@@ -574,7 +574,7 @@ void loadFont(UIFont* self) {
     if ([_name length] < 1) {
         // fallback to default if could not find a font name
         _name = c_defaultFontName;
-    } 
+    }
 
     _size = [coder decodeFloatForKey:@"UIFontPointSize"];
     _horizontalScale = 1.0f;

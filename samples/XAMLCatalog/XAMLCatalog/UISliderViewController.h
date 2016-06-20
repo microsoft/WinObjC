@@ -14,24 +14,7 @@
 //
 //******************************************************************************
 
-#import "ProgrammaticViewController.h"
-#import "UIActivityIndicatorViewController.h"
-#import "UISliderViewController.h"
+#import "MenuTableViewController.h"
 
-@implementation ProgrammaticViewController
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-
-    // UIActivityIndicatorView
-    [self addMenuItemViewController:[[UIActivityIndicatorViewController alloc] init] andTitle:@"UIActivityIndicatorView"];
-
-    // UISlider
-    [self addMenuItemViewController:[[UISliderViewController alloc] init] andTitle:@"UISlider"];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
-
+@interface UISliderViewController : MenuTableViewController
 @end

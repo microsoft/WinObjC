@@ -18,7 +18,7 @@
 #import <Foundation/Foundation.h>
 
 TEST(NSOperation, NSOperationDealloc) {
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    NSOperationQueue* queue = [[NSOperationQueue alloc] init];
     ASSERT_NO_THROW([queue release]);
 }
 

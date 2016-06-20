@@ -1085,13 +1085,10 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         if ([controller modalPresentationStyle] == UIModalPresentationPopover) {
             [controller->priv->_popoverPresentationController release];
             controller->priv->_popoverPresentationController =
-                [[UIPopoverPresentationController alloc] initWithPresentedViewController:controller
-                                                                presentingViewController:self];
+                [[UIPopoverPresentationController alloc] initWithPresentedViewController:controller presentingViewController:self];
         }
 
-        [controller performSelectorOnMainThread:@selector(_addToTop:)
-                                     withObject:[NSNumber numberWithInt:animated]
-                                  waitUntilDone:NO];
+        [controller performSelectorOnMainThread:@selector(_addToTop:) withObject:[NSNumber numberWithInt:animated] waitUntilDone:NO];
     }
 }
 

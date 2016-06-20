@@ -16,25 +16,21 @@
 
 #include "UIStackView.h"
 
-UIStackView::UIStackView()
-{
+UIStackView::UIStackView() {
 }
 
-void UIStackView::InitFromXIB(XIBObject *obj)
-{
+void UIStackView::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
 
     _outputClassName = "UIStackView";
 }
 
-void UIStackView::InitFromStory(XIBObject *obj)
-{
+void UIStackView::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
 
     _outputClassName = "UIStackView";
 }
 
-void UIStackView::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UIStackView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIView::ConvertStaticMappings(writer, obj);
 }

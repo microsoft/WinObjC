@@ -56,8 +56,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    //CoreMotion
+
+    // CoreMotion
     [self addMenuItemViewController:[[CoreMotionViewController alloc] init] andTitle:@"CoreMotion"];
 
     // Foundations tests

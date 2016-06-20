@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
     <HasSharedItems>true</HasSharedItems>
@@ -14,6 +14,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\ProgrammaticViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\StoryBoardViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UIActivityIndicatorViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UISliderViewController.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />

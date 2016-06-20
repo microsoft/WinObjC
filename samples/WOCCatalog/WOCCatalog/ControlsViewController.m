@@ -34,7 +34,10 @@ static const int MODALFORMSHEET_ROW = 4;
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    UIBarButtonItem* popoverButton = [[UIBarButtonItem alloc] initWithTitle:@"Popover" style:UIBarButtonItemStyleBordered target:self action:@selector(pressedPopoverBarButton:)];
+    UIBarButtonItem* popoverButton = [[UIBarButtonItem alloc] initWithTitle:@"Popover"
+                                                                      style:UIBarButtonItemStyleBordered
+                                                                     target:self
+                                                                     action:@selector(pressedPopoverBarButton:)];
     self.navigationItem.rightBarButtonItem = popoverButton;
 
     CGRect tableFrame = self.view.bounds;
@@ -59,7 +62,8 @@ static const int MODALFORMSHEET_ROW = 4;
     self.rightPopoverButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.rightPopoverButton.titleLabel.font = [UIFont systemFontOfSize:11];
     [self.rightPopoverButton setTitle:@"Popover (up arrow direction)" forState:UIControlStateNormal];
-    [self.rightPopoverButton setFrame:CGRectMake(self.view.bounds.size.width - buttonOriginOffset - buttonWidth, buttonOriginOffset, buttonWidth, buttonHeight)];
+    [self.rightPopoverButton
+        setFrame:CGRectMake(self.view.bounds.size.width - buttonOriginOffset - buttonWidth, buttonOriginOffset, buttonWidth, buttonHeight)];
     [self.rightPopoverButton addTarget:self action:@selector(pressedPopoverButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.rightPopoverButton];
 }
@@ -101,7 +105,7 @@ static const int MODALFORMSHEET_ROW = 4;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if (indexPath.row == 1) {
         // slider
-        CGRect frame = CGRectMake(5.0, 12.0, 120.0, 8.0);
+        CGRect frame = CGRectMake(5.0, 12.0, 120.0, 38.0);
         UISlider* sliderCtl = [[UISlider alloc] initWithFrame:frame];
 
         // in case the parent view draws with a custom color or gradient, use a transparent color
@@ -208,9 +212,11 @@ static const int MODALFORMSHEET_ROW = 4;
     viewController.modalPresentationStyle = UIModalPresentationPopover;
     viewController.preferredContentSize = CGSizeMake(500, 500);
 
-    [self presentViewController:viewController animated:YES completion:^{
-        assert(viewController.numViewEventsFired == 3);
-    }];
+    [self presentViewController:viewController
+                       animated:YES
+                     completion:^{
+                         assert(viewController.numViewEventsFired == 3);
+                     }];
 
     assert(viewController.popoverPresentationController != nil);
 
@@ -235,9 +241,11 @@ static const int MODALFORMSHEET_ROW = 4;
     viewController.modalPresentationStyle = UIModalPresentationPopover;
     viewController.preferredContentSize = CGSizeMake(300, 300);
 
-    [self presentViewController:viewController animated:YES completion:^{
-        assert(viewController.numViewEventsFired == 3);
-    }];
+    [self presentViewController:viewController
+                       animated:YES
+                     completion:^{
+                         assert(viewController.numViewEventsFired == 3);
+                     }];
 
     assert(viewController.popoverPresentationController != nil);
 

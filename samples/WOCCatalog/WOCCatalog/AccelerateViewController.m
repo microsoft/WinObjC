@@ -60,28 +60,28 @@ static const double meanDivisor = 100;
     _valueBlue = 100;
     _convolveSize = 1;
 
-    _redSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 8.0)];
+    _redSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 38.0)];
     _redSlider.backgroundColor = [UIColor clearColor];
     _redSlider.minimumValue = 0.0;
     _redSlider.maximumValue = 200.0;
     _redSlider.continuous = YES;
     _redSlider.value = 100.0;
 
-    _greenSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 8.0)];
+    _greenSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 38.0)];
     _greenSlider.backgroundColor = [UIColor clearColor];
     _greenSlider.minimumValue = 0.0;
     _greenSlider.maximumValue = 200.0;
     _greenSlider.continuous = YES;
     _greenSlider.value = 100.0;
 
-    _blueSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 8.0)];
+    _blueSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 38.0)];
     _blueSlider.backgroundColor = [UIColor clearColor];
     _blueSlider.minimumValue = 0.0;
     _blueSlider.maximumValue = 200.0;
     _blueSlider.continuous = YES;
     _blueSlider.value = 100.0;
 
-    _convolveSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 8.0)];
+    _convolveSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 38.0)];
     _convolveSlider.backgroundColor = [UIColor clearColor];
     _convolveSlider.minimumValue = 1.0;
     _convolveSlider.maximumValue = 99.0;
@@ -302,10 +302,7 @@ static const double meanDivisor = 100;
     outBuffer.height = CGImageGetHeight(_localImg);
     outBuffer.rowBytes = CGImageGetBytesPerRow(_localImg);
 
-    int16_t A[] = { _valueRed,          0,         0,         0,
-                           0, _valueGreen,         0,         0,
-                           0,          0, _valueBlue,         0,
-                           0,          0,         0,         0};
+    int16_t A[] = { _valueRed, 0, 0, 0, 0, _valueGreen, 0, 0, 0, 0, _valueBlue, 0, 0, 0, 0, 0 };
 
     error = vImageMatrixMultiply_ARGB8888(&inBuffer, &midBuffer, A, meanDivisor, NULL, NULL, 0);
 

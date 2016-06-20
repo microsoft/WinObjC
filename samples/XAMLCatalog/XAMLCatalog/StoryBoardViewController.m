@@ -16,7 +16,6 @@
 
 #import "StoryBoardViewController.h"
 
-
 @implementation StoryBoardViewController
 
 - (id)init {
@@ -25,7 +24,7 @@
     return self;
 }
 
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder*)aDecoder {
     self = [super initWithCoder:aDecoder];
 
     return self;
@@ -44,7 +43,9 @@
     UIViewController* activityIndicatorVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UIActivityIndicatorViewSB"];
     [self addMenuItemViewController:activityIndicatorVC andTitle:@"UIActivityIndicatorView"];
 
-    // UITextFieldView
+    // UISlider
+    UIViewController* sliderVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UISliderSB"];
+    [self addMenuItemViewController:sliderVC andTitle:@"UISliderSB"];
 }
 
 - (void)didReceiveMemoryWarning {

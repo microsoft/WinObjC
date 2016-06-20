@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -187,6 +187,7 @@
     <ClangCompile Include="..\..\XAMLCatalog\UIActivityIndicatorViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\main.m" />
     <ClangCompile Include="..\..\XAMLCatalog\MenuTableViewController.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\UISliderViewController.m" />
     <AssetCatalogCompile Include="..\..\XAMLCatalog\Assets.xcassets" />
     <StoryboardCompile Include="..\..\XAMLCatalog\XAMLCatalog.storyboard" />
     <SBInfoPlistCopy Include="..\..\XAMLCatalog\Info.plist">

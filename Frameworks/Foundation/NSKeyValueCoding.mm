@@ -157,18 +157,18 @@ SEL KVCGetterForPropertyName(NSObject* self, const char* key) {
 
 template <typename T>
 static id quickGet(id self, SEL getter) {
-    T ret = ((T(*)(id, SEL))objc_msgSend)(self, getter);
+    T ret = ((T (*)(id, SEL))objc_msgSend)(self, getter);
     return woc::ValueTransformer<T>::get(&ret);
 }
 
 template <>
 id quickGet<id>(id self, SEL getter) {
-    return ((id(*)(id, SEL))objc_msgSend)(self, getter);
+    return ((id (*)(id, SEL))objc_msgSend)(self, getter);
 }
 
 template <>
 id quickGet<Class>(id self, SEL getter) {
-    return ((id(*)(id, SEL))objc_msgSend)(self, getter);
+    return ((id (*)(id, SEL))objc_msgSend)(self, getter);
 }
 
 bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret) {
@@ -186,8 +186,7 @@ bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret) {
 
     if (0
 #define APPLY_TYPE(type, name, capitalizedName, encodingChar) || (valueType[0] == encodingChar && (*ret = quickGet<type>(self, getter)))
-        APPLY_TYPE(id, object, Object, '@')
-        APPLY_TYPE(Class, class, Class, '#')
+        APPLY_TYPE(id, object, Object, '@') APPLY_TYPE(Class, class, Class, '#')
 #include "type_encoding_cases.h"
 #undef APPLY_TYPE
             ) {
@@ -411,8 +410,7 @@ bool KVCSetViaAccessor(NSObject* self, SEL setter, id value) {
         if (0
 #define APPLY_TYPE(type, name, capitalizedName, encodingChar) \
     || (valueType[0] == encodingChar && quickSet<type>(self, setter, value, valueType))
-            APPLY_TYPE(id, object, Object, '@')
-            APPLY_TYPE(Class, class, Class, '#')
+            APPLY_TYPE(id, object, Object, '@') APPLY_TYPE(Class, class, Class, '#')
 #include "type_encoding_cases.h"
 #undef APPLY_TYPE
                 ) {
