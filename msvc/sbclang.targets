@@ -192,15 +192,16 @@
     <Clang
       Condition="'@(ClangCompile)' != '' and '%(ClangCompile.ExcludedFromBuild)' != 'true'"
       InternalSystemIncludePaths="%(ClangCompile.InternalSystemIncludePaths)"
+      InternalIncludePaths="%(ClangCompile.InternalIncludePaths)"
+      InternalForceIncludes="%(ClangCompile.InternalForceIncludes)"
       ExcludedSearchPathSubdirectories="%(ClangCompile.ExcludedSearchPathSubdirectories)"
       Autocomplete="$(ClangAutocomplete)"
       AutocompleteCommandLineTemplate="%(ClangCompile.AutocompleteCommandLineTemplate)"
-      CommandLineTemplate="%(ClangCompile.WOCStdlibOptions) %(ClangCompile.CommandLineTemplate)"
+      CommandLineTemplate="%(ClangCompile.CommandLineTemplate)"
       CommandTLogFile="%(ClangCompile.CommandTLogFile)"
       CompileAs="%(ClangCompile.CompileAs)"
       DebugInformation="%(ClangCompile.DebugInformation)"
       DependencyFile="%(ClangCompile.DependencyFile)"
-      DependencySource="%(ClangCompile.DependencySource)"
       ExceptionHandling="%(ClangCompile.ExceptionHandling)"
       HeaderMapInclude="%(ClangCompile.HeaderMapInclude)"
       IncludePaths="%(ClangCompile.IncludePaths)"
@@ -341,7 +342,8 @@
     <!-- Figure out WOCStdlib options to use -->
     <ItemGroup>
       <ClangCompile>
-        <WOCStdlibOptions Condition="'%(ClangCompile.WOCStdlib)' == 'true'">-cc1 -internal-isystem "$(StarboardSdkRoot)\include\WOCStdLib" -include WOCStdlib.h</WOCStdlibOptions>
+        <InternalSystemIncludePaths Condition="'%(ClangCompile.WOCStdlib)' == 'true'">$(StarboardSdkRoot)\include\WOCStdLib;%(InternalSystemIncludePaths)</InternalSystemIncludePaths>
+        <InternalForceIncludes Condition="'%(ClangCompile.WOCStdlib)' == 'true'">WOCStdlib.h;%(InternalForceIncludes)</InternalForceIncludes>
       </ClangCompile>
     </ItemGroup>
 
