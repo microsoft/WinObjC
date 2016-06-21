@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -40,10 +40,11 @@
     CGContextSetFillColorWithColor(context, [UIColor yellowColor].CGColor);
     CGContextFillRect(context, CGRectMake(rectWidth / 2 - 25, maxHeight / 2 - rectHeight / 2 - 25, rectWidth + 25, rectHeight + 25));
 
+    // Note: Shadow or Alpha would be better test samples for this, but are not fully implemented yet in the bridge.
+    // TODO: Use Shadow or Alpha instead of BlendMode when supported by the bridge
     // Enable shadow
-    // CGSize shadowOffset = CGSizeMake(10, 20);
-    // CGContextSetShadow(context, shadowOffset, 10);
-
+    /*CGSize shadowOffset = CGSizeMake(10, 20);
+    CGContextSetShadow(context, shadowOffset, 10);*/
     // Set composite alpha of the transparency layer
     // CGContextSetAlpha(context, 0.5);
 

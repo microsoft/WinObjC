@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -153,22 +153,6 @@
 
         NSArray* curvePoints = @[ [NSValue valueWithCGPoint:CGPointMake(140, 250)], [NSValue valueWithCGPoint:CGPointMake(110, 180)], @50 ];
 
-        /*						  CGPathAddLineToPoint(path,
-                                                          &transform,
-                                                          [curvePoints[0] CGPointValue].x,
-                                                          [curvePoints[0] CGPointValue].y
-                                                          );
-                                                           CGPathAddLineToPoint(path,
-                                                          &transform,
-                                                          [curvePoints[1] CGPointValue].x,
-                                                          [curvePoints[1] CGPointValue].y
-                                                          );
-                                  CGPathMoveToPoint(path,
-                  &transform,
-                  [movePoints[0] CGPointValue].x,
-                  [movePoints[0] CGPointValue].y);
-                                          */
-
         CGPathAddArcToPoint(path,
                             &transform,
                             [curvePoints[0] CGPointValue].x,
@@ -189,9 +173,7 @@
     UIGraphicsEndImageContext();
     self.testViewDisplayView.image = image;
 
-    //[self.consoleView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
     [self.consoleView reloadData];
-    //    self.cons
 }
 
 // UITableViewDelegat
@@ -308,7 +290,6 @@
 }
 
 void cgPathApplierFunction(void* info, const CGPathElement* element) {
-    //    UITextView* textView = (__bridge UITextView*)(info);
     NSMutableString* elementString = (__bridge NSMutableString*)(info);
     NSString* pointCountKey = @"pointCountKey";
     NSString* nameKey = @"nameKey";
@@ -320,14 +301,11 @@ void cgPathApplierFunction(void* info, const CGPathElement* element) {
         @(kCGPathElementCloseSubpath) : @{ pointCountKey : @0, nameKey : @"kCGPathElementCloseSubpath" }
     };
     NSDictionary* elementInfo = elementsInfo[@(element->type)];
-    //    NSMutableString * elementString = [NSMutableString string];
     [elementString appendString:[NSString stringWithFormat:@"%@\n", elementInfo[nameKey]]];
     for (NSInteger i = 0; i < [elementInfo[pointCountKey] integerValue]; i++) {
         CGPoint point = element->points[i];
         [elementString appendString:[NSString stringWithFormat:@"\t( %f, %f )\n", point.x, point.y]];
     }
-
-    //    [elementArray addObject:elementString];
 }
 
 @end

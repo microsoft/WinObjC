@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -60,8 +60,7 @@ static const CGFloat c_LineWidth = 20;
     CGPathApply(path, (__bridge void*)params, _Applier);
 
     // Create stroked path
-    // CGContextReplacePathWithStrokedPath(context);
-    // Using "CGPathCreateCopyByStrokingPath" for now, as it does the same thing but provides a copy
+    // TODO: Change this to use CGContextReplacePathWithStrokedPath()
     NSMutableArray<NSValue*>* strokedPoints = [NSMutableArray new];
     CGPathRef newPath = CGPathCreateCopyByStrokingPath(path, NULL, c_LineWidth, kCGLineCapButt, kCGLineJoinMiter, 1);
     // Log stroked path info
