@@ -17,5 +17,5 @@
 #import <Foundation/NSError.h>
 #import "BridgeHelpers.h"
 
-@interface NSErrorPrototype : NSError
+@interface NSCFError : NSError
 @end
