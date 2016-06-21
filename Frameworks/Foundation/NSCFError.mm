@@ -20,21 +20,6 @@
 #import "BridgeHelpers.h"
 #import "CFFoundationInternal.h"
 
-@interface NSCFError : NSError
-@end
-
-#pragma region NSErrorPrototype
-@implementation NSErrorPrototype
-
-PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFError)
-
-- (instancetype)initWithDomain:(NSString*)domain code:(NSInteger)code userInfo:(NSDictionary*)dict {
-    return reinterpret_cast<NSErrorPrototype*>(static_cast<NSError*>(CFErrorCreate(kCFAllocatorDefault, static_cast<CFStringRef>(domain), static_cast<CFIndex>(code), static_cast<CFDictionaryRef>(dict))));
-}
-
-@end
-#pragma endregion
-
 #pragma region NSCF Bridged Class
 @implementation NSCFError
 

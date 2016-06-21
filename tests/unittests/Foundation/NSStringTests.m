@@ -538,3 +538,41 @@ TEST(NSString, GetParagraphStringWithBytes6) {
     ASSERT_EQ([paragraph length], endIndex);
     ASSERT_EQ([paragraph length], contentsEnd);
 }
+
+TEST(NSString, PathExtensions) {
+    NSString* string = @"";
+    ASSERT_TRUE([string.pathExtension isEqualToString:@""]);
+
+    string = @"hello.world";
+    ASSERT_TRUE([string.pathExtension isEqualToString:@"world"]);
+
+    string = @"C:\FolderA\file.plist";
+    ASSERT_TRUE([string.pathExtension isEqualToString:@"plist"]);
+
+    string = @"/tmp/scratch.tiff";
+    ASSERT_TRUE([string.pathExtension isEqualToString:@"tiff"]);
+
+    string = @".scratch.tiff";
+    ASSERT_TRUE([string.pathExtension isEqualToString:@"tiff"]);
+
+    string = @"/tmp/scratch";
+    ASSERT_TRUE([string.pathExtension isEqualToString:@""]);
+
+    string = @".tiff";
+    ASSERT_TRUE([string.pathExtension isEqualToString:@""]);
+
+    string = @".";
+    ASSERT_TRUE([string.pathExtension isEqualToString:@""]);
+
+    string = @"foo.";
+    ASSERT_TRUE([string.pathExtension isEqualToString:@""]);
+
+    string = @"/tmp/";
+    ASSERT_TRUE([string.pathExtension isEqualToString:@""]);
+
+    string = @"/tmp/scratch..tiff";
+    ASSERT_TRUE([string.pathExtension isEqualToString:@"tiff"]);
+
+    string = @"/tmp/random.foo.tiff";
+    ASSERT_TRUE([string.pathExtension isEqualToString:@"tiff"]);
+}

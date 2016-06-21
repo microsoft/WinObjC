@@ -54,7 +54,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly, retain) UINavigationItem* topItem;
 @property (nonatomic, readonly, retain) UINavigationItem* backItem;
 @property (nonatomic, copy) NSArray* items;
-@property (nonatomic, assign) id delegate;
+@property (nonatomic, assign) id<UINavigationBarDelegate> delegate;
 @property (nonatomic, assign, getter=isTranslucent) BOOL translucent STUB_PROPERTY;
 @property (nonatomic, retain) UIImage* shadowImage;
 @property (nonatomic, copy) NSDictionary* titleTextAttributes STUB_PROPERTY;

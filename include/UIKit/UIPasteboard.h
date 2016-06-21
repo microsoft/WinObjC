@@ -62,11 +62,11 @@ UIKIT_EXPORT_CLASS
 - (NSArray*)dataForPasteboardType:(NSString*)pasteboardType inItemSet:(NSIndexSet*)itemSet STUB_METHOD;
 - (NSArray*)valuesForPasteboardType:(NSString*)pasteboardType inItemSet:(NSIndexSet*)itemSet STUB_METHOD;
 - (void)addItems:(NSArray*)items STUB_METHOD;
-@property (copy, nonatomic) NSString* string STUB_PROPERTY;
+@property (copy, nonatomic) NSString* string;
 @property (copy, nonatomic) NSArray* strings STUB_PROPERTY;
-@property (copy, nonatomic) UIImage* image STUB_PROPERTY;
+@property (copy, nonatomic) UIImage* image;
 @property (copy, nonatomic) NSArray* images STUB_PROPERTY;
-@property (copy, nonatomic) NSURL* URL STUB_PROPERTY;
+@property (copy, nonatomic) NSURL* URL;
 @property (copy, nonatomic) NSArray* URLs STUB_PROPERTY;
 @property (copy, nonatomic) UIColor* color STUB_PROPERTY;
 @property (copy, nonatomic) NSArray* colors STUB_PROPERTY;

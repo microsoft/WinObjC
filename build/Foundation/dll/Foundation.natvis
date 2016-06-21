@@ -4,9 +4,6 @@
     <Type Name="NSConstantString">
         <DisplayString>{c_string,[len]s8}</DisplayString>
         <StringView>c_string,[len]s8</StringView>
-        <Expand HideRawView="true">
-            <ExpandedItem>*(NSObject*)this</ExpandedItem>
-        </Expand>
     </Type>
 
     <!-- Bridged Types -->

@@ -845,7 +845,10 @@ void loadFont(UIFont* self) {
     return TRUE;
 }
 
-- (NSObject*)copyWithZone:(NSZone*)zone {
+/**
+@Status Interoperable
+*/
+- (instancetype)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 
