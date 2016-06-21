@@ -123,7 +123,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
     [self _adjustTextLayerSize:FALSE];
 
-    // this will take care of regenerating the attributed string 
+    // this will take care of regenerating the attributed string
     [self _setText:[coder decodeObjectForKey:@"UIText"]];
 
     return self;
@@ -178,14 +178,12 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     return self;
 }
 
-
 /**
  @Status Interoperable
 */
 - (void)setShowsHorizontalScrollIndicator:(BOOL)show {
-    [super setShowsHorizontalScrollIndicator:FALSE];
+    [super setShowsHorizontalScrollIndicator:show];
 }
-
 
 - (void)_adjustTextLayerSize:(BOOL)setContentPos {
     CGSize size;
@@ -260,7 +258,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 #endif
 }
 
-- (void)_resetAttributedString:(NSString *)newString {
+- (void)_resetAttributedString:(NSString*)newString {
     // re-generate attributed string using current style-reatled properties
     NSMutableDictionary* attributes = [NSMutableDictionary dictionary];
     attributes[NSFontAttributeName] = _font;

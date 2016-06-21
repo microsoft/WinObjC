@@ -124,6 +124,8 @@ public:
 
 - (void)_setZIndex:(int)zIndex;
 
+- (void)_setOrigin:(CGPoint)origin updateContent:(BOOL)updateContent;
+
 @property WXFrameworkElement* contentsElement;
 
 @end

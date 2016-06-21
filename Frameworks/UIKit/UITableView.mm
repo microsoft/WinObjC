@@ -647,7 +647,7 @@ static void initInternal(UITableView* self) {
  @Status Interoperable
 */
 - (void)setShowsHorizontalScrollIndicator:(BOOL)show {
-    [super setShowsHorizontalScrollIndicator:FALSE];
+    [super setShowsHorizontalScrollIndicator:show];
 }
 
 /**
@@ -1208,7 +1208,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
         return;
     }
 
-    if (frame.size.width != tablePriv->_lastSize.width && frame.size.height != tablePriv->_lastSize.height) {
+    // update size when frame width or height changed. So when resizing the window
+    // scrollbar can be resized to reflect correct length or position
+    if (frame.size.width != tablePriv->_lastSize.width || frame.size.height != tablePriv->_lastSize.height) {
         bool changedWidth = frame.size.width != tablePriv->_lastSize.width;
         tablePriv->_lastSize = frame.size;
         recalcTableSize(self, changedWidth);

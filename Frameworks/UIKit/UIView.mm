@@ -659,7 +659,9 @@ static std::string _printViewHeirarchy(UIView* leafView) {
     self->priv->_pointerPressedEventRegistration =
         [self->priv->_xamlInputElement addPointerPressedEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
             // Capture the pointer within this xaml element
-            [weakSelf->priv->_xamlInputElement capturePointer:e.pointer];
+            if (![self->priv->_xamlInputElement capturePointer:e.pointer]) {
+                TraceWarning(TAG, L"Failed to capture pointer...");
+            }
 
             // Set the event to handled, then process it as a UITouch
             e.handled = YES;
@@ -678,6 +680,9 @@ static std::string _printViewHeirarchy(UIView* leafView) {
             // Set the event to handled, then process it as a UITouch
             e.handled = YES;
             [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseEnded];
+
+            // release the pointer capture
+            [self->priv->_xamlInputElement releasePointerCapture:e.pointer];
         }];
 
     self->priv->_pointerCanceledEventRegistration =
@@ -1396,10 +1401,6 @@ static float doRound(float f) {
     curFrame.origin = origin;
 
     [layer setFrame:curFrame];
-}
-
-- (void)_setBoundsOrigin:(CGPoint)origin {
-    [layer setOrigin:origin];
 }
 
 /**

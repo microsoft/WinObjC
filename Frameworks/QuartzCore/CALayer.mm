@@ -46,6 +46,9 @@
 
 static const wchar_t* TAG = L"CALayer";
 
+static const bool DEBUG_ALL = false;
+static const bool DEBUG_VERBOSE = DEBUG_ALL || false;
+
 NSString* const kCAOnOrderIn = @"kCAOnOrderIn";
 NSString* const kCAOnOrderOut = @"kCAOnOrderOut";
 NSString* const kCATransition = @"kCATransition";
@@ -184,7 +187,9 @@ static void DoDisplayList(CALayer* layer) {
 
         if (!cur->_textureOverride) {
             if (cur->delegate) {
-                TraceVerbose(TAG, L"Getting new texture for %hs", object_getClassName(cur->delegate));
+                if (DEBUG_VERBOSE) {
+                    TraceVerbose(TAG, L"Getting new texture for %hs", object_getClassName(cur->delegate));
+                }
             }
             DisplayTexture* newTexture = (DisplayTexture*)[cur->self _getDisplayTexture];
             cur->needsDisplay = FALSE;
@@ -488,11 +493,13 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
  @Status Interoperable
 */
 - (void)display {
-    TraceVerbose(TAG,
-                 L"Displaying for 0x%08x (%hs, %hs)",
-                 priv->delegate,
-                 object_getClassName(self),
-                 priv->delegate ? object_getClassName(priv->delegate) : "nil");
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG,
+                     L"Displaying for 0x%08x (%hs, %hs)",
+                     priv->delegate,
+                     object_getClassName(self),
+                     priv->delegate ? object_getClassName(priv->delegate) : "nil");
+    }
 
     if (priv->savedContext != NULL) {
         CGContextRelease(priv->savedContext);
@@ -507,7 +514,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
     if (priv->contents == NULL || priv->ownsContents || [self isKindOfClass:[CAShapeLayer class]]) {
         if (priv->contents) {
             if (priv->ownsContents) {
-                TraceVerbose(TAG, L"Freeing 0x%x with refcount %d", priv->contents, CFGetRetainCount((CFTypeRef)priv->contents));
+                if (DEBUG_VERBOSE) {
+                    TraceVerbose(TAG, L"Freeing 0x%x with refcount %d", priv->contents, CFGetRetainCount((CFTypeRef)priv->contents));
+                }
                 CGImageRelease(priv->contents);
             }
             priv->contents = NULL;
@@ -815,7 +824,10 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         insertBefore = priv->childAtIndex(index)->self;
     } else {
         if (index > (unsigned)priv->childCount) {
-            TraceVerbose(TAG, L"Adding sublayer at index %d, count=%d!", index, priv->childCount);
+            if (DEBUG_VERBOSE) {
+                TraceVerbose(TAG, L"Adding sublayer at index %d, count=%d!", index, priv->childCount);
+            }
+
             index = priv->childCount;
         }
     }
@@ -996,11 +1008,15 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     ret.size = priv->bounds.size;
 
     ret = CGRectApplyAffineTransform(ret, translate);
-    /*
-    TraceVerbose(TAG, L"%hs: frame(%d, %d, %d, %d)", object_getClassName(self),
-    (int) ret->origin.x, (int) ret->origin.y,
-    (int) ret->size.width, (int) ret->size.height);
-    */
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG,
+                     L"%hs: frame(%d, %d, %d, %d)",
+                     object_getClassName(self),
+                     (int)ret.origin.x,
+                     (int)ret.origin.y,
+                     (int)ret.size.width,
+                     (int)ret.size.height);
+    }
 
     memcpy(&priv->_cachedFrame, &ret, sizeof(CGRect));
     priv->_frameIsCached = TRUE;
@@ -1012,13 +1028,18 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Interoperable
 */
 - (void)setFrame:(CGRect)frame {
-    /*
-    char szOut[512];
-    sprintf_s(szOut, sizeof(szOut), "%s: setFrame(%f, %f, %f, %f)\n", object_getClassName(self),
-    frame.origin.x, frame.origin.y,
-    frame.size.width, frame.size.height);
-    TraceVerbose(TAG, L"%hs", szOut);
-    */
+    if (DEBUG_VERBOSE) {
+        char szOut[512];
+        sprintf_s(szOut,
+                  sizeof(szOut),
+                  "%s: setFrame(%f, %f, %f, %f)\n",
+                  object_getClassName(self),
+                  frame.origin.x,
+                  frame.origin.y,
+                  frame.size.width,
+                  frame.size.height);
+        TraceVerbose(TAG, L"%hs", szOut);
+    }
     priv->_frameIsCached = FALSE;
 
     if (memcmp(&frame, &CGRectNull, sizeof(CGRect)) == 0) {
@@ -1210,6 +1231,10 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 - (void)setOrigin:(CGPoint)origin {
+    [self _setOrigin:origin updateContent:YES];
+}
+
+- (void)_setOrigin:(CGPoint)origin updateContent:(BOOL)updateCALayerOrigin {
     if (origin.x != origin.x || origin.y != origin.y) {
         TraceWarning(TAG, L"**** Warning: Bad origin on CALayer - %f, %f *****", origin.x, origin.y);
         memset(&origin, 0, sizeof(CGPoint));
@@ -1222,9 +1247,17 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         priv->bounds.origin = origin;
         [action runActionForKey:(id)_boundsOriginAction object:self arguments:nil];
 
-        NSValue* newOriginValue = [[NSValue alloc] initWithCGPoint:priv->bounds.origin];
-        [CATransaction _setPropertyForLayer:self name:@"bounds.origin" value:newOriginValue];
-        [newOriginValue release];
+        // In the case of scrollviewer, we should not to update backing CALayer origin, This is related to our new design.
+        // previously updating the CALayer origin would resulting in content scrolling. but now scrollviewer
+        // is the one doing scrolling. so UIScrollview's origin really does not change any more.
+        // otherwise, it will result in double scrolling - meaning, scrollviewer does the scroll once. CALayer will scroll the
+        // scrollviewer itself.
+        if (updateCALayerOrigin) {
+            NSValue* newOriginValue = [[NSValue alloc] initWithCGPoint:priv->bounds.origin];
+            [CATransaction _setPropertyForLayer:self name:@"bounds.origin" value:newOriginValue];
+            [newOriginValue release];
+        }
+
         priv->originSet = TRUE;
     }
 }
@@ -2100,7 +2133,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 - (void)dealloc {
-    TraceVerbose(TAG, L"CALayer dealloced");
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG, L"CALayer dealloced");
+    }
     [self removeAllAnimations];
     [self removeFromSuperlayer];
     while (priv->firstChild) {
@@ -2138,7 +2173,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         qval.CreateFromMatrix(reinterpret_cast<float*>(&curTransform));
         return [NSNumber numberWithFloat:(float)-qval.roll() * 180.0f / M_PI];
     } else if (strcmp(pPath, "transform.rotation.x") == 0 || strcmp(pPath, "transform.rotation.y") == 0) {
-        TraceVerbose(TAG, L"Should get rotation");
+        if (DEBUG_VERBOSE) {
+            TraceVerbose(TAG, L"Should get rotation");
+        }
         return [NSNumber numberWithFloat:0.0f];
     } else if (strcmp(pPath, "transform.scale") == 0) {
         CATransform3D curTransform = [self transform];
@@ -2253,7 +2290,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (CALayer*)mask {
     UNIMPLEMENTED();
-    TraceVerbose(TAG, L"mask not supported");
+    TraceWarning(TAG, L"mask not supported");
     return nil;
 }
 
@@ -2262,7 +2299,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (void)setShadowPath:(CGPathRef)path {
     UNIMPLEMENTED();
-    TraceVerbose(TAG, L"setShadowPath not supported");
+    TraceWarning(TAG, L"setShadowPath not supported");
 }
 
 /**
