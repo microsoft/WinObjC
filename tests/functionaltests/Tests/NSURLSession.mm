@@ -141,6 +141,20 @@ didReceiveResponse:(NSURLResponse*)response
 @end
 
 /**
+ * Test to verify a that two tasks do not have the same identifier.
+ */
+TEST(NSURLSession, TaskIdentifiers) {
+    NSURLSessionDataTaskTestHelper* dataTaskTestHelper = [[NSURLSessionDataTaskTestHelper alloc] init];
+    NSURLSession* session = [dataTaskTestHelper createSession];
+    NSURL* url = [NSURL URLWithString:@"https://httpbin.org/cookies/set?Hello=World"];
+
+    NSURLSessionTask* dataTask = [session dataTaskWithURL:url];
+    NSURLSessionTask* downloadTask = [session downloadTaskWithURL:url];
+
+    ASSERT_NE(dataTask.taskIdentifier, downloadTask.taskIdentifier);
+}
+
+/**
  * Test to verify a data task call can be successfully made and a valid data is received without a completion handler
  */
 TEST(NSURLSession, DataTaskWithURL) {

@@ -54,6 +54,7 @@
 
 @interface NSURLSessionTask () <NSURLProtocolClient>
 - (id)_initWithTaskDelegate:(id<_NSURLSessionTaskDelegate>)taskDelegate
+                 identifier:(NSUInteger)identifier
               configuration:(NSURLSessionConfiguration*)configuration
                     request:(NSURLRequest*)request;
 @property (readwrite, assign) id<_NSURLSessionTaskDelegate> _taskDelegate;
@@ -81,6 +82,6 @@
 @end
 
 @interface NSURLSessionDownloadTask ()
-- (id)_initWithTaskDelegate:(id<_NSURLSessionTaskDelegate>)taskDelegate configuration:(NSURLSessionConfiguration*)configuration resumeData:(NSData*)resumeData;
+- (id)_initWithTaskDelegate:(id<_NSURLSessionTaskDelegate>)taskDelegate identifier:(NSUInteger)identifier configuration:(NSURLSessionConfiguration*)configuration resumeData:(NSData*)resumeData;
 //- (id)_initWithTaskDelegate:(id<_NSURLSessionTaskDelegate>)taskDelegate configuration:(NSURLSessionConfiguration*)configuration dataTask:(NSURLSessionDataTask*)dataTask;
 @end
