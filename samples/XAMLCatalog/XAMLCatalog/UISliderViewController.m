@@ -34,7 +34,7 @@
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
-    if (indexPath.row == 2) {
+    if (indexPath.row == 3) {
         return 130;
     }
 
@@ -70,22 +70,6 @@
         [cell addSubview:slider];
     } else if (indexPath.row == 2) {
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(xMargin, 0, labelWidth, labelHeight)];
-        label.text = @"Click button to set value programmatically";
-
-        _setValueSlider = [[UISlider alloc] initWithFrame:CGRectMake(xMargin, labelHeight, 300, elementHeight)];
-        _setValueSlider.maximumValue = 100;
-        _setValueSlider.minimumValue = 0;
-        _setValueSlider.value = 25;
-        [cell addSubview:label];
-        [cell addSubview:_setValueSlider];
-
-        UIButton* button = [[UIButton alloc] initWithFrame:CGRectMake(xMargin, labelHeight + 30, 250, labelHeight)];
-        [button setTitle:@"Set value to 25" forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(_buttonClick:) forControlEvents:UIControlEventTouchUpInside];
-        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [cell addSubview:button];
-    } else if (indexPath.row == 3) {
-        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(xMargin, 0, labelWidth, labelHeight)];
         label.text = @"UISlider (initial = 25 min= 20, max = 87)";
 
         UISlider* sliderWithMinMax = [[UISlider alloc] initWithFrame:CGRectMake(xMargin, labelHeight, 300, elementHeight)];
@@ -94,10 +78,24 @@
         sliderWithMinMax.value = 25;
         [cell addSubview:label];
         [cell addSubview:sliderWithMinMax];
-    } else if (indexPath.row == 4) {
-        _valueChangeLabel = [[UILabel alloc] initWithFrame:CGRectMake(xMargin, 0, labelWidth, labelHeight)];
-        _valueChangeLabel.text = @"UISlider with value changed event";
+    } else if (indexPath.row == 3) {
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(xMargin, 0, labelWidth, labelHeight)];
+        label.text = @"Click button to set value to 25.0";
 
+        _setValueSlider = [[UISlider alloc] initWithFrame:CGRectMake(xMargin, labelHeight, 300, elementHeight)];
+        _setValueSlider.maximumValue = 100;
+        _setValueSlider.minimumValue = 0;
+        _setValueSlider.value = 25;
+        [cell addSubview:label];
+        [cell addSubview:_setValueSlider];
+
+        UIButton* button = [[UIButton alloc] initWithFrame:CGRectMake(xMargin, labelHeight + 40, 200, labelHeight)];
+        button.backgroundColor = [UIColor grayColor];
+        [button setTitle:@"Set value to 25" forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(_buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [cell addSubview:button];
+    } else if (indexPath.row == 4) {
         UISlider* slider = [[UISlider alloc] initWithFrame:CGRectMake(xMargin, labelHeight, 300, elementHeight)];
         slider.maximumValue = 100;
         slider.minimumValue = 0;
@@ -107,17 +105,21 @@
         [slider addTarget:self action:@selector(_sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
         [slider addTarget:self action:@selector(_sliderTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
 
+        _valueChangeLabel = [[UILabel alloc] initWithFrame:CGRectMake(xMargin, 0, labelWidth, labelHeight)];
+        NSString* labelText = [NSString stringWithFormat:@"UISlider,continuous=YES,value=%f", slider.value];
+        _valueChangeLabel.text = labelText;
+
         [cell addSubview:_valueChangeLabel];
         [cell addSubview:slider];
     } else if (indexPath.row == 5) {
-        // left right and thumb images
-        _discontinuousSliderLabel = [[UILabel alloc] initWithFrame:CGRectMake(xMargin, 0, labelWidth, labelHeight)];
-        _discontinuousSliderLabel.text = @"UISlider, continuous=NO";
-
         UISlider* slider = [[UISlider alloc] initWithFrame:CGRectMake(xMargin, labelHeight, 300, elementHeight)];
         slider.maximumValue = 100;
         slider.minimumValue = 0;
         slider.value = 25;
+
+        _discontinuousSliderLabel = [[UILabel alloc] initWithFrame:CGRectMake(xMargin, 0, labelWidth, labelHeight)];
+        NSString* labelText = [NSString stringWithFormat:@"UISlider,continuous=NO,value=%f", slider.value];
+        _discontinuousSliderLabel.text = labelText;
 
         // add value changed event to slider
         [slider addTarget:self action:@selector(_sliderMoved:) forControlEvents:UIControlEventValueChanged];
@@ -134,15 +136,11 @@
 }
 
 - (void)_sliderValueChanged:(UISlider*)slider {
-    _valueChangeLabel.text = [NSString stringWithFormat:@"UISlider current value = %f", slider.value];
+    _valueChangeLabel.text = [NSString stringWithFormat:@"UISlider, continuous=YES,value= %f", slider.value];
 }
 
 - (void)_sliderMoved:(UISlider*)slider {
     _discontinuousSliderLabel.text = [NSString stringWithFormat:@"UISlider, continuous=NO,value= %f", slider.value];
-}
-
-- (void)_sliderTouchUpInside:(UISlider*)slider {
-    NSLog(@"UIControlEventTouchUpInside control event called, slider current value = %f", slider.value);
 }
 
 @end

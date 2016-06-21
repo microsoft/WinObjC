@@ -42,6 +42,9 @@
 
 - (void)_UISlider_initInternal {
     _xamlSlider = [WXCSlider make];
+
+    // BUG:7911911 - [XAMLCatalog] UISlider not rendering the right track image of XAML slider on ARM
+    _xamlSlider.requestedTheme = WXElementThemeLight;
     _xamlSlider.maximum = 1.0f;
     _xamlSlider.minimum = 0.0f;
     _xamlSlider.value = 0.0f;
