@@ -35,7 +35,6 @@
 
 static const wchar_t* TAG = L"NSDictionary";
 
-@class NSPropertyListReader;
 @class NSPropertyListSerialization;
 
 struct SortedKeysHelperCtx {
@@ -113,7 +112,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
 @implementation NSDictionary
 
-+ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSDictionary, NSDictionaryPrototype);
+BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTypeID);
 
 /**
  @Status Interoperable

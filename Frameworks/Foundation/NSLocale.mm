@@ -59,7 +59,7 @@ NSString* const NSCurrentLocaleDidChangeNotification = static_cast<NSString*>(kC
 /**
  @Status Interoperable
 */
-+ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSLocale, NSLocalePrototype);
+BASE_CLASS_REQUIRED_IMPLS(NSLocale, NSLocalePrototype, CFLocaleGetTypeID);
 
 /**
  @Status Interoperable

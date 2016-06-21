@@ -21,10 +21,13 @@
 #include "NSCFDate.h"
 #include <CoreFoundation/CFDate.h>
 
+@interface NSCFDate : NSDate
+@end
+
 #pragma region Factory Class
 @implementation NSDatePrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFDate)
 
 - (instancetype)initWithString:(NSString*)string {
     StrongId<NSDateFormatter> formatter;
@@ -47,9 +50,6 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 #pragma endregion
 
 #pragma region NSCF Bridged Class
-@interface NSCFDate : NSDate
-@end
-
 @implementation NSCFDate
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFDateRef, CFDateGetTypeID, NSDate, NSCFDate)

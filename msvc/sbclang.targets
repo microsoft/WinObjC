@@ -148,6 +148,19 @@
         <AdditionalOptions Condition="'$(ConfigurationType)' == 'Application'">$(AdditionalOptions) -D_WOC_APP</AdditionalOptions>
       </ClCompile>
     </ItemGroup>
+
+    <PropertyGroup Condition="'$(StarboardHasObjCSources)' == ''">
+      <StarboardHasObjCSources Condition="'@(ClangCompile->WithMetadataValue('CompileAs', 'CompileAsObjC'))' != ''">true</StarboardHasObjCSources>
+      <StarboardHasObjCSources Condition="'@(ClangCompile->WithMetadataValue('CompileAs', 'CompileAsObjCpp'))' != ''">true</StarboardHasObjCSources>
+      <StarboardHasObjCSources Condition="'@(ClangCompile->WithMetadataValue('Extension', '.m'))' != ''">true</StarboardHasObjCSources>
+      <StarboardHasObjCSources Condition="'@(ClangCompile->WithMetadataValue('Extension', '.mm'))' != ''">true</StarboardHasObjCSources>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(StarboardHasObjCSources)' == 'true'">
+      <ClCompile Include="$(MSBuildThisFileDirectory)\objcrt\objc_2stage_init.cpp">
+        <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      </ClCompile>
+    </ItemGroup>
   </Target>
 
   <Target

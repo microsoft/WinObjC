@@ -898,11 +898,11 @@ namespace ClangCompile
             Default,
             [Field(DisplayName = "Compile as C Code", Description = "Compile as C Code", Switch = "-x c")]
             CompileAsC,
-            [Field(DisplayName = "Compile as C++ Code", Description = "Compile as C++ Code", Switch = "-x c++ -std=c++11 -fdeprecated-macro")]
+            [Field(DisplayName = "Compile as C++ Code", Description = "Compile as C++ Code", Switch = "-x c++ -std=c++14 -fdeprecated-macro")]
             CompileAsCpp,
             [Field(DisplayName = "Compile as Objective C Code", Description = "Compile as Objective C Code", Switch = "-x objective-c")]
             CompileAsObjC,
-            [Field(DisplayName = "Compile as Objective C++ Code", Description = "Compile as Objective C++ Code", Switch = "-x objective-c++ -std=c++11 -fdeprecated-macro")]
+            [Field(DisplayName = "Compile as Objective C++ Code", Description = "Compile as Objective C++ Code", Switch = "-x objective-c++ -std=c++14 -fdeprecated-macro")]
             CompileAsObjCpp
         }
 

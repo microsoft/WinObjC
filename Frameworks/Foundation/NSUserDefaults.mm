@@ -20,14 +20,14 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "Foundation/NSString.h"
 #import "Foundation/NSMutableDictionary.h"
 #import "Foundation/NSNumber.h"
-#import "Foundation/NSProcessInfo.h"
 #import "Foundation/NSNotificationCenter.h"
 #import "Foundation/NSData.h"
 #import "Foundation/NSUserDefaults.h"
 #import "Foundation/NSThread.h"
-#import "NSPersistentDomain.h"
 #import "NSStringInternal.h"
 #import "LoggingNative.h"
+#import "ForFoundationOnly.h"
+#import <CoreFoundation/CFPreferences.h>
 
 static const wchar_t* TAG = L"NSUserDefaults";
 
@@ -41,44 +41,22 @@ FOUNDATION_EXPORT NSString* const NSTimeFormatString = @"NSTimeFormatString";
 FOUNDATION_EXPORT NSString* const NSDateFormatString = @"NSDateFormatString";
 FOUNDATION_EXPORT NSString* const NSAMPMDesignation = @"NSAMPMDesignation";
 FOUNDATION_EXPORT NSString* const NSTimeDateFormatString = @"NSTimeDateFormatString";
-
 FOUNDATION_EXPORT NSString* const NSShortWeekDayNameArray = @"NSShortWeekDayNameArray";
 FOUNDATION_EXPORT NSString* const NSShortMonthNameArray = @"NSShortMonthNameArray";
 
 FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUserDefaultsDidChangeNotification";
 
 @implementation NSUserDefaults {
-    NSMutableDictionary* _domains;
-    NSMutableArray* _searchList;
-    NSDictionary* _dictionaryRep;
-
-    BOOL _willSave;
+    StrongId<NSMutableDictionary> _registrationDict;
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)init {
-    _domains = [NSMutableDictionary new];
-    _searchList = [[NSMutableArray allocWithZone:nil] initWithCapacity:64];
+    [super init];
 
-    [_searchList addObject:NSArgumentDomain];
-    [_searchList addObject:[[NSProcessInfo processInfo] processName]];
-    [_searchList addObject:NSGlobalDomain];
-    [_searchList addObject:NSRegistrationDomain];
-    [_searchList addObject:@"Foundation"];
-
-    [[NSProcessInfo processInfo] environment];
-
-    //[self registerFoundationDefaults];
-    //[self registerArgumentDefaults];
-    //[self registerProcessNameDefaults];
-
-    [_domains setObject:[NSMutableDictionary dictionary] forKey:NSRegistrationDomain];
-
-    id domain = [NSPersistentDomain persistantDomainWithName:@"UserDefaults"];
-
-    [_domains setObject:domain forKey:[[NSProcessInfo processInfo] processName]];
+    _registrationDict = [NSMutableDictionary dictionary];
 
     [self setObject:[NSArray arrayWithObject:@"en"] forKey:@"AppleLanguages"];
     [self setObject:@"en_US" forKey:@"AppleLocale"];
@@ -99,110 +77,62 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
     return standard;
 }
 
-- (NSMutableDictionary*)_buildDictionaryRep {
-    NSMutableDictionary* result = [NSMutableDictionary dictionary];
-    NSInteger i, count = [_searchList count];
-
-    for (i = 0; i < count; i++) {
-        NSPersistentDomain* domain = [_domains objectForKey:[_searchList objectAtIndex:i]];
-        NSEnumerator* state = [domain keyEnumerator];
-        id key;
-
-        while ((key = [state nextObject]) != nil) {
-            id value = [domain objectForKey:key];
-
-            if (value != nil)
-                [result setObject:value forKey:key];
-        }
-    }
-
-    return result;
-}
-
 /**
  @Status Interoperable
 */
 - (id)dictionaryRepresentation {
-    if (_dictionaryRep == nil)
-        _dictionaryRep = [[self _buildDictionaryRep] retain];
-
-    return _dictionaryRep;
+    _CFApplicationPreferences* preferences = _CFStandardApplicationPreferences(kCFPreferencesCurrentApplication);
+    CFDictionaryRef dict = _CFApplicationPreferencesCopyRepresentation(preferences);
+    return [(NSDictionary*)dict autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (void)registerDefaults:(id)values {
-    [[_domains objectForKey:NSRegistrationDomain] addEntriesFromDictionary:values];
+- (void)registerDefaults:(NSDictionary*)dictionary {
+    [_registrationDict addEntriesFromDictionary:dictionary];
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 - (NSMutableDictionary*)persistentDomainForName:(id)name {
-    NSMutableDictionary* result = [NSMutableDictionary dictionary];
-    NSPersistentDomain* domain = [NSPersistentDomain persistantDomainWithName:name];
-    NSArray* allKeys = [domain allKeys];
-    NSInteger i, count = [allKeys count];
-
-    for (i = 0; i < count; i++) {
-        NSString* key = [allKeys objectAtIndex:i];
-
-        [result setObject:[domain objectForKey:key] forKey:key];
-    }
-
-    return result;
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 - (void)removePersistentDomainForName:(id)name {
+    UNIMPLEMENTED();
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 - (void)setPersistentDomain:(id)domain forName:(NSString*)name {
-    TraceVerbose(TAG, L"Setting domain for %hs", [name UTF8String]);
-    [_domains setObject:domain forKey:name];
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)synchronize {
-    /*
-    if ( ![NSThread isMainThread] ) {
-    return FALSE;
-    }
-    */
-
-    _willSave = FALSE;
-    [[self _persistentDomain] synchronize];
-    return TRUE;
-}
-
-- (NSPersistentDomain*)_persistentDomain {
-    return [_domains objectForKey:[[NSProcessInfo processInfo] processName]];
+    return CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication);
 }
 
 /**
  @Status Interoperable
 */
 - (id)objectForKey:(NSString*)defaultName {
-    NSInteger i, count = [_searchList count];
+    id obj = [(id)CFPreferencesCopyAppValue(static_cast<CFStringRef>(defaultName), kCFPreferencesCurrentApplication) autorelease];
 
-    for (i = 0; i < count; i++) {
-        id domain = [_domains objectForKey:[_searchList objectAtIndex:i]];
-        id object = [domain objectForKey:defaultName];
-
-        if (object != nil) {
-            return object;
-        }
+    if (!obj) {
+        obj = [_registrationDict objectForKey:defaultName];
     }
 
-    return nil;
+    return obj;
 }
 
 /**
@@ -247,11 +177,13 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
 - (BOOL)boolForKey:(NSString*)defaultName {
     id object = [self objectForKey:defaultName];
 
-    if ([object isKindOfClass:[NSNumber class]])
+    if ([object isKindOfClass:[NSNumber class]]) {
         return [(NSNumber*)object boolValue];
+    }
 
-    if ([object isKindOfClass:[NSString class]])
+    if ([object isKindOfClass:[NSString class]]) {
         return [(NSString*)object boolValue];
+    }
 
     return NO;
 }
@@ -300,63 +232,6 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
                                                      ([number isKindOfClass:[NSNumber class]] ? [number doubleValue] : 0.0);
 }
 
-static id deepCopyValue(id obj) {
-    if ([obj isKindOfClass:[NSArray class]]) {
-        int count = [obj count];
-        int i = 0;
-        id* objs = (id*)IwMalloc(count * sizeof(id));
-        for (id curObj in obj) {
-            objs[i] = deepCopyValue(curObj);
-            i++;
-        }
-
-        id ret;
-
-        if ([obj isKindOfClass:[NSMutableArray class]]) {
-            ret = [[NSMutableArray alloc] initWithObjects:objs count:count];
-        } else {
-            ret = [[NSArray alloc] initWithObjects:objs count:count];
-        }
-
-        for (i = 0; i < count; i++) {
-            [objs[i] release];
-        }
-
-        IwFree(objs);
-
-        return ret;
-    } else if ([obj isKindOfClass:[NSDictionary class]]) {
-        int count = [obj count];
-        int i = 0;
-        id* objs = (id*)IwMalloc(count * sizeof(id));
-        id* keys = (id*)IwMalloc(count * sizeof(id));
-
-        for (id curObj in obj) {
-            keys[i] = curObj;
-            objs[i] = deepCopyValue([obj objectForKey:curObj]);
-            i++;
-        }
-
-        id ret;
-        if ([obj isKindOfClass:[NSMutableDictionary class]]) {
-            ret = [[NSMutableDictionary alloc] initWithObjects:objs forKeys:keys count:count];
-        } else {
-            ret = [[NSDictionary alloc] initWithObjects:objs forKeys:keys count:count];
-        }
-
-        for (i = 0; i < count; i++) {
-            [objs[i] release];
-        }
-
-        IwFree(objs);
-        IwFree(keys);
-
-        return ret;
-    }
-
-    return [obj copy];
-}
-
 /**
  @Status Interoperable
 */
@@ -365,29 +240,11 @@ static id deepCopyValue(id obj) {
         return;
     }
 
-    value = deepCopyValue(value);
+    CFTypeRef valueCopy = CFAutorelease(CFPropertyListCreateDeepCopy(kCFAllocatorDefault, value, kCFPropertyListMutableContainersAndLeaves));
 
-    [(NSMutableDictionary*)[self _persistentDomain] setObject:value forKey:key];
-    [value release];
-    [_dictionaryRep autorelease];
-    _dictionaryRep = nil;
+    CFPreferencesSetAppValue(static_cast<CFStringRef>(key), valueCopy, kCFPreferencesCurrentApplication);
 
     [[NSNotificationCenter defaultCenter] postNotificationName:NSUserDefaultsDidChangeNotification object:self];
-
-    if (!_willSave) {
-        _willSave = TRUE;
-        if (![NSThread isMainThread]) {
-            TraceWarning(TAG, L"Warning: NSUserDefaults accessed from non-main thread");
-            [self performSelectorOnMainThread:@selector(_scheduleSync) withObject:nil waitUntilDone:FALSE];
-        } else {
-            [self performSelector:@selector(synchronize) withObject:nil afterDelay:1.0];
-        }
-    }
-}
-
-- (id)_scheduleSync {
-    [self performSelector:@selector(synchronize) withObject:nil afterDelay:1.0];
-    return self;
 }
 
 /**
@@ -481,7 +338,7 @@ static id deepCopyValue(id obj) {
  @Status Interoperable
 */
 - (void)removeObjectForKey:(NSString*)key {
-    [(NSMutableDictionary*)[self _persistentDomain] removeObjectForKey:key];
+    CFPreferencesSetAppValue((CFStringRef)key, NULL, kCFPreferencesCurrentApplication);
 
     [[NSNotificationCenter defaultCenter] postNotificationName:NSUserDefaultsDidChangeNotification object:self];
 }
@@ -493,13 +350,16 @@ static id deepCopyValue(id obj) {
     id array = [self objectForKey:key];
     NSInteger count;
 
-    if (![array isKindOfClass:[NSArray class]])
+    if (![array isKindOfClass:[NSArray class]]) {
         return nil;
+    }
 
     count = [array count];
-    while (--count >= 0)
-        if (![[array objectAtIndex:count] isKindOfClass:[NSString class]])
+    while (--count >= 0) {
+        if (![[array objectAtIndex:count] isKindOfClass:[NSString class]]) {
             return nil;
+        }
+    }
 
     return array;
 }

@@ -66,10 +66,10 @@ FOUNDATION_EXPORT_CLASS
 - (void)setURL:(NSURL*)url forKey:(NSString*)defaultName;
 - (void)removeObjectForKey:(NSString*)defaultName;
 - (BOOL)synchronize;
-- (NSDictionary*)persistentDomainForName:(NSString*)domainName;
+- (NSDictionary*)persistentDomainForName:(NSString*)domainName STUB_METHOD;
 - (NSArray*)persistentDomainNames STUB_METHOD;
-- (void)removePersistentDomainForName:(NSString*)domainName;
-- (void)setPersistentDomain:(NSDictionary*)domain forName:(NSString*)domainName;
+- (void)removePersistentDomainForName:(NSString*)domainName STUB_METHOD;
+- (void)setPersistentDomain:(NSDictionary*)domain forName:(NSString*)domainName STUB_METHOD;
 - (BOOL)objectIsForcedForKey:(NSString*)key STUB_METHOD;
 - (BOOL)objectIsForcedForKey:(NSString*)key inDomain:(NSString*)domain STUB_METHOD;
 - (NSDictionary*)dictionaryRepresentation;

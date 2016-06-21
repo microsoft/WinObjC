@@ -2,22 +2,22 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{54301553-f778-4fb5-9fcb-edb2a27656db}</UniqueIdentifier>
+      <UniqueIdentifier>{4b5d9819-1540-461e-ae2e-80a6d44f17c7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{dad4880c-6a54-48ec-84eb-87e08bf9708b}</UniqueIdentifier>
+      <UniqueIdentifier>{9270947b-45a3-42f8-824e-53499305baf2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Images">
-      <UniqueIdentifier>{3B17B161-1BEE-4D63-AC8B-5B52F35FD576}</UniqueIdentifier>
+      <UniqueIdentifier>{5E0CBBC2-C7A9-444C-992A-FE7C0896A3B7}</UniqueIdentifier>
     </Filter>
     <Filter Include="WOCCatalog">
-      <UniqueIdentifier>{4D7F5631-530F-4896-85F5-97190E9C7BBF}</UniqueIdentifier>
+      <UniqueIdentifier>{3ACC0DED-9879-4446-8DA0-43059404C0F9}</UniqueIdentifier>
     </Filter>
     <Filter Include="WOCCatalog\Supporting Files">
-      <UniqueIdentifier>{336C48A8-4532-495C-93FE-D62005D7E958}</UniqueIdentifier>
+      <UniqueIdentifier>{160BAD43-3BD5-43E8-8762-5828CF78D7B5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{28A48E36-B15B-4C9B-8F1E-FF7CAEC11DCD}</UniqueIdentifier>
+      <UniqueIdentifier>{AC4EA281-C68B-4A1D-9BE5-C6F2859C7F8A}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,9 +48,6 @@
     <ClangCompile Include="..\..\WOCCatalog\XamlViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\WindowLevelControlViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\ViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
@@ -64,9 +61,6 @@
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\WindowViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\BezierViewController.m">
@@ -156,10 +150,10 @@
     <ClangCompile Include="..\..\WOCCatalog\ToolbarsViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\AccelerateViewController.m">
+    <ClangCompile Include="..\..\WOCCatalog\UserDefaultsViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\BlankWindowViewController.m">
+    <ClangCompile Include="..\..\WOCCatalog\AccelerateViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\TextFieldsViewController.m">

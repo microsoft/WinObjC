@@ -42,7 +42,6 @@
 #import "CoreMotionViewController.h"
 #import "ShadowViewController.h"
 #import "UIPasteboardViewController.h"
-#import "WindowViewController.h"
 
 #ifdef WINOBJC
 #import "XamlViewController.h"
@@ -144,9 +143,6 @@
     UIViewController* controller = [board instantiateInitialViewController];
 
     [self addMenuItemViewController:controller andTitle:@"XIB Test"];
-    
-    // Window
-    [self addMenuItemViewController:[[WindowViewController alloc] init] andTitle:@"Window"];
 }
 
 - (void)didReceiveMemoryWarning {

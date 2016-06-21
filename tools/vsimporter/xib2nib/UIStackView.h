@@ -14,8 +14,18 @@
 //
 //******************************************************************************
 
-#import <UIKit/UIKit.h>
+#pragma once
 
-@interface BlankWindowViewController : UIViewController {
-}
-@end
+#include "UIView.h"
+
+class UIStackView :
+    public UIView
+{
+public:
+    UIStackView();
+
+    virtual void InitFromXIB(XIBObject *obj);
+    virtual void InitFromStory(XIBObject *obj);
+    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+};
+

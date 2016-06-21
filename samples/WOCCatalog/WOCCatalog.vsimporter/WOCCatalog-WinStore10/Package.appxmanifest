@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="46c77b35-bed0-4ae7-a5f4-a28b5824494b"
+    Name="a5434b32-aabd-4c51-bf85-89de616f861a"
     Publisher="islandwood"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="46c77b35-bed0-4ae7-a5f4-a28b5824494b" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="a5434b32-aabd-4c51-bf85-89de616f861a" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>WOCCatalog</DisplayName>
-    <PublisherDisplayName>ziweihe</PublisherDisplayName>
+    <PublisherDisplayName>oliversa</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

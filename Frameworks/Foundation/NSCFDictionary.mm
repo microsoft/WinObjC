@@ -42,10 +42,13 @@ static CFDictionaryValueCallBacks _NSCFDictionaryValueCallBacks = {
     _NSCFCallbackEquals,
 };
 
+@interface NSCFDictionary : NSMutableDictionary
+@end
+
 #pragma region NSDictionaryPrototype
 @implementation NSDictionaryPrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFDictionary)
 
 - (_Nullable instancetype)init {
     return [self initWithObjects:nil forKeys:nil count:0];
@@ -68,6 +71,8 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 #pragma region NSMutableDictionaryPrototype
 @implementation NSMutableDictionaryPrototype
 
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFDictionary)
+
 - (_Nullable instancetype)init {
     return [self initWithCapacity:0];
 }
@@ -89,9 +94,6 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 #pragma endregion
 
 #pragma region NSCF Bridged Class
-@interface NSCFDictionary : NSMutableDictionary
-@end
-
 @implementation NSCFDictionary
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFDictionaryRef, CFDictionaryGetTypeID, NSDictionary, NSCFDictionary)

@@ -322,3 +322,14 @@ TEST(NSArray, BinarySearchInsertionIndex) {
     auto indexInMiddle3 = objectIndexInArray(arrayOfTwo, 1, 0, 2, NSBinarySearchingInsertionIndex);
     ASSERT_EQ_MSG(indexInMiddle3, 1, @"If no match found item should be inserted before least greater object");
 }
+
+TEST(NSArray, MutateDuringEnumeration) {
+    __block NSMutableArray* array = [NSMutableArray arrayWithObjects:@"A", @"B", @"C", nil];
+    void (^enumerate)() = ^{
+        for(id object in array) {
+            [array addObject:@"<sound effects reminiscent of explosions>"];
+        }
+    };
+
+    ASSERT_ANY_THROW(enumerate());
+}

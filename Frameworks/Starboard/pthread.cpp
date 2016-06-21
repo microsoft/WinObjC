@@ -438,8 +438,12 @@ extern "C" int pthread_mutex_unlock(pthread_mutex_t* mutex) {
 @Notes Ignores Error codes, ignores error cases
 */
 extern "C" int pthread_mutex_destroy(pthread_mutex_t* mutex) {
-    DeleteCriticalSection((CRITICAL_SECTION*)*mutex);
-    delete ((CRITICAL_SECTION*)*mutex);
+    if (mutex != nullptr && *mutex != PTHREAD_MUTEX_INITIALIZER) {
+        DeleteCriticalSection((CRITICAL_SECTION*)*mutex);
+        delete ((CRITICAL_SECTION*)*mutex);
+        *mutex = PTHREAD_MUTEX_INITIALIZER;
+    }
+
     return 0;
 }
 

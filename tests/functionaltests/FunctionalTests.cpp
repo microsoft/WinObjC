@@ -231,6 +231,8 @@ public:
 //
 extern void NSUserDefaultsBasic();
 extern void NSUserDefaultsKVCArray();
+extern void NSUserDefaultsFlush();
+extern void NSUserDefaultsPersist();
 
 class NSUserDefaults {
 public:
@@ -250,4 +252,30 @@ public:
     TEST_METHOD(NSUserDefaults_KVCArray) {
         NSUserDefaultsKVCArray();
     }
+
+    TEST_METHOD(NSUSerDefaults_Flush) {
+        NSUserDefaultsFlush();
+    }
+
 }; /* class NSUserDefaults */
+
+//
+// NSBundle Tests
+//
+extern void NSBundleMSAppxURL();
+
+class NSBundle {
+public:
+    BEGIN_TEST_CLASS(NSBundle)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(NSURLClassSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationMainTest));
+    }
+
+    TEST_METHOD(NSBundle_MSAppxURL) {
+        NSBundleMSAppxURL();
+    }
+}; /* class NSBundle */

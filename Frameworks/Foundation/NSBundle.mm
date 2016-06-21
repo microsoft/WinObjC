@@ -599,10 +599,9 @@ static NSString* _pathFromNSURL(NSURL* url) {
     NSString* path = [url path];
 
     if (scheme == nil || [scheme isEqualToString:NSURLFileScheme]) {
-        NSString* appxRoot = [[[self bundlePath] stringByDeletingLastPathComponent] stringByAppendingString:_NSGetSlashStr()];
-        NSRange range = [path rangeOfString:appxRoot];
+        NSRange range = [path rangeOfString:[self bundlePath]];
 
-        // If a URL was returned from URLForResource, it ought to have appxRoot in it
+        // If a URL was returned from URLForResource, it ought to have [self bundlePath] in it
         if (range.location != NSNotFound) {
             path = [path substringFromIndex:range.location + range.length];
         }

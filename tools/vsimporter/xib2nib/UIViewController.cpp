@@ -136,34 +136,39 @@ void UIViewController::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) 
         } else {
             ScanForSegues(segueTemplates, this);
 
-            XIBDictionary* externalObjects = new XIBDictionary();
+            // This would cause a crash if we're not really a storyboard (i.e. input file has extension .storyboard)
+            // Currently we set both XIB3 and Storyboard with _isStory == true when calling XIBObject::ScanStoryObjects()
+            // which may trickle down into this control. IsStoryBoardConversion() returns true if we're really a .storyboard input file
+            if (IsStoryboardConversion()) {
+                XIBDictionary* externalObjects = new XIBDictionary();
 
-            char szNibName[255];
+                char szNibName[255];
+                sprintf(szNibName, "%s-view-%s", _id, _view->_id);
+                AddString(writer, "UINibName", szNibName);
 
-            sprintf(szNibName, "%s-view-%s", _id, _view->_id);
-            AddString(writer, "UINibName", szNibName);
+                char szOutputName[255];
+                sprintf(szOutputName, "%s.nib", szNibName);
+                printf("Writing %s\n", GetOutputFilename(szOutputName).c_str());
+                FILE* fpOut = fopen(GetOutputFilename(szOutputName).c_str(), "wb");
 
-            char szOutputName[255];
-            sprintf(szOutputName, "%s.nib", szNibName);
-            printf("Writing %s\n", GetOutputFilename(szOutputName).c_str());
-            FILE* fpOut = fopen(GetOutputFilename(szOutputName).c_str(), "wb");
+                NIBWriter* viewWriter = new NIBWriter(fpOut, externalObjects, _view);
+                viewWriter->ExportObject(_view);
 
-            NIBWriter* viewWriter = new NIBWriter(fpOut, externalObjects, _view);
-            viewWriter->ExportObject(_view);
+                XIBObject* ownerProxy = viewWriter->AddProxy("IBFilesOwner");
+                viewWriter->_topObjects->AddMember(NULL, ownerProxy);
+                XIBObject* firstResponderProxy = viewWriter->AddProxy("IBFirstResponder");
+                viewWriter->_topObjects->AddMember(NULL, firstResponderProxy);
 
-            XIBObject* ownerProxy = viewWriter->AddProxy("IBFilesOwner");
-            viewWriter->_topObjects->AddMember(NULL, ownerProxy);
-            XIBObject* firstResponderProxy = viewWriter->AddProxy("IBFirstResponder");
-            viewWriter->_topObjects->AddMember(NULL, firstResponderProxy);
+                //  Add view connection
+                viewWriter->AddOutletConnection(ownerProxy, _view, "view");
 
-            //  Add view connection
-            viewWriter->AddOutletConnection(ownerProxy, _view, "view");
+                viewWriter->WriteObjects();
+                fclose(fpOut);
 
-            viewWriter->WriteObjects();
-            fclose(fpOut);
-
-            if (externalObjects->_members.size() > 1)
-                AddOutputMember(writer, "UIExternalObjectsTableForViewLoading", externalObjects);
+                if (externalObjects->_members.size() > 1) {
+                    AddOutputMember(writer, "UIExternalObjectsTableForViewLoading", externalObjects);
+                }
+            }
         }
     }
     if (_parentViewController) {

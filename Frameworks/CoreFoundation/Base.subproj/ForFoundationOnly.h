@@ -158,6 +158,7 @@ CF_EXPORT void _CFApplicationPreferencesSet(_CFApplicationPreferences *self, CFS
 CF_EXPORT void _CFApplicationPreferencesRemove(_CFApplicationPreferences *self, CFStringRef defaultName);
 CF_EXPORT Boolean _CFApplicationPreferencesSynchronize(_CFApplicationPreferences *self);
 CF_EXPORT void _CFApplicationPreferencesUpdate(_CFApplicationPreferences *self); // same as updateDictRep
+CF_EXPORT CFDictionaryRef _CFApplicationPreferencesCopyRepresentation(_CFApplicationPreferences *self); // WINOBJC
 CF_EXPORT CFDictionaryRef _CFApplicationPreferencesCopyRepresentation3(_CFApplicationPreferences *self, CFDictionaryRef hint, CFDictionaryRef insertion, CFPreferencesDomainRef afterDomain);
 CF_EXPORT CFDictionaryRef _CFApplicationPreferencesCopyRepresentationWithHint(_CFApplicationPreferences *self, CFDictionaryRef hint); // same as dictRep
 CF_EXPORT void _CFApplicationPreferencesSetStandardSearchList(_CFApplicationPreferences *appPreferences);
@@ -170,7 +171,6 @@ CF_EXPORT Boolean _CFApplicationPreferencesContainsDomain(_CFApplicationPreferen
 CF_EXPORT void _CFApplicationPreferencesRemoveDomain(_CFApplicationPreferences *self, CFPreferencesDomainRef domain);
 
 CF_EXPORT CFTypeRef  _CFApplicationPreferencesSearchDownToDomain(_CFApplicationPreferences *self, CFPreferencesDomainRef stopper, CFStringRef key);
-
 _CF_EXPORT_SCOPE_END
 
 // ---- CFString material ----------------------------------------
@@ -477,6 +477,7 @@ CF_EXPORT int _NS_rmdir(const char *name);
 CF_EXPORT int _NS_chmod(const char *name, int mode);
 CF_EXPORT int _NS_unlink(const char *name);
 CF_EXPORT char *_NS_getcwd(char *dstbuf, size_t size);     // Warning: this doesn't support dstbuf as null even though 'getcwd' does
+CF_EXPORT int _NS_chdir(const char *name);
 CF_EXPORT char *_NS_getenv(const char *name);
 CF_EXPORT int _NS_rename(const char *oldName, const char *newName);
 CF_EXPORT int _NS_open(const char *name, int oflag, int pmode);

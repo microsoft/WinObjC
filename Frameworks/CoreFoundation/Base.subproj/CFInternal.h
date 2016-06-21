@@ -145,6 +145,8 @@ CF_EXPORT Boolean _CFGetCurrentDirectory(char *path, int maxlen);
 
 CF_EXPORT CFArrayRef _CFGetWindowsBinaryDirectories(void);
 
+CF_EXPORT void __CFSocketInitializeWinSock(void); // WINOBJC
+
 CF_EXPORT CFStringRef _CFStringCreateHostName(void);
 
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI

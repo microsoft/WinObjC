@@ -53,7 +53,7 @@ CFDateFormatterRef _getLocaleDescriptionFormatter(NSLocale* locale) {
 /**
  @Status Interoperable
 */
-+ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSDate, NSDatePrototype);
+BASE_CLASS_REQUIRED_IMPLS(NSDate, NSDatePrototype, CFDateGetTypeID);
 
 /**
  @Status Interoperable

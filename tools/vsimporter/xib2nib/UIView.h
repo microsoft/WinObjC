@@ -64,14 +64,13 @@ public:
     bool     _clipsToBounds;
     bool     _userInteractionDisabled;
     bool     _clearsContextBeforeDrawing;
-	int		 _tag;
+    int      _tag;
 public:
     UIView();
 
     virtual void InitFromXIB(XIBObject *obj);
     virtual void InitFromStory(XIBObject *obj);
     virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
-    void SetSize(float width, float height);
 
     UIRect getFrame();
     void setFrame(UIRect frame);

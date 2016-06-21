@@ -102,6 +102,7 @@ typedef NSUInteger NSSearchPathDirectory;
 FOUNDATION_EXPORT NSArray* NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory d, NSSearchPathDomainMask mask, BOOL expand);
 
 FOUNDATION_EXPORT NSString* NSHomeDirectory(void);
+FOUNDATION_EXPORT NSString* NSHomeDirectoryForUser(NSString* userName);
 
 FOUNDATION_EXPORT NSString* NSTemporaryDirectory(void);
 FOUNDATION_EXPORT void NSSetTemporaryDirectory(NSString* path);

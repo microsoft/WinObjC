@@ -27,12 +27,15 @@ LIBRARY CoreFoundation
         ; WINOBJC: Expose a few private CF Helpers
         _CFAppendPathComponent2
         _CFAppendPathExtension2
+        _CFApplicationPreferencesCopyRepresentation
         _CFRuntimeBridgeTypeToClass
         _CFStartOfLastPathComponent2
         _CFStartOfPathExtension2
         _CFGetSlash
         _CFGetSlashStr
         _CFProcessPath
+        _CFURLCreateCurrentDirectoryURL
+        _NS_chdir
 
         ; Base Utilities.mm
         kCFCoreFoundationVersionNumber DATA
@@ -934,17 +937,15 @@ LIBRARY CoreFoundation
         ; __CFConstantStringClassReference ; WINOBJC: Use above _NSCFString export instead.
 
         ; CFStringTokenizer.mm
-        ; HACKHACK: Reference Platform doesn't have an impl of this class.
-        ;
-        ; CFStringTokenizerCreate
-        ; CFStringTokenizerSetString
-        ; CFStringTokenizerAdvanceToNextToken
-        ; CFStringTokenizerGoToTokenAtIndex
+        CFStringTokenizerCreate
+        CFStringTokenizerSetString
+        CFStringTokenizerAdvanceToNextToken
+        CFStringTokenizerGoToTokenAtIndex
         ; CFStringTokenizerCopyCurrentTokenAttribute
-        ; CFStringTokenizerGetCurrentTokenRange
+        CFStringTokenizerGetCurrentTokenRange
         ; CFStringTokenizerGetCurrentSubTokens
         ; CFStringTokenizerCopyBestStringLanguage
-        ; CFStringTokenizerGetTypeID
+        CFStringTokenizerGetTypeID
 
         ; CFTimeZone.mm
         kCFTimeZoneSystemTimeZoneDidChangeNotification DATA
@@ -1201,6 +1202,7 @@ LIBRARY CoreFoundation
         CFURLCreatePropertyFromResource
         CFURLDestroyResource
         CFURLWriteDataAndPropertiesToResource
+        CFCopyHomeDirectoryURL
 
         ; Preferences Utilities.mm
         kCFPreferencesAnyApplication DATA
