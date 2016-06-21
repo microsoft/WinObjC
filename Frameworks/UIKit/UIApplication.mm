@@ -216,9 +216,12 @@ static idretaintype(WSDDisplayRequest) _screenActive;
 
     // Subscribe to back button events
     // TODO: This will be revisited when we sort out our WinRT navigation integration model
+    // BUG 7945962:- UIKit unit test "UIApplicationOpenURLSuccess" breaks when UIApplication tries to register for back button press
+    /*
     [[WUCSystemNavigationManager getForCurrentView] addBackRequestedEvent:^(RTObject* sender, WUCBackRequestedEventArgs* e) {
         e.handled = [UIApplication _doBackAction];
     }];
+    */
 
     return sharedApplication;
 }
