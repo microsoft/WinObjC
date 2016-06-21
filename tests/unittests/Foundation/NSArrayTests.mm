@@ -274,13 +274,30 @@ static int objectIndexInArray(NSArray* array, int value, int startingFrom, int l
 TEST(NSArray, BinarySearchInsertionIndex) {
     NSArray* array = @[ @0, @1, @2, @2, @3, @4, @4, @6, @7, @7, @7, @8, @9, @9 ];
 
-    auto indexOfFirstNine = objectIndexInArray(array, 9, 7, 6, NSBinarySearchingFirstEqual);
+    ASSERT_TRUE_MSG(objectIndexInArray(array, 11, 0, array.count, 0) == NSNotFound,
+                    @"NSArray return NSNotFound if object is not found.");
+
+    ASSERT_TRUE_MSG(objectIndexInArray(array, 11, 0, array.count, NSBinarySearchingFirstEqual) == NSNotFound,
+                    @"NSArray return NSNotFound if object is not found.");
+
+    ASSERT_TRUE_MSG(objectIndexInArray(array, 11, 0, array.count, NSBinarySearchingLastEqual) == NSNotFound,
+                    @"NSArray return NSNotFound if object is not found.");
+
+    auto notFoundInRange = objectIndexInArray(array, 7, 0, 5);
+    ASSERT_TRUE_MSG(notFoundInRange == NSNotFound,
+                    @"NSArray return NSNotFound if object is not found.");
+
+    auto indexOfAnySeven = objectIndexInArray(array, 7, 0, array.count);
+    ASSERT_TRUE_MSG((indexOfAnySeven >= 8) && (indexOfAnySeven <= 10),
+                    @"If no options provided NSArray returns an arbitrary matching object's index.");
+
+    auto indexOfFirstNine = objectIndexInArray(array, 9, 7, array.count - 7, NSBinarySearchingFirstEqual);
     ASSERT_TRUE_MSG(indexOfFirstNine == 12, @"If NSBinarySearchingFirstEqual is set NSArray returns the lowest index of equal objects.");
 
     auto indexOfLastTwo = objectIndexInArray(array, 2, 1, 7, NSBinarySearchingLastEqual);
     ASSERT_TRUE_MSG(indexOfLastTwo == 3, @"If NSBinarySearchingLastEqual is set NSArray returns the highest index of equal objects.");
 
-    auto anyIndexToInsertNine = objectIndexInArray(array, 9, 0, 13, NSBinarySearchingInsertionIndex);
+    auto anyIndexToInsertNine = objectIndexInArray(array, 9, 0, array.count, NSBinarySearchingInsertionIndex);
     ASSERT_TRUE_MSG(
         (anyIndexToInsertNine >= 12) && (anyIndexToInsertNine <= 14),
         @"If NSBinarySearchingInsertionIndex is specified and no other options provided NSArray returns any equal or one larger "
@@ -309,7 +326,7 @@ TEST(NSArray, BinarySearchInsertionIndex) {
                     @"specified NSArray returns the index of the least greater object...");
 
     auto rangeStart = 0;
-    auto rangeLength = 13;
+    auto rangeLength = array.count;
     auto endOfArray = objectIndexInArray(array, 10, rangeStart, rangeLength, NSBinarySearchingInsertionIndex | NSBinarySearchingLastEqual);
     ASSERT_TRUE_MSG(endOfArray == (rangeStart + rangeLength),
                     @"...or the index at the end of the array if the object is larger than all other elements.");
