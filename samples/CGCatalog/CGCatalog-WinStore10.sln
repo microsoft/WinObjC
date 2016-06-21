@@ -1,0 +1,43 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CGCatalog", "CGCatalog", "{75A57568-C6E9-4942-BE20-D512FA0E6C80}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CGCatalog-Headers", "CGCatalog.vsimporter\CGCatalog-Headers-WinStore10\CGCatalog-Headers.vcxitems", "{D572B7A5-D04F-47D5-AB85-6CA3D7FFC143}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CGCatalog", "CGCatalog.vsimporter\CGCatalog-WinStore10\CGCatalog.vcxproj", "{173E0C8B-B274-43B0-93AF-CFAA93782000}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		CGCatalog.vsimporter\CGCatalog-Headers-WinStore10\CGCatalog-Headers.vcxitems*{D572B7A5-D04F-47D5-AB85-6CA3D7FFC143}*SharedItemsImports = 9
+		CGCatalog.vsimporter\CGCatalog-Headers-WinStore10\CGCatalog-Headers.vcxitems*{173E0C8B-B274-43B0-93AF-CFAA93782000}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|Win32 = Debug|Win32
+		Release|ARM = Release|ARM
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{173E0C8B-B274-43B0-93AF-CFAA93782000}.Debug|ARM.ActiveCfg = Debug|ARM
+		{173E0C8B-B274-43B0-93AF-CFAA93782000}.Debug|ARM.Build.0 = Debug|ARM
+		{173E0C8B-B274-43B0-93AF-CFAA93782000}.Debug|ARM.Deploy.0 = Debug|ARM
+		{173E0C8B-B274-43B0-93AF-CFAA93782000}.Debug|Win32.ActiveCfg = Debug|Win32
+		{173E0C8B-B274-43B0-93AF-CFAA93782000}.Debug|Win32.Build.0 = Debug|Win32
+		{173E0C8B-B274-43B0-93AF-CFAA93782000}.Debug|Win32.Deploy.0 = Debug|Win32
+		{173E0C8B-B274-43B0-93AF-CFAA93782000}.Release|ARM.ActiveCfg = Release|ARM
+		{173E0C8B-B274-43B0-93AF-CFAA93782000}.Release|ARM.Build.0 = Release|ARM
+		{173E0C8B-B274-43B0-93AF-CFAA93782000}.Release|ARM.Deploy.0 = Release|ARM
+		{173E0C8B-B274-43B0-93AF-CFAA93782000}.Release|Win32.ActiveCfg = Release|Win32
+		{173E0C8B-B274-43B0-93AF-CFAA93782000}.Release|Win32.Build.0 = Release|Win32
+		{173E0C8B-B274-43B0-93AF-CFAA93782000}.Release|Win32.Deploy.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D572B7A5-D04F-47D5-AB85-6CA3D7FFC143} = {75A57568-C6E9-4942-BE20-D512FA0E6C80}
+		{173E0C8B-B274-43B0-93AF-CFAA93782000} = {75A57568-C6E9-4942-BE20-D512FA0E6C80}
+	EndGlobalSection
+EndGlobal
