@@ -44,7 +44,7 @@ FOUNDATION_EXPORT_CLASS
 - (instancetype)initWithObjects:(ObjectType)firstObj, ...;
 - (instancetype)initWithObjects:(const ObjectType _Nonnull[])objects count:(NSUInteger)cnt;
 - (instancetype)initWithSet:(NSSet<ObjectType>*)set;
-- (instancetype)initWithSet:(NSSet<ObjectType>*)set copyItems:(BOOL)flag STUB_METHOD;
+- (instancetype)initWithSet:(NSSet<ObjectType>*)set copyItems:(BOOL)flag;
 @property (readonly) NSUInteger count;
 @property (readonly, copy) NSArray<ObjectType>* allObjects;
 - (ObjectType)anyObject;
