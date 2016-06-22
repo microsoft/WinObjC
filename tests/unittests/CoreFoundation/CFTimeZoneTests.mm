@@ -55,55 +55,57 @@ static void assertCFTimeZoneProperties(CFTimeZoneRef tz, NSDictionary* expectedP
 }
 
 TEST(CFTimeZone, Create) {
+    // WinObjC draws on a separate database
     NSDictionary* expected = @{
-        // @"CFTimeZoneCopyAbbreviation" : @"GMT-5",
+#ifdef WINOBJC
+        @"CFTimeZoneCopyAbbreviation" : @"EST",
+#else
+        @"CFTimeZoneCopyAbbreviation" : @"GMT-5",
+#endif
         @"CFTimeZoneCopyAbbreviation" : @"EST",
         @"CFTimeZoneGetName" : @"EST",
         @"CFTimeZoneCopyLocalizedName Standard" : @"GMT-05:00",
-        // @"CFTimeZoneCopyLocalizedName ShortStandard" : @"GMT-5",
-        @"CFTimeZoneCopyLocalizedName ShortStandard" : @"GMT-05:00",
+        @"CFTimeZoneCopyLocalizedName ShortStandard" : @"GMT-5",
         @"CFTimeZoneCopyLocalizedName DaylightSaving" : @"GMT-05:00",
-        // @"CFTimeZoneCopyLocalizedName ShortDaylightSaving" : @"GMT-5",
-        @"CFTimeZoneCopyLocalizedName ShortDaylightSaving" : @"GMT-05:00",
+        @"CFTimeZoneCopyLocalizedName ShortDaylightSaving" : @"GMT-5",
         @"CFTimeZoneCopyLocalizedName Generic" : @"GMT-05:00",
-        // @"CFTimeZoneCopyLocalizedName ShortGeneric" : @"GMT-5",
-        @"CFTimeZoneCopyLocalizedName ShortGeneric" : @"GMT-05:00",
+        @"CFTimeZoneCopyLocalizedName ShortGeneric" : @"GMT-5",
         @"CFTimeZoneGetSecondsFromGMT" : @-18000.000000
     };
     assertCFTimeZoneProperties(CFTimeZoneCreate(kCFAllocatorDefault, CFSTR("EST"), nullptr), expected);
 
+    // WinObjC draws on a separate database
     expected = @{
-        // @"CFTimeZoneCopyAbbreviation" : @"GMT-3",
+#ifdef WINOBJC
         @"CFTimeZoneCopyAbbreviation" : @"America/Argentina/Buenos_Aires",
+#else
+        @"CFTimeZoneCopyAbbreviation" : @"GMT-3",
+#endif
         @"CFTimeZoneGetName" : @"America/Argentina/Buenos_Aires",
         @"CFTimeZoneCopyLocalizedName Standard" : @"GMT-03:00",
-        // @"CFTimeZoneCopyLocalizedName ShortStandard" : @"GMT-3",
-        @"CFTimeZoneCopyLocalizedName ShortStandard" : @"GMT-03:00",
+        @"CFTimeZoneCopyLocalizedName ShortStandard" : @"GMT-3",
         @"CFTimeZoneCopyLocalizedName DaylightSaving" : @"GMT-03:00",
-        // @"CFTimeZoneCopyLocalizedName ShortDaylightSaving" : @"GMT-3",
-        @"CFTimeZoneCopyLocalizedName ShortDaylightSaving" : @"GMT-03:00",
-        // @"CFTimeZoneCopyLocalizedName Generic" : @"Buenos Aires",
-        @"CFTimeZoneCopyLocalizedName Generic" : @"AR (Buenos Aires)",
-        // @"CFTimeZoneCopyLocalizedName ShortGeneric" : @"Buenos Aires",
-        @"CFTimeZoneCopyLocalizedName ShortGeneric" : @"AR (Buenos Aires)",
+        @"CFTimeZoneCopyLocalizedName ShortDaylightSaving" : @"GMT-3",
+        @"CFTimeZoneCopyLocalizedName Generic" : @"Buenos Aires",
+        @"CFTimeZoneCopyLocalizedName ShortGeneric" : @"Buenos Aires",
         @"CFTimeZoneGetSecondsFromGMT" : @-10800.000000
     };
     assertCFTimeZoneProperties(CFTimeZoneCreate(kCFAllocatorDefault, CFSTR("America/Argentina/Buenos_Aires"), nullptr), expected);
 
+    // WinObjC draws on a separate database
     expected = @{
-        // @"CFTimeZoneCopyAbbreviation" : @"PST",
+#ifdef WINOBJC
         @"CFTimeZoneCopyAbbreviation" : @"US/Pacific",
+#else
+        @"CFTimeZoneCopyAbbreviation" : @"PST",
+#endif
         @"CFTimeZoneGetName" : @"US/Pacific",
         @"CFTimeZoneCopyLocalizedName Standard" : @"GMT-08:00",
-        // @"CFTimeZoneCopyLocalizedName ShortStandard" : @"GMT-8",
-        @"CFTimeZoneCopyLocalizedName ShortStandard" : @"PST",
+        @"CFTimeZoneCopyLocalizedName ShortStandard" : @"GMT-8",
         @"CFTimeZoneCopyLocalizedName DaylightSaving" : @"GMT-07:00",
-        // @"CFTimeZoneCopyLocalizedName ShortDaylightSaving" : @"GMT-7",
-        @"CFTimeZoneCopyLocalizedName ShortDaylightSaving" : @"PDT",
-        // @"CFTimeZoneCopyLocalizedName Generic" : @"Los Angeles",
-        @"CFTimeZoneCopyLocalizedName Generic" : @"US (Los Angeles)",
-        // @"CFTimeZoneCopyLocalizedName ShortGeneric" : @"Los Angeles",
-        @"CFTimeZoneCopyLocalizedName ShortGeneric" : @"US (Los Angeles)",
+        @"CFTimeZoneCopyLocalizedName ShortDaylightSaving" : @"GMT-7",
+        @"CFTimeZoneCopyLocalizedName Generic" : @"Los Angeles",
+        @"CFTimeZoneCopyLocalizedName ShortGeneric" : @"Los Angeles",
         @"CFTimeZoneGetSecondsFromGMT" : @-28800.000000
     };
     assertCFTimeZoneProperties(CFTimeZoneCreate(kCFAllocatorDefault, CFSTR("US/Pacific"), nullptr), expected);

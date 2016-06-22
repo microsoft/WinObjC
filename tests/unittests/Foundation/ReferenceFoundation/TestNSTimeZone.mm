@@ -24,7 +24,9 @@
 
 #import <Foundation/Foundation.h>
 #import <TestFramework.h>
-#include <Windows.h>
+#import <windows.h>
+
+#import <unicode/timezone.h>
 
 TEST(NSTimeZone, Abbreviation) {
     auto tz = [NSTimeZone systemTimeZone];
@@ -48,21 +50,19 @@ TEST(NSTimeZone, InitializingTimeZoneWithAbbreviation) {
     // Test valid timezone abbreviation of "AST" for "America/Halifax"
     tz = [NSTimeZone timeZoneWithAbbreviation:@"AST"];
     auto expectedName = @"America/Halifax";
-    ASSERT_OBJCEQ_MSG((tz) ? tz.name : nil,
-                      expectedName,
-                      @"expected name \"%@\" is not equal to \"%@\"",
-                      expectedName,
-                      (tz) ? tz.name : nil);
+    ASSERT_OBJCEQ_MSG(tz.name, expectedName, @"expected name \"%@\" is not equal to \"%@\"", expectedName, tz.name);
 }
 
 TEST(NSTimeZone, SystemTimeZoneUsesSystemTime) {
-    TIME_ZONE_INFORMATION tzInfo;
-    DWORD unused = GetTimeZoneInformation(&tzInfo);
+    icu::TimeZone* systemTime = icu::TimeZone::detectHostTimeZone();
+    icu::UnicodeString expectedUnicodeName;
+    systemTime->getID(expectedUnicodeName);
 
-    NSString* zoneName = [[NSTimeZone systemTimeZone] localizedName:NSTimeZoneNameStyleStandard locale:[NSLocale systemLocale]];
+    NSString* zoneName = [[NSTimeZone systemTimeZone] name];
     zoneName = (zoneName == nil) ? @"Invalid Abbreviation" : zoneName;
 
-    NSString* expectedName = [NSString stringWithCharacters:(const unichar*)tzInfo.StandardName length:wcsnlen_s(tzInfo.StandardName, 32)];
+    NSString* expectedName =
+        [NSString stringWithCharacters:(const unichar*)expectedUnicodeName.getBuffer() length:expectedUnicodeName.length()];
     expectedName = (expectedName == nil) ? @"Invalid Zone" : expectedName;
     ASSERT_OBJCEQ_MSG(zoneName, expectedName, @"expected name \"%@\" is not equal to \"%@\"", zoneName, expectedName);
 }

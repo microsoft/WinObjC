@@ -13,29 +13,21 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-//
-// Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See http://swift.org/LICENSE.txt for license information
-// See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSData.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSArray.h"
-#include "Etc.h"
-#include "BridgeHelpers.h"
-#include "NSCFTimeZone.h"
-#include "NSRaise.h"
-#include <CoreFoundation/CFTimeZone.h>
-#include <Foundation/NSTimeZone.h>
-#include <unicode/gregocal.h>
+#import <Starboard.h>
+#import <StubReturn.h>
+#import <Foundation/NSData.h>
+#import <Foundation/NSString.h>
+#import <Foundation/NSArray.h>
+#import "Etc.h"
+#import "BridgeHelpers.h"
+#import "NSCFTimeZone.h"
+#import "NSRaise.h"
+#import <CoreFoundation/CFTimeZone.h>
+#import <Foundation/NSTimeZone.h>
+#import <unicode/gregocal.h>
 
-#import <vector>
-#import <string>
+static const wchar_t* TAG = L"NSTimeZone";
 
 @implementation NSTimeZone
 
@@ -83,8 +75,12 @@
 + (NSString*)timeZoneDataVersion {
     UErrorCode errorCode = U_ZERO_ERROR;
     const char* tzDataVersion = icu::TimeZone::getTZDataVersion(errorCode);
-    NSString* ret = [NSString stringWithUTF8String:tzDataVersion];
-    return ret;
+
+    if (!U_SUCCESS(errorCode)) {
+        TraceError(TAG, L"Error fetching the time zone data version.");
+    }
+
+    return [NSString stringWithUTF8String:tzDataVersion];
 }
 
 /**
@@ -110,11 +106,7 @@
  @Status Interoperable
 */
 + (instancetype)timeZoneWithName:(NSString*)name {
-    @try {
-        return [[[self alloc] initWithName:name] autorelease];
-    } @catch (NSException* e) {
-        return nil;
-    }
+    return [[[self alloc] initWithName:name] autorelease];
 }
 
 /**
@@ -136,8 +128,8 @@
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super init]) {
-        NSString* name = [coder decodeObjectForKey:@"name"];
-        NSData* data = [coder decodeObjectOfClass:[NSData class] forKey:@"data"];
+        NSString* name = [coder decodeObjectForKey:@"NS.name"];
+        NSData* data = [coder decodeObjectOfClass:[NSData class] forKey:@"NS.data"];
 
         return [self initWithName:name data:data];
     }
@@ -149,9 +141,8 @@
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
     // Can't encode/decode ICU object. Potentially recreate system TZ?
-    [coder encodeObject:[self description] forKey:@"description"];
-    [coder encodeObject:[self name] forKey:@"name"];
-    [coder encodeObject:[self data] forKey:@"data"];
+    [coder encodeObject:[self name] forKey:@"NS.name"];
+    [coder encodeObject:[self data] forKey:@"NS.data"];
 }
 
 /**
@@ -184,7 +175,7 @@
  @Status Interoperable
 */
 - (instancetype)initWithName:(NSString*)name {
-    return [self initWithName:name data:nil];
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -217,6 +208,13 @@
 /**
  @Status Interoperable
 */
+- (NSData*)data {
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
 - (NSString*)abbreviationForDate:(NSDate*)date {
     return NSInvalidAbstractInvocationReturn();
 }
@@ -226,6 +224,13 @@
 */
 - (NSTimeInterval)daylightSavingTimeOffsetForDate:(NSDate*)date {
     return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSTimeInterval)daylightSavingTimeOffset {
+    return [self daylightSavingTimeOffsetForDate:[NSDate date]];
 }
 
 /**

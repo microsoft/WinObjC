@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -24,22 +24,26 @@
 #pragma region Factory Class
 @implementation NSTimeZonePrototype
 
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSTimeZonePrototype)
+
 - (instancetype)initWithName:(NSString*)name {
     if (!name) {
-        [NSException raise:NSInvalidArgumentException format:@"NSTimeZone initWithName: name can't be nil"];
+        [self release];
+        return nil;
     }
 
     return reinterpret_cast<NSTimeZonePrototype*>(
-        static_cast<NSTimeZone*>(CFTimeZoneCreateWithName(nullptr, static_cast<CFStringRef>(name), true)));
+        static_cast<NSTimeZone*>(CFTimeZoneCreateWithName(kCFAllocatorDefault, static_cast<CFStringRef>(name), false)));
 }
 
 - (instancetype)initWithName:(NSString*)name data:(NSData*)data {
     if (!name) {
-        [NSException raise:NSInvalidArgumentException format:@"NSTimeZone initWithName: name can't be nil"];
+        [self release];
+        return nil;
     }
 
     return reinterpret_cast<NSTimeZonePrototype*>(
-        static_cast<NSTimeZone*>(CFTimeZoneCreateWithName(nullptr, static_cast<CFStringRef>(name), true)));
+        static_cast<NSTimeZone*>(CFTimeZoneCreate(kCFAllocatorDefault, static_cast<CFStringRef>(name), static_cast<CFDataRef>(data))));
 }
 
 @end

@@ -36,7 +36,7 @@ NSDateFormatter* _getDescriptionFormatter() {
     [formatter setDateFormat:@"yyyy'-'MM'-'dd' 'HH':'mm':'ss Z"];
     [formatter
         setTimeZone:static_cast<NSTimeZone*>(CFAutorelease(CFTimeZoneCreateWithTimeIntervalFromGMT(kCFAllocatorSystemDefault, 0.0)))];
-    return [formatter autorelease];
+    return formatter;
 }
 
 CFDateFormatterRef _getLocaleDescriptionFormatter(NSLocale* locale) {
@@ -44,8 +44,8 @@ CFDateFormatterRef _getLocaleDescriptionFormatter(NSLocale* locale) {
                                                          static_cast<CFLocaleRef>(locale),
                                                          kCFDateFormatterFullStyle,
                                                          kCFDateFormatterFullStyle);
-    CFDateFormatterSetProperty(formatter, kCFDateFormatterTimeZone, CFTimeZoneCopySystem());
-    return formatter;
+    CFDateFormatterSetProperty(formatter, kCFDateFormatterTimeZone, CFAutorelease(CFTimeZoneCopySystem()));
+    return (CFDateFormatterRef)CFAutorelease(formatter);
 }
 
 @implementation NSDate

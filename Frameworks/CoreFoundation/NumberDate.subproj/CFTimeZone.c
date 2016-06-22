@@ -3,6 +3,7 @@
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
+// Copyright (c) Microsoft. All rights reserved.
 // Licensed under Apache License v2.0 with Runtime Library Exception
 //
 // See http://swift.org/LICENSE.txt for license information
@@ -14,22 +15,6 @@
     Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
     Responsibility: Christopher Kane
 */
-
-//******************************************************************************
-//
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
-//
-// This code is licensed under the MIT License (MIT).
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-//
-//******************************************************************************
 
 #include <CoreFoundation/CFTimeZone.h>
 #include <CoreFoundation/CFPropertyList.h>
@@ -206,6 +191,20 @@ static CFMutableArrayRef __CFCopyRecursiveDirectoryList() {
 #error Unknown or unspecified DEPLOYMENT_TARGET
 #endif
 
+#define BUFFER_SIZE 768
+
+static UnicodeString __CFStringRefToUnicodeString(CFStringRef str) {
+    UniChar buffer[BUFFER_SIZE];
+    CFStringGetCharacters(str, CFRangeMake(0, CFStringGetLength(str)), buffer);
+    return UnicodeString(reinterpret_cast<UChar*>(buffer), CFStringGetLength(str));
+}
+
+static CFStringRef __UnicodeStringToCFStringRef(UnicodeString str) {
+    return (str.length() > 0) ? 
+        CFStringCreateWithCharacters(kCFAllocatorDefault, reinterpret_cast<const UniChar*>(str.getBuffer()), str.length()) :
+        CFSTR("");
+}
+
 struct __CFTimeZone {
     CFRuntimeBase _base;
     icu::LocalPointer<icu::BasicTimeZone> _timeZone;
@@ -215,7 +214,7 @@ struct __CFTimeZone {
 
 static CFTimeZoneRef __CFTimeZoneInitWithICU(CFTimeZoneRef ret, CFStringRef name, CFDataRef data) {
     icu::BasicTimeZone* timeZone = static_cast<icu::BasicTimeZone*>(
-        icu::BasicTimeZone::createTimeZone(CFStringGetCStringPtr(name, CFStringGetFastestEncoding(name))));
+        icu::BasicTimeZone::createTimeZone(__CFStringRefToUnicodeString(name)));
 
     ((struct __CFTimeZone *)ret)->_timeZone.adoptInstead(timeZone);
     ((struct __CFTimeZone *)ret)->_name = CFStringCreateCopy(CFGetAllocator(ret), name);
@@ -227,15 +226,13 @@ static CFTimeZoneRef __CFTimeZoneInitWithICU(CFTimeZoneRef ret, CFStringRef name
 CF_INLINE UDate __CFAbsoluteTimeToUDate(CFAbsoluteTime time) {
     // UDate = milliseconds since Jan 01, 1970
     // CFAbsoluteTime = seconds since Jan 01, 2001
-    // 978307200 = seconds between Jan 01 1970 and Jan 01 2001
-    return (time + 978307200) * 1000;
+    return (time + kCFAbsoluteTimeIntervalSince1970) * 1000;
 }
 
 CF_INLINE CFAbsoluteTime __UDateToCFAbsoluteTime(UDate time) {
     // UDate = milliseconds since Jan 01, 1970
     // CFAbsoluteTime = seconds since Jan 01, 2001
-    // 978307200 = seconds between Jan 01 1970 and Jan 01 2001
-    return time/1000 - 978307200;
+    return time/1000 - kCFAbsoluteTimeIntervalSince1970;
 }
 
 static Boolean __CFTimeZoneEqual(CFTypeRef cf1, CFTypeRef cf2) {
@@ -1094,24 +1091,31 @@ CFTimeZoneRef CFTimeZoneCreateWithName(CFAllocatorRef allocator, CFStringRef nam
     }
     __CFTimeZoneUnlockGlobal();
     CFIndex len = CFStringGetLength(name);
+    // Check for GMT timezone names
+    // GMT timezone names must follow a specific format
     if (6 == len || 8 == len || 9 == len) {
         UniChar buffer[9];
         CFStringGetCharacters(name, CFRangeMake(0, len), buffer);
         if ('G' == buffer[0] && 'M' == buffer[1] && 'T' == buffer[2] && ('+' == buffer[3] || '-' == buffer[3])) {
+            // GMT+... or GMT-...
             if ('0' <= buffer[4] && buffer[4] <= '9') {
                 if ('0' <= buffer[5] && buffer[5] <= '9') {
+                    // GMT+##... or GMT-##...
                     int32_t hours = (buffer[4] - '0') * 10 + (buffer[5] - '0');
                     if (-14 <= hours && hours <= 14) {
                         CFTimeInterval ti = hours * 3600.0;
                         if (6 == len) {
+                            // GMT+## or GMT-##
                             return CFTimeZoneCreateWithTimeIntervalFromGMT(allocator, ('-' == buffer[3] ? -1.0 : 1.0) * ti);
                         } else if ((8 == len) && ('0' <= buffer[6] && buffer[6] <= '9') && ('0' <= buffer[7] && buffer[7] <= '9')) {
+                            // GMT+#### or GMT-####
                             int32_t minutes = (buffer[6] - '0') * 10 + (buffer[7] - '0');
                             if ((-14 == hours && 0 == minutes) || (14 == hours && 0 == minutes) || (0 <= minutes && minutes <= 59)) {
                                 ti = ti + minutes * 60.0;
                                 return CFTimeZoneCreateWithTimeIntervalFromGMT(allocator, ('-' == buffer[3] ? -1.0 : 1.0) * ti);
                             }
                         } else if ((9 == len) && (buffer[6] == ':') && ('0' <= buffer[7] && buffer[7] <= '9') && ('0' <= buffer[8] && buffer[8] <= '9')) {
+                            // GMT+##:## or GMT-##:##
                             int32_t minutes = (buffer[7] - '0') * 10 + (buffer[8] - '0');
                             if ((-14 == hours && 0 == minutes) || (14 == hours && 0 == minutes) || (0 <= minutes && minutes <= 59)) {
                                 ti = ti + minutes * 60.0;
@@ -1120,11 +1124,13 @@ CFTimeZoneRef CFTimeZoneCreateWithName(CFAllocatorRef allocator, CFStringRef nam
                         }
                     }
                 } else if (buffer[5] == ':') {
+                    // GMT+#:... or GMT-#:...
                     int32_t hours = (buffer[4] - '0');
                     if (-14 <= hours && hours <= 14) {
                         CFTimeInterval ti = hours * 3600.0;
                         if (8 == len) {
                             if (('0' <= buffer[6] && buffer[6] <= '9') && ('0' <= buffer[7] && buffer[7] <= '9')) {
+                                // GMT+#:## or GMT-#:##
                                 int32_t minutes = (buffer[6] - '0') * 10 + (buffer[7] - '0');
                                 if ((-14 == hours && 0 == minutes) || (14 == hours && 0 == minutes) || (0 <= minutes && minutes <= 59)) {
                                     ti = ti + minutes * 60.0;
@@ -1204,12 +1210,20 @@ CFStringRef CFTimeZoneCopyAbbreviation(CFTimeZoneRef tz, CFAbsoluteTime at) {
     __CFGenericValidateType(tz, CFTimeZoneGetTypeID());
     UnicodeString result;
     tz->_timeZone->getID(result);
-    return (result.length() > 0) ? CFStringCreateWithCharacters(CFGetAllocator(tz), reinterpret_cast<const UniChar*>(result.getBuffer()), result.length()) : NULL;
+    return __UnicodeStringToCFStringRef(result);
 }
 
 Boolean CFTimeZoneIsDaylightSavingTime(CFTimeZoneRef tz, CFAbsoluteTime at) {
     __CFGenericValidateType(tz, CFTimeZoneGetTypeID());
-    return CFTimeZoneGetDaylightSavingTimeOffset(tz, at) != 0;
+
+    UErrorCode status = U_ZERO_ERROR;
+    UBool daylight = tz->_timeZone->inDaylightTime(__CFAbsoluteTimeToUDate(at), status);
+
+    if (U_SUCCESS(status)) {
+        return daylight;
+    }
+
+    return false;
 }
 
 CFTimeInterval CFTimeZoneGetDaylightSavingTimeOffset(CFTimeZoneRef tz, CFAbsoluteTime at) {
@@ -1244,8 +1258,6 @@ CFAbsoluteTime CFTimeZoneGetNextDaylightSavingTimeTransition(CFTimeZoneRef tz, C
 }
 
 extern UCalendar *__CFCalendarCreateUCalendar(CFStringRef calendarID, CFStringRef localeID, CFTimeZoneRef tz);
-
-#define BUFFER_SIZE 768
 
 CFStringRef CFTimeZoneCopyLocalizedName(CFTimeZoneRef tz, CFTimeZoneNameStyle style, CFLocaleRef locale) {
     CF_OBJC_FUNCDISPATCHV(CFTimeZoneGetTypeID(), CFStringRef, (NSTimeZone *)tz, localizedName:(NSTimeZoneNameStyle)style locale:(NSLocale *)locale);
