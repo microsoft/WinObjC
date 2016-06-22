@@ -237,7 +237,7 @@ public:
 extern void NSUserDefaultsBasic();
 extern void NSUserDefaultsKVCArray();
 extern void NSUserDefaultsFlush();
-extern void NSUserDefaultsPersist();
+extern void NSUserDefaultsPerf();
 
 class NSUserDefaults {
 public:
@@ -260,6 +260,10 @@ public:
 
     TEST_METHOD(NSUSerDefaults_Flush) {
         NSUserDefaultsFlush();
+    }
+
+    TEST_METHOD(NSUserDefaults_Perf) {
+        NSUserDefaultsPerf();
     }
 
 }; /* class NSUserDefaults */

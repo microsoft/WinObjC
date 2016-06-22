@@ -877,7 +877,11 @@ static Boolean synchronizeApplicationDomain(CFTypeRef context, void *domain) {
     CFDataRef data = CFPropertyListCreateData(__CFPreferencesAllocator(), (CFPropertyListRef)domain, kCFPropertyListXMLFormat_v1_0, 0, NULL);
     Boolean success = false;
     if (data) {
+#if DEPLOYMENT_TARGET_WINDOWS
+        success = _CFWriteBytesToFileAsync((CFURLRef)context, CFDataGetBytePtr(data), CFDataGetLength(data));
+#else
         success = _CFWriteBytesToFile((CFURLRef)context, CFDataGetBytePtr(data), CFDataGetLength(data));
+#endif
         CFRelease(data);
     }
 
