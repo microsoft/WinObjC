@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsRootNamespace>CGCatalog_Headers</ItemsRootNamespace>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <Keyword>IslandwoodProj</Keyword>
+    <ItemsProjectGuid>{D572B7A5-D04F-47D5-AB85-6CA3D7FFC143}</ItemsProjectGuid>
+    <SharedGUID>{69C2B8BC-9E2F-4E16-9105-5299E2AA9504}</SharedGUID>
+  </PropertyGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\AppDelegate.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGCRootViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGCBaseViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGPathApplyViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGBitmapContentViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextBeginEndTransparencyLayer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextSetPatternPhase.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextReplacePathWithStrokedPath.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+</Project>
