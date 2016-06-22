@@ -15,14 +15,20 @@
 //******************************************************************************
 
 #pragma once
+
 #include "UIView.h"
+
 class UIWindow :
     public UIView
 {
 public:
     bool _visibleAtLaunch;
+    bool _resizesToFullScreen;
+
     UIWindow();
+
     virtual void InitFromXIB(XIBObject *obj);
+    virtual void InitFromStory(XIBObject *obj);
+
     virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
 };
-

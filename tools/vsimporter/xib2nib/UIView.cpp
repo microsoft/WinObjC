@@ -55,7 +55,7 @@ UIView::UIView() {
     _clearsContextBeforeDrawing = true;
     _enabled = true;
     _translatesAutoresizeToConstraints = true;
-	_tag = -1;
+    _tag = -1;
 }
 
 void UIView::InitFromXIB(XIBObject* obj) {
@@ -94,7 +94,7 @@ void UIView::InitFromXIB(XIBObject* obj) {
     _autoresizingMask = 0;
     _hidden = false;
     _opaque = GetBool("IBUIOpaque", true);
-	_tag = GetInt("IBUITag", -1);
+    _tag = GetInt("IBUITag", -1);
     _clipsToBounds = GetBool("IBUIClipsSubviews", false);
     _userInteractionDisabled = !GetBool("IBUIUserInteractionEnabled", true);
     _contentMode = GetInt("IBUIContentMode", 0);
@@ -134,9 +134,9 @@ void UIView::InitFromStory(XIBObject* obj) {
     if (!_constraints)
         _constraints = new XIBArray();
 
-	if (getAttrib("tag")) {
-		_tag = strtod(getAttrAndHandle("tag"), NULL);
-	}
+    if (getAttrib("tag")) {
+        _tag = strtod(getAttrAndHandle("tag"), NULL);
+    }
 
     if (getAttrib("opaque")) {
         const char* pVal = getAttrAndHandle("opaque");

@@ -189,6 +189,7 @@ XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi:
     IS_CONVERTER(ret, className, "panGestureRecognizer", UIPanGestureRecognizer)
     IS_CONVERTER(ret, className, "swipeGestureRecognizer", UISwipeGestureRecognizer)
     IS_CONVERTER(ret, className, "tapGestureRecognizer", UITapGestureRecognizer)
+    IS_CONVERTER(ret, className, "window", UIWindow)
 
     // Stubbed mapping - full functionality is not provided but these stubs will unblock the import process
     IS_CONVERTER(ret, className, "pageControl", UIPageControl)
