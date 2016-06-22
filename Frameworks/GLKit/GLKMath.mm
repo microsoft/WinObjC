@@ -851,24 +851,24 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 m, BOOL* isInvertible) {
             ((m.m00 * m.m12 * m.m21) + (m.m01 * m.m10 * m.m22) + (m.m02 * m.m11 * m.m20));
 
     const float determinant = m.m00 * a.m00 + m.m01 * a.m10 + m.m02 * a.m20 + m.m03 * a.m30;
-	GLKMatrix4 aNorm;
+    GLKMatrix4 aNorm;
 
     if (determinant == 0) {
-		
+        
         if (isInvertible != nullptr) { 
-			*isInvertible = false;
-		}
+            *isInvertible = false;
+        }
 
-		// Set output to identity matrix if input matrix is not invertible
+        // Set output to identity matrix if input matrix is not invertible
         aNorm = { 0 };
         aNorm.m00 = 1.0f;
         aNorm.m11 = 1.0f;
         aNorm.m22 = 1.0f;
         aNorm.m33 = 1.0f;
     } else {
-		if (isInvertible != nullptr) {
-			*isInvertible = true;
-		}
+        if (isInvertible != nullptr) {
+            *isInvertible = true;
+        }
 
         const float determinantInv = 1.0f / determinant;
 
@@ -960,8 +960,8 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeRotation(float rad, float x, float y, floa
     float invMagn;
 
     if (magn < COMPARISON_EPSILON) {
-		// Detect near zero magnitude vector and set the inverse to NaN value to avoid divide by zero situation 
-		// and return the same output as iOS does in this case.
+        // Detect near zero magnitude vector and set the inverse to NaN value to avoid divide by zero situation 
+        // and return the same output as iOS does in this case.
         invMagn = -NAN;
     } else {
         invMagn = 1.f / magn;
