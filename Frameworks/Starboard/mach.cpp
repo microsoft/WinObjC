@@ -79,4 +79,11 @@ kern_return_t mach_timebase_info(mach_timebase_info_t tinfo) {
     return 0;
 }
 
+uint64_t mach_absolute_time() {
+    LARGE_INTEGER count;
+    QueryPerformanceCounter(&count);
+    // mach_absolute_time is unsigned, but this function returns a signed value.
+    return (uint64_t)count.QuadPart;
+}
+
 }
