@@ -10,6 +10,7 @@
 		552816051D062EC90082C178 /* CGCCGBitmapContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 552816041D062EC90082C178 /* CGCCGBitmapContentViewController.m */; };
 		552816081D062F6B0082C178 /* CGCCGContextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 552816071D062F6B0082C178 /* CGCCGContextViewController.m */; };
 		5528160A1D0630300082C178 /* LogoAutodesk.png in Resources */ = {isa = PBXBuildFile; fileRef = 552816091D0630300082C178 /* LogoAutodesk.png */; };
+		5579D6771D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5579D6761D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m */; };
 		F0D21C831D05FEF9002C32EE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D21C821D05FEF9002C32EE /* main.m */; };
 		F0D21C861D05FEF9002C32EE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D21C851D05FEF9002C32EE /* AppDelegate.m */; };
 		F0D21C891D05FEF9002C32EE /* CGCRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D21C881D05FEF9002C32EE /* CGCRootViewController.m */; };
@@ -29,6 +30,8 @@
 		552816061D062F6B0082C178 /* CGCCGContextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CGCCGContextViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		552816071D062F6B0082C178 /* CGCCGContextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CGCCGContextViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		552816091D0630300082C178 /* LogoAutodesk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LogoAutodesk.png; sourceTree = "<group>"; };
+		5579D6751D1B73EC00B33059 /* CGCCGPathContainsPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGCCGPathContainsPointViewController.h; sourceTree = "<group>"; };
+		5579D6761D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGCCGPathContainsPointViewController.m; sourceTree = "<group>"; };
 		F0D21C7E1D05FEF9002C32EE /* CGCatalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CGCatalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0D21C821D05FEF9002C32EE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = main.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		F0D21C841D05FEF9002C32EE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AppDelegate.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -121,6 +124,8 @@
 				FB10A1991D10792E008EA8A1 /* CGCCGContextSetPatternPhase.m */,
 				FBA3A50A1D132C9A00C3C011 /* CGCCGContextReplacePathWithStrokedPath.h */,
 				FBA3A50B1D132C9A00C3C011 /* CGCCGContextReplacePathWithStrokedPath.m */,
+				5579D6751D1B73EC00B33059 /* CGCCGPathContainsPointViewController.h */,
+				5579D6761D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m */,
 			);
 			path = Samples;
 			sourceTree = "<group>";
@@ -210,6 +215,7 @@
 				FB1264921D0A0484007C907C /* CGCCGContextBeginEndTransparencyLayer.m in Sources */,
 				FB10A19A1D10792E008EA8A1 /* CGCCGContextSetPatternPhase.m in Sources */,
 				552816081D062F6B0082C178 /* CGCCGContextViewController.m in Sources */,
+				5579D6771D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m in Sources */,
 				F0D21C861D05FEF9002C32EE /* AppDelegate.m in Sources */,
 				F0D21CBF1D06078D002C32EE /* CGCBaseViewController.m in Sources */,
 				FB18A4BA1D1AD10A00A9555A /* CGCCGContextBeginTransparencyLayerWithRect.m in Sources */,
