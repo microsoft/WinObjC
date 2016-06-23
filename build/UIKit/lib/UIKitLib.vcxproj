@@ -232,8 +232,6 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPopoverController.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\WYPopoverController.m">
       <ObjectiveCARC>true</ObjectiveCARC>
-      <OptimizationLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Disabled</OptimizationLevel>
-      <OptimizationLevel Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">Disabled</OptimizationLevel>
     </ClangCompile>
     <ClangCompile Include="..\..\..\Frameworks\UIKit\WYStoryboardPopoverSegue.m">
       <ObjectiveCARC>true</ObjectiveCARC>

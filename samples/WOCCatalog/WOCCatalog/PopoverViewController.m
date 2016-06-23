@@ -28,7 +28,7 @@
 
     self->imageView = [[UIImageView alloc] initWithImage:image];
     UIButton* backButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 100, 25)];
-    [backButton setTitle:@"Back" forState:UIControlStateNormal];
+    [backButton setTitle:@"Done" forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(dismissViewController) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:backButton];
 
