@@ -188,15 +188,10 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     title = @"CGSize";
     [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:3]]];
 
-    title = @"Default Bold Font of Size 16  with 10px Green Shadow";
+    title = @"Default Bold Font of Size 16";
     [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:4]]];
     title = @"CGSizet";
     [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:5]]];
-
-    title = @"Default Bold Font of Size 16 Font with 10px Shadow";
-    [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:6]]];
-    title = @"CGSize";
-    [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:7]]];
 
     title = @"Capatalized Alphabet Drawn in a circle. Black Background Green Text Size 12 Default Font";
     [rows
@@ -333,15 +328,13 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
 
 - (float)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
     // Special height for circular word display
-    if (indexPath.row == 8 || indexPath.row == 9) {
+    if (indexPath.row == 6 || indexPath.row == 7) {
         //  Circular letter view and UITextView row need more height
         return 350.0f;
-    } else if (indexPath.row == 13) {
+    } else if (indexPath.row == 12) {
         return 200.0f;
     }
-    if (indexPath.row == 13) {
-        return 150.0f;
-    }
+
     return DefaultHeightOfCell;
 }
 
