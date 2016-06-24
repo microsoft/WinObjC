@@ -95,7 +95,7 @@ COREGRAPHICS_EXPORT void CGContextSetLineJoin(CGContextRef c, CGLineJoin join);
 COREGRAPHICS_EXPORT void CGContextSetLineWidth(CGContextRef c, CGFloat width);
 COREGRAPHICS_EXPORT void CGContextSetMiterLimit(CGContextRef c, CGFloat limit);
 
-COREGRAPHICS_EXPORT void CGContextSetPatternPhase(CGContextRef c, CGSize phase) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGContextSetPatternPhase(CGContextRef c, CGSize phase);
 COREGRAPHICS_EXPORT void CGContextSetFillPattern(CGContextRef c, CGPatternRef pattern, const CGFloat* components);
 COREGRAPHICS_EXPORT void CGContextSetRenderingIntent(CGContextRef c, CGColorRenderingIntent intent) STUB_METHOD;
 
