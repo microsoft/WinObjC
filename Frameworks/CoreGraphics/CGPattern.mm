@@ -39,8 +39,8 @@
         return simpleImage;
     }
 
-    float width = bounds.size.width;
-    float height = bounds.size.height;
+    float width = xStep;
+    float height = yStep;
 
     if (width <= 0.0f || height <= 0.0f) {
         return nullptr;

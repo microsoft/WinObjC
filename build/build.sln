@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25114.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Starboard", "Starboard", "{ADFDC5D9-3048-4E53-A9B7-41731D7AD8CF}"
 EndProject
@@ -759,12 +759,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FunctionalTests", "Tests\Fu
 		{FB55E8F6-A77C-4D74-8866-6EA9B7EA6B09} = {FB55E8F6-A77C-4D74-8866-6EA9B7EA6B09}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CoreGraphics", "CoreGraphics", "{0A79AFE5-2685-433C-BC78-A4AD09CD7BF8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreGraphics.UnitTests", "Tests\UnitTests\CoreGraphics\CoreGraphics.UnitTests.vcxproj", "{DA6C01EA-A22E-4807-BACE-63C5C6ABAE77}"
+EndProject
 Global
-    GlobalSection(SharedMSBuildProjectFiles) = preSolution
-        Headers\Headers.Shared\Internal.Shared.vcxitems*{c0db71aa-0f89-41ac-bb7d-c0cb5458f4f9}*SharedItemsImports = 9
-        Headers\Headers.Shared\Public.Shared.vcxitems*{45d41acc-2c3c-43d2-bc10-02aa73ffc7c7}*SharedItemsImports = 9
-        Tests\Tests.Shared\Tests.Shared.vcxitems*{ee68a240-536d-4557-ab96-d164e93059a1}*SharedItemsImports = 9
-    EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
 		Debug|x86 = Debug|x86
@@ -1898,6 +1897,14 @@ Global
 		{4FDF4507-8C1E-4617-9278-11D4BFE8F3A5}.Release|ARM.Build.0 = Release|ARM
 		{4FDF4507-8C1E-4617-9278-11D4BFE8F3A5}.Release|x86.ActiveCfg = Release|Win32
 		{4FDF4507-8C1E-4617-9278-11D4BFE8F3A5}.Release|x86.Build.0 = Release|Win32
+		{DA6C01EA-A22E-4807-BACE-63C5C6ABAE77}.Debug|ARM.ActiveCfg = Debug|ARM
+		{DA6C01EA-A22E-4807-BACE-63C5C6ABAE77}.Debug|ARM.Build.0 = Debug|ARM
+		{DA6C01EA-A22E-4807-BACE-63C5C6ABAE77}.Debug|x86.ActiveCfg = Debug|Win32
+		{DA6C01EA-A22E-4807-BACE-63C5C6ABAE77}.Debug|x86.Build.0 = Debug|Win32
+		{DA6C01EA-A22E-4807-BACE-63C5C6ABAE77}.Release|ARM.ActiveCfg = Release|ARM
+		{DA6C01EA-A22E-4807-BACE-63C5C6ABAE77}.Release|ARM.Build.0 = Release|ARM
+		{DA6C01EA-A22E-4807-BACE-63C5C6ABAE77}.Release|x86.ActiveCfg = Release|Win32
+		{DA6C01EA-A22E-4807-BACE-63C5C6ABAE77}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -2188,5 +2195,7 @@ Global
 		{85AE5EC2-24A1-4A23-B176-D89B79E85804} = {2F82C9C9-AEE7-4E2B-80F0-72780A265A8D}
 		{926FBB0B-874F-4F88-84EB-4352D41CF810} = {5DAC2E58-D2CE-4590-A3B5-9DAB3076DD33}
 		{4FDF4507-8C1E-4617-9278-11D4BFE8F3A5} = {5995B891-E02B-4FA4-8D14-82997198372F}
+		{0A79AFE5-2685-433C-BC78-A4AD09CD7BF8} = {88413F6C-C27A-4B48-9AE5-D36161920F6D}
+		{DA6C01EA-A22E-4807-BACE-63C5C6ABAE77} = {0A79AFE5-2685-433C-BC78-A4AD09CD7BF8}
 	EndGlobalSection
 EndGlobal
