@@ -61,7 +61,7 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)isSubsetOfSet:(NSSet<ObjectType>*)otherSet;
 - (BOOL)intersectsSet:(NSSet<ObjectType>*)otherSet;
 - (BOOL)isEqualToSet:(NSSet<ObjectType>*)otherSet;
-- (id)valueForKey:(NSString*)key STUB_METHOD;
+- (id)valueForKey:(NSString*)key;
 - (void)setValue:(id)value forKey:(NSString*)key STUB_METHOD;
 - (NSArray<ObjectType>*)sortedArrayUsingDescriptors:(NSArray<NSSortDescriptor*>*)sortDescriptors;
 @property (readonly, copy) NSString* description;
