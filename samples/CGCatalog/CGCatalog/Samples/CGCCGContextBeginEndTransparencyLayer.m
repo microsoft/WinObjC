@@ -39,14 +39,9 @@
     CGContextSetFillColorWithColor(context, [UIColor yellowColor].CGColor);
     CGContextFillRect(context, CGRectMake(rectWidth / 2 - 25, maxHeight / 2 - rectHeight / 2 - 25, rectWidth + 25, rectHeight + 25));
 
-    // Note: Shadow or Alpha would be better test samples for this, but are not fully implemented yet in the bridge.
-    // TODO: Use Shadow or Alpha instead of BlendMode when supported by the bridge
-    // Enable shadow
-    /*CGSize shadowOffset = CGSizeMake(10, 20);
-    CGContextSetShadow(context, shadowOffset, 10);*/
-    // Set composite alpha of the transparency layer
-    // CGContextSetAlpha(context, 0.5);
-
+    // Set the blend mode to use between the background rectangle and the ones in the transparency layer
+    // Note: The rectangles in the transparency layer should NOT be blended with each other.
+    //       Only the background rectangle should be blended with the ones in the layer.
     CGContextSetBlendMode(context, kCGBlendModeHue);
 
     // Begin Transparency
