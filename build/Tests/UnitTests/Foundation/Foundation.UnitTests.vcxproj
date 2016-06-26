@@ -292,6 +292,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSObject_CancelPreviousPerformRequests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSOperationTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSOrderedSetTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSPointerArrayTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSPointerFunctionsTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSPredicateTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSProcessInfoTests.mm" />
