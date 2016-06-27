@@ -32,7 +32,7 @@ void soundCompletion(SystemSoundID ssID, void* self);
 
     // Currently using the example wav file located at deps/3rdparty/openal-soft-winphone/examples.
     // The file duration 1 min 15 secs, which is a bit on the longer side.
-    CFURLRef url = (__bridge CFURLRef)[[NSBundle mainBundle] URLForResource:@"DST-10Class" withExtension:@"WAV"];
+    CFURLRef url = (__bridge CFURLRef)[[NSBundle mainBundle] URLForResource:@"test" withExtension:@"wav"];
 
     AudioServicesCreateSystemSoundID(url, &sid);
 

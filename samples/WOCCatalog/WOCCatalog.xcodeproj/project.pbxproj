@@ -45,9 +45,9 @@
 		4FAF43091CF67047009F29E8 /* UIPasteboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAF43081CF67047009F29E8 /* UIPasteboardViewController.m */; };
 		4FBE9F581C0E518B00BF0B87 /* TextDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FBE9F571C0E518B00BF0B87 /* TextDisplayViewController.m */; };
 		77BA01121CF38236006D6454 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BA01111CF38236006D6454 /* AudioToolbox.framework */; };
- 		77BA01151CF38272006D6454 /* DST-10Class.WAV in Resources */ = {isa = PBXBuildFile; fileRef = 77BA01141CF38272006D6454 /* DST-10Class.WAV */; };
 		77D71D9C1C8F5A6800ED26A3 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77D71D9B1C8F5A6800ED26A3 /* CoreMotion.framework */; };
 		77D71D9E1C8F5A8C00ED26A3 /* CoreMotionViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 77D71D9D1C8F5A8C00ED26A3 /* CoreMotionViewController.mm */; };
+		77E93C4A1D21D87C009F27A2 /* test.wav in Resources */ = {isa = PBXBuildFile; fileRef = 77E93C491D21D87C009F27A2 /* test.wav */; };
 		77F3AD3F1CF3854D00485FBA /* AudioToolboxViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 77F3AD3E1CF3854D00485FBA /* AudioToolboxViewController.mm */; };
 		7B2A185A1BB5FF9B0004E097 /* AutoLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B2A18591BB5FF9B0004E097 /* AutoLayoutViewController.m */; };
 		7B363CFE1BF5CBFE001F08DD /* PageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B363CFD1BF5CBFE001F08DD /* PageViewController.m */; };
@@ -149,10 +149,10 @@
 		4FBE9F561C0E518B00BF0B87 /* TextDisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextDisplayViewController.h; sourceTree = "<group>"; };
 		4FBE9F571C0E518B00BF0B87 /* TextDisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDisplayViewController.m; sourceTree = "<group>"; };
 		77BA01111CF38236006D6454 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		77BA01141CF38272006D6454 /* DST-10Class.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "DST-10Class.WAV"; path = "../../deps/3rdparty/openal-soft-winphone/examples/DST-10Class.WAV"; sourceTree = "<group>"; };
 		77D71D9B1C8F5A6800ED26A3 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		77D71D9D1C8F5A8C00ED26A3 /* CoreMotionViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CoreMotionViewController.mm; sourceTree = "<group>"; };
 		77D71D9F1C8F5AA000ED26A3 /* CoreMotionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreMotionViewController.h; sourceTree = "<group>"; };
+		77E93C491D21D87C009F27A2 /* test.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test.wav; path = WOCCatalog/test.wav; sourceTree = "<group>"; };
 		77F3AD3D1CF3854D00485FBA /* AudioToolboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioToolboxViewController.h; sourceTree = "<group>"; };
 		77F3AD3E1CF3854D00485FBA /* AudioToolboxViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AudioToolboxViewController.mm; sourceTree = "<group>"; };
 		7B2A18571BB5FF020004E097 /* AutoLayoutViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AutoLayoutViewController.h; sourceTree = "<group>"; };
@@ -383,7 +383,7 @@
 		77BA01131CF38244006D6454 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
-				77BA01141CF38272006D6454 /* DST-10Class.WAV */,
+				77E93C491D21D87C009F27A2 /* test.wav */,
 			);
 			name = Sounds;
 			sourceTree = "<group>";
@@ -478,13 +478,13 @@
 				4EE861F51B5997AD00682BDB /* segment_search.png in Resources */,
 				4EE861EC1B5997AD00682BDB /* photo1.jpg in Resources */,
 				4EE861F21B5997AD00682BDB /* photo7.gif in Resources */,
+				77E93C4A1D21D87C009F27A2 /* test.wav in Resources */,
 				4EE861ED1B5997AD00682BDB /* photo2.jpg in Resources */,
 				4EE861EE1B5997AD00682BDB /* photo3.jpg in Resources */,
 				4EE861F01B5997AD00682BDB /* photo5.jpg in Resources */,
 				4EE861F11B5997AD00682BDB /* photo6.jpg in Resources */,
 				4EE861F71B5997AD00682BDB /* whiteButton.png in Resources */,
 				4EE861EB1B5997AD00682BDB /* blueButton.png in Resources */,
-				77BA01151CF38272006D6454 /* DST-10Class.WAV in Resources */,
 				23FB26321CD3ED56009020FB /* XIBTest.storyboard in Resources */,
 				4EE861F61B5997AD00682BDB /* segment_tools.png in Resources */,
 			);

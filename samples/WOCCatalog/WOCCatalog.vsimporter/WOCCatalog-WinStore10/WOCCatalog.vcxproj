@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -253,7 +253,7 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="..\..\..\..\deps\3rdparty\openal-soft-winphone\examples\DST-10Class.WAV" />
+    <Media Include="..\..\WOCCatalog\test.wav" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
