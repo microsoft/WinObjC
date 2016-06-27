@@ -15,9 +15,9 @@
 //******************************************************************************
 #pragma once
 
-#import <CoreGraphics/CoreGraphicsExport.h>
-#import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGAffineTransform.h>
+#import <CoreGraphics/CGGeometry.h>
+#import <CoreGraphics/CoreGraphicsExport.h>
 
 typedef enum { kCGPathFill, kCGPathEOFill, kCGPathStroke, kCGPathFillStroke, kCGPathEOFillStroke } CGPathDrawingMode;
 

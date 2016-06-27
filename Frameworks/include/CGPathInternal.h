@@ -17,9 +17,9 @@
 #ifndef __CGPATHINTERNAL_H
 #define __CGPATHINTERNAL_H
 
+#include "CFBridgeBase.h"
 #include "CoreGraphics/CGContext.h"
 #include "CoreGraphics/CGPath.h"
-#include "CFBridgeBase.h"
 
 struct __CGPath : public CFBridgeBase<__CGPath> {
     CGPathElement* _components;
