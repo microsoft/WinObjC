@@ -47,8 +47,6 @@ int cgPathPointCountForElementType(CGPathElementType type) {
 void cgPathModifyingApplierFunction(void* info, const CGPathElement* element) {
     int pointCount = cgPathPointCountForElementType(element->type);
 
-    NSMutableArray* points = [NSMutableArray array];
-
     for (int i = 0; i < pointCount; i++) {
         element->points[i] = CGPointMake(44, 44);
     }
