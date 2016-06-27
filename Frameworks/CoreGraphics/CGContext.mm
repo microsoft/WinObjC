@@ -1136,12 +1136,11 @@ void CGContextBeginTransparencyLayerWithRect(CGContextRef ctx, CGRect rect, CFDi
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGPathRef CGContextCopyPath(CGContextRef c) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return c->Backing()->CGContextCopyPath();
 }
 
 /**

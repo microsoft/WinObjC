@@ -777,3 +777,6 @@ bool CGContextImpl::CGContextIsPointInPath(bool eoFill, float x, float y) {
     // CGContextImpl is not being currently used but, by convention we add the method here.
     return false;
 }
+CGPathRef CGContextImpl::CGContextCopyPath(void) {
+    return NULL;
+}
