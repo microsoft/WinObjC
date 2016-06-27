@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -36,16 +37,16 @@ typedef UInt32 AudioServicesPropertyID;
 typedef UInt32 SystemSoundID;
 typedef void (*AudioServicesSystemSoundCompletionProc)(SystemSoundID ssID, void* clientData);
 
-AUDIOTOOLBOX_EXPORT OSStatus AudioServicesCreateSystemSoundID(CFURLRef inFileURL, SystemSoundID* outSystemSoundID) STUB_METHOD;
-AUDIOTOOLBOX_EXPORT OSStatus AudioServicesDisposeSystemSoundID(SystemSoundID inSystemSoundID) STUB_METHOD;
-AUDIOTOOLBOX_EXPORT void AudioServicesPlayAlertSound(SystemSoundID inSystemSoundID) STUB_METHOD;
-AUDIOTOOLBOX_EXPORT void AudioServicesPlaySystemSound(SystemSoundID inSystemSoundID) STUB_METHOD;
+AUDIOTOOLBOX_EXPORT OSStatus AudioServicesCreateSystemSoundID(CFURLRef inFileURL, SystemSoundID* outSystemSoundID);
+AUDIOTOOLBOX_EXPORT OSStatus AudioServicesDisposeSystemSoundID(SystemSoundID inSystemSoundID);
+AUDIOTOOLBOX_EXPORT void AudioServicesPlayAlertSound(SystemSoundID inSystemSoundID);
+AUDIOTOOLBOX_EXPORT void AudioServicesPlaySystemSound(SystemSoundID inSystemSoundID);
 AUDIOTOOLBOX_EXPORT OSStatus AudioServicesAddSystemSoundCompletion(SystemSoundID inSystemSoundID,
                                                                    CFRunLoopRef inRunLoop,
                                                                    CFStringRef inRunLoopMode,
                                                                    AudioServicesSystemSoundCompletionProc inCompletionRoutine,
-                                                                   void* inClientData) STUB_METHOD;
-AUDIOTOOLBOX_EXPORT void AudioServicesRemoveSystemSoundCompletion(SystemSoundID inSystemSoundID) STUB_METHOD;
+                                                                   void* inClientData);
+AUDIOTOOLBOX_EXPORT void AudioServicesRemoveSystemSoundCompletion(SystemSoundID inSystemSoundID);
 AUDIOTOOLBOX_EXPORT OSStatus AudioServicesGetPropertyInfo(AudioServicesPropertyID inPropertyID,
                                                           UInt32 inSpecifierSize,
                                                           const void* inSpecifier,
