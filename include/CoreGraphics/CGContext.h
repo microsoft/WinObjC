@@ -188,9 +188,9 @@ COREGRAPHICS_EXPORT void CGContextRotateCTM(CGContextRef c, CGFloat angle);
 COREGRAPHICS_EXPORT void CGContextScaleCTM(CGContextRef c, CGFloat sx, CGFloat sy);
 COREGRAPHICS_EXPORT void CGContextTranslateCTM(CGContextRef c, CGFloat tx, CGFloat ty);
 
-COREGRAPHICS_EXPORT void CGContextBeginTransparencyLayer(CGContextRef c, CFDictionaryRef auxiliaryInfo) STUB_METHOD;
-COREGRAPHICS_EXPORT void CGContextBeginTransparencyLayerWithRect(CGContextRef c, CGRect rect, CFDictionaryRef auxInfo) STUB_METHOD;
-COREGRAPHICS_EXPORT void CGContextEndTransparencyLayer(CGContextRef c) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGContextBeginTransparencyLayer(CGContextRef c, CFDictionaryRef auxiliaryInfo);
+COREGRAPHICS_EXPORT void CGContextBeginTransparencyLayerWithRect(CGContextRef c, CGRect rect, CFDictionaryRef auxInfo);
+COREGRAPHICS_EXPORT void CGContextEndTransparencyLayer(CGContextRef c);
 
 COREGRAPHICS_EXPORT void CGContextDrawTiledImage(CGContextRef c, CGRect rect, CGImageRef image);
 COREGRAPHICS_EXPORT void CGContextDrawImage(CGContextRef c, CGRect rect, CGImageRef image);
