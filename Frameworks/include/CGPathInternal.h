@@ -21,8 +21,10 @@
 #include "CoreGraphics/CGContext.h"
 #include "CoreGraphics/CGPath.h"
 
+const int kCGPathMaxPointCount = 3;
+
 struct __CGPath : public CFBridgeBase<__CGPath> {
-    CGPathElement* _components;
+    CGPathElement* _elements;
     NSUInteger _count;
     NSUInteger _max;
 

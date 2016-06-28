@@ -115,7 +115,7 @@ COREGRAPHICS_EXPORT void CGPathMoveToPoint(CGMutablePathRef path, const CGAffine
 COREGRAPHICS_EXPORT void CGPathCloseSubpath(CGMutablePathRef path);
 COREGRAPHICS_EXPORT void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rect);
 
-COREGRAPHICS_EXPORT bool CGPathEqualToPath(CGPathRef path1, CGPathRef path2) STUB_METHOD;
+COREGRAPHICS_EXPORT bool CGPathEqualToPath(CGPathRef path1, CGPathRef path2);
 
 COREGRAPHICS_EXPORT CGRect CGPathGetBoundingBox(CGPathRef path);
 
