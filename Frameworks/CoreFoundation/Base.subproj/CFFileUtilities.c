@@ -160,7 +160,7 @@ static Boolean _CFReadBytesFromPath(CFAllocatorRef alloc, const char *path, void
 }
 CF_PRIVATE Boolean _CFReadBytesFromFile(CFAllocatorRef alloc, CFURLRef url, void **bytes, CFIndex *length, CFIndex maxLength, int extraOpenFlags) {
     // maxLength is the number of bytes desired, or 0 if the whole file is desired regardless of length.
-    
+
     char path[CFMaxPathSize];
     if (!CFURLGetFileSystemRepresentation(url, true, (uint8_t *)path, CFMaxPathSize)) {
         return false;
@@ -207,6 +207,72 @@ CF_PRIVATE Boolean _CFWriteBytesToFile(CFURLRef url, const void *bytes, CFIndex 
     return true;
 }
 
+// WINOBJC
+#if DEPLOYMENT_TARGET_WINDOWS
+
+// cleans up OVERLAPPED instance after file operation completion
+static VOID CALLBACK _threadpoolCallback(_Inout_ PTP_CALLBACK_INSTANCE Instance,
+    _Inout_opt_ PVOID Context,
+    _Inout_opt_ PVOID Overlapped,
+    _In_ ULONG IoResult,
+    _In_ ULONG_PTR NumberOfBytesTransferred,
+    _Inout_ PTP_IO Io) {
+    free(Overlapped);
+    CloseThreadpoolIo(Io);
+}
+
+CF_PRIVATE Boolean _CFWriteBytesToFileAsync(CFURLRef url, const void *bytes, CFIndex length) {
+    char path[CFMaxPathSize];
+    if (!CFURLGetFileSystemRepresentation(url, true, (uint8_t *)path, CFMaxPathSize)) {
+        return false;
+    }
+
+    wchar_t wpath[CFMaxPathSize];
+    int convertedLength = MultiByteToWideChar(CP_UTF8, 0, path, CFMaxPathSize, wpath, CFMaxPathSize);
+    if (0 == convertedLength) {
+        unsigned error = GetLastError();
+        CFLog(kCFLogLevelWarning, CFSTR("_CFWriteBytesToFileAsync failed to convert the path (error %u)"), error);
+        return false;
+    }
+
+    HANDLE fileHandle = NULL;
+    CREATEFILE2_EXTENDED_PARAMETERS createExParams;
+    createExParams.dwSize = sizeof(CREATEFILE2_EXTENDED_PARAMETERS);
+    createExParams.dwFileAttributes = FILE_ATTRIBUTE_NORMAL;
+    createExParams.dwFileFlags = FILE_FLAG_OVERLAPPED;
+    createExParams.dwSecurityQosFlags = 0;
+    createExParams.lpSecurityAttributes = NULL;
+    createExParams.hTemplateFile = NULL;
+
+    OVERLAPPED* overlapped = (OVERLAPPED*)calloc(1, sizeof(OVERLAPPED));
+
+    if ((fileHandle = CreateFile2(wpath, GENERIC_WRITE, FILE_SHARE_READ, CREATE_ALWAYS, &createExParams)) == INVALID_HANDLE_VALUE) {
+        unsigned error = GetLastError();
+        CFLog(kCFLogLevelWarning, CFSTR("_CFWriteBytesToFileAsync failed to open the file (error %u)"), error);
+        free(overlapped);
+        return false;
+    }
+
+    PTP_IO threadPoolIo = CreateThreadpoolIo(fileHandle, _threadpoolCallback, NULL, NULL);
+    StartThreadpoolIo(threadPoolIo);
+
+    if (!WriteFile(fileHandle, bytes, length, NULL, overlapped)) {
+        unsigned error = GetLastError();
+        if (ERROR_IO_PENDING != error) {
+            CFLog(kCFLogLevelWarning, CFSTR("_CFWriteBytesToFileAsync failed to write to the file (error %u)"), error);
+            CloseHandle(fileHandle);
+            CancelThreadpoolIo(threadPoolIo);
+            CloseThreadpoolIo(threadPoolIo);
+            free(overlapped);
+            return false;
+        }
+    }
+
+    CloseHandle(fileHandle);
+
+    return true;
+}
+#endif
 
 /* On Mac OS 8/9, one of dirSpec and dirURL must be non-NULL.  On all other platforms, one of path and dirURL must be non-NULL
 If both are present, they are assumed to be in-synch; that is, they both refer to the same directory.  */

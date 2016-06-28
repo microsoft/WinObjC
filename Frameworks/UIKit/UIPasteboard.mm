@@ -57,6 +57,18 @@ UIPasteboard* generalPasteboard;
 NSMutableDictionary* globalPasteboards;
 static pthread_mutex_t globalPasteboardsLock = PTHREAD_MUTEX_INITIALIZER;
 
+WADDataPackageView* _getClipboardContent() {
+    @try {
+        return [WADClipboard getContent];
+    } @catch (NSException* exception) {
+        if ([exception _hresult] == E_ACCESSDENIED) {
+            return nil;
+        }
+
+        @throw;
+    }
+}
+
 /**
  @Status Caveat
  @Notes only NSString and UIImage are supported by generalPasteboard.
@@ -142,7 +154,7 @@ static pthread_mutex_t globalPasteboardsLock = PTHREAD_MUTEX_INITIALIZER;
  @Notes only NSString, NSURL and UIImage are supported.
 */
 - (NSArray<NSString*>*)pasteboardTypes {
-    WADDataPackageView* wasDataPackageView = [WADClipboard getContent];
+    WADDataPackageView* wasDataPackageView = _getClipboardContent();
     NSMutableArray<NSString*>* types = [[[NSMutableArray<NSString*> alloc] init] autorelease];
 
     if ([wasDataPackageView contains:[WADStandardDataFormats text]]) {
@@ -163,7 +175,7 @@ static pthread_mutex_t globalPasteboardsLock = PTHREAD_MUTEX_INITIALIZER;
  @Notes only NSString, NSURL and UIImage are supported.
 */
 - (BOOL)containsPasteboardTypes:(NSArray*)pasteboardTypes {
-    WADDataPackageView* wasDataPackageView = [WADClipboard getContent];
+    WADDataPackageView* wasDataPackageView = _getClipboardContent();
     BOOL result = NO;
 
     for (NSString* type in pasteboardTypes) {
@@ -193,7 +205,7 @@ static pthread_mutex_t globalPasteboardsLock = PTHREAD_MUTEX_INITIALIZER;
  @Notes only NSString and UIImage (only PNG format) are supported.
 */
 - (NSData*)dataForPasteboardType:(NSString*)pasteboardType {
-    WADDataPackageView* wasDataPackageView = [WADClipboard getContent];
+    WADDataPackageView* wasDataPackageView = _getClipboardContent();
     NSData* data = nil;
 
     if ([pasteboardType isEqualToString:(NSString*)kUTTypeText]) {
@@ -453,7 +465,7 @@ static pthread_mutex_t globalPasteboardsLock = PTHREAD_MUTEX_INITIALIZER;
 
 + (NSString*)_getStringFromClipboard {
     __block NSString* stringData = nil;
-    WADDataPackageView* wasDataPackageView = [WADClipboard getContent];
+    WADDataPackageView* wasDataPackageView = _getClipboardContent();
 
     if ([wasDataPackageView contains:[WADStandardDataFormats text]]) {
         dispatch_group_t group = dispatch_group_create();
@@ -514,7 +526,7 @@ static pthread_mutex_t globalPasteboardsLock = PTHREAD_MUTEX_INITIALIZER;
 
 + (UIImage*)_getImageFromClipboard {
     __block UIImage* imageData = nil;
-    WADDataPackageView* wasDataPackageView = [WADClipboard getContent];
+    WADDataPackageView* wasDataPackageView = _getClipboardContent();
 
     if ([wasDataPackageView contains:[WADStandardDataFormats bitmap]]) {
         dispatch_group_t group = dispatch_group_create();
@@ -621,7 +633,7 @@ static pthread_mutex_t globalPasteboardsLock = PTHREAD_MUTEX_INITIALIZER;
 
 + (NSURL*)_getURLFromClipboard {
     __block NSURL* URLData = nil;
-    WADDataPackageView* wasDataPackageView = [WADClipboard getContent];
+    WADDataPackageView* wasDataPackageView = _getClipboardContent();
 
     if ([wasDataPackageView contains:[WADStandardDataFormats uri]]) {
         dispatch_group_t group = dispatch_group_create();
