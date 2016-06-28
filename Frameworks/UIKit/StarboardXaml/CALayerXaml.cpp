@@ -22,6 +22,7 @@
 #include <StringHelpers.h>
 #include <LoggingNative.h>
 #include <algorithm>
+#include <collection.h>
 
 using namespace concurrency;
 using namespace Platform;
@@ -451,6 +452,16 @@ Size LayerContent::ArrangeOverride(Size finalSize) {
 }
 
 Size LayerContent::MeasureOverride(Size availableSize) {
+    // We need to measure our children as well; otherwise they're not guaranteed to render.
+    for (UIElement^ child : Children->GetView()) {
+        child->Measure(availableSize);
+    }
+
+    // We need to measure our m_content as well; otherwise it's not guaranteed to render.
+    if (m_content) {
+        m_content->Measure(availableSize);
+    }
+
     return availableSize;
 }
 
@@ -1503,6 +1514,16 @@ Size CALayerXaml::ArrangeOverride(Size finalSize) {
 }
 
 Size CALayerXaml::MeasureOverride(Size availableSize) {
+    // We need to measure our children as well; otherwise they're not guaranteed to render.
+    for (UIElement^ child : Children->GetView()) {
+        child->Measure(availableSize);
+    }
+
+    // We need to measure our m_content as well; otherwise it's not guaranteed to render.
+    if (m_content) {
+        m_content->Measure(availableSize);
+    }
+
     return m_size;
 }
 
