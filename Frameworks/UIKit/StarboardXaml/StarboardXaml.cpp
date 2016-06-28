@@ -95,6 +95,20 @@ void App::OnActivated(IActivatedEventArgs^ args) {
             _ApplicationMainLaunch(ActivationTypeToast, argsString);
         }
         UIApplicationMainHandleToastNotificationEvent(Strings::WideToNarrow(argsString->Data()).c_str());
+    } else if (args->Kind == ActivationKind::VoiceCommand) {
+        Windows::Media::SpeechRecognition::SpeechRecognitionResult^ argResult = safe_cast<VoiceCommandActivatedEventArgs^>(args)->Result;
+        TraceVerbose(TAG, L"Received voice command with argument - %s", argResult->Text->Data());
+        if (initiateAppLaunch) {
+            _ApplicationMainLaunch(ActivationTypeVoiceCommand, argResult);
+        }
+        UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(argResult));
+    } else if (args->Kind == ActivationKind::Protocol) {
+        Windows::Foundation::Uri^ argUri = safe_cast<ProtocolActivatedEventArgs^>(args)->Uri;
+        TraceVerbose(TAG, L"Received protocol with uri- %s", argUri->ToString()->Data());
+        if (initiateAppLaunch) {
+            _ApplicationMainLaunch(ActivationTypeProtocol, argUri);
+        }
+        UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri));
     } else {
         if (initiateAppLaunch) {
             _ApplicationMainLaunch(ActivationTypeNone, nullptr);
@@ -102,7 +116,7 @@ void App::OnActivated(IActivatedEventArgs^ args) {
     }
 }
 
-void App::_ApplicationMainLaunch(ActivationType activationType, Platform::String^ activationArg) {
+void App::_ApplicationMainLaunch(ActivationType activationType, Platform::Object^ activationArg) {
     _ApplicationLaunch(activationType, activationArg);
     _RegisterEventHandlers();
 }
@@ -145,7 +159,7 @@ void App::_OnSuspending(Platform::Object^ sender, Windows::ApplicationModel::Sus
     TraceVerbose(TAG, L"Suspending event received");
 }
 
-extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::String^ activationArg) {
+extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
     auto uiElem = ref new Xaml::Controls::Grid();
     auto rootFrame = ref new Xaml::Controls::Frame();
     rootFrame->Content = uiElem;
@@ -156,7 +170,12 @@ extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::Stri
     Xaml::Window::Current->Activate();
 
     auto startupRect = Xaml::Window::Current->Bounds;
-    RunApplicationMain(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height, activationType, activationArg);
+    if (activationType == ActivationTypeToast) {
+        RunApplicationMainWithString(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height,
+            activationType, static_cast<Platform::String^>(activationArg));
+    } else {
+        RunApplicationMain(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height, activationType, activationArg);
+    }
 }
 
 // This is the actual entry point from the app into our framework.

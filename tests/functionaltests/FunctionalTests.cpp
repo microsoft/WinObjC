@@ -19,6 +19,8 @@
 #include "Framework/Framework.h"
 #include <WexTestClass.h>
 #include <ErrorHandling.h>
+#include "MockClass.h"
+#include <windows.applicationModel.activation.h>
 
 using namespace WEX::Logging;
 using namespace WEX::TestExecution;
@@ -277,5 +279,28 @@ public:
 
     TEST_METHOD(NSBundle_MSAppxURL) {
         NSBundleMSAppxURL();
+    }
+}; /* class NSBundle */
+
+//
+// Cortana Activation Tests
+//
+
+extern void CortanaTestVoiceCommandForegroundActivation();
+
+class Cortana {
+public:
+    BEGIN_TEST_CLASS(Cortana)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    TEST_CLASS_PROPERTY(L"Ignore", L"true")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(CortanaTestClassSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationMainTest));
+    }
+
+    TEST_METHOD(CortanaTest_VoiceCommandForegroundActivation) {
+        CortanaTestVoiceCommandForegroundActivation();
     }
 }; /* class NSBundle */

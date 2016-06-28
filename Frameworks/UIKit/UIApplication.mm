@@ -52,6 +52,8 @@
 
 #include "RingBuffer.h"
 
+#include <UWP/WindowsMediaSpeechRecognition.h>
+#include <UWP/WindowsFoundation.h>
 #include "UWP/WindowsUINotifications.h"
 #include "LoggingNative.h"
 #include "UIApplicationMainInternal.h"
@@ -97,6 +99,8 @@ NSString* const UIApplicationLaunchOptionsSourceApplicationKey = @"UIApplication
 NSString* const UIApplicationLaunchOptionsRemoteNotificationKey = @"UIApplicationLaunchOptionsRemoteNotificationKey";
 NSString* const UIApplicationLaunchOptionsAnnotationKey = @"UIApplicationLaunchOptionsAnnotationKey";
 NSString* const UIApplicationLaunchOptionsLocalNotificationKey = @"UIApplicationLaunchOptionsLocalNotificationKey";
+NSString* const UIApplicationLaunchOptionsVoiceCommandKey = @"UIApplicationLaunchOptionsVoiceCommandKey";
+NSString* const UIApplicationLaunchOptionsProtocolKey = @"UIApplicationLaunchOptionsProtocolKey";
 NSString* const UIApplicationLaunchOptionsLocationKey = @"UIApplicationLaunchOptionsLocationKey";
 
 NSString* const UIApplicationDidReceiveMemoryWarningNotification = @"UIApplicationDidReceiveMemoryWarningNotification";
@@ -1634,6 +1638,18 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
 
     // TODO::
     // todo-nithishm-05262016 - Implement UILocalNotification and call LocalNotification delegate here.
+}
+
+- (void)_sendVoiceCommandReceivedEvent:(WMSSpeechRecognitionResult*)voiceCommandResult {
+    if ([self.delegate respondsToSelector:@selector(application:didReceiveVoiceCommand:)]) {
+        [self.delegate application:sharedApplication didReceiveVoiceCommand:voiceCommandResult];
+    }
+}
+
+- (void)_sendProtocolReceivedEvent:(WFUri*)protocolUri {
+    if ([self.delegate respondsToSelector:@selector(application:didReceiveProtocol:)]) {
+        [self.delegate application:sharedApplication didReceiveProtocol:protocolUri];
+    }
 }
 
 - (void)_sendHighMemoryWarning {

@@ -16,6 +16,8 @@
 #pragma once
 
 #include "StarboardXaml.h"
+#include <inspectable.h>
+#include <hstring.h>
 
 // IOS application main startup path
 extern "C" int ApplicationMainStart(const char* principalName,
@@ -23,5 +25,13 @@ extern "C" int ApplicationMainStart(const char* principalName,
                                     float windowWidth,
                                     float windowHeight,
                                     ActivationType activationType,
-                                    const char* activationArg);
+                                    IInspectable* activationArg);
+
+extern "C" int ApplicationMainStartHSTRING(const char* principalName,
+                                           const char* delegateName,
+                                           float windowWidth,
+                                           float windowHeight,
+                                           ActivationType activationType,
+                                           HSTRING activationArg);
+
 void SetTemporaryFolder(const char* folder);

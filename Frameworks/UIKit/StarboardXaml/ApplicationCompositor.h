@@ -25,7 +25,15 @@ extern "C" void RunApplicationMain(Platform::String^ principalClassName,
                                    float windowWidth,
                                    float windowHeight,
                                    ActivationType type,
-                                   Platform::String^ activationArg);
+                                   Platform::Object^ activationArg);
+
+// Because String^ does not inherit from IInspectable
+extern "C" void RunApplicationMainWithString(Platform::String^ principalClassName,
+                                   Platform::String^ delegateClassName,
+                                   float windowWidth,
+                                   float windowHeight,
+                                   ActivationType type,
+                                   Platform::String^ activationString);
 #endif
 
 // clang-format on

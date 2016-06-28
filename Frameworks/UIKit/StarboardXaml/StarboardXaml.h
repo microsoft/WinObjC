@@ -24,6 +24,8 @@
 typedef enum {
     ActivationTypeNone = 0,
     ActivationTypeToast = 1,
+    ActivationTypeVoiceCommand = 2,
+    ActivationTypeProtocol = 3,
 } ActivationType;
 
 #ifdef __cplusplus_winrt
@@ -41,7 +43,7 @@ public:
 private:
     XamlTypeInfo::InfoProvider::XamlTypeInfoProvider^ _provider;
 
-    void _ApplicationMainLaunch(ActivationType activationType, Platform::String^ activationArg);
+    void _ApplicationMainLaunch(ActivationType activationType, Platform::Object^ activationArg);
     void _RegisterEventHandlers();
     void _OnAppVisibilityChanged(Platform::Object^ sender, Windows::UI::Core::VisibilityChangedEventArgs^ args);
     void _OnAppMemoryUsageChanged(Platform::Object^ sender, Platform::Object^ args);
@@ -49,7 +51,7 @@ private:
     void _OnSuspending(Platform::Object^ sender, Windows::ApplicationModel::SuspendingEventArgs^ args);
 };
 
-extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::String^ activationArg);
+extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg);
 
 #endif
 

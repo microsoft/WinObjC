@@ -14,7 +14,9 @@
 //
 //******************************************************************************
 
+#include <COMIncludes.h>
 #import "ApplicationMain.h"
+#include <COMIncludes_End.h>
 
 #import <assert.h>
 #import <math.h>
@@ -33,6 +35,8 @@
 #import <CACompositorClient.h>
 #import <UIApplicationInternal.h>
 #import <MainDispatcher.h>
+#import <UWP/WindowsMediaSpeechRecognition.h>
+#import <UWP/WindowsFoundation.h>
 
 static CACompositorClientInterface* _compositorClient = NULL;
 
@@ -40,17 +44,15 @@ void SetCACompositorClient(CACompositorClientInterface* client) {
     _compositorClient = client;
 }
 
-int ApplicationMainStart(const char* principalName,
-                         const char* delegateName,
-                         float windowWidth,
-                         float windowHeight,
-                         ActivationType activationType,
-                         const char* activationArg) {
+int _ApplicationMainStart(const char* principalName,
+                          const char* delegateName,
+                          float windowWidth,
+                          float windowHeight,
+                          ActivationType activationType,
+                          id activationArg) {
     // Note: We must use nil rather than an empty string for these class names
     NSString* principalClassName = Strings::IsEmpty<const char*>(principalName) ? nil : [[NSString alloc] initWithCString:principalName];
     NSString* delegateClassName = Strings::IsEmpty<const char*>(delegateName) ? nil : [[NSString alloc] initWithCString:delegateName];
-
-    NSString* activationArgument = Strings::IsEmpty<const char*>(activationArg) ? nil : [[NSString alloc] initWithCString:activationArg];
 
     WOCDisplayMode* displayMode = [UIApplication displayMode];
     [displayMode _setWindowSize:CGSizeMake(windowWidth, windowHeight)];
@@ -106,10 +108,42 @@ int ApplicationMainStart(const char* principalName,
 
     [displayMode _updateDisplaySettings];
 
-    UIApplicationMainInit(principalClassName, delegateClassName, defaultOrientation, (int)activationType, activationArgument);
+    UIApplicationMainInit(principalClassName, delegateClassName, defaultOrientation, (int)activationType, activationArg);
     ScheduleMainRunLoop();
 
     return 0;
+}
+
+int ApplicationMainStartHSTRING(const char* principalName,
+                                const char* delegateName,
+                                float windowWidth,
+                                float windowHeight,
+                                ActivationType activationType,
+                                HSTRING activationArg) {
+    return _ApplicationMainStart(principalName,
+                                 delegateName,
+                                 windowWidth,
+                                 windowHeight,
+                                 activationType,
+                                 Strings::WideToNSString(activationArg));
+}
+
+int ApplicationMainStart(const char* principalName,
+                         const char* delegateName,
+                         float windowWidth,
+                         float windowHeight,
+                         ActivationType activationType,
+                         IInspectable* activationArg) {
+    id activationArgument = nil;
+    if (activationType == ActivationTypeVoiceCommand) {
+        WMSSpeechRecognitionResult* speechResult = [WMSSpeechRecognitionResult createWith:activationArg];
+        activationArgument = speechResult;
+    } else if (activationType == ActivationTypeProtocol) {
+        WFUri* protocolResult = [WFUri createWith:activationArg];
+        activationArgument = protocolResult;
+    }
+
+    return _ApplicationMainStart(principalName, delegateName, windowWidth, windowHeight, activationType, activationArgument);
 }
 
 void SetTemporaryFolder(const char* folder) {

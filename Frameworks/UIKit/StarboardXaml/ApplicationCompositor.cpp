@@ -53,12 +53,31 @@ void InitializeApp() {
     SetupMainRunLoopTimedMultipleWaiter();
 }
 
+extern "C" void RunApplicationMainWithString(Platform::String^ principalClassName,
+                                   Platform::String^ delegateClassName,
+                                   float windowWidth,
+                                   float windowHeight,
+                                   ActivationType activationType,
+                                   Platform::String^ activationString) {
+    // Perform initialization
+    InitializeApp();
+
+    // Kick off iOS application main startup
+    ApplicationMainStartHSTRING(
+        Strings::WideToNarrow(principalClassName->Data()).c_str(),
+        Strings::WideToNarrow(delegateClassName->Data()).c_str(),
+        windowWidth,
+        windowHeight,
+        activationType,
+        reinterpret_cast<HSTRING>(activationString));
+}
+
 extern "C" void RunApplicationMain(Platform::String^ principalClassName,
                                    Platform::String^ delegateClassName,
                                    float windowWidth,
                                    float windowHeight,
                                    ActivationType activationType,
-                                   Platform::String^ activationArg) {
+                                   Platform::Object^ activationArg) {
     // Perform initialization
     InitializeApp();
 
@@ -69,7 +88,7 @@ extern "C" void RunApplicationMain(Platform::String^ principalClassName,
         windowWidth,
         windowHeight,
         activationType,
-        Strings::WideToNarrow(activationArg->Data()).c_str());
+        reinterpret_cast<IInspectable*>(activationArg));
 }
 
 // clang-format off
