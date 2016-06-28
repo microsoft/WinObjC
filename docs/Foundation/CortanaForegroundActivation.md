@@ -41,7 +41,7 @@ We will use Objective-C projection as well as C++/CX wrappers as appropriate for
 The diagram below illustrates the code flow for activating an app via Cortana.
 
 
-![Diagram of Activation path](./mediaCortana_Foreground_Activation.png)
+![Diagram of Activation path](./media/Cortana_Foreground_Activation.png)
 
 
 
