@@ -210,6 +210,12 @@
     <ClInclude Include="xib2nib\UIStackView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="xib2nib\UIProgressView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xib2nib\UIPongPressGestureRecognizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xib2nib\NIBWriter.cpp">
@@ -408,6 +414,12 @@
       <Filter>Source Files\UIKit</Filter>
     </ClCompile>
     <ClCompile Include="xib2nib\UIStackView.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIProgressView.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIPongPressGestureRecognizer.cpp">
       <Filter>Source Files\UIKit</Filter>
     </ClCompile>
   </ItemGroup>

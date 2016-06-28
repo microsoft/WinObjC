@@ -43,4 +43,14 @@
     <Type Name="NSException">
         <DisplayString>{_name,na}: {_reason,na}</DisplayString>
     </Type>
+
+    <Type Name="_NSHSTRINGString">
+        <DisplayString>{_hs,sh}</DisplayString>
+        <Expand>
+            <Item Name="[length]">WindowsGetStringLen(_hs)</Item>
+            <Synthetic Name="[encoding]">
+                <DisplayString>unicode</DisplayString>
+            </Synthetic>
+        </Expand>
+    </Type>
 </AutoVisualizer>

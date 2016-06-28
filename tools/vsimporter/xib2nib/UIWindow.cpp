@@ -16,27 +16,51 @@
 
 #include "UIWindow.h"
 
-static PropertyMapper propertyMappings[] = {
-    "IBUIResizesToFullScreen", "UIResizesToFullScreen", NULL,
-};
-static const int numPropertyMappings = sizeof(propertyMappings) / sizeof(PropertyMapper);
-
 UIWindow::UIWindow()
 {
     _visibleAtLaunch = false;
+    _resizesToFullScreen = false;
 }
 
 void UIWindow::InitFromXIB(XIBObject *obj)
 {
     UIView::InitFromXIB(obj);
+
     _visibleAtLaunch = obj->GetBool("IBUIVisibleAtLaunch", false);
+    _resizesToFullScreen = obj->GetBool("IBUIResizesToFullScreen", false);
+
+    _outputClassName = "UIWindow";
+}
+
+void UIWindow::InitFromStory(XIBObject* obj)
+{
+    UIView::InitFromStory(obj);
+
+    const char* visibleAtLaunchAttrib = getAttrib("visibleAtLaunch");
+    if (visibleAtLaunchAttrib && strcmp(visibleAtLaunchAttrib, "YES") == 0) {
+        _visibleAtLaunch = true;
+    }
+
+    const char* resizeToFullScreenAttrib = getAttrib("resizesToFullScreen");
+    if (resizeToFullScreenAttrib && strcmp(resizeToFullScreenAttrib, "YES") == 0) {
+        _resizesToFullScreen = true;
+    }
 
     _outputClassName = "UIWindow";
 }
 
 void UIWindow::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
 {
-    if ( _visibleAtLaunch ) writer->_visibleWindows->AddMember(NULL, this);
-    Map(writer, obj, propertyMappings, numPropertyMappings);
     UIView::ConvertStaticMappings(writer, obj);
+
+    // NOTE: There is difficulty confirming these keys are correct - NIB files generated were not conclusive in confirming these
+    // keys under the unarchiver
+    if (_visibleAtLaunch) {
+        writer->_visibleWindows->AddMember(NULL, this);
+        AddBool(writer, "UIVisibleAtLaunch", _visibleAtLaunch);
+    }
+
+    if (_resizesToFullScreen) {
+        AddBool(writer, "UIResizesToFullScreen", _resizesToFullScreen);
+    }
 }

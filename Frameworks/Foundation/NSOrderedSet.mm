@@ -14,217 +14,293 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import <Foundation/NSException.h>
+#import <NSOrderedSetInternal.h>
+#import <Starboard.h>
 #import <StubReturn.h>
+#import <VAListHelper.h>
 
-#include "Foundation/NSOrderedSet.h"
+// Needed to make sure that the returned array behaves like a one way proxy to an array
+@implementation _NSProxyOrderedSetArray
+- (instancetype)initWithOrderedSet:(NSOrderedSet*)orderedSet {
+    if (self = [super init]) {
+        _array = orderedSet->_arrayContainer;
+    }
+
+    return self;
+}
+
+- (NSUInteger)count {
+    return [_array count];
+}
+
+- (id)objectAtIndex:(NSUInteger)index {
+    return [_array objectAtIndex:index];
+}
+@end
 
 @implementation NSOrderedSet
+
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (instancetype)orderedSet {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [[self new] autorelease];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (instancetype)orderedSetWithArray:(NSArray*)array {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self orderedSetWithArray:array range:NSMakeRange(0, [array count]) copyItems:NO];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (instancetype)orderedSetWithArray:(NSArray*)array range:(NSRange)range copyItems:(BOOL)flag {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [[[self alloc] initWithArray:array range:range copyItems:flag] autorelease];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (instancetype)orderedSetWithObject:(id)object {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [[[self alloc] initWithObject:object] autorelease];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-+ (instancetype)orderedSetWithObjects:(id)firstObj {
-    UNIMPLEMENTED();
-    return StubReturn();
++ (instancetype)orderedSetWithObjects:(id)firstObj, ... {
+    va_list argList;
+    va_start(argList, firstObj);
+    std::vector<id> flatArgs = ConvertVAListToVector((id)firstObj, argList);
+    va_end(argList);
+
+    if (flatArgs.size() == 0) {
+        // return empty set if args are nil.
+        return [[self new] autorelease];
+    }
+
+    return [[[self alloc] initWithObjects:flatArgs.data() count:flatArgs.size()] autorelease];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-+ (instancetype)orderedSetWithObjects:(id _Nonnull const[])objects count:(NSUInteger)cnt {
-    UNIMPLEMENTED();
-    return StubReturn();
++ (instancetype)orderedSetWithObjects:(id _Nonnull const[])objects count:(NSUInteger)count {
+    return [[[self alloc] initWithObjects:objects count:count] autorelease];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (instancetype)orderedSetWithOrderedSet:(NSOrderedSet*)set {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self orderedSetWithOrderedSet:set range:NSMakeRange(0, [set count]) copyItems:NO];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (instancetype)orderedSetWithOrderedSet:(NSOrderedSet*)set range:(NSRange)range copyItems:(BOOL)flag {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [[[self alloc] initWithOrderedSet:set range:range copyItems:flag] autorelease];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (instancetype)orderedSetWithSet:(NSSet*)set {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [[[self alloc] initWithSet:set] autorelease];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (instancetype)orderedSetWithSet:(NSSet*)set copyItems:(BOOL)flag {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [[[self alloc] initWithSet:set copyItems:flag] autorelease];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithArray:(NSArray*)array {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self initWithArray:array range:NSMakeRange(0, [array count]) copyItems:NO];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithArray:(NSArray*)array copyItems:(BOOL)flag {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self initWithArray:array range:NSMakeRange(0, [array count]) copyItems:flag];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithArray:(NSArray*)array range:(NSRange)range copyItems:(BOOL)flag {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (array == nil) {
+        return [self init];
+    }
+
+    THROW_NS_IF_FALSE(E_BOUNDS, NSMaxRange(range) <= [array count]);
+
+    if (self = [self init]) {
+        NSUInteger start = range.location;
+        NSUInteger end = NSMaxRange(range);
+
+        if (flag) {
+            for (NSUInteger i = start; i < end; i++) {
+                id obj = [[array objectAtIndex:i] copy];
+                [self _insertObject:obj];
+                [obj release];
+            }
+        } else {
+            for (NSUInteger i = start; i < end; i++) {
+                [self _insertObject:[array objectAtIndex:i]];
+            }
+        }
+    }
+    return self;
+}
+
+- (void)_insertObject:(id)object {
+    if ([self containsObject:object]) {
+        return;
+    }
+
+    [_arrayContainer addObject:object];
+    [_setContainer addObject:object];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
+*/
+- (NSUInteger)count {
+    return [_arrayContainer count];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSArray*)array {
+    return [[[_NSProxyOrderedSetArray alloc] initWithOrderedSet:self] autorelease];
+}
+
+/**
+ @Status Caveat
+ @Notes returned set does not reflect future changes.
+*/
+- (NSSet*)set {
+    return [[_setContainer copy] autorelease];
+}
+
+/**
+ @Status Interoperable
 */
 - (instancetype)initWithObject:(id)object {
-    UNIMPLEMENTED();
-    return StubReturn();
+    THROW_NS_IF_FALSE(E_INVALIDARG, object != nil);
+    id ret[] = { object };
+    return [self initWithObjects:ret count:1];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-- (instancetype)initWithObjects:(id)firstObj {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (instancetype)initWithObjects:(id)firstObj, ... {
+    va_list argList;
+    va_start(argList, firstObj);
+    std::vector<id> flatArgs = ConvertVAListToVector((id)firstObj, argList);
+    va_end(argList);
+    return [self initWithObjects:flatArgs.data() count:flatArgs.size()];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-- (instancetype)initWithObjects:(id _Nonnull const[])objects count:(NSUInteger)cnt {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (instancetype)initWithObjects:(id _Nonnull const[])objects count:(NSUInteger)count {
+    if ((objects == NULL) && (count == 0)) {
+        return [self init];
+    }
+
+    THROW_NS_IF_FALSE(E_INVALIDARG, objects != NULL);
+
+    if (self = [self init]) {
+        for (NSUInteger i = 0; i < count; ++i) {
+            [self _insertObject:objects[i]];
+        }
+    }
+    return self;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithOrderedSet:(NSOrderedSet*)set {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self initWithOrderedSet:set range:NSMakeRange(0, [set count]) copyItems:NO];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithOrderedSet:(NSOrderedSet*)set copyItems:(BOOL)flag {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self initWithOrderedSet:set range:NSMakeRange(0, [set count]) copyItems:flag];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithOrderedSet:(NSOrderedSet*)orderedSet range:(NSRange)range copyItems:(BOOL)flag {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (orderedSet == nil) {
+        return [self init];
+    }
+
+    return [self initWithArray:orderedSet->_arrayContainer range:range copyItems:flag];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithSet:(NSSet*)set {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self initWithSet:set copyItems:NO];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithSet:(NSSet*)set copyItems:(BOOL)flag {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (set == nil) {
+        return [self init];
+    }
+
+    if (self = [super init]) {
+        _setContainer.attach([[NSMutableSet alloc] initWithSet:set copyItems:flag]);
+        _arrayContainer.attach([[NSMutableArray alloc] initWithArray:[set allObjects] copyItems:flag]);
+    }
+
+    return self;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)init {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (self = [super init]) {
+        _setContainer = [NSMutableSet new];
+        _arrayContainer = [NSMutableArray new];
+    }
+
+    return self;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (BOOL)containsObject:(id)object {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (object == nil) {
+        return NO;
+    }
+    return [_setContainer containsObject:object];
 }
 
 /**
@@ -238,87 +314,85 @@
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)enumerateObjectsUsingBlock:(void (^)(id, NSUInteger, BOOL*))block {
-    UNIMPLEMENTED();
+    return [_arrayContainer enumerateObjectsUsingBlock:block];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)enumerateObjectsWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(id, NSUInteger, BOOL*))block {
-    UNIMPLEMENTED();
+    return [_arrayContainer enumerateObjectsWithOptions:opts usingBlock:block];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (id)objectAtIndex:(NSUInteger)index {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [_arrayContainer objectAtIndex:index];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
+*/
+- (id)firstObject {
+    return [_arrayContainer firstObject];
+}
+
+/**
+ @Status Interoperable
+*/
+- (id)lastObject {
+    return [_arrayContainer lastObject];
+}
+
+/**
+ @Status Interoperable
 */
 - (id)objectAtIndexedSubscript:(NSUInteger)index {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [_arrayContainer objectAtIndexedSubscript:index];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSArray*)objectsAtIndexes:(NSIndexSet*)indexes {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [_arrayContainer objectsAtIndexes:indexes];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSUInteger)indexOfObject:(id)object {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [_arrayContainer indexOfObject:object];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSUInteger)indexOfObject:(id)object
               inSortedRange:(NSRange)range
                     options:(NSBinarySearchingOptions)opts
             usingComparator:(NSComparator)cmp {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [_arrayContainer indexOfObject:object inSortedRange:range options:opts usingComparator:cmp];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSUInteger)indexOfObjectAtIndexes:(NSIndexSet*)indexSet
                              options:(NSEnumerationOptions)opts
                          passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [_arrayContainer indexOfObjectAtIndexes:indexSet options:opts passingTest:predicate];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSUInteger)indexOfObjectPassingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [_arrayContainer indexOfObjectPassingTest:predicate];
 }
 
 /**
@@ -342,12 +416,10 @@
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSIndexSet*)indexesOfObjectsPassingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [_arrayContainer indexesOfObjectsPassingTest:predicate];
 }
 
 /**
@@ -360,29 +432,24 @@
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSEnumerator*)objectEnumerator {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [_arrayContainer objectEnumerator];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSEnumerator*)reverseObjectEnumerator {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [_arrayContainer reverseObjectEnumerator];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)getObjects:(id _Nonnull[])objects range:(NSRange)range {
-    UNIMPLEMENTED();
+    [_arrayContainer getObjects:objects range:range];
 }
 
 /**
@@ -427,66 +494,52 @@
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (BOOL)isEqualToOrderedSet:(NSOrderedSet*)other {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [[other array] isEqualToArray:_arrayContainer];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (BOOL)intersectsOrderedSet:(NSOrderedSet*)other {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self intersectsSet:[other set]];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (BOOL)intersectsSet:(NSSet*)set {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [_setContainer intersectsSet:set];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (BOOL)isSubsetOfOrderedSet:(NSOrderedSet*)other {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self isSubsetOfSet:[other set]];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (BOOL)isSubsetOfSet:(NSSet*)set {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [_setContainer isSubsetOfSet:set];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSArray*)sortedArrayUsingDescriptors:(NSArray*)sortDescriptors {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [_arrayContainer sortedArrayUsingDescriptors:sortDescriptors];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSArray*)sortedArrayUsingComparator:(NSComparator)cmptr {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [_arrayContainer sortedArrayUsingComparator:cmptr];
 }
 
 /**
@@ -526,30 +579,24 @@
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (id)copyWithZone:(NSZone*)zone {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self retain];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id _Nonnull[])stackbuf count:(NSUInteger)len {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [_arrayContainer countByEnumeratingWithState:state objects:stackbuf count:len];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (id)mutableCopyWithZone:(NSZone*)zone {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [[NSMutableOrderedSet alloc] initWithOrderedSet:self];
 }
 
 /**

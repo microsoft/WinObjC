@@ -29,18 +29,18 @@ NSString* const NSCocoaErrorDomain = @"NSCocoaErrorDomain";
 NSString* const NSMachErrorDomain = @"NSMachErrorDomain";
 
 /* Error Keys */
-NSString* const NSUnderlyingErrorKey = @"NSUnderlyingErrorKey";
-NSString* const NSLocalizedDescriptionKey = @"NSLocalizedDescriptionKey";
-NSString* const NSLocalizedFailureReasonErrorKey = @"NSLocalizedFailureReasonErrorKey";
+NSString* const NSUnderlyingErrorKey = static_cast<NSString* const>(kCFErrorUnderlyingErrorKey);
+NSString* const NSLocalizedDescriptionKey = static_cast<NSString* const>(kCFErrorLocalizedDescriptionKey);
+NSString* const NSLocalizedFailureReasonErrorKey = static_cast<NSString* const>(kCFErrorLocalizedFailureReasonKey);
 NSString* const NSLocalizedRecoveryOptionsErrorKey = @"NSLocalizedRecoveryOptionsErrorKey";
-NSString* const NSLocalizedRecoverySuggestionErrorKey = @"NSLocalizedRecoverySuggestionErrorKey";
+NSString* const NSLocalizedRecoverySuggestionErrorKey = static_cast<NSString* const>(kCFErrorLocalizedRecoverySuggestionKey);
 NSString* const NSRecoveryAttempterErrorKey = @"NSRecoveryAttempterErrorKey";
 NSString* const NSStringEncodingErrorKey = @"NSStringEncodingErrorKey";
 NSString* const NSErrorFailingURLStringKey = @"NSErrorFailingURLStringKey";
-NSString* const NSURLErrorKey = @"NSURLErrorKey";
+NSString* const NSURLErrorKey = static_cast<NSString* const>(kCFErrorURLKey);
 NSString* const NSDebugDescriptionKey = @"NSDebugDescription";
 
-NSString* const NSFilePathErrorKey = @"NSFilePathErrorKey";
+NSString* const NSFilePathErrorKey = static_cast<NSString* const>(kCFErrorFilePathKey);
 NSString* const NSHelpAnchorErrorKey = @"NSHelpAnchorErrorKey";
 NSString* const NSURLErrorFailingURLErrorKey = @"NSURLErrorFailingURLErrorKey";
 NSString* const NSURLErrorFailingURLStringErrorKey = @"NSURLErrorFailingURLStringErrorKey";

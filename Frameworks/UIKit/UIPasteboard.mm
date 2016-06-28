@@ -19,13 +19,14 @@
 #import "RawBuffer.h"
 #import <COMIncludes_End.h>
 
-#include "Starboard.h"
-#include "UIKit/UIPasteboard.h"
+#import "Starboard.h"
+#import "UIKit/UIPasteboard.h"
 #import "NSLogging.h"
-#include <StubReturn.h>
+#import <StubReturn.h>
 
-#include "UWP/WindowsApplicationModelDataTransfer.h"
-#include "CGImageInternal.h"
+#import "UWP/WindowsApplicationModelDataTransfer.h"
+#import "CGImageInternal.h"
+#import "MobileCoreServices/UTType.h"
 
 static const wchar_t* TAG = L"UIPasteboard";
 NSString* const UIPasteboardNameGeneral = @"UIPasteboardNameGeneral";
@@ -33,14 +34,14 @@ NSString* const UIPasteboardNameFind = @"UIPasteboardNameFind";
 NSString* const UIPasteboardChangedTypesAddedKey = @"UIPasteboardChangedTypesAddedKey";
 NSString* const UIPasteboardChangedTypesRemovedKey = @"UIPasteboardChangedTypesRemovedKey";
 
-/** @Status Interoperable */
-NSArray* const UIPasteboardTypeListString = [NSMutableArray new];
-/** @Status Interoperable */
-NSArray* const UIPasteboardTypeListURL = [NSMutableArray new];
-/** @Status Interoperable */
-NSArray* const UIPasteboardTypeListImage = [NSMutableArray new];
-/** @Status Interoperable */
-NSArray* const UIPasteboardTypeListColor = [NSMutableArray new];
+/** @Status Stub */
+NSArray* const UIPasteboardTypeListString = StubConstant();
+/** @Status Stub */
+NSArray* const UIPasteboardTypeListURL = StubConstant();
+/** @Status Stub */
+NSArray* const UIPasteboardTypeListImage = StubConstant();
+/** @Status Stub */
+NSArray* const UIPasteboardTypeListColor = StubConstant();
 
 NSString* const UIPasteboardChangedNotification = @"UIPasteboardChangedNotification";
 NSString* const UIPasteboardRemovedNotification = @"UIPasteboardRemovedNotification";
@@ -50,165 +51,51 @@ using namespace ABI::Windows::Storage::Streams;
 
 using namespace Microsoft::WRL;
 
-@implementation UIPasteboard {
-    NSMutableDictionary* _typeToData;
-}
+@implementation UIPasteboard
+
 UIPasteboard* generalPasteboard;
-NSMutableDictionary* globalPasteBoards;
+NSMutableDictionary* globalPasteboards;
+static pthread_mutex_t globalPasteboardsLock = PTHREAD_MUTEX_INITIALIZER;
+
+WADDataPackageView* _getClipboardContent() {
+    @try {
+        return [WADClipboard getContent];
+    } @catch (NSException* exception) {
+        if ([exception _hresult] == E_ACCESSDENIED) {
+            return nil;
+        }
+
+        @throw;
+    }
+}
 
 /**
  @Status Caveat
  @Notes only NSString and UIImage are supported by generalPasteboard.
 */
 + (UIPasteboard*)generalPasteboard {
-    if (generalPasteboard == nil) {
-        generalPasteboard = [[UIPasteboard alloc] init:UIPasteboardNameGeneral];
+    @synchronized(self) {
+        if (generalPasteboard == nil) {
+            generalPasteboard = [[UIPasteboard alloc] init:UIPasteboardNameGeneral];
+        }
     }
     return generalPasteboard;
 }
 
 - (UIPasteboard*)init:(NSString*)pasteBoardName {
     if (self = [super init]) {
-        if (globalPasteBoards == nil) {
-            globalPasteBoards = [[NSMutableDictionary alloc] initWithCapacity:10];
+        pthread_mutex_lock(&globalPasteboardsLock);
+        if (globalPasteboards == nil) {
+            globalPasteboards = [[NSMutableDictionary alloc] initWithCapacity:10];
         }
+        pthread_mutex_unlock(&globalPasteboardsLock);
 
-        if ([pasteBoardName isEqualToString:UIPasteboardNameGeneral]) {
-            __weak UIPasteboard* weakSelf = self;
-            EventRegistrationToken evrt = [WADClipboard addContentChangedEvent:^void(RTObject* first, RTObject* second) {
-                [weakSelf _handleItemHandedToClipboard:(RTObject*)first with:(RTObject*)second];
-            }];
-        }
-
-        _typeToData = [[NSMutableDictionary alloc] initWithCapacity:3];
         _name = pasteBoardName;
     }
     return self;
 }
 
-- (void)_handleItemHandedToClipboard:(RTObject*)first with:(RTObject*)second {
-    WADDataPackageView* wasDataPackageView = [WADClipboard getContent];
-    __weak UIPasteboard* weakSelf = self;
-
-    if ([wasDataPackageView contains:[WADStandardDataFormats text]]) {
-        [wasDataPackageView getTextAsyncWithSuccess:^void(NSString* success) {
-
-            [weakSelf _handleTextAddedToClipboard:success];
-
-        }
-            failure:^void(NSError* failure) {
-                [weakSelf _failurWhileHandingItemToClipboard:failure
-                                                     withMsg:@"_handleItemHandedToClipboard getTextAsyncWithSuccess failed"];
-
-            }];
-
-    } else if ([wasDataPackageView contains:[WADStandardDataFormats bitmap]]) {
-        [wasDataPackageView getBitmapAsyncWithSuccess:^void(WSSRandomAccessStreamReference* success) {
-
-            [weakSelf _handleBitMapAddedToClipboard:success];
-
-        }
-            failure:^void(NSError* failure) {
-                [weakSelf _failurWhileHandingItemToClipboard:failure
-                                                     withMsg:@"_handleItemHandedToClipboard getBitmapAsyncWithSuccess failed"];
-
-            }];
-
-    } else if ([wasDataPackageView contains:[WADStandardDataFormats uri]]) {
-        [wasDataPackageView getUriAsyncWithSuccess:^void(WFUri* success) {
-
-            [weakSelf _handleItemURLAddedToClipboard:success];
-
-        }
-            failure:^void(NSError* failure) {
-                [weakSelf _failurWhileHandingItemToClipboard:failure
-                                                     withMsg:@"_handleItemHandedToClipboard getBitmapAsyncWithSuccess failed"];
-
-            }];
-    }
-}
-
-- (void)_handleTextAddedToClipboard:(NSString*)data {
-    [_typeToData setObject:[data dataUsingEncoding:NSUTF8StringEncoding] forKey:@"NSString"];
-}
-
-- (void)_handleBitMapAddedToClipboard:(WSSRandomAccessStreamReference*)data {
-    __weak UIPasteboard* weakSelf = self;
-
-    [data openReadAsyncWithSuccess:^void(RTObject<WSSIRandomAccessStreamWithContentType>* success) {
-
-        WSSBuffer* buffer = [[WSSBuffer make:success.size] autorelease];
-
-        [success readAsync:buffer
-            count:success.size
-            options:WSSInputStreamOptionsNone
-            success:^void(RTObject<WSSIBuffer>* success) {
-                // Get the data out of the com object.
-                ComPtr<IInspectable> insp = [success comObj];
-                ComPtr<IBufferByteAccess> bufferByteAccess;
-                HRESULT result;
-                result = insp.As(&bufferByteAccess);
-                if (FAILED(result)) {
-                    @throw [NSException exceptionWithName:NSGenericException
-                                                   reason:@"Internal error: Failed to create IBuffer from NSData"
-                                                 userInfo:nil];
-                }
-
-                // Retrieve the buffer data.
-                byte* pixels = nullptr;
-                int length = success.length;
-                result = bufferByteAccess->Buffer(&pixels);
-                if (FAILED(result)) {
-                    @throw [NSException exceptionWithName:NSGenericException
-                                                   reason:@"Internal error: Failed to create IBuffer from NSData"
-                                                 userInfo:nil];
-                }
-
-                [weakSelf _packageNSDataIntoUIImage:(char*)pixels length:length];
-
-            }
-            progress:nullptr
-            failure:^void(NSError* failure) {
-                [weakSelf _failurWhileHandingItemToClipboard:failure withMsg:@"_handleBitMapAddedToClipboard readAsync:buffer failed"];
-            }];
-
-        IBufferByteAccess* pBufferByteAccess = nullptr;
-
-    }
-        failure:^void(NSError* failure) {
-            [weakSelf _failurWhileHandingItemToClipboard:failure withMsg:@"_handleBitMapAddedToClipboard openReadAsyncWithSuccess failed"];
-        }];
-}
-
-- (void)_packageNSDataIntoUIImage:(char*)bytes length:(int)length {
-    NSData* data = [NSData dataWithBytes:bytes length:length];
-    UIImage* uiimage = [UIImage imageWithData:data];
-    [_typeToData setObject:UIImagePNGRepresentation(uiimage) forKey:@"UIImage"];
-}
-
-- (void)_handleItemURLAddedToClipboard:(WFUri*)data {
-    NSString* temp;
-    if ([data absoluteUri] != nil && [data absoluteUri].length > 0) {
-        temp = [data absoluteUri];
-
-    } else if ([data displayUri] != nil && [data displayUri].length > 0) {
-        temp = [data displayUri];
-    }
-
-    if ([data absoluteCanonicalUri] != nil && [data absoluteCanonicalUri].length > 0) {
-        temp = [data absoluteCanonicalUri];
-    } else if ([data toString] != nil && [data toString].length > 0) {
-        temp = [data toString];
-    }
-
-    if (temp != nil) {
-        [_typeToData setObject:[temp dataUsingEncoding:NSUTF8StringEncoding] forKey:@"NSString"];
-    } else {
-        TraceError(TAG, L"Error cannot understand WFUri data");
-    }
-}
-
-- (void)_failurWhileHandingItemToClipboard:(NSError*)failure withMsg:(NSString*)msg {
++ (void)_failureWhileHandingItemToClipboard:(NSError*)failure withMsg:(NSString*)msg {
     if (failure != nil) {
         NSTraceError(TAG, @"Error with UIPasteBoard %@", failure);
     }
@@ -220,7 +107,7 @@ NSMutableDictionary* globalPasteBoards;
 
 /**
  @Status Caveat
- @Notes Only general pasteboard and local app communication is supported.
+ @Notes Only local app communication is supported.
 */
 + (UIPasteboard*)pasteboardWithName:(NSString*)pasteboardName create:(BOOL)create {
     // initArray
@@ -228,8 +115,10 @@ NSMutableDictionary* globalPasteBoards;
     if (pasteboardName == nil) {
         return [UIPasteboard pasteboardWithUniqueName];
     }
-    UIPasteboard* temp = [[UIPasteboard alloc] init];
-    [globalPasteBoards setObject:temp forKey:pasteboardName];
+    UIPasteboard* temp = [[[UIPasteboard alloc] init] autorelease];
+    pthread_mutex_lock(&globalPasteboardsLock);
+    [globalPasteboards setObject:temp forKey:pasteboardName];
+    pthread_mutex_unlock(&globalPasteboardsLock);
     return temp;
 }
 
@@ -239,8 +128,10 @@ NSMutableDictionary* globalPasteBoards;
 + (UIPasteboard*)pasteboardWithUniqueName {
     static int curId = 0;
     char szName[255];
-    sprintf_s(szName, sizeof(szName), "Undefined_%d", curId);
-    curId++;
+    @synchronized(self) {
+        sprintf_s(szName, sizeof(szName), "Undefined_%d", curId);
+        curId++;
+    }
     NSString* uniqueName = [NSString stringWithCString:szName];
     return [UIPasteboard pasteboardWithName:uniqueName create:YES];
 }
@@ -251,39 +142,86 @@ NSMutableDictionary* globalPasteBoards;
 */
 + (void)removePasteboardWithName:(NSString*)pasteboardName {
     // only allow none general pasteboards to be removed
-    if (globalPasteBoards != nil) {
-        [globalPasteBoards removeObjectForKey:pasteboardName];
+    pthread_mutex_lock(&globalPasteboardsLock);
+    if (globalPasteboards != nil) {
+        [globalPasteboards removeObjectForKey:pasteboardName];
     }
-}
-
-/**
- @Status Interoperable
- @Notes
-*/
-- (NSArray*)pasteboardTypes {
-    return _typeToData.allKeys;
-}
-
-/**
- @Status Interoperable
- @Notes
-*/
-- (BOOL)containsPasteboardTypes:(NSArray*)pasteboardTypes {
-    if ([_typeToData objectForKey:pasteboardTypes] == nil) {
-        return NO;
-    }
-    return YES;
+    pthread_mutex_unlock(&globalPasteboardsLock);
 }
 
 /**
  @Status Caveat
- @Notes only NSString and UIImage are supported.
+ @Notes only NSString, NSURL and UIImage are supported.
+*/
+- (NSArray<NSString*>*)pasteboardTypes {
+    WADDataPackageView* wasDataPackageView = _getClipboardContent();
+    NSMutableArray<NSString*>* types = [[[NSMutableArray<NSString*> alloc] init] autorelease];
+
+    if ([wasDataPackageView contains:[WADStandardDataFormats text]]) {
+        [types addObject:(NSString*)kUTTypeText];
+    }
+    if ([wasDataPackageView contains:[WADStandardDataFormats bitmap]]) {
+        [types addObject:(NSString*)kUTTypeImage];
+    }
+    if ([wasDataPackageView contains:[WADStandardDataFormats uri]]) {
+        [types addObject:(NSString*)kUTTypeURL];
+    }
+
+    return types;
+}
+
+/**
+ @Status Caveat
+ @Notes only NSString, NSURL and UIImage are supported.
+*/
+- (BOOL)containsPasteboardTypes:(NSArray*)pasteboardTypes {
+    WADDataPackageView* wasDataPackageView = _getClipboardContent();
+    BOOL result = NO;
+
+    for (NSString* type in pasteboardTypes) {
+        if ([type isEqualToString:(NSString*)kUTTypeText]) {
+            if ([wasDataPackageView contains:[WADStandardDataFormats text]]) {
+                result = YES;
+                break;
+            }
+        } else if ([type isEqualToString:(NSString*)kUTTypeImage]) {
+            if ([wasDataPackageView contains:[WADStandardDataFormats bitmap]]) {
+                result = YES;
+                break;
+            }
+        } else if ([type isEqualToString:(NSString*)kUTTypeURL]) {
+            if ([wasDataPackageView contains:[WADStandardDataFormats uri]]) {
+                result = YES;
+                break;
+            }
+        }
+    }
+
+    return result;
+}
+
+/**
+ @Status Caveat
+ @Notes only NSString and UIImage (only PNG format) are supported.
 */
 - (NSData*)dataForPasteboardType:(NSString*)pasteboardType {
-    if ([_name isEqualToString:UIPasteboardNameGeneral]) {
-        return [_typeToData objectForKey:pasteboardType];
+    WADDataPackageView* wasDataPackageView = _getClipboardContent();
+    NSData* data = nil;
+
+    if ([pasteboardType isEqualToString:(NSString*)kUTTypeText]) {
+        NSString* stringData = [UIPasteboard _getStringFromClipboard];
+        if (stringData != nil) {
+            data = [stringData dataUsingEncoding:NSUnicodeStringEncoding];
+        }
+    } else if ([pasteboardType isEqualToString:(NSString*)kUTTypeImage]) {
+        UIImage* imageData = [UIPasteboard _getImageFromClipboard];
+        if (imageData != nil) {
+            // After UIImageJPEGRepresentation is implemented, should consider both PND and JPEG
+            data = UIImagePNGRepresentation(imageData);
+        }
     }
-    return [_typeToData objectForKey:pasteboardType];
+
+    return data;
 }
 
 /**
@@ -303,13 +241,12 @@ NSMutableDictionary* globalPasteBoards;
     if (data == nil || pasteboardType == nil) {
         return;
     }
-    [_typeToData setObject:data forKey:pasteboardType];
 
     // Copy and Paste
     if ([_name isEqualToString:UIPasteboardNameGeneral]) {
         WADDataPackage* dataPackage = [[WADDataPackage make] autorelease];
         dataPackage.requestedOperation = WADDataPackageOperationCopy;
-        [self _setData:pasteboardType withData:data on:dataPackage];
+        [UIPasteboard _setData:pasteboardType withData:data on:dataPackage];
         [WADClipboard setContent:dataPackage];
     }
 }
@@ -323,8 +260,7 @@ NSMutableDictionary* globalPasteBoards;
     result = BufferFromRawData(&rawBuffer, (unsigned char*)data, length);
 
     if (FAILED(result)) {
-        @throw
-            [NSException exceptionWithName:NSGenericException reason:@"Internal error: Failed to create IBuffer from NSData" userInfo:nil];
+        THROW_NS_HR_MSG(result, "Internal error: Failed to create IBuffer from NSData.");
     }
 
     buffer.Attach(rawBuffer);
@@ -342,7 +278,7 @@ NSMutableDictionary* globalPasteBoards;
     return stream;
 }
 
-- (WSSInMemoryRandomAccessStream*)grabStreamFromUIImage:(UIImage*)image {
++ (WSSInMemoryRandomAccessStream*)_grabStreamFromUIImage:(UIImage*)image {
     CGImageRef img = [image CGImage];
 
     if (img->_imgType == CGImageTypePNG || img->_imgType == CGImageTypeJPEG) {
@@ -404,23 +340,27 @@ NSMutableDictionary* globalPasteBoards;
         }
 
         WSSInMemoryRandomAccessStream* stream = [[WSSInMemoryRandomAccessStream make] autorelease];
-        return [UIPasteboard _populateStream:stream withData:data withLength:len];
+        [UIPasteboard _populateStream:stream withData:data withLength:len];
+        if (freeData) {
+            IwFree((void*)data);
+        }
+        return stream;
     }
     return nil;
 }
 
-- (void)_setData:(NSString*)type withData:(NSData*)data on:(WADDataPackage*)package {
-    if ([type isEqualToString:@"NSString"]) {
-        [package setText:[[NSString alloc] initWithData:data encoding:NSUnicodeStringEncoding]];
-    } else if ([type isEqualToString:@"UIImage"]) {
++ (void)_setData:(NSString*)type withData:(NSData*)data on:(WADDataPackage*)package {
+    if ([type isEqualToString:(NSString*)kUTTypeText]) {
+        [package setText:[[[NSString alloc] initWithData:data encoding:NSUnicodeStringEncoding] autorelease]];
+    } else if ([type isEqualToString:(NSString*)kUTTypeImage]) {
         // grab the image and unpack it and repack it.
-        UIImage* uiImage = [[UIImage imageWithData:data] retain];
+        UIImage* uiImage = [UIImage imageWithData:data];
         WSSRandomAccessStreamReference* randomAccessStreamReference =
-            [WSSRandomAccessStreamReference createFromStream:[self grabStreamFromUIImage:uiImage]];
+            [WSSRandomAccessStreamReference createFromStream:[UIPasteboard _grabStreamFromUIImage:uiImage]];
         [package setBitmap:randomAccessStreamReference];
-    } else if ([type isEqualToString:@"NSURL"]) {
+    } else if ([type isEqualToString:(NSString*)kUTTypeURL]) {
         // make sure it is a valid NSURL
-        NSURL* url = [NSURL URLWithString:[[NSString alloc] initWithData:data encoding:NSUnicodeStringEncoding]];
+        NSURL* url = [NSURL URLWithString:[[[NSString alloc] initWithData:data encoding:NSUnicodeStringEncoding] autorelease]];
         if (url == nil) {
             TraceWarning(TAG, L"Null NSURL not supported");
             return;
@@ -495,6 +435,251 @@ NSMutableDictionary* globalPasteBoards;
 */
 - (void)addItems:(NSArray*)items {
     UNIMPLEMENTED();
+}
+
+/**
+ @Status Caveat
+ @Notes Only general pasteboard, for other type, it just will return nil.
+*/
+- (NSString*)string {
+    if ([_name isEqualToString:UIPasteboardNameGeneral]) {
+        return [UIPasteboard _getStringFromClipboard];
+    }
+
+    return nil;
+}
+
+/**
+ @Status Caveat
+ @Notes Only general pasteboard.
+*/
+- (void)setString:(NSString*)aString {
+    if (aString == nil) {
+        return;
+    }
+
+    if ([_name isEqualToString:UIPasteboardNameGeneral]) {
+        [UIPasteboard _setStringToClipboard:aString];
+    }
+}
+
++ (NSString*)_getStringFromClipboard {
+    __block NSString* stringData = nil;
+    WADDataPackageView* wasDataPackageView = _getClipboardContent();
+
+    if ([wasDataPackageView contains:[WADStandardDataFormats text]]) {
+        dispatch_group_t group = dispatch_group_create();
+        dispatch_group_enter(group);
+
+        [wasDataPackageView getTextAsyncWithSuccess:^void(NSString* success) {
+            stringData = [success retain];
+
+            dispatch_group_leave(group);
+        }
+            failure:^void(NSError* failure) {
+                [UIPasteboard _failureWhileHandingItemToClipboard:failure withMsg:@"string getTextAsyncWithSuccess failed"];
+
+                dispatch_group_leave(group);
+            }];
+
+        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+        dispatch_release(group);
+    }
+
+    return [stringData autorelease];
+}
+
++ (void)_setStringToClipboard:(NSString*)stringData {
+    NSData* data = [stringData dataUsingEncoding:NSUnicodeStringEncoding];
+    WADDataPackage* dataPackage = [[WADDataPackage make] autorelease];
+
+    dataPackage.requestedOperation = WADDataPackageOperationCopy;
+    [UIPasteboard _setData:(NSString*)kUTTypeText withData:data on:dataPackage];
+    [WADClipboard setContent:dataPackage];
+}
+
+/**
+ @Status Caveat
+ @Notes Only general pasteboard, for other type, it just will return nil.
+*/
+- (UIImage*)image {
+    if ([_name isEqualToString:UIPasteboardNameGeneral]) {
+        return [UIPasteboard _getImageFromClipboard];
+    }
+
+    return nil;
+}
+
+/**
+ @Status Caveat
+ @Notes Only general pasteboard.
+*/
+- (void)setImage:(UIImage*)aImage {
+    if (aImage == nil) {
+        return;
+    }
+
+    if ([_name isEqualToString:UIPasteboardNameGeneral]) {
+        [UIPasteboard _setImageToClipboard:aImage];
+    }
+}
+
++ (UIImage*)_getImageFromClipboard {
+    __block UIImage* imageData = nil;
+    WADDataPackageView* wasDataPackageView = _getClipboardContent();
+
+    if ([wasDataPackageView contains:[WADStandardDataFormats bitmap]]) {
+        dispatch_group_t group = dispatch_group_create();
+        dispatch_group_enter(group);
+
+        [wasDataPackageView getBitmapAsyncWithSuccess:^void(WSSRandomAccessStreamReference* randomAccessStreamReference) {
+
+            [randomAccessStreamReference openReadAsyncWithSuccess:^void(RTObject<WSSIRandomAccessStreamWithContentType>* content) {
+
+                WSSBuffer* buffer = [[WSSBuffer make:content.size] autorelease];
+
+                [content readAsync:buffer
+                    count:content.size
+                    options:WSSInputStreamOptionsNone
+                    success:^void(RTObject<WSSIBuffer>* success) {
+                        // Get the data out of the com object.
+                        ComPtr<IInspectable> insp = [success comObj];
+                        ComPtr<IBufferByteAccess> bufferByteAccess;
+                        HRESULT result = insp.As(&bufferByteAccess);
+                        if (FAILED(result)) {
+                            THROW_NS_HR_MSG(result, "Internal error: Failed to create IBuffer from NSData.");
+                        }
+
+                        // Retrieve the buffer data.
+                        byte* pixels = nullptr;
+                        int length = success.length;
+                        result = bufferByteAccess->Buffer(&pixels);
+                        if (FAILED(result)) {
+                            THROW_NS_HR_MSG(result, "Internal error: Failed to create IBuffer from NSData.");
+                        }
+
+                        NSData* data = [NSData dataWithBytesNoCopy:pixels length:length freeWhenDone:NO];
+                        imageData = [[UIImage imageWithData:data] retain];
+
+                        dispatch_group_leave(group);
+                    }
+                    progress:nullptr
+                    failure:^void(NSError* readError) {
+                        [UIPasteboard _failureWhileHandingItemToClipboard:readError
+                                                                  withMsg:@"_getImageFromClipboard readAsync:buffer failed"];
+
+                        dispatch_group_leave(group);
+                    }];
+
+            }
+                failure:^void(NSError* openError) {
+                    [UIPasteboard _failureWhileHandingItemToClipboard:openError
+                                                              withMsg:@"_getImageFromClipboard openReadAsyncWithSuccess failed"];
+
+                    dispatch_group_leave(group);
+                }];
+
+        }
+            failure:^void(NSError* failure) {
+                [UIPasteboard _failureWhileHandingItemToClipboard:failure
+                                                          withMsg:@"_getImageFromClipboard getBitmapAsyncWithSuccess failed"];
+
+                dispatch_group_leave(group);
+            }];
+
+        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+        dispatch_release(group);
+    }
+
+    return [imageData autorelease];
+}
+
++ (void)_setImageToClipboard:(UIImage*)imageData {
+    WADDataPackage* dataPackage = [[WADDataPackage make] autorelease];
+    dataPackage.requestedOperation = WADDataPackageOperationCopy;
+
+    WSSRandomAccessStreamReference* randomAccessStreamReference =
+        [WSSRandomAccessStreamReference createFromStream:[UIPasteboard _grabStreamFromUIImage:imageData]];
+    [dataPackage setBitmap:randomAccessStreamReference];
+
+    [WADClipboard setContent:dataPackage];
+}
+
+/**
+ @Status Caveat
+ @Notes Only general pasteboard, for other type, it just will return nil.
+*/
+- (NSURL*)URL {
+    if ([_name isEqualToString:UIPasteboardNameGeneral]) {
+        return [UIPasteboard _getURLFromClipboard];
+    }
+
+    return nil;
+}
+
+/**
+ @Status Caveat
+ @Notes Only general pasteboard and local app communication is supported.
+*/
+- (void)setURL:(NSURL*)aURL {
+    if (aURL == nil) {
+        return;
+    }
+
+    if ([_name isEqualToString:UIPasteboardNameGeneral]) {
+        [UIPasteboard _setURLToClipboard:aURL];
+    }
+}
+
++ (NSURL*)_getURLFromClipboard {
+    __block NSURL* URLData = nil;
+    WADDataPackageView* wasDataPackageView = _getClipboardContent();
+
+    if ([wasDataPackageView contains:[WADStandardDataFormats uri]]) {
+        dispatch_group_t group = dispatch_group_create();
+        dispatch_group_enter(group);
+
+        [wasDataPackageView getUriAsyncWithSuccess:^void(WFUri* data) {
+            NSString* temp = data.absoluteUri;
+            if (temp == nil || temp.length == 0) {
+                temp = data.displayUri;
+            }
+            if (temp == nil || temp.length == 0) {
+                temp = data.absoluteCanonicalUri;
+            }
+            if (temp == nil || temp.length == 0) {
+                temp = [data toString];
+            }
+
+            if (temp != nil) {
+                URLData = [[NSURL URLWithString:temp] retain];
+            } else {
+                TraceError(TAG, L"Error cannot understand WFUri data");
+            }
+
+            dispatch_group_leave(group);
+        }
+            failure:^void(NSError* failure) {
+                [UIPasteboard _failureWhileHandingItemToClipboard:failure withMsg:@"_getURLFromClipboard getBitmapAsyncWithSuccess failed"];
+
+                dispatch_group_leave(group);
+            }];
+
+        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+        dispatch_release(group);
+    }
+
+    return [URLData autorelease];
+}
+
++ (void)_setURLToClipboard:(NSURL*)URLData {
+    WADDataPackage* dataPackage = [[WADDataPackage make] autorelease];
+    dataPackage.requestedOperation = WADDataPackageOperationCopy;
+
+    WFUri* uri = [[WFUri makeUri:URLData.absoluteString] autorelease];
+    [dataPackage setUri:uri];
+
+    [WADClipboard setContent:dataPackage];
 }
 
 @end

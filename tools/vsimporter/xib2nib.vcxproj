@@ -109,6 +109,8 @@
     <ClInclude Include="xib2nib\UIPageControl.h" />
     <ClInclude Include="xib2nib\UIPanGestureRecognizer.h" />
     <ClInclude Include="xib2nib\UIPickerView.h" />
+    <ClInclude Include="xib2nib\UIPongPressGestureRecognizer.h" />
+    <ClInclude Include="xib2nib\UIProgressView.h" />
     <ClInclude Include="xib2nib\UIProxyObject.h" />
     <ClInclude Include="xib2nib\UIRuntimeAccessibilityConfiguration.h" />
     <ClInclude Include="xib2nib\UIRuntimeEventConnection.h" />
@@ -176,6 +178,8 @@
     <ClCompile Include="xib2nib\UIPageControl.cpp" />
     <ClCompile Include="xib2nib\UIPanGestureRecognizer.cpp" />
     <ClCompile Include="xib2nib\UIPickerView.cpp" />
+    <ClCompile Include="xib2nib\UIPongPressGestureRecognizer.cpp" />
+    <ClCompile Include="xib2nib\UIProgressView.cpp" />
     <ClCompile Include="xib2nib\UIProxyObject.cpp" />
     <ClCompile Include="xib2nib\UIRuntimeAccessibilityConfiguration.cpp" />
     <ClCompile Include="xib2nib\UIRuntimeEventConnection.cpp" />

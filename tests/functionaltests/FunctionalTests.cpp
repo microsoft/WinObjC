@@ -156,6 +156,7 @@ public:
 extern void NSURLConnectionRequestWithURL();
 extern void NSURLConnectionRequestWithURL_Failure();
 
+extern void NSURLSessionTaskIdentifiers();
 extern void NSURLSessionDataTaskWithURL();
 extern void NSURLSessionDataTaskWithURL_Failure();
 extern void NSURLSessionDataTaskWithURL_WithCompletionHandler();
@@ -192,6 +193,10 @@ public:
     //
     // NSURLSession
     //
+
+    TEST_METHOD(NSURLSession_TaskIdentifiers) {
+        NSURLSessionTaskIdentifiers();
+    }
 
     TEST_METHOD(NSURLSession_DataTaskWithURL) {
         NSURLSessionDataTaskWithURL();
@@ -232,7 +237,7 @@ public:
 extern void NSUserDefaultsBasic();
 extern void NSUserDefaultsKVCArray();
 extern void NSUserDefaultsFlush();
-extern void NSUserDefaultsPersist();
+extern void NSUserDefaultsPerf();
 
 class NSUserDefaults {
 public:
@@ -255,6 +260,10 @@ public:
 
     TEST_METHOD(NSUSerDefaults_Flush) {
         NSUserDefaultsFlush();
+    }
+
+    TEST_METHOD(NSUserDefaults_Perf) {
+        NSUserDefaultsPerf();
     }
 
 }; /* class NSUserDefaults */

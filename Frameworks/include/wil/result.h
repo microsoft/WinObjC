@@ -4935,6 +4935,20 @@ static NSString* const g_winobjcDomain = @"WinObjCErrorDomain";
 static NSString* const g_hresultDomain = @"HRESULTErrorDomain";
 static NSString* const g_NSHResultErrorDictKey = @"hresult";
 
+NSString* _NSStringFromHResult(HRESULT hr) {
+    wchar_t errorText[256];
+    errorText[0] = L'\0';
+    auto strLen = FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+        nullptr,
+        hr,
+        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+        errorText,
+        ARRAYSIZE(errorText),
+        nullptr);
+
+    return[NSString stringWithCharacters:reinterpret_cast<const unichar*>(errorText) length:strLen];
+}
+
 // Create the extra information we can communicate as part of the exception:
 NSDictionary* _createFailureInfoDict(const wil::FailureInfo& fi) {
     return @{
@@ -4942,21 +4956,8 @@ NSDictionary* _createFailureInfoDict(const wil::FailureInfo& fi) {
         @"function" : [NSString stringWithUTF8String:fi.pszFunction],
         @"line" : [NSNumber numberWithInt:fi.uLineNumber],
         g_NSHResultErrorDictKey : [NSNumber numberWithInt:fi.hr],
+        NSLocalizedDescriptionKey : [NSString stringWithFormat:@"0x%x: %@", fi.hr, _NSStringFromHResult(fi.hr)],
     };
-}
-
-NSString* _NSStringFromHResult(HRESULT hr) {
-    wchar_t errorText[256];
-    errorText[0] = L'\0';
-    auto strLen = FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                                 nullptr,
-                                 hr,
-                                 MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                                 errorText,
-                                 ARRAYSIZE(errorText),
-                                 nullptr);
-
-    return [NSString stringWithCharacters:reinterpret_cast<const unichar*>(errorText) length:strLen];
 }
 
 // Construct an NSError for the out parameter representing a failure info from WRL:

@@ -55,6 +55,7 @@ dataTask:(NSURLSessionDataTask*)dataTask {
 */
 
 - (id)_initWithTaskDelegate:(id<_NSURLSessionTaskDelegate>)taskDelegate
+                 identifier:(NSUInteger)identifier
               configuration:(NSURLSessionConfiguration*)configuration
                  resumeData:(NSData*)resumeData {
     _NSURLSessionDownloadResumeInfo* resumeInfo = [NSKeyedUnarchiver unarchiveObjectWithData:resumeData];
@@ -64,7 +65,7 @@ dataTask:(NSURLSessionDataTask*)dataTask {
     }
 
     NSURLRequest* originalRequest = [[[NSURLRequest alloc] initWithURL:resumeInfo.remoteURL] autorelease];
-    if (self = [super _initWithTaskDelegate:taskDelegate configuration:configuration request:originalRequest]) {
+    if (self = [super _initWithTaskDelegate:taskDelegate identifier:identifier configuration:configuration request:originalRequest]) {
         NSMutableURLRequest* newRequest = [[originalRequest mutableCopy] autorelease];
         if (resumeInfo.lastModifiedDate) {
             [newRequest setValue:resumeInfo.lastModifiedDate forHTTPHeaderField:@"If-Range"];

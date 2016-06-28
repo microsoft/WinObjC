@@ -34,7 +34,7 @@
     self.webView.delegate = self;
     [self.view addSubview:self.webView];
     
-    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.microsoft.com/"]]];
+    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://www.microsoft.com/"]]];
 }
 
 

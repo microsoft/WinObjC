@@ -45,6 +45,7 @@ enum HttpStatus : int {
 }
 
 - (id)_initWithTaskDelegate:(id<_NSURLSessionTaskDelegate>)taskDelegate
+                 identifier:(NSUInteger)identifier
               configuration:(NSURLSessionConfiguration*)configuration
                     request:(NSURLRequest*)request {
     if (self = [super init]) {
@@ -72,6 +73,8 @@ enum HttpStatus : int {
 
         _countOfBytesExpectedToReceive = NSURLSessionTransferSizeUnknown;
         _countOfBytesExpectedToSend = NSURLSessionTransferSizeUnknown;
+
+        _taskIdentifier = identifier;
     }
     return self;
 }

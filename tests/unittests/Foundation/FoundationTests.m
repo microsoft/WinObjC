@@ -566,6 +566,9 @@ TEST(KVO, DisabledInitialNotification) { // Initial notification for non-notifyi
                   1,
                   "An INITIAL notification for nonNotifyingObjectProperty should have fired.");
 
+    EXPECT_EQ(@(NSKeyValueChangeSetting),
+              [[[[observer changesForKeypath:@"nonNotifyingObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeKindKey]);
+
     [observed removeObserver:observer forKeyPath:@"nonNotifyingObjectProperty"];
     [pool release];
 }

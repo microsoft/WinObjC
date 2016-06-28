@@ -129,6 +129,7 @@ LIBRARY Starboard
         arc4random
         arc4random_uniform
         mach_timebase_info
+        mach_absolute_time
         sysctlbyname
 
         EbrIncrement

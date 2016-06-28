@@ -1,3 +1,20 @@
+//******************************************************************************
+//
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+
 #include <TestFramework.h>
 
 #import <GLKit/GLKit.h>
@@ -10,6 +27,14 @@
 
 using namespace GLKitShader;
 
+struct Dw32 {
+    union {
+        unsigned int u32;
+        float f32;
+    };
+};
+
+
 NSString* stripSource(NSString* s, NSString* searchStr) {
     NSRange r;
     while ((r = [s rangeOfString:searchStr]).location != NSNotFound) {
@@ -17,6 +42,7 @@ NSString* stripSource(NSString* s, NSString* searchStr) {
         searchRange.location = r.location + r.length;
         searchRange.length = s.length - searchRange.location;
         NSRange endRange = [s rangeOfString:@"\n" options:static_cast<NSStringCompareOptions>(0) range:searchRange];
+
         if (endRange.location != NSNotFound) {
             r.length = endRange.location - r.location;
         } else {
@@ -68,6 +94,41 @@ bool hasVariable(GLKShaderPair* p, const char* varName, bool checkVS = true, boo
 
     return false;
 }
+
+static void checkMatrixWithinTolerance(
+    const char* pStr, const float* pM, const float* pMGolden, int dimension = 4, float tolerance = COMPARISON_EPSILON) {
+    const unsigned int* pMUInt = reinterpret_cast<const unsigned int*>(pM);
+    const unsigned int* pMGoldenUInt = reinterpret_cast<const unsigned int*>(pMGolden);
+
+    assert(dimension <= 4);
+
+    int index = 0;
+
+    for (int i = 0; i < dimension; i++) {
+        for (int j = 0; j < dimension; j++) {
+            // Catch cases where element data are identical but ASSERT_NEAR and ASSERT_EQ identifies as different
+            // Specifically, ASSERT_NEAR incorrectly marks +/- NaN values as not being identical
+            if (pMUInt[index] != pMGoldenUInt[index]) {
+                ASSERT_NEAR_MSG(pM[index],
+                                pMGolden[index],
+                                tolerance,
+                                "TEST FAILED: %s \n\tMatrix mismatch at M[%i][%i]\n\t\tGOLDEN: %f\n\t\tACTUAL: %f\n",
+                                pStr,
+                                i,
+                                j,
+                                pMGolden[index],
+                                pM[index]);
+            }
+
+            index++;
+        }
+    }
+}
+
+static void checkMatrix(const char* pStr, const float* pM, const float* pMGolden, int dimension = 4) {
+    checkMatrixWithinTolerance(pStr, pM, pMGolden, dimension, 0.0f);
+}
+
 
 TEST(GLKit, DeadCodeElimination) {
     GLKVector4 clr = GLKVector4White();
@@ -393,85 +454,154 @@ TEST(GLKit, TemporaryShaderNodes) {
 TEST(GLKit, BasicMath) {
     BOOL invertible = FALSE;
 
-    GLKVector4 v = GLKVector4Make(3.f, 2.f, 1.f, 1.f);
+    Dw32 cos2f;
+    Dw32 sin2f;
+    Dw32 negSin2f;
 
-    GLKMatrix4 rot = GLKMatrix4MakeXRotation(2.f);
-    GLKMatrix4 trans = GLKMatrix4MakeTranslation(5.f, 5.f, 5.f);
+    cos2f.f32 = cosf(2.f);
+    sin2f.f32 = sinf(2.f);
+    negSin2f.f32 = -sin2f.f32;
 
-    auto mc = GLKMatrix4Multiply(trans, rot);
+    const Dw32 goldenIdentity[16] = {  0x3f800000, 0x00000000, 0x00000000, 0x00000000, 
+                                       0x00000000, 0x3f800000, 0x00000000, 0x00000000,
+                                       0x00000000, 0x00000000, 0x3f800000, 0x00000000, 
+                                       0x00000000, 0x00000000, 0x00000000, 0x3f800000 };
+                                         
+    const Dw32 goldenRot2OverX[16] = { 0x3f800000, 0x00000000, 0x00000000, 0x00000000, 
+                                       0x00000000, cos2f,      sin2f,      0x00000000,
+                                       0x00000000, negSin2f,   cos2f,      0x00000000, 
+                                       0x00000000, 0x00000000, 0x00000000, 0x3f800000 };
+                                         
+    const Dw32 goldenTrans555[16] = {  0x3f800000, 0x00000000, 0x00000000, 0x00000000, 
+                                       0x00000000, 0x3f800000, 0x00000000, 0x00000000,
+                                       0x00000000, 0x00000000, 0x3f800000, 0x00000000, 
+                                       0x40a00000, 0x40a00000, 0x40a00000, 0x3f800000 };
+                                         
+    const Dw32 goldenOrtho[16] = {     0x3bda740e, 0x00000000, 0x00000000, 0x00000000, 
+                                       0x00000000, 0xbba3d70a, 0x00000000, 0x00000000,
+                                       0x00000000, 0x00000000, 0xbda72f05, 0x00000000, 
+                                       0xbeaaaaab, 0xbe800000, 0xbf853978, 0x3f800000 };
+                                        
+    const Dw32 goldenLookAt[16] = {    0xbf800000, 0x00000000, 0x00000000, 0x00000000, 
+                                       0x00000000, 0x3f57fa33, 0x3f0970ac, 0x00000000,
+                                       0x00000000, 0x3f0970ac, 0xbf57fa33, 0x00000000, 
+                                       0x00000000, 0xb5000000, 0xc1509d4e, 0x3f800000 };
+
+    const Dw32 goldenRotIdentZeroVec[16] = { 
+                                       0xffc00000, 0xffc00000, 0xffc00000, 0xffc00000, 
+                                       0xffc00000, 0xffc00000, 0xffc00000, 0xffc00000, 
+                                       0xffc00000, 0xffc00000, 0xffc00000, 0xffc00000, 
+                                       0x00000000, 0x00000000, 0x00000000, 0x3f800000 };
+
+    const Dw32 goldenMakeRotZeroVec[16] = { 
+                                       0xffc00000, 0xffc00000, 0xffc00000, 0x00000000, 
+                                       0xffc00000, 0xffc00000, 0xffc00000, 0x00000000, 
+                                       0xffc00000, 0xffc00000, 0xffc00000, 0x00000000, 
+                                       0x00000000, 0x00000000, 0x00000000, 0x3f800000 };
+
+
+    GLKMatrix4 mIdentity       = GLKMatrix4Identity;
+    GLKVector4 v               = GLKVector4Make(3.f, 2.f, 1.f, 1.f);
+    GLKMatrix4 ortho           = GLKMatrix4MakeOrtho(-100.0f, 200.0f, 150.0f, -250.0f, 0.5f, 25.0f);
+    GLKMatrix4 lookAt          = GLKMatrix4MakeLookAt(0.0f, 7.0f, -11.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+    GLKMatrix4 rot             = GLKMatrix4MakeXRotation(2.f);
+    GLKMatrix4 trans           = GLKMatrix4MakeTranslation(5.f, 5.f, 5.f);
+    GLKMatrix4 rotIdentZeroVec = GLKMatrix4Rotate(mIdentity, 2.0f, 0.0f, 0.0f, 0.0f);
+    GLKMatrix4 makeRotZeroVec  = GLKMatrix4MakeRotation(2.0f, 0.0f, 0.0f, 0.0f);
+
+
+    // Validate generation of identity, rotateX, translation, rotateAxis and compound identity+rotateAxis matrices
+    checkMatrixWithinTolerance("GLKMatrix4Identity.", &mIdentity.m[0], &goldenIdentity[0].f32);
+    checkMatrixWithinTolerance("GLKMatrix4MakeOrtho.", &ortho.m[0], &goldenOrtho[0].f32);
+    checkMatrixWithinTolerance("GLKMatrix4MakeLookAt.", &lookAt.m[0], &goldenLookAt[0].f32);
+    checkMatrixWithinTolerance("GLKMatrix4MakeXRotation.", &rot.m[0], &goldenRot2OverX[0].f32);
+    checkMatrix("GLKMatrix4MakeTranslation.", &trans.m[0], &goldenTrans555[0].f32);
+    checkMatrix("GLKMatrix4Rotate Identity with Zero Mag Vector.", &rotIdentZeroVec.m[0], &goldenRotIdentZeroVec[0].f32);
+    checkMatrix("GLKMatrix4MakeRotation over Zero Mag Vector.", &makeRotZeroVec.m[0], &goldenMakeRotZeroVec[0].f32); 
+
+    //Validate multiply order
+    auto mc = GLKMatrix4Multiply(rot, trans);
+    EXPECT_TRUE_MSG(((mc.m30 == trans.m30) && ((mc.m31 != trans.m31) || (mc.m32 != trans.m32))), 
+                    "Translation before rotateX so Y & Z translation values should change in product.");
+
+    // Generate inversion matrix
     auto mcInverse = GLKMatrix4Invert(mc, &invertible);
     EXPECT_TRUE_MSG(invertible, "Expected to be able to calculate matrix inverse.");
 
+    // Validate inversion matrix
+    auto mcMultInverse = GLKMatrix4Multiply(mc, mcInverse);
+    checkMatrixWithinTolerance("A matrix multiplied by it's inverse should produce the identity matrix.", 
+                               &mcMultInverse.m[0], &mIdentity.m[0]);
+
+
+    // Validate transform and reverse transform
     auto v2 = GLKMatrix4MultiplyVector4(mcInverse, GLKMatrix4MultiplyVector4(mc, v));
     EXPECT_TRUE_MSG(GLKVector4AllEqualToVector4(v, v2), "Matrix multiplication yielded unexpected result.");
 
-    float values[16] = { 0.f, 1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f, 9.f, 10.f, 11.f, 12.f, 13.f, 14.f, 15.f };
-    GLKMatrix4 m = GLKMatrix4MakeWithArray(values);
-    EXPECT_TRUE_MSG(m.m[0] == values[0] && m.m[1] == values[1] && m.m[2] == values[2] && m.m[3] == values[3] && m.m[4] == values[4] &&
-                        m.m[5] == values[5] && m.m[6] == values[6] && m.m[7] == values[7] && m.m[8] == values[8] && m.m[9] == values[9] &&
-                        m.m[10] == values[10] && m.m[11] == values[11] && m.m[12] == values[12] && m.m[13] == values[13] &&
-                        m.m[14] == values[14] && m.m[15] == values[15],
-                    "GLKMatrix4MakeWithArray yielded unexpected result.");
+    // Validate handling of non-invertible matrices.
+    // Make mc a non-invertible matrix by clearing the m33 element of the rotation+translation matrix.
+    mc.m33 = 0.0f;
+    mcInverse = GLKMatrix4Invert(mc, &invertible);
+    EXPECT_TRUE_MSG((invertible == FALSE), "GLKMatrix4Invert erroneously reported non-invertible matrix as invertible.");
+    checkMatrix("GLKMatrix4Invert should return the identity matrix when a non-invertible matrix is passed in.", 
+                &mcInverse.m[0], &mIdentity.m[0]);
 
-    m = GLKMatrix4MakeWithArrayAndTranspose(values);
-    EXPECT_TRUE_MSG(m.m[0] == values[0] && m.m[1] == values[4] && m.m[2] == values[8] && m.m[3] == values[12] && m.m[4] == values[1] &&
-                        m.m[5] == values[5] && m.m[6] == values[9] && m.m[7] == values[13] && m.m[8] == values[2] && m.m[9] == values[6] &&
-                        m.m[10] == values[10] && m.m[11] == values[14] && m.m[12] == values[3] && m.m[13] == values[7] &&
-                        m.m[14] == values[11] && m.m[15] == values[15],
-                    "GLKMatrix4MakeWithArrayAndTranspose yielded unexpected result.");
+    // Validate Making a 4x4 matrix using various methods
+    float m4Values[16]  = { 0.f, 1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f, 9.f, 10.f, 11.f, 12.f, 13.f, 14.f, 15.f };
+    float m4ValuesT[16] = { 0.f, 4.f, 8.f, 12.f, 1.f, 5.f, 9.f, 13.f, 2.f, 6.f, 10.f, 14.f, 3.f, 7.f, 11.f, 15.f };
 
-    m = GLKMatrix4MakeWithRows(GLKVector4Make(0.f, 1.f, 2.f, 3.f),
+    GLKMatrix4 m4 = GLKMatrix4MakeWithArray(m4Values);
+    checkMatrix("GLKMatrix4MakeWithArray.", &m4.m[0], &m4Values[0], 4);
+
+    m4 = GLKMatrix4MakeWithArrayAndTranspose(m4Values);
+    checkMatrix("GLKMatrix4MakeWithArrayAndTranspose.", &m4.m[0], &m4ValuesT[0], 4);
+
+    m4 = GLKMatrix4MakeWithRows(GLKVector4Make(0.f, 1.f, 2.f, 3.f),
                                GLKVector4Make(4.f, 5.f, 6.f, 7.f),
                                GLKVector4Make(8.f, 9.f, 10.f, 11.f),
                                GLKVector4Make(12.f, 13.f, 14.f, 15.f));
-    EXPECT_TRUE_MSG(m.m[0] == values[0] && m.m[1] == values[4] && m.m[2] == values[8] && m.m[3] == values[12] && m.m[4] == values[1] &&
-                        m.m[5] == values[5] && m.m[6] == values[9] && m.m[7] == values[13] && m.m[8] == values[2] && m.m[9] == values[6] &&
-                        m.m[10] == values[10] && m.m[11] == values[14] && m.m[12] == values[3] && m.m[13] == values[7] &&
-                        m.m[14] == values[11] && m.m[15] == values[15],
-                    "GLKMatrix4MakeWithRows yielded unexpected result.");
+    checkMatrix("GLKMatrix4MakeWithRows should yield transpose of original.", &m4.m[0], &m4ValuesT[0], 4);
 
-    m = GLKMatrix4MakeWithColumns(GLKVector4Make(0.f, 1.f, 2.f, 3.f),
+    m4 = GLKMatrix4MakeWithColumns(GLKVector4Make(0.f, 1.f, 2.f, 3.f),
                                   GLKVector4Make(4.f, 5.f, 6.f, 7.f),
                                   GLKVector4Make(8.f, 9.f, 10.f, 11.f),
                                   GLKVector4Make(12.f, 13.f, 14.f, 15.f));
-    EXPECT_TRUE_MSG(m.m[0] == values[0] && m.m[1] == values[1] && m.m[2] == values[2] && m.m[3] == values[3] && m.m[4] == values[4] &&
-                        m.m[5] == values[5] && m.m[6] == values[6] && m.m[7] == values[7] && m.m[8] == values[8] && m.m[9] == values[9] &&
-                        m.m[10] == values[10] && m.m[11] == values[11] && m.m[12] == values[12] && m.m[13] == values[13] &&
-                        m.m[14] == values[14] && m.m[15] == values[15],
-                    "GLKMatrix4MakeWithColumns yielded unexpected result.");
+    checkMatrix("GLKMatrix4MakeWithColumns.", &m4.m[0], &m4Values[0], 4);
 
-    GLKMatrix3 m3 = GLKMatrix3MakeWithRows(GLKVector3Make(0.f, 1.f, 2.f), GLKVector3Make(3.f, 4.f, 5.f), GLKVector3Make(6.f, 7.f, 8.f));
-    EXPECT_TRUE_MSG(m3.m[0] == values[0] && m3.m[1] == values[3] && m3.m[2] == values[6] && m3.m[3] == values[1] && m3.m[4] == values[4] &&
-                        m3.m[5] == values[7] && m3.m[6] == values[2] && m3.m[7] == values[5] && m3.m[8] == values[8],
-                    "GLKMatrix3MakeWithRows yielded unexpected result.");
+    // Validate Making a 3x3 matrix using various methods
+    float m3Values[9]  = { 0.f, 1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f};
+    float m3ValuesT[9] = { 0.f, 3.f, 6.f, 1.f, 4.f, 7.f, 2.f, 5.f, 8.f};
 
-    m3 = GLKMatrix3MakeWithColumns(GLKVector3Make(0.f, 1.f, 2.f), GLKVector3Make(3.f, 4.f, 5.f), GLKVector3Make(6.f, 7.f, 8.f));
-    EXPECT_TRUE_MSG(m3.m[0] == values[0] && m3.m[1] == values[1] && m3.m[2] == values[2] && m3.m[3] == values[3] && m3.m[4] == values[4] &&
-                        m3.m[5] == values[5] && m3.m[6] == values[6] && m3.m[7] == values[7] && m3.m[8] == values[8],
-                    "GLKMatrix3MakeWithColumns yielded unexpected result.");
+    GLKMatrix3 m3 = GLKMatrix3MakeWithRows(GLKVector3Make(0.f, 1.f, 2.f), 
+                                           GLKVector3Make(3.f, 4.f, 5.f), 
+                                           GLKVector3Make(6.f, 7.f, 8.f));
+    checkMatrix("GLKMatrix3MakeWithRows should yield transpose of original.", &m3.m[0], &m3ValuesT[0], 3);
 
-    m3 = GLKMatrix3MakeWithArray(values);
-    EXPECT_TRUE_MSG(m3.m[0] == values[0] && m3.m[1] == values[1] && m3.m[2] == values[2] && m3.m[3] == values[3] && m3.m[4] == values[4] &&
-                        m3.m[5] == values[5] && m3.m[6] == values[6] && m3.m[7] == values[7] && m3.m[8] == values[8],
-                    "GLKMatrix3MakeWithArray yielded unexpected result.");
+    m3 = GLKMatrix3MakeWithColumns(GLKVector3Make(0.f, 1.f, 2.f), 
+                                   GLKVector3Make(3.f, 4.f, 5.f), 
+                                   GLKVector3Make(6.f, 7.f, 8.f));
+    checkMatrix("GLKMatrix3MakeWithColumns.", &m3.m[0], &m3Values[0], 3);
 
-    m3 = GLKMatrix3MakeWithArrayAndTranspose(values);
-    EXPECT_TRUE_MSG(m3.m[0] == values[0] && m3.m[1] == values[3] && m3.m[2] == values[6] && m3.m[3] == values[1] && m3.m[4] == values[4] &&
-                        m3.m[5] == values[7] && m3.m[6] == values[2] && m3.m[7] == values[5] && m3.m[8] == values[8],
-                    "GLKMatrix3MakeWithArrayAndTranspose yielded unexpected result.");
+    m3 = GLKMatrix3MakeWithArray(m3Values);
+    checkMatrix("GLKMatrix3MakeWithArray.", &m3.m[0], &m3Values[0], 3);
 
-    m = GLKMatrix4MakeWithArray(values);
-    m3 = GLKMatrix4GetMatrix3(m);
-    GLKMatrix2 m2 = GLKMatrix4GetMatrix2(m);
+    m3 = GLKMatrix3MakeWithArrayAndTranspose(m3Values);
+    checkMatrix("GLKMatrix3MakeWithArrayAndTranspose.", &m3.m[0], &m3ValuesT[0], 3);
+
+    // Validate sub-matrices
+    m4 = GLKMatrix4MakeWithArray(m4Values);
+    m3 = GLKMatrix4GetMatrix3(m4);
+    GLKMatrix2 m2 = GLKMatrix4GetMatrix2(m4);
     GLKMatrix2 m2_2 = GLKMatrix3GetMatrix2(m3);
 
-    EXPECT_TRUE_MSG(m3.m00 == m.m00 && m3.m01 == m.m01 && m3.m02 == m.m02 && m3.m10 == m.m10 && m3.m11 == m.m11 && m3.m12 == m.m12 &&
-                        m3.m20 == m.m20 && m3.m21 == m.m21 && m3.m22 == m.m22,
+    EXPECT_TRUE_MSG(m3.m00 == m4.m00 && m3.m01 == m4.m01 && m3.m02 == m4.m02 &&
+                    m3.m10 == m4.m10 && m3.m11 == m4.m11 && m3.m12 == m4.m12 &&
+                    m3.m20 == m4.m20 && m3.m21 == m4.m21 && m3.m22 == m4.m22,
                     "GLKMatrix4GetMatrix3 yielded unexpected result.");
 
-    EXPECT_TRUE_MSG(m2.m00 == m.m00 && m2.m01 == m.m01 && m2.m10 == m.m10 && m2.m11 == m.m11,
+    EXPECT_TRUE_MSG(m2.m00 == m4.m00 && m2.m01 == m4.m01 && m2.m10 == m4.m10 && m2.m11 == m4.m11,
                     "GLKMatrix4GetMatrix2 yielded unexpected result.");
-
+    
     EXPECT_TRUE_MSG(m2_2.m00 == m3.m00 && m2_2.m01 == m3.m01 && m2_2.m10 == m3.m10 && m2_2.m11 == m3.m11,
                     "GLKMatrix3GetMatrix2 yielded unexpected result.");
 }
@@ -496,7 +626,8 @@ TEST(GLKit, Quaternions) {
     EXPECT_TRUE_MSG(fabsf(angle - (float)M_PI) <= COMPARISON_EPSILON, "Incorrect angle extracted!");
     EXPECT_TRUE_MSG(GLKVector3AllEqualToVector3(axis, GLKVector3YAxis()), "Incorrect rotation axis extracted!");
 
-    GLKVector3 rotated = GLKQuaternionRotateVector3(q, GLKVector3XAxis());
+    GLKVector3 rotated = GLKVector3XAxis();
+    GLKQuaternionRotateVector3Array(q, &rotated, 1);
     EXPECT_TRUE_MSG(GLKVector3AllEqualToScalar(GLKVector3Add(rotated, GLKVector3XAxis()), 0.f), "Quaternion rotation appears incorrect.");
 
     GLKMatrix3 xrot = GLKMatrix3MakeXRotation(M_PI / 3.f);

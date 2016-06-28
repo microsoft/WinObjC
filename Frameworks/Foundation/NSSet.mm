@@ -27,6 +27,7 @@
 #include "VAListHelper.h"
 #include "NSRaise.h"
 #include "BridgeHelpers.h"
+#import <_NSKeyValueCodingAggregateFunctions.h>
 
 @implementation NSSet
 
@@ -121,16 +122,32 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
  @Status Interoperable
 */
 - (instancetype)initWithSet:(NSSet*)set {
+    return [self initWithSet:set copyItems:NO];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithSet:(NSSet*)set copyItems:(BOOL)flag {
     NSUInteger count = [set count];
     id* objects = (id*)IwMalloc(count * sizeof(id));
     NSUInteger i = 0;
+    id obj;
 
     for (id curObj in set) {
         assert(i < count);
-        objects[i++] = curObj;
+        obj = flag ? [curObj copy] : curObj;
+        objects[i++] = obj;
     }
 
     NSSet* ret = [self initWithObjects:objects count:count];
+
+    if (flag) {
+        for (NSUInteger i = 0; i < count; ++i) {
+            [objects[i] release];
+        }
+    }
+
     IwFree(objects);
 
     return ret;
@@ -454,15 +471,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
  @Status Stub
  @Notes
 */
-- (instancetype)initWithSet:(NSSet*)set copyItems:(BOOL)flag {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
 - (NSSet*)filteredSetUsingPredicate:(NSPredicate*)predicate {
     UNIMPLEMENTED();
     return StubReturn();
@@ -495,12 +503,35 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-- (id)valueForKey:(NSString*)key {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (NSObject*)valueForKey:(NSString*)key {
+    if ([key hasPrefix:@"@"]) {
+        SEL sel = [_NSKeyValueCodingAggregateFunctions resolveFunction:[key substringFromIndex:1]];
+        if (sel == nil) {
+            return [self valueForUndefinedKey:key];
+        }
+
+        return [[_NSKeyValueCodingAggregateFunctions class] performSelector:sel withObject:self];
+    }
+
+    id ret = [NSMutableSet set];
+
+    id enumerator = [self objectEnumerator];
+    id curVal = [enumerator nextObject];
+
+    while (curVal != nil) {
+        id newvalue = [curVal valueForKey:key];
+        if (newvalue == nil) {
+            [ret addObject:[NSNull null]];
+        } else {
+            [ret addObject:newvalue];
+        }
+
+        curVal = [enumerator nextObject];
+    }
+
+    return ret;
 }
 
 /**

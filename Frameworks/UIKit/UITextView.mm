@@ -302,7 +302,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Interoperable
 */
 - (void)setFont:(UIFont*)font {
-    if ([_font isEqual:font]) {
+    if (![_font isEqual:font]) {
         _font = font;
         [self.textStorage setDefaultAttribute:font forKey:NSFontAttributeName];
         [self _adjustTextLayerSize:FALSE];

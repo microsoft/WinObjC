@@ -18,7 +18,6 @@
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSFastEnumeration.h>
 #import <Foundation/NSObject.h>
-
 #import <Foundation/NSOrderedSet.h>
 
 @class NSArray<ObjectType>;
@@ -30,11 +29,11 @@ FOUNDATION_EXPORT_CLASS
 @interface NSMutableOrderedSet <ObjectType> : NSOrderedSet <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding>
 + (instancetype)orderedSetWithCapacity:(NSUInteger)numItems STUB_METHOD;
 - (instancetype)initWithCapacity:(NSUInteger)numItems STUB_METHOD;
-- (instancetype)init STUB_METHOD;
-- (void)addObject:(ObjectType)object STUB_METHOD;
+- (instancetype)init;
+- (void)addObject:(ObjectType)object;
 - (void)addObjects:(const ObjectType _Nonnull[])objects count:(NSUInteger)count STUB_METHOD;
 - (void)addObjectsFromArray:(NSArray<ObjectType>*)array STUB_METHOD;
-- (void)insertObject:(ObjectType)object atIndex:(NSUInteger)idx STUB_METHOD;
+- (void)insertObject:(ObjectType)object atIndex:(NSUInteger)idx;
 - (void)setObject:(ObjectType)object atIndexedSubscript:(NSUInteger)idx STUB_METHOD;
 - (void)insertObjects:(NSArray<ObjectType>*)objects atIndexes:(NSIndexSet*)indexes STUB_METHOD;
 - (void)removeObject:(ObjectType)object STUB_METHOD;

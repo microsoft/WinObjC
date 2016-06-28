@@ -16,7 +16,15 @@
 
 #pragma once
 
+#include <COMIncludes.h>
+#import <hstring.h>
+#include <COMIncludes_end.h>
+
 @interface NSString ()
 - (int)_versionStringCompare:(NSString*)compStrAddr;
 - (NSString*)_reverseString;
+@end
+
+@interface NSString (WinObjCHSTRINGAdditions)
++ (instancetype)_stringWithHSTRING:(HSTRING)hstring;
 @end
