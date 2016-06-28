@@ -24,11 +24,15 @@
 
 #import <Starboard.h>
 #import "CGPatternInternal.h"
-#import <CoreGraphics\CGContext.h>
 #import "CGContextInternal.h"
 #import "CGContextImpl.h"
 #import <Foundation\Foundation.h>
 #import <CoreGraphics\CGPattern.h>
+#import <CoreGraphics\CGContext.h>
+#import <CoreGraphics\CGColor.h>
+#import <CoreGraphics\CGColorSpace.h>
+#import <CoreGraphics\CGPath.h>
+#include "CGImageInternal.h"
 
 void _DrawCustomPattern(void* info, CGContextRef context) {
     // Draw a circle inset from the pattern size
@@ -36,6 +40,20 @@ void _DrawCustomPattern(void* info, CGContextRef context) {
     circleRect = CGRectInset(circleRect, 4, 4);
     CGContextFillEllipseInRect(context, circleRect);
     CGContextStrokeEllipseInRect(context, circleRect);
+}
+
+CGContextRef createBitmapContext(size_t width, size_t height) {
+    size_t bytesPerRow = width * 4;
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef context = CGBitmapContextCreate(NULL,
+                                                 width,
+                                                 height,
+                                                 8,
+                                                 bytesPerRow,
+                                                 colorSpace,
+                                                 kCGImageAlphaPremultipliedLast);
+    CGColorSpaceRelease(colorSpace);
+    return context;
 }
 
 TEST(CGContext, CGContextSetPatternPhasePatternIsNil) {
@@ -47,6 +65,8 @@ TEST(CGContext, CGContextSetPatternPhasePatternIsNil) {
 
     // When
     CGContextSetPatternPhase(ctx, CGSizeMake(100, 100));
+
+
 
     // Then
     ASSERT_EQ(0, backing->curState->curFillColorObject);
@@ -120,4 +140,25 @@ TEST(CGContext, CGContextSetPatternPhaseNegativeChange) {
     ASSERT_EQ(300, matrix.ty);
 
     CGContextRelease(ctx);
+}
+
+TEST(CGContext, CGContextReplacePathWithStrokedPathLeftToRightLine) {
+
+    CGMutablePathRef path = CGPathCreateMutable();
+    EXPECT_TRUE( path != NULL);
+
+    CGContextRef context = createBitmapContext(100, 100);
+    EXPECT_TRUE( context != NULL);
+
+    CGContextSetLineWidth(context, 1);
+    CGContextSetLineCap(context, kCGLineCapRound);
+    CGContextSetLineJoin(context, kCGLineJoinMiter);
+    CGContextSetMiterLimit(context, 1);
+
+    CGPathMoveToPoint(path, NULL, 10, 10);
+    CGPathAddLineToPoint(path, NULL, 10, 90);
+
+    CGContextAddPath(context, path);
+    // TODO: Call CGContextReplacePathWithStrokedPath(context);
+
 }
