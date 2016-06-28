@@ -16,6 +16,9 @@
 
 #import <StubReturn.h>
 #import <CoreGraphics/CGBitmapContext.h>
+#import <CoreGraphics/CGContext.h>
+#import "CGContextInternal.h"
+#import <CoreGraphics/CGImage.h>
 
 /**
  @Status Stub
@@ -45,12 +48,13 @@ CGImageRef CGBitmapContextCreateImage(CGContextRef context) {
 }*/
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes tied to underlying implementation caveats in CGImageGetBitmapInfo. 
 */
 CGBitmapInfo CGBitmapContextGetBitmapInfo(CGContextRef context) {
-    UNIMPLEMENTED();
-    return StubReturn();
+	CGImageRef imageRef = context->Backing()->DestImage();
+	CGBitmapInfo bitmapInfo = CGImageGetBitmapInfo(imageRef);
+	return bitmapInfo;
 }
 
 /**
@@ -64,21 +68,25 @@ CGImageAlphaInfo CGBitmapContextGetAlphaInfo(CGContextRef context) {
 }*/
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 size_t CGBitmapContextGetBitsPerComponent(CGContextRef context) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    CGImageRef imageRef = context->Backing()->DestImage();
+    size_t bitsPerComponent = CGImageGetBitsPerComponent(imageRef);
+    return bitsPerComponent;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes UIView in Islandwood ignores alpha by default, which differs from iOS.
+ Expect returns of 24 bits on Islandwood where 32 bits is expected on iOS.
 */
 size_t CGBitmapContextGetBitsPerPixel(CGContextRef context) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    CGImageRef imageRef = context->Backing()->DestImage();
+    size_t bytesPerPixel = imageRef->Backing()->BytesPerPixel();
+    size_t bitsPerByte = 8;
+    return bytesPerPixel * bitsPerByte;
 }
 
 /**
@@ -97,7 +105,7 @@ CGColorSpaceRef CGBitmapContextGetColorSpace(CGContextRef context) {
 */
 /*
 void * CGBitmapContextGetData(CGContextRef context) {
-    UNIMPLEMENTED();
+	UNIMPLEMENTED();
     return StubReturn();
 }*/
 
