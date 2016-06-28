@@ -662,7 +662,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
     self->priv->_pointerPressedEventRegistration =
         [self->priv->_xamlInputElement addPointerPressedEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
             // Capture the pointer within this xaml element
-            [self->priv->_xamlInputElement capturePointer:e.pointer];
+            [weakSelf->priv->_xamlInputElement capturePointer:e.pointer];
 
             // Set the event to handled, then process it as a UITouch
             e.handled = YES;
