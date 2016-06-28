@@ -669,9 +669,7 @@ bool CGPathContainsPoint(CGPathRef path, const CGAffineTransform* m, CGPoint poi
     }
     // check if the point is outside this box already, if it is, return false
     CGRect boundingBox = CGPathGetBoundingBox(path);
-
-    if ((boundingBox.origin.x > point.x) || (boundingBox.origin.y > point.y) ||
-        ((boundingBox.origin.x + boundingBox.size.width) < point.x) || ((boundingBox.origin.y + boundingBox.size.height) < point.y)) {
+    if(!CGRectContainsPoint(boundingBox, point)){
         return false;
     }
 
