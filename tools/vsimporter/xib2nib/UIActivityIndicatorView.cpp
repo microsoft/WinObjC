@@ -19,14 +19,14 @@
 
 UIActivityIndicatorView::UIActivityIndicatorView() {
     _animating = false;
-    _style = 0;
+    _style = UIActivityIndicatorViewStyleInvalid;
     _tintColor = NULL;
 }
 
 void UIActivityIndicatorView::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
 
-    _style = obj->GetInt("IBUIStyle", 0);
+    _style = UIActivityIndicatorViewStyle(obj->GetInt("IBUIStyle", 0));
     _animating = obj->GetBool("IBUIAnimating", false);
 
     _outputClassName = "UIActivityIndicatorView";
@@ -42,12 +42,12 @@ void UIActivityIndicatorView::InitFromStory(XIBObject* obj) {
 
     const char* styleAttr = getAttrAndHandle("style");
     if (styleAttr) {
-        if (strcmp(styleAttr, "white") == 0) {
-            _style = 0;
-        } else if (strcmp(styleAttr, "whiteLarge") == 0) {
-            _style = 1;
+        if (strcmp(styleAttr, "whiteLarge") == 0) {
+            _style = UIActivityIndicatorViewStyleWhiteLarge;
+        } else if (strcmp(styleAttr, "white") == 0) {
+            _style = UIActivityIndicatorViewStyleWhite;
         } else if (strcmp(styleAttr, "gray") == 0) {
-            _style = 2;
+            _style = UIActivityIndicatorViewStyleGray;
         }
     }
 
@@ -67,11 +67,11 @@ void UIActivityIndicatorView::Awaken() {
     UIView::Awaken();
 
     switch (_style) {
-        case 0: // whiteLarge
-        case 1: // white
+        case UIActivityIndicatorViewStyleWhiteLarge:
+        case UIActivityIndicatorViewStyleWhite:
             _tintColor = new UIColor(4, 4, 1.0f, 0.0f, 0.0f, 1.0f, "whiteColor");
             break;
-        case 2: // gray
+        case UIActivityIndicatorViewStyleGray:
             _tintColor = new UIColor(4, 4, 0.5f, 0.5f, 0.5f, 1.0f, "grayColor");
             break;
     }
@@ -80,7 +80,7 @@ void UIActivityIndicatorView::Awaken() {
 void UIActivityIndicatorView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIView::ConvertStaticMappings(writer, obj);
 
-    if (_style) {
+    if (_style >= UIActivityIndicatorViewStyleWhiteLarge && _style <= UIActivityIndicatorViewStyleGray) {
         AddInt(writer, "UIActivityIndicatorViewStyle", _style);
     }
 

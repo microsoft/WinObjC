@@ -16,19 +16,24 @@
 
 #pragma once
 #include "UIView.h"
-class UIActivityIndicatorView :
-    public UIView
-{
+
+enum UIActivityIndicatorViewStyle {
+    UIActivityIndicatorViewStyleInvalid = -1,
+    UIActivityIndicatorViewStyleWhiteLarge = 0,
+    UIActivityIndicatorViewStyleWhite = 1,
+    UIActivityIndicatorViewStyleGray = 2,
+};
+
+class UIActivityIndicatorView : public UIView {
 public:
-    int _style;
+    UIActivityIndicatorViewStyle _style;
     bool _animating;
-    UIColor *_tintColor;
+    UIColor* _tintColor;
     UIRect _frame;
     UIActivityIndicatorView();
 
     virtual void Awaken();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-
