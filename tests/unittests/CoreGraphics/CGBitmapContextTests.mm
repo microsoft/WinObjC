@@ -28,6 +28,7 @@ TEST(CGBitmapContext, BitmapInfoAPIs_CMYK) {
 
     // The following causes a crash since CGImage only supports RGB right now
     // IF the quick return is removed, these tests should be reinstated
+    // TODO:: GitHub Issue: https://github.com/Microsoft/WinObjC/issues/594
     // EXPECT_EQ(CGBitmapContextGetBitmapInfo(context), 0);
     EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context), 8);
     EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 8);
@@ -52,6 +53,7 @@ TEST(CGBitmapContext, BitmapInfoAPIs_Gray) {
 
     // The following causes a crash since CGImage only supports RGB right now
     // IF the quick return is removed, these tests should be reinstated
+    // TODO:: GitHub Issue: https://github.com/Microsoft/WinObjC/issues/594
     // EXPECT_EQ(CGBitmapContextGetBitmapInfo(context), 0);
     EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context), 8);
     EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 8);
