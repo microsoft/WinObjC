@@ -33,6 +33,7 @@ TEST(CGBitmapContext, BitmapInfoAPIs_CMYK) {
     EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context), 8);
     EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 8);
 
+    CGColorSpaceRelease(cmykColorSpace);
     CGContextRelease(context);
 }
 
@@ -44,6 +45,7 @@ TEST(CGBitmapContext, BitmapInfoAPIs_RGB) {
     EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context), 8);
     EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 24);
 
+    CGColorSpaceRelease(rgbColorSpace);
     CGContextRelease(context);
 }
 
@@ -58,5 +60,6 @@ TEST(CGBitmapContext, BitmapInfoAPIs_Gray) {
     EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context), 8);
     EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 8);
 
+    CGColorSpaceRelease(grayColorSpace);
     CGContextRelease(context);
 }
