@@ -156,9 +156,9 @@ void _CGPathAddElement(
         path->_elements = (CGPathElementInternal*)IwRealloc(path->_elements, path->_max * sizeof(CGPathElementInternal));
     }
     CGPathElementInternal* element = &path->_elements[path->_count];
-    // The new elements needs its points array pointer updated
+    // The new element needs to call init
     // because it was created with alloc
-    element->updatePointsArrayPointer();
+    element->init();
     element->type = type;
     element->points[0] = p0;
     element->points[1] = p1;
@@ -191,10 +191,10 @@ CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
     ret->_count = path->_count;
     ret->_elements = (CGPathElementInternal*)IwRealloc(ret->_elements, ret->_max * sizeof(CGPathElementInternal));
     memcpy(ret->_elements, path->_elements, path->_count * sizeof(CGPathElementInternal));
-    // All of the new elements need their points array pointer updated
+    // All of the new elements need to call init
     // because they were created with alloc + memcpy
     for (unsigned i = 0; i < path->_count; i++) {
-        ret->_elements[i].updatePointsArrayPointer();
+        ret->_elements[i].init();
     }
     return ret;
 }
@@ -436,21 +436,21 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* m, CGPathRef 
     }
 
     for (unsigned i = 0; i < copyObj->_count; i++) {
-        CGPathElementInternal c = copyObj->_elements[i];
+        pathObj->_elements[pathObj->_count] = copyObj->_elements[i];
+        pathObj->_count++;
+        CGPathElementInternal* c = &pathObj->_elements[pathObj->_count];
+
         if (m) {
-            switch (c.type) {
+            switch (c->type) {
                 case kCGPathElementMoveToPoint:
                 case kCGPathElementAddLineToPoint:
-                    c.points[0] = CGPointApplyAffineTransform(c.points[0], *m);
+                    c->points[0] = CGPointApplyAffineTransform(c->points[0], *m);
                     break;
                 default:
                     // Append the path anyway, without transforming.
                     break;
             }
         }
-
-        pathObj->_elements[pathObj->_count] = c;
-        pathObj->_count++;
     }
 }
 
@@ -723,12 +723,12 @@ bool CGPathEqualToPath(CGPathRef path1, CGPathRef path2) {
         }
         unsigned pointCount = _CGPathPointCountForElementType(element1->type);
         for (unsigned p = 0; p < pointCount; p++) {
-            CGPoint p1 = element1->points[p];
-            CGPoint p2 = element2->points[p];
-            if (abs(p1.x - p2.x) > FLT_EPSILON) {
+            CGPoint* p1 = &element1->points[p];
+            CGPoint* p2 = &element2->points[p];
+            if (abs(p1->x - p2->x) > FLT_EPSILON) {
                 return false;
             }
-            if (abs(p1.y - p2.y) > FLT_EPSILON) {
+            if (abs(p1->y - p2->y) > FLT_EPSILON) {
                 return false;
             }
         }

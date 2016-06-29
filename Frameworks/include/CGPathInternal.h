@@ -30,22 +30,22 @@ struct CGPathElementInternal : CGPathElement {
 
     // Constructor. Used to adjust array pointer after creation.
     CGPathElementInternal() : CGPathElement() {
-        updatePointsArrayPointer();
+        this->init();
     }
     // Copy Constructor. Used to adjust array pointer after copy.
     CGPathElementInternal(const CGPathElementInternal& copy) : CGPathElement(copy) {
         memcpy(this->internalPoints, copy.internalPoints, sizeof(internalPoints));
-        updatePointsArrayPointer();
+        this->init();
     }
     // Assignment operator. Used to adjust array pointer after assignment.
     CGPathElementInternal& operator=(const CGPathElementInternal& copy) {
         CGPathElement::operator=(copy);
         memcpy(this->internalPoints, copy.internalPoints, sizeof(internalPoints));
-        updatePointsArrayPointer();
+        this->init();
         return *this;
     }
     // This should be called when elements are created with alloc/memcpy
-    void updatePointsArrayPointer() {
+    void init() {
         this->points = internalPoints;
     }
 };
