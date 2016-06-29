@@ -59,12 +59,6 @@ public:
 
 __CGPath::~__CGPath() {
     if (_elements) {
-        for (unsigned i = 0; i < _count; i++) {
-            CGPoint* points = _elements[i].points;
-            if (points) {
-                IwFree(points);
-            }
-        }
         IwFree(_elements);
     }
 }
@@ -159,10 +153,12 @@ void _CGPathAddElement(
     CGPathRef path, CGPathElementType type, CGPoint p0 = CGPointZero, CGPoint p1 = CGPointZero, CGPoint p2 = CGPointZero) {
     if (path->_count + 1 >= path->_max) {
         path->_max += 32;
-        path->_elements = (CGPathElement*)IwRealloc(path->_elements, path->_max * sizeof(CGPathElement));
+        path->_elements = (CGPathElementInternal*)IwRealloc(path->_elements, path->_max * sizeof(CGPathElementInternal));
     }
-    CGPathElement* element = &path->_elements[path->_count];
-    element->points = (CGPoint*)IwCalloc(kCGPathMaxPointCount, sizeof(CGPoint));
+    CGPathElementInternal* element = &path->_elements[path->_count];
+    // The new elements needs its points array pointer updated
+    // because it was created with alloc
+    element->updatePointsArrayPointer();
     element->type = type;
     element->points[0] = p0;
     element->points[1] = p1;
@@ -193,11 +189,12 @@ CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
     auto ret = __CGPath::alloc(nil);
     ret->_max = path->_max;
     ret->_count = path->_count;
-    ret->_elements = (CGPathElement*)IwRealloc(ret->_elements, ret->_max * sizeof(CGPathElement));
-    memcpy(ret->_elements, path->_elements, path->_count * sizeof(CGPathElement));
+    ret->_elements = (CGPathElementInternal*)IwRealloc(ret->_elements, ret->_max * sizeof(CGPathElementInternal));
+    memcpy(ret->_elements, path->_elements, path->_count * sizeof(CGPathElementInternal));
+    // All of the new elements need their points array pointer updated
+    // because they were created with alloc + memcpy
     for (unsigned i = 0; i < path->_count; i++) {
-        ret->_elements[i].points = (CGPoint*)IwCalloc(kCGPathMaxPointCount, sizeof(CGPoint));
-        memcpy(ret->_elements[i].points, path->_elements[i].points, kCGPathMaxPointCount * sizeof(CGPoint));
+        ret->_elements[i].updatePointsArrayPointer();
     }
     return ret;
 }
@@ -435,14 +432,11 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* m, CGPathRef 
 
     if (pathObj->_count + copyObj->_count >= pathObj->_max) {
         pathObj->_max += copyObj->_count;
-        pathObj->_elements = (CGPathElement*)IwRealloc(pathObj->_elements, pathObj->_max * sizeof(CGPathElement));
+        pathObj->_elements = (CGPathElementInternal*)IwRealloc(pathObj->_elements, pathObj->_max * sizeof(CGPathElementInternal));
     }
 
     for (unsigned i = 0; i < copyObj->_count; i++) {
-        CGPathElement c = copyObj->_elements[i];
-        c.points = (CGPoint*)IwCalloc(kCGPathMaxPointCount, sizeof(CGPoint));
-        memcpy(c.points, copyObj->_elements[i].points, kCGPathMaxPointCount * sizeof(CGPoint));
-
+        CGPathElementInternal c = copyObj->_elements[i];
         if (m) {
             switch (c.type) {
                 case kCGPathElementMoveToPoint:
@@ -653,8 +647,7 @@ void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function) {
     // TODO: Add check for NULL and return. Add for other relevant functions in this file.
 
     for (unsigned i = 0; i < path->_count; i++) {
-        CGPathElement element = path->_elements[i];
-        function(info, &element);
+        function(info, &path->_elements[i]);
     }
 }
 
@@ -723,15 +716,15 @@ bool CGPathEqualToPath(CGPathRef path1, CGPathRef path2) {
     }
 
     for (unsigned i = 0; i < path1->_count; i++) {
-        CGPathElement element1 = path1->_elements[i];
-        CGPathElement element2 = path2->_elements[i];
-        if (element1.type != element2.type) {
+        CGPathElement* element1 = &path1->_elements[i];
+        CGPathElement* element2 = &path2->_elements[i];
+        if (element1->type != element2->type) {
             return false;
         }
-        unsigned pointCount = _CGPathPointCountForElementType(element1.type);
+        unsigned pointCount = _CGPathPointCountForElementType(element1->type);
         for (unsigned p = 0; p < pointCount; p++) {
-            CGPoint p1 = element1.points[p];
-            CGPoint p2 = element2.points[p];
+            CGPoint p1 = element1->points[p];
+            CGPoint p2 = element2->points[p];
             if (abs(p1.x - p2.x) > FLT_EPSILON) {
                 return false;
             }
@@ -748,15 +741,15 @@ bool CGPathEqualToPath(CGPathRef path1, CGPathRef path2) {
 */
 CGPoint CGPathGetCurrentPoint(CGPathRef path) {
     if (path->_count > 0) {
-        CGPathElement c = path->_elements[path->_count - 1];
-        switch (c.type) {
+        CGPathElement* c = &path->_elements[path->_count - 1];
+        switch (c->type) {
             case kCGPathElementMoveToPoint:
             case kCGPathElementAddLineToPoint:
-                return c.points[0];
+                return c->points[0];
             case kCGPathElementAddQuadCurveToPoint:
-                return c.points[1];
+                return c->points[1];
             case kCGPathElementAddCurveToPoint:
-                return c.points[2];
+                return c->points[2];
             default:
                 return CGPointZero;
         }

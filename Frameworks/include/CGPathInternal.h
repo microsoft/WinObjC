@@ -23,8 +23,36 @@
 
 const int kCGPathMaxPointCount = 3;
 
+struct CGPathElementInternal : CGPathElement {
+    // Internal representation of points used to simplify size calculations
+    // CGPoint* points in CGPathElement should always point to this array
+    CGPoint internalPoints[kCGPathMaxPointCount];
+
+    // Constructor. Used to adjust array pointer after creation.
+    CGPathElementInternal() {
+        updatePointsArrayPointer();
+    }
+    // Copy Constructor. Used to adjust array pointer after copy.
+    CGPathElementInternal(const CGPathElementInternal& copy) : CGPathElement(copy) {
+        memcpy(this->internalPoints, copy.internalPoints, sizeof(internalPoints));
+        updatePointsArrayPointer();
+    }
+    // Assignment operator. Used to adjust array pointer after assignment.
+    CGPathElementInternal& operator=(const CGPathElementInternal& copy) {
+        CGPathElement::operator=(copy);
+        memcpy(this->internalPoints, copy.internalPoints, sizeof(internalPoints));
+        updatePointsArrayPointer();
+        return *this;
+    }
+    // This should be called when elements are created with alloc/memcpy
+    void updatePointsArrayPointer() {
+        this->points = internalPoints;
+    }
+};
+typedef struct CGPathElementInternal CGPathElementInternal;
+
 struct __CGPath : public CFBridgeBase<__CGPath> {
-    CGPathElement* _elements;
+    CGPathElementInternal* _elements;
     NSUInteger _count;
     NSUInteger _max;
 
