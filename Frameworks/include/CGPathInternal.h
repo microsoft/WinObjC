@@ -29,7 +29,7 @@ struct CGPathElementInternal : CGPathElement {
     CGPoint internalPoints[kCGPathMaxPointCount];
 
     // Constructor. Used to adjust array pointer after creation.
-    CGPathElementInternal() {
+    CGPathElementInternal() : CGPathElement() {
         updatePointsArrayPointer();
     }
     // Copy Constructor. Used to adjust array pointer after copy.
