@@ -14,7 +14,47 @@
 //
 //******************************************************************************
 
-#import <TestFramework.h>
-#import <Starboard.h>
+#import "CGContextInternal.h"
+#import <CoreGraphics/CGContext.h>
+#import <CoreGraphics/CGImage.h>
 #import <CoreGraphics\CGBitmapContext.h>
 #import <Foundation\Foundation.h>
+#import <Starboard.h>
+#import <TestFramework.h>
+
+TEST(CGBitmapContext, BitmapInfoAPIs_CMYK) {
+    CGColorSpaceRef cmykColorSpace = CGColorSpaceCreateDeviceCMYK();
+    CGContextRef context = CGBitmapContextCreate(0, 0, 0, 8, 0, cmykColorSpace, 0);
+
+    // The following causes a crash since CGImage only supports RGB right now
+    // IF the quick return is removed, these tests should be reinstated
+    // EXPECT_EQ(CGBitmapContextGetBitmapInfo(context), 0);
+    EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context), 8);
+    EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 8);
+
+    CGContextRelease(context);
+}
+
+TEST(CGBitmapContext, BitmapInfoAPIs_RGB) {
+    CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef context = CGBitmapContextCreate(0, 0, 0, 8, 0, rgbColorSpace, 0);
+
+    EXPECT_EQ(CGBitmapContextGetBitmapInfo(context), 0);
+    EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context), 8);
+    EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 24);
+
+    CGContextRelease(context);
+}
+
+TEST(CGBitmapContext, BitmapInfoAPIs_Gray) {
+    CGColorSpaceRef grayColorSpace = CGColorSpaceCreateDeviceGray();
+    CGContextRef context = CGBitmapContextCreate(0, 0, 0, 8, 0, grayColorSpace, 0);
+
+    // The following causes a crash since CGImage only supports RGB right now
+    // IF the quick return is removed, these tests should be reinstated
+    // EXPECT_EQ(CGBitmapContextGetBitmapInfo(context), 0);
+    EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context), 8);
+    EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 8);
+
+    CGContextRelease(context);
+}
