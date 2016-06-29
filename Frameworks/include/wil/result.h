@@ -3067,10 +3067,16 @@ inline void LogFailure(__R_FN_PARAMS_FULL,
     // Caller bug: Leaking a success code into a failure-only function
     FAIL_FAST_IF(SUCCEEDED(failure->hr) && (type != FailureType::FailFast));
 
+    // TODO: We probably don't want to do this once we've hooked into our logging/telemetry pipeline, 
+    // as that will *also* log to the debugger.
+    // We log to OutputDebugString if:
+    // * Someone set g_fResultOutputDebugString to true (by the calling module or in the debugger)
+    bool const fUseOutputDebugString = g_fResultOutputDebugString;
+
     // We need to generate the logging message if:
     // * We're logging to OutputDebugString
     // * OR the caller asked us to (generally for attaching to a C++/CX exception)
-    if (fWantDebugString) {
+    if (fWantDebugString || fUseOutputDebugString) {
         // Call the logging callback (if present) to allow them to generate the debug string that will be pushed to the console
         // or the platform exception object if the caller desires it.
         if (g_pfnResultLoggingCallback != nullptr) {
@@ -3083,6 +3089,10 @@ inline void LogFailure(__R_FN_PARAMS_FULL,
             GetFailureLogString(debugString, debugStringSizeChars, *failure);
         }
 
+        // Log to the debugger if required
+        if (fUseOutputDebugString) {
+            ::OutputDebugStringW(debugString);
+        }
     } else {
         // [deprecated behavior]
         // This callback was at one point *always* called for all failures, so we continue to call it for failures even when we don't
