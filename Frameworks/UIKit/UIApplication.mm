@@ -214,14 +214,14 @@ static idretaintype(WSDDisplayRequest) _screenActive;
     [[NSRunLoop mainRunLoop] _addInputSource:shutdownEvent forMode:@"kCFRunLoopDefaultMode"];
     [[NSRunLoop mainRunLoop] _addObserver:sharedApplication forMode:@"kCFRunLoopDefaultMode"];
 
-    // Subscribe to back button events
     // TODO: This will be revisited when we sort out our WinRT navigation integration model
-    // BUG 7945962:- UIKit unit test "UIApplicationOpenURLSuccess" breaks when UIApplication tries to register for back button press
-    /*
-    [[WUCSystemNavigationManager getForCurrentView] addBackRequestedEvent:^(RTObject* sender, WUCBackRequestedEventArgs* e) {
-        e.handled = [UIApplication _doBackAction];
-    }];
-    */
+    // Subscribe to back button events
+    // Note: This method may be called from UnitTests, so make sure we don't fall over if we're not running from within a UWP.
+    if ([WUCCoreWindow getForCurrentThread]) {
+        [[WUCSystemNavigationManager getForCurrentView] addBackRequestedEvent:^ (RTObject* sender, WUCBackRequestedEventArgs* e) {
+            e.handled = [UIApplication _doBackAction];
+        }];
+    }
 
     return sharedApplication;
 }
