@@ -42,7 +42,7 @@
       <Filter>Tests</Filter>
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSUserDefaultsTests.mm" />
-    <ClangCompile Include="..\..\..\tests\functionaltests\Tests\CortanaTests.mm">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\CortanaTests.mm">
       <Filter>Tests</Filter>
     </ClangCompile>
   </ItemGroup>

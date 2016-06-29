@@ -16,11 +16,13 @@
 
 #include <TestFramework.h>
 #include <Foundation/Foundation.h>
+
 #include <COMIncludes.h>
 #include "MockClass.h"
 #include <windows.applicationModel.activation.h>
 #include <windows.media.speechRecognition.h>
 #include <COMIncludes_End.h>
+
 #include <UWP/WindowsApplicationModelActivation.h>
 #include <UWP/WindowsMediaSpeechRecognition.h>
 #include <UWP/WindowsUIXaml.h>
@@ -31,10 +33,13 @@ using namespace ABI::Windows::ApplicationModel::Activation;
 using namespace ABI::Windows::Media::SpeechRecognition;
 using namespace Microsoft::WRL;
 
+
 MOCK_CLASS(MockSpeechRecognitionResult,
            public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, ISpeechRecognitionResult, ISpeechRecognitionResult2> {
-               InspectableClass(RuntimeClass_Windows_Media_SpeechRecognition_SpeechRecognitionResult,
-                                BaseTrust); // claim to be the implementation for the real system RuntimeClass for SpeechRecognitionResult.
+
+              // Claim to be the implementation for the real system RuntimeClass for SpeechRecognitionResult.
+              InspectableClass(RuntimeClass_Windows_Media_SpeechRecognition_SpeechRecognitionResult,
+                                BaseTrust);
 
            public:
                MOCK_STDCALL_METHOD_1(get_Status);
@@ -52,8 +57,10 @@ MOCK_CLASS(MockSpeechRecognitionResult,
 MOCK_CLASS(
     MockVoiceCommandActivatedEventArgs,
     public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IVoiceCommandActivatedEventArgs, IActivatedEventArgs> {
+
+        // Claim to be the implementation for the real system RuntimeClass for VoiceCommandActivatedEventArgs.
         InspectableClass(RuntimeClass_Windows_ApplicationModel_Activation_VoiceCommandActivatedEventArgs,
-                         BaseTrust); // claim to be the implementation for the real system RuntimeClass for VoiceCommandActivatedEventArgs.
+                         BaseTrust);
 
     public:
         MOCK_STDCALL_METHOD_1(get_Result);
@@ -64,8 +71,10 @@ MOCK_CLASS(
 
 MOCK_CLASS(MockProtocolActivatedEventArgs,
            public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IProtocolActivatedEventArgs, IActivatedEventArgs> {
-               InspectableClass(RuntimeClass_Windows_ApplicationModel_Activation_ProtocolActivatedEventArgs,
-                                BaseTrust); // claim to be the implementation for the real system RuntimeClass for Accel.
+
+                // Claim to be the implementation for the real system RuntimeClass for Accel.
+                InspectableClass(RuntimeClass_Windows_ApplicationModel_Activation_ProtocolActivatedEventArgs,
+                                BaseTrust);
 
            public:
                MOCK_STDCALL_METHOD_1(get_Uri);
@@ -77,8 +86,7 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
 // TODO: 8008558 Test handling foreground activation parameters from Cortana
 TEST(CortanaTest, VoiceCommandForegroundActivation) {
     LOG_INFO("CortanaTest Voice Command Foreground Activation Test: ");
-    // Get current application to test on
-    WXApplication* app = [WXApplication current];
+
     // Create mocked data to pass into application
     auto fakeSpeechRecognitionResult = Make<MockSpeechRecognitionResult>();
     fakeSpeechRecognitionResult->Setget_Text([](HSTRING* text) {
@@ -87,15 +95,18 @@ TEST(CortanaTest, VoiceCommandForegroundActivation) {
         *text = value.Detach();
         return S_OK;
     });
+
     auto fakeVoiceCommandActivatedEventArgs = Make<MockVoiceCommandActivatedEventArgs>();
     fakeVoiceCommandActivatedEventArgs->Setget_Result([&fakeSpeechRecognitionResult](ISpeechRecognitionResult** result) {
         fakeSpeechRecognitionResult.CopyTo(result);
         return S_OK;
     });
+
     fakeVoiceCommandActivatedEventArgs->Setget_Kind([](ActivationKind* kind) {
         *kind = ActivationKind_VoiceCommand;
         return S_OK;
     });
+    
     fakeVoiceCommandActivatedEventArgs->Setget_PreviousExecutionState([](ApplicationExecutionState* state) {
         *state = ApplicationExecutionState_NotRunning;
         return S_OK;

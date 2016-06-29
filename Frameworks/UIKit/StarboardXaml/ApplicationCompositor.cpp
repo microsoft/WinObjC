@@ -53,42 +53,36 @@ void InitializeApp() {
     SetupMainRunLoopTimedMultipleWaiter();
 }
 
-extern "C" void RunApplicationMainWithString(Platform::String^ principalClassName,
-                                   Platform::String^ delegateClassName,
-                                   float windowWidth,
-                                   float windowHeight,
-                                   ActivationType activationType,
-                                   Platform::String^ activationString) {
-    // Perform initialization
-    InitializeApp();
-
-    // Kick off iOS application main startup
-    ApplicationMainStartHSTRING(
-        Strings::WideToNarrow(principalClassName->Data()).c_str(),
-        Strings::WideToNarrow(delegateClassName->Data()).c_str(),
-        windowWidth,
-        windowHeight,
-        activationType,
-        reinterpret_cast<HSTRING>(activationString));
-}
-
 extern "C" void RunApplicationMain(Platform::String^ principalClassName,
                                    Platform::String^ delegateClassName,
                                    float windowWidth,
                                    float windowHeight,
                                    ActivationType activationType,
                                    Platform::Object^ activationArg) {
+
     // Perform initialization
     InitializeApp();
 
     // Kick off iOS application main startup
-    ApplicationMainStart(
-        Strings::WideToNarrow(principalClassName->Data()).c_str(),
-        Strings::WideToNarrow(delegateClassName->Data()).c_str(),
-        windowWidth,
-        windowHeight,
-        activationType,
-        reinterpret_cast<IInspectable*>(activationArg));
+    if (activationType == ActivationTypeVoiceCommand){
+        // The activationArg is a Platform::String^, which is not an IInspectable* so it must be converted to an HSTRING before NSString*
+        ApplicationMainStart(
+                Strings::WideToNarrow(principalClassName->Data()).c_str(),
+                Strings::WideToNarrow(delegateClassName->Data()).c_str(),
+                windowWidth,
+                windowHeight,
+                activationType,
+                reinterpret_cast<HSTRING>(activationArg));
+    } else {
+        // Convert Object^ to IInspectable* so it can be passed into Objective C and there converted to its projection
+        ApplicationMainStart(
+                Strings::WideToNarrow(principalClassName->Data()).c_str(),
+                Strings::WideToNarrow(delegateClassName->Data()).c_str(),
+                windowWidth,
+                windowHeight,
+                activationType,
+                reinterpret_cast<IInspectable*>(activationArg));
+    }
 }
 
 // clang-format off

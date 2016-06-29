@@ -19,8 +19,6 @@
 #include "Framework/Framework.h"
 #include <WexTestClass.h>
 #include <ErrorHandling.h>
-#include "MockClass.h"
-#include <windows.applicationModel.activation.h>
 
 using namespace WEX::Logging;
 using namespace WEX::TestExecution;

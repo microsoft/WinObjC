@@ -91,25 +91,33 @@ void App::OnActivated(IActivatedEventArgs^ args) {
     if (args->Kind == ActivationKind::ToastNotification) {
         Platform::String^ argsString = safe_cast<ToastNotificationActivatedEventArgs^>(args)->Argument;
         TraceVerbose(TAG, L"Received toast notification with argument - %s", argsString->Data());
+
         if (initiateAppLaunch) {
             _ApplicationMainLaunch(ActivationTypeToast, argsString);
         }
+
         UIApplicationMainHandleToastNotificationEvent(Strings::WideToNarrow(argsString->Data()).c_str());
     } else if (args->Kind == ActivationKind::VoiceCommand) {
         Windows::Media::SpeechRecognition::SpeechRecognitionResult^ argResult = safe_cast<VoiceCommandActivatedEventArgs^>(args)->Result;
         TraceVerbose(TAG, L"Received voice command with argument - %s", argResult->Text->Data());
+
         if (initiateAppLaunch) {
             _ApplicationMainLaunch(ActivationTypeVoiceCommand, argResult);
         }
+
         UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(argResult));
     } else if (args->Kind == ActivationKind::Protocol) {
         Windows::Foundation::Uri^ argUri = safe_cast<ProtocolActivatedEventArgs^>(args)->Uri;
         TraceVerbose(TAG, L"Received protocol with uri- %s", argUri->ToString()->Data());
+
         if (initiateAppLaunch) {
             _ApplicationMainLaunch(ActivationTypeProtocol, argUri);
         }
+
         UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri));
     } else {
+        TraceVerbose(TAG, L"Received unhandled activation kind - %d", args->Kind);
+        
         if (initiateAppLaunch) {
             _ApplicationMainLaunch(ActivationTypeNone, nullptr);
         }
@@ -170,12 +178,7 @@ extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::Obje
     Xaml::Window::Current->Activate();
 
     auto startupRect = Xaml::Window::Current->Bounds;
-    if (activationType == ActivationTypeToast) {
-        RunApplicationMainWithString(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height,
-            activationType, static_cast<Platform::String^>(activationArg));
-    } else {
-        RunApplicationMain(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height, activationType, activationArg);
-    }
+    RunApplicationMain(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height, activationType, activationArg);
 }
 
 // This is the actual entry point from the app into our framework.

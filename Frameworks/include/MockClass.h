@@ -15,8 +15,13 @@
 //*****************************************************************************/
 #pragma once
 
+
+// Nil is a C++/CX object and __alignof is a Microsoft specific operator so they need to be redefined for Objective C
+#ifdef __OBJC__
 #define Nil Nil2
 #define __alignof alignof
+#endif
+
 #include "ParameterTypes.h"
 #include "Windows.h"
 #include "WexTestClass.h"
@@ -59,7 +64,7 @@ virtual HRESULT RemoveMessageChannelListener(const Bar& bar, const Foo& foo) = 0
 virtual HRESULT SendOnMessageChannel(const wchar_t* psz1, int x, char w, long long xyz) = 0;
 };
 
-class MockSessionWithLambdas : public ISession
+MOCK_CLASS(MockSessionWithLambdas, public ISession
 {
 public:
 MOCK_METHOD_0(VoidNoArgs);
@@ -75,7 +80,7 @@ SetAddMessageChannelListener([](const Foo& foo){ return E_NOTIMPL; });
 SetRemoveMessageChannelListener([](const Bar& bar, const Foo& foo){ return E_NOTIMPL; });
 SetSendOnMessageChannel([](const wchar_t* psz1, int x, char w, long long xyz){ return E_NOTIMPL; });
 }
-};
+});
 
 TEST_METHOD(InterfaceMockingSample)
 {
@@ -87,7 +92,7 @@ HRESULT result = x.AddMessageChannelListener(Foo());
 
 x.SetAddMessageChannelListenerCallback([](const Foo& foo)
 {
-VERIFY_ARE_EQUAL(32, foo.a); // Perform validation within the callback
+ASSERT_EQ(32, foo.a); // Perform validation within the callback
 return HRESULT_FROM_WIN32(ERROR_OUT_OF_PAPER);
 });
 
@@ -98,10 +103,12 @@ result = x.AddMessageChannelListener(Foo());
 // objects interact with the ISession interface, all of the provided lambdas will be executed, allowing
 // fine-grained control of how the other objects behave.
 
-VERIFY_ARE_EQUAL(HRESULT_FROM_WIN32(ERROR_OUT_OF_PAPER), result);
+ASSERT_EQ(HRESULT_FROM_WIN32(ERROR_OUT_OF_PAPER), result);
 }
 */ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// Clang doesn't allow unqualified methods to be mocked so we need to attach the class name to it when mocking
+// A namespace is created around the class to allow this to be used more than once
 #define MOCK_CLASS(CLASS_NAME, ...)                       \
     namespace BUILD_VARIABLE_NAME(CLASS_NAME, _PRIVATE) { \
         class CLASS_NAME;                                 \
@@ -324,7 +331,7 @@ VERIFY_ARE_EQUAL(1, callCount);
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 // This macro must be called per-interface before any of the CX_MOCK_METHOD* calls will compile for it.
-// Be sure to fully qualify your interface name; for example: Arcadia::TestFoundation::Tests::ITestInterface.
+// Be sure to fully qualify your interface name; for example: ABI::Windows::Media::SpeechRecognition::ISpeechRecognitionResult
 #define CX_MOCK_INTERFACE(FULLY_QUALIFIED_INTERFACE_NAME) CX_MOCK_INTERFACE_DISPATCHER_IMPL(FULLY_QUALIFIED_INTERFACE_NAME, __cdecl)
 
 ////////////////////////////////////////////////////////////////
@@ -491,8 +498,8 @@ VERIFY_ARE_EQUAL(1, callCount);
 // Validates that a callback has been set before invoking it.
 /////////////////////////////////////////////////////////////
 #if !defined CUSTOM_MOCK_CALLBACK_VALIDATOR
-namespace Arcadia {
-namespace TestFoundation {
+namespace Test {
+namespace Mock {
 template <typename TFunctor>
 void ValidateCallback(const TFunctor& functor, const wchar_t* name) {
     WEX::TestExecution::SetVerifyOutput verifySettings(WEX::TestExecution::VerifyOutputSettings::LogOnlyFailures);
@@ -612,7 +619,7 @@ public:                                                                         
     virtual WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::ReturnType __VA_ARGS__ METHOD_NAME(                     \
         BUILD_VARIABLE_NAME(MOCK_NAMED_ARGS_, PARAMETER_COUNT)(METHOD_NAME)) BUILD_VARIABLE_NAME(MEMBER_PARAMETER_TYPES_CONST_, IS_CONST) \
         override {                                                                                                                        \
-        Arcadia::TestFoundation::ValidateCallback(BUILD_VARIABLE_NAME(m_, METHOD_NAME), TAEF_WIDEN(TAEF_STRINGIZE(METHOD_NAME)));         \
+        Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, METHOD_NAME), TAEF_WIDEN(TAEF_STRINGIZE(METHOD_NAME)));         \
         return BUILD_VARIABLE_NAME(m_, METHOD_NAME)(BUILD_VARIABLE_NAME(MOCK_CALL_ARGS_, PARAMETER_COUNT));                               \
     }                                                                                                                                     \
     void BUILD_VARIABLE_NAME(Set, METHOD_NAME)(const decltype(BUILD_VARIABLE_NAME(m_, METHOD_NAME))& callback) {                          \
@@ -736,7 +743,7 @@ private:                                                                        
     virtual BUILD_VARIABLE_NAME(METHOD_NAME, PARAMETER_TYPES)::ReturnType METHOD_NAME(                                              \
         BUILD_VARIABLE_NAME(MOCK_NAMED_ARGS_, PARAMETER_COUNT)(INTERFACE_NAME::METHOD_NAME))                                        \
         BUILD_VARIABLE_NAME(MOCK_OVERRIDE_, MOCK_TYPE) {                                                                            \
-        Arcadia::TestFoundation::ValidateCallback(BUILD_VARIABLE_NAME(m_, METHOD_NAME), TAEF_WIDEN(TAEF_STRINGIZE(METHOD_NAME)));   \
+        Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, METHOD_NAME), TAEF_WIDEN(TAEF_STRINGIZE(METHOD_NAME)));   \
         return BUILD_VARIABLE_NAME(m_, METHOD_NAME)(BUILD_VARIABLE_NAME(MOCK_CALL_ARGS_, PARAMETER_COUNT));                         \
     }                                                                                                                               \
     internal:                                                                                                                       \
@@ -772,13 +779,13 @@ private:                                                                        
     property BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ReturnType PROPERTY_NAME {        \
         virtual BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ReturnType get()               \
             BUILD_VARIABLE_NAME(MOCK_OVERRIDE_, MOCK_TYPE) {                                                                  \
-            Arcadia::TestFoundation::ValidateCallback(BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get)),       \
+            Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get)),       \
                                                       TAEF_WIDEN(TAEF_STRINGIZE(PROPERTY_NAME))L"::get");                     \
             return BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get))();                                        \
         }                                                                                                                     \
         virtual void set(BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, set), PARAMETER_TYPES)::Parameter1 p1)        \
             BUILD_VARIABLE_NAME(MOCK_OVERRIDE_, MOCK_TYPE) {                                                                  \
-            Arcadia::TestFoundation::ValidateCallback(BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, set)),       \
+            Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, set)),       \
                                                       TAEF_WIDEN(TAEF_STRINGIZE(PROPERTY_NAME))L"::set");                     \
             return BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, set))(p1);                                      \
         }                                                                                                                     \
@@ -812,7 +819,7 @@ private:                                                                        
     property BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ReturnType PROPERTY_NAME {        \
         virtual BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ReturnType get()               \
             BUILD_VARIABLE_NAME(MOCK_OVERRIDE_, MOCK_TYPE) {                                                                  \
-            Arcadia::TestFoundation::ValidateCallback(BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get)),       \
+            Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get)),       \
                                                       TAEF_WIDEN(TAEF_STRINGIZE(PROPERTY_NAME))L"::get");                     \
             return BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get))();                                        \
         }                                                                                                                     \

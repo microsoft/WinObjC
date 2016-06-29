@@ -25,13 +25,6 @@ extern "C" int ApplicationMainStart(const char* principalName,
                                     float windowWidth,
                                     float windowHeight,
                                     ActivationType activationType,
-                                    IInspectable* activationArg);
-
-extern "C" int ApplicationMainStartHSTRING(const char* principalName,
-                                           const char* delegateName,
-                                           float windowWidth,
-                                           float windowHeight,
-                                           ActivationType activationType,
-                                           HSTRING activationArg);
+                                    void* activationArg);
 
 void SetTemporaryFolder(const char* folder);
