@@ -17,65 +17,42 @@
 #ifndef __CGPATHINTERNAL_H
 #define __CGPATHINTERNAL_H
 
+#include "CFBridgeBase.h"
 #include "CoreGraphics/CGContext.h"
 #include "CoreGraphics/CGPath.h"
-#include "CFBridgeBase.h"
 
-enum pathComponentType {
-    pathComponentRectangle,
-    pathComponentMove,
-    pathComponentLineTo,
-    pathComponentArcToPoint,
-    pathComponentQuadCurve,
-    pathComponentBezierCurve,
-    pathComponentCurve,
-    pathComponentEllipseInRect,
-    pathComponentClose,
-    pathComponentArcAngle,
+const int kCGPathMaxPointCount = 3;
+
+struct CGPathElementInternal : CGPathElement {
+    // Internal representation of points used to simplify size calculations
+    // CGPoint* points in CGPathElement should always point to this array
+    CGPoint internalPoints[kCGPathMaxPointCount];
+
+    // Constructor. Used to adjust array pointer after creation.
+    CGPathElementInternal() : CGPathElement() {
+        this->init();
+    }
+    // Copy Constructor. Used to adjust array pointer after copy.
+    CGPathElementInternal(const CGPathElementInternal& copy) : CGPathElement(copy) {
+        memcpy(this->internalPoints, copy.internalPoints, sizeof(internalPoints));
+        this->init();
+    }
+    // Assignment operator. Used to adjust array pointer after assignment.
+    CGPathElementInternal& operator=(const CGPathElementInternal& copy) {
+        CGPathElement::operator=(copy);
+        memcpy(this->internalPoints, copy.internalPoints, sizeof(internalPoints));
+        this->init();
+        return *this;
+    }
+    // This should be called when elements are created with alloc/memcpy
+    void init() {
+        this->points = internalPoints;
+    }
 };
-
-typedef struct {
-    float x1, y1, x2, y2;
-    float radius;
-} arcToPoint;
-
-typedef struct {
-    float x, y, startAngle, endAngle;
-    float radius;
-    BOOL clockwise;
-} arcAngle;
-
-struct curveToPoint {
-    float x1, y1; // tangent from start
-    float x2, y2; // tangent to end
-    float x, y; // end pos
-};
-
-struct quadCurveToPoint {
-    float cpx, cpy;
-    float x, y;
-};
-
-struct ellipseInRect {
-    CGRect rect;
-};
-
-typedef struct {
-    pathComponentType type;
-
-    union {
-        CGRect rect;
-        CGPoint point;
-        arcToPoint atp;
-        curveToPoint ctp;
-        ellipseInRect eir;
-        quadCurveToPoint qtp;
-        arcAngle aa;
-    };
-} pathComponent;
+typedef struct CGPathElementInternal CGPathElementInternal;
 
 struct __CGPath : public CFBridgeBase<__CGPath> {
-    pathComponent* _components;
+    CGPathElementInternal* _elements;
     NSUInteger _count;
     NSUInteger _max;
 
