@@ -72,7 +72,7 @@ MOCK_CLASS(
 MOCK_CLASS(MockProtocolActivatedEventArgs,
            public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IProtocolActivatedEventArgs, IActivatedEventArgs> {
 
-                // Claim to be the implementation for the real system RuntimeClass for Accel.
+                // Claim to be the implementation for the real system RuntimeClass for ProtocolActivatedEventArgs.
                 InspectableClass(RuntimeClass_Windows_ApplicationModel_Activation_ProtocolActivatedEventArgs,
                                 BaseTrust);
 

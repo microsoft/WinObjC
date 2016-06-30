@@ -33,6 +33,12 @@
 #import <UIKit/UIKitExport.h>
 #import <Foundation/Foundation.h>
 #import <UIKit/UIApplication.h>
+/* TODO 7328699::
+ * Projection headers cannot currenly be included in modules, so we must forward declare classes for now
+ * App developers should import the following files to use methods requiring projected classes
+ * #import <UWP/WindowsFoundation.h>
+ * #import <UWP/WindowsMediaSpeechRecognition.h>
+*/
 
 @class NSString, UIApplication, NSDictionary, NSCoder, UIViewController, NSArray, UIUserNotificationSettings, UILocalNotification, NSData,
     NSError, NSUserActivity, UIApplicationShortcutItem, NSURL, UIWindow, WMSSpeechRecognitionResult, WFUri;
