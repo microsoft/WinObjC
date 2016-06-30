@@ -20,16 +20,16 @@
 #import <CoreGraphics/CGContext.h>
 #import <CoreGraphics/CGPath.h>
 #import <CoreGraphics/CGLayer.h>
+#import "CGColorSpaceInternal.h"
+#import "CGContextInternal.h"
+#include "LoggingNative.h"
+#import "_CGLifetimeBridgingType.h"
 #import <CoreGraphics/CGAffineTransform.h>
 #import <CoreGraphics/CGGradient.h>
 #import <Foundation/NSString.h>
 #import <UIKit/UIImage.h>
 #import <UIKit/UIFont.h>
 #import <UIKit/UIColor.h>
-#import "CGContextInternal.h"
-#import "CGColorSpaceInternal.h"
-#import "_CGLifetimeBridgingType.h"
-#include "LoggingNative.h"
 #import <pthread.h>
 
 static const wchar_t* TAG = L"CGContext";
@@ -1297,4 +1297,8 @@ CGImageRef CGJPEGImageCreateFromFile(NSString* path) {
 
 CGImageRef CGJPEGImageCreateFromData(NSData* data) {
     return new CGJPEGDecoderImage(data);
+}
+
+bool CGContextIsPointInPath(CGContextRef c, bool eoFill, float x, float y) {
+    return c->Backing()->CGContextIsPointInPath(eoFill, x, y);
 }

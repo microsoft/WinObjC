@@ -14,15 +14,15 @@
 //
 //******************************************************************************
 
-#import "CGPathInternal.h"
-#include "LoggingNative.h"
-#import <CoreGraphics/CGContext.h>
-#import <CoreGraphics/CGGeometry.h>
 #import "CGContextInternal.h"
 #import "CGPathInternal.h"
+#import "CGPathInternal.h"
+#include "LoggingNative.h"
 #import <CoreGraphics/CGBitmapContext.h>
 #import <CoreGraphics/CGColorSpace.h>
 #import <CoreGraphics/CGContext.h>
+#import <CoreGraphics/CGContext.h>
+#import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGImage.h>
 #import <CoreGraphics/CoreGraphicsExport.h>
@@ -669,34 +669,20 @@ bool CGPathContainsPoint(CGPathRef path, const CGAffineTransform* m, CGPoint poi
     }
     // check if the point is outside this box already, if it is, return false
     CGRect boundingBox = CGPathGetBoundingBox(path);
-    if(!CGRectContainsPoint(boundingBox, point)){
+    if (!CGRectContainsPoint(boundingBox, point)) {
         return false;
     }
 
     CGContextRef context =
         CGBitmapContextCreate(0, boundingBox.origin.x + boundingBox.size.width, boundingBox.origin.y + boundingBox.size.height, 1, 1, 0, 0);
 
-    CGContextSetGrayFillColor(context, 1.0, 1.0);
     CGContextAddPath(context, path);
 
-    if (eoFill) {
-        CGContextEOFillPath(context);
-    } else {
-        CGContextFillPath(context);
-    }
-
-    CGImageRef image = context->Backing()->DestImage();
-
-    float r = 0.0f;
-    float g = 0.0f;
-    float b = 0.0f;
-    float a = 0.0f;
-    image->Backing()->GetPixel(point.x, point.y, r, g, b, a);
+    bool inPath = CGContextIsPointInPath(context, eoFill, point.x, point.y);
 
     CGContextRelease(context);
 
-    // the filled path will be white, so if any component is greater than 0, we have a point inside the path
-    return r > 0;
+    return inPath;
 }
 
 /**
