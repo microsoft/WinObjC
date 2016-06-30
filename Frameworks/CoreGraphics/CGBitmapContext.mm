@@ -49,7 +49,8 @@ CGImageRef CGBitmapContextCreateImage(CGContextRef context) {
 
 /**
  @Status Caveat
- @Notes tied to underlying implementation caveats in CGImageGetBitmapInfo. 
+ @Notes tied to underlying implementation caveats in CGImageGetBitmapInfo.
+ From CGImage.mm: "Only returns kCGImageAlpha information"
 */
 CGBitmapInfo CGBitmapContextGetBitmapInfo(CGContextRef context) {
 	CGImageRef imageRef = context->Backing()->DestImage();
@@ -84,8 +85,8 @@ size_t CGBitmapContextGetBitsPerComponent(CGContextRef context) {
 */
 size_t CGBitmapContextGetBitsPerPixel(CGContextRef context) {
     CGImageRef imageRef = context->Backing()->DestImage();
-    size_t bytesPerPixel = imageRef->Backing()->BytesPerPixel();
-    size_t bitsPerByte = 8;
+    const size_t bytesPerPixel = imageRef->Backing()->BytesPerPixel();
+    const size_t bitsPerByte = 8;
     return bytesPerPixel * bitsPerByte;
 }
 
