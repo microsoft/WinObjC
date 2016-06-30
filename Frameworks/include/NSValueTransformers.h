@@ -98,7 +98,7 @@ id valueFromDataWithType(void* data, const char* objcType) {
                     auto dataAsAutoId = reinterpret_cast<AutoId<NSObject, LifetimeUnsafe>*>(data);
                     return static_cast<id>(*dataAsAutoId);
                 } else {
-                    FAIL_FAST_MSG(E_UNEXPECTED, "Unknown lifetime type destrucuring AutoId with type encoding `%s'.", objcType);
+                    FAIL_FAST_MSG("Unknown lifetime type destrucuring AutoId with type encoding `%s'.", objcType);
                     return nil;
                 }
             }
@@ -169,7 +169,7 @@ bool dataWithTypeFromValue(void* data, const char* objcType, id value) {
                     auto dataAsAutoId = reinterpret_cast<AutoId<NSObject, LifetimeUnsafe>*>(data);
                     (*dataAsAutoId) = value;
                 } else {
-                    FAIL_FAST_MSG(E_UNEXPECTED, "Unknown lifetime type destrucuring AutoId with type encoding `%s'.", objcType);
+                    FAIL_FAST_MSG("Unknown lifetime type destrucuring AutoId with type encoding `%s'.", objcType);
                     return false;
                 }
                 return true;

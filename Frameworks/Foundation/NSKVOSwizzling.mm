@@ -163,7 +163,7 @@ static void notifyingVariadicSetImpl(id self, SEL _cmd, ...) {
             imp(self, _cmd, raw[0], raw[1], raw[2], raw[3], raw[4], raw[5]);
             break;
         default:
-            FAIL_FAST_MSG(E_UNEXPECTED, "Can't override setter with more than 6 sizeof(long) stack arguments.");
+            FAIL_FAST_MSG("Can't override setter with more than 6 sizeof(long) stack arguments.");
             return;
     }
 

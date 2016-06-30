@@ -1261,15 +1261,15 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
 #define FAIL_FAST_IF_NULL(ptr) __RFF_FN(FailFast_IfNull)(__RFF_INFO(#ptr) ptr)
 
 // Always fail fast a known failure - fail fast a var-arg message on failure
-#define FAIL_FAST_MSG(hr, fmt, ...) __RFF_FN(FailFast_UnexpectedMsg)(__RFF_INFO(#hr) wil::verify_hresult(hr), fmt, __VA_ARGS__)
+#define FAIL_FAST_MSG(fmt, ...) __RFF_FN(FailFast_UnexpectedMsg)(__RFF_INFO(nullptr) fmt, __VA_ARGS__)
 
 // Conditionally fail fast failures - returns parameter value - fail fast a var-arg message on failure
-#define FAIL_FAST_IF_MSG(hr, condition, fmt, ...) \
-    __RFF_FN(FailFast_IfMsg)(__RFF_INFO(#condition) wil::verify_hresult(hr), wil::verify_bool(condition), fmt, __VA_ARGS__)
-#define FAIL_FAST_IF_FALSE_MSG(hr, condition, fmt, ...) \
-    __RFF_FN(FailFast_IfFalseMsg)(__RFF_INFO(#condition) wil::verify_hresult(hr), wil::verify_bool(condition), fmt, __VA_ARGS__)
-#define FAIL_FAST_IF_NULL_MSG(hr, ptr, fmt, ...) \
-    __RFF_FN(FailFast_IfNullMsg)(__RFF_INFO(#ptr) wil::verify_hresult(hr), ptr, fmt, __VA_ARGS__)
+#define FAIL_FAST_IF_MSG(condition, fmt, ...) \
+    __RFF_FN(FailFast_IfMsg)(__RFF_INFO(#condition) wil::verify_bool(condition), fmt, __VA_ARGS__)
+#define FAIL_FAST_IF_FALSE_MSG(condition, fmt, ...) \
+    __RFF_FN(FailFast_IfFalseMsg)(__RFF_INFO(#condition) wil::verify_bool(condition), fmt, __VA_ARGS__)
+#define FAIL_FAST_IF_NULL_MSG(ptr, fmt, ...) \
+    __RFF_FN(FailFast_IfNullMsg)(__RFF_INFO(#ptr) ptr, fmt, __VA_ARGS__)
 
 // Immediate fail fast (no telemetry - use rarely / only when *already* in an undefined state)
 #define FAIL_FAST_IMMEDIATE() __RFF_FN(FailFastImmediate_Unexpected)()
@@ -4226,7 +4226,7 @@ __RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFast_IfNull)
 }
 
 __RFF_DIRECT_NORET_METHOD(void, FailFast_UnexpectedMsg)
-(__RFF_DIRECT_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
+(__RFF_DIRECT_FN_PARAMS _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     va_list argList;
     va_start(argList, formatString);
     __RFF_FN_LOCALS;
@@ -4240,7 +4240,7 @@ __RFF_INTERNAL_NOINLINE_NORET_METHOD(_FailFast_UnexpectedMsg)
 }
 
 __RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_IfMsg)
-(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
+(__RFF_CONDITIONAL_FN_PARAMS bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (condition) {
         va_list argList;
         va_start(argList, formatString);
