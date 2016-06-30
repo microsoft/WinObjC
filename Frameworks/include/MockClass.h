@@ -107,8 +107,11 @@ ASSERT_EQ(HRESULT_FROM_WIN32(ERROR_OUT_OF_PAPER), result);
 }
 */ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////////
+// Class definition must be placed inside macro to mock in Objective C++
 // Clang doesn't allow unqualified methods to be mocked so we need to attach the class name to it when mocking
 // A namespace is created around the class to allow this to be used more than once
+////////////////////////////////////////////////////////////////
 #define MOCK_CLASS(CLASS_NAME, ...)                       \
     namespace BUILD_VARIABLE_NAME(CLASS_NAME, _PRIVATE) { \
         class CLASS_NAME;                                 \

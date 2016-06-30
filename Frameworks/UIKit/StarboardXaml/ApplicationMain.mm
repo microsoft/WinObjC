@@ -45,20 +45,19 @@ void SetCACompositorClient(CACompositorClientInterface* client) {
 }
 
 int ApplicationMainStart(const char* principalName,
-                          const char* delegateName,
-                          float windowWidth,
-                          float windowHeight,
-                          ActivationType activationType,
-                          void* activationArg) {
-
+                         const char* delegateName,
+                         float windowWidth,
+                         float windowHeight,
+                         ActivationType activationType,
+                         void* activationArg) {
     // Note: We must use nil rather than an empty string for these class names
     NSString* principalClassName = Strings::IsEmpty<const char*>(principalName) ? nil : [[NSString alloc] initWithCString:principalName];
     NSString* delegateClassName = Strings::IsEmpty<const char*>(delegateName) ? nil : [[NSString alloc] initWithCString:delegateName];
 
     id activationArgument = nil;
 
-	// Populate Objective C equivalent of activation argument
-    if (activationType == ActivationTypeToast){
+    // Populate Objective C equivalent of activation argument
+    if (activationType == ActivationTypeToast) {
         NSString* toastArgument = Strings::WideToNSString(static_cast<HSTRING>(activationArg));
         activationArgument = toastArgument;
     } else if (activationType == ActivationTypeVoiceCommand) {
@@ -89,7 +88,7 @@ int ApplicationMainStart(const char* principalName,
         } else if ([orientation isKindOfClass:[NSArray class]]) {
             bool found = false;
 
-            for (NSString* curstr in(NSArray*)orientation) {
+            for (NSString* curstr in (NSArray*)orientation) {
                 UIInterfaceOrientation newOrientation = UIOrientationFromString(defaultOrientation, curstr);
                 if (newOrientation == defaultOrientation) {
                     found = true;

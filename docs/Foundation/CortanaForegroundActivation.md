@@ -34,7 +34,7 @@ We will create new OnApplicationLaunchOptions as well as new delegate methods fo
 We will need to convert C++/CX Windows::Media::SpeechRecognition::SpeechRecognitionResult^ and Windows::Foundation::Uri^ to Objective C Projections WMSSpeechRecognitionResult\* and WFUri\* respectively by passing them as Iinspectable\* through C functions between the two languages.  Because Platform::String^ is not an IInspectable\*, we will need a branching path to handle the conversion from Platform::String^ as an HSTRING to NSString\* before joining the two  paths in _ApplicationMainStart.
 
 ###Language Decisions
-We will use Objective-C projection as well as C++/CX wrappers as appropriate for functionality with Islandwood
+We will use Objective-C projection as well as C++/CX wrappers as appropriate for functionality with WinObjC
 
 ##Detailed Design
 
@@ -85,4 +85,4 @@ UIApplicationDelegate.h:
 
 ###Test Approach
 
-Functionally testing the onActivated path will require a large addition of path code to allow testing to hook in at different points, or possibly a restructuring of startup code to allow the test to get ownership of the app.
+Functionally testing the onActivated path will require a large addition of path code to allow testing to hook in at different points, or possibly a restructuring of startup code to allow the test to get ownership of the app.  Currently this is being tested manually.

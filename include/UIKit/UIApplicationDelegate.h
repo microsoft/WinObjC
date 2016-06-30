@@ -35,7 +35,7 @@
 #import <UIKit/UIApplication.h>
 
 @class NSString, UIApplication, NSDictionary, NSCoder, UIViewController, NSArray, UIUserNotificationSettings, UILocalNotification, NSData,
-    NSError, NSUserActivity, UIApplicationShortcutItem, NSURL, UIWindow;
+    NSError, NSUserActivity, UIApplicationShortcutItem, NSURL, UIWindow, WMSSpeechRecognitionResult, WFUri;
 
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsURLKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsSourceApplicationKey;
@@ -118,6 +118,8 @@ UIKIT_EXPORT NSString* const UIApplicationOpenURLOptionsOpenInPlaceKey;
          forRemoteNotification:(NSDictionary*)userInfo
              completionHandler:(void (^)(void))completionHandler;
 - (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo;
+- (void)application:(UIApplication*)application didReceiveVoiceCommand:(WMSSpeechRecognitionResult*)result;
+- (void)application:(UIApplication*)application didReceiveProtocol:(WFUri*)uri;
 - (void)application:(UIApplication*)application
     handleActionWithIdentifier:(NSString*)identifier
           forLocalNotification:(UILocalNotification*)notification
