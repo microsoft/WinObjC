@@ -48,6 +48,7 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
 
 @implementation NSUserDefaults {
     StrongId<NSMutableDictionary> _registrationDict;
+    StrongId<NSOperationQueue> _synchronizeQueue;
 }
 
 /**
@@ -57,6 +58,9 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
     [super init];
 
     _registrationDict = [NSMutableDictionary dictionary];
+
+    _synchronizeQueue = [NSOperationQueue new];
+    [_synchronizeQueue setMaxConcurrentOperationCount:1];
 
     [self setObject:[NSArray arrayWithObject:@"en"] forKey:@"AppleLanguages"];
     [self setObject:@"en_US" forKey:@"AppleLocale"];
@@ -245,6 +249,12 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
     CFPreferencesSetAppValue(static_cast<CFStringRef>(key), valueCopy, kCFPreferencesCurrentApplication);
 
     [[NSNotificationCenter defaultCenter] postNotificationName:NSUserDefaultsDidChangeNotification object:self];
+
+    if ([_synchronizeQueue operationCount] < 2) {
+        [_synchronizeQueue addOperationWithBlock:^void(void) {
+            [self synchronize];
+        }];
+    }
 }
 
 /**
