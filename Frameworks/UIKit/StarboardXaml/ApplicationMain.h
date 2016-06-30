@@ -16,8 +16,6 @@
 #pragma once
 
 #include "StarboardXaml.h"
-#include <inspectable.h>
-#include <hstring.h>
 
 // IOS application main startup path
 extern "C" int ApplicationMainStart(const char* principalName,

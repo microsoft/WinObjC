@@ -14,9 +14,7 @@
 //
 //******************************************************************************
 
-#include <COMIncludes.h>
 #import "ApplicationMain.h"
-#include <COMIncludes_End.h>
 
 #import <assert.h>
 #import <math.h>
