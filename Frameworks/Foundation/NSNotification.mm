@@ -27,26 +27,14 @@
  @Status Interoperable
 */
 + (NSNotification*)notificationWithName:(NSString*)name object:(id)obj {
-    NSNotification* ret = [self alloc];
-
-    ret->notificationName = [name retain];
-    ret->notificationObj = [obj retain];
-    ret->userInfo = nil;
-
-    return [ret autorelease];
+    return [self notificationWithName:name object:obj userInfo:nil];
 }
 
 /**
  @Status Interoperable
 */
 + (NSNotification*)notificationWithName:(NSString*)name object:(id)obj userInfo:(NSDictionary*)info {
-    NSNotification* ret = [self alloc];
-
-    ret->notificationName = [name retain];
-    ret->notificationObj = [obj retain];
-    ret->userInfo = [info retain];
-
-    return [ret autorelease];
+    return [[[self alloc] initWithName:name object:obj userInfo:info] autorelease];
 }
 
 /**
@@ -74,8 +62,8 @@
  @Status Interoperable
 */
 - (void)dealloc {
-    [notificationName release];
     [notificationObj release];
+    [notificationName release];
     [userInfo release];
 
     [super dealloc];
@@ -85,9 +73,13 @@
  @Status Stub
  @Notes
 */
-- (instancetype)initWithName:(NSString*)aName object:(id)object userInfo:(NSDictionary*)userInfo {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (instancetype)initWithName:(NSString*)aName object:(id)object userInfo:(NSDictionary*)info {
+    if ((self = [super init]) != nil) {
+        notificationObj = [object retain];
+        notificationName = [aName copy];
+        userInfo = [userInfo retain];
+    }
+    return self;
 }
 
 /**
