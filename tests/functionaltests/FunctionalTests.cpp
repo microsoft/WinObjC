@@ -314,3 +314,28 @@ public:
         UIViewTestsCreate();
     }
 }; /* class UIViewTests */
+
+// Projection Tests
+//
+extern void ProjectionWUCCoreDispatcherSanity();
+
+class ProjectionTest {
+public:
+    BEGIN_TEST_CLASS(ProjectionTest)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(ProjectionTestClassSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
+
+    TEST_CLASS_CLEANUP(ProjectionTestClassCleanup) {
+        return true;
+    }
+
+    TEST_METHOD(ProjectionTest_WUCCoreDispatcherSanity) {
+        ProjectionWUCCoreDispatcherSanity();
+    }
+
+}; /* class ProjectionTest */
