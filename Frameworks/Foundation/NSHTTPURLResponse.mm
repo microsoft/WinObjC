@@ -14,12 +14,12 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSHTTPURLResponse.h"
-#include "CoreFoundation/CFDictionary.h"
+#include <Starboard.h>
+#include <Foundation/NSString.h>
+#include <Foundation/NSHTTPURLResponse.h>
+#include <CoreFoundation/CFDictionary.h>
 #include "NSURLResponseInternal.h"
-#include "StubReturn.h"
+#include <StubReturn.h>
 
 static Boolean CFHTTPHeaderEqual(const void* obj1, const void* obj2) {
     return [(id)obj1 caseInsensitiveCompare:(NSString*)obj2] == 0;

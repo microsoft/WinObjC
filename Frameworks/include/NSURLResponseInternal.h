@@ -16,7 +16,7 @@
 
 #pragma once
 
-#import "Starboard/SmartTypes.h"
+#import <Starboard/SmartTypes.h>
 
 @interface NSURLResponse ()
 - (id)_initWithURL:(NSURL*)url
