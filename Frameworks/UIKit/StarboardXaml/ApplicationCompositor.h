@@ -25,7 +25,8 @@ extern "C" void RunApplicationMain(Platform::String^ principalClassName,
                                    float windowWidth,
                                    float windowHeight,
                                    ActivationType type,
-                                   Platform::String^ activationArg);
+                                   Platform::Object^ activationArg);
+
 #endif
 
 // clang-format on
