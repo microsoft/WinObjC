@@ -679,7 +679,7 @@ static void layoutSubSections(UIPickerView* self) {
 /**
  @Status Stub
 */
-- (UIView*)viewForRow:(NSInteger)row inComponent:(NSInteger)component {
+- (UIView*)viewForRow:(NSInteger)row forComponent:(NSInteger)component {
     UNIMPLEMENTED();
     return StubReturn();
 }

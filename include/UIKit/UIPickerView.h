@@ -65,6 +65,6 @@ UIKIT_EXPORT_CLASS
 - (void)selectRow:(NSInteger)row inComponent:(NSInteger)component animated:(BOOL)animated;
 
 - (NSInteger)numberOfRowsInComponent:(NSInteger)component STUB_METHOD;
-- (UIView*)viewForRow:(NSInteger)row inComponent:(NSInteger)component STUB_METHOD;
+- (UIView*)viewForRow:(NSInteger)row forComponent:(NSInteger)component STUB_METHOD;
 
 @end
