@@ -299,24 +299,24 @@ public:
 //
 
 extern void CortanaTestVoiceCommandForegroundActivation();
+extern void CortanaTestDelegateMethodsCalled();
 
 class Cortana {
 public:
     BEGIN_TEST_CLASS(Cortana)
     TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
     TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
-    TEST_CLASS_PROPERTY(L"Ignore", L"true")
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(CortanaTestClassSetup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+        // The class setup allows us to activate the app in our test method, but can only be done once per class
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&CortanaTestVoiceCommandForegroundActivation));
     }
 
-    TEST_METHOD(CortanaTest_VoiceCommandForegroundActivation) {
-        CortanaTestVoiceCommandForegroundActivation();
+    TEST_METHOD(Cortana_DelegateMethodsCalled) {
+        CortanaTestDelegateMethodsCalled();
     }
-}; /* class NSBundle */
-
+}; /* class Cortana*/
 // UIViewTests
 //
 extern void UIViewTestsCreate();
