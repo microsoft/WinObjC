@@ -45,7 +45,7 @@
 }
 
 /**
- @Status Stub
+ @Status interoperable
  @Notes
 */
 - (instancetype)initWithName:(NSString*)aName object:(id)object userInfo:(NSDictionary*)info {
