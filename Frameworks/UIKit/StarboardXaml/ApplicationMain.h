@@ -23,5 +23,6 @@ extern "C" int ApplicationMainStart(const char* principalName,
                                     float windowWidth,
                                     float windowHeight,
                                     ActivationType activationType,
-                                    const char* activationArg);
+                                    void* activationArg);
+
 void SetTemporaryFolder(const char* folder);
