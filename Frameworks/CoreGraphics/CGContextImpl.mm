@@ -375,7 +375,7 @@ void CGContextImpl::CGContextSetFillColor(float* components) {
 
 void CGContextImpl::CGContextSetFillPattern(CGPatternRef pattern, const float* components) {
     CGPattern* intPattern = (CGPattern*)pattern;
-    curState->curFillColorObject = pattern;
+    curState->curFillColorObject = [pattern retain];
     switch (intPattern->surfaceFmt) {
         case _ColorRGB:
         case _Color565:
@@ -397,6 +397,16 @@ void CGContextImpl::CGContextSetFillPattern(CGPatternRef pattern, const float* c
             curState->curFillColor.b = 1.0f;
             curState->curFillColor.a = 1.0f;
             break;
+    }
+}
+
+void CGContextImpl::CGContextSetPatternPhase(CGSize phase) {
+    if ([curState->curFillColorObject isKindOfClass:[CGPattern class]]) {
+        CGPattern* pattern = curState->curFillColorObject;
+        CGAffineTransform matrix = pattern->matrix;
+        matrix.tx += phase.width;
+        matrix.ty += phase.height;
+        pattern->matrix = matrix;
     }
 }
 

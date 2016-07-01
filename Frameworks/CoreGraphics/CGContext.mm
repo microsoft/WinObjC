@@ -93,11 +93,10 @@ void CGContextSetFillPattern(CGContextRef ctx, CGPatternRef pattern, const float
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextSetPatternPhase(CGContextRef ctx, CGSize phase) {
-    UNIMPLEMENTED();
-    TraceWarning(TAG, L"CGContextSetPatternPhase not implemented");
+    return ctx->Backing()->CGContextSetPatternPhase(phase);
 }
 
 /**

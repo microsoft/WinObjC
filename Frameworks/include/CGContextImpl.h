@@ -15,6 +15,11 @@
 //******************************************************************************
 
 #pragma once
+
+#ifndef __CGCONTEXTIMPL_TEST_FRIENDS
+#define __CGCONTEXTIMPL_TEST_FRIENDS
+#endif
+
 #include "CGContextInternal.h"
 
 #include "CoreGraphics/CGPath.h"
@@ -53,6 +58,7 @@ private:
 #define MAX_CG_STATES 16
 
 class CGContextImpl {
+__CGCONTEXTIMPL_TEST_FRIENDS;
 protected:
     CGContextRef _rootContext;
     CGImageRef _imgDest;
@@ -107,6 +113,7 @@ public:
     virtual void CGContextSetStrokeColorWithColor(id color);
     virtual void CGContextSetFillColorWithColor(id color);
     virtual void CGContextSetFillColor(float* components);
+    virtual void CGContextSetPatternPhase(CGSize phase);
     virtual void CGContextSetFillPattern(CGPatternRef pattern, const float* components);
     virtual void CGContextSelectFont(char* name, float size, DWORD encoding);
     virtual void CGContextGetTextPosition(CGPoint* pos);

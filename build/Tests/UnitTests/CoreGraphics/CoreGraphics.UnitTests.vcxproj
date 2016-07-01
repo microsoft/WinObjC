@@ -31,14 +31,8 @@
     <ProjectReference Include="..\..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26da08da-d0b9-4579-b168-e7f0a5f20e57}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\UIKit\dll\UIKit.vcxproj">
-      <Project>{8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\AutoLayout\dll\AutoLayout.vcxproj">
       <Project>{D036FDB1-F82C-40C7-B1B4-65F499EAE116}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\QuartzCore\dll\QuartzCore.vcxproj">
-      <Project>{037B568F-4104-417E-9FB8-B6899E398903}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
       <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
