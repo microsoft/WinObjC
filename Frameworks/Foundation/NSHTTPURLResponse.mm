@@ -73,7 +73,7 @@ static CFHashCode CFHTTPHeaderHash(const void* obj1) {
             expectedContentLength = [expectedLength intValue];
         }
 
-		// Parse the filename from the Content-Disposition header field.
+        // Parse the filename from the Content-Disposition header field.
         NSString* contentDisposition = [allHeaderFields objectForKey:@"Content-Disposition"];
         NSRange filenameTagPosition = [contentDisposition rangeOfString:@"filename=" options:NSBackwardsSearch];
         NSCharacterSet* filenameEndDelimiter;
@@ -81,12 +81,12 @@ static CFHashCode CFHTTPHeaderHash(const void* obj1) {
         if (filenameTagPosition.location != NSNotFound) {
             NSUInteger startPos = NSMaxRange(filenameTagPosition); // denotes the start position of the file name
 
-			// if a quote follows 'filename=', then use the entire quoted string
+            // if a quote follows 'filename=', then use the entire quoted string
             if ([[contentDisposition substringWithRange:{NSMaxRange(filenameTagPosition), 1}] isEqual:@"\""]) {
                 filenameEndDelimiter = [NSCharacterSet characterSetWithCharactersInString:@"\""];
                 startPos++; // " is not part of the file name, so start one character further
             } else {
-				// If the filename is not quoted, proceed until semicolon or space is found
+                // If the filename is not quoted, proceed until semicolon or space is found
                 filenameEndDelimiter = [NSCharacterSet characterSetWithCharactersInString:@"; "];
             }
 
@@ -96,16 +96,16 @@ static CFHashCode CFHTTPHeaderHash(const void* obj1) {
                 filenameEndPosition.location = [contentDisposition length] - 1;
             }
 
-			// replace any illegal filename characters with underscores
+            // replace any illegal filename characters with underscores
             filename = _NSReplaceIllegalFileNameCharacters(
                 [contentDisposition substringWithRange:{startPos, filenameEndPosition.location - startPos}]);
         }
 
-		// parse MIME type from content-type header field.
+        // parse MIME type from content-type header field.
         NSArray* contentTypeFields = [[allHeaderFields objectForKey:@"content-type"] componentsSeparatedByString:@";"];
         mimeType = [[contentTypeFields objectAtIndex:0] lowercaseString];
 
-		// charset may be specified after a semicolon
+        // charset may be specified after a semicolon
         if ([contentTypeFields count] > 1) {
             NSString* encodingName = [[contentTypeFields objectAtIndex:1] lowercaseString];
             NSRange encodingNameTagPosition = [encodingName rangeOfString:@"charset="];
