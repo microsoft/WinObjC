@@ -17,11 +17,7 @@
 #import <StubReturn.h>
 #import <Foundation/NSNotification.h>
 
-@implementation NSNotification {
-    NSString* notificationName;
-    id notificationObj;
-    id userInfo;
-}
+@implementation NSNotification
 
 /**
  @Status Interoperable
@@ -40,31 +36,10 @@
 /**
  @Status Interoperable
 */
-- (id)object {
-    return notificationObj;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)name {
-    return notificationName;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSDictionary*)userInfo {
-    return userInfo;
-}
-
-/**
- @Status Interoperable
-*/
 - (void)dealloc {
-    [notificationObj release];
-    [notificationName release];
-    [userInfo release];
+    [_object release];
+    [_name release];
+    [_userInfo release];
 
     [super dealloc];
 }
@@ -75,9 +50,9 @@
 */
 - (instancetype)initWithName:(NSString*)aName object:(id)object userInfo:(NSDictionary*)info {
     if ((self = [super init]) != nil) {
-        notificationObj = [object retain];
-        notificationName = [aName copy];
-        userInfo = [userInfo retain];
+        _object = [object retain];
+        _name = [aName copy];
+        _userInfo = [info retain];
     }
     return self;
 }
