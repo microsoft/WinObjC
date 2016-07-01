@@ -1,3 +1,22 @@
+/*
+Original Author: Michael Ash on 11/9/08.
+Copyright (c) 2008 Rogue Amoeba Software LLC
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
+persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*/
+
 //******************************************************************************
 //
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
@@ -14,24 +33,25 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSOperation.h"
-
-static const wchar_t* TAG = L"NSOperation";
+#import <Starboard.h>
+#import <StubReturn.h>
+#import <Foundation/NSOperation.h>
+#import <condition_variable>
+#import <mutex>
 
 @implementation NSOperation {
     StrongId<NSMutableArray> _dependencies;
     void (^_completionBlock)(void);
-    pthread_cond_t _finishCondition;
-    pthread_mutex_t _finishLock;
-    pthread_mutex_t _dependenciesLock;
-    pthread_mutex_t _completionBlockLock;
+    std::condition_variable_any _finishCondition;
+    std::recursive_mutex _finishLock;
+    std::recursive_mutex _dependenciesLock;
+    std::recursive_mutex _completionBlockLock;
 }
 
 @synthesize cancelled = _cancelled;
 @synthesize executing = _executing;
 @synthesize finished = _finished;
+@synthesize ready = _ready;
 
 /**
  @Status Interoperable
@@ -41,26 +61,48 @@ static const wchar_t* TAG = L"NSOperation";
     return NO;
 }
 
+- (void)_checkReady {
+    bool newReady = YES;
+
+    // If cancelled, skip this logic and set _ready to YES. Otherwise check dependencies.
+    if (![self isCancelled]) {
+        _dependenciesLock.lock();
+        int count = [_dependencies count];
+
+        for (int i = 0; i < count; i++) {
+            id op = [_dependencies objectAtIndex:i];
+
+            if (![op isFinished]) {
+                newReady = NO;
+            }
+        }
+
+        _dependenciesLock.unlock();
+    }
+
+    if (_ready != newReady) {
+        [self willChangeValueForKey:@"isReady"];
+        _ready = newReady;
+        [self didChangeValueForKey:@"isReady"];
+    }
+}
+
 - (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
     if ([keyPath isEqualToString:@"isFinished"]) {
-        pthread_mutex_lock(&_finishLock);
-        pthread_cond_broadcast(&_finishCondition);
-        pthread_mutex_unlock(&_finishLock);
+        if (object == self) {
+            _finishLock.lock();
+            _finishCondition.notify_all();
+            _finishLock.unlock();
+        } else {
+            [self _checkReady];
+        }
     }
 }
 
 - (id)init {
     if (self = [super init]) {
         _dependencies.attach([NSMutableArray new]);
-        pthread_cond_init(&_finishCondition, 0);
-        pthread_mutexattr_t attr;
-        pthread_mutexattr_init(&attr);
-        pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-        pthread_mutex_init(&_finishLock, &attr);
-        pthread_mutexattr_destroy(&attr);
-        pthread_mutex_init(&_dependenciesLock, NULL);
-        pthread_mutex_init(&_completionBlockLock, NULL);
-
+        _ready = YES;
         [self addObserver:self forKeyPath:@"isFinished" options:0 context:NULL];
     }
 
@@ -70,44 +112,36 @@ static const wchar_t* TAG = L"NSOperation";
 /**
  @Status Interoperable
 */
+- (BOOL)isReady {
+    return _ready;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)addDependency:(id)operation {
-    pthread_mutex_lock(&_dependenciesLock);
+    [self willChangeValueForKey:@"dependencies"];
+    _dependenciesLock.lock();
     [_dependencies addObject:operation];
-    pthread_mutex_unlock(&_dependenciesLock);
+    [operation addObserver:self forKeyPath:@"isFinished" options:0 context:NULL];
+    _dependenciesLock.unlock();
+    [self didChangeValueForKey:@"dependencies"];
+    [self _checkReady];
 }
 
 /**
  @Status Interoperable
 */
 - (void)removeDependency:(NSOperation*)operation {
-    pthread_mutex_lock(&_dependenciesLock);
+    [self willChangeValueForKey:@"dependencies"];
+    _dependenciesLock.lock();
+    [operation removeObserver:self forKeyPath:@"isFinished" context:NULL];
     [_dependencies removeObject:operation];
-    pthread_mutex_unlock(&_dependenciesLock);
+    _dependenciesLock.unlock();
+    [self didChangeValueForKey:@"dependencies"];
+    [self _checkReady];
 }
 
-/**
- @Status Interoperable
-*/
-- (BOOL)isReady {
-    if ([self isCancelled]) {
-        return YES;
-    }
-
-    pthread_mutex_lock(&_dependenciesLock);
-    int count = [_dependencies count];
-
-    for (int i = 0; i < count; i++) {
-        id op = [_dependencies objectAtIndex:i];
-
-        if (![op isFinished]) {
-            pthread_mutex_unlock(&_dependenciesLock);
-            return NO;
-        }
-    }
-
-    pthread_mutex_unlock(&_dependenciesLock);
-    return YES;
-}
 
 /**
  @Status Stub
@@ -128,19 +162,21 @@ static const wchar_t* TAG = L"NSOperation";
  @Status Interoperable
 */
 - (void)setCompletionBlock:(void (^)(void))block {
-    pthread_mutex_lock(&_completionBlockLock);
-    [_completionBlock autorelease];
+    [self willChangeValueForKey:@"completionBlock"];
+    _completionBlockLock.lock();
+    [_completionBlock release];
     _completionBlock = [block copy];
-    pthread_mutex_unlock(&_completionBlockLock);
+    _completionBlockLock.unlock();
+    [self didChangeValueForKey:@"completionBlock"];
 }
 
 /**
  @Status Interoperable
 */
 - (void (^)(void))completionBlock {
-    pthread_mutex_lock(&_completionBlockLock);
+    _completionBlockLock.lock();
     id ret = [[_completionBlock retain] autorelease];
-    pthread_mutex_unlock(&_completionBlockLock);
+    _completionBlockLock.unlock();
     return ret;
 }
 
@@ -168,6 +204,20 @@ static const wchar_t* TAG = L"NSOperation";
 /**
  @Status Interoperable
 */
+- (BOOL)isConcurrent {
+    return NO;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isAsynchronous {
+    return NO;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)start {
     if (_finished) {
         return;
@@ -175,14 +225,14 @@ static const wchar_t* TAG = L"NSOperation";
 
     THROW_NS_IF(E_INVALIDARG, (_executing || ![self isReady]));
     
-    pthread_mutex_lock(&_finishLock);
+    _finishLock.lock();
     BOOL shouldExecute = !_cancelled; // Note: in the cancelled case, [self main] is not called but isFinished will still be observable
     if (shouldExecute) {
         [self willChangeValueForKey:@"isExecuting"];
         _executing = YES;
         [self didChangeValueForKey:@"isExecuting"];
     }
-    pthread_mutex_unlock(&_finishLock);
+    _finishLock.unlock();
     
     if (shouldExecute) {
         NSAutoreleasePool* pool = [NSAutoreleasePool new];
@@ -194,7 +244,7 @@ static const wchar_t* TAG = L"NSOperation";
 }
 
 - (void)_finish:(BOOL)didExecute {
-    pthread_mutex_lock(&_finishLock);
+    _finishLock.lock();
     if (didExecute) {
         [self willChangeValueForKey:@"isExecuting"];
     }
@@ -208,11 +258,12 @@ static const wchar_t* TAG = L"NSOperation";
         [self didChangeValueForKey:@"isExecuting"];
     }
 
-    pthread_mutex_lock(&_completionBlockLock);
+    _completionBlockLock.lock();
     void (^completion)(void) = [_completionBlock retain];
-    pthread_mutex_unlock(&_completionBlockLock);
+    [self setCompletionBlock:nil];
+    _completionBlockLock.unlock();
 
-    pthread_mutex_unlock(&_finishLock);
+    _finishLock.unlock();
     
     if (completion) {
         completion();
@@ -226,11 +277,12 @@ static const wchar_t* TAG = L"NSOperation";
 */
 - (void)cancel {
     if (_cancelled == NO) {
-        pthread_mutex_lock(&_finishLock);
+        _finishLock.lock();
         [self willChangeValueForKey:@"isCancelled"];
         _cancelled = YES;
         [self didChangeValueForKey:@"isCancelled"];
-        pthread_mutex_unlock(&_finishLock);
+        _finishLock.unlock();
+        [self _checkReady];
     }
 }
 
@@ -244,21 +296,21 @@ static const wchar_t* TAG = L"NSOperation";
  @Status Interoperable
 */
 - (void)waitUntilFinished {
-    pthread_mutex_lock(&_finishLock);
+    _finishLock.lock();
     while (![self isFinished]) {
-        pthread_cond_wait(&_finishCondition, &_finishLock);
+        _finishCondition.wait(_finishLock);
     }
 
-    pthread_mutex_unlock(&_finishLock);
+    _finishLock.unlock();
 }
 
 /**
  @Status Interoperable
 */
 - (NSArray*)dependencies {
-    pthread_mutex_lock(&_dependenciesLock);
+    _dependenciesLock.lock();
     NSArray* copy = [[_dependencies copy] autorelease];
-    pthread_mutex_unlock(&_dependenciesLock);
+    _dependenciesLock.unlock();
     return copy;
 }
 
@@ -266,11 +318,15 @@ static const wchar_t* TAG = L"NSOperation";
  @Status Interoperable
 */
 - (void)dealloc {
+    _dependenciesLock.lock();
+    int count = [_dependencies count];
+    for (int i = 0; i < count; i++) {
+        id op = [_dependencies objectAtIndex:i];
+        [op removeObserver:self forKeyPath:@"isFinished" context:NULL];
+    }
+
+    _dependenciesLock.unlock();
     [self removeObserver:self forKeyPath:@"isFinished" context:NULL];
-    pthread_cond_destroy(&_finishCondition);
-    pthread_mutex_destroy(&_finishLock);
-    pthread_mutex_destroy(&_dependenciesLock);
-    pthread_mutex_destroy(&_completionBlockLock);
     [_completionBlock release];
     [super dealloc];
 }

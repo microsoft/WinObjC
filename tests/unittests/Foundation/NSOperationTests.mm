@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
+#import <TestFramework.h>
 #import <Foundation/Foundation.h>
 
 #import <thread>
@@ -103,15 +103,77 @@ TEST(NSOperation, NSOperationSuspend) {
     [suspendOperation waitUntilFinished];
 }
 
-// Test subclass for NSOperation
-@interface MyOperation : NSOperation
+@interface TestObserver : NSObject
+@property BOOL didObserveCompletionBlock;
+@property BOOL didObserveDependencies;
+@property BOOL didObserveReady;
+@property BOOL didObserveCancelled;
+@property BOOL didObserveExecuting;
+@property BOOL didObserveFinished;
+@end
 
-@property (assign, getter = isExecuting) BOOL executing;
-@property (assign, getter = isFinished, readonly) BOOL finished;
+@implementation TestObserver
+- (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
+    if ([keyPath isEqualToString:@"completionBlock"]) {
+        _didObserveCompletionBlock = YES;
+    } else if ([keyPath isEqualToString:@"dependencies"]) {
+        _didObserveDependencies = YES;
+    } else if ([keyPath isEqualToString:@"isReady"]) {
+        _didObserveReady = YES;
+    } else if ([keyPath isEqualToString:@"isCancelled"]) {
+        _didObserveCancelled = YES;
+    } else if ([keyPath isEqualToString:@"isExecuting"]) {
+        _didObserveExecuting = YES;
+    } else if ([keyPath isEqualToString:@"isFinished"]) {
+        _didObserveFinished = YES;
+    }
+}
 
 @end
 
-@implementation MyOperation
+TEST(NSOperation, NSOperationKVO) {
+    NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
+    NSOperation* operation = [[NSOperation new] autorelease];
+    TestObserver* observer = [[TestObserver new] autorelease];
+
+    [operation addObserver:observer forKeyPath:@"completionBlock" options:0 context:NULL];
+    [operation addObserver:observer forKeyPath:@"isCancelled" options:0 context:NULL];
+    [operation addObserver:observer forKeyPath:@"isExecuting" options:0 context:NULL];
+    [operation addObserver:observer forKeyPath:@"isFinished" options:0 context:NULL];
+
+    [operation setCompletionBlock:^{
+        // nothing to do here.
+    }];
+
+    ASSERT_TRUE([observer didObserveCompletionBlock]);
+    [observer setDidObserveCompletionBlock:NO];
+
+    ASSERT_FALSE([observer didObserveCompletionBlock]);
+    ASSERT_FALSE([observer didObserveCancelled]);
+    ASSERT_FALSE([observer didObserveExecuting]);
+    ASSERT_FALSE([observer didObserveFinished]);
+
+    [queue addOperation:operation];
+    [operation waitUntilFinished];
+
+    ASSERT_TRUE([observer didObserveCompletionBlock]);
+    ASSERT_FALSE([observer didObserveCancelled]);
+    ASSERT_TRUE([observer didObserveExecuting]);
+    ASSERT_TRUE([observer didObserveFinished]);
+
+   [operation removeObserver:observer forKeyPath:@"completionBlock" context:NULL];
+   [operation removeObserver:observer forKeyPath:@"isCancelled" context:NULL];
+   [operation removeObserver:observer forKeyPath:@"isExecuting" context:NULL];
+   [operation removeObserver:observer forKeyPath:@"isFinished" context:NULL];
+}
+
+// Test asynchronous subclass for NSOperation
+@interface MyConcurrentOperation : NSOperation
+@property (assign, getter = isExecuting) BOOL executing;
+@property (assign, getter = isFinished, readonly) BOOL finished;
+@end
+
+@implementation MyConcurrentOperation
 
 @synthesize executing = _executing;
 @synthesize finished = _finished;
@@ -140,8 +202,9 @@ TEST(NSOperation, NSOperationSuspend) {
 
 - (void)start
 {
-    if (self.isCancelled)
+    if (self.isCancelled) {
         return;
+    }
 
     self.executing = YES;
     [self doSomething];
@@ -162,10 +225,10 @@ TEST(NSOperation, NSOperationSuspend) {
 
 @end
 
-TEST(NSOperation, NSOperationSubclass) {
+TEST(NSOperation, NSOperationConcurrentSubclass) {
     NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
 
-    NSOperation* operation = [MyOperation new];
+    NSOperation* operation = [MyConcurrentOperation new];
 
     [operation setCompletionBlock:^{
         [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
@@ -179,6 +242,53 @@ TEST(NSOperation, NSOperationSubclass) {
     ASSERT_TRUE([operation isFinished]);
     ASSERT_FALSE([operation isExecuting]);
     ASSERT_NO_THROW([operation release]);
+}
+
+// Test synchronous subclass for NSOperation
+@interface MyNonconcurrentOperation : NSOperation
+@property BOOL didWork;
+@end
+
+@implementation MyNonconcurrentOperation
+
+- (void)main
+{
+    if (self.isCancelled) {
+        return;
+    }
+
+    _didWork = YES;
+}
+
+@end
+
+TEST(NSOperation, NSOperationNonconcurrentSubclass) {
+    NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
+
+    MyNonconcurrentOperation* operation = [MyNonconcurrentOperation new];
+
+    [operation setCompletionBlock:^{
+        [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
+        ASSERT_TRUE([operation isFinished]);
+    }];
+
+    [queue addOperation:operation];
+    [operation waitUntilFinished];
+
+    ASSERT_TRUE([operation isFinished]);
+    ASSERT_FALSE([operation isExecuting]);
+    ASSERT_TRUE([operation didWork]);
+    ASSERT_NO_THROW([operation release]);
+
+    MyNonconcurrentOperation* operation2 = [[MyNonconcurrentOperation new] autorelease];
+    [operation2 cancel];
+
+    [queue addOperation:operation2];
+    [operation2 waitUntilFinished];
+    ASSERT_TRUE([operation2 isCancelled]);
+    ASSERT_TRUE([operation2 isFinished]);
+    ASSERT_FALSE([operation2 isExecuting]);
+    ASSERT_FALSE([operation2 didWork]);
 }
 
 TEST(NSOperation, NSOperationMultipleWaiters) {
@@ -200,4 +310,46 @@ TEST(NSOperation, NSOperationMultipleWaiters) {
     [operation waitUntilFinished];
 
     ASSERT_TRUE([operation isFinished]);
+}
+
+TEST(NSOperation, NSOperationIsReady) {
+    NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
+    TestObserver* observer = [[TestObserver new] autorelease];
+    NSOperation* dependency1 = [[NSOperation new] autorelease];
+    NSOperation* dependency2 = [[NSOperation new] autorelease];
+    NSOperation* dependency3 = [[NSOperation new] autorelease];
+
+    NSOperation* operation = [[NSOperation new] autorelease];
+    ASSERT_TRUE([operation isReady]);
+    [operation addObserver:observer forKeyPath:@"isReady" options:0 context:NULL];
+    ASSERT_FALSE([observer didObserveReady]);
+
+    [operation addDependency:dependency1];
+    [operation addDependency:dependency2];
+
+    ASSERT_TRUE([observer didObserveReady]);
+    ASSERT_FALSE([operation isReady]);
+    [observer setDidObserveReady:NO];
+
+    [queue addOperation:dependency1];
+    [dependency1 waitUntilFinished];
+    ASSERT_FALSE([observer didObserveReady]);
+    ASSERT_FALSE([operation isReady]);
+
+    [queue addOperation:dependency2];
+    [dependency2 waitUntilFinished];
+    ASSERT_TRUE([observer didObserveReady]);
+    ASSERT_TRUE([operation isReady]);
+    [observer setDidObserveReady:NO];
+
+    [operation addDependency:dependency3];
+    ASSERT_TRUE([observer didObserveReady]);
+    ASSERT_FALSE([operation isReady]);
+    [observer setDidObserveReady:NO];
+
+    [operation cancel];
+    ASSERT_TRUE([observer didObserveReady]);
+    ASSERT_TRUE([operation isReady]);
+
+   [operation removeObserver:observer forKeyPath:@"isReady" context:NULL];
 }

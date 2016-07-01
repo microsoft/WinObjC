@@ -64,7 +64,7 @@ FOUNDATION_EXPORT_CLASS
 - (void)addDependency:(NSOperation*)operation;
 - (void)removeDependency:(NSOperation*)operation STUB_METHOD;
 @property (readonly, copy) NSArray* dependencies;
-@property NSQualityOfService qualityOfService;
+@property NSQualityOfService qualityOfService STUB_PROPERTY;
 @property double threadPriority STUB_PROPERTY;
 @property NSOperationQueuePriority queuePriority;
 - (void)waitUntilFinished;
