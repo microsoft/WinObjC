@@ -313,7 +313,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -332,7 +331,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAColorKeyFrame : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
 @property (retain) WUColor* value;
 @property (retain) WUXMAKeyTime* keyTime;
 + (WXDependencyProperty*)keyTimeProperty;
@@ -347,7 +345,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMADoubleKeyFrame : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
 @property double value;
 @property (retain) WUXMAKeyTime* keyTime;
 + (WXDependencyProperty*)keyTimeProperty;
@@ -388,7 +385,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMANavigationTransitionInfo : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
 - (NSString*)getNavigationStateCore;
 - (void)setNavigationStateCore:(NSString*)navigationState;
 @end
@@ -401,7 +397,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAObjectKeyFrame : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
 @property (retain) RTObject* value;
 @property (retain) WUXMAKeyTime* keyTime;
 + (WXDependencyProperty*)keyTimeProperty;
@@ -416,7 +411,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAPointKeyFrame : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
 @property (retain) WFPoint* value;
 @property (retain) WUXMAKeyTime* keyTime;
 + (WXDependencyProperty*)keyTimeProperty;
@@ -431,7 +425,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMATimeline : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
 @property double speedRatio;
 @property (retain) WUXMARepeatBehavior* repeatBehavior;
 @property WUXMAFillBehavior fillBehavior;

@@ -537,7 +537,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -556,7 +555,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMBrush : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
 @property (retain) WUXMTransform* transform;
 @property (retain) WUXMTransform* relativeTransform;
 @property double opacity;
@@ -573,7 +571,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMCacheMode : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMCacheMode_DEFINED__
@@ -584,7 +581,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMGeneralTransform : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
 @property (readonly) WUXMGeneralTransform* inverse;
 @property (readonly) WUXMGeneralTransform* inverseCore;
 - (WFPoint*)transformPoint:(WFPoint*)point;
@@ -671,7 +667,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMProjection : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMProjection_DEFINED__
@@ -815,7 +810,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMGradientBrush : WUXMBrush
-+ (instancetype)make ACTIVATOR;
 @property WUXMGradientSpreadMethod spreadMethod;
 @property WUXMBrushMappingMode mappingMode;
 @property (retain) WUXMGradientStopCollection* gradientStops;
@@ -1008,7 +1002,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMTileBrush : WUXMBrush
-+ (instancetype)make ACTIVATOR;
 @property WUXMStretch stretch;
 @property WUXMAlignmentY alignmentY;
 @property WUXMAlignmentX alignmentX;

@@ -110,7 +110,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMIXamlRenderingBackgroundTask : RTObject
-+ (instancetype)make ACTIVATOR;
 - (void)onRun:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
 @end
 
@@ -122,7 +121,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -151,7 +149,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMIBitmapSource : WUXMImageSource
-+ (instancetype)make ACTIVATOR;
 @property (readonly) int pixelHeight;
 @property (readonly) int pixelWidth;
 + (WXDependencyProperty*)pixelHeightProperty;
