@@ -28,6 +28,9 @@
     <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\MobileCoreServices\dll\MobileCoreServicesdll.vcxproj">
+      <Project>{f1c44e27-6599-49c3-b4c2-d812c114b166}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\QuartzCore\dll\QuartzCore.vcxproj">
       <Project>{037B568F-4104-417E-9FB8-B6899E398903}</Project>
     </ProjectReference>
@@ -70,7 +73,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
-      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;MobileCoreservices.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -83,7 +86,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
-      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;MobileCoreservices.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -96,7 +99,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
-      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;MobileCoreservices.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -109,7 +112,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
-      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;MobileCoreservices.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>

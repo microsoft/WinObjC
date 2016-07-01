@@ -28,3 +28,64 @@ TEST(NSError, NSErrorSanity) {
     ASSERT_NE([error1 hash], [error3 hash]);
 }
 
+@interface NSTestError : NSError
+@end
+
+@implementation NSTestError
+@end
+
+TEST(NSError, NSErrorSubclassable) {
+    NSString* expectedDomain = @"testDomain";
+    NSDictionary* expectedUserInfo = @{@1 : @"foo", @2 : @"bar"};
+    NSInteger expectedCode = 2;
+    NSTestError* testError = [[[NSTestError alloc] initWithDomain:expectedDomain code:expectedCode userInfo:expectedUserInfo] autorelease];
+
+    ASSERT_OBJCEQ([testError domain], expectedDomain);
+    ASSERT_EQ([testError code], expectedCode);
+    ASSERT_OBJCEQ([testError userInfo], expectedUserInfo);
+    ASSERT_TRUE([testError isMemberOfClass:[NSTestError class]]);
+    ASSERT_TRUE([testError isKindOfClass:[NSError class]]);
+    ASSERT_OBJCEQ((__bridge NSString*)CFErrorGetDomain((__bridge CFErrorRef)testError), expectedDomain);
+    ASSERT_EQ((long)CFErrorGetCode((__bridge CFErrorRef)testError), (long)expectedCode);
+    NSDictionary* actualUserInfo = (__bridge NSDictionary*)CFErrorCopyUserInfo((__bridge CFErrorRef)testError);
+    ASSERT_OBJCEQ(actualUserInfo, expectedUserInfo);
+    [actualUserInfo release];
+    ASSERT_NO_THROW([testError description]);
+    ASSERT_NO_THROW([testError debugDescription]);
+}
+
+TEST(NSError, NSErrorBridge) {
+    NSString* expectedDomain = @"testDomain";
+    NSDictionary* expectedUserInfo = @{@1 : @"foo", @2 : @"bar"};
+    NSInteger expectedCode = 2;
+    NSError* testError = [NSError errorWithDomain:expectedDomain code:expectedCode userInfo:expectedUserInfo];
+
+    ASSERT_OBJCEQ((__bridge NSString*)CFErrorGetDomain((__bridge CFErrorRef)testError), expectedDomain);
+    ASSERT_EQ((long)CFErrorGetCode((__bridge CFErrorRef)testError), (long)expectedCode);
+    NSDictionary* actualUserInfo = (__bridge NSDictionary*)CFErrorCopyUserInfo((__bridge CFErrorRef)testError);
+    ASSERT_OBJCEQ(actualUserInfo, expectedUserInfo);
+    [actualUserInfo release];
+    ASSERT_TRUE([testError isMemberOfClass:[NSError class]]);
+    ASSERT_NO_THROW([testError description]);
+    ASSERT_NO_THROW([testError debugDescription]);
+}
+
+TEST(NSError, NSCFErrorBridge) {
+    NSString* expectedDomain = @"testDomain";
+    NSDictionary* expectedUserInfo = @{@1 : @"foo", @2 : @"bar"};
+    NSInteger expectedCode = 2;
+
+    NSError* testError = (__bridge NSError*)CFErrorCreate(kCFAllocatorDefault,
+        (__bridge CFStringRef)expectedDomain,
+        expectedCode,
+        (__bridge CFDictionaryRef)expectedUserInfo);
+
+    ASSERT_OBJCEQ([testError domain], expectedDomain);
+    ASSERT_EQ((long)[testError code], (long)expectedCode);
+    ASSERT_OBJCEQ([testError userInfo], expectedUserInfo);
+    ASSERT_TRUE([testError isKindOfClass:[NSError class]]);
+    ASSERT_NO_THROW([testError description]);
+    ASSERT_NO_THROW([testError debugDescription]);
+    [testError release];
+}
+

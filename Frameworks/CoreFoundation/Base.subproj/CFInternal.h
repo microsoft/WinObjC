@@ -620,6 +620,11 @@ CF_PRIVATE Boolean _CFReadBytesFromFile(CFAllocatorRef alloc, CFURLRef url, void
 
 CF_EXPORT Boolean _CFWriteBytesToFile(CFURLRef url, const void *bytes, CFIndex length);
 
+// WINOBJC: asynchronous write helper for faster file i/o
+#if DEPLOYMENT_TARGET_WINDOWS
+CF_EXPORT Boolean _CFWriteBytesToFileAsync(CFURLRef url, const void *bytes, CFIndex length);
+#endif
+
 CF_PRIVATE CFMutableArrayRef _CFCreateContentsOfDirectory(CFAllocatorRef alloc, char *dirPath, void *dirSpec, CFURLRef dirURL, CFStringRef matchingAbstractType);
     /* On Mac OS 8/9, one of dirSpec, dirPath and dirURL must be non-NULL */
     /* On all other platforms, one of path and dirURL must be non-NULL */
