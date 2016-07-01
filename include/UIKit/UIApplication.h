@@ -200,6 +200,7 @@ typedef enum : NSInteger {
 } UIUserInterfaceLayoutDirection;
 
 UIKIT_EXPORT int UIApplicationMain(int argc, char* argv[], NSString* pClassName, NSString* dClassName);
+UIKIT_EXPORT void UIApplicationInitialize(const wchar_t* principalClass, const wchar_t* delegateClass);
 UIKIT_EXPORT const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid;
 UIKIT_EXPORT const NSTimeInterval UIMinimumKeepAliveTimeout;
 

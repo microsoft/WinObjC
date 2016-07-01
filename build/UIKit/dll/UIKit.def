@@ -2,7 +2,7 @@ LIBRARY UIKit
     EXPORTS
         ; Application entry points (StarboardXAML)
         UIApplicationMain
-        UIApplicationMainTest
+        UIApplicationInitialize
 
         ; NSAttributedString
         NSFontAttributeName DATA
