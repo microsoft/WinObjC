@@ -680,6 +680,9 @@ void CGContextImpl::CGContextSetLineWidth(float width) {
 void CGContextImpl::CGContextSetShouldAntialias(DWORD shouldAntialias) {
 }
 
+void CGContextImpl::CGContextReplacePathWithStrokedPath(CGContextRef context) {
+}
+
 void CGContextImpl::CGContextClip() {
 }
 

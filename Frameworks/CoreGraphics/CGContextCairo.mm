@@ -14,8 +14,9 @@
 //
 //******************************************************************************
 
-#import <CoreGraphics/CGGeometry.h>
 #import <Starboard.h>
+#import <CoreGraphics/CGGeometry.h>
+#import <CoreGraphics/CGAffineTransform.h>
 #import <memory>
 
 #import "CGColorSpaceInternal.h"
@@ -1629,6 +1630,230 @@ void CGContextCairo::CGContextSetShouldAntialias(DWORD shouldAntialias) {
     UNLOCK_CAIRO();
 }
 
+void CGContextCairo::_CGContextDrawStrokedPath(cairo_path_t* flatPath, int i, int prev, int total, CGFloat lineWidth) {
+    cairo_path_data_t* data = &flatPath->data[i];
+    int nextIndex = i + flatPath->data[i].header.length;
+    bool moreData = nextIndex < total;
+    // Try to get next and previous types.
+    cairo_path_data_type_t nextType = CAIRO_PATH_CLOSE_PATH;
+    cairo_path_data_type_t prevType = CAIRO_PATH_CLOSE_PATH;
+    if (moreData) {
+        nextType = flatPath->data[nextIndex].header.type;
+    }
+    if (i > 0) {
+        prevType = flatPath->data[prev].header.type;
+    }
+    switch (data->header.type) {
+        case CAIRO_PATH_MOVE_TO: {
+            // Don't do a move here, it'll move to the center of our stroke.
+            // Save the current position for later. This will help us close the current sub path
+            CGPoint lastPos = curPathPosition;
+            // Set the current position
+            curPathPosition.x = data[1].point.x;
+            curPathPosition.y = data[1].point.y;
+
+            // If there's more data process it
+            if (moreData) {
+                _CGContextDrawStrokedPath(flatPath, nextIndex, i, total, lineWidth);
+                // return the current point to the saved point.
+                curPathPosition.x = lastPos.x;
+                curPathPosition.y = lastPos.y;
+            }
+            break;
+        }
+        case CAIRO_PATH_CURVE_TO:
+            // There shouldn't be curves in this path. Move on.
+            if (moreData) {
+                _CGContextDrawStrokedPath(flatPath, nextIndex, i, total, lineWidth);
+            }
+            break;
+        case CAIRO_PATH_CLOSE_PATH: {
+            // Close path
+            cairo_close_path(_drawContext);
+            if (moreData) {
+                _CGContextDrawStrokedPath(flatPath, nextIndex, i, total, lineWidth);
+
+                // Close path on return
+                cairo_close_path(_drawContext);
+            }
+            break;
+        }
+        case CAIRO_PATH_LINE_TO: {
+            // The start and end of the original line
+            CGPoint lineStart = curPathPosition;
+            CGPoint lineEnd = CGPointMake(data[1].point.x, data[1].point.y);
+
+            CGFloat halfWidth = lineWidth / 2.0;
+
+            // Get the length of the original line
+            CGFloat lineLength = sqrt(pow(lineEnd.y - lineStart.y, 2) + pow(lineEnd.x - lineStart.x, 2));
+            // Get the height of the line (used to rotate stroke rectangle)
+            CGFloat adjacent = lineEnd.y - lineStart.y;
+            // Create an unrotated rectangle for the line
+            CGRect lineRect = CGRectMake(lineStart.x, lineStart.y - halfWidth, lineLength, lineWidth);
+            // Calculate the rotation angle
+            CGFloat angle = acos(adjacent / lineLength);
+            if (lineEnd.x > lineStart.x) {
+                angle = M_PI_2 - angle;
+            } else {
+                angle = M_PI_2 + angle;
+            }
+            // Rotate all the points in the rectangle to fit the actual line
+            CGAffineTransform transform =
+                CGAffineTransformConcat(CGAffineTransformConcat(CGAffineTransformMakeTranslation(-CGRectGetMinX(lineRect),
+                                                                                                 -CGRectGetMidY(lineRect)),
+                                                                CGAffineTransformMakeRotation(angle)),
+                                        CGAffineTransformMakeTranslation(CGRectGetMinX(lineRect), CGRectGetMidY(lineRect)));
+            CGPoint p0 = CGPointApplyAffineTransform(CGPointMake(CGRectGetMinX(lineRect), CGRectGetMaxY(lineRect)), transform);
+            CGPoint p1 = CGPointApplyAffineTransform(CGPointMake(CGRectGetMaxX(lineRect), CGRectGetMaxY(lineRect)), transform);
+            CGPoint p2 = CGPointApplyAffineTransform(CGPointMake(CGRectGetMaxX(lineRect), CGRectGetMinY(lineRect)), transform);
+            CGPoint p3 = CGPointApplyAffineTransform(CGPointMake(CGRectGetMinX(lineRect), CGRectGetMinY(lineRect)), transform);
+            // If the previous type was a move, move to the first part of the stroked path
+            if (prevType == CAIRO_PATH_MOVE_TO) {
+                cairo_move_to(_drawContext, p0.x, p0.y);
+            } else {
+                // Otherwise draw a line to the first part of the stroked path
+                cairo_line_to(_drawContext, p0.x, p0.y);
+            }
+
+            // Add line to second point
+            cairo_line_to(_drawContext, p1.x, p1.y);
+            // Set current position to the end of the original line
+            curPathPosition.x = lineEnd.x;
+            curPathPosition.y = lineEnd.y;
+            // If there are more elements
+            if (moreData) {
+                // Handle next element
+                _CGContextDrawStrokedPath(flatPath, nextIndex, i, total, lineWidth);
+
+                // If the next element was a move to, move back to p1. This will close up the end of this stroke
+                if (nextType == CAIRO_PATH_MOVE_TO) {
+                    cairo_move_to(_drawContext, p1.x, p1.y);
+
+                    switch (curState->lineCap) {
+                        case kCGLineCapRound: {
+                            // Add arc to close sub path
+                            CGPoint arcMidPoint = CGPointMake((p1.x + p2.x) / 2.0, (p1.y + p2.y) / 2.0);
+                            cairo_arc_negative(_drawContext, arcMidPoint.x, arcMidPoint.y, halfWidth, angle + M_PI_2, angle - M_PI_2);
+                            cairo_move_to(_drawContext, p2.x, p2.y);
+                            break;
+                        }
+
+                        case kCGLineCapButt: {
+                            // Draw a line segment to close sub path
+                            cairo_line_to(_drawContext, p2.x, p2.y);
+                            break;
+                        }
+
+                        case kCGLineCapSquare:
+                            CGPoint p1a = CGContextCairo::_extendPoint(p0, p1, halfWidth);
+                            CGPoint p2a = CGContextCairo::_extendPoint(p3, p2, halfWidth);
+                            cairo_line_to(_drawContext, p1a.x, p1a.y);
+                            cairo_line_to(_drawContext, p2a.x, p2a.y);
+                            cairo_line_to(_drawContext, p2.x, p2.y);
+                            break;
+                    }
+                } else {
+                    // Add line to the 3rd point
+                    cairo_line_to(_drawContext, p2.x, p2.y);
+                }
+
+                // Add line to the 4th point
+                cairo_line_to(_drawContext, p3.x, p3.y);
+
+                // If the previous element was a move to, close up this end of the segment
+                if (prevType == CAIRO_PATH_MOVE_TO) {
+                    switch (curState->lineCap) {
+                        case kCGLineCapRound: {
+                            // Add arc to close sub path
+                            CGPoint arcMidPoint = CGPointMake((p0.x + p3.x) / 2.0, (p0.y + p3.y) / 2.0);
+                            cairo_arc_negative(_drawContext, arcMidPoint.x, arcMidPoint.y, halfWidth, angle - M_PI_2, angle + M_PI_2);
+                            cairo_move_to(_drawContext, p0.x, p0.y);
+                            break;
+                        }
+
+                        case kCGLineCapButt: {
+                            // Draw a line segment to close sub path
+                            cairo_line_to(_drawContext, p0.x, p0.y);
+                            break;
+                        }
+
+                        case kCGLineCapSquare:
+                            CGPoint p3a = CGContextCairo::_extendPoint(p2, p3, halfWidth);
+                            CGPoint p0a = CGContextCairo::_extendPoint(p1, p0, halfWidth);
+                            cairo_line_to(_drawContext, p3a.x, p3a.y);
+                            cairo_line_to(_drawContext, p0a.x, p0a.y);
+                            cairo_line_to(_drawContext, p0.x, p0.y);
+                            break;
+                    }
+                }
+
+                // Set current position to the start of original line
+                // Shouldn't matter while traversing the path backwards
+                curPathPosition.x = lineStart.x;
+                curPathPosition.y = lineStart.y;
+            } else {
+                // No more lines. Add the cap for the end of this sub path
+                switch (curState->lineCap) {
+                    case kCGLineCapRound: {
+                        // Add arc to 3rd point
+                        CGPoint arcMidPoint = CGPointMake((p1.x + p2.x) / 2.0, (p1.y + p2.y) / 2.0);
+                        cairo_arc_negative(_drawContext, arcMidPoint.x, arcMidPoint.y, halfWidth, angle + M_PI_2, angle - M_PI_2);
+                        cairo_move_to(_drawContext, p2.x, p2.y);
+                        // Draw a line segment to 4th point.
+                        cairo_line_to(_drawContext, p3.x, p3.y);
+                        break;
+                    }
+
+                    case kCGLineCapButt: {
+                        // Draw a line segment to 3rd and 4th points (no end cap)
+                        cairo_line_to(_drawContext, p2.x, p2.y);
+                        cairo_line_to(_drawContext, p3.x, p3.y);
+                        break;
+                    }
+
+                    case kCGLineCapSquare:
+                        CGPoint p1a = CGContextCairo::_extendPoint(p0, p1, halfWidth);
+                        CGPoint p2a = CGContextCairo::_extendPoint(p3, p2, halfWidth);
+                        cairo_line_to(_drawContext, p1a.x, p1a.y);
+                        cairo_line_to(_drawContext, p2a.x, p2a.y);
+                        cairo_line_to(_drawContext, p2.x, p2.y);
+                        cairo_line_to(_drawContext, p3.x, p3.y);
+                        break;
+                }
+
+                // Set position. Shouldn't matter while traversing the path backwards
+                curPathPosition.x = lineStart.x;
+                curPathPosition.y = lineStart.y;
+            }
+
+        } break;
+    }
+}
+
+CGPoint CGContextCairo::_extendPoint(CGPoint a, CGPoint b, CGFloat length) {
+    CGPoint c;
+
+    CGFloat lengthAB = sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
+    c.x = b.x + (b.x - a.x) / lengthAB * length;
+    c.y = b.y + (b.y - a.y) / lengthAB * length;
+    return c;
+}
+
+void CGContextCairo::CGContextReplacePathWithStrokedPath(CGContextRef context) {
+    ObtainLock();
+
+    LOCK_CAIRO();
+
+    cairo_path_t* flatPath = cairo_copy_path_flat(_drawContext);
+    double lineWidth = cairo_get_line_width(_drawContext);
+    cairo_new_path(_drawContext);
+    cairo_set_line_width(_drawContext, 1);
+    _CGContextDrawStrokedPath(flatPath, 0, 0, flatPath->num_data, lineWidth);
+    cairo_path_destroy(flatPath);
+
+    UNLOCK_CAIRO();
+}
 void CGContextCairo::CGContextClip() {
     ObtainLock();
 

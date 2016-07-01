@@ -59,7 +59,7 @@ __CGContext::__CGContext(CGImageRef pDest) {
 #ifdef DEBUG_CONTEXT_COUNT
     TraceVerbose(TAG, L"contextCount: %d", contextCount);
 #endif
-    object_setClass((id)this, [CGNSContext class]);
+    object_setClass((id) this, [CGNSContext class]);
     scale = 1.0f;
     _backing = pDest->Backing()->CreateDrawingContext(this);
 }
@@ -689,11 +689,11 @@ void CGContextSetShadow(CGContextRef context, CGSize offset, float blur) {
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Converts curves to lines. Endpoint and line join settings are ignored.
 */
 void CGContextReplacePathWithStrokedPath(CGContextRef context) {
-    UNIMPLEMENTED();
-    TraceWarning(TAG, L"CGContextReplacePathWithStrokedPath not implemented");
+    context->Backing()->CGContextReplacePathWithStrokedPath(context);
 }
 
 /**
