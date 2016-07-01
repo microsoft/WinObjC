@@ -3,7 +3,7 @@ LIBRARY UIKit
         ; Application entry points (StarboardXAML)
         UIApplicationMain
         UIApplicationInitialize
-		UIApplicationActivationTest
+        UIApplicationActivationTest
 
         ; NSAttributedString
         NSFontAttributeName DATA
