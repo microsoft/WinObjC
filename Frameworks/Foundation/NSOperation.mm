@@ -1,73 +1,37 @@
-/*
-Original Author: Michael Ash on 11/9/08.
-Copyright (c) 2008 Rogue Amoeba Software LLC
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
-rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
-persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
-Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-*/
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
 #include "Starboard.h"
 #include "StubReturn.h"
 #include "Foundation/NSOperation.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableArray.h"
-#include "LoggingNative.h"
 
 static const wchar_t* TAG = L"NSOperation";
 
-#if __cplusplus
-#include <pthread.h>
-#include <string.h>
-struct NSOperationPriv {
-    NSOperationQueuePriority priority;
-    id dependencies;
-    void (^completionBlock)(void);
-
-    pthread_cond_t finishCondition;
-    pthread_mutex_t finishLock;
-
-    int executing : 1;
-    int cancelled : 1;
-    int finished : 1;
-
-    NSOperationPriv() {
-        memset(this, 0, sizeof(NSOperationPriv));
-        pthread_cond_init(&finishCondition, 0);
-
-        pthread_mutexattr_t attr;
-
-        pthread_mutexattr_init(&attr);
-        pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-        pthread_mutex_init(&finishLock, &attr);
-        pthread_mutexattr_destroy(&attr);
-    }
-
-    ~NSOperationPriv() {
-        pthread_cond_destroy(&finishCondition);
-        pthread_mutex_destroy(&finishLock);
-    }
-};
-#else
-struct NSOperationPriv;
-#endif
-
-@interface NSOperation () {
-    struct NSOperationPriv* priv;
+@implementation NSOperation {
+    StrongId<NSMutableArray> _dependencies;
+    void (^_completionBlock)(void);
+    pthread_cond_t _finishCondition;
+    pthread_mutex_t _finishLock;
+    pthread_mutex_t _dependenciesLock;
+    pthread_mutex_t _completionBlockLock;
 }
-@end
 
-@implementation NSOperation
+@synthesize cancelled = _cancelled;
+@synthesize executing = _executing;
+@synthesize finished = _finished;
 
 /**
  @Status Interoperable
@@ -77,39 +41,72 @@ struct NSOperationPriv;
     return NO;
 }
 
-/**
- @Status Interoperable
-*/
-+ (id)allocWithZone:(NSZone*)zone {
-    NSOperation* ret = [super allocWithZone:zone];
-
-    ret->priv = new NSOperationPriv();
-
-    return ret;
+- (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
+    if ([keyPath isEqualToString:@"isFinished"]) {
+        pthread_mutex_lock(&_finishLock);
+        pthread_cond_broadcast(&_finishCondition);
+        pthread_mutex_unlock(&_finishLock);
+    }
 }
 
-/**
- @Status Interoperable
-*/
-- (NSOperationQueuePriority)queuePriority {
-    return priv->priority;
+- (id)init {
+    if (self = [super init]) {
+        _dependencies.attach([NSMutableArray new]);
+        pthread_cond_init(&_finishCondition, 0);
+        pthread_mutexattr_t attr;
+        pthread_mutexattr_init(&attr);
+        pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+        pthread_mutex_init(&_finishLock, &attr);
+        pthread_mutexattr_destroy(&attr);
+        pthread_mutex_init(&_dependenciesLock, NULL);
+        pthread_mutex_init(&_completionBlockLock, NULL);
+
+        [self addObserver:self forKeyPath:@"isFinished" options:0 context:NULL];
+    }
+
+    return self;
 }
 
 /**
  @Status Interoperable
 */
 - (void)addDependency:(id)operation {
-    if (priv->dependencies == nil) {
-        priv->dependencies = [[NSMutableArray alloc] init];
-    }
-    [priv->dependencies addObject:operation];
+    pthread_mutex_lock(&_dependenciesLock);
+    [_dependencies addObject:operation];
+    pthread_mutex_unlock(&_dependenciesLock);
 }
 
 /**
  @Status Interoperable
 */
-- (void)setQueuePriority:(NSOperationQueuePriority)priority {
-    priv->priority = priority;
+- (void)removeDependency:(NSOperation*)operation {
+    pthread_mutex_lock(&_dependenciesLock);
+    [_dependencies removeObject:operation];
+    pthread_mutex_unlock(&_dependenciesLock);
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isReady {
+    if ([self isCancelled]) {
+        return YES;
+    }
+
+    pthread_mutex_lock(&_dependenciesLock);
+    int count = [_dependencies count];
+
+    for (int i = 0; i < count; i++) {
+        id op = [_dependencies objectAtIndex:i];
+
+        if (![op isFinished]) {
+            pthread_mutex_unlock(&_dependenciesLock);
+            return NO;
+        }
+    }
+
+    pthread_mutex_unlock(&_dependenciesLock);
+    return YES;
 }
 
 /**
@@ -131,139 +128,109 @@ struct NSOperationPriv;
  @Status Interoperable
 */
 - (void)setCompletionBlock:(void (^)(void))block {
-    id oldBlock = priv->completionBlock;
-    priv->completionBlock = [block copy];
-    [oldBlock release];
+    pthread_mutex_lock(&_completionBlockLock);
+    [_completionBlock autorelease];
+    _completionBlock = [block copy];
+    pthread_mutex_unlock(&_completionBlockLock);
 }
 
 /**
  @Status Interoperable
 */
 - (void (^)(void))completionBlock {
-    return priv->completionBlock;
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)isReady {
-    //  Note, check dependencies when we get them
-    int count = [priv->dependencies count];
-
-    for (int i = 0; i < count; i++) {
-        id op = [priv->dependencies objectAtIndex:i];
-
-        if (![op isFinished]) {
-            return NO;
-        }
-    }
-    return YES;
+    pthread_mutex_lock(&_completionBlockLock);
+    id ret = [[_completionBlock retain] autorelease];
+    pthread_mutex_unlock(&_completionBlockLock);
+    return ret;
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)isCancelled {
-    return priv->cancelled != 0;
+    return _cancelled;
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)isFinished {
-    return priv->finished != 0;
+    return _finished;
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)isExecuting {
-    return priv->executing != 0;
+    return _executing;
 }
 
 /**
  @Status Interoperable
 */
 - (void)start {
-    if (!priv->executing && !priv->finished) {
-        bool execute = false;
-
-        pthread_mutex_lock(&priv->finishLock);
-        if (!priv->cancelled) {
-            [self willChangeValueForKey:@"isExecuting"];
-            priv->executing = 1;
-            [self didChangeValueForKey:@"isExecuting"];
-            execute = true;
-        }
-        pthread_mutex_unlock(&priv->finishLock);
-        if (execute) {
-            [self main];
-        }
-
-        if (execute) {
-            [self willChangeValueForKey:@"isExecuting"];
-        }
-
-        [self _setFinished:YES
-            andPerformUnderLock:^{
-                if (execute) {
-                    priv->executing = 0;
-                    [self didChangeValueForKey:@"isExecuting"];
-                }
-            }];
+    if (_finished) {
+        return;
     }
+
+    THROW_NS_IF(E_INVALIDARG, (_executing || ![self isReady]));
+    
+    pthread_mutex_lock(&_finishLock);
+    BOOL shouldExecute = !_cancelled; // Note: in the cancelled case, [self main] is not called but isFinished will still be observable
+    if (shouldExecute) {
+        [self willChangeValueForKey:@"isExecuting"];
+        _executing = YES;
+        [self didChangeValueForKey:@"isExecuting"];
+    }
+    pthread_mutex_unlock(&_finishLock);
+    
+    if (shouldExecute) {
+        NSAutoreleasePool* pool = [NSAutoreleasePool new];
+        [self main];
+        [pool release];
+    }
+
+    [self _finish:shouldExecute];
 }
 
-/**
- @Status Interoperable
-*/
-- (void)setFinished:(BOOL)finished {
-    [self _setFinished:finished andPerformUnderLock:nil];
-}
-
-- (void)_setFinished:(BOOL)finished andPerformUnderLock:(void (^)())block {
-    // yes, this is ugly: priv->finished is an int though.
-    int newValue = finished ? 1 : 0;
-    pthread_mutex_lock(&priv->finishLock);
+- (void)_finish:(BOOL)didExecute {
+    pthread_mutex_lock(&_finishLock);
+    if (didExecute) {
+        [self willChangeValueForKey:@"isExecuting"];
+    }
 
     [self willChangeValueForKey:@"isFinished"];
-
-    if (priv->finished != newValue) {
-        priv->finished = newValue;
-    }
-
+    _finished = YES;
     [self didChangeValueForKey:@"isFinished"];
 
-    if (block) {
-        block();
+    if (didExecute) {
+        _executing = NO;
+        [self didChangeValueForKey:@"isExecuting"];
     }
 
-    if (newValue == 1) {
-        pthread_cond_broadcast(&priv->finishCondition);
+    pthread_mutex_lock(&_completionBlockLock);
+    void (^completion)(void) = [_completionBlock retain];
+    pthread_mutex_unlock(&_completionBlockLock);
+
+    pthread_mutex_unlock(&_finishLock);
+    
+    if (completion) {
+        completion();
     }
 
-    pthread_mutex_unlock(&priv->finishLock);
-
-    // This may seem unintuitive, but the completion
-    // block is intended to be called even if the operation
-    // is cancelled.
-    if (newValue == 1 && priv->completionBlock) {
-        priv->completionBlock();
-        [priv->completionBlock release];
-        priv->completionBlock = nil;
-    }
+    [completion release];
 }
 
 /**
  @Status Interoperable
 */
 - (void)cancel {
-    if (priv->cancelled == 0) {
-        pthread_mutex_lock(&priv->finishLock);
+    if (_cancelled == NO) {
+        pthread_mutex_lock(&_finishLock);
         [self willChangeValueForKey:@"isCancelled"];
-        priv->cancelled = 1;
+        _cancelled = YES;
         [self didChangeValueForKey:@"isCancelled"];
-        pthread_mutex_unlock(&priv->finishLock);
+        pthread_mutex_unlock(&_finishLock);
     }
 }
 
@@ -277,35 +244,35 @@ struct NSOperationPriv;
  @Status Interoperable
 */
 - (void)waitUntilFinished {
-    pthread_mutex_lock(&priv->finishLock);
+    pthread_mutex_lock(&_finishLock);
     while (![self isFinished]) {
-        pthread_cond_wait(&priv->finishCondition, &priv->finishLock);
+        pthread_cond_wait(&_finishCondition, &_finishLock);
     }
-    pthread_mutex_unlock(&priv->finishLock);
+
+    pthread_mutex_unlock(&_finishLock);
 }
 
 /**
  @Status Interoperable
 */
-- (id)dependencies {
-    return priv->dependencies;
+- (NSArray*)dependencies {
+    pthread_mutex_lock(&_dependenciesLock);
+    NSArray* copy = [[_dependencies copy] autorelease];
+    pthread_mutex_unlock(&_dependenciesLock);
+    return copy;
 }
 
 /**
  @Status Interoperable
 */
 - (void)dealloc {
-    assert(!priv->completionBlock);
-    delete priv;
+    [self removeObserver:self forKeyPath:@"isFinished" context:NULL];
+    pthread_cond_destroy(&_finishCondition);
+    pthread_mutex_destroy(&_finishLock);
+    pthread_mutex_destroy(&_dependenciesLock);
+    pthread_mutex_destroy(&_completionBlockLock);
+    [_completionBlock release];
     [super dealloc];
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (void)removeDependency:(NSOperation*)operation {
-    UNIMPLEMENTED();
 }
 
 @end
