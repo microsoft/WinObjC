@@ -21,6 +21,7 @@
 #include "MockClass.h"
 #include <windows.applicationModel.activation.h>
 #include <windows.media.speechRecognition.h>
+#include <windows.foundation.h>
 #include <COMIncludes_End.h>
 
 #include <UWP/WindowsApplicationModelActivation.h>
@@ -31,6 +32,7 @@
 
 using namespace ABI::Windows::ApplicationModel::Activation;
 using namespace ABI::Windows::Media::SpeechRecognition;
+using namespace ABI::Windows::Foundation;
 using namespace Microsoft::WRL;
 
 // Method to call in tests to activate app
@@ -40,6 +42,7 @@ extern "C" void UIApplicationActivationTest(IInspectable* args);
 static bool willFinishLaunchingWithOptionsCalled = false;
 static bool didFinishLaunchingWithOptionsCalled = false;
 static bool didReceiveVoiceCommandCalled = false;
+static bool didReceiveProtocolCalled = false;
 
 MOCK_CLASS(MockSpeechRecognitionResult,
            public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, ISpeechRecognitionResult, ISpeechRecognitionResult2> {
@@ -73,8 +76,43 @@ MOCK_CLASS(MockVoiceCommandActivatedEventArgs,
                MOCK_STDCALL_METHOD_1(get_SplashScreen);
            });
 
+MOCK_CLASS(
+    MockUri,
+    public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IUriRuntimeClass, IUriRuntimeClassWithAbsoluteCanonicalUri, IStringable> {
+
+        // Claim to be the implementation for the real system RuntimeClass for Uri.
+        InspectableClass(RuntimeClass_Windows_Foundation_Uri, BaseTrust);
+
+    public:
+        MOCK_STDCALL_METHOD_1(get_AbsoluteUri);
+        MOCK_STDCALL_METHOD_1(get_DisplayUri);
+        MOCK_STDCALL_METHOD_1(get_Domain);
+        MOCK_STDCALL_METHOD_1(get_Extension);
+        MOCK_STDCALL_METHOD_1(get_Fragment);
+        MOCK_STDCALL_METHOD_1(get_Host);
+        MOCK_STDCALL_METHOD_1(get_Password);
+        MOCK_STDCALL_METHOD_1(get_Path);
+        MOCK_STDCALL_METHOD_1(get_Query);
+        MOCK_STDCALL_METHOD_1(get_QueryParsed);
+        MOCK_STDCALL_METHOD_1(get_RawUri);
+        MOCK_STDCALL_METHOD_1(get_SchemeName);
+        MOCK_STDCALL_METHOD_1(get_UserName);
+        MOCK_STDCALL_METHOD_1(get_Port);
+        MOCK_STDCALL_METHOD_1(get_Suspicious);
+        MOCK_STDCALL_METHOD_2(Equals);
+        MOCK_STDCALL_METHOD_2(CombineUri);
+        MOCK_STDCALL_METHOD_1(get_AbsoluteCanonicalUri);
+        MOCK_STDCALL_METHOD_1(get_DisplayIri);
+        MOCK_STDCALL_METHOD_1(ToString);
+    });
+
 MOCK_CLASS(MockProtocolActivatedEventArgs,
-           public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IProtocolActivatedEventArgs, IActivatedEventArgs> {
+           public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>,
+                               IProtocolActivatedEventArgs,
+                               IActivatedEventArgs,
+                               IProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData,
+                               IApplicationViewActivatedEventArgs,
+                               IViewSwitcherProvider> {
 
                // Claim to be the implementation for the real system RuntimeClass for ProtocolActivatedEventArgs.
                InspectableClass(RuntimeClass_Windows_ApplicationModel_Activation_ProtocolActivatedEventArgs, BaseTrust);
@@ -84,14 +122,18 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
                MOCK_STDCALL_METHOD_1(get_Kind);
                MOCK_STDCALL_METHOD_1(get_PreviousExecutionState);
                MOCK_STDCALL_METHOD_1(get_SplashScreen);
+               MOCK_STDCALL_METHOD_1(get_CallerPackageFamilyName);
+               MOCK_STDCALL_METHOD_1(get_Data);
+               MOCK_STDCALL_METHOD_1(get_CurrentlyShownApplicationViewId);
+               MOCK_STDCALL_METHOD_1(get_ViewSwitcher);
            });
 
 // Delegate for testing Cortana foreground activation
 // Use text value to guarantee it is the same argument we create
-@interface CortanaForegroundTestDelegate : NSObject <UIApplicationDelegate>
+@interface CortanaVoiceCommandForegroundTestDelegate : NSObject <UIApplicationDelegate>
 @end
 
-@implementation CortanaForegroundTestDelegate
+@implementation CortanaVoiceCommandForegroundTestDelegate
 - (BOOL)application:(UIApplication*)application willFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsVoiceCommandKey]);
     WMSSpeechRecognitionResult* result = launchOptions[UIApplicationLaunchOptionsVoiceCommandKey];
@@ -115,14 +157,45 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
 }
 @end
 
+@interface CortanaProtocolForegroundTestDelegate : NSObject <UIApplicationDelegate>
+@end
+
+@implementation CortanaProtocolForegroundTestDelegate
+- (BOOL)application:(UIApplication*)application willFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
+    ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsProtocolKey]);
+    WFUri* uri = launchOptions[UIApplicationLaunchOptionsProtocolKey];
+    ASSERT_STREQ("CORTANA_TEST", [uri.toString UTF8String]);
+    willFinishLaunchingWithOptionsCalled = true;
+    return true;
+}
+
+- (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
+    ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsProtocolKey]);
+    WFUri* uri = launchOptions[UIApplicationLaunchOptionsProtocolKey];
+    ASSERT_STREQ("CORTANA_TEST", [uri.toString UTF8String]);
+    didFinishLaunchingWithOptionsCalled = true;
+    return true;
+}
+
+- (BOOL)application:(UIApplication*)application didReceiveProtocol:(WFUri*)uri {
+    ASSERT_STREQ("CORTANA_TEST", [uri.toString UTF8String]);
+    didReceiveProtocolCalled = true;
+    return true;
+}
+@end
+
 // Create method in UIApplication to swizzle setDelegate: so we can use our delegate for testing
 @interface UIApplication (CortanaForegroundTest)
-- (void)swizzleDelegate:(id)delegateAddr;
+- (void)swizzleVoiceCommandDelegate:(id)delegateAddr;
+- (void)swizzleProtocolDelegate:(id)delegateAddr;
 @end
 
 @implementation UIApplication (CortanaForegroundTest)
-- (void)swizzleDelegate:(id)delegateAddr {
-    [self swizzleDelegate:[CortanaForegroundTestDelegate new]];
+- (void)swizzleVoiceCommandDelegate:(id)delegateAddr {
+    [self swizzleVoiceCommandDelegate:[CortanaVoiceCommandForegroundTestDelegate new]];
+}
+- (void)swizzleProtocolDelegate:(id)delegateAddr {
+    [self swizzleProtocolDelegate:[CortanaProtocolForegroundTestDelegate new]];
 }
 @end
 
@@ -157,19 +230,77 @@ TEST(CortanaTest, VoiceCommandForegroundActivation) {
 
     // Swizzle method to use our delegate for testing
     Method originalMethod = class_getInstanceMethod([UIApplication class], @selector(setDelegate:));
-    Method swizzledMethod = class_getInstanceMethod([UIApplication class], @selector(swizzleDelegate:));
+    Method swizzledMethod = class_getInstanceMethod([UIApplication class], @selector(swizzleVoiceCommandDelegate:));
     method_exchangeImplementations(originalMethod, swizzledMethod);
 
     // Pass activation argument to method which activates the app
     auto args = fakeVoiceCommandActivatedEventArgs.Detach();
     UIApplicationActivationTest(reinterpret_cast<IInspectable*>(args));
 
-	// Un-Swizzle the methods now that we are done
+    // Un-Swizzle the methods now that we are done
     method_exchangeImplementations(originalMethod, swizzledMethod);
 }
 
-TEST(CortanaTest, DelegateMethodsCalled) {
+TEST(CortanaTest, VoiceCommandForegroundActivationDelegateMethodsCalled) {
     ASSERT_TRUE(willFinishLaunchingWithOptionsCalled);
     ASSERT_TRUE(didFinishLaunchingWithOptionsCalled);
     ASSERT_TRUE(didReceiveVoiceCommandCalled);
+
+    // Set flags to false so they can be used for other tests.
+    willFinishLaunchingWithOptionsCalled = false;
+    didFinishLaunchingWithOptionsCalled = false;
+    didReceiveVoiceCommandCalled = false;
+}
+
+// Creates test method which we call in TEST_CLASS_SETUP to activate app
+TEST(CortanaTest, ProtocolForegroundActivation) {
+    LOG_INFO("CortanaTest Protocol Foreground Activation Test: ");
+
+    // Create mocked data to pass into application
+    auto fakeUri = Make<MockUri>();
+    fakeUri->SetToString([](HSTRING* text) {
+        Wrappers::HString value;
+        value.Set(L"CORTANA_TEST");
+        *text = value.Detach();
+        return S_OK;
+    });
+
+    auto fakeProtocolActivatedEventArgs = Make<MockProtocolActivatedEventArgs>();
+    fakeProtocolActivatedEventArgs->Setget_Uri([&fakeUri](IUriRuntimeClass** uri) {
+        fakeUri.CopyTo(uri);
+        return S_OK;
+    });
+
+    fakeProtocolActivatedEventArgs->Setget_Kind([](ActivationKind* kind) {
+        *kind = ActivationKind_Protocol;
+        return S_OK;
+    });
+
+    fakeProtocolActivatedEventArgs->Setget_PreviousExecutionState([](ApplicationExecutionState* state) {
+        *state = ApplicationExecutionState_NotRunning;
+        return S_OK;
+    });
+
+    // Swizzle method to use our delegate for testing
+    Method originalMethod = class_getInstanceMethod([UIApplication class], @selector(setDelegate:));
+    Method swizzledMethod = class_getInstanceMethod([UIApplication class], @selector(swizzleProtocolDelegate:));
+    method_exchangeImplementations(originalMethod, swizzledMethod);
+
+    // Pass activation argument to method which activates the app
+    auto args = fakeProtocolActivatedEventArgs.Detach();
+    UIApplicationActivationTest(reinterpret_cast<IInspectable*>(args));
+
+    // Un-Swizzle the methods now that we are done
+    method_exchangeImplementations(originalMethod, swizzledMethod);
+}
+
+TEST(CortanaTest, ProtocolForegroundActivationDelegateMethodsCalled) {
+    ASSERT_TRUE(willFinishLaunchingWithOptionsCalled);
+    ASSERT_TRUE(didFinishLaunchingWithOptionsCalled);
+    ASSERT_TRUE(didReceiveProtocolCalled);
+
+    // Set flags to false so they can be used for other tests.
+    willFinishLaunchingWithOptionsCalled = false;
+    didFinishLaunchingWithOptionsCalled = false;
+    didReceiveProtocolCalled = false;
 }

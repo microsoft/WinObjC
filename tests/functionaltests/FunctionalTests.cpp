@@ -299,24 +299,45 @@ public:
 //
 
 extern void CortanaTestVoiceCommandForegroundActivation();
-extern void CortanaTestDelegateMethodsCalled();
+extern void CortanaTestVoiceCommandForegroundActivationDelegateMethodsCalled();
 
-class Cortana {
+class CortanaVoiceCommandForeground {
 public:
-    BEGIN_TEST_CLASS(Cortana)
+    BEGIN_TEST_CLASS(CortanaVoiceCommandForeground)
     TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
     TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     END_TEST_CLASS()
 
-    TEST_CLASS_SETUP(CortanaTestClassSetup) {
+    TEST_CLASS_SETUP(CortanaVoiceCommandForegroundTestClassSetup) {
         // The class setup allows us to activate the app in our test method, but can only be done once per class
         return SUCCEEDED(FrameworkHelper::RunOnUIThread(&CortanaTestVoiceCommandForegroundActivation));
     }
 
-    TEST_METHOD(Cortana_DelegateMethodsCalled) {
-        CortanaTestDelegateMethodsCalled();
+    TEST_METHOD(Cortana_VoiceCommandForegroundActivationDelegateMethodsCalled) {
+        CortanaTestVoiceCommandForegroundActivationDelegateMethodsCalled();
     }
-}; /* class Cortana*/
+}; /* class CortanaVoiceCommandForeground*/
+
+extern void CortanaTestProtocolForegroundActivation();
+extern void CortanaTestProtocolForegroundActivationDelegateMethodsCalled();
+
+class CortanaProtocolForeground {
+public:
+    BEGIN_TEST_CLASS(CortanaProtocolForeground)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(CortanaProtocolForegroundTestClassSetup) {
+        // The class setup allows us to activate the app in our test method, but can only be done once per class
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&CortanaTestProtocolForegroundActivation));
+    }
+
+    TEST_METHOD(Cortana_ProtocolForegroundActivationDelegateMethodsCalled) {
+        CortanaTestProtocolForegroundActivationDelegateMethodsCalled();
+    }
+}; /* class CortanaProtocolForeground*/
+
 // UIViewTests
 //
 extern void UIViewTestsCreate();
