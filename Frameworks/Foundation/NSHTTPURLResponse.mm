@@ -21,11 +21,11 @@
 #include "NSURLResponseInternal.h"
 #include <StubReturn.h>
 
-static Boolean CFHTTPHeaderEqual(const void* obj1, const void* obj2) {
+static Boolean _CFHTTPHeaderEqual(const void* obj1, const void* obj2) {
     return [(id)obj1 caseInsensitiveCompare:(NSString*)obj2] == 0;
 }
 
-static CFHashCode CFHTTPHeaderHash(const void* obj1) {
+static CFHashCode _CFHTTPHeaderHash(const void* obj1) {
     return [[(id)obj1 lowercaseString] hash];
 }
 
@@ -56,8 +56,8 @@ static CFHashCode CFHTTPHeaderHash(const void* obj1) {
     if (headerFields != nil) {
         CFDictionaryKeyCallBacks caseInsensitiveKeyChecker = kCFTypeDictionaryKeyCallBacks;
 
-        caseInsensitiveKeyChecker.equal = CFHTTPHeaderEqual;
-        caseInsensitiveKeyChecker.hash = CFHTTPHeaderHash;
+        caseInsensitiveKeyChecker.equal = _CFHTTPHeaderEqual;
+        caseInsensitiveKeyChecker.hash = _CFHTTPHeaderHash;
 
         allHeaderFields = (NSMutableDictionary*)
             CFDictionaryCreateMutable(NULL, [headerFields count], &caseInsensitiveKeyChecker, &kCFTypeDictionaryValueCallBacks);
