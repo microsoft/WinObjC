@@ -45,7 +45,7 @@
 }
 
 /**
- @Status interoperable
+ @Status Interoperable
  @Notes
 */
 - (instancetype)initWithName:(NSString*)aName object:(id)object userInfo:(NSDictionary*)info {
