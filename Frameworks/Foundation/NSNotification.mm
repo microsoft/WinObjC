@@ -52,7 +52,7 @@
     if ((self = [super init]) != nil) {
         _object = [object retain];
         _name = [aName copy];
-        _userInfo = [info retain];
+        _userInfo = [info copy];
     }
     return self;
 }
