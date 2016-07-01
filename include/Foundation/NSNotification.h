@@ -25,7 +25,7 @@ FOUNDATION_EXPORT_CLASS
 @interface NSNotification : NSObject <NSCoding, NSCopying>
 + (instancetype)notificationWithName:(NSString*)aName object:(id)anObject;
 + (instancetype)notificationWithName:(NSString*)aName object:(id)anObject userInfo:(NSDictionary*)userInfo;
-- (instancetype)initWithName:(NSString*)aName object:(id)object userInfo:(NSDictionary*)userInfo STUB_METHOD;
+- (instancetype)initWithName:(NSString*)aName object:(id)object userInfo:(NSDictionary*)userInfo;
 @property (readonly, copy) NSString* name;
 @property (readonly, retain) id object;
 @property (readonly, copy) NSDictionary* userInfo;

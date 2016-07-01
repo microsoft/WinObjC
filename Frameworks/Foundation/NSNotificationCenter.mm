@@ -79,8 +79,9 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
  @Status Interoperable
 */
 - (void)postNotificationName:(NSString*)name object:(NSObject*)sender {
-    NSNotification* notification = [NSNotification notificationWithName:name object:sender];
+    NSNotification* notification = [[NSNotification alloc] initWithName:name object:sender userInfo:nil];
     [self postNotification:notification];
+    [notification release];
 }
 
 /**
