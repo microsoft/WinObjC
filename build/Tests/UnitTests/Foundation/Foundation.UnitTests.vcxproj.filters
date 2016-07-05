@@ -107,6 +107,9 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSURLRequest.mm">
       <Filter>ReferenceFoundation</Filter>
     </ClangCompile>
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSURLResponse.mm">
+        <Filter>ReferenceFoundation</Filter>
+    </ClangCompile>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestUtils.mm">
       <Filter>ReferenceFoundation</Filter>
     </ClangCompile>
