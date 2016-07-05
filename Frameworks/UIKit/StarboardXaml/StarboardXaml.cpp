@@ -79,8 +79,8 @@ void App::OnLaunched(LaunchActivatedEventArgs^ args) {
 }
 
 void App::OnActivated(IActivatedEventArgs^ args) {
-        _ApplicationActivate(args);
-        _RegisterEventHandlers();
+    _ApplicationActivate(args);
+    _RegisterEventHandlers();
 }
 
 void App::_ApplicationMainLaunch(ActivationType activationType, Platform::Object^ activationArg) {

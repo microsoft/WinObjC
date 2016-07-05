@@ -39,10 +39,8 @@ using namespace Microsoft::WRL;
 extern "C" void UIApplicationActivationTest(IInspectable* args);
 
 // These are for testing that delegate methods are actually called
-static bool willFinishLaunchingWithOptionsCalled = false;
-static bool didFinishLaunchingWithOptionsCalled = false;
-static bool didReceiveVoiceCommandCalled = false;
-static bool didReceiveProtocolCalled = false;
+static NSMutableDictionary* cortanaVoiceCommandForegroundDelegateMethodsCalled = [NSMutableDictionary new];
+static NSMutableDictionary* cortanaProtocolForegroundDelegateMethodsCalled = [NSMutableDictionary new];
 
 MOCK_CLASS(MockSpeechRecognitionResult,
            public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, ISpeechRecognitionResult, ISpeechRecognitionResult2> {
@@ -138,7 +136,8 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
     ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsVoiceCommandKey]);
     WMSSpeechRecognitionResult* result = launchOptions[UIApplicationLaunchOptionsVoiceCommandKey];
     ASSERT_STREQ("CORTANA_TEST", [result.text UTF8String]);
-    willFinishLaunchingWithOptionsCalled = true;
+    ASSERT_TRUE(cortanaVoiceCommandForegroundDelegateMethodsCalled);
+    [cortanaVoiceCommandForegroundDelegateMethodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
 
@@ -146,13 +145,13 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
     ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsVoiceCommandKey]);
     WMSSpeechRecognitionResult* result = launchOptions[UIApplicationLaunchOptionsVoiceCommandKey];
     ASSERT_STREQ("CORTANA_TEST", [result.text UTF8String]);
-    didFinishLaunchingWithOptionsCalled = true;
+    [cortanaVoiceCommandForegroundDelegateMethodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
 
 - (BOOL)application:(UIApplication*)application didReceiveVoiceCommand:(WMSSpeechRecognitionResult*)result {
     ASSERT_STREQ("CORTANA_TEST", [result.text UTF8String]);
-    didReceiveVoiceCommandCalled = true;
+    [cortanaVoiceCommandForegroundDelegateMethodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
 @end
@@ -165,7 +164,7 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
     ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsProtocolKey]);
     WFUri* uri = launchOptions[UIApplicationLaunchOptionsProtocolKey];
     ASSERT_STREQ("CORTANA_TEST", [uri.toString UTF8String]);
-    willFinishLaunchingWithOptionsCalled = true;
+    [cortanaProtocolForegroundDelegateMethodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
 
@@ -173,13 +172,13 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
     ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsProtocolKey]);
     WFUri* uri = launchOptions[UIApplicationLaunchOptionsProtocolKey];
     ASSERT_STREQ("CORTANA_TEST", [uri.toString UTF8String]);
-    didFinishLaunchingWithOptionsCalled = true;
+    [cortanaProtocolForegroundDelegateMethodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
 
 - (BOOL)application:(UIApplication*)application didReceiveProtocol:(WFUri*)uri {
     ASSERT_STREQ("CORTANA_TEST", [uri.toString UTF8String]);
-    didReceiveProtocolCalled = true;
+    [cortanaProtocolForegroundDelegateMethodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
 @end
@@ -242,14 +241,9 @@ TEST(CortanaTest, VoiceCommandForegroundActivation) {
 }
 
 TEST(CortanaTest, VoiceCommandForegroundActivationDelegateMethodsCalled) {
-    ASSERT_TRUE(willFinishLaunchingWithOptionsCalled);
-    ASSERT_TRUE(didFinishLaunchingWithOptionsCalled);
-    ASSERT_TRUE(didReceiveVoiceCommandCalled);
-
-    // Set flags to false so they can be used for other tests.
-    willFinishLaunchingWithOptionsCalled = false;
-    didFinishLaunchingWithOptionsCalled = false;
-    didReceiveVoiceCommandCalled = false;
+    ASSERT_TRUE(cortanaVoiceCommandForegroundDelegateMethodsCalled[@"application:willFinishLaunchingWithOptions:"]);
+    ASSERT_TRUE(cortanaVoiceCommandForegroundDelegateMethodsCalled[@"application:didFinishLaunchingWithOptions:"]);
+    ASSERT_TRUE(cortanaVoiceCommandForegroundDelegateMethodsCalled[@"application:didReceiveVoiceCommand:"]);
 }
 
 // Creates test method which we call in TEST_CLASS_SETUP to activate app
@@ -295,12 +289,7 @@ TEST(CortanaTest, ProtocolForegroundActivation) {
 }
 
 TEST(CortanaTest, ProtocolForegroundActivationDelegateMethodsCalled) {
-    ASSERT_TRUE(willFinishLaunchingWithOptionsCalled);
-    ASSERT_TRUE(didFinishLaunchingWithOptionsCalled);
-    ASSERT_TRUE(didReceiveProtocolCalled);
-
-    // Set flags to false so they can be used for other tests.
-    willFinishLaunchingWithOptionsCalled = false;
-    didFinishLaunchingWithOptionsCalled = false;
-    didReceiveProtocolCalled = false;
+    ASSERT_TRUE(cortanaProtocolForegroundDelegateMethodsCalled[@"application:willFinishLaunchingWithOptions:"]);
+    ASSERT_TRUE(cortanaProtocolForegroundDelegateMethodsCalled[@"application:didFinishLaunchingWithOptions:"]);
+    ASSERT_TRUE(cortanaProtocolForegroundDelegateMethodsCalled[@"application:didReceiveProtocol:"]);
 }
