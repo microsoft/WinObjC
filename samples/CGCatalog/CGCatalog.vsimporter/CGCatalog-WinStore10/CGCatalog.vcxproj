@@ -30,8 +30,8 @@
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{173E0C8B-B274-43B0-93AF-CFAA93782000}</ProjectGuid>
-    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">C:\Users\adegrow\Documents\islandwood\WinObjC</WINOBJC_SDK_ROOT>
+    <ProjectGuid>{941A8C6E-B738-4A69-937E-C7F26FFE11CF}</ProjectGuid>
+    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">C:\Users\jparmenter\Documents\WinObjC</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -186,6 +186,7 @@
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextBeginEndTransparencyLayer.m" />
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextSetPatternPhase.m" />
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGPathContainsPointViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\AppDelegate.m" />
     <ClangCompile Include="..\..\CGCatalog\CGCBaseViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextBeginTransparencyLayerWithRect.m" />

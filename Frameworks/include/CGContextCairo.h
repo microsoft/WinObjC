@@ -132,4 +132,5 @@ public:
     virtual void CGContextSetRGBStrokeColor(float r, float g, float b, float a);
 
     virtual CGSize CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, float x, float y);
+    virtual bool CGContextIsPointInPath(bool eoFill, float x, float y);
 };

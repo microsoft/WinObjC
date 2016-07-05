@@ -14,10 +14,18 @@
 //
 //******************************************************************************
 
+#import "CGContextInternal.h"
+#import "CGPathInternal.h"
 #import "CGPathInternal.h"
 #include "LoggingNative.h"
+#import <CoreGraphics/CGBitmapContext.h>
+#import <CoreGraphics/CGColorSpace.h>
+#import <CoreGraphics/CGContext.h>
 #import <CoreGraphics/CGContext.h>
 #import <CoreGraphics/CGGeometry.h>
+#import <CoreGraphics/CGGeometry.h>
+#import <CoreGraphics/CGImage.h>
+#import <CoreGraphics/CoreGraphicsExport.h>
 #import <Starboard.h>
 #import <StubReturn.h>
 #import <algorithm>
@@ -652,12 +660,29 @@ void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 bool CGPathContainsPoint(CGPathRef path, const CGAffineTransform* m, CGPoint point, bool eoFill) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (m) {
+        point = CGPointApplyAffineTransform(point, *m);
+    }
+    // check if the point is outside this box already, if it is, return false
+    CGRect boundingBox = CGPathGetBoundingBox(path);
+    if (!CGRectContainsPoint(boundingBox, point)) {
+        return false;
+    }
+
+    CGContextRef context =
+        CGBitmapContextCreate(0, boundingBox.origin.x + boundingBox.size.width, boundingBox.origin.y + boundingBox.size.height, 1, 1, 0, 0);
+
+    CGContextAddPath(context, path);
+
+    bool inPath = CGContextIsPointInPath(context, eoFill, point.x, point.y);
+
+    CGContextRelease(context);
+
+    return inPath;
 }
 
 /**

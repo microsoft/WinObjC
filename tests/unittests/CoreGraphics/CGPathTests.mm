@@ -18,6 +18,8 @@
 #import <Foundation\Foundation.h>
 #import <Starboard.h>
 #import <TestFramework.h>
+#import <CoreGraphics/CGColor.h>
+#import <CoreGraphics/CGColorSpace.h>
 
 static NSString* const kPointsKey = @"PointsKey";
 static NSString* const kTypeKey = @"TypeKey";
@@ -345,4 +347,205 @@ TEST(CGPath, CGPathAddPath) {
     cgPathCompare(expected1, result1);
 
     CGPathRelease(path1);
+}
+
+CGPathRef newPathForRoundRect(CGRect rect, CGFloat radius) {
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGRect innerRect = CGRectInset(rect, radius, radius);
+    CGFloat insideRight = innerRect.origin.x + innerRect.size.width;
+    CGFloat outsideRight = rect.origin.x + rect.size.width;
+    CGFloat insideBottom = innerRect.origin.y + innerRect.size.height;
+    CGFloat outsideBottom = rect.origin.y + rect.size.height;
+
+    CGFloat insideTop = innerRect.origin.y;
+    CGFloat outsideTop = rect.origin.y;
+    CGFloat outsideLeft = rect.origin.x;
+
+    CGPathMoveToPoint(path, NULL, innerRect.origin.x, outsideTop);
+
+    CGPathAddLineToPoint(path, NULL, insideRight, outsideTop);
+    CGPathAddArcToPoint(path, NULL, outsideRight, outsideTop, outsideRight, insideTop, radius);
+
+    CGPathAddLineToPoint(path, NULL, outsideRight, insideBottom);
+    CGPathAddArcToPoint(path, NULL, outsideRight, outsideBottom, insideRight, outsideBottom, radius);
+
+    CGPathAddLineToPoint(path, NULL, innerRect.origin.x, outsideBottom);
+    CGPathAddArcToPoint(path, NULL, outsideLeft, outsideBottom, outsideLeft, insideBottom, radius);
+
+    CGPathAddLineToPoint(path, NULL, outsideLeft, insideTop);
+    CGPathAddArcToPoint(path, NULL, outsideLeft, outsideTop, innerRect.origin.x, outsideTop, radius);
+
+    CGPathCloseSubpath(path);
+
+    return path;
+}
+
+TEST(CGPath, CGPathContainsPointOutsideRect) {
+    CGFloat originX = 10.0f;
+    CGFloat originY = 20.0f;
+    CGFloat pathWidth = 100.0f;
+    CGFloat pathHeight = 200.0f;
+    CGRect testRect = CGRectMake(originX, originY, pathWidth, pathHeight);
+    CGFloat radius = 10.0f;
+    CGPathRef path = newPathForRoundRect(testRect, radius);
+
+    // test areas outside the rect
+    CGPoint testPoint = CGPointMake(-1.0f, -1.0f);
+    bool test = CGPathContainsPoint(path, NULL, testPoint, YES);
+
+    EXPECT_FALSE(test);
+
+    testPoint = CGPointMake(testRect.size.width + testRect.origin.x + 1, 0.f);
+    test = CGPathContainsPoint(path, NULL, testPoint, YES);
+
+    EXPECT_FALSE(test);
+
+    testPoint = CGPointMake(0.0f, testRect.size.height + testRect.origin.y + 1.0f);
+    test = CGPathContainsPoint(path, NULL, testPoint, YES);
+
+    EXPECT_FALSE(test);
+}
+
+TEST(CGPath, CGPathContainsPointInsideRectOutsidePath) {
+    CGFloat originX = 10.0f;
+    CGFloat originY = 20.0f;
+    CGFloat pathWidth = 100.0f;
+    CGFloat pathHeight = 200.0f;
+    CGRect testRect = CGRectMake(originX, originY, pathWidth, pathHeight);
+    CGFloat radius = 10.0f;
+    CGPathRef path = newPathForRoundRect(testRect, radius);
+
+    // test areas inside the rect but NOT in the path
+    CGPoint testPoint = CGPointMake(1.0f, 1.0f);
+    bool test = CGPathContainsPoint(path, NULL, testPoint, YES);
+
+    EXPECT_FALSE(test);
+
+    testPoint = CGPointMake(testRect.origin.x, 0.0f);
+    test = CGPathContainsPoint(path, NULL, testPoint, YES);
+
+    EXPECT_FALSE(test);
+
+    testPoint = CGPointMake(0.0f, testRect.origin.y);
+    test = CGPathContainsPoint(path, NULL, testPoint, YES);
+
+    EXPECT_FALSE(test);
+}
+TEST(CGPath, CGPathContainsPointShoulders) {
+    CGFloat originX = 10.0f;
+    CGFloat originY = 20.0f;
+    CGFloat pathWidth = 100.0f;
+    CGFloat pathHeight = 200.0f;
+    CGRect testRect = CGRectMake(originX, originY, pathWidth, pathHeight);
+    CGFloat radius = 10.0f;
+    CGPathRef path = newPathForRoundRect(testRect, radius);
+
+    // check the curve OUTSIDE the path's shoulders
+    CGPoint testPoint = CGPointMake(testRect.origin.x + 1.0, testRect.origin.y + 1.0);
+    bool test = CGPathContainsPoint(path, NULL, testPoint, YES);
+
+    EXPECT_FALSE(test);
+
+    // check the curve just INSIDE the path's shoulders
+    testPoint = CGPointMake(testRect.origin.x + radius, testRect.origin.y + radius);
+    test = CGPathContainsPoint(path, NULL, testPoint, YES);
+
+    EXPECT_TRUE(test);
+
+    testPoint = CGPointMake(testRect.origin.x + testRect.size.width - radius - radius, testRect.origin.y + testRect.size.height - 20.0);
+    test = CGPathContainsPoint(path, NULL, testPoint, YES);
+
+    EXPECT_TRUE(test);
+
+    testPoint = CGPointMake(testRect.origin.x + radius, testRect.origin.y + testRect.size.height - radius - radius);
+    test = CGPathContainsPoint(path, NULL, testPoint, YES);
+
+    EXPECT_TRUE(test);
+
+    testPoint = CGPointMake(testRect.origin.x + testRect.size.width - radius - radius, testRect.origin.y + radius);
+    test = CGPathContainsPoint(path, NULL, testPoint, YES);
+
+    EXPECT_TRUE(test);
+}
+
+TEST(CGPath, CGPathContainsPointWithTransform) {
+    CGFloat originX = 10.0f;
+    CGFloat originY = 20.0f;
+    CGFloat pathWidth = 100.0f;
+    CGFloat pathHeight = 200.0f;
+    CGRect testRect = CGRectMake(originX, originY, pathWidth, pathHeight);
+    CGFloat radius = 10.0f;
+    CGPathRef path = newPathForRoundRect(testRect, radius);
+
+    // test areas inside the rect but NOT in the path ...
+    CGPoint testPoint = CGPointMake(testRect.origin.x - 1.0f, testRect.origin.y - 1.0f);
+    // ... and transform it in
+    CGAffineTransform transform = CGAffineTransformMakeTranslation(testRect.origin.x, testRect.origin.y);
+    bool test = CGPathContainsPoint(path, &transform, testPoint, YES);
+
+    EXPECT_TRUE(test);
+}
+
+TEST(CGPath, CGPathContainsPointEOFillFalse) {
+    CGFloat originX = 10.0f;
+    CGFloat originY = 20.0f;
+    CGFloat pathWidth = 100.0f;
+    CGFloat pathHeight = 200.0f;
+    CGRect testRect = CGRectMake(originX, originY, pathWidth, pathHeight);
+    CGFloat radius = 10.0f;
+    CGPathRef path = newPathForRoundRect(testRect, radius);
+
+    // same tests inside the rect as above with eoFill false.
+    // OUTSIDE rect tests are not needed, since they return before before any painting is done.
+
+    // test areas inside the rect but NOT in the path
+    CGPoint testPoint = CGPointMake(1.0f, 1.0f);
+    bool test = CGPathContainsPoint(path, NULL, testPoint, NO);
+
+    EXPECT_FALSE(test);
+
+    testPoint = CGPointMake(testRect.origin.x, 0.0f);
+    test = CGPathContainsPoint(path, NULL, testPoint, NO);
+
+    EXPECT_FALSE(test);
+
+    testPoint = CGPointMake(0.0f, testRect.origin.y);
+    test = CGPathContainsPoint(path, NULL, testPoint, NO);
+
+    EXPECT_FALSE(test);
+
+    // check the curve OUTSIDE the path's shoulders
+    testPoint = CGPointMake(testRect.origin.x + 1.0, testRect.origin.y + 1.0);
+    test = CGPathContainsPoint(path, NULL, testPoint, NO);
+
+    EXPECT_FALSE(test);
+
+    // check the curve just INSIDE the path's shoulders
+    testPoint = CGPointMake(testRect.origin.x + radius, testRect.origin.y + radius);
+    test = CGPathContainsPoint(path, NULL, testPoint, NO);
+
+    EXPECT_TRUE(test);
+
+    testPoint = CGPointMake(testRect.origin.x + testRect.size.width - radius - radius, testRect.origin.y + testRect.size.height - 20.0);
+    test = CGPathContainsPoint(path, NULL, testPoint, NO);
+
+    EXPECT_TRUE(test);
+
+    testPoint = CGPointMake(testRect.origin.x + radius, testRect.origin.y + testRect.size.height - radius - radius);
+    test = CGPathContainsPoint(path, NULL, testPoint, NO);
+
+    EXPECT_TRUE(test);
+
+    testPoint = CGPointMake(testRect.origin.x + testRect.size.width - radius - radius, testRect.origin.y + radius);
+    test = CGPathContainsPoint(path, NULL, testPoint, NO);
+
+    EXPECT_TRUE(test);
+
+    // test areas inside the rect but NOT in the path ...
+    CGAffineTransform transform = CGAffineTransformMakeTranslation(testRect.origin.x, testRect.origin.y);
+
+    testPoint = CGPointMake(testRect.origin.x - 1.0f, testRect.origin.y - 1.0f);
+    test = CGPathContainsPoint(path, &transform, testPoint, NO);
+
+    EXPECT_TRUE(test);
 }

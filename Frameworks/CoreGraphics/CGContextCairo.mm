@@ -14,18 +14,18 @@
 //
 //******************************************************************************
 
-#import <Starboard.h>
 #import <CoreGraphics/CGGeometry.h>
+#import <Starboard.h>
 #import <memory>
 
-#import "CGContextImpl.h"
-#import "CGImageInternal.h"
-#import "CGGradientInternal.h"
-#import "CGPatternInternal.h"
 #import "CGColorSpaceInternal.h"
 #import "CGContextCairo.h"
+#import "CGContextImpl.h"
 #import "CGFontInternal.h"
+#import "CGGradientInternal.h"
+#import "CGImageInternal.h"
 #import "CGPathInternal.h"
+#import "CGPatternInternal.h"
 #import "UIColorInternal.h"
 
 #define CAIRO_WIN32_STATIC_BUILD
@@ -35,10 +35,10 @@
 extern "C" {
 #import <ft2build.h>
 #import FT_FREETYPE_H
-#import <ftglyph.h>
-#import <tttables.h>
 #import <ftadvanc.h>
+#import <ftglyph.h>
 #import <ftsizes.h>
+#import <tttables.h>
 }
 
 #include "LoggingNative.h"
@@ -1917,4 +1917,17 @@ CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, flo
     UNLOCK_CAIRO();
 
     return ret;
+}
+
+bool CGContextCairo::CGContextIsPointInPath(bool eoFill, float x, float y) {
+    ObtainLock();
+    LOCK_CAIRO();
+    if (eoFill) {
+        cairo_set_fill_rule(_drawContext, CAIRO_FILL_RULE_EVEN_ODD);
+    } else {
+        cairo_set_fill_rule(_drawContext, CAIRO_FILL_RULE_WINDING);
+    }
+    bool returnValue = cairo_in_fill(_drawContext, x, y);
+    UNLOCK_CAIRO();
+    return returnValue;
 }
