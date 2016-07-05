@@ -14,25 +14,25 @@
 //
 //******************************************************************************
 
-#import <Starboard.h>
 #import <CoreGraphics/CGContext.h>
+#import <Starboard.h>
 
 #import "CGContextInternal.h"
 #import "CGFontInternal.h"
+#import "CGPathInternal.h"
 #import "CGPatternInternal.h"
 #import "CoreGraphics/CGGeometry.h"
-#import "cairo-ft.h"
-#import "CGPathInternal.h"
 #import "UIColorInternal.h"
 #import "UIFontInternal.h"
+#import "cairo-ft.h"
 
 extern "C" {
 #import <ft2build.h>
 #import FT_FREETYPE_H
-#import <ftglyph.h>
-#import <tttables.h>
 #import <ftadvanc.h>
+#import <ftglyph.h>
 #import <ftsizes.h>
+#import <tttables.h>
 }
 
 #include "LoggingNative.h"
@@ -770,4 +770,10 @@ void CGContextImpl::CGContextSetShadow(CGSize offset, float blur) {
     CGContextSetShadowWithColor(offset, blur, shadowColor);
 
     CGColorRelease(shadowColor);
+}
+
+bool CGContextImpl::CGContextIsPointInPath(bool eoFill, float x, float y) {
+    // CGContext could be backed by CGContextImpl or CGContextCairo.
+    // CGContextImpl is not being currently used but, by convention we add the method here.
+    return false;
 }

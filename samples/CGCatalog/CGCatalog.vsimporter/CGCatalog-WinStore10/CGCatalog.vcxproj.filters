@@ -2,25 +2,25 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{4dc5fdc8-a76f-4648-808d-0ee6c2ba3b5d}</UniqueIdentifier>
+      <UniqueIdentifier>{8f35a040-837f-4e8a-9d4d-9330b6b87e87}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{7d9f7452-b109-48c3-bf6a-efac85f4f678}</UniqueIdentifier>
+      <UniqueIdentifier>{f69ade3e-f1dc-472b-9d4e-e26120af6184}</UniqueIdentifier>
     </Filter>
     <Filter Include="CGCatalog">
-      <UniqueIdentifier>{F18F7C7A-E456-452F-B880-BEA7C0CE2B92}</UniqueIdentifier>
+      <UniqueIdentifier>{A40230AF-A60D-4963-83C0-F77FD0107797}</UniqueIdentifier>
     </Filter>
     <Filter Include="CGCatalog\Resources">
-      <UniqueIdentifier>{EFB2BA33-EF2B-400F-B2FF-A2A540C2BF02}</UniqueIdentifier>
+      <UniqueIdentifier>{D20814C5-6BD9-4D30-98AE-A7005D9C50F2}</UniqueIdentifier>
     </Filter>
     <Filter Include="CGCatalog\Samples">
-      <UniqueIdentifier>{DE3A1064-C807-447E-84FC-340093556F2A}</UniqueIdentifier>
+      <UniqueIdentifier>{FBE9E107-FCFD-4593-AB19-4C27321BD656}</UniqueIdentifier>
     </Filter>
     <Filter Include="CGCatalog\Supporting Files">
-      <UniqueIdentifier>{D21F3BBE-570B-4C49-B426-4B18C0A67256}</UniqueIdentifier>
+      <UniqueIdentifier>{DB575B17-322F-43D7-8038-8F0D3F25FA65}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{0F1A39B1-36D2-43BF-8179-D9814E1176A8}</UniqueIdentifier>
+      <UniqueIdentifier>{4F2ED9E1-F740-4210-A6F7-C67CB874B09E}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +61,9 @@
       <Filter>CGCatalog\Samples</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextViewController.m">
+      <Filter>CGCatalog\Samples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGPathContainsPointViewController.m">
       <Filter>CGCatalog\Samples</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\AppDelegate.m">

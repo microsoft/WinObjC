@@ -15,7 +15,6 @@
 //******************************************************************************
 #pragma once
 
-#import <CoreGraphics/CoreGraphicsExport.h>
 #import <CoreGraphics/CGAffineTransform.h>
 #import <CoreGraphics/CGColor.h>
 #import <CoreGraphics/CGColorSpace.h>
@@ -23,10 +22,11 @@
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGGradient.h>
 #import <CoreGraphics/CGImage.h>
+#import <CoreGraphics/CGPDFPage.h>
 #import <CoreGraphics/CGPath.h>
 #import <CoreGraphics/CGPattern.h>
-#import <CoreGraphics/CGPDFPage.h>
 #import <CoreGraphics/CGShading.h>
+#import <CoreGraphics/CoreGraphicsExport.h>
 
 typedef enum { kCGEncodingFontSpecific, kCGEncodingMacRoman } CGTextEncoding;
 typedef enum {

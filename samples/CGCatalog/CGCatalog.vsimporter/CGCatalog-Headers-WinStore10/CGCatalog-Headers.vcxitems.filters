@@ -2,10 +2,10 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="CGCatalog">
-      <UniqueIdentifier>{EC004CE6-3C6A-4C8E-B2AF-2F7E9F794D13}</UniqueIdentifier>
+      <UniqueIdentifier>{12C2F85C-4398-411D-8614-8BBD784B6671}</UniqueIdentifier>
     </Filter>
     <Filter Include="CGCatalog\Samples">
-      <UniqueIdentifier>{FD180152-726F-4D60-A3CF-53F543348827}</UniqueIdentifier>
+      <UniqueIdentifier>{A21B1485-64D9-405A-AFB2-9A57D078CC2F}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -37,6 +37,9 @@
       <Filter>CGCatalog\Samples</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextReplacePathWithStrokedPath.h">
+      <Filter>CGCatalog\Samples</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGPathContainsPointViewController.h">
       <Filter>CGCatalog\Samples</Filter>
     </ClInclude>
   </ItemGroup>

@@ -22,9 +22,9 @@
 
 #include "CGContextInternal.h"
 
-#include "CoreGraphics/CGPath.h"
-#include "CoreGraphics/CGLayer.h"
 #include "CoreGraphics/CGGradient.h"
+#include "CoreGraphics/CGLayer.h"
+#include "CoreGraphics/CGPath.h"
 #include "CoreGraphics/CGShading.h"
 #include "UIKit/UIColor.h"
 #include "UIKit/UIFont.h"
@@ -172,6 +172,7 @@ public:
 
     virtual void CGContextSetShadowWithColor(CGSize offset, float blur, CGColorRef color);
     virtual void CGContextSetShadow(CGSize offset, float blur);
+    virtual bool CGContextIsPointInPath(bool eoFill, float x, float y);
 };
 
 #define LOCK_CAIRO() pthread_mutex_lock(&_cairoLock);
