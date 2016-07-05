@@ -1108,7 +1108,7 @@ typedef enum {
     XML_PARSE_NOBASEFIX = 1<<18,/* do not fixup XINCLUDE xml:base uris */
     XML_PARSE_HUGE      = 1<<19,/* relax any hardcoded limit from the parser */
     XML_PARSE_OLDSAX    = 1<<20,/* parse using SAX2 interface before 2.7.0 */
-    XML_PARSE_IGNORE_ENC= 1<<21 /* ignore internal document encoding hint */
+    XML_PARSE_IGNORE_ENC= 1<<21,/* ignore internal document encoding hint */
     XML_PARSE_BIG_LINES = 1 <<22,
 } xmlParserOption;
 

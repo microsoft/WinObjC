@@ -212,13 +212,23 @@ int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* de
     return 0;
 }
 
+// This is the initialization function for non-Islandwood apps that intend to call into Islandwood:
+// test executables and general WinRT apps that want to call Islandwood libraries
 UIKIT_EXPORT
-void UIApplicationMainTest() {
+void UIApplicationInitialize(const wchar_t* principalClassName, const wchar_t* delegateClassName) {
     // Initialize COM on this thread
     ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
     // Register tracelogging
     TraceRegister();
+
+    if (principalClassName != nullptr) {
+        g_principalClassName = ref new Platform::String(principalClassName);
+    }
+
+    if (delegateClassName != nullptr) {
+        g_delegateClassName = ref new Platform::String(delegateClassName);
+    }
 
     _ApplicationLaunch(ActivationTypeNone, nullptr);
 }

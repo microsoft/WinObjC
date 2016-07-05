@@ -188,15 +188,10 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     title = @"CGSize";
     [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:3]]];
 
-    title = @"Default Bold Font of Size 16  with 10px Green Shadow";
+    title = @"Default Bold Font of Size 16";
     [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:4]]];
     title = @"CGSizet";
     [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:5]]];
-
-    title = @"Default Bold Font of Size 16 Font with 10px Shadow";
-    [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:6]]];
-    title = @"CGSize";
-    [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:7]]];
 
     title = @"Capatalized Alphabet Drawn in a circle. Black Background Green Text Size 12 Default Font";
     [rows
@@ -225,9 +220,7 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
         addObject:[self makeTestCellWithTitle:title
                           WithAccessoryUIView:[self makeTextDrawer:13 WithCustomHeight:130 WithCustomBackgroundColor:[UIColor grayColor]]]];
 
-    title =
-        @"CTFontManagerRegisterFontsForURL: (Register different fonts familys)\nfont 1: Harlow Solid Italic\nfont 2: Goudy Stout\nfont 3: "
-        @"Kunstler Script";
+    title = @"CTFontManagerRegisterFontsForURL: (Register different fonts familys)\nfont 1: Times New Roman\nfont 2: Gadugi";
     [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:14]]];
 
     return self;
@@ -313,7 +306,7 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
 
     uiTextView.text = TestParagraph;
 
-    //intentionally setting text color after setting text
+    // intentionally setting text color after setting text
     uiTextView.textColor = [UIColor blueColor];
 
     uiTextView.returnKeyType = UIReturnKeyDefault;
@@ -335,15 +328,13 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
 
 - (float)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
     // Special height for circular word display
-    if (indexPath.row == 8 || indexPath.row == 9) {
+    if (indexPath.row == 6 || indexPath.row == 7) {
         //  Circular letter view and UITextView row need more height
         return 350.0f;
-    } else if (indexPath.row == 13) {
+    } else if (indexPath.row == 12) {
         return 200.0f;
     }
-    if (indexPath.row == 13) {
-        return 150.0f;
-    }
+
     return DefaultHeightOfCell;
 }
 
@@ -487,38 +478,28 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     CGContextScaleCTM(context, 1.0, -1.0);
 
     // font 1
-    NSURL* url = [NSURL fileURLWithPath:@"C:/Windows/Fonts/KUNSTLER.TTF"];
+    NSURL* url = [NSURL fileURLWithPath:@"C:/Windows/Fonts/gadugi.ttf"];
     bool result = CTFontManagerRegisterFontsForURL((__bridge CFURLRef)(url), kCTFontManagerScopeProcess, NULL);
     if (result) {
-        UIFont* font = [UIFont fontWithName:@"Kunstler Script" size:22.0];
+        UIFont* font = [UIFont fontWithName:@"Gadugi" size:22.0];
         CTTypesetterRef typesetter =
             CTTypesetterCreateWithAttributedString((__bridge CFAttributedStringRef)[self getAttributedStringForFont:font]);
         CFRange range = { 0, 11 };
         CTLineRef line = CTTypesetterCreateLineWithOffset(typesetter, range, 0.0f);
         CTLineDraw(line, context);
     }
+
     // font 2
-    url = [NSURL fileURLWithPath:@"C:/Windows/Fonts/GOUDYSTO.TTF"];
+    url = [NSURL fileURLWithPath:@"C:/Windows/Fonts/times.ttf"];
     result = CTFontManagerRegisterFontsForURL((__bridge CFURLRef)(url), kCTFontManagerScopeProcess, NULL);
     if (result) {
-        UIFont* font = [UIFont fontWithName:@"Goudy Stout" size:22.0];
+        UIFont* font = [UIFont fontWithName:@"Times New Roman" size:22.0];
         CTTypesetterRef typesetter =
             CTTypesetterCreateWithAttributedString((__bridge CFAttributedStringRef)[self getAttributedStringForFont:font]);
         CFRange range = { 0, 11 };
         CTLineRef line = CTTypesetterCreateLineWithOffset(typesetter, range, 0.0f);
         CGContextSetTextPosition(context, 0.0, 25.0);
-        CTLineDraw(line, context);
-    }
-    // font 3
-    url = [NSURL fileURLWithPath:@"C:/Windows/Fonts/HARLOWSI.TTF"];
-    result = CTFontManagerRegisterFontsForURL((__bridge CFURLRef)(url), kCTFontManagerScopeProcess, NULL);
-    if (result) {
-        UIFont* font = [UIFont fontWithName:@"Harlow Solid Italic" size:22.0];
-        CTTypesetterRef typesetter =
-            CTTypesetterCreateWithAttributedString((__bridge CFAttributedStringRef)[self getAttributedStringForFont:font]);
-        CFRange range = { 0, 11 };
-        CTLineRef line = CTTypesetterCreateLineWithOffset(typesetter, range, 0.0f);
-        CGContextSetTextPosition(context, 0.0, 50.0);
+
         CTLineDraw(line, context);
     }
 }

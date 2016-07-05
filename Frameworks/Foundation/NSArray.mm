@@ -34,6 +34,7 @@
 #include "NSRaise.h"
 #include "NSCFArray.h"
 #include "BridgeHelpers.h"
+#import <_NSKeyValueCodingAggregateFunctions.h>
 
 static const wchar_t* TAG = L"NSArray";
 
@@ -332,6 +333,15 @@ BASE_CLASS_REQUIRED_IMPLS(NSArray, NSArrayPrototype, CFArrayGetTypeID);
  @Status Interoperable
 */
 - (NSObject*)valueForKey:(NSString*)key {
+    if ([key hasPrefix:@"@"]) {
+        SEL sel = [_NSKeyValueCodingAggregateFunctions resolveFunction:[key substringFromIndex:1]];
+        if (sel == nil) {
+            return [self valueForUndefinedKey:key];
+        }
+
+        return [[_NSKeyValueCodingAggregateFunctions class] performSelector:sel withObject:self];
+    }
+
     id ret = [NSMutableArray array];
 
     id enumerator = [self objectEnumerator];
@@ -785,16 +795,14 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
         reverse = false;
     }
 
-    _enumerateWithBlock(enumerator,
-                        options,
-                        ^(id key, BOOL* stop) {
-                            block(key, index, stop);
-                            if (reverse) {
-                                index--;
-                            } else {
-                                index++;
-                            }
-                        });
+    _enumerateWithBlock(enumerator, options, ^(id key, BOOL* stop) {
+        block(key, index, stop);
+        if (reverse) {
+            index--;
+        } else {
+            index++;
+        }
+    });
 }
 
 /**

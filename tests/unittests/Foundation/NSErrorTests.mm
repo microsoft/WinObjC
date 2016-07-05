@@ -16,6 +16,7 @@
 
 #include <TestFramework.h>
 #include <Foundation\Foundation.h>
+#include <ErrorHandling.h>
 
 TEST(NSError, NSErrorSanity) {
     NSError* error1 = [NSError errorWithDomain:@"TestDomain" code:2 userInfo:@{@1 : @"foo", @2 : @"bar"}];
@@ -26,6 +27,13 @@ TEST(NSError, NSErrorSanity) {
     ASSERT_EQ([error1 hash], [error2 hash]);
     ASSERT_OBJCNE(error1, error3);
     ASSERT_NE([error1 hash], [error3 hash]);
+
+    NSError* error;
+    try {
+        THROW_NS_HR(E_INVALIDARG);
+    }
+    CATCH_POPULATE_NSERROR(&error);
+    LOG_INFO(@"The error is %@", [error description]);
 }
 
 @interface NSTestError : NSError

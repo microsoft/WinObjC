@@ -54,6 +54,10 @@ static const wchar_t* g_logTag = L"UIFont";
 
 NSString* const c_defaultFontName = @"Helvetica";
 
+// keep consistent with UIDescriptor
+// We need to set the maximun of size, since xaml will crash if it is too big.
+static const float c_maxSize = 100.0f;
+
 FT_Library _fontLib;
 FT_MemoryRec_ _fontMemory;
 NSMutableDictionary* _fontList;
@@ -408,7 +412,7 @@ static vector<wstring> _getFontNamesForFamilyName(wchar_t* familyName) {
 + (UIFont*)fontWithName:(NSString*)name size:(float)size {
     UIFont* ret = [self alloc];
 
-    if (size == 0.0f) {
+    if (size <= 0 || size > c_maxSize) {
         size = [self systemFontSize];
     }
 
@@ -449,7 +453,7 @@ static vector<wstring> _getFontNamesForFamilyName(wchar_t* familyName) {
  @Public        Yes
 */
 + (UIFont*)fontWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)fontSize {
-    if (fontSize <= 0.0f) {
+    if (fontSize <= 0 || fontSize > c_maxSize) {
         fontSize = descriptor.pointSize;
     }
 
@@ -594,6 +598,10 @@ void loadFont(UIFont* self) {
 */
 - (UIFont*)fontWithSize:(float)size {
     UIFont* ret = [UIFont alloc];
+
+    if (size <= 0 || size > c_maxSize) {
+        size = [[self class] systemFontSize];
+    }
 
     ret->_font = _font;
     ret->_sizingFont = _sizingFont;

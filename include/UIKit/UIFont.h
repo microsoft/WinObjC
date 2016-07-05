@@ -50,6 +50,7 @@ UIKIT_EXPORT_CLASS
 + (UIFont*)italicSystemFontOfSize:(CGFloat)fontSize;
 
 - (UIFont*)fontWithSize:(CGFloat)fontSize;
+- (UIFontDescriptor*)fontDescriptor;
 
 @property (nonatomic, readonly, retain) NSString* fontName;
 
@@ -61,6 +62,5 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly) CGFloat capHeight;
 @property (nonatomic, readonly, retain) NSString* familyName;
 @property (nonatomic, readonly) CGFloat leading;
-@property (nonatomic, readonly) UIFontDescriptor* fontDescriptor;
 
 @end

@@ -14,21 +14,27 @@
 //
 //******************************************************************************
 
-#pragma once
+#include "UIProgressView.h"
 
-#include "UIView.h"
-
-class UIWindow :
-    public UIView
+UIProgressView::UIProgressView()
 {
-public:
-    bool _visibleAtLaunch;
-    bool _resizesToFullScreen;
+}
 
-    UIWindow();
+void UIProgressView::InitFromXIB(XIBObject *obj)
+{
+    UIView::InitFromXIB(obj);
 
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
+    _outputClassName = "UIProgressView";
+}
 
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
-};
+void UIProgressView::InitFromStory(XIBObject *obj)
+{
+    UIView::InitFromStory(obj);
+
+    _outputClassName = "UIProgressView";
+}
+
+void UIProgressView::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
+{
+    UIView::ConvertStaticMappings(writer, obj);
+}

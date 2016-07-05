@@ -1261,15 +1261,15 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
 #define FAIL_FAST_IF_NULL(ptr) __RFF_FN(FailFast_IfNull)(__RFF_INFO(#ptr) ptr)
 
 // Always fail fast a known failure - fail fast a var-arg message on failure
-#define FAIL_FAST_MSG(hr, fmt, ...) __RFF_FN(FailFast_UnexpectedMsg)(__RFF_INFO(#hr) wil::verify_hresult(hr), fmt, __VA_ARGS__)
+#define FAIL_FAST_MSG(fmt, ...) __RFF_FN(FailFast_UnexpectedMsg)(__RFF_INFO(nullptr) fmt, __VA_ARGS__)
 
 // Conditionally fail fast failures - returns parameter value - fail fast a var-arg message on failure
-#define FAIL_FAST_IF_MSG(hr, condition, fmt, ...) \
-    __RFF_FN(FailFast_IfMsg)(__RFF_INFO(#condition) wil::verify_hresult(hr), wil::verify_bool(condition), fmt, __VA_ARGS__)
-#define FAIL_FAST_IF_FALSE_MSG(hr, condition, fmt, ...) \
-    __RFF_FN(FailFast_IfFalseMsg)(__RFF_INFO(#condition) wil::verify_hresult(hr), wil::verify_bool(condition), fmt, __VA_ARGS__)
-#define FAIL_FAST_IF_NULL_MSG(hr, ptr, fmt, ...) \
-    __RFF_FN(FailFast_IfNullMsg)(__RFF_INFO(#ptr) wil::verify_hresult(hr), ptr, fmt, __VA_ARGS__)
+#define FAIL_FAST_IF_MSG(condition, fmt, ...) \
+    __RFF_FN(FailFast_IfMsg)(__RFF_INFO(#condition) wil::verify_bool(condition), fmt, __VA_ARGS__)
+#define FAIL_FAST_IF_FALSE_MSG(condition, fmt, ...) \
+    __RFF_FN(FailFast_IfFalseMsg)(__RFF_INFO(#condition) wil::verify_bool(condition), fmt, __VA_ARGS__)
+#define FAIL_FAST_IF_NULL_MSG(ptr, fmt, ...) \
+    __RFF_FN(FailFast_IfNullMsg)(__RFF_INFO(#ptr) ptr, fmt, __VA_ARGS__)
 
 // Immediate fail fast (no telemetry - use rarely / only when *already* in an undefined state)
 #define FAIL_FAST_IMMEDIATE() __RFF_FN(FailFastImmediate_Unexpected)()
@@ -3067,10 +3067,16 @@ inline void LogFailure(__R_FN_PARAMS_FULL,
     // Caller bug: Leaking a success code into a failure-only function
     FAIL_FAST_IF(SUCCEEDED(failure->hr) && (type != FailureType::FailFast));
 
+    // TODO: We probably don't want to do this once we've hooked into our logging/telemetry pipeline, 
+    // as that will *also* log to the debugger.
+    // We log to OutputDebugString if:
+    // * Someone set g_fResultOutputDebugString to true (by the calling module or in the debugger)
+    bool const fUseOutputDebugString = g_fResultOutputDebugString;
+
     // We need to generate the logging message if:
     // * We're logging to OutputDebugString
     // * OR the caller asked us to (generally for attaching to a C++/CX exception)
-    if (fWantDebugString) {
+    if (fWantDebugString || fUseOutputDebugString) {
         // Call the logging callback (if present) to allow them to generate the debug string that will be pushed to the console
         // or the platform exception object if the caller desires it.
         if (g_pfnResultLoggingCallback != nullptr) {
@@ -3083,6 +3089,10 @@ inline void LogFailure(__R_FN_PARAMS_FULL,
             GetFailureLogString(debugString, debugStringSizeChars, *failure);
         }
 
+        // Log to the debugger if required
+        if (fUseOutputDebugString) {
+            ::OutputDebugStringW(debugString);
+        }
     } else {
         // [deprecated behavior]
         // This callback was at one point *always* called for all failures, so we continue to call it for failures even when we don't
@@ -4216,7 +4226,7 @@ __RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFast_IfNull)
 }
 
 __RFF_DIRECT_NORET_METHOD(void, FailFast_UnexpectedMsg)
-(__RFF_DIRECT_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
+(__RFF_DIRECT_FN_PARAMS _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     va_list argList;
     va_start(argList, formatString);
     __RFF_FN_LOCALS;
@@ -4230,7 +4240,7 @@ __RFF_INTERNAL_NOINLINE_NORET_METHOD(_FailFast_UnexpectedMsg)
 }
 
 __RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_IfMsg)
-(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
+(__RFF_CONDITIONAL_FN_PARAMS bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (condition) {
         va_list argList;
         va_start(argList, formatString);
@@ -4935,6 +4945,20 @@ static NSString* const g_winobjcDomain = @"WinObjCErrorDomain";
 static NSString* const g_hresultDomain = @"HRESULTErrorDomain";
 static NSString* const g_NSHResultErrorDictKey = @"hresult";
 
+NSString* _NSStringFromHResult(HRESULT hr) {
+    wchar_t errorText[256];
+    errorText[0] = L'\0';
+    auto strLen = FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+        nullptr,
+        hr,
+        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+        errorText,
+        ARRAYSIZE(errorText),
+        nullptr);
+
+    return[NSString stringWithCharacters:reinterpret_cast<const unichar*>(errorText) length:strLen];
+}
+
 // Create the extra information we can communicate as part of the exception:
 NSDictionary* _createFailureInfoDict(const wil::FailureInfo& fi) {
     return @{
@@ -4942,21 +4966,8 @@ NSDictionary* _createFailureInfoDict(const wil::FailureInfo& fi) {
         @"function" : [NSString stringWithUTF8String:fi.pszFunction],
         @"line" : [NSNumber numberWithInt:fi.uLineNumber],
         g_NSHResultErrorDictKey : [NSNumber numberWithInt:fi.hr],
+        NSLocalizedDescriptionKey : [NSString stringWithFormat:@"0x%x: %@", fi.hr, _NSStringFromHResult(fi.hr)],
     };
-}
-
-NSString* _NSStringFromHResult(HRESULT hr) {
-    wchar_t errorText[256];
-    errorText[0] = L'\0';
-    auto strLen = FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                                 nullptr,
-                                 hr,
-                                 MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                                 errorText,
-                                 ARRAYSIZE(errorText),
-                                 nullptr);
-
-    return [NSString stringWithCharacters:reinterpret_cast<const unichar*>(errorText) length:strLen];
 }
 
 // Construct an NSError for the out parameter representing a failure info from WRL:

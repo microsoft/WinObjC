@@ -100,7 +100,7 @@ static void _requestExtendedExecutionSession() {
 static void _removeExtendedExecutionSession() {
     std::lock_guard<std::mutex> lock(s_extendedExecutionMutex);
     // Remove the extended execution session only when there are no more pending requests.
-    FAIL_FAST_IF_MSG(E_UNEXPECTED, (s_extendedExecutionRequestCount == 0), "There is no extended execution session active!");
+    FAIL_FAST_IF_MSG((s_extendedExecutionRequestCount == 0), "There is no extended execution session active!");
     if (--s_extendedExecutionRequestCount == 0) {
         NSTraceInfo(TAG, @"Removing extended execution.");
         [s_uwpExecutionSession removeRevokedEvent:s_uwpEventRegistrationToken];
@@ -302,7 +302,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
 
         accessFailure = ^void(NSError* error) {
             NSTraceInfo(TAG, @"Location authorization error: %@", error);
-            FAIL_FAST_MSG(E_UNEXPECTED, "Unexpected failure while authorizing location.");
+            FAIL_FAST_MSG("Unexpected failure while authorizing location.");
         };
 
         [WDGGeolocator requestAccessAsyncWithSuccess:accessSucess failure:accessFailure];

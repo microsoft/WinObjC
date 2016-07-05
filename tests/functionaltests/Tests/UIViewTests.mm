@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,21 +14,13 @@
 //
 //******************************************************************************
 
-#pragma once
+#include <TestFramework.h>
+#import <Foundation/NSThread.h>
+#import <UIKit/UIView.h>
 
-#include "UIView.h"
+TEST(UIViewTests, Create) {
+    EXPECT_FALSE([NSThread isMainThread]);
 
-class UIWindow :
-    public UIView
-{
-public:
-    bool _visibleAtLaunch;
-    bool _resizesToFullScreen;
-
-    UIWindow();
-
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
-};
+    // Try to create and destroy a UIView on a non-UI thread
+    [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)] release];
+}

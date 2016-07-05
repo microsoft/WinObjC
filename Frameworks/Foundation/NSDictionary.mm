@@ -32,6 +32,7 @@
 #import "NSCFDictionary.h"
 #import "NSRaise.h"
 #import "BridgeHelpers.h"
+#import <_NSKeyValueCodingAggregateFunctions.h>
 
 static const wchar_t* TAG = L"NSDictionary";
 
@@ -260,9 +261,13 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
 - (id)valueForKey:(id)key {
     const char* keyName = (const char*)[key UTF8String];
 
-    if (keyName[0] == '@') {
-        TraceError(L"NSDictionary", L"Unsupported aggregate key %hs", keyName);
-        return nil;
+    if ([key hasPrefix:@"@"]) {
+        SEL sel = [_NSKeyValueCodingAggregateFunctions resolveFunction:[key substringFromIndex:1]];
+        if (sel == nil) {
+            return [self valueForUndefinedKey:key];
+        }
+
+        return [[_NSKeyValueCodingAggregateFunctions class] performSelector:sel withObject:self];
     }
 
     id ret = [self objectForKey:key];
@@ -780,12 +785,10 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
         return;
     }
 
-    _enumerateWithBlock([self keyEnumerator],
-                        options,
-                        ^(id key, BOOL* stop) {
-                            id value = [self objectForKey:key];
-                            block(key, value, stop);
-                        });
+    _enumerateWithBlock([self keyEnumerator], options, ^(id key, BOOL* stop) {
+        id value = [self objectForKey:key];
+        block(key, value, stop);
+    });
 }
 
 /**

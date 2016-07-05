@@ -22,6 +22,7 @@
 #include <StringHelpers.h>
 #include <LoggingNative.h>
 #include <algorithm>
+#include <collection.h>
 
 using namespace concurrency;
 using namespace Platform;

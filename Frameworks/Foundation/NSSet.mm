@@ -27,6 +27,7 @@
 #include "VAListHelper.h"
 #include "NSRaise.h"
 #include "BridgeHelpers.h"
+#import <_NSKeyValueCodingAggregateFunctions.h>
 
 @implementation NSSet
 
@@ -502,12 +503,35 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-- (id)valueForKey:(NSString*)key {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (NSObject*)valueForKey:(NSString*)key {
+    if ([key hasPrefix:@"@"]) {
+        SEL sel = [_NSKeyValueCodingAggregateFunctions resolveFunction:[key substringFromIndex:1]];
+        if (sel == nil) {
+            return [self valueForUndefinedKey:key];
+        }
+
+        return [[_NSKeyValueCodingAggregateFunctions class] performSelector:sel withObject:self];
+    }
+
+    id ret = [NSMutableSet set];
+
+    id enumerator = [self objectEnumerator];
+    id curVal = [enumerator nextObject];
+
+    while (curVal != nil) {
+        id newvalue = [curVal valueForKey:key];
+        if (newvalue == nil) {
+            [ret addObject:[NSNull null]];
+        } else {
+            [ret addObject:newvalue];
+        }
+
+        curVal = [enumerator nextObject];
+    }
+
+    return ret;
 }
 
 /**

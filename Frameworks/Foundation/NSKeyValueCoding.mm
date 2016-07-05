@@ -25,7 +25,8 @@
 #import "NSThread-Internal.h"
 #import "NSValueTransformers.h"
 #import "Starboard.h"
-#include "StubReturn.h"
+#import "StubReturn.h"
+#import <_NSKeyValueCodingAggregateFunctions.h>
 
 #import <unicode/utf8.h>
 
@@ -157,18 +158,18 @@ SEL KVCGetterForPropertyName(NSObject* self, const char* key) {
 
 template <typename T>
 static id quickGet(id self, SEL getter) {
-    T ret = ((T(*)(id, SEL))objc_msgSend)(self, getter);
+    T ret = ((T (*)(id, SEL))objc_msgSend)(self, getter);
     return woc::ValueTransformer<T>::get(&ret);
 }
 
 template <>
 id quickGet<id>(id self, SEL getter) {
-    return ((id(*)(id, SEL))objc_msgSend)(self, getter);
+    return ((id (*)(id, SEL))objc_msgSend)(self, getter);
 }
 
 template <>
 id quickGet<Class>(id self, SEL getter) {
-    return ((id(*)(id, SEL))objc_msgSend)(self, getter);
+    return ((id (*)(id, SEL))objc_msgSend)(self, getter);
 }
 
 bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret) {
@@ -267,6 +268,15 @@ static bool tryGetArrayAdapter(id self, const char* key, id* ret) {
     NSString* key = nil;
     NSString* restOfKeypath;
     key = _NSKVCSplitKeypath(keyPath, &restOfKeypath);
+
+    if ([key hasPrefix:@"@"] && restOfKeypath) {
+        // Recursive call to calculate the actual keypath
+        // If we have a call such as @sum.foo.bar.x.y.z , we want to calculate the results of foo.bar.x.y.z then apply the sum function on
+        // it.
+
+        id value = [self valueForKeyPath:restOfKeypath];
+        return [value valueForKey:key];
+    }
 
     id val = [self valueForKey:key];
 

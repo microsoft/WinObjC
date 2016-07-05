@@ -22,7 +22,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include "Accelerate\cblas.h"
-#include "Accelerate\cblas_f77.h"
+#include "CBLAS/cblas_f77.h"
 
 // Default error handler for BLAS routines 
 // For details, refer to developer.apple.com for cblas_xerbla

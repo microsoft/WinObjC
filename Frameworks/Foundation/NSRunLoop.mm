@@ -521,7 +521,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 
 - (void)_processMainRunLoop:(int)value {
     if ([NSThread currentThread] != [NSThread mainThread]) {
-        FAIL_FAST_MSG(E_UNEXPECTED, "_processMainRunLoop should only be scheduled on the main UI thread!");
+        FAIL_FAST_MSG("_processMainRunLoop should only be scheduled on the main UI thread!");
     }
 
     NSRunLoopState* state = [self _stateForMode:NSDefaultRunLoopMode];

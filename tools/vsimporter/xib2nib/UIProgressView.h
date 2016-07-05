@@ -18,17 +18,14 @@
 
 #include "UIView.h"
 
-class UIWindow :
+class UIProgressView :
     public UIView
 {
 public:
-    bool _visibleAtLaunch;
-    bool _resizesToFullScreen;
-
-    UIWindow();
+    UIProgressView();
 
     virtual void InitFromXIB(XIBObject *obj);
     virtual void InitFromStory(XIBObject *obj);
-
     virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
 };
+

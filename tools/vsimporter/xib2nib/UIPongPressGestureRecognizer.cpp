@@ -14,21 +14,27 @@
 //
 //******************************************************************************
 
-#pragma once
+#include "UIPongPressGestureRecognizer.h"
 
-#include "UIView.h"
-
-class UIWindow :
-    public UIView
+UIPongPressGestureRecognizer::UIPongPressGestureRecognizer()
 {
-public:
-    bool _visibleAtLaunch;
-    bool _resizesToFullScreen;
+}
 
-    UIWindow();
+void UIPongPressGestureRecognizer::InitFromXIB(XIBObject *obj)
+{
+    UIView::InitFromXIB(obj);
 
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
+    _outputClassName = "UIPongPressGestureRecognizer";
+}
 
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
-};
+void UIPongPressGestureRecognizer::InitFromStory(XIBObject *obj)
+{
+    UIView::InitFromStory(obj);
+
+    _outputClassName = "UIPongPressGestureRecognizer";
+}
+
+void UIPongPressGestureRecognizer::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
+{
+    UIView::ConvertStaticMappings(writer, obj);
+}

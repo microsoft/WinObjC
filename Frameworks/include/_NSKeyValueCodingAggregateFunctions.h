@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,22 +13,20 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#include "UIView.h"
+#import <Foundation/NSArray.h>
+#import <Foundation/NSNumber.h>
+#import <Foundation/NSFastEnumeration.h>
 
-class UIWindow :
-    public UIView
-{
-public:
-    bool _visibleAtLaunch;
-    bool _resizesToFullScreen;
-
-    UIWindow();
-
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
-};
+@interface _NSKeyValueCodingAggregateFunctions : NSObject
++ (NSSet*)distinctUnionOfSets:(NSSet*)values;
++ (NSArray*)distinctUnionOfArrays:(NSArray*)values;
++ (NSArray*)distinctUnionOfObjects:(id<NSFastEnumeration>)values;
++ (NSNumber*)count:(id<NSFastEnumeration>)values;
++ (id)min:(id<NSFastEnumeration>)values;
++ (id)max:(id<NSFastEnumeration>)values;
++ (NSNumber*)avg:(id<NSFastEnumeration>)values;
++ (NSNumber*)sum:(id<NSFastEnumeration>)values;
++ (SEL)resolveFunction:(NSString*)fun;
+@end

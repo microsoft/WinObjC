@@ -83,8 +83,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
     unsigned int rawLength;
     const wchar_t* rawEncodedString = WindowsGetStringRawBuffer(encodedString.Get(), &rawLength);
 
-    NSString* nsEncodedString =
-        [[NSString alloc] initWithBytes:rawEncodedString length:(rawLength * sizeof(wchar_t)) encoding:NSUnicodeStringEncoding];
+    NSString* nsEncodedString = [NSString _stringWithHSTRING:encodedString.Get()];
 
     // Do any necessary post-processing for options
     // If line length specified, place a newline character (/r, /n, or /r/n every (specified number) characters)
@@ -123,7 +122,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
     }
 
     // If line length not specified, or newLineCount <= 0, none of the other options matter, just return nsEncodedString
-    return [nsEncodedString autorelease];
+    return nsEncodedString;
 }
 
 /**

@@ -100,7 +100,7 @@ const float c_buttonFontSize = 14.0f;
 + (UIFontDescriptor*)fontDescriptorWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)size {
     UIFontDescriptor* fontDescriptor = [[UIFontDescriptor alloc] init];
     fontDescriptor->_name = descriptor->_name;
-    fontDescriptor->_size = size;
+    fontDescriptor->_size = [UIFontDescriptor _getFallBackFontSize:size];
     fontDescriptor->_traits = descriptor->_traits;
     return [fontDescriptor autorelease];
 }

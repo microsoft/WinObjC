@@ -66,6 +66,9 @@
 #include "UISwipeGestureRecognizer.h"
 #include "UITapGestureRecognizer.h"
 #include "UIStackView.h"
+#include "UIProgressView.h"
+#include "UIPongPressGestureRecognizer.h"
+
 #include <assert.h>
 
 #include "..\WBITelemetry\WBITelemetry.h"
@@ -121,6 +124,10 @@ XIBObject* ObjectConverter::ConverterForObject(const char* className, pugi::xml_
     IS_CONVERTER(ret, className, "IBUISearchDisplayController", UISearchDisplayController)
     IS_CONVERTER(ret, className, "IBUISlider", UISlider)
     IS_CONVERTER(ret, className, "IBNSLayoutConstraint", NSLayoutConstraint)
+
+    // Stubbed implementation
+    IS_CONVERTER(ret, className, "IBUIProgressView", UIProgressView)
+    IS_CONVERTER(ret, className, "IBUIPongPressGestureRecognizer", UIPongPressGestureRecognizer)
 
     if (ret == NULL) {
         ret = new XIBObject();
@@ -189,11 +196,14 @@ XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi:
     IS_CONVERTER(ret, className, "panGestureRecognizer", UIPanGestureRecognizer)
     IS_CONVERTER(ret, className, "swipeGestureRecognizer", UISwipeGestureRecognizer)
     IS_CONVERTER(ret, className, "tapGestureRecognizer", UITapGestureRecognizer)
+    IS_CONVERTER(ret, className, "window", UIWindow)
 
     // Stubbed mapping - full functionality is not provided but these stubs will unblock the import process
     IS_CONVERTER(ret, className, "pageControl", UIPageControl)
     IS_CONVERTER(ret, className, "mapView", MKMapView)
     IS_CONVERTER(ret, className, "stackView", UIStackView)
+    IS_CONVERTER(ret, className, "progressView", UIProgressView)
+    IS_CONVERTER(ret, className, "pongPressGestureRecognizer", UIPongPressGestureRecognizer)
 
     IS_CONVERTER(ret, className, "customObject", ObjectConverterSwapper)
 

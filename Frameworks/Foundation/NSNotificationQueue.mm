@@ -25,7 +25,8 @@
  @Notes
 */
 + (instancetype)defaultQueue {
-    UNIMPLEMENTED();
+    // TODO: Intentionally commented out for now to prevent flooded debug spew from NSRunLoop's usage.
+    // UNIMPLEMENTED();
     return StubReturn();
 }
 

@@ -399,7 +399,7 @@ private:
                 float byValue = [static_cast<NSNumber*>(_byValue) floatValue];
                 _toValue = [[NSNumber numberWithFloat:(fromValue + byValue)] retain];
             } else {
-                FAIL_FAST_MSG(E_UNEXPECTED, "Guaranteed to be taken care of by _createAnimation in CABasicAnimation.");
+                FAIL_FAST_MSG("Guaranteed to be taken care of by _createAnimation in CABasicAnimation.");
             }
         } else if (_toValue != nil) {
             if (_byValue != nil) {
@@ -408,10 +408,10 @@ private:
                 float byValue = [static_cast<NSNumber*>(_byValue) floatValue];
                 _fromValue = [[NSNumber numberWithFloat:(toValue - byValue)] retain];
             } else {
-                FAIL_FAST_MSG(E_UNEXPECTED, "Guaranteed to be taken care of by _createAnimation in CABasicAnimation.");
+                FAIL_FAST_MSG("Guaranteed to be taken care of by _createAnimation in CABasicAnimation.");
             }
         } else if (_byValue != nil) {
-            FAIL_FAST_MSG(E_UNEXPECTED, "Guaranteed to be taken care of by _createAnimation in CABasicAnimation.");
+            FAIL_FAST_MSG("Guaranteed to be taken care of by _createAnimation in CABasicAnimation.");
         } else {
             UNIMPLEMENTED_WITH_MSG("Unsupported when all CABasicAnimation properties are nil");
         }
@@ -679,7 +679,7 @@ private:
                 performOperation(translationFrom, translationBy, translationTo, dimensions, add);
             } else {
                 // Guaranteed to be taken care of by _createAnimation in CABasicAnimation.
-                FAIL_FAST_MSG(E_UNEXPECTED, "Guaranteed to be taken care of by _createAnimation in CABasicAnimation.");
+                FAIL_FAST_MSG("Guaranteed to be taken care of by _createAnimation in CABasicAnimation.");
                 isValid = false;
             }
         } else if (_toValue != nil) {
@@ -698,11 +698,11 @@ private:
                 performOperation(scaleTo, scaleBy, scaleFrom, dimensions, divide);
                 performOperation(translationTo, translationBy, translationFrom, dimensions, subtract);
             } else {
-                FAIL_FAST_MSG(E_UNEXPECTED, "Guaranteed to be taken care of by _createAnimation in CABasicAnimation.");
+                FAIL_FAST_MSG("Guaranteed to be taken care of by _createAnimation in CABasicAnimation.");
                 isValid = false;
             }
         } else if (_byValue != nil) {
-            FAIL_FAST_MSG(E_UNEXPECTED, "Guaranteed to be taken care of by _createAnimation in CABasicAnimation.");
+            FAIL_FAST_MSG("Guaranteed to be taken care of by _createAnimation in CABasicAnimation.");
             isValid = false;
         } else {
             UNIMPLEMENTED_WITH_MSG("Unsupported when all interpolation values are nil");

@@ -119,6 +119,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
     NSRunLoopSource* _runLoopCancelSource;
 
     uint32_t _threadInitializedFuse;
+    NSUInteger _nextTaskIdentifier;
 }
 @property (readwrite, copy) NSURLSessionConfiguration* configuration;
 @property (readwrite, retain) id<NSURLSessionDelegate> delegate;
@@ -264,6 +265,10 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
     _taskRemovalCondition.notify_all();
 }
 
+- (NSUInteger)_nextTaskIdentifier {
+    return InterlockedIncrementNoFence((long*)&_nextTaskIdentifier);
+}
+
 - (_NSURLSessionInflightTaskInfo*)_inflightDataForTask:(NSURLSessionTask*)task {
     std::lock_guard<std::mutex> lock(_mutex);
     return _inflightTasks[task];
@@ -304,7 +309,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
         return nil;
     }
 
-    NSURLSessionDataTask* newTask = [[NSURLSessionDataTask alloc] _initWithTaskDelegate:self configuration:_configuration request:request];
+    NSURLSessionDataTask* newTask = [[NSURLSessionDataTask alloc] _initWithTaskDelegate:self identifier:[self _nextTaskIdentifier] configuration:_configuration request:request];
     [self _registerDataTask:newTask withCompletionHandler:completionHandler];
     return newTask;
 }
@@ -341,7 +346,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
     }
 
     NSURLSessionDownloadTask* newTask =
-        [[NSURLSessionDownloadTask alloc] _initWithTaskDelegate:self configuration:_configuration request:request];
+        [[NSURLSessionDownloadTask alloc] _initWithTaskDelegate:self identifier:[self _nextTaskIdentifier] configuration:_configuration request:request];
     [self _registerDownloadTask:newTask withCompletionHandler:completionHandler];
     return newTask;
 }
@@ -363,7 +368,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
     }
 
     NSURLSessionDownloadTask* newTask =
-        [[NSURLSessionDownloadTask alloc] _initWithTaskDelegate:self configuration:_configuration resumeData:resumeData];
+        [[NSURLSessionDownloadTask alloc] _initWithTaskDelegate:self identifier:[self _nextTaskIdentifier] configuration:_configuration resumeData:resumeData];
     [self _registerDownloadTask:newTask withCompletionHandler:completionHandler];
     return newTask;
 }

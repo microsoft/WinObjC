@@ -23,8 +23,13 @@
 using namespace WEX::Logging;
 using namespace WEX::TestExecution;
 
-// This is an internal method that UIKit exposes solely for the test frameworks' to use.
-extern "C" void UIApplicationMainTest();
+// This is a method that UIKit exposes for the test frameworks to use.
+extern "C" void UIApplicationInitialize(const wchar_t*, const wchar_t*);
+
+static void UIApplicationDefaultInitialize() {
+    // Pass null to indicate default app and app delegate classes
+    UIApplicationInitialize(nullptr, nullptr);
+}
 
 //
 // How is functional test organized?
@@ -92,7 +97,7 @@ public:
     //     2. Use the same mechanism as in TEST_METHOD below to export a method from the WinObjC test file and call it here.
     //     3. If you do not need this functionality feel free to remove this for your test class.
     TEST_CLASS_SETUP(SampleTestClassSetup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationMainTest));
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
     }
 
     // SampleTest test class cleanup.
@@ -156,6 +161,7 @@ public:
 extern void NSURLConnectionRequestWithURL();
 extern void NSURLConnectionRequestWithURL_Failure();
 
+extern void NSURLSessionTaskIdentifiers();
 extern void NSURLSessionDataTaskWithURL();
 extern void NSURLSessionDataTaskWithURL_Failure();
 extern void NSURLSessionDataTaskWithURL_WithCompletionHandler();
@@ -174,7 +180,7 @@ public:
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(NSURLClassSetup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationMainTest));
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
     }
 
     //
@@ -192,6 +198,10 @@ public:
     //
     // NSURLSession
     //
+
+    TEST_METHOD(NSURLSession_TaskIdentifiers) {
+        NSURLSessionTaskIdentifiers();
+    }
 
     TEST_METHOD(NSURLSession_DataTaskWithURL) {
         NSURLSessionDataTaskWithURL();
@@ -242,7 +252,7 @@ public:
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(NSURLClassSetup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationMainTest));
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
     }
 
     TEST_METHOD(NSUserDefaults_Basic) {
@@ -276,7 +286,7 @@ public:
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(NSURLClassSetup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationMainTest));
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
     }
 
     TEST_METHOD(NSBundle_MSAppxURL) {
@@ -299,10 +309,55 @@ public:
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(CortanaTestClassSetup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationMainTest));
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
     }
 
     TEST_METHOD(CortanaTest_VoiceCommandForegroundActivation) {
         CortanaTestVoiceCommandForegroundActivation();
     }
 }; /* class NSBundle */
+
+// UIViewTests
+//
+extern void UIViewTestsCreate();
+
+class UIViewTests {
+public:
+    BEGIN_TEST_CLASS(UIViewTests)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(UIViewTestsSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
+
+    TEST_METHOD(UIViewTests_Create) {
+        UIViewTestsCreate();
+    }
+}; /* class UIViewTests */
+
+// Projection Tests
+//
+extern void ProjectionWUCCoreDispatcherSanity();
+
+class ProjectionTest {
+public:
+    BEGIN_TEST_CLASS(ProjectionTest)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(ProjectionTestClassSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
+
+    TEST_CLASS_CLEANUP(ProjectionTestClassCleanup) {
+        return true;
+    }
+
+    TEST_METHOD(ProjectionTest_WUCCoreDispatcherSanity) {
+        ProjectionWUCCoreDispatcherSanity();
+    }
+
+}; /* class ProjectionTest */
