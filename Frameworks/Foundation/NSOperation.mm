@@ -41,17 +41,20 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 @implementation NSOperation {
     StrongId<NSMutableArray> _dependencies;
-    void (^_completionBlock)(void);
+    StrongId<void(^)()> _completionBlock;
     std::condition_variable_any _finishCondition;
     std::recursive_mutex _finishLock;
     std::recursive_mutex _dependenciesLock;
     std::recursive_mutex _completionBlockLock;
+    std::recursive_mutex _readyLock;
 }
 
 @synthesize cancelled = _cancelled;
 @synthesize executing = _executing;
 @synthesize finished = _finished;
 @synthesize ready = _ready;
+
+static const NSString* NSOperationContext = @"context";
 
 /**
  @Status Interoperable
@@ -62,11 +65,12 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 }
 
 - (void)_checkReady {
+    std::lock_guard<std::recursive_mutex> lock(_readyLock);
     bool newReady = YES;
 
     // If cancelled, skip this logic and set _ready to YES. Otherwise check dependencies.
     if (![self isCancelled]) {
-        _dependenciesLock.lock();
+        std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
         int count = [_dependencies count];
 
         for (int i = 0; i < count; i++) {
@@ -76,8 +80,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
                 newReady = NO;
             }
         }
-
-        _dependenciesLock.unlock();
     }
 
     if (_ready != newReady) {
@@ -88,7 +90,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 }
 
 - (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
-    if ([keyPath isEqualToString:@"isFinished"]) {
+    if (context == (void*)NSOperationContext) {
         if (object == self) {
             _finishLock.lock();
             _finishCondition.notify_all();
@@ -103,7 +105,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     if (self = [super init]) {
         _dependencies.attach([NSMutableArray new]);
         _ready = YES;
-        [self addObserver:self forKeyPath:@"isFinished" options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"isFinished" options:0 context:(void*)NSOperationContext];
     }
 
     return self;
@@ -113,6 +115,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  @Status Interoperable
 */
 - (BOOL)isReady {
+    std::lock_guard<std::recursive_mutex> lock(_readyLock);
     return _ready;
 }
 
@@ -120,11 +123,10 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  @Status Interoperable
 */
 - (void)addDependency:(id)operation {
+    std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
     [self willChangeValueForKey:@"dependencies"];
-    _dependenciesLock.lock();
     [_dependencies addObject:operation];
-    [operation addObserver:self forKeyPath:@"isFinished" options:0 context:NULL];
-    _dependenciesLock.unlock();
+    [operation addObserver:self forKeyPath:@"isFinished" options:0 context:(void*)NSOperationContext];
     [self didChangeValueForKey:@"dependencies"];
     [self _checkReady];
 }
@@ -133,13 +135,15 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  @Status Interoperable
 */
 - (void)removeDependency:(NSOperation*)operation {
-    [self willChangeValueForKey:@"dependencies"];
-    _dependenciesLock.lock();
-    [operation removeObserver:self forKeyPath:@"isFinished" context:NULL];
-    [_dependencies removeObject:operation];
-    _dependenciesLock.unlock();
-    [self didChangeValueForKey:@"dependencies"];
-    [self _checkReady];
+    std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
+    NSUInteger index = [_dependencies indexOfObject:operation];
+    if (index != NSNotFound) {
+        [self willChangeValueForKey:@"dependencies"];
+        [operation removeObserver:self forKeyPath:@"isFinished" context:(void*)NSOperationContext];
+        [_dependencies removeObject:operation];
+        [self didChangeValueForKey:@"dependencies"];
+        [self _checkReady];
+    }
 }
 
 
@@ -162,11 +166,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  @Status Interoperable
 */
 - (void)setCompletionBlock:(void (^)(void))block {
+    std::lock_guard<std::recursive_mutex> lock(_completionBlockLock);
     [self willChangeValueForKey:@"completionBlock"];
-    _completionBlockLock.lock();
-    [_completionBlock release];
-    _completionBlock = [block copy];
-    _completionBlockLock.unlock();
+    _completionBlock = block;
     [self didChangeValueForKey:@"completionBlock"];
 }
 
@@ -174,16 +176,15 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  @Status Interoperable
 */
 - (void (^)(void))completionBlock {
-    _completionBlockLock.lock();
-    id ret = [[_completionBlock retain] autorelease];
-    _completionBlockLock.unlock();
-    return ret;
+    std::lock_guard<std::recursive_mutex> lock(_completionBlockLock);
+    return [[_completionBlock retain] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)isCancelled {
+    std::lock_guard<std::recursive_mutex> lock(_finishLock);
     return _cancelled;
 }
 
@@ -276,12 +277,11 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  @Status Interoperable
 */
 - (void)cancel {
+    std::lock_guard<std::recursive_mutex> lock(_finishLock);
     if (_cancelled == NO) {
-        _finishLock.lock();
         [self willChangeValueForKey:@"isCancelled"];
         _cancelled = YES;
         [self didChangeValueForKey:@"isCancelled"];
-        _finishLock.unlock();
         [self _checkReady];
     }
 }
@@ -308,9 +308,8 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  @Status Interoperable
 */
 - (NSArray*)dependencies {
-    _dependenciesLock.lock();
+    std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
     NSArray* copy = [[_dependencies copy] autorelease];
-    _dependenciesLock.unlock();
     return copy;
 }
 
@@ -322,12 +321,11 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     int count = [_dependencies count];
     for (int i = 0; i < count; i++) {
         id op = [_dependencies objectAtIndex:i];
-        [op removeObserver:self forKeyPath:@"isFinished" context:NULL];
+        [op removeObserver:self forKeyPath:@"isFinished" context:(void*)NSOperationContext];
     }
 
     _dependenciesLock.unlock();
-    [self removeObserver:self forKeyPath:@"isFinished" context:NULL];
-    [_completionBlock release];
+    [self removeObserver:self forKeyPath:@"isFinished" context:(void*)NSOperationContext];
     [super dealloc];
 }
 

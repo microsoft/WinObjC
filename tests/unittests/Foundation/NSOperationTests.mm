@@ -312,6 +312,14 @@ TEST(NSOperation, NSOperationMultipleWaiters) {
     ASSERT_TRUE([operation isFinished]);
 }
 
+TEST(NSOperation, NSDependencyRemove) {
+    // tests that nothing happens when a dependency is removed that was never added.
+    NSOperation* operation = [[NSOperation new] autorelease];
+    NSOperation* dependency = [[NSOperation new] autorelease];
+
+    ASSERT_NO_THROW([operation removeDependency:dependency]);
+}
+
 TEST(NSOperation, NSOperationIsReady) {
     NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
     TestObserver* observer = [[TestObserver new] autorelease];
