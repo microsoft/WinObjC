@@ -79,3 +79,14 @@ TEST(NSUserDefaults, Flush) {
     [[NSUserDefaults standardUserDefaults] setObject:@"Cheddar" forKey:@"FavoriteCheese"];
     CFPreferencesFlushCaches();
 }
+
+TEST(NSUserDefaults, Perf) {
+    for (int i = 0; i < 500; i++) {
+        [[NSUserDefaults standardUserDefaults] setValue:@(i) forKey:[NSString stringWithFormat:@"Test%d", i]];
+    }
+
+    NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    NSTimeInterval end = [NSDate timeIntervalSinceReferenceDate];
+    LOG_INFO("Synchronize took %lf s", end - start);
+}

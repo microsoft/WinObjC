@@ -19,6 +19,7 @@
 #include "Foundation/NSError.h"
 #include "NSCFError.h"
 #include "BridgeHelpers.h"
+#include "ForFoundationOnly.h"
 
 /* Error Domains */
 NSString* const NSOSStatusErrorDomain = @"NSOSStatusErrorDomain";
@@ -45,9 +46,23 @@ NSString* const NSURLErrorFailingURLErrorKey = @"NSURLErrorFailingURLErrorKey";
 NSString* const NSURLErrorFailingURLStringErrorKey = @"NSURLErrorFailingURLStringErrorKey";
 NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPeerTrustErrorKey";
 
-@implementation NSError
+@implementation NSError {
+    uint8_t _cfinfo[4]; // Maintains same memory layout as CFRuntime
+#if __LP64__ // From CFRuntimeBase
+    uint32_t _rc;
+#endif
+    NSInteger _code;
+    StrongId<NSString> _domain;
+    StrongId<NSDictionary> _userInfo;
+}
 
-BASE_CLASS_REQUIRED_IMPLS(NSError, NSErrorPrototype, CFErrorGetTypeID);
++ (void)initialize {
+    [NSCFError class];
+}
+
+- (CFTypeID)_cfTypeID {
+    return CFErrorGetTypeID();
+}
 
 /**
  @Status Interoperable
@@ -60,50 +75,64 @@ BASE_CLASS_REQUIRED_IMPLS(NSError, NSErrorPrototype, CFErrorGetTypeID);
  @Status Interoperable
 */
 - (instancetype)initWithDomain:(NSString*)domain code:(NSInteger)code userInfo:(NSDictionary*)dict {
-    // Derived classes are required to implement this initializer.
-    return NSInvalidAbstractInvocationReturn();
+    if (self = [super init]) {
+        _code = code;
+        _domain.attach([domain copy]);
+        _userInfo.attach([dict copy]);
+    }
+
+    return self;
 }
 
 /**
  @Status Interoperable
 */
 - (NSString*)description {
-    return [self localizedDescription];
+    return [(__bridge NSString*)_CFErrorCreateLocalizedDescription((__bridge CFErrorRef)self) autorelease];
+}
+
+- (NSString*)debugDescription {
+    return [(__bridge NSString*)_CFErrorCreateDebugDescription((__bridge CFErrorRef)self) autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (NSString*)domain {
-    return NSInvalidAbstractInvocationReturn();
+    return [[_domain retain] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (int)code {
-    return NSInvalidAbstractInvocationReturn();
+- (NSInteger)code {
+    return _code;
 }
 
 /**
  @Status Interoperable
 */
 - (NSDictionary*)userInfo {
-    return NSInvalidAbstractInvocationReturn();
+    return [[_userInfo retain] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (NSString*)localizedDescription {
-    return NSInvalidAbstractInvocationReturn();
+    NSString* description = [_userInfo objectForKey:NSLocalizedDescriptionKey];
+    if (nil != description) {
+        return description;
+    }
+
+    return [NSString stringWithFormat:@"Error Domain=%@ Code=%ld \"%@\"", (id)_domain, (long)_code, (id)_userInfo];
 }
 
 /**
  @Status Interoperable
 */
 - (NSString*)localizedFailureReason {
-    return NSInvalidAbstractInvocationReturn();
+    return [_userInfo objectForKey:NSLocalizedFailureReasonErrorKey];
 }
 
 /**
@@ -151,8 +180,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSError, NSErrorPrototype, CFErrorGetTypeID);
         return NO;
     }
 
-    return ([[self domain] isEqual:[other domain]] && [self code] == [other code] && [[self userInfo] isEqual:[other userInfo]] &&
-            [[self localizedDescription] isEqual:[other localizedDescription]]);
+    return ([[self domain] isEqual:[other domain]] && [self code] == [other code] && [[self userInfo] isEqual:[other userInfo]]);
 }
 
 /**

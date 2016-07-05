@@ -463,7 +463,7 @@ static void* s_kvoObservationInfoAssociationKey; // has no value; pointer used a
     rootObserver.root = true;
 
     if ((options & NSKeyValueObservingOptionInitial)) {
-        NSMutableDictionary* change = [NSMutableDictionary dictionary];
+        NSMutableDictionary* change = [NSMutableDictionary dictionaryWithObjectsAndKeys:@(NSKeyValueChangeSetting), NSKeyValueChangeKindKey, nil];
 
         if ((options & NSKeyValueObservingOptionNew)) {
             id newValue = [self valueForKeyPath:keyPath] ?: [NSNull null];

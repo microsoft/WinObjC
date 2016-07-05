@@ -20,6 +20,7 @@
 #import <Foundation/NSMutableAttributedString.h>
 
 @class NSLayoutManager;
+@protocol NSTextStorageDelegate;
 
 typedef enum {
     NSTextStorageEditedAttributes = 0x01,
@@ -33,7 +34,7 @@ UIKIT_EXPORT NSString* const NSTextStorageWillProcessEditingNotification;
 UIKIT_EXPORT_CLASS
 @interface NSTextStorage : NSMutableAttributedString
 @property (nonatomic) CGSize size;
-@property (assign, nonatomic) id delegate STUB_PROPERTY;
+@property (assign, nonatomic) id<NSTextStorageDelegate> delegate STUB_PROPERTY;
 @property (readonly, nonatomic) NSTextStorageEditActions editedMask STUB_PROPERTY;
 @property (readonly, nonatomic) NSInteger changeInLength STUB_PROPERTY;
 @property (readonly, nonatomic) NSRange editedRange STUB_PROPERTY;

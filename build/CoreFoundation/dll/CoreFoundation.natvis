@@ -95,24 +95,6 @@
         </Expand>
     </Type>
 
-    <!-- NSConstantString is always UTF-8. It is emitted by the compiler. -->
-    <Type Name="NSConstantString">
-        <DisplayString>{c_string,[len]s8}</DisplayString>
-        <StringView>c_string,[len]s8</StringView>
-        <Expand HideRawView="true">
-            <ExpandedItem>*(NSObject*)this</ExpandedItem>
-        </Expand>
-    </Type>
-
-    <!-- Since any CFStringRef can point to any NSString, we have to go through the NSObject renderer. -->
-    <Type Name="__CFString">
-        <DisplayString>{*(NSObject*)this,na}</DisplayString>
-        <StringView>*(NSObject*)this,na</StringView>
-        <Expand HideRawView="true">
-            <ExpandedItem>*(NSObject*)this</ExpandedItem>
-        </Expand>
-    </Type>
-
     <!--
         CFNumber's low CFInfo bits (CFNumber.c:483)
         32                            0
@@ -144,14 +126,6 @@
             <ExpandedItem>*(CoreFoundation.dll!__CFNumber*)this,view(CF)</ExpandedItem>
             -->
             <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFNumber*)this,!</Item>
-        </Expand>
-    </Type>
-
-    <!-- Since any CFNumberRef can point to any NSNumber, we have to go through the NSObject renderer. -->
-    <Type Name="__CFNumber">
-        <DisplayString>{*(NSObject*)this,na}</DisplayString>
-        <Expand HideRawView="true">
-            <ExpandedItem>*(NSObject*)this</ExpandedItem>
         </Expand>
     </Type>
 
@@ -235,14 +209,6 @@
         </Expand>
     </Type>
 
-    <!-- Since any CFArrayRef can point to any NSArray, we have to go through the NSObject renderer. -->
-    <Type Name="__CFArray">
-        <DisplayString>{*(NSObject*)this,na}</DisplayString>
-        <Expand HideRawView="true">
-            <ExpandedItem>*(NSObject*)this</ExpandedItem>
-        </Expand>
-    </Type>
-
     <!--
         CFBasicHash's low CFInfo bits (CFBasicHash.h:73)
         32                            0
@@ -287,14 +253,6 @@
         </Expand>
     </Type>
 
-    <!-- Since any __CFBasicHash can point to any NSDictionary/NSSet, we have to go through the NSObject renderer. -->
-    <Type Name="__CFBasicHash">
-        <DisplayString>{*(NSObject*)this,na}</DisplayString>
-        <Expand HideRawView="true">
-            <ExpandedItem>*(NSObject*)this</ExpandedItem>
-        </Expand>
-    </Type>
-
     <!--
         CFData's low CFInfo bits (CFData.c:61)
         32                            0
@@ -331,14 +289,6 @@
                     </ArrayItems>
                 </Expand>
             </Synthetic>
-        </Expand>
-    </Type>
-
-    <!-- Since any __CFData can point to any NSData, we have to go through the NSObject renderer. -->
-    <Type Name="__CFData">
-        <DisplayString>{*(NSObject*)this,na}</DisplayString>
-        <Expand HideRawView="true">
-            <ExpandedItem>*(NSObject*)this</ExpandedItem>
         </Expand>
     </Type>
 </AutoVisualizer>

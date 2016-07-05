@@ -278,9 +278,28 @@ static void initInternal(UISearchBar* self) {
     [self->_promptLabel setText:_prompt];
 
     // display the textField
-    CGFloat textFieldOriginY = self.frame.size.height - c_defaultTextFieldHeight - c_marginBottom;
+    CGFloat textFieldHeight = c_defaultTextFieldHeight;
+
+    // When prompt text is available, we display the textfield at the bottom of UISearchBar, else we display the textField at the center of
+    // UISearchBar
+    // This is consistent with ios behaviour
+    CGFloat textFieldOriginY;
+    if ([_prompt length] == 0) {
+        if (self.frame.size.height < c_defaultTextFieldHeight) {
+            textFieldHeight = self.frame.size.height;
+        }
+
+        textFieldOriginY = (self.frame.size.height - textFieldHeight) / 2;
+    } else {
+        textFieldOriginY = self.frame.size.height - c_defaultTextFieldHeight - c_marginBottom;
+        if (textFieldOriginY < 0) {
+            textFieldOriginY = 0;
+            textFieldHeight = self.frame.size.height;
+        }
+    }
+
     CGRect textFrame = { { c_marginLeftAndRight, textFieldOriginY },
-                         { self.frame.size.width - (2 * c_marginLeftAndRight), c_defaultTextFieldHeight } };
+                         { self.frame.size.width - (2 * c_marginLeftAndRight), textFieldHeight } };
 
     // display the cancelButton on right side of textField
     if (_showsCancelButton) {
