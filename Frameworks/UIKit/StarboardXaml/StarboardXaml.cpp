@@ -238,14 +238,20 @@ void UIApplicationInitialize(const wchar_t* principalClassName, const wchar_t* d
     _ApplicationLaunch(ActivationTypeNone, nullptr);
 }
 
+// Note: Like UIApplicationMain, delegateClassName is actually an NSString*.
 UIKIT_EXPORT
-void UIApplicationActivationTest(IInspectable* activationArgs, wchar_t* delegateName){
+void UIApplicationActivationTest(IInspectable* activationArgs, void* delegateClassName){
     // Initialize COM on this thread
     ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
     // Register tracelogging
     TraceRegister();
-    g_delegateClassName = ref new Platform::String(delegateName);
+
+    if (delegateClassName) {
+        auto rawString = _RawBufferFromNSString(delegateClassName);
+        g_delegateClassName = reinterpret_cast<Platform::String^>(Strings::NarrowToWide<HSTRING>(rawString).Detach());
+    }
+
     _ApplicationActivate(reinterpret_cast<Platform::Object^>(activationArgs));
 }
 

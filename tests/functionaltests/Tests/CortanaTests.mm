@@ -36,7 +36,7 @@ using namespace ABI::Windows::Foundation;
 using namespace Microsoft::WRL;
 
 // Method to call in tests to activate app
-extern "C" void UIApplicationActivationTest(IInspectable* args, wchar_t* delegateName);
+extern "C" void UIApplicationActivationTest(IInspectable* args, void* delegateClassName);
 
 MOCK_CLASS(MockSpeechRecognitionResult,
            public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, ISpeechRecognitionResult, ISpeechRecognitionResult2> {
@@ -231,7 +231,8 @@ TEST(CortanaTest, VoiceCommandForegroundActivation) {
 
     // Pass activation argument to method which activates the app
     auto args = fakeVoiceCommandActivatedEventArgs.Detach();
-    UIApplicationActivationTest(reinterpret_cast<IInspectable*>(args), L"CortanaVoiceCommandForegroundTestDelegate");
+    UIApplicationActivationTest(reinterpret_cast<IInspectable*>(args),
+                                NSStringFromClass([CortanaVoiceCommandForegroundTestDelegate class]));
 }
 
 TEST(CortanaTest, VoiceCommandForegroundActivationDelegateMethodsCalled) {
@@ -274,7 +275,7 @@ TEST(CortanaTest, ProtocolForegroundActivation) {
 
     // Pass activation argument to method which activates the app
     auto args = fakeProtocolActivatedEventArgs.Detach();
-    UIApplicationActivationTest(reinterpret_cast<IInspectable*>(args), L"CortanaProtocolForegroundTestDelegate");
+    UIApplicationActivationTest(reinterpret_cast<IInspectable*>(args), NSStringFromClass([CortanaProtocolForegroundTestDelegate class]));
 }
 
 TEST(CortanaTest, ProtocolForegroundActivationDelegateMethodsCalled) {
