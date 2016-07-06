@@ -707,11 +707,14 @@ CF_INLINE uintptr_t __CFISAForTypeID(CFTypeID typeID) {
 CF_INLINE bool __CF_IsBridgedObject(CFTypeRef obj) {
     CFRuntimeBase* object = (CFRuntimeBase*)obj;
     if (!object || 
-        (object->_cfisa == 0) || 
-        (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFString)) || 
+        (object->_cfisa == 0)) {
+        return false;
+    }
+
+    if ((object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFString)) || 
         (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFNumber)) || 
         (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFBoolean))) {
-        return false;
+        return true;
     }
 
     for (unsigned int i = 0; i < __CFRuntimeClassTableSize; i++) {
