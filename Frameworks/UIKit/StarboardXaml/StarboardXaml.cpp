@@ -239,13 +239,13 @@ void UIApplicationInitialize(const wchar_t* principalClassName, const wchar_t* d
 }
 
 UIKIT_EXPORT
-void UIApplicationActivationTest(IInspectable* activationArgs){
+void UIApplicationActivationTest(IInspectable* activationArgs, wchar_t* delegateName){
     // Initialize COM on this thread
     ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
     // Register tracelogging
     TraceRegister();
-
+	g_delegateClassName = ref new Platform::String(delegateName);
     _ApplicationActivate(reinterpret_cast<Platform::Object^>(activationArgs));
 }
 

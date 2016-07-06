@@ -36,11 +36,7 @@ using namespace ABI::Windows::Foundation;
 using namespace Microsoft::WRL;
 
 // Method to call in tests to activate app
-extern "C" void UIApplicationActivationTest(IInspectable* args);
-
-// These are for testing that delegate methods are actually called
-static NSMutableDictionary* cortanaVoiceCommandForegroundDelegateMethodsCalled = [NSMutableDictionary new];
-static NSMutableDictionary* cortanaProtocolForegroundDelegateMethodsCalled = [NSMutableDictionary new];
+extern "C" void UIApplicationActivationTest(IInspectable* args, wchar_t* delegateName);
 
 MOCK_CLASS(MockSpeechRecognitionResult,
            public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, ISpeechRecognitionResult, ISpeechRecognitionResult2> {
@@ -129,15 +125,23 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
 // Delegate for testing Cortana foreground activation
 // Use text value to guarantee it is the same argument we create
 @interface CortanaVoiceCommandForegroundTestDelegate : NSObject <UIApplicationDelegate>
+@property (nonatomic, readonly) NSMutableDictionary* methodsCalled;
 @end
 
 @implementation CortanaVoiceCommandForegroundTestDelegate
+- (id)init {
+    self = [super init];
+    if (self) {
+        _methodsCalled = [NSMutableDictionary new];
+    }
+    return self;
+}
+
 - (BOOL)application:(UIApplication*)application willFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsVoiceCommandKey]);
     WMSSpeechRecognitionResult* result = launchOptions[UIApplicationLaunchOptionsVoiceCommandKey];
     ASSERT_STREQ("CORTANA_TEST", [result.text UTF8String]);
-    ASSERT_TRUE(cortanaVoiceCommandForegroundDelegateMethodsCalled);
-    [cortanaVoiceCommandForegroundDelegateMethodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
+    [[self methodsCalled] setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
 
@@ -145,26 +149,38 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
     ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsVoiceCommandKey]);
     WMSSpeechRecognitionResult* result = launchOptions[UIApplicationLaunchOptionsVoiceCommandKey];
     ASSERT_STREQ("CORTANA_TEST", [result.text UTF8String]);
-    [cortanaVoiceCommandForegroundDelegateMethodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
+    [[self methodsCalled] setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
 
 - (BOOL)application:(UIApplication*)application didReceiveVoiceCommand:(WMSSpeechRecognitionResult*)result {
+    // Delegate method should only be called once
+    ASSERT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
     ASSERT_STREQ("CORTANA_TEST", [result.text UTF8String]);
-    [cortanaVoiceCommandForegroundDelegateMethodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
+    [[self methodsCalled] setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
+
 @end
 
 @interface CortanaProtocolForegroundTestDelegate : NSObject <UIApplicationDelegate>
+@property (nonatomic, readonly) NSMutableDictionary* methodsCalled;
 @end
 
 @implementation CortanaProtocolForegroundTestDelegate
+- (id)init {
+    self = [super init];
+    if (self) {
+        _methodsCalled = [NSMutableDictionary new];
+    }
+    return self;
+}
+
 - (BOOL)application:(UIApplication*)application willFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsProtocolKey]);
     WFUri* uri = launchOptions[UIApplicationLaunchOptionsProtocolKey];
     ASSERT_STREQ("CORTANA_TEST", [uri.toString UTF8String]);
-    [cortanaProtocolForegroundDelegateMethodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
+    [[self methodsCalled] setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
 
@@ -172,32 +188,18 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
     ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsProtocolKey]);
     WFUri* uri = launchOptions[UIApplicationLaunchOptionsProtocolKey];
     ASSERT_STREQ("CORTANA_TEST", [uri.toString UTF8String]);
-    [cortanaProtocolForegroundDelegateMethodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
+    [[self methodsCalled] setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
 
 - (BOOL)application:(UIApplication*)application didReceiveProtocol:(WFUri*)uri {
+    // Delegate method should only be called once
+    ASSERT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
     ASSERT_STREQ("CORTANA_TEST", [uri.toString UTF8String]);
-    [cortanaProtocolForegroundDelegateMethodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
+    [[self methodsCalled] setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
 @end
-
-// Create method in UIApplication to swizzle setDelegate: so we can use our delegate for testing
-@interface UIApplication (CortanaForegroundTest)
-- (void)swizzleVoiceCommandDelegate:(id)delegateAddr;
-- (void)swizzleProtocolDelegate:(id)delegateAddr;
-@end
-
-@implementation UIApplication (CortanaForegroundTest)
-- (void)swizzleVoiceCommandDelegate:(id)delegateAddr {
-    [self swizzleVoiceCommandDelegate:[CortanaVoiceCommandForegroundTestDelegate new]];
-}
-- (void)swizzleProtocolDelegate:(id)delegateAddr {
-    [self swizzleProtocolDelegate:[CortanaProtocolForegroundTestDelegate new]];
-}
-@end
-
 // Creates test method which we call in TEST_CLASS_SETUP to activate app
 TEST(CortanaTest, VoiceCommandForegroundActivation) {
     LOG_INFO("CortanaTest Voice Command Foreground Activation Test: ");
@@ -227,23 +229,18 @@ TEST(CortanaTest, VoiceCommandForegroundActivation) {
         return S_OK;
     });
 
-    // Swizzle method to use our delegate for testing
-    Method originalMethod = class_getInstanceMethod([UIApplication class], @selector(setDelegate:));
-    Method swizzledMethod = class_getInstanceMethod([UIApplication class], @selector(swizzleVoiceCommandDelegate:));
-    method_exchangeImplementations(originalMethod, swizzledMethod);
-
     // Pass activation argument to method which activates the app
     auto args = fakeVoiceCommandActivatedEventArgs.Detach();
-    UIApplicationActivationTest(reinterpret_cast<IInspectable*>(args));
-
-    // Un-Swizzle the methods now that we are done
-    method_exchangeImplementations(originalMethod, swizzledMethod);
+    UIApplicationActivationTest(reinterpret_cast<IInspectable*>(args), L"CortanaVoiceCommandForegroundTestDelegate");
 }
 
 TEST(CortanaTest, VoiceCommandForegroundActivationDelegateMethodsCalled) {
-    ASSERT_TRUE(cortanaVoiceCommandForegroundDelegateMethodsCalled[@"application:willFinishLaunchingWithOptions:"]);
-    ASSERT_TRUE(cortanaVoiceCommandForegroundDelegateMethodsCalled[@"application:didFinishLaunchingWithOptions:"]);
-    ASSERT_TRUE(cortanaVoiceCommandForegroundDelegateMethodsCalled[@"application:didReceiveVoiceCommand:"]);
+    CortanaVoiceCommandForegroundTestDelegate* testDelegate = [[UIApplication sharedApplication] delegate];
+    NSDictionary* methodsCalled = [testDelegate methodsCalled];
+    ASSERT_TRUE(methodsCalled);
+    ASSERT_TRUE([methodsCalled objectForKey:@"application:willFinishLaunchingWithOptions:"]);
+    ASSERT_TRUE([methodsCalled objectForKey:@"application:didFinishLaunchingWithOptions:"]);
+    ASSERT_TRUE([methodsCalled objectForKey:@"application:didReceiveVoiceCommand:"]);
 }
 
 // Creates test method which we call in TEST_CLASS_SETUP to activate app
@@ -275,21 +272,16 @@ TEST(CortanaTest, ProtocolForegroundActivation) {
         return S_OK;
     });
 
-    // Swizzle method to use our delegate for testing
-    Method originalMethod = class_getInstanceMethod([UIApplication class], @selector(setDelegate:));
-    Method swizzledMethod = class_getInstanceMethod([UIApplication class], @selector(swizzleProtocolDelegate:));
-    method_exchangeImplementations(originalMethod, swizzledMethod);
-
     // Pass activation argument to method which activates the app
     auto args = fakeProtocolActivatedEventArgs.Detach();
-    UIApplicationActivationTest(reinterpret_cast<IInspectable*>(args));
-
-    // Un-Swizzle the methods now that we are done
-    method_exchangeImplementations(originalMethod, swizzledMethod);
+    UIApplicationActivationTest(reinterpret_cast<IInspectable*>(args), L"CortanaProtocolForegroundTestDelegate");
 }
 
 TEST(CortanaTest, ProtocolForegroundActivationDelegateMethodsCalled) {
-    ASSERT_TRUE(cortanaProtocolForegroundDelegateMethodsCalled[@"application:willFinishLaunchingWithOptions:"]);
-    ASSERT_TRUE(cortanaProtocolForegroundDelegateMethodsCalled[@"application:didFinishLaunchingWithOptions:"]);
-    ASSERT_TRUE(cortanaProtocolForegroundDelegateMethodsCalled[@"application:didReceiveProtocol:"]);
+    CortanaProtocolForegroundTestDelegate* testDelegate = [[UIApplication sharedApplication] delegate];
+    NSDictionary* methodsCalled = [testDelegate methodsCalled];
+    ASSERT_TRUE(methodsCalled);
+    ASSERT_TRUE([methodsCalled objectForKey:@"application:willFinishLaunchingWithOptions:"]);
+    ASSERT_TRUE([methodsCalled objectForKey:@"application:didFinishLaunchingWithOptions:"]);
+    ASSERT_TRUE([methodsCalled objectForKey:@"application:didReceiveProtocol:"]);
 }
