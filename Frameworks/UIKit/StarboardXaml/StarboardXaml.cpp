@@ -152,7 +152,7 @@ extern "C" void _ApplicationActivate(Platform::Object^ arguments) {
 
     if (args->Kind == ActivationKind::ToastNotification) {
         Platform::String^ argsString = safe_cast<ToastNotificationActivatedEventArgs^>(args)->Argument;
-        TraceVerbose(TAG, L"Received toast notification with argument - %s", argsString->Data());
+        TraceVerbose(TAG, L"Received toast notification with argument - %ls", argsString->Data());
 
         if (initiateAppLaunch) {
             _ApplicationLaunch(ActivationTypeToast, argsString);
@@ -161,7 +161,7 @@ extern "C" void _ApplicationActivate(Platform::Object^ arguments) {
         UIApplicationMainHandleToastNotificationEvent(Strings::WideToNarrow(argsString->Data()).c_str());
     } else if (args->Kind == ActivationKind::VoiceCommand) {
         Windows::Media::SpeechRecognition::SpeechRecognitionResult^ argResult = safe_cast<VoiceCommandActivatedEventArgs^>(args)->Result;
-        TraceVerbose(TAG, L"Received voice command with argument - %s", argResult->Text->Data());
+        TraceVerbose(TAG, L"Received voice command with argument - %ls", argResult->Text->Data());
 
         if (initiateAppLaunch) {
             _ApplicationLaunch(ActivationTypeVoiceCommand, argResult);
@@ -170,7 +170,7 @@ extern "C" void _ApplicationActivate(Platform::Object^ arguments) {
         UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(argResult));
     } else if (args->Kind == ActivationKind::Protocol) {
         Windows::Foundation::Uri^ argUri = safe_cast<ProtocolActivatedEventArgs^>(args)->Uri;
-        TraceVerbose(TAG, L"Received protocol with uri- %s", argUri->ToString()->Data());
+        TraceVerbose(TAG, L"Received protocol with uri- %ls", argUri->ToString()->Data());
 
         if (initiateAppLaunch) {
             _ApplicationLaunch(ActivationTypeProtocol, argUri);
@@ -245,7 +245,7 @@ void UIApplicationActivationTest(IInspectable* activationArgs, wchar_t* delegate
 
     // Register tracelogging
     TraceRegister();
-	g_delegateClassName = ref new Platform::String(delegateName);
+    g_delegateClassName = ref new Platform::String(delegateName);
     _ApplicationActivate(reinterpret_cast<Platform::Object^>(activationArgs));
 }
 

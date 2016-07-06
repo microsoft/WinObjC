@@ -141,7 +141,7 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
     ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsVoiceCommandKey]);
     WMSSpeechRecognitionResult* result = launchOptions[UIApplicationLaunchOptionsVoiceCommandKey];
     ASSERT_STREQ("CORTANA_TEST", [result.text UTF8String]);
-    [[self methodsCalled] setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
+    _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
 
@@ -149,7 +149,7 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
     ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsVoiceCommandKey]);
     WMSSpeechRecognitionResult* result = launchOptions[UIApplicationLaunchOptionsVoiceCommandKey];
     ASSERT_STREQ("CORTANA_TEST", [result.text UTF8String]);
-    [[self methodsCalled] setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
+    _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
 
@@ -157,7 +157,7 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
     // Delegate method should only be called once
     ASSERT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
     ASSERT_STREQ("CORTANA_TEST", [result.text UTF8String]);
-    [[self methodsCalled] setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
+    _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
 
@@ -180,7 +180,7 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
     ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsProtocolKey]);
     WFUri* uri = launchOptions[UIApplicationLaunchOptionsProtocolKey];
     ASSERT_STREQ("CORTANA_TEST", [uri.toString UTF8String]);
-    [[self methodsCalled] setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
+    _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
 
@@ -188,7 +188,7 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
     ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsProtocolKey]);
     WFUri* uri = launchOptions[UIApplicationLaunchOptionsProtocolKey];
     ASSERT_STREQ("CORTANA_TEST", [uri.toString UTF8String]);
-    [[self methodsCalled] setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
+    _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
 
@@ -196,7 +196,7 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
     // Delegate method should only be called once
     ASSERT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
     ASSERT_STREQ("CORTANA_TEST", [uri.toString UTF8String]);
-    [[self methodsCalled] setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
+    _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
 @end
