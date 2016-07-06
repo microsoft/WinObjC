@@ -196,6 +196,12 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
         didWork = FALSE;
 
         for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
+            [priv->suspendedCondition lock];
+            while (priv->isSuspended) {
+                [priv->suspendedCondition wait];
+            }
+            [priv->suspendedCondition unlock];
+
             if (RunOperationFromLists(&priv->myQueues[i], (NSAtomicListRef*)(&priv->queues[i]), &priv->curOperation)) {
                 didWork = TRUE;
             }

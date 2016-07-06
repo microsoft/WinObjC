@@ -17,8 +17,13 @@
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
+#import <thread>
+#import <mutex>
+#import <condition_variable>
+#import <chrono>
+
 TEST(NSOperation, NSOperationDealloc) {
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    NSOperationQueue* queue = [[NSOperationQueue alloc] init];
     ASSERT_NO_THROW([queue release]);
 }
 
@@ -58,4 +63,39 @@ TEST(NSOperation, NSOperationCancellation) {
 
     ASSERT_FALSE([cancelledOperation isExecuting]);
     ASSERT_TRUE([cancelledOperation isCancelled]);
+}
+
+TEST(NSOperation, NSOperationSuspend) {
+    NSOperationQueue* queue = [[NSOperationQueue alloc] init];
+
+    NSOperation* suspendOperation = [[NSOperation alloc] init];
+
+    __block NSCondition* suspendCondition = [NSCondition new];
+    __block bool shouldBeTrue = false;
+
+    [suspendOperation setCompletionBlock:^{
+        [suspendOperation waitUntilFinished]; // Should not deadlock, but we cannot test this
+        ASSERT_TRUE([suspendOperation isFinished]);
+
+        [suspendCondition lock];
+        ASSERT_TRUE(shouldBeTrue);
+        [suspendCondition unlock];
+    }];
+
+    [queue setSuspended:YES];
+    [queue addOperation:suspendOperation];
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(300));
+    [suspendCondition lock];
+    shouldBeTrue = true;
+    [suspendCondition broadcast];
+    [suspendCondition unlock];
+
+    ASSERT_TRUE([queue isSuspended]);
+    ASSERT_FALSE([suspendOperation isExecuting]);
+
+    [queue setSuspended:NO];
+    ASSERT_FALSE([queue isSuspended]);
+
+    [suspendOperation waitUntilFinished];
 }
