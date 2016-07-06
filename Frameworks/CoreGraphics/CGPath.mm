@@ -187,6 +187,10 @@ CGMutablePathRef CGPathCreateMutable() {
  @Notes Creates a mutable copy
 */
 CGPathRef CGPathCreateCopy(CGPathRef path) {
+    if( path == NULL ) {
+        return NULL;
+    }
+
     return CGPathCreateMutableCopy(path);
 }
 
@@ -194,6 +198,10 @@ CGPathRef CGPathCreateCopy(CGPathRef path) {
  @Status Interoperable
 */
 CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
+    if( path == NULL ) {
+        return NULL;
+    }
+
     auto ret = __CGPath::alloc(nil);
     ret->_max = path->_max;
     ret->_count = path->_count;
@@ -211,6 +219,10 @@ CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
  @Status Interoperable
 */
 void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* m, float x, float y) {
+    if( path == NULL ) {
+        return;
+    }
+
     if (m) {
         CGPoint pt;
 
@@ -352,6 +364,10 @@ void CGPathAddArc(CGMutablePathRef path,
                   CGFloat startAngle,
                   CGFloat endAngle,
                   bool clockwise) {
+    if( path == NULL ) {
+        return;
+    }
+
     // Normalize the start angle so it's between 0 and 2*pi
     startAngle = fmod(startAngle, 2.0f * M_PI);
     if (startAngle < 0.0f) {
@@ -390,6 +406,10 @@ void CGPathAddArc(CGMutablePathRef path,
  @Status Interoperable
 */
 void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* m, float x, float y) {
+    if( path == NULL ) {
+        return;
+    }
+
     if (m) {
         CGPoint pt;
 
@@ -409,7 +429,7 @@ void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* m, float 
  @Status Interoperable
 */
 void CGPathAddLines(CGMutablePathRef path, const CGAffineTransform* m, CGPoint* points, int count) {
-    if (count == 0) {
+    if (count == 0 || points == NULL || path == NULL) {
         return;
     }
 
@@ -423,6 +443,10 @@ void CGPathAddLines(CGMutablePathRef path, const CGAffineTransform* m, CGPoint* 
  @Status Interoperable
 */
 void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rect) {
+    if( path == NULL ) {
+        return;
+    }
+
     CGPathMoveToPoint(path, m, CGRectGetMinX(rect), CGRectGetMinY(rect));
 
     CGPathAddLineToPoint(path, m, CGRectGetMaxX(rect), CGRectGetMinY(rect));
@@ -435,6 +459,10 @@ void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rec
  @Status Interoperable
 */
 void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* m, CGPathRef toAdd) {
+    if( path == NULL || toAdd == NULL ) {
+        return;
+    }
+
     CGPathRef pathObj = path;
     CGPathRef copyObj = toAdd;
 
@@ -466,6 +494,10 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* m, CGPathRef 
  @Status Interoperable
 */
 void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rect) {
+    if( path == NULL ) {
+        return;
+    }
+
     // Determine the control point offset multiplier to create 4 arcs
     CGFloat offsetMultiplier = _CGPathControlPointOffsetMultiplier(M_PI_2);
 
@@ -496,6 +528,10 @@ void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* m, C
  @Status Interoperable
 */
 void CGPathCloseSubpath(CGMutablePathRef path) {
+    if( path == NULL ) {
+        return;
+    }
+
     _CGPathAddElement(path, kCGPathElementCloseSubpath);
 }
 
@@ -504,6 +540,10 @@ void CGPathCloseSubpath(CGMutablePathRef path) {
 */
 CGRect CGPathGetBoundingBox(CGPathRef path) {
     CGRect ret;
+
+    if( path == NULL ) {
+        return CGRectMake(std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity(), 0, 0);
+    }
 
     auto context = CGBitmapContextCreate(0, 1, 1, 1, 1, 0, 0);
     path->_applyPath(context);
@@ -517,6 +557,10 @@ CGRect CGPathGetBoundingBox(CGPathRef path) {
  @Status Interoperable
 */
 bool CGPathIsEmpty(CGPathRef path) {
+    if( path == NULL ) {
+        return true;
+    }
+    
     CGPathRef pathObj = path;
     return pathObj->_count == 0;
 }
@@ -525,6 +569,10 @@ bool CGPathIsEmpty(CGPathRef path) {
  @Status Interoperable
 */
 void CGPathRelease(CGPathRef path) {
+    if( path == NULL ) {
+        return;
+    }
+
     CFRelease(path);
 }
 
@@ -532,6 +580,10 @@ void CGPathRelease(CGPathRef path) {
  @Status Interoperable
 */
 CGPathRef CGPathRetain(CGPathRef path) {
+    if( path == NULL ) {
+        return NULL;
+    }
+
     CFRetain(path);
 
     return path;
@@ -542,6 +594,10 @@ CGPathRef CGPathRetain(CGPathRef path) {
  @Notes transform property not supported
 */
 void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* m, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y) {
+    if( path == NULL ) {
+        return;
+    }
+
     assert(!m);
     CGPathRef pathObj = path;
 
@@ -556,6 +612,10 @@ void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* m
 */
 void CGPathAddCurveToPoint(
     CGMutablePathRef path, const CGAffineTransform* m, CGFloat cp1x, CGFloat cp1y, CGFloat cp2x, CGFloat cp2y, CGFloat x, CGFloat y) {
+    if( path == NULL ) {
+        return;
+    }
+    
     CGPathRef pathObj = path;
 
     CGPoint cp1 = CGPointMake(cp1x, cp1y);
@@ -652,7 +712,9 @@ int _CGPathPointCountForElementType(CGPathElementType type) {
  @Status Interoperable
 */
 void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function) {
-    // TODO: Add check for NULL and return. Add for other relevant functions in this file.
+    if( path == NULL ) {
+        return;
+    }
 
     for (unsigned i = 0; i < path->_count; i++) {
         function(info, &path->_elements[i]);
@@ -664,6 +726,10 @@ void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function) {
  @Notes
 */
 bool CGPathContainsPoint(CGPathRef path, const CGAffineTransform* m, CGPoint point, bool eoFill) {
+    if( path == NULL ) {
+        return false;
+    }
+
     if (m) {
         point = CGPointApplyAffineTransform(point, *m);
     }
@@ -736,6 +802,14 @@ CGPathRef CGPathCreateWithRoundedRect(CGRect rect, CGFloat cornerWidth, CGFloat 
  @Status Interoperable
 */
 bool CGPathEqualToPath(CGPathRef path1, CGPathRef path2) {
+    if( path1 == path2 ) {
+        return true;
+    }
+
+    if( path1 == NULL || path2 == NULL ) {
+        return false;
+    }
+
     if (path1->_count != path2->_count) {
         return false;
     }
@@ -765,6 +839,10 @@ bool CGPathEqualToPath(CGPathRef path1, CGPathRef path2) {
  @Status Interoperable
 */
 CGPoint CGPathGetCurrentPoint(CGPathRef path) {
+    if( path == NULL ) {
+        return CGPointZero;
+    }
+
     if (path->_count > 0) {
         CGPathElement* c = &path->_elements[path->_count - 1];
         switch (c->type) {
