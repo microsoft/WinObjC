@@ -36,7 +36,6 @@
 #import "LoggingNative.h"
 #import "RawBuffer.h"
 #import "NSURLProtocolInternal.h"
-#import "NSHTTPURLResponseInternal.h"
 
 #pragma region Types and Namespaces
 using namespace Microsoft::WRL;
@@ -314,6 +313,8 @@ static std::function<R(Args...)> bindObjC(id instance, SEL _cmd) {
 
         HttpStatusCode statusCode;
         THROW_IF_FAILED(responseMessage->get_StatusCode(&statusCode));
+        HttpVersion httpVersion;
+        THROW_IF_FAILED(responseMessage->get_Version(&httpVersion));
 
         ComPtr<IHttpResponseHeaderCollection> headerCollection;
         THROW_IF_FAILED(responseMessage->get_Headers(&headerCollection));
@@ -377,10 +378,23 @@ static std::function<R(Args...)> bindObjC(id instance, SEL _cmd) {
             [nsHeaders addEntriesFromDictionary:contentHeaders];
         }
 
-        NSHTTPURLResponse* nsResponse = [[[NSHTTPURLResponse alloc] initWithURL:[_request URL]
-                                                                     statusCode:statusCode
-                                                                        headers:nsHeaders
-                                                          expectedContentLength:contentLength] autorelease];
+        NSString* httpVersionStr;
+        switch (httpVersion) {
+            case HttpVersion_Http10:
+                httpVersionStr = @"HTTP/1.0";
+                break;
+            case HttpVersion_Http11:
+                httpVersionStr = @"HTTP/1.1";
+                break;
+            case HttpVersion_Http20:
+                httpVersionStr = @"HTTP/2.0";
+                break;
+            default:
+                httpVersionStr = nil;
+        }
+        NSHTTPURLResponse* nsResponse =
+            [[[NSHTTPURLResponse alloc] initWithURL:[_request URL] statusCode:statusCode HTTPVersion:httpVersionStr headerFields:nsHeaders]
+                autorelease];
 
         if (statusCode >= 300 && statusCode <= 399) { // redirect code
             ComPtr<IUriRuntimeClass> uri;
