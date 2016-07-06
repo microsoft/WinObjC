@@ -33,6 +33,8 @@
 #import <CACompositorClient.h>
 #import <UIApplicationInternal.h>
 #import <MainDispatcher.h>
+#import <UWP/WindowsMediaSpeechRecognition.h>
+#import <UWP/WindowsFoundation.h>
 
 static CACompositorClientInterface* _compositorClient = NULL;
 
@@ -45,12 +47,24 @@ int ApplicationMainStart(const char* principalName,
                          float windowWidth,
                          float windowHeight,
                          ActivationType activationType,
-                         const char* activationArg) {
+                         void* activationArg) {
     // Note: We must use nil rather than an empty string for these class names
     NSString* principalClassName = Strings::IsEmpty<const char*>(principalName) ? nil : [[NSString alloc] initWithCString:principalName];
     NSString* delegateClassName = Strings::IsEmpty<const char*>(delegateName) ? nil : [[NSString alloc] initWithCString:delegateName];
 
-    NSString* activationArgument = Strings::IsEmpty<const char*>(activationArg) ? nil : [[NSString alloc] initWithCString:activationArg];
+    id activationArgument = nil;
+
+    // Populate Objective C equivalent of activation argument
+    if (activationType == ActivationTypeToast) {
+        NSString* toastArgument = Strings::WideToNSString(static_cast<HSTRING>(activationArg));
+        activationArgument = toastArgument;
+    } else if (activationType == ActivationTypeVoiceCommand) {
+        WMSSpeechRecognitionResult* speechResult = [WMSSpeechRecognitionResult createWith:activationArg];
+        activationArgument = speechResult;
+    } else if (activationType == ActivationTypeProtocol) {
+        WFUri* protocolResult = [WFUri createWith:activationArg];
+        activationArgument = protocolResult;
+    }
 
     WOCDisplayMode* displayMode = [UIApplication displayMode];
     [displayMode _setWindowSize:CGSizeMake(windowWidth, windowHeight)];
@@ -72,7 +86,7 @@ int ApplicationMainStart(const char* principalName,
         } else if ([orientation isKindOfClass:[NSArray class]]) {
             bool found = false;
 
-            for (NSString* curstr in(NSArray*)orientation) {
+            for (NSString* curstr in (NSArray*)orientation) {
                 UIInterfaceOrientation newOrientation = UIOrientationFromString(defaultOrientation, curstr);
                 if (newOrientation == defaultOrientation) {
                     found = true;

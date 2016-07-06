@@ -295,6 +295,28 @@ public:
 }; /* class NSBundle */
 
 //
+// Cortana Activation Tests
+//
+
+extern void CortanaTestVoiceCommandForegroundActivation();
+
+class Cortana {
+public:
+    BEGIN_TEST_CLASS(Cortana)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    TEST_CLASS_PROPERTY(L"Ignore", L"true")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(CortanaTestClassSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
+
+    TEST_METHOD(CortanaTest_VoiceCommandForegroundActivation) {
+        CortanaTestVoiceCommandForegroundActivation();
+    }
+}; /* class NSBundle */
+
 // UIViewTests
 //
 extern void UIViewTestsCreate();

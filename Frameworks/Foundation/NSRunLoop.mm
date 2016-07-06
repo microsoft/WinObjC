@@ -263,11 +263,6 @@ static void DispatchMainRunLoopWakeup(void* arg) {
         [self acceptInputForMode:mode beforeDate:limitDate];
     }
 
-    if ([NSThread currentThread] == [NSThread mainThread]) {
-        [[NSOperationQueue mainQueue] _doMainWork];
-        dispatch_main_queue_callback();
-    }
-
     [pool release];
 
     return (limitDate != nil);
@@ -525,11 +520,21 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 }
 
 - (void)_processMainRunLoop:(int)value {
+    if ([NSThread currentThread] != [NSThread mainThread]) {
+        FAIL_FAST_MSG("_processMainRunLoop should only be scheduled on the main UI thread!");
+    }
+
     NSRunLoopState* state = [self _stateForMode:NSDefaultRunLoopMode];
+
     // Wrap code in a autorelease pool so all the auto released objects from calling the event
     // handlers can be manually released.
     NSAutoreleasePool* pool = [NSAutoreleasePool new];
+
+    [[NSOperationQueue mainQueue] _doMainWork];
+    dispatch_main_queue_callback();
+
     [state _handleSignaledInput:value];
+
     [pool release];
 }
 

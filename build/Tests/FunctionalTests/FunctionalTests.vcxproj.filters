@@ -44,6 +44,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSBundleTests.mm">
       <Filter>Tests</Filter>
     </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\CortanaTests.mm">
+      <Filter>Tests</Filter>
+    </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIViewTests.mm">
       <Filter>Tests</Filter>
     </ClangCompile>
@@ -62,5 +65,4 @@
       <Filter>Tests</Filter>
     </Xml>
   </ItemGroup>
-</Project>
 </Project>

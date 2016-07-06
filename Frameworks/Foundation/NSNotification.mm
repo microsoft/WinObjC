@@ -17,77 +17,44 @@
 #import <StubReturn.h>
 #import <Foundation/NSNotification.h>
 
-@implementation NSNotification {
-    NSString* notificationName;
-    id notificationObj;
-    id userInfo;
-}
+@implementation NSNotification
 
 /**
  @Status Interoperable
 */
 + (NSNotification*)notificationWithName:(NSString*)name object:(id)obj {
-    NSNotification* ret = [self alloc];
-
-    ret->notificationName = [name retain];
-    ret->notificationObj = [obj retain];
-    ret->userInfo = nil;
-
-    return [ret autorelease];
+    return [self notificationWithName:name object:obj userInfo:nil];
 }
 
 /**
  @Status Interoperable
 */
 + (NSNotification*)notificationWithName:(NSString*)name object:(id)obj userInfo:(NSDictionary*)info {
-    NSNotification* ret = [self alloc];
-
-    ret->notificationName = [name retain];
-    ret->notificationObj = [obj retain];
-    ret->userInfo = [info retain];
-
-    return [ret autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-- (id)object {
-    return notificationObj;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)name {
-    return notificationName;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSDictionary*)userInfo {
-    return userInfo;
+    return [[[self alloc] initWithName:name object:obj userInfo:info] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (void)dealloc {
-    [notificationName release];
-    [notificationObj release];
-    [userInfo release];
+    [_object release];
+    [_name release];
+    [_userInfo release];
 
     [super dealloc];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
-- (instancetype)initWithName:(NSString*)aName object:(id)object userInfo:(NSDictionary*)userInfo {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (instancetype)initWithName:(NSString*)aName object:(id)object userInfo:(NSDictionary*)info {
+    if ((self = [super init]) != nil) {
+        _object = [object retain];
+        _name = [aName copy];
+        _userInfo = [info copy];
+    }
+    return self;
 }
 
 /**

@@ -42,6 +42,7 @@
 #import "CoreMotionViewController.h"
 #import "ShadowViewController.h"
 #import "UIPasteboardViewController.h"
+#import "AudioToolboxViewController.h"
 
 #ifdef WINOBJC
 #import "XamlViewController.h"
@@ -57,8 +58,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.menuItems = [NSMutableArray array];
-
-    // CoreMotion
+    
+    //AudioToolbox
+    [self addMenuItemViewController:[[AudioToolboxViewController alloc] init] andTitle:@"AudioToolbox"];
+   
+    //CoreMotion
     [self addMenuItemViewController:[[CoreMotionViewController alloc] init] andTitle:@"CoreMotion"];
 
     // Foundations tests

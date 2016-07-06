@@ -17,10 +17,12 @@
 #import "CGCRootViewController.h"
 #import "CGCCGBitmapContentViewController.h"
 #import "CGCCGContextBeginEndTransparencyLayer.h"
+#import "CGCCGContextBeginTransparencyLayerWithRect.h"
 #import "CGCCGContextReplacePathWithStrokedPath.h"
 #import "CGCCGContextSetPatternPhase.h"
 #import "CGCCGContextViewController.h"
 #import "CGCCGPathApplyViewController.h"
+#import "CGCCGPathContainsPointViewController.h"
 
 @interface SampleRow : NSObject
 
@@ -57,9 +59,11 @@
             [SampleRow row:@"CGContext" class:[CGCCGContextViewController class]],
             [SampleRow row:@"CGBitmapContext" class:[CGCCGBitmapContentViewController class]],
             [SampleRow row:@"CGContextBeginEndTransparencyLayer" class:[CGCCGContextBeginEndTransparencyLayer class]],
+            [SampleRow row:@"CGContextBeginTransparencyLayerWithRect" class:[CGCCGContextBeginTransparencyLayerWithRect class]],
             [SampleRow row:@"CGContextSetPatternPhase" class:[CGCCGContextSetPatternPhase class]],
             [SampleRow row:@"CGContextReplacePathWithStrokedPath" class:[CGCCGContextReplacePathWithStrokedPath class]],
-        ];
+            [SampleRow row:@"CGCCGPathContainsPointViewController" class:[CGCCGPathContainsPointViewController class]],
+                    ];
     }
     return _samples;
 }

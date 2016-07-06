@@ -25,17 +25,16 @@
 
 #import "WYPopoverController.h"
 
-#import "UIBarButtonItem+Internals.h"
-
 #import <objc/runtime.h>
 
 #if !__has_feature(objc_arc)
     #error ARC must be enabled
 #endif
 
-//#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
 #define WY_BASE_SDK_7_ENABLED
-//#endif
+#endif
 
 #ifdef DEBUG
 #define WY_LOG(fmt, ...)		NSLog((@"%s (%d) : " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
@@ -43,15 +42,13 @@
 #define WY_LOG(...)
 #endif
 
-#define WY_IS_IOS_EQUAL_TO(v)                  YES //([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
+#define WY_IS_IOS_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
 
-#define WY_IS_IOS_GREATER_THAN(v)              YES //([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
+#define WY_IS_IOS_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
 
-#define WY_IS_IOS_GREATER_THAN_OR_EQUAL_TO(v)  YES //([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+#define WY_IS_IOS_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
-#define WY_IS_IOS_LESS_THAN(v)                 NO // ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
-
-#define WYCGRectIntegral(r) r
+#define WY_IS_IOS_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -445,6 +442,9 @@ static char const * const UINavigationControllerEmbedInPopoverTagKey = "UINaviga
     
     WYPopoverTheme *result = nil;
     
+    // We avoid use of the WY_IS_IOS_LESS_THAN macro here
+    // because of an issue calling |UIDevice| methods at |+ (void)load| time.
+    // TODO fix underlying issue #598.
 #ifdef WINOBJC
     result = [WYPopoverTheme themeForIOS7];
 #else
@@ -1094,7 +1094,7 @@ static float edgeSizeFromCornerRadius(float cornerRadius) {
 {
     contentView = viewController.view;
     
-    contentView.frame = WYCGRectIntegral(CGRectMake(0, 0, self.bounds.size.width, 100));
+    contentView.frame = CGRectIntegral(CGRectMake(0, 0, self.bounds.size.width, 100));
     
     [self addSubview:contentView];
     
@@ -1106,7 +1106,7 @@ static float edgeSizeFromCornerRadius(float cornerRadius) {
         navigationBarHeight = navigationController.navigationBar.bounds.size.height;
     }
     
-    contentView.frame = WYCGRectIntegral([self innerRect]);
+    contentView.frame = CGRectIntegral([self innerRect]);
     
     if (innerView == nil)
     {
@@ -1130,7 +1130,7 @@ static float edgeSizeFromCornerRadius(float cornerRadius) {
     
     [self insertSubview:innerView aboveSubview:contentView];
     
-    innerView.frame = WYCGRectIntegral(contentView.frame);
+    innerView.frame = CGRectIntegral(contentView.frame);
     
     [self.layer setNeedsDisplay];
 }
@@ -1395,7 +1395,6 @@ static float edgeSizeFromCornerRadius(float cornerRadius) {
     }
 }
 
-
 #pragma mark Private
 
 - (CGRect)outerRect
@@ -1459,10 +1458,16 @@ static float edgeSizeFromCornerRadius(float cornerRadius) {
         result.size.height -= borderWidth;
     }
     
+    // The below code is disabled on WINOBJC due to an issue where |viewContentInsets| has a garbage value (in DEBUG builds).
+    // Given that most of the theming/drawing code in WYPopoverController is effectively a no-op in WINOBJC,
+    // just skipping over the below is an adequate (or at least quick) fix.
+    // TODO fix underlying issue #597.
+#ifndef WINOBJC
     result.origin.x += viewContentInsets.left;
     result.origin.y += viewContentInsets.top;
     result.size.width = result.size.width - viewContentInsets.left - viewContentInsets.right;
     result.size.height = result.size.height - viewContentInsets.top - viewContentInsets.bottom;
+#endif
     
     if (borderWidth > 0)
     {
@@ -1925,11 +1930,7 @@ static WYPopoverTheme *defaultTheme_ = nil;
         }
     }
     
-#ifdef WINOBJC
-    CGSize contentViewSize = viewController.preferredContentSize;
-#else
     CGSize contentViewSize = self.popoverContentSize;
-#endif
     
     if (overlayView == nil)
     {
@@ -2110,11 +2111,7 @@ static WYPopoverTheme *defaultTheme_ = nil;
                              completion:(void (^)(void))completion
 {
     barButtonItem = aItem;
-#ifdef WINOBJC
-    UIView *itemView = [barButtonItem _view];
-#else
     UIView *itemView = [barButtonItem valueForKey:@"view"];
-#endif
     aArrowDirections = WYPopoverArrowDirectionDown | WYPopoverArrowDirectionUp;
     [self presentPopoverFromRect:itemView.bounds
                           inView:itemView
@@ -2208,9 +2205,7 @@ static WYPopoverTheme *defaultTheme_ = nil;
     if ([viewController isKindOfClass:[UINavigationController class]] == YES)
     {
         UINavigationController *navigationController = (UINavigationController *)viewController;
-#ifndef WINOBJC
         navigationController.embedInPopover = YES;
-#endif
         
 #ifdef WY_BASE_SDK_7_ENABLED
         if ([navigationController respondsToSelector:@selector(setEdgesForExtendedLayout:)])
@@ -2240,11 +2235,7 @@ static WYPopoverTheme *defaultTheme_ = nil;
     
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
     
-#ifdef WINOBJC
-    CGSize contentViewSize = viewController.preferredContentSize;
-#else
     CGSize contentViewSize = self.popoverContentSize;
-#endif
     CGSize minContainerSize = WY_POPOVER_MIN_SIZE;
     
     CGRect viewFrame;
@@ -2310,10 +2301,10 @@ static WYPopoverTheme *defaultTheme_ = nil;
         
         containerFrame = CGRectZero;
         containerFrame.size = containerViewSize;
-        containerFrame.size.width = ABS(MIN(maxX - minX, containerFrame.size.width));
-        containerFrame.size.height = ABS(MIN(maxY - minY, containerFrame.size.height));
+        containerFrame.size.width = MIN(maxX - minX, containerFrame.size.width);
+        containerFrame.size.height = MIN(maxY - minY, containerFrame.size.height);
         
-        backgroundView.frame = WYCGRectIntegral(containerFrame);
+        backgroundView.frame = CGRectIntegral(containerFrame);
         
         backgroundView.center = CGPointMake(viewFrame.origin.x + viewFrame.size.width / 2, viewFrame.origin.y + viewFrame.size.height / 2);
         
@@ -2365,8 +2356,8 @@ static WYPopoverTheme *defaultTheme_ = nil;
         
         containerFrame = CGRectZero;
         containerFrame.size = containerViewSize;
-        containerFrame.size.width = ABS(MIN(maxX - minX, containerFrame.size.width));
-        containerFrame.size.height = ABS(MIN(maxY - minY, containerFrame.size.height));
+        containerFrame.size.width = MIN(maxX - minX, containerFrame.size.width);
+        containerFrame.size.height = MIN(maxY - minY, containerFrame.size.height);
         
         backgroundView.frame = containerFrame;
         
@@ -2417,10 +2408,10 @@ static WYPopoverTheme *defaultTheme_ = nil;
         
         containerFrame = CGRectZero;
         containerFrame.size = containerViewSize;
-        containerFrame.size.width = ABS(MIN(maxX - minX, containerFrame.size.width));
-        containerFrame.size.height = ABS(MIN(maxY - minY, containerFrame.size.height));
+        containerFrame.size.width = MIN(maxX - minX, containerFrame.size.width);
+        containerFrame.size.height = MIN(maxY - minY, containerFrame.size.height);
         
-        backgroundView.frame = WYCGRectIntegral(containerFrame);
+        backgroundView.frame = CGRectIntegral(containerFrame);
         
         backgroundView.center = CGPointMake(viewFrame.origin.x + viewFrame.size.width / 2, viewFrame.origin.y + viewFrame.size.height / 2);
         
@@ -2474,13 +2465,13 @@ static WYPopoverTheme *defaultTheme_ = nil;
         
         containerFrame = CGRectZero;
         containerFrame.size = containerViewSize;
-        containerFrame.size.width = ABS(MIN(maxX - minX, containerFrame.size.width));
-        containerFrame.size.height = ABS(MIN(maxY - minY, containerFrame.size.height));
+        containerFrame.size.width = MIN(maxX - minX, containerFrame.size.width);
+        containerFrame.size.height = MIN(maxY - minY, containerFrame.size.height);
         backgroundView.frame = containerFrame;
         
         backgroundView.center = CGPointMake(viewFrame.origin.x + viewFrame.size.width / 2, viewFrame.origin.y + viewFrame.size.height / 2);
         
-        containerFrame = WYCGRectIntegral(backgroundView.frame);
+        containerFrame = CGRectIntegral(backgroundView.frame);
         
         offset = backgroundView.frame.size.width / 2 + viewFrame.size.width / 2 - backgroundView.outerShadowInsets.left;
         
@@ -2524,7 +2515,7 @@ static WYPopoverTheme *defaultTheme_ = nil;
         containerFrame.size = containerViewSize;
         containerFrame.size.width = MIN(maxX - minX, containerFrame.size.width);
         containerFrame.size.height = MIN(maxY - minY, containerFrame.size.height);
-        backgroundView.frame = WYCGRectIntegral(containerFrame);
+        backgroundView.frame = CGRectIntegral(containerFrame);
         
         backgroundView.center = CGPointMake(minX + (maxX - minX) / 2, minY + (maxY - minY) / 2);
         
@@ -2533,7 +2524,7 @@ static WYPopoverTheme *defaultTheme_ = nil;
         backgroundView.arrowOffset = offset;
     }
     
-    containerFrame = WYCGRectIntegral(containerFrame);
+    containerFrame = CGRectIntegral(containerFrame);
     
     backgroundView.frame = containerFrame;
     
@@ -3136,11 +3127,7 @@ static CGPoint WYPointRelativeToOrientation(CGPoint origin, CGSize size, UIInter
     
     if (barButtonItem)
     {
-#ifdef WINOBJC
-        inView = [barButtonItem _view];
-#else
         inView = [barButtonItem valueForKey:@"view"];
-#endif
         rect = inView.bounds;
     }
     else if ([delegate respondsToSelector:@selector(popoverController:willRepositionPopoverToRect:inView:)])

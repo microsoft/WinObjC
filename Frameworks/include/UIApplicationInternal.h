@@ -16,6 +16,8 @@
 #pragma once
 
 #import <UIKit/UIApplication.h>
+#import <UWP/WindowsMediaSpeechRecognition.h>
+#import <UWP/WindowsFoundation.h>
 
 @interface UIApplication (internal)
 - (UIWindow*)_popupWindow;
@@ -25,6 +27,8 @@
 - (void)_bringToForeground:(NSURL*)url;
 - (void)_sendHighMemoryWarning;
 - (void)_sendNotificationReceivedEvent:(NSString*)notificationData;
+- (void)_sendVoiceCommandReceivedEvent:(WMSSpeechRecognitionResult*)voiceCommandResult;
+- (void)_sendProtocolReceivedEvent:(WFUri*)protocolUri;
 @end
 
 @interface WOCDisplayMode (internal)
@@ -45,5 +49,5 @@
 // UIApplicationMainInit is declared here instead of UIApplicationMainInternal.h because it uses NS* types and cannot be defined in
 // in a file that gets included in C++/CX sources.
 UIKIT_EXPORT int UIApplicationMainInit(
-    NSString* pClassName, NSString* dClassName, UIInterfaceOrientation defaultOrientation, int activationType, NSString* activationArg);
+    NSString* pClassName, NSString* dClassName, UIInterfaceOrientation defaultOrientation, int activationType, id activationArg);
 void _UIApplicationShutdown();

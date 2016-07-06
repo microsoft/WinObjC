@@ -15,11 +15,16 @@
 //******************************************************************************
 
 #pragma once
+
+#ifndef __CGCONTEXTIMPL_TEST_FRIENDS
+#define __CGCONTEXTIMPL_TEST_FRIENDS
+#endif
+
 #include "CGContextInternal.h"
 
-#include "CoreGraphics/CGPath.h"
-#include "CoreGraphics/CGLayer.h"
 #include "CoreGraphics/CGGradient.h"
+#include "CoreGraphics/CGLayer.h"
+#include "CoreGraphics/CGPath.h"
 #include "CoreGraphics/CGShading.h"
 #include "UIKit/UIColor.h"
 #include "UIKit/UIFont.h"
@@ -53,6 +58,7 @@ private:
 #define MAX_CG_STATES 16
 
 class CGContextImpl {
+__CGCONTEXTIMPL_TEST_FRIENDS;
 protected:
     CGContextRef _rootContext;
     CGImageRef _imgDest;
@@ -107,6 +113,7 @@ public:
     virtual void CGContextSetStrokeColorWithColor(id color);
     virtual void CGContextSetFillColorWithColor(id color);
     virtual void CGContextSetFillColor(float* components);
+    virtual void CGContextSetPatternPhase(CGSize phase);
     virtual void CGContextSetFillPattern(CGPatternRef pattern, const float* components);
     virtual void CGContextSelectFont(char* name, float size, DWORD encoding);
     virtual void CGContextGetTextPosition(CGPoint* pos);
@@ -153,6 +160,7 @@ public:
     virtual void CGContextClipToRect(CGRect rect);
 
     virtual void CGContextBeginTransparencyLayer(id auxInfo);
+    virtual void CGContextBeginTransparencyLayerWithRect(CGRect rect, id auxInfo);
     virtual void CGContextEndTransparencyLayer();
 
     virtual void CGContextSetGrayStrokeColor(float gray, float alpha);
@@ -164,6 +172,7 @@ public:
 
     virtual void CGContextSetShadowWithColor(CGSize offset, float blur, CGColorRef color);
     virtual void CGContextSetShadow(CGSize offset, float blur);
+    virtual bool CGContextIsPointInPath(bool eoFill, float x, float y);
 };
 
 #define LOCK_CAIRO() pthread_mutex_lock(&_cairoLock);

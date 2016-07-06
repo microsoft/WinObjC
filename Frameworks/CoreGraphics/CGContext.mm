@@ -20,16 +20,16 @@
 #import <CoreGraphics/CGContext.h>
 #import <CoreGraphics/CGPath.h>
 #import <CoreGraphics/CGLayer.h>
+#import "CGColorSpaceInternal.h"
+#import "CGContextInternal.h"
+#include "LoggingNative.h"
+#import "_CGLifetimeBridgingType.h"
 #import <CoreGraphics/CGAffineTransform.h>
 #import <CoreGraphics/CGGradient.h>
 #import <Foundation/NSString.h>
 #import <UIKit/UIImage.h>
 #import <UIKit/UIFont.h>
 #import <UIKit/UIColor.h>
-#import "CGContextInternal.h"
-#import "CGColorSpaceInternal.h"
-#import "_CGLifetimeBridgingType.h"
-#include "LoggingNative.h"
 #import <pthread.h>
 
 static const wchar_t* TAG = L"CGContext";
@@ -59,7 +59,7 @@ __CGContext::__CGContext(CGImageRef pDest) {
 #ifdef DEBUG_CONTEXT_COUNT
     TraceVerbose(TAG, L"contextCount: %d", contextCount);
 #endif
-    object_setClass((id) this, [CGNSContext class]);
+    object_setClass((id)this, [CGNSContext class]);
     scale = 1.0f;
     _backing = pDest->Backing()->CreateDrawingContext(this);
 }
@@ -93,11 +93,10 @@ void CGContextSetFillPattern(CGContextRef ctx, CGPatternRef pattern, const float
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextSetPatternPhase(CGContextRef ctx, CGSize phase) {
-    UNIMPLEMENTED();
-    TraceWarning(TAG, L"CGContextSetPatternPhase not implemented");
+    return ctx->Backing()->CGContextSetPatternPhase(phase);
 }
 
 /**
@@ -753,18 +752,16 @@ void CGContextAddLines(CGContextRef pContext, const CGPoint* pt, unsigned count)
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextBeginTransparencyLayer(CGContextRef ctx, CFDictionaryRef auxInfo) {
-    UNIMPLEMENTED();
     ctx->Backing()->CGContextBeginTransparencyLayer((id)auxInfo);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextEndTransparencyLayer(CGContextRef ctx) {
-    UNIMPLEMENTED();
     ctx->Backing()->CGContextEndTransparencyLayer();
 }
 
@@ -1131,11 +1128,11 @@ void CGContextBeginPage(CGContextRef c, const CGRect* mediaBox) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
-void CGContextBeginTransparencyLayerWithRect(CGContextRef c, CGRect rect, CFDictionaryRef auxInfo) {
-    UNIMPLEMENTED();
+void CGContextBeginTransparencyLayerWithRect(CGContextRef ctx, CGRect rect, CFDictionaryRef auxInfo) {
+    ctx->Backing()->CGContextBeginTransparencyLayerWithRect(rect, (id)auxInfo);
 }
 
 /**
@@ -1299,4 +1296,8 @@ CGImageRef CGJPEGImageCreateFromFile(NSString* path) {
 
 CGImageRef CGJPEGImageCreateFromData(NSData* data) {
     return new CGJPEGDecoderImage(data);
+}
+
+bool CGContextIsPointInPath(CGContextRef c, bool eoFill, float x, float y) {
+    return c->Backing()->CGContextIsPointInPath(eoFill, x, y);
 }

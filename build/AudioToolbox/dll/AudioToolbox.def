@@ -1,5 +1,11 @@
 LIBRARY AudioToolbox
     EXPORTS
+          AudioServicesCreateSystemSoundID
+          AudioServicesDisposeSystemSoundID
+          AudioServicesPlayAlertSound
+          AudioServicesPlaySystemSound
+          AudioServicesAddSystemSoundCompletion
+          AudioServicesRemoveSystemSoundCompletion
           AudioFileClose
           AudioFileGetProperty
           AudioFileGetPropertyInfo

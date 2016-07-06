@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -43,11 +43,9 @@
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
   </ImportGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <CompileAsWinRT>false</CompileAsWinRT>
-    </ClCompile>
     <Link>
       <ModuleDefinitionFile>AudioToolbox.def</ModuleDefinitionFile>
+      <AdditionalDependencies>ObjCUWP.lib;WindowsApp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -55,11 +53,9 @@
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <CompileAsWinRT>false</CompileAsWinRT>
-    </ClCompile>
     <Link>
       <ModuleDefinitionFile>AudioToolbox.def</ModuleDefinitionFile>
+      <AdditionalDependencies>ObjCUWP.lib;WindowsApp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -67,11 +63,9 @@
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
-    <ClCompile>
-      <CompileAsWinRT>false</CompileAsWinRT>
-    </ClCompile>
     <Link>
       <ModuleDefinitionFile>AudioToolbox.def</ModuleDefinitionFile>
+      <AdditionalDependencies>ObjCUWP.lib;WindowsApp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -79,11 +73,9 @@
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
-    <ClCompile>
-      <CompileAsWinRT>false</CompileAsWinRT>
-    </ClCompile>
     <Link>
       <ModuleDefinitionFile>AudioToolbox.def</ModuleDefinitionFile>
+      <AdditionalDependencies>ObjCUWP.lib;WindowsApp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
