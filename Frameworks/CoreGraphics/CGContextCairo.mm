@@ -1933,7 +1933,10 @@ bool CGContextCairo::CGContextIsPointInPath(bool eoFill, float x, float y) {
 }
 CGPathRef CGContextCairo::CGContextCopyPath(void) {
     CGMutablePathRef copyPath = CGPathCreateMutable();
+    ObtainLock();
+    LOCK_CAIRO();
     cairo_path_t* caPath = cairo_copy_path(_drawContext);
+    UNLOCK_CAIRO();
     cairo_path_data_t* data;
 
     for (int i = 0; i < caPath->num_data; i += caPath->data[i].header.length) {
