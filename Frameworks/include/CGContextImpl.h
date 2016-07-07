@@ -58,7 +58,8 @@ private:
 #define MAX_CG_STATES 16
 
 class CGContextImpl {
-__CGCONTEXTIMPL_TEST_FRIENDS;
+    __CGCONTEXTIMPL_TEST_FRIENDS;
+
 protected:
     CGContextRef _rootContext;
     CGImageRef _imgDest;
@@ -154,6 +155,7 @@ public:
     virtual void CGContextSetLineCap(DWORD lineCap);
     virtual void CGContextSetLineWidth(float width);
     virtual void CGContextSetShouldAntialias(DWORD shouldAntialias);
+    virtual void CGContextReplacePathWithStrokedPath(CGContextRef context);
     virtual void CGContextClip();
     virtual void CGContextGetClipBoundingBox(CGRect* ret);
     virtual void CGContextGetPathBoundingBox(CGRect* ret);
