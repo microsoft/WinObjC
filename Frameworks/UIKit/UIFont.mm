@@ -73,6 +73,47 @@ void* FTReallocFunc(FT_Memory memory, long curSize, long newSize, void* ptr) {
     return IwRealloc(ptr, newSize);
 }
 
+@interface UIFontKey : NSObject<NSCopying>
+@end
+
+@implementation UIFontKey 
+{
+@public
+    idretaintype(NSString) _name;
+    float _size;
+}
+
+- (NSUInteger)hash {
+    NSUInteger ret = [_name hash];
+    ret += (NSUInteger)(_size * 100.0f);
+
+    return ret;
+}
+
+- (BOOL)isEqual:(UIFontKey*)other {
+    if (![other isKindOfClass:[UIFontKey class]])
+        return FALSE;
+    if (_size != other->_size)
+        return FALSE;
+    if (![_name isEqual:(id)other->_name])
+        return FALSE;
+
+    return TRUE;
+}
+
+- (NSObject*)copyWithZone:(NSZone*)zone {
+    return [self retain];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)dealloc {
+    _name = nil;
+    [super dealloc];
+}
+@end
+
 @implementation UIFont {
 @public
     void *_font, *_sizingFont;
@@ -406,24 +447,27 @@ static vector<wstring> _getFontNamesForFamilyName(wchar_t* familyName) {
  @Status Interoperable
 */
 + (UIFont*)fontWithName:(NSString*)name size:(float)size {
-    UIFont* ret = [self alloc];
 
     if (size <= 0) {
         size = [self systemFontSize];
     }
 
-    ret->_name = name;
-    ret->_size = size;
-    ret->_horizontalScale = 1.0f;
+    UIFontKey* fontKey = [[UIFontKey alloc] init];
+    fontKey->_name = name;
+    fontKey->_size = size;
 
     _CGFontLock();
     auto unlock = wil::ScopeExit([]() { _CGFontUnlock(); });
 
-    id cached = [g_fontCache objectForKey:(id)ret];
+    id cached = [g_fontCache objectForKey:(id)fontKey];
     if (cached != nil) {
-        [ret release];
         return cached;
     }
+
+    UIFont* ret = [self alloc];
+    ret->_name = name;
+    ret->_size = size;
+    ret->_horizontalScale = 1.0f;
 
     if (name == nil) {
         TraceWarning(g_logTag, L"Warning: Font name is nil, fall back to Helvetic!");
@@ -438,7 +482,7 @@ static vector<wstring> _getFontNamesForFamilyName(wchar_t* familyName) {
         return nil;
     }
 
-    [g_fontCache setObject:(id)ret forKey:(id)ret];
+    [g_fontCache setObject:(id)ret forKey:(id)fontKey];
 
     return [ret autorelease];
 }
