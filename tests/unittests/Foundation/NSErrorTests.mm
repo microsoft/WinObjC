@@ -27,7 +27,9 @@ TEST(NSError, NSErrorSanity) {
     ASSERT_EQ([error1 hash], [error2 hash]);
     ASSERT_OBJCNE(error1, error3);
     ASSERT_NE([error1 hash], [error3 hash]);
+}
 
+ARM_DISABLED_TEST(NSError, NSErrorCatchPopulate) {
     NSError* error;
     try {
         THROW_NS_HR(E_INVALIDARG);
