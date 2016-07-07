@@ -71,11 +71,7 @@ static const NSString* NSOperationContext = @"context";
     // If cancelled, skip this logic and set _ready to YES. Otherwise check dependencies.
     if (![self isCancelled]) {
         std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
-        int count = [_dependencies count];
-
-        for (int i = 0; i < count; i++) {
-            id op = [_dependencies objectAtIndex:i];
-
+        for(NSOperation* op in (NSArray*)_dependencies) {
             if (![op isFinished]) {
                 newReady = NO;
             }
@@ -184,7 +180,6 @@ static const NSString* NSOperationContext = @"context";
  @Status Interoperable
 */
 - (BOOL)isCancelled {
-    std::lock_guard<std::recursive_mutex> lock(_finishLock);
     return _cancelled;
 }
 
@@ -261,7 +256,7 @@ static const NSString* NSOperationContext = @"context";
 
     _completionBlockLock.lock();
     void (^completion)(void) = [_completionBlock retain];
-    [self setCompletionBlock:nil];
+    _completionBlock = nil;
     _completionBlockLock.unlock();
 
     _finishLock.unlock();
@@ -318,9 +313,7 @@ static const NSString* NSOperationContext = @"context";
 */
 - (void)dealloc {
     _dependenciesLock.lock();
-    int count = [_dependencies count];
-    for (int i = 0; i < count; i++) {
-        id op = [_dependencies objectAtIndex:i];
+    for(NSOperation* op in (NSArray*)_dependencies) {
         [op removeObserver:self forKeyPath:@"isFinished" context:(void*)NSOperationContext];
     }
 

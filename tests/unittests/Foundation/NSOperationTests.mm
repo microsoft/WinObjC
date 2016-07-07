@@ -156,7 +156,7 @@ TEST(NSOperation, NSOperationKVO) {
     [queue addOperation:operation];
     [operation waitUntilFinished];
 
-    ASSERT_TRUE([observer didObserveCompletionBlock]);
+    ASSERT_FALSE([observer didObserveCompletionBlock]);
     ASSERT_FALSE([observer didObserveCancelled]);
     ASSERT_TRUE([observer didObserveExecuting]);
     ASSERT_TRUE([observer didObserveFinished]);
