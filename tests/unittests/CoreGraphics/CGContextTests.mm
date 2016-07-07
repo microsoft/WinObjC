@@ -195,7 +195,7 @@ TEST(CGContext, CGContextCopyPathEllipse) {
         CGRect rect = CGRectMake(40, 40, 200, 40);
 
         CGPathAddEllipseInRect(path, NULL, rect);
-
+		//TODO :: Fix unit test expected results after Github Issue #621 is resolved.
         NSArray* expected = @[
             @{ kTypeKey : @(kCGPathElementMoveToPoint),
                kPointsKey : @[ @240, @60 ] },
@@ -321,6 +321,7 @@ TEST(CGPath, CGContextCopyPathCGPathAddQuadCurveToPoint) {
     CGPathMoveToPoint(path, NULL, 400, 400);
     CGPathAddQuadCurveToPoint(path, NULL, 140, 250, 110, 180);
 
+	//TODO :: Fix unit test expected results after Github Issue #621 is resolved.
     // True Expected
     // kCGPathElementMoveToPoint
     //( 400.000000, 400.000000 )
