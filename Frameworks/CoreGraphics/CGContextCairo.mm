@@ -1848,7 +1848,6 @@ void CGContextCairo::CGContextReplacePathWithStrokedPath(CGContextRef context) {
     cairo_path_t* flatPath = cairo_copy_path_flat(_drawContext);
     double lineWidth = cairo_get_line_width(_drawContext);
     cairo_new_path(_drawContext);
-    cairo_set_line_width(_drawContext, 1);
     _CGContextDrawStrokedPath(flatPath, 0, 0, flatPath->num_data, lineWidth);
     cairo_path_destroy(flatPath);
 
