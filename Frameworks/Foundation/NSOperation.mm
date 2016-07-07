@@ -17,57 +17,44 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 */
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSOperation.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableArray.h"
-#include "LoggingNative.h"
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
-static const wchar_t* TAG = L"NSOperation";
+#import <Starboard.h>
+#import <StubReturn.h>
+#import <Foundation/NSOperation.h>
+#import <condition_variable>
+#import <mutex>
 
-#if __cplusplus
-#include <pthread.h>
-#include <string.h>
-struct NSOperationPriv {
-    NSOperationQueuePriority priority;
-    id dependencies;
-    void (^completionBlock)(void);
-
-    pthread_cond_t finishCondition;
-    pthread_mutex_t finishLock;
-
-    int executing : 1;
-    int cancelled : 1;
-    int finished : 1;
-
-    NSOperationPriv() {
-        memset(this, 0, sizeof(NSOperationPriv));
-        pthread_cond_init(&finishCondition, 0);
-
-        pthread_mutexattr_t attr;
-
-        pthread_mutexattr_init(&attr);
-        pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-        pthread_mutex_init(&finishLock, &attr);
-        pthread_mutexattr_destroy(&attr);
-    }
-
-    ~NSOperationPriv() {
-        pthread_cond_destroy(&finishCondition);
-        pthread_mutex_destroy(&finishLock);
-    }
-};
-#else
-struct NSOperationPriv;
-#endif
-
-@interface NSOperation () {
-    struct NSOperationPriv* priv;
+@implementation NSOperation {
+    StrongId<NSMutableArray> _dependencies;
+    StrongId<void(^)()> _completionBlock;
+    std::condition_variable_any _finishCondition;
+    std::recursive_mutex _finishLock;
+    std::recursive_mutex _dependenciesLock;
+    std::recursive_mutex _completionBlockLock;
+    std::recursive_mutex _readyLock;
 }
-@end
 
-@implementation NSOperation
+@synthesize cancelled = _cancelled;
+@synthesize executing = _executing;
+@synthesize finished = _finished;
+@synthesize ready = _ready;
+
+static const NSString* NSOperationContext = @"context";
 
 /**
  @Status Interoperable
@@ -77,40 +64,84 @@ struct NSOperationPriv;
     return NO;
 }
 
-/**
- @Status Interoperable
-*/
-+ (id)allocWithZone:(NSZone*)zone {
-    NSOperation* ret = [super allocWithZone:zone];
+- (void)_checkReady {
+    std::lock_guard<std::recursive_mutex> lock(_readyLock);
+    bool newReady = YES;
 
-    ret->priv = new NSOperationPriv();
+    // If cancelled, skip this logic and set _ready to YES. Otherwise check dependencies.
+    if (![self isCancelled]) {
+        std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
+        for(NSOperation* op in (NSArray*)_dependencies) {
+            if (![op isFinished]) {
+                newReady = NO;
+            }
+        }
+    }
 
-    return ret;
+    if (_ready != newReady) {
+        [self willChangeValueForKey:@"isReady"];
+        _ready = newReady;
+        [self didChangeValueForKey:@"isReady"];
+    }
+}
+
+- (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
+    if (context == (void*)NSOperationContext) {
+        if (object == self) {
+            _finishLock.lock();
+            _finishCondition.notify_all();
+            _finishLock.unlock();
+        } else {
+            [self _checkReady];
+        }
+    }
+}
+
+- (id)init {
+    if (self = [super init]) {
+        _dependencies.attach([NSMutableArray new]);
+        _ready = YES;
+        [self addObserver:self forKeyPath:@"isFinished" options:0 context:(void*)NSOperationContext];
+    }
+
+    return self;
 }
 
 /**
  @Status Interoperable
 */
-- (NSOperationQueuePriority)queuePriority {
-    return priv->priority;
+- (BOOL)isReady {
+    std::lock_guard<std::recursive_mutex> lock(_readyLock);
+    return _ready;
 }
 
 /**
  @Status Interoperable
 */
 - (void)addDependency:(id)operation {
-    if (priv->dependencies == nil) {
-        priv->dependencies = [[NSMutableArray alloc] init];
-    }
-    [priv->dependencies addObject:operation];
+    std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
+    [self willChangeValueForKey:@"dependencies"];
+    [_dependencies addObject:operation];
+    [operation addObserver:self forKeyPath:@"isFinished" options:0 context:(void*)NSOperationContext];
+    [self didChangeValueForKey:@"dependencies"];
+    [self _checkReady];
 }
 
 /**
  @Status Interoperable
 */
-- (void)setQueuePriority:(NSOperationQueuePriority)priority {
-    priv->priority = priority;
+- (void)removeDependency:(NSOperation*)operation {
+    std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
+    NSUInteger index = [_dependencies indexOfObject:operation];
+    if (index != NSNotFound) {
+        [self willChangeValueForKey:@"dependencies"];
+        [operation removeObserver:self forKeyPath:@"isFinished" context:(void*)NSOperationContext];
+        [_dependencies removeObject:operation];
+        [self didChangeValueForKey:@"dependencies"];
+        [self _checkReady];
+    }
 }
+
 
 /**
  @Status Stub
@@ -131,139 +162,122 @@ struct NSOperationPriv;
  @Status Interoperable
 */
 - (void)setCompletionBlock:(void (^)(void))block {
-    id oldBlock = priv->completionBlock;
-    priv->completionBlock = [block copy];
-    [oldBlock release];
+    std::lock_guard<std::recursive_mutex> lock(_completionBlockLock);
+    [self willChangeValueForKey:@"completionBlock"];
+    _completionBlock = block;
+    [self didChangeValueForKey:@"completionBlock"];
 }
 
 /**
  @Status Interoperable
 */
 - (void (^)(void))completionBlock {
-    return priv->completionBlock;
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)isReady {
-    //  Note, check dependencies when we get them
-    int count = [priv->dependencies count];
-
-    for (int i = 0; i < count; i++) {
-        id op = [priv->dependencies objectAtIndex:i];
-
-        if (![op isFinished]) {
-            return NO;
-        }
-    }
-    return YES;
+    std::lock_guard<std::recursive_mutex> lock(_completionBlockLock);
+    return [[_completionBlock retain] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)isCancelled {
-    return priv->cancelled != 0;
+    return _cancelled;
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)isFinished {
-    return priv->finished != 0;
+    return _finished;
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)isExecuting {
-    return priv->executing != 0;
+    return _executing;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isConcurrent {
+    return NO;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isAsynchronous {
+    return NO;
 }
 
 /**
  @Status Interoperable
 */
 - (void)start {
-    if (!priv->executing && !priv->finished) {
-        bool execute = false;
-
-        pthread_mutex_lock(&priv->finishLock);
-        if (!priv->cancelled) {
-            [self willChangeValueForKey:@"isExecuting"];
-            priv->executing = 1;
-            [self didChangeValueForKey:@"isExecuting"];
-            execute = true;
-        }
-        pthread_mutex_unlock(&priv->finishLock);
-        if (execute) {
-            [self main];
-        }
-
-        if (execute) {
-            [self willChangeValueForKey:@"isExecuting"];
-        }
-
-        [self _setFinished:YES
-            andPerformUnderLock:^{
-                if (execute) {
-                    priv->executing = 0;
-                    [self didChangeValueForKey:@"isExecuting"];
-                }
-            }];
+    if (_finished) {
+        return;
     }
+
+    THROW_NS_IF(E_INVALIDARG, (_executing || ![self isReady]));
+    
+    _finishLock.lock();
+    BOOL shouldExecute = !_cancelled; // Note: in the cancelled case, [self main] is not called but isFinished will still be observable
+    if (shouldExecute) {
+        [self willChangeValueForKey:@"isExecuting"];
+        _executing = YES;
+        [self didChangeValueForKey:@"isExecuting"];
+    }
+    _finishLock.unlock();
+    
+    if (shouldExecute) {
+        NSAutoreleasePool* pool = [NSAutoreleasePool new];
+        [self main];
+        [pool release];
+    }
+
+    [self _finish:shouldExecute];
 }
 
-/**
- @Status Interoperable
-*/
-- (void)setFinished:(BOOL)finished {
-    [self _setFinished:finished andPerformUnderLock:nil];
-}
-
-- (void)_setFinished:(BOOL)finished andPerformUnderLock:(void (^)())block {
-    // yes, this is ugly: priv->finished is an int though.
-    int newValue = finished ? 1 : 0;
-    pthread_mutex_lock(&priv->finishLock);
+- (void)_finish:(BOOL)didExecute {
+    _finishLock.lock();
+    if (didExecute) {
+        [self willChangeValueForKey:@"isExecuting"];
+    }
 
     [self willChangeValueForKey:@"isFinished"];
-
-    if (priv->finished != newValue) {
-        priv->finished = newValue;
-    }
-
+    _finished = YES;
     [self didChangeValueForKey:@"isFinished"];
 
-    if (block) {
-        block();
+    if (didExecute) {
+        _executing = NO;
+        [self didChangeValueForKey:@"isExecuting"];
     }
 
-    if (newValue == 1) {
-        pthread_cond_broadcast(&priv->finishCondition);
+    _completionBlockLock.lock();
+    void (^completion)(void) = [_completionBlock retain];
+    _completionBlock = nil;
+    _completionBlockLock.unlock();
+
+    _finishLock.unlock();
+    
+    if (completion) {
+        completion();
     }
 
-    pthread_mutex_unlock(&priv->finishLock);
-
-    // This may seem unintuitive, but the completion
-    // block is intended to be called even if the operation
-    // is cancelled.
-    if (newValue == 1 && priv->completionBlock) {
-        priv->completionBlock();
-        [priv->completionBlock release];
-        priv->completionBlock = nil;
-    }
+    [completion release];
 }
 
 /**
  @Status Interoperable
 */
 - (void)cancel {
-    if (priv->cancelled == 0) {
-        pthread_mutex_lock(&priv->finishLock);
+    std::lock_guard<std::recursive_mutex> lock(_finishLock);
+    if (_cancelled == NO) {
         [self willChangeValueForKey:@"isCancelled"];
-        priv->cancelled = 1;
+        _cancelled = YES;
         [self didChangeValueForKey:@"isCancelled"];
-        pthread_mutex_unlock(&priv->finishLock);
+        [self _checkReady];
     }
 }
 
@@ -277,35 +291,35 @@ struct NSOperationPriv;
  @Status Interoperable
 */
 - (void)waitUntilFinished {
-    pthread_mutex_lock(&priv->finishLock);
+    _finishLock.lock();
     while (![self isFinished]) {
-        pthread_cond_wait(&priv->finishCondition, &priv->finishLock);
+        _finishCondition.wait(_finishLock);
     }
-    pthread_mutex_unlock(&priv->finishLock);
+
+    _finishLock.unlock();
 }
 
 /**
  @Status Interoperable
 */
-- (id)dependencies {
-    return priv->dependencies;
+- (NSArray*)dependencies {
+    std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
+    NSArray* copy = [[_dependencies copy] autorelease];
+    return copy;
 }
 
 /**
  @Status Interoperable
 */
 - (void)dealloc {
-    assert(!priv->completionBlock);
-    delete priv;
-    [super dealloc];
-}
+    _dependenciesLock.lock();
+    for(NSOperation* op in (NSArray*)_dependencies) {
+        [op removeObserver:self forKeyPath:@"isFinished" context:(void*)NSOperationContext];
+    }
 
-/**
- @Status Stub
- @Notes
-*/
-- (void)removeDependency:(NSOperation*)operation {
-    UNIMPLEMENTED();
+    _dependenciesLock.unlock();
+    [self removeObserver:self forKeyPath:@"isFinished" context:(void*)NSOperationContext];
+    [super dealloc];
 }
 
 @end
