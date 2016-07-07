@@ -54,9 +54,9 @@ static const wchar_t* g_logTag = L"UIFont";
 
 NSString* const c_defaultFontName = @"Helvetica";
 
-// keep consistent with UIFontDescriptor
-// NOTES : This is an arbitrary value designed to put an upper bound on the memory pressure from large fonts
-static const float c_maxSize = 65536.0f;
+// keep consistent with UIDescriptor
+// We need to set the maximun of size, since xaml will crash if it is too big.
+static const float c_maxSize = 100.0f;
 
 FT_Library _fontLib;
 FT_MemoryRec_ _fontMemory;
