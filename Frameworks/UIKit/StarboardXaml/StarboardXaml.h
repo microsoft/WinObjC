@@ -40,9 +40,14 @@ public:
 
 private:
     XamlTypeInfo::InfoProvider::XamlTypeInfoProvider^ _provider;
+};
 
-    void _ApplicationMainLaunch(ActivationType activationType, Platform::String^ activationArg);
+ref class AppEventListener
+{
+public:
     void _RegisterEventHandlers();
+
+private:
     void _OnAppVisibilityChanged(Platform::Object^ sender, Windows::UI::Core::VisibilityChangedEventArgs^ args);
     void _OnAppMemoryUsageChanged(Platform::Object^ sender, Platform::Object^ args);
     void _OnResuming(Platform::Object^ sender, Platform::Object^ args);
@@ -50,6 +55,9 @@ private:
 };
 
 extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::String^ activationArg);
+extern "C" void EbrApplicationActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ args);
+extern "C" bool EbrApplicationLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args);
+void _ApplicationMainLaunch(ActivationType activationType, Platform::String^ activationArg);
 
 #endif
 

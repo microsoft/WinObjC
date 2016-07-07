@@ -74,7 +74,7 @@ namespace Xib2Xaml.LegacyHandlers
             var idAttr = tag.Attribute(XName.Get("id"));
             if (idAttr != null)
             {
-                XamlXibReader.IdToObjectMap.Add(idAttr.Value, domObject);
+                XamlLegacyXibReader.IdToObjectMap.Add(idAttr.Value, domObject);
             }
 
             SetFrameSize(tag, domObject);
@@ -203,7 +203,7 @@ namespace Xib2Xaml.LegacyHandlers
                 {
                     throw new NotImplementedException("Reference with no Ref attribute");
                 }
-                element = XamlXibReader.GetReference(currentElement.Document, refAttr.Value);
+                element = XamlLegacyXibReader.GetReference(currentElement.Document, refAttr.Value);
             }
 
             return element;
@@ -254,7 +254,7 @@ namespace Xib2Xaml.LegacyHandlers
                 case 1: //NSRGB
                 {
                     var values =
-                        XamlXibReader.DecodeFromBase64(GetElementWithMatchingAttribute(color, "key", "NSRGB").Value)
+                        XamlLegacyXibReader.DecodeFromBase64(GetElementWithMatchingAttribute(color, "key", "NSRGB").Value)
                             .Split(' ');
 
                     var color2 = Color.FromRgb((byte) (double.Parse(values[0])*255),
@@ -268,7 +268,7 @@ namespace Xib2Xaml.LegacyHandlers
                 {
                     var searchKey = colorSpace == 2 ? "NSRGB" : "NSWhite";
                     var asciiDecodedString =
-                        XamlXibReader.DecodeFromBase64(GetElementWithMatchingAttribute(color, "key", searchKey).Value)
+                        XamlLegacyXibReader.DecodeFromBase64(GetElementWithMatchingAttribute(color, "key", searchKey).Value)
                             .Replace("\0", "");
                     var values = asciiDecodedString.Split(' ');
 
@@ -414,7 +414,7 @@ namespace Xib2Xaml.LegacyHandlers
             }
 
             //// Find control type and create a node
-            //XamlType controlType = member.SchemaContext.GetXamlType(XamlXibReader.GetControlType(controlName));
+            //XamlType controlType = member.SchemaContext.GetXamlType(XamlLegacyXibReader.GetControlType(controlName));
             //XamlDomObject domObject = new XamlDomObject(controlType);
             //member.Items.Add(domObject);
 
@@ -459,10 +459,10 @@ namespace Xib2Xaml.LegacyHandlers
                     domObject.Type.CanAssignTo(domObject.SchemaContext.GetXamlType(typeof(Button)))
                     )
                 {
-                    var left = int.Parse(matches[0].Value) - 12; // XamlXibReader.WIDTHMULTIPLIER);
-                    var top = int.Parse(matches[1].Value) - 12; // * XamlXibReader.HEIGHTMULTIPLIER);
-                    var width = int.Parse(matches[2].Value) + 24; // * XamlXibReader.WIDTHMULTIPLIER);
-                    var height = int.Parse(matches[3].Value) + 24; // * XamlXibReader.HEIGHTMULTIPLIER);
+                    var left = int.Parse(matches[0].Value) - 12; // XamlLegacyXibReader.WIDTHMULTIPLIER);
+                    var top = int.Parse(matches[1].Value) - 12; // * XamlLegacyXibReader.HEIGHTMULTIPLIER);
+                    var width = int.Parse(matches[2].Value) + 24; // * XamlLegacyXibReader.WIDTHMULTIPLIER);
+                    var height = int.Parse(matches[3].Value) + 24; // * XamlLegacyXibReader.HEIGHTMULTIPLIER);
 
                     domObject.SetAttachableMemberValue(typeof(Canvas), "Left", left.ToString());
                     domObject.SetAttachableMemberValue(typeof(Canvas), "Top", top.ToString());
@@ -511,7 +511,7 @@ namespace Xib2Xaml.LegacyHandlers
                         var newlines = textValue.Split('\n');
                         foreach (var line in newlines)
                         {
-                            sb.Append(XamlXibReader.DecodeFromBase64(line));
+                            sb.Append(XamlLegacyXibReader.DecodeFromBase64(line));
                         }
                         textValue = sb.ToString();
                     }

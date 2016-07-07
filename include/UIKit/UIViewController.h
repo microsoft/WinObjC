@@ -174,6 +174,8 @@ UIKIT_EXPORT_CLASS
                                                          sourceView:(UIView*)sourceView STUB_METHOD;
 - (id<UIViewControllerTransitionCoordinator>)transitionCoordinator STUB_METHOD;
 - (instancetype)initWithNibName:(NSString*)nibName bundle:(NSBundle*)nibBundle;
+- (instancetype)initWithXAMLClass:(NSString*)className;
+- (instancetype)initWithXAMLPage:(NSString*)pageName;
 - (void)addChildViewController:(UIViewController*)childController;
 - (void)addKeyCommand:(UIKeyCommand*)keyCommand STUB_METHOD;
 - (void)applicationFinishedRestoringState STUB_METHOD;

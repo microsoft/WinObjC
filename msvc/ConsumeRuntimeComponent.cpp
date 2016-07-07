@@ -26,20 +26,24 @@
 
 extern "C"
 {
-	int __cdecl EbrDefaultXamlMain()
-	{
-		int main(int argc, char *argv[]);
+    int __cdecl EbrDefaultXamlMain()
+    {
+        int main(int argc, char *argv[]);
 
-		return main(0, NULL);
-	}
-	#pragma comment(linker, "/alternatename:?main@@YAHP$01$AAV?$Array@P$AAVString@Platform@@$00@Platform@@@Z=_EbrDefaultXamlMain")
+        return main(0, NULL);
+    }
+    #pragma comment(linker, "/alternatename:?main@@YAHP$01$AAV?$Array@P$AAVString@Platform@@$00@Platform@@@Z=_EbrDefaultXamlMain")
 }
 
 #ifdef _M_ARM
-int __cdecl main(::Platform::Array<::Platform::String^>^ args)
+int __cdecl WOCMain(::Platform::Array<::Platform::String^>^ args)
 {
-	EbrDefaultXamlMain();
+    EbrDefaultXamlMain();
+
+    return 0;
 }
+
+#pragma comment(linker, "/alternatename:?main@@YAHP$01$AAV?$Array@P$AAVString@Platform@@$00@Platform@@@Z=?WOCMain@@YAHP$01$AAV?$Array@P$AAVString@Platform@@$00@Platform@@@Z")
 #endif
 #else // _WOC_APP
 // We need to export something to ensure we link a viable PE

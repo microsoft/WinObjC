@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import "Starboard.h"
+
 #import "Foundation/NSBundle.h"
 #import "Foundation/NSMutableArray.h"
 #import "Foundation/NSMutableDictionary.h"
@@ -23,6 +24,7 @@
 #import "Foundation/NSNotificationCenter.h"
 #import "Foundation/NSString.h"
 #import "Foundation/NSValue.h"
+
 #import "UIKit/UIApplication.h"
 #import "UIKit/UIDevice.h"
 #import "UIKit/UINib.h"
@@ -35,13 +37,25 @@
 #import "AutoLayout.h"
 #import "UIViewControllerInternal.h"
 #import "UIApplicationInternal.h"
+
+// TODO: Rename UIEmptyController to UIEmptyView
 #import "UIEmptyController.h"
+
 #import "UIViewInternal.h"
 #import "UIViewControllerInternal.h"
 #import "UIStoryboardInternal.h"
 #import "UIResponderInternal.h"
 #import "NSCoderInternal.h"
 #import "UIPopoverPresentationControllerInternal.h"
+
+#import "UWP/WindowsUIXaml.h"
+#import "UWP/WindowsFoundation.h"
+
+#include "COMIncludes.h"
+#include "WinString.h"
+#include "RoApi.h"
+#include "Windows.UI.Xaml.Markup.h"
+#include "COMIncludes_End.h"
 
 NSString* const UIViewControllerHierarchyInconsistencyException = @"UIViewControllerHierarchyInconsistencyException";
 NSString* const UIViewControllerShowDetailTargetDidChangeNotification = @"UIViewControllerShowDetailTargetDidChangeNotification";
@@ -273,6 +287,75 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     return _length;
 }
 @end
+
+// Proxy class that wraps up parent INavigationEventArgs which is later used to trigger OnNavigatedTo in viewWillAppear
+class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArgs {
+    virtual HRESULT STDMETHODCALLTYPE QueryInterface(
+        /* [in] */ REFIID riid,
+        /* [iid_is][out] */ _COM_Outptr_ void __RPC_FAR* __RPC_FAR* ppvObject) {
+        if (memcmp(&riid, &ABI::Windows::UI::Xaml::Navigation::IID_INavigationEventArgs, sizeof(IID)) == 0) {
+            *ppvObject = (void**)this;
+            return S_OK;
+        }
+        return E_NOTIMPL;
+    }
+
+    virtual ULONG STDMETHODCALLTYPE AddRef(void) {
+        return 1;
+    }
+
+    virtual ULONG STDMETHODCALLTYPE Release(void) {
+        return 1;
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE GetIids(
+        /* [out] */ __RPC__out ULONG* iidCount,
+        /* [size_is][size_is][out] */ __RPC__deref_out_ecount_full_opt(*iidCount) IID** iids) {
+        *iidCount = 0;
+
+        return S_OK;
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE GetRuntimeClassName(
+        /* [out] */ __RPC__deref_out_opt HSTRING* className) {
+        return E_FAIL;
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE GetTrustLevel(
+        /* [out] */ __RPC__out TrustLevel* trustLevel) {
+        return S_OK;
+    }
+
+    virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_Content(
+        /* [out][retval] */ __RPC__deref_out_opt IInspectable** value) {
+        return S_OK;
+    }
+
+    virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_Parameter(
+        /* [out][retval] */ __RPC__deref_out_opt IInspectable** value) {
+        return S_OK;
+    }
+
+    virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_SourcePageType(
+        /* [out][retval] */ __RPC__out ABI::Windows::UI::Xaml::Interop::TypeName* value) {
+        return S_OK;
+    }
+
+    virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_NavigationMode(
+        /* [out][retval] */ __RPC__out ABI::Windows::UI::Xaml::Navigation::NavigationMode* value) {
+        return S_OK;
+    }
+
+    virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_Uri(
+        /* [out][retval] */ __RPC__deref_out_opt ABI::Windows::Foundation::IUriRuntimeClass** value) {
+        return S_OK;
+    }
+
+    virtual /* [propput] */ HRESULT STDMETHODCALLTYPE put_Uri(
+        /* [in] */ __RPC__in_opt ABI::Windows::Foundation::IUriRuntimeClass* value) {
+        return S_OK;
+    }
+};
 
 @implementation UIViewController : UIResponder
 
@@ -692,11 +775,17 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         priv->nibBundle = bundle;
     }
 
-    if (strNib) {
+    if ([strNib length] > 0) {
         priv->nibName = [strNib copy];
     } else {
         priv->nibName = nil;
     }
+
+    // TODO: Check to see if we have a XAML class file locally in the project
+    // 1. Find local XAML files (*.xaml.cpp) - assume the filename as the class name
+    // 2. Set priv->_xamlClass = filename (e.g. <ClassName>.xaml.cpp)
+    // 3. Set priv->_xamlPage = filename (NOT SURE IF PAGE WILL WORK WITHOUT THE CODE-BEHIND METHODS)
+    // 4. Remove initWithXAMLClass and initWithXAMLPage
 
     return self;
 }
@@ -710,6 +799,20 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     return [self initWithNibName:nil bundle:nil];
 }
 
+- (instancetype)initWithXAMLClass:(NSString*)className {
+    self = [self initWithNibName:nil bundle:nil];
+    priv->_xamlClassName = className;
+
+    return self;
+}
+
+- (instancetype)initWithXAMLPage:(NSString*)pageName {
+    self = [self initWithNibName:nil bundle:nil];
+    priv->_xamlPageName = pageName;
+
+    return self;
+}
+
 /**
  @Status Interoperable
 */
@@ -718,8 +821,13 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         return;
     }
 
-    NSString* nibPath = nil;
+    if (priv->_xamlClassName != nil || priv->_xamlPageName != nil) {
+        [self _loadXamlPage];
+        return;
+    }
 
+    // Fallback to loading the NIB file
+    NSString* nibPath = nil;
     if (priv->nibName != nil) {
         NSBundle* bundle = priv->nibBundle;
 
@@ -772,7 +880,6 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         }
 
         IwFree(ourClass);
-        // if ( nibPath == nil ) assert(0);
     }
 
     if (nibPath != nil) {
@@ -834,19 +941,21 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         if ([self modalPresentationStyle] == UIModalPresentationFormSheet) {
             frame = [self _modalPresentationFormSheetFrame];
         }
-        UIInterfaceOrientation curOrientation = (UIInterfaceOrientation)[[UIApplication sharedApplication] statusBarOrientation];
 
         /*
-        switch ( curOrientation ) {
-        case UIInterfaceOrientationLandscapeLeft:
-        case UIInterfaceOrientationLandscapeRight: {
-        float temp = frame.size.width;
-        frame.size.width = frame.size.height;
-        frame.size.height = temp;
-        }
-        break;
+        // TODO: Remove if this is no longer applicable
+        UIInterfaceOrientation curOrientation = (UIInterfaceOrientation)[[UIApplication sharedApplication] statusBarOrientation];
+        switch (curOrientation) {
+            case UIInterfaceOrientationLandscapeLeft:
+            case UIInterfaceOrientationLandscapeRight: {
+                float temp = frame.size.width;
+                frame.size.width = frame.size.height;
+                frame.size.height = temp;
+            }
+            break;
         }
         */
+
         [priv->view setFrame:frame];
     }
 }
@@ -1177,6 +1286,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         CGPoint curPos;
         id layer = [curView layer];
 
+        // TODO: Eradicate warning about multiple methods named 'position' found
         curPos = [layer position];
 
         CABasicAnimation* animation = [CABasicAnimation animationWithKeyPath:@"position"];
@@ -1625,6 +1735,13 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
  @Status Interoperable
 */
 - (void)viewWillAppear:(BOOL)isAnimated {
+    if (priv->_page != nil) {
+        EventArgs* args = new EventArgs();
+        WUXNNavigationEventArgs* navArgs = NSAllocateObject([WUXNNavigationEventArgs class], 0, NULL);
+        [navArgs setComObj:args];
+
+        [priv->_page onNavigatedTo:navArgs];
+    }
 }
 
 /**
@@ -1685,6 +1802,82 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 */
 - (BOOL)isEditing {
     return priv->_isEditing;
+}
+
+- (void)_loadXamlPage {
+    if (priv->_xamlClassName == nil && priv->_xamlPageName == nil) {
+        return;
+    }
+
+    CGRect frame = [[UIScreen mainScreen] applicationFrame];
+    if ([self modalPresentationStyle] == UIModalPresentationFormSheet) {
+        frame = [self _modalPresentationFormSheetFrame];
+    }
+
+    // Create a template UIView
+    UIView* view = [[[UIEmptyController alloc] initWithFrame:frame] autorelease];
+    [view setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+    [self setView:view];
+
+    // If we find a XAML class or page, attempt to load it
+    if (priv->_xamlClassName != nil) {
+        Microsoft::WRL::ComPtr<IInspectable> pageObj;
+        Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> xamlType;
+        Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlMetadataProvider> xamlMeta;
+        Microsoft::WRL::ComPtr<IInspectable> insp = [WXApplication.current comObj];
+        insp.As(&xamlMeta);
+
+        uint32_t classNameLen = [priv->_xamlClassName length];
+        unichar* className = (unichar*)IwMalloc(sizeof(unichar) * (classNameLen + 1));
+        auto freeClassName = wil::ScopeExit([&]() {
+            IwFree(className); 
+        });
+
+        HSTRING hClassName;
+        auto freeHClassName = wil::ScopeExit([&]() {
+            WindowsDeleteString(hClassName);
+        });
+
+        // Copy the string into className and null terminate it
+        [priv->_xamlClassName getCharacters:className];
+        className[classNameLen] = '\0';
+
+        WindowsCreateString((LPCWSTR)className, classNameLen, &hClassName);
+        xamlMeta->GetXamlTypeByFullName(hClassName, &xamlType);
+        xamlType->ActivateInstance(&pageObj);
+
+        priv->_page = (WXCPage*)NSAllocateObject([WXCPage class], 0, NULL);
+        [priv->_page setComObj:pageObj];
+    } else {
+        // TODO: If we load a XAML page, are we bypassing the code-gen methods to trigger events (e.g. *.xaml.cpp) and forward them to an
+        // UIView-class object
+        priv->_page = [WXCPage make];
+        WFUri* location = [WFUri makeUri:[NSString stringWithFormat:@"ms-appx:///%@", (NSString*)priv->_xamlPageName]];
+        [WXApplication loadComponentWithResourceLocation:priv->_page
+                                         resourceLocator:location
+                               componentResourceLocation:WUXCPComponentResourceLocationApplication];
+    }
+
+    unsigned int propListCount;
+    objc_property_t* props = (objc_property_t*)class_copyPropertyList([self class], &propListCount);
+    auto freeProps = wil::ScopeExit([&]() {
+        IwFree(props);
+    });
+
+    for (int i = 0; i < propListCount; i++) {
+        objc_property_t curProp = props[i];
+        const char* propName = property_getName(curProp);
+        if (propName) {
+            NSString* propNameString = [NSString stringWithCString:propName];
+            RTObject* obj = [priv->_page findName:propNameString];
+            if (obj) {
+                // Store the XAML element found on the page for each public facing property
+                [self setValue:obj forKey:propNameString];
+            }
+        }
+    }
+
+    [self.view setNativeElement:priv->_page];
 }
 
 /**

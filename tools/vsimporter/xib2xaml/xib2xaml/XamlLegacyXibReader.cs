@@ -35,9 +35,9 @@ namespace Xib2Xaml
 
         internal static int WIDTH = 480;
         internal static int HEIGHT = 800;
-        private XDocument _document;
 
         private readonly XamlReader _underlyingReader;
+        private XDocument _document;
 
         public XamlLegacyXibReader(string file)
         {
@@ -67,8 +67,7 @@ namespace Xib2Xaml
             _document = xDocument;
             var schemaContext = new XamlSchemaContext();
 
-            var rootObjectsTag = GetElementWithMatchingAttribute(xDocument.Root.Element(XName.Get("data")), "key",
-                "IBDocument.RootObjects");
+            var rootObjectsTag = GetElementWithMatchingAttribute(xDocument.Root.Element(XName.Get("data")), "key", "IBDocument.RootObjects");
             var windowTag = GetElementWithMatchingAttribute(rootObjectsTag, "class", "IBUIWindow");
 
             XamlDomObject rootDomObject;
@@ -279,6 +278,7 @@ namespace Xib2Xaml
         }
 
         #region XamlReader methods
+
         public override bool IsEof
         {
             get { return _underlyingReader.IsEof; }

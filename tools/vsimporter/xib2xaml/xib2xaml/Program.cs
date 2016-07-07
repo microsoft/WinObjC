@@ -29,19 +29,18 @@ namespace Xib2Xaml
         private const string PlaceHolderCPPFile = "xib2xaml.Resources.placeholder.xaml.cpp";
         private const string PlaceHolderHeaderFile = "xib2xaml.Resources.placeholder.xaml.h";
 
-        private static void GenerateXAMLCodeBehindFromResource(string className, string resourceName,
-            string destinationFileName)
+        private static void GenerateXAMLCodeBehindFromResource(string className, string resourceName, string destinationFileName)
         {
             if (string.IsNullOrWhiteSpace(className))
             {
-                throw new ArgumentNullException("className");
+                throw new ArgumentNullException(nameof(className));
             }
 
             using (var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
             {
                 if (resource == null)
                 {
-                    throw new ArgumentException("Failed to find resource", "resourceName");
+                    throw new ArgumentException("Failed to find resource", nameof(resourceName));
                 }
 
                 // Modify the contents of the embedded resource replacing the <PlaceHolderClassNameToken> with the supplied className
@@ -49,10 +48,10 @@ namespace Xib2Xaml
                 using (var bs = new BufferedStream(resource))
                 using (var sr = new StreamReader(bs))
                 {
-                    string line, replacedText;
+                    string line;
                     while ((line = sr.ReadLine()) != null)
                     {
-                        replacedText = line.Replace(PlaceHolderClassNameToken, className);
+                        var replacedText = line.Replace(PlaceHolderClassNameToken, className);
                         sb.Append(replacedText).AppendLine();
                     }
                 }
@@ -84,9 +83,7 @@ namespace Xib2Xaml
             }
 
             using (var xamlReader = new XamlXibReader(args[0]))
-            using (
-                var xmlWriter = XmlWriter.Create(args[0].Replace(".xib", ".xaml"), new XmlWriterSettings {Indent = true})
-                )
+            using (var xmlWriter = XmlWriter.Create(args[0].Replace(".xib", ".xaml"), new XmlWriterSettings {Indent = true}))
             using (var xamlWriter = new XamlXmlWriter(xmlWriter, xamlReader.SchemaContext))
             {
                 XamlServices.Transform(xamlReader, xamlWriter);

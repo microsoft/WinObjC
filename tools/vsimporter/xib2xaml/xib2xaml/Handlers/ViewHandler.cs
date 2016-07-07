@@ -28,11 +28,14 @@ namespace Xib2Xaml.Handlers
 {
     internal class ViewHandler
     {
+        // Full bound example: <Button Click="{x:Bind Model.EventHandlers['deepPathClicked:'].Handle}">Deep Path</Button>
+        private const string XBindFormatString = "{{x:Bind Model.EventHandlers['{0}'].Handle}}";
+
         internal static List<XamlDomObject> CreateObject(XElement tag, XamlSchemaContext schema)
         {
-            var domObjects = new List<XamlDomObject>();
-
             Debug.Assert(tag != null);
+
+            var domObjects = new List<XamlDomObject>();
 
             // Create the view and canvas
             var canvas = new XamlDomObject(schema.GetXamlType(typeof(Canvas)));
@@ -65,44 +68,18 @@ namespace Xib2Xaml.Handlers
         {
             Debug.Assert(tag != null && domObject != null);
 
-            // Mark ids so we can wire events and names properly.
-            // We need to strip them before sending to XXW though.
-            var idAttr = tag.Attribute(XName.Get("id"));
-            if (idAttr != null)
-            {
-                XamlXibReader.IdToObjectMap.Add(idAttr.Value, domObject);
-            }
+            SetName(tag, domObject);
 
             SetFrameSize(tag, domObject);
 
             SetOpacity(tag, domObject);
 
-            var backgroundColor = GetElementWithMatchingAttribute(tag, "key", "backgroundColor");
-            if (backgroundColor != null)
-            {
-                SetColor(domObject, backgroundColor, domObject.Type.GetMember("Background"));
-            }
+            SetBackground(tag, domObject);
 
             GetDimensions(tag, domObject);
 
-            //var colors = from nsColor in element.Elements(XName.Get("object"))
-            //             where nsColor.Attribute(XName.Get("class")).Value == "NSColor"
-            //             select nsColor;
-
-            //foreach (var color in colors)
-            //{
-            //    GetColor(controlType, domObject, color);
-            //}
-
-            //GetNormalTitle(element, domObject);
-
-            //GetFont(element, controlType, domObject);
-
-            //GetOpacity(element, controlType, domObject);
-
-            //GetText(element, domObject);
-
-            //GetImage(element, domObject);
+            // TODO: Re-enable once we figure out why the bindings do not permit single quotes in them
+            //SetBindings(tag, domObject);
         }
 
         private static XamlDomObject CreateView(XElement viewTag, XamlSchemaContext schemaContext)
@@ -133,13 +110,17 @@ namespace Xib2Xaml.Handlers
             return canvas;
         }
 
-        protected static void SetOpacity(XElement element, XamlDomObject domObject)
+        protected static void SetName(XElement element, XamlDomObject domObject)
         {
-            var opacityAttr = element.Attribute(XName.Get("opaque"));
-            if (opacityAttr != null && opacityAttr.Value.Equals("yes", StringComparison.InvariantCultureIgnoreCase))
+            // Mark IDs so we can wire events and names properly. We need to strip them before sending to XXW though.
+            var idAttr = element.Attribute(XName.Get("id"));
+            if (idAttr != null)
             {
-                // TODO: Investigate why the legacy handler set the opacity to 0.7 vs 1.0
-                domObject.SetMemberValue(domObject.Type.GetMember("Opacity"), "0.7");
+                XamlXibReader.IdToObjectMap.Add(idAttr.Value, domObject);
+
+                // Modify the ID attrib so it doesn't contain dashes
+                var name = idAttr.Value.Replace("-", "");
+                domObject.MemberNodes.Insert(0, new XamlDomMember(XamlLanguage.Name, name));
             }
         }
 
@@ -163,6 +144,25 @@ namespace Xib2Xaml.Handlers
             }
         }
 
+        protected static void SetOpacity(XElement element, XamlDomObject domObject)
+        {
+            var opacityAttr = element.Attribute(XName.Get("opaque"));
+            if (opacityAttr != null && opacityAttr.Value.Equals("yes", StringComparison.InvariantCultureIgnoreCase))
+            {
+                // TODO: Investigate why the legacy handler set the opacity to 0.7 vs 1.0
+                domObject.SetMemberValue(domObject.Type.GetMember("Opacity"), "0.7");
+            }
+        }
+
+        protected static void SetBackground(XElement element, XamlDomObject domObject)
+        {
+            var backgroundColor = GetElementWithMatchingAttribute(element, "key", "backgroundColor");
+            if (backgroundColor != null)
+            {
+                SetColor(domObject, backgroundColor, domObject.Type.GetMember("Background"));
+            }
+        }
+
         protected static string GetValueWithMatchingAttribute(XElement currentElement, string attribute,
             string className)
         {
@@ -171,6 +171,7 @@ namespace Xib2Xaml.Handlers
             {
                 return element.Value;
             }
+
             return null;
         }
 
@@ -183,13 +184,13 @@ namespace Xib2Xaml.Handlers
                 select objectTag;
 
             Debug.Assert(elements.Count() == 1 || elements.Count() == 0);
+
             if (!elements.Any())
             {
                 return null;
             }
 
             var element = elements.First();
-
             if (element.Name == XName.Get("reference"))
             {
                 var refAttr = element.Attribute(XName.Get("ref"));
@@ -202,6 +203,16 @@ namespace Xib2Xaml.Handlers
             }
 
             return element;
+        }
+
+        protected static void GetAndSetValue(XElement element, XamlDomObject domObject, string key, XamlMember member)
+        {
+            var valueElement = element.Attribute(XName.Get(key));
+            if (valueElement != null)
+            {
+                var textValue = valueElement.Value;
+                domObject.SetMemberValue(member, textValue);
+            }
         }
 
         private static XamlMember GetColorMember(XamlType xType, string colorType)
@@ -305,7 +316,6 @@ namespace Xib2Xaml.Handlers
                 case "view":
                     objects = CreateObject(element, member.SchemaContext);
                     break;
-
                 case "tableView":
                     objects = TableViewHandler.CreateObject(element, member.SchemaContext);
                     break;
@@ -336,41 +346,11 @@ namespace Xib2Xaml.Handlers
             }
 
             Debug.Assert(objects != null);
+
             foreach (var domObject in objects)
             {
                 member.Items.Add(domObject);
             }
-
-            //// Find control type and create a node
-            //XamlType controlType = member.SchemaContext.GetXamlType(XamlXibReader.GetControlType(controlName));
-            //XamlDomObject domObject = new XamlDomObject(controlType);
-            //member.Items.Add(domObject);
-
-            //GetDimensions(element, domObject);
-
-            //if (controlType.UnderlyingType == typeof(TextBox))
-            //{
-            //    domObject.SetMemberValue("TextWrapping", "Wrap");
-            //}
-
-            //var colors = from nsColor in element.Elements(XName.Get("object"))
-            //             where nsColor.Attribute(XName.Get("class")).Value == "NSColor"
-            //             select nsColor;
-
-            //foreach (var color in colors)
-            //{
-            //    GetColor(controlType, domObject, color);
-            //}
-
-            //GetNormalTitle(element, domObject);
-
-            //GetFont(element, controlType, domObject);
-
-            //GetOpacity(element, controlType, domObject);
-
-            //GetText(element, domObject);
-
-            //GetImage(element, domObject);
         }
 
         protected static void GetDimensions(XElement element, XamlDomObject domObject)
@@ -417,24 +397,45 @@ namespace Xib2Xaml.Handlers
             }
         }
 
-        //static protected void GetNormalTitle(XElement element, XamlDomObject domObject)
-        //{
-        //    GetAndSetValue(element, domObject, "normalTitle", domObject.Type.ContentProperty);
-        ////}
-
-        //private void GetText(XElement element, XamlDomObject domObject)
-        //{
-        //    GetAndSetValue(element, domObject, "text", domObject.Type.ContentProperty);
-        //}
-
-        protected static void GetAndSetValue(XElement element, XamlDomObject domObject, string key, XamlMember member)
+        #region XAML Binding
+        internal static XamlMember GetEvent(XamlDomObject domObject)
         {
-            var valueElement = element.Attribute(XName.Get(key));
-            if (valueElement != null)
+            if (domObject.Type.CanAssignTo(domObject.SchemaContext.GetXamlType(typeof(Slider))))
             {
-                var textValue = valueElement.Value;
-                domObject.SetMemberValue(member, textValue);
+                return domObject.Type.GetMember("ValueChanged");
+            }
+            if (domObject.Type.CanAssignTo(domObject.SchemaContext.GetXamlType(typeof(TextBox))))
+            {
+                return domObject.Type.GetMember("TextChanged");
+            }
+            if (domObject.Type.CanAssignTo(domObject.SchemaContext.GetXamlType(typeof(Button))))
+            {
+                return domObject.Type.GetMember("Click");
+            }
+
+            throw new NotImplementedException();
+        }
+
+        protected static void SetBindings(XElement element, XamlDomObject domObject)
+        {
+            var connections = element.Element(XName.Get("connections"));
+            if (connections != null)
+            {
+                foreach (var action in connections.Elements(XName.Get("action")))
+                {
+                    var selector = action.Attribute(XName.Get("selector"));
+                    if (selector!= null)
+                    {
+                        var selectorValue = selector.Value;
+                        if (selectorValue.Contains(":"))
+                        {
+                            var bindingDelegate = string.Format(XBindFormatString, selectorValue);
+                            domObject.MemberNodes.Insert(0, new XamlDomMember(GetEvent(domObject), bindingDelegate));
+                        }
+                    }
+                }
             }
         }
+        #endregion
     }
 }

@@ -56,6 +56,7 @@ namespace XamlTools.XamlDom
             {
                 Items.Add(item);
             }
+
             Resolve();
         }
 
@@ -110,6 +111,7 @@ namespace XamlTools.XamlDom
             {
                 throw new NotImplementedException("Unknown members are not implemented");
             }
+
             _member = member;
             Resolve();
         }
@@ -130,6 +132,7 @@ namespace XamlTools.XamlDom
             {
                 throw new ArgumentNullException("attachedMember");
             }
+
             _unresolvedDeclaringType = declaringType;
             _unresolvedMemberName = attachedMember;
 
@@ -194,6 +197,7 @@ namespace XamlTools.XamlDom
                         _items.Seal();
                     }
                 }
+
                 return _items;
             }
         }
@@ -208,6 +212,7 @@ namespace XamlTools.XamlDom
                 {
                     throw new InvalidOperationException("SchemaContext must match the XamlMember's SchemaContext");
                 }
+
                 _schemaContext = value;
             }
         }
@@ -227,17 +232,18 @@ namespace XamlTools.XamlDom
             {
                 _schemaContext = Parent.SchemaContext;
             }
+
             if (Member == null && _unresolvedMemberName != null)
             {
                 if (_unresolvedDeclaringType != null)
                 {
-                    _member =
-                        SchemaContext.GetXamlType(_unresolvedDeclaringType).GetAttachableMember(_unresolvedMemberName);
+                    _member = SchemaContext.GetXamlType(_unresolvedDeclaringType).GetAttachableMember(_unresolvedMemberName);
                 }
                 else
                 {
                     _member = Parent.Type.GetMember(_unresolvedMemberName);
                 }
+
                 _unresolvedMemberName = null;
                 _unresolvedDeclaringType = null;
             }

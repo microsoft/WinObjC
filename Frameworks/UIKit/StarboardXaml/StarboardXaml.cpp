@@ -19,6 +19,7 @@
 #include "ApplicationMain.h"
 #include "LayerRegistration.h"
 #include "StringConversion.h"
+#include "Windows.UI.Xaml.h"
 
 #include "ApplicationCompositor.h"
 #include "XamlCompositor.h"
@@ -57,6 +58,46 @@ Platform::Array<Xaml::Markup::XmlnsDefinition>^ App::GetXmlnsDefinitions() {
     return ref new Platform::Array<Xaml::Markup::XmlnsDefinition>(0);
 }
 
+void AppEventListener::_RegisterEventHandlers() {
+    Windows::UI::Xaml::Application::Current->Suspending += ref new Xaml::SuspendingEventHandler(this, &AppEventListener::_OnSuspending);
+    Windows::UI::Xaml::Application::Current->Resuming += ref new Windows::Foundation::EventHandler<Platform::Object^>(this, &AppEventListener::_OnResuming);
+
+    // Register for Window Visibility change event.
+    // TODO::
+    // todo-nithishm-03072016 - Move this out of the Windows Visibility event in future.
+    Xaml::Window::Current->VisibilityChanged += ref new Xaml::WindowVisibilityChangedEventHandler(this, &AppEventListener::_OnAppVisibilityChanged);
+    // Register for Application Memory Usage Increase event.
+    MemoryManager::AppMemoryUsageIncreased += ref new Windows::Foundation::EventHandler<Platform::Object^>(this, &AppEventListener::_OnAppMemoryUsageChanged);
+}
+
+void AppEventListener::_OnAppVisibilityChanged(Platform::Object^ sender, Core::VisibilityChangedEventArgs^ args)
+{
+    TraceVerbose(TAG, L"VisibilityChanged event received - %d", args->Visible);
+    UIApplicationMainHandleWindowVisibilityChangeEvent(args->Visible);
+}
+
+void AppEventListener::_OnAppMemoryUsageChanged(Platform::Object^ sender, Platform::Object^ args)
+{
+    auto level = MemoryManager::AppMemoryUsageLevel;
+
+    TraceVerbose(TAG, L"AppMemoryUsageIncreased event received - %d", level);
+    if (level == AppMemoryUsageLevel::High) {
+        UIApplicationMainHandleHighMemoryUsageEvent();
+    }
+}
+
+void AppEventListener::_OnResuming(Platform::Object^ sender, Platform::Object^ args)
+{
+    TraceVerbose(TAG, L"Resuming event received");
+}
+
+void AppEventListener::_OnSuspending(Platform::Object^ sender, Windows::ApplicationModel::SuspendingEventArgs^ args)
+{
+    TraceVerbose(TAG, L"Suspending event received");
+}
+
+static AppEventListener ^_appEvents;
+
 void App::InitializeComponent() {
 }
 
@@ -64,21 +105,31 @@ void App::Connect(int connectionId, Platform::Object^ target) {
 }
 
 void App::OnLaunched(LaunchActivatedEventArgs^ args) {
+    if (EbrApplicationLaunched(args) == true) {
+        _ApplicationMainLaunch(ActivationTypeNone, nullptr);
+    }
+}
+
+void App::OnActivated(IActivatedEventArgs^ args) {
+    EbrApplicationActivated(args);
+}
+
+bool EbrApplicationLaunched(LaunchActivatedEventArgs^ args) {
     if (args->PrelaunchActivated) {
         // Opt out of prelaunch for now. MSDN guidance is to check the flag and just return.
-        return;
+        return false;
     }
 
     if ((args->PreviousExecutionState == ApplicationExecutionState::Running) ||
         (args->PreviousExecutionState == ApplicationExecutionState::Suspended)) {
         // Skip re-initializing as the app is being resumed from memory.
-        return;
+        return false;
     }
 
-    _ApplicationMainLaunch(ActivationTypeNone, nullptr);
+    return true;
 }
 
-void App::OnActivated(IActivatedEventArgs^ args) {
+void EbrApplicationActivated(IActivatedEventArgs^ args) {
     TraceVerbose(TAG, L"OnActivated event received for %d. Previous app state was %d", args->Kind, args->PreviousExecutionState);
 
     bool initiateAppLaunch = false;
@@ -102,47 +153,11 @@ void App::OnActivated(IActivatedEventArgs^ args) {
     }
 }
 
-void App::_ApplicationMainLaunch(ActivationType activationType, Platform::String^ activationArg) {
+void _ApplicationMainLaunch(ActivationType activationType, Platform::String^ activationArg) {
     _ApplicationLaunch(activationType, activationArg);
-    _RegisterEventHandlers();
-}
 
-void App::_RegisterEventHandlers() {
-    this->Suspending += ref new Xaml::SuspendingEventHandler(this, &App::_OnSuspending);
-    this->Resuming += ref new Windows::Foundation::EventHandler<Platform::Object^>(this, &App::_OnResuming);
-
-    // Register for Window Visibility change event.
-    // TODO::
-    // todo-nithishm-03072016 - Move this out of the Windows Visibility event in future.
-    Xaml::Window::Current->VisibilityChanged += ref new Xaml::WindowVisibilityChangedEventHandler(this, &App::_OnAppVisibilityChanged);
-    // Register for Application Memory Usage Increase event.
-    MemoryManager::AppMemoryUsageIncreased += ref new Windows::Foundation::EventHandler<Platform::Object^>(this, &App::_OnAppMemoryUsageChanged);
-}
-
-void App::_OnAppVisibilityChanged(Platform::Object^ sender, Core::VisibilityChangedEventArgs^ args)
-{
-    TraceVerbose(TAG, L"VisibilityChanged event received - %d", args->Visible);
-    UIApplicationMainHandleWindowVisibilityChangeEvent(args->Visible);
-}
-
-void App::_OnAppMemoryUsageChanged(Platform::Object^ sender, Platform::Object^ args)
-{
-    auto level = MemoryManager::AppMemoryUsageLevel;
-
-    TraceVerbose(TAG, L"AppMemoryUsageIncreased event received - %d", level);
-    if (level == AppMemoryUsageLevel::High) {
-        UIApplicationMainHandleHighMemoryUsageEvent();
-    }
-}
-
-void App::_OnResuming(Platform::Object^ sender, Platform::Object^ args)
-{
-    TraceVerbose(TAG, L"Resuming event received");
-}
-
-void App::_OnSuspending(Platform::Object^ sender, Windows::ApplicationModel::SuspendingEventArgs^ args)
-{
-    TraceVerbose(TAG, L"Suspending event received");
+    _appEvents = ref new AppEventListener();
+    _appEvents->_RegisterEventHandlers();
 }
 
 extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::String^ activationArg) {
@@ -180,12 +195,27 @@ int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* de
         g_delegateClassName = reinterpret_cast<Platform::String^>(Strings::NarrowToWide<HSTRING>(rawString).Detach());
     }
 
-    // Start our application
-    Xaml::Application::Start(
-        ref new Xaml::ApplicationInitializationCallback([](Xaml::ApplicationInitializationCallbackParams ^ p) {
+    Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::IApplicationStatics> appStatics = nullptr;
+    Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::IApplication> currentApplication = nullptr;
+    HRESULT hr = RoGetActivationFactory(Platform::StringReference(RuntimeClass_Windows_UI_Xaml_Application).GetHSTRING(),
+        ABI::Windows::UI::Xaml::IID_IApplicationStatics,
+        reinterpret_cast<void **>(appStatics.GetAddressOf()));
+
+    if (hr == S_OK && appStatics) {
+        appStatics->get_Current(currentApplication.GetAddressOf());
+    }
+
+    if (currentApplication == nullptr) {
+        // Start our application
+        Xaml::Application::Start(
+            ref new Xaml::ApplicationInitializationCallback([](Xaml::ApplicationInitializationCallbackParams^ p) {
             // Simply creating the app will kick off the rest of the launch sequence
             auto app = ref new App();
         }));
+    }
+    else {
+        _ApplicationMainLaunch(ActivationTypeNone, nullptr);
+    }
 
     return 0;
 }

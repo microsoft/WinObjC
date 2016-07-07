@@ -1,10 +1,10 @@
-﻿//
-// <PlaceHolderClassName>.xaml.cpp
-// Implementation of the <PlaceHolderClassName> class.
+//
+// MainViewController.xaml.cpp
+// Implementation of the MainViewController class.
 //
 
 #include "pch.h"
-#include "<PlaceHolderClassName>.xaml.h"
+#include "MainViewController.xaml.h"
 
 using namespace IslandwoodAutoGenNamespace;
 
@@ -23,7 +23,7 @@ namespace IslandwoodAutoGenNamespace {
     /// <summary>
     /// Load the XAML page
     /// </summary>
-    <PlaceHolderClassName>::<PlaceHolderClassName>() {
+    MainViewController::MainViewController() {
         InitializeComponent();
     }
 }
