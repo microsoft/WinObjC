@@ -143,6 +143,8 @@ int cgContextPathPointCountForElementType(CGPathElementType type) {
         case kCGPathElementCloseSubpath:
             pointCount = 0;
             break;
+        default:
+            break;
     }
     return pointCount;
 }

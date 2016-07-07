@@ -1952,6 +1952,9 @@ CGPathRef CGContextCairo::CGContextCopyPath(void) {
             case CAIRO_PATH_CLOSE_PATH:
                 CGPathCloseSubpath(copyPath);
                 break;
+            default:
+                FAIL_FAST();
+                break;
         }
     }
     cairo_path_destroy(caPath);
