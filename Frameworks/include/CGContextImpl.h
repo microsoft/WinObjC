@@ -173,6 +173,7 @@ public:
     virtual void CGContextSetShadowWithColor(CGSize offset, float blur, CGColorRef color);
     virtual void CGContextSetShadow(CGSize offset, float blur);
     virtual bool CGContextIsPointInPath(bool eoFill, float x, float y);
+    virtual CGPathRef CGContextCopyPath(void);
 };
 
 #define LOCK_CAIRO() pthread_mutex_lock(&_cairoLock);

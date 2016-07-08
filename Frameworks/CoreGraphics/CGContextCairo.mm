@@ -1931,3 +1931,35 @@ bool CGContextCairo::CGContextIsPointInPath(bool eoFill, float x, float y) {
     UNLOCK_CAIRO();
     return returnValue;
 }
+CGPathRef CGContextCairo::CGContextCopyPath(void) {
+    CGMutablePathRef copyPath = CGPathCreateMutable();
+    ObtainLock();
+    LOCK_CAIRO();
+    cairo_path_t* caPath = cairo_copy_path(_drawContext);
+    UNLOCK_CAIRO();
+    cairo_path_data_t* data;
+
+    for (int i = 0; i < caPath->num_data; i += caPath->data[i].header.length) {
+        data = &caPath->data[i];
+        switch (data->header.type) {
+            case CAIRO_PATH_MOVE_TO:
+                CGPathMoveToPoint(copyPath, NULL, data[1].point.x, data[1].point.y);
+                break;
+            case CAIRO_PATH_LINE_TO:
+                CGPathAddLineToPoint(copyPath, NULL, data[1].point.x, data[1].point.y);
+                break;
+            case CAIRO_PATH_CURVE_TO:
+                CGPathAddCurveToPoint(
+                    copyPath, NULL, data[1].point.x, data[1].point.y, data[2].point.x, data[2].point.y, data[3].point.x, data[3].point.y);
+                break;
+            case CAIRO_PATH_CLOSE_PATH:
+                CGPathCloseSubpath(copyPath);
+                break;
+            default:
+                FAIL_FAST();
+                break;
+        }
+    }
+    cairo_path_destroy(caPath);
+    return (CGPathRef)copyPath;
+}
