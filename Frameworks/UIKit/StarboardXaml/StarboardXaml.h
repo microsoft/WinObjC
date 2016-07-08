@@ -52,6 +52,8 @@ private:
 };
 
 extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg);
+extern "C" void _ApplicationActivate(Platform::Object^ args);
+
 
 #endif
 
