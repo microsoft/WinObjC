@@ -1,0 +1,43 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AddressBookSample", "AddressBookSample", "{6FF8B251-C6DC-418B-BDBF-846F07A772C2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AddressBookSample-Headers", "AddressBookSample.vsimporter\AddressBookSample-Headers-WinStore10\AddressBookSample-Headers.vcxitems", "{F091CACD-3928-45AC-B634-63F1D5E1E49A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AddressBookSample", "AddressBookSample.vsimporter\AddressBookSample-WinStore10\AddressBookSample.vcxproj", "{1BB3B806-F32E-4357-B0A2-61FA9F2F1219}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		AddressBookSample.vsimporter\AddressBookSample-Headers-WinStore10\AddressBookSample-Headers.vcxitems*{F091CACD-3928-45AC-B634-63F1D5E1E49A}*SharedItemsImports = 9
+		AddressBookSample.vsimporter\AddressBookSample-Headers-WinStore10\AddressBookSample-Headers.vcxitems*{1BB3B806-F32E-4357-B0A2-61FA9F2F1219}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|Win32 = Debug|Win32
+		Release|ARM = Release|ARM
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1BB3B806-F32E-4357-B0A2-61FA9F2F1219}.Debug|ARM.ActiveCfg = Debug|ARM
+		{1BB3B806-F32E-4357-B0A2-61FA9F2F1219}.Debug|ARM.Build.0 = Debug|ARM
+		{1BB3B806-F32E-4357-B0A2-61FA9F2F1219}.Debug|ARM.Deploy.0 = Debug|ARM
+		{1BB3B806-F32E-4357-B0A2-61FA9F2F1219}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1BB3B806-F32E-4357-B0A2-61FA9F2F1219}.Debug|Win32.Build.0 = Debug|Win32
+		{1BB3B806-F32E-4357-B0A2-61FA9F2F1219}.Debug|Win32.Deploy.0 = Debug|Win32
+		{1BB3B806-F32E-4357-B0A2-61FA9F2F1219}.Release|ARM.ActiveCfg = Release|ARM
+		{1BB3B806-F32E-4357-B0A2-61FA9F2F1219}.Release|ARM.Build.0 = Release|ARM
+		{1BB3B806-F32E-4357-B0A2-61FA9F2F1219}.Release|ARM.Deploy.0 = Release|ARM
+		{1BB3B806-F32E-4357-B0A2-61FA9F2F1219}.Release|Win32.ActiveCfg = Release|Win32
+		{1BB3B806-F32E-4357-B0A2-61FA9F2F1219}.Release|Win32.Build.0 = Release|Win32
+		{1BB3B806-F32E-4357-B0A2-61FA9F2F1219}.Release|Win32.Deploy.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F091CACD-3928-45AC-B634-63F1D5E1E49A} = {6FF8B251-C6DC-418B-BDBF-846F07A772C2}
+		{1BB3B806-F32E-4357-B0A2-61FA9F2F1219} = {6FF8B251-C6DC-418B-BDBF-846F07A772C2}
+	EndGlobalSection
+EndGlobal
