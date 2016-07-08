@@ -281,6 +281,38 @@ TEST(CGPath, CGPathEqualToPath) {
     CGPathRelease(path1);
 }
 
+TEST(CGPath, CGPathApplyAddManyRects) {
+    CGMutablePathRef path = CGPathCreateMutable();
+    NSMutableArray* expected = [NSMutableArray array];
+    for (int i = 0; i < 100; i++) {
+        CGRect rect = CGRectMake(i, 4, 8, 16);
+
+        CGPathAddRect(path, NULL, rect);
+
+        NSArray* expectedRect = @[
+            @{ kTypeKey : @(kCGPathElementMoveToPoint),
+               kPointsKey : @[ @(i), @4 ] },
+            @{ kTypeKey : @(kCGPathElementAddLineToPoint),
+               kPointsKey : @[ @(i + 8), @4 ] },
+            @{ kTypeKey : @(kCGPathElementAddLineToPoint),
+               kPointsKey : @[ @(i + 8), @20 ] },
+            @{ kTypeKey : @(kCGPathElementAddLineToPoint),
+               kPointsKey : @[ @(i), @20 ] },
+            @{ kTypeKey : @(kCGPathElementCloseSubpath),
+               kPointsKey : [NSArray array] }
+        ];
+        [expected addObjectsFromArray:expectedRect];
+    }
+
+    NSMutableArray* result = [NSMutableArray array];
+
+    CGPathApply(path, result, cgPathApplierFunction);
+
+    cgPathCompare(expected, result);
+
+    CGPathRelease(path);
+}
+
 TEST(CGPath, CGPathAddPath) {
     CGMutablePathRef path1 = CGPathCreateMutable();
 

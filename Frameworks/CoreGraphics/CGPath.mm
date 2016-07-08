@@ -162,6 +162,11 @@ void _CGPathAddElement(
     if (path->_count + 1 >= path->_max) {
         path->_max += 32;
         path->_elements = (CGPathElementInternal*)IwRealloc(path->_elements, path->_max * sizeof(CGPathElementInternal));
+        // Re-init all existing elements
+        for (int i = 0; i < path->_count; i++) {
+            CGPathElementInternal* element = &path->_elements[i];
+            element->init();
+        }
     }
     CGPathElementInternal* element = &path->_elements[path->_count];
     // The new element needs to call init
