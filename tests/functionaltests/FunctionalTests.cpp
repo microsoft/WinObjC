@@ -31,6 +31,9 @@ static void UIApplicationDefaultInitialize() {
     UIApplicationInitialize(nullptr, nullptr);
 }
 
+// Cleanup method to call after every test class to prevent leaking UIApplication
+extern void FunctionalTestCleanupUIApplication();
+
 //
 // How is functional test organized?
 //
@@ -183,6 +186,11 @@ public:
         return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
     }
 
+    TEST_METHOD_CLEANUP(NSURLCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
     //
     // NSURLConnection
     //
@@ -255,6 +263,11 @@ public:
         return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
     }
 
+    TEST_METHOD_CLEANUP(NSUserDefaultsCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
     TEST_METHOD(NSUserDefaults_Basic) {
         NSUserDefaultsBasic();
     }
@@ -289,6 +302,11 @@ public:
         return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
     }
 
+    TEST_METHOD_CLEANUP(NSBundleCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
     TEST_METHOD(NSBundle_MSAppxURL) {
         NSBundleMSAppxURL();
     }
@@ -313,6 +331,11 @@ public:
         return SUCCEEDED(FrameworkHelper::RunOnUIThread(&CortanaTestVoiceCommandForegroundActivation));
     }
 
+    TEST_METHOD_CLEANUP(CortanaVoiceCommandForegroundCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
     TEST_METHOD(Cortana_VoiceCommandForegroundActivationDelegateMethodsCalled) {
         CortanaTestVoiceCommandForegroundActivationDelegateMethodsCalled();
     }
@@ -331,6 +354,11 @@ public:
     TEST_CLASS_SETUP(CortanaProtocolForegroundTestClassSetup) {
         // The class setup allows us to activate the app in our test method, but can only be done once per class
         return SUCCEEDED(FrameworkHelper::RunOnUIThread(&CortanaTestProtocolForegroundActivation));
+    }
+
+    TEST_METHOD_CLEANUP(CortanaProtocolForegroundCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
     }
 
     TEST_METHOD(Cortana_ProtocolForegroundActivationDelegateMethodsCalled) {
@@ -353,6 +381,11 @@ public:
         return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
     }
 
+    TEST_METHOD_CLEANUP(UIViewCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
     TEST_METHOD(UIViewTests_Create) {
         UIViewTestsCreate();
     }
@@ -373,7 +406,8 @@ public:
         return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
     }
 
-    TEST_CLASS_CLEANUP(ProjectionTestClassCleanup) {
+    TEST_METHOD_CLEANUP(ProjectionTestCleanup) {
+        FunctionalTestCleanupUIApplication();
         return true;
     }
 

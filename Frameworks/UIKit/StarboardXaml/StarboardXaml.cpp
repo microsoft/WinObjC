@@ -229,10 +229,14 @@ void UIApplicationInitialize(const wchar_t* principalClassName, const wchar_t* d
 
     if (principalClassName != nullptr) {
         g_principalClassName = ref new Platform::String(principalClassName);
+    } else {
+        g_principalClassName = ref new Platform::String();
     }
 
     if (delegateClassName != nullptr) {
         g_delegateClassName = ref new Platform::String(delegateClassName);
+    } else {
+        g_delegateClassName = ref new Platform::String();
     }
 
     _ApplicationLaunch(ActivationTypeNone, nullptr);
@@ -250,6 +254,8 @@ void UIApplicationActivationTest(IInspectable* activationArgs, void* delegateCla
     if (delegateClassName) {
         auto rawString = _RawBufferFromNSString(delegateClassName);
         g_delegateClassName = reinterpret_cast<Platform::String^>(Strings::NarrowToWide<HSTRING>(rawString).Detach());
+    } else {
+        g_delegateClassName = ref new Platform::String();
     }
 
     _ApplicationActivate(reinterpret_cast<Platform::Object^>(activationArgs));
