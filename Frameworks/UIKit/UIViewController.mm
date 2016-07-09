@@ -38,9 +38,7 @@
 #import "UIViewControllerInternal.h"
 #import "UIApplicationInternal.h"
 
-// TODO: Rename UIEmptyController to UIEmptyView
-#import "UIEmptyController.h"
-
+#import "UIEmptyView.h"
 #import "UIViewInternal.h"
 #import "UIViewControllerInternal.h"
 #import "UIStoryboardInternal.h"
@@ -50,6 +48,8 @@
 
 #import "UWP/WindowsUIXaml.h"
 #import "UWP/WindowsFoundation.h"
+
+#import "StringHelpers.h"
 
 #include "COMIncludes.h"
 #include "WinString.h"
@@ -695,7 +695,7 @@ class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArg
     }
 
     priv->_childViewControllers = [coder decodeObjectForKey:@"UIChildViewControllers"];
-    // assert(nibName != nil);
+
     priv->_edgesForExtendedLayout = [coder decodeIntForKey:@"UIKeyEdgesForExtendedLayout"];
 
     return self;
@@ -762,30 +762,33 @@ class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArg
  @Status Interoperable
 */
 - (instancetype)initWithNibName:(NSString*)strNib bundle:(NSBundle*)bundle {
-    if (!priv) {
-        priv = (UIViewControllerPriv*)IwCalloc(1, sizeof(UIViewControllerPriv));
-        priv->_curOrientation = UIInterfaceOrientationPortrait;
-        priv->_contentSizeForViewInPopover.width = 320.0f;
-        priv->_contentSizeForViewInPopover.height = 1100.0f;
-    }
+    if (self = [super init]) {
+        if (!priv) {
+            priv = (UIViewControllerPriv*)IwCalloc(1, sizeof(UIViewControllerPriv));
+            priv->_curOrientation = UIInterfaceOrientationPortrait;
+            priv->_contentSizeForViewInPopover.width = 320.0f;
+            priv->_contentSizeForViewInPopover.height = 1100.0f;
+        }
 
-    if (bundle == nil) {
-        priv->nibBundle = [NSBundle mainBundle];
-    } else {
-        priv->nibBundle = bundle;
-    }
+        if (bundle == nil) {
+            priv->nibBundle = [NSBundle mainBundle];
+        } else {
+            priv->nibBundle = bundle;
+        }
 
-    if ([strNib length] > 0) {
-        priv->nibName = [strNib copy];
-    } else {
-        priv->nibName = nil;
-    }
+        if ([strNib length] > 0) {
+            priv->nibName.attach([strNib copy]);
+        } else {
+            priv->nibName = nil;
+        }
 
-    // TODO: Check to see if we have a XAML class file locally in the project
-    // 1. Find local XAML files (*.xaml.cpp) - assume the filename as the class name
-    // 2. Set priv->_xamlClass = filename (e.g. <ClassName>.xaml.cpp)
-    // 3. Set priv->_xamlPage = filename (NOT SURE IF PAGE WILL WORK WITHOUT THE CODE-BEHIND METHODS)
-    // 4. Remove initWithXAMLClass and initWithXAMLPage
+        // Load the XAML version if found. First prepend the auto-generated XAML namespace to the XAML class name
+        NSString* xamlClassName = [NSString stringWithFormat:@"IslandwoodAutoGenNamespace.%@", strNib];
+        auto xamlType = [self _returnXamlType:xamlClassName];
+        if (xamlType.Get() != nullptr) {
+            priv->_xamlClassName = xamlClassName;
+        }
+    }
 
     return self;
 }
@@ -794,23 +797,7 @@ class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArg
  @Status Interoperable
 */
 - (instancetype)init {
-    [super init];
-
     return [self initWithNibName:nil bundle:nil];
-}
-
-- (instancetype)initWithXAMLClass:(NSString*)className {
-    self = [self initWithNibName:nil bundle:nil];
-    priv->_xamlClassName = className;
-
-    return self;
-}
-
-- (instancetype)initWithXAMLPage:(NSString*)pageName {
-    self = [self initWithNibName:nil bundle:nil];
-    priv->_xamlPageName = pageName;
-
-    return self;
 }
 
 /**
@@ -821,7 +808,7 @@ class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArg
         return;
     }
 
-    if (priv->_xamlClassName != nil || priv->_xamlPageName != nil) {
+    if (priv->_xamlClassName != nil) {
         [self _loadXamlPage];
         return;
     }
@@ -919,7 +906,7 @@ class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArg
             frame = [self _modalPresentationFormSheetFrame];
         }
 
-        UIView* view = [[[UIEmptyController alloc] initWithFrame:frame] autorelease];
+        UIView* view = [[[UIEmptyView alloc] initWithFrame:frame] autorelease];
         [view setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
         [self setView:view];
     }
@@ -941,20 +928,6 @@ class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArg
         if ([self modalPresentationStyle] == UIModalPresentationFormSheet) {
             frame = [self _modalPresentationFormSheetFrame];
         }
-
-        /*
-        // TODO: Remove if this is no longer applicable
-        UIInterfaceOrientation curOrientation = (UIInterfaceOrientation)[[UIApplication sharedApplication] statusBarOrientation];
-        switch (curOrientation) {
-            case UIInterfaceOrientationLandscapeLeft:
-            case UIInterfaceOrientationLandscapeRight: {
-                float temp = frame.size.width;
-                frame.size.width = frame.size.height;
-                frame.size.height = temp;
-            }
-            break;
-        }
-        */
 
         [priv->view setFrame:frame];
     }
@@ -978,7 +951,7 @@ class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArg
                 frame = [self _modalPresentationFormSheetFrame];
             }
 
-            UIView* view = [[[UIEmptyController alloc] initWithFrame:frame] autorelease];
+            UIView* view = [[[UIEmptyView alloc] initWithFrame:frame] autorelease];
             [self setView:view];
         }
     }
@@ -1804,8 +1777,23 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     return priv->_isEditing;
 }
 
+- (Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType>)_returnXamlType:(NSString*)xamlClassName {
+    Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlMetadataProvider> xamlMetaProvider = nullptr;
+    auto inspApplicationCurrent = [WXApplication.current comObj];
+    inspApplicationCurrent.As(&xamlMetaProvider);
+
+    auto hClassName = Strings::NarrowToWide<HSTRING>(xamlClassName);
+    Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> xamlType = nullptr;
+    HRESULT hr = xamlMetaProvider->GetXamlTypeByFullName(hClassName.Get(), xamlType.GetAddressOf());
+    if (SUCCEEDED(hr) && xamlType.Get() != nullptr) {
+        return xamlType;
+    }
+
+    return nullptr;
+}
+
 - (void)_loadXamlPage {
-    if (priv->_xamlClassName == nil && priv->_xamlPageName == nil) {
+    if (priv->_xamlClassName == nil) {
         return;
     }
 
@@ -1815,50 +1803,20 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     }
 
     // Create a template UIView
-    UIView* view = [[[UIEmptyController alloc] initWithFrame:frame] autorelease];
+    UIView* view = [[[UIEmptyView alloc] initWithFrame:frame] autorelease];
     [view setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
     [self setView:view];
 
-    // If we find a XAML class or page, attempt to load it
-    if (priv->_xamlClassName != nil) {
-        Microsoft::WRL::ComPtr<IInspectable> pageObj;
-        Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> xamlType;
-        Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlMetadataProvider> xamlMeta;
-        Microsoft::WRL::ComPtr<IInspectable> insp = [WXApplication.current comObj];
-        insp.As(&xamlMeta);
+    // Activate an instance of the XAML class and its page
+    Microsoft::WRL::ComPtr<IInspectable> pageObj = nullptr;
+    auto xamlType = [self _returnXamlType:priv->_xamlClassName];
+    xamlType->ActivateInstance(pageObj.GetAddressOf());
 
-        uint32_t classNameLen = [priv->_xamlClassName length];
-        unichar* className = (unichar*)IwMalloc(sizeof(unichar) * (classNameLen + 1));
-        auto freeClassName = wil::ScopeExit([&]() {
-            IwFree(className); 
-        });
+    priv->_page = (WXCPage*)NSAllocateObject([WXCPage class], 0, NULL);
+    [priv->_page setComObj:pageObj];
 
-        HSTRING hClassName;
-        auto freeHClassName = wil::ScopeExit([&]() {
-            WindowsDeleteString(hClassName);
-        });
-
-        // Copy the string into className and null terminate it
-        [priv->_xamlClassName getCharacters:className];
-        className[classNameLen] = '\0';
-
-        WindowsCreateString((LPCWSTR)className, classNameLen, &hClassName);
-        xamlMeta->GetXamlTypeByFullName(hClassName, &xamlType);
-        xamlType->ActivateInstance(&pageObj);
-
-        priv->_page = (WXCPage*)NSAllocateObject([WXCPage class], 0, NULL);
-        [priv->_page setComObj:pageObj];
-    } else {
-        // TODO: If we load a XAML page, are we bypassing the code-gen methods to trigger events (e.g. *.xaml.cpp) and forward them to an
-        // UIView-class object
-        priv->_page = [WXCPage make];
-        WFUri* location = [WFUri makeUri:[NSString stringWithFormat:@"ms-appx:///%@", (NSString*)priv->_xamlPageName]];
-        [WXApplication loadComponentWithResourceLocation:priv->_page
-                                         resourceLocator:location
-                               componentResourceLocation:WUXCPComponentResourceLocationApplication];
-    }
-
-    unsigned int propListCount;
+    // Walk the list of outlets and assign them to the corresponding XAML UIElement
+    unsigned int propListCount = 0;
     objc_property_t* props = (objc_property_t*)class_copyPropertyList([self class], &propListCount);
     auto freeProps = wil::ScopeExit([&]() {
         IwFree(props);

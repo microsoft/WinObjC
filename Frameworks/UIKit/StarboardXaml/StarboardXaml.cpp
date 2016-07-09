@@ -63,9 +63,9 @@ void AppEventListener::_RegisterEventHandlers() {
     Windows::UI::Xaml::Application::Current->Resuming += ref new Windows::Foundation::EventHandler<Platform::Object^>(this, &AppEventListener::_OnResuming);
 
     // Register for Window Visibility change event.
-    // TODO::
-    // todo-nithishm-03072016 - Move this out of the Windows Visibility event in future.
+    // TODO: Move this out of the Windows Visibility event in future
     Xaml::Window::Current->VisibilityChanged += ref new Xaml::WindowVisibilityChangedEventHandler(this, &AppEventListener::_OnAppVisibilityChanged);
+
     // Register for Application Memory Usage Increase event.
     MemoryManager::AppMemoryUsageIncreased += ref new Windows::Foundation::EventHandler<Platform::Object^>(this, &AppEventListener::_OnAppMemoryUsageChanged);
 }

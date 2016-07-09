@@ -45,7 +45,7 @@
 #include "UWP/WindowsSystemDisplay.h"
 #include "UrlLauncher.h"
 
-#include "UIEmptyController.h"
+#include "UIEmptyView.h"
 
 #include "CACompositor.h"
 #include "UIInterface.h"
@@ -1426,7 +1426,7 @@ static void evaluateKeyboard(id self) {
 
     if (_blankView == nil) {
         CGRect frame = { 0 };
-        _blankView = [[UIEmptyController alloc] initWithFrame:frame];
+        _blankView = [[UIEmptyView alloc] initWithFrame:frame];
         [_blankView setBackgroundColor:[UIColor blackColor]];
         [_blankView setAutoresizesSubviews:FALSE];
     }

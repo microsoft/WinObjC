@@ -14,12 +14,9 @@
 //
 //******************************************************************************
 
-#pragma once
+#import "Starboard.h"
+#import "UIEmptyView.h"
 
-#include "UIKit/UIView.h"
-
-@interface UIEmptyController : UIView {
-@public
-}
+@implementation UIEmptyView
 
 @end

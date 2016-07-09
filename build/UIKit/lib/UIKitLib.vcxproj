@@ -44,7 +44,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIControl.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIDevice.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIDocument.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIEmptyController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIEmptyView.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIEvent.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIFont.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIFontDescriptor.mm" />
@@ -124,7 +124,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITextView.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIToolbar.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
-    </ClangCompile> 
+    </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIWebView.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UISwipeGestureRecognizer.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionView.mm">
@@ -295,7 +295,7 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAnimationNotification.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIDeviceInternal.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIEmptyController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIEmptyView.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIImageCachedObject.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UINavigationControllerInternal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIProxyObject.h" />

@@ -71,7 +71,6 @@ struct UIViewControllerPriv {
 
     idretaintype(WXCPage) _page;
     idretaintype(NSString) _xamlClassName;
-    idretaintype(NSString) _xamlPageName;
 };
 
 @interface _UIViewControllerContextTransitioning : NSObject <UIViewControllerContextTransitioning>

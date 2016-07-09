@@ -26,10 +26,8 @@
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
-    // Load the view from XAML instead of XIB file.
-    //MainViewController* viewController = [[MainViewController alloc] initWithNibName:@"MainViewController" bundle:nil];
-    //MainViewController *viewController = [[MainViewController alloc] initWithXAMLPage:@"MainViewController.xaml"];
-    MainViewController *viewController = [[MainViewController alloc] initWithXAMLClass:@"IslandwoodAutoGenNamespace.MainViewController"];
+    // Re-use the designated initializer and attempt to load the XAML page if the XAML type based on the class name is present
+    MainViewController* viewController = [[MainViewController alloc] initWithNibName:@"MainViewController" bundle:nil];
 
     self.window.rootViewController = viewController;
     [self.window makeKeyAndVisible];
