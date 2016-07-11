@@ -265,8 +265,8 @@
                 [self _printOutput:@"Download task was cancelled but cannot be resumed"];
             } else {
                 [self _printOutput:@"Download task was cancelled and produced resume data (size %d)\n", resumeData.length];
-                _lastResumeData = resumeData;
             }
+            _lastResumeData = resumeData;
         }];
     } else {
         [_lastTask cancel];
