@@ -38,7 +38,7 @@ void UIToolbar::InitFromStory(XIBObject* obj) {
     const char* style = getAttrib("barStyle");
     if (style) {
         bool isHandled = true;
-        if (strcmp(style, "blackOpaque") == 0 || strcmp(style, "black") == 0) {
+        if (strcmp(style, "blackOpaque") == 0) {
             _style = 1;
         } else if (strcmp(style, "blackTranslucent") == 0) {
             _style = 2;

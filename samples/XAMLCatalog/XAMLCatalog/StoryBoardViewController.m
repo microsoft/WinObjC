@@ -46,10 +46,6 @@
     // UISlider
     UIViewController* sliderVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UISliderSB"];
     [self addMenuItemViewController:sliderVC andTitle:@"UISliderSB"];
-
-    // UIToolbar
-    UIViewController* toolbarVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UIToolbarSB"];
-    [self addMenuItemViewController:toolbarVC andTitle:@"UIToolbarSB"];
 }
 
 - (void)didReceiveMemoryWarning {

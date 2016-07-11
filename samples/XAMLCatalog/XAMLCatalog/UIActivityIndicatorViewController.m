@@ -34,7 +34,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"Xaml ActivityIndicator";
 
     // UIActivityIndicatorView - style gray
     UIActivityIndicatorView* aivStyleGray = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
