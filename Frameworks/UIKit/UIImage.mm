@@ -789,8 +789,8 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* src, 
     }
 
     if (botCap) {
-        // BL Corner
         if (leftCap) {
+            // BL Corner
             CGContextDrawImageRect(context,
                                    cgImg,
                                    makeRect(0, 0, leftCap, botCap),
