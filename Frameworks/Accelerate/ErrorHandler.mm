@@ -19,5 +19,5 @@
 
 
 extern "C" void AccelerateThrowFatal(const char* msg) {
-    FAIL_FAST_MSG(E_UNEXPECTED, msg);
+    FAIL_FAST_MSG(msg);
 }

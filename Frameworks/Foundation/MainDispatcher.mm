@@ -52,7 +52,7 @@ extern "C" void ScheduleMainRunLoop() {
         [runLoop _run];
     } else {
         // Main runloop should only be scheduled from the main UI thread.
-        FAIL_FAST_MSG(E_UNEXPECTED, "Main runloop should only be scheduled from the main UI thread!");
+        FAIL_FAST_MSG("Main runloop should only be scheduled from the main UI thread!");
     }
 }
 
@@ -66,7 +66,7 @@ void _ProcessMainRunLoop(int signaled) {
         [runLoop _processMainRunLoop:signaled];
     } else {
         // Main runloop should only be scheduled from the main UI thread.
-        FAIL_FAST_MSG(E_UNEXPECTED, "Main runloop should only be scheduled from the main UI thread!");
+        FAIL_FAST_MSG("Main runloop should only be scheduled from the main UI thread!");
     }
 }
 
@@ -144,7 +144,7 @@ int MainRunLoopTimedMultipleWait(EbrEvent* events, int numEvents, double timeout
         }
     } else {
         // Main runloop should only be scheduled from the main UI thread.
-        FAIL_FAST_MSG(E_UNEXPECTED, "Main runloop should only be scheduled from the main UI thread!");
+        FAIL_FAST_MSG("Main runloop should only be scheduled from the main UI thread!");
     }
 
     return 0;

@@ -24,6 +24,8 @@
 typedef enum {
     ActivationTypeNone = 0,
     ActivationTypeToast = 1,
+    ActivationTypeVoiceCommand = 2,
+    ActivationTypeProtocol = 3,
 } ActivationType;
 
 #ifdef __cplusplus_winrt
@@ -54,10 +56,10 @@ private:
     void _OnSuspending(Platform::Object^ sender, Windows::ApplicationModel::SuspendingEventArgs^ args);
 };
 
-extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::String^ activationArg);
+extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg);
 extern "C" void EbrApplicationActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ args);
 extern "C" bool EbrApplicationLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args);
-void _ApplicationMainLaunch(ActivationType activationType, Platform::String^ activationArg);
+void _ApplicationMainLaunch(ActivationType activationType, Platform::Object^ activationArg);
 
 #endif
 

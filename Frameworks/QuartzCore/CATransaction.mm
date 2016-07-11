@@ -139,7 +139,7 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 */
 + (void)setCompletionBlock:(void (^)(void))block {
     UNIMPLEMENTED();
-    FAIL_FAST_MSG(E_UNEXPECTED, "setCompletionBlock not implemented!");
+    FAIL_FAST_MSG("setCompletionBlock not implemented!");
     [self _currentTransaction]->_completionBlock = [block copy];
 }
 

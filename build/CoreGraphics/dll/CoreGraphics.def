@@ -215,6 +215,7 @@ LIBRARY CoreGraphics
         CGContextIsDirty
         CGContextReleaseLock
         CGContextSetDirty
+        CGContextGetBacking
         EbrCenterTextInRectVertically
 
         ; CGDataConsumer.mm

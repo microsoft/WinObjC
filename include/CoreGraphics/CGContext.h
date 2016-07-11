@@ -15,7 +15,6 @@
 //******************************************************************************
 #pragma once
 
-#import <CoreGraphics/CoreGraphicsExport.h>
 #import <CoreGraphics/CGAffineTransform.h>
 #import <CoreGraphics/CGColor.h>
 #import <CoreGraphics/CGColorSpace.h>
@@ -23,10 +22,11 @@
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGGradient.h>
 #import <CoreGraphics/CGImage.h>
+#import <CoreGraphics/CGPDFPage.h>
 #import <CoreGraphics/CGPath.h>
 #import <CoreGraphics/CGPattern.h>
-#import <CoreGraphics/CGPDFPage.h>
 #import <CoreGraphics/CGShading.h>
+#import <CoreGraphics/CoreGraphicsExport.h>
 
 typedef enum { kCGEncodingFontSpecific, kCGEncodingMacRoman } CGTextEncoding;
 typedef enum {
@@ -95,7 +95,7 @@ COREGRAPHICS_EXPORT void CGContextSetLineJoin(CGContextRef c, CGLineJoin join);
 COREGRAPHICS_EXPORT void CGContextSetLineWidth(CGContextRef c, CGFloat width);
 COREGRAPHICS_EXPORT void CGContextSetMiterLimit(CGContextRef c, CGFloat limit);
 
-COREGRAPHICS_EXPORT void CGContextSetPatternPhase(CGContextRef c, CGSize phase) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGContextSetPatternPhase(CGContextRef c, CGSize phase);
 COREGRAPHICS_EXPORT void CGContextSetFillPattern(CGContextRef c, CGPatternRef pattern, const CGFloat* components);
 COREGRAPHICS_EXPORT void CGContextSetRenderingIntent(CGContextRef c, CGColorRenderingIntent intent) STUB_METHOD;
 
@@ -188,9 +188,9 @@ COREGRAPHICS_EXPORT void CGContextRotateCTM(CGContextRef c, CGFloat angle);
 COREGRAPHICS_EXPORT void CGContextScaleCTM(CGContextRef c, CGFloat sx, CGFloat sy);
 COREGRAPHICS_EXPORT void CGContextTranslateCTM(CGContextRef c, CGFloat tx, CGFloat ty);
 
-COREGRAPHICS_EXPORT void CGContextBeginTransparencyLayer(CGContextRef c, CFDictionaryRef auxiliaryInfo) STUB_METHOD;
-COREGRAPHICS_EXPORT void CGContextBeginTransparencyLayerWithRect(CGContextRef c, CGRect rect, CFDictionaryRef auxInfo) STUB_METHOD;
-COREGRAPHICS_EXPORT void CGContextEndTransparencyLayer(CGContextRef c) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGContextBeginTransparencyLayer(CGContextRef c, CFDictionaryRef auxiliaryInfo);
+COREGRAPHICS_EXPORT void CGContextBeginTransparencyLayerWithRect(CGContextRef c, CGRect rect, CFDictionaryRef auxInfo);
+COREGRAPHICS_EXPORT void CGContextEndTransparencyLayer(CGContextRef c);
 
 COREGRAPHICS_EXPORT void CGContextDrawTiledImage(CGContextRef c, CGRect rect, CGImageRef image);
 COREGRAPHICS_EXPORT void CGContextDrawImage(CGContextRef c, CGRect rect, CGImageRef image);

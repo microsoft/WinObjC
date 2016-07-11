@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
@@ -18,6 +18,9 @@
     </Filter>
     <Filter Include="Xcode Variable Files">
       <UniqueIdentifier>{AC4EA281-C68B-4A1D-9BE5-C6F2859C7F8A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sounds">
+      <UniqueIdentifier>{d4374887-0c05-4875-bbd0-cd0db7571693}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +165,9 @@
     <ClangCompile Include="..\..\WOCCatalog\PickersViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\AudioToolboxViewController.mm">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo9.jpg">
       <Filter>Images</Filter>
     </SBResourceCopy>
@@ -223,5 +229,10 @@
     <Text Include="WOCCatalog-Release-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\..\WOCCatalog\test.wav">
+      <Filter>Sounds</Filter>
+    </Media>
   </ItemGroup>
 </Project>

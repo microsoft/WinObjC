@@ -93,6 +93,14 @@ static int stackLevel = 0;
 
 int viewCount = 0;
 
+static void RunSynchronouslyOnMainThread(void (^block)()) {
+    if ([NSThread isMainThread]) {
+        block();
+    } else {
+        dispatch_sync(dispatch_get_main_queue(), block);
+    }
+}
+
 @implementation UIView {
     idretaintype(CALayer) layer;
     bool _deallocating;
@@ -722,7 +730,12 @@ static std::string _printViewHeirarchy(UIView* leafView) {
 + (instancetype)allocWithZone:(NSZone*)zone {
     UIView* ret = [super allocWithZone:zone];
 
-    [ret _initPriv];
+    // Run on the main thread because the underlying XAML objects can only be
+    // called from the UI thread
+    RunSynchronouslyOnMainThread(^{
+        [ret _initPriv];
+    });
+
     return ret;
 }
 
@@ -3271,6 +3284,14 @@ static float doRound(float f) {
  @Status Interoperable
 */
 - (void)dealloc {
+    // Run on the main thread because the underlying XAML objects can only be
+    // called from the UI thread
+    RunSynchronouslyOnMainThread(^{
+        [self _dealloc];
+    });
+}
+
+- (void)_dealloc {
     if (_deallocating) {
         return;
     }

@@ -52,6 +52,8 @@ UIKIT_EXPORT NSString* const UIApplicationSignificantTimeChangeNotification;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsURLKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsSourceApplicationKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsRemoteNotificationKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsVoiceCommandKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsProtocolKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsAnnotationKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsLocalNotificationKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsLocationKey;
@@ -200,6 +202,7 @@ typedef enum : NSInteger {
 } UIUserInterfaceLayoutDirection;
 
 UIKIT_EXPORT int UIApplicationMain(int argc, char* argv[], NSString* pClassName, NSString* dClassName);
+UIKIT_EXPORT void UIApplicationInitialize(const wchar_t* principalClass, const wchar_t* delegateClass);
 UIKIT_EXPORT const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid;
 UIKIT_EXPORT const NSTimeInterval UIMinimumKeepAliveTimeout;
 

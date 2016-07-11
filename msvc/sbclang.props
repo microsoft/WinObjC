@@ -3,26 +3,19 @@
   <PropertyGroup>
     <StarboardSdkRoot>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', '..'))</StarboardSdkRoot>
     <StarboardLLVMDirectory Condition="'$(StarboardLLVMDirectory)' == ''">$(MSBuildThisFileDirectory)LLVM-3.6.0\</StarboardLLVMDirectory>
-    <StarboardIncludes>-I"$(StarboardSdkRoot)\deps\prebuilt\include" -I"$(StarboardSdkRoot)\deps\prebuilt\include\icu" -I"$([System.IO.Path]::Combine('$(StarboardSdkRoot)\include\Platform', '$(TargetOsAndVersion)'))"</StarboardIncludes>
-    <ExtraStarboardOptions>-fconst-strings -fconstant-string-class NSConstantString -fblocks -include StubIncludes.h $(StarboardIncludes)</ExtraStarboardOptions>
   </PropertyGroup>
-  <PropertyGroup Label="Clang CC1 Args">
-    <CC1PlatformArgs Condition="'$(ApplicationType)' == 'Windows Store'">-DWINAPI_FAMILY=WINAPI_FAMILY_APP -D_WINSOCK_DEPRECATED_NO_WARNINGS</CC1PlatformArgs>
-    <CC1PlatformArgs Condition="'$(ApplicationType)' == 'Windows Phone'">-DWINAPI_FAMILY=WINAPI_FAMILY_PHONE_APP</CC1PlatformArgs>
-    <CC1TargetCpu Condition="'$(Platform)' != 'ARM'">pentium4</CC1TargetCpu>
-    <CC1TargetCpu Condition="'$(Platform)' == 'ARM'">cortex-a9</CC1TargetCpu>
-    <CC1TargetTriple Condition="'$(Platform)' != 'ARM'">i686-pc-windows-msvc</CC1TargetTriple>
-    <CC1TargetTriple Condition="'$(Platform)' == 'ARM'">thumbv7-pc-windows-msvc</CC1TargetTriple>
-    <CC1CpuArgs Condition="'$(Platform)' == 'ARM'">-backend-option -arm-restrict-it -target-abi aapcs -disable-llvm-verifier -mfloat-abi hard</CC1CpuArgs>
-    <CC1Args>-cc1 -triple $(CC1TargetTriple) -internal-isystem "[LLVMResourceDir]\include" -emit-obj -disable-free -main-file-name [InputFileName] -mrelocation-model static -mthread-model posix -mdisable-fp-elim -relaxed-aliasing -fmath-errno -masm-verbose -mconstructor-aliases -target-cpu $(CC1TargetCpu) -fdiagnostics-format msvc -fno-caret-diagnostics -dwarf-column-info -coverage-file [Input] -resource-dir "[LLVMResourceDir]" -fdebug-compilation-dir [InputAbsDir] -ferror-limit 19 -mstackrealign -fms-extensions -fms-compatibility -fms-compatibility-version=19.00 -fdelayed-template-parsing -fobjc-runtime=objfw -fobjc-dispatch-method=non-legacy -fdiagnostics-show-option -D_HAS_EXCEPTIONS=0 -DWINOBJC -D__WRL_NO_DEFAULT_LIB__ -Wno-incomplete-umbrella $(CC1PlatformArgs) $(CC1CpuArgs) [ObjectFileName]</CC1Args>
-    <CC1DefaultIncludesTLog>-Xclang -internal-isystem -Xclang "[LLVMResourceDir]\include" -Xclang -internal-isystem -Xclang "$(VCInstallDir)include" -Xclang -internal-isystem -Xclang "$(StarboardSdkRoot)\include"</CC1DefaultIncludesTLog>
-    <CC1ArgsTLog>-Xclang -triple -Xclang $(CC1TargetTriple) -mrelocation-model static -mthread-model posix -mdisable-fp-elim -relaxed-aliasing -fmath-errno -masm-verbose -mconstructor-aliases -target-cpu $(CC1TargetCpu) -fdiagnostics-format msvc -dwarf-column-info -resource-dir "[LLVMResourceDir]" $(CC1DefaultIncludesTLog) -ferror-limit 19 -mstackrealign -fms-extensions -fms-compatibility -fms-compatibility-version=19.00 -fdelayed-template-parsing -fobjc-runtime=objfw -fobjc-dispatch-method=non-legacy -fdiagnostics-show-option -fconstant-cfstrings -D_HAS_EXCEPTIONS=0</CC1ArgsTLog>
+  <PropertyGroup Label="Clang Args">
+    <ClangPlatformArgs Condition="'$(ApplicationType)' == 'Windows Store'">-DWINAPI_FAMILY=WINAPI_FAMILY_APP -D_WINSOCK_DEPRECATED_NO_WARNINGS</ClangPlatformArgs>
+    <ClangPlatformArgs Condition="'$(ApplicationType)' == 'Windows Phone'">-DWINAPI_FAMILY=WINAPI_FAMILY_PHONE_APP</ClangPlatformArgs>
+    <ClangTargetTriple Condition="'$(Platform)' != 'ARM'">i686-pc-windows-msvc</ClangTargetTriple>
+    <ClangTargetTriple Condition="'$(Platform)' == 'ARM'">thumbv7-pc-windows-msvc</ClangTargetTriple>
+    <ClangArgs>-target $(ClangTargetTriple) -isystem "[LLVMResourceDir]\include" -fblocks -fno-strict-aliasing -fdiagnostics-format=msvc -fno-caret-diagnostics -fobjc-runtime=objfw -Xclang -fobjc-dispatch-method=non-legacy -Xclang -fconst-strings -fconstant-string-class=NSConstantString -D_HAS_EXCEPTIONS=0 -DWINOBJC -D__WRL_NO_DEFAULT_LIB__ -Wno-incomplete-umbrella $(ClangPlatformArgs)</ClangArgs>
     <VSUpdateVersion>$(registry:HKEY_LOCAL_MACHINE\Software\Microsoft\DevDiv\vc\Servicing\14.0\IDE.x64@Version)</VSUpdateVersion>
     <VSUpdateVersion Condition="'$(VSUpdateVersion)' == ''">$(registry:HKEY_LOCAL_MACHINE\Software\Microsoft\DevDiv\vc\Servicing\14.0\IDE.Base@Version)</VSUpdateVersion>
     <VSUpdateVersion Condition="'$(VSUpdateVersion)' == ''">$(registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\DevDiv\vc\Servicing\14.0\IDE.x64@Version)</VSUpdateVersion>
     <VSUpdateVersion Condition="'$(VSUpdateVersion)' == ''">$(registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\DevDiv\vc\Servicing\14.0\IDE.Base@Version)</VSUpdateVersion>
     <!-- Use the old code view records if VS is VS2015 VSU2 RC or older -->
-    <CC1Args Condition="'$(VSUpdateVersion)' != '' and '$(VSUpdateVersion)'  &lt;= '14.0.25029'">$(CC1Args) -fno-new-code-view-record</CC1Args>
+    <ClangArgs Condition="'$(VSUpdateVersion)' != '' and '$(VSUpdateVersion)'  &lt;= '14.0.25029'">$(ClangArgs) -Xclang -fno-new-code-view-record</ClangArgs>
   </PropertyGroup>
 
   <ItemDefinitionGroup Label="Defaults">
@@ -42,7 +35,9 @@
       <RuntimeLibrary Condition="'%(ClangCompile.RuntimeLibrary)' == ''">MultiThreadedDLL</RuntimeLibrary>
       <ReadTLogFile Condition="'%(ClangCompile.ReadTLogFile)' == ''">$(TLogLocation)clang.read.1.tlog</ReadTLogFile>
       <WOCStdlib Condition="'%(ClangCompile.WOCStdlib)' == ''">true</WOCStdlib>
-      <InternalSystemIncludePaths Condition="'%(ClangCompile.InternalSystemIncludePaths)' == ''">$(IncludePath);$(StarboardSdkRoot)\include;$(StarboardSdkRoot)\include\VCInclude</InternalSystemIncludePaths>
+      <InternalSystemIncludePaths Condition="'%(ClangCompile.InternalSystemIncludePaths)' == ''">$(IncludePath);$(StarboardSdkRoot)\include;$(StarboardSdkRoot)\include\VCInclude;$(StarboardSdkRoot)\deps\prebuilt\include;$(StarboardSdkRoot)\deps\prebuilt\include\icu;$([System.IO.Path]::Combine('$(StarboardSdkRoot)\include\Platform', '$(TargetOsAndVersion)'))</InternalSystemIncludePaths>
+      <InternalForceIncludes Condition="'%(ClangCompile.InternalSystemIncludes)' == ''">StubIncludes.h</InternalForceIncludes>
+      <SystemHeaderDeps Condition="'%(ClangCompile.SystemHeaderDeps)' == ''">false</SystemHeaderDeps>
       <MaxClangProcesses Condition="'%(ClangCompile.MaxClangProcesses)' == ''">-1</MaxClangProcesses>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -58,8 +53,8 @@
 
   <ItemDefinitionGroup>
     <ClangCompile>
-      <CommandLineTemplate>$(CC1Args) $(ExtraStarboardOptions) [Input] [AllOptions] [DependencySource] [DependencyFile] [AdditionalOptions]</CommandLineTemplate>
-      <AutocompleteCommandLineTemplate>$(CC1ArgsTLog) $(CC1PlatformArgs) $(ExtraStarboardOptions) [AllOptions] [AdditionalOptions]</AutocompleteCommandLineTemplate>
+      <CommandLineTemplate>$(ClangArgs) [AllOptions] [AdditionalOptions] [DependencyFile] [ObjectFileName] [Input]</CommandLineTemplate>
+      <AutocompleteCommandLineTemplate>$(ClangArgs) [AllOptions] [AdditionalOptions]</AutocompleteCommandLineTemplate>
       <ShowOnlyRuleProperties>false</ShowOnlyRuleProperties>
     </ClangCompile>
 

@@ -2,7 +2,7 @@ LIBRARY UIKit
     EXPORTS
         ; Application entry points (StarboardXAML)
         UIApplicationMain
-        UIApplicationMainTest
+        UIApplicationInitialize
 
         ; NSAttributedString
         NSFontAttributeName DATA
@@ -288,6 +288,8 @@ LIBRARY UIKit
         UIApplicationLaunchOptionsSourceApplicationKey DATA
         UIApplicationLaunchOptionsRemoteNotificationKey DATA
         UIApplicationLaunchOptionsLocalNotificationKey DATA
+        UIApplicationLaunchOptionsVoiceCommandKey DATA
+        UIApplicationLaunchOptionsProtocolKey DATA
         UIApplicationLaunchOptionsAnnotationKey DATA
         UIApplicationLaunchOptionsLocationKey DATA
         UIApplicationLaunchOptionsNewsstandDownloadsKey DATA

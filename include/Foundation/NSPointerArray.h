@@ -26,19 +26,19 @@
 
 FOUNDATION_EXPORT_CLASS
 @interface NSPointerArray : NSObject <NSCoding, NSCopying, NSFastEnumeration>
-- (instancetype)initWithOptions:(NSPointerFunctionsOptions)options STUB_METHOD;
-- (instancetype)initWithPointerFunctions:(NSPointerFunctions*)functions STUB_METHOD;
-+ (NSPointerArray*)pointerArrayWithOptions:(NSPointerFunctionsOptions)options STUB_METHOD;
-+ (NSPointerArray*)pointerArrayWithPointerFunctions:(NSPointerFunctions*)functions STUB_METHOD;
-+ (NSPointerArray*)strongObjectsPointerArray STUB_METHOD;
-+ (NSPointerArray*)weakObjectsPointerArray STUB_METHOD;
-@property NSUInteger count STUB_PROPERTY;
-@property (readonly, copy) NSArray* allObjects STUB_PROPERTY;
-- (void*)pointerAtIndex:(NSUInteger)index STUB_METHOD;
-- (void)addPointer:(void*)pointer STUB_METHOD;
-- (void)removePointerAtIndex:(NSUInteger)index STUB_METHOD;
-- (void)insertPointer:(void*)item atIndex:(NSUInteger)index STUB_METHOD;
-- (void)replacePointerAtIndex:(NSUInteger)index withPointer:(void*)item STUB_METHOD;
-- (void)compact STUB_METHOD;
-@property (readonly, copy) NSPointerFunctions* pointerFunctions STUB_PROPERTY;
+- (instancetype)initWithOptions:(NSPointerFunctionsOptions)options;
+- (instancetype)initWithPointerFunctions:(NSPointerFunctions*)functions;
++ (NSPointerArray*)pointerArrayWithOptions:(NSPointerFunctionsOptions)options;
++ (NSPointerArray*)pointerArrayWithPointerFunctions:(NSPointerFunctions*)functions;
++ (NSPointerArray*)strongObjectsPointerArray;
++ (NSPointerArray*)weakObjectsPointerArray;
+@property NSUInteger count;
+@property (readonly, copy) NSArray* allObjects;
+- (void*)pointerAtIndex:(NSUInteger)index;
+- (void)addPointer:(void*)pointer;
+- (void)removePointerAtIndex:(NSUInteger)index;
+- (void)insertPointer:(void*)item atIndex:(NSUInteger)index;
+- (void)replacePointerAtIndex:(NSUInteger)index withPointer:(void*)item;
+- (void)compact;
+@property (readonly, copy) NSPointerFunctions* pointerFunctions;
 @end

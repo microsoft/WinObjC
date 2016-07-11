@@ -15,9 +15,9 @@
 //******************************************************************************
 #pragma once
 
-#import <CoreGraphics/CoreGraphicsExport.h>
-#import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGAffineTransform.h>
+#import <CoreGraphics/CGGeometry.h>
+#import <CoreGraphics/CoreGraphicsExport.h>
 
 typedef enum { kCGPathFill, kCGPathEOFill, kCGPathStroke, kCGPathFillStroke, kCGPathEOFillStroke } CGPathDrawingMode;
 
@@ -109,20 +109,20 @@ COREGRAPHICS_EXPORT void CGPathAddRect(CGMutablePathRef path, const CGAffineTran
 COREGRAPHICS_EXPORT void CGPathAddRects(CGMutablePathRef path, const CGAffineTransform* m, const CGRect* rects, size_t count) STUB_METHOD;
 COREGRAPHICS_EXPORT void CGPathAddRoundedRect(
     CGMutablePathRef path, const CGAffineTransform* transform, CGRect rect, CGFloat cornerWidth, CGFloat cornerHeight) STUB_METHOD;
-COREGRAPHICS_EXPORT void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function);
 
 COREGRAPHICS_EXPORT void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* m, CGFloat x, CGFloat y);
 COREGRAPHICS_EXPORT void CGPathCloseSubpath(CGMutablePathRef path);
 COREGRAPHICS_EXPORT void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rect);
 
-COREGRAPHICS_EXPORT bool CGPathEqualToPath(CGPathRef path1, CGPathRef path2) STUB_METHOD;
+COREGRAPHICS_EXPORT bool CGPathEqualToPath(CGPathRef path1, CGPathRef path2);
 
 COREGRAPHICS_EXPORT CGRect CGPathGetBoundingBox(CGPathRef path);
 
 COREGRAPHICS_EXPORT CGRect CGPathGetPathBoundingBox(CGPathRef path) STUB_METHOD;
-COREGRAPHICS_EXPORT CGPoint CGPathGetCurrentPoint(CGPathRef path) STUB_METHOD;
+COREGRAPHICS_EXPORT CGPoint CGPathGetCurrentPoint(CGPathRef path);
 COREGRAPHICS_EXPORT CFTypeID CGPathGetTypeID() STUB_METHOD;
 
 COREGRAPHICS_EXPORT bool CGPathIsEmpty(CGPathRef path);
 COREGRAPHICS_EXPORT bool CGPathIsRect(CGPathRef path, CGRect* rect) STUB_METHOD;
-COREGRAPHICS_EXPORT bool CGPathContainsPoint(CGPathRef path, const CGAffineTransform* m, CGPoint point, bool eoFill) STUB_METHOD;
+COREGRAPHICS_EXPORT bool CGPathContainsPoint(CGPathRef path, const CGAffineTransform* m, CGPoint point, bool eoFill);

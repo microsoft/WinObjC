@@ -142,25 +142,47 @@ void EbrApplicationActivated(IActivatedEventArgs^ args) {
     if (args->Kind == ActivationKind::ToastNotification) {
         Platform::String^ argsString = safe_cast<ToastNotificationActivatedEventArgs^>(args)->Argument;
         TraceVerbose(TAG, L"Received toast notification with argument - %s", argsString->Data());
+
         if (initiateAppLaunch) {
             _ApplicationMainLaunch(ActivationTypeToast, argsString);
         }
+
         UIApplicationMainHandleToastNotificationEvent(Strings::WideToNarrow(argsString->Data()).c_str());
+    } else if (args->Kind == ActivationKind::VoiceCommand) {
+        Windows::Media::SpeechRecognition::SpeechRecognitionResult^ argResult = safe_cast<VoiceCommandActivatedEventArgs^>(args)->Result;
+        TraceVerbose(TAG, L"Received voice command with argument - %s", argResult->Text->Data());
+
+        if (initiateAppLaunch) {
+            _ApplicationMainLaunch(ActivationTypeVoiceCommand, argResult);
+        }
+
+        UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(argResult));
+    } else if (args->Kind == ActivationKind::Protocol) {
+        Windows::Foundation::Uri^ argUri = safe_cast<ProtocolActivatedEventArgs^>(args)->Uri;
+        TraceVerbose(TAG, L"Received protocol with uri- %s", argUri->ToString()->Data());
+
+        if (initiateAppLaunch) {
+            _ApplicationMainLaunch(ActivationTypeProtocol, argUri);
+        }
+
+        UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri));
     } else {
+        TraceVerbose(TAG, L"Received unhandled activation kind - %d", args->Kind);
+        
         if (initiateAppLaunch) {
             _ApplicationMainLaunch(ActivationTypeNone, nullptr);
         }
     }
 }
 
-void _ApplicationMainLaunch(ActivationType activationType, Platform::String^ activationArg) {
+void _ApplicationMainLaunch(ActivationType activationType, Platform::Object^ activationArg) {
     _ApplicationLaunch(activationType, activationArg);
 
     _appEvents = ref new AppEventListener();
     _appEvents->_RegisterEventHandlers();
 }
 
-extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::String^ activationArg) {
+extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
     auto uiElem = ref new Xaml::Controls::Grid();
     auto rootFrame = ref new Xaml::Controls::Frame();
     rootFrame->Content = uiElem;
@@ -220,13 +242,23 @@ int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* de
     return 0;
 }
 
+// This is the initialization function for non-Islandwood apps that intend to call into Islandwood:
+// test executables and general WinRT apps that want to call Islandwood libraries
 UIKIT_EXPORT
-void UIApplicationMainTest() {
+void UIApplicationInitialize(const wchar_t* principalClassName, const wchar_t* delegateClassName) {
     // Initialize COM on this thread
     ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
     // Register tracelogging
     TraceRegister();
+
+    if (principalClassName != nullptr) {
+        g_principalClassName = ref new Platform::String(principalClassName);
+    }
+
+    if (delegateClassName != nullptr) {
+        g_delegateClassName = ref new Platform::String(delegateClassName);
+    }
 
     _ApplicationLaunch(ActivationTypeNone, nullptr);
 }

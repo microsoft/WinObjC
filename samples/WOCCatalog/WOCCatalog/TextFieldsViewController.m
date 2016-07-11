@@ -20,6 +20,7 @@ static const CGFloat c_originX = 5;
 static const CGFloat c_originY = 8;
 static const CGFloat c_width = 260;
 static const CGFloat c_height = 40;
+static const CGFloat c_labelFontSize = 17.0f;
 
 @implementation TextFieldsViewController {
 @private
@@ -46,7 +47,21 @@ static const CGFloat c_height = 40;
     textField.textAlignment = textAlignment;
     textField.spellCheckingType = spellCheckingType;
     textField.delegate = self;
+    return textField;
+}
 
+- (UITextField*)_createTextFieldWithColor:(UIColor*)color
+                              placeHolder:(NSString*)placeHolder
+                              borderStyle:(UITextBorderStyle)borderStyle
+                          backgroundImage:(UIImage*)backgroundImage {
+    CGRect frame = CGRectMake(c_originX, c_originY, c_width, c_height);
+    UITextField* textField = [[UITextField alloc] initWithFrame:frame];
+    textField.textColor = color;
+    textField.font = [UIFont systemFontOfSize:c_labelFontSize];
+    textField.placeholder = placeHolder;
+    textField.borderStyle = borderStyle;
+    textField.background = backgroundImage;
+    textField.delegate = self;
     return textField;
 }
 
@@ -166,6 +181,12 @@ static const CGFloat c_height = 40;
                                                borderStyle:UIKeyboardTypePhonePad
                                              textAlignment:UITextBorderStyleLine
                                          spellCheckingType:UITextSpellCheckingTypeNo]];
+
+    // Row 11. Background image
+    [_textFields addObject:[self _createTextFieldWithColor:[UIColor redColor]
+                                               placeHolder:@"background image"
+                                               borderStyle:UITextBorderStyleLine
+                                           backgroundImage:[UIImage imageNamed:@"photo1.jpg"]]];
 
     [self tableView].allowsSelection = NO;
 }

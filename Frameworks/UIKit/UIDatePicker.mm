@@ -504,7 +504,7 @@ static int numRowsDate(int component) {
         case 2: // Year
             return MAX_YEAR_RANGE;
     }
-    FAIL_FAST_MSG(E_INVALIDARG, "Component out of range");
+    FAIL_FAST_MSG("Component out of range");
 }
 
 static NSDateComponents* finishTime(UIDatePicker* self) {
@@ -555,7 +555,7 @@ int numRowsTime(int component) {
         case 2: // AM/PM
             return 2;
     }
-    FAIL_FAST_MSG(E_INVALIDARG, "Component out of range");
+    FAIL_FAST_MSG("Component out of range");
 }
 
 int numRowsTimer(int component) {
@@ -565,7 +565,7 @@ int numRowsTimer(int component) {
         case 1: // Minutes
             return 60;
     }
-    FAIL_FAST_MSG(E_INVALIDARG, "Component out of range");
+    FAIL_FAST_MSG("Component out of range");
 }
 
 int numRowsDay() {
@@ -602,7 +602,7 @@ static float rowWidthDate(int component) {
         case 2:
             return 100.0f;
         default:
-            FAIL_FAST_MSG(E_INVALIDARG, "Component out of range");
+            FAIL_FAST_MSG("Component out of range");
     }
 }
 
@@ -645,7 +645,7 @@ static NSString* titleForDateRow(UIDatePicker* self, unsigned row, int component
             ret = [NSString stringWithFormat:@"%d", YEAR_START + row];
             break;
         default:
-            FAIL_FAST_MSG(E_INVALIDARG, "Component out of range");
+            FAIL_FAST_MSG("Component out of range");
     }
 
     bool isValid = true;
@@ -719,7 +719,7 @@ static id titleForTimeRow(UIDatePicker* self, int row, int component, UIColor** 
             ret = row == 0 ? @"AM" : @"PM";
             break;
         default:
-            FAIL_FAST_MSG(E_INVALIDARG, "Component out of range");
+            FAIL_FAST_MSG("Component out of range");
     }
 
     if (color) {
@@ -740,7 +740,7 @@ static NSString* titleForTimerRow(int row, int component) {
         case 1:
             return [NSString stringWithFormat:@"%d", row];
         default:
-            FAIL_FAST_MSG(E_INVALIDARG, "Component out of range");
+            FAIL_FAST_MSG("Component out of range");
     }
 }
 
@@ -788,7 +788,7 @@ static NSString* titleForDayRow(UIDatePicker* self, int row) {
             }
             return titleForDayRow(self, row);
     }
-    FAIL_FAST_MSG(E_INVALIDARG, "Invalid mode");
+    FAIL_FAST_MSG("Invalid mode");
 }
 
 static void resetPickerPositions(UIDatePicker* self) {

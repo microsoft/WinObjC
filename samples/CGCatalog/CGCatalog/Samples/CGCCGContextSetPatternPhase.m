@@ -33,12 +33,6 @@ static const int c_PatternSize = 48;
     CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
     CGContextFillRect(context, CGRectMake(0, 0, maxWidth, maxHeight));
 
-    // Create a base pattern color space
-    CGContextSaveGState(context);
-    CGColorSpaceRef colorSpace = CGColorSpaceCreatePattern(NULL);
-    CGContextSetFillColorSpace(context, colorSpace);
-    CGColorSpaceRelease(colorSpace);
-
     // Create the pattern
     static const CGPatternCallbacks callbacks = { 0, &_DrawCustomPattern, NULL };
     CGFloat alpha = 1;
@@ -52,7 +46,6 @@ static const int c_PatternSize = 48;
 
     // Fill using the pattern
     CGContextFillRect(context, rect);
-    CGContextRestoreGState(context);
 }
 
 void _DrawCustomPattern(void* info, CGContextRef context) {

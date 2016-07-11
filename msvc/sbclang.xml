@@ -53,17 +53,10 @@
       Visible="False"
       IncludeInCommandLine="False"
       Name="ReadTLogFile" />
-    <StringProperty
-      Visible="False"
-      IncludeInCommandLine="False"
-      Name="InputFileName" />
-    <StringProperty
-      Visible="False"
-      IncludeInCommandLine="False"
-      Name="InputAbsDir" />
     <StringListProperty
       Visible="False"
       Category="Command Line"
+      Switch="-c "
       Name="Input">
       <StringListProperty.DataSource>
         <DataSource
@@ -111,22 +104,22 @@
       <EnumValue
         DisplayName="Multi-threaded"
         Description="Causes your application to use the multithread, static version of the run-time library."
-        Switch="-D_MT --dependent-lib=libcmt --dependent-lib=oldnames"
+        Switch="-D_MT -Xclang --dependent-lib=libcmt -Xclang --dependent-lib=oldnames"
         Name="MultiThreaded" />
       <EnumValue
         DisplayName="Multi-threaded Debug"
         Description="Defines _DEBUG and _MT. This option also causes the compiler to place the library name LIBCMTD.lib into the .obj file so that the linker will use LIBCMTD.lib to resolve external symbols."
-        Switch="-D_DEBUG -D_MT --dependent-lib=libcmtd --dependent-lib=oldnames"
+        Switch="-D_DEBUG -D_MT -Xclang --dependent-lib=libcmtd -Xclang --dependent-lib=oldnames"
         Name="MultiThreadedDebug" />
       <EnumValue
         DisplayName="Multi-threaded DLL"
         Description="Causes your application to use the multithread- and DLL-specific version of the run-time library. Defines _MT and _DLL and causes the compiler to place the library name MSVCRT.lib into the .obj file."
-        Switch="-D_MT -D_DLL --dependent-lib=msvcrt --dependent-lib=oldnames"
+        Switch="-D_MT -D_DLL -Xclang --dependent-lib=msvcrt -Xclang --dependent-lib=oldnames"
         Name="MultiThreadedDLL" />
       <EnumValue
         DisplayName="Multi-threaded Debug DLL"
         Description="Defines _DEBUG, _MT, and _DLL and causes your application to use the debug multithread- and DLL-specific version of the run-time library. It also causes the compiler to place the library name MSVCRTD.lib into the .obj file."
-        Switch="-D_DEBUG -D_MT -D_DLL --dependent-lib=msvcrtd --dependent-lib=oldnames"
+        Switch="-D_DEBUG -D_MT -D_DLL -Xclang --dependent-lib=msvcrtd -Xclang --dependent-lib=oldnames"
         Name="MultiThreadedDebugDLL" />
     </EnumProperty>
     <EnumProperty
@@ -137,22 +130,22 @@
       <EnumValue
         DisplayName="Disabled"
         Description="Disable optimization."
-        Switch="-O0 -mrelax-all"
+        Switch="-O0"
         Name="Disabled" />
       <EnumValue
         DisplayName="Optimize for size"
         Description="Medium level, with extra optimizations to reduce code size."
-        Switch="-Os -vectorize-loops -vectorize-slp"
+        Switch="-Os"
         Name="MinSpace" />
       <EnumValue
         DisplayName="Optimize for speed"
         Description="More optimizations."
-        Switch="-O2 -vectorize-loops -vectorize-slp"
+        Switch="-O2"
         Name="MaxSpeed" />
       <EnumValue
         DisplayName="Maximum optimizations"
         Description="Even more optimizations."
-        Switch="-O3 -vectorize-loops -vectorize-slp"
+        Switch="-O3"
         Name="Full" />
     </EnumProperty>
     <BoolProperty
@@ -163,9 +156,9 @@
       Name="DebugInformation" />
     <BoolProperty
       Category="General"
-      DisplayName="Enable C++ Exceptions"
-      Description="Specifies the model of exception handling to be used by the compiler."
-      Switch="-fexceptions -fobjc-exceptions -fcxx-exceptions"
+      DisplayName="Enable Exceptions"
+      Description="Specifies exception handling model to be used by the compiler for (Objective-)C++."
+      Switch="-fexceptions"
       Name="ExceptionHandling" />
     <BoolProperty
       Category="General"
@@ -177,7 +170,7 @@
       Category="General"
       DisplayName="Enable C and Objective-C Modules"
       Description="Specifies whether to use Clang modules."
-      Switch="-fmodules -fimplicit-module-maps"
+      Switch="-fmodules"
       Name="ObjectiveCModules" />
     <StringProperty
       Visible="False"
@@ -189,10 +182,24 @@
     <StringListProperty
       Visible="False"
       Category="Paths"
-      DisplayName="Hidden Include Paths"
-      Description="Hidden include Paths"
-      Switch="-internal-isystem "
+      DisplayName="Hidden SYSTEM include search paths"
+      Description="Hidden SYSTEM include search paths"
+      Switch="-isystem "
       Name="InternalSystemIncludePaths" />
+    <StringListProperty
+      Visible="False"
+      Category="Paths"
+      DisplayName="Hidden include paths"
+      Description="Hidden include paths"
+      Switch="-I "
+      Name="InternalIncludePaths" />
+    <StringListProperty
+      Visible="False"
+      Category="Paths"
+      DisplayName="Hidden force inclusions"
+      Description="Hidden force inclusions"
+      Switch="-include "
+      Name="InternalForceIncludes" />
     <StringListProperty
       IncludeInCommandLine="False"
       Category="Paths"
@@ -248,7 +255,7 @@
       <EnumValue
         DisplayName="Compile as C++ Code"
         Description="Compile as C++ Code"
-        Switch="-x c++ -std=c++11 -fdeprecated-macro"
+        Switch="-x c++"
         Name="CompileAsCpp" />
       <EnumValue
         DisplayName="Compile as Objective C Code"
@@ -258,7 +265,7 @@
       <EnumValue
         DisplayName="Compile as Objective C++ Code"
         Description="Compile as Objective C++ Code"
-        Switch="-x objective-c++ -std=c++11 -fdeprecated-macro"
+        Switch="-x objective-c++"
         Name="CompileAsObjCpp" />
     </EnumProperty>
     <StringProperty
@@ -325,20 +332,14 @@
       Category="Preprocessor"
       DisplayName="Dependency File"
       Description="Specifies a name to override the default dependency file name."
-      Switch="-dependency-file "
+      Switch="-MF "
       Name="DependencyFile" />
-    <StringProperty
-      IncludeInCommandLine="False"
-      Category="Preprocessor"
-      DisplayName="Dependency Source"
-      Description="Specifies a name to override the default dependency source file name."
-      Switch="-MT "
-      Name="DependencySource" />
     <BoolProperty
       Category="Preprocessor"
       DisplayName="Use System Headers For Dependencies"
       Description="Don't ignore system headers when calculating dependencies."
-      Switch="-sys-header-deps"
+      Switch="-MD"
+      ReverseSwitch="-MMD"
       Name="SystemHeaderDeps" />
   </Rule>
   <ItemType

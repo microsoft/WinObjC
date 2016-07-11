@@ -14,18 +14,18 @@
 //
 //******************************************************************************
 
-#import <Starboard.h>
 #import <CoreGraphics/CGGeometry.h>
+#import <Starboard.h>
 #import <memory>
 
-#import "CGContextImpl.h"
-#import "CGImageInternal.h"
-#import "CGGradientInternal.h"
-#import "CGPatternInternal.h"
 #import "CGColorSpaceInternal.h"
 #import "CGContextCairo.h"
+#import "CGContextImpl.h"
 #import "CGFontInternal.h"
+#import "CGGradientInternal.h"
+#import "CGImageInternal.h"
 #import "CGPathInternal.h"
+#import "CGPatternInternal.h"
 #import "UIColorInternal.h"
 
 #define CAIRO_WIN32_STATIC_BUILD
@@ -35,10 +35,10 @@
 extern "C" {
 #import <ft2build.h>
 #import FT_FREETYPE_H
-#import <ftglyph.h>
-#import <tttables.h>
 #import <ftadvanc.h>
+#import <ftglyph.h>
 #import <ftsizes.h>
+#import <tttables.h>
 }
 
 #include "LoggingNative.h"
@@ -1681,35 +1681,60 @@ void CGContextCairo::CGContextClipToRect(CGRect rect) {
 }
 
 void CGContextCairo::CGContextBeginTransparencyLayer(id auxInfo) {
-    //  [To future blamb, next time you comment this out, make a note as to why]
+    ObtainLock();
+    LOCK_CAIRO();
+    cairo_save(_drawContext);
+    CGContextSaveGState();
+    // Set defaults for new group/layer
+    CGContextSetAlpha(1.0);
+    CGContextSetShadowWithColor(CGSizeMake(0, 0), 0, NULL);
+    CGContextSetBlendMode(kCGBlendModeNormal);
+    // Create group
     cairo_push_group(_drawContext);
+    UNLOCK_CAIRO();
+}
+
+void CGContextCairo::CGContextBeginTransparencyLayerWithRect(CGRect rect, id auxInfo) {
+    ObtainLock();
+    LOCK_CAIRO();
+    cairo_save(_drawContext);
+    // Add rect and clip with it
+    cairo_new_path(_drawContext);
+    CGContextAddRect(rect);
+    cairo_clip(_drawContext);
+    CGContextSaveGState();
+    // Set defaults for new group/layer
+    CGContextSetAlpha(1.0);
+    CGContextSetShadowWithColor(CGSizeMake(0, 0), 0, NULL);
+    CGContextSetBlendMode(kCGBlendModeNormal);
+    // Create group
+    cairo_push_group(_drawContext);
+    UNLOCK_CAIRO();
 }
 
 void CGContextCairo::CGContextEndTransparencyLayer() {
     ObtainLock();
-
     LOCK_CAIRO();
-    cairo_pop_group_to_source(_drawContext);
-
-    cairo_save(_drawContext);
-    cairo_new_path(_drawContext);
-    cairo_rectangle(_drawContext, 0, 0, _imgDest->Backing()->Width(), _imgDest->Backing()->Height());
-
+    // Retrieve the group as a pattern
+    cairo_pattern_t* group = cairo_pop_group(_drawContext);
+    // Restore the CG state before the group was created
+    CGContextRestoreGState();
+    // Set the transform matrix
     cairo_matrix_t m;
     float trans[6];
     memcpy(trans, &curState->curTransform, sizeof(curState->curTransform));
-
     m.xx = trans[0];
     m.yx = trans[1];
     m.xy = trans[2];
     m.yy = trans[3];
     m.x0 = trans[4];
     m.y0 = trans[5];
-
     cairo_set_matrix(_drawContext, &m);
-    cairo_fill(_drawContext);
-
+    // Draw the group
+    cairo_set_source(_drawContext, group);
+    cairo_paint_with_alpha(_drawContext, curState->curFillColor.a);
     cairo_restore(_drawContext);
+    cairo_pattern_destroy(group);
     UNLOCK_CAIRO();
 }
 
@@ -1892,4 +1917,17 @@ CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, flo
     UNLOCK_CAIRO();
 
     return ret;
+}
+
+bool CGContextCairo::CGContextIsPointInPath(bool eoFill, float x, float y) {
+    ObtainLock();
+    LOCK_CAIRO();
+    if (eoFill) {
+        cairo_set_fill_rule(_drawContext, CAIRO_FILL_RULE_EVEN_ODD);
+    } else {
+        cairo_set_fill_rule(_drawContext, CAIRO_FILL_RULE_WINDING);
+    }
+    bool returnValue = cairo_in_fill(_drawContext, x, y);
+    UNLOCK_CAIRO();
+    return returnValue;
 }

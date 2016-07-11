@@ -660,9 +660,11 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
                     format:@"Both NSBinarySearchingFirstEqual and NSBinarySearchingLastEqual were specified."];
     }
 
-    if (range.location + range.length > [self count]) {
+    NSUInteger selfCount = [self count];
+
+    if (range.location + range.length > selfCount) {
         [NSException raise:NSInvalidArgumentException
-                    format:@"Range {%d, %d} larger than array of size %d.", range.location, range.length, [self count]];
+                    format:@"Range {%d, %d} larger than array of size %d.", range.location, range.length, selfCount];
     }
 
     NSUInteger index = CFArrayBSearchValues(static_cast<CFArrayRef>(self),
@@ -671,11 +673,11 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
                                             _CFComparatorFunctionFromComparator,
                                             &comparator);
 
-    if (index >= [self count] && (options & NSBinarySearchingInsertionIndex)) {
-        return index;
+    if (index >= selfCount && (options & NSBinarySearchingInsertionIndex)) {
+        return selfCount;
     }
 
-    if (([self count] > 0) && ([[self objectAtIndex:index] isEqual:obj])) {
+    if ((selfCount > index) && ([[self objectAtIndex:index] isEqual:obj])) {
         if (options & NSBinarySearchingFirstEqual) {
             while (NSLocationInRange(index - 1, range)) {
                 if ([[self objectAtIndex:index - 1] isEqual:obj]) {

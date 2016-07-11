@@ -14,21 +14,79 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSURLResponse.h"
+#include <Starboard.h>
+#include <StubReturn.h>
+#include <Foundation/NSURLResponse.h>
 #include "NSURLResponseInternal.h"
 
+@interface NSURLResponse() {
+    int _expectedContentLength;
+    StrongId<NSString> _mimeType;
+    StrongId<NSString> _suggestedFilename;
+    StrongId<NSString> _textEncodingName;
+    StrongId<NSURL> _url;
+}
+@end
+
 @implementation NSURLResponse
+
+static NSString* s_invalidFileNameChars = @"\\/:;*\"<>|?";
+static NSString* s_unknownFileName = @"Unknown";
+static NSString* s_defaultMimeType = @"application/octet-stream";
+
+NSString* _NSReplaceIllegalFileNameCharacters(NSString* fileName) {
+    static StrongId<NSCharacterSet> invalidFileNameCharacterSet = [NSCharacterSet characterSetWithCharactersInString:s_invalidFileNameChars];
+
+    if (fileName) {
+        if (!NSEqualRanges({NSNotFound, 0}, [fileName rangeOfCharacterFromSet:invalidFileNameCharacterSet])) {
+            // remove illegal characters
+            NSArray<NSString*>* substrings = [fileName componentsSeparatedByCharactersInSet:invalidFileNameCharacterSet];
+            fileName = [substrings componentsJoinedByString:@"_"];
+        }
+
+        if ([fileName length] > 0) {
+            return fileName;
+        }
+    }
+
+    return s_unknownFileName;
+}
 
 /**
  @Status Interoperable
 */
-- (id)initWithURL:(id)url MIMEType:(id)mimeType expectedContentLength:(int)expectedContentLength textEncodingName:(id)textEncodingName {
-    _expectedContentLength = expectedContentLength;
-    _url = url;
-    _mimeType.attach([mimeType copy]);
-    _textEncodingName.attach([textEncodingName copy]);
+- (id)init {
+    return [self initWithURL:nil MIMEType:s_defaultMimeType expectedContentLength:0 textEncodingName:nil];
+}
+
+/**
+ @Status Interoperable
+*/
+- (id)initWithURL:(NSURL*)url MIMEType:(NSString*)mimeType expectedContentLength:(NSInteger)expectedContentLength textEncodingName:(NSString*)textEncodingName {
+    return [self _initWithURL:url
+        MIMEType:mimeType
+        expectedContentLength:expectedContentLength
+        textEncodingName:textEncodingName
+        suggestedFilename:_NSReplaceIllegalFileNameCharacters([url lastPathComponent])];
+}
+
+- (id)_initWithURL:(NSURL*)url
+        MIMEType:(NSString*)mimeType
+        expectedContentLength:(NSInteger)expectedContentLength
+        textEncodingName:(NSString*)textEncodingName
+        suggestedFilename:(NSString*)fileName {
+
+    if (self = [super init]) {
+        _expectedContentLength = expectedContentLength;
+        _url.attach([url copy]);
+        _mimeType.attach([mimeType copy]);
+        _textEncodingName.attach([textEncodingName copy]);
+        if (nil != fileName) {
+            _suggestedFilename.attach([fileName copy]);
+        } else {
+            _suggestedFilename.attach([s_unknownFileName copy]);
+        }
+    }
 
     return self;
 }
@@ -36,48 +94,36 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 /**
  @Status Interoperable
 */
-- (id)MIMEType {
-    return _mimeType;
+- (NSString*)MIMEType {
+    return [[_mimeType retain] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (id)textEncodingName {
-    return _textEncodingName;
+- (NSString*)textEncodingName {
+    return [[_textEncodingName retain] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (__int64)expectedContentLength {
-    if (_expectedContentLength == 0) {
-        return -1;
-    }
-
     return _expectedContentLength;
 }
 
-- (int)statusCode {
-    return 401;
+/**
+ @Status Interoperable
+*/
+- (NSURL*)URL {
+    return [[_url retain] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (id)URL {
-    return _url;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)dealloc {
-    _url = nil;
-    _mimeType = nil;
-    _textEncodingName = nil;
-
-    [super dealloc];
+- (NSString*)suggestedFilename {
+    return [[_suggestedFilename retain] autorelease];
 }
 
 /**

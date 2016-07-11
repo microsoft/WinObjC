@@ -477,10 +477,6 @@ namespace ClangCompile
                 {
                     return GetSpecial("objectfilename", ObjectFileName, input) + ".d";
                 }
-                else if (name == "dependencysource")
-                {
-                    return GetSpecial("objectfilename", ObjectFileName, input);
-                }
             }
             
             if (name == "objectfilename")
@@ -525,9 +521,9 @@ namespace ClangCompile
         {
             return LLVMDirectory + @"\lib\clang\" + LLVMClangVersion;
         }
-#endregion
+        #endregion
 
-#region MSBuild Properties
+        #region MSBuild Properties
         [PropertyPage(Visible = false, IncludeInCommandLine = false)]
         public string LLVMClangVersion
         {
@@ -564,11 +560,11 @@ namespace ClangCompile
         static string LLVMClangVersionValue;
 
         [PropertyPage(Visible = false, IncludeInCommandLine = false)]
-        public string LLVMResourceDir 
+        public string LLVMResourceDir
         {
             get
             {
-                if(LLVMResourceDirValue == null || LLVMResourceDirValue == "")
+                if (LLVMResourceDirValue == null || LLVMResourceDirValue == "")
                 {
                     LLVMResourceDirValue = GetClangResourceDir();
                 }
@@ -606,16 +602,10 @@ namespace ClangCompile
             set;
         }
 
-        [PropertyPage(Visible = false, IncludeInCommandLine = false)]
-        public string InputFileName { get; set; }
-
-        [PropertyPage(Visible = false, IncludeInCommandLine = false)]
-        [ResolvePath()]
-        public string InputAbsDir { get; set; }
-
         [Required]
         [PropertyPage(
           Category = "Command Line",
+          Switch = "-c ",
           Visible = false)]
         [DataSource(
             Persistence = "ProjectFile",
@@ -666,13 +656,13 @@ namespace ClangCompile
 
         public enum RuntimeLibraryEnum
         {
-            [Field(DisplayName = "Multi-threaded", Description = "Causes your application to use the multithread, static version of the run-time library.", Switch = "-D_MT --dependent-lib=libcmt --dependent-lib=oldnames")]
+            [Field(DisplayName = "Multi-threaded", Description = "Causes your application to use the multithread, static version of the run-time library.", Switch = "-D_MT -Xclang --dependent-lib=libcmt -Xclang --dependent-lib=oldnames")]
             MultiThreaded,
-            [Field(DisplayName = "Multi-threaded Debug", Description = "Defines _DEBUG and _MT. This option also causes the compiler to place the library name LIBCMTD.lib into the .obj file so that the linker will use LIBCMTD.lib to resolve external symbols.", Switch="-D_DEBUG -D_MT --dependent-lib=libcmtd --dependent-lib=oldnames")]
+            [Field(DisplayName = "Multi-threaded Debug", Description = "Defines _DEBUG and _MT. This option also causes the compiler to place the library name LIBCMTD.lib into the .obj file so that the linker will use LIBCMTD.lib to resolve external symbols.", Switch= "-D_DEBUG -D_MT -Xclang --dependent-lib=libcmtd -Xclang --dependent-lib=oldnames")]
             MultiThreadedDebug,
-            [Field(DisplayName = "Multi-threaded DLL", Description = "Causes your application to use the multithread- and DLL-specific version of the run-time library. Defines _MT and _DLL and causes the compiler to place the library name MSVCRT.lib into the .obj file.", Switch = "-D_MT -D_DLL --dependent-lib=msvcrt --dependent-lib=oldnames")]
+            [Field(DisplayName = "Multi-threaded DLL", Description = "Causes your application to use the multithread- and DLL-specific version of the run-time library. Defines _MT and _DLL and causes the compiler to place the library name MSVCRT.lib into the .obj file.", Switch = "-D_MT -D_DLL -Xclang --dependent-lib=msvcrt -Xclang --dependent-lib=oldnames")]
             MultiThreadedDLL,
-            [Field(DisplayName = "Multi-threaded Debug DLL", Description = "Defines _DEBUG, _MT, and _DLL and causes your application to use the debug multithread- and DLL-specific version of the run-time library. It also causes the compiler to place the library name MSVCRTD.lib into the .obj file.", Switch = "-D_DEBUG -D_MT -D_DLL --dependent-lib=msvcrtd --dependent-lib=oldnames")]
+            [Field(DisplayName = "Multi-threaded Debug DLL", Description = "Defines _DEBUG, _MT, and _DLL and causes your application to use the debug multithread- and DLL-specific version of the run-time library. It also causes the compiler to place the library name MSVCRTD.lib into the .obj file.", Switch = "-D_DEBUG -D_MT -D_DLL -Xclang --dependent-lib=msvcrtd -Xclang --dependent-lib=oldnames")]
             MultiThreadedDebugDLL
         }
 
@@ -690,13 +680,13 @@ namespace ClangCompile
         RuntimeLibraryEnum RuntimeLibraryValue;
 
         public enum OptimizationLevelEnum {
-            [Field(Switch="-O0 -mrelax-all", DisplayName="Disabled", Description="Disable optimization.")]
+            [Field(Switch="-O0", DisplayName="Disabled", Description="Disable optimization.")]
             Disabled,
-            [Field(Switch="-Os -vectorize-loops -vectorize-slp", DisplayName="Optimize for size", Description="Medium level, with extra optimizations to reduce code size.")]
+            [Field(Switch="-Os", DisplayName="Optimize for size", Description="Medium level, with extra optimizations to reduce code size.")]
             MinSpace,
-            [Field(Switch="-O2 -vectorize-loops -vectorize-slp", DisplayName="Optimize for speed", Description="More optimizations.")]
+            [Field(Switch="-O2", DisplayName="Optimize for speed", Description="More optimizations.")]
             MaxSpeed,
-            [Field(Switch="-O3 -vectorize-loops -vectorize-slp", DisplayName="Maximum optimizations", Description="Even more optimizations.")]
+            [Field(Switch="-O3", DisplayName="Maximum optimizations", Description="Even more optimizations.")]
             Full
         }
 
@@ -721,10 +711,10 @@ namespace ClangCompile
         public bool DebugInformation { get; set; }
 
         [PropertyPage(
-            DisplayName = "Enable C++ Exceptions",
-            Description = "Specifies the model of exception handling to be used by the compiler.",
+            DisplayName = "Enable Exceptions",
+            Description = "Specifies exception handling model to be used by the compiler for (Objective-)C++.",
             Category = "General",
-            Switch = "-fexceptions -fobjc-exceptions -fcxx-exceptions")]
+            Switch = "-fexceptions")]
         public bool ExceptionHandling { get; set; }
 
         [PropertyPage(
@@ -738,7 +728,7 @@ namespace ClangCompile
             DisplayName = "Enable C and Objective-C Modules",
             Description = "Specifies whether to use Clang modules.",
             Category = "General",
-            Switch = "-fmodules -fimplicit-module-maps")]
+            Switch = "-fmodules")]
         public bool ObjectiveCModules { get; set; }
 
         [PropertyPage(
@@ -752,12 +742,29 @@ namespace ClangCompile
 
         [PropertyPage(
             Category = "Paths",
-            DisplayName = "Hidden Include Paths",
-            Description = "Hidden include Paths",
-            Switch = "-internal-isystem ",
+            DisplayName = "Hidden SYSTEM include search paths",
+            Description = "Hidden SYSTEM include search paths",
+            Switch = "-isystem ",
             Visible = false)]
         [ResolvePath()]
         public string[] InternalSystemIncludePaths { get; set; }
+
+        [PropertyPage(
+            Category = "Paths",
+            DisplayName = "Hidden include paths",
+            Description = "Hidden include paths",
+            Switch = "-I ",
+            Visible = false)]
+        [ResolvePath()]
+        public string[] InternalIncludePaths { get; set; }
+
+        [PropertyPage(
+            Category = "Paths",
+            DisplayName = "Hidden force inclusions",
+            Description = "Hidden force inclusions",
+            Switch = "-include ",
+            Visible = false)]
+        public string[] InternalForceIncludes { get; set; }
 
         [PropertyPage(
             Category = "Paths",
@@ -892,17 +899,18 @@ namespace ClangCompile
             Switch = "-U")]
         public string[] UndefinePreprocessorDefinitions { get; set; }
 
+        // This option needs to go BEFORE the file being compiled
         public enum CompileAsEnum
         {
             [Field(DisplayName = "Default", Description = "Default", Switch = "")]
             Default,
             [Field(DisplayName = "Compile as C Code", Description = "Compile as C Code", Switch = "-x c")]
             CompileAsC,
-            [Field(DisplayName = "Compile as C++ Code", Description = "Compile as C++ Code", Switch = "-x c++ -std=c++14 -fdeprecated-macro")]
+            [Field(DisplayName = "Compile as C++ Code", Description = "Compile as C++ Code", Switch = "-x c++")]
             CompileAsCpp,
             [Field(DisplayName = "Compile as Objective C Code", Description = "Compile as Objective C Code", Switch = "-x objective-c")]
             CompileAsObjC,
-            [Field(DisplayName = "Compile as Objective C++ Code", Description = "Compile as Objective C++ Code", Switch = "-x objective-c++ -std=c++14 -fdeprecated-macro")]
+            [Field(DisplayName = "Compile as Objective C++ Code", Description = "Compile as Objective C++ Code", Switch = "-x objective-c++")]
             CompileAsObjCpp
         }
 
@@ -923,24 +931,8 @@ namespace ClangCompile
             Category = "Language",
             DisplayName = "LLVM Directory",
             Description = "Use LLVM from this directory for compilation",
-            IncludeInCommandLine=false)]
-        public string LLVMDirectory
-        {
-            get
-            {
-                if(LLVMDirectoryValue == null) {
-                    // The SDK should always set this?
-                    LLVMDirectoryValue = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location) + "\\LLVM-3.6.0\\";
-                }
-                return LLVMDirectoryValue;
-            }
-            set
-            {
-                LLVMDirectoryValue = value;
-            }
-        }
-
-        string LLVMDirectoryValue;
+            IncludeInCommandLine = false)]
+        public string LLVMDirectory { get; set; }
 
         [PropertyPage(
             Category = "General",
@@ -1006,41 +998,13 @@ namespace ClangCompile
             DisplayName = "Additional Options",
             Description = "Additional Options",
             IncludeInCommandLine=false)]
-        public string AdditionalOptions { 
-            get
-            {
-                return AdditionalOptionsValue;
-            }
-            set
-            {
-                AdditionalOptionsValue = filterAdditionalOptions(value);
-            }
-        }
-
-        string AdditionalOptionsValue;
-
-        private string filterAdditionalOptions(string opts)
-        {
-            List<string> retTokens = new List<string>();
-            IEnumerable<string> tokens = StringSplitter.SplitCommandLine(opts);
-            foreach (string t in tokens)
-            {
-                if (t == "-fobjc-arc")
-                    ObjectiveCARC = true;
-                else if (t == "-fno-objc-arc")
-                    ObjectiveCARC = false;
-                else
-                    retTokens.Add(t);
-            }
-
-            return String.Join(" ", retTokens);
-        }
+        public string AdditionalOptions { get; set; }
 
         [PropertyPage(
             Category = "Preprocessor",
             DisplayName = "Dependency File",
             Description = "Specifies a name to override the default dependency file name.",
-            Switch = "-dependency-file ",
+            Switch = "-MF ",
             IncludeInCommandLine = false)]
         [ResolvePath()]
         
@@ -1048,22 +1012,14 @@ namespace ClangCompile
 
         [PropertyPage(
             Category = "Preprocessor",
-            DisplayName = "Dependency Source",
-            Description = "Specifies a name to override the default dependency source file name.",
-            Switch = "-MT ",
-            IncludeInCommandLine = false)]
-        [ResolvePath()]
-        public string DependencySource { get; set; }
-
-        [PropertyPage(
-            Category = "Preprocessor",
             DisplayName = "Use System Headers For Dependencies",
             Description = "Don't ignore system headers when calculating dependencies.",
-            Switch = "-sys-header-deps")]
+            Switch = "-MD",
+            ReverseSwitch = "-MMD")]
         public bool SystemHeaderDeps { get; set; }
-#endregion
+        #endregion
 
-#region ToolTask Overrides
+        #region ToolTask Overrides
         // ToLower() is affected by localization.
         // Be VERY careful when adding static strings to the dictionary, since lookup is also done with ToLower.
         static Dictionary<string, PropertyInfo> AllProps = typeof(Clang).GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance).ToDictionary(x => x.Name.ToLower());

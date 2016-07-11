@@ -106,7 +106,7 @@
     }
     {
         CGMutablePathRef path = CGPathCreateMutable();
-        NSArray* points = @[ [NSValue valueWithCGPoint:CGPointMake(25, 100)], @20, @(1.5 * M_PI), @(0), @YES ];
+        NSArray* points = @[ [NSValue valueWithCGPoint:CGPointMake(25, 100)], @20, @(1.25 * M_PI), @(0), @YES ];
         CGPathAddArc(path,
                      &transform,
                      [points[0] CGPointValue].x,

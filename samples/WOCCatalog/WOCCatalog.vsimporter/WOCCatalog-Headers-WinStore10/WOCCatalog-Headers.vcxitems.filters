@@ -114,5 +114,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\TaskInfoViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\UIPasteboardViewController.h">
+		<Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AudioToolboxViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

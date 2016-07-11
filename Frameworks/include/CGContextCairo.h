@@ -123,6 +123,7 @@ public:
     virtual void CGContextClipToRect(CGRect rect);
 
     virtual void CGContextBeginTransparencyLayer(id auxInfo);
+    virtual void CGContextBeginTransparencyLayerWithRect(CGRect rect, id auxInfo);
     virtual void CGContextEndTransparencyLayer();
 
     virtual void CGContextSetGrayStrokeColor(float gray, float alpha);
@@ -131,4 +132,5 @@ public:
     virtual void CGContextSetRGBStrokeColor(float r, float g, float b, float a);
 
     virtual CGSize CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, float x, float y);
+    virtual bool CGContextIsPointInPath(bool eoFill, float x, float y);
 };

@@ -50,22 +50,30 @@ static const int MODALFORMSHEET_ROW = 4;
 
     const CGFloat buttonHeight = 50;
     const CGFloat buttonWidth = 175;
-    const CGFloat buttonOriginOffset = 25;
+    const CGFloat originOffset = 25;
 
     self.leftPopoverButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.leftPopoverButton.titleLabel.font = [UIFont systemFontOfSize:11];
     [self.leftPopoverButton setTitle:@"Popover (left arrow direction)" forState:UIControlStateNormal];
-    [self.leftPopoverButton setFrame:CGRectMake(buttonOriginOffset, buttonOriginOffset, buttonWidth, buttonHeight)];
+    [self.leftPopoverButton setFrame:CGRectMake(originOffset, originOffset, buttonWidth, buttonHeight)];
     [self.leftPopoverButton addTarget:self action:@selector(pressedPopoverButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.leftPopoverButton];
 
     self.rightPopoverButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.rightPopoverButton.titleLabel.font = [UIFont systemFontOfSize:11];
     [self.rightPopoverButton setTitle:@"Popover (up arrow direction)" forState:UIControlStateNormal];
-    [self.rightPopoverButton
-        setFrame:CGRectMake(self.view.bounds.size.width - buttonOriginOffset - buttonWidth, buttonOriginOffset, buttonWidth, buttonHeight)];
+    [self.rightPopoverButton setFrame:CGRectMake(self.view.bounds.size.width - originOffset - buttonWidth, originOffset, buttonWidth, buttonHeight)];
     [self.rightPopoverButton addTarget:self action:@selector(pressedPopoverButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.rightPopoverButton];
+
+    UILabel* popoverDisclaimerLabel = [[UILabel alloc] initWithFrame:
+        CGRectMake(self.leftPopoverButton.frame.origin.x + self.leftPopoverButton.frame.size.width + originOffset,
+                   self.leftPopoverButton.frame.origin.y,
+                   self.rightPopoverButton.frame.origin.x - self.leftPopoverButton.frame.origin.x - self.leftPopoverButton.frame.size.width - originOffset * 2,
+                   self.leftPopoverButton.frame.size.height)];
+    popoverDisclaimerLabel.text = @"Tablet-style popovers require WOCOperationModeTablet to be enabled (see DisplayModeViewController).";
+    popoverDisclaimerLabel.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:popoverDisclaimerLabel];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -205,8 +213,6 @@ static const int MODALFORMSHEET_ROW = 4;
 
 - (void)pressedPopoverButton:(UIButton*)sender {
     PopoverViewController* viewController = [[PopoverViewController alloc] initWithImage:[UIImage imageNamed:@"photo1.jpg"]];
-    viewController.modalPresentationStyle = UIModalPresentationPopover;
-
     assert(viewController.popoverPresentationController == nil);
 
     viewController.modalPresentationStyle = UIModalPresentationPopover;
@@ -234,8 +240,6 @@ static const int MODALFORMSHEET_ROW = 4;
 
 - (void)pressedPopoverBarButton:(UIBarButtonItem*)sender {
     PopoverViewController* viewController = [[PopoverViewController alloc] initWithImage:[UIImage imageNamed:@"photo1.jpg"]];
-    viewController.modalPresentationStyle = UIModalPresentationPopover;
-
     assert(viewController.popoverPresentationController == nil);
 
     viewController.modalPresentationStyle = UIModalPresentationPopover;
