@@ -274,6 +274,11 @@
             // entered by the user.
             [self _createContact];
             break;
+        default:
+            // This case should never be reached, since a ContactOperation can only
+            // have the previously-handled values.
+            NSLog(@"Error -- invalid ContactOperation of: %d", self.contactOperation);
+            break;
     }
 
     // Dismiss this view after the button is pressed.
@@ -349,23 +354,21 @@
 - (void)_createContact {
     CFErrorRef error = NULL;
     self.contact = ABPersonCreate();
-    CFTypeRef firstName = [self _copyContactInfoFrom:self.firstName];
-    CFTypeRef lastName = [self _copyContactInfoFrom:self.lastName];
-    CFTypeRef phoneNumber = [self _copyContactInfoFrom:self.phoneNumber];
-    CFTypeRef email = [self _copyContactInfoFrom:self.email];
-    CFTypeRef address = [self _copyContactInfoFrom:self.address];
     bool succeeded = true;
 
+    CFTypeRef firstName = [self _copyContactInfoFrom:self.firstName];
     if (firstName) {
         succeeded = succeeded && ABRecordSetValue(self.contact, kABPersonFirstNameProperty, firstName, &error);
         CFRelease(firstName);
     }
 
+    CFTypeRef lastName = [self _copyContactInfoFrom:self.lastName];
     if (lastName) {
         succeeded = succeeded && ABRecordSetValue(self.contact, kABPersonLastNameProperty, lastName, &error);
         CFRelease(lastName);
     }
 
+    CFTypeRef phoneNumber = [self _copyContactInfoFrom:self.phoneNumber];
     if (phoneNumber) {
         ABMutableMultiValueRef phoneNumbers = ABMultiValueCreateMutable(kABMultiStringPropertyType);
         succeeded = succeeded && ABMultiValueAddValueAndLabel(phoneNumbers, phoneNumber, kABPersonPhoneMainLabel, NULL);
@@ -374,6 +377,7 @@
         CFRelease(phoneNumber);
     }
 
+    CFTypeRef email = [self _copyContactInfoFrom:self.email];
     if (email) {
         ABMutableMultiValueRef emails = ABMultiValueCreateMutable(kABMultiStringPropertyType);
         succeeded = succeeded && ABMultiValueAddValueAndLabel(emails, email, kABWorkLabel, NULL);
@@ -382,6 +386,7 @@
         CFRelease(email);
     }
 
+    CFTypeRef address = [self _copyContactInfoFrom:self.address];
     if (address) {
         ABMutableMultiValueRef addresses = ABMultiValueCreateMutable(kABMultiDictionaryPropertyType);
         NSDictionary* homeAddress = @{ (NSString*)kABPersonAddressStreetKey : (__bridge NSString*)address };
