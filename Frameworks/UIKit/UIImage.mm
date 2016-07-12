@@ -739,7 +739,7 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* src, 
                                             (dst->size.width - leftCap - rightCap),
                                             (dst->size.height - topCap - botCap)));
         } else {
-            UNIMPLEMENTED_MSG("Patched draws only supported when sum of leftCap and rightCap is less than the width of the UI element.");
+            UNIMPLEMENTED_WITH_MSG("Patched draws only supported when sum of leftCap and rightCap is less than the width of the UI element.");
         }
 
         if (rightCap) {
