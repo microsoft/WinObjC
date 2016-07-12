@@ -125,9 +125,9 @@ UIKIT_EXPORT NSString* const UIApplicationOpenURLOptionsOpenInPlaceKey;
          forRemoteNotification:(NSDictionary*)userInfo
              completionHandler:(void (^)(void))completionHandler;
 - (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo;
-- (void)application:(UIApplication*)application didReceiveToastNotification:(WAAToastNotificationActivatedEventArgs*)result;
-- (void)application:(UIApplication*)application didReceiveVoiceCommand:(WAAVoiceCommandActivatedEventArgs*)result;
-- (void)application:(UIApplication*)application didReceiveProtocol:(WAAProtocolActivatedEventArgs*)uri;
+- (void)application:(UIApplication*)application didReceiveToastNotification:(WAAToastNotificationActivatedEventArgs*)notificationArgs;
+- (void)application:(UIApplication*)application didReceiveVoiceCommand:(WAAVoiceCommandActivatedEventArgs*)voiceCommandArgs;
+- (void)application:(UIApplication*)application didReceiveProtocol:(WAAProtocolActivatedEventArgs*)protocolArgs;
 - (void)application:(UIApplication*)application
     handleActionWithIdentifier:(NSString*)identifier
           forLocalNotification:(UILocalNotification*)notification
