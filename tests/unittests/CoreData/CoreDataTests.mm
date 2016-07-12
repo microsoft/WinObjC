@@ -16,6 +16,7 @@
 
 #include <TestFramework.h>
 #import <CoreData/CoreData.h>
+#import "CoreData/NSManagedObjectModel-XMLParsing.h"
 #import <Foundation/Foundation.h>
 
 TEST(CoreData, NSManagedObjectModelInit) {
@@ -24,7 +25,6 @@ TEST(CoreData, NSManagedObjectModelInit) {
                       autorelease]);
 }
 
-extern "C" NSManagedObjectModel* _NSManagedObjectModelFromXMLData(NSData* data, NSURL* sourceURL);
 TEST(CoreData, NSManagedObjectModel_Basic) {
     // Represented model:
     // Entity: Person

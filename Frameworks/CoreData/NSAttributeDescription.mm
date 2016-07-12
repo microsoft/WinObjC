@@ -18,7 +18,7 @@
 #import <Foundation/Foundation.h>
 #import <StubReturn.h>
 
-#import "NSManagedObjectModel-XMLParsing.h"
+#import <CoreData/NSManagedObjectModel-XMLParsing.h>
 
 @interface NSAttributeDescription () {
     StrongId<id> _minValue;

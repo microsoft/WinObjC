@@ -23,7 +23,7 @@
 #import <LoggingNative.h>
 #import <Starboard/SmartTypes.h>
 
-#import "NSManagedObjectModel-XMLParsing.h"
+#import <CoreData/NSManagedObjectModel-XMLParsing.h>
 
 #include <list>
 #include <tuple>

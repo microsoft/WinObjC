@@ -18,7 +18,7 @@
 #import <Foundation/Foundation.h>
 #import <StubReturn.h>
 
-#import "NSManagedObjectModel-XMLParsing.h"
+#import <CoreData/NSManagedObjectModel-XMLParsing.h>
 
 @implementation NSPropertyDescription
 - (id)initWithXMLElementName:(NSString*)entityName attributes:(NSDictionary<NSString*, NSString*>*)attributes {

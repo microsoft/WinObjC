@@ -20,7 +20,7 @@
 #import <CoreData/CoreData.h>
 #import <Foundation/Foundation.h>
 
-#import "NSManagedObjectModel-XMLParsing.h"
+#import <CoreData/NSManagedObjectModel-XMLParsing.h>
 
 @interface NSManagedObjectModel () {
     StrongId<NSMutableArray> _unresolvedEntities;
