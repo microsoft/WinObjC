@@ -59,25 +59,25 @@ MOCK_CLASS(MockToastNotificationActivatedEventArgs,
 }
 
 - (BOOL)application:(UIApplication*)application willFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
-    ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsToastNotificationKey]);
+    EXPECT_TRUE(launchOptions[UIApplicationLaunchOptionsToastNotificationKey]);
     WAAToastNotificationActivatedEventArgs* args = launchOptions[UIApplicationLaunchOptionsToastNotificationKey];
-    ASSERT_STREQ("TOAST_NOTIFICATION_TEST", [args.argument UTF8String]);
+    EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", args.argument);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
-    ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsToastNotificationKey]);
+    EXPECT_TRUE(launchOptions[UIApplicationLaunchOptionsToastNotificationKey]);
     WAAToastNotificationActivatedEventArgs* args = launchOptions[UIApplicationLaunchOptionsToastNotificationKey];
-    ASSERT_STREQ("TOAST_NOTIFICATION_TEST", [args.argument UTF8String]);
+    EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", args.argument);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
 
 - (BOOL)application:(UIApplication*)application didReceiveToastNotification:(WAAToastNotificationActivatedEventArgs*)args {
     // Delegate method should only be called once
-    ASSERT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
-    ASSERT_STREQ("TOAST_NOTIFICATION_TEST", [args.argument UTF8String]);
+    EXPECT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
+    EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", args.argument);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
@@ -111,8 +111,8 @@ MOCK_CLASS(MockToastNotificationActivatedEventArgs,
 
 - (BOOL)application:(UIApplication*)application didReceiveToastNotification:(WAAToastNotificationActivatedEventArgs*)args {
     // Delegate method should only be called once
-    ASSERT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
-    ASSERT_STREQ("TOAST_NOTIFICATION_TEST", [args.argument UTF8String]);
+    EXPECT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
+    EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", args.argument);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
@@ -151,10 +151,10 @@ TEST(ToastNotificationTest, ForegroundActivation) {
 TEST(ToastNotificationTest, ForegroundActivationDelegateMethodsCalled) {
     ToastNotificationForegroundActivationTestDelegate* testDelegate = [[UIApplication sharedApplication] delegate];
     NSDictionary* methodsCalled = [testDelegate methodsCalled];
-    ASSERT_TRUE(methodsCalled);
-    ASSERT_TRUE([methodsCalled objectForKey:@"application:willFinishLaunchingWithOptions:"]);
-    ASSERT_TRUE([methodsCalled objectForKey:@"application:didFinishLaunchingWithOptions:"]);
-    ASSERT_TRUE([methodsCalled objectForKey:@"application:didReceiveToastNotification:"]);
+    EXPECT_TRUE(methodsCalled);
+    EXPECT_TRUE([methodsCalled objectForKey:@"application:willFinishLaunchingWithOptions:"]);
+    EXPECT_TRUE([methodsCalled objectForKey:@"application:didFinishLaunchingWithOptions:"]);
+    EXPECT_TRUE([methodsCalled objectForKey:@"application:didReceiveToastNotification:"]);
 }
 
 TEST(ToastNotificationTest, ActivatedAppReceivesToastNotification) {
@@ -189,6 +189,6 @@ TEST(ToastNotificationTest, ActivatedAppReceivesToastNotification) {
                                 NSStringFromClass([ToastNotificationForegroundActivationTestDelegate class]));
 
     NSDictionary* methodsCalled = [testDelegate methodsCalled];
-    ASSERT_TRUE(methodsCalled);
-    ASSERT_TRUE([methodsCalled objectForKey:@"application:didReceiveToastNotification:"]);
+    EXPECT_TRUE(methodsCalled);
+    EXPECT_TRUE([methodsCalled objectForKey:@"application:didReceiveToastNotification:"]);
 }
