@@ -97,6 +97,7 @@ NSString* const UIApplicationLaunchOptionsSourceApplicationKey = @"UIApplication
 NSString* const UIApplicationLaunchOptionsRemoteNotificationKey = @"UIApplicationLaunchOptionsRemoteNotificationKey";
 NSString* const UIApplicationLaunchOptionsAnnotationKey = @"UIApplicationLaunchOptionsAnnotationKey";
 NSString* const UIApplicationLaunchOptionsLocalNotificationKey = @"UIApplicationLaunchOptionsLocalNotificationKey";
+NSString* const UIApplicationLaunchOptionsToastNotificationKey = @"UIApplicationLaunchOptionsLocalNotificationKey";
 NSString* const UIApplicationLaunchOptionsVoiceCommandKey = @"UIApplicationLaunchOptionsVoiceCommandKey";
 NSString* const UIApplicationLaunchOptionsProtocolKey = @"UIApplicationLaunchOptionsProtocolKey";
 NSString* const UIApplicationLaunchOptionsLocationKey = @"UIApplicationLaunchOptionsLocationKey";
@@ -1202,28 +1203,15 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
     }
 }
 
-- (void)_sendNotificationReceivedEvent:(NSString*)notificationData {
-    NSMutableDictionary* data = [NSMutableDictionary dictionary];
-    [data setValue:notificationData forKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-
-    // As there is now way to distinguish remote notification from local, calling both delegates here for now.
-    if ([self.delegate respondsToSelector:@selector(didReceiveRemoteNotification:fetchCompletionHandler:)]) {
-        [self.delegate didReceiveRemoteNotification:data
-                             fetchCompletionHandler:^{
-                                 // TODO::
-                                 // todo-nithishm-05262016 - Implement logic to invoke a application trigger here.
-                             }];
-    } else if ([self.delegate respondsToSelector:@selector(didReceiveRemoteNotification:)]) {
-        [self.delegate didReceiveRemoteNotification:data];
+- (void)_sendNotificationReceivedEvent:(WAAToastNotificationActivatedEventArgs*)notificationArgs {
+    if ([self.delegate respondsToSelector:@selector(application:didReceiveToastNotification:)]) {
+        [self.delegate application:sharedApplication didReceiveToastNotification:notificationArgs];
     }
-
-    // TODO::
-    // todo-nithishm-05262016 - Implement UILocalNotification and call LocalNotification delegate here.
 }
 
-- (void)_sendVoiceCommandReceivedEvent:(WMSSpeechRecognitionResult*)voiceCommandResult {
+- (void)_sendVoiceCommandReceivedEvent:(WAAVoiceCommandActivatedEventArgs*)voiceCommandArgs {
     if ([self.delegate respondsToSelector:@selector(application:didReceiveVoiceCommand:)]) {
-        [self.delegate application:sharedApplication didReceiveVoiceCommand:voiceCommandResult];
+        [self.delegate application:sharedApplication didReceiveVoiceCommand:voiceCommandArgs];
     }
 }
 

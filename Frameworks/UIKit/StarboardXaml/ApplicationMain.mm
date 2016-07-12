@@ -14,7 +14,9 @@
 //
 //******************************************************************************
 
+#include <COMIncludes.h>
 #import "ApplicationMain.h"
+#include <COMIncludes_End.h>
 
 #import <assert.h>
 #import <math.h>
@@ -33,8 +35,7 @@
 #import <CACompositorClient.h>
 #import <UIApplicationInternal.h>
 #import <MainDispatcher.h>
-#import <UWP/WindowsMediaSpeechRecognition.h>
-#import <UWP/WindowsFoundation.h>
+#import <UWP/WindowsApplicationModelActivation.h>
 
 static CACompositorClientInterface* _compositorClient = NULL;
 
@@ -47,7 +48,7 @@ int ApplicationMainStart(const char* principalName,
                          float windowWidth,
                          float windowHeight,
                          ActivationType activationType,
-                         void* activationArg) {
+                         IInspectable* activationArg) {
     // Note: We must use nil rather than an empty string for these class names
     NSString* principalClassName = Strings::IsEmpty<const char*>(principalName) ? nil : [[NSString alloc] initWithCString:principalName];
     NSString* delegateClassName = Strings::IsEmpty<const char*>(delegateName) ? nil : [[NSString alloc] initWithCString:delegateName];
@@ -56,14 +57,14 @@ int ApplicationMainStart(const char* principalName,
 
     // Populate Objective C equivalent of activation argument
     if (activationType == ActivationTypeToast) {
-        NSString* toastArgument = Strings::WideToNSString(static_cast<HSTRING>(activationArg));
+        WAAToastNotificationActivatedEventArgs* toastArgument = [WAAToastNotificationActivatedEventArgs createWith:activationArg];
         activationArgument = toastArgument;
     } else if (activationType == ActivationTypeVoiceCommand) {
-        WMSSpeechRecognitionResult* speechResult = [WMSSpeechRecognitionResult createWith:activationArg];
-        activationArgument = speechResult;
+        WAAVoiceCommandActivatedEventArgs* voiceCommandArgument = [WAAVoiceCommandActivatedEventArgs createWith:activationArg];
+        activationArgument = voiceCommandArgument;
     } else if (activationType == ActivationTypeProtocol) {
-        WFUri* protocolResult = [WFUri createWith:activationArg];
-        activationArgument = protocolResult;
+        WAAProtocolActivatedEventArgs* protocolArgument = [WAAProtocolActivatedEventArgs createWith:activationArg];
+        activationArgument = protocolArgument;
     }
 
     WOCDisplayMode* displayMode = [UIApplication displayMode];
@@ -86,7 +87,7 @@ int ApplicationMainStart(const char* principalName,
         } else if ([orientation isKindOfClass:[NSArray class]]) {
             bool found = false;
 
-            for (NSString* curstr in (NSArray*)orientation) {
+            for (NSString* curstr in(NSArray*)orientation) {
                 UIInterfaceOrientation newOrientation = UIOrientationFromString(defaultOrientation, curstr);
                 if (newOrientation == defaultOrientation) {
                     found = true;

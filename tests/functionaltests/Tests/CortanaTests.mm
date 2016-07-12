@@ -139,24 +139,24 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
 
 - (BOOL)application:(UIApplication*)application willFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsVoiceCommandKey]);
-    WMSSpeechRecognitionResult* result = launchOptions[UIApplicationLaunchOptionsVoiceCommandKey];
-    ASSERT_STREQ("CORTANA_TEST", [result.text UTF8String]);
+    WAAVoiceCommandActivatedEventArgs* args = launchOptions[UIApplicationLaunchOptionsVoiceCommandKey];
+    ASSERT_STREQ("CORTANA_TEST", [args.result.text UTF8String]);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsVoiceCommandKey]);
-    WMSSpeechRecognitionResult* result = launchOptions[UIApplicationLaunchOptionsVoiceCommandKey];
-    ASSERT_STREQ("CORTANA_TEST", [result.text UTF8String]);
+    WAAVoiceCommandActivatedEventArgs* args = launchOptions[UIApplicationLaunchOptionsVoiceCommandKey];
+    ASSERT_STREQ("CORTANA_TEST", [args.result.text UTF8String]);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
 
-- (BOOL)application:(UIApplication*)application didReceiveVoiceCommand:(WMSSpeechRecognitionResult*)result {
+- (BOOL)application:(UIApplication*)application didReceiveVoiceCommand:(WAAVoiceCommandActivatedEventArgs*)args {
     // Delegate method should only be called once
     ASSERT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
-    ASSERT_STREQ("CORTANA_TEST", [result.text UTF8String]);
+    ASSERT_STREQ("CORTANA_TEST", [args.result.text UTF8String]);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
@@ -178,24 +178,24 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
 
 - (BOOL)application:(UIApplication*)application willFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsProtocolKey]);
-    WFUri* uri = launchOptions[UIApplicationLaunchOptionsProtocolKey];
-    ASSERT_STREQ("CORTANA_TEST", [uri.toString UTF8String]);
+    WAAProtocolActivatedEventArgs* args = launchOptions[UIApplicationLaunchOptionsProtocolKey];
+    ASSERT_STREQ("CORTANA_TEST", [args.uri.toString UTF8String]);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     ASSERT_TRUE(launchOptions[UIApplicationLaunchOptionsProtocolKey]);
-    WFUri* uri = launchOptions[UIApplicationLaunchOptionsProtocolKey];
-    ASSERT_STREQ("CORTANA_TEST", [uri.toString UTF8String]);
+    WAAProtocolActivatedEventArgs* args = launchOptions[UIApplicationLaunchOptionsProtocolKey];
+    ASSERT_STREQ("CORTANA_TEST", [args.uri.toString UTF8String]);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
 
-- (BOOL)application:(UIApplication*)application didReceiveProtocol:(WFUri*)uri {
+- (BOOL)application:(UIApplication*)application didReceiveProtocol:(WAAProtocolActivatedEventArgs*)args {
     // Delegate method should only be called once
     ASSERT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
-    ASSERT_STREQ("CORTANA_TEST", [uri.toString UTF8String]);
+    ASSERT_STREQ("CORTANA_TEST", [args.uri.toString UTF8String]);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }

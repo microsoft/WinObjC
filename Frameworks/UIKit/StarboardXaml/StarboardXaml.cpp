@@ -144,14 +144,14 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
     }
 
     if (args->Kind == ActivationKind::ToastNotification) {
-        Platform::String^ argsString = safe_cast<ToastNotificationActivatedEventArgs^>(args)->Argument;
-        TraceVerbose(TAG, L"Received toast notification with argument - %s", argsString->Data());
+        ToastNotificationActivatedEventArgs^ toastArgs = safe_cast<ToastNotificationActivatedEventArgs^>(args);
+        TraceVerbose(TAG, L"Received toast notification with argument - %ls", toastArgs->Argument->Data());
 
         if (initiateAppLaunch) {
-            _ApplicationLaunch(ActivationTypeToast, argsString);
+            _ApplicationLaunch(ActivationTypeToast, toastArgs);
         }
 
-        UIApplicationMainHandleToastNotificationEvent(Strings::WideToNarrow(argsString->Data()).c_str());
+        UIApplicationMainHandleToastNotificationEvent(reinterpret_cast<IInspectable*>(toastArgs));
     } else if (args->Kind == ActivationKind::VoiceCommand) {
         Windows::Media::SpeechRecognition::SpeechRecognitionResult^ argResult = safe_cast<VoiceCommandActivatedEventArgs^>(args)->Result;
         TraceVerbose(TAG, L"Received voice command with argument - %s", argResult->Text->Data());

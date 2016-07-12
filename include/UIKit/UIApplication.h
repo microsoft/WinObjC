@@ -52,6 +52,7 @@ UIKIT_EXPORT NSString* const UIApplicationSignificantTimeChangeNotification;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsURLKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsSourceApplicationKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsRemoteNotificationKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsToastNotificationKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsVoiceCommandKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsProtocolKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsAnnotationKey;

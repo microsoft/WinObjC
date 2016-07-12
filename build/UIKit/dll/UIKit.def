@@ -291,6 +291,7 @@ LIBRARY UIKit
         UIApplicationLaunchOptionsSourceApplicationKey DATA
         UIApplicationLaunchOptionsRemoteNotificationKey DATA
         UIApplicationLaunchOptionsLocalNotificationKey DATA
+        UIApplicationLaunchOptionsToastNotificationKey DATA
         UIApplicationLaunchOptionsVoiceCommandKey DATA
         UIApplicationLaunchOptionsProtocolKey DATA
         UIApplicationLaunchOptionsAnnotationKey DATA

@@ -39,8 +39,7 @@
 #import "UIDeviceInternal.h"
 #import <MainDispatcher.h>
 #import <CACompositor.h>
-#import <UWP/WindowsMediaSpeechRecognition.h>
-#import <UWP/WindowsFoundation.h>
+#import <UWP/WindowsApplicationModelActivation.h>
 
 static const wchar_t* TAG = L"UIApplicationMain";
 
@@ -241,9 +240,7 @@ int UIApplicationMainInit(NSString* principalClassName,
     NSMutableDictionary* launchOption = [NSMutableDictionary dictionary];
     switch (activationType) {
         case ActivationTypeToast:
-            // As there is now way to distinguish remote notification from local, set both keys for now.
-            [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-            [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsLocalNotificationKey];
+            [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsToastNotificationKey];
             break;
         case ActivationTypeVoiceCommand:
             [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsVoiceCommandKey];
@@ -325,14 +322,14 @@ extern "C" void UIApplicationMainHandleResumeEvent() {
     [[NSUserDefaults _standardUserDefaultsNoInitialize] _resumeSynchronize];
 }
 
-extern "C" void UIApplicationMainHandleToastNotificationEvent(const char* notificationData) {
-    NSString* data = Strings::IsEmpty<const char*>(notificationData) ? nil : [[NSString alloc] initWithCString:notificationData];
-    [[UIApplication sharedApplication] _sendNotificationReceivedEvent:data];
+extern "C" void UIApplicationMainHandleToastNotificationEvent(IInspectable* toastArgs) {
+    WAAToastNotificationActivatedEventArgs* toastArgument = [WAAToastNotificationActivatedEventArgs createWith:toastArgs];
+    [[UIApplication sharedApplication] _sendNotificationReceivedEvent:toastArgument];
 }
 
-extern "C" void UIApplicationMainHandleVoiceCommandEvent(IInspectable* voiceCommandResult) {
-    WMSSpeechRecognitionResult* speechResult = [WMSSpeechRecognitionResult createWith:voiceCommandResult];
-    [[UIApplication sharedApplication] _sendVoiceCommandReceivedEvent:speechResult];
+extern "C" void UIApplicationMainHandleVoiceCommandEvent(IInspectable* voiceCommandArgs) {
+    WAAVoiceCommandActivatedEventArgs* voiceCommandArgument = [WAAVoiceCommandActivatedEventArgs createWith:voiceCommandArgs];
+    [[UIApplication sharedApplication] _sendVoiceCommandReceivedEvent:voiceCommandArgument];
 }
 
 static NSString* _bundleIdFromPackageFamilyName(const wchar_t* packageFamily) {
