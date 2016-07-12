@@ -49,4 +49,7 @@
 @property (nonatomic, readonly) NSString* _inverseRelationshipName;
 @end
 
-NSManagedObjectModel* _NSParseManagedObjectModelFromXMLDataAtURL(NSURL* url);
+/* exposed as a test surface */
+COREDATA_EXPORT NSManagedObjectModel* _NSManagedObjectModelFromXMLData(NSData* data, NSURL* sourceURL);
+
+COREDATA_EXPORT NSManagedObjectModel* _NSManagedObjectModelFromXMLDataAtURL(NSURL* url);

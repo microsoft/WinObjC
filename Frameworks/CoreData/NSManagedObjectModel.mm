@@ -39,7 +39,7 @@
         return nil;
     }
 
-    return [_NSParseManagedObjectModelFromXMLDataAtURL(url) retain];
+    return [_NSManagedObjectModelFromXMLDataAtURL(url) retain];
 }
 
 - (id)initWithXMLElementName:(NSString*)entityName attributes:(NSDictionary<NSString*, NSString*>*)attributes {

@@ -70,6 +70,8 @@ static Class _classForElementName(NSString* elementName) {
 // XML data model parsing is done via recursive descent and state management. Each element
 // we encounter can push another state onto the stack. The state dictates what state transitions
 // are available and what is to be done when the state is exited.
+//
+// Some of these states cascade, and their order should be retained.
 enum _NSModelParsingState : unsigned int {
     _NSModelParsingStateNone = 0,
     _NSModelParsingStateGenericObject,
@@ -254,12 +256,7 @@ static CFXMLParserCallBacks xmlParserCallbacks{
     0, xmlCreateStructure, addChild, endStructure, nullptr, nullptr,
 };
 
-NSManagedObjectModel* _NSParseManagedObjectModelFromXMLDataAtURL(NSURL* url) {
-    if (!url) {
-        return nil;
-    }
-
-    NSData* data = [NSData dataWithContentsOfURL:url];
+NSManagedObjectModel* _NSManagedObjectModelFromXMLData(NSData* data, NSURL* sourceURL) {
     if (!data) {
         return nil;
     }
@@ -270,7 +267,7 @@ NSManagedObjectModel* _NSParseManagedObjectModelFromXMLDataAtURL(NSURL* url) {
     };
     CFXMLParserRef parser = CFXMLParserCreate(kCFAllocatorDefault,
                                               (CFDataRef)data,
-                                              (CFURLRef)[url absoluteURL],
+                                              (CFURLRef)[sourceURL absoluteURL],
                                               kCFXMLParserSkipMetaData | kCFXMLParserReplacePhysicalEntities | kCFXMLParserSkipWhitespace,
                                               kCFXMLNodeCurrentVersion,
                                               &xmlParserCallbacks,
@@ -279,4 +276,13 @@ NSManagedObjectModel* _NSParseManagedObjectModelFromXMLDataAtURL(NSURL* url) {
         return nil;
     }
     return [ctx.model.detach() autorelease];
+}
+
+NSManagedObjectModel* _NSManagedObjectModelFromXMLDataAtURL(NSURL* url) {
+    if (!url) {
+        return nil;
+    }
+
+    NSData* data = [NSData dataWithContentsOfURL:url];
+    return _NSManagedObjectModelFromXMLData(data, url);
 }
