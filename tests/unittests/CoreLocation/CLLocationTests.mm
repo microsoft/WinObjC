@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -65,4 +66,31 @@ TEST(CoreLocation, CLLocation_CopyTest) {
     ASSERT_OBJCEQ_MSG(location1, location2, "FAILED: location1 and location2 are equal!\n");
     [location1 release];
     [location2 release];
+}
+
+TEST(CoreLocation, LocationDistanceTests) {
+    LOG_INFO("CLLocation Distance Test: ");
+
+    CLLocation* locationSeattle = [[CLLocation alloc] initWithLatitude:47.6062 longitude:-122.3321];
+    CLLocation* locationLosAngeles = [[CLLocation alloc] initWithLatitude:34.0522 longitude:-118.2437];
+    CLLocation* locationSanFrancisco = [[CLLocation alloc] initWithLatitude:37.7749 longitude:-122.4194];
+    CLLocation* locationChicago = [[CLLocation alloc] initWithLatitude:41.8781 longitude:-87.6298];
+    CLLocation* locationNewYork = [[CLLocation alloc] initWithLatitude:40.7128 longitude:-74.0059];
+
+    CLLocationDistance distance1 = [locationSeattle getDistanceFrom:locationLosAngeles];
+    CLLocationDistance distance2 = [locationLosAngeles getDistanceFrom:locationSanFrancisco];
+    CLLocationDistance distance3 = [locationSeattle getDistanceFrom:locationChicago];
+    CLLocationDistance distance4 = [locationLosAngeles getDistanceFrom:locationNewYork];
+
+    // Check values within nearest 2 kilometers because radius of earth varies among measurements
+    ASSERT_NEAR_MSG(distance1, 1545791, 2000, "FAILED: Distance: %f\n", distance1);
+    ASSERT_NEAR_MSG(distance2, 559296, 2000, "FAILED: Distance: %f\n", distance2);
+    ASSERT_NEAR_MSG(distance3, 2789733, 2000, "FAILED: Distance: %f\n", distance3);
+    ASSERT_NEAR_MSG(distance4, 3936990, 2000, "FAILED: Distance: %f\n", distance4);
+
+    [locationSeattle release];
+    [locationLosAngeles release];
+    [locationSanFrancisco release];
+    [locationChicago release];
+    [locationNewYork release];
 }

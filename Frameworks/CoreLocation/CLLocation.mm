@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -25,6 +26,8 @@ const CLLocationAccuracy kCLLocationAccuracyThreeKilometers = 3000;
 const CLLocationAccuracy kCLLocationAccuracyBestForNavigation = 1;
 const CLLocationAccuracy kCLLocationAccuracyBest = 5;
 const CLLocationDistance kCLDistanceFilterNone = 0;
+// Radius of the earth in meters
+static const double earthRadius = 6371000.0;
 
 /**
  * CLLocation class extension.
@@ -50,19 +53,11 @@ const CLLocationDistance kCLDistanceFilterNone = 0;
 }
 
 /**
- @Status Stub
-*/
-CORELOCATION_EXPORT BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D coordinate) {
-    UNIMPLEMENTED();
-    return FALSE;
-}
-
-/**
- @Status Stub
+ @Status Interoperable
+ @Notes  This is a deprecated version of distanceFromLocation
 */
 - (CLLocationDistance)getDistanceFrom:(const CLLocation*)location {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self distanceFromLocation:location];
 }
 
 /**
@@ -228,11 +223,24 @@ CORELOCATION_EXPORT BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D co
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+ @Notes  This uses the "haversine" formula to find circular distance between two points, found
+         here: https://en.wikipedia.org/wiki/Haversine_formula
 */
 - (CLLocationDistance)distanceFromLocation:(const CLLocation*)location {
-    UNIMPLEMENTED();
-    return StubReturn();
+    static const double degreesToRadians = M_PI / 180.0;
+    const double sourceLatitude = location.coordinate.latitude * degreesToRadians;
+    const double sourceLongitude = location.coordinate.longitude * degreesToRadians;
+    const double destinationLatitude = self.coordinate.latitude * degreesToRadians;
+    const double destinationLongitude = self.coordinate.longitude * degreesToRadians;
+    const double latitudeDelta = destinationLatitude - sourceLatitude;
+    const double longitudeDelta = destinationLongitude - sourceLongitude;
+    const double a = sin(latitudeDelta / 2) * sin(latitudeDelta / 2) +
+                     cos(sourceLatitude) * cos(destinationLatitude) * sin(longitudeDelta / 2) * sin(longitudeDelta / 2);
+    const double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    CLLocationDistance distance = earthRadius * c;
+
+    return distance;
 }
 
 /**

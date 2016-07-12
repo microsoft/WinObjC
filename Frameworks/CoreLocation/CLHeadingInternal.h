@@ -14,25 +14,13 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
 #import <CoreLocation/CoreLocationExport.h>
 #import <Foundation/NSObject.h>
-#import <CoreLocation/CoreLocationDataTypes.h>
 
-@class NSDate;
-
-typedef double CLHeadingComponentValue;
-
-CORELOCATION_EXPORT_CLASS
-@interface CLHeading : NSObject <NSCopying, NSSecureCoding>
-@property (readonly, nonatomic) CLLocationDirection magneticHeading;
-@property (readonly, nonatomic) CLLocationDirection trueHeading;
-@property (readonly, nonatomic) CLLocationDirection headingAccuracy;
-@property (readonly, copy, nonatomic) NSDate* timestamp;
-@property (readonly, copy, nonatomic) NSString* description;
-@property (readonly, nonatomic) CLHeadingComponentValue x;
-@property (readonly, nonatomic) CLHeadingComponentValue y;
-@property (readonly, nonatomic) CLHeadingComponentValue z;
+@interface CLHeading ()
+- (instancetype)initWithAccuracy:(CLLocationDirection)accuracy
+                 magneticHeading:(CLLocationDirection)magneticHeading
+                     trueHeading:(CLLocationDirection)trueHeading;
 @end

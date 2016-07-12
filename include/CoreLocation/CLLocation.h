@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -45,8 +46,8 @@ CORELOCATION_EXPORT_CLASS
 @property (readonly, nonatomic) CLLocationAccuracy verticalAccuracy;
 @property (readonly, copy, nonatomic) NSDate* timestamp;
 @property (readonly, copy, nonatomic) NSString* description;
-- (CLLocationDistance)distanceFromLocation:(const CLLocation*)location STUB_METHOD;
-- (CLLocationDistance)getDistanceFrom:(const CLLocation*)location STUB_METHOD;
+- (CLLocationDistance)distanceFromLocation:(const CLLocation*)location;
+- (CLLocationDistance)getDistanceFrom:(const CLLocation*)location;
 @property (readonly, nonatomic) CLLocationSpeed speed;
 @property (readonly, nonatomic) CLLocationDirection course;
 @end
