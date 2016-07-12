@@ -133,78 +133,78 @@ static void _voidImp(id self, SEL _cmd) {
 }
 
 static int _intImp(id self, SEL _cmd) {
-	return 2048;
+    return 2048;
 }
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
 @implementation TEST_IDENT(DynamicResolution)
 + (BOOL)resolveClassMethod:(SEL)method {
-	IMP imp = nullptr;
-	const char* types = nullptr;
-	if (sel_isEqual(method, @selector(dynamicClassMethodForResponseChecking))) {
-		imp = (IMP)&_voidImp;
-		types = "v@:";
-	} else if (sel_isEqual(method, @selector(dynamicClassMethodForSignature:))) {
-		imp = (IMP)&_voidImp;
-		types = "v@:i";
-	} else if (sel_isEqual(method, @selector(dynamicClassMethod))) {
-		imp = (IMP)&_intImp;
-		types = "i@:";
-	}
-	if (imp) {
-		class_addMethod(object_getClass(self), method, imp, types);
-	}
-	return imp != nullptr;
+    IMP imp = nullptr;
+    const char* types = nullptr;
+    if (sel_isEqual(method, @selector(dynamicClassMethodForResponseChecking))) {
+        imp = (IMP)&_voidImp;
+        types = "v@:";
+    } else if (sel_isEqual(method, @selector(dynamicClassMethodForSignature:))) {
+        imp = (IMP)&_voidImp;
+        types = "v@:i";
+    } else if (sel_isEqual(method, @selector(dynamicClassMethod))) {
+        imp = (IMP)&_intImp;
+        types = "i@:";
+    }
+    if (imp) {
+        class_addMethod(object_getClass(self), method, imp, types);
+    }
+    return imp != nullptr;
 }
 
 + (BOOL)resolveInstanceMethod:(SEL)method {
-	IMP imp = nullptr;
-	const char* types = nullptr;
-	if (sel_isEqual(method, @selector(dynamicInstanceMethodForResponseChecking))) {
-		imp = (IMP)&_voidImp;
-		types = "v@:";
-	} else if (sel_isEqual(method, @selector(dynamicInstanceMethodForSignature:))) {
-		imp = (IMP)&_voidImp;
-		types = "v@:i";
-	} else if (sel_isEqual(method, @selector(dynamicInstanceMethod))) {
-		imp = (IMP)&_intImp;
-		types = "i@:";
-	}
-	if (imp) {
-		class_addMethod(self, method, imp, types);
-	}
-	return imp != nullptr;
+    IMP imp = nullptr;
+    const char* types = nullptr;
+    if (sel_isEqual(method, @selector(dynamicInstanceMethodForResponseChecking))) {
+        imp = (IMP)&_voidImp;
+        types = "v@:";
+    } else if (sel_isEqual(method, @selector(dynamicInstanceMethodForSignature:))) {
+        imp = (IMP)&_voidImp;
+        types = "v@:i";
+    } else if (sel_isEqual(method, @selector(dynamicInstanceMethod))) {
+        imp = (IMP)&_intImp;
+        types = "i@:";
+    }
+    if (imp) {
+        class_addMethod(self, method, imp, types);
+    }
+    return imp != nullptr;
 }
 @end
 #pragma clang diagnostic pop
 
 TEST(NSObject, DynamicRespondsToSelector) {
-	EXPECT_TRUE([TEST_IDENT(DynamicResolution) respondsToSelector:@selector(dynamicClassMethodForResponseChecking)]);
-	EXPECT_FALSE([TEST_IDENT(DynamicResolution) respondsToSelector:@selector(dynamicInstanceMethodForResponseChecking)]);
-	EXPECT_TRUE([TEST_IDENT(DynamicResolution) instancesRespondToSelector:@selector(dynamicInstanceMethodForResponseChecking)]);
-	EXPECT_FALSE([TEST_IDENT(DynamicResolution) instancesRespondToSelector:@selector(dynamicClassMethodForResponseChecking)]);
+    EXPECT_TRUE([TEST_IDENT(DynamicResolution) respondsToSelector:@selector(dynamicClassMethodForResponseChecking)]);
+    EXPECT_FALSE([TEST_IDENT(DynamicResolution) respondsToSelector:@selector(dynamicInstanceMethodForResponseChecking)]);
+    EXPECT_TRUE([TEST_IDENT(DynamicResolution) instancesRespondToSelector:@selector(dynamicInstanceMethodForResponseChecking)]);
+    EXPECT_FALSE([TEST_IDENT(DynamicResolution) instancesRespondToSelector:@selector(dynamicClassMethodForResponseChecking)]);
 }
 
 TEST(NSObject, DynamicClassResolution) {
-	EXPECT_EQ(2048, [TEST_IDENT(DynamicResolution) dynamicClassMethod]);
-	EXPECT_ANY_THROW([TEST_IDENT(DynamicResolution) dynamicInstanceMethod]);
+    EXPECT_EQ(2048, [TEST_IDENT(DynamicResolution) dynamicClassMethod]);
+    EXPECT_ANY_THROW([TEST_IDENT(DynamicResolution) dynamicInstanceMethod]);
 
-	NSMethodSignature* signature = nil;
-	ASSERT_OBJCNE(nil, signature = [TEST_IDENT(DynamicResolution) methodSignatureForSelector:@selector(dynamicClassMethodForSignature:)]);
-	EXPECT_STREQ("i", [signature getArgumentTypeAtIndex:2]);
+    NSMethodSignature* signature = nil;
+    ASSERT_OBJCNE(nil, signature = [TEST_IDENT(DynamicResolution) methodSignatureForSelector:@selector(dynamicClassMethodForSignature:)]);
+    EXPECT_STREQ("i", [signature getArgumentTypeAtIndex:2]);
 
-	EXPECT_OBJCEQ(nil, [TEST_IDENT(DynamicResolution) methodSignatureForSelector:@selector(dynamicInstanceMethodForSignature:)]);
+    EXPECT_OBJCEQ(nil, [TEST_IDENT(DynamicResolution) methodSignatureForSelector:@selector(dynamicInstanceMethodForSignature:)]);
 }
 
 TEST(NSObject, DynamicResolution) {
-	id instance = [[[TEST_IDENT(DynamicResolution) alloc] init] autorelease];
-	EXPECT_EQ(2048, [instance dynamicInstanceMethod]);
-	EXPECT_ANY_THROW([instance dynamicClassMethod]);
+    id instance = [[[TEST_IDENT(DynamicResolution) alloc] init] autorelease];
+    EXPECT_EQ(2048, [instance dynamicInstanceMethod]);
+    EXPECT_ANY_THROW([instance dynamicClassMethod]);
 
-	NSMethodSignature* signature = nil;
-	ASSERT_OBJCNE(nil, signature = [instance methodSignatureForSelector:@selector(dynamicInstanceMethodForSignature:)]);
-	EXPECT_STREQ("i", [signature getArgumentTypeAtIndex:2]);
+    NSMethodSignature* signature = nil;
+    ASSERT_OBJCNE(nil, signature = [instance methodSignatureForSelector:@selector(dynamicInstanceMethodForSignature:)]);
+    EXPECT_STREQ("i", [signature getArgumentTypeAtIndex:2]);
 
-	EXPECT_OBJCEQ(nil, [instance methodSignatureForSelector:@selector(dynamicClassMethodForSignature:)]);
+    EXPECT_OBJCEQ(nil, [instance methodSignatureForSelector:@selector(dynamicClassMethodForSignature:)]);
 }
