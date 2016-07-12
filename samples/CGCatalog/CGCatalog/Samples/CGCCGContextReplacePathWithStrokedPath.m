@@ -87,9 +87,6 @@ typedef NS_ENUM(NSInteger, StrokedPathType) {
     params = @{ @"logs" : self.logs, @"points" : originalPoints };
     CGPathApply(path, (__bridge void*)params, _Applier);
 
-    // Create stroked path
-    // TODO: Change this to use CGContextReplacePathWithStrokedPath()
-
     // Draw the path
     NSMutableArray<NSValue*>* points;
     switch (self.strokedPathType) {
@@ -103,16 +100,18 @@ typedef NS_ENUM(NSInteger, StrokedPathType) {
         case StrokedPathTypeCopyStroke: {
             NSMutableArray<NSValue*>* strokedPoints = [NSMutableArray new];
             CGPathRef newPath = CGPathCreateCopyByStrokingPath(path, NULL, c_LineWidth, kCGLineCapRound, kCGLineJoinMiter, 1);
-            [self.logs addObject:@"Copy Stroke Path:"];
-            params = @{ @"logs" : self.logs, @"points" : strokedPoints };
-            CGPathApply(newPath, (__bridge void*)params, _Applier);
+			if (newPath != NULL) {  // TODO: Remove when CGPathCreateCopyByStrokingPath is implemented!
+                [self.logs addObject:@"Copy Stroke Path:"];
+                params = @{ @"logs" : self.logs, @"points" : strokedPoints };
+                CGPathApply(newPath, (__bridge void*)params, _Applier);
 
-            CGContextSetFillColorWithColor(context, [UIColor blueColor].CGColor);
-            CGContextAddPath(context, newPath);
-            CGContextFillPath(context);
+                CGContextSetFillColorWithColor(context, [UIColor blueColor].CGColor);
+                CGContextAddPath(context, newPath);
+                CGContextFillPath(context);
 
-            points = strokedPoints;
-            CGPathRelease(newPath);
+                points = strokedPoints;
+                CGPathRelease(newPath);
+			}
         } break;
 
         case StrokedPathTypeReplaceStroke2:
@@ -127,12 +126,14 @@ typedef NS_ENUM(NSInteger, StrokedPathType) {
             params = @{ @"logs" : self.logs, @"points" : strokedPoints };
             CGPathApply(newPath, (__bridge void*)params, _Applier);
 
-            if (self.strokedPathType == StrokedPathTypeReplaceStroke)
+            if (self.strokedPathType == StrokedPathTypeReplaceStroke) {
                 CGContextSetFillColorWithColor(context, [UIColor orangeColor].CGColor);
-            else
+			} else {
                 CGContextSetFillColorWithColor(context, [UIColor purpleColor].CGColor);
+			}
 
             CGContextStrokePath(context);
+            //CGContextFillPath(context);  // TODO: Path not filled as expected.
 
             points = strokedPoints;
             CGPathRelease(newPath);
@@ -144,16 +145,14 @@ typedef NS_ENUM(NSInteger, StrokedPathType) {
     CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
     for (NSValue* value in points) {
         CGPoint point = value.CGPointValue;
-        CGContextAddArc(context, point.x, point.y, 4, 0.0, M_PI * 2, YES);
-        CGContextFillPath(context);
+		_drawMarker(context, point, 4);
     }
 
     // Draw highlighted point
     if (self.highlightedPoint.x != 0 && self.highlightedPoint.y != 0) {
         CGContextSetLineWidth(context, 1);
         CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);
-        CGContextAddArc(context, self.highlightedPoint.x, self.highlightedPoint.y, 4, 0.0, M_PI * 2, YES);
-        CGContextFillPath(context);
+		_drawMarker(context, self.highlightedPoint, 4);
     }
 
     CGPathRelease(path);
@@ -161,6 +160,14 @@ typedef NS_ENUM(NSInteger, StrokedPathType) {
         [self.delegate didFinishDrawing];
     }
 }
+
+
+void _drawMarker(CGContextRef context, CGPoint point, CGFloat size) {
+    CGFloat halfSize = size / 2;
+	CGContextAddRect(context, CGRectMake(point.x-halfSize, point.y-halfSize, size, size));
+    CGContextFillPath(context);
+}
+
 
 void _Applier(void* info, const CGPathElement* element) {
     NSString* description = nil;
