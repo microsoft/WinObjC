@@ -411,7 +411,7 @@ class ActivatedAppReceivesToastNotification {
     TEST_METHOD(ToastNotification_ActivatedAppReceivesToastNotification) {
         ToastNotificationTestActivatedAppReceivesToastNotification();
     }
-}; /* class ToastNotificationForeground */
+}; /* class ActivatedAppReceivesToastNotification */
 
 // UIViewTests
 //

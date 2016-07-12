@@ -34,7 +34,7 @@ extern "C" void UIApplicationActivationTest(IInspectable* args, void* delegateCl
 MOCK_CLASS(MockToastNotificationActivatedEventArgs,
            public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IToastNotificationActivatedEventArgs, IActivatedEventArgs> {
 
-               // Claim to be the implementation for the real system RuntimeClass for VoiceCommandActivatedEventArgs.
+               // Claim to be the implementation for the real system RuntimeClass for ToastNotificationActivatedEventArgs.
                InspectableClass(RuntimeClass_Windows_ApplicationModel_Activation_ToastNotificationActivatedEventArgs, BaseTrust);
 
            public:
@@ -123,6 +123,7 @@ MOCK_CLASS(MockToastNotificationActivatedEventArgs,
 TEST(ToastNotificationTest, ForegroundActivation) {
     LOG_INFO("Toast Notification Foreground Activation Test: ");
 
+    // Create mocked data to pass into application
     auto fakeToastNotificationActivatedEventArgs = Make<MockToastNotificationActivatedEventArgs>();
     fakeToastNotificationActivatedEventArgs->Setget_Argument([](HSTRING* argument) {
         Wrappers::HString value;
@@ -162,6 +163,7 @@ TEST(ToastNotificationTest, ActivatedAppReceivesToastNotification) {
     ActivatedAppReceivesToastNotificationDelegate* testDelegate = [ActivatedAppReceivesToastNotificationDelegate new];
     [[UIApplication sharedApplication] setDelegate:testDelegate];
 
+    // Create mocked data to pass into application
     auto fakeToastNotificationActivatedEventArgs = Make<MockToastNotificationActivatedEventArgs>();
     fakeToastNotificationActivatedEventArgs->Setget_Argument([](HSTRING* argument) {
         Wrappers::HString value;
