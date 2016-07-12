@@ -15,6 +15,8 @@
 //
 //******************************************************************************
 
+#pragma once
+
 #import <CoreLocation/CoreLocation.h>
 #import <CoreMotion/CoreMotion.h>
 #import <UIKit/UIKit.h>

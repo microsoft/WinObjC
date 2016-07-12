@@ -23,14 +23,14 @@
 */
 BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D coord) {
     if (coord.latitude > 90.0 || coord.latitude < -90.0) {
-        return false;
+        return NO;
     }
 
     if (coord.longitude > 180.0 || coord.longitude < -180.0) {
-        return false;
+        return NO;
     }
 
-    return true;
+    return YES;
 }
 
 /**

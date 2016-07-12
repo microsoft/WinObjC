@@ -18,6 +18,7 @@
 #import <StubReturn.h>
 #import <Starboard.h>
 #import <CoreLocation/CLLocation.h>
+#import <CoreLocation/CoreLocationFunctions.h>
 
 const CLLocationAccuracy kCLLocationAccuracyHundredMeters = 100;
 const CLLocationAccuracy kCLLocationAccuracyKilometer = 1000;
@@ -228,6 +229,15 @@ static const double earthRadius = 6371000.0;
          here: https://en.wikipedia.org/wiki/Haversine_formula
 */
 - (CLLocationDistance)distanceFromLocation:(const CLLocation*)location {
+    // If either location is invalid return -1
+    if (location == nullptr) {
+        return -1.0;
+    }
+
+    if (!CLLocationCoordinate2DIsValid(self.coordinate) || !CLLocationCoordinate2DIsValid(location.coordinate)) {
+        return -1.0;
+    }
+
     static const double degreesToRadians = M_PI / 180.0;
     const double sourceLatitude = location.coordinate.latitude * degreesToRadians;
     const double sourceLongitude = location.coordinate.longitude * degreesToRadians;
