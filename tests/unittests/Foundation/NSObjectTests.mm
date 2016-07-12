@@ -121,6 +121,8 @@ TEST(NSObject, NSZombie) { // This test will fail with an AV if zombies do not w
 }
 
 @interface TEST_IDENT(DynamicResolution): NSObject
+- (void)dynamicInstanceMethodForSignature:(int)x;
++ (void)dynamicClassMethodForSignature:(int)x;
 - (void)dynamicInstanceMethodForResponseChecking;
 + (void)dynamicClassMethodForResponseChecking;
 - (int)dynamicInstanceMethod;
@@ -143,6 +145,9 @@ static int _intImp(id self, SEL _cmd) {
 	if (sel_isEqual(method, @selector(dynamicClassMethodForResponseChecking))) {
 		imp = (IMP)&_voidImp;
 		types = "v@:";
+	} else if (sel_isEqual(method, @selector(dynamicClassMethodForSignature:))) {
+		imp = (IMP)&_voidImp;
+		types = "v@:i";
 	} else if (sel_isEqual(method, @selector(dynamicClassMethod))) {
 		imp = (IMP)&_intImp;
 		types = "i@:";
@@ -159,6 +164,9 @@ static int _intImp(id self, SEL _cmd) {
 	if (sel_isEqual(method, @selector(dynamicInstanceMethodForResponseChecking))) {
 		imp = (IMP)&_voidImp;
 		types = "v@:";
+	} else if (sel_isEqual(method, @selector(dynamicInstanceMethodForSignature:))) {
+		imp = (IMP)&_voidImp;
+		types = "v@:i";
 	} else if (sel_isEqual(method, @selector(dynamicInstanceMethod))) {
 		imp = (IMP)&_intImp;
 		types = "i@:";
@@ -181,10 +189,22 @@ TEST(NSObject, DynamicRespondsToSelector) {
 TEST(NSObject, DynamicClassResolution) {
 	EXPECT_EQ(2048, [TEST_IDENT(DynamicResolution) dynamicClassMethod]);
 	EXPECT_ANY_THROW([TEST_IDENT(DynamicResolution) dynamicInstanceMethod]);
+
+	NSMethodSignature* signature = nil;
+	ASSERT_OBJCNE(nil, signature = [TEST_IDENT(DynamicResolution) methodSignatureForSelector:@selector(dynamicClassMethodForSignature:)]);
+	EXPECT_STREQ("i", [signature getArgumentTypeAtIndex:2]);
+
+	EXPECT_OBJCEQ(nil, [TEST_IDENT(DynamicResolution) methodSignatureForSelector:@selector(dynamicInstanceMethodForSignature:)]);
 }
 
 TEST(NSObject, DynamicResolution) {
 	id instance = [[[TEST_IDENT(DynamicResolution) alloc] init] autorelease];
 	EXPECT_EQ(2048, [instance dynamicInstanceMethod]);
 	EXPECT_ANY_THROW([instance dynamicClassMethod]);
+
+	NSMethodSignature* signature = nil;
+	ASSERT_OBJCNE(nil, signature = [instance methodSignatureForSelector:@selector(dynamicInstanceMethodForSignature:)]);
+	EXPECT_STREQ("i", [signature getArgumentTypeAtIndex:2]);
+
+	EXPECT_OBJCEQ(nil, [instance methodSignatureForSelector:@selector(dynamicClassMethodForSignature:)]);
 }

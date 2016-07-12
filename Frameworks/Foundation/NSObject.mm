@@ -313,6 +313,27 @@ static id _NSWeakLoad(id obj) {
 /**
  @Status Interoperable
 */
++ (NSMethodSignature*)methodSignatureForSelector:(SEL)selector {
+    Class metaClass = object_getClass(self);
+    Method method = class_getInstanceMethod(metaClass, selector);
+
+    if (!method && [self resolveClassMethod:selector]) {
+        method = class_getInstanceMethod(metaClass, selector);
+    }
+
+    if (!method) {
+        TraceWarning(L"Objective-C", L"+[%hs %hs]: unrecognized selector in signature lookup.", class_getName(self), sel_getName(selector));
+        return nil;
+    }
+
+    const char* methodTypes = method_getTypeEncoding(method);
+
+    return [NSMethodSignature signatureWithObjCTypes:methodTypes];
+}
+
+/**
+ @Status Interoperable
+*/
 - (NSMethodSignature*)methodSignatureForSelector:(SEL)selector {
     return [[self class] instanceMethodSignatureForSelector:selector];
 }
@@ -320,16 +341,12 @@ static id _NSWeakLoad(id obj) {
 /**
  @Status Interoperable
 */
-+ (IMP)instanceMethodForSelector:(SEL)selector {
-    IMP ret = class_getMethodImplementation(self, selector);
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
 + (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)selector {
     Method method = class_getInstanceMethod(self, selector);
+
+    if (!method && [self resolveInstanceMethod:selector]) {
+        method = class_getInstanceMethod(self, selector);
+    }
 
     if (!method) {
         TraceWarning(L"Objective-C", L"-[%hs %hs]: unrecognized selector in signature lookup.", class_getName(self), sel_getName(selector));
@@ -339,6 +356,14 @@ static id _NSWeakLoad(id obj) {
     const char* methodTypes = method_getTypeEncoding(method);
 
     return [NSMethodSignature signatureWithObjCTypes:methodTypes];
+}
+
+/**
+ @Status Interoperable
+*/
++ (IMP)instanceMethodForSelector:(SEL)selector {
+    IMP ret = class_getMethodImplementation(self, selector);
+    return ret;
 }
 
 // NOTE: long return value to allow nonfatal continuation to get a "valid" result (for non-fpret/non-stret calls)
