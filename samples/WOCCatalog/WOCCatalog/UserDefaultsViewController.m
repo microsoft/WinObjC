@@ -54,14 +54,14 @@ static const CGFloat c_height = 40;
 
     // Slider for retrieving favorite bool
     UISwitch* switchFavoriteBool = [[UISwitch alloc] initWithFrame:frame];
-    [switchFavoriteBool setOn:[[standardDefaults objectForKey:@"FavoriteBool"] boolValue] animated:NO];
+    [switchFavoriteBool setOn:[standardDefaults boolForKey:@"FavoriteBool"] animated:NO];
     [_textFields addObject:switchFavoriteBool];
     [switchFavoriteBool addTarget:self action:@selector(changeFavoriteBool) forControlEvents:UIControlEventValueChanged];
 
     [self tableView].allowsSelection = NO;    
 }
 
-- (void) changeFavoriteBool {
+- (void)changeFavoriteBool {
     id newFavorite = [NSNumber numberWithBool:[[_textFields objectAtIndex:1] isOn]];
     NSUserDefaults* standardDefaults = [NSUserDefaults standardUserDefaults];
     [standardDefaults setObject:newFavorite forKey:@"FavoriteBool"];
