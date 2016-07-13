@@ -77,7 +77,7 @@ int ApplicationMainStart(const char* principalName,
     if (infoDict != nil) {
         defaultOrientation = EbrGetWantedOrientation();
 
-        NSObject* orientation = [infoDict objectForKey:@"UISupportedInterfaceOrientations"];
+        id orientation = [infoDict objectForKey:@"UISupportedInterfaceOrientations"];
 
         if (orientation == nil) {
             orientation = [infoDict objectForKey:@"UIInterfaceOrientation"];
@@ -88,7 +88,7 @@ int ApplicationMainStart(const char* principalName,
         } else if ([orientation isKindOfClass:[NSArray class]]) {
             bool found = false;
 
-            for (NSString* curstr in(NSArray*)orientation) {
+            for (NSString* curstr in orientation) {
                 UIInterfaceOrientation newOrientation = UIOrientationFromString(defaultOrientation, curstr);
                 if (newOrientation == defaultOrientation) {
                     found = true;
