@@ -300,10 +300,7 @@ static const double meanDivisor = 100;
     outBuffer.height = CGImageGetHeight(_img);
     outBuffer.rowBytes = CGImageGetBytesPerRow(_img);
 
-    int16_t A[] = { _valueRed,          0,         0,         0,
-                           0, _valueGreen,         0,         0,
-                           0,          0, _valueBlue,         0,
-                           0,          0,         0,         0};
+    int16_t A[] = { _valueRed, 0, 0, 0, 0, _valueGreen, 0, 0, 0, 0, _valueBlue, 0, 0, 0, 0, 0 };
 
     error = vImageMatrixMultiply_ARGB8888(&inBuffer, &midBuffer, A, meanDivisor, NULL, NULL, 0);
 
@@ -327,8 +324,10 @@ static const double meanDivisor = 100;
     // create CGImageRef from vImage_Buffer output
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 
-    CGContextRef ctx = CGBitmapContextCreate(
-        outBuffer.data, outBuffer.width, outBuffer.height, 8, outBuffer.rowBytes, colorSpace, (CGBitmapInfo)kCGImageAlphaNoneSkipLast);
+    const CGBitmapInfo bitmapInfo = kCGImageAlphaNoneSkipLast | kCGBitmapByteOrder32Little;
+
+    CGContextRef ctx =
+        CGBitmapContextCreate(outBuffer.data, outBuffer.width, outBuffer.height, 8, outBuffer.rowBytes, colorSpace, bitmapInfo);
 
     CGImageRef imageRef = CGBitmapContextCreateImage(ctx);
 

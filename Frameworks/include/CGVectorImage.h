@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -48,6 +49,7 @@ class CGVectorImageBacking : public CGImageBacking {
 private:
     int _width, _height;
     surfaceFormat _surfaceFmt;
+    CGColorSpaceModel _colorSpaceModel;
     CGVectorDrawingCommand* _drawCommand;
 
 public:
@@ -65,7 +67,11 @@ public:
     int Height();
     int BytesPerRow();
     int BytesPerPixel();
+    int BitsPerComponent();
+    void GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo);
     surfaceFormat SurfaceFormat();
+    CGColorSpaceModel ColorSpaceModel();
+    CGBitmapInfo BitmapInfo();
     void* StaticImageData();
     void* LockImageData();
     void ReleaseImageData();

@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -22,7 +23,8 @@
 
 class __CGGradient: private objc_object {
 public:
-    surfaceFormat _colorSpace;
+    surfaceFormat _format;
+    CGColorSpaceModel _colorSpaceModel;
     float* _components;
     float* _locations;
     DWORD _count;

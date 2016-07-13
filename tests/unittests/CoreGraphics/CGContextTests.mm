@@ -41,7 +41,7 @@ void _DrawCustomPattern(void* info, CGContextRef context) {
 
 TEST(CGContext, CGContextSetPatternPhasePatternIsNil) {
     // Given
-    CGContextRef ctx = CGBitmapContextCreate24(1000, 1000);
+    CGContextRef ctx = _CGBitmapContextCreateWithFormat(1000, 1000, _ColorBGR);
     CGContextImpl* backing = CGContextGetBacking(ctx);
 
     backing->curState->curFillColorObject = nil;
@@ -57,7 +57,7 @@ TEST(CGContext, CGContextSetPatternPhasePatternIsNil) {
 
 TEST(CGContext, CGContextSetPatternPhaseColorObjectIsFillColor) {
     // Given
-    CGContextRef ctx = CGBitmapContextCreate24(1000, 1000);
+    CGContextRef ctx = _CGBitmapContextCreateWithFormat(1000, 1000, _ColorBGR);
     CGContextImpl* backing = CGContextGetBacking(ctx);
 
     CGContextSetFillColorWithColor(ctx, [UIColor blueColor].CGColor);
@@ -73,10 +73,10 @@ TEST(CGContext, CGContextSetPatternPhaseColorObjectIsFillColor) {
 
 TEST(CGContext, CGContextSetPatternPhasePositiveChange) {
     // Given
-    CGContextRef ctx = CGBitmapContextCreate24(1000, 1000);
+    CGContextRef ctx = _CGBitmapContextCreateWithFormat(1000, 1000, _ColorBGR);
     CGContextImpl* backing = CGContextGetBacking(ctx);
 
-    CGRect boundsRect = CGRectMake(0, 0,1000, 1000);
+    CGRect boundsRect = CGRectMake(0, 0, 1000, 1000);
     const CGPatternCallbacks callbacks = { 0, &_DrawCustomPattern, NULL };
     CGFloat alpha = 1;
     CGAffineTransform transform = CGAffineTransformMakeTranslation(10, 10);
@@ -99,10 +99,10 @@ TEST(CGContext, CGContextSetPatternPhasePositiveChange) {
 
 TEST(CGContext, CGContextSetPatternPhaseNegativeChange) {
     // Given
-    CGContextRef ctx = CGBitmapContextCreate24(1000, 1000);
+    CGContextRef ctx = _CGBitmapContextCreateWithFormat(1000, 1000, _ColorBGR);
     CGContextImpl* backing = CGContextGetBacking(ctx);
 
-    CGRect boundsRect = CGRectMake(0, 0,1000, 1000);
+    CGRect boundsRect = CGRectMake(0, 0, 1000, 1000);
     const CGPatternCallbacks callbacks = { 0, &_DrawCustomPattern, NULL };
     CGFloat alpha = 1;
     CGAffineTransform transform = CGAffineTransformMakeTranslation(300, 500);

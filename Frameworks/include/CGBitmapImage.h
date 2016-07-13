@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -21,22 +22,24 @@ public:
     void* _imageData;
     DWORD _pixmanFmt;
     surfaceFormat _bitmapFmt;
+    CGColorSpaceModel _colorSpaceModel;
+    CGBitmapInfo _bitmapInfo;
     DWORD _width, _height;
     DWORD _internalWidth, _internalHeight;
     DWORD _bytesPerRow;
     DWORD _bytesPerPixel;
+    DWORD _bitsPerComponent;
     DWORD _refCount;
     BOOL _bottomOrientation;
 
     CGImageData* Duplicate();
-    CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* Data);
+    CGImageData(__CGSurfaceInfo* surfaceInfo);
     ~CGImageData();
 };
 
 class CGBitmapImage : public __CGImage {
 public:
-    CGBitmapImage(DWORD width, DWORD height, surfaceFormat fmt);
-    CGBitmapImage(DWORD width, DWORD height, surfaceFormat fmt, void* Data);
+    CGBitmapImage(__CGSurfaceInfo* surfaceInfo);
     CGBitmapImage(CGImageRef pImg);
 };
 
@@ -45,8 +48,7 @@ private:
     CGImageData* _data;
 
 public:
-    CGBitmapImageBacking(DWORD width, DWORD height, surfaceFormat fmt);
-    CGBitmapImageBacking(DWORD width, DWORD height, surfaceFormat fmt, void* Data);
+    CGBitmapImageBacking(__CGSurfaceInfo* surfaceInfo);
     CGBitmapImageBacking(CGImageRef pImg);
 
     ~CGBitmapImageBacking();
@@ -62,7 +64,11 @@ public:
     int Height();
     int BytesPerRow();
     int BytesPerPixel();
+    int BitsPerComponent();
+    void GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo);
     surfaceFormat SurfaceFormat();
+    CGColorSpaceModel ColorSpaceModel();
+    CGBitmapInfo BitmapInfo();
     void* StaticImageData();
     void* LockImageData();
     void ReleaseImageData();

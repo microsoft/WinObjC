@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -25,11 +26,11 @@
 
 class CGContextImpl;
 COREGRAPHICS_EXPORT void EbrCenterTextInRectVertically(CGRect* rect, CGSize* textSize, id font);
-COREGRAPHICS_EXPORT CGContextRef CGBitmapContextCreate32(int width,
-                                                         int height,
-                                                         DisplayTexture* texture = NULL,
-                                                         DisplayTextureLocking* locking = NULL);
-COREGRAPHICS_EXPORT CGContextRef CGBitmapContextCreate24(int width, int height);
+COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithTexture(int width,
+                                                                   int height,
+                                                                   DisplayTexture* texture = NULL,
+                                                                   DisplayTextureLocking* locking = NULL);
+COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, surfaceFormat fmt);
 COREGRAPHICS_EXPORT CGImageRef CGBitmapContextGetImage(CGContextRef ctx);
 COREGRAPHICS_EXPORT void CGContextDrawImageRect(CGContextRef ctx, CGImageRef img, CGRect src, CGRect dst);
 COREGRAPHICS_EXPORT void CGContextClearToColor(CGContextRef ctx, float r, float g, float b, float a);

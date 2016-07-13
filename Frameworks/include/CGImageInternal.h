@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -56,7 +57,11 @@ public:
     virtual int Height() = 0;
     virtual int BytesPerRow() = 0;
     virtual int BytesPerPixel() = 0;
+    virtual int BitsPerComponent() = 0;
+    virtual void GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo) = 0;
     virtual surfaceFormat SurfaceFormat() = 0;
+    virtual CGColorSpaceModel ColorSpaceModel() = 0;
+    virtual CGBitmapInfo BitmapInfo() = 0;
     virtual void* StaticImageData() = 0;
     virtual void* LockImageData() = 0;
     virtual void ReleaseImageData() = 0;

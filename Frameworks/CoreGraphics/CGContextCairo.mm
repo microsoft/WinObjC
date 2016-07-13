@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -27,6 +28,7 @@
 #import "CGPathInternal.h"
 #import "CGPatternInternal.h"
 #import "UIColorInternal.h"
+#import "CGSurfaceInfoInternal.h"
 
 #define CAIRO_WIN32_STATIC_BUILD
 
@@ -662,7 +664,9 @@ void CGContextCairo::CGContextClipToMask(CGRect dest, CGImageRef img) {
     if (img->Backing()->SurfaceFormat() != _ColorGrayscale) {
         curState->_imgMask = img->Backing()->Copy();
     } else {
-        CGBitmapImage* pNewImage = new CGBitmapImage(img->Backing()->Width(), img->Backing()->Height(), _ColorRGBA);
+        __CGSurfaceInfo surfaceInfo = _CGSurfaceInfoInit(img->Backing()->Width(), img->Backing()->Height(), _ColorABGR);
+
+        CGBitmapImage* pNewImage = new CGBitmapImage(&surfaceInfo);
 
         BYTE* imgData = (BYTE*)img->Backing()->LockImageData();
         BYTE* newImgData = (BYTE*)pNewImage->Backing()->LockImageData();
@@ -1391,8 +1395,8 @@ void CGContextCairo::CGContextDrawLinearGradient(CGGradientRef gradient, CGPoint
     cairo_pattern_t* pattern = cairo_pattern_create_linear(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
     _assignAndResetFilter(pattern);
 
-    switch (gradient->_colorSpace) {
-        case _ColorRGBA:
+    switch (gradient->_format) {
+        case _ColorABGR:
             for (unsigned i = 0; i < gradient->_count; i++) {
                 float* curColor = &gradient->_components[i * 4];
                 cairo_pattern_add_color_stop_rgba(pattern, gradient->_locations[i], curColor[0], curColor[1], curColor[2], curColor[3]);
@@ -1432,8 +1436,8 @@ void CGContextCairo::CGContextDrawRadialGradient(
     cairo_pattern_t* pattern = cairo_pattern_create_radial(startCenter.x, startCenter.y, startRadius, endCenter.x, endCenter.y, endRadius);
     _assignAndResetFilter(pattern);
 
-    switch (gradient->_colorSpace) {
-        case _ColorRGBA:
+    switch (gradient->_format) {
+        case _ColorABGR:
             for (unsigned i = 0; i < gradient->_count; i++) {
                 float* curColor = &gradient->_components[i * 4];
                 cairo_pattern_add_color_stop_rgba(pattern, gradient->_locations[i], curColor[0], curColor[1], curColor[2], curColor[3]);

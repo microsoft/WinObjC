@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -27,28 +28,6 @@
 #define kCGBitmapByteOrder16Host kCGBitmapByteOrder16Little
 #define kCGBitmapByteOrder32Host kCGBitmapByteOrder32Little
 #endif
-
-typedef enum {
-    kCGImageAlphaNone,
-    kCGImageAlphaPremultipliedLast,
-    kCGImageAlphaPremultipliedFirst,
-    kCGImageAlphaLast,
-    kCGImageAlphaFirst,
-    kCGImageAlphaNoneSkipLast,
-    kCGImageAlphaNoneSkipFirst,
-    kCGImageAlphaOnly
-} CGImageAlphaInfo;
-enum {
-    kCGBitmapAlphaInfoMask = 0x1F,
-    kCGBitmapFloatComponents = (1 << 8),
-    kCGBitmapByteOrderMask = 0x7000,
-    kCGBitmapByteOrderDefault = (0 << 12),
-    kCGBitmapByteOrder16Little = (1 << 12),
-    kCGBitmapByteOrder32Little = (2 << 12),
-    kCGBitmapByteOrder16Big = (3 << 12),
-    kCGBitmapByteOrder32Big = (4 << 12)
-};
-typedef uint32_t CGBitmapInfo;
 
 COREGRAPHICS_EXPORT CGImageRef CGImageCreate(size_t width,
                                              size_t height,
@@ -98,6 +77,7 @@ COREGRAPHICS_EXPORT size_t CGImageGetBitsPerPixel(CGImageRef image);
 COREGRAPHICS_EXPORT size_t CGImageGetBytesPerRow(CGImageRef image);
 COREGRAPHICS_EXPORT CGColorSpaceRef CGImageGetColorSpace(CGImageRef image);
 COREGRAPHICS_EXPORT CGDataProviderRef CGImageGetDataProvider(CGImageRef image);
+COREGRAPHICS_EXPORT void* _CGImageGetData(CGImageRef image);
 
 COREGRAPHICS_EXPORT const CGFloat* CGImageGetDecode(CGImageRef image) STUB_METHOD;
 COREGRAPHICS_EXPORT bool CGImageGetShouldInterpolate(CGImageRef image) STUB_METHOD;
@@ -106,3 +86,8 @@ COREGRAPHICS_EXPORT bool CGImageIsMask(CGImageRef image) STUB_METHOD;
 
 COREGRAPHICS_EXPORT size_t CGImageGetHeight(CGImageRef image);
 COREGRAPHICS_EXPORT size_t CGImageGetWidth(CGImageRef image);
+
+COREGRAPHICS_EXPORT inline surfaceFormat _CGImageGetFormat(unsigned int bitsPerComponent,
+                                                           unsigned int bitsPerPixel,
+                                                           CGColorSpaceRef colorSpace,
+                                                           CGBitmapInfo bitmapInfo);
