@@ -27,6 +27,7 @@
 #include "Foundation/NSString.h"
 #include "NSRunLoopSource.h"
 #include "NSRunLoop+Internal.h"
+#include "NSUserDefaultsInternal.h"
 #include "UIKit/UIView.h"
 #include "UIKit/UIImage.h"
 #include "UIKit/UIColor.h"
@@ -1243,6 +1244,14 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
         UIView* window = [windows objectAtIndex:i];
         _sendMemoryWarningToViewControllers(window);
     }
+}
+
+- (void)_sendSuspendEvent {
+    [NSUserDefaults _suspendSynchronize];
+}
+
+- (void)_sendResumeEvent {
+    [NSUserDefaults _resumeSynchronize];
 }
 
 static void layoutBlankView(UIView* inputView, UIView* accessoryView, float totalHeight) {

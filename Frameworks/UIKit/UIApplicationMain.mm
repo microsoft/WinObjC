@@ -320,6 +320,14 @@ extern "C" void UIApplicationMainHandleHighMemoryUsageEvent() {
     [[UIApplication sharedApplication] _sendHighMemoryWarning];
 }
 
+extern "C" void UIApplicationMainHandleSuspendEvent() {
+    [[UIApplication sharedApplication] _sendSuspendEvent];
+}
+
+extern "C" void UIApplicationMainHandleResumeEvent() {
+    [[UIApplication sharedApplication] _sendResumeEvent];
+}
+
 extern "C" void UIApplicationMainHandleToastNotificationEvent(const char* notificationData) {
     NSString* data = Strings::IsEmpty<const char*>(notificationData) ? nil : [[NSString alloc] initWithCString:notificationData];
     [[UIApplication sharedApplication] _sendNotificationReceivedEvent:data];

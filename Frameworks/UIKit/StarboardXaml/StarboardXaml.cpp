@@ -182,6 +182,23 @@ void _ApplicationMainLaunch(ActivationType activationType, Platform::Object^ act
     _appEvents->_RegisterEventHandlers();
 }
 
+void App::_OnResuming(Platform::Object^ sender, Platform::Object^ args)
+{
+    TraceVerbose(TAG, L"Resuming event received");
+    UIApplicationMainHandleResumeEvent();
+}
+
+void App::_OnSuspending(Platform::Object^ sender, Windows::ApplicationModel::SuspendingEventArgs^ args)
+{
+    TraceVerbose(TAG, L"Suspending event received");
+
+    Windows::ApplicationModel::SuspendingDeferral^ deferral = args->SuspendingOperation->GetDeferral();
+
+    // TODO: revisit this if new event tells us we are entering background (for deferred suspend)
+    UIApplicationMainHandleSuspendEvent();
+    deferral->Complete();
+}
+
 extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
     auto uiElem = ref new Xaml::Controls::Grid();
     auto rootFrame = ref new Xaml::Controls::Frame();

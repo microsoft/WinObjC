@@ -25,6 +25,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import <Foundation/NSUserDefaults.h>
 #import <Foundation/NSThread.h>
 #import "NSStringInternal.h"
+#import "NSUserDefaultsInternal.h"
 #import <LoggingNative.h>
 #import <ForFoundationOnly.h>
 #import <CoreFoundation/CFPreferences.h>
@@ -53,20 +54,36 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
     StrongId<NSOperationQueue> _synchronizeQueue;
 }
 
+static NSUserDefaults* _standard;
+
 /**
  @Status Interoperable
 */
 - (instancetype)init {
-    [super init];
+    return [self initWithSuiteName:nil];
+}
 
-    _cacheDict = [NSMutableDictionary dictionary];
-    _registrationDict = [NSMutableDictionary dictionary];
+/**
+ @Status Caveat
+ @Notes supports nil only for suitename
+*/
+- (instancetype)initWithSuiteName:(NSString*)suitename {
+    if (nil != suitename) {
+        UNIMPLEMENTED();
+        return StubReturn();
+    }
 
-    _synchronizeQueue.attach([NSOperationQueue new]);
-    [_synchronizeQueue setMaxConcurrentOperationCount:1];
+    if(self = [super init]) {
 
-    [self setObject:[NSArray arrayWithObject:@"en"] forKey:@"AppleLanguages"];
-    [self setObject:@"en_US" forKey:@"AppleLocale"];
+        _cacheDict = [NSMutableDictionary dictionary];
+        _registrationDict = [NSMutableDictionary dictionary];
+
+        _synchronizeQueue.attach([NSOperationQueue new]);
+        [_synchronizeQueue setMaxConcurrentOperationCount:1];
+
+        [self setObject:[NSArray arrayWithObject:@"en"] forKey:@"AppleLanguages"];
+        [self setObject:@"en_US" forKey:@"AppleLocale"];
+    }
 
     return self;
 }
@@ -80,13 +97,11 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
  @Status Interoperable
 */
 + (NSUserDefaults*)standardUserDefaults {
-    static NSUserDefaults* standard;
-
-    if (standard == nil) {
-        standard = [self new];
+    if (_standard == nil) {
+        _standard = [self new];
     }
 
-    return standard;
+    return _standard;
 }
 
 /**
@@ -129,22 +144,26 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Writes to file only - external changes to the preferences file are overwritten.
 */
 - (BOOL)synchronize {
-    _cacheLock.lock();
-    BOOL isDirty = _cacheIsDirty;
+    BOOL isDirty;
 
-    if (isDirty) {
-        [_cacheDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL* stop) {
-            CFPreferencesSetAppValue(static_cast<CFStringRef>(key), obj, kCFPreferencesCurrentApplication);
-        }];
+    // lock scope
+    {
+        std::lock_guard<std::mutex> lock(_cacheLock);
+        isDirty = _cacheIsDirty;
 
-        [_cacheDict removeAllObjects];
-        _cacheIsDirty = NO;
+        if (isDirty) {
+            [_cacheDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL* stop) {
+                CFPreferencesSetAppValue(static_cast<CFStringRef>(key), obj, kCFPreferencesCurrentApplication);
+            }];
+
+            [_cacheDict removeAllObjects];
+            _cacheIsDirty = NO;
+        }
     }
-    _cacheLock.unlock();
-
 
     BOOL result = NO;
     if (isDirty) {
@@ -158,10 +177,13 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
  @Status Interoperable
 */
 - (id)objectForKey:(NSString*)defaultName {
-    // Check cache
-    _cacheLock.lock();
-    id obj = [_cacheDict objectForKey:defaultName];
-    _cacheLock.unlock();
+    id obj;
+
+    // Check cache under lock
+    {
+        std::lock_guard<std::mutex> lock(_cacheLock);
+        obj = [_cacheDict objectForKey:defaultName];
+    }
 
     if (!obj) {
         // Check stored app preferences
@@ -283,8 +305,26 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
     }
 }
 
+- (NSOperationQueue*) _synchronizeQueue {
+    return _synchronizeQueue;
+}
+
++ (void) _suspendSynchronize {
+    if (_standard != nil) {
+        [[_standard _synchronizeQueue] setSuspended:YES];
+        [[_standard _synchronizeQueue] waitUntilAllOperationsAreFinished];
+    }
+}
+
++ (void) _resumeSynchronize {
+    if (_standard != nil) {
+        [[_standard _synchronizeQueue] setSuspended:NO];
+    }
+}
+
 /**
  @Status Interoperable
+ @Notes Threadsafe with other NSUserDefaults operations, not threadsafe with CFPreferences operations
 */
 - (void)setObject:(id)value forKey:(NSString*)key {
     if (value == nil) {
@@ -293,10 +333,11 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
 
     CFTypeRef valueCopy = CFAutorelease(CFPropertyListCreateDeepCopy(kCFAllocatorDefault, value, kCFPropertyListMutableContainersAndLeaves));
 
-    _cacheLock.lock();
-    [_cacheDict setObject:(id)valueCopy forKey:key];
-    _cacheIsDirty = YES;
-    _cacheLock.unlock();
+    {
+        std::lock_guard<std::mutex> lock(_cacheLock);
+        [_cacheDict setObject:(id)valueCopy forKey:key];
+        _cacheIsDirty = YES;
+    }
 
     [[NSNotificationCenter defaultCenter] postNotificationName:NSUserDefaultsDidChangeNotification object:self];
     [self _scheduleSynchronize];
@@ -393,11 +434,12 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
  @Status Interoperable
 */
 - (void)removeObjectForKey:(NSString*)key {
-    _cacheLock.lock();
-    [_cacheDict removeObjectForKey:key];
-    CFPreferencesSetAppValue((CFStringRef)key, NULL, kCFPreferencesCurrentApplication);
-    _cacheIsDirty = YES; // Ensures that changes are written to storage
-    _cacheLock.unlock();
+    {
+        std::lock_guard<std::mutex> lock(_cacheLock);
+        [_cacheDict removeObjectForKey:key];
+        CFPreferencesSetAppValue((CFStringRef)key, NULL, kCFPreferencesCurrentApplication);
+        _cacheIsDirty = YES; // Ensures that changes are written to storage
+    }
 
     [[NSNotificationCenter defaultCenter] postNotificationName:NSUserDefaultsDidChangeNotification object:self];
     [self _scheduleSynchronize];
@@ -450,15 +492,6 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
  @Notes
 */
 - (id)initWithUser:(NSString*)username {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (instancetype)initWithSuiteName:(NSString*)suitename {
     UNIMPLEMENTED();
     return StubReturn();
 }
