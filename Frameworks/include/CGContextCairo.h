@@ -22,8 +22,6 @@ struct _cairo;
 typedef struct _cairo cairo_t;
 typedef enum _cairo_filter cairo_filter_t;
 typedef struct _cairo_pattern cairo_pattern_t;
-struct cairo_path;
-typedef struct cairo_path cairo_path_t;
 
 class CGContextCairo : public CGContextImpl {
 private:
@@ -33,8 +31,6 @@ private:
     // reset the filter as well.
     // pattern: The pattern for which current filter should be assigned.
     void _assignAndResetFilter(cairo_pattern_t* pattern);
-    void _CGContextDrawStrokedPath(cairo_path_t* flatPath, int i, int prev, int total, CGFloat lineWidth);
-    static CGPoint _extendPoint(CGPoint a, CGPoint b, CGFloat length);
 
     void _cairoImageSurfaceBlur(cairo_surface_t* surface);
     void _cairoContextStrokePathShadow();
