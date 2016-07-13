@@ -27,6 +27,8 @@
 #import "UIGestureRecognizerInternal.h"
 #import "UWP/WindowsUIXamlControls.h"
 
+static const double c_defaultStepFrequency = 0.1;
+
 @implementation UISlider {
     float _value;
     BOOL _continuous;
@@ -52,8 +54,27 @@
     _rootPanel = [WXCGrid make];
     [_rootPanel.children addObject:_xamlSlider];
     [self layer].contentsElement = _rootPanel;
+    [self _updateStepFrequency];
     [self setContinuous:YES];
     [self _registerForEventsWithXaml];
+}
+
+- (void)_updateStepFrequency {
+    // The frame size, minimumValue and maximumValue of UISlider can change dynamically, so we need to update the step frequency when they
+    // do.
+    if ((_xamlSlider.maximum - _xamlSlider.minimum) > 0 && self.frame.size.width > 0) {
+        _xamlSlider.stepFrequency = (_xamlSlider.maximum - _xamlSlider.minimum) / (self.frame.size.width);
+    } else {
+        _xamlSlider.stepFrequency = c_defaultStepFrequency;
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    [self _updateStepFrequency];
 }
 
 /**
@@ -104,6 +125,7 @@
 */
 - (void)setMinimumValue:(float)value {
     _xamlSlider.minimum = value;
+    [self _updateStepFrequency];
 }
 
 - (void)_registerForEventsWithXaml {
@@ -165,6 +187,7 @@
 */
 - (void)setMaximumValue:(float)value {
     _xamlSlider.maximum = value;
+    [self _updateStepFrequency];
 }
 
 /**
