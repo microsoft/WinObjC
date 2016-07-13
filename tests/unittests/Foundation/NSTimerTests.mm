@@ -136,7 +136,7 @@ TEST(NSTimer, ScheduledTimerWithTimeIntervalRepeat) {
     volatile long waitCompletion = 0;
 
     auto selectorCalledAsync = std::async(std::launch::async, [&waitCompletion, testObj]() {
-        BOOL fooChanged = [testObj waitOnCalledConditionForInterval:5] && [testObj called];
+        BOOL fooChanged = [testObj waitOnCalledConditionForInterval:4] && [testObj called];
         _InterlockedExchange(&waitCompletion, 1L);
         return fooChanged;
     });
