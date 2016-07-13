@@ -306,7 +306,7 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
  @Status Interoperable
 */
 - (void)setBool:(int)value forKey:(NSString*)defaultName {
-    [self setObject:value ? @"YES" : @"NO" forKey:defaultName];
+    [self setObject:(value ? @YES : @NO) forKey:defaultName];
 }
 
 /**
