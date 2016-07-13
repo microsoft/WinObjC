@@ -32,7 +32,7 @@ CORELOCATION_EXPORT_CLASS
 @property (readonly, nonatomic) CLLocationDirection headingAccuracy;
 @property (readonly, copy, nonatomic) NSDate* timestamp;
 @property (readonly, copy, nonatomic) NSString* description;
-@property (readonly, nonatomic) CLHeadingComponentValue x;
-@property (readonly, nonatomic) CLHeadingComponentValue y;
-@property (readonly, nonatomic) CLHeadingComponentValue z;
+@property (readonly, nonatomic) CLHeadingComponentValue x STUB_PROPERTY;
+@property (readonly, nonatomic) CLHeadingComponentValue y STUB_PROPERTY;
+@property (readonly, nonatomic) CLHeadingComponentValue z STUB_PROPERTY;
 @end

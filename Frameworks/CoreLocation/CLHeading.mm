@@ -44,9 +44,6 @@
         newHeading->_magneticHeading = _magneticHeading;
         newHeading->_trueHeading = _trueHeading;
         newHeading->_timestamp = [_timestamp copyWithZone:zone];
-        newHeading->_x = _x;
-        newHeading->_y = _y;
-        newHeading->_z = _z;
     }
 
     return newHeading;
