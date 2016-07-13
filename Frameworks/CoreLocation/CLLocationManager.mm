@@ -63,7 +63,7 @@ static void _requestExtendedExecutionAsync() {
 
 /**
  * Helper method to handle the revoked event from extended execution.
- * @param {WAEExtendedExecutionRevokedReason} Extended execution revoked reason.
+ * @param {WAEExtendedExecutionRevokedReason} reason: Extended execution revoked reason.
  */
 static void _handleExtendedExecutionRevokedEvent(WAEExtendedExecutionRevokedReason reason) {
     std::lock_guard<std::mutex> lock(s_extendedExecutionMutex);
@@ -150,7 +150,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
 
 /**
  * [setDesiredAccuracy: description]
- * @param {CLLocationAccuracy} accuracy the accuracy of the location data in meters.
+ * @param {CLLocationAccuracy} accuracy: the accuracy of the location data in meters.
  */
 - (void)setDesiredAccuracy:(CLLocationAccuracy)accuracy {
     _desiredAccuracy = accuracy;
@@ -169,7 +169,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
 
 /**
  * Setter method for distanceFilter property.
- * @param {CLLocationDistance} the minimum distance (measured in meters) a device must move horizontally before an update event is
+ * @param {CLLocationDistance} filter: the minimum distance (measured in meters) a device must move horizontally before an update event is
  * generated.
  */
 - (void)setDistanceFilter:(CLLocationDistance)filter {
@@ -332,8 +332,8 @@ static const int64_t c_timeoutInSeconds = 15LL;
 
 /**
  * Handles geolocator's state change events.
- * @param {WDGGeolocator*} geolocator geolocator instance.
- * @param {WDGStatusChangedEventArgs*} event StatusChangedEventArgs  received from Windows.
+ * @param {WDGGeolocator*} geolocator: geolocator instance.
+ * @param {WDGStatusChangedEventArgs*} event: StatusChangedEventArgs received from Windows.
  */
 - (void)_handleStatusChangedEvent:(WDGGeolocator*)geolocator statusEvent:(WDGStatusChangedEventArgs*)event {
     @synchronized(self) {
@@ -375,8 +375,8 @@ static const int64_t c_timeoutInSeconds = 15LL;
 
 /**
  * Handles geolocator's position change events.
- * @param {WDGGeolocator*} geolocator geolocator instance.
- * @param {WDGPositionChangedEventArgs*} event PositionChangedEventArgs received from Windows.
+ * @param {WDGGeolocator*} geolocator: geolocator instance.
+ * @param {WDGPositionChangedEventArgs*} event: PositionChangedEventArgs received from Windows.
  */
 - (void)_handlePositionChangedEvent:(WDGGeolocator*)geolocator statusEvent:(WDGPositionChangedEventArgs*)event {
     NSTraceVerbose(TAG, @"Received position changed event.");
@@ -385,8 +385,8 @@ static const int64_t c_timeoutInSeconds = 15LL;
 
 /**
  * Handles compass's heading change events.
- * @param {WDSCompass*} compass compass instance.
- * @param {WDSCompassReadingChangedEventArgs*} event ReadingChangedEventArgs received from Windows.
+ * @param {WDSCompass*} compass: compass instance.
+ * @param {WDSCompassReadingChangedEventArgs*} event: ReadingChangedEventArgs received from Windows.
  */
 - (void)_handleHeadingChangedEvent:(WDSCompass*)compass statusEvent:(WDSCompassReadingChangedEventArgs*)event {
     NSTraceVerbose(TAG, @"Received heading changed event.");
@@ -395,7 +395,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
 
 /**
  * Handles location change updates.
- * @param {WDGGeoposition*} geoposition updated location values received from Windows.
+ * @param {WDGGeoposition*} geoposition: updated location values received from Windows.
  */
 - (void)_handleLocationUpdate:(WDGGeoposition*)geoposition {
     @synchronized(self) {
@@ -443,7 +443,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
 
 /**
  * Handles heading change updates.
- * @param {WDSCompassReading*} compassReading updated heading values received from Windows.
+ * @param {WDSCompassReading*} compassReading: updated heading values received from Windows.
  */
 - (void)_handleHeadingUpdate:(WDSCompassReading*)compassReading {
     @synchronized(self) {
@@ -487,7 +487,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
 
 /**
  * Handles errors related with location updates.
- * @param {NSError*} error location update error received from Windows.
+ * @param {NSError*} error: location update error received from Windows.
  */
 - (void)_handleLocationUpdateError:(NSError*)error {
     // Deliver location update failure to the location manager delegate.
@@ -624,7 +624,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
         _uwpGeolocator = [WDGGeolocator make];
         _uwpCompass = [WDSCompass getDefault];
         _headingOrientation = CLDeviceOrientationLandscapeLeft;
-        _headingFilter = 0;
+        _headingFilter = 1;
     }
 
     return self;
@@ -759,12 +759,12 @@ static const int64_t c_timeoutInSeconds = 15LL;
             NSTraceInfo(TAG, @"Started periodic heading update");
 
             if (self.allowsBackgroundLocationUpdates) {
-                // Request for a extended execution session so location updates can continue in the background.
+                // Request for a extended execution session so heading updates can continue in the background.
                 _requestExtendedExecutionSession();
                 _extendedExecutionSessionRequested = YES;
             }
 
-            // Register for position change event only the first time location update is requested.
+            // Register for position change event only the first time heading update is requested.
             __weak CLLocationManager* weakSelf = self;
             _uwpPeriodicHeadingChangeToken =
                 [_uwpCompass addReadingChangedEvent:^void(WDSCompass* compass, WDSCompassReadingChangedEventArgs* event) {
