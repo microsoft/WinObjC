@@ -13,9 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#ifndef __CGSURFACEINFOINTERNAL_H
-#define __CGSURFACEINFOINTERNAL_H
+#pragma once
 
 #import "CoreGraphics/CoreGraphicsExport.h"
 
@@ -53,5 +51,3 @@ static inline __CGSurfaceInfo _CGSurfaceInfoInit(size_t width,
 
     return surfaceInfo;
 }
-
-#endif
