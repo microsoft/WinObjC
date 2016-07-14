@@ -85,4 +85,4 @@ UIApplicationDelegate.h:
 
 ###Test Approach
 
-Functionally testing the onActivated path will require a large addition of path code to allow testing to hook in at different points, or possibly a restructuring of startup code to allow the test to get ownership of the app.  Currently this is being tested manually.
+We are using the functional test framework to test Cortana foreground activation.  We can create a test app shell which activates with given arguments, which we can use to test that all delegate methods are called and with the correct data.

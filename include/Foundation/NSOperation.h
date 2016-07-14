@@ -62,9 +62,9 @@ FOUNDATION_EXPORT_CLASS
 @property (readonly, getter=isReady) BOOL ready;
 @property (copy) NSString* name;
 - (void)addDependency:(NSOperation*)operation;
-- (void)removeDependency:(NSOperation*)operation STUB_METHOD;
+- (void)removeDependency:(NSOperation*)operation;
 @property (readonly, copy) NSArray* dependencies;
-@property NSQualityOfService qualityOfService;
+@property NSQualityOfService qualityOfService STUB_PROPERTY;
 @property double threadPriority STUB_PROPERTY;
 @property NSOperationQueuePriority queuePriority;
 - (void)waitUntilFinished;

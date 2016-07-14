@@ -3,6 +3,7 @@ LIBRARY UIKit
         ; Application entry points (StarboardXAML)
         UIApplicationMain
         UIApplicationInitialize
+        UIApplicationActivationTest
 
         ; NSAttributedString
         NSFontAttributeName DATA
@@ -1160,8 +1161,9 @@ LIBRARY UIKit
 
         ; Extra stuff for WinObjC:
         UIShutdown
-        UIQueueTouchInput
-        UIQueueKeyInput
         UIRequestTransactionProcessing
         UIOrientationFromString
         UIApplicationDidChangeDisplayModeNofication
+        EbrApplicationActivated
+        EbrApplicationLaunched
+

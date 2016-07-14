@@ -831,7 +831,6 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
  @Status Interoperable
 */
 - (BOOL)changeCurrentDirectoryPath:(NSString*)path {
-    
     return (0 == _NS_chdir([path UTF8String]));
 }
 

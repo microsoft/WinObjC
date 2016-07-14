@@ -872,6 +872,10 @@ void CGContextCairo::CGContextFillRect(CGRect rct) {
 
     if (curState->_imgMask == NULL) {
         cairo_fill(_drawContext);
+#if defined(__i386__)
+        // There's a missing call to _mm_empty in cairo somewhere, this will clear out the state so the FPU doesn't return bogus results.
+        __builtin_ia32_emms();
+#endif
     } else {
         cairo_mask_surface(_drawContext, curState->_imgMask->Backing()->LockCairoSurface(), 0.0, 0.0);
         curState->_imgMask->Backing()->ReleaseCairoSurface();
@@ -1930,4 +1934,36 @@ bool CGContextCairo::CGContextIsPointInPath(bool eoFill, float x, float y) {
     bool returnValue = cairo_in_fill(_drawContext, x, y);
     UNLOCK_CAIRO();
     return returnValue;
+}
+CGPathRef CGContextCairo::CGContextCopyPath(void) {
+    CGMutablePathRef copyPath = CGPathCreateMutable();
+    ObtainLock();
+    LOCK_CAIRO();
+    cairo_path_t* caPath = cairo_copy_path(_drawContext);
+    UNLOCK_CAIRO();
+    cairo_path_data_t* data;
+
+    for (int i = 0; i < caPath->num_data; i += caPath->data[i].header.length) {
+        data = &caPath->data[i];
+        switch (data->header.type) {
+            case CAIRO_PATH_MOVE_TO:
+                CGPathMoveToPoint(copyPath, NULL, data[1].point.x, data[1].point.y);
+                break;
+            case CAIRO_PATH_LINE_TO:
+                CGPathAddLineToPoint(copyPath, NULL, data[1].point.x, data[1].point.y);
+                break;
+            case CAIRO_PATH_CURVE_TO:
+                CGPathAddCurveToPoint(
+                    copyPath, NULL, data[1].point.x, data[1].point.y, data[2].point.x, data[2].point.y, data[3].point.x, data[3].point.y);
+                break;
+            case CAIRO_PATH_CLOSE_PATH:
+                CGPathCloseSubpath(copyPath);
+                break;
+            default:
+                FAIL_FAST();
+                break;
+        }
+    }
+    cairo_path_destroy(caPath);
+    return (CGPathRef)copyPath;
 }

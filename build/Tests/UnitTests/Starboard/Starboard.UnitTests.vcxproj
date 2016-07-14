@@ -236,6 +236,9 @@
     <ClangCompile Include="..\..\..\..\tests\unittests\Starboard\objcrt_sanity.m" />
     <ClangCompile Include="..\..\..\..\tests\unittests\Starboard\PthreadTests.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\Starboard\ProjectionsTests.mm" />
+    <ClangCompile Include="..\..\..\..\tests\unittests\Starboard\CommonCryptoTests.m">
+        <CompileAs>CompileAsObjC</CompileAs>
+    </ClangCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\tests\unittests\Starboard\LifetimeCounting.h" />

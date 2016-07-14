@@ -187,8 +187,7 @@ bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret) {
 
     if (0
 #define APPLY_TYPE(type, name, capitalizedName, encodingChar) || (valueType[0] == encodingChar && (*ret = quickGet<type>(self, getter)))
-        APPLY_TYPE(id, object, Object, '@')
-        APPLY_TYPE(Class, class, Class, '#')
+        APPLY_TYPE(id, object, Object, '@') APPLY_TYPE(Class, class, Class, '#')
 #include "type_encoding_cases.h"
 #undef APPLY_TYPE
             ) {
@@ -421,8 +420,7 @@ bool KVCSetViaAccessor(NSObject* self, SEL setter, id value) {
         if (0
 #define APPLY_TYPE(type, name, capitalizedName, encodingChar) \
     || (valueType[0] == encodingChar && quickSet<type>(self, setter, value, valueType))
-            APPLY_TYPE(id, object, Object, '@')
-            APPLY_TYPE(Class, class, Class, '#')
+            APPLY_TYPE(id, object, Object, '@') APPLY_TYPE(Class, class, Class, '#')
 #include "type_encoding_cases.h"
 #undef APPLY_TYPE
                 ) {

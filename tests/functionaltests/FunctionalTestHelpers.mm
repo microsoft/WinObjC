@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,12 +14,9 @@
 //
 //******************************************************************************
 
-#pragma once
+#include "UIKit/UIApplication.h"
 
-#include "UIKit/UIView.h"
-
-@interface UIEmptyController : UIView {
-@public
+// Prevents UIApplication state from carrying over between functional tests
+void FunctionalTestCleanupUIApplication() {
+    [[UIApplication sharedApplication] _destroy];
 }
-
-@end

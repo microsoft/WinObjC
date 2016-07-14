@@ -17,6 +17,7 @@
 
 #include <StarboardExport.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <StubIncludes.h>
 
 #define CC_MD2_DIGEST_LENGTH 16
@@ -90,15 +91,15 @@ SB_IMPEXP CCCryptorStatus CCCryptorCreate(
     CCOperation op, CCAlgorithm alg, CCOptions options, const void* key, size_t keyLength, const void* iv, CCCryptorRef* cryptorRef);
 
 SB_IMPEXP CCCryptorStatus CCCryptorCreateFromData(CCOperation op,
-                                        CCAlgorithm alg,
-                                        CCOptions options,
-                                        const void* key,
-                                        size_t keyLength,
-                                        const void* iv,
-                                        const void* data,
-                                        size_t dataLength,
-                                        CCCryptorRef* cryptorRef,
-                                        size_t* dataUsed);
+                                                  CCAlgorithm alg,
+                                                  CCOptions options,
+                                                  const void* key,
+                                                  size_t keyLength,
+                                                  const void* iv,
+                                                  const void* data,
+                                                  size_t dataLength,
+                                                  CCCryptorRef* cryptorRef,
+                                                  size_t* dataUsed);
 
 SB_IMPEXP CCCryptorStatus CCCryptorRelease(CCCryptorRef cryptorRef);
 
@@ -112,15 +113,15 @@ SB_IMPEXP size_t CCCryptorGetOutputLength(CCCryptorRef cryptorRef, size_t inputL
 SB_IMPEXP CCCryptorStatus CCCryptorReset(CCCryptorRef cryptorRef, const void* iv);
 
 SB_IMPEXP CCCryptorStatus CCCrypt(CCOperation op,
-                        CCAlgorithm alg,
-                        CCOptions options,
-                        const void* key,
-                        size_t keyLength,
-                        const void* iv,
-                        const void* dataIn,
-                        size_t dataInLength,
-                        void* dataOut,
-                        size_t dataOutAvailable,
-                        size_t* dataOutMoved);
+                                  CCAlgorithm alg,
+                                  CCOptions options,
+                                  const void* key,
+                                  size_t keyLength,
+                                  const void* iv,
+                                  const void* dataIn,
+                                  size_t dataInLength,
+                                  void* dataOut,
+                                  size_t dataOutAvailable,
+                                  size_t* dataOutMoved);
 
 SB_EXTERNC_END

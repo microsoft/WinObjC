@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,29 +13,41 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #include "Starboard.h"
 
 #include "UIKit/UIEvent.h"
-#include "Foundation/NSMutableSet.h"
 
 @implementation UIEvent {
-    idretaintype(NSSet) touches;
-    idretaintype(UITouch) touchEvent;
+    StrongId<NSMutableSet<UITouch*>> touches;
+    StrongId<UITouch> touchEvent;
     double _timestamp;
 }
-+ (UIEvent*)createWithTouches:(NSSet*)touchUISet touchEvent:(UITouch*)touch {
+
+/**
+ @Public No
+ Note: Only used for legacy hit-testing purposes.  Should remove at some point.
+*/
++ (UIEvent*)_createWithTouches:(NSSet*)allTouches forNewTouch:(UITouch*)newTouch {
     UIEvent* us = (UIEvent*)[self new];
-    us->touches = touchUISet;
-    us->touchEvent = touch;
+    us->touches = allTouches;
+    us->touchEvent = newTouch;
 
     return us;
 }
 
 /**
+ @Public No
+*/
+- (void)_updateWithTouches:(NSMutableSet<UITouch*>*)allTouches touchEvent:(UITouch*)newTouch {
+    self->touches = allTouches;
+    self->touchEvent = newTouch;
+    self->_timestamp = newTouch.timestamp;
+}
+
+/**
  @Status Stub
 */
-- (NSSet*)touchesForWindow:(UIWindow*)window {
+- (NSSet<UITouch*>*)touchesForWindow:(UIWindow*)window {
     UNIMPLEMENTED();
     return nil;
 }
@@ -43,7 +55,7 @@
 /**
  @Status Stub
 */
-- (NSSet*)touchesForGestureRecognizer:(UIGestureRecognizer*)gesture {
+- (NSSet<UITouch*>*)touchesForGestureRecognizer:(UIGestureRecognizer*)gesture {
     UNIMPLEMENTED();
     return nil;
 }
@@ -51,7 +63,7 @@
 /**
  @Status Interoperable
 */
-- (NSSet*)allTouches {
+- (NSSet<UITouch*>*)allTouches {
     return touches;
 }
 
@@ -62,7 +74,7 @@
 /**
  @Status Interoperable
 */
-- (NSSet*)touchesForView:(UIView*)view {
+- (NSSet<UITouch*>*)touchesForView:(UIView*)view {
     NSEnumerator* curEnum = [touches objectEnumerator];
     NSMutableSet* ret = [NSMutableSet set];
 
@@ -80,15 +92,20 @@
     }
 }
 
-- (void)_setTimestamp:(double)time {
-    _timestamp = time;
-}
-
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Only supports/returns UIEventTypeTouches.
 */
 - (UIEventType)type {
     return UIEventTypeTouches;
+}
+
+/**
+ @Status Caveat
+ @Notes Only supports/returns UIEventSubtypeNone.
+*/
+- (UIEventSubtype)subtype {
+    return UIEventSubtypeNone;
 }
 
 /**

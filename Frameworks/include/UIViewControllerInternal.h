@@ -26,6 +26,8 @@ enum ControllerVisibiltyState {
     controllerWillDisappearAnimated
 };
 
+@class WXCPage;
+
 struct UIViewControllerPriv {
     idretaintype(UINavigationItem) navigationItem;
     idretaintype(UITabBarItem) tabBarItem;
@@ -66,6 +68,9 @@ struct UIViewControllerPriv {
     idretaintype(NSArray) _modalTemplates;
     idretaintype(UIView) view;
     idretaintype(NSMutableArray) _childViewControllers;
+
+    idretaintype(WXCPage) _page;
+    idretaintype(NSString) _xamlClassName;
 };
 
 @interface _UIViewControllerContextTransitioning : NSObject <UIViewControllerContextTransitioning>

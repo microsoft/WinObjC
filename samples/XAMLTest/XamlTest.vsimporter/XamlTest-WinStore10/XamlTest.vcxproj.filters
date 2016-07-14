@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{a46ad9f2-b06d-4390-8f5f-64a065d15770}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{a0a1c256-cd47-4350-b1f5-1f4c547c9dfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XamlTest">
+      <UniqueIdentifier>{EA7AEAAC-BF78-4EB5-B384-EAECBEE459E9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XamlTest\Supporting Files">
+      <UniqueIdentifier>{91B32CCA-CB5B-4E86-A320-36CB88190D32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xcode Variable Files">
+      <UniqueIdentifier>{4506463F-96BE-4F71-B959-20975ED4D1B4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="default.rd.xml" />
+    <AppxManifest Include="Package.appxmanifest" />
+    <None Include="XamlTest_TemporaryKey.pfx" />
+    <Image Include="Assets\LockScreenLogo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square150x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Wide310x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <ClangCompile Include="..\..\XamlTest\AppDelegate.m">
+      <Filter>XamlTest</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\XamlTest\main.m">
+      <Filter>XamlTest\Supporting Files</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\XamlTest\MainViewController.m">
+      <Filter>XamlTest</Filter>
+    </ClangCompile>
+    <AssetCatalogCompile Include="..\..\XamlTest\Images.xcassets">
+      <Filter>XamlTest</Filter>
+    </AssetCatalogCompile>
+    <XibCompile Include="..\..\XamlTest\MainViewController.xib">
+      <Filter>XamlTest</Filter>
+    </XibCompile>
+    <SBResourceCopy Include="..\..\Default-568h@2x.png">
+      <Filter>XamlTest\Supporting Files</Filter>
+    </SBResourceCopy>
+    <SBInfoPlistCopy Include="..\..\XamlTest\Info.plist" />
+    <Text Include="XamlTest-Debug-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+    <Text Include="XamlTest-Release-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.xaml.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="MainViewController.xaml.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h" />
+    <ClInclude Include="MainViewController.xaml.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="MainViewController.xaml">
+      <Filter>XamlTest</Filter>
+    </Page>
+  </ItemGroup>
+</Project>

@@ -80,7 +80,8 @@
 XIBObject* ObjectConverter::ConverterForObject(const char* className, pugi::xml_node node) {
     XIBObject* ret = NULL;
 
-    // NOTE: Legacy XIBs (pre-XCode5) are not really under active expansion. Developers can upgrade their XIBs to modern XIB format using ibtool
+    // NOTE: Legacy XIBs (pre-XCode5) are not really under active expansion. Developers can upgrade their XIBs to modern XIB format using
+    // ibtool
     IS_CONVERTER(ret, className, "IBCocoaTouchEventConnection", UIRuntimeEventConnection)
     IS_CONVERTER(ret, className, "IBCocoaTouchOutletConnection", UIRuntimeOutletConnection)
     IS_CONVERTER(ret, className, "IBCocoaTouchOutletCollectionConnection", UIRuntimeOutletCollectionConnection)

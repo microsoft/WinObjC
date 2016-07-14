@@ -165,7 +165,6 @@ public:
 #include <set>
 
 class CAXamlCompositor;
-struct IWAccessibilityInfo;
 
 class DisplayNode : public RefCountedType {
     friend class CAXamlCompositor;
@@ -194,7 +193,6 @@ public:
     void SetContents(DisplayTexture* tex, float width, float height, float scale);
     void SetContentsElement(winobjc::Id& elem, float width, float height, float scale);
     void SetContentsElement(winobjc::Id& elem);
-    void SetAccessibilityInfo(const IWAccessibilityInfo& info);
 
     void SetShouldRasterize(bool shouldRasterize);
 

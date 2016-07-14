@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsRootNamespace>XamlTest_Headers</ItemsRootNamespace>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <Keyword>IslandwoodProj</Keyword>
+    <ItemsProjectGuid>{2DCC58E2-7345-4C41-9DE1-3500B1286A1E}</ItemsProjectGuid>
+    <SharedGUID>{AA73286D-CBBF-4A5E-98DE-EA00FF42F97D}</SharedGUID>
+  </PropertyGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XamlTest\MainViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XamlTest\AppDelegate.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+</Project>
