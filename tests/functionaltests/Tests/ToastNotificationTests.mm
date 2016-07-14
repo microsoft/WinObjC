@@ -26,10 +26,34 @@
 #include "StringHelpers.h"
 
 using namespace ABI::Windows::ApplicationModel::Activation;
+using namespace ABI::Windows::Foundation::Collections;
 using namespace Microsoft::WRL;
 
 // Method to call in tests to activate app
 extern "C" void UIApplicationActivationTest(IInspectable* args, void* delegateClassName);
+
+MOCK_CLASS(MockValueSet,
+           public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>,
+                               IPropertySet,
+                               IObservableMap<HSTRING, IInspectable*>,
+                               IMap<HSTRING, IInspectable*>,
+                               IIterable<IKeyValuePair<HSTRING, IInspectable*>*>> {
+
+               // Claim to be the implementation for the real system RuntimeClass for ToastNotificationActivatedEventArgs.
+               InspectableClass(RuntimeClass_Windows_Foundation_Collections_ValueSet, BaseTrust);
+
+           public:
+               MOCK_STDCALL_METHOD_2(add_MapChanged);
+               MOCK_STDCALL_METHOD_1(remove_MapChanged);
+               MOCK_STDCALL_METHOD_2(Lookup);
+               MOCK_STDCALL_METHOD_1(get_Size);
+               MOCK_STDCALL_METHOD_2(HasKey);
+               MOCK_STDCALL_METHOD_1(GetView);
+               MOCK_STDCALL_METHOD_3(Insert);
+               MOCK_STDCALL_METHOD_1(Remove);
+               MOCK_STDCALL_METHOD_0(Clear);
+               MOCK_STDCALL_METHOD_1(First);
+           });
 
 MOCK_CLASS(MockToastNotificationActivatedEventArgs,
            public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IToastNotificationActivatedEventArgs, IActivatedEventArgs> {
@@ -59,25 +83,25 @@ MOCK_CLASS(MockToastNotificationActivatedEventArgs,
 }
 
 - (BOOL)application:(UIApplication*)application willFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
-    EXPECT_TRUE(launchOptions[UIApplicationLaunchOptionsToastNotificationKey]);
-    WAAToastNotificationActivatedEventArgs* args = launchOptions[UIApplicationLaunchOptionsToastNotificationKey];
-    EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", args.argument);
+    EXPECT_TRUE(launchOptions[UIApplicationLaunchOptionsToastActionKey]);
+    NSDictionary* toastAction = launchOptions[UIApplicationLaunchOptionsToastActionKey];
+    EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", toastAction[UIApplicationLaunchOptionsToastActionArgumentKey]);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
-    EXPECT_TRUE(launchOptions[UIApplicationLaunchOptionsToastNotificationKey]);
-    WAAToastNotificationActivatedEventArgs* args = launchOptions[UIApplicationLaunchOptionsToastNotificationKey];
-    EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", args.argument);
+    EXPECT_TRUE(launchOptions[UIApplicationLaunchOptionsToastActionKey]);
+    NSDictionary* toastAction = launchOptions[UIApplicationLaunchOptionsToastActionKey];
+    EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", toastAction[UIApplicationLaunchOptionsToastActionArgumentKey]);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
 
-- (BOOL)application:(UIApplication*)application didReceiveToastNotification:(WAAToastNotificationActivatedEventArgs*)args {
+- (BOOL)application:(UIApplication*)application didReceiveToastAction:(NSDictionary*)toastAction {
     // Delegate method should only be called once
     EXPECT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
-    EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", args.argument);
+    EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", toastAction[UIApplicationLaunchOptionsToastActionArgumentKey]);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
@@ -109,10 +133,10 @@ MOCK_CLASS(MockToastNotificationActivatedEventArgs,
     return true;
 }
 
-- (BOOL)application:(UIApplication*)application didReceiveToastNotification:(WAAToastNotificationActivatedEventArgs*)args {
+- (BOOL)application:(UIApplication*)application didReceiveToastAction:(NSDictionary*)toastAction {
     // Delegate method should only be called once
     EXPECT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
-    EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", args.argument);
+    EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", toastAction[UIApplicationLaunchOptionsToastActionArgumentKey]);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
@@ -124,11 +148,18 @@ TEST(ToastNotificationTest, ForegroundActivation) {
     LOG_INFO("Toast Notification Foreground Activation Test: ");
 
     // Create mocked data to pass into application
+    auto fakeUserInput = Make<MockValueSet>();
+
     auto fakeToastNotificationActivatedEventArgs = Make<MockToastNotificationActivatedEventArgs>();
     fakeToastNotificationActivatedEventArgs->Setget_Argument([](HSTRING* argument) {
         Wrappers::HString value;
         value.Set(L"TOAST_NOTIFICATION_TEST");
         *argument = value.Detach();
+        return S_OK;
+    });
+
+    fakeToastNotificationActivatedEventArgs->Setget_UserInput([&fakeUserInput](IPropertySet** userInput) {
+        fakeUserInput.CopyTo(userInput);
         return S_OK;
     });
 
@@ -154,7 +185,7 @@ TEST(ToastNotificationTest, ForegroundActivationDelegateMethodsCalled) {
     EXPECT_TRUE(methodsCalled);
     EXPECT_TRUE([methodsCalled objectForKey:@"application:willFinishLaunchingWithOptions:"]);
     EXPECT_TRUE([methodsCalled objectForKey:@"application:didFinishLaunchingWithOptions:"]);
-    EXPECT_TRUE([methodsCalled objectForKey:@"application:didReceiveToastNotification:"]);
+    EXPECT_TRUE([methodsCalled objectForKey:@"application:didReceiveToastAction:"]);
 }
 
 TEST(ToastNotificationTest, ActivatedAppReceivesToastNotification) {
@@ -164,11 +195,18 @@ TEST(ToastNotificationTest, ActivatedAppReceivesToastNotification) {
     [[UIApplication sharedApplication] setDelegate:testDelegate];
 
     // Create mocked data to pass into application
+    auto fakeUserInput = Make<MockValueSet>();
+
     auto fakeToastNotificationActivatedEventArgs = Make<MockToastNotificationActivatedEventArgs>();
     fakeToastNotificationActivatedEventArgs->Setget_Argument([](HSTRING* argument) {
         Wrappers::HString value;
         value.Set(L"TOAST_NOTIFICATION_TEST");
         *argument = value.Detach();
+        return S_OK;
+    });
+
+    fakeToastNotificationActivatedEventArgs->Setget_UserInput([&fakeUserInput](IPropertySet** userInput) {
+        fakeUserInput.CopyTo(userInput);
         return S_OK;
     });
 
@@ -190,5 +228,5 @@ TEST(ToastNotificationTest, ActivatedAppReceivesToastNotification) {
 
     NSDictionary* methodsCalled = [testDelegate methodsCalled];
     EXPECT_TRUE(methodsCalled);
-    EXPECT_TRUE([methodsCalled objectForKey:@"application:didReceiveToastNotification:"]);
+    EXPECT_TRUE([methodsCalled objectForKey:@"application:didReceiveToastAction:"]);
 }

@@ -97,10 +97,13 @@ NSString* const UIApplicationLaunchOptionsSourceApplicationKey = @"UIApplication
 NSString* const UIApplicationLaunchOptionsRemoteNotificationKey = @"UIApplicationLaunchOptionsRemoteNotificationKey";
 NSString* const UIApplicationLaunchOptionsAnnotationKey = @"UIApplicationLaunchOptionsAnnotationKey";
 NSString* const UIApplicationLaunchOptionsLocalNotificationKey = @"UIApplicationLaunchOptionsLocalNotificationKey";
-NSString* const UIApplicationLaunchOptionsToastNotificationKey = @"UIApplicationLaunchOptionsToastNotificationKey";
+NSString* const UIApplicationLaunchOptionsToastActionKey = @"UIApplicationLaunchOptionsToastActionKey";
 NSString* const UIApplicationLaunchOptionsVoiceCommandKey = @"UIApplicationLaunchOptionsVoiceCommandKey";
 NSString* const UIApplicationLaunchOptionsProtocolKey = @"UIApplicationLaunchOptionsProtocolKey";
 NSString* const UIApplicationLaunchOptionsLocationKey = @"UIApplicationLaunchOptionsLocationKey";
+
+NSString* const UIApplicationLaunchOptionsToastActionArgumentKey = @"UIApplicationLaunchOptionsToastActionArgumentKey";
+NSString* const UIApplicationLaunchOptionsToastActionUserInputKey = @"UIApplicationLaunchOptionsToastActionUserInputKey";
 
 NSString* const UIApplicationDidReceiveMemoryWarningNotification = @"UIApplicationDidReceiveMemoryWarningNotification";
 NSString* const UIApplicationWillChangeStatusBarFrameNotification = @"UIApplicationWillChangeStatusBarFrameNotification";
@@ -1203,15 +1206,15 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
     }
 }
 
-- (void)_sendNotificationReceivedEvent:(WAAToastNotificationActivatedEventArgs*)notificationArgs {
-    if ([self.delegate respondsToSelector:@selector(application:didReceiveToastNotification:)]) {
-        [self.delegate application:sharedApplication didReceiveToastNotification:notificationArgs];
+- (void)_sendToastActionReceivedEvent:(NSDictionary*)toastAction {
+    if ([self.delegate respondsToSelector:@selector(application:didReceiveToastAction:)]) {
+        [self.delegate application:sharedApplication didReceiveToastAction:toastAction];
     }
 }
 
-- (void)_sendVoiceCommandReceivedEvent:(WAAVoiceCommandActivatedEventArgs*)voiceCommandArgs {
+- (void)_sendVoiceCommandReceivedEvent:(WMSSpeechRecognitionResult*)result {
     if ([self.delegate respondsToSelector:@selector(application:didReceiveVoiceCommand:)]) {
-        [self.delegate application:sharedApplication didReceiveVoiceCommand:voiceCommandArgs];
+        [self.delegate application:sharedApplication didReceiveVoiceCommand:result];
     }
 }
 

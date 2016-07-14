@@ -58,13 +58,17 @@ int ApplicationMainStart(const char* principalName,
     // Populate Objective C equivalent of activation argument
     if (activationType == ActivationTypeToast) {
         WAAToastNotificationActivatedEventArgs* toastArgument = [WAAToastNotificationActivatedEventArgs createWith:activationArg];
-        activationArgument = toastArgument;
+        NSDictionary* toastAction = @{
+            UIApplicationLaunchOptionsToastActionArgumentKey : toastArgument.argument,
+            UIApplicationLaunchOptionsToastActionUserInputKey : toastArgument.userInput
+        };
+        activationArgument = toastAction;
     } else if (activationType == ActivationTypeVoiceCommand) {
-        WAAVoiceCommandActivatedEventArgs* voiceCommandArgument = [WAAVoiceCommandActivatedEventArgs createWith:activationArg];
-        activationArgument = voiceCommandArgument;
+        WMSSpeechRecognitionResult* result = [WMSSpeechRecognitionResult createWith:activationArg];
+        activationArgument = result;
     } else if (activationType == ActivationTypeProtocol) {
-        WAAProtocolActivatedEventArgs* protocolArgument = [WAAProtocolActivatedEventArgs createWith:activationArg];
-        activationArgument = protocolArgument;
+        WFUri* uri = [WFUri createWith:activationArg];
+        activationArgument = uri;
     }
 
     WOCDisplayMode* displayMode = [UIApplication displayMode];

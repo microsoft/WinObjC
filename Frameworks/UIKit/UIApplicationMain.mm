@@ -240,7 +240,7 @@ int UIApplicationMainInit(NSString* principalClassName,
     NSMutableDictionary* launchOption = [NSMutableDictionary dictionary];
     switch (activationType) {
         case ActivationTypeToast:
-            [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsToastNotificationKey];
+            [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsToastActionKey];
             break;
         case ActivationTypeVoiceCommand:
             [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsVoiceCommandKey];
@@ -322,14 +322,17 @@ extern "C" void UIApplicationMainHandleResumeEvent() {
     [[NSUserDefaults _standardUserDefaultsNoInitialize] _resumeSynchronize];
 }
 
-extern "C" void UIApplicationMainHandleToastNotificationEvent(IInspectable* toastArgs) {
-    WAAToastNotificationActivatedEventArgs* toastArgument = [WAAToastNotificationActivatedEventArgs createWith:toastArgs];
-    [[UIApplication sharedApplication] _sendNotificationReceivedEvent:toastArgument];
+extern "C" void UIApplicationMainHandleToastActionEvent(HSTRING toastArgument, IInspectable* toastUserInput) {
+    NSString* argument = Strings::WideToNSString(toastArgument);
+    WFCValueSet* userInput = [WFCValueSet createWith:toastUserInput];
+    NSDictionary* toastAction =
+        @{ UIApplicationLaunchOptionsToastActionArgumentKey : argument, UIApplicationLaunchOptionsToastActionUserInputKey : userInput };
+    [[UIApplication sharedApplication] _sendToastActionReceivedEvent:toastAction];
 }
 
-extern "C" void UIApplicationMainHandleVoiceCommandEvent(IInspectable* voiceCommandArgs) {
-    WAAVoiceCommandActivatedEventArgs* voiceCommandArgument = [WAAVoiceCommandActivatedEventArgs createWith:voiceCommandArgs];
-    [[UIApplication sharedApplication] _sendVoiceCommandReceivedEvent:voiceCommandArgument];
+extern "C" void UIApplicationMainHandleVoiceCommandEvent(IInspectable* voiceCommandResult) {
+    WMSSpeechRecognitionResult* result = [WMSSpeechRecognitionResult createWith:voiceCommandResult];
+    [[UIApplication sharedApplication] _sendVoiceCommandReceivedEvent:result];
 }
 
 static NSString* _bundleIdFromPackageFamilyName(const wchar_t* packageFamily) {

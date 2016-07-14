@@ -139,24 +139,24 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
 
 - (BOOL)application:(UIApplication*)application willFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     EXPECT_TRUE(launchOptions[UIApplicationLaunchOptionsVoiceCommandKey]);
-    WAAVoiceCommandActivatedEventArgs* args = launchOptions[UIApplicationLaunchOptionsVoiceCommandKey];
-    EXPECT_OBJCEQ(@"CORTANA_TEST", args.result.text);
+    WMSSpeechRecognitionResult* result = launchOptions[UIApplicationLaunchOptionsVoiceCommandKey];
+    EXPECT_OBJCEQ(@"CORTANA_TEST", result.text);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     EXPECT_TRUE(launchOptions[UIApplicationLaunchOptionsVoiceCommandKey]);
-    WAAVoiceCommandActivatedEventArgs* args = launchOptions[UIApplicationLaunchOptionsVoiceCommandKey];
-    EXPECT_OBJCEQ(@"CORTANA_TEST", args.result.text);
+    WMSSpeechRecognitionResult* result = launchOptions[UIApplicationLaunchOptionsVoiceCommandKey];
+    EXPECT_OBJCEQ(@"CORTANA_TEST", result.text);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
 
-- (BOOL)application:(UIApplication*)application didReceiveVoiceCommand:(WAAVoiceCommandActivatedEventArgs*)args {
+- (BOOL)application:(UIApplication*)application didReceiveVoiceCommand:(WMSSpeechRecognitionResult*)result {
     // Delegate method should only be called once
     EXPECT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
-    EXPECT_OBJCEQ(@"CORTANA_TEST", args.result.text);
+    EXPECT_OBJCEQ(@"CORTANA_TEST", result.text);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
@@ -178,24 +178,24 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
 
 - (BOOL)application:(UIApplication*)application willFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     EXPECT_TRUE(launchOptions[UIApplicationLaunchOptionsProtocolKey]);
-    WAAProtocolActivatedEventArgs* args = launchOptions[UIApplicationLaunchOptionsProtocolKey];
-    EXPECT_OBJCEQ(@"CORTANA_TEST", args.uri.toString);
+    WFUri* uri = launchOptions[UIApplicationLaunchOptionsProtocolKey];
+    EXPECT_OBJCEQ(@"CORTANA_TEST", uri.toString);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     EXPECT_TRUE(launchOptions[UIApplicationLaunchOptionsProtocolKey]);
-    WAAProtocolActivatedEventArgs* args = launchOptions[UIApplicationLaunchOptionsProtocolKey];
-    EXPECT_OBJCEQ(@"CORTANA_TEST", args.uri.toString);
+    WFUri* uri = launchOptions[UIApplicationLaunchOptionsProtocolKey];
+    EXPECT_OBJCEQ(@"CORTANA_TEST", uri.toString);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
 
-- (BOOL)application:(UIApplication*)application didReceiveProtocol:(WAAProtocolActivatedEventArgs*)args {
+- (BOOL)application:(UIApplication*)application didReceiveProtocol:(WFUri*)uri {
     // Delegate method should only be called once
     EXPECT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
-    EXPECT_OBJCEQ(@"CORTANA_TEST", args.uri.toString);
+    EXPECT_OBJCEQ(@"CORTANA_TEST", uri.toString);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }

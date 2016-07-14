@@ -30,6 +30,8 @@
 #include "..\UIApplicationMainInternal.h"
 
 using namespace Windows::ApplicationModel::Activation;
+using namespace Windows::Media::SpeechRecognition;
+using namespace Windows::Foundation;
 using namespace Windows::UI;
 using namespace Windows::System;
 
@@ -151,7 +153,9 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
             _ApplicationLaunch(ActivationTypeToast, toastArgs);
         }
 
-        UIApplicationMainHandleToastNotificationEvent(reinterpret_cast<IInspectable*>(toastArgs));
+        UIApplicationMainHandleToastActionEvent(reinterpret_cast<HSTRING>(toastArgs->Argument),
+            reinterpret_cast<IInspectable*>(toastArgs->UserInput));
+
     } else if (args->Kind == ActivationKind::VoiceCommand) {
         Windows::Media::SpeechRecognition::SpeechRecognitionResult^ argResult = safe_cast<VoiceCommandActivatedEventArgs^>(args)->Result;
         TraceVerbose(TAG, L"Received voice command with argument - %s", argResult->Text->Data());

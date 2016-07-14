@@ -36,18 +36,18 @@
 /* TODO 7328699::
  * Projection headers cannot currenly be included in modules, so we must forward declare classes for now
  * App developers should import the following files to use methods requiring projected classes
- * #import <UWP/WindowsApplicationModelActivation.h>
+ * #import <UWP/WindowsFoundation.h>
+ * #import <UWP/WindowsMediaSpeechRecognition.h>
 */
 
 @class NSString, UIApplication, NSDictionary, NSCoder, UIViewController, NSArray, UIUserNotificationSettings, UILocalNotification, NSData,
-    NSError, NSUserActivity, UIApplicationShortcutItem, NSURL, UIWindow, WAAToastNotificationActivatedEventArgs,
-    WAAVoiceCommandActivatedEventArgs, WAAProtocolActivatedEventArgs;
+    NSError, NSUserActivity, UIApplicationShortcutItem, NSURL, UIWindow, WFCValueSet, WMSSpeechRecognitionResult, WFUri;
 
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsURLKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsSourceApplicationKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsRemoteNotificationKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsLocalNotificationKey;
-UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsToastNotificationKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsToastActionKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsVoiceCommandKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsProtocolKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsAnnotationKey;
@@ -61,6 +61,8 @@ UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsUserActivityTypeKey;
 UIKIT_EXPORT NSString* const UIApplicationOpenURLOptionsSourceApplicationKey;
 UIKIT_EXPORT NSString* const UIApplicationOpenURLOptionsAnnotationKey;
 UIKIT_EXPORT NSString* const UIApplicationOpenURLOptionsOpenInPlaceKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsToastActionArgumentKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsToastActionUserInputKey;
 
 @protocol UIApplicationDelegate <NSObject>
 @optional
@@ -125,9 +127,9 @@ UIKIT_EXPORT NSString* const UIApplicationOpenURLOptionsOpenInPlaceKey;
          forRemoteNotification:(NSDictionary*)userInfo
              completionHandler:(void (^)(void))completionHandler;
 - (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo;
-- (void)application:(UIApplication*)application didReceiveToastNotification:(WAAToastNotificationActivatedEventArgs*)notificationArgs;
-- (void)application:(UIApplication*)application didReceiveVoiceCommand:(WAAVoiceCommandActivatedEventArgs*)voiceCommandArgs;
-- (void)application:(UIApplication*)application didReceiveProtocol:(WAAProtocolActivatedEventArgs*)protocolArgs;
+- (void)application:(UIApplication*)application didReceiveToastAction:(NSDictionary*)action;
+- (void)application:(UIApplication*)application didReceiveVoiceCommand:(WMSSpeechRecognitionResult*)result;
+- (void)application:(UIApplication*)application didReceiveProtocol:(WFUri*)uri;
 - (void)application:(UIApplication*)application
     handleActionWithIdentifier:(NSString*)identifier
           forLocalNotification:(UILocalNotification*)notification
