@@ -15,9 +15,24 @@
 //******************************************************************************
 #pragma once
 
-@interface UITouch ()
+@class WUIPointerPoint;
 
-+ (UITouch*)createWithPoint:(CGPoint)point tapCount:(int)tapCount;
-- (void)_redirectTouch:(UIView*)view;
+@interface UITouch () {
+@public
+    NSTimeInterval _timestamp;
+    float _touchX, _touchY;
+    float _previousTouchX, _previousTouchY;
+    unsigned _tapCount;
+    UITouchPhase _phase;
+    StrongId<UIView> _view;
+    WUIPointerPoint* _pointerPoint; // Only valid during the processing of a pointer event; don't try to retain it.
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // TODO: This manual velocity tracking shouldn't be necessary once we move to WinRT Pan gesture recognition.
+    float _velocityX, _velocityY;
+}
+
++ (UITouch*)_createWithPoint:(CGPoint)point;
+- (void)_updateWithPoint:(WUIPointerPoint*)pointerPoint forPhase:(UITouchPhase)touchPhase;
 
 @end

@@ -28,6 +28,7 @@ static const CGFloat c_height = 40;
     NSString* systemVersion;
     NSString* identifierForVendor;
     UITextField* currentSystemVersion;
+    UIButton* _disableInputButton;
 }
 
 - (void)viewDidLoad {
@@ -45,7 +46,7 @@ static const CGFloat c_height = 40;
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 5;
+    return 6;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
@@ -141,9 +142,30 @@ static const CGFloat c_height = 40;
         cell.accessoryView = textField;
         cell.textLabel.text = @"identifierForVendor";
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    } else if (indexPath.row == 5) {
+        // Add test for disabling input
+        UIButton* _disableInputButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        NSString* buttonText = @"Ignore UIApplication interaction events for 5 seconds.";
+        _disableInputButton.frame = CGRectMake(5.0f, 5.0f, 450, cell.frame.size.height - 5.0f);
+        _disableInputButton.layer.cornerRadius = 5.0f;
+        [_disableInputButton setTitle:buttonText forState:UIControlStateNormal];
+        _disableInputButton.titleLabel.textAlignment = UITextAlignmentCenter;
+        [_disableInputButton addTarget:self action:@selector(_disableInputButtonClicked) forControlEvents:UIControlEventTouchUpInside];
+        [cell addSubview:_disableInputButton];
     }
 
     return cell;
+}
+
+- (void)_reEnableInput {
+    // Reenable input
+    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+}
+
+- (void)_disableInputButtonClicked {
+    // Disable input for 5 seconds
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+    [self performSelector:@selector(_reEnableInput) withObject:self afterDelay:5.0];
 }
 
 @end

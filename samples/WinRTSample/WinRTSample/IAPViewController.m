@@ -166,17 +166,22 @@ NSString* const kProduct2 = @"product2";
         [WSCurrentAppSimulator requestProductPurchaseAsync:productId
             includeReceipt:TRUE
             success:^void(NSString* result) {
-                // validate the purchase.
-                NSDictionary* productLicenses = [[WSCurrentAppSimulator licenseInformation] productLicenses];
-                WSProductLicense* license = productLicenses[productId];
-                if (license.isActive) {
-                    outputTextView.text = [NSString stringWithFormat:@"You bought %@", name];
-                } else {
-                    outputTextView.text = [NSString stringWithFormat:@"%@ was not bought", name];
-                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    // validate the purchase.
+                    NSDictionary* productLicenses = [[WSCurrentAppSimulator licenseInformation] productLicenses];
+                    WSProductLicense* license = productLicenses[productId];
+                    if (license.isActive) {
+                        outputTextView.text = [NSString stringWithFormat : @"You bought %@", name];
+                    }
+                    else {
+                        outputTextView.text = [NSString stringWithFormat : @"%@ was not bought", name];
+                    }
+                });
             }
             failure:^(NSError* err) {
-                outputTextView.text = [NSString stringWithFormat:@"Failed to buy: %@\nError: %@", name, err];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    outputTextView.text = [NSString stringWithFormat:@"Failed to buy: %@\nError: %@", name, err];
+                });
             }];
     } else {
         outputTextView.text = [NSString stringWithFormat:@"You already own %@", name];

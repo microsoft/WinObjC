@@ -18,24 +18,25 @@
 #import <Starboard.h>
 #import <StubReturn.h>
 
-#import <CoreGraphics/CGContext.h>
 #import "CGContextInternal.h"
+#import <CoreGraphics/CGContext.h>
 
-#import <UIKit/UIView.h>
-#import <UIKit/UIControl.h>
-#import <Foundation/NSTimer.h>
-#import <UIKit/UIViewController.h>
+#import "CACompositor.h"
+#import "UIApplicationInternal.h"
+#import "UIResponderInternal.h"
+#import "XamlUtilities.h"
 #import <Foundation/NSNotificationCenter.h>
-#import <UIKit/UIFont.h>
+#import <Foundation/NSTimer.h>
 #import <UIKit/UIColor.h>
-#import <UIKit/UITextField.h>
+#import <UIKit/UIControl.h>
+#import <UIKit/UIFont.h>
 #import <UIKit/UIImage.h>
 #import <UIKit/UIImageView.h>
 #import <UIKit/UITableViewCell.h>
+#import <UIKit/UITextField.h>
+#import <UIKit/UIView.h>
+#import <UIKit/UIViewController.h>
 #import <UWP/WindowsUIXamlControls.h>
-#import "XamlUtilities.h"
-#import "UIResponderInternal.h"
-#import "UIApplicationInternal.h"
 
 static const wchar_t* TAG = L"UITextField";
 
@@ -56,6 +57,7 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
     StrongId<UIFont> _font;
     StrongId<UIColor> _textColor;
     StrongId<UIColor> _backgroundColor;
+    StrongId<UIImage> _backgroundImage;
     UITextAlignment _alignment;
     UITextBorderStyle _borderStyle;
     BOOL _secureTextMode;
@@ -190,7 +192,7 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
 
 /**
  @Status Caveat
- @Notes fonts can be set, but will be ignored for rendering, instead default font will be used.  
+ @Notes Fonts can be set, but will be ignored for rendering, instead default font will be used.
 */
 - (void)setFont:(UIFont*)font {
     _font = font;
@@ -231,6 +233,10 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
 */
 - (void)setBackgroundColor:(UIColor*)color {
     _backgroundColor = color;
+
+    // In class WXCTextBox and WXCPasswordBox, there is just one ivar 'background' for both background color and background image.
+    // When setting background color, clear out _backgroundImage assigning it to nil.
+    _backgroundImage = nil;
 
     [_secureModeLock lock];
     if (_secureTextMode) {
@@ -377,10 +383,11 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
 //
 /**
  @Status Caveat
- @Notes does not support UITextBorderStyleBezel
+ @Notes Does not support UITextBorderStyleBezel
 */
 - (void)setBorderStyle:(UITextBorderStyle)style {
     if (_borderStyle != style) {
+        UITextBorderStyle oldStyle = _borderStyle;
         _borderStyle = style;
 
         [_secureModeLock lock];
@@ -389,7 +396,28 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
         } else {
             [XamlUtilities setControlBorderStyle:_textBox borderStyle:_borderStyle];
         }
+
+        // If _borderStyle is set to the UITextBorderStyleRoundedRect,
+        // the custom background image associated with the text field is ignored.
+        // _borderStyle == UITextBorderStyleRoundedRect means to
+        // change _borderStyle from another style to UITextBorderStyleRoundedRect.
+        if (_borderStyle == UITextBorderStyleRoundedRect && _backgroundImage != nil) {
+            if (_secureTextMode) {
+                _passwordBox.background =
+                    [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:_backgroundColor]];
+            } else {
+                _textBox.background = [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:_backgroundColor]];
+            }
+        }
         [_secureModeLock unlock];
+
+        // If _borderStyle is not set to the UITextBorderStyleRoundedRect,
+        // the custom background image associated with the text field is shown.
+        // oldStyle == UITextBorderStyleRoundedRect means to
+        // change _borderStyle from UITextBorderStyleRoundedRect to another style.
+        if (oldStyle == UITextBorderStyleRoundedRect) {
+            self.background = _backgroundImage;
+        }
     }
 }
 
@@ -400,19 +428,54 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
     return _borderStyle;
 }
 
-/**
- @Status Stub
-*/
-- (void)setBackground:(UIImage*)image {
-    UNIMPLEMENTED();
+// TODO: GitHub issue 508 and 509
+// We need a type-safe way to do this with projections.  This is copied verbatim from the projections
+// code and works perfectly for this limited usage, but we don't do any type validation below.
+inline id _createRtProxy(Class cls, IInspectable* iface) {
+    if (!iface) {
+        return nil;
+    }
+
+    RTObject* ret = [NSAllocateObject(cls, 0, 0) init];
+    [ret setComObj:iface];
+    return ret;
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Does not support UIImage object that was initialized using a CIImage object
+*/
+- (void)setBackground:(UIImage*)image {
+    _backgroundImage = image;
+
+    // Gap: Need to add using CIImage to set ImageBrush when CGImage is NULL after CIImage is implemented.
+    CGImageRef cgImg = [image CGImage];
+    if (cgImg == NULL) {
+        TraceWarning(TAG, L"cgImg is NULL, need to use CIImage to initialize ImageBrush.");
+        return;
+    }
+
+    if (_borderStyle != UITextBorderStyleRoundedRect) {
+        Microsoft::WRL::ComPtr<IInspectable> inspectableNode(GetCACompositor()->GetBitmapForCGImage(cgImg));
+        WUXMIBitmapSource* bitmapImageSource = _createRtProxy([WUXMIBitmapSource class], inspectableNode.Get());
+        WUXMImageBrush* imageBrush = [WUXMImageBrush make];
+        imageBrush.imageSource = bitmapImageSource;
+
+        [_secureModeLock lock];
+        if (_secureTextMode) {
+            _passwordBox.background = imageBrush;
+        } else {
+            _textBox.background = imageBrush;
+        }
+        [_secureModeLock unlock];
+    }
+}
+
+/**
+ @Status Interoperable
 */
 - (UIImage*)background {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return _backgroundImage;
 }
 
 /**
@@ -753,7 +816,8 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes May not be fully implemented
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
@@ -769,6 +833,7 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
             _textColor = [UIColor blackColor];
         }
         _backgroundColor = [UIColor lightGrayColor];
+        _backgroundImage = nil;
         _isFirstResponder = NO;
         [self _initTextField];
     }
@@ -782,13 +847,14 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         _font = [UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]];
+        _alignment = UITextAlignmentLeft;
+        _borderStyle = UITextBorderStyleNone;
+        _secureTextMode = NO;
+        _text = nil;
         _textColor = [UIColor blackColor];
         _backgroundColor = [UIColor lightGrayColor];
-        _alignment = UITextAlignmentLeft;
-        _secureTextMode = NO;
-        _borderStyle = UITextBorderStyleNone;
+        _backgroundImage = nil;
         _spellCheckingType = UITextSpellCheckingTypeDefault;
-        _text = nil;
         _isFirstResponder = NO;
         [self _initTextField];
     }
@@ -1051,8 +1117,10 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
     [self->_textBox addLoadedEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
         __strong UITextField* strongSelf = weakSelf;
         if (strongSelf) {
-            strongSelf->_textBox.background =
-                [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:strongSelf.backgroundColor]];
+            if (strongSelf->_backgroundImage == nil || _borderStyle == UITextBorderStyleRoundedRect) {
+                strongSelf->_textBox.background =
+                    [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:strongSelf.backgroundColor]];
+            }
             strongSelf->_textBox.foreground =
                 [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:strongSelf.textColor]];
             strongSelf->_textBox.textAlignment = [XamlUtilities convertUITextAlignmentToWXTextAlignment:strongSelf.textAlignment];
@@ -1095,8 +1163,10 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
     [self->_passwordBox addLoadedEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
         __strong UITextField* strongSelf = weakSelf;
         if (strongSelf) {
-            strongSelf->_passwordBox.background =
-                [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:strongSelf.backgroundColor]];
+            if (strongSelf->_backgroundImage == nil || _borderStyle == UITextBorderStyleRoundedRect) {
+                strongSelf->_passwordBox.background =
+                    [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:strongSelf.backgroundColor]];
+            }
             strongSelf->_passwordBox.foreground =
                 [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:strongSelf.textColor]];
             // passwordBox does not support textAlignment

@@ -19,27 +19,26 @@
 #import <Foundation/NSMutableDictionary.h>
 #import <Foundation/NSValue.h>
 #import <Foundation/NSString.h>
-#import "RingBuffer.h"
 #import <UIKit/UIPanGestureRecognizer.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import <UIKit/UITouch.h>
 #import "UIGestureRecognizerInternal.h"
 #import "LoggingNative.h"
 #import "UIScrollViewInternal.h"
+#import "UWP/WindowsUIInput.h"
+#import "UITouchInternal.h"
 
 static const wchar_t* TAG = L"UIPanGestureRecognizer";
 
 // So we can allocate explicitly because otherwise constructors aren't called:
 struct TouchInfo {
     UITouch* touch;
-
     CGPoint startPos, lastPos;
     double startTime;
 };
 
 struct Private {
     std::vector<TouchInfo> touches;
-
     CGPoint currentVelocity;
     CGPoint lastCenter;
     CGPoint currentTranslation;
@@ -174,9 +173,7 @@ static CGPoint getAverageVelocity(double disableVelocity, const std::vector<Touc
     CGPoint ret = { 0, 0 };
     float numAverages = 0.0f;
     for (size_t i = 0; i < touches.size(); i++) {
-        CGPoint touchVelocity;
-        touchVelocity = [touches[i].touch velocity];
-
+        CGPoint touchVelocity = CGPointMake(touches[i].touch->_velocityX, touches[i].touch->_velocityY);
         ret.x += touchVelocity.x;
         ret.y += touchVelocity.y;
         numAverages += 1.0f;
@@ -213,7 +210,7 @@ static CGPoint getAverageVelocity(double disableVelocity, const std::vector<Touc
     return ret;
 }
 
-static TouchInfo* findTouch(id touch, std::vector<TouchInfo>& touches) {
+static TouchInfo* findTouch(UITouch* touch, std::vector<TouchInfo>& touches) {
     for (size_t i = 0; i < touches.size(); i++) {
         if (touches[i].touch == touch)
             return &touches[i];
@@ -222,7 +219,7 @@ static TouchInfo* findTouch(id touch, std::vector<TouchInfo>& touches) {
     return NULL;
 }
 
-static void deleteTouch(id touch, std::vector<TouchInfo>& touches) {
+static void deleteTouch(UITouch* touch, std::vector<TouchInfo>& touches) {
     for (size_t i = 0; i < touches.size(); i++) {
         if (touches[i].touch == touch) {
             touches.erase(touches.begin() + i);
@@ -267,6 +264,7 @@ static void deleteTouch(id touch, std::vector<TouchInfo>& touches) {
 
         CGPoint pos;
         pos = [touch locationInView:nil];
+
         curTouch.startPos = curTouch.lastPos = pos;
         _touchedView = [touch view];
         _priv->touches.push_back(curTouch);
@@ -304,8 +302,9 @@ static CGPoint lastMidpoint(const std::vector<TouchInfo>& touches) {
         assert([touch phase] == UITouchPhaseMoved);
         TouchInfo* info = findTouch(touch, _priv->touches);
 
-        if (!info)
-            continue;
+        if (!info) {
+            FAIL_FAST();
+        }
 
         info->lastPos = [touch locationInView:nil];
     }
@@ -347,7 +346,7 @@ static CGPoint lastMidpoint(const std::vector<TouchInfo>& touches) {
         TouchInfo* info = findTouch(touch, _priv->touches);
 
         if (!info) {
-            continue;
+            FAIL_FAST();
         }
 
         info->lastPos = [touch locationInView:nil];
@@ -396,10 +395,13 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     CGPoint ret;
     ret = pointToView(_priv->currentTranslation, viewAddr) - pointToView(origin, viewAddr);
 
-    if (_lockVertical)
+    if (_lockVertical) {
         ret.x = 0;
-    if (_lockHorizontal)
+    }
+
+    if (_lockHorizontal) {
         ret.y = 0;
+    }
 
     return ret;
 }
@@ -453,10 +455,13 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     CGPoint dx = pointToView(_priv->currentVelocity, viewAddr) - pointToView(zero, viewAddr);
     ret = dx;
 
-    if (_lockVertical)
+    if (_lockVertical) {
         ret.x = 0;
-    if (_lockHorizontal)
+    }
+
+    if (_lockHorizontal) {
         ret.y = 0;
+    }
 
     return ret;
 }

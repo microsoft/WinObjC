@@ -61,9 +61,10 @@ static CFTypeID __kCFStringTokenizerTypeID = _kCFRuntimeNotATypeID;
 
 CFTypeID CFStringTokenizerGetTypeID(void) {
     static dispatch_once_t initOnce = 0;
-    dispatch_once(&initOnce, ^{
-        __kCFStringTokenizerTypeID = _CFRuntimeRegisterClass(&__CFStringTokenizerClass);
-    });
+    dispatch_once(&initOnce,
+                  ^{
+                      __kCFStringTokenizerTypeID = _CFRuntimeRegisterClass(&__CFStringTokenizerClass);
+                  });
     return __kCFStringTokenizerTypeID;
 }
 
