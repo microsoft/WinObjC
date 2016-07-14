@@ -1677,7 +1677,6 @@ void CGContextCairo::CGContextReplacePathWithStrokedPath(CGContextRef context) {
                 // Add arc to close sub path
                 CGPoint arcMidPoint = CGPointMake((p1.x + p2.x) / 2.0, (p1.y + p2.y) / 2.0);
                 cairo_arc_negative(context, arcMidPoint.x, arcMidPoint.y, halfStrokeWidth, angle + M_PI_2, angle - M_PI_2);
-                cairo_move_to(context, p2.x, p2.y);
                 break;
             }
 
@@ -1698,49 +1697,176 @@ void CGContextCairo::CGContextReplacePathWithStrokedPath(CGContextRef context) {
         }
     };
 
-    auto addLineJoin = [halfStrokeWidth, &strokedPoint](cairo_t* context, CGFloat angle, CGPoint p1, CGPoint p2) -> void {
-        // TODO: Use miter limit
+    auto addLineJoin = [halfStrokeWidth,
+                        &strokedPoint,
+                        this](cairo_t* context, CGFloat angle1, CGPoint p1, CGFloat angle2, CGPoint p2, bool reverse) -> void {
+
         double miterLimit = cairo_get_miter_limit(context);
         cairo_line_join_t lineJoin = cairo_get_line_join(context);
 
-        switch (lineJoin) {
-            case CAIRO_LINE_JOIN_MITER: {
-                // TODO: Implement Miter
-                cairo_line_to(context, p2.x, p2.y);
-                break;
-            }
-
-            case CAIRO_LINE_JOIN_ROUND: {
-                // TODO: Implement Round
-                cairo_line_to(context, p2.x, p2.y);
-                break;
-            }
-
-            case CAIRO_LINE_JOIN_BEVEL:
-                cairo_line_to(context, p2.x, p2.y);
-                break;
+        // Check to see if join should be overridden to use bevel
+        CGFloat delta = angle2 - angle1;
+        delta = fmod(delta, 2.0f * M_PI);
+        if (delta < 0.0f) {
+            delta += 2.0f * M_PI;
         }
+        // Force acute angles to use bevel
+        // Top range is temporary fix to avoid joins
+        // on intermediate curve lines
+        if (delta < M_PI || delta > (1.98f * M_PI)) {
+            lineJoin = CAIRO_LINE_JOIN_BEVEL;
+        }
+
+        if (lineJoin == CAIRO_LINE_JOIN_MITER) {
+            CGFloat m1 = tan(angle1);
+            CGFloat b1 = p1.y - (m1 * p1.x);
+
+            CGFloat m2 = tan(angle2);
+            CGFloat b2 = p2.y - (m2 * p2.x);
+
+            CGFloat x = (b2 - b1) / (m1 - m2);
+            CGFloat y = 0;
+            // If m1 is very large it's probably a vertical line
+            if (m1 > 1000000) {
+                y = m2 * x + b2;
+            } else {
+                y = m1 * x + b1;
+            }
+            CGFloat fullStrokeWidth = 2.0f * halfStrokeWidth;
+            CGPoint miterp1 = strokedPoint(p1, angle1, fullStrokeWidth, !reverse);
+            CGPoint miterp2 = strokedPoint(p2, angle2, fullStrokeWidth, !reverse);
+
+            CGFloat miterm1 = tan(angle1);
+            CGFloat miterb1 = miterp1.y - (miterm1 * miterp1.x);
+
+            CGFloat miterm2 = tan(angle2);
+            CGFloat miterb2 = miterp2.y - (miterm2 * miterp2.x);
+
+            CGFloat miterx = (miterb2 - miterb1) / (miterm1 - miterm2);
+            CGFloat mitery = 0;
+            // If m1 is very large it's probably a vertical line
+            if (miterm1 > 1000000) {
+                mitery = miterm2 * miterx + miterm2;
+            } else {
+                mitery = miterm1 * miterx + miterb1;
+            }
+
+            CGFloat miterLength = sqrt(pow(miterx - x, 2.0f) + pow(mitery - y, 2.0f));
+
+            CGFloat miterRatio = (miterLength / fullStrokeWidth);
+
+            if (miterRatio > miterLimit) {
+                lineJoin = CAIRO_LINE_JOIN_BEVEL;
+            } else {
+                cairo_line_to(context, x, y);
+                cairo_line_to(context, p2.x, p2.y);
+                return;
+            }
+        }
+
+        if (lineJoin == CAIRO_LINE_JOIN_ROUND) {
+            CGFloat m1 = tan(angle1);
+            CGFloat b1 = p1.y - (m1 * p1.x);
+
+            CGFloat m2 = tan(angle2);
+            CGFloat b2 = p2.y - (m2 * p2.x);
+
+            CGFloat x = (b2 - b1) / (m1 - m2);
+
+            CGFloat y = 0;
+            // If m1 is very large it's probably a vertical line
+            if (m1 > 1000000) {
+                y = m2 * x + b2;
+            } else {
+                y = m1 * x + b1;
+            }
+
+            // TODO: This code comes directly from CGContextAddArcToPoint
+            // Consolidate and reuse instead of copy
+            float radius = halfStrokeWidth;
+            float x0, y0, x1, x2, y1, y2;
+            float dx0, dy0, dx2, dy2, xl0, xl2;
+            float san, n0x, n0y, n2x, n2y, t;
+
+            x0 = p1.x;
+            y0 = p1.y;
+            x1 = x;
+            y1 = y;
+            x2 = p2.x;
+            y2 = p2.y;
+            // Calculate
+            dx0 = x0 - x1;
+            dy0 = y0 - y1;
+
+            xl0 = sqrt(dx0 * dx0 + dy0 * dy0);
+            if (xl0 - 0 < FLT_EPSILON) {
+                lineJoin = CAIRO_LINE_JOIN_BEVEL;
+            } else {
+                dx2 = x2 - x1;
+                dy2 = y2 - y1;
+                xl2 = sqrt(dx2 * dx2 + dy2 * dy2);
+
+                san = dx2 * dy0 - dx0 * dy2;
+
+                if (san < 0) {
+                    n0x = -dy0 / xl0;
+                    n0y = dx0 / xl0;
+                    n2x = dy2 / xl2;
+                    n2y = -dx2 / xl2;
+                } else {
+                    n0x = dy0 / xl0;
+                    n0y = -dx0 / xl0;
+                    n2x = -dy2 / xl2;
+                    n2y = dx2 / xl2;
+                }
+                t = (dx2 * n2y - dx2 * n0y - dy2 * n2x + dy2 * n0x) / san;
+                if (san < 0) {
+                    cairo_arc_negative(context,
+                                       x1 + radius * (t * dx0 + n0x),
+                                       y1 + radius * (t * dy0 + n0y),
+                                       radius,
+                                       atan2f(-n0y, -n0x),
+                                       atan2(-n2y, -n2x));
+                } else {
+                    cairo_arc(context,
+                              x1 + radius * (t * dx0 + n0x),
+                              y1 + radius * (t * dy0 + n0y),
+                              radius,
+                              atan2f(-n0y, -n0x),
+                              atan2(-n2y, -n2x));
+                }
+                return;
+            }
+        }
+        // Perform Bevel Join
+        if (lineJoin == CAIRO_LINE_JOIN_BEVEL) {
+            cairo_line_to(context, p2.x, p2.y);
+            return;
+        }
+
     };
 
-    // originalIndices will hold indexes in the cairo path array
-    int originalIndices[flatPath->num_data];
+    // cairoIndices will hold indexes in the cairo path array
+    int cairoIndices[flatPath->num_data];
 
     // Adjusted index will be incremented for each element
-    int adjustedIndex = 0;
+    int cgIndex = 0;
 
     // Subpath start index gets set for every new move/subpath
     int subpathStartIndex = 0;
 
+    CGFloat lastAngle = 0;
+
     // Calculate the angle for a line between two points
-    // The indices will be used to access the originalIndices array
+    // The indices will be used to access the cairoIndices array
     // TODO: Enhance to be reusable in more places.
-    auto angleBetweenPoints = [&adjustedIndex, &originalIndices, &flatPath](int index1, int index2) -> CGFloat {
-        if (index1 < 0 || index1 >= adjustedIndex || index2 < 0 || index2 >= adjustedIndex) {
+    auto angleBetweenPoints = [&cgIndex, &cairoIndices, &flatPath](int index1, int index2) -> CGFloat {
+        if (index1 < 0 || index1 > cgIndex || index2 < 0 || index2 > cgIndex) {
             return 0;
         }
 
-        cairo_path_data_t* data1 = &flatPath->data[originalIndices[index1]];
-        cairo_path_data_t* data2 = &flatPath->data[originalIndices[index2]];
+        cairo_path_data_t* data1 = &flatPath->data[cairoIndices[index1]];
+        cairo_path_data_t* data2 = &flatPath->data[cairoIndices[index2]];
 
         CGPoint p1 = CGPointMake(data1[1].point.x, data1[1].point.y);
         CGPoint p2 = CGPointMake(data2[1].point.x, data2[1].point.y);
@@ -1751,7 +1877,7 @@ void CGContextCairo::CGContextReplacePathWithStrokedPath(CGContextRef context) {
     // Traverse the path
     for (int i = 0; i < flatPath->num_data; i += flatPath->data[i].header.length) {
         // Save the cairo index for later
-        originalIndices[adjustedIndex] = i;
+        cairoIndices[cgIndex] = i;
 
         // Get the current element
         cairo_path_data_t* data = &flatPath->data[i];
@@ -1759,9 +1885,9 @@ void CGContextCairo::CGContextReplacePathWithStrokedPath(CGContextRef context) {
         // If available get the previous element
         cairo_path_data_t* prevData = NULL;
         if (i != 0) {
-            int prevAdjustedIndex = adjustedIndex - 1;
-            int originalIndex = originalIndices[prevAdjustedIndex];
-            prevData = &flatPath->data[originalIndex];
+            int prevCGIndex = cgIndex - 1;
+            int cairoIndex = cairoIndices[prevCGIndex];
+            prevData = &flatPath->data[cairoIndex];
         }
 
         // If the current element is a line element
@@ -1784,14 +1910,28 @@ void CGContextCairo::CGContextReplacePathWithStrokedPath(CGContextRef context) {
             // Otherwise join 2 lines
             else {
                 // TODO: Line Join
-                cairo_line_to(_drawContext, nLineStart.x, nLineStart.y);
+                // Get current point
+                double currentX;
+                double currentY;
+                cairo_get_current_point(_drawContext, &currentX, &currentY);
+
+                // Join Lines
+                addLineJoin(_drawContext,
+                            lastAngle,
+                            CGPointMake(currentX, currentY),
+                            angle,
+                            CGPointMake(nLineStart.x, nLineStart.y),
+                            false);
             }
             cairo_line_to(_drawContext, nLineEnd.x, nLineEnd.y);
+
+            lastAngle = angle;
         }
 
         // If we're at the last element or at a move/close path operation,
         // the path needs to be traversed in reverse to close the subpath.
-        bool isLastElement = (i + flatPath->data[i].header.length) >= flatPath->num_data;
+        bool isLastElement = ((i + flatPath->data[i].header.length) >= flatPath->num_data) && (CAIRO_PATH_LINE_TO == data->header.type);
+
         if (isLastElement || CAIRO_PATH_MOVE_TO == data->header.type || CAIRO_PATH_CLOSE_PATH == data->header.type) {
             // Special case for last element to use information from current element
             if (isLastElement) {
@@ -1800,16 +1940,17 @@ void CGContextCairo::CGContextReplacePathWithStrokedPath(CGContextRef context) {
 
             if (prevData != NULL) {
                 // Add line cap for end of subpath
-                CGFloat angle = angleBetweenPoints(adjustedIndex - 2, adjustedIndex - 1);
+                int angleIndex = isLastElement ? cgIndex : cgIndex - 1;
+                CGFloat angle = angleBetweenPoints(angleIndex - 1, angleIndex);
                 CGPoint prevPoint = CGPointMake(prevData[1].point.x, prevData[1].point.y);
                 CGPoint p1 = strokedPoint(prevPoint, angle, halfStrokeWidth, false);
                 CGPoint p2 = strokedPoint(prevPoint, angle, halfStrokeWidth, true);
                 addLineCap(_drawContext, angle, p1, p2);
                 // Go reverse down sub path to add the lines for the other side of the stroke
-                int startIndex = isLastElement ? adjustedIndex - 1 : adjustedIndex - 2;
+                int startIndex = isLastElement ? cgIndex - 1 : cgIndex - 2;
                 for (int reverseIndex = startIndex; reverseIndex >= subpathStartIndex; reverseIndex--) {
-                    cairo_path_data_t* reverseData = &flatPath->data[originalIndices[reverseIndex]];
-                    cairo_path_data_t* reversePrevData = &flatPath->data[originalIndices[reverseIndex + 1]];
+                    cairo_path_data_t* reverseData = &flatPath->data[cairoIndices[reverseIndex]];
+                    cairo_path_data_t* reversePrevData = &flatPath->data[cairoIndices[reverseIndex + 1]];
                     CGPoint oLineStart = CGPointMake(reversePrevData[1].point.x, reversePrevData[1].point.y);
                     CGPoint oLineEnd = CGPointMake(reverseData[1].point.x, reverseData[1].point.y);
                     CGFloat angle = atan2(oLineStart.y - oLineEnd.y, oLineStart.x - oLineEnd.x);
@@ -1818,7 +1959,16 @@ void CGContextCairo::CGContextReplacePathWithStrokedPath(CGContextRef context) {
 
                     if (reverseIndex != startIndex) {
                         // TODO: Line Join
-                        cairo_line_to(_drawContext, nLineStart.x, nLineStart.y);
+                        // cairo_line_to(_drawContext, nLineStart.x, nLineStart.y);
+                        double currentX;
+                        double currentY;
+                        cairo_get_current_point(_drawContext, &currentX, &currentY);
+                        addLineJoin(_drawContext,
+                                    lastAngle,
+                                    CGPointMake(currentX, currentY),
+                                    angle,
+                                    CGPointMake(nLineStart.x, nLineStart.y),
+                                    true);
                     }
                     // Add new line
                     cairo_line_to(_drawContext, nLineEnd.x, nLineEnd.y);
@@ -1829,16 +1979,17 @@ void CGContextCairo::CGContextReplacePathWithStrokedPath(CGContextRef context) {
                         CGPoint p2 = strokedPoint(oLineEnd, angle, halfStrokeWidth, false);
                         addLineCap(_drawContext, angle + M_PI, p1, p2);
                     }
+                    lastAngle = angle;
                 }
             }
             // Reset index for start of new subpath
-            subpathStartIndex = adjustedIndex;
+            subpathStartIndex = cgIndex;
             // Close subpath
             cairo_close_path(_drawContext);
         }
 
         // Increment adjusted index
-        adjustedIndex++;
+        cgIndex++;
     }
 
     cairo_path_destroy(flatPath);
