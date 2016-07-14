@@ -96,7 +96,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -115,7 +114,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMMTransform3D : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMMTransform3D_DEFINED__

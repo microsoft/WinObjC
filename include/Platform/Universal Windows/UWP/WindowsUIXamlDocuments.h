@@ -362,7 +362,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -416,7 +415,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDBlock : WUXDTextElement
-+ (instancetype)make ACTIVATOR;
 @property WXTextAlignment textAlignment;
 @property (retain) WXThickness* margin;
 @property WXLineStackingStrategy lineStackingStrategy;
@@ -435,7 +433,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDInline : WUXDTextElement
-+ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXDInline_DEFINED__
@@ -765,7 +762,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXFrameworkElement : WXUIElement
-+ (instancetype)make ACTIVATOR;
 @property (retain) WXThickness* margin;
 @property (retain) NSString* language;
 @property WXHorizontalAlignment horizontalAlignment;

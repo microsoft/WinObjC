@@ -38,8 +38,7 @@
 bool g_isStoryboard = false;
 static char g_outputDirectory[4096];
 
-bool IsStoryboardConversion()
-{
+bool IsStoryboardConversion() {
     return g_isStoryboard;
 }
 
@@ -80,7 +79,7 @@ void ConvertStoryboard(pugi::xml_document& doc) {
         viewControllerMappings[curController.first] = curController.second;
     }
     viewControllerInfo[std::string("UIViewControllerIdentifiersToNibNames")] = viewControllerMappings;
-    
+
     printf("Writing %s\n", GetOutputFilename("Info.plist").c_str());
     Plist::writePlistBinary(GetOutputFilename("Info.plist").c_str(), viewControllerInfo);
 }
@@ -241,12 +240,9 @@ void ConvertXIBToNib(FILE* fpOut, pugi::xml_document& doc) {
 int main(int argc, char* argv[]) {
     TELEMETRY_INIT(L"AIF-47606e3a-4264-4368-8f7f-ed6ec3366dca");
 
-    if (checkTelemetryOptIn())
-    {
+    if (checkTelemetryOptIn()) {
         TELEMETRY_ENABLE();
-    }
-    else
-    {
+    } else {
         TELEMETRY_DISABLE();
     }
 
@@ -254,8 +250,7 @@ int main(int argc, char* argv[]) {
 
     TELEMETRY_SET_INTERNAL(isMSFTInternalMachine());
     string machineID = getMachineID();
-    if (!machineID.empty())
-    {
+    if (!machineID.empty()) {
         TELEMETRY_SET_MACHINEID(machineID.c_str());
     }
 

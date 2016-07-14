@@ -2104,7 +2104,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -2211,7 +2210,6 @@ WINRT_EXPORT
 + (WUXCPFlyoutBase*)getAttachedFlyout:(WXFrameworkElement*)element;
 + (void)setAttachedFlyout:(WXFrameworkElement*)element value:(WUXCPFlyoutBase*)value;
 + (void)showAttachedFlyout:(WXFrameworkElement*)flyoutOwner;
-+ (instancetype)make ACTIVATOR;
 @property WUXCPFlyoutPlacementMode placement;
 + (WXDependencyProperty*)attachedFlyoutProperty;
 + (WXDependencyProperty*)placementProperty;
@@ -2336,7 +2334,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXFrameworkTemplate : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXFrameworkTemplate_DEFINED__
@@ -2542,7 +2539,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXFrameworkElement : WXUIElement
-+ (instancetype)make ACTIVATOR;
 @property (retain) WXThickness* margin;
 @property (retain) NSString* language;
 @property WXHorizontalAlignment horizontalAlignment;
@@ -2612,7 +2608,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCPanel : WXFrameworkElement
-+ (instancetype)make ACTIVATOR;
 @property (retain) WUXMATransitionCollection* childrenTransitions;
 @property (retain) WUXMBrush* background;
 @property (readonly) WXCUIElementCollection* children;
@@ -3706,7 +3701,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMBrush : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
 @property (retain) WUXMTransform* transform;
 @property (retain) WUXMTransform* relativeTransform;
 @property double opacity;
@@ -3723,7 +3717,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMTileBrush : WUXMBrush
-+ (instancetype)make ACTIVATOR;
 @property WUXMStretch stretch;
 @property WUXMAlignmentY alignmentY;
 @property WUXMAlignmentX alignmentX;
@@ -3769,7 +3762,6 @@ WINRT_EXPORT
 @interface WXCControl : WXFrameworkElement
 + (BOOL)getIsTemplateFocusTarget:(WXFrameworkElement*)element;
 + (void)setIsTemplateFocusTarget:(WXFrameworkElement*)element value:(BOOL)value;
-+ (instancetype)make ACTIVATOR;
 @property (retain) WUTFontWeight* fontWeight;
 @property WUTFontStyle fontStyle;
 @property WUTFontStretch fontStretch;
@@ -4307,7 +4299,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCPSelectorItem : WXCContentControl
-+ (instancetype)make ACTIVATOR;
 @property BOOL isSelected;
 + (WXDependencyProperty*)isSelectedProperty;
 @end
@@ -4365,7 +4356,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCPRangeBase : WXCControl
-+ (instancetype)make ACTIVATOR;
 @property double value;
 @property double smallChange;
 @property double minimum;
@@ -4442,7 +4432,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCPButtonBase : WXCContentControl
-+ (instancetype)make ACTIVATOR;
 @property (retain) RTObject* commandParameter;
 @property (retain) RTObject<WUXIICommand>* command;
 @property WXCClickMode clickMode;
@@ -4514,7 +4503,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCListViewBase : WUXCPSelector <WXCISemanticZoomInformation>
-+ (instancetype)make ACTIVATOR;
 @property BOOL isSwipeEnabled;
 @property BOOL isItemClickEnabled;
 @property WXCIncrementalLoadingTrigger incrementalLoadingTrigger;
@@ -5830,7 +5818,6 @@ WINRT_EXPORT
 @interface WUXCPPickerFlyoutBase : WUXCPFlyoutBase
 + (NSString*)getTitle:(WXDependencyObject*)element;
 + (void)setTitle:(WXDependencyObject*)element value:(NSString*)value;
-+ (instancetype)make ACTIVATOR;
 + (WXDependencyProperty*)titleProperty;
 - (void)onConfirmed;
 - (BOOL)shouldShowConfirmationButtons;

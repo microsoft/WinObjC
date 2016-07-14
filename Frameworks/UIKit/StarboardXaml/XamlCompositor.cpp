@@ -59,13 +59,6 @@ void SetRootGrid(winobjc::Id& root) {
     rootNode->SizeChanged += ref new Windows::UI::Xaml::SizeChangedEventHandler(&OnGridSizeChanged);
 }
 
-void IWXamlTouch(float x, float y, unsigned int touchID, int event, unsigned __int64 timestampMicro);
-void IWXamlKeyInput(int key);
-
-#define EVENT_DOWN 0x64
-#define EVENT_MOVE 0x65
-#define EVENT_UP 0x66
-
 void (*RenderCallback)();
 
 ref class XamlRenderingListener sealed {
@@ -111,54 +104,12 @@ void DisableRenderingListener() {
     renderListener->Stop();
 }
 
-ref class XamlUIEventHandler sealed : XamlCompositor::Controls::ICALayerXamlInputEvents {
-public:
-    virtual void PointerDown(float x, float y, unsigned int pointerId, unsigned __int64 timestampMicro) {
-        IWXamlTouch(x, y, pointerId, EVENT_DOWN, timestampMicro);
-    }
-
-    virtual void PointerUp(float x, float y, unsigned int pointerId, unsigned __int64 timestampMicro) {
-        IWXamlTouch(x, y, pointerId, EVENT_UP, timestampMicro);
-    }
-
-    virtual void PointerMoved(float x, float y, unsigned int pointerId, unsigned __int64 timestampMicro) {
-        IWXamlTouch(x, y, pointerId, EVENT_MOVE, timestampMicro);
-    }
-
-    virtual void KeyDown(unsigned int key) {
-        IWXamlKeyInput((int)key);
-    }
-};
-
-static XamlUIEventHandler^ uiHandlerSingleton;
-
-void SetUIHandlers() {
-    uiHandlerSingleton = ref new XamlUIEventHandler();
-    XamlCompositor::Controls::CALayerInputHandler::Instance->SetInputHandler(uiHandlerSingleton);
-}
-
 static XamlCompositor::Controls::CALayerXaml^ GetCALayer(DisplayNode* node) {
     return (XamlCompositor::Controls::CALayerXaml^)(Platform::Object^)node->_xamlNode;
 };
 
 static XamlCompositor::Controls::EventedStoryboard^ GetStoryboard(DisplayAnimation* anim) {
     return (XamlCompositor::Controls::EventedStoryboard^)(Platform::Object^)anim->_xamlAnimation;
-}
-
-DisplayNode::DisplayNode() {
-    _xamlNode = (Platform::Object^)XamlCompositor::Controls::CALayerXaml::CreateLayer();
-    isRoot = false;
-    parent = NULL;
-    currentTexture = NULL;
-    topMost = false;
-}
-
-DisplayNode::~DisplayNode() {
-    XamlCompositor::Controls::CALayerXaml^ xamlLayer = GetCALayer(this);
-    XamlCompositor::Controls::CALayerXaml::DestroyLayer(xamlLayer);
-    for (auto curNode : _subnodes) {
-        curNode->parent = NULL;
-    }
 }
 
 DisplayAnimation::DisplayAnimation() {
@@ -259,6 +210,23 @@ concurrency::task<void> DisplayAnimation::AddTransitionAnimation(DisplayNode* no
     } , concurrency::task_continuation_context::use_current());
 }
 
+DisplayNode::DisplayNode() {
+    auto xamlNode = (Platform::Object^)XamlCompositor::Controls::CALayerXaml::CreateLayer();
+    _xamlNode = xamlNode;
+    isRoot = false;
+    parent = NULL;
+    currentTexture = NULL;
+    topMost = false;
+}
+
+DisplayNode::~DisplayNode() {
+    XamlCompositor::Controls::CALayerXaml^ xamlLayer = GetCALayer(this);
+    XamlCompositor::Controls::CALayerXaml::DestroyLayer(xamlLayer);
+    for (auto curNode : _subnodes) {
+        curNode->parent = NULL;
+    }
+}
+
 void DisplayNode::AddToRoot() {
     XamlCompositor::Controls::CALayerXaml^ xamlNode = GetCALayer(this);
     windowCollection->Children->Append(xamlNode);
@@ -317,17 +285,6 @@ void DisplayNode::SetBackgroundColor(float r, float g, float b, float a) {
     if (!isRoot && !topMost) {
         xamlNode->SetBackgroundColor(r, g, b, a);
     }
-}
-
-void DisplayNode::SetAccessibilityInfo(const IWAccessibilityInfo& info) {
-    /* Disabled for now
-    XamlCompositor::Controls::CALayerXaml^ xamlNode = GetCALayer(this);
-    auto peer =
-    (XamlCompositor::Controls::CALayerXamlAutomationPeer^)Windows::UI::Xaml::Automation::Peers::FrameworkElementAutomationPeer::FromElement(xamlNode);
-
-    assert(xamlNode != nullptr);
-    assert(peer != nullptr);
-    */
 }
 
 void DisplayNode::SetShouldRasterize(bool rasterize) {
@@ -484,31 +441,6 @@ winobjc::Id CreateBitmapFromBits(void* ptr, int width, int height, int stride) {
     return bitmap;
 }
 
-winobjc::Id CreateWritableBitmap(int width, int height) {
-    auto bitmap = ref new Windows::UI::Xaml::Media::Imaging::WriteableBitmap(width, height);
-    return bitmap;
-}
-
-void* LockWritableBitmap(winobjc::Id& bitmap, void** ptr, int* stride) {
-    auto writableBitmap = (Windows::UI::Xaml::Media::Imaging::WriteableBitmap^)(Platform::Object^)bitmap;
-    ComPtr<IBufferByteAccess> bufferByteAccess;
-    Windows::Storage::Streams::IBuffer^ pixelData = writableBitmap->PixelBuffer;
-
-    *stride = writableBitmap->PixelWidth * 4;
-
-    reinterpret_cast<IInspectable*>(pixelData)->QueryInterface(IID_PPV_ARGS(&bufferByteAccess));
-    byte* pixels = nullptr;
-    bufferByteAccess->Buffer(&pixels);
-    *ptr = pixels;
-
-    return bufferByteAccess.Detach();
-}
-
-void UnlockWritableBitmap(winobjc::Id& bitmap, void* byteAccess) {
-    IUnknown* pUnk = (IUnknown*)byteAccess;
-    pUnk->Release();
-}
-
 void DisplayNode::SetContents(winobjc::Id& bitmap, float width, float height, float scale) {
     XamlCompositor::Controls::CALayerXaml^ xamlNode = GetCALayer(this);
     if (((void*)bitmap) != NULL) {
@@ -534,6 +466,31 @@ void DisplayNode::SetContentsElement(winobjc::Id& elem) {
     xamlNode->SetContentElement(contents, width, height, scale);
 }
 
+winobjc::Id CreateWritableBitmap(int width, int height) {
+    auto bitmap = ref new Windows::UI::Xaml::Media::Imaging::WriteableBitmap(width, height);
+    return bitmap;
+}
+
+void* LockWritableBitmap(winobjc::Id& bitmap, void** ptr, int* stride) {
+    auto writableBitmap = (Windows::UI::Xaml::Media::Imaging::WriteableBitmap^)(Platform::Object^)bitmap;
+    ComPtr<IBufferByteAccess> bufferByteAccess;
+    Windows::Storage::Streams::IBuffer^ pixelData = writableBitmap->PixelBuffer;
+
+    *stride = writableBitmap->PixelWidth * 4;
+
+    reinterpret_cast<IInspectable*>(pixelData)->QueryInterface(IID_PPV_ARGS(&bufferByteAccess));
+    byte* pixels = nullptr;
+    bufferByteAccess->Buffer(&pixels);
+    *ptr = pixels;
+
+    return bufferByteAccess.Detach();
+}
+
+void UnlockWritableBitmap(winobjc::Id& bitmap, void* byteAccess) {
+    IUnknown* pUnk = (IUnknown*)byteAccess;
+    pUnk->Release();
+}
+
 DisplayTextureXamlGlyphs::DisplayTextureXamlGlyphs() {
     _horzAlignment = alignLeft;
     _insets[0] = 0.0f;
@@ -547,6 +504,7 @@ DisplayTextureXamlGlyphs::DisplayTextureXamlGlyphs() {
     _fontSize = 14.0f;
 
     auto textControl = XamlCompositor::Controls::CATextLayerXaml::CreateTextLayer();
+    textControl->TextBlock->IsHitTestVisible = false; // Our content should never be HitTestVisible as they are always leaf nodes.
     _xamlTextbox = (Platform::Object^)textControl;
 }
 

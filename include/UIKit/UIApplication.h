@@ -242,7 +242,7 @@ UIKIT_EXPORT_CLASS
 - (void)registerForRemoteNotifications;
 - (void)registerUserNotificationSettings:(UIUserNotificationSettings*)notificationSettings;
 - (void)scheduleLocalNotification:(UILocalNotification*)notification;
-- (void)sendEvent:(UIEvent*)event;
+- (void)sendEvent:(UIEvent*)event STUB_METHOD;
 - (void)setMinimumBackgroundFetchInterval:(NSTimeInterval)minimumBackgroundFetchInterval STUB_METHOD;
 - (void)setNewsstandIconImage:(UIImage*)image STUB_METHOD;
 - (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated;
@@ -279,7 +279,6 @@ UIKIT_EXPORT_CLASS
 @end
 
 @interface UIApplication (UIApplicationStarboardAdditions)
-+ (void)setStarboardInternalLoggingLevel:(int)level;
 - (void)registerForRemoteNotificationTypes:(UIRemoteNotificationType)types withId:(NSString*)id;
 @end
 
@@ -340,6 +339,9 @@ typedef uint32_t WOCDeviceType;
 
 - (void)setDisplayPreset:(WOCDisplayPreset)mode;
 - (void)updateDisplaySettings;
+
+// Note: Will be deprecated in future releases
+@property (nonatomic) BOOL useLegacyHitTesting;
 @end
 
 @interface UIApplication (UIApplicationDisplayMode)

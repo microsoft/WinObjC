@@ -27,52 +27,41 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 #pragma once
 
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CGGeometry.h>
 
-typedef enum {
+typedef NS_ENUM(NSInteger, UIForceTouchCapability) {
     UIForceTouchCapabilityUnknown = 0,
     UIForceTouchCapabilityUnavailable = 1,
     UIForceTouchCapabilityAvailable = 2,
-} UIForceTouchCapability;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, UITouchType) {
     UITouchTypeDirect,
     UITouchTypeIndirect,
     UITouchTypeStylus,
-} UITouchType;
+};
 
-typedef enum {
+typedef NS_OPTIONS(NSInteger, UITouchProperties) {
     UITouchPropertyForce = (1UL << 0),
     UITouchPropertyAzimuth = (1UL << 1),
     UITouchPropertyAltitude = (1UL << 2),
     UITouchPropertyLocation = (1UL << 3),
-} UITouchProperties;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, UITouchPhase) {
     UITouchPhaseBegan,
     UITouchPhaseMoved,
     UITouchPhaseStationary,
     UITouchPhaseEnded,
     UITouchPhaseCancelled,
-} UITouchPhase;
+};
 
 @class UIView, UIWindow, SKNode;
 
-@interface UITouch : NSObject {
-@public
-    float touchX, touchY;
-    float previousTouchX, previousTouchY;
-    float velocityX, velocityY;
-    UIView* _view;
-    NSTimeInterval _timestamp;
-    unsigned _tapCount;
-    UITouchPhase _phase;
-}
-
+@interface UITouch : NSObject
 - (CGFloat)azimuthAngleInView:(UIView*)view STUB_METHOD;
 - (CGPoint)locationInNode:(SKNode*)node STUB_METHOD;
 - (CGPoint)locationInView:(UIView*)inView;
@@ -82,8 +71,8 @@ typedef enum {
 - (CGPoint)precisePreviousLocationInView:(UIView*)view STUB_METHOD;
 - (CGPoint)previousLocationInNode:(SKNode*)node STUB_METHOD;
 - (CGPoint)previousLocationInView:(UIView*)inView;
-- (CGPoint)velocity;
 - (CGVector)azimuthUnitVectorInView:(UIView*)view STUB_METHOD;
+
 @property (nonatomic, readonly) NSTimeInterval timestamp;
 @property (nonatomic, readonly) NSUInteger tapCount;
 @property (nonatomic, readonly) UITouchPhase phase;

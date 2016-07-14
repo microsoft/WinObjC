@@ -2444,14 +2444,10 @@ void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
  @Status Interoperable
 */
 + (CGPoint)convertPoint:(CGPoint)point fromLayer:(CALayer*)fromLayer toLayer:(CALayer*)toLayer {
-    CALayer* pToLayer = (CALayer*)toLayer;
-
-    if (fromLayer != nil) {
-        CALayer* pFromLayer = (CALayer*)(id)fromLayer;
-
+    if (fromLayer) {
         //  Convert the point to center-based position
-        point.x -= pFromLayer->priv->bounds.size.width * pFromLayer->priv->anchorPoint.x;
-        point.y -= pFromLayer->priv->bounds.size.height * pFromLayer->priv->anchorPoint.y;
+        point.x -= fromLayer->priv->bounds.size.width * fromLayer->priv->anchorPoint.x;
+        point.y -= fromLayer->priv->bounds.size.height * fromLayer->priv->anchorPoint.y;
 
         //  Convert to world-view
         CGAffineTransform fromTransform;
@@ -2459,15 +2455,15 @@ void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
         point = CGPointApplyAffineTransform(point, fromTransform);
     }
 
-    if (pToLayer != NULL) {
+    if (toLayer) {
         CGAffineTransform toTransform;
         GetLayerTransform(toLayer, &toTransform);
         toTransform = CGAffineTransformInvert(toTransform);
         point = CGPointApplyAffineTransform(point, toTransform);
 
         //  Convert the point from center-based position
-        point.x += pToLayer->priv->bounds.size.width * pToLayer->priv->anchorPoint.x;
-        point.y += pToLayer->priv->bounds.size.height * pToLayer->priv->anchorPoint.y;
+        point.x += toLayer->priv->bounds.size.width * toLayer->priv->anchorPoint.x;
+        point.y += toLayer->priv->bounds.size.height * toLayer->priv->anchorPoint.y;
     }
 
     return point;
@@ -2496,14 +2492,6 @@ void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
 
 - (NSObject*)presentationValueForKey:(NSString*)key {
     return GetCACompositor()->getDisplayProperty(priv->_presentationNode, [key UTF8String]);
-}
-
-/**
- @Status Interoperable
- @Notes WinObjC extension.
-*/
-- (void)updateAccessibilityInfo:(const IWAccessibilityInfo*)info {
-    GetCACompositor()->SetAccessibilityInfo([self _presentationNode], *info);
 }
 
 - (void)_setZIndex:(int)zIndex {

@@ -72,12 +72,10 @@ TEST(UIFontTest, FontWithName) {
     UIFont* fontPositiveWithName = [UIFont fontWithName:@"SegoeUI" size:10];
     UIFont* fontZeroWithName = [UIFont fontWithName:@"SegoeUI" size:0];
     UIFont* fontNegativeWithName = [UIFont fontWithName:@"SegoeUI" size:-10];
-    UIFont* fontOverflowWithName = [UIFont fontWithName:@"SegoeUI" size:242];
 
     ASSERT_TRUE_MSG([fontPositiveWithName pointSize] == 10, "Failed: Size of fontPositiveWithName is not positive.");
     ASSERT_TRUE_MSG([fontZeroWithName pointSize] == 14, "Failed: Size of fontZeroWithName is not systemtFontSize.");
     ASSERT_TRUE_MSG([fontNegativeWithName pointSize] == 14, "Failed: Size of fontNegativeWithName is not systemtFontSize.");
-    ASSERT_TRUE_MSG([fontOverflowWithName pointSize] == 14, "Failed: Size of fontOverflowWithName is not systemtFontSize.");
 }
 
 TEST(UIFontTest, FontWithSize) {
@@ -86,12 +84,10 @@ TEST(UIFontTest, FontWithSize) {
     UIFont* fontPositiveWithSize = [font fontWithSize:10];
     UIFont* fontZeroWithSize = [font fontWithSize:0];
     UIFont* fontNegativeWithSize = [font fontWithSize:-10];
-    UIFont* fontOverflowWithName = [font fontWithSize:242];
 
     ASSERT_TRUE_MSG([fontPositiveWithSize pointSize] == 10, "Failed: Size of fontPositiveWithSize is not positive.");
     ASSERT_TRUE_MSG([fontZeroWithSize pointSize] == 14, "Failed: Size of fontZeroWithSize is not systemtFontSize.");
     ASSERT_TRUE_MSG([fontNegativeWithSize pointSize] == 14, "Failed: Size of fontNegativeWithSize is not systemtFontSize.");
-    ASSERT_TRUE_MSG([fontOverflowWithName pointSize] == 14, "Failed: Size of fontOverflowWithName is not systemtFontSize.");
 }
 
 TEST(UIFontTest, FontWithDescriptor) {
@@ -99,10 +95,8 @@ TEST(UIFontTest, FontWithDescriptor) {
     UIFont* fontPositiveWithDescriptor = [UIFont fontWithDescriptor:fontDescriptor size:10];
     UIFont* fontZeroWithDescriptor = [UIFont fontWithDescriptor:fontDescriptor size:0];
     UIFont* fontNegativeWithDescriptor = [UIFont fontWithDescriptor:fontDescriptor size:-10];
-    UIFont* fontOverflowWithName = [UIFont fontWithDescriptor:fontDescriptor size:242];
 
     ASSERT_TRUE_MSG([fontPositiveWithDescriptor pointSize] == 10, "Failed: Size of fontPositiveWithDescriptor is not positive.");
     ASSERT_TRUE_MSG([fontZeroWithDescriptor pointSize] == 14, "Failed: Size of fontZeroWithDescriptor is not systemtFontSize.");
     ASSERT_TRUE_MSG([fontNegativeWithDescriptor pointSize] == 14, "Failed: Size of fontNegativeWithDescriptor is not systemtFontSize.");
-    ASSERT_TRUE_MSG([fontOverflowWithName pointSize] == 14, "Failed: Size of fontOverflowWithName is not systemtFontSize.");
 }

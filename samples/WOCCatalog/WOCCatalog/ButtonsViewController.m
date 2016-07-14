@@ -16,68 +16,63 @@
 
 #import "ButtonsViewController.h"
 
-@implementation SBButtonsViewController
+@implementation ButtonsViewController
 
-- (id) init {
+- (id)init {
     self = [super init];
-    
+
     return self;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     self.title = @"Buttons";
-    
+
     [self tableView].allowsSelection = NO;
     self.menuItems = [NSArray array];
-    self.menuItems = [NSArray arrayWithObjects: self.grayButton, self.imageButton, self.roundedButtonType, self.detailDisclosureButtonType, nil];
+    self.menuItems =
+        [NSArray arrayWithObjects:self.grayButton, self.imageButton, self.roundedButtonType, self.detailDisclosureButtonType, nil];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
+- (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
     return 2; //[self.menuItems count];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
     return 50;
 }
 
-- (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MenuCell"];
+- (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
+    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"MenuCell"];
     if (nil == cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
     }
-    
+
     if (indexPath.row == 0) {
-        UIButton *button  = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        UIButton* button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         button.frame = CGRectMake(5.0f, 5.0f, 200.0f, cell.frame.size.height - 5.0f);
         button.layer.cornerRadius = 5.0f;
         [button setTitle:@"Simple Button" forState:UIControlStateNormal];
         [cell addSubview:button];
     } else if (indexPath.row == 1) {
-        UIImage *buttonBackground = [UIImage imageNamed:@"whiteButton.png"];
-        UIImage *buttonBackgroundPressed = [UIImage imageNamed:@"blueButton.png"];
-        UIButton *button  = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        UIImage* buttonBackground = [UIImage imageNamed:@"whiteButton.png"];
+        UIImage* buttonBackgroundPressed = [UIImage imageNamed:@"blueButton.png"];
+        UIButton* button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         button.frame = CGRectMake(5.0f, 5.0f, 200.0f, cell.frame.size.height - 5.0f);
-        
-        UIImage *newImage = [buttonBackground stretchableImageWithLeftCapWidth:12.0 topCapHeight:0.0];
+
+        UIImage* newImage = [buttonBackground stretchableImageWithLeftCapWidth:12.0 topCapHeight:0.0];
         [button setBackgroundImage:newImage forState:UIControlStateNormal];
-        
-        UIImage *newPressedImage = [buttonBackgroundPressed stretchableImageWithLeftCapWidth:12.0 topCapHeight:0.0];
+
+        UIImage* newPressedImage = [buttonBackgroundPressed stretchableImageWithLeftCapWidth:12.0 topCapHeight:0.0];
         [button setBackgroundImage:newPressedImage forState:UIControlStateHighlighted];
-        
+
         [button setTitle:@"Image Button" forState:UIControlStateNormal];
         [button setTintColor:[UIColor whiteColor]];
         [cell addSubview:button];
     }
-    
+
     return cell;
 }
 
-
 @end
-

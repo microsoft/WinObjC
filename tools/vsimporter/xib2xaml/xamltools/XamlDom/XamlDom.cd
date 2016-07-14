@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Microsoft.Xaml.Tools.XamlDom.XamlDomItem">
+    <Position X="1.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Dom\XamlDomItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Xaml.Tools.XamlDom.XamlDomMember">
+    <Position X="6" Y="1.75" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAgAgBAAAD4AAAAYAAgAAAEAAAIAgAAABAAAQAAAAA=</HashCode>
+      <FileName>Dom\XamlDomMember.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Xaml.Tools.XamlDom.XamlDomNode">
+    <Position X="4" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAQAAAAQMAAAQAAAAAAAACAAAICABBAEAA=</HashCode>
+      <FileName>Dom\XamlDomNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Xaml.Tools.XamlDom.XamlDomWriter" BaseTypeListCollapsed="true">
+    <Position X="8.5" Y="0.5" Width="2.75" />
+    <Members>
+      <Field Name="RootNode" Hidden="true" />
+      <Field Name="writerStack" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAwAAAKAAAAAAQAAIAiIAAAAgAAAgAgQAAAASCAAAA=</HashCode>
+      <FileName>Dom\XamlDomWriter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.Xaml.Tools.XamlDom.XamlDomReader">
+    <Position X="8.5" Y="5" Width="2.5" />
+    <NestedTypes>
+      <Class Name="Microsoft.Xaml.Tools.XamlDom.XamlDomReader.XamlNode" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Dom\XamlDomReader.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAgCDAAAAAAIAAAAAAgUAAgARAIYAAQAYAhAAAQAAA=</HashCode>
+      <FileName>Dom\XamlDomReader.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.Xaml.Tools.XamlDom.XamlDomValue">
+    <Position X="3" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Dom\XamlDomValue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Xaml.Tools.XamlDom.XamlDomObject">
+    <Position X="0.5" Y="3.75" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>CAAhAcAAAEDAAAQAQAAgAAIQCAAgQAIAAZBEABAAEAA=</HashCode>
+      <FileName>Dom\XamlDomObject.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.Xaml.Tools.XamlDom.XamlNodeCollection&lt;T&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3" Y="7.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AGIgAFAAAAAAABAQSAAABAQAAAAGAACACEAAAABQMAA=</HashCode>
+      <FileName>Dom\XamlNodeCollection.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

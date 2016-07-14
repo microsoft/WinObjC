@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,9 +16,8 @@
 #pragma once
 
 @interface UIEvent ()
-
-+ (UIEvent*)createWithTouches:(NSSet*)touchUISet touchEvent:(UITouch*)touch;
++ (UIEvent*)_createWithTouches:(NSSet*)allTouches forNewTouch:(UITouch*)newTouch;
+- (void)_updateWithTouches:(NSMutableSet<UITouch*>*)allTouches touchEvent:(UITouch*)newTouch;
 - (UITouch*)_touchEvent;
-- (void)_setTimestamp:(double)time;
 
 @end

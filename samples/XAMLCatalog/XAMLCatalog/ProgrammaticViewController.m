@@ -14,12 +14,24 @@
 //
 //******************************************************************************
 
-#pragma once
+#import "ProgrammaticViewController.h"
+#import "UIActivityIndicatorViewController.h"
+#import "UISliderViewController.h"
 
-#include "UIKit/UIView.h"
+@implementation ProgrammaticViewController
 
-@interface UIEmptyController : UIView {
-@public
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    // UIActivityIndicatorView
+    [self addMenuItemViewController:[[UIActivityIndicatorViewController alloc] init] andTitle:@"UIActivityIndicatorView"];
+
+    // UISlider
+    [self addMenuItemViewController:[[UISliderViewController alloc] init] andTitle:@"UISlider"];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
 }
 
 @end

@@ -201,7 +201,6 @@ void buildGeometry(std::vector<Vertex>& verts, std::vector<unsigned short>& indi
     }
 
     // 2 - calculate normals.
-    size_t prevIdx = 0;
     for (int y = 0; y < mapHeight; y ++) {
         for (int x = 0; x < mapWidth; x ++) {
             Vertex& v = verts[y * mapWidth + x];

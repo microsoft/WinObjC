@@ -16,17 +16,17 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SBButtonsViewController : UITableViewController
+@interface ButtonsViewController : UITableViewController
 
-@property (nonatomic, retain, readonly) UIButton *grayButton;
-@property (nonatomic, retain, readonly) UIButton *imageButton;
+@property (nonatomic, retain, readonly) UIButton* grayButton;
+@property (nonatomic, retain, readonly) UIButton* imageButton;
 
-@property (nonatomic, retain, readonly) UIButton *roundedButtonType;
-@property (nonatomic, retain, readonly) UIButton *detailDisclosureButtonType;
-@property (nonatomic, retain, readonly) UIButton *infoLightButtonType;
-@property (nonatomic, retain, readonly) UIButton *infoDarkButtonType;
-@property (nonatomic, retain, readonly) UIButton *contactAddButtonType;
+@property (nonatomic, retain, readonly) UIButton* roundedButtonType;
+@property (nonatomic, retain, readonly) UIButton* detailDisclosureButtonType;
+@property (nonatomic, retain, readonly) UIButton* infoLightButtonType;
+@property (nonatomic, retain, readonly) UIButton* infoDarkButtonType;
+@property (nonatomic, retain, readonly) UIButton* contactAddButtonType;
 
-@property (nonatomic, retain) NSArray *menuItems;
+@property (nonatomic, retain) NSArray* menuItems;
 
 @end

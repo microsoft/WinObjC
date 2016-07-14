@@ -57,7 +57,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.menuItems = [NSMutableArray array];
     
     //AudioToolbox
     [self addMenuItemViewController:[[AudioToolboxViewController alloc] init] andTitle:@"AudioToolbox"];
@@ -72,7 +71,7 @@
     [self addMenuItemViewController:[[ControlsViewController alloc] init] andTitle:@"Controls"];
 
     // Buttons
-    [self addMenuItemViewController:[[SBButtonsViewController alloc] init] andTitle:@"SBButtonsViewController"];
+    [self addMenuItemViewController:[[ButtonsViewController alloc] init] andTitle:@"ButtonsViewController"];
 
     // AutoLayout
     [self addMenuItemViewController:[[AutoLayoutViewController alloc] init] andTitle:@"Constraint Based Layout"];

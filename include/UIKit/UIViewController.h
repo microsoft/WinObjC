@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include <UIKit/UIKitExport.h>
+#import <UIKit/UIKitExport.h>
 #import <UIKit/UIAppearanceContainer.h>
 #import <UIKit/UIContentContainer.h>
 #import <UIKit/UIFocusEnvironment.h>
@@ -173,7 +173,7 @@ UIKIT_EXPORT_CLASS
 - (id<UIViewControllerPreviewing>)registerForPreviewingWithDelegate:(id<UIViewControllerPreviewingDelegate>)delegate
                                                          sourceView:(UIView*)sourceView STUB_METHOD;
 - (id<UIViewControllerTransitionCoordinator>)transitionCoordinator STUB_METHOD;
-- (instancetype)initWithNibName:(NSString*)nibName bundle:(NSBundle*)nibBundle;
+-(instancetype)initWithNibName:(NSString*)nibName bundle:(NSBundle*)nibBundle NS_DESIGNATED_INITIALIZER;
 - (void)addChildViewController:(UIViewController*)childController;
 - (void)addKeyCommand:(UIKeyCommand*)keyCommand STUB_METHOD;
 - (void)applicationFinishedRestoringState STUB_METHOD;
