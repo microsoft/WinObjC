@@ -14,110 +14,67 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIControl.h"
-#include "UIKit/UIImage.h"
-#include "UIKit/UIImageView.h"
-#include "UIKit/UIGestureRecognizer.h"
-#include "UIKit/UISlider.h"
+#import "AssertARCEnabled.h"
+#import "Starboard.h"
+#import "StubReturn.h"
+#import "UIKit/UIView.h"
+#import "UIKit/UIControl.h"
+#import "UIKit/UIImage.h"
+#import "UIKit/UIImageView.h"
+#import "UIKit/UIGestureRecognizer.h"
+#import "UIKit/UISlider.h"
 
-#include "UIGestureRecognizerInternal.h"
+#import "UIGestureRecognizerInternal.h"
+#import "UWP/WindowsUIXamlControls.h"
+
+static const double c_defaultStepFrequency = 0.1;
 
 @implementation UISlider {
-    idretaintype(UIImage) _sliderLeft, _sliderRight, _dot, _dotHighlighted;
-    idretaintype(UIImageView) _sliderLeftView, _sliderRightView, _sliderThumbView;
-    float _value, _max, _min, _trackVal;
+    float _value;
     BOOL _continuous;
+
+    // Since xaml Slider does not support minimumValueImage and maximumValueImage, hence we have
+    // _rootPanel, which is a panel that holds the xaml slider and minimumValueImage and maximumValueImage.
+    StrongId<WXCGrid> _rootPanel;
+    StrongId<WXCSlider> _xamlSlider;
+    EventRegistrationToken _manipulationStartingEvent;
+    EventRegistrationToken _manipulationCompletedEvent;
+    EventRegistrationToken _valueChangedEvent;
 }
-static void sizeViews(UISlider* self, bool animated) {
-    CGRect bounds, thumbSize;
-    bounds = [self bounds];
-    thumbSize = [self->_sliderThumbView bounds];
 
-    if (animated) {
-        [UIView beginAnimations:@"MoveView" context:nil];
-        [UIView setAnimationDuration:0.25f];
-        [UIView setAnimationDelegate:nil];
-    }
+- (void)_UISlider_initInternal {
+    _xamlSlider = [WXCSlider make];
 
-    CGRect newFrame;
-    newFrame.origin.x = 0;
-    newFrame.origin.y = bounds.size.height / 2.0f - 4.0f;
-    newFrame.size.width = bounds.size.width;
-    newFrame.size.height = 8.0f;
-    [self->_sliderLeftView setFrame:newFrame];
+    // BUG:7911911 - [XAMLCatalog] UISlider not rendering the right track image of XAML slider on ARM
+    _xamlSlider.requestedTheme = WXElementThemeLight;
+    _xamlSlider.maximum = 1.0f;
+    _xamlSlider.minimum = 0.0f;
+    _xamlSlider.value = 0.0f;
 
-    float amt;
+    _rootPanel = [WXCGrid make];
+    [_rootPanel.children addObject:_xamlSlider];
+    [self layer].contentsElement = _rootPanel;
+    [self _updateStepFrequency];
+    [self setContinuous:YES];
+    [self _registerForEventsWithXaml];
+}
 
-    if (self->_max > 0.0f) {
-        amt = (self->_value - self->_min) / self->_max;
+- (void)_updateStepFrequency {
+    // The frame size, minimumValue and maximumValue of UISlider can change dynamically, so we need to update the step frequency when they
+    // do.
+    if ((_xamlSlider.maximum - _xamlSlider.minimum) > 0 && self.frame.size.width > 0) {
+        _xamlSlider.stepFrequency = (_xamlSlider.maximum - _xamlSlider.minimum) / (self.frame.size.width);
     } else {
-        amt = 0.0f;
-    }
-
-    newFrame.size.width = bounds.size.width * amt;
-    if (newFrame.size.width > bounds.size.width) {
-        newFrame.size.width = bounds.size.width;
-    }
-    if (newFrame.size.width < 8 || (newFrame.size.width != newFrame.size.width)) {
-        newFrame.size.width = 8;
-    }
-
-    [self->_sliderRightView setFrame:newFrame];
-
-    newFrame = thumbSize;
-    thumbSize.origin.x = bounds.size.width * amt - thumbSize.size.width / 2.0f;
-    thumbSize.origin.y = bounds.size.height / 2.0f - thumbSize.size.height / 2.0f;
-
-    [self->_sliderThumbView setFrame:thumbSize];
-
-    if (animated) {
-        [UIView commitAnimations];
+        _xamlSlider.stepFrequency = c_defaultStepFrequency;
     }
 }
 
-static void initInternal(UISlider* self) {
-    self->_sliderLeft = [[UIImage imageNamed:@"/img/progress-background@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
-    self->_sliderRight = [[UIImage imageNamed:@"/img/progress-foreground@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
-    self->_dot = [UIImage imageNamed:@"/img/slider-handle@2x.png"];
-    self->_dotHighlighted = [UIImage imageNamed:@"/img/slider-handle-highlighted@2x.png"];
-
-    CGRect progressFrame;
-
-    progressFrame.origin.x = 0;
-    progressFrame.origin.y = 0;
-    progressFrame.size.width = 0;
-    progressFrame.size.height = 8;
-
-    self->_sliderLeftView = [[[UIImageView alloc] initWithFrame:progressFrame] autorelease];
-    [self->_sliderLeftView setImage:(id)self->_sliderLeft];
-
-    progressFrame.size.width = 8;
-    self->_sliderRightView = [[[UIImageView alloc] initWithFrame:progressFrame] autorelease];
-    [self->_sliderRightView setImage:(id)self->_sliderRight];
-
-    progressFrame.origin.x = 0;
-    progressFrame.origin.y = 0;
-    progressFrame.size.width = 50;
-    progressFrame.size.height = 100;
-    self->_sliderThumbView = [[[UIImageView alloc] initWithFrame:progressFrame] autorelease];
-    [self->_sliderThumbView setContentMode:UIViewContentModeCenter];
-    [self->_sliderThumbView setImage:(id)self->_dot];
-    [self->_sliderThumbView setHighlightedImage:(id)self->_dotHighlighted];
-    [self->_sliderThumbView setUserInteractionEnabled:TRUE];
-
-    [self addSubview:(id)self->_sliderLeftView];
-    [self addSubview:(id)self->_sliderRightView];
-    [self addSubview:(id)self->_sliderThumbView];
-
-    UIPanGestureRecognizer* panGesture = [[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_didPan:)] autorelease];
-    [panGesture setDelegate:(id<UIGestureRecognizerDelegate>)self];
-    [panGesture _setDragSlack:0.0f];
-    [self->_sliderThumbView addGestureRecognizer:(id)panGesture];
-    [self setContinuous:TRUE];
-
-    sizeViews(self, false);
+/**
+ @Status Interoperable
+*/
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    [self _updateStepFrequency];
 }
 
 /**
@@ -125,22 +82,22 @@ static void initInternal(UISlider* self) {
  @Notes May not be fully implemented
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    [super initWithCoder:coder];
+    if (self = [super initWithCoder:coder]) {
+        [self _UISlider_initInternal];
 
-    id valueStr = [coder decodeObjectForKey:@"UIValue"];
+        if ([coder containsValueForKey:@"UIValue"]) {
+            id valueStr = [coder decodeObjectForKey:@"UIValue"];
+            _value = [valueStr floatValue];
+            _xamlSlider.value = _value;
+        }
 
-    _value = [valueStr floatValue];
-    _max = 1.0f;
-    _min = 0.0f;
-
-    if ([coder containsValueForKey:@"UIMaxValue"]) {
-        _max = [[coder decodeObjectForKey:@"UIMaxValue"] floatValue];
+        if ([coder containsValueForKey:@"UIMaxValue"]) {
+            _xamlSlider.maximum = [[coder decodeObjectForKey:@"UIMaxValue"] floatValue];
+        }
+        if ([coder containsValueForKey:@"UIMinValue"]) {
+            _xamlSlider.minimum = [[coder decodeObjectForKey:@"UIMinValue"] floatValue];
+        }
     }
-    if ([coder containsValueForKey:@"UIMinValue"]) {
-        _min = [[coder decodeObjectForKey:@"UIMinValue"] floatValue];
-    }
-
-    initInternal(self);
 
     return self;
 }
@@ -149,13 +106,9 @@ static void initInternal(UISlider* self) {
  @Status Interoperable
 */
 - (instancetype)initWithFrame:(CGRect)frame {
-    [super initWithFrame:frame];
-
-    _value = 0.0f;
-    _max = 1.0f;
-    _min = 0.0f;
-
-    initInternal(self);
+    if (self = [super initWithFrame:frame]) {
+        [self _UISlider_initInternal];
+    }
 
     return self;
 }
@@ -171,48 +124,96 @@ static void initInternal(UISlider* self) {
  @Status Interoperable
 */
 - (void)setMinimumValue:(float)value {
-    _min = value;
-    sizeViews(self, false);
+    _xamlSlider.minimum = value;
+    [self _updateStepFrequency];
 }
 
+- (void)_registerForEventsWithXaml {
+    __weak UISlider* weakSelf = self;
+    _valueChangedEvent = [_xamlSlider addValueChangedEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
+        __strong UISlider* strongSelf = weakSelf;
+        if (strongSelf && strongSelf->_continuous) {
+            strongSelf->_value = strongSelf->_xamlSlider.value;
+            [strongSelf _sendValueChangedEvents];
+        }
+    }];
+
+    _xamlSlider.manipulationMode = WUXIManipulationModesAll;
+
+    // The value of a UISlider on ios cannot be changed by clicking anywhere on the track.
+    // The thumb has to be hold and dragged.
+    // On the other hand the value of a Xaml Slider can be changed by clicking anywhere on the track.
+    // So we need manipulationStartingEvent when the value of Slider changes by clicking anywhere on
+    // the track and not by dragging the thumb.
+    // TODO: 7877568- Move to handling pointer events when available with projections, instead of manipulation events.
+    _manipulationStartingEvent =
+        [_xamlSlider addManipulationStartingEvent:^void(RTObject* sender, WUXIManipulationStartingRoutedEventArgs* e) {
+            __strong UISlider* strongSelf = weakSelf;
+            if (strongSelf && (strongSelf->_continuous == NO)) {
+                if (strongSelf->_value != strongSelf->_xamlSlider.value) {
+                    strongSelf->_value = strongSelf->_xamlSlider.value;
+                    [strongSelf _sendValueChangedEvents];
+                }
+            }
+        }];
+
+    // ManipulationCompletedEvent will be fired when dragging has been completed
+    // This allows us to fire UIControlEventValueChanged event and UIControlEventTouchUpInside event
+    _manipulationCompletedEvent =
+        [_xamlSlider addManipulationCompletedEvent:^void(RTObject* sender, WUXIManipulationCompletedRoutedEventArgs* e) {
+            __strong UISlider* strongSelf = weakSelf;
+            if (strongSelf && (strongSelf->_continuous == NO)) {
+                if (strongSelf->_value != strongSelf->_xamlSlider.value) {
+                    strongSelf->_value = strongSelf->_xamlSlider.value;
+                    [strongSelf _sendValueChangedEvents];
+                }
+                [strongSelf sendActionsForControlEvents:UIControlEventTouchUpInside];
+            }
+        }];
+}
+
+- (void)_sendValueChangedEvents {
+    [self sendActionsForControlEvents:UIControlEventValueChanged];
+}
 /**
  @Status Interoperable
 */
 - (float)minimumValue {
-    return _min;
+    return _xamlSlider.minimum;
 }
 
 /**
  @Status Interoperable
 */
 - (void)setMaximumValue:(float)value {
-    _max = value;
-    sizeViews(self, false);
+    _xamlSlider.maximum = value;
+    [self _updateStepFrequency];
 }
 
 /**
  @Status Interoperable
 */
 - (float)maximumValue {
-    return _max;
+    return _xamlSlider.maximum;
 }
 
 /**
  @Status Interoperable
 */
 - (void)setValue:(float)value {
-    [self setValue:value animated:FALSE];
+    [self setValue:value animated:NO];
 }
 
+/**
+ @Status Caveat
+ @Notes animation is not supported
+*/
 - (void)setValue:(float)value animated:(BOOL)animated {
-    if (value < _min) {
-        value = _min;
+    if (_value != value) {
+        // Xaml takes care of validating the input value, we copy the value from xaml slider back to our ivar
+        _xamlSlider.value = value;
+        _value = _xamlSlider.value;
     }
-    if (value > _max) {
-        value = _max;
-    }
-    _value = value;
-    sizeViews(self, animated ? true : false);
 }
 
 /**
@@ -230,113 +231,60 @@ static void initInternal(UISlider* self) {
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 - (void)setThumbImage:(UIImage*)image forState:(NSUInteger)state {
-    _dot = image;
-    if (state == 0) {
-        [_sliderThumbView setImage:image];
-        [_sliderThumbView setHighlightedImage:nil];
-        sizeViews(self, false);
-    } else if (state == 1) {
-        [_sliderThumbView setHighlightedImage:image];
-    }
+    UNIMPLEMENTED();
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 - (void)setMinimumTrackImage:(UIImage*)image forState:(NSUInteger)state {
-    [_sliderLeftView setImage:image];
-    _sliderLeft = [image stretchableImageWithLeftCapWidth:3 topCapHeight:0];
-}
-
-- (void)setMinimumValueImage:(UIImage*)image {
-    [_sliderLeftView setImage:image];
-    _sliderLeft = [image stretchableImageWithLeftCapWidth:3 topCapHeight:0];
-}
-
-- (void)setMaximumValueImage:(UIImage*)image {
-    [_sliderRightView setImage:image];
-    _sliderLeft = [image stretchableImageWithLeftCapWidth:3 topCapHeight:0];
+    UNIMPLEMENTED();
 }
 
 /**
- @Status Interoperable
+ @Status Stub
+*/
+- (void)setMinimumValueImage:(UIImage*)image {
+    UNIMPLEMENTED();
+}
+
+- (void)dealloc {
+    [_xamlSlider removeManipulationStartingEvent:_manipulationStartingEvent];
+    [_xamlSlider removeManipulationCompletedEvent:_manipulationCompletedEvent];
+    [_xamlSlider removeValueChangedEvent:_valueChangedEvent];
+}
+
+/**
+ @Status Stub
+*/
+- (void)setMaximumValueImage:(UIImage*)image {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
 */
 - (void)setMaximumTrackImage:(UIImage*)image forState:(NSUInteger)state {
-    [_sliderRightView setImage:image];
-    _sliderRight = [image stretchableImageWithLeftCapWidth:3 topCapHeight:0];
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (UIImage*)currentThumbImage {
-    return _dot;
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (UIImage*)currentMinimumTrackImage {
-    return _sliderLeft;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)layoutSubviews {
-    sizeViews(self, false);
-}
-
-- (void)_didPan:(UIPanGestureRecognizer*)gesture {
-    DWORD state = [gesture state];
-
-    CGPoint amt;
-    amt = [gesture translationInView:self];
-    [gesture setTranslation:CGPointMake(0, 0) inView:self];
-
-    CGRect bounds;
-    bounds = [self bounds];
-
-    _trackVal = _value + (amt.x / bounds.size.width) * (_max - _min);
-    [self setValue:_trackVal];
-
-    if (state == UIGestureRecognizerStateEnded) {
-        [_sliderThumbView setHighlighted:FALSE];
-        [self sendActionsForControlEvents:UIControlEventValueChanged];
-        [self sendActionsForControlEvents:UIControlEventTouchUpInside];
-    } else if (state == UIGestureRecognizerStateBegan) {
-        if ([_sliderThumbView highlightedImage] != nil) {
-            [_sliderThumbView setHighlighted:TRUE];
-        }
-        if (self.isContinuous == YES) {
-            [self sendActionsForControlEvents:UIControlEventValueChanged];
-        }
-    } else if ((self.isContinuous == YES) && (state == UIGestureRecognizerStateChanged)) {
-        [self sendActionsForControlEvents:UIControlEventValueChanged];
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (void)dealloc {
-    _sliderLeft = nil;
-    _sliderRight = nil;
-    _dot = nil;
-    _dotHighlighted = nil;
-    [_sliderLeftView removeFromSuperview];
-    [_sliderRightView removeFromSuperview];
-    [_sliderThumbView removeFromSuperview];
-
-    _sliderLeftView = nil;
-    _sliderRightView = nil;
-    _sliderThumbView = nil;
-    [super dealloc];
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setHidden:(BOOL)hide {
-    [super setHidden:hide];
-    [_sliderThumbView setHidden:hide];
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**

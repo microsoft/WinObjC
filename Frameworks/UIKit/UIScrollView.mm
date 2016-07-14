@@ -103,7 +103,6 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
 @implementation UIScrollView {
     id _delegate;
-    id _pressTimer;
     idretain _savedTouch, _savedEvent;
     idretain _zoomView;
     CGPoint _lastTouchPos;
@@ -873,6 +872,11 @@ static void doInertialScroll(UIScrollView* self, CGPoint velocity, AnimationReas
 
     self->_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(_inertialAnimTimer)];
     [self->_displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:@"kCFRunLoopDefaultMode"];
+
+    // We must pulse the animation because we're not guaranteed that another frame
+    // will be rendered by XAML; performing one scroll will cause XAML to keep rendering frames.
+    // Otherwise we can get stuck here with no call from the displaylink.
+    [self _inertialAnimTimer];
 }
 
 static void animMoveTo(UIScrollView* self, CGPoint target, bool clampTarget) {
@@ -990,7 +994,7 @@ static void doAnimatedScroll(UIScrollView* self, CGPoint dest, AnimationReason r
  @Status Interoperable
 */
 - (BOOL)isTracking {
-    return _isDragging || (_pressTimer != nil);
+    return _isDragging;
 }
 
 /**
@@ -1006,28 +1010,6 @@ static void doAnimatedScroll(UIScrollView* self, CGPoint dest, AnimationReason r
 - (float)decelerationRate {
     UNIMPLEMENTED();
     return 0.998f;
-}
-
-- (void)_pressTimer {
-    if (_pressTimer != nil) {
-        [_pressTimer invalidate];
-        _pressTimer = nil;
-    }
-
-    CGPoint curPos;
-    curPos = [_savedTouch locationInView:self];
-    id viewTouched = [super hitTest:curPos withEvent:_savedEvent];
-    if (viewTouched == self && _forwardsToSuperview) {
-        viewTouched = [viewTouched superview];
-    }
-
-    if (viewTouched != nil && viewTouched != self) {
-        _savedTouch = [[_savedTouch copy] autorelease];
-        [_savedTouch _redirectTouch:viewTouched];
-
-        _savedEvent = [[UIEvent createWithTouches:[NSSet setWithObject:(id)_savedTouch] touchEvent:(id)_savedTouch] autorelease];
-        [[UIApplication sharedApplication] sendEvent:_savedEvent];
-    }
 }
 
 /**
@@ -1309,8 +1291,7 @@ static void cancelScrolling(UIScrollView* self) {
         hideScrollersAction(self);
     }
     [self->_displayLink invalidate];
-    [self->_pressTimer invalidate];
-    self->_displayLink = self->_pressTimer = self->_savedTouch = self->_savedEvent = nil;
+    self->_displayLink = self->_savedTouch = self->_savedEvent = nil;
 }
 
 /**

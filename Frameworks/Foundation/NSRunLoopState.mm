@@ -464,7 +464,11 @@ bool GetMainDispatchTimerTimeout(double* val) {
 
 - (void)_handleSignaledInput:(int)signaled {
     if (signaled != -1) {
-        [_waitSignalObjects[signaled] fire];
+        if (signaled >= _numWaitSignals) {
+            TraceWarning(TAG, L"Unable to handle signaled input for nonexistent signal:%d", _numWaitSignals);
+        } else {
+            [_waitSignalObjects[signaled] fire];
+        }
     }
 
     if (_numWaitSockets > 0 && _socks.result > 0) {

@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0C1B7E5B-2252-49B5-89EC-FD86A526057D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>xamltools</RootNamespace>
+    <AssemblyName>xamltools</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <!--The SRID stuff is difficult to get to work in straight DEV10 enviroment-->
+  <!--
+  <ItemGroup>
+    <GenerateTextStringResources Include="Resources\MessageStringTable.txt" >
+      <StringResourceClassNamespace>MS.Utility</StringResourceClassNamespace>
+      <GenerateFieldsInsteadOfProperties>true</GenerateFieldsInsteadOfProperties>
+    </GenerateTextStringResources>
+  </ItemGroup>
+-->
+  <ItemGroup>
+    <Compile Include="DiagnosticWriter.cs" />
+    <Compile Include="XamlDom\XamlDomNamespace.cs" />
+    <Compile Include="XamlDom\XamlDomReader.cs" />
+    <Compile Include="XamlDom\XamlDomReaderSettings.cs" />
+    <Compile Include="XamlDom\XamlDomWriter.cs" />
+    <Compile Include="XamlDom\XamlDomNode.cs" />
+    <Compile Include="XamlDom\XamlDomItem.cs" />
+    <Compile Include="XamlDom\XamlDomMember.cs" />
+    <Compile Include="XamlDom\XamlNodeCollection.cs" />
+    <Compile Include="XamlDom\XamlDomObject.cs" />
+    <Compile Include="XamlDom\SealableNamespaceCollection.cs" />
+    <Compile Include="XamlDom\XamlDomValue.cs" />
+    <Compile Include="XamlDom\XamlDomServices.cs" />
+    <Compile Include="ResourceIDHelper.cs" />
+    <!-- These are part of the XamlTool 'real' build but uses the SRID stuff -->
+    <!--
+    <Compile Include="Uid\Tasks\IPersistFileCheckSum.cs" />
+    <Compile Include="Uid\Tasks\IVsMSBuildTaskFileManager.cs" />
+    <Compile Include="Uid\Tasks\ReferenceAwareTask.cs" />
+    <Compile Include="Uid\Tasks\shared.cs" />
+    <Compile Include="Uid\Tasks\TaskFileService.cs" />
+    <Compile Include="Uid\Tasks\TaskHelper.cs" />
+    <Compile Include="Uid\Tasks\UidCollector.cs" />
+    <Compile Include="Uid\Tasks\UidManager.cs" />
+-->
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.XML" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

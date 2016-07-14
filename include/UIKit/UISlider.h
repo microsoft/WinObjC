@@ -48,9 +48,9 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) float minimumValue;
 @property (nonatomic) float maximumValue;
 @property (nonatomic, getter=isContinuous) BOOL continuous;
-@property (nonatomic, retain) UIColor* minimumTrackTintColor;
-@property (nonatomic, retain) UIColor* maximumTrackTintColor;
-@property (nonatomic, retain) UIColor* thumbTintColor;
+@property (nonatomic, strong) UIColor* minimumTrackTintColor;
+@property (nonatomic, strong) UIColor* maximumTrackTintColor;
+@property (nonatomic, strong) UIColor* thumbTintColor;
 
 - (void)setThumbImage:(UIImage*)image forState:(UIControlState)state;
 - (void)setMinimumTrackImage:(UIImage*)image forState:(UIControlState)state;

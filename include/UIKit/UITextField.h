@@ -88,7 +88,7 @@ UIKIT_EXPORT_CLASS
 
 // Setting the View’s Background Appearance
 @property (nonatomic) UITextBorderStyle borderStyle;
-@property (nonatomic, strong) UIImage* background STUB_PROPERTY;
+@property (nonatomic, strong) UIImage* background;
 @property (nonatomic, strong) UIImage* disabledBackground STUB_PROPERTY;
 
 // Managing Overlay Views

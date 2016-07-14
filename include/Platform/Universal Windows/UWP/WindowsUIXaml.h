@@ -791,7 +791,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -1209,7 +1208,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXFrameworkTemplate : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXFrameworkTemplate_DEFINED__
@@ -1300,7 +1298,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXStateTriggerBase : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
 - (void)setActive:(BOOL)IsActive;
 @end
 
@@ -1606,7 +1603,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXFrameworkElement : WXUIElement
-+ (instancetype)make ACTIVATOR;
 @property (retain) WXThickness* margin;
 @property (retain) NSString* language;
 @property WXHorizontalAlignment horizontalAlignment;

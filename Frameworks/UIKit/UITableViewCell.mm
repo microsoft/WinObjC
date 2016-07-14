@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#define NOMINMAX
+
 #import "Starboard.h"
 #import "UITableViewContentView.h"
 #import "UIKit/UILabel.h"

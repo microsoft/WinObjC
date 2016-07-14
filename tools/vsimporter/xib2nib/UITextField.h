@@ -19,16 +19,14 @@
 
 class UIFont;
 
-class UITextField :
-    public UIControl
-{
+class UITextField : public UIControl {
 private:
     CGSize _shadowOffset;
-    const char *_text;
-    const char *_placeholder;
+    const char* _text;
+    const char* _placeholder;
     int _borderStyle;
-    XIBObject *_textColor;
-    UIFont *_font;
+    XIBObject* _textColor;
+    UIFont* _font;
     int _autoCorrectionType;
     int _returnKeyType;
     bool _clearsOnBeginEditing;
@@ -37,8 +35,7 @@ private:
 public:
     UITextField();
 
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

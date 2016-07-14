@@ -39,15 +39,15 @@ typedef enum {
 } UIActivityIndicatorViewStyle;
 
 UIKIT_EXPORT_CLASS
-@interface UIActivityIndicatorView : UIView
+@interface UIActivityIndicatorView : UIView <NSCoding>
 
-- (id)initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyle)style;
+- (instancetype)initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyle)style;
 - (void)startAnimating;
 - (void)stopAnimating;
 - (BOOL)isAnimating;
 
-@property BOOL hidesWhenStopped;
-@property UIActivityIndicatorViewStyle activityIndicatorViewStyle STUB_PROPERTY;
-@property (readwrite, nonatomic, retain) UIColor* color STUB_PROPERTY;
+@property (nonatomic) BOOL hidesWhenStopped;
+@property (nonatomic) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
+@property (readwrite, nonatomic, strong) UIColor* color;
 
 @end

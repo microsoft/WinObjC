@@ -45,16 +45,14 @@
 #include "UWP/WindowsSystemDisplay.h"
 #include "UrlLauncher.h"
 
-#include "UIEmptyController.h"
+#include "UIEmptyView.h"
 
 #include "CACompositor.h"
 #include "UIInterface.h"
 
-#include "RingBuffer.h"
-
-#include <UWP/WindowsMediaSpeechRecognition.h>
-#include <UWP/WindowsFoundation.h>
+#include "UWP/WindowsUICore.h"
 #include "UWP/WindowsUINotifications.h"
+
 #include "LoggingNative.h"
 #include "UIApplicationMainInternal.h"
 
@@ -149,7 +147,6 @@ NSString* const UIContentSizeCategoryDidChangeNotification = @"UIContentSizeCate
 const NSTimeInterval UIApplicationBackgroundFetchIntervalMinimum = StubConstant();
 const NSTimeInterval UIApplicationBackgroundFetchIntervalNever = StubConstant();
 
-float windowInsetLeft, windowInsetRight, windowInsetTop, windowInsetBottom;
 float statusBarHeight = 20.0f;
 static UIInterfaceOrientation _curOrientation = UIInterfaceOrientationPortrait;
 static UIInterfaceOrientation _internalOrientation = UIInterfaceOrientationPortrait;
@@ -159,7 +156,6 @@ extern UIWindow* _curKeyWindow;
 NSArray* windows;
 UIWindow* popupWindow;
 UIApplication* sharedApplication;
-extern bool g_bDidChangeView;
 int showKeyboard, forceHideKeyboard;
 static int curKeyboardType, showKeyboardType;
 bool keyboardVisible;
@@ -169,22 +165,12 @@ static bool blankViewUp = false;
 static float curBlankViewHeight = 0.0f;
 static bool doEvaluateKeyboard = false;
 
-#ifdef _DEBUG
-bool g_logErrors = true;
-#else
-bool g_logErrors = true;
-#endif
-
 // Right now it's expected that the user sets this when they want otherwise:
 float keyboardBaseHeight = 200, keyboardPhysicalHeight = 0;
 
 static UIEdgeInsets _statusBarInsets;
 
-id currentlyTrackingGesturesList;
-BOOL resetAllTrackingGestures = TRUE;
-
 BOOL refreshPending = FALSE;
-NSRunLoopSource* newMouseEvent;
 NSRunLoopSource* shutdownEvent;
 UIImageView* statusBar;
 UIView* statusBarRotationLayer;
@@ -193,75 +179,13 @@ BOOL statusBarHidden = FALSE;
 unsigned ignoringInteractionEvents = 0;
 BOOL idleDisabled = FALSE;
 extern BOOL _doShutdown;
-EbrEvent g_NewMouseEvent, g_shutdownEvent;
+EbrEvent g_shutdownEvent;
 extern id _curFirstResponder;
 
 UIApplicationState _applicationState = UIApplicationStateInactive;
 
-NSMutableDictionary* g_curGesturesDict;
-
 // Used to query for Url scheme handlers or launch an app with a Url
 UrlLauncher* _launcher;
-
-typedef struct {
-    float x, y;
-    double timeStamp;
-    int count;
-} TouchRecord;
-
-static TouchRecord touchRecords[32];
-static int touchRecordHead = 0, touchRecordTail = 0;
-
-static float touchDist(float x1, float y1, float x2, float y2) {
-    return sqrtf(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)));
-}
-
-#define TAP_SLACK_AREA \
-    (((GetCACompositor()->screenWidth() / GetCACompositor()->deviceWidth()) * GetCACompositor()->screenXDpi()) / 3.0f) //  1/3 inch
-
-static void RecordTouch(float x, float y, double timeStamp) {
-    //  Skip over old touches
-    while (timeStamp - touchRecords[touchRecordHead].timeStamp > 0.300 && touchRecordHead != touchRecordTail) {
-        touchRecordHead = (touchRecordHead + 1) % 32;
-    }
-
-    int curPos = touchRecordHead;
-
-    while (curPos != touchRecordTail) {
-        if (timeStamp - touchRecords[curPos].timeStamp <= 0.300 &&
-            touchDist(x, y, touchRecords[curPos].x, touchRecords[curPos].y) < TAP_SLACK_AREA) {
-            //  Update the record
-            touchRecords[curPos].count++;
-            touchRecords[curPos].timeStamp = timeStamp;
-            return;
-        }
-        curPos = (curPos + 1) % 32;
-    }
-
-    touchRecords[touchRecordTail].x = x;
-    touchRecords[touchRecordTail].y = y;
-    touchRecords[touchRecordTail].timeStamp = timeStamp;
-    touchRecords[touchRecordTail].count = 1;
-
-    touchRecordTail = (touchRecordTail + 1) % 32;
-}
-
-static int GetTouchCount(float x, float y, double timeStamp) {
-    int curPos = touchRecordHead;
-
-    while (curPos != touchRecordTail) {
-        if (timeStamp - touchRecords[curPos].timeStamp <= 0.300 &&
-            touchDist(x, y, touchRecords[curPos].x, touchRecords[curPos].y) < TAP_SLACK_AREA) {
-            //  Update the record
-            return touchRecords[curPos].count;
-        }
-        curPos = (curPos + 1) % 32;
-    }
-
-    return 0;
-}
-
-int GetMouseEvents(EbrInputEvent* pDest, int max);
 
 static UIView *_curKeyboardAccessory, *_curKeyboardInputView;
 
@@ -285,19 +209,21 @@ static idretaintype(WSDDisplayRequest) _screenActive;
 
     sharedApplication = [super alloc];
 
-    newMouseEvent = [NSRunLoopSource new];
-    [newMouseEvent setSourceDelegate:sharedApplication selector:@selector(newMouseEvent)];
-    [newMouseEvent setPriority:100];
-    g_NewMouseEvent = (EbrEvent)[newMouseEvent eventHandle];
-
     shutdownEvent = [NSRunLoopSource new];
     [shutdownEvent setSourceDelegate:[UIApplication class] selector:@selector(_shutdownEvent)];
     g_shutdownEvent = (EbrEvent)[shutdownEvent eventHandle];
 
-    [[NSRunLoop mainRunLoop] _addInputSource:newMouseEvent forMode:@"kCFRunLoopDefaultMode"];
     [[NSRunLoop mainRunLoop] _addInputSource:shutdownEvent forMode:@"kCFRunLoopDefaultMode"];
     [[NSRunLoop mainRunLoop] _addObserver:sharedApplication forMode:@"kCFRunLoopDefaultMode"];
-    currentlyTrackingGesturesList = [NSMutableArray new];
+
+    // TODO: This will be revisited when we sort out our WinRT navigation integration model
+    // Subscribe to back button events
+    // Note: This method may be called from UnitTests, so make sure we don't fall over if we're not running from within a UWP.
+    if ([WUCCoreWindow getForCurrentThread]) {
+        [[WUCSystemNavigationManager getForCurrentView] addBackRequestedEvent:^ (RTObject* sender, WUCBackRequestedEventArgs* e) {
+            e.handled = [UIApplication _doBackAction];
+        }];
+    }
 
     return sharedApplication;
 }
@@ -307,7 +233,6 @@ static idretaintype(WSDDisplayRequest) _screenActive;
     popupWindow = nil;
     sharedApplication = nil;
 
-    [[NSRunLoop mainRunLoop] _removeInputSource:newMouseEvent forMode:@"kCFRunLoopDefaultMode"];
     [[NSRunLoop mainRunLoop] _removeObserver:sharedApplication forMode:@"kCFRunLoopDefaultMode"];
 }
 
@@ -428,9 +353,11 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
     }
 }
 
-+ (void)_doBackAction {
++ (BOOL)_doBackAction {
+    TraceVerbose(TAG, L"Handling back button press.");
+
     if (ignoringInteractionEvents) {
-        return;
+        return false;
     }
 
     NSArray* windows = [[self sharedApplication] windows];
@@ -473,6 +400,8 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
             [appDelegate performSelector:@selector(applicationBackButtonPressed:) withObject:nil];
         }
     }
+
+    return wasHandled;
 }
 
 + (void)_launchedWithURL:(NSURL*)url {
@@ -754,34 +683,6 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
     if (statusBarHidden != hidden) {
         statusBarHidden = hidden;
         [statusBar setHidden:hidden];
-#ifdef NO_STATUSBAR
-        if (!statusBarHidden) {
-            windowInsetLeft = _statusBarInsets.left;
-            windowInsetRight = _statusBarInsets.right;
-            windowInsetTop = _statusBarInsets.top;
-            windowInsetBottom = _statusBarInsets.bottom;
-            g_bDidChangeView = true;
-        } else {
-            windowInsetLeft = 0;
-            windowInsetRight = 0;
-            windowInsetTop = 0;
-            windowInsetBottom = 0;
-            g_bDidChangeView = true;
-        }
-#endif
-
-        /*
-        int windowCount = [windows count];
-
-        for ( int i = 0; i < windowCount; i ++ ) {
-        id curWindow = [windows objectAtIndex:i];
-        id controller = [curWindow rootViewController];
-
-        if ( controller != nil ) {
-        [controller _resizeForStatusBar:hidden];
-        }
-        }
-        */
     }
 }
 
@@ -869,336 +770,11 @@ static void printViews(id curView, int level) {
     _UIApplicationShutdown();
 }
 
-- (void)newMouseEvent {
-    EbrInputEvent localEvents[256];
-    int numEvents = GetMouseEvents(localEvents, 256);
-
-    for (int curEvent = 0; curEvent < numEvents; curEvent++) {
-        EbrInputEvent* evt = &localEvents[curEvent];
-
-        if (evt->mouseEvent == keyPressed) {
-            if (evt->type == 27) {
-                [UIApplication _doBackAction];
-                return;
-            }
-            [UIResponder _keyPressed:evt->type];
-            return;
-        }
-
-        /*
-        int count = [windows count];
-        for ( int i = 0; i < count; i ++ ) {
-        id curWindow = [windows objectAtIndex:i];
-        printViews(curWindow, 1);
-        }
-        */
-
-        static UITouch* touches[10];
-        static NSMutableSet* allTouches;
-        UITouch* newTouchEvent;
-
-        int finger = evt->fingerCount;
-
-        if (allTouches == nil) {
-            allTouches = [[NSMutableSet set] retain];
-        }
-
-        switch (evt->mouseEvent) {
-            case mouseDown: {
-#ifndef WIN32
-                assert(touches[finger] == nil);
-#endif
-
-                RecordTouch(evt->x, evt->y, evt->touchTime);
-                int tapCount = GetTouchCount(evt->x, evt->y, evt->touchTime);
-                touches[finger] = [[UITouch createWithPoint:CGPointMake(evt->x, evt->y) tapCount:tapCount] autorelease];
-                [allTouches addObject:touches[finger]];
-                newTouchEvent = touches[finger];
-
-                UIEvent* touchTestEvent = [[UIEvent createWithTouches:allTouches touchEvent:newTouchEvent] autorelease];
-
-                //  Figure out which view it's in
-                id mouseView = nil;
-                int count = [windows count];
-
-                for (int i = count - 1; i >= 0; i--) {
-                    id curWindow = [windows objectAtIndex:i];
-
-                    CGPoint pos;
-
-                    pos.x = evt->x;
-                    pos.y = evt->y;
-
-                    pos = [curWindow convertPoint:pos fromView:nil toView:curWindow];
-
-                    mouseView = [curWindow hitTest:pos withEvent:touchTestEvent];
-                    if (mouseView != nil && mouseView != curWindow) {
-                        break;
-                    }
-                }
-
-                if (mouseView != nil) {
-                    TraceVerbose(TAG, L"%hs touched", object_getClassName(mouseView));
-                }
-                touches[finger]->_view = mouseView;
-                [touches[finger].view retain];
-
-                touches[finger]->_phase = UITouchPhaseBegan;
-                touches[finger]->_timestamp = evt->touchTime;
-                touches[finger]->velocityX = evt->velocityX;
-                touches[finger]->velocityY = evt->velocityY;
-                touches[finger]->previousTouchX = touches[finger]->touchX;
-                touches[finger]->previousTouchY = touches[finger]->touchY;
-                touches[finger]->touchX = evt->x;
-                touches[finger]->touchY = evt->y;
-            } break;
-
-            case mouseMove:
-                assert(touches[finger] != nil);
-                if (touches[finger] == nil) {
-                    continue;
-                }
-
-                newTouchEvent = touches[finger];
-                touches[finger]->_phase = UITouchPhaseMoved;
-                touches[finger]->_timestamp = evt->touchTime;
-                touches[finger]->velocityX = evt->velocityX;
-                touches[finger]->velocityY = evt->velocityY;
-                touches[finger]->previousTouchX = touches[finger]->touchX;
-                touches[finger]->previousTouchY = touches[finger]->touchY;
-                touches[finger]->touchX = evt->x;
-                touches[finger]->touchY = evt->y;
-                break;
-
-            case mouseUp: {
-                // This code may be helpful for debugging gestures again later:
-                /*
-                static int count = 0;
-                if ( count < 3 )
-                ++count;
-                else
-                continue;
-                */
-
-                if (touches[finger] == nil) {
-                    continue;
-                }
-
-                assert(touches[finger] != nil);
-                newTouchEvent = touches[finger];
-                touches[finger]->_phase = UITouchPhaseEnded;
-                touches[finger]->_timestamp = evt->touchTime;
-                touches[finger]->velocityX = evt->velocityX;
-                touches[finger]->velocityY = evt->velocityY;
-                touches[finger]->previousTouchX = touches[finger]->touchX;
-                touches[finger]->previousTouchY = touches[finger]->touchY;
-                touches[finger]->touchX = evt->x;
-                touches[finger]->touchY = evt->y;
-                break;
-            }
-
-            default:
-                assert(0);
-                break;
-        }
-
-        UIEvent* touchEvent = [[UIEvent createWithTouches:allTouches touchEvent:newTouchEvent] autorelease];
-        [touchEvent _setTimestamp:evt->touchTime];
-
-        //  Send off the UIEvent
-        [self sendEvent:touchEvent];
-
-        switch (evt->mouseEvent) {
-            case mouseUp:
-                [allTouches removeObject:touches[finger]];
-                touches[finger] = nil;
-
-                //  If all fingers come off the screen, reset all gestures
-                resetAllTrackingGestures = TRUE;
-
-                for (int i = 0; i < 10; i++) {
-                    if (touches[i] != nil) {
-                        resetAllTrackingGestures = FALSE;
-                    }
-                }
-
-                if (resetAllTrackingGestures) {
-                    for (UIGestureRecognizer* curgesture in currentlyTrackingGesturesList) {
-                        [curgesture reset];
-                    }
-
-                    [currentlyTrackingGesturesList removeAllObjects];
-                }
-                break;
-        }
-    }
-}
-
 /**
- @Status Interoperable
+ @Status Stub
 */
 - (void)sendEvent:(UIEvent*)event {
-    UITouch* touch = [event _touchEvent];
-    SEL eventName;
-
-    switch (touch.phase) {
-        case UITouchPhaseBegan:
-            eventName = @selector(touchesBegan:withEvent:);
-            break;
-
-        case UITouchPhaseMoved:
-            eventName = @selector(touchesMoved:withEvent:);
-            break;
-
-        case UITouchPhaseEnded:
-            eventName = @selector(touchesEnded:withEvent:);
-            break;
-
-        case UITouchPhaseCancelled:
-            eventName = @selector(touchesCancelled:withEvent:);
-            break;
-
-        default:
-            assert(0);
-            break;
-    }
-
-    UIView* view = touch.view;
-    if (view == nil) {
-        return;
-    }
-    bool process = true;
-
-    UIView* views[128];
-    int viewDepth = 0;
-    if (resetAllTrackingGestures) {
-        resetAllTrackingGestures = FALSE;
-        //  Find gesture recognizers in the heirarchy, back-first
-        UIView* curView = view;
-
-        while (curView != nil) {
-            assert(viewDepth < 128);
-            views[viewDepth++] = curView;
-            curView = curView->priv->superview;
-        }
-
-        for (int i = viewDepth - 1; i >= 0; i--) {
-            curView = views[i];
-
-            for (UIGestureRecognizer* curgesture in curView->priv->gestures) {
-                if ([curgesture isEnabled]) {
-                    [currentlyTrackingGesturesList addObject:curgesture];
-                }
-            }
-        }
-    }
-
-    viewDepth = 0;
-
-    g_curGesturesDict = [NSMutableDictionary new];
-
-    UIGestureRecognizer* recognizers[128];
-
-    for (UIGestureRecognizer* curgesture in currentlyTrackingGesturesList) {
-        recognizers[viewDepth++] = curgesture;
-
-        id gestureClass = [curgesture class];
-        NSMutableArray* arr = [g_curGesturesDict objectForKey:gestureClass];
-        if (arr == nil) {
-            arr = [NSMutableArray new];
-            [g_curGesturesDict setObject:arr forKey:gestureClass];
-            [arr release];
-        }
-        [arr addObject:curgesture];
-    }
-
-    for (int i = 0; i < viewDepth; i++) {
-        UIGestureRecognizer* curgesture = recognizers[i];
-
-        if ([curgesture state] != UIGestureRecognizerStateCancelled) {
-            // TraceVerbose(TAG, L"Checking gesture %hs", object_getClassName(curgesture));
-            id delegate = [curgesture delegate];
-            BOOL send = TRUE;
-            if (touch.phase == UITouchPhaseBegan && [delegate respondsToSelector:@selector(gestureRecognizer:shouldReceiveTouch:)]) {
-                send = [delegate gestureRecognizer:curgesture shouldReceiveTouch:touch];
-            }
-
-            if (send) {
-                [curgesture performSelector:eventName withObject:[NSMutableSet setWithObject:touch] withObject:event];
-            }
-        }
-    }
-
-    // gesture priority list
-    const static id s_gesturesPriority[] = {[UIPinchGestureRecognizer class],
-                                            [UISwipeGestureRecognizer class],
-                                            [UIPanGestureRecognizer class],
-                                            [UILongPressGestureRecognizer class],
-                                            [UITapGestureRecognizer class] };
-
-    const static int s_numGestureTypes = sizeof(s_gesturesPriority) / sizeof(s_gesturesPriority[0]);
-
-    //  Process all gestures
-    for (int i = 0; i < s_numGestureTypes; i++) {
-        id curgestureClass = s_gesturesPriority[i];
-        id gestures = [g_curGesturesDict objectForKey:curgestureClass];
-        if ([curgestureClass _fireGestures:gestures]) {
-            process = false;
-        }
-    }
-
-    //  Removed/reset failed/done gestures
-    for (int i = 0; i < viewDepth; i++) {
-        UIGestureRecognizer* curgesture = recognizers[i];
-        UIGestureRecognizerState state = (UIGestureRecognizerState)[curgesture state];
-
-        if (state == UIGestureRecognizerStateRecognized || state == UIGestureRecognizerStateEnded ||
-            state == UIGestureRecognizerStateFailed || state == UIGestureRecognizerStateCancelled) {
-            [curgesture reset];
-            TraceVerbose(TAG, L"Removing gesture %hs %x state=%d", object_getClassName(curgesture), curgesture, state);
-            [currentlyTrackingGesturesList removeObject:curgesture];
-            id gesturesArr = [g_curGesturesDict objectForKey:[curgesture class]];
-            [gesturesArr removeObject:curgesture];
-        }
-    }
-
-    [g_curGesturesDict release];
-    g_curGesturesDict = nil;
-
-    if (process == false) {
-        touch->_phase = UITouchPhaseCancelled;
-        eventName = @selector(touchesCancelled:withEvent:);
-    }
-
-    if (touch.phase != UITouchPhaseBegan && ![view->priv->currentTouches containsObject:touch]) {
-        // TraceVerbose(TAG, L"View not aware of touch, ignoring");
-        return;
-    }
-
-    if (touch.phase == UITouchPhaseBegan && ignoringInteractionEvents > 0) {
-        TraceVerbose(TAG, L"Global interaction disabled, ignoring");
-        return;
-    }
-
-    if (touch.phase == UITouchPhaseBegan && !view->priv->multipleTouchEnabled) {
-        if ([view->priv->currentTouches count] > 0) {
-            TraceVerbose(TAG, L"View already has a touch, ignoring");
-            return;
-        }
-    }
-
-    NSMutableSet* touches;
-    if (touch.phase == UITouchPhaseBegan) {
-        [view->priv->currentTouches addObject:touch];
-        touches = [NSMutableSet setWithObject:touch];
-    } else if (touch.phase == UITouchPhaseEnded || touch.phase == UITouchPhaseCancelled) {
-        touches = [NSMutableSet setWithObject:touch];
-        [view->priv->currentTouches removeObject:touch];
-    } else {
-        touches = [NSMutableSet setWithArray:view->priv->currentTouches];
-    }
-
-    [view performSelector:eventName withObject:touches withObject:event];
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1255,14 +831,16 @@ static void printViews(id curView, int level) {
  @Status Interoperable
 */
 - (BOOL)sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent*)forEvent {
+    // If sending to nil, use the current first responder
     UIResponder* curTarget = target;
-
     if (curTarget == nil) {
         curTarget = _curFirstResponder;
     }
 
+    // Walk the target's responder chain looking for a responder for this action
     while (curTarget != nil) {
         if ([curTarget respondsToSelector:action]) {
+            // We found a target; invoke the selector.
             [curTarget performSelector:action withObject:sender withObject:forEvent];
             return TRUE;
         }
@@ -1345,14 +923,6 @@ static void printViews(id curView, int level) {
         [statusBarRotationLayer addSubview:statusBar];
         popupRotationLayer = [[UIKeyboardRotationView alloc] initWithFrame:frame];
 
-#ifdef NO_STATUSBAR
-        windowInsetLeft = 0.0f;
-        windowInsetRight = 0.0f;
-        windowInsetTop = statusBarHeight;
-        windowInsetBottom = 0.0f;
-        g_bDidChangeView = true;
-#endif
-
         CALayer* layer = [statusBarRotationLayer layer];
         [layer validateDisplayHierarchy];
         GetCACompositor()->setNodeTopMost((DisplayNode*)[layer _presentationNode], true);
@@ -1389,6 +959,11 @@ static void printViews(id curView, int level) {
 */
 - (void)beginIgnoringInteractionEvents {
     ignoringInteractionEvents++;
+
+    // Disable input for this Window
+    if (ignoringInteractionEvents == 1) {
+        [WUCCoreWindow getForCurrentThread].isInputEnabled = NO;
+    }
 }
 
 /**
@@ -1411,6 +986,11 @@ static void printViews(id curView, int level) {
 - (void)endIgnoringInteractionEvents {
     if (ignoringInteractionEvents > 0) {
         ignoringInteractionEvents--;
+    }
+
+    if (ignoringInteractionEvents == 0) {
+        // Re-enable input for this Window
+        [WUCCoreWindow getForCurrentThread].isInputEnabled = YES;
     }
 }
 
@@ -1860,7 +1440,7 @@ static void evaluateKeyboard(id self) {
 
     if (_blankView == nil) {
         CGRect frame = { 0 };
-        _blankView = [[UIEmptyController alloc] initWithFrame:frame];
+        _blankView = [[UIEmptyView alloc] initWithFrame:frame];
         [_blankView setBackgroundColor:[UIColor blackColor]];
         [_blankView setAutoresizesSubviews:FALSE];
     }
@@ -2020,17 +1600,6 @@ static void evaluateKeyboard(id self) {
 }
 
 /**
- @Public No
-*/
-+ (void)setStarboardInternalLoggingLevel:(int)level {
-    if (level > 0) {
-        g_logErrors = true;
-    } else {
-        g_logErrors = false;
-    }
-}
-
-/**
  @Status Caveat
  @Notes WinObjC extension
 */
@@ -2154,283 +1723,6 @@ static void evaluateKeyboard(id self) {
 }
 
 @end
-
-struct Record {
-    Record() {
-    }
-    Record(const CGPoint& pos, double timestamp) : pos(pos), timestamp(timestamp) {
-    }
-
-    CGPoint pos;
-    double timestamp;
-};
-
-static RingBuffer<Record, 50> _touchHistory[10];
-
-static CGPoint findLastSpeed(int finger, float time) {
-    double endTime = _touchHistory[finger].fromEnd(0).timestamp;
-    CGPoint curPos = _touchHistory[finger].fromEnd(0).pos;
-    double curTime = endTime;
-    bool gotRecord = false; //  Get at least one record
-    CGPoint ret = { 0, 0 };
-    float numRet = 0.0f;
-
-    bool distanceSatisfied = false;
-
-    size_t i = 1;
-    for (; i < _touchHistory[finger].size(); ++i) {
-        double timestamp = _touchHistory[finger].fromEnd(i).timestamp;
-        CGPoint pos = _touchHistory[finger].fromEnd(i).pos;
-        if ((endTime - timestamp > time) && gotRecord) {
-            break;
-        }
-
-        if (timestamp != curTime) {
-            if (curPos.x != pos.x && curPos.y != pos.y) {
-                //  Average the speed and direction in
-                CGPoint dir;
-                dir.x = (float)((curPos.x - pos.x) / (curTime - timestamp));
-                dir.y = (float)((curPos.y - pos.y) / (curTime - timestamp));
-                numRet += 1.0f;
-                ret.x += dir.x;
-                ret.y += dir.y;
-
-                gotRecord = true;
-
-                //  Make sure that at least one of the touches satisfies a minimum distance threshold
-                if ((curPos - pos).lenGe(5.0f)) {
-                    distanceSatisfied = true;
-                }
-            }
-        }
-    }
-
-    if (numRet > 0.0f) {
-        ret.x /= numRet;
-        ret.y /= numRet;
-    }
-
-    if (!distanceSatisfied) {
-        ret.x = 0.0f;
-        ret.y = 0.0f;
-    }
-
-    return ret;
-}
-
-#define MAX_MOUSE_EVENTS 1024
-static EbrInputEvent g_MouseEventsQueue[MAX_MOUSE_EVENTS];
-static int g_MouseEventsHead = 0, g_MouseEventsTail = 0;
-
-pthread_mutex_t g_MouseCrit = PTHREAD_MUTEX_INITIALIZER;
-extern EbrEvent g_NewMouseEvent;
-
-void AddMouseEvent(EbrInputEvent* pEvt) {
-    pthread_mutex_lock(&g_MouseCrit);
-
-    bool add = true;
-    CGPoint pos = CGPoint::point(pEvt->x, pEvt->y);
-
-    switch (pEvt->mouseEvent) {
-        case mouseDown: {
-            pEvt->velocityX = 0.0f;
-            pEvt->velocityY = 0.0f;
-            _touchHistory[pEvt->fingerCount].reset();
-            _touchHistory[pEvt->fingerCount].add(Record(pos, pEvt->touchTime));
-        } break;
-
-        case mouseMove: {
-            _touchHistory[pEvt->fingerCount].add(Record(pos, pEvt->touchTime));
-            CGPoint velocity = findLastSpeed(pEvt->fingerCount, 0.1f);
-            pEvt->velocityX = velocity.x;
-            pEvt->velocityY = velocity.y;
-        } break;
-
-        case mouseUp: {
-            _touchHistory[pEvt->fingerCount].add(Record(pos, pEvt->touchTime));
-            CGPoint velocity = findLastSpeed(pEvt->fingerCount, 0.1f);
-            pEvt->velocityX = velocity.x;
-            pEvt->velocityY = velocity.y;
-        } break;
-    }
-
-    if (add) {
-        memcpy(&g_MouseEventsQueue[g_MouseEventsHead], pEvt, sizeof(EbrInputEvent));
-        g_MouseEventsHead = (g_MouseEventsHead + 1) % (MAX_MOUSE_EVENTS);
-        if (g_MouseEventsHead == g_MouseEventsTail) {
-            assert(0); //  Queue overflow
-        }
-    }
-
-    pthread_mutex_unlock(&g_MouseCrit);
-    EbrEventSignal(g_NewMouseEvent);
-}
-
-int GetMouseEvents(EbrInputEvent* pDest, int max) {
-    int ret = 0;
-    EbrInputEvent* fingerMoves[10] = { 0 };
-
-    pthread_mutex_lock(&g_MouseCrit);
-
-    while (max--) {
-        if (g_MouseEventsTail != g_MouseEventsHead) {
-            EbrInputEvent curEvent;
-
-            memcpy(&curEvent, &g_MouseEventsQueue[g_MouseEventsTail], sizeof(EbrInputEvent));
-            if (curEvent.mouseEvent == mouseMove) {
-                int finger = curEvent.fingerCount;
-                if (fingerMoves[finger] == NULL) {
-                    memcpy(pDest, &g_MouseEventsQueue[g_MouseEventsTail], sizeof(EbrInputEvent));
-                    fingerMoves[finger] = pDest;
-                    pDest++;
-                    ret++;
-                } else {
-                    memcpy(fingerMoves[finger], &g_MouseEventsQueue[g_MouseEventsTail], sizeof(EbrInputEvent));
-                }
-            } else {
-                memcpy(pDest, &g_MouseEventsQueue[g_MouseEventsTail], sizeof(EbrInputEvent));
-                pDest++;
-                ret++;
-            }
-            g_MouseEventsTail = (g_MouseEventsTail + 1) % (MAX_MOUSE_EVENTS);
-        } else {
-            break;
-        }
-    }
-
-    pthread_mutex_unlock(&g_MouseCrit);
-
-    return ret;
-}
-
-void AddMouseEvent(EbrInputEvent* pEvt);
-
-void UIQueueKeyInput(int key) {
-    EbrInputEvent localEvt;
-    EbrInputEvent* evt = &localEvt;
-
-    memset(evt, 0, sizeof(EbrInputEvent));
-
-    evt->mouseEvent = keyPressed;
-    evt->type = key;
-
-    AddMouseEvent(evt);
-}
-
-double microStartEpoch;
-int64_t microEpoch;
-
-#define EVENT_DOWN 0x64
-#define EVENT_MOVE 0x65
-#define EVENT_UP 0x66
-
-#define MAXPOINTS 10
-static int idLookup[MAXPOINTS] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
-
-int GetContactIndex(int dwID) {
-    for (int i = 0; i < MAXPOINTS; i++) {
-        if (idLookup[i] == dwID) {
-            return i;
-        }
-    }
-
-    return -1;
-}
-
-int AddContactIndex(int dwID) {
-    for (int i = 0; i < MAXPOINTS; i++) {
-        if (idLookup[i] == -1) {
-            idLookup[i] = dwID;
-            return i;
-        }
-    }
-
-    printf("Out of contact points!\n");
-
-    return -1;
-}
-
-void UIQueueTouchInput(
-    float x, float y, int fingerID, int eventType, float surfaceWidth, float surfaceHeight, int64_t eventTime, bool bLandscape) {
-    int touchID = 0;
-
-    if (eventType == EVENT_DOWN) {
-        touchID = AddContactIndex(fingerID);
-    } else {
-        touchID = GetContactIndex(fingerID);
-    }
-    if (touchID == -1) {
-        return;
-    }
-
-    EbrInputEvent evt;
-
-    float viewWidth = bLandscape ? GetCACompositor()->screenHeight() : GetCACompositor()->screenWidth();
-    float viewHeight = bLandscape ? GetCACompositor()->screenWidth() : GetCACompositor()->screenHeight();
-
-    float aspectX = (float)surfaceWidth / (float)(viewWidth - (windowInsetLeft + windowInsetRight));
-    float aspectY = (float)surfaceHeight / (float)(viewHeight - (windowInsetTop + windowInsetBottom));
-
-    float aspect = aspectX < aspectY ? aspectX : aspectY;
-
-    float outWidth = (viewWidth - (windowInsetLeft + windowInsetRight)) * aspect;
-    float outHeight = (viewHeight - (windowInsetTop + windowInsetBottom)) * aspect;
-
-    float leftX = ((float)surfaceWidth - outWidth) / 2.0f;
-    float topY = ((float)surfaceHeight - outHeight) / 2.0f;
-
-    x -= leftX;
-    y -= topY;
-
-    if (bLandscape) {
-        float tmp = x;
-        x = outHeight - y;
-        y = tmp;
-        x = x * GetCACompositor()->screenWidth() / outHeight;
-        y = y * GetCACompositor()->screenHeight() / outWidth;
-    } else {
-        x = x * GetCACompositor()->screenWidth() / outWidth;
-        y = y * GetCACompositor()->screenHeight() / outHeight;
-    }
-
-    if (x < 0.0f) {
-        x = 0.0f;
-    }
-    if (x > GetCACompositor()->screenWidth()) {
-        x = GetCACompositor()->screenWidth();
-    }
-    if (y < 0.0f) {
-        y = 0.0f;
-    }
-    if (y > GetCACompositor()->screenHeight()) {
-        y = GetCACompositor()->screenHeight();
-    }
-
-    evt.x = x;
-    evt.y = y;
-    evt.numPoints = 1;
-
-    evt.fingerCount = touchID;
-    evt.touchTime = (eventTime / 1000000000.0);
-
-    switch (eventType) {
-        case EVENT_DOWN:
-            evt.mouseEvent = mouseDown;
-            AddMouseEvent(&evt);
-            break;
-
-        case EVENT_UP:
-            idLookup[touchID] = -1;
-            evt.mouseEvent = mouseUp;
-            AddMouseEvent(&evt);
-            break;
-
-        case EVENT_MOVE:
-            evt.mouseEvent = mouseMove;
-            AddMouseEvent(&evt);
-            break;
-    }
-}
 
 void UIRequestTransactionProcessing() {
     [UIApplication viewChanged];

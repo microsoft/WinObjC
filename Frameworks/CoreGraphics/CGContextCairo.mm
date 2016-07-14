@@ -872,6 +872,10 @@ void CGContextCairo::CGContextFillRect(CGRect rct) {
 
     if (curState->_imgMask == NULL) {
         cairo_fill(_drawContext);
+#if defined(__i386__)
+        // There's a missing call to _mm_empty in cairo somewhere, this will clear out the state so the FPU doesn't return bogus results.
+        __builtin_ia32_emms();
+#endif
     } else {
         cairo_mask_surface(_drawContext, curState->_imgMask->Backing()->LockCairoSurface(), 0.0, 0.0);
         curState->_imgMask->Backing()->ReleaseCairoSurface();

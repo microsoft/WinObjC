@@ -1,0 +1,43 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XamlTest", "XamlTest", "{60C1937A-C2A8-4A62-8875-E45D404D776C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XamlTest-Headers", "XamlTest.vsimporter\XamlTest-Headers-WinStore10\XamlTest-Headers.vcxitems", "{2DCC58E2-7345-4C41-9DE1-3500B1286A1E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XamlTest", "XamlTest.vsimporter\XamlTest-WinStore10\XamlTest.vcxproj", "{EAE9A640-F166-44E8-8FFF-884F7F8114D2}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		XamlTest.vsimporter\XamlTest-Headers-WinStore10\XamlTest-Headers.vcxitems*{2DCC58E2-7345-4C41-9DE1-3500B1286A1E}*SharedItemsImports = 9
+		XamlTest.vsimporter\XamlTest-Headers-WinStore10\XamlTest-Headers.vcxitems*{EAE9A640-F166-44E8-8FFF-884F7F8114D2}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|Win32 = Debug|Win32
+		Release|ARM = Release|ARM
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EAE9A640-F166-44E8-8FFF-884F7F8114D2}.Debug|ARM.ActiveCfg = Debug|ARM
+		{EAE9A640-F166-44E8-8FFF-884F7F8114D2}.Debug|ARM.Build.0 = Debug|ARM
+		{EAE9A640-F166-44E8-8FFF-884F7F8114D2}.Debug|ARM.Deploy.0 = Debug|ARM
+		{EAE9A640-F166-44E8-8FFF-884F7F8114D2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EAE9A640-F166-44E8-8FFF-884F7F8114D2}.Debug|Win32.Build.0 = Debug|Win32
+		{EAE9A640-F166-44E8-8FFF-884F7F8114D2}.Debug|Win32.Deploy.0 = Debug|Win32
+		{EAE9A640-F166-44E8-8FFF-884F7F8114D2}.Release|ARM.ActiveCfg = Release|ARM
+		{EAE9A640-F166-44E8-8FFF-884F7F8114D2}.Release|ARM.Build.0 = Release|ARM
+		{EAE9A640-F166-44E8-8FFF-884F7F8114D2}.Release|ARM.Deploy.0 = Release|ARM
+		{EAE9A640-F166-44E8-8FFF-884F7F8114D2}.Release|Win32.ActiveCfg = Release|Win32
+		{EAE9A640-F166-44E8-8FFF-884F7F8114D2}.Release|Win32.Build.0 = Release|Win32
+		{EAE9A640-F166-44E8-8FFF-884F7F8114D2}.Release|Win32.Deploy.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2DCC58E2-7345-4C41-9DE1-3500B1286A1E} = {60C1937A-C2A8-4A62-8875-E45D404D776C}
+		{EAE9A640-F166-44E8-8FFF-884F7F8114D2} = {60C1937A-C2A8-4A62-8875-E45D404D776C}
+	EndGlobalSection
+EndGlobal

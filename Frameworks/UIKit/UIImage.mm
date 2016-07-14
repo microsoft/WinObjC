@@ -1072,8 +1072,8 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
         CGPatternRef pat = CGPatternCreate((void*)&ii,
                                            makeRect(0, 0, pos.size.width * _scale, pos.size.height * _scale),
                                            CGAffineTransformMakeScale(_scale, _scale),
-                                           10,
-                                           10,
+                                           pos.size.width * _scale,
+                                           pos.size.height * _scale,
                                            kCGPatternTilingConstantSpacing,
                                            true,
                                            &patCB);

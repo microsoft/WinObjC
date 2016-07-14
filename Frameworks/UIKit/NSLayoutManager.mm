@@ -70,6 +70,7 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
         while (curIdx < [string length] && !stop) {
             CGPoint startPoint = CGPointMake(curX, y);
             __block float newX = curX;
+            __block float lastProposedSize = 0.0f;
 
             //  Ask the typesetter to fit and characters within a given width; it will call us
             //  to ask what the maximum width is, once it figures out the height it needs to put
@@ -88,7 +89,6 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
                                                                                                     y + maxFontHeight - height,
                                                                                                     containerSize.width - (curX + offset),
                                                                                                     height);
-                                                                       CGRect remaining;
                                                                        CGRect lineRect = [container
                                                                            lineFragmentRectForProposedRect:proposed
                                                                                                    atIndex:idx
@@ -112,6 +112,9 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
                                                                        if (ret < 0.0f) {
                                                                            ret = 0.0f;
                                                                        }
+                                                                       if ( ret > 0.0f ) {
+                                                                           lastProposedSize = ret;
+                                                                       }
                                                                        return ret;
                                                                    });
 
@@ -121,7 +124,15 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
                 curX = startPoint.x + 5.0f;
             }
 
-            //  Did the typesetter determine that we can fit at least one character?
+            //  In the case that the typesetter cannot fit one character into the container, and the
+            //  proposed size is the full width of the container (there are no exclusions) draw one
+            //  glyph. One caveat is this does not take into account exclusion zones outside the 
+            //  container.
+            if ((pos == curIdx) && ((lastProposedSize + container.lineFragmentPadding) >= containerSize.width)) {
+                pos = curIdx + 1;
+            }
+
+            //  Did we determine that we can fit at least one character?
             if (pos != curIdx) {
                 //  Yes, we will record what the (x,y) origin is and create a new CTLine from it
                 CFRange lineRange;

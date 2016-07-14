@@ -239,5 +239,5 @@ void IWUpdateAccessibility(id receiver, NSObject<UIAccessibility>* accessibility
 
     // traits are composed of accessibility flags, just copy them.
     info.flags = (IWAccessibilityFlags)accessibilityObj.accessibilityTraits;
-    [receiver updateAccessibilityInfo:&info];
+    UNIMPLEMENTED();
 }

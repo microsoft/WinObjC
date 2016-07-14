@@ -19,60 +19,59 @@
 #include "UIColor.h"
 
 typedef enum {
-   UIViewAutoresizingNone                 = 0,
-   UIViewAutoresizingFlexibleLeftMargin   = 1 << 0,
-   UIViewAutoresizingFlexibleWidth        = 1 << 1,
-   UIViewAutoresizingFlexibleRightMargin  = 1 << 2,
-   UIViewAutoresizingFlexibleTopMargin    = 1 << 3,
-   UIViewAutoresizingFlexibleHeight       = 1 << 4,
-   UIViewAutoresizingFlexibleBottomMargin = 1 << 5
+    UIViewAutoresizingNone = 0,
+    UIViewAutoresizingFlexibleLeftMargin = 1 << 0,
+    UIViewAutoresizingFlexibleWidth = 1 << 1,
+    UIViewAutoresizingFlexibleRightMargin = 1 << 2,
+    UIViewAutoresizingFlexibleTopMargin = 1 << 3,
+    UIViewAutoresizingFlexibleHeight = 1 << 4,
+    UIViewAutoresizingFlexibleBottomMargin = 1 << 5
 } UIViewAutoresizing;
 
 typedef enum {
-   UIViewContentModeScaleToFill,
-   UIViewContentModeScaleAspectFit,
-   UIViewContentModeScaleAspectFill,
-   UIViewContentModeRedraw,
-   UIViewContentModeCenter,
-   UIViewContentModeTop,
-   UIViewContentModeBottom,
-   UIViewContentModeLeft,
-   UIViewContentModeRight,
-   UIViewContentModeTopLeft,
-   UIViewContentModeTopRight,
-   UIViewContentModeBottomLeft,
-   UIViewContentModeBottomRight,
+    UIViewContentModeScaleToFill,
+    UIViewContentModeScaleAspectFit,
+    UIViewContentModeScaleAspectFill,
+    UIViewContentModeRedraw,
+    UIViewContentModeCenter,
+    UIViewContentModeTop,
+    UIViewContentModeBottom,
+    UIViewContentModeLeft,
+    UIViewContentModeRight,
+    UIViewContentModeTopLeft,
+    UIViewContentModeTopRight,
+    UIViewContentModeBottomLeft,
+    UIViewContentModeBottomRight,
 } UIViewContentMode;
 
-class UIView : public ObjectConverterSwapper
-{
+class UIView : public ObjectConverterSwapper {
 public:
-    XIBArray *_subviews;
-    XIBArray *_constraints;
-    UIColor *_backgroundColor;
-    UIRect  _bounds;
-    UIRect  _contentStretch;
-    UIPoint  _center;
-    bool     _autoresizeSubviews;
-    bool     _hidden;
-    bool     _translatesAutoresizeToConstraints;
-    int      _autoresizingMask;
-    int      _contentMode;
-    bool     _opaque;
-    bool     _enabled;
-    bool     _multipleTouchEnabled;
-    bool     _clipsToBounds;
-    bool     _userInteractionDisabled;
-    bool     _clearsContextBeforeDrawing;
-    int      _tag;
+    XIBArray* _subviews;
+    XIBArray* _constraints;
+    UIColor* _backgroundColor;
+    UIRect _bounds;
+    UIRect _contentStretch;
+    UIPoint _center;
+    bool _autoresizeSubviews;
+    bool _hidden;
+    bool _translatesAutoresizeToConstraints;
+    int _autoresizingMask;
+    int _contentMode;
+    bool _opaque;
+    bool _enabled;
+    bool _multipleTouchEnabled;
+    bool _clipsToBounds;
+    bool _userInteractionDisabled;
+    bool _clearsContextBeforeDrawing;
+    int _tag;
+
 public:
     UIView();
 
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 
     UIRect getFrame();
     void setFrame(UIRect frame);
 };
-
