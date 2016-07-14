@@ -17,6 +17,7 @@
 #pragma once
 
 @interface NSUserDefaults()
-+ (void)_suspendSynchronize;
-+ (void)_resumeSynchronize;
++ (NSUserDefaults*)_standardUserDefaultsNoInitialize;
+- (void)_suspendSynchronize;
+- (void)_resumeSynchronize;
 @end

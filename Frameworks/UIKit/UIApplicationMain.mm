@@ -29,6 +29,7 @@
 #import <UIKit/UIApplicationDelegate.h>
 #import <StringHelpers.h>
 #import "NSThread-Internal.h"
+#import "NSUserDefaultsInternal.h"
 #import "StarboardXaml/StarboardXaml.h"
 #import "UIApplicationInternal.h"
 #import "UIFontInternal.h"
@@ -321,11 +322,11 @@ extern "C" void UIApplicationMainHandleHighMemoryUsageEvent() {
 }
 
 extern "C" void UIApplicationMainHandleSuspendEvent() {
-    [[UIApplication sharedApplication] _sendSuspendEvent];
+    [[NSUserDefaults _standardUserDefaultsNoInitialize] _suspendSynchronize];
 }
 
 extern "C" void UIApplicationMainHandleResumeEvent() {
-    [[UIApplication sharedApplication] _sendResumeEvent];
+    [[NSUserDefaults _standardUserDefaultsNoInitialize] _resumeSynchronize];
 }
 
 extern "C" void UIApplicationMainHandleToastNotificationEvent(const char* notificationData) {

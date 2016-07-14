@@ -54,7 +54,7 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
     StrongId<NSOperationQueue> _synchronizeQueue;
 }
 
-static NSUserDefaults* _standard;
+static StrongId<NSUserDefaults> _standard = nil;
 
 /**
  @Status Interoperable
@@ -97,11 +97,18 @@ static NSUserDefaults* _standard;
  @Status Interoperable
 */
 + (NSUserDefaults*)standardUserDefaults {
-    if (_standard == nil) {
-        _standard = [self new];
+    @synchronized(self) {
+        if (nil == _standard) {
+            _standard.attach([self new]);
+        }
+        return _standard;
     }
+}
 
-    return _standard;
++ (NSUserDefaults*)_standardUserDefaultsNoInitialize {
+    @synchronized(self) {
+        return _standard;
+    }
 }
 
 /**
@@ -309,17 +316,13 @@ static NSUserDefaults* _standard;
     return _synchronizeQueue;
 }
 
-+ (void) _suspendSynchronize {
-    if (_standard != nil) {
-        [[_standard _synchronizeQueue] setSuspended:YES];
-        [[_standard _synchronizeQueue] waitUntilAllOperationsAreFinished];
-    }
+- (void) _suspendSynchronize {
+    [_synchronizeQueue setSuspended:YES];
+    [_synchronizeQueue waitUntilAllOperationsAreFinished];
 }
 
-+ (void) _resumeSynchronize {
-    if (_standard != nil) {
-        [[_standard _synchronizeQueue] setSuspended:NO];
-    }
+- (void) _resumeSynchronize {
+    [_synchronizeQueue setSuspended:NO];
 }
 
 /**
