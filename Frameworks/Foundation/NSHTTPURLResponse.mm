@@ -147,29 +147,60 @@ static CFHashCode _CFHTTPHeaderHash(const void* obj1) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return YES;
 }
 
 /**
- @Status Stub
- @Notes
-*/
-- (id)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
+    [coder encodeInteger:_statusCode forKey:@"statusCode"];
+    [coder encodeObject:_allHeaderFields forKey:@"allHeaderFields"];
+    [coder encodeObject:_HTTPVersion forKey:@"HTTPVersion"];
+    [super encodeWithCoder:coder];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    if (self = [super initWithCoder:coder]) {
+        _statusCode = [coder decodeIntegerForKey:@"statusCode"];
+        _allHeaderFields = [coder decodeObjectOfClass:[NSMutableDictionary class] forKey:@"allHeaderFields"];
+        _HTTPVersion = [coder decodeObjectOfClass:[NSString class] forKey:@"HTTPVersion"];
+    }
+
+    return self;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isEqual:(id)other {
+    if ((other == nil) || ![other isKindOfClass:[NSHTTPURLResponse class]]) {
+        return NO;
+    }
+
+    return (([super isEqual:other]) && ([self hash] == [other hash]));
+}
+
+/**
+ @Status Interoperable
+*/
+- (unsigned)hash {
+    unsigned ret = [super hash] ^ _statusCode;
+
+    if (_allHeaderFields != nil) {
+        ret ^= [_allHeaderFields hash];
+    }
+
+    if (_HTTPVersion != nil) {
+        ret ^= [_HTTPVersion hash];
+    }
+    return ret;
 }
 
 @end

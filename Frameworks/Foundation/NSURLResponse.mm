@@ -134,29 +134,71 @@ NSString* _NSReplaceIllegalFileNameCharacters(NSString* fileName) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return YES;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-- (id)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    if (self = [super init]) {
+        _expectedContentLength = [coder decodeIntForKey:@"expectedContentLength"];
+        _mimeType = [coder decodeObjectOfClass:[NSString class] forKey:@"mimeType"];
+        _suggestedFilename = [coder decodeObjectOfClass:[NSString class] forKey:@"suggestedFilename"];
+        _textEncodingName = [coder decodeObjectOfClass:[NSString class] forKey:@"textEncodingName"];
+        _url = [coder decodeObjectOfClass:[NSURL class] forKey:@"url"];
+    }
+
+    return self;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
+    [coder encodeInt:_expectedContentLength forKey:@"expectedContentLength"];
+    [coder encodeObject:_mimeType forKey:@"mimeType"];
+    [coder encodeObject:_suggestedFilename forKey:@"suggestedFilename"];
+    [coder encodeObject:_textEncodingName forKey:@"textEncodingName"];
+    [coder encodeObject:_url forKey:@"url"];
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isEqual:(id)other {
+    if (![other isKindOfClass:[NSURLResponse class]]) {
+        return NO;
+    }
+
+    return ([self hash] == [other hash]);
+}
+
+/**
+ @Status Interoperable
+*/
+- (unsigned)hash {
+    unsigned ret = _expectedContentLength;
+    if (nil != _suggestedFilename) {
+        ret ^= [_suggestedFilename hash];
+    }
+
+    if (nil != _mimeType) {
+        ret ^= [_mimeType hash];
+    }
+
+    if (nil != _textEncodingName) {
+        ret ^= [_textEncodingName hash];
+    }
+
+    if (nil != _url) {
+        ret ^= [_url hash];
+    }
+
+    return ret;
 }
 
 @end
