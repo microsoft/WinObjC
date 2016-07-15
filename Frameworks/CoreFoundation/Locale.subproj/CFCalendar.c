@@ -117,7 +117,8 @@ static void __CFCalendarSetupCal(CFCalendarRef calendar) {
     calendar->_cal = __CFCalendarCreateUCalendar(calendar->_identifier, calendar->_localeID, calendar->_tz);
 }
 
-#if DEPLOYMENT_RUNTIME_SWIFT
+// WINOBJC: CFCalendarIsWeekend and getNextWeekend are useful. Add win32 as a target as well to properly export it for Foundation to access
+#if DEPLOYMENT_RUNTIME_SWIFT || TARGET_OS_WIN32
 Boolean _CFCalendarIsWeekend(CFCalendarRef calendar, CFAbsoluteTime at) {
     if (calendar->_cal == NULL) {
         __CFCalendarSetupCal(calendar);
@@ -652,6 +653,9 @@ static CFRange __CFCalendarGetRangeOfUnit2(CFCalendarRef calendar, CFCalendarUni
             case kCFCalendarUnitHour:
             case kCFCalendarUnitDay:
             case kCFCalendarUnitWeekday:
+            // WINOBJC: WeekOfYear and WeekOfMonth are also valid "biggerUnit"s.
+            case kCFCalendarUnitWeekOfYear:
+            case kCFCalendarUnitWeekOfMonth:
             case kCFCalendarUnitWeek:
             case kCFCalendarUnitMonth:
             case kCFCalendarUnitYear:
@@ -667,6 +671,9 @@ static CFRange __CFCalendarGetRangeOfUnit2(CFCalendarRef calendar, CFCalendarUni
             case kCFCalendarUnitHour:
             case kCFCalendarUnitDay:
             case kCFCalendarUnitWeekday:
+            // WINOBJC: WeekOfYear and WeekOfMonth are also valid "biggerUnit"s.
+            case kCFCalendarUnitWeekOfYear:
+            case kCFCalendarUnitWeekOfMonth:
             case kCFCalendarUnitWeek:
             case kCFCalendarUnitMonth:
             case kCFCalendarUnitYear:
@@ -681,6 +688,9 @@ static CFRange __CFCalendarGetRangeOfUnit2(CFCalendarRef calendar, CFCalendarUni
             switch (biggerUnit) {
             case kCFCalendarUnitDay:
             case kCFCalendarUnitWeekday:
+            // WINOBJC: WeekOfYear and WeekOfMonth are also valid "biggerUnit"s.
+            case kCFCalendarUnitWeekOfYear:
+            case kCFCalendarUnitWeekOfMonth:
             case kCFCalendarUnitWeek:
             case kCFCalendarUnitMonth:
             case kCFCalendarUnitYear:
@@ -693,6 +703,9 @@ static CFRange __CFCalendarGetRangeOfUnit2(CFCalendarRef calendar, CFCalendarUni
         break;
     case kCFCalendarUnitDay:
             switch (biggerUnit) {
+            // WINOBJC: WeekOfYear and WeekOfMonth are also valid "biggerUnit"s.
+            case kCFCalendarUnitWeekOfYear:
+            case kCFCalendarUnitWeekOfMonth:
             case kCFCalendarUnitWeek:
             case kCFCalendarUnitMonth:
             case kCFCalendarUnitYear:
@@ -703,6 +716,9 @@ static CFRange __CFCalendarGetRangeOfUnit2(CFCalendarRef calendar, CFCalendarUni
         break;
     case kCFCalendarUnitWeekday:
             switch (biggerUnit) {
+            // WINOBJC: WeekOfYear and WeekOfMonth are also valid "biggerUnit"s.
+            case kCFCalendarUnitWeekOfYear:
+            case kCFCalendarUnitWeekOfMonth:
             case kCFCalendarUnitWeek:
             case kCFCalendarUnitMonth:
             case kCFCalendarUnitYear:
@@ -720,6 +736,9 @@ static CFRange __CFCalendarGetRangeOfUnit2(CFCalendarRef calendar, CFCalendarUni
         break;
             }
         break;
+    // WINOBJC: Add cases for weekOf units. ICU will handle them below.
+    case kCFCalendarUnitWeekOfYear:
+    case kCFCalendarUnitWeekOfMonth:
     case kCFCalendarUnitWeek:
             switch (biggerUnit) {
             case kCFCalendarUnitMonth:
@@ -964,36 +983,43 @@ Boolean _CFCalendarGetComponentDifferenceV(CFCalendarRef calendar, CFAbsoluteTim
     int direction = (startingAT <= resultAT) ? 1 : -1;
     char ch = *componentDesc;
     while (ch) {
+        // WINOBJC: ICU function ucal_add does not accept UCAL_LEAP_MONTH. Skip this component as it causes failure. TODO: 7682424 ICU update may fix this
+        if (ch == 'l') {
+            vector++;
+            componentDesc++;
+            ch = *componentDesc;
+            continue;
+        }
         UCalendarDateFields field = __CFCalendarGetICUFieldCodeFromChar(ch);
         const int multiple_table[] = {0, 0, 16, 19, 24, 26, 24, 28, 14, 14, 14};
         int multiple = direction * (1 << multiple_table[flsl(__CFCalendarGetCalendarUnitFromChar(ch)) - 1]);
         Boolean divide = false, alwaysDivide = false;
         int result = 0;
         while ((direction > 0 && curr < goal) || (direction < 0 && goal < curr)) {
-        ucal_add(calendar->_cal, field, multiple, &status);
-        UDate newcurr = ucal_getMillis(calendar->_cal, &status);
-        if ((direction > 0 && curr < newcurr && newcurr <= goal) || (direction < 0 && newcurr < curr && goal <= newcurr)) {
-            result += multiple;
-            curr = newcurr;
-        } else {
-            // Either newcurr is going backwards, or not making
-            // progress, or has overshot the goal; reset date
-            // and try smaller multiples.
-            ucal_setMillis(calendar->_cal, curr, &status);
-            divide = true;
-            // once we start overshooting the goal, the add at
-            // smaller multiples will succeed at most once for
-            // each multiple, so we reduce it every time through
-            // the loop.
-            if ((direction > 0 && goal < newcurr) || (direction < 0 && newcurr < goal)) alwaysDivide = true;
+            ucal_add(calendar->_cal, field, multiple, &status);
+            UDate newcurr = ucal_getMillis(calendar->_cal, &status);
+            if ((direction > 0 && curr < newcurr && newcurr <= goal) || (direction < 0 && newcurr < curr && goal <= newcurr)) {
+                result += multiple;
+                curr = newcurr;
+            } else {
+                // Either newcurr is going backwards, or not making
+                // progress, or has overshot the goal; reset date
+                // and try smaller multiples.
+                ucal_setMillis(calendar->_cal, curr, &status);
+                divide = true;
+                // once we start overshooting the goal, the add at
+                // smaller multiples will succeed at most once for
+                // each multiple, so we reduce it every time through
+                // the loop.
+                if ((direction > 0 && goal < newcurr) || (direction < 0 && newcurr < goal)) alwaysDivide = true;
+            }
+            if (divide) {
+                multiple = multiple / 2;
+                if (0 == multiple) break;
+                divide = alwaysDivide;
+            }
         }
-        if (divide) {
-            multiple = multiple / 2;
-            if (0 == multiple) break;
-            divide = alwaysDivide;
-        }
-        }
-        *(*vector) = result;
+        *(*vector) = result;   
         vector++;
         componentDesc++;
         ch = *componentDesc;
