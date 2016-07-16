@@ -28,6 +28,7 @@
 #include "CoreGraphics/CGShading.h"
 #include "UIKit/UIColor.h"
 #include "UIKit/UIFont.h"
+#import "UIColorInternal.h"
 
 typedef struct {
     id curFillColorObject;
@@ -58,7 +59,8 @@ private:
 #define MAX_CG_STATES 16
 
 class CGContextImpl {
-__CGCONTEXTIMPL_TEST_FRIENDS;
+    __CGCONTEXTIMPL_TEST_FRIENDS;
+
 protected:
     CGContextRef _rootContext;
     CGImageRef _imgDest;
