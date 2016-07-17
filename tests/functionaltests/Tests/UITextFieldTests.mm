@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,14 +13,26 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #include <TestFramework.h>
-#import <Foundation/NSThread.h>
-#import <UIKit/UIView.h>
+#import <UIKit/UITextField.h>
 
-TEST(UIView, Create) {
-    EXPECT_FALSE([NSThread isMainThread]);
+#include <COMIncludes.h>
+#import <WRLHelpers.h>
+#import <ErrorHandling.h>
+#import <RawBuffer.h>
+#import <wrl/client.h>
+#import <wrl/implements.h>
+#import <wrl/async.h>
+#import <wrl/wrappers/corewrappers.h>
+#import <windows.foundation.h>
+#include <COMIncludes_end.h>
 
-    // Try to create and destroy a UIView on a non-UI thread
-    [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)] release];
+#include "ObjCXamlControls.h"
+
+TEST(UITextField, CreateXamlElement) {
+    dispatch_sync(dispatch_get_main_queue(),
+    ^{
+        // TODO: Switch to UIKit.Xaml projections when they're available.
+        Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateTextBox());
+    });
 }

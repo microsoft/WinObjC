@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,13 +14,16 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
-#import <Foundation/NSThread.h>
-#import <UIKit/UIView.h>
+#pragma once
 
-TEST(UIView, Create) {
-    EXPECT_FALSE([NSThread isMainThread]);
+#ifndef UIKIT_XAML_IMPEXP
+#define UIKIT_XAML_IMPEXP __declspec(dllimport)
+#endif
 
-    // Try to create and destroy a UIView on a non-UI thread
-    [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)] release];
-}
+#ifndef UIKIT_XAML_EXPORT
+#ifdef __cplusplus
+#define UIKIT_XAML_EXPORT extern "C" UIKIT_XAML_IMPEXP
+#else
+#define UIKIT_XAML_EXPORT extern UIKIT_XAML_IMPEXP
+#endif
+#endif

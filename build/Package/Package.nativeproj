@@ -67,6 +67,7 @@
       <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\*.winmd" />
       <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\*.bitmap" />
       <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\*.data" />
+      <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\**\*.xaml" />
 
       <!-- Files in these directories ship both Debug and Release varieties -->
       <SBLibsWin10Win32 Include="..\Win32\Debug\Universal Windows\Debug\*.lib">
@@ -105,6 +106,7 @@
       <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\*.winmd" />
       <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\*.bitmap" />
       <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\*.data" />
+      <SBLibsWin10ARM Include="..\Win32\$(Configuration)\Universal Windows\**\*.xaml" />
 
       <!-- Files in these directories ship both Debug and Release varieties -->
       <SBLibsWin10ARM Include="..\ARM\Debug\Universal Windows\Debug\*.lib">
@@ -192,9 +194,9 @@
     <Message Importance="high" Text="Copying ObjC Runtime Support files to destination" />
     <Copy SourceFiles="@(MSVCObjCRTFiles)" DestinationFiles="@(MSVCObjCRTFiles->'$(SBPackageDir)msvc\objcrt\%(Filename)%(Extension)')" />
     <Message Importance="high" Text="Copying x86 lib files to destination" />
-    <Copy SourceFiles="@(SBLibsWin10Win32)" DestinationFiles="@(SBLibsWin10Win32->'$(SBPackageDir)lib\Universal Windows\%(OutputDirectory)\%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(SBLibsWin10Win32)" DestinationFiles="@(SBLibsWin10Win32->'$(SBPackageDir)lib\Universal Windows\%(OutputDirectory)\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Message Importance="high" Text="Copying ARM lib files to destination" />
-    <Copy SourceFiles="@(SBLibsWin10ARM)" DestinationFiles="@(SBLibsWin10ARM->'$(SBPackageDir)lib\Universal Windows\%(OutputDirectory)\%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(SBLibsWin10ARM)" DestinationFiles="@(SBLibsWin10ARM->'$(SBPackageDir)lib\Universal Windows\%(OutputDirectory)\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Message Importance="high" Text="Copying includes to destination" />
     <Copy SourceFiles="@(SBIncludes)" DestinationFiles="@(SBIncludes->'$(SBPackageDir)include\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(SBXMLIncludes)" DestinationFiles="@(SBXMLIncludes->'$(SBPackageDir)include\libxml\%(RecursiveDir)%(Filename)%(Extension)')" />

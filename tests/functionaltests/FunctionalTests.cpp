@@ -366,30 +366,55 @@ public:
     }
 }; /* class CortanaProtocolForeground*/
 
-// UIViewTests
+// UIKitTests
 //
-extern void UIViewTestsCreate();
+extern void UIViewCreate();
+extern void UIActivityIndicatorCreateXamlElement();
+extern void UIButtonCreateXamlElement();
+extern void UIScrollViewCreateXamlElement();
+extern void UISliderCreateXamlElement();
+extern void UITextFieldCreateXamlElement();
 
-class UIViewTests {
+class UIKitTests {
 public:
-    BEGIN_TEST_CLASS(UIViewTests)
+    BEGIN_TEST_CLASS(UIKitTests)
     TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
     TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     END_TEST_CLASS()
 
-    TEST_CLASS_SETUP(UIViewTestsSetup) {
+    TEST_CLASS_SETUP(UIKitTestsSetup) {
         return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
     }
 
-    TEST_METHOD_CLEANUP(UIViewCleanup) {
+    TEST_METHOD_CLEANUP(UIKitTestsCleanup) {
         FunctionalTestCleanupUIApplication();
         return true;
     }
 
-    TEST_METHOD(UIViewTests_Create) {
-        UIViewTestsCreate();
+    TEST_METHOD(UIView_Create) {
+        UIViewCreate();
     }
-}; /* class UIViewTests */
+
+    TEST_METHOD(UIActivityIndicator_CreateXamlElement) {
+        UIActivityIndicatorCreateXamlElement();
+    }
+
+    TEST_METHOD(UIButton_CreateXamlElement) {
+        UIButtonCreateXamlElement();
+    }
+
+    TEST_METHOD(UIScrollView_CreateXamlElement) {
+        UIScrollViewCreateXamlElement();
+    }
+
+    TEST_METHOD(UISlider_CreateXamlElement) {
+        UISliderCreateXamlElement();
+    }
+
+    TEST_METHOD(UITextField_CreateXamlElement) {
+        UITextFieldCreateXamlElement();
+    }
+}; /* class UIKitTests */
 
 // Projection Tests
 //

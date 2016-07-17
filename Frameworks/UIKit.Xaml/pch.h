@@ -1,6 +1,6 @@
-//******************************************************************************
+﻿//******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,14 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#include <TestFramework.h>
-#import <Foundation/NSThread.h>
-#import <UIKit/UIView.h>
-
-TEST(UIView, Create) {
-    EXPECT_FALSE([NSThread isMainThread]);
-
-    // Try to create and destroy a UIView on a non-UI thread
-    [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)] release];
-}
+#include <collection.h>
+#include <ppltasks.h>

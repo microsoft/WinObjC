@@ -54,6 +54,14 @@
       <SBResourceCopy Include="$(StarboardLibDirs)\AppInsights_Win10-UAP.dll" />
     </ItemGroup>
 
+    <!-- UIKit.Xaml -->
+    <ItemGroup>
+      <UIKitXamlFile Include="$(StarboardLibDirs)\UIKit.Xaml\**\*.xaml" />
+      <SBResourceCopy Include="%(UIKitXamlFile.Identity)">
+        <VariantDir>UIKit\%(UIKitXamlFile.RecursiveDir)</VariantDir>
+      </SBResourceCopy>
+    </ItemGroup>
+
     <ItemGroup>
       <!-- CoreFoundation resource files -->
       <SBResourceCopy Include="$(StarboardLibDirs)\CFCharacterSetBitmaps.bitmap" />

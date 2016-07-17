@@ -1,6 +1,6 @@
-//******************************************************************************
+﻿//******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,14 +13,24 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+// clang-format does not like C++/CX
+// clang-format off
+#pragma once
 
-#include <TestFramework.h>
-#import <Foundation/NSThread.h>
-#import <UIKit/UIView.h>
+#include "TextBox.g.h"
+#include "ObjCXamlControls.h"
 
-TEST(UIView, Create) {
-    EXPECT_FALSE([NSThread isMainThread]);
+namespace UIKit {
 
-    // Try to create and destroy a UIView on a non-UI thread
-    [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)] release];
+[Windows::Foundation::Metadata::WebHostHidden]
+public ref class TextBox sealed {
+public:
+    TextBox();
+    void OnApplyTemplate() override;
+
+private:
+    // TODO : Add support for toggle - able password field when UITextField is in secure mode.
+};
+
 }
+// clang-format on
