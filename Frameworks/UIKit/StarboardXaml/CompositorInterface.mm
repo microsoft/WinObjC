@@ -47,7 +47,6 @@
 
 #import <UWP/WindowsUIViewManagement.h>
 #import <UWP/WindowsDevicesInput.h>
-#import "UIColorInternal.h"
 
 static const wchar_t* TAG = L"CompositorInterface";
 
@@ -338,7 +337,10 @@ public:
         _insets[2] = edgeInsets.right;
         _insets[3] = edgeInsets.bottom;
 
-        memcpy(_color, [color _getColors], sizeof(_color));
+        ColorQuad colorComponents;
+        [color getColors:&colorComponents];
+
+        ColorQuadToFloatArray(colorComponents, _color);
 
         _fontSize = [font pointSize];
         _centerVertically = centerVertically;
@@ -1079,7 +1081,8 @@ public:
         } else if (strcmp(name, "sublayerTransform") == 0) {
             UNIMPLEMENTED_WITH_MSG("sublayerTransform not implemented");
         } else if (strcmp(name, "backgroundColor") == 0) {
-            ColorQuad color = *[(UIColor*)newValue _getColors];
+            ColorQuad color{};
+            [(UIColor*)newValue getColors:&color];
             SetBackgroundColor(color.r, color.g, color.b, color.a);
         } else {
             FAIL_FAST_HR(E_NOTIMPL);

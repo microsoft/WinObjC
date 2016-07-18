@@ -212,12 +212,13 @@ void CGContextCairo::_cairoContextStrokePathShadow() {
     cairo_append_path(ctx, path);
 
     NSUInteger componentsNum = CGColorGetNumberOfComponents(curState->shadowColor);
-    const CGFloat* components = CGColorGetComponents(curState->shadowColor);
+    CGFloat* components = (CGFloat*)CGColorGetComponents(curState->shadowColor);
     if (componentsNum == 2) {
         cairo_set_source_rgba(ctx, components[0], components[0], components[0], components[1]);
     } else if (componentsNum == 4) {
         cairo_set_source_rgba(ctx, components[0], components[1], components[2], components[3]);
     }
+    IwFree(components);
 
     // Make the stroke style same as _drawContext
     cairo_set_line_width(ctx, cairo_get_line_width(_drawContext));
@@ -699,12 +700,12 @@ void CGContextCairo::CGContextSetStrokeColor(float* components) {
 }
 
 void CGContextCairo::CGContextSetStrokeColorWithColor(id color) {
-    curState->curStrokeColor = *[(UIColor*)color _getColors];
+    [(UIColor*)color getColors:&curState->curStrokeColor];
 }
 
 void CGContextCairo::CGContextSetFillColorWithColor(id color) {
     if ((int)[(UIColor*)color _type] == solidBrush) {
-        curState->curFillColor = *[(UIColor*)color _getColors];
+        [(UIColor*)color getColors:&curState->curFillColor];
         curState->curFillColorObject = nil;
     } else {
         curState->curFillColorObject = [color retain];

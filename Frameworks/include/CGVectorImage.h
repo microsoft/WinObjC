@@ -16,8 +16,6 @@
 
 #pragma once
 
-#import "UIColorInternal.h"
-
 class CGVectorImageBacking;
 
 class CGVectorImage : public __CGImage {

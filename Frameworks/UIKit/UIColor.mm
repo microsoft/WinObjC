@@ -216,7 +216,7 @@ rgb hsv2rgb(hsv in) {
     enum BrushType _type;
     UIImage* _image;
     id _pattern;
-    ColorQuad _components;
+    float _r, _g, _b, _a;
 }
 
 /**
@@ -244,16 +244,16 @@ rgb hsv2rgb(hsv in) {
         return [[[self class] performSelector:NSSelectorFromString(pattern)] retain];
     } else {
         if ([coder containsValueForKey:@"UIWhite"]) {
-            _components.r = _components.g = _components.b = [coder decodeFloatForKey:@"UIWhite"];
+            _r = _g = _b = [coder decodeFloatForKey:@"UIWhite"];
         } else {
-            _components.r = [coder decodeFloatForKey:@"UIRed"];
-            _components.g = [coder decodeFloatForKey:@"UIGreen"];
-            _components.b = [coder decodeFloatForKey:@"UIBlue"];
+            _r = [coder decodeFloatForKey:@"UIRed"];
+            _g = [coder decodeFloatForKey:@"UIGreen"];
+            _b = [coder decodeFloatForKey:@"UIBlue"];
         }
         if ([coder containsValueForKey:@"UIAlpha"]) {
-            _components.a = [coder decodeFloatForKey:@"UIAlpha"];
+            _a = [coder decodeFloatForKey:@"UIAlpha"];
         } else {
-            _components.a = 1.0f;
+            _a = 1.0f;
         }
 
         return self;
@@ -266,10 +266,10 @@ rgb hsv2rgb(hsv in) {
 - (void)encodeWithCoder:(NSCoder*)coder {
     assert(_type == solidBrush);
 
-    [coder encodeFloat:_components.r forKey:@"UIRed"];
-    [coder encodeFloat:_components.g forKey:@"UIGreen"];
-    [coder encodeFloat:_components.b forKey:@"UIBlue"];
-    [coder encodeFloat:_components.a forKey:@"UIAlpha"];
+    [coder encodeFloat:_r forKey:@"UIRed"];
+    [coder encodeFloat:_g forKey:@"UIGreen"];
+    [coder encodeFloat:_b forKey:@"UIBlue"];
+    [coder encodeFloat:_a forKey:@"UIAlpha"];
 }
 
 /**
@@ -428,10 +428,10 @@ rgb hsv2rgb(hsv in) {
 */
 + (UIColor*)colorWithRed:(float)r green:(float)g blue:(float)b alpha:(float)a {
     UIColor* ret = [self alloc];
-    ret->_components.r = r;
-    ret->_components.g = g;
-    ret->_components.b = b;
-    ret->_components.a = a;
+    ret->_r = r;
+    ret->_g = g;
+    ret->_b = b;
+    ret->_a = a;
     ret->_type = solidBrush;
 
     return [ret autorelease];
@@ -459,10 +459,10 @@ rgb hsv2rgb(hsv in) {
 
     out = hsv2rgb(in);
 
-    _components.r = (float)out.r;
-    _components.g = (float)out.g;
-    _components.b = (float)out.b;
-    _components.a = (float)a;
+    _r = (float)out.r;
+    _g = (float)out.g;
+    _b = (float)out.b;
+    _a = (float)a;
     _type = solidBrush;
 
     return self;
@@ -472,10 +472,10 @@ rgb hsv2rgb(hsv in) {
  @Status Interoperable
 */
 - (UIColor*)initWithRed:(float)r green:(float)g blue:(float)b alpha:(float)a {
-    _components.r = r;
-    _components.g = g;
-    _components.b = b;
-    _components.a = a;
+    _r = r;
+    _g = g;
+    _b = b;
+    _a = a;
     _type = solidBrush;
     return self;
 }
@@ -514,10 +514,10 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     _image = [image retain];
     _type = cgPatternBrush;
 
-    _components.r = 0;
-    _components.g = 0;
-    _components.b = 0;
-    _components.a = 0;
+    _r = 0;
+    _g = 0;
+    _b = 0;
+    _a = 0;
 
     return self;
 }
@@ -558,7 +558,7 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
  @Status Interoperable
 */
 - (UIColor*)colorWithAlphaComponent:(float)alpha {
-    return [UIColor colorWithRed:_components.r green:_components.g blue:_components.b alpha:alpha];
+    return [UIColor colorWithRed:_r green:_g blue:_b alpha:alpha];
 }
 
 + (UIColor*)colorWithColor:(UIColor*)copyclr {
@@ -570,10 +570,10 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
 
     ret->_type = copyclr->_type;
     ret->_pattern = [copyclr->_pattern retain];
-    ret->_components.r = copyclr->_components.r;
-    ret->_components.g = copyclr->_components.g;
-    ret->_components.b = copyclr->_components.b;
-    ret->_components.a = copyclr->_components.a;
+    ret->_r = copyclr->_r;
+    ret->_g = copyclr->_g;
+    ret->_b = copyclr->_b;
+    ret->_a = copyclr->_a;
 
     return [ret autorelease];
 }
@@ -591,16 +591,21 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
 
     ret->_type = copyclr->_type;
     ret->_pattern = [copyclr->_pattern retain];
-    ret->_components.r = copyclr->_components.r;
-    ret->_components.g = copyclr->_components.g;
-    ret->_components.b = copyclr->_components.b;
-    ret->_components.a = copyclr->_components.a;
+    ret->_r = copyclr->_r;
+    ret->_g = copyclr->_g;
+    ret->_b = copyclr->_b;
+    ret->_a = copyclr->_a;
 
     return [ret autorelease];
 }
 
-- (const ColorQuad*)_getColors {
-    return &_components;
+- (void)getColors:(ColorQuad*)colors {
+    if (colors) {
+        colors->r = _r;
+        colors->g = _g;
+        colors->b = _b;
+        colors->a = _a;
+    }
 }
 
 /**
@@ -694,9 +699,9 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     hsv out;
     rgb in;
 
-    in.r = _components.r;
-    in.b = _components.b;
-    in.g = _components.g;
+    in.r = _r;
+    in.b = _b;
+    in.g = _g;
 
     out = rgb2hsv(in);
 
@@ -710,7 +715,7 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
         *v = (float)out.v;
     }
     if (a) {
-        *a = _components.a;
+        *a = _a;
     }
 
     return TRUE;
@@ -721,16 +726,16 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
 */
 - (BOOL)getRed:(float*)r green:(float*)g blue:(float*)b alpha:(float*)a {
     if (r) {
-        *r = _components.r;
+        *r = _r;
     }
     if (g) {
-        *g = _components.g;
+        *g = _g;
     }
     if (b) {
-        *b = _components.b;
+        *b = _b;
     }
     if (a) {
-        *a = _components.a;
+        *a = _a;
     }
 
     return TRUE;
@@ -744,8 +749,8 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
         return FALSE;
     }
 
-    if (_type == other->_type && _image == other->_image && _pattern == other->_pattern && _components.r == other->_components.r &&
-        _components.g == other->_components.g && _components.b == other->_components.b) {
+    if (_type == other->_type && _image == other->_image && _pattern == other->_pattern && _r == other->_r && _g == other->_g &&
+        _b == other->_b) {
         return TRUE;
     } else {
         return FALSE;
