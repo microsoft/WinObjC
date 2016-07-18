@@ -353,12 +353,12 @@ void CGContextImpl::CGContextSetStrokeColor(float* components) {
 }
 
 void CGContextImpl::CGContextSetStrokeColorWithColor(id color) {
-    [(UIColor*)color getColors:&curState->curStrokeColor];
+    curState->curStrokeColor = *[(UIColor*)color _getColors];
 }
 
 void CGContextImpl::CGContextSetFillColorWithColor(id color) {
     if ((int)[(UIColor*)color _type] == solidBrush) {
-        [(UIColor*)color getColors:&curState->curFillColor];
+        curState->curFillColor = *[(UIColor*)color _getColors];
         curState->curFillColorObject = nil;
     } else {
         curState->curFillColorObject = [color retain];
