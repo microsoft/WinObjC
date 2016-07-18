@@ -136,29 +136,32 @@ NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPe
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return YES;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-- (id)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    if (self = [super init]) {
+        _code = [coder decodeIntForKey:@"code"];
+        _domain = [coder decodeObjectOfClass:[NSString class] forKey:@"domain"];
+        _userInfo = [coder decodeObjectOfClass:[NSDictionary class] forKey:@"userInfo"];
+    }
+
+    return self;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
+    [coder encodeInt:_code forKey:@"code"];
+    [coder encodeObject:_domain forKey:@"domain"];
+    [coder encodeObject:_userInfo forKey:@"userInfo"];
 }
 
 /**
