@@ -23,17 +23,13 @@
 @class NSCalendar;
 @class NSTimeZone;
 
-// enum {
-//   NSUndefinedDateComponent = 0x7fffffff
-//};
-
 FOUNDATION_EXPORT_CLASS
 @interface NSDateComponents : NSObject <NSCopying, NSSecureCoding>
 @property (readonly, copy) NSDate* date;
 @property (copy) NSCalendar* calendar;
 @property (copy) NSTimeZone* timeZone;
 @property (readonly, getter=isValidDate) BOOL validDate;
-- (BOOL)isValidDateInCalendar:(NSCalendar*)calendar STUB_METHOD;
+- (BOOL)isValidDateInCalendar:(NSCalendar*)calendar;
 @property NSInteger era;
 @property NSInteger year;
 @property NSInteger month;
@@ -50,6 +46,6 @@ FOUNDATION_EXPORT_CLASS
 @property NSInteger weekOfYear;
 @property NSInteger yearForWeekOfYear;
 @property (getter=isLeapMonth) BOOL leapMonth;
-- (NSInteger)valueForComponent:(NSCalendarUnit)unit STUB_METHOD;
-- (void)setValue:(NSInteger)value forComponent:(NSCalendarUnit)unit STUB_METHOD;
+- (NSInteger)valueForComponent:(NSCalendarUnit)unit;
+- (void)setValue:(NSInteger)value forComponent:(NSCalendarUnit)unit;
 @end

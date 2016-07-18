@@ -197,6 +197,10 @@ CF_EXPORT const CFStringRef kCFIndianCalendar CF_AVAILABLE(10_6, 4_0);
 CF_EXPORT const CFStringRef kCFISO8601Calendar CF_AVAILABLE(10_6, 4_0);
 CF_EXPORT const CFStringRef kCFIslamicTabularCalendar CF_AVAILABLE(10_10, 8_0);
 CF_EXPORT const CFStringRef kCFIslamicUmmAlQuraCalendar CF_AVAILABLE(10_10, 8_0);
+//WINOBJC: Expose additional calendar identifiers for foundation to use
+CF_EXPORT const CFStringRef kCFCopticCalendar CF_AVAILABLE(10_10, 8_0);
+CF_EXPORT const CFStringRef kCFEthiopicAmeteMihretCalendar CF_AVAILABLE(10_10, 8_0);
+CF_EXPORT const CFStringRef kCFEthiopicAmeteAlemCalendar CF_AVAILABLE(10_10, 8_0);
 
 CF_EXTERN_C_END
 CF_IMPLICIT_BRIDGING_DISABLED
