@@ -17,20 +17,13 @@
 #pragma once
 
 #import <UIKit/UIColor.h>
-#import <CoreGraphics/CoreGraphics.h>
-
-typedef struct {
-    CGFloat r;
-    CGFloat g;
-    CGFloat b;
-    CGFloat a;
-} ColorQuad;
+#import <CoreGraphics/CGPattern.h>
 
 @interface UIColor (Internal) {
 }
 + (UIColor*)_colorWithCGPattern:(CGPatternRef)pattern;
 + (UIColor*)_windowsTableViewCellSelectionBackgroundColor;
 
-- (const ColorQuad*)_getColors;
+- (void)getColors:(ColorQuad*)colors;
 - (BrushType)_type;
 @end

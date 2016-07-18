@@ -20,7 +20,6 @@
 #import <LinkedList.h>
 #import <AccessibilityInternal.h>
 #import <UIKit/UIImage.h>
-#import "UIColorInternal.h"
 
 @class CAAnimation, CALayerContext;
 
