@@ -68,7 +68,7 @@ FOUNDATION_EXPORT_CLASS
 - (void)enumerateKeysAndObjectsWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(KeyType, ObjectType, BOOL*))block;
 - (NSArray<KeyType>*)keysSortedByValueUsingSelector:(SEL)comparator;
 - (NSArray<KeyType>*)keysSortedByValueUsingComparator:(NSComparator)cmptr;
-- (NSArray<KeyType>*)keysSortedByValueWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr STUB_METHOD;
+- (NSArray<KeyType>*)keysSortedByValueWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr;
 - (NSSet<KeyType>*)keysOfEntriesPassingTest:(BOOL (^)(KeyType, ObjectType, BOOL*))predicate STUB_METHOD;
 - (NSSet<KeyType>*)keysOfEntriesWithOptions:(NSEnumerationOptions)opts
                                 passingTest:(BOOL (^)(KeyType, ObjectType, BOOL*))predicate STUB_METHOD;

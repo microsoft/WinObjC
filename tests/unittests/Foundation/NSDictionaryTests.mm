@@ -68,3 +68,51 @@ TEST(NSDictionary, ExpandBeyondCapacity) {
 
     ASSERT_EQ(expectedCount, [dictionary count]);
 }
+
+TEST(NSDictionary, keysSortedByValue) {
+    NSDictionary* dictionary = @{@"f" : @6, @"b": @2, @"a" : @1, @"c" : @3, @"e" : @5, @"d" : @4};
+    NSArray* expected = @[@"a", @"b", @"c", @"d", @"e", @"f"];
+    NSArray* actual = [dictionary keysSortedByValueUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        int a = [obj1 intValue];
+        int b = [obj2 intValue];
+        if (a == b) {
+            return NSOrderedSame;
+        }
+
+        return (a > b) ? NSOrderedDescending : NSOrderedAscending;
+    }];
+
+    ASSERT_OBJCEQ(expected, actual);
+}
+
+TEST(NSDictionary, keysSortedByValueWithOptions) {
+    NSDictionary* dictionary = @{@"f" : @6, @"b": @2, @"a" : @1, @"c" : @3, @"e" : @5, @"d" : @4};
+    NSArray* expected = @[@"a", @"b", @"c", @"d", @"e", @"f"];
+    NSArray* actual = [dictionary keysSortedByValueWithOptions:0 usingComparator:^NSComparisonResult(id obj1, id obj2) {
+        int a = [obj1 intValue];
+        int b = [obj2 intValue];
+        if (a == b) {
+            return NSOrderedSame;
+        }
+
+        return (a > b) ? NSOrderedDescending : NSOrderedAscending;
+    }];
+
+    ASSERT_OBJCEQ(expected, actual);
+}
+
+TEST(NSDictionary, keysSortedByValueWithOptions_Stable) {
+    NSDictionary* dictionary = @{@"a" : @1, @"b": @1, @"c" : @1, @"d" : @1, @"e" : @1, @"f" : @0};
+    NSArray* expected = @[@"f", @"d", @"b", @"e", @"c", @"a"]; // Note: ordering after "f" is dependent on CFDictionary (this ordering matches the reference platform)
+    NSArray* actual = [dictionary keysSortedByValueWithOptions:NSSortStable usingComparator:^NSComparisonResult(id obj1, id obj2) {
+        int a = [obj1 intValue];
+        int b = [obj2 intValue];
+        if (a == b) {
+            return NSOrderedSame;
+        }
+
+        return (a > b) ? NSOrderedDescending : NSOrderedAscending;
+    }];
+
+    ASSERT_OBJCEQ(expected, actual);
+}

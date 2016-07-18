@@ -557,11 +557,23 @@ recurse:
 }
 
 /**
- @Status Caveat
- @Notes Options are currently ignored
+ @Status Interoperable
+ @Notes NSSortConcurrent is ignored, but this is compatible with reference documentation
 */
 - (void)sortWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr {
-    [self sortUsingFunction:CFNSBlockCompare context:cmptr];
+    if (NSSortStable) {
+        __block NSArray* original = [[self mutableCopy] autorelease];
+        [self sortUsingFunction:CFNSBlockCompare context:^NSComparisonResult(id obj1, id obj2) {
+            NSComparisonResult result = cmptr(obj1, obj2);
+            if (result != NSOrderedSame) {
+                return result;
+            }
+
+            return ([original indexOfObjectIdenticalTo:obj1] > [original indexOfObjectIdenticalTo:obj2]) ? NSOrderedDescending : NSOrderedAscending;
+        }];
+    } else {
+        [self sortUsingFunction:CFNSBlockCompare context:cmptr];
+    }
 }
 
 @end
