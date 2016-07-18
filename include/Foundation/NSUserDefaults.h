@@ -45,7 +45,7 @@ FOUNDATION_EXPORT_CLASS
 + (void)resetStandardUserDefaults;
 - (instancetype)init;
 - (id)initWithUser:(NSString*)username STUB_METHOD;
-- (instancetype)initWithSuiteName:(NSString*)suitename STUB_METHOD;
+- (instancetype)initWithSuiteName:(NSString*)suitename;
 - (void)registerDefaults:(NSDictionary*)dictionary;
 - (NSArray*)arrayForKey:(NSString*)defaultName;
 - (BOOL)boolForKey:(NSString*)defaultName;

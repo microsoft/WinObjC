@@ -29,6 +29,7 @@
 #import <UIKit/UIApplicationDelegate.h>
 #import <StringHelpers.h>
 #import "NSThread-Internal.h"
+#import "NSUserDefaultsInternal.h"
 #import "StarboardXaml/StarboardXaml.h"
 #import "UIApplicationInternal.h"
 #import "UIFontInternal.h"
@@ -318,6 +319,14 @@ extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisibl
 
 extern "C" void UIApplicationMainHandleHighMemoryUsageEvent() {
     [[UIApplication sharedApplication] _sendHighMemoryWarning];
+}
+
+extern "C" void UIApplicationMainHandleSuspendEvent() {
+    [[NSUserDefaults _standardUserDefaultsNoInitialize] _suspendSynchronize];
+}
+
+extern "C" void UIApplicationMainHandleResumeEvent() {
+    [[NSUserDefaults _standardUserDefaultsNoInitialize] _resumeSynchronize];
 }
 
 extern "C" void UIApplicationMainHandleToastNotificationEvent(const char* notificationData) {
