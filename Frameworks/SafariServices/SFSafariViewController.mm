@@ -76,15 +76,6 @@ static const wchar_t* TAG = L"SFSafariViewController";
 }
 
 - (NSString*)_sourceApplication {
-    // When an app is asked to open a URL, we must provide the identity of the
-    // "source application". If the request originates from another app on the
-    // machine, the source application would be its bundle ID. In the case where
-    // the URL is coming from the web, however, the behavior is undocumented but
-    // in practice seems to be the host name of the source, in reverse order.
-
-    NSArray* hostParts = [_url.host componentsSeparatedByString:@"."];
-    NSArray* reverseHostParts = [[hostParts reverseObjectEnumerator] allObjects];
-
-    return [reverseHostParts componentsJoinedByString:@"."];
+    return @"com.apple.SafariViewService";
 }
 @end
