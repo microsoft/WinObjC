@@ -317,8 +317,7 @@ static StrongId<NSUserDefaults> _standard = nil;
 }
 
 - (void) _suspendSynchronize {
-    [_synchronizeQueue setSuspended:YES];
-    [_synchronizeQueue waitUntilAllOperationsAreFinished];
+    [_synchronizeQueue addOperations:@[[NSBlockOperation blockOperationWithBlock:^{[_synchronizeQueue setSuspended:YES];}]] waitUntilFinished:YES];
 }
 
 - (void) _resumeSynchronize {
