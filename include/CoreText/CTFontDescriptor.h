@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -23,6 +23,7 @@
 #import <CoreFoundation/CFNumber.h>
 #import <CoreFoundation/CFSet.h>
 #import <CoreFoundation/CFString.h>
+#import <CoreGraphics/CGBase.h>
 
 typedef const struct __CTFontDescriptor* CTFontDescriptorRef;
 typedef uint32_t CTFontOrientation;
