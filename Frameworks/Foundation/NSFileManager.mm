@@ -1,8 +1,8 @@
 //******************************************************************************
 //
-// COPYRIGHT (C) MICROSOFT. ALL RIGHTS RESERVED.
+// Copyright (c) Microsoft. All rights reserved.
 //
-// THIS CODE IS LICENSED UNDER THE MIT LICENSE (MIT).
+// This code is licensed under the MIT License (MIT).
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -14,1015 +14,1015 @@
 //
 //******************************************************************************
 
-#IMPORT <STARBOARD.H>
-#IMPORT <STUBRETURN.H>
-#IMPORT <FOUNDATION/NSFILEMANAGER.H>
-#IMPORT <FOUNDATION/NSERROR.H>
-#IMPORT <FOUNDATION/NSSTRING.H>
-#IMPORT <FOUNDATION/NSMUTABLEARRAY.H>
-#IMPORT <FOUNDATION/NSMUTABLEDICTIONARY.H>
-#IMPORT <FOUNDATION/NSNUMBER.H>
-#IMPORT <FOUNDATION/NSDATE.H>
-#IMPORT <FOUNDATION/NSDATA.H>
-#IMPORT <FOUNDATION/NSURL.H>
-#IMPORT <FOUNDATION/NSDIRECTORYENUMERATOR.H>
-#IMPORT <FOUNDATION/NSDICTIONARY.H>
-#IMPORT <STRING>
-#IMPORT <VECTOR>
-#IMPORT <SYS/STAT.H>
-#IMPORT <ERRNO.H>
-#IMPORT <LOGGINGNATIVE.H>
-#IMPORT <CFFOUNDATIONINTERNAL.H>
-#IMPORT <FORFOUNDATIONONLY.H>
-#IMPORT "NSDIRECTORYENUMERATORINTERNAL.H"
+#import <Starboard.h>
+#import <StubReturn.h>
+#import <Foundation/NSFileManager.h>
+#import <Foundation/NSError.h>
+#import <Foundation/NSString.h>
+#import <Foundation/NSMutableArray.h>
+#import <Foundation/NSMutableDictionary.h>
+#import <Foundation/NSNumber.h>
+#import <Foundation/NSDate.h>
+#import <Foundation/NSData.h>
+#import <Foundation/NSURL.h>
+#import <Foundation/NSDirectoryEnumerator.h>
+#import <Foundation/NSDictionary.h>
+#import <string>
+#import <vector>
+#import <sys/stat.h>
+#import <errno.h>
+#import <LoggingNative.h>
+#import <CFFoundationInternal.h>
+#import <ForFoundationOnly.h>
+#import "NSDirectoryEnumeratorInternal.h"
 
-STATIC CONST WCHAR_T* TAG = L"NSFILEMANAGER";
+static const wchar_t* TAG = L"NSFileManager";
 
-#IFDEF __LINUX__
-#DEFINE _S_IFDIR S_IFDIR
-#ENDIF
+#ifdef __linux__
+#define _S_IFDIR S_IFDIR
+#endif
 
-// FILE ATTRIBUTE KEYS
-NSSTRING* CONST NSFILETYPE = @"NSFILETYPE";
-NSSTRING* CONST NSFILESIZE = @"NSFILESIZE";
-NSSTRING* CONST NSFILEMODIFICATIONDATE = @"NSFILEMODIFICATIONDATE";
-NSSTRING* CONST NSFILEREFERENCECOUNT = @"NSFILEREFERENCECOUNT";
-NSSTRING* CONST NSFILEDEVICEIDENTIFIER = @"NSFILEDEVICEIDENTIFIER";
-NSSTRING* CONST NSFILEOWNERACCOUNTNAME = @"NSFILEOWNERACCOUNTNAME";
-NSSTRING* CONST NSFILEGROUPOWNERACCOUNTNAME = @"NSFILEGROUPOWNERACCOUNTNAME";
-NSSTRING* CONST NSFILEPOSIXPERMISSIONS = @"NSFILEPOSIXPERMISSIONS";
-NSSTRING* CONST NSFILESYSTEMNUMBER = @"NSFILESYSTEMNUMBER";
-NSSTRING* CONST NSFILESYSTEMFILENUMBER = @"NSFILESYSTEMFILENUMBER";
-NSSTRING* CONST NSFILEEXTENSIONHIDDEN = @"NSFILEEXTENSIONHIDDEN";
-NSSTRING* CONST NSFILEHFSCREATORCODE = @"NSFILEHFSCREATORCODE";
-NSSTRING* CONST NSFILEHFSTYPECODE = @"NSFILEHFSTYPECODE";
-NSSTRING* CONST NSFILEIMMUTABLE = @"NSFILEIMMUTABLE";
-NSSTRING* CONST NSFILEAPPENDONLY = @"NSFILEAPPENDONLY";
-NSSTRING* CONST NSFILECREATIONDATE = @"NSFILECREATIONDATE";
-NSSTRING* CONST NSFILEOWNERACCOUNTID = @"NSFILEOWNERACCOUNTID";
-NSSTRING* CONST NSFILEGROUPOWNERACCOUNTID = @"NSFILEGROUPOWNERACCOUNTID";
-NSSTRING* CONST NSFILEBUSY = @"NSFILEBUSY";
+// file attribute keys
+NSString* const NSFileType = @"NSFileType";
+NSString* const NSFileSize = @"NSFileSize";
+NSString* const NSFileModificationDate = @"NSFileModificationDate";
+NSString* const NSFileReferenceCount = @"NSFileReferenceCount";
+NSString* const NSFileDeviceIdentifier = @"NSFileDeviceIdentifier";
+NSString* const NSFileOwnerAccountName = @"NSFileOwnerAccountName";
+NSString* const NSFileGroupOwnerAccountName = @"NSFileGroupOwnerAccountName";
+NSString* const NSFilePosixPermissions = @"NSFilePosixPermissions";
+NSString* const NSFileSystemNumber = @"NSFileSystemNumber";
+NSString* const NSFileSystemFileNumber = @"NSFileSystemFileNumber";
+NSString* const NSFileExtensionHidden = @"NSFileExtensionHidden";
+NSString* const NSFileHFSCreatorCode = @"NSFileHFSCreatorCode";
+NSString* const NSFileHFSTypeCode = @"NSFileHFSTypeCode";
+NSString* const NSFileImmutable = @"NSFileImmutable";
+NSString* const NSFileAppendOnly = @"NSFileAppendOnly";
+NSString* const NSFileCreationDate = @"NSFileCreationDate";
+NSString* const NSFileOwnerAccountID = @"NSFileOwnerAccountID";
+NSString* const NSFileGroupOwnerAccountID = @"NSFileGroupOwnerAccountID";
+NSString* const NSFileBusy = @"NSFileBusy";
 
-NSSTRING* CONST NSFILEPROTECTIONKEY = @"NSFILEPROTECTIONKEY";
+NSString* const NSFileProtectionKey = @"NSFileProtectionKey";
 
-// NSFILETYPE ATTRIBUTE VALUES
-NSSTRING* CONST NSFILETYPEDIRECTORY = @"NSFILETYPEDIRECTORY";
-NSSTRING* CONST NSFILETYPEREGULAR = @"NSFILETYPEREGULAR";
-NSSTRING* CONST NSFILETYPESYMBOLICLINK = @"NSFILETYPESYMBOLICLINK";
-NSSTRING* CONST NSFILETYPESOCKET = @"NSFILETYPESOCKET";
-NSSTRING* CONST NSFILETYPECHARACTERSPECIAL = @"NSFILETYPECHARACTERSPECIAL";
-NSSTRING* CONST NSFILETYPEBLOCKSPECIAL = @"NSFILETYPEBLOCKSPECIAL";
-NSSTRING* CONST NSFILETYPEUNKNOWN = @"NSFILETYPEUNKNOWN";
+// NSFileType Attribute Values
+NSString* const NSFileTypeDirectory = @"NSFileTypeDirectory";
+NSString* const NSFileTypeRegular = @"NSFileTypeRegular";
+NSString* const NSFileTypeSymbolicLink = @"NSFileTypeSymbolicLink";
+NSString* const NSFileTypeSocket = @"NSFileTypeSocket";
+NSString* const NSFileTypeCharacterSpecial = @"NSFileTypeCharacterSpecial";
+NSString* const NSFileTypeBlockSpecial = @"NSFileTypeBlockSpecial";
+NSString* const NSFileTypeUnknown = @"NSFileTypeUnknown";
 
-// FILE-SYSTEM ATTRIBUTE KEYS
-NSSTRING* CONST NSFILESYSTEMSIZE = @"NSFILESYSTEMSIZE";
-NSSTRING* CONST NSFILESYSTEMFREESIZE = @"NSFILESYSTEMFREESIZE";
-NSSTRING* CONST NSFILESYSTEMNODES = @"NSFILESYSTEMNODES";
-NSSTRING* CONST NSFILESYSTEMFREENODES = @"NSFILESYSTEMFREENODES";
+// File-System attribute Keys
+NSString* const NSFileSystemSize = @"NSFileSystemSize";
+NSString* const NSFileSystemFreeSize = @"NSFileSystemFreeSize";
+NSString* const NSFileSystemNodes = @"NSFileSystemNodes";
+NSString* const NSFileSystemFreeNodes = @"NSFileSystemFreeNodes";
 
-// FILE PROTECTION VALUES
-NSSTRING* CONST NSFILEPROTECTIONNONE = @"NSFILEPROTECTIONNONE";
-NSSTRING* CONST NSFILEPROTECTIONCOMPLETE = @"NSFILEPROTECTIONCOMPLETE";
-NSSTRING* CONST NSFILEPROTECTIONCOMPLETEUNLESSOPEN = @"NSFILEPROTECTIONCOMPLETEUNLESSOPEN";
-NSSTRING* CONST NSFILEPROTECTIONCOMPLETEUNTILFIRSTUSERAUTHENTICATION = @"NSFILEPROTECTIONCOMPLETEUNTILFIRSTUSERAUTHENTICATION";
+// File Protection Values
+NSString* const NSFileProtectionNone = @"NSFileProtectionNone";
+NSString* const NSFileProtectionComplete = @"NSFileProtectionComplete";
+NSString* const NSFileProtectionCompleteUnlessOpen = @"NSFileProtectionCompleteUnlessOpen";
+NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileProtectionCompleteUntilFirstUserAuthentication";
 
-@IMPLEMENTATION NSFILEMANAGER
+@implementation NSFileManager
 
-// CREATING A FILE MANAGER
+// Creating a File Manager
 
 /**
- @STATUS INTEROPERABLE
+ @Status Interoperable
 */
-+ (NSFILEMANAGER*)DEFAULTMANAGER {
-    STATIC ID DEFAULTMANAGER = [[SELF ALLOC] INIT];
++ (NSFileManager*)defaultManager {
+    static id defaultManager = [[self alloc] init];
 
-    RETURN DEFAULTMANAGER;
+    return defaultManager;
 }
 
-// LOCATING SYSTEM DIRECTORIES
+// Locating System Directories
 
 /**
- @STATUS CAVEAT
- @NOTES IGNORES APPROPRIATEFORURL, CREATE, AND ERROR. CALLS URLSFORDIRECTORY AND RETURNS FIRST RESULT.
+ @Status Caveat
+ @Notes Ignores appropriateForURL, create, and error. Calls URLsForDirectory and returns first result.
 */
-- (NSURL*)URLFORDIRECTORY:(NSSEARCHPATHDIRECTORY)DIRECTORY
-                 INDOMAIN:(NSSEARCHPATHDOMAINMASK)DOMAINS
-        APPROPRIATEFORURL:(NSURL*)FORURL
-                   CREATE:(BOOL)CREATE
-                    ERROR:(NSERROR**)ERROR {
-    NSARRAY* URLS = [SELF URLSFORDIRECTORY:DIRECTORY INDOMAINS:DOMAINS];
-    IF ([URLS COUNT] > 0) {
-        RETURN [URLS OBJECTATINDEX:0];
+- (NSURL*)URLForDirectory:(NSSearchPathDirectory)directory
+                 inDomain:(NSSearchPathDomainMask)domains
+        appropriateForURL:(NSURL*)forURL
+                   create:(BOOL)create
+                    error:(NSError**)error {
+    NSArray* urls = [self URLsForDirectory:directory inDomains:domains];
+    if ([urls count] > 0) {
+        return [urls objectAtIndex:0];
     }
 
-    RETURN NIL;
+    return nil;
 }
 
 /**
- @STATUS INTEROPERABLE
+ @Status Interoperable
 */
-- (NSARRAY*)URLSFORDIRECTORY:(NSSEARCHPATHDIRECTORY)DIRECTORY INDOMAINS:(NSSEARCHPATHDOMAINMASK)DOMAINS {
-    ID PATHS = NSSEARCHPATHFORDIRECTORIESINDOMAINS(DIRECTORY, DOMAINS, YES);
+- (NSArray*)URLsForDirectory:(NSSearchPathDirectory)directory inDomains:(NSSearchPathDomainMask)domains {
+    id paths = NSSearchPathForDirectoriesInDomains(directory, domains, YES);
 
-    INT COUNT = [PATHS COUNT];
+    int count = [paths count];
 
-    ID RET = [NSMUTABLEARRAY ARRAY];
+    id ret = [NSMutableArray array];
 
-    FOR (INT I = 0; I < COUNT; I++) {
-        ID CUROBJ = [PATHS OBJECTATINDEX:I];
+    for (int i = 0; i < count; i++) {
+        id curObj = [paths objectAtIndex:i];
 
-        ID NEWURL = [NSURL FILEURLWITHPATH:CUROBJ];
+        id newUrl = [NSURL fileURLWithPath:curObj];
 
-        [RET ADDOBJECT:NEWURL];
+        [ret addObject:newUrl];
     }
 
-    RETURN RET;
+    return ret;
 }
 
-// LOCATING APPLICATION GROUP CONTAINER DIRECTORIES
+// Locating Application Group Container Directories
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (NSURL*)CONTAINERURLFORSECURITYAPPLICATIONGROUPIDENTIFIER:(NSSTRING*)GROUPIDENTIFIER {
+- (NSURL*)containerURLForSecurityApplicationGroupIdentifier:(NSString*)groupIdentifier {
     UNIMPLEMENTED();
-    RETURN NIL;
+    return nil;
 }
 
-// DISCOVERING DIRECTORY CONTENTS
+// Discovering Directory Contents
 
 /**
- @STATUS CAVEAT
- @NOTES FETCHING DIRECTORY CONTENTS, RETURN AN ARRAY OF NSURL OBJECTS. CURRENTLY IGNORING PASSED IN MASK
-   AND ONLY SUPPORT PREFECCH NSURLCONTENTMODIFICATIONDATEKEY
+ @Status Caveat
+ @Notes Fetching directory contents, return an array of NSURL objects. Currently ignoring passed in mask
+   and only support prefecch NSURLContentModificationDateKey
 */
-- (NSARRAY*)CONTENTSOFDIRECTORYATURL:(NSURL*)URL
-          INCLUDINGPROPERTIESFORKEYS:(NSARRAY*)KEYS
-                             OPTIONS:(NSDIRECTORYENUMERATIONOPTIONS)MASK
-                               ERROR:(NSERROR**)ERROR {
-    IF (ERROR) {
-        *ERROR = NIL;
+- (NSArray*)contentsOfDirectoryAtURL:(NSURL*)url
+          includingPropertiesForKeys:(NSArray*)keys
+                             options:(NSDirectoryEnumerationOptions)mask
+                               error:(NSError**)error {
+    if (error) {
+        *error = nil;
     }
 
-    // CHECK EXISTENCE OF TARGET DIR
-    AUTO ISDIR = NO;
-    IF (![SELF FILEEXISTSATPATH:URL.PATH ISDIRECTORY:&ISDIR]) {
-        IF (ERROR) {
-            // TODO: STANDARDIZE THE ERROR CODE AND MESSAGE
-            *ERROR = [NSERROR ERRORWITHDOMAIN:@"TARGET PATH DOES NOT EXIST" CODE:100 USERINFO:NIL];
+    // check existence of target dir
+    auto isDir = NO;
+    if (![self fileExistsAtPath:url.path isDirectory:&isDir]) {
+        if (error) {
+            // TODO: standardize the error code and message
+            *error = [NSError errorWithDomain:@"Target path does not exist" code:100 userInfo:nil];
         }
-        RETURN NIL;
-    } ELSE IF (!ISDIR) {
-        // TODO: STANDARDIZE THE ERROR CODE AND MESSAGE
-        IF (ERROR) {
-            *ERROR = [NSERROR ERRORWITHDOMAIN:@"TARGET PATH IS NOT A DIRECTORY" CODE:100 USERINFO:NIL];
+        return nil;
+    } else if (!isDir) {
+        // TODO: standardize the error code and message
+        if (error) {
+            *error = [NSError errorWithDomain:@"Target Path is not a directory" code:100 userInfo:nil];
         }
-        RETURN NIL;
+        return nil;
     }
 
-    ID ENUMERATOR = [[NSDIRECTORYENUMERATOR ALLOC] _INITWITHPATH:[[URL PATH] UTF8STRING]
-                                                         SHALLOW:YES
-                                      INCLUDINGPROPERTIESFORKEYS:KEYS
-                                                         OPTIONS:MASK
-                                                     RETURNNSURL:YES];
+    id enumerator = [[NSDirectoryEnumerator alloc] _initWithPath:[[url path] UTF8String]
+                                                         shallow:YES
+                                      includingPropertiesForKeys:keys
+                                                         options:mask
+                                                     returnNSURL:YES];
 
-    // BY ENUMERATING THE DIRECTORY, CONSTRUCT THE DIRECOTRY CONTENTS AT THIS URL
-    ID RET = [ENUMERATOR ALLOBJECTS];
-    [ENUMERATOR RELEASE];
-    RETURN RET;
+    // by enumerating the directory, construct the direcotry contents at this URL
+    id ret = [enumerator allObjects];
+    [enumerator release];
+    return ret;
 }
 
 /**
- @STATUS CAVEAT
- @NOTES PATH MUST EXIST
+ @Status Caveat
+ @Notes Path must exist
 */
-- (NSARRAY*)CONTENTSOFDIRECTORYATPATH:(NSSTRING*)PATHADDR ERROR:(NSERROR**)ERROR {
-    ID ENUMERATOR = [NSDIRECTORYENUMERATOR NEW];
-    ENUMERATOR = [ENUMERATOR _INITWITHPATH:[PATHADDR UTF8STRING]
-                                   SHALLOW:YES
-                INCLUDINGPROPERTIESFORKEYS:NIL
-                                   OPTIONS:NSDIRECTORYENUMERATIONSKIPSSUBDIRECTORYDESCENDANTS
-                               RETURNNSURL:NO];
+- (NSArray*)contentsOfDirectoryAtPath:(NSString*)pathAddr error:(NSError**)error {
+    id enumerator = [NSDirectoryEnumerator new];
+    enumerator = [enumerator _initWithPath:[pathAddr UTF8String]
+                                   shallow:YES
+                includingPropertiesForKeys:nil
+                                   options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
+                               returnNSURL:NO];
 
-    ID RET = [ENUMERATOR ALLOBJECTS];
-    [ENUMERATOR RELEASE];
-    RETURN RET;
+    id ret = [enumerator allObjects];
+    [enumerator release];
+    return ret;
 }
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (NSDIRECTORYENUMERATOR*)ENUMERATORATURL:(NSURL*)URL
-               INCLUDINGPROPERTIESFORKEYS:(NSARRAY*)KEYS
-                                  OPTIONS:(NSDIRECTORYENUMERATIONOPTIONS)MASK
-                             ERRORHANDLER:(BOOL (^)(NSURL* URL, NSERROR* ERROR))HANDLER {
+- (NSDirectoryEnumerator*)enumeratorAtURL:(NSURL*)url
+               includingPropertiesForKeys:(NSArray*)keys
+                                  options:(NSDirectoryEnumerationOptions)mask
+                             errorHandler:(BOOL (^)(NSURL* url, NSError* error))handler {
     UNIMPLEMENTED();
-    RETURN NIL;
+    return nil;
 }
 
 /**
- @STATUS INTEROPERABLE
+ @Status Interoperable
 */
-- (ID)ENUMERATORATPATH:(ID)PATHADDR {
-    CONST CHAR* PATH = [PATHADDR UTF8STRING];
+- (id)enumeratorAtPath:(id)pathAddr {
+    const char* path = [pathAddr UTF8String];
 
-    NSDIRECTORYENUMERATOR* DIRECTORYENUM = [NSDIRECTORYENUMERATOR NEW];
-    [DIRECTORYENUM _INITWITHPATH:PATH
-                           SHALLOW:NO
-        INCLUDINGPROPERTIESFORKEYS:NIL
-                           OPTIONS:NSDIRECTORYENUMERATIONSKIPSSUBDIRECTORYDESCENDANTS
-                       RETURNNSURL:NO];
+    NSDirectoryEnumerator* directoryEnum = [NSDirectoryEnumerator new];
+    [directoryEnum _initWithPath:path
+                           shallow:NO
+        includingPropertiesForKeys:nil
+                           options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
+                       returnNSURL:NO];
 
-    RETURN DIRECTORYENUM;
+    return directoryEnum;
 }
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (NSARRAY*)MOUNTEDVOLUMEURLSINCLUDINGRESOURCEVALUESFORKEYS:(NSARRAY*)PROPERTYKEYS OPTIONS:(NSVOLUMEENUMERATIONOPTIONS)OPTIONS {
+- (NSArray*)mountedVolumeURLsIncludingResourceValuesForKeys:(NSArray*)propertyKeys options:(NSVolumeEnumerationOptions)options {
     UNIMPLEMENTED();
-    RETURN NIL;
+    return nil;
 }
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (NSARRAY*)SUBPATHSOFDIRECTORYATPATH:(NSSTRING*)PATH ERROR:(NSERROR**)ERROR {
+- (NSArray*)subpathsOfDirectoryAtPath:(NSString*)path error:(NSError**)error {
     UNIMPLEMENTED();
-    RETURN NIL;
+    return nil;
 }
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (NSARRAY*)SUBPATHSATPATH:(NSSTRING*)PATH {
+- (NSArray*)subpathsAtPath:(NSString*)path {
     UNIMPLEMENTED();
-    RETURN NIL;
+    return nil;
 }
 
-// CREATING AND DELETING ITEMS
+// Creating and Deleting Items
 
 /**
- @STATUS CAVEAT
- @NOTES ATTRIBUTES PARAMETER NOT SUPPORTED. ERROR PARAMETER NOT SUPPORTED.
+ @Status Caveat
+ @Notes attributes parameter not supported. error parameter not supported.
 */
-- (BOOL)CREATEDIRECTORYATURL:(NSURL*)URL
- WITHINTERMEDIATEDIRECTORIES:(BOOL)CREATEINTERMEDIATES
-                  ATTRIBUTES:(NSDICTIONARY*)ATTRS
-                       ERROR:(NSERROR**)ERR {
-    ID PATH = [URL PATH];
+- (BOOL)createDirectoryAtURL:(NSURL*)url
+ withIntermediateDirectories:(BOOL)createIntermediates
+                  attributes:(NSDictionary*)attrs
+                       error:(NSError**)err {
+    id path = [url path];
 
-    RETURN [SELF CREATEDIRECTORYATPATH:PATH WITHINTERMEDIATEDIRECTORIES:CREATEINTERMEDIATES ATTRIBUTES:ATTRS ERROR:ERR];
+    return [self createDirectoryAtPath:path withIntermediateDirectories:createIntermediates attributes:attrs error:err];
 }
 
 /**
- @STATUS CAVEAT
- @NOTES ATTRIBUTES PARAMETER NOT SUPPORTED.  ERROR PARAMETER IS NOT POPULATED
+ @Status Caveat
+ @Notes attributes parameter not supported.  error parameter is not populated
 */
-- (BOOL)CREATEDIRECTORYATPATH:(NSSTRING*)PATHADDR
-  WITHINTERMEDIATEDIRECTORIES:(BOOL)CREATEINTERMEDIATES
-                   ATTRIBUTES:(NSDICTIONARY*)ATTRS
-                        ERROR:(NSERROR**)ERR {
-    IF (CREATEINTERMEDIATES) {
-        CONST CHAR* PATH = [PATHADDR UTF8STRING];
-        ID COMPONENTS = [PATHADDR PATHCOMPONENTS];
-        CHAR CURPATH[256] = "";
+- (BOOL)createDirectoryAtPath:(NSString*)pathAddr
+  withIntermediateDirectories:(BOOL)createIntermediates
+                   attributes:(NSDictionary*)attrs
+                        error:(NSError**)err {
+    if (createIntermediates) {
+        const char* path = [pathAddr UTF8String];
+        id components = [pathAddr pathComponents];
+        char curPath[256] = "";
 
-        INT COUNT = [COMPONENTS COUNT];
-        FOR (INT I = 0; I < COUNT; I++) {
-            ID CURCOMPONENT = [COMPONENTS OBJECTATINDEX:I];
-            CONST CHAR* PCOMPONENT = [CURCOMPONENT UTF8STRING];
+        int count = [components count];
+        for (int i = 0; i < count; i++) {
+            id curComponent = [components objectAtIndex:i];
+            const char* pComponent = [curComponent UTF8String];
 
-            IF (STRLEN(PCOMPONENT) > 0) {
-                STRCAT_S(CURPATH, _COUNTOF(CURPATH), PCOMPONENT);
-                STRCAT_S(CURPATH, _COUNTOF(CURPATH), "/");
+            if (strlen(pComponent) > 0) {
+                strcat_s(curPath, _countof(curPath), pComponent);
+                strcat_s(curPath, _countof(curPath), "/");
             }
 
-            IF (STRLEN(CURPATH) > 0) {
-                BOOL SUCCESS = EBRMKDIR(CURPATH);
-                IF (!SUCCESS && ERRNO != EEXIST) {
-                    TRACEERROR(TAG, L"FAILED TO MAKE PATH %HS: %D", CURPATH, ERRNO);
-                    // RETURN NO;
+            if (strlen(curPath) > 0) {
+                bool success = EbrMkdir(curPath);
+                if (!success && errno != EEXIST) {
+                    TraceError(TAG, L"Failed to make path %hs: %d", curPath, errno);
+                    // return NO;
                 }
             }
         }
 
-        RETURN YES;
-    } ELSE {
-        CONST CHAR* PATH = [PATHADDR UTF8STRING];
-        IF (EBRMKDIR(PATH) == 0) {
-            RETURN YES;
-        } ELSE {
-            RETURN NO;
+        return YES;
+    } else {
+        const char* path = [pathAddr UTF8String];
+        if (EbrMkdir(path) == 0) {
+            return YES;
+        } else {
+            return NO;
         }
     }
 }
 
 /**
- @STATUS CAVEAT
- @NOTES ATTRIBUTES PARAMETER NOT SUPPORTED
+ @Status Caveat
+ @Notes attributes parameter not supported
 */
-- (BOOL)CREATEFILEATPATH:(ID)PATHADDR CONTENTS:(ID)CONTENTS ATTRIBUTES:(ID)ATTRIBUTES {
-    CONST CHAR* PATH = [PATHADDR UTF8STRING];
+- (BOOL)createFileAtPath:(id)pathAddr contents:(id)contents attributes:(id)attributes {
+    const char* path = [pathAddr UTF8String];
 
-    TRACEVERBOSE(TAG, L"CREATEFILEATPATH: %HS", PATH);
+    TraceVerbose(TAG, L"createFileAtPath: %hs", path);
 
-    EBRFILE* FPOUT = EBRFOPEN(PATH, "WB");
+    EbrFile* fpOut = EbrFopen(path, "wb");
 
-    IF (!FPOUT) {
-        TRACEERROR(TAG, L"FAILED TO CREATEFILEATPATH: %HS", PATH);
-        RETURN NO;
+    if (!fpOut) {
+        TraceError(TAG, L"failed to createFileAtPath: %hs", path);
+        return NO;
     }
 
-    CHAR* BYTES = (CHAR*)[CONTENTS BYTES];
-    INT LENGTH = [CONTENTS LENGTH];
+    char* bytes = (char*)[contents bytes];
+    int length = [contents length];
 
-    EBRFWRITE(BYTES, 1, LENGTH, FPOUT);
+    EbrFwrite(bytes, 1, length, fpOut);
 
-    EBRFCLOSE(FPOUT);
+    EbrFclose(fpOut);
 
-    RETURN YES;
+    return YES;
 }
 
 /**
- @STATUS INTEROPERABLE
+ @Status Interoperable
 */
-- (BOOL)REMOVEITEMATURL:(NSURL*)URL ERROR:(NSERROR**)ERROR {
-    ID PATHADDR = [URL PATH];
-    IF (PATHADDR == NIL) {
-        TRACEVERBOSE(TAG, L"REMOVEITEMATURL: NIL!");
-        RETURN YES;
+- (BOOL)removeItemAtURL:(NSURL*)URL error:(NSError**)error {
+    id pathAddr = [URL path];
+    if (pathAddr == nil) {
+        TraceVerbose(TAG, L"removeItemAtURL: nil!");
+        return YES;
     }
 
-    RETURN [SELF REMOVEITEMATPATH:PATHADDR ERROR:ERROR];
+    return [self removeItemAtPath:pathAddr error:error];
 }
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (BOOL)REPLACEITEMATURL:(NSURL*)ORIGINALITEMURL
-           WITHITEMATURL:(NSURL*)NEWITEMURL
-          BACKUPITEMNAME:(NSSTRING*)BACKUPITEMNAME
-                 OPTIONS:(NSFILEMANAGERITEMREPLACEMENTOPTIONS)OPTIONS
-        RESULTINGITEMURL:(NSURL**)RESULTINGURL
-                   ERROR:(NSERROR**)ERROR {
+- (BOOL)replaceItemAtURL:(NSURL*)originalItemURL
+           withItemAtURL:(NSURL*)newItemURL
+          backupItemName:(NSString*)backupItemName
+                 options:(NSFileManagerItemReplacementOptions)options
+        resultingItemURL:(NSURL**)resultingURL
+                   error:(NSError**)error {
     UNIMPLEMENTED();
-    RETURN NO;
+    return NO;
 }
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (BOOL)TRASHITEMATURL:(NSURL*)URL RESULTINGITEMURL:(NSURL**)OUTRESULTINGURL ERROR:(NSERROR**)ERROR {
+- (BOOL)trashItemAtURL:(NSURL*)url resultingItemURL:(NSURL**)outResultingURL error:(NSError**)error {
     UNIMPLEMENTED();
-    RETURN NO;
+    return NO;
 }
 
-// MOVING AND COPYING ITEMS
+// Moving and Copying Items
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (BOOL)COPYITEMATURL:(NSURL*)SRCURL TOURL:(NSURL*)DSTURL ERROR:(NSERROR**)ERROR {
+- (BOOL)copyItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError**)error {
     UNIMPLEMENTED();
 
-    RETURN NO;
+    return NO;
 }
 
 /**
- @STATUS INTEROPERABLE
+ @Status Interoperable
 */
-- (BOOL)COPYITEMATPATH:(ID)SRCPATH TOPATH:(ID)DESTPATH ERROR:(NSERROR**)ERROR {
-    IF (SRCPATH == NIL || DESTPATH == NIL) {
-        TRACEVERBOSE(TAG, L"COPYITEMATPATH: NIL!");
-        RETURN NO;
+- (BOOL)copyItemAtPath:(id)srcPath toPath:(id)destPath error:(NSError**)error {
+    if (srcPath == nil || destPath == nil) {
+        TraceVerbose(TAG, L"copyItemAtPath: nil!");
+        return NO;
     }
 
-    CONST CHAR* SRC = [SRCPATH UTF8STRING];
-    CONST CHAR* DEST = [DESTPATH UTF8STRING];
+    const char* src = [srcPath UTF8String];
+    const char* dest = [destPath UTF8String];
 
-    IF (EBRACCESS(DEST, 0) == 0) {
-        IF (ERROR) {
-            // TODO: STANDARDIZE THE ERROR CODE AND MESSAGE
-            *ERROR = [NSERROR ERRORWITHDOMAIN:@"WOULD OVERWRITE DESTINATION" CODE:100 USERINFO:NIL];
+    if (EbrAccess(dest, 0) == 0) {
+        if (error) {
+            // TODO: standardize the error code and message
+            *error = [NSError errorWithDomain:@"Would overwrite destination" code:100 userInfo:nil];
         }
-        TRACEVERBOSE(TAG, L"NOT COPYING %HS TO %HS BECAUSE DEST EXISTS", SRC, DEST);
-        RETURN NO;
+        TraceVerbose(TAG, L"Not copying %hs to %hs because dest exists", src, dest);
+        return NO;
     }
 
-    TRACEVERBOSE(TAG, L"COPYING %HS TO %HS", SRC, DEST);
+    TraceVerbose(TAG, L"Copying %hs to %hs", src, dest);
 
-    EBRFILE* FPIN = EBRFOPEN(SRC, "RB");
-    IF (!FPIN) {
-        TRACEERROR(TAG, L"ERROR OPENING %HS", SRC);
-        RETURN NO;
+    EbrFile* fpIn = EbrFopen(src, "rb");
+    if (!fpIn) {
+        TraceError(TAG, L"Error opening %hs", src);
+        return NO;
     }
 
-    EBRFILE* FPOUT = EBRFOPEN(DEST, "WB");
-    IF (!FPOUT) {
-        EBRFCLOSE(FPIN);
-        TRACEERROR(TAG, L"ERROR OPENING %HS", DEST);
-        RETURN NO;
+    EbrFile* fpOut = EbrFopen(dest, "wb");
+    if (!fpOut) {
+        EbrFclose(fpIn);
+        TraceError(TAG, L"Error opening %hs", dest);
+        return NO;
     }
 
-    WHILE (!EBRFEOF(FPIN)) {
-        BYTE IN[4096];
-        INT READ = EBRFREAD(IN, 1, 4096, FPIN);
-        EBRFWRITE(IN, 1, READ, FPOUT);
+    while (!EbrFeof(fpIn)) {
+        BYTE in[4096];
+        int read = EbrFread(in, 1, 4096, fpIn);
+        EbrFwrite(in, 1, read, fpOut);
     }
 
-    EBRFCLOSE(FPOUT);
-    EBRFCLOSE(FPIN);
+    EbrFclose(fpOut);
+    EbrFclose(fpIn);
 
-    TRACEVERBOSE(TAG, L"DONE COPYING");
+    TraceVerbose(TAG, L"Done copying");
 
-    RETURN YES;
+    return YES;
 }
 
 /**
- @STATUS CAVEAT
- @NOTES DOES NOT SUPPORT FILE MANAGER MOVE DELEGATES FOR SHOULDMOVEITEM OR SHOULDPROCEEDAFTERERROR.
+ @Status Caveat
+ @Notes does not support file manager move delegates for shouldMoveItem or shouldProceedAfterError.
 */
-- (BOOL)MOVEITEMATURL:(NSURL*)SRCURL TOURL:(NSURL*)DSTURL ERROR:(NSERROR**)ERROR {
-    THROW_NS_IF_FALSE(E_INVALIDARG, SRCURL != NIL);
-    THROW_NS_IF_FALSE(E_INVALIDARG, DSTURL != NIL);
-    IF (![SRCURL ISFILEURL] || ![DSTURL ISFILEURL]) {
-        IF (ERROR) {
-            *ERROR = [NSERROR ERRORWITHDOMAIN:NSCOCOAERRORDOMAIN CODE:NSFILEREADUNSUPPORTEDSCHEMEERROR USERINFO:NIL];
-        }
-
-        RETURN NO;
-    }
-    RETURN [SELF MOVEITEMATPATH:[SRCURL PATH] TOPATH:[DSTURL PATH] ERROR:ERROR];
-}
-
-/**
- @STATUS CAVEAT
- @NOTES DOES NOT SUPPORT FILE MANAGER MOVE DELEGATES FOR SHOULDMOVEITEM OR SHOULDPROCEEDAFTERERROR.
-*/
-- (BOOL)MOVEITEMATPATH:(NSSTRING*)SRCPATH TOPATH:(NSSTRING*)DESTPATH ERROR:(NSERROR**)ERROR {
-    THROW_NS_IF_FALSE(E_INVALIDARG, SRCPATH != NIL);
-    THROW_NS_IF_FALSE(E_INVALIDARG, DESTPATH != NIL);
-
-    IF (![SELF FILEEXISTSATPATH:SRCPATH]) {
-        IF (ERROR) {
-            *ERROR = [NSERROR ERRORWITHDOMAIN:NSCOCOAERRORDOMAIN CODE:NSFILENOSUCHFILEERROR USERINFO:NIL];
+- (BOOL)moveItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError**)error {
+    THROW_NS_IF_FALSE(E_INVALIDARG, srcURL != nil);
+    THROW_NS_IF_FALSE(E_INVALIDARG, dstURL != nil);
+    if (![srcURL isFileURL] || ![dstURL isFileURL]) {
+        if (error) {
+            *error = [NSError errorWithDomain:NSCocoaErrorDomain code:NSFileReadUnsupportedSchemeError userInfo:nil];
         }
 
-        RETURN NO;
+        return NO;
     }
-
-    CONST CHAR* SRC = [SRCPATH UTF8STRING];
-    CONST CHAR* DEST = [DESTPATH UTF8STRING];
-
-    BOOL SUCCESS = EBRRENAME(SRC, DEST);
-    IF (!SUCCESS) {
-        TRACEERROR(TAG, L"RENAME FAILED. ERRNO:%D", ERRNO);
-        IF (ERROR) {
-            *ERROR = [NSERROR ERRORWITHDOMAIN:NSWIN32ERRORDOMAIN CODE:ERRNO USERINFO:NIL];
-        }
-        RETURN NO;
-    }
-
-    RETURN YES;
-}
-
-// MANAGING ICLOUD-BASED ITEMS
-
-/**
- @STATUS STUB
-*/
-- (NSURL*)URLFORUBIQUITYCONTAINERIDENTIFIER:(NSSTRING*)CONTAINERID {
-    UNIMPLEMENTED();
-
-    RETURN NIL;
+    return [self moveItemAtPath:[srcURL path] toPath:[dstURL path] error:error];
 }
 
 /**
- @STATUS STUB
+ @Status Caveat
+ @Notes does not support file manager move delegates for shouldMoveItem or shouldProceedAfterError.
 */
-- (BOOL)ISUBIQUITOUSITEMATURL:(NSURL*)URL {
-    UNIMPLEMENTED();
-    RETURN NO;
-}
+- (BOOL)moveItemAtPath:(NSString*)srcPath toPath:(NSString*)destPath error:(NSError**)error {
+    THROW_NS_IF_FALSE(E_INVALIDARG, srcPath != nil);
+    THROW_NS_IF_FALSE(E_INVALIDARG, destPath != nil);
 
-/**
- @STATUS STUB
-*/
-- (BOOL)SETUBIQUITOUS:(BOOL)FLAG ITEMATURL:(NSURL*)URL DESTINATIONURL:(NSURL*)DESTINATIONURL ERROR:(NSERROR**)ERROROUT {
-    UNIMPLEMENTED();
-    RETURN NO;
-}
-
-/**
- @STATUS STUB
-*/
-- (BOOL)STARTDOWNLOADINGUBIQUITOUSITEMATURL:(NSURL*)URL ERROR:(NSERROR**)ERROROUT {
-    UNIMPLEMENTED();
-    RETURN NO;
-}
-
-/**
- @STATUS STUB
-*/
-- (BOOL)EVICTUBIQUITOUSITEMATURL:(NSURL*)URL ERROR:(NSERROR**)ERROROUT {
-    UNIMPLEMENTED();
-    RETURN NO;
-}
-
-/**
- @STATUS STUB
-*/
-- (NSURL*)URLFORPUBLISHINGUBIQUITOUSITEMATURL:(NSURL*)URL EXPIRATIONDATE:(NSDATE**)OUTDATE ERROR:(NSERROR**)ERROR {
-    UNIMPLEMENTED();
-    RETURN NIL;
-}
-
-// CREATING SYMBOLIC AND HARD LINKS
-/**
- @STATUS STUB
-*/
-- (BOOL)CREATESYMBOLICLINKATURL:(NSURL*)URL WITHDESTINATIONURL:(NSURL*)DESTURL ERROR:(NSERROR**)ERROR {
-    UNIMPLEMENTED();
-    RETURN NO;
-}
-
-/**
- @STATUS STUB
-*/
-- (BOOL)CREATESYMBOLICLINKATPATH:(NSSTRING*)PATH WITHDESTINATIONPATH:(NSSTRING*)TOPATH ERROR:(NSERROR**)ERROR {
-    UNIMPLEMENTED();
-    RETURN NO;
-}
-
-/**
- @STATUS STUB
-*/
-- (BOOL)LINKITEMATURL:(NSURL*)SRCURL TOURL:(NSURL*)DSTURL ERROR:(NSERROR**)ERROR {
-    UNIMPLEMENTED();
-    RETURN NO;
-}
-
-/**
- @STATUS STUB
-*/
-- (BOOL)LINKITEMATPATH:(NSSTRING*)FROMPATH TOPATH:(NSSTRING*)TOPATH ERROR:(NSERROR**)ERROR {
-    UNIMPLEMENTED();
-    RETURN NO;
-}
-
-/**
- @STATUS CAVEAT
- @NOTES DOES NOT RESOLVE SYMLINKS
-*/
-- (NSSTRING*)DESTINATIONOFSYMBOLICLINKATPATH:(NSSTRING*)PATH ERROR:(NSERROR* _NULLABLE*)ERROR {
-    RETURN [[PATH COPY] AUTORELEASE];
-}
-
-// DETERMINING ACCESS TO FILES
-
-/**
- @STATUS INTEROPERABLE
-*/
-- (BOOL)FILEEXISTSATPATH:(NSSTRING*)PATHADDR {
-    IF (PATHADDR == NIL) {
-        RETURN NO;
-    }
-
-    CONST CHAR* PATH = [PATHADDR UTF8STRING];
-
-    IF (STRCMP(PATH, "") == 0) {
-        RETURN NO;
-    }
-
-    IF (EBRACCESS(PATH, 0) == 0) {
-        RETURN YES;
-    } ELSE {
-        TRACEVERBOSE(TAG, L"FILE @ %HS DOESN'T EXIST", PATH);
-        RETURN NO;
-    }
-}
-
-/**
- @STATUS INTEROPERABLE
-*/
-- (BOOL)FILEEXISTSATPATH:(NSSTRING*)PATHADDR ISDIRECTORY:(BOOL*)ISDIRECTORY {
-    CONST CHAR* PATH = [PATHADDR UTF8STRING];
-    STRUCT STAT ST;
-
-    IF (EBRSTAT(PATH, &ST) == 0) {
-        IF (ISDIRECTORY) {
-            *ISDIRECTORY = (ST.ST_MODE & _S_IFDIR) == _S_IFDIR;
-        }
-        RETURN YES;
-    } ELSE {
-        RETURN NO;
-    }
-}
-
-/**
- @STATUS INTEROPERABLE
-*/
-- (BOOL)ISREADABLEFILEATPATH:(ID)PATHADDR {
-    CONST CHAR* PATH = [PATHADDR UTF8STRING];
-
-    IF (EBRACCESS(PATH, 6) == 0) {
-        RETURN YES;
-    } ELSE {
-        TRACEVERBOSE(TAG, L"FILE @ %HS ISN'T WRITABLE", PATH);
-        RETURN NO;
-    }
-}
-
-/**
- @STATUS INTEROPERABLE
-*/
-- (BOOL)ISWRITABLEFILEATPATH:(ID)PATHADDR {
-    CONST CHAR* PATH = [PATHADDR UTF8STRING];
-
-    IF (EBRACCESS(PATH, 4) == 0) {
-        RETURN YES;
-    } ELSE {
-        TRACEVERBOSE(TAG, L"FILE @ %HS ISN'T READABLE", PATH);
-        RETURN NO;
-    }
-}
-
-/**
- @STATUS STUB
-*/
-- (BOOL)ISEXECUTABLEFILEATPATH:(NSSTRING*)PATH {
-    UNIMPLEMENTED();
-    RETURN NO;
-}
-
-/**
- @STATUS STUB
-*/
-- (BOOL)ISDELETABLEFILEATPATH:(NSSTRING*)PATH {
-    UNIMPLEMENTED();
-    RETURN NO;
-}
-
-// GETTING AND SETTING ATTRIBUTES
-
-/**
- @STATUS STUB
-*/
-- (NSARRAY*)COMPONENTSTODISPLAYFORPATH:(NSSTRING*)PATH {
-    UNIMPLEMENTED();
-    RETURN NIL;
-}
-
-/**
- @STATUS STUB
-*/
-- (ID)DISPLAYNAMEATPATH:(ID)PATH {
-    UNIMPLEMENTED();
-    RETURN PATH;
-}
-
-/**
- @STATUS CAVEAT
- @NOTES ONLY NSFILESIZE AND NSFILETYPE ATTRIBUTES ARE SUPPORTED
-*/
-- (ID)ATTRIBUTESOFITEMATPATH:(ID)PATHADDR ERROR:(NSERROR**)ERROR {
-    IF (PATHADDR == NIL) {
-        TRACEVERBOSE(TAG, L"ATTRIBUTESOFITEMATPATH NIL!");
-
-        IF (ERROR) {
-            // TODO: STANDARDIZE THE ERROR CODE AND MESSAGE
-            *ERROR = [NSERROR ERRORWITHDOMAIN:@"EMPTY FILE PATH" CODE:100 USERINFO:NIL];
+    if (![self fileExistsAtPath:srcPath]) {
+        if (error) {
+            *error = [NSError errorWithDomain:NSCocoaErrorDomain code:NSFileNoSuchFileError userInfo:nil];
         }
 
-        RETURN NIL;
+        return NO;
     }
 
-    STRUCT STAT ST;
+    const char* src = [srcPath UTF8String];
+    const char* dest = [destPath UTF8String];
 
-    CONST CHAR* PATH = [PATHADDR UTF8STRING];
-    TRACEVERBOSE(TAG, L"ATTRIBUTESOFITEMATPATH: %HS", PATH);
-
-    IF (EBRSTAT(PATH, &ST) == -1) {
-        IF (ERROR) {
-            // TODO: STANDARDIZE THE ERROR CODE AND MESSAGE
-            *ERROR = [NSERROR ERRORWITHDOMAIN:@"FILE NOT FOUND" CODE:100 USERINFO:NIL];
+    bool success = EbrRename(src, dest);
+    if (!success) {
+        TraceError(TAG, L"Rename failed. errno:%d", errno);
+        if (error) {
+            *error = [NSError errorWithDomain:NSWin32ErrorDomain code:errno userInfo:nil];
         }
-        RETURN NIL;
+        return NO;
     }
 
-    ID RET = [NSMUTABLEDICTIONARY DICTIONARY];
-
-    [RET SETVALUE:[NSNUMBER NUMBERWITHINT:ST.ST_SIZE] FORKEY:NSFILESIZE];
-    IF (ST.ST_MODE & _S_IFDIR) {
-        [RET SETVALUE:NSFILETYPEDIRECTORY FORKEY:NSFILETYPE];
-    } ELSE {
-        [RET SETVALUE:NSFILETYPEREGULAR FORKEY:NSFILETYPE];
-    }
-
-    RETURN RET;
+    return YES;
 }
 
+// Managing iCloud-Based Items
+
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (ID)ATTRIBUTESOFFILESYSTEMFORPATH:(ID)PATHADDR ERROR:(NSERROR**)ERROR {
+- (NSURL*)URLForUbiquityContainerIdentifier:(NSString*)containerID {
     UNIMPLEMENTED();
-    IF (ERROR) {
-        *ERROR = NIL;
-    }
 
-    CONST CHAR* PATH = [PATHADDR UTF8STRING];
-
-    TRACEVERBOSE(TAG, L"FILEATTRIBUTESATPATH: %HS", PATH);
-
-    ID RET = [NSMUTABLEDICTIONARY DICTIONARY];
-    [RET SETVALUE:[NSNUMBER NUMBERWITHINT:256 * 1024 * 1024] FORKEY:NSFILESYSTEMFREESIZE];
-
-    RETURN RET;
+    return nil;
 }
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (BOOL)SETATTRIBUTES:(ID)ATTRIBS OFITEMATPATH:(ID)PATHADDR ERROR:(NSERROR**)ERR {
+- (BOOL)isUbiquitousItemAtURL:(NSURL*)url {
     UNIMPLEMENTED();
-    RETURN YES;
-}
-
-// GETTING AND COMPARING FILE CONTENTS
-
-/**
- @STATUS INTEROPERABLE
-*/
-- (ID)CONTENTSATPATH:(ID)PATHADDR {
-    RETURN [NSDATA DATAWITHCONTENTSOFFILE:PATHADDR];
+    return NO;
 }
 
 /**
- @STATUS CAVEAT
- @NOTES COMPARING DIRECTORIES NOT SUPPORTED
+ @Status Stub
 */
-- (BOOL)CONTENTSEQUALATPATH:(ID)PATHOBJ1 ANDPATH:(ID)PATHOBJ2 {
-    CONST CHAR* PATH1 = [PATHOBJ1 UTF8STRING];
-    CONST CHAR* PATH2 = [PATHOBJ2 UTF8STRING];
+- (BOOL)setUbiquitous:(BOOL)flag itemAtURL:(NSURL*)url destinationURL:(NSURL*)destinationURL error:(NSError**)errorOut {
+    UNIMPLEMENTED();
+    return NO;
+}
 
-    BOOL DIR = EBRISDIR(PATH1);
-    IF (DIR != EBRISDIR(PATH2)) {
-        RETURN NO;
+/**
+ @Status Stub
+*/
+- (BOOL)startDownloadingUbiquitousItemAtURL:(NSURL*)url error:(NSError**)errorOut {
+    UNIMPLEMENTED();
+    return NO;
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)evictUbiquitousItemAtURL:(NSURL*)url error:(NSError**)errorOut {
+    UNIMPLEMENTED();
+    return NO;
+}
+
+/**
+ @Status Stub
+*/
+- (NSURL*)URLForPublishingUbiquitousItemAtURL:(NSURL*)url expirationDate:(NSDate**)outDate error:(NSError**)error {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+// Creating Symbolic and Hard Links
+/**
+ @Status Stub
+*/
+- (BOOL)createSymbolicLinkAtURL:(NSURL*)url withDestinationURL:(NSURL*)destURL error:(NSError**)error {
+    UNIMPLEMENTED();
+    return NO;
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)createSymbolicLinkAtPath:(NSString*)path withDestinationPath:(NSString*)toPath error:(NSError**)error {
+    UNIMPLEMENTED();
+    return NO;
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)linkItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError**)error {
+    UNIMPLEMENTED();
+    return NO;
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)linkItemAtPath:(NSString*)fromPath toPath:(NSString*)toPath error:(NSError**)error {
+    UNIMPLEMENTED();
+    return NO;
+}
+
+/**
+ @Status Caveat
+ @Notes does not resolve symlinks
+*/
+- (NSString*)destinationOfSymbolicLinkAtPath:(NSString*)path error:(NSError* _Nullable*)error {
+    return [[path copy] autorelease];
+}
+
+// Determining Access to Files
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)fileExistsAtPath:(NSString*)pathAddr {
+    if (pathAddr == nil) {
+        return NO;
     }
 
-    IF (DIR) {
-        // NO GOOD:
-        ASSERT(0);
-    } ELSE {
-        STRUCT STAT ST1, ST2;
-        IF (EBRSTAT(PATH1, &ST1) != 0 || EBRSTAT(PATH2, &ST2) != 0) {
-            RETURN NO;
+    const char* path = [pathAddr UTF8String];
+
+    if (strcmp(path, "") == 0) {
+        return NO;
+    }
+
+    if (EbrAccess(path, 0) == 0) {
+        return YES;
+    } else {
+        TraceVerbose(TAG, L"File @ %hs doesn't exist", path);
+        return NO;
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)fileExistsAtPath:(NSString*)pathAddr isDirectory:(BOOL*)isDirectory {
+    const char* path = [pathAddr UTF8String];
+    struct stat st;
+
+    if (EbrStat(path, &st) == 0) {
+        if (isDirectory) {
+            *isDirectory = (st.st_mode & _S_IFDIR) == _S_IFDIR;
+        }
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isReadableFileAtPath:(id)pathAddr {
+    const char* path = [pathAddr UTF8String];
+
+    if (EbrAccess(path, 6) == 0) {
+        return YES;
+    } else {
+        TraceVerbose(TAG, L"File @ %hs isn't writable", path);
+        return NO;
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isWritableFileAtPath:(id)pathAddr {
+    const char* path = [pathAddr UTF8String];
+
+    if (EbrAccess(path, 4) == 0) {
+        return YES;
+    } else {
+        TraceVerbose(TAG, L"File @ %hs isn't readable", path);
+        return NO;
+    }
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)isExecutableFileAtPath:(NSString*)path {
+    UNIMPLEMENTED();
+    return NO;
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)isDeletableFileAtPath:(NSString*)path {
+    UNIMPLEMENTED();
+    return NO;
+}
+
+// Getting and Setting Attributes
+
+/**
+ @Status Stub
+*/
+- (NSArray*)componentsToDisplayForPath:(NSString*)path {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
+- (id)displayNameAtPath:(id)path {
+    UNIMPLEMENTED();
+    return path;
+}
+
+/**
+ @Status Caveat
+ @Notes Only NSFileSize and NSFileType attributes are supported
+*/
+- (id)attributesOfItemAtPath:(id)pathAddr error:(NSError**)error {
+    if (pathAddr == nil) {
+        TraceVerbose(TAG, L"attributesOfItemAtPath nil!");
+
+        if (error) {
+            // TODO: standardize the error code and message
+            *error = [NSError errorWithDomain:@"Empty File Path" code:100 userInfo:nil];
         }
 
-        IF (ST1.ST_SIZE != ST2.ST_SIZE) {
-            RETURN NO;
+        return nil;
+    }
+
+    struct stat st;
+
+    const char* path = [pathAddr UTF8String];
+    TraceVerbose(TAG, L"attributesOfItemAtPath: %hs", path);
+
+    if (EbrStat(path, &st) == -1) {
+        if (error) {
+            // TODO: standardize the error code and message
+            *error = [NSError errorWithDomain:@"File not found" code:100 userInfo:nil];
+        }
+        return nil;
+    }
+
+    id ret = [NSMutableDictionary dictionary];
+
+    [ret setValue:[NSNumber numberWithInt:st.st_size] forKey:NSFileSize];
+    if (st.st_mode & _S_IFDIR) {
+        [ret setValue:NSFileTypeDirectory forKey:NSFileType];
+    } else {
+        [ret setValue:NSFileTypeRegular forKey:NSFileType];
+    }
+
+    return ret;
+}
+
+/**
+ @Status Stub
+*/
+- (id)attributesOfFileSystemForPath:(id)pathAddr error:(NSError**)error {
+    UNIMPLEMENTED();
+    if (error) {
+        *error = nil;
+    }
+
+    const char* path = [pathAddr UTF8String];
+
+    TraceVerbose(TAG, L"fileAttributesAtPath: %hs", path);
+
+    id ret = [NSMutableDictionary dictionary];
+    [ret setValue:[NSNumber numberWithInt:256 * 1024 * 1024] forKey:NSFileSystemFreeSize];
+
+    return ret;
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)setAttributes:(id)attribs ofItemAtPath:(id)pathAddr error:(NSError**)err {
+    UNIMPLEMENTED();
+    return YES;
+}
+
+// Getting and Comparing File Contents
+
+/**
+ @Status Interoperable
+*/
+- (id)contentsAtPath:(id)pathAddr {
+    return [NSData dataWithContentsOfFile:pathAddr];
+}
+
+/**
+ @Status Caveat
+ @Notes Comparing directories not supported
+*/
+- (BOOL)contentsEqualAtPath:(id)pathObj1 andPath:(id)pathObj2 {
+    const char* path1 = [pathObj1 UTF8String];
+    const char* path2 = [pathObj2 UTF8String];
+
+    bool dir = EbrIsDir(path1);
+    if (dir != EbrIsDir(path2)) {
+        return NO;
+    }
+
+    if (dir) {
+        // no good:
+        assert(0);
+    } else {
+        struct stat st1, st2;
+        if (EbrStat(path1, &st1) != 0 || EbrStat(path2, &st2) != 0) {
+            return NO;
         }
 
-        ID D1 = [[NSDATA ALLOC] INITWITHCONTENTSOFFILE:PATHOBJ1];
-        ID D2 = [[NSDATA ALLOC] INITWITHCONTENTSOFFILE:PATHOBJ2];
+        if (st1.st_size != st2.st_size) {
+            return NO;
+        }
 
-        BOOL RET = [D1 ISEQUALTODATA:D2] != 0;
+        id d1 = [[NSData alloc] initWithContentsOfFile:pathObj1];
+        id d2 = [[NSData alloc] initWithContentsOfFile:pathObj2];
 
-        [D1 RELEASE];
-        [D2 RELEASE];
+        bool ret = [d1 isEqualToData:d2] != 0;
 
-        RETURN RET;
+        [d1 release];
+        [d2 release];
+
+        return ret;
     }
 
-    RETURN NO;
+    return NO;
 }
 
-// GETTING THE RELATIONSHIP BETWEEN ITEMS
+// Getting the Relationship Between Items
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (BOOL)GETRELATIONSHIP:(NSURLRELATIONSHIP*)OUTRELATIONSHIP
-       OFDIRECTORYATURL:(NSURL*)DIRECTORYURL
-            TOITEMATURL:(NSURL*)OTHERURL
-                  ERROR:(NSERROR**)ERROR {
+- (BOOL)getRelationship:(NSURLRelationship*)outRelationship
+       ofDirectoryAtURL:(NSURL*)directoryURL
+            toItemAtURL:(NSURL*)otherURL
+                  error:(NSError**)error {
     UNIMPLEMENTED();
-    RETURN NO;
+    return NO;
 }
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (BOOL)GETRELATIONSHIP:(NSURLRELATIONSHIP*)OUTRELATIONSHIP
-            OFDIRECTORY:(NSSEARCHPATHDIRECTORY)DIRECTORY
-               INDOMAIN:(NSSEARCHPATHDOMAINMASK)DOMAINMASK
-            TOITEMATURL:(NSURL*)URL
-                  ERROR:(NSERROR**)ERROR {
+- (BOOL)getRelationship:(NSURLRelationship*)outRelationship
+            ofDirectory:(NSSearchPathDirectory)directory
+               inDomain:(NSSearchPathDomainMask)domainMask
+            toItemAtURL:(NSURL*)url
+                  error:(NSError**)error {
     UNIMPLEMENTED();
-    RETURN NO;
+    return NO;
 }
 
-// CONVERTING FILE PATHS TO STRINGS
+// Converting File Paths to Strings
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (CONST CHAR*)FILESYSTEMREPRESENTATIONWITHPATH:(ID)PATHADDR {
+- (const char*)fileSystemRepresentationWithPath:(id)pathAddr {
     UNIMPLEMENTED();
-    RETURN [PATHADDR UTF8STRING];
+    return [pathAddr UTF8String];
 }
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (ID)STRINGWITHFILESYSTEMREPRESENTATION:(CONST CHAR*)PATH LENGTH:(NSUINTEGER)LENGTH {
+- (id)stringWithFileSystemRepresentation:(const char*)path length:(NSUInteger)length {
     UNIMPLEMENTED();
-    RETURN [NSSTRING STRINGWITHCSTRING:PATH LENGTH:LENGTH];
+    return [NSString stringWithCString:path length:length];
 }
 
-// MANAGING THE DELEGATE
+// Managing the Delegate
 
-// MANAGING THE CURRENT DIRECTORY
+// Managing the Current Directory
 
 /**
- @STATUS INTEROPERABLE
+ @Status Interoperable
 */
-- (BOOL)CHANGECURRENTDIRECTORYPATH:(NSSTRING*)PATH {
-    RETURN (0 == _NS_CHDIR([PATH UTF8STRING]));
+- (BOOL)changeCurrentDirectoryPath:(NSString*)path {
+    return (0 == _NS_chdir([path UTF8String]));
 }
 
 /**
- @STATUS INTEROPERABLE
+ @Status Interoperable
 */
-- (NSSTRING*)CURRENTDIRECTORYPATH {
-    RETURN [[STATIC_CAST<NSURL*>(_CFURLCREATECURRENTDIRECTORYURL(KCFALLOCATORDEFAULT)) AUTORELEASE] PATH];
+- (NSString*)currentDirectoryPath {
+    return [[static_cast<NSURL*>(_CFURLCreateCurrentDirectoryURL(kCFAllocatorDefault)) autorelease] path];
 }
 
-// DEPRECATED METHODS
+// Deprecated Methods
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (BOOL)COPYPATH:(NSSTRING*)SRC TOPATH:(NSSTRING*)DEST HANDLER:HANDLER {
+- (BOOL)copyPath:(NSString*)src toPath:(NSString*)dest handler:handler {
     UNIMPLEMENTED();
-    RETURN NO;
+    return NO;
 }
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (BOOL)MOVEPATH:(NSSTRING*)SRC TOPATH:(NSSTRING*)DEST HANDLER:HANDLER {
+- (BOOL)movePath:(NSString*)src toPath:(NSString*)dest handler:handler {
     UNIMPLEMENTED();
-    RETURN NO;
+    return NO;
 }
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (BOOL)REMOVEFILEATPATH:(NSSTRING*)PATH HANDLER:HANDLER {
+- (BOOL)removeFileAtPath:(NSString*)path handler:handler {
     UNIMPLEMENTED();
-    RETURN NO;
+    return NO;
 }
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (BOOL)CHANGEFILEATTRIBUTES:(NSDICTIONARY*)ATTRIBUTES ATPATH:(NSSTRING*)PATH {
+- (BOOL)changeFileAttributes:(NSDictionary*)attributes atPath:(NSString*)path {
     UNIMPLEMENTED();
-    RETURN NO;
+    return NO;
 }
 
 /**
- @STATUS CAVEAT
- @NOTES ONLY NSFILESIZE, NSFILETYPE, NSFILECREATIONDATE, NSFILEMODIFICATIONDATE ATTRIBUTES ARE SUPPORTED.
- @TRAVERSELINK NOT SUPPORTED.
+ @Status Caveat
+ @Notes Only NSFileSize, NSFileType, NSFileCreationDate, NSFileModificationDate attributes are supported.
+ @traverseLink not supported.
 */
-- (NSDICTIONARY*)FILEATTRIBUTESATPATH:(NSSTRING*)PATHADDR TRAVERSELINK:(BOOL)TRAVESELINKS {
-    IF (PATHADDR == NIL) {
-        TRACEVERBOSE(TAG, L"FILEATTRIBUTESATPATH NIL!");
+- (NSDictionary*)fileAttributesAtPath:(NSString*)pathAddr traverseLink:(BOOL)traveseLinks {
+    if (pathAddr == nil) {
+        TraceVerbose(TAG, L"fileAttributesAtPath nil!");
 
-        RETURN NIL;
+        return nil;
     }
 
-    STRUCT STAT ST;
+    struct stat st;
 
-    CONST CHAR* PATH = [PATHADDR UTF8STRING];
-    TRACEVERBOSE(TAG, L"FILEATTRIBUTESATPATH: %HS", PATH);
+    const char* path = [pathAddr UTF8String];
+    TraceVerbose(TAG, L"fileAttributesAtPath: %hs", path);
 
-    IF (EBRSTAT(PATH, &ST) == -1) {
-        RETURN NIL;
+    if (EbrStat(path, &st) == -1) {
+        return nil;
     }
 
-    ID RET = [NSMUTABLEDICTIONARY DICTIONARY];
+    id ret = [NSMutableDictionary dictionary];
 
-    [RET SETVALUE:[NSNUMBER NUMBERWITHINT:ST.ST_SIZE] FORKEY:NSFILESIZE];
+    [ret setValue:[NSNumber numberWithInt:st.st_size] forKey:NSFileSize];
 
-    // NOTE: ST_CTIME IS FILE CREATION TIME ON WINDOWS FOR NTFS
-    [RET SETVALUE:[NSDATE DATEWITHTIMEINTERVALSINCE1970:ST.ST_CTIME] FORKEY:NSFILECREATIONDATE];
-    [RET SETVALUE:[NSDATE DATEWITHTIMEINTERVALSINCE1970:ST.ST_MTIME] FORKEY:NSFILEMODIFICATIONDATE];
+    // NOTE: st_ctime is file creation time on windows for NTFS
+    [ret setValue:[NSDate dateWithTimeIntervalSince1970:st.st_ctime] forKey:NSFileCreationDate];
+    [ret setValue:[NSDate dateWithTimeIntervalSince1970:st.st_mtime] forKey:NSFileModificationDate];
 
-    IF (ST.ST_MODE & _S_IFDIR) {
-        [RET SETVALUE:NSFILETYPEDIRECTORY FORKEY:NSFILETYPE];
-    } ELSE {
-        [RET SETVALUE:NSFILETYPEREGULAR FORKEY:NSFILETYPE];
+    if (st.st_mode & _S_IFDIR) {
+        [ret setValue:NSFileTypeDirectory forKey:NSFileType];
+    } else {
+        [ret setValue:NSFileTypeRegular forKey:NSFileType];
     }
 
-    RETURN RET;
+    return ret;
 }
 
 /**
- @STATUS CAVEAT
- @NOTES RETURNS HARDCODED ATTRIBUTES
+ @Status Caveat
+ @Notes returns hardcoded attributes
 */
-- (NSDICTIONARY*)FILESYSTEMATTRIBUTESATPATH:(NSSTRING*)PATHADDR {
-    ID RET = [NSMUTABLEDICTIONARY DICTIONARY];
-    [RET SETVALUE:[NSNUMBER NUMBERWITHINT:32 * 1024 * 1024] FORKEY:NSFILESYSTEMFREESIZE];
-    [RET SETVALUE:[NSNUMBER NUMBERWITHINT:64 * 1024 * 1024 * 1024] FORKEY:NSFILESYSTEMSIZE];
+- (NSDictionary*)fileSystemAttributesAtPath:(NSString*)pathAddr {
+    id ret = [NSMutableDictionary dictionary];
+    [ret setValue:[NSNumber numberWithInt:32 * 1024 * 1024] forKey:NSFileSystemFreeSize];
+    [ret setValue:[NSNumber numberWithInt:64 * 1024 * 1024 * 1024] forKey:NSFileSystemSize];
 
-    RETURN RET;
+    return ret;
 }
 
 /**
- @STATUS INTEROPERABLE
+ @Status Interoperable
 */
-- (NSARRAY*)DIRECTORYCONTENTSATPATH:(NSSTRING*)PATHADDR {
-    ID ENUMERATOR = [[[NSDIRECTORYENUMERATOR ALLOC] _INITWITHPATH:[PATHADDR UTF8STRING]
-                                                          SHALLOW:YES
-                                       INCLUDINGPROPERTIESFORKEYS:NIL
-                                                          OPTIONS:NSDIRECTORYENUMERATIONSKIPSSUBDIRECTORYDESCENDANTS
-                                                      RETURNNSURL:NO] AUTORELEASE];
+- (NSArray*)directoryContentsAtPath:(NSString*)pathAddr {
+    id enumerator = [[[NSDirectoryEnumerator alloc] _initWithPath:[pathAddr UTF8String]
+                                                          shallow:YES
+                                       includingPropertiesForKeys:nil
+                                                          options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
+                                                      returnNSURL:NO] autorelease];
 
-    ID RET = [ENUMERATOR ALLOBJECTS];
-    RETURN RET;
+    id ret = [enumerator allObjects];
+    return ret;
 }
 
 /**
- @STATUS CAVEAT
- @NOTES ATTRIBUTES PARAMETER NOT SUPPORTED
+ @Status Caveat
+ @Notes attributes parameter not supported
 */
-- (BOOL)CREATEDIRECTORYATPATH:(ID)PATHADDR ATTRIBUTES:(NSDICTIONARY*)ATTRS {
-    CONST CHAR* PATH = [PATHADDR UTF8STRING];
+- (BOOL)createDirectoryAtPath:(id)pathAddr attributes:(NSDictionary*)attrs {
+    const char* path = [pathAddr UTF8String];
 
-    IF (EBRMKDIR(PATH)) {
-        RETURN YES;
-    } ELSE {
-        RETURN NO;
+    if (EbrMkdir(path)) {
+        return YES;
+    } else {
+        return NO;
     }
 }
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (BOOL)CREATESYMBOLICLINKATPATH:(NSSTRING*)PATH PATHCONTENT:(NSSTRING*)DESTINATION {
+- (BOOL)createSymbolicLinkAtPath:(NSString*)path pathContent:(NSString*)destination {
     UNIMPLEMENTED();
-    RETURN NO;
+    return NO;
 }
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (NSSTRING*)PATHCONTENTOFSYMBOLICLINKATPATH:(NSSTRING*)PATH {
+- (NSString*)pathContentOfSymbolicLinkAtPath:(NSString*)path {
     UNIMPLEMENTED();
-    RETURN NIL;
+    return nil;
 }
 
 /**
- @STATUS STUB
+ @Status Stub
 */
-- (BOOL)LINKPATH:(NSSTRING*)SOURCE TOPATH:(NSSTRING*)DESTINATION HANDLER:HANDLER {
+- (BOOL)linkPath:(NSString*)source toPath:(NSString*)destination handler:handler {
     UNIMPLEMENTED();
-    RETURN NO;
+    return NO;
 }
 
 /**
- @STATUS INTEROPERABLE
+ @Status Interoperable
 */
-- (BOOL)REMOVEITEMATPATH:(ID)PATHADDR ERROR:(NSERROR**)ERROR {
-    IF (ERROR) {
-        *ERROR = NIL;
+- (BOOL)removeItemAtPath:(id)pathAddr error:(NSError**)error {
+    if (error) {
+        *error = nil;
     }
 
-    CONST CHAR* PATH = [PATHADDR UTF8STRING];
-    TRACEVERBOSE(TAG, L"REMOVEITEMATPATH: %HS", PATH);
+    const char* path = [pathAddr UTF8String];
+    TraceVerbose(TAG, L"removeItemAtPath: %hs", path);
 
-    BOOL RET = EBRREMOVE(PATH);
-    IF (!RET && ERROR) {
-        // TODO: STANDARDIZE THE ERROR CODE AND MESSAGE
-        *ERROR = [NSERROR ERRORWITHDOMAIN:@"FAILED TO DELETE FILE" CODE:100 USERINFO:NIL];
+    BOOL ret = EbrRemove(path);
+    if (!ret && error) {
+        // TODO: standardize the error code and message
+        *error = [NSError errorWithDomain:@"Failed to delete file" code:100 userInfo:nil];
     }
 
-    RETURN RET;
+    return ret;
 }
 
-@END
+@end
 
 /**
- @STATUS STUB
- @NOTES
+ @Status Stub
+ @Notes
 */
-NSSTRING* NSOPENSTEPROOTDIRECTORY() {
+NSString* NSOpenStepRootDirectory() {
     UNIMPLEMENTED();
-    RETURN STUBRETURN();
+    return StubReturn();
 }
