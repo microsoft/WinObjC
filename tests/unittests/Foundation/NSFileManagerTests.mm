@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -24,42 +24,35 @@
 #import <Foundation/NSNumber.h>
 #import <Foundation/NSDate.h>
 #import <Foundation/NSURL.h>
-#import <Foundation/NSFileHandle.h>
 #import <stdlib.h>
 #import <windows.h>
+#import <Starboard/SmartTypes.h>
 
-static NSString* getPathToFile(char const* filePath) {
+static NSString* getModulePath() {
     char fullPath[_MAX_PATH];
-    int len = GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
-    char* ptrToLastEntry = strrchr(fullPath, '\\');
-    int lengthOfLastEntry = strlen(ptrToLastEntry);
-    strncpy_s(ptrToLastEntry, _MAX_PATH - (len - lengthOfLastEntry), filePath, strlen(filePath) + 1);
-
-    return [NSString stringWithFormat:@"%s", fullPath];
+    GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
+    return [@(fullPath) stringByDeletingLastPathComponent];
 }
 
-static void createFileWithContentAndVerify(char const* filePath, NSString* content) {
-    NSString* fullPath = getPathToFile(filePath);
-    NSFileHandle* fh = [NSFileHandle fileHandleForWritingAtPath:fullPath];
-    ASSERT_TRUE(fh != nil);
+static NSString* getPathToFile(NSString* fileName) {
+    static StrongId<NSString*> refPath = getModulePath();
+    return [refPath stringByAppendingPathComponent:fileName];
+}
 
-    if (content) {
-        NSData* data = [content dataUsingEncoding:NSUTF8StringEncoding];
-        [fh writeData:data];
-    }
-
-    [fh closeFile];
-
-    // verify file exists.
+static void createFileWithContentAndVerify(NSString* fileName, NSString* content) {
+    NSString* fullPath = getPathToFile(fileName);
+    ASSERT_TRUE([content writeToFile:fullPath atomically:NO]);
     ASSERT_TRUE([[NSFileManager defaultManager] fileExistsAtPath:fullPath]);
 }
 
-static void deleteFile(char const* filePath) {
-    NSError* error;
-    ASSERT_TRUE_MSG([[NSFileManager defaultManager] removeItemAtPath:getPathToFile(filePath) error:&error],
-                    "FAILED:Unable to delete the test file.");
-    ASSERT_OBJCEQ(error, nil);
-}
+void deleteFile(NSString* name) {
+    NSString* fullPath = getPathToFile(name);
+    if ([[NSFileManager defaultManager] fileExistsAtPath:fullPath]) {
+        [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
+    }
+};
+
+using unique_fileDeleter = std::unique_ptr<NSString, decltype(&deleteFile)>;
 
 TEST(NSFileManager, GetAttributes) {
     // get test startup full path
@@ -100,9 +93,7 @@ TEST(NSFileManager, GetAttributes) {
     ASSERT_OBJCEQ_MSG(expectedModificationDate, modificationDate, "failed to check modification date for %@", testFileFullPath);
 
     // now check file size
-    ASSERT_TRUE_MSG(fileStatus.st_size == reinterpret_cast<long>([attributes fileSize]),
-                    "failed to check file size for %@",
-                    testFileFullPath);
+    ASSERT_TRUE_MSG(fileStatus.st_size == static_cast<long>([attributes fileSize]), "failed to check file size for %@", testFileFullPath);
 }
 
 TEST(NSFileManager, EnumateDirectoryUsingURL) {
@@ -173,73 +164,52 @@ TEST(NSFileManager, ChangeDirectory) {
 }
 
 TEST(NSFileManager, MoveFileViaPath) {
-    char const* srcName = "\\NSFileManagerMoveTestFile.txt";
-    char const* destName = "\\MovedFile.txt";
+    unique_fileDeleter srcName(@"NSFileManagerMoveTestFilePath.txt", deleteFile);
+    unique_fileDeleter destName(@"MovedFilePath.txt", deleteFile);
 
     NSString* content = @"The Quick Brown Fox.";
-    createFileWithContentAndVerify(srcName, content);
+    createFileWithContentAndVerify(srcName.get(), content);
 
-    NSString* srcPath = getPathToFile(srcName);
-    NSString* destPath = getPathToFile(destName);
+    NSString* srcPath = getPathToFile(srcName.get());
+    NSString* destPath = getPathToFile(destName.get());
 
     NSFileManager* manager = [NSFileManager defaultManager];
 
     NSError* error = nil;
     BOOL status = [manager moveItemAtPath:srcPath toPath:destPath error:&error];
-    EXPECT_TRUE(status);
+    ASSERT_TRUE(status);
     EXPECT_EQ(nil, error);
 
     // Verify file exists.
-    EXPECT_TRUE([manager fileExistsAtPath:destPath]);
+    ASSERT_TRUE([manager fileExistsAtPath:destPath]);
     EXPECT_FALSE([manager fileExistsAtPath:srcPath]);
 
     // Verify data.
-    NSFileHandle* fh = [NSFileHandle fileHandleForReadingAtPath:destPath];
-    EXPECT_TRUE(fh != nil);
-
-    NSData* fileData = [fh readDataToEndOfFile];
-    EXPECT_TRUE_MSG(fileData != nil, "FAILED: reading the entire file failed.");
-
-    NSString* str = [[[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding] autorelease];
-    EXPECT_OBJCEQ_MSG(str, content, "FAILED: Unable to read the file content.");
-
-    [fh closeFile];
-
-    deleteFile((status ? destName : srcName));
+    ASSERT_OBJCEQ([content dataUsingEncoding:NSUTF8StringEncoding], [NSData dataWithContentsOfFile:destPath]);
 }
 
 TEST(NSFileManager, MoveFileViaURL) {
-    char const* srcName = "\\NSFileManagerMoveTestFile.txt";
-    char const* destName = "\\MovedFile.txt";
+    unique_fileDeleter srcName(@"NSFileManagerMoveTestFileURL.txt", deleteFile);
+    unique_fileDeleter destName(@"MovedFileURL.txt", deleteFile);
 
     NSString* content = @"The Quick Brown Fox.";
-    createFileWithContentAndVerify(srcName, content);
+    createFileWithContentAndVerify(srcName.get(), content);
 
-    NSURL* srcURL = [NSURL fileURLWithPath:getPathToFile(srcName)];
-    NSURL* destURL = [NSURL fileURLWithPath:getPathToFile(destName)];
+    NSURL* srcURL = [NSURL fileURLWithPath:getPathToFile(srcName.get())];
+    NSURL* destURL = [NSURL fileURLWithPath:getPathToFile(destName.get())];
 
     NSFileManager* manager = [NSFileManager defaultManager];
 
     NSError* error = nil;
     BOOL status = [manager moveItemAtURL:srcURL toURL:destURL error:&error];
-    EXPECT_TRUE(status);
+    ASSERT_TRUE(status);
     EXPECT_EQ(nil, error);
 
     // Verify file exists.
-    EXPECT_TRUE([manager fileExistsAtPath:[destURL path]]);
-    EXPECT_FALSE([manager fileExistsAtPath:[srcURL path]);
+    ASSERT_TRUE([manager fileExistsAtPath:[destURL path]]);
+    EXPECT_FALSE([manager fileExistsAtPath:[srcURL path]]);
 
     // Verify data.
-    NSFileHandle* fh = [NSFileHandle fileHandleForReadingAtPath:getPathToFile(destName)];
-    EXPECT_TRUE(fh != nil);
 
-    NSData* fileData = [fh readDataToEndOfFile];
-    EXPECT_TRUE_MSG(fileData != nil, "FAILED: reading the entire file failed.");
-
-    NSString* str = [[[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding] autorelease];
-    EXPECT_OBJCEQ_MSG(str, content, "FAILED: Unable to read the file content.");
-
-    [fh closeFile];
-
-    deleteFile((status ? destName : srcName));
+    ASSERT_OBJCEQ([content dataUsingEncoding:NSUTF8StringEncoding], [NSData dataWithContentsOfURL:destURL]);
 }
