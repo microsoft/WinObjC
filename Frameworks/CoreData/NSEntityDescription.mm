@@ -34,17 +34,15 @@
 @end
 
 @implementation NSEntityDescription
-- (id)initWithXMLElementName:(NSString*)entityName attributes:(NSDictionary<NSString*, NSString*>*)attributes {
+- (instancetype)_initWithXMLElementName:(NSString*)entityName attributes:(NSDictionary<NSString*, NSString*>*)attributes {
     if (self = [super init]) {
+        // Properties not herein set are set via child entity parsing.
         _unresolvedProperties = [NSMutableArray new];
         _name = [attributes[@"name"] copy];
         _managedObjectClassName = [attributes[@"representedClassName"] copy];
-        _renamingIdentifier = [attributes[@"elementID"] copy]; // TODO(DH): figure.
+        _renamingIdentifier = [attributes[@"elementID"] copy];
         _versionHashModifier = [attributes[@"versionHashModifier"] copy];
         _abstract = [attributes[@"isAbstract"] isEqualToString:@"YES"];
-
-        // _userInfo, _compoundIndexes, and _uniquenessConstraints are set out-of-band by the XML parser.
-        // _subentities, *ByName, and other collection properties are derived from sub-elements via the XML parser.
     }
     return self;
 }
@@ -155,7 +153,7 @@
 
         relationship.inverseRelationship = [inverseEntity.relationshipsByName objectForKey:relationship._inverseRelationshipName];
         if (relationship._inverseEntityName != nil && relationship.inverseRelationship == nil) {
-            __debugbreak();
+            FAIL_FAST_MSG("NSRelationshipDescription has an inverse entity, but no inverse relationship. Broken model?");
         }
     }
 }

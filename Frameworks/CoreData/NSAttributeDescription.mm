@@ -67,8 +67,8 @@
     return nil;
 }
 
-- (id)initWithXMLElementName:(NSString*)entityName attributes:(NSDictionary<NSString*, NSString*>*)attributes {
-    if (self = [super initWithXMLElementName:entityName attributes:attributes]) {
+- (instancetype)_initWithXMLElementName:(NSString*)entityName attributes:(NSDictionary<NSString*, NSString*>*)attributes {
+    if (self = [super _initWithXMLElementName:entityName attributes:attributes]) {
         _attributeType = [[self class] _attributeTypeFromString:attributes[@"attributeType"]];
         _valueTransformerName = [attributes[@"valueTransformerName"] copy];
 
@@ -109,15 +109,15 @@
 }
 
 - (NSString*)description {
-    return [NSString stringWithFormat:@"<%@ %p: %@,%@%@%@%@%@ default=%@ userInfo=%@>",
+    return [NSString stringWithFormat:@"<%@ %p: %@,%hs%hs%hs%hs%hs default=%@ userInfo=%@>",
                                       object_getClass(self),
                                       self,
                                       self.name,
-                                      self.optional ? @" optional" : @"",
-                                      self.transient ? @" transient" : @"",
-                                      self.indexed ? @" indexed" : @"",
-                                      self.storedInExternalRecord ? @" external" : @"",
-                                      self.indexedBySpotlight ? @" spotlight" : @"",
+                                      self.optional ? " optional" : "",
+                                      self.transient ? " transient" : "",
+                                      self.indexed ? " indexed" : "",
+                                      self.storedInExternalRecord ? " external" : "",
+                                      self.indexedBySpotlight ? " spotlight" : "",
                                       _defaultValue,
                                       self.userInfo];
 }

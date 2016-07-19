@@ -26,6 +26,7 @@
 #import <CoreData/NSManagedObjectModel-XMLParsing.h>
 
 #include <list>
+#include <stack>
 #include <tuple>
 
 static NSString* const _kNSManagedObjectModelTag = @"model";
@@ -43,17 +44,17 @@ static NSString* const _kNSManagedObjectModelEntityUniquenessConstraintConstrain
 
 // To save ourselves some string compares:
 static NSString* _uniqueTag(NSString* tag) {
-    static StrongId<NSSet> _tagSet = [NSSet setWithObjects:_kNSManagedObjectModelTag,
-                                                           _kNSManagedObjectModelEntityTag,
-                                                           _kNSManagedObjectModelEntityAttributeTag,
-                                                           _kNSManagedObjectModelEntityRelationshipTag,
-                                                           _kNSManagedObjectModelUserInfoTag,
-                                                           _kNSManagedObjectModelUserInfoEntryTag,
-                                                           _kNSManagedObjectModelEntityCompoundIndexTag,
-                                                           _kNSManagedObjectModelEntityCompoundIndexesTag,
-                                                           _kNSManagedObjectModelEntityUniquenessConstraintTag,
-                                                           _kNSManagedObjectModelEntityUniquenessConstraintsTag,
-                                                           nullptr];
+    static StrongId<NSSet<NSString*>> _tagSet = [NSSet setWithObjects:_kNSManagedObjectModelTag,
+                                                                      _kNSManagedObjectModelEntityTag,
+                                                                      _kNSManagedObjectModelEntityAttributeTag,
+                                                                      _kNSManagedObjectModelEntityRelationshipTag,
+                                                                      _kNSManagedObjectModelUserInfoTag,
+                                                                      _kNSManagedObjectModelUserInfoEntryTag,
+                                                                      _kNSManagedObjectModelEntityCompoundIndexTag,
+                                                                      _kNSManagedObjectModelEntityCompoundIndexesTag,
+                                                                      _kNSManagedObjectModelEntityUniquenessConstraintTag,
+                                                                      _kNSManagedObjectModelEntityUniquenessConstraintsTag,
+                                                                      nullptr];
     return [_tagSet member:tag];
 }
 
@@ -92,21 +93,23 @@ enum _NSModelParsingState : unsigned int {
 
 struct _NSModelParsingContext {
     StrongId<NSManagedObjectModel> model;
-    std::list<std::tuple<_NSModelParsingState, StrongId<NSObject>>> states;
+
+    using StateType = std::tuple<_NSModelParsingState, StrongId<NSObject>>;
+    std::stack<StateType, std::list<StateType>> states;
 
     void push_state(_NSModelParsingState st, id object) {
-        states.emplace_front(st, object);
+        states.emplace(st, object);
     }
     std::tuple<_NSModelParsingState, id> pop() {
-        auto state = states.front();
-        states.pop_front();
+        auto state = states.top();
+        states.pop();
         return state;
     }
     std::tuple<_NSModelParsingState, id> peek() {
-        return states.front();
+        return states.top();
     }
     _NSModelParsingState state() {
-        return states.empty() ? _NSModelParsingStateNone : std::get<_NSModelParsingState>(states.front());
+        return states.empty() ? _NSModelParsingStateNone : std::get<_NSModelParsingState>(peek());
     }
     size_t count() const {
         return states.size();
@@ -161,7 +164,7 @@ static void* xmlCreateStructure(CFXMLParserRef parser, CFXMLNodeRef node, void* 
                         newState = _NSModelParsingStateModel;
                     }
 
-                    EMIT_STATE(newState, [[[cls alloc] initWithXMLElementName:elementName attributes:attributes] autorelease]);
+                    EMIT_STATE(newState, [[[cls alloc] _initWithXMLElementName:elementName attributes:attributes] autorelease]);
                     break;
                 }
                 case _NSModelParsingStateCompoundIndices:

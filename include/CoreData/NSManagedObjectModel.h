@@ -40,7 +40,7 @@ COREDATA_EXPORT_CLASS
 - (NSArray*)entitiesForConfiguration:(NSString*)configuration STUB_METHOD;
 - (void)setEntities:(NSArray*)entities forConfiguration:(NSString*)configuration;
 @property (readonly, copy) NSDictionary* fetchRequestTemplatesByName STUB_PROPERTY;
-- (NSFetchRequest*)fetchRequestTemplateForName:(NSString*)name STUB_PROPERTY;
+- (NSFetchRequest*)fetchRequestTemplateForName:(NSString*)name STUB_METHOD;
 - (NSFetchRequest*)fetchRequestFromTemplateWithName:(NSString*)name substitutionVariables:(NSDictionary*)variables STUB_METHOD;
 - (void)setFetchRequestTemplate:(NSFetchRequest*)fetchRequest forName:(NSString*)name STUB_METHOD;
 @property (strong) NSDictionary* localizationDictionary STUB_PROPERTY;

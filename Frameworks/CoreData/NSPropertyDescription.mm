@@ -21,7 +21,7 @@
 #import <CoreData/NSManagedObjectModel-XMLParsing.h>
 
 @implementation NSPropertyDescription
-- (id)initWithXMLElementName:(NSString*)entityName attributes:(NSDictionary<NSString*, NSString*>*)attributes {
+- (instancetype)_initWithXMLElementName:(NSString*)entityName attributes:(NSDictionary<NSString*, NSString*>*)attributes {
     if (self = [super init]) {
         _name = [attributes[@"name"] copy];
         _renamingIdentifier = [attributes[@"elementID"] copy];
@@ -60,15 +60,15 @@
 }
 
 - (NSString*)description {
-    return [NSString stringWithFormat:@"<%@ %p: %@,%@%@%@%@%@ userInfo=%@>",
+    return [NSString stringWithFormat:@"<%@ %p: %@,%hs%hs%hs%hs%hs userInfo=%@>",
                                       object_getClass(self),
                                       self,
                                       self.name,
-                                      self.optional ? @" optional" : @"",
-                                      self.transient ? @" transient" : @"",
-                                      self.indexed ? @" indexed" : @"",
-                                      self.storedInExternalRecord ? @" external" : @"",
-                                      self.indexedBySpotlight ? @" spotlight" : @"",
+                                      self.optional ? " optional" : "",
+                                      self.transient ? " transient" : "",
+                                      self.indexed ? " indexed" : "",
+                                      self.storedInExternalRecord ? " external" : "",
+                                      self.indexedBySpotlight ? " spotlight" : "",
                                       self.userInfo];
 }
 

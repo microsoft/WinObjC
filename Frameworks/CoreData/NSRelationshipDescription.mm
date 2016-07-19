@@ -38,8 +38,8 @@
     // 0/nil is NSNoActionDeleteRule
     return (NSDeleteRule)[[_deleteRules objectForKey:string] unsignedIntegerValue];
 }
-- (id)initWithXMLElementName:(NSString*)entityName attributes:(NSDictionary<NSString*, NSString*>*)attributes {
-    if (self = [super initWithXMLElementName:entityName attributes:attributes]) {
+- (instancetype)_initWithXMLElementName:(NSString*)entityName attributes:(NSDictionary<NSString*, NSString*>*)attributes {
+    if (self = [super _initWithXMLElementName:entityName attributes:attributes]) {
         _destinationEntityName.attach([attributes[@"destinationEntity"] copy]);
 
         _inverseEntityName.attach([attributes[@"inverseEntity"] copy]);
@@ -78,17 +78,17 @@
 }
 
 - (NSString*)description {
-    return [NSString stringWithFormat:@"<%@ %p: %@,%@%@%@%@%@%@%@ destination=%@ inverse=%p userInfo=%@>",
+    return [NSString stringWithFormat:@"<%@ %p: %@,%hs%hs%hs%hs%hs%hs%hs destination=%@ inverse=%p userInfo=%@>",
                                       object_getClass(self),
                                       self,
                                       self.name,
-                                      self.optional ? @" optional" : @"",
-                                      self.transient ? @" transient" : @"",
-                                      self.indexed ? @" indexed" : @"",
-                                      self.storedInExternalRecord ? @" external" : @"",
-                                      self.indexedBySpotlight ? @" spotlight" : @"",
-                                      self.toMany ? @" to-many" : @"",
-                                      self.ordered ? @" ordered" : @"",
+                                      self.optional ? " optional" : "",
+                                      self.transient ? " transient" : "",
+                                      self.indexed ? " indexed" : "",
+                                      self.storedInExternalRecord ? " external" : "",
+                                      self.indexedBySpotlight ? " spotlight" : "",
+                                      self.toMany ? " to-many" : "",
+                                      self.ordered ? " ordered" : "",
                                       _destinationEntity.name,
                                       _inverseRelationship,
                                       self.userInfo];

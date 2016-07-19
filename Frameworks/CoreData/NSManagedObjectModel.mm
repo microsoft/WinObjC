@@ -42,7 +42,7 @@
     return [_NSManagedObjectModelFromXMLDataAtURL(url) retain];
 }
 
-- (id)initWithXMLElementName:(NSString*)entityName attributes:(NSDictionary<NSString*, NSString*>*)attributes {
+- (instancetype)_initWithXMLElementName:(NSString*)entityName attributes:(NSDictionary<NSString*, NSString*>*)attributes {
     if (self = [super init]) {
         _unresolvedEntities.attach([NSMutableArray new]);
     }

@@ -20,7 +20,7 @@
 
 @protocol _NSCDXMLCoding <NSObject>
 @required
-- (instancetype)initWithXMLElementName:(NSString*)entityName attributes:(NSDictionary<NSString*, NSString*>*)attributes;
+- (instancetype)_initWithXMLElementName:(NSString*)entityName attributes:(NSDictionary<NSString*, NSString*>*)attributes;
 - (bool)_insertChildElement:(id<_NSCDXMLCoding>)childElement;
 - (void)_awakeFromXML;
 @end
