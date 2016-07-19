@@ -181,7 +181,7 @@ CTFontRef CTFontCreateCopyWithSymbolicTraits(
     if (size == 0.0f) {
         size = ((UIFont*)font).pointSize;
     }
-    UIFont* ret = [_LazyUIFont fontWithDescriptor:newFontDescriptor size:size];
+    UIFont* ret = [[_LazyUIFont fontWithDescriptor:newFontDescriptor size:size] retain];
 
     return (CTFontRef)ret;
 }
@@ -658,7 +658,7 @@ CGFontRef CTFontCopyGraphicsFont(CTFontRef font, CTFontDescriptorRef _Nullable* 
  @Status Caveat
  @Notes transform and attributes parameters not supported
 */
-CTFontRef CTFontCreateWithGraphicsFont(CGFontRef cgFont, CGFloat size, const CGAffineTransform* xform, id attributes) {
+CTFontRef CTFontCreateWithGraphicsFont(CGFontRef cgFont, CGFloat size, const CGAffineTransform* xform, CTFontDescriptorRef attributes) {
     if (size == 0.0f) {
         size = 12.0f;
     }

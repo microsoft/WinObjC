@@ -59,7 +59,7 @@ __CGContext::__CGContext(CGImageRef pDest) {
 #ifdef DEBUG_CONTEXT_COUNT
     TraceVerbose(TAG, L"contextCount: %d", contextCount);
 #endif
-    object_setClass((id)this, [CGNSContext class]);
+    object_setClass((id) this, [CGNSContext class]);
     scale = 1.0f;
     _backing = pDest->Backing()->CreateDrawingContext(this);
 }
@@ -951,9 +951,9 @@ CGSize CGContextConvertSizeToUserSpace(CGContextRef c, CGSize size) {
 /**
  @Status Stub
 */
-CGPoint CGContextConvertSizeToDeviceSpace(CGContextRef ctx, CGPoint pt) {
+CGSize CGContextConvertSizeToDeviceSpace(CGContextRef ctx, CGSize size) {
     UNIMPLEMENTED();
-    return pt;
+    return size;
 }
 
 /**

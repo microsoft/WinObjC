@@ -69,7 +69,10 @@ __CGColorSpace::~__CGColorSpace() {
 /**
  @Status Stub
 */
-CGColorSpaceRef CGColorSpaceCreateCalibratedRGB() {
+CGColorSpaceRef CGColorSpaceCreateCalibratedRGB(const CGFloat whitePoint[3],
+                                                const CGFloat blackPoint[3],
+                                                const CGFloat gamma[3],
+                                                const CGFloat matrix[9]) {
     UNIMPLEMENTED();
     TraceWarning(TAG, L"CGColorSpaceCreateCalibratedRGB not supported");
     return (CGColorSpaceRef) new __CGColorSpace(_ColorRGBA);
@@ -78,7 +81,7 @@ CGColorSpaceRef CGColorSpaceCreateCalibratedRGB() {
 /**
  @Status Interoperable
 */
-CGColorSpaceRef CGColorSpaceCreateIndexed(id baseSpace, int lastIndex, void* colorTable) {
+CGColorSpaceRef CGColorSpaceCreateIndexed(CGColorSpaceRef baseSpace, size_t lastIndex, const unsigned char* colorTable) {
     __CGColorSpace* ret = new __CGColorSpace(_ColorIndexed);
 
     ret->palette = (char*)IwMalloc(3 * (lastIndex + 1));
@@ -143,8 +146,8 @@ CGColorSpaceRef CGColorSpaceCreateDeviceGray() {
  @Status Caveat
  @Notes Must be "kCGColorSpaceGenericRGB" or "kCGColorSpaceGenericRGBLinear"
 */
-CGColorSpaceRef CGColorSpaceCreateWithName(id name) {
-    char* strName = (char*)[name UTF8String];
+CGColorSpaceRef CGColorSpaceCreateWithName(CFStringRef name) {
+    char* strName = (char*)[(NSString*)name UTF8String];
 
     if (strcmp(strName, "kCGColorSpaceGenericRGB") == 0) {
         return (CGColorSpaceRef) new __CGColorSpace(_ColorRGBA);
