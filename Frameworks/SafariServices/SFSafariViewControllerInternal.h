@@ -13,11 +13,15 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
 #pragma once
 
-extern "C" int UIApplicationMainLoop();
-extern "C" void UIApplicationMainHandleHighMemoryUsageEvent();
-extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible);
-extern "C" void UIApplicationMainHandleToastNotificationEvent(const char* notificationData);
-extern "C" void UIApplicationMainHandleVoiceCommandEvent(IInspectable* voiceCommandResult);
-extern "C" void UIApplicationMainHandleProtocolEvent(IInspectable* protocolUri, const wchar_t* sourceApplication);
+#import <SafariServices/SFSafariViewController.h>
+
+@interface SFSafariViewController () {
+@protected
+    NSURL* _url;
+}
+
+- (NSString*)_sourceApplication;
+@end

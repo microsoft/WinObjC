@@ -158,17 +158,19 @@ void EbrApplicationActivated(IActivatedEventArgs^ args) {
 
         UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(argResult));
     } else if (args->Kind == ActivationKind::Protocol) {
-        Windows::Foundation::Uri^ argUri = safe_cast<ProtocolActivatedEventArgs^>(args)->Uri;
-        TraceVerbose(TAG, L"Received protocol with uri- %s", argUri->ToString()->Data());
+        ProtocolActivatedEventArgs^ protocolArgs = safe_cast<ProtocolActivatedEventArgs^>(args);
+        Windows::Foundation::Uri^ argUri = protocolArgs->Uri;
+        const wchar_t* caller = protocolArgs->CallerPackageFamilyName->Data();
+        TraceVerbose(TAG, L"Received protocol with uri- %s from %s", argUri->ToString()->Data(), caller);
 
         if (initiateAppLaunch) {
             _ApplicationMainLaunch(ActivationTypeProtocol, argUri);
         }
 
-        UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri));
+        UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri), caller);
     } else {
         TraceVerbose(TAG, L"Received unhandled activation kind - %d", args->Kind);
-        
+
         if (initiateAppLaunch) {
             _ApplicationMainLaunch(ActivationTypeNone, nullptr);
         }
@@ -194,6 +196,54 @@ extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::Obje
 
     auto startupRect = Xaml::Window::Current->Bounds;
     RunApplicationMain(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height, activationType, activationArg);
+}
+
+extern "C" void _ApplicationActivate(Platform::Object^ arguments) {
+    IActivatedEventArgs^ args = static_cast<IActivatedEventArgs^>(arguments);
+    TraceVerbose(TAG, L"OnActivated event received for %d. Previous app state was %d", args->Kind, args->PreviousExecutionState);
+    bool initiateAppLaunch = false;
+    if ((args->PreviousExecutionState != ApplicationExecutionState::Running) &&
+        (args->PreviousExecutionState != ApplicationExecutionState::Suspended)) {
+        TraceVerbose(TAG, L"Initializing application");
+        initiateAppLaunch = true;
+    }
+
+    if (args->Kind == ActivationKind::ToastNotification) {
+        Platform::String^ argsString = safe_cast<ToastNotificationActivatedEventArgs^>(args)->Argument;
+        TraceVerbose(TAG, L"Received toast notification with argument - %ls", argsString->Data());
+
+        if (initiateAppLaunch) {
+            _ApplicationLaunch(ActivationTypeToast, argsString);
+        }
+
+        UIApplicationMainHandleToastNotificationEvent(Strings::WideToNarrow(argsString->Data()).c_str());
+    } else if (args->Kind == ActivationKind::VoiceCommand) {
+        Windows::Media::SpeechRecognition::SpeechRecognitionResult^ argResult = safe_cast<VoiceCommandActivatedEventArgs^>(args)->Result;
+        TraceVerbose(TAG, L"Received voice command with argument - %ls", argResult->Text->Data());
+
+        if (initiateAppLaunch) {
+            _ApplicationLaunch(ActivationTypeVoiceCommand, argResult);
+        }
+
+        UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(argResult));
+    } else if (args->Kind == ActivationKind::Protocol) {
+        ProtocolActivatedEventArgs^ protocolArgs = safe_cast<ProtocolActivatedEventArgs^>(args);
+        Windows::Foundation::Uri^ argUri = protocolArgs->Uri;
+        const wchar_t* caller = protocolArgs->CallerPackageFamilyName->Data();
+        TraceVerbose(TAG, L"Received protocol with uri- %ls from %ls", argUri->ToString()->Data(), caller);
+
+        if (initiateAppLaunch) {
+            _ApplicationLaunch(ActivationTypeProtocol, argUri);
+        }
+
+        UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri), caller);
+    } else {
+        TraceVerbose(TAG, L"Received unhandled activation kind - %d", args->Kind);
+
+        if (initiateAppLaunch) {
+            _ApplicationLaunch(ActivationTypeNone, nullptr);
+        }
+    }
 }
 
 // This is the actual entry point from the app into our framework.
@@ -254,13 +304,36 @@ void UIApplicationInitialize(const wchar_t* principalClassName, const wchar_t* d
 
     if (principalClassName != nullptr) {
         g_principalClassName = ref new Platform::String(principalClassName);
+    } else {
+        g_principalClassName = ref new Platform::String();
     }
 
     if (delegateClassName != nullptr) {
         g_delegateClassName = ref new Platform::String(delegateClassName);
+    } else {
+        g_delegateClassName = ref new Platform::String();
     }
 
     _ApplicationLaunch(ActivationTypeNone, nullptr);
+}
+
+// Note: Like UIApplicationMain, delegateClassName is actually an NSString*.
+UIKIT_EXPORT
+void UIApplicationActivationTest(IInspectable* activationArgs, void* delegateClassName){
+    // Initialize COM on this thread
+    ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+
+    // Register tracelogging
+    TraceRegister();
+
+    if (delegateClassName) {
+        auto rawString = _RawBufferFromNSString(delegateClassName);
+        g_delegateClassName = reinterpret_cast<Platform::String^>(Strings::NarrowToWide<HSTRING>(rawString).Detach());
+    } else {
+        g_delegateClassName = ref new Platform::String();
+    }
+
+    _ApplicationActivate(reinterpret_cast<Platform::Object^>(activationArgs));
 }
 
 // clang-format on

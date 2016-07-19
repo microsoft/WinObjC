@@ -14,10 +14,9 @@
 //
 //******************************************************************************
 
-#pragma once
+#include "UIKit/UIApplication.h"
 
-#include <Foundation/NSHTTPURLResponse.h>
-
-@interface NSHTTPURLResponse ()
-- (id)initWithURL:(NSURL*)url statusCode:(NSInteger)statusCode headers:(id)headers expectedContentLength:(int)expectedContentLength;
-@end
+// Prevents UIApplication state from carrying over between functional tests
+void FunctionalTestCleanupUIApplication() {
+    [[UIApplication sharedApplication] _destroy];
+}

@@ -120,7 +120,7 @@ COREGRAPHICS_EXPORT void CGContextAddLines(CGContextRef c, const CGPoint* points
 COREGRAPHICS_EXPORT void CGContextAddLineToPoint(CGContextRef c, CGFloat x, CGFloat y);
 COREGRAPHICS_EXPORT void CGContextAddPath(CGContextRef c, CGPathRef path);
 
-COREGRAPHICS_EXPORT CGPathRef CGContextCopyPath(CGContextRef c) STUB_METHOD;
+COREGRAPHICS_EXPORT CGPathRef CGContextCopyPath(CGContextRef c);
 
 COREGRAPHICS_EXPORT void CGContextAddQuadCurveToPoint(CGContextRef c, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y);
 COREGRAPHICS_EXPORT void CGContextAddRect(CGContextRef c, CGRect rect);

@@ -93,14 +93,6 @@ static int stackLevel = 0;
 
 int viewCount = 0;
 
-static void RunSynchronouslyOnMainThread(void (^block)()) {
-    if ([NSThread isMainThread]) {
-        block();
-    } else {
-        dispatch_sync(dispatch_get_main_queue(), block);
-    }
-}
-
 @implementation UIView {
     idretaintype(CALayer) layer;
     bool _deallocating;
@@ -744,11 +736,15 @@ static UIView* initInternal(UIView* self, CGRect pos) {
         TraceVerbose(TAG, L"[%f,%f] @ %fx%f", (float)pos.origin.x, (float)pos.origin.y, (float)pos.size.width, (float)pos.size.height);
     }
 
-    [self _initPriv];
-    [self setOpaque:TRUE];
-    [self setFrame:pos];
-    [self setNeedsDisplay];
-    [self initAccessibility];
+    // Run on the main thread because the underlying XAML objects can only be
+    // called from the UI thread
+    RunSynchronouslyOnMainThread(^{
+        [self _initPriv];
+        [self setOpaque:TRUE];
+        [self setFrame:pos];
+        [self setNeedsDisplay];
+        [self initAccessibility];
+    });
 
     return self;
 }
