@@ -343,7 +343,7 @@ static NSString* _bundleIdFromPackageFamilyName(const wchar_t* packageFamily) {
         // in-app activation scenario that we support is from web navigation,
         // which on the reference platform would mean that the activation is
         // coming from Safari, so this is the expected ID.
-        return @"com.apple.SafariWebService";
+        return @"com.apple.SafariViewService";
     } else {
         // The activation is coming from out of process. In theory we should
         // look up the bundle ID of the source process (if it has one), but
@@ -357,5 +357,5 @@ extern "C" void UIApplicationMainHandleProtocolEvent(IInspectable* protocolUri, 
     WFUri* protocolResult = [WFUri createWith:protocolUri];
     NSString* source = _bundleIdFromPackageFamilyName(sourceApplication);
 
-    [[UIApplication sharedApplication] _sendProtocolReceivedEvent:protocolResult source:nil];
+    [[UIApplication sharedApplication] _sendProtocolReceivedEvent:protocolResult source:source];
 }
