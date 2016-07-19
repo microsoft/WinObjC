@@ -131,7 +131,7 @@ TEST(CFStringTokenizer, ChineseWordBreak) {
     ASSERT_TRUE(NULL != tokenizer);
     verifyRange(tokenizer, 0, 1); // 我 I
     verifyRange(tokenizer, 1, 1); // 爱 love
-    verifyRange(tokenizer, 2, 1); // 微软 microsoft
+    verifyRange(tokenizer, 2, 2); // 微软 microsoft
 
     CFRelease(tokenizer);
     CFRelease(locale);

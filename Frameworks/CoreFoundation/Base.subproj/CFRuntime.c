@@ -70,20 +70,6 @@ __kCFReleaseEvent = 29
 #include <malloc/malloc.h>
 #endif
 
-// WINOBJC: add in ICU deps so that we can initialize ICU with correct data when we
-// initialize CoreFoundation. Really this should be in the "normal" loading path but
-// that requires rebuilding ICU.
-#include <unicode/coll.h>
-#include <unicode/ucnv.h>
-#include <unicode/brkiter.h>
-#include <unicode/uclean.h>
-#include <unicode/udata.h>
-#include <assert.h>
-extern "C" {
-extern const char _static_icuData[];
-};
-
-
 #define FAKE_INSTRUMENTS 0
 
 #define CF_IS_SWIFT(type,obj) false
@@ -1322,13 +1308,6 @@ void __CFInitialize(void) {
 #if defined(DEBUG) && (DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED)
         // CFLog(kCFLogLevelWarning, CFSTR("Assertions enabled"));
 #endif
-
-        // WINOBJC: add in ICU deps so that we can initialize ICU with correct data when we
-        // initialize CoreFoundation. Really this should be in the "normal" loading path but
-        // that requires rebuilding ICU.
-        UErrorCode status = U_ZERO_ERROR;
-        udata_setCommonData(_static_icuData, &status);
-        assert(status == U_ZERO_ERROR);
 
         __CFProphylacticAutofsAccess = false;
         
