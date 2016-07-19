@@ -245,10 +245,10 @@ static const double earthRadius = 6371000.0;
     const double destinationLongitude = self.coordinate.longitude * degreesToRadians;
     const double latitudeDelta = destinationLatitude - sourceLatitude;
     const double longitudeDelta = destinationLongitude - sourceLongitude;
-    const double a = sin(latitudeDelta / 2) * sin(latitudeDelta / 2) +
+    const double haversineA = sin(latitudeDelta / 2) * sin(latitudeDelta / 2) +
                      cos(sourceLatitude) * cos(destinationLatitude) * sin(longitudeDelta / 2) * sin(longitudeDelta / 2);
-    const double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-    CLLocationDistance distance = earthRadius * c;
+    const double inverseHaversine = 2 * atan2(sqrt(haversineA), sqrt(1 - haversineA));
+    CLLocationDistance distance = earthRadius * inverseHaversine;
 
     return distance;
 }
