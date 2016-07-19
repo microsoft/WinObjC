@@ -137,7 +137,6 @@ void UIApplicationLaunched(LaunchActivatedEventArgs^ args) {
 
 void UIApplicationActivated(IActivatedEventArgs^ args) {
     TraceVerbose(TAG, L"OnActivated event received for %d. Previous app state was %d", args->Kind, args->PreviousExecutionState);
-
     bool initiateAppLaunch = false;
     if ((args->PreviousExecutionState != ApplicationExecutionState::Running) &&
         (args->PreviousExecutionState != ApplicationExecutionState::Suspended)) {
@@ -157,14 +156,14 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
             reinterpret_cast<IInspectable*>(toastArgs->UserInput));
 
     } else if (args->Kind == ActivationKind::VoiceCommand) {
-        Windows::Media::SpeechRecognition::SpeechRecognitionResult^ argResult = safe_cast<VoiceCommandActivatedEventArgs^>(args)->Result;
-        TraceVerbose(TAG, L"Received voice command with argument - %s", argResult->Text->Data());
+        SpeechRecognitionResult^ result = safe_cast<VoiceCommandActivatedEventArgs^>(args)->Result;
+        TraceVerbose(TAG, L"Received voice command with argument - %ls", result->Text->Data());
 
         if (initiateAppLaunch) {
-            _ApplicationLaunch(ActivationTypeVoiceCommand, argResult);
+            _ApplicationLaunch(ActivationTypeVoiceCommand, result);
         }
 
-        UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(argResult));
+        UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(result));
     } else if (args->Kind == ActivationKind::Protocol) {
         ProtocolActivatedEventArgs^ protocolArgs = safe_cast<ProtocolActivatedEventArgs^>(args);
         Windows::Foundation::Uri^ argUri = protocolArgs->Uri;
