@@ -187,9 +187,7 @@ TEST(NSFileManager, MoveFileViaPath) {
     EXPECT_FALSE([manager fileExistsAtPath:srcPath]);
 
     // Verify data.
-    error = nil;
-    ASSERT_OBJCEQ(content, [NSString stringWithContentsOfFile:destPath encoding:NSUTF8StringEncoding error:&error]);
-    EXPECT_EQ(nil, error);
+    ASSERT_OBJCEQ([content dataUsingEncoding:NSUTF8StringEncoding], [NSData dataWithContentsOfFile:destPath]);
 }
 
 TEST(NSFileManager, MoveFileViaURL) {
@@ -214,7 +212,5 @@ TEST(NSFileManager, MoveFileViaURL) {
     EXPECT_FALSE([manager fileExistsAtPath:[srcURL path]]);
 
     // Verify data.
-    error = nil;
-    ASSERT_OBJCEQ(content, [NSString stringWithContentsOfURL:destURL encoding:NSUTF8StringEncoding error:&error]);
-    EXPECT_EQ(nil, error);
+    ASSERT_OBJCEQ([content dataUsingEncoding:NSUTF8StringEncoding], [NSData dataWithContentsOfURL:destURL]);
 }
