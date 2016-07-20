@@ -280,32 +280,18 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
  @Status Interoperable
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    if (self = [super init]) {
-        // Can't encode/decode ICU object. Potentially recreate system TZ?
-        _nextDaylightSavingTimeTransition = [[coder decodeObjectOfClass:[NSDate class] forKey:@"nextDaylightSavingTimeTransition"] retain];
-        _abbreviation = [[coder decodeObjectForKey:@"abbreviation"] retain];
-        _name = [[coder decodeObjectForKey:@"name"] retain];
-        _data = [[coder decodeObjectOfClass:[NSData class] forKey:@"data"] retain];
-        _daylightSavingTimeOffset = [coder decodeDoubleForKey:@"daylightSavingTimeOffset"];
-        _isDaylightSavingTime = [coder decodeBoolForKey:@"isDaylightSavingTime"];
-        _secondsFromGMT = [coder decodeInt64ForKey:@"secondsFromGMT"];
-    }
-    return self;
+    NSString* tempName = [coder decodeObjectForKey:@"NS.TimeZoneName"];
+    NSData* tempData = [coder decodeObjectOfClass:[NSData class] forKey:@"NS.TimeZoneData"];
+    return [self initWithName:tempName data:tempData];
 }
 
 /**
  @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    // Can't encode/decode ICU object. Potentially recreate system TZ?
-    [coder encodeObject:[self description] forKey:@"description"];
-    [coder encodeObject:_nextDaylightSavingTimeTransition forKey:@"nextDaylightSavingTimeTransition"];
-    [coder encodeObject:_abbreviation forKey:@"abbreviation"];
-    [coder encodeObject:_name forKey:@"name"];
-    [coder encodeObject:_data forKey:@"data"];
-    [coder encodeDouble:_daylightSavingTimeOffset forKey:@"daylightSavingTimeOffset"];
-    [coder encodeBool:_isDaylightSavingTime forKey:@"isDaylightSavingTime"];
-    [coder encodeInt64:_secondsFromGMT forKey:@"secondsFromGMT"];
+    // Timezones in ICU are reconstructed using this name.
+    [coder encodeObject:[self name] forKey:@"NS.TimeZoneName"];
+    [coder encodeObject:[self data] forKey:@"NS.TimeZoneData"];
 }
 
 /**

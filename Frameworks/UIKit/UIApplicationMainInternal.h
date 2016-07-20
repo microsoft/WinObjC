@@ -21,3 +21,5 @@ extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisibl
 extern "C" void UIApplicationMainHandleToastNotificationEvent(const char* notificationData);
 extern "C" void UIApplicationMainHandleVoiceCommandEvent(IInspectable* voiceCommandResult);
 extern "C" void UIApplicationMainHandleProtocolEvent(IInspectable* protocolUri);
+extern "C" void UIApplicationMainHandleSuspendEvent();
+extern "C" void UIApplicationMainHandleResumeEvent();

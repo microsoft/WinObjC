@@ -96,7 +96,7 @@ CFAbsoluteTime CFAbsoluteTimeGetCurrent(void) {
 
     // WINOBJC: ensure that extra precision is maintained in the conversion to seconds.
     auto timeSinceEpochSec = std::chrono::duration_cast<std::chrono::duration<double, std::ratio<1>>>(timeSinceEpoch).count();
-    ret = timeSinceEpochSec;
+    ret = timeSinceEpochSec - kCFAbsoluteTimeIntervalSince1970;
     return ret;
 }
 
