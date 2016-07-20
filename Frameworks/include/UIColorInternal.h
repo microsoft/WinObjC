@@ -26,7 +26,7 @@ typedef struct {
     CGFloat a;
 } __CGColorQuad;
 
-inline void _Clear__CGColorQuad(__CGColorQuad& color) {
+inline void _ClearColorQuad(__CGColorQuad& color) {
     color.r = 0.0f;
     color.g = 0.0f;
     color.b = 0.0f;

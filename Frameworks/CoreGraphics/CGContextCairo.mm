@@ -702,7 +702,7 @@ void CGContextCairo::CGContextSetStrokeColorWithColor(id color) {
     if (color) {
         curState->curStrokeColor = *[(UIColor*)color _getColors];
     } else {
-        _Clear__CGColorQuad(curState->curStrokeColor);
+        _ClearColorQuad(curState->curStrokeColor);
     }
 }
 
@@ -711,7 +711,7 @@ void CGContextCairo::CGContextSetFillColorWithColor(id color) {
         if (color) {
             curState->curFillColor = *[(UIColor*)color _getColors];
         } else {
-            _Clear__CGColorQuad(curState->curFillColor);
+            _ClearColorQuad(curState->curFillColor);
         }
         curState->curFillColorObject = nil;
     } else {
