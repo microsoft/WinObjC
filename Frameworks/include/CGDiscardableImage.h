@@ -15,13 +15,15 @@
 //
 //******************************************************************************
 
+#pragma once
+
 class CGDiscardableImageBacking : public CGImageBacking {
 protected:
     CGImageBacking* _forward;
     bool _hasCachedInfo;
     bool _hasFormatInfo;
     int _cachedWidth, _cachedHeight;
-    surfaceFormat _cachedSurfaceFormat;
+    __CGSurfaceFormat _cachedSurfaceFormat;
     CGColorSpaceModel _cachedColorSpaceModel;
     CGBitmapInfo _cachedBitmapInfo;
 
@@ -41,7 +43,7 @@ public:
     int BytesPerPixel();
     int BitsPerComponent();
     void GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo);
-    surfaceFormat SurfaceFormat();
+    __CGSurfaceFormat SurfaceFormat();
     CGColorSpaceModel ColorSpaceModel();
     CGBitmapInfo BitmapInfo();
     void* StaticImageData();

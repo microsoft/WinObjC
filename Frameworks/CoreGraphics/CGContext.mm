@@ -72,10 +72,6 @@ __CGContext::~__CGContext() {
     delete _backing;
 }
 
-CGContextImpl* __CGContext::Backing() {
-    return _backing;
-}
-
 /**
  @Status Interoperable
 */
@@ -788,7 +784,7 @@ CGContextRef CGBitmapContextCreate(void* data,
                                    CGColorSpaceRef colorSpace,
                                    CGBitmapInfo bitmapInfo) {
     CGImageRef newImage = NULL;
-    DWORD alphaType = bitmapInfo & 0x1F;
+    DWORD alphaType = bitmapInfo & kCGBitmapAlphaInfoMask;
 
     bool colorSpaceAllocated = false;
 
@@ -808,19 +804,19 @@ CGContextRef CGBitmapContextCreate(void* data,
     const unsigned int numComponents = numColorComponents + ((alphaType == kCGImageAlphaNone) ? 0 : 1);
     const unsigned int bitsPerPixel = (bitsPerComponent == 5) ? 16 : numComponents * bitsPerComponent;
 
-    surfaceFormat format = _CGImageGetFormat(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo);
+    __CGSurfaceFormat format = _CGImageGetFormat(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo);
 
-    __CGSurfaceInfo createParams = {.width = width,
-                                    .height = height,
-                                    .bitsPerComponent = bitsPerComponent,
-                                    .bytesPerPixel = bitsPerPixel >> 3,
-                                    .bytesPerRow = bytesPerRow,
-                                    .surfaceData = data,
-                                    .colorSpaceModel = ((__CGColorSpace*)colorSpace)->colorSpaceModel,
-                                    .bitmapInfo = bitmapInfo,
-                                    .format = format };
+    __CGSurfaceInfo surfaceInfo = __CGSurfaceInfo(((__CGColorSpace*)colorSpace)->colorSpaceModel,
+                                                  bitmapInfo,
+                                                  bitsPerComponent,
+                                                  bitsPerPixel >> 3,
+                                                  width,
+                                                  height,
+                                                  bytesPerRow,
+                                                  data,
+                                                  format);
 
-    newImage = new CGBitmapImage(&createParams);
+    newImage = new CGBitmapImage(surfaceInfo);
 
     CGContextRef ret = new __CGContext(newImage);
     CFRelease((id)newImage);
@@ -1035,9 +1031,9 @@ CGContextRef _CGBitmapContextCreateWithTexture(int width, int height, DisplayTex
     __CGSurfaceInfo surfaceInfo = _CGSurfaceInfoInit(width, height, _ColorARGB);
 
     if (texture) {
-        newImage = new CGGraphicBufferImage(&surfaceInfo, texture, locking);
+        newImage = new CGGraphicBufferImage(surfaceInfo, texture, locking);
     } else {
-        newImage = new CGBitmapImage(&surfaceInfo);
+        newImage = new CGBitmapImage(surfaceInfo);
     }
 
     CGContextRef context = new __CGContext(newImage);
@@ -1046,9 +1042,9 @@ CGContextRef _CGBitmapContextCreateWithTexture(int width, int height, DisplayTex
     return context;
 }
 
-CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, surfaceFormat fmt) {
+CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurfaceFormat fmt) {
     __CGSurfaceInfo surfaceInfo = _CGSurfaceInfoInit(width, height, fmt);
-    CGImageRef newImage = new CGBitmapImage(&surfaceInfo);
+    CGImageRef newImage = new CGBitmapImage(surfaceInfo);
     CGContextRef context = new __CGContext(newImage);
     CGImageRelease(newImage);
 

@@ -666,7 +666,7 @@ void CGContextCairo::CGContextClipToMask(CGRect dest, CGImageRef img) {
     } else {
         __CGSurfaceInfo surfaceInfo = _CGSurfaceInfoInit(img->Backing()->Width(), img->Backing()->Height(), _ColorABGR);
 
-        CGBitmapImage* pNewImage = new CGBitmapImage(&surfaceInfo);
+        CGBitmapImage* pNewImage = new CGBitmapImage(surfaceInfo);
 
         BYTE* imgData = (BYTE*)img->Backing()->LockImageData();
         BYTE* newImgData = (BYTE*)pNewImage->Backing()->LockImageData();

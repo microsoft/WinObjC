@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -14,10 +15,10 @@
 //
 //******************************************************************************
 
-#ifndef __CGPATTERNINTERNAL_H
-#define __CGPATTERNINTERNAL_H
+#pragma once
 
 #include "CoreGraphics/CGPattern.h"
+#include "CoreGraphicsInternal.h"
 
 @interface CGPattern : NSObject {
 @public
@@ -28,11 +29,9 @@
     DWORD tiling;
     BOOL isColored;
     CGPatternCallbacks callbacks;
-    surfaceFormat surfaceFmt;
+    __CGSurfaceFormat surfaceFmt;
 }
 - (CGImageRef)getPatternImage;
 - (CGAffineTransform)getPatternTransform;
 + (instancetype)patternWithImage:(CGImageRef)img;
 @end
-
-#endif

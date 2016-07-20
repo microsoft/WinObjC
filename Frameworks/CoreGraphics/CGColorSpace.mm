@@ -139,7 +139,6 @@ CGColorSpaceModel CGColorSpaceGetModel(CGColorSpaceRef colorSpace) {
     if (colorSpace) {
         return ((__CGColorSpace*)colorSpace)->colorSpaceModel;
     } else {
-        TraceWarning(TAG, L"CGColorSpaceGetModel: Null colorspace. Returning RGB");
         return kCGColorSpaceModelRGB;
     }
 }

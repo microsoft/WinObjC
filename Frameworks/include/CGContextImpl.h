@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -82,7 +83,7 @@ public:
     CGContextImpl(CGContextRef base, CGImageRef destinationImage);
     virtual ~CGContextImpl();
 
-    virtual CGImageRef DestImage();
+    inline CGImageRef DestImage() { return _imgDest; }
 
     virtual void CGContextSetBlendMode(CGBlendMode mode);
     virtual CGBlendMode CGContextGetBlendMode();

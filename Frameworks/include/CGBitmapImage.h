@@ -15,13 +15,15 @@
 //
 //******************************************************************************
 
+#pragma once
+
 class CGImageData {
 public:
     cairo_surface_t* _surface;
     BOOL _freeWhenDone;
     void* _imageData;
     DWORD _pixmanFmt;
-    surfaceFormat _bitmapFmt;
+    __CGSurfaceFormat _bitmapFmt;
     CGColorSpaceModel _colorSpaceModel;
     CGBitmapInfo _bitmapInfo;
     DWORD _width, _height;
@@ -33,13 +35,13 @@ public:
     BOOL _bottomOrientation;
 
     CGImageData* Duplicate();
-    CGImageData(__CGSurfaceInfo* surfaceInfo);
+    CGImageData(const __CGSurfaceInfo& surfaceInfo);
     ~CGImageData();
 };
 
 class CGBitmapImage : public __CGImage {
 public:
-    CGBitmapImage(__CGSurfaceInfo* surfaceInfo);
+    CGBitmapImage(const __CGSurfaceInfo& surfaceInfo);
     CGBitmapImage(CGImageRef pImg);
 };
 
@@ -48,7 +50,7 @@ private:
     CGImageData* _data;
 
 public:
-    CGBitmapImageBacking(__CGSurfaceInfo* surfaceInfo);
+    CGBitmapImageBacking(const __CGSurfaceInfo& surfaceInfo);
     CGBitmapImageBacking(CGImageRef pImg);
 
     ~CGBitmapImageBacking();
@@ -66,7 +68,7 @@ public:
     int BytesPerPixel();
     int BitsPerComponent();
     void GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo);
-    surfaceFormat SurfaceFormat();
+    __CGSurfaceFormat SurfaceFormat();
     CGColorSpaceModel ColorSpaceModel();
     CGBitmapInfo BitmapInfo();
     void* StaticImageData();

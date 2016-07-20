@@ -75,7 +75,7 @@ __CGImage::__CGImage() {
     TraceVerbose(TAG, L"Number of CGImages: %d created=%x", numCGImages, this);
 #endif
 
-    object_setClass((id) this, [CGNSImage class]);
+    object_setClass((id)this, [CGNSImage class]);
 }
 
 static std::vector<CGImageDestructionListener> _imageDestructionListeners;
@@ -181,7 +181,7 @@ CGImageRef CGImageCreateWithImageInRect(CGImageRef ref, CGRect rect) {
 
     assert(surfaceInfo.surfaceData == NULL);
 
-    CGImageRef newImage = new CGBitmapImage(&surfaceInfo);
+    CGImageRef newImage = new CGBitmapImage(surfaceInfo);
 
     int startX = (int)rect.origin.x;
     int startY = (int)rect.origin.y;
@@ -219,7 +219,7 @@ CGImageRef CGImageCreateCopy(CGImageRef ref) {
 
     assert(surfaceInfo.surfaceData == NULL);
 
-    CGImageRef newImage = new CGBitmapImage(&surfaceInfo);
+    CGImageRef newImage = new CGBitmapImage(surfaceInfo);
 
     int startX = 0;
     int startY = 0;
@@ -260,7 +260,7 @@ CGImageRef CGImageCreateCopyWithColorSpace(CGImageRef ref, CGColorSpaceRef color
 
     assert(surfaceInfo.surfaceData == NULL);
 
-    CGImageRef newImage = new CGBitmapImage(&surfaceInfo);
+    CGImageRef newImage = new CGBitmapImage(surfaceInfo);
 
     int startX = 0;
     int startY = 0;
@@ -306,7 +306,7 @@ CGImageRef CGImageCreateWithMask(CGImageRef image, CGImageRef mask) {
         __CGSurfaceInfo surfaceInfo =
             _CGSurfaceInfoInit(image->Backing()->Width(), image->Backing()->Height(), _ColorABGR, newImageData, bytesPerRow);
 
-        newImage = new CGBitmapImage(&surfaceInfo);
+        newImage = new CGBitmapImage(surfaceInfo);
         newImage->Backing()->SetFreeWhenDone(TRUE);
 
         int imgWidth = image->Backing()->Width();
@@ -402,7 +402,7 @@ CGImageRef CGImageMaskCreate(size_t width,
     //  Create an 8-bit mask from the data
     __CGSurfaceInfo surfaceInfo = _CGSurfaceInfoInit(width, height, _ColorGrayscale);
 
-    CGImageRef newImage = new CGBitmapImage(&surfaceInfo);
+    CGImageRef newImage = new CGBitmapImage(surfaceInfo);
     char* pNewImage = (char*)newImage->Backing()->LockImageData();
 
     int pixOut = 0;
@@ -647,8 +647,7 @@ CGImageRef CGImageCreate(size_t width,
         if (bytesPerRow >= (width * 3)) {
             TraceWarning(TAG, L"Warning: colorSpace = NULL, assuming RGB based on bytesPerRow.");
             colorSpace = CGColorSpaceCreateDeviceRGB();
-        }
-        else {
+        } else {
             TraceWarning(TAG, L"Warning: colorSpace = NULL, assuming Gray based on bytesPerRow.");
             colorSpace = CGColorSpaceCreateDeviceGray();
         }
@@ -656,24 +655,24 @@ CGImageRef CGImageCreate(size_t width,
         colorSpaceAllocated = true;
     }
 
-    surfaceFormat format = _CGImageGetFormat(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo);
+    __CGSurfaceFormat format = _CGImageGetFormat(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo);
 
     if (format != _ColorIndexed) {
-        __CGSurfaceInfo surfaceInfo = {.width = width,
-                                       .height = height,
-                                       .bitsPerComponent = bitsPerComponent,
-                                       .bytesPerPixel = bitsPerPixel >> 3,
-                                       .bytesPerRow = bytesPerRow,
-                                       .surfaceData = data,
-                                       .colorSpaceModel = ((__CGColorSpace*)colorSpace)->colorSpaceModel,
-                                       .bitmapInfo = bitmapInfo,
-                                       .format = format };
+        __CGSurfaceInfo surfaceInfo = __CGSurfaceInfo(((__CGColorSpace*)colorSpace)->colorSpaceModel,
+                                                      bitmapInfo,
+                                                      bitsPerComponent,
+                                                      bitsPerPixel >> 3,
+                                                      width,
+                                                      height,
+                                                      bytesPerRow,
+                                                      data,
+                                                      format);
 
-        newImage = new CGBitmapImage(&surfaceInfo);
+        newImage = new CGBitmapImage(surfaceInfo);
     } else {
         __CGSurfaceInfo surfaceInfo = _CGSurfaceInfoInit(width, height, _ColorBGR);
 
-        newImage = new CGBitmapImage(&surfaceInfo);
+        newImage = new CGBitmapImage(surfaceInfo);
         void* pData = newImage->Backing()->LockImageData();
         int stride = newImage->Backing()->BytesPerRow();
 
@@ -799,7 +798,7 @@ NSData* _CGImagePNGRepresentation(UIImage* img) {
 
     int xStrideOut;
     int yStrideOut;
-    surfaceFormat backingFormat = pImage->Backing()->SurfaceFormat();
+    __CGSurfaceFormat backingFormat = pImage->Backing()->SurfaceFormat();
 
     // Write header (8 bit colour depth)
     switch (backingFormat) {
@@ -999,72 +998,4 @@ bool CGImageIsMask(CGImageRef image) {
 CGImageRef CGImageCreateWithMaskingColors(CGImageRef image, const CGFloat* components) {
     UNIMPLEMENTED();
     return StubReturn();
-}
-
-inline surfaceFormat _CGImageGetFormat(unsigned int bitsPerComponent,
-                                       unsigned int bitsPerPixel,
-                                       CGColorSpaceRef colorSpace,
-                                       CGBitmapInfo bitmapInfo) {
-    CGColorSpaceModel colorSpaceModel = ((__CGColorSpace*)colorSpace)->colorSpaceModel;
-    surfaceFormat fmt;
-    unsigned int alphaInfo = bitmapInfo & kCGBitmapAlphaInfoMask;
-    unsigned int byteOrder = bitmapInfo & kCGBitmapByteOrderMask;
-
-    assert((bitmapInfo & kCGBitmapFloatComponents) == 0);
-
-    if (colorSpaceModel == kCGColorSpaceModelRGB) {
-        if (byteOrder == kCGBitmapByteOrderDefault || byteOrder == kCGBitmapByteOrder32Big) {
-            switch (alphaInfo) {
-                case kCGImageAlphaNoneSkipFirst:
-                    if (bitsPerComponent == 8) {
-                        fmt = _ColorBGRX;
-                    } else if (bitsPerComponent == 5) {
-                        fmt = _Color565;
-                    }
-                    break;
-                case kCGImageAlphaFirst:
-                case kCGImageAlphaPremultipliedFirst:
-                    fmt = _ColorARGB;
-                    break;
-                case kCGImageAlphaNone:
-                    if (bitsPerComponent == 5) {
-                        fmt = _Color565;
-                    } else if (bitsPerPixel == 32) {
-                        // TODO: verify
-                        fmt = _ColorARGB;
-                    } else {
-                        fmt = _ColorBGR;
-                    }
-                    break;
-                case kCGImageAlphaNoneSkipLast:
-                case kCGImageAlphaLast:
-                case kCGImageAlphaPremultipliedLast:
-                default:
-                    UNIMPLEMENTED_WITH_MSG("RGBX and RGBA pixelformats unsupported");
-                    fmt = _ColorARGB;
-                    break;
-            }
-        } else {
-            assert(byteOrder == kCGBitmapByteOrder32Little);
-
-            if (alphaInfo == kCGImageAlphaLast || alphaInfo == kCGImageAlphaPremultipliedLast) {
-                fmt = _ColorABGR;
-            } else if (alphaInfo == kCGImageAlphaNoneSkipLast) {
-                fmt = _ColorXBGR;
-            } else if (alphaInfo == kCGImageAlphaNoneSkipFirst) {
-                fmt = _ColorBGRX;
-            } else {
-                UNIMPLEMENTED_WITH_MSG("Pixel format unsupported");
-                fmt = _ColorABGR;
-            }
-        }
-    } else if (colorSpaceModel == kCGColorSpaceModelPattern) {
-        fmt = _ColorA8;
-    } else if (colorSpaceModel == kCGColorSpaceModelMonochrome) {
-        fmt = _ColorGrayscale;
-    } else if (colorSpaceModel == kCGColorSpaceModelIndexed) {
-        fmt = _ColorIndexed;
-    }
-
-    return fmt;
 }

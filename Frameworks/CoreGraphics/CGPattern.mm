@@ -53,7 +53,7 @@
     CGBitmapInfo bitmapInfo;
 
     if (isColored) {
-        bitmapInfo = kCGImageAlphaFirst;
+        bitmapInfo = kCGImageAlphaFirst | kCGBitmapByteOrder32Big;
         colorSpace = CGColorSpaceCreateDeviceRGB();
     } else {
         bitmapInfo = kCGImageAlphaNone;
@@ -82,7 +82,7 @@
     }*/
 
     if (isColored) {
-        bitmapInfo = kCGImageAlphaFirst;
+        bitmapInfo = kCGImageAlphaFirst | kCGBitmapByteOrder32Big;
         colorSpace = CGColorSpaceCreateDeviceRGB();
     } else {
         bitmapInfo = kCGImageAlphaNone;
@@ -136,7 +136,7 @@ CGPatternRef CGPatternCreateColorspace(void* info,
                                        CGPatternTiling tiling,
                                        bool isColored,
                                        const CGPatternCallbacks* callbacks,
-                                       surfaceFormat fmt) {
+                                       __CGSurfaceFormat fmt) {
     CGPattern* ret = [CGPattern new];
 
     // TODO: Obey the colorspace.

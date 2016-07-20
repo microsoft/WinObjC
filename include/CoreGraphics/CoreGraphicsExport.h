@@ -14,6 +14,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
 #pragma once
 
 #ifndef COREGRAPHICS_IMPEXP
@@ -113,48 +114,3 @@ typedef enum {
     kCGColorSpaceModelIndexed,
     kCGColorSpaceModelPattern,
 } CGColorSpaceModel;
-
-typedef enum {
-    _Color565 = 0,
-    _ColorARGB,
-    _ColorABGR,
-    _ColorBGRX,
-    _ColorXBGR,
-    _ColorGrayscale,
-    _ColorBGR,
-    _ColorA8,
-    _ColorIndexed,
-    _ColorMax,
-    _ColorRGBA = _ColorABGR
-} surfaceFormat;
-
-typedef struct {
-    CGColorSpaceModel colorSpaceModel;
-    CGBitmapInfo bitmapInfo;
-    unsigned int bitsPerComponent;
-    unsigned int bytesPerPixel;
-} __CGFormatProperties;
-
-static const __CGFormatProperties c_FormatTable[_ColorMax] = {
-    { kCGColorSpaceModelRGB, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 5, 2 }, //_Color565,
-    { kCGColorSpaceModelRGB, (kCGImageAlphaFirst | kCGBitmapByteOrderDefault), 8, 4 }, //_ColorARGB,
-    { kCGColorSpaceModelRGB, (kCGImageAlphaLast | kCGBitmapByteOrder32Little), 8, 4 }, //_ColorABGR,
-    { kCGColorSpaceModelRGB, (kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrderDefault), 8, 4 }, //_ColorBGRX,
-    { kCGColorSpaceModelRGB, (kCGImageAlphaNoneSkipLast | kCGBitmapByteOrder32Little), 8, 4 }, //_ColorXBGR,
-    { kCGColorSpaceModelMonochrome, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 8, 1 }, //_ColorGrayscale,
-    { kCGColorSpaceModelRGB, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 8, 3 }, //_ColorBGR,
-    { kCGColorSpaceModelPattern, (kCGImageAlphaOnly | kCGBitmapByteOrderDefault), 8, 1 }, //_ColorA8,
-    { kCGColorSpaceModelIndexed, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 8, 2 }, //_ColorIndexed,
-};
-
-struct __CGSurfaceInfo {
-    size_t width;
-    size_t height;
-    size_t bitsPerComponent;
-    size_t bytesPerPixel;
-    size_t bytesPerRow;
-    void* surfaceData;
-    CGColorSpaceModel colorSpaceModel;
-    CGBitmapInfo bitmapInfo;
-    surfaceFormat format;
-};

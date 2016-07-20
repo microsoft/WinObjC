@@ -21,7 +21,7 @@ class CGVectorImageBacking;
 
 class CGVectorImage : public __CGImage {
 public:
-    CGVectorImage(DWORD width, DWORD height, surfaceFormat fmt);
+    CGVectorImage(DWORD width, DWORD height, __CGSurfaceFormat fmt);
     CGImageRef Rasterize(CGRect* insets);
 
     inline CGVectorImageBacking* VectorBacking() {
@@ -48,12 +48,12 @@ public:
 class CGVectorImageBacking : public CGImageBacking {
 private:
     int _width, _height;
-    surfaceFormat _surfaceFmt;
+    __CGSurfaceFormat _surfaceFmt;
     CGColorSpaceModel _colorSpaceModel;
     CGVectorDrawingCommand* _drawCommand;
 
 public:
-    CGVectorImageBacking(DWORD width, DWORD height, surfaceFormat fmt);
+    CGVectorImageBacking(DWORD width, DWORD height, __CGSurfaceFormat fmt);
 
     ~CGVectorImageBacking();
 
@@ -69,7 +69,7 @@ public:
     int BytesPerPixel();
     int BitsPerComponent();
     void GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo);
-    surfaceFormat SurfaceFormat();
+    __CGSurfaceFormat SurfaceFormat();
     CGColorSpaceModel ColorSpaceModel();
     CGBitmapInfo BitmapInfo();
     void* StaticImageData();

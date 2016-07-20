@@ -121,7 +121,7 @@ void CGDiscardableImageBacking::GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* s
     _forward->GetSurfaceInfoWithoutPixelPtr(surfaceInfo);
 }
 
-surfaceFormat CGDiscardableImageBacking::SurfaceFormat() {
+__CGSurfaceFormat CGDiscardableImageBacking::SurfaceFormat() {
     if (!_forward) {
         if (_hasCachedInfo) {
             InitFormatInfoIfNeeded();

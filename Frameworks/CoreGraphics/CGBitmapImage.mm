@@ -42,22 +42,22 @@ static const wchar_t* TAG = L"CGBitmapImage";
 
 int imgDataCount = 0, imgDataSize = 0;
 
-CGImageData::CGImageData(__CGSurfaceInfo* surfaceInfo) {
+CGImageData::CGImageData(const __CGSurfaceInfo& surfaceInfo) {
     EbrIncrement((volatile int*)&imgDataCount);
 
     _refCount = 1;
-    _width = surfaceInfo->width;
-    _height = surfaceInfo->height;
-    _imageData = surfaceInfo->surfaceData;
-    _internalWidth = surfaceInfo->width;
-    _internalHeight = surfaceInfo->height;
+    _width = surfaceInfo.width;
+    _height = surfaceInfo.height;
+    _imageData = surfaceInfo.surfaceData;
+    _internalWidth = surfaceInfo.width;
+    _internalHeight = surfaceInfo.height;
     _bottomOrientation = FALSE;
     _freeWhenDone = FALSE;
-    _bitmapInfo = surfaceInfo->bitmapInfo;
-    _bitmapFmt = surfaceInfo->format;
-    _bitsPerComponent = surfaceInfo->bitsPerComponent;
-    _colorSpaceModel = surfaceInfo->colorSpaceModel;
-    _bytesPerPixel = surfaceInfo->bytesPerPixel;
+    _bitmapInfo = surfaceInfo.bitmapInfo;
+    _bitmapFmt = surfaceInfo.format;
+    _bitsPerComponent = surfaceInfo.bitsPerComponent;
+    _colorSpaceModel = surfaceInfo.colorSpaceModel;
+    _bytesPerPixel = surfaceInfo.bytesPerPixel;
 
     switch (_bitmapFmt) {
         case _Color565:
@@ -319,17 +319,10 @@ CGImageData::~CGImageData() {
 }
 
 CGImageData* CGImageData::Duplicate() {
-    __CGSurfaceInfo surfaceInfo = {.width = _width,
-                                   .height = _height,
-                                   .bitsPerComponent = _bitsPerComponent,
-                                   .bytesPerPixel = _bytesPerPixel,
-                                   .bytesPerRow = 0,
-                                   .surfaceData = NULL,
-                                   .colorSpaceModel = _colorSpaceModel,
-                                   .bitmapInfo = _bitmapInfo,
-                                   .format = _bitmapFmt };
+    __CGSurfaceInfo surfaceInfo =
+        __CGSurfaceInfo(_colorSpaceModel, _bitmapInfo, _bitsPerComponent, _bytesPerPixel, _width, _height, 0, NULL, _bitmapFmt);
 
-    CGImageData* ret = new CGImageData(&surfaceInfo);
+    CGImageData* ret = new CGImageData(surfaceInfo);
 
     BYTE* imgIn = (BYTE*)_imageData;
     BYTE* imgOut = (BYTE*)ret->_imageData;
@@ -342,7 +335,7 @@ CGImageData* CGImageData::Duplicate() {
     return ret;
 }
 
-CGBitmapImage::CGBitmapImage(__CGSurfaceInfo* surfaceInfo) {
+CGBitmapImage::CGBitmapImage(const __CGSurfaceInfo& surfaceInfo) {
     _img = new CGBitmapImageBacking(surfaceInfo);
     _img->_parent = this;
     _imgType = CGImageTypeBitmap;
@@ -358,7 +351,7 @@ CGContextImpl* CGBitmapImageBacking::CreateDrawingContext(CGContextRef base) {
     return new CGContextCairo(base, _parent);
 }
 
-CGBitmapImageBacking::CGBitmapImageBacking(__CGSurfaceInfo* surfaceInfo) {
+CGBitmapImageBacking::CGBitmapImageBacking(const __CGSurfaceInfo& surfaceInfo) {
     _imageLocks = 0;
     _cairoLocks = 0;
 
@@ -372,10 +365,10 @@ CGBitmapImageBacking::CGBitmapImageBacking(CGImageRef img) {
     if (img->_imgType == CGImageTypeBitmap) {
         _data = ((CGBitmapImageBacking*)img->Backing())->_data->Duplicate();
     } else {
-        __CGSurfaceInfo surfaceInfo; 
+        __CGSurfaceInfo surfaceInfo;
         img->Backing()->GetSurfaceInfoWithoutPixelPtr(&surfaceInfo);
 
-        _data = new CGImageData(&surfaceInfo);
+        _data = new CGImageData(surfaceInfo);
 
         cairo_t* drawContext = cairo_create(LockCairoSurface());
         cairo_surface_t* copySurface = img->Backing()->LockCairoSurface();
@@ -463,7 +456,7 @@ void CGBitmapImageBacking::GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfac
     surfaceInfo->format = _data->_bitmapFmt;
 }
 
-surfaceFormat CGBitmapImageBacking::SurfaceFormat() {
+__CGSurfaceFormat CGBitmapImageBacking::SurfaceFormat() {
     return _data->_bitmapFmt;
 }
 

@@ -13,21 +13,21 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
 #pragma once
 
+#import "CGColorSpaceInternal.h"
 #import "CoreGraphics/CoreGraphicsExport.h"
+#import "CoreGraphicsInternal.h"
 
-static CGBitmapInfo c_kCGBitmapInfoInvalidBits = 0xDEADBEEF;
-
-static inline __CGSurfaceInfo _CGSurfaceInfoInit(size_t width,
-                                                 size_t height,
-                                                 surfaceFormat fmt,
+static inline __CGSurfaceInfo _CGSurfaceInfoInit(unsigned int width,
+                                                 unsigned int height,
+                                                 __CGSurfaceFormat fmt,
                                                  void* data = NULL,
-                                                 size_t bytesPerRow = 0,
+                                                 unsigned int bytesPerRow = 0,
                                                  CGBitmapInfo bitmapInfo = c_kCGBitmapInfoInvalidBits) {
     __CGSurfaceInfo surfaceInfo;
 
-    assert(fmt < _ColorMax);
     surfaceInfo.format = fmt;
     surfaceInfo.width = width;
     surfaceInfo.height = height;
@@ -37,11 +37,6 @@ static inline __CGSurfaceInfo _CGSurfaceInfoInit(size_t width,
     surfaceInfo.bitsPerComponent = c_FormatTable[fmt].bitsPerComponent;
     surfaceInfo.bytesPerPixel = c_FormatTable[fmt].bytesPerPixel;
 
-    // Set bytesPerRow if necessary
-    if ((data != NULL) && (bytesPerRow == 0)) {
-        surfaceInfo.bytesPerRow = width * surfaceInfo.bytesPerPixel;
-    }
-
     // Set bitmapInfo if passed in, otherwise set the default value for the surface format
     if (bitmapInfo != c_kCGBitmapInfoInvalidBits) {
         surfaceInfo.bitmapInfo = bitmapInfo;
@@ -49,5 +44,92 @@ static inline __CGSurfaceInfo _CGSurfaceInfoInit(size_t width,
         surfaceInfo.bitmapInfo = c_FormatTable[fmt].bitmapInfo;
     }
 
+    // Set bytesPerRow if necessary
+    if ((data != NULL) && (bytesPerRow == 0)) {
+        surfaceInfo.bytesPerRow = width * surfaceInfo.bytesPerPixel;
+    }
+
     return surfaceInfo;
+}
+
+static inline __CGSurfaceFormat _CGImageGetFormat(unsigned int bitsPerComponent,
+                                                  unsigned int bitsPerPixel,
+                                                  CGColorSpaceRef colorSpace,
+                                                  CGBitmapInfo bitmapInfo) {
+    CGColorSpaceModel colorSpaceModel = ((__CGColorSpace*)colorSpace)->colorSpaceModel;
+    __CGSurfaceFormat fmt;
+    unsigned int alphaInfo = bitmapInfo & kCGBitmapAlphaInfoMask;
+    unsigned int byteOrder = bitmapInfo & kCGBitmapByteOrderMask;
+
+    assert((bitmapInfo & kCGBitmapFloatComponents) == 0);
+
+    if (colorSpaceModel == kCGColorSpaceModelRGB) {
+        if (byteOrder == kCGBitmapByteOrder32Big) {
+            switch (alphaInfo) {
+                case kCGImageAlphaNoneSkipFirst:
+                    if (bitsPerComponent == 5) {
+                        fmt = _Color565;
+                    } else {
+                        UNIMPLEMENTED_WITH_MSG("XRGB pixelformat unsupported");
+                    }
+                    break;
+                case kCGImageAlphaFirst:
+                case kCGImageAlphaPremultipliedFirst:
+                    fmt = _ColorARGB;
+                    break;
+                case kCGImageAlphaNone:
+                    if (bitsPerComponent == 5) {
+                        fmt = _Color565;
+                    } else if (bitsPerPixel == 32) {
+                        // TODO: verify
+                        fmt = _ColorARGB;
+                    } else {
+                        // TODO: verify
+                        fmt = _ColorBGR;
+                    }
+                    break;
+                case kCGImageAlphaNoneSkipLast:
+                case kCGImageAlphaLast:
+                case kCGImageAlphaPremultipliedLast:
+                default:
+                    UNIMPLEMENTED_WITH_MSG("RGBX and RGBA pixelformats unsupported");
+                    fmt = _ColorARGB;
+                    break;
+            }
+        } else {
+            assert(byteOrder == kCGBitmapByteOrder32Little || byteOrder == kCGBitmapByteOrderDefault);
+
+            switch (alphaInfo) {
+                case kCGImageAlphaLast:
+                case kCGImageAlphaPremultipliedLast:
+                    fmt = _ColorABGR;
+                    break;
+                case kCGImageAlphaNoneSkipLast:
+                    fmt = _ColorXBGR;
+                    break;
+                case kCGImageAlphaNoneSkipFirst:
+                    fmt = _ColorBGRX;
+                    break;
+                case kCGImageAlphaNone:
+                    if (bitsPerPixel == 32) {
+                        fmt = _ColorBGRX;
+                    } else {
+                        fmt = _ColorBGR;
+                    }
+                    break;
+                default:
+                    UNIMPLEMENTED_WITH_MSG("Pixel format unsupported");
+                    fmt = _ColorABGR;
+                    break;
+            }
+        }
+    } else if (colorSpaceModel == kCGColorSpaceModelPattern) {
+        fmt = _ColorA8;
+    } else if (colorSpaceModel == kCGColorSpaceModelMonochrome) {
+        fmt = _ColorGrayscale;
+    } else if (colorSpaceModel == kCGColorSpaceModelIndexed) {
+        fmt = _ColorIndexed;
+    }
+
+    return fmt;
 }
