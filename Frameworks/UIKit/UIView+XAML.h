@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,16 +14,13 @@
 //
 //******************************************************************************
 
-#import <UIKit/UIKit.h>
+#pragma once
 
-// Change the view controller to derive from UIXAMLViewController so that we could load the XAML page.
-@interface MainViewController : UIViewController <UITextFieldDelegate>
+#import <UIKit/UIView.h>
 
-@property (weak, nonatomic) IBOutlet UILabel* label;
-@property (weak, nonatomic) IBOutlet UITextField* text;
-@property (weak, nonatomic) IBOutlet UIButton* button;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView* spinner;
-@property (weak, nonatomic) IBOutlet UISlider* slider;
+// Forward declaration
+@class WXFrameworkElement;
 
+@interface UIView (XAML)
+- (id)_initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement;
 @end
-

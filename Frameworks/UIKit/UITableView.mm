@@ -34,20 +34,17 @@
 #import "UINibInternal.h"
 #import "CACompositor.h"
 
-typedef id idweak;
-
 static const wchar_t* TAG = L"UITableView";
 
 NSString* const UITableViewIndexSearch = @"UITableViewIndexSearch";
+
 /** @Status Stub */
 const CGFloat UITableViewAutomaticDimension = StubConstant();
 
 UIKIT_EXPORT NSString* const UITableViewSelectionDidChangeNotification = @"UITableViewSelectionDidChangeNotification";
 
-// narsty hack
+// TODO: Nasty hack
 extern id _curFirstResponder;
-
-extern "C" bool doLog;
 
 class VisibleComponent : public LLTreeNode<VisibleComponent, VisibleComponent> {
 public:
@@ -56,6 +53,7 @@ public:
     VisibleComponent(TableViewNode* node) {
         _node = node;
     }
+
     ~VisibleComponent();
 };
 

@@ -42,8 +42,12 @@ static const double c_defaultStepFrequency = 0.1;
     EventRegistrationToken _valueChangedEvent;
 }
 
-- (void)_UISlider_initInternal {
-    _xamlSlider = [WXCSlider make];
+- (void)_UISlider_initInternal:(WXFrameworkElement*)xamlElement {
+    if (xamlElement != nil && [xamlElement isKindOfClass:[WXCSlider class]]) {
+        _xamlSlider = static_cast<WXCSlider*>(xamlElement);
+    } else {
+        _xamlSlider = [WXCSlider make];
+    }
 
     // BUG:7911911 - [XAMLCatalog] UISlider not rendering the right track image of XAML slider on ARM
     _xamlSlider.requestedTheme = WXElementThemeLight;
@@ -83,7 +87,7 @@ static const double c_defaultStepFrequency = 0.1;
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
-        [self _UISlider_initInternal];
+        [self _UISlider_initInternal:nil];
 
         if ([coder containsValueForKey:@"UIValue"]) {
             id valueStr = [coder decodeObjectForKey:@"UIValue"];
@@ -106,8 +110,12 @@ static const double c_defaultStepFrequency = 0.1;
  @Status Interoperable
 */
 - (instancetype)initWithFrame:(CGRect)frame {
+    return [self _initWithFrame:frame xamlElement:nil];
+}
+
+- (instancetype)_initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
     if (self = [super initWithFrame:frame]) {
-        [self _UISlider_initInternal];
+        [self _UISlider_initInternal:xamlElement];
     }
 
     return self;

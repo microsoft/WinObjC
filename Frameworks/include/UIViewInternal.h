@@ -105,10 +105,9 @@ public:
 @public
     UIViewPrivateState* priv;
 }
+
 - (void)_initPriv;
 + (void)_setPageTransitionForView:(UIView*)view fromLeft:(BOOL)fromLeft;
-- (UIViewPrivateState*)_privateState;
-
 - (void)_applyConstraints;
 - (void)_setShouldLayout;
 + (void)_setNestedAnimationsEnabled:(BOOL)enable;
@@ -116,6 +115,7 @@ public:
 - (void)__setContentsImage:(id)image;
 - (UIWindow*)_getWindowInternal;
 - (BOOL)_isEnabled;
+
 @end
 
 @interface NSLayoutConstraint ()

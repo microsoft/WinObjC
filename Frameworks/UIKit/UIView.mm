@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import "Starboard.h"
+
 #import "UIAnimationNotification.h"
 #import "QuartzCore/CABasicAnimation.h"
 #import "QuartzCore/CALayer.h"
@@ -102,10 +103,6 @@ int viewCount = 0;
 @synthesize traitCollection;
 @synthesize collisionBoundsType;
 @synthesize collisionBoundingPath;
-
-- (UIViewPrivateState*)_privateState {
-    return priv;
-}
 
 // TODO: GitHub issue 508 and 509
 // We need a type-safe way to do this with projections.  This is copied verbatim from the projections
@@ -812,6 +809,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     }
 
     PAUSE_ANIMATIONS();
+
     [self setBounds:bounds];
     [self setCenter:center];
     [self setNeedsDisplay];
@@ -819,6 +817,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
         float val = [coder decodeFloatForKey:@"UIAlpha"];
         [self setAlpha:val];
     }
+
     if ([coder containsValueForKey:@"UIContentStretch"]) {
         CGRect rect;
 
@@ -971,6 +970,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     if (layoutGuide == nil) {
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Cannot add nil UILayoutGuide!" userInfo:nil];
     }
+
     if (layoutGuide.owningView != self) {
         [layoutGuide.owningView removeLayoutGuide:layoutGuide];
         [priv->_layoutGuides addObject:layoutGuide];
@@ -985,9 +985,11 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     if (layoutGuide == nil) {
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Cannot remove nil UILayoutGuide!" userInfo:nil];
     }
+
     if (![priv->_layoutGuides containsObject:layoutGuide]) {
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Cannot remove nil UILayoutGuide!" userInfo:nil];
     }
+
     layoutGuide.owningView = nil;
     [priv->_layoutGuides removeObject:layoutGuide];
 }
@@ -3276,6 +3278,8 @@ static float doRound(float f) {
     [self setFrame:curSize];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
 /**
  @Status Interoperable
 */
@@ -3286,6 +3290,7 @@ static float doRound(float f) {
         [self _dealloc];
     });
 }
+#pragma clang diagnostic pop
 
 - (void)_dealloc {
     if (_deallocating) {
@@ -3466,6 +3471,9 @@ static float doRound(float f) {
     return [self isUserInteractionEnabled];
 }
 
+/**
+ @Public No
+*/
 - (void)__setContentsImage:(id)image {
     UIImageSetLayerContents([self layer], image);
 }
