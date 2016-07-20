@@ -62,11 +62,13 @@ CGColorRef CGColorCreateCopy(CGColorRef color) {
  @Status Interoperable
 */
 CGColorRef CGColorCreateCopyWithAlpha(CGColorRef color, float alpha) {
-    ColorQuad curColor;
+    static __CGColorQuad defaultColor{ 0.0f, 0.0f, 0.0f, 0.0f };
+    const __CGColorQuad* curColor = [(UIColor*)color _getColors];
+    if (!curColor) {
+        curColor = &defaultColor;
+    }
 
-    [(UIColor*)color getColors:&curColor];
-
-    return static_cast<CGColorRef>([[_LazyUIColor colorWithRed:curColor.r green:curColor.g blue:curColor.b alpha:alpha] retain]);
+    return static_cast<CGColorRef>([[_LazyUIColor colorWithRed:curColor->r green:curColor->g blue:curColor->b alpha:alpha] retain]);
 }
 
 /**
@@ -82,25 +84,29 @@ CGColorRef CGColorCreateWithPattern(CGColorSpaceRef colorSpace, CGPatternRef pat
  @Status Interoperable
 */
 bool CGColorEqualToColor(CGColorRef color1, CGColorRef color2) {
-    ColorQuad components1{};
-    ColorQuad components2{};
+    if (color1 == color2) {
+        return true;
+    }
+    if (!color1 || !color2) {
+        return false;
+    }
+    const __CGColorQuad* components1 = [(UIColor*)color1 _getColors];
+    const __CGColorQuad* components2 = [(UIColor*)color2 _getColors];
 
-    [(UIColor*)color1 getColors:&components1];
-    [(UIColor*)color2 getColors:&components2];
-
-    return ((components1.r == components1.r) && (components1.g == components1.g) && (components1.b == components1.b) &&
-            (components1.a == components1.a));
+    return ((components1->r == components2->r) && (components1->g == components2->g) && (components1->b == components2->b) &&
+            (components1->a == components2->a));
 }
 
 /**
  @Status Interoperable
 */
 CGFloat CGColorGetAlpha(CGColorRef color) {
-    ColorQuad components;
+    const __CGColorQuad* curColor = [(UIColor*)color _getColors];
 
-    [(UIColor*)color getColors:&components];
-
-    return (CGFloat)components.a;
+    if (curColor) {
+        return curColor->a;
+    }
+    return 0.0f;
 }
 
 /**
@@ -114,16 +120,10 @@ CGColorSpaceRef CGColorGetColorSpace(CGColorRef color) {
 
 /**
  @Status Caveat
- @Notes Works as expected for RGBA only, but returns a client-freed buffer.
+ @Notes Works as expected for RGBA only.
 */
 const CGFloat* CGColorGetComponents(CGColorRef color) {
-    float* ret = (float*)IwMalloc(sizeof(float) * 4);
-    ColorQuad colorComponents;
-    [(UIColor*)color getColors:&colorComponents];
-
-    ColorQuadToFloatArray(colorComponents, ret);
-
-    return ret;
+    return (const CGFloat*)[(UIColor*)color _getColors];
 }
 
 /**
