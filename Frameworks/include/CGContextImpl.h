@@ -32,8 +32,8 @@
 
 typedef struct {
     id curFillColorObject;
-    ColorQuad curFillColor, curTextColor, curStrokeColor;
-    ColorQuad curPenColor, curForegroundColor;
+    __CGColorQuad curFillColor, curTextColor, curStrokeColor;
+    __CGColorQuad curPenColor, curForegroundColor;
     CGImageRef _imgClip, _imgMask;
     CGRect _imgMaskRect;
     CGAffineTransform curTransform;

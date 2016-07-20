@@ -121,7 +121,7 @@ void __CGGradient::initWithColors(CFArrayRef componentsArr, const float* locatio
         UIColor* curColor = [components objectAtIndex:i];
 
         if (curColor) {
-            const ColorQuad* color = [curColor _getColors];
+            const __CGColorQuad* color = [curColor _getColors];
             memcpy(&_components[i * componentCount], color, sizeof(CGFloat) * componentCount);
         } else {
             memset(&_components[i * componentCount], 0, sizeof(CGFloat) * componentCount);

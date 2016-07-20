@@ -1083,7 +1083,7 @@ public:
         } else if (strcmp(name, "sublayerTransform") == 0) {
             UNIMPLEMENTED_WITH_MSG("sublayerTransform not implemented");
         } else if (strcmp(name, "backgroundColor") == 0) {
-            const ColorQuad* color = [(UIColor*)newValue _getColors];
+            const __CGColorQuad* color = [(UIColor*)newValue _getColors];
             if (color) {
                 SetBackgroundColor(color->r, color->g, color->b, color->a);
             } else {

@@ -1696,7 +1696,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     if (color != nil) {
         priv->backgroundColor = *[static_cast<UIColor*>(color) _getColors];
     } else {
-        _ClearColorQuad(priv->backgroundColor);
+        _Clear__CGColorQuad(priv->backgroundColor);
     }
 
     [CATransaction _setPropertyForLayer:self name:@"backgroundColor" value:(NSObject*)color];
@@ -1718,7 +1718,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     if (newColor != nil) {
         priv->contentColor = *[static_cast<UIColor*>(newColor) _getColors];
     } else {
-        _ClearColorQuad(priv->contentColor);
+        _Clear__CGColorQuad(priv->contentColor);
     }
     [CATransaction _setPropertyForLayer:self name:@"contentColor" value:static_cast<UIColor*>(newColor)];
 }
@@ -1731,7 +1731,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     if (color != nil) {
         priv->borderColor = *[static_cast<UIColor*>(color) _getColors];
     } else {
-        _ClearColorQuad(priv->borderColor);
+        _Clear__CGColorQuad(priv->borderColor);
     }
 
     CGColorRef old = priv->_borderColor;

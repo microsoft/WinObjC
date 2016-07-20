@@ -356,7 +356,7 @@ void CGContextImpl::CGContextSetStrokeColorWithColor(id color) {
     if (color) {
         curState->curStrokeColor = *[(UIColor*)color _getColors];
     } else {
-        _ClearColorQuad(curState->curStrokeColor);
+        _Clear__CGColorQuad(curState->curStrokeColor);
     }
 }
 
@@ -365,7 +365,7 @@ void CGContextImpl::CGContextSetFillColorWithColor(id color) {
         if (color) {
             curState->curFillColor = *[(UIColor*)color _getColors];
         } else {
-            _ClearColorQuad(curState->curFillColor);
+            _Clear__CGColorQuad(curState->curFillColor);
         }
         curState->curFillColorObject = nil;
     } else {

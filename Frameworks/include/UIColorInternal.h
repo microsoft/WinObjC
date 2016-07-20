@@ -24,9 +24,9 @@ typedef struct {
     CGFloat g;
     CGFloat b;
     CGFloat a;
-} ColorQuad;
+} __CGColorQuad;
 
-inline void _ClearColorQuad(ColorQuad& color) {
+inline void _Clear__CGColorQuad(__CGColorQuad& color) {
     color.r = 0.0f;
     color.g = 0.0f;
     color.b = 0.0f;
@@ -38,6 +38,6 @@ inline void _ClearColorQuad(ColorQuad& color) {
 + (UIColor*)_colorWithCGPattern:(CGPatternRef)pattern;
 + (UIColor*)_windowsTableViewCellSelectionBackgroundColor;
 
-- (const ColorQuad*)_getColors;
+- (const __CGColorQuad*)_getColors;
 - (BrushType)_type;
 @end

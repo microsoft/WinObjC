@@ -216,7 +216,7 @@ rgb hsv2rgb(hsv in) {
     enum BrushType _type;
     UIImage* _image;
     id _pattern;
-    ColorQuad _components;
+    __CGColorQuad _components;
 }
 
 /**
@@ -244,7 +244,10 @@ rgb hsv2rgb(hsv in) {
         return [[[self class] performSelector:NSSelectorFromString(pattern)] retain];
     } else {
         if ([coder containsValueForKey:@"UIWhite"]) {
-            _components.r = _components.g = _components.b = [coder decodeFloatForKey:@"UIWhite"];
+            const CGFloat uiWhite = [coder decodeFloatForKey:@"UIWhite"];
+            _components.r = uiWhite;
+            _components.g = uiWhite;
+            _components.b = uiWhite;
         } else {
             _components.r = [coder decodeFloatForKey:@"UIRed"];
             _components.g = [coder decodeFloatForKey:@"UIGreen"];
@@ -504,7 +507,7 @@ callbacks.version = 0;
 callbacks.releaseInfo = 0;
 callbacks.drawPattern = __UIColorPatternFill;
 
-_pattern = (id) CGPatternCreateColorspace(self, bounds, m, bounds.size.width, bounds.size.height, 0, FALSE, &callbacks, pImg->_has32BitAlpha ? _ColorRGBA : _ColorRGB);
+_pattern = (id) CGPatternCreateColorspace(self, bounds, m, bounds.size.width, bounds.size.height, 0, NO, &callbacks, pImg->_has32BitAlpha ? _ColorRGBA : _ColorRGB);
 } else {
 _pattern = (id) CGPatternCreateFromImage(pImg);
 }
@@ -514,10 +517,10 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     _image = [image retain];
     _type = cgPatternBrush;
 
-    _components.r = 0;
-    _components.g = 0;
-    _components.b = 0;
-    _components.a = 0;
+    _components.r = 0.0f;
+    _components.g = 0.0f;
+    _components.b = 0.0f;
+    _components.a = 0.0f;
 
     return self;
 }
@@ -599,7 +602,7 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     return [ret autorelease];
 }
 
-- (const ColorQuad*)_getColors {
+- (const __CGColorQuad*)_getColors {
     return &_components;
 }
 
@@ -713,7 +716,7 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
         *a = _components.a;
     }
 
-    return TRUE;
+    return YES;
 }
 
 /**
@@ -733,7 +736,7 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
         *a = _components.a;
     }
 
-    return TRUE;
+    return YES;
 }
 
 /**
@@ -741,14 +744,14 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
 */
 - (BOOL)isEqual:(UIColor*)other {
     if (![other isKindOfClass:[UIColor class]]) {
-        return FALSE;
+        return NO;
     }
 
     if (_type == other->_type && _image == other->_image && _pattern == other->_pattern && _components.r == other->_components.r &&
         _components.g == other->_components.g && _components.b == other->_components.b) {
-        return TRUE;
+        return YES;
     } else {
-        return FALSE;
+        return NO;
     }
 }
 

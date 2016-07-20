@@ -44,7 +44,7 @@ public:
 
     CATransform3D transform;
     CATransform3D sublayerTransform;
-    ColorQuad backgroundColor, borderColor, contentColor;
+    __CGColorQuad backgroundColor, borderColor, contentColor;
     float borderWidth, cornerRadius;
     float opacity;
 };

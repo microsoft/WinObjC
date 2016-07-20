@@ -62,8 +62,8 @@ CGColorRef CGColorCreateCopy(CGColorRef color) {
  @Status Interoperable
 */
 CGColorRef CGColorCreateCopyWithAlpha(CGColorRef color, float alpha) {
-    static ColorQuad defaultColor{ 0.0f, 0.0f, 0.0f, 0.0f };
-    const ColorQuad* curColor = [(UIColor*)color _getColors];
+    static __CGColorQuad defaultColor{ 0.0f, 0.0f, 0.0f, 0.0f };
+    const __CGColorQuad* curColor = [(UIColor*)color _getColors];
     if (!curColor) {
         curColor = &defaultColor;
     }
@@ -90,8 +90,8 @@ bool CGColorEqualToColor(CGColorRef color1, CGColorRef color2) {
     if (!color1 || !color2) {
         return false;
     }
-    const ColorQuad* components1 = [(UIColor*)color1 _getColors];
-    const ColorQuad* components2 = [(UIColor*)color2 _getColors];
+    const __CGColorQuad* components1 = [(UIColor*)color1 _getColors];
+    const __CGColorQuad* components2 = [(UIColor*)color2 _getColors];
 
     return ((components1->r == components2->r) && (components1->g == components2->g) && (components1->b == components2->b) &&
             (components1->a == components2->a));
@@ -101,10 +101,10 @@ bool CGColorEqualToColor(CGColorRef color1, CGColorRef color2) {
  @Status Interoperable
 */
 CGFloat CGColorGetAlpha(CGColorRef color) {
-    const ColorQuad* curColor = [(UIColor*)color _getColors];
+    const __CGColorQuad* curColor = [(UIColor*)color _getColors];
 
     if (curColor) {
-        return [(UIColor*)color _getColors]->a;
+        return curColor->a;
     }
     return 0.0f;
 }
