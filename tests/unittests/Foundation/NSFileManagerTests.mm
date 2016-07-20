@@ -41,7 +41,9 @@ static NSString* getPathToFile(NSString* fileName) {
 
 static void createFileWithContentAndVerify(NSString* fileName, NSString* content) {
     NSString* fullPath = getPathToFile(fileName);
-    ASSERT_TRUE([content writeToFile:fullPath atomically:NO]);
+    NSError* error = nil;
+    ASSERT_TRUE([content writeToFile:fullPath atomically:NO encoding:NSUTF8StringEncoding error:&error]);
+    ASSERT_EQ(nil, error);
     ASSERT_TRUE([[NSFileManager defaultManager] fileExistsAtPath:fullPath]);
 }
 
@@ -185,7 +187,9 @@ TEST(NSFileManager, MoveFileViaPath) {
     EXPECT_FALSE([manager fileExistsAtPath:srcPath]);
 
     // Verify data.
-    ASSERT_OBJCEQ([content dataUsingEncoding:NSUTF8StringEncoding], [NSData dataWithContentsOfFile:destPath]);
+    error = nil;
+    ASSERT_OBJCEQ(content, [NSString stringWithContentsOfFile:destPath encoding:NSUTF8StringEncoding error:&error]);
+    EXPECT_EQ(nil, error);
 }
 
 TEST(NSFileManager, MoveFileViaURL) {
@@ -210,6 +214,7 @@ TEST(NSFileManager, MoveFileViaURL) {
     EXPECT_FALSE([manager fileExistsAtPath:[srcURL path]]);
 
     // Verify data.
-
-    ASSERT_OBJCEQ([content dataUsingEncoding:NSUTF8StringEncoding], [NSData dataWithContentsOfURL:destURL]);
+    error = nil;
+    ASSERT_OBJCEQ(content, [NSString stringWithContentsOfURL:destURL encoding:NSUTF8StringEncoding error:&error]);
+    EXPECT_EQ(nil, error);
 }
