@@ -225,11 +225,11 @@ static const double earthRadius = 6371000.0;
 
 /**
  @Status Interoperable
- @Notes  This uses the "haversine" formula to find circular distance between two points, found
-         here: https://en.wikipedia.org/wiki/Haversine_formula
+ @Notes  This uses the "haversine" formula to find circular distance between two points
+         More information on the haversine formula can be found here: https://en.wikipedia.org/wiki/Haversine_formula
 */
 - (CLLocationDistance)distanceFromLocation:(const CLLocation*)location {
-    // If either location is invalid return -1
+    // If either location is invalid return -1 as per what the API does on iOS
     if (location == nullptr) {
         return -1.0;
     }
@@ -245,6 +245,10 @@ static const double earthRadius = 6371000.0;
     const double destinationLongitude = self.coordinate.longitude * degreesToRadians;
     const double latitudeDelta = destinationLatitude - sourceLatitude;
     const double longitudeDelta = destinationLongitude - sourceLongitude;
+
+    // haversineA represents the internal part of the distance formula using haversines, which is used to calculate
+    // the inverse of hav(h), which we call inverseHaversine. inverseHaversine is then multiplied by the radius of
+    // the earth to get the distance between two points
     const double haversineA = sin(latitudeDelta / 2) * sin(latitudeDelta / 2) +
                      cos(sourceLatitude) * cos(destinationLatitude) * sin(longitudeDelta / 2) * sin(longitudeDelta / 2);
     const double inverseHaversine = 2 * atan2(sqrt(haversineA), sqrt(1 - haversineA));

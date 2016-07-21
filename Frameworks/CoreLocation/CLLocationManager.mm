@@ -643,10 +643,10 @@ static const int64_t c_timeoutInSeconds = 15LL;
         [_uwpCompass removeReadingChangedEvent:_uwpPeriodicHeadingChangeToken];
         _periodicLocationUpdateRequested = NO;
     }
-    if (_extendedExecutionSessionRequested) {
-        _removeExtendedExecutionSession();
-        _extendedExecutionSessionRequested = NO;
-    }
+
+    [self stopUpdatingLocation];
+    [self stopUpdatingHeading];
+
     if (_statusUpdateRequested) {
         [_uwpGeolocator removeStatusChangedEvent:_uwpStatusToken];
         _statusUpdateRequested = NO;
@@ -665,7 +665,6 @@ static const int64_t c_timeoutInSeconds = 15LL;
             if (self.allowsBackgroundLocationUpdates) {
                 // Request for a extended execution session so location updates can continue in the background.
                 _requestExtendedExecutionSession();
-                _extendedExecutionSessionRequested = YES;
             }
 
             // Register for position change event only the first time location update is requested.
@@ -690,11 +689,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
             NSTraceInfo(TAG, @"Stopped periodic location update");
             [_uwpGeolocator removePositionChangedEvent:_uwpPeriodicPositionChangeToken];
             
-            if (_extendedExecutionSessionRequested) {
-                _removeExtendedExecutionSession();
-                _extendedExecutionSessionRequested = NO;
-            }
-
+            _removeExtendedExecutionSession();
             _periodicLocationUpdateRequested = NO;
         }
     }
@@ -784,11 +779,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
             NSTraceInfo(TAG, @"Stopped periodic heading update");
             [_uwpCompass removeReadingChangedEvent:_uwpPeriodicHeadingChangeToken];
             
-            if (_extendedExecutionSessionRequested) {
-                _removeExtendedExecutionSession();
-                _extendedExecutionSessionRequested = NO;
-            }
-
+            _removeExtendedExecutionSession();
             _periodicHeadingUpdateRequested = NO;
         }
     }
