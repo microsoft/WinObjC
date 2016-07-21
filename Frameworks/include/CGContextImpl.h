@@ -71,6 +71,8 @@ protected:
     virtual void ObtainLock();
 
 public:
+    inline float GetAlpha() const { return curState->curFillColor.a; }
+    inline CGBlendMode GetBlendMode() const { return curState->curBlendMode; }
     virtual void ReleaseLock();
 
     virtual void DrawImage(CGImageRef img, CGRect src, CGRect dest, bool tiled = false);

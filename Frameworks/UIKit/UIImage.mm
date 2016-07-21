@@ -667,7 +667,8 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
  @Status Interoperable
 */
 - (void)drawAtPoint:(CGPoint)point {
-    [self drawAtPoint:CGPointMake(point.x, point.y) blendMode:kCGBlendModeNormal alpha:0.0f];
+    const CGContextImpl* ctxImpl = UIGraphicsGetCurrentContext()->Backing();
+    [self drawAtPoint:point blendMode:ctxImpl->GetBlendMode() alpha:ctxImpl->GetAlpha()];
 }
 
 /**
@@ -685,7 +686,9 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     }
 
     CGContextSaveGState(cur);
+
     CGContextSetBlendMode(cur, mode);
+    CGContextSetAlpha(cur, alpha);
 
     CGRect srcRect;
     CGRect pos;
@@ -1027,14 +1030,14 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
  @Status Interoperable
 */
 - (void)drawInRect:(CGRect)pos {
-    [self drawInRect:pos blendMode:kCGBlendModeNormal alpha:1.0f];
+    CGContextImpl* ctxImpl = UIGraphicsGetCurrentContext()->Backing();
+    [self drawInRect:pos blendMode:ctxImpl->GetBlendMode() alpha:ctxImpl->GetAlpha()];
 }
 
 /**
  @Status Interoperable
 */
 - (void)drawInRect:(CGRect)pos blendMode:(CGBlendMode)mode alpha:(float)alpha {
-    //  [BUG: Need to honor mode and alpha]
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGImageRef img = getImage(self);
 
@@ -1043,17 +1046,15 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
         return;
     }
 
-    CGContextSaveGState(ctx);
-    CGContextSetBlendMode(ctx, mode);
-
-    if (alpha != 1.0f) {
-        TraceVerbose(TAG, L"Should draw with alpha");
-    }
-
     if (_scale == 0.0f) {
         TraceWarning(TAG, L"Scale should be non-zero!");
         return;
     }
+
+    CGContextSaveGState(ctx);
+
+    CGContextSetBlendMode(ctx, mode);
+    CGContextSetAlpha(ctx, alpha);
 
     // Destination rect taken from pos with origin transformed from TL to BL
     CGRect dstRect;

@@ -64,7 +64,8 @@ typedef enum {
     kCGBlendModeDestinationAtop,
     kCGBlendModeXOR,
     kCGBlendModePlusDarker,
-    kCGBlendModePlusLighter
+    kCGBlendModePlusLighter,
+    kCGBlendModeInvalid,
 } CGBlendMode;
 typedef enum {
     kCGTextFill,

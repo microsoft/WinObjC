@@ -325,7 +325,7 @@ void CGContextCairo::DrawImage(CGImageRef img, CGRect src, CGRect dest, bool til
         cairo_new_path(_drawContext);
         cairo_rectangle(_drawContext, 0, 0, dest.size.width, dest.size.height);
         cairo_clip(_drawContext);
-        cairo_paint(_drawContext);
+        cairo_paint_with_alpha(_drawContext, curState->curFillColor.a);
 
         cairo_restore(_drawContext);
         cairo_new_path(_drawContext);
@@ -375,7 +375,7 @@ void CGContextCairo::DrawImage(CGImageRef img, CGRect src, CGRect dest, bool til
         cairo_clip(_drawContext);
 
         if (curState->_imgMask == NULL) {
-            cairo_paint(_drawContext);
+            cairo_paint_with_alpha(_drawContext, curState->curFillColor.a);
         } else {
             cairo_mask_surface(_drawContext, curState->_imgMask->Backing()->LockCairoSurface(), 0.0, 0.0);
             curState->_imgMask->Backing()->ReleaseCairoSurface();
@@ -1420,7 +1420,7 @@ void CGContextCairo::CGContextDrawLinearGradient(CGGradientRef gradient, CGPoint
         cairo_mask_surface(_drawContext, curState->_imgMask->Backing()->LockCairoSurface(), 0.0, 0.0);
         curState->_imgMask->Backing()->ReleaseCairoSurface();
     } else {
-        cairo_paint(_drawContext);
+        cairo_paint_with_alpha(_drawContext, curState->curFillColor.a);
     }
     cairo_pattern_destroy(pattern);
     UNLOCK_CAIRO();
@@ -1461,7 +1461,7 @@ void CGContextCairo::CGContextDrawRadialGradient(
         cairo_mask_surface(_drawContext, curState->_imgMask->Backing()->LockCairoSurface(), 0.0, 0.0);
         curState->_imgMask->Backing()->ReleaseCairoSurface();
     } else {
-        cairo_paint(_drawContext);
+        cairo_paint_with_alpha(_drawContext, curState->curFillColor.a);
     }
     cairo_pattern_destroy(pattern);
     UNLOCK_CAIRO();

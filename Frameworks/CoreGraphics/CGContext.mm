@@ -70,10 +70,6 @@ __CGContext::~__CGContext() {
     delete _backing;
 }
 
-CGContextImpl* __CGContext::Backing() {
-    return _backing;
-}
-
 /**
  @Status Interoperable
 */
