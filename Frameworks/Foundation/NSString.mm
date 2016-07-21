@@ -537,6 +537,10 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
  @Status Interoperable
 */
 - (void)getCharacters:(unichar*)dest range:(NSRange)range {
+    if (range.location + range.length > self.length) {
+        [self _raiseBoundsExceptionForSelector:_cmd andRange:range];
+    }
+
     for (unsigned int i = 0; i < range.length; i++) {
         dest[i] = [self characterAtIndex:(i + range.location)];
     }
@@ -1093,7 +1097,15 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
  @Status Interoperable
 */
 - (BOOL)isAbsolutePath {
-    return ([self hasPrefix:_NSGetSlashStr()]) || ((_isLetter([self characterAtIndex:0])) && ([self characterAtIndex:1] == ':'));
+    if ([self hasPrefix:_NSGetSlashStr()]) {
+        return YES;
+    }
+
+    if (self.length >= 2) {
+        return _isLetter([self characterAtIndex:0]) && [self characterAtIndex:1] == ':';
+    }
+
+    return NO;
 }
 
 /**
