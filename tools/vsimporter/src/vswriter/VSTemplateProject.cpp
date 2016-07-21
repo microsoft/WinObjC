@@ -143,7 +143,68 @@ static void expandProjectItem(const std::string& srcDir, const std::string& dest
   }
 }
 
-static void writeProjectItem(const ProjectItem* item, const StringMap& params)
+static bool isAppxManifestFileName(const String& fileName)
+{
+    const String extension = ".appxmanifest";
+
+    if (fileName.length() < extension.length()) {
+        return false;
+    }
+
+    return 0 == fileName.compare(fileName.length() - extension.length(), String::npos, extension);
+}
+
+static void insertUrlSchemes(const String& file, const StringSet& schemes)
+{
+    //
+    // Inject registered URL schemes into the AppX manifest file, in this format:
+    //
+    // <Application>
+    //     <Application ...>
+    //         <Extensions>
+    //             <uap:Extension Category="windows.protocol">
+    //                 <uap:Protocol name="scheme1" />
+    //             </uap:Extension>
+    //             <uap:Extension Category="windows.protocol">
+    //                 <uap:Protocol name="scheme2" />
+    //             </uap:Extension>
+    //         </Extensions>
+    //     </Application>
+    // </Application>
+    //
+
+    pugi::xml_document doc;
+    if (!doc.load_file(file.c_str())) {
+        SBLog::error() << "Failed to parse AppX manifest file " << file << std::endl;
+        return;
+    }
+
+    pugi::xpath_node app = doc.select_single_node(PUGIXML_TEXT("/Package/Applications/Application"));
+    if (!app) {
+        SBLog::error() << "Failed to find Application element in AppX manifest file " << file << std::endl;
+        return;
+    }
+
+    pugi::xml_node extensions = app.node().append_child(PUGIXML_TEXT("Extensions"));
+
+    for (const String& scheme : schemes) {
+        // pugixml doesn't have great support for handling namespaces. We just better hope
+        // that our template manifests have the uap prefix mapped to the namespace
+        // "http://schemas.microsoft.com/appx/manifest/uap/windows10".
+        pugi::xml_node extension = extensions.append_child(PUGIXML_TEXT("uap:Extension"));
+
+        extension.append_attribute(PUGIXML_TEXT("Category")).set_value(PUGIXML_TEXT("windows.protocol"));
+
+        pugi::string_t schemeValue(scheme.begin(), scheme.end());
+
+        pugi::xml_node protocol = extension.append_child(PUGIXML_TEXT("uap:Protocol"));
+        protocol.append_attribute(PUGIXML_TEXT("Name")).set_value(schemeValue.c_str());
+    }
+
+    doc.save_file(file.c_str());
+}
+
+static void writeProjectItem(const ProjectItem* item, const StringMap& params, const StringSet& urlSchemes)
 {
   if (!item)
     return;
@@ -172,6 +233,11 @@ static void writeProjectItem(const ProjectItem* item, const StringMap& params)
     // Copy the file contents
     ofs << ifs.rdbuf();
   }
+
+  if (!urlSchemes.empty() && isAppxManifestFileName(item->inFile)) {
+      ofs.close();
+      insertUrlSchemes(item->outFile, urlSchemes);
+  }
 }
 
 void VSTemplateProject::expand(const std::string& srcDir, const std::string& destDir, const VSTemplateParameters& params)
@@ -190,9 +256,9 @@ void VSTemplateProject::expand(const std::string& srcDir, const std::string& des
 
 }
 
-void VSTemplateProject::write() const
+void VSTemplateProject::write(const StringSet& urlSchemes) const
 {
   for (auto item : m_items) {
-    writeProjectItem(item, m_params);
+    writeProjectItem(item, m_params, urlSchemes);
   }
 }

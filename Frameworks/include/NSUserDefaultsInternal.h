@@ -16,16 +16,8 @@
 
 #pragma once
 
-#import <SafariServices/SafariServicesExport.h>
-#import <Foundation/NSObjCRuntime.h>
-
-@class SFSafariViewController;
-@class NSURL;
-@class NSString;
-@class NSArray;
-
-@protocol SFSafariViewControllerDelegate <NSObject>
-- (void)safariViewController:(SFSafariViewController*)controller didCompleteInitialLoad:(BOOL)didLoadSuccessfully;
-- (NSArray*)safariViewController:(SFSafariViewController*)controller activityItemsForURL:(NSURL*)URL title:(NSString*)title;
-- (void)safariViewControllerDidFinish:(SFSafariViewController*)controller;
+@interface NSUserDefaults()
++ (NSUserDefaults*)_standardUserDefaultsNoInitialize;
+- (void)_suspendSynchronize;
+- (void)_resumeSynchronize;
 @end

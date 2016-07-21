@@ -27,6 +27,82 @@
 #include "VCProjectItem.h"
 #include "xc2vs.h"
 
+static void parsePlist(const String& plistPath, VCProject& proj)
+{
+    //
+    // Find any URL schemes registered to this bundle, in this format:
+    //
+    // <key>CFBundleURLTypes</key>
+    // <array>
+    //     <dict>
+    //        <key>CFBundleURLSchemes</key>
+    //        <array>
+    //            <string>scheme1</string>
+    //            <string>scheme2</string>
+    //        </array>
+    //    </dict>
+    // </array>
+    //
+
+    using namespace Plist;
+    using boost::any_cast;
+
+    StringSet registeredUrlSchemes;
+
+    boost::any plist;
+    readPlist(plistPath.c_str(), plist);
+
+    dictionary_type* dict = any_cast<dictionary_type>(&plist);
+    if (dict == nullptr) {
+        SBLog::warning() << "Unexpected Plist format in " << plistPath << std::endl;
+        return;
+    }
+
+    auto iter = dict->find("CFBundleURLTypes");
+    if (iter == dict->end()) {
+        return;
+    }
+
+    array_type* urlTypes = any_cast<array_type>(&iter->second);
+    if (urlTypes == nullptr) {
+        SBLog::warning() << "Unexpected CFBundleURLTypes format in " << plistPath << std::endl;
+        return;
+    }
+
+    for (auto& urlTypeElement : *urlTypes) {
+        dictionary_type* urlType = any_cast<dictionary_type>(&urlTypeElement);
+        if (urlType == nullptr) {
+            SBLog::warning() << "Unexpected CFBundleURLTypes format in " << plistPath << std::endl;
+            continue;
+        }
+
+        iter = urlType->find("CFBundleURLSchemes");
+        if (iter == urlType->end()) {
+            continue;
+        }
+
+        array_type* urlSchemes = any_cast<array_type>(&iter->second);
+        if (urlSchemes == nullptr) {
+            SBLog::warning() << "Unexpected CFBundleURLSchemes format in " << plistPath << std::endl;
+            continue;
+        }
+
+        for (auto& urlScheme : *urlSchemes) {
+            string_type* scheme = any_cast<string_type>(&urlScheme);
+            if (scheme == nullptr) {
+                SBLog::warning() << "Unexpected CFBundleURLSchemes format in " << plistPath << std::endl;
+                continue;
+            }
+
+            registeredUrlSchemes.insert(*scheme);
+        }
+    }
+
+    if (!registeredUrlSchemes.empty()) {
+        proj.setUrlSchemes(registeredUrlSchemes);
+    }
+}
+
 SBBuildPhase* SBResourcesBuildPhase::create(const PBXBuildPhase* phase, SBTarget& parentTarget)
 {
   const PBXResourcesBuildPhase* resourcesPhase = dynamic_cast<const PBXResourcesBuildPhase*>(phase);
@@ -90,6 +166,7 @@ void SBResourcesBuildPhase::writeVCProjectFiles(VCProject& proj) const
 
     // Add plist file to project (only once)
     if (infoPlistMap.find(plistPath) == infoPlistMap.end()) {
+      parsePlist(plistPath, proj);
       infoPlistMap[plistPath] = addRelativeFilePathToVS("SBInfoPlistCopy", plistPath, "", proj, *bs.second);
     }
 

@@ -94,8 +94,8 @@ __attribute__((objc_root_class)) @interface NSObject<NSObject> {
 - (void)doesNotRecognizeSelector:(SEL)selector;
 
 /* Forwarding */
-+ (BOOL)resolveClassMethod:(SEL)selector STUB_METHOD;
-+ (BOOL)resolveInstanceMethod:(SEL)selector STUB_METHOD;
++ (BOOL)resolveClassMethod:(SEL)selector;
++ (BOOL)resolveInstanceMethod:(SEL)selector;
 - (id)forwardingTargetForSelector:(SEL)aSelector;
 - (void)forwardInvocation:(NSInvocation*)invocation STUB_METHOD;
 

@@ -144,3 +144,15 @@ TEST(NSTimeZone, SystemTimeZoneTests) {
         [aDSTTz localizedName:NSTimeZoneNameStyleShortDaylightSaving locale:[NSLocale localeWithLocaleIdentifier:@"en-GB"]];
     ASSERT_OBJCEQ_MSG(@"+1300", tzNameShortDaylight, "FAILED - localizedName of NSTimeZoneNameStyleShortDaylightSaving is not correct.");
 }
+
+TEST(NSTimeZone, ArchivingUnarchiving) {
+    NSTimeZone* tz = [NSTimeZone localTimeZone];
+
+    ASSERT_TRUE([tz isEqualToTimeZone:[NSTimeZone systemTimeZone]]);
+
+    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:tz];
+
+    NSTimeZone* tzUnArchived = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+
+    ASSERT_TRUE([tzUnArchived isEqualToTimeZone:[NSTimeZone systemTimeZone]]);
+}

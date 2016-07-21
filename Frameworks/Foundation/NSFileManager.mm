@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,27 +14,27 @@
 //
 //******************************************************************************
 
-#import "Starboard.h"
-#import "StubReturn.h"
-#import "Foundation/NSFileManager.h"
-#import "Foundation/NSError.h"
-#import "Foundation/NSString.h"
-#import "Foundation/NSMutableArray.h"
-#import "Foundation/NSMutableDictionary.h"
-#import "Foundation/NSNumber.h"
-#import "Foundation/NSDate.h"
-#import "Foundation/NSData.h"
-#import "Foundation/NSURL.h"
-#import "Foundation/NSDirectoryEnumerator.h"
+#import <Starboard.h>
+#import <StubReturn.h>
+#import <Foundation/NSFileManager.h>
+#import <Foundation/NSError.h>
+#import <Foundation/NSString.h>
+#import <Foundation/NSMutableArray.h>
+#import <Foundation/NSMutableDictionary.h>
+#import <Foundation/NSNumber.h>
+#import <Foundation/NSDate.h>
+#import <Foundation/NSData.h>
+#import <Foundation/NSURL.h>
+#import <Foundation/NSDirectoryEnumerator.h>
 #import <Foundation/NSDictionary.h>
 #import <string>
 #import <vector>
 #import <sys/stat.h>
 #import <errno.h>
-#import "LoggingNative.h"
+#import <LoggingNative.h>
+#import <CFFoundationInternal.h>
+#import <ForFoundationOnly.h>
 #import "NSDirectoryEnumeratorInternal.h"
-#import "CFFoundationInternal.h"
-#import "ForFoundationOnly.h"
 
 static const wchar_t* TAG = L"NSFileManager";
 
@@ -122,7 +122,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
  @Status Interoperable
 */
 - (NSArray*)URLsForDirectory:(NSSearchPathDirectory)directory inDomains:(NSSearchPathDomainMask)domains {
-    id paths = NSSearchPathForDirectoriesInDomains(directory, domains, TRUE);
+    id paths = NSSearchPathForDirectoriesInDomains(directory, domains, YES);
 
     int count = [paths count];
 
@@ -228,7 +228,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 
     NSDirectoryEnumerator* directoryEnum = [NSDirectoryEnumerator new];
     [directoryEnum _initWithPath:path
-                           shallow:FALSE
+                           shallow:NO
         includingPropertiesForKeys:nil
                            options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
                        returnNSURL:NO];
@@ -302,18 +302,18 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
                 bool success = EbrMkdir(curPath);
                 if (!success && errno != EEXIST) {
                     TraceError(TAG, L"Failed to make path %hs: %d", curPath, errno);
-                    // return FALSE;
+                    // return NO;
                 }
             }
         }
 
-        return TRUE;
+        return YES;
     } else {
         const char* path = [pathAddr UTF8String];
         if (EbrMkdir(path) == 0) {
-            return TRUE;
+            return YES;
         } else {
-            return FALSE;
+            return NO;
         }
     }
 }
@@ -331,7 +331,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 
     if (!fpOut) {
         TraceError(TAG, L"failed to createFileAtPath: %hs", path);
-        return FALSE;
+        return NO;
     }
 
     char* bytes = (char*)[contents bytes];
@@ -341,7 +341,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 
     EbrFclose(fpOut);
 
-    return TRUE;
+    return YES;
 }
 
 /**
@@ -395,7 +395,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 - (BOOL)copyItemAtPath:(id)srcPath toPath:(id)destPath error:(NSError**)error {
     if (srcPath == nil || destPath == nil) {
         TraceVerbose(TAG, L"copyItemAtPath: nil!");
-        return FALSE;
+        return NO;
     }
 
     const char* src = [srcPath UTF8String];
@@ -407,7 +407,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
             *error = [NSError errorWithDomain:@"Would overwrite destination" code:100 userInfo:nil];
         }
         TraceVerbose(TAG, L"Not copying %hs to %hs because dest exists", src, dest);
-        return FALSE;
+        return NO;
     }
 
     TraceVerbose(TAG, L"Copying %hs to %hs", src, dest);
@@ -415,14 +415,14 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     EbrFile* fpIn = EbrFopen(src, "rb");
     if (!fpIn) {
         TraceError(TAG, L"Error opening %hs", src);
-        return FALSE;
+        return NO;
     }
 
     EbrFile* fpOut = EbrFopen(dest, "wb");
     if (!fpOut) {
         EbrFclose(fpIn);
         TraceError(TAG, L"Error opening %hs", dest);
-        return FALSE;
+        return NO;
     }
 
     while (!EbrFeof(fpIn)) {
@@ -436,36 +436,55 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 
     TraceVerbose(TAG, L"Done copying");
 
-    return TRUE;
-}
-
-/**
- @Status Stub
-*/
-- (BOOL)moveItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError**)error {
-    UNIMPLEMENTED();
-
-    return NO;
+    return YES;
 }
 
 /**
  @Status Caveat
- @Notes error parameter is not populated
+ @Notes does not support file manager move delegates for shouldMoveItem or shouldProceedAfterError.
 */
-- (BOOL)moveItemAtPath:(id)srcPath toPath:(id)destPath error:(NSError**)error {
+- (BOOL)moveItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError**)error {
+    THROW_NS_IF_FALSE(E_INVALIDARG, srcURL != nil);
+    THROW_NS_IF_FALSE(E_INVALIDARG, dstURL != nil);
+    if (![srcURL isFileURL] || ![dstURL isFileURL]) {
+        if (error) {
+            *error = [NSError errorWithDomain:NSCocoaErrorDomain code:NSFileReadUnsupportedSchemeError userInfo:nil];
+        }
+
+        return NO;
+    }
+    return [self moveItemAtPath:[srcURL path] toPath:[dstURL path] error:error];
+}
+
+/**
+ @Status Caveat
+ @Notes does not support file manager move delegates for shouldMoveItem or shouldProceedAfterError.
+*/
+- (BOOL)moveItemAtPath:(NSString*)srcPath toPath:(NSString*)destPath error:(NSError**)error {
+    THROW_NS_IF_FALSE(E_INVALIDARG, srcPath != nil);
+    THROW_NS_IF_FALSE(E_INVALIDARG, destPath != nil);
+
+    if (![self fileExistsAtPath:srcPath]) {
+        if (error) {
+            *error = [NSError errorWithDomain:NSCocoaErrorDomain code:NSFileNoSuchFileError userInfo:nil];
+        }
+
+        return NO;
+    }
+
     const char* src = [srcPath UTF8String];
     const char* dest = [destPath UTF8String];
 
-    TraceVerbose(TAG, L"Moving %hs to %hs", src, dest);
-
     bool success = EbrRename(src, dest);
     if (!success) {
-        TraceError(TAG, L"Rename failed.");
-        return FALSE;
-        // assert(0);
+        TraceError(TAG, L"Rename failed. errno:%d", errno);
+        if (error) {
+            *error = [NSError errorWithDomain:NSWin32ErrorDomain code:errno userInfo:nil];
+        }
+        return NO;
     }
 
-    return TRUE;
+    return YES;
 }
 
 // Managing iCloud-Based Items
@@ -567,20 +586,20 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 */
 - (BOOL)fileExistsAtPath:(NSString*)pathAddr {
     if (pathAddr == nil) {
-        return FALSE;
+        return NO;
     }
 
     const char* path = [pathAddr UTF8String];
 
     if (strcmp(path, "") == 0) {
-        return FALSE;
+        return NO;
     }
 
     if (EbrAccess(path, 0) == 0) {
-        return TRUE;
+        return YES;
     } else {
         TraceVerbose(TAG, L"File @ %hs doesn't exist", path);
-        return FALSE;
+        return NO;
     }
 }
 
@@ -595,9 +614,9 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
         if (isDirectory) {
             *isDirectory = (st.st_mode & _S_IFDIR) == _S_IFDIR;
         }
-        return TRUE;
+        return YES;
     } else {
-        return FALSE;
+        return NO;
     }
 }
 
@@ -608,10 +627,10 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     const char* path = [pathAddr UTF8String];
 
     if (EbrAccess(path, 6) == 0) {
-        return TRUE;
+        return YES;
     } else {
         TraceVerbose(TAG, L"File @ %hs isn't writable", path);
-        return FALSE;
+        return NO;
     }
 }
 
@@ -622,10 +641,10 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     const char* path = [pathAddr UTF8String];
 
     if (EbrAccess(path, 4) == 0) {
-        return TRUE;
+        return YES;
     } else {
         TraceVerbose(TAG, L"File @ %hs isn't readable", path);
-        return FALSE;
+        return NO;
     }
 }
 
@@ -728,7 +747,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 */
 - (BOOL)setAttributes:(id)attribs ofItemAtPath:(id)pathAddr error:(NSError**)err {
     UNIMPLEMENTED();
-    return TRUE;
+    return YES;
 }
 
 // Getting and Comparing File Contents
@@ -750,7 +769,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 
     bool dir = EbrIsDir(path1);
     if (dir != EbrIsDir(path2)) {
-        return false;
+        return NO;
     }
 
     if (dir) {
@@ -759,11 +778,11 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     } else {
         struct stat st1, st2;
         if (EbrStat(path1, &st1) != 0 || EbrStat(path2, &st2) != 0) {
-            return false;
+            return NO;
         }
 
         if (st1.st_size != st2.st_size) {
-            return false;
+            return NO;
         }
 
         id d1 = [[NSData alloc] initWithContentsOfFile:pathObj1];
@@ -777,7 +796,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
         return ret;
     }
 
-    return FALSE;
+    return NO;
 }
 
 // Getting the Relationship Between Items
@@ -947,9 +966,9 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     const char* path = [pathAddr UTF8String];
 
     if (EbrMkdir(path)) {
-        return TRUE;
+        return YES;
     } else {
-        return FALSE;
+        return NO;
     }
 }
 

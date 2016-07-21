@@ -220,7 +220,7 @@ static idretaintype(WSDDisplayRequest) _screenActive;
     // Subscribe to back button events
     // Note: This method may be called from UnitTests, so make sure we don't fall over if we're not running from within a UWP.
     if ([WUCCoreWindow getForCurrentThread]) {
-        [[WUCSystemNavigationManager getForCurrentView] addBackRequestedEvent:^ (RTObject* sender, WUCBackRequestedEventArgs* e) {
+        [[WUCSystemNavigationManager getForCurrentView] addBackRequestedEvent:^(RTObject* sender, WUCBackRequestedEventArgs* e) {
             e.handled = [UIApplication _doBackAction];
         }];
     }
@@ -1226,9 +1226,17 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
     }
 }
 
-- (void)_sendProtocolReceivedEvent:(WFUri*)protocolUri {
-    if ([self.delegate respondsToSelector:@selector(application:didReceiveProtocol:)]) {
-        [self.delegate application:sharedApplication didReceiveProtocol:protocolUri];
+- (void)_sendProtocolReceivedEvent:(WFUri*)protocolUri source:(NSString*)source {
+    id delegate = self.delegate;
+
+    if ([delegate respondsToSelector:@selector(application:didReceiveProtocol:)]) {
+        [delegate application:sharedApplication didReceiveProtocol:protocolUri];
+    }
+
+    if ([delegate respondsToSelector:@selector(application:openURL:sourceApplication:annotation:)]) {
+        NSURL* url = [NSURL URLWithString:protocolUri.absoluteUri];
+
+        [delegate application:sharedApplication openURL:url sourceApplication:source annotation:nil];
     }
 }
 

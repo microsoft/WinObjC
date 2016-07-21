@@ -29,6 +29,7 @@
 #import <UIKit/UIApplicationDelegate.h>
 #import <StringHelpers.h>
 #import "NSThread-Internal.h"
+#import "NSUserDefaultsInternal.h"
 #import "StarboardXaml/StarboardXaml.h"
 #import "UIApplicationInternal.h"
 #import "UIFontInternal.h"
@@ -320,6 +321,14 @@ extern "C" void UIApplicationMainHandleHighMemoryUsageEvent() {
     [[UIApplication sharedApplication] _sendHighMemoryWarning];
 }
 
+extern "C" void UIApplicationMainHandleSuspendEvent() {
+    [[NSUserDefaults _standardUserDefaultsNoInitialize] _suspendSynchronize];
+}
+
+extern "C" void UIApplicationMainHandleResumeEvent() {
+    [[NSUserDefaults _standardUserDefaultsNoInitialize] _resumeSynchronize];
+}
+
 extern "C" void UIApplicationMainHandleToastNotificationEvent(const char* notificationData) {
     NSString* data = Strings::IsEmpty<const char*>(notificationData) ? nil : [[NSString alloc] initWithCString:notificationData];
     [[UIApplication sharedApplication] _sendNotificationReceivedEvent:data];
@@ -330,7 +339,32 @@ extern "C" void UIApplicationMainHandleVoiceCommandEvent(IInspectable* voiceComm
     [[UIApplication sharedApplication] _sendVoiceCommandReceivedEvent:speechResult];
 }
 
-extern "C" void UIApplicationMainHandleProtocolEvent(IInspectable* protocolUri) {
+static NSString* _bundleIdFromPackageFamilyName(const wchar_t* packageFamily) {
+    // Find out what package the event is coming from
+    NSString* sourceFamily = [[[NSString alloc] initWithBytes:const_cast<wchar_t*>(packageFamily)
+                                                       length:wcslen(packageFamily) * sizeof(wchar_t)
+                                                     encoding:NSUnicodeStringEncoding] autorelease];
+
+    NSString* thisFamily = [[[WAPackage current] id] familyName];
+
+    if ([sourceFamily isEqualToString:thisFamily]) {
+        // The activation is coming from inside our own application. The only
+        // in-app activation scenario that we support is from web navigation,
+        // which on the reference platform would mean that the activation is
+        // coming from Safari, so this is the expected ID.
+        return @"com.apple.SafariViewService";
+    } else {
+        // The activation is coming from out of process. In theory we should
+        // look up the bundle ID of the source process (if it has one), but
+        // we don't support doing that now. Just return the package family
+        // name unmodified, and heaven help any app that tries to interpret it.
+        return sourceFamily;
+    }
+}
+
+extern "C" void UIApplicationMainHandleProtocolEvent(IInspectable* protocolUri, const wchar_t* sourceApplication) {
     WFUri* protocolResult = [WFUri createWith:protocolUri];
-    [[UIApplication sharedApplication] _sendProtocolReceivedEvent:protocolResult];
+    NSString* source = _bundleIdFromPackageFamilyName(sourceApplication);
+
+    [[UIApplication sharedApplication] _sendProtocolReceivedEvent:protocolResult source:source];
 }

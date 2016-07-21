@@ -89,11 +89,17 @@ void AppEventListener::_OnAppMemoryUsageChanged(Platform::Object^ sender, Platfo
 void AppEventListener::_OnResuming(Platform::Object^ sender, Platform::Object^ args)
 {
     TraceVerbose(TAG, L"Resuming event received");
+    UIApplicationMainHandleResumeEvent();
 }
 
 void AppEventListener::_OnSuspending(Platform::Object^ sender, Windows::ApplicationModel::SuspendingEventArgs^ args)
 {
     TraceVerbose(TAG, L"Suspending event received");
+    Windows::ApplicationModel::SuspendingDeferral^ deferral = args->SuspendingOperation->GetDeferral();
+
+    // TODO: revisit this if new event tells us we are entering background (for deferred suspend)
+    UIApplicationMainHandleSuspendEvent();
+    deferral->Complete();
 }
 
 static AppEventListener ^_appEvents;
@@ -158,14 +164,16 @@ void EbrApplicationActivated(IActivatedEventArgs^ args) {
 
         UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(argResult));
     } else if (args->Kind == ActivationKind::Protocol) {
-        Windows::Foundation::Uri^ argUri = safe_cast<ProtocolActivatedEventArgs^>(args)->Uri;
-        TraceVerbose(TAG, L"Received protocol with uri- %s", argUri->ToString()->Data());
+        ProtocolActivatedEventArgs^ protocolArgs = safe_cast<ProtocolActivatedEventArgs^>(args);
+        Windows::Foundation::Uri^ argUri = protocolArgs->Uri;
+        const wchar_t* caller = protocolArgs->CallerPackageFamilyName->Data();
+        TraceVerbose(TAG, L"Received protocol with uri- %s from %s", argUri->ToString()->Data(), caller);
 
         if (initiateAppLaunch) {
             _ApplicationMainLaunch(ActivationTypeProtocol, argUri);
         }
 
-        UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri));
+        UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri), caller);
     } else {
         TraceVerbose(TAG, L"Received unhandled activation kind - %d", args->Kind);
 
@@ -225,14 +233,16 @@ extern "C" void _ApplicationActivate(Platform::Object^ arguments) {
 
         UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(argResult));
     } else if (args->Kind == ActivationKind::Protocol) {
-        Windows::Foundation::Uri^ argUri = safe_cast<ProtocolActivatedEventArgs^>(args)->Uri;
-        TraceVerbose(TAG, L"Received protocol with uri- %ls", argUri->ToString()->Data());
+        ProtocolActivatedEventArgs^ protocolArgs = safe_cast<ProtocolActivatedEventArgs^>(args);
+        Windows::Foundation::Uri^ argUri = protocolArgs->Uri;
+        const wchar_t* caller = protocolArgs->CallerPackageFamilyName->Data();
+        TraceVerbose(TAG, L"Received protocol with uri- %ls from %ls", argUri->ToString()->Data(), caller);
 
         if (initiateAppLaunch) {
             _ApplicationLaunch(ActivationTypeProtocol, argUri);
         }
 
-        UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri));
+        UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri), caller);
     } else {
         TraceVerbose(TAG, L"Received unhandled activation kind - %d", args->Kind);
 
