@@ -28,7 +28,7 @@ const CLLocationAccuracy kCLLocationAccuracyBestForNavigation = 1;
 const CLLocationAccuracy kCLLocationAccuracyBest = 5;
 const CLLocationDistance kCLDistanceFilterNone = 0;
 // Radius of the earth in meters
-static const double earthRadius = 6371000.0;
+static const double c_earthRadius = 6371000.0;
 
 /**
  * CLLocation class extension.
@@ -252,7 +252,7 @@ static const double earthRadius = 6371000.0;
     const double haversineA = sin(latitudeDelta / 2) * sin(latitudeDelta / 2) +
                      cos(sourceLatitude) * cos(destinationLatitude) * sin(longitudeDelta / 2) * sin(longitudeDelta / 2);
     const double inverseHaversine = 2 * atan2(sqrt(haversineA), sqrt(1 - haversineA));
-    CLLocationDistance distance = earthRadius * inverseHaversine;
+    CLLocationDistance distance = c_earthRadius * inverseHaversine;
 
     return distance;
 }
