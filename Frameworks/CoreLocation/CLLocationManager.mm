@@ -468,6 +468,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
                 accuracy = 10.0;
                 break;
             default:
+                NSTraceInfo(TAG, @"Got an unknown value for heading accuracy reading.");
                 accuracy = 0;
         }
 
@@ -641,7 +642,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
     }
     if (_periodicHeadingUpdateRequested) {
         [_uwpCompass removeReadingChangedEvent:_uwpPeriodicHeadingChangeToken];
-        _periodicLocationUpdateRequested = NO;
+        _periodicHeadingUpdateRequested = NO;
     }
 
     [self stopUpdatingLocation];
