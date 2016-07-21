@@ -19,15 +19,6 @@
 #import <CoreGraphics/CGColorSpace.h>
 #import <CoreGraphics/CGPattern.h>
 
-typedef struct { float r, g, b, a; } ColorQuad;
-
-inline void ColorQuadToFloatArray(ColorQuad color, float* colorArray) {
-    colorArray[0] = color.r;
-    colorArray[1] = color.g;
-    colorArray[2] = color.b;
-    colorArray[3] = color.a;
-}
-
 COREGRAPHICS_EXPORT CGColorRef CGColorRetain(CGColorRef color);
 COREGRAPHICS_EXPORT void CGColorRelease(CGColorRef color);
 COREGRAPHICS_EXPORT CGColorRef CGColorCreate(CGColorSpaceRef space, const CGFloat* components);

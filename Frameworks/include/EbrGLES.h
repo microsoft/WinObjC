@@ -66,7 +66,7 @@ bool EbrGLESInitShaders(ID3D11Device* device);
 void EbrGLESDestroyShaders();
 void EbrGLESInitDraw();
 void EbrGLESSetTexturing(TextureMode mode);
-void EbrGLESSetArrays(CAPoint3D* verts, CGPoint* uvs, ColorQuad* colors, float* texNums);
+void EbrGLESSetArrays(CAPoint3D* verts, CGPoint* uvs, __CGColorQuad* colors, float* texNums);
 void EbrGLESSet2DArrays(CGPoint* verts, CGPoint* uvs);
 void EbrGLESSetColor(float* colorArray); // of size 4
 void EbrGLESSetTransform(ID3D11DeviceContext* ctx, float* matrix); // of size 16, row-major.

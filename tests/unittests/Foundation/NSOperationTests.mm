@@ -361,3 +361,26 @@ TEST(NSOperation, NSOperationIsReady) {
 
    [operation removeObserver:observer forKeyPath:@"isReady" context:NULL];
 }
+
+TEST(NSOperation, NSBlockOperationInQueue) {
+    NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
+
+
+    __block BOOL executedBlock = NO;
+    NSOperation* operation = [NSBlockOperation blockOperationWithBlock:^{
+        executedBlock = YES;
+    }];
+
+    [operation setCompletionBlock:^{
+        [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
+        ASSERT_TRUE([operation isFinished]);
+        ASSERT_TRUE(executedBlock);
+    }];
+
+    [queue addOperation:operation];
+
+    [operation waitUntilFinished];
+
+    ASSERT_TRUE([operation isFinished]);
+    ASSERT_FALSE([operation isExecuting]);
+}

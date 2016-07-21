@@ -60,22 +60,22 @@ enum {
     NSCalendarUnitNanosecond = (1 << 15),
     NSCalendarUnitCalendar = (1 << 20),
     NSCalendarUnitTimeZone = (1 << 21),
-    NSEraCalendarUnit = kCFCalendarUnitEra,
-    NSYearCalendarUnit = kCFCalendarUnitYear,
-    NSMonthCalendarUnit = kCFCalendarUnitMonth,
-    NSDayCalendarUnit = kCFCalendarUnitDay,
-    NSHourCalendarUnit = kCFCalendarUnitHour,
-    NSMinuteCalendarUnit = kCFCalendarUnitMinute,
-    NSSecondCalendarUnit = kCFCalendarUnitSecond,
+    NSEraCalendarUnit = NSCalendarUnitEra,
+    NSYearCalendarUnit = NSCalendarUnitYear,
+    NSMonthCalendarUnit = NSCalendarUnitMonth,
+    NSDayCalendarUnit = NSCalendarUnitDay,
+    NSHourCalendarUnit = NSCalendarUnitHour,
+    NSMinuteCalendarUnit = NSCalendarUnitMinute,
+    NSSecondCalendarUnit = NSCalendarUnitSecond,
     NSWeekCalendarUnit = kCFCalendarUnitWeek,
-    NSWeekdayCalendarUnit = kCFCalendarUnitWeekday,
-    NSWeekdayOrdinalCalendarUnit = kCFCalendarUnitWeekdayOrdinal,
-    NSQuarterCalendarUnit = kCFCalendarUnitQuarter,
-    NSWeekOfMonthCalendarUnit = kCFCalendarUnitWeekOfMonth,
-    NSWeekOfYearCalendarUnit = kCFCalendarUnitWeekOfYear,
-    NSYearForWeekOfYearCalendarUnit = kCFCalendarUnitYearForWeekOfYear,
-    NSCalendarCalendarUnit = (1 << 20),
-    NSTimeZoneCalendarUnit = (1 << 21),
+    NSWeekdayCalendarUnit = NSCalendarUnitWeekday,
+    NSWeekdayOrdinalCalendarUnit = NSCalendarUnitWeekdayOrdinal,
+    NSQuarterCalendarUnit = NSCalendarUnitQuarter,
+    NSWeekOfMonthCalendarUnit = NSCalendarUnitWeekOfMonth,
+    NSWeekOfYearCalendarUnit = NSCalendarUnitWeekOfYear,
+    NSYearForWeekOfYearCalendarUnit = NSCalendarUnitYearForWeekOfYear,
+    NSCalendarCalendarUnit = NSCalendarUnitCalendar,
+    NSTimeZoneCalendarUnit = NSCalendarUnitTimeZone,
 };
 
 typedef NSUInteger NSCalendarOptions;
@@ -114,6 +114,7 @@ FOUNDATION_EXPORT_CLASS
 + (NSCalendar*)currentCalendar;
 + (NSCalendar*)autoupdatingCurrentCalendar STUB_METHOD;
 + (NSCalendar*)calendarWithIdentifier:(NSString*)calendarIdentifierConstant;
+- (id)init NS_UNAVAILABLE;
 - (id)initWithCalendarIdentifier:(NSString*)string;
 @property (readonly, copy) NSString* calendarIdentifier;
 @property NSUInteger firstWeekday;
@@ -124,7 +125,7 @@ FOUNDATION_EXPORT_CLASS
 - (NSUInteger)ordinalityOfUnit:(NSCalendarUnit)smaller inUnit:(NSCalendarUnit)larger forDate:(NSDate*)date;
 - (NSRange)rangeOfUnit:(NSCalendarUnit)smaller inUnit:(NSCalendarUnit)larger forDate:(NSDate*)date;
 - (BOOL)rangeOfUnit:(NSCalendarUnit)unit startDate:(NSDate* _Nullable*)datep interval:(NSTimeInterval*)tip forDate:(NSDate*)date;
-- (BOOL)rangeOfWeekendStartDate:(NSDate* _Nullable*)datep interval:(NSTimeInterval*)tip containingDate:(NSDate*)date STUB_METHOD;
+- (BOOL)rangeOfWeekendStartDate:(NSDate* _Nullable*)datep interval:(NSTimeInterval*)tip containingDate:(NSDate*)date;
 @property (copy) NSTimeZone* timeZone;
 - (NSDate*)dateByAddingComponents:(NSDateComponents*)comps toDate:(NSDate*)date options:(NSCalendarOptions)opts;
 - (NSDate*)dateByAddingUnit:(NSCalendarUnit)unit value:(NSInteger)value toDate:(NSDate*)date options:(NSCalendarOptions)options;
@@ -132,13 +133,9 @@ FOUNDATION_EXPORT_CLASS
 - (void)enumerateDatesStartingAfterDate:(NSDate*)start
                      matchingComponents:(NSDateComponents*)comps
                                 options:(NSCalendarOptions)opts
-                             usingBlock:(void (^)(NSDate*, BOOL, BOOL*))block STUB_METHOD;
-- (NSDate*)dateBySettingHour:(NSInteger)h
-                      minute:(NSInteger)m
-                      second:(NSInteger)s
-                      ofDate:(NSDate*)date
-                     options:(NSCalendarOptions)opts STUB_METHOD;
-- (NSDate*)dateBySettingUnit:(NSCalendarUnit)unit value:(NSInteger)v ofDate:(NSDate*)date options:(NSCalendarOptions)opts STUB_METHOD;
+                             usingBlock:(void (^)(NSDate*, BOOL, BOOL*))block;
+- (NSDate*)dateBySettingHour:(NSInteger)h minute:(NSInteger)m second:(NSInteger)s ofDate:(NSDate*)date options:(NSCalendarOptions)opts;
+- (NSDate*)dateBySettingUnit:(NSCalendarUnit)unit value:(NSInteger)v ofDate:(NSDate*)date options:(NSCalendarOptions)opts;
 - (NSDate*)dateWithEra:(NSInteger)eraValue
                   year:(NSInteger)yearValue
                  month:(NSInteger)monthValue
@@ -146,7 +143,7 @@ FOUNDATION_EXPORT_CLASS
                   hour:(NSInteger)hourValue
                 minute:(NSInteger)minuteValue
                 second:(NSInteger)secondValue
-            nanosecond:(NSInteger)nanosecondValue STUB_METHOD;
+            nanosecond:(NSInteger)nanosecondValue;
 
 - (NSDate*)dateWithEra:(NSInteger)eraValue
      yearForWeekOfYear:(NSInteger)yearValue
@@ -155,32 +152,29 @@ FOUNDATION_EXPORT_CLASS
                   hour:(NSInteger)hourValue
                 minute:(NSInteger)minuteValue
                 second:(NSInteger)secondValue
-            nanosecond:(NSInteger)nanosecondValue STUB_METHOD;
+            nanosecond:(NSInteger)nanosecondValue;
 
-- (BOOL)date:(NSDate*)date matchesComponents:(NSDateComponents*)comps STUB_METHOD;
-- (NSDate*)nextDateAfterDate:(NSDate*)date matchingComponents:(NSDateComponents*)comps options:(NSCalendarOptions)options STUB_METHOD;
+- (BOOL)date:(NSDate*)date matchesComponents:(NSDateComponents*)comps;
+- (NSDate*)nextDateAfterDate:(NSDate*)date matchingComponents:(NSDateComponents*)comps options:(NSCalendarOptions)options;
 - (NSDate*)nextDateAfterDate:(NSDate*)date
                 matchingHour:(NSInteger)hourValue
                       minute:(NSInteger)minuteValue
                       second:(NSInteger)secondValue
-                     options:(NSCalendarOptions)options STUB_METHOD;
-- (NSDate*)nextDateAfterDate:(NSDate*)date
-                matchingUnit:(NSCalendarUnit)unit
-                       value:(NSInteger)value
-                     options:(NSCalendarOptions)options STUB_METHOD;
+                     options:(NSCalendarOptions)options;
+- (NSDate*)nextDateAfterDate:(NSDate*)date matchingUnit:(NSCalendarUnit)unit value:(NSInteger)value options:(NSCalendarOptions)options;
 - (BOOL)nextWeekendStartDate:(NSDate* _Nullable*)datep
                     interval:(NSTimeInterval*)tip
                      options:(NSCalendarOptions)options
-                   afterDate:(NSDate*)date STUB_METHOD;
-- (NSDate*)startOfDayForDate:(NSDate*)date STUB_METHOD;
-- (NSComparisonResult)compareDate:(NSDate*)date1 toDate:(NSDate*)date2 toUnitGranularity:(NSCalendarUnit)unit STUB_METHOD;
-- (BOOL)isDate:(NSDate*)date1 equalToDate:(NSDate*)date2 toUnitGranularity:(NSCalendarUnit)unit STUB_METHOD;
-- (BOOL)isDate:(NSDate*)date1 inSameDayAsDate:(NSDate*)date2 STUB_METHOD;
-- (BOOL)isDateInToday:(NSDate*)date STUB_METHOD;
-- (BOOL)isDateInTomorrow:(NSDate*)date STUB_METHOD;
-- (BOOL)isDateInWeekend:(NSDate*)date STUB_METHOD;
-- (BOOL)isDateInYesterday:(NSDate*)date STUB_METHOD;
-- (NSInteger)component:(NSCalendarUnit)unit fromDate:(NSDate*)date STUB_METHOD;
+                   afterDate:(NSDate*)date;
+- (NSDate*)startOfDayForDate:(NSDate*)date;
+- (NSComparisonResult)compareDate:(NSDate*)date1 toDate:(NSDate*)date2 toUnitGranularity:(NSCalendarUnit)unit;
+- (BOOL)isDate:(NSDate*)date1 equalToDate:(NSDate*)date2 toUnitGranularity:(NSCalendarUnit)unit;
+- (BOOL)isDate:(NSDate*)date1 inSameDayAsDate:(NSDate*)date2;
+- (BOOL)isDateInToday:(NSDate*)date;
+- (BOOL)isDateInTomorrow:(NSDate*)date;
+- (BOOL)isDateInWeekend:(NSDate*)date;
+- (BOOL)isDateInYesterday:(NSDate*)date;
+- (NSInteger)component:(NSCalendarUnit)unit fromDate:(NSDate*)date;
 - (NSDateComponents*)components:(NSCalendarUnit)unitFlags fromDate:(NSDate*)date;
 - (NSDateComponents*)components:(NSCalendarUnit)unitFlags
                        fromDate:(NSDate*)startingDate
@@ -189,23 +183,23 @@ FOUNDATION_EXPORT_CLASS
 - (NSDateComponents*)components:(NSCalendarUnit)unitFlags
              fromDateComponents:(NSDateComponents*)startingDateComp
                toDateComponents:(NSDateComponents*)resultDateComp
-                        options:(NSCalendarOptions)options STUB_METHOD;
-- (NSDateComponents*)componentsInTimeZone:(NSTimeZone*)timezone fromDate:(NSDate*)date STUB_METHOD;
+                        options:(NSCalendarOptions)options;
+- (NSDateComponents*)componentsInTimeZone:(NSTimeZone*)timezone fromDate:(NSDate*)date;
 - (void)getEra:(NSInteger*)eraValuePointer
           year:(NSInteger*)yearValuePointer
          month:(NSInteger*)monthValuePointer
            day:(NSInteger*)dayValuePointer
-      fromDate:(NSDate*)date STUB_METHOD;
+      fromDate:(NSDate*)date;
 - (void)getEra:(NSInteger*)eraValuePointer
     yearForWeekOfYear:(NSInteger*)yearValuePointer
            weekOfYear:(NSInteger*)weekValuePointer
               weekday:(NSInteger*)weekdayValuePointer
-             fromDate:(NSDate*)date STUB_METHOD;
+             fromDate:(NSDate*)date;
 - (void)getHour:(NSInteger*)hourValuePointer
          minute:(NSInteger*)minuteValuePointer
          second:(NSInteger*)secondValuePointer
      nanosecond:(NSInteger*)nanosecondValuePointer
-       fromDate:(NSDate*)date STUB_METHOD;
+       fromDate:(NSDate*)date;
 @property (readonly, copy) NSString* AMSymbol;
 @property (readonly, copy) NSString* PMSymbol;
 @property (readonly, copy) NSArray* weekdaySymbols;
