@@ -109,6 +109,11 @@ const ConditionalValueListMap& VCProject::getUserMacros() const
   return m_userMacros;
 }
 
+const StringSet& VCProject::getUrlSchemes() const
+{
+    return m_urlSchemes;
+}
+
 void VCProject::addGlobalProperty(const std::string& name, const std::string& value, const std::string& condition)
 {
   if (!name.empty())
@@ -180,10 +185,20 @@ void VCProject::addBuildExtension(const std::string& extension)
   m_buildExtensions.push_back(extension);
 }
 
+void VCProject::setUrlSchemes(const StringSet& schemes)
+{
+    if (!m_urlSchemes.empty() && (schemes != m_urlSchemes)) {
+        SBLog::warning() << "Inconsistent URL schemes across configurations; using first set only" << std::endl;
+        return;
+    }
+
+    m_urlSchemes = schemes;
+}
+
 bool VCProject::write() const
 {
   // Write the template
-  m_template->write();
+  m_template->write(m_urlSchemes);
 
   return writeProject() && writeFilters();
 }

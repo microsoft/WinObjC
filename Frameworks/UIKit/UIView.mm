@@ -93,14 +93,6 @@ static int stackLevel = 0;
 
 int viewCount = 0;
 
-static void RunSynchronouslyOnMainThread(void (^block)()) {
-    if ([NSThread isMainThread]) {
-        block();
-    } else {
-        dispatch_sync(dispatch_get_main_queue(), block);
-    }
-}
-
 @implementation UIView {
     idretaintype(CALayer) layer;
     bool _deallocating;

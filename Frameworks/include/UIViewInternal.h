@@ -130,3 +130,11 @@ public:
 @interface NSStringDrawingContext ()
 - (void)_setInternalTotalBounds:(CGRect)rect;
 @end
+
+inline void RunSynchronouslyOnMainThread(void(^block)()) {
+    if ([NSThread isMainThread]) {
+        block();
+    } else {
+        dispatch_sync(dispatch_get_main_queue(), block);
+    }
+}

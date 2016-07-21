@@ -30,7 +30,7 @@
 - (void)_sendResumeEvent;
 - (void)_sendNotificationReceivedEvent:(NSString*)notificationData;
 - (void)_sendVoiceCommandReceivedEvent:(WMSSpeechRecognitionResult*)voiceCommandResult;
-- (void)_sendProtocolReceivedEvent:(WFUri*)protocolUri;
+- (void)_sendProtocolReceivedEvent:(WFUri*)protocolUri source:(NSString*)source;
 @end
 
 @interface WOCDisplayMode (internal)

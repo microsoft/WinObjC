@@ -164,14 +164,16 @@ void EbrApplicationActivated(IActivatedEventArgs^ args) {
 
         UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(argResult));
     } else if (args->Kind == ActivationKind::Protocol) {
-        Windows::Foundation::Uri^ argUri = safe_cast<ProtocolActivatedEventArgs^>(args)->Uri;
-        TraceVerbose(TAG, L"Received protocol with uri- %s", argUri->ToString()->Data());
+        ProtocolActivatedEventArgs^ protocolArgs = safe_cast<ProtocolActivatedEventArgs^>(args);
+        Windows::Foundation::Uri^ argUri = protocolArgs->Uri;
+        const wchar_t* caller = protocolArgs->CallerPackageFamilyName->Data();
+        TraceVerbose(TAG, L"Received protocol with uri- %s from %s", argUri->ToString()->Data(), caller);
 
         if (initiateAppLaunch) {
             _ApplicationMainLaunch(ActivationTypeProtocol, argUri);
         }
 
-        UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri));
+        UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri), caller);
     } else {
         TraceVerbose(TAG, L"Received unhandled activation kind - %d", args->Kind);
 
@@ -231,14 +233,16 @@ extern "C" void _ApplicationActivate(Platform::Object^ arguments) {
 
         UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(argResult));
     } else if (args->Kind == ActivationKind::Protocol) {
-        Windows::Foundation::Uri^ argUri = safe_cast<ProtocolActivatedEventArgs^>(args)->Uri;
-        TraceVerbose(TAG, L"Received protocol with uri- %ls", argUri->ToString()->Data());
+        ProtocolActivatedEventArgs^ protocolArgs = safe_cast<ProtocolActivatedEventArgs^>(args);
+        Windows::Foundation::Uri^ argUri = protocolArgs->Uri;
+        const wchar_t* caller = protocolArgs->CallerPackageFamilyName->Data();
+        TraceVerbose(TAG, L"Received protocol with uri- %ls from %ls", argUri->ToString()->Data(), caller);
 
         if (initiateAppLaunch) {
             _ApplicationLaunch(ActivationTypeProtocol, argUri);
         }
 
-        UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri));
+        UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri), caller);
     } else {
         TraceVerbose(TAG, L"Received unhandled activation kind - %d", args->Kind);
 
