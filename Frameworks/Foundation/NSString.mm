@@ -1102,6 +1102,9 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
     }
 
     if (self.length >= 2) {
+        // TODO: This will require some investigation when we design a cohesive path story.
+        // Currently, we'll report @"C:Hello.txt" as absolute, when it is in fact relative
+        // to the drive-specific CWD on C:.
         return _isLetter([self characterAtIndex:0]) && [self characterAtIndex:1] == ':';
     }
 
