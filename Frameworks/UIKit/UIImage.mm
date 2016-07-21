@@ -236,7 +236,7 @@ static bool loadImageFromWICFrame(UIImage* dest, IWICImagingFactory* pFactory, I
                                        32,
                                        width * 4,
                                        clrRgb,
-                                       (kCGImageAlphaLast | kCGBitmapByteOrder32Little),
+                                       kCGImageAlphaLast,
                                        nil,
                                        NULL,
                                        false,
