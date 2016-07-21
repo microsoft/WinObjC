@@ -273,6 +273,11 @@ TEST(CortanaTest, ProtocolForegroundActivation) {
         return S_OK;
     });
 
+    fakeProtocolActivatedEventArgs->Setget_CallerPackageFamilyName([](HSTRING* name) {
+        Wrappers::HStringReference testName(L"TestPackageFamilyName");
+        return testName.CopyTo(name);
+    });
+
     // Pass activation argument to method which activates the app
     auto args = fakeProtocolActivatedEventArgs.Detach();
     UIApplicationActivationTest(reinterpret_cast<IInspectable*>(args), NSStringFromClass([CortanaProtocolForegroundTestDelegate class]));

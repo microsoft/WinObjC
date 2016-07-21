@@ -67,9 +67,11 @@ void UIImageSetLayerContents(CALayer* layer, UIImage* image) {
     if ([layer contentsScale] != [image scale]) {
         [layer setContentsScale:[image scale]];
     }
-    if ([layer contentsOrientation] != [image imageOrientation]) {
-        [layer setContentsOrientation:[image imageOrientation]];
-    }
+
+    // if setContentsOrientation with image orientation here,
+    // the Image will be rotated twice when shown in the screen.
+    [layer setContentsOrientation:0];
+
     CGRect stretch = [image _imageStretch];
     if (!CGRectEqualToRect([layer contentsCenter], stretch)) {
         [layer setContentsCenter:stretch];
@@ -114,11 +116,12 @@ void UIImageSetLayerContents(CALayer* layer, UIImage* image) {
 }
 
 + (UIImageCachedObject*)cacheImage:(UIImage*)image withName:(NSString*)name {
-    //  Cache the image
+    // Cache the image
     UIImageCachedObject* obj = [UIImageCachedObject new];
     obj->_scale = image->_scale;
     obj->_imageStretch = image->_imageStretch;
     obj->m_pImage = image->m_pImage;
+    obj->_orientation = image->_orientation;
     CGImageRetain(obj->m_pImage);
     obj->_cacheName = [name copy];
     pthread_mutex_lock(&imageCacheLock);
@@ -469,6 +472,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         _scale = cachedImage->_scale;
         _imageStretch = cachedImage->_imageStretch;
         _isFromCache = true;
+        _orientation = cachedImage->_orientation;
         pthread_mutex_unlock(&imageCacheLock);
         return self;
     }
@@ -1371,11 +1375,10 @@ NSData* UIImagePNGRepresentation(UIImage* img) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat quality) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return _CGImageJPEGRepresentation(img, quality);
 }
 
 /**

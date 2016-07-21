@@ -16,16 +16,12 @@
 
 #pragma once
 
-#import <SafariServices/SafariServicesExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <SafariServices/SFSafariViewController.h>
 
-@class SFSafariViewController;
-@class NSURL;
-@class NSString;
-@class NSArray;
+@interface SFSafariViewController () {
+@protected
+    NSURL* _url;
+}
 
-@protocol SFSafariViewControllerDelegate <NSObject>
-- (void)safariViewController:(SFSafariViewController*)controller didCompleteInitialLoad:(BOOL)didLoadSuccessfully;
-- (NSArray*)safariViewController:(SFSafariViewController*)controller activityItemsForURL:(NSURL*)URL title:(NSString*)title;
-- (void)safariViewControllerDidFinish:(SFSafariViewController*)controller;
+- (NSString*)_sourceApplication;
 @end

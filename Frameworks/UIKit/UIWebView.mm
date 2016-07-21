@@ -25,6 +25,7 @@
 #include "UIKit/UIScrollView.h"
 #include "UIKit/UIApplication.h"
 #include "UIKit/UIColor.h"
+#include "UIViewInternal.h"
 
 #include "UIKit/UIWebView.h"
 #include "UWP/WindowsUIXamlControls.h"
@@ -39,6 +40,7 @@
     WXCWebView* _xamlWebControl;
     EventRegistrationToken _xamlLoadCompletedEventCookie;
     EventRegistrationToken _xamlLoadStartedEventCookie;
+    EventRegistrationToken _xamlUnsupportedUriSchemeEventCookie;
 }
 
 /**
@@ -78,8 +80,23 @@
     NSURL* url = [request URL];
     NSString* urlStr = [url absoluteString];
 
+    StrongId<WWHHttpMethod*> method;
+    StrongId<WWHHttpRequestMessage*> msg;
+    StrongId<WFUri*> uri;
+
+    method.attach([WWHHttpMethod make:request.HTTPMethod]);
+    uri.attach([WFUri makeUri:urlStr]);
+    msg.attach([WWHHttpRequestMessage make:method uri:uri]);
+
+    [request.allHTTPHeaderFields enumerateKeysAndObjectsUsingBlock:^(NSString* field, NSString* value, BOOL* stop) {
+        [[msg headers] append:field value:value];
+    }];
+
     _isLoading = true;
-    [_xamlWebControl navigate:[[WFUri makeUri:urlStr] autorelease]];
+
+    RunSynchronouslyOnMainThread(^{
+        [_xamlWebControl navigateWithHttpRequestMessage:msg];
+    });
 }
 
 static void initWebKit(UIWebView* self) {
@@ -95,8 +112,40 @@ static void initWebKit(UIWebView* self) {
     }];
     self->_xamlLoadStartedEventCookie =
         [self->_xamlWebControl addNavigationStartingEvent:^void(RTObject* sender, WXCWebViewNavigationStartingEventArgs* e) {
+            // Give the client a chance to cancel the navigation
+            if ([self->_delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
+                NSURL* url = [NSURL URLWithString:e.uri.absoluteUri];
+                NSURLRequest* request = [NSURLRequest requestWithURL:url];
+
+                // ???? XAML doesn't expose this information to us
+                UIWebViewNavigationType navigationType = UIWebViewNavigationTypeOther;
+
+                if (![self->_delegate webView:self shouldStartLoadWithRequest:request navigationType:navigationType]) {
+                    e.cancel = YES;
+                    return;
+                }
+            }
+
+            // Cancellation declined, navigation is proceeding
             if ([self->_delegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
                 [self->_delegate webViewDidStartLoad:self];
+            }
+        }];
+
+    self->_xamlUnsupportedUriSchemeEventCookie = [self->_xamlWebControl
+        addUnsupportedUriSchemeIdentifiedEvent:^(RTObject* sender, WXCWebViewUnsupportedUriSchemeIdentifiedEventArgs* e) {
+            if ([self->_delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
+                NSURL* url = [NSURL URLWithString:e.uri.absoluteUri];
+                NSURLRequest* request = [NSURLRequest requestWithURL:url];
+                UIWebViewNavigationType navigationType = UIWebViewNavigationTypeOther;
+
+                // The WebView doesn't know what to do with this URL, but give our client a crack at it
+                if ([self->_delegate webView:self shouldStartLoadWithRequest:request navigationType:navigationType]) {
+                    // Client said to proceed, so pass the URL off to the system URI resolver
+                } else {
+                    // Client took care of the URL
+                    e.handled = YES;
+                }
             }
         }];
 
@@ -138,7 +187,9 @@ static void initWebKit(UIWebView* self) {
 - (instancetype)initWithFrame:(CGRect)rect {
     [super initWithFrame:rect];
 
-    initWebKit(self);
+    RunSynchronouslyOnMainThread(^{
+        initWebKit(self);
+    });
 
     return self;
 }
@@ -262,9 +313,12 @@ static void initWebKit(UIWebView* self) {
  @Status Interoperable
 */
 - (void)dealloc {
-    [_xamlWebControl removeLoadCompletedEvent:_xamlLoadCompletedEventCookie];
-    [_xamlWebControl removeNavigationStartingEvent:_xamlLoadStartedEventCookie];
-    [_xamlWebControl release];
+    RunSynchronouslyOnMainThread(^{
+        [_xamlWebControl removeLoadCompletedEvent:_xamlLoadCompletedEventCookie];
+        [_xamlWebControl removeNavigationStartingEvent:_xamlLoadStartedEventCookie];
+        [_xamlWebControl removeUnsupportedUriSchemeIdentifiedEvent:_xamlUnsupportedUriSchemeEventCookie];
+        [_xamlWebControl release];
+    });
 
     [super dealloc];
 }
