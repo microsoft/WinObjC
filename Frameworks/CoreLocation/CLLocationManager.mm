@@ -103,8 +103,11 @@ static void _requestExtendedExecutionSession() {
  */
 static void _removeExtendedExecutionSession() {
     std::lock_guard<std::mutex> lock(s_extendedExecutionMutex);
-    // Remove the extended execution session only when there are no more pending requests.
-    FAIL_FAST_IF_MSG((s_extendedExecutionRequestCount == 0), "There is no extended execution session active!");
+    
+    if (s_extendedExecutionRequestCount == 0) {
+        return;
+    }
+
     if (--s_extendedExecutionRequestCount == 0) {
         NSTraceInfo(TAG, @"Removing extended execution.");
         [s_uwpExecutionSession removeRevokedEvent:s_uwpEventRegistrationToken];
@@ -129,7 +132,6 @@ static void _removeExtendedExecutionSession() {
     // Ensures atleast one ongoing periodic location update request.
     BOOL _periodicLocationUpdateRequested;
     BOOL _periodicHeadingUpdateRequested;
-    BOOL _extendedExecutionSessionRequested;
 }
 
 @property (readwrite, copy, nonatomic) CLLocation* location;
@@ -757,7 +759,6 @@ static const int64_t c_timeoutInSeconds = 15LL;
             if (self.allowsBackgroundLocationUpdates) {
                 // Request for a extended execution session so heading updates can continue in the background.
                 _requestExtendedExecutionSession();
-                _extendedExecutionSessionRequested = YES;
             }
 
             // Register for position change event only the first time heading update is requested.
