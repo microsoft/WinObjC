@@ -67,25 +67,25 @@ static inline __CGSurfaceFormat _CGImageGetFormat(unsigned int bitsPerComponent,
         if (byteOrder == kCGBitmapByteOrder32Big) {
             switch (alphaInfo) {
                 case kCGImageAlphaNoneSkipFirst:
-                    if (bitsPerComponent == 5) {
-                        fmt = _Color565;
-                    } else {
-                        UNIMPLEMENTED_WITH_MSG("XRGB pixelformat unsupported");
-                    }
+                    UNIMPLEMENTED_WITH_MSG("XRGB pixelformat unsupported");
+                    fmt = _ColorARGB;
                     break;
                 case kCGImageAlphaFirst:
                 case kCGImageAlphaPremultipliedFirst:
                     fmt = _ColorARGB;
                     break;
                 case kCGImageAlphaNone:
-                    if (bitsPerComponent == 5) {
-                        fmt = _Color565;
-                    } else if (bitsPerPixel == 32) {
+                    if (bitsPerPixel == 32) {
                         // TODO: verify
                         fmt = _ColorARGB;
-                    } else {
-                        // TODO: verify
+                    } else if (bitsPerComponent == 5) {
+                        fmt = _Color565;
+                    } else if (bitsPerPixel == 24) {
+                        UNIMPLEMENTED_WITH_MSG("RGB pixelformat unsupported");
                         fmt = _ColorBGR;
+                    } else {
+                        UNIMPLEMENTED_WITH_MSG("Unknown pixelformat");
+                        fmt = _ColorARGB;
                     }
                     break;
                 case kCGImageAlphaNoneSkipLast:
@@ -112,9 +112,12 @@ static inline __CGSurfaceFormat _CGImageGetFormat(unsigned int bitsPerComponent,
                     break;
                 case kCGImageAlphaNone:
                     if (bitsPerPixel == 32) {
-                        fmt = _ColorBGRX;
-                    } else {
+                        fmt = _ColorXBGR;
+                    } else if (bitsPerPixel == 24) {
                         fmt = _ColorBGR;
+                    } else if (bitsPerComponent == 5) {
+                        UNIMPLEMENTED_WITH_MSG("BGR565 Pixel format unsupported");
+                        fmt = _Color565;
                     }
                     break;
                 default:

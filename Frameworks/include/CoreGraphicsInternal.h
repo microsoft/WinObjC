@@ -44,7 +44,7 @@ static const __CGPixelProperties c_FormatTable[_ColorMax] = {
     { kCGColorSpaceModelRGB, (kCGImageAlphaNone | kCGBitmapByteOrder32Big), 5, 2 }, //_Color565,
     { kCGColorSpaceModelRGB, (kCGImageAlphaFirst | kCGBitmapByteOrder32Big), 8, 4 }, //_ColorARGB,
     { kCGColorSpaceModelRGB, (kCGImageAlphaLast | kCGBitmapByteOrder32Little), 8, 4 }, //_ColorABGR,
-    { kCGColorSpaceModelRGB, (kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Big), 8, 4 }, //_ColorBGRX,
+    { kCGColorSpaceModelRGB, (kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Little), 8, 4 }, //_ColorBGRX,
     { kCGColorSpaceModelRGB, (kCGImageAlphaNoneSkipLast | kCGBitmapByteOrder32Little), 8, 4 }, //_ColorXBGR,
     { kCGColorSpaceModelMonochrome, (kCGImageAlphaNone | kCGBitmapByteOrder32Big), 8, 1 }, //_ColorGrayscale,
     { kCGColorSpaceModelRGB, (kCGImageAlphaNone | kCGBitmapByteOrder32Big), 8, 3 }, //_ColorBGR,
