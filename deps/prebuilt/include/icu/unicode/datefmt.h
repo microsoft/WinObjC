@@ -1,6 +1,6 @@
 /*
  ********************************************************************************
- *   Copyright (C) 1997-2011, International Business Machines
+ *   Copyright (C) 1997-2016, International Business Machines
  *   Corporation and others.  All Rights Reserved.
  ********************************************************************************
  *
@@ -28,6 +28,8 @@
 #include "unicode/numfmt.h"
 #include "unicode/format.h"
 #include "unicode/locid.h"
+#include "unicode/enumset.h"
+#include "unicode/udisplaycontext.h"
 
 /**
  * \file
@@ -38,6 +40,11 @@ U_NAMESPACE_BEGIN
 
 class TimeZone;
 class DateTimePatternGenerator;
+
+// explicit template instantiation. see digitlst.h
+#if defined(_MSC_VER)
+template class U_I18N_API EnumSet<UDateFormatBooleanAttribute, 0, UDAT_BOOLEAN_ATTRIBUTE_COUNT>;
+#endif
 
 /**
  * DateFormat is an abstract class for a family of classes that convert dates and
@@ -137,7 +144,6 @@ class DateTimePatternGenerator;
  */
 class U_I18N_API DateFormat : public Format {
 public:
-
     /**
      * Constants for various style patterns. These reflect the order of items in
      * the DateTimePatterns resource. There are 4 time patterns, 4 date patterns,
@@ -145,29 +151,28 @@ public:
      * in the resource occurs in the order full, long, medium, short.
      * @stable ICU 2.4
      */
-    enum EStyle
-    {
-        kNone   = -1,
+    enum EStyle {
+        kNone = -1,
 
-        kFull   = 0,
-        kLong   = 1,
+        kFull = 0,
+        kLong = 1,
         kMedium = 2,
-        kShort  = 3,
+        kShort = 3,
 
-        kDateOffset   = kShort + 1,
-     // kFull   + kDateOffset = 4
-     // kLong   + kDateOffset = 5
-     // kMedium + kDateOffset = 6
-     // kShort  + kDateOffset = 7
+        kDateOffset = kShort + 1,
+        // kFull   + kDateOffset = 4
+        // kLong   + kDateOffset = 5
+        // kMedium + kDateOffset = 6
+        // kShort  + kDateOffset = 7
 
-        kDateTime             = 8,
-     // Default DateTime
+        kDateTime = 8,
+        // Default DateTime
 
         kDateTimeOffset = kDateTime + 1,
-     // kFull   + kDateTimeOffset = 9
-     // kLong   + kDateTimeOffset = 10
-     // kMedium + kDateTimeOffset = 11
-     // kShort  + kDateTimeOffset = 12
+        // kFull   + kDateTimeOffset = 9
+        // kLong   + kDateTimeOffset = 10
+        // kMedium + kDateTimeOffset = 11
+        // kShort  + kDateTimeOffset = 12
 
         // relative dates
         kRelative = (1 << 7),
@@ -180,23 +185,20 @@ public:
 
         kShortRelative = kShort | kRelative,
 
+        kDefault = kMedium,
 
-        kDefault      = kMedium,
-
-
-
-    /**
-     * These constants are provided for backwards compatibility only.
-     * Please use the C++ style constants defined above.
-     */
-        FULL        = kFull,
-        LONG        = kLong,
-        MEDIUM        = kMedium,
-        SHORT        = kShort,
-        DEFAULT        = kDefault,
-        DATE_OFFSET    = kDateOffset,
-        NONE        = kNone,
-        DATE_TIME    = kDateTime
+        /**
+         * These constants are provided for backwards compatibility only.
+         * Please use the C++ style constants defined above.
+         */
+        FULL = kFull,
+        LONG = kLong,
+        MEDIUM = kMedium,
+        SHORT = kShort,
+        DEFAULT = kDefault,
+        DATE_OFFSET = kDateOffset,
+        NONE = kNone,
+        DATE_TIME = kDateTime
     };
 
     /**
@@ -210,7 +212,6 @@ public:
      * @stable ICU 2.0
      */
     virtual UBool operator==(const Format&) const;
-
 
     using Format::format;
 
@@ -228,10 +229,7 @@ public:
      * @return          Reference to 'appendTo' parameter.
      * @stable ICU 2.0
      */
-    virtual UnicodeString& format(const Formattable& obj,
-                                  UnicodeString& appendTo,
-                                  FieldPosition& pos,
-                                  UErrorCode& status) const;
+    virtual UnicodeString& format(const Formattable& obj, UnicodeString& appendTo, FieldPosition& pos, UErrorCode& status) const;
 
     /**
      * Format an object to produce a string. This method handles Formattable
@@ -285,9 +283,7 @@ public:
      * @return              Reference to 'appendTo' parameter.
      * @stable ICU 2.1
      */
-    virtual UnicodeString& format(  Calendar& cal,
-                                    UnicodeString& appendTo,
-                                    FieldPosition& fieldPosition) const = 0;
+    virtual UnicodeString& format(Calendar& cal, UnicodeString& appendTo, FieldPosition& fieldPosition) const = 0;
 
     /**
      * Formats a date into a date/time string. Subclasses should implement this method.
@@ -307,10 +303,7 @@ public:
      * @return          Reference to 'appendTo' parameter.
      * @stable ICU 4.4
      */
-    virtual UnicodeString& format(Calendar& cal,
-                                  UnicodeString& appendTo,
-                                  FieldPositionIterator* posIter,
-                                  UErrorCode& status) const;
+    virtual UnicodeString& format(Calendar& cal, UnicodeString& appendTo, FieldPositionIterator* posIter, UErrorCode& status) const;
     /**
      * Formats a UDate into a date/time string.
      * <P>
@@ -338,9 +331,7 @@ public:
      * @return              Reference to 'appendTo' parameter.
      * @stable ICU 2.0
      */
-    UnicodeString& format(  UDate date,
-                            UnicodeString& appendTo,
-                            FieldPosition& fieldPosition) const;
+    UnicodeString& format(UDate date, UnicodeString& appendTo, FieldPosition& fieldPosition) const;
 
     /**
      * Formats a UDate into a date/time string.
@@ -355,10 +346,7 @@ public:
      * @return          Reference to 'appendTo' parameter.
      * @stable ICU 4.4
      */
-    UnicodeString& format(UDate date,
-                          UnicodeString& appendTo,
-                          FieldPositionIterator* posIter,
-                          UErrorCode& status) const;
+    UnicodeString& format(UDate date, UnicodeString& appendTo, FieldPositionIterator* posIter, UErrorCode& status) const;
     /**
      * Formats a UDate into a date/time string. If there is a problem, you won't
      * know, using this method. Use the overloaded format() method which takes a
@@ -373,31 +361,40 @@ public:
     UnicodeString& format(UDate date, UnicodeString& appendTo) const;
 
     /**
-     * Redeclared Format method.
+     * Parse a date/time string. For example, a time text "07/10/96 4:5 PM, PDT"
+     * will be parsed into a UDate that is equivalent to Date(837039928046).
+     * Parsing begins at the beginning of the string and proceeds as far as
+     * possible.  Assuming no parse errors were encountered, this function
+     * doesn't return any information about how much of the string was consumed
+     * by the parsing.  If you need that information, use the version of
+     * parse() that takes a ParsePosition.
+     * <P>
+     * By default, parsing is lenient: If the input is not in the form used by
+     * this object's format method but can still be parsed as a date, then the
+     * parse succeeds. Clients may insist on strict adherence to the format by
+     * calling setLenient(false).
+     * @see DateFormat::setLenient(boolean)
+     * <P>
+     * Note that the normal date formats associated with some calendars - such
+     * as the Chinese lunar calendar - do not specify enough fields to enable
+     * dates to be parsed unambiguously. In the case of the Chinese lunar
+     * calendar, while the year within the current 60-year cycle is specified,
+     * the number of such cycles since the start date of the calendar (in the
+     * ERA field of the Calendar object) is not normally part of the format,
+     * and parsing may assume the wrong era. For cases such as this it is
+     * recommended that clients parse using the method
+     * parse(const UnicodeString&, Calendar& cal, ParsePosition&)
+     * with the Calendar passed in set to the current date, or to a date
+     * within the era/cycle that should be assumed if absent in the format.
      *
-     * @param obj       The object to be formatted into a string.
-     * @param appendTo  Output parameter to receive result.
-     *                  Result is appended to existing contents.
-     * @param status    Output param filled with success/failure status.
-     * @return          Reference to 'appendTo' parameter.
-     * @stable ICU 2.0
-     */
-    UnicodeString& format(const Formattable& obj,
-                          UnicodeString& appendTo,
-                          UErrorCode& status) const;
-
-    /**
-     * Parse a date/time string.
-     *
-     * @param text      The string to be parsed into a UDate value.
+     * @param text      The date/time string to be parsed into a UDate value.
      * @param status    Output param to be set to success/failure code. If
      *                  'text' cannot be parsed, it will be set to a failure
      *                  code.
-     * @result          The parsed UDate value, if successful.
+     * @return          The parsed UDate value, if successful.
      * @stable ICU 2.0
      */
-    virtual UDate parse( const UnicodeString& text,
-                        UErrorCode& status) const;
+    virtual UDate parse(const UnicodeString& text, UErrorCode& status) const;
 
     /**
      * Parse a date/time string beginning at the given parse position. For
@@ -408,26 +405,24 @@ public:
      * this object's format method but can still be parsed as a date, then the
      * parse succeeds. Clients may insist on strict adherence to the format by
      * calling setLenient(false).
-     *
      * @see DateFormat::setLenient(boolean)
      *
-     * @param text  The date/time string to be parsed
-     * @param cal   a Calendar set to the date and time to be formatted
-     *              into a date/time string.  When the calendar type
-     *              is different from the internal calendar held by this
-     *              DateFormat instance, calendar field values will be
-     *              parsed based on the internal calendar, then the result
-     *              (time in milliseconds and time zone) will be set in
-     *              this calendar.
+     * @param text  The date/time string to be parsed.
+     * @param cal   A Calendar set on input to the date and time to be used for
+     *              missing values in the date/time string being parsed, and set
+     *              on output to the parsed date/time. When the calendar type is
+     *              different from the internal calendar held by this DateFormat
+     *              instance, the internal calendar will be cloned to a work
+     *              calendar set to the same milliseconds and time zone as the
+     *              cal parameter, field values will be parsed based on the work
+     *              calendar, then the result (milliseconds and time zone) will
+     *              be set in this calendar.
      * @param pos   On input, the position at which to start parsing; on
      *              output, the position at which parsing terminated, or the
      *              start position if the parse failed.
-     * @return      A valid UDate if the input could be parsed.
      * @stable ICU 2.1
      */
-    virtual void parse( const UnicodeString& text,
-                        Calendar& cal,
-                        ParsePosition& pos) const = 0;
+    virtual void parse(const UnicodeString& text, Calendar& cal, ParsePosition& pos) const = 0;
 
     /**
      * Parse a date/time string beginning at the given parse position. For
@@ -438,18 +433,28 @@ public:
      * this object's format method but can still be parsed as a date, then the
      * parse succeeds. Clients may insist on strict adherence to the format by
      * calling setLenient(false).
-     *
      * @see DateFormat::setLenient(boolean)
+     * <P>
+     * Note that the normal date formats associated with some calendars - such
+     * as the Chinese lunar calendar - do not specify enough fields to enable
+     * dates to be parsed unambiguously. In the case of the Chinese lunar
+     * calendar, while the year within the current 60-year cycle is specified,
+     * the number of such cycles since the start date of the calendar (in the
+     * ERA field of the Calendar object) is not normally part of the format,
+     * and parsing may assume the wrong era. For cases such as this it is
+     * recommended that clients parse using the method
+     * parse(const UnicodeString&, Calendar& cal, ParsePosition&)
+     * with the Calendar passed in set to the current date, or to a date
+     * within the era/cycle that should be assumed if absent in the format.
      *
-     * @param text  The date/time string to be parsed
+     * @param text  The date/time string to be parsed into a UDate value.
      * @param pos   On input, the position at which to start parsing; on
      *              output, the position at which parsing terminated, or the
      *              start position if the parse failed.
      * @return      A valid UDate if the input could be parsed.
      * @stable ICU 2.0
      */
-    UDate parse( const UnicodeString& text,
-                 ParsePosition& pos) const;
+    UDate parse(const UnicodeString& text, ParsePosition& pos) const;
 
     /**
      * Parse a string to produce an object. This methods handles parsing of
@@ -472,14 +477,9 @@ public:
      *                  last character successfully parsed. If the
      *                  source is not parsed successfully, this param
      *                  will remain unchanged.
-     * @return          A newly created Formattable* object, or NULL
-     *                  on failure.  The caller owns this and should
-     *                  delete it when done.
      * @stable ICU 2.0
      */
-    virtual void parseObject(const UnicodeString& source,
-                             Formattable& result,
-                             ParsePosition& parse_pos) const;
+    virtual void parseObject(const UnicodeString& source, Formattable& result, ParsePosition& parse_pos) const;
 
     /**
      * Create a default date/time formatter that uses the SHORT style for both
@@ -501,28 +501,36 @@ public:
      * @return          A time formatter which the caller owns.
      * @stable ICU 2.0
      */
-    static DateFormat* U_EXPORT2 createTimeInstance(EStyle style = kDefault,
-                                          const Locale& aLocale = Locale::getDefault());
+    static DateFormat* U_EXPORT2 createTimeInstance(EStyle style = kDefault, const Locale& aLocale = Locale::getDefault());
 
     /**
      * Creates a date formatter with the given formatting style for the given
      * const locale.
      *
-     * @param style     The given formatting style. For example,
-     *                  SHORT for "M/d/yy" in the US locale.
+     * @param style     The given formatting style. For example, SHORT for "M/d/yy" in the
+     *                  US locale. As currently implemented, relative date formatting only
+     *                  affects a limited range of calendar days before or after the
+     *                  current date, based on the CLDR &lt;field type="day"&gt;/&lt;relative&gt; data:
+     *                  For example, in English, "Yesterday", "Today", and "Tomorrow".
+     *                  Outside of this range, dates are formatted using the corresponding
+     *                  non-relative style.
      * @param aLocale   The given locale.
      * @return          A date formatter which the caller owns.
      * @stable ICU 2.0
      */
-    static DateFormat* U_EXPORT2 createDateInstance(EStyle style = kDefault,
-                                          const Locale& aLocale = Locale::getDefault());
+    static DateFormat* U_EXPORT2 createDateInstance(EStyle style = kDefault, const Locale& aLocale = Locale::getDefault());
 
     /**
      * Creates a date/time formatter with the given formatting styles for the
      * given locale.
      *
      * @param dateStyle The given formatting style for the date portion of the result.
-     *                  For example, SHORT for "M/d/yy" in the US locale.
+     *                  For example, SHORT for "M/d/yy" in the US locale. As currently
+     *                  implemented, relative date formatting only affects a limited range
+     *                  of calendar days before or after the current date, based on the
+     *                  CLDR &lt;field type="day"&gt;/&lt;relative&gt; data: For example, in English,
+     *                  "Yesterday", "Today", and "Tomorrow". Outside of this range, dates
+     *                  are formatted using the corresponding non-relative style.
      * @param timeStyle The given formatting style for the time portion of the result.
      *                  For example, SHORT for "h:mm a" in the US locale. Relative
      *                  time styles are not currently supported.
@@ -531,8 +539,69 @@ public:
      * @stable ICU 2.0
      */
     static DateFormat* U_EXPORT2 createDateTimeInstance(EStyle dateStyle = kDefault,
-                                              EStyle timeStyle = kDefault,
-                                              const Locale& aLocale = Locale::getDefault());
+                                                        EStyle timeStyle = kDefault,
+                                                        const Locale& aLocale = Locale::getDefault());
+
+#ifndef U_HIDE_INTERNAL_API
+    /**
+     * Returns the best pattern given a skeleton and locale.
+     * @param locale the locale
+     * @param skeleton the skeleton
+     * @param status ICU error returned here
+     * @return the best pattern.
+     * @internal For ICU use only.
+     */
+    static UnicodeString getBestPattern(const Locale& locale, const UnicodeString& skeleton, UErrorCode& status);
+#endif /* U_HIDE_INTERNAL_API */
+
+    /**
+     * Creates a date/time formatter for the given skeleton and
+     * default locale.
+     *
+     * @param skeleton The skeleton e.g "yMMMMd." Fields in the skeleton can
+     *                 be in any order, and this method uses the locale to
+     *                 map the skeleton to a pattern that includes locale
+     *                 specific separators with the fields in the appropriate
+     *                 order for that locale.
+     * @param status   Any error returned here.
+     * @return         A date/time formatter which the caller owns.
+     * @stable ICU 55
+     */
+    static DateFormat* U_EXPORT2 createInstanceForSkeleton(const UnicodeString& skeleton, UErrorCode& status);
+
+    /**
+     * Creates a date/time formatter for the given skeleton and locale.
+     *
+     * @param skeleton The skeleton e.g "yMMMMd." Fields in the skeleton can
+     *                 be in any order, and this method uses the locale to
+     *                 map the skeleton to a pattern that includes locale
+     *                 specific separators with the fields in the appropriate
+     *                 order for that locale.
+     * @param locale  The given locale.
+     * @param status   Any error returned here.
+     * @return         A date/time formatter which the caller owns.
+     * @stable ICU 55
+     */
+    static DateFormat* U_EXPORT2 createInstanceForSkeleton(const UnicodeString& skeleton, const Locale& locale, UErrorCode& status);
+
+    /**
+     * Creates a date/time formatter for the given skeleton and locale.
+     *
+     * @param calendarToAdopt the calendar returned DateFormat is to use.
+     * @param skeleton The skeleton e.g "yMMMMd." Fields in the skeleton can
+     *                 be in any order, and this method uses the locale to
+     *                 map the skeleton to a pattern that includes locale
+     *                 specific separators with the fields in the appropriate
+     *                 order for that locale.
+     * @param locale  The given locale.
+     * @param status   Any error returned here.
+     * @return         A date/time formatter which the caller owns.
+     * @stable ICU 55
+     */
+    static DateFormat* U_EXPORT2 createInstanceForSkeleton(Calendar* calendarToAdopt,
+                                                           const UnicodeString& skeleton,
+                                                           const Locale& locale,
+                                                           UErrorCode& status);
 
     /**
      * Gets the set of locales for which DateFormats are installed.
@@ -544,16 +613,27 @@ public:
     static const Locale* U_EXPORT2 getAvailableLocales(int32_t& count);
 
     /**
-     * Returns true if the formatter is set for lenient parsing.
+     * Returns whether both date/time parsing in the encapsulated Calendar object and DateFormat whitespace &
+     * numeric processing is lenient.
      * @stable ICU 2.0
      */
     virtual UBool isLenient(void) const;
 
     /**
-     * Specify whether or not date/time parsing is to be lenient. With lenient
-     * parsing, the parser may use heuristics to interpret inputs that do not
-     * precisely match this object's format. With strict parsing, inputs must
-     * match this object's format.
+     * Specifies whether date/time parsing is to be lenient.  With
+     * lenient parsing, the parser may use heuristics to interpret inputs that
+     * do not precisely match this object's format.  Without lenient parsing,
+     * inputs must match this object's format more closely.
+     *
+     * Note: ICU 53 introduced finer grained control of leniency (and added
+     * new control points) making the preferred method a combination of
+     * setCalendarLenient() & setBooleanAttribute() calls.
+     * This method supports prior functionality but may not support all
+     * future leniency control & behavior of DateFormat. For control of pre 53 leniency,
+     * Calendar and DateFormat whitespace & numeric tolerance, this method is safe to
+     * use. However, mixing leniency control via this method and modification of the
+     * newer attributes via setBooleanAttribute() may produce undesirable
+     * results.
      *
      * @param lenient  True specifies date/time interpretation to be lenient.
      * @see Calendar::setLenient
@@ -562,7 +642,28 @@ public:
     virtual void setLenient(UBool lenient);
 
     /**
+     * Returns whether date/time parsing in the encapsulated Calendar object processing is lenient.
+     * @stable ICU 53
+     */
+    virtual UBool isCalendarLenient(void) const;
+
+    /**
+     * Specifies whether encapsulated Calendar date/time parsing is to be lenient.  With
+     * lenient parsing, the parser may use heuristics to interpret inputs that
+     * do not precisely match this object's format.  Without lenient parsing,
+     * inputs must match this object's format more closely.
+     * @param lenient when true, parsing is lenient
+     * @see com.ibm.icu.util.Calendar#setLenient
+     * @stable ICU 53
+     */
+    virtual void setCalendarLenient(UBool lenient);
+
+    /**
      * Gets the calendar associated with this date/time formatter.
+     * The calendar is owned by the formatter and must not be modified.
+     * Also, the calendar does not reflect the results of a parse operation.
+     * To parse to a calendar, use {@link #parse(const UnicodeString&, Calendar& cal, ParsePosition&) const parse(const UnicodeString&,
+     * Calendar& cal, ParsePosition&)}
      * @return the calendar associated with this date/time formatter.
      * @stable ICU 2.0
      */
@@ -587,7 +688,6 @@ public:
      * @stable ICU 2.0
      */
     virtual void setCalendar(const Calendar& newCalendar);
-
 
     /**
      * Gets the number formatter which this date/time formatter uses to format
@@ -633,6 +733,53 @@ public:
      * @stable ICU 2.0
      */
     virtual void setTimeZone(const TimeZone& zone);
+
+    /**
+     * Set a particular UDisplayContext value in the formatter, such as
+     * UDISPCTX_CAPITALIZATION_FOR_STANDALONE.
+     * @param value The UDisplayContext value to set.
+     * @param status Input/output status. If at entry this indicates a failure
+     *               status, the function will do nothing; otherwise this will be
+     *               updated with any new status from the function.
+     * @stable ICU 53
+     */
+    virtual void setContext(UDisplayContext value, UErrorCode& status);
+
+    /**
+     * Get the formatter's UDisplayContext value for the specified UDisplayContextType,
+     * such as UDISPCTX_TYPE_CAPITALIZATION.
+     * @param type The UDisplayContextType whose value to return
+     * @param status Input/output status. If at entry this indicates a failure
+     *               status, the function will do nothing; otherwise this will be
+     *               updated with any new status from the function.
+     * @return The UDisplayContextValue for the specified type.
+     * @stable ICU 53
+     */
+    virtual UDisplayContext getContext(UDisplayContextType type, UErrorCode& status) const;
+
+    /**
+      * Sets an boolean attribute on this DateFormat.
+      * May return U_UNSUPPORTED_ERROR if this instance does not support
+      * the specified attribute.
+      * @param attr the attribute to set
+      * @param newvalue new value
+      * @param status the error type
+      * @return *this - for chaining (example: format.setAttribute(...).setAttribute(...) )
+      * @stable ICU 53
+      */
+
+    virtual DateFormat& U_EXPORT2 setBooleanAttribute(UDateFormatBooleanAttribute attr, UBool newvalue, UErrorCode& status);
+
+    /**
+     * Returns a boolean from this DateFormat
+     * May return U_UNSUPPORTED_ERROR if this instance does not support
+     * the specified attribute.
+     * @param attr the attribute to set
+     * @param status the error type
+     * @return the attribute value. Undefined if there is an error.
+     * @stable ICU 53
+     */
+    virtual UBool U_EXPORT2 getBooleanAttribute(UDateFormatBooleanAttribute attr, UErrorCode& status) const;
 
 protected:
     /**
@@ -682,14 +829,22 @@ private:
      */
     static DateFormat* U_EXPORT2 create(EStyle timeStyle, EStyle dateStyle, const Locale& inLocale);
 
+    /**
+     * enum set of active boolean attributes for this instance
+     */
+    EnumSet<UDateFormatBooleanAttribute, 0, UDAT_BOOLEAN_ATTRIBUTE_COUNT> fBoolFlags;
+
+    UDisplayContext fCapitalizationContext;
+    friend class DateFmtKeyByStyle;
+
 public:
+#ifndef U_HIDE_OBSOLETE_API
     /**
      * Field selector for FieldPosition for DateFormat fields.
      * @obsolete ICU 3.4 use UDateFormatField instead, since this API will be
      * removed in that release
      */
-    enum EField
-    {
+    enum EField {
         // Obsolete; use UDateFormatField instead
         kEraField = UDAT_ERA_FIELD,
         kYearField = UDAT_YEAR_FIELD,
@@ -735,17 +890,12 @@ public:
         HOUR0_FIELD = UDAT_HOUR0_FIELD,
         TIMEZONE_FIELD = UDAT_TIMEZONE_FIELD
     };
+#endif /* U_HIDE_OBSOLETE_API */
 };
 
-inline UnicodeString&
-DateFormat::format(const Formattable& obj,
-                   UnicodeString& appendTo,
-                   UErrorCode& status) const {
-    return Format::format(obj, appendTo, status);
-}
 U_NAMESPACE_END
 
 #endif /* #if !UCONFIG_NO_FORMATTING */
 
 #endif // _DATEFMT
-//eof
+// eof

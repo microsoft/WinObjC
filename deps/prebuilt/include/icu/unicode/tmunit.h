@@ -1,7 +1,7 @@
 /*
  *******************************************************************************
- * Copyright (C) 2009-2014, Google, International Business Machines Corporation and *
- * others. All Rights Reserved.                                                *
+ * Copyright (C) 2009-2016, International Business Machines Corporation,       *
+ * Google, and others. All Rights Reserved.                                    *
  *******************************************************************************
  */
 
@@ -108,7 +108,7 @@ private:
 
     /**
      * Constructor
-     * @internal ICU 4.2
+     * @internal (private)
      */
     TimeUnit(UTimeUnitFields timeUnitField);
 };

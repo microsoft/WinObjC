@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (C) 1996-2015, International Business Machines
+ * Copyright (C) 1996-2016, International Business Machines
  * Corporation and others. All Rights Reserved.
  *******************************************************************************
 */
@@ -762,12 +762,29 @@ typedef enum UDateFormatField {
 
 #ifndef U_HIDE_DRAFT_API
     /**
-     * FieldPosition and UFieldPosition selector for ':' time separator,
-     * no corresponding UCAL_ field.
-     * @draft ICU 55
+     * FieldPosition selector for 'b' field alignment.
+     * Displays midnight and noon for 12am and 12pm, respectively, if available;
+     * otherwise fall back to AM / PM.
+     * @draft ICU 57
      */
-    UDAT_TIME_SEPARATOR_FIELD = 35,
+    UDAT_AM_PM_MIDNIGHT_NOON_FIELD = 35,
+
+    /* FieldPosition selector for 'B' field alignment.
+     * Displays flexible day periods, such as "in the morning", if available.
+     * @draft ICU 57
+     */
+    UDAT_FLEXIBLE_DAY_PERIOD_FIELD = 36,
 #endif /* U_HIDE_DRAFT_API */
+
+#ifndef U_HIDE_INTERNAL_API
+    /**
+     * FieldPosition and UFieldPosition selector for time separator,
+     * no corresponding UCAL_ field. No pattern character is currently
+     * defined for this.
+     * @internal
+     */
+    UDAT_TIME_SEPARATOR_FIELD = 37,
+#endif /* U_HIDE_INTERNAL_API */
 
     /**
       * Number of FieldPosition and UFieldPosition selectors for
@@ -777,9 +794,18 @@ typedef enum UDateFormatField {
       * in the future.
       * @stable ICU 3.0
       */
-    UDAT_FIELD_COUNT = 36
+    UDAT_FIELD_COUNT = 38
 
 } UDateFormatField;
+
+#ifndef U_HIDE_INTERNAL_API
+/**
+ * Is a pattern character defined for UDAT_TIME_SEPARATOR_FIELD?
+ * In ICU 55 it was COLON, but that was withdrawn in ICU 56.
+ * @internal ICU 56
+ */
+#define UDAT_HAS_PATTERN_CHAR_FOR_TIME_SEPARATOR 0
+#endif /* U_HIDE_INTERNAL_API */
 
 /**
  * Maps from a UDateFormatField to the corresponding UCalendarDateFields.
@@ -856,13 +882,14 @@ typedef enum UDateFormatBooleanAttribute {
 #ifndef U_HIDE_DRAFT_API
     /**
      * indicates tolerance of a partial literal match
-     * @draft ICU 53
+     * e.g. accepting "--mon-02-march-2011" for a pattern of "'--: 'EEE-WW-MMMM-yyyy"
+     * @draft ICU 56
      */
-    UDAT_PARSE_PARTIAL_MATCH = 2,
+    UDAT_PARSE_PARTIAL_LITERAL_MATCH = 2,
     /**
      * indicates tolerance of pattern mismatch between input data and specified format pattern.
      * e.g. accepting "September" for a month pattern of MMM ("Sep")
-     * @draft ICU 53
+     * @draft ICU 56
      */
     UDAT_PARSE_MULTIPLE_PATTERNS_FOR_MATCH = 3,
 #endif /* U_HIDE_DRAFT_API */
@@ -947,7 +974,6 @@ U_STABLE UDateFormat* U_EXPORT2 udat_clone(const UDateFormat* fmt, UErrorCode* s
 U_STABLE int32_t U_EXPORT2 udat_format(
     const UDateFormat* format, UDate dateToFormat, UChar* result, int32_t resultLength, UFieldPosition* position, UErrorCode* status);
 
-#ifndef U_HIDE_DRAFT_API
 /**
 * Format a date using an UDateFormat.
 * The date will be formatted using the conventions specified in {@link #udat_open }
@@ -968,9 +994,9 @@ U_STABLE int32_t U_EXPORT2 udat_format(
 * @see udat_format
 * @see udat_parseCalendar
 * @see UFieldPosition
-* @draft ICU 55
+* @stable ICU 55
 */
-U_DRAFT int32_t U_EXPORT2 udat_formatCalendar(
+U_STABLE int32_t U_EXPORT2 udat_formatCalendar(
     const UDateFormat* format, UCalendar* calendar, UChar* result, int32_t capacity, UFieldPosition* position, UErrorCode* status);
 
 /**
@@ -998,14 +1024,14 @@ U_DRAFT int32_t U_EXPORT2 udat_formatCalendar(
 *          The total buffer size needed; if greater than resultLength, the output was truncated.
 * @see udat_parse
 * @see UFieldPositionIterator
-* @draft ICU 55
+* @stable ICU 55
 */
-U_DRAFT int32_t U_EXPORT2 udat_formatForFields(const UDateFormat* format,
-                                               UDate dateToFormat,
-                                               UChar* result,
-                                               int32_t resultLength,
-                                               UFieldPositionIterator* fpositer,
-                                               UErrorCode* status);
+U_STABLE int32_t U_EXPORT2 udat_formatForFields(const UDateFormat* format,
+                                                UDate dateToFormat,
+                                                UChar* result,
+                                                int32_t resultLength,
+                                                UFieldPositionIterator* fpositer,
+                                                UErrorCode* status);
 
 /**
 * Format a date using a UDateFormat.
@@ -1035,12 +1061,10 @@ U_DRAFT int32_t U_EXPORT2 udat_formatForFields(const UDateFormat* format,
 * @see udat_format
 * @see udat_parseCalendar
 * @see UFieldPositionIterator
-* @draft ICU 55
+* @stable ICU 55
 */
-U_DRAFT int32_t U_EXPORT2 udat_formatCalendarForFields(
+U_STABLE int32_t U_EXPORT2 udat_formatCalendarForFields(
     const UDateFormat* format, UCalendar* calendar, UChar* result, int32_t capacity, UFieldPositionIterator* fpositer, UErrorCode* status);
-
-#endif /* U_HIDE_DRAFT_API */
 
 /**
 * Parse a string into an date/time using a UDateFormat.
@@ -1149,7 +1173,6 @@ U_STABLE void U_EXPORT2 udat_setCalendar(UDateFormat* fmt, const UCalendar* cale
 */
 U_STABLE const UNumberFormat* U_EXPORT2 udat_getNumberFormat(const UDateFormat* fmt);
 
-#ifndef U_HIDE_DRAFT_API
 /**
 * Get the UNumberFormat for specific field associated with an UDateFormat.
 * For example: 'y' for year and 'M' for month
@@ -1157,9 +1180,9 @@ U_STABLE const UNumberFormat* U_EXPORT2 udat_getNumberFormat(const UDateFormat* 
 * @param field the field to query
 * @return A pointer to the UNumberFormat used by fmt to format field numbers.
 * @see udat_setNumberFormatForField
-* @draft ICU 54
+* @stable ICU 54
 */
-U_DRAFT const UNumberFormat* U_EXPORT2 udat_getNumberFormatForField(const UDateFormat* fmt, UChar field);
+U_STABLE const UNumberFormat* U_EXPORT2 udat_getNumberFormatForField(const UDateFormat* fmt, UChar field);
 
 /**
 * Set the UNumberFormat for specific field associated with an UDateFormat.
@@ -1174,14 +1197,12 @@ U_DRAFT const UNumberFormat* U_EXPORT2 udat_getNumberFormatForField(const UDateF
 * @param numberFormatToSet A pointer to the UNumberFormat to be used by fmt to format numbers.
 * @param status error code passed around (memory allocation or invalid fields)
 * @see udat_getNumberFormatForField
-* @draft ICU 54
+* @stable ICU 54
 */
-U_DRAFT void U_EXPORT2 udat_adoptNumberFormatForFields(UDateFormat* fmt,
-                                                       const UChar* fields,
-                                                       UNumberFormat* numberFormatToSet,
-                                                       UErrorCode* status);
-#endif /* U_HIDE_DRAFT_API */
-
+U_STABLE void U_EXPORT2 udat_adoptNumberFormatForFields(UDateFormat* fmt,
+                                                        const UChar* fields,
+                                                        UNumberFormat* numberFormatToSet,
+                                                        UErrorCode* status);
 /**
 * Set the UNumberFormat associated with an UDateFormat.
 * A UDateFormat uses a UNumberFormat to format numbers within a date,
@@ -1195,8 +1216,6 @@ U_DRAFT void U_EXPORT2 udat_adoptNumberFormatForFields(UDateFormat* fmt,
 * @stable ICU 2.0
 */
 U_STABLE void U_EXPORT2 udat_setNumberFormat(UDateFormat* fmt, const UNumberFormat* numberFormatToSet);
-
-#ifndef U_HIDE_DRAFT_API
 /**
 * Adopt the UNumberFormat associated with an UDateFormat.
 * A UDateFormat uses a UNumberFormat to format numbers within a date,
@@ -1204,11 +1223,9 @@ U_STABLE void U_EXPORT2 udat_setNumberFormat(UDateFormat* fmt, const UNumberForm
 * @param fmt The formatter to set.
 * @param numberFormatToAdopt A pointer to the UNumberFormat to be used by fmt to format numbers.
 * @see udat_getNumberFormat
-* @draft ICU 54
+* @stable ICU 54
 */
-U_DRAFT void U_EXPORT2 udat_adoptNumberFormat(UDateFormat* fmt, UNumberFormat* numberFormatToAdopt);
-#endif /* U_HIDE_DRAFT_API */
-
+U_STABLE void U_EXPORT2 udat_adoptNumberFormat(UDateFormat* fmt, UNumberFormat* numberFormatToAdopt);
 /**
 * Get a locale for which date/time formatting patterns are available.
 * A UDateFormat in a locale returned by this function will perform the correct
@@ -1340,44 +1357,41 @@ typedef enum UDateFormatSymbolType {
      * Standalone version of UDAT_SHORTER_WEEKDAYS.
      * @stable ICU 51
      */
-    UDAT_STANDALONE_SHORTER_WEEKDAYS
-#ifndef U_HIDE_DRAFT_API
-    ,
+    UDAT_STANDALONE_SHORTER_WEEKDAYS,
     /**
      * Cyclic year names (only supported for some calendars, and only for FORMAT usage;
      * udat_setSymbols not supported for UDAT_CYCLIC_YEARS_WIDE)
-     * @draft ICU 54
+     * @stable ICU 54
      */
     UDAT_CYCLIC_YEARS_WIDE,
     /**
      * Cyclic year names (only supported for some calendars, and only for FORMAT usage)
-     * @draft ICU 54
+     * @stable ICU 54
      */
     UDAT_CYCLIC_YEARS_ABBREVIATED,
     /**
      * Cyclic year names (only supported for some calendars, and only for FORMAT usage;
      * udat_setSymbols not supported for UDAT_CYCLIC_YEARS_NARROW)
-     * @draft ICU 54
+     * @stable ICU 54
      */
     UDAT_CYCLIC_YEARS_NARROW,
     /**
      * Calendar zodiac  names (only supported for some calendars, and only for FORMAT usage;
      * udat_setSymbols not supported for UDAT_ZODIAC_NAMES_WIDE)
-     * @draft ICU 54
+     * @stable ICU 54
      */
     UDAT_ZODIAC_NAMES_WIDE,
     /**
      * Calendar zodiac  names (only supported for some calendars, and only for FORMAT usage)
-     * @draft ICU 54
+     * @stable ICU 54
      */
     UDAT_ZODIAC_NAMES_ABBREVIATED,
     /**
      * Calendar zodiac  names (only supported for some calendars, and only for FORMAT usage;
      * udat_setSymbols not supported for UDAT_ZODIAC_NAMES_NARROW)
-     * @draft ICU 54
+     * @stable ICU 54
      */
     UDAT_ZODIAC_NAMES_NARROW
-#endif /* U_HIDE_DRAFT_API */
 } UDateFormatSymbolType;
 
 struct UDateFormatSymbols;
