@@ -152,11 +152,9 @@ Boolean _CFCalendarGetNextWeekend(CFCalendarRef calendar, _CFCalendarWeekendRang
         weekdayTypes[i] = ucal_getDayOfWeekType(calendar->_cal, (UCalendarDaysOfWeek)weekdaysIndex[i], &status);
     }
     for (CFIndex i = 0; i < 7; i++) {
-        // if (weekdayTypes[i] == UCAL_WEEKEND_ONSET) {
-        if ((weekdayTypes[i] == UCAL_WEEKEND_ONSET) || 
+        if ((weekdayTypes[i] == UCAL_WEEKEND_ONSET) ||
             (weekdayTypes[i] == UCAL_WEEKEND && weekdayTypes[(i - 1) % 7] == UCAL_WEEKDAY)) {
             onset = weekdaysIndex[i];
-        // } else if (weekdayTypes[i] == UCAL_WEEKEND_CEASE) {
         } else if ((weekdayTypes[i] == UCAL_WEEKEND_CEASE) || 
             (weekdayTypes[i] == UCAL_WEEKEND && weekdayTypes[(i + 1) % 7] == UCAL_WEEKDAY)) {
             cease = weekdaysIndex[i];
