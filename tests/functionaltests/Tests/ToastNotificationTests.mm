@@ -32,6 +32,16 @@ using namespace Microsoft::WRL;
 // Method to call in tests to activate app
 extern "C" void UIApplicationActivationTest(IInspectable* args, void* delegateClassName);
 
+MOCK_CLASS(MockIterator,
+           public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IIterator<IKeyValuePair<HSTRING, IInspectable*>*>> {
+
+           public:
+               MOCK_STDCALL_METHOD_1(get_Current);
+               MOCK_STDCALL_METHOD_1(get_HasCurrent);
+               MOCK_STDCALL_METHOD_1(MoveNext);
+               MOCK_STDCALL_METHOD_3(GetMany);
+           });
+
 MOCK_CLASS(MockValueSet,
            public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>,
                                IPropertySet,
@@ -148,7 +158,17 @@ TEST(ToastNotificationTest, ForegroundActivation) {
     LOG_INFO("Toast Notification Foreground Activation Test: ");
 
     // Create mocked data to pass into application
+    auto fakeIterator = Make<MockIterator>();
+    fakeIterator->Setget_HasCurrent([](boolean* hasCurrent) {
+        *hasCurrent = false;
+        return S_OK;
+    });
+
     auto fakeUserInput = Make<MockValueSet>();
+    fakeUserInput->SetFirst([fakeIterator](IIterator<IKeyValuePair<HSTRING, IInspectable*>*>** first) {
+        fakeIterator.CopyTo(first);
+        return S_OK;
+    });
 
     auto fakeToastNotificationActivatedEventArgs = Make<MockToastNotificationActivatedEventArgs>();
     fakeToastNotificationActivatedEventArgs->Setget_Argument([](HSTRING* argument) {
@@ -195,7 +215,17 @@ TEST(ToastNotificationTest, ActivatedAppReceivesToastNotification) {
     [[UIApplication sharedApplication] setDelegate:testDelegate];
 
     // Create mocked data to pass into application
+    auto fakeIterator = Make<MockIterator>();
+    fakeIterator->Setget_HasCurrent([](boolean* hasCurrent) {
+        *hasCurrent = false;
+        return S_OK;
+    });
+
     auto fakeUserInput = Make<MockValueSet>();
+    fakeUserInput->SetFirst([fakeIterator](IIterator<IKeyValuePair<HSTRING, IInspectable*>*>** first) {
+        fakeIterator.CopyTo(first);
+        return S_OK;
+    });
 
     auto fakeToastNotificationActivatedEventArgs = Make<MockToastNotificationActivatedEventArgs>();
     fakeToastNotificationActivatedEventArgs->Setget_Argument([](HSTRING* argument) {

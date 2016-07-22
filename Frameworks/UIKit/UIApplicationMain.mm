@@ -14,6 +14,10 @@
 //
 //******************************************************************************
 
+#include <COMIncludes.h>
+#import <windows.foundation.h>
+#include <COMIncludes_End.h>
+
 #import "Starboard.h"
 #import <Foundation/NSMutableArray.h>
 #import <Foundation/NSData.h>
@@ -42,6 +46,9 @@
 #import <UWP/WindowsApplicationModelActivation.h>
 
 static const wchar_t* TAG = L"UIApplicationMain";
+
+using namespace Microsoft::WRL;
+using namespace ABI::Windows::Foundation;
 
 @interface NSAutoreleasePoolWarn : NSAutoreleasePool
 @end
@@ -324,7 +331,21 @@ extern "C" void UIApplicationMainHandleResumeEvent() {
 
 extern "C" void UIApplicationMainHandleToastActionEvent(HSTRING toastArgument, IInspectable* toastUserInput) {
     NSString* argument = Strings::WideToNSString(toastArgument);
-    WFCValueSet* userInput = [WFCValueSet createWith:toastUserInput];
+
+    // Convert IPropertyValue to NSString
+    WFCValueSet* values = [WFCValueSet createWith:toastUserInput];
+    NSMutableDictionary* userInput = [NSMutableDictionary new];
+    for (NSString* key in [values allKeys]) {
+        RTObject* holderObject = [values objectForKey:key];
+        ComPtr<IPropertyValue> value;
+        HRESULT result = holderObject.comObj.As(&value);
+        THROW_NS_IF_FAILED(result);
+        Wrappers::HString hstr;
+        result = value->GetString(hstr.GetAddressOf());
+        THROW_NS_IF_FAILED(result);
+        [userInput setObject:Strings::WideToNSString(hstr.Get()) forKey:key];
+    }
+
     NSDictionary* toastAction =
         @{ UIApplicationLaunchOptionsToastActionArgumentKey : argument, UIApplicationLaunchOptionsToastActionUserInputKey : userInput };
     [[UIApplication sharedApplication] _sendToastActionReceivedEvent:toastAction];

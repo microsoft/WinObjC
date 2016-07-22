@@ -16,6 +16,7 @@
 
 #include <COMIncludes.h>
 #import "ApplicationMain.h"
+#import <windows.foundation.h>
 #include <COMIncludes_End.h>
 
 #import <assert.h>
@@ -36,6 +37,9 @@
 #import <UIApplicationInternal.h>
 #import <MainDispatcher.h>
 #import <UWP/WindowsApplicationModelActivation.h>
+
+using namespace Microsoft::WRL;
+using namespace ABI::Windows::Foundation;
 
 static CACompositorClientInterface* _compositorClient = NULL;
 
@@ -58,9 +62,20 @@ int ApplicationMainStart(const char* principalName,
     // Populate Objective C equivalent of activation argument
     if (activationType == ActivationTypeToast) {
         WAAToastNotificationActivatedEventArgs* toastArgument = [WAAToastNotificationActivatedEventArgs createWith:activationArg];
+        NSMutableDictionary* userInput = [NSMutableDictionary new];
+        for (NSString* key in [toastArgument.userInput allKeys]) {
+            RTObject* holderObject = [toastArgument.userInput objectForKey:key];
+            ComPtr<IPropertyValue> value;
+            HRESULT result = holderObject.comObj.As(&value);
+            THROW_NS_IF_FAILED(result);
+            Wrappers::HString hstr;
+            result = value->GetString(hstr.GetAddressOf());
+            THROW_NS_IF_FAILED(result);
+            [userInput setObject:Strings::WideToNSString(hstr.Get()) forKey:key];
+        }
         NSDictionary* toastAction = @{
             UIApplicationLaunchOptionsToastActionArgumentKey : toastArgument.argument,
-            UIApplicationLaunchOptionsToastActionUserInputKey : toastArgument.userInput
+            UIApplicationLaunchOptionsToastActionUserInputKey : userInput
         };
         activationArgument = toastAction;
     } else if (activationType == ActivationTypeVoiceCommand) {
