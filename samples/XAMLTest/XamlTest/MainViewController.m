@@ -29,6 +29,7 @@
     self.slider.value = 0.33;
 
     // Spinners should be spinning
+    [self.spinner setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
     [self.spinner startAnimating];
 }
 

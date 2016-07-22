@@ -61,8 +61,10 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
     StrongId<UIColor> _textColor;
     StrongId<UIColor> _backgroundColor;
     StrongId<UIImage> _backgroundImage;
+
     UITextAlignment _alignment;
     UITextBorderStyle _borderStyle;
+
     BOOL _secureTextMode;
     BOOL _isFirstResponder;
 

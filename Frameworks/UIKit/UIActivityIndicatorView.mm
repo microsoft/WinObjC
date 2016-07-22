@@ -14,12 +14,13 @@
 //
 //******************************************************************************
 
-#import "Starboard.h"
-#import <UIKit/UIKit.h>
-#import <UWP/WindowsUIXamlControls.h>
-
 #import "AssertARCEnabled.h"
+#import <Starboard.h>
+#import <StubReturn.h>
+
 #import "XamlUtilities.h"
+
+#import <UWP/WindowsUIXamlControls.h>
 
 static const int c_normalSquareLength = 20;
 static const int c_largeSquareLength = 37;
@@ -28,9 +29,11 @@ static const int c_largeSquareLength = 37;
     BOOL _hidesWhenStopped;
     BOOL _isAnimating;
     BOOL _startAnimating;
+
     StrongId<UIColor> _color;
     StrongId<WXCProgressRing> _progressRing;
     StrongId<UIView> _subView;
+
     UIActivityIndicatorViewStyle _style;
 }
 
@@ -40,7 +43,7 @@ static const int c_largeSquareLength = 37;
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
-        [self _UIActivityIndicatorView_initInternal];
+        [self _UIActivityIndicatorView_initInternal:nil];
 
         if ([coder containsValueForKey:@"UIHidesWhenStopped"]) {
             [self setHidesWhenStopped:[coder decodeInt32ForKey:@"UIHidesWhenStopped"]];
@@ -84,6 +87,7 @@ static const int c_largeSquareLength = 37;
     if (_startAnimating) {
         [self startAnimating];
     }
+
     [super awakeFromNib];
 }
 
@@ -92,9 +96,10 @@ static const int c_largeSquareLength = 37;
 */
 - (instancetype)initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyle)style {
     if (self = [super initWithFrame:CGRectZero]) {
-        [self _UIActivityIndicatorView_initInternal];
+        [self _UIActivityIndicatorView_initInternal:nil];
         [self setActivityIndicatorViewStyle:style];
     }
+
     return self;
 }
 
@@ -102,9 +107,14 @@ static const int c_largeSquareLength = 37;
  @Status Interoperable
 */
 - (instancetype)initWithFrame:(CGRect)frame {
+    return [self _initWithFrame:frame xamlElement:nil];
+}
+
+- (instancetype)_initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
     if (self = [super initWithFrame:frame]) {
-        [self _UIActivityIndicatorView_initInternal];
+        [self _UIActivityIndicatorView_initInternal:xamlElement];
     }
+
     return self;
 }
 
@@ -117,15 +127,20 @@ static const int c_largeSquareLength = 37;
     _subView.center = { self.center.x - self.frame.origin.x, self.center.y - self.frame.origin.y };
 }
 
-- (void)_UIActivityIndicatorView_initInternal {
-    _progressRing = [WXCProgressRing make];
+- (void)_UIActivityIndicatorView_initInternal:(WXFrameworkElement*)xamlElement {
+    if (xamlElement != nil && [xamlElement isKindOfClass:[WXCProgressRing class]]) {
+        _progressRing = static_cast<WXCProgressRing*>(xamlElement);
+    } else {
+        _progressRing = [WXCProgressRing make];
+    }
+
     _subView = [[UIView alloc] initWithFrame:CGRectZero];
 
     [_subView setNativeElement:_progressRing];
     [self addSubview:_subView];
 
-    _isAnimating = FALSE;
-    [self setHidesWhenStopped:TRUE];
+    _isAnimating = NO;
+    [self setHidesWhenStopped:YES];
     [self setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhite];
 }
 
@@ -139,7 +154,7 @@ static const int c_largeSquareLength = 37;
     _hidesWhenStopped = shouldhide;
 
     if (_hidesWhenStopped && !_isAnimating) {
-        [self setHidden:TRUE];
+        [self setHidden:YES];
     }
 }
 
@@ -192,9 +207,9 @@ static const int c_largeSquareLength = 37;
         return;
     }
 
-    _isAnimating = TRUE;
-    [self setHidden:FALSE];
-    [_progressRing setIsActive:TRUE];
+    _isAnimating = YES;
+    [self setHidden:NO];
+    [_progressRing setIsActive:YES];
 }
 
 /**
@@ -203,12 +218,12 @@ static const int c_largeSquareLength = 37;
 */
 - (void)stopAnimating {
     if (_isAnimating) {
-        _isAnimating = FALSE;
+        _isAnimating = NO;
     }
 
-    [_progressRing setIsActive:FALSE];
+    [_progressRing setIsActive:YES];
     if (_hidesWhenStopped) {
-        [self setHidden:TRUE];
+        [self setHidden:NO];
     }
 }
 

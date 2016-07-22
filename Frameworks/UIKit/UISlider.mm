@@ -15,16 +15,18 @@
 //******************************************************************************
 
 #import "AssertARCEnabled.h"
-#import "Starboard.h"
-#import "StubReturn.h"
-#import "UIKit/UIView.h"
-#import "UIKit/UIControl.h"
-#import "UIKit/UIImage.h"
-#import "UIKit/UIImageView.h"
-#import "UIKit/UIGestureRecognizer.h"
-#import "UIKit/UISlider.h"
+#import <Starboard.h>
+#import <StubReturn.h>
+
+#import <UIKit/UIView.h>
+#import <UIKit/UIControl.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UIGestureRecognizer.h>
+#import <UIKit/UISlider.h>
 
 #import "UIGestureRecognizerInternal.h"
+
 #import "UWP/WindowsUIXamlControls.h"
 
 static const double c_defaultStepFrequency = 0.1;
@@ -37,6 +39,7 @@ static const double c_defaultStepFrequency = 0.1;
     // _rootPanel, which is a panel that holds the xaml slider and minimumValueImage and maximumValueImage.
     StrongId<WXCGrid> _rootPanel;
     StrongId<WXCSlider> _xamlSlider;
+
     EventRegistrationToken _manipulationStartingEvent;
     EventRegistrationToken _manipulationCompletedEvent;
     EventRegistrationToken _valueChangedEvent;

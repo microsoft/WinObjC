@@ -47,6 +47,8 @@ namespace Xib2Xaml.Handlers
             // TextBlock doesn't like inlines as content in attribute form...
             GetAndSetValue(tag, domObject, "text", domObject.Type.GetMember("Text"));
 
+            GetAndSetValue(tag, domObject, "textAlignment", domObject.Type.GetMember("TextAlignment"));
+
             var backgroundColor = GetElementWithMatchingAttribute(tag, "key", "textColor");
             if (backgroundColor != null)
             {
