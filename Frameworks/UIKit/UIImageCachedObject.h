@@ -22,7 +22,6 @@
     id _cacheName;
     float _scale;
     CGRect _imageStretch;
-    UIImageOrientation _orientation;
 }
 - (void)dealloc;
 @end

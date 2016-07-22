@@ -250,7 +250,6 @@
     <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\NSCoder+UIKitAdditionsTest.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\NSLayoutConstraint.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\UIApplication.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\UIImageTests.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\UIViewTest.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\NSValue+UIKitAdditionsTests.mm" />
     <ClangCompile Include="UIColorTests.mm" />
@@ -258,9 +257,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\tests\unittests\UIKit\NullCompositor.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <SBResourceCopy Include="..\..\..\..\tests\unittests\UIKit\rightOrientationPhoto.JPG" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
