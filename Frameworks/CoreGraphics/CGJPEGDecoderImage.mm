@@ -174,7 +174,7 @@ static int jpeg_find_orientation(j_decompress_ptr cinfo) {
         return 0;
 
     //  Find offset and tag count
-    DWORD offset = readDWord(curPos, left, bigEndian);
+    WORD offset = readWord(curPos, left, bigEndian);
     offset -= 8;
     if (offset > left)
         return 0;
@@ -387,23 +387,12 @@ void CGJPEGImageBacking::Decode(void* imgDest, int stride) {
         case 1:
             _orientation = 0;
             break;
-        case 2:
-            _orientation = UIImageOrientationUpMirrored;
-            break;
+
         case 3:
             _orientation = UIImageOrientationDown;
             break;
-        case 4:
-            _orientation = UIImageOrientationDownMirrored;
-            break;
-        case 5:
-            _orientation = UIImageOrientationRightMirrored;
-            break;
         case 6:
             _orientation = UIImageOrientationRight;
-            break;
-        case 7:
-            _orientation = UIImageOrientationLeftMirrored;
             break;
         case 8:
             _orientation = UIImageOrientationLeft;
