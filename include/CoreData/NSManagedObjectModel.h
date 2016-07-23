@@ -29,16 +29,16 @@
 
 COREDATA_EXPORT_CLASS
 @interface NSManagedObjectModel : NSObject <NSCoding, NSCopying, NSFastEnumeration>
-- (instancetype)initWithContentsOfURL:(NSURL*)url STUB_METHOD;
+- (instancetype)initWithContentsOfURL:(NSURL*)url;
 + (NSManagedObjectModel*)mergedModelFromBundles:(NSArray*)bundles STUB_METHOD;
 + (NSManagedObjectModel*)mergedModelFromBundles:(NSArray*)bundles forStoreMetadata:(NSDictionary*)metadata STUB_METHOD;
 + (NSManagedObjectModel*)modelByMergingModels:(NSArray*)models STUB_METHOD;
 + (NSManagedObjectModel*)modelByMergingModels:(NSArray*)models forStoreMetadata:(NSDictionary*)metadata STUB_METHOD;
-@property (strong) NSArray* entities STUB_PROPERTY;
-@property (readonly, copy) NSDictionary* entitiesByName STUB_PROPERTY;
+@property (strong) NSArray* entities;
+@property (readonly, copy) NSDictionary* entitiesByName;
 @property (readonly, strong) NSArray* configurations STUB_PROPERTY;
 - (NSArray*)entitiesForConfiguration:(NSString*)configuration STUB_METHOD;
-- (void)setEntities:(NSArray*)entities forConfiguration:(NSString*)configuration STUB_METHOD;
+- (void)setEntities:(NSArray*)entities forConfiguration:(NSString*)configuration;
 @property (readonly, copy) NSDictionary* fetchRequestTemplatesByName STUB_PROPERTY;
 - (NSFetchRequest*)fetchRequestTemplateForName:(NSString*)name STUB_METHOD;
 - (NSFetchRequest*)fetchRequestFromTemplateWithName:(NSString*)name substitutionVariables:(NSDictionary*)variables STUB_METHOD;

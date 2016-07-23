@@ -30,26 +30,31 @@
 
 COREDATA_EXPORT_CLASS
 @interface NSEntityDescription : NSObject <NSCoding, NSCopying, NSFastEnumeration>
-@property (copy) NSString* name STUB_PROPERTY;
-@property (readonly, assign) NSManagedObjectModel* managedObjectModel STUB_PROPERTY;
-@property (copy) NSString* managedObjectClassName STUB_PROPERTY;
-@property (copy) NSString* renamingIdentifier STUB_PROPERTY;
-@property (getter=isAbstract) BOOL abstract STUB_PROPERTY;
-@property (nonatomic, strong) NSDictionary* userInfo STUB_PROPERTY;
-@property (readonly, copy) NSDictionary* subentitiesByName STUB_PROPERTY;
-@property (strong) NSArray* subentities STUB_PROPERTY;
-@property (readonly, assign) NSEntityDescription* superentity STUB_PROPERTY;
-- (BOOL)isKindOfEntity:(NSEntityDescription*)entity STUB_METHOD;
-@property (readonly, copy) NSDictionary* propertiesByName STUB_PROPERTY;
-@property (strong) NSArray* properties STUB_PROPERTY;
-@property (readonly, copy) NSDictionary* attributesByName STUB_PROPERTY;
-@property (readonly, copy) NSDictionary* relationshipsByName STUB_PROPERTY;
-- (NSArray*)relationshipsWithDestinationEntity:(NSEntityDescription*)entity STUB_METHOD;
 + (NSEntityDescription*)entityForName:(NSString*)entityName inManagedObjectContext:(NSManagedObjectContext*)context STUB_METHOD;
 + (NSManagedObject*)insertNewObjectForEntityForName:(NSString*)entityName
                              inManagedObjectContext:(NSManagedObjectContext*)context STUB_METHOD;
+
+@property (copy) NSString* name;
+@property (readonly, assign) NSManagedObjectModel* managedObjectModel;
+@property (copy) NSString* managedObjectClassName;
+@property (copy) NSString* renamingIdentifier;
+@property (getter=isAbstract) BOOL abstract;
+@property (nonatomic, strong) NSDictionary* userInfo;
+
+@property (strong) NSArray* subentities;
+@property (readonly, copy) NSDictionary* subentitiesByName;
+@property (readonly, assign) NSEntityDescription* superentity;
+- (BOOL)isKindOfEntity:(NSEntityDescription*)entity STUB_METHOD;
+
+@property (strong) NSArray* properties;
+@property (readonly, copy) NSDictionary* propertiesByName;
+@property (readonly, copy) NSDictionary* attributesByName;
+@property (readonly, copy) NSDictionary* relationshipsByName;
+- (NSArray*)relationshipsWithDestinationEntity:(NSEntityDescription*)entity STUB_METHOD;
+
+@property (strong) NSArray* compoundIndexes;
+
 @property (readonly, copy) NSData* versionHash STUB_PROPERTY;
-@property (copy) NSString* versionHashModifier STUB_PROPERTY;
+@property (copy) NSString* versionHashModifier;
 - (id)copy STUB_METHOD;
-@property (strong) NSArray* compoundIndexes STUB_PROPERTY;
 @end

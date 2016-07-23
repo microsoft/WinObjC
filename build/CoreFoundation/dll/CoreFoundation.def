@@ -1260,3 +1260,40 @@ LIBRARY CoreFoundation
         CFGregorianDateGetAbsoluteTime
         CFGregorianDateIsValid
 
+        ; XML Parsing
+        CFXMLCreateStringByEscapingEntities
+        CFXMLCreateStringByUnescapingEntities
+
+        CFXMLNodeCreate
+        CFXMLNodeCreateCopy
+        CFXMLNodeGetInfoPtr
+        CFXMLNodeGetString
+        CFXMLNodeGetTypeCode
+        CFXMLNodeGetTypeID
+        CFXMLNodeGetVersion
+
+        CFXMLParserAbort
+        CFXMLParserCopyErrorDescription
+        CFXMLParserCreate
+        CFXMLParserCreateWithDataFromURL
+        CFXMLParserGetCallBacks
+        CFXMLParserGetContext
+        CFXMLParserGetDocument
+        CFXMLParserGetLineNumber
+        CFXMLParserGetLocation
+        CFXMLParserGetSourceURL
+        CFXMLParserGetStatusCode
+        CFXMLParserGetTypeID
+        CFXMLParserParse
+
+        CFXMLTreeCreateFromData
+        CFXMLTreeCreateFromDataWithError
+        CFXMLTreeCreateWithDataFromURL
+        CFXMLTreeCreateWithNode
+        CFXMLTreeCreateXMLData
+        CFXMLTreeGetNode
+
+        kCFXMLTreeErrorDescription DATA
+        kCFXMLTreeErrorLineNumber DATA
+        kCFXMLTreeErrorLocation DATA
+        kCFXMLTreeErrorStatusCode DATA
