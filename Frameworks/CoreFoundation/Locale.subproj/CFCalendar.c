@@ -144,12 +144,19 @@ Boolean _CFCalendarGetNextWeekend(CFCalendarRef calendar, _CFCalendarWeekendRang
     if (!calendar->_cal) {
         return false;
     }
+
+    // WINOBJC: WinObjC's ICU returns UCAL_WEEKDAY and UCAL_WEEKEND with no onset or cease
+    // Add calculations for onset or cease using weekday and weekend
     for (CFIndex i = 0; i < 7; i++) {
         UErrorCode status = U_ZERO_ERROR;
         weekdayTypes[i] = ucal_getDayOfWeekType(calendar->_cal, (UCalendarDaysOfWeek)weekdaysIndex[i], &status);
-        if (weekdayTypes[i] == UCAL_WEEKEND_ONSET) {
+    }
+    for (CFIndex i = 0; i < 7; i++) {
+        if ((weekdayTypes[i] == UCAL_WEEKEND_ONSET) ||
+            (weekdayTypes[i] == UCAL_WEEKEND && weekdayTypes[(i - 1) % 7] == UCAL_WEEKDAY)) {
             onset = weekdaysIndex[i];
-        } else if (weekdayTypes[i] == UCAL_WEEKEND_CEASE) {
+        } else if ((weekdayTypes[i] == UCAL_WEEKEND_CEASE) || 
+            (weekdayTypes[i] == UCAL_WEEKEND && weekdayTypes[(i + 1) % 7] == UCAL_WEEKDAY)) {
             cease = weekdaysIndex[i];
         }
     }

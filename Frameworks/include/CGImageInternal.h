@@ -120,4 +120,3 @@ public:
 typedef void (*CGImageDestructionListener)(CGImageRef img);
 COREGRAPHICS_EXPORT void CGImageAddDestructionListener(CGImageDestructionListener listener);
 COREGRAPHICS_EXPORT NSData* _CGImagePNGRepresentation(UIImage* img);
-COREGRAPHICS_EXPORT NSData* _CGImageJPEGRepresentation(UIImage* img, CGFloat compressionQuality);

@@ -139,7 +139,7 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
                     if (!U_FAILURE(status)) {
                         const UnicodeString* zoneId = timeZoneIds->snext(status);
                         if (!U_FAILURE(status)) {
-                            systemTimeZone->_icuTZ = icu_48::TimeZone::createTimeZone(*zoneId);
+                            systemTimeZone->_icuTZ = icu::TimeZone::createTimeZone(*zoneId);
                             gotICUTimeZone = YES;
                         }
                     }
@@ -232,7 +232,7 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
 */
 + (instancetype)timeZoneForSecondsFromGMT:(NSInteger)seconds {
     NSTimeZone* ret = [self alloc];
-    ret->_icuTZ = icu_48::TimeZone::createTimeZone(icu_48::UnicodeString("GMT"));
+    ret->_icuTZ = icu::TimeZone::createTimeZone(icu::UnicodeString("GMT"));
     ret->_icuTZ->setRawOffset(seconds * 1000);
     return [ret autorelease];
 }
@@ -249,7 +249,7 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
 
 + (instancetype)_gmtTimeZone {
     NSTimeZone* ret = [self alloc];
-    ret->_icuTZ = icu_48::TimeZone::getGMT()->clone();
+    ret->_icuTZ = icu::TimeZone::getGMT()->clone();
     return [ret autorelease];
 }
 
@@ -258,7 +258,7 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
 */
 + (instancetype)timeZoneWithName:(NSString*)name {
     NSTimeZone* ret = [self alloc];
-    ret->_icuTZ = icu_48::TimeZone::createTimeZone(icu_48::UnicodeString([name UTF8String]));
+    ret->_icuTZ = icu::TimeZone::createTimeZone(icu::UnicodeString([name UTF8String]));
     return [ret autorelease];
 }
 
@@ -323,8 +323,8 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
 
         while (abbreviation != NULL && status == U_ZERO_ERROR) {
             icu::TimeZone* timeZone = icu::TimeZone::createTimeZone(*abbreviation);
-            icu_48::UnicodeString name;
-            icu_48::UnicodeString id;
+            icu::UnicodeString name;
+            icu::UnicodeString id;
 
             timeZone->getDisplayName(name);
             timeZone->getID(id);
@@ -364,7 +364,7 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
 */
 - (instancetype)initWithName:(NSString*)name {
     if (self = [self init]) {
-        self->_icuTZ = icu_48::TimeZone::createTimeZone(icu_48::UnicodeString([name UTF8String]));
+        self->_icuTZ = icu::TimeZone::createTimeZone(icu::UnicodeString([name UTF8String]));
     }
     return self;
 }
@@ -420,7 +420,7 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
  @Status Interoperable
 */
 - (NSString*)name {
-    icu_48::UnicodeString n;
+    icu::UnicodeString n;
     _icuTZ->getID(n);
     std::string realStr;
     n.toUTF8String(realStr);
@@ -432,7 +432,7 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
  @Notes Displays correct abbreviation but with slightly incorrect formatting on the offset. GMT-07:00 vs GMT-7
 */
 - (NSString*)abbreviation {
-    icu_48::UnicodeString n;
+    icu::UnicodeString n;
     UBool useDaylight = [self isDaylightSavingTime];
     _icuTZ->getDisplayName(useDaylight, icu::TimeZone::EDisplayType::SHORT, n);
     std::string realStr;
@@ -457,7 +457,7 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
     NSString* identifier = [locale localeIdentifier];
     icu::Locale icuLocale = icu::Locale::createFromName([identifier UTF8String]);
 
-    icu_48::UnicodeString ret;
+    icu::UnicodeString ret;
 
     _icuTZ->getDisplayName(daylight, type, icuLocale, ret);
 

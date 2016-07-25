@@ -1,7 +1,7 @@
 /*
 *******************************************************************************
 *
-*   Copyright (C) 2009-2011, International Business Machines
+*   Copyright (C) 2009-2013, International Business Machines
 *   Corporation and others.  All Rights Reserved.
 *
 *******************************************************************************
@@ -78,6 +78,77 @@ U_NAMESPACE_BEGIN
 class U_COMMON_API Normalizer2 : public UObject {
 public:
     /**
+     * Destructor.
+     * @stable ICU 4.4
+     */
+    ~Normalizer2();
+
+    /**
+     * Returns a Normalizer2 instance for Unicode NFC normalization.
+     * Same as getInstance(NULL, "nfc", UNORM2_COMPOSE, errorCode).
+     * Returns an unmodifiable singleton instance. Do not delete it.
+     * @param errorCode Standard ICU error code. Its input value must
+     *                  pass the U_SUCCESS() test, or else the function returns
+     *                  immediately. Check for U_FAILURE() on output or use with
+     *                  function chaining. (See User Guide for details.)
+     * @return the requested Normalizer2, if successful
+     * @stable ICU 49
+     */
+    static const Normalizer2* getNFCInstance(UErrorCode& errorCode);
+
+    /**
+     * Returns a Normalizer2 instance for Unicode NFD normalization.
+     * Same as getInstance(NULL, "nfc", UNORM2_DECOMPOSE, errorCode).
+     * Returns an unmodifiable singleton instance. Do not delete it.
+     * @param errorCode Standard ICU error code. Its input value must
+     *                  pass the U_SUCCESS() test, or else the function returns
+     *                  immediately. Check for U_FAILURE() on output or use with
+     *                  function chaining. (See User Guide for details.)
+     * @return the requested Normalizer2, if successful
+     * @stable ICU 49
+     */
+    static const Normalizer2* getNFDInstance(UErrorCode& errorCode);
+
+    /**
+     * Returns a Normalizer2 instance for Unicode NFKC normalization.
+     * Same as getInstance(NULL, "nfkc", UNORM2_COMPOSE, errorCode).
+     * Returns an unmodifiable singleton instance. Do not delete it.
+     * @param errorCode Standard ICU error code. Its input value must
+     *                  pass the U_SUCCESS() test, or else the function returns
+     *                  immediately. Check for U_FAILURE() on output or use with
+     *                  function chaining. (See User Guide for details.)
+     * @return the requested Normalizer2, if successful
+     * @stable ICU 49
+     */
+    static const Normalizer2* getNFKCInstance(UErrorCode& errorCode);
+
+    /**
+     * Returns a Normalizer2 instance for Unicode NFKD normalization.
+     * Same as getInstance(NULL, "nfkc", UNORM2_DECOMPOSE, errorCode).
+     * Returns an unmodifiable singleton instance. Do not delete it.
+     * @param errorCode Standard ICU error code. Its input value must
+     *                  pass the U_SUCCESS() test, or else the function returns
+     *                  immediately. Check for U_FAILURE() on output or use with
+     *                  function chaining. (See User Guide for details.)
+     * @return the requested Normalizer2, if successful
+     * @stable ICU 49
+     */
+    static const Normalizer2* getNFKDInstance(UErrorCode& errorCode);
+
+    /**
+     * Returns a Normalizer2 instance for Unicode NFKC_Casefold normalization.
+     * Same as getInstance(NULL, "nfkc_cf", UNORM2_COMPOSE, errorCode).
+     * Returns an unmodifiable singleton instance. Do not delete it.
+     * @param errorCode Standard ICU error code. Its input value must
+     *                  pass the U_SUCCESS() test, or else the function returns
+     *                  immediately. Check for U_FAILURE() on output or use with
+     *                  function chaining. (See User Guide for details.)
+     * @return the requested Normalizer2, if successful
+     * @stable ICU 49
+     */
+    static const Normalizer2* getNFKCCasefoldInstance(UErrorCode& errorCode);
+
+    /**
      * Returns a Normalizer2 instance which uses the specified data file
      * (packageName/name similar to ucnv_openPackage() and ures_open()/ResourceBundle)
      * and which composes or decomposes text according to the specified mode.
@@ -98,11 +169,7 @@ public:
      * @return the requested Normalizer2, if successful
      * @stable ICU 4.4
      */
-    static const Normalizer2 *
-    getInstance(const char *packageName,
-                const char *name,
-                UNormalization2Mode mode,
-                UErrorCode &errorCode);
+    static const Normalizer2* getInstance(const char* packageName, const char* name, UNormalization2Mode mode, UErrorCode& errorCode);
 
     /**
      * Returns the normalized form of the source string.
@@ -114,8 +181,7 @@ public:
      * @return normalized src
      * @stable ICU 4.4
      */
-    UnicodeString
-    normalize(const UnicodeString &src, UErrorCode &errorCode) const {
+    UnicodeString normalize(const UnicodeString& src, UErrorCode& errorCode) const {
         UnicodeString result;
         normalize(src, result, errorCode);
         return result;
@@ -133,10 +199,7 @@ public:
      * @return dest
      * @stable ICU 4.4
      */
-    virtual UnicodeString &
-    normalize(const UnicodeString &src,
-              UnicodeString &dest,
-              UErrorCode &errorCode) const = 0;
+    virtual UnicodeString& normalize(const UnicodeString& src, UnicodeString& dest, UErrorCode& errorCode) const = 0;
     /**
      * Appends the normalized form of the second string to the first string
      * (merging them at the boundary) and returns the first string.
@@ -151,10 +214,7 @@ public:
      * @return first
      * @stable ICU 4.4
      */
-    virtual UnicodeString &
-    normalizeSecondAndAppend(UnicodeString &first,
-                             const UnicodeString &second,
-                             UErrorCode &errorCode) const = 0;
+    virtual UnicodeString& normalizeSecondAndAppend(UnicodeString& first, const UnicodeString& second, UErrorCode& errorCode) const = 0;
     /**
      * Appends the second string to the first string
      * (merging them at the boundary) and returns the first string.
@@ -169,10 +229,7 @@ public:
      * @return first
      * @stable ICU 4.4
      */
-    virtual UnicodeString &
-    append(UnicodeString &first,
-           const UnicodeString &second,
-           UErrorCode &errorCode) const = 0;
+    virtual UnicodeString& append(UnicodeString& first, const UnicodeString& second, UErrorCode& errorCode) const = 0;
 
     /**
      * Gets the decomposition mapping of c.
@@ -185,10 +242,62 @@ public:
      * @param decomposition String object which will be set to c's
      *                      decomposition mapping, if there is one.
      * @return TRUE if c has a decomposition, otherwise FALSE
-     * @draft ICU 4.6
+     * @stable ICU 4.6
      */
-    virtual UBool
-    getDecomposition(UChar32 c, UnicodeString &decomposition) const = 0;
+    virtual UBool getDecomposition(UChar32 c, UnicodeString& decomposition) const = 0;
+
+    /**
+     * Gets the raw decomposition mapping of c.
+     *
+     * This is similar to the getDecomposition() method but returns the
+     * raw decomposition mapping as specified in UnicodeData.txt or
+     * (for custom data) in the mapping files processed by the gennorm2 tool.
+     * By contrast, getDecomposition() returns the processed,
+     * recursively-decomposed version of this mapping.
+     *
+     * When used on a standard NFKC Normalizer2 instance,
+     * getRawDecomposition() returns the Unicode Decomposition_Mapping (dm) property.
+     *
+     * When used on a standard NFC Normalizer2 instance,
+     * it returns the Decomposition_Mapping only if the Decomposition_Type (dt) is Canonical (Can);
+     * in this case, the result contains either one or two code points (=1..4 UChars).
+     *
+     * This function is independent of the mode of the Normalizer2.
+     * The default implementation returns FALSE.
+     * @param c code point
+     * @param decomposition String object which will be set to c's
+     *                      raw decomposition mapping, if there is one.
+     * @return TRUE if c has a decomposition, otherwise FALSE
+     * @stable ICU 49
+     */
+    virtual UBool getRawDecomposition(UChar32 c, UnicodeString& decomposition) const;
+
+    /**
+     * Performs pairwise composition of a & b and returns the composite if there is one.
+     *
+     * Returns a composite code point c only if c has a two-way mapping to a+b.
+     * In standard Unicode normalization, this means that
+     * c has a canonical decomposition to a+b
+     * and c does not have the Full_Composition_Exclusion property.
+     *
+     * This function is independent of the mode of the Normalizer2.
+     * The default implementation returns a negative value.
+     * @param a A (normalization starter) code point.
+     * @param b Another code point.
+     * @return The non-negative composite code point if there is one; otherwise a negative value.
+     * @stable ICU 49
+     */
+    virtual UChar32 composePair(UChar32 a, UChar32 b) const;
+
+    /**
+     * Gets the combining class of c.
+     * The default implementation returns 0
+     * but all standard implementations return the Unicode Canonical_Combining_Class value.
+     * @param c code point
+     * @return c's combining class
+     * @stable ICU 49
+     */
+    virtual uint8_t getCombiningClass(UChar32 c) const;
 
     /**
      * Tests if the string is normalized.
@@ -204,8 +313,7 @@ public:
      * @return TRUE if s is normalized
      * @stable ICU 4.4
      */
-    virtual UBool
-    isNormalized(const UnicodeString &s, UErrorCode &errorCode) const = 0;
+    virtual UBool isNormalized(const UnicodeString& s, UErrorCode& errorCode) const = 0;
 
     /**
      * Tests if the string is normalized.
@@ -222,8 +330,7 @@ public:
      * @return UNormalizationCheckResult
      * @stable ICU 4.4
      */
-    virtual UNormalizationCheckResult
-    quickCheck(const UnicodeString &s, UErrorCode &errorCode) const = 0;
+    virtual UNormalizationCheckResult quickCheck(const UnicodeString& s, UErrorCode& errorCode) const = 0;
 
     /**
      * Returns the end of the normalized substring of the input string.
@@ -247,8 +354,7 @@ public:
      * @return "yes" span end index
      * @stable ICU 4.4
      */
-    virtual int32_t
-    spanQuickCheckYes(const UnicodeString &s, UErrorCode &errorCode) const = 0;
+    virtual int32_t spanQuickCheckYes(const UnicodeString& s, UErrorCode& errorCode) const = 0;
 
     /**
      * Tests if the character always has a normalization boundary before it,
@@ -295,10 +401,6 @@ public:
      * @stable ICU 4.4
      */
     virtual UBool isInert(UChar32 c) const = 0;
-
-private:
-    // No ICU "poor man's RTTI" for this class nor its subclasses.
-    virtual UClassID getDynamicClassID() const;
 };
 
 /**
@@ -324,8 +426,14 @@ public:
      * @param filterSet UnicodeSet which determines the characters to be normalized
      * @stable ICU 4.4
      */
-    FilteredNormalizer2(const Normalizer2 &n2, const UnicodeSet &filterSet) :
-            norm2(n2), set(filterSet) {}
+    FilteredNormalizer2(const Normalizer2& n2, const UnicodeSet& filterSet) : norm2(n2), set(filterSet) {
+    }
+
+    /**
+     * Destructor.
+     * @stable ICU 4.4
+     */
+    ~FilteredNormalizer2();
 
     /**
      * Writes the normalized form of the source string to the destination string
@@ -340,10 +448,7 @@ public:
      * @return dest
      * @stable ICU 4.4
      */
-    virtual UnicodeString &
-    normalize(const UnicodeString &src,
-              UnicodeString &dest,
-              UErrorCode &errorCode) const;
+    virtual UnicodeString& normalize(const UnicodeString& src, UnicodeString& dest, UErrorCode& errorCode) const;
     /**
      * Appends the normalized form of the second string to the first string
      * (merging them at the boundary) and returns the first string.
@@ -358,10 +463,7 @@ public:
      * @return first
      * @stable ICU 4.4
      */
-    virtual UnicodeString &
-    normalizeSecondAndAppend(UnicodeString &first,
-                             const UnicodeString &second,
-                             UErrorCode &errorCode) const;
+    virtual UnicodeString& normalizeSecondAndAppend(UnicodeString& first, const UnicodeString& second, UErrorCode& errorCode) const;
     /**
      * Appends the second string to the first string
      * (merging them at the boundary) and returns the first string.
@@ -376,23 +478,55 @@ public:
      * @return first
      * @stable ICU 4.4
      */
-    virtual UnicodeString &
-    append(UnicodeString &first,
-           const UnicodeString &second,
-           UErrorCode &errorCode) const;
+    virtual UnicodeString& append(UnicodeString& first, const UnicodeString& second, UErrorCode& errorCode) const;
 
     /**
-     * Gets the decomposition mapping of c. Equivalent to normalize(UnicodeString(c))
-     * on a UNORM2_DECOMPOSE Normalizer2 instance, but much faster.
+     * Gets the decomposition mapping of c.
+     * For details see the base class documentation.
+     *
      * This function is independent of the mode of the Normalizer2.
      * @param c code point
      * @param decomposition String object which will be set to c's
      *                      decomposition mapping, if there is one.
      * @return TRUE if c has a decomposition, otherwise FALSE
-     * @draft ICU 4.6
+     * @stable ICU 4.6
      */
-    virtual UBool
-    getDecomposition(UChar32 c, UnicodeString &decomposition) const;
+    virtual UBool getDecomposition(UChar32 c, UnicodeString& decomposition) const;
+
+    /**
+     * Gets the raw decomposition mapping of c.
+     * For details see the base class documentation.
+     *
+     * This function is independent of the mode of the Normalizer2.
+     * @param c code point
+     * @param decomposition String object which will be set to c's
+     *                      raw decomposition mapping, if there is one.
+     * @return TRUE if c has a decomposition, otherwise FALSE
+     * @stable ICU 49
+     */
+    virtual UBool getRawDecomposition(UChar32 c, UnicodeString& decomposition) const;
+
+    /**
+     * Performs pairwise composition of a & b and returns the composite if there is one.
+     * For details see the base class documentation.
+     *
+     * This function is independent of the mode of the Normalizer2.
+     * @param a A (normalization starter) code point.
+     * @param b Another code point.
+     * @return The non-negative composite code point if there is one; otherwise a negative value.
+     * @stable ICU 49
+     */
+    virtual UChar32 composePair(UChar32 a, UChar32 b) const;
+
+    /**
+     * Gets the combining class of c.
+     * The default implementation returns 0
+     * but all standard implementations return the Unicode Canonical_Combining_Class value.
+     * @param c code point
+     * @return c's combining class
+     * @stable ICU 49
+     */
+    virtual uint8_t getCombiningClass(UChar32 c) const;
 
     /**
      * Tests if the string is normalized.
@@ -405,8 +539,7 @@ public:
      * @return TRUE if s is normalized
      * @stable ICU 4.4
      */
-    virtual UBool
-    isNormalized(const UnicodeString &s, UErrorCode &errorCode) const;
+    virtual UBool isNormalized(const UnicodeString& s, UErrorCode& errorCode) const;
     /**
      * Tests if the string is normalized.
      * For details see the Normalizer2 base class documentation.
@@ -418,8 +551,7 @@ public:
      * @return UNormalizationCheckResult
      * @stable ICU 4.4
      */
-    virtual UNormalizationCheckResult
-    quickCheck(const UnicodeString &s, UErrorCode &errorCode) const;
+    virtual UNormalizationCheckResult quickCheck(const UnicodeString& s, UErrorCode& errorCode) const;
     /**
      * Returns the end of the normalized substring of the input string.
      * For details see the Normalizer2 base class documentation.
@@ -431,8 +563,7 @@ public:
      * @return "yes" span end index
      * @stable ICU 4.4
      */
-    virtual int32_t
-    spanQuickCheckYes(const UnicodeString &s, UErrorCode &errorCode) const;
+    virtual int32_t spanQuickCheckYes(const UnicodeString& s, UErrorCode& errorCode) const;
 
     /**
      * Tests if the character always has a normalization boundary before it,
@@ -462,24 +593,20 @@ public:
      * @stable ICU 4.4
      */
     virtual UBool isInert(UChar32 c) const;
+
 private:
-    UnicodeString &
-    normalize(const UnicodeString &src,
-              UnicodeString &dest,
-              USetSpanCondition spanCondition,
-              UErrorCode &errorCode) const;
+    UnicodeString& normalize(const UnicodeString& src, UnicodeString& dest, USetSpanCondition spanCondition, UErrorCode& errorCode) const;
 
-    UnicodeString &
-    normalizeSecondAndAppend(UnicodeString &first,
-                             const UnicodeString &second,
-                             UBool doNormalize,
-                             UErrorCode &errorCode) const;
+    UnicodeString& normalizeSecondAndAppend(UnicodeString& first,
+                                            const UnicodeString& second,
+                                            UBool doNormalize,
+                                            UErrorCode& errorCode) const;
 
-    const Normalizer2 &norm2;
-    const UnicodeSet &set;
+    const Normalizer2& norm2;
+    const UnicodeSet& set;
 };
 
 U_NAMESPACE_END
 
-#endif  // !UCONFIG_NO_NORMALIZATION
-#endif  // __NORMALIZER2_H__
+#endif // !UCONFIG_NO_NORMALIZATION
+#endif // __NORMALIZER2_H__

@@ -135,7 +135,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
@@ -162,7 +162,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
@@ -193,7 +193,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
@@ -224,7 +224,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>

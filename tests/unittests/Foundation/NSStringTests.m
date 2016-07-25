@@ -576,3 +576,41 @@ TEST(NSString, PathExtensions) {
     string = @"/tmp/random.foo.tiff";
     ASSERT_TRUE([string.pathExtension isEqualToString:@"tiff"]);
 }
+
+TEST(NSString, Exceptions) {
+    NSRange range{ 100, 10 };
+
+    EXPECT_ANY_THROW([@"hello" characterAtIndex:10]);
+
+    unichar buffer[1024];
+    EXPECT_ANY_THROW([@"hello" getCharacters:&buffer[0] range:range]);
+
+    EXPECT_ANY_THROW([[[@"hello" mutableCopy] autorelease] replaceCharactersInRange:range withString:@"boom"]);
+
+    EXPECT_ANY_THROW([(NSMutableString*)@"hello" replaceCharactersInRange:range withString:@"boom"]);
+
+    NSString* immutableFormattedString = [NSString stringWithFormat:@"Hello %p", buffer];
+    EXPECT_ANY_THROW([(NSMutableString*)immutableFormattedString replaceCharactersInRange:range withString:@"boom"]);
+}
+
+class StringsFormatPropertyList : public ::testing::TestWithParam<const wchar_t*> {};
+
+TEST_P(StringsFormatPropertyList, CanDeserialize) {
+    const wchar_t* data = GetParam();
+    NSString* string = [NSString stringWithCharacters:(const unichar*)data length:wcslen(data)];
+
+    ASSERT_OBJCNE(nil, string);
+
+    NSDictionary* propertyList = [string propertyListFromStringsFileFormat];
+
+    ASSERT_OBJCNE(nil, propertyList);
+
+    ASSERT_OBJCEQ(@"value1", propertyList[@"key1"]);
+    ASSERT_OBJCEQ(@"value2", propertyList[@"key2"]);
+}
+
+INSTANTIATE_TEST_CASE_P(NSString,
+                        StringsFormatPropertyList,
+                        ::testing::Values(L"\uFEFFkey1=value1;\n\"key2\"=\"value2\";", // BOM
+                                          L"key1=value1;\n\"key2\"=\"value2\";" // No BOM
+                                          ));

@@ -347,7 +347,6 @@ LIBRARY CoreGraphics
         CGPNGImageCreateFromData
         CGJPEGImageCreateFromFile
         CGPNGImageCreateFromFile
-        _CGImageJPEGRepresentation
         _CGImagePNGRepresentation
         _CGImageGetData
 

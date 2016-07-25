@@ -786,7 +786,11 @@ void CFNumberFormatterSetProperty(CFNumberFormatterRef formatter, CFStringRef ke
 #if U_ICU_VERSION_MAJOR_NUM >= 55
         __CFGenericValidateType(value, CFNumberGetTypeID());
         CFNumberGetValue((CFNumberRef)value, kCFNumberSInt32Type, &n);
-        __cficu_unum_setContext(formatter->_nf, n, &status);
+
+        // WINOBJC: WinObjC seems to have stricter type-checking than the reference platform,
+        // so an explicit cast is required here
+        // __cficu_unum_setContext(formatter->_nf, n, &status);
+        __cficu_unum_setContext(formatter->_nf, (UDisplayContext)n, &status);
 #endif
     }
     if (kCFNumberFormatterSpellOutStyle == formatter->_style && kCFNumberFormatterIsLenientKey != key) return;

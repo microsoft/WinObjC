@@ -29,7 +29,6 @@
 #import "CGSurfaceInfoInternal.h"
 
 extern "C" {
-#import <jpeglib.h>
 #import <png.h>
 };
 
@@ -714,196 +713,6 @@ CGImageRef CGImageCreate(size_t width,
     return (CGImageRef)newImage;
 }
 
-NSData* _CGImageJPEGRepresentation(UIImage* img, CGFloat compressionQuality) {
-    if (img == nil) {
-        TraceWarning(TAG, L"UIImageJPEGRepresentation: img = nil!");
-        return nil;
-    }
-
-    if (compressionQuality < 0.0f || compressionQuality > 1.0f) {
-        TraceWarning(TAG, L"UIImageJPEGRepresentation: compressionQuality is not between 0.0f to 1.0f!");
-        return nil;
-    }
-
-    CGImageRef pImage = (CGImageRef)[img CGImage];
-    if (pImage == NULL) {
-        TraceWarning(TAG, L"UIImageJPEGRepresentation: no image passed to UIImageJPEGRepresentation");
-        return nil;
-    }
-
-    if (pImage->Backing()->Width() == 0 || pImage->Backing()->Height() == 0) {
-        TraceVerbose(TAG, L"UIImageJPEGRepresentation: image passed has an unexpected size 0");
-        FAIL_FAST_HR(E_UNEXPECTED);
-    }
-
-    /* Step 1: allocate and initialize JPEG compression object */
-    jpeg_compress_struct cinfo;
-    jpeg_error_mgr jerr;
-    cinfo.err = jpeg_std_error(&jerr);
-    jpeg_create_compress(&cinfo);
-
-    int width = pImage->Backing()->Width();
-    int height = pImage->Backing()->Height();
-    int xStrideImg = pImage->Backing()->BytesPerPixel();
-    int yStrideImg = pImage->Backing()->BytesPerRow();
-    BYTE* pImgData = (BYTE*)pImage->Backing()->LockImageData();
-
-    unsigned char* newImgData = (unsigned char*)malloc(sizeof(unsigned char) * width * 3 * height);
-
-    // Rotate data of img to show in proper direction.
-    // All imgs' surfaceFormates are set to RGBA when inited. While libjpeg don't support RGBA and
-    // There is no alpha in jpeg, so newImgData pick the first three bytes(RGB) in each pixel.
-    // CMYK formate is not supported yet due to JPEGDecode does't decode 4 components CMYK properly.
-    int orientation = [img imageOrientation];
-    int j = 0;
-    switch (orientation) {
-        case UIImageOrientationDownMirrored:
-            for (int y = height - 1; y >= 0; y--) {
-                for (int x = 0; x < width; x++) {
-                    newImgData[j] = pImgData[y * yStrideImg + x * xStrideImg];
-                    newImgData[j + 1] = pImgData[y * yStrideImg + x * xStrideImg + 1];
-                    newImgData[j + 2] = pImgData[y * yStrideImg + x * xStrideImg + 2];
-                    j += 3;
-                }
-            }
-            break;
-
-        case UIImageOrientationDown:
-            for (int i = width * height - 1; i >= 0; i--) {
-                newImgData[j] = pImgData[i * 4];
-                newImgData[j + 1] = pImgData[i * 4 + 1];
-                newImgData[j + 2] = pImgData[i * 4 + 2];
-                j += 3;
-            }
-            break;
-
-        case UIImageOrientationRightMirrored:
-            for (int x = 0; x <= width - 1; x++) {
-                for (int y = 0; y <= height - 1; y++) {
-                    newImgData[j] = pImgData[y * yStrideImg + x * xStrideImg];
-                    newImgData[j + 1] = pImgData[y * yStrideImg + x * xStrideImg + 1];
-                    newImgData[j + 2] = pImgData[y * yStrideImg + x * xStrideImg + 2];
-                    j += 3;
-                }
-            }
-            width = pImage->Backing()->Height();
-            height = pImage->Backing()->Width();
-            break;
-
-        case UIImageOrientationRight:
-            for (int x = 0; x < width; x++) {
-                for (int y = height - 1; y >= 0; y--) {
-                    newImgData[j] = pImgData[y * yStrideImg + x * xStrideImg];
-                    newImgData[j + 1] = pImgData[y * yStrideImg + x * xStrideImg + 1];
-                    newImgData[j + 2] = pImgData[y * yStrideImg + x * xStrideImg + 2];
-                    j += 3;
-                }
-            }
-            width = pImage->Backing()->Height();
-            height = pImage->Backing()->Width();
-            break;
-
-        case UIImageOrientationLeftMirrored:
-            for (int x = width - 1; x >= 0; x--) {
-                for (int y = height - 1; y >= 0; y--) {
-                    newImgData[j] = pImgData[y * yStrideImg + x * xStrideImg];
-                    newImgData[j + 1] = pImgData[y * yStrideImg + x * xStrideImg + 1];
-                    newImgData[j + 2] = pImgData[y * yStrideImg + x * xStrideImg + 2];
-                    j += 3;
-                }
-            }
-            width = pImage->Backing()->Height();
-            height = pImage->Backing()->Width();
-            break;
-
-        case UIImageOrientationLeft:
-            for (int x = width - 1; x >= 0; x--) {
-                for (int y = 0; y <= height - 1; y++) {
-                    newImgData[j] = pImgData[y * yStrideImg + x * xStrideImg];
-                    newImgData[j + 1] = pImgData[y * yStrideImg + x * xStrideImg + 1];
-                    newImgData[j + 2] = pImgData[y * yStrideImg + x * xStrideImg + 2];
-                    j += 3;
-                }
-            }
-            width = pImage->Backing()->Height();
-            height = pImage->Backing()->Width();
-            break;
-
-        case UIImageOrientationUpMirrored:
-            for (int y = 0; y <= height - 1; y++) {
-                for (int x = width - 1; x >= 0; x--) {
-                    newImgData[j] = pImgData[y * yStrideImg + x * xStrideImg];
-                    newImgData[j + 1] = pImgData[y * yStrideImg + x * xStrideImg + 1];
-                    newImgData[j + 2] = pImgData[y * yStrideImg + x * xStrideImg + 2];
-                    j += 3;
-                }
-            }
-            break;
-
-        case UIImageOrientationUp:
-            for (int i = 0; i < width * height; i++) {
-                newImgData[j] = pImgData[i * 4];
-                newImgData[j + 1] = pImgData[i * 4 + 1];
-                newImgData[j + 2] = pImgData[i * 4 + 2];
-                j += 3;
-            }
-            break;
-
-        default:
-            for (int i = 0; i < width * height; i++) {
-                newImgData[j] = pImgData[i * 4];
-                newImgData[j + 1] = pImgData[i * 4 + 1];
-                newImgData[j + 2] = pImgData[i * 4 + 2];
-                j += 3;
-            }
-            TraceWarning(TAG, L"Unknown image orientation %d. Dispose as UIImageOrientationUp", orientation);
-    }
-
-    /* Step 2: Set parameters for compression */
-    cinfo.input_components = 3;
-    cinfo.in_color_space = JCS_RGB;
-
-    cinfo.image_width = width;
-    cinfo.image_height = height;
-
-    /* Step 3: specify data destination */
-    unsigned char* mem = (unsigned char*)malloc(sizeof(unsigned char) * width * 3 * height);
-    unsigned long memSize = sizeof(unsigned char) * width * 3 * height;
-    jpeg_mem_dest(&cinfo, &mem, &memSize);
-
-    jpeg_set_defaults(&cinfo);
-
-    // Quality in iOS range from 0-1 while quality in libjpeg range from 0-100.
-    // There is a rough mapping to make their behavior similar.
-    int quality = (int)roundf(compressionQuality * 100 + 20 * (1 - compressionQuality));
-    jpeg_set_quality(&cinfo, quality, TRUE);
-
-    /* Step 4: Start compressor */
-    jpeg_start_compress(&cinfo, true);
-
-    JSAMPROW row_pointer[1];
-
-    /* Step 5: Read img data and write to mem row by row*/
-    while (cinfo.next_scanline < cinfo.image_height) {
-        row_pointer[0] = &newImgData[cinfo.next_scanline * width * 3];
-        jpeg_write_scanlines(&cinfo, row_pointer, 1);
-    }
-
-    /* Step 6: Finish compression */
-    jpeg_finish_compress(&cinfo);
-
-    NSMutableData* ret = [NSMutableData dataWithBytes:mem length:memSize];
-
-    /* Step 7: Release JPEG compression object */
-    /* This is an important step since it will release a good deal of memory. */
-    jpeg_destroy_compress(&cinfo);
-
-    free(mem);
-    free(newImgData);
-    pImage->Backing()->ReleaseImageData();
-    return ret;
-}
-
 static void PNGWriteFunc(png_structp png_ptr, png_bytep data, png_size_t length) {
     id dataOut = (id)png_get_io_ptr(png_ptr);
 
@@ -1130,7 +939,7 @@ NSData* _CGImagePNGRepresentation(UIImage* img) {
     png_write_end(png_ptr, NULL);
     png_destroy_write_struct(&png_ptr, &info_ptr);
 
-	return ret;
+    return ret;
 }
 
 @interface _UIImageWriterCallback : NSObject
