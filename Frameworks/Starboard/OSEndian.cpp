@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#import <CoreFoundation/CoreFoundation.h>
+#include <CoreFoundation/CoreFoundation.h>
 #include <libkern/OSByteOrder.h>
 
 extern "C" int32_t OSHostByteOrder() {

@@ -26,15 +26,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKViewController.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKSkyboxEffect.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKShader.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderInfo.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderGen.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderProg.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKMatrixStack.mm" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderGen.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderInfo.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderProg.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{69003FC3-4890-430D-8527-B81C99781864}</ProjectGuid>
