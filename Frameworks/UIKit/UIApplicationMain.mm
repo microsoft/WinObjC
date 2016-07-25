@@ -122,10 +122,6 @@ int UIApplicationMainInit(NSString* principalClassName,
                           UIInterfaceOrientation defaultOrientation,
                           int activationType,
                           id activationArg) {
-    // Make sure we reference classes we need:
-    void ForceInclusion();
-    ForceInclusion();
-
     [[NSThread currentThread] _associateWithMainThread];
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
 

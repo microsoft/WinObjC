@@ -48,10 +48,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSCoder+UIKitAdditions.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSMutableAttributedString+UIKitAdditions.mm" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="UIKit.def" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

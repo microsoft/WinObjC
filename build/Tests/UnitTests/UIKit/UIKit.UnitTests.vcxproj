@@ -247,7 +247,6 @@
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="..\..\..\..\Frameworks\UIKit\NSCoder+UIKitAdditions.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\Accessibility.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\NSAttributedString+UIKitAdditionsTests.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\NSCoder+UIKitAdditionsTest.mm" />
