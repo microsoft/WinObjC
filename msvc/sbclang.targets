@@ -357,7 +357,7 @@
   </ItemDefinitionGroup>
 
   <PropertyGroup>
-    <ComputeLinkInputsTargets>$(ComputeLinkInputsTargets);ComputeClangLinkInputs;ComputeRuntimeInputs;ComputeWholeArchiveLinkInputs</ComputeLinkInputsTargets>
+    <ComputeLinkInputsTargets>$(ComputeLinkInputsTargets);ComputeClangLinkInputs;ComputeRuntimeInputs;ComputeWholeArchiveLinkInputs;ComputeObjectiveCLinkInputs</ComputeLinkInputsTargets>
     <ComputeLibInputsTargets>$(ComputeLibInputsTargets);ComputeClangLibInputs;</ComputeLibInputsTargets>
     <ComputeImpLibInputsTargets>$(ComputeImpLibInputsTargets);ComputeClangImpLibInputs;</ComputeImpLibInputsTargets>
   </PropertyGroup>
@@ -483,9 +483,17 @@
        and 2-stage loading.
   -->
   <Target Name="ComputeWholeArchiveLinkInputs" DependsOnTargets="ComputeStarboardReferencesRequiringObjectiveC">
-    <ItemGroup Condition="'@(_StarboardReferencesRequiringObjectiveC)'!=''">
+    <ItemGroup Condition="'@(_StarboardReferencesRequiringObjectiveC)'!='' and '$(StarboardLinkWholeArchive)'=='true'">
       <Link>
         <AdditionalOptions>%(Link.AdditionalOptions) "/WHOLEARCHIVE:@(_StarboardReferencesRequiringObjectiveC, '" /WHOLEARCHIVE:"')"</AdditionalOptions>
+      </Link>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ComputeObjectiveCLinkInputs" DependsOnTargets="ComputeStarboardReferencesRequiringObjectiveC">
+    <ItemGroup Condition="'@(_StarboardReferencesRequiringObjectiveC)'!=''">
+      <Link>
+        <AdditionalOptions>%(Link.AdditionalOptions) /INCLUDE:$(StarboardObjectiveCPinningSymbolName)</AdditionalOptions>
       </Link>
     </ItemGroup>
   </Target>

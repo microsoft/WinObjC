@@ -92,6 +92,8 @@ extern "C" const InitFunc __declspec(selectany) _SEGALLOC(".CRT$XCLB") ___objc_m
 // we would be resolving classes that have not been loaded.
 extern "C" const InitFunc __declspec(selectany) _SEGALLOC(".CRT$XCV") ___objc_legacy_post_XCU = &___objc_legacy_resolve_all;
 
+extern "C" const void* ___pin_objc_init = 0x0;
+
 // Force inclusion of this TU.
 #if defined(_M_IX86)
 #pragma comment(linker, "/include:____objc_modern_load /include:____objc_modern_resolve /include:____objc_legacy_post_XCU")
