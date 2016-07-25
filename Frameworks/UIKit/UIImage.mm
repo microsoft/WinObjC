@@ -673,7 +673,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
 /**
  @Status Interoperable
 */
--(void)drawAtPoint:(CGPoint)point blendMode : (CGBlendMode)mode alpha : (float)alpha {
+- (void)drawAtPoint:(CGPoint)point blendMode:(CGBlendMode)mode alpha:(float)alpha {
     CGContextRef cur = UIGraphicsGetCurrentContext();
     CGImageRef img = getImage(self);
 
@@ -697,8 +697,8 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     CGRect srcRect;
     CGRect pos;
     pos.origin = point;
-    pos.size.width = ((float)imgBacking->Width());
-    pos.size.height = ((float)imgBacking->Height());
+    pos.size.width = ((float)imgBacking->Width() / _scale);
+    pos.size.height = ((float)imgBacking->Height() / _scale);
 
     srcRect.origin.x = 0;
     srcRect.origin.y = float(imgBacking->Height());
@@ -717,47 +717,60 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     [self drawAtPoint:pos.origin];
 }
 
-static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* src, CGRect* dst) {
-    // Note: Subdivides image into 1-9 patches which are drawn individually.
-    // Note: The number of subdivisions depends on what insets have been set.
+static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) {
+    // Note: Subdivides image into 1-9 patches which are drawn individually and the number of
+    // subdivisions depends on what insets have been set.
+
+    // Note: Since source image has a TL origin (UIKit) and destination image has BL origin (QuartzCore) by default and there may be a
+    // custom transform applied to the GFX context, we need to at the very least ensure images are sampledFrom and writtenTo the right
+    // location for each pixel.
+    // Thus, the patch rects are constructed according to their default origin and the sign of the rect height indicates the sampling Y
+    // direction
+    // relative to its the origin. Any custom transforms applied to the GFX context are handled in the underlying draw function.
+
+    CGImageRef cgImg = getImage(img);
+    CGImageBacking* imgBacking = cgImg->Backing();
+
+    const float srcHeight = static_cast<float>(imgBacking->Height());
+    const float srcWidth = static_cast<float>(imgBacking->Width());
     const float topCap = img->_imageInsets.top;
     const float botCap = img->_imageInsets.bottom;
     const float leftCap = img->_imageInsets.left;
     const float rightCap = img->_imageInsets.right;
-    CGImageRef cgImg = getImage(img);
 
     // Center strip
-    if (src->size.height - topCap - botCap > 0) {
+    if (srcHeight - topCap - botCap > 0) {
         if (leftCap) {
             // MidHeightLeft
             CGContextDrawImageRect(context,
                                    cgImg,
-                                   CGRectMake(0, botCap, leftCap, (src->size.height - topCap - botCap)),
+                                   CGRectMake(0, srcHeight - botCap, leftCap, -(srcHeight - topCap - botCap)),
                                    CGRectMake(dst->origin.x, (dst->origin.y + botCap), leftCap, (dst->size.height - topCap - botCap)));
         }
 
-        if (src->size.width - leftCap - rightCap > 0) {
+        if (srcWidth - leftCap - rightCap > 0) {
             // MidHeightMidWidth
             CGContextDrawImageRect(context,
                                    cgImg,
-                                   CGRectMake(leftCap, botCap, (src->size.width - leftCap - rightCap), (src->size.height - topCap - botCap)),
+                                   CGRectMake(leftCap, srcHeight - botCap, (srcWidth - leftCap - rightCap), -(srcHeight - topCap - botCap)),
                                    CGRectMake((dst->origin.x + leftCap),
-                                            (dst->origin.y + botCap),
-                                            (dst->size.width - leftCap - rightCap),
-                                            (dst->size.height - topCap - botCap)));
+                                              (dst->origin.y + botCap),
+                                              (dst->size.width - leftCap - rightCap),
+                                              (dst->size.height - topCap - botCap)));
         } else {
-            UNIMPLEMENTED_WITH_MSG("Patched draws only supported when sum of leftCap and rightCap is less than the width of the UI element.");
+            UNIMPLEMENTED_WITH_MSG(
+                "Patched draws only supported when sum of leftCap and rightCap is less than the width of the UI element.");
         }
 
         if (rightCap) {
             // MidHeightRight
             CGContextDrawImageRect(context,
                                    cgImg,
-                                   CGRectMake((src->size.width - rightCap), botCap, rightCap, (src->size.height - topCap - botCap)),
+                                   CGRectMake((srcWidth - rightCap), srcHeight - botCap, rightCap, -(srcHeight - topCap - botCap)),
                                    CGRectMake((dst->origin.x + dst->size.width - rightCap),
-                                            (dst->origin.y + botCap),
-                                            rightCap,
-                                            (dst->size.height - topCap - botCap)));
+                                              (dst->origin.y + botCap),
+                                              rightCap,
+                                              (dst->size.height - topCap - botCap)));
         }
     } else {
         UNIMPLEMENTED_WITH_MSG("Patched draws only supported when sum of topCap and botCap is less than the height of the UI element.");
@@ -768,30 +781,30 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* src, 
             // TL corner
             CGContextDrawImageRect(context,
                                    cgImg,
-                                   CGRectMake(0, (src->size.height - topCap), leftCap, topCap),
+                                   CGRectMake(0, topCap, leftCap, -topCap),
                                    CGRectMake(dst->origin.x, (dst->origin.y + dst->size.height - topCap), leftCap, topCap));
         }
 
-        if (src->size.width - leftCap - rightCap > 0) {
+        if (srcWidth - leftCap - rightCap > 0) {
             // TCenter
             CGContextDrawImageRect(context,
                                    cgImg,
-                                   CGRectMake(leftCap, (src->size.height - topCap), (src->size.width - leftCap - rightCap), topCap),
+                                   CGRectMake(leftCap, topCap, (srcWidth - leftCap - rightCap), -topCap),
                                    CGRectMake((dst->origin.x + leftCap),
-                                            (dst->origin.y + dst->size.height - topCap),
-                                            (dst->size.width - leftCap - rightCap),
-                                            topCap));
+                                              (dst->origin.y + dst->size.height - topCap),
+                                              (dst->size.width - leftCap - rightCap),
+                                              topCap));
         }
 
         if (rightCap) {
             // TR corner
             CGContextDrawImageRect(context,
                                    cgImg,
-                                   CGRectMake((src->size.width - rightCap), (src->size.height - topCap), rightCap, topCap),
+                                   CGRectMake((srcWidth - rightCap), topCap, rightCap, -topCap),
                                    CGRectMake((dst->origin.x + dst->size.width - rightCap),
-                                            (dst->origin.y + dst->size.height - topCap),
-                                            rightCap,
-                                            topCap));
+                                              (dst->origin.y + dst->size.height - topCap),
+                                              rightCap,
+                                              topCap));
         }
     }
 
@@ -800,15 +813,15 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* src, 
             // BL Corner
             CGContextDrawImageRect(context,
                                    cgImg,
-                                   CGRectMake(0, 0, leftCap, botCap),
+                                   CGRectMake(0, srcHeight, leftCap, -botCap),
                                    CGRectMake(dst->origin.x, dst->origin.y, leftCap, botCap));
         }
 
-        if (src->size.width - leftCap - rightCap > 0) {
+        if (srcWidth - leftCap - rightCap > 0) {
             // bottomMidWidth
             CGContextDrawImageRect(context,
                                    cgImg,
-                                   CGRectMake(leftCap, 0, (src->size.width - leftCap - rightCap), botCap),
+                                   CGRectMake(leftCap, srcHeight, (srcWidth - leftCap - rightCap), -botCap),
                                    CGRectMake((dst->origin.x + leftCap), dst->origin.y, (dst->size.width - leftCap - rightCap), botCap));
         }
 
@@ -816,7 +829,7 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* src, 
             // BR corner
             CGContextDrawImageRect(context,
                                    cgImg,
-                                   CGRectMake((src->size.width - rightCap), 0, rightCap, botCap),
+                                   CGRectMake((srcWidth - rightCap), srcHeight, rightCap, -botCap),
                                    CGRectMake((dst->origin.x + dst->size.width - rightCap), dst->origin.y, rightCap, botCap));
         }
     }
@@ -851,19 +864,8 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* src, 
     CGContextSetBlendMode(ctx, mode);
     CGContextSetAlpha(ctx, alpha);
 
-    // Destination rect taken from pos with origin transformed from TL to BL
-    CGRect dstRect;
-    dstRect.origin = { pos.origin.x, (static_cast<float>(CGBitmapContextGetHeight(ctx)) - pos.origin.y - pos.size.height) };
-    dstRect.size = pos.size;
-
-    CGImageBacking* imgBacking = img->Backing();
-
-    CGRect srcRect;
-    srcRect.origin = { 0 };
-    srcRect.size = { static_cast<float>(imgBacking->Width()), static_cast<float>(imgBacking->Height()) };
-
     // Draw image and divide into patches if necessary
-    drawPatches(ctx, self, &srcRect, &dstRect);
+    drawPatches(ctx, self, &pos);
 
     CGContextRestoreGState(ctx);
 }
