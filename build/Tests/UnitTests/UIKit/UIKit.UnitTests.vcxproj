@@ -43,6 +43,9 @@
     <ProjectReference Include="..\..\..\QuartzCore\dll\QuartzCore.vcxproj">
       <Project>{037B568F-4104-417E-9FB8-B6899E398903}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\MobileCoreServices\dll\MobileCoreServicesdll.vcxproj">
+      <Project>{F1C44E27-6599-49C3-B4C2-D812C114B166}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\UIKIt\lib\UIKItLib.vcxproj">
       <Project>{C0A51F53-73EE-435D-81D9-FE8FE625C431}</Project>
     </ProjectReference>
