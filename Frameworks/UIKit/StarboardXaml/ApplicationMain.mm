@@ -66,11 +66,9 @@ int ApplicationMainStart(const char* principalName,
         for (NSString* key in [toastArgument.userInput allKeys]) {
             RTObject* holderObject = [toastArgument.userInput objectForKey:key];
             ComPtr<IPropertyValue> value;
-            HRESULT result = holderObject.comObj.As(&value);
-            THROW_NS_IF_FAILED(result);
+            THROW_NS_IF_FAILED(holderObject.comObj.As(&value));
             Wrappers::HString hstr;
-            result = value->GetString(hstr.GetAddressOf());
-            THROW_NS_IF_FAILED(result);
+            THROW_NS_IF_FAILED(value->GetString(hstr.GetAddressOf()));
             [userInput setObject:Strings::WideToNSString(hstr.Get()) forKey:key];
         }
         NSDictionary* toastAction = @{
