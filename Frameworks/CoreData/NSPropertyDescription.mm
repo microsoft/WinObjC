@@ -14,10 +14,64 @@
 //
 //******************************************************************************
 
+#import <CoreData/CoreData.h>
+#import <Foundation/Foundation.h>
 #import <StubReturn.h>
-#import <CoreData/NSPropertyDescription.h>
+
+#import <CoreData/NSManagedObjectModel-XMLParsing.h>
 
 @implementation NSPropertyDescription
+- (instancetype)_initWithXMLElementName:(NSString*)entityName attributes:(NSDictionary<NSString*, NSString*>*)attributes {
+    if (self = [super init]) {
+        _name = [attributes[@"name"] copy];
+        _renamingIdentifier = [attributes[@"elementID"] copy];
+        _versionHashModifier = [attributes[@"versionHashModifier"] copy];
+
+        _optional = [attributes[@"optional"] isEqualToString:@"YES"];
+        _transient = [attributes[@"transient"] isEqualToString:@"YES"];
+        _indexed = [attributes[@"indexed"] isEqualToString:@"YES"];
+        _storedInExternalRecord = [attributes[@"storedInTruthFile"] isEqualToString:@"YES"];
+        _indexedBySpotlight = [attributes[@"spotlightIndexingEnabled"] isEqualToString:@"YES"];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [_name release];
+    [_userInfo release];
+    [_validationPredicates release];
+    [_validationWarnings release];
+    [_versionHash release];
+    [_versionHashModifier release];
+    [_renamingIdentifier release];
+
+    [super dealloc];
+}
+
+- (void)setEntity:(NSEntityDescription*)entity {
+    _entity = entity;
+}
+
+- (bool)_insertChildElement:(id<_NSCDXMLCoding>)childElement {
+    return NO;
+}
+
+- (void)_awakeFromXML {
+}
+
+- (NSString*)description {
+    return [NSString stringWithFormat:@"<%@ %p: %@,%hs%hs%hs%hs%hs userInfo=%@>",
+                                      object_getClass(self),
+                                      self,
+                                      self.name,
+                                      self.optional ? " optional" : "",
+                                      self.transient ? " transient" : "",
+                                      self.indexed ? " indexed" : "",
+                                      self.storedInExternalRecord ? " external" : "",
+                                      self.indexedBySpotlight ? " spotlight" : "",
+                                      self.userInfo];
+}
+
 /**
 @Status Stub
 @Notes

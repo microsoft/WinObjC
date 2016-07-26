@@ -27,18 +27,18 @@
 
 COREDATA_EXPORT_CLASS
 @interface NSPropertyDescription : NSObject <NSCoding, NSCopying>
-@property (readonly, assign, nonatomic) NSEntityDescription* entity STUB_PROPERTY;
-@property (getter=isIndexed) BOOL indexed STUB_PROPERTY;
-@property (getter=isOptional) BOOL optional STUB_PROPERTY;
-@property (getter=isTransient) BOOL transient STUB_PROPERTY;
-@property (copy, nonatomic) NSString* name STUB_PROPERTY;
-@property (nonatomic, strong) NSDictionary* userInfo STUB_PROPERTY;
-@property (readonly, strong) NSArray* validationPredicates STUB_PROPERTY;
+@property (readonly, assign, nonatomic) NSEntityDescription* entity;
+@property (getter=isIndexed) BOOL indexed;
+@property (getter=isOptional) BOOL optional;
+@property (getter=isTransient) BOOL transient;
+@property (copy, nonatomic) NSString* name;
+@property (nonatomic, strong) NSDictionary* userInfo;
+@property (readonly, strong) NSArray* validationPredicates;
 @property (readonly, strong) NSArray* validationWarnings STUB_PROPERTY;
 - (void)setValidationPredicates:(NSArray*)validationPredicates withValidationWarnings:(NSArray*)validationWarnings STUB_METHOD;
 @property (readonly, copy) NSData* versionHash STUB_PROPERTY;
-@property (copy) NSString* versionHashModifier STUB_PROPERTY;
-@property (copy) NSString* renamingIdentifier STUB_PROPERTY;
-@property (getter=isIndexedBySpotlight) BOOL indexedBySpotlight STUB_PROPERTY;
-@property (getter=isStoredInExternalRecord) BOOL storedInExternalRecord STUB_PROPERTY;
+@property (copy) NSString* versionHashModifier;
+@property (copy) NSString* renamingIdentifier;
+@property (getter=isIndexedBySpotlight) BOOL indexedBySpotlight;
+@property (getter=isStoredInExternalRecord) BOOL storedInExternalRecord;
 @end

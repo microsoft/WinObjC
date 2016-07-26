@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -59,7 +60,7 @@ __CGContext::__CGContext(CGImageRef pDest) {
 #ifdef DEBUG_CONTEXT_COUNT
     TraceVerbose(TAG, L"contextCount: %d", contextCount);
 #endif
-    object_setClass((id)this, [CGNSContext class]);
+    object_setClass((id) this, [CGNSContext class]);
     scale = 1.0f;
     _backing = pDest->Backing()->CreateDrawingContext(this);
 }
@@ -68,10 +69,6 @@ __CGContext::~__CGContext() {
     contextCount--;
 
     delete _backing;
-}
-
-CGContextImpl* __CGContext::Backing() {
-    return _backing;
 }
 
 /**
@@ -951,9 +948,9 @@ CGSize CGContextConvertSizeToUserSpace(CGContextRef c, CGSize size) {
 /**
  @Status Stub
 */
-CGPoint CGContextConvertSizeToDeviceSpace(CGContextRef ctx, CGPoint pt) {
+CGSize CGContextConvertSizeToDeviceSpace(CGContextRef ctx, CGSize size) {
     UNIMPLEMENTED();
-    return pt;
+    return size;
 }
 
 /**

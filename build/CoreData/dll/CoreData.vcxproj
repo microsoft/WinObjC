@@ -25,6 +25,9 @@
     <None Include="CoreData.def" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\lib\CoreDataLib.vcxproj">
       <Project>{d5bd554b-11cb-47ff-87f2-85709389da27}</Project>
     </ProjectReference>

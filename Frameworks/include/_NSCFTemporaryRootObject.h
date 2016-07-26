@@ -30,4 +30,8 @@ __attribute__((objc_root_class)) @interface _NSCFTemporaryRootObject {
 @public
     Class isa;
 }
+
+/* From NSObject */
+- (void)doesNotRecognizeSelector:(SEL)selector;
+
 @end

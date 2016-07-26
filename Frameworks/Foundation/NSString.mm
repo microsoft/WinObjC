@@ -56,20 +56,6 @@ using FilePathPredicate = bool (^)(NSString*);
 NSString* const NSParseErrorException = @"NSParseErrorException";
 NSString* const NSCharacterConversionException = @"NSCharacterConversionException";
 
-id error(id obj, char* buf, const char* error, ...) {
-    TraceError(TAG, L"propertyListFromStrings error: %hs", buf);
-
-    return nil;
-}
-
-static unichar SwapWord(unichar c) {
-    return (c >> 8) | ((c & 0xFF) << 8);
-}
-
-static unichar PickWord(unichar c) {
-    return c;
-}
-
 typedef enum {
     NEW_LINE = 0x0a,
     CARRIAGE_RETURN = 0x0d,
@@ -81,6 +67,24 @@ typedef enum {
  @Status Interoperable
 */
 BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
+
+// Exception methods for _NSCFString
+- (void)_raiseBoundsExceptionForSelector:(SEL)selector andIndex:(NSUInteger)index {
+    [NSException raise:NSRangeException
+                format:@"-[NSString %@]: Index %lu out of bounds; string length %lu",
+                       NSStringFromSelector(selector),
+                       (unsigned long)index,
+                       (unsigned long)self.length];
+}
+
+- (void)_raiseBoundsExceptionForSelector:(SEL)selector andRange:(NSRange)range {
+    [NSException raise:NSRangeException
+                format:@"-[NSString %@]: Range {%lu, %lu} out of bounds; string length %lu",
+                       NSStringFromSelector(selector),
+                       (unsigned long)range.location,
+                       (unsigned long)range.length,
+                       (unsigned long)self.length];
+}
 
 /**
  @Status Interoperable
@@ -533,6 +537,10 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
  @Status Interoperable
 */
 - (void)getCharacters:(unichar*)dest range:(NSRange)range {
+    if (range.location + range.length > self.length) {
+        [self _raiseBoundsExceptionForSelector:_cmd andRange:range];
+    }
+
     for (unsigned int i = 0; i < range.length; i++) {
         dest[i] = [self characterAtIndex:(i + range.location)];
     }
@@ -1089,7 +1097,18 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
  @Status Interoperable
 */
 - (BOOL)isAbsolutePath {
-    return ([self hasPrefix:_NSGetSlashStr()]) || ((_isLetter([self characterAtIndex:0])) && ([self characterAtIndex:1] == ':'));
+    if ([self hasPrefix:_NSGetSlashStr()]) {
+        return YES;
+    }
+
+    if (self.length >= 2) {
+        // TODO: This will require some investigation when we design a cohesive path story.
+        // Currently, we'll report @"C:Hello.txt" as absolute, when it is in fact relative
+        // to the drive-specific CWD on C:.
+        return _isLetter([self characterAtIndex:0]) && [self characterAtIndex:1] == ':';
+    }
+
+    return NO;
 }
 
 /**
@@ -1261,254 +1280,14 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
  @Status Interoperable
 */
 - (NSDictionary*)propertyListFromStringsFileFormat {
-    NSMutableDictionary* ret = [NSMutableDictionary new];
-    NSUInteger length = [self length];
+    CFStringEncoding fastestCFEncoding = CFStringGetFastestEncoding(static_cast<CFStringRef>(self));
+    NSStringEncoding encoding = (NSStringEncoding)CFStringConvertEncodingToNSStringEncoding(fastestCFEncoding);
 
-    NSString* key;
-    id value;
+    NSData* data = [self dataUsingEncoding:encoding];
 
-    unsigned int index, c, strSize = 0, strMax = 2048;
-    std::unique_ptr<char[], decltype(&IwFree)> strBuf(static_cast<char*>(IwMalloc(strMax)), IwFree);
-
-    enum {
-        STATE_WHITESPACE,
-        STATE_COMMENT_SLASH,
-        STATE_COMMENT_EOL,
-        STATE_COMMENT,
-        STATE_COMMENT_STAR,
-        STATE_STRING,
-        STATE_STRING_KEY,
-        STATE_STRING_SLASH,
-        STATE_STRING_SLASH_X00,
-        STATE_STRING_SLASH_XX0
-    } state = STATE_WHITESPACE;
-    enum { EXPECT_KEY, EXPECT_EQUAL_SEMI, EXPECT_VAL, EXPECT_SEMI } expect = EXPECT_KEY;
-
-    unichar (*mapUC)(unichar);
-    if ([self characterAtIndex:0] == 0xFFFE) {
-        // reverse endianness
-        mapUC = SwapWord;
-        index = 1;
-    } else if ([self characterAtIndex:0] == 0xFEFF) {
-        // native endianness
-        mapUC = PickWord;
-        index = 1;
-    } else {
-        // no BOM, assume native endianness
-        mapUC = PickWord;
-        index = 0;
-    }
-
-    if (mapUC([self characterAtIndex:(length - 1)]) == 0x0A)
-        length--;
-
-    for (; index < length; index++) {
-        c = mapUC([self characterAtIndex:index]);
-        switch (state) {
-            case STATE_WHITESPACE:
-                if (c == '/') {
-                    state = STATE_COMMENT_SLASH;
-                } else if (c == '=') {
-                    if (expect == EXPECT_EQUAL_SEMI) {
-                        expect = EXPECT_VAL;
-                    } else {
-                        return error(ret, strBuf.get(), "unexpected character %02X '%c' at %d", c, c, index);
-                    }
-                } else if (c == ';') {
-                    if (expect == EXPECT_SEMI) {
-                        [ret setValue:value forKey:key];
-                        value = nil;
-                        key = nil;
-                        expect = EXPECT_KEY;
-                    } else if (expect == EXPECT_EQUAL_SEMI) {
-                        expect = EXPECT_KEY;
-                        assert(0);
-                        //[array addObject:[array lastObject]];
-                    } else {
-                        return error(ret, strBuf.get(), "unexpected character %02X '%c' at %d", c, c, index);
-                    }
-                } else if (c == '\"') {
-                    if (expect != EXPECT_KEY && expect != EXPECT_VAL) {
-                        return error(ret, strBuf.get(), "unexpected character %02X '%c' at %d", c, c, index);
-                    }
-
-                    strSize = 0;
-                    state = STATE_STRING;
-                } else if (c > ' ') {
-                    if (expect != EXPECT_KEY) {
-                        return error(ret, strBuf.get(), "unexpected character %02X '%c' at %d", c, c, index);
-                    }
-
-                    strBuf[0] = c;
-                    strSize = 1;
-                    state = STATE_STRING_KEY;
-                }
-                break;
-
-            case STATE_COMMENT_SLASH:
-                if (c == '*') {
-                    state = STATE_COMMENT;
-                } else if (c == '/') {
-                    state = STATE_COMMENT_EOL;
-                } else {
-                    return error(ret, strBuf.get(), "unexpected character %02X '%c',after /", c, c);
-                }
-                break;
-
-            case STATE_COMMENT_EOL:
-                if (c == 0x0A) {
-                    state = STATE_WHITESPACE;
-                }
-
-            case STATE_COMMENT:
-                if (c == '*') {
-                    state = STATE_COMMENT_STAR;
-                }
-                break;
-
-            case STATE_COMMENT_STAR:
-                if (c == '/') {
-                    state = STATE_WHITESPACE;
-                } else if (c != '*') {
-                    state = STATE_COMMENT;
-                }
-                break;
-
-            case STATE_STRING_KEY:
-                switch (c) {
-                    case '\"':
-                        return error(ret, strBuf.get(), "unexpected character %02X '%c' at %d", c, c, index);
-                    case '=':
-                        index -= 2;
-                    case ' ':
-                        c = '\"';
-                }
-
-            case STATE_STRING:
-                if (c == '\"') {
-                    strBuf[strSize] = '\0';
-
-                    NSString* string = [NSString stringWithUTF8String:strBuf.get()];
-                    if (expect == EXPECT_KEY) {
-                        key = string;
-                    } else {
-                        value = string;
-                    }
-
-                    state = STATE_WHITESPACE;
-
-                    if (expect == EXPECT_KEY) {
-                        expect = EXPECT_EQUAL_SEMI;
-                    } else {
-                        expect = EXPECT_SEMI;
-                    }
-                } else {
-                    if (strSize >= strMax) {
-                        strMax *= 2;
-                        char* oldPtr = strBuf.release();
-                        strBuf.reset((char*)IwRealloc(oldPtr, strMax));
-                    }
-                    if (c == '\\') {
-                        state = STATE_STRING_SLASH;
-                    } else {
-                        //  [NOTE: Convert to UTF8 here!]
-                        strBuf[strSize] = c;
-                        strSize++;
-                    }
-                }
-                break;
-
-            case STATE_STRING_SLASH:
-                switch (c) {
-                    case 'a':
-                        strBuf[strSize++] = '\a';
-                        state = STATE_STRING;
-                        break;
-                    case 'b':
-                        strBuf[strSize++] = '\b';
-                        state = STATE_STRING;
-                        break;
-                    case 'f':
-                        strBuf[strSize++] = '\f';
-                        state = STATE_STRING;
-                        break;
-                    case 'n':
-                        strBuf[strSize++] = '\n';
-                        state = STATE_STRING;
-                        break;
-                    case 'r':
-                        strBuf[strSize++] = '\r';
-                        state = STATE_STRING;
-                        break;
-                    case 't':
-                        strBuf[strSize++] = '\t';
-                        state = STATE_STRING;
-                        break;
-                    case 'v':
-                        strBuf[strSize++] = '\v';
-                        state = STATE_STRING;
-                        break;
-                    case '0':
-                    case '1':
-                    case '2':
-                    case '3':
-                    case '4':
-                    case '5':
-                    case '6':
-                    case '7':
-                        strBuf[strSize++] = c - '0';
-                        state = STATE_STRING_SLASH_X00;
-                        break;
-
-                    default:
-                        strBuf[strSize++] = c;
-                        state = STATE_STRING;
-                        break;
-                }
-                break;
-
-            case STATE_STRING_SLASH_X00:
-                if (c < '0' || c > '7') {
-                    state = STATE_STRING;
-                    index--;
-                } else {
-                    state = STATE_STRING_SLASH_XX0;
-                    strBuf[strSize - 1] *= 8;
-                    strBuf[strSize - 1] += c - '0';
-                }
-                break;
-
-            case STATE_STRING_SLASH_XX0:
-                state = STATE_STRING;
-                if (c < '0' || c > '7') {
-                    index--;
-                } else {
-                    strBuf[strSize - 1] *= 8;
-                    strBuf[strSize - 1] += c - '0';
-                }
-                break;
-        }
-    }
-
-    if (state != STATE_WHITESPACE) {
-        return error(ret, nullptr, "unexpected EOF\n");
-    }
-
-    switch (expect) {
-        case EXPECT_EQUAL_SEMI:
-            return error(ret, nullptr, "unexpected EOF, expecting = or ;");
-
-        case EXPECT_VAL:
-            return error(ret, nullptr, "unexpected EOF, expecting value");
-
-        case EXPECT_SEMI:
-            return error(ret, nullptr, "unexpected EOF, expecting ;");
-
-        default:
-            break;
-    }
-
-    return [ret autorelease];
+    NSDictionary* propertyList = static_cast<NSDictionary*>(
+        CFPropertyListCreateWithData(nullptr, static_cast<CFDataRef>(data), kCFPropertyListImmutable, nullptr, nullptr));
+    return [propertyList autorelease];
 }
 
 BOOL _isAParagraphSeparatorTypeCharacter(unichar ch) {

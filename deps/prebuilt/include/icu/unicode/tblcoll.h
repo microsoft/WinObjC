@@ -1,6 +1,6 @@
 /*
 ******************************************************************************
-* Copyright (C) 1996-2015, International Business Machines Corporation and
+* Copyright (C) 1996-2016, International Business Machines Corporation and
 * others. All Rights Reserved.
 ******************************************************************************
 */
@@ -684,6 +684,7 @@ public:
     virtual int32_t internalNextSortKeyPart(
         UCharIterator* iter, uint32_t state[2], uint8_t* dest, int32_t count, UErrorCode& errorCode) const;
 
+    // Do not enclose the default constructor with #ifndef U_HIDE_INTERNAL_API
     /**
      * Only for use in ucol_openRules().
      * @internal

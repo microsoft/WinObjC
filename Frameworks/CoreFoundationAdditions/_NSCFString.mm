@@ -20,6 +20,11 @@
 #include "_NSCFString.h"
 #include <CoreFoundation/CFString.h>
 
+@interface _NSCFTemporaryRootObject (NSString)
+- (void)_raiseBoundsExceptionForSelector:(SEL)selector andIndex:(NSUInteger)index;
+- (void)_raiseBoundsExceptionForSelector:(SEL)selector andRange:(NSRange)range;
+@end
+
 // ignore bridge cast warnings here. _NSCFString will be a subclass of NSString. It just
 // doesn't realize it yet.
 #pragma clang diagnostic push
@@ -59,19 +64,40 @@
 
 // NSString overrides
 - (NSUInteger)length {
-    return CFStringGetLength(static_cast<CFStringRef>(self));
+    return _CFStringGetLength2(static_cast<CFStringRef>(self));
+}
+
+- (NSUInteger)hash {
+    return __CFStringHash(static_cast<CFStringRef>(self));
 }
 
 - (unichar)characterAtIndex:(NSUInteger)index {
-    return CFStringGetCharacterAtIndex(static_cast<CFStringRef>(self), index);
+    unichar ch = 0;
+    int err = _CFStringCheckAndGetCharacterAtIndex(static_cast<CFStringRef>(self), index, &ch);
+    if (err == _CFStringErrBounds) {
+        [self _raiseBoundsExceptionForSelector:_cmd andIndex:index];
+        return 0;
+    }
+    return ch;
 }
 
 - (void)getCharacters:(unichar*)buffer range:(NSRange)range {
-    return CFStringGetCharacters(static_cast<CFStringRef>(self), CFRange{ range.location, range.length }, buffer);
+    int err = _CFStringCheckAndGetCharacters(static_cast<CFStringRef>(self), CFRange{ range.location, range.length }, buffer);
+    if (err == _CFStringErrBounds) {
+        [self _raiseBoundsExceptionForSelector:_cmd andRange:range];
+    }
 }
 
 - (void)replaceCharactersInRange:(NSRange)range withString:(NSString*)replacement {
-    CFStringReplace(static_cast<CFMutableStringRef>(self), CFRange{ range.location, range.length }, static_cast<CFStringRef>(replacement));
+    int err = __CFStringCheckAndReplace(static_cast<CFMutableStringRef>(self), CFRange{ range.location, range.length }, static_cast<CFStringRef>(replacement));
+    switch (err) {
+    case _CFStringErrBounds:
+        [self _raiseBoundsExceptionForSelector:_cmd andRange:range];
+        break;
+    case _CFStringErrNotMutable:
+        [self doesNotRecognizeSelector:_cmd];
+        break;
+    }
 }
 
 - (instancetype)copyWithZone:(NSZone*)zone {
