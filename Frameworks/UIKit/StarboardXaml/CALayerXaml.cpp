@@ -165,6 +165,11 @@ Rect LayerContent::_GetContentGravityRect(Size size) {
     float width = 0;
     float height = 0;
 
+    double widthAspect = size.Width / m_contentSize.Width;
+    double heightAspect = size.Height / m_contentSize.Height;
+    double minAspect = std::min<double>(widthAspect, heightAspect);
+    double maxAspect = std::max<double>(widthAspect, heightAspect);
+
     //  Top/bottom switched due to geometric origin
     switch (m_gravity) {
         case ContentGravity::Center:
@@ -280,21 +285,23 @@ Rect LayerContent::_GetContentGravityRect(Size size) {
 
         case ContentGravity::ResizeAspect:
             // UIViewContentModeScaleAspectFit
-            left = 0;
-            top = 0;
-            width = size.Width;
-            height = size.Height;
+
+            // Scale the image with the smaller aspect.
+            width = m_contentSize.Width * (float)minAspect;
+            height = m_contentSize.Height * (float)minAspect;
+
+            left = (size.Width / 2) - (width / 2);
+            top = (size.Height / 2) - (height / 2);
             if (m_image != nullptr) {
-                m_image->Stretch = Stretch::Uniform;
+                // Using Fill since we calculate the aspect ourselves because image translates when modifying its scale with Stretch::Uniform.
+                m_image->Stretch = Stretch::Fill;
             }
             break;
 
         case ContentGravity::ResizeAspectFill:
             // UIViewContentModeScaleAspectFill
-            double widthAspect = size.Width / m_contentSize.Width;
-            double heightAspect = size.Height / m_contentSize.Height;
-            double maxAspect = std::max<double>(widthAspect, heightAspect);
 
+            // Scale the image with the larger aspect.
             width = m_contentSize.Width * (float)maxAspect;
             height = m_contentSize.Height * (float)maxAspect;
 
@@ -302,7 +309,7 @@ Rect LayerContent::_GetContentGravityRect(Size size) {
             top = (size.Height / 2) - (height / 2);
             if (m_image != nullptr)
             {
-                // Using Fill since we calculate the aspect outselves because XAML clips when setting UniformToFill.
+                // Using Fill since we calculate the aspect ourselves because XAML clips when setting UniformToFill.
                 m_image->Stretch = Stretch::Fill;
             }
             break;
