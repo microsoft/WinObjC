@@ -111,10 +111,12 @@ void App::Connect(int connectionId, Platform::Object^ target) {
 }
 
 void App::OnLaunched(LaunchActivatedEventArgs^ args) {
-    EbrApplicationActivated(args);
+    TraceVerbose(TAG, L"OnLaunched invoked");
+    EbrApplicationLaunched(args);
 }
 
 void App::OnActivated(IActivatedEventArgs^ args) {
+    TraceVerbose(TAG, L"OnActivated invoked");
     EbrApplicationActivated(args);
 }
 
@@ -122,8 +124,8 @@ void EbrApplicationLaunched(LaunchActivatedEventArgs^ args) {
     // Opt out of prelaunch for now. MSDN guidance is to check the flag and just return.
     // Or skip re-initializing as the app is being resumed from memory.
     bool initiateAppLaunch = (!(args->PrelaunchActivated)
-                                && args->PreviousExecutionState != ApplicationExecutionState::Running
-                                && args->PreviousExecutionState != ApplicationExecutionState::Suspended);
+                                && (args->PreviousExecutionState != ApplicationExecutionState::Running)
+                                && (args->PreviousExecutionState != ApplicationExecutionState::Suspended));
 
     if (initiateAppLaunch) {
         TraceVerbose(TAG, L"Initializing application");
@@ -205,7 +207,7 @@ extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::Obje
 UIKIT_EXPORT
 int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* delegateClassName) {
     // Make method only run once
-    static int once = [principalClassName, delegateClassName]()->int{
+    static int once = [principalClassName, delegateClassName] () -> int {
 
         // Initialize COM on this thread
         ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
