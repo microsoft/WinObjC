@@ -15,28 +15,8 @@
 //
 //******************************************************************************
 
-#import <StubReturn.h>
-#import <CoreLocation/CoreLocationFunctions.h>
+#import <UIKit/UIKit.h>
 
-/**
- @Status Interoperable
-*/
-BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D coord) {
-    if (coord.latitude > 90.0 || coord.latitude < -90.0) {
-        return false;
-    }
+@interface GeocodingViewController : UITableViewController
 
-    if (coord.longitude > 180.0 || coord.longitude < -180.0) {
-        return false;
-    }
-
-    return true;
-}
-
-/**
- @Status Interoperable
-*/
-CLLocationCoordinate2D CLLocationCoordinate2DMake(CLLocationDegrees latitude, CLLocationDegrees longitude) {
-    CLLocationCoordinate2D returnCoordinate = { latitude, longitude };
-    return returnCoordinate;
-}
+@end

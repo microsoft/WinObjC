@@ -20,5 +20,5 @@
 #import <CoreLocation/CoreLocationDataTypes.h>
 #import <objc/runtime.h>
 
-CORELOCATION_EXPORT BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D coord) STUB_METHOD;
+CORELOCATION_EXPORT BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D coord);
 CORELOCATION_EXPORT CLLocationCoordinate2D CLLocationCoordinate2DMake(CLLocationDegrees latitude, CLLocationDegrees longitude) STUB_METHOD;
