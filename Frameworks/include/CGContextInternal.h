@@ -48,9 +48,11 @@ COREGRAPHICS_EXPORT CGImageRef CGJPEGImageCreateFromData(NSData* data);
 COREGRAPHICS_EXPORT bool CGContextIsPointInPath(CGContextRef c, bool eoFill, float x, float y);
 
 class __CGContext : private objc_object {
+private:
+    CGContextImpl* _backing;
+
 public:
     float scale;
-    CGContextImpl* _backing;
 
     __CGContext(CGImageRef pDest);
     ~__CGContext();
