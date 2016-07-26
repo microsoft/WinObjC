@@ -128,6 +128,13 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSPropertyList.mm">
       <Filter>ReferenceFoundation</Filter>
     </ClangCompile>
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSCalendarTests.mm" />
+
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSCalendar.mm">
+
+        <Filter>ReferenceFoundation</Filter>
+
+    </ClangCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="$(StarboardBasePath)\tests\unittests\Foundation\NSFileManagerUT.txt" />

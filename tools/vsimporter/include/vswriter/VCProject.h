@@ -57,6 +57,7 @@ public:
   const ConditionalValueListMap& getGlobalProperties() const;
   const ConditionalValueListMap& getUserMacros() const;
   const void getPlatforms(StringSet& ret) const;
+  const StringSet& getUrlSchemes() const;
 
   bool write() const;
 
@@ -67,6 +68,7 @@ public:
   virtual VCProjectConfiguration* addConfiguration(const std::string& name);
   virtual VCProjectItem* addItem(const std::string& itemName, const std::string& itemPath, const std::string& filterPath = "");
   virtual void addBuildExtension(const std::string& extension);
+  virtual void setUrlSchemes(const StringSet& schemes);
 
 protected:
   typedef std::map<std::string, VCProjectConfiguration*> ConfigurationMap;
@@ -101,5 +103,6 @@ protected:
   ConditionalValueListMap m_userMacros;
   StringVec m_buildExtensions;
   ConfigurationMap m_configurations;
+  StringSet m_urlSchemes;
   ItemList m_items;
 };

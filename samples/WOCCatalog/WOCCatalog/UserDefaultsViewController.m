@@ -30,28 +30,35 @@ static const CGFloat c_height = 40;
     [super viewDidLoad];
 
     NSUserDefaults* standardDefaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary* dict = @{@"FavoriteWord" : @"Blue"};
+    NSDictionary* dict = @{@"FavoriteWord" : @"ChangeAndRelaunchMe", @"FavoriteBool" : [NSNumber numberWithBool:YES]};
     [standardDefaults registerDefaults:dict];
-    NSString* placeHolder = [NSString stringWithFormat:@"Favorite Word: %@ (Type a new value here and relaunch!)", [standardDefaults stringForKey:@"FavoriteWord"]];
+    NSString* placeHolder = [NSString stringWithFormat:@"%@", [standardDefaults stringForKey:@"FavoriteWord"]];
 
     _textFields = [NSMutableArray new];
 
+    // Text box for retrieving favorite string
     CGRect frame = CGRectMake(c_originX, c_originY, c_width, c_height);
     UITextField* textField = [[UITextField alloc] initWithFrame:frame];
-    textField.textColor = [UIColor blackColor];
-    textField.backgroundColor = [UIColor blueColor];
-    textField.secureTextEntry = NO;
-    textField.font = [UIFont systemFontOfSize:17.0];
     textField.placeholder = placeHolder;
     textField.keyboardType = UIKeyboardTypeASCIICapable;
-    textField.borderStyle = UITextBorderStyleRoundedRect;
-    textField.textAlignment = UITextAlignmentRight;
-    textField.spellCheckingType = UITextSpellCheckingTypeNo;
+    textField.textAlignment = UITextAlignmentLeft;
     textField.delegate = self;
 
     [_textFields addObject:textField];
 
-    [self tableView].allowsSelection = NO;
+    // Slider for retrieving favorite bool
+    UISwitch* switchFavoriteBool = [[UISwitch alloc] initWithFrame:frame];
+    [switchFavoriteBool setOn:[standardDefaults boolForKey:@"FavoriteBool"] animated:NO];
+    [_textFields addObject:switchFavoriteBool];
+    [switchFavoriteBool addTarget:self action:@selector(changeFavoriteBool) forControlEvents:UIControlEventValueChanged];
+
+    [self tableView].allowsSelection = NO;    
+}
+
+- (void)changeFavoriteBool {
+    id newFavorite = [NSNumber numberWithBool:[[_textFields objectAtIndex:1] isOn]];
+    NSUserDefaults* standardDefaults = [NSUserDefaults standardUserDefaults];
+    [standardDefaults setObject:newFavorite forKey:@"FavoriteBool"];
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
@@ -78,7 +85,6 @@ static const CGFloat c_height = 40;
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     NSUserDefaults* standardDefaults = [NSUserDefaults standardUserDefaults];
     [standardDefaults setObject:textField.text forKey:@"FavoriteWord"];
-    [standardDefaults synchronize];
 }
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {

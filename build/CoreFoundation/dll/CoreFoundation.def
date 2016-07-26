@@ -250,6 +250,7 @@ LIBRARY CoreFoundation
         _CFCalendarDecomposeAbsoluteTimeV
         _CFCalendarAddComponentsV
         _CFCalendarGetComponentDifferenceV
+        _CFCalendarGetNextWeekend
 
         ; CFCharacterSet.mm
         CFCharacterSetCreateCopy
@@ -415,6 +416,9 @@ LIBRARY CoreFoundation
         kCFPersianCalendar=kCFCalendarIdentifierPersian DATA
         kCFIndianCalendar=kCFCalendarIdentifierIndian DATA
         kCFISO8601Calendar=kCFCalendarIdentifierISO8601 DATA
+        kCFCopticCalendar=kCFCalendarIdentifierCoptic DATA
+        kCFEthiopicAmeteAlemCalendar=kCFCalendarIdentifierEthiopicAmeteAlem DATA
+        kCFEthiopicAmeteMihretCalendar=kCFCalendarIdentifierEthiopicAmeteMihret DATA
         kCFLocaleCurrentLocaleDidChangeNotification DATA
         CFLocaleCopyCurrent
         CFLocaleCreate
@@ -1256,3 +1260,40 @@ LIBRARY CoreFoundation
         CFGregorianDateGetAbsoluteTime
         CFGregorianDateIsValid
 
+        ; XML Parsing
+        CFXMLCreateStringByEscapingEntities
+        CFXMLCreateStringByUnescapingEntities
+
+        CFXMLNodeCreate
+        CFXMLNodeCreateCopy
+        CFXMLNodeGetInfoPtr
+        CFXMLNodeGetString
+        CFXMLNodeGetTypeCode
+        CFXMLNodeGetTypeID
+        CFXMLNodeGetVersion
+
+        CFXMLParserAbort
+        CFXMLParserCopyErrorDescription
+        CFXMLParserCreate
+        CFXMLParserCreateWithDataFromURL
+        CFXMLParserGetCallBacks
+        CFXMLParserGetContext
+        CFXMLParserGetDocument
+        CFXMLParserGetLineNumber
+        CFXMLParserGetLocation
+        CFXMLParserGetSourceURL
+        CFXMLParserGetStatusCode
+        CFXMLParserGetTypeID
+        CFXMLParserParse
+
+        CFXMLTreeCreateFromData
+        CFXMLTreeCreateFromDataWithError
+        CFXMLTreeCreateWithDataFromURL
+        CFXMLTreeCreateWithNode
+        CFXMLTreeCreateXMLData
+        CFXMLTreeGetNode
+
+        kCFXMLTreeErrorDescription DATA
+        kCFXMLTreeErrorLineNumber DATA
+        kCFXMLTreeErrorLocation DATA
+        kCFXMLTreeErrorStatusCode DATA

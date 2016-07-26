@@ -119,8 +119,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSDate, NSDatePrototype, CFDateGetTypeID);
  @Status Interoperable
 */
 - (NSDate*)dateByAddingTimeInterval:(double)interval {
-    return
-        [[[NSDate allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:[self timeIntervalSinceReferenceDate] + interval] autorelease];
+    return [NSDate dateWithTimeIntervalSinceReferenceDate:[self timeIntervalSinceReferenceDate] + interval];
 }
 
 /**

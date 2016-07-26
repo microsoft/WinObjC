@@ -1,7 +1,7 @@
 /*
 *******************************************************************************
 *
-*   Copyright (C) 1999-2010, International Business Machines
+*   Copyright (C) 1999-2012, International Business Machines
 *   Corporation and others.  All Rights Reserved.
 *
 *******************************************************************************
@@ -17,26 +17,24 @@
 /**
  * \file
  * \brief C API: 16-bit Unicode handling macros
- * 
+ *
  * This file defines macros to deal with 16-bit Unicode (UTF-16) code units and strings.
- * utf16.h is included by utf.h after unicode/umachine.h
- * and some common definitions.
  *
  * For more information see utf.h and the ICU User Guide Strings chapter
- * (http://icu-project.org/userguide/strings.html).
+ * (http://userguide.icu-project.org/strings).
  *
  * <em>Usage:</em>
  * ICU coding guidelines for if() statements should be followed when using these macros.
- * Compound statements (curly braces {}) must be used  for if-else-while... 
+ * Compound statements (curly braces {}) must be used  for if-else-while...
  * bodies and all macro statements should be terminated with semicolon.
  */
 
 #ifndef __UTF16_H__
 #define __UTF16_H__
 
-/* utf.h must be included first. */
+#include "unicode/umachine.h"
 #ifndef __UTF_H__
-#   include "unicode/utf.h"
+#include "unicode/utf.h"
 #endif
 
 /* single-code point definitions -------------------------------------------- */
@@ -55,7 +53,7 @@
  * @return TRUE or FALSE
  * @stable ICU 2.4
  */
-#define U16_IS_LEAD(c) (((c)&0xfffffc00)==0xd800)
+#define U16_IS_LEAD(c) (((c)&0xfffffc00) == 0xd800)
 
 /**
  * Is this code unit a trail surrogate (U+dc00..U+dfff)?
@@ -63,7 +61,7 @@
  * @return TRUE or FALSE
  * @stable ICU 2.4
  */
-#define U16_IS_TRAIL(c) (((c)&0xfffffc00)==0xdc00)
+#define U16_IS_TRAIL(c) (((c)&0xfffffc00) == 0xdc00)
 
 /**
  * Is this code unit a surrogate (U+d800..U+dfff)?
@@ -80,7 +78,7 @@
  * @return TRUE or FALSE
  * @stable ICU 2.4
  */
-#define U16_IS_SURROGATE_LEAD(c) (((c)&0x400)==0)
+#define U16_IS_SURROGATE_LEAD(c) (((c)&0x400) == 0)
 
 /**
  * Assuming c is a surrogate code point (U16_IS_SURROGATE(c)),
@@ -89,13 +87,13 @@
  * @return TRUE or FALSE
  * @stable ICU 4.2
  */
-#define U16_IS_SURROGATE_TRAIL(c) (((c)&0x400)!=0)
+#define U16_IS_SURROGATE_TRAIL(c) (((c)&0x400) != 0)
 
 /**
  * Helper constant for U16_GET_SUPPLEMENTARY.
  * @internal
  */
-#define U16_SURROGATE_OFFSET ((0xd800<<10UL)+0xdc00-0x10000)
+#define U16_SURROGATE_OFFSET ((0xd800 << 10UL) + 0xdc00 - 0x10000)
 
 /**
  * Get a supplementary code point value (U+10000..U+10ffff)
@@ -108,9 +106,7 @@
  * @return supplementary code point (U+10000..U+10ffff)
  * @stable ICU 2.4
  */
-#define U16_GET_SUPPLEMENTARY(lead, trail) \
-    (((UChar32)(lead)<<10UL)+(UChar32)(trail)-U16_SURROGATE_OFFSET)
-
+#define U16_GET_SUPPLEMENTARY(lead, trail) (((UChar32)(lead) << 10UL) + (UChar32)(trail)-U16_SURROGATE_OFFSET)
 
 /**
  * Get the lead surrogate (0xd800..0xdbff) for a
@@ -119,7 +115,7 @@
  * @return lead surrogate (U+d800..U+dbff) for supplementary
  * @stable ICU 2.4
  */
-#define U16_LEAD(supplementary) (UChar)(((supplementary)>>10)+0xd7c0)
+#define U16_LEAD(supplementary) (UChar)(((supplementary) >> 10) + 0xd7c0)
 
 /**
  * Get the trail surrogate (0xdc00..0xdfff) for a
@@ -128,7 +124,7 @@
  * @return trail surrogate (U+dc00..U+dfff) for supplementary
  * @stable ICU 2.4
  */
-#define U16_TRAIL(supplementary) (UChar)(((supplementary)&0x3ff)|0xdc00)
+#define U16_TRAIL(supplementary) (UChar)(((supplementary)&0x3ff) | 0xdc00)
 
 /**
  * How many 16-bit code units are used to encode this Unicode code point? (1 or 2)
@@ -137,7 +133,7 @@
  * @return 1 or 2
  * @stable ICU 2.4
  */
-#define U16_LENGTH(c) ((uint32_t)(c)<=0xffff ? 1 : 2)
+#define U16_LENGTH(c) ((uint32_t)(c) <= 0xffff ? 1 : 2)
 
 /**
  * The maximum number of 16-bit code units per Unicode code point (U+0000..U+10ffff).
@@ -163,15 +159,17 @@
  * @see U16_GET
  * @stable ICU 2.4
  */
-#define U16_GET_UNSAFE(s, i, c) { \
-    (c)=(s)[i]; \
-    if(U16_IS_SURROGATE(c)) { \
-        if(U16_IS_SURROGATE_LEAD(c)) { \
-            (c)=U16_GET_SUPPLEMENTARY((c), (s)[(i)+1]); \
-        } else { \
-            (c)=U16_GET_SUPPLEMENTARY((s)[(i)-1], (c)); \
-        } \
-    } \
+#define U16_GET_UNSAFE(s, i, c)                                 \
+    {                                                           \
+        (c) = (s)[i];                                           \
+        if (U16_IS_SURROGATE(c)) {                              \
+            if (U16_IS_SURROGATE_LEAD(c)) {                     \
+                (c) = U16_GET_SUPPLEMENTARY((c), (s)[(i) + 1]); \
+            } else {                                            \
+                (c) = U16_GET_SUPPLEMENTARY((s)[(i)-1], (c));   \
+            }                                                   \
+        }                                                       \
+    \
 }
 
 /**
@@ -182,6 +180,9 @@
  * The offset may point to either the lead or trail surrogate unit
  * for a supplementary code point, in which case the macro will read
  * the adjacent matching surrogate as well.
+ *
+ * The length can be negative for a NUL-terminated string.
+ *
  * If the offset points to a single, unpaired surrogate, then that itself
  * will be returned as the code point.
  * Iteration through a string is more efficient with U16_NEXT_UNSAFE or U16_NEXT.
@@ -194,20 +195,22 @@
  * @see U16_GET_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_GET(s, start, i, length, c) { \
-    (c)=(s)[i]; \
-    if(U16_IS_SURROGATE(c)) { \
-        uint16_t __c2; \
-        if(U16_IS_SURROGATE_LEAD(c)) { \
-            if((i)+1<(length) && U16_IS_TRAIL(__c2=(s)[(i)+1])) { \
-                (c)=U16_GET_SUPPLEMENTARY((c), __c2); \
-            } \
-        } else { \
-            if((i)>(start) && U16_IS_LEAD(__c2=(s)[(i)-1])) { \
-                (c)=U16_GET_SUPPLEMENTARY(__c2, (c)); \
-            } \
-        } \
-    } \
+#define U16_GET(s, start, i, length, c)                                         \
+    {                                                                           \
+        (c) = (s)[i];                                                           \
+        if (U16_IS_SURROGATE(c)) {                                              \
+            uint16_t __c2;                                                      \
+            if (U16_IS_SURROGATE_LEAD(c)) {                                     \
+                if ((i) + 1 != (length) && U16_IS_TRAIL(__c2 = (s)[(i) + 1])) { \
+                    (c) = U16_GET_SUPPLEMENTARY((c), __c2);                     \
+                }                                                               \
+            } else {                                                            \
+                if ((i) > (start) && U16_IS_LEAD(__c2 = (s)[(i)-1])) {          \
+                    (c) = U16_GET_SUPPLEMENTARY(__c2, (c));                     \
+                }                                                               \
+            }                                                                   \
+        }                                                                       \
+    \
 }
 
 /* definitions with forward iteration --------------------------------------- */
@@ -231,11 +234,13 @@
  * @see U16_NEXT
  * @stable ICU 2.4
  */
-#define U16_NEXT_UNSAFE(s, i, c) { \
-    (c)=(s)[(i)++]; \
-    if(U16_IS_LEAD(c)) { \
-        (c)=U16_GET_SUPPLEMENTARY((c), (s)[(i)++]); \
-    } \
+#define U16_NEXT_UNSAFE(s, i, c)                          \
+    {                                                     \
+        (c) = (s)[(i)++];                                 \
+        if (U16_IS_LEAD(c)) {                             \
+            (c) = U16_GET_SUPPLEMENTARY((c), (s)[(i)++]); \
+        }                                                 \
+    \
 }
 
 /**
@@ -243,6 +248,8 @@
  * and advance the offset to the next code point boundary.
  * (Post-incrementing forward iteration.)
  * "Safe" macro, handles unpaired surrogates and checks for string boundaries.
+ *
+ * The length can be negative for a NUL-terminated string.
  *
  * The offset may point to the lead surrogate unit
  * for a supplementary code point, in which case the macro will read
@@ -258,15 +265,17 @@
  * @see U16_NEXT_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_NEXT(s, i, length, c) { \
-    (c)=(s)[(i)++]; \
-    if(U16_IS_LEAD(c)) { \
-        uint16_t __c2; \
-        if((i)<(length) && U16_IS_TRAIL(__c2=(s)[(i)])) { \
-            ++(i); \
-            (c)=U16_GET_SUPPLEMENTARY((c), __c2); \
-        } \
-    } \
+#define U16_NEXT(s, i, length, c)                                   \
+    {                                                               \
+        (c) = (s)[(i)++];                                           \
+        if (U16_IS_LEAD(c)) {                                       \
+            uint16_t __c2;                                          \
+            if ((i) != (length) && U16_IS_TRAIL(__c2 = (s)[(i)])) { \
+                ++(i);                                              \
+                (c) = U16_GET_SUPPLEMENTARY((c), __c2);             \
+            }                                                       \
+        }                                                           \
+    \
 }
 
 /**
@@ -282,13 +291,15 @@
  * @see U16_APPEND
  * @stable ICU 2.4
  */
-#define U16_APPEND_UNSAFE(s, i, c) { \
-    if((uint32_t)(c)<=0xffff) { \
-        (s)[(i)++]=(uint16_t)(c); \
-    } else { \
-        (s)[(i)++]=(uint16_t)(((c)>>10)+0xd7c0); \
-        (s)[(i)++]=(uint16_t)(((c)&0x3ff)|0xdc00); \
-    } \
+#define U16_APPEND_UNSAFE(s, i, c)                         \
+    {                                                      \
+        if ((uint32_t)(c) <= 0xffff) {                     \
+            (s)[(i)++] = (uint16_t)(c);                    \
+        } else {                                           \
+            (s)[(i)++] = (uint16_t)(((c) >> 10) + 0xd7c0); \
+            (s)[(i)++] = (uint16_t)(((c)&0x3ff) | 0xdc00); \
+        }                                                  \
+    \
 }
 
 /**
@@ -308,15 +319,17 @@
  * @see U16_APPEND_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_APPEND(s, i, capacity, c, isError) { \
-    if((uint32_t)(c)<=0xffff) { \
-        (s)[(i)++]=(uint16_t)(c); \
-    } else if((uint32_t)(c)<=0x10ffff && (i)+1<(capacity)) { \
-        (s)[(i)++]=(uint16_t)(((c)>>10)+0xd7c0); \
-        (s)[(i)++]=(uint16_t)(((c)&0x3ff)|0xdc00); \
-    } else /* c>0x10ffff or not enough space */ { \
-        (isError)=TRUE; \
-    } \
+#define U16_APPEND(s, i, capacity, c, isError)                          \
+    {                                                                   \
+        if ((uint32_t)(c) <= 0xffff) {                                  \
+            (s)[(i)++] = (uint16_t)(c);                                 \
+        } else if ((uint32_t)(c) <= 0x10ffff && (i) + 1 < (capacity)) { \
+            (s)[(i)++] = (uint16_t)(((c) >> 10) + 0xd7c0);              \
+            (s)[(i)++] = (uint16_t)(((c)&0x3ff) | 0xdc00);              \
+        } else /* c>0x10ffff or not enough space */ {                   \
+            (isError) = TRUE;                                           \
+        }                                                               \
+    \
 }
 
 /**
@@ -329,10 +342,12 @@
  * @see U16_FWD_1
  * @stable ICU 2.4
  */
-#define U16_FWD_1_UNSAFE(s, i) { \
-    if(U16_IS_LEAD((s)[(i)++])) { \
-        ++(i); \
-    } \
+#define U16_FWD_1_UNSAFE(s, i)         \
+    {                                  \
+        if (U16_IS_LEAD((s)[(i)++])) { \
+            ++(i);                     \
+        }                              \
+    \
 }
 
 /**
@@ -340,16 +355,20 @@
  * (Post-incrementing iteration.)
  * "Safe" macro, handles unpaired surrogates and checks for string boundaries.
  *
+ * The length can be negative for a NUL-terminated string.
+ *
  * @param s const UChar * string
  * @param i string offset, must be i<length
  * @param length string length
  * @see U16_FWD_1_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_FWD_1(s, i, length) { \
-    if(U16_IS_LEAD((s)[(i)++]) && (i)<(length) && U16_IS_TRAIL((s)[i])) { \
-        ++(i); \
-    } \
+#define U16_FWD_1(s, i, length)                                                   \
+    {                                                                             \
+        if (U16_IS_LEAD((s)[(i)++]) && (i) != (length) && U16_IS_TRAIL((s)[i])) { \
+            ++(i);                                                                \
+        }                                                                         \
+    \
 }
 
 /**
@@ -364,12 +383,14 @@
  * @see U16_FWD_N
  * @stable ICU 2.4
  */
-#define U16_FWD_N_UNSAFE(s, i, n) { \
-    int32_t __N=(n); \
-    while(__N>0) { \
-        U16_FWD_1_UNSAFE(s, i); \
-        --__N; \
-    } \
+#define U16_FWD_N_UNSAFE(s, i, n)   \
+    {                               \
+        int32_t __N = (n);          \
+        while (__N > 0) {           \
+            U16_FWD_1_UNSAFE(s, i); \
+            --__N;                  \
+        }                           \
+    \
 }
 
 /**
@@ -378,19 +399,23 @@
  * (Post-incrementing iteration.)
  * "Safe" macro, handles unpaired surrogates and checks for string boundaries.
  *
+ * The length can be negative for a NUL-terminated string.
+ *
  * @param s const UChar * string
- * @param i string offset, must be i<length
- * @param length string length
+ * @param i int32_t string offset, must be i<length
+ * @param length int32_t string length
  * @param n number of code points to skip
  * @see U16_FWD_N_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_FWD_N(s, i, length, n) { \
-    int32_t __N=(n); \
-    while(__N>0 && (i)<(length)) { \
-        U16_FWD_1(s, i, length); \
-        --__N; \
-    } \
+#define U16_FWD_N(s, i, length, n)                                             \
+    {                                                                          \
+        int32_t __N = (n);                                                     \
+        while (__N > 0 && ((i) < (length) || ((length) < 0 && (s)[i] != 0))) { \
+            U16_FWD_1(s, i, length);                                           \
+            --__N;                                                             \
+        }                                                                      \
+    \
 }
 
 /**
@@ -406,10 +431,12 @@
  * @see U16_SET_CP_START
  * @stable ICU 2.4
  */
-#define U16_SET_CP_START_UNSAFE(s, i) { \
-    if(U16_IS_TRAIL((s)[i])) { \
-        --(i); \
-    } \
+#define U16_SET_CP_START_UNSAFE(s, i) \
+    {                                 \
+        if (U16_IS_TRAIL((s)[i])) {   \
+            --(i);                    \
+        }                             \
+    \
 }
 
 /**
@@ -426,10 +453,12 @@
  * @see U16_SET_CP_START_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_SET_CP_START(s, start, i) { \
-    if(U16_IS_TRAIL((s)[i]) && (i)>(start) && U16_IS_LEAD((s)[(i)-1])) { \
-        --(i); \
-    } \
+#define U16_SET_CP_START(s, start, i)                                           \
+    {                                                                           \
+        if (U16_IS_TRAIL((s)[i]) && (i) > (start) && U16_IS_LEAD((s)[(i)-1])) { \
+            --(i);                                                              \
+        }                                                                       \
+    \
 }
 
 /* definitions with backward iteration -------------------------------------- */
@@ -454,11 +483,13 @@
  * @see U16_PREV
  * @stable ICU 2.4
  */
-#define U16_PREV_UNSAFE(s, i, c) { \
-    (c)=(s)[--(i)]; \
-    if(U16_IS_TRAIL(c)) { \
-        (c)=U16_GET_SUPPLEMENTARY((s)[--(i)], (c)); \
-    } \
+#define U16_PREV_UNSAFE(s, i, c)                          \
+    {                                                     \
+        (c) = (s)[--(i)];                                 \
+        if (U16_IS_TRAIL(c)) {                            \
+            (c) = U16_GET_SUPPLEMENTARY((s)[--(i)], (c)); \
+        }                                                 \
+    \
 }
 
 /**
@@ -482,15 +513,17 @@
  * @see U16_PREV_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_PREV(s, start, i, c) { \
-    (c)=(s)[--(i)]; \
-    if(U16_IS_TRAIL(c)) { \
-        uint16_t __c2; \
-        if((i)>(start) && U16_IS_LEAD(__c2=(s)[(i)-1])) { \
-            --(i); \
-            (c)=U16_GET_SUPPLEMENTARY(__c2, (c)); \
-        } \
-    } \
+#define U16_PREV(s, start, i, c)                                   \
+    {                                                              \
+        (c) = (s)[--(i)];                                          \
+        if (U16_IS_TRAIL(c)) {                                     \
+            uint16_t __c2;                                         \
+            if ((i) > (start) && U16_IS_LEAD(__c2 = (s)[(i)-1])) { \
+                --(i);                                             \
+                (c) = U16_GET_SUPPLEMENTARY(__c2, (c));            \
+            }                                                      \
+        }                                                          \
+    \
 }
 
 /**
@@ -504,10 +537,12 @@
  * @see U16_BACK_1
  * @stable ICU 2.4
  */
-#define U16_BACK_1_UNSAFE(s, i) { \
-    if(U16_IS_TRAIL((s)[--(i)])) { \
-        --(i); \
-    } \
+#define U16_BACK_1_UNSAFE(s, i)         \
+    {                                   \
+        if (U16_IS_TRAIL((s)[--(i)])) { \
+            --(i);                      \
+        }                               \
+    \
 }
 
 /**
@@ -522,10 +557,12 @@
  * @see U16_BACK_1_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_BACK_1(s, start, i) { \
-    if(U16_IS_TRAIL((s)[--(i)]) && (i)>(start) && U16_IS_LEAD((s)[(i)-1])) { \
-        --(i); \
-    } \
+#define U16_BACK_1(s, start, i)                                                     \
+    {                                                                               \
+        if (U16_IS_TRAIL((s)[--(i)]) && (i) > (start) && U16_IS_LEAD((s)[(i)-1])) { \
+            --(i);                                                                  \
+        }                                                                           \
+    \
 }
 
 /**
@@ -541,12 +578,14 @@
  * @see U16_BACK_N
  * @stable ICU 2.4
  */
-#define U16_BACK_N_UNSAFE(s, i, n) { \
-    int32_t __N=(n); \
-    while(__N>0) { \
-        U16_BACK_1_UNSAFE(s, i); \
-        --__N; \
-    } \
+#define U16_BACK_N_UNSAFE(s, i, n)   \
+    {                                \
+        int32_t __N = (n);           \
+        while (__N > 0) {            \
+            U16_BACK_1_UNSAFE(s, i); \
+            --__N;                   \
+        }                            \
+    \
 }
 
 /**
@@ -563,12 +602,14 @@
  * @see U16_BACK_N_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_BACK_N(s, start, i, n) { \
-    int32_t __N=(n); \
-    while(__N>0 && (i)>(start)) { \
-        U16_BACK_1(s, start, i); \
-        --__N; \
-    } \
+#define U16_BACK_N(s, start, i, n)         \
+    {                                      \
+        int32_t __N = (n);                 \
+        while (__N > 0 && (i) > (start)) { \
+            U16_BACK_1(s, start, i);       \
+            --__N;                         \
+        }                                  \
+    \
 }
 
 /**
@@ -584,10 +625,12 @@
  * @see U16_SET_CP_LIMIT
  * @stable ICU 2.4
  */
-#define U16_SET_CP_LIMIT_UNSAFE(s, i) { \
-    if(U16_IS_LEAD((s)[(i)-1])) { \
-        ++(i); \
-    } \
+#define U16_SET_CP_LIMIT_UNSAFE(s, i)  \
+    {                                  \
+        if (U16_IS_LEAD((s)[(i)-1])) { \
+            ++(i);                     \
+        }                              \
+    \
 }
 
 /**
@@ -598,17 +641,21 @@
  * The input offset may be the same as the string length.
  * "Safe" macro, handles unpaired surrogates and checks for string boundaries.
  *
+ * The length can be negative for a NUL-terminated string.
+ *
  * @param s const UChar * string
- * @param start starting string offset (usually 0)
- * @param i string offset, start<=i<=length
- * @param length string length
+ * @param start int32_t starting string offset (usually 0)
+ * @param i int32_t string offset, start<=i<=length
+ * @param length int32_t string length
  * @see U16_SET_CP_LIMIT_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_SET_CP_LIMIT(s, start, i, length) { \
-    if((start)<(i) && (i)<(length) && U16_IS_LEAD((s)[(i)-1]) && U16_IS_TRAIL((s)[i])) { \
-        ++(i); \
-    } \
+#define U16_SET_CP_LIMIT(s, start, i, length)                                                                       \
+    {                                                                                                               \
+        if ((start) < (i) && ((i) < (length) || (length) < 0) && U16_IS_LEAD((s)[(i)-1]) && U16_IS_TRAIL((s)[i])) { \
+            ++(i);                                                                                                  \
+        }                                                                                                           \
+    \
 }
 
 #endif

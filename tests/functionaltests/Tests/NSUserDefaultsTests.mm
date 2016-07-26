@@ -59,34 +59,21 @@ TEST(NSUserDefaults, KVCArray) {
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-CF_EXPORT void CFPreferencesFlushCaches(void);
-
-TEST(NSUserDefaults, Flush) {
-    [[NSUserDefaults standardUserDefaults] setObject:@"Cheddar" forKey:@"FavoriteCheese"];
-    CFPreferencesFlushCaches();
-
-    NSString* actualCheese = [[NSUserDefaults standardUserDefaults] stringForKey:@"FavoriteCheese"];
-    EXPECT_OBJCEQ(@"Cheddar", actualCheese);
-    [[NSUserDefaults standardUserDefaults] setObject:@"Swiss" forKey:@"FavoriteCheese"];
-    actualCheese = [[NSUserDefaults standardUserDefaults] stringForKey:@"FavoriteCheese"];
-    EXPECT_OBJCEQ(@"Swiss", actualCheese);
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FavoriteCheese"];
-    actualCheese = [[NSUserDefaults standardUserDefaults] stringForKey:@"FavoriteCheese"];
-    EXPECT_OBJCEQ(nil, actualCheese);
-    CFPreferencesFlushCaches();
-    actualCheese = [[NSUserDefaults standardUserDefaults] stringForKey:@"FavoriteCheese"];
-    EXPECT_OBJCEQ(nil, actualCheese);
-    [[NSUserDefaults standardUserDefaults] setObject:@"Cheddar" forKey:@"FavoriteCheese"];
-    CFPreferencesFlushCaches();
+TEST(NSUserDefaults, Remove) {
+	[[NSUserDefaults standardUserDefaults] setObject:@"Cheddar" forKey:@"FavoriteCheese"];
+	NSString* actualCheese = [[NSUserDefaults standardUserDefaults] stringForKey:@"FavoriteCheese"];
+	EXPECT_OBJCEQ(@"Cheddar", actualCheese);
+	[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FavoriteCheese"];
+	actualCheese = [[NSUserDefaults standardUserDefaults] stringForKey:@"FavoriteCheese"];
+	EXPECT_OBJCEQ(nil, actualCheese);
 }
 
 TEST(NSUserDefaults, Perf) {
+    NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
     for (int i = 0; i < 500; i++) {
         [[NSUserDefaults standardUserDefaults] setValue:@(i) forKey:[NSString stringWithFormat:@"Test%d", i]];
     }
 
-    NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     NSTimeInterval end = [NSDate timeIntervalSinceReferenceDate];
-    LOG_INFO("Synchronize took %lf s", end - start);
+    LOG_INFO("NSUserDefaults took %lf s", end - start);
 }

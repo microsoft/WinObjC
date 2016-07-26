@@ -1,6 +1,6 @@
 /*
 ********************************************************************************
-*   Copyright (C) 2010, International Business Machines
+*   Copyright (C) 2010-2012, International Business Machines
 *   Corporation and others.  All Rights Reserved.
 ********************************************************************************
 *
@@ -87,7 +87,9 @@ public:
      * @return the complement of the result of operator==
      * @stable ICU 4.4
      */
-    UBool operator!=(const FieldPositionIterator& rhs) const { return !operator==(rhs); }
+    UBool operator!=(const FieldPositionIterator& rhs) const {
+        return !operator==(rhs);
+    }
 
     /**
      * If the current position is valid, updates the FieldPosition values, advances the iterator,
@@ -101,16 +103,13 @@ private:
 
     /**
      * Sets the data used by the iterator, and resets the position.
-     * Returns U_ILLEGAL_ARGUMENT_ERROR in status if the data is not valid 
+     * Returns U_ILLEGAL_ARGUMENT_ERROR in status if the data is not valid
      * (length is not a multiple of 3, or start >= limit for any run).
      */
-    void setData(UVector32 *adopt, UErrorCode& status);
+    void setData(UVector32* adopt, UErrorCode& status);
 
-    UVector32 *data;
+    UVector32* data;
     int32_t pos;
-
-    // No ICU "poor man's RTTI" for this class nor its subclasses.
-    virtual UClassID getDynamicClassID() const;
 };
 
 U_NAMESPACE_END

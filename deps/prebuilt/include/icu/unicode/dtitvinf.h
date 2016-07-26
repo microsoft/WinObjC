@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (C) 2008-2014, International Business Machines Corporation and
+ * Copyright (C) 2008-2016, International Business Machines Corporation and
  * others. All Rights Reserved.
  *******************************************************************************
  *
@@ -329,12 +329,24 @@ private:
      */
     friend class DateIntervalFormat;
 
+    friend struct DateIntervalSink;
+
     /**
      * Following is for saving the interval patterns.
      * We only support interval patterns on
      * ERA, YEAR, MONTH, DAY, AM_PM, HOUR, and MINUTE
      */
-    enum IntervalPatternIndex { kIPI_ERA, kIPI_YEAR, kIPI_MONTH, kIPI_DATE, kIPI_AM_PM, kIPI_HOUR, kIPI_MINUTE, kIPI_MAX_INDEX };
+    enum IntervalPatternIndex {
+        kIPI_ERA,
+        kIPI_YEAR,
+        kIPI_MONTH,
+        kIPI_DATE,
+        kIPI_AM_PM,
+        kIPI_HOUR,
+        kIPI_MINUTE,
+        kIPI_SECOND,
+        kIPI_MAX_INDEX
+    };
 
 public:
 #ifndef U_HIDE_INTERNAL_API

@@ -29,11 +29,12 @@
 #include "CoreGraphics/CGShading.h"
 #include "UIKit/UIColor.h"
 #include "UIKit/UIFont.h"
+#import "UIColorInternal.h"
 
 typedef struct {
     id curFillColorObject;
-    ColorQuad curFillColor, curTextColor, curStrokeColor;
-    ColorQuad curPenColor, curForegroundColor;
+    __CGColorQuad curFillColor, curTextColor, curStrokeColor;
+    __CGColorQuad curPenColor, curForegroundColor;
     CGImageRef _imgClip, _imgMask;
     CGRect _imgMaskRect;
     CGAffineTransform curTransform;
@@ -59,7 +60,8 @@ private:
 #define MAX_CG_STATES 16
 
 class CGContextImpl {
-__CGCONTEXTIMPL_TEST_FRIENDS;
+    __CGCONTEXTIMPL_TEST_FRIENDS;
+
 protected:
     CGContextRef _rootContext;
     CGImageRef _imgDest;

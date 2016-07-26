@@ -58,6 +58,8 @@
       <!-- CoreFoundation resource files -->
       <SBResourceCopy Include="$(StarboardLibDirs)\CFCharacterSetBitmaps.bitmap" />
       <SBResourceCopy Include="$(StarboardLibDirs)\CFUniCharPropertyDatabase.data" />
+      <SBResourceCopy Include="$(StarboardLibDirs)\CFUnicodeData-B.mapping" />
+      <SBResourceCopy Include="$(StarboardLibDirs)\CFUnicodeData-L.mapping" />
     </ItemGroup>
   </Target>
 

@@ -1993,7 +1993,7 @@ CFTypeRef CFDateFormatterCopyProperty(CFDateFormatterRef formatter, CFStringRef 
         return formatter->_property._UsesCharacterDirection ? CFRetain(formatter->_property._UsesCharacterDirection) : CFRetain(kCFBooleanFalse);
     } else if (CFEqual(key, kCFDateFormatterFormattingContextKey)) {
         if (formatter->_property._FormattingContext) return CFRetain(formatter->_property._FormattingContext);
-        int value = 0; // __cficu_udat_getContext(formatter->_df, UDISPCTX_TYPE_CAPITALIZATION, &status); // HACKHACK: don't have this symbol in our ICU version.
+        int value = __cficu_udat_getContext(formatter->_df, UDISPCTX_TYPE_CAPITALIZATION, &status);
         return CFNumberCreate(CFGetAllocator(formatter), kCFNumberIntType, (const void *)&value);
     } else {
         CFAssert3(0, __kCFLogAssertion, "%s(): unknown key %p (%@)", __PRETTY_FUNCTION__, key, key);

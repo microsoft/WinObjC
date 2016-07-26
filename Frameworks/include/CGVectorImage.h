@@ -16,6 +16,8 @@
 
 #pragma once
 
+#import "UIColorInternal.h"
+
 class CGVectorImageBacking;
 
 class CGVectorImage : public __CGImage {
@@ -37,10 +39,10 @@ public:
     CGRect _src, _dest;
     CGPoint _start, _end;
     float _lineWidth;
-    ColorQuad _color;
+    __CGColorQuad _color;
 
     CGVectorDrawingCommand(CGImageRef image, CGRect src, CGRect dst);
-    CGVectorDrawingCommand(CGPoint lineStart, CGPoint lineEnd, ColorQuad color, float lineWidth);
+    CGVectorDrawingCommand(CGPoint lineStart, CGPoint lineEnd, __CGColorQuad color, float lineWidth);
     ~CGVectorDrawingCommand();
 };
 
@@ -74,5 +76,5 @@ public:
     void SetFreeWhenDone(bool freeWhenDone);
 
     void DrawImage(CGImageRef image, CGRect src, CGRect dst);
-    void StrokePath(id path, ColorQuad color, float lineWidth, CGAffineTransform* t);
+    void StrokePath(id path, __CGColorQuad color, float lineWidth, CGAffineTransform* t);
 };
