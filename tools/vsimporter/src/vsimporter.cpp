@@ -267,8 +267,7 @@ int main(int argc, char* argv[])
 
   // Make sure workspace arguments are valid
   if (workspaceSet) {
-	  sbValidateWithTelemetry(!projectSet, "Cannot specify both a project and a workspace.");
-	sbValidateWithTelemetry(targets.empty(), "Cannot specify target(s) when specifying a workspace.");
+    sbValidateWithTelemetry(!projectSet, "Cannot specify both a project and a workspace.");
   }
 
   // Disallow specifying schemes and targets together
@@ -323,14 +322,10 @@ int main(int argc, char* argv[])
   if (mode == ListMode) {
     mainWorkspace->printSummary();
   } else if (mode == GenerateMode) {
-    if (allTargets) {
-      mainWorkspace->queueAllTargets(configurations);
-    } else if (projectSet) {
-      mainWorkspace->queueTargets(targets, configurations);
-    } else if (workspaceSet) {
+    if (!schemes.empty() || allSchemes) {
       mainWorkspace->queueSchemes(schemes, configurations);
     } else {
-		sbAssertWithTelemetry(0); // non-reachable
+      mainWorkspace->queueTargets(targets, configurations);
     }
     mainWorkspace->generateFiles(genProjectionsFlag);
   } else {

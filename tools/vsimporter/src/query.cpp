@@ -47,8 +47,7 @@ bool queryBoolSelection(const String& queryMessage)
   }
 }
 
-template <class T>
-void queryListSelection(const std::vector<T*>& vec, const String& queryMessage, const String& itemName, std::vector<T*>& ret)
+void queryListSelection(const StringVec& vec, const String& queryMessage, const String& itemName, std::vector<size_t>& ret)
 {
   sbAssert(!vec.empty());
 
@@ -58,7 +57,7 @@ void queryListSelection(const std::vector<T*>& vec, const String& queryMessage, 
     
     std::cout << "  0) " << strToUpper("all " + itemName + "s") << std::endl;
     for (int i = 0; i < vec.size(); i++)
-      std::cout << "  " << i+1 << ") " << vec[i]->getName() << std::endl;
+      std::cout << "  " << i+1 << ") " << vec[i] << std::endl;
     
     do {
       std::cout << "Choose the " << itemName << "(s) to export: ";
@@ -74,13 +73,10 @@ void queryListSelection(const std::vector<T*>& vec, const String& queryMessage, 
   std::cout << std::endl;
 
   if (selection == 0) {
-    ret.insert(ret.end(), vec.begin(), vec.end());
+    for (size_t i = 0; i < vec.size(); ++i) {
+      ret.push_back(i);
+    }
   } else {
-    ret.push_back(vec[selection - 1]);
+    ret.push_back(selection - 1);
   }
 }
-
-// Explicit instantiation
-template void queryListSelection<const XCScheme>(const std::vector<const XCScheme*>& vec, const String& queryMessage, const String& itemName, std::vector<const XCScheme*>& ret);
-template void queryListSelection<const PBXTarget>(const std::vector<const PBXTarget*>& vec, const String& queryMessage, const String& itemName, std::vector<const PBXTarget*>& ret);
-template void queryListSelection<const XCBuildConfiguration>(const std::vector<const XCBuildConfiguration*>& vec, const String& queryMessage, const String& itemName, std::vector<const XCBuildConfiguration*>& ret);

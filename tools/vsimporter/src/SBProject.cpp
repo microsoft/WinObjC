@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include <iostream>
+#include <iterator>
 #include "types.h"
 #include "utils.h"
 #include "sbassert.h"
@@ -73,14 +74,7 @@ void SBProject::printSummary()
     for (int i = 0; i < buildConfigs.size(); i++)
       std::cout << "\t" << buildConfigs[i]->getName() << std::endl;
     std::cout << std::endl;
-
-    const String& defaultConfig = buildConfigList->getDefaultConfigurationName();
-    const String& defaultTarget = targets[0]->getName();
-    std::cout << "    If no build configurations are specified then all configurations will be used." << std::endl;
-    std::cout << "    If no targets are specified then all valid targets will be exported." << std::endl;
   }
-
-  std::cout << std::endl;
 }
 
 const String& SBProject::getPath() const
@@ -114,40 +108,26 @@ const StringSet& SBProject::getSelectedConfigurations() const
   return m_selectedConfigs;
 }
 
-void SBProject::getTargets(SBTargetList& ret) const
+void SBProject::getQueuedTargets(SBTargetList& ret) const
 {
   for (auto targetKV : m_existingTargets) {
     ret.push_back(targetKV.second);
   }
 }
 
-void SBProject::queueProjectTargetWithId(const String& targetId, const StringSet& configNames)
+void SBProject::getPossibleTargets(StringVec& ret) const
 {
-  SBTarget* sbTarget = queueTargetWithId(targetId, &configNames);
+  const PBXTargetList& projectTargets = m_project->getTargets();
+  std::transform(projectTargets.begin(),
+                 projectTargets.end(),
+                 back_inserter(ret),
+                 [](const PBXTarget* t) { return t->getName(); });
 }
 
-void SBProject::queueProjectTargets(const StringSet& targetNames, const StringSet& configNames)
+SBTarget* SBProject::queueTargetWithName(const String& targetName, const StringSet* configNames)
 {
-  BuildSettings bs(m_project);
-  bool isInteractive = bs.getValue("VSIMPORTER_INTERACTIVE") == "YES";
-
-  // Get the specified targets
-  PBXTargetList pbxTargets;
-  if (isInteractive) {
-    // Query the user to select schemes
-    queryTargets(pbxTargets);
-  } else if (targetNames.empty()) {
-    // Queue up all targets
-    const PBXTargetList& allTargets = m_project->getTargets();
-    pbxTargets.insert(pbxTargets.end(), allTargets.begin(), allTargets.end());
-  } else {
-    m_project->getTargets(targetNames, pbxTargets);
-  }
-  
-  // Queue up targets
-  for (auto target : pbxTargets) {
-    SBTarget* sbTarget = queueTarget(target, &configNames);
-  }
+  const PBXTarget* pbxTarget = m_project->getTargetWithName(targetName);
+  return queueTarget(pbxTarget, configNames);
 }
 
 SBTarget* SBProject::queueTargetWithId(const String& targetId, const StringSet* configNames)
@@ -207,24 +187,28 @@ void SBProject::selectBuildConfigurations(const StringSet* configNames)
   BuildSettings bs(NULL);
   bool isInteractive = bs.getValue("VSIMPORTER_INTERACTIVE") == "YES";
   const XCConfigurationList* buildConfigList = m_project->getBuildConfigurationList();
-  BuildConfigurationList selectedConfigs;
   if (isInteractive) {
-    queryBuildConfigurations(selectedConfigs);
+    queryBuildConfigurations();
   } else if (configNames->empty()) {
     const BuildConfigurationList& projectConfigs = buildConfigList->getConfigurations();
-    selectedConfigs.insert(selectedConfigs.end(), projectConfigs.begin(), projectConfigs.end());
+    std::transform(projectConfigs.begin(),
+                   projectConfigs.end(),
+                   std::inserter(m_selectedConfigs, m_selectedConfigs.end()),
+                   [](const XCBuildConfiguration* c) { return c->getName(); });
   } else {
-    buildConfigList->getConfigurations(*configNames, selectedConfigs);
-  }
-
-  // Cache the configuration names
-  for (auto config : selectedConfigs) {
-    m_selectedConfigs.insert(config->getName());
+    buildConfigList->getValidConfigurations(*configNames, m_selectedConfigs);
   }
 
   // Add the default configuration, if not all configurations were found
   if (configNames->size() > m_selectedConfigs.size()) {
     m_selectedConfigs.insert(buildConfigList->getDefaultConfigurationName());
+  }
+}
+
+void SBProject::queueAllTargets(const StringSet* configNames)
+{
+  for (auto target : m_project->getTargets()) {
+    queueTarget(target, configNames);
   }
 }
 
@@ -261,7 +245,7 @@ SBTarget* SBProject::queueTarget(const PBXTarget* target, const StringSet* confi
   return sbTarget;
 }
 
-void SBProject::queryBuildConfigurations(BuildConfigurationList& ret) const
+void SBProject::queryBuildConfigurations()
 {
   String queryMessage = "The \"" + getName() + "\" project has multiple build configurations.";
 
@@ -269,14 +253,18 @@ void SBProject::queryBuildConfigurations(BuildConfigurationList& ret) const
   sbAssert(buildConfigList);
   const BuildConfigurationList& buildConfigs = buildConfigList->getConfigurations();
 
-  queryListSelection(buildConfigs, queryMessage, "configuration", ret);
-}
+  StringVec configNames;
+  std::transform(buildConfigs.begin(),
+                 buildConfigs.end(),
+                 back_inserter(configNames),
+                 [](const XCBuildConfiguration* c) { return c->getName(); });
 
-void SBProject::queryTargets(PBXTargetList& ret) const
-{
-  String queryMessage = "The \"" + getName() + "\" project has multiple targets.";
-  const PBXTargetList& targets = m_project->getTargets();
-  queryListSelection(targets, queryMessage, "target", ret);
+  std::vector<size_t> selection;
+  queryListSelection(configNames, queryMessage, "configuration", selection);
+  for (size_t i = 0; i < selection.size(); i++) {
+    size_t currentSelection = selection[i];
+    m_selectedConfigs.insert(configNames[currentSelection]);
+  }
 }
 
 SBProject* SBProject::createFromPath(const String& projectPath)

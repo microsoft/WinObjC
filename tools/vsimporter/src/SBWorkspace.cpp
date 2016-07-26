@@ -177,32 +177,54 @@ void SBWorkspace::findSchemes(const String& containerAbsPath)
   }
 }
 
-void SBWorkspace::printSummary() const
-{ 
-  if (!m_mainProject)
-    std::cout << "Information about workspace \"" << getName() << "\":" << std::endl;
-  else
-    m_mainProject->printSummary();
-  
-  if (!m_schemes.empty()) {
-    std::cout << "    Schemes:" << std::endl;
-    for (int i = 0; i < m_schemes.size(); i++)
-      std::cout << "\t" << m_schemes[i]->getName() << std::endl;
-  } else if (m_mainProject) {
-    std::cout << "    The project does not contain any schemes." << std::endl;
+void SBWorkspace::printSchemes() const
+{
+  std::cout << "    Schemes:" << std::endl;
+  for (int i = 0; i < m_schemes.size(); i++) {
+    std::cout << "\t" << m_schemes[i]->getName() << std::endl;
   }
   std::cout << std::endl;
 }
 
-void SBWorkspace::querySchemes(SchemeVec& ret) const
+void SBWorkspace::printSummary() const
+{ 
+  if (!m_mainProject) {
+    std::cout << "Information about workspace \"" << getName() << "\":" << std::endl;
+    printSchemes();
+  }
+
+  for (auto project : m_openProjects) {
+    project.second->printSummary();
+  }
+
+  if (m_mainProject) {
+    printSchemes();
+  }
+}
+
+void SBWorkspace::queueSelectedTargets(const StringSet& configNames)
 {
   String queryMessage;
-  if (m_workspace)
-    queryMessage = "The \"" + getName() + "\" workspace contains multiple schemes.";
-  else
-    queryMessage = "The project contains multiple schemes.";
+  if (m_workspace) {
+    queryMessage = "The \"" + getName() + "\" workspace contains multiple targets.";
+  } else {
+    queryMessage = "The project contains multiple targets.";
+  }
+
+  StringVec targets;
+  std::vector<SBProject*> projects;
+  for (auto project : m_openProjects) {
+    project.second->getPossibleTargets(targets);
+    projects.insert(projects.end(), targets.size() - projects.size(), project.second);
+  }
   
-  queryListSelection(m_schemes, queryMessage, "scheme", ret);
+  std::vector<size_t> selection;
+  queryListSelection(targets, queryMessage, "target", selection);
+
+  for (size_t i = 0; i < selection.size(); i++) {
+    size_t currentSelection = selection[i];
+    projects[currentSelection]->queueTargetWithName(targets[currentSelection], &configNames);
+  }
 }
 
 const XCScheme* SBWorkspace::getScheme(const String& schemeName) const
@@ -232,10 +254,7 @@ void SBWorkspace::queueSchemes(const StringSet& schemeNames, const StringSet& co
   
   // Get the specified schemes
   SchemeVec schemePtrs;
-  if (isInteractive) {
-    // Query the user to select schemes
-    querySchemes(schemePtrs);
-  } else if (schemeNames.empty()) {
+  if (schemeNames.empty()) {
     // Queue up all schemes
     schemePtrs.insert(schemePtrs.end(), m_schemes.begin(), m_schemes.end());
   } else {
@@ -254,11 +273,32 @@ void SBWorkspace::queueSchemes(const StringSet& schemeNames, const StringSet& co
 
       // Create the target
       if (targetProj) {
-        targetProj->queueProjectTargetWithId(buildRef.id, configNames);
+        targetProj->queueTargetWithId(buildRef.id, &configNames);
       } else {
         SBLog::warning() << "Failed to open \"" << buildRef.container << "\" project referenced by \"" << scheme->getName() << "\" scheme. "
                          << "Ignoring \"" << buildRef.targetName << "\" target." << std::endl;
       }
+    }
+  }
+}
+
+void SBWorkspace::queueTargets(const StringSet& targetNames, const StringSet& configNames)
+{
+  BuildSettings bs(NULL);
+  bool isInteractive = bs.getValue("VSIMPORTER_INTERACTIVE") == "YES";
+
+  // Get the specified targets
+  if (isInteractive) {
+    // Query the user to select targets to be queued
+    queueSelectedTargets(configNames);
+  } else if (targetNames.empty()) {
+    // Queue up all targets
+    for (auto project : m_openProjects) {
+      project.second->queueAllTargets(&configNames);
+    }
+  } else {
+    for (auto targetName : targetNames) {
+      queueTargetWithName(targetName, configNames);
     }
   }
 }
@@ -291,20 +331,6 @@ SBProject* SBWorkspace::openProject(const String& projectPath)
   return ret;
 }
 
-void SBWorkspace::queueTargets(const StringSet& targetNames, const StringSet& configNames)
-{
-  sbAssert(m_mainProject);
-  m_mainProject->queueProjectTargets(targetNames, configNames);
-}
-
-void SBWorkspace::queueAllTargets(const StringSet& configNames)
-{
-  const StringSet emptySet;
-  for (auto project : m_openProjects) {
-    project.second->queueProjectTargets(emptySet, configNames);
-  }
-}
-
 SBTarget* SBWorkspace::queueTargetWithProductName(const String& productName)
 {
   // Ask every open project to try building the target with specified product name
@@ -312,6 +338,18 @@ SBTarget* SBWorkspace::queueTargetWithProductName(const String& productName)
   SBTarget* target = NULL;
   for (auto project : m_openProjects) {
     target = project.second->queueTargetWithProductName(productName);
+    if (target)
+      break;
+  }
+  return target;
+}
+
+SBTarget* SBWorkspace::queueTargetWithName(const String& targetName, const StringSet& configNames)
+{
+  // Ask every open project to try building the target with specified name
+  SBTarget* target = NULL;
+  for (auto project : m_openProjects) {
+    target = project.second->queueTargetWithName(targetName, &configNames);
     if (target)
       break;
   }
@@ -330,7 +368,7 @@ void SBWorkspace::detectProjectCollisions() const
     }
 
     // Get all project targets
-    project.second->getTargets(targets);
+    project.second->getQueuedTargets(targets);
   }
 
   // Check for any target name collisions

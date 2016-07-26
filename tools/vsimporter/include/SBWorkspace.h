@@ -42,11 +42,11 @@ public:
   void printSummary() const;
   void generateFiles(bool genProjectionsProj);
   void queueSchemes(const StringSet& schemeNames, const StringSet& configNames);
-  void queueAllTargets(const StringSet& configNames);
   void queueTargets(const StringSet& targetNames, const StringSet& configNames);
   /********************/
   
   SBTarget* queueTargetWithProductName(const String& productName);
+  SBTarget* queueTargetWithName(const String& targetName, const StringSet& configNames);
   SBProject* openProject(const String& projectPath);
 
 private:
@@ -57,11 +57,12 @@ private:
   SBWorkspace();
   
   void findSchemes(const String& containerAbsPath);
+  void printSchemes() const;
   
   SBProject* findOpenProject(const String& absProjPath) const;
   const XCScheme* getScheme(const String& schemeName) const;
   void getSchemes(const StringSet& schemeNames, SchemeVec& ret) const;
-  void querySchemes(SchemeVec& ret) const;
+  void queueSelectedTargets(const StringSet& configNames);
   void detectProjectCollisions() const;
   VCProject* generateGlueProject() const;
 
