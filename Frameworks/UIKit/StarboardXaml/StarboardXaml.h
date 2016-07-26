@@ -58,7 +58,7 @@ private:
 
 extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg);
 extern "C" void EbrApplicationActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ args);
-extern "C" bool EbrApplicationLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args);
+extern "C" void EbrApplicationLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args);
 void _ApplicationMainLaunch(ActivationType activationType, Platform::Object^ activationArg);
 
 #endif
