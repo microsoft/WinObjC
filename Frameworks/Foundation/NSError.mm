@@ -147,9 +147,9 @@ NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPe
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super init]) {
-        _code = [coder decodeIntForKey:@"code"];
-        _domain = [coder decodeObjectOfClass:[NSString class] forKey:@"domain"];
-        _userInfo = [coder decodeObjectOfClass:[NSDictionary class] forKey:@"userInfo"];
+        _code = [coder decodeIntForKey:@"NS.code"];
+        _domain = [coder decodeObjectOfClass:[NSString class] forKey:@"NS.domain"];
+        _userInfo = [coder decodeObjectOfClass:[NSDictionary class] forKey:@"NS.userInfo"];
     }
 
     return self;
@@ -159,9 +159,9 @@ NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPe
  @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    [coder encodeInt:_code forKey:@"code"];
-    [coder encodeObject:_domain forKey:@"domain"];
-    [coder encodeObject:_userInfo forKey:@"userInfo"];
+    [coder encodeInt:_code forKey:@"NS.code"];
+    [coder encodeObject:_domain forKey:@"NS.domain"];
+    [coder encodeObject:_userInfo forKey:@"NS.userInfo"];
 }
 
 /**

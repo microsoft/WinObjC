@@ -99,7 +99,7 @@ TEST(NSError, NSCFErrorBridge) {
     [testError release];
 }
 
-TEST(NSError, canBeArchived) {
+TEST(NSError, CanBeArchived) {
     NSString* expectedDomain = @"testDomain";
     NSDictionary* expectedUserInfo = @{@1 : @"foo", @2 : @"bar"};
     NSInteger expectedCode = 2;

@@ -488,7 +488,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
  @Status Interoperable
 */
 - (NSSet*)objectsPassingTest:(BOOL (^)(id, BOOL*))predicate {
-    __block NSSet* ret = [NSMutableSet setWithCapacity:0];
+    __block NSMutableSet* ret = [NSMutableSet setWithCapacity:0];
 
    [self enumerateObjectsUsingBlock:^void(id obj, BOOL* stop){
         if (predicate(obj, stop)) {

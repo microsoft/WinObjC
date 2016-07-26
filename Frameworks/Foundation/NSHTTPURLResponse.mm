@@ -35,6 +35,24 @@ static CFHashCode _CFHTTPHeaderHash(const void* obj1) {
     StrongId<NSString> _HTTPVersion;
 }
 
+NSMutableDictionary* _constructCaseInsensitiveDictionary(NSDictionary* dict) {
+    CFDictionaryKeyCallBacks caseInsensitiveKeyChecker = kCFTypeDictionaryKeyCallBacks;
+
+    caseInsensitiveKeyChecker.equal = _CFHTTPHeaderEqual;
+    caseInsensitiveKeyChecker.hash = _CFHTTPHeaderHash;
+
+    NSMutableDictionary* ret = (NSMutableDictionary*)
+        CFDictionaryCreateMutable(NULL, [dict count], &caseInsensitiveKeyChecker, &kCFTypeDictionaryValueCallBacks);
+
+    //  Case insensitive dictionary
+    for (id key in [dict allKeys]) {
+        id val = [dict objectForKey:key];
+        [ret setObject:val forKey:key];
+    }
+
+	return ret;
+}
+
 /**
  @Status Stub
 */
@@ -54,19 +72,7 @@ static CFHashCode _CFHTTPHeaderHash(const void* obj1) {
     NSMutableDictionary* allHeaderFields = nil;
 
     if (headerFields != nil) {
-        CFDictionaryKeyCallBacks caseInsensitiveKeyChecker = kCFTypeDictionaryKeyCallBacks;
-
-        caseInsensitiveKeyChecker.equal = _CFHTTPHeaderEqual;
-        caseInsensitiveKeyChecker.hash = _CFHTTPHeaderHash;
-
-        allHeaderFields = (NSMutableDictionary*)
-            CFDictionaryCreateMutable(NULL, [headerFields count], &caseInsensitiveKeyChecker, &kCFTypeDictionaryValueCallBacks);
-
-        //  Case insensitive dictionary
-        for (id key in [headerFields allKeys]) {
-            id val = [headerFields objectForKey:key];
-            [allHeaderFields setObject:val forKey:key];
-        }
+		allHeaderFields = _constructCaseInsensitiveDictionary(headerFields);
 
         NSString* expectedLength = [allHeaderFields objectForKey:@"Content-Length"];
         if (nil != expectedLength) {
@@ -157,9 +163,9 @@ static CFHashCode _CFHTTPHeaderHash(const void* obj1) {
  @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    [coder encodeInteger:_statusCode forKey:@"statusCode"];
-    [coder encodeObject:_allHeaderFields forKey:@"allHeaderFields"];
-    [coder encodeObject:_HTTPVersion forKey:@"HTTPVersion"];
+    [coder encodeInteger:_statusCode forKey:@"NS.statusCode"];
+    [coder encodeObject:_allHeaderFields forKey:@"NS.allHeaderFields"];
+    [coder encodeObject:_HTTPVersion forKey:@"NS.HTTPVersion"];
     [super encodeWithCoder:coder];
 }
 
@@ -168,9 +174,13 @@ static CFHashCode _CFHTTPHeaderHash(const void* obj1) {
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
-        _statusCode = [coder decodeIntegerForKey:@"statusCode"];
-        _allHeaderFields = [coder decodeObjectOfClass:[NSMutableDictionary class] forKey:@"allHeaderFields"];
-        _HTTPVersion = [coder decodeObjectOfClass:[NSString class] forKey:@"HTTPVersion"];
+        _statusCode = [coder decodeIntegerForKey:@"NS.statusCode"];
+        NSDictionary* headerFields = [coder decodeObjectOfClass:[NSMutableDictionary class] forKey:@"NS.allHeaderFields"];
+		if (headerFields != nil) {
+			_allHeaderFields = _constructCaseInsensitiveDictionary(headerFields);
+	    }
+
+        _HTTPVersion = [coder decodeObjectOfClass:[NSString class] forKey:@"NS.HTTPVersion"];
     }
 
     return self;
@@ -184,20 +194,24 @@ static CFHashCode _CFHTTPHeaderHash(const void* obj1) {
         return NO;
     }
 
+	if (other == self) {
+		return YES;
+	}
+
     return (([super isEqual:other]) && ([self hash] == [other hash]));
 }
 
 /**
  @Status Interoperable
 */
-- (unsigned)hash {
+- (NSUInteger)hash {
     unsigned ret = [super hash] ^ _statusCode;
 
-    if (_allHeaderFields != nil) {
+    if (_allHeaderFields) {
         ret ^= [_allHeaderFields hash];
     }
 
-    if (_HTTPVersion != nil) {
+    if (_HTTPVersion) {
         ret ^= [_HTTPVersion hash];
     }
     return ret;

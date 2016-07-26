@@ -145,11 +145,11 @@ NSString* _NSReplaceIllegalFileNameCharacters(NSString* fileName) {
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super init]) {
-        _expectedContentLength = [coder decodeIntForKey:@"expectedContentLength"];
-        _mimeType = [coder decodeObjectOfClass:[NSString class] forKey:@"mimeType"];
-        _suggestedFilename = [coder decodeObjectOfClass:[NSString class] forKey:@"suggestedFilename"];
-        _textEncodingName = [coder decodeObjectOfClass:[NSString class] forKey:@"textEncodingName"];
-        _url = [coder decodeObjectOfClass:[NSURL class] forKey:@"url"];
+        _expectedContentLength = [coder decodeIntForKey:@"NS.expectedContentLength"];
+        _mimeType = [coder decodeObjectOfClass:[NSString class] forKey:@"NS.mimeType"];
+        _suggestedFilename = [coder decodeObjectOfClass:[NSString class] forKey:@"NS.suggestedFilename"];
+        _textEncodingName = [coder decodeObjectOfClass:[NSString class] forKey:@"NS.textEncodingName"];
+        _url = [coder decodeObjectOfClass:[NSURL class] forKey:@"NS.url"];
     }
 
     return self;
@@ -159,11 +159,11 @@ NSString* _NSReplaceIllegalFileNameCharacters(NSString* fileName) {
  @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    [coder encodeInt:_expectedContentLength forKey:@"expectedContentLength"];
-    [coder encodeObject:_mimeType forKey:@"mimeType"];
-    [coder encodeObject:_suggestedFilename forKey:@"suggestedFilename"];
-    [coder encodeObject:_textEncodingName forKey:@"textEncodingName"];
-    [coder encodeObject:_url forKey:@"url"];
+    [coder encodeInt:_expectedContentLength forKey:@"NS.expectedContentLength"];
+    [coder encodeObject:_mimeType forKey:@"NS.mimeType"];
+    [coder encodeObject:_suggestedFilename forKey:@"NS.suggestedFilename"];
+    [coder encodeObject:_textEncodingName forKey:@"NS.textEncodingName"];
+    [coder encodeObject:_url forKey:@"NS.url"];
 }
 
 /**
@@ -174,27 +174,31 @@ NSString* _NSReplaceIllegalFileNameCharacters(NSString* fileName) {
         return NO;
     }
 
+	if (other == self) {
+		return YES;
+	}
+
     return ([self hash] == [other hash]);
 }
 
 /**
  @Status Interoperable
 */
-- (unsigned)hash {
+- (NSUInteger)hash {
     unsigned ret = _expectedContentLength;
-    if (nil != _suggestedFilename) {
+    if (_suggestedFilename) {
         ret ^= [_suggestedFilename hash];
     }
 
-    if (nil != _mimeType) {
+    if (_mimeType) {
         ret ^= [_mimeType hash];
     }
 
-    if (nil != _textEncodingName) {
+    if (_textEncodingName) {
         ret ^= [_textEncodingName hash];
     }
 
-    if (nil != _url) {
+    if (_url) {
         ret ^= [_url hash];
     }
 

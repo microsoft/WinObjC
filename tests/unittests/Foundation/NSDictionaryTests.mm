@@ -48,7 +48,7 @@ TEST(NSDictionary, Enumerate) {
     ASSERT_EQ(0, waitingCount);
 }
 
-TEST(NSDictionary, keysSortedByValueUsingComparator) {
+TEST(NSDictionary, KeysSortedByValueUsingComparator) {
     NSDictionary* testDict = @{ @"A" : @2, @"B" : @4, @"C" : @3, @"D" : @1 };
     NSArray* actualArray = [testDict keysSortedByValueUsingComparator: ^(id obj1, id obj2) {
         return [obj1 compare:obj2];
@@ -69,7 +69,7 @@ TEST(NSDictionary, ExpandBeyondCapacity) {
     ASSERT_EQ(expectedCount, [dictionary count]);
 }
 
-TEST(NSDictionary, keysSortedByValue) {
+TEST(NSDictionary, KeysSortedByValue) {
     NSDictionary* dictionary = @{@"f" : @6, @"b": @2, @"a" : @1, @"c" : @3, @"e" : @5, @"d" : @4};
     NSArray* expected = @[@"a", @"b", @"c", @"d", @"e", @"f"];
     NSArray* actual = [dictionary keysSortedByValueUsingComparator:^NSComparisonResult(id obj1, id obj2) {
@@ -85,7 +85,7 @@ TEST(NSDictionary, keysSortedByValue) {
     ASSERT_OBJCEQ(expected, actual);
 }
 
-TEST(NSDictionary, keysSortedByValueWithOptions) {
+TEST(NSDictionary, KeysSortedByValueWithOptions) {
     NSDictionary* dictionary = @{@"f" : @6, @"b": @2, @"a" : @1, @"c" : @3, @"e" : @5, @"d" : @4};
     NSArray* expected = @[@"a", @"b", @"c", @"d", @"e", @"f"];
     NSArray* actual = [dictionary keysSortedByValueWithOptions:0 usingComparator:^NSComparisonResult(id obj1, id obj2) {
@@ -101,7 +101,7 @@ TEST(NSDictionary, keysSortedByValueWithOptions) {
     ASSERT_OBJCEQ(expected, actual);
 }
 
-TEST(NSDictionary, keysSortedByValueWithOptions_Stable) {
+TEST(NSDictionary, KeysSortedByValueWithOptions_Stable) {
     NSDictionary* dictionary = @{@"a" : @1, @"b": @1, @"c" : @1, @"d" : @1, @"e" : @1, @"f" : @0};
     NSArray* expected = @[@"f", @"d", @"b", @"e", @"c", @"a"]; // Note: ordering after "f" is dependent on CFDictionary (this ordering matches the reference platform)
     NSArray* actual = [dictionary keysSortedByValueWithOptions:NSSortStable usingComparator:^NSComparisonResult(id obj1, id obj2) {

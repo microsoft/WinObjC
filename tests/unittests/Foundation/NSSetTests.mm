@@ -34,7 +34,7 @@ TEST(NSSet, ContainsObject) {
     ASSERT_FALSE([set containsObject:nil]);
 }
 
-TEST(NSSet, setValueForKey) {
+TEST(NSSet, SetValueForKey) {
     NSMutableDictionary* dict1 = [[@{} mutableCopy] autorelease];
     NSMutableDictionary* dict2 = [[@{@"a" : @"1"} mutableCopy] autorelease];
     NSMutableDictionary* dict3 = [[@{@"b" : @"2"} mutableCopy] autorelease];
@@ -47,7 +47,7 @@ TEST(NSSet, setValueForKey) {
     ASSERT_OBJCEQ(expected, [dict3 objectForKey:key]);
 }
 
-TEST(NSSet, objectsPassingTest) {
+TEST(NSSet, ObjectsPassingTest) {
     NSSet* set = [NSSet setWithObjects:@1, @2, @3, @4, @5, @6, nil];
     NSSet* expectedEvensLessThanFive = [NSSet setWithObjects:@2, @4, nil];
     NSSet* actual = [set objectsPassingTest:^(id obj, BOOL* stop){

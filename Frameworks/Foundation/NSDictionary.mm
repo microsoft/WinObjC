@@ -717,8 +717,8 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
  @Status Interoperable
 */
 - (NSArray*)keysSortedByValueWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr {
-    NSMutableArray* ret = [NSMutableArray arrayWithArray:[self allKeys]];
-    [ret sortWithOptions:opts usingComparator:^NSComparisonResult(id key1, id key2){
+    NSMutableArray* ret = [[self allKeys] mutableCopy];
+    [ret sortWithOptions:opts usingComparator:^NSComparisonResult(id key1, id key2) {
         id val1 = [self objectForKey:key1];
         id val2 = [self objectForKey:key2];
         return cmptr(val1, val2);
