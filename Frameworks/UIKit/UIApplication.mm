@@ -778,10 +778,22 @@ static void printViews(id curView, int level) {
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Windows Launcher only supports launching URIs asynchronously. Check if the URI can be opened
+ and return its result to the caller instead of blocking for the URI to be actually opened.
 */
 - (BOOL)openURL:(NSURL*)url {
-    return [_launcher _openURL:url];
+    if ([self canOpenURL:url]) {
+        dispatch_queue_t queue =
+            ([NSThread isMainThread]) ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+        dispatch_async(queue,
+                       ^{
+                           [_launcher _openURL:url];
+                       });
+        return YES;
+    }
+
+    return NO;
 }
 
 /**
