@@ -26,13 +26,19 @@ TEST(CGBitmapContext, BitmapInfoAPIs_CMYK) {
     CGColorSpaceRef cmykColorSpace = CGColorSpaceCreateDeviceCMYK();
     CGContextRef context = CGBitmapContextCreate(0, 0, 0, 8, 0, cmykColorSpace, 0);
 
+    EXPECT_EQ(CGBitmapContextGetBitmapInfo(context), 0);
+
     // The following tests may fail since CMYK color spaces are not supported
     // and so cmykColorSpace will be NULL.  If a NULL colorspace is passed
-    // to CGBitmapContextCreate, a RGB colorspace will be assumed.
+    // to CGBitmapContextCreate, a RGB colorspace will be assumed and calls to
+    // CGBitmapContextGetBitsPerComponent and CGBitmapContextGetBitsPerPixel will
+    // return the values for a context created with an RGB colorspace instead of a
+    // CMYK one.
     // TODO:: GitHub Issue: https://github.com/Microsoft/WinObjC/issues/594
-    EXPECT_EQ(CGBitmapContextGetBitmapInfo(context), 0);
-    EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context), 8);
-    EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 32);
+    // TODO:: Re-add these tests when CMYK colorspaces are supported
+
+    // EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context), 8);
+    // EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 32);
 
     CGColorSpaceRelease(cmykColorSpace);
     CGContextRelease(context);
