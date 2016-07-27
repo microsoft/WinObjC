@@ -31,9 +31,8 @@ App::App() {
 }
 
 extern "C" int main(int argc, char* argv[]);
-extern "C" int __cdecl EbrDefaultXamlMain();
-extern "C" void EbrApplicationActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ args);
-extern "C" void EbrApplicationLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args);
+extern "C" void OnApplicationActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ args);
+extern "C" void OnApplicationLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args);
 
 /// <summary>
 /// Invoked when the application is launched normally by the end user.  Other entry points
@@ -42,12 +41,12 @@ extern "C" void EbrApplicationLaunched(Windows::ApplicationModel::Activation::La
 /// <param name="e">Details about the launch request and process.</param>
 void App::OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ e) {
     main(0, NULL);
-    EbrApplicationLaunched(e);
+    OnApplicationLaunched(e);
 }
 
 void App::OnActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ e) {
     main(0, NULL);
-    EbrApplicationActivated(e);
+    OnApplicationActivated(e);
 }
 
 /// <summary>

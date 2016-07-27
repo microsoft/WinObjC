@@ -111,16 +111,16 @@ void App::Connect(int connectionId, Platform::Object^ target) {
 }
 
 void App::OnLaunched(LaunchActivatedEventArgs^ args) {
-    TraceVerbose(TAG, L"OnLaunched invoked");
-    EbrApplicationLaunched(args);
+    OnApplicationLaunched(args);
 }
 
 void App::OnActivated(IActivatedEventArgs^ args) {
-    TraceVerbose(TAG, L"OnActivated invoked");
-    EbrApplicationActivated(args);
+    OnApplicationActivated(args);
 }
 
-void EbrApplicationLaunched(LaunchActivatedEventArgs^ args) {
+void OnApplicationLaunched(LaunchActivatedEventArgs^ args) {
+    TraceVerbose(TAG, L"OnLaunched event received for %d. Previous app state was %d", args->Kind, args->PreviousExecutionState);
+
     // Opt out of prelaunch for now. MSDN guidance is to check the flag and just return.
     // Or skip re-initializing as the app is being resumed from memory.
     bool initiateAppLaunch = (!(args->PrelaunchActivated)
@@ -128,18 +128,16 @@ void EbrApplicationLaunched(LaunchActivatedEventArgs^ args) {
                                 && (args->PreviousExecutionState != ApplicationExecutionState::Suspended));
 
     if (initiateAppLaunch) {
-        TraceVerbose(TAG, L"Initializing application");
         _ApplicationMainLaunch(ActivationTypeNone, args);
     }
 }
 
-void EbrApplicationActivated(IActivatedEventArgs^ args) {
+void OnApplicationActivated(IActivatedEventArgs^ args) {
     TraceVerbose(TAG, L"OnActivated event received for %d. Previous app state was %d", args->Kind, args->PreviousExecutionState);
 
     bool initiateAppLaunch = false;
     if ((args->PreviousExecutionState != ApplicationExecutionState::Running) &&
         (args->PreviousExecutionState != ApplicationExecutionState::Suspended)) {
-        TraceVerbose(TAG, L"Initializing application");
         initiateAppLaunch = true;
     }
 
@@ -182,12 +180,13 @@ void EbrApplicationActivated(IActivatedEventArgs^ args) {
 }
 
 void _ApplicationMainLaunch(ActivationType activationType, Platform::Object^ activationArg) {
+    TraceVerbose(TAG, L"Initializing application");
     _ApplicationLaunch(activationType, activationArg);
     _appEvents = ref new AppEventListener();
     _appEvents->_RegisterEventHandlers();
 }
 
-extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
+void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
     auto uiElem = ref new Xaml::Controls::Grid();
     auto rootFrame = ref new Xaml::Controls::Frame();
     rootFrame->Content = uiElem;
@@ -290,7 +289,7 @@ void UIApplicationActivationTest(IInspectable* activationArgs, void* delegateCla
         g_delegateClassName = ref new Platform::String();
     }
 
-    EbrApplicationActivated(static_cast<IActivatedEventArgs^>(reinterpret_cast<Platform::Object^>(activationArgs)));
+    OnApplicationActivated(static_cast<IActivatedEventArgs^>(reinterpret_cast<Platform::Object^>(activationArgs)));
 }
 
 // clang-format on

@@ -1164,6 +1164,6 @@ LIBRARY UIKit
         UIRequestTransactionProcessing
         UIOrientationFromString
         UIApplicationDidChangeDisplayModeNofication
-        EbrApplicationActivated
-        EbrApplicationLaunched
+        OnApplicationActivated
+        OnApplicationLaunched
 
