@@ -339,6 +339,8 @@ class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArg
     }
 };
 
+NSMutableDictionary *_pageMappings;
+
 @implementation UIViewController : UIResponder
 
 @synthesize preferredFocusedView;
@@ -1765,10 +1767,13 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     return priv->_isEditing;
 }
 
-
 - (void)_loadXamlPage {
     if (priv->_xamlClassName == nil) {
         return;
+    }
+
+    if (_pageMappings == nil) {
+        _pageMappings = (NSMutableDictionary *)CFDictionaryCreateMutable(NULL, 10, NULL, NULL);
     }
 
     CGRect frame = [[UIScreen mainScreen] applicationFrame];
@@ -1787,6 +1792,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     xamlType->ActivateInstance(pageObj.GetAddressOf());
 
     priv->_page = CreateRtProxy([WXCPage class], pageObj.Get());
+    [_pageMappings setObject: self forKey: (id) (void *) pageObj.Get()];
 
     // Walk the list of outlets and assign them to the corresponding XAML UIElement
     unsigned int propListCount = 0;
@@ -2779,3 +2785,11 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 }
 
 @end
+
+extern "C" void UIViewControllerFirePageEvent(void *pageController, const char *selector)
+{
+    id obj = [_pageMappings objectForKey: (id)pageController];
+    SEL sel = sel_registerName(selector);
+    [obj performSelector: sel withObject: nil];
+}
+

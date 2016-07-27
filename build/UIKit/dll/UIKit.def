@@ -1166,4 +1166,4 @@ LIBRARY UIKit
         UIApplicationDidChangeDisplayModeNofication
         EbrApplicationActivated
         EbrApplicationLaunched
-
+        UIViewControllerFirePageEvent

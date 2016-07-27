@@ -50,14 +50,14 @@
     NSLog(@"buttonClicked");
 
     // Change the label text
-    self.label.text = @"You clicked a button";
+    self.text.text = @"You clicked a button";
 }
 
 - (IBAction)sliderValueChanged:(id)sender {
     NSLog(@"sliderValueChangedChanged: %@", self.text.text);
 
     // Change the label text
-    self.label.text = [NSString stringWithFormat:@"Slider value: %f", self.slider.value];
+    self.text.text = [NSString stringWithFormat:@"Slider value: %f", self.slider.value];
 }
 
 

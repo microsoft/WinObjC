@@ -19,11 +19,11 @@
 // Change the view controller to derive from UIXAMLViewController so that we could load the XAML page.
 @interface MainViewController : UIViewController <UITextFieldDelegate>
 
-@property (weak, nonatomic) IBOutlet UILabel* label;
-@property (weak, nonatomic) IBOutlet UITextField* text;
-@property (weak, nonatomic) IBOutlet UIButton* button;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView* spinner;
-@property (weak, nonatomic) IBOutlet UISlider* slider;
+@property (strong, nonatomic) IBOutlet UILabel* label;
+@property (strong, nonatomic) IBOutlet UITextField* text;
+@property (strong, nonatomic) IBOutlet UIButton* button;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView* spinner;
+@property (strong, nonatomic) IBOutlet UISlider* slider;
 
 @end
 
