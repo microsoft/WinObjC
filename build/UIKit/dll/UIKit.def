@@ -4,6 +4,8 @@ LIBRARY UIKit
         UIApplicationMain
         UIApplicationInitialize
         UIApplicationActivationTest
+        UIApplicationActivated
+        UIApplicationLaunched
 
         ; NSAttributedString
         NSFontAttributeName DATA
@@ -1164,6 +1166,4 @@ LIBRARY UIKit
         UIRequestTransactionProcessing
         UIOrientationFromString
         UIApplicationDidChangeDisplayModeNofication
-        UIApplicationActivated
-        UIApplicationLaunched
 
