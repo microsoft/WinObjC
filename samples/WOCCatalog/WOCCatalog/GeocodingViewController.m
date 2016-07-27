@@ -96,7 +96,7 @@
                     completionHandler:^(NSArray* placemarks, NSError* error) {
                         if (error) {
                             self.rowLabel2 = [NSString stringWithFormat:@"Error: %@", error];
-                            self.rowLabelDetail2 = @"Error";
+                            self.rowLabelDetail2 = @"Error (Expect error in this row)";
                         }
                         
                         if ([placemarks count] > 0) {

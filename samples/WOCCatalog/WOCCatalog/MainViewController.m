@@ -60,7 +60,7 @@
     [super viewDidLoad];
     
     // Geocoding
-    [self addMenuItemViewController:[[AudioToolboxViewController alloc] init] andTitle:@"Geocoding"];
+    [self addMenuItemViewController:[[GeocodingViewController alloc] init] andTitle:@"Geocoding"];
     
     // AudioToolbox
     [self addMenuItemViewController:[[AudioToolboxViewController alloc] init] andTitle:@"AudioToolbox"];
