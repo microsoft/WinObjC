@@ -17,7 +17,7 @@
 #pragma once
 
 #import <SafariServices/SafariServicesExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @class SFSafariViewController;
 @class NSURL;

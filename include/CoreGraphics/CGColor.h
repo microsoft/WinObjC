@@ -31,3 +31,4 @@ COREGRAPHICS_EXPORT CGColorSpaceRef CGColorGetColorSpace(CGColorRef color);
 COREGRAPHICS_EXPORT size_t CGColorGetNumberOfComponents(CGColorRef color);
 COREGRAPHICS_EXPORT const CGFloat* CGColorGetComponents(CGColorRef color);
 COREGRAPHICS_EXPORT CGPatternRef CGColorGetPattern(CGColorRef color);
+COREGRAPHICS_EXPORT CFTypeID CGColorGetTypeID();
