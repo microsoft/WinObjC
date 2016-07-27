@@ -40,7 +40,8 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import <mutex>
 
 @implementation NSOperation {
-    StrongId<NSMutableArray> _dependencies;
+    StrongId<NSMutableSet> _dependencies;
+    NSUInteger _readyCount;
     StrongId<void(^)()> _completionBlock;
     std::condition_variable_any _finishCondition;
     std::recursive_mutex _finishLock;
@@ -68,13 +69,11 @@ static const NSString* NSOperationContext = @"context";
     std::lock_guard<std::recursive_mutex> lock(_readyLock);
     bool newReady = YES;
 
-    // If cancelled, skip this logic and set _ready to YES. Otherwise check dependencies.
+    // If cancelled, skip this logic and set _ready to YES. Otherwise check dependency ready count.
     if (![self isCancelled]) {
         std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
-        for(NSOperation* op in (NSArray*)_dependencies) {
-            if (![op isFinished]) {
-                newReady = NO;
-            }
+        if (_readyCount < [_dependencies count]) {
+            newReady = NO;
         }
     }
 
@@ -92,6 +91,13 @@ static const NSString* NSOperationContext = @"context";
             _finishCondition.notify_all();
             _finishLock.unlock();
         } else {
+            std::lock_guard<std::recursive_mutex> lock(_readyLock);
+            if ([object isFinished]) {
+                if ([_dependencies containsObject:object]) {
+                    _readyCount++;
+                }
+            }
+
             [self _checkReady];
         }
     }
@@ -99,7 +105,7 @@ static const NSString* NSOperationContext = @"context";
 
 - (id)init {
     if (self = [super init]) {
-        _dependencies.attach([NSMutableArray new]);
+        _dependencies.attach([NSMutableSet new]);
         _ready = YES;
         [self addObserver:self forKeyPath:@"isFinished" options:0 context:(void*)NSOperationContext];
     }
@@ -119,10 +125,10 @@ static const NSString* NSOperationContext = @"context";
  @Status Interoperable
 */
 - (void)addDependency:(id)operation {
-    std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
+    std::lock_guard<std::recursive_mutex> dependenciesLock(_dependenciesLock);
     [self willChangeValueForKey:@"dependencies"];
     [_dependencies addObject:operation];
-    [operation addObserver:self forKeyPath:@"isFinished" options:0 context:(void*)NSOperationContext];
+    [operation addObserver:self forKeyPath:@"isFinished" options:NSKeyValueObservingOptionInitial context:(void*)NSOperationContext];
     [self didChangeValueForKey:@"dependencies"];
     [self _checkReady];
 }
@@ -131,12 +137,16 @@ static const NSString* NSOperationContext = @"context";
  @Status Interoperable
 */
 - (void)removeDependency:(NSOperation*)operation {
-    std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
-    NSUInteger index = [_dependencies indexOfObject:operation];
-    if (index != NSNotFound) {
+    std::lock_guard<std::recursive_mutex> readyLock(_readyLock);
+    std::lock_guard<std::recursive_mutex> dependenciesLock(_dependenciesLock);
+    if ([_dependencies containsObject:operation]) {
         [self willChangeValueForKey:@"dependencies"];
-        [operation removeObserver:self forKeyPath:@"isFinished" context:(void*)NSOperationContext];
+        if ([operation isFinished]) {
+            _readyCount--;
+        }
+
         [_dependencies removeObject:operation];
+        [operation removeObserver:self forKeyPath:@"isFinished" context:(void*)NSOperationContext];
         [self didChangeValueForKey:@"dependencies"];
         [self _checkReady];
     }
@@ -304,8 +314,7 @@ static const NSString* NSOperationContext = @"context";
 */
 - (NSArray*)dependencies {
     std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
-    NSArray* copy = [[_dependencies copy] autorelease];
-    return copy;
+    return [_dependencies allObjects];
 }
 
 /**
@@ -313,7 +322,7 @@ static const NSString* NSOperationContext = @"context";
 */
 - (void)dealloc {
     _dependenciesLock.lock();
-    for(NSOperation* op in (NSArray*)_dependencies) {
+    for(NSOperation* op in [_dependencies allObjects]) {
         [op removeObserver:self forKeyPath:@"isFinished" context:(void*)NSOperationContext];
     }
 
