@@ -32,6 +32,7 @@
 #import <UIKit/UINib.h>
 #import <UIKit/UIApplicationDelegate.h>
 #import <StringHelpers.h>
+#import <CollectionHelpers.h>
 #import "NSThread-Internal.h"
 #import "NSUserDefaultsInternal.h"
 #import "StarboardXaml/StarboardXaml.h"
@@ -48,7 +49,7 @@
 static const wchar_t* TAG = L"UIApplicationMain";
 
 using namespace Microsoft::WRL;
-using namespace ABI::Windows::Foundation;
+using namespace ABI::Windows::Foundation::Collections;
 
 @interface NSAutoreleasePoolWarn : NSAutoreleasePool
 @end
@@ -334,15 +335,11 @@ extern "C" void UIApplicationMainHandleToastActionEvent(HSTRING toastArgument, I
 
     // Convert IPropertyValue to NSString
     WFCValueSet* values = [WFCValueSet createWith:toastUserInput];
-    NSMutableDictionary* userInput = [NSMutableDictionary new];
-    for (NSString* key in [values allKeys]) {
-        RTObject* holderObject = [values objectForKey:key];
-        ComPtr<IPropertyValue> value;
-        THROW_NS_IF_FAILED(holderObject.comObj.As(&value));
-        Wrappers::HString hstr;
-        THROW_NS_IF_FAILED(value->GetString(hstr.GetAddressOf()));
-        [userInput setObject:Strings::WideToNSString(hstr.Get()) forKey:key];
-    }
+    NSDictionary* userInput = [NSDictionary new];
+
+    // UserInput only contains strings so we can treat it as a map of only strings to convert correctly
+    THROW_NS_IF_FAILED(Collections::WRLToNSCollection(
+        reinterpret_cast<ComPtr<ABI::Windows::Foundation::Collections::IMap<HSTRING, HSTRING>>*>(toastUserInput)->Get(), &userInput));
 
     NSDictionary* toastAction =
         @{ UIApplicationLaunchOptionsToastActionArgumentKey : argument, UIApplicationLaunchOptionsToastActionUserInputKey : userInput };
