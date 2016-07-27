@@ -1,6 +1,5 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -48,18 +47,14 @@ COREGRAPHICS_EXPORT CGImageRef CGJPEGImageCreateFromData(NSData* data);
 COREGRAPHICS_EXPORT bool CGContextIsPointInPath(CGContextRef c, bool eoFill, float x, float y);
 
 class __CGContext : private objc_object {
-private:
-    CGContextImpl* _backing;
-
 public:
     float scale;
+    CGContextImpl* _backing;
 
     __CGContext(CGImageRef pDest);
     ~__CGContext();
 
-    inline CGContextImpl* Backing() {
-        return _backing;
-    }
+    CGContextImpl* Backing();
 };
 #include "CGContextImpl.h"
 
