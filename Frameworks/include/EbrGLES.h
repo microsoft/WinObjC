@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -40,7 +41,7 @@ EbrFastTexture* EbrCreateFastTexture(int x,
                                      int height,
                                      int sourceStride,
                                      void* data,
-                                     surfaceFormat fmt,
+                                     __CGSurfaceFormat fmt,
                                      EbrTextureFilter minFilter = EbrTextureFilterLinear,
                                      EbrTextureFilter magFilter = EbrTextureFilterLinear);
 void* EbrLockFastTexture(EbrFastTexture* buf, int* stride);

@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -351,7 +352,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
     if ([NSThread isMainThread]) {
         tex = GetCACompositor()->CreateWritableBitmapTexture32(width, height);
     }
-    CGContextRef ret = CGBitmapContextCreate32(width, height, tex, &_globallockingBufferInterface);
+
+    CGContextRef ret = _CGBitmapContextCreateWithTexture(width, height, tex, &_globallockingBufferInterface);
+
     if (tex) {
         _globallockingBufferInterface.ReleaseDisplayTexture(tex);
     }
@@ -570,9 +573,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
             if ((priv->isOpaque && priv->_backgroundColor == nil) || (priv->backgroundColor.a == 1.0 && 0)) {
                 /* CGVectorImage is currently in development - not ready for general use */
                 if (useVector) {
-                    // target = new CGVectorImage(width, height, _ColorRGB);
+                    // target = new CGVectorImage(width, height, _ColorBGR);
                 } else {
-                    drawContext = CGBitmapContextCreate24(width, height);
+                    drawContext = _CGBitmapContextCreateWithFormat(width, height, _ColorBGR);
                 }
                 priv->drewOpaque = TRUE;
             } else {

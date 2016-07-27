@@ -15,22 +15,22 @@
 //
 //******************************************************************************
 
-#ifndef __CGCONTEXTINTERNAL_H
-#define __CGCONTEXTINTERNAL_H
+#pragma once
 
 #include "CGImageInternal.h"
 #include "CoreGraphics/CGContext.h"
+#include "CoreGraphicsInternal.h"
 #include "Starboard.h"
 
 #include <objc/runtime.h>
 
 class CGContextImpl;
 COREGRAPHICS_EXPORT void EbrCenterTextInRectVertically(CGRect* rect, CGSize* textSize, id font);
-COREGRAPHICS_EXPORT CGContextRef CGBitmapContextCreate32(int width,
-                                                         int height,
-                                                         DisplayTexture* texture = NULL,
-                                                         DisplayTextureLocking* locking = NULL);
-COREGRAPHICS_EXPORT CGContextRef CGBitmapContextCreate24(int width, int height);
+COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithTexture(int width,
+                                                                   int height,
+                                                                   DisplayTexture* texture = NULL,
+                                                                   DisplayTextureLocking* locking = NULL);
+COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurfaceFormat fmt);
 COREGRAPHICS_EXPORT CGImageRef CGBitmapContextGetImage(CGContextRef ctx);
 COREGRAPHICS_EXPORT void CGContextDrawImageRect(CGContextRef ctx, CGImageRef img, CGRect src, CGRect dst);
 COREGRAPHICS_EXPORT void CGContextClearToColor(CGContextRef ctx, float r, float g, float b, float a);
@@ -61,6 +61,5 @@ public:
         return _backing;
     }
 };
-#include "CGContextImpl.h"
 
-#endif
+#include "CGContextImpl.h"

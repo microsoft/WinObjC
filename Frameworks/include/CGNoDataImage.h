@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -14,19 +15,23 @@
 //
 //******************************************************************************
 
+#pragma once
+
 class CGNoDataImage : public __CGImage {
 public:
-    CGNoDataImage(DWORD width, DWORD height, surfaceFormat fmt);
+    CGNoDataImage(DWORD width, DWORD height, __CGSurfaceFormat fmt);
 };
 
 class CGNoDataImageBacking : public CGImageBacking {
 private:
-    surfaceFormat _bitmapFmt;
+    __CGSurfaceFormat _bitmapFmt;
+    CGColorSpaceModel _colorSpaceModel;
+    CGBitmapInfo _bitmapInfo;
     DWORD _width, _height;
 
 public:
     DisplayTexture* _generatedTexture;
-    CGNoDataImageBacking(DWORD width, DWORD height, surfaceFormat fmt);
+    CGNoDataImageBacking(DWORD width, DWORD height, __CGSurfaceFormat fmt);
 
     ~CGNoDataImageBacking();
 
@@ -42,7 +47,11 @@ public:
     int Height();
     int BytesPerRow();
     int BytesPerPixel();
-    surfaceFormat SurfaceFormat();
+    int BitsPerComponent();
+    void GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo);
+    __CGSurfaceFormat SurfaceFormat();
+    CGColorSpaceModel ColorSpaceModel();
+    CGBitmapInfo BitmapInfo();
     void* StaticImageData();
     void* LockImageData();
     void ReleaseImageData();

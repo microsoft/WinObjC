@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -22,7 +23,7 @@ class CGVectorImageBacking;
 
 class CGVectorImage : public __CGImage {
 public:
-    CGVectorImage(DWORD width, DWORD height, surfaceFormat fmt);
+    CGVectorImage(DWORD width, DWORD height, __CGSurfaceFormat fmt);
     CGImageRef Rasterize(CGRect* insets);
 
     inline CGVectorImageBacking* VectorBacking() {
@@ -49,11 +50,12 @@ public:
 class CGVectorImageBacking : public CGImageBacking {
 private:
     int _width, _height;
-    surfaceFormat _surfaceFmt;
+    __CGSurfaceFormat _surfaceFmt;
+    CGColorSpaceModel _colorSpaceModel;
     CGVectorDrawingCommand* _drawCommand;
 
 public:
-    CGVectorImageBacking(DWORD width, DWORD height, surfaceFormat fmt);
+    CGVectorImageBacking(DWORD width, DWORD height, __CGSurfaceFormat fmt);
 
     ~CGVectorImageBacking();
 
@@ -67,7 +69,11 @@ public:
     int Height();
     int BytesPerRow();
     int BytesPerPixel();
-    surfaceFormat SurfaceFormat();
+    int BitsPerComponent();
+    void GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo);
+    __CGSurfaceFormat SurfaceFormat();
+    CGColorSpaceModel ColorSpaceModel();
+    CGBitmapInfo BitmapInfo();
     void* StaticImageData();
     void* LockImageData();
     void ReleaseImageData();
