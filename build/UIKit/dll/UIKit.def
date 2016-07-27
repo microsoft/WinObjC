@@ -1164,6 +1164,6 @@ LIBRARY UIKit
         UIRequestTransactionProcessing
         UIOrientationFromString
         UIApplicationDidChangeDisplayModeNofication
-        OnApplicationActivated
-        OnApplicationLaunched
+        UIApplicationActivated
+        UIApplicationLaunched
 

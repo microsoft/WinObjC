@@ -111,14 +111,14 @@ void App::Connect(int connectionId, Platform::Object^ target) {
 }
 
 void App::OnLaunched(LaunchActivatedEventArgs^ args) {
-    OnApplicationLaunched(args);
+    UIApplicationLaunched(args);
 }
 
 void App::OnActivated(IActivatedEventArgs^ args) {
-    OnApplicationActivated(args);
+    UIApplicationActivated(args);
 }
 
-void OnApplicationLaunched(LaunchActivatedEventArgs^ args) {
+void UIApplicationLaunched(LaunchActivatedEventArgs^ args) {
     TraceVerbose(TAG, L"OnLaunched event received for %d. Previous app state was %d", args->Kind, args->PreviousExecutionState);
 
     // Opt out of prelaunch for now. MSDN guidance is to check the flag and just return.
@@ -133,7 +133,7 @@ void OnApplicationLaunched(LaunchActivatedEventArgs^ args) {
     }
 }
 
-void OnApplicationActivated(IActivatedEventArgs^ args) {
+void UIApplicationActivated(IActivatedEventArgs^ args) {
     TraceVerbose(TAG, L"OnActivated event received for %d. Previous app state was %d", args->Kind, args->PreviousExecutionState);
 
     bool initiateAppLaunch = false;
@@ -288,7 +288,7 @@ void UIApplicationActivationTest(IInspectable* activationArgs, void* delegateCla
         g_delegateClassName = ref new Platform::String();
     }
 
-    OnApplicationActivated(static_cast<IActivatedEventArgs^>(reinterpret_cast<Platform::Object^>(activationArgs)));
+    UIApplicationActivated(static_cast<IActivatedEventArgs^>(reinterpret_cast<Platform::Object^>(activationArgs)));
 }
 
 // clang-format on

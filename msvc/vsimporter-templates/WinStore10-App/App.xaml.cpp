@@ -31,8 +31,8 @@ App::App() {
 }
 
 extern "C" int main(int argc, char* argv[]);
-extern "C" void OnApplicationActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ args);
-extern "C" void OnApplicationLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args);
+extern "C" void UIApplicationActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ args);
+extern "C" void UIApplicationLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args);
 
 /// <summary>
 /// Invoked when the application is launched normally by the end user.  Other entry points
@@ -41,12 +41,12 @@ extern "C" void OnApplicationLaunched(Windows::ApplicationModel::Activation::Lau
 /// <param name="e">Details about the launch request and process.</param>
 void App::OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ e) {
     main(0, NULL);
-    OnApplicationLaunched(e);
+    UIApplicationLaunched(e);
 }
 
 void App::OnActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ e) {
     main(0, NULL);
-    OnApplicationActivated(e);
+    UIApplicationActivated(e);
 }
 
 /// <summary>

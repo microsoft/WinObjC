@@ -56,8 +56,8 @@ private:
     void _OnSuspending(Platform::Object^ sender, Windows::ApplicationModel::SuspendingEventArgs^ args);
 };
 
-extern "C" void OnApplicationActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ args);
-extern "C" void OnApplicationLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args);
+extern "C" void UIApplicationActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ args);
+extern "C" void UIApplicationLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args);
 void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg);
 
 #endif
