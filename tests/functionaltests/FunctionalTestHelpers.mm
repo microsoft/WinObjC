@@ -14,9 +14,26 @@
 //
 //******************************************************************************
 
+#import "FunctionalTestHelpers.h"
 #include "UIKit/UIApplication.h"
+#import <Starboard/SmartTypes.h>
+#import <UWP/WindowsApplicationModel.h>
 
 // Prevents UIApplication state from carrying over between functional tests
 void FunctionalTestCleanupUIApplication() {
     [[UIApplication sharedApplication] _destroy];
+}
+
+// Gets the path to the app installation location
+// Returned path is formatted with double backslashes
+NSString* getModulePath() {
+    return [[[WAPackage current] installedLocation] path];
+}
+
+// Gets path to functional test module and appends path component
+// Returned path is formatted with double backslashes
+NSString* appendPathRelativeToFTModule(NSString* pathAppendage) {
+    StrongId<NSString> refPath = getModulePath();
+    refPath = [refPath stringByAppendingPathComponent:pathAppendage];
+    return [refPath stringByReplacingOccurrencesOfString:@"/" withString:@"\\"];
 }

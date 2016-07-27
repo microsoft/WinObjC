@@ -328,7 +328,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dll", "dll", "{A0BB1A76-4E8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{A34667A0-8AA5-4F03-B51C-337B76A4BE0C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssetsLibraryLib", "AssetsLibrary\lib\AssetsLibrary.vcxproj", "{A92B7F82-DE95-4D29-B942-276DC21C180C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssetsLibraryLib", "AssetsLibrary\lib\AssetsLibraryLib.vcxproj", "{A92B7F82-DE95-4D29-B942-276DC21C180C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssetsLibrary", "AssetsLibrary\dll\AssetsLibrary.vcxproj", "{A3A27F94-66BD-4DEC-892D-1DC8FEED2B5D}"
 EndProject

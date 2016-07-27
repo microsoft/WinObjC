@@ -14,9 +14,16 @@
 //
 //******************************************************************************
 
+#import "ALAssetInternal.h"
+#import "ALAssetRepresentationInternal.h"
 #import <StubReturn.h>
+#import <Starboard.h>
+#import <Foundation/NSError.h>
 #import <AssetsLibrary/ALAsset.h>
+#import <AssetsLibrary/ALAssetRepresentation.h>
+#import <UWP/WindowsStorage.h>
 
+NSString* const ALAssetDomain = @"ALAsset";
 NSString* const ALAssetPropertyType = @"ALAssetPropertyType";
 NSString* const ALAssetPropertyLocation = @"ALAssetPropertyLocation";
 NSString* const ALAssetPropertyDuration = @"ALAssetPropertyDuration";
@@ -30,7 +37,92 @@ NSString* const ALAssetTypePhoto = @"ALAssetTypePhoto";
 NSString* const ALAssetTypeVideo = @"ALAssetTypeVideo";
 NSString* const ALAssetTypeUnknown = @"ALAssetTypeUnknown";
 
+@interface ALAsset () {
+    StrongId<NSMutableArray> _representations;
+    StrongId<NSURL> _assetURL;
+    StrongId<NSString> _localPath;
+}
+@end
+
 @implementation ALAsset
+
+/**
+@Status Caveat
+@Notes Creates Asset Representations for representations at the url
+*/
+- (instancetype)_initWithURL:(NSURL*)url error:(NSError**)error {
+    if ((self = [super init])) {
+        __block NSError* tempError = nil;
+
+        if (!url) {
+            if (error) {
+                *error = [NSError errorWithDomain:ALAssetDomain code:_ALAssetErrorCodeInvalidURL userInfo:nil];
+            }
+            [self release];
+            return nil;
+        }
+
+        if ([url.scheme isEqualToString:@"assets-library"]) {
+            _assetURL = url;
+
+            dispatch_group_t group = dispatch_group_create();
+            dispatch_group_enter(group);
+
+            // Assemble the full path of the asset based on the location of the default Pictures library
+            [WSStorageLibrary getLibraryAsync:WSKnownLibraryIdPictures
+                success:^void(WSStorageLibrary* picturesLibrary) {
+                    _localPath = [picturesLibrary.saveFolder.path stringByAppendingString:[_assetURL path]];
+                    _localPath = [_localPath stringByReplacingOccurrencesOfString:@"/" withString:@"\\"];
+                    dispatch_group_leave(group);
+                }
+                failure:^void(NSError* storageError) {
+                    if (error) {
+                        tempError = [storageError copy];
+                    }
+                    dispatch_group_leave(group);
+                }];
+
+            dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+            dispatch_release(group);
+
+            if (error) {
+                *error = [tempError autorelease];
+            }
+
+            if (_localPath == nil) {
+                [self release];
+                return nil;
+            }
+        } else {
+            if (error) {
+                *error = [NSError errorWithDomain:ALAssetDomain code:_ALAssetErrorCodeInvalidURLScheme userInfo:nil];
+            }
+            [self release];
+            return nil;
+        }
+
+        _representations.attach([NSMutableArray new]);
+
+        // Determine if it's a specific single file or a collection of files
+        if ([_assetURL pathExtension] == nil) {
+            // This url is a collection of asset representations
+            // TODO: Task 8316785 - Fill _representations with all asset representations at this url
+            //       starting with the default representation at index 0
+        } else {
+            // TODO: Task 8316836 - Set type of asset (ALAssetTypePhoto/ALAssetTypeVideo/ALAssetTypeUnknown)
+
+            ALAssetRepresentation* assetRepresentation =
+                [[[ALAssetRepresentation alloc] _initWithAssetURL:_assetURL localPath:_localPath error:error] autorelease];
+            if (assetRepresentation == nil) {
+                [self release];
+                return nil;
+            }
+            [_representations addObject:assetRepresentation];
+        }
+    }
+    return self;
+}
+
 /**
  @Status Stub
  @Notes
@@ -41,12 +133,17 @@ NSString* const ALAssetTypeUnknown = @"ALAssetTypeUnknown";
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Return the default representation for this asset which will always be the first
+        index of the representations
 */
 - (ALAssetRepresentation*)defaultRepresentation {
-    UNIMPLEMENTED();
-    return StubReturn();
+    // TODO: Task 8317089 - If asset is not available, should return nil and
+    //       post ALAssetsLibraryChangedNotification if it becomes available
+    if ([_representations count] > 0) {
+        return _representations[0];
+    }
+    return nil;
 }
 
 /**

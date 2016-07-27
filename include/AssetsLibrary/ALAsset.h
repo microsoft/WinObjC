@@ -17,9 +17,7 @@
 
 #import <AssetsLibrary/AssetsLibraryExport.h>
 #import <AssetsLibrary/ALAssetsLibrary.h>
-
 #import <CoreGraphics/CoreGraphics.h>
-
 #import <Foundation/NSObject.h>
 
 @class NSString;
@@ -44,7 +42,7 @@ ASSETSLIBRARY_EXPORT NSString* const ALAssetTypeUnknown;
 ASSETSLIBRARY_EXPORT_CLASS
 @interface ALAsset : NSObject <NSObject>
 - (id)valueForProperty:(NSString*)property STUB_METHOD;
-- (ALAssetRepresentation*)defaultRepresentation STUB_METHOD;
+- (ALAssetRepresentation*)defaultRepresentation;
 - (ALAssetRepresentation*)representationForUTI:(NSString*)representationUTI STUB_METHOD;
 - (CGImageRef)thumbnail STUB_METHOD;
 - (CGImageRef)aspectRatioThumbnail STUB_METHOD;
