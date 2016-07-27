@@ -35,12 +35,12 @@ static CFHashCode _CFHTTPHeaderHash(const void* obj1) {
     StrongId<NSString> _HTTPVersion;
 }
 
-NSString* const _NSStatusCode = @"NS.statusCode";
-NSString* const _NSAllHeaderFields = @"NS.allHeaderFields";
-NSString* const _NSHTTPVersion = @"NS.HTTPVersion";
+static NSString* const _NSArchivalStatusCode = @"NS.statusCode";
+static NSString* const _NSArchivalAllHeaderFields = @"NS.allHeaderFields";
+static NSString* const _NSArchivalHTTPVersion = @"NS.HTTPVersion";
 
-NSMutableDictionary* _constructCaseInsensitiveDictionary(NSDictionary* dict) {
-    static CFDictionaryKeyCallBacks caseInsensitiveKeyChecker = kCFTypeDictionaryKeyCallBacks;
+static NSMutableDictionary* _constructCaseInsensitiveDictionary(NSDictionary* dict) {
+    CFDictionaryKeyCallBacks caseInsensitiveKeyChecker = kCFTypeDictionaryKeyCallBacks;
 
     caseInsensitiveKeyChecker.equal = _CFHTTPHeaderEqual;
     caseInsensitiveKeyChecker.hash = _CFHTTPHeaderHash;
@@ -167,9 +167,9 @@ NSMutableDictionary* _constructCaseInsensitiveDictionary(NSDictionary* dict) {
  @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    [coder encodeInteger:_statusCode forKey:_NSStatusCode];
-    [coder encodeObject:_allHeaderFields forKey:_NSAllHeaderFields];
-    [coder encodeObject:_HTTPVersion forKey:_NSHTTPVersion];
+    [coder encodeInteger:_statusCode forKey:_NSArchivalStatusCode];
+    [coder encodeObject:_allHeaderFields forKey:_NSArchivalAllHeaderFields];
+    [coder encodeObject:_HTTPVersion forKey:_NSArchivalHTTPVersion];
     [super encodeWithCoder:coder];
 }
 
@@ -178,13 +178,13 @@ NSMutableDictionary* _constructCaseInsensitiveDictionary(NSDictionary* dict) {
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
-        _statusCode = [coder decodeIntegerForKey:_NSStatusCode];
-        NSDictionary* headerFields = [coder decodeObjectOfClass:[NSMutableDictionary class] forKey:_NSAllHeaderFields];
+        _statusCode = [coder decodeIntegerForKey:_NSArchivalStatusCode];
+        NSDictionary* headerFields = [coder decodeObjectOfClass:[NSMutableDictionary class] forKey:_NSArchivalAllHeaderFields];
         if (headerFields != nil) {
             _allHeaderFields = _constructCaseInsensitiveDictionary(headerFields);
         }
 
-        _HTTPVersion = [coder decodeObjectOfClass:[NSString class] forKey:_NSHTTPVersion];
+        _HTTPVersion = [coder decodeObjectOfClass:[NSString class] forKey:_NSArchivalHTTPVersion];
     }
 
     return self;

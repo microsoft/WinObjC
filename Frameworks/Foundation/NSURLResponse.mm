@@ -34,10 +34,10 @@ static NSString* const s_invalidFileNameChars = @"\\/:;*\"<>|?";
 static NSString* const s_unknownFileName = @"Unknown";
 static NSString* const s_defaultMimeType = @"application/octet-stream";
 static NSString* const s_NSExpectedContentLength = @"NS.expectedContentLength";
-static NSString* const s_NSMIMEType = @"NS.mimeType";
-static NSString* const s_NSTextEncodingName = @"NS.textEncodingName";
-static NSString* const s_NSSuggestedFilename = @"NS.suggestedFilename";
-static NSString* const s_NSURL = @"NS.url";
+static NSString* const s_NSArchivalMIMEType = @"NS.mimeType";
+static NSString* const s_NSArchivalTextEncodingName = @"NS.textEncodingName";
+static NSString* const s_NSArchivalSuggestedFilename = @"NS.suggestedFilename";
+static NSString* const s_NSArchivalURL = @"NS.url";
 
 NSString* _NSReplaceIllegalFileNameCharacters(NSString* fileName) {
     static StrongId<NSCharacterSet> invalidFileNameCharacterSet = [NSCharacterSet characterSetWithCharactersInString:s_invalidFileNameChars];
@@ -151,10 +151,10 @@ NSString* _NSReplaceIllegalFileNameCharacters(NSString* fileName) {
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super init]) {
         _expectedContentLength = [coder decodeIntForKey:s_NSExpectedContentLength];
-        _mimeType = [coder decodeObjectOfClass:[NSString class] forKey:s_NSMIMEType];
-        _suggestedFilename = [coder decodeObjectOfClass:[NSString class] forKey:s_NSSuggestedFilename];
-        _textEncodingName = [coder decodeObjectOfClass:[NSString class] forKey:s_NSTextEncodingName];
-        _url = [coder decodeObjectOfClass:[NSURL class] forKey:s_NSURL];
+        _mimeType = [coder decodeObjectOfClass:[NSString class] forKey:s_NSArchivalMIMEType];
+        _suggestedFilename = [coder decodeObjectOfClass:[NSString class] forKey:s_NSArchivalSuggestedFilename];
+        _textEncodingName = [coder decodeObjectOfClass:[NSString class] forKey:s_NSArchivalTextEncodingName];
+        _url = [coder decodeObjectOfClass:[NSURL class] forKey:s_NSArchivalURL];
     }
 
     return self;
@@ -165,10 +165,10 @@ NSString* _NSReplaceIllegalFileNameCharacters(NSString* fileName) {
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
     [coder encodeInt:_expectedContentLength forKey:s_NSExpectedContentLength];
-    [coder encodeObject:_mimeType forKey:s_NSMIMEType];
-    [coder encodeObject:_suggestedFilename forKey:s_NSSuggestedFilename];
-    [coder encodeObject:_textEncodingName forKey:s_NSTextEncodingName];
-    [coder encodeObject:_url forKey:s_NSURL];
+    [coder encodeObject:_mimeType forKey:s_NSArchivalMIMEType];
+    [coder encodeObject:_suggestedFilename forKey:s_NSArchivalSuggestedFilename];
+    [coder encodeObject:_textEncodingName forKey:s_NSArchivalTextEncodingName];
+    [coder encodeObject:_url forKey:s_NSArchivalURL];
 }
 
 /**
