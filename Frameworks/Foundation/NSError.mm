@@ -46,6 +46,11 @@ NSString* const NSURLErrorFailingURLErrorKey = @"NSURLErrorFailingURLErrorKey";
 NSString* const NSURLErrorFailingURLStringErrorKey = @"NSURLErrorFailingURLStringErrorKey";
 NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPeerTrustErrorKey";
 
+/* Error Coding */
+NSString* const _NSCode = @"NS.code";
+NSString* const _NSDomain = @"NS.domain";
+NSString* const _NSUserInfo = @"NS.userInfo";
+
 @implementation NSError {
     uint8_t _cfinfo[4]; // Maintains same memory layout as CFRuntime
 #if __LP64__ // From CFRuntimeBase
@@ -147,9 +152,9 @@ NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPe
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super init]) {
-        _code = [coder decodeIntForKey:@"NS.code"];
-        _domain = [coder decodeObjectOfClass:[NSString class] forKey:@"NS.domain"];
-        _userInfo = [coder decodeObjectOfClass:[NSDictionary class] forKey:@"NS.userInfo"];
+        _code = [coder decodeIntForKey:_NSCode];
+        _domain = [coder decodeObjectOfClass:[NSString class] forKey:_NSDomain];
+        _userInfo = [coder decodeObjectOfClass:[NSDictionary class] forKey:_NSUserInfo];
     }
 
     return self;
@@ -159,9 +164,9 @@ NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPe
  @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    [coder encodeInt:_code forKey:@"NS.code"];
-    [coder encodeObject:_domain forKey:@"NS.domain"];
-    [coder encodeObject:_userInfo forKey:@"NS.userInfo"];
+    [coder encodeInt:_code forKey:_NSCode];
+    [coder encodeObject:_domain forKey:_NSDomain];
+    [coder encodeObject:_userInfo forKey:_NSUserInfo];
 }
 
 /**

@@ -561,14 +561,13 @@ recurse:
  @Notes NSSortConcurrent is ignored, but this is compatible with reference documentation
 */
 - (void)sortWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr {
-    if (opts | NSSortStable) {
-        __block NSArray* original = [[self mutableCopy] autorelease];
-		__block CFMutableDictionaryRef originalIndices = CFDictionaryCreateMutable(kCFAllocatorDefault, [self count], nullptr, nullptr);
+    if (opts & NSSortStable) {
+        CFMutableDictionaryRef originalIndices = CFDictionaryCreateMutable(kCFAllocatorDefault, [self count], nullptr, nullptr);
 
-		// Construct a dictionary mapping of objects in the array to their original indices
-		for (int i = 0; i < [self count]; i++) {
-			CFDictionaryAddValue(originalIndices, (const void*)[self objectAtIndex:i], (const void*)i);
-		}
+        // Construct a dictionary mapping of objects in the array to their original indices
+        for (int i = 0; i < [self count]; i++) {
+            CFDictionaryAddValue(originalIndices, (const void*)[self objectAtIndex:i], (const void*)i);
+        }
 
         [self sortUsingFunction:CFNSBlockCompare context:^NSComparisonResult(id obj1, id obj2) {
             NSComparisonResult result = cmptr(obj1, obj2);
@@ -576,11 +575,11 @@ recurse:
                 return result;
             }
 
-			// If the caller-provided comparator result is NSOrderedSame, ensure stability is enforced by comparing the original object indices.
-            return (CFDictionaryGetValue(originalIndices, obj1) > CFDictionaryGetValue(originalIndices, obj2)) ?
-				NSOrderedDescending : NSOrderedAscending;
+            // If the caller-provided comparator result is NSOrderedSame, ensure stability is enforced by comparing the original object indices.
+            return ((NSUInteger)CFDictionaryGetValue(originalIndices, obj1) > (NSUInteger)CFDictionaryGetValue(originalIndices, obj2)) ?
+                NSOrderedDescending : NSOrderedAscending;
         }];
-		CFRelease(originalIndices);
+        CFRelease(originalIndices);
     } else {
         [self sortUsingFunction:CFNSBlockCompare context:cmptr];
     }
