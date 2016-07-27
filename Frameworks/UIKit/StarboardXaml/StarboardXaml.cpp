@@ -128,7 +128,8 @@ void OnApplicationLaunched(LaunchActivatedEventArgs^ args) {
                                 && (args->PreviousExecutionState != ApplicationExecutionState::Suspended));
 
     if (initiateAppLaunch) {
-        _ApplicationMainLaunch(ActivationTypeNone, args);
+        TraceVerbose(TAG, L"Initializing application");
+        _ApplicationLaunch(ActivationTypeNone, args);
     }
 }
 
@@ -138,6 +139,7 @@ void OnApplicationActivated(IActivatedEventArgs^ args) {
     bool initiateAppLaunch = false;
     if ((args->PreviousExecutionState != ApplicationExecutionState::Running) &&
         (args->PreviousExecutionState != ApplicationExecutionState::Suspended)) {
+        TraceVerbose(TAG, L"Initializing application");
         initiateAppLaunch = true;
     }
 
@@ -146,7 +148,7 @@ void OnApplicationActivated(IActivatedEventArgs^ args) {
         TraceVerbose(TAG, L"Received toast notification with argument - %s", argsString->Data());
 
         if (initiateAppLaunch) {
-            _ApplicationMainLaunch(ActivationTypeToast, argsString);
+            _ApplicationLaunch(ActivationTypeToast, argsString);
         }
 
         UIApplicationMainHandleToastNotificationEvent(Strings::WideToNarrow(argsString->Data()).c_str());
@@ -155,7 +157,7 @@ void OnApplicationActivated(IActivatedEventArgs^ args) {
         TraceVerbose(TAG, L"Received voice command with argument - %s", argResult->Text->Data());
 
         if (initiateAppLaunch) {
-            _ApplicationMainLaunch(ActivationTypeVoiceCommand, argResult);
+            _ApplicationLaunch(ActivationTypeVoiceCommand, argResult);
         }
 
         UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(argResult));
@@ -166,7 +168,7 @@ void OnApplicationActivated(IActivatedEventArgs^ args) {
         TraceVerbose(TAG, L"Received protocol with uri- %s from %s", argUri->ToString()->Data(), caller);
 
         if (initiateAppLaunch) {
-            _ApplicationMainLaunch(ActivationTypeProtocol, argUri);
+            _ApplicationLaunch(ActivationTypeProtocol, argUri);
         }
 
         UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri), caller);
@@ -174,17 +176,11 @@ void OnApplicationActivated(IActivatedEventArgs^ args) {
         TraceVerbose(TAG, L"Received unhandled activation kind - %d", args->Kind);
 
         if (initiateAppLaunch) {
-            _ApplicationMainLaunch(ActivationTypeNone, nullptr);
+            _ApplicationLaunch(ActivationTypeNone, nullptr);
         }
     }
 }
 
-void _ApplicationMainLaunch(ActivationType activationType, Platform::Object^ activationArg) {
-    TraceVerbose(TAG, L"Initializing application");
-    _ApplicationLaunch(activationType, activationArg);
-    _appEvents = ref new AppEventListener();
-    _appEvents->_RegisterEventHandlers();
-}
 
 void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
     auto uiElem = ref new Xaml::Controls::Grid();
@@ -198,6 +194,9 @@ void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activat
 
     auto startupRect = Xaml::Window::Current->Bounds;
     RunApplicationMain(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height, activationType, activationArg);
+
+    _appEvents = ref new AppEventListener();
+    _appEvents->_RegisterEventHandlers();
 }
 
 

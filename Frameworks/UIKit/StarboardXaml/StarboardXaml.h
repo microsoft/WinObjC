@@ -59,7 +59,6 @@ private:
 extern "C" void OnApplicationActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ args);
 extern "C" void OnApplicationLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args);
 void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg);
-void _ApplicationMainLaunch(ActivationType activationType, Platform::Object^ activationArg);
 
 #endif
 
