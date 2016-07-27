@@ -41,13 +41,12 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 @implementation NSOperation {
     StrongId<NSMutableSet> _dependencies;
-    NSUInteger _readyCount;
+    NSUInteger _outstandingDependenciesCount;
     StrongId<void(^)()> _completionBlock;
     std::condition_variable_any _finishCondition;
     std::recursive_mutex _finishLock;
     std::recursive_mutex _dependenciesLock;
     std::recursive_mutex _completionBlockLock;
-    std::recursive_mutex _readyLock;
 }
 
 @synthesize cancelled = _cancelled;
@@ -66,13 +65,12 @@ static const NSString* NSOperationContext = @"context";
 }
 
 - (void)_checkReady {
-    std::lock_guard<std::recursive_mutex> lock(_readyLock);
+    std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
     bool newReady = YES;
 
     // If cancelled, skip this logic and set _ready to YES. Otherwise check dependency ready count.
     if (![self isCancelled]) {
-        std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
-        if (_readyCount < [_dependencies count]) {
+        if (_outstandingDependenciesCount > 0) {
             newReady = NO;
         }
     }
@@ -91,10 +89,10 @@ static const NSString* NSOperationContext = @"context";
             _finishCondition.notify_all();
             _finishLock.unlock();
         } else {
-            std::lock_guard<std::recursive_mutex> lock(_readyLock);
-            if ([object isFinished]) {
-                if ([_dependencies containsObject:object]) {
-                    _readyCount++;
+            std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
+            if ([_dependencies containsObject:object]) {
+                if ([object isFinished]) {
+                    _outstandingDependenciesCount--;
                 }
             }
 
@@ -117,7 +115,7 @@ static const NSString* NSOperationContext = @"context";
  @Status Interoperable
 */
 - (BOOL)isReady {
-    std::lock_guard<std::recursive_mutex> lock(_readyLock);
+    std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
     return _ready;
 }
 
@@ -130,6 +128,7 @@ static const NSString* NSOperationContext = @"context";
     [_dependencies addObject:operation];
     [operation addObserver:self forKeyPath:@"isFinished" options:NSKeyValueObservingOptionInitial context:(void*)NSOperationContext];
     [self didChangeValueForKey:@"dependencies"];
+    _outstandingDependenciesCount++; // will be decremented if necessary in observeValueForKey, due to NSKeyValueObservingOptionInitial
     [self _checkReady];
 }
 
@@ -137,12 +136,11 @@ static const NSString* NSOperationContext = @"context";
  @Status Interoperable
 */
 - (void)removeDependency:(NSOperation*)operation {
-    std::lock_guard<std::recursive_mutex> readyLock(_readyLock);
     std::lock_guard<std::recursive_mutex> dependenciesLock(_dependenciesLock);
     if ([_dependencies containsObject:operation]) {
         [self willChangeValueForKey:@"dependencies"];
-        if ([operation isFinished]) {
-            _readyCount--;
+        if (![operation isFinished]) {
+            _outstandingDependenciesCount--;
         }
 
         [_dependencies removeObject:operation];
