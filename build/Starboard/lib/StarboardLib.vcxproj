@@ -41,7 +41,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\version.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\dlfcn.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\OSMisc.cpp" />
-    <ClangCompile Include="..\..\..\Frameworks\Starboard\OSEndian.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\OSEndian.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="..\..\..\Frameworks\Starboard\inet.cpp" />

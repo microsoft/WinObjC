@@ -500,9 +500,6 @@
     <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLInputStream.c">
       <Filter>Parsing</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLInterface.c">
-      <Filter>Parsing</Filter>
-    </ClangCompile>
     <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLNode.c">
       <Filter>Parsing</Filter>
     </ClangCompile>
