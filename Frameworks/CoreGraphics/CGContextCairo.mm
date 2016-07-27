@@ -1657,14 +1657,26 @@ void CGContextCairo::CGContextReplacePathWithStrokedPath(CGContextRef context) {
 
     CGFloat halfStrokeWidth = (curState->lineWidth) / 2.0f;
 
+    // Determines if a line is vertical
+    auto lineIsVertical = [](CGFloat angle) -> bool {
+        CGFloat epsilon = .000001f;
+        return (abs(abs(angle) - (M_PI / 2.0f)) < epsilon) || (abs(abs(angle) - (M_PI * 3.0f / 2.0f)) < epsilon);
+    };
+
+    // Determines if a line is horizontal
+    auto lineIsHorizontal = [](CGFloat angle) -> bool {
+        CGFloat epsilon = .000001f;
+        return (abs(abs(angle) - 0.0f) < epsilon) || (abs(abs(angle) - M_PI) < epsilon);
+    };
+
     // Calculates points on stroked path from original points
     // Reverse flag should be true if we're traversing the path backwards
     auto strokedPoint = [](CGPoint p, CGFloat angle, CGFloat distance, bool reverse) -> CGPoint {
         if (reverse) {
             angle += M_PI;
         }
-        CGFloat x = p.x - (sin(angle) * distance);
-        CGFloat y = p.y + (cos(angle) * distance);
+        CGFloat x = p.x + (cos(angle + M_PI_2) * distance);
+        CGFloat y = p.y + (sin(angle + M_PI_2) * distance);
 
         return CGPointMake(x, y);
     };
@@ -1699,6 +1711,8 @@ void CGContextCairo::CGContextReplacePathWithStrokedPath(CGContextRef context) {
 
     auto addLineJoin = [halfStrokeWidth,
                         &strokedPoint,
+                        &lineIsVertical,
+                        &lineIsHorizontal,
                         this](cairo_t* context, CGFloat angle1, CGPoint p1, CGFloat angle2, CGPoint p2, bool reverse) -> void {
 
         double miterLimit = cairo_get_miter_limit(context);
@@ -1718,53 +1732,88 @@ void CGContextCairo::CGContextReplacePathWithStrokedPath(CGContextRef context) {
         }
 
         if (lineJoin == CAIRO_LINE_JOIN_MITER) {
-            CGFloat m1 = tan(angle1);
-            CGFloat b1 = p1.y - (m1 * p1.x);
+            // Slopes for a vertical line will be unusable. If line1 is vertical we'll use the slope from line2 later
+            bool line1IsVertical = lineIsVertical(angle1);
+            // If both lines are vertical this should be swtiched to be a bevel
+            bool line2IsVertical = lineIsVertical(angle2);
 
-            CGFloat m2 = tan(angle2);
-            CGFloat b2 = p2.y - (m2 * p2.x);
-
-            CGFloat x = (b2 - b1) / (m1 - m2);
-            CGFloat y = 0;
-            // If m1 is very large it's probably a vertical line
-            if (m1 > 1000000) {
-                y = m2 * x + b2;
-            } else {
-                y = m1 * x + b1;
-            }
-            CGFloat fullStrokeWidth = 2.0f * halfStrokeWidth;
-            CGPoint miterp1 = strokedPoint(p1, angle1, fullStrokeWidth, !reverse);
-            CGPoint miterp2 = strokedPoint(p2, angle2, fullStrokeWidth, !reverse);
-
-            CGFloat miterm1 = tan(angle1);
-            CGFloat miterb1 = miterp1.y - (miterm1 * miterp1.x);
-
-            CGFloat miterm2 = tan(angle2);
-            CGFloat miterb2 = miterp2.y - (miterm2 * miterp2.x);
-
-            CGFloat miterx = (miterb2 - miterb1) / (miterm1 - miterm2);
-            CGFloat mitery = 0;
-            // If m1 is very large it's probably a vertical line
-            if (miterm1 > 1000000) {
-                mitery = miterm2 * miterx + miterm2;
-            } else {
-                mitery = miterm1 * miterx + miterb1;
-            }
-
-            CGFloat miterLength = sqrt(pow(miterx - x, 2.0f) + pow(mitery - y, 2.0f));
-
-            CGFloat miterRatio = (miterLength / fullStrokeWidth);
-
-            if (miterRatio > miterLimit) {
+            if (line1IsVertical && line2IsVertical) {
                 lineJoin = CAIRO_LINE_JOIN_BEVEL;
             } else {
-                cairo_line_to(context, x, y);
-                cairo_line_to(context, p2.x, p2.y);
-                return;
+                CGFloat m1 = tan(angle1);
+                CGFloat b1 = p1.y - (m1 * p1.x);
+
+                CGFloat m2 = tan(angle2);
+                CGFloat b2 = p2.y - (m2 * p2.x);
+
+                CGFloat x = (b2 - b1) / (m1 - m2);
+                CGFloat y = 0;
+                // Check if angle1 is a vertical line.
+                if (line1IsVertical) {
+                    y = m2 * x + b2;
+                } else {
+                    y = m1 * x + b1;
+                }
+                CGFloat fullStrokeWidth = 2.0f * halfStrokeWidth;
+                CGPoint miterp1 = strokedPoint(p1, angle1, fullStrokeWidth, !reverse);
+                CGPoint miterp2 = strokedPoint(p2, angle2, fullStrokeWidth, !reverse);
+
+                CGFloat miterm1 = tan(angle1);
+                CGFloat miterb1 = miterp1.y - (miterm1 * miterp1.x);
+
+                CGFloat miterm2 = tan(angle2);
+                CGFloat miterb2 = miterp2.y - (miterm2 * miterp2.x);
+
+                CGFloat miterx = (miterb2 - miterb1) / (miterm1 - miterm2);
+                CGFloat mitery = 0;
+
+                if (line1IsVertical) {
+                    mitery = miterm2 * miterx + miterm2;
+                } else {
+                    mitery = miterm1 * miterx + miterb1;
+                }
+
+                CGFloat miterLength = sqrt(pow(miterx - x, 2.0f) + pow(mitery - y, 2.0f));
+
+                CGFloat miterRatio = (miterLength / fullStrokeWidth);
+
+                if (miterRatio > miterLimit) {
+                    lineJoin = CAIRO_LINE_JOIN_BEVEL;
+                } else {
+                    cairo_line_to(context, x, y);
+                    cairo_line_to(context, p2.x, p2.y);
+                    return;
+                }
             }
         }
 
         if (lineJoin == CAIRO_LINE_JOIN_ROUND) {
+            bool line1IsVertical = lineIsVertical(angle1);
+            bool line2IsVertical = lineIsVertical(angle2);
+
+            bool line1IsHorizontal = lineIsHorizontal(angle1);
+            bool line2IsHorizontal = lineIsHorizontal(angle2);
+
+            if ((line1IsVertical && line2IsVertical)) {
+                CGPoint arcMidPoint = CGPointMake((p1.x + p2.x) / 2.0, (p1.y + p2.y) / 2.0);
+                if (p1.x < p2.x) {
+                    cairo_arc_negative(context, arcMidPoint.x, arcMidPoint.y, halfStrokeWidth, angle1 - M_PI_2, angle1 + M_PI_2);
+                } else {
+                    cairo_arc_negative(context, arcMidPoint.x, arcMidPoint.y, halfStrokeWidth, angle1 + M_PI_2, angle1 - M_PI_2);
+                }
+                return;
+            }
+
+            if (line1IsHorizontal && line2IsHorizontal) {
+                CGPoint arcMidPoint = CGPointMake((p1.x + p2.x) / 2.0, (p1.y + p2.y) / 2.0);
+                if (p1.y < p2.y) {
+                    cairo_arc_negative(context, arcMidPoint.x, arcMidPoint.y, halfStrokeWidth, angle1 - M_PI_2, angle1 + M_PI_2);
+                } else {
+                    cairo_arc_negative(context, arcMidPoint.x, arcMidPoint.y, halfStrokeWidth, angle1 + M_PI_2, angle1 - M_PI_2);
+                }
+                return;
+            }
+
             CGFloat m1 = tan(angle1);
             CGFloat b1 = p1.y - (m1 * p1.x);
 
@@ -1774,8 +1823,8 @@ void CGContextCairo::CGContextReplacePathWithStrokedPath(CGContextRef context) {
             CGFloat x = (b2 - b1) / (m1 - m2);
 
             CGFloat y = 0;
-            // If m1 is very large it's probably a vertical line
-            if (m1 > 1000000) {
+
+            if (line1IsVertical) {
                 y = m2 * x + b2;
             } else {
                 y = m1 * x + b1;

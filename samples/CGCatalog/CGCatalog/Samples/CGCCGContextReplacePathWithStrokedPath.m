@@ -67,6 +67,39 @@ typedef NS_ENUM(NSInteger, DrawMode) { DrawModeFill = 0, DrawModeStroke };
     if (self.strokedPathType == StrokedPathTypeReplaceStroke2 || self.strokedPathType == StrokedPathTypeLine2) {
         CGPathMoveToPoint(path, NULL, 200, 100);
         CGPathAddLineToPoint(path, NULL, 16, 16);
+
+        CGPathMoveToPoint(path, NULL, 400, 16);
+        CGPathAddQuadCurveToPoint(path, NULL, 300, 100, 200, 200);
+        CGPathAddArcToPoint(path, NULL, 200, 100, 0, 100, 50);
+        CGPathAddLineToPoint(path, NULL, 100, 200);
+        CGPathAddLineToPoint(path, NULL, 10, 180);
+
+        CGPathMoveToPoint(path, NULL, 400, 200);
+        CGPathAddLineToPoint(path, NULL, 400, 250);
+        CGPathAddLineToPoint(path, NULL, 400, 200);
+        CGPathAddLineToPoint(path, NULL, 450, 200);
+        CGPathAddLineToPoint(path, NULL, 400, 200);
+        CGPathAddLineToPoint(path, NULL, 400, 150);
+        CGPathAddLineToPoint(path, NULL, 400, 200);
+        CGPathAddLineToPoint(path, NULL, 350, 200);
+        CGPathAddLineToPoint(path, NULL, 400, 200);
+
+        CGPathMoveToPoint(path, NULL, 500, 25);
+        CGPathAddLineToPoint(path, NULL, 500, 75);
+        CGPathAddLineToPoint(path, NULL, 500, 25);
+
+        CGPathMoveToPoint(path, NULL, 500, 150);
+        CGPathAddLineToPoint(path, NULL, 500, 100);
+        CGPathAddLineToPoint(path, NULL, 500, 150);
+
+        CGPathMoveToPoint(path, NULL, 575, 100);
+        CGPathAddLineToPoint(path, NULL, 525, 100);
+        CGPathAddLineToPoint(path, NULL, 575, 100);
+
+        CGPathMoveToPoint(path, NULL, 425, 100);
+        CGPathAddLineToPoint(path, NULL, 475, 100);
+        CGPathAddLineToPoint(path, NULL, 425, 100);
+
     } else {
         CGPathMoveToPoint(path, NULL, 50, 100);
         CGPathAddLineToPoint(path, NULL, 100, 100);
@@ -74,15 +107,7 @@ typedef NS_ENUM(NSInteger, DrawMode) { DrawModeFill = 0, DrawModeStroke };
         CGPathAddLineToPoint(path, NULL, 180, 90);
         CGPathAddLineToPoint(path, NULL, 60, 140);
         CGPathAddLineToPoint(path, NULL, 90, 170);
-    }
 
-    if (self.strokedPathType == StrokedPathTypeReplaceStroke2 || self.strokedPathType == StrokedPathTypeLine2) {
-        CGPathMoveToPoint(path, NULL, 400, 16);
-        CGPathAddQuadCurveToPoint(path, NULL, 300, 100, 200, 200);
-        CGPathAddArcToPoint(path, NULL, 200, 100, 0, 100, 50);
-        CGPathAddLineToPoint(path, NULL, 100, 200);
-        CGPathAddLineToPoint(path, NULL, 10, 180);
-    } else {
         CGPathMoveToPoint(path, NULL, 350, 170);
         CGPathAddLineToPoint(path, NULL, 260, 140);
         CGPathAddArcToPoint(path, NULL, 500, 500, 450, 350, 50);
