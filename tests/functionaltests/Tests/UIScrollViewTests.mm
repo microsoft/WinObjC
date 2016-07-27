@@ -28,11 +28,25 @@
 #include <COMIncludes_end.h>
 
 #include "ObjCXamlControls.h"
+#import "UWP/WindowsUIXamlControls.h"
 
 TEST(UIScrollView, CreateXamlElement) {
     dispatch_sync(dispatch_get_main_queue(),
-    ^{
-        // TODO: Switch to UIKit.Xaml projections when they're available.
-        Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateScrollViewer());
-    });
+                  ^{
+                      // TODO: Switch to UIKit.Xaml projections when they're available.
+                      Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateScrollViewer());
+                      ASSERT_TRUE(xamlElement);
+                  });
+}
+
+TEST(UIScrollView, GetXamlElement) {
+    dispatch_sync(dispatch_get_main_queue(),
+                  ^{
+                      UIView* view = [[[UIScrollView alloc] init] autorelease];
+                      WXFrameworkElement* backingElement = [view xamlElement];
+                      ASSERT_TRUE(backingElement);
+
+                      // TODO: Fix up when UIScrollView moves fully to XAML
+                      ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
+                  });
 }

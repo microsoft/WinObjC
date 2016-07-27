@@ -123,6 +123,9 @@ public:
 - (void)_setRootLayer:(BOOL)isRootLayer;
 
 - (void)_setZIndex:(int)zIndex;
+
+@property WXFrameworkElement* contentsElement;
+
 @end
 
 #endif /* _CALAYERPRIVATE_H_ */

@@ -467,18 +467,10 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
 - (void)drawInContext:(CGContextRef)ctx {
 }
 
-/**
- @Status Caveat
- @Notes WinObjC extension method
-*/
 - (WXFrameworkElement*)contentsElement {
     return _contentsElement;
 }
 
-/**
- @Status Caveat
- @Notes WinObjC extension method
-*/
 - (void)setContentsElement:(WXFrameworkElement*)element {
     [element retain];
     [_contentsElement release];

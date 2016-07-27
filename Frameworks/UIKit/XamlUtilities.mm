@@ -15,8 +15,7 @@
 //******************************************************************************
 
 #import "XamlUtilities.h"
-
-#import "UIView+XAML.h"
+#import "UIViewInternal+Xaml.h"
 
 // cornerRadius when border style is set to round rectangle
 static const int c_borderCornerRadius = 8;
@@ -183,11 +182,11 @@ UIView* GenerateUIKitControlFromXamlType(RTObject* xamlObject) {
 
     // TODO: For prototyping, this will suffice but it would be better to consolidate with Xib2Xaml in the long term
     NSDictionary* xamlSupportedControls = @{
-        [WXCTextBlock class] : [UILabel class],
-        [WXCTextBox class] : [UITextField class],
-        [WXCButton class] : [UIButton class],
-        [WXCProgressRing class] : [UIActivityIndicatorView class],
-        [WXCSlider class] : [UISlider class],
+            [WXCTextBlock class] : [UILabel class],
+            [WXCTextBox class] : [UITextField class],
+            [WXCButton class] : [UIButton class],
+            [WXCProgressRing class] : [UIActivityIndicatorView class],
+            [WXCSlider class] : [UISlider class],
     };
 
     // Create the UIKit control based on the XAML type and return it to the caller
@@ -201,7 +200,7 @@ UIView* GenerateUIKitControlFromXamlType(RTObject* xamlObject) {
                 }
                 break;
             }
-        } catch(...) {
+        } catch (...) {
             // TODO: ARM throws an exception when we try to pass NSException instead of ... - compiler update needed
             continue;
         }

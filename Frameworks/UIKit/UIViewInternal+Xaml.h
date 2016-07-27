@@ -21,6 +21,6 @@
 // Forward declaration
 @class WXFrameworkElement;
 
-@interface UIView (XAML)
+@interface UIView (Xaml_Internal)
 - (id)_initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement;
 @end

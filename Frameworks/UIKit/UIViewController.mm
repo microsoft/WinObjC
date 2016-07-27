@@ -1797,9 +1797,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     // Walk the list of outlets and assign them to the corresponding XAML UIElement
     unsigned int propListCount = 0;
     objc_property_t* props = (objc_property_t*)class_copyPropertyList([self class], &propListCount);
-    auto freeProps = wil::ScopeExit([&]() {
-        IwFree(props);
-    });
+    auto freeProps = wil::ScopeExit([&]() { IwFree(props); });
 
     for (int i = 0; i < propListCount; i++) {
         objc_property_t curProp = props[i];
@@ -1814,7 +1812,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         }
     }
 
-    [self.view setNativeElement:priv->_page];
+    [self.view setXamlElement:priv->_page];
 }
 
 /**

@@ -247,7 +247,7 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
     _backgroundImage = nil;
 
     WUColor* convertedColor = ConvertUIColorToWUColor(_backgroundColor);
-    WUXMSolidColorBrush* brush =  [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
+    WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
 
     [_secureModeLock lock];
     if (_secureTextMode) {
@@ -409,7 +409,7 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
         }
 
         WUColor* convertedColor = ConvertUIColorToWUColor(_backgroundColor);
-        WUXMSolidColorBrush* brush =  [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
+        WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
 
         // If _borderStyle is set to the UITextBorderStyleRoundedRect,
         // the custom background image associated with the text field is ignored.
@@ -799,10 +799,10 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
         _secureTextMode = secure;
         if (_secureTextMode) {
             [self _initPasswordBox:nil];
-            [self layer].contentsElement = _passwordBox;
+            [self setXamlElement:_passwordBox];
         } else {
             [self _initTextBox:nil];
-            [self layer].contentsElement = _textBox;
+            [self setXamlElement:_textBox];
         }
     }
     [_secureModeLock unlock];
@@ -1135,12 +1135,12 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
         if (strongSelf) {
             if (strongSelf->_backgroundImage == nil || _borderStyle == UITextBorderStyleRoundedRect) {
                 WUColor* convertedColor = ConvertUIColorToWUColor(strongSelf.backgroundColor);
-                WUXMSolidColorBrush* brush =  [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
+                WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
                 strongSelf->_textBox.background = brush;
             }
 
             WUColor* convertedTextColor = ConvertUIColorToWUColor(strongSelf.textColor);
-            WUXMSolidColorBrush* textBrush =  [WUXMSolidColorBrush makeInstanceWithColor:convertedTextColor];
+            WUXMSolidColorBrush* textBrush = [WUXMSolidColorBrush makeInstanceWithColor:convertedTextColor];
             strongSelf->_textBox.foreground = textBrush;
 
             strongSelf->_textBox.textAlignment = ConvertUITextAlignmentToWXTextAlignment(strongSelf.textAlignment);
@@ -1186,12 +1186,12 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
         if (strongSelf) {
             if (strongSelf->_backgroundImage == nil || _borderStyle == UITextBorderStyleRoundedRect) {
                 WUColor* convertedColor = ConvertUIColorToWUColor(strongSelf.backgroundColor);
-                WUXMSolidColorBrush* brush =  [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
+                WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
                 strongSelf->_passwordBox.background = brush;
             }
 
             WUColor* convertedTextColor = ConvertUIColorToWUColor(strongSelf.textColor);
-            WUXMSolidColorBrush* textBrush =  [WUXMSolidColorBrush makeInstanceWithColor:convertedTextColor];
+            WUXMSolidColorBrush* textBrush = [WUXMSolidColorBrush makeInstanceWithColor:convertedTextColor];
             strongSelf->_passwordBox.foreground = textBrush;
             // passwordBox does not support textAlignment
 
@@ -1232,15 +1232,15 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
     self->_dummyButton.isTabStop = YES;
 
     self->_hiddenView = [[_UIHiddenButtonView alloc] initWithFrame:CGRectZero];
-    [self->_hiddenView setNativeElement:self->_dummyButton];
+    [self->_hiddenView setXamlElement:self->_dummyButton];
     [self addSubview:self->_hiddenView];
 
     if (self->_secureTextMode) {
         [self _initPasswordBox:nil];
-        [self layer].contentsElement = self->_passwordBox;
+        [self setXamlElement:self->_passwordBox];
     } else {
         [self _initTextBox:xamlElement];
-        [self layer].contentsElement = self->_textBox;
+        [self setXamlElement:self->_textBox];
     }
 }
 

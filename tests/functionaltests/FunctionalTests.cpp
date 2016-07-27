@@ -369,11 +369,17 @@ public:
 // UIKitTests
 //
 extern void UIViewCreate();
-extern void UIActivityIndicatorCreateXamlElement();
+extern void UIViewGetXamlElement();
+extern void UIActivityIndicatorViewCreateXamlElement();
+extern void UIActivityIndicatorViewGetXamlElement();
 extern void UIButtonCreateXamlElement();
+extern void UIButtonGetXamlElement();
 extern void UIScrollViewCreateXamlElement();
+extern void UIScrollViewGetXamlElement();
 extern void UISliderCreateXamlElement();
+extern void UISliderGetXamlElement();
 extern void UITextFieldCreateXamlElement();
+extern void UITextFieldGetXamlElement();
 
 class UIKitTests {
 public:
@@ -395,24 +401,48 @@ public:
         UIViewCreate();
     }
 
-    TEST_METHOD(UIActivityIndicator_CreateXamlElement) {
-        UIActivityIndicatorCreateXamlElement();
+    TEST_METHOD(UIView_GetXamlElement) {
+        UIViewGetXamlElement();
+    }
+
+    TEST_METHOD(UIActivityIndicatorView_CreateXamlElement) {
+        UIActivityIndicatorViewCreateXamlElement();
+    }
+
+    TEST_METHOD(UIActivityIndicatorView_GetXamlElement) {
+        UIActivityIndicatorViewGetXamlElement();
     }
 
     TEST_METHOD(UIButton_CreateXamlElement) {
         UIButtonCreateXamlElement();
     }
 
+    TEST_METHOD(UIButton_GetXamlElement) {
+        UIButtonGetXamlElement();
+    }
+
     TEST_METHOD(UIScrollView_CreateXamlElement) {
         UIScrollViewCreateXamlElement();
+    }
+
+    TEST_METHOD(UIScrollView_GetXamlElement) {
+        UIScrollViewGetXamlElement();
     }
 
     TEST_METHOD(UISlider_CreateXamlElement) {
         UISliderCreateXamlElement();
     }
 
+    TEST_METHOD(UISlider_GetXamlElement) {
+        UISliderGetXamlElement();
+    }
+
     TEST_METHOD(UITextField_CreateXamlElement) {
         UITextFieldCreateXamlElement();
+    }
+
+    TEST_METHOD(UITextField_GetXamlElement) {
+        UITextFieldGetXamlElement();
     }
 }; /* class UIKitTests */
 

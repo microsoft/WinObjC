@@ -28,11 +28,25 @@
 #include <COMIncludes_end.h>
 
 #include "ObjCXamlControls.h"
+#import "UWP/WindowsUIXamlControls.h"
 
 TEST(UITextField, CreateXamlElement) {
     dispatch_sync(dispatch_get_main_queue(),
-    ^{
-        // TODO: Switch to UIKit.Xaml projections when they're available.
-        Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateTextBox());
-    });
+                  ^{
+                      // TODO: Switch to UIKit.Xaml projections when they're available.
+                      Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateTextBox());
+                      ASSERT_TRUE(xamlElement);
+                  });
+}
+
+TEST(UITextField, GetXamlElement) {
+    dispatch_sync(dispatch_get_main_queue(),
+                  ^{
+                      UIView* view = [[[UITextField alloc] init] autorelease];
+                      WXFrameworkElement* backingElement = [view xamlElement];
+                      ASSERT_TRUE(backingElement);
+
+                      // TODO: Fix up when UITextField moves fully to XAML
+                      ASSERT_TRUE([backingElement isKindOfClass:[WXCTextBox class]]);
+                  });
 }

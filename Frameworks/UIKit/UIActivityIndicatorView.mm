@@ -17,7 +17,6 @@
 #import "AssertARCEnabled.h"
 #import <Starboard.h>
 #import <StubReturn.h>
-
 #import "XamlUtilities.h"
 
 #import <UWP/WindowsUIXamlControls.h>
@@ -136,7 +135,7 @@ static const int c_largeSquareLength = 37;
 
     _subView = [[UIView alloc] initWithFrame:CGRectZero];
 
-    [_subView setNativeElement:_progressRing];
+    [_subView setXamlElement:_progressRing];
     [self addSubview:_subView];
 
     _isAnimating = NO;
@@ -241,7 +240,7 @@ static const int c_largeSquareLength = 37;
     _color = color;
 
     WUColor* convertedColor = ConvertUIColorToWUColor(color);
-    WUXMSolidColorBrush* brush =  [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
+    WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
     [_progressRing setForeground:brush];
 }
 

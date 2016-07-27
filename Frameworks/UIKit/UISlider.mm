@@ -60,7 +60,7 @@ static const double c_defaultStepFrequency = 0.1;
 
     _rootPanel = [WXCGrid make];
     [_rootPanel.children addObject:_xamlSlider];
-    [self layer].contentsElement = _rootPanel;
+    [self setXamlElement:_rootPanel];
     [self _updateStepFrequency];
     [self setContinuous:YES];
     [self _registerForEventsWithXaml];
