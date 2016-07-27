@@ -92,6 +92,8 @@ extern "C" const InitFunc __declspec(selectany) _SEGALLOC(".CRT$XCLB") ___objc_m
 // we would be resolving classes that have not been loaded.
 extern "C" const InitFunc __declspec(selectany) _SEGALLOC(".CRT$XCV") ___objc_legacy_post_XCU = &___objc_legacy_resolve_all;
 
+// Compiler Contract: the WinObjC build system will force this symbol to be included,
+// pulling in this object even if it has been aggregated into a .lib.
 extern "C" __declspec(selectany) const void* ___pin_objc_init = 0x0;
 
 // Force inclusion of this TU.
