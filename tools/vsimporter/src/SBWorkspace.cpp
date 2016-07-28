@@ -399,6 +399,11 @@ SBTarget* SBWorkspace::queueTargetWithName(const String& targetName, const Strin
     if (target)
       break;
   }
+
+  if (!target) {
+    SBLog::warning() << "Unable to convert \"" << targetName << "\" target." << std::endl;
+  }
+
   return target;
 }
 
