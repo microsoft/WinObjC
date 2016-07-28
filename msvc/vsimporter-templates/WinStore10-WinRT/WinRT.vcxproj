@@ -3,7 +3,6 @@
   <ItemGroup Label="ProjectConfigurations" VSImporterLabel="ProjectConfigSummary" />
   <PropertyGroup Label="Globals" VSImporterLabel="GlobalProperties">
     <ProjectName>$projectname$</ProjectName>
-    <RootNamespace>$safeprojectname$</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>

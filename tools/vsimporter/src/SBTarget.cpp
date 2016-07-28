@@ -281,14 +281,24 @@ VCProject* SBTarget::constructVCProject(VSTemplateProject* projTemplate)
   }
   proj->addGlobalProperty("WINOBJC_SDK_ROOT", platformPath(sdkDir), "'$(WINOBJC_SDK_ROOT)' == ''");
 
-  // Set configuration properties
+  // Compute a common TargetName (by taking the first value we find)
+  String vsTargetName = getName();
   for (auto configBS : m_buildSettings) {
-    VCProjectConfiguration *projConfig = proj->addConfiguration(configBS.first);
     String productName = configBS.second->getValue("PRODUCT_NAME");
     if (!productName.empty()) {
-      projConfig->setProperty("TargetName", productName);
+      vsTargetName = productName;
+      break;
     }
   }
+
+  // Set configuration properties
+  for (auto configBS : m_buildSettings) {
+    VCProjectConfiguration* projConfig = proj->addConfiguration(configBS.first);
+    projConfig->setProperty("TargetName", vsTargetName);
+  }
+
+  // Set the RootNamespace to match the TargetName
+  proj->addGlobalProperty("RootNamespace", vsTargetName);
 
   // Write files associated with each build phase
   SBBuildPhaseList::const_iterator phaseIt = m_buildPhases.begin();

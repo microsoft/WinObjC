@@ -479,6 +479,9 @@ VCProject* SBWorkspace::generateGlueProject() const
     projConfig->setProperty("TargetName", getName());
   }
 
+  // Set RootNamespace
+  glueProject->addGlobalProperty("RootNamespace", getName());
+
   return glueProject;
 }
 
