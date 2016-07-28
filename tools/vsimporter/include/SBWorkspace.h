@@ -52,6 +52,7 @@ public:
 private:
   typedef std::vector<SBTarget*> SBTargetVec;
   typedef std::map<String, SBProject*> ProjectMap;
+  typedef std::vector<SBProject*> SBProjectVec;
   typedef std::vector<const XCScheme*> SchemeVec;
 
   SBWorkspace();
@@ -62,9 +63,10 @@ private:
   SBProject* findOpenProject(const String& absProjPath) const;
   const XCScheme* getScheme(const String& schemeName) const;
   void getSchemes(const StringSet& schemeNames, SchemeVec& ret) const;
-  void queueSelectedTargets(const StringSet& configNames);
+  void selectTargets(std::vector<std::pair<String, SBProject*>>& ret);
   void detectProjectCollisions() const;
   VCProject* generateGlueProject() const;
+  void getAllTargets(std::vector<std::pair<String, SBProject*>>& targets) const;
 
   // Relevant if Workspace was constructed from a workspace file
   XCWorkspace* m_workspace;

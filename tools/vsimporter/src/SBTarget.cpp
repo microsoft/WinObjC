@@ -43,7 +43,8 @@ SBTarget::~SBTarget() {}
 
 SBTarget::SBTarget(const PBXTarget* target, const StringSet& configNames, SBProject& parentProject)
   : m_target(target),
-    m_parentProject(parentProject)
+    m_parentProject(parentProject),
+    m_explicit(false)
 {
   sbAssert(target);
   sbAssert(!configNames.empty());
@@ -263,8 +264,8 @@ VCProject* SBTarget::constructVCProject(VSTemplateProject* projTemplate)
   // Create the project
   VCProject* proj = new VCProject(projTemplate);
 
-  // Set project to export public headers
-  if (getProductType() == TargetStaticLib) {
+  // Set explicitly queued up project to export public headers
+  if (m_explicit && getProductType() == TargetStaticLib) {
     proj->addGlobalProperty("ExportPublicHeaders", "true");
   }
 
@@ -335,4 +336,9 @@ void SBTarget::resolveVCProjectDependecies(VCProject* proj, std::multimap<SBTarg
     sbAssert(match);
     proj->addProjectReference(match);
   }
+}
+
+void SBTarget::markExplicit()
+{
+  m_explicit = true;
 }

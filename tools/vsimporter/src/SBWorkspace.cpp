@@ -17,6 +17,7 @@
 #include <string.h>
 #include <iostream>
 #include <limits>
+#include <iterator>
 
 #include "sbassert.h"
 #include "utils.h"
@@ -202,7 +203,7 @@ void SBWorkspace::printSummary() const
   }
 }
 
-void SBWorkspace::queueSelectedTargets(const StringSet& configNames)
+void SBWorkspace::selectTargets(std::vector<std::pair<String, SBProject*>>& ret)
 {
   String queryMessage;
   if (m_workspace) {
@@ -211,20 +212,27 @@ void SBWorkspace::queueSelectedTargets(const StringSet& configNames)
     queryMessage = "The project contains multiple targets.";
   }
 
-  StringVec targets;
-  std::vector<SBProject*> projects;
-  for (auto project : m_openProjects) {
-    project.second->getPossibleTargets(targets);
-    projects.insert(projects.end(), targets.size() - projects.size(), project.second);
-  }
-  
-  std::vector<size_t> selection;
-  queryListSelection(targets, queryMessage, "target", selection);
+  // Get all possible targets in the solution
+  std::vector<std::pair<String, SBProject*>> allTargets;
+  getAllTargets(allTargets);
 
-  for (size_t i = 0; i < selection.size(); i++) {
-    size_t currentSelection = selection[i];
-    projects[currentSelection]->queueTargetWithName(targets[currentSelection], &configNames);
-  }
+  // Construct vector of target names for the query, maintaining order
+  StringVec targetNames;
+  std::transform(allTargets.begin(),
+                 allTargets.end(),
+                 back_inserter(targetNames),
+                 [](auto kv) { return kv.first; });
+
+  // Query the user for which targets should be queued
+  std::vector<size_t> selection;
+  queryListSelection(targetNames, queryMessage, "target", selection);
+
+  // Return selection of targets
+  ret.clear();
+  std::transform(selection.begin(),
+                 selection.end(),
+                 back_inserter(ret),
+                 [&allTargets](size_t i) { return allTargets[i]; });
 }
 
 const XCScheme* SBWorkspace::getScheme(const String& schemeName) const
@@ -272,13 +280,33 @@ void SBWorkspace::queueSchemes(const StringSet& schemeNames, const StringSet& co
       SBProject* targetProj = openProject(projectPath);
 
       // Create the target
+      SBTarget* target = NULL;
       if (targetProj) {
-        targetProj->queueTargetWithId(buildRef.id, &configNames);
+        target = targetProj->queueTargetWithId(buildRef.id, &configNames);
       } else {
         SBLog::warning() << "Failed to open \"" << buildRef.container << "\" project referenced by \"" << scheme->getName() << "\" scheme. "
                          << "Ignoring \"" << buildRef.targetName << "\" target." << std::endl;
       }
+
+      // Mark target as having been explicitly queued up
+      if (target) {
+        target->markExplicit();
+      }
     }
+  }
+}
+
+void SBWorkspace::getAllTargets(std::vector<std::pair<String, SBProject*>>& targets) const
+{
+  for (auto projectKV : m_openProjects) {
+    SBProject* project = projectKV.second;
+    StringVec projectTargets;
+
+    project->getPossibleTargets(projectTargets);
+    std::transform(projectTargets.begin(),
+                   projectTargets.end(),
+                   back_inserter(targets),
+                   [project](const String& targetName) { return std::make_pair(targetName, project); });
   }
 }
 
@@ -288,17 +316,35 @@ void SBWorkspace::queueTargets(const StringSet& targetNames, const StringSet& co
   bool isInteractive = bs.getValue("VSIMPORTER_INTERACTIVE") == "YES";
 
   // Get the specified targets
+  std::vector<std::pair<String, SBProject*>> selectedTargets;
   if (isInteractive) {
     // Query the user to select targets to be queued
-    queueSelectedTargets(configNames);
+    selectTargets(selectedTargets);
   } else if (targetNames.empty()) {
     // Queue up all targets
-    for (auto project : m_openProjects) {
-      project.second->queueAllTargets(&configNames);
-    }
+    getAllTargets(selectedTargets);
   } else {
-    for (auto targetName : targetNames) {
-      queueTargetWithName(targetName, configNames);
+    std::transform(targetNames.begin(),
+                   targetNames.end(),
+                   back_inserter(selectedTargets),
+                   [](const String& targetName) { return make_pair(targetName, static_cast<SBProject*>(NULL)); });
+  }
+
+  // Queue targets
+  for (auto targetKV : selectedTargets) {
+    const String& targetName = targetKV.first;
+    SBProject* targetProject = targetKV.second;
+
+    SBTarget *target = NULL;
+    if (targetProject) {
+      target = targetProject->queueTargetWithName(targetName, &configNames);
+    } else {
+      target = queueTargetWithName(targetName, configNames);
+    }
+
+    // Mark target as having been explicitly queued up
+    if (target) {
+      target->markExplicit();
     }
   }
 }

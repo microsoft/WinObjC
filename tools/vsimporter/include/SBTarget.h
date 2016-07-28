@@ -50,6 +50,7 @@ public:
   String makeAbsolutePath(const String& path) const;
   String makeRelativePath(const String& path, const String& absRoot = "") const;
   SBTarget* getPossibleTarget(const PBXBuildFile* buildFile);
+  void markExplicit();
   
   virtual VCProject* constructVCProject(VSTemplateProject* projTemplate) = 0;
   void resolveVCProjectDependecies(VCProject* proj, std::multimap<SBTarget*, VCProject*>& vcProjects);
@@ -71,6 +72,8 @@ private:
   void addDependency(SBTarget* depTarget);
   void processDependencies();
   bool writeVCProject();
+
+  bool m_explicit;
 };
 
 #endif /* _SBTARGET_H_ */
