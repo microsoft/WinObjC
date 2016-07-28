@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #include <TestFramework.h>
-#include <Foundation\Foundation.h>
+#include <Foundation/Foundation.h>
 
 TEST(NSSet, ExpandBeyondCapacity) {
     NSMutableSet* set = [NSMutableSet setWithCapacity:1];

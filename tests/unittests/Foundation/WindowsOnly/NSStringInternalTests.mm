@@ -14,7 +14,10 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
+// Windows-only:
+//      NSString _reverseString
+
+#import <TestFramework.h>
 #import <Foundation/Foundation.h>
 #import "NSStringInternal.h"
 

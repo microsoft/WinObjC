@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#import "Starboard.h"
+#import "Starboard/SmartTypes.h"
 #import "TestFramework.h"
 #import "CoreFoundation/CoreFoundation.h"
 

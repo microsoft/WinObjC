@@ -14,26 +14,45 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
-#include "windows.h"
-#include <string.h>
-#include <Foundation/NSProcessInfo.h>
+#import <TestFramework.h>
+#import <Foundation/Foundation.h>
+#import <string.h>
+#import <windows.h>
+
+// Accessors for process info differ between platforms
+#if !TARGET_OS_WIN32
+#import <libproc.h>
+#endif
+
+int processIdentifier = static_cast<int>(GetCurrentProcessId());
 
 TEST(NSProcessInfo, NSProcessInfoGetProperties) {
+    // Accessors for process name differ between platforms
+    NSString* processName;
+#if TARGET_OS_WIN32
     // get the process name/id/processor count from windows side
     wchar_t moduleFullPath[_MAX_PATH];
-    NSString* processName;
     uint32_t length = ::GetModuleFileNameW(NULL, moduleFullPath, _MAX_PATH);
     ASSERT_TRUE(length > 0 && length < _MAX_PATH);
 
     wchar_t moduleName[_MAX_FNAME];
     ASSERT_TRUE(::_wsplitpath_s(moduleFullPath, NULL, 0, NULL, 0, moduleName, std::extent<decltype(moduleName)>::value, NULL, 0) == 0);
-    processName = [[NSString alloc] initWithCharacters:(const unichar*)moduleName length:wcsnlen_s(moduleName, _MAX_FNAME)];
+    processName = [NSString stringWithCharacters:(const unichar*)moduleName length:wcsnlen_s(moduleName, _MAX_FNAME)];
+#else
+    char moduleFullPath[_MAX_PATH];
+    proc_name(processIdentifier, moduleFullPath, _MAX_PATH);
+    processName = [NSString stringWithUTF8String:moduleFullPath];
+#endif
 
-    int processIdentifier = static_cast<int>(GetCurrentProcessId());
+    // Accessors for processor count differ between platforms
+    DWORD processorCount;
+#if TARGET_OS_WIN32
     SYSTEM_INFO systemInfo;
     GetNativeSystemInfo(&systemInfo);
-    DWORD processorCount = systemInfo.dwNumberOfProcessors;
+    processorCount = systemInfo.dwNumberOfProcessors;
+#else
+    processorCount = sysconf(_SC_NPROCESSORS_ONLN);
+#endif
 
     // get the same info from NSProcessInfo side and make sure they are the same
     NSProcessInfo* processInfo = [NSProcessInfo processInfo];
@@ -47,6 +66,4 @@ TEST(NSProcessInfo, NSProcessInfoGetProperties) {
              processInfo.processorCount,
              processInfo.processIdentifier,
              processInfo.systemUptime);
-
-    [processName release];
 }
