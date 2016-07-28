@@ -17,7 +17,6 @@
 #include <COMIncludes.h>
 #import "ApplicationMain.h"
 #import <windows.foundation.h>
-#import <windows.applicationmodel.activation.h>
 #include <COMIncludes_End.h>
 
 #import <assert.h>
@@ -33,7 +32,6 @@
 
 #import <Starboard.h>
 #import <StringHelpers.h>
-#import <CollectionHelpers.h>
 #import <UIInterface.h>
 #import <CACompositorClient.h>
 #import <UIApplicationInternal.h>
@@ -41,7 +39,7 @@
 #import <UWP/WindowsApplicationModelActivation.h>
 
 using namespace Microsoft::WRL;
-using namespace ABI::Windows::Foundation::Collections;
+using namespace ABI::Windows::Foundation;
 
 static CACompositorClientInterface* _compositorClient = NULL;
 
@@ -63,21 +61,20 @@ int ApplicationMainStart(const char* principalName,
 
     // Populate Objective C equivalent of activation argument
     if (activationType == ActivationTypeToast) {
-        ComPtr<ABI::Windows::ApplicationModel::Activation::IToastNotificationActivatedEventArgs>* args =
-            reinterpret_cast<ComPtr<ABI::Windows::ApplicationModel::Activation::IToastNotificationActivatedEventArgs>*>(activationArg);
-        ComPtr<ABI::Windows::Foundation::Collections::IPropertySet>* toastUserInput;
-        THROW_NS_IF_FAILED(args->Get()->get_UserInput(toastUserInput->GetAddressOf()));
-        NSDictionary* userInput = [NSDictionary new];
-
-        // UserInput only contains strings so we can treat it as a map of only strings to convert correctly
-        THROW_NS_IF_FAILED(Collections::WRLToNSCollection(
-            reinterpret_cast<ComPtr<ABI::Windows::Foundation::Collections::IMap<HSTRING, HSTRING>>*>(toastUserInput)->Get(), &userInput));
-        ComPtr<HSTRING>* toastArgument;
-        THROW_NS_IF_FAILED(args->Get()->get_Argument(toastArgument->Get()));
-        NSString* argument = Strings::WideToNSString(reinterpret_cast<HSTRING>(toastArgument->Get()));
-
-        NSDictionary* toastAction =
-            @{ UIApplicationLaunchOptionsToastActionArgumentKey : argument, UIApplicationLaunchOptionsToastActionUserInputKey : userInput };
+        WAAToastNotificationActivatedEventArgs* toastArgument = [WAAToastNotificationActivatedEventArgs createWith:activationArg];
+        NSMutableDictionary* userInput = [NSMutableDictionary new];
+        for (NSString* key in [toastArgument.userInput allKeys]) {
+            RTObject* holderObject = [toastArgument.userInput objectForKey:key];
+            ComPtr<IPropertyValue> value;
+            THROW_NS_IF_FAILED(holderObject.comObj.As(&value));
+            Wrappers::HString hstr;
+            THROW_NS_IF_FAILED(value->GetString(hstr.GetAddressOf()));
+            [userInput setObject:Strings::WideToNSString(hstr.Get()) forKey:key];
+        }
+        NSDictionary* toastAction = @{
+            UIApplicationLaunchOptionsToastActionArgumentKey : toastArgument.argument,
+            UIApplicationLaunchOptionsToastActionUserInputKey : userInput
+        };
         activationArgument = toastAction;
     } else if (activationType == ActivationTypeVoiceCommand) {
         WMSSpeechRecognitionResult* result = [WMSSpeechRecognitionResult createWith:activationArg];
