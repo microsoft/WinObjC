@@ -350,3 +350,41 @@ TEST(NSArray, MutateDuringEnumeration) {
 
     ASSERT_ANY_THROW(enumerate());
 }
+
+TEST(NSArray, SortedArrayWithOptions) {
+    NSArray* unsortedArray = @[@3, @11, @2, @12, @1, @13];
+
+    NSArray* expectedSortedArray = @[@1, @2, @3, @11, @12, @13];
+    NSArray* actualSortedArray = [unsortedArray sortedArrayWithOptions:0 usingComparator:^NSComparisonResult(id obj1, id obj2) {
+        int val1 = [obj1 intValue];
+        int val2 = [obj2 intValue];
+
+        if (val1 == val2) {
+            return NSOrderedSame;
+        }
+
+        return (val1 > val2) ? NSOrderedDescending : NSOrderedAscending;
+    }];
+
+    ASSERT_OBJCEQ(expectedSortedArray, actualSortedArray);
+
+    // For our stable sort test, we compare using a comparator that treats 1, 2, and 3 as equal and 11, 12, and 13 as equal. Therefore
+    // 3, 2, and 1 should be in original order.
+    NSArray* expectedStableSort = @[@3, @2, @1, @11, @12, @13];
+    NSArray* actualStableSort = [unsortedArray sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(id obj1, id obj2) {
+        int val1 = [obj1 intValue];
+        int val2 = [obj2 intValue];
+
+        if (val1 < 10 && val2 < 10) {
+            return NSOrderedSame;
+        }
+
+        if (val1 > 10 && val2 > 10) {
+            return NSOrderedSame;
+        }
+
+        return (val1 > val2) ? NSOrderedDescending : NSOrderedAscending;
+    }];
+
+    ASSERT_OBJCEQ(expectedStableSort, actualStableSort);
+}

@@ -46,6 +46,11 @@ NSString* const NSURLErrorFailingURLErrorKey = @"NSURLErrorFailingURLErrorKey";
 NSString* const NSURLErrorFailingURLStringErrorKey = @"NSURLErrorFailingURLStringErrorKey";
 NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPeerTrustErrorKey";
 
+/* Error Coding */
+static NSString* const _NSErrorArchivalCodeKey = @"NS.code";
+static NSString* const _NSErrorArchivalDomainKey = @"NS.domain";
+static NSString* const _NSErrorArchivalUserInfoKey = @"NS.userInfo";
+
 @implementation NSError {
     uint8_t _cfinfo[4]; // Maintains same memory layout as CFRuntime
 #if __LP64__ // From CFRuntimeBase
@@ -136,29 +141,32 @@ NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPe
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return YES;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-- (id)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    if (self = [super init]) {
+        _code = [coder decodeIntForKey:_NSErrorArchivalCodeKey];
+        _domain = [coder decodeObjectOfClass:[NSString class] forKey:_NSErrorArchivalDomainKey];
+        _userInfo = [coder decodeObjectOfClass:[NSDictionary class] forKey:_NSErrorArchivalUserInfoKey];
+    }
+
+    return self;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
+    [coder encodeInt:_code forKey:_NSErrorArchivalCodeKey];
+    [coder encodeObject:_domain forKey:_NSErrorArchivalDomainKey];
+    [coder encodeObject:_userInfo forKey:_NSErrorArchivalUserInfoKey];
 }
 
 /**

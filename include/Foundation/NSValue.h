@@ -20,23 +20,22 @@
 
 FOUNDATION_EXPORT_CLASS
 @interface NSValue : NSObject <NSCopying, NSSecureCoding>
+@property(readonly) NSRange rangeValue;
+@property(readonly) __unsafe_unretained id nonretainedObjectValue;
+@property(readonly) void* pointerValue;
+@property(readonly) const char* objCType;
 
 - (NSValue*)initWithBytes:(const void*)value objCType:(const char*)type;
 + (NSValue*)valueWithBytes:(const void*)value objCType:(const char*)type;
 + (NSValue*)value:(const void*)value withObjCType:(const char*)type;
 - (void)getValue:(void*)value;
-- (const char*)objCType;
 
 /* Pointer Values */
 + (NSValue*)valueWithPointer:(const void*)pointer;
 + (NSValue*)valueWithNonretainedObject:(__unsafe_unretained id)object;
-- (void*)pointerValue;
-- (__unsafe_unretained id)nonretainedObjectValue;
 
 /* Range Values */
 + (NSValue*)valueWithRange:(NSRange)range;
-- (NSRange)rangeValue;
-
 - (BOOL)isEqualToValue:(NSValue*)other;
 
 @end
