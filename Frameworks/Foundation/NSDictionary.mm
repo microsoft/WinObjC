@@ -716,6 +716,20 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
 /**
  @Status Interoperable
 */
+- (NSArray*)keysSortedByValueWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr {
+    NSMutableArray* ret = [[[self allKeys] mutableCopy] autorelease];
+    [ret sortWithOptions:opts usingComparator:^NSComparisonResult(id key1, id key2) {
+        id val1 = [self objectForKey:key1];
+        id val2 = [self objectForKey:key2];
+        return cmptr(val1, val2);
+    }];
+
+    return ret;
+}
+
+/**
+ @Status Interoperable
+*/
 - (NSString*)description {
     thread_local unsigned int indent = 0;
     NSMutableString* s = [NSMutableString new];
@@ -809,15 +823,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
     }
 
     return result;
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (NSArray*)keysSortedByValueWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr {
-    UNIMPLEMENTED();
-    return StubReturn();
 }
 
 /**

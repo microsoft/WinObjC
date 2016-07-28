@@ -56,13 +56,13 @@ FOUNDATION_EXPORT_CLASS
 - (NSEnumerator<ObjectType>*)objectEnumerator;
 - (void)enumerateObjectsUsingBlock:(void (^)(ObjectType, BOOL*))block;
 - (void)enumerateObjectsWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(ObjectType, BOOL*))block;
-- (NSSet<ObjectType>*)objectsPassingTest:(BOOL (^)(ObjectType, BOOL*))predicate STUB_METHOD;
+- (NSSet<ObjectType>*)objectsPassingTest:(BOOL (^)(ObjectType, BOOL*))predicate;
 - (NSSet<ObjectType>*)objectsWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(ObjectType, BOOL*))predicate STUB_METHOD;
 - (BOOL)isSubsetOfSet:(NSSet<ObjectType>*)otherSet;
 - (BOOL)intersectsSet:(NSSet<ObjectType>*)otherSet;
 - (BOOL)isEqualToSet:(NSSet<ObjectType>*)otherSet;
 - (id)valueForKey:(NSString*)key;
-- (void)setValue:(id)value forKey:(NSString*)key STUB_METHOD;
+- (void)setValue:(id)value forKey:(NSString*)key;
 - (NSArray<ObjectType>*)sortedArrayUsingDescriptors:(NSArray<NSSortDescriptor*>*)sortDescriptors;
 @property (readonly, copy) NSString* description;
 - (NSString*)descriptionWithLocale:(id)locale STUB_METHOD;

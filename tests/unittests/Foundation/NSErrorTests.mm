@@ -99,3 +99,13 @@ TEST(NSError, NSCFErrorBridge) {
     [testError release];
 }
 
+TEST(NSError, CanBeArchived) {
+    NSString* expectedDomain = @"testDomain";
+    NSDictionary* expectedUserInfo = @{@1 : @"foo", @2 : @"bar"};
+    NSInteger expectedCode = 2;
+    NSError* expected = [NSError errorWithDomain:expectedDomain code:expectedCode userInfo:expectedUserInfo];
+
+    id data = [NSKeyedArchiver archivedDataWithRootObject:expected];
+    id actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    ASSERT_OBJCEQ(expected, actual);
+}
