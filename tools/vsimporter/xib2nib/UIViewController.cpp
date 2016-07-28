@@ -21,14 +21,7 @@
 #include <assert.h>
 
 static PropertyMapper propertyMappings[] = {
-    "IBUINibName",
-    "UINibName",
-    NULL,
-    "IBUIResizesToFullScreen",
-    "UIResizesToFullScreen",NULL,
-    "IBUITitle",
-    "UITitle",
-    NULL,
+    "IBUINibName", "UINibName", NULL, "IBUIResizesToFullScreen", "UIResizesToFullScreen", NULL, "IBUITitle", "UITitle", NULL,
 };
 
 static const int numPropertyMappings = sizeof(propertyMappings) / sizeof(PropertyMapper);

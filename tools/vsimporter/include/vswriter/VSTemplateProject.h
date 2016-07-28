@@ -19,6 +19,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
 
 namespace pugi {
   class xml_node;
@@ -30,6 +31,7 @@ class ProjectItem;
 typedef std::vector<ProjectItem*> ProjectItemVec;
 typedef std::vector<std::string> StringVec;
 typedef std::map<std::string, std::string> StringMap;
+typedef std::set<std::string> StringSet;
 
 class VSTemplateProject {
 public:
@@ -37,7 +39,7 @@ public:
   ~VSTemplateProject();
 
   void expand(const std::string& srcDir, const std::string& destDir, const VSTemplateParameters& params);
-  void write() const;
+  void write(const StringSet& urlSchemes) const;
 
   bool isShared() const;
   bool isDeployable() const;

@@ -558,7 +558,7 @@ WADDataPackageView* _getClipboardContent() {
                             THROW_NS_HR_MSG(result, "Internal error: Failed to create IBuffer from NSData.");
                         }
 
-                        NSData* data = [NSData dataWithBytesNoCopy:pixels length:length freeWhenDone:NO];
+                        NSData* data = [NSData dataWithBytes:pixels length:length];
                         imageData = [[UIImage imageWithData:data] retain];
 
                         dispatch_group_leave(group);

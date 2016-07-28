@@ -17,6 +17,7 @@
 #pragma once
 
 #import "LinkedList.h"
+#include "UWP/InteropBase.h"
 
 @class UIWindow;
 @class WXFrameworkElement;
@@ -58,6 +59,11 @@ public:
     CGRect _resizeRoundingError;
 
     StrongId<WXFrameworkElement> _xamlInputElement; // The XAML element receiving touch input for this view
+    EventRegistrationToken _pointerPressedEventRegistration = { 0 };
+    EventRegistrationToken _pointerMovedEventRegistration = { 0 };
+    EventRegistrationToken _pointerReleasedEventRegistration = { 0 };
+    EventRegistrationToken _pointerCanceledEventRegistration = { 0 };
+    EventRegistrationToken _pointerCaptureLostEventRegistration = { 0 };
 
     UIViewPrivateState(UIView* owner) {
         setSelf(owner);
@@ -112,7 +118,7 @@ public:
 - (BOOL)_isEnabled;
 @end
 
-@interface NSLayoutConstraint () 
+@interface NSLayoutConstraint ()
 - (void)_setView:(UIView*)view;
 - (void)_printConstraint;
 + (void)_printConstraints:(NSArray*)constraints;
@@ -124,3 +130,11 @@ public:
 @interface NSStringDrawingContext ()
 - (void)_setInternalTotalBounds:(CGRect)rect;
 @end
+
+inline void RunSynchronouslyOnMainThread(void(^block)()) {
+    if ([NSThread isMainThread]) {
+        block();
+    } else {
+        dispatch_sync(dispatch_get_main_queue(), block);
+    }
+}

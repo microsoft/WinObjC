@@ -40,12 +40,11 @@ TEST(NSDateFormatter, CustomDateFormat) {
     LOG_INFO(@"With dateFormat '%@':  '%@'", dateFormatter.dateFormat, dateStr);
 }
 
-// TODO 7367511: Slight format difference in ICU
 // ShortStyle
 // locale  stringFromDate  example
 // ------  --------------  --------
 // en_US   M/d/yy       12/25/15
-TEST(NSDateFormatter, DISABLED_DateStyleShort) {
+TEST(NSDateFormatter, DateStyleShort) {
     auto timestamps = @{
         @-31536000 : @"1/1/69, 12:00 AM",
         @0.0 : @"1/1/70, 12:00 AM",
@@ -84,12 +83,11 @@ TEST(NSDateFormatter, DISABLED_DateStyleShort) {
     }
 }
 
-// TODO 7367511: Slight format difference in ICU
 // MediumStyle
 // locale  stringFromDate  example
 // ------  --------------  ------------
 // en_US   MMM d, y       Dec 25, 2015
-TEST(NSDateFormatter, DISABLED_DateStyleMedium) {
+TEST(NSDateFormatter, DateStyleMedium) {
     auto timestamps = @{
         @-31536000 : @"Jan 1, 1969, 12:00:00 AM",
         @0.0 : @"Jan 1, 1970, 12:00:00 AM",
@@ -126,12 +124,11 @@ TEST(NSDateFormatter, DISABLED_DateStyleMedium) {
     }
 }
 
-// TODO 7367511: Slight format difference in ICU
 // LongStyle
 // locale  stringFromDate  example
 // ------  --------------  -----------------
 // en_US   MMMM d, y       December 25, 2015
-TEST(NSDateFormatter, DISABLED_DateStyleLong) {
+TEST(NSDateFormatter, DateStyleLong) {
     auto timestamps = @{
         @-31536000 : @"January 1, 1969 at 12:00:00 AM GMT",
         @0.0 : @"January 1, 1970 at 12:00:00 AM GMT",
@@ -168,12 +165,11 @@ TEST(NSDateFormatter, DISABLED_DateStyleLong) {
     }
 }
 
-// TODO 7367511: Slight format difference in ICU
 // FullStyle
 // locale  stringFromDate  example
 // ------  --------------  -------------------------
 // en_US   EEEE, MMMM d, y  Friday, December 25, 2015
-TEST(NSDateFormatter, DISABLED_DateStyleFull) {
+TEST(NSDateFormatter, DateStyleFull) {
     auto timestamps = @{
         @-31536000 : @"Wednesday, January 1, 1969 at 12:00:00 AM GMT",
         @0.0 : @"Thursday, January 1, 1970 at 12:00:00 AM GMT",

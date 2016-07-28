@@ -23,6 +23,7 @@ public:
     int _style;
     bool _animating;
     UIColor *_tintColor;
+    UIRect _frame;
     UIActivityIndicatorView();
 
     virtual void Awaken();

@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import "Starboard.h"
+
 #import "Foundation/NSBundle.h"
 #import "Foundation/NSMutableArray.h"
 #import "Foundation/NSMutableDictionary.h"
@@ -23,6 +24,7 @@
 #import "Foundation/NSNotificationCenter.h"
 #import "Foundation/NSString.h"
 #import "Foundation/NSValue.h"
+
 #import "UIKit/UIApplication.h"
 #import "UIKit/UIDevice.h"
 #import "UIKit/UINib.h"
@@ -35,13 +37,25 @@
 #import "AutoLayout.h"
 #import "UIViewControllerInternal.h"
 #import "UIApplicationInternal.h"
-#import "UIEmptyController.h"
+
+#import "UIEmptyView.h"
 #import "UIViewInternal.h"
 #import "UIViewControllerInternal.h"
 #import "UIStoryboardInternal.h"
 #import "UIResponderInternal.h"
 #import "NSCoderInternal.h"
 #import "UIPopoverPresentationControllerInternal.h"
+
+#import "UWP/WindowsUIXaml.h"
+#import "UWP/WindowsFoundation.h"
+
+#import "StringHelpers.h"
+
+#include "COMIncludes.h"
+#include "WinString.h"
+#include "RoApi.h"
+#include "Windows.UI.Xaml.Markup.h"
+#include "COMIncludes_End.h"
 
 NSString* const UIViewControllerHierarchyInconsistencyException = @"UIViewControllerHierarchyInconsistencyException";
 NSString* const UIViewControllerShowDetailTargetDidChangeNotification = @"UIViewControllerShowDetailTargetDidChangeNotification";
@@ -273,6 +287,75 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     return _length;
 }
 @end
+
+// Proxy class that wraps up parent INavigationEventArgs which is later used to trigger OnNavigatedTo in viewWillAppear
+class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArgs {
+    virtual HRESULT STDMETHODCALLTYPE QueryInterface(
+        /* [in] */ REFIID riid,
+        /* [iid_is][out] */ _COM_Outptr_ void __RPC_FAR* __RPC_FAR* ppvObject) {
+        if (memcmp(&riid, &ABI::Windows::UI::Xaml::Navigation::IID_INavigationEventArgs, sizeof(IID)) == 0) {
+            *ppvObject = (void**)this;
+            return S_OK;
+        }
+        return E_NOTIMPL;
+    }
+
+    virtual ULONG STDMETHODCALLTYPE AddRef(void) {
+        return 1;
+    }
+
+    virtual ULONG STDMETHODCALLTYPE Release(void) {
+        return 1;
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE GetIids(
+        /* [out] */ __RPC__out ULONG* iidCount,
+        /* [size_is][size_is][out] */ __RPC__deref_out_ecount_full_opt(*iidCount) IID** iids) {
+        *iidCount = 0;
+
+        return S_OK;
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE GetRuntimeClassName(
+        /* [out] */ __RPC__deref_out_opt HSTRING* className) {
+        return E_FAIL;
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE GetTrustLevel(
+        /* [out] */ __RPC__out TrustLevel* trustLevel) {
+        return S_OK;
+    }
+
+    virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_Content(
+        /* [out][retval] */ __RPC__deref_out_opt IInspectable** value) {
+        return S_OK;
+    }
+
+    virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_Parameter(
+        /* [out][retval] */ __RPC__deref_out_opt IInspectable** value) {
+        return S_OK;
+    }
+
+    virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_SourcePageType(
+        /* [out][retval] */ __RPC__out ABI::Windows::UI::Xaml::Interop::TypeName* value) {
+        return S_OK;
+    }
+
+    virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_NavigationMode(
+        /* [out][retval] */ __RPC__out ABI::Windows::UI::Xaml::Navigation::NavigationMode* value) {
+        return S_OK;
+    }
+
+    virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_Uri(
+        /* [out][retval] */ __RPC__deref_out_opt ABI::Windows::Foundation::IUriRuntimeClass** value) {
+        return S_OK;
+    }
+
+    virtual /* [propput] */ HRESULT STDMETHODCALLTYPE put_Uri(
+        /* [in] */ __RPC__in_opt ABI::Windows::Foundation::IUriRuntimeClass* value) {
+        return S_OK;
+    }
+};
 
 @implementation UIViewController : UIResponder
 
@@ -558,16 +641,18 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         if ((orientation != priv->_curOrientation) || !priv->_didSetRotation ||
             orientation != [[UIApplication sharedApplication] statusBarOrientation]) {
             bool sendEvent = orientation != priv->_curOrientation;
-            if (sendEvent)
+            if (sendEvent) {
                 [self willRotateToInterfaceOrientation:orientation duration:0.25];
+            }
 
             UIInterfaceOrientation oldOrientation = priv->_curOrientation;
             priv->_curOrientation = orientation;
             priv->_didSetRotation = true;
             [self setOrientationInternal:orientation animated:animated];
 
-            if (sendEvent)
+            if (sendEvent) {
                 [self didRotateFromInterfaceOrientation:oldOrientation];
+            }
         }
     }
 }
@@ -610,7 +695,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     }
 
     priv->_childViewControllers = [coder decodeObjectForKey:@"UIChildViewControllers"];
-    // assert(nibName != nil);
+
     priv->_edgesForExtendedLayout = [coder decodeIntForKey:@"UIKeyEdgesForExtendedLayout"];
 
     return self;
@@ -677,23 +762,32 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
  @Status Interoperable
 */
 - (instancetype)initWithNibName:(NSString*)strNib bundle:(NSBundle*)bundle {
-    if (!priv) {
-        priv = (UIViewControllerPriv*)IwCalloc(1, sizeof(UIViewControllerPriv));
-        priv->_curOrientation = UIInterfaceOrientationPortrait;
-        priv->_contentSizeForViewInPopover.width = 320.0f;
-        priv->_contentSizeForViewInPopover.height = 1100.0f;
-    }
+    if (self = [super init]) {
+        if (!priv) {
+            priv = (UIViewControllerPriv*)IwCalloc(1, sizeof(UIViewControllerPriv));
+            priv->_curOrientation = UIInterfaceOrientationPortrait;
+            priv->_contentSizeForViewInPopover.width = 320.0f;
+            priv->_contentSizeForViewInPopover.height = 1100.0f;
+        }
 
-    if (bundle == nil) {
-        priv->nibBundle = [NSBundle mainBundle];
-    } else {
-        priv->nibBundle = bundle;
-    }
+        if (bundle == nil) {
+            priv->nibBundle = [NSBundle mainBundle];
+        } else {
+            priv->nibBundle = bundle;
+        }
 
-    if (strNib) {
-        priv->nibName = [strNib copy];
-    } else {
-        priv->nibName = nil;
+        if ([strNib length] > 0) {
+            priv->nibName.attach([strNib copy]);
+        } else {
+            priv->nibName = nil;
+        }
+
+        // Load the XAML version if found. First prepend the auto-generated XAML namespace to the XAML class name
+        NSString* xamlClassName = [NSString stringWithFormat:@"IslandwoodAutoGenNamespace.%@", strNib];
+        auto xamlType = [self _returnXamlType:xamlClassName];
+        if (xamlType.Get() != nullptr) {
+            priv->_xamlClassName = xamlClassName;
+        }
     }
 
     return self;
@@ -703,8 +797,6 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
  @Status Interoperable
 */
 - (instancetype)init {
-    [super init];
-
     return [self initWithNibName:nil bundle:nil];
 }
 
@@ -716,8 +808,13 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         return;
     }
 
-    NSString* nibPath = nil;
+    if (priv->_xamlClassName != nil) {
+        [self _loadXamlPage];
+        return;
+    }
 
+    // Fallback to loading the NIB file
+    NSString* nibPath = nil;
     if (priv->nibName != nil) {
         NSBundle* bundle = priv->nibBundle;
 
@@ -770,7 +867,6 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         }
 
         IwFree(ourClass);
-        // if ( nibPath == nil ) assert(0);
     }
 
     if (nibPath != nil) {
@@ -810,7 +906,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             frame = [self _modalPresentationFormSheetFrame];
         }
 
-        UIView* view = [[[UIEmptyController alloc] initWithFrame:frame] autorelease];
+        UIView* view = [[[UIEmptyView alloc] initWithFrame:frame] autorelease];
         [view setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
         [self setView:view];
     }
@@ -832,19 +928,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         if ([self modalPresentationStyle] == UIModalPresentationFormSheet) {
             frame = [self _modalPresentationFormSheetFrame];
         }
-        UIInterfaceOrientation curOrientation = (UIInterfaceOrientation)[[UIApplication sharedApplication] statusBarOrientation];
 
-        /*
-        switch ( curOrientation ) {
-        case UIInterfaceOrientationLandscapeLeft:
-        case UIInterfaceOrientationLandscapeRight: {
-        float temp = frame.size.width;
-        frame.size.width = frame.size.height;
-        frame.size.height = temp;
-        }
-        break;
-        }
-        */
         [priv->view setFrame:frame];
     }
 }
@@ -867,7 +951,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
                 frame = [self _modalPresentationFormSheetFrame];
             }
 
-            UIView* view = [[[UIEmptyController alloc] initWithFrame:frame] autorelease];
+            UIView* view = [[[UIEmptyView alloc] initWithFrame:frame] autorelease];
             [self setView:view];
         }
     }
@@ -1083,13 +1167,10 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         if ([controller modalPresentationStyle] == UIModalPresentationPopover) {
             [controller->priv->_popoverPresentationController release];
             controller->priv->_popoverPresentationController =
-                [[UIPopoverPresentationController alloc] initWithPresentedViewController:controller
-                                                                presentingViewController:self];
+                [[UIPopoverPresentationController alloc] initWithPresentedViewController:controller presentingViewController:self];
         }
 
-        [controller performSelectorOnMainThread:@selector(_addToTop:)
-                                     withObject:[NSNumber numberWithInt:animated]
-                                  waitUntilDone:NO];
+        [controller performSelectorOnMainThread:@selector(_addToTop:) withObject:[NSNumber numberWithInt:animated] waitUntilDone:NO];
     }
 }
 
@@ -1178,6 +1259,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         CGPoint curPos;
         id layer = [curView layer];
 
+        // TODO: Eradicate warning about multiple methods named 'position' found
         curPos = [layer position];
 
         CABasicAnimation* animation = [CABasicAnimation animationWithKeyPath:@"position"];
@@ -1626,6 +1708,13 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
  @Status Interoperable
 */
 - (void)viewWillAppear:(BOOL)isAnimated {
+    if (priv->_page != nil) {
+        EventArgs* args = new EventArgs();
+        WUXNNavigationEventArgs* navArgs = NSAllocateObject([WUXNNavigationEventArgs class], 0, NULL);
+        [navArgs setComObj:args];
+
+        [priv->_page onNavigatedTo:navArgs];
+    }
 }
 
 /**
@@ -1686,6 +1775,67 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 */
 - (BOOL)isEditing {
     return priv->_isEditing;
+}
+
+- (Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType>)_returnXamlType:(NSString*)xamlClassName {
+    Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlMetadataProvider> xamlMetaProvider = nullptr;
+    auto inspApplicationCurrent = [WXApplication.current comObj];
+    inspApplicationCurrent.As(&xamlMetaProvider);
+
+    auto hClassName = Strings::NarrowToWide<HSTRING>(xamlClassName);
+    Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> xamlType = nullptr;
+    HRESULT hr = xamlMetaProvider->GetXamlTypeByFullName(hClassName.Get(), xamlType.GetAddressOf());
+    if (SUCCEEDED(hr) && xamlType.Get() != nullptr) {
+        return xamlType;
+    }
+
+    return nullptr;
+}
+
+- (void)_loadXamlPage {
+    if (priv->_xamlClassName == nil) {
+        return;
+    }
+
+    CGRect frame = [[UIScreen mainScreen] applicationFrame];
+    if ([self modalPresentationStyle] == UIModalPresentationFormSheet) {
+        frame = [self _modalPresentationFormSheetFrame];
+    }
+
+    // Create a template UIView
+    UIView* view = [[[UIEmptyView alloc] initWithFrame:frame] autorelease];
+    [view setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+    [self setView:view];
+
+    // Activate an instance of the XAML class and its page
+    Microsoft::WRL::ComPtr<IInspectable> pageObj = nullptr;
+    auto xamlType = [self _returnXamlType:priv->_xamlClassName];
+    xamlType->ActivateInstance(pageObj.GetAddressOf());
+
+    priv->_page = (WXCPage*)NSAllocateObject([WXCPage class], 0, NULL);
+    [priv->_page setComObj:pageObj];
+
+    // Walk the list of outlets and assign them to the corresponding XAML UIElement
+    unsigned int propListCount = 0;
+    objc_property_t* props = (objc_property_t*)class_copyPropertyList([self class], &propListCount);
+    auto freeProps = wil::ScopeExit([&]() {
+        IwFree(props);
+    });
+
+    for (int i = 0; i < propListCount; i++) {
+        objc_property_t curProp = props[i];
+        const char* propName = property_getName(curProp);
+        if (propName) {
+            NSString* propNameString = [NSString stringWithCString:propName];
+            RTObject* obj = [priv->_page findName:propNameString];
+            if (obj) {
+                // Store the XAML element found on the page for each public facing property
+                [self setValue:obj forKey:propNameString];
+            }
+        }
+    }
+
+    [self.view setNativeElement:priv->_page];
 }
 
 /**

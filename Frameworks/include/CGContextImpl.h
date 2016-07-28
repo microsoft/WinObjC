@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -28,11 +29,12 @@
 #include "CoreGraphics/CGShading.h"
 #include "UIKit/UIColor.h"
 #include "UIKit/UIFont.h"
+#import "UIColorInternal.h"
 
 typedef struct {
     id curFillColorObject;
-    ColorQuad curFillColor, curTextColor, curStrokeColor;
-    ColorQuad curPenColor, curForegroundColor;
+    __CGColorQuad curFillColor, curTextColor, curStrokeColor;
+    __CGColorQuad curPenColor, curForegroundColor;
     CGImageRef _imgClip, _imgMask;
     CGRect _imgMaskRect;
     CGAffineTransform curTransform;
@@ -58,7 +60,8 @@ private:
 #define MAX_CG_STATES 16
 
 class CGContextImpl {
-__CGCONTEXTIMPL_TEST_FRIENDS;
+    __CGCONTEXTIMPL_TEST_FRIENDS;
+
 protected:
     CGContextRef _rootContext;
     CGImageRef _imgDest;
@@ -71,6 +74,8 @@ protected:
     virtual void ObtainLock();
 
 public:
+    inline float GetAlpha() const { return curState->curFillColor.a; }
+    inline CGBlendMode GetBlendMode() const { return curState->curBlendMode; }
     virtual void ReleaseLock();
 
     virtual void DrawImage(CGImageRef img, CGRect src, CGRect dest, bool tiled = false);
@@ -82,7 +87,7 @@ public:
     CGContextImpl(CGContextRef base, CGImageRef destinationImage);
     virtual ~CGContextImpl();
 
-    virtual CGImageRef DestImage();
+    inline CGImageRef DestImage() { return _imgDest; }
 
     virtual void CGContextSetBlendMode(CGBlendMode mode);
     virtual CGBlendMode CGContextGetBlendMode();

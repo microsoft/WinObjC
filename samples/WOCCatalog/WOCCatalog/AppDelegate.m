@@ -41,9 +41,6 @@
 
 @implementation AppDelegate
 
-// Five UIWindow are created. The first four are for testing/demostrating windowLevel property of UIWindow.
-// The level control UIWindow has buttons for changing the windowLevel of blue, red, yellow window.
-// The last UIWindow is the main UIWindow which is for testing/demostrating all other things.
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     MainViewController* mtvc = [[MainViewController alloc] init];

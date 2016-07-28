@@ -361,7 +361,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -382,7 +381,6 @@ WINRT_EXPORT
 @interface WUXAPAutomationPeer : WXDependencyObject
 + (BOOL)listenerExists:(WUXAPAutomationEvents)eventId;
 + (WUXAPRawElementProviderRuntimeId*)generateRawElementProviderRuntimeId;
-+ (instancetype)make ACTIVATOR;
 @property (retain) WUXAPAutomationPeer* eventsSource;
 - (RTObject*)getPattern:(WUXAPPatternInterface)patternInterface;
 - (void)raiseAutomationEvent:(WUXAPAutomationEvents)eventId;

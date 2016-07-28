@@ -238,6 +238,7 @@
     <ClangCompile Include="..\..\..\..\tests\unittests\CoreGraphics\CGPathTests.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\CoreGraphics\CGContextTests.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\CoreGraphics\CGBitmapContextTests.mm" />
+    <ClangCompile Include="..\..\..\..\tests\unittests\CoreGraphics\CGColorTests.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

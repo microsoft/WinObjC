@@ -679,7 +679,7 @@ CFTypeRef CFMakeCollectable(CFTypeRef cf) CF_AUTOMATED_REFCOUNT_UNAVAILABLE;
 
 
 // WINOBJC: Start. Include old WinObjC additions to CFBase.h. Some might not really belong here but are still needed by other dependencies.
-#import <math.h>
+#include <math.h>
 #ifdef __LP64__
 typedef double CGFloat;
 #define CGFLOAT_MIN DBL_MIN
@@ -822,12 +822,12 @@ typedef struct CGRect {
     CGSize size;
 } CGRect;
 
-#import <CoreFoundation/CoreFoundationExport.h>
-#import <MacTypes.h>
-#import <Block.h>
+#include <CoreFoundation/CoreFoundationExport.h>
+#include <MacTypes.h>
+#include <Block.h>
 
 #ifdef WOCSTDLIB
-#import <mach/mach_types.h>
+#include <mach/mach_types.h>
 #endif
 
 

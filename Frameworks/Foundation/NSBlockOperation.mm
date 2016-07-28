@@ -49,7 +49,10 @@
  @Status Interoperable
 */
 - (instancetype)init {
-    _executionBlocks.attach([NSMutableArray new]);
+    if (self = [super init]) {
+        _executionBlocks.attach([NSMutableArray new]);
+    }
+
     return self;
 }
 

@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -105,8 +106,6 @@ inline IWLazyClassLookup::operator id() {
     return _clsRef;
 }
 #endif // __OBJC__
-
-enum surfaceFormat { _Color565, _ColorARGB, _ColorRGBA, _ColorRGB32, _ColorRGB32HE, _ColorGrayscale, _ColorRGB, _ColorA8, _ColorIndexed };
 
 #ifdef __cplusplus
 class EbrFile;

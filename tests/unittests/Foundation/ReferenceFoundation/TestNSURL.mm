@@ -459,16 +459,16 @@ TEST(NSURL, URLByResolvingSymlinksInPath) {
         NSURL* url = [NSURL fileURLWithPath:@"~"];
         ASSERT_OBJCEQ(url, [url copy]);
         auto result = [url URLByResolvingSymlinksInPath].absoluteString;
-         auto expected =
-             [[@"file:///" stringByAppendingString:[NSFileManager defaultManager].currentDirectoryPath] stringByAppendingString:@"/~"];
+        auto expected =
+            [[@"file:///" stringByAppendingString:[NSFileManager defaultManager].currentDirectoryPath] stringByAppendingString:@"/~"];
         ASSERT_OBJCEQ_MSG(result, expected, @"URLByResolvingSymlinksInPath resolves relative paths using current working directory.");
     }
 
     {
         NSURL* url = [NSURL fileURLWithPath:@"anysite.com/search"];
         auto result = [url URLByResolvingSymlinksInPath].absoluteString;
-         auto expected = [[@"file:///" stringByAppendingString:[NSFileManager defaultManager].currentDirectoryPath]
-             stringByAppendingString:@"/anysite.com/search"];
+        auto expected = [[@"file:///" stringByAppendingString:[NSFileManager defaultManager].currentDirectoryPath]
+            stringByAppendingString:@"/anysite.com/search"];
         ASSERT_OBJCEQ(result, expected);
     }
 

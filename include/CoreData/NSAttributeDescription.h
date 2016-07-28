@@ -41,9 +41,9 @@ typedef NS_ENUM(NSUInteger, NSAttributeType) {
 
 COREDATA_EXPORT_CLASS
 @interface NSAttributeDescription : NSPropertyDescription <NSCoding, NSCopying>
-@property NSAttributeType attributeType STUB_PROPERTY;
+@property NSAttributeType attributeType;
 @property (copy) NSString* attributeValueClassName STUB_PROPERTY;
-@property (retain) id defaultValue STUB_PROPERTY;
+@property (retain) id defaultValue;
 @property (readonly, copy) NSData* versionHash STUB_PROPERTY;
 @property (copy) NSString* valueTransformerName STUB_PROPERTY;
 @property BOOL allowsExternalBinaryDataStorage STUB_PROPERTY;

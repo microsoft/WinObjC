@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -351,7 +352,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
     if ([NSThread isMainThread]) {
         tex = GetCACompositor()->CreateWritableBitmapTexture32(width, height);
     }
-    CGContextRef ret = CGBitmapContextCreate32(width, height, tex, &_globallockingBufferInterface);
+
+    CGContextRef ret = _CGBitmapContextCreateWithTexture(width, height, tex, &_globallockingBufferInterface);
+
     if (tex) {
         _globallockingBufferInterface.ReleaseDisplayTexture(tex);
     }
@@ -570,9 +573,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
             if ((priv->isOpaque && priv->_backgroundColor == nil) || (priv->backgroundColor.a == 1.0 && 0)) {
                 /* CGVectorImage is currently in development - not ready for general use */
                 if (useVector) {
-                    // target = new CGVectorImage(width, height, _ColorRGB);
+                    // target = new CGVectorImage(width, height, _ColorBGR);
                 } else {
-                    drawContext = CGBitmapContextCreate24(width, height);
+                    drawContext = _CGBitmapContextCreateWithFormat(width, height, _ColorBGR);
                 }
                 priv->drewOpaque = TRUE;
             } else {
@@ -1694,12 +1697,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (void)setBackgroundColor:(CGColorRef)color {
     if (color != nil) {
-        [static_cast<UIColor*>(color) getColors:&priv->backgroundColor];
+        priv->backgroundColor = *[static_cast<UIColor*>(color) _getColors];
     } else {
-        priv->backgroundColor.r = 0.0f;
-        priv->backgroundColor.g = 0.0f;
-        priv->backgroundColor.b = 0.0f;
-        priv->backgroundColor.a = 0.0f;
+        _ClearColorQuad(priv->backgroundColor);
     }
 
     [CATransaction _setPropertyForLayer:self name:@"backgroundColor" value:(NSObject*)color];
@@ -1718,7 +1718,11 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 - (void)_setContentColor:(CGColorRef)newColor {
-    [static_cast<UIColor*>(newColor) getColors:&priv->contentColor];
+    if (newColor != nil) {
+        priv->contentColor = *[static_cast<UIColor*>(newColor) _getColors];
+    } else {
+        _ClearColorQuad(priv->contentColor);
+    }
     [CATransaction _setPropertyForLayer:self name:@"contentColor" value:static_cast<UIColor*>(newColor)];
 }
 
@@ -1728,12 +1732,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 - (void)setBorderColor:(CGColorRef)color {
     UNIMPLEMENTED();
     if (color != nil) {
-        [static_cast<UIColor*>(color) getColors:&priv->borderColor];
+        priv->borderColor = *[static_cast<UIColor*>(color) _getColors];
     } else {
-        priv->borderColor.r = 0.0f;
-        priv->borderColor.g = 0.0f;
-        priv->borderColor.b = 0.0f;
-        priv->borderColor.a = 0.0f;
+        _ClearColorQuad(priv->borderColor);
     }
 
     CGColorRef old = priv->_borderColor;
@@ -2441,14 +2442,10 @@ void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
  @Status Interoperable
 */
 + (CGPoint)convertPoint:(CGPoint)point fromLayer:(CALayer*)fromLayer toLayer:(CALayer*)toLayer {
-    CALayer* pToLayer = (CALayer*)toLayer;
-
-    if (fromLayer != nil) {
-        CALayer* pFromLayer = (CALayer*)(id)fromLayer;
-
+    if (fromLayer) {
         //  Convert the point to center-based position
-        point.x -= pFromLayer->priv->bounds.size.width * pFromLayer->priv->anchorPoint.x;
-        point.y -= pFromLayer->priv->bounds.size.height * pFromLayer->priv->anchorPoint.y;
+        point.x -= fromLayer->priv->bounds.size.width * fromLayer->priv->anchorPoint.x;
+        point.y -= fromLayer->priv->bounds.size.height * fromLayer->priv->anchorPoint.y;
 
         //  Convert to world-view
         CGAffineTransform fromTransform;
@@ -2456,15 +2453,15 @@ void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
         point = CGPointApplyAffineTransform(point, fromTransform);
     }
 
-    if (pToLayer != NULL) {
+    if (toLayer) {
         CGAffineTransform toTransform;
         GetLayerTransform(toLayer, &toTransform);
         toTransform = CGAffineTransformInvert(toTransform);
         point = CGPointApplyAffineTransform(point, toTransform);
 
         //  Convert the point from center-based position
-        point.x += pToLayer->priv->bounds.size.width * pToLayer->priv->anchorPoint.x;
-        point.y += pToLayer->priv->bounds.size.height * pToLayer->priv->anchorPoint.y;
+        point.x += toLayer->priv->bounds.size.width * toLayer->priv->anchorPoint.x;
+        point.y += toLayer->priv->bounds.size.height * toLayer->priv->anchorPoint.y;
     }
 
     return point;
@@ -2493,14 +2490,6 @@ void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
 
 - (NSObject*)presentationValueForKey:(NSString*)key {
     return GetCACompositor()->getDisplayProperty(priv->_presentationNode, [key UTF8String]);
-}
-
-/**
- @Status Interoperable
- @Notes WinObjC extension.
-*/
-- (void)updateAccessibilityInfo:(const IWAccessibilityInfo*)info {
-    GetCACompositor()->SetAccessibilityInfo([self _presentationNode], *info);
 }
 
 - (void)_setZIndex:(int)zIndex {

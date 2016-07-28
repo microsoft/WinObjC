@@ -4,6 +4,8 @@ LIBRARY UIKit
         UIApplicationMain
         UIApplicationInitialize
         UIApplicationActivationTest
+        UIApplicationActivated
+        UIApplicationLaunched
 
         ; NSAttributedString
         NSFontAttributeName DATA
@@ -1161,8 +1163,7 @@ LIBRARY UIKit
 
         ; Extra stuff for WinObjC:
         UIShutdown
-        UIQueueTouchInput
-        UIQueueKeyInput
         UIRequestTransactionProcessing
         UIOrientationFromString
         UIApplicationDidChangeDisplayModeNofication
+

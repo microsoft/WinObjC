@@ -42,18 +42,23 @@ public:
 
 private:
     XamlTypeInfo::InfoProvider::XamlTypeInfoProvider^ _provider;
+};
 
-    void _ApplicationMainLaunch(ActivationType activationType, Platform::Object^ activationArg);
+ref class AppEventListener
+{
+public:
     void _RegisterEventHandlers();
+
+private:
     void _OnAppVisibilityChanged(Platform::Object^ sender, Windows::UI::Core::VisibilityChangedEventArgs^ args);
     void _OnAppMemoryUsageChanged(Platform::Object^ sender, Platform::Object^ args);
     void _OnResuming(Platform::Object^ sender, Platform::Object^ args);
     void _OnSuspending(Platform::Object^ sender, Windows::ApplicationModel::SuspendingEventArgs^ args);
 };
 
-extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg);
-extern "C" void _ApplicationActivate(Platform::Object^ args);
-
+extern "C" void UIApplicationActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ args);
+extern "C" void UIApplicationLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args);
+void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg);
 
 #endif
 

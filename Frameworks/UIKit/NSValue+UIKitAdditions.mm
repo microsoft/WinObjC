@@ -167,7 +167,3 @@
 }
 
 @end
-
-void NSValueForceinclude() {
-    [NSValue class];
-}

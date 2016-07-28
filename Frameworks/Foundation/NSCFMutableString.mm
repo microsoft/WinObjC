@@ -45,7 +45,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSObject)
 
 - (instancetype)initWithFormat:(id)formatStr arguments:(va_list)pReader {
     CFMutableStringRef mutableRef = CFStringCreateMutable(kCFAllocatorDefault, 0);
-    CFStringAppendFormatAndArguments(mutableRef, nullptr, static_cast<CFStringRef>(formatStr), pReader);
+    _CFStringAppendFormatAndArgumentsAux(mutableRef, &_NSCFStringCopyDescription, nullptr, static_cast<CFStringRef>(formatStr), pReader);
     return reinterpret_cast<NSMutableStringPrototype*>(static_cast<NSMutableString*>(mutableRef));
 }
 

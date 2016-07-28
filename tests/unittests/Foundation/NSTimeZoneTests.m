@@ -81,9 +81,10 @@ TEST(NSTimeZone, SystemTimeZoneTests) {
 
     //[NSTimeZone abbreviationDictionary]
     NSDictionary* dictionary = [NSTimeZone abbreviationDictionary];
-    ASSERT_TRUE_MSG(
-        [dictionary count] == 168,
-        "FAILED - [[NSTimeZone abbreviationDictionary] count] != 168. There should be exactly 168 time zones in ICU. Was ICU updated?");
+    ASSERT_EQ_MSG(
+        175,
+        [dictionary count],
+        "FAILED - [[NSTimeZone abbreviationDictionary] count] != 175. There should be exactly 175 time zones in ICU. Was ICU updated?");
     NSString* abbreviation = [[dictionary allKeys] objectAtIndex:0];
     NSTimeZone* zone1 = [NSTimeZone timeZoneWithAbbreviation:abbreviation];
     NSTimeZone* zone2 = [NSTimeZone timeZoneWithName:[dictionary objectForKey:abbreviation]];
@@ -104,16 +105,17 @@ TEST(NSTimeZone, SystemTimeZoneTests) {
 
     // KnownTimeZones - Note, this is after the default abbreviationDictionary is replaced.
     NSArray* knownTimeZoneNames = [NSTimeZone knownTimeZoneNames];
-    ASSERT_TRUE_MSG([knownTimeZoneNames count] == 168,
-                    "FAILED - [NSTimeZone knownTimeZoneNames] != 168. There should be exactly 168 time zones in ICU. Was ICU updated?");
+    ASSERT_EQ_MSG(175,
+                  [knownTimeZoneNames count],
+                  "FAILED - [NSTimeZone knownTimeZoneNames] != 175. There should be exactly 175 time zones in ICU. Was ICU updated?");
 
 #ifndef WINOBJC_DISABLE_TESTS
     // TODO 6678996: disabled check for ARM since we use a different version of icu data. Can be re-enabled if we get matching icu data.
     // Test for method timeZoneDataVersion. The value is based on the ICU version.
     NSString* timeZoneDataVersion = [NSTimeZone timeZoneDataVersion];
-    ASSERT_OBJCEQ_MSG(@"2011k",
+    ASSERT_OBJCEQ_MSG(@"2016b",
                       timeZoneDataVersion,
-                      "FAILED - [NSTimeZone timeZoneDataVersion] != 2011k. The version should be 2011k. Was ICU updated?");
+                      "FAILED - [NSTimeZone timeZoneDataVersion] != 2016b. The version should be 2016b. Was ICU updated?");
 #endif
 
     // Verify localizedName
@@ -143,4 +145,16 @@ TEST(NSTimeZone, SystemTimeZoneTests) {
     NSString* tzNameShortDaylight =
         [aDSTTz localizedName:NSTimeZoneNameStyleShortDaylightSaving locale:[NSLocale localeWithLocaleIdentifier:@"en-GB"]];
     ASSERT_OBJCEQ_MSG(@"+1300", tzNameShortDaylight, "FAILED - localizedName of NSTimeZoneNameStyleShortDaylightSaving is not correct.");
+}
+
+TEST(NSTimeZone, ArchivingUnarchiving) {
+    NSTimeZone* tz = [NSTimeZone localTimeZone];
+
+    ASSERT_TRUE([tz isEqualToTimeZone:[NSTimeZone systemTimeZone]]);
+
+    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:tz];
+
+    NSTimeZone* tzUnArchived = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+
+    ASSERT_TRUE([tzUnArchived isEqualToTimeZone:[NSTimeZone systemTimeZone]]);
 }

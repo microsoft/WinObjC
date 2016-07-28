@@ -16,10 +16,10 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Starboard.h"
 #include "StubReturn.h"
 #include "Foundation/NSDateComponents.h"
-
-#define NSUndefinedDateComponent 0x7fffffff
+#include "NSDateComponentsInternal.h"
 
 @implementation NSDateComponents
+
 /**
  @Status Interoperable
 */
@@ -44,65 +44,227 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     return self;
 }
 
+// A convenience function for checking every component to match
+- (BOOL)_componentsMatch:(NSDateComponents*)comp2 forUnits:(NSCalendarUnit)units {
+    for (int i = 0; i < _countof(s_NSDateComponentsIndividualFlags); i++) {
+        if ((units & s_NSDateComponentsIndividualFlags[i]) != 0) {
+            NSUInteger val1 = [self valueForComponent:s_NSDateComponentsIndividualFlags[i]];
+            NSUInteger val2 = [comp2 valueForComponent:s_NSDateComponentsIndividualFlags[i]];
+            if (val1 != val2) {
+                return NO;
+            }
+        }
+    }
+
+    return YES;
+}
+
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
+*/
+- (BOOL)isValidDate {
+    if (!_calendar) {
+        return NO;
+    }
+    [_calendar setTimeZone:_timeZone];
+    return [self isValidDateInCalendar:_calendar];
+}
+
+/**
+ @Status Interoperable
 */
 - (BOOL)isValidDateInCalendar:(NSCalendar*)calendar {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSDate* dateThisIs = [calendar dateFromComponents:self];
+    NSDateComponents* otherComponents = [calendar components:s_NSDateComponentsAllFlagOptions fromDate:dateThisIs];
+    NSCalendarUnit unitsToCheck = 0;
+    for (int i = 0; i < _countof(s_NSDateComponentsIndividualFlags); i++) {
+        if ([self valueForComponent:s_NSDateComponentsIndividualFlags[i]] != NSUndefinedDateComponent) {
+            unitsToCheck |= s_NSDateComponentsIndividualFlags[i];
+        }
+    }
+    return [self _componentsMatch:otherComponents forUnits:unitsToCheck];
+}
+
+/** Interoperable
+ @Status Interoperable
+*/
+- (NSDate*)date {
+    if (self.calendar != nil) {
+        return [self.calendar dateFromComponents:self];
+    }
+    return nil;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSInteger)valueForComponent:(NSCalendarUnit)unit {
-    UNIMPLEMENTED();
-    return StubReturn();
+    switch (unit) {
+        case NSCalendarUnitEra:
+            return _era;
+        case NSCalendarUnitYear:
+            return _year;
+        case NSCalendarUnitMonth:
+            return _month;
+        case NSCalendarUnitDay:
+            return _day;
+        case NSCalendarUnitHour:
+            return _hour;
+        case NSCalendarUnitMinute:
+            return _minute;
+        case NSCalendarUnitSecond:
+            return _second;
+        case NSCalendarUnitWeekday:
+            return _weekday;
+        case NSCalendarUnitWeekdayOrdinal:
+            return _weekdayOrdinal;
+        case NSCalendarUnitQuarter:
+            return _quarter;
+        case NSCalendarUnitWeekOfMonth:
+            return _weekOfMonth;
+        case NSCalendarUnitWeekOfYear:
+            return _weekOfYear;
+        case NSCalendarUnitYearForWeekOfYear:
+            return _yearForWeekOfYear;
+        case NSCalendarUnitNanosecond:
+            return _nanosecond;
+        default:
+            return NSDateComponentUndefined;
+    }
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)setValue:(NSInteger)value forComponent:(NSCalendarUnit)unit {
-    UNIMPLEMENTED();
+    switch (unit) {
+        case NSCalendarUnitEra:
+            _era = value;
+            break;
+        case NSCalendarUnitYear:
+            _year = value;
+            break;
+        case NSCalendarUnitMonth:
+            _month = value;
+            break;
+        case NSCalendarUnitDay:
+            _day = value;
+            break;
+        case NSCalendarUnitHour:
+            _hour = value;
+            break;
+        case NSCalendarUnitMinute:
+            _minute = value;
+            break;
+        case NSCalendarUnitSecond:
+            _second = value;
+            break;
+        case NSCalendarUnitWeekday:
+            _weekday = value;
+            break;
+        case NSCalendarUnitWeekdayOrdinal:
+            _weekdayOrdinal = value;
+            break;
+        case NSCalendarUnitQuarter:
+            _quarter = value;
+            break;
+        case NSCalendarUnitWeekOfMonth:
+            _weekOfMonth = value;
+            break;
+        case NSCalendarUnitWeekOfYear:
+            _weekOfYear = value;
+            break;
+        case NSCalendarUnitYearForWeekOfYear:
+            _yearForWeekOfYear = value;
+            break;
+        case NSCalendarUnitNanosecond:
+            _nanosecond = value;
+            break;
+        default:
+            break;
+    }
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (id)copyWithZone:(NSZone*)zone {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSDateComponents* newObject = [[[self class] allocWithZone:zone] init];
+    if (newObject) {
+        newObject.era = self.era;
+        newObject.year = self.year;
+        newObject.month = self.month;
+        newObject.day = self.day;
+        newObject.hour = self.hour;
+        newObject.minute = self.minute;
+        newObject.second = self.second;
+        newObject.nanosecond = self.nanosecond;
+        newObject.week = self.week;
+        newObject.weekday = self.weekday;
+        newObject.weekdayOrdinal = self.weekdayOrdinal;
+        newObject.quarter = self.quarter;
+        newObject.weekOfMonth = self.weekOfMonth;
+        newObject.weekOfYear = self.weekOfYear;
+        newObject.yearForWeekOfYear = self.yearForWeekOfYear;
+        newObject.calendar = [self.calendar copy];
+        newObject.timeZone = [self.timeZone copy];
+        newObject.leapMonth = self.isLeapMonth;
+    }
+
+    return newObject;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return YES;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (id)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (self = [self init]) {
+        _era = [decoder decodeIntegerForKey:@"NS.era"];
+        _year = [decoder decodeIntegerForKey:@"NS.year"];
+        _month = [decoder decodeIntegerForKey:@"NS.month"];
+        _day = [decoder decodeIntegerForKey:@"NS.day"];
+        _hour = [decoder decodeIntegerForKey:@"NS.hour"];
+        _minute = [decoder decodeIntegerForKey:@"NS.minute"];
+        _second = [decoder decodeIntegerForKey:@"NS.second"];
+        _nanosecond = [decoder decodeIntegerForKey:@"NS.nanosecond"];
+        _week = [decoder decodeIntegerForKey:@"NS.week"];
+        _weekday = [decoder decodeIntegerForKey:@"NS.weekday"];
+        _weekdayOrdinal = [decoder decodeIntegerForKey:@"NS.weekdayordinal"];
+        _quarter = [decoder decodeIntegerForKey:@"NS.quarter"];
+        _weekOfMonth = [decoder decodeIntegerForKey:@"NS.weekofmonth"];
+        _weekOfYear = [decoder decodeIntegerForKey:@"NS.weekofyear"];
+        _yearForWeekOfYear = [decoder decodeIntegerForKey:@"NS.yearforweekofyear"];
+    }
+
+    return self;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
+    [coder encodeInteger:_era forKey:@"NS.era"];
+    [coder encodeInteger:_year forKey:@"NS.year"];
+    [coder encodeInteger:_month forKey:@"NS.month"];
+    [coder encodeInteger:_day forKey:@"NS.day"];
+    [coder encodeInteger:_hour forKey:@"NS.hour"];
+    [coder encodeInteger:_minute forKey:@"NS.minute"];
+    [coder encodeInteger:_second forKey:@"NS.second"];
+    [coder encodeInteger:_nanosecond forKey:@"NS.nanosecond"];
+    [coder encodeInteger:_week forKey:@"NS.week"];
+    [coder encodeInteger:_weekday forKey:@"NS.weekday"];
+    [coder encodeInteger:_weekdayOrdinal forKey:@"NS.weekdayordinal"];
+    [coder encodeInteger:_quarter forKey:@"NS.quarter"];
+    [coder encodeInteger:_weekOfMonth forKey:@"NS.weekofmonth"];
+    [coder encodeInteger:_weekOfYear forKey:@"NS.weekofyear"];
+    [coder encodeInteger:_yearForWeekOfYear forKey:@"NS.yearforweekofyear"];
 }
 
 @end

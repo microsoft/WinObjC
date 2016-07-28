@@ -60,28 +60,28 @@ static const double meanDivisor = 100;
     _valueBlue = 100;
     _convolveSize = 1;
 
-    _redSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 8.0)];
+    _redSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 38.0)];
     _redSlider.backgroundColor = [UIColor clearColor];
     _redSlider.minimumValue = 0.0;
     _redSlider.maximumValue = 200.0;
     _redSlider.continuous = YES;
     _redSlider.value = 100.0;
 
-    _greenSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 8.0)];
+    _greenSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 38.0)];
     _greenSlider.backgroundColor = [UIColor clearColor];
     _greenSlider.minimumValue = 0.0;
     _greenSlider.maximumValue = 200.0;
     _greenSlider.continuous = YES;
     _greenSlider.value = 100.0;
 
-    _blueSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 8.0)];
+    _blueSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 38.0)];
     _blueSlider.backgroundColor = [UIColor clearColor];
     _blueSlider.minimumValue = 0.0;
     _blueSlider.maximumValue = 200.0;
     _blueSlider.continuous = YES;
     _blueSlider.value = 100.0;
 
-    _convolveSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 8.0)];
+    _convolveSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 38.0)];
     _convolveSlider.backgroundColor = [UIColor clearColor];
     _convolveSlider.minimumValue = 1.0;
     _convolveSlider.maximumValue = 99.0;
@@ -221,18 +221,18 @@ static const double meanDivisor = 100;
     }
 }
 
-- (void)blueChanged:(UISlider*)slider {
-    if (_valueBlue != slider.value) {
-        _valueBlue = slider.value;
-        _bLabel.text = [NSString stringWithFormat:@"R: %d%%", _valueBlue];
+- (void)greenChanged:(UISlider*)slider {
+    if (_valueGreen != slider.value) {
+        _valueGreen = slider.value;
+        _gLabel.text = [NSString stringWithFormat:@"G: %d%%", _valueGreen];
         [self changeImageCell];
     }
 }
 
-- (void)greenChanged:(UISlider*)slider {
-    if (_valueGreen != slider.value) {
-        _valueGreen = slider.value;
-        _gLabel.text = [NSString stringWithFormat:@"R: %d%%", _valueGreen];
+- (void)blueChanged:(UISlider*)slider {
+    if (_valueBlue != slider.value) {
+        _valueBlue = slider.value;
+        _bLabel.text = [NSString stringWithFormat:@"B: %d%%", _valueBlue];
         [self changeImageCell];
     }
 }
@@ -266,44 +266,83 @@ static const double meanDivisor = 100;
 }
 
 - (UIImage*)transformImage:(UIImage*)image {
-    CGImageRef _img = image.CGImage;
+    CGImageRef _localImg = image.CGImage;
     vImage_Buffer inBuffer, midBuffer, outBuffer;
     vImage_Error error;
     void *pixelBuffer, *midPixelBuffer;
 
-    // create vImage_Buffer with data from CGImageRef
-    CGDataProviderRef inProvider = CGImageGetDataProvider(_img);
+    // Create input vImage_Buffer with data from CGImageRef
+    CGDataProviderRef inProvider = CGImageGetDataProvider(_localImg);
     CFDataRef inBitmapData = CGDataProviderCopyData(inProvider);
 
-    inBuffer.width = CGImageGetWidth(_img);
-    inBuffer.height = CGImageGetHeight(_img);
-    inBuffer.rowBytes = CGImageGetBytesPerRow(_img);
+    inBuffer.width = CGImageGetWidth(_localImg);
+    inBuffer.height = CGImageGetHeight(_localImg);
+    inBuffer.rowBytes = CGImageGetBytesPerRow(_localImg);
 
     inBuffer.data = (void*)CFDataGetBytePtr(inBitmapData);
 
-    // create vImage_Buffer for output
-    midPixelBuffer = malloc(CGImageGetBytesPerRow(_img) * CGImageGetHeight(_img));
-    pixelBuffer = malloc(CGImageGetBytesPerRow(_img) * CGImageGetHeight(_img));
+    // Create output vImage_Buffer
+    midPixelBuffer = malloc(CGImageGetBytesPerRow(_localImg) * CGImageGetHeight(_localImg));
+    pixelBuffer = malloc(CGImageGetBytesPerRow(_localImg) * CGImageGetHeight(_localImg));
 
-    if (midPixelBuffer == NULL)
+    if (midPixelBuffer == NULL) {
         NSLog(@"No midpixelbuffer");
-    if (pixelBuffer == NULL)
+    }
+    if (pixelBuffer == NULL) {
         NSLog(@"No pixelbuffer");
+    }
 
     midBuffer.data = midPixelBuffer;
-    midBuffer.width = CGImageGetWidth(_img);
-    midBuffer.height = CGImageGetHeight(_img);
-    midBuffer.rowBytes = CGImageGetBytesPerRow(_img);
+    midBuffer.width = CGImageGetWidth(_localImg);
+    midBuffer.height = CGImageGetHeight(_localImg);
+    midBuffer.rowBytes = CGImageGetBytesPerRow(_localImg);
 
     outBuffer.data = pixelBuffer;
-    outBuffer.width = CGImageGetWidth(_img);
-    outBuffer.height = CGImageGetHeight(_img);
-    outBuffer.rowBytes = CGImageGetBytesPerRow(_img);
+    outBuffer.width = CGImageGetWidth(_localImg);
+    outBuffer.height = CGImageGetHeight(_localImg);
+    outBuffer.rowBytes = CGImageGetBytesPerRow(_localImg);
 
-    int16_t A[] = { _valueRed,          0,         0,         0,
-                           0, _valueGreen,         0,         0,
-                           0,          0, _valueBlue,         0,
-                           0,          0,         0,         0};
+    const CGImageAlphaInfo alphaInfo = CGImageGetAlphaInfo(_localImg);
+    const CGBitmapInfo bitmapInfo = CGImageGetBitmapInfo(_localImg);
+    const int byteOrder = bitmapInfo & kCGBitmapByteOrderMask;
+
+    unsigned int redIndex, greenIndex, blueIndex, alphaIndex;
+
+    // Use the byteorder and alpha info of the input image to get the byte index of each component
+    if (byteOrder == kCGBitmapByteOrder32Big) {
+        // RGBX or XRGB
+        if (alphaInfo == kCGImageAlphaLast || alphaInfo == kCGImageAlphaNoneSkipLast) {
+            alphaIndex = 0;
+            redIndex = 3;
+            greenIndex = 2;
+            blueIndex = 1;
+        } else {
+            alphaIndex = 3;
+            redIndex = 2;
+            greenIndex = 1;
+            blueIndex = 0;
+        }
+    } else {
+        // XBGR or BGRX
+        if (alphaInfo == kCGImageAlphaLast || alphaInfo == kCGImageAlphaNoneSkipLast) {
+            alphaIndex = 3;
+            redIndex = 0;
+            greenIndex = 1;
+            blueIndex = 2;
+        } else {
+            alphaIndex = 0;
+            redIndex = 1;
+            greenIndex = 2;
+            blueIndex = 3;
+        }
+    }
+
+    // Convert the component index to the matrix diagonal index and set the appropriate values for each component
+    int16_t A[16] = { 0 };
+    A[(alphaIndex << 2) + alphaIndex] = 100;
+    A[(redIndex << 2) + redIndex] = _valueRed;
+    A[(greenIndex << 2) + greenIndex] = _valueGreen;
+    A[(blueIndex << 2) + blueIndex] = _valueBlue;
 
     error = vImageMatrixMultiply_ARGB8888(&inBuffer, &midBuffer, A, meanDivisor, NULL, NULL, 0);
 
@@ -317,24 +356,24 @@ static const double meanDivisor = 100;
     background[2] = 0;
     background[3] = 0;
 
-    // perform convolution
+    // Perform convolution
     error = vImageBoxConvolve_ARGB8888(&midBuffer, &outBuffer, NULL, 0, 0, _convolveSize, _convolveSize, background, kvImageEdgeExtend);
 
     if (error) {
         NSLog(@"error from convolution %ld", error);
     }
 
-    // create CGImageRef from vImage_Buffer output
+    // Create CGImageRef from vImage_Buffer output
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 
-    CGContextRef ctx = CGBitmapContextCreate(
-        outBuffer.data, outBuffer.width, outBuffer.height, 8, outBuffer.rowBytes, colorSpace, (CGBitmapInfo)kCGImageAlphaNoneSkipLast);
+    CGContextRef ctx =
+        CGBitmapContextCreate(outBuffer.data, outBuffer.width, outBuffer.height, 8, outBuffer.rowBytes, colorSpace, bitmapInfo);
 
     CGImageRef imageRef = CGBitmapContextCreateImage(ctx);
 
     UIImage* returnImage = [UIImage imageWithCGImage:imageRef];
 
-    // clean up
+    // Clean up
     CGContextRelease(ctx);
     CGColorSpaceRelease(colorSpace);
     free(midPixelBuffer);

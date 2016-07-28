@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -40,7 +41,7 @@ EbrFastTexture* EbrCreateFastTexture(int x,
                                      int height,
                                      int sourceStride,
                                      void* data,
-                                     surfaceFormat fmt,
+                                     __CGSurfaceFormat fmt,
                                      EbrTextureFilter minFilter = EbrTextureFilterLinear,
                                      EbrTextureFilter magFilter = EbrTextureFilterLinear);
 void* EbrLockFastTexture(EbrFastTexture* buf, int* stride);
@@ -66,7 +67,7 @@ bool EbrGLESInitShaders(ID3D11Device* device);
 void EbrGLESDestroyShaders();
 void EbrGLESInitDraw();
 void EbrGLESSetTexturing(TextureMode mode);
-void EbrGLESSetArrays(CAPoint3D* verts, CGPoint* uvs, ColorQuad* colors, float* texNums);
+void EbrGLESSetArrays(CAPoint3D* verts, CGPoint* uvs, __CGColorQuad* colors, float* texNums);
 void EbrGLESSet2DArrays(CGPoint* verts, CGPoint* uvs);
 void EbrGLESSetColor(float* colorArray); // of size 4
 void EbrGLESSetTransform(ID3D11DeviceContext* ctx, float* matrix); // of size 16, row-major.

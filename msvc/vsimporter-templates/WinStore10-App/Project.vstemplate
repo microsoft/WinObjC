@@ -12,6 +12,12 @@
       <ProjectItem ReplaceParameters="false" TargetFileName="Assets\Square150x150Logo.scale-200.png">Square150x150Logo.scale-200.png</ProjectItem>
       <ProjectItem ReplaceParameters="false" TargetFileName="Assets\StoreLogo.png">StoreLogo.png</ProjectItem>
       <ProjectItem ReplaceParameters="false" TargetFileName="Assets\Wide310x150Logo.scale-200.png">Wide310x150Logo.scale-200.png</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="App.xaml">App.xaml</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="App.xaml.cpp">App.xaml.cpp</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="App.xaml.h">App.xaml.h</ProjectItem>
+
+      <ProjectItem ReplaceParameters="false">pch.cpp</ProjectItem>
+      <ProjectItem ReplaceParameters="false">pch.h</ProjectItem>
     </Project>
   </TemplateContent>
 </VSTemplate>

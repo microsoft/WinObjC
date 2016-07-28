@@ -29,7 +29,7 @@ public:
         return nullptr;
     }
     Microsoft::WRL::ComPtr<IInspectable> GetXamlLayoutElement(DisplayNode*) override {
-        return nullptr;
+        return Microsoft::WRL::ComPtr<IInspectable>();
     }
     std::shared_ptr<DisplayTransaction> CreateDisplayTransaction() override {
         return nullptr;
@@ -81,6 +81,11 @@ public:
     DisplayTexture* GetDisplayTextureForCGImage(CGImageRef img, bool create) override {
         return nullptr;
     }
+
+    Microsoft::WRL::ComPtr<IInspectable> GetBitmapForCGImage(CGImageRef img) override {
+        return nullptr;
+    }
+
     DisplayTexture* CreateDisplayTextureForText() override {
         return nullptr;
     }
@@ -178,9 +183,6 @@ public:
     void EnableDisplaySyncNotification() override {
     }
     void DisableDisplaySyncNotification() override {
-    }
-
-    virtual void SetAccessibilityInfo(DisplayNode* node, const IWAccessibilityInfo& info) override {
     }
 
     virtual void SetShouldRasterize(DisplayNode* node, bool rasterize) override {

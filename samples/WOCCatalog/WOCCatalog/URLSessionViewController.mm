@@ -43,7 +43,8 @@
     if (self = [super init]) {
         _delegateQueue = [[NSOperationQueue alloc] init];
         [_delegateQueue setMaxConcurrentOperationCount:5];
-        _urlSession = [NSURLSession sessionWithConfiguration:nil delegate:self delegateQueue:_delegateQueue];
+
+        _urlSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration new] delegate:self delegateQueue:_delegateQueue];
         _tasks = [NSMutableArray new];
     }
     return self;
@@ -77,13 +78,19 @@
     int nbuttons = 0;
 
     UIButton* dataTaskButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    dataTaskButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons % BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_Y(nbuttons++ / BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_WIDTH, BUTTON_ROW_HEIGHT };
+    dataTaskButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons % BUTTON_NUM_IN_ROW),
+                                     BUTTON_ROW_ITEM_Y(nbuttons++ / BUTTON_NUM_IN_ROW),
+                                     BUTTON_ROW_ITEM_WIDTH,
+                                     BUTTON_ROW_HEIGHT };
     [dataTaskButton setTitle:@"Data" forState:UIControlStateNormal];
     [dataTaskButton addTarget:self action:@selector(dataTaskButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:dataTaskButton];
 
     UIButton* downloadTaskButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    downloadTaskButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons % BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_Y(nbuttons++ / BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_WIDTH, BUTTON_ROW_HEIGHT };
+    downloadTaskButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons % BUTTON_NUM_IN_ROW),
+                                         BUTTON_ROW_ITEM_Y(nbuttons++ / BUTTON_NUM_IN_ROW),
+                                         BUTTON_ROW_ITEM_WIDTH,
+                                         BUTTON_ROW_HEIGHT };
     [downloadTaskButton setTitle:@"Download" forState:UIControlStateNormal];
     [downloadTaskButton addTarget:self action:@selector(downloadTaskButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:downloadTaskButton];
@@ -107,19 +114,28 @@
     [self.view addSubview:_blockSwitchContainer];
 
     UIButton* cancelLastButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    cancelLastButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons % BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_Y(nbuttons++ / BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_WIDTH, BUTTON_ROW_HEIGHT };
+    cancelLastButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons % BUTTON_NUM_IN_ROW),
+                                       BUTTON_ROW_ITEM_Y(nbuttons++ / BUTTON_NUM_IN_ROW),
+                                       BUTTON_ROW_ITEM_WIDTH,
+                                       BUTTON_ROW_HEIGHT };
     [cancelLastButton setTitle:@"Cancel" forState:UIControlStateNormal];
     [cancelLastButton addTarget:self action:@selector(cancelLastButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:cancelLastButton];
 
     UIButton* resumeLastButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    resumeLastButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons % BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_Y(nbuttons++ / BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_WIDTH, BUTTON_ROW_HEIGHT };
+    resumeLastButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons % BUTTON_NUM_IN_ROW),
+                                       BUTTON_ROW_ITEM_Y(nbuttons++ / BUTTON_NUM_IN_ROW),
+                                       BUTTON_ROW_ITEM_WIDTH,
+                                       BUTTON_ROW_HEIGHT };
     [resumeLastButton setTitle:@"Resume" forState:UIControlStateNormal];
     [resumeLastButton addTarget:self action:@selector(resumeLastButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:resumeLastButton];
 
     UIButton* legacyDownloadButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    legacyDownloadButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons % BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_Y(nbuttons++ / BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_WIDTH, BUTTON_ROW_HEIGHT };
+    legacyDownloadButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons % BUTTON_NUM_IN_ROW),
+                                           BUTTON_ROW_ITEM_Y(nbuttons++ / BUTTON_NUM_IN_ROW),
+                                           BUTTON_ROW_ITEM_WIDTH,
+                                           BUTTON_ROW_HEIGHT };
     [legacyDownloadButton setTitle:@"Legacy" forState:UIControlStateNormal];
     [legacyDownloadButton addTarget:self action:@selector(legacyDownloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:legacyDownloadButton];
@@ -246,7 +262,11 @@
 - (void)cancelLastButtonPressed:(id)sender {
     if ([_lastTask isKindOfClass:[NSURLSessionDownloadTask class]]) {
         [(NSURLSessionDownloadTask*)_lastTask cancelByProducingResumeData:^(NSData* resumeData) {
-            [self _printOutput:@"Download task produced resume data (size %d)\n", resumeData.length];
+            if (resumeData == nil) {
+                [self _printOutput:@"Download task was cancelled but cannot be resumed"];
+            } else {
+                [self _printOutput:@"Download task was cancelled and produced resume data (size %lu)\n", resumeData.length];
+            }
             _lastResumeData = resumeData;
         }];
     } else {
@@ -277,9 +297,8 @@
 
 - (void)legacyDownloadButtonPressed:(id)sender {
     [self _clear];
+
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:_urlTextField.text]];
-    __autoreleasing NSError* error = nil;
-    __autoreleasing NSURLResponse* response = nil;
     NSURLConnection* conn = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
     [conn scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     [conn start];

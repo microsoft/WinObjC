@@ -30,10 +30,9 @@ static const CGFloat c_height = 50;
     UIButton* screenShotButton;
     UIButton* textPasteButton;
     UIButton* URLPasteButton;
-    UIImage* imageSpecial;
     UITableViewCell* cell;
     UIView* myImageOuterView;
-    UIImageView* ui;
+    UIImageView* _imageView;
     NSMutableArray* _textFields;
     NSString* clipboardText;
     NSString* clipboardURLText;
@@ -41,11 +40,13 @@ static const CGFloat c_height = 50;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    // Initialize the paste board
+    copyAndPaste = [UIPasteboard generalPasteboard];
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
     [self tableView].allowsSelection = YES;
-    copyAndPaste = [UIPasteboard generalPasteboard];
 
     return 9;
 }
@@ -176,15 +177,15 @@ static const CGFloat c_height = 50;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.textLabel.text = @"Image should appear in accessory view";
 
-        if (ui != nil && imageSpecial != nil) {
+        if (_imageView != nil) {
             UIView* view = [[UIView alloc] initWithFrame:CGRectMake(50, 50, 200, 40)];
-            [view addSubview:ui];
+            [view addSubview:_imageView];
+
             cell.accessoryView = view;
             [cell addSubview:view];
 
         } else {
-            CGRect frame = CGRectMake(c_originX, c_originY, c_width, c_height);
-            UILabel* label = [[UILabel alloc] initWithFrame:frame];
+            UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(c_originX, c_originY, c_width, c_height)];
             [label setBackgroundColor:nil];
             [label setText:@"Image on clipboard is null"];
 
@@ -204,12 +205,12 @@ static const CGFloat c_height = 50;
 
 - (void)onPasteChanged {
     clipboardText = copyAndPaste.string;
+
     [[self tableView] reloadData];
 }
 
 - (void)onSetImageToPasteboard {
-    UIImage* photo = [UIImage imageNamed:@"photo9.jpg"];
-    copyAndPaste.image = photo;
+    copyAndPaste.image = [UIImage imageNamed:@"photo9.jpg"];
 }
 
 - (void)onURLCopyAndPaste {
@@ -217,17 +218,14 @@ static const CGFloat c_height = 50;
     copyAndPaste.URL = urlData;
     NSURL* urlFromClipboard = copyAndPaste.URL;
     clipboardURLText = urlFromClipboard.absoluteString;
+
     [[self tableView] reloadData];
 }
 
 - (void)onPasteChangedScreenCapture {
-    imageSpecial = copyAndPaste.image;
-    CGSize imageSize = imageSpecial.size;
+    _imageView = [[UIImageView alloc] initWithFrame:CGRectMake(c_originX, c_originY, 320, 320)];
+    [_imageView setImage:copyAndPaste.image];
 
-    CGRect frame = CGRectMake(c_originX, c_originY, 320, 320);
-    ui = [[UIImageView alloc] initWithFrame:frame];
-
-    [ui setImage:imageSpecial];
     [[self tableView] reloadData];
 }
 

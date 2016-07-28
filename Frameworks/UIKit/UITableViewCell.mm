@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#define NOMINMAX
+
 #import "Starboard.h"
 #import "UITableViewContentView.h"
 #import "UIKit/UILabel.h"
@@ -820,7 +822,7 @@ static void updateBackgroundView(UITableViewCell* self, bool forceRefresh = fals
 
 static void setInternalAccessoryColor(UITableViewCell* self) {
     if (self->_internalAccessoryView != nil) {
-        ColorQuad contentColor;
+        __CGColorQuad contentColor;
         contentColor.r = 0.13f;
         contentColor.g = 0.24f;
         contentColor.b = 0.44f;
@@ -1085,12 +1087,10 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
 
 - (void)_addBottomBorder:(UITableView*)parentTable {
     if (_borderView == nil) {
-        ColorQuad color = { 0 };
-
-        [[parentTable backgroundColor] getColors:&color];
+        const __CGColorQuad* color = [[parentTable backgroundColor] _getColors];
         UIColor* backgroundColor = nil;
 
-        if ((color.a == 0.0f) || (color.r == 1.0f && color.g == 1.0f && color.b == 1.0f && color.a == 1.0f)) {
+        if ((color == nullptr) || (color->a == 0.0f) || (color->r == 1.0f && color->g == 1.0f && color->b == 1.0f && color->a == 1.0f)) {
             backgroundColor = [UIColor grayColor];
         } else {
             backgroundColor = [UIColor whiteColor];

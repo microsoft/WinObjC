@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -17,25 +18,6 @@
 
 #import <CoreGraphics/CoreGraphicsExport.h>
 #import <CoreGraphics/CGDataProvider.h>
-
-typedef enum {
-    kCGRenderingIntentDefault,
-    kCGRenderingIntentAbsoluteColorimetric,
-    kCGRenderingIntentRelativeColorimetric,
-    kCGRenderingIntentSaturation,
-    kCGRenderingIntentPerceptual,
-} CGColorRenderingIntent;
-
-typedef CF_ENUM(int32_t, CGColorSpaceModel) {
-    kCGColorSpaceModelUnknown = -1,
-    kCGColorSpaceModelMonochrome,
-    kCGColorSpaceModelRGB,
-    kCGColorSpaceModelCMYK,
-    kCGColorSpaceModelLab,
-    kCGColorSpaceModelDeviceN,
-    kCGColorSpaceModelIndexed,
-    kCGColorSpaceModelPattern,
-};
 
 COREGRAPHICS_EXPORT void CGColorSpaceRelease(CGColorSpaceRef space);
 COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceRetain(CGColorSpaceRef space);

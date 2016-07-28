@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -14,15 +15,16 @@
 //
 //******************************************************************************
 
-#ifndef __CGGRADIENTINTERNAL_H
-#define __CGGRADIENTINTERNAL_H
+#pragma once
 
 #include "CoreGraphics/CGGradient.h"
+#include "CoreGraphicsInternal.h"
 #include <objc/runtime.h>
 
-class __CGGradient: private objc_object {
+class __CGGradient : private objc_object {
 public:
-    surfaceFormat _colorSpace;
+    __CGSurfaceFormat _format;
+    CGColorSpaceModel _colorSpaceModel;
     float* _components;
     float* _locations;
     DWORD _count;
@@ -32,4 +34,3 @@ public:
     void initWithColorComponents(const float* components, const float* locations, size_t count, CGColorSpaceRef colorspace);
     void initWithColors(CFArrayRef components, const float* locations, CGColorSpaceRef colorspace);
 };
-#endif

@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -24,7 +25,7 @@
 #import "CoreGraphics/CGGeometry.h"
 #import "UIColorInternal.h"
 #import "UIFontInternal.h"
-#import "cairo-ft.h"
+#import "CGSurfaceInfoInternal.h"
 
 extern "C" {
 #import <ft2build.h>
@@ -110,10 +111,6 @@ CGContextImpl::~CGContextImpl() {
     }
     ReleaseLock();
     CGImageRelease(_imgDest);
-}
-
-CGImageRef CGContextImpl::DestImage() {
-    return _imgDest;
 }
 
 void CGContextImpl::ObtainLock() {
@@ -315,7 +312,9 @@ void CGContextImpl::CGContextClipToMask(CGRect dest, CGImageRef img) {
     if (img->Backing()->SurfaceFormat() != _ColorGrayscale) {
         curState->_imgMask = img->Backing()->Copy();
     } else {
-        CGBitmapImage* pNewImage = new CGBitmapImage(img->Backing()->Width(), img->Backing()->Height(), _ColorRGBA);
+        __CGSurfaceInfo surfaceInfo = _CGSurfaceInfoInit(img->Backing()->Width(), img->Backing()->Height(), _ColorABGR);
+
+        CGBitmapImage* pNewImage = new CGBitmapImage(surfaceInfo);
 
         BYTE* imgData = (BYTE*)img->Backing()->LockImageData();
         BYTE* newImgData = (BYTE*)pNewImage->Backing()->LockImageData();
@@ -353,12 +352,20 @@ void CGContextImpl::CGContextSetStrokeColor(float* components) {
 }
 
 void CGContextImpl::CGContextSetStrokeColorWithColor(id color) {
-    [(UIColor*)color getColors:&curState->curStrokeColor];
+    if (color) {
+        curState->curStrokeColor = *[(UIColor*)color _getColors];
+    } else {
+        _ClearColorQuad(curState->curStrokeColor);
+    }
 }
 
 void CGContextImpl::CGContextSetFillColorWithColor(id color) {
     if ((int)[(UIColor*)color _type] == solidBrush) {
-        [(UIColor*)color getColors:&curState->curFillColor];
+        if (color) {
+            curState->curFillColor = *[(UIColor*)color _getColors];
+        } else {
+            _ClearColorQuad(curState->curFillColor);
+        }
         curState->curFillColorObject = nil;
     } else {
         curState->curFillColorObject = [color retain];
@@ -377,7 +384,7 @@ void CGContextImpl::CGContextSetFillPattern(CGPatternRef pattern, const float* c
     CGPattern* intPattern = (CGPattern*)pattern;
     curState->curFillColorObject = [pattern retain];
     switch (intPattern->surfaceFmt) {
-        case _ColorRGB:
+        case _ColorBGR:
         case _Color565:
             curState->curFillColor.r = 1.0f;
             curState->curFillColor.g = 1.0f;

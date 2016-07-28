@@ -433,7 +433,7 @@ void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* m, float 
 /**
  @Status Interoperable
 */
-void CGPathAddLines(CGMutablePathRef path, const CGAffineTransform* m, CGPoint* points, int count) {
+void CGPathAddLines(CGMutablePathRef path, const CGAffineTransform* m, const CGPoint* points, size_t count) {
     if (count == 0 || points == NULL || path == NULL) {
         return;
     }

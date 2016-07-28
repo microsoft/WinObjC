@@ -99,6 +99,7 @@
                                    50.0,
                                    tableRect.size.width,
                                    tableRect.size.height-50.0);
+
     return pickerRect;
 }
 

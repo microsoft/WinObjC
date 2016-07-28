@@ -73,6 +73,8 @@ void ObjectCache::PushCacheableObject(ICacheableObject^ obj) {
 // LayerContent
 //
 LayerContent::LayerContent() {
+    Name = L"LayerContent"; // Set a name so we can be seen in the live tree viewer
+    IsHitTestVisible = true; // Always be hit testable by default.
     m_gravity = ContentGravity::Resize;
     m_scaleFactor = 1.0f;
 }
@@ -162,6 +164,11 @@ Rect LayerContent::_GetContentGravityRect(Size size) {
     float top = 0;
     float width = 0;
     float height = 0;
+
+    double widthAspect = size.Width / m_contentSize.Width;
+    double heightAspect = size.Height / m_contentSize.Height;
+    double minAspect = std::min<double>(widthAspect, heightAspect);
+    double maxAspect = std::max<double>(widthAspect, heightAspect);
 
     //  Top/bottom switched due to geometric origin
     switch (m_gravity) {
@@ -278,21 +285,23 @@ Rect LayerContent::_GetContentGravityRect(Size size) {
 
         case ContentGravity::ResizeAspect:
             // UIViewContentModeScaleAspectFit
-            left = 0;
-            top = 0;
-            width = size.Width;
-            height = size.Height;
+
+            // Scale the image with the smaller aspect.
+            width = m_contentSize.Width * (float)minAspect;
+            height = m_contentSize.Height * (float)minAspect;
+
+            left = (size.Width / 2) - (width / 2);
+            top = (size.Height / 2) - (height / 2);
             if (m_image != nullptr) {
-                m_image->Stretch = Stretch::Uniform;
+                // Using Fill since we calculate the aspect ourselves because image translates when modifying its scale with Stretch::Uniform.
+                m_image->Stretch = Stretch::Fill;
             }
             break;
 
         case ContentGravity::ResizeAspectFill:
             // UIViewContentModeScaleAspectFill
-            double widthAspect = size.Width / m_contentSize.Width;
-            double heightAspect = size.Height / m_contentSize.Height;
-            double maxAspect = std::max<double>(widthAspect, heightAspect);
 
+            // Scale the image with the larger aspect.
             width = m_contentSize.Width * (float)maxAspect;
             height = m_contentSize.Height * (float)maxAspect;
 
@@ -300,7 +309,7 @@ Rect LayerContent::_GetContentGravityRect(Size size) {
             top = (size.Height / 2) - (height / 2);
             if (m_image != nullptr)
             {
-                // Using Fill since we calculate the aspect outselves because XAML clips when setting UniformToFill.
+                // Using Fill since we calculate the aspect ourselves because XAML clips when setting UniformToFill.
                 m_image->Stretch = Stretch::Fill;
             }
             break;
@@ -337,6 +346,7 @@ void LayerContent::SetImageContent(ImageSource^ source, float width, float heigh
     }
 
     Image^ imgContents = _GetImage();
+    imgContents->IsHitTestVisible = false; // Our content should never be HitTestVisible as they are always leaf nodes.
 
     if (Util::isInstanceOf<BitmapSource^>(source)) {
         m_imageSize = Size(width, height);
@@ -1063,16 +1073,20 @@ void CALayerXaml::Reset() {
     m_originSet = false;
     m_createdTransforms = false;
     LayerOpacity = 1.0;
-    m_backgroundBrush = _TransparentBrush;
-    m_backgroundColor.R = 0;
-    m_backgroundColor.G = 0;
-    m_backgroundColor.B = 0;
-    m_backgroundColor.A = 0;
+
+    IsHitTestVisible = true; // Always hit-testable by default
 
     Set("anchorPoint", Point(0.5, 0.5));
     m_masksToBounds = false;
 
     __super::Background = _TransparentBrush;
+
+    // Due to the nature of how we lay out our CALayerXamls as 1x1 panels, we need an actual backing element
+    // that we can use for hit testing purposes.  Without this backing rectangle, we are unable accept pointer
+    // input at the appropriate location in many instances.  For example, we wouldn't be able to click on a UIView
+    // that hasn't set a background or any content, which is incorrect behavior.  This will be revisited when
+    // we move the code closer to UI.Composition Visual usage.
+    SetBackgroundColor(0, 0, 0, 0);
 }
 
 CALayerXaml^ CALayerXaml::CreateLayer() {
@@ -1291,11 +1305,6 @@ CALayerXaml::CALayerXaml() {
     LayerOpacity = 1.0;
 
     Background = _TransparentBrush;
-    PointerPressed += ref new PointerEventHandler(this, &CALayerXaml::_CALayerXaml_PointerPressed);
-    PointerReleased += ref new PointerEventHandler(this, &CALayerXaml::_CALayerXaml_PointerReleased);
-    PointerMoved += ref new PointerEventHandler(this, &CALayerXaml::_CALayerXaml_PointerMoved);
-    PointerCanceled += ref new PointerEventHandler(this, &CALayerXaml::_CALayerXaml_PointerCanceled);
-    IsHitTestVisible = true;
 
     // note-nithishm-03252016 - DependencyProperty are registered with Panel class instead of CALayerXaml class, as we found that
     // while property look up, the code starts with the base class and not the current class. This might be a bug but for now as a
@@ -1312,8 +1321,11 @@ CALayerXaml::CALayerXaml() {
                                                               double::typeid,
                                                               Panel::typeid,
                                                               ref new PropertyMetadata((Platform::Object^ )0.0,
-                                                                ref new PropertyChangedCallback(&CALayerXaml::SizeChangedCallback)));
+                                                              ref new PropertyChangedCallback(&CALayerXaml::SizeChangedCallback)));
     }
+
+    // Always start off with a clean slate.
+    Reset();
 }
 
 void CALayerXaml::_CopyPropertiesFrom(CALayerXaml^ fromLayer) {
@@ -1321,27 +1333,6 @@ void CALayerXaml::_CopyPropertiesFrom(CALayerXaml^ fromLayer) {
     Set("position", fromLayer->Get("position"));
     Set("size", fromLayer->Get("size"));
     Set("anchorPoint", fromLayer->Get("anchorPoint"));
-}
-
-void CALayerXaml::_CALayerXaml_PointerPressed(Object^ sender, PointerRoutedEventArgs^ e) {
-    CapturePointer(e->Pointer);
-    CALayerInputHandler::Instance->_HandleDownInput(this, e);
-    e->Handled = true;
-}
-
-void CALayerXaml::_CALayerXaml_PointerReleased(Object^ sender, PointerRoutedEventArgs^ e) {
-    CALayerInputHandler::Instance->_HandleUpInput(this, e);
-    e->Handled = true;
-}
-
-void CALayerXaml::_CALayerXaml_PointerCanceled(Object^ sender, PointerRoutedEventArgs^ e) {
-    CALayerInputHandler::Instance->_HandleUpInput(this, e);
-    e->Handled = true;
-}
-
-void CALayerXaml::_CALayerXaml_PointerMoved(Object^ sender, PointerRoutedEventArgs^ e) {
-    CALayerInputHandler::Instance->_HandleMoveInput(this, e);
-    e->Handled = true;
 }
 
 void CALayerXaml::_DiscardContent() {
@@ -1807,58 +1798,7 @@ Object^ EventedStoryboard::GetStoryboard() {
 }
 
 //
-// CALayerInputHandler
-//
-void CALayerInputHandler::_HandleDownInput(CALayerXaml^ layer, PointerRoutedEventArgs^ e) {
-    CALayerXaml^ rootLayer = layer;
-    while (Util::isInstanceOf<CALayerXaml^>(rootLayer->Parent)) {
-        rootLayer = static_cast<CALayerXaml^>(rootLayer->Parent);
-    }
-
-    PointerPoint^ point = e->GetCurrentPoint(rootLayer);
-    m_inputEventHandler->PointerDown((float)point->Position.X, (float)point->Position.Y, point->PointerId, point->Timestamp);
-
-    if (m_dummyFocus == nullptr) {
-        m_dummyFocus = ref new UserControl();
-        m_dummyFocus->Width = 0;
-        m_dummyFocus->Height = 0;
-        m_dummyFocus->IsTabStop = true;
-        ((Panel^)rootLayer->Parent)->Children->Append(m_dummyFocus);
-    }
-    m_dummyFocus->Focus(FocusState::Keyboard);
-}
-
-void CALayerInputHandler::_HandleUpInput(CALayerXaml^ layer, PointerRoutedEventArgs^ e) {
-    CALayerXaml^ rootLayer = layer;
-    while (Util::isInstanceOf<CALayerXaml^>(rootLayer->Parent)) {
-        rootLayer = static_cast<CALayerXaml^>(rootLayer->Parent);
-    }
-    PointerPoint^ point = e->GetCurrentPoint(rootLayer);
-    m_inputEventHandler->PointerUp((float)point->Position.X, (float)point->Position.Y, point->PointerId, point->Timestamp);
-}
-
-void CALayerInputHandler::_HandleMoveInput(CALayerXaml^ layer, PointerRoutedEventArgs^ e) {
-    CALayerXaml^ rootLayer = layer;
-    while (Util::isInstanceOf<CALayerXaml^>(rootLayer->Parent)) {
-        rootLayer = static_cast<CALayerXaml^>(rootLayer->Parent);
-    }
-    PointerPoint^ point = e->GetCurrentPoint(rootLayer);
-    m_inputEventHandler->PointerMoved((float)point->Position.X, (float)point->Position.Y, point->PointerId, point->Timestamp);
-}
-
-void CALayerInputHandler::SetInputHandler(ICALayerXamlInputEvents^ handler) {
-    m_inputEventHandler = handler;
-    CoreWindow::GetForCurrentThread()->CharacterReceived +=
-        ref new TypedEventHandler<CoreWindow^, CharacterReceivedEventArgs^>(CALayerInputHandler::Instance,
-                                                                              &CALayerInputHandler::_CoreWindow_CharacterReceived);
-}
-
-void CALayerInputHandler::_CoreWindow_CharacterReceived(CoreWindow^ sender, CharacterReceivedEventArgs^ args) {
-    m_inputEventHandler->KeyDown((unsigned int)args->KeyCode);
-}
-
-//
-// CALayerInputHandler
+// CATextLayerXaml
 //
 void CATextLayerXaml::Reset() {
     TextBlock->Text = "";

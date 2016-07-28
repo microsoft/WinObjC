@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -16,11 +17,13 @@
 
 #pragma once
 
+#import "UIColorInternal.h"
+
 class CGVectorImageBacking;
 
 class CGVectorImage : public __CGImage {
 public:
-    CGVectorImage(DWORD width, DWORD height, surfaceFormat fmt);
+    CGVectorImage(DWORD width, DWORD height, __CGSurfaceFormat fmt);
     CGImageRef Rasterize(CGRect* insets);
 
     inline CGVectorImageBacking* VectorBacking() {
@@ -37,21 +40,22 @@ public:
     CGRect _src, _dest;
     CGPoint _start, _end;
     float _lineWidth;
-    ColorQuad _color;
+    __CGColorQuad _color;
 
     CGVectorDrawingCommand(CGImageRef image, CGRect src, CGRect dst);
-    CGVectorDrawingCommand(CGPoint lineStart, CGPoint lineEnd, ColorQuad color, float lineWidth);
+    CGVectorDrawingCommand(CGPoint lineStart, CGPoint lineEnd, __CGColorQuad color, float lineWidth);
     ~CGVectorDrawingCommand();
 };
 
 class CGVectorImageBacking : public CGImageBacking {
 private:
     int _width, _height;
-    surfaceFormat _surfaceFmt;
+    __CGSurfaceFormat _surfaceFmt;
+    CGColorSpaceModel _colorSpaceModel;
     CGVectorDrawingCommand* _drawCommand;
 
 public:
-    CGVectorImageBacking(DWORD width, DWORD height, surfaceFormat fmt);
+    CGVectorImageBacking(DWORD width, DWORD height, __CGSurfaceFormat fmt);
 
     ~CGVectorImageBacking();
 
@@ -65,7 +69,11 @@ public:
     int Height();
     int BytesPerRow();
     int BytesPerPixel();
-    surfaceFormat SurfaceFormat();
+    int BitsPerComponent();
+    void GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo);
+    __CGSurfaceFormat SurfaceFormat();
+    CGColorSpaceModel ColorSpaceModel();
+    CGBitmapInfo BitmapInfo();
     void* StaticImageData();
     void* LockImageData();
     void ReleaseImageData();
@@ -74,5 +82,5 @@ public:
     void SetFreeWhenDone(bool freeWhenDone);
 
     void DrawImage(CGImageRef image, CGRect src, CGRect dst);
-    void StrokePath(id path, ColorQuad color, float lineWidth, CGAffineTransform* t);
+    void StrokePath(id path, __CGColorQuad color, float lineWidth, CGAffineTransform* t);
 };

@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -14,29 +15,33 @@
 //
 //******************************************************************************
 
+#pragma once
+
 class CGImageData {
 public:
     cairo_surface_t* _surface;
     BOOL _freeWhenDone;
     void* _imageData;
     DWORD _pixmanFmt;
-    surfaceFormat _bitmapFmt;
+    __CGSurfaceFormat _bitmapFmt;
+    CGColorSpaceModel _colorSpaceModel;
+    CGBitmapInfo _bitmapInfo;
     DWORD _width, _height;
     DWORD _internalWidth, _internalHeight;
     DWORD _bytesPerRow;
     DWORD _bytesPerPixel;
+    DWORD _bitsPerComponent;
     DWORD _refCount;
     BOOL _bottomOrientation;
 
     CGImageData* Duplicate();
-    CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* Data);
+    CGImageData(const __CGSurfaceInfo& surfaceInfo);
     ~CGImageData();
 };
 
 class CGBitmapImage : public __CGImage {
 public:
-    CGBitmapImage(DWORD width, DWORD height, surfaceFormat fmt);
-    CGBitmapImage(DWORD width, DWORD height, surfaceFormat fmt, void* Data);
+    CGBitmapImage(const __CGSurfaceInfo& surfaceInfo);
     CGBitmapImage(CGImageRef pImg);
 };
 
@@ -45,8 +50,7 @@ private:
     CGImageData* _data;
 
 public:
-    CGBitmapImageBacking(DWORD width, DWORD height, surfaceFormat fmt);
-    CGBitmapImageBacking(DWORD width, DWORD height, surfaceFormat fmt, void* Data);
+    CGBitmapImageBacking(const __CGSurfaceInfo& surfaceInfo);
     CGBitmapImageBacking(CGImageRef pImg);
 
     ~CGBitmapImageBacking();
@@ -62,7 +66,11 @@ public:
     int Height();
     int BytesPerRow();
     int BytesPerPixel();
-    surfaceFormat SurfaceFormat();
+    int BitsPerComponent();
+    void GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo);
+    __CGSurfaceFormat SurfaceFormat();
+    CGColorSpaceModel ColorSpaceModel();
+    CGBitmapInfo BitmapInfo();
     void* StaticImageData();
     void* LockImageData();
     void ReleaseImageData();

@@ -22,3 +22,5 @@
 
 @interface NSMutableStringPrototype : NSMutableString
 @end
+
+CFStringRef _NSCFStringCopyDescription(void* cfTypeRef, const void* locInfo);
