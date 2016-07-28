@@ -312,8 +312,12 @@ static bool headerTypeMatch(const PBXFile* file)
 
 void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs, std::multimap<SBTarget*, VCProject*>& vcProjects)
 {
+  // Nothing to do if project contains no queued targets
+  if (m_existingTargets.empty()) {
+    return;
+  }
+
   // Get the output format and directory
-  String outputFormat = m_buildSettings->getValue("VSIMPORTER_OUTPUT_FORMAT");
   String outputDir = m_buildSettings->getValue("VSIMPORTER_OUTPUT_DIR");
 
   // Create a solution folder for the project
@@ -325,7 +329,7 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
   getMatchingFiles(&headerTypeMatch, headerFiles);
   if (!headerFiles.empty()) {
     // Get the template
-    VSTemplate* vstemplate = VSTemplate::getTemplate(outputFormat + "-" + "SharedHeaders");
+    VSTemplate* vstemplate = VSTemplate::getTemplate("SharedHeaders");
     sbAssert(vstemplate);
 
     // Set up basis template parameters
@@ -338,7 +342,7 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
     sbAssert(projTemplates.size() == 1);
 
     // Create a shared project with all the headers
-    VCItemHint headerHint = { "ClInclude", "" };
+    VCItemHint headerHint = { "ClInclude", "", "" };
     headerProj = new VCSharedProject(projTemplates.front());
     for (auto file : headerFiles) {
       addFileToVS(file, *headerProj, getBuildSettings(), &headerHint);
@@ -358,13 +362,13 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
     String templateName;
     TargetProductType productType = target.second->getProductType();
     if (productType == TargetApplication) {
-      templateName = outputFormat + "-" + "App";
+      templateName = "App";
     } else if (productType == TargetStaticLib) {
-      templateName = outputFormat + "-" + "StaticLib";
+      templateName = "StaticLib";
     } else if (productType == TargetBundle) {
-      templateName = outputFormat + "-" + "Bundle";
+      templateName = "Bundle";
     } else if (target.first->getType() == "PBXAggregateTarget") {
-      templateName = outputFormat + "-" + "Aggregate";
+      templateName = "Aggregate";
     } else {
       SBLog::warning() << "Failed to construct VS template name for \"" << target.second->getName() << "\" target." << std::endl;
     }

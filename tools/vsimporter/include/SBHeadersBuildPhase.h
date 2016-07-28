@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,22 +14,24 @@
 //
 //******************************************************************************
 
-#pragma once
+#ifndef _SBHEADERSBUILDPHASE_H_
+#define _SBHEADERSBUILDPHASE_H_
 
-#include "types.h"
+#include "SBBuildPhase.h"
 
-class PBXFile;
-class PBXBuildFile;
-class VCProject;
-class VCProjectItem;
-class BuildSettings;
+class PBXHeadersBuildPhase;
+class SBNativeTarget;
 
-struct VCItemHint {
-  String defaultType;
-  String pathOverride;
-  String filterOverride;
+class SBHeadersBuildPhase : public SBBuildPhase {
+public:
+  static SBBuildPhase* create(const PBXBuildPhase* phase, SBTarget& parentTarget);
+  virtual ~SBHeadersBuildPhase() {}
+  virtual void writeVCProjectFiles(VCProject& proj) const;
+
+private:
+  SBHeadersBuildPhase(const PBXHeadersBuildPhase* phase, const SBNativeTarget& parentTarget);
+
+  const PBXHeadersBuildPhase* m_phase;
 };
 
-void addFileToVS(const PBXFile* file, VCProject& proj, const BuildSettings& bs, const VCItemHint* itemHint = NULL);
-void addBuildFileToVS(const PBXBuildFile* buildFile, VCProject& proj, const BuildSettings& bs, const VCItemHint* itemHint = NULL);
-VCProjectItem* addRelativeFilePathToVS(const String& itemName, const String& filePath, const String& filterPath, VCProject& proj, const BuildSettings& bs);
+#endif /* _SBHEADERSBUILDPHASE_H_ */

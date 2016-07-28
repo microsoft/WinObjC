@@ -263,6 +263,11 @@ VCProject* SBTarget::constructVCProject(VSTemplateProject* projTemplate)
   // Create the project
   VCProject* proj = new VCProject(projTemplate);
 
+  // Set project to export public headers
+  if (getProductType() == TargetStaticLib) {
+    proj->addGlobalProperty("ExportPublicHeaders", "true");
+  }
+
   // Get path to WinObjC SDK
   const BuildSettings& projBS = m_parentProject.getBuildSettings();
   String useRelativeSdkPath = projBS.getValue("VSIMPORTER_RELATIVE_SDK_PATH");

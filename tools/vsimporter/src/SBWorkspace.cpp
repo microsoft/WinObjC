@@ -31,6 +31,11 @@
 #include "SBProject.h"
 #include "SBTarget.h"
 #include "VSSolution.h"
+#include "VSTemplate.h"
+#include "VSTemplateProject.h"
+#include "VSTemplateParameters.h"
+#include "VCProject.h"
+#include "VCProjectConfiguration.h"
 
 SBWorkspace* SBWorkspace::s_workspace = NULL;
 
@@ -341,7 +346,54 @@ void SBWorkspace::detectProjectCollisions() const
   }
 }
 
-void SBWorkspace::generateFiles()
+VCProject* SBWorkspace::generateGlueProject() const
+{
+  // Get a set of all configurations appearing in all projects
+  StringSet slnConfigs;
+  for (auto project : m_openProjects) {
+    const StringSet& configs = project.second->getSelectedConfigurations();
+    slnConfigs.insert(configs.begin(), configs.end());
+  }
+
+  // Get the template
+  VSTemplate* vstemplate = VSTemplate::getTemplate("WinRT");
+  sbAssert(vstemplate);
+
+  // Set up basis template parameters
+  string projectName = getName() + "WinRT";
+  VSTemplateParameters templateParams;
+  templateParams.setProjectName(projectName);
+
+  // Expand the template and get the template project
+  vstemplate->expand(sb_dirname(getPath()), templateParams);
+  const VSTemplateProjectVec& projTemplates = vstemplate->getProjects();
+  sbAssert(projTemplates.size() == 1);
+
+  // Create the glue project and add it to the solution
+  VCProject* glueProject = new VCProject(projTemplates.front());
+
+  // Get path to WinObjC SDK
+  BuildSettings globalBS(NULL);
+  String useRelativeSdkPath = globalBS.getValue("VSIMPORTER_RELATIVE_SDK_PATH");
+  String sdkDir = globalBS.getValue("WINOBJC_SDK_ROOT");
+
+  // Try to create a relative path to the SDK, if requested
+  if (strToUpper(useRelativeSdkPath) == "YES") {
+    String projectDir = sb_dirname(projTemplates.front()->getPath());
+    sdkDir = getRelativePath(projectDir, sdkDir);
+  }
+  glueProject->addGlobalProperty("WINOBJC_SDK_ROOT", platformPath(sdkDir), "'$(WINOBJC_SDK_ROOT)' == ''");
+
+  // Set configuration properties
+  for (auto configName : slnConfigs) {
+    VCProjectConfiguration *projConfig = glueProject->addConfiguration(configName);
+    projConfig->setProperty("TargetName", getName());
+  }
+
+  return glueProject;
+}
+
+void SBWorkspace::generateFiles(bool genProjectionsProj)
 {
   // Detect and warn about about any collisions
   detectProjectCollisions();
@@ -370,9 +422,21 @@ void SBWorkspace::generateFiles()
     project.second->constructVCProjects(*sln, slnConfigs, vcProjects);
   }
 
+  // Construct a projections project, if required
+  VCProject* glueProject = nullptr;
+  if (genProjectionsProj) {
+    glueProject = generateGlueProject();
+    sln->addProject(glueProject);
+  }
+
   // Resolve dependencies
   for (auto proj : vcProjects) {
     proj.first->resolveVCProjectDependecies(proj.second, vcProjects);
+
+    // Add a dependency on all static/framework target projects
+    if (glueProject && proj.first->getProductType() == TargetStaticLib) {
+      glueProject->addProjectReference(proj.second);
+    }
   }
 
   // Write solution/projects to disk

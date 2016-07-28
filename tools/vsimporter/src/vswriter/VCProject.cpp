@@ -421,5 +421,10 @@ bool VCProject::writeFilters() const
   nodeHandlers["FilterItemDescriptions"] = &VCProject::writeFilterItemDescriptions;
   nodeHandlers["FilterDescriptions"] = &VCProject::writeFilterDescriptions;
 
-  return writeTemplate(filtersFilePath, nodeHandlers);
+  // In cases where the VS template doesn't contain a filters file, write nothing
+  if (fileExists(filtersFilePath)) {
+    return writeTemplate(filtersFilePath, nodeHandlers);
+  } else {
+    return true;
+  }
 }

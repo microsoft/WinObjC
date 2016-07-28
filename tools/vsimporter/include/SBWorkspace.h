@@ -24,6 +24,7 @@ class PBXProject;
 class XCScheme;
 class SBProject;
 class SBTarget;
+class VCProject;
 
 class SBWorkspace {
 public:
@@ -39,7 +40,7 @@ public:
 
   /* Called from main */
   void printSummary() const;
-  void generateFiles();
+  void generateFiles(bool genProjectionsProj);
   void queueSchemes(const StringSet& schemeNames, const StringSet& configNames);
   void queueAllTargets(const StringSet& configNames);
   void queueTargets(const StringSet& targetNames, const StringSet& configNames);
@@ -62,6 +63,7 @@ private:
   void getSchemes(const StringSet& schemeNames, SchemeVec& ret) const;
   void querySchemes(SchemeVec& ret) const;
   void detectProjectCollisions() const;
+  VCProject* generateGlueProject() const;
 
   // Relevant if Workspace was constructed from a workspace file
   XCWorkspace* m_workspace;

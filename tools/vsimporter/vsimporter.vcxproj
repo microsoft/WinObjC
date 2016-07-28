@@ -123,6 +123,7 @@
     <ClCompile Include="src\SBAggregateTarget.cpp" />
     <ClCompile Include="src\SBBuildPhase.cpp" />
     <ClCompile Include="src\SBFrameworksBuildPhase.cpp" />
+    <ClCompile Include="src\SBHeadersBuildPhase.cpp" />
     <ClCompile Include="src\SBLog.cpp" />
     <ClCompile Include="src\SBNativeTarget.cpp" />
     <ClCompile Include="src\SBProject.cpp" />
@@ -208,6 +209,7 @@
     <ClInclude Include="include\SBAggregateTarget.h" />
     <ClInclude Include="include\SBBuildPhase.h" />
     <ClInclude Include="include\SBFrameworksBuildPhase.h" />
+    <ClInclude Include="include\SBHeadersBuildPhase.h" />
     <ClInclude Include="include\SBLog.h" />
     <ClInclude Include="include\SBNativeTarget.h" />
     <ClInclude Include="include\SBProject.h" />
