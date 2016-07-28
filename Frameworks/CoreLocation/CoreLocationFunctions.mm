@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -18,19 +19,24 @@
 #import <CoreLocation/CoreLocationFunctions.h>
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-/*BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D coord) {
-    UNIMPLEMENTED();
-    return StubReturn();
-}*/
+BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D coord) {
+    if (coord.latitude > 90.0 || coord.latitude < -90.0) {
+        return NO;
+    }
+
+    if (coord.longitude > 180.0 || coord.longitude < -180.0) {
+        return NO;
+    }
+
+    return YES;
+}
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 CLLocationCoordinate2D CLLocationCoordinate2DMake(CLLocationDegrees latitude, CLLocationDegrees longitude) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    CLLocationCoordinate2D returnCoordinate = { latitude, longitude };
+    return returnCoordinate;
 }

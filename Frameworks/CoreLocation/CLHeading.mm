@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -16,15 +17,36 @@
 
 #import <StubReturn.h>
 #import <CoreLocation/CLHeading.h>
+#import <Foundation/Foundation.h>
 
 @implementation CLHeading
 
+- (instancetype)initWithAccuracy:(CLLocationDirection)accuracy
+                 magneticHeading:(CLLocationDirection)magneticHeading
+                     trueHeading:(CLLocationDirection)trueHeading {
+    if (self = [super init]) {
+        _headingAccuracy = accuracy;
+        _magneticHeading = magneticHeading;
+        _trueHeading = trueHeading;
+        _timestamp = [NSDate date];
+    }
+
+    return self;
+}
+
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (id)copyWithZone:(NSZone*)zone {
-    UNIMPLEMENTED();
-    return StubReturn();
+    CLHeading* newHeading = [[[self class] allocWithZone:zone] init];
+    if (newHeading) {
+        newHeading->_headingAccuracy = _headingAccuracy;
+        newHeading->_magneticHeading = _magneticHeading;
+        newHeading->_trueHeading = _trueHeading;
+        newHeading->_timestamp = [_timestamp copyWithZone:zone];
+    }
+
+    return newHeading;
 }
 
 /**
