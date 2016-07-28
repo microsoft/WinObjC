@@ -27,9 +27,12 @@ using namespace Microsoft::WRL;
 @interface UrlLauncher : NSObject
 - (UrlLauncher*)initWithLauncher:(Class)launcher;
 
-// Launches the default app handling the url. NSURL: the url to launch. Class: Always WSLauncher, except in test cases
+// Launches the default app handling the url asynchronously. NSURL: the url to launch. Class: Always WSLauncher
+-(BOOL)_openURLAsync : (NSURL*)url;
+
+// Launches the default app handling the url. NSURL: the url to launch. Class: Always WSLauncher
 - (BOOL)_openURL:(NSURL*)url;
 
-// Querys the system for an app handling the url. NSURL: the url to launch. Class: Always WSLauncher, except in test cases
+// Querys the system for an app handling the url. NSURL: the url to launch. Class: Always WSLauncher
 - (BOOL)_canOpenURL:(NSURL*)url;
 @end
