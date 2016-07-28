@@ -119,7 +119,8 @@ static CFMutableArrayRef __CFCopyWindowsTimeZoneList() {
     DYNAMIC_TIME_ZONE_INFORMATION info;
     
     for (dwIndex=0; EnumDynamicTimeZoneInformation(dwIndex, &info) == ERROR_SUCCESS ; dwIndex++) {
-        CFStringRef string = CFStringCreateWithBytes(kCFAllocatorSystemDefault, (const UInt8 *)info.StandardName, (wcsnlen_s(info.StandardName, 32) * sizeof(UniChar)), kCFStringEncodingUnicode, false);
+        CFStringRef string = CFStringCreateWithCharacters(
+            kCFAllocatorSystemDefault, reinterpret_cast<const UniChar*>(info.StandardName), wcsnlen_s(info.StandardName, 32));
         CFArrayAppendValue(result, string);
         CFRelease(string);
     }

@@ -127,13 +127,10 @@ static const wchar_t* TAG = L"NSTimeZone";
  @Status Interoperable
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    if (self = [super init]) {
-        NSString* name = [coder decodeObjectForKey:@"NS.name"];
-        NSData* data = [coder decodeObjectOfClass:[NSData class] forKey:@"NS.data"];
+    NSString* name = [coder decodeObjectForKey:@"NS.name"];
+    NSData* data = [coder decodeObjectOfClass:[NSData class] forKey:@"NS.data"];
 
-        return [self initWithName:name data:data];
-    }
-    return self;
+    return [self initWithName:name data:data];
 }
 
 /**

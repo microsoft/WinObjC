@@ -28,7 +28,6 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSTimeZonePrototype)
 
 - (instancetype)initWithName:(NSString*)name {
     if (!name) {
-        [self release];
         return nil;
     }
 
@@ -38,7 +37,6 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSTimeZonePrototype)
 
 - (instancetype)initWithName:(NSString*)name data:(NSData*)data {
     if (!name) {
-        [self release];
         return nil;
     }
 
