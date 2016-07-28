@@ -27,11 +27,12 @@
 
   <PropertyGroup>
     <ClangCompileExtraInputs>$(MSBuildProjectFile)</ClangCompileExtraInputs>
-    <CombinedHMapFilename>$(IntDir)$(MSBuildProjectName)-combined</CombinedHMapFilename>
-    <ProjectHMapFilename>$(IntDir)$(MSBuildProjectName)-project</ProjectHMapFilename>
+    <CombinedHMapFilename>$([System.IO.Path]::Combine('$(ProjectDir)', '$(IntDir)', '$(MSBuildProjectName)-combined'))</CombinedHMapFilename>
+    <ProjectHMapFilename>$([System.IO.Path]::Combine('$(ProjectDir)', '$(IntDir)', '$(MSBuildProjectName)-project'))</ProjectHMapFilename>
     <CombinedHMapRequired>@(ClangCompile->AnyHaveMetadataValue('HeaderMap','Combined'))</CombinedHMapRequired>
     <ProjectHMapRequired>@(ClangCompile->AnyHaveMetadataValue('HeaderMap','Project'))</ProjectHMapRequired>
     <HMapAddFrameworkEntries>@(ClangCompile->AnyHaveMetadataValue('HeaderMapAddFrameworkEntries','true'))</HMapAddFrameworkEntries>
+    <DummyClangFile>$(IntDir)DummyNoCompile.mm</DummyClangFile>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -40,9 +41,200 @@
     <DepWalkerCommand>"$(MSBuildThisFileDirectory)..\bin\depends.exe" /c /f:1 /d:"$(DepWalkerPathFile)" /oc:"$(DepWalkerOutputFile)" "$(TargetPath)"</DepWalkerCommand>
     <LibPathPattern>^,"([^"]*.\DLL)"</LibPathPattern>
   </PropertyGroup>
+  
+  <PropertyGroup>
+    <WritePublicHeaderList>false</WritePublicHeaderList>
+    <Objc2WinmdExe>$(MSBuildThisFileDirectory)..\bin\objc2winmd.exe</Objc2WinmdExe>
+    <SolutionPublicHeadersDir>$(SolutionDir)$(Configuration)\Headers</SolutionPublicHeadersDir>
+    <PublicHeadersDir>$(SolutionPublicHeadersDir)\$(TargetName)</PublicHeadersDir>
+    <PublicHeaderListFileSuffix>.headers</PublicHeaderListFileSuffix>
+    <PublicHeaderArgsFileSuffix>.args</PublicHeaderArgsFileSuffix>
+    <PublicHeaderListFile>$(PublicHeadersDir)\$(TargetName)$(PublicHeaderListFileSuffix)</PublicHeaderListFile>
+    <PublicHeaderArgsFile>$(PublicHeadersDir)\$(TargetName)$(PublicHeaderArgsFileSuffix)</PublicHeaderArgsFile>
+  </PropertyGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)\middleware.targets" />
 
+  <Target
+    Name="FindPublicHeaders"
+    BeforeTargets="Link;Lib"
+    Condition="'$(ConfigurationType)' == 'StaticLibrary' or '$(ConfigurationType)' == 'DynamicLibrary'" >
+    
+    <ItemGroup>
+      <PublicHeader
+        Include="$(PublicHeadersDir)\%(ClInclude.Filename)%(ClInclude.Extension)"
+        Condition="'%(ClInclude.PublicHeader)' == 'true'">
+        <Source>%(ClInclude.Identity)</Source>
+      </PublicHeader>
+    </ItemGroup>
+    
+    <PropertyGroup>
+      <WritePublicHeaderList Condition="'$(ExportPublicHeaders)' == 'true' and '@(PublicHeader)' != ''">true</WritePublicHeaderList>
+    </PropertyGroup>
+    
+  </Target>
+  
+  <Target
+    Name="CopyPublicHeaders"
+    Condition="'@(PublicHeader)' != ''"
+    DependsOnTargets="FindPublicHeaders"
+    BeforeTargets="Link;Lib"
+    Inputs="@(PublicHeader->'%(Source)')"
+    Outputs="@(PublicHeader)">
+    
+    <MakeDir Directories="@(PublicHeader->DirectoryName()->Distinct()->ClearMetadata())" />
+    
+    <Copy
+      SourceFiles="@(PublicHeader->'%(Source)')"
+      DestinationFiles="@(PublicHeader)" />
+      
+    <WriteLinesToFile
+      File="$(TLogLocation)$(ProjectName).read.headers.tlog"
+      Lines="^$(ProjectPath);@(PublicHeader->'%(Source)')"
+      Overwrite="true"
+      Encoding="Unicode" />
+      
+    <WriteLinesToFile
+      File="$(TLogLocation)$(ProjectName).write.headers.tlog"
+      Lines="^$(ProjectPath);@(PublicHeader)"
+      Overwrite="true"
+      Encoding="Unicode" /> 
+    
+  </Target>
+  
+  <Target
+    Name="WritePublicHeaderList"
+    Condition="'$(WritePublicHeaderList)' == 'true'"
+    DependsOnTargets="CopyPublicHeaders"
+    AfterTargets="Link;Lib">
+    
+    <!-- Get project-wide Clang arguments -->
+    <Clang
+      InternalSystemIncludePaths="%(ClangCompile.InternalSystemIncludePaths)"
+      InternalIncludePaths="%(ClangCompile.InternalIncludePaths)"
+      InternalForceIncludes="%(ClangCompile.InternalForceIncludes)"
+      ExcludedSearchPathSubdirectories="%(ClangCompile.ExcludedSearchPathSubdirectories)"
+      Autocomplete="true"
+      AutocompleteCommandLineTemplate="%(ClangCompile.AutocompleteCommandLineTemplate)"
+      CommandLineTemplate="%(ClangCompile.CommandLineTemplate)"
+      CommandTLogFile="%(ClangCompile.CommandTLogFile)"
+      CompileAs="CompileAsObjCpp"
+      DebugInformation="%(ClangCompile.DebugInformation)"
+      DependencyFile="%(ClangCompile.DependencyFile)"
+      ExceptionHandling="%(ClangCompile.ExceptionHandling)"
+      HeaderMapInclude="%(ClangCompile.HeaderMapInclude)"
+      IncludePaths="%(ClangCompile.IncludePaths);$(SolutionPublicHeadersDir)"
+      Input="@(ClangCompile->WithMetadataValue('Identity', '$(DummyClangFile)'))"
+      LLVMDirectory="$(StarboardLLVMDirectory)"
+      ObjectiveCARC="%(ClangCompile.ObjectiveCARC)"
+      ObjectiveCModules="false"
+      ObjectiveCModulesCachePath="%(ClangCompile.ObjectiveCModulesCachePath)"
+      ObjectFileName="%(ClangCompile.ObjectFileName)"
+      OptimizationLevel="%(ClangCompile.OptimizationLevel)"
+      PrefixHeader="%(ClangCompile.PrefixHeader)"
+      PreprocessorDefinitions="%(ClangCompile.PreprocessorDefinitions)"
+      ProjectFile="$(MSBuildProjectFullPath)"
+      RuntimeLibrary="%(ClangCompile.RuntimeLibrary)"
+      SystemHeaderDeps="%(ClangCompile.SystemHeaderDeps)"
+      UserIncludePaths="%(ClangCompile.UserIncludePaths)"
+      ReadTLogFile="%(ClangCompile.ReadTLogFile)"
+      MaxClangProcesses="%(ClangCompile.MaxClangProcesses)"
+      AdditionalOptions="%(ClangCompile.OtherFlags) %(ClangCompile.AdditionalOptions)">
+      <Output TaskParameter="Outputs" ItemName="DummyClangOutput" />
+    </Clang>
+
+    <WriteLinesToFile
+      File="$(PublicHeaderListFile)"
+      Lines="@(PublicHeader)"
+      Overwrite="true"
+      Encoding="ASCII" />
+      
+    <WriteLinesToFile
+      File="$(PublicHeaderArgsFile)"
+      Lines="@(DummyClangOutput->Metadata('AutocompleteCommand'))"
+      Overwrite="true"
+      Encoding="ASCII" />
+      
+    <WriteLinesToFile
+      File="$(TLogLocation)$(ProjectName).read.headerlist.tlog"
+      Lines="^$(ProjectPath)"
+      Overwrite="true"
+      Encoding="Unicode" />
+      
+    <WriteLinesToFile
+      File="$(TLogLocation)$(ProjectName).write.headerlist.tlog"
+      Lines="^$(ProjectPath);$(PublicHeaderListFile);$(PublicHeaderArgsFile)"
+      Overwrite="true"
+      Encoding="Unicode" /> 
+
+  </Target>
+  
+  <Target
+    Name="RemovePublicHeaderList"
+    Condition="'$(WritePublicHeaderList)' != 'true' and (Exists('$(PublicHeaderArgsFile)') or Exists('$(PublicHeaderListFile)'))"
+    DependsOnTargets="FindPublicHeaders"
+    AfterTargets="Link;Lib">
+    
+    <Delete Files="$(PublicHeaderArgsFile);$(PublicHeaderListFile)" />
+    
+  </Target>
+  
+  <PropertyGroup>
+    <ResolveAssemblyReferencesDependsOn>SetFirstTimeLoading;$(ResolveAssemblyReferencesDependsOn);</ResolveAssemblyReferencesDependsOn>
+    <BeforeMidlCompileTargets>InvokeObjc2Winmd;$(BeforeMidlTargets);</BeforeMidlCompileTargets>
+  </PropertyGroup>
+  
+  <Target Name="SetFirstTimeLoading">
+    <PropertyGroup>
+        <FirstTimeLoading Condition=" '$(FirstTimeLoading)' == '' ">false</FirstTimeLoading>
+    </PropertyGroup>
+  </Target>
+  
+  <Target
+    Name="InvokeObjc2Winmd"
+    Condition="'$(FirstTimeLoading)' == 'false' And '$(IslandwoodConfigurationType)' == 'Projection' And !Exists('$(Objc2WinmdGeneratedFilesDir)')"
+    BeforeTargets="ComputeClangOptions">
+    
+    <MakeDir Directories="$(Objc2WinmdGeneratedFilesDir)" />
+    
+    <!-- Find all public header list files -->
+    <ItemGroup>
+      <Objc2WinmdInput Include="$(SolutionPublicHeadersDir)\**\*$(PublicHeaderListFileSuffix)" />
+      <Objc2WinmdInput Include="$(SolutionPublicHeadersDir)\**\*$(PublicHeaderArgsFileSuffix)" />
+    </ItemGroup>
+    
+    <!-- Call objc2winmd -->
+    <Exec
+      Condition="'@(Objc2WinmdInput)' != ''"
+      Command="&quot;$(Objc2WinmdExe)&quot; -r &quot;$(TargetName)&quot; -o &quot;$(Objc2WinmdGeneratedFilesDir)&quot; @(Objc2WinmdInput->'&quot;%(FullPath)&quot;', ' ')" />
+    
+    <ItemGroup>
+      <ClangCompile Include="$(Objc2WinmdGeneratedFilesDir)\**\*.mm" />
+      <Midl Include="$(Objc2WinmdGeneratedFilesDir)\**\*.idl" />
+    </ItemGroup>
+      
+    <Touch Files="$(MSBuildProjectDirectory)\$(MSBuildProjectFile)" />
+    
+  </Target>
+
+  <Target
+    Name="MergeWinmd"
+    Condition="'$(FirstTimeLoading)' == 'false' And '$(IslandwoodConfigurationType)' == 'Projection'"
+    AfterTargets="Link">
+
+    <!-- Find all generated winmd's -->
+    <ItemGroup>
+      <MergeWinmdInput Include="$(SolutionDir)$(IntDir)\*.winmd" />
+    </ItemGroup>
+
+    <!-- Call mdmerge -->
+    <!-- $TargetPlatformWinMDLocation or windowsSDK_MetadataPath -->
+    <Exec
+      Condition="'@(MergeWinmdInput)' != ''"
+      Command="mdmerge.exe -i &quot;$(SolutionDir)$(IntDir.TrimEnd('\'))&quot; -o &quot;$(OutputPath.TrimEnd('\'))&quot; -n:1 -partial -metadata_dir &quot;$(TargetPlatformWinMDLocation)\Windows.Foundation.FoundationContract\1.0.0.0&quot;" />
+
+  </Target>
+  
   <Target
     Name="HandleExplicitLibs"
     Condition="'$(CopyStarboardLibraries)' == 'true'"
@@ -150,10 +342,10 @@
 
     <!-- Print which WinObjC libraries will be used, when copying dependent libraries -->
     <Message
-      Condition="'$(UseStarboardSourceSdk)' == 'true' and '$(CopyStarboardLibraries)' == 'true'"
+      Condition="'$(UseStarboardSourceSdk)' == 'true'"
       Importance="High"
       Text="Using $(StarboardCRTConfig) WinObjC libraries due to $(StarboardCRT) CRT." />
-
+      
     <ItemGroup Condition="'$(AppContainerApplication)' == 'true' And '$(IslandwoodDRT)' == 'true'">
       <ClCompile Include="$(MSBuildThisFileDirectory)ConsumeRuntimeComponent.cpp">
         <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -328,7 +520,14 @@
     <MakeDir Directories="@(ClangCompile->Metadata('ObjectFileName')->DirectoryName()->Distinct()->ClearMetadata())" />
   </Target>
   
-  <Target Name="ComputeClangOptions" Condition="">
+  <Target Name="ComputeClangOptions">
+    <!-- Inject a dummy ClangCompile file to gain access to autocomplete arguments for the project -->
+    <ItemGroup>
+      <ClangCompile Include="$(DummyClangFile)">
+        <ExcludedFromBuild>true</ExcludedFromBuild>
+      </ClangCompile>
+    </ItemGroup>
+    
     <!-- Figure out what to compile each file as -->
     <ItemGroup>
       <ClangCompile Condition="'%(ClangCompile.CompileAs)' == 'Default' or '%(ClangCompile.CompileAs)' == ''">
@@ -424,11 +623,17 @@
 
   <!-- Sets StarboardHasObjCSources based on whether any files in this project are being built as Objective-C -->
   <Target Name="ComputeStarboardHasObjCSources" DependsOnTargets="ComputeClangOptions">
-    <PropertyGroup Condition="'$(StarboardHasObjCSources)' == ''">
-      <!-- ComputeClangOptions fills CompileAs based on file extension in the absence of other information. -->
-      <StarboardHasObjCSources Condition="'@(ClangCompile->WithMetadataValue('CompileAs', 'CompileAsObjC'))' != ''">true</StarboardHasObjCSources>
-      <StarboardHasObjCSources Condition="'@(ClangCompile->WithMetadataValue('CompileAs', 'CompileAsObjCpp'))' != ''">true</StarboardHasObjCSources>
+    <ItemGroup>
+      <ObjCSources Include="@(ClangCompile)" Condition="'%(ClangCompile.ExcludedFromBuild)' != 'true' And ('%(ClangCompile.CompileAs)' == 'CompileAsObjC' or '%(ClangCompile.CompileAs)' == 'CompileAsObjCpp')" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <StarboardHasObjCSources Condition="'$(StarboardHasObjCSources)' == '' And '@(ObjCSources)' != ''">true</StarboardHasObjCSources>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ObjCSources Remove="@(ObjCSources)" />
+    </ItemGroup>
   </Target>
 
   <!-- Sets StarboardRequiresObjectiveCRuntime based on whether this project has Objective-C sources non-recursively. -->

@@ -51,6 +51,10 @@
     <StarboardLinkWholeArchive Condition="'$(StarboardLinkWholeArchive)' == ''">false</StarboardLinkWholeArchive>
     <CopyStarboardLibraries Condition="'$(ConfigurationType)' == 'Application'">true</CopyStarboardLibraries>
   </PropertyGroup>
+  
+  <PropertyGroup>
+    <Objc2WinmdGeneratedFilesDir>$(ProjectDir)Generated</Objc2WinmdGeneratedFilesDir>
+  </PropertyGroup>
 
   <ItemDefinitionGroup>
     <ClangCompile>
