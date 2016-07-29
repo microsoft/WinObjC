@@ -778,10 +778,11 @@ static void printViews(id curView, int level) {
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes This method only returns the status for if the URL can be opened and not the actual open URL call status.
 */
 - (BOOL)openURL:(NSURL*)url {
-    return [_launcher _openURL:url];
+    return [_launcher _openURLAsync:url];
 }
 
 /**

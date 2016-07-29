@@ -416,3 +416,24 @@ public:
     }
 
 }; /* class ProjectionTest */
+
+//
+// UIApplicationTests
+//
+extern void UIApplicationTestsOpenURL();
+
+class UIApplicationTests {
+public:
+    BEGIN_TEST_CLASS(UIApplicationTests)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(UIApplicationTestsSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
+
+    TEST_METHOD(UIApplicationTests_OpenURL) {
+        UIApplicationTestsOpenURL();
+    }
+}; /* class UIApplicationTests */
