@@ -4,6 +4,12 @@
 
 include $(CLEAR_VARS)
 
+TESTS_TO_BUILD := Foundation
+
+# Makefile Entrypoint: for running `make` without an argument.
+.PHONY: all
+all: $(foreach t,$(TESTS_TO_BUILD),$(t).UnitTests.exe)
+
 CLANG := clang++
 OSX_VERSION_MIN := 10.10
 
@@ -28,7 +34,7 @@ CFLAGS += -mmacosx-version-min=$(OSX_VERSION_MIN)
 
 LDFLAGS := -framework Foundation -mmacosx-version-min=$(OSX_VERSION_MIN)
 
-Shims : $(OUTDIR)/windows.o $(OUTDIR)/IwMalloc.o $(OUTDIR)/LoggingNative.o
+SHIMS := $(OUTDIR)/windows.o $(OUTDIR)/IwMalloc.o $(OUTDIR)/LoggingNative.o
 
 $(OUTDIR)/IwMalloc.o : ../../Frameworks/WinObjCRT/MemoryManagement.cpp
 	mkdir -p $(OUTDIR)
@@ -58,11 +64,11 @@ $(OUTDIR)/ReferenceFoundation_%.o : $(OUTDIR)/ReferenceFoundation_TestUtils.o $(
 	mkdir -p $(OUTDIR)
 	$(CLANG) -c -o $@ $(CFLAGS) $(word 2,$^) 
 
-.PHONY: clean Shims
+.PHONY: clean
 
 clean:
 	$(RM) $(OUTDIR)/*.o
 	$(RM) Foundation.UnitTests.exe
 
-Foundation.UnitTests.exe : Shims $(OUTTARGETS)
+Foundation.UnitTests.exe : $(SHIMS) $(OUTTARGETS)
 	$(CLANG) -o $@ -std=c++14 $(INC_PARAMS) EntryPoint.cpp ../frameworks/gtest/src/gtest-all.cc $(LDFLAGS) ../../build/Tests/UnitTests/Foundation/OSX/*.o
