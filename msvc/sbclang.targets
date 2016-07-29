@@ -87,18 +87,6 @@
     <Copy
       SourceFiles="@(PublicHeader->'%(Source)')"
       DestinationFiles="@(PublicHeader)" />
-      
-    <WriteLinesToFile
-      File="$(TLogLocation)$(ProjectName).read.headers.tlog"
-      Lines="^$(ProjectPath);@(PublicHeader->'%(Source)')"
-      Overwrite="true"
-      Encoding="Unicode" />
-      
-    <WriteLinesToFile
-      File="$(TLogLocation)$(ProjectName).write.headers.tlog"
-      Lines="^$(ProjectPath);@(PublicHeader)"
-      Overwrite="true"
-      Encoding="Unicode" /> 
     
   </Target>
   
@@ -154,18 +142,6 @@
       Lines="@(DummyClangOutput->Metadata('AutocompleteCommand'))"
       Overwrite="true"
       Encoding="ASCII" />
-      
-    <WriteLinesToFile
-      File="$(TLogLocation)$(ProjectName).read.headerlist.tlog"
-      Lines="^$(ProjectPath)"
-      Overwrite="true"
-      Encoding="Unicode" />
-      
-    <WriteLinesToFile
-      File="$(TLogLocation)$(ProjectName).write.headerlist.tlog"
-      Lines="^$(ProjectPath);$(PublicHeaderListFile);$(PublicHeaderArgsFile)"
-      Overwrite="true"
-      Encoding="Unicode" /> 
 
   </Target>
   
