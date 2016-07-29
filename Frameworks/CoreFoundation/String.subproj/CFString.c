@@ -1,4 +1,4 @@
-// clang-format off
+﻿// clang-format off
 
 // This source file is part of the Swift.org open source project
 //
@@ -45,11 +45,8 @@
 
 // WINOBJC: need UNIMPLEMENTED(), StubReturn()
 // TODO: 7495205: Can remove this include when all the UNIMPLEMENTED() functions are filled in
-#pragma push_macro("__OBJC__")
-#undef __OBJC__
 #include <ErrorHandling.h>
 #include <StubReturn.h>
-#pragma pop_macro("__OBJC__")
 
 #if defined(__GNUC__)
 #define LONG_DOUBLE_SUPPORT 1
