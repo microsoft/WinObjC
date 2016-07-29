@@ -5,6 +5,7 @@
 include $(CLEAR_VARS)
 
 CLANG := clang++
+OSX_VERSION_MIN := 10.10
 
 SRCDIR := Foundation
 SRCFILES := $(wildcard $(SRCDIR)/*.m*)
@@ -23,8 +24,9 @@ CFLAGS += -x objective-c++
 CFLAGS += $(INC_PARAMS)
 CFLAGS += -DTARGET_OS_MAC
 CFLAGS += -DWINOBJCRT_IMPEXP=
+CFLAGS += -mmacosx-version-min=$(OSX_VERSION_MIN)
 
-LDFLAGS := -framework Foundation
+LDFLAGS := -framework Foundation -mmacosx-version-min=$(OSX_VERSION_MIN)
 
 Shims : $(OUTDIR)/windows.o $(OUTDIR)/IwMalloc.o $(OUTDIR)/LoggingNative.o
 
