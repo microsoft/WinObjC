@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreImage/CoreImage.h>
-#import "Starboard.h"
+#import "Starboard/SmartTypes.h"
 #import "CALayerInternal.h"
 #import "../UIKit/NullCompositor.h"
 
@@ -33,18 +33,18 @@ TEST(CoreImage, CGImageFromRect) {
     GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
     char* executablePath = strrchr(fullPath, '\\');
     const char* relativePathToPhoto = "\\Photo2.jpg";
-    strncpy (executablePath, relativePathToPhoto, strlen(relativePathToPhoto) + 1);
+    strncpy(executablePath, relativePathToPhoto, strlen(relativePathToPhoto) + 1);
     UIImage* photo = [UIImage imageNamed:[NSString stringWithCString:fullPath]];
     CIImage* ciImage = [CIImage imageWithCGImage:photo.CGImage];
     CGImageRef cgImage = [context createCGImage:ciImage fromRect:CGRectMake(300, 600, 200, 200)];
     photo = [UIImage imageWithCGImage:cgImage];
 
     const char* relativePathToCroppedPhoto = "\\CroppedPhoto2.jpg";
-    strncpy (executablePath, relativePathToCroppedPhoto, strlen(relativePathToCroppedPhoto) + 1);
+    strncpy(executablePath, relativePathToCroppedPhoto, strlen(relativePathToCroppedPhoto) + 1);
     UIImage* croppedPhoto = [UIImage imageNamed:[NSString stringWithCString:fullPath]];
-    
+
     NSData* photoData = UIImagePNGRepresentation(photo);
     NSData* croppedPhotoData = UIImagePNGRepresentation(croppedPhoto);
-    
+
     ASSERT_TRUE_MSG([photoData isEqualToData:croppedPhotoData], "Failed: Cropped image does not match reference image");
 }

@@ -17,7 +17,7 @@
 #include <TestFramework.h>
 
 #import <UIKit/UIKit.h>
-#import "Starboard.h"
+#import "Starboard/SmartTypes.h"
 #import "CALayerInternal.h"
 #import "NullCompositor.h"
 

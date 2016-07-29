@@ -14,6 +14,9 @@
 //
 //******************************************************************************
 
+// Windows-only:
+//      CFBridgeBase
+
 #include <TestFramework.h>
 #include "CFBridgeBase.h"
 #include <Foundation/NSAutoreleasePool.h>

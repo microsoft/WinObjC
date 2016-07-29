@@ -83,7 +83,7 @@ NSString* const UIViewControllerShowDetailTargetDidChangeNotification = @"UIView
 
 #import <UIKit/UIStoryboardPushSegueTemplate.h>
 
-#import "..\include\CACompositor.h"
+#import "CACompositor.h"
 
 #import "Etc.h"
 
@@ -1818,9 +1818,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     // Walk the list of outlets and assign them to the corresponding XAML UIElement
     unsigned int propListCount = 0;
     objc_property_t* props = (objc_property_t*)class_copyPropertyList([self class], &propListCount);
-    auto freeProps = wil::ScopeExit([&]() {
-        IwFree(props);
-    });
+    auto freeProps = wil::ScopeExit([&]() { IwFree(props); });
 
     for (int i = 0; i < propListCount; i++) {
         objc_property_t curProp = props[i];

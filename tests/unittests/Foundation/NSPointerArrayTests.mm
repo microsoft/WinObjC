@@ -1,5 +1,22 @@
-﻿#import <Foundation/Foundation.h>
-#include <TestFramework.h>
+﻿//******************************************************************************
+//
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+
+#import <Foundation/Foundation.h>
+#import <TestFramework.h>
+#import <windows.h>
 
 // Expose some private functions of the NSPointerArray implementation
 @interface NSPointerArray (Private)
@@ -80,6 +97,7 @@ TEST(NSPointerArray, Equality) {
     [cPtrArray1 addPointer:const_cast<char*>(s2)];
 
     char* dup_s1 = _strdup(s1);
+
     NSPointerArray* cPtrArray2 = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsCStringPersonality];
     [cPtrArray2 addPointer:nullptr];
     [cPtrArray2 addPointer:dup_s1];

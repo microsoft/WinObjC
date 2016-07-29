@@ -14,27 +14,12 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
+#import <TestFramework.h>
 #import <Foundation/Foundation.h>
-#import "NSBooleanPredicate.h"
 
 TEST(NSPredicate, Init) {
     NSPredicate* predicate = [[NSPredicate alloc] init];
     ASSERT_TRUE_MSG(predicate != nil, "FAILED: predicate should be non-null!");
-    [predicate release];
-}
-
-TEST(NSPredicate, NSBooleanPredicateYES) {
-    NSBooleanPredicate* predicate = [[NSBooleanPredicate alloc] initWithValue:YES];
-    ASSERT_TRUE_MSG(predicate != nil, "FAILED: predicate should be non-null!");
-    ASSERT_TRUE_MSG([predicate value], "FAILED: predicate should be YES.");
-    [predicate release];
-}
-
-TEST(NSPredicate, NSBooleanPredicateNO) {
-    NSBooleanPredicate* predicate = [[NSBooleanPredicate alloc] initWithValue:NO];
-    ASSERT_TRUE_MSG(predicate != nil, "FAILED: predicate should be non-null!");
-    ASSERT_TRUE_MSG(![predicate value], "FAILED: predicate should be NO.");
     [predicate release];
 }
 
@@ -47,20 +32,6 @@ TEST(NSPredicate, predicateWithValue) {
 
     ASSERT_TRUE_MSG([predicateTrue evaluateWithObject:nil], "FAILED: predicate should be YES.");
     ASSERT_TRUE_MSG(![predicateFalse evaluateWithObject:nil], "FAILED: predicate should be NO.");
-}
-
-TEST(NSPredicate, NSBooleanPredicate_ArchiveAndUnarchiveObject) {
-    NSBooleanPredicate* predicate = [[NSBooleanPredicate alloc] initWithValue:NO];
-    ASSERT_TRUE_MSG(predicate != nil, "FAILED: predicate should be non-null!");
-
-    // archive the object
-    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:predicate];
-    ASSERT_TRUE_MSG(data != nil, "FAILED: archived data should be non-null!");
-
-    NSPredicate* unArchivedPredicate = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    ASSERT_TRUE_MSG(unArchivedPredicate != nil, "FAILED: unArchivedPredicate should be non-null!");
-
-    [predicate release];
 }
 
 TEST(NSPredicate, PredicateWithBlock) {

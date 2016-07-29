@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
+#import <TestFramework.h>
 #import <Foundation/Foundation.h>
 #import <mach/mach_time.h>
 
@@ -258,11 +258,11 @@ struct TestKVOStruct {
 }
 
 + (NSSet*)keyPathsForValuesAffectingDependsOnTwoKeys {
-    return [NSSet setWithArray:@[@"boolTrigger1", @"boolTrigger2"]];
+    return [NSSet setWithArray:@[ @"boolTrigger1", @"boolTrigger2" ]];
 }
 
 + (NSSet*)keyPathsForValuesAffectingDependsOnTwoSubKeys {
-    return [NSSet setWithArray:@[@"cascadableKey.boolTrigger1", @"cascadableKey.boolTrigger2"]];
+    return [NSSet setWithArray:@[ @"cascadableKey.boolTrigger1", @"cascadableKey.boolTrigger2" ]];
 }
 
 - (bool)dependsOnTwoKeys {
@@ -1001,14 +1001,8 @@ TEST(KVO, RemoveOneOfTwoObservers) { // Test adding duplicate contexts
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
     TestKVOObserver* observer2 = [[[TestKVOObserver alloc] init] autorelease];
 
-    [observed addObserver:observer
-               forKeyPath:@"basicObjectProperty"
-                  options:NSKeyValueObservingOptionNew
-                  context:nullptr];
-    [observed addObserver:observer2
-               forKeyPath:@"basicObjectProperty"
-                  options:NSKeyValueObservingOptionNew
-                  context:nullptr];
+    [observed addObserver:observer forKeyPath:@"basicObjectProperty" options:NSKeyValueObservingOptionNew context:nullptr];
+    [observed addObserver:observer2 forKeyPath:@"basicObjectProperty" options:NSKeyValueObservingOptionNew context:nullptr];
 
     observed.basicObjectProperty = @"";
 
@@ -1110,18 +1104,18 @@ TEST(KVO, SubpathWithDerivedKeyBasedOnSubpath) {
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
 
     // key dependent on sub keypath is dependent upon dictionaryProperty.subDictionary
-    NSMutableDictionary* mutableDictionary = [[@{ @"subDictionary" : @{@"floatGuy": @(1.234)}} mutableCopy] autorelease];
+    NSMutableDictionary* mutableDictionary = [[@{ @"subDictionary" : @{ @"floatGuy" : @(1.234) } } mutableCopy] autorelease];
     observed.dictionaryProperty = mutableDictionary;
 
     [observed addObserver:observer forKeyPath:@"keyDependentOnSubKeypath.floatGuy" options:0 context:nil];
 
-    mutableDictionary[@"subDictionary"] = @{@"floatGuy": @(3.456)}; // 1 notification
+    mutableDictionary[@"subDictionary"] = @{ @"floatGuy" : @(3.456) }; // 1 notification
 
-    NSMutableDictionary* mutableDictionary2 = [[@{ @"subDictionary" : @{@"floatGuy": @(5.678)}} mutableCopy] autorelease];
+    NSMutableDictionary* mutableDictionary2 = [[@{ @"subDictionary" : @{ @"floatGuy" : @(5.678) } } mutableCopy] autorelease];
 
     observed.dictionaryProperty = mutableDictionary2; // 2nd notification
 
-    mutableDictionary2[@"subDictionary"] = @{@"floatGuy": @(7.890)}; // 3rd notification
+    mutableDictionary2[@"subDictionary"] = @{ @"floatGuy" : @(7.890) }; // 3rd notification
 
     EXPECT_EQ(3, [observer numberOfObservedChanges]);
 
@@ -1140,8 +1134,12 @@ TEST(KVO, MultipleObservers) {
 
     EXPECT_EQ_MSG([[observer changesForKeypath:@"basicObjectProperty"] count], 1, "One change on basicObjectProperty should have fired.");
     EXPECT_EQ_MSG([[observer changesForKeypath:@"basicPodProperty"] count], 0, "Zero changes on basicPodProperty should have fired.");
-    EXPECT_EQ_MSG([[observer2 changesForKeypath:@"basicObjectProperty"] count], 0, "Zero changes on basicObjectProperty should have fired (obs 2).");
-    EXPECT_EQ_MSG([[observer2 changesForKeypath:@"basicPodProperty"] count], 0, "Zero changes on basicPodProperty should have fired (obs 2).");
+    EXPECT_EQ_MSG([[observer2 changesForKeypath:@"basicObjectProperty"] count],
+                  0,
+                  "Zero changes on basicObjectProperty should have fired (obs 2).");
+    EXPECT_EQ_MSG([[observer2 changesForKeypath:@"basicPodProperty"] count],
+                  0,
+                  "Zero changes on basicPodProperty should have fired (obs 2).");
 
     [observed addObserver:observer2 forKeyPath:@"basicObjectProperty" options:NSKeyValueObservingOptionNew context:NULL];
     observed.basicObjectProperty = @"Goodbye";
@@ -1158,7 +1156,7 @@ TEST(KVO, MultipleObservers) {
                       [[[[observer2 changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeOldKey],
                       "There should be no old value included in the change notification.");
     EXPECT_OBJCEQ([[[[observer2 changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey],
-                      @"Goodbye");
+                  @"Goodbye");
     [observed removeObserver:observer forKeyPath:@"basicObjectProperty"];
     [observed removeObserver:observer2 forKeyPath:@"basicObjectProperty"];
 
@@ -1180,7 +1178,7 @@ TEST(KVO, DerivedKeyDependentOnDerivedKey) {
 
     EXPECT_EQ(1, [observer numberOfObservedChanges]);
     EXPECT_OBJCEQ([[[[observer changesForKeypath:@"keyDerivedTwoTimes"] anyObject] info] objectForKey:NSKeyValueChangeNewKey],
-                      @"---!!!KVO!!!---");
+                  @"---!!!KVO!!!---");
 
     [observer clear];
 
@@ -1188,7 +1186,7 @@ TEST(KVO, DerivedKeyDependentOnDerivedKey) {
 
     EXPECT_EQ(1, [observer numberOfObservedChanges]);
     EXPECT_OBJCEQ([[[[observer changesForKeypath:@"keyDerivedTwoTimes"] anyObject] info] objectForKey:NSKeyValueChangeNewKey],
-                      @"---!!!$$$!!!---");
+                  @"---!!!$$$!!!---");
 
     [observed removeObserver:observer forKeyPath:@"keyDerivedTwoTimes"];
     [pool release];
@@ -1242,20 +1240,6 @@ TEST(KVO, DerivedKeyDependentOnTwoSubKeys) {
 
     [observed removeObserver:observer forKeyPath:@"dependsOnTwoSubKeys"];
     [pool release];
-}
-
-
-@interface NSObject (Nonexistent)
-+ (void)nonexistentSelector;
-+ (id)tryToReturnANonexistentThing;
-@end
-
-TEST(Sanity, NonFatalSelectors) {
-    WinObjC_SetMissingSelectorFatal(NO);
-    EXPECT_NO_THROW([NSObject nonexistentSelector]);
-    EXPECT_OBJCEQ(nil, [NSObject tryToReturnANonexistentThing]);
-    WinObjC_SetMissingSelectorFatal(YES);
-    EXPECT_ANY_THROW([NSObject nonexistentSelector]);
 }
 
 TEST(Foundation, NSSearchPathForDirectoriesInDomains) {

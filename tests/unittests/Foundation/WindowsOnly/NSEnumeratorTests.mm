@@ -14,9 +14,12 @@
 //
 //******************************************************************************
 
+// Windows-only:
+//      NSEnumerator enumeratorWithArray, enumeratorWithArrayReverse, objectEnumerator
+
 #import "Foundation/Foundation.h"
 #import "NSEnumeratorInternal.h"
-#import "Starboard.h"
+#import "Starboard/SmartTypes.h"
 #import "TestFramework.h"
 
 TEST(NSEnumerator, EnumeratorWithArray) {

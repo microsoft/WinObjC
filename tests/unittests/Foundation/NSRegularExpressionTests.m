@@ -14,9 +14,9 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
+#import <TestFramework.h>
 #import <Foundation/Foundation.h>
-#import "Starboard.h"
+#import <Starboard/SmartTypes.h>
 
 TEST(NSRegularExpression, CaptureGroupReplacementTest) {
     NSString* result = [@"ab  cd e    spaces" stringByReplacingOccurrencesOfString:@"\\s+"

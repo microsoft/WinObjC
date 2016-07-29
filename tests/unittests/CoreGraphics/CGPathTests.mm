@@ -14,10 +14,11 @@
 //
 //******************************************************************************
 
+#import <TestFramework.h>
+#import <Starboard/SmartTypes.h>
 #import <CoreGraphics\CGPath.h>
 #import <Foundation\Foundation.h>
-#import <Starboard.h>
-#import <TestFramework.h>
+
 #import <CoreGraphics/CGColor.h>
 #import <CoreGraphics/CGColorSpace.h>
 

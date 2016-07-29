@@ -16,7 +16,6 @@
 
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
-#import <Foundation/NSURLSessionConfiguration.h>
 
 TEST(NSURLSessionConfiguration, initValues) {
     NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];

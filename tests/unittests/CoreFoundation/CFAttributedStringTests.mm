@@ -15,10 +15,10 @@
 //******************************************************************************
 
 #import <TestFramework.h>
-#import <Starboard.h>
-#import <CoreFoundation\CFAttributedString.h>
-#import <CoreFoundation\CFString.h>
-#import <Foundation\Foundation.h>
+#import <Starboard/SmartTypes.h>
+#import <CoreFoundation/CFAttributedString.h>
+#import <CoreFoundation/CFString.h>
+#import <Foundation/Foundation.h>
 
 void assertAttributeAt(
     CFAttributedStringRef aStr, CFStringRef attrName, CFTypeRef expectedValue, CFIndex expectedLocation, CFIndex expectedLength) {

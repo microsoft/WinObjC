@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include <Windows.h>
+#include <windows.h>
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
@@ -22,7 +22,7 @@
 + (void)resetCreationCount;
 @end
 
-static unsigned long creationCount;
+static long creationCount;
 @implementation TestCreationSignallingClass
 + (BOOL)supportsSecureCoding {
     return YES;
@@ -37,7 +37,7 @@ static unsigned long creationCount;
     InterlockedExchange(&creationCount, 0);
 }
 
-+ (unsigned long)creationCount {
++ (long)creationCount {
     return creationCount;
 }
 

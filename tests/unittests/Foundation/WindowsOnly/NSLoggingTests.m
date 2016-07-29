@@ -13,6 +13,10 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
+// Windows-only:
+//      g_etl...TestHook
+
 #undef _WINOBJC_DO_NOT_USE_NSLOG
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
@@ -52,9 +56,7 @@ void validateWideEtl(const wchar_t* tag, const wchar_t* expectedBody, int expect
 
 TEST(NSLogging, NSLoggingWideBasicTests) {
     g_isTestHookEnabled = true;
-    auto reset = wil::ScopeExit([] () {
-        g_isTestHookEnabled = false;
-    });
+    auto reset = wil::ScopeExit([]() { g_isTestHookEnabled = false; });
 
     // Basic test. Use macros so can use literal concatenation.
     const wchar_t* tag = L"TAG";
@@ -88,9 +90,7 @@ TEST(NSLogging, NSLoggingWideBasicTests) {
 
 TEST(NSLogging, NSLoggingNSStringBasicTests) {
     g_isTestHookEnabled = true;
-    auto reset = wil::ScopeExit([] () {
-        g_isTestHookEnabled = false;
-    });
+    auto reset = wil::ScopeExit([]() { g_isTestHookEnabled = false; });
 
     // Basic test. Use macros so can use literal concatenation.
     const wchar_t* tag = L"TAG";
@@ -125,9 +125,7 @@ TEST(NSLogging, NSLoggingNSStringBasicTests) {
 
 TEST(NSLogging, NSLoggingWideFormatTests) {
     g_isTestHookEnabled = true;
-    auto reset = wil::ScopeExit([] () {
-        g_isTestHookEnabled = false;
-    });
+    auto reset = wil::ScopeExit([]() { g_isTestHookEnabled = false; });
 
     int intSample = 12345;
     float floatSample = 123.45;
@@ -136,7 +134,8 @@ TEST(NSLogging, NSLoggingWideFormatTests) {
     const wchar_t* tag = L"TAG/タグ";
     const wchar_t* format = L"Int: %d Float: %.2f Narrow: %hs Wide: %ws Narrow2: %S Wide2: %s";
     const wchar_t* expectedBody = L"Int: 12345 Float: 123.45 Narrow: abcdefg Wide: 文字化け Narrow2: abcdefg Wide2: 文字化け";
-    const wchar_t* expectedDebug = L"V/TAG/タグ: Int: 12345 Float: 123.45 Narrow: abcdefg Wide: 文字化け Narrow2: abcdefg Wide2: 文字化け\n";
+    const wchar_t* expectedDebug =
+        L"V/TAG/タグ: Int: 12345 Float: 123.45 Narrow: abcdefg Wide: 文字化け Narrow2: abcdefg Wide2: 文字化け\n";
 
     setup();
     TraceVerbose(tag, format, intSample, floatSample, narrowSample, wideSample, narrowSample, wideSample);
@@ -146,9 +145,7 @@ TEST(NSLogging, NSLoggingWideFormatTests) {
 
 TEST(NSLogging, NSLoggingNSStringFormatTests) {
     g_isTestHookEnabled = true;
-    auto reset = wil::ScopeExit([] () {
-        g_isTestHookEnabled = false;
-    });
+    auto reset = wil::ScopeExit([]() { g_isTestHookEnabled = false; });
 
     int intSample = 12345;
     float floatSample = 123.45;
@@ -169,7 +166,7 @@ TEST(NSLogging, NSLoggingNSStringFormatTests) {
 TEST(NSLogging, NSLogTests) {
     g_isTestHookEnabled = true;
     g_isNSLogTestHookEnabled = true;
-    auto reset = wil::ScopeExit([] () {
+    auto reset = wil::ScopeExit([]() {
         g_isTestHookEnabled = false;
         g_isNSLogTestHookEnabled = false;
     });

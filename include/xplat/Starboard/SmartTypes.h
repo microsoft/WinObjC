@@ -17,6 +17,7 @@
 #pragma once
 
 #include "Starboard/TypeTraits.h"
+#include "IwMalloc.h"
 
 #if defined(__OBJC__)
 #include <Foundation/Foundation.h>
@@ -301,26 +302,27 @@ bool operator!=(const Any& other, const AutoId<TObj, TLifetimeTraits>& val) {
 #if defined(__OBJC__)
 namespace woc {
 template <typename T>
-class unique_cf : public std::unique_ptr<std::remove_pointer<T>::type, decltype(&CFRelease)> {
+class unique_cf : public std::unique_ptr<typename std::remove_pointer<T>::type, decltype(&CFRelease)> {
 public:
-    unique_cf() : std::unique_ptr<std::remove_pointer<T>::type, decltype(&CFRelease)>(nullptr, CFRelease) {
+    unique_cf() : std::unique_ptr<typename std::remove_pointer<T>::type, decltype(&CFRelease)>(nullptr, CFRelease) {
     }
 
-    explicit unique_cf(T&& val) : std::unique_ptr<std::remove_pointer<T>::type, decltype(&CFRelease)>(std::forward<T>(val), CFRelease) {
+    explicit unique_cf(T&& val)
+        : std::unique_ptr<typename std::remove_pointer<T>::type, decltype(&CFRelease)>(std::forward<T>(val), CFRelease) {
     }
 };
 }
 
 namespace woc {
-    template <typename T>
-    class unique_iw : public std::unique_ptr<T, void(*)(T*)> {
-    public:
-        unique_iw() : std::unique_ptr<T, void(*)(T*)>(nullptr, (void(*)(T*))&IwFree) {
-        }
+template <typename T>
+class unique_iw : public std::unique_ptr<T, void (*)(T*)> {
+public:
+    unique_iw() : std::unique_ptr<T, void (*)(T*)>(nullptr, (void (*)(T*)) & IwFree) {
+    }
 
-        explicit unique_iw(T* val) : std::unique_ptr<T, void(*)(T*)>(val, (void(*)(T*))&IwFree) {
-        }
-    };
+    explicit unique_iw(T* val) : std::unique_ptr<T, void (*)(T*)>(val, (void (*)(T*)) & IwFree) {
+    }
+};
 }
 
 #endif

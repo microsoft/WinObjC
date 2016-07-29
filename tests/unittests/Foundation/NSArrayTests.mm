@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #include <TestFramework.h>
-#include <Foundation\Foundation.h>
+#include <Foundation/Foundation.h>
 
 void assertArrayContents(NSArray* array, NSObject* first, ...) {
     va_list args;
@@ -222,7 +222,6 @@ TEST(NSArray, RemoveObjectsAtIndexes) {
     NSArray* expectedArray = @[ @0, @1, @6, @9 ];
 
     ASSERT_OBJCEQ(testArray, expectedArray);
-
 }
 
 TEST(NSArray, Description) {
@@ -261,21 +260,22 @@ TEST(NSArray, ExpandBeyondCapacity) {
 }
 
 TEST(NSArray, AddingObjects) {
-    assertArrayContents([@[@1, @2] arrayByAddingObjectsFromArray:@[@3, @4]], @1, @2, @3, @4, nil);
+    assertArrayContents([@[ @1, @2 ] arrayByAddingObjectsFromArray:@[ @3, @4 ]], @1, @2, @3, @4, nil);
 }
 
 static int objectIndexInArray(NSArray* array, int value, int startingFrom, int length, NSBinarySearchingOptions options = 0) {
     return [array indexOfObject:[NSNumber numberWithInteger:value]
                   inSortedRange:NSMakeRange(startingFrom, length)
                         options:options
-                usingComparator:^(NSNumber* a, NSNumber* b) { return [a compare:b]; }];
+                usingComparator:^(NSNumber* a, NSNumber* b) {
+                    return [a compare:b];
+                }];
 }
 
 TEST(NSArray, BinarySearchInsertionIndex) {
     NSArray* array = @[ @0, @1, @2, @2, @3, @4, @4, @6, @7, @7, @7, @8, @9, @9 ];
 
-    ASSERT_TRUE_MSG(objectIndexInArray(array, 11, 0, array.count, 0) == NSNotFound,
-                    @"NSArray return NSNotFound if object is not found.");
+    ASSERT_TRUE_MSG(objectIndexInArray(array, 11, 0, array.count, 0) == NSNotFound, @"NSArray return NSNotFound if object is not found.");
 
     ASSERT_TRUE_MSG(objectIndexInArray(array, 11, 0, array.count, NSBinarySearchingFirstEqual) == NSNotFound,
                     @"NSArray return NSNotFound if object is not found.");
@@ -284,8 +284,7 @@ TEST(NSArray, BinarySearchInsertionIndex) {
                     @"NSArray return NSNotFound if object is not found.");
 
     auto notFoundInRange = objectIndexInArray(array, 7, 0, 5);
-    ASSERT_TRUE_MSG(notFoundInRange == NSNotFound,
-                    @"NSArray return NSNotFound if object is not found.");
+    ASSERT_TRUE_MSG(notFoundInRange == NSNotFound, @"NSArray return NSNotFound if object is not found.");
 
     auto indexOfAnySeven = objectIndexInArray(array, 7, 0, array.count);
     ASSERT_TRUE_MSG((indexOfAnySeven >= 8) && (indexOfAnySeven <= 10),
@@ -343,7 +342,7 @@ TEST(NSArray, BinarySearchInsertionIndex) {
 TEST(NSArray, MutateDuringEnumeration) {
     __block NSMutableArray* array = [NSMutableArray arrayWithObjects:@"A", @"B", @"C", nil];
     void (^enumerate)() = ^{
-        for(id object in array) {
+        for (id object in array) {
             [array addObject:@"<sound effects reminiscent of explosions>"];
         }
     };

@@ -24,12 +24,12 @@ struct IsBlock : std::false_type {};
 
 #if defined(__OBJC__)
 template <typename Ret, typename... Args>
-struct IsBlock<Ret(^)(Args...)> : std::true_type {};
+struct IsBlock<Ret (^)(Args...)> : std::true_type {};
 
 // since templated argument packs can't expand variadic "..."s, we need a separate specialization
 // for variadic blocks.
 template <typename Ret, typename... Args>
-struct IsBlock<Ret(^)(Args..., ...)> : std::true_type {};
+struct IsBlock<Ret (^)(Args..., ...)> : std::true_type {};
 #endif
 
 // MakeObjcPointer conditionally applies pointer semantics to Objective-C class types without damaging
@@ -38,6 +38,7 @@ template <typename TObj>
 class MakeObjcPointer {
     using _decayed = typename std::decay<TObj>::type;
     using _type = typename std::conditional<IsBlock<_decayed>::value, _decayed, typename std::remove_pointer<_decayed>::type*>::type;
+
 public:
     static_assert(std::is_convertible<_type, id>::value, "MakeObjcPointer can't wrap non-Objective-C types.");
     using type = _type;

@@ -15,12 +15,9 @@
 //******************************************************************************
 
 #import <TestFramework.h>
-#import <Starboard.h>
+#import <Starboard/SmartTypes.h>
 
-#import <Foundation/NSString.h>
-#import <Foundation/NSData.h>
-#import <Foundation/NSMutableData.h>
-#import <Foundation/NSURL.h>
+#import <Foundation/Foundation.h>
 
 // TODO: BUG 5403859: Enable ARC on this test file once load order issue is fixed
 

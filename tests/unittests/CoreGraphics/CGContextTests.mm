@@ -24,7 +24,7 @@
 
 #import <Starboard.h>
 #import "CGPatternInternal.h"
-#import <CoreGraphics\CGContext.h>
+#import <CoreGraphics/CGContext.h>
 #import "CGContextInternal.h"
 #import "CGContextImpl.h"
 #import <Foundation\Foundation.h>
@@ -80,8 +80,7 @@ TEST(CGContext, CGContextSetPatternPhasePositiveChange) {
     const CGPatternCallbacks callbacks = { 0, &_DrawCustomPattern, NULL };
     CGFloat alpha = 1;
     CGAffineTransform transform = CGAffineTransformMakeTranslation(10, 10);
-    CGPatternRef pattern = CGPatternCreate(
-        NULL, boundsRect, transform, 50, 50, kCGPatternTilingConstantSpacing, true, &callbacks);
+    CGPatternRef pattern = CGPatternCreate(NULL, boundsRect, transform, 50, 50, kCGPatternTilingConstantSpacing, true, &callbacks);
     CGContextSetFillPattern(ctx, pattern, &alpha);
     CGPatternRelease(pattern);
 
@@ -106,8 +105,7 @@ TEST(CGContext, CGContextSetPatternPhaseNegativeChange) {
     const CGPatternCallbacks callbacks = { 0, &_DrawCustomPattern, NULL };
     CGFloat alpha = 1;
     CGAffineTransform transform = CGAffineTransformMakeTranslation(300, 500);
-    CGPatternRef pattern = CGPatternCreate(
-        NULL, boundsRect, transform, 50, 50, kCGPatternTilingConstantSpacing, true, &callbacks);
+    CGPatternRef pattern = CGPatternCreate(NULL, boundsRect, transform, 50, 50, kCGPatternTilingConstantSpacing, true, &callbacks);
     CGContextSetFillPattern(ctx, pattern, &alpha);
     CGPatternRelease(pattern);
 
@@ -197,7 +195,7 @@ TEST(CGContext, CGContextCopyPathEllipse) {
         CGRect rect = CGRectMake(40, 40, 200, 40);
 
         CGPathAddEllipseInRect(path, NULL, rect);
-		//TODO :: Fix unit test expected results after Github Issue #621 is resolved.
+        // TODO :: Fix unit test expected results after Github Issue #621 is resolved.
         NSArray* expected = @[
             @{ kTypeKey : @(kCGPathElementMoveToPoint),
                kPointsKey : @[ @240, @60 ] },
@@ -323,7 +321,7 @@ TEST(CGPath, CGContextCopyPathCGPathAddQuadCurveToPoint) {
     CGPathMoveToPoint(path, NULL, 400, 400);
     CGPathAddQuadCurveToPoint(path, NULL, 140, 250, 110, 180);
 
-	//TODO :: Fix unit test expected results after Github Issue #621 is resolved.
+    // TODO :: Fix unit test expected results after Github Issue #621 is resolved.
     // True Expected
     // kCGPathElementMoveToPoint
     //( 400.000000, 400.000000 )

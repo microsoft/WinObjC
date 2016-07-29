@@ -13,13 +13,18 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
+// Windows-only:
+//      THROW_NS_HR
+//      HRESULT_FROM_WIN32
+//      anything else involving an hresult
+
 #include <TestFramework.h>
 
 #import <Foundation/Foundation.h>
 #include "ErrorHandling.h"
 
 ARM_DISABLED_TEST(ErrorHandling, NormalizeExceptions) {
-
     const char message1[] = "Message1";
     const char message2[] = "Message2";
     const HRESULT hr = HRESULT_FROM_WIN32(ERROR_OUT_OF_PAPER);
@@ -28,7 +33,8 @@ ARM_DISABLED_TEST(ErrorHandling, NormalizeExceptions) {
     try {
         try {
             THROW_NS_HR_MSG(hr, message1);
-        } CATCH_THROW_NORMALIZED_MSG(message2)
+        }
+        CATCH_THROW_NORMALIZED_MSG(message2)
     } catch (NSException* e) {
         ASSERT_STREQ([[e reason] UTF8String], message1);
         ASSERT_EQ([e _hresult], hr);
@@ -40,7 +46,8 @@ ARM_DISABLED_TEST(ErrorHandling, NormalizeExceptions) {
     try {
         try {
             THROW_NS_HR_MSG(hr, message1);
-        } CATCH_THROW_NORMALIZED()
+        }
+        CATCH_THROW_NORMALIZED()
     } catch (NSException* e) {
         ASSERT_STREQ([[e reason] UTF8String], message1);
         ASSERT_EQ([e _hresult], hr);
@@ -52,7 +59,8 @@ ARM_DISABLED_TEST(ErrorHandling, NormalizeExceptions) {
     try {
         try {
             THROW_HR_MSG(hr, message1);
-        } CATCH_THROW_NORMALIZED_MSG(message2)
+        }
+        CATCH_THROW_NORMALIZED_MSG(message2)
     } catch (NSException* e) {
         ASSERT_STREQ([[e reason] UTF8String], message1);
         ASSERT_EQ([e _hresult], hr);
@@ -64,7 +72,8 @@ ARM_DISABLED_TEST(ErrorHandling, NormalizeExceptions) {
     try {
         try {
             THROW_HR_MSG(hr, message1);
-        } CATCH_THROW_NORMALIZED()
+        }
+        CATCH_THROW_NORMALIZED()
     } catch (NSException* e) {
         ASSERT_STREQ([[e reason] UTF8String], message1);
         ASSERT_EQ([e _hresult], hr);

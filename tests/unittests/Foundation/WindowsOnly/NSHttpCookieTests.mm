@@ -14,7 +14,10 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
+// Windows-only:
+//      parseCookies
+
+#import <TestFramework.h>
 #import <Foundation/Foundation.h>
 
 // Implemented in NSHTTPCookie.mm

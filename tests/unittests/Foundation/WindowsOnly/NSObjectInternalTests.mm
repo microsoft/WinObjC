@@ -14,12 +14,18 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
-#import <Foundation/Foundation.h>
-#import "NSBlocksInternal.h"
+// Windows-only:
+//      WinObjC_SetZombiesEnabled
 
-TEST(Blocks, BlockAdapterClass) {
-    void (^block)() = ^{
-    };
-    EXPECT_TRUE([static_cast<id>(block) isKindOfClass:[_NSBlockAdapter class]]);
+#import <TestFramework.h>
+#import <Foundation/Foundation.h>
+
+TEST(NSObject, NSZombie) { // This test will fail with an AV if zombies do not work.
+    WinObjC_SetZombiesEnabled(YES);
+
+    NSObject* object = [[NSObject alloc] init];
+    [object release];
+    EXPECT_ANY_THROW([object self]);
+
+    WinObjC_SetZombiesEnabled(NO);
 }

@@ -35,7 +35,13 @@ inline char* IwStrDup(const char* str) {
     char* buffer = (char*)IwMalloc(len + 1);
 
     if (buffer != NULL) {
+// strcpy_s is a MSVC extension,
+// strncpy is not usable in our current WinObjC build
+#ifdef _WIN32
         strcpy_s(buffer, len + 1, str);
+#else
+        strncpy(buffer, str, len + 1);
+#endif
     }
 
     return buffer;

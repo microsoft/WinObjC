@@ -1,3 +1,4 @@
+// clang-format off
 /* A Bison parser, made by GNU Bison 2.7.  */
 
 /* Bison interface for Yacc-like parsers in C
@@ -153,3 +154,5 @@ int yyparse ();
 #endif /* ! YYPARSE_PARAM */
 
 #endif /* !YY_YY_RULES_TAB_H_INCLUDED  */
+
+// clang-format on

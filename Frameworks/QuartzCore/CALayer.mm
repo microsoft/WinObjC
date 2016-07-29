@@ -36,7 +36,7 @@
 #include "QuartzCore/CAEAGLLayer.h"
 #include "CAEAGLLayerInternal.h"
 
-#include "..\include\CACompositor.h"
+#include "CACompositor.h"
 #include "CAAnimationInternal.h"
 #include "CABasicAnimationInternal.h"
 #include "CATransactionInternal.h"

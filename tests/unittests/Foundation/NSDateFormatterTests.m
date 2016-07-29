@@ -16,9 +16,6 @@
 
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
-#import "NSLogging.h"
-
-static const wchar_t* TAG = L"NSDateFormatterTests";
 
 // keys: [[NSLocale localeIdentifier] stringByAppendingFormat:@"%d", timezone.secondsFromGMT]
 // eg "en_US-28800" or "en_GB0"

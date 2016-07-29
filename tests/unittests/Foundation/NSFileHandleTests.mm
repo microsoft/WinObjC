@@ -14,18 +14,36 @@
 //
 //******************************************************************************
 
-#import "Starboard.h"
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
 
 #import <windows.h>
+#import <algorithm>
 
 NSString* getPathToFile(char const* filePath) {
+    size_t i = 0;
     char fullPath[_MAX_PATH];
     int len = GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
-    char* ptrToLastEntry = strrchr(fullPath, '\\');
+
+// Path separator characters differ between platforms
+#if TARGET_OS_WIN32
+    const char slashChar = '\\';
+#else
+    const char slashChar = '/';
+#endif
+
+    char* ptrToLastEntry = strrchr(fullPath, slashChar);
     int lengthOfLastEntry = strlen(ptrToLastEntry);
-    strncpy_s(ptrToLastEntry, _MAX_PATH - (len - lengthOfLastEntry), filePath, strlen(filePath) + 1);
+
+    size_t destSize = _MAX_PATH - (len - lengthOfLastEntry);
+    size_t srcSize = strlen(filePath) + 1;
+
+// strncpy_s is a MSVC extension
+#if TARGET_OS_WIN32
+    strncpy_s(ptrToLastEntry, destSize, filePath, srcSize);
+#else
+    strncpy(ptrToLastEntry, filePath, std::min(destSize, srcSize));
+#endif
 
     return [NSString stringWithFormat:@"%s", fullPath];
 }

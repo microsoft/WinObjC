@@ -14,8 +14,10 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
+#import <TestFramework.h>
 #import <Foundation/Foundation.h>
+
+#import <windows.h>
 
 void testUrlCharacterSetEncoding(NSString* decodedString, NSString* encodedString, NSCharacterSet* allowedCharacterSet) {
     NSString* testString = [decodedString stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacterSet];
@@ -139,6 +141,7 @@ TEST(NSString, NSString_FastestEncoding) {
 
 TEST(NSString, UnownedDeepCopy) {
     char* buffer = _strdup("Hello World");
+
     NSString* firstString =
         [[[NSString alloc] initWithBytesNoCopy:buffer length:11 encoding:NSUTF8StringEncoding freeWhenDone:NO] autorelease];
     NSString* secondString = [[firstString copy] autorelease];
