@@ -40,13 +40,5 @@ ARM_DISABLED_TEST(Projections, BadCastTests) {
     ASSERT_TRUE_MSG(badges != nil, "Could not find our element!");
 
     id badge = [badges objectAtIndex:0];
-
-    // Make sure invalid casts throw:
-    bool exceptionThrown = false;
-    try {
-        rt_dynamic_cast<WDXDXmlDocument>(badge);
-    } catch (NSException* e) {
-        exceptionThrown = true;
-    }
-    ASSERT_TRUE_MSG(exceptionThrown, "Bad cast didn't throw exception!");
+    ASSERT_OBJCEQ(rt_dynamic_cast<WDXDXmlDocument>(badge), nil);
 }
