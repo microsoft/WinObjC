@@ -20,19 +20,18 @@
 
 #include "UWP/WindowsSystem.h"
 
-
 using namespace Microsoft::WRL;
 
 // Packages launcher and url together, allowing us to specify a custom launcher to be used when testing _openURL
 @interface UrlLauncher : NSObject
 - (UrlLauncher*)initWithLauncher:(Class)launcher;
 
-// Launches the default app handling the url asynchronously. NSURL: the url to launch. Class: Always WSLauncher
--(BOOL)_openURLAsync : (NSURL*)url;
+// Launches the default app handling the url asynchronously. NSURL: the url to launch. Class: Always WSLauncher, except in test cases
+- (BOOL)_openURLAsync:(NSURL*)url;
 
-// Launches the default app handling the url. NSURL: the url to launch. Class: Always WSLauncher
+// Launches the default app handling the url. NSURL: the url to launch. Class: Always WSLauncher, except in test cases
 - (BOOL)_openURL:(NSURL*)url;
 
-// Querys the system for an app handling the url. NSURL: the url to launch. Class: Always WSLauncher
+// Querys the system for an app handling the url. NSURL: the url to launch. Class: Always WSLauncher, except in test cases
 - (BOOL)_canOpenURL:(NSURL*)url;
 @end
