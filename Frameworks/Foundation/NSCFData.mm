@@ -113,8 +113,8 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFDataRef, CFDataGetTypeID, NSData, NSCFData)
 }
 
 - (NSObject*)copyWithZone:(NSZone*)zone {
-    if (_CFDataIsMutable(static_cast<CFDataRef>(self))) {
-        return reinterpret_cast<NSCFData*>(static_cast<NSData*>(CFDataCreateCopy(nullptr, static_cast<CFMutableDataRef>(self))));
+    if (_CFDataIsMutable(static_cast<CFDataRef>(self)) || !_CFDataOwnsBuffer(static_cast<CFDataRef>(self))) {
+        return reinterpret_cast<NSCFData*>(static_cast<NSData*>(CFDataCreateCopy(nullptr, static_cast<CFDataRef>(self))));
     }
 
     return [self retain];
