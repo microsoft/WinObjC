@@ -27,10 +27,64 @@
 
 using namespace ABI::Windows::ApplicationModel::Activation;
 using namespace ABI::Windows::Foundation::Collections;
+using namespace ABI::Windows::Foundation;
 using namespace Microsoft::WRL;
 
 // Method to call in tests to activate app
 extern "C" void UIApplicationActivationTest(IInspectable* args, void* delegateClassName);
+
+MOCK_CLASS(MockPropertyValue,
+           public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IPropertyValue> {
+
+           public:
+               MOCK_STDCALL_METHOD_1(get_Type);
+               MOCK_STDCALL_METHOD_1(get_IsNumericScalar);
+               MOCK_STDCALL_METHOD_1(GetUInt8);
+               MOCK_STDCALL_METHOD_1(GetInt16);
+               MOCK_STDCALL_METHOD_1(GetUInt16);
+               MOCK_STDCALL_METHOD_1(GetInt32);
+               MOCK_STDCALL_METHOD_1(GetUInt32);
+               MOCK_STDCALL_METHOD_1(GetInt64);
+               MOCK_STDCALL_METHOD_1(GetUInt64);
+               MOCK_STDCALL_METHOD_1(GetSingle);
+               MOCK_STDCALL_METHOD_1(GetDouble);
+               MOCK_STDCALL_METHOD_1(GetChar16);
+               MOCK_STDCALL_METHOD_1(GetBoolean);
+               MOCK_STDCALL_METHOD_1(GetString);
+               MOCK_STDCALL_METHOD_1(GetGuid);
+               MOCK_STDCALL_METHOD_1(GetDateTime);
+               MOCK_STDCALL_METHOD_1(GetTimeSpan);
+               MOCK_STDCALL_METHOD_1(GetPoint);
+               MOCK_STDCALL_METHOD_1(GetSize);
+               MOCK_STDCALL_METHOD_1(GetRect);
+               MOCK_STDCALL_METHOD_2(GetUInt8Array);
+               MOCK_STDCALL_METHOD_2(GetInt16Array);
+               MOCK_STDCALL_METHOD_2(GetUInt16Array);
+               MOCK_STDCALL_METHOD_2(GetInt32Array);
+               MOCK_STDCALL_METHOD_2(GetUInt32Array);
+               MOCK_STDCALL_METHOD_2(GetInt64Array);
+               MOCK_STDCALL_METHOD_2(GetUInt64Array);
+               MOCK_STDCALL_METHOD_2(GetSingleArray);
+               MOCK_STDCALL_METHOD_2(GetDoubleArray);
+               MOCK_STDCALL_METHOD_2(GetChar16Array);
+               MOCK_STDCALL_METHOD_2(GetBooleanArray);
+               MOCK_STDCALL_METHOD_2(GetStringArray);
+               MOCK_STDCALL_METHOD_2(GetInspectableArray);
+               MOCK_STDCALL_METHOD_2(GetGuidArray);
+               MOCK_STDCALL_METHOD_2(GetDateTimeArray);
+               MOCK_STDCALL_METHOD_2(GetTimeSpanArray);
+               MOCK_STDCALL_METHOD_2(GetPointArray);
+               MOCK_STDCALL_METHOD_2(GetSizeArray);
+               MOCK_STDCALL_METHOD_2(GetRectArray);
+           });
+
+MOCK_CLASS(MockKeyValuePair,
+           public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IKeyValuePair<HSTRING, IInspectable*>> {
+
+           public:
+               MOCK_STDCALL_METHOD_1(get_Key);
+               MOCK_STDCALL_METHOD_1(get_Value);
+           });
 
 MOCK_CLASS(MockIterator,
            public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IIterator<IKeyValuePair<HSTRING, IInspectable*>*>> {
@@ -96,6 +150,8 @@ MOCK_CLASS(MockToastNotificationActivatedEventArgs,
     EXPECT_TRUE(launchOptions[UIApplicationLaunchOptionsToastActionKey]);
     NSDictionary* toastAction = launchOptions[UIApplicationLaunchOptionsToastActionKey];
     EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", toastAction[UIApplicationLaunchOptionsToastActionArgumentKey]);
+    NSDictionary* userInput = toastAction[UIApplicationLaunchOptionsToastActionUserInputKey];
+    EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST_VALUE", userInput[@"TOAST_NOTIFICATION_TEST_KEY"]);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
@@ -104,6 +160,8 @@ MOCK_CLASS(MockToastNotificationActivatedEventArgs,
     EXPECT_TRUE(launchOptions[UIApplicationLaunchOptionsToastActionKey]);
     NSDictionary* toastAction = launchOptions[UIApplicationLaunchOptionsToastActionKey];
     EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", toastAction[UIApplicationLaunchOptionsToastActionArgumentKey]);
+    NSDictionary* userInput = toastAction[UIApplicationLaunchOptionsToastActionUserInputKey];
+    EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST_VALUE", userInput[@"TOAST_NOTIFICATION_TEST_KEY"]);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
@@ -112,6 +170,8 @@ MOCK_CLASS(MockToastNotificationActivatedEventArgs,
     // Delegate method should only be called once
     EXPECT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
     EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", toastAction[UIApplicationLaunchOptionsToastActionArgumentKey]);
+    NSDictionary* userInput = toastAction[UIApplicationLaunchOptionsToastActionUserInputKey];
+    EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST_VALUE", userInput[@"TOAST_NOTIFICATION_TEST_KEY"]);
     _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
     return true;
 }
@@ -158,8 +218,42 @@ TEST(ToastNotificationTest, ForegroundActivation) {
     LOG_INFO("Toast Notification Foreground Activation Test: ");
 
     // Create mocked data to pass into application
+    auto fakePropertyValue = Make<MockPropertyValue>();
+    fakePropertyValue->SetGetString([](HSTRING* value) {
+        Wrappers::HString str;
+        str.Set(L"TOAST_NOTIFICATION_TEST_VALUE");
+        *value = str.Detach();
+        return S_OK;
+    });
+
+    auto fakeKeyValuePair = Make<MockKeyValuePair>();
+    fakeKeyValuePair->Setget_Key([](HSTRING* key) {
+        Wrappers::HString str;
+        str.Set(L"TOAST_NOTIFICATION_TEST_KEY");
+        *key = str.Detach();
+        return S_OK;
+    });
+
+    fakeKeyValuePair->Setget_Value([&fakePropertyValue](IInspectable** value) {
+        fakePropertyValue.CopyTo(value);
+        return S_OK;
+    });
+
     auto fakeIterator = Make<MockIterator>();
-    fakeIterator->Setget_HasCurrent([](boolean* hasCurrent) {
+
+    // Return false the second time this is called so it doesn't create an infinite loop
+    int count = 0;
+    fakeIterator->Setget_HasCurrent([&count](boolean* hasCurrent) {
+        *hasCurrent = (++count != 2);
+        return S_OK;
+    });
+
+    fakeIterator->Setget_Current([&fakeKeyValuePair](IKeyValuePair<HSTRING, IInspectable*>** current) {
+        fakeKeyValuePair.CopyTo(current);
+        return S_OK;
+    });
+
+    fakeIterator->SetMoveNext([](boolean* hasCurrent) {
         *hasCurrent = false;
         return S_OK;
     });
@@ -167,6 +261,22 @@ TEST(ToastNotificationTest, ForegroundActivation) {
     auto fakeUserInput = Make<MockValueSet>();
     fakeUserInput->SetFirst([fakeIterator](IIterator<IKeyValuePair<HSTRING, IInspectable*>*>** first) {
         fakeIterator.CopyTo(first);
+        return S_OK;
+    });
+
+    // Only return the value after we have been called to bypass attempted conversion to String^
+    bool copyValue = false;
+    fakeUserInput->SetLookup([&fakePropertyValue, &copyValue](HSTRING key, IInspectable** value) {
+        if (copyValue) {
+            fakePropertyValue.CopyTo(value);
+        } else {
+            copyValue = true;
+        }
+        return S_OK;
+    });
+
+    fakeUserInput->SetInsert([](HSTRING key, IInspectable* value, boolean* replaced) {
+        *replaced = true;
         return S_OK;
     });
 
