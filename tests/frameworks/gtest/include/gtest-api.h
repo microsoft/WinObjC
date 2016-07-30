@@ -97,12 +97,8 @@ std::vector<char> Format(NSString* message, Args ... args)
 }
 }
 
-namespace testing {
-namespace internal {
 inline std::ostream& operator<<(std::ostream& os, const id& object) {
     return os << (char*)([[object description] UTF8String]);
-}
-}
 }
 
 namespace woc {
