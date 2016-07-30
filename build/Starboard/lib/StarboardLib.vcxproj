@@ -32,7 +32,6 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\pevents.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\String.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\TaskInfo.cpp" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\ErrorHandling.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\unistd.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\PlatformSupport.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\CommonCryptor.cpp" />

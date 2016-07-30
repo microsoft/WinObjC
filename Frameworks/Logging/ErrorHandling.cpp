@@ -28,27 +28,27 @@ extern "C" void __fastfail(unsigned) {
 }
 /* End Intrinsic Shims */
 
-unsigned long starboardGetCurrentThreadId() {
+unsigned long _loggingGetCurrentThreadId() {
     return ::GetCurrentThreadId();
 }
 
-long starboardInterlockedIncrementNoFence(long volatile* addend) {
+long _loggingInterlockedIncrementNoFence(long volatile* addend) {
     return ::InterlockedIncrementNoFence(addend);
 }
 
-unsigned long starboardGetLastError() {
+unsigned long _loggingGetLastError() {
     return ::GetLastError();
 }
 
-void starboardCopyMemory(void* destination, const void* source, size_t length) {
+void _loggingCopyMemory(void* destination, const void* source, size_t length) {
     ::CopyMemory(destination, source, length);
 }
 
-void starboardZeroMemory(void* destination, size_t length) {
+void _loggingZeroMemory(void* destination, size_t length) {
     ::ZeroMemory(destination, length);
 }
 
-unsigned long starboardFormatMessageW(unsigned long flags,
+unsigned long _loggingFormatMessageW(unsigned long flags,
                                   const void* source,
                                   unsigned long messageId,
                                   unsigned long languageId,
@@ -58,18 +58,19 @@ unsigned long starboardFormatMessageW(unsigned long flags,
     return ::FormatMessageW(flags, source, messageId, languageId, buffer, size, arguments);
 }
 
-void starboardOutputDebugStringW(wchar_t* outputString) {
+void _loggingOutputDebugStringW(wchar_t* outputString) {
     return ::OutputDebugStringW(outputString);
 }
 
-long starboardInterlockedDecrementRelease(long volatile* addend) {
+long _loggingInterlockedDecrementRelease(long volatile* addend) {
     return ::InterlockedDecrementRelease(addend);
 }
 
-void* starboardInterlockedCompareExchangePointer(void* volatile* destination, void* exchange, void* comparand) {
+void* _loggingInterlockedCompareExchangePointer(void* volatile* destination, void* exchange, void* comparand) {
     return ::InterlockedCompareExchangePointer(destination, exchange, comparand);
 }
 
-bool failFastOnUnimplemented() {
+bool _loggingFailFastOnUnimplemented() {
     return false;
 }
+

@@ -7,8 +7,6 @@ LIBRARY Logging
      TraceCritical
      TraceRegister
      TraceUnregister
-     ; TODO: WIL logging callback
-     ; g_pfnLoggingCallback
 
      TelemetryEvent
      TelemetryMetric
@@ -17,3 +15,22 @@ LIBRARY Logging
      TelemetryTraceWarning
      TelemetryTraceError
      TelemetryTraceCritical
+     
+     ; Error Handling Internal
+     _loggingFailFastOnUnimplemented
+     _loggingGetCurrentThreadId
+     _loggingInterlockedIncrementNoFence
+     _loggingGetLastError
+     _loggingCopyMemory
+     _loggingZeroMemory
+     _loggingFormatMessageW
+     _loggingOutputDebugStringW
+     _loggingInterlockedDecrementRelease
+     _loggingInterlockedCompareExchangePointer
+     __fastfail
+     g_pfnLoggingCallback DATA
+     g_isTestHookEnabled DATA
+     g_etlTagTestHook DATA
+     g_etlLevelTestHook DATA
+     g_etlBufferTestHook DATA
+     g_debugTestHook DATA

@@ -28,6 +28,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Logging\LoggingInternal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Logging\LoggingTesting.cpp" />
   </ItemGroup>
+  <ItemGroup>
+      <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Logging\ErrorHandling.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D3500720-CF56-43AB-A9D6-9DC119A411B8}</ProjectGuid>
     <ProjectName>LoggingLib</ProjectName>
@@ -46,43 +49,46 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
+      <AdditionalOptions>"/DWIL_IMPEXP= " "/DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
-      <AdditionalOptions>"/DWIL_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DWIL_IMPEXP= " "-DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
+      <AdditionalOptions>"/DWIL_IMPEXP= " "/DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DWIL_IMPEXP= " "-DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
+      <AdditionalOptions>"/DWIL_IMPEXP= " "/DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DWIL_IMPEXP= " "-DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
+      <AdditionalOptions>"/DWIL_IMPEXP= " "/DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DWIL_IMPEXP= "  "-DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">

@@ -15,50 +15,45 @@
 //******************************************************************************
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "LoggingNative.h"
+
 //
 // Send a telemetry event with the given name. E.g.:
 //
 // TelemetryEvent(L"MY_EVENT");
 //
-void TelemetryEvent(const wchar_t* name);
+LOGGING_EXPORT void TelemetryEvent(const wchar_t* name);
 
 //
 // Send telemetry metric with name and value. E.g.:
 //
 // TelemetryMetric(L"MY_METRIC", 1.23);
 //
-void TelemetryMetric(const wchar_t* name, double value);
+LOGGING_EXPORT void TelemetryMetric(const wchar_t* name, double value);
 
 //
 // Send a verbose telemetry trace. Also sends to local TraceVerbose. E.g.:
 //
 // TelemetryTraceVerbose(L"MY_TAG", "Message");
 //
-void TelemetryTraceVerbose(const wchar_t* tag, const wchar_t* format, ...);
+LOGGING_EXPORT void TelemetryTraceVerbose(const wchar_t* tag, const wchar_t* format, ...);
 
 //
 // Send an info telemetry trace. Also sends to local TraceInfo.
 //
-void TelemetryTraceInfo(const wchar_t* tag, const wchar_t* format, ...);
+LOGGING_EXPORT void TelemetryTraceInfo(const wchar_t* tag, const wchar_t* format, ...);
 
 //
 // Send a warning telemetry trace. Also sends to local TraceWarning.
 //
-void TelemetryTraceWarning(const wchar_t* tag, const wchar_t* format, ...);
+LOGGING_EXPORT void TelemetryTraceWarning(const wchar_t* tag, const wchar_t* format, ...);
 
 //
 // Send an error telemetry trace. Also sends to local TraceError.
 //
-void TelemetryTraceError(const wchar_t* tag, const wchar_t* format, ...);
+LOGGING_EXPORT void TelemetryTraceError(const wchar_t* tag, const wchar_t* format, ...);
 
 //
 // Send a critical telemetry trace. Also sends to local TraceCritical.
 //
-void TelemetryTraceCritical(const wchar_t* tag, const wchar_t* format, ...);
-
-#ifdef __cplusplus
-}
-#endif
+LOGGING_EXPORT void TelemetryTraceCritical(const wchar_t* tag, const wchar_t* format, ...);
