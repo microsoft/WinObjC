@@ -309,10 +309,6 @@ void _UIApplicationShutdown() {
     [outerPool release];
 }
 
-extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible) {
-    [[UIApplication sharedApplication] _sendActiveStatus:((isVisible) ? YES : NO)];
-}
-
 extern "C" void UIApplicationMainHandleHighMemoryUsageEvent() {
     [[UIApplication sharedApplication] _sendHighMemoryWarning];
 }
@@ -323,6 +319,14 @@ extern "C" void UIApplicationMainHandleSuspendEvent() {
 
 extern "C" void UIApplicationMainHandleResumeEvent() {
     [[NSUserDefaults _standardUserDefaultsNoInitialize] _resumeSynchronize];
+}
+
+extern "C" void UIApplicationMainHandlePLMEvent(bool isActive) {
+    [[UIApplication sharedApplication] _sendActiveStatus:((isActive) ? YES : NO)];
+}
+
+extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible) {
+    [[UIApplication sharedApplication] _sendActiveStatus:((isVisible) ? YES : NO)];
 }
 
 extern "C" void UIApplicationMainHandleToastNotificationEvent(const char* notificationData) {
