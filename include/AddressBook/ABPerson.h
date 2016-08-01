@@ -26,7 +26,7 @@
 
 typedef uint32_t ABPersonSortOrdering;
 typedef uint32_t ABPersonCompositeNameFormat;
-typedef enum ABPersonImageFormat;
+typedef enum { kABPersonImageFormatThumbnail = 0, kABPersonImageFormatOriginalSize = 2 } ABPersonImageFormat;
 
 ADDRESSBOOK_EXPORT ABRecordRef ABPersonCreate() STUB_METHOD;
 ADDRESSBOOK_EXPORT ABRecordRef ABPersonCreateInSource(ABRecordRef source) STUB_METHOD;
@@ -61,7 +61,6 @@ ADDRESSBOOK_EXPORT CFDataRef ABPersonCreateVCardRepresentationWithPeople(CFArray
 
 enum { kABPersonSortByFirstName = 0, kABPersonSortByLastName = 1 };
 enum { kABPersonCompositeNameFormatFirstNameFirst = 0, kABPersonCompositeNameFormatLastNameFirst = 1 };
-enum { kABPersonImageFormatThumbnail = 0, kABPersonImageFormatOriginalSize = 2 };
 
 ADDRESSBOOK_EXPORT const ABPropertyID kABPersonFirstNameProperty;
 ADDRESSBOOK_EXPORT const ABPropertyID kABPersonLastNameProperty;
