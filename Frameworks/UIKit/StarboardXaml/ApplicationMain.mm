@@ -32,6 +32,7 @@
 
 #import <Starboard.h>
 #import <StringHelpers.h>
+#import <CollectionHelpers.h>
 #import <UIInterface.h>
 #import <CACompositorClient.h>
 #import <UIApplicationInternal.h>
@@ -39,7 +40,6 @@
 #import <UWP/WindowsApplicationModelActivation.h>
 
 using namespace Microsoft::WRL;
-using namespace ABI::Windows::Foundation;
 
 static CACompositorClientInterface* _compositorClient = NULL;
 
@@ -63,14 +63,7 @@ int ApplicationMainStart(const char* principalName,
     if (activationType == ActivationTypeToast) {
         WAAToastNotificationActivatedEventArgs* toastArgument = [WAAToastNotificationActivatedEventArgs createWith:activationArg];
         NSMutableDictionary* userInput = [NSMutableDictionary new];
-        for (NSString* key in [toastArgument.userInput allKeys]) {
-            RTObject* holderObject = [toastArgument.userInput objectForKey:key];
-            ComPtr<IPropertyValue> value;
-            THROW_NS_IF_FAILED(holderObject.comObj.As(&value));
-            Wrappers::HString hstr;
-            THROW_NS_IF_FAILED(value->GetString(hstr.GetAddressOf()));
-            [userInput setObject:Strings::WideToNSString(hstr.Get()) forKey:key];
-        }
+        THROW_NS_IF_FAILED(Collections::ToastUserInputToNSDictionary(toastArgument.userInput, &userInput));
         NSDictionary* toastAction = @{
             UIApplicationLaunchOptionsToastActionArgumentKey : toastArgument.argument,
             UIApplicationLaunchOptionsToastActionUserInputKey : userInput

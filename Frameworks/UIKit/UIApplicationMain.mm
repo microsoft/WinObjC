@@ -32,6 +32,7 @@
 #import <UIKit/UINib.h>
 #import <UIKit/UIApplicationDelegate.h>
 #import <StringHelpers.h>
+#import <CollectionHelpers.h>
 #import "NSThread-Internal.h"
 #import "NSUserDefaultsInternal.h"
 #import "StarboardXaml/StarboardXaml.h"
@@ -48,7 +49,6 @@
 static const wchar_t* TAG = L"UIApplicationMain";
 
 using namespace Microsoft::WRL;
-using namespace ABI::Windows::Foundation;
 
 @interface NSAutoreleasePoolWarn : NSAutoreleasePool
 @end
@@ -335,15 +335,7 @@ extern "C" void UIApplicationMainHandleToastActionEvent(HSTRING toastArgument, I
     // Convert IPropertyValue to NSString
     WFCValueSet* values = [WFCValueSet createWith:toastUserInput];
     NSMutableDictionary* userInput = [NSMutableDictionary new];
-    for (NSString* key in [values allKeys]) {
-        RTObject* holderObject = [values objectForKey:key];
-        ComPtr<IPropertyValue> value;
-        THROW_NS_IF_FAILED(holderObject.comObj.As(&value));
-        Wrappers::HString hstr;
-        THROW_NS_IF_FAILED(value->GetString(hstr.GetAddressOf()));
-        [userInput setObject:Strings::WideToNSString(hstr.Get()) forKey:key];
-    }
-
+    THROW_NS_IF_FAILED(Collections::ToastUserInputToNSDictionary(values, &userInput));
     NSDictionary* toastAction =
         @{ UIApplicationLaunchOptionsToastActionArgumentKey : argument, UIApplicationLaunchOptionsToastActionUserInputKey : userInput };
     [[UIApplication sharedApplication] _sendToastActionReceivedEvent:toastAction];

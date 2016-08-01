@@ -20,6 +20,7 @@
 #include "Starboard.h"
 
 #import <Foundation/NSString.h>
+#import <UWP/InteropBase.h>
 #include <COMIncludes.h>
 
 #include <wrl\client.h>
@@ -79,6 +80,18 @@ template <typename T>
 HRESULT WRLToNSCollection(const Microsoft::WRL::ComPtr<T>& collection,
                           typename Private::CollectionType<T>::NSEquivalentType* __autoreleasing* pNSCollection) {
     return WRLToNSCollection(collection.Get(), pNSCollection);
+}
+
+static HRESULT ToastUserInputToNSDictionary(WFCValueSet* userInput, NSMutableDictionary** dict) {
+    for (NSString* key in [userInput allKeys]) {
+        RTObject* holderObject = [userInput objectForKey:key];
+        Microsoft::WRL::ComPtr<ABI::Windows::Foundation::IPropertyValue> value;
+        RETURN_IF_FAILED(holderObject.comObj.As(&value));
+        Microsoft::WRL::Wrappers::HString hstr;
+        RETURN_IF_FAILED(value->GetString(hstr.GetAddressOf()));
+        [*dict setObject:Strings::WideToNSString(hstr.Get()) forKey:key];
+    }
+    return S_OK;
 }
 #endif
 }
