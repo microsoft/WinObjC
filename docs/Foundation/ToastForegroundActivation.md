@@ -3,9 +3,11 @@
 
 ##[Toast Foreground Activation]
 
-    ## #DEV DESIGN specification
+###DEV DESIGN specification
 
-    ##Owner** Dev** AJ Ballway; alballw
+
+##Owner
+**Dev** AJ Ballway; alballw
 
 ##Overview
 This document covers details on how Toast Notification Actions will be integrated with apps built mainly in iOS code which also want to leverage Windows Toast Notifications
