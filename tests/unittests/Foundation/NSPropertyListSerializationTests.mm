@@ -17,6 +17,7 @@
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
+// TODO: Issue #785
 // Temporarily disabling this as it doesn't appear to pass on OSX, either
 // date and plistDict[@"Date Modified"] are currently about 8 hrs apart when run from a GMT-8 computer,
 // due to date = [NSDateForamtter dateFromString] using the current user settings, such as time zone

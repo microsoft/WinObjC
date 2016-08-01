@@ -21,95 +21,100 @@
 
 #import <array>
 
-static void assertCFTimeZoneProperties(CFTimeZoneRef tz, NSDictionary* expectedProperties) {
-    ASSERT_OBJCEQ(expectedProperties[@"CFTimeZoneCopyAbbreviation"], (__bridge NSString*)CFTimeZoneCopyAbbreviation(tz, 0));
+class PropertyTests
+    : public ::testing::TestWithParam<
+          ::testing::
+              tuple<CFStringRef, NSString*, NSString*, NSString*, NSString*, NSString*, NSString*, NSString*, NSString*, CFTimeInterval>> {
+public:
+    explicit PropertyTests()
+        : ::testing::TestWithParam<::testing::tuple<CFStringRef,
+                                                    NSString*,
+                                                    NSString*,
+                                                    NSString*,
+                                                    NSString*,
+                                                    NSString*,
+                                                    NSString*,
+                                                    NSString*,
+                                                    NSString*,
+                                                    CFTimeInterval>>() {
+    }
 
-    ASSERT_OBJCEQ(expectedProperties[@"CFTimeZoneGetName"], (__bridge NSString*)CFTimeZoneGetName(tz));
+protected:
+    virtual void SetUp() {
+    }
 
-    ASSERT_OBJCEQ(expectedProperties[@"CFTimeZoneCopyLocalizedName Standard"],
+    virtual void TearDown() {
+    }
+};
+
+TEST_P(PropertyTests, NameOffset) {
+    CFStringRef tzName = ::testing::get<0>(GetParam());
+    CFTimeZoneRef tz = CFTimeZoneCreate(kCFAllocatorDefault, tzName, nullptr);
+
+    EXPECT_OBJCEQ(::testing::get<1>(GetParam()), (__bridge NSString*)CFTimeZoneCopyAbbreviation(tz, 0));
+
+    EXPECT_OBJCEQ(::testing::get<2>(GetParam()), (__bridge NSString*)CFTimeZoneGetName(tz));
+
+    EXPECT_OBJCEQ(::testing::get<3>(GetParam()),
                   (__bridge NSString*)CFTimeZoneCopyLocalizedName(tz,
                                                                   kCFTimeZoneNameStyleStandard,
                                                                   (__bridge CFLocaleRef)[NSLocale systemLocale]));
-    ASSERT_OBJCEQ(expectedProperties[@"CFTimeZoneCopyLocalizedName ShortStandard"],
+    EXPECT_OBJCEQ(::testing::get<4>(GetParam()),
                   (__bridge NSString*)CFTimeZoneCopyLocalizedName(tz,
                                                                   kCFTimeZoneNameStyleShortStandard,
                                                                   (__bridge CFLocaleRef)[NSLocale systemLocale]));
-    ASSERT_OBJCEQ(expectedProperties[@"CFTimeZoneCopyLocalizedName DaylightSaving"],
+    EXPECT_OBJCEQ(::testing::get<5>(GetParam()),
                   (__bridge NSString*)CFTimeZoneCopyLocalizedName(tz,
                                                                   kCFTimeZoneNameStyleDaylightSaving,
                                                                   (__bridge CFLocaleRef)[NSLocale systemLocale]));
-    ASSERT_OBJCEQ(expectedProperties[@"CFTimeZoneCopyLocalizedName ShortDaylightSaving"],
+    EXPECT_OBJCEQ(::testing::get<6>(GetParam()),
                   (__bridge NSString*)CFTimeZoneCopyLocalizedName(tz,
                                                                   kCFTimeZoneNameStyleShortDaylightSaving,
                                                                   (__bridge CFLocaleRef)[NSLocale systemLocale]));
-    ASSERT_OBJCEQ(expectedProperties[@"CFTimeZoneCopyLocalizedName Generic"],
+    EXPECT_OBJCEQ(::testing::get<7>(GetParam()),
                   (__bridge NSString*)CFTimeZoneCopyLocalizedName(tz,
                                                                   kCFTimeZoneNameStyleGeneric,
                                                                   (__bridge CFLocaleRef)[NSLocale systemLocale]));
-    ASSERT_OBJCEQ(expectedProperties[@"CFTimeZoneCopyLocalizedName ShortGeneric"],
+    EXPECT_OBJCEQ(::testing::get<8>(GetParam()),
                   (__bridge NSString*)CFTimeZoneCopyLocalizedName(tz,
                                                                   kCFTimeZoneNameStyleShortGeneric,
                                                                   (__bridge CFLocaleRef)[NSLocale systemLocale]));
 
-    ASSERT_OBJCEQ(expectedProperties[@"CFTimeZoneGetSecondsFromGMT"], [NSNumber numberWithDouble:CFTimeZoneGetSecondsFromGMT(tz, 0)]);
+    EXPECT_EQ(::testing::get<9>(GetParam()), CFTimeZoneGetSecondsFromGMT(tz, 0));
 }
 
-TEST(CFTimeZone, Create) {
-    // WinObjC draws on a separate database
-    NSDictionary* expected = @{
-#ifdef WINOBJC
-        @"CFTimeZoneCopyAbbreviation" : @"EST",
-#else
-        @"CFTimeZoneCopyAbbreviation" : @"GMT-5",
-#endif
-        @"CFTimeZoneCopyAbbreviation" : @"EST",
-        @"CFTimeZoneGetName" : @"EST",
-        @"CFTimeZoneCopyLocalizedName Standard" : @"GMT-05:00",
-        @"CFTimeZoneCopyLocalizedName ShortStandard" : @"GMT-5",
-        @"CFTimeZoneCopyLocalizedName DaylightSaving" : @"GMT-05:00",
-        @"CFTimeZoneCopyLocalizedName ShortDaylightSaving" : @"GMT-5",
-        @"CFTimeZoneCopyLocalizedName Generic" : @"GMT-05:00",
-        @"CFTimeZoneCopyLocalizedName ShortGeneric" : @"GMT-5",
-        @"CFTimeZoneGetSecondsFromGMT" : @-18000.000000
-    };
-    assertCFTimeZoneProperties(CFTimeZoneCreate(kCFAllocatorDefault, CFSTR("EST"), nullptr), expected);
+INSTANTIATE_TEST_CASE_P(
+    CFTimeZone,
+    PropertyTests,
+    ::testing::Values(
+        ::testing::make_tuple(
+            CFSTR("EST"), @"GMT-5", @"EST", @"GMT-05:00", @"GMT-5", @"GMT-05:00", @"GMT-5", @"GMT-05:00", @"GMT-5", -18000.000000),
+        ::testing::make_tuple(CFSTR("America/Argentina/Buenos_Aires"),
+                              @"GMT-3",
+                              @"America/Argentina/Buenos_Aires",
+                              @"GMT-03:00",
+                              @"GMT-3",
+                              @"GMT-03:00",
+                              @"GMT-3",
+                              @"Buenos Aires",
+                              @"Buenos Aires",
+                              -10800.000000),
 
-    // WinObjC draws on a separate database
-    expected = @{
+        // Windows database diverges from OSX database
+        ::testing::make_tuple(CFSTR("US/Pacific"),
 #ifdef WINOBJC
-        @"CFTimeZoneCopyAbbreviation" : @"America/Argentina/Buenos_Aires",
+                              @"GMT-8",
 #else
-        @"CFTimeZoneCopyAbbreviation" : @"GMT-3",
+                              @"PST",
 #endif
-        @"CFTimeZoneGetName" : @"America/Argentina/Buenos_Aires",
-        @"CFTimeZoneCopyLocalizedName Standard" : @"GMT-03:00",
-        @"CFTimeZoneCopyLocalizedName ShortStandard" : @"GMT-3",
-        @"CFTimeZoneCopyLocalizedName DaylightSaving" : @"GMT-03:00",
-        @"CFTimeZoneCopyLocalizedName ShortDaylightSaving" : @"GMT-3",
-        @"CFTimeZoneCopyLocalizedName Generic" : @"Buenos Aires",
-        @"CFTimeZoneCopyLocalizedName ShortGeneric" : @"Buenos Aires",
-        @"CFTimeZoneGetSecondsFromGMT" : @-10800.000000
-    };
-    assertCFTimeZoneProperties(CFTimeZoneCreate(kCFAllocatorDefault, CFSTR("America/Argentina/Buenos_Aires"), nullptr), expected);
-
-    // WinObjC draws on a separate database
-    expected = @{
-#ifdef WINOBJC
-        @"CFTimeZoneCopyAbbreviation" : @"US/Pacific",
-#else
-        @"CFTimeZoneCopyAbbreviation" : @"PST",
-#endif
-        @"CFTimeZoneGetName" : @"US/Pacific",
-        @"CFTimeZoneCopyLocalizedName Standard" : @"GMT-08:00",
-        @"CFTimeZoneCopyLocalizedName ShortStandard" : @"GMT-8",
-        @"CFTimeZoneCopyLocalizedName DaylightSaving" : @"GMT-07:00",
-        @"CFTimeZoneCopyLocalizedName ShortDaylightSaving" : @"GMT-7",
-        @"CFTimeZoneCopyLocalizedName Generic" : @"Los Angeles",
-        @"CFTimeZoneCopyLocalizedName ShortGeneric" : @"Los Angeles",
-        @"CFTimeZoneGetSecondsFromGMT" : @-28800.000000
-    };
-    assertCFTimeZoneProperties(CFTimeZoneCreate(kCFAllocatorDefault, CFSTR("US/Pacific"), nullptr), expected);
-}
+                              @"US/Pacific",
+                              @"GMT-08:00",
+                              @"GMT-8",
+                              @"GMT-07:00",
+                              @"GMT-7",
+                              @"Los Angeles",
+                              @"Los Angeles",
+                              -28800.000000)));
 
 TEST(CFTimeZone, Default) {
     CFTimeZoneRef oldDefault = CFTimeZoneCopyDefault();
@@ -207,9 +212,9 @@ TEST(CFTimeZone, CreateWithTimeIntervalFromGMT) {
 
     ASSERT_OBJCEQ(static_cast<id>(gmtMinusFive),
                   [static_cast<id>(CFTimeZoneCreateWithTimeIntervalFromGMT(kCFAllocatorDefault, 5 * -3600)) autorelease]);
-    ASSERT_OBJCEQ(static_cast<id>(gmtMinusFive),
+    EXPECT_OBJCEQ(static_cast<id>(gmtMinusFive),
                   [static_cast<id>(CFTimeZoneCreateWithName(kCFAllocatorDefault, CFSTR("GMT-05"), false)) autorelease]);
-    ASSERT_OBJCEQ(static_cast<id>(gmtMinusFive),
+    EXPECT_OBJCEQ(static_cast<id>(gmtMinusFive),
                   [static_cast<id>(CFTimeZoneCreateWithName(kCFAllocatorDefault, CFSTR("GMT-05:00"), false)) autorelease]);
 
     // CFTimeZoneRefs created with GMT time interval are different from regional timezones with the same offset

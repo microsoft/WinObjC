@@ -16,6 +16,13 @@
     Responsibility: Christopher Kane
 */
 
+// WINOBJC:
+// WinObjC has opted to base its CFTimeZone implementation off of ICU instead of tzinfo files,
+// causing this file to diverge significantly from Apple's open-source implementation.
+// Because of the scope of the changes, 
+// individual divergences within this file may not be denoted with a WINOBJC comment,
+// nor document the original state of the code.
+
 #include <CoreFoundation/CFTimeZone.h>
 #include <CoreFoundation/CFPropertyList.h>
 #include <CoreFoundation/CFDateFormatter.h>
@@ -225,14 +232,14 @@ static CFTimeZoneRef __CFTimeZoneInitWithICU(CFTimeZoneRef ret, CFStringRef name
 }
 
 CF_INLINE UDate __CFAbsoluteTimeToUDate(CFAbsoluteTime time) {
-    // UDate = milliseconds since Jan 01, 1970
-    // CFAbsoluteTime = seconds since Jan 01, 2001
+    // UDate measures milliseconds since Jan 01, 1970
+    // CFAbsoluteTime measures seconds since Jan 01, 2001
     return (time + kCFAbsoluteTimeIntervalSince1970) * 1000;
 }
 
 CF_INLINE CFAbsoluteTime __UDateToCFAbsoluteTime(UDate time) {
-    // UDate = milliseconds since Jan 01, 1970
-    // CFAbsoluteTime = seconds since Jan 01, 2001
+    // UDate measures milliseconds since Jan 01, 1970
+    // CFAbsoluteTime measures seconds since Jan 01, 2001
     return time/1000 - kCFAbsoluteTimeIntervalSince1970;
 }
 
@@ -1204,14 +1211,16 @@ CFTimeInterval CFTimeZoneGetSecondsFromGMT(CFTimeZoneRef tz, CFAbsoluteTime at) 
         // rawOffset is in milliseconds, CFTimeInterval is in seconds
         return (rawOffset + dstOffset) / 1000;
     }
+
+    CFLog(kCFLogLevelError, CFSTR("Failed to get icu timezone offset %d"), GetLastError());
     return 0.0;
 }
 
 CFStringRef CFTimeZoneCopyAbbreviation(CFTimeZoneRef tz, CFAbsoluteTime at) {
-    __CFGenericValidateType(tz, CFTimeZoneGetTypeID());
-    UnicodeString result;
-    tz->_timeZone->getID(result);
-    return __UnicodeStringToCFStringRef(result);
+    return CFTimeZoneCopyLocalizedName(
+        tz, 
+        CFTimeZoneIsDaylightSavingTime(tz, at) ? kCFTimeZoneNameStyleShortDaylightSaving : kCFTimeZoneNameStyleShortStandard, 
+        CFLocaleGetSystem());
 }
 
 Boolean CFTimeZoneIsDaylightSavingTime(CFTimeZoneRef tz, CFAbsoluteTime at) {
@@ -1224,6 +1233,7 @@ Boolean CFTimeZoneIsDaylightSavingTime(CFTimeZoneRef tz, CFAbsoluteTime at) {
         return daylight;
     }
 
+    CFLog(kCFLogLevelError, CFSTR("Failed to get icu timezone dst status %d"), GetLastError());
     return false;
 }
 
@@ -1241,6 +1251,8 @@ CFTimeInterval CFTimeZoneGetDaylightSavingTimeOffset(CFTimeZoneRef tz, CFAbsolut
         // dstOffset is in milliseconds, CFTimeInterval is in seconds
         return dstOffset / 1000;
     }
+
+    CFLog(kCFLogLevelError, CFSTR("Failed to get icu timezone dst offset %d"), GetLastError());
     return 0.0;
 }
 

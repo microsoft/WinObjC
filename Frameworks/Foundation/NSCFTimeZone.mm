@@ -14,12 +14,14 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "BridgeHelpers.h"
-#include "CFHelpers.h"
-#include "CFFoundationInternal.h"
-#include "NSCFTimeZone.h"
-#include <CoreFoundation/CFTimeZone.h>
+#import "NSCFTimeZone.h"
+
+#import "BridgeHelpers.h"
+#import "CFHelpers.h"
+
+#import <Starboard.h>
+#import <CFFoundationInternal.h>
+#import <CoreFoundation/CFTimeZone.h>
 
 #pragma region Factory Class
 @implementation NSTimeZonePrototype

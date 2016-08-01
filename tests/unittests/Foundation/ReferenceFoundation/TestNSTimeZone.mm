@@ -26,7 +26,10 @@
 #import <TestFramework.h>
 #import <windows.h>
 
+// Windows NSTimeZone is based on ICU
+#if TARGET_OS_WIN32
 #import <unicode/timezone.h>
+#endif
 
 TEST(NSTimeZone, Abbreviation) {
     auto tz = [NSTimeZone systemTimeZone];
@@ -54,15 +57,27 @@ TEST(NSTimeZone, InitializingTimeZoneWithAbbreviation) {
 }
 
 TEST(NSTimeZone, SystemTimeZoneUsesSystemTime) {
+    NSString* zoneName = [[NSTimeZone systemTimeZone] abbreviation];
+
+// Windows NSTimeZone uses icu, OSX version of this test uses linux-y APIs not available on Windows.
+#if TARGET_OS_WIN32
     icu::TimeZone* systemTime = icu::TimeZone::detectHostTimeZone();
     icu::UnicodeString expectedUnicodeName;
     systemTime->getID(expectedUnicodeName);
 
-    NSString* zoneName = [[NSTimeZone systemTimeZone] name];
-    zoneName = (zoneName == nil) ? @"Invalid Abbreviation" : zoneName;
-
     NSString* expectedName =
         [NSString stringWithCharacters:(const unichar*)expectedUnicodeName.getBuffer() length:expectedUnicodeName.length()];
+#else
+    tzset();
+    time_t t = time(nil);
+    struct tm lt = tm();
+    localtime_r(&t, &lt);
+
+    NSString* expectedName = [NSString stringWithCString:lt.tm_zone encoding:NSASCIIStringEncoding];
+#endif
+
+    zoneName = (zoneName == nil) ? @"Invalid Abbreviation" : zoneName;
     expectedName = (expectedName == nil) ? @"Invalid Zone" : expectedName;
+
     ASSERT_OBJCEQ_MSG(zoneName, expectedName, @"expected name \"%@\" is not equal to \"%@\"", zoneName, expectedName);
 }
