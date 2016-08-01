@@ -84,11 +84,32 @@ static const NSString* NSOperationContext = @"context";
     }
 }
 
+- (void)_completionBlockThread {
+    decltype(_completionBlock) localCompletion;
+
+    { // _completionBlockLock scope
+        std::lock_guard<std::recursive_mutex> lock(_completionBlockLock);
+        localCompletion = std::move(_completionBlock);
+    } // end _completionBlockLock scope
+
+    if (localCompletion) {
+        localCompletion();
+    }
+}
+
+- (void)_spawnCompletionBlockThread {
+    // Occurs under _finishLock.
+    [NSThread detachNewThreadSelector:@selector(_completionBlockThread) toTarget:self withObject:nil];
+}
+
 - (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
     if (context == (void*)NSOperationContext) {
         if (object == self) {
             std::lock_guard<std::recursive_mutex> lock(_finishLock);
-            _finishCondition.notify_all();
+            if (self.finished) {
+                _finishCondition.notify_all();
+                [self _spawnCompletionBlockThread];
+            }
         } else {
             std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
             if ([_dependencies containsObject:object]) {
@@ -248,15 +269,9 @@ static const NSString* NSOperationContext = @"context";
         [pool release];
     }
 
-    [self _finish:shouldExecute];
-}
-
-- (void)_finish:(BOOL)didExecute {
-    void (^completion)(void);
-
     { // _finishLock scope
         std::lock_guard<std::recursive_mutex> lock(_finishLock);
-        if (didExecute) {
+        if (shouldExecute) {
             [self willChangeValueForKey:@"isExecuting"];
         }
 
@@ -264,23 +279,11 @@ static const NSString* NSOperationContext = @"context";
         _finished = YES;
         [self didChangeValueForKey:@"isFinished"];
 
-        if (didExecute) {
+        if (shouldExecute) {
             _executing = NO;
             [self didChangeValueForKey:@"isExecuting"];
         }
-
-        { // _completionBlockLock scope
-            std::lock_guard<std::recursive_mutex> lock(_completionBlockLock);
-            completion = [_completionBlock retain];
-            _completionBlock = nil;
-        } // end _completionBlockLock scope
-    } // end _finishLock scope
-    
-    if (completion) {
-        completion();
     }
-
-    [completion release];
 }
 
 /**
