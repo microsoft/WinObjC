@@ -140,12 +140,6 @@
 
     // UIPasteboard
     [self addMenuItemViewController:[[UIPasteboardViewController alloc] init] andTitle:@"Copy And Paste"];
-
-    // XIBTest
-    UIStoryboard* board = [UIStoryboard storyboardWithName:@"XIBTest" bundle:[NSBundle mainBundle]];
-    UIViewController* controller = [board instantiateInitialViewController];
-
-    [self addMenuItemViewController:controller andTitle:@"XIB Test"];
 }
 
 - (void)didReceiveMemoryWarning {

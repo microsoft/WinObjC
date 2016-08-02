@@ -103,7 +103,6 @@
 
         // Add value changed event to slider
         [slider addTarget:self action:@selector(_sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
-        [slider addTarget:self action:@selector(_sliderTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
 
         _valueChangeLabel = [[UILabel alloc] initWithFrame:CGRectMake(xMargin, 0, labelWidth, labelHeight)];
         NSString* labelText = [NSString stringWithFormat:@"UISlider,continuous=YES,value=%f", slider.value];

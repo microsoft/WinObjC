@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -237,7 +237,6 @@
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo6.jpg" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\whiteButton.png" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\blueButton.png" />
-    <StoryboardCompile Include="..\..\WOCCatalog\XIBTest.storyboard" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_tools.png" />
     <SBInfoPlistCopy Include="..\..\WOCCatalog\Info.plist">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug'">false</ExcludedFromBuild>

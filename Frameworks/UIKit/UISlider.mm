@@ -32,7 +32,6 @@
 static const double c_defaultStepFrequency = 0.1;
 
 @implementation UISlider {
-    float _value;
     BOOL _continuous;
 
     // Since xaml Slider does not support minimumValueImage and maximumValueImage, hence we have
@@ -94,8 +93,7 @@ static const double c_defaultStepFrequency = 0.1;
 
         if ([coder containsValueForKey:@"UIValue"]) {
             id valueStr = [coder decodeObjectForKey:@"UIValue"];
-            _value = [valueStr floatValue];
-            _xamlSlider.value = _value;
+            _xamlSlider.value = [valueStr floatValue];
         }
 
         if ([coder containsValueForKey:@"UIMaxValue"]) {
@@ -128,7 +126,7 @@ static const double c_defaultStepFrequency = 0.1;
  @Status Interoperable
 */
 - (float)value {
-    return _value;
+    return _xamlSlider.value;
 }
 
 /**
@@ -144,7 +142,6 @@ static const double c_defaultStepFrequency = 0.1;
     _valueChangedEvent = [_xamlSlider addValueChangedEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
         __strong UISlider* strongSelf = weakSelf;
         if (strongSelf && strongSelf->_continuous) {
-            strongSelf->_value = strongSelf->_xamlSlider.value;
             [strongSelf _sendValueChangedEvents];
         }
     }];
@@ -161,10 +158,7 @@ static const double c_defaultStepFrequency = 0.1;
         [_xamlSlider addManipulationStartingEvent:^void(RTObject* sender, WUXIManipulationStartingRoutedEventArgs* e) {
             __strong UISlider* strongSelf = weakSelf;
             if (strongSelf && (strongSelf->_continuous == NO)) {
-                if (strongSelf->_value != strongSelf->_xamlSlider.value) {
-                    strongSelf->_value = strongSelf->_xamlSlider.value;
-                    [strongSelf _sendValueChangedEvents];
-                }
+                [strongSelf _sendValueChangedEvents];
             }
         }];
 
@@ -174,10 +168,7 @@ static const double c_defaultStepFrequency = 0.1;
         [_xamlSlider addManipulationCompletedEvent:^void(RTObject* sender, WUXIManipulationCompletedRoutedEventArgs* e) {
             __strong UISlider* strongSelf = weakSelf;
             if (strongSelf && (strongSelf->_continuous == NO)) {
-                if (strongSelf->_value != strongSelf->_xamlSlider.value) {
-                    strongSelf->_value = strongSelf->_xamlSlider.value;
-                    [strongSelf _sendValueChangedEvents];
-                }
+                [strongSelf _sendValueChangedEvents];
                 [strongSelf sendActionsForControlEvents:UIControlEventTouchUpInside];
             }
         }];
@@ -220,11 +211,7 @@ static const double c_defaultStepFrequency = 0.1;
  @Notes animation is not supported
 */
 - (void)setValue:(float)value animated:(BOOL)animated {
-    if (_value != value) {
-        // Xaml takes care of validating the input value, we copy the value from xaml slider back to our ivar
-        _xamlSlider.value = value;
-        _value = _xamlSlider.value;
-    }
+    _xamlSlider.value = value;
 }
 
 /**
