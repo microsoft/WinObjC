@@ -18,6 +18,7 @@
 
 #import "AssertARCEnabled.h"
 #import <StubReturn.h>
+#import <Starboard/SmartTypes.h>
 
 #import "_ABAddressBookManager.h"
 
@@ -85,19 +86,19 @@ ABAuthorizationStatus ABAddressBookGetAuthorizationStatus() {
  runtime.
 */
 void ABAddressBookRequestAccessWithCompletion(ABAddressBookRef addressBook, ABAddressBookRequestAccessCompletionHandler completion) {
-    CFErrorRef error = NULL;
+    CFErrorRef error = nullptr;
+    woc::unique_cf<CFErrorRef> strongError;
     bool accessGranted = ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized;
     if (!accessGranted) {
         error = CFErrorCreate(NULL, ABAddressBookErrorDomain, kABOperationNotPermittedByUserError, NULL);
     }
 
+    strongError.reset(error);
+
     // Since we can't request access at runtime (Contacts capabilities must be declared
     // in the app's package manifest), immediately call the completion handler with the current
     // authorization status.
     completion(accessGranted, error);
-    if (error != NULL) {
-        CFRelease(error);
-    }
 }
 
 /**
