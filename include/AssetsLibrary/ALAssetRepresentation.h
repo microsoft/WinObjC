@@ -33,9 +33,9 @@ ASSETSLIBRARY_EXPORT_CLASS
 - (float)scale STUB_METHOD;
 - (CGSize)dimensions STUB_METHOD;
 - (NSString*)filename STUB_METHOD;
-- (long long)size STUB_METHOD;
-- (NSUInteger)getBytes:(uint8_t*)buffer fromOffset:(long long)offset length:(NSUInteger)length error:(NSError**)error STUB_METHOD;
+- (long long)size;
+- (NSUInteger)getBytes:(uint8_t*)buffer fromOffset:(long long)offset length:(NSUInteger)length error:(NSError**)error;
 - (NSString*)UTI STUB_METHOD;
 - (NSDictionary*)metadata STUB_METHOD;
-- (NSURL*)url STUB_METHOD;
+- (NSURL*)url;
 @end

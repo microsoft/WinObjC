@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,21 +14,11 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <AssetsLibrary/ALAssetRepresentation.h>
+@class NSURL;
 
-#import <UIKit/UIKitExport.h>
-#import <Foundation/Foundation.h>
+typedef NS_ENUM(NSUInteger, ALAssetRepresentationErrorCode) { _ALAssetRepresentationErrorCodeFileAccessError = 100 };
 
-@class UITextField;
-@class NSString;
-
-@protocol UITextFieldDelegate <NSObject>
-@optional
-- (BOOL)textFieldShouldBeginEditing:(UITextField*)textField;
-- (void)textFieldDidBeginEditing:(UITextField*)textField;
-- (BOOL)textFieldShouldEndEditing:(UITextField*)textField;
-- (void)textFieldDidEndEditing:(UITextField*)textField;
-- (BOOL)textField:(UITextField*)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString*)string;
-- (BOOL)textFieldShouldClear:(UITextField*)textField;
-- (BOOL)textFieldShouldReturn:(UITextField*)textField;
+@interface ALAssetRepresentation ()
+- (instancetype)_initWithAssetURL:(NSURL*)url localPath:(NSString*)path error:(NSError**)error;
 @end

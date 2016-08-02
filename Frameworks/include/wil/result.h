@@ -4931,7 +4931,7 @@ struct err_exception_policy {
 
 } // namespace wil
 
-#ifdef __OBJC__
+#if defined(__OBJC__) && !defined(WIL_IGNORE_OBJC_EXCEPTIONS)
 
 #import <Foundation/NSError.h>
 #import <Foundation/NSNumber.h>
@@ -5024,7 +5024,7 @@ void _catchAndPopulateNSError(NSError** outError) {
         unsigned errorCode = E_UNEXPECTED;
 
         // If we have an hresult in our user dict, use that, otherwise this was unexpected:
-        NSNumber* hresultValue = [e.userInfo objectForKey:[NSString stringWithCString:"hresult"]];
+        NSNumber* hresultValue = e.userInfo[g_NSHResultErrorDictKey];
         if (hresultValue) {
             errorCode = [hresultValue unsignedIntValue];
         }
@@ -5077,6 +5077,7 @@ void _rethrowNormalizedCaughtExceptionObjC(__R_FN_PARAMS_FULL, _In_opt_ PCWSTR m
 
 }
 
+// Misspelling is intentional
 WI_HEADER_INITITALIZATION_FUNCTION(InitializeObjCExceptions, [] {
     g_resultFromUncaughtExceptionObjC = _resultFromUncaughtExceptionObjC;
     g_rethrowAsNSException = _rethrowAsNSException;

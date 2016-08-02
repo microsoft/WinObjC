@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,21 +14,11 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <AssetsLibrary/ALAsset.h>
+@class NSURL;
 
-#import <UIKit/UIKitExport.h>
-#import <Foundation/Foundation.h>
+typedef NS_ENUM(NSUInteger, ALAssetErrorCode) { _ALAssetErrorCodeInvalidURL = 100, _ALAssetErrorCodeInvalidURLScheme = 101 };
 
-@class UITextField;
-@class NSString;
-
-@protocol UITextFieldDelegate <NSObject>
-@optional
-- (BOOL)textFieldShouldBeginEditing:(UITextField*)textField;
-- (void)textFieldDidBeginEditing:(UITextField*)textField;
-- (BOOL)textFieldShouldEndEditing:(UITextField*)textField;
-- (void)textFieldDidEndEditing:(UITextField*)textField;
-- (BOOL)textField:(UITextField*)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString*)string;
-- (BOOL)textFieldShouldClear:(UITextField*)textField;
-- (BOOL)textFieldShouldReturn:(UITextField*)textField;
+@interface ALAsset ()
+- (instancetype)_initWithURL:(NSURL*)url error:(NSError**)error;
 @end

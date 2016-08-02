@@ -14,7 +14,9 @@
 //
 //******************************************************************************
 
+#import <Starboard.h>
 #import <StubReturn.h>
+#import "ALAssetInternal.h"
 #import <AssetsLibrary/ALAssetsLibrary.h>
 
 NSString* const ALAssetLibraryUpdatedAssetsKey = @"ALAssetLibraryUpdatedAssetsKey";
@@ -42,13 +44,19 @@ NSString* const ALAssetsLibraryErrorDomain = @"ALAssetsLibraryErrorDomain";
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (void)assetForURL:(NSURL*)assetURL
         resultBlock:(ALAssetsLibraryAssetForURLResultBlock)resultBlock
        failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock {
-    UNIMPLEMENTED();
+    NSError* error;
+    ALAsset* asset = [[[ALAsset alloc] _initWithURL:assetURL error:&error] autorelease];
+    if (asset == nil) {
+        failureBlock(error);
+    } else {
+        resultBlock(asset);
+    }
 }
 
 /**

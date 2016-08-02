@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,19 +16,7 @@
 
 #pragma once
 
-#import <UIKit/UIKitExport.h>
-#import <Foundation/Foundation.h>
-
-@class UITextField;
-@class NSString;
-
-@protocol UITextFieldDelegate <NSObject>
-@optional
-- (BOOL)textFieldShouldBeginEditing:(UITextField*)textField;
-- (void)textFieldDidBeginEditing:(UITextField*)textField;
-- (BOOL)textFieldShouldEndEditing:(UITextField*)textField;
-- (void)textFieldDidEndEditing:(UITextField*)textField;
-- (BOOL)textField:(UITextField*)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString*)string;
-- (BOOL)textFieldShouldClear:(UITextField*)textField;
-- (BOOL)textFieldShouldReturn:(UITextField*)textField;
-@end
+// Setup AssetsLibrary test by copying video to Pictures Library
+bool AssetsLibraryTestVideoSetup(const char* fileNameTemp);
+// Cleanup method to call after AssetsLibrary to delete copied video file
+bool AssetsLibraryTestVideoCleanup(const char* fileNameTemp);
