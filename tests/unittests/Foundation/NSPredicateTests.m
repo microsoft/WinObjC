@@ -17,10 +17,9 @@
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
 
-TEST(NSPredicate, Init) {
-    NSPredicate* predicate = [[NSPredicate alloc] init];
+TEST(NSPredicate, predicate) {
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"1<3"];
     ASSERT_TRUE_MSG(predicate != nil, "FAILED: predicate should be non-null!");
-    [predicate release];
 }
 
 TEST(NSPredicate, predicateWithValue) {
@@ -104,7 +103,7 @@ TEST(NSPredicate, PredicateWithBlockSub) {
 }
 
 TEST(NSPredicate, ArchiveAndUnarchiveObject) {
-    NSPredicate* predicate = [[NSPredicate alloc] init];
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"1<3"];
     ASSERT_TRUE_MSG(predicate != nil, "FAILED: predicate should be non-null!");
 
     // archive the object
@@ -113,8 +112,6 @@ TEST(NSPredicate, ArchiveAndUnarchiveObject) {
 
     NSPredicate* unArchivedPredicate = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     ASSERT_TRUE_MSG(unArchivedPredicate != nil, "FAILED: unArchivedPredicate should be non-null!");
-
-    [predicate release];
 }
 
 TEST(NSPredicate, copy) {
@@ -311,7 +308,7 @@ TEST(NSPredicate, InCollection) {
 TEST(NSPredicate, Matches) {
     NSMutableArray* animals = [NSMutableArray array];
 
-    PredicateTestAnimal* animal = [[[PredicateTestAnimal alloc] initWithName:@"test1" age:5 speed:115] autorelease];
+    PredicateTestAnimal* animal = [[[PredicateTestAnimal alloc] initWithName:@"test" age:5 speed:115] autorelease];
     [animals addObject:animal];
 
     animal = [[[PredicateTestAnimal alloc] initWithName:@"tesp" age:5 speed:115] autorelease];
@@ -323,10 +320,25 @@ TEST(NSPredicate, Matches) {
     ASSERT_EQ_MSG(1, [validTestAnimals count], "FAILED: Unable to filter based on class property.");
 }
 
-TEST(NSPredicate, Matches) {
+TEST(NSPredicate, Matches0) {
+    NSArray* array = @[
+        @"TATACCATGGGCCATCATCATCATCATCATCATCATCATCATCACAG",
+        @"CGGGATCCCTATCAAGGCACCTCTTCG",
+        @"CATGCCATGGATACCAACGAGTCCGAAC",
+        @"CAT",
+        @"CATCATCATGTCT",
+        @"DOG"
+    ];
+
+    // find strings that contain a repetition of at least 3 'CAT' sequences,
+    // but not followed by a further 'CA'
+    NSPredicate* catPredicate = [NSPredicate predicateWithFormat:@"SELF MATCHES '.*(CAT){3,}(?!CA).*'"];
+
+    NSArray* filteredArray = [array filteredArrayUsingPredicate:catPredicate];
+    ASSERT_EQ([filteredArray count], 1);
 }
 
-TEST(NSPredicate, Like) {
+TEST(NSPredicate, Matches1) {
     NSMutableArray* animals = [NSMutableArray array];
 
     PredicateTestAnimal* animal = [[[PredicateTestAnimal alloc] initWithName:@"test1" age:5 speed:115] autorelease];
@@ -336,6 +348,27 @@ TEST(NSPredicate, Like) {
     [animals addObject:animal];
 
     animal = [[[PredicateTestAnimal alloc] initWithName:@"testp" age:5 speed:115] autorelease];
+    [animals addObject:animal];
+
+    NSPredicate* betweenPredicate = [NSPredicate predicateWithFormat:@"name MATCHES 't.*t[0-9]'"];
+    NSArray* validTestAnimals = [animals filteredArrayUsingPredicate:betweenPredicate];
+
+    ASSERT_EQ_MSG(2, [validTestAnimals count], "FAILED: Unable to filter based on class property.");
+}
+
+TEST(NSPredicate, Like) {
+    NSMutableArray* animals = [NSMutableArray array];
+
+    PredicateTestAnimal* animal = [[[PredicateTestAnimal alloc] initWithName:@"test1.foo" age:5 speed:115] autorelease];
+    [animals addObject:animal];
+
+    animal = [[[PredicateTestAnimal alloc] initWithName:@"test2.foo" age:5 speed:115] autorelease];
+    [animals addObject:animal];
+
+    animal = [[[PredicateTestAnimal alloc] initWithName:@"testp.foo" age:5 speed:115] autorelease];
+    [animals addObject:animal];
+
+    animal = [[[PredicateTestAnimal alloc] initWithName:@"atestp.foo" age:5 speed:115] autorelease];
     [animals addObject:animal];
 
     NSPredicate* betweenPredicate = [NSPredicate predicateWithFormat:@"name LIKE %@", @"t.*t[0-9]"];
