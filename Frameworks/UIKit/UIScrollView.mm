@@ -441,9 +441,11 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
                 changeContentOffset(strongSelf, offset, FALSE);
                 strongSelf->_scrollingTriggeredByScrollviewer = NO;
                 strongSelf->_isChangingContentOffset = NO;
-                TraceVerbose(TAG,
-                             L"in view changed listener: _isChangingContentOffset set to %d in viewchanged final",
-                             strongSelf->_isChangingContentOffset);
+                if (DEBUG_VERBOSE) {
+                    TraceVerbose(TAG,
+                                 L"in view changed listener: _isChangingContentOffset set to %d in viewchanged final",
+                                 strongSelf->_isChangingContentOffset);
+                }
             }
         }
     }];
@@ -485,13 +487,17 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
             const double paddedOffsetX = (double)(strongSelf->_contentOffset.x + strongSelf->_contentInset.left);
             const double paddedOffsetY = (double)(strongSelf->_contentOffset.y + strongSelf->_contentInset.top);
-            if (![strongSelf->_scrollViewer changeViewWithOptionalAnimation:[NSNumber numberWithDouble:paddedOffsetX]
+            BOOL changeViewSucceed = [strongSelf->_scrollViewer changeViewWithOptionalAnimation:[NSNumber numberWithDouble:paddedOffsetX]
                                                              verticalOffset:[NSNumber numberWithFloat:paddedOffsetY]
                                                                  zoomFactor:[NSNumber numberWithDouble:1.0]
-                                                           disableAnimation:YES]) {
+                                                           disableAnimation:YES];
+            if (!changeViewSucceed) {
                 TraceWarning(TAG,
                              L"changeViewWithOptionalAnimation failed, self->_scrollViewer.Visibility = %d",
                              strongSelf->_scrollViewer.visibility);
+                
+            } else {
+                [strongSelf->_scrollViewer updateLayout];
             }
         }
     }];
@@ -709,11 +715,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 */
 - (void)setContentOffset:(CGPoint)offset {
     if (_isChangingContentOffset) {
-        if (DEBUG_VERBOSE) {
-            TraceWarning(TAG, L"setContentOffset: waiting for scrollviewer to finish scroling before setting new contentOffset property");
-        }
-
-        [self _defferSetContentOffset:offset animated:NO];
+        TraceWarning(TAG, L"setContentOffset: waiting for scrollviewer to finish scroling before setting new contentOffset property");
         return;
     }
 
@@ -807,16 +809,19 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
                     TraceVerbose(TAG,
                                  L"_isChangingContentOffset set to %d changeContentOffset (without Animation)",
                                  self->_isChangingContentOffset);
-
-                    if (![self->_scrollViewer changeViewWithOptionalAnimation:[NSNumber numberWithDouble:paddedOffsetX]
+                    
+                    BOOL changeViewSucceed = [self->_scrollViewer changeViewWithOptionalAnimation:[NSNumber numberWithDouble:paddedOffsetX]
                                                                verticalOffset:[NSNumber numberWithFloat:paddedOffsetY]
                                                                    zoomFactor:[NSNumber numberWithDouble:zoomFactor]
-                                                             disableAnimation:!animated]) {
+                                                             disableAnimation:!animated];
+                    if (!changeViewSucceed) {
                         TraceWarning(TAG,
                                      L"changeViewWithOptionalAnimation failed, self->_scrollViewer.Visibility = %d, loaded=%d",
                                      self->_scrollViewer.visibility,
                                      self->_loaded);
                         self->_isChangingContentOffset = NO;
+                    } else {
+                        [self->_scrollViewer updateLayout];
                     }
                 }
             }
@@ -846,11 +851,11 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
             TraceVerbose(TAG,
                          L"_isChangingContentOffset set to %d in changeContentOffset (with Animation) ",
                          self->_isChangingContentOffset);
-
-            if (![self->_scrollViewer changeViewWithOptionalAnimation:[NSNumber numberWithDouble:paddedOffsetX]
+            BOOL changeViewSucceed = [self->_scrollViewer changeViewWithOptionalAnimation:[NSNumber numberWithDouble:paddedOffsetX]
                                                        verticalOffset:[NSNumber numberWithFloat:paddedOffsetY]
                                                            zoomFactor:[NSNumber numberWithDouble:zoomFactor]
-                                                     disableAnimation:!animated]) {
+                                                     disableAnimation:!animated];
+            if (!changeViewSucceed) {
                 TraceWarning(TAG,
                              L"changeViewWithOptionalAnimation failed, self->_scrollViewer.Visibility = %d, loaded=%d",
                              self->_scrollViewer.visibility,
@@ -861,26 +866,12 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
     }
 }
 
-- (void)_defferSetContentOffset:(CGPoint)offset animated:(BOOL)animated {
-    const double delayInSeconds = 0.05;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-    dispatch_after(popTime,
-                   dispatch_get_main_queue(),
-                   ^(void) {
-                       [self setContentOffset:offset animated:animated];
-                   });
-}
-
 /**
  @Status Interoperable
 */
 - (void)setContentOffset:(CGPoint)offset animated:(BOOL)animated {
     if (_isChangingContentOffset) {
-        if (DEBUG_VERBOSE) {
-            TraceWarning(TAG, L"setContentOffset: waiting for scrollviewer to finish scroling before setting new contentOffset");
-        }
-
-        [self _defferSetContentOffset:offset animated:animated];
+        TraceWarning(TAG, L"setContentOffset: waiting for scrollviewer to finish scroling before setting new contentOffset");
         return;
     }
 
