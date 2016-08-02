@@ -123,7 +123,7 @@ TEST(NSPredicate, copy) {
 
     ASSERT_OBJCEQ_MSG(predicate, copyObj, "FAILED: objects do not match.");
 
-    [predicate release];
+    [copyObj release];
 }
 
 TEST(NSPredicate, stringFormatTest) {

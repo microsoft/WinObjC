@@ -116,7 +116,7 @@ NSUInteger checkMatches(NSRegularExpression* regex, NSString* testString) {
     return [regex numberOfMatchesInString:testString options:0 range:range];
 }
 
-TEST(NSRegularExpression, MatchtingTest0) {
+TEST(NSRegularExpression, MatchingTests0) {
     NSError* error = nil;
     NSRegularExpression* regex =
         [NSRegularExpression regularExpressionWithPattern:@"t.*t" options:NSRegularExpressionCaseInsensitive error:&error];
