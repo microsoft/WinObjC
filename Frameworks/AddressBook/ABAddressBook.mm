@@ -19,7 +19,7 @@
 #import "AssertARCEnabled.h"
 #import <StubReturn.h>
 
-#import "_ABAddressBook.h"
+#import "_ABAddressBookManager.h"
 
 #import "UWP/InteropBase.h"
 #import "UWP/WindowsDevicesEnumeration.h"
@@ -43,13 +43,13 @@ ABAddressBookRef ABAddressBookCreate() {
  @Notes
 */
 ABAddressBookRef ABAddressBookCreateWithOptions(CFDictionaryRef options, CFErrorRef* error) {
-    _ABAddressBook* addressBook = [[_ABAddressBook alloc] init];
+    _ABAddressBookManager* addressBook = [[_ABAddressBookManager alloc] init];
     if (addressBook.contactStore == nil) {
         // There was an error setting up the backing
         // contact store, so just return NULL to signify
         // the error.
-        if (error != NULL) {
-			// In this case, the caller is responsible to release error.
+        if (error != nullptr) {
+            // In this case, the caller is responsible to release error.
             *error = CFErrorCreate(NULL, ABAddressBookErrorDomain, kABOperationNotPermittedByUserError, NULL);
         }
         return NULL;
@@ -67,14 +67,15 @@ ABAuthorizationStatus ABAddressBookGetAuthorizationStatus() {
     WDEDeviceAccessInformation* deviceAccessInformation = [WDEDeviceAccessInformation createFromDeviceClassId:guid];
     WDEDeviceAccessStatus currentStatus = deviceAccessInformation.currentStatus;
 
-    if (currentStatus == WDEDeviceAccessStatusAllowed) {
-        return kABAuthorizationStatusAuthorized;
-    } else if (currentStatus == WDEDeviceAccessStatusDeniedBySystem) {
-        return kABAuthorizationStatusRestricted;
-    } else if (currentStatus == WDEDeviceAccessStatusDeniedByUser) {
-        return kABAuthorizationStatusDenied;
-    } else { // WDEDeviceAccessStatusUnspecified
-        return kABAuthorizationStatusNotDetermined;
+    switch (currentStatus) {
+        case WDEDeviceAccessStatusAllowed:
+            return kABAuthorizationStatusAuthorized;
+        case WDEDeviceAccessStatusDeniedBySystem:
+            return kABAuthorizationStatusRestricted;
+        case WDEDeviceAccessStatusDeniedByUser:
+            return kABAuthorizationStatusDenied;
+        default: // WDEDeviceAccessStatusUnspecified:
+            return kABAuthorizationStatusNotDetermined;
     }
 }
 

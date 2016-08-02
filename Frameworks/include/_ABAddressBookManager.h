@@ -18,8 +18,8 @@
 
 #import "UWP/WindowsApplicationModelContacts.h"
 
-@interface _ABAddressBook : NSObject
+@interface _ABAddressBookManager : NSObject
 
-@property (nonatomic) WACContactStore* contactStore;
+@property WACContactStore* contactStore;
 
 @end

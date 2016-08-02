@@ -536,7 +536,7 @@ void ValidateCallback(const TFunctor& functor, const wchar_t* name) {
 #elif defined(ASSERT_NE_MSG)
 template <typename TFunctor>
 void ValidateCallback(const TFunctor& functor, const wchar_t* name) {
-	ASSERT_NE_MSG(functor, nullptr, "The callback for %s has not been set!", name);
+    ASSERT_NE_MSG(functor, nullptr, "The callback for %s has not been set!", name);
 }
 #else
 #error "Unknown Test Framework!"

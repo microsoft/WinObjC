@@ -14,36 +14,42 @@
 //
 //******************************************************************************
 
-#import "_ABAddressBook.h"
+#import "_ABAddressBookManager.h"
 #import "UWP/WindowsApplicationModelContacts.h"
 
-@interface _ABAddressBook ()
+@interface _ABAddressBookManager ()
 
 @end
 
-@implementation _ABAddressBook
+@implementation _ABAddressBookManager
 
 - (id)init {
     self = [super init];
     if (self) {
-        __block BOOL completed = NO;
         __block WACContactStore* result = nil;
+        __block BOOL failed = YES;
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
         [WACContactManager requestStoreAsyncWithAccessType:WACContactStoreAccessTypeAllContactsReadOnly
             success:^(WACContactStore* success) {
-                completed = YES;
                 result = success;
+                failed = NO;
+                dispatch_semaphore_signal(semaphore);
             }
             failure:^(NSError* failure) {
-                completed = YES;
+                failed = YES;
+                dispatch_semaphore_signal(semaphore);
             }];
 
         // Wait until async method completes.
-        while (!completed) {
-            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-        }
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+        dispatch_release(semaphore);
 
-        self.contactStore = result;
+        if (failed) {
+            return nil;
+        } else {
+            self.contactStore = result;
+        }
     }
 
     return self;

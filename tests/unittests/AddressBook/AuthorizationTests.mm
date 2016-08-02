@@ -22,18 +22,18 @@
 #include <windows.foundation.h>
 #import <COMIncludes_End.h>
 
-#import <Foundation/Foundation.h>
 #import <CoreFoundation/CoreFoundation.h>
+#import <Foundation/Foundation.h>
 
-#import <AddressBook/ABAddressBook.h>
 #import "UWP/WindowsDevicesEnumeration.h"
+#import <AddressBook/ABAddressBook.h>
 
 using namespace ABI::Windows::Devices::Enumeration;
 using namespace ABI::Windows::Foundation;
 using namespace Microsoft::WRL;
 
 // Status to be returned by mocked version of get_CurrentStatus.
-static WDEDeviceAccessStatus statusToMock;
+static WDEDeviceAccessStatus statusToMock = WDEDeviceAccessStatusUnspecified;
 
 // Mocked version of WDEDeviceAccessInformation.
 MOCK_CLASS(MockDeviceAccessInformation, public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IDeviceAccessInformation> {
@@ -100,44 +100,63 @@ public:
 
 @end
 
-TEST(AddressBook, AddressBook_AuthorizationStatus) {
-    IMP originalImplementation = [__ABAddressBook_Swizzle setupMock];
+class AddressBookTest : public ::testing::Test {
+protected:
+    virtual void SetUp() {
+        _originalImplementation = [__ABAddressBook_Swizzle setupMock];
+    }
 
-    statusToMock = WDEDeviceAccessStatusUnspecified;
-    ASSERT_EQ_MSG(kABAuthorizationStatusNotDetermined,
-                  ABAddressBookGetAuthorizationStatus(),
-                  "FAILED: Authorization Status should be undetermined!\n");
+    virtual void TearDown() {
+        [__ABAddressBook_Swizzle tearDownMock:_originalImplementation];
+    }
 
-    statusToMock = WDEDeviceAccessStatusAllowed;
-    ASSERT_EQ_MSG(kABAuthorizationStatusAuthorized,
-                  ABAddressBookGetAuthorizationStatus(),
-                  "FAILED: Authorization Status should be authorized!\n");
+    void testABAddressBookGetAuthorizationStatus(WDEDeviceAccessStatus toMock,
+                                                 ABAuthorizationStatus expected,
+                                                 char* errorMessage) {
+        statusToMock = toMock;
+        ASSERT_EQ_MSG(expected, ABAddressBookGetAuthorizationStatus(), errorMessage);
+    }
 
-    statusToMock = WDEDeviceAccessStatusDeniedByUser;
-    ASSERT_EQ_MSG(kABAuthorizationStatusDenied, ABAddressBookGetAuthorizationStatus(), "FAILED: Authorization Status should be denied!\n");
+    void testABAddressBookRequestAccess(WDEDeviceAccessStatus toMock, ABAddressBookRequestAccessCompletionHandler completion) {
+        statusToMock = toMock;
+        ABAddressBookRequestAccessWithCompletion(NULL, completion);
+    }
 
-    statusToMock = WDEDeviceAccessStatusDeniedBySystem;
-    ASSERT_EQ_MSG(kABAuthorizationStatusRestricted,
-                  ABAddressBookGetAuthorizationStatus(),
-                  "FAILED: Authorization Status should be restricted!\n");
+    IMP _originalImplementation;
+};
 
-    [__ABAddressBook_Swizzle tearDownMock:originalImplementation];
+TEST_F(AddressBookTest, AuthorizationStatusNotDetermined) {
+    testABAddressBookGetAuthorizationStatus(WDEDeviceAccessStatusUnspecified,
+                                            kABAuthorizationStatusNotDetermined,
+                                            "FAILED: Authorization Status should be undetermined!\n");
 }
 
-TEST(AddressBook, AddressBook_RequestAuthorization) {
-    IMP originalImplementation = [__ABAddressBook_Swizzle setupMock];
+TEST_F(AddressBookTest, AuthorizationStatusAuthorized) {
+    testABAddressBookGetAuthorizationStatus(WDEDeviceAccessStatusAllowed,
+                                            kABAuthorizationStatusAuthorized,
+                                            "FAILED: Authorization Status should be authorized!\n");
+}
 
-    // Test the case when permissions are not granted.
-    statusToMock = WDEDeviceAccessStatusUnspecified;
-    ABAddressBookRequestAccessWithCompletion(NULL, ^(bool granted, CFErrorRef error) {
+TEST_F(AddressBookTest, AuthorizationStatusDenied) {
+    testABAddressBookGetAuthorizationStatus(WDEDeviceAccessStatusDeniedByUser,
+                                            kABAuthorizationStatusDenied,
+                                            "FAILED: Authorization Status should be denied!\n");
+}
+
+TEST_F(AddressBookTest, AuthorizationStatusRestricted) {
+    testABAddressBookGetAuthorizationStatus(WDEDeviceAccessStatusDeniedBySystem,
+                                            kABAuthorizationStatusRestricted,
+                                            "FAILED: Authorization Status should be restricted!\n");
+}
+
+TEST_F(AddressBookTest, RequestAuthorizationNotGranted) {
+    testABAddressBookRequestAccess(WDEDeviceAccessStatusUnspecified, ^(bool granted, CFErrorRef error) {
         ASSERT_FALSE_MSG(granted, "FAILED: Access should not be granted\n");
     });
+}
 
-    // Test the case where permissions are granted.
-    statusToMock = WDEDeviceAccessStatusAllowed;
-    ABAddressBookRequestAccessWithCompletion(NULL, ^(bool granted, CFErrorRef error) {
+TEST_F(AddressBookTest, RequestAuthorizationGranted) {
+    testABAddressBookRequestAccess(WDEDeviceAccessStatusAllowed, ^(bool granted, CFErrorRef error) {
         ASSERT_TRUE_MSG(granted, "FAILED: Access should be granted\n");
     });
-
-    [__ABAddressBook_Swizzle tearDownMock:originalImplementation];
 }
