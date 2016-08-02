@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="AddressBookSample">
+      <UniqueIdentifier>{48381322-5991-4D27-B414-9B6D577E842A}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\AddressBook\AppDelegate.h">
+      <Filter>AddressBookSample</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\AddressBook\ViewController.h">
+      <Filter>AddressBookSample</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\AddressBook\SingleContactViewController.h">
+      <Filter>AddressBookSample</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\AddressBook\ViewAllContactsViewController.h">
+      <Filter>AddressBookSample</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

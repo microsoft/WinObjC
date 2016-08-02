@@ -15,12 +15,8 @@
 //******************************************************************************
 
 #import <TestFramework.h>
-#import <Starboard.h>
-#import <CoreFoundation\CFAttributedString.h>
-#import <Foundation\NSAttributedString.h>
-#import <Foundation\NSDictionary.h>
-#import <Foundation\NSMutableAttributedString.h>
-
+#import <CoreFoundation/CFAttributedString.h>
+#import <Foundation/Foundation.h>
 #import <windows.h>
 #import <vector>
 
@@ -519,12 +515,13 @@ TEST(NSAttributedString, SetAttributedString) {
 ARM_DISABLED_TEST(NSAttributedString, ThrowsBounds) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
 
-    NSError* error = nil;
-    try {
+    bool thrown = false;
+    @try {
         [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 7)];
+    } @catch (NSException* exception) {
+        thrown = true;
     }
-    CATCH_POPULATE_NSERROR(&error);
-    ASSERT_EQ(E_BOUNDS, error.code);
+    ASSERT_TRUE(thrown);
 }
 
 TEST(NSAttributedString, AttributedSubstringFromRange) {

@@ -17,11 +17,10 @@
 #include "pch.h"
 #include <gtest-api.h>
 #include "Framework/Framework.h"
+#include "FunctionalTestHelpers.h"
+#include "Tests/AssetsLibraryTests/AssetsLibraryTestHelpers.h"
 #include <WexTestClass.h>
 #include <ErrorHandling.h>
-
-using namespace WEX::Logging;
-using namespace WEX::TestExecution;
 
 // This is a method that UIKit exposes for the test frameworks to use.
 extern "C" void UIApplicationInitialize(const wchar_t*, const wchar_t*);
@@ -30,9 +29,6 @@ static void UIApplicationDefaultInitialize() {
     // Pass null to indicate default app and app delegate classes
     UIApplicationInitialize(nullptr, nullptr);
 }
-
-// Cleanup method to call after every test class to prevent leaking UIApplication
-extern void FunctionalTestCleanupUIApplication();
 
 //
 // How is functional test organized?
@@ -313,6 +309,38 @@ public:
 }; /* class NSBundle */
 
 //
+// AssetsLibrary Tests
+//
+extern void AssetsLibraryGetVideoAsset();
+
+class AssetsLibrary {
+public:
+    BEGIN_TEST_CLASS(AssetsLibrary)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    TEST_CLASS_PROPERTY(L"UAP:AppXManifest", L"AssetsLibrary.AppxManifest.xml")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(AssetsLibraryClassSetup) {
+        bool success = AssetsLibraryTestVideoSetup("AssetsLibraryTestVideo.mp4");
+        return (success & SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize)));
+    }
+
+    TEST_CLASS_CLEANUP(AssetsLibraryClassCleanup) {
+        return AssetsLibraryTestVideoCleanup("AssetsLibraryTestVideo.mp4");
+    }
+
+    TEST_METHOD_CLEANUP(AssetsLibraryCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
+    TEST_METHOD(AssetsLibrary_GetVideoAsset) {
+        AssetsLibraryGetVideoAsset();
+    }
+}; /* class AssetsLibrary */
+
+//
 // Cortana Activation Tests
 //
 
@@ -416,3 +444,24 @@ public:
     }
 
 }; /* class ProjectionTest */
+
+//
+// UIApplicationTests
+//
+extern void UIApplicationTestsOpenURL();
+
+class UIApplicationTests {
+public:
+    BEGIN_TEST_CLASS(UIApplicationTests)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(UIApplicationTestsSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
+
+    TEST_METHOD(UIApplicationTests_OpenURL) {
+        UIApplicationTestsOpenURL();
+    }
+}; /* class UIApplicationTests */

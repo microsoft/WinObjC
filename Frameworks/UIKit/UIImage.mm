@@ -229,8 +229,17 @@ static bool loadImageFromWICFrame(UIImage* dest, IWICImagingFactory* pFactory, I
 
     if (SUCCEEDED(hr)) {
         CGColorSpaceRef clrRgb = CGColorSpaceCreateDeviceRGB();
-        dest->m_pImage =
-            CGImageCreate(width, height, 8, 32, width * 4, clrRgb, kCGImageAlphaFirst, nil, NULL, false, kCGRenderingIntentDefault);
+        dest->m_pImage = CGImageCreate(width,
+                                       height,
+                                       8,
+                                       32,
+                                       width * 4,
+                                       clrRgb,
+                                       kCGImageAlphaLast,
+                                       nil,
+                                       NULL,
+                                       false,
+                                       kCGRenderingIntentDefault);
         CGColorSpaceRelease(clrRgb);
 
         hr = pFactory->CreateFormatConverter(&pFormatConverter);
@@ -470,7 +479,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     fpIn = EbrFopen(pathStr, "rb");
     if (!fpIn) {
         TraceVerbose(TAG, L"Image %hs not found", pathStr);
-        // m_pImage = new CGBitmapImage(64, 64, surfaceFormat::_ColorRGBA, NULL);
+        // m_pImage = new CGBitmapImage(64, 64, __CGSurfaceFormat::_ColorABGR, NULL);
         return nil;
     }
 
@@ -491,7 +500,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         fpIn = EbrFopen(pathStr, "rb");
         if (!fpIn) {
             TraceVerbose(TAG, L"Image %hs not found", pathStr);
-            // m_pImage = new CGBitmapImage(64, 64, surfaceFormat::_ColorRGBA, NULL);
+            // m_pImage = new CGBitmapImage(64, 64, __CGSurfaceFormat::_ColorABGR, NULL);
             return nil;
         }
 
@@ -499,7 +508,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         int len = EbrFtell(fpIn);
         if (len <= 0) {
             TraceVerbose(TAG, L"Image %hs invalid", pathStr);
-            // m_pImage = new CGBitmapImage(64, 64, surfaceFormat::_ColorRGBA, NULL);
+            // m_pImage = new CGBitmapImage(64, 64, __CGSurfaceFormat::_ColorABGR, NULL);
             EbrFclose(fpIn);
             return nil;
         }
@@ -520,7 +529,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
                             TraceVerbose(TAG, L"");
                     }
                     TraceVerbose(TAG, L"Image type %hs not recognized header=%x", pathStr, *((DWORD*)in));
-                    // m_pImage = new CGBitmapImage(64, 64, surfaceFormat::_ColorRGBA, NULL);
+                    // m_pImage = new CGBitmapImage(64, 64, __CGSurfaceFormat::_ColorABGR, NULL);
                     return nil;
                 }
             }

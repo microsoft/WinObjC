@@ -14,19 +14,16 @@
 //
 //******************************************************************************
 
-#import <sys/types.h>
-#import <sys/stat.h>
-#import <TestFramework.h>
-#import <time.h>
-#import <stdio.h>
-#import <errno.h>
-#import <Foundation/NSFileManager.h>
-#import <Foundation/NSNumber.h>
-#import <Foundation/NSDate.h>
-#import <Foundation/NSURL.h>
-#import <stdlib.h>
-#import <windows.h>
-#import <Starboard/SmartTypes.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <TestFramework.h>
+#include <time.h>
+#include <stdio.h>
+#include <errno.h>
+#include <Foundation/Foundation.h>
+#include <stdlib.h>
+#include <windows.h>
+#include <Starboard/SmartTypes.h>
 
 static NSString* getModulePath() {
     char fullPath[_MAX_PATH];
@@ -59,8 +56,10 @@ using unique_fileDeleter = std::unique_ptr<NSString, decltype(&deleteFile)>;
 TEST(NSFileManager, GetAttributes) {
     // get test startup full path
     wchar_t fullPath[_MAX_PATH];
-    GetModuleFileNameW(NULL, fullPath, _MAX_PATH);
+    size_t len = GetModuleFileNameW(NULL, fullPath, _MAX_PATH);
 
+// Window needs extra handling for the drive character
+#if TARGET_OS_WIN32
     // split test startup full path into components like drive, directory, filename and ext etc.
     wchar_t drive[_MAX_DRIVE];
     wchar_t dir[_MAX_DIR];
@@ -69,7 +68,8 @@ TEST(NSFileManager, GetAttributes) {
     // reconstruct fullpath for test artifact file. e.g., C:\WinObjc\WinObjC\build\Debug\data\NSFileManagerUT.txt
     ASSERT_TRUE(wcscat_s(dir, _countof(dir), L"\\data\\") == 0);
     ASSERT_TRUE(::_wmakepath_s(fullPath, _countof(fullPath), drive, dir, L"NSFileManagerUT", L".txt") == 0);
-    NSString* testFileFullPath = [NSString stringWithCharacters:(const unichar*)fullPath length:_MAX_PATH];
+#endif
+    NSString* testFileFullPath = [NSString stringWithCharacters:(const unichar*)fullPath length:len + 1];
 
     LOG_INFO("this test try to validate file creation date and modification date and size for %@", testFileFullPath);
     NSFileManager* manager = [NSFileManager defaultManager];
@@ -78,9 +78,17 @@ TEST(NSFileManager, GetAttributes) {
     NSDictionary* attributes = [manager fileAttributesAtPath:testFileFullPath traverseLink:YES];
     ASSERT_TRUE_MSG(attributes != nil, "failed to get file attributes for %@", testFileFullPath);
 
-    // get file attributes from windows side
+// Get file attributes from OS-side
+// _stat and _wstat are MS extensions
+#if TARGET_OS_WIN32
     struct _stat fileStatus = { 0 };
     ASSERT_TRUE(::_wstat(fullPath, &fileStatus) == 0);
+#else
+    struct stat fileStatus = { 0 };
+    char narrowFullPath[_MAX_PATH];
+    wcstombs(narrowFullPath, fullPath, _MAX_PATH);
+    ASSERT_TRUE(stat(narrowFullPath, &fileStatus) == 0);
+#endif
 
     // check file creation date
     NSDate* expectedCreationDate = [NSDate dateWithTimeIntervalSince1970:(double)fileStatus.st_ctime];
@@ -95,7 +103,7 @@ TEST(NSFileManager, GetAttributes) {
     ASSERT_OBJCEQ_MSG(expectedModificationDate, modificationDate, "failed to check modification date for %@", testFileFullPath);
 
     // now check file size
-    ASSERT_TRUE_MSG(fileStatus.st_size == static_cast<long>([attributes fileSize]), "failed to check file size for %@", testFileFullPath);
+    ASSERT_EQ_MSG(fileStatus.st_size, static_cast<long>([attributes fileSize]), "failed to check file size for %@", testFileFullPath);
 }
 
 TEST(NSFileManager, EnumateDirectoryUsingURL) {
@@ -103,11 +111,14 @@ TEST(NSFileManager, EnumateDirectoryUsingURL) {
     wchar_t startUpPath[_MAX_PATH];
     GetModuleFileNameW(NULL, startUpPath, _MAX_PATH);
 
+// Window needs extra handling for the drive character
+#if TARGET_OS_WIN32
     // construct the start up dir
     wchar_t drive[_MAX_DRIVE];
     wchar_t dir[_MAX_DIR];
     ASSERT_TRUE(::_wsplitpath_s(startUpPath, drive, _countof(drive), dir, _countof(dir), NULL, 0, NULL, 0) == 0);
     ASSERT_TRUE(::_wmakepath_s(startUpPath, _countof(startUpPath), drive, dir, L"", L"") == 0);
+#endif
 
     // change current dir to app start up path
     ASSERT_TRUE(SetCurrentDirectoryW(startUpPath) != 0);
@@ -138,10 +149,26 @@ TEST(NSFileManager, EnumateDirectoryUsingURL) {
 
     // construct file path for target file and get its attrbutes from windows side
     wchar_t targetFileFullPath[_MAX_PATH];
+
+// wcscpy_s and wcscat_s are MSVC extensions
+#if TARGET_OS_WIN32
     ASSERT_TRUE(wcscpy_s(targetFileFullPath, _countof(targetFileFullPath), currentDir) == 0);
     ASSERT_TRUE(wcscat_s(targetFileFullPath, _countof(targetFileFullPath), L"\\data\\NSFileManagerUT.txt") == 0);
+#else
+    ASSERT_NE(nullptr, wcscpy(targetFileFullPath, currentDir));
+    ASSERT_NE(nullptr, wcscat(targetFileFullPath, L"\\data\\NSFileManagerUT.txt"));
+#endif
+
+// _stat and _wstat are MS extensions
+#if TARGET_OS_WIN32
     struct _stat fileStatus = { 0 };
     ASSERT_TRUE(::_wstat(targetFileFullPath, &fileStatus) == 0);
+#else
+    struct stat fileStatus = { 0 };
+    char narrowFullPath[_MAX_PATH];
+    wcstombs(narrowFullPath, targetFileFullPath, _MAX_PATH);
+    ASSERT_TRUE(stat(narrowFullPath, &fileStatus) == 0);
+#endif
 
     // TODO: 7491194: Implement CFURL resourceValue APIs
     // check NSURL resourceValue of NSURLContentModificationDateKey is the same as file modification date

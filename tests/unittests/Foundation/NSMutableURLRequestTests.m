@@ -16,8 +16,6 @@
 
 #include "gtest-api.h"
 #import <Foundation/Foundation.h>
-#import <Foundation/NSMutableURLRequest.h>
-#import <Foundation/NSURL.h>
 
 TEST(NSMutableURLRequest, setValue) {
     NSURL* url = [NSURL URLWithString:@"file:///foo/var/"];

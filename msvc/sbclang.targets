@@ -99,7 +99,8 @@
 
   <Target
     Name="ComputeStarboardCRT"
-    BeforeTargets="ComputeCrtSDKReference">
+    BeforeTargets="ComputeCrtSDKReference"
+    DependsOnTargets="ComputeStarboardHasObjCSources">
 
     <PropertyGroup>
       <!-- Choose a CRT to use -->
@@ -151,16 +152,11 @@
       </ClCompile>
     </ItemGroup>
 
-    <PropertyGroup Condition="'$(StarboardHasObjCSources)' == ''">
-      <StarboardHasObjCSources Condition="'@(ClangCompile->WithMetadataValue('CompileAs', 'CompileAsObjC'))' != ''">true</StarboardHasObjCSources>
-      <StarboardHasObjCSources Condition="'@(ClangCompile->WithMetadataValue('CompileAs', 'CompileAsObjCpp'))' != ''">true</StarboardHasObjCSources>
-      <StarboardHasObjCSources Condition="'@(ClangCompile->WithMetadataValue('Extension', '.m'))' != ''">true</StarboardHasObjCSources>
-      <StarboardHasObjCSources Condition="'@(ClangCompile->WithMetadataValue('Extension', '.mm'))' != ''">true</StarboardHasObjCSources>
-    </PropertyGroup>
-
     <ItemGroup Condition="'$(StarboardHasObjCSources)' == 'true'">
       <ClCompile Include="$(MSBuildThisFileDirectory)\objcrt\objc_2stage_init.cpp">
         <PrecompiledHeader>NotUsing</PrecompiledHeader>
+        <RuntimeLibrary>$(StarboardCRT)</RuntimeLibrary>
+        <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       </ClCompile>
     </ItemGroup>
   </Target>
@@ -361,7 +357,7 @@
   </ItemDefinitionGroup>
 
   <PropertyGroup>
-    <ComputeLinkInputsTargets>$(ComputeLinkInputsTargets);ComputeClangLinkInputs;ComputeRuntimeInputs</ComputeLinkInputsTargets>
+    <ComputeLinkInputsTargets>$(ComputeLinkInputsTargets);ComputeClangLinkInputs;ComputeRuntimeInputs;ComputeWholeArchiveLinkInputs;ComputeObjectiveCLinkInputs</ComputeLinkInputsTargets>
     <ComputeLibInputsTargets>$(ComputeLibInputsTargets);ComputeClangLibInputs;</ComputeLibInputsTargets>
     <ComputeImpLibInputsTargets>$(ComputeImpLibInputsTargets);ComputeClangImpLibInputs;</ComputeImpLibInputsTargets>
   </PropertyGroup>
@@ -398,9 +394,28 @@
 
   </Target>
 
-  <Target Name="ComputeRuntimeInputs" DependsOnTargets="ComputeClangOptions">
+  <!-- Sets StarboardHasObjCSources based on whether any files in this project are being built as Objective-C -->
+  <Target Name="ComputeStarboardHasObjCSources" DependsOnTargets="ComputeClangOptions">
+    <PropertyGroup Condition="'$(StarboardHasObjCSources)' == ''">
+      <!-- ComputeClangOptions fills CompileAs based on file extension in the absence of other information. -->
+      <StarboardHasObjCSources Condition="'@(ClangCompile->WithMetadataValue('CompileAs', 'CompileAsObjC'))' != ''">true</StarboardHasObjCSources>
+      <StarboardHasObjCSources Condition="'@(ClangCompile->WithMetadataValue('CompileAs', 'CompileAsObjCpp'))' != ''">true</StarboardHasObjCSources>
+    </PropertyGroup>
+  </Target>
+
+  <!-- Sets StarboardRequiresObjectiveCRuntime based on whether this project has either Objective-C sources itself or
+       a reference to a statically-linked library that has Objective-C sources.
+  -->
+  <Target Name="ComputeStarboardRequiresObjectiveCRuntime" DependsOnTargets="ComputeStarboardHasObjCSources;ComputeStarboardReferencesRequiringObjectiveC">
+    <PropertyGroup Condition="'$(StarboardRequiresObjectiveCRuntime)' == ''">
+      <StarboardRequiresObjectiveCRuntime Condition="'@(_StarboardReferencesRequiringObjectiveC)' != ''">true</StarboardRequiresObjectiveCRuntime>
+      <StarboardRequiresObjectiveCRuntime Condition="'$(StarboardHasObjCSources)' == 'true'">true</StarboardRequiresObjectiveCRuntime>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="ComputeRuntimeInputs" DependsOnTargets="ComputeClangOptions;ComputeStarboardRequiresObjectiveCRuntime">
     <ItemGroup>
-      <Link Condition="'$(StarboardLinkObjCRuntime)' == 'true'" Include="$(StarboardObjCRuntimeLib)"/>
+      <Link Condition="'$(StarboardLinkObjCRuntime)' == 'true' and '$(StarboardRequiresObjectiveCRuntime)' == 'true'" Include="$(StarboardObjCRuntimeLib)"/>
       <Link Condition="'$(StarboardRuntimeLib)' != '' And '$(IslandwoodDRT)' == 'true'" Include="$(StarboardRuntimeLib)"/>
       <Link Condition="'$(StarboardDefaultLibs)' != '' And '$(IslandwoodDRT)' == 'true'" Include="$(StarboardDefaultLibs)"/>
     </ItemGroup>
@@ -419,6 +434,67 @@
   <Target Name="ComputeClangImpLibInputs" DependsOnTargets="ComputeClangOptions;_ClangCompile">
     <ItemGroup>
       <ImpLib Condition="'%(ClangOutputs.ImpLibCompiled)' == 'true'" Include="%(ClangOutputs.ObjectFileName)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Recursive Target.
+       Returns a list of .lib files from all referenced projects that include Objective-C code by
+       invoking _ComputeStarboardReferencedProjectRequiresObjectiveC on them.
+  -->
+  <Target Name="ComputeStarboardReferencesRequiringObjectiveC">
+    <MSBuild
+      Projects="@(_MSBuildProjectReferenceExistent)"
+      Targets="_ComputeStarboardReferencedProjectRequiresObjectiveC"
+      BuildInParallel="$(BuildInParallel)"
+      Properties="%(_MSBuildProjectReferenceExistent.SetConfiguration); %(_MSBuildProjectReferenceExistent.SetPlatform)"
+      Condition="'%(_MSBuildProjectReferenceExistent.Extension)' == '.vcxproj' and '@(ProjectReferenceWithConfiguration)' != '' and '@(_MSBuildProjectReferenceExistent)' != ''"
+      ContinueOnError="!$(BuildingProject)"
+      RemoveProperties="%(_MSBuildProjectReferenceExistent.GlobalPropertiesToRemove)">
+      <Output TaskParameter="TargetOutputs" ItemName="_StarboardReferencesRequiringObjectiveC"/>
+    </MSBuild>
+  </Target>
+
+  <!-- Returns every output from <Lib> in this project if we include Objective-C code.
+       Right now, we only go so far as to check whether we have Objective-C ourselves. A lib consuming a lib
+       consuming Objective-C will not be considered to be consuming Objective-C.
+       We should consider recursing.
+  -->
+  <Target Name="_ComputeStarboardReferencedProjectRequiresObjectiveC" Returns="@(ObjCLibFullPath)" DependsOnTargets="ComputeStarboardHasObjCSources">
+    <ItemGroup>
+      <Lib Include="tmp"  Condition="'@(Lib)'==''">
+       <DeleteSoon>true</DeleteSoon>
+      </Lib>
+    </ItemGroup>
+    <PropertyGroup>
+      <!-- Consider recursing on this rule to capture libs aggregating Objective-C libs. -->
+      <_ObjCLibFullPath Condition="'$(ConfigurationType)'=='StaticLibrary' and '$(StarboardHasObjCSources)'=='true'">@(Lib->MetaData('OutputFile')->FullPath()->Distinct())</_ObjCLibFullPath>
+    </PropertyGroup>
+    <ItemGroup>
+      <ObjCLibFullPath Include="$(_ObjCLibFullPath)">
+        <FileType>lib</FileType>
+        <ConsumesObjectiveC>$(StarboardHasObjCSources)</ConsumesObjectiveC>
+      </ObjCLibFullPath>
+      <Lib Remove="@(Lib)" Condition="'%(Lib.DeleteSoon)'=='true'" />
+    </ItemGroup>
+  </Target>
+
+  <!-- This target adds one /WHOLEARCHIVE: for every referenced project that includes Objective-C code.
+       This pulls in a lot of things, but it clears up many of the issues surrounding Objective-C categories
+       and 2-stage loading.
+  -->
+  <Target Name="ComputeWholeArchiveLinkInputs" DependsOnTargets="ComputeStarboardReferencesRequiringObjectiveC">
+    <ItemGroup Condition="'@(_StarboardReferencesRequiringObjectiveC)'!='' and '$(StarboardLinkWholeArchive)'=='true'">
+      <Link>
+        <AdditionalOptions>%(Link.AdditionalOptions) "/WHOLEARCHIVE:@(_StarboardReferencesRequiringObjectiveC, '" /WHOLEARCHIVE:"')"</AdditionalOptions>
+      </Link>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ComputeObjectiveCLinkInputs" DependsOnTargets="ComputeStarboardReferencesRequiringObjectiveC">
+    <ItemGroup Condition="'@(_StarboardReferencesRequiringObjectiveC)'!=''">
+      <Link>
+        <AdditionalOptions>%(Link.AdditionalOptions) /INCLUDE:$(StarboardObjectiveCPinningSymbolName)</AdditionalOptions>
+      </Link>
     </ItemGroup>
   </Target>
 

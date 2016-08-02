@@ -17,9 +17,7 @@
 #include "gtest-api.h"
 #import <Foundation/Foundation.h>
 #import <future>
-#include "Starboard.h"
 #include <pthread.h>
-#include <windows.h>
 
 static int counter = 0;
 

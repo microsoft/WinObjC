@@ -15,10 +15,13 @@
 //******************************************************************************
 
 #import "Foundation/Foundation.h"
-#import "Starboard.h"
+#import "Starboard/SmartTypes.h"
 #import "TestFramework.h"
 
+// objc_storeWeak is in a separate header on WinObjC, whereas it's available by default in OSX
+#ifdef WINOBJC
 #import <objc/objc-arc.h>
+#endif
 
 // Helper for comparing NSMapTables
 void assertMapTablesEqual(NSMapTable* table1, NSMapTable* table2) {

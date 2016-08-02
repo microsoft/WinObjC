@@ -15,10 +15,7 @@
 //******************************************************************************
 
 #import "TestFramework.h"
-#import <Foundation/NSInvocation.h>
-#import <Foundation/NSNumber.h>
-#import <Foundation/NSException.h>
-#import <Foundation/NSMethodSignature.h>
+#import <Foundation/Foundation.h>
 #import <memory>
 #import <type_traits>
 
@@ -149,8 +146,8 @@ struct SmallDisparateAggregate4 { // on x86 and ARM, this will be returned in re
     do {                                                                              \
         object.prop = __VA_ARGS__;                                                    \
         _testInvocation<decltype(object.prop)>(object, @selector(prop), __VA_ARGS__); \
-    \
-} while (0)
+                                                                                      \
+    } while (0)
 
 template <typename T>
 static void _testInvocation(id object, SEL selector, T value) {

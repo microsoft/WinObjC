@@ -17,6 +17,7 @@
 
 extern "C" int UIApplicationMainLoop();
 extern "C" void UIApplicationMainHandleHighMemoryUsageEvent();
+extern "C" void UIApplicationMainHandlePLMEvent(bool isActive);
 extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible);
 extern "C" void UIApplicationMainHandleToastNotificationEvent(const char* notificationData);
 extern "C" void UIApplicationMainHandleVoiceCommandEvent(IInspectable* voiceCommandResult);

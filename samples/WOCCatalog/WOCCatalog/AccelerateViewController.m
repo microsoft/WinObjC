@@ -221,18 +221,18 @@ static const double meanDivisor = 100;
     }
 }
 
-- (void)blueChanged:(UISlider*)slider {
-    if (_valueBlue != slider.value) {
-        _valueBlue = slider.value;
-        _bLabel.text = [NSString stringWithFormat:@"R: %d%%", _valueBlue];
+- (void)greenChanged:(UISlider*)slider {
+    if (_valueGreen != slider.value) {
+        _valueGreen = slider.value;
+        _gLabel.text = [NSString stringWithFormat:@"G: %d%%", _valueGreen];
         [self changeImageCell];
     }
 }
 
-- (void)greenChanged:(UISlider*)slider {
-    if (_valueGreen != slider.value) {
-        _valueGreen = slider.value;
-        _gLabel.text = [NSString stringWithFormat:@"R: %d%%", _valueGreen];
+- (void)blueChanged:(UISlider*)slider {
+    if (_valueBlue != slider.value) {
+        _valueBlue = slider.value;
+        _bLabel.text = [NSString stringWithFormat:@"B: %d%%", _valueBlue];
         [self changeImageCell];
     }
 }
@@ -271,7 +271,7 @@ static const double meanDivisor = 100;
     vImage_Error error;
     void *pixelBuffer, *midPixelBuffer;
 
-    // create vImage_Buffer with data from CGImageRef
+    // Create input vImage_Buffer with data from CGImageRef
     CGDataProviderRef inProvider = CGImageGetDataProvider(_localImg);
     CFDataRef inBitmapData = CGDataProviderCopyData(inProvider);
 
@@ -281,7 +281,7 @@ static const double meanDivisor = 100;
 
     inBuffer.data = (void*)CFDataGetBytePtr(inBitmapData);
 
-    // create vImage_Buffer for output
+    // Create output vImage_Buffer
     midPixelBuffer = malloc(CGImageGetBytesPerRow(_localImg) * CGImageGetHeight(_localImg));
     pixelBuffer = malloc(CGImageGetBytesPerRow(_localImg) * CGImageGetHeight(_localImg));
 
@@ -302,7 +302,47 @@ static const double meanDivisor = 100;
     outBuffer.height = CGImageGetHeight(_localImg);
     outBuffer.rowBytes = CGImageGetBytesPerRow(_localImg);
 
-    int16_t A[] = { _valueRed, 0, 0, 0, 0, _valueGreen, 0, 0, 0, 0, _valueBlue, 0, 0, 0, 0, 0 };
+    const CGImageAlphaInfo alphaInfo = CGImageGetAlphaInfo(_localImg);
+    const CGBitmapInfo bitmapInfo = CGImageGetBitmapInfo(_localImg);
+    const int byteOrder = bitmapInfo & kCGBitmapByteOrderMask;
+
+    unsigned int redIndex, greenIndex, blueIndex, alphaIndex;
+
+    // Use the byteorder and alpha info of the input image to get the byte index of each component
+    if (byteOrder == kCGBitmapByteOrder32Big) {
+        // RGBX or XRGB
+        if (alphaInfo == kCGImageAlphaLast || alphaInfo == kCGImageAlphaNoneSkipLast) {
+            alphaIndex = 0;
+            redIndex = 3;
+            greenIndex = 2;
+            blueIndex = 1;
+        } else {
+            alphaIndex = 3;
+            redIndex = 2;
+            greenIndex = 1;
+            blueIndex = 0;
+        }
+    } else {
+        // XBGR or BGRX
+        if (alphaInfo == kCGImageAlphaLast || alphaInfo == kCGImageAlphaNoneSkipLast) {
+            alphaIndex = 3;
+            redIndex = 0;
+            greenIndex = 1;
+            blueIndex = 2;
+        } else {
+            alphaIndex = 0;
+            redIndex = 1;
+            greenIndex = 2;
+            blueIndex = 3;
+        }
+    }
+
+    // Convert the component index to the matrix diagonal index and set the appropriate values for each component
+    int16_t A[16] = { 0 };
+    A[(alphaIndex << 2) + alphaIndex] = 100;
+    A[(redIndex << 2) + redIndex] = _valueRed;
+    A[(greenIndex << 2) + greenIndex] = _valueGreen;
+    A[(blueIndex << 2) + blueIndex] = _valueBlue;
 
     error = vImageMatrixMultiply_ARGB8888(&inBuffer, &midBuffer, A, meanDivisor, NULL, NULL, 0);
 
@@ -316,24 +356,24 @@ static const double meanDivisor = 100;
     background[2] = 0;
     background[3] = 0;
 
-    // perform convolution
+    // Perform convolution
     error = vImageBoxConvolve_ARGB8888(&midBuffer, &outBuffer, NULL, 0, 0, _convolveSize, _convolveSize, background, kvImageEdgeExtend);
 
     if (error) {
         NSLog(@"error from convolution %ld", error);
     }
 
-    // create CGImageRef from vImage_Buffer output
+    // Create CGImageRef from vImage_Buffer output
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 
-    CGContextRef ctx = CGBitmapContextCreate(
-        outBuffer.data, outBuffer.width, outBuffer.height, 8, outBuffer.rowBytes, colorSpace, (CGBitmapInfo)kCGImageAlphaNoneSkipLast);
+    CGContextRef ctx =
+        CGBitmapContextCreate(outBuffer.data, outBuffer.width, outBuffer.height, 8, outBuffer.rowBytes, colorSpace, bitmapInfo);
 
     CGImageRef imageRef = CGBitmapContextCreateImage(ctx);
 
     UIImage* returnImage = [UIImage imageWithCGImage:imageRef];
 
-    // clean up
+    // Clean up
     CGContextRelease(ctx);
     CGColorSpaceRelease(colorSpace);
     free(midPixelBuffer);

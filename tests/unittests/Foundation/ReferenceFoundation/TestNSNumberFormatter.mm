@@ -69,7 +69,7 @@ TEST(NSNumberFormatter, AlwaysShowDecimalSeparator) {
 }
 
 // Fail grouping separator
-TEST(NSNumberFormatter, DISABLED_GroupingSeparator) {
+DISABLED_TEST(NSNumberFormatter, GroupingSeparator) {
     NSNumberFormatter* numberFormatter = [[NSNumberFormatter new] autorelease];
     numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     numberFormatter.usesGroupingSeparator = YES;
@@ -79,7 +79,7 @@ TEST(NSNumberFormatter, DISABLED_GroupingSeparator) {
 }
 
 // Percent symbol fails, possibly encoding problem.
-TEST(NSNumberFormatter, DISABLED_PercentSymbol) {
+DISABLED_TEST(NSNumberFormatter, PercentSymbol) {
     NSNumberFormatter* numberFormatter = [[NSNumberFormatter new] autorelease];
     numberFormatter.numberStyle = NSNumberFormatterPercentStyle;
     numberFormatter.percentSymbol = @"💯";
@@ -189,7 +189,7 @@ TEST(NSNumberFormatter, GroupingSize) {
 }
 
 // Fails, does not insert grouping separators
-TEST(NSNumberFormatter, DISABLED_SecondaryGroupingSize) {
+DISABLED_TEST(NSNumberFormatter, SecondaryGroupingSize) {
     NSNumberFormatter* numberFormatter = [[NSNumberFormatter new] autorelease];
     numberFormatter.secondaryGroupingSize = 2;
     numberFormatter.groupingSeparator = @"_";
@@ -208,7 +208,7 @@ TEST(NSNumberFormatter, RoundingMode) {
 }
 
 // Failed. Expected value is 4.2, actual is 4.
-TEST(NSNumberFormatter, DISABLED_RoundingIncrement) {
+DISABLED_TEST(NSNumberFormatter, RoundingIncrement) {
     NSNumberFormatter* numberFormatter = [[NSNumberFormatter new] autorelease];
     numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     numberFormatter.roundingIncrement = @0.2;

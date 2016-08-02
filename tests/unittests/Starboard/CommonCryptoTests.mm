@@ -16,7 +16,7 @@
 
 #include <TestFramework.h>
 #include <windows.h>
-#include <CommonCrypto\CommonCrypto.h>
+#include <CommonCrypto/CommonCrypto.h>
 #include <string>
 #include <vector>
 #include "ByteUtils.h"
@@ -87,44 +87,43 @@ void _multipleUpdatesYieldsSameDigest(int (*init)(CC_Digest_State**),
     ASSERT_EQ_MSG(final(digest2.data(), &ctx), 1, "FAILED: final returned incorrect value");
     logBytes("(Multiline digest)", digest2.data(), digestLength);
 
-    ASSERT_TRUE_MSG(equalsBytes(digest1.data(), digest2.data(), digestLength), "FAILED: multiple updates using same data should yield same result");
+    ASSERT_TRUE_MSG(equalsBytes(digest1.data(), digest2.data(), digestLength),
+                    "FAILED: multiple updates using same data should yield same result");
 }
 
-class DigestTest : public ::testing::TestWithParam<::testing::tuple<int(*)(CC_Digest_State**),
-             int (*)(CC_Digest_State** ctx, const void* data, CC_LONG len),
-             int (*)(unsigned char* digest, CC_Digest_State** ctx),
-             unsigned>> {};
+class DigestTest : public ::testing::TestWithParam<::testing::tuple<int (*)(CC_Digest_State**),
+                                                                    int (*)(CC_Digest_State** ctx, const void* data, CC_LONG len),
+                                                                    int (*)(unsigned char* digest, CC_Digest_State** ctx),
+                                                                    unsigned>> {};
 
 TEST_P(DigestTest, Sanity) {
-    _sanity(::testing::get<0>(GetParam()),
-        ::testing::get<1>(GetParam()),
-        ::testing::get<2>(GetParam()),
-        ::testing::get<3>(GetParam()));
+    _sanity(::testing::get<0>(GetParam()), ::testing::get<1>(GetParam()), ::testing::get<2>(GetParam()), ::testing::get<3>(GetParam()));
 }
 
 TEST_P(DigestTest, SameDataYieldsSameDigest) {
     _sameDataYieldsSameDigest(::testing::get<0>(GetParam()),
-        ::testing::get<1>(GetParam()),
-        ::testing::get<2>(GetParam()),
-        ::testing::get<3>(GetParam()));
+                              ::testing::get<1>(GetParam()),
+                              ::testing::get<2>(GetParam()),
+                              ::testing::get<3>(GetParam()));
 }
 
 TEST_P(DigestTest, MultipleUpdatesYieldsSameDigest) {
     _sameDataYieldsSameDigest(::testing::get<0>(GetParam()),
-        ::testing::get<1>(GetParam()),
-        ::testing::get<2>(GetParam()),
-        ::testing::get<3>(GetParam()));
+                              ::testing::get<1>(GetParam()),
+                              ::testing::get<2>(GetParam()),
+                              ::testing::get<3>(GetParam()));
 }
 
-INSTANTIATE_TEST_CASE_P(CommonDigest,
-                        DigestTest,
-                        ::testing::Values(::testing::make_tuple(CC_MD2_Init, CC_MD2_Update, CC_MD2_Final, CC_MD2_DIGEST_LENGTH),
-                                          ::testing::make_tuple(CC_MD4_Init, CC_MD4_Update, CC_MD4_Final, CC_MD4_DIGEST_LENGTH),
-                                          ::testing::make_tuple(CC_MD5_Init, CC_MD5_Update, CC_MD5_Final, CC_MD5_DIGEST_LENGTH),
-                                          ::testing::make_tuple(CC_SHA1_Init, CC_SHA1_Update, CC_SHA1_Final, CC_SHA1_DIGEST_LENGTH),
-                                          ::testing::make_tuple(CC_SHA256_Init, CC_SHA256_Update, CC_SHA256_Final, CC_SHA256_DIGEST_LENGTH),
-                                          ::testing::make_tuple(CC_SHA384_Init, CC_SHA384_Update, CC_SHA384_Final, CC_SHA384_DIGEST_LENGTH),
-                                          ::testing::make_tuple(CC_SHA512_Init, CC_SHA512_Update, CC_SHA512_Final, CC_SHA512_DIGEST_LENGTH)));
+INSTANTIATE_TEST_CASE_P(
+    CommonDigest,
+    DigestTest,
+    ::testing::Values(::testing::make_tuple(CC_MD2_Init, CC_MD2_Update, CC_MD2_Final, CC_MD2_DIGEST_LENGTH),
+                      ::testing::make_tuple(CC_MD4_Init, CC_MD4_Update, CC_MD4_Final, CC_MD4_DIGEST_LENGTH),
+                      ::testing::make_tuple(CC_MD5_Init, CC_MD5_Update, CC_MD5_Final, CC_MD5_DIGEST_LENGTH),
+                      ::testing::make_tuple(CC_SHA1_Init, CC_SHA1_Update, CC_SHA1_Final, CC_SHA1_DIGEST_LENGTH),
+                      ::testing::make_tuple(CC_SHA256_Init, CC_SHA256_Update, CC_SHA256_Final, CC_SHA256_DIGEST_LENGTH),
+                      ::testing::make_tuple(CC_SHA384_Init, CC_SHA384_Update, CC_SHA384_Final, CC_SHA384_DIGEST_LENGTH),
+                      ::testing::make_tuple(CC_SHA512_Init, CC_SHA512_Update, CC_SHA512_Final, CC_SHA512_DIGEST_LENGTH)));
 
 void _oneShotYieldsSameDigestAsUpdate(int (*init)(CC_Digest_State**),
                                       int (*update)(CC_Digest_State** ctx, const void* data, CC_LONG len),
@@ -146,30 +145,30 @@ void _oneShotYieldsSameDigestAsUpdate(int (*init)(CC_Digest_State**),
     ASSERT_TRUE_MSG(equalsBytes(digest1.data(), digest2.data(), digestLength), "FAILED: one shot should yield same result");
 }
 
-class DigestTest2 : public ::testing::TestWithParam<::testing::tuple<int(*)(CC_Digest_State**),
-             int (*)(CC_Digest_State** ctx, const void* data, CC_LONG len),
-             int (*)(unsigned char* digest, CC_Digest_State** ctx),
-             unsigned char* (*)(const void*, CC_LONG, unsigned char*),
-             unsigned>> {};
+class DigestTest2 : public ::testing::TestWithParam<::testing::tuple<int (*)(CC_Digest_State**),
+                                                                     int (*)(CC_Digest_State** ctx, const void* data, CC_LONG len),
+                                                                     int (*)(unsigned char* digest, CC_Digest_State** ctx),
+                                                                     unsigned char* (*)(const void*, CC_LONG, unsigned char*),
+                                                                     unsigned>> {};
 
 TEST_P(DigestTest2, OneShotYieldsSameDigestAsUpdate) {
     _oneShotYieldsSameDigestAsUpdate(::testing::get<0>(GetParam()),
-        ::testing::get<1>(GetParam()),
-        ::testing::get<2>(GetParam()),
-        ::testing::get<3>(GetParam()),
-        ::testing::get<4>(GetParam()));
+                                     ::testing::get<1>(GetParam()),
+                                     ::testing::get<2>(GetParam()),
+                                     ::testing::get<3>(GetParam()),
+                                     ::testing::get<4>(GetParam()));
 }
 
-INSTANTIATE_TEST_CASE_P(CommonDigest,
-                        DigestTest2,
-                        ::testing::Values(::testing::make_tuple(CC_MD2_Init, CC_MD2_Update, CC_MD2_Final, CC_MD2, CC_MD2_DIGEST_LENGTH),
-                            ::testing::make_tuple(CC_MD4_Init, CC_MD4_Update, CC_MD4_Final, CC_MD4, CC_MD4_DIGEST_LENGTH),
-                            ::testing::make_tuple(CC_MD5_Init, CC_MD5_Update, CC_MD5_Final, CC_MD5, CC_MD5_DIGEST_LENGTH),
-                            ::testing::make_tuple(CC_SHA1_Init, CC_SHA1_Update, CC_SHA1_Final, CC_SHA1, CC_SHA1_DIGEST_LENGTH),
-                            ::testing::make_tuple(CC_SHA256_Init, CC_SHA256_Update, CC_SHA256_Final, CC_SHA256, CC_SHA256_DIGEST_LENGTH),
-                            ::testing::make_tuple(CC_SHA384_Init, CC_SHA384_Update, CC_SHA384_Final, CC_SHA384, CC_SHA384_DIGEST_LENGTH),
-                            ::testing::make_tuple(CC_SHA512_Init, CC_SHA512_Update, CC_SHA512_Final, CC_SHA512, CC_SHA512_DIGEST_LENGTH)));
-
+INSTANTIATE_TEST_CASE_P(
+    CommonDigest,
+    DigestTest2,
+    ::testing::Values(::testing::make_tuple(CC_MD2_Init, CC_MD2_Update, CC_MD2_Final, CC_MD2, CC_MD2_DIGEST_LENGTH),
+                      ::testing::make_tuple(CC_MD4_Init, CC_MD4_Update, CC_MD4_Final, CC_MD4, CC_MD4_DIGEST_LENGTH),
+                      ::testing::make_tuple(CC_MD5_Init, CC_MD5_Update, CC_MD5_Final, CC_MD5, CC_MD5_DIGEST_LENGTH),
+                      ::testing::make_tuple(CC_SHA1_Init, CC_SHA1_Update, CC_SHA1_Final, CC_SHA1, CC_SHA1_DIGEST_LENGTH),
+                      ::testing::make_tuple(CC_SHA256_Init, CC_SHA256_Update, CC_SHA256_Final, CC_SHA256, CC_SHA256_DIGEST_LENGTH),
+                      ::testing::make_tuple(CC_SHA384_Init, CC_SHA384_Update, CC_SHA384_Final, CC_SHA384, CC_SHA384_DIGEST_LENGTH),
+                      ::testing::make_tuple(CC_SHA512_Init, CC_SHA512_Update, CC_SHA512_Final, CC_SHA512, CC_SHA512_DIGEST_LENGTH)));
 
 /* CommonHMAC tests */
 
@@ -212,26 +211,25 @@ void _multipleUpdatesYieldsSameHash(CCHmacAlgorithm algorithm, unsigned outputLe
     CCHmacFinal(&ctx, hash2.data());
     logBytes(singleLine, hash2.data(), outputLength);
 
-    ASSERT_TRUE_MSG(equalsBytes(hash1.data(), hash2.data(), outputLength), "FAILED: multiple updates using same data should yield same result");
+    ASSERT_TRUE_MSG(equalsBytes(hash1.data(), hash2.data(), outputLength),
+                    "FAILED: multiple updates using same data should yield same result");
 }
 
 TEST_P(HmacTest, SameDataYieldsSameHash) {
-    _sameDataYieldsSameHash(::testing::get<0>(GetParam()),
-        ::testing::get<1>(GetParam()));
+    _sameDataYieldsSameHash(::testing::get<0>(GetParam()), ::testing::get<1>(GetParam()));
 }
 
 TEST_P(HmacTest, MultipleUpdatesYieldsSameHash) {
-    _multipleUpdatesYieldsSameHash(::testing::get<0>(GetParam()),
-        ::testing::get<1>(GetParam()));
+    _multipleUpdatesYieldsSameHash(::testing::get<0>(GetParam()), ::testing::get<1>(GetParam()));
 }
 
 INSTANTIATE_TEST_CASE_P(CommonHmac,
                         HmacTest,
                         ::testing::Values(::testing::make_tuple(kCCHmacAlgSHA1, CC_SHA1_DIGEST_LENGTH),
-                            ::testing::make_tuple(kCCHmacAlgMD5, CC_MD5_DIGEST_LENGTH),
-                            ::testing::make_tuple(kCCHmacAlgSHA256, CC_SHA256_DIGEST_LENGTH),
-                            ::testing::make_tuple(kCCHmacAlgSHA384, CC_SHA384_DIGEST_LENGTH),
-                            ::testing::make_tuple(kCCHmacAlgSHA512, CC_SHA512_DIGEST_LENGTH)));
+                                          ::testing::make_tuple(kCCHmacAlgMD5, CC_MD5_DIGEST_LENGTH),
+                                          ::testing::make_tuple(kCCHmacAlgSHA256, CC_SHA256_DIGEST_LENGTH),
+                                          ::testing::make_tuple(kCCHmacAlgSHA384, CC_SHA384_DIGEST_LENGTH),
+                                          ::testing::make_tuple(kCCHmacAlgSHA512, CC_SHA512_DIGEST_LENGTH)));
 
 TEST(CommonHmac, OneShotSanity) {
     unsigned hashLength = CC_SHA256_DIGEST_LENGTH;
@@ -352,17 +350,13 @@ void _multipleUpdatesYieldsSameCrypto(CCAlgorithm algorithm,
     ASSERT_EQ(outputLength, updateBytesMoved1 + updateBytesMoved2 + finalBytesMoved);
     logBytes(singleLine, output2.data(), outputLength);
 
-    ASSERT_TRUE_MSG(equalsBytes(output1.data(), output2.data(), outputLength), "FAILED: multiple updates using same data should yield same result");
+    ASSERT_TRUE_MSG(equalsBytes(output1.data(), output2.data(), outputLength),
+                    "FAILED: multiple updates using same data should yield same result");
     ASSERT_EQ(kCCSuccess, CCCryptorRelease(ctx));
 }
 
-void _encryptDecryptSameAsOriginal(CCAlgorithm algorithm,
-                                      CCOptions options,
-                                      size_t keyLength,
-                                      size_t update1Size,
-                                      size_t update2Size,
-                                      size_t outputSize,
-                                      const char* iv) {
+void _encryptDecryptSameAsOriginal(
+    CCAlgorithm algorithm, CCOptions options, size_t keyLength, size_t update1Size, size_t update2Size, size_t outputSize, const char* iv) {
     CCCryptorRef ctx;
 
     CCCryptorStatus status;
@@ -408,50 +402,47 @@ void _encryptDecryptSameAsOriginal(CCAlgorithm algorithm,
     ASSERT_EQ(outputLength, oneShotBytesDecrypted);
     logBytes(singleLine, output2.data(), update1Size + update2Size);
 
-    ASSERT_TRUE_MSG(equalsBytes((BYTE*)singleLine, output2.data(),  update1Size + update2Size), "FAILED: Encrypt followed by Decrypt should equal original");
+    ASSERT_TRUE_MSG(equalsBytes((BYTE*)singleLine, output2.data(), update1Size + update2Size),
+                    "FAILED: Encrypt followed by Decrypt should equal original");
 }
 
-class CryptorTest : public ::testing::TestWithParam<::testing::tuple<CCAlgorithm,
-                                      CCOperation,
-                                      CCOptions,
-                                      size_t,
-                                      size_t,
-                                      size_t,
-                                      size_t,
-                                      const char*>> {};
+class CryptorTest
+    : public ::testing::TestWithParam<::testing::tuple<CCAlgorithm, CCOperation, CCOptions, size_t, size_t, size_t, size_t, const char*>> {
+};
 
 TEST_P(CryptorTest, OneShotYieldsSameCrypto) {
     _oneShotYieldsSameCrypto(::testing::get<0>(GetParam()),
-        ::testing::get<1>(GetParam()),
-        ::testing::get<2>(GetParam()),
-        ::testing::get<3>(GetParam()),
-        ::testing::get<4>(GetParam()),
-        ::testing::get<5>(GetParam()),
-        ::testing::get<6>(GetParam()),
-        ::testing::get<7>(GetParam()));
+                             ::testing::get<1>(GetParam()),
+                             ::testing::get<2>(GetParam()),
+                             ::testing::get<3>(GetParam()),
+                             ::testing::get<4>(GetParam()),
+                             ::testing::get<5>(GetParam()),
+                             ::testing::get<6>(GetParam()),
+                             ::testing::get<7>(GetParam()));
 }
 
 TEST_P(CryptorTest, MultipleUpdatesYieldsSameCrypto) {
     _multipleUpdatesYieldsSameCrypto(::testing::get<0>(GetParam()),
-        ::testing::get<1>(GetParam()),
-        ::testing::get<2>(GetParam()),
-        ::testing::get<3>(GetParam()),
-        ::testing::get<4>(GetParam()),
-        ::testing::get<5>(GetParam()),
-        ::testing::get<6>(GetParam()),
-        ::testing::get<7>(GetParam()));
+                                     ::testing::get<1>(GetParam()),
+                                     ::testing::get<2>(GetParam()),
+                                     ::testing::get<3>(GetParam()),
+                                     ::testing::get<4>(GetParam()),
+                                     ::testing::get<5>(GetParam()),
+                                     ::testing::get<6>(GetParam()),
+                                     ::testing::get<7>(GetParam()));
 }
 
 TEST_P(CryptorTest, EncryptDecryptSameAsOriginal) {
     _encryptDecryptSameAsOriginal(::testing::get<0>(GetParam()),
-        ::testing::get<2>(GetParam()),
-        ::testing::get<3>(GetParam()),
-        ::testing::get<4>(GetParam()),
-        ::testing::get<5>(GetParam()),
-        ::testing::get<6>(GetParam()),
-        ::testing::get<7>(GetParam()));
+                                  ::testing::get<2>(GetParam()),
+                                  ::testing::get<3>(GetParam()),
+                                  ::testing::get<4>(GetParam()),
+                                  ::testing::get<5>(GetParam()),
+                                  ::testing::get<6>(GetParam()),
+                                  ::testing::get<7>(GetParam()));
 }
 
+// clang-format off
 INSTANTIATE_TEST_CASE_P(CommonCryptor,
                         CryptorTest,
                         ::testing::Values(
@@ -477,6 +468,7 @@ INSTANTIATE_TEST_CASE_P(CommonCryptor,
                             ::testing::make_tuple(kCCAlgorithmRC2, kCCEncrypt, kCCOptionECBMode | kCCOptionPKCS7Padding, kCCKeySizeMinRC2, kCCBlockSizeRC2, kCCBlockSizeRC2 + 1, kCCBlockSizeRC2 * 3, nullptr),
                             ::testing::make_tuple(kCCAlgorithmRC4, kCCEncrypt, 0, kCCKeySizeMinRC4, 2, 5, 7, nullptr),
                             ::testing::make_tuple(kCCAlgorithmRC4, kCCEncrypt, 0, kCCKeySizeMaxRC4, 0, 14, 14, nullptr)));
+// clang-format on
 
 TEST(CommonCryptor, Sanity) {
     unsigned aesBlockLength = 16;

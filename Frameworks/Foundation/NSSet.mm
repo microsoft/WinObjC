@@ -485,12 +485,18 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSSet*)objectsPassingTest:(BOOL (^)(id, BOOL*))predicate {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSMutableSet* ret = [NSMutableSet setWithCapacity:0];
+
+   [self enumerateObjectsUsingBlock:^void(id obj, BOOL* stop){
+        if (predicate(obj, stop)) {
+            [ret addObject:obj];
+        }
+    }];
+
+    return ret;
 }
 
 /**
@@ -535,11 +541,12 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)setValue:(id)value forKey:(NSString*)key {
-    UNIMPLEMENTED();
+    [self enumerateObjectsUsingBlock:^void(id obj, BOOL*){
+        [obj setValue:value forKey:key];
+    }];
 }
 
 /**

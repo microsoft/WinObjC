@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -19,21 +19,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="AssetsLibrary.def" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+      <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26da08da-d0b9-4579-b168-e7f0a5f20e57}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Starboard\lib\StarboardLib.vcxproj">
       <Project>{2a00fc26-2ecf-4df7-8ecf-2d18c5ac61c9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\AssetsLibrary.vcxproj">
+    <ProjectReference Include="..\lib\AssetsLibraryLib.vcxproj">
       <Project>{a92b7f82-de95-4d29-b942-276dc21c180c}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AssetsLibrary.def" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A3A27F94-66BD-4DEC-892D-1DC8FEED2B5D}</ProjectGuid>
@@ -53,12 +59,10 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>AssetsLibrary.def</ModuleDefinitionFile>
+      <AdditionalDependencies>libdispatch.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>
-      </IncludePaths>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -67,12 +71,10 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>AssetsLibrary.def</ModuleDefinitionFile>
+      <AdditionalDependencies>libdispatch.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>
-      </IncludePaths>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -81,12 +83,10 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>AssetsLibrary.def</ModuleDefinitionFile>
+      <AdditionalDependencies>libdispatch.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>
-      </IncludePaths>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -95,12 +95,10 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>AssetsLibrary.def</ModuleDefinitionFile>
+      <AdditionalDependencies>libdispatch.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>
-      </IncludePaths>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>

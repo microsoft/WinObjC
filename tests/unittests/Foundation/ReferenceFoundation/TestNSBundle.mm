@@ -25,7 +25,6 @@
 #import <Foundation/Foundation.h>
 #import <TestFramework.h>
 #import <LoggingNative.h>
-#import <StringHelpers.h>
 
 TEST(NSBundle, Paths) {
     auto bundle = [NSBundle mainBundle];
@@ -111,7 +110,7 @@ static NSString* _setupPlayground() {
     NSError* error = nil;
     [[NSFileManager defaultManager] createDirectoryAtPath:tempDir withIntermediateDirectories:false attributes:nil error:&error];
     if (error) {
-        TraceError(L"TestNSBundle", Strings::NarrowToWide<std::wstring>([[error description] UTF8String]).data());
+        TraceError(L"TestNSBundle", L"%hs", [[error description] UTF8String]);
         return nil;
     }
 
@@ -119,7 +118,7 @@ static NSString* _setupPlayground() {
     auto bundlePath = [tempDir stringByAppendingString:_bundleName];
     [[NSFileManager defaultManager] createDirectoryAtPath:bundlePath withIntermediateDirectories:false attributes:nil error:&error];
     if (error) {
-        TraceError(L"TestNSBundle", Strings::NarrowToWide<std::wstring>([[error description] UTF8String]).data());
+        TraceError(L"TestNSBundle", L"%hs", [[error description] UTF8String]);
         return nil;
     }
 
@@ -133,7 +132,7 @@ static NSString* _setupPlayground() {
     auto subDirPath = [[bundlePath stringByAppendingString:@"/"] stringByAppendingString:_subDirectory];
     [[NSFileManager defaultManager] createDirectoryAtPath:subDirPath withIntermediateDirectories:false attributes:nil error:&error];
     if (error) {
-        TraceError(L"TestNSBundle", Strings::NarrowToWide<std::wstring>([[error description] UTF8String]).data());
+        TraceError(L"TestNSBundle", L"%hs", [[error description] UTF8String]);
         return nil;
     }
     [[NSFileManager defaultManager] createFileAtPath:[@[ subDirPath, @"/", _main, @".", _type ] componentsJoinedByString:@""]

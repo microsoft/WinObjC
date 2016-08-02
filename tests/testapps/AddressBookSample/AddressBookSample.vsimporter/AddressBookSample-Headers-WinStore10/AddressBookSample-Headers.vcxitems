@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsRootNamespace>AddressBookSample_Headers</ItemsRootNamespace>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <Keyword>IslandwoodProj</Keyword>
+    <ItemsProjectGuid>{F091CACD-3928-45AC-B634-63F1D5E1E49A}</ItemsProjectGuid>
+    <SharedGUID>{082562A2-B94A-4D43-AFE9-15FB24B83C7C}</SharedGUID>
+  </PropertyGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\AddressBook\AppDelegate.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\AddressBook\ViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\AddressBook\SingleContactViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\AddressBook\ViewAllContactsViewController.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+</Project>

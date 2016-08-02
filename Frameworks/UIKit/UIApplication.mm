@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import "Starboard.h"
 #import <StubReturn.h>
 
 #include "Platform/EbrPlatform.h"
@@ -55,6 +55,7 @@
 
 #include "LoggingNative.h"
 #include "UIApplicationMainInternal.h"
+#import "StarboardXaml/UWPBackgroundTask.h"
 
 static const wchar_t* TAG = L"UIApplication";
 
@@ -778,10 +779,11 @@ static void printViews(id curView, int level) {
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes This method only returns the status for if the URL can be opened and not the actual open URL call status.
 */
 - (BOOL)openURL:(NSURL*)url {
-    return [_launcher _openURL:url];
+    return [_launcher _openURLAsync:url];
 }
 
 /**
@@ -863,25 +865,50 @@ static void printViews(id curView, int level) {
  @Status Stub
 */
 - (UIBackgroundTaskIdentifier)beginBackgroundTaskWithExpirationHandler:(void (^)())handler {
+#ifdef ENABLE_BACKGROUND_TASK
+    return [[UWPBackgroundTask sharedInstance] requestBackgroundTask:handler];
+#else
     UNIMPLEMENTED();
     TraceVerbose(TAG, L"beginBackgroundTaskWithExpirationHandler not supported");
     return 0;
+#endif
+}
+
+/**
+ @Status Stub
+*/
+- (UIBackgroundTaskIdentifier)beginBackgroundTaskWithName:(NSString*)taskName expirationHandler:(void (^)(void))handler {
+#ifdef ENABLE_BACKGROUND_TASK
+    // taskName argument is not used here as UWPBackgroundTask has its own in-built mechanism to to keep track of tasks.
+    return [[UWPBackgroundTask sharedInstance] requestBackgroundTask:handler];
+#else
+    UNIMPLEMENTED();
+    return StubReturn();
+#endif
 }
 
 /**
  @Status Stub
 */
 - (double)backgroundTimeRemaining {
+#ifdef ENABLE_BACKGROUND_TASK
+    return [[UWPBackgroundTask sharedInstance] timeRemaining];
+#else
     UNIMPLEMENTED();
     return 60.0 * 5;
+#endif
 }
 
 /**
  @Status Stub
 */
-- (void)endBackgroundTask:(UIBackgroundTaskIdentifier)handler {
+- (void)endBackgroundTask:(UIBackgroundTaskIdentifier)taskIdentifier {
+#ifdef ENABLE_BACKGROUND_TASK
+    [[UWPBackgroundTask sharedInstance] unregisterBackgroundTask:taskIdentifier];
+#else
     UNIMPLEMENTED();
     TraceVerbose(TAG, L"endBackgroundTask not supported");
+#endif
 }
 
 - (void)_showScene:(UIViewController*)controller {
@@ -1172,6 +1199,10 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
 }
 
 - (void)_sendEnteringBackgroundEvents {
+#ifdef ENABLE_BACKGROUND_TASK
+    [[UWPBackgroundTask sharedInstance] isEnteringBackground];
+#endif
+
     if ([self.delegate respondsToSelector:@selector(applicationDidEnterBackground:)]) {
         [self.delegate applicationDidEnterBackground:self];
     }
@@ -1181,6 +1212,10 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
 }
 
 - (void)_sendEnteringForegroundEvents {
+#ifdef ENABLE_BACKGROUND_TASK
+    [[UWPBackgroundTask sharedInstance] isEnteringForeground];
+#endif
+
     if (_applicationState == UIApplicationStateBackground) {
         // Note: *applicationWillEnterForeground* events should only be sent when the app is coming to Foreground from Background.
         if ([self.delegate respondsToSelector:@selector(applicationWillEnterForeground:)]) {
@@ -1206,14 +1241,22 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
     [data setValue:notificationData forKey:UIApplicationLaunchOptionsRemoteNotificationKey];
 
     // As there is now way to distinguish remote notification from local, calling both delegates here for now.
-    if ([self.delegate respondsToSelector:@selector(didReceiveRemoteNotification:fetchCompletionHandler:)]) {
-        [self.delegate didReceiveRemoteNotification:data
-                             fetchCompletionHandler:^{
-                                 // TODO::
-                                 // todo-nithishm-05262016 - Implement logic to invoke a application trigger here.
-                             }];
-    } else if ([self.delegate respondsToSelector:@selector(didReceiveRemoteNotification:)]) {
-        [self.delegate didReceiveRemoteNotification:data];
+    if ([self.delegate respondsToSelector:@selector(application:didReceiveRemoteNotification:fetchCompletionHandler:)]) {
+#ifdef ENABLE_BACKGROUND_TASK
+        // Hold a ApplicationTrigger deferral to prevent the application from suspending until the completion handler is
+        // called.
+        NSUInteger taskIdentifier = [[UWPBackgroundTask sharedInstance] requestBackgroundTask:nil];
+#endif
+        [self.delegate application:self
+            didReceiveRemoteNotification:data
+                  fetchCompletionHandler:^(UIBackgroundFetchResult result) {
+                      TraceVerbose(TAG, L"didReceiveRemoteNotification fetchCompletionHandler called with result %d", result);
+#ifdef ENABLE_BACKGROUND_TASK
+                      [[UWPBackgroundTask sharedInstance] unregisterBackgroundTask:taskIdentifier];
+#endif
+                  }];
+    } else if ([self.delegate respondsToSelector:@selector(application:didReceiveRemoteNotification:)]) {
+        [self.delegate application:self didReceiveRemoteNotification:data];
     }
 
     // TODO::
@@ -1639,14 +1682,6 @@ static void evaluateKeyboard(id self) {
  @Status Stub
 */
 - (BOOL)setKeepAliveTimeout:(NSTimeInterval)timeout handler:(void (^)(void))keepAliveHandler {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-- (UIBackgroundTaskIdentifier)beginBackgroundTaskWithName:(NSString*)taskName expirationHandler:(void (^)(void))handler {
     UNIMPLEMENTED();
     return StubReturn();
 }
