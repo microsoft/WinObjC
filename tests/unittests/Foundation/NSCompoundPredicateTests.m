@@ -388,7 +388,7 @@ TEST(NSCompoundPredicate, ArchiveAndUnarchiveObject) {
 }
 
 TEST(Foundation, NSCompoundPredicate_copy) {
-    NSPredicate* predicate = [[NSPredicate alloc] init];
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"10 >= 30"];
     NSCompoundPredicate* compoundPredicate = [NSCompoundPredicate notPredicateWithSubpredicate:predicate];
     ASSERT_TRUE_MSG(compoundPredicate != nil, "FAILED: compoundPredicate should be non-null!");
 
@@ -403,6 +403,5 @@ TEST(Foundation, NSCompoundPredicate_copy) {
                   [copyObj compoundPredicateType],
                   "FAILED: compoundPredicateType do not match.");
 
-    [predicate release];
     [copyObj release];
 }
