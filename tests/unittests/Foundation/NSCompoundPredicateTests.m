@@ -18,20 +18,17 @@
 #import <Foundation/Foundation.h>
 
 TEST(NSCompoundPredicate, Init) {
-    NSCompoundPredicate* compoundPredicate = [[NSCompoundPredicate alloc] init];
+    NSCompoundPredicate* compoundPredicate = [NSCompoundPredicate notPredicateWithSubpredicate:[NSPredicate predicateWithFormat:@"1<3"]];
     ASSERT_TRUE_MSG(compoundPredicate != nil, "FAILED: compoundPredicate should be non-null!");
-    [compoundPredicate release];
 }
 
 TEST(Foundation, NSCompoundPredicate_NOTPredicateWithSubpredicate) {
-    NSPredicate* predicate = [[NSPredicate alloc] init];
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"1<3"];
     NSCompoundPredicate* compoundPredicate = [NSCompoundPredicate notPredicateWithSubpredicate:predicate];
     ASSERT_TRUE_MSG(compoundPredicate != nil, "FAILED: compoundPredicate should be non-null!");
 
     ASSERT_TRUE_MSG([compoundPredicate subpredicates] != nil, "FAILED: subpredicates should be non-null!");
     ASSERT_EQ_MSG(NSNotPredicateType, [compoundPredicate compoundPredicateType], "FAILED: type should be NSNotPredicateType.");
-
-    [predicate release];
 }
 
 TEST(NSCompoundPredicate, NOTPredicateWithSubpredicateEval) {
@@ -61,14 +58,12 @@ TEST(NSCompoundPredicate, NOTPredicateWithSubpredicateEval) {
 }
 
 TEST(Foundation, NSCompoundPredicate_ANDPredicateWithSubpredicates) {
-    NSArray* predicates = [[NSArray alloc] init];
+    NSArray* predicates = [NSArray array];
     NSCompoundPredicate* compoundPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:predicates];
     ASSERT_TRUE_MSG(compoundPredicate != nil, "FAILED: compoundPredicate should be non-null!");
 
     ASSERT_TRUE_MSG([compoundPredicate subpredicates] != nil, "FAILED: subpredicates should be non-null!");
     ASSERT_EQ_MSG(NSAndPredicateType, [compoundPredicate compoundPredicateType], "FAILED: type should be NSAndPredicateType.");
-
-    [predicates release];
 }
 
 TEST(NSCompoundPredicate, _ANDPredicateWithSubpredicatesEval) {
@@ -152,14 +147,12 @@ TEST(NSCompoundPredicate, _ANDPredicateWithSubpredicatesEvalWithNOT) {
 }
 
 TEST(Foundation, NSCompoundPredicate_ORPredicateWithSubpredicates) {
-    NSArray* predicates = [[NSArray alloc] init];
+    NSArray* predicates = [NSArray array];
     NSCompoundPredicate* compoundPredicate = [NSCompoundPredicate orPredicateWithSubpredicates:predicates];
     ASSERT_TRUE_MSG(compoundPredicate != nil, "FAILED: compoundPredicate should be non-null!");
 
     ASSERT_TRUE_MSG([compoundPredicate subpredicates] != nil, "FAILED: subpredicates should be non-null!");
     ASSERT_EQ_MSG(NSOrPredicateType, [compoundPredicate compoundPredicateType], "FAILED: type should be NSOrPredicateType.");
-
-    [predicates release];
 }
 
 TEST(NSCompoundPredicate, ORPredicateWithSubpredicatesEval) {
@@ -305,7 +298,7 @@ TEST(NSCompoundPredicate, ORPredicateWithSubpredicatesEvalWithNOTWithAND) {
 TEST(NSCompoundPredicate, ORPredicateWithSubpredicatesEvalWithNOTWithAND2) {
     // testing (((!predicate1) || (predicate2 && !predicate3) || (predicate4)) && (predicate5))
 
-    NSMutableArray* array = [[NSMutableArray alloc] init];
+    NSMutableArray* array = [NSMutableArray array];
 
     for (int i = 1; i < 20; ++i) {
         [array addObject:[NSNumber numberWithInt:i]];
@@ -369,12 +362,10 @@ TEST(NSCompoundPredicate, ORPredicateWithSubpredicatesEvalWithNOTWithAND2) {
                           "expected.");
         }
     }
-
-    [array release];
 }
 
 TEST(NSCompoundPredicate, ArchiveAndUnarchiveObject) {
-    NSCompoundPredicate* compoundPredicate = [[NSCompoundPredicate alloc] init];
+    NSCompoundPredicate* compoundPredicate = [NSCompoundPredicate notPredicateWithSubpredicate:[NSPredicate predicateWithFormat:@"1<3"]];
     ASSERT_TRUE_MSG(compoundPredicate != nil, "FAILED: compoundPredicate should be non-null!");
 
     // archive the object
@@ -383,12 +374,10 @@ TEST(NSCompoundPredicate, ArchiveAndUnarchiveObject) {
     // unarchive
     NSCompoundPredicate* unArchivedcompoundPredicate = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     ASSERT_TRUE_MSG(unArchivedcompoundPredicate != nil, "FAILED: unArchivedcompoundPredicate should be non-null!");
-
-    [compoundPredicate release];
 }
 
 TEST(Foundation, NSCompoundPredicate_copy) {
-    NSPredicate* predicate = [[NSPredicate alloc] init];
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"1<3"];
     NSCompoundPredicate* compoundPredicate = [NSCompoundPredicate notPredicateWithSubpredicate:predicate];
     ASSERT_TRUE_MSG(compoundPredicate != nil, "FAILED: compoundPredicate should be non-null!");
 
@@ -403,6 +392,5 @@ TEST(Foundation, NSCompoundPredicate_copy) {
                   [copyObj compoundPredicateType],
                   "FAILED: compoundPredicateType do not match.");
 
-    [predicate release];
     [copyObj release];
 }
