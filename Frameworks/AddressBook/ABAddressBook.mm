@@ -20,7 +20,7 @@
 #import <StubReturn.h>
 #import <Starboard/SmartTypes.h>
 
-#import "_ABAddressBookManager.h"
+#import "ABAddressBookManagerInternal.h"
 
 #import "UWP/InteropBase.h"
 #import "UWP/WindowsDevicesEnumeration.h"

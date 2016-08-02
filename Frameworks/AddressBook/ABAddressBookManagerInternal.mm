@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#import "_ABAddressBookManager.h"
+#import "ABAddressBookManagerInternal.h"
 #import "UWP/WindowsApplicationModelContacts.h"
 
 @interface _ABAddressBookManager ()
