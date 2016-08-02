@@ -45,7 +45,7 @@ ABAddressBookRef ABAddressBookCreate() {
 */
 ABAddressBookRef ABAddressBookCreateWithOptions(CFDictionaryRef options, CFErrorRef* error) {
     _ABAddressBookManager* addressBook = [[_ABAddressBookManager alloc] init];
-    if (addressBook.contactStore == nil) {
+    if (addressBook == nil) {
         // There was an error setting up the backing
         // contact store, so just return NULL to signify
         // the error.
@@ -86,19 +86,16 @@ ABAuthorizationStatus ABAddressBookGetAuthorizationStatus() {
  runtime.
 */
 void ABAddressBookRequestAccessWithCompletion(ABAddressBookRef addressBook, ABAddressBookRequestAccessCompletionHandler completion) {
-    CFErrorRef error = nullptr;
     woc::unique_cf<CFErrorRef> strongError;
     bool accessGranted = ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized;
     if (!accessGranted) {
-        error = CFErrorCreate(NULL, ABAddressBookErrorDomain, kABOperationNotPermittedByUserError, NULL);
+        strongError.reset(CFErrorCreate(NULL, ABAddressBookErrorDomain, kABOperationNotPermittedByUserError, NULL));
     }
-
-    strongError.reset(error);
 
     // Since we can't request access at runtime (Contacts capabilities must be declared
     // in the app's package manifest), immediately call the completion handler with the current
     // authorization status.
-    completion(accessGranted, error);
+    completion(accessGranted, strongError.get());
 }
 
 /**
