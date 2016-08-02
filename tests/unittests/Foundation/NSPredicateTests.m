@@ -118,7 +118,7 @@ TEST(NSPredicate, ArchiveAndUnarchiveObject) {
 }
 
 TEST(NSPredicate, copy) {
-    NSPredicate* predicate = [[NSPredicate alloc] init];
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"1<3"];
     ASSERT_TRUE_MSG(predicate != nil, "FAILED: predicate should be non-null!");
 
     NSPredicate* copyObj = [predicate copy];
@@ -126,7 +126,6 @@ TEST(NSPredicate, copy) {
 
     ASSERT_OBJCEQ_MSG(predicate, copyObj, "FAILED: objects do not match.");
 
-    [copyObj release];
     [predicate release];
 }
 
@@ -235,7 +234,7 @@ TEST(NSPredicate, keyPathAccess) {
 }
 
 TEST(NSPredicate, BeginsWith) {
-    NSMutableArray* animals = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray* animals = [NSMutableArray array];
     PredicateTestAnimal* animal = [[[PredicateTestAnimal alloc] initWithName:@"aaa" age:5 speed:115] autorelease];
     [animals addObject:animal];
 
@@ -254,7 +253,7 @@ TEST(NSPredicate, BeginsWith) {
 }
 
 TEST(NSPredicate, EndsWith) {
-    NSMutableArray* animals = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray* animals = [NSMutableArray array];
     PredicateTestAnimal* animal = [[[PredicateTestAnimal alloc] initWithName:@"aax" age:5 speed:115] autorelease];
     [animals addObject:animal];
 
@@ -268,7 +267,7 @@ TEST(NSPredicate, EndsWith) {
 }
 
 TEST(NSPredicate, Contains) {
-    NSMutableArray* animals = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray* animals = [NSMutableArray array];
     PredicateTestAnimal* animal = [[[PredicateTestAnimal alloc] initWithName:@"aax" age:5 speed:115] autorelease];
     [animals addObject:animal];
 
@@ -282,7 +281,7 @@ TEST(NSPredicate, Contains) {
 }
 
 TEST(NSPredicate, Contains2) {
-    NSMutableArray* animals = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray* animals = [NSMutableArray array];
     PredicateTestAnimal* animal = [[[PredicateTestAnimal alloc] initWithName:@"aax" age:5 speed:115] autorelease];
     [animals addObject:animal];
 
@@ -293,7 +292,7 @@ TEST(NSPredicate, Contains2) {
 }
 
 TEST(NSPredicate, InCollection) {
-    NSMutableArray* animals = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray* animals = [NSMutableArray array];
 
     PredicateTestAnimal* animal = [[[PredicateTestAnimal alloc] initWithName:@"test1" age:5 speed:115] autorelease];
     [animals addObject:animal];
@@ -310,7 +309,7 @@ TEST(NSPredicate, InCollection) {
 }
 
 TEST(NSPredicate, Matches) {
-    NSMutableArray* animals = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray* animals = [NSMutableArray array];
 
     PredicateTestAnimal* animal = [[[PredicateTestAnimal alloc] initWithName:@"test1" age:5 speed:115] autorelease];
     [animals addObject:animal];
@@ -324,8 +323,11 @@ TEST(NSPredicate, Matches) {
     ASSERT_EQ_MSG(1, [validTestAnimals count], "FAILED: Unable to filter based on class property.");
 }
 
+TEST(NSPredicate, Matches) {
+}
+
 TEST(NSPredicate, Like) {
-    NSMutableArray* animals = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray* animals = [NSMutableArray array];
 
     PredicateTestAnimal* animal = [[[PredicateTestAnimal alloc] initWithName:@"test1" age:5 speed:115] autorelease];
     [animals addObject:animal];
