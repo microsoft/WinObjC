@@ -25,6 +25,6 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\NSRecursiveLockInternalTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\NSStringInternalTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSObject_NSCoding.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\Foundation\WindowsOnly\NSPointerArrayInternalTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\NSPointerArrayInternalTests.mm" />
   </ItemGroup>
 </Project>
