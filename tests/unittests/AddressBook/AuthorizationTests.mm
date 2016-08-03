@@ -36,14 +36,15 @@ using namespace Microsoft::WRL;
 static WDEDeviceAccessStatus statusToMock = WDEDeviceAccessStatusUnspecified;
 
 // Mocked version of WDEDeviceAccessInformation.
-MOCK_CLASS(MockDeviceAccessInformation, public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IDeviceAccessInformation> {
-    InspectableClass(RuntimeClass_Windows_Devices_Enumeration_DeviceAccessInformation, BaseTrust);
+MOCK_CLASS(MockDeviceAccessInformation,
+           public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IDeviceAccessInformation> {
+               InspectableClass(RuntimeClass_Windows_Devices_Enumeration_DeviceAccessInformation, BaseTrust);
 
-public:
-    MOCK_STDCALL_METHOD_2(add_AccessChanged);
-    MOCK_STDCALL_METHOD_1(remove_AccessChanged);
-    MOCK_STDCALL_METHOD_1(get_CurrentStatus);
-});
+           public:
+               MOCK_STDCALL_METHOD_2(add_AccessChanged);
+               MOCK_STDCALL_METHOD_1(remove_AccessChanged);
+               MOCK_STDCALL_METHOD_1(get_CurrentStatus);
+           });
 
 @interface __ABAddressBook_Swizzle : NSObject
 
@@ -100,7 +101,7 @@ public:
 
 @end
 
-class AddressBookTest : public ::testing::Test {
+class AddressBookTest : public ::testing::TestWithParam<::testing::tuple<WDEDeviceAccessStatus, ABAuthorizationStatus, const char*>> {
 protected:
     virtual void SetUp() {
         _originalImplementation = [__ABAddressBook_Swizzle setupMock];
@@ -110,53 +111,57 @@ protected:
         [__ABAddressBook_Swizzle tearDownMock:_originalImplementation];
     }
 
-    void testABAddressBookGetAuthorizationStatus(WDEDeviceAccessStatus toMock,
-                                                 ABAuthorizationStatus expected,
-                                                 char* errorMessage) {
-        statusToMock = toMock;
-        ASSERT_EQ_MSG(expected, ABAddressBookGetAuthorizationStatus(), errorMessage);
+    IMP _originalImplementation;
+};
+
+class AddressBookTest2 : public ::testing::TestWithParam<::testing::tuple<WDEDeviceAccessStatus, bool>> {
+protected:
+    virtual void SetUp() {
+        _originalImplementation = [__ABAddressBook_Swizzle setupMock];
     }
 
-    void testABAddressBookRequestAccess(WDEDeviceAccessStatus toMock, ABAddressBookRequestAccessCompletionHandler completion) {
-        statusToMock = toMock;
-        ABAddressBookRequestAccessWithCompletion(NULL, completion);
+    virtual void TearDown() {
+        [__ABAddressBook_Swizzle tearDownMock:_originalImplementation];
     }
 
     IMP _originalImplementation;
 };
 
-TEST_F(AddressBookTest, AuthorizationStatusNotDetermined) {
-    testABAddressBookGetAuthorizationStatus(WDEDeviceAccessStatusUnspecified,
-                                            kABAuthorizationStatusNotDetermined,
-                                            "FAILED: Authorization Status should be undetermined!\n");
+TEST_P(AddressBookTest, AuthorizationStatus) {
+    statusToMock = ::testing::get<0>(GetParam());
+    ASSERT_EQ_MSG(::testing::get<1>(GetParam()), ABAddressBookGetAuthorizationStatus(), ::testing::get<2>(GetParam()));
 }
 
-TEST_F(AddressBookTest, AuthorizationStatusAuthorized) {
-    testABAddressBookGetAuthorizationStatus(WDEDeviceAccessStatusAllowed,
-                                            kABAuthorizationStatusAuthorized,
-                                            "FAILED: Authorization Status should be authorized!\n");
+TEST_P(AddressBookTest2, RequestAuthorization) {
+    statusToMock = ::testing::get<0>(GetParam());
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10.0 * NSEC_PER_SEC));
+    __block bool grantedStatus = false;
+    ABAddressBookRequestAccessWithCompletion(NULL,
+                                             ^(bool granted, CFErrorRef error) {
+                                                 grantedStatus = granted;
+                                                 dispatch_semaphore_signal(semaphore);
+                                             });
+    ASSERT_EQ_MSG(dispatch_semaphore_wait(semaphore, timeout), 0, "FAILED: Callback not called within timeout!\n");
+    ASSERT_EQ_MSG(grantedStatus, ::testing::get<1>(GetParam()), "FAILED: incorrect granted status!\n");
 }
 
-TEST_F(AddressBookTest, AuthorizationStatusDenied) {
-    testABAddressBookGetAuthorizationStatus(WDEDeviceAccessStatusDeniedByUser,
-                                            kABAuthorizationStatusDenied,
-                                            "FAILED: Authorization Status should be denied!\n");
-}
+INSTANTIATE_TEST_CASE_P(AddressBook,
+                        AddressBookTest,
+                        ::testing::Values(::testing::make_tuple(WDEDeviceAccessStatusUnspecified,
+                                                                kABAuthorizationStatusNotDetermined,
+                                                                "FAILED: Authorization Status should be undetermined!\n"),
+                                          ::testing::make_tuple(WDEDeviceAccessStatusAllowed,
+                                                                kABAuthorizationStatusAuthorized,
+                                                                "FAILED: Authorization Status should be authorized!\n"),
+                                          ::testing::make_tuple(WDEDeviceAccessStatusDeniedByUser,
+                                                                kABAuthorizationStatusDenied,
+                                                                "FAILED: Authorization Status should be denied!\n"),
+                                          ::testing::make_tuple(WDEDeviceAccessStatusDeniedBySystem,
+                                                                kABAuthorizationStatusRestricted,
+                                                                "FAILED: Authorization Status should be restricted!\n")));
 
-TEST_F(AddressBookTest, AuthorizationStatusRestricted) {
-    testABAddressBookGetAuthorizationStatus(WDEDeviceAccessStatusDeniedBySystem,
-                                            kABAuthorizationStatusRestricted,
-                                            "FAILED: Authorization Status should be restricted!\n");
-}
-
-TEST_F(AddressBookTest, RequestAuthorizationNotGranted) {
-    testABAddressBookRequestAccess(WDEDeviceAccessStatusUnspecified, ^(bool granted, CFErrorRef error) {
-        ASSERT_FALSE_MSG(granted, "FAILED: Access should not be granted\n");
-    });
-}
-
-TEST_F(AddressBookTest, RequestAuthorizationGranted) {
-    testABAddressBookRequestAccess(WDEDeviceAccessStatusAllowed, ^(bool granted, CFErrorRef error) {
-        ASSERT_TRUE_MSG(granted, "FAILED: Access should be granted\n");
-    });
-}
+INSTANTIATE_TEST_CASE_P(AddressBook,
+                        AddressBookTest2,
+                        ::testing::Values(::testing::make_tuple(WDEDeviceAccessStatusUnspecified, false),
+                                          ::testing::make_tuple(WDEDeviceAccessStatusAllowed, true)));

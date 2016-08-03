@@ -86,16 +86,21 @@ ABAuthorizationStatus ABAddressBookGetAuthorizationStatus() {
  runtime.
 */
 void ABAddressBookRequestAccessWithCompletion(ABAddressBookRef addressBook, ABAddressBookRequestAccessCompletionHandler completion) {
-    woc::unique_cf<CFErrorRef> strongError;
+    CFErrorRef error = nullptr;
     bool accessGranted = ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized;
     if (!accessGranted) {
-        strongError.reset(CFErrorCreate(NULL, ABAddressBookErrorDomain, kABOperationNotPermittedByUserError, NULL));
+        error = CFErrorCreate(NULL, ABAddressBookErrorDomain, kABOperationNotPermittedByUserError, NULL);
     }
 
     // Since we can't request access at runtime (Contacts capabilities must be declared
     // in the app's package manifest), immediately call the completion handler with the current
-    // authorization status.
-    completion(accessGranted, strongError.get());
+    // authorization status. Dispatch it async to match the reference platform.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+                   ^(void) {
+                       woc::unique_cf<CFErrorRef> strongError;
+                       strongError.reset(error);
+                       completion(accessGranted, strongError.get());
+                   });
 }
 
 /**
