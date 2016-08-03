@@ -85,10 +85,10 @@ TEST(NSString, IntegerValue) {
     ASSERT_EQ([string8 integerValue], 0);
 
     NSString* string9 = @"999999999999999999999999999999";
-    ASSERT_EQ([string9 integerValue], INT_MAX);
+    ASSERT_EQ([string9 integerValue], LONG_MAX);
 
     NSString* string10 = @"-999999999999999999999999999999";
-    ASSERT_EQ([string10 integerValue], INT_MIN);
+    ASSERT_EQ([string10 integerValue], LONG_MIN);
 }
 
 TEST(NSString, IntValue) {
@@ -117,10 +117,10 @@ TEST(NSString, IntValue) {
     ASSERT_EQ([string8 intValue], 0);
 
     NSString* string9 = @"999999999999999999999999999999";
-    ASSERT_EQ([string9 intValue], LONG_MAX);
+    ASSERT_EQ([string9 intValue], INT_MAX);
 
     NSString* string10 = @"-999999999999999999999999999999";
-    ASSERT_EQ([string10 intValue], LONG_MIN);
+    ASSERT_EQ([string10 intValue], INT_MIN);
 }
 
 TEST(NSString, IsEqualToStringWithSwiftString) {
