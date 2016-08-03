@@ -39,10 +39,14 @@ While it's possible to checkout a separate git enlistment on an OSX machine and 
 
 #### Building & Running Foundation Unit Tests
 
-1. In a shell, cd to \<enlistment root\>/tests/unittests
+1. In a shell, cd to \<enlistment root\>/tests/unittests/Foundation
     * If your enlistment is shared from another machine, such as in the recommended steps above, your enlistment root will be in /Volumes/ (eg: /Volumes/WinObjC/)
 2. Run 'make Foundation.UnitTests.exe' - this creates Foundation.UnitTests.exe in your current directory
-3. Run './Foundation.UnitTests.exe' - --gtest_filter and similar options are available if wanted
+3. The makefile will print an output location for Foundation.UnitTests.exe, eg: 
+    * Done, please run from /Volumes/WinObjC/build/Tests/UnitTests/Foundation/OSX/Foundation.UnitTests.exe
+
+4. Run '/Volumes/WinObjC/build/Tests/UnitTests/Foundation/OSX/Foundation.UnitTests.exe', or your equivalent address - 
+    * --gtest_filter and similar options are available
 
 #### Current known failures:
 
