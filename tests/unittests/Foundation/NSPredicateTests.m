@@ -305,7 +305,7 @@ TEST(NSPredicate, InCollection) {
     ASSERT_EQ_MSG(1, [validTestAnimals count], "FAILED: Unable to filter based on class property.");
 }
 
-TEST(NSPredicate, Matches) {
+TEST(NSPredicate, Matches_InstanceFieldsFilteredByRegularExpression) {
     NSMutableArray* animals = [NSMutableArray array];
 
     PredicateTestAnimal* animal = [[[PredicateTestAnimal alloc] initWithName:@"test" age:5 speed:115] autorelease];
@@ -320,7 +320,7 @@ TEST(NSPredicate, Matches) {
     ASSERT_EQ_MSG(1, [validTestAnimals count], "FAILED: Unable to filter based on class property.");
 }
 
-TEST(NSPredicate, Matches0) {
+TEST(NSPredicate, Matches_StringsFilteredByRegularExpression) {
     NSArray* array = @[
         @"TATACCATGGGCCATCATCATCATCATCATCATCATCATCATCACAG",
         @"CGGGATCCCTATCAAGGCACCTCTTCG",
@@ -338,7 +338,7 @@ TEST(NSPredicate, Matches0) {
     ASSERT_EQ([filteredArray count], 1);
 }
 
-TEST(NSPredicate, Matches1) {
+TEST(NSPredicate, Matches_InstanceFieldsFilterByRegexEndingInNumbers) {
     NSMutableArray* animals = [NSMutableArray array];
 
     PredicateTestAnimal* animal = [[[PredicateTestAnimal alloc] initWithName:@"test1" age:5 speed:115] autorelease];
