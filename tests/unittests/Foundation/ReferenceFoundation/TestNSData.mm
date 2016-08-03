@@ -126,14 +126,14 @@ TEST(NSData, LongDebugDescription) {
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ffffffff ffffffff>";
+        @"ffffffff ffffffff ffffffff ffffffff ff>";
 
-    std::vector<uint8_t> bytes(1024, 0xff);
+    std::vector<uint8_t> bytes(1025, 0xff);
     NSData* data = [NSData dataWithBytes:bytes.data() length:bytes.size()];
     ASSERT_OBJCEQ(data.debugDescription, expected);
 }
 
-TEST(NSData, NoCopyDescription) {
+TEST(NSData, NoCopyLongDebugDescription) {
     auto expected =
         @"<ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "

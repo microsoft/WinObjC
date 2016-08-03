@@ -450,7 +450,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
     // Documentation states that invalid input should return nil, but reference platform tests show it returns an empty NSData object
     auto ret = [self initWithBase64EncodedString:base64String options:0];
     if (!ret) {
-        ret = [self initWithBase64EncodedString:@"" options:0];
+        ret = [self init];
     }
     return ret;
 }
