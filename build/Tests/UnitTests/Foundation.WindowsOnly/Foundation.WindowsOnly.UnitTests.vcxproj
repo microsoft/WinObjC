@@ -234,6 +234,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSObject_NSCoding.mm" />
+    <ClangCompile Include="..\..\..\..\tests\unittests\Foundation\WindowsOnly\NSPointerArrayInternalTests.mm" />
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\BlockClassTests.mm" />
