@@ -96,13 +96,14 @@ TEST(NSData, Base64EncodeWithOptions) {
                       base64EncodedStringWithOptions:NSDataBase64Encoding76CharacterLineLength | NSDataBase64EncodingEndLineWithLineFeed]);
 }
 
-TEST(NSData, Base64EncodingWithoutOptions) {
+TEST(NSData, Base64InvalidInitialization) {
     // Documentation states that invalid input should return nil, but reference platform tests show it returns an empty NSData object
-    StrongId<NSData> invalidDecoded = [[[NSData alloc] initWithBase64Encoding:@"%"] autorelease];
+    StrongId<NSString> invalidString = @"%";
+    StrongId<NSData> invalidDecoded = [[[NSData alloc] initWithBase64Encoding:invalidString] autorelease];
     ASSERT_OBJCEQ(@"<>", [invalidDecoded description]);
 
     // Should match documentation and return nil
-    invalidDecoded = [[[NSData alloc] initWithBase64EncodedString:@"%" options:0] autorelease];
+    invalidDecoded = [[[NSData alloc] initWithBase64EncodedString:invalidString options:0] autorelease];
     ASSERT_OBJCEQ(nil, invalidDecoded);
 }
 
