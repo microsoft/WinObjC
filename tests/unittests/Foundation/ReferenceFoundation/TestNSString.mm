@@ -955,7 +955,10 @@ TEST_P(ComparisonTests, PrefixSuffix) {
     StrongId<NSString> lhs = ::testing::get<0>(GetParam());
     StrongId<NSString> rhs = ::testing::get<1>(GetParam());
 
+    LOG_INFO("lhs - \"%s\"\n rhs - \"%s\"\n", [lhs description], [rhs description]);
     checkHasPrefixHasSuffix(lhs, rhs, ::testing::get<2>(GetParam()), ::testing::get<3>(GetParam()));
+
+    LOG_INFO("lhs - \"%s\"\n rhs - \"%s\"\n", [rhs description], [lhs description]);
     checkHasPrefixHasSuffix(rhs, lhs, ::testing::get<4>(GetParam()), ::testing::get<5>(GetParam()));
 
     static NSString* fragment = @"abc";
@@ -977,13 +980,17 @@ TEST_P(ComparisonTests, PrefixSuffix) {
     combinerWithLhs.attach([combiner mutableCopy]);
     [combinerWithLhs appendString:lhs];
 
+    LOG_INFO("lhs - \"%s\"\n rhs - \"%s\"\n", [lhsWithFragment description], [rhs description]);
     checkHasPrefixHasSuffix(lhsWithFragment, rhs, ::testing::get<6>(GetParam()), ::testing::get<7>(GetParam()));
+    LOG_INFO("lhs - \"%s\"\n rhs - \"%s\"\n", [fragmentWithLhs description], [rhs description]);
     checkHasPrefixHasSuffix(fragmentWithLhs, rhs, ::testing::get<8>(GetParam()), ::testing::get<9>(GetParam()));
+    LOG_INFO("lhs - \"%s\"\n rhs - \"%s\"\n", [lhsWithCombiner description], [rhs description]);
     checkHasPrefixHasSuffix(lhsWithCombiner, rhs, ::testing::get<10>(GetParam()), ::testing::get<11>(GetParam()));
+    LOG_INFO("lhs - \"%s\"\n rhs - \"%s\"\n", [combinerWithLhs description], [rhs description]);
     checkHasPrefixHasSuffix(combinerWithLhs, rhs, ::testing::get<12>(GetParam()), ::testing::get<13>(GetParam()));
 }
 
-INSTANTIATE_TEST_CASE_P(
+OSX_DISABLED_INSTANTIATE_TEST_CASE_P(
     NSString,
     ComparisonTests,
     ::testing::Values(::testing::make_tuple(@"", @"", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
@@ -996,7 +1003,6 @@ INSTANTIATE_TEST_CASE_P(
                       ::testing::make_tuple(@"\u0000", @"\u0000", YES, YES, YES, YES, YES, NO, NO, YES, YES, NO, NO, YES),
                       ::testing::make_tuple(@"\r\n", @"t", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
                       ::testing::make_tuple(@"\r\n", @"\n", NO, YES, NO, NO, NO, NO, NO, YES, NO, NO, NO, YES),
-                      ::testing::make_tuple(@"\u0000", @"\u0000\u0000", YES, NO, YES, YES, NO, NO, NO, NO, NO, NO, NO, NO),
 
                       // Whitespace
                       // U+000A LINE FEED (LF)
@@ -1076,7 +1082,14 @@ INSTANTIATE_TEST_CASE_P(
                       // U+0341 has a canonical decomposition mapping of U+0301.
                       ::testing::make_tuple(@"\u0301", @"\u0341", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
                       ::testing::make_tuple(@"\u0301", @"\u0954", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
-                      ::testing::make_tuple(@"\u0341", @"\u0954", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO)));
+                      ::testing::make_tuple(@"\u0341", @"\u0954", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO)),
+    // DISABLED TESTS
+    // Due to a difference in CFConstantString implementation, this test fails on the reference platform. Essientially the issue comes down
+    // to how embedded null characters are handled and thus how the string length is computed. WinObjC does not handle them and thus sees
+    // @"\u0000\u0000" as equivalent to @"\u0000" meaning that, in a sense, [@"u0000" hasPrefix:@"\u0000\u0000"] is true. The expected
+    // results
+    // should change when compiler generated builtin constant strings are supported.
+    ::testing::Values(::testing::make_tuple(@"\u0000", @"\u0000\u0000", YES, NO, YES, YES, NO, NO, NO, NO, NO, NO, NO, NO)));
 
 // WINOBJC: No playground support for ObjC
 /*
