@@ -17,6 +17,7 @@
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
 #import <mach/mach_time.h>
+#import <Starboard/SmartTypes.h>
 
 TEST(Sanity, SanityTest) {
     LOG_INFO("Foundation sanity test: ");
@@ -198,8 +199,8 @@ struct TestKVOStruct {
 };
 
 @interface TestKVOObject : NSObject {
-    NSString *_internal_derivedObjectProperty;
-    NSString *_internal_keyDerivedTwoTimes;
+    StrongId<NSString> _internal_derivedObjectProperty;
+    StrongId<NSString> _internal_keyDerivedTwoTimes;
     int _manuallyNotifyingIntegerProperty;
     int _ivarWithoutSetter;
 }
@@ -232,8 +233,6 @@ struct TestKVOStruct {
 @implementation TestKVOObject
 - (void)dealloc {
     [_cascadableKey release];
-    [_internal_derivedObjectProperty release];
-    [_internal_keyDerivedTwoTimes release];
     [_nonNotifyingObjectProperty release];
     [_basicObjectProperty release];
     [_recursiveDependent1 release];
@@ -303,8 +302,8 @@ struct TestKVOStruct {
 - (void)setBasicObjectProperty:(NSString*)basicObjectProperty {
     [_basicObjectProperty release];
     _basicObjectProperty = [basicObjectProperty retain];
-    _internal_derivedObjectProperty = [[NSString stringWithFormat:@"!!!%@!!!", _basicObjectProperty] retain];
-    _internal_keyDerivedTwoTimes = [[NSString stringWithFormat:@"---%@---", [self derivedObjectProperty]] retain];
+    _internal_derivedObjectProperty = [NSString stringWithFormat:@"!!!%@!!!", _basicObjectProperty];
+    _internal_keyDerivedTwoTimes = [NSString stringWithFormat:@"---%@---", [self derivedObjectProperty]];
 }
 
 - (NSString*)keyDerivedTwoTimes {
