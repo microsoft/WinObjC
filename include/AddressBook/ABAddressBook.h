@@ -32,11 +32,11 @@ typedef CF_ENUM(CFIndex, ABAuthorizationStatus) {
     kABAuthorizationStatusAuthorized
 };
 
-ADDRESSBOOK_EXPORT ABAddressBookRef ABAddressBookCreate() STUB_METHOD;
-ADDRESSBOOK_EXPORT ABAddressBookRef ABAddressBookCreateWithOptions(CFDictionaryRef options, CFErrorRef* error) STUB_METHOD;
-ADDRESSBOOK_EXPORT ABAuthorizationStatus ABAddressBookGetAuthorizationStatus() STUB_METHOD;
+ADDRESSBOOK_EXPORT ABAddressBookRef ABAddressBookCreate();
+ADDRESSBOOK_EXPORT ABAddressBookRef ABAddressBookCreateWithOptions(CFDictionaryRef options, CFErrorRef* error);
+ADDRESSBOOK_EXPORT ABAuthorizationStatus ABAddressBookGetAuthorizationStatus();
 ADDRESSBOOK_EXPORT void ABAddressBookRequestAccessWithCompletion(ABAddressBookRef addressBook,
-                                                                 ABAddressBookRequestAccessCompletionHandler completion) STUB_METHOD;
+                                                                 ABAddressBookRequestAccessCompletionHandler completion);
 
 ADDRESSBOOK_EXPORT bool ABAddressBookHasUnsavedChanges(ABAddressBookRef addressBook) STUB_METHOD;
 ADDRESSBOOK_EXPORT bool ABAddressBookSave(ABAddressBookRef addressBook, CFErrorRef* error) STUB_METHOD;
