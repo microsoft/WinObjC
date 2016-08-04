@@ -18,11 +18,10 @@ OUT_OBJ_DIR := $(OUTDIR)/Objects
 OUTTARGETS := $(addsuffix .o, $(addprefix $(OUT_OBJ_DIR)/, $(basename $(notdir $(SRCFILES)))))
 OUTTARGETS += $(addsuffix .o, $(addprefix $(OUT_OBJ_DIR)/ReferenceFoundation_, $(basename $(notdir $(RF_SRCFILES)))))
 
+RESOURCE_DIR := $(SRCDIR)/data
 RF_RESOURCE_DIR := $(SRCDIR)/ReferenceFoundation/Resources
-RF_RESOURCE_FILES := $(notdir $(wildcard $(RF_RESOURCE_DIR)/*))
-COPY_FILES := $(addprefix $(OUTDIR)/, $(RF_RESOURCE_FILES))
-COPY_FILES += $(OUTDIR)/data/NSFileManagerUT.txt
-
+RESOURCE_FILES := $(addprefix data/, $(notdir $(wildcard $(RESOURCE_DIR)/*))) $(notdir $(wildcard $(RF_RESOURCE_DIR)/*))
+COPY_FILES := $(addprefix $(OUTDIR)/, $(RESOURCE_FILES))
 
 INC := $(SRCDIR)/../../frameworks/include $(SRCDIR)/../../frameworks/gtest $(SRCDIR)/../../frameworks/gtest/include 
 INC += $(SRCDIR)/../../frameworks/OSXShims/include $(SRCDIR)/ReferenceFoundation $(SRCDIR)/../../../include/xplat
@@ -70,21 +69,14 @@ $(OUT_OBJ_DIR)/ReferenceFoundation_%.o : $(OUT_OBJ_DIR)/ReferenceFoundation_Test
 .PHONY: clean
 
 clean:
-	$(RM) $(OUT_OBJ_DIR)/*.o
-	$(RM) -d $(OUT_OBJ_DIR)
-	$(RM) -d $(OUTDIR)/tmp/*
-	$(RM) -d $(OUTDIR)/tmp
-	$(RM) $(OUTDIR)/data/*
-	$(RM) -d $(OUTDIR)/data
-	$(RM) $(OUTDIR)/*.*
-	$(RM) $(OUTDIR)/*
+	- $(RM) -r $(OUT_OBJ_DIR) $(OUTDIR)
+
+$(OUTDIR)/data/% :
+	mkdir -p $(OUTDIR)/data
+	cp -f $(RESOURCE_DIR)/$* $@
 
 $(OUTDIR)/% :
 	cp -f $(RF_RESOURCE_DIR)/$* $@
-
-$(OUTDIR)/data/NSFileManagerUT.txt :
-	mkdir -p $(OUTDIR)/data
-	cp -f $(SRCDIR)/NSFileManagerUT.txt $@
 
 $(OUTDIR)/Foundation.UnitTests.exe : $(SHIMS) $(OUTTARGETS) $(COPY_FILES)
 	$(CLANG) -o $@ -std=c++14 $(INC_PARAMS) $(SRCDIR)/../EntryPoint.cpp $(SRCDIR)/../../frameworks/gtest/src/gtest-all.cc \

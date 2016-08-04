@@ -133,7 +133,14 @@ TEST(NSFileManager, EnumateDirectoryUsingURL) {
     wchar_t currentDir[_MAX_PATH];
     DWORD ret = GetCurrentDirectoryW(_MAX_PATH, currentDir);
     ASSERT_TRUE(ret > 0 && ret < _MAX_PATH);
-    LOG_INFO("Change current dir to:%@", [NSString stringWithBytes:currentDir length:sizeof(wchar_t) * ret encoding:WCHAR_ENCODING]);
+
+    // OSX wchar_t's are twice as wide
+    LOG_INFO("Change current dir to:%@",
+#if TARGET_OS_WIN32
+             [NSString stringWithCharacters:(const unichar*)currentDir length:_MAX_PATH]);
+#else
+             [NSString stringWithBytes:currentDir length:sizeof(wchar_t) * ret encoding:WCHAR_ENCODING]);
+#endif
 
     // construct target URL using current directory and relative URL
     NSFileManager* manager = [NSFileManager defaultManager];
