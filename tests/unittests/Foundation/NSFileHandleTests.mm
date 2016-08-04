@@ -16,49 +16,14 @@
 
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
-#import <Starboard/SmartTypes.h>
 #import <windows.h>
 #import <algorithm>
-#include <type_traits>
-#include <functional>
+#import "TestUtils.h"
 
+#define SCOPE_CLOSE_HANDLE(fileHandle) \
+_SCOPE_GUARD([fileHandle](void*) { [fileHandle closeFile]; }) \
 
-#define _CONCAT(x, y) x##y
-#define CONCAT(x, y) _CONCAT(x, y)
-
-static NSString* getModulePath() {
-    char fullPath[_MAX_PATH];
-    GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
-    return [@(fullPath) stringByDeletingLastPathComponent];
-}
-
-static NSString* getPathToFile(NSString* fileName) {
-    static StrongId<NSString*> refPath = getModulePath();
-    return [refPath stringByAppendingPathComponent:fileName];
-}
-
-static void createFileWithContentAndVerify(NSString* fileName, NSString* content) {
-    NSString* fullPath = getPathToFile(fileName);
-    NSError* error = nil;
-    ASSERT_TRUE([content writeToFile:fullPath atomically:NO encoding:NSUTF8StringEncoding error:&error]);
-    ASSERT_EQ(nil, error);
-    ASSERT_TRUE([[NSFileManager defaultManager] fileExistsAtPath:fullPath]);
-}
-
-static void deleteFile(NSString* name) {
-    NSString* fullPath = getPathToFile(name);
-    if ([[NSFileManager defaultManager] fileExistsAtPath:fullPath]) {
-        [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
-    }
-};
-
-#define SCOPE_CLOSE_HANDLE(fileHandle)                                                           \
-    std::unique_ptr<void, std::function<void(void*)>> CONCAT(_closeScope_, __LINE__)((void*)0x1, \
-                                                                                     [fileHandle](void*) { [fileHandle closeFile]; })
-
-#define SCOPE_DELETE_FILE(fileName)                                                              \
-    std::unique_ptr<void, std::function<void(void*)>> CONCAT(_closeScope_, __LINE__)((void*)0x1, \
-                                                                                     [fileName](void*) { deleteFile(fileName); })
+#define SCOPE_DELETE_FILE(fileName) _SCOPE_GUARD([fileName](void*) { deleteFile(fileName); })
 
 TEST(NSFileHandle, ReadFile) {
     NSString* content = @"The Quick Brown Fox.";
@@ -319,6 +284,6 @@ TEST(NSFileHandle, ReadingNonExistentFile) {
     NSString* fullPath = getPathToFile(@"nonexisting.txt");
     NSError* error;
     NSFileHandle* fh = [NSFileHandle fileHandleForReadingFromURL:[NSURL fileURLWithPath:fullPath] error:&error];
-    ASSERT_TRUE(nil == nil);
+    ASSERT_TRUE(fh == nil);
     ASSERT_TRUE(error != nil);
 }
