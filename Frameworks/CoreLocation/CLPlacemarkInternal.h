@@ -14,24 +14,18 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
 #import <CoreLocation/CoreLocationExport.h>
 #import <Foundation/NSObject.h>
-#import <CoreLocation/CoreLocationDataTypes.h>
 
-typedef NS_ENUM(NSUInteger, CLRegionState) { CLRegionStateUnknown, CLRegionStateInside, CLRegionStateOutside };
+@class CLLocation;
+@class CLRegion;
+@class NSTimeZone;
+@class NSDictionary;
+@class NSArray;
 
-CORELOCATION_EXPORT_CLASS
-@interface CLRegion : NSObject <NSCopying, NSSecureCoding>
-- (instancetype)initCircularRegionWithCenter:(CLLocationCoordinate2D)center
-                                      radius:(CLLocationDistance)radius
-                                  identifier:(NSString*)identifier;
-@property (readonly, copy, nonatomic) NSString* identifier;
-@property (readonly, nonatomic) CLLocationCoordinate2D center;
-@property (readonly, nonatomic) CLLocationDistance radius;
-@property (assign, nonatomic) BOOL notifyOnEntry STUB_PROPERTY;
-@property (assign, nonatomic) BOOL notifyOnExit STUB_PROPERTY;
-- (BOOL)containsCoordinate:(CLLocationCoordinate2D)coordinate STUB_METHOD;
+@interface CLPlacemark ()
+- (instancetype)initWithName:(NSString*)name location:(CLLocation*)location;
+- (instancetype)initWithLocation:(CLLocation*)location dictionary:(NSMutableDictionary*)dictionary;
 @end

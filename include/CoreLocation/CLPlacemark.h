@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -27,22 +28,22 @@
 
 CORELOCATION_EXPORT_CLASS
 @interface CLPlacemark : NSObject <NSCopying, NSSecureCoding>
-- (instancetype)initWithPlacemark:(CLPlacemark*)placemark STUB_METHOD;
-@property (readonly, copy, nonatomic) CLLocation* location STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* name STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSDictionary* addressDictionary STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* ISOcountryCode STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* country STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* postalCode STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* administrativeArea STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* subAdministrativeArea STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* locality STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* subLocality STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* thoroughfare STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* subThoroughfare STUB_PROPERTY;
-@property (readonly, copy, nonatomic) CLRegion* region STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSTimeZone* timeZone STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* inlandWater STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* ocean STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSArray* areasOfInterest STUB_PROPERTY;
+- (instancetype)initWithPlacemark:(CLPlacemark*)placemark;
+@property (readonly, copy, nonatomic) CLLocation* location;
+@property (readonly, copy, nonatomic) NSString* name;
+@property (readonly, copy, nonatomic) NSDictionary* addressDictionary;
+@property (readonly, copy, nonatomic) NSString* ISOcountryCode;
+@property (readonly, copy, nonatomic) NSString* country;
+@property (readonly, copy, nonatomic) NSString* postalCode;
+@property (readonly, copy, nonatomic) NSString* administrativeArea;
+@property (readonly, copy, nonatomic) NSString* subAdministrativeArea;
+@property (readonly, copy, nonatomic) NSString* locality;
+@property (readonly, copy, nonatomic) NSString* subLocality;
+@property (readonly, copy, nonatomic) NSString* thoroughfare;
+@property (readonly, copy, nonatomic) NSString* subThoroughfare;
+@property (readonly, copy, nonatomic) CLRegion* region;
+@property (readonly, copy, nonatomic) NSTimeZone* timeZone;
+@property (readonly, copy, nonatomic) NSString* inlandWater;
+@property (readonly, copy, nonatomic) NSString* ocean;
+@property (readonly, copy, nonatomic) NSArray* areasOfInterest;
 @end

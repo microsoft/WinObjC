@@ -120,6 +120,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AudioToolboxViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\GeocodingViewController.h">
+    <Filter>WOCCatalog</Filter>
+        </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\CoreLocationViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>

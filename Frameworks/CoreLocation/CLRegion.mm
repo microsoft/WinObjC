@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -14,19 +15,24 @@
 //
 //******************************************************************************
 
-#import <StubReturn.h>
 #import <CoreLocation/CLRegion.h>
+#import <StubReturn.h>
 
 @implementation CLRegion
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (instancetype)initCircularRegionWithCenter:(CLLocationCoordinate2D)center
                                       radius:(CLLocationDistance)radius
                                   identifier:(NSString*)identifier {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (self = [super init]) {
+        _center = center;
+        _radius = radius;
+        _identifier = identifier;
+    }
+
+    return self;
 }
 
 /**
