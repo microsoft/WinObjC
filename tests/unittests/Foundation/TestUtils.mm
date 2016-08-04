@@ -15,7 +15,9 @@
 //******************************************************************************
 #import <TestFramework.h>
 #import <Starboard/SmartTypes.h>
+#import <windows.h>
 #import "TestUtils.h"
+
 
 void assertOrderedSetContent(NSOrderedSet* set, NSObject* first, ...) {
     va_list args;
