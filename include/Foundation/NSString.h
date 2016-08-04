@@ -228,7 +228,7 @@ FOUNDATION_EXPORT_CLASS
 @property (readonly, copy) NSString* precomposedStringWithCompatibilityMapping;
 @property (readonly) double doubleValue;
 @property (readonly) float floatValue;
-@property (readonly) int intValue;
+@property (readonly) int32_t intValue;
 @property (readonly) NSInteger integerValue;
 @property (readonly) long long longLongValue;
 @property (readonly) BOOL boolValue;
