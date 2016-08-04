@@ -48,27 +48,25 @@ If ($PsCmdlet.ParameterSetName -Eq "AutomaticStatus") {
 	$disabledCount = 0
 	ForEach($xmlItem in (Get-ChildItem $TestXMLDirectory -ErrorAction SilentlyContinue)) {
 		[xml]$xml = Get-Content $xmlItem.FullName
-		ForEach($testSuite in $xml.testsuites.testsuite) {
-			$testCount += $testSuite.tests
-			$failureCount += $testSuite.failures
-			$disabledCount += $testSuite.disabled
-		}
+		$testCount += $xml.testSuites.tests
+		$failureCount += $xml.testSuites.failures
+		$disabledCount += $xml.testSuites.disabled
 	}
 
-	$Status = "success"
-	$explanation = "{0} tests, all passed ({1} skipped)" -f $testCount, $disabledCount
-	If ($disabledCount -Gt 0) {
-		$explanation += " ({0} skipped)" -f $disabledCount
-	}
-	If ($testCount -Gt 0 -And $failureCount -Gt 0) {
-		$Status = "failure"
-		$explanation = "{1}/{0} tests failed" -f $testCount, $failureCount
-		If ($disabledCount -Gt 0) {
-			$explanation += " ({0} skipped)" -f $disabledCount
-		}
-	} ElseIf ($testCount -Eq 0) {
+	If ($testCount -Eq 0) {
 		$Status = "failure"
 		$explanation = "Build failed (no tests run)"
+	} ElseIf ($failureCount -Gt 0) {
+		$Status = "failure"
+		$explanation = "{0}/{1} test{2} failed" -f $failureCount, $testCount, $(If ($testCount -Ne 1) { "s" })
+	} Else {
+		$Status = "success"
+		$explanation = "{0}/{0} test{1} passed" -f $testCount, $(If ($testCount -Ne 1) { "s" })
+	}
+
+	# If no tests run, disabledCount will be 0 anyway.
+	If ($disabledCount -Gt 0) {
+		$explanation += ", {0} disabled test{1} skipped" -f $disabledCount, $(If ($disabledCount -Ne 1) { "s" })
 	}
 
 	If (![string]::IsNullOrWhiteSpace($Description)) {
