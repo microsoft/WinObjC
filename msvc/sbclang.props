@@ -52,8 +52,9 @@
     <CopyStarboardLibraries Condition="'$(ConfigurationType)' == 'Application'">true</CopyStarboardLibraries>
   </PropertyGroup>
   
+  <!-- This need to be an absolute path, so we can successfully filter duplicates -->
   <PropertyGroup>
-    <Objc2WinmdGeneratedFilesDir>$(ProjectDir)Generated</Objc2WinmdGeneratedFilesDir>
+    <Objc2WinmdGeneratedFilesDir>$(MSBuildProjectDirectory)\Generated</Objc2WinmdGeneratedFilesDir>
   </PropertyGroup>
 
   <ItemDefinitionGroup>
