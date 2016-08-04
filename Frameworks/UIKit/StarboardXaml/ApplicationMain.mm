@@ -62,8 +62,13 @@ int ApplicationMainStart(const char* principalName,
     // Populate Objective C equivalent of activation argument
     if (activationType == ActivationTypeToast) {
         WAAToastNotificationActivatedEventArgs* toastArgument = [WAAToastNotificationActivatedEventArgs createWith:activationArg];
+
+        // Convert to NSDictionary with NSStrings
         NSMutableDictionary* userInput = [NSMutableDictionary new];
-        THROW_NS_IF_FAILED(Collections::ToastUserInputToNSDictionary(toastArgument.userInput, &userInput));
+        ComPtr<ABI::Windows::Foundation::Collections::IMap<HSTRING, IInspectable*>> comPtr;
+        THROW_NS_IF_FAILED(toastArgument.userInput.comObj.As(&comPtr));
+        THROW_NS_IF_FAILED(Collections::WRLToNSCollection(comPtr, &userInput));
+
         NSDictionary* toastAction = @{
             UIApplicationLaunchOptionsToastActionArgumentKey : toastArgument.argument,
             UIApplicationLaunchOptionsToastActionUserInputKey : userInput

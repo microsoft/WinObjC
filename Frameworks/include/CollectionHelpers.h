@@ -25,7 +25,6 @@
 
 #include <wrl\client.h>
 #include <wrl\wrappers\corewrappers.h>
-#include <Windows.Foundation.Collections.h>
 #include "WRLHelpers.h"
 #include "StringHelpers.h"
 
@@ -76,22 +75,38 @@ HRESULT WRLToNSCollection<ABI::Windows::Foundation::Collections::IMap<HSTRING, H
     return S_OK;
 }
 
+// Specified for converting IPropertyValue of String to NSString for Toast Action conversion
+template <>
+HRESULT WRLToNSCollection<ABI::Windows::Foundation::Collections::IMap<HSTRING, IInspectable*>>(
+    ABI::Windows::Foundation::Collections::IMap<HSTRING, IInspectable*>* map, NSDictionary* __autoreleasing* pDictionary) {
+    using NSType = Private::CollectionType<ABI::Windows::Foundation::Collections::IMap<HSTRING, IInspectable*>>::NSMutableEquivalentType;
+    NSType* collection = [[NSType alloc] init];
+    HRESULT hr = WRLHelpers::ForEach(
+        map,
+        [&collection](const Microsoft::WRL::ComPtr<ABI::Windows::Foundation::Collections::IKeyValuePair<HSTRING, IInspectable*>>& pair,
+                      boolean* stop) {
+            Microsoft::WRL::Wrappers::HString key, value;
+            Microsoft::WRL::ComPtr<IInspectable> inspectableValue;
+            Microsoft::WRL::ComPtr<ABI::Windows::Foundation::IPropertyValue> propertyValue;
+            RETURN_IF_FAILED(pair->get_Key(key.GetAddressOf()));
+            RETURN_IF_FAILED(pair->get_Value(inspectableValue.GetAddressOf()));
+            RETURN_IF_FAILED(inspectableValue.As(&propertyValue));
+            RETURN_IF_FAILED(propertyValue->GetString(value.GetAddressOf()));
+
+            [collection setObject:Strings::WideToNSString(value.Get()) forKey:Strings::WideToNSString(key.Get())];
+            return S_OK;
+        });
+    RETURN_IF_FAILED(hr);
+
+    *pDictionary = collection;
+    return S_OK;
+}
+
 template <typename T>
 HRESULT WRLToNSCollection(const Microsoft::WRL::ComPtr<T>& collection,
                           typename Private::CollectionType<T>::NSEquivalentType* __autoreleasing* pNSCollection) {
     return WRLToNSCollection(collection.Get(), pNSCollection);
 }
 
-static HRESULT ToastUserInputToNSDictionary(WFCValueSet* userInput, NSMutableDictionary** dict) {
-    for (NSString* key in [userInput allKeys]) {
-        RTObject* holderObject = [userInput objectForKey:key];
-        Microsoft::WRL::ComPtr<ABI::Windows::Foundation::IPropertyValue> value;
-        RETURN_IF_FAILED(holderObject.comObj.As(&value));
-        Microsoft::WRL::Wrappers::HString hstr;
-        RETURN_IF_FAILED(value->GetString(hstr.GetAddressOf()));
-        [*dict setObject:Strings::WideToNSString(hstr.Get()) forKey:key];
-    }
-    return S_OK;
-}
 #endif
 }
