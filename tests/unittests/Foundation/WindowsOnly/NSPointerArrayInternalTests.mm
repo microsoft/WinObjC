@@ -88,6 +88,16 @@ TEST(NSPointerArray, Equality) {
     [cPtrArray3 addPointer:const_cast<char*>(s3)];
     BOOL equalCStrA1A3 = [cPtrArray1 isEqual:cPtrArray3];
 
+    NSUInteger h1 = [cPtrArray1 hash];
+    NSUInteger h2 = [cPtrArray2 hash];
+    NSUInteger h3 = [cPtrArray3 hash];
+
+    ASSERT_TRUE_MSG(equalCStrA1A2, "Arrays of C strings should be equal");
+    ASSERT_FALSE_MSG(equalCStrA1A3, "Arrays of C strings should not be equal");
+
+    ASSERT_EQ_MSG(h1, h2, "Hash value of C strings arrays should be equal");
+    ASSERT_NE_MSG(h1, h3, "Hash value of C strings arrays should not be equal");
+
     free(dup_s1);
 }
 

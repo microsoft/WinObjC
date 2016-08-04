@@ -248,9 +248,10 @@ TEST(NSPointerArray, Compact) {
 // Disabling test until the bug is fixed.
 //
 DISABLED_TEST(NSPointerArray, Weak) {
+    NSPointerArray* array = [NSPointerArray weakObjectsPointerArray];
+
     // Create a autorelease pool for this test so that the objects' used by this test are managed locally.
     NSAutoreleasePool* pool = [NSAutoreleasePool new];
-    NSPointerArray* array = [[NSPointerArray weakObjectsPointerArray] retain];
 
     NSUInteger notify = 0;
     DummyTestClass* dtc = [[DummyTestClass alloc] initWithNotifyPtr:&notify];
@@ -268,7 +269,6 @@ DISABLED_TEST(NSPointerArray, Weak) {
     ASSERT_EQ_MSG(array.count, 1, @"Incorrect size");
     ptr = [array pointerAtIndex:0];
     ASSERT_EQ_MSG(NULL, ptr, @"Incorrect pointer");
-    [array release];
 }
 
 TEST(NSPointerArray, Strong) {
