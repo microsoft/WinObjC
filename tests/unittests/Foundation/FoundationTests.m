@@ -198,6 +198,8 @@ struct TestKVOStruct {
 };
 
 @interface TestKVOObject : NSObject {
+    NSString *_internal_derivedObjectProperty;
+    NSString *_internal_keyDerivedTwoTimes;
     int _manuallyNotifyingIntegerProperty;
     int _ivarWithoutSetter;
 }
@@ -230,6 +232,15 @@ struct TestKVOStruct {
 @implementation TestKVOObject
 - (void)dealloc {
     [_cascadableKey release];
+    [_internal_derivedObjectProperty release];
+    [_internal_keyDerivedTwoTimes release];
+    [_nonNotifyingObjectProperty release];
+    [_basicObjectProperty release];
+    [_recursiveDependent1 release];
+    [_recursiveDependent2 release];
+    [_dictionaryProperty release];
+    [_boolTrigger1 release];
+    [_boolTrigger2 release];
     [super dealloc];
 }
 
@@ -286,11 +297,18 @@ struct TestKVOStruct {
 }
 
 - (NSString*)derivedObjectProperty {
-    return [NSString stringWithFormat:@"!!!%@!!!", _basicObjectProperty];
+    return _internal_derivedObjectProperty;
+}
+
+- (void)setBasicObjectProperty:(NSString*)basicObjectProperty {
+    [_basicObjectProperty release];
+    _basicObjectProperty = [basicObjectProperty retain];
+    _internal_derivedObjectProperty = [[NSString stringWithFormat:@"!!!%@!!!", _basicObjectProperty] retain];
+    _internal_keyDerivedTwoTimes = [[NSString stringWithFormat:@"---%@---", [self derivedObjectProperty]] retain];
 }
 
 - (NSString*)keyDerivedTwoTimes {
-    return [NSString stringWithFormat:@"---%@---", [self derivedObjectProperty]];
+    return _internal_keyDerivedTwoTimes;
 }
 
 - (TestKVOObject*)derivedCascadableKey {
@@ -879,7 +897,7 @@ TEST(KVO, SubpathsWithInitialNotification) { // Test initial observation on nest
                       objectForKey:NSKeyValueChangeNewKey]);
     EXPECT_OBJCEQ(@(0),
                   [[[[observer changesForKeypath:@"cascadableKey.basicPodProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey]);
-    EXPECT_OBJCEQ(@"!!!(null)!!!",
+    EXPECT_OBJCEQ([NSNull null],
                   [[[[observer changesForKeypath:@"cascadableKey.derivedObjectProperty"] anyObject] info]
                       objectForKey:NSKeyValueChangeNewKey]);
 
