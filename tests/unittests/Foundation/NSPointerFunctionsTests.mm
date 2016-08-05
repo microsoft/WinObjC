@@ -80,7 +80,7 @@ TEST(NSPointerFunctions, OpaquePersonality) {
     const void* ptr3 = (void*)((long)ptr1 + 1);
 
     testEqualFunction(functions, ptr1, ptr2, ptr3);
-    // Disabling hash function check here as performing hash on opaque values cannot be accuratly matched with the reference platform.
+    // Disabling hash function check here as performing hash on opaque values cannot be accurately matched with the reference platform.
     // testHashFunction(functions, ptr1, ptr2, ptr3);
 }
 
