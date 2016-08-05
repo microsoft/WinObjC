@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#import <TestFramework.h>
 #import <Foundation/Foundation.h>
 
 template <typename T>
@@ -167,10 +167,10 @@ TEST(NSNumber, Compare) {
     ASSERT_EQ(NSOrderedDescending, [[NSNumber numberWithInt:-7] compare:[NSNumber numberWithDouble:-pow(2, 66)]]);
 }
 
-@interface TestNSNumberSubclass : NSNumber
+@interface TestNSNumberLongLongSubclass : NSNumber
 @end
 
-@implementation TestNSNumberSubclass {
+@implementation TestNSNumberLongLongSubclass {
     long long _value;
 }
 
@@ -191,15 +191,81 @@ TEST(NSNumber, Compare) {
 
 @end
 
-TEST(NSNumber, Derived_CFNumberGetValue) {
+@interface TestNSNumberFloatSubclass : NSNumber
+@end
+
+@implementation TestNSNumberFloatSubclass {
+    float _value;
+}
+
+- (instancetype)initWithFloat:(float)val {
+    if (self = [super init]) {
+        _value = val;
+    }
+    return self;
+}
+
+- (float)floatValue {
+    return _value;
+}
+
+- (const char*)objCType {
+    return @encode(float);
+}
+
+@end
+
+TEST(NSNumber, CFNumberGetValue_Integral) {
     long long expected = LLONG_MAX;
-    NSNumber* num = [TestNSNumberSubclass numberWithLongLong:expected];
+    NSNumber* numBaseClass = [NSNumber numberWithLongLong:expected];
+    NSNumber* numDerived = [TestNSNumberLongLongSubclass numberWithLongLong:expected];
 
     long long result;
-    ASSERT_TRUE(CFNumberGetValue(static_cast<CFNumberRef>(num), kCFNumberLongLongType, &result));
+
+    ASSERT_TRUE(CFNumberGetValue(static_cast<CFNumberRef>(numBaseClass), kCFNumberLongLongType, &result));
     ASSERT_EQ(expected, result);
 
-    // Too small an output type should fail
+    ASSERT_TRUE(CFNumberGetValue(static_cast<CFNumberRef>(numDerived), kCFNumberLongLongType, &result));
+    ASSERT_EQ(expected, result);
+}
+
+// Contrary to the documentation, which states that this function ought return false on out of range,
+// neither OSX nor iOS actually does this.
+// Since this seems like useful functionality, this test (and the false return) will remain on Windows.
+OSX_DISABLED_TEST(NSNumber, CFNumberGetValue_OutOfRange) {
+    long long expected = LLONG_MAX;
+    NSNumber* numBaseClass = [NSNumber numberWithLongLong:expected];
+    NSNumber* numDerived = [TestNSNumberLongLongSubclass numberWithLongLong:expected];
+
+    // Too small an output type should return false
     long tooSmallResult;
-    ASSERT_FALSE(CFNumberGetValue(static_cast<CFNumberRef>(num), kCFNumberLongType, &tooSmallResult));
+    ASSERT_FALSE(CFNumberGetValue(static_cast<CFNumberRef>(numBaseClass), kCFNumberLongType, &tooSmallResult));
+    ASSERT_FALSE(CFNumberGetValue(static_cast<CFNumberRef>(numDerived), kCFNumberLongType, &tooSmallResult));
+}
+
+TEST(NSNumber, CFNumberGetValue_Lossy) {
+    float expected = 0.58f;
+    NSNumber* num = [NSNumber numberWithFloat:expected];
+
+    float result;
+    ASSERT_TRUE(CFNumberGetValue(static_cast<CFNumberRef>(num), kCFNumberFloatType, &result));
+    ASSERT_EQ(expected, result);
+
+    // Loss of floating-point precision should return false
+    long integralResult;
+    ASSERT_FALSE(CFNumberGetValue(static_cast<CFNumberRef>(num), kCFNumberLongType, &integralResult));
+}
+
+// OSX seems to have a bug where this functionality doesn't work for subclasses
+OSX_DISABLED_TEST(NSNumber, CFNumberGetValue_LossyDerived) {
+    float expected = 0.58f;
+    NSNumber* num = [TestNSNumberFloatSubclass numberWithFloat:expected];
+
+    float result;
+    ASSERT_TRUE(CFNumberGetValue(static_cast<CFNumberRef>(num), kCFNumberFloatType, &result));
+    ASSERT_EQ(expected, result);
+
+    // Loss of floating-point precision should return false
+    long integralResult;
+    ASSERT_FALSE(CFNumberGetValue(static_cast<CFNumberRef>(num), kCFNumberLongType, &integralResult));
 }
