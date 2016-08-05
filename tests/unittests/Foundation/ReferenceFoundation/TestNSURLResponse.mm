@@ -239,7 +239,7 @@ TEST(NSHTTPURLResponse, ContentLength_withContentEncodingAndTransferEncoding_2) 
 // present in the filename-parm parameter.
 //
 
-TEST(NSHTTPURLResponse, SuggestedFilename_NotAvailable_1) {
+TEST(NSHTTPURLResponse, SuggestedFilename_notAvailable_1) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = [NSDictionary<NSString*, NSString*> dictionary];
     NSHTTPURLResponse* response =
@@ -247,7 +247,7 @@ TEST(NSHTTPURLResponse, SuggestedFilename_NotAvailable_1) {
     ASSERT_OBJCEQ(@"Unknown", response.suggestedFilename);
 }
 
-TEST(NSHTTPURLResponse, SuggestedFilename_NotAvailable_2) {
+TEST(NSHTTPURLResponse, SuggestedFilename_notAvailable_2) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Disposition" : @"inline" };
     NSHTTPURLResponse* response =
@@ -255,7 +255,7 @@ TEST(NSHTTPURLResponse, SuggestedFilename_NotAvailable_2) {
     ASSERT_OBJCEQ(@"Unknown", response.suggestedFilename);
 }
 
-TEST(NSHTTPURLResponse, SuggestedFilename) {
+TEST(NSHTTPURLResponse, SuggestedFilename_1) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Disposition" : @"attachment; filename=\"fname.ext\"" };
     NSHTTPURLResponse* response =
@@ -263,7 +263,7 @@ TEST(NSHTTPURLResponse, SuggestedFilename) {
     ASSERT_OBJCEQ(@"fname.ext", response.suggestedFilename);
 }
 
-TEST(NSHTTPURLResponse, SuggestedFilename_Unquoted) {
+TEST(NSHTTPURLResponse, SuggestedFilename_2) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Disposition" : @"attachment; filename=genome.jpeg; modification-date=\"Wed, 12 Feb 1997 16:29:51 -0500\";" };
     NSHTTPURLResponse* response =
@@ -271,7 +271,7 @@ TEST(NSHTTPURLResponse, SuggestedFilename_Unquoted) {
     ASSERT_OBJCEQ(@"genome.jpeg", response.suggestedFilename);
 }
 
-TEST(NSHTTPURLResponse, SuggestedFilename_UnusualCharacter) {
+TEST(NSHTTPURLResponse, SuggestedFilename_3) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Disposition" : @"attachment; filename=\";.ext\"" };
     NSHTTPURLResponse* response =
@@ -287,7 +287,7 @@ TEST(NSHTTPURLResponse, SuggestedFilename_MultipleFilenamesInResponse) {
     ASSERT_OBJCEQ(@"wrong.ext", response.suggestedFilename);
 }
 
-TEST(NSHTTPURLResponse, SuggestedFilename_InvalidSlashes1) {
+TEST(NSHTTPURLResponse, SuggestedFilename_removeSlashes_1) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Disposition" : @"attachment; filename=\"/a/b/name\"" };
     NSHTTPURLResponse* response =
@@ -295,7 +295,7 @@ TEST(NSHTTPURLResponse, SuggestedFilename_InvalidSlashes1) {
     ASSERT_OBJCEQ(@"_a_b_name", response.suggestedFilename);
 }
 
-TEST(NSHTTPURLResponse, SuggestedFilename_InvalidSlashes2) {
+TEST(NSHTTPURLResponse, SuggestedFilename_removeSlashes_2) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Disposition" : @"attachment; filename=\"a/../b/name\"" };
     NSHTTPURLResponse* response =
@@ -305,7 +305,7 @@ TEST(NSHTTPURLResponse, SuggestedFilename_InvalidSlashes2) {
 
 // The MIME type / character encoding
 
-TEST(NSHTTPURLResponse, MIMETypeAndCharacterEncoding_Unspecified) {
+TEST(NSHTTPURLResponse, mimetypeAndCharacterEncoding_1) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Server" : @"Apache" };
     NSHTTPURLResponse* response =
@@ -314,7 +314,7 @@ TEST(NSHTTPURLResponse, MIMETypeAndCharacterEncoding_Unspecified) {
     ASSERT_OBJCEQ(nil, response.textEncodingName);
 }
 
-TEST(NSHTTPURLResponse, MIMETypeAndCharacterEncoding_MIMEOnly) {
+TEST(NSHTTPURLResponse, mimetypeAndCharacterEncoding_2) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Type" : @"text/html" };
     NSHTTPURLResponse* response =
@@ -323,7 +323,7 @@ TEST(NSHTTPURLResponse, MIMETypeAndCharacterEncoding_MIMEOnly) {
     ASSERT_OBJCEQ(nil, response.textEncodingName);
 }
 
-TEST(NSHTTPURLResponse, MIMETypeAndCharacterEncoding_Both) {
+TEST(NSHTTPURLResponse, mimetypeAndCharacterEncoding_3) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Type" : @"text/HTML; charset=ISO-8859-4" };
     NSHTTPURLResponse* response =
@@ -333,7 +333,7 @@ TEST(NSHTTPURLResponse, MIMETypeAndCharacterEncoding_Both) {
 }
 
 // Archival
-TEST(NSURLResponse, CanBeArchived) {
+TEST(NSURLResponse, canBeArchived) {
     NSURLResponse* expected = [[[NSURLResponse alloc] initWithURL:[NSURL URLWithString:@"test"]
                                                 MIMEType:@"text/plain"
                                                 expectedContentLength:100
@@ -344,7 +344,7 @@ TEST(NSURLResponse, CanBeArchived) {
     EXPECT_NO_THROW([NSKeyedUnarchiver unarchiveObjectWithData:data]);
 }
 
-TEST(NSHTTPURLResponse, CanBeArchived) {
+TEST(NSHTTPURLResponse, canBeArchived) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Type" : @"text/HTML; charset=ISO-8859-4" };
     NSHTTPURLResponse* expected =
