@@ -19,6 +19,9 @@
 #import <StubReturn.h>
 #import "AssertARCEnabled.h"
 
+#import "ABAddressBookManagerInternal.h"
+#import "ABContactInternal.h"
+
 const ABPropertyID kABPersonFirstNameProperty = 101;
 const ABPropertyID kABPersonLastNameProperty = 102;
 const ABPropertyID kABPersonMiddleNameProperty = 103;
@@ -200,30 +203,59 @@ bool ABPersonRemoveImageData(ABRecordRef person, CFErrorRef* error) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFIndex ABAddressBookGetPersonCount(ABAddressBookRef addressBook) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (addressBook == nullptr) {
+        return 0;
+    }
+    _ABAddressBookManager* addressBookManager = (__bridge _ABAddressBookManager*)addressBook;
+    NSArray* contacts = [addressBookManager getListOfContacts];
+    return contacts ? [contacts count] : 0;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 ABRecordRef ABAddressBookGetPersonWithRecordID(ABAddressBookRef addressBook, ABRecordID recordID) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (addressBook == nullptr) {
+        return nullptr;
+    }
+
+    _ABAddressBookManager* addressBookManager = (__bridge _ABAddressBookManager*)addressBook;
+    NSArray* contacts = [addressBookManager getListOfContacts];
+    if (contacts == nil) {
+        return nullptr;
+    }
+
+    for (_ABContact* contact in contacts) {
+        // Windows Contacts have their IDs as a string in the format:
+        // {storeid.itemtype.id}
+        // We are interested in the last part (id), we can just ensure
+        // that the ID ends with ".id}".
+        NSString* ending = [NSString stringWithFormat:@".%d}", recordID];
+        if ([contact.contact.id hasSuffix:ending]) {
+            return (__bridge ABRecordRef)contact;
+        }
+    }
+
+    return nullptr;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFArrayRef ABAddressBookCopyArrayOfAllPeople(ABAddressBookRef addressBook) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (addressBook == nullptr) {
+        return nullptr;
+    }
+
+    _ABAddressBookManager* addressBookManager = (__bridge _ABAddressBookManager*)addressBook;
+    NSArray* contacts = [addressBookManager getListOfContacts];
+    return (__bridge_retained CFArrayRef)contacts;
 }
 
 /**

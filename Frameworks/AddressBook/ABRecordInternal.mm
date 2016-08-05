@@ -14,13 +14,12 @@
 //
 //******************************************************************************
 
-#pragma once
+#import "ABRecordInternal.h"
 
-#import "UWP/WindowsApplicationModelContacts.h"
+@interface _ABRecord ()
 
-@interface _ABAddressBookManager : NSObject
+@end
 
-@property WACContactStore* contactStore;
-- (NSArray*)getListOfContacts;
+@implementation _ABRecord
 
 @end

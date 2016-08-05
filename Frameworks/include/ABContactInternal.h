@@ -17,10 +17,11 @@
 #pragma once
 
 #import "UWP/WindowsApplicationModelContacts.h"
+#import "ABRecordInternal.h"
 
-@interface _ABAddressBookManager : NSObject
+@interface _ABContact : _ABRecord
 
-@property WACContactStore* contactStore;
-- (NSArray*)getListOfContacts;
+@property WACContact* contact;
+- (id)initWithContact:(WACContact*)contact;
 
 @end
