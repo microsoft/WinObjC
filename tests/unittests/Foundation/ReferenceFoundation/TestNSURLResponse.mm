@@ -265,12 +265,12 @@ TEST(NSHTTPURLResponse, SuggestedFilename_3) {
     ASSERT_OBJCEQ(@"_.ext", response.suggestedFilename); // Differs from reference platform because ; is an illegal filename character
 }
 
-TEST(NSHTTPURLResponse, SuggestedFilename_4) {
+TEST(NSHTTPURLResponse, SuggestedFilename_MultipleFilenamesInResponse) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Disposition" : @"attachment; aa=bb\\; filename=\"wrong.ext\"; filename=\"fname.ext\"; cc=dd" };
     NSHTTPURLResponse* response =
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
-    ASSERT_OBJCEQ(@"fname.ext", response.suggestedFilename);
+    ASSERT_OBJCEQ(@"wrong.ext", response.suggestedFilename);
 }
 
 TEST(NSHTTPURLResponse, SuggestedFilename_removeSlashes_1) {
