@@ -51,7 +51,7 @@ TEST(NSURLCredential, credentialForTrust) {
     ASSERT_TRUE_MSG(credential != nil, "FAILED: credential should be non-null!");
     ASSERT_EQ_MSG(nil, [credential user], "FAILED: User name is not null");
     ASSERT_EQ_MSG(nil, [credential password], "FAILED: password is not null");
-    ASSERT_EQ_MSG(NSURLCredentialPersistenceNone, [credential persistence], "FAILED: persistence is not valid");
+    ASSERT_EQ_MSG(NSURLCredentialPersistenceForSession, [credential persistence], "FAILED: persistence is not valid");
     ASSERT_EQ_MSG(NO, [credential hasPassword], "FAILED: hasPassword is not the expected value");
     ASSERT_EQ_MSG(nil, [credential identity], "FAILED: identity not null");
 }

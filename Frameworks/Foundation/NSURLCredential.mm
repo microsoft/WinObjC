@@ -75,6 +75,7 @@
 - (instancetype)initWithTrust:(SecTrustRef)trust {
     if (self = [super init]) {
         _trust = trust;
+        _persistence = NSURLCredentialPersistenceForSession;
     }
     return self;
 }
