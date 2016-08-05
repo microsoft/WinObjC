@@ -28,7 +28,7 @@
     if (self = [super init]) {
         _allowsCellularAccess = YES;
         _timeoutIntervalForRequest = 60;
-        _timeoutIntervalForResource = 7;
+        _timeoutIntervalForResource = 7 * 24 * 60 * 60;
         _HTTPCookieAcceptPolicy = NSHTTPCookieAcceptPolicyOnlyFromMainDocumentDomain;
         _HTTPCookieStorage = [[NSHTTPCookieStorage sharedHTTPCookieStorage] retain];
         _HTTPShouldSetCookies = YES;
@@ -41,22 +41,13 @@
     return self;
 }
 
-- (instancetype)_initTLSAndCache {
-    if (self = [self _initWithSharedDefaults]) {
-        _TLSMaximumSupportedProtocol = kTLSProtocol12;
-        _TLSMinimumSupportedProtocol = kTLSProtocol1;
-        _URLCache = [[NSURLCache sharedURLCache] retain];
-    }
-    return self;
-}
-
 /**
  @Status Interoperable
 */
 - (instancetype)init {
     if (self = [self _initWithSharedDefaults]) {
         _TLSMaximumSupportedProtocol = kTLSProtocol12;
-        _TLSMinimumSupportedProtocol = kSSLProtocol3;
+        _TLSMinimumSupportedProtocol = kTLSProtocol1;
     }
     return self;
 }
@@ -65,7 +56,9 @@
  @Status Interoperable
 */
 - (instancetype)initEphemeralSession {
-    self = [self _initTLSAndCache];
+    if (self = [self init]) {
+        _URLCache = [[NSURLCache sharedURLCache] retain];
+    }
     return self;
 }
 
@@ -73,7 +66,7 @@
  @Status Interoperable
 */
 - (instancetype)initBackgroundSession:(NSString*)identifier {
-    if (self = [self _initTLSAndCache]) {
+    if (self = [self init]) {
         _identifier = identifier;
     }
     return self;
