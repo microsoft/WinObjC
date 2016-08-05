@@ -359,19 +359,20 @@ TEST(NSPredicate, Matches_InstanceFieldsFilterByRegexEndingInNumbers) {
 TEST(NSPredicate, Like) {
     NSMutableArray* animals = [NSMutableArray array];
 
-    PredicateTestAnimal* animal = [[[PredicateTestAnimal alloc] initWithName:@"test1.foo" age:5 speed:115] autorelease];
+    PredicateTestAnimal* animal = [[[PredicateTestAnimal alloc] initWithName:@"test.foo" age:5 speed:115] autorelease];
     [animals addObject:animal];
 
-    animal = [[[PredicateTestAnimal alloc] initWithName:@"test2.foo" age:5 speed:115] autorelease];
+    animal = [[[PredicateTestAnimal alloc] initWithName:@"test.foo" age:5 speed:115] autorelease];
     [animals addObject:animal];
 
-    animal = [[[PredicateTestAnimal alloc] initWithName:@"testp.foo" age:5 speed:115] autorelease];
+    animal = [[[PredicateTestAnimal alloc] initWithName:@"hello.foo" age:5 speed:115] autorelease];
     [animals addObject:animal];
 
     animal = [[[PredicateTestAnimal alloc] initWithName:@"atestp.foo" age:5 speed:115] autorelease];
     [animals addObject:animal];
 
-    NSPredicate* betweenPredicate = [NSPredicate predicateWithFormat:@"name LIKE %@", @"t.*t[0-9]"];
+    // Like has to be limited to *,?. This fix is coming in via #791
+    NSPredicate* betweenPredicate = [NSPredicate predicateWithFormat:@"name LIKE %@", @"test*.foo"];
     NSArray* validTestAnimals = [animals filteredArrayUsingPredicate:betweenPredicate];
 
     ASSERT_EQ_MSG(2, [validTestAnimals count], "FAILED: Unable to filter based on class property.");
