@@ -66,13 +66,14 @@ TEST(NSURLRequest, HeaderFields) {
     ASSERT_OBJCNE(request.allHTTPHeaderFields, nil);
     ASSERT_OBJCEQ(request.allHTTPHeaderFields[@"Accept"], @"application/json");
 
-    // Setting @"accept" should remove @"Accept"
+    // Setting @"accept" should update @"Accept"
     [request setValue:@"application/xml" forHTTPHeaderField:@"accept"];
-    ASSERT_OBJCEQ(request.allHTTPHeaderFields[@"Accept"], nil);
+    ASSERT_OBJCEQ(request.allHTTPHeaderFields[@"Accept"], @"application/xml");
     ASSERT_OBJCEQ(request.allHTTPHeaderFields[@"accept"], @"application/xml");
 
     // Adding to @"Accept" should add to @"accept"
     [request addValue:@"text/html" forHTTPHeaderField:@"Accept"];
+    ASSERT_OBJCEQ(request.allHTTPHeaderFields[@"Accept"], @"application/xml,text/html");
     ASSERT_OBJCEQ(request.allHTTPHeaderFields[@"accept"], @"application/xml,text/html");
 }
 
