@@ -24,7 +24,10 @@
 
 @implementation NSURLSessionConfiguration
 
-- (instancetype)_initWithSharedDefaults {
+/**
+ @Status Interoperable
+*/
+- (instancetype)init {
     if (self = [super init]) {
         _allowsCellularAccess = YES;
         _timeoutIntervalForRequest = 60;
@@ -35,20 +38,11 @@
         _networkServiceType = NSURLNetworkServiceTypeDefault;
         _requestCachePolicy = NSURLRequestUseProtocolCachePolicy;
         _HTTPMaximumConnectionsPerHost = 6;
+        _TLSMaximumSupportedProtocol = kTLSProtocol12;
+        _TLSMinimumSupportedProtocol = kTLSProtocol1;
         //_URLCredentialStorage = [[NSURLCredentialStorage sharedCredentialStorage] retain];
     }
 
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)init {
-    if (self = [self _initWithSharedDefaults]) {
-        _TLSMaximumSupportedProtocol = kTLSProtocol12;
-        _TLSMinimumSupportedProtocol = kTLSProtocol1;
-    }
     return self;
 }
 
