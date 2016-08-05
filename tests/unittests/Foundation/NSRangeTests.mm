@@ -34,4 +34,7 @@ TEST(NSRange, NSRangeTests) {
     testStringFromRange(@"\r\n{1, 2}", { 1, 2 });
     testStringFromRange(@"{  2, 4  }", { 2, 4 });
     testStringFromRange(@"{-1, -2}", { 1, 2 });
+    testStringFromRange(@"1 2", { 1, 2 });
+    testStringFromRange(@"{1,2,3}", { 1, 2 });
+    testStringFromRange(@"", { 0, 0 });
 }

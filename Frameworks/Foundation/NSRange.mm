@@ -49,15 +49,12 @@ NSString* NSStringFromRange(NSRange range) {
  @Status Interoperable
 */
 NSRange NSRangeFromString(NSString* s) {
-    static NSCharacterSet* numbers = [NSCharacterSet characterSetWithCharactersInString:@"1234567890"];
-    NSScanner* scanner = [NSScanner scannerWithString:s];
     unsigned long long position = 0;
     unsigned long long length = 0;
 
-    [scanner scanUpToCharactersFromSet:numbers intoString:nullptr];
-    if ([scanner scanUnsignedLongLong:&position]) {
-        [scanner scanUpToCharactersFromSet:numbers intoString:nullptr];
-        [scanner scanUnsignedLongLong:&length];
+    const char* input = strpbrk([s UTF8String], "0123456789");
+    if (input) {
+        sscanf(input, "%llu%*[^0-9]%llu", &position, &length);
     }
 
     return NSMakeRange(position, length);
