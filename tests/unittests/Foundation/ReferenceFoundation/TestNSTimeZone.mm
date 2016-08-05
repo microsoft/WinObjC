@@ -57,10 +57,13 @@ TEST(NSTimeZone, InitializingTimeZoneWithAbbreviation) {
 }
 
 TEST(NSTimeZone, SystemTimeZoneUsesSystemTime) {
-    NSString* zoneName = [[NSTimeZone systemTimeZone] abbreviation];
-
-// Windows NSTimeZone uses icu, OSX version of this test uses linux-y APIs not available on Windows.
+// Windows NSTimeZone uses icu, OSX version of this test uses a GNU/BSD only API (struct tm.tm_zone) not available on Windows.
+// Because this API is missing on Windows, the Windows path of this test compares against name rather than abbreviation -
+// abbreviation is messy to retrieve the value of, and the code would end up identical to the implementation code,
+// making the test not very meaningful.
 #if TARGET_OS_WIN32
+    NSString* zoneName = [[NSTimeZone systemTimeZone] name];
+
     icu::TimeZone* systemTime = icu::TimeZone::detectHostTimeZone();
     icu::UnicodeString expectedUnicodeName;
     systemTime->getID(expectedUnicodeName);
@@ -68,6 +71,8 @@ TEST(NSTimeZone, SystemTimeZoneUsesSystemTime) {
     NSString* expectedName =
         [NSString stringWithCharacters:(const unichar*)expectedUnicodeName.getBuffer() length:expectedUnicodeName.length()];
 #else
+    NSString* zoneName = [[NSTimeZone systemTimeZone] abbreviation];
+
     tzset();
     time_t t = time(nil);
     struct tm lt = tm();
