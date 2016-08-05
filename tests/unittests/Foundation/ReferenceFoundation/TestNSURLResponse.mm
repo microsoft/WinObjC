@@ -22,6 +22,10 @@
 // See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
 //
 
+// WINOBJC: The MIME types were changed from txt (not MIME types) to text/plain to better
+// approximate what we believe they were testing. If support for "txt" as a MIME is Swift-specific
+// behaviour, we would prefer to test the reference platform's behaviour over it.
+
 #import <Foundation/Foundation.h>
 #import <TestFramework.h>
 
@@ -83,18 +87,6 @@ OSX_DISABLED_TEST(NSURLResponse, SuggestedFilename_QueryParameter) {
     NSURL* url = [NSURL URLWithString:@"a/test/name.extension?foo=bar"];
     NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
     ASSERT_OBJCEQ(@"name.extension", res.suggestedFilename);
-}
-
-TEST(NSURLResponse, SuggestedFilename_MatchingMIME) {
-    NSURL* url = [NSURL URLWithString:@"a/test/name.extension.txt"];
-    NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
-    ASSERT_OBJCEQ(@"name.extension.txt", res.suggestedFilename);
-}
-
-TEST(NSURLResponse, SuggestedFilename_QueryParameter_MatchingMIME) {
-    NSURL* url = [NSURL URLWithString:@"a/test/name.extension.txt?foo=bar"];
-    NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
-    ASSERT_OBJCEQ(@"name.extension.txt", res.suggestedFilename);
 }
 
 TEST(NSURLResponse, SuggestedFilename_NoFilename) {
@@ -279,12 +271,13 @@ TEST(NSHTTPURLResponse, SuggestedFilename_3) {
     ASSERT_OBJCEQ(@";.ext", response.suggestedFilename);
 }
 
-TEST(NSHTTPURLResponse, SuggestedFilename_MultipleFilenamesInResponse) {
+// Swift behaviour here does not match OS X; OS X takes the first extension.
+OSX_DISABLED_TEST(NSHTTPURLResponse, SuggestedFilename_4) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Disposition" : @"attachment; aa=bb\\; filename=\"wrong.ext\"; filename=\"fname.ext\"; cc=dd" };
     NSHTTPURLResponse* response =
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
-    ASSERT_OBJCEQ(@"wrong.ext", response.suggestedFilename);
+    ASSERT_OBJCEQ(@"fname.ext", response.suggestedFilename);
 }
 
 TEST(NSHTTPURLResponse, SuggestedFilename_removeSlashes_1) {
@@ -333,32 +326,7 @@ TEST(NSHTTPURLResponse, mimetypeAndCharacterEncoding_3) {
 }
 
 // Archival
-TEST(NSURLResponse, canBeArchived) {
-    NSURLResponse* expected = [[[NSURLResponse alloc] initWithURL:[NSURL URLWithString:@"test"]
-                                                MIMEType:@"text/plain"
-                                                expectedContentLength:100
-                                                textEncodingName:@"utf8"] autorelease];
-
-    id data = nil;
-    EXPECT_NO_THROW(data = [NSKeyedArchiver archivedDataWithRootObject:expected]);
-    EXPECT_NO_THROW([NSKeyedUnarchiver unarchiveObjectWithData:data]);
-}
-
-TEST(NSHTTPURLResponse, canBeArchived) {
-    NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
-    auto f = @{ @"Content-Type" : @"text/HTML; charset=ISO-8859-4" };
-    NSHTTPURLResponse* expected =
-        [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
-
-    id data = nil;
-    EXPECT_NO_THROW(data = [NSKeyedArchiver archivedDataWithRootObject:expected]);
-    EXPECT_NO_THROW([NSKeyedUnarchiver unarchiveObjectWithData:data]);
-}
-
-// These are the same tests as above, with an additional check that the objects returned from unarchival
-// match the ones archived.
-// On the reference platform, NSURLResponse isEqual: only does a pointer comparison.
-OSX_DISABLED_TEST(NSURLResponse, CanBeArchivedWithFullFidelity) {
+OSX_DISABLED_TEST(NSURLResponse, canBeArchived) {
     NSURLResponse* expected = [[[NSURLResponse alloc] initWithURL:[NSURL URLWithString:@"test"]
                                                 MIMEType:@"text/plain"
                                                 expectedContentLength:100
@@ -369,7 +337,7 @@ OSX_DISABLED_TEST(NSURLResponse, CanBeArchivedWithFullFidelity) {
     ASSERT_OBJCEQ(expected, actual);
 }
 
-OSX_DISABLED_TEST(NSHTTPURLResponse, CanBeArchivedWithFullFidelity) {
+OSX_DISABLED_TEST(NSHTTPURLResponse, canBeArchived) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Type" : @"text/HTML; charset=ISO-8859-4" };
     NSHTTPURLResponse* expected =
