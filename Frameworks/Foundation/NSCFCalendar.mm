@@ -594,6 +594,42 @@ static NSUInteger s_retryAttempts = 55;
     THROW_NS_IF_NULL(E_INVALIDARG, comps);
     THROW_NS_IF_FALSE(E_INVALIDARG, (opts != 0));
 
+    BOOL optionsAreInContrast = NO;
+
+    BOOL isOptionsValid = ((opts & NSCalendarMatchPreviousTimePreservingSmallerUnits) != 0);
+
+    if ((opts & NSCalendarMatchNextTimePreservingSmallerUnits) != 0) {
+        if (isOptionsValid == NO) {
+            isOptionsValid = YES;
+        } else {
+            optionsAreInContrast = YES;
+        }
+    }
+    if ((opts & NSCalendarMatchNextTime) != 0) {
+        if (isOptionsValid == NO) {
+            isOptionsValid = YES;
+        } else {
+            optionsAreInContrast = YES;
+        }
+    }
+
+    // This is a valid solo option as well as when used in conjunction with the others.
+    if (!isOptionsValid) {
+        isOptionsValid = ((opts & NSCalendarMatchStrictly) != 0);
+    }
+
+    THROW_NS_IF_FALSE_MSG(E_INVALIDARG,
+                          (isOptionsValid && !optionsAreInContrast),
+                          "Options must specify exactly one of these matching options: NSCalendarMatchPreviousTimePreservingSmallerUnits, "
+                          "NSCalendarMatchNextTimePreservingSmallerUnits, NSCalendarMatchNextTime");
+
+    // If the matching components did not specify any particular day when matching for weekOfYear then match the first weekday
+    if (comps.weekOfYear != NSUndefinedDateComponent && comps.day == NSUndefinedDateComponent &&
+        comps.weekday == NSUndefinedDateComponent) {
+        comps = [[comps copy] autorelease];
+        [comps setValue:1 forComponent:NSCalendarUnitWeekday];
+    }
+
     NSComparisonResult expectedResult = NSOrderedDescending;
     BOOL searchForwards = !((opts & NSCalendarSearchBackwards));
     if (searchForwards) {
