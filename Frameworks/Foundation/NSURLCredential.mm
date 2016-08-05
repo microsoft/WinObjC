@@ -73,9 +73,8 @@
  @Status Interoperable
 */
 - (instancetype)initWithTrust:(SecTrustRef)trust {
-    if (self = [super init]) {
+    if (self = [self _initWithPersistence:NSURLCredentialPersistenceForSession]) {
         _trust = trust;
-        _persistence = NSURLCredentialPersistenceForSession;
     }
     return self;
 }
