@@ -28,8 +28,7 @@
 #import <LoggingNative.h>
 
 #import <array>
-#import <direct.h>
-#import <io.h>
+#import <windows.h>
 
 NSString* const kURLTestParsingTestsKey = @"ParsingTests";
 
@@ -119,6 +118,8 @@ static boolean setup_test_paths() {
                       gRelativeOffsetFromBaseCurrentWorkingDirectory = strlen(cwdURL.fileSystemRepresentation) + 1;
                   });
 
+// File system functions/constants differ between platforms
+#if TARGET_OS_WIN32
     // WINOBJC: create tmp/ first
     if (_mkdir(gBaseTemporaryDirectoryPath.data()) != 0 && errno != EEXIST) {
         return false;
@@ -135,6 +136,23 @@ static boolean setup_test_paths() {
     if (_rmdir(gDirectoryDoesNotExistPath.data()) != 0 && errno != ENOENT) {
         return false;
     }
+#else
+    if (mkdir(gBaseTemporaryDirectoryPath.data(), S_IRWXU) != 0 && errno != EEXIST) {
+        return false;
+    }
+    if (creat(gFileExistsPath.data(), S_IRWXU) < 0 && errno != EEXIST) {
+        return false;
+    }
+    if (unlink(gFileDoesNotExistPath.data()) != 0 && errno != ENOENT) {
+        return false;
+    }
+    if (mkdir(gDirectoryExistsPath.data(), S_IRWXU) != 0 && errno != EEXIST) {
+        return false;
+    }
+    if (rmdir(gDirectoryDoesNotExistPath.data()) != 0 && errno != ENOENT) {
+        return false;
+    }
+#endif
 
     return true;
 }
@@ -152,7 +170,7 @@ TEST(NSURL, FileURLWithPath_relativeToURL) {
     ASSERT_OBJCNE_MSG(nil, homeDirectory, @"Failed to find home directory");
     NSURL* homeURL = [NSURL fileURLWithPath:homeDirectory isDirectory:YES];
     ASSERT_OBJCNE_MSG(nil, homeURL, @"fileURLWithPath:isDirectory: failed");
-    ASSERT_OBJCEQ([NSString stringWithCString:gBaseCurrentWorkingDirectoryPath.data() encoding:NSUTF8StringEncoding], homeURL.path);
+    ASSERT_OBJCEQ(homeDirectory, homeURL.path);
 
     // #if os(OSX)
     NSURL* baseURL = [NSURL fileURLWithPath:homeDirectory isDirectory:YES];
@@ -459,16 +477,32 @@ TEST(NSURL, URLByResolvingSymlinksInPath) {
         NSURL* url = [NSURL fileURLWithPath:@"~"];
         ASSERT_OBJCEQ(url, [url copy]);
         auto result = [url URLByResolvingSymlinksInPath].absoluteString;
+
+// Absolute paths on OSX naturally begin with '/', not so on Windows, which begins with a drive.
+// An extra '/' is needed on Windows to match CF behavior
+#if TARGET_OS_WIN32
         auto expected =
             [[@"file:///" stringByAppendingString:[NSFileManager defaultManager].currentDirectoryPath] stringByAppendingString:@"/~"];
+#else
+        auto expected =
+            [[@"file://" stringByAppendingString:[NSFileManager defaultManager].currentDirectoryPath] stringByAppendingString:@"/~"];
+#endif
         ASSERT_OBJCEQ_MSG(result, expected, @"URLByResolvingSymlinksInPath resolves relative paths using current working directory.");
     }
 
     {
         NSURL* url = [NSURL fileURLWithPath:@"anysite.com/search"];
         auto result = [url URLByResolvingSymlinksInPath].absoluteString;
+
+// Absolute paths on OSX naturally begin with '/', not so on Windows, which begins with a drive.
+// An extra '/' is needed on Windows to match CF behavior
+#if TARGET_OS_WIN32
         auto expected = [[@"file:///" stringByAppendingString:[NSFileManager defaultManager].currentDirectoryPath]
             stringByAppendingString:@"/anysite.com/search"];
+#else
+        auto expected = [[@"file://" stringByAppendingString:[NSFileManager defaultManager].currentDirectoryPath]
+            stringByAppendingString:@"/anysite.com/search"];
+#endif
         ASSERT_OBJCEQ(result, expected);
     }
 

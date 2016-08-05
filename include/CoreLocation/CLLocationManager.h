@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -67,11 +68,11 @@ CORELOCATION_EXPORT_CLASS
 @property (assign, nonatomic) CLActivityType activityType;
 - (void)startMonitoringSignificantLocationChanges STUB_METHOD;
 - (void)stopMonitoringSignificantLocationChanges STUB_METHOD;
-- (void)startUpdatingHeading STUB_METHOD;
-- (void)stopUpdatingHeading STUB_METHOD;
+- (void)startUpdatingHeading;
+- (void)stopUpdatingHeading;
 - (void)dismissHeadingCalibrationDisplay STUB_METHOD;
-@property (assign, nonatomic) CLLocationDegrees headingFilter STUB_PROPERTY;
-@property (assign, nonatomic) CLDeviceOrientation headingOrientation STUB_PROPERTY;
+@property (assign, nonatomic) CLLocationDegrees headingFilter;
+@property (assign, nonatomic) CLDeviceOrientation headingOrientation;
 - (void)startMonitoringForRegion:(CLRegion*)region STUB_METHOD;
 - (void)stopMonitoringForRegion:(CLRegion*)region STUB_METHOD;
 @property (readonly, copy, nonatomic) NSSet* monitoredRegions STUB_PROPERTY;
@@ -85,7 +86,7 @@ CORELOCATION_EXPORT_CLASS
 - (void)allowDeferredLocationUpdatesUntilTraveled:(CLLocationDistance)distance timeout:(NSTimeInterval)timeout STUB_METHOD;
 - (void)disallowDeferredLocationUpdates STUB_METHOD;
 @property (readonly, copy, nonatomic) CLLocation* location;
-@property (readonly, copy, nonatomic) CLHeading* heading STUB_PROPERTY;
+@property (readonly, copy, nonatomic) CLHeading* heading;
 + (BOOL)regionMonitoringAvailable STUB_METHOD;
 + (BOOL)regionMonitoringEnabled STUB_METHOD;
 - (void)startMonitoringForRegion:(CLRegion*)region desiredAccuracy:(CLLocationAccuracy)accuracy STUB_METHOD;

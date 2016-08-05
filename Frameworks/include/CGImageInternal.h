@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -14,10 +15,10 @@
 //
 //******************************************************************************
 
-#ifndef __CGIMAGEINTERNAL_H
-#define __CGIMAGEINTERNAL_H
+#pragma once
 
 #include "Starboard.h"
+#include "CoreGraphicsInternal.h"
 #include "CoreGraphics/CGImage.h"
 #include <objc/runtime.h>
 
@@ -56,7 +57,11 @@ public:
     virtual int Height() = 0;
     virtual int BytesPerRow() = 0;
     virtual int BytesPerPixel() = 0;
-    virtual surfaceFormat SurfaceFormat() = 0;
+    virtual int BitsPerComponent() = 0;
+    virtual void GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo) = 0;
+    virtual __CGSurfaceFormat SurfaceFormat() = 0;
+    virtual CGColorSpaceModel ColorSpaceModel() = 0;
+    virtual CGBitmapInfo BitmapInfo() = 0;
     virtual void* StaticImageData() = 0;
     virtual void* LockImageData() = 0;
     virtual void ReleaseImageData() = 0;
@@ -87,7 +92,7 @@ typedef enum {
     CGImageTypeJPEG
 } CGImageType;
 
-class __CGImage: private objc_object {
+class __CGImage : private objc_object {
 protected:
     CGImageBacking* _img;
 
@@ -99,7 +104,7 @@ public:
     __CGImage();
     ~__CGImage();
 
-    CGImageBacking* Backing() const {
+    inline CGImageBacking* Backing() const {
         return _img;
     }
     CGImageBacking* DetachBacking(CGImageRef newParent);
@@ -115,5 +120,3 @@ public:
 typedef void (*CGImageDestructionListener)(CGImageRef img);
 COREGRAPHICS_EXPORT void CGImageAddDestructionListener(CGImageDestructionListener listener);
 COREGRAPHICS_EXPORT NSData* _CGImagePNGRepresentation(UIImage* img);
-
-#endif

@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -19,6 +20,8 @@
 #import <CoreGraphics/CGContext.h>
 #import "CGContextInternal.h"
 #import <CoreGraphics/CGImage.h>
+
+static const wchar_t* TAG = L"CGBitmapContext";
 
 /**
  @Status Stub
@@ -48,25 +51,40 @@ CGImageRef CGBitmapContextCreateImage(CGContextRef context) {
 }*/
 
 /**
- @Status Caveat
- @Notes tied to underlying implementation caveats in CGImageGetBitmapInfo.
- From CGImage.mm: "Only returns kCGImageAlpha information"
+@Status Interoperable
+@Notes
 */
 CGBitmapInfo CGBitmapContextGetBitmapInfo(CGContextRef context) {
-	CGImageRef imageRef = context->Backing()->DestImage();
-	CGBitmapInfo bitmapInfo = CGImageGetBitmapInfo(imageRef);
-	return bitmapInfo;
+    int ret;
+
+    if (context) {
+        ret = context->Backing()->DestImage()->Backing()->BitmapInfo();
+    }
+    else {
+        TraceWarning(TAG, L"CGBitmapContextGetBitmapInfo: Null context!");
+        ret = 0;
+    }
+
+    return (CGBitmapInfo)ret;
 }
 
 /**
- @Status Stub
- @Notes
+@Status Interoperable
+@Notes
 */
-/*
 CGImageAlphaInfo CGBitmapContextGetAlphaInfo(CGContextRef context) {
-    UNIMPLEMENTED();
-    return StubReturn();
-}*/
+    int ret;
+
+    if (context) {
+        ret = context->Backing()->DestImage()->Backing()->BitmapInfo() & kCGBitmapAlphaInfoMask;
+    }
+    else {
+        TraceWarning(TAG, L"CGBitmapContextGetAlphaInfo: Null context!");
+        ret = 0;
+    }
+
+    return (CGImageAlphaInfo)ret;
+}
 
 /**
  @Status Interoperable

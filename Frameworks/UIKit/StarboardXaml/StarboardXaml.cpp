@@ -28,6 +28,7 @@
 #include <UIKit\UIKitExport.h>
 #include "StarboardXaml.h"
 #include "..\UIApplicationMainInternal.h"
+#include "UWPBackgroundTask.h"
 
 using namespace Windows::ApplicationModel::Activation;
 using namespace Windows::UI;
@@ -59,15 +60,29 @@ Platform::Array<Xaml::Markup::XmlnsDefinition>^ App::GetXmlnsDefinitions() {
 }
 
 void AppEventListener::_RegisterEventHandlers() {
-    Windows::UI::Xaml::Application::Current->Suspending += ref new Xaml::SuspendingEventHandler(this, &AppEventListener::_OnSuspending);
-    Windows::UI::Xaml::Application::Current->Resuming += ref new Windows::Foundation::EventHandler<Platform::Object^>(this, &AppEventListener::_OnResuming);
+    Windows::UI::Xaml::Application::Current->UnhandledException +=
+        ref new Xaml::UnhandledExceptionEventHandler(this, &AppEventListener::_OnUnhandledException);
 
+    Windows::UI::Xaml::Application::Current->Suspending +=
+        ref new Xaml::SuspendingEventHandler(this, &AppEventListener::_OnSuspending);
+    Windows::UI::Xaml::Application::Current->Resuming +=
+        ref new Windows::Foundation::EventHandler<Platform::Object^>(this, &AppEventListener::_OnResuming);
+
+#ifdef ENABLE_BACKGROUND_TASK
+    Windows::UI::Xaml::Application::Current->EnteredBackground +=
+        ref new Xaml::EnteredBackgroundEventHandler(this, &AppEventListener::_OnEnteredBackground);
+    Windows::UI::Xaml::Application::Current->LeavingBackground +=
+        ref new Xaml::LeavingBackgroundEventHandler(this, &AppEventListener::_OnLeavingBackground);
+#else
     // Register for Window Visibility change event.
     // TODO: Move this out of the Windows Visibility event in future
-    Xaml::Window::Current->VisibilityChanged += ref new Xaml::WindowVisibilityChangedEventHandler(this, &AppEventListener::_OnAppVisibilityChanged);
+    Xaml::Window::Current->VisibilityChanged +=
+        ref new Xaml::WindowVisibilityChangedEventHandler(this, &AppEventListener::_OnAppVisibilityChanged);
+#endif
 
     // Register for Application Memory Usage Increase event.
-    MemoryManager::AppMemoryUsageIncreased += ref new Windows::Foundation::EventHandler<Platform::Object^>(this, &AppEventListener::_OnAppMemoryUsageChanged);
+    MemoryManager::AppMemoryUsageIncreased +=
+        ref new Windows::Foundation::EventHandler<Platform::Object^>(this, &AppEventListener::_OnAppMemoryUsageChanged);
 }
 
 void AppEventListener::_OnAppVisibilityChanged(Platform::Object^ sender, Core::VisibilityChangedEventArgs^ args)
@@ -102,6 +117,43 @@ void AppEventListener::_OnSuspending(Platform::Object^ sender, Windows::Applicat
     deferral->Complete();
 }
 
+#ifdef ENABLE_BACKGROUND_TASK
+void AppEventListener::_OnEnteredBackground(Platform::Object^ sender, Windows::ApplicationModel::EnteredBackgroundEventArgs^ args)
+{
+    TraceVerbose(TAG, L"EnteredBackground event received");
+    _enteredBackgroundEventDeferral = args->GetDeferral();
+    UIApplicationMainHandlePLMEvent(false);
+    _enteredBackgroundEventDeferral->Complete();
+    _enteredBackgroundEventDeferral = nullptr;
+}
+
+void AppEventListener::_OnLeavingBackground(Platform::Object^ sender, Windows::ApplicationModel::LeavingBackgroundEventArgs^ args)
+{
+    TraceVerbose(TAG, L"LeavingBackground event received");
+    UIApplicationMainHandlePLMEvent(true);
+}
+
+void AppEventListener::_OnBackgroundTaskCancelled(
+    Windows::ApplicationModel::Background::IBackgroundTaskInstance^ taskInstance,
+    Windows::ApplicationModel::Background::BackgroundTaskCancellationReason reason)
+{
+    TraceVerbose(TAG, L"Background task cancelled called for task %s", taskInstance->Task->Name->Data());
+    if (wcscmp(taskInstance->Task->Name->Data(), c_backgroundTaskName) == 0) {
+        TraceVerbose(TAG, L"Background task cancelled called for ApplicationTrigger task due to reason %ld", reason);
+        _applicationTriggerDeferral->Complete();
+        _applicationTriggerDeferral = nullptr;
+        taskInstance->Task->Unregister(true);
+    }
+}
+#endif
+
+void AppEventListener::_OnUnhandledException(Platform::Object^ sender, Xaml::UnhandledExceptionEventArgs^ args)
+{
+    TraceError(TAG, L"Application hit an unhandled exception %ld (%s)", args->Exception.Value, args->Message->Data());
+    FAIL_FAST();
+}
+
+
 static AppEventListener ^_appEvents;
 
 void App::InitializeComponent() {
@@ -111,31 +163,37 @@ void App::Connect(int connectionId, Platform::Object^ target) {
 }
 
 void App::OnLaunched(LaunchActivatedEventArgs^ args) {
-    if (EbrApplicationLaunched(args) == true) {
-        _ApplicationMainLaunch(ActivationTypeNone, nullptr);
-    }
+    UIApplicationLaunched(args);
 }
 
 void App::OnActivated(IActivatedEventArgs^ args) {
-    EbrApplicationActivated(args);
+    UIApplicationActivated(args);
 }
 
-bool EbrApplicationLaunched(LaunchActivatedEventArgs^ args) {
-    if (args->PrelaunchActivated) {
-        // Opt out of prelaunch for now. MSDN guidance is to check the flag and just return.
-        return false;
-    }
+#ifdef ENABLE_BACKGROUND_TASK
+void App::OnBackgroundActivated(BackgroundActivatedEventArgs^ args) {
+    __super::OnBackgroundActivated(args);
+    UIApplicationBackgroundActivated(args);
+}
+#endif
 
-    if ((args->PreviousExecutionState == ApplicationExecutionState::Running) ||
-        (args->PreviousExecutionState == ApplicationExecutionState::Suspended)) {
-        // Skip re-initializing as the app is being resumed from memory.
-        return false;
-    }
+extern "C"
+void UIApplicationLaunched(LaunchActivatedEventArgs^ args) {
+    TraceVerbose(TAG, L"OnLaunched event received for %d. Previous app state was %d", args->Kind, args->PreviousExecutionState);
+    // Opt out of prelaunch for now. MSDN guidance is to check the flag and just return.
+    // Or skip re-initializing as the app is being resumed from memory.
+    bool initiateAppLaunch = (!(args->PrelaunchActivated)
+                                && (args->PreviousExecutionState != ApplicationExecutionState::Running)
+                                && (args->PreviousExecutionState != ApplicationExecutionState::Suspended));
 
-    return true;
+    if (initiateAppLaunch) {
+        TraceVerbose(TAG, L"Initializing application");
+        _ApplicationLaunch(ActivationTypeNone, args);
+    }
 }
 
-void EbrApplicationActivated(IActivatedEventArgs^ args) {
+extern "C"
+void UIApplicationActivated(IActivatedEventArgs^ args) {
     TraceVerbose(TAG, L"OnActivated event received for %d. Previous app state was %d", args->Kind, args->PreviousExecutionState);
 
     bool initiateAppLaunch = false;
@@ -150,7 +208,7 @@ void EbrApplicationActivated(IActivatedEventArgs^ args) {
         TraceVerbose(TAG, L"Received toast notification with argument - %s", argsString->Data());
 
         if (initiateAppLaunch) {
-            _ApplicationMainLaunch(ActivationTypeToast, argsString);
+            _ApplicationLaunch(ActivationTypeToast, argsString);
         }
 
         UIApplicationMainHandleToastNotificationEvent(Strings::WideToNarrow(argsString->Data()).c_str());
@@ -159,84 +217,14 @@ void EbrApplicationActivated(IActivatedEventArgs^ args) {
         TraceVerbose(TAG, L"Received voice command with argument - %s", argResult->Text->Data());
 
         if (initiateAppLaunch) {
-            _ApplicationMainLaunch(ActivationTypeVoiceCommand, argResult);
+            _ApplicationLaunch(ActivationTypeVoiceCommand, argResult);
         }
-
         UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(argResult));
     } else if (args->Kind == ActivationKind::Protocol) {
         ProtocolActivatedEventArgs^ protocolArgs = safe_cast<ProtocolActivatedEventArgs^>(args);
         Windows::Foundation::Uri^ argUri = protocolArgs->Uri;
         const wchar_t* caller = protocolArgs->CallerPackageFamilyName->Data();
         TraceVerbose(TAG, L"Received protocol with uri- %s from %s", argUri->ToString()->Data(), caller);
-
-        if (initiateAppLaunch) {
-            _ApplicationMainLaunch(ActivationTypeProtocol, argUri);
-        }
-
-        UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri), caller);
-    } else {
-        TraceVerbose(TAG, L"Received unhandled activation kind - %d", args->Kind);
-
-        if (initiateAppLaunch) {
-            _ApplicationMainLaunch(ActivationTypeNone, nullptr);
-        }
-    }
-}
-
-void _ApplicationMainLaunch(ActivationType activationType, Platform::Object^ activationArg) {
-    _ApplicationLaunch(activationType, activationArg);
-
-    _appEvents = ref new AppEventListener();
-    _appEvents->_RegisterEventHandlers();
-}
-
-extern "C" void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
-    auto uiElem = ref new Xaml::Controls::Grid();
-    auto rootFrame = ref new Xaml::Controls::Frame();
-    rootFrame->Content = uiElem;
-
-    SetXamlRoot(uiElem);
-
-    Xaml::Window::Current->Content = rootFrame;
-    Xaml::Window::Current->Activate();
-
-    auto startupRect = Xaml::Window::Current->Bounds;
-    RunApplicationMain(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height, activationType, activationArg);
-}
-
-extern "C" void _ApplicationActivate(Platform::Object^ arguments) {
-    IActivatedEventArgs^ args = static_cast<IActivatedEventArgs^>(arguments);
-    TraceVerbose(TAG, L"OnActivated event received for %d. Previous app state was %d", args->Kind, args->PreviousExecutionState);
-    bool initiateAppLaunch = false;
-    if ((args->PreviousExecutionState != ApplicationExecutionState::Running) &&
-        (args->PreviousExecutionState != ApplicationExecutionState::Suspended)) {
-        TraceVerbose(TAG, L"Initializing application");
-        initiateAppLaunch = true;
-    }
-
-    if (args->Kind == ActivationKind::ToastNotification) {
-        Platform::String^ argsString = safe_cast<ToastNotificationActivatedEventArgs^>(args)->Argument;
-        TraceVerbose(TAG, L"Received toast notification with argument - %ls", argsString->Data());
-
-        if (initiateAppLaunch) {
-            _ApplicationLaunch(ActivationTypeToast, argsString);
-        }
-
-        UIApplicationMainHandleToastNotificationEvent(Strings::WideToNarrow(argsString->Data()).c_str());
-    } else if (args->Kind == ActivationKind::VoiceCommand) {
-        Windows::Media::SpeechRecognition::SpeechRecognitionResult^ argResult = safe_cast<VoiceCommandActivatedEventArgs^>(args)->Result;
-        TraceVerbose(TAG, L"Received voice command with argument - %ls", argResult->Text->Data());
-
-        if (initiateAppLaunch) {
-            _ApplicationLaunch(ActivationTypeVoiceCommand, argResult);
-        }
-
-        UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(argResult));
-    } else if (args->Kind == ActivationKind::Protocol) {
-        ProtocolActivatedEventArgs^ protocolArgs = safe_cast<ProtocolActivatedEventArgs^>(args);
-        Windows::Foundation::Uri^ argUri = protocolArgs->Uri;
-        const wchar_t* caller = protocolArgs->CallerPackageFamilyName->Data();
-        TraceVerbose(TAG, L"Received protocol with uri- %ls from %ls", argUri->ToString()->Data(), caller);
 
         if (initiateAppLaunch) {
             _ApplicationLaunch(ActivationTypeProtocol, argUri);
@@ -252,50 +240,86 @@ extern "C" void _ApplicationActivate(Platform::Object^ arguments) {
     }
 }
 
+#ifdef ENABLE_BACKGROUND_TASK
+extern "C"
+void UIApplicationBackgroundActivated(BackgroundActivatedEventArgs^ args) {
+    TraceVerbose(TAG, L"OnBackgroundActivated called for task %s", args->TaskInstance->Task->Name->Data());
+
+    if (wcscmp(args->TaskInstance->Task->Name->Data(), c_backgroundTaskName) == 0) {
+        TraceVerbose(TAG, L"OnBackgroundActivated called for ApplicationTrigger task.");
+        FAIL_FAST_IF(_appEvents->_applicationTriggerDeferral != nullptr);
+        _appEvents->_applicationTriggerDeferral = args->TaskInstance->GetDeferral();
+    }
+
+    args->TaskInstance->Canceled +=
+        ref new Windows::ApplicationModel::Background::BackgroundTaskCanceledEventHandler(_appEvents,
+            &AppEventListener::_OnBackgroundTaskCancelled);
+}
+#endif
+
+void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
+    auto uiElem = ref new Xaml::Controls::Grid();
+    auto rootFrame = ref new Xaml::Controls::Frame();
+    rootFrame->Content = uiElem;
+
+    SetXamlRoot(uiElem);
+
+    Xaml::Window::Current->Content = rootFrame;
+    Xaml::Window::Current->Activate();
+
+    auto startupRect = Xaml::Window::Current->Bounds;
+    RunApplicationMain(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height, activationType, activationArg);
+
+    _appEvents = ref new AppEventListener();
+    _appEvents->_RegisterEventHandlers();
+}
+
+
 // This is the actual entry point from the app into our framework.
 // Note: principalClassName and delegateClassName are actually NSString*s.
 UIKIT_EXPORT
 int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* delegateClassName) {
-    // Initialize COM on this thread
-    ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+    // Make method only run once
+    static int once = [principalClassName, delegateClassName] () -> int {
 
-    // Register tracelogging
-    TraceRegister();
+        // Initialize COM on this thread
+        ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
-    // Copy the principal and delegate class names into our globals
-    if (principalClassName) {
-        auto rawString = _RawBufferFromNSString(principalClassName);
-        g_principalClassName = reinterpret_cast<Platform::String^>(Strings::NarrowToWide<HSTRING>(rawString).Detach());
-    }
+        // Register tracelogging
+        TraceRegister();
 
-    if (delegateClassName) {
-        auto rawString = _RawBufferFromNSString(delegateClassName);
-        g_delegateClassName = reinterpret_cast<Platform::String^>(Strings::NarrowToWide<HSTRING>(rawString).Detach());
-    }
+        // Copy the principal and delegate class names into our globals
+        if (principalClassName) {
+            auto rawString = _RawBufferFromNSString(principalClassName);
+            g_principalClassName = reinterpret_cast<Platform::String^>(Strings::NarrowToWide<HSTRING>(rawString).Detach());
+        }
 
-    Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::IApplicationStatics> appStatics = nullptr;
-    Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::IApplication> currentApplication = nullptr;
-    HRESULT hr = RoGetActivationFactory(Platform::StringReference(RuntimeClass_Windows_UI_Xaml_Application).GetHSTRING(),
-        ABI::Windows::UI::Xaml::IID_IApplicationStatics,
-        reinterpret_cast<void **>(appStatics.GetAddressOf()));
+        if (delegateClassName) {
+            auto rawString = _RawBufferFromNSString(delegateClassName);
+            g_delegateClassName = reinterpret_cast<Platform::String^>(Strings::NarrowToWide<HSTRING>(rawString).Detach());
+        }
 
-    if (hr == S_OK && appStatics) {
-        appStatics->get_Current(currentApplication.GetAddressOf());
-    }
+        Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::IApplicationStatics> appStatics = nullptr;
+        Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::IApplication> currentApplication = nullptr;
+        HRESULT hr = RoGetActivationFactory(Platform::StringReference(RuntimeClass_Windows_UI_Xaml_Application).GetHSTRING(),
+            ABI::Windows::UI::Xaml::IID_IApplicationStatics,
+            reinterpret_cast<void **>(appStatics.GetAddressOf()));
 
-    if (currentApplication == nullptr) {
-        // Start our application
-        Xaml::Application::Start(
-            ref new Xaml::ApplicationInitializationCallback([](Xaml::ApplicationInitializationCallbackParams^ p) {
-            // Simply creating the app will kick off the rest of the launch sequence
-            auto app = ref new App();
-        }));
-    }
-    else {
-        _ApplicationMainLaunch(ActivationTypeNone, nullptr);
-    }
+        if (hr == S_OK && appStatics) {
+            appStatics->get_Current(currentApplication.GetAddressOf());
+        }
 
-    return 0;
+        if (currentApplication == nullptr) {
+            // Start our application
+            Xaml::Application::Start(
+                ref new Xaml::ApplicationInitializationCallback([](Xaml::ApplicationInitializationCallbackParams^ p) {
+                // Simply creating the app will kick off the rest of the launch sequence
+                auto app = ref new App();
+            }));
+        }
+        return 0;
+    }();
+    return once;
 }
 
 // This is the initialization function for non-Islandwood apps that intend to call into Islandwood:
@@ -339,7 +363,7 @@ void UIApplicationActivationTest(IInspectable* activationArgs, void* delegateCla
         g_delegateClassName = ref new Platform::String();
     }
 
-    _ApplicationActivate(reinterpret_cast<Platform::Object^>(activationArgs));
+    UIApplicationActivated(static_cast<IActivatedEventArgs^>(reinterpret_cast<Platform::Object^>(activationArgs)));
 }
 
 // clang-format on

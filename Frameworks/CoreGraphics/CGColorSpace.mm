@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -51,10 +52,10 @@ static IWLazyClassLookup _LazyUIColor2("UIColor");
 #pragma clang diagnostic pop
 @end
 
-__CGColorSpace::__CGColorSpace(surfaceFormat fmt) {
-    object_setClass((id) this, [CGNSColorSpace class]);
+__CGColorSpace::__CGColorSpace(CGColorSpaceModel model) {
+    object_setClass((id)this, [CGNSColorSpace class]);
 
-    colorSpace = fmt;
+    colorSpaceModel = model;
     palette = NULL;
     lastColor = 0;
 }
@@ -69,17 +70,20 @@ __CGColorSpace::~__CGColorSpace() {
 /**
  @Status Stub
 */
-CGColorSpaceRef CGColorSpaceCreateCalibratedRGB() {
+CGColorSpaceRef CGColorSpaceCreateCalibratedRGB(const CGFloat whitePoint[3],
+                                                const CGFloat blackPoint[3],
+                                                const CGFloat gamma[3],
+                                                const CGFloat matrix[9]) {
     UNIMPLEMENTED();
     TraceWarning(TAG, L"CGColorSpaceCreateCalibratedRGB not supported");
-    return (CGColorSpaceRef) new __CGColorSpace(_ColorRGBA);
+    return (CGColorSpaceRef) new __CGColorSpace(kCGColorSpaceModelRGB);
 }
 
 /**
  @Status Interoperable
 */
-CGColorSpaceRef CGColorSpaceCreateIndexed(id baseSpace, int lastIndex, void* colorTable) {
-    __CGColorSpace* ret = new __CGColorSpace(_ColorIndexed);
+CGColorSpaceRef CGColorSpaceCreateIndexed(CGColorSpaceRef baseSpace, size_t lastIndex, const unsigned char* colorTable) {
+    __CGColorSpace* ret = new __CGColorSpace(kCGColorSpaceModelIndexed);
 
     ret->palette = (char*)IwMalloc(3 * (lastIndex + 1));
     memcpy(ret->palette, colorTable, 3 * (lastIndex + 1));
@@ -91,70 +95,76 @@ CGColorSpaceRef CGColorSpaceCreateIndexed(id baseSpace, int lastIndex, void* col
  @Status Interoperable
 */
 CGColorSpaceRef CGColorSpaceCreateDeviceRGB() {
-    return (CGColorSpaceRef) new __CGColorSpace(_ColorRGBA);
-}
-
-/**
- @Status Stub
- @Notes Always returns RGBA colorspace
-*/
-CGColorSpaceRef CGColorSpaceCreatePattern(CGColorSpaceRef source) {
-    UNIMPLEMENTED();
-    return (CGColorSpaceRef) new __CGColorSpace(_ColorRGBA);
+    return (CGColorSpaceRef) new __CGColorSpace(kCGColorSpaceModelRGB);
 }
 
 /**
  @Status Stub
  @Notes Always returns RGB colorspace
 */
-CGColorSpaceModel CGColorSpaceGetModel(CGColorSpaceRef colorSpace) {
+CGColorSpaceRef CGColorSpaceCreatePattern(CGColorSpaceRef source) {
     UNIMPLEMENTED();
-    TraceWarning(TAG, L"CGColorSpaceGetModel not implemented");
-    return kCGColorSpaceModelRGB;
-}
-
-/**
- @Status Caveat
- @Notes Doesn't support all bitmap formats
-*/
-size_t CGColorSpaceGetNumberOfComponents(CGColorSpaceRef pSpace) {
-    switch (((__CGColorSpace*)pSpace)->colorSpace) {
-        case _ColorRGBA:
-        case _ColorARGB:
-            return 3;
-
-        case _ColorGrayscale:
-            return 1;
-
-        default:
-            assert(0);
-            return 0;
-    }
+    return (CGColorSpaceRef) new __CGColorSpace(kCGColorSpaceModelRGB);
 }
 
 /**
  @Status Interoperable
 */
 CGColorSpaceRef CGColorSpaceCreateDeviceGray() {
-    return (CGColorSpaceRef) new __CGColorSpace(_ColorGrayscale);
+    return (CGColorSpaceRef) new __CGColorSpace(kCGColorSpaceModelMonochrome);
 }
 
 /**
  @Status Caveat
- @Notes Must be "kCGColorSpaceGenericRGB" or "kCGColorSpaceGenericRGBLinear"
+ @Notes Only GenericRGB, GenericRGBLinear and GenericGray supported
 */
-CGColorSpaceRef CGColorSpaceCreateWithName(id name) {
-    char* strName = (char*)[name UTF8String];
+CGColorSpaceRef CGColorSpaceCreateWithName(CFStringRef name) {
+    const char* strName = static_cast<const char*>([(__bridge NSString*)name UTF8String]);
 
     if (strcmp(strName, "kCGColorSpaceGenericRGB") == 0) {
-        return (CGColorSpaceRef) new __CGColorSpace(_ColorRGBA);
+        return (CGColorSpaceRef) new __CGColorSpace(kCGColorSpaceModelRGB);
     } else if (strcmp(strName, "kCGColorSpaceGenericRGBLinear") == 0) {
-        return (CGColorSpaceRef) new __CGColorSpace(_ColorRGBA);
+        return (CGColorSpaceRef) new __CGColorSpace(kCGColorSpaceModelRGB);
+    } else if (strcmp(strName, "kCGColorSpaceGenericGray") == 0) {
+        return (CGColorSpaceRef) new __CGColorSpace(kCGColorSpaceModelMonochrome);
     } else {
-        assert(0);
+        UNIMPLEMENTED_WITH_MSG("Colorspace Unsupported: %s", strName);
+        return (CGColorSpaceRef) new __CGColorSpace(kCGColorSpaceModelRGB);
     }
 
     return NULL;
+}
+
+/**
+@Status Interoperable
+*/
+CGColorSpaceModel CGColorSpaceGetModel(CGColorSpaceRef colorSpace) {
+    if (colorSpace) {
+        return ((__CGColorSpace*)colorSpace)->colorSpaceModel;
+    } else {
+        return kCGColorSpaceModelRGB;
+    }
+}
+
+/**
+@Status Caveat
+@Notes Doesn't support all colorSpaces
+*/
+size_t CGColorSpaceGetNumberOfComponents(CGColorSpaceRef pSpace) {
+    const CGColorSpaceModel colorSpaceModel = ((__CGColorSpace*)pSpace)->colorSpaceModel;
+
+    switch (colorSpaceModel) {
+        case kCGColorSpaceModelRGB:
+            return 3;
+        case kCGColorSpaceModelPattern:
+        case kCGColorSpaceModelMonochrome:
+            return 1;
+        case kCGColorSpaceModelCMYK:
+            return 4;
+        default:
+            UNIMPLEMENTED_WITH_MSG("Colorspace Unsupported. Model: %d", colorSpaceModel);
+            return 0;
+    }
 }
 
 /**

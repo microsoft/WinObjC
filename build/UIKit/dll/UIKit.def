@@ -4,6 +4,9 @@ LIBRARY UIKit
         UIApplicationMain
         UIApplicationInitialize
         UIApplicationActivationTest
+        UIApplicationLaunched
+        UIApplicationActivated
+        ;UIApplicationBackgroundActivated - Code disabled with ENABLE_BACKGROUND_TASK flag for now
 
         ; NSAttributedString
         NSFontAttributeName DATA
@@ -1164,6 +1167,3 @@ LIBRARY UIKit
         UIRequestTransactionProcessing
         UIOrientationFromString
         UIApplicationDidChangeDisplayModeNofication
-        EbrApplicationActivated
-        EbrApplicationLaunched
-

@@ -15,13 +15,13 @@
 //******************************************************************************
 
 #import <TestFramework.h>
-#import <Starboard.h>
+#import <Starboard/SmartTypes.h>
 
-#import <CoreFoundation\CFAttributedString.h>
-#import <Foundation\NSAttributedString.h>
-#import <Foundation\NSDictionary.h>
-#import <Foundation\NSMutableAttributedString.h>
-#import <UIKit\UIKit.h>
+#import <CoreFoundation/CFAttributedString.h>
+#import <Foundation/NSAttributedString.h>
+#import <Foundation/NSDictionary.h>
+#import <Foundation/NSMutableAttributedString.h>
+#import <UIKit/UIKit.h>
 
 #import <vector>
 #import <windows.h>

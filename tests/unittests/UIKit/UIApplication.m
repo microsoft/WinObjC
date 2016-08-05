@@ -41,11 +41,11 @@
 // Invokes previously set failure method, allowing us to spoof a scheme handler query
 + (void)invokeQueryFailure:(NSError*)failure;
 
-// Waits on condition2 - used as a secondary condition to set up race condition tests
-+ (void)waitForCondition2;
+// Waits on TestCondition - used as a secondary condition to set up race condition tests
++ (void)waitForTestCondition;
 
-// Signals condition2 - used as a secondary condition to set up race condition tests
-+ (void)signalCondition2;
+// Signals TestCondition - used as a secondary condition to set up race condition tests
++ (void)waitForTestCondition;
 @end
 
 @implementation MockWSLauncher
@@ -55,8 +55,10 @@ static void (^_querySuccessFunction)(WSLaunchQuerySupportStatus) = nil;
 static void (^_queryFailureFunction)(NSError*) = nil;
 
 // The MockWSLauncher internals are declared static as globals even though they are only accessed by class functions.
-static NSCondition* s_condition;
-static NSCondition* s_condition2;
+static NSCondition* s_launchCompleteCondition;
+static NSCondition* s_queryCompleteCondition;
+static NSCondition* s_testCondition;
+static NSCondition* s_invokeLaunchCompleteCondition;
 static NSInteger s_count;
 static BOOL s_launchReady;
 
@@ -65,8 +67,10 @@ static BOOL s_launchReady;
 }
 
 + (void)setup {
-    s_condition = [NSCondition new];
-    s_condition2 = [NSCondition new];
+    s_launchCompleteCondition = [NSCondition new];
+    s_queryCompleteCondition = [NSCondition new];
+    s_testCondition = [NSCondition new];
+    s_invokeLaunchCompleteCondition = [NSCondition new];
     s_launchReady = NO;
     s_count = 0;
 }
@@ -80,103 +84,125 @@ static BOOL s_launchReady;
     _launchFailureFunction = nil;
     _querySuccessFunction = nil;
     _queryFailureFunction = nil;
-    [s_condition lock];
-    [s_condition unlock];
-    [s_condition2 lock];
-    [s_condition2 unlock];
-    [s_condition release];
-    [s_condition2 release];
-    s_condition = nil;
-    s_condition2 = nil;
+    [s_launchCompleteCondition lock];
+    [s_launchCompleteCondition unlock];
+    [s_queryCompleteCondition lock];
+    [s_queryCompleteCondition unlock];
+    [s_testCondition lock];
+    [s_testCondition unlock];
+    [s_invokeLaunchCompleteCondition lock];
+    [s_invokeLaunchCompleteCondition unlock];
+    [s_launchCompleteCondition release];
+    [s_queryCompleteCondition release];
+    [s_testCondition release];
+    [s_invokeLaunchCompleteCondition release];
+    s_launchCompleteCondition = nil;
+    s_queryCompleteCondition = nil;
+    s_testCondition = nil;
+    s_invokeLaunchCompleteCondition = nil;
 }
 
 + (void)launchUriAsync:(WFUri*)uri success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure {
-    [s_condition lock];
+    [s_launchCompleteCondition lock];
     if (!_launchSuccessFunction) {
         _launchSuccessFunction = Block_copy(success);
         _launchFailureFunction = Block_copy(failure);
     }
 
     s_launchReady = YES;
-    [s_condition signal];
-    [s_condition unlock];
+    [s_launchCompleteCondition signal];
+    [s_launchCompleteCondition unlock];
 }
 
 + (void)queryUriSupportAsync:(WFUri*)uri
       launchQuerySupportType:(WSLaunchQuerySupportType)launchQuerySupportType
                      success:(void (^)(WSLaunchQuerySupportStatus))success
                      failure:(void (^)(NSError*))failure {
-    [s_condition lock];
+    [s_queryCompleteCondition lock];
     if (!_querySuccessFunction) {
         _querySuccessFunction = Block_copy(success);
         _queryFailureFunction = Block_copy(failure);
     }
 
     s_launchReady = YES;
-    [s_condition signal];
-    [s_condition unlock];
+    [s_queryCompleteCondition signal];
+    [s_queryCompleteCondition unlock];
 }
 
 + (void)invokeLaunchSuccess:(NSNumber*)didLaunch {
-    [s_condition lock];
-    [self signalCondition2];
+    [s_launchCompleteCondition lock];
+    [self signalTestCondition];
     while (!s_launchReady) {
-        [s_condition wait];
+        [s_launchCompleteCondition wait];
     }
 
     s_launchReady = NO;
     s_count++;
     _launchSuccessFunction([didLaunch boolValue]);
-    [s_condition unlock];
+    [self signalInvokeLaunchCompleteCondition];
+    [s_launchCompleteCondition unlock];
 }
 
 + (void)invokeLaunchFailure:(NSError*)failure {
-    [s_condition lock];
-    [self signalCondition2];
+    [s_launchCompleteCondition lock];
+    [self signalTestCondition];
     while (!s_launchReady) {
-        [s_condition wait];
+        [s_launchCompleteCondition wait];
     }
 
     s_launchReady = NO;
     _launchFailureFunction(failure);
-    [s_condition unlock];
+    [self signalInvokeLaunchCompleteCondition];
+    [s_launchCompleteCondition unlock];
 }
 
 + (void)invokeQuerySuccess:(NSNumber*)status {
-    [s_condition lock];
-    [self signalCondition2];
+    [s_queryCompleteCondition lock];
+    [self signalTestCondition];
     while (!s_launchReady) {
-        [s_condition wait];
+        [s_queryCompleteCondition wait];
     }
 
     s_launchReady = NO;
     s_count++;
     _querySuccessFunction([status unsignedIntegerValue]);
-    [s_condition unlock];
+    [s_queryCompleteCondition unlock];
 }
 
 + (void)invokeQueryFailure:(NSError*)failure {
-    [s_condition lock];
-    [self signalCondition2];
+    [s_queryCompleteCondition lock];
+    [self signalTestCondition];
     while (!s_launchReady) {
-        [s_condition wait];
+        [s_queryCompleteCondition wait];
     }
 
     s_launchReady = NO;
     _queryFailureFunction(failure);
-    [s_condition unlock];
+    [s_queryCompleteCondition unlock];
 }
 
-+ (void)waitForCondition2 {
-    [s_condition2 lock];
-    [s_condition2 wait];
-    [s_condition2 unlock];
++ (void)waitForTestCondition {
+    [s_testCondition lock];
+    [s_testCondition wait];
+    [s_testCondition unlock];
 }
 
-+ (void)signalCondition2 {
-    [s_condition2 lock];
-    [s_condition2 signal];
-    [s_condition2 unlock];
++ (void)signalTestCondition {
+    [s_testCondition lock];
+    [s_testCondition signal];
+    [s_testCondition unlock];
+}
+
++ (void)waitForInvokeLaunchCompleteCondition {
+    [s_invokeLaunchCompleteCondition lock];
+    [s_invokeLaunchCompleteCondition wait];
+    [s_invokeLaunchCompleteCondition unlock];
+}
+
++ (void)signalInvokeLaunchCompleteCondition {
+    [s_invokeLaunchCompleteCondition lock];
+    [s_invokeLaunchCompleteCondition signal];
+    [s_invokeLaunchCompleteCondition unlock];
 }
 @end
 
@@ -192,7 +218,7 @@ void invokeLaunchSuccess(BOOL didLaunch) {
                                                  object:[NSNumber numberWithBool:didLaunch]];
     [thread autorelease];
     [thread start];
-    [MockWSLauncher waitForCondition2];
+    [MockWSLauncher waitForTestCondition];
 }
 
 // On a separate thread, delivers launch failure
@@ -201,7 +227,7 @@ void invokeLaunchFailure() {
     NSThread* thread = [[NSThread alloc] initWithTarget:[MockWSLauncher class] selector:@selector(invokeLaunchFailure:) object:testError];
     [thread autorelease];
     [thread start];
-    [MockWSLauncher waitForCondition2];
+    [MockWSLauncher waitForTestCondition];
 }
 
 // On a separate thread, delivers query results
@@ -211,7 +237,7 @@ void invokeQuerySuccess(unsigned int status) {
                                                  object:[NSNumber numberWithUnsignedInteger:status]];
     [thread autorelease];
     [thread start];
-    [MockWSLauncher waitForCondition2];
+    [MockWSLauncher waitForTestCondition];
 }
 
 // On a separate thread, delivers query failure
@@ -220,7 +246,7 @@ void invokeQueryFailure() {
     NSThread* thread = [[NSThread alloc] initWithTarget:[MockWSLauncher class] selector:@selector(invokeQueryFailure:) object:testError];
     [thread autorelease];
     [thread start];
-    [MockWSLauncher waitForCondition2];
+    [MockWSLauncher waitForTestCondition];
 }
 
 TEST(UIKit, UIApplicationOpenURLSuccess) {
@@ -228,13 +254,15 @@ TEST(UIKit, UIApplicationOpenURLSuccess) {
     UIApplication* testApplication = [[UIApplication alloc] _initForTestingWithLauncher:[MockWSLauncher class]];
     NSURL* testURL = [NSURL URLWithString:@"http://www.bing.com/news"];
 
+    // Because [UIApplication openURL:] first checks if the URL to open is valid, setup test such that query returns success
+    invokeQuerySuccess(WSLaunchQuerySupportStatusAvailable);
+    // Now set up the success for the launch - this result is actually not verified in this test as the URL open happens
+    // asynchronously.
     invokeLaunchSuccess(YES);
     BOOL result = [testApplication openURL:testURL];
     ASSERT_EQ_MSG(YES, result, "openURL returned unexpected result");
-
-    invokeLaunchSuccess(NO);
-    result = [testApplication openURL:testURL];
-    ASSERT_EQ_MSG(NO, result, "openURL returned unexpected result");
+    // Because the actual URL step is asynchronous, wait for it to complete before proceeding to the next test
+    [MockWSLauncher waitForInvokeLaunchCompleteCondition];
 
     [MockWSLauncher cleanUp];
 }
@@ -244,7 +272,10 @@ TEST(UIKit, UIApplicationOpenURLFailure) {
     UIApplication* testApplication = [[UIApplication alloc] _initForTestingWithLauncher:[MockWSLauncher class]];
     NSURL* testURL = [NSURL URLWithString:@"http://www.bing.com/news"];
 
-    invokeLaunchFailure();
+    // Because [UIApplication openURL:] first checks if the URL to open is valid, setup test such that query returns failure
+    invokeQuerySuccess(WSLaunchQuerySupportStatusNotSupported);
+    // There is no need to setup anything for launch as [UIApplication openURL:] will not invoke launch if the [UIApplication canOpenURL:]
+    // fails.
     BOOL result;
     ASSERT_NO_THROW(result = [testApplication openURL:testURL]);
     ASSERT_EQ_MSG(NO, result, "openURL returned unexpected result");
@@ -258,16 +289,22 @@ TEST(UIKit, UIApplicationOpenURLDoubleCall) {
     UIApplication* testApplication = [[UIApplication alloc] _initForTestingWithLauncher:[MockWSLauncher class]];
     NSURL* testURL = [NSURL URLWithString:@"http://www.bing.com/news"];
 
+    // For the first test setup setup query and launch to success
+    invokeQuerySuccess(WSLaunchQuerySupportStatusAvailable);
     invokeLaunchSuccess(YES);
-    invokeLaunchSuccess(NO);
+    // For the second test setup setup query to failure
+    invokeQuerySuccess(WSLaunchQuerySupportStatusNotSupported);
 
     BOOL result = [testApplication openURL:testURL];
     ASSERT_EQ_MSG(YES, result, "openURL returned unexpected result");
-    ASSERT_EQ_MSG(1, [MockWSLauncher count], "openURL resulted in unexpected success function call count");
+    [MockWSLauncher waitForInvokeLaunchCompleteCondition];
+    // Verify both query and launch got invoked.
+    ASSERT_EQ_MSG(2, [MockWSLauncher count], "openURL resulted in unexpected success function call count");
 
     result = [testApplication openURL:testURL];
     ASSERT_EQ_MSG(NO, result, "openURL returned unexpected result");
-    ASSERT_EQ_MSG(2, [MockWSLauncher count], "openURL resulted in unexpected success function call count");
+    // Verify only got invoked.
+    ASSERT_EQ_MSG(3, [MockWSLauncher count], "openURL resulted in unexpected success function call count");
 
     [MockWSLauncher cleanUp];
 }

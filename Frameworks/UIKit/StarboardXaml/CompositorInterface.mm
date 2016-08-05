@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -44,6 +45,7 @@
 #import <LoggingNative.h>
 #import "StringHelpers.h"
 #import <MainDispatcher.h>
+#import "CoreGraphics/CGImage.h"
 
 #import <UWP/WindowsUIViewManagement.h>
 #import <UWP/WindowsDevicesInput.h>
@@ -236,9 +238,10 @@ public:
             matched = true;
         }
 
-        // Unrecognized, make 8888 RGBA:
+        // Unrecognized, make 8888 ARGB:
         if (!matched) {
-            CGContextRef ctx = CGBitmapContextCreate32(texWidth, texHeight);
+            CGContextRef ctx = _CGBitmapContextCreateWithFormat(texWidth, texHeight, _ColorARGB);
+
             pNewImage = CGBitmapContextGetImage(ctx);
             CGImageRetain(pNewImage);
 
@@ -363,11 +366,10 @@ public:
 
     void Completed() {
         id animHandler = _animHandler; // Save in a local for the block to retain.
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [animHandler animationDidStop:TRUE];
-                           [animHandler _removeAnimationsFromLayer];
-                       });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [animHandler animationDidStop:TRUE];
+            [animHandler _removeAnimationsFromLayer];
+        });
     }
 
     DisplayAnimationTransition(id animHandler, NSString* type, NSString* subType) {
@@ -730,11 +732,10 @@ public:
 
     void Completed() {
         id animHandler = _animHandler; // Save in a local for the block to retain.
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [animHandler animationDidStop:TRUE];
-                           [animHandler _removeAnimationsFromLayer];
-                       });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [animHandler animationDidStop:TRUE];
+            [animHandler _removeAnimationsFromLayer];
+        });
     }
 
     DisplayAnimationBasic(id animHandler,

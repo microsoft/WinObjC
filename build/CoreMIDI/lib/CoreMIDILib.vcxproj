@@ -45,7 +45,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
       <AdditionalOptions>"-DCOREMIDI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -54,7 +54,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
       <AdditionalOptions>"-DCOREMIDI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
@@ -64,7 +64,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
       <AdditionalOptions>"-DCOREMIDI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -73,7 +73,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
       <AdditionalOptions>"-DCOREMIDI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>

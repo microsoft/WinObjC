@@ -58,19 +58,19 @@
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\3rdparty\AppInsights\src\core;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\3rdparty\AppInsights\src\core;</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(StarboardBasePath)\deps\prebuilt\ApplicationInsights\Win32\Release\AppInsights_Win10-UAP</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\3rdparty\AppInsights\src\core;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\3rdparty\AppInsights\src\core;</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(StarboardBasePath)\deps\prebuilt\ApplicationInsights\Win32\Release\AppInsights_Win10-UAP</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\3rdparty\AppInsights\src\core;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\3rdparty\AppInsights\src\core;</IncludePath>
     <LibraryPath>$(VC_LibraryPath_ARM);$(WindowsSDK_LibraryPath_ARM);$(NETFXKitsDir)Lib\um\arm;$(StarboardBasePath)\deps\prebuilt\ApplicationInsights\ARM\Release\AppInsights_Win10-UAP</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\3rdparty\AppInsights\src\core;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\3rdparty\AppInsights\src\core;</IncludePath>
     <LibraryPath>$(VC_LibraryPath_ARM);$(WindowsSDK_LibraryPath_ARM);$(NETFXKitsDir)Lib\um\arm;$(StarboardBasePath)\deps\prebuilt\ApplicationInsights\ARM\Release\AppInsights_Win10-UAP;</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -81,7 +81,7 @@
       <ModuleDefinitionFile>Logging.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
     <PostBuildEvent>
@@ -99,7 +99,7 @@
       <ModuleDefinitionFile>Logging.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
     <PostBuildEvent>
@@ -117,7 +117,7 @@
       <ModuleDefinitionFile>Logging.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
     <PostBuildEvent>
@@ -135,7 +135,7 @@
       <ModuleDefinitionFile>Logging.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
     <PostBuildEvent>

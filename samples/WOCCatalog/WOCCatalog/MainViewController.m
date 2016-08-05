@@ -43,6 +43,8 @@
 #import "ShadowViewController.h"
 #import "UIPasteboardViewController.h"
 #import "AudioToolboxViewController.h"
+#import "GeocodingViewController.h"
+#import "CoreLocationViewController.h"
 
 #ifdef WINOBJC
 #import "XamlViewController.h"
@@ -57,12 +59,18 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
     
-    //AudioToolbox
+    // Geocoding
+    [self addMenuItemViewController:[[GeocodingViewController alloc] init] andTitle:@"Geocoding"];
+    
+    // AudioToolbox
     [self addMenuItemViewController:[[AudioToolboxViewController alloc] init] andTitle:@"AudioToolbox"];
-   
-    //CoreMotion
+    // CoreMotion
     [self addMenuItemViewController:[[CoreMotionViewController alloc] init] andTitle:@"CoreMotion"];
+    
+    // CoreLocation
+    [self addMenuItemViewController:[[CoreLocationViewController alloc] init] andTitle:@"CoreLocation"];
 
     // Foundations tests
     [self addMenuItemViewController:[[FoundationsViewController alloc] init] andTitle:@"Foundation Tests"];

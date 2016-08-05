@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -507,7 +508,7 @@ callbacks.version = 0;
 callbacks.releaseInfo = 0;
 callbacks.drawPattern = __UIColorPatternFill;
 
-_pattern = (id) CGPatternCreateColorspace(self, bounds, m, bounds.size.width, bounds.size.height, 0, NO, &callbacks, pImg->_has32BitAlpha ? _ColorRGBA : _ColorRGB);
+_pattern = (id) CGPatternCreateColorspace(self, bounds, m, bounds.size.width, bounds.size.height, 0, NO, &callbacks, pImg->_has32BitAlpha ? _ColorABGR : _ColorBGR);
 } else {
 _pattern = (id) CGPatternCreateFromImage(pImg);
 }

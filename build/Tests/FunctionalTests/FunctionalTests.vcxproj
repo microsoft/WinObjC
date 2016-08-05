@@ -110,7 +110,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>FUNCTIONAL_TEST_FRAMEWORK;INLINE_TEST_METHOD_MARKUP;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(WINOBJC_SDK_ROOT)\include;..\..\..\tests\frameworks\gtest;..\..\..\Frameworks\include;..\..\..\tests\frameworks\gtest\include;..\..\..\tests\functionaltests\Framework;$(MSBuildThisFileDirectory);..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(WINOBJC_SDK_ROOT)\include;..\..\..\tests\frameworks\gtest;..\..\..\Frameworks\include;..\..\..\include\xplat;..\..\..\tests\frameworks\gtest\include;..\..\..\tests\functionaltests\Framework;$(MSBuildThisFileDirectory);..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -121,12 +121,15 @@
       <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>..\..\..\include;..\..\..\Frameworks\include;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>..\..\..\include;..\..\..\Frameworks\include;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>For %%f in ("$(ProjectDir)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\*.mp4") do (xcopy /y %%f "$(TargetDir)\data\")</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -137,7 +140,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>FUNCTIONAL_TEST_FRAMEWORK;INLINE_TEST_METHOD_MARKUP;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(WINOBJC_SDK_ROOT)\include;..\..\..\tests\frameworks\gtest;..\..\..\Frameworks\include;..\..\..\tests\frameworks\gtest\include;..\..\..\tests\functionaltests\Framework;$(MSBuildThisFileDirectory);..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(WINOBJC_SDK_ROOT)\include;..\..\..\tests\frameworks\gtest;..\..\..\Frameworks\include;..\..\..\include\xplat;..\..\..\tests\frameworks\gtest\include;..\..\..\tests\functionaltests\Framework;$(MSBuildThisFileDirectory);..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -150,12 +153,15 @@
       <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>..\..\..\Frameworks\include;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>..\..\..\Frameworks\include;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>For %%f in ("$(ProjectDir)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\*.mp4") do (xcopy /y %%f "$(TargetDir)\data\")</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
     <ClCompile>
@@ -164,7 +170,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>FUNCTIONAL_TEST_FRAMEWORK;INLINE_TEST_METHOD_MARKUP;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(WINOBJC_SDK_ROOT)\include;..\..\..\tests\frameworks\gtest;..\..\..\Frameworks\include;..\..\..\tests\frameworks\gtest\include;..\..\..\tests\functionaltests\Framework;$(MSBuildThisFileDirectory);..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(WINOBJC_SDK_ROOT)\include;..\..\..\tests\frameworks\gtest;..\..\..\Frameworks\include;..\..\..\include\xplat;..\..\..\tests\frameworks\gtest\include;..\..\..\tests\functionaltests\Framework;$(MSBuildThisFileDirectory);..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -175,12 +181,15 @@
       <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>..\..\..\Frameworks\include;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>..\..\..\Frameworks\include;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>For %%f in ("$(ProjectDir)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\*.mp4") do (xcopy /y %%f "$(TargetDir)\data\")</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
     <ClCompile>
@@ -191,7 +200,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>FUNCTIONAL_TEST_FRAMEWORK;INLINE_TEST_METHOD_MARKUP;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(WINOBJC_SDK_ROOT)\include;..\..\..\tests\frameworks\gtest;..\..\..\Frameworks\include;..\..\..\tests\frameworks\gtest\include;..\..\..\tests\functionaltests\Framework;$(MSBuildThisFileDirectory);..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(WINOBJC_SDK_ROOT)\include;..\..\..\tests\frameworks\gtest;..\..\..\Frameworks\include;..\..\..\include\xplat;..\..\..\tests\frameworks\gtest\include;..\..\..\tests\functionaltests\Framework;$(MSBuildThisFileDirectory);..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -204,12 +213,15 @@
       <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>..\..\..\Frameworks\include;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>..\..\..\Frameworks\include;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>For %%f in ("$(ProjectDir)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\*.mp4") do (xcopy /y %%f "$(TargetDir)\data\")</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\FunctionalTests.cpp" />
@@ -222,6 +234,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Logger.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\pch.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\targetver.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\FunctionalTestHelpers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibraryTestHelpers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSURLConnection.mm">
@@ -239,9 +253,16 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\CortanaTests.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIViewTests.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\FunctionalTestHelpers.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIApplicationTests.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibraryTests.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibraryTestHelpers.mm" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSURL.AppxManifest.xml" />
+    <Xml Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibrary.AppxManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibraryTestVideo.mp4" />
   </ItemGroup>
   <Target Name="CopyContent" AfterTargets="Build">
     <Copy DestinationFolder="$(OutDir)" SkipUnchangedFiles="True" SourceFiles="@(Xml)" />

@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -55,7 +56,7 @@
         size = [image size];
 
         float scale = [image scale];
-        CGContextRef context = CGBitmapContextCreate32(unsigned(size.width * scale), unsigned(size.height * scale));
+        CGContextRef context = _CGBitmapContextCreateWithFormat(unsigned(size.width * scale), unsigned(size.height * scale), _ColorARGB);
 
         CGContextTranslateCTM(context, 0, size.height * scale);
         CGContextScaleCTM(context, 1.0, -1.0);

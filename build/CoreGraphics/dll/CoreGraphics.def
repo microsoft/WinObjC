@@ -30,9 +30,10 @@ LIBRARY CoreGraphics
         CGBitmapContextGetData
         CGBitmapContextGetHeight
         CGBitmapContextGetWidth
-        ; private export below
-        CGBitmapContextCreate24
-        CGBitmapContextCreate32
+        
+        ; private exports below
+        _CGBitmapContextCreateWithTexture
+        _CGBitmapContextCreateWithFormat
         CGBitmapContextGetImage
 
         ; CGColor.mm
@@ -50,7 +51,7 @@ LIBRARY CoreGraphics
         CGColorGetPattern
         CGColorGetTypeID
 
-        ; private export below
+        ; private exports below
         CGColorGetConstantColor
 
         ; CGColorSpace Reference.mm
@@ -208,7 +209,7 @@ LIBRARY CoreGraphics
         CGContextConvertRectToDeviceSpace
         CGContextConvertRectToUserSpace
 
-        ; private export below
+        ; private exports below
         CGContextClearToColor
         CGContextDrawImageRect
         CGContextGetBlendMode
@@ -273,7 +274,7 @@ LIBRARY CoreGraphics
         CGFontGetGlyphAdvances
         CGFontGetUnitsPerEm
 
-        ; private export below
+        ; private exports below
         CGFontFitChars
         CGFontGetGlyphs
         CGFontGetGlyphsForUnichars
@@ -340,13 +341,14 @@ LIBRARY CoreGraphics
         CGImageGetWidth
         CGImageIsMask
 
-        ;private export below
+        ; private exports below
         CGImageAddDestructionListener
         CGJPEGImageCreateFromData
         CGPNGImageCreateFromData
         CGJPEGImageCreateFromFile
         CGPNGImageCreateFromFile
         _CGImagePNGRepresentation
+        _CGImageGetData
 
         ; CGLayer.mm
         CGLayerCreateWithContext
@@ -395,7 +397,7 @@ LIBRARY CoreGraphics
         CGPathIsRect
         CGPathContainsPoint
 
-        ;private export below
+        ; private exports below
         _CGPathFitRect
         _CGPathApplyPath
         _CGPathGetBoundingBoxInternal
@@ -406,7 +408,7 @@ LIBRARY CoreGraphics
         CGPatternRetain
         CGPatternRelease
 
-        ;private export
+        ; private exports below
         CGPatternCreateFromImage
 
         ; CGPDFArray.mm

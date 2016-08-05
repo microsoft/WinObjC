@@ -43,7 +43,7 @@ TEST(NSData, WriteToURLOptions) {
 TEST(NSData, EmptyDescription) {
     auto expected = @"<>";
 
-    std::vector<byte> bytes = {};
+    std::vector<uint8_t> bytes = {};
     NSData* data = [NSData dataWithBytes:bytes.data() length:bytes.size()];
 
     ASSERT_OBJCEQ(expected, data.description);
@@ -52,7 +52,7 @@ TEST(NSData, EmptyDescription) {
 TEST(NSData, Description) {
     auto expected = @"<ff4c3e00 55>";
 
-    std::vector<byte> bytes = { 0xff, 0x4c, 0x3e, 0x00, 0x55 };
+    std::vector<uint8_t> bytes = { 0xff, 0x4c, 0x3e, 0x00, 0x55 };
     NSData* data = [NSData dataWithBytes:bytes.data() length:bytes.size()];
 
     ASSERT_OBJCEQ(data.description, expected);
@@ -69,27 +69,28 @@ TEST(NSData, LongDescription) {
                     @"82d8ff6e 4482d8ff 6e4482d8 ff6e4482 d8ff6e44 82d8ff6e 4482d8ff 6e4482d8 ff6e4482 d8ff6e44 82d8ff6e 4482d8ff "
                     @"6e4482d8 ff6e4482 d8ff6e44 82d8ff6e 4482d8ff 6e4482d8 ff6e4482 d8ff6e44 82d8>";
 
-    std::vector<byte> bytes = { 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44,
-                                0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff,
-                                0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82,
-                                0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e,
-                                0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8,
-                                0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44,
-                                0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff,
-                                0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82,
-                                0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e,
-                                0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8,
-                                0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44,
-                                0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff,
-                                0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82,
-                                0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e,
-                                0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8,
-                                0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44,
-                                0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff,
-                                0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82,
-                                0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e,
-                                0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8,
-                                0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8 };
+    std::vector<uint8_t> bytes = { 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e,
+                                   0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82,
+                                   0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff,
+                                   0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44,
+                                   0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8,
+                                   0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e,
+                                   0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82,
+                                   0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff,
+                                   0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44,
+                                   0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8,
+                                   0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e,
+                                   0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82,
+                                   0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff,
+                                   0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44,
+                                   0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8,
+                                   0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e,
+                                   0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82,
+                                   0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff,
+                                   0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44,
+                                   0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8,
+                                   0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e,
+                                   0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8, 0xff, 0x6e, 0x44, 0x82, 0xd8 };
 
     NSData* data = [NSData dataWithBytes:bytes.data() length:bytes.size()];
 
@@ -99,12 +100,14 @@ TEST(NSData, LongDescription) {
 TEST(NSData, DebugDescription) {
     auto expected = @"<ff4c3e00 55>";
 
-    std::vector<byte> bytes = { 0xff, 0x4c, 0x3e, 0x00, 0x55 };
+    std::vector<uint8_t> bytes = { 0xff, 0x4c, 0x3e, 0x00, 0x55 };
     NSData* data = [NSData dataWithBytes:bytes.data() length:bytes.size()];
 
     ASSERT_OBJCEQ(data.debugDescription, expected);
 }
 
+// These tests were changed from the Swift versions because of a difference in functionality between Objective C and Swift
+// The Swift version would only print the first and last 512 bytes while the Objective C version will print all of the data
 TEST(NSData, LimitDebugDescription) {
     auto expected =
         @"<ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
@@ -127,7 +130,7 @@ TEST(NSData, LimitDebugDescription) {
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
         @"ffffffff ffffffff ffffffff ffffffff>";
 
-    std::vector<byte> bytes(1024, 0xff);
+    std::vector<uint8_t> bytes(1024, 0xff);
     NSData* data = [NSData dataWithBytes:bytes.data() length:bytes.size()];
     ASSERT_OBJCEQ(data.debugDescription, expected);
 }
@@ -143,34 +146,7 @@ TEST(NSData, LongDebugDescription) {
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ... ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ffffffff ffffffff ffffffff>";
-
-    std::vector<byte> bytes(100000, 0xff);
-    NSData* data = [NSData dataWithBytes:bytes.data() length:bytes.size()];
-    ASSERT_OBJCEQ(data.debugDescription, expected);
-}
-
-TEST(NSData, EdgeDebugDescription) {
-    auto expected =
-        @"<ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ... ffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
@@ -181,12 +157,12 @@ TEST(NSData, EdgeDebugDescription) {
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
         @"ffffffff ffffffff ffffffff ffffffff ff>";
 
-    std::vector<byte> bytes(1025, 0xff);
+    std::vector<uint8_t> bytes(1025, 0xff);
     NSData* data = [NSData dataWithBytes:bytes.data() length:bytes.size()];
     ASSERT_OBJCEQ(data.debugDescription, expected);
 }
 
-TEST(NSData, EdgeNoCopyDescription) {
+TEST(NSData, NoCopyLongDebugDescription) {
     auto expected =
         @"<ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
@@ -197,7 +173,7 @@ TEST(NSData, EdgeNoCopyDescription) {
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
-        @"ffffffff ffffffff ... ffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
+        @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
@@ -208,7 +184,7 @@ TEST(NSData, EdgeNoCopyDescription) {
         @"ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff "
         @"ffffffff ffffffff ffffffff ffffffff ff>";
 
-    std::vector<byte> bytes(1025, 0xff);
+    std::vector<uint8_t> bytes(1025, 0xff);
     NSData* data = [NSData dataWithBytesNoCopy:bytes.data() length:bytes.size() freeWhenDone:false];
     ASSERT_OBJCEQ(data.debugDescription, expected);
     ASSERT_EQ(data.bytes, bytes.data());
@@ -383,7 +359,7 @@ TEST(NSData, Base64EncodedStringGetsEncodedText) {
 
 TEST(NSData, Base64DecodeWithPadding1) {
     auto encodedPadding1 = @"AoR=";
-    std::vector<byte> dataPadding1Bytes = { 0x02, 0x84 };
+    std::vector<uint8_t> dataPadding1Bytes = { 0x02, 0x84 };
     NSData* dataPadding1 = [NSData dataWithBytes:dataPadding1Bytes.data() length:dataPadding1Bytes.size()];
 
     NSData* decodedPadding1;
@@ -396,7 +372,7 @@ TEST(NSData, Base64DecodeWithPadding1) {
 
 TEST(NSData, Base64DecodeWithPadding2) {
     auto encodedPadding2 = @"Ao==";
-    std::vector<byte> dataPadding2Bytes = { 0x02 };
+    std::vector<uint8_t> dataPadding2Bytes = { 0x02 };
     NSData* dataPadding2 = [NSData dataWithBytes:dataPadding2Bytes.data() length:dataPadding2Bytes.size()];
 
     NSData* decodedPadding2;
@@ -408,14 +384,14 @@ TEST(NSData, Base64DecodeWithPadding2) {
 }
 
 TEST(NSData, RangeOfData) {
-    std::vector<byte> baseData = { 0x00, 0x01, 0x02, 0x03, 0x04 };
+    std::vector<uint8_t> baseData = { 0x00, 0x01, 0x02, 0x03, 0x04 };
     NSData* base = [NSData dataWithBytes:baseData.data() length:baseData.size()];
     NSRange baseFullRange = NSMakeRange(0, baseData.size());
     NSRange noPrefixRange = NSMakeRange(2, baseData.size() - 2);
     NSRange noSuffixRange = NSMakeRange(0, baseData.size() - 2);
     NSRange notFoundRange = NSMakeRange(NSNotFound, 0);
 
-    std::vector<byte> prefixData = { 0x00, 0x01 };
+    std::vector<uint8_t> prefixData = { 0x00, 0x01 };
     NSData* prefix = [NSData dataWithBytes:prefixData.data() length:prefixData.size()];
     NSRange prefixRange = NSMakeRange(0, prefixData.size());
 
@@ -430,7 +406,7 @@ TEST(NSData, RangeOfData) {
     ASSERT_TRUE(NSEqualRanges([base rangeOfData:prefix options:0 range:noSuffixRange], prefixRange));
     ASSERT_TRUE(NSEqualRanges([base rangeOfData:prefix options:NSDataSearchBackwards range:noSuffixRange], prefixRange));
 
-    std::vector<byte> suffixData = { 0x03, 0x04 };
+    std::vector<uint8_t> suffixData = { 0x03, 0x04 };
     NSData* suffix = [NSData dataWithBytes:suffixData.data() length:suffixData.size()];
     NSRange suffixRange = NSMakeRange(3, suffixData.size());
 
@@ -445,7 +421,7 @@ TEST(NSData, RangeOfData) {
     ASSERT_TRUE(NSEqualRanges([base rangeOfData:suffix options:0 range:noSuffixRange], notFoundRange));
     ASSERT_TRUE(NSEqualRanges([base rangeOfData:suffix options:NSDataSearchBackwards range:noSuffixRange], notFoundRange));
 
-    std::vector<byte> sliceData = { 0x02, 0x03 };
+    std::vector<uint8_t> sliceData = { 0x02, 0x03 };
     NSData* slice = [NSData dataWithBytes:sliceData.data() length:sliceData.size()];
     NSRange sliceRange = NSMakeRange(2, sliceData.size());
 

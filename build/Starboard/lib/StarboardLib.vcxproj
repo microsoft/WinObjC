@@ -41,7 +41,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\version.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\dlfcn.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\OSMisc.cpp" />
-    <ClangCompile Include="..\..\..\Frameworks\Starboard\OSEndian.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\OSEndian.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="..\..\..\Frameworks\Starboard\inet.cpp" />
@@ -70,22 +70,22 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SB_IMPEXP=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</IncludePaths>
       <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DSB_IMPEXP="" %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SB_IMPEXP=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</IncludePaths>
       <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DSB_IMPEXP="" %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
@@ -93,22 +93,22 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SB_IMPEXP=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</IncludePaths>
       <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DSB_IMPEXP="" %(AdditionalOptions) -Wno-error</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SB_IMPEXP=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</IncludePaths>
       <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DSB_IMPEXP="" %(AdditionalOptions) -Wno-error</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>

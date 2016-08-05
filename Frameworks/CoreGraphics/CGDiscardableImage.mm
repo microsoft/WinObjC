@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -27,7 +28,10 @@ CGContextImpl* CGDiscardableImageBacking::CreateDrawingContext(CGContextRef base
 CGDiscardableImageBacking::CGDiscardableImageBacking() {
     _forward = NULL;
     _hasCachedInfo = false;
+    _hasFormatInfo = false;
     _cachedSurfaceFormat = _Color565;
+    _cachedColorSpaceModel = kCGColorSpaceModelRGB;
+    _cachedBitmapInfo = 0;
     _cachedWidth = -1;
     _cachedHeight = -1;
 }
@@ -105,9 +109,22 @@ int CGDiscardableImageBacking::BytesPerPixel() {
     return _forward->BytesPerPixel();
 }
 
-surfaceFormat CGDiscardableImageBacking::SurfaceFormat() {
+int CGDiscardableImageBacking::BitsPerComponent() {
+    ConstructIfNeeded();
+
+    return _forward->BitsPerComponent();
+}
+
+void CGDiscardableImageBacking::GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo) {
+    ConstructIfNeeded();
+
+    _forward->GetSurfaceInfoWithoutPixelPtr(surfaceInfo);
+}
+
+__CGSurfaceFormat CGDiscardableImageBacking::SurfaceFormat() {
     if (!_forward) {
         if (_hasCachedInfo) {
+            InitFormatInfoIfNeeded();
             return _cachedSurfaceFormat;
         }
     }
@@ -115,6 +132,32 @@ surfaceFormat CGDiscardableImageBacking::SurfaceFormat() {
     ConstructIfNeeded();
 
     return _forward->SurfaceFormat();
+}
+
+CGColorSpaceModel CGDiscardableImageBacking::ColorSpaceModel() {
+    if (!_forward) {
+        if (_hasCachedInfo) {
+            InitFormatInfoIfNeeded();
+            return _cachedColorSpaceModel;
+        }
+    }
+
+    ConstructIfNeeded();
+
+    return _forward->ColorSpaceModel();
+}
+
+CGBitmapInfo CGDiscardableImageBacking::BitmapInfo() {
+    if (!_forward) {
+        if (_hasCachedInfo) {
+            InitFormatInfoIfNeeded();
+            return _cachedBitmapInfo;
+        }
+    }
+
+    ConstructIfNeeded();
+
+    return _forward->BitmapInfo();
 }
 
 void* CGDiscardableImageBacking::LockImageData() {

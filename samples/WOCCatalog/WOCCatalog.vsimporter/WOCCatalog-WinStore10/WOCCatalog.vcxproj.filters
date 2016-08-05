@@ -168,6 +168,9 @@
     <ClangCompile Include="..\..\WOCCatalog\AudioToolboxViewController.mm">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\GeocodingViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo9.jpg">
       <Filter>Images</Filter>
     </SBResourceCopy>
@@ -234,5 +237,10 @@
     <Media Include="..\..\WOCCatalog\test.wav">
       <Filter>Sounds</Filter>
     </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="..\..\WOCCatalog\CoreLocationViewController.mm">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
   </ItemGroup>
 </Project>

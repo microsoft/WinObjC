@@ -543,6 +543,7 @@ LIBRARY CoreFoundation
         CFDataIncreaseLength
         CFDataSetLength
         _CFDataIsMutable
+        _CFDataOwnsBuffer
 
         ; CFMutableDictionary.mm
         CFDictionaryCreateMutable

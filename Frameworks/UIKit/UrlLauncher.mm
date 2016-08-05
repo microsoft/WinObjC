@@ -41,6 +41,32 @@ static const wchar_t* TAG = L"UrlLauncher";
     return self;
 }
 
+/**
+ * Opens the given URL asynchronously, if it can be opened.
+ * Note: This method only returns the status for if the URL can be opened and not actual open URL call status.
+ *
+ * @param {NSURL*} url URL to open
+ * @return {BOOL} true if the URL can be opened, false otherwise
+ */
+- (BOOL)_openURLAsync:(NSURL*)url {
+    if ([self _canOpenURL:url]) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
+                       ^{
+                           [self _openURL:url];
+                       });
+        return YES;
+    }
+
+    return NO;
+}
+
+/**
+ * Opens the given URL synchronously.
+ * Note: This method can block, so it not recommended to call from the main thread
+ *
+ * @param {NSURL*} url URL to open
+ * @return {BOOL} true if the URL was opened successfully, false otherwise
+ */
 - (BOOL)_openURL:(NSURL*)url {
     @synchronized(self) {
         NSThread* thread = [[NSThread alloc] initWithTarget:self selector:@selector(_openURLHelper:) object:url];
@@ -82,6 +108,13 @@ static const wchar_t* TAG = L"UrlLauncher";
     [_launcher launchUriAsync:uri success:launchSuccess failure:launchFailure];
 }
 
+/**
+ * Checks if the given URL can be opened synchronously.
+ * Note: This method can block, but because it will not block for a long time it should be OK to call it from the main thread.
+ *
+ * @param {NSURL*} url URL to check
+ * @return {BOOL} true if the URL can be opened successfully, false otherwise
+ */
 - (BOOL)_canOpenURL:(NSURL*)url {
     @synchronized(self) {
         NSThread* thread = [[NSThread alloc] initWithTarget:self selector:@selector(_canOpenURLHelper:) object:url];

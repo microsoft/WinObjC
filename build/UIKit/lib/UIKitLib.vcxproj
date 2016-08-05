@@ -19,8 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSCoder+UIKitAdditions.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSMutableAttributedString+UIKitAdditions.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\art.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\ForceInclusion.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSAttributedString+UIKitAdditions.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSString+UIKitAdditions.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSValue+UIKitAdditions.mm" />
@@ -333,6 +334,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\Quaternion.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\StringConversion.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\ApplicationMain.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\UWPBackgroundTask.mm">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\CompositorInterface.h" />
@@ -342,6 +346,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\ApplicationCompositor.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\CALayerXaml.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\StarboardXaml.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\UWPBackgroundTask.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C0A51F53-73EE-435D-81D9-FE8FE625C431}</ProjectGuid>
@@ -360,11 +365,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <CompileAsWinRT>true</CompileAsWinRT>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\include;$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>UIKIT_IMPEXP=; %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions) -Wno-error</AdditionalOptions>
@@ -373,11 +378,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <CompileAsWinRT>true</CompileAsWinRT>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\include;$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>UIKIT_IMPEXP=; %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions) -Wno-error</AdditionalOptions>
@@ -387,11 +392,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
     <ClCompile>
       <CompileAsWinRT>true</CompileAsWinRT>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\include;$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>UIKIT_IMPEXP=; %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions) -Wno-error</AdditionalOptions>
@@ -400,11 +405,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
     <ClCompile>
       <CompileAsWinRT>true</CompileAsWinRT>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\include;$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>UIKIT_IMPEXP=; %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions) -Wno-error</AdditionalOptions>

@@ -14,6 +14,9 @@
     <Filter Include="Tests\ProjectionTests">
       <UniqueIdentifier>{5a10bb7a-cefc-42f3-a6ef-96a2448c37df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tests\AssetsLibraryTests">
+      <UniqueIdentifier>{e421dffa-cf92-4b58-a6cf-0e4a0d9d05e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\pch.h" />
@@ -22,6 +25,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\functionaltest-api.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Framework\Framework.h">
       <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\FunctionalTestHelpers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibraryTestHelpers.h">
+      <Filter>Tests\AssetsLibraryTests</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -57,10 +64,27 @@
       <Filter>Tests\ProjectionTests</Filter>
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\FunctionalTestHelpers.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIApplicationTests.mm">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibraryTests.mm">
+      <Filter>Tests\AssetsLibraryTests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibraryTestHelpers.mm">
+      <Filter>Tests\AssetsLibraryTests</Filter>
+    </ClangCompile>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSURL.AppxManifest.xml">
       <Filter>Tests</Filter>
     </Xml>
+    <Xml Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibrary.AppxManifest.xml">
+      <Filter>Tests\AssetsLibraryTests</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibraryTestVideo.mp4">
+      <Filter>Tests\AssetsLibraryTests</Filter>
+    </Media>
   </ItemGroup>
 </Project>

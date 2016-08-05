@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -19,13 +20,13 @@
 
 #include <objc/runtime.h>
 
-class __CGColorSpace: private objc_object {
+class __CGColorSpace : private objc_object {
 public:
-    surfaceFormat colorSpace;
+    CGColorSpaceModel colorSpaceModel;
     char* palette;
     int lastColor;
 
-    __CGColorSpace(surfaceFormat fmt);
+    __CGColorSpace(CGColorSpaceModel model);
     ~__CGColorSpace();
 };
 

@@ -25,8 +25,8 @@
     <ProjectReference Include="..\..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
       <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Foundation\lib\FoundationLib.vcxproj">
-      <Project>{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}</Project>
+    <ProjectReference Include="..\..\..\Foundation\dll\Foundation.vcxproj">
+      <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Logging\lib\LoggingLib.vcxproj">
       <Project>{D3500720-CF56-43AB-A9D6-9DC119A411B8}</Project>
@@ -140,16 +140,13 @@
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-Werror=deprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;DEBUG=1;</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DFOUNDATION_IMPEXP= " "-DCOREFOUNDATION_IMPEXP= " -Werror=deprecated-declarations %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 -Werror=deprecated-declarations %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
-    <PostBuildEvent>
-      <Command>xcopy /y "$(ProjectDir)..\..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
@@ -167,16 +164,13 @@
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-Werror=deprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DFOUNDATION_IMPEXP= " "-DCOREFOUNDATION_IMPEXP= " -Werror=deprecated-declarations %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 -Werror=deprecated-declarations %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
-    <PostBuildEvent>
-      <Command>xcopy /y "$(ProjectDir)..\..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -198,16 +192,13 @@
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DFOUNDATION_IMPEXP= " "-DCOREFOUNDATION_IMPEXP= " -Werror=deprecated-declarations %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 -Werror=deprecated-declarations %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
-    <PostBuildEvent>
-      <Command>xcopy /y "$(ProjectDir)..\..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
@@ -229,42 +220,29 @@
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DFOUNDATION_IMPEXP= " "-DCOREFOUNDATION_IMPEXP= " -Werror=deprecated-declarations %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 -Werror=deprecated-declarations %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
-    <PostBuildEvent>
-      <Command>xcopy /y "$(ProjectDir)..\..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\Framework\Framework.cpp" />
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSObject_NSCoding.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSKeyValueCoding.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSString+HSTRING.mm" />
-  </ItemGroup>
-  <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSURLResponse.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRangeTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSDictionaryTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSLoggingTests.m" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSStringInternalTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSInvocationTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\BlockClassTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRegularExpressionTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSSortDescriptorTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSLockTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRecursiveLockTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ArchivalTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CFBridgeBaseTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CoreFoundationTests.m" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ErrorHandlingTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\FoundationTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSArrayTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSAttributedStringTests.mm" />
@@ -280,11 +258,9 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSDataTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSDateComponentsTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSDateFormatterTests.m" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSEnumeratorTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSExpressionTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSFileManagerTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSFileHandleTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSHttpCookieTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSJSONSerializationTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSLocaleTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSMapTableTests.mm" />
@@ -366,6 +342,12 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.targets" />
   </ImportGroup>
+  <Target Name="CopyTestResourcesToOutput" AfterTargets="AfterBuild">
+    <ItemGroup>
+      <TestResourceFile Include="$(MSBuildThisFileDirectory)..\..\..\..\tests\unittests\Foundation\data\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(TestResourceFile)" DestinationFolder="$(OutDir)\data" SkipUnchangedFiles="True" />
+  </Target>
   <Target Name="CopyReferenceFoundationTestResourcesToOutput" AfterTargets="AfterBuild">
     <ItemGroup>
       <ReferenceFoundationTestResourceFile Include="$(MSBuildThisFileDirectory)..\..\..\..\tests\unittests\Foundation\ReferenceFoundation\Resources\*" />

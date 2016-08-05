@@ -121,6 +121,7 @@ TEST(NSHTTPURLResponse, HeaderFields_2) {
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:@{}] autorelease];
     ASSERT_EQ(0, response.allHeaderFields.count);
 }
+
 TEST(NSHTTPURLResponse, HeaderFields_3) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"A" : @"1", @"B" : @"2" };
@@ -146,6 +147,7 @@ TEST(NSHTTPURLResponse, ContentLength_available_1) {
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
     ASSERT_EQ(997, response.expectedContentLength);
 }
+
 TEST(NSHTTPURLResponse, ContentLength_available_2) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Length" : @"997", @"Transfer-Encoding" : @"identity" };
@@ -153,6 +155,7 @@ TEST(NSHTTPURLResponse, ContentLength_available_2) {
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
     ASSERT_EQ(997, response.expectedContentLength);
 }
+
 TEST(NSHTTPURLResponse, ContentLength_available_3) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Length" : @"997", @"Content-Encoding" : @"identity" };
@@ -160,6 +163,7 @@ TEST(NSHTTPURLResponse, ContentLength_available_3) {
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
     ASSERT_EQ(997, response.expectedContentLength);
 }
+
 TEST(NSHTTPURLResponse, ContentLength_available_4) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Length" : @"997", @"Content-Encoding" : @"identity", @"Transfer-Encoding" : @"identity" };
@@ -175,6 +179,7 @@ TEST(NSHTTPURLResponse, ContentLength_notAvailable) {
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
     ASSERT_EQ(-1, response.expectedContentLength);
 }
+
 TEST(NSHTTPURLResponse, ContentLength_withTransferEncoding) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Length" : @"997", @"Transfer-Encoding" : @"chunked" };
@@ -182,6 +187,7 @@ TEST(NSHTTPURLResponse, ContentLength_withTransferEncoding) {
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
     ASSERT_EQ(997, response.expectedContentLength);
 }
+
 TEST(NSHTTPURLResponse, ContentLength_withContentEncoding) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Length" : @"997", @"Content-Encoding" : @"deflate" };
@@ -189,6 +195,7 @@ TEST(NSHTTPURLResponse, ContentLength_withContentEncoding) {
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
     ASSERT_EQ(997, response.expectedContentLength);
 }
+
 TEST(NSHTTPURLResponse, ContentLength_withContentEncodingAndTransferEncoding) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Length" : @"997", @"Content-Encoding" : @"deflate", @"Transfer-Encoding" : @"identity" };
@@ -196,6 +203,7 @@ TEST(NSHTTPURLResponse, ContentLength_withContentEncodingAndTransferEncoding) {
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
     ASSERT_EQ(997, response.expectedContentLength);
 }
+
 TEST(NSHTTPURLResponse, ContentLength_withContentEncodingAndTransferEncoding_2) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Length" : @"997", @"Content-Encoding" : @"identity", @"Transfer-Encoding" : @"chunked" };
@@ -224,6 +232,7 @@ TEST(NSHTTPURLResponse, SuggestedFilename_notAvailable_1) {
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
     ASSERT_OBJCEQ(@"Unknown", response.suggestedFilename);
 }
+
 TEST(NSHTTPURLResponse, SuggestedFilename_notAvailable_2) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Disposition" : @"inline" };
@@ -239,6 +248,7 @@ TEST(NSHTTPURLResponse, SuggestedFilename_1) {
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
     ASSERT_OBJCEQ(@"fname.ext", response.suggestedFilename);
 }
+
 TEST(NSHTTPURLResponse, SuggestedFilename_2) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Disposition" : @"attachment; filename=genome.jpeg; modification-date=\"Wed, 12 Feb 1997 16:29:51 -0500\";" };
@@ -246,6 +256,7 @@ TEST(NSHTTPURLResponse, SuggestedFilename_2) {
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
     ASSERT_OBJCEQ(@"genome.jpeg", response.suggestedFilename);
 }
+
 TEST(NSHTTPURLResponse, SuggestedFilename_3) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Disposition" : @"attachment; filename=\";.ext\"" };
@@ -253,6 +264,7 @@ TEST(NSHTTPURLResponse, SuggestedFilename_3) {
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
     ASSERT_OBJCEQ(@"_.ext", response.suggestedFilename); // Differs from reference platform because ; is an illegal filename character
 }
+
 TEST(NSHTTPURLResponse, SuggestedFilename_4) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Disposition" : @"attachment; aa=bb\\; filename=\"wrong.ext\"; filename=\"fname.ext\"; cc=dd" };
@@ -260,6 +272,7 @@ TEST(NSHTTPURLResponse, SuggestedFilename_4) {
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
     ASSERT_OBJCEQ(@"fname.ext", response.suggestedFilename);
 }
+
 TEST(NSHTTPURLResponse, SuggestedFilename_removeSlashes_1) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Disposition" : @"attachment; filename=\"/a/b/name\"" };
@@ -267,6 +280,7 @@ TEST(NSHTTPURLResponse, SuggestedFilename_removeSlashes_1) {
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
     ASSERT_OBJCEQ(@"_a_b_name", response.suggestedFilename);
 }
+
 TEST(NSHTTPURLResponse, SuggestedFilename_removeSlashes_2) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Disposition" : @"attachment; filename=\"a/../b/name\"" };
@@ -285,6 +299,7 @@ TEST(NSHTTPURLResponse, mimetypeAndCharacterEncoding_1) {
     ASSERT_OBJCEQ(nil, response.MIMEType);
     ASSERT_OBJCEQ(nil, response.textEncodingName);
 }
+
 TEST(NSHTTPURLResponse, mimetypeAndCharacterEncoding_2) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Type" : @"text/html" };
@@ -293,6 +308,7 @@ TEST(NSHTTPURLResponse, mimetypeAndCharacterEncoding_2) {
     ASSERT_OBJCEQ(@"text/html", response.MIMEType);
     ASSERT_OBJCEQ(nil, response.textEncodingName);
 }
+
 TEST(NSHTTPURLResponse, mimetypeAndCharacterEncoding_3) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Type" : @"text/HTML; charset=ISO-8859-4" };
@@ -300,4 +316,27 @@ TEST(NSHTTPURLResponse, mimetypeAndCharacterEncoding_3) {
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
     ASSERT_OBJCEQ(@"text/html", response.MIMEType);
     ASSERT_OBJCEQ(@"iso-8859-4", response.textEncodingName);
+}
+
+// Archival
+TEST(NSURLResponse, canBeArchived) {
+    NSURLResponse* expected = [[[NSURLResponse alloc] initWithURL:[NSURL URLWithString:@"test"]
+                                                MIMEType:@"txt"
+                                                expectedContentLength:100
+                                                textEncodingName:@"utf8"] autorelease];
+
+    id data = [NSKeyedArchiver archivedDataWithRootObject:expected];
+    id actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    ASSERT_OBJCEQ(expected, actual);
+}
+
+TEST(NSHTTPURLResponse, canBeArchived) {
+    NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
+    auto f = @{ @"Content-Type" : @"text/HTML; charset=ISO-8859-4" };
+    NSHTTPURLResponse* expected =
+        [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
+
+    id data = [NSKeyedArchiver archivedDataWithRootObject:expected];
+    id actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    ASSERT_OBJCEQ(expected, actual);
 }

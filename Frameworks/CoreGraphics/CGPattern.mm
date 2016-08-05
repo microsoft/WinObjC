@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -48,11 +49,18 @@
 
     // TODO: Take into account x/yStep, to justify the two calls here.
     CGContextRef patternCtx;
+    CGColorSpaceRef colorSpace;
+    CGBitmapInfo bitmapInfo;
+
     if (isColored) {
-        patternCtx = CGBitmapContextCreate32((DWORD)ceilf(width), (DWORD)ceilf(height));
+        bitmapInfo = kCGImageAlphaFirst | kCGBitmapByteOrder32Big;
+        colorSpace = CGColorSpaceCreateDeviceRGB();
     } else {
-        patternCtx = CGBitmapContextCreate(NULL, (DWORD)ceilf(width), (DWORD)ceilf(height), 8, 0, NULL, 0);
+        bitmapInfo = kCGImageAlphaNone;
+        colorSpace = CGColorSpaceCreateDeviceGray();
     }
+
+    patternCtx = CGBitmapContextCreate(NULL, (DWORD)ceilf(width), (DWORD)ceilf(height), 8, 0, colorSpace, bitmapInfo);
 
     CGContextTranslateCTM(patternCtx, 0.0f, height);
     CGContextScaleCTM(patternCtx, 1.0f, -1.0f);
@@ -61,6 +69,7 @@
 
     CGImageRef tilePattern = CGBitmapContextCreateImage(patternCtx);
 
+    CGColorSpaceRelease(colorSpace);
     CGContextRelease(patternCtx);
 
     float outWidth = width, outHeight = height;
@@ -73,14 +82,19 @@
     }*/
 
     if (isColored) {
-        patternCtx = CGBitmapContextCreate32((DWORD)ceilf(outWidth), (DWORD)ceilf(outHeight));
+        bitmapInfo = kCGImageAlphaFirst | kCGBitmapByteOrder32Big;
+        colorSpace = CGColorSpaceCreateDeviceRGB();
     } else {
-        patternCtx = CGBitmapContextCreate(NULL, (DWORD)ceilf(outWidth), (DWORD)ceilf(outHeight), 8, 0, NULL, 0);
+        bitmapInfo = kCGImageAlphaNone;
+        colorSpace = CGColorSpaceCreateDeviceGray();
     }
+
+    patternCtx = CGBitmapContextCreate(NULL, (DWORD)ceilf(outWidth), (DWORD)ceilf(outHeight), 8, 0, colorSpace, bitmapInfo);
 
     CGRect rect = { 0, 0, width, height };
     CGContextDrawTiledImage(patternCtx, rect, tilePattern);
 
+    CGColorSpaceRelease(colorSpace);
     CGImageRelease(tilePattern);
 
     if (generatedImage) {
@@ -122,7 +136,7 @@ CGPatternRef CGPatternCreateColorspace(void* info,
                                        CGPatternTiling tiling,
                                        bool isColored,
                                        const CGPatternCallbacks* callbacks,
-                                       surfaceFormat fmt) {
+                                       __CGSurfaceFormat fmt) {
     CGPattern* ret = [CGPattern new];
 
     // TODO: Obey the colorspace.
@@ -151,7 +165,7 @@ CGPatternRef CGPatternCreate(void* info,
                              CGPatternTiling tiling,
                              bool isColored,
                              const CGPatternCallbacks* callbacks) {
-    return CGPatternCreateColorspace(info, bounds, matrix, xStep, yStep, tiling, isColored, callbacks, isColored ? _ColorRGBA : _ColorA8);
+    return CGPatternCreateColorspace(info, bounds, matrix, xStep, yStep, tiling, isColored, callbacks, isColored ? _ColorABGR : _ColorA8);
 }
 
 /**

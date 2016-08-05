@@ -21,13 +21,12 @@
 // See http://swift.org/LICENSE.txt for license information
 // See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
 //
-#import "Starboard.h"
+#import "Starboard/SmartTypes.h"
 #import <Foundation/Foundation.h>
 #import <TestFramework.h>
 #import "TestUtils.h"
 
 #import <CoreFoundation/CoreFoundation.h>
-#import "CFFoundationInternal.h"
 
 #include <vector>
 
@@ -86,10 +85,10 @@ TEST(NSString, IntegerValue) {
     ASSERT_EQ([string8 integerValue], 0);
 
     NSString* string9 = @"999999999999999999999999999999";
-    ASSERT_EQ([string9 integerValue], INT_MAX);
+    ASSERT_EQ([string9 integerValue], LONG_MAX);
 
     NSString* string10 = @"-999999999999999999999999999999";
-    ASSERT_EQ([string10 integerValue], INT_MIN);
+    ASSERT_EQ([string10 integerValue], LONG_MIN);
 }
 
 TEST(NSString, IntValue) {
@@ -118,10 +117,10 @@ TEST(NSString, IntValue) {
     ASSERT_EQ([string8 intValue], 0);
 
     NSString* string9 = @"999999999999999999999999999999";
-    ASSERT_EQ([string9 intValue], LONG_MAX);
+    ASSERT_EQ([string9 intValue], INT_MAX);
 
     NSString* string10 = @"-999999999999999999999999999999";
-    ASSERT_EQ([string10 intValue], LONG_MIN);
+    ASSERT_EQ([string10 intValue], INT_MIN);
 }
 
 TEST(NSString, IsEqualToStringWithSwiftString) {
@@ -383,7 +382,7 @@ BOOL stringsAreCaseInsensitivelyEqual(NSString* lhs, NSString* rhs) {
 // NSURL. Right now any NSURL created as a local file URL i.e. file://localhost/... will
 // fail when looking up its path. This makes this test obviously fail and the string code
 // untested.
-TEST(NSString, DISABLED_CompletePathIntoString) {
+DISABLED_TEST(NSString, CompletePathIntoString) {
     auto fileNames = @[
         @"/tmp/Test_completePathIntoString_01",
         @"/tmp/test_completePathIntoString_02",
@@ -595,19 +594,19 @@ TEST(NSString, StringByDeletingLastPathComponent) {
     {
         NSString* path = @"/tmp/";
         auto result = path.stringByDeletingLastPathComponent;
-        ASSERT_OBJCEQ(result, static_cast<NSString*>(_CFGetSlashStr()));
+        ASSERT_OBJCEQ(result, @"/");
     }
 
     {
         NSString* path = @"/tmp";
         auto result = path.stringByDeletingLastPathComponent;
-        ASSERT_OBJCEQ(result, static_cast<NSString*>(_CFGetSlashStr()));
+        ASSERT_OBJCEQ(result, @"/");
     }
 
     {
         NSString* path = @"/";
         auto result = path.stringByDeletingLastPathComponent;
-        ASSERT_OBJCEQ(result, static_cast<NSString*>(_CFGetSlashStr()));
+        ASSERT_OBJCEQ(result, @"/");
     }
 
     {
@@ -636,10 +635,11 @@ TEST(NSString, StringByResolvingSymlinksInPath) {
         NSString* path = @"/tmp/..";
         auto result = path.stringByResolvingSymlinksInPath;
 
-#if 0 // WINOBJC: never true // #if os(OSX)
-        auto expected = @"/private";
-#else
+// #if below is from the original Swift tests - platform differences were already known
+#if TARGET_OS_WIN32
         auto expected = @"/";
+#else
+        auto expected = @"/private";
 #endif
 
         ASSERT_OBJCEQ_MSG(result, expected, @"For absolute paths, all symbolic links are guaranteed to be removed.");
@@ -699,7 +699,7 @@ TEST(NSString, GetCString_nonASCII_withASCIIAccessor) {
 }
 
 // TODO 7292268: Re-enable this test when NSHomeDirectory doesn't just return nil / NSHomeDirectoryForUser is implemented
-TEST(NSString, DISABLED_NSHomeDirectoryForUser) {
+DISABLED_TEST(NSString, NSHomeDirectoryForUser) {
     // TODO 7292268: method not implemented.  // NSString* homeDir = NSHomeDirectoryForUser(nil);
     NSString* homeDir = NSHomeDirectory();
     NSString* userName = NSUserName();
@@ -710,7 +710,7 @@ TEST(NSString, DISABLED_NSHomeDirectoryForUser) {
 }
 
 // TODO 7292268: Re-enable this test when NSHomeDirectory doesn't just return nil
-TEST(NSString, DISABLED_StringByExpandingTildeInPath) {
+DISABLED_TEST(NSString, StringByExpandingTildeInPath) {
     {
         NSString* path = @"~";
         auto result = path.stringByExpandingTildeInPath;
@@ -743,7 +743,7 @@ TEST(NSString, DISABLED_StringByExpandingTildeInPath) {
 }
 
 // TODO 7292268: Re-enable this test when NSHomeDirectory works
-TEST(NSString, DISABLED_StringByStandardizingPath) {
+DISABLED_TEST(NSString, StringByStandardizingPath) {
     // tmp is special because it is symlinked to /private/tmp and this /private prefix should be dropped,
     // so tmp is tmp. On Linux tmp is not symlinked so it would be the same.
     {

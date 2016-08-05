@@ -63,6 +63,8 @@
 		AF8072C71C86238E00512FB6 /* URLSessionViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AF8072C51C86238E00512FB6 /* URLSessionViewController.mm */; };
 		C14942D11C77E1A700C2B67E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14942D01C77E1A700C2B67E /* Accelerate.framework */; };
 		C14942D41C77E1EE00C2B67E /* AccelerateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C14942D31C77E1EE00C2B67E /* AccelerateViewController.m */; };
+		C1BA9A091D27222C004D9E6E /* CoreLocationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1BA9A061D27222C004D9E6E /* CoreLocationViewController.mm */; };
+		C1E414D61D52925300D1F062 /* GeocodingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1E414D51D52925300D1F062 /* GeocodingViewController.m */; };
 		D27357F21C6AD0E200CA31C4 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27357F11C6AD0E200CA31C4 /* CoreImage.framework */; };
 		D2AC20301C6972A600D54717 /* BasicAnimationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2AC202F1C6972A600D54717 /* BasicAnimationViewController.m */; };
 		D2AC20341C69733600D54717 /* photo9.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D2AC20331C69733600D54717 /* photo9.jpg */; };
@@ -177,6 +179,10 @@
 		C14942D01C77E1A700C2B67E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		C14942D21C77E1EE00C2B67E /* AccelerateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccelerateViewController.h; sourceTree = "<group>"; };
 		C14942D31C77E1EE00C2B67E /* AccelerateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccelerateViewController.m; sourceTree = "<group>"; };
+		C1BA9A051D27222C004D9E6E /* CoreLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreLocationViewController.h; sourceTree = "<group>"; };
+		C1BA9A061D27222C004D9E6E /* CoreLocationViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CoreLocationViewController.mm; sourceTree = "<group>"; };
+		C1E414D41D52925300D1F062 /* GeocodingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeocodingViewController.h; sourceTree = "<group>"; };
+		C1E414D51D52925300D1F062 /* GeocodingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeocodingViewController.m; sourceTree = "<group>"; };
 		D27357F11C6AD0E200CA31C4 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		D2AC202E1C69729C00D54717 /* BasicAnimationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicAnimationViewController.h; sourceTree = "<group>"; };
 		D2AC202F1C6972A600D54717 /* BasicAnimationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasicAnimationViewController.m; sourceTree = "<group>"; };
@@ -248,6 +254,10 @@
 		4EE861571B5996BF00682BDB /* WOCCatalog */ = {
 			isa = PBXGroup;
 			children = (
+				C1E414D41D52925300D1F062 /* GeocodingViewController.h */,
+				C1E414D51D52925300D1F062 /* GeocodingViewController.m */,
+				C1BA9A051D27222C004D9E6E /* CoreLocationViewController.h */,
+				C1BA9A061D27222C004D9E6E /* CoreLocationViewController.mm */,
 				143EAE4C1D075DD50068D90F /* UserDefaultsViewController.h */,
 				143EAE4D1D075DD50068D90F /* UserDefaultsViewController.m */,
 				4FAF43071CF67047009F29E8 /* UIPasteboardViewController.h */,
@@ -522,12 +532,14 @@
 				7B363CFE1BF5CBFE001F08DD /* PageViewController.m in Sources */,
 				49FF82CF1C18BFED00798804 /* ApplicationViewController.m in Sources */,
 				4ED640231B717E470092921E /* SingleImageViewController.m in Sources */,
+				C1E414D61D52925300D1F062 /* GeocodingViewController.m in Sources */,
 				77F3AD3F1CF3854D00485FBA /* AudioToolboxViewController.mm in Sources */,
 				AF8072C71C86238E00512FB6 /* URLSessionViewController.mm in Sources */,
 				F01C22551C1A3B120007FF0B /* MainViewController.m in Sources */,
 				7BCEEE4D1B70220300C31CF5 /* OpenGLES20Controller.m in Sources */,
 				4EE861D61B5997A500682BDB /* SegmentsViewController.m in Sources */,
 				4FBE9F581C0E518B00BF0B87 /* TextDisplayViewController.m in Sources */,
+				C1BA9A091D27222C004D9E6E /* CoreLocationViewController.mm in Sources */,
 				D2AC20301C6972A600D54717 /* BasicAnimationViewController.m in Sources */,
 				4ED640201B712C0B0092921E /* PhotogridViewController.m in Sources */,
 				4EE861D21B5997A500682BDB /* ControlsViewController.m in Sources */,

@@ -14,10 +14,11 @@
 //
 //******************************************************************************
 
-#import "Starboard.h"
-#include <TestFramework.h>
+#import <Starboard/SmartTypes.h>
+#import <TestFramework.h>
 #import <Foundation/Foundation.h>
 #import <future>
+#import <windows.h>
 
 TEST(NSTimer, Init) {
     ASSERT_TRUE_MSG([[[NSTimer alloc] init] autorelease] != nil, "FAILED: alloc/init failed.");

@@ -51,13 +51,13 @@ TEST(NSSortDescriptor, SortDescriptorWithNilKey) {
 }
 
 // Used for testing keys and custom comparators.
-@interface Point : NSObject
+@interface TestPoint : NSObject
 @property (assign) NSString* name;
 @property (assign) NSInteger xCord;
 @property (assign) NSInteger yCord;
 @end
 
-@implementation Point
+@implementation TestPoint
 - (instancetype)initWithName:(NSString*)nme xCord:(NSInteger)x yCord:(NSInteger)y {
     if (self == [super init]) {
         _name = [nme copy];
@@ -79,13 +79,13 @@ TEST(NSSortDescriptor, SortDescriptorWithCustomObjectAndKey) {
     NSString* key = @"xCord";
     int size = 10;
 
-    Point* firstObj = [[[Point alloc] initWithName:@"obj1" xCord:0 yCord:10] autorelease];
-    Point* lastObj = [[[Point alloc] initWithName:@"obj3" xCord:100 yCord:30] autorelease];
+    TestPoint* firstObj = [[[TestPoint alloc] initWithName:@"obj1" xCord:0 yCord:10] autorelease];
+    TestPoint* lastObj = [[[TestPoint alloc] initWithName:@"obj3" xCord:100 yCord:30] autorelease];
     [data addObject:firstObj];
     [data addObject:lastObj];
 
     for (int i = 1; i < size; ++i) {
-        Point* obj = [[[Point alloc] initWithName:@"testObj" xCord:i yCord:(i + 1)] autorelease];
+        TestPoint* obj = [[[TestPoint alloc] initWithName:@"testObj" xCord:i yCord:(i + 1)] autorelease];
         [data addObject:obj];
     }
 
@@ -110,13 +110,13 @@ TEST(NSSortDescriptor, SortDescriptorWithCustomObjectAndSelector) {
     NSString* key = @"xCord";
     int size = 20;
 
-    Point* firstObj = [[[Point alloc] initWithName:@"obj1" xCord:0 yCord:10] autorelease];
-    Point* lastObj = [[[Point alloc] initWithName:@"obj3" xCord:100 yCord:30] autorelease];
+    TestPoint* firstObj = [[[TestPoint alloc] initWithName:@"obj1" xCord:0 yCord:10] autorelease];
+    TestPoint* lastObj = [[[TestPoint alloc] initWithName:@"obj3" xCord:100 yCord:30] autorelease];
     [data addObject:firstObj];
     [data addObject:lastObj];
 
     for (int i = 1; i < size; ++i) {
-        Point* obj = [[[Point alloc] initWithName:@"testObj" xCord:i yCord:(i + 1)] autorelease];
+        TestPoint* obj = [[[TestPoint alloc] initWithName:@"testObj" xCord:i yCord:(i + 1)] autorelease];
         [data addObject:obj];
     }
 
@@ -140,13 +140,13 @@ TEST(NSSortDescriptor, SortDescriptorWithCustomObjectAndComparator) {
     int size = 40;
     NSString* key = @"xCord";
 
-    Point* firstObj = [[[Point alloc] initWithName:@"obj1" xCord:0 yCord:10] autorelease];
-    Point* lastObj = [[[Point alloc] initWithName:@"obj3" xCord:100 yCord:30] autorelease];
+    TestPoint* firstObj = [[[TestPoint alloc] initWithName:@"obj1" xCord:0 yCord:10] autorelease];
+    TestPoint* lastObj = [[[TestPoint alloc] initWithName:@"obj3" xCord:100 yCord:30] autorelease];
     [data addObject:firstObj];
     [data addObject:lastObj];
 
     for (int i = 1; i < size; ++i) {
-        Point* obj = [[[Point alloc] initWithName:@"testObj" xCord:i yCord:(i + 1)] autorelease];
+        TestPoint* obj = [[[TestPoint alloc] initWithName:@"testObj" xCord:i yCord:(i + 1)] autorelease];
         [data addObject:obj];
     }
 

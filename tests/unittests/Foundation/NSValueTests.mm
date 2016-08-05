@@ -14,9 +14,9 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
+#import <TestFramework.h>
 #import <Foundation/Foundation.h>
-#include <complex.h>
+#import <complex>
 
 struct ArbitrarilyComplexStruct {
 #ifdef _M_ARM
@@ -24,7 +24,7 @@ struct ArbitrarilyComplexStruct {
 #else
     __m128 i;
 #endif
-    _Complex double c;
+    std::complex<double> c;
 };
 
 TEST(NSValue, canStoreAPointer) {
@@ -46,13 +46,17 @@ TEST(NSValue, specializedInstanceIsStillAnNSValue) {
 }
 
 TEST(NSValue, arbitraryStructCanBeStored) {
-    ArbitrarilyComplexStruct acs{ { 3.14 }, 1.9 * I };
+    using namespace std::complex_literals;
+    ArbitrarilyComplexStruct acs{ { 3.14 }, 1.9i };
+
     id val = [NSValue valueWithBytes:&acs objCType:@encode(ArbitrarilyComplexStruct)];
     ASSERT_OBJCNE(nil, val);
 }
 
 TEST(NSValue, arbitraryStructCanBeRetrieved) {
-    ArbitrarilyComplexStruct acs{ { 3.14 }, 1.9 * I };
+    using namespace std::complex_literals;
+    ArbitrarilyComplexStruct acs{ { 3.14 }, 1.9i };
+
     id val = [NSValue valueWithBytes:&acs objCType:@encode(ArbitrarilyComplexStruct)];
     ArbitrarilyComplexStruct acs2{};
     ASSERT_NO_THROW([val getValue:&acs2]);
@@ -60,8 +64,11 @@ TEST(NSValue, arbitraryStructCanBeRetrieved) {
     ASSERT_OBJCEQ(val, val2);
 }
 
-TEST(NSValue, arbitraryStructCanBeSerializedAndDeserialized) {
-    ArbitrarilyComplexStruct acs{ { 3.14 }, 1.9 * I };
+// OSX cannot encode __m128 so the serialization will fail
+OSX_DISABLED_TEST(NSValue, arbitraryStructCanBeSerializedAndDeserialized) {
+    using namespace std::complex_literals;
+    ArbitrarilyComplexStruct acs{ { 3.14 }, 1.9i };
+
     id val = [NSValue valueWithBytes:&acs objCType:@encode(ArbitrarilyComplexStruct)];
     id data = [NSKeyedArchiver archivedDataWithRootObject:val];
     id val2 = [NSKeyedUnarchiver unarchiveObjectWithData:data];

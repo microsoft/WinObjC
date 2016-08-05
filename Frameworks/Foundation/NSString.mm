@@ -779,7 +779,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 /**
  @Status Interoperable
 */
-- (int)intValue {
+- (int32_t)intValue {
     char* str = (char*)[self UTF8String];
     return strtol(str, nullptr, 10);
 }
@@ -788,7 +788,8 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
  @Status Interoperable
 */
 - (NSInteger)integerValue {
-    return [self intValue];
+    char* str = (char*)[self UTF8String];
+    return strtol(str, nullptr, 10);
 }
 
 /**

@@ -86,6 +86,3 @@
     return [self replacementObjectForCoder:archiver];
 }
 @end
-
-__attribute__((constructor)) static void _ForceTUInclusion() {
-}

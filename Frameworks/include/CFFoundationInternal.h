@@ -47,6 +47,7 @@ CF_EXPORT Boolean _CFDictionaryIsMutable(CFDictionaryRef dictionary);
 CF_EXPORT Boolean _CFArrayIsMutable(CFArrayRef array);
 CF_PRIVATE Boolean __CFCharacterSetIsMutable(CFCharacterSetRef cset);
 CF_EXPORT Boolean _CFDataIsMutable(CFDataRef data);
+CF_EXPORT Boolean _CFDataOwnsBuffer(CFDataRef data);
 CF_EXPORT Boolean _CFAttributedStringIsMutable(CFAttributedStringRef attrStr);
 CF_EXPORT Boolean _CFSetIsMutable(CFSetRef hc);
 CF_EXTERN_C_END

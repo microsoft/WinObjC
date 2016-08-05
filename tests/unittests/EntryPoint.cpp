@@ -15,21 +15,27 @@
 //******************************************************************************
 
 #include <windows.h>
-
 #include <TestFramework.h>
 
 int main(int argc, char** argv) {
+// ::CoInitialize, Uninitialize, don't exist on OSX, aren't needed
+#ifdef WIN32
     // Initialize COM for all of the tests
     ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
     testing::InitGoogleTest(&argc, argv);
-
     LOG_INFO("Starting unit tests...");
-
     auto result = RUN_ALL_TESTS();
 
-    // TODO: move to a scopeguard when we have one in our codebase
+    // TODO: Issue #689 move to a scopeguard when we have one in our codebase
     ::CoUninitialize();
+
+#else
+    testing::InitGoogleTest(&argc, argv);
+    printf("Starting unit tests...\n");
+    auto result = RUN_ALL_TESTS();
+
+#endif
 
     return result;
 }
