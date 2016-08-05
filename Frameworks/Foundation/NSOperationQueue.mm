@@ -28,6 +28,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "Foundation/NSLock.h"
 #import <time.h>
 #import "LoggingNative.h"
+#import "NSOperationInternal.h"
 
 static const wchar_t* TAG = L"NSOperationQueue";
 
@@ -132,6 +133,7 @@ static id _mainQueue;
 
 @interface NSOperationQueue () {
     struct NSOperationQueuePriv* priv;
+    dispatch_queue_t _completionQueue;
 }
 @end
 
@@ -234,13 +236,17 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
  @Status Interoperable
 */
 - (id)init {
-    priv = new NSOperationQueuePriv();
+    if (self = [super init]) {
+        priv = new NSOperationQueuePriv();
 
-    priv->_maxConcurrentOperationCount = 1;
-    priv->workAvailable = [[NSCondition alloc] init];
-    priv->suspendedCondition = [[NSCondition alloc] init];
-    priv->allWorkDone = [[NSCondition alloc] init];
-    priv->isSuspended = 0;
+        priv->_maxConcurrentOperationCount = 1;
+        priv->workAvailable = [[NSCondition alloc] init];
+        priv->suspendedCondition = [[NSCondition alloc] init];
+        priv->allWorkDone = [[NSCondition alloc] init];
+        priv->isSuspended = 0;
+
+        _completionQueue = dispatch_queue_create("NSOperation finish queue", nullptr);
+    }
 
     return self;
 }
@@ -270,6 +276,8 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     [self addOperation:curDep];
     }
     */
+
+    [op _setCompletionQueue:_completionQueue];
 
     unsigned priority = 1;
     if ([op queuePriority] < NSOperationQueuePriorityNormal) {
@@ -537,6 +545,8 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     [priv->allWorkDone release];
     pthread_mutex_destroy(&priv->_threadRunningLock);
     delete priv;
+
+    dispatch_release(_completionQueue);
 
     [super dealloc];
 }
