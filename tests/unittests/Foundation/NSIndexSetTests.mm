@@ -19,7 +19,7 @@
 
 void verifyIndexSetEqualsArray(NSArray* expected, NSIndexSet* actual) {
     __block unsigned int callCount = 0;
-    NSMutableIndexSet* expectedIndexSet = [[[NSMutableIndexSet alloc] init] autorelease];
+    NSMutableIndexSet* expectedIndexSet = [NSMutableIndexSet indexSet];
 
     [actual enumerateIndexesUsingBlock:^(NSUInteger index, BOOL* stop) {
         ASSERT_OBJCEQ([expected objectAtIndex:callCount++], [NSNumber numberWithUnsignedInt:index]);
@@ -27,11 +27,12 @@ void verifyIndexSetEqualsArray(NSArray* expected, NSIndexSet* actual) {
     }];
 
     ASSERT_EQ([expected count], callCount);
-    ASSERT_EQ(YES, [actual isEqualToIndexSet:expectedIndexSet]);
+    ASSERT_OBJCEQ(expectedIndexSet, actual);
 }
 
 TEST(NSIndexSet, AddIndexesInRange) {
-    NSMutableIndexSet* indexSet = [NSMutableIndexSet new];
+    NSMutableIndexSet* indexSet = [NSMutableIndexSet indexSet];
+    NSMutableIndexSet* expectedIndexSet = [NSMutableIndexSet indexSet];
 
     LOG_INFO("Basic addIndexesInRange operation tests of NSIndexSet");
 
@@ -39,6 +40,7 @@ TEST(NSIndexSet, AddIndexesInRange) {
     [indexSet addIndexesInRange:NSMakeRange(2, 4)]; // [2-5]
     [indexSet addIndexesInRange:NSMakeRange(7, 2)]; // [7-8]
     [indexSet addIndexesInRange:NSMakeRange(11, 5)]; // [11-15]
+    // The resulting set should contain ranges - [2-5], [7-8] and [11-15].
 
     // make sure life is ok.
     NSArray* expected = @[ @2, @3, @4, @5, @7, @8, @11, @12, @13, @14, @15 ];
@@ -47,33 +49,51 @@ TEST(NSIndexSet, AddIndexesInRange) {
     // add in a left overlap.
     LOG_INFO("Left overlap addIndexesInRange operation tests of NSIndexSet");
     [indexSet addIndexesInRange:NSMakeRange(1, 2)]; // [1-2]
-    expected = @[ @1, @2, @3, @4, @5, @7, @8, @11, @12, @13, @14, @15 ];
-    verifyIndexSetEqualsArray(expected, indexSet);
+    // The resulting set should contain ranges - [1-5], [7-8] and [11-15].
+    // verify the ranges in the set.
+    [expectedIndexSet removeAllIndexes];
+    [expectedIndexSet addIndexesInRange:NSMakeRange(1, 5)]; // [1-5]
+    [expectedIndexSet addIndexesInRange:NSMakeRange(7, 2)]; // [7-8]
+    [expectedIndexSet addIndexesInRange:NSMakeRange(11, 5)]; // [11-15]
+    ASSERT_TRUE([indexSet isEqualToIndexSet:expectedIndexSet]);
 
     // add in a right overlap.
     LOG_INFO("Right overlap addIndexesInRange operation tests of NSIndexSet");
     [indexSet addIndexesInRange:NSMakeRange(4, 3)]; // [4-6]
-    expected = @[ @1, @2, @3, @4, @5, @6, @7, @8, @11, @12, @13, @14, @15 ];
-    verifyIndexSetEqualsArray(expected, indexSet);
+    // The resulting set should contain ranges - [1-8] and [11-15].
+    // verify the ranges in the set.
+    [expectedIndexSet removeAllIndexes];
+    [expectedIndexSet addIndexesInRange:NSMakeRange(1, 8)]; // [1-8]
+    [expectedIndexSet addIndexesInRange:NSMakeRange(11, 5)]; // [11-15]
+    ASSERT_TRUE([indexSet isEqualToIndexSet:expectedIndexSet]);
 
     // add in a subset
     LOG_INFO("Subset addIndexesInRange operation tests of NSIndexSet");
     [indexSet addIndexesInRange:NSMakeRange(12, 2)]; // [12-13]
-    expected = @[ @1, @2, @3, @4, @5, @6, @7, @8, @11, @12, @13, @14, @15 ];
-    verifyIndexSetEqualsArray(expected, indexSet);
+    // The resulting set should contain ranges - [1-8] and [11-15].
+    // verify the ranges in the set.
+    [expectedIndexSet removeAllIndexes];
+    [expectedIndexSet addIndexesInRange:NSMakeRange(1, 8)]; // [1-8]
+    [expectedIndexSet addIndexesInRange:NSMakeRange(11, 5)]; // [11-15]
+    ASSERT_TRUE([indexSet isEqualToIndexSet:expectedIndexSet]);
 
     // add in a candidate that spans multiple ranges. (super set of [1-8] and left overlap of [11-15])
     LOG_INFO("Superset addIndexesInRange operation tests of NSIndexSet");
     [indexSet addIndexesInRange:NSMakeRange(0, 13)]; // [0-12]
-    expected = @[ @0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, @15 ];
-    verifyIndexSetEqualsArray(expected, indexSet);
+    // The resulting should contain ranges - [0-15].
+    // verify the ranges in the set.
+    [expectedIndexSet removeAllIndexes];
+    [expectedIndexSet addIndexesInRange:NSMakeRange(0, 16)]; // [0-15]
+    ASSERT_TRUE([indexSet isEqualToIndexSet:expectedIndexSet]);
 
     // add in an adjacent candidate.
     LOG_INFO("Adjacent addIndexesInRange operation tests of NSIndexSet");
     [indexSet addIndexesInRange:NSMakeRange(16, 2)]; // [16-17]
-    expected = @[ @0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, @15, @16, @17 ];
-    verifyIndexSetEqualsArray(expected, indexSet);
-    [indexSet release];
+    // The resulting should contain ranges - [0-17].
+    // verify the ranges in the set.
+    [expectedIndexSet removeAllIndexes];
+    [expectedIndexSet addIndexesInRange:NSMakeRange(0, 18)]; // [0-17]
+    ASSERT_TRUE([indexSet isEqualToIndexSet:expectedIndexSet]);
 }
 
 TEST(NSIndexSet, Init) {
@@ -112,19 +132,26 @@ TEST(NSIndexSet, EnumerateConcurrent) {
 }
 
 TEST(NSIndexSet, addIndex) {
-    NSMutableIndexSet* indexSet = [NSMutableIndexSet new];
+    NSMutableIndexSet* indexSet = [[NSMutableIndexSet new] autorelease];
+    NSMutableIndexSet* expectedIndexSet = [[NSMutableIndexSet new] autorelease];
 
     // Test addIndex
     [indexSet addIndex:2];
+    // The resulting set should contain range - [2].
 
     // Verify that the set contains 2 and no other indices.
     NSArray* expected = @[ @2 ];
     verifyIndexSetEqualsArray(expected, indexSet);
+    // verify the ranges in the set.
+    [expectedIndexSet removeAllIndexes];
+    [expectedIndexSet addIndexesInRange:NSMakeRange(2, 1)]; // [2]
+    ASSERT_TRUE([indexSet isEqualToIndexSet:expectedIndexSet]);
 
     // set up the indexSet with a few non overlapping indices.
     [indexSet addIndexesInRange:NSMakeRange(2, 4)]; // [2-5]
     [indexSet addIndexesInRange:NSMakeRange(7, 2)]; // [7-8]
     [indexSet addIndexesInRange:NSMakeRange(11, 5)]; // [11-15]
+    // The resulting set should contain ranges - [2-5], [7-8] and [11-15].
 
     // Test addIndexes
     NSMutableIndexSet* addSet = [NSMutableIndexSet new];
@@ -132,61 +159,113 @@ TEST(NSIndexSet, addIndex) {
     [addSet addIndexesInRange:NSMakeRange(8, 2)]; // [8-9]
     [addSet addIndexesInRange:NSMakeRange(11, 7)]; // [11-17]
     [indexSet addIndexes:addSet];
+    // The resulting set should contain ranges - [0-5], [7-9] and [11-17].
 
-    // Verify that the set equals the expected result
-    expected = @[ @0, @1, @2, @3, @4, @5, @7, @8, @9, @11, @12, @13, @14, @15, @16, @17 ];
-    verifyIndexSetEqualsArray(expected, indexSet);
-    [indexSet release];
+    // verify the ranges in the set.
+    [expectedIndexSet removeAllIndexes];
+    [expectedIndexSet addIndexesInRange:NSMakeRange(0, 6)]; // [0-5]
+    [expectedIndexSet addIndexesInRange:NSMakeRange(7, 3)]; // [7-9]
+    [expectedIndexSet addIndexesInRange:NSMakeRange(11, 7)]; // [11-17]
+    ASSERT_TRUE([indexSet isEqualToIndexSet:expectedIndexSet]);
 }
 
 TEST(NSIndexSet, removeIndex) {
-    NSMutableIndexSet* indexSet = [NSMutableIndexSet new];
+    NSMutableIndexSet* indexSet = [[NSMutableIndexSet new] autorelease];
+    NSMutableIndexSet* expectedIndexSet = [[NSMutableIndexSet new] autorelease];
 
     // set up the indexSet with a few non overlapping indices.
     [indexSet addIndexesInRange:NSMakeRange(2, 4)]; // [2-5]
     [indexSet addIndexesInRange:NSMakeRange(7, 2)]; // [7-8]
     [indexSet addIndexesInRange:NSMakeRange(11, 5)]; // [11-15]
-
-    [indexSet removeIndex:8];
+    // The resulting set should contain ranges - [2-5], [7-8] and [11-15].
 
     // Remove an index that doesn't exist
     ASSERT_NO_THROW([indexSet removeIndex:9]);
 
-    verifyIndexSetEqualsArray(@[ @2, @3, @4, @5, @7, @11, @12, @13, @14, @15 ], indexSet);
-    [indexSet release];
+    [indexSet removeIndex:8];
+    // The resulting set should contain ranges - [2-5], [7] and [11-15].
+
+    // verify the ranges in the set.
+    [expectedIndexSet removeAllIndexes];
+    [expectedIndexSet addIndexesInRange:NSMakeRange(2, 4)]; // [2-5]
+    [expectedIndexSet addIndexesInRange:NSMakeRange(7, 1)]; // [7]
+    [expectedIndexSet addIndexesInRange:NSMakeRange(11, 5)]; // [11-15]
+    ASSERT_TRUE([indexSet isEqualToIndexSet:expectedIndexSet]);
 }
 
-TEST(NSIndexSet, shiftIndexes) {
-    NSMutableIndexSet* indexSet = [NSMutableIndexSet new];
+// Note: There seems to be a bug in iOS with shiftIndexesStartingAtIndex:
+//  [indexSet addIndexesInRange:NSMakeRange(2, 4)]; // [2-5]
+//  [indexSet addIndexesInRange:NSMakeRange(8, 2)]; // [8-9]
+//  [indexSet addIndexesInRange:NSMakeRange(12, 5)]; // [12-16]
+//
+//  should result in a set with ranges [2-5], [8-9] and [12-16]
+//
+//  [indexSet shiftIndexesStartingAtIndex:12 by:-3];
+//
+//  should then result in a set ranges [2-5] and [8-13] but on iOS it returns [2-5], [8] and [9-13]
+//  This cannot be correct as there is no way such a set can be created using any method from NSMutableIndexSet.
+//  Also verified this behavior is not consistent. i.e. on iOS with the resulting set above ([2-5], [8] and [9-13]),
+//  perform - [indexSet addIndexesInRange:NSMakeRange(17, 2)]; // [17-18]
+//
+//  the new set will be [2-5], [8], [9-13] and [17,18]
+//
+//  [indexSet shiftIndexesStartingAtIndex:17 by:-3];
+//
+//  should have returned a set [2-5], [8], [9-13] and [14,18] as per the previous behavior of this method but the
+//  set returned is [2-5], [8] and [9-18]. i.e. adjacent ranges get merged.
+//
+//  There is no clear explanation on this inconsistent behaviour, hence disabling this test on OSX
+//
+OSX_DISABLED_TEST(NSIndexSet, shiftIndexes) {
+    NSMutableIndexSet* indexSet = [[NSMutableIndexSet new] autorelease];
+    NSMutableIndexSet* expectedIndexSet = [[NSMutableIndexSet new] autorelease];
 
     // set up the indexSet with a few non overlapping indices.
     [indexSet addIndexesInRange:NSMakeRange(2, 4)]; // [2-5]
     [indexSet addIndexesInRange:NSMakeRange(7, 2)]; // [7-8]
     [indexSet addIndexesInRange:NSMakeRange(11, 5)]; // [11-15]
+    // The resulting set should contain ranges - [2-5], [7-8] and [11-15].
 
     // Test shiftIndexes
     [indexSet shiftIndexesStartingAtIndex:6 by:1];
+    // The resulting set should contain ranges - [2-5], [8-9] and [12-16].
 
-    // Verify that the set equals the expected result
-    NSArray* expected = @[ @2, @3, @4, @5, @8, @9, @12, @13, @14, @15, @16 ];
-    verifyIndexSetEqualsArray(expected, indexSet);
+    // verify the ranges in the set.
+    [expectedIndexSet removeAllIndexes];
+    [expectedIndexSet addIndexesInRange:NSMakeRange(2, 4)]; // [2-5]
+    [expectedIndexSet addIndexesInRange:NSMakeRange(8, 2)]; // [8-9]
+    [expectedIndexSet addIndexesInRange:NSMakeRange(12, 5)]; // [12-16]
+    ASSERT_OBJCEQ(expectedIndexSet, indexSet);
 
     // Test shiftIndexes with negative delta
     [indexSet shiftIndexesStartingAtIndex:12 by:-3];
-    expected = @[ @2, @3, @4, @5, @8, @9, @10, @11, @12, @13 ];
-    verifyIndexSetEqualsArray(expected, indexSet);
+    // The resulting set should contain ranges - [2-5] and [8-13].
+    // verify the ranges in the set.
+    [expectedIndexSet removeAllIndexes];
+    [expectedIndexSet addIndexesInRange:NSMakeRange(2, 4)]; // [2-5]
+    [expectedIndexSet addIndexesInRange:NSMakeRange(8, 6)]; // [8-13]
+    ASSERT_OBJCEQ(expectedIndexSet, indexSet);
 
     // Test shiftIndexes with adjacent range
     [indexSet addIndexesInRange:NSMakeRange(17, 2)]; // [17-18]
+    // The resulting set should contain ranges - [2-5], [8-15] and [17-18].
     [indexSet shiftIndexesStartingAtIndex:17 by:-3];
-    expected = @[ @2, @3, @4, @5, @8, @9, @10, @11, @12, @13, @14, @15 ];
-    verifyIndexSetEqualsArray(expected, indexSet);
+    // The resulting set should contain ranges - [2-5] and [8-15].
+    // verify the ranges in the set.
+    [expectedIndexSet removeAllIndexes];
+    [expectedIndexSet addIndexesInRange:NSMakeRange(2, 4)]; // [2-5]
+    [expectedIndexSet addIndexesInRange:NSMakeRange(8, 8)]; // [8-15]
+    ASSERT_OBJCEQ(expectedIndexSet, indexSet);
 
     [indexSet removeAllIndexes];
     [indexSet addIndexesInRange:NSMakeRange(1, 2)];
+    // The resulting set should contain range - [1-2].
     [indexSet shiftIndexesStartingAtIndex:2 by:-1];
-    expected = @[@1];
+    // The resulting set should contain range - [1].
+    NSArray* expected = @[ @1 ];
     verifyIndexSetEqualsArray(expected, indexSet);
-
-    [indexSet release];
+    // verify the ranges in the set.
+    [expectedIndexSet removeAllIndexes];
+    [expectedIndexSet addIndexesInRange:NSMakeRange(1, 1)]; // [1]
+    ASSERT_OBJCEQ(expectedIndexSet, indexSet);
 }
