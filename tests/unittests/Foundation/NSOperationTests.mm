@@ -62,7 +62,7 @@ TEST(NSOperation, NSOperation) {
 
     [operation waitUntilFinished];
 
-    [completionCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:10]];
+    [completionCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
     [completionCondition unlock];
 
     ASSERT_TRUE(completionBlockCalled);
@@ -90,7 +90,7 @@ TEST(NSOperation, NSOperationCancellation) {
 
     [cancelledOperation waitUntilFinished];
 
-    [completionCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:10]];
+    [completionCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
     [completionCondition unlock];
 
     ASSERT_TRUE(completionBlockCalled);
@@ -279,7 +279,7 @@ TEST(NSOperation, NSOperationConcurrentSubclass) {
 
     [operation waitUntilFinished];
 
-    [completionCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:10]];
+    [completionCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
     [completionCondition unlock];
 
     ASSERT_TRUE(completionBlockCalled);
@@ -323,7 +323,7 @@ TEST(NSOperation, NSOperationNonconcurrentSubclass) {
     [queue addOperation:operation];
     [operation waitUntilFinished];
 
-    [completionCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:10]];
+    [completionCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
     [completionCondition unlock];
 
     ASSERT_TRUE(completionBlockCalled);
@@ -401,7 +401,7 @@ TEST(NSOperation, NSOperationWithDependenciesDoesRun) {
 
     [dep1Condition lock];
     [queue addOperation:dependency1];
-    [dep1Condition wait];
+    [dep1Condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2.0]];
     [dep1Condition unlock];
     EXPECT_TRUE(dep1Completed);
     EXPECT_FALSE(dep2Completed);
@@ -410,11 +410,11 @@ TEST(NSOperation, NSOperationWithDependenciesDoesRun) {
     [completionCondition lock]; // dep2 will trigger operation to complete.
     [dep2Condition lock];
     [queue addOperation:dependency2];
-    [dep2Condition wait];
+    [dep2Condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2.0]];
     [dep2Condition unlock];
     EXPECT_TRUE(dep2Completed);
 
-    [completionCondition wait];
+    [completionCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2.0]];
     [completionCondition unlock];
     EXPECT_TRUE(completionBlockCalled);
 }
@@ -452,6 +452,7 @@ OSX_DISABLED_TEST(NSOperation, NSOperationIsReady) {
 
     [queue addOperation:dependency2];
     [dependency2 waitUntilFinished];
+
     ASSERT_TRUE([observer didObserveReady]);
     ASSERT_TRUE([operation isReady]);
     [observer setDidObserveReady:NO];
@@ -487,7 +488,7 @@ TEST(NSOperation, RunConcurrentOperationManually) {
 
     [operation waitUntilFinished];
 
-    [completionCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:10]];
+    [completionCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
     [completionCondition unlock];
 
     ASSERT_TRUE(completionBlockCalled);
@@ -514,7 +515,7 @@ TEST(NSOperation, RunNonconcurrentOperationManually) {
 
     [operation waitUntilFinished];
 
-    [completionCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:10]];
+    [completionCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
     [completionCondition unlock];
 
     ASSERT_TRUE(completionBlockCalled);
@@ -546,7 +547,7 @@ TEST(NSOperation, NSBlockOperationInQueue) {
 
     [operation waitUntilFinished];
 
-    [completionCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:10]];
+    [completionCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
     [completionCondition unlock];
 
     ASSERT_TRUE(completionBlockCalled);
