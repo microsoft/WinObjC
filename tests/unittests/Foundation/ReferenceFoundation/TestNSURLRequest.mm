@@ -62,18 +62,34 @@ TEST(NSURLRequest, HeaderFields) {
     NSURL* url = [NSURL URLWithString:@"http://swift.org"];
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
 
+    // Setup a new field
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     ASSERT_OBJCNE(request.allHTTPHeaderFields, nil);
     ASSERT_OBJCEQ(request.allHTTPHeaderFields[@"Accept"], @"application/json");
 
-    // Setting @"accept" should remove @"Accept"
+    // Setting @"accept" should update @"Accept"
     [request setValue:@"application/xml" forHTTPHeaderField:@"accept"];
-    ASSERT_OBJCEQ(request.allHTTPHeaderFields[@"Accept"], nil);
+    ASSERT_OBJCEQ(request.allHTTPHeaderFields[@"Accept"], @"application/xml");
     ASSERT_OBJCEQ(request.allHTTPHeaderFields[@"accept"], @"application/xml");
 
-    // Adding to @"Accept" should add to @"accept"
+    // Adding to @"Accept" should sync its value with @"accept"
     [request addValue:@"text/html" forHTTPHeaderField:@"Accept"];
+    ASSERT_OBJCEQ(request.allHTTPHeaderFields[@"Accept"], @"application/xml,text/html");
     ASSERT_OBJCEQ(request.allHTTPHeaderFields[@"accept"], @"application/xml,text/html");
+
+    // Setup a new field
+    [request setValue:@"for=192.0.2.43" forHTTPHeaderField:@"Forwarded"];
+    ASSERT_OBJCEQ(request.allHTTPHeaderFields[@"Forwarded"], @"for=192.0.2.43");
+
+    // Adding to @forwarded should sync with @Forwarded
+    [request addValue:@"by=203.0.113.43" forHTTPHeaderField:@"FORWARDED"];
+    ASSERT_OBJCEQ(request.allHTTPHeaderFields[@"FORWARDED"], @"for=192.0.2.43,by=203.0.113.43");
+    ASSERT_OBJCEQ(request.allHTTPHeaderFields[@"Forwarded"], @"for=192.0.2.43,by=203.0.113.43");
+
+    // Setup a new field
+    [request addValue:@"en.wikipedia.org:8080" forHTTPHeaderField:@"host"];
+    ASSERT_OBJCEQ(request.allHTTPHeaderFields[@"host"], @"en.wikipedia.org:8080");
+    ASSERT_OBJCEQ(request.allHTTPHeaderFields[@"Host"], @"en.wikipedia.org:8080");
 }
 
 TEST(NSURLRequest, Copy) {
