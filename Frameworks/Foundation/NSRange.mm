@@ -54,7 +54,7 @@ NSRange NSRangeFromString(NSString* s) {
 
     const char* input = strpbrk([s UTF8String], "0123456789");
     if (input) {
-        sscanf(input, "%llu%*[^0-9]%llu", &position, &length);
+        sscanf_s(input, "%llu%*[^0-9]%llu", &position, &length);
     }
 
     return NSMakeRange(position, length);
