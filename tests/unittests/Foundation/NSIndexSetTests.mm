@@ -19,7 +19,7 @@
 
 void verifyIndexSetEqualsArray(NSArray* expected, NSIndexSet* actual) {
     __block unsigned int callCount = 0;
-    NSMutableIndexSet* expectedIndexSet = [[[NSMutableIndexSet alloc] init] autorelease];
+    NSMutableIndexSet* expectedIndexSet = [NSMutableIndexSet indexSet];
 
     [actual enumerateIndexesUsingBlock:^(NSUInteger index, BOOL* stop) {
         ASSERT_OBJCEQ([expected objectAtIndex:callCount++], [NSNumber numberWithUnsignedInt:index]);
@@ -31,8 +31,8 @@ void verifyIndexSetEqualsArray(NSArray* expected, NSIndexSet* actual) {
 }
 
 TEST(NSIndexSet, AddIndexesInRange) {
-    NSMutableIndexSet* indexSet = [[NSMutableIndexSet new] autorelease];
-    NSMutableIndexSet* expectedIndexSet = [[NSMutableIndexSet new] autorelease];
+    NSMutableIndexSet* indexSet = [NSMutableIndexSet indexSet];
+    NSMutableIndexSet* expectedIndexSet = [NSMutableIndexSet indexSet];
 
     LOG_INFO("Basic addIndexesInRange operation tests of NSIndexSet");
 
