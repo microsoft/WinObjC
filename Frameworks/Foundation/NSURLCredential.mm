@@ -58,6 +58,10 @@
 - (instancetype)initWithIdentity:(SecIdentityRef)identity
                     certificates:(NSArray*)certArray
                      persistence:(NSURLCredentialPersistence)persistence {
+    if (!identity) {
+        [self release];
+        return nil;
+    }
     if (self = [self _initWithPersistence:persistence]) {
         _identity = identity;
         _certificates = [certArray copy];
