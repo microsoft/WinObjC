@@ -225,17 +225,8 @@ static bool loadImageFromWICFrame(UIImage* dest, IWICImagingFactory* pFactory, I
 
     if (SUCCEEDED(hr)) {
         CGColorSpaceRef clrRgb = CGColorSpaceCreateDeviceRGB();
-        dest->m_pImage = CGImageCreate(width,
-                                       height,
-                                       8,
-                                       32,
-                                       width * 4,
-                                       clrRgb,
-                                       kCGImageAlphaLast,
-                                       nil,
-                                       NULL,
-                                       false,
-                                       kCGRenderingIntentDefault);
+        dest->m_pImage =
+            CGImageCreate(width, height, 8, 32, width * 4, clrRgb, kCGImageAlphaLast, nil, NULL, false, kCGRenderingIntentDefault);
         CGColorSpaceRelease(clrRgb);
 
         hr = pFactory->CreateFormatConverter(&pFormatConverter);
@@ -843,6 +834,8 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
         }
 
         if (dstRightCap) {
+            CGContextDrawImageRect(context,
+                                   cgImg,
                                    CGRectMake((srcWidth - srcRightCap), srcHeight, srcRightCap, -srcBotCap),
                                    CGRectMake((dstX + dstWidth - dstRightCap), dstY, dstRightCap, dstBotCap));
         }
