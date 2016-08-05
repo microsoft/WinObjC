@@ -123,4 +123,11 @@
     return [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
 }
 
+- (void)dealloc {
+    [_HTTPCookieStorage release];
+    [_URLCache release];
+    [_URLCredentialStorage release];
+    [super dealloc];
+}
+
 @end
