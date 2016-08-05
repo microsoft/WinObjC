@@ -27,7 +27,7 @@
 
 TEST(NSURLResponse, URL) {
     NSURL* url = [NSURL URLWithString:@"a/test/path"];
-    NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"txt" expectedContentLength:0 textEncodingName:nil] autorelease];
+    NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
     ASSERT_OBJCEQ_MSG(url, res.URL, @"should be the expected url");
 }
 
@@ -71,21 +71,35 @@ TEST(NSURLResponse, TextEncodingName) {
     ASSERT_OBJCEQ(nil, res2.textEncodingName);
 }
 
-TEST(NSURLResponse, SuggestedFilename) {
+// Disabled pending GH#832; we do not respect the incoming MIME type when generating filenames. OS X does.
+OSX_DISABLED_TEST(NSURLResponse, SuggestedFilename) {
     NSURL* url = [NSURL URLWithString:@"a/test/name.extension"];
-    NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"txt" expectedContentLength:0 textEncodingName:nil] autorelease];
+    NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
     ASSERT_OBJCEQ(@"name.extension", res.suggestedFilename);
 }
 
-TEST(NSURLResponse, SuggestedFilename_2) {
+// Disabled pending GH#832; we do not respect the incoming MIME type when generating filenames. OS X does.
+OSX_DISABLED_TEST(NSURLResponse, SuggestedFilename_QueryParameter) {
     NSURL* url = [NSURL URLWithString:@"a/test/name.extension?foo=bar"];
-    NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"txt" expectedContentLength:0 textEncodingName:nil] autorelease];
+    NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
     ASSERT_OBJCEQ(@"name.extension", res.suggestedFilename);
 }
 
-TEST(NSURLResponse, SuggestedFilename_3) {
+TEST(NSURLResponse, SuggestedFilename_MatchingMIME) {
+    NSURL* url = [NSURL URLWithString:@"a/test/name.extension.txt"];
+    NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
+    ASSERT_OBJCEQ(@"name.extension.txt", res.suggestedFilename);
+}
+
+TEST(NSURLResponse, SuggestedFilename_QueryParameter_MatchingMIME) {
+    NSURL* url = [NSURL URLWithString:@"a/test/name.extension.txt?foo=bar"];
+    NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
+    ASSERT_OBJCEQ(@"name.extension.txt", res.suggestedFilename);
+}
+
+TEST(NSURLResponse, SuggestedFilename_NoFilename) {
     NSURL* url = [NSURL URLWithString:@"a://bar"];
-    NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"txt" expectedContentLength:0 textEncodingName:nil] autorelease];
+    NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
     ASSERT_OBJCEQ(@"Unknown", res.suggestedFilename);
 }
 
@@ -262,7 +276,7 @@ TEST(NSHTTPURLResponse, SuggestedFilename_UnusualCharacter) {
     auto f = @{ @"Content-Disposition" : @"attachment; filename=\";.ext\"" };
     NSHTTPURLResponse* response =
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
-    ASSERT_OBJCEQ(@"_.ext", response.suggestedFilename); // Differs from reference platform because ; is an illegal filename character
+    ASSERT_OBJCEQ(@";.ext", response.suggestedFilename);
 }
 
 TEST(NSHTTPURLResponse, SuggestedFilename_MultipleFilenamesInResponse) {
@@ -321,7 +335,7 @@ TEST(NSHTTPURLResponse, MIMETypeAndCharacterEncoding_Both) {
 // Archival
 TEST(NSURLResponse, CanBeArchived) {
     NSURLResponse* expected = [[[NSURLResponse alloc] initWithURL:[NSURL URLWithString:@"test"]
-                                                MIMEType:@"txt"
+                                                MIMEType:@"text/plain"
                                                 expectedContentLength:100
                                                 textEncodingName:@"utf8"] autorelease];
 

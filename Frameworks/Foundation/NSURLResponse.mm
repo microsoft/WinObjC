@@ -30,7 +30,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 @implementation NSURLResponse
 
-static NSString* const s_invalidFileNameChars = @"\\/:;*\"<>|?";
+static NSString* const s_invalidFileNameChars = @"\\/:*\"<>|?";
 static NSString* const s_unknownFileName = @"Unknown";
 static NSString* const s_defaultMimeType = @"application/octet-stream";
 static NSString* const s_NSExpectedContentLength = @"NS.expectedContentLength";
