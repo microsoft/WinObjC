@@ -54,15 +54,18 @@
     @synchronized(self) {
         [self _lazyInitAllHTTPHeaderFields];
 
-        // Update any case-insensitive variants of headerName from the dictionary
+        // Update any case-insensitive variants of headerName in the dictionary
         for (NSString* key in _allHTTPHeaderFields.allKeys) {
             if ([headerName caseInsensitiveCompare:key] == NSOrderedSame) {
                 [_allHTTPHeaderFields setObject:[value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] forKey:key];
             }
         }
 
-        // Update the case-sensitive variant of headerName in the dictionary
-        [_allHTTPHeaderFields setObject:[value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] forKey:headerName];
+        if (![_allHTTPHeaderFields objectForKey:headerName]) {
+            // Update the case-sensitive variant of headerName in the dictionary
+            [_allHTTPHeaderFields setObject:[value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]
+                                     forKey:headerName];
+        }
     }
 }
 
