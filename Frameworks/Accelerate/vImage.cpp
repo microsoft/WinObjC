@@ -15,13 +15,16 @@
 //
 //******************************************************************************
 
+#include "Accelerate/vImage.h"
+#include "ErrorHandling.h"
+#include "LoggingNative.h"
 #include <new>
-#include "Accelerate\vImage.h"
+
+static const wchar_t* TAG = L"vImage";
 
 /**
 @Status Interoperable
 */
-
 vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
                                         const vImage_Buffer* dest,
                                         void* tempBuffer,
@@ -41,8 +44,8 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
         return kvImageInvalidOffset_Y;
     } else if ((srcOffsetToROI_Y + dest->height > src->height) || (srcOffsetToROI_X + dest->width > src->width)) {
         return kvImageRoiLargerThanInputBuffer;
-    } else if (!(flags & kvImageCopyInPlace) && !(flags & kvImageBackgroundColorFill) &&
-               !(flags & kvImageEdgeExtend) && !(flags & kvImageTruncateKernel)) {
+    } else if (!(flags & kvImageCopyInPlace) && !(flags & kvImageBackgroundColorFill) && !(flags & kvImageEdgeExtend) &&
+               !(flags & kvImageTruncateKernel)) {
         return kvImageInvalidEdgeStyle;
     }
 
@@ -51,11 +54,11 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
     //  Caveat: We return kvImageInvalidParameter for height, width, srcOffsetToROI_X, and srcOffsetToROI_Y >=2^31
     //  For 32 bit OS, we don't expect size >= 2^31. Hence it is not supported in current release.
     //  TODO for 64-bit
-    if (src->height > maxVal || src->width > maxVal || dest->height > maxVal || dest->width > maxVal
-        || srcOffsetToROI_X > maxVal || srcOffsetToROI_Y > maxVal || kernel_height> maxVal || kernel_width > maxVal) {
+    if (src->height > maxVal || src->width > maxVal || dest->height > maxVal || dest->width > maxVal || srcOffsetToROI_X > maxVal ||
+        srcOffsetToROI_Y > maxVal || kernel_height > maxVal || kernel_width > maxVal) {
         return kvImageInvalidParameter;
     }
-    
+
     int KW_d2 = kernel_width / 2;
     int KH_d2 = kernel_height / 2;
 
@@ -95,8 +98,9 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
     //  Pointer to access the temporary buffer data.
     Pixel_8888_s* temp_buf;
     bool tempBuffer_flag = 0;
+
     if (tempBuffer == nullptr) {
-        temp_buf = new(std::nothrow) Pixel_8888_s[(dest->height + (top + below) * dest->width)];
+        temp_buf = new (std::nothrow) Pixel_8888_s[(dest->height + (top + below) * dest->width)];
         if (temp_buf == nullptr) {
             return kvImageMemoryAllocationError;
         }
@@ -113,7 +117,7 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
     size_t src_rowstride = src->rowBytes / sizeof(Pixel_8888);
     size_t dest_rowstride = dest->rowBytes / sizeof(Pixel_8888);
 
-    //  This block deals with code for flag kvImageCopyInPlace, which require the pixel to be copied as is 
+    //  This block deals with code for flag kvImageCopyInPlace, which require the pixel to be copied as is
     //  from source image when the kernel does not overlap with the image data
     if (flags & kvImageCopyInPlace) {
         bool sum_flag = 0;
@@ -129,7 +133,6 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
             sum[3] = 0;
 
             for (uint32_t j = 0; j < dest->width; ++j, src_j++) {
-
                 //  Copying the pixel data as is from source for no kernel overlap section
                 if (j < start_j || j > end_j) {
                     dest_buf[i * dest_rowstride + j] = src_buf[src_i * src_rowstride + src_j];
@@ -143,14 +146,14 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
                             sum[3] += src_buf[src_i * src_rowstride + src_j + k].val[3];
                         }
                     } else {
-                        sum[0] += -src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[0]
-                            + src_buf[src_i * src_rowstride + src_j + KW_d2].val[0];
-                        sum[1] += -src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[1]
-                            + src_buf[src_i * src_rowstride + src_j + KW_d2].val[1];
-                        sum[2] += -src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[2]
-                            + src_buf[src_i * src_rowstride + src_j + KW_d2].val[2];
-                        sum[3] += -src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[3]
-                            + src_buf[src_i * src_rowstride + src_j + KW_d2].val[3];
+                        sum[0] += -src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[0] +
+                                  src_buf[src_i * src_rowstride + src_j + KW_d2].val[0];
+                        sum[1] += -src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[1] +
+                                  src_buf[src_i * src_rowstride + src_j + KW_d2].val[1];
+                        sum[2] += -src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[2] +
+                                  src_buf[src_i * src_rowstride + src_j + KW_d2].val[2];
+                        sum[3] += -src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[3] +
+                                  src_buf[src_i * src_rowstride + src_j + KW_d2].val[3];
                     }
 
                     dest_buf[i * dest_rowstride + j].val[0] = sum[0] > (255 * kernel_width) ? 255 : sum[0] / kernel_width;
@@ -172,10 +175,9 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
             sum[3] = 0;
 
             for (uint32_t j = 0; j < dest->width; ++j, src_j++) {
-
                 //  Copying the pixel data as is from source for no kernel overlap section
                 if (j < start_j || j > end_j) {
-                    temp_buf[(top + i)*dest_rowstride] = src_buf[src_i * src_rowstride + src_j];
+                    temp_buf[(top + i) * dest_rowstride] = src_buf[src_i * src_rowstride + src_j];
                 } else {
                     if (sum_flag == 0) {
                         sum_flag = 1;
@@ -186,14 +188,14 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
                             sum[3] += src_buf[src_i * src_rowstride + src_j + k].val[3];
                         }
                     } else {
-                        sum[0] = sum[0] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[0]
-                            + src_buf[src_i * src_rowstride + src_j + KW_d2].val[0];
-                        sum[1] = sum[1] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[1]
-                            + src_buf[src_i * src_rowstride + src_j + KW_d2].val[1];
-                        sum[2] = sum[2] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[2]
-                            + src_buf[src_i * src_rowstride + src_j + KW_d2].val[2];
-                        sum[3] = sum[3] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[3]
-                            + src_buf[src_i * src_rowstride + src_j + KW_d2].val[3];
+                        sum[0] = sum[0] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[0] +
+                                 src_buf[src_i * src_rowstride + src_j + KW_d2].val[0];
+                        sum[1] = sum[1] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[1] +
+                                 src_buf[src_i * src_rowstride + src_j + KW_d2].val[1];
+                        sum[2] = sum[2] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[2] +
+                                 src_buf[src_i * src_rowstride + src_j + KW_d2].val[2];
+                        sum[3] = sum[3] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[3] +
+                                 src_buf[src_i * src_rowstride + src_j + KW_d2].val[3];
                     }
 
                     temp_buf[(top + i) * dest_rowstride + j].val[0] = sum[0] > (255 * kernel_width) ? 255 : sum[0] / kernel_width;
@@ -215,7 +217,6 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
             sum[3] = 0;
 
             for (uint32_t j = 0; j < dest->width; ++j, src_j++) {
-
                 //  Copying the pixel data as is from source for no kernel overlap section
                 if (j < start_j || j > end_j) {
                     temp_buf[(top + (i - dest->height)) * dest_rowstride + j] = src_buf[src_i * src_rowstride + src_j];
@@ -229,24 +230,24 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
                             sum[3] += src_buf[src_i * src_rowstride + src_j + k].val[3];
                         }
                     } else {
-                        sum[0] = sum[0] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[0]
-                            + src_buf[src_i * src_rowstride + src_j + KW_d2].val[0];
-                        sum[1] = sum[1] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[1]
-                            + src_buf[src_i * src_rowstride + src_j + KW_d2].val[1];
-                        sum[2] = sum[2] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[2]
-                            + src_buf[src_i * src_rowstride + src_j + KW_d2].val[2];
-                        sum[3] = sum[3] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[3]
-                            + src_buf[src_i * src_rowstride + src_j + KW_d2].val[3];
+                        sum[0] = sum[0] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[0] +
+                                 src_buf[src_i * src_rowstride + src_j + KW_d2].val[0];
+                        sum[1] = sum[1] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[1] +
+                                 src_buf[src_i * src_rowstride + src_j + KW_d2].val[1];
+                        sum[2] = sum[2] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[2] +
+                                 src_buf[src_i * src_rowstride + src_j + KW_d2].val[2];
+                        sum[3] = sum[3] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[3] +
+                                 src_buf[src_i * src_rowstride + src_j + KW_d2].val[3];
                     }
 
-                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[0]
-                        = sum[0] > (255 * kernel_width) ? 255 : sum[0] / kernel_width;
-                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[1]
-                        = sum[1] > (255 * kernel_width) ? 255 : sum[1] / kernel_width;
-                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[2]
-                        = sum[2] > (255 * kernel_width) ? 255 : sum[2] / kernel_width;
-                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[3]
-                        = sum[3] > (255 * kernel_width) ? 255 : sum[3] / kernel_width;
+                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[0] =
+                        sum[0] > (255 * kernel_width) ? 255 : sum[0] / kernel_width;
+                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[1] =
+                        sum[1] > (255 * kernel_width) ? 255 : sum[1] / kernel_width;
+                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[2] =
+                        sum[2] > (255 * kernel_width) ? 255 : sum[2] / kernel_width;
+                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[3] =
+                        sum[3] > (255 * kernel_width) ? 255 : sum[3] / kernel_width;
                 }
             }
         }
@@ -301,14 +302,14 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
                     }
                 }
 
-                temp_buf[(top + below) * dest_rowstride + i - start_i].val[0]
-                    = sum[0] > (255 * kernel_height) ? 255 : sum[0] / kernel_height;
-                temp_buf[(top + below) * dest_rowstride + i - start_i].val[1]
-                    = sum[1] > (255 * kernel_height) ? 255 : sum[1] / kernel_height;
-                temp_buf[(top + below) * dest_rowstride + i - start_i].val[2]
-                    = sum[2] > (255 * kernel_height) ? 255 : sum[2] / kernel_height;
-                temp_buf[(top + below) * dest_rowstride + i - start_i].val[3]
-                    = sum[3] > (255 * kernel_height) ? 255 : sum[3] / kernel_height;
+                temp_buf[(top + below) * dest_rowstride + i - start_i].val[0] =
+                    sum[0] > (255 * kernel_height) ? 255 : sum[0] / kernel_height;
+                temp_buf[(top + below) * dest_rowstride + i - start_i].val[1] =
+                    sum[1] > (255 * kernel_height) ? 255 : sum[1] / kernel_height;
+                temp_buf[(top + below) * dest_rowstride + i - start_i].val[2] =
+                    sum[2] > (255 * kernel_height) ? 255 : sum[2] / kernel_height;
+                temp_buf[(top + below) * dest_rowstride + i - start_i].val[3] =
+                    sum[3] > (255 * kernel_height) ? 255 : sum[3] / kernel_height;
             }
 
             for (uint32_t i = start_i; i <= end_i; ++i) {
@@ -333,7 +334,7 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
         }
     }
 
-    //  This block deals with code for flag kvImageTruncateKernel, which require the kernel to be truncated 
+    //  This block deals with code for flag kvImageTruncateKernel, which require the kernel to be truncated
     //  when it does not overlap with the image data
     else if (flags & kvImageTruncateKernel) {
         uint32_t divisor;
@@ -355,7 +356,7 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
                 sum[3] += src_buf[src_i * src_rowstride + src_j + k].val[3];
             }
 
-            if (i<0) {
+            if (i < 0) {
                 temp_buf[(top + i) * dest_rowstride].val[0] = sum[0] > (255 * divisor) ? 255 : sum[0] / divisor;
                 temp_buf[(top + i) * dest_rowstride].val[1] = sum[1] > (255 * divisor) ? 255 : sum[1] / divisor;
                 temp_buf[(top + i) * dest_rowstride].val[2] = sum[2] > (255 * divisor) ? 255 : sum[2] / divisor;
@@ -382,14 +383,14 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
                     sum[2] += src_buf[src_i * src_rowstride + src_j + KW_d2].val[2];
                     sum[3] += src_buf[src_i * src_rowstride + src_j + KW_d2].val[3];
                 } else if (j <= end_j) {
-                    sum[0] += src_buf[src_i * src_rowstride + src_j + KW_d2].val[0]
-                        - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[0];
-                    sum[1] += src_buf[src_i * src_rowstride + src_j + KW_d2].val[1]
-                        - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[1];
-                    sum[2] += src_buf[src_i * src_rowstride + src_j + KW_d2].val[2]
-                        - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[2];
-                    sum[3] += src_buf[src_i * src_rowstride + src_j + KW_d2].val[3]
-                        - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[3];
+                    sum[0] +=
+                        src_buf[src_i * src_rowstride + src_j + KW_d2].val[0] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[0];
+                    sum[1] +=
+                        src_buf[src_i * src_rowstride + src_j + KW_d2].val[1] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[1];
+                    sum[2] +=
+                        src_buf[src_i * src_rowstride + src_j + KW_d2].val[2] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[2];
+                    sum[3] +=
+                        src_buf[src_i * src_rowstride + src_j + KW_d2].val[3] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[3];
                 } else {
                     divisor--;
                     sum[0] -= src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[0];
@@ -404,14 +405,10 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
                     temp_buf[(top + i) * dest_rowstride + j].val[2] = sum[2] > (255 * divisor) ? 255 : sum[2] / divisor;
                     temp_buf[(top + i) * dest_rowstride + j].val[3] = sum[3] > (255 * divisor) ? 255 : sum[3] / divisor;
                 } else if (i >= static_cast<int>(dest->height)) {
-                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[0]
-                        = sum[0] > (255 * divisor) ? 255 : sum[0] / divisor;
-                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[1]
-                        = sum[1] > (255 * divisor) ? 255 : sum[1] / divisor;
-                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[2]
-                        = sum[2] > (255 * divisor) ? 255 : sum[2] / divisor;
-                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[3]
-                        = sum[3] > (255 * divisor) ? 255 : sum[3] / divisor;
+                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[0] = sum[0] > (255 * divisor) ? 255 : sum[0] / divisor;
+                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[1] = sum[1] > (255 * divisor) ? 255 : sum[1] / divisor;
+                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[2] = sum[2] > (255 * divisor) ? 255 : sum[2] / divisor;
+                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[3] = sum[3] > (255 * divisor) ? 255 : sum[3] / divisor;
                 } else {
                     dest_buf[i * dest_rowstride + j].val[0] = sum[0] > (255 * divisor) ? 255 : sum[0] / divisor;
                     dest_buf[i * dest_rowstride + j].val[1] = sum[1] > (255 * divisor) ? 255 : sum[1] / divisor;
@@ -491,10 +488,9 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
         }
     }
 
-    //  This block deals with code for flag kvImageBackgroundColorFill, which requires all pixels outside image to be  
+    //  This block deals with code for flag kvImageBackgroundColorFill, which requires all pixels outside image to be
     //  set to the parameter backgroundColor
     else if (flags & kvImageBackgroundColorFill) {
-        
         if (backgroundColor == nullptr) {
             return kvImageNullPointerArgument;
         }
@@ -515,20 +511,16 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
                 sum[3] += src_buf[src_i * src_rowstride + src_j + k].val[3];
             }
 
-            if (i<0) {
+            if (i < 0) {
                 temp_buf[(top + i) * dest_rowstride].val[0] = sum[0] > (255 * kernel_width) ? 255 : sum[0] / kernel_width;
                 temp_buf[(top + i) * dest_rowstride].val[1] = sum[1] > (255 * kernel_width) ? 255 : sum[1] / kernel_width;
                 temp_buf[(top + i) * dest_rowstride].val[2] = sum[2] > (255 * kernel_width) ? 255 : sum[2] / kernel_width;
                 temp_buf[(top + i) * dest_rowstride].val[3] = sum[3] > (255 * kernel_width) ? 255 : sum[3] / kernel_width;
             } else if (i >= static_cast<int>(dest->height)) {
-                temp_buf[(top + (i - dest->height)) * dest_rowstride].val[0]
-                    = sum[0] > (255 * kernel_width) ? 255 : sum[0] / kernel_width;
-                temp_buf[(top + (i - dest->height)) * dest_rowstride].val[1]
-                    = sum[1] > (255 * kernel_width) ? 255 : sum[1] / kernel_width;
-                temp_buf[(top + (i - dest->height)) * dest_rowstride].val[2]
-                    = sum[2] > (255 * kernel_width) ? 255 : sum[2] / kernel_width;
-                temp_buf[(top + (i - dest->height)) * dest_rowstride].val[3]
-                    = sum[3] > (255 * kernel_width) ? 255 : sum[3] / kernel_width;
+                temp_buf[(top + (i - dest->height)) * dest_rowstride].val[0] = sum[0] > (255 * kernel_width) ? 255 : sum[0] / kernel_width;
+                temp_buf[(top + (i - dest->height)) * dest_rowstride].val[1] = sum[1] > (255 * kernel_width) ? 255 : sum[1] / kernel_width;
+                temp_buf[(top + (i - dest->height)) * dest_rowstride].val[2] = sum[2] > (255 * kernel_width) ? 255 : sum[2] / kernel_width;
+                temp_buf[(top + (i - dest->height)) * dest_rowstride].val[3] = sum[3] > (255 * kernel_width) ? 255 : sum[3] / kernel_width;
             } else {
                 dest_buf[i * dest_rowstride].val[0] = sum[0] > (255 * kernel_width) ? 255 : sum[0] / kernel_width;
                 dest_buf[i * dest_rowstride].val[1] = sum[1] > (255 * kernel_width) ? 255 : sum[1] / kernel_width;
@@ -545,14 +537,14 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
                     sum[2] += src_buf[src_i * src_rowstride + src_j + KW_d2].val[2] - backgroundColor[2];
                     sum[3] += src_buf[src_i * src_rowstride + src_j + KW_d2].val[3] - backgroundColor[3];
                 } else if (j <= end_j) {
-                    sum[0] += src_buf[src_i * src_rowstride + src_j + KW_d2].val[0]
-                        - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[0];
-                    sum[1] += src_buf[src_i * src_rowstride + src_j + KW_d2].val[1]
-                        - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[1];
-                    sum[2] += src_buf[src_i * src_rowstride + src_j + KW_d2].val[2]
-                        - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[2];
-                    sum[3] += src_buf[src_i * src_rowstride + src_j + KW_d2].val[3]
-                        - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[3];
+                    sum[0] +=
+                        src_buf[src_i * src_rowstride + src_j + KW_d2].val[0] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[0];
+                    sum[1] +=
+                        src_buf[src_i * src_rowstride + src_j + KW_d2].val[1] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[1];
+                    sum[2] +=
+                        src_buf[src_i * src_rowstride + src_j + KW_d2].val[2] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[2];
+                    sum[3] +=
+                        src_buf[src_i * src_rowstride + src_j + KW_d2].val[3] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[3];
                 } else {
                     sum[0] += -src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[0] + backgroundColor[0];
                     sum[1] += -src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[1] + backgroundColor[1];
@@ -566,14 +558,14 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
                     temp_buf[(top + i) * dest_rowstride + j].val[2] = sum[2] > (255 * kernel_width) ? 255 : sum[2] / kernel_width;
                     temp_buf[(top + i) * dest_rowstride + j].val[3] = sum[3] > (255 * kernel_width) ? 255 : sum[3] / kernel_width;
                 } else if (i >= static_cast<int>(dest->height)) {
-                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[0]
-                        = sum[0] > (255 * kernel_width) ? 255 : sum[0] / kernel_width;
-                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[1]
-                        = sum[1] > (255 * kernel_width) ? 255 : sum[1] / kernel_width;
-                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[2]
-                        = sum[2] > (255 * kernel_width) ? 255 : sum[2] / kernel_width;
-                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[3]
-                        = sum[3] > (255 * kernel_width) ? 255 : sum[3] / kernel_width;
+                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[0] =
+                        sum[0] > (255 * kernel_width) ? 255 : sum[0] / kernel_width;
+                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[1] =
+                        sum[1] > (255 * kernel_width) ? 255 : sum[1] / kernel_width;
+                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[2] =
+                        sum[2] > (255 * kernel_width) ? 255 : sum[2] / kernel_width;
+                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[3] =
+                        sum[3] > (255 * kernel_width) ? 255 : sum[3] / kernel_width;
                 } else {
                     dest_buf[i * dest_rowstride + j].val[0] = sum[0] > (255 * kernel_width) ? 255 : sum[0] / kernel_width;
                     dest_buf[i * dest_rowstride + j].val[1] = sum[1] > (255 * kernel_width) ? 255 : sum[1] / kernel_width;
@@ -656,10 +648,9 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
         }
     }
 
-    //  This block deals with code for flag kvImageEdgeExtend, which requires all pixels outside image to be  
+    //  This block deals with code for flag kvImageEdgeExtend, which requires all pixels outside image to be
     //  replicated by the edges of the image outwards.
     else if (flags & kvImageEdgeExtend) {
-
         //  For storing the first and the last pixel if the image is to be extended
         Pixel_8888_s first_pixel;
         Pixel_8888_s last_pixel;
@@ -682,20 +673,16 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
                 sum[3] += src_buf[src_i * src_rowstride + src_j + k].val[3];
             }
 
-            if (i<0) {
+            if (i < 0) {
                 temp_buf[(top + i) * dest_rowstride].val[0] = sum[0] > (255 * kernel_width) ? 255 : sum[0] / kernel_width;
                 temp_buf[(top + i) * dest_rowstride].val[1] = sum[1] > (255 * kernel_width) ? 255 : sum[1] / kernel_width;
                 temp_buf[(top + i) * dest_rowstride].val[2] = sum[2] > (255 * kernel_width) ? 255 : sum[2] / kernel_width;
                 temp_buf[(top + i) * dest_rowstride].val[3] = sum[3] > (255 * kernel_width) ? 255 : sum[3] / kernel_width;
             } else if (i >= static_cast<int>(dest->height)) {
-                temp_buf[(top + (i - dest->height)) * dest_rowstride].val[0]
-                    = sum[0] > (255 * kernel_width) ? 255 : sum[0] / kernel_width;
-                temp_buf[(top + (i - dest->height)) * dest_rowstride].val[1]
-                    = sum[1] > (255 * kernel_width) ? 255 : sum[1] / kernel_width;
-                temp_buf[(top + (i - dest->height)) * dest_rowstride].val[2]
-                    = sum[2] > (255 * kernel_width) ? 255 : sum[2] / kernel_width;
-                temp_buf[(top + (i - dest->height)) * dest_rowstride].val[3]
-                    = sum[3] > (255 * kernel_width) ? 255 : sum[3] / kernel_width;
+                temp_buf[(top + (i - dest->height)) * dest_rowstride].val[0] = sum[0] > (255 * kernel_width) ? 255 : sum[0] / kernel_width;
+                temp_buf[(top + (i - dest->height)) * dest_rowstride].val[1] = sum[1] > (255 * kernel_width) ? 255 : sum[1] / kernel_width;
+                temp_buf[(top + (i - dest->height)) * dest_rowstride].val[2] = sum[2] > (255 * kernel_width) ? 255 : sum[2] / kernel_width;
+                temp_buf[(top + (i - dest->height)) * dest_rowstride].val[3] = sum[3] > (255 * kernel_width) ? 255 : sum[3] / kernel_width;
             } else {
                 dest_buf[i * dest_rowstride].val[0] = sum[0] > (255 * kernel_width) ? 255 : sum[0] / kernel_width;
                 dest_buf[i * dest_rowstride].val[1] = sum[1] > (255 * kernel_width) ? 255 : sum[1] / kernel_width;
@@ -712,14 +699,14 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
                     sum[2] += src_buf[src_i * src_rowstride + src_j + KW_d2].val[2] - first_pixel.val[2];
                     sum[3] += src_buf[src_i * src_rowstride + src_j + KW_d2].val[3] - first_pixel.val[3];
                 } else if (j <= end_j) {
-                    sum[0] += src_buf[src_i * src_rowstride + src_j + KW_d2].val[0]
-                        - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[0];
-                    sum[1] += src_buf[src_i * src_rowstride + src_j + KW_d2].val[1]
-                        - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[1];
-                    sum[2] += src_buf[src_i * src_rowstride + src_j + KW_d2].val[2]
-                        - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[2];
-                    sum[3] += src_buf[src_i * src_rowstride + src_j + KW_d2].val[3]
-                       - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[3];
+                    sum[0] +=
+                        src_buf[src_i * src_rowstride + src_j + KW_d2].val[0] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[0];
+                    sum[1] +=
+                        src_buf[src_i * src_rowstride + src_j + KW_d2].val[1] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[1];
+                    sum[2] +=
+                        src_buf[src_i * src_rowstride + src_j + KW_d2].val[2] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[2];
+                    sum[3] +=
+                        src_buf[src_i * src_rowstride + src_j + KW_d2].val[3] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[3];
                 } else {
                     sum[0] += last_pixel.val[0] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[0];
                     sum[1] += last_pixel.val[1] - src_buf[src_i * src_rowstride + src_j - KW_d2 - 1].val[1];
@@ -733,14 +720,14 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
                     temp_buf[(top + i) * dest_rowstride + j].val[2] = sum[2] > (255 * kernel_width) ? 255 : sum[2] / kernel_width;
                     temp_buf[(top + i) * dest_rowstride + j].val[3] = sum[3] > (255 * kernel_width) ? 255 : sum[3] / kernel_width;
                 } else if (i >= static_cast<int>(dest->height)) {
-                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[0]
-                        = sum[0] > (255 * kernel_width) ? 255 : sum[0] / kernel_width;
-                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[1]
-                        = sum[1] > (255 * kernel_width) ? 255 : sum[1] / kernel_width;
-                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[2]
-                        = sum[2] > (255 * kernel_width) ? 255 : sum[2] / kernel_width;
-                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[3]
-                        = sum[3] > (255 * kernel_width) ? 255 : sum[3] / kernel_width;
+                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[0] =
+                        sum[0] > (255 * kernel_width) ? 255 : sum[0] / kernel_width;
+                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[1] =
+                        sum[1] > (255 * kernel_width) ? 255 : sum[1] / kernel_width;
+                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[2] =
+                        sum[2] > (255 * kernel_width) ? 255 : sum[2] / kernel_width;
+                    temp_buf[(top + (i - dest->height)) * dest_rowstride + j].val[3] =
+                        sum[3] > (255 * kernel_width) ? 255 : sum[3] / kernel_width;
                 } else {
                     dest_buf[i * dest_rowstride + j].val[0] = sum[0] > (255 * kernel_width) ? 255 : sum[0] / kernel_width;
                     dest_buf[i * dest_rowstride + j].val[1] = sum[1] > (255 * kernel_width) ? 255 : sum[1] / kernel_width;
@@ -845,7 +832,6 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
     return kvImageNoError;
 }
 
-
 vImage_Error vImageMatrixMultiply_ARGB8888(const vImage_Buffer* src,
                                            const vImage_Buffer* dest,
                                            const int16_t matrix[16],
@@ -893,7 +879,6 @@ vImage_Error vImageMatrixMultiply_ARGB8888(const vImage_Buffer* src,
         int32_t pre_b3 = pre_bias_p[3];
 
         for (vImagePixelCount i = 0; i < height; ++i) {
-
             for (vImagePixelCount j = 0; j < width; ++j) {
                 struct Pixel_8888_s pixel = in[i * in_rowstride + j];
                 int32_t prod[4];
@@ -922,9 +907,7 @@ vImage_Error vImageMatrixMultiply_ARGB8888(const vImage_Buffer* src,
             }
         }
     } else {
-
         for (vImagePixelCount i = 0; i < height; ++i) {
-
             for (vImagePixelCount j = 0; j < width; ++j) {
                 struct Pixel_8888_s pixel = in[i * in_rowstride + j];
                 int32_t prod[4];
@@ -952,3 +935,779 @@ vImage_Error vImageMatrixMultiply_ARGB8888(const vImage_Buffer* src,
 
     return kvImageNoError;
 }
+
+/**
+@Status Interoperable
+@Notes Packed buffer byte order notation is little endian
+*/
+vImage_Error vImageConvert_ARGB8888toPlanar8(const vImage_Buffer* srcARGB,
+                                             const vImage_Buffer* destA,
+                                             const vImage_Buffer* destR,
+                                             const vImage_Buffer* destG,
+                                             const vImage_Buffer* destB,
+                                             vImage_Flags flags) {
+    if ((destA == nullptr) || (destR == nullptr) || (destG == nullptr) || (destB == nullptr) || (srcARGB == nullptr)) {
+        TraceError(TAG, L"One or more NULL parameters passed in");
+        return kvImageNullPointerArgument;
+    }
+
+    const unsigned int alphaRowPitch = destA->rowBytes;
+    const unsigned int redRowPitch = destR->rowBytes;
+    const unsigned int greenRowPitch = destG->rowBytes;
+    const unsigned int blueRowPitch = destB->rowBytes;
+    const unsigned int pixelRowPitch = srcARGB->rowBytes;
+    const unsigned int width = srcARGB->width;
+    const unsigned int height = srcARGB->height;
+
+    FAIL_FAST_IF_FALSE((width > 0) && (height > 0));
+    FAIL_FAST_IF_FALSE(alphaRowPitch >= width);
+    FAIL_FAST_IF_FALSE(redRowPitch >= width);
+    FAIL_FAST_IF_FALSE(greenRowPitch >= width);
+    FAIL_FAST_IF_FALSE(blueRowPitch >= width);
+    FAIL_FAST_IF_FALSE(pixelRowPitch >= width * sizeof(Pixel_8888_s));
+
+    if ((height != destA->height) || (height != destR->height) || (height != destG->height) || (height != destB->height) ||
+        (width != destA->width) || (width != destR->width) || (width != destG->width) || (width != destB->width)) {
+        TraceError(TAG, L"Buffer sizes don't match");
+        return kvImageBufferSizeMismatch;
+    }
+
+    unsigned char* pixelRowBytePtr = reinterpret_cast<unsigned char*>(srcARGB->data);
+    unsigned char* alphaRowBytePtr = reinterpret_cast<unsigned char*>(destA->data);
+    unsigned char* redRowBytePtr = reinterpret_cast<unsigned char*>(destR->data);
+    unsigned char* greenRowBytePtr = reinterpret_cast<unsigned char*>(destG->data);
+    unsigned char* blueRowBytePtr = reinterpret_cast<unsigned char*>(destB->data);
+
+#if (VIMAGE_SSE == 1)
+    const unsigned int pixelsPerBlock = c_vImageBlockSizeBytes;
+
+    if ((c_vImageUseSse2 == true) && (width >= pixelsPerBlock)) {
+        const unsigned int blocksPerRow = width / pixelsPerBlock + ((width % pixelsPerBlock != 0) ? 1 : 0);
+
+        __m128i *pixelRowM128Ptr, *alphaRowM128Ptr, *redRowM128Ptr, *greenRowM128Ptr, *blueRowM128Ptr;
+        __m128i vPixelBlocks[4], vBlocks02[2], vBlocks13[2], vBlocks_02A_13A[2], vBlocks_02B_13B[2];
+        __m128i vAlphaRedEven, vAlphaRedOdd, vGreenBlueEven, vGreenBlueOdd;
+        __m128i vAlpha, vRed, vGreen, vBlue;
+
+        for (unsigned int i = 0; i < height; i++) {
+            alphaRowM128Ptr = reinterpret_cast<__m128i*>(alphaRowBytePtr);
+            redRowM128Ptr = reinterpret_cast<__m128i*>(redRowBytePtr);
+            greenRowM128Ptr = reinterpret_cast<__m128i*>(greenRowBytePtr);
+            blueRowM128Ptr = reinterpret_cast<__m128i*>(blueRowBytePtr);
+            pixelRowM128Ptr = reinterpret_cast<__m128i*>(pixelRowBytePtr);
+
+            for (unsigned int j = 0; j < blocksPerRow; j++) {
+                vPixelBlocks[0] = _mm_loadu_si128(&pixelRowM128Ptr[0]);
+                vPixelBlocks[1] = _mm_loadu_si128(&pixelRowM128Ptr[1]);
+                vPixelBlocks[2] = _mm_loadu_si128(&pixelRowM128Ptr[2]);
+                vPixelBlocks[3] = _mm_loadu_si128(&pixelRowM128Ptr[3]);
+
+                // Interleave blocks 0 and 2
+                vBlocks02[0] = _mm_unpacklo_epi8(vPixelBlocks[0], vPixelBlocks[2]);
+                vBlocks02[1] = _mm_unpackhi_epi8(vPixelBlocks[0], vPixelBlocks[2]);
+
+                // Interleave blocks 1 and 3
+                vBlocks13[0] = _mm_unpacklo_epi8(vPixelBlocks[1], vPixelBlocks[3]);
+                vBlocks13[1] = _mm_unpackhi_epi8(vPixelBlocks[1], vPixelBlocks[3]);
+
+                // Interleave 02A and 13A
+                vBlocks_02A_13A[0] = _mm_unpacklo_epi8(vBlocks02[0], vBlocks13[0]);
+                vBlocks_02A_13A[1] = _mm_unpackhi_epi8(vBlocks02[0], vBlocks13[0]);
+
+                // Interleave 02B and 13B
+                vBlocks_02B_13B[0] = _mm_unpacklo_epi8(vBlocks02[1], vBlocks13[1]);
+                vBlocks_02B_13B[1] = _mm_unpackhi_epi8(vBlocks02[1], vBlocks13[1]);
+
+                // Interleave 02A_13A with 02B_13B to get 4 vectors with odd and even pairs of AR and GB components
+                vAlphaRedEven = _mm_unpacklo_epi8(vBlocks_02A_13A[0], vBlocks_02B_13B[0]);
+                vGreenBlueEven = _mm_unpackhi_epi8(vBlocks_02A_13A[0], vBlocks_02B_13B[0]);
+
+                vAlphaRedOdd = _mm_unpacklo_epi8(vBlocks_02A_13A[1], vBlocks_02B_13B[1]);
+                vGreenBlueOdd = _mm_unpackhi_epi8(vBlocks_02A_13A[1], vBlocks_02B_13B[1]);
+
+                // Interleave even and odd pairs to extract planar buffers
+                vAlpha = _mm_unpacklo_epi8(vAlphaRedEven, vAlphaRedOdd);
+                vRed = _mm_unpackhi_epi8(vAlphaRedEven, vAlphaRedOdd);
+                vGreen = _mm_unpacklo_epi8(vGreenBlueEven, vGreenBlueOdd);
+                vBlue = _mm_unpackhi_epi8(vGreenBlueEven, vGreenBlueOdd);
+
+                // Write planar data to memory
+                _mm_storeu_si128(&alphaRowM128Ptr[j], vAlpha);
+                _mm_storeu_si128(&redRowM128Ptr[j], vRed);
+                _mm_storeu_si128(&greenRowM128Ptr[j], vGreen);
+                _mm_storeu_si128(&blueRowM128Ptr[j], vBlue);
+
+                // Increment m128Ptr by 4 to get next 16 ARGB pixels (note: 4 ARGB pixels per m128 register)
+                pixelRowM128Ptr += 4;
+            }
+
+            alphaRowBytePtr += alphaRowPitch;
+            redRowBytePtr += redRowPitch;
+            greenRowBytePtr += greenRowPitch;
+            blueRowBytePtr += blueRowPitch;
+            pixelRowBytePtr += pixelRowPitch;
+        }
+    } else {
+#endif
+        Pixel_8888_s* pixelRowPixelPtr;
+
+        for (unsigned int i = 0; i < height; i++) {
+            pixelRowPixelPtr = reinterpret_cast<Pixel_8888_s*>(pixelRowBytePtr);
+
+            for (unsigned int j = 0; j < width; j++) {
+                alphaRowBytePtr[j] = pixelRowPixelPtr[j].val[0];
+                redRowBytePtr[j] = pixelRowPixelPtr[j].val[1];
+                greenRowBytePtr[j] = pixelRowPixelPtr[j].val[2];
+                blueRowBytePtr[j] = pixelRowPixelPtr[j].val[3];
+            }
+
+            alphaRowBytePtr += alphaRowPitch;
+            redRowBytePtr += redRowPitch;
+            greenRowBytePtr += greenRowPitch;
+            blueRowBytePtr += blueRowPitch;
+            pixelRowBytePtr += pixelRowPitch;
+        }
+#if (VIMAGE_SSE == 1)
+    }
+#endif
+
+    return kvImageNoError;
+}
+
+/**
+@Status Interoperable
+@Notes Packed buffer byte order notation is little endian
+*/
+vImage_Error vImageConvert_Planar8toARGB8888(const vImage_Buffer* srcA,
+                                             const vImage_Buffer* srcR,
+                                             const vImage_Buffer* srcG,
+                                             const vImage_Buffer* srcB,
+                                             const vImage_Buffer* dest,
+                                             vImage_Flags flags) {
+    if ((srcA == nullptr) || (srcR == nullptr) || (srcG == nullptr) || (srcB == nullptr) || (dest == nullptr)) {
+        TraceError(TAG, L"One or more NULL parameters passed in");
+        return kvImageNullPointerArgument;
+    }
+
+    const unsigned int alphaRowPitch = srcA->rowBytes;
+    const unsigned int redRowPitch = srcR->rowBytes;
+    const unsigned int greenRowPitch = srcG->rowBytes;
+    const unsigned int blueRowPitch = srcB->rowBytes;
+    const unsigned int pixelRowPitch = dest->rowBytes;
+    const unsigned int width = dest->width;
+    const unsigned int height = dest->height;
+
+    FAIL_FAST_IF_FALSE((width > 0) && (height > 0));
+    FAIL_FAST_IF_FALSE(alphaRowPitch >= width);
+    FAIL_FAST_IF_FALSE(redRowPitch >= width);
+    FAIL_FAST_IF_FALSE(greenRowPitch >= width);
+    FAIL_FAST_IF_FALSE(blueRowPitch >= width);
+    FAIL_FAST_IF_FALSE(pixelRowPitch >= width * sizeof(Pixel_8888_s));
+
+    if ((height != srcA->height) || (height != srcR->height) || (height != srcG->height) || (height != srcB->height) ||
+        (width != srcA->width) || (width != srcR->width) || (width != srcG->width) || (width != srcB->width)) {
+        TraceError(TAG, L"Buffer sizes don't match");
+        return kvImageBufferSizeMismatch;
+    }
+
+    unsigned char* pixelRowBytePtr = reinterpret_cast<unsigned char*>(dest->data);
+    unsigned char* alphaRowBytePtr = reinterpret_cast<unsigned char*>(srcA->data);
+    unsigned char* redRowBytePtr = reinterpret_cast<unsigned char*>(srcR->data);
+    unsigned char* greenRowBytePtr = reinterpret_cast<unsigned char*>(srcG->data);
+    unsigned char* blueRowBytePtr = reinterpret_cast<unsigned char*>(srcB->data);
+
+#if (VIMAGE_SSE == 1)
+    const unsigned int pixelsPerBlock = c_vImageBlockSizeBytes;
+
+    if ((c_vImageUseSse2 == true) && (width >= pixelsPerBlock)) {
+        const unsigned int blocksPerRow = width / pixelsPerBlock + ((width % pixelsPerBlock != 0) ? 1 : 0);
+
+        __m128i *pixelRowM128Ptr, *alphaRowM128Ptr, *redRowM128Ptr, *greenRowM128Ptr, *blueRowM128Ptr;
+        __m128i vA, vR, vG, vB, vAG[2], vRB[2], vARGB[4];
+
+        for (unsigned int i = 0; i < height; i++) {
+            alphaRowM128Ptr = reinterpret_cast<__m128i*>(alphaRowBytePtr);
+            redRowM128Ptr = reinterpret_cast<__m128i*>(redRowBytePtr);
+            greenRowM128Ptr = reinterpret_cast<__m128i*>(greenRowBytePtr);
+            blueRowM128Ptr = reinterpret_cast<__m128i*>(blueRowBytePtr);
+            pixelRowM128Ptr = reinterpret_cast<__m128i*>(pixelRowBytePtr);
+
+            for (unsigned int j = 0; j < blocksPerRow; j++) {
+                // Load 16 components of each plane into vectors
+                vA = _mm_loadu_si128(&alphaRowM128Ptr[j]);
+                vR = _mm_loadu_si128(&redRowM128Ptr[j]);
+                vG = _mm_loadu_si128(&greenRowM128Ptr[j]);
+                vB = _mm_loadu_si128(&blueRowM128Ptr[j]);
+
+                // Interleave A & G and R & B components to get AG & RB vectors
+                vAG[0] = _mm_unpacklo_epi8(vA, vG);
+                vAG[1] = _mm_unpackhi_epi8(vA, vG);
+                vRB[0] = _mm_unpacklo_epi8(vR, vB);
+                vRB[1] = _mm_unpackhi_epi8(vR, vB);
+
+                // Interleave AG & RB vectors to get ARGB pixels
+                vARGB[0] = _mm_unpacklo_epi8(vAG[0], vRB[0]);
+                vARGB[1] = _mm_unpackhi_epi8(vAG[0], vRB[0]);
+                vARGB[2] = _mm_unpacklo_epi8(vAG[1], vRB[1]);
+                vARGB[3] = _mm_unpackhi_epi8(vAG[1], vRB[1]);
+
+                // Write ARGB pixels to memory
+                _mm_storeu_si128(&pixelRowM128Ptr[0], vARGB[0]);
+                _mm_storeu_si128(&pixelRowM128Ptr[1], vARGB[1]);
+                _mm_storeu_si128(&pixelRowM128Ptr[2], vARGB[2]);
+                _mm_storeu_si128(&pixelRowM128Ptr[3], vARGB[3]);
+
+                // Increment m128Ptr by 4 to get next 16 ARGB pixels (note: 4 ARGB pixels per m128 register)
+                pixelRowM128Ptr += 4;
+            }
+
+            alphaRowBytePtr += alphaRowPitch;
+            redRowBytePtr   += redRowPitch;
+            greenRowBytePtr += greenRowPitch;
+            blueRowBytePtr  += blueRowPitch;
+            pixelRowBytePtr += pixelRowPitch;
+        }
+    } else {
+#endif
+        Pixel_8888_s* pixelRow;
+        for (unsigned int i = 0; i < height; i++) {
+            pixelRow = reinterpret_cast<Pixel_8888_s*>(pixelRowBytePtr);
+
+            for (unsigned int j = 0; j < width; j++) {
+                pixelRow[j].val[0] = alphaRowBytePtr[j];
+                pixelRow[j].val[1] = redRowBytePtr[j];
+                pixelRow[j].val[2] = greenRowBytePtr[j];
+                pixelRow[j].val[3] = blueRowBytePtr[j];
+            }
+
+            alphaRowBytePtr += alphaRowPitch;
+            redRowBytePtr += redRowPitch;
+            greenRowBytePtr += greenRowPitch;
+            blueRowBytePtr += blueRowPitch;
+            pixelRowBytePtr += pixelRowPitch;
+        }
+#if (VIMAGE_SSE == 1)
+    }
+#endif
+
+    return kvImageNoError;
+}
+
+/**
+@Status Interoperable
+@Notes Packed buffer byte order notation is little endian
+*/
+vImage_Error vImageConvert_Planar8toPlanarF(
+    const vImage_Buffer* src, const vImage_Buffer* dest, Pixel_F maxFloat, Pixel_F minFloat, vImage_Flags flags) {
+    if ((src == nullptr) || (dest == nullptr)) {
+        TraceError(TAG, L"One or more NULL parameters passed in");
+        return kvImageNullPointerArgument;
+    } else if ((src->width != dest->width) || (src->height != dest->height) || (dest->rowBytes < (dest->width * sizeof(Pixel_F)))) {
+        TraceError(TAG, L"Buffer sizes don't match");
+        return kvImageBufferSizeMismatch;
+    }
+
+    const unsigned int srcRowPitch = src->rowBytes;
+    const unsigned int destRowPitch = dest->rowBytes;
+    const unsigned int width = src->width;
+    const unsigned int height = src->height;
+
+    FAIL_FAST_IF_FALSE((width > 0) && (height > 0));
+    FAIL_FAST_IF_FALSE(srcRowPitch >= width);
+    FAIL_FAST_IF_FALSE(destRowPitch >= width * sizeof(Pixel_F));
+
+    unsigned char* srcRowStartPtr = reinterpret_cast<unsigned char*>(src->data);
+    unsigned char* destRowStartPtr = reinterpret_cast<unsigned char*>(dest->data);
+    unsigned char* srcReadPtr;
+    float* destWritePtr;
+
+#if (VIMAGE_SSE == 1)
+    const unsigned int pixelsPerBlock = c_vImageBlockSizeBytes;
+
+    if ((c_vImageUseSse2 == true) && (width >= pixelsPerBlock)) {
+        const unsigned int blocksPerRow = width / pixelsPerBlock + ((width % pixelsPerBlock != 0) ? 1 : 0);
+        __declspec(align(16)) const float scalingFactor = (maxFloat - minFloat) / 255.0f;
+        __m128i vInt8, vInt16[2], vInt32[4];
+        __m128i vZeros = _mm_setzero_si128();
+        __m128 vFloat32[4];
+        __m128 vMinFloat = _mm_load_ps1(&minFloat);
+        __m128 vScalingFactor = _mm_load_ps1(&scalingFactor);
+
+        for (unsigned int i = 0; i < height; i++) {
+            destWritePtr = reinterpret_cast<float*>(destRowStartPtr);
+            srcReadPtr = srcRowStartPtr;
+
+            for (unsigned int j = 0; j < blocksPerRow; j++) {
+                // Load 16 pixels from planar buffer
+                vInt8 = _mm_loadu_si128(reinterpret_cast<__m128i*>(srcReadPtr));
+
+                // Convert to 16bit ints
+                vInt16[0] = _mm_unpacklo_epi8(vInt8, vZeros);
+                vInt16[1] = _mm_unpackhi_epi8(vInt8, vZeros);
+
+                // Convert to 32bit ints
+                vInt32[0] = _mm_unpacklo_epi16(vInt16[0], vZeros);
+                vInt32[1] = _mm_unpackhi_epi16(vInt16[0], vZeros);
+                vInt32[2] = _mm_unpacklo_epi16(vInt16[1], vZeros);
+                vInt32[3] = _mm_unpackhi_epi16(vInt16[1], vZeros);
+
+                // Convert to floats
+                vFloat32[0] = _mm_cvtepi32_ps(vInt32[0]);
+                vFloat32[1] = _mm_cvtepi32_ps(vInt32[1]);
+                vFloat32[2] = _mm_cvtepi32_ps(vInt32[2]);
+                vFloat32[3] = _mm_cvtepi32_ps(vInt32[3]);
+
+                // Apply scaling factor
+                vFloat32[0] = _mm_mul_ps(vFloat32[0], vScalingFactor);
+                vFloat32[1] = _mm_mul_ps(vFloat32[1], vScalingFactor);
+                vFloat32[2] = _mm_mul_ps(vFloat32[2], vScalingFactor);
+                vFloat32[3] = _mm_mul_ps(vFloat32[3], vScalingFactor);
+
+                // Add minfloat
+                vFloat32[0] = _mm_add_ps(vFloat32[0], vMinFloat);
+                vFloat32[1] = _mm_add_ps(vFloat32[1], vMinFloat);
+                vFloat32[2] = _mm_add_ps(vFloat32[2], vMinFloat);
+                vFloat32[3] = _mm_add_ps(vFloat32[3], vMinFloat);
+
+                // Write floats to memory
+                _mm_storeu_ps(destWritePtr, vFloat32[0]);
+                _mm_storeu_ps(&destWritePtr[4], vFloat32[1]);
+                _mm_storeu_ps(&destWritePtr[8], vFloat32[2]);
+                _mm_storeu_ps(&destWritePtr[12], vFloat32[3]);
+
+                // Increment read/write pointers
+                destWritePtr += pixelsPerBlock;
+                srcReadPtr += pixelsPerBlock;
+            }
+
+            srcRowStartPtr += srcRowPitch;
+            destRowStartPtr += destRowPitch;
+        }
+    } else {
+#endif
+        for (unsigned int i = 0; i < height; i++) {
+            destWritePtr = reinterpret_cast<float*>(destRowStartPtr);
+            srcReadPtr = srcRowStartPtr;
+
+            for (unsigned int j = 0; j < width; j++) {
+                destWritePtr[j] = _vImageConvertAndClampUint8ToFloat(srcReadPtr[j], minFloat, maxFloat);
+            }
+
+            srcRowStartPtr += srcRowPitch;
+            destRowStartPtr += destRowPitch;
+        }
+#if (VIMAGE_SSE == 1)
+    }
+#endif
+
+    return kvImageNoError;
+}
+
+/**
+@Status Interoperable
+@Notes Packed buffer byte order notation is little endian
+*/
+vImage_Error vImageConvert_Planar8toRGB888(
+    const vImage_Buffer* srcR, const vImage_Buffer* srcG, const vImage_Buffer* srcB, const vImage_Buffer* rgbDest, vImage_Flags flags) {
+    if ((srcR == nullptr) || (srcG == nullptr) || (srcB == nullptr) || (rgbDest == nullptr)) {
+        TraceError(TAG, L"One or more NULL parameters passed in");
+        return kvImageNullPointerArgument;
+    }
+
+    const unsigned int redRowPitch = srcR->rowBytes;
+    const unsigned int greenRowPitch = srcG->rowBytes;
+    const unsigned int blueRowPitch = srcB->rowBytes;
+    const unsigned int pixelRowPitch = rgbDest->rowBytes;
+    const unsigned int width = rgbDest->width;
+    const unsigned int height = rgbDest->height;
+
+    FAIL_FAST_IF_FALSE((width > 0) && (height > 0));
+    FAIL_FAST_IF_FALSE(redRowPitch >= width);
+    FAIL_FAST_IF_FALSE(greenRowPitch >= width);
+    FAIL_FAST_IF_FALSE(blueRowPitch >= width);
+    FAIL_FAST_IF_FALSE(pixelRowPitch >= width * sizeof(Pixel_888_s));
+
+    if ((height != srcR->height) || (height != srcG->height) || (height != srcB->height) || (width != srcR->width) ||
+        (width != srcG->width) || (width != srcB->width)) {
+        TraceError(TAG, L"Buffer sizes don't match");
+        return kvImageBufferSizeMismatch;
+    }
+
+    unsigned char* pixelRowBytePtr = reinterpret_cast<unsigned char*>(rgbDest->data);
+    unsigned char* redRowBytePtr = reinterpret_cast<unsigned char*>(srcR->data);
+    unsigned char* greenRowBytePtr = reinterpret_cast<unsigned char*>(srcG->data);
+    unsigned char* blueRowBytePtr = reinterpret_cast<unsigned char*>(srcB->data);
+    Pixel_888_s* pixelRowPixelPtr;
+
+    for (unsigned int i = 0; i < height; i++) {
+        pixelRowPixelPtr = reinterpret_cast<Pixel_888_s*>(pixelRowBytePtr);
+
+        for (unsigned int j = 0; j < width; j++) {
+            pixelRowPixelPtr[j].val[0] = redRowBytePtr[j];
+            pixelRowPixelPtr[j].val[1] = greenRowBytePtr[j];
+            pixelRowPixelPtr[j].val[2] = blueRowBytePtr[j];
+        }
+
+        redRowBytePtr   += redRowPitch;
+        greenRowBytePtr += greenRowPitch;
+        blueRowBytePtr  += blueRowPitch;
+        pixelRowBytePtr += pixelRowPitch;
+    }
+
+    return kvImageNoError;
+}
+
+/**
+@Status Interoperable
+*/
+vImage_Error vImageConvert_PlanarFtoPlanar8(
+    const vImage_Buffer* src, const vImage_Buffer* dest, Pixel_F maxFloat, Pixel_F minFloat, vImage_Flags flags) {
+    if ((src == nullptr) || (dest == nullptr)) {
+        TraceError(TAG, L"One or more NULL parameters passed in");
+        return kvImageNullPointerArgument;
+    } else if ((src->width != dest->width) || (src->height != dest->height)) {
+        TraceError(TAG, L"Buffer sizes don't match");
+        return kvImageBufferSizeMismatch;
+    }
+
+    const unsigned int srcRowPitch = src->rowBytes;
+    const unsigned int destRowPitch = dest->rowBytes;
+    const unsigned int width = src->width;
+    const unsigned int height = src->height;
+
+    FAIL_FAST_IF_FALSE(srcRowPitch >= width * sizeof(Pixel_F));
+    FAIL_FAST_IF_FALSE(destRowPitch >= width);
+
+    unsigned char* srcRowStartPtr = reinterpret_cast<unsigned char*>(src->data);
+    unsigned char* destRowStartPtr = reinterpret_cast<unsigned char*>(dest->data);
+    Pixel_F* srcReadPtr;
+    unsigned char* destWritePtr;
+
+#if (VIMAGE_SSE == 1)
+    const unsigned int pixelsPerBlock = c_vImageBlockSizeBytes;
+
+    if ((c_vImageUseSse2 == true) && (width >= pixelsPerBlock)) {
+        const unsigned int blocksPerRow = width / pixelsPerBlock + ((width % pixelsPerBlock != 0) ? 1 : 0);
+        __declspec(align(16)) const float scalingFactor = 255.0f / (maxFloat - minFloat);
+        __m128i vInt8, vInt16[2], vInt32[4];
+        __m128 vFloat32[4];
+        __m128 vMinFloat = _mm_load_ps1(&minFloat);
+        __m128 vScalingFactor = _mm_load_ps1(&scalingFactor);
+
+        for (unsigned int i = 0; i < height; i++) {
+            srcReadPtr = reinterpret_cast<Pixel_F*>(srcRowStartPtr);
+            destWritePtr = destRowStartPtr;
+
+            for (unsigned int j = 0; j < blocksPerRow; j++) {
+                // Load 16 pixels from float buffer
+                vFloat32[0] = _mm_loadu_ps(&srcReadPtr[0]);
+                vFloat32[1] = _mm_loadu_ps(&srcReadPtr[4]);
+                vFloat32[2] = _mm_loadu_ps(&srcReadPtr[8]);
+                vFloat32[3] = _mm_loadu_ps(&srcReadPtr[12]);
+
+                // Subtract minFloat
+                vFloat32[0] = _mm_sub_ps(vFloat32[0], vMinFloat);
+                vFloat32[1] = _mm_sub_ps(vFloat32[1], vMinFloat);
+                vFloat32[2] = _mm_sub_ps(vFloat32[2], vMinFloat);
+                vFloat32[3] = _mm_sub_ps(vFloat32[3], vMinFloat);
+
+                // Apply scaling factor
+                vFloat32[0] = _mm_mul_ps(vFloat32[0], vScalingFactor);
+                vFloat32[1] = _mm_mul_ps(vFloat32[1], vScalingFactor);
+                vFloat32[2] = _mm_mul_ps(vFloat32[2], vScalingFactor);
+                vFloat32[3] = _mm_mul_ps(vFloat32[3], vScalingFactor);
+
+                // Convert to int32
+                vInt32[0] = _mm_cvtps_epi32(vFloat32[0]);
+                vInt32[1] = _mm_cvtps_epi32(vFloat32[1]);
+                vInt32[2] = _mm_cvtps_epi32(vFloat32[2]);
+                vInt32[3] = _mm_cvtps_epi32(vFloat32[3]);
+
+                // Pack and saturate to int16
+                vInt16[0] = _mm_packs_epi32(vInt32[0], vInt32[1]);
+                vInt16[1] = _mm_packs_epi32(vInt32[2], vInt32[3]);
+
+                // Pack and saturate to uint8
+                vInt8 = _mm_packus_epi16(vInt16[0], vInt16[1]);
+
+                // Write to uint8s to memory
+                _mm_storeu_si128(reinterpret_cast<__m128i*>(destWritePtr), vInt8);
+
+                // Increment read/write pointers
+                destWritePtr += pixelsPerBlock;
+                srcReadPtr += pixelsPerBlock;
+            }
+
+            srcRowStartPtr +=   srcRowPitch;
+            destRowStartPtr += destRowPitch;
+        }
+    } else {
+#endif
+        for (unsigned int i = 0; i < height; i++) {
+            srcReadPtr = reinterpret_cast<Pixel_F*>(srcRowStartPtr);
+            destWritePtr = destRowStartPtr;
+
+            for (unsigned int j = 0; j < width; j++) {
+                destWritePtr[j] = _vImageClipConvertAndSaturateFloatToUint8(srcReadPtr[j], minFloat, maxFloat);
+            }
+
+            srcRowStartPtr += srcRowPitch;
+            destRowStartPtr += destRowPitch;
+        }
+    }
+
+    return kvImageNoError;
+}
+
+template <int alphaPos>
+inline vImage_Error _vImageUnpremultiplyData_8888(const vImage_Buffer* src, const vImage_Buffer* dest, vImage_Flags flags) {
+    if ((src == nullptr) || (dest == nullptr)) {
+        TraceError(TAG, L"One or more NULL parameters passed in");
+        return kvImageNullPointerArgument;
+    } else if ((dest->width > src->width) || (dest->height > src->height)) {
+        TraceError(TAG, L"Destination height or width is greater than source height or width");
+        return kvImageRoiLargerThanInputBuffer;
+    }
+
+    const unsigned int srcRowPitch = src->rowBytes;
+    const unsigned int destRowPitch = dest->rowBytes;
+    const unsigned int width = src->width;
+    const unsigned int height = src->height;
+
+    FAIL_FAST_IF_FALSE(srcRowPitch >= width * sizeof(Pixel_8888_s));
+    FAIL_FAST_IF_FALSE(destRowPitch >= width * sizeof(Pixel_8888_s));
+
+    Pixel_8888_s* srcReadPtr = reinterpret_cast<Pixel_8888_s*>(src->data);
+    Pixel_8888_s* destWritePtr = reinterpret_cast<Pixel_8888_s*>(dest->data);
+    unsigned char* srcRowStartPtr = reinterpret_cast<unsigned char*>(src->data);
+    unsigned char* destRowStartPtr = reinterpret_cast<unsigned char*>(dest->data);
+
+#if (VIMAGE_SSE == 1)
+    // 4 bytes per pixel
+    const unsigned int pixelsPerBlock = c_vImageBlockSizeBytes >> 2;
+
+    if (width >= pixelsPerBlock) {
+        const unsigned int blocksPerRow = width / pixelsPerBlock + ((width % pixelsPerBlock != 0) ? 1 : 0);
+        const unsigned int alphaMaskUInt32 = 0xFF << (alphaPos << 3);
+        const unsigned int colorMaskUInt32 = ~alphaMaskUInt32;
+        __declspec(align(16)) const unsigned int alphaMask[4] = { alphaMaskUInt32, alphaMaskUInt32, alphaMaskUInt32, alphaMaskUInt32 };
+        __declspec(align(16)) const unsigned int colorMask[4] = { colorMaskUInt32, colorMaskUInt32, colorMaskUInt32, colorMaskUInt32 };
+        const __m128i vInt8AlphaMask = _mm_loadu_si128(reinterpret_cast<const __m128i*>(&alphaMask[0]));
+        const __m128i vInt8ColorMask = _mm_loadu_si128(reinterpret_cast<const __m128i*>(&colorMask[0]));
+
+        __declspec(align(16)) const float scalingFactor = 255.0f;
+
+        __m128i vInt8, vInt16[2], vInt32[4];
+        __m128i vInt8Alphas;
+        __m128i vZeros = _mm_setzero_si128();
+        __m128 vFloat32[4];
+        __m128 vAlphas[4];
+        __m128 vScalingFactor = _mm_load_ps1(&scalingFactor);
+
+        for (unsigned int i = 0; i < height; i++) {
+            destWritePtr = reinterpret_cast<Pixel_8888_s*>(destRowStartPtr);
+            srcReadPtr = reinterpret_cast<Pixel_8888_s*>(srcRowStartPtr);
+
+            for (unsigned int j = 0; j < blocksPerRow; j++) {
+                // Load 16 pixels
+                vInt8 = _mm_loadu_si128(reinterpret_cast<__m128i*>(&srcReadPtr[0]));
+
+                // Extract and cache alpha components into register
+                vInt8Alphas = _mm_and_si128(vInt8, vInt8AlphaMask);
+
+                // Convert to 16bit pixel components
+                vInt16[0] = _mm_unpacklo_epi8(vInt8, vZeros);
+                vInt16[1] = _mm_unpackhi_epi8(vInt8, vZeros);
+
+                // Convert to 32bit pixel components
+                vInt32[0] = _mm_unpacklo_epi16(vInt16[0], vZeros);
+                vInt32[1] = _mm_unpackhi_epi16(vInt16[0], vZeros);
+                vInt32[2] = _mm_unpacklo_epi16(vInt16[1], vZeros);
+                vInt32[3] = _mm_unpackhi_epi16(vInt16[1], vZeros);
+
+                // Convert to float32 pixel components
+                for (unsigned int i = 0; i < 4; i++) {
+                    vFloat32[i] = _mm_cvtepi32_ps(vInt32[i]);
+                }
+
+                // Splat alpha components
+                for (unsigned int i = 0; i < 4; i++) {
+                    vAlphas[i] = _mm_shuffle_ps(vFloat32[i], vFloat32[i], _MM_SHUFFLE(alphaPos, alphaPos, alphaPos, alphaPos));
+                }
+
+                // Get reciprocal of alphas
+                for (unsigned int i = 0; i < 4; i++) {
+                    vAlphas[i] = _mm_rcp_ps(vAlphas[i]);
+                }
+
+                // Multiply reciprocal of alpha by pixels
+                for (unsigned int i = 0; i < 4; i++) {
+                    vFloat32[i] = _mm_mul_ps(vFloat32[i], vAlphas[i]);
+                }
+
+                // Apply scaling factor
+                for (unsigned int i = 0; i < 4; i++) {
+                    vFloat32[i] = _mm_mul_ps(vFloat32[i], vScalingFactor);
+                }
+
+                // Convert to int32
+                for (unsigned int i = 0; i < 4; i++) {
+                    vInt32[i] = _mm_cvtps_epi32(vFloat32[i]);
+                }
+
+                // Pack and saturate to int16
+                vInt16[0] = _mm_packs_epi32(vInt32[0], vInt32[1]);
+                vInt16[1] = _mm_packs_epi32(vInt32[2], vInt32[3]);
+
+                // Pack and saturate to uint8
+                vInt8 = _mm_packus_epi16(vInt16[0], vInt16[1]);
+
+                // Mask out invalid alpha from output pixels
+                vInt8 = _mm_and_si128(vInt8, vInt8ColorMask);
+
+                // Combine with original alpha
+                vInt8 = _mm_or_si128(vInt8, vInt8Alphas);
+
+                // Write pixels to memory
+                _mm_storeu_si128(reinterpret_cast<__m128i*>(destWritePtr), vInt8);
+
+                // Increment read/write pointers
+                destWritePtr += pixelsPerBlock;
+                srcReadPtr += pixelsPerBlock;
+            }
+
+            srcRowStartPtr += srcRowPitch;
+            destRowStartPtr += destRowPitch;
+        }
+    } else {
+#endif
+        for (unsigned int i = 0; i < height; i++) {
+            srcReadPtr = reinterpret_cast<Pixel_8888_s*>(srcRowStartPtr);
+            destWritePtr = reinterpret_cast<Pixel_8888_s*>(destRowStartPtr);
+
+            for (unsigned int j = 0; j < width; j++) {
+                _vImageUnpremultiplyPixel<alphaPos>(&destWritePtr[j], &srcReadPtr[j]);
+            }
+
+            srcRowStartPtr += srcRowPitch;
+            destRowStartPtr += destRowPitch;
+        }
+    }
+
+    return kvImageNoError;
+}
+
+/// Unpremultiply pixel
+template <int alphaPos>
+inline void _vImageUnpremultiplyPixel(Pixel_8888_s* dest, Pixel_8888_s* src);
+
+template <>
+inline void _vImageUnpremultiplyPixel<0>(Pixel_8888_s* dest, Pixel_8888_s* src) {
+    dest->val[0] = src->val[0];
+    dest->val[1] = _vImageDivideAndSaturateUint8(src->val[1], src->val[0]);
+    dest->val[2] = _vImageDivideAndSaturateUint8(src->val[2], src->val[0]);
+    dest->val[3] = _vImageDivideAndSaturateUint8(src->val[3], src->val[0]);
+}
+
+template <>
+inline void _vImageUnpremultiplyPixel<3>(Pixel_8888_s* dest, Pixel_8888_s* src) {
+    dest->val[3] = src->val[3];
+    dest->val[0] = _vImageDivideAndSaturateUint8(src->val[0], src->val[3]);
+    dest->val[1] = _vImageDivideAndSaturateUint8(src->val[1], src->val[3]);
+    dest->val[2] = _vImageDivideAndSaturateUint8(src->val[2], src->val[3]);
+}
+
+/**
+@Status Interoperable
+@Notes Packed buffer byte order notation is little endian
+*/
+vImage_Error vImageUnpremultiplyData_RGBA8888(const vImage_Buffer* src, const vImage_Buffer* dest, vImage_Flags flags) {
+    return _vImageUnpremultiplyData_8888<3>(src, dest, flags);
+}
+
+/**
+@Status Interoperable
+@Notes Packed buffer byte order notation is little endian
+*/
+vImage_Error vImageUnpremultiplyData_BGRA8888(const vImage_Buffer* src, const vImage_Buffer* dest, vImage_Flags flags) {
+    return _vImageUnpremultiplyData_8888<3>(src, dest, flags);
+}
+
+/**
+@Status Interoperable
+@Notes Packed buffer byte order notation is little endian
+*/
+vImage_Error vImageUnpremultiplyData_ARGB8888(const vImage_Buffer* src, const vImage_Buffer* dest, vImage_Flags flags) {
+    return _vImageUnpremultiplyData_8888<0>(src, dest, flags);
+}
+
+/**
+@Status Interoperable
+*/
+vImage_Error vImageBuffer_Init(
+    vImage_Buffer* buffer, vImagePixelCount height, vImagePixelCount width, uint32_t bitsPerFragment, vImage_Flags flags) {
+    const uint32_t truncatedBytesPerFragment = bitsPerFragment >> 3;
+    const uint32_t byteAlignedBytesPerFragment = ((bitsPerFragment + 7) & ~(7)) >> 3;
+    const bool pixelsAreByteAligned = ((bitsPerFragment & 7) == 0) ? true : false;
+    const uint32_t minBitsPerRow = bitsPerFragment * width;
+    const uint32_t minByteAlignedBytesPerRow = ((minBitsPerRow + 7) & ~(7)) >> 3;
+    const uint32_t alignedPitch = _vImageAlignUInt(minByteAlignedBytesPerRow, c_vImageBlockSizeBytes);
+    vImage_Error returnCode = kvImageNoError;
+
+    if ((flags & ~(kvImageNoFlags | kvImageNoAllocate | kvImagePrintDiagnosticsToConsole | kvImageDoNotTile)) != 0) {
+        TraceWarning(TAG, L"Unsupported flag(s)");
+        return kvImageUnknownFlagsBit;
+    }
+
+    FAIL_FAST_IF_FALSE(height > 0 && width > 0 && bitsPerFragment > 0);
+
+    buffer->height = height;
+    buffer->width = width;
+
+    if ((flags & kvImageNoAllocate) == kvImageNoAllocate) {
+        // Align rowBytes
+        buffer->rowBytes = alignedPitch;
+        buffer->data = nullptr;
+        returnCode = c_vImageBlockSizeBytes;
+    } else if (c_vImagePadAllocs == true) {
+        // For 4bytesPerFragment pixels, SSE2 instructions operate on 4 pixels at a time
+        const uint32_t minCompilerAlignmentBytes = 4;
+        const uint32_t additionalRowPaddingBytes = (c_vImageBlockSizeBytes - minCompilerAlignmentBytes);
+        const uint32_t maxPitch = alignedPitch + additionalRowPaddingBytes;
+        const uint32_t allocSize = maxPitch * height;
+
+        // Note: We can't use alignedMalloc here since the client is responsible for freeing the buffer and can use free or aligned_free
+        buffer->data = malloc(allocSize);
+
+        if (buffer->data != nullptr) {
+            // SIMD load/store instructions operate best on 16byte aligned memory and in blocks of 16bytes
+            // Padding to ensure that for unaligned start addresses, at the very least:
+            // 1. A single 16pixel block can be operated on per row
+            // 2. Every second row will be 16byte aligned
+            const uint32_t bytePaddingForIdealAlignment =
+                (c_vImageBlockSizeBytes - ((uint32_t)(buffer->data) & (c_vImageBlockSizeBytes - 1))) % c_vImageBlockSizeBytes;
+            buffer->rowBytes = alignedPitch + bytePaddingForIdealAlignment;
+        } else {
+            // Try again without additional padding
+            buffer->rowBytes = alignedPitch;
+            buffer->data = malloc(buffer->rowBytes * height);
+
+            if (buffer->data == nullptr) {
+                returnCode = kvImageMemoryAllocationError;
+            }
+        }
+    } else {
+        buffer->rowBytes = alignedPitch;
+        buffer->data = malloc(buffer->rowBytes * height);
+
+        if (buffer->data == nullptr) {
+            returnCode = kvImageMemoryAllocationError;
+        }
+    }
+
+    return returnCode;
+}
+
+// Alias vImageConvert_ARGB8888toPlanar8 with vImageConvert_BGRA8888toPlanar8 and vImageConvert_RGBA8888toPlanar8
+_vImageFunctionInterfaceCvt8888ToPlanar8 vImageConvert_BGRA8888toPlanar8 = vImageConvert_ARGB8888toPlanar8;
+_vImageFunctionInterfaceCvt8888ToPlanar8 vImageConvert_RGBA8888toPlanar8 = vImageConvert_ARGB8888toPlanar8;
