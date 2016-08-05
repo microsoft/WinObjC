@@ -635,10 +635,11 @@ TEST(NSString, StringByResolvingSymlinksInPath) {
         NSString* path = @"/tmp/..";
         auto result = path.stringByResolvingSymlinksInPath;
 
-#if 0 // WINOBJC: never true // #if os(OSX)
-        auto expected = @"/private";
-#else
+// #if below is from the original Swift tests - platform differences were already known
+#if TARGET_OS_WIN32
         auto expected = @"/";
+#else
+        auto expected = @"/private";
 #endif
 
         ASSERT_OBJCEQ_MSG(result, expected, @"For absolute paths, all symbolic links are guaranteed to be removed.");
