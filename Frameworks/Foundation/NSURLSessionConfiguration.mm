@@ -71,7 +71,7 @@
 */
 - (id)copyWithZone:(NSZone*)zone {
     NSURLSessionConfiguration* copy = [[[self class] allocWithZone:zone] init];
-    copy.identifier = [_identifier copy];
+    copy.identifier = _identifier;
     copy.networkServiceType = _networkServiceType;
     copy.allowsCellularAccess = _allowsCellularAccess;
     copy.timeoutIntervalForRequest = _timeoutIntervalForRequest;
