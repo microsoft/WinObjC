@@ -24,35 +24,9 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <Starboard/SmartTypes.h>
-
-static NSString* getModulePath() {
-    char fullPath[_MAX_PATH];
-    GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
-    return [@(fullPath) stringByDeletingLastPathComponent];
-}
-
-static NSString* getPathToFile(NSString* fileName) {
-    static StrongId<NSString*> refPath = getModulePath();
-    return [refPath stringByAppendingPathComponent:fileName];
-}
-
-static void createFileWithContentAndVerify(NSString* fileName, NSString* content) {
-    NSString* fullPath = getPathToFile(fileName);
-    NSError* error = nil;
-    ASSERT_TRUE([content writeToFile:fullPath atomically:NO encoding:NSUTF8StringEncoding error:&error]);
-    ASSERT_EQ(nil, error);
-    ASSERT_TRUE([[NSFileManager defaultManager] fileExistsAtPath:fullPath]);
-}
-
-void deleteFile(NSString* name) {
-    NSString* fullPath = getPathToFile(name);
-    if ([[NSFileManager defaultManager] fileExistsAtPath:fullPath]) {
-        [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
-    }
-};
+#include "TestUtils.h"
 
 using unique_fileDeleter = std::unique_ptr<NSString, decltype(&deleteFile)>;
-
 TEST(NSFileManager, GetAttributes) {
     // get test startup full path
     wchar_t fullPath[_MAX_PATH];
