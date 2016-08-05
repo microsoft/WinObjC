@@ -17,12 +17,7 @@
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
-// TODO: Issue #785
-// Temporarily disabling this as it doesn't appear to pass on OSX, either
-// date and plistDict[@"Date Modified"] are currently about 8 hrs apart when run from a GMT-8 computer,
-// due to date = [NSDateForamtter dateFromString] using the current user settings, such as time zone
-// This appears to match the OSX behavior
-TEST(NSPropertyListSerialization, DISABLED_PropertyListForDate) {
+TEST(NSPropertyListSerialization, PropertyListForDate) {
     NSString* xml = @"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" "
                     @"\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n<plist version=\"1.0\">\n<dict>\n<key>Date "
                     @"Modified</key><date>2014-12-15T19:48:38Z</date>\n</dict>\n</plist>";
