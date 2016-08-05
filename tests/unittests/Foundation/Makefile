@@ -81,7 +81,7 @@ $(OUTDIR)/% :
 $(OUTDIR)/Foundation.UnitTests.exe : $(SHIMS) $(OUTTARGETS) $(COPY_FILES)
 	$(CLANG) -o $@ -std=c++14 $(INC_PARAMS) $(SRCDIR)/../EntryPoint.cpp $(SRCDIR)/../../frameworks/gtest/src/gtest-all.cc \
 	$(LDFLAGS) $(SRCDIR)/../../../build/Tests/UnitTests/Foundation/OSX/Objects/*.o
-	@echo "\nDone, please run from $(realpath $@)"
+	@echo "\nDone, please run from $(shell CDPATH="" cd "$(dir $@)"; pwd)/$(notdir $@)"
 
 .PHONY: Foundation.UnitTests.exe
 
