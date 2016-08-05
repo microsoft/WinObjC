@@ -40,7 +40,7 @@
         _HTTPMaximumConnectionsPerHost = 6;
         _TLSMaximumSupportedProtocol = kTLSProtocol12;
         _TLSMinimumSupportedProtocol = kTLSProtocol1;
-        //_URLCredentialStorage = [[NSURLCredentialStorage sharedCredentialStorage] retain];
+        _URLCredentialStorage = [[NSURLCredentialStorage sharedCredentialStorage] retain];
     }
 
     return self;
@@ -61,7 +61,7 @@
 */
 - (instancetype)initBackgroundSession:(NSString*)identifier {
     if (self = [self init]) {
-        _identifier = identifier;
+        _identifier = [identifier copy];
     }
     return self;
 }
@@ -71,7 +71,7 @@
 */
 - (id)copyWithZone:(NSZone*)zone {
     NSURLSessionConfiguration* copy = [[[self class] allocWithZone:zone] init];
-    copy.identifier = _identifier;
+    copy.identifier = [_identifier copy];
     copy.networkServiceType = _networkServiceType;
     copy.allowsCellularAccess = _allowsCellularAccess;
     copy.timeoutIntervalForRequest = _timeoutIntervalForRequest;
@@ -127,6 +127,7 @@
     [_HTTPCookieStorage release];
     [_URLCache release];
     [_URLCredentialStorage release];
+    [_identifier release];
     [super dealloc];
 }
 
