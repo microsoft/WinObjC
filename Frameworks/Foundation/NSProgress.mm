@@ -310,7 +310,7 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
  @Status Interoperable
 */
 - (BOOL)isIndeterminate {
-    return (_totalUnitCount <= 0) || (_completedUnitCount <= 0);
+    return (_totalUnitCount <= 0) && (_completedUnitCount <= 0);
 }
 
 /**
@@ -398,7 +398,7 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
         // Otherwise, dynamically describe
         if ([_kind isEqual:NSProgressKindFile]) {
             if ([_userInfo count] == 0) {
-                ret = [ret stringByAppendingFormat:@"%d bytes of %d bytes", _completedUnitCount, _totalUnitCount];
+                ret = [ret stringByAppendingFormat:@"%lld bytes of %lld bytes", _completedUnitCount, _totalUnitCount];
             } else {
                 NSNumber* completedFiles = [_userInfo objectForKey:NSProgressFileCompletedCountKey];
                 NSNumber* totalFiles = [_userInfo objectForKey:NSProgressFileTotalCountKey];
@@ -411,9 +411,9 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
                     ret = [ret stringByAppendingFormat:@"(%d bytes/second)", [bytesPerSecond intValue]];
                 }
             }
-
+	
         } else {
-            ret = [ret stringByAppendingFormat:@"%d of %d", _completedUnitCount, _totalUnitCount];
+            ret = [ret stringByAppendingFormat:@"%lld of %lld", _completedUnitCount, _totalUnitCount];
         }
 
         NSNumber* secondsRemaining = [_userInfo objectForKey:NSProgressEstimatedTimeRemainingKey];
