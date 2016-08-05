@@ -14,9 +14,14 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
+#import <TestFramework.h>
 #import <Foundation/Foundation.h>
-#include "windows.h"
+#import <windows.h>
+
+// Needed for dirname outside of Windows
+#if !TARGET_OS_WIN32
+#import <libgen.h>
+#endif
 
 void testNSURLMethod(SEL selector, NSURL* input, id argument, NSURL* expected) {
     NSURL* actual = [input performSelector:selector withObject:argument];
@@ -196,6 +201,8 @@ TEST(NSURL, CheckResourceIsReachable) {
     wchar_t startUpPath[_MAX_PATH];
     GetModuleFileNameW(nullptr, startUpPath, _MAX_PATH);
 
+// File systems differ between platforms - Windows needs separate handling for drive character, etc
+#if TARGET_OS_WIN32
     // construct the start up dir
     wchar_t drive[_MAX_DRIVE];
     wchar_t dir[_MAX_DIR];
@@ -204,6 +211,12 @@ TEST(NSURL, CheckResourceIsReachable) {
 
     // change current dir to app start up path
     ASSERT_TRUE(SetCurrentDirectoryW(startUpPath) != 0);
+#else
+    char tempBuffer[_MAX_PATH];
+    wcstombs(tempBuffer, startUpPath, _MAX_PATH);
+
+    ASSERT_TRUE(chdir(dirname(tempBuffer)) == 0);
+#endif
 
     NSFileManager* manager = [NSFileManager defaultManager];
     NSURL* baseURL = [NSURL fileURLWithPath:[manager currentDirectoryPath]];
@@ -220,11 +233,13 @@ TEST(NSURL, GetFileSystemRepresentation) {
     NSURL* url = [NSURL fileURLWithPath:@"Hello.txt"];
     ASSERT_OBJCNE(url, nil);
 
-    char resultPath[_MAX_PATH];
-    ASSERT_TRUE([url getFileSystemRepresentation:resultPath maxLength:_MAX_PATH]);
+    size_t pathMax = 4096;
 
-    char baseResultPath[_MAX_PATH];
-    ASSERT_TRUE([url.baseURL getFileSystemRepresentation:baseResultPath maxLength:_MAX_PATH]);
+    char resultPath[pathMax];
+    ASSERT_TRUE([url getFileSystemRepresentation:resultPath maxLength:pathMax]);
+
+    char baseResultPath[pathMax];
+    ASSERT_TRUE([url.baseURL getFileSystemRepresentation:baseResultPath maxLength:pathMax]);
     NSString* expectedPath = [NSString stringWithFormat:@"%s/Hello.txt", baseResultPath];
     NSString* nsResultPath = [NSString stringWithFormat:@"%s", resultPath];
     ASSERT_OBJCEQ(expectedPath, nsResultPath);
@@ -240,7 +255,6 @@ TEST(NSURL, Copy) {
     NSURL* urlCopy = [[url copy] autorelease];
 
     ASSERT_OBJCEQ(url, urlCopy);
-    ASSERT_NE(url, urlCopy);
 }
 
 TEST(NSURL, BridgedCast) {

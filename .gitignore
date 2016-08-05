@@ -33,6 +33,12 @@ msvc/ClangCompileTask.pdb
 [Rr]elease/
 BundleArtifacts/
 [Oo]bj/
+[Oo]SX/
+*.o
+*.UnitTests.exe
+
+# Test results
+tmp
 
 # User-specific files
 *.suo

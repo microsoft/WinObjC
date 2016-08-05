@@ -15,8 +15,6 @@
 //******************************************************************************
 
 #import "Foundation/Foundation.h"
-#import "NSPointerFunctionsConcrete.h"
-#import "Starboard.h"
 #import "TestFramework.h"
 
 // Some of NSPointerFunctions is implicitly tested in NSMapTableTests - this file is primarily aimed at the remainder
@@ -79,7 +77,7 @@ TEST(NSPointerFunctions, OpaquePersonality) {
 
     const void* ptr1;
     const void* ptr2 = ptr1;
-    const void* ptr3 = (void*)((int)ptr1 + 1);
+    const void* ptr3 = (void*)((long)ptr1 + 1);
 
     testEqualFunction(functions, ptr1, ptr2, ptr3);
     testHashFunction(functions, ptr1, ptr2, ptr3);
@@ -89,9 +87,9 @@ TEST(NSPointerFunctions, IntegerPersonality) {
     NSPointerFunctions* functions =
         [NSPointerFunctions pointerFunctionsWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality];
 
-    int int1 = 3425;
-    int int2 = 3425;
-    int int3 = 23526526;
+    long int1 = 3425;
+    long int2 = 3425;
+    long int3 = 23526526;
 
     testEqualFunction(functions, (void*)int1, (void*)int2, (void*)int3);
     testHashFunction(functions, (void*)int1, (void*)int2, (void*)int3);
@@ -124,11 +122,4 @@ TEST(NSPointerFunctions, Copy) {
     ASSERT_EQ(functions.sizeFunction, functionsCopy.sizeFunction);
     ASSERT_EQ(functions.usesStrongWriteBarrier, functionsCopy.usesStrongWriteBarrier);
     ASSERT_EQ(functions.usesWeakReadAndWriteBarriers, functionsCopy.usesWeakReadAndWriteBarriers);
-
-    _NSConcretePointerFunctions* functionsConcrete = reinterpret_cast<_NSConcretePointerFunctions*>(&*functions);
-    _NSConcretePointerFunctions* functionsCopyConcrete = reinterpret_cast<_NSConcretePointerFunctions*>(&*functionsCopy);
-
-    ASSERT_EQ(functionsConcrete.copyIn, functionsCopyConcrete.copyIn);
-    ASSERT_EQ(functionsConcrete.weakMemory, functionsCopyConcrete.weakMemory);
-    ASSERT_EQ(functionsConcrete.options, functionsCopyConcrete.options);
 }

@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -50,25 +51,22 @@ __CGGradient::~__CGGradient() {
 }
 
 void __CGGradient::initWithColorComponents(const float* components, const float* locations, size_t count, CGColorSpaceRef colorspace) {
-    DWORD componentCount = 0;
     __CGColorSpace* cs = (__CGColorSpace*)colorspace;
-    _colorSpace = cs->colorSpace;
+    DWORD componentCount = 0;
 
-    switch (_colorSpace) {
-        case _ColorRGB:
-            componentCount = 3;
-            break;
+    _colorSpaceModel = cs->colorSpaceModel;
 
-        case _ColorRGBA:
+    switch (_colorSpaceModel) {
+        case kCGColorSpaceModelRGB:
             componentCount = 4;
+            _format = _ColorABGR;
             break;
-
-        case _ColorGrayscale:
+        case kCGColorSpaceModelMonochrome:
             componentCount = 2;
+            _format = _ColorGrayscale;
             break;
-
         default:
-            assert(0);
+            UNIMPLEMENTED_WITH_MSG("Unsupported colorspace used to create gradiant.");
             break;
     }
 
@@ -93,40 +91,35 @@ void __CGGradient::initWithColors(CFArrayRef componentsArr, const float* locatio
     size_t componentCount = 0;
     __CGColorSpace* cs = (__CGColorSpace*)colorspace;
 
-    _colorSpace = _ColorRGBA;
+    _colorSpaceModel = cs->colorSpaceModel;
 
-    switch (_colorSpace) {
-        case _ColorRGB:
-            componentCount = 3;
-            break;
-
-        case _ColorRGBA:
+    switch (_colorSpaceModel) {
+        case kCGColorSpaceModelRGB:
             componentCount = 4;
+            _format = _ColorABGR;
             break;
-
-        case _ColorGrayscale:
+        case kCGColorSpaceModelMonochrome:
             componentCount = 2;
+            _format = _ColorGrayscale;
             break;
-
         default:
-            assert(0);
+            UNIMPLEMENTED_WITH_MSG("Unsupported colorspace used to create gradiant.");
             break;
     }
 
     int count = [components count];
 
-    _components = new float[count * componentCount];
+    _components = new CGFloat[count * componentCount];
 
     for (int i = 0; i < count; i++) {
         UIColor* curColor = [components objectAtIndex:i];
 
-        float colorArray[4];
-        ColorQuad color;
-        [curColor getColors:&color];
-
-        ColorQuadToFloatArray(color, colorArray);
-
-        memcpy(&_components[i * componentCount], colorArray, sizeof(float) * componentCount);
+        if (curColor) {
+            const __CGColorQuad* color = [curColor _getColors];
+            memcpy(&_components[i * componentCount], color, sizeof(CGFloat) * componentCount);
+        } else {
+            memset(&_components[i * componentCount], 0, sizeof(CGFloat) * componentCount);
+        }
     }
 
     _locations = new float[count];

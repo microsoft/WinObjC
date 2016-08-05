@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -216,7 +217,7 @@ rgb hsv2rgb(hsv in) {
     enum BrushType _type;
     UIImage* _image;
     id _pattern;
-    float _r, _g, _b, _a;
+    __CGColorQuad _components;
 }
 
 /**
@@ -244,16 +245,19 @@ rgb hsv2rgb(hsv in) {
         return [[[self class] performSelector:NSSelectorFromString(pattern)] retain];
     } else {
         if ([coder containsValueForKey:@"UIWhite"]) {
-            _r = _g = _b = [coder decodeFloatForKey:@"UIWhite"];
+            const CGFloat uiWhite = [coder decodeFloatForKey:@"UIWhite"];
+            _components.r = uiWhite;
+            _components.g = uiWhite;
+            _components.b = uiWhite;
         } else {
-            _r = [coder decodeFloatForKey:@"UIRed"];
-            _g = [coder decodeFloatForKey:@"UIGreen"];
-            _b = [coder decodeFloatForKey:@"UIBlue"];
+            _components.r = [coder decodeFloatForKey:@"UIRed"];
+            _components.g = [coder decodeFloatForKey:@"UIGreen"];
+            _components.b = [coder decodeFloatForKey:@"UIBlue"];
         }
         if ([coder containsValueForKey:@"UIAlpha"]) {
-            _a = [coder decodeFloatForKey:@"UIAlpha"];
+            _components.a = [coder decodeFloatForKey:@"UIAlpha"];
         } else {
-            _a = 1.0f;
+            _components.a = 1.0f;
         }
 
         return self;
@@ -266,10 +270,10 @@ rgb hsv2rgb(hsv in) {
 - (void)encodeWithCoder:(NSCoder*)coder {
     assert(_type == solidBrush);
 
-    [coder encodeFloat:_r forKey:@"UIRed"];
-    [coder encodeFloat:_g forKey:@"UIGreen"];
-    [coder encodeFloat:_b forKey:@"UIBlue"];
-    [coder encodeFloat:_a forKey:@"UIAlpha"];
+    [coder encodeFloat:_components.r forKey:@"UIRed"];
+    [coder encodeFloat:_components.g forKey:@"UIGreen"];
+    [coder encodeFloat:_components.b forKey:@"UIBlue"];
+    [coder encodeFloat:_components.a forKey:@"UIAlpha"];
 }
 
 /**
@@ -428,10 +432,10 @@ rgb hsv2rgb(hsv in) {
 */
 + (UIColor*)colorWithRed:(float)r green:(float)g blue:(float)b alpha:(float)a {
     UIColor* ret = [self alloc];
-    ret->_r = r;
-    ret->_g = g;
-    ret->_b = b;
-    ret->_a = a;
+    ret->_components.r = r;
+    ret->_components.g = g;
+    ret->_components.b = b;
+    ret->_components.a = a;
     ret->_type = solidBrush;
 
     return [ret autorelease];
@@ -459,10 +463,10 @@ rgb hsv2rgb(hsv in) {
 
     out = hsv2rgb(in);
 
-    _r = (float)out.r;
-    _g = (float)out.g;
-    _b = (float)out.b;
-    _a = (float)a;
+    _components.r = (float)out.r;
+    _components.g = (float)out.g;
+    _components.b = (float)out.b;
+    _components.a = (float)a;
     _type = solidBrush;
 
     return self;
@@ -472,10 +476,10 @@ rgb hsv2rgb(hsv in) {
  @Status Interoperable
 */
 - (UIColor*)initWithRed:(float)r green:(float)g blue:(float)b alpha:(float)a {
-    _r = r;
-    _g = g;
-    _b = b;
-    _a = a;
+    _components.r = r;
+    _components.g = g;
+    _components.b = b;
+    _components.a = a;
     _type = solidBrush;
     return self;
 }
@@ -504,7 +508,7 @@ callbacks.version = 0;
 callbacks.releaseInfo = 0;
 callbacks.drawPattern = __UIColorPatternFill;
 
-_pattern = (id) CGPatternCreateColorspace(self, bounds, m, bounds.size.width, bounds.size.height, 0, FALSE, &callbacks, pImg->_has32BitAlpha ? _ColorRGBA : _ColorRGB);
+_pattern = (id) CGPatternCreateColorspace(self, bounds, m, bounds.size.width, bounds.size.height, 0, NO, &callbacks, pImg->_has32BitAlpha ? _ColorABGR : _ColorBGR);
 } else {
 _pattern = (id) CGPatternCreateFromImage(pImg);
 }
@@ -514,10 +518,10 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     _image = [image retain];
     _type = cgPatternBrush;
 
-    _r = 0;
-    _g = 0;
-    _b = 0;
-    _a = 0;
+    _components.r = 0.0f;
+    _components.g = 0.0f;
+    _components.b = 0.0f;
+    _components.a = 0.0f;
 
     return self;
 }
@@ -558,7 +562,7 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
  @Status Interoperable
 */
 - (UIColor*)colorWithAlphaComponent:(float)alpha {
-    return [UIColor colorWithRed:_r green:_g blue:_b alpha:alpha];
+    return [UIColor colorWithRed:_components.r green:_components.g blue:_components.b alpha:alpha];
 }
 
 + (UIColor*)colorWithColor:(UIColor*)copyclr {
@@ -570,10 +574,10 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
 
     ret->_type = copyclr->_type;
     ret->_pattern = [copyclr->_pattern retain];
-    ret->_r = copyclr->_r;
-    ret->_g = copyclr->_g;
-    ret->_b = copyclr->_b;
-    ret->_a = copyclr->_a;
+    ret->_components.r = copyclr->_components.r;
+    ret->_components.g = copyclr->_components.g;
+    ret->_components.b = copyclr->_components.b;
+    ret->_components.a = copyclr->_components.a;
 
     return [ret autorelease];
 }
@@ -591,21 +595,16 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
 
     ret->_type = copyclr->_type;
     ret->_pattern = [copyclr->_pattern retain];
-    ret->_r = copyclr->_r;
-    ret->_g = copyclr->_g;
-    ret->_b = copyclr->_b;
-    ret->_a = copyclr->_a;
+    ret->_components.r = copyclr->_components.r;
+    ret->_components.g = copyclr->_components.g;
+    ret->_components.b = copyclr->_components.b;
+    ret->_components.a = copyclr->_components.a;
 
     return [ret autorelease];
 }
 
-- (void)getColors:(ColorQuad*)colors {
-    if (colors) {
-        colors->r = _r;
-        colors->g = _g;
-        colors->b = _b;
-        colors->a = _a;
-    }
+- (const __CGColorQuad*)_getColors {
+    return &_components;
 }
 
 /**
@@ -699,9 +698,9 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     hsv out;
     rgb in;
 
-    in.r = _r;
-    in.b = _b;
-    in.g = _g;
+    in.r = _components.r;
+    in.b = _components.b;
+    in.g = _components.g;
 
     out = rgb2hsv(in);
 
@@ -715,10 +714,10 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
         *v = (float)out.v;
     }
     if (a) {
-        *a = _a;
+        *a = _components.a;
     }
 
-    return TRUE;
+    return YES;
 }
 
 /**
@@ -726,19 +725,19 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
 */
 - (BOOL)getRed:(float*)r green:(float*)g blue:(float*)b alpha:(float*)a {
     if (r) {
-        *r = _r;
+        *r = _components.r;
     }
     if (g) {
-        *g = _g;
+        *g = _components.g;
     }
     if (b) {
-        *b = _b;
+        *b = _components.b;
     }
     if (a) {
-        *a = _a;
+        *a = _components.a;
     }
 
-    return TRUE;
+    return YES;
 }
 
 /**
@@ -746,14 +745,14 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
 */
 - (BOOL)isEqual:(UIColor*)other {
     if (![other isKindOfClass:[UIColor class]]) {
-        return FALSE;
+        return NO;
     }
 
-    if (_type == other->_type && _image == other->_image && _pattern == other->_pattern && _r == other->_r && _g == other->_g &&
-        _b == other->_b) {
-        return TRUE;
+    if (_type == other->_type && _image == other->_image && _pattern == other->_pattern && _components.r == other->_components.r &&
+        _components.g == other->_components.g && _components.b == other->_components.b) {
+        return YES;
     } else {
-        return FALSE;
+        return NO;
     }
 }
 

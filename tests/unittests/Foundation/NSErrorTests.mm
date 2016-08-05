@@ -15,27 +15,17 @@
 //******************************************************************************
 
 #include <TestFramework.h>
-#include <Foundation\Foundation.h>
-#include <ErrorHandling.h>
+#include <Foundation/Foundation.h>
 
 TEST(NSError, NSErrorSanity) {
-    NSError* error1 = [NSError errorWithDomain:@"TestDomain" code:2 userInfo:@{@1 : @"foo", @2 : @"bar"}];
-    NSError* error2 = [NSError errorWithDomain:@"TestDomain" code:2 userInfo:@{@1 : @"foo", @2 : @"bar"}];
-    NSError* error3 = [NSError errorWithDomain:@"DifferentTestDomain" code:2 userInfo:@{@1 : @"foo", @2 : @"bar"}];
+    NSError* error1 = [NSError errorWithDomain:@"TestDomain" code:2 userInfo:@{ @1 : @"foo", @2 : @"bar" }];
+    NSError* error2 = [NSError errorWithDomain:@"TestDomain" code:2 userInfo:@{ @1 : @"foo", @2 : @"bar" }];
+    NSError* error3 = [NSError errorWithDomain:@"DifferentTestDomain" code:2 userInfo:@{ @1 : @"foo", @2 : @"bar" }];
 
     ASSERT_OBJCEQ(error1, error2);
     ASSERT_EQ([error1 hash], [error2 hash]);
     ASSERT_OBJCNE(error1, error3);
     ASSERT_NE([error1 hash], [error3 hash]);
-}
-
-ARM_DISABLED_TEST(NSError, NSErrorCatchPopulate) {
-    NSError* error;
-    try {
-        THROW_NS_HR(E_INVALIDARG);
-    }
-    CATCH_POPULATE_NSERROR(&error);
-    LOG_INFO(@"The error is %@", [error description]);
 }
 
 @interface NSTestError : NSError
@@ -46,7 +36,7 @@ ARM_DISABLED_TEST(NSError, NSErrorCatchPopulate) {
 
 TEST(NSError, NSErrorSubclassable) {
     NSString* expectedDomain = @"testDomain";
-    NSDictionary* expectedUserInfo = @{@1 : @"foo", @2 : @"bar"};
+    NSDictionary* expectedUserInfo = @{ @1 : @"foo", @2 : @"bar" };
     NSInteger expectedCode = 2;
     NSTestError* testError = [[[NSTestError alloc] initWithDomain:expectedDomain code:expectedCode userInfo:expectedUserInfo] autorelease];
 
@@ -66,7 +56,7 @@ TEST(NSError, NSErrorSubclassable) {
 
 TEST(NSError, NSErrorBridge) {
     NSString* expectedDomain = @"testDomain";
-    NSDictionary* expectedUserInfo = @{@1 : @"foo", @2 : @"bar"};
+    NSDictionary* expectedUserInfo = @{ @1 : @"foo", @2 : @"bar" };
     NSInteger expectedCode = 2;
     NSError* testError = [NSError errorWithDomain:expectedDomain code:expectedCode userInfo:expectedUserInfo];
 
@@ -82,13 +72,11 @@ TEST(NSError, NSErrorBridge) {
 
 TEST(NSError, NSCFErrorBridge) {
     NSString* expectedDomain = @"testDomain";
-    NSDictionary* expectedUserInfo = @{@1 : @"foo", @2 : @"bar"};
+    NSDictionary* expectedUserInfo = @{ @1 : @"foo", @2 : @"bar" };
     NSInteger expectedCode = 2;
 
-    NSError* testError = (__bridge NSError*)CFErrorCreate(kCFAllocatorDefault,
-        (__bridge CFStringRef)expectedDomain,
-        expectedCode,
-        (__bridge CFDictionaryRef)expectedUserInfo);
+    NSError* testError = (__bridge NSError*)
+        CFErrorCreate(kCFAllocatorDefault, (__bridge CFStringRef)expectedDomain, expectedCode, (__bridge CFDictionaryRef)expectedUserInfo);
 
     ASSERT_OBJCEQ([testError domain], expectedDomain);
     ASSERT_EQ((long)[testError code], (long)expectedCode);
@@ -99,3 +87,13 @@ TEST(NSError, NSCFErrorBridge) {
     [testError release];
 }
 
+TEST(NSError, CanBeArchived) {
+    NSString* expectedDomain = @"testDomain";
+    NSDictionary* expectedUserInfo = @{@1 : @"foo", @2 : @"bar"};
+    NSInteger expectedCode = 2;
+    NSError* expected = [NSError errorWithDomain:expectedDomain code:expectedCode userInfo:expectedUserInfo];
+
+    id data = [NSKeyedArchiver archivedDataWithRootObject:expected];
+    id actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    ASSERT_OBJCEQ(expected, actual);
+}

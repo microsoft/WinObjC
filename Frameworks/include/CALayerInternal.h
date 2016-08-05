@@ -20,6 +20,7 @@
 #import <LinkedList.h>
 #import <AccessibilityInternal.h>
 #import <UIKit/UIImage.h>
+#import "UIColorInternal.h"
 
 @class CAAnimation, CALayerContext;
 
@@ -43,7 +44,7 @@ public:
 
     CATransform3D transform;
     CATransform3D sublayerTransform;
-    ColorQuad backgroundColor, borderColor, contentColor;
+    __CGColorQuad backgroundColor, borderColor, contentColor;
     float borderWidth, cornerRadius;
     float opacity;
 };

@@ -86,7 +86,7 @@ ASSETSLIBRARY_EXPORT_CLASS
 + (void)disableSharedPhotoStreamsSupport STUB_METHOD;
 - (void)assetForURL:(NSURL*)assetURL
         resultBlock:(ALAssetsLibraryAssetForURLResultBlock)resultBlock
-       failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock STUB_METHOD;
+       failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock;
 - (void)enumerateGroupsWithTypes:(ALAssetsGroupType)types
                       usingBlock:(ALAssetsLibraryGroupsEnumerationResultsBlock)enumerationBlock
                     failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock STUB_METHOD;

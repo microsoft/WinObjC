@@ -24,7 +24,7 @@
 #define CONCAT(x, y) _CONCAT(x, y)
 #define TEST_IDENT(x) CONCAT(TEST_PREFIX, _##x)
 
-@interface TEST_IDENT(Observee): NSObject {
+@interface TEST_IDENT (Observee): NSObject {
     NSMutableArray* _bareArray;
     NSMutableArray* _manualNotificationArray;
     NSMutableArray* _kvcMediatedArray;
@@ -32,7 +32,7 @@
 }
 @end
 
-@implementation TEST_IDENT(Observee)
+@implementation TEST_IDENT (Observee)
 - (instancetype)init {
     if (self = [super init]) {
         _bareArray = [NSMutableArray new];
@@ -78,7 +78,7 @@
 }
 @end
 
-@interface TEST_IDENT(Observer): NSObject {
+@interface TEST_IDENT (Observer): NSObject {
     StrongId<NSArray<void (^)(NSString*, id, NSDictionary*, void*)>> _callbacks;
     NSUInteger _callbackIndex;
 }
@@ -88,7 +88,7 @@
 - (void)performBlock:(void (^)())block andExpectChangeCallbacks:(NSArray<void (^)(NSString*, id, NSDictionary*, void*)>*)callbacks;
 @end
 
-@implementation TEST_IDENT(Observer)
+@implementation TEST_IDENT (Observer)
 - (void)performBlock:(void (^)())block andExpectChangeCallbacks:(NSArray<void (^)(NSString*, id, NSDictionary*, void*)>*)callbacks {
     _hits = 0;
     _callbackIndex = 0;
@@ -106,7 +106,7 @@
 }
 @end
 
-@interface TEST_IDENT(Facade): NSObject {
+@interface TEST_IDENT (Facade): NSObject {
     StrongId<TEST_IDENT(Observee)> _observee;
     StrongId<TEST_IDENT(Observer)> _observer;
 }
@@ -115,7 +115,7 @@
     andExpectChangeCallbacks:(NSArray<void (^)(NSString*, id, NSDictionary*, void*)>*)callbacks;
 @end
 
-@implementation TEST_IDENT(Facade)
+@implementation TEST_IDENT (Facade)
 - (instancetype)init {
     if (self = [super init]) {
         _observee.attach([TEST_IDENT(Observee) new]);
@@ -163,10 +163,12 @@ TEST(KVO, ToMany_NoNotificationOnBareArray) {
     [facade observeKeyPath:@"bareArray"
                      withOptions:0
                  performingBlock:PERFORM { [observee addObjectToBareArray:@"hello"]; }
-        andExpectChangeCallbacks:@[ CHANGE_CB {
-            // Any notification here is illegal.
-            ADD_FAILURE();
-        } ]];
+        andExpectChangeCallbacks:@[
+            CHANGE_CB {
+                // Any notification here is illegal.
+                ADD_FAILURE();
+            }
+        ]];
     EXPECT_EQ(0, facade.hits);
 }
 

@@ -153,7 +153,6 @@
     <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFOldStylePList.c" />
     <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFPropertyList.c" />
     <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLInputStream.c" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLInterface.c" />
     <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLNode.c" />
     <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLParser.c" />
     <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLTree.c" />
@@ -269,7 +268,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\;$(StarboardBasePath)\Frameworks\CoreFoundation;$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\;$(StarboardBasePath)\Frameworks\CoreFoundation;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;</AdditionalIncludeDirectories>
       <AdditionalOptions>-DCF_BUILDING_CF=1 -DTARGET_OS_WIN32=1 -DDEPLOYMENT_TARGET_WINDOWS=1 -DHAVE_STRUCT_TIMESPEC=1 -DINCLUDE_OBJC=1 -DUNICODE -DDISPATCH_NO_LEGACY=1 -D__XSI_VISIBLE=500 -DTARGET_IPHONE_SIMULATOR=0 -D__CONSTANT_CFSTRINGS__=1 -DDEBUG=1 %(AdditionalOptions) </AdditionalOptions>
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
@@ -279,12 +278,13 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\WOCStdLib;$(StarboardBasePath)\Frameworks\CoreFoundation\Base.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\AppServices.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Collections.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Error.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Locale.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\NumberDate.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Parsing.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Plugin.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Preferences.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\RunLoop.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Stream.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\String.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\StringEncodings.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\URL.SubProj;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include\WOCStdLib;$(StarboardBasePath)\Frameworks\CoreFoundation\Base.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\AppServices.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Collections.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Error.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Locale.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\NumberDate.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Parsing.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Plugin.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Preferences.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\RunLoop.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Stream.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\String.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\StringEncodings.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\URL.SubProj;</IncludePaths>
       <AdditionalOptions>-DCF_BUILDING_CF=1 -DTARGET_OS_WIN32=1 -DDEPLOYMENT_TARGET_WINDOWS=1 -DHAVE_STRUCT_TIMESPEC=1 -DINCLUDE_OBJC=1 -DUNICODE -DDISPATCH_NO_LEGACY=1 -D__XSI_VISIBLE=500 -DTARGET_IPHONE_SIMULATOR=0 -D__CONSTANT_CFSTRINGS__=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol -Wno-duplicate-decl-specifier -Wno-nonnull -Wno-receiver-expr -Wno-msvc-include -Wno-deprecated-declarations -Wno-switch</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <PrefixHeader>$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\Base.subproj\CoreFoundation_Prefix.h</PrefixHeader>
       <CompileAs>CompileAsObjCpp</CompileAs>
+      <PreprocessorDefinitions>WIL_IGNORE_OBJC_EXCEPTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -294,7 +294,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\;$(StarboardBasePath)\Frameworks\CoreFoundation;$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\;$(StarboardBasePath)\Frameworks\CoreFoundation;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;</AdditionalIncludeDirectories>
       <AdditionalOptions>-DCF_BUILDING_CF=1 -DTARGET_OS_WIN32=1 -DDEPLOYMENT_TARGET_WINDOWS=1 -DHAVE_STRUCT_TIMESPEC=1 -DINCLUDE_OBJC=1 -DUNICODE -DDISPATCH_NO_LEGACY=1 -D__XSI_VISIBLE=500 -DTARGET_IPHONE_SIMULATOR=0 -D__CONSTANT_CFSTRINGS__=1 %(AdditionalOptions) </AdditionalOptions>
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
@@ -304,13 +304,14 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\WOCStdLib;$(StarboardBasePath)\Frameworks\CoreFoundation\Base.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\AppServices.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Collections.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Error.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Locale.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\NumberDate.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Parsing.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Plugin.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Preferences.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\RunLoop.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Stream.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\String.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\StringEncodings.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\URL.SubProj;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include\WOCStdLib;$(StarboardBasePath)\Frameworks\CoreFoundation\Base.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\AppServices.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Collections.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Error.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Locale.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\NumberDate.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Parsing.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Plugin.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Preferences.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\RunLoop.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Stream.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\String.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\StringEncodings.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\URL.SubProj;</IncludePaths>
       <AdditionalOptions>-DCF_BUILDING_CF=1 -DTARGET_OS_WIN32=1 -DDEPLOYMENT_TARGET_WINDOWS=1 -DHAVE_STRUCT_TIMESPEC=1 -DINCLUDE_OBJC=1 -DUNICODE -DDISPATCH_NO_LEGACY=1 -D__XSI_VISIBLE=500 -DTARGET_IPHONE_SIMULATOR=0 -D__CONSTANT_CFSTRINGS__=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol -Wno-duplicate-decl-specifier -Wno-nonnull -Wno-receiver-expr -Wno-msvc-include -Wno-deprecated-declarations -Wno-switch</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <OptimizationLevel>Full</OptimizationLevel>
       <PrefixHeader>$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\Base.subproj\CoreFoundation_Prefix.h</PrefixHeader>
       <CompileAs>CompileAsObjCpp</CompileAs>
+      <PreprocessorDefinitions>WIL_IGNORE_OBJC_EXCEPTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -321,7 +322,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\;$(StarboardBasePath)\Frameworks\CoreFoundation;$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\;$(StarboardBasePath)\Frameworks\CoreFoundation;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;</AdditionalIncludeDirectories>
       <AdditionalOptions>-DCF_BUILDING_CF=1 -DTARGET_OS_WIN32=1 -DDEPLOYMENT_TARGET_WINDOWS=1 -DHAVE_STRUCT_TIMESPEC=1 -DINCLUDE_OBJC=1 -DUNICODE -DDISPATCH_NO_LEGACY=1 -D__XSI_VISIBLE=500 -DTARGET_IPHONE_SIMULATOR=0 -D__CONSTANT_CFSTRINGS__=1 -DDEBUG=1 %(AdditionalOptions) </AdditionalOptions>
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
@@ -331,12 +332,13 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\WOCStdLib;$(StarboardBasePath)\Frameworks\CoreFoundation\Base.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\AppServices.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Collections.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Error.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Locale.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\NumberDate.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Parsing.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Plugin.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Preferences.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\RunLoop.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Stream.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\String.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\StringEncodings.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\URL.SubProj;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include\WOCStdLib;$(StarboardBasePath)\Frameworks\CoreFoundation\Base.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\AppServices.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Collections.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Error.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Locale.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\NumberDate.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Parsing.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Plugin.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Preferences.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\RunLoop.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Stream.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\String.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\StringEncodings.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\URL.SubProj;</IncludePaths>
       <AdditionalOptions>-DCF_BUILDING_CF=1 -DTARGET_OS_WIN32=1 -DDEPLOYMENT_TARGET_WINDOWS=1 -DHAVE_STRUCT_TIMESPEC=1 -DINCLUDE_OBJC=1 -DUNICODE -DDISPATCH_NO_LEGACY=1 -D__XSI_VISIBLE=500 -DTARGET_IPHONE_SIMULATOR=0 -D__CONSTANT_CFSTRINGS__=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol -Wno-duplicate-decl-specifier -Wno-nonnull -Wno-receiver-expr -Wno-msvc-include -Wno-deprecated-declarations -Wno-switch</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <PrefixHeader>$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\Base.subproj\CoreFoundation_Prefix.h</PrefixHeader>
       <CompileAs>CompileAsObjCpp</CompileAs>
+      <PreprocessorDefinitions>WIL_IGNORE_OBJC_EXCEPTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -346,7 +348,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\;$(StarboardBasePath)\Frameworks\CoreFoundation;$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\;$(StarboardBasePath)\Frameworks\CoreFoundation;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;</AdditionalIncludeDirectories>
       <AdditionalOptions>-DCF_BUILDING_CF=1 -DTARGET_OS_WIN32=1 -DDEPLOYMENT_TARGET_WINDOWS=1 -DHAVE_STRUCT_TIMESPEC=1 -DINCLUDE_OBJC=1 -DUNICODE -DDISPATCH_NO_LEGACY=1 -D__XSI_VISIBLE=500 -DTARGET_IPHONE_SIMULATOR=0 -D__CONSTANT_CFSTRINGS__=1 %(AdditionalOptions) </AdditionalOptions>
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
@@ -356,15 +358,16 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\WOCStdLib;$(StarboardBasePath)\Frameworks\CoreFoundation\Base.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\AppServices.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Collections.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Error.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Locale.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\NumberDate.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Parsing.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Plugin.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Preferences.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\RunLoop.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Stream.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\String.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\StringEncodings.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\URL.SubProj;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include\WOCStdLib;$(StarboardBasePath)\Frameworks\CoreFoundation\Base.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\AppServices.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Collections.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Error.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Locale.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\NumberDate.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Parsing.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Plugin.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Preferences.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\RunLoop.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Stream.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\String.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\StringEncodings.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\URL.SubProj;</IncludePaths>
       <AdditionalOptions>-DCF_BUILDING_CF=1 -DTARGET_OS_WIN32=1 -DDEPLOYMENT_TARGET_WINDOWS=1 -DHAVE_STRUCT_TIMESPEC=1 -DINCLUDE_OBJC=1 -DUNICODE -DDISPATCH_NO_LEGACY=1 -D__XSI_VISIBLE=500 -DTARGET_IPHONE_SIMULATOR=0 -D__CONSTANT_CFSTRINGS__=1 %(AdditionalOptions)-Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol -Wno-duplicate-decl-specifier -Wno-nonnull -Wno-receiver-expr -Wno-msvc-include -Wno-deprecated-declarations -Wno-switch</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <OptimizationLevel>Full</OptimizationLevel>
       <PrefixHeader>$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\Base.subproj\CoreFoundation_Prefix.h</PrefixHeader>
       <CompileAs>CompileAsObjCpp</CompileAs>
+      <PreprocessorDefinitions>WIL_IGNORE_OBJC_EXCEPTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClangCompile>
-  </ItemDefinitionGroup> 
+  </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>

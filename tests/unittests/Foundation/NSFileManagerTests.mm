@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -20,18 +20,46 @@
 #include <time.h>
 #include <stdio.h>
 #include <errno.h>
-#include <Foundation/NSFileManager.h>
-#include <Foundation/NSNumber.h>
-#include <Foundation/NSDate.h>
-#include <Foundation/NSURL.h>
-#include "stdlib.h"
-#include "windows.h"
+#include <Foundation/Foundation.h>
+#include <stdlib.h>
+#include <windows.h>
+#include <Starboard/SmartTypes.h>
+
+static NSString* getModulePath() {
+    char fullPath[_MAX_PATH];
+    GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
+    return [@(fullPath) stringByDeletingLastPathComponent];
+}
+
+static NSString* getPathToFile(NSString* fileName) {
+    static StrongId<NSString*> refPath = getModulePath();
+    return [refPath stringByAppendingPathComponent:fileName];
+}
+
+static void createFileWithContentAndVerify(NSString* fileName, NSString* content) {
+    NSString* fullPath = getPathToFile(fileName);
+    NSError* error = nil;
+    ASSERT_TRUE([content writeToFile:fullPath atomically:NO encoding:NSUTF8StringEncoding error:&error]);
+    ASSERT_EQ(nil, error);
+    ASSERT_TRUE([[NSFileManager defaultManager] fileExistsAtPath:fullPath]);
+}
+
+void deleteFile(NSString* name) {
+    NSString* fullPath = getPathToFile(name);
+    if ([[NSFileManager defaultManager] fileExistsAtPath:fullPath]) {
+        [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
+    }
+};
+
+using unique_fileDeleter = std::unique_ptr<NSString, decltype(&deleteFile)>;
 
 TEST(NSFileManager, GetAttributes) {
     // get test startup full path
     wchar_t fullPath[_MAX_PATH];
-    GetModuleFileNameW(NULL, fullPath, _MAX_PATH);
+    size_t len = GetModuleFileNameW(NULL, fullPath, _MAX_PATH);
 
+// Window needs extra handling for the drive character
+#if TARGET_OS_WIN32
     // split test startup full path into components like drive, directory, filename and ext etc.
     wchar_t drive[_MAX_DRIVE];
     wchar_t dir[_MAX_DIR];
@@ -40,7 +68,8 @@ TEST(NSFileManager, GetAttributes) {
     // reconstruct fullpath for test artifact file. e.g., C:\WinObjc\WinObjC\build\Debug\data\NSFileManagerUT.txt
     ASSERT_TRUE(wcscat_s(dir, _countof(dir), L"\\data\\") == 0);
     ASSERT_TRUE(::_wmakepath_s(fullPath, _countof(fullPath), drive, dir, L"NSFileManagerUT", L".txt") == 0);
-    NSString* testFileFullPath = [NSString stringWithCharacters:(const unichar*)fullPath length:_MAX_PATH];
+#endif
+    NSString* testFileFullPath = [NSString stringWithCharacters:(const unichar*)fullPath length:len + 1];
 
     LOG_INFO("this test try to validate file creation date and modification date and size for %@", testFileFullPath);
     NSFileManager* manager = [NSFileManager defaultManager];
@@ -49,9 +78,17 @@ TEST(NSFileManager, GetAttributes) {
     NSDictionary* attributes = [manager fileAttributesAtPath:testFileFullPath traverseLink:YES];
     ASSERT_TRUE_MSG(attributes != nil, "failed to get file attributes for %@", testFileFullPath);
 
-    // get file attributes from windows side
+// Get file attributes from OS-side
+// _stat and _wstat are MS extensions
+#if TARGET_OS_WIN32
     struct _stat fileStatus = { 0 };
     ASSERT_TRUE(::_wstat(fullPath, &fileStatus) == 0);
+#else
+    struct stat fileStatus = { 0 };
+    char narrowFullPath[_MAX_PATH];
+    wcstombs(narrowFullPath, fullPath, _MAX_PATH);
+    ASSERT_TRUE(stat(narrowFullPath, &fileStatus) == 0);
+#endif
 
     // check file creation date
     NSDate* expectedCreationDate = [NSDate dateWithTimeIntervalSince1970:(double)fileStatus.st_ctime];
@@ -66,9 +103,7 @@ TEST(NSFileManager, GetAttributes) {
     ASSERT_OBJCEQ_MSG(expectedModificationDate, modificationDate, "failed to check modification date for %@", testFileFullPath);
 
     // now check file size
-    ASSERT_TRUE_MSG(fileStatus.st_size == reinterpret_cast<long>([attributes fileSize]),
-                    "failed to check file size for %@",
-                    testFileFullPath);
+    ASSERT_EQ_MSG(fileStatus.st_size, static_cast<long>([attributes fileSize]), "failed to check file size for %@", testFileFullPath);
 }
 
 TEST(NSFileManager, EnumateDirectoryUsingURL) {
@@ -76,11 +111,14 @@ TEST(NSFileManager, EnumateDirectoryUsingURL) {
     wchar_t startUpPath[_MAX_PATH];
     GetModuleFileNameW(NULL, startUpPath, _MAX_PATH);
 
+// Window needs extra handling for the drive character
+#if TARGET_OS_WIN32
     // construct the start up dir
     wchar_t drive[_MAX_DRIVE];
     wchar_t dir[_MAX_DIR];
     ASSERT_TRUE(::_wsplitpath_s(startUpPath, drive, _countof(drive), dir, _countof(dir), NULL, 0, NULL, 0) == 0);
     ASSERT_TRUE(::_wmakepath_s(startUpPath, _countof(startUpPath), drive, dir, L"", L"") == 0);
+#endif
 
     // change current dir to app start up path
     ASSERT_TRUE(SetCurrentDirectoryW(startUpPath) != 0);
@@ -111,10 +149,26 @@ TEST(NSFileManager, EnumateDirectoryUsingURL) {
 
     // construct file path for target file and get its attrbutes from windows side
     wchar_t targetFileFullPath[_MAX_PATH];
+
+// wcscpy_s and wcscat_s are MSVC extensions
+#if TARGET_OS_WIN32
     ASSERT_TRUE(wcscpy_s(targetFileFullPath, _countof(targetFileFullPath), currentDir) == 0);
     ASSERT_TRUE(wcscat_s(targetFileFullPath, _countof(targetFileFullPath), L"\\data\\NSFileManagerUT.txt") == 0);
+#else
+    ASSERT_NE(nullptr, wcscpy(targetFileFullPath, currentDir));
+    ASSERT_NE(nullptr, wcscat(targetFileFullPath, L"\\data\\NSFileManagerUT.txt"));
+#endif
+
+// _stat and _wstat are MS extensions
+#if TARGET_OS_WIN32
     struct _stat fileStatus = { 0 };
     ASSERT_TRUE(::_wstat(targetFileFullPath, &fileStatus) == 0);
+#else
+    struct stat fileStatus = { 0 };
+    char narrowFullPath[_MAX_PATH];
+    wcstombs(narrowFullPath, targetFileFullPath, _MAX_PATH);
+    ASSERT_TRUE(stat(narrowFullPath, &fileStatus) == 0);
+#endif
 
     // TODO: 7491194: Implement CFURL resourceValue APIs
     // check NSURL resourceValue of NSURLContentModificationDateKey is the same as file modification date
@@ -136,4 +190,54 @@ TEST(NSFileManager, ChangeDirectory) {
     NSString* currentPath = [manager currentDirectoryPath];
     ASSERT_OBJCNE_MSG(originalPath, currentPath, "Expected change in current directory");
     ASSERT_OBJCEQ_MSG(parentPath, currentPath, "Expected current directory to change to parentPath");
+}
+
+TEST(NSFileManager, MoveFileViaPath) {
+    unique_fileDeleter srcName(@"NSFileManagerMoveTestFilePath.txt", deleteFile);
+    unique_fileDeleter destName(@"MovedFilePath.txt", deleteFile);
+
+    NSString* content = @"The Quick Brown Fox.";
+    createFileWithContentAndVerify(srcName.get(), content);
+
+    NSString* srcPath = getPathToFile(srcName.get());
+    NSString* destPath = getPathToFile(destName.get());
+
+    NSFileManager* manager = [NSFileManager defaultManager];
+
+    NSError* error = nil;
+    BOOL status = [manager moveItemAtPath:srcPath toPath:destPath error:&error];
+    ASSERT_TRUE(status);
+    EXPECT_EQ(nil, error);
+
+    // Verify file exists.
+    ASSERT_TRUE([manager fileExistsAtPath:destPath]);
+    EXPECT_FALSE([manager fileExistsAtPath:srcPath]);
+
+    // Verify data.
+    ASSERT_OBJCEQ([content dataUsingEncoding:NSUTF8StringEncoding], [NSData dataWithContentsOfFile:destPath]);
+}
+
+TEST(NSFileManager, MoveFileViaURL) {
+    unique_fileDeleter srcName(@"NSFileManagerMoveTestFileURL.txt", deleteFile);
+    unique_fileDeleter destName(@"MovedFileURL.txt", deleteFile);
+
+    NSString* content = @"The Quick Brown Fox.";
+    createFileWithContentAndVerify(srcName.get(), content);
+
+    NSURL* srcURL = [NSURL fileURLWithPath:getPathToFile(srcName.get())];
+    NSURL* destURL = [NSURL fileURLWithPath:getPathToFile(destName.get())];
+
+    NSFileManager* manager = [NSFileManager defaultManager];
+
+    NSError* error = nil;
+    BOOL status = [manager moveItemAtURL:srcURL toURL:destURL error:&error];
+    ASSERT_TRUE(status);
+    EXPECT_EQ(nil, error);
+
+    // Verify file exists.
+    ASSERT_TRUE([manager fileExistsAtPath:[destURL path]]);
+    EXPECT_FALSE([manager fileExistsAtPath:[srcURL path]]);
+
+    // Verify data.
+    ASSERT_OBJCEQ([content dataUsingEncoding:NSUTF8StringEncoding], [NSData dataWithContentsOfURL:destURL]);
 }

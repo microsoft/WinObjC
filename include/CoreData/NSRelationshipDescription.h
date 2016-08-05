@@ -27,12 +27,12 @@ typedef NS_ENUM(NSUInteger, NSDeleteRule) { NSNoActionDeleteRule, NSNullifyDelet
 
 COREDATA_EXPORT_CLASS
 @interface NSRelationshipDescription : NSPropertyDescription <NSCoding, NSCopying>
-@property (assign, nonatomic) NSEntityDescription* destinationEntity STUB_PROPERTY;
-@property (assign, nonatomic) NSRelationshipDescription* inverseRelationship STUB_PROPERTY;
-@property NSDeleteRule deleteRule STUB_PROPERTY;
-@property NSUInteger maxCount STUB_PROPERTY;
-@property NSUInteger minCount STUB_PROPERTY;
-@property (readonly, getter=isToMany) BOOL toMany STUB_PROPERTY;
-@property (getter=isOrdered) BOOL ordered STUB_PROPERTY;
+@property (assign, nonatomic) NSEntityDescription* destinationEntity;
+@property (assign, nonatomic) NSRelationshipDescription* inverseRelationship;
+@property NSDeleteRule deleteRule;
+@property NSUInteger maxCount;
+@property NSUInteger minCount;
+@property (readonly, getter=isToMany) BOOL toMany;
+@property (getter=isOrdered) BOOL ordered;
 @property (readonly, copy) NSData* versionHash STUB_PROPERTY;
 @end

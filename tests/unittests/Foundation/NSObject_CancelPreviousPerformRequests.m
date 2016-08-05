@@ -19,6 +19,7 @@
 #import "Starboard/SmartTypes.h"
 
 #import <future>
+#import <windows.h>
 
 @interface TestObject : NSObject {
     StrongId<NSCondition> _fooCondition;
@@ -44,14 +45,14 @@
 }
 
 - (void)incrementFoo {
-    @synchronized (self) {
+    @synchronized(self) {
         self.foo += 1;
         [_fooCondition broadcast];
     }
 }
 
 - (void)incrementBar:(NSNumber*)amount {
-    @synchronized (self) {
+    @synchronized(self) {
         self.bar += [amount intValue];
         [_barCondition broadcast];
     }
@@ -72,17 +73,18 @@ TEST(NSObject, PerformSelectorAfterDelaySanity) {
     volatile long fooWaitCompleted = 0;
     StrongId<TestObject> testObject = [[[TestObject alloc] init] autorelease];
 
-    auto fooChangedAsync = std::async(std::launch::async, [&fooWaitCompleted, testObject](){
-        BOOL fooChanged = [testObject waitOnFooForInterval:testDuration] && [testObject foo] != 0;
-        _InterlockedExchange(&fooWaitCompleted, 1L);
-        return fooChanged;
-    });
+    auto fooChangedAsync = std::async(std::launch::async,
+                                      [&fooWaitCompleted, testObject]() {
+                                          BOOL fooChanged = [testObject waitOnFooForInterval:testDuration] && [testObject foo] != 0;
+                                          _InterlockedExchange(&fooWaitCompleted, 1L);
+                                          return fooChanged;
+                                      });
 
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
     [testObject performSelector:@selector(incrementFoo) withObject:nil afterDelay:0.25];
 
-    for(;;) {
+    for (;;) {
         // Spin the run loop until the async test wait gives up or completes.
         [runLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
         if (fooWaitCompleted) {
@@ -97,11 +99,12 @@ TEST(NSObject, CancelPreviousPerformRequestsWithTarget) {
     volatile long fooWaitCompleted = 0;
     StrongId<TestObject> testObject = [[[TestObject alloc] init] autorelease];
 
-    auto fooChangedAsync = std::async(std::launch::async, [&fooWaitCompleted, testObject](){
-        BOOL fooChanged = [testObject waitOnFooForInterval:testDuration] && [testObject foo] != 0;
-        _InterlockedExchange(&fooWaitCompleted, 1L);
-        return fooChanged;
-    });
+    auto fooChangedAsync = std::async(std::launch::async,
+                                      [&fooWaitCompleted, testObject]() {
+                                          BOOL fooChanged = [testObject waitOnFooForInterval:testDuration] && [testObject foo] != 0;
+                                          _InterlockedExchange(&fooWaitCompleted, 1L);
+                                          return fooChanged;
+                                      });
 
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
@@ -110,7 +113,7 @@ TEST(NSObject, CancelPreviousPerformRequestsWithTarget) {
 
     [NSObject cancelPreviousPerformRequestsWithTarget:testObject];
 
-    for(;;) {
+    for (;;) {
         // Spin the run loop until the async test wait gives up or completes.
         [runLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
         if (fooWaitCompleted) {
@@ -125,17 +128,19 @@ TEST(NSObject, CancelPreviousPerformRequestsWithTargetSelectorObject) {
     volatile long fooWaitCompleted = 0, barWaitCompleted = 0;
     StrongId<TestObject> testObject = [[[TestObject alloc] init] autorelease];
 
-    auto fooChangedAsync = std::async(std::launch::async, [&fooWaitCompleted, testObject](){
-        BOOL fooChanged = [testObject waitOnFooForInterval:testDuration] && [testObject foo] != 0;
-        _InterlockedExchange(&fooWaitCompleted, 1L);
-        return fooChanged;
-    });
+    auto fooChangedAsync = std::async(std::launch::async,
+                                      [&fooWaitCompleted, testObject]() {
+                                          BOOL fooChanged = [testObject waitOnFooForInterval:testDuration] && [testObject foo] != 0;
+                                          _InterlockedExchange(&fooWaitCompleted, 1L);
+                                          return fooChanged;
+                                      });
 
-    auto barChangedAsync = std::async(std::launch::async, [&barWaitCompleted, testObject](){
-        bool barChanged = [testObject waitOnBarForInterval:testDuration] && [testObject bar] != 0;
-        _InterlockedExchange(&barWaitCompleted, 1L);
-        return barChanged;
-    });
+    auto barChangedAsync = std::async(std::launch::async,
+                                      [&barWaitCompleted, testObject]() {
+                                          bool barChanged = [testObject waitOnBarForInterval:testDuration] && [testObject bar] != 0;
+                                          _InterlockedExchange(&barWaitCompleted, 1L);
+                                          return barChanged;
+                                      });
 
     NSNumber* amount = @(5);
 
@@ -148,7 +153,7 @@ TEST(NSObject, CancelPreviousPerformRequestsWithTargetSelectorObject) {
 
     [NSObject cancelPreviousPerformRequestsWithTarget:testObject selector:@selector(incrementBar:) object:amount];
 
-    for(;;) {
+    for (;;) {
         // Spin the run loop until the async test wait gives up or completes.
         [runLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
         if (fooWaitCompleted && barWaitCompleted) {
@@ -159,4 +164,3 @@ TEST(NSObject, CancelPreviousPerformRequestsWithTargetSelectorObject) {
     ASSERT_TRUE_MSG(fooChangedAsync.get(), "testObject.foo did not change despite waiting for selector to fire");
     ASSERT_FALSE_MSG(barChangedAsync.get(), "testObject.bar changed despite being cancelled");
 }
-

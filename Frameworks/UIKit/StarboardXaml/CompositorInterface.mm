@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -44,9 +45,11 @@
 #import <LoggingNative.h>
 #import "StringHelpers.h"
 #import <MainDispatcher.h>
+#import "CoreGraphics/CGImage.h"
 
 #import <UWP/WindowsUIViewManagement.h>
 #import <UWP/WindowsDevicesInput.h>
+#import "UIColorInternal.h"
 
 static const wchar_t* TAG = L"CompositorInterface";
 
@@ -235,9 +238,10 @@ public:
             matched = true;
         }
 
-        // Unrecognized, make 8888 RGBA:
+        // Unrecognized, make 8888 ARGB:
         if (!matched) {
-            CGContextRef ctx = CGBitmapContextCreate32(texWidth, texHeight);
+            CGContextRef ctx = _CGBitmapContextCreateWithFormat(texWidth, texHeight, _ColorARGB);
+
             pNewImage = CGBitmapContextGetImage(ctx);
             CGImageRetain(pNewImage);
 
@@ -337,10 +341,11 @@ public:
         _insets[2] = edgeInsets.right;
         _insets[3] = edgeInsets.bottom;
 
-        ColorQuad colorComponents;
-        [color getColors:&colorComponents];
-
-        ColorQuadToFloatArray(colorComponents, _color);
+        if (color) {
+            memcpy(_color, [color _getColors], sizeof(_color));
+        } else {
+            memset(_color, 0, sizeof(_color));
+        }
 
         _fontSize = [font pointSize];
         _centerVertically = centerVertically;
@@ -361,11 +366,10 @@ public:
 
     void Completed() {
         id animHandler = _animHandler; // Save in a local for the block to retain.
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [animHandler animationDidStop:TRUE];
-                           [animHandler _removeAnimationsFromLayer];
-                       });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [animHandler animationDidStop:TRUE];
+            [animHandler _removeAnimationsFromLayer];
+        });
     }
 
     DisplayAnimationTransition(id animHandler, NSString* type, NSString* subType) {
@@ -728,11 +732,10 @@ public:
 
     void Completed() {
         id animHandler = _animHandler; // Save in a local for the block to retain.
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [animHandler animationDidStop:TRUE];
-                           [animHandler _removeAnimationsFromLayer];
-                       });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [animHandler animationDidStop:TRUE];
+            [animHandler _removeAnimationsFromLayer];
+        });
     }
 
     DisplayAnimationBasic(id animHandler,
@@ -1081,9 +1084,12 @@ public:
         } else if (strcmp(name, "sublayerTransform") == 0) {
             UNIMPLEMENTED_WITH_MSG("sublayerTransform not implemented");
         } else if (strcmp(name, "backgroundColor") == 0) {
-            ColorQuad color{};
-            [(UIColor*)newValue getColors:&color];
-            SetBackgroundColor(color.r, color.g, color.b, color.a);
+            const __CGColorQuad* color = [(UIColor*)newValue _getColors];
+            if (color) {
+                SetBackgroundColor(color->r, color->g, color->b, color->a);
+            } else {
+                SetBackgroundColor(0.0f, 0.0f, 0.0f, 0.0f);
+            }
         } else {
             FAIL_FAST_HR(E_NOTIMPL);
         }

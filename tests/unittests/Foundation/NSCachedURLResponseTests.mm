@@ -16,7 +16,6 @@
 
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
-#import <Foundation/NSCachedURLResponse.h>
 
 TEST(NSCachedURLResponse, initWithResponseAndData) {
     NSData* data = [NSData data];

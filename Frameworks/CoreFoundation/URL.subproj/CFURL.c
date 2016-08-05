@@ -24,11 +24,8 @@
 
 // WINOBJC: need UNIMPLEMENTED(), StubReturn()
 // TODO: 7491994: Can remove this include when all the UNIMPLEMENTED() functions are filled in
-#pragma push_macro("__OBJC__")
-#undef __OBJC__
 #include <ErrorHandling.h>
 #include <StubReturn.h>
-#pragma pop_macro("__OBJC__")
 
 #include <limits.h>
 #include <stdlib.h>

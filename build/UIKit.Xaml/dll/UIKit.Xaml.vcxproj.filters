@@ -31,4 +31,7 @@
     <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\TextBox.xaml" />
     <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Themes\Generic.xaml" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="DummyObjC.m" />
+  </ItemGroup>
 </Project>

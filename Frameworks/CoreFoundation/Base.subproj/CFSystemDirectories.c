@@ -55,7 +55,8 @@ CFSearchPathEnumerationState __CFGetNextSearchPathEnumeration(CFSearchPathEnumer
 #endif
 
 
-#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS
+// WINOBJC: Disable this function only for WinObjC as we don't provide system intrinsics for it.
+#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || (DEPLOYMENT_TARGET_WINDOWS && !defined(WINOBJC))
 
 CFArrayRef CFCopySearchPathForDirectoriesInDomains(CFSearchPathDirectory directory, CFSearchPathDomainMask domainMask, Boolean expandTilde) {
     CFMutableArrayRef array;

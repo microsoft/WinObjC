@@ -38,7 +38,7 @@ struct buttonState {
 @end
 
 @implementation UIButton {
-    ColorQuad _backgroundColor;
+    __CGColorQuad _backgroundColor;
     StrongId<UIColor> _defaultColor;
     buttonState* _states;
     UIEdgeInsets titleInsets, imageInsets, contentInsets;
@@ -123,7 +123,7 @@ static void setLabelProperties(UIButton* self) {
 static void setImageProperties(UIButton* self) {
     [self->_imageView setImage:getImage(self)];
 
-    ColorQuad contentColor = self->_backgroundColor;
+    __CGColorQuad contentColor = self->_backgroundColor;
     if (self->_adjustsImageWhenHighlighted && self->_curState == UIControlStateHighlighted &&
         self->_states[UIControlStateHighlighted].image == nil) {
         contentColor.r = 0.5f;
@@ -991,7 +991,7 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
     if (image != nil) {
         UIImageSetLayerContents([self layer], image);
 
-        ColorQuad contentColor = _backgroundColor;
+        __CGColorQuad contentColor = _backgroundColor;
         if (_adjustsImageWhenHighlighted && _curState == UIControlStateHighlighted && _states[UIControlStateHighlighted].image == nil) {
             contentColor.r = 0.5f;
             contentColor.g = 0.5f;

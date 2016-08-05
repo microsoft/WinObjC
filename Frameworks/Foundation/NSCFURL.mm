@@ -141,7 +141,7 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFURLRef, CFURLGetTypeID, NSURL, NSCFURL)
         ret = [ret stringByRemovingPercentEncoding];
 
         // Remove slashes from before drives
-        if (([ret hasPrefix:_NSGetSlashStr()]) && (_isLetter([ret characterAtIndex:1])) && ([ret characterAtIndex:2] == ':')) {
+        if ([ret length] >= 3 && ([ret hasPrefix:_NSGetSlashStr()]) && (_isLetter([ret characterAtIndex:1])) && ([ret characterAtIndex:2] == ':')) {
             ret = [ret substringFromIndex:1];
         }
 

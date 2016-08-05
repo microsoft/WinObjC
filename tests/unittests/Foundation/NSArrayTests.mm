@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #include <TestFramework.h>
-#include <Foundation\Foundation.h>
+#include <Foundation/Foundation.h>
 
 void assertArrayContents(NSArray* array, NSObject* first, ...) {
     va_list args;
@@ -222,7 +222,6 @@ TEST(NSArray, RemoveObjectsAtIndexes) {
     NSArray* expectedArray = @[ @0, @1, @6, @9 ];
 
     ASSERT_OBJCEQ(testArray, expectedArray);
-
 }
 
 TEST(NSArray, Description) {
@@ -261,21 +260,22 @@ TEST(NSArray, ExpandBeyondCapacity) {
 }
 
 TEST(NSArray, AddingObjects) {
-    assertArrayContents([@[@1, @2] arrayByAddingObjectsFromArray:@[@3, @4]], @1, @2, @3, @4, nil);
+    assertArrayContents([@[ @1, @2 ] arrayByAddingObjectsFromArray:@[ @3, @4 ]], @1, @2, @3, @4, nil);
 }
 
 static int objectIndexInArray(NSArray* array, int value, int startingFrom, int length, NSBinarySearchingOptions options = 0) {
     return [array indexOfObject:[NSNumber numberWithInteger:value]
                   inSortedRange:NSMakeRange(startingFrom, length)
                         options:options
-                usingComparator:^(NSNumber* a, NSNumber* b) { return [a compare:b]; }];
+                usingComparator:^(NSNumber* a, NSNumber* b) {
+                    return [a compare:b];
+                }];
 }
 
 TEST(NSArray, BinarySearchInsertionIndex) {
     NSArray* array = @[ @0, @1, @2, @2, @3, @4, @4, @6, @7, @7, @7, @8, @9, @9 ];
 
-    ASSERT_TRUE_MSG(objectIndexInArray(array, 11, 0, array.count, 0) == NSNotFound,
-                    @"NSArray return NSNotFound if object is not found.");
+    ASSERT_TRUE_MSG(objectIndexInArray(array, 11, 0, array.count, 0) == NSNotFound, @"NSArray return NSNotFound if object is not found.");
 
     ASSERT_TRUE_MSG(objectIndexInArray(array, 11, 0, array.count, NSBinarySearchingFirstEqual) == NSNotFound,
                     @"NSArray return NSNotFound if object is not found.");
@@ -284,8 +284,7 @@ TEST(NSArray, BinarySearchInsertionIndex) {
                     @"NSArray return NSNotFound if object is not found.");
 
     auto notFoundInRange = objectIndexInArray(array, 7, 0, 5);
-    ASSERT_TRUE_MSG(notFoundInRange == NSNotFound,
-                    @"NSArray return NSNotFound if object is not found.");
+    ASSERT_TRUE_MSG(notFoundInRange == NSNotFound, @"NSArray return NSNotFound if object is not found.");
 
     auto indexOfAnySeven = objectIndexInArray(array, 7, 0, array.count);
     ASSERT_TRUE_MSG((indexOfAnySeven >= 8) && (indexOfAnySeven <= 10),
@@ -343,10 +342,48 @@ TEST(NSArray, BinarySearchInsertionIndex) {
 TEST(NSArray, MutateDuringEnumeration) {
     __block NSMutableArray* array = [NSMutableArray arrayWithObjects:@"A", @"B", @"C", nil];
     void (^enumerate)() = ^{
-        for(id object in array) {
+        for (id object in array) {
             [array addObject:@"<sound effects reminiscent of explosions>"];
         }
     };
 
     ASSERT_ANY_THROW(enumerate());
+}
+
+TEST(NSArray, SortedArrayWithOptions) {
+    NSArray* unsortedArray = @[@3, @11, @2, @12, @1, @13];
+
+    NSArray* expectedSortedArray = @[@1, @2, @3, @11, @12, @13];
+    NSArray* actualSortedArray = [unsortedArray sortedArrayWithOptions:0 usingComparator:^NSComparisonResult(id obj1, id obj2) {
+        int val1 = [obj1 intValue];
+        int val2 = [obj2 intValue];
+
+        if (val1 == val2) {
+            return NSOrderedSame;
+        }
+
+        return (val1 > val2) ? NSOrderedDescending : NSOrderedAscending;
+    }];
+
+    ASSERT_OBJCEQ(expectedSortedArray, actualSortedArray);
+
+    // For our stable sort test, we compare using a comparator that treats 1, 2, and 3 as equal and 11, 12, and 13 as equal. Therefore
+    // 3, 2, and 1 should be in original order.
+    NSArray* expectedStableSort = @[@3, @2, @1, @11, @12, @13];
+    NSArray* actualStableSort = [unsortedArray sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(id obj1, id obj2) {
+        int val1 = [obj1 intValue];
+        int val2 = [obj2 intValue];
+
+        if (val1 < 10 && val2 < 10) {
+            return NSOrderedSame;
+        }
+
+        if (val1 > 10 && val2 > 10) {
+            return NSOrderedSame;
+        }
+
+        return (val1 > val2) ? NSOrderedDescending : NSOrderedAscending;
+    }];
+
+    ASSERT_OBJCEQ(expectedStableSort, actualStableSort);
 }

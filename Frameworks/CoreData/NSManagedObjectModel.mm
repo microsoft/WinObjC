@@ -14,17 +14,106 @@
 //
 //******************************************************************************
 
+#import <ErrorHandling.h>
 #import <StubReturn.h>
-#import <CoreData/NSManagedObjectModel.h>
+
+#import <CoreData/CoreData.h>
+#import <Foundation/Foundation.h>
+
+#import <CoreData/NSManagedObjectModel-XMLParsing.h>
+
+@interface NSManagedObjectModel () {
+    StrongId<NSMutableArray> _unresolvedEntities;
+}
+@property (atomic, copy) NSDictionary<NSString*, NSEntityDescription*>* entitiesByName;
+@end
 
 @implementation NSManagedObjectModel
 /**
-@Status Stub
-@Notes
+ @Status Caveat
+ @Notes Parses all relationships, entities, attributes and ignopres configurations and fetch requests.
 */
-- (instancetype)initWithContentsOfURL:(NSURL*)url {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (id)initWithContentsOfURL:(NSURL*)url {
+    [self release];
+    if (!url) {
+        return nil;
+    }
+
+    return [_NSManagedObjectModelFromXMLDataAtURL(url) retain];
+}
+
+- (instancetype)_initWithXMLElementName:(NSString*)entityName attributes:(NSDictionary<NSString*, NSString*>*)attributes {
+    if (self = [super init]) {
+        _unresolvedEntities.attach([NSMutableArray new]);
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [_entities release];
+    [_configurations release];
+    [_localizationDictionary release];
+    [_versionIdentifiers release];
+
+    // derived properties
+    [_entitiesByName release];
+    [_fetchRequestTemplatesByName release];
+    [_entityVersionHashesByName release];
+
+    [super dealloc];
+}
+
+- (bool)_insertChildElement:(id<_NSCDXMLCoding>)childElement {
+    if ([childElement isKindOfClass:[NSEntityDescription class]]) {
+        [_unresolvedEntities addObject:childElement];
+        return YES;
+    }
+    return NO;
+}
+
+/**
+ @Status Caveat
+ @Notes Does not support configurations.
+*/
+- (void)setEntities:(NSArray*)entities forConfiguration:(NSString*)configuration {
+    @synchronized(self) {
+        if (entities == _entities) {
+            return;
+        }
+        [_entities autorelease];
+        _entities = [entities copy];
+
+        NSMutableDictionary<NSString*, NSEntityDescription*>* entitiesByName = [NSMutableDictionary dictionary];
+
+        // Pass 1: add all named entities.
+        for (NSEntityDescription* entity in _entities) {
+            [entity setManagedObjectModel:self];
+            [entitiesByName setObject:entity forKey:entity.name];
+        }
+        self.entitiesByName = entitiesByName;
+    }
+}
+
+- (void)_awakeFromXML {
+    [self setEntities:_unresolvedEntities forConfiguration:nil];
+    for (NSEntityDescription* entity in (id)_unresolvedEntities) {
+        [entity _awakeFromXML];
+    }
+
+    for (NSEntityDescription* entity in (id)_unresolvedEntities) {
+        // This has to happen in a second pass, since inverse relationships can only be established
+        // after every entity is registered on the context, and every entity's relationships have
+        // otherwise been created.
+        [entity _resolveRelationships];
+    }
+    _unresolvedEntities = nil;
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)description {
+    return [NSString stringWithFormat:@"<%@ %p: %@>", object_getClass(self), self, _entitiesByName];
 }
 
 /**
@@ -70,14 +159,6 @@
 - (NSArray*)entitiesForConfiguration:(NSString*)configuration {
     UNIMPLEMENTED();
     return StubReturn();
-}
-
-/**
-@Status Stub
-@Notes
-*/
-- (void)setEntities:(NSArray*)entities forConfiguration:(NSString*)configuration {
-    UNIMPLEMENTED();
 }
 
 /**

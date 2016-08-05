@@ -48,9 +48,9 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
 
 #ifndef WIL_EXPORT
 #ifdef __cplusplus
-#define WIL_EXPORT WIL_IMPEXP extern "C"
+#define WIL_EXPORT extern "C" WIL_IMPEXP
 #else
-#define WIL_EXPORT WIL_IMPEXP extern
+#define WIL_EXPORT extern WIL_IMPEXP
 #endif
 #endif
 
@@ -1689,9 +1689,8 @@ namespace details {
 __declspec(selectany) void(__stdcall* g_pfnTelemetryCallback)(bool alreadyReported, wil::FailureInfo const& failure) WI_NOEXCEPT = nullptr;
 
 // Observe all errors flowing through the system with this callback (set with wil::SetResultLoggingCallback); use with custom logging
-// TODO: WIL logging callback
-// WIL_EXPORT void(__stdcall* g_pfnLoggingCallback)(wil::FailureInfo const& failure) WI_NOEXCEPT;
-__declspec(selectany) void(__stdcall* g_pfnLoggingCallback)(wil::FailureInfo const& failure) WI_NOEXCEPT = nullptr;
+// WIL logging callback; exported from our logging binary so the same instance is shared across all of our modules in a given process.
+WIL_EXPORT void(__stdcall* g_pfnLoggingCallback)(wil::FailureInfo const& failure) WI_NOEXCEPT;
 
 // True if g_pfnResultLoggingCallback is set (allows cutting off backwards compat calls to the function)
 __declspec(selectany) bool g_resultMessageCallbackSet = false;
@@ -2554,7 +2553,7 @@ inline void SetResultTelemetryFallback(_In_opt_ decltype(details::g_pfnTelemetry
 
 inline void SetResultLoggingCallback(_In_opt_ decltype(details::g_pfnLoggingCallback) callbackFunction) {
     // Only ONE function can own the result logging callback
-    __FAIL_FAST_PRERELEASE_ASSERT__((details::g_pfnLoggingCallback == nullptr) || (callbackFunction == nullptr));
+    __FAIL_FAST_PRERELEASE_ASSERT__((details::g_pfnLoggingCallback == nullptr) || (details::g_pfnLoggingCallback == callbackFunction) || (callbackFunction == nullptr));
     details::g_pfnLoggingCallback = callbackFunction;
 }
 
@@ -3067,16 +3066,9 @@ inline void LogFailure(__R_FN_PARAMS_FULL,
     // Caller bug: Leaking a success code into a failure-only function
     FAIL_FAST_IF(SUCCEEDED(failure->hr) && (type != FailureType::FailFast));
 
-    // TODO: We probably don't want to do this once we've hooked into our logging/telemetry pipeline, 
-    // as that will *also* log to the debugger.
-    // We log to OutputDebugString if:
-    // * Someone set g_fResultOutputDebugString to true (by the calling module or in the debugger)
-    bool const fUseOutputDebugString = g_fResultOutputDebugString;
-
     // We need to generate the logging message if:
-    // * We're logging to OutputDebugString
-    // * OR the caller asked us to (generally for attaching to a C++/CX exception)
-    if (fWantDebugString || fUseOutputDebugString) {
+    // * The caller asked us to (generally for attaching to a C++/CX exception)
+    if (fWantDebugString) {
         // Call the logging callback (if present) to allow them to generate the debug string that will be pushed to the console
         // or the platform exception object if the caller desires it.
         if (g_pfnResultLoggingCallback != nullptr) {
@@ -3087,11 +3079,6 @@ inline void LogFailure(__R_FN_PARAMS_FULL,
         // it for OutputDebugString or exception message, then generate the default string.
         if (debugString[0] == L'\0') {
             GetFailureLogString(debugString, debugStringSizeChars, *failure);
-        }
-
-        // Log to the debugger if required
-        if (fUseOutputDebugString) {
-            ::OutputDebugStringW(debugString);
         }
     } else {
         // [deprecated behavior]
@@ -4931,7 +4918,7 @@ struct err_exception_policy {
 
 } // namespace wil
 
-#ifdef __OBJC__
+#if defined(__OBJC__) && !defined(WIL_IGNORE_OBJC_EXCEPTIONS)
 
 #import <Foundation/NSError.h>
 #import <Foundation/NSNumber.h>
@@ -5024,7 +5011,7 @@ void _catchAndPopulateNSError(NSError** outError) {
         unsigned errorCode = E_UNEXPECTED;
 
         // If we have an hresult in our user dict, use that, otherwise this was unexpected:
-        NSNumber* hresultValue = [e.userInfo objectForKey:[NSString stringWithCString:"hresult"]];
+        NSNumber* hresultValue = e.userInfo[g_NSHResultErrorDictKey];
         if (hresultValue) {
             errorCode = [hresultValue unsignedIntValue];
         }
@@ -5077,6 +5064,7 @@ void _rethrowNormalizedCaughtExceptionObjC(__R_FN_PARAMS_FULL, _In_opt_ PCWSTR m
 
 }
 
+// Misspelling is intentional
 WI_HEADER_INITITALIZATION_FUNCTION(InitializeObjCExceptions, [] {
     g_resultFromUncaughtExceptionObjC = _resultFromUncaughtExceptionObjC;
     g_rethrowAsNSException = _rethrowAsNSException;

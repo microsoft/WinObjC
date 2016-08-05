@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -35,7 +36,7 @@
 #include "QuartzCore/CAEAGLLayer.h"
 #include "CAEAGLLayerInternal.h"
 
-#include "..\include\CACompositor.h"
+#include "CACompositor.h"
 #include "CAAnimationInternal.h"
 #include "CABasicAnimationInternal.h"
 #include "CATransactionInternal.h"
@@ -356,7 +357,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
     if ([NSThread isMainThread]) {
         tex = GetCACompositor()->CreateWritableBitmapTexture32(width, height);
     }
-    CGContextRef ret = CGBitmapContextCreate32(width, height, tex, &_globallockingBufferInterface);
+
+    CGContextRef ret = _CGBitmapContextCreateWithTexture(width, height, tex, &_globallockingBufferInterface);
+
     if (tex) {
         _globallockingBufferInterface.ReleaseDisplayTexture(tex);
     }
@@ -571,9 +574,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
             if ((priv->isOpaque && priv->_backgroundColor == nil) || (priv->backgroundColor.a == 1.0 && 0)) {
                 /* CGVectorImage is currently in development - not ready for general use */
                 if (useVector) {
-                    // target = new CGVectorImage(width, height, _ColorRGB);
+                    // target = new CGVectorImage(width, height, _ColorBGR);
                 } else {
-                    drawContext = CGBitmapContextCreate24(width, height);
+                    drawContext = _CGBitmapContextCreateWithFormat(width, height, _ColorBGR);
                 }
                 priv->drewOpaque = TRUE;
             } else {
@@ -1719,12 +1722,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (void)setBackgroundColor:(CGColorRef)color {
     if (color != nil) {
-        [static_cast<UIColor*>(color) getColors:&priv->backgroundColor];
+        priv->backgroundColor = *[static_cast<UIColor*>(color) _getColors];
     } else {
-        priv->backgroundColor.r = 0.0f;
-        priv->backgroundColor.g = 0.0f;
-        priv->backgroundColor.b = 0.0f;
-        priv->backgroundColor.a = 0.0f;
+        _ClearColorQuad(priv->backgroundColor);
     }
 
     [CATransaction _setPropertyForLayer:self name:@"backgroundColor" value:(NSObject*)color];
@@ -1743,7 +1743,11 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 - (void)_setContentColor:(CGColorRef)newColor {
-    [static_cast<UIColor*>(newColor) getColors:&priv->contentColor];
+    if (newColor != nil) {
+        priv->contentColor = *[static_cast<UIColor*>(newColor) _getColors];
+    } else {
+        _ClearColorQuad(priv->contentColor);
+    }
     [CATransaction _setPropertyForLayer:self name:@"contentColor" value:static_cast<UIColor*>(newColor)];
 }
 
@@ -1753,12 +1757,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 - (void)setBorderColor:(CGColorRef)color {
     UNIMPLEMENTED();
     if (color != nil) {
-        [static_cast<UIColor*>(color) getColors:&priv->borderColor];
+        priv->borderColor = *[static_cast<UIColor*>(color) _getColors];
     } else {
-        priv->borderColor.r = 0.0f;
-        priv->borderColor.g = 0.0f;
-        priv->borderColor.b = 0.0f;
-        priv->borderColor.a = 0.0f;
+        _ClearColorQuad(priv->borderColor);
     }
 
     CGColorRef old = priv->_borderColor;

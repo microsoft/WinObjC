@@ -86,7 +86,7 @@ CFDataRef CGDataProviderCopyData(CGDataProviderRef provider) {
  @Status Caveat
  @Notes Only calls getBytePointer
 */
-CGDataProviderRef CGDataProviderCreateDirect(void* info, __int64 size, CGDataProviderDirectCallbacks* callBacks) {
+CGDataProviderRef CGDataProviderCreateDirect(void* info, off_t size, const CGDataProviderDirectCallbacks* callBacks) {
     TraceWarning(TAG, L"Warning: CGDataProviderCreateDirect is hacky");
     char* pBytes = (char*)callBacks->getBytePointer(info);
 
@@ -99,7 +99,7 @@ CGDataProviderRef CGDataProviderCreateDirect(void* info, __int64 size, CGDataPro
  @Status Caveat
  @Notes Hacky
 */
-CGDataProviderRef CGDataProviderCreateSequential(void* info, CGDataProviderSequentialCallbacks* callBacks) {
+CGDataProviderRef CGDataProviderCreateSequential(void* info, const CGDataProviderSequentialCallbacks* callBacks) {
     TraceWarning(TAG, L"Warning: CGDataProviderCreateSequential is hacky");
     char* pBytes = (char*)IwMalloc(1024 * 1024);
 

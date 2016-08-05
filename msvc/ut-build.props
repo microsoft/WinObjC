@@ -3,8 +3,13 @@
 
   <ItemDefinitionGroup>
     <ClangCompile>
+      <AdditionalOptions>-Werror=microsoft %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_WINOBJC_DO_NOT_USE_NSLOG=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
+
+  <PropertyGroup Label="Configuration">
+    <StarboardLinkWholeArchive>true</StarboardLinkWholeArchive>
+  </PropertyGroup>
 
 </Project>

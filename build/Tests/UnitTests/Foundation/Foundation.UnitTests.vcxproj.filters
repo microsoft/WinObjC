@@ -8,22 +8,15 @@
     <ClInclude Include="$(StarboardBasePath)\tests\unittests\Foundation\RuntimeTestHelpers.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSObject_NSCoding.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRangeTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSKeyValueCoding.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSDictionaryTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSLoggingTests.m" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSStringInternalTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSInvocationTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\BlockClassTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRegularExpressionTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSSortDescriptorTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSLockTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRecursiveLockTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ArchivalTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CFBridgeBaseTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CoreFoundationTests.m" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ErrorHandlingTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\FoundationTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSArrayTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSAttributedStringTests.mm" />
@@ -37,10 +30,8 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSDataTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSDateComponentsTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSDateFormatterTests.m" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSEnumeratorTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSExpressionTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSFileManagerTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSHttpCookieTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSJSONSerializationTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSLocaleTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSMapTableTests.mm" />
@@ -108,7 +99,7 @@
       <Filter>ReferenceFoundation</Filter>
     </ClangCompile>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSURLResponse.mm">
-        <Filter>ReferenceFoundation</Filter>
+      <Filter>ReferenceFoundation</Filter>
     </ClangCompile>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestUtils.mm">
       <Filter>ReferenceFoundation</Filter>
@@ -128,10 +119,22 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSPropertyList.mm">
       <Filter>ReferenceFoundation</Filter>
     </ClangCompile>
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSCalendarTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSCalendar.mm">
+      <Filter>ReferenceFoundation</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSMutableOrderedSetTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSKeyValueCodingTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSOrderedSetTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSPropertyListSerializationTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\TestUtils.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSNotificationTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSObject_KeyValueObservationTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSCacheTests.mm" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="$(StarboardBasePath)\tests\unittests\Foundation\NSFileManagerUT.txt" />
-    <Text Include="$(StarboardBasePath)\tests\unittests\Foundation\NSFileHandleTestFile.txt" />
+    <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" />
+    <Text Include="..\..\..\tests\unittests\Foundation\NSFileHandleTestFile.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ReferenceFoundation">

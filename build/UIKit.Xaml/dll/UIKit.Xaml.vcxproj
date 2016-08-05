@@ -25,6 +25,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
+    <StarboardBasePath>..\..\..</StarboardBasePath>
     <ApplicationType>Windows Store</ApplicationType>
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
@@ -53,8 +54,8 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -95,7 +96,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
       <AdditionalUsingDirectories>$(WindowsSDK_WindowsMetadata);$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)..\..\..\include;$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)..\..\..\include;$(MSBuildThisFileDirectory)..\..\..\include\xplat;$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml;</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions) "-DUIKIT_XAML_IMPEXP=__declspec(dllexport)"</AdditionalOptions>
       <DisableSpecificWarnings>28204</DisableSpecificWarnings>
     </ClCompile>
@@ -115,7 +116,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
       <AdditionalUsingDirectories>$(WindowsSDK_WindowsMetadata);$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)..\..\..\include;$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)..\..\..\include;$(MSBuildThisFileDirectory)..\..\..\include\xplat;$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml;</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions) "-DUIKIT_XAML_IMPEXP=__declspec(dllexport)"</AdditionalOptions>
       <DisableSpecificWarnings>28204</DisableSpecificWarnings>
     </ClCompile>
@@ -135,7 +136,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
       <AdditionalUsingDirectories>$(WindowsSDK_WindowsMetadata);$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)..\..\..\include;$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)..\..\..\include;$(MSBuildThisFileDirectory)..\..\..\include\xplat;$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml;</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions) "-DUIKIT_XAML_IMPEXP=__declspec(dllexport)"</AdditionalOptions>
       <DisableSpecificWarnings>28204</DisableSpecificWarnings>
     </ClCompile>
@@ -155,7 +156,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
       <AdditionalUsingDirectories>$(WindowsSDK_WindowsMetadata);$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)..\..\..\include;$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)..\..\..\include;$(MSBuildThisFileDirectory)..\..\..\include\xplat;$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml;</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions) "-DUIKIT_XAML_IMPEXP=__declspec(dllexport)"</AdditionalOptions>
       <DisableSpecificWarnings>28204</DisableSpecificWarnings>
     </ClCompile>
@@ -229,6 +230,9 @@
     <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Themes\Generic.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
+      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
       <Project>{0ac27ecf-e2ab-420b-9359-4843fff4cbfa}</Project>
     </ProjectReference>
@@ -236,7 +240,7 @@
       <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
 </Project>

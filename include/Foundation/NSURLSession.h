@@ -147,6 +147,7 @@ FOUNDATION_EXPORT_CLASS
 
 /* Session Delegates */
 @protocol NSURLSessionDelegate <NSObject>
+@optional
 - (void)URLSession:(NSURLSession*)session didBecomeInvalidWithError:(NSError*)error;
 - (void)URLSession:(NSURLSession*)session
     didReceiveChallenge:(NSURLAuthenticationChallenge*)challenge

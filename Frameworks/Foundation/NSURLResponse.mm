@@ -30,9 +30,14 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 @implementation NSURLResponse
 
-static NSString* s_invalidFileNameChars = @"\\/:;*\"<>|?";
-static NSString* s_unknownFileName = @"Unknown";
-static NSString* s_defaultMimeType = @"application/octet-stream";
+static NSString* const s_invalidFileNameChars = @"\\/:;*\"<>|?";
+static NSString* const s_unknownFileName = @"Unknown";
+static NSString* const s_defaultMimeType = @"application/octet-stream";
+static NSString* const s_NSExpectedContentLength = @"NS.expectedContentLength";
+static NSString* const s_NSArchivalMIMEType = @"NS.mimeType";
+static NSString* const s_NSArchivalTextEncodingName = @"NS.textEncodingName";
+static NSString* const s_NSArchivalSuggestedFilename = @"NS.suggestedFilename";
+static NSString* const s_NSArchivalURL = @"NS.url";
 
 NSString* _NSReplaceIllegalFileNameCharacters(NSString* fileName) {
     static StrongId<NSCharacterSet> invalidFileNameCharacterSet = [NSCharacterSet characterSetWithCharactersInString:s_invalidFileNameChars];
@@ -134,29 +139,75 @@ NSString* _NSReplaceIllegalFileNameCharacters(NSString* fileName) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return YES;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-- (id)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    if (self = [super init]) {
+        _expectedContentLength = [coder decodeIntForKey:s_NSExpectedContentLength];
+        _mimeType = [coder decodeObjectOfClass:[NSString class] forKey:s_NSArchivalMIMEType];
+        _suggestedFilename = [coder decodeObjectOfClass:[NSString class] forKey:s_NSArchivalSuggestedFilename];
+        _textEncodingName = [coder decodeObjectOfClass:[NSString class] forKey:s_NSArchivalTextEncodingName];
+        _url = [coder decodeObjectOfClass:[NSURL class] forKey:s_NSArchivalURL];
+    }
+
+    return self;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
+    [coder encodeInt:_expectedContentLength forKey:s_NSExpectedContentLength];
+    [coder encodeObject:_mimeType forKey:s_NSArchivalMIMEType];
+    [coder encodeObject:_suggestedFilename forKey:s_NSArchivalSuggestedFilename];
+    [coder encodeObject:_textEncodingName forKey:s_NSArchivalTextEncodingName];
+    [coder encodeObject:_url forKey:s_NSArchivalURL];
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isEqual:(id)other {
+    if (other == self) {
+        return YES;
+    }
+
+    if (![other isKindOfClass:[NSURLResponse class]]) {
+        return NO;
+    }
+
+    return ([self hash] == [other hash]);
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSUInteger)hash {
+    unsigned ret = _expectedContentLength;
+    if (_suggestedFilename) {
+        ret ^= [_suggestedFilename hash];
+    }
+
+    if (_mimeType) {
+        ret ^= [_mimeType hash];
+    }
+
+    if (_textEncodingName) {
+        ret ^= [_textEncodingName hash];
+    }
+
+    if (_url) {
+        ret ^= [_url hash];
+    }
+
+    return ret;
 }
 
 @end

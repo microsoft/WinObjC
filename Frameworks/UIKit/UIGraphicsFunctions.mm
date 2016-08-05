@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -76,7 +77,7 @@ void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, float scal
     if (scale == 0.0f) {
         scale = GetCACompositor()->screenScale();
     }
-    CGContextRef newCtx = CGBitmapContextCreate32((int)(size.width * scale), (int)(size.height * scale));
+    CGContextRef newCtx = _CGBitmapContextCreateWithFormat((int)(size.width * scale), (int)(size.height * scale), _ColorARGB);
     newCtx->scale = scale;
     CGContextTranslateCTM(newCtx, 0.0f, size.height * scale);
     CGContextScaleCTM(newCtx, scale, scale);

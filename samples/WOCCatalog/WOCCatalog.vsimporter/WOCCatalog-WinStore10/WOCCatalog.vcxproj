@@ -221,6 +221,7 @@
     <ClangCompile Include="..\..\WOCCatalog\AccelerateViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\TextFieldsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\PickersViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\CoreLocationViewController.mm" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo9.jpg" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo4.jpg" />
     <XibCompile Include="..\..\WOCCatalog\BezierViewController.xib" />

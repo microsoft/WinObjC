@@ -95,8 +95,9 @@ CF_INLINE Boolean __CFDataBytesInline(CFDataRef data) {return __CFDataGetInfoBit
 CF_INLINE Boolean __CFDataUseAllocator(CFDataRef data) {return __CFDataGetInfoBit(data, __kCFUseAllocator);}
 CF_INLINE Boolean __CFDataAllocatesCollectable(CFDataRef data) {return __CFDataGetInfoBit(data, __kCFAllocatesCollectable);}
 
-// WINOBJC: This function is for Foundation's benefit; no one else should use it.
+// WINOBJC: These functions are for Foundation's benefit; no one else should use them.
 CF_EXPORT Boolean _CFDataIsMutable(CFDataRef data) { return __CFDataIsMutable(data); }
+CF_EXPORT Boolean _CFDataOwnsBuffer(CFDataRef data) { return data->_bytesDeallocator != kCFAllocatorNull; }
 
 CF_INLINE UInt32 __CFMutableVariety(const void *cf) {
     return __CFBitfieldGetValue(((const CFRuntimeBase *)cf)->_cfinfo[CF_INFO_BITS], 1, 0);

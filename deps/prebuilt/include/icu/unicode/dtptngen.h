@@ -1,6 +1,6 @@
 /*
 *******************************************************************************
-* Copyright (C) 2007-2010, International Business Machines Corporation and
+* Copyright (C) 2007-2016, International Business Machines Corporation and
 * others. All Rights Reserved.
 *******************************************************************************
 *
@@ -24,24 +24,24 @@ U_NAMESPACE_BEGIN
  * \brief C++ API: Date/Time Pattern Generator
  */
 
-
 class Hashtable;
 class FormatParser;
 class DateTimeMatcher;
 class DistanceInfo;
 class PatternMap;
 class PtnSkeleton;
+class SharedDateTimePatternGenerator;
 
 /**
- * This class provides flexible generation of date format patterns, like "yy-MM-dd". 
- * The user can build up the generator by adding successive patterns. Once that 
+ * This class provides flexible generation of date format patterns, like "yy-MM-dd".
+ * The user can build up the generator by adding successive patterns. Once that
  * is done, a query can be made using a "skeleton", which is a pattern which just
- * includes the desired fields and lengths. The generator will return the "best fit" 
+ * includes the desired fields and lengths. The generator will return the "best fit"
  * pattern corresponding to that skeleton.
  * <p>The main method people will use is getBestPattern(String skeleton),
- * since normally this class is pre-built with data from a particular locale. 
+ * since normally this class is pre-built with data from a particular locale.
  * However, generators can be built directly from other data as well.
- * <p><i>Issue: may be useful to also have a function that returns the list of 
+ * <p><i>Issue: may be useful to also have a function that returns the list of
  * fields in a pattern, in order, since we have that internally.
  * That would be useful for getting the UI order of field elements.</i>
  * @stable ICU 3.8
@@ -65,14 +65,25 @@ public:
      */
     static DateTimePatternGenerator* U_EXPORT2 createInstance(const Locale& uLocale, UErrorCode& status);
 
+#ifndef U_HIDE_INTERNAL_API
+
+    /**
+     * For ICU use only
+     *
+     * @internal
+     */
+    static DateTimePatternGenerator* U_EXPORT2 internalMakeInstance(const Locale& uLocale, UErrorCode& status);
+
+#endif /* U_HIDE_INTERNAL_API */
+
     /**
      * Create an empty generator, to be constructed with addPattern(...) etc.
      * @param status  Output param set to success/failure code on exit,
      *               which must not indicate a failure before the function call.
      * @stable ICU 3.8
      */
-     static DateTimePatternGenerator* U_EXPORT2 createEmptyInstance(UErrorCode& status);
-     
+    static DateTimePatternGenerator* U_EXPORT2 createEmptyInstance(UErrorCode& status);
+
     /**
      * Destructor.
      * @stable ICU 3.8
@@ -80,21 +91,21 @@ public:
     virtual ~DateTimePatternGenerator();
 
     /**
-     * Clone DateTimePatternGenerator object. Clients are responsible for 
+     * Clone DateTimePatternGenerator object. Clients are responsible for
      * deleting the DateTimePatternGenerator object cloned.
      * @stable ICU 3.8
      */
     DateTimePatternGenerator* clone() const;
 
-     /**
-      * Return true if another object is semantically equal to this one.
-      *
-      * @param other    the DateTimePatternGenerator object to be compared with.
-      * @return         true if other is semantically equal to this.
-      * @stable ICU 3.8
-      */
+    /**
+     * Return true if another object is semantically equal to this one.
+     *
+     * @param other    the DateTimePatternGenerator object to be compared with.
+     * @return         true if other is semantically equal to this.
+     * @stable ICU 3.8
+     */
     UBool operator==(const DateTimePatternGenerator& other) const;
-    
+
     /**
      * Return true if another object is semantically unequal to this one.
      *
@@ -104,6 +115,7 @@ public:
      */
     UBool operator!=(const DateTimePatternGenerator& other) const;
 
+#ifndef U_HIDE_DRAFT_API
     /**
      * Utility to return a unique skeleton from a given pattern. For example,
      * both "MMM-dd" and "dd/MMM" produce the skeleton "MMMdd".
@@ -112,10 +124,31 @@ public:
      * @param status  Output param set to success/failure code on exit,
      *                  which must not indicate a failure before the function call.
      * @return skeleton such as "MMMdd"
+     * @draft ICU 56
+     */
+    static UnicodeString staticGetSkeleton(const UnicodeString& pattern, UErrorCode& status);
+#endif /* U_HIDE_DRAFT_API */
+
+    /**
+     * Utility to return a unique skeleton from a given pattern. For example,
+     * both "MMM-dd" and "dd/MMM" produce the skeleton "MMMdd".
+     * getSkeleton() works exactly like staticGetSkeleton().
+     * Use staticGetSkeleton() instead of getSkeleton().
+     *
+     * @param pattern   Input pattern, such as "dd/MMM"
+     * @param status  Output param set to success/failure code on exit,
+     *                  which must not indicate a failure before the function call.
+     * @return skeleton such as "MMMdd"
      * @stable ICU 3.8
      */
-    UnicodeString getSkeleton(const UnicodeString& pattern, UErrorCode& status);
+    UnicodeString getSkeleton(const UnicodeString& pattern, UErrorCode& status); /* {
+        The function is commented out because it is a stable API calling a draft API.
+        After staticGetSkeleton becomes stable, staticGetSkeleton can be used and
+        these comments and the definition of getSkeleton in dtptngen.cpp should be removed.
+        return staticGetSkeleton(pattern, status);
+    }*/
 
+#ifndef U_HIDE_DRAFT_API
     /**
      * Utility to return a unique base skeleton from a given pattern. This is
      * the same as the skeleton, except that differences in length are minimized
@@ -126,33 +159,61 @@ public:
      * @param pattern  Input pattern, such as "dd/MMM"
      * @param status  Output param set to success/failure code on exit,
      *               which must not indicate a failure before the function call.
-     * @return base skeleton, such as "Md"
+     * @return base skeleton, such as "MMMd"
+     * @draft ICU 56
+     */
+    static UnicodeString staticGetBaseSkeleton(const UnicodeString& pattern, UErrorCode& status);
+#endif /* U_HIDE_DRAFT_API */
+
+    /**
+     * Utility to return a unique base skeleton from a given pattern. This is
+     * the same as the skeleton, except that differences in length are minimized
+     * so as to only preserve the difference between string and numeric form. So
+     * for example, both "MMM-dd" and "d/MMM" produce the skeleton "MMMd"
+     * (notice the single d).
+     * getBaseSkeleton() works exactly like staticGetBaseSkeleton().
+     * Use staticGetBaseSkeleton() instead of getBaseSkeleton().
+     *
+     * @param pattern  Input pattern, such as "dd/MMM"
+     * @param status  Output param set to success/failure code on exit,
+     *               which must not indicate a failure before the function call.
+     * @return base skeleton, such as "MMMd"
      * @stable ICU 3.8
      */
-    UnicodeString getBaseSkeleton(const UnicodeString& pattern, UErrorCode& status);
+    UnicodeString getBaseSkeleton(const UnicodeString& pattern, UErrorCode& status); /* {
+        The function is commented out because it is a stable API calling a draft API.
+        After staticGetBaseSkeleton becomes stable, staticGetBaseSkeleton can be used and
+        these comments and the definition of getBaseSkeleton in dtptngen.cpp should be removed.
+        return staticGetBaseSkeleton(pattern, status);
+    }*/
 
     /**
      * Adds a pattern to the generator. If the pattern has the same skeleton as
      * an existing pattern, and the override parameter is set, then the previous
      * value is overriden. Otherwise, the previous value is retained. In either
-     * case, the conflicting status is set and previous vale is stored in 
+     * case, the conflicting status is set and previous vale is stored in
      * conflicting pattern.
      * <p>
      * Note that single-field patterns (like "MMM") are automatically added, and
      * don't need to be added explicitly!
      *
      * @param pattern   Input pattern, such as "dd/MMM"
-     * @param override  When existing values are to be overridden use true, 
+     * @param override  When existing values are to be overridden use true,
      *                   otherwise use false.
      * @param conflictingPattern  Previous pattern with the same skeleton.
      * @param status  Output param set to success/failure code on exit,
      *               which must not indicate a failure before the function call.
-     * @return conflicting status.  The value could be UDATPG_NO_CONFLICT, 
+     * @return conflicting status.  The value could be UDATPG_NO_CONFLICT,
      *                             UDATPG_BASE_CONFLICT or UDATPG_CONFLICT.
      * @stable ICU 3.8
+         * <p>
+         * <h4>Sample code</h4>
+         * \snippet samples/dtptngsample/dtptngsample.cpp getBestPatternExample1
+         * \snippet samples/dtptngsample/dtptngsample.cpp addPatternExample
+         * <p>
      */
-    UDateTimePatternConflict addPattern(const UnicodeString& pattern, 
-                                        UBool override, 
+    UDateTimePatternConflict addPattern(const UnicodeString& pattern,
+                                        UBool override,
                                         UnicodeString& conflictingPattern,
                                         UErrorCode& status);
 
@@ -210,22 +271,24 @@ public:
     const UnicodeString& getAppendItemName(UDateTimePatternField field) const;
 
     /**
-     * The date time format is a message format pattern used to compose date and
-     * time patterns. The default value is "{0} {1}", where {0} will be replaced
-     * by the date pattern and {1} will be replaced by the time pattern.
+     * The DateTimeFormat is a message format pattern used to compose date and
+     * time patterns. The default pattern in the root locale is "{1} {0}", where
+     * {1} will be replaced by the date pattern and {0} will be replaced by the
+     * time pattern; however, other locales may specify patterns such as
+     * "{1}, {0}" or "{1} 'at' {0}", etc.
      * <p>
      * This is used when the input skeleton contains both date and time fields,
      * but there is not a close match among the added patterns. For example,
      * suppose that this object was created by adding "dd-MMM" and "hh:mm", and
-     * its datetimeFormat is the default "{0} {1}". Then if the input skeleton
+     * its datetimeFormat is the default "{1} {0}". Then if the input skeleton
      * is "MMMdhmm", there is not an exact match, so the input skeleton is
      * broken up into two components "MMMd" and "hmm". There are close matches
      * for those two skeletons, so the result is put together with this pattern,
      * resulting in "d-MMM h:mm".
      *
      * @param dateTimeFormat
-     *            message format pattern, here {0} will be replaced by the date
-     *            pattern and {1} will be replaced by the time pattern.
+     *            message format pattern, here {1} will be replaced by the date
+     *            pattern and {0} will be replaced by the time pattern.
      * @stable ICU 3.8
      */
     void setDateTimeFormat(const UnicodeString& dateTimeFormat);
@@ -249,9 +312,13 @@ public:
      * @return bestPattern
      *            The best pattern found from the given skeleton.
      * @stable ICU 3.8
+         * <p>
+         * <h4>Sample code</h4>
+         * \snippet samples/dtptngsample/dtptngsample.cpp getBestPatternExample1
+         * \snippet samples/dtptngsample/dtptngsample.cpp getBestPatternExample
+         * <p>
      */
-     UnicodeString getBestPattern(const UnicodeString& skeleton, UErrorCode& status);
-
+    UnicodeString getBestPattern(const UnicodeString& skeleton, UErrorCode& status);
 
     /**
      * Return the best pattern matching the input skeleton. It is guaranteed to
@@ -272,10 +339,7 @@ public:
      *            The best pattern found from the given skeleton.
      * @stable ICU 4.4
      */
-     UnicodeString getBestPattern(const UnicodeString& skeleton,
-                                  UDateTimePatternMatchOptions options,
-                                  UErrorCode& status);
-
+    UnicodeString getBestPattern(const UnicodeString& skeleton, UDateTimePatternMatchOptions options, UErrorCode& status);
 
     /**
      * Adjusts the field types (width and subtype) of a pattern to match what is
@@ -292,10 +356,13 @@ public:
      *               which must not indicate a failure before the function call.
      * @return pattern adjusted to match the skeleton fields widths and subtypes.
      * @stable ICU 3.8
+         * <p>
+         * <h4>Sample code</h4>
+         * \snippet samples/dtptngsample/dtptngsample.cpp getBestPatternExample1
+         * \snippet samples/dtptngsample/dtptngsample.cpp replaceFieldTypesExample
+         * <p>
      */
-     UnicodeString replaceFieldTypes(const UnicodeString& pattern, 
-                                     const UnicodeString& skeleton, 
-                                     UErrorCode& status);
+    UnicodeString replaceFieldTypes(const UnicodeString& pattern, const UnicodeString& skeleton, UErrorCode& status);
 
     /**
      * Adjusts the field types (width and subtype) of a pattern to match what is
@@ -319,10 +386,10 @@ public:
      * @return pattern adjusted to match the skeleton fields widths and subtypes.
      * @stable ICU 4.4
      */
-     UnicodeString replaceFieldTypes(const UnicodeString& pattern, 
-                                     const UnicodeString& skeleton, 
-                                     UDateTimePatternMatchOptions options,
-                                     UErrorCode& status);
+    UnicodeString replaceFieldTypes(const UnicodeString& pattern,
+                                    const UnicodeString& skeleton,
+                                    UDateTimePatternMatchOptions options,
+                                    UErrorCode& status);
 
     /**
      * Return a list of all the skeletons (in canonical form) from this class.
@@ -335,16 +402,16 @@ public:
      *         The caller must delete the object.
      * @stable ICU 3.8
      */
-     StringEnumeration* getSkeletons(UErrorCode& status) const;
+    StringEnumeration* getSkeletons(UErrorCode& status) const;
 
-     /**
-      * Get the pattern corresponding to a given skeleton.
-      * @param skeleton 
-      * @return pattern corresponding to a given skeleton.
-      * @stable ICU 3.8
-      */
-     const UnicodeString& getPatternForSkeleton(const UnicodeString& skeleton) const;
-     
+    /**
+     * Get the pattern corresponding to a given skeleton.
+     * @param skeleton
+     * @return pattern corresponding to a given skeleton.
+     * @stable ICU 3.8
+     */
+    const UnicodeString& getPatternForSkeleton(const UnicodeString& skeleton) const;
+
     /**
      * Return a list of all the base skeletons (in canonical form) from this class.
      *
@@ -354,22 +421,24 @@ public:
      *         The caller must delete the object.
      * @stable ICU 3.8
      */
-     StringEnumeration* getBaseSkeletons(UErrorCode& status) const;
-     
-     /**
-      * Return a list of redundant patterns are those which if removed, make no 
-      * difference in the resulting getBestPattern values. This method returns a 
-      * list of them, to help check the consistency of the patterns used to build 
-      * this generator.
-      * 
-      * @param status  Output param set to success/failure code on exit,
-      *               which must not indicate a failure before the function call.
-      * @return a StringEnumeration with the redundant pattern.
-      *         The caller must delete the object.
-      * @internal ICU 3.8
-      */
-     StringEnumeration* getRedundants(UErrorCode& status);
-      
+    StringEnumeration* getBaseSkeletons(UErrorCode& status) const;
+
+#ifndef U_HIDE_INTERNAL_API
+    /**
+     * Return a list of redundant patterns are those which if removed, make no
+     * difference in the resulting getBestPattern values. This method returns a
+     * list of them, to help check the consistency of the patterns used to build
+     * this generator.
+     *
+     * @param status  Output param set to success/failure code on exit,
+     *               which must not indicate a failure before the function call.
+     * @return a StringEnumeration with the redundant pattern.
+     *         The caller must delete the object.
+     * @internal ICU 3.8
+     */
+    StringEnumeration* getRedundants(UErrorCode& status);
+#endif /* U_HIDE_INTERNAL_API */
+
     /**
      * The decimal value is used in formatting fractions of seconds. If the
      * skeleton contains fractional seconds, then this is used with the
@@ -378,7 +447,7 @@ public:
      * the decimal string is ",". Then the resulting pattern is modified to be
      * "H:mm:ss,SSSS"
      *
-     * @param decimal 
+     * @param decimal
      * @stable ICU 3.8
      */
     void setDecimal(const UnicodeString& decimal);
@@ -409,13 +478,13 @@ private:
      * Constructor.
      * @stable ICU 3.8
      */
-    DateTimePatternGenerator(UErrorCode & status);
+    DateTimePatternGenerator(UErrorCode& status);
 
     /**
      * Constructor.
      * @stable ICU 3.8
      */
-    DateTimePatternGenerator(const Locale& locale, UErrorCode & status);
+    DateTimePatternGenerator(const Locale& locale, UErrorCode& status);
 
     /**
      * Copy constructor.
@@ -431,27 +500,42 @@ private:
      */
     DateTimePatternGenerator& operator=(const DateTimePatternGenerator& other);
 
-    Locale pLocale;  // pattern locale
-    FormatParser *fp;
+    Locale pLocale; // pattern locale
+    FormatParser* fp;
     DateTimeMatcher* dtMatcher;
-    DistanceInfo *distanceInfo;
-    PatternMap *patternMap;
+    DistanceInfo* distanceInfo;
+    PatternMap* patternMap;
     UnicodeString appendItemFormats[UDATPG_FIELD_COUNT];
     UnicodeString appendItemNames[UDATPG_FIELD_COUNT];
     UnicodeString dateTimeFormat;
     UnicodeString decimal;
-    DateTimeMatcher *skipMatcher;
-    Hashtable *fAvailableFormatKeyHash;
+    DateTimeMatcher* skipMatcher;
+    Hashtable* fAvailableFormatKeyHash;
     UnicodeString hackPattern;
     UnicodeString emptyString;
     UChar fDefaultHourFormatChar;
 
-    void initData(const Locale &locale, UErrorCode &status);
+    int32_t fAllowedHourFormats[7]; // Actually an array of AllowedHourFormat enum type, ending with UNKNOWN.
+
+    /* internal flags masks for adjustFieldTypes etc. */
+    enum {
+        kDTPGNoFlags = 0,
+        kDTPGFixFractionalSeconds = 1,
+        kDTPGSkeletonUsesCapJ = 2,
+        kDTPGSkeletonUsesLowB = 3,
+        kDTPGSkeletonUsesCapB = 4
+    };
+
+    void initData(const Locale& locale, UErrorCode& status);
     void addCanonicalItems();
     void addICUPatterns(const Locale& locale, UErrorCode& status);
     void hackTimes(const UnicodeString& hackPattern, UErrorCode& status);
     void addCLDRData(const Locale& locale, UErrorCode& status);
-    UDateTimePatternConflict addPatternWithSkeleton(const UnicodeString& pattern, const UnicodeString * skeletonToUse, UBool override, UnicodeString& conflictingPattern, UErrorCode& status);
+    UDateTimePatternConflict addPatternWithSkeleton(const UnicodeString& pattern,
+                                                    const UnicodeString* skeletonToUse,
+                                                    UBool override,
+                                                    UnicodeString& conflictingPattern,
+                                                    UErrorCode& status);
     void initHashtable(UErrorCode& status);
     void setDateTimeFromCalendar(const Locale& locale, UErrorCode& status);
     void setDecimalSymbols(const Locale& locale, UErrorCode& status);
@@ -459,15 +543,23 @@ private:
     UDateTimePatternField getAppendNameNumber(const char* field) const;
     void getAppendName(UDateTimePatternField field, UnicodeString& value);
     int32_t getCanonicalIndex(const UnicodeString& field);
-    const UnicodeString* getBestRaw(DateTimeMatcher& source, int32_t includeMask, DistanceInfo* missingFields, const PtnSkeleton** specifiedSkeletonPtr = 0);
-    UnicodeString adjustFieldTypes(const UnicodeString& pattern, const PtnSkeleton* specifiedSkeleton, UBool fixFractionalSeconds, UDateTimePatternMatchOptions options = UDATPG_MATCH_NO_OPTIONS);
-    UnicodeString getBestAppending(int32_t missingFields, UDateTimePatternMatchOptions options = UDATPG_MATCH_NO_OPTIONS);
+    const UnicodeString* getBestRaw(DateTimeMatcher& source,
+                                    int32_t includeMask,
+                                    DistanceInfo* missingFields,
+                                    const PtnSkeleton** specifiedSkeletonPtr = 0);
+    UnicodeString adjustFieldTypes(const UnicodeString& pattern,
+                                   const PtnSkeleton* specifiedSkeleton,
+                                   int32_t flags,
+                                   UDateTimePatternMatchOptions options = UDATPG_MATCH_NO_OPTIONS);
+    UnicodeString getBestAppending(int32_t missingFields, int32_t flags, UDateTimePatternMatchOptions options = UDATPG_MATCH_NO_OPTIONS);
     int32_t getTopBitNumber(int32_t foundMask);
-    void setAvailableFormat(const UnicodeString &key, UErrorCode& status);
-    UBool isAvailableFormatSet(const UnicodeString &key) const;
-    void copyHashtable(Hashtable *other, UErrorCode &status);
+    void setAvailableFormat(const UnicodeString& key, UErrorCode& status);
+    UBool isAvailableFormatSet(const UnicodeString& key) const;
+    void copyHashtable(Hashtable* other, UErrorCode& status);
     UBool isCanonicalItem(const UnicodeString& item) const;
-} ;// end class DateTimePatternGenerator
+    static void loadAllowedHourFormatsData(UErrorCode& status);
+    void getAllowedHourFormats(const Locale& locale, UErrorCode& status);
+}; // end class DateTimePatternGenerator
 
 U_NAMESPACE_END
 

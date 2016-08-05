@@ -232,4 +232,9 @@
       <Filter>Sounds</Filter>
     </Media>
   </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="..\..\WOCCatalog\CoreLocationViewController.mm">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+  </ItemGroup>
 </Project>

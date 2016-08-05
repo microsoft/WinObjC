@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #include <TestFramework.h>
-#include <Foundation\Foundation.h>
+#include <Foundation/Foundation.h>
 
 TEST(NSFoundationGenerics, NSArray) {
     // just test that we can compile generics

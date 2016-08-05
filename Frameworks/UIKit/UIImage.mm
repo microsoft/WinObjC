@@ -66,11 +66,9 @@ void UIImageSetLayerContents(CALayer* layer, UIImage* image) {
     if ([layer contentsScale] != [image scale]) {
         [layer setContentsScale:[image scale]];
     }
-
-    // if setContentsOrientation with image orientation here,
-    // the Image will be rotated twice when shown in the screen.
-    [layer setContentsOrientation:0];
-
+    if ([layer contentsOrientation] != [image imageOrientation]) {
+        [layer setContentsOrientation:[image imageOrientation]];
+    }
     CGRect stretch = [image _imageStretch];
     if (!CGRectEqualToRect([layer contentsCenter], stretch)) {
         [layer setContentsCenter:stretch];
@@ -115,12 +113,11 @@ void UIImageSetLayerContents(CALayer* layer, UIImage* image) {
 }
 
 + (UIImageCachedObject*)cacheImage:(UIImage*)image withName:(NSString*)name {
-    // Cache the image
+    //  Cache the image
     UIImageCachedObject* obj = [UIImageCachedObject new];
     obj->_scale = image->_scale;
     obj->_imageStretch = image->_imageStretch;
     obj->m_pImage = image->m_pImage;
-    obj->_orientation = image->_orientation;
     CGImageRetain(obj->m_pImage);
     obj->_cacheName = [name copy];
     pthread_mutex_lock(&imageCacheLock);
@@ -232,8 +229,17 @@ static bool loadImageFromWICFrame(UIImage* dest, IWICImagingFactory* pFactory, I
 
     if (SUCCEEDED(hr)) {
         CGColorSpaceRef clrRgb = CGColorSpaceCreateDeviceRGB();
-        dest->m_pImage =
-            CGImageCreate(width, height, 8, 32, width * 4, clrRgb, kCGImageAlphaFirst, nil, NULL, false, kCGRenderingIntentDefault);
+        dest->m_pImage = CGImageCreate(width,
+                                       height,
+                                       8,
+                                       32,
+                                       width * 4,
+                                       clrRgb,
+                                       kCGImageAlphaLast,
+                                       nil,
+                                       NULL,
+                                       false,
+                                       kCGRenderingIntentDefault);
         CGColorSpaceRelease(clrRgb);
 
         hr = pFactory->CreateFormatConverter(&pFormatConverter);
@@ -462,7 +468,6 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         _scale = cachedImage->_scale;
         _imageStretch = cachedImage->_imageStretch;
         _isFromCache = true;
-        _orientation = cachedImage->_orientation;
         pthread_mutex_unlock(&imageCacheLock);
         return self;
     }
@@ -474,7 +479,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     fpIn = EbrFopen(pathStr, "rb");
     if (!fpIn) {
         TraceVerbose(TAG, L"Image %hs not found", pathStr);
-        // m_pImage = new CGBitmapImage(64, 64, surfaceFormat::_ColorRGBA, NULL);
+        // m_pImage = new CGBitmapImage(64, 64, __CGSurfaceFormat::_ColorABGR, NULL);
         return nil;
     }
 
@@ -495,7 +500,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         fpIn = EbrFopen(pathStr, "rb");
         if (!fpIn) {
             TraceVerbose(TAG, L"Image %hs not found", pathStr);
-            // m_pImage = new CGBitmapImage(64, 64, surfaceFormat::_ColorRGBA, NULL);
+            // m_pImage = new CGBitmapImage(64, 64, __CGSurfaceFormat::_ColorABGR, NULL);
             return nil;
         }
 
@@ -503,7 +508,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         int len = EbrFtell(fpIn);
         if (len <= 0) {
             TraceVerbose(TAG, L"Image %hs invalid", pathStr);
-            // m_pImage = new CGBitmapImage(64, 64, surfaceFormat::_ColorRGBA, NULL);
+            // m_pImage = new CGBitmapImage(64, 64, __CGSurfaceFormat::_ColorABGR, NULL);
             EbrFclose(fpIn);
             return nil;
         }
@@ -524,7 +529,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
                             TraceVerbose(TAG, L"");
                     }
                     TraceVerbose(TAG, L"Image type %hs not recognized header=%x", pathStr, *((DWORD*)in));
-                    // m_pImage = new CGBitmapImage(64, 64, surfaceFormat::_ColorRGBA, NULL);
+                    // m_pImage = new CGBitmapImage(64, 64, __CGSurfaceFormat::_ColorABGR, NULL);
                     return nil;
                 }
             }
@@ -1365,10 +1370,11 @@ NSData* UIImagePNGRepresentation(UIImage* img) {
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat quality) {
-    return _CGImageJPEGRepresentation(img, quality);
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**

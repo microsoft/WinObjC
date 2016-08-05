@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -65,4 +66,43 @@ TEST(CoreLocation, CLLocation_CopyTest) {
     ASSERT_OBJCEQ_MSG(location1, location2, "FAILED: location1 and location2 are equal!\n");
     [location1 release];
     [location2 release];
+}
+
+TEST(CoreLocation, LocationDistanceTests) {
+    LOG_INFO("CLLocation Distance Test: ");
+
+    CLLocation* locationSeattle = [[CLLocation alloc] initWithLatitude:47.6062 longitude:-122.3321];
+    CLLocation* locationLosAngeles = [[CLLocation alloc] initWithLatitude:34.0522 longitude:-118.2437];
+    CLLocation* locationSanFrancisco = [[CLLocation alloc] initWithLatitude:37.7749 longitude:-122.4194];
+    CLLocation* locationChicago = [[CLLocation alloc] initWithLatitude:41.8781 longitude:-87.6298];
+    CLLocation* locationNewYork = [[CLLocation alloc] initWithLatitude:40.7128 longitude:-74.0059];
+    CLLocation* locationInvalid = [[CLLocation alloc] initWithLatitude:250.0 longitude:-120.0];
+    CLLocation* locationMSFT16 = [[CLLocation alloc] initWithLatitude:47.6440706 longitude:-122.129362];
+    CLLocation* locationMSFT35 = [[CLLocation alloc] initWithLatitude:47.6452832 longitude:-122.1255836];
+
+    CLLocationDistance distance1 = [locationSeattle getDistanceFrom:locationLosAngeles];
+    CLLocationDistance distance2 = [locationLosAngeles getDistanceFrom:locationSanFrancisco];
+    CLLocationDistance distance3 = [locationSeattle getDistanceFrom:locationChicago];
+    CLLocationDistance distance4 = [locationLosAngeles getDistanceFrom:locationNewYork];
+    CLLocationDistance distance5 = [locationLosAngeles getDistanceFrom:locationInvalid];
+    CLLocationDistance distance6 = [locationLosAngeles getDistanceFrom:NULL];
+    CLLocationDistance distance7 = [locationMSFT16 getDistanceFrom:locationMSFT35];
+
+    // Check values within nearest a small range because the estimated radius of earth varies among measurements
+    ASSERT_NEAR_MSG(distance1, 1545791, 500, "FAILED: Distance: %f\n", distance1);
+    ASSERT_NEAR_MSG(distance2, 559296, 200, "FAILED: Distance: %f\n", distance2);
+    ASSERT_NEAR_MSG(distance3, 2789733, 1000, "FAILED: Distance: %f\n", distance3);
+    ASSERT_NEAR_MSG(distance4, 3936990, 1500, "FAILED: Distance: %f\n", distance4);
+    ASSERT_NEAR_MSG(distance5, -1, 0.001, "FAILED: Distance: %f\n", distance5);
+    ASSERT_NEAR_MSG(distance6, -1, 0.001, "FAILED: Distance: %f\n", distance6);
+    ASSERT_NEAR_MSG(distance7, 314.3, 1, "FAILED: Distance: %f\n", distance7);
+
+    [locationSeattle release];
+    [locationLosAngeles release];
+    [locationSanFrancisco release];
+    [locationChicago release];
+    [locationNewYork release];
+    [locationInvalid release];
+    [locationMSFT16 release];
+    [locationMSFT35 release];
 }
