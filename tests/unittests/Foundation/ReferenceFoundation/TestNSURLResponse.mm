@@ -339,12 +339,37 @@ TEST(NSURLResponse, CanBeArchived) {
                                                 expectedContentLength:100
                                                 textEncodingName:@"utf8"] autorelease];
 
+    id data = nil;
+    EXPECT_NO_THROW(data = [NSKeyedArchiver archivedDataWithRootObject:expected]);
+    EXPECT_NO_THROW([NSKeyedUnarchiver unarchiveObjectWithData:data]);
+}
+
+TEST(NSHTTPURLResponse, CanBeArchived) {
+    NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
+    auto f = @{ @"Content-Type" : @"text/HTML; charset=ISO-8859-4" };
+    NSHTTPURLResponse* expected =
+        [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
+
+    id data = nil;
+    EXPECT_NO_THROW(data = [NSKeyedArchiver archivedDataWithRootObject:expected]);
+    EXPECT_NO_THROW([NSKeyedUnarchiver unarchiveObjectWithData:data]);
+}
+
+// These are the same tests as above, with an additional check that the objects returned from unarchival
+// match the ones archived.
+// On the reference platform, NSURLResponse isEqual: only does a pointer comparison.
+OSX_DISABLED_TEST(NSURLResponse, CanBeArchivedWithFullFidelity) {
+    NSURLResponse* expected = [[[NSURLResponse alloc] initWithURL:[NSURL URLWithString:@"test"]
+                                                MIMEType:@"text/plain"
+                                                expectedContentLength:100
+                                                textEncodingName:@"utf8"] autorelease];
+
     id data = [NSKeyedArchiver archivedDataWithRootObject:expected];
     id actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     ASSERT_OBJCEQ(expected, actual);
 }
 
-TEST(NSHTTPURLResponse, CanBeArchived) {
+OSX_DISABLED_TEST(NSHTTPURLResponse, CanBeArchivedWithFullFidelity) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     auto f = @{ @"Content-Type" : @"text/HTML; charset=ISO-8859-4" };
     NSHTTPURLResponse* expected =
