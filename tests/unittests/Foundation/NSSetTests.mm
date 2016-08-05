@@ -36,8 +36,8 @@ TEST(NSSet, ContainsObject) {
 
 TEST(NSSet, SetValueForKey) {
     NSMutableDictionary* dict1 = [[@{} mutableCopy] autorelease];
-    NSMutableDictionary* dict2 = [[@{@"a" : @"1"} mutableCopy] autorelease];
-    NSMutableDictionary* dict3 = [[@{@"b" : @"2"} mutableCopy] autorelease];
+    NSMutableDictionary* dict2 = [[@{ @"a" : @"1" } mutableCopy] autorelease];
+    NSMutableDictionary* dict3 = [[@{ @"b" : @"2" } mutableCopy] autorelease];
     NSSet* set = [NSSet setWithObjects:dict1, dict2, dict3, nil];
     id key = @"key";
     id expected = @"expectedValue";
@@ -50,15 +50,12 @@ TEST(NSSet, SetValueForKey) {
 TEST(NSSet, ObjectsPassingTest) {
     NSSet* set = [NSSet setWithObjects:@1, @2, @3, @4, @5, @6, nil];
     NSSet* expectedEvensLessThanFive = [NSSet setWithObjects:@2, @4, nil];
-    NSSet* actual = [set objectsPassingTest:^(id obj, BOOL* stop){
-        if ([obj intValue] % 2 == 0) {
-            return YES;
+    NSSet* actual = [set objectsPassingTest:^(id obj, BOOL* stop) {
+        if ([obj intValue] < 5) {
+            if ([obj intValue] % 2 == 0) {
+                return YES;
+            }
         }
-
-        if([obj intValue] >= 5) {
-            *stop = YES;
-        }
-
         return NO;
     }];
 
