@@ -27,7 +27,7 @@ void verifyIndexSetEqualsArray(NSArray* expected, NSIndexSet* actual) {
     }];
 
     ASSERT_EQ([expected count], callCount);
-    ASSERT_TRUE([actual isEqualToIndexSet:expectedIndexSet]);
+    ASSERT_OBJCEQ(expectedIndexSet, actual);
 }
 
 TEST(NSIndexSet, AddIndexesInRange) {
@@ -235,7 +235,7 @@ OSX_DISABLED_TEST(NSIndexSet, shiftIndexes) {
     [expectedIndexSet addIndexesInRange:NSMakeRange(2, 4)]; // [2-5]
     [expectedIndexSet addIndexesInRange:NSMakeRange(8, 2)]; // [8-9]
     [expectedIndexSet addIndexesInRange:NSMakeRange(12, 5)]; // [12-16]
-    ASSERT_TRUE([indexSet isEqualToIndexSet:expectedIndexSet]);
+    ASSERT_OBJCEQ(expectedIndexSet, indexSet);
 
     // Test shiftIndexes with negative delta
     [indexSet shiftIndexesStartingAtIndex:12 by:-3];
@@ -244,7 +244,7 @@ OSX_DISABLED_TEST(NSIndexSet, shiftIndexes) {
     [expectedIndexSet removeAllIndexes];
     [expectedIndexSet addIndexesInRange:NSMakeRange(2, 4)]; // [2-5]
     [expectedIndexSet addIndexesInRange:NSMakeRange(8, 6)]; // [8-13]
-    ASSERT_TRUE([indexSet isEqualToIndexSet:expectedIndexSet]);
+    ASSERT_OBJCEQ(expectedIndexSet, indexSet);
 
     // Test shiftIndexes with adjacent range
     [indexSet addIndexesInRange:NSMakeRange(17, 2)]; // [17-18]
@@ -255,7 +255,7 @@ OSX_DISABLED_TEST(NSIndexSet, shiftIndexes) {
     [expectedIndexSet removeAllIndexes];
     [expectedIndexSet addIndexesInRange:NSMakeRange(2, 4)]; // [2-5]
     [expectedIndexSet addIndexesInRange:NSMakeRange(8, 8)]; // [8-15]
-    ASSERT_TRUE([indexSet isEqualToIndexSet:expectedIndexSet]);
+    ASSERT_OBJCEQ(expectedIndexSet, indexSet);
 
     [indexSet removeAllIndexes];
     [indexSet addIndexesInRange:NSMakeRange(1, 2)];
@@ -267,5 +267,5 @@ OSX_DISABLED_TEST(NSIndexSet, shiftIndexes) {
     // verify the ranges in the set.
     [expectedIndexSet removeAllIndexes];
     [expectedIndexSet addIndexesInRange:NSMakeRange(1, 1)]; // [1]
-    ASSERT_TRUE([indexSet isEqualToIndexSet:expectedIndexSet]);
+    ASSERT_OBJCEQ(expectedIndexSet, indexSet);
 }
