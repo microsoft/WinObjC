@@ -72,7 +72,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
-      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;MobileCoreservices.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -85,7 +85,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
-      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;MobileCoreservices.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -98,7 +98,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
-      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;MobileCoreservices.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -111,7 +111,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
-      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;MobileCoreservices.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>

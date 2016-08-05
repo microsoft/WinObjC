@@ -24,6 +24,7 @@
     </ProjectReference>
     <ProjectReference Include="..\..\UIKit.Xaml\dll\UIKit.Xaml.vcxproj">
       <Project>{1884D8F8-2C05-4334-A778-7D3C5A6736E8}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
       <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
     </ProjectReference>

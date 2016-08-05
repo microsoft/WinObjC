@@ -2,7 +2,7 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="XamlTest">
-      <UniqueIdentifier>{17602408-5CF3-4910-8B33-1019954C530B}</UniqueIdentifier>
+      <UniqueIdentifier>{CE2E982F-EBD5-4691-AC2B-B44EA7A69624}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

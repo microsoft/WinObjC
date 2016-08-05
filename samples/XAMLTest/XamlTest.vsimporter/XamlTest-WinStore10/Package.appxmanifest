@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="8b9adf94-816c-4a00-9d84-efeb129f8f18"
+    Name="59ef5516-6e1a-45a4-a1bd-09139c535354"
     Publisher="islandwood"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="8b9adf94-816c-4a00-9d84-efeb129f8f18" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="59ef5516-6e1a-45a4-a1bd-09139c535354" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>XamlTest</DisplayName>
