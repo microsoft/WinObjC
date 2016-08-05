@@ -733,104 +733,112 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
 
     const float srcHeight = static_cast<float>(imgBacking->Height());
     const float srcWidth = static_cast<float>(imgBacking->Width());
-    const float topCap = img->_imageInsets.top;
-    const float botCap = img->_imageInsets.bottom;
-    const float leftCap = img->_imageInsets.left;
-    const float rightCap = img->_imageInsets.right;
+    const float srcTopCap = img->_imageInsets.top * img->_scale;
+    const float srcBotCap = img->_imageInsets.bottom * img->_scale;
+    const float srcLeftCap = img->_imageInsets.left * img->_scale;
+    const float srcRightCap = img->_imageInsets.right * img->_scale;
+
+    const float dstHeight = dst->size.height;
+    const float dstWidth = dst->size.width;
+    const float dstX = dst->origin.x;
+    const float dstY = dst->origin.y;
+    const float dstTopCap = img->_imageInsets.top;
+    const float dstBotCap = img->_imageInsets.bottom;
+    const float dstLeftCap = img->_imageInsets.left;
+    const float dstRightCap = img->_imageInsets.right;
 
     // Center strip
-    if (srcHeight - topCap - botCap > 0) {
-        if (leftCap) {
+    if (dstHeight - dstTopCap - dstBotCap > 0) {
+        if (dstLeftCap) {
             // MidHeightLeft
             CGContextDrawImageRect(context,
                                    cgImg,
-                                   CGRectMake(0, srcHeight - botCap, leftCap, -(srcHeight - topCap - botCap)),
-                                   CGRectMake(dst->origin.x, (dst->origin.y + botCap), leftCap, (dst->size.height - topCap - botCap)));
+                                   CGRectMake(0, srcHeight - srcBotCap, srcLeftCap, -(srcHeight - srcTopCap - srcBotCap)),
+                                   CGRectMake(dstX, (dstY + dstBotCap), dstLeftCap, (dstHeight - dstTopCap - dstBotCap)));
         }
 
-        if (srcWidth - leftCap - rightCap > 0) {
+        if (dstWidth - dstLeftCap - dstRightCap > 0) {
             // MidHeightMidWidth
             CGContextDrawImageRect(context,
                                    cgImg,
-                                   CGRectMake(leftCap, srcHeight - botCap, (srcWidth - leftCap - rightCap), -(srcHeight - topCap - botCap)),
-                                   CGRectMake((dst->origin.x + leftCap),
-                                              (dst->origin.y + botCap),
-                                              (dst->size.width - leftCap - rightCap),
-                                              (dst->size.height - topCap - botCap)));
+                                   CGRectMake(srcLeftCap,
+                                              srcHeight - srcBotCap,
+                                              (srcWidth - srcLeftCap - srcRightCap),
+                                              -(srcHeight - srcTopCap - srcBotCap)),
+                                   CGRectMake((dstX + dstLeftCap),
+                                              (dstY + dstBotCap),
+                                              (dstWidth - dstLeftCap - dstRightCap),
+                                              (dstHeight - dstTopCap - dstBotCap)));
         } else {
             UNIMPLEMENTED_WITH_MSG(
-                "Patched draws only supported when sum of leftCap and rightCap is less than the width of the UI element.");
+                "Patched draws only supported when sum of dstLeftCap and dstRightCap is less than the width of the UI element.");
         }
 
-        if (rightCap) {
+        if (dstRightCap) {
             // MidHeightRight
-            CGContextDrawImageRect(context,
-                                   cgImg,
-                                   CGRectMake((srcWidth - rightCap), srcHeight - botCap, rightCap, -(srcHeight - topCap - botCap)),
-                                   CGRectMake((dst->origin.x + dst->size.width - rightCap),
-                                              (dst->origin.y + botCap),
-                                              rightCap,
-                                              (dst->size.height - topCap - botCap)));
+            CGContextDrawImageRect(
+                context,
+                cgImg,
+                CGRectMake((srcWidth - srcRightCap), srcHeight - srcBotCap, srcRightCap, -(srcHeight - srcTopCap - srcBotCap)),
+                CGRectMake((dstX + dstWidth - dstRightCap), (dstY + dstBotCap), dstRightCap, (dstHeight - dstTopCap - dstBotCap)));
         }
     } else {
-        UNIMPLEMENTED_WITH_MSG("Patched draws only supported when sum of topCap and botCap is less than the height of the UI element.");
+        UNIMPLEMENTED_WITH_MSG(
+            "Patched draws only supported when sum of dstTopCap and dstBotCap is less than the height of the UI element.");
     }
 
-    if (topCap) {
-        if (leftCap) {
+    if (dstTopCap) {
+        if (dstLeftCap) {
             // TL corner
             CGContextDrawImageRect(context,
                                    cgImg,
-                                   CGRectMake(0, topCap, leftCap, -topCap),
-                                   CGRectMake(dst->origin.x, (dst->origin.y + dst->size.height - topCap), leftCap, topCap));
+                                   CGRectMake(0, srcTopCap, srcLeftCap, -srcTopCap),
+                                   CGRectMake(dstX, (dstY + dstHeight - dstTopCap), dstLeftCap, dstTopCap));
         }
 
-        if (srcWidth - leftCap - rightCap > 0) {
+        if (dstWidth - dstLeftCap - dstRightCap > 0) {
             // TCenter
             CGContextDrawImageRect(context,
                                    cgImg,
-                                   CGRectMake(leftCap, topCap, (srcWidth - leftCap - rightCap), -topCap),
-                                   CGRectMake((dst->origin.x + leftCap),
-                                              (dst->origin.y + dst->size.height - topCap),
-                                              (dst->size.width - leftCap - rightCap),
-                                              topCap));
+                                   CGRectMake(srcLeftCap, srcTopCap, (srcWidth - srcLeftCap - srcRightCap), -srcTopCap),
+                                   CGRectMake((dstX + dstLeftCap),
+                                              (dstY + dstHeight - dstTopCap),
+                                              (dstWidth - dstLeftCap - dstRightCap),
+                                              dstTopCap));
         }
 
-        if (rightCap) {
+        if (dstRightCap) {
             // TR corner
             CGContextDrawImageRect(context,
                                    cgImg,
-                                   CGRectMake((srcWidth - rightCap), topCap, rightCap, -topCap),
-                                   CGRectMake((dst->origin.x + dst->size.width - rightCap),
-                                              (dst->origin.y + dst->size.height - topCap),
-                                              rightCap,
-                                              topCap));
+                                   CGRectMake((srcWidth - srcRightCap), srcTopCap, srcRightCap, -srcTopCap),
+                                   CGRectMake((dstX + dstWidth - dstRightCap), (dstY + dstHeight - dstTopCap), dstRightCap, dstTopCap));
         }
     }
 
-    if (botCap) {
-        if (leftCap) {
+    if (dstBotCap) {
+        if (dstLeftCap) {
             // BL Corner
             CGContextDrawImageRect(context,
                                    cgImg,
-                                   CGRectMake(0, srcHeight, leftCap, -botCap),
-                                   CGRectMake(dst->origin.x, dst->origin.y, leftCap, botCap));
+                                   CGRectMake(0, srcHeight, srcLeftCap, -srcBotCap),
+                                   CGRectMake(dstX, dstY, dstLeftCap, dstBotCap));
         }
 
-        if (srcWidth - leftCap - rightCap > 0) {
+        if (dstWidth - dstLeftCap - dstRightCap > 0) {
             // bottomMidWidth
             CGContextDrawImageRect(context,
                                    cgImg,
-                                   CGRectMake(leftCap, srcHeight, (srcWidth - leftCap - rightCap), -botCap),
-                                   CGRectMake((dst->origin.x + leftCap), dst->origin.y, (dst->size.width - leftCap - rightCap), botCap));
+                                   CGRectMake(srcLeftCap, srcHeight, (srcWidth - srcLeftCap - srcRightCap), -srcBotCap),
+                                   CGRectMake((dstX + dstLeftCap), dstY, (dstWidth - dstLeftCap - dstRightCap), dstBotCap));
         }
 
-        if (rightCap) {
+        if (dstRightCap) {
             // BR corner
             CGContextDrawImageRect(context,
                                    cgImg,
-                                   CGRectMake((srcWidth - rightCap), srcHeight, rightCap, -botCap),
-                                   CGRectMake((dst->origin.x + dst->size.width - rightCap), dst->origin.y, rightCap, botCap));
+                                   CGRectMake((srcWidth - srcRightCap), srcHeight, srcRightCap, -srcBotCap),
+                                   CGRectMake((dstX + dstWidth - dstRightCap), dstY, dstRightCap, dstBotCap));
         }
     }
 }

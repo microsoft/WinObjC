@@ -31,13 +31,12 @@ static idretain _buttonFill[2];
 
 @implementation UISegment
 + (instancetype)initialize {
-    _buttonLeft[0] = [[UIImage imageNamed:@"/img/ButtonBarLeftNoSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
-    _buttonLeft[1] = [[UIImage imageNamed:@"/img/ButtonBarLeftSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
-    _buttonRight[0] =
-        [[UIImage imageNamed:@"/img/ButtonBarRightNoSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
-    _buttonRight[1] = [[UIImage imageNamed:@"/img/ButtonBarRightSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
-    _buttonFill[0] = [[UIImage imageNamed:@"/img/ButtonBarFillNoSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 6, 0, 6)];
-    _buttonFill[1] = [[UIImage imageNamed:@"/img/ButtonBarFillSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 6, 0, 6)];
+    _buttonLeft[0] = [[UIImage imageNamed:@"/img/ButtonBarLeftNoSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
+    _buttonLeft[1] = [[UIImage imageNamed:@"/img/ButtonBarLeftSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
+    _buttonRight[0] = [[UIImage imageNamed:@"/img/ButtonBarRightNoSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
+    _buttonRight[1] = [[UIImage imageNamed:@"/img/ButtonBarRightSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
+    _buttonFill[0] = [[UIImage imageNamed:@"/img/ButtonBarFillNoSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
+    _buttonFill[1] = [[UIImage imageNamed:@"/img/ButtonBarFillSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
 
     return self;
 }
