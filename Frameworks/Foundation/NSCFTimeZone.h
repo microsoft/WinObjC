@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,12 +13,13 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#include <unicode/gregocal.h>
+#include "BridgeHelpers.h"
+#include <Foundation/NSTimeZone.h>
 
-@interface NSTimeZone (Internal)
-- (icu::TimeZone*)_createICUTimeZone;
-+ (instancetype)_gmtTimeZone;
+@interface NSTimeZonePrototype : NSTimeZone
+@end
+
+@interface NSCFTimeZone : NSTimeZone
 @end
