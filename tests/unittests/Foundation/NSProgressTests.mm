@@ -14,8 +14,8 @@
 // floating
 //******************************************************************************
 
-#import "Foundation/Foundation.h"
-#import "TestFramework.h"
+#import <Foundation/Foundation.h>
+#import <TestFramework.h>
 #import <thread>
 
 static const uint64_t work1pendingUnitCount = 2;
@@ -131,30 +131,35 @@ TEST(NSProgress, FractionCompleted) {
 
 TEST(NSProgress, IsIndeterminate) {
     NSProgress* progress = [[[NSProgress alloc] initWithParent:nil userInfo:nil] autorelease];
-    ASSERT_EQ(YES, [progress isIndeterminate]);
+    EXPECT_TRUE([progress isIndeterminate]);
 
     [progress setTotalUnitCount:5];
-    ASSERT_EQ(NO, [progress isIndeterminate]);
+    EXPECT_FALSE([progress isIndeterminate]);
 
     [progress setCompletedUnitCount:5];
-    ASSERT_EQ(NO, [progress isIndeterminate]);
+    EXPECT_FALSE([progress isIndeterminate]);
 
     [progress setTotalUnitCount:0];
-    ASSERT_EQ(NO, [progress isIndeterminate]);
+    EXPECT_FALSE([progress isIndeterminate]);
 
     [progress setCompletedUnitCount:5];
     [progress setTotalUnitCount:1];
-    ASSERT_EQ(NO, [progress isIndeterminate]);
+    EXPECT_FALSE([progress isIndeterminate]);
 
     [progress setCompletedUnitCount:15];
     [progress setTotalUnitCount:0];
-    ASSERT_EQ(NO, [progress isIndeterminate]);
+    EXPECT_FALSE([progress isIndeterminate]);
 
     [progress setCompletedUnitCount:0];
     [progress setTotalUnitCount:0];
-    ASSERT_EQ(YES, [progress isIndeterminate]);
+    EXPECT_TRUE([progress isIndeterminate]);
 }
 
+// The way fractionCompleted and completedUnitCount being updated is flawed.
+// It does not pertain to the behavior that is detailed here
+// https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSProgress_Class/#//apple_ref/doc/uid/TP40013490-CH1-SW46
+// for creating a tree of progress objects.
+// The following bug is opened to address this: #834
 OSX_DISABLED_TEST(NSProgress, ChainImplicit) {
     NSProgress* prog1 = [NSProgress progressWithTotalUnitCount:100];
     [prog1 becomeCurrentWithPendingUnitCount:100];
@@ -163,12 +168,11 @@ OSX_DISABLED_TEST(NSProgress, ChainImplicit) {
     NSProgress* prog3 = [NSProgress progressWithTotalUnitCount:10];
     [prog3 setCompletedUnitCount:6];
 
-	
-	//We are getting 0, in osx
+    // We are getting 0, in osx
     ASSERT_EQ(0.6, [prog3 fractionCompleted]);
-	//We are getting 0.6, in osx
-	ASSERT_EQ(0, [prog2 fractionCompleted]);
-	ASSERT_EQ(0, [prog1 fractionCompleted]);
+    // We are getting 0.6, in osx
+    ASSERT_EQ(0, [prog2 fractionCompleted]);
+    ASSERT_EQ(0, [prog1 fractionCompleted]);
 
     ASSERT_EQ(6, [prog3 completedUnitCount]);
     ASSERT_EQ(0, [prog2 completedUnitCount]);
@@ -181,7 +185,7 @@ OSX_DISABLED_TEST(NSProgress, ChainImplicit) {
     ASSERT_EQ(1.0, [prog1 fractionCompleted]);
 
     ASSERT_EQ(10, [prog3 completedUnitCount]);
-	//the below should be 0
+    // the below should be 0
     ASSERT_EQ(50, [prog2 completedUnitCount]);
     ASSERT_EQ(100, [prog1 completedUnitCount]);
 
@@ -207,6 +211,8 @@ TEST(NSProgress, TreeImplicit) {
     ASSERT_EQ(work1pendingUnitCount + work2pendingUnitCount, [root completedUnitCount]);
 }
 
+// The selector addChild:withPendingUnitCount is only supported in OSX Foundation 10.11,
+// therfore the test is being disabled on OSX, since it is not being compiled against Foundation version 10.11
 OSX_DISABLED_TEST(NSProgress, TreeExplicit) {
     NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
     // layer 1 children
@@ -241,8 +247,8 @@ OSX_DISABLED_TEST(NSProgress, TreeExplicit) {
     ASSERT_EQ(80, [root completedUnitCount]);
 }
 
-
-//Since on osx we are not compiling against 10.11, addChild: selector is not supported.
+// The selector addChild:withPendingUnitCount is only supported in OSX Foundation 10.11,
+// therfore the test is being disabled on OSX, since it is not being compiled against Foundation version 10.11
 OSX_DISABLED_TEST(NSProgress, CurrentProgress_ThreadLocal) {
     NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
     [root becomeCurrentWithPendingUnitCount:50];
@@ -277,7 +283,7 @@ OSX_DISABLED_TEST(NSProgress, CurrentProgress_ThreadLocal) {
 }
 
 ARM_DISABLED_TEST(NSProgress, SingleParentEvenAcrossThreads) {
-    #if TARGET_OS_WIN32
+#if TARGET_OS_WIN32
     NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
     ProgressThreadHelper* progressThreadHelper = [[ProgressThreadHelper new] autorelease];
 
@@ -293,9 +299,11 @@ ARM_DISABLED_TEST(NSProgress, SingleParentEvenAcrossThreads) {
     }
 
     ASSERT_EQ(YES, [progressThreadHelper exceptionWasCaught]);
-	#endif
+#endif
 }
 
+// The selector addChild:withPendingUnitCount is only supported in OSX Foundation 10.11,
+// therfore the test is being disabled on OSX, since it is not being compiled against Foundation version 10.11
 OSX_DISABLED_TEST(NSProgress, ResignCurrentAutomaticBehavior) {
     // Become current and resign current without a child in-between should automatically increment by adding the pending units
     NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
@@ -324,6 +332,8 @@ OSX_DISABLED_TEST(NSProgress, ResignCurrentAutomaticBehavior) {
     ASSERT_EQ(150, [root completedUnitCount]);
 }
 
+// The selector addChild:withPendingUnitCount is only supported in OSX Foundation 10.11,
+// therfore the test is being disabled on OSX, since it is not being compiled against Foundation version 10.11
 OSX_DISABLED_TEST(NSProgress, CancelPauseResume) {
     NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
 
@@ -373,15 +383,15 @@ TEST(NSProgress, LocalizedDescription) {
 
     // Set kind
     [progress setKind:NSProgressKindFile];
-	ASSERT_OBJCEQ(NSProgressKindFile,[progress kind]);
+    ASSERT_OBJCEQ(NSProgressKindFile, [progress kind]);
     [progress setUserInfoObject:NSProgressFileOperationKindDownloading forKey:NSProgressFileOperationKindKey];
     NSString* localizedDescriptionWithKind = [progress localizedDescription];
     NSString* localizedAdditionalDescriptionWithKind = [progress localizedAdditionalDescription];
     ASSERT_OBJCNE(@"", localizedDescriptionWithKind);
-    #if TARGET_OS_WIN32
-        ASSERT_OBJCEQ(@"", localizedAdditionalDescriptionWithKind); // Yes, this matches the reference platform
-    #endif
-    
+#if TARGET_OS_WIN32
+    ASSERT_OBJCEQ(@"", localizedAdditionalDescriptionWithKind); // Yes, this matches the reference platform
+#endif
+
     ASSERT_OBJCNE(baseLocalizedDescription, localizedDescriptionWithKind);
 
     // Change kind key
@@ -399,9 +409,9 @@ TEST(NSProgress, LocalizedDescription) {
     [progress setUserInfoObject:@17 forKey:NSProgressThroughputKey];
     NSString* localizedAdditionalDescriptionWithThroughput = [progress localizedAdditionalDescription];
     ASSERT_OBJCNE(@"", localizedAdditionalDescriptionWithThroughput);
-    #if TARGET_OS_WIN32
+#if TARGET_OS_WIN32
     ASSERT_OBJCNE(localizedAdditionalDescriptionWithEstimatedTime, localizedAdditionalDescriptionWithThroughput);
-    #endif
+#endif
     // Manually set
     NSString* userSetLocalizedDescription = @"user-set localizedDescription";
     NSString* userSetLocalizedAdditionalDescription = @"user-set localizedAdditionalDescription";
