@@ -219,10 +219,4 @@ TEST(NSCharacterSet, Polymorphic_Creators) {
 
     set = [NSMutableCharacterSet characterSetWithRange:NSMakeRange(0, 32)];
     ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
-
-    set = [NSMutableCharacterSet characterSetWithBitmapRepresentation:nil];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
-
-    set = [NSMutableCharacterSet characterSetWithContentsOfFile:nil];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 }
