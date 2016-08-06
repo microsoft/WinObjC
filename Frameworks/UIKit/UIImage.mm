@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -44,11 +45,6 @@
 @end
 
 static const wchar_t* TAG = L"UIImage";
-
-struct insetInfo {
-    UIImage* img;
-    CGRect size;
-};
 
 CFMutableDictionaryRef g_imageCache;
 pthread_mutex_t imageCacheLock = PTHREAD_MUTEX_INITIALIZER;
@@ -229,17 +225,8 @@ static bool loadImageFromWICFrame(UIImage* dest, IWICImagingFactory* pFactory, I
 
     if (SUCCEEDED(hr)) {
         CGColorSpaceRef clrRgb = CGColorSpaceCreateDeviceRGB();
-        dest->m_pImage = CGImageCreate(width,
-                                       height,
-                                       8,
-                                       32,
-                                       width * 4,
-                                       clrRgb,
-                                       kCGImageAlphaLast,
-                                       nil,
-                                       NULL,
-                                       false,
-                                       kCGRenderingIntentDefault);
+        dest->m_pImage =
+            CGImageCreate(width, height, 8, 32, width * 4, clrRgb, kCGImageAlphaLast, nil, NULL, false, kCGRenderingIntentDefault);
         CGColorSpaceRelease(clrRgb);
 
         hr = pFactory->CreateFormatConverter(&pFormatConverter);
@@ -680,7 +667,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
  @Status Interoperable
 */
 - (void)drawAtPoint:(CGPoint)point {
-    [self drawAtPoint:CGPointMake(point.x, point.y) blendMode:kCGBlendModeNormal alpha:0.0f];
+    [self drawAtPoint:point blendMode:kCGBlendModeNormal alpha:1.0f];
 }
 
 /**
@@ -688,30 +675,37 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
 */
 - (void)drawAtPoint:(CGPoint)point blendMode:(CGBlendMode)mode alpha:(float)alpha {
     CGContextRef cur = UIGraphicsGetCurrentContext();
+    CGImageRef img = getImage(self);
+
     if (!cur) {
         TraceVerbose(TAG, L"CGContext = NULL!");
         return;
     }
-    if (!getImage(self)) {
+
+    if (!img) {
         TraceVerbose(TAG, L"m_pImage = NULL!");
         return;
     }
 
     CGContextSaveGState(cur);
+
     CGContextSetBlendMode(cur, mode);
+    CGContextSetAlpha(cur, alpha);
+
+    CGImageBacking* imgBacking = img->Backing();
 
     CGRect srcRect;
     CGRect pos;
     pos.origin = point;
-    pos.size.width = ((float)getImage(self)->Backing()->Width() / _scale);
-    pos.size.height = ((float)getImage(self)->Backing()->Height() / _scale);
+    pos.size.width = ((float)imgBacking->Width() / _scale);
+    pos.size.height = ((float)imgBacking->Height() / _scale);
 
     srcRect.origin.x = 0;
-    srcRect.origin.y = float(getImage(self)->Backing()->Height());
-    srcRect.size.width = float(getImage(self)->Backing()->Width());
-    srcRect.size.height = -((float)getImage(self)->Backing()->Height());
+    srcRect.origin.y = float(imgBacking->Height());
+    srcRect.size.width = float(imgBacking->Width());
+    srcRect.size.height = -((float)imgBacking->Height());
 
-    CGContextDrawImageRect(cur, getImage(self), srcRect, pos);
+    CGContextDrawImageRect(cur, img, srcRect, pos);
 
     CGContextRestoreGState(cur);
 }
@@ -723,311 +717,129 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     [self drawAtPoint:pos.origin];
 }
 
-static void drawNinePatchCallBack(void* info, CGContextRef context) {
-    insetInfo* ii = (insetInfo*)info;
-    UIImage* img = ii->img;
+static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) {
+    // Note: Subdivides image into 1-9 patches which are drawn individually and the number of
+    // subdivisions depends on what insets have been set.
 
-    if (img->_imageInsets.top) {
-        CGContextDrawImageRect(context,
-                               getImage(img),
-                               makeRect(0,
-                                        getImage(img)->Backing()->Height() - img->_imageInsets.top,
-                                        img->_imageInsets.left,
-                                        img->_imageInsets.top),
-                               makeRect(0, ii->size.size.height - img->_imageInsets.top, img->_imageInsets.left, img->_imageInsets.top));
-        if (getImage(img)->Backing()->Width() - img->_imageInsets.left - img->_imageInsets.right > 0) {
+    // Note: Since source image has a TL origin (UIKit) and destination image has BL origin (QuartzCore) by default and there may be a
+    // custom transform applied to the GFX context, we need to at the very least ensure images are sampledFrom and writtenTo the right
+    // location for each pixel.
+    // Thus, the patch rects are constructed according to their default origin and the sign of the rect height indicates the sampling Y
+    // direction
+    // relative to its the origin. Any custom transforms applied to the GFX context are handled in the underlying draw function.
+
+    CGImageRef cgImg = getImage(img);
+    CGImageBacking* imgBacking = cgImg->Backing();
+
+    const float srcHeight = static_cast<float>(imgBacking->Height());
+    const float srcWidth = static_cast<float>(imgBacking->Width());
+    const float srcTopCap = img->_imageInsets.top * img->_scale;
+    const float srcBotCap = img->_imageInsets.bottom * img->_scale;
+    const float srcLeftCap = img->_imageInsets.left * img->_scale;
+    const float srcRightCap = img->_imageInsets.right * img->_scale;
+
+    const float dstHeight = dst->size.height;
+    const float dstWidth = dst->size.width;
+    const float dstX = dst->origin.x;
+    const float dstY = dst->origin.y;
+    const float dstTopCap = img->_imageInsets.top;
+    const float dstBotCap = img->_imageInsets.bottom;
+    const float dstLeftCap = img->_imageInsets.left;
+    const float dstRightCap = img->_imageInsets.right;
+
+    // Center strip
+    if (dstHeight - dstTopCap - dstBotCap > 0) {
+        if (dstLeftCap) {
+            // MidHeightLeft
             CGContextDrawImageRect(context,
-                                   getImage(img),
-                                   makeRect(img->_imageInsets.left,
-                                            getImage(img)->Backing()->Height() - img->_imageInsets.top,
-                                            getImage(img)->Backing()->Width() - img->_imageInsets.left - img->_imageInsets.right,
-                                            img->_imageInsets.top),
-                                   makeRect(img->_imageInsets.left,
-                                            ii->size.size.height - img->_imageInsets.top,
-                                            ii->size.size.width - img->_imageInsets.left - img->_imageInsets.right,
-                                            img->_imageInsets.top));
+                                   cgImg,
+                                   CGRectMake(0, srcHeight - srcBotCap, srcLeftCap, -(srcHeight - srcTopCap - srcBotCap)),
+                                   CGRectMake(dstX, (dstY + dstBotCap), dstLeftCap, (dstHeight - dstTopCap - dstBotCap)));
         }
-        CGContextDrawImageRect(context,
-                               getImage(img),
-                               makeRect(getImage(img)->Backing()->Width() - img->_imageInsets.right,
-                                        getImage(img)->Backing()->Height() - img->_imageInsets.top,
-                                        img->_imageInsets.right,
-                                        img->_imageInsets.top),
-                               makeRect(ii->size.size.width - img->_imageInsets.right,
-                                        ii->size.size.height - img->_imageInsets.top,
-                                        img->_imageInsets.right,
-                                        img->_imageInsets.top));
-    }
 
-    // Coordinates flipped on Y
-    if (getImage(img)->Backing()->Height() - img->_imageInsets.top - img->_imageInsets.bottom > 0) {
-        CGContextDrawImageRect(context,
-                               getImage(img),
-                               makeRect(0,
-                                        img->_imageInsets.bottom,
-                                        img->_imageInsets.left,
-                                        getImage(img)->Backing()->Height() - img->_imageInsets.top - img->_imageInsets.bottom),
-                               makeRect(0,
-                                        img->_imageInsets.bottom,
-                                        img->_imageInsets.left,
-                                        ii->size.size.height - img->_imageInsets.top - img->_imageInsets.bottom));
-        if (getImage(img)->Backing()->Width() - img->_imageInsets.left - img->_imageInsets.right > 0) {
+        if (dstWidth - dstLeftCap - dstRightCap > 0) {
+            // MidHeightMidWidth
             CGContextDrawImageRect(context,
-                                   getImage(img),
-                                   makeRect(img->_imageInsets.left,
-                                            img->_imageInsets.bottom,
-                                            getImage(img)->Backing()->Width() - img->_imageInsets.left - img->_imageInsets.right,
-                                            getImage(img)->Backing()->Height() - img->_imageInsets.top - img->_imageInsets.bottom),
-                                   makeRect(img->_imageInsets.left,
-                                            img->_imageInsets.bottom,
-                                            ii->size.size.width - img->_imageInsets.left - img->_imageInsets.right,
-                                            ii->size.size.height - img->_imageInsets.top - img->_imageInsets.bottom));
+                                   cgImg,
+                                   CGRectMake(srcLeftCap,
+                                              srcHeight - srcBotCap,
+                                              (srcWidth - srcLeftCap - srcRightCap),
+                                              -(srcHeight - srcTopCap - srcBotCap)),
+                                   CGRectMake((dstX + dstLeftCap),
+                                              (dstY + dstBotCap),
+                                              (dstWidth - dstLeftCap - dstRightCap),
+                                              (dstHeight - dstTopCap - dstBotCap)));
         } else {
-            assert(0);
+            UNIMPLEMENTED_WITH_MSG(
+                "Patched draws only supported when sum of dstLeftCap and dstRightCap is less than the width of the UI element.");
         }
-        CGContextDrawImageRect(context,
-                               getImage(img),
-                               makeRect(getImage(img)->Backing()->Width() - img->_imageInsets.right,
-                                        img->_imageInsets.bottom,
-                                        img->_imageInsets.right,
-                                        getImage(img)->Backing()->Height() - img->_imageInsets.top - img->_imageInsets.bottom),
-                               makeRect(ii->size.size.width - img->_imageInsets.right,
-                                        img->_imageInsets.bottom,
-                                        img->_imageInsets.right,
-                                        ii->size.size.height - img->_imageInsets.top - img->_imageInsets.bottom));
+
+        if (dstRightCap) {
+            // MidHeightRight
+            CGContextDrawImageRect(
+                context,
+                cgImg,
+                CGRectMake((srcWidth - srcRightCap), srcHeight - srcBotCap, srcRightCap, -(srcHeight - srcTopCap - srcBotCap)),
+                CGRectMake((dstX + dstWidth - dstRightCap), (dstY + dstBotCap), dstRightCap, (dstHeight - dstTopCap - dstBotCap)));
+        }
+    } else {
+        UNIMPLEMENTED_WITH_MSG(
+            "Patched draws only supported when sum of dstTopCap and dstBotCap is less than the height of the UI element.");
     }
 
-    if (img->_imageInsets.bottom) {
-        CGContextDrawImageRect(context,
-                               getImage(img),
-                               makeRect(0, 0, img->_imageInsets.left, img->_imageInsets.bottom),
-                               makeRect(0, 0, img->_imageInsets.left, img->_imageInsets.bottom));
-        if (getImage(img)->Backing()->Width() - img->_imageInsets.left - img->_imageInsets.right > 0) {
+    if (dstTopCap) {
+        if (dstLeftCap) {
+            // TL corner
             CGContextDrawImageRect(context,
-                                   getImage(img),
-                                   makeRect(img->_imageInsets.left,
-                                            0,
-                                            getImage(img)->Backing()->Width() - img->_imageInsets.left - img->_imageInsets.right,
-                                            img->_imageInsets.bottom),
-                                   makeRect(img->_imageInsets.left,
-                                            0,
-                                            ii->size.size.width - img->_imageInsets.left - img->_imageInsets.right,
-                                            img->_imageInsets.bottom));
+                                   cgImg,
+                                   CGRectMake(0, srcTopCap, srcLeftCap, -srcTopCap),
+                                   CGRectMake(dstX, (dstY + dstHeight - dstTopCap), dstLeftCap, dstTopCap));
         }
-        CGContextDrawImageRect(
-            context,
-            getImage(img),
-            makeRect(getImage(img)->Backing()->Width() - img->_imageInsets.right, 0, img->_imageInsets.right, img->_imageInsets.bottom),
-            makeRect(ii->size.size.width - img->_imageInsets.right, 0, img->_imageInsets.right, img->_imageInsets.bottom));
-    }
-}
 
-static void drawLeftCap(UIImage* self, CGContextRef cur, CGRect pos) {
-    CGRect srcRect;
-    CGRect destRect = pos;
+        if (dstWidth - dstLeftCap - dstRightCap > 0) {
+            // TCenter
+            CGContextDrawImageRect(context,
+                                   cgImg,
+                                   CGRectMake(srcLeftCap, srcTopCap, (srcWidth - srcLeftCap - srcRightCap), -srcTopCap),
+                                   CGRectMake((dstX + dstLeftCap),
+                                              (dstY + dstHeight - dstTopCap),
+                                              (dstWidth - dstLeftCap - dstRightCap),
+                                              dstTopCap));
+        }
 
-    srcRect.origin.x = 0;
-    srcRect.origin.y = 0;
-    srcRect.size.width = float(getImage(self)->Backing()->Width());
-    srcRect.size.height = float(getImage(self)->Backing()->Height());
-
-    CGRect drawRect, capRect;
-
-    //  Draw the left cap
-    drawRect.origin.x = destRect.origin.x;
-    drawRect.origin.y = destRect.origin.y;
-    drawRect.size.width = self->_imageInsets.left;
-    drawRect.size.height = destRect.size.height;
-
-    capRect = srcRect;
-    capRect.size.width = self->_imageInsets.left * self->_scale;
-
-    capRect.origin.y = getImage(self)->Backing()->Height() - capRect.origin.y;
-    capRect.size.height = -capRect.size.height;
-
-    float minX = drawRect.origin.x + drawRect.size.width;
-    CGContextDrawImageRect(cur, getImage(self), capRect, drawRect);
-
-    //  Draw cap fragment
-    drawRect.origin.x = destRect.origin.x + self->_imageInsets.left;
-    drawRect.origin.y = destRect.origin.y;
-    drawRect.size.width = pos.size.width - srcRect.size.width / self->_scale;
-    drawRect.size.height = destRect.size.height;
-
-    capRect.origin.x = self->_imageInsets.left * self->_scale;
-    capRect.origin.y = getImage(self)->Backing()->Height() - srcRect.origin.y;
-    capRect.size.width = 1;
-    capRect.size.height = -srcRect.size.height;
-    if (drawRect.size.width > 0.0f) {
-        CGContextDrawImageRect(cur, getImage(self), capRect, drawRect);
+        if (dstRightCap) {
+            // TR corner
+            CGContextDrawImageRect(context,
+                                   cgImg,
+                                   CGRectMake((srcWidth - srcRightCap), srcTopCap, srcRightCap, -srcTopCap),
+                                   CGRectMake((dstX + dstWidth - dstRightCap), (dstY + dstHeight - dstTopCap), dstRightCap, dstTopCap));
+        }
     }
 
-    //  Adjust the source and desination rects
-    srcRect.origin.x = self->_imageInsets.left * self->_scale;
-    srcRect.size.width = getImage(self)->Backing()->Width() - self->_imageInsets.left * self->_scale;
-    destRect.origin.x += pos.size.width - (srcRect.size.width / self->_scale);
-    destRect.size.width = srcRect.size.width / self->_scale;
+    if (dstBotCap) {
+        if (dstLeftCap) {
+            // BL Corner
+            CGContextDrawImageRect(context,
+                                   cgImg,
+                                   CGRectMake(0, srcHeight, srcLeftCap, -srcBotCap),
+                                   CGRectMake(dstX, dstY, dstLeftCap, dstBotCap));
+        }
 
-    //  Invert srcRect
-    srcRect.origin.y = getImage(self)->Backing()->Height() - srcRect.origin.y;
-    srcRect.size.height = -srcRect.size.height;
+        if (dstWidth - dstLeftCap - dstRightCap > 0) {
+            // bottomMidWidth
+            CGContextDrawImageRect(context,
+                                   cgImg,
+                                   CGRectMake(srcLeftCap, srcHeight, (srcWidth - srcLeftCap - srcRightCap), -srcBotCap),
+                                   CGRectMake((dstX + dstLeftCap), dstY, (dstWidth - dstLeftCap - dstRightCap), dstBotCap));
+        }
 
-    if (destRect.origin.x < minX) {
-        float diff = minX - destRect.origin.x;
-        destRect.origin.x += diff;
-        destRect.size.width -= diff;
-        srcRect.origin.x += diff * self->_scale;
-        srcRect.size.width -= diff * self->_scale;
+        if (dstRightCap) {
+            CGContextDrawImageRect(context,
+                                   cgImg,
+                                   CGRectMake((srcWidth - srcRightCap), srcHeight, srcRightCap, -srcBotCap),
+                                   CGRectMake((dstX + dstWidth - dstRightCap), dstY, dstRightCap, dstBotCap));
+        }
     }
-    if (destRect.size.width > 0.0f) {
-        CGContextDrawImageRect(cur, getImage(self), srcRect, destRect);
-    }
-}
-
-static void drawTopCap(UIImage* self, CGContextRef cur, CGRect pos) {
-    CGRect srcRect;
-    CGRect destRect = pos;
-
-    srcRect.origin.x = 0;
-    srcRect.origin.y = 0;
-    srcRect.size.width = float(getImage(self)->Backing()->Width());
-    srcRect.size.height = float(getImage(self)->Backing()->Height());
-
-    CGRect drawRect, capRect;
-
-    //  Draw the left cap
-    drawRect.origin.x = destRect.origin.x;
-    drawRect.origin.y = destRect.origin.y;
-    drawRect.size.width = destRect.size.width;
-    drawRect.size.height = self->_imageInsets.top;
-
-    capRect = srcRect;
-    capRect.size.height = self->_imageInsets.top;
-
-    capRect.origin.y = getImage(self)->Backing()->Height() - capRect.origin.y;
-    capRect.size.height = -capRect.size.height;
-
-    CGContextDrawImageRect(cur, getImage(self), capRect, drawRect);
-
-    //  Draw cap fragment
-    drawRect.origin.x = destRect.origin.x;
-    drawRect.origin.y = destRect.origin.y + self->_imageInsets.top;
-    drawRect.size.width = destRect.size.width;
-    drawRect.size.height = pos.size.height - srcRect.size.height;
-
-    capRect.origin.x = srcRect.origin.x;
-    capRect.origin.y = self->_imageInsets.top;
-    capRect.size.width = srcRect.size.width;
-    capRect.size.height = -1;
-    CGContextDrawImageRect(cur, getImage(self), capRect, drawRect);
-
-    //  Adjust the source and desination rects
-    srcRect.origin.y = self->_imageInsets.top;
-    srcRect.size.height = getImage(self)->Backing()->Height() - self->_imageInsets.top;
-    destRect.origin.y += pos.size.height - srcRect.size.height;
-    destRect.size.height = srcRect.size.height;
-
-    //  Invert srcRect
-    srcRect.origin.y = getImage(self)->Backing()->Height() - srcRect.origin.y;
-    srcRect.size.height = -srcRect.size.height;
-    CGContextDrawImageRect(cur, getImage(self), srcRect, destRect);
-}
-
-static void drawFromRect(UIImage* self, CGContextRef ctx, CGRect dest, CGRect source) {
-    source.origin.x *= self->_scale;
-    source.origin.y *= self->_scale;
-    source.size.width *= self->_scale;
-    source.size.height *= self->_scale;
-
-    source.origin.y = getImage(self)->Backing()->Height() - source.origin.y;
-    source.size.height = -source.size.height;
-
-    CGContextDrawImageRect(ctx, getImage(self), source, dest);
-}
-
-static CGRect makeRect(float left, float top, float width, float height) {
-    CGRect ret = { left, top, width, height };
-
-    return ret;
-}
-
-static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
-    CGSize size = { 0, 0 };
-    size = [self size];
-    // FIXME: Floating point accuracy messes with the seams.
-    float stretchyWidth = (self->_imageInsets.left < size.width) ? 0.999f : 0.f;
-    float stretchyHeight = (self->_imageInsets.top < size.height) ? 0.999f : 0.f;
-    float bottomCapHeight = size.height - self->_imageInsets.top - stretchyHeight;
-    float rightCapWidth = size.width - self->_imageInsets.left - stretchyWidth;
-
-    // topLeftCorner
-    drawFromRect(self,
-                 ctx,
-                 makeRect(CGRectGetMinX(rect), CGRectGetMinY(rect), self->_imageInsets.left, self->_imageInsets.top),
-                 makeRect(0, 0, self->_imageInsets.left, self->_imageInsets.top));
-
-    // topEdgeFill
-    drawFromRect(self,
-                 ctx,
-                 makeRect(CGRectGetMinX(rect) + self->_imageInsets.left,
-                          CGRectGetMinY(rect),
-                          rect.size.width - rightCapWidth - self->_imageInsets.left,
-                          self->_imageInsets.top),
-                 makeRect(self->_imageInsets.left, 0, stretchyWidth, self->_imageInsets.top));
-
-    // topRightCorner
-    drawFromRect(self,
-                 ctx,
-                 makeRect(CGRectGetMaxX(rect) - rightCapWidth, CGRectGetMinY(rect), rightCapWidth, self->_imageInsets.top),
-                 makeRect(size.width - rightCapWidth, 0, rightCapWidth, self->_imageInsets.top));
-
-    // bottomLeftCorner
-    drawFromRect(self,
-                 ctx,
-                 makeRect(CGRectGetMinX(rect), CGRectGetMaxY(rect) - bottomCapHeight, self->_imageInsets.left, bottomCapHeight),
-                 makeRect(0, size.height - bottomCapHeight, self->_imageInsets.left, bottomCapHeight));
-
-    // bottomEdgeFill
-    drawFromRect(self,
-                 ctx,
-                 makeRect(CGRectGetMinX(rect) + self->_imageInsets.left,
-                          CGRectGetMaxY(rect) - bottomCapHeight,
-                          rect.size.width - rightCapWidth - self->_imageInsets.left,
-                          bottomCapHeight),
-                 makeRect(self->_imageInsets.left, size.height - bottomCapHeight, stretchyWidth, bottomCapHeight));
-
-    // bottomRightCorner
-    drawFromRect(self,
-                 ctx,
-                 makeRect(CGRectGetMaxX(rect) - rightCapWidth, CGRectGetMaxY(rect) - bottomCapHeight, rightCapWidth, bottomCapHeight),
-                 makeRect(size.width - rightCapWidth, size.height - bottomCapHeight, rightCapWidth, bottomCapHeight));
-
-    // leftEdgeFill
-    drawFromRect(self,
-                 ctx,
-                 makeRect(CGRectGetMinX(rect),
-                          CGRectGetMinY(rect) + self->_imageInsets.top,
-                          self->_imageInsets.left,
-                          rect.size.height - bottomCapHeight - self->_imageInsets.top),
-                 makeRect(0, self->_imageInsets.top, self->_imageInsets.left, stretchyHeight));
-
-    // rightEdgeFill
-    drawFromRect(self,
-                 ctx,
-                 makeRect(CGRectGetMaxX(rect) - rightCapWidth,
-                          CGRectGetMinY(rect) + self->_imageInsets.top,
-                          rightCapWidth,
-                          rect.size.height - bottomCapHeight - self->_imageInsets.top),
-                 makeRect(size.width - rightCapWidth, self->_imageInsets.top, rightCapWidth, stretchyHeight));
-
-    // centerFill
-    drawFromRect(self,
-                 ctx,
-                 makeRect(CGRectGetMinX(rect) + self->_imageInsets.left,
-                          CGRectGetMinY(rect) + self->_imageInsets.top,
-                          rect.size.width - rightCapWidth - self->_imageInsets.left,
-                          rect.size.height - bottomCapHeight - self->_imageInsets.top),
-                 makeRect(self->_imageInsets.left, self->_imageInsets.top, stretchyWidth, stretchyHeight));
 }
 
 /**
@@ -1041,60 +853,28 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
  @Status Interoperable
 */
 - (void)drawInRect:(CGRect)pos blendMode:(CGBlendMode)mode alpha:(float)alpha {
-    //  [BUG: Need to honor mode and alpha]
-    CGContextRef cur = UIGraphicsGetCurrentContext();
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGImageRef img = getImage(self);
 
-    if (!getImage(self)) {
+    if (img == NULL) {
         TraceWarning(TAG, L"m_pImage = NULL!");
         return;
     }
 
-    CGContextSaveGState(cur);
-    CGContextSetBlendMode(cur, mode);
-
-    if (alpha != 1.0) {
-        TraceVerbose(TAG, L"Should draw with alpha");
-    }
-
-    if (_scale == 0) {
+    if (_scale == 0.0f) {
         TraceWarning(TAG, L"Scale should be non-zero!");
         return;
     }
 
-    if (_imageInsets.left == 0 && _imageInsets.top == 0 && _imageInsets.right == 0 && _imageInsets.bottom == 0) {
-        CGRect srcRect;
-        CGRect destRect = pos;
+    CGContextSaveGState(ctx);
 
-        srcRect.origin.x = 0;
-        srcRect.origin.y = 0;
-        srcRect.size.width = float(getImage(self)->Backing()->Width());
-        srcRect.size.height = float(getImage(self)->Backing()->Height());
+    CGContextSetBlendMode(ctx, mode);
+    CGContextSetAlpha(ctx, alpha);
 
-        //  Invert srcRect
-        srcRect.origin.y = getImage(self)->Backing()->Height() - srcRect.origin.y;
-        srcRect.size.height = -srcRect.size.height;
-        CGContextDrawImageRect(cur, getImage(self), srcRect, destRect);
-    } else {
-        static const CGPatternCallbacks patCB = { 0, drawNinePatchCallBack, NULL };
-        insetInfo ii = { self, makeRect(0, 0, pos.size.width * _scale, pos.size.height * _scale) };
+    // Draw image and divide into patches if necessary
+    drawPatches(ctx, self, &pos);
 
-        CGPatternRef pat = CGPatternCreate((void*)&ii,
-                                           makeRect(0, 0, pos.size.width * _scale, pos.size.height * _scale),
-                                           CGAffineTransformMakeScale(_scale, _scale),
-                                           pos.size.width * _scale,
-                                           pos.size.height * _scale,
-                                           kCGPatternTilingConstantSpacing,
-                                           true,
-                                           &patCB);
-
-        CGFloat alpha = 1.0f;
-        CGContextSetFillPattern(cur, pat, &alpha);
-        CGContextFillRect(cur, pos);
-
-        CGPatternRelease(pat);
-    }
-
-    CGContextRestoreGState(cur);
+    CGContextRestoreGState(ctx);
 }
 
 - (void)setOrientation:(UIImageOrientation)orientation {
