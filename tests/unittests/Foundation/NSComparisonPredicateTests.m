@@ -231,7 +231,7 @@ OSX_DISABLED_TEST(NSComparisonPredicate, NSAllPredicateModifier2) {
     ASSERT_TRUE_MSG(predicate != nil, "FAILED: predicate should be non-null!");
 
     // validate the expression.
-    ASSERT_TRUE_MSG(![predicate evaluateWithObject:nil substitutionVariables:nil], "FAILED: predicate failed.");
+    ASSERT_FALSE_MSG([predicate evaluateWithObject:nil substitutionVariables:nil], "FAILED: predicate failed.");
 }
 
 TEST(NSComparisonPredicate, NSLessThanPredicateOperatorType) {
@@ -630,7 +630,7 @@ TEST(NSComparisonPredicate, NSContainsPredicateOperatorType) {
 
     ASSERT_TRUE_MSG(comparisonPredicate != nil, "FAILED: comparisonPredicate should be non-null!");
 
-    ASSERT_TRUE_MSG(![comparisonPredicate evaluateWithObject:nil substitutionVariables:nil], "FAILED: Comparison failed.");
+    ASSERT_FALSE_MSG([comparisonPredicate evaluateWithObject:nil substitutionVariables:nil], "FAILED: Comparison failed.");
 }
 
 TEST(NSComparisonPredicate, NSContainsPredicateOperatorType_NSCaseInsensitivePredicateOption) {
