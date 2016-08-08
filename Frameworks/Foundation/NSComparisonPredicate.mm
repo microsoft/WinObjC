@@ -17,6 +17,7 @@
 #import <Starboard.h>
 #import <Foundation/NSComparisonPredicate.h>
 #import <Foundation/NSLocale.h>
+#import <NSPredicateUtil.h>
 
 @implementation NSComparisonPredicate
 
@@ -95,7 +96,7 @@
 }
 
 + (NSComparisonPredicateOptions)extractOptions:(NSString*)option {
-    // We can short to using obtainStringCompareOptionsWithComparisonPredicateOptions, but it would just make the code much more unreadable.
+    // We can short to using extractStringCompareOptions, but it would just make the code much more unreadable.
     NSComparisonPredicateOptions options = 0;
     if ([option rangeOfString:@"c"].location != NSNotFound) {
         options |= NSCaseInsensitivePredicateOption;
@@ -113,31 +114,6 @@
     return options;
 }
 
-- (NSStringCompareOptions)obtainStringCompareOptionsWithComparisonPredicateOptions:(NSComparisonPredicateOptions)options {
-    switch (options) {
-        case NSCaseInsensitivePredicateOption:
-            return NSCaseInsensitiveSearch;
-        case NSDiacriticInsensitivePredicateOption:
-            return NSDiacriticInsensitiveSearch;
-        // For the two below need to verify on reference platform.
-        case NSNormalizedPredicateOption:
-        case NSLocaleSensitivePredicateOption:
-        default:
-            break;
-    }
-
-    return NSCaseInsensitiveSearch;
-}
-
-- (NSLocale*)obtainLocaleForComparisonPredicateOptions:(NSComparisonPredicateOptions)options {
-    if (options & NSLocaleSensitivePredicateOption) {
-        return [NSLocale currentLocale];
-    }
-
-    // system locale
-    return nil;
-}
-
 - (BOOL)_InContainsPredicate:(id)leftResult rightResult:(id)rightResult {
     if (rightResult == nil) {
         return NO;
@@ -148,18 +124,10 @@
     }
 
     if ([self _areResultsStrings:leftResult rightResult:rightResult]) {
-        // Ensure NSComparisonPredicateOptions options are met. _comparisonPredicateModifier
-        NSComparisonPredicateOptions option = [self obtainStringCompareOptionsWithComparisonPredicateOptions:_comparisonPredicateModifier];
-
-        // VSO 7120611: when rangeOfString with locale is implemented
-        // NSRange range = NSMakeRange(0, [rightResult length])
-        //         return [rightResult rangeOfString:leftResult
-        //                   options:option
-        //                     range:range
-        //                    locale:[self obtainLocaleForComparisonPredicateOptions:_comparisonPredicateModifier]]
-        //    .location != NSNotFound;
-
-        return [rightResult rangeOfString:leftResult options:static_cast<NSStringCompareOptions>(option)].location != NSNotFound;
+        NSRange range = NSMakeRange(0, [rightResult length]);
+        return
+            [rightResult rangeOfString:leftResult options:extractStringCompareOptions(_options) range:range locale:extractLocale(_options)]
+                .location != NSNotFound;
     }
 
     return NO;
@@ -202,10 +170,9 @@
     // The right is the regex pattern, left is the string to validate.
 
     NSError* error = NULL;
-    NSRegularExpression* regex =
-        [NSRegularExpression regularExpressionWithPattern:rightResult
-                                                  options:[self obtainNSRegularExpressionOptions:_comparisonPredicateModifier]
-                                                    error:&error];
+    NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:rightResult
+                                                                           options:[self obtainNSRegularExpressionOptions:_options]
+                                                                             error:&error];
     if (error) {
         [NSException raise:NSGenericException
                     format:@"Unable to do the regex match, regex failure message:%@", [error localizedDescription]];
@@ -241,30 +208,20 @@
             return ![leftResult isEqual:rightResult];
 
         case NSBeginsWithPredicateOperatorType: {
-            NSStringCompareOptions compareOption =
-                [self obtainStringCompareOptionsWithComparisonPredicateOptions:_comparisonPredicateModifier];
-            // VSO:7120611 when rangeOfString with locale is implemented
-            // NSRange range = NSMakeRange(0, [leftResult length])
-            //         return [leftResult rangeOfString:rightResult options:(NSAnchoredSearch | compareOption)
-            //                     range:range
-            //                    locale:[self obtainLocaleForComparisonPredicateOptions:_comparisonPredicateModifier]]
-            //    .location != NSNotFound;
-
-            return ([leftResult rangeOfString:rightResult options:static_cast<NSStringCompareOptions>(NSAnchoredSearch | compareOption)]
-                        .location != NSNotFound);
+            NSRange range = NSMakeRange(0, [leftResult length]);
+            return [leftResult rangeOfString:rightResult
+                                     options:(NSAnchoredSearch | extractStringCompareOptions(_options))
+                                       range:range
+                                      locale:extractLocale(_options)]
+                       .location != NSNotFound;
         }
         case NSEndsWithPredicateOperatorType: {
-            NSStringCompareOptions compareOption =
-                [self obtainStringCompareOptionsWithComparisonPredicateOptions:_comparisonPredicateModifier];
-            // VSO 7120611: when rangeOfString with locale is implemented
-            // NSRange range = NSMakeRange(0, [leftResult length])
-            //         return [leftResult rangeOfString:rightResult options:(NSBackwardsSearch | compareOption)
-            //                     range:range
-            //                    locale:[self obtainLocaleForComparisonPredicateOptions:_comparisonPredicateModifier]]
-            //    .location != NSNotFound;
-
-            return ([leftResult rangeOfString:rightResult options:static_cast<NSStringCompareOptions>(NSBackwardsSearch | compareOption)]
-                        .location != NSNotFound);
+            NSRange range = NSMakeRange(0, [leftResult length]);
+            return [leftResult rangeOfString:rightResult
+                                     options:(NSBackwardsSearch | extractStringCompareOptions(_options))
+                                       range:range
+                                      locale:extractLocale(_options)]
+                       .location != NSNotFound;
         }
         case NSInPredicateOperatorType:
             // check if right contains left
@@ -362,10 +319,10 @@
     }
 
     return [NSComparisonPredicate predicateWithLeftExpression:leftSub
-                             rightExpression:rightSub
-                                    modifier:_comparisonPredicateModifier
-                                        type:_predicateOperatorType
-                                     options:_options];
+                                              rightExpression:rightSub
+                                                     modifier:_comparisonPredicateModifier
+                                                         type:_predicateOperatorType
+                                                      options:_options];
 }
 
 /**
