@@ -148,19 +148,6 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
         ToastNotificationActivatedEventArgs^ toastArgs = safe_cast<ToastNotificationActivatedEventArgs^>(args);
         TraceVerbose(TAG, L"Received toast notification with argument - %ls", toastArgs->Argument->Data());
 
-        // TODO 8218419: Cannot currently consume values in Objective C projection without first converting to IPropertyValue
-        // Create list of keys so we can modify the valueset
-        std::vector<Platform::String^> keys;
-        for (auto i = toastArgs->UserInput->First(); i->HasCurrent; i->MoveNext()) {
-            keys.push_back(i->Current->Key);
-        }
-        
-        // Convert String^ to IPropertyValue so they can be converted to NSString*
-        for (auto i : keys) {
-            Platform::Object^ value = toastArgs->UserInput->Lookup(i);
-            toastArgs->UserInput->Insert(i, PropertyValue::CreateString(static_cast<Platform::String^>(value)));
-        }
-
         if (initiateAppLaunch) {
             _ApplicationLaunch(ActivationTypeToast, toastArgs);
         }

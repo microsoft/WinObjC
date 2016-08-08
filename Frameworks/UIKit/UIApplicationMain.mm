@@ -333,11 +333,11 @@ extern "C" void UIApplicationMainHandleToastActionEvent(HSTRING toastArgument, I
     NSString* argument = Strings::WideToNSString(toastArgument);
 
     // Convert to NSDictionary with NSStrings
-    WFCValueSet* values = [WFCValueSet createWith:toastUserInput];
     NSMutableDictionary* userInput = [NSMutableDictionary new];
-    ComPtr<ABI::Windows::Foundation::Collections::IMap<HSTRING, IInspectable*>> comPtr;
-    THROW_NS_IF_FAILED(values.comObj.As(&comPtr));
-    THROW_NS_IF_FAILED(Collections::WRLToNSCollection(comPtr, &userInput));
+    ComPtr<IInspectable> comPtr = toastUserInput;
+    ComPtr<ABI::Windows::Foundation::Collections::IPropertySet> map;
+    THROW_NS_IF_FAILED(comPtr.As(&map));
+    THROW_NS_IF_FAILED(Collections::WRLToNSCollection(map, &userInput));
 
     NSDictionary* toastAction =
         @{ UIApplicationLaunchOptionsToastActionArgumentKey : argument, UIApplicationLaunchOptionsToastActionUserInputKey : userInput };

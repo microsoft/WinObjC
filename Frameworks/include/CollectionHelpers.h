@@ -46,6 +46,12 @@ struct CollectionType<ABI::Windows::Foundation::Collections::IVector<T>> {
     using NSEquivalentType = NSArray;
     using NSMutableEquivalentType = NSMutableArray;
 };
+
+template <>
+struct CollectionType<ABI::Windows::Foundation::Collections::IPropertySet> {
+    using NSEquivalentType = NSDictionary;
+    using NSMutableEquivalentType = NSMutableDictionary;
+};
 }
 
 template <typename T>
@@ -76,10 +82,11 @@ HRESULT WRLToNSCollection<ABI::Windows::Foundation::Collections::IMap<HSTRING, H
 }
 
 // Specified for converting IPropertyValue of String to NSString for Toast Action conversion
+// TODO 8218419: Cannot currently consume values in Objective C projection without first converting to IPropertyValue
 template <>
-HRESULT WRLToNSCollection<ABI::Windows::Foundation::Collections::IMap<HSTRING, IInspectable*>>(
-    ABI::Windows::Foundation::Collections::IMap<HSTRING, IInspectable*>* map, NSDictionary* __autoreleasing* pDictionary) {
-    using NSType = Private::CollectionType<ABI::Windows::Foundation::Collections::IMap<HSTRING, IInspectable*>>::NSMutableEquivalentType;
+HRESULT WRLToNSCollection<ABI::Windows::Foundation::Collections::IPropertySet>(ABI::Windows::Foundation::Collections::IPropertySet* map,
+                                                                               NSDictionary* __autoreleasing* pDictionary) {
+    using NSType = Private::CollectionType<ABI::Windows::Foundation::Collections::IPropertySet>::NSMutableEquivalentType;
     NSType* collection = [[NSType alloc] init];
     HRESULT hr = WRLHelpers::ForEach(
         map,

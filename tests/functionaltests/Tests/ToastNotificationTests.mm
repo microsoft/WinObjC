@@ -241,10 +241,8 @@ TEST(ToastNotificationTest, ForegroundActivation) {
 
     auto fakeIterator = Make<MockIterator>();
 
-    // Return false the second time this is called so it doesn't create an infinite loop
-    int count = 0;
-    fakeIterator->Setget_HasCurrent([&count](boolean* hasCurrent) {
-        *hasCurrent = (++count != 2);
+    fakeIterator->Setget_HasCurrent([](boolean* hasCurrent) {
+        *hasCurrent = true;
         return S_OK;
     });
 

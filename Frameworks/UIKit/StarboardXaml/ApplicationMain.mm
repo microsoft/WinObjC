@@ -17,6 +17,7 @@
 #include <COMIncludes.h>
 #import "ApplicationMain.h"
 #import <windows.foundation.h>
+#import <windows.applicationmodel.activation.h>
 #include <COMIncludes_End.h>
 
 #import <assert.h>
@@ -65,9 +66,12 @@ int ApplicationMainStart(const char* principalName,
 
         // Convert to NSDictionary with NSStrings
         NSMutableDictionary* userInput = [NSMutableDictionary new];
-        ComPtr<ABI::Windows::Foundation::Collections::IMap<HSTRING, IInspectable*>> comPtr;
-        THROW_NS_IF_FAILED(toastArgument.userInput.comObj.As(&comPtr));
-        THROW_NS_IF_FAILED(Collections::WRLToNSCollection(comPtr, &userInput));
+        ComPtr<IInspectable> comPtr = activationArg;
+        ComPtr<ABI::Windows::ApplicationModel::Activation::IToastNotificationActivatedEventArgs> args;
+        THROW_NS_IF_FAILED(comPtr.As(&args));
+        ComPtr<ABI::Windows::Foundation::Collections::IPropertySet> map;
+        THROW_NS_IF_FAILED(args->get_UserInput(&map));
+        THROW_NS_IF_FAILED(Collections::WRLToNSCollection(map, &userInput));
 
         NSDictionary* toastAction = @{
             UIApplicationLaunchOptionsToastActionArgumentKey : toastArgument.argument,
