@@ -25,6 +25,7 @@
 #import "UIWindowInternal.h"
 #import "UIViewControllerInternal.h"
 #import "UIGestureRecognizerInternal.h"
+#import "UIKit/UIGestureRecognizerSubclass.h"
 #import "CALayerInternal.h"
 #import "CAAnimationInternal.h"
 #import <AutoLayout.h>
@@ -198,20 +199,67 @@ BOOL g_resetAllTrackingGestures = TRUE;
         }
     }
 
-    // gesture priority list
-    const static id s_gesturesPriority[] = {[UIPinchGestureRecognizer class],
-                                            [UISwipeGestureRecognizer class],
-                                            [UIPanGestureRecognizer class],
-                                            [UILongPressGestureRecognizer class],
-                                            [UITapGestureRecognizer class] };
+    //
+    // Remove any gestures that should not simulatanously be recognized
+    //
 
-    const static int s_numGestureTypes = sizeof(s_gesturesPriority) / sizeof(s_gesturesPriority[0]);
+    // First find the active gesture
+    UIGestureRecognizer* activeGesture = nil;
 
-    //  Process all gestures
-    for (int i = 0; i < s_numGestureTypes; i++) {
-        id curgestureClass = s_gesturesPriority[i];
-        id gestures = [g_curGesturesDict objectForKey:curgestureClass];
-        if ([curgestureClass _fireGestures:gestures]) {
+    int count = [g_currentlyTrackingGesturesList count];
+    for (UIGestureRecognizer* curGesture in [g_currentlyTrackingGesturesList reverseObjectEnumerator]) {
+        UIGestureRecognizerState state = curGesture.state;
+        if (state != UIGestureRecognizerStatePossible && state != UIGestureRecognizerStateCancelled) {
+            activeGesture = curGesture;
+            break;
+        }
+    }
+
+    if (activeGesture) {
+        BOOL activeResponds =
+            [activeGesture.delegate respondsToSelector:@selector(gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)];
+
+        // now test it against the other gestures, removing if we do not handle simultaneous gestures
+        NSMutableSet* gesturesToRemove = [NSMutableSet set];
+        for (UIGestureRecognizer* curGesture in g_currentlyTrackingGesturesList) {
+            if (curGesture == activeGesture) {
+                continue;
+            }
+            BOOL currentResponds =
+                [curGesture.delegate respondsToSelector:@selector(gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)];
+
+            if (currentResponds == NO ||
+                [curGesture.delegate gestureRecognizer:curGesture shouldRecognizeSimultaneouslyWithGestureRecognizer:activeGesture] == NO) {
+                [gesturesToRemove addObject:curGesture];
+            } else if (activeResponds == NO ||
+                       [activeGesture.delegate gestureRecognizer:curGesture
+                           shouldRecognizeSimultaneouslyWithGestureRecognizer:activeGesture] == NO) {
+                [gesturesToRemove addObject:curGesture];
+            }
+
+            BOOL canPrevent = [activeGesture canPreventGestureRecognizer:curGesture];
+            if (canPrevent == YES) {
+                [gesturesToRemove addObject:curGesture];
+            }
+        }
+
+        // remove those gesturee
+        for (UIGestureRecognizer* curGesture in gesturesToRemove) {
+            [curGesture reset];
+            if (DEBUG_GESTURES) {
+                TraceVerbose(TAG, L"Removing gesture %hs %x state=%d", object_getClassName(curGesture), curGesture);
+            }
+            [g_currentlyTrackingGesturesList removeObject:curGesture];
+            id gesturesArr = [g_curGesturesDict objectForKey:[curGesture class]];
+            [gesturesArr removeObject:curGesture];
+        }
+    }
+
+    // to support the subclassing of gestures, fire the gestures based on their order in the tracking list
+    count = [g_currentlyTrackingGesturesList count];
+    for (UIGestureRecognizer* curGesture in [g_currentlyTrackingGesturesList reverseObjectEnumerator]) {
+        id curgestureClass = [curGesture class];
+        if ([curgestureClass _fireGestures:@[ curGesture ]]) {
             handled = true;
             if (handled && DEBUG_GESTURES) {
                 TraceVerbose(TAG, L"Gesture (%hs) handled.", object_getClassName(curgestureClass));
