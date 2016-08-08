@@ -389,7 +389,7 @@ TEST(NSProgress, LocalizedDescription) {
     NSString* localizedAdditionalDescriptionWithKind = [progress localizedAdditionalDescription];
     ASSERT_OBJCNE(@"", localizedDescriptionWithKind);
 #if TARGET_OS_WIN32
-    ASSERT_OBJCEQ(@"", localizedAdditionalDescriptionWithKind); // Yes, this matches the reference platform
+    ASSERT_OBJCEQ(@"0 bytes of 100 bytes", localizedAdditionalDescriptionWithKind);
 #endif
 
     ASSERT_OBJCNE(baseLocalizedDescription, localizedDescriptionWithKind);
