@@ -26,10 +26,7 @@ void VerifyJSONObjectWithDataSucceeds(NSString* dataString, NSJSONWritingOptions
     ASSERT_OBJCEQ_MSG(expectedResult, actualResult, "FAILED: expected (%@) != actual (%@)", expectedResult, actualResult);
 }
 
-void VerifyJSONObjectWithDataFails(NSString* dataString,
-                                   NSJSONWritingOptions opts,
-                                   NSInteger expectedErrorCode,
-                                   NSString* expectedErrorDescription) {
+void VerifyJSONObjectWithDataFails(NSString* dataString, NSJSONWritingOptions opts, NSInteger expectedErrorCode) {
     NSData* jsonData = [dataString dataUsingEncoding:NSUTF8StringEncoding];
     NSError* err = nil;
     id actualResult = [NSJSONSerialization JSONObjectWithData:jsonData options:opts error:&err];
@@ -38,12 +35,6 @@ void VerifyJSONObjectWithDataFails(NSString* dataString,
     ASSERT_OBJCNE_MSG(nil, err, "FAILED: err == nil");
     ASSERT_OBJCEQ_MSG(@"NSCocoaErrorDomain", [err domain], "FAILED: expected error with domain NSCocoaErrorDomain");
     ASSERT_EQ_MSG(expectedErrorCode, [err code], "FAILED: unexpected error code %d", [err code]);
-    NSString* actualErrorDescription = [[err userInfo] objectForKey:@"NSDebugDescription"];
-    ASSERT_OBJCEQ_MSG(expectedErrorDescription,
-                      actualErrorDescription,
-                      "FAILED: expected error description (%s) did not match actual (%s).",
-                      expectedErrorDescription,
-                      actualErrorDescription);
 }
 
 void VerifyJSONObjectWithDataThrows(NSString* dataString, NSJSONWritingOptions opts) {
@@ -106,12 +97,11 @@ TEST(NSJSON, JSONObjectWithDataTests) {
     VerifyJSONObjectWithDataSucceeds(testString6, 1, @{ @"foo" : @"1", @"bar" : @"2" });
 
     // error cases
-    NSString* fragmentDescription = @"JSON text did not start with array or object and option to allow fragments not set.";
-    VerifyJSONObjectWithDataFails(testString1, 0, 3840, fragmentDescription);
-    VerifyJSONObjectWithDataFails(testString2, 0, 3840, fragmentDescription);
-    VerifyJSONObjectWithDataFails(testString3, 0, 3840, @"Invalid JSON string.");
-    VerifyJSONObjectWithDataFails(testString4, 0, 3840, fragmentDescription);
-    VerifyJSONObjectWithDataFails(testString7, 0, 3840, @"Invalid JSON string.");
+    VerifyJSONObjectWithDataFails(testString1, 0, 3840);
+    VerifyJSONObjectWithDataFails(testString2, 0, 3840);
+    VerifyJSONObjectWithDataFails(testString3, 0, 3840);
+    VerifyJSONObjectWithDataFails(testString4, 0, 3840);
+    VerifyJSONObjectWithDataFails(testString7, 0, 3840);
     VerifyJSONObjectWithDataThrows(testString8, 0);
 
     // Ensure nil error argument does not throw
