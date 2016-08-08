@@ -99,8 +99,11 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
         return nil;
     }
 
-    StrongId<NSArray> keyArray = [_keyEnumerator allObjects];
-    StrongId<NSMutableArray> toRet = [NSMutableArray new];
+    StrongId<NSArray> keyArray;
+    keyArray.attach([_keyEnumerator allObjects]);
+
+    StrongId<NSMutableArray> toRet;
+    toRet.attach([NSMutableArray new]);
 
     for (id key in static_cast<NSArray*>(keyArray)) {
         [toRet addObject:[_dictionary objectForKey:key]];
@@ -718,11 +721,12 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
 */
 - (NSArray*)keysSortedByValueWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr {
     NSMutableArray* ret = [[[self allKeys] mutableCopy] autorelease];
-    [ret sortWithOptions:opts usingComparator:^NSComparisonResult(id key1, id key2) {
-        id val1 = [self objectForKey:key1];
-        id val2 = [self objectForKey:key2];
-        return cmptr(val1, val2);
-    }];
+    [ret sortWithOptions:opts
+         usingComparator:^NSComparisonResult(id key1, id key2) {
+             id val1 = [self objectForKey:key1];
+             id val2 = [self objectForKey:key2];
+             return cmptr(val1, val2);
+         }];
 
     return ret;
 }
@@ -799,10 +803,12 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
         return;
     }
 
-    _enumerateWithBlock([self keyEnumerator], options, ^(id key, BOOL* stop) {
-        id value = [self objectForKey:key];
-        block(key, value, stop);
-    });
+    _enumerateWithBlock([self keyEnumerator],
+                        options,
+                        ^(id key, BOOL* stop) {
+                            id value = [self objectForKey:key];
+                            block(key, value, stop);
+                        });
 }
 
 /**
