@@ -101,6 +101,7 @@ static CFIndex _DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthF
 
     FT_Pos lastPossibleBreakWidth = 0;
     int lastPossibleBreakPos = -1;
+    int lastGlyphToPrintPos = -1;
 
     lineStart = curIndex;
 
@@ -127,13 +128,23 @@ static CFIndex _DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthF
 
         if (chars[curIndex] == 10 || (curIndex > 0 && chars[curIndex - 1] == 13 && curIndex - 1 >= lineStart)) {
             if ((curIndex > 0 && chars[curIndex - 1] == 13 && chars[curIndex] != 10)) {
-                curIndex--;
+                --curIndex;
+            }
+
+            if (curIndex > lineStart && chars[curIndex - 1] == ' ') {
+                // Ending line with trailing spaces, only want width up to last printable glyph
+                lineWidth = ((float)lastPossibleBreakWidth) / 64.0f;
+            } else {
+                // No trailing spaces, so we print everything with the current width
+                lastGlyphToPrintPos = curIndex - 1;
+                lineWidth = ((float)penX) / 64.0f;
             }
 
             //  We have hit a hard linebreak, consume it
-            curIndex++;
+            ++curIndex;
 
-            lineWidth = ((float)penX) / 64.0f;
+            //  Do a hard line break
+            hitLinebreak = true;
             break;
         }
 
@@ -178,7 +189,10 @@ static CFIndex _DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthF
             if (curChar == ' ') {
                 //  Soft linebreak possibility
                 lastPossibleBreakPos = curIndex;
-                lastPossibleBreakWidth = penX;
+                if (curIndex > lineStart && chars[curIndex - 1] != ' ') {
+                    lastGlyphToPrintPos = curIndex - 1;
+                    lastPossibleBreakWidth = penX;
+                }
             }
             penX += advance.x;
 
@@ -191,32 +205,46 @@ static CFIndex _DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthF
             if (lastPossibleBreakPos != -1) {
                 //  We must now perform a soft break
                 curIndex = lastPossibleBreakPos + 1;
-
-                if (curChar == ' ') {
-                    //  Do a hard line break
-                    hitLinebreak = true;
-                }
                 lineWidth = ((float)lastPossibleBreakWidth) / 64.0f;
             } else {
                 if (lineStart != curIndex) {
                     //  Back out the last character
                     penX -= advance.x;
+                    lastGlyphToPrintPos = curIndex - 1;
+                } else {
+                    lastGlyphToPrintPos = curIndex;
                 }
                 lineWidth = ((float)penX) / 64.0f;
-                break;
             }
+
+            //  Do a hard line break
+            hitLinebreak = true;
             break;
         }
 
-        curIndex++;
+        ++curIndex;
     }
 
-    if (curIndex >= count) {
-        lineWidth = ((float)penX) / 64.0f;
+    if (curIndex >= count && !hitLinebreak) {
+        // Ran out of characters to print before establishing width
+        if (chars[count - 1] == ' ') {
+            // Ending line with trailing spaces, only want width up to last printable glyph
+            lineWidth = ((float)lastPossibleBreakWidth) / 64.0f;
+        } else {
+            // No trailing spaces, so we print everything with the current width
+            lineWidth = ((float)penX) / 64.0f;
+            lastGlyphToPrintPos = count - 1;
+        }
     }
-
     if (line) {
-        NSRange lineRange = NSMakeRange(range.location, range.length);
+        if (lastGlyphToPrintPos != curIndex && lastGlyphToPrintPos >= 0) {
+            // Remove any trailing whitespace
+            glyphOrigins.erase(glyphOrigins.begin() + (lastGlyphToPrintPos - lineStart + 1), glyphOrigins.end());
+            glyphAdvances.erase(glyphAdvances.begin() + (lastGlyphToPrintPos - lineStart + 1), glyphAdvances.end());
+            characters.erase(characters.begin() + (lastGlyphToPrintPos - lineStart + 1), characters.end());
+        }
+
+        NSRange lineRange = NSMakeRange(lineStart, lastGlyphToPrintPos - lineStart + 1);
         line->_runs.attach([NSMutableArray new]);
         line->_strRange = lineRange;
         line->_width = lineWidth;
@@ -317,8 +345,7 @@ CTTypesetterRef CTTypesetterCreateWithAttributedStringAndOptions(CFAttributedStr
  @Notes
 */
 CTLineRef CTTypesetterCreateLine(CTTypesetterRef typesetter, CFRange stringRange) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return CTTypesetterCreateLineWithOffset(typesetter, stringRange, 0.0f);
 }
 
 /**
@@ -338,8 +365,7 @@ CTLineRef CTTypesetterCreateLineWithOffset(CTTypesetterRef ts, CFRange range, do
  @Notes
 */
 CFIndex CTTypesetterSuggestLineBreak(CTTypesetterRef typesetter, CFIndex startIndex, double width) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return CTTypesetterSuggestLineBreakWithOffset(typesetter, startIndex, width, 0.0f);
 }
 
 // Private/exported function

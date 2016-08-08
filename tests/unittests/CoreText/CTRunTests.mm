@@ -172,7 +172,7 @@ TEST(CoreText, CTRunGetAttributes) {
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getString();
     CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(string);
     CFRange range = { 0, CFAttributedStringGetLength(string) };
-    CTLineRef line = CTTypesetterCreateLineWithOffset(ts, range, 0.0f);
+    CTLineRef line = CTTypesetterCreateLine(ts, range);
     CFArrayRef runsArray = CTLineGetGlyphRuns(line);
     CTRunRef run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 0);
 

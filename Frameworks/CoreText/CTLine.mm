@@ -140,7 +140,7 @@ CTLineRef CTLineCreateTruncatedLine(CTLineRef sourceLine, double width, CTLineTr
 
     CTTypesetterRef typeSetter = CTTypesetterCreateWithAttributedString((CFAttributedStringRef)finalString);
     CFRange range = { 0, finalString.length };
-    CTLineRef ret = (CTLineRef)CTTypesetterCreateLineWithOffset(typeSetter, range, 0);
+    CTLineRef ret = (CTLineRef)CTTypesetterCreateLine(typeSetter, range);
     CFRelease(typeSetter);
     [stringFromToken release];
 

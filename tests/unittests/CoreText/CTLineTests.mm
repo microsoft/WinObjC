@@ -36,7 +36,7 @@ TEST(CoreText, CTLineGetStringIndexForPosition) {
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString();
     CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(string);
     CFRange range = { 0, CFAttributedStringGetLength(string) };
-    CTLineRef line = CTTypesetterCreateLineWithOffset(ts, range, 0.0f);
+    CTLineRef line = CTTypesetterCreateLine(ts, range);
 
     // testing with position < 0
     CGPoint position = { -1, 0 };
@@ -66,7 +66,7 @@ TEST(CoreGraphics, CTLineGetOffsetForStringIndex) {
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString();
     CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(string);
     CFRange range = { 0, CFAttributedStringGetLength(string) };
-    CTLineRef line = CTTypesetterCreateLineWithOffset(ts, range, 0.0f);
+    CTLineRef line = CTTypesetterCreateLine(ts, range);
 
     CGFloat secOffset;
     // testing with index < 0
