@@ -58,7 +58,7 @@
 - (instancetype)initWithIdentity:(SecIdentityRef)identity
                     certificates:(NSArray*)certArray
                      persistence:(NSURLCredentialPersistence)persistence {
-    if (!identity) {
+    if (!identity || !certArray || !certArray.count) {
         [self release];
         return nil;
     }
