@@ -41,9 +41,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <ProjectGuid>{782ABF6D-BA34-4CBE-8EF6-B8ECD399F286}</ProjectGuid>
+    <ProjectGuid>{8BBA14CE-FBBE-4950-A31E-E94105A24490}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>libDispatch.UnitTests</RootNamespace>
+    <RootNamespace>libDispatch.3rdPartyUT</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <ApplicationType>Windows Store</ApplicationType>
@@ -221,31 +221,31 @@
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="$(StarboardBasePath)\tests\unittests\Framework\Framework.cpp" />
-    <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
+    <ClCompile Include="$(StarboardBasePath)\tests\3rdparty\Framework\Framework.cpp" />
+    <ClCompile Include="$(StarboardBasePath)\tests\3rdparty\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_after.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_api.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_apply.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_c99.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_cascade.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_debug.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_drift.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_group.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_pingpong.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_priority.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_sema.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_starfish.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_test.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_timer_bit31.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_timer_bit63.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_timer_set_time.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_autorelease.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch_after.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch_api.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch_apply.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch_c99.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch_cascade.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch_debug.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch_drift.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch_group.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch_pingpong.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch_priority.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch_sema.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch_starfish.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch_test.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch_timer_bit31.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch_timer_bit63.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch_timer_set_time.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch_autorelease.m" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\tests\unittests\libDispatch\dispatch_test.h" />
+    <ClInclude Include="$(StarboardBasePath)\tests\3rdparty\libDispatch\dispatch_test.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
