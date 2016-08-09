@@ -772,6 +772,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AddressBook", "AddressBook", "{69D1F829-1843-4395-BCE9-69C4CEB59004}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AddressBook.UnitTests", "Tests\UnitTests\AddressBook\AddressBook.UnitTests.vcxproj", "{62E53898-65C2-4401-BF58-FBFB728E1B27}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rdParty", "3rdParty", "{DA66E27D-9C75-423E-BC9A-78D380FDB99D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libDispatch", "libDispatch", "{5F048266-CFE5-40A4-A57A-102C973977F0}"
