@@ -212,7 +212,7 @@ CFIndex ABAddressBookGetPersonCount(ABAddressBookRef addressBook) {
     }
     _ABAddressBookManager* addressBookManager = (__bridge _ABAddressBookManager*)addressBook;
     NSArray* contacts = [addressBookManager getListOfContacts];
-    return contacts ? [contacts count] : 0;
+    return [contacts count];
 }
 
 /**
@@ -230,18 +230,26 @@ ABRecordRef ABAddressBookGetPersonWithRecordID(ABAddressBookRef addressBook, ABR
         return nullptr;
     }
 
-    for (_ABContact* contact in contacts) {
-        // Windows Contacts have their IDs as a string in the format:
-        // {storeid.itemtype.id}
-        // We are interested in the last part (id), we can just ensure
-        // that the ID ends with ".id}".
-        NSString* ending = [NSString stringWithFormat:@".%d}", recordID];
-        if ([contact.contact.id hasSuffix:ending]) {
-            return (__bridge ABRecordRef)contact;
+    // Windows Contacts have their IDs as a string in the format:
+    // {storeid.itemtype.id}
+    // We are interested in the last part (id), we can just ensure
+    // that the ID ends with ".id}".
+    NSString* ending = [NSString stringWithFormat:@".%d}", recordID];
+    NSUInteger index = [contacts indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL* stop) {
+        _ABContact* person = (_ABContact*)obj;
+        if ([person.contact.id hasSuffix:ending]) {
+            *stop = YES;
+            return YES;
+        } else {
+            return NO;
         }
-    }
+    }];
 
-    return nullptr;
+    if (index == NSNotFound) {
+        return nullptr;
+    } else {
+        return (__bridge ABRecordRef)contacts[index];
+    }
 }
 
 /**

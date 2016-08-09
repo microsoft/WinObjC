@@ -17,10 +17,6 @@
 #import "ABContactInternal.h"
 #import "UWP/WindowsApplicationModelContacts.h"
 
-@interface _ABContact ()
-
-@end
-
 @implementation _ABContact
 
 - (id)initWithContact:(WACContact*)contact {

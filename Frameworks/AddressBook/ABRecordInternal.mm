@@ -16,10 +16,6 @@
 
 #import "ABRecordInternal.h"
 
-@interface _ABRecord ()
-
-@end
-
 @implementation _ABRecord
 
 @end
