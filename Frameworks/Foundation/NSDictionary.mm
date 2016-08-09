@@ -101,7 +101,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
     NSMutableArray* toRet = [NSMutableArray array];
 
-    for (id key in _keyEnumerator) {
+    for (id key in static_cast<NSEnumerator*>(_keyEnumerator)) {
         [toRet addObject:[_dictionary objectForKey:key]];
     }
 
