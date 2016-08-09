@@ -16,7 +16,7 @@
 #import "Starboard.h"
 #import "LoggingNative.h"
 #import <Foundation/NSString.h>
-#import <Windows.h>
+#import <windows.h>
 #import "NSLogInternal.h"
 #import "StringHelpers.h"
 

@@ -21,7 +21,7 @@
 #import "CALayerInternal.h"
 #import "NullCompositor.h"
 
-#include <Windows.h>
+#include <windows.h>
 
 static void initAutoLayout() {
     static bool initialized;
