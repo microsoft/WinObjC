@@ -83,13 +83,13 @@ OSX_DISABLED_TEST(NSURLResponse, SuggestedFilename) {
 }
 
 // Disabled pending GH#832; we do not respect the incoming MIME type when generating filenames. OS X does.
-OSX_DISABLED_TEST(NSURLResponse, SuggestedFilename_QueryParameter) {
+OSX_DISABLED_TEST(NSURLResponse, SuggestedFilename_2) {
     NSURL* url = [NSURL URLWithString:@"a/test/name.extension?foo=bar"];
     NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
     ASSERT_OBJCEQ(@"name.extension", res.suggestedFilename);
 }
 
-TEST(NSURLResponse, SuggestedFilename_NoFilename) {
+TEST(NSURLResponse, SuggestedFilename_3) {
     NSURL* url = [NSURL URLWithString:@"a://bar"];
     NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
     ASSERT_OBJCEQ(@"Unknown", res.suggestedFilename);
@@ -271,10 +271,11 @@ TEST(NSHTTPURLResponse, SuggestedFilename_3) {
     ASSERT_OBJCEQ(@";.ext", response.suggestedFilename);
 }
 
-// Swift behaviour here does not match OS X; OS X takes the first extension.
-OSX_DISABLED_TEST(NSHTTPURLResponse, SuggestedFilename_4) {
+// WINOBJC: Swift behaviour here does not match OS X; OS X takes the first extension.
+// The test has been updated with the correct behaviour.
+TEST(NSHTTPURLResponse, SuggestedFilename_4) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
-    auto f = @{ @"Content-Disposition" : @"attachment; aa=bb\\; filename=\"wrong.ext\"; filename=\"fname.ext\"; cc=dd" };
+    auto f = @{ @"Content-Disposition" : @"attachment; aa=bb\\; filename=\"fname.ext\"; filename=\"wrong.ext\"; cc=dd" };
     NSHTTPURLResponse* response =
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
     ASSERT_OBJCEQ(@"fname.ext", response.suggestedFilename);

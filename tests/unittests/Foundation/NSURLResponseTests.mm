@@ -17,16 +17,6 @@
 #import <Foundation/Foundation.h>
 #import <TestFramework.h>
 
-// Swift behaviour here does not match OS X; OS X takes the first extension.
-// Matches NSHTTPURLResponse.SuggestedFilename_4
-TEST(NSHTTPURLResponse, SuggestedFilename_MultipleFilenamesInResponse_NonSwift) {
-    NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
-    auto f = @{ @"Content-Disposition" : @"attachment; aa=bb\\; filename=\"wrong.ext\"; filename=\"fname.ext\"; cc=dd" };
-    NSHTTPURLResponse* response =
-        [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:f] autorelease];
-    ASSERT_OBJCEQ(@"wrong.ext", response.suggestedFilename);
-}
-
 TEST(NSURLResponse, SuggestedFilename_MatchingMIME) {
     NSURL* url = [NSURL URLWithString:@"a/test/name.extension.txt"];
     NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
