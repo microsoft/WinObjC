@@ -20,7 +20,7 @@
 #import <NSLogging.h>
 #import "CMMotionManagerInternal.h"
 #import "UWP/WindowsGraphicsDisplay.h"
-#import "Windows.h"
+#import "windows.h"
 
 // Timestamps for readings are in seconds for iOS and in 100-nanoseconds for WinRT
 static const double c_secondToHundredNanoseconds = 10000000.0;

@@ -20,7 +20,7 @@
 #import <objc/objc-arc.h>
 
 #import <Starboard/String.h>
-#import <Windows.h>
+#import <windows.h>
 #import <string>
 #import <tuple>
 

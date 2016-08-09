@@ -16,7 +16,7 @@
 
 #import <Foundation/NSURLSessionConfiguration.h>
 #import <Starboard.h>
-#import <Windows.h>
+#import <windows.h>
 
 @interface NSURLSessionConfiguration ()
 @property (readwrite, copy) NSString* identifier;

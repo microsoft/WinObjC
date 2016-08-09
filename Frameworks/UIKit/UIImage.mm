@@ -33,7 +33,7 @@
 #include "CALayerInternal.h"
 #include "CACompositor.h"
 
-#include "Windows.h"
+#include "windows.h"
 #include "COMIncludes.h"
 #include "Wincodec.h"
 #include "COMIncludes_End.h"
