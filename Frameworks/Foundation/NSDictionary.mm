@@ -99,17 +99,14 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
         return nil;
     }
 
-    StrongId<NSArray> keyArray;
-    keyArray.attach([_keyEnumerator allObjects]);
+    NSArray* keyArray = [_keyEnumerator allObjects];
+    NSMutableArray* toRet = [NSMutableArray array];
 
-    StrongId<NSMutableArray> toRet;
-    toRet.attach([NSMutableArray new]);
-
-    for (id key in static_cast<NSArray*>(keyArray)) {
+    for (id key in keyArray) {
         [toRet addObject:[_dictionary objectForKey:key]];
     }
 
-    return toRet.detach();
+    return toRet;
 }
 
 @end
