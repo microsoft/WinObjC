@@ -111,7 +111,7 @@ TEST(NSFileManager, EnumateDirectoryUsingURL) {
     // OSX wchar_t's are twice as wide
     LOG_INFO("Change current dir to:%@",
 #if TARGET_OS_WIN32
-             [NSString stringWithCharacters:(const unichar*)currentDir length:_MAX_PATH]);
+             [NSString stringWithCharacters:(const unichar*)currentDir length:ret]);
 #else
              [NSString stringWithBytes:currentDir length:sizeof(wchar_t) * ret encoding:WCHAR_ENCODING]);
 #endif
