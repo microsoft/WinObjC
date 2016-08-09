@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,11 +15,11 @@
 //******************************************************************************
 #pragma once
 
-#import <Foundation/Foundation.h>
-#import <windows.h>
+#include <functional>
+#include <memory>
+#include <windows.h>
 
-void assertOrderedSetContent(NSOrderedSet* set, NSObject* first, ...);
-NSString* getModulePath();
-NSString* getPathToFile(NSString* fileName);
-void createFileWithContentAndVerify(NSString* fileName, NSString* content);
-void deleteFile(NSString* name);
+#define _CONCAT(x, y) x##y
+#define CONCAT(x, y) _CONCAT(x, y)
+
+#define _SCOPE_GUARD(STATEMENT) std::unique_ptr<void, std::function<void(void*)>> CONCAT(_closeScope_, __LINE__)((void*)0x1, STATEMENT)
