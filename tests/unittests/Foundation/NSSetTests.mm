@@ -61,3 +61,47 @@ TEST(NSSet, ObjectsPassingTest) {
 
     ASSERT_OBJCEQ(expectedEvensLessThanFive, actual);
 }
+
+TEST(NSSet, FilterUsingPredicateString) {
+    NSSet* americanMakes = [NSSet setWithObjects:@"Chrysler", @"Ford", @"General Motors", nil];
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"SELF BEGINSWITH[c] %@", @"G"];
+
+    NSSet* filteredSet = [americanMakes filteredSetUsingPredicate:predicate];
+
+    ASSERT_NE(nil, filteredSet);
+    ASSERT_EQ(1, [filteredSet count]);
+    ASSERT_OBJCEQ(@"General Motors", [filteredSet anyObject]);
+}
+
+TEST(NSSet, FilterUsingPredicateNumbers) {
+    NSSet* numbers = [NSSet setWithObjects:@2, @4, @8, @16, @32, nil];
+    NSSet* expected = [NSSet setWithObjects:@4, @8, @16, nil];
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"(SELF >= 4) AND (SELF < 32)"];
+
+    NSSet* filteredSet = [numbers filteredSetUsingPredicate:predicate];
+
+    ASSERT_NE(nil, filteredSet);
+    ASSERT_EQ(3, [filteredSet count]);
+    ASSERT_OBJCEQ(expected, filteredSet);
+}
+
+TEST(NSSet, FilterUsingPredicateNumbersAlwaysFalse) {
+    NSSet* numbers = [NSSet setWithObjects:@2, @4, @8, @16, @32, nil];
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"SELF <= 0"];
+
+    NSSet* filteredSet = [numbers filteredSetUsingPredicate:predicate];
+
+    ASSERT_NE(nil, filteredSet);
+    ASSERT_EQ(0, [filteredSet count]);
+}
+
+TEST(NSSet, FilterUsingPredicateNumbersAlwaysTrue) {
+    NSSet* numbers = [NSSet setWithObjects:@2, @4, @8, @16, @32, nil];
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"SELF >= 0"];
+
+    NSSet* filteredSet = [numbers filteredSetUsingPredicate:predicate];
+
+    ASSERT_NE(nil, filteredSet);
+    ASSERT_EQ([numbers count], [filteredSet count]);
+    ASSERT_OBJCEQ(numbers, filteredSet);
+}
