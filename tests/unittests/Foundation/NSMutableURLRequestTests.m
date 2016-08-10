@@ -72,5 +72,8 @@ TEST(NSMutableURLRequest, mutableCopy) {
     ASSERT_NE_MSG(url, nullptr, "FAILED: url should be non-null!");
     NSMutableURLRequest* urlRequest = [NSMutableURLRequest requestWithURL:url];
     ASSERT_NE_MSG(urlRequest, nullptr, "FAILED: urlRequest should be non-null!");
-    EXPECT_TRUE_MSG([urlRequest isKindOfClass:[NSMutableURLRequest class]], "FAILED: a copy of NSMutableURLRequest should be mutable");
+    NSMutableURLRequest* copyRequest = [urlRequest copy];
+    EXPECT_TRUE_MSG([copyRequest isKindOfClass:[NSMutableURLRequest class]], "FAILED: a copy of NSMutableURLRequest should be mutable");
+    EXPECT_OBJCEQ_MSG([copyRequest URL], [urlRequest URL], "FAILED: the copy should have the same URL as the original");
+    EXPECT_NE_MSG(copyRequest, urlRequest, "FAILED: the copy should not be the same object");
 }
