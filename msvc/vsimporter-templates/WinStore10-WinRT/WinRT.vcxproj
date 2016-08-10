@@ -44,7 +44,7 @@
     <Midl>
       <OutputDirectory>$(IntDir)</OutputDirectory>
       <HeaderFileName>$(Objc2WinmdGeneratedFilesDir)\%(Filename)_h.h</HeaderFileName>
-      <MetadataFileName>$(IntDir)%(Filename).winmd</MetadataFileName>
+      <MetadataFileName>$(SolutionDir)$(Configuration)%(Filename).winmd</MetadataFileName>
       <AdditionalIncludeDirectories>$(Objc2WinmdGeneratedFilesDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </Midl>
 	<Link>
