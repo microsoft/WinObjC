@@ -18,6 +18,8 @@
 
 #include_next <winnt.h>
 #ifdef __OBJC__
+#ifdef DELETE
 #undef DELETE
+#endif
 #endif
 
