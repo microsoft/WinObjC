@@ -75,15 +75,15 @@ TEST(NSDateComponents, IndependentWeekTest) {
     dateComponents.day = 1;
     dateComponents.month = 1;
     dateComponents.year = 1999;
-    EXPECT_EQ_MSG([dateComponents week], LONG_MAX, "FAILED: week default value should be LONG_MAX");
+    EXPECT_EQ_MSG([dateComponents week], NSUndefinedDateComponent, "FAILED: week default value should be NSUndefinedDateComponent");
 
     dateComponents.calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    EXPECT_EQ_MSG([dateComponents week], LONG_MAX, "FAILED: week value should not change because of calendar");
+    EXPECT_EQ_MSG([dateComponents week], NSUndefinedDateComponent, "FAILED: week value should not change because of calendar");
 
     dateComponents.weekOfMonth = 1;
-    EXPECT_EQ_MSG([dateComponents week], LONG_MAX, "FAILED: week value should not depend on weekOfMonth");
+    EXPECT_EQ_MSG([dateComponents week], NSUndefinedDateComponent, "FAILED: week value should not depend on weekOfMonth");
     dateComponents.weekOfYear = 1;
-    EXPECT_EQ_MSG([dateComponents week], LONG_MAX, "FAILED: week value should not depend on weekOfYear");
+    EXPECT_EQ_MSG([dateComponents week], NSUndefinedDateComponent, "FAILED: week value should not depend on weekOfYear");
 
     [dateComponents setWeek:1];
     EXPECT_EQ_MSG([dateComponents week], 1, "FAILED: week value should change when assigned");
