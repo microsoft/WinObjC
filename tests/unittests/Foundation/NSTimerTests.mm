@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -109,16 +109,15 @@ TEST(NSTimer, ScheduledTimerWithTimeInterval) {
     NSTimerTestObj* testObj = [[[NSTimerTestObj alloc] initWithValue:NO] autorelease];
     volatile long waitCompletion = 0;
 
-    auto selectorCalledAsync = std::async(std::launch::async,
-                                          [&waitCompletion, testObj]() {
-                                              BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
-                                              _InterlockedExchange(&waitCompletion, 1L);
-                                              return fooChanged;
-                                          });
+    auto selectorCalledAsync = std::async(std::launch::async, [&waitCompletion, testObj]() {
+        BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
+        _InterlockedExchange(&waitCompletion, 1L);
+        return fooChanged;
+    });
 
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
-    NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:10 target:testObj selector:@selector(testFunction) userInfo:nil repeats:NO];
+    NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:testObj selector:@selector(testFunction) userInfo:nil repeats:NO];
     ASSERT_TRUE_MSG(timer != nil, "FAILED: timer should not be nil.");
 
     ASSERT_TRUE_MSG([timer isValid], "FAILED: The timer should be valid before fire.");
@@ -140,16 +139,15 @@ TEST(NSTimer, ScheduledTimerWithTimeIntervalRepeat) {
     NSTimerTestObj* testObj = [[[NSTimerTestObj alloc] initWithValue:NO count:5] autorelease];
     volatile long waitCompletion = 0;
 
-    auto selectorCalledAsync = std::async(std::launch::async,
-                                          [&waitCompletion, testObj]() {
-                                              BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
-                                              _InterlockedExchange(&waitCompletion, 1L);
-                                              return fooChanged;
-                                          });
+    auto selectorCalledAsync = std::async(std::launch::async, [&waitCompletion, testObj]() {
+        BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
+        _InterlockedExchange(&waitCompletion, 1L);
+        return fooChanged;
+    });
 
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
-    NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:2 target:testObj selector:@selector(testFunction) userInfo:nil repeats:YES];
+    NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:testObj selector:@selector(testFunction) userInfo:nil repeats:YES];
     ASSERT_TRUE_MSG(timer != nil, "FAILED: timer should not be nil.");
 
     ASSERT_TRUE_MSG([timer isValid], "FAILED: The timer should be valid before fire.");
@@ -170,7 +168,7 @@ TEST(NSTimer, ScheduledTimerWithTimeIntervalRepeat) {
 
 TEST(NSTimer, ScheduledTimerWithTimeIntervalFireOnce) {
     NSTimerTestObj* testObj = [[[NSTimerTestObj alloc] initWithValue:NO] autorelease];
-    NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:testObj selector:@selector(testFunction) userInfo:nil repeats:NO];
+    NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:1 target:testObj selector:@selector(testFunction) userInfo:nil repeats:NO];
 
     ASSERT_TRUE_MSG(timer != nil, "FAILED: timer should not be nil.");
 
@@ -188,16 +186,15 @@ TEST(NSTimer, ScheduledTimerWithTimeIntervalFireRepeat) {
     NSTimerTestObj* testObj = [[[NSTimerTestObj alloc] initWithValue:NO count:5] autorelease];
     volatile long waitCompletion = 0;
 
-    auto selectorCalledAsync = std::async(std::launch::async,
-                                          [&waitCompletion, testObj]() {
-                                              BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
-                                              _InterlockedExchange(&waitCompletion, 1L);
-                                              return fooChanged;
-                                          });
+    auto selectorCalledAsync = std::async(std::launch::async, [&waitCompletion, testObj]() {
+        BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
+        _InterlockedExchange(&waitCompletion, 1L);
+        return fooChanged;
+    });
 
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
-    NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:2 target:testObj selector:@selector(testFunction) userInfo:nil repeats:YES];
+    NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:testObj selector:@selector(testFunction) userInfo:nil repeats:YES];
     ASSERT_TRUE_MSG(timer != nil, "FAILED: timer should not be nil.");
 
     ASSERT_TRUE_MSG([timer isValid], "FAILED: The timer should be valid before fire.");
@@ -229,12 +226,11 @@ TEST(NSTimer, ScheduledTimerWithTimeIntervalWithInvocation) {
     NSTimerTestObj* testObj = [[[NSTimerTestObj alloc] initWithValue:NO] autorelease];
     volatile long waitCompletion = 0;
 
-    auto selectorCalledAsync = std::async(std::launch::async,
-                                          [&waitCompletion, testObj]() {
-                                              BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
-                                              _InterlockedExchange(&waitCompletion, 1L);
-                                              return fooChanged;
-                                          });
+    auto selectorCalledAsync = std::async(std::launch::async, [&waitCompletion, testObj]() {
+        BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
+        _InterlockedExchange(&waitCompletion, 1L);
+        return fooChanged;
+    });
 
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
@@ -247,7 +243,7 @@ TEST(NSTimer, ScheduledTimerWithTimeIntervalWithInvocation) {
     [invocation setTarget:testObj];
     [invocation setArgument:&testDummyArg atIndex:2];
 
-    NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:10 invocation:invocation repeats:NO];
+    NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:0.1 invocation:invocation repeats:NO];
     ASSERT_TRUE_MSG(timer != nil, "FAILED: timer should not be nil.");
 
     [testDummyArg release];
