@@ -351,9 +351,12 @@
     </ItemGroup>
   </Target>
 
+  <PropertyGroup>
+    <ResolveSDKReferencesDependsOn>ComputeStarboardCRT;$(ResolveSDKReferencesDependsOn)</ResolveSDKReferencesDependsOn>
+  </PropertyGroup>
+
   <Target
     Name="ComputeStarboardCRT"
-    BeforeTargets="ComputeCrtSDKReference"
     DependsOnTargets="ComputeStarboardHasObjCSources">
 
     <PropertyGroup>
