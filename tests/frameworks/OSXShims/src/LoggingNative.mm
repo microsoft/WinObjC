@@ -15,12 +15,36 @@
 //******************************************************************************
 
 #import <LoggingNative.h>
+#import <Starboard/SmartTypes.h>
 #import <Foundation/NSString.h>
 
 #import <cstdarg>
 
+// NOTE: this function is assumed to only run in Little Endian environments like OSX
+static NSStringEncoding _getWcharEncoding() {
+    switch (sizeof(wchar_t)) {
+        case 2:
+            return NSUTF16LittleEndianStringEncoding;
+        case 4:
+            return NSUTF32LittleEndianStringEncoding;
+        default:
+            assert(false);
+    }
+}
+
+static NSStringEncoding getWcharEncoding() {
+    static NSStringEncoding encoding = _getWcharEncoding();
+    return encoding;
+}
+
 void TraceVerbose(const wchar_t* tag, const wchar_t* format, ...) {
-    NSString* formatString = [NSString stringWithFormat:@"[%ls] %ls", tag, format];
+    StrongId<NSString> nsTag;
+    nsTag.attach([[NSString alloc] initWithBytes:tag length:sizeof(wchar_t) * wcslen(tag) encoding:getWcharEncoding()]);
+
+    StrongId<NSString> nsFormat;
+    nsFormat.attach([[NSString alloc] initWithBytes:format length:sizeof(wchar_t) * wcslen(format) encoding:getWcharEncoding()]);
+
+    NSString* formatString = [NSString stringWithFormat:@"[%@] %@", static_cast<NSString*>(nsTag), static_cast<NSString*>(nsFormat)];
     va_list varArgs;
     va_start(varArgs, format);
     NSLogv(formatString, varArgs);
@@ -28,7 +52,13 @@ void TraceVerbose(const wchar_t* tag, const wchar_t* format, ...) {
 }
 
 void TraceInfo(const wchar_t* tag, const wchar_t* format, ...) {
-    NSString* formatString = [NSString stringWithFormat:@"[%ls] %ls", tag, format];
+    StrongId<NSString> nsTag;
+    nsTag.attach([[NSString alloc] initWithBytes:tag length:sizeof(wchar_t) * wcslen(tag) encoding:getWcharEncoding()]);
+
+    StrongId<NSString> nsFormat;
+    nsFormat.attach([[NSString alloc] initWithBytes:format length:sizeof(wchar_t) * wcslen(format) encoding:getWcharEncoding()]);
+
+    NSString* formatString = [NSString stringWithFormat:@"[%@] %@", static_cast<NSString*>(nsTag), static_cast<NSString*>(nsFormat)];
     va_list varArgs;
     va_start(varArgs, format);
     NSLogv(formatString, varArgs);
@@ -36,7 +66,13 @@ void TraceInfo(const wchar_t* tag, const wchar_t* format, ...) {
 }
 
 void TraceWarning(const wchar_t* tag, const wchar_t* format, ...) {
-    NSString* formatString = [NSString stringWithFormat:@"[%ls] %ls", tag, format];
+    StrongId<NSString> nsTag;
+    nsTag.attach([[NSString alloc] initWithBytes:tag length:sizeof(wchar_t) * wcslen(tag) encoding:getWcharEncoding()]);
+
+    StrongId<NSString> nsFormat;
+    nsFormat.attach([[NSString alloc] initWithBytes:format length:sizeof(wchar_t) * wcslen(format) encoding:getWcharEncoding()]);
+
+    NSString* formatString = [NSString stringWithFormat:@"[%@] %@", static_cast<NSString*>(nsTag), static_cast<NSString*>(nsFormat)];
     va_list varArgs;
     va_start(varArgs, format);
     NSLogv(formatString, varArgs);
@@ -44,7 +80,13 @@ void TraceWarning(const wchar_t* tag, const wchar_t* format, ...) {
 }
 
 void TraceError(const wchar_t* tag, const wchar_t* format, ...) {
-    NSString* formatString = [NSString stringWithFormat:@"[%ls] %ls", tag, format];
+    StrongId<NSString> nsTag;
+    nsTag.attach([[NSString alloc] initWithBytes:tag length:sizeof(wchar_t) * wcslen(tag) encoding:getWcharEncoding()]);
+
+    StrongId<NSString> nsFormat;
+    nsFormat.attach([[NSString alloc] initWithBytes:format length:sizeof(wchar_t) * wcslen(format) encoding:getWcharEncoding()]);
+
+    NSString* formatString = [NSString stringWithFormat:@"[%@] %@", static_cast<NSString*>(nsTag), static_cast<NSString*>(nsFormat)];
     va_list varArgs;
     va_start(varArgs, format);
     NSLogv(formatString, varArgs);
@@ -52,7 +94,13 @@ void TraceError(const wchar_t* tag, const wchar_t* format, ...) {
 }
 
 void TraceCritical(const wchar_t* tag, const wchar_t* format, ...) {
-    NSString* formatString = [NSString stringWithFormat:@"[%ls] %ls", tag, format];
+    StrongId<NSString> nsTag;
+    nsTag.attach([[NSString alloc] initWithBytes:tag length:sizeof(wchar_t) * wcslen(tag) encoding:getWcharEncoding()]);
+
+    StrongId<NSString> nsFormat;
+    nsFormat.attach([[NSString alloc] initWithBytes:format length:sizeof(wchar_t) * wcslen(format) encoding:getWcharEncoding()]);
+
+    NSString* formatString = [NSString stringWithFormat:@"[%@] %@", static_cast<NSString*>(nsTag), static_cast<NSString*>(nsFormat)];
     va_list varArgs;
     va_start(varArgs, format);
     NSLogv(formatString, varArgs);

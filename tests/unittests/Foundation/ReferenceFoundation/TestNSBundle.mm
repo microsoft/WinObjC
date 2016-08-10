@@ -23,6 +23,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Starboard/SmartTypes.h>
 #import <TestFramework.h>
 #import <LoggingNative.h>
 
@@ -97,68 +98,75 @@ static NSString* _subDirectory = @"Sources";
 static NSString* _main = @"main";
 static NSString* _type = @"swift";
 
-static NSString* _setupPlayground() {
-    NSArray* _bundleResourceNames = @[ @"hello.world", @"goodbye.world", @"swift.org" ];
-
-    // Make sure the directory is uniquely named
-    // WINOBJC: test environment is different, '/tmp/' is not a top-level directory
-    // NSString* tempDir =
-    //     [[@"/tmp/TestFoundation_Playground_" stringByAppendingString:[NSUUID UUID].UUIDString] stringByAppendingString:@"/"];
-    NSString* tempDir =
-        [[@"./tmp/TestFoundation_Playground_" stringByAppendingString:[NSUUID UUID].UUIDString] stringByAppendingString:@"/"];
-
-    NSError* error = nil;
-    [[NSFileManager defaultManager] createDirectoryAtPath:tempDir withIntermediateDirectories:false attributes:nil error:&error];
-    if (error) {
-        TraceError(L"TestNSBundle", L"%hs", [[error description] UTF8String]);
-        return nil;
+class NSBundlePlayground : public ::testing::Test {
+public:
+    explicit NSBundlePlayground() : ::testing::Test() {
     }
 
-    // Make a flat bundle in the playground
-    auto bundlePath = [tempDir stringByAppendingString:_bundleName];
-    [[NSFileManager defaultManager] createDirectoryAtPath:bundlePath withIntermediateDirectories:false attributes:nil error:&error];
-    if (error) {
-        TraceError(L"TestNSBundle", L"%hs", [[error description] UTF8String]);
-        return nil;
-    }
+protected:
+    virtual void SetUp() {
+        NSArray* _bundleResourceNames = @[ @"hello.world", @"goodbye.world", @"swift.org" ];
 
-    // Put some resources in the bundle
-    for (NSString* n in _bundleResourceNames) {
-        [[NSFileManager defaultManager] createFileAtPath:[[bundlePath stringByAppendingString:@"/"] stringByAppendingString:n]
+        // Make sure the directory is uniquely named
+        // WINOBJC: test environment is different, '/tmp/' is not a top-level directory
+        // NSString* tempDir =
+        //     [[@"/tmp/TestFoundation_Playground_" stringByAppendingString:[NSUUID UUID].UUIDString] stringByAppendingString:@"/"];
+        NSString* tempDir =
+            [[@"./tmp_TestFoundation_Playground_" stringByAppendingString:[NSUUID UUID].UUIDString] stringByAppendingString:@"/"];
+
+        NSError* error = nil;
+        [[NSFileManager defaultManager] createDirectoryAtPath:tempDir withIntermediateDirectories:false attributes:nil error:&error];
+        if (error) {
+            TraceError(L"TestNSBundle", L"%hs", [[error description] UTF8String]);
+            return;
+        }
+
+        // Make a flat bundle in the playground
+        auto bundlePath = [tempDir stringByAppendingString:_bundleName];
+        [[NSFileManager defaultManager] createDirectoryAtPath:bundlePath withIntermediateDirectories:false attributes:nil error:&error];
+        if (error) {
+            TraceError(L"TestNSBundle", L"%hs", [[error description] UTF8String]);
+            return;
+        }
+
+        // Put some resources in the bundle
+        for (NSString* n in _bundleResourceNames) {
+            [[NSFileManager defaultManager] createFileAtPath:[[bundlePath stringByAppendingString:@"/"] stringByAppendingString:n]
+                                                    contents:nil
+                                                  attributes:nil];
+        }
+        // Add a resource into a subdirectory
+        auto subDirPath = [[bundlePath stringByAppendingString:@"/"] stringByAppendingString:_subDirectory];
+        [[NSFileManager defaultManager] createDirectoryAtPath:subDirPath withIntermediateDirectories:false attributes:nil error:&error];
+        if (error) {
+            TraceError(L"TestNSBundle", L"%hs", [[error description] UTF8String]);
+            return;
+        }
+        [[NSFileManager defaultManager] createFileAtPath:[@[ subDirPath, @"/", _main, @".", _type ] componentsJoinedByString:@""]
                                                 contents:nil
                                               attributes:nil];
+
+        _playground = tempDir;
     }
-    // Add a resource into a subdirectory
-    auto subDirPath = [[bundlePath stringByAppendingString:@"/"] stringByAppendingString:_subDirectory];
-    [[NSFileManager defaultManager] createDirectoryAtPath:subDirPath withIntermediateDirectories:false attributes:nil error:&error];
-    if (error) {
-        TraceError(L"TestNSBundle", L"%hs", [[error description] UTF8String]);
-        return nil;
+
+    virtual void TearDown() {
+        NSError* error;
+        [[NSFileManager defaultManager] removeItemAtPath:_playground error:&error];
+        if (error) {
+            // Oh well
+        }
     }
-    [[NSFileManager defaultManager] createFileAtPath:[@[ subDirPath, @"/", _main, @".", _type ] componentsJoinedByString:@""]
-                                            contents:nil
-                                          attributes:nil];
 
-    return tempDir;
-}
+    StrongId<NSString> _playground;
+};
 
-static void _cleanupPlayground(NSString* location) {
-    NSError* error;
-    [[NSFileManager defaultManager] removeItemAtPath:location error:&error];
-    if (error) {
-        // Oh well
-    }
-}
-
-TEST(NSBundle, URLsForResourcesWithExtension) {
-    NSString* playground = _setupPlayground();
-
-    if (!playground) {
+TEST_F(NSBundlePlayground, URLsForResourcesWithExtension) {
+    if (!_playground) {
         ASSERT_TRUE_MSG(false, @"Unable to create playground");
         return;
     }
 
-    NSBundle* bundle = [NSBundle bundleWithPath:[playground stringByAppendingString:_bundleName]];
+    NSBundle* bundle = [NSBundle bundleWithPath:[_playground stringByAppendingString:_bundleName]];
     ASSERT_OBJCNE(bundle, nil);
 
     auto worldResources = [bundle URLsForResourcesWithExtension:@"world" subdirectory:nil];
@@ -167,6 +175,4 @@ TEST(NSBundle, URLsForResourcesWithExtension) {
 
     auto path = [bundle pathForResource:_main ofType:_type inDirectory:_subDirectory];
     ASSERT_OBJCNE(path, nil);
-
-    _cleanupPlayground(playground);
 }
