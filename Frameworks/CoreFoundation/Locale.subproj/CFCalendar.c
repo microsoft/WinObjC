@@ -744,14 +744,14 @@ static CFRange __CFCalendarGetRangeOfUnit2(CFCalendarRef calendar, CFCalendarUni
             }
         break;
     // WINOBJC: Add cases for weekOf units. ICU will handle them below.
-    case kCFCalendarUnitWeekOfYear:
     case kCFCalendarUnitWeekOfMonth:
-    // WINOBJC: Asking for the range of WeekOfMonth in Year always returns 6.
+        // WINOBJC: Asking for the range of WeekOfMonth in Year always returns 6.
         if (biggerUnit == kCFCalendarUnitYear) {
             range.location = 1;
             range.length = 6;
             break;
         }
+    case kCFCalendarUnitWeekOfYear:
     case kCFCalendarUnitWeek:
             switch (biggerUnit) {
             case kCFCalendarUnitMonth:
