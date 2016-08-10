@@ -18,7 +18,6 @@
 #import <windows.h>
 #import "TestUtils.h"
 
-
 void assertOrderedSetContent(NSOrderedSet* set, NSObject* first, ...) {
     va_list args;
     va_start(args, first);
