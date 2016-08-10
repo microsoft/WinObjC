@@ -26,20 +26,11 @@
 static const wchar_t* TAG = L"NSDictionary";
 
 static CFDictionaryKeyCallBacks _NSCFDictionaryKeyCallBacks = {
-    0,
-    _NSCFCallbackCopy,
-    _NSCFCallbackRelease,
-    _NSCFCallbackCopyDescription,
-    _NSCFCallbackEquals,
-    _NSCFCallbackHash,
+    0, _NSCFCallbackCopy, _NSCFCallbackRelease, _NSCFCallbackCopyDescription, _NSCFCallbackEquals, _NSCFCallbackHash,
 };
 
 static CFDictionaryValueCallBacks _NSCFDictionaryValueCallBacks = {
-    0,
-    _NSCFCallbackRetain,
-    _NSCFCallbackRelease,
-    _NSCFCallbackCopyDescription,
-    _NSCFCallbackEquals,
+    0, _NSCFCallbackRetain, _NSCFCallbackRelease, _NSCFCallbackCopyDescription, _NSCFCallbackEquals,
 };
 
 @interface NSCFDictionary : NSMutableDictionary
@@ -56,11 +47,11 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFDictionary)
 
 - (_Nullable instancetype)initWithObjects:(const id*)vals forKeys:(const id<NSCopying> _Nonnull[])keys count:(NSUInteger)count {
     NSDictionary* dictionary = static_cast<NSDictionary*>(CFDictionaryCreate(kCFAllocatorDefault,
-                                                                                                     (const void**)(keys),
-                                                                                                     (const void**)(vals),
-                                                                                                     count,
-                                                                                                     &_NSCFDictionaryKeyCallBacks,
-                                                                                                     &_NSCFDictionaryValueCallBacks));
+                                                                             (const void**)(keys),
+                                                                             (const void**)(vals),
+                                                                             count,
+                                                                             &_NSCFDictionaryKeyCallBacks,
+                                                                             &_NSCFDictionaryValueCallBacks));
 
     return reinterpret_cast<NSDictionaryPrototype*>(dictionary);
 }
@@ -87,7 +78,8 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFDictionary)
 }
 
 - (_Nullable instancetype)initWithCapacity:(NSUInteger)numItems {
-    return reinterpret_cast<NSMutableDictionaryPrototype*>(CFDictionaryCreateMutable(kCFAllocatorDefault, numItems, &_NSCFDictionaryKeyCallBacks, &_NSCFDictionaryValueCallBacks));
+    return reinterpret_cast<NSMutableDictionaryPrototype*>(
+        CFDictionaryCreateMutable(kCFAllocatorDefault, numItems, &_NSCFDictionaryKeyCallBacks, &_NSCFDictionaryValueCallBacks));
 }
 
 @end
@@ -112,9 +104,8 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFDictionaryRef, CFDictionaryGetTypeID, NSDictionar
 }
 
 - (NSEnumerator*)keyEnumerator {
-    // TODO: BUG 7087201
-    // This isn't quite correct because it snapshots the keys at this moment,
-    // but it's technically not supported to mutate while enumerating, so go with it.
+    // This snapshots the keys at this moment,
+    // but mutation during enumeration is considered invalid, so it should be okay.
     return [[self allKeys] objectEnumerator];
 }
 
