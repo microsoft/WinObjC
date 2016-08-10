@@ -42,7 +42,8 @@
 
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        self.imageView = [[UIImageView alloc] initWithFrame:CGRectInset(CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame)), 5, 5)];
+        self.imageView =
+            [[UIImageView alloc] initWithFrame:CGRectInset(CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame)), 5, 5)];
 
         self.imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         self.imageView.layer.masksToBounds = YES;
@@ -76,7 +77,7 @@
     }
 
     images = [NSArray arrayWithObjects:[[UIImage imageNamed:@"photo1.jpg"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal],
-                                       [UIImage imageNamed:@"photo2.jpg"],
+                                       [UIImage imageNamed:@"photo2.png"],
                                        [UIImage imageNamed:@"photo3.jpg"],
                                        [UIImage imageNamed:@"photo4.jpg"],
                                        [UIImage imageNamed:@"photo5.jpg"],

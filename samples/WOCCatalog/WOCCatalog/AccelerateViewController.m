@@ -441,7 +441,7 @@ static const double meanDivisor = 100;
         [self.collectionView registerClass:[SelectorCell class] forCellWithReuseIdentifier:@"photoCell"];
 
         images = [NSArray arrayWithObjects:[[UIImage imageNamed:@"photo1.jpg"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal],
-                                           [UIImage imageNamed:@"photo2.jpg"],
+                                           [UIImage imageNamed:@"photo2.png"],
                                            [UIImage imageNamed:@"photo3.jpg"],
                                            [UIImage imageNamed:@"photo4.jpg"],
                                            [UIImage imageNamed:@"photo5.jpg"],
