@@ -692,7 +692,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
             return substring;
         }
 
-        // only way we could of ended up here is, if we have a string with multiple leading slashes.
+        // only way we could have ended up here is, if we have a string with multiple leading slashes.
         NSArray<NSString*>* tokens = [self componentsSeparatedByString:_NSGetSlashStr()];
         return ([tokens[0] isEqualToString:@""]) ? _NSGetSlashStr() : tokens[0];
     }

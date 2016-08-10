@@ -620,6 +620,7 @@ TEST(NSString, LastPathComponent) {
     EXPECT_OBJCEQ(@"/", string.lastPathComponent);
 
 #if TARGET_OS_WIN32
+    // Backward slash isn't properly supported in OSX, you end up getting FolderA\file.plist
     string = @"C:\\FolderA\\file.plist";
     EXPECT_OBJCEQ(@"file.plist", string.lastPathComponent);
 #endif
