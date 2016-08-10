@@ -56,7 +56,9 @@ TEST(NSTimer, Init) {
     _called = YES;
     _count++;
     if (_count >= _maxCalls) {
+        [_calledCondition lock];
         [_calledCondition broadcast];
+        [_calledCondition unlock];
     }
 }
 
@@ -65,7 +67,9 @@ TEST(NSTimer, Init) {
     _count++;
     _dummyVal = dummyVal;
     if (_count >= _maxCalls) {
+        [_calledCondition lock];
         [_calledCondition broadcast];
+        [_calledCondition unlock];
     }
 }
 
@@ -81,7 +85,10 @@ TEST(NSTimer, Init) {
 }
 
 - (BOOL)waitOnCalledConditionForInterval:(NSTimeInterval)interval {
-    return [_calledCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:interval]];
+    [_calledCondition lock];
+    BOOL ret = [_calledCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:interval]];
+    [_calledCondition unlock];
+    return ret;
 }
 
 - (void)dealloc {
