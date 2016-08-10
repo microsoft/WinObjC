@@ -20,10 +20,6 @@
 #import <future>
 #import <windows.h>
 
-TEST(NSTimer, Init) {
-    ASSERT_TRUE_MSG([[[NSTimer alloc] init] autorelease] != nil, "FAILED: alloc/init failed.");
-}
-
 @interface NSTimerTestObj : NSObject {
     NSCondition* _calledCondition;
     StrongId<id> _dummyVal;
