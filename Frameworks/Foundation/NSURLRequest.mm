@@ -113,7 +113,7 @@
 */
 - (instancetype)copyWithZone:(NSZone*)zone {
     if ([self isKindOfClass:[NSMutableURLRequest class]]) {
-        return [[NSURLRequest alloc] _initWithURLRequest:self];
+        return [[NSMutableURLRequest alloc] _initWithURLRequest:self];
     }
     return [self retain];
 }

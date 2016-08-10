@@ -20,24 +20,24 @@
 TEST(NSMutableURLRequest, setValue) {
     NSURL* url = [NSURL URLWithString:@"file:///foo/var/"];
 
-    ASSERT_TRUE_MSG(url != NULL, "FAILED: url should be non-null!");
+    ASSERT_NE_MSG(url, nullptr, "FAILED: url should be non-null!");
     NSMutableURLRequest* urlRequest = [NSMutableURLRequest requestWithURL:url];
-    ASSERT_TRUE_MSG(urlRequest != NULL, "FAILED: urlRequest should be non-null!");
-    ASSERT_OBJCEQ_MSG(url, [urlRequest URL], "FAILED: url is not valid.");
-    ASSERT_EQ_MSG(NSURLRequestUseProtocolCachePolicy,
+    ASSERT_NE_MSG(urlRequest, nullptr, "FAILED: urlRequest should be non-null!");
+    EXPECT_OBJCEQ_MSG(url, [urlRequest URL], "FAILED: url is not valid.");
+    EXPECT_EQ_MSG(NSURLRequestUseProtocolCachePolicy,
                   [urlRequest cachePolicy],
                   "FAILED:cachePolicy is not NSURLRequestUseProtocolCachePolicy.");
-    ASSERT_EQ_MSG(60.0, [urlRequest timeoutInterval], "FAILED: timeoutInterval is not 60.0.");
-    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] == nil, "FAILED: allHTTPHeaderFields is not null.");
-    ASSERT_OBJCEQ_MSG(@"GET", [urlRequest HTTPMethod], "FAILED: HTTPMethod is not GET.");
-    ASSERT_EQ_MSG(YES, [urlRequest HTTPShouldHandleCookies], "FAILED: HTTPShouldHandleCookies is not YES.");
+    EXPECT_EQ_MSG(60.0, [urlRequest timeoutInterval], "FAILED: timeoutInterval is not 60.0.");
+    EXPECT_EQ_MSG([urlRequest allHTTPHeaderFields], nil, "FAILED: allHTTPHeaderFields is not null.");
+    EXPECT_OBJCEQ_MSG(@"GET", [urlRequest HTTPMethod], "FAILED: HTTPMethod is not GET.");
+    EXPECT_EQ_MSG(YES, [urlRequest HTTPShouldHandleCookies], "FAILED: HTTPShouldHandleCookies is not YES.");
 
     // verify sets
     NSString* contentData = @"ContentData";
     NSString* content = @"Content-Data";
     [urlRequest setValue:contentData forHTTPHeaderField:content];
     NSDictionary* httpFields = [urlRequest allHTTPHeaderFields];
-    ASSERT_OBJCEQ_MSG(contentData, [httpFields objectForKey:content], "FAILED: objectForKey is not valid.");
+    EXPECT_OBJCEQ_MSG(contentData, [httpFields objectForKey:content], "FAILED: objectForKey is not valid.");
     [contentData release];
     [content release];
 }
@@ -45,24 +45,32 @@ TEST(NSMutableURLRequest, setValue) {
 TEST(NSMutableURLRequest, addValue) {
     NSURL* url = [NSURL URLWithString:@"file:///foo/var/"];
 
-    ASSERT_TRUE_MSG(url != NULL, "FAILED: url should be non-null!");
+    ASSERT_NE_MSG(url, nullptr, "FAILED: url should be non-null!");
     NSMutableURLRequest* urlRequest = [NSMutableURLRequest requestWithURL:url];
-    ASSERT_TRUE_MSG(urlRequest != NULL, "FAILED: urlRequest should be non-null!");
-    ASSERT_OBJCEQ_MSG(url, [urlRequest URL], "FAILED: url is not valid.");
-    ASSERT_EQ_MSG(NSURLRequestUseProtocolCachePolicy,
+    ASSERT_NE_MSG(urlRequest, nullptr, "FAILED: urlRequest should be non-null!");
+    EXPECT_OBJCEQ_MSG(url, [urlRequest URL], "FAILED: url is not valid.");
+    EXPECT_EQ_MSG(NSURLRequestUseProtocolCachePolicy,
                   [urlRequest cachePolicy],
                   "FAILED:cachePolicy is not NSURLRequestUseProtocolCachePolicy.");
-    ASSERT_EQ_MSG(60.0, [urlRequest timeoutInterval], "FAILED: timeoutInterval is not 60.0.");
-    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] == nil, "FAILED: allHTTPHeaderFields is not null.");
-    ASSERT_OBJCEQ_MSG(@"GET", [urlRequest HTTPMethod], "FAILED: HTTPMethod is not GET.");
-    ASSERT_EQ_MSG(YES, [urlRequest HTTPShouldHandleCookies], "FAILED: HTTPShouldHandleCookies is not YES.");
+    EXPECT_EQ_MSG(60.0, [urlRequest timeoutInterval], "FAILED: timeoutInterval is not 60.0.");
+    EXPECT_EQ_MSG([urlRequest allHTTPHeaderFields], nil, "FAILED: allHTTPHeaderFields is not null.");
+    EXPECT_OBJCEQ_MSG(@"GET", [urlRequest HTTPMethod], "FAILED: HTTPMethod is not GET.");
+    EXPECT_EQ_MSG(YES, [urlRequest HTTPShouldHandleCookies], "FAILED: HTTPShouldHandleCookies is not YES.");
 
     // verify add
     NSString* contentData = @"ContentData";
     NSString* content = @"Content-Data";
     [urlRequest addValue:contentData forHTTPHeaderField:content];
     NSDictionary* httpFields = [urlRequest allHTTPHeaderFields];
-    ASSERT_OBJCEQ_MSG(contentData, [httpFields objectForKey:content], "FAILED: objectForKey is not valid.");
+    EXPECT_OBJCEQ_MSG(contentData, [httpFields objectForKey:content], "FAILED: objectForKey is not valid.");
     [contentData release];
     [content release];
+}
+
+TEST(NSMutableURLRequest, mutableCopy) {
+    NSURL* url = [NSURL URLWithString:@"file:///foo/var/"];
+    ASSERT_NE_MSG(url, nullptr, "FAILED: url should be non-null!");
+    NSMutableURLRequest* urlRequest = [NSMutableURLRequest requestWithURL:url];
+    ASSERT_NE_MSG(urlRequest, nullptr, "FAILED: urlRequest should be non-null!");
+    EXPECT_TRUE_MSG([urlRequest isKindOfClass:[NSMutableURLRequest class]], "FAILED: a copy of NSMutableURLRequest should be mutable");
 }
