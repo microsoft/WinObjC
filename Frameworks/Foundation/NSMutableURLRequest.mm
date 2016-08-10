@@ -69,4 +69,11 @@ static CFHashCode _CFHTTPHeaderHash(const void* obj1) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
+- (instancetype)copyWithZone:(NSZone*)zone {
+    return [self mutableCopyWithZone:zone];
+}
+
 @end

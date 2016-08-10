@@ -76,4 +76,10 @@ TEST(NSMutableURLRequest, mutableCopy) {
     EXPECT_TRUE_MSG([copyRequest isKindOfClass:[NSMutableURLRequest class]], "FAILED: a copy of NSMutableURLRequest should be mutable");
     EXPECT_OBJCEQ_MSG([copyRequest URL], [urlRequest URL], "FAILED: the copy should have the same URL as the original");
     EXPECT_NE_MSG(copyRequest, urlRequest, "FAILED: the copy should not be the same object");
+
+    [copyRequest setValue:@"VALUE" forHTTPHeaderField:@"httpHeaderField"];
+    EXPECT_EQ_MSG([urlRequest valueForHTTPHeaderField:@"httpHeaderField"],
+                  nil,
+                  "FAILED: modifying copied value should not modify original");
+    EXPECT_OBJCEQ_MSG([copyRequest valueForHTTPHeaderField:@"httpHeaderField"], @"VALUE", "FAILED: copied value should be modified");
 }
