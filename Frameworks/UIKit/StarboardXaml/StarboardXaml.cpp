@@ -176,7 +176,7 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
 
         UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri), caller);
     } else {
-        TraceVerbose(TAG, L"Received unhandled activation kind - %d", args->Kind);
+        TraceWarning(TAG, L"Received unhandled activation kind - %d", args->Kind);
 
         if (initiateAppLaunch) {
             _ApplicationLaunch(ActivationTypeNone, nullptr);

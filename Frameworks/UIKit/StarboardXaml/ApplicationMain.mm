@@ -65,7 +65,7 @@ int ApplicationMainStart(const char* principalName,
         WAAToastNotificationActivatedEventArgs* toastArgument = [WAAToastNotificationActivatedEventArgs createWith:activationArg];
 
         // Convert to NSDictionary with NSStrings
-        NSMutableDictionary* userInput = [NSMutableDictionary new];
+        NSMutableDictionary* userInput = [[NSMutableDictionary new] autorelease];
         ComPtr<IInspectable> comPtr = activationArg;
         ComPtr<ABI::Windows::ApplicationModel::Activation::IToastNotificationActivatedEventArgs> args;
         THROW_NS_IF_FAILED(comPtr.As(&args));
