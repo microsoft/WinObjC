@@ -142,15 +142,14 @@
  @Status Interoperable
 */
 - (void)filterUsingPredicate:(NSPredicate*)predicate {
-    if (predicate == NUL) {
+    if (predicate == nil) {
         return;
     }
-    @synchronized(self) {
-        NSArray* objects = [self allObjects];
-        for (id obj in objects) {
-            if (![predicate evaluateWithObject:obj]) {
-                [self removeObject:obj];
-            }
+
+    NSArray* objects = [self allObjects];
+    for (id obj in objects) {
+        if (![predicate evaluateWithObject:obj]) {
+            [self removeObject:obj];
         }
     }
 }

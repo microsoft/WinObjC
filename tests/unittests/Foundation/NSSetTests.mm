@@ -84,3 +84,24 @@ TEST(NSSet, FilterUsingPredicateNumbers) {
     ASSERT_EQ(3, [filteredSet count]);
     ASSERT_OBJCEQ(expected, filteredSet);
 }
+
+TEST(NSSet, FilterUsingPredicateNumbersAlwaysFalse) {
+    NSSet* numbers = [NSSet setWithObjects:@2, @4, @8, @16, @32, nil];
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"SELF <= 0"];
+
+    NSSet* filteredSet = [numbers filteredSetUsingPredicate:predicate];
+
+    ASSERT_NE(nil, filteredSet);
+    ASSERT_EQ(0, [filteredSet count]);
+}
+
+TEST(NSSet, FilterUsingPredicateNumbersAlwaysTrue) {
+    NSSet* numbers = [NSSet setWithObjects:@2, @4, @8, @16, @32, nil];
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"SELF >= 0"];
+
+    NSSet* filteredSet = [numbers filteredSetUsingPredicate:predicate];
+
+    ASSERT_NE(nil, filteredSet);
+    ASSERT_EQ([numbers count], [filteredSet count]);
+    ASSERT_OBJCEQ(numbers, filteredSet);
+}
