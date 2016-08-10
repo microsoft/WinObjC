@@ -133,7 +133,7 @@ function ExecTest($test, $argList, $outputRemoteName, $outputLocalName)
 if ($TestDirectory -eq "") 
 {
     $MyPath = (get-item $MyInvocation.MyCommand.Path).Directory.FullName;
-    $TestSrcDirectory = Join-Path $MyPath "..\build\$Platform\$Config"
+    $TestSrcDirectory = Join-Path $MyPath "$Platform\$Config"
 }
 else
 {
@@ -154,7 +154,7 @@ if ($TargetingDevice)
     EnsureDeviceConnection
 }
 
-$DefaultModuleFilter = ".*3rd(p|P)arty(u|U)(t|T).*\.(exe)"
+$DefaultModuleFilter = ".*((u|U)nit)(t|T)est.*\.(exe)"
 
 $Tests = $null
 
