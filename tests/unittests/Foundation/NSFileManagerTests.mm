@@ -26,7 +26,6 @@
 #include <Starboard/SmartTypes.h>
 #include "TestUtils.h"
 
-using unique_fileDeleter = std::unique_ptr<NSString, decltype(&deleteFile)>;
 TEST(NSFileManager, GetAttributes) {
     // get test startup full path
     wchar_t fullPath[_MAX_PATH];
@@ -182,14 +181,17 @@ TEST(NSFileManager, ChangeDirectory) {
 }
 
 TEST(NSFileManager, MoveFileViaPath) {
-    unique_fileDeleter srcName(@"NSFileManagerMoveTestFilePath.txt", deleteFile);
-    unique_fileDeleter destName(@"MovedFilePath.txt", deleteFile);
+    NSString* srcName = @"NSFileManagerMoveTestFilePath.txt";
+    NSString* destName = @"MovedFilePath.txt";
+
+    SCOPE_DELETE_FILE(srcName);
+    SCOPE_DELETE_FILE(destName);
 
     NSString* content = @"The Quick Brown Fox.";
-    createFileWithContentAndVerify(srcName.get(), content);
+    createFileWithContentAndVerify(srcName, content);
 
-    NSString* srcPath = getPathToFile(srcName.get());
-    NSString* destPath = getPathToFile(destName.get());
+    NSString* srcPath = getPathToFile(srcName);
+    NSString* destPath = getPathToFile(destName);
 
     NSFileManager* manager = [NSFileManager defaultManager];
 
@@ -207,14 +209,16 @@ TEST(NSFileManager, MoveFileViaPath) {
 }
 
 TEST(NSFileManager, MoveFileViaURL) {
-    unique_fileDeleter srcName(@"NSFileManagerMoveTestFileURL.txt", deleteFile);
-    unique_fileDeleter destName(@"MovedFileURL.txt", deleteFile);
+    NSString* srcName = @"NSFileManagerMoveTestFileURL.txt";
+    NSString* destName = @"MovedFileURL.txt";
+    SCOPE_DELETE_FILE(srcName);
+    SCOPE_DELETE_FILE(destName);
 
     NSString* content = @"The Quick Brown Fox.";
-    createFileWithContentAndVerify(srcName.get(), content);
+    createFileWithContentAndVerify(srcName, content);
 
-    NSURL* srcURL = [NSURL fileURLWithPath:getPathToFile(srcName.get())];
-    NSURL* destURL = [NSURL fileURLWithPath:getPathToFile(destName.get())];
+    NSURL* srcURL = [NSURL fileURLWithPath:getPathToFile(srcName)];
+    NSURL* destURL = [NSURL fileURLWithPath:getPathToFile(destName)];
 
     NSFileManager* manager = [NSFileManager defaultManager];
 

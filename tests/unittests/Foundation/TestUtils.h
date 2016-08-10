@@ -29,3 +29,8 @@ NSString* getModulePath();
 NSString* getPathToFile(NSString* fileName);
 void createFileWithContentAndVerify(NSString* fileName, NSString* content);
 void deleteFile(NSString* name);
+
+#define SCOPE_CLOSE_HANDLE(fileHandle) \
+_SCOPE_GUARD([fileHandle](void*) { [fileHandle closeFile]; }) \
+
+#define SCOPE_DELETE_FILE(fileName) _SCOPE_GUARD([fileName](void*) { deleteFile(fileName); })
