@@ -16,10 +16,13 @@
 
 #pragma once
 
-#include_next <winnt.h>
 #ifdef __OBJC__
-#ifdef DELETE
-#undef DELETE
+#pragma push_macro("DELETE")
 #endif
+
+#include_next <winnt.h>
+
+#ifdef __OBJC__
+#pragma pop_macro("DELETE")
 #endif
 
