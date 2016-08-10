@@ -348,6 +348,15 @@ TEST(NSCalendar, PreserveSmallerUnitsMatching) {
     expectedDate = [calendar dateWithEra:1 year:2001 month:5 day:1 hour:0 minute:0 second:0 nanosecond:0];
 
     ASSERT_OBJCEQ(expectedDate, actualDate);
+
+    components = [[[NSDateComponents alloc] init] autorelease];
+    components.day = 29;
+
+    date = [calendar dateWithEra:1 year:2012 month:2 day:20 hour:3 minute:4 second:5 nanosecond:0];
+    actualDate = [calendar nextDateAfterDate:date matchingComponents:components options:NSCalendarMatchNextTimePreservingSmallerUnits];
+    expectedDate = [calendar dateWithEra:1 year:2012 month:2 day:29 hour:0 minute:0 second:0 nanosecond:0];
+
+    ASSERT_OBJCEQ(expectedDate, actualDate);
 }
 
 TEST(NSCalendar, weekOfUnitMatching) {
@@ -479,9 +488,17 @@ TEST(NSCalendar, NSRangeValidation) {
     range = [calendar rangeOfUnit:NSCalendarUnitHour inUnit:NSCalendarUnitWeekOfMonth forDate:expectedDate];
     ASSERT_EQ(range.location, 0);
     ASSERT_EQ(range.length, 24);
+
+    range = [calendar rangeOfUnit:NSCalendarUnitWeekOfMonth inUnit:NSCalendarUnitMonth forDate:expectedDate];
+    ASSERT_EQ(range.location, 1);
+    ASSERT_EQ(range.length, 5);
+
+    range = [calendar rangeOfUnit:NSCalendarUnitWeekOfMonth inUnit:NSCalendarUnitYear forDate:expectedDate];
+    ASSERT_EQ(range.location, 1);
+    ASSERT_EQ(range.length, 6);
 }
 
-TEST(NSCalendar, BadMatchingOptions) {
+ARM_DISABLED_TEST(NSCalendar, BadMatchingOptions) {
     @try {
         NSCalendar* calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
 
@@ -513,34 +530,4 @@ OSX_DISABLED_TEST(NSCalendar, NanoSecondComparison) {
     NSDate* date2 = [NSDate dateWithTimeIntervalSinceReferenceDate:.9];
     ASSERT_EQ([calendar compareDate:date1 toDate:date2 toUnitGranularity:NSCalendarUnitNanosecond], NSOrderedAscending);
     ASSERT_EQ([calendar compareDate:date2 toDate:date1 toUnitGranularity:NSCalendarUnitNanosecond], NSOrderedDescending);
-}
-
-OSX_DISABLED_TEST(NSCalendar, RangeOfWeekOfMonth) {
-    // Retrieving the range of a WeekOfMonth unit should return the number of weeks within the month for that date.
-    // The behavior on OSX however, is that the returned range is always 6 weeks regardless of the actual number of
-    // weeks in the given month.
-
-    NSCalendar* calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
-    NSDate* date = [calendar dateWithEra:1 year:2010 month:3 day:31 hour:3 minute:4 second:5 nanosecond:0];
-    NSRange range = [calendar rangeOfUnit:NSCalendarUnitWeekOfMonth inUnit:NSCalendarUnitYear forDate:date];
-    ASSERT_EQ(range.location, 1);
-    ASSERT_EQ(range.length, 5);
-}
-
-OSX_DISABLED_TEST(NSCalendar, NSCalendarMatchNextTimePreservingSmallerUnitsLeapDay) {
-    // NSCalendarMatchNextTimePreservingSmallerUnits as a matching option does not reflect the documentation accurately.
-    // When matching a date, this option should preserve all smaller values when finding the next date. The behavior on OSX
-    // has instead stripped the date of these smaller values. The date matched from OSX is 2/29/2012 00:00:00 when it should be
-    // 2/29/2012 03:04:05. Thus, this test is disabled.
-
-    NSCalendar* calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents* components = [[[NSDateComponents alloc] init] autorelease];
-    components.day = 29;
-
-    NSDate* startingDate = [calendar dateWithEra:1 year:2012 month:2 day:20 hour:3 minute:4 second:5 nanosecond:0];
-    NSDate* actualDate =
-        [calendar nextDateAfterDate:startingDate matchingComponents:components options:NSCalendarMatchNextTimePreservingSmallerUnits];
-    NSDate* expectedDate = [calendar dateWithEra:1 year:2012 month:2 day:29 hour:3 minute:4 second:5 nanosecond:0];
-
-    ASSERT_OBJCEQ(expectedDate, actualDate);
 }

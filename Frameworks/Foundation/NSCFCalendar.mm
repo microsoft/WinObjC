@@ -670,11 +670,14 @@ static NSUInteger s_retryAttempts = 55;
     // Issue 650: NSCalendar Certain Units Need Optimized and Combination of Interpretive Units Match Incorrect Dates
     NSCalendarUnit interpretiveUnit = 0;
 
+    NSDateComponents* smallerComps = [[[NSDateComponents alloc] init] autorelease];
     for (int i = 0; i < _countof(s_NSDateComponentsIndividualFlags); i++) {
         // If a largest unit exists and the matching options does not specify preserving smaller units
-        if (mathematicalUnit != 0 && i < NSDateComponentsMathematicalUnitCutoff &&
-            !((opts & NSCalendarMatchPreviousTimePreservingSmallerUnits) || (opts & NSCalendarMatchNextTimePreservingSmallerUnits))) {
-            // Set this smaller unit to undefined.
+        if (mathematicalUnit != 0 && i < NSDateComponentsMathematicalUnitCutoff) {
+            if (((opts & NSCalendarMatchPreviousTimePreservingSmallerUnits) || (opts & NSCalendarMatchNextTimePreservingSmallerUnits))) {
+                [smallerComps setValue:[startComps valueForComponent:s_NSDateComponentsIndividualFlags[i]]
+                          forComponent:s_NSDateComponentsIndividualFlags[i]];
+            }
             [newComps setValue:NSUndefinedDateComponent forComponent:s_NSDateComponentsIndividualFlags[i]];
         }
 
@@ -761,8 +764,8 @@ static NSUInteger s_retryAttempts = 55;
                 numIters++;
             }
 
-            // If matchnext is specified and an exact match is not found after the initial try.
-            if (matchNext && !([comps _componentsMatch:newComps forUnits:unitFlags])) {
+            // If stopOnFirstMatch is specified and an exact match is not found after the initial try.
+            if (stopOnFirstMatch && !([comps _componentsMatch:newComps forUnits:unitFlags])) {
                 // Find the unit that made this match fail.
                 NSCalendarUnit highestUnitThatFailed = 0;
 
@@ -779,7 +782,17 @@ static NSUInteger s_retryAttempts = 55;
 
                 NSDateComponents* oneUnit = [[[NSDateComponents alloc] init] autorelease];
 
-                [oneUnit setValue:(searchForwards ? 1 : -1) forComponent:highestUnitThatFailed];
+                // If matching does not want the next value then do not update the highest unit.
+                [oneUnit setValue:(matchNext ? 1 : 0) forComponent:highestUnitThatFailed];
+
+                if ((opts & NSCalendarMatchPreviousTimePreservingSmallerUnits) || (opts & NSCalendarMatchNextTimePreservingSmallerUnits)) {
+                    for (int i = 0; i < _countof(s_NSDateComponentsIndividualFlags); i++) {
+                        NSUInteger value = [smallerComps valueForComponent:s_NSDateComponentsIndividualFlags[i]];
+                        if (value != NSUndefinedDateComponent) {
+                            [oneUnit setValue:value forComponent:s_NSDateComponentsIndividualFlags[i]];
+                        }
+                    }
+                }
 
                 bestdate = [self dateByAddingComponents:oneUnit toDate:bestdate options:opts];
             }

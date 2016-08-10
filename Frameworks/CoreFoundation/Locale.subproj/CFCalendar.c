@@ -746,6 +746,12 @@ static CFRange __CFCalendarGetRangeOfUnit2(CFCalendarRef calendar, CFCalendarUni
     // WINOBJC: Add cases for weekOf units. ICU will handle them below.
     case kCFCalendarUnitWeekOfYear:
     case kCFCalendarUnitWeekOfMonth:
+    // WINOBJC: Asking for the range of WeekOfMonth in Year always returns 6.
+        if (biggerUnit == kCFCalendarUnitYear) {
+            range.location = 1;
+            range.length = 6;
+            break;
+        }
     case kCFCalendarUnitWeek:
             switch (biggerUnit) {
             case kCFCalendarUnitMonth:
@@ -961,6 +967,13 @@ Boolean _CFCalendarAddComponentsV(CFCalendarRef calendar, /* inout */ CFAbsolute
     ucal_setMillis(calendar->_cal, udate, &status);
     char ch = *componentDesc;
     while (ch) {
+        // WINOBJC: ICU function ucal_add does not accept Nanoseconds. Skip this component as it causes failure.
+        if (ch == '#') {
+            vector++;
+            componentDesc++;
+            ch = *componentDesc;
+            continue;
+        }
         UCalendarDateFields field = __CFCalendarGetICUFieldCodeFromChar(ch);
             int amount = *vector;
         if (options & kCFCalendarComponentsWrap) {
