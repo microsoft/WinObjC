@@ -61,3 +61,23 @@ TEST(NSSet, ObjectsPassingTest) {
 
     ASSERT_OBJCEQ(expectedEvensLessThanFive, actual);
 }
+
+TEST(NSSet, FilterUsingPredicateString) {
+    NSSet* americanMakes = [NSSet setWithObjects:@"Chrysler", @"Ford", @"General Motors", nil];
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"SELF BEGINSWITH[c] %@", @"G"];
+
+    NSSet* filteredSet = [americanMakes filteredSetUsingPredicate:predicate];
+
+    ASSERT_NE(nil, filteredSet);
+    ASSERT_EQ(1, [filteredSet count]);
+}
+
+TEST(NSSet, FilterUsingPredicateNumbers) {
+    NSSet* americanMakes = [NSSet setWithObjects:@2, @4, @8, @16, @32, nil];
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"(SELF >= 4) AND (SELF < 32)"];
+
+    NSSet* filteredSet = [americanMakes filteredSetUsingPredicate:predicate];
+
+    ASSERT_NE(nil, filteredSet);
+    ASSERT_EQ(3, [filteredSet count]);
+}

@@ -139,11 +139,21 @@
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)filterUsingPredicate:(NSPredicate*)predicate {
-    UNIMPLEMENTED();
+    if (predicate == NULL) {
+        return;
+    }
+    @synchronized(self) {
+        NSArray* objects = [self allObjects];
+
+        for (id obj in objects) {
+            if (![predicate evaluateWithObject:obj]) {
+                [self removeObject:obj];
+            }
+        }
+    }
 }
 
 @end
