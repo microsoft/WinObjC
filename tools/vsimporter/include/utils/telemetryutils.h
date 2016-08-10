@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,19 +14,13 @@
 //
 //******************************************************************************
 
-#ifndef _MISCUTILS_H_
-#define _MISCUTILS_H_
+#ifndef _TELEMETRYUTILS_H_
+#define _TELEMETRYUTILS_H_
 
 #include "types.h"
+#include "sbassert.h"
 
-String getTime();
-double getEpochTime();
-
-template <typename T, unsigned S>
-inline unsigned arraySize(const T (&v)[S]) { return S; }
-
-void removeDupes(StringVec& in);
-bool checkTelemetryOptIn();
-bool isMSFTInternalMachine();
-std::string getMachineID();
-#endif /* _MISCUTILS_H_ */
+void sbAssertWithTelemetry(bool condition, const std::string& cause = "");
+void sbValidateWithTelemetry(bool condition, const std::string& cause = "");
+std::string stripTrailingData(const std::string& cause);
+#endif /* _TELEMETRYUTILS_H_ */
