@@ -20,9 +20,9 @@
 TEST(NSMutableURLRequest, setValue) {
     NSURL* url = [NSURL URLWithString:@"file:///foo/var/"];
 
-    ASSERT_NE_MSG(url, nullptr, "FAILED: url should be non-null!");
+    ASSERT_NE_MSG(url, nil, "FAILED: url should be non-null!");
     NSMutableURLRequest* urlRequest = [NSMutableURLRequest requestWithURL:url];
-    ASSERT_NE_MSG(urlRequest, nullptr, "FAILED: urlRequest should be non-null!");
+    ASSERT_NE_MSG(urlRequest, nil, "FAILED: urlRequest should be non-null!");
     EXPECT_OBJCEQ_MSG(url, [urlRequest URL], "FAILED: url is not valid.");
     EXPECT_EQ_MSG(NSURLRequestUseProtocolCachePolicy,
                   [urlRequest cachePolicy],
@@ -45,9 +45,9 @@ TEST(NSMutableURLRequest, setValue) {
 TEST(NSMutableURLRequest, addValue) {
     NSURL* url = [NSURL URLWithString:@"file:///foo/var/"];
 
-    ASSERT_NE_MSG(url, nullptr, "FAILED: url should be non-null!");
+    ASSERT_NE_MSG(url, nil, "FAILED: url should be non-null!");
     NSMutableURLRequest* urlRequest = [NSMutableURLRequest requestWithURL:url];
-    ASSERT_NE_MSG(urlRequest, nullptr, "FAILED: urlRequest should be non-null!");
+    ASSERT_NE_MSG(urlRequest, nil, "FAILED: urlRequest should be non-null!");
     EXPECT_OBJCEQ_MSG(url, [urlRequest URL], "FAILED: url is not valid.");
     EXPECT_EQ_MSG(NSURLRequestUseProtocolCachePolicy,
                   [urlRequest cachePolicy],
@@ -69,9 +69,9 @@ TEST(NSMutableURLRequest, addValue) {
 
 TEST(NSMutableURLRequest, mutableCopy) {
     NSURL* url = [NSURL URLWithString:@"file:///foo/var/"];
-    ASSERT_NE_MSG(url, nullptr, "FAILED: url should be non-null!");
+    ASSERT_NE_MSG(url, nil, "FAILED: url should be non-null!");
     NSMutableURLRequest* urlRequest = [NSMutableURLRequest requestWithURL:url];
-    ASSERT_NE_MSG(urlRequest, nullptr, "FAILED: urlRequest should be non-null!");
+    ASSERT_NE_MSG(urlRequest, nil, "FAILED: urlRequest should be non-null!");
     NSMutableURLRequest* copyRequest = [urlRequest copy];
     EXPECT_TRUE_MSG([copyRequest isKindOfClass:[NSMutableURLRequest class]], "FAILED: a copy of NSMutableURLRequest should be mutable");
     EXPECT_OBJCEQ_MSG([copyRequest URL], [urlRequest URL], "FAILED: the copy should have the same URL as the original");
