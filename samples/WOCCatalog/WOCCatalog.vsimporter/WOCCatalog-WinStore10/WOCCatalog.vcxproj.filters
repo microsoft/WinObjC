@@ -198,10 +198,13 @@
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo1.jpg">
       <Filter>Images</Filter>
     </SBResourceCopy>
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo2.png">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo7.gif">
       <Filter>Images</Filter>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo2.jpg">
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo2.png">
       <Filter>Images</Filter>
     </SBResourceCopy>
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo3.jpg">
