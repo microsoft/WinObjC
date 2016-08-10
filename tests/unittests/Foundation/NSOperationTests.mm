@@ -419,6 +419,42 @@ TEST(NSOperation, NSOperationWithDependenciesDoesRun) {
     EXPECT_TRUE(completionBlockCalled);
 }
 
+TEST(NSOperation, NSOperationWithDependenciesInDifferentPrioritiesDoesRun) {
+    NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
+    TestObserver* observer = [[TestObserver new] autorelease];
+
+    NSCondition* dep1Condition = nil;
+    BOOL dep1Completed = NO;
+    NSOperation* dependency1 = [[NSOperation new] autorelease];
+    dependency1.queuePriority = NSOperationQueuePriorityVeryLow;
+    [dependency1 setCompletionBlock:_completionBlockPopulatingConditionAndFlag(nil, &dep1Condition, &dep1Completed)];
+
+    NSOperation* operation = [[NSOperation new] autorelease];
+    operation.queuePriority = NSOperationQueuePriorityVeryHigh;
+    NSCondition* completionCondition = nil;
+    BOOL completionBlockCalled = NO;
+    [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(nil, &completionCondition, &completionBlockCalled)];
+
+    [operation addDependency:dependency1];
+
+    EXPECT_FALSE([operation isReady]);
+
+    // Stage the operation before its dependencies.
+    [queue addOperation:operation];
+
+    [completionCondition lock]; // dep1 will trigger operation to complete.
+    [dep1Condition lock];
+    [queue addOperation:dependency1];
+    [dep1Condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2.0]];
+    [dep1Condition unlock];
+    EXPECT_TRUE(dep1Completed);
+    EXPECT_FALSE(completionBlockCalled);
+
+    [completionCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2.0]];
+    [completionCondition unlock];
+    EXPECT_TRUE(completionBlockCalled);
+}
+
 // On the reference platform, we cannot observe isReady immediately.
 // There appears to be a marked laziness in signalling the ready status via
 // dependency completion.
