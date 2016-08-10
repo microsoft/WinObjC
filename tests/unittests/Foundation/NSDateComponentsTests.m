@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include "TestFramework.h"
 #import <Foundation/Foundation.h>
 
 TEST(NSDateComponents, ComponentsTimeZoneTest) {
@@ -44,6 +44,7 @@ TEST(NSDateComponents, ComponentsTimeZoneTest) {
     EXPECT_OBJCNE_MSG(cstDateNonMatching, cstDateMatching, "FAILED: dates should differ by one hour");
     EXPECT_OBJCNE_MSG(estDate, cstDateNonMatching, "FAILED: dates should differ by one hour");
     EXPECT_EQ_MSG(secondsBetween, 3600, "FAILED: dates should differ by one hour");
+    [dateComponents release];
 }
 
 TEST(NSDateComponents, CalendarTimeZoneTest) {
@@ -68,6 +69,7 @@ TEST(NSDateComponents, CalendarTimeZoneTest) {
 
     NSTimeInterval secondsBetween = [cstDate timeIntervalSinceDate:estDate];
     EXPECT_EQ_MSG(secondsBetween, 3600, "FAILED: dates should differ by one hour");
+    [dateComponents release];
 }
 
 TEST(NSDateComponents, IndependentWeekTest) {
@@ -87,4 +89,5 @@ TEST(NSDateComponents, IndependentWeekTest) {
 
     [dateComponents setWeek:1];
     EXPECT_EQ_MSG([dateComponents week], 1, "FAILED: week value should change when assigned");
+    [dateComponents release];
 }
