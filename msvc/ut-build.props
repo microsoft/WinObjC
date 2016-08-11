@@ -8,8 +8,4 @@
     </ClangCompile>
   </ItemDefinitionGroup>
 
-  <PropertyGroup Label="Configuration">
-    <StarboardLinkWholeArchive>true</StarboardLinkWholeArchive>
-  </PropertyGroup>
-
 </Project>
