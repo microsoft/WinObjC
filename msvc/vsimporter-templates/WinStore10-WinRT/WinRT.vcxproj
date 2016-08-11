@@ -42,10 +42,13 @@
 	  <IncludePaths>$(SolutionPublicHeadersDir);$(WINOBJC_SDK_ROOT)\..\WinObjC_Internal\Source\winmd2objc\Support;$(WINOBJC_SDK_ROOT)\Frameworks\include;%(IncludePaths)</IncludePaths>
     </ClangCompile>
     <Midl>
-      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <OutputDirectory>$(Objc2WinmdGeneratedFilesDir)</OutputDirectory>
       <HeaderFileName>$(Objc2WinmdGeneratedFilesDir)\%(Filename)_h.h</HeaderFileName>
       <MetadataFileName>$(SolutionDir)$(Configuration)%(Filename).winmd</MetadataFileName>
       <AdditionalIncludeDirectories>$(Objc2WinmdGeneratedFilesDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <GenerateTypeLibrary>false</GenerateTypeLibrary>
+      <GenerateClientFiles>None</GenerateClientFiles>
+      <GenerateServerFiles>None</GenerateServerFiles>
     </Midl>
 	<Link>
 	  <AdditionalDependencies>WinObjCRT.lib;%(AdditionalDependencies)</AdditionalDependencies>
