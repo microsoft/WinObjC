@@ -91,3 +91,6 @@
     return kCFStringEncodingUTF16LE;
 }
 @end
+
+static __attribute__((constructor)) void _ForceTUInclusion() {
+}

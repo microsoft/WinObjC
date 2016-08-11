@@ -32,3 +32,6 @@
     return val;
 }
 @end
+
+__attribute__((constructor)) static void _ForceTUInclusion() {
+}
