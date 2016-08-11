@@ -16,13 +16,14 @@
 #pragma once
 
 #import <Foundation/Foundation.h>
-#import <functional>
-#include <memory>
+#import <windows.h>
+#import <FrameworkTestUtil.h>
 
-#define _CONCAT(x, y) x##y
-#define CONCAT(x, y) _CONCAT(x, y)
+#define SCOPE_CLOSE_HANDLE(fileHandle) \
+    \
+_SCOPE_GUARD([fileHandle](void*) { [fileHandle closeFile]; })
 
-#define _SCOPE_GUARD(STATEMENT) std::unique_ptr<void, std::function<void(void*)>> CONCAT(_closeScope_, __LINE__)((void*)0x1, STATEMENT)
+#define SCOPE_DELETE_FILE(fileName) _SCOPE_GUARD([fileName](void*) { deleteFile(fileName); })
 
 void assertOrderedSetContent(NSOrderedSet* set, NSObject* first, ...);
 NSString* getModulePath();

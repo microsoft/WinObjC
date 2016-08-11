@@ -16,20 +16,26 @@
 
 #include <windows.h>
 #include <TestFramework.h>
+#include <FrameworkTestUtil.h>
+
+#define SCOPE_UNINITIALIZE(hResult) \
+    \
+_SCOPE_GUARD([hResult](void*) {     \
+        if (SUCCEEDED(hResult)) {   \
+            ::CoUninitialize();     \
+        }                           \
+    })
 
 int main(int argc, char** argv) {
 // ::CoInitialize, Uninitialize, don't exist on OSX, aren't needed
 #ifdef WIN32
     // Initialize COM for all of the tests
-    ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    HRESULT hResult = ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    SCOPE_UNINITIALIZE(hResult);
 
     testing::InitGoogleTest(&argc, argv);
     LOG_INFO("Starting unit tests...");
     auto result = RUN_ALL_TESTS();
-
-    // TODO: Issue #689 move to a scopeguard when we have one in our codebase
-    ::CoUninitialize();
-
 #else
     testing::InitGoogleTest(&argc, argv);
     printf("Starting unit tests...\n");

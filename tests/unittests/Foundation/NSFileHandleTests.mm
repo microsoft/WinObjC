@@ -16,7 +16,6 @@
 
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
-#import <windows.h>
 #import <algorithm>
 #import "TestUtils.h"
 
