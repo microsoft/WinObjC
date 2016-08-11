@@ -18,6 +18,7 @@
 #include "Accelerate/vImage.h"
 #include "ErrorHandling.h"
 #include "LoggingNative.h"
+#include <algorithm>
 #include <new>
 
 static const wchar_t* TAG = L"vImage";
@@ -972,35 +973,58 @@ vImage_Error vImageConvert_ARGB8888toPlanar8(const vImage_Buffer* srcARGB,
         return kvImageBufferSizeMismatch;
     }
 
-    unsigned char* pixelRowBytePtr = reinterpret_cast<unsigned char*>(srcARGB->data);
-    unsigned char* alphaRowBytePtr = reinterpret_cast<unsigned char*>(destA->data);
-    unsigned char* redRowBytePtr = reinterpret_cast<unsigned char*>(destR->data);
-    unsigned char* greenRowBytePtr = reinterpret_cast<unsigned char*>(destG->data);
-    unsigned char* blueRowBytePtr = reinterpret_cast<unsigned char*>(destB->data);
+    unsigned char* srcArgbBytes = reinterpret_cast<unsigned char*>(srcARGB->data);
+    unsigned char* destAlphaBytes = reinterpret_cast<unsigned char*>(destA->data);
+    unsigned char* destRedBytes = reinterpret_cast<unsigned char*>(destR->data);
+    unsigned char* destGreenBytes = reinterpret_cast<unsigned char*>(destG->data);
+    unsigned char* destBlueBytes = reinterpret_cast<unsigned char*>(destB->data);
+    Pixel_8888_s* srcArgbPixels;
 
 #if (VIMAGE_SSE == 1)
     const unsigned int pixelsPerBlock = c_vImageBlockSizeBytes;
 
     if ((c_vImageUseSse2 == true) && (width >= pixelsPerBlock)) {
-        const unsigned int blocksPerRow = width / pixelsPerBlock + ((width % pixelsPerBlock != 0) ? 1 : 0);
+        unsigned int blocksPerRow = width / pixelsPerBlock;
+        unsigned int leftoverElements = width % pixelsPerBlock;
 
-        __m128i *pixelRowM128Ptr, *alphaRowM128Ptr, *redRowM128Ptr, *greenRowM128Ptr, *blueRowM128Ptr;
+        if (leftoverElements > 0) {
+            const unsigned int blockAlignedWidth = _vImageAlignUInt(width, pixelsPerBlock);
+            unsigned int minPlanarPitchPixels = std::min(alphaRowPitch, std::min(redRowPitch, std::min(greenRowPitch, blueRowPitch)));
+
+            // If there is enough padding in both row pitches for a whole block, round up to the next block
+            if ((minPlanarPitchPixels >= blockAlignedWidth) && (pixelRowPitch >= (blockAlignedWidth * sizeof(Pixel_8888)))) {
+                leftoverElements = 0;
+                blocksPerRow += 1;
+            }
+        }
+
         __m128i vPixelBlocks[4], vBlocks02[2], vBlocks13[2], vBlocks_02A_13A[2], vBlocks_02B_13B[2];
         __m128i vAlphaRedEven, vAlphaRedOdd, vGreenBlueEven, vGreenBlueOdd;
         __m128i vAlpha, vRed, vGreen, vBlue;
 
+        unsigned int offset;
+
         for (unsigned int i = 0; i < height; i++) {
-            alphaRowM128Ptr = reinterpret_cast<__m128i*>(alphaRowBytePtr);
-            redRowM128Ptr = reinterpret_cast<__m128i*>(redRowBytePtr);
-            greenRowM128Ptr = reinterpret_cast<__m128i*>(greenRowBytePtr);
-            blueRowM128Ptr = reinterpret_cast<__m128i*>(blueRowBytePtr);
-            pixelRowM128Ptr = reinterpret_cast<__m128i*>(pixelRowBytePtr);
+            offset = 0;
+
+            srcArgbPixels = reinterpret_cast<Pixel_8888_s*>(srcArgbBytes);
+
+            if (leftoverElements > 0) {
+                for (unsigned int j = 0; j < leftoverElements; j++) {
+                    destAlphaBytes[j] = srcArgbPixels[j].val[0];
+                    destRedBytes[j] = srcArgbPixels[j].val[1];
+                    destGreenBytes[j] = srcArgbPixels[j].val[2];
+                    destBlueBytes[j] = srcArgbPixels[j].val[3];
+                }
+
+                offset += leftoverElements;
+            }
 
             for (unsigned int j = 0; j < blocksPerRow; j++) {
-                vPixelBlocks[0] = _mm_loadu_si128(&pixelRowM128Ptr[0]);
-                vPixelBlocks[1] = _mm_loadu_si128(&pixelRowM128Ptr[1]);
-                vPixelBlocks[2] = _mm_loadu_si128(&pixelRowM128Ptr[2]);
-                vPixelBlocks[3] = _mm_loadu_si128(&pixelRowM128Ptr[3]);
+                vPixelBlocks[0] = _mm_loadu_si128(reinterpret_cast<__m128i*>(&srcArgbPixels[offset + 0]));
+                vPixelBlocks[1] = _mm_loadu_si128(reinterpret_cast<__m128i*>(&srcArgbPixels[offset + 4]));
+                vPixelBlocks[2] = _mm_loadu_si128(reinterpret_cast<__m128i*>(&srcArgbPixels[offset + 8]));
+                vPixelBlocks[3] = _mm_loadu_si128(reinterpret_cast<__m128i*>(&srcArgbPixels[offset + 12]));
 
                 // Interleave blocks 0 and 2
                 vBlocks02[0] = _mm_unpacklo_epi8(vPixelBlocks[0], vPixelBlocks[2]);
@@ -1032,40 +1056,38 @@ vImage_Error vImageConvert_ARGB8888toPlanar8(const vImage_Buffer* srcARGB,
                 vBlue = _mm_unpackhi_epi8(vGreenBlueEven, vGreenBlueOdd);
 
                 // Write planar data to memory
-                _mm_storeu_si128(&alphaRowM128Ptr[j], vAlpha);
-                _mm_storeu_si128(&redRowM128Ptr[j], vRed);
-                _mm_storeu_si128(&greenRowM128Ptr[j], vGreen);
-                _mm_storeu_si128(&blueRowM128Ptr[j], vBlue);
+                _mm_storeu_si128(reinterpret_cast<__m128i*>(&destAlphaBytes[offset]), vAlpha);
+                _mm_storeu_si128(reinterpret_cast<__m128i*>(&destRedBytes[offset]), vRed);
+                _mm_storeu_si128(reinterpret_cast<__m128i*>(&destGreenBytes[offset]), vGreen);
+                _mm_storeu_si128(reinterpret_cast<__m128i*>(&destBlueBytes[offset]), vBlue);
 
-                // Increment m128Ptr by 4 to get next 16 ARGB pixels (note: 4 ARGB pixels per m128 register)
-                pixelRowM128Ptr += 4;
+                // Increment read and write offsets
+                offset += pixelsPerBlock;
             }
 
-            alphaRowBytePtr += alphaRowPitch;
-            redRowBytePtr += redRowPitch;
-            greenRowBytePtr += greenRowPitch;
-            blueRowBytePtr += blueRowPitch;
-            pixelRowBytePtr += pixelRowPitch;
+            destAlphaBytes += alphaRowPitch;
+            destRedBytes += redRowPitch;
+            destGreenBytes += greenRowPitch;
+            destBlueBytes += blueRowPitch;
+            srcArgbBytes += pixelRowPitch;
         }
     } else {
 #endif
-        Pixel_8888_s* pixelRowPixelPtr;
-
         for (unsigned int i = 0; i < height; i++) {
-            pixelRowPixelPtr = reinterpret_cast<Pixel_8888_s*>(pixelRowBytePtr);
+            srcArgbPixels = reinterpret_cast<Pixel_8888_s*>(srcArgbBytes);
 
             for (unsigned int j = 0; j < width; j++) {
-                alphaRowBytePtr[j] = pixelRowPixelPtr[j].val[0];
-                redRowBytePtr[j] = pixelRowPixelPtr[j].val[1];
-                greenRowBytePtr[j] = pixelRowPixelPtr[j].val[2];
-                blueRowBytePtr[j] = pixelRowPixelPtr[j].val[3];
+                destAlphaBytes[j] = srcArgbPixels[j].val[0];
+                destRedBytes[j] = srcArgbPixels[j].val[1];
+                destGreenBytes[j] = srcArgbPixels[j].val[2];
+                destBlueBytes[j] = srcArgbPixels[j].val[3];
             }
 
-            alphaRowBytePtr += alphaRowPitch;
-            redRowBytePtr += redRowPitch;
-            greenRowBytePtr += greenRowPitch;
-            blueRowBytePtr += blueRowPitch;
-            pixelRowBytePtr += pixelRowPitch;
+            destAlphaBytes += alphaRowPitch;
+            destRedBytes += redRowPitch;
+            destGreenBytes += greenRowPitch;
+            destBlueBytes += blueRowPitch;
+            srcArgbBytes += pixelRowPitch;
         }
 #if (VIMAGE_SSE == 1)
     }
@@ -1110,34 +1132,54 @@ vImage_Error vImageConvert_Planar8toARGB8888(const vImage_Buffer* srcA,
         return kvImageBufferSizeMismatch;
     }
 
-    unsigned char* pixelRowBytePtr = reinterpret_cast<unsigned char*>(dest->data);
-    unsigned char* alphaRowBytePtr = reinterpret_cast<unsigned char*>(srcA->data);
-    unsigned char* redRowBytePtr = reinterpret_cast<unsigned char*>(srcR->data);
-    unsigned char* greenRowBytePtr = reinterpret_cast<unsigned char*>(srcG->data);
-    unsigned char* blueRowBytePtr = reinterpret_cast<unsigned char*>(srcB->data);
+    unsigned char* destArgbBytes = reinterpret_cast<unsigned char*>(dest->data);
+    unsigned char* srcAlphaBytes = reinterpret_cast<unsigned char*>(srcA->data);
+    unsigned char* srcRedBytes = reinterpret_cast<unsigned char*>(srcR->data);
+    unsigned char* srcGreenBytes = reinterpret_cast<unsigned char*>(srcG->data);
+    unsigned char* srcBlueBytes = reinterpret_cast<unsigned char*>(srcB->data);
+    Pixel_8888_s* destArgbPixels;
 
 #if (VIMAGE_SSE == 1)
     const unsigned int pixelsPerBlock = c_vImageBlockSizeBytes;
 
     if ((c_vImageUseSse2 == true) && (width >= pixelsPerBlock)) {
-        const unsigned int blocksPerRow = width / pixelsPerBlock + ((width % pixelsPerBlock != 0) ? 1 : 0);
+        unsigned int blocksPerRow = width / pixelsPerBlock;
+        unsigned int leftoverElements = width % pixelsPerBlock;
 
-        __m128i *pixelRowM128Ptr, *alphaRowM128Ptr, *redRowM128Ptr, *greenRowM128Ptr, *blueRowM128Ptr;
+        if (leftoverElements > 0) {
+            const unsigned int blockAlignedWidth = _vImageAlignUInt(width, pixelsPerBlock);
+            const unsigned int minPlanarPitchPixels = std::min(alphaRowPitch, std::min(redRowPitch, std::min(greenRowPitch, blueRowPitch)));
+
+            // If there is enough padding in both row pitches, round up to the next block
+            if ((minPlanarPitchPixels >= blockAlignedWidth) && (pixelRowPitch >= (blockAlignedWidth * sizeof(Pixel_8888)))) {
+                leftoverElements = 0;
+                blocksPerRow += 1;
+            }
+        }
+
         __m128i vA, vR, vG, vB, vAG[2], vRB[2], vARGB[4];
+        unsigned int offset;
 
         for (unsigned int i = 0; i < height; i++) {
-            alphaRowM128Ptr = reinterpret_cast<__m128i*>(alphaRowBytePtr);
-            redRowM128Ptr = reinterpret_cast<__m128i*>(redRowBytePtr);
-            greenRowM128Ptr = reinterpret_cast<__m128i*>(greenRowBytePtr);
-            blueRowM128Ptr = reinterpret_cast<__m128i*>(blueRowBytePtr);
-            pixelRowM128Ptr = reinterpret_cast<__m128i*>(pixelRowBytePtr);
+            offset = 0;
+
+            destArgbPixels = reinterpret_cast<Pixel_8888_s*>(destArgbBytes);
+
+            for (unsigned int j = 0; j < leftoverElements; j++) {
+                destArgbPixels[j].val[0] = srcAlphaBytes[j];
+                destArgbPixels[j].val[1] = srcRedBytes[j];
+                destArgbPixels[j].val[2] = srcGreenBytes[j];
+                destArgbPixels[j].val[3] = srcBlueBytes[j];
+            }
+
+            offset += leftoverElements;
 
             for (unsigned int j = 0; j < blocksPerRow; j++) {
                 // Load 16 components of each plane into vectors
-                vA = _mm_loadu_si128(&alphaRowM128Ptr[j]);
-                vR = _mm_loadu_si128(&redRowM128Ptr[j]);
-                vG = _mm_loadu_si128(&greenRowM128Ptr[j]);
-                vB = _mm_loadu_si128(&blueRowM128Ptr[j]);
+                vA = _mm_loadu_si128(reinterpret_cast<__m128i*>(&srcAlphaBytes[offset]));
+                vR = _mm_loadu_si128(reinterpret_cast<__m128i*>(&srcRedBytes[offset]));
+                vG = _mm_loadu_si128(reinterpret_cast<__m128i*>(&srcGreenBytes[offset]));
+                vB = _mm_loadu_si128(reinterpret_cast<__m128i*>(&srcBlueBytes[offset]));
 
                 // Interleave A & G and R & B components to get AG & RB vectors
                 vAG[0] = _mm_unpacklo_epi8(vA, vG);
@@ -1152,39 +1194,38 @@ vImage_Error vImageConvert_Planar8toARGB8888(const vImage_Buffer* srcA,
                 vARGB[3] = _mm_unpackhi_epi8(vAG[1], vRB[1]);
 
                 // Write ARGB pixels to memory
-                _mm_storeu_si128(&pixelRowM128Ptr[0], vARGB[0]);
-                _mm_storeu_si128(&pixelRowM128Ptr[1], vARGB[1]);
-                _mm_storeu_si128(&pixelRowM128Ptr[2], vARGB[2]);
-                _mm_storeu_si128(&pixelRowM128Ptr[3], vARGB[3]);
+                _mm_storeu_si128(reinterpret_cast<__m128i*>(&destArgbPixels[offset + 0]), vARGB[0]);
+                _mm_storeu_si128(reinterpret_cast<__m128i*>(&destArgbPixels[offset + 4]), vARGB[1]);
+                _mm_storeu_si128(reinterpret_cast<__m128i*>(&destArgbPixels[offset + 8]), vARGB[2]);
+                _mm_storeu_si128(reinterpret_cast<__m128i*>(&destArgbPixels[offset + 12]), vARGB[3]);
 
-                // Increment m128Ptr by 4 to get next 16 ARGB pixels (note: 4 ARGB pixels per m128 register)
-                pixelRowM128Ptr += 4;
+                // Increment read and write pointers
+                offset += pixelsPerBlock;
             }
 
-            alphaRowBytePtr += alphaRowPitch;
-            redRowBytePtr   += redRowPitch;
-            greenRowBytePtr += greenRowPitch;
-            blueRowBytePtr  += blueRowPitch;
-            pixelRowBytePtr += pixelRowPitch;
+            srcAlphaBytes += alphaRowPitch;
+            srcRedBytes += redRowPitch;
+            srcGreenBytes += greenRowPitch;
+            srcBlueBytes += blueRowPitch;
+            destArgbBytes += pixelRowPitch;
         }
     } else {
 #endif
-        Pixel_8888_s* pixelRow;
         for (unsigned int i = 0; i < height; i++) {
-            pixelRow = reinterpret_cast<Pixel_8888_s*>(pixelRowBytePtr);
+            destArgbPixels = reinterpret_cast<Pixel_8888_s*>(destArgbBytes);
 
             for (unsigned int j = 0; j < width; j++) {
-                pixelRow[j].val[0] = alphaRowBytePtr[j];
-                pixelRow[j].val[1] = redRowBytePtr[j];
-                pixelRow[j].val[2] = greenRowBytePtr[j];
-                pixelRow[j].val[3] = blueRowBytePtr[j];
+                destArgbPixels[j].val[0] = srcAlphaBytes[j];
+                destArgbPixels[j].val[1] = srcRedBytes[j];
+                destArgbPixels[j].val[2] = srcGreenBytes[j];
+                destArgbPixels[j].val[3] = srcBlueBytes[j];
             }
 
-            alphaRowBytePtr += alphaRowPitch;
-            redRowBytePtr += redRowPitch;
-            greenRowBytePtr += greenRowPitch;
-            blueRowBytePtr += blueRowPitch;
-            pixelRowBytePtr += pixelRowPitch;
+            srcAlphaBytes += alphaRowPitch;
+            srcRedBytes += redRowPitch;
+            srcGreenBytes += greenRowPitch;
+            srcBlueBytes += blueRowPitch;
+            destArgbBytes += pixelRowPitch;
         }
 #if (VIMAGE_SSE == 1)
     }
@@ -1216,16 +1257,28 @@ vImage_Error vImageConvert_Planar8toPlanarF(
     FAIL_FAST_IF_FALSE(srcRowPitch >= width);
     FAIL_FAST_IF_FALSE(destRowPitch >= width * sizeof(Pixel_F));
 
-    unsigned char* srcRowStartPtr = reinterpret_cast<unsigned char*>(src->data);
-    unsigned char* destRowStartPtr = reinterpret_cast<unsigned char*>(dest->data);
-    unsigned char* srcReadPtr;
-    float* destWritePtr;
+    unsigned char* srcRowStart = reinterpret_cast<unsigned char*>(src->data);
+    unsigned char* destRowStart = reinterpret_cast<unsigned char*>(dest->data);
+    unsigned char* srcBytes;
+    float* destFloats;
 
 #if (VIMAGE_SSE == 1)
-    const unsigned int pixelsPerBlock = c_vImageBlockSizeBytes;
+    const unsigned int unitsPerBlock = c_vImageBlockSizeBytes;
 
-    if ((c_vImageUseSse2 == true) && (width >= pixelsPerBlock)) {
-        const unsigned int blocksPerRow = width / pixelsPerBlock + ((width % pixelsPerBlock != 0) ? 1 : 0);
+    if ((c_vImageUseSse2 == true) && (width >= unitsPerBlock)) {
+        unsigned int blocksPerRow = width / unitsPerBlock;
+        unsigned int leftoverElements = width % unitsPerBlock;
+
+        if (leftoverElements > 0) {
+            const unsigned int blockAlignedWidth = _vImageAlignUInt(width, unitsPerBlock);
+
+            // If there is enough padding in both row pitches for a whole block, round up to the next block
+            if ((srcRowPitch >= blockAlignedWidth) && (destRowPitch >= (blockAlignedWidth * sizeof(Pixel_F)))) {
+                leftoverElements = 0;
+                blocksPerRow += 1;
+            }
+        }
+
         __declspec(align(16)) const float scalingFactor = (maxFloat - minFloat) / 255.0f;
         __m128i vInt8, vInt16[2], vInt32[4];
         __m128i vZeros = _mm_setzero_si128();
@@ -1234,12 +1287,19 @@ vImage_Error vImageConvert_Planar8toPlanarF(
         __m128 vScalingFactor = _mm_load_ps1(&scalingFactor);
 
         for (unsigned int i = 0; i < height; i++) {
-            destWritePtr = reinterpret_cast<float*>(destRowStartPtr);
-            srcReadPtr = srcRowStartPtr;
+            destFloats = reinterpret_cast<float*>(destRowStart);
+            srcBytes = srcRowStart;
+
+            for (unsigned int j = 0; j < leftoverElements; j++) {
+                destFloats[j] = _vImageConvertAndClampUint8ToFloat(srcBytes[j], minFloat, maxFloat);
+            }
+
+            srcBytes += leftoverElements;
+            destFloats += leftoverElements;
 
             for (unsigned int j = 0; j < blocksPerRow; j++) {
                 // Load 16 pixels from planar buffer
-                vInt8 = _mm_loadu_si128(reinterpret_cast<__m128i*>(srcReadPtr));
+                vInt8 = _mm_loadu_si128(reinterpret_cast<__m128i*>(srcBytes));
 
                 // Convert to 16bit ints
                 vInt16[0] = _mm_unpacklo_epi8(vInt8, vZeros);
@@ -1270,31 +1330,31 @@ vImage_Error vImageConvert_Planar8toPlanarF(
                 vFloat32[3] = _mm_add_ps(vFloat32[3], vMinFloat);
 
                 // Write floats to memory
-                _mm_storeu_ps(destWritePtr, vFloat32[0]);
-                _mm_storeu_ps(&destWritePtr[4], vFloat32[1]);
-                _mm_storeu_ps(&destWritePtr[8], vFloat32[2]);
-                _mm_storeu_ps(&destWritePtr[12], vFloat32[3]);
+                _mm_storeu_ps(destFloats, vFloat32[0]);
+                _mm_storeu_ps(&destFloats[4], vFloat32[1]);
+                _mm_storeu_ps(&destFloats[8], vFloat32[2]);
+                _mm_storeu_ps(&destFloats[12], vFloat32[3]);
 
                 // Increment read/write pointers
-                destWritePtr += pixelsPerBlock;
-                srcReadPtr += pixelsPerBlock;
+                destFloats += unitsPerBlock;
+                srcBytes += unitsPerBlock;
             }
 
-            srcRowStartPtr += srcRowPitch;
-            destRowStartPtr += destRowPitch;
+            srcRowStart += srcRowPitch;
+            destRowStart += destRowPitch;
         }
     } else {
 #endif
         for (unsigned int i = 0; i < height; i++) {
-            destWritePtr = reinterpret_cast<float*>(destRowStartPtr);
-            srcReadPtr = srcRowStartPtr;
+            destFloats = reinterpret_cast<float*>(destRowStart);
+            srcBytes = srcRowStart;
 
             for (unsigned int j = 0; j < width; j++) {
-                destWritePtr[j] = _vImageConvertAndClampUint8ToFloat(srcReadPtr[j], minFloat, maxFloat);
+                destFloats[j] = _vImageConvertAndClampUint8ToFloat(srcBytes[j], minFloat, maxFloat);
             }
 
-            srcRowStartPtr += srcRowPitch;
-            destRowStartPtr += destRowPitch;
+            srcRowStart += srcRowPitch;
+            destRowStart += destRowPitch;
         }
 #if (VIMAGE_SSE == 1)
     }
@@ -1333,25 +1393,25 @@ vImage_Error vImageConvert_Planar8toRGB888(
         return kvImageBufferSizeMismatch;
     }
 
-    unsigned char* pixelRowBytePtr = reinterpret_cast<unsigned char*>(rgbDest->data);
-    unsigned char* redRowBytePtr = reinterpret_cast<unsigned char*>(srcR->data);
-    unsigned char* greenRowBytePtr = reinterpret_cast<unsigned char*>(srcG->data);
-    unsigned char* blueRowBytePtr = reinterpret_cast<unsigned char*>(srcB->data);
-    Pixel_888_s* pixelRowPixelPtr;
+    unsigned char* destRgbBytes = reinterpret_cast<unsigned char*>(rgbDest->data);
+    unsigned char* srcRedBytes = reinterpret_cast<unsigned char*>(srcR->data);
+    unsigned char* srcGreenBytes = reinterpret_cast<unsigned char*>(srcG->data);
+    unsigned char* srcBlueBytes = reinterpret_cast<unsigned char*>(srcB->data);
+    Pixel_888_s* destRGB;
 
     for (unsigned int i = 0; i < height; i++) {
-        pixelRowPixelPtr = reinterpret_cast<Pixel_888_s*>(pixelRowBytePtr);
+        destRGB = reinterpret_cast<Pixel_888_s*>(destRgbBytes);
 
         for (unsigned int j = 0; j < width; j++) {
-            pixelRowPixelPtr[j].val[0] = redRowBytePtr[j];
-            pixelRowPixelPtr[j].val[1] = greenRowBytePtr[j];
-            pixelRowPixelPtr[j].val[2] = blueRowBytePtr[j];
+            destRGB[j].val[0] = srcRedBytes[j];
+            destRGB[j].val[1] = srcGreenBytes[j];
+            destRGB[j].val[2] = srcBlueBytes[j];
         }
 
-        redRowBytePtr   += redRowPitch;
-        greenRowBytePtr += greenRowPitch;
-        blueRowBytePtr  += blueRowPitch;
-        pixelRowBytePtr += pixelRowPitch;
+        srcRedBytes += redRowPitch;
+        srcGreenBytes += greenRowPitch;
+        srcBlueBytes += blueRowPitch;
+        destRgbBytes += pixelRowPitch;
     }
 
     return kvImageNoError;
@@ -1378,16 +1438,28 @@ vImage_Error vImageConvert_PlanarFtoPlanar8(
     FAIL_FAST_IF_FALSE(srcRowPitch >= width * sizeof(Pixel_F));
     FAIL_FAST_IF_FALSE(destRowPitch >= width);
 
-    unsigned char* srcRowStartPtr = reinterpret_cast<unsigned char*>(src->data);
-    unsigned char* destRowStartPtr = reinterpret_cast<unsigned char*>(dest->data);
-    Pixel_F* srcReadPtr;
-    unsigned char* destWritePtr;
+    unsigned char* srcRowStart = reinterpret_cast<unsigned char*>(src->data);
+    unsigned char* destRowStart = reinterpret_cast<unsigned char*>(dest->data);
+    Pixel_F* srcFloats;
+    unsigned char* destBytes;
 
 #if (VIMAGE_SSE == 1)
-    const unsigned int pixelsPerBlock = c_vImageBlockSizeBytes;
+    const unsigned int unitsPerBlock = c_vImageBlockSizeBytes;
 
-    if ((c_vImageUseSse2 == true) && (width >= pixelsPerBlock)) {
-        const unsigned int blocksPerRow = width / pixelsPerBlock + ((width % pixelsPerBlock != 0) ? 1 : 0);
+    if ((c_vImageUseSse2 == true) && (width >= unitsPerBlock)) {
+        unsigned int blocksPerRow = width / unitsPerBlock;
+        unsigned int leftoverElements = width % unitsPerBlock;
+
+        if (leftoverElements > 0) {
+            const unsigned int blockAlignedWidth = _vImageAlignUInt(width, unitsPerBlock);
+
+            // If there is enough padding in both row pitches for a whole block, round up to the next block
+            if ((destRowPitch >= blockAlignedWidth) && (srcRowPitch >= (blockAlignedWidth * sizeof(Pixel_F)))) {
+                leftoverElements = 0;
+                blocksPerRow += 1;
+            }
+        }
+
         __declspec(align(16)) const float scalingFactor = 255.0f / (maxFloat - minFloat);
         __m128i vInt8, vInt16[2], vInt32[4];
         __m128 vFloat32[4];
@@ -1395,15 +1467,22 @@ vImage_Error vImageConvert_PlanarFtoPlanar8(
         __m128 vScalingFactor = _mm_load_ps1(&scalingFactor);
 
         for (unsigned int i = 0; i < height; i++) {
-            srcReadPtr = reinterpret_cast<Pixel_F*>(srcRowStartPtr);
-            destWritePtr = destRowStartPtr;
+            srcFloats = reinterpret_cast<Pixel_F*>(srcRowStart);
+            destBytes = destRowStart;
+
+            for (unsigned int j = 0; j < leftoverElements; j++) {
+                destBytes[j] = _vImageClipConvertAndSaturateFloatToUint8(srcFloats[j], minFloat, maxFloat);
+            }
+
+            srcFloats += leftoverElements;
+            destBytes += leftoverElements;
 
             for (unsigned int j = 0; j < blocksPerRow; j++) {
                 // Load 16 pixels from float buffer
-                vFloat32[0] = _mm_loadu_ps(&srcReadPtr[0]);
-                vFloat32[1] = _mm_loadu_ps(&srcReadPtr[4]);
-                vFloat32[2] = _mm_loadu_ps(&srcReadPtr[8]);
-                vFloat32[3] = _mm_loadu_ps(&srcReadPtr[12]);
+                vFloat32[0] = _mm_loadu_ps(&srcFloats[0]);
+                vFloat32[1] = _mm_loadu_ps(&srcFloats[4]);
+                vFloat32[2] = _mm_loadu_ps(&srcFloats[8]);
+                vFloat32[3] = _mm_loadu_ps(&srcFloats[12]);
 
                 // Subtract minFloat
                 vFloat32[0] = _mm_sub_ps(vFloat32[0], vMinFloat);
@@ -1431,28 +1510,28 @@ vImage_Error vImageConvert_PlanarFtoPlanar8(
                 vInt8 = _mm_packus_epi16(vInt16[0], vInt16[1]);
 
                 // Write to uint8s to memory
-                _mm_storeu_si128(reinterpret_cast<__m128i*>(destWritePtr), vInt8);
+                _mm_storeu_si128(reinterpret_cast<__m128i*>(destBytes), vInt8);
 
                 // Increment read/write pointers
-                destWritePtr += pixelsPerBlock;
-                srcReadPtr += pixelsPerBlock;
+                destBytes += unitsPerBlock;
+                srcFloats += unitsPerBlock;
             }
 
-            srcRowStartPtr +=   srcRowPitch;
-            destRowStartPtr += destRowPitch;
+            srcRowStart += srcRowPitch;
+            destRowStart += destRowPitch;
         }
     } else {
 #endif
         for (unsigned int i = 0; i < height; i++) {
-            srcReadPtr = reinterpret_cast<Pixel_F*>(srcRowStartPtr);
-            destWritePtr = destRowStartPtr;
+            srcFloats = reinterpret_cast<Pixel_F*>(srcRowStart);
+            destBytes = destRowStart;
 
             for (unsigned int j = 0; j < width; j++) {
-                destWritePtr[j] = _vImageClipConvertAndSaturateFloatToUint8(srcReadPtr[j], minFloat, maxFloat);
+                destBytes[j] = _vImageClipConvertAndSaturateFloatToUint8(srcFloats[j], minFloat, maxFloat);
             }
 
-            srcRowStartPtr += srcRowPitch;
-            destRowStartPtr += destRowPitch;
+            srcRowStart += srcRowPitch;
+            destRowStart += destRowPitch;
         }
     }
 
@@ -1477,40 +1556,59 @@ inline vImage_Error _vImageUnpremultiplyData_8888(const vImage_Buffer* src, cons
     FAIL_FAST_IF_FALSE(srcRowPitch >= width * sizeof(Pixel_8888_s));
     FAIL_FAST_IF_FALSE(destRowPitch >= width * sizeof(Pixel_8888_s));
 
-    Pixel_8888_s* srcReadPtr = reinterpret_cast<Pixel_8888_s*>(src->data);
-    Pixel_8888_s* destWritePtr = reinterpret_cast<Pixel_8888_s*>(dest->data);
-    unsigned char* srcRowStartPtr = reinterpret_cast<unsigned char*>(src->data);
-    unsigned char* destRowStartPtr = reinterpret_cast<unsigned char*>(dest->data);
+    Pixel_8888_s* srcPixels = reinterpret_cast<Pixel_8888_s*>(src->data);
+    Pixel_8888_s* destPixels = reinterpret_cast<Pixel_8888_s*>(dest->data);
+    unsigned char* srcRowStart = reinterpret_cast<unsigned char*>(src->data);
+    unsigned char* destRowStart = reinterpret_cast<unsigned char*>(dest->data);
 
 #if (VIMAGE_SSE == 1)
     // 4 bytes per pixel
     const unsigned int pixelsPerBlock = c_vImageBlockSizeBytes >> 2;
 
     if (width >= pixelsPerBlock) {
-        const unsigned int blocksPerRow = width / pixelsPerBlock + ((width % pixelsPerBlock != 0) ? 1 : 0);
+        unsigned int blocksPerRow = width / pixelsPerBlock;
+        unsigned int leftoverElements = width % pixelsPerBlock;
+
+        if (leftoverElements > 0) {
+            const unsigned int blockAlignedWidth = _vImageAlignUInt(width, pixelsPerBlock);
+
+            unsigned int minPitch = std::min(srcRowPitch, destRowPitch);
+            // If there is enough padding in both row pitches for a whole block, round up to the next block
+            if (minPitch >= (blockAlignedWidth * sizeof(Pixel_8888))) {
+                leftoverElements = 0;
+                blocksPerRow += 1;
+            }
+        }
+
         const unsigned int alphaMaskUInt32 = 0xFF << (alphaPos << 3);
         const unsigned int colorMaskUInt32 = ~alphaMaskUInt32;
         __declspec(align(16)) const unsigned int alphaMask[4] = { alphaMaskUInt32, alphaMaskUInt32, alphaMaskUInt32, alphaMaskUInt32 };
         __declspec(align(16)) const unsigned int colorMask[4] = { colorMaskUInt32, colorMaskUInt32, colorMaskUInt32, colorMaskUInt32 };
         const __m128i vInt8AlphaMask = _mm_loadu_si128(reinterpret_cast<const __m128i*>(&alphaMask[0]));
         const __m128i vInt8ColorMask = _mm_loadu_si128(reinterpret_cast<const __m128i*>(&colorMask[0]));
-
         __declspec(align(16)) const float scalingFactor = 255.0f;
-
         __m128i vInt8, vInt16[2], vInt32[4];
         __m128i vInt8Alphas;
         __m128i vZeros = _mm_setzero_si128();
         __m128 vFloat32[4];
         __m128 vAlphas[4];
         __m128 vScalingFactor = _mm_load_ps1(&scalingFactor);
+        unsigned int offset;
 
         for (unsigned int i = 0; i < height; i++) {
-            destWritePtr = reinterpret_cast<Pixel_8888_s*>(destRowStartPtr);
-            srcReadPtr = reinterpret_cast<Pixel_8888_s*>(srcRowStartPtr);
+            destPixels = reinterpret_cast<Pixel_8888_s*>(destRowStart);
+            srcPixels = reinterpret_cast<Pixel_8888_s*>(srcRowStart);
+            offset = 0;
+
+            for (unsigned int j = 0; j < leftoverElements; j++) {
+                _vImageUnpremultiplyPixel<alphaPos>(&destPixels[j], &srcPixels[j]);
+            }
+
+            offset += leftoverElements;
 
             for (unsigned int j = 0; j < blocksPerRow; j++) {
                 // Load 16 pixels
-                vInt8 = _mm_loadu_si128(reinterpret_cast<__m128i*>(&srcReadPtr[0]));
+                vInt8 = _mm_loadu_si128(reinterpret_cast<__m128i*>(&srcPixels[offset]));
 
                 // Extract and cache alpha components into register
                 vInt8Alphas = _mm_and_si128(vInt8, vInt8AlphaMask);
@@ -1569,28 +1667,27 @@ inline vImage_Error _vImageUnpremultiplyData_8888(const vImage_Buffer* src, cons
                 vInt8 = _mm_or_si128(vInt8, vInt8Alphas);
 
                 // Write pixels to memory
-                _mm_storeu_si128(reinterpret_cast<__m128i*>(destWritePtr), vInt8);
+                _mm_storeu_si128(reinterpret_cast<__m128i*>(&destPixels[offset]), vInt8);
 
-                // Increment read/write pointers
-                destWritePtr += pixelsPerBlock;
-                srcReadPtr += pixelsPerBlock;
+                // Increment pixel offset
+                offset += pixelsPerBlock;
             }
 
-            srcRowStartPtr += srcRowPitch;
-            destRowStartPtr += destRowPitch;
+            srcRowStart += srcRowPitch;
+            destRowStart += destRowPitch;
         }
     } else {
 #endif
         for (unsigned int i = 0; i < height; i++) {
-            srcReadPtr = reinterpret_cast<Pixel_8888_s*>(srcRowStartPtr);
-            destWritePtr = reinterpret_cast<Pixel_8888_s*>(destRowStartPtr);
+            srcPixels = reinterpret_cast<Pixel_8888_s*>(srcRowStart);
+            destPixels = reinterpret_cast<Pixel_8888_s*>(destRowStart);
 
             for (unsigned int j = 0; j < width; j++) {
-                _vImageUnpremultiplyPixel<alphaPos>(&destWritePtr[j], &srcReadPtr[j]);
+                _vImageUnpremultiplyPixel<alphaPos>(&destPixels[j], &srcPixels[j]);
             }
 
-            srcRowStartPtr += srcRowPitch;
-            destRowStartPtr += destRowPitch;
+            srcRowStart += srcRowPitch;
+            destRowStart += destRowPitch;
         }
     }
 
