@@ -35,6 +35,7 @@
 #import <UIKit/UIGestureRecognizer.h>
 #import <UIKit/UIPanGestureRecognizer.h>
 #import <UIKit/UIScrollView.h>
+#import <UWP/WindowsUIXaml.h>
 #import <UWP/WindowsUIXamlControls.h>
 #import <UWP/WindowsUIXamlShapes.h>
 
@@ -54,6 +55,7 @@ static const bool DEBUG_ALL = false;
 static const bool DEBUG_VERBOSE = DEBUG_ALL || false;
 static const bool DEBUG_DELEGATE = DEBUG_ALL || false;
 static const bool DEBUG_INSETS = DEBUG_ALL || false;
+static const bool DEBUG_ZOOM = DEBUG_ALL || false;
 
 /** @Status Stub */
 const float UIScrollViewDecelerationRateNormal = StubConstant();
@@ -88,12 +90,10 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     BOOL _canCancelContentTouches;
     BOOL _delaysContentTouches;
 
-    // TODO: Zoom related properties and Pink gesture will be updated to
-    // work with directManipulation Pinch Gesture in upcoming changes
     idretain _zoomView;
-    float _zoomScale, _maximumZoomScale, _minimumZoomScale;
-    idretain _pinchGesture;
-    BOOL _isZooming, _isZoomingToRect;
+    float _zoomScale;
+    BOOL _isZooming;
+    BOOL _isZoomingToRect;
 
     // xaml visuals to back UIScrollView - includes Scrollviewer, ContentGrid, Insets, and ContentCanvas
     StrongId<WXCScrollViewer> _scrollViewer;
@@ -139,21 +139,15 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     WXCScrollBarVisibility _previousVerticalScrollBarVisibility;
 }
 
-- (void)_initUIScrollView {
-    // TODO: gesture/zoom related code will be changed in upcoming change
-    [self setMultipleTouchEnabled:TRUE];
-    self->_zoomScale = self->_maximumZoomScale = self->_minimumZoomScale = 1.0f;
-    self->_pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(_didPinch:)];
-    [self->_pinchGesture setDelegate:self];
-    [self addGestureRecognizer:self->_pinchGesture];
-
-    // do necessary init for backing xaml elements
-    [self _initScrollViewer];
-}
-
-- (void)_initScrollViewer {
+- (void)_initScrollViewer:(WXFrameworkElement*)xamlElement {
     // creating backing scrollviewer
-    _scrollViewer = [WXCScrollViewer make];
+    if (!xamlElement) {
+        _scrollViewer = [WXCScrollViewer make];
+    } else {
+        _scrollViewer = rt_dynamic_cast<WXCScrollViewer>(xamlElement);
+    }
+
+    [self setMultipleTouchEnabled:TRUE];
 
     // create insets, assign names to make it easy to debug in visual tree
     _topInset = [WUXSRectangle make];
@@ -245,6 +239,12 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
     // Set up our defaults:
     [self _setScrollEnabled:YES];
+
+    // init zoom scale
+    self->_zoomScale = 1.0f;
+    _scrollViewer.maxZoomFactor = 1.0f;
+    _scrollViewer.minZoomFactor = 1.0f;
+    _scrollViewer.zoomMode = WXCZoomModeDisabled;
 }
 
 - (BOOL)_isAnimating {
@@ -260,27 +260,33 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     _viewChangingEventToken = [_scrollViewer addViewChangingEvent:^void(RTObject*, WXCScrollViewerViewChangingEventArgs* arg) {
         __strong UIScrollView* strongSelf = weakself;
         if (strongSelf) {
+            if (DEBUG_VERBOSE) {
+                TraceVerbose(
+                    TAG,
+                    L"ViewChanging: currentOffset=[%f, %f], nextOffset=[%f, %f], finalOffset=[%f, %f], isAnimating=%d, "
+                    L"isDragging=%d, isInertial=%d, isPagingEnabled=%d, firedDelegatesAfterFingerLifted=%d, "
+                    L"manipulationStarted=%d, currentRecordedZoomFactor=%f, currentZoomFactor=%f, nextZoomFactor=%f, finalZoomFactor=%f",
+                    strongSelf->_scrollViewer.horizontalOffset,
+                    strongSelf->_scrollViewer.verticalOffset,
+                    arg.nextView.horizontalOffset,
+                    arg.nextView.verticalOffset,
+                    arg.finalView.horizontalOffset,
+                    arg.finalView.verticalOffset,
+                    strongSelf->_isAnimating,
+                    strongSelf->_isDragging,
+                    arg.isInertial,
+                    strongSelf->_pagingEnabled,
+                    strongSelf->_firedDelegatesAfterFingerLifted,
+                    strongSelf->_manipulationStarted,
+                    strongSelf->_zoomScale,
+                    strongSelf->_scrollViewer.zoomFactor,
+                    arg.nextView.zoomFactor,
+                    arg.finalView.zoomFactor);
+            }
+
+            // check if content offset changed, if so, we are scrolling.
             if ((strongSelf->_scrollViewer.horizontalOffset != arg.nextView.horizontalOffset) ||
                 (strongSelf->_scrollViewer.verticalOffset != arg.finalView.verticalOffset)) {
-                if (DEBUG_VERBOSE) {
-                    TraceVerbose(TAG,
-                                 L"ViewChanging: currentOffset=[%f, %f], nextOffset=[%f, %f], finalOffset=[%f, %f], isAnimating=%d, "
-                                 L"isDragging=%d, isInertial=%d, isPagingEnabled=%d, firedDelegatesAfterFingerLifted=%d, "
-                                 L"manipulationStarted=%d",
-                                 strongSelf->_scrollViewer.horizontalOffset,
-                                 strongSelf->_scrollViewer.verticalOffset,
-                                 arg.nextView.horizontalOffset,
-                                 arg.nextView.verticalOffset,
-                                 arg.finalView.horizontalOffset,
-                                 arg.finalView.verticalOffset,
-                                 strongSelf->_isAnimating,
-                                 strongSelf->_isDragging,
-                                 arg.isInertial,
-                                 strongSelf->_pagingEnabled,
-                                 strongSelf->_firedDelegatesAfterFingerLifted,
-                                 strongSelf->_manipulationStarted);
-                }
-
                 // view is about to change its position (or scrolling)
                 if (strongSelf->_manipulationStarted) {
                     if (!arg.isInertial) {
@@ -370,6 +376,20 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
                         }
                     }
                 }
+            } else {
+                // zooming is happening
+                if (strongSelf->_manipulationStarted) {
+                    // user is casuing zooming using gesture
+                    if (!strongSelf->_isZooming) {
+                        strongSelf->_isZooming = YES;
+
+                        // invoking scrollViewWillBeginZooming delegate, note: this delegate is only called with zoom gesture when zooming
+                        // happens
+                        if ([strongSelf.delegate respondsToSelector:@selector(scrollViewWillBeginZooming:withView:)]) {
+                            [strongSelf.delegate scrollViewWillBeginZooming:strongSelf withView:strongSelf->_zoomView];
+                        }
+                    }
+                }
             }
         }
     }];
@@ -388,12 +408,13 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
             if (DEBUG_VERBOSE) {
                 TraceVerbose(TAG,
-                             L"ViewChanged: interm=%d, currentOffset=[%f, %f], nextOffset=[%f, %f], contentSize=[%f, %f]",
+                             L"ViewChanged: interm=%d, currentOffset=[%f, %f], nextOffset=[%f, %f], zoomFactor=%f, contentSize=[%f, %f]",
                              arg.isIntermediate,
                              strongSelf->_contentOffset.x,
                              strongSelf->_contentOffset.y,
                              offset.x,
                              offset.y,
+                             strongSelf->_scrollViewer.zoomFactor,
                              strongSelf->_contentSize.width,
                              strongSelf->_contentSize.height);
             }
@@ -401,6 +422,16 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
             if (arg.isIntermediate) {
                 // intermedia view changed event
                 changeContentOffset(strongSelf, offset, FALSE);
+
+                // check if zoom changed as well
+                if (strongSelf->_scrollViewer.zoomFactor != strongSelf->_zoomScale) {
+                    strongSelf->_zoomScale = strongSelf->_scrollViewer.zoomFactor;
+
+                    // when zoom scale changed, fire this delegate
+                    if ([strongSelf.delegate respondsToSelector:@selector(scrollViewDidZoom:)]) {
+                        [strongSelf.delegate scrollViewDidZoom:strongSelf];
+                    }
+                }
             } else {
                 // final view changed event
                 strongSelf->_isAnimating = NO;
@@ -439,6 +470,20 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
                 }
 
                 changeContentOffset(strongSelf, offset, FALSE);
+                if (strongSelf->_scrollViewer.zoomFactor != strongSelf->_zoomScale) {
+                    strongSelf->_zoomScale = strongSelf->_scrollViewer.zoomFactor;
+                }
+
+                if (strongSelf->_isZooming) {
+                    // zooming is ended
+                    strongSelf->_isZooming = NO;
+                    if ([strongSelf.delegate respondsToSelector:@selector(scrollViewDidEndZooming:withView:atScale:)]) {
+                        [strongSelf.delegate scrollViewDidEndZooming:strongSelf
+                                                            withView:strongSelf->_zoomView
+                                                             atScale:strongSelf->_zoomScale];
+                    }
+                }
+
                 strongSelf->_scrollingTriggeredByScrollviewer = NO;
                 strongSelf->_isChangingContentOffset = NO;
                 if (DEBUG_VERBOSE) {
@@ -482,22 +527,24 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     __weak UIScrollView* weakSelf = self;
     _loadEventToken = [self->_scrollViewer addLoadedEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
         __strong UIScrollView* strongSelf = weakSelf;
-        if (strongSelf && _contentOffset != CGPointZero) {
+        if (strongSelf && (strongSelf->_contentOffset != CGPointZero || strongSelf->_zoomScale != strongSelf->_scrollViewer.zoomFactor)) {
             strongSelf->_loaded = YES;
 
             const double paddedOffsetX = (double)(strongSelf->_contentOffset.x + strongSelf->_contentInset.left);
             const double paddedOffsetY = (double)(strongSelf->_contentOffset.y + strongSelf->_contentInset.top);
-            BOOL changeViewSucceed = [strongSelf->_scrollViewer changeViewWithOptionalAnimation:[NSNumber numberWithDouble:paddedOffsetX]
-                                                             verticalOffset:[NSNumber numberWithFloat:paddedOffsetY]
-                                                                 zoomFactor:[NSNumber numberWithDouble:1.0]
-                                                           disableAnimation:YES];
+            BOOL changeViewSucceed =
+                [strongSelf->_scrollViewer changeViewWithOptionalAnimation:[NSNumber numberWithDouble:paddedOffsetX]
+                                                            verticalOffset:[NSNumber numberWithDouble:paddedOffsetY]
+                                                                zoomFactor:[NSNumber numberWithFloat:strongSelf->_zoomScale]
+                                                          disableAnimation:YES];
             if (!changeViewSucceed) {
                 TraceWarning(TAG,
                              L"changeViewWithOptionalAnimation failed, self->_scrollViewer.Visibility = %d",
                              strongSelf->_scrollViewer.visibility);
-                
+
             } else {
                 [strongSelf->_scrollViewer updateLayout];
+                [strongSelf setNeedsLayout];
             }
         }
     }];
@@ -508,7 +555,11 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
  @Notes May not be fully implemented
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    [self _initUIScrollView];
+    return [self _initWithCoder:coder xamlElement:nil];
+}
+
+- (instancetype)_initWithCoder:(NSCoder*)coder xamlElement:(WXFrameworkElement*)xamlElement {
+    [self _initScrollViewer:xamlElement];
 
     if (self = [super initWithCoder:coder]) {
         if ([coder containsValueForKey:@"UIDelaysContentTouches"]) {
@@ -557,11 +608,16 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
  @Status Interoperable
 */
 - (instancetype)initWithFrame:(CGRect)frame {
+    return [self _initWithFrame:frame xamlElement:nil];
+}
+
+
+- (instancetype)_initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
     if (self = [super initWithFrame:frame]) {
         [self setClipsToBounds:1];
         _delaysContentTouches = TRUE;
 
-        [self _initScrollViewer];
+        [self _initScrollViewer:xamlElement];
     }
 
     return self;
@@ -773,7 +829,6 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
 
     const double paddedOffsetX = (double)(offset.x + self->_contentInset.left);
     const double paddedOffsetY = (double)(offset.y + self->_contentInset.top);
-    const float zoomFactor = 1.0;
     const double actualOffsetX = self->_scrollViewer.horizontalOffset;
     const double actualOffsetY = self->_scrollViewer.verticalOffset;
 
@@ -809,11 +864,11 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
                     TraceVerbose(TAG,
                                  L"_isChangingContentOffset set to %d changeContentOffset (without Animation)",
                                  self->_isChangingContentOffset);
-                    
+
                     BOOL changeViewSucceed = [self->_scrollViewer changeViewWithOptionalAnimation:[NSNumber numberWithDouble:paddedOffsetX]
-                                                               verticalOffset:[NSNumber numberWithFloat:paddedOffsetY]
-                                                                   zoomFactor:[NSNumber numberWithDouble:zoomFactor]
-                                                             disableAnimation:!animated];
+                                                                                   verticalOffset:[NSNumber numberWithDouble:paddedOffsetY]
+                                                                                       zoomFactor:nil
+                                                                                 disableAnimation:!animated];
                     if (!changeViewSucceed) {
                         TraceWarning(TAG,
                                      L"changeViewWithOptionalAnimation failed, self->_scrollViewer.Visibility = %d, loaded=%d",
@@ -852,9 +907,9 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
                          L"_isChangingContentOffset set to %d in changeContentOffset (with Animation) ",
                          self->_isChangingContentOffset);
             BOOL changeViewSucceed = [self->_scrollViewer changeViewWithOptionalAnimation:[NSNumber numberWithDouble:paddedOffsetX]
-                                                       verticalOffset:[NSNumber numberWithFloat:paddedOffsetY]
-                                                           zoomFactor:[NSNumber numberWithDouble:zoomFactor]
-                                                     disableAnimation:!animated];
+                                                                           verticalOffset:[NSNumber numberWithDouble:paddedOffsetY]
+                                                                               zoomFactor:nil
+                                                                         disableAnimation:!animated];
             if (!changeViewSucceed) {
                 TraceWarning(TAG,
                              L"changeViewWithOptionalAnimation failed, self->_scrollViewer.Visibility = %d, loaded=%d",
@@ -1026,9 +1081,16 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
  @Status Interoperable
 */
 - (void)setMaximumZoomScale:(float)scale {
-    _maximumZoomScale = scale;
+    if (_scrollViewer.minZoomFactor > scale) {
+        _scrollViewer.minZoomFactor = scale;
+    }
+
+    _scrollViewer.maxZoomFactor = scale;
+    _scrollViewer.zoomMode = (_scrollViewer.minZoomFactor != _scrollViewer.maxZoomFactor) ? WXCZoomModeEnabled : WXCZoomModeDisabled;
+
     float newScale = _zoomScale;
-    clamp(newScale, _minimumZoomScale, _maximumZoomScale);
+    clamp(newScale, _scrollViewer.minZoomFactor, _scrollViewer.maxZoomFactor);
+
     [self setZoomScale:newScale];
 }
 
@@ -1036,19 +1098,22 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
  @Status Interoperable
 */
 - (float)maximumZoomScale {
-    return _maximumZoomScale;
+    return _scrollViewer.maxZoomFactor;
 }
 
 /**
  @Status Interoperable
 */
 - (void)setMinimumZoomScale:(float)scale {
-    _minimumZoomScale = scale;
-    if (_minimumZoomScale > _maximumZoomScale) {
-        _maximumZoomScale = _minimumZoomScale;
+    if (_scrollViewer.maxZoomFactor < scale) {
+        _scrollViewer.maxZoomFactor = scale;
     }
+
+    _scrollViewer.minZoomFactor = scale;
+    _scrollViewer.zoomMode = (_scrollViewer.minZoomFactor != _scrollViewer.maxZoomFactor) ? WXCZoomModeEnabled : WXCZoomModeDisabled;
+
     float newScale = _zoomScale;
-    clamp(newScale, _minimumZoomScale, _maximumZoomScale);
+    clamp(newScale, _scrollViewer.minZoomFactor, _scrollViewer.maxZoomFactor);
     [self setZoomScale:newScale];
 }
 
@@ -1056,18 +1121,15 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
  @Status Interoperable
 */
 - (float)minimumZoomScale {
-    return _minimumZoomScale;
+    return _scrollViewer.minZoomFactor;
 }
 
-- (void)_zoomStopped {
-    if ([self.delegate respondsToSelector:@selector(scrollViewDidEndZooming:withView:atScale:)]) {
-        [self.delegate scrollViewDidEndZooming:self withView:_zoomView atScale:_zoomScale];
+static void zoomToPoint(UIScrollView* self, NSNumber* x, NSNumber* y, NSNumber* scale, BOOL animated) {
+    if (DEBUG_ZOOM) {
+        TraceVerbose(TAG, L"zoomToPoint [%f, %f], zoomScale=%f", x, y, scale);
     }
-}
 
-static void setZoomTo(UIScrollView* self, float scale, BOOL animated) {
-    float oldZoom = self->_zoomScale;
-    self->_zoomScale = scale;
+    self->_zoomScale = scale.floatValue;
 
     UIView* view = self;
     if ([self.delegate respondsToSelector:@selector(viewForZoomingInScrollView:)]) {
@@ -1075,69 +1137,15 @@ static void setZoomTo(UIScrollView* self, float scale, BOOL animated) {
         self->_zoomView = view;
     }
 
-    if (animated) {
-        if ([self.delegate respondsToSelector:@selector(scrollViewWillBeginZooming:withView:)]) {
-            [self.delegate scrollViewWillBeginZooming:self withView:self->_zoomView];
-        }
-
-        [UIView beginAnimations:@"ZoomAnimation" context:nil];
-        [UIView setAnimationDelegate:self];
-        [UIView setAnimationDidStopSelector:@selector(_zoomStopped)];
-        [UIView setAnimationDuration:0.3];
+    BOOL changeViewSucceed =
+        [self->_scrollViewer changeViewWithOptionalAnimation:x verticalOffset:y zoomFactor:scale disableAnimation:!animated];
+    if (!changeViewSucceed) {
+        TraceWarning(TAG, L"changeViewWithOptionalAnimation failed, self->_scrollViewer.Visibility=%d", self->_scrollViewer.visibility);
+    } else if (!animated) {
+        // need to updateLayout if no animation is involved to reflect the change immeidately
+        [self->_scrollViewer updateLayout];
     }
 
-    CGAffineTransform trans;
-    trans = CGAffineTransformMakeScale(self->_zoomScale, self->_zoomScale);
-    if (self->_zoomView != nil) {
-        [view setTransform:trans];
-
-        CGRect frame;
-        frame = [view frame];
-
-        [self setContentSize:CGSizeMake(frame.size.width, frame.size.height)];
-        clipPoint(self, self->_contentOffset, false);
-        [self _refreshOrigin];
-        CGPoint oldPos, newPos;
-        oldPos = [[view layer] position];
-        newPos.x = frame.size.width / 2.0f;
-        newPos.y = frame.size.height / 2.0f;
-
-        [self setNeedsLayout];
-        [self layoutIfNeeded];
-
-        // This breaks Salmaan's sample app and doesn't really make a lot of sense but I want to keep it
-        // in here because it's apparently useful for other apps: document better.
-        /*
-        CGPoint curPos;
-        curPos = [[view layer] position];
-        if ( curPos.x == oldPos.x && curPos.y == oldPos.y ) {
-        [[view layer] setPosition:newPos];
-        }
-        */
-    } else {
-        CGRect bounds;
-        bounds = [view bounds];
-
-        [view setTransform:trans];
-
-        bounds.size.width = bounds.size.width * oldZoom / self->_zoomScale;
-        bounds.size.height = bounds.size.height * oldZoom / self->_zoomScale;
-        [view setBounds:bounds];
-
-        clipPoint(self, self->_contentOffset, false);
-        [self _refreshOrigin];
-
-        [self setNeedsLayout];
-        [self layoutIfNeeded];
-    }
-
-    if ([self.delegate respondsToSelector:@selector(scrollViewDidZoom:)]) {
-        [self.delegate scrollViewDidZoom:self];
-    }
-
-    if (animated) {
-        [UIView commitAnimations];
-    }
     [self setNeedsLayout];
 }
 
@@ -1145,13 +1153,13 @@ static void setZoomTo(UIScrollView* self, float scale, BOOL animated) {
  @Status Interoperable
 */
 - (void)setZoomScale:(float)scale animated:(BOOL)animated {
-    clamp((float&)scale, _minimumZoomScale, _maximumZoomScale);
+    clamp((float&)scale, _scrollViewer.minZoomFactor, _scrollViewer.maxZoomFactor);
     if (scale == _zoomScale) {
         return;
     }
 
     _isZoomingToRect = TRUE;
-    setZoomTo(self, scale, animated);
+    zoomToPoint(self, nil, nil, [NSNumber numberWithFloat:scale], animated);
     _isZoomingToRect = FALSE;
 }
 
@@ -1174,19 +1182,35 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
  @Status Interoperable
 */
 - (void)zoomToRect:(CGRect)rect animated:(BOOL)animated {
-    CGRect bounds;
-    bounds = [self bounds];
+    _isZoomingToRect = TRUE;
+
+    CGRect bounds = [self bounds];
+
+    if (DEBUG_ZOOM) {
+        TraceVerbose(TAG,
+                     L"bounds=[[%f,%f], [%f,%f]], contentOffset=[%f, %f], contentSize=[%f, %f]",
+                     bounds.origin.x,
+                     bounds.origin.y,
+                     bounds.size.width,
+                     bounds.size.height,
+                     _contentOffset.x,
+                     _contentOffset.y,
+                     _contentSize.width,
+                     _contentSize.height);
+    }
 
     float scaleX = bounds.size.width / rect.size.width;
     float scaleY = bounds.size.height / rect.size.height;
 
     float newScale = min(scaleX, scaleY);
-    clamp(newScale, _minimumZoomScale, _maximumZoomScale);
+    clamp(newScale, _scrollViewer.minZoomFactor, _scrollViewer.maxZoomFactor);
 
-    setContentOffsetKVOed(self, rect.origin * newScale);
-    _isZoomingToRect = TRUE;
-    [self setZoomScale:newScale animated:animated];
-    clipPoint(self, _contentOffset, false);
+    zoomToPoint(self,
+                [NSNumber numberWithDouble:rect.origin.x * newScale],
+                [NSNumber numberWithDouble:rect.origin.y * newScale],
+                [NSNumber numberWithFloat:newScale],
+                animated);
+
     _isZoomingToRect = FALSE;
 }
 
@@ -1283,10 +1307,19 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setDirectionalLockEnabled:(BOOL)enabled {
-    UNIMPLEMENTED();
+    _scrollViewer.isHorizontalRailEnabled = enabled;
+    _scrollViewer.isVerticalRailEnabled = enabled;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isDirectionalLockEnabled {
+    assert(_scrollViewer.isHorizontalRailEnabled == _scrollViewer.isVerticalRailEnabled);
+    return _scrollViewer.isHorizontalRailEnabled;
 }
 
 /**
@@ -1309,7 +1342,6 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
 */
 - (void)dealloc {
     _zoomView = nil;
-    _pinchGesture = nil;
 
     [_scrollViewer removeDirectManipulationStartedEvent:_directManipulationStartedEventToken];
     [_scrollViewer removeDirectManipulationCompletedEvent:_directManipulationCompletedEventToken];
@@ -1362,65 +1394,6 @@ static float findMinY(UIScrollView* o) {
     }
 
     _isTracking = NO;
-}
-
-- (void)_didPinch:(UIPinchGestureRecognizer*)gesture {
-    if (_minimumZoomScale == _maximumZoomScale) {
-        return;
-    }
-
-    UIGestureRecognizerState state = [gesture state];
-    UIView* view = self;
-
-    if ([self.delegate respondsToSelector:@selector(viewForZoomingInScrollView:)]) {
-        view = [self.delegate viewForZoomingInScrollView:self];
-    }
-    if (state == UIGestureRecognizerStateBegan) {
-        //  Cancel any other pans
-        [_pinchGesture setScale:_zoomScale];
-        _isZooming = true;
-        [self setNeedsLayout];
-    } else if (state == UIGestureRecognizerStateEnded || state == UIGestureRecognizerStatePossible) {
-        BOOL fireEvent = _isZooming;
-        _isZooming = false;
-
-        if (fireEvent) {
-            if ([self.delegate respondsToSelector:@selector(scrollViewDidEndZooming:withView:atScale:)]) {
-                [self.delegate scrollViewDidEndZooming:self withView:view atScale:_zoomScale];
-            }
-        }
-    } else if (state == UIGestureRecognizerStateChanged) {
-        CGFloat scale = [static_cast<UIPinchGestureRecognizer*>(gesture) scale];
-        clamp(scale, _minimumZoomScale, _maximumZoomScale);
-        if (scale == _zoomScale) {
-            return;
-        }
-
-        CGPoint start = _contentOffset, pinchPoint;
-        pinchPoint = [gesture locationInView:self];
-        CGPoint diff = pinchPoint - _contentOffset;
-
-        CGRect viewBounds;
-        viewBounds = [self bounds];
-
-        CGRect bounds;
-        bounds = [self bounds];
-
-        double relativeScale = ((double)scale / (double)_zoomScale);
-        //_contentOffset = start * relativeScale + diff * (1 - 1 / relativeScale);
-        _contentOffset = ((view == self) ? start : (start * scale / _zoomScale)) + diff * ((float)(1.0 - 1.0 / relativeScale));
-        clamp((float&)_contentOffset.x,
-              (float)-_contentInset.left,
-              max((float)(_contentSize.width - bounds.size.width + _contentInset.right), 0.f));
-        clamp((float&)_contentOffset.y,
-              (float)-_contentInset.top,
-              max((float)(_contentSize.height - bounds.size.height + _contentInset.bottom), 0.f));
-
-        if ([self.delegate respondsToSelector:@selector(scrollViewWillBeginZooming:withView:)]) {
-            [self.delegate scrollViewWillBeginZooming:self withView:view];
-        }
-        setZoomTo(self, scale, FALSE);
-    }
 }
 
 /**

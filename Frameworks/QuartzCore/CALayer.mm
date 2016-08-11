@@ -30,6 +30,7 @@
 #include "UIKit/UIColor.h"
 #include "UIColorInternal.h"
 #include "UIKit/NSValue+UIKitAdditions.h"
+#import <UWP/WindowsUIXaml.h>
 
 #include "QuartzCore/CALayer.h"
 #include "QuartzCore/CATransaction.h"
@@ -44,6 +45,7 @@
 
 #include "LoggingNative.h"
 #include "CALayerInternal.h"
+
 
 static const wchar_t* TAG = L"CALayer";
 
@@ -2467,53 +2469,68 @@ void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
     }
 }
 
+// TODO: GitHub issue 508 and 509
+// We need a type-safe way to do this with projections.  This is copied verbatim from the projections
+// code and works perfectly for this limited usage, but we don't do any type validation below.
+// all _createRtProxy instance needs to go in a shared DLL in the future
+inline id _createRtProxy(Class cls, IInspectable* iface) {
+    // Oddly, WinRT can hand us back NULL objects from successful function calls. Plumb these through as nil.
+    if (!iface) {
+        return nil;
+    }
+
+    RTObject* ret = [NSAllocateObject(cls, 0, 0) init];
+    [ret setComObj:iface];
+    return [ret autorelease];
+}
+
+inline WXUIElement* _getBackingXamlElementForCALayer(CALayer* layer) {
+    Microsoft::WRL::ComPtr<IInspectable> fromNode(GetCACompositor()->GetXamlLayoutElement([layer _presentationNode]));
+    return _createRtProxy([WXUIElement class], fromNode.Get());
+}
+
 /**
  @Status Interoperable
 */
 + (CGPoint)convertPoint:(CGPoint)point fromLayer:(CALayer*)fromLayer toLayer:(CALayer*)toLayer {
-    if (fromLayer) {
-        //  Convert the point to center-based position
-        point.x -= fromLayer->priv->bounds.size.width * fromLayer->priv->anchorPoint.x;
-        point.y -= fromLayer->priv->bounds.size.height * fromLayer->priv->anchorPoint.y;
 
-        //  Convert to world-view
-        CGAffineTransform fromTransform;
-        GetLayerTransform(fromLayer, &fromTransform);
-        point = CGPointApplyAffineTransform(point, fromTransform);
+    CGPoint ret = {point.x, point.y};
+
+    if (fromLayer && toLayer) {
+        // get the backing xaml UIElement for fromLayer
+        WXUIElement* fromLayerElement = _getBackingXamlElementForCALayer(fromLayer);
+
+        // get the backing xaml UIElement for toLayer
+        WXUIElement* toLayerElement = _getBackingXamlElementForCALayer(toLayer);
+
+        // set up transform from xaml elment in fromLayer to xaml element in toLayer
+        WUXMGeneralTransform* transform = [fromLayerElement transformToVisual:toLayerElement];
+
+        // transform the points in fromLayer to point in toLayer
+        WFPoint* pointInFromLayer = [WXPointHelper fromCoordinates:point.x y:point.y];
+        WFPoint* pointInToLayer = [transform transformPoint:pointInFromLayer];
+        ret = { pointInToLayer.x, pointInToLayer.y };
     }
-
-    if (toLayer) {
-        CGAffineTransform toTransform;
-        GetLayerTransform(toLayer, &toTransform);
-        toTransform = CGAffineTransformInvert(toTransform);
-        point = CGPointApplyAffineTransform(point, toTransform);
-
-        //  Convert the point from center-based position
-        point.x += toLayer->priv->bounds.size.width * toLayer->priv->anchorPoint.x;
-        point.y += toLayer->priv->bounds.size.height * toLayer->priv->anchorPoint.y;
-    }
-
-    return point;
+    
+    return ret;
 }
 
 + (CGRect)convertRect:(CGRect)pos fromLayer:(CALayer*)fromLayer toLayer:(CALayer*)toLayer {
-    CGRect ret;
+    // get the backing xaml UIElement for fromLayer
+    WXUIElement* fromLayerElement = _getBackingXamlElementForCALayer(fromLayer);
 
-    CGPoint pt1 = pos.origin;
-    CGPoint pt2;
+    // get the backing xaml UIElement for toLayer
+    WXUIElement* toLayerElement = _getBackingXamlElementForCALayer(toLayer);
 
-    pt2 = pos.origin;
-    pt2.x += pos.size.width;
-    pt2.y += pos.size.height;
+    // set up transform from xaml elment in fromLayer to xaml element in toLayer
+    WUXMGeneralTransform* transform = [fromLayerElement transformToVisual:toLayerElement];
 
-    pt1 = [self convertPoint:pt1 fromLayer:fromLayer toLayer:toLayer];
-    pt2 = [self convertPoint:pt2 fromLayer:fromLayer toLayer:toLayer];
+    // transform the rect in fromLayer to rect in toLayer
+    WFRect* rectInFromLayer =
+        [WXRectHelper fromCoordinatesAndDimensions:pos.origin.x y:pos.origin.y width:pos.size.width height:pos.size.height];
+    WFRect* rectInToLayer = [transform transformBounds:rectInFromLayer];
 
-    ret.origin.x = pt1.x < pt2.x ? pt1.x : pt2.x;
-    ret.origin.y = pt1.y < pt2.y ? pt1.y : pt2.y;
-    ret.size.width = fabsf(pt1.x - pt2.x);
-    ret.size.height = fabsf(pt1.y - pt2.y);
-
+    CGRect ret = { rectInToLayer.x, rectInToLayer.y, rectInToLayer.width, rectInToLayer.height };
     return ret;
 }
 
