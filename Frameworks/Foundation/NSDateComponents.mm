@@ -18,7 +18,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Foundation/NSDateComponents.h"
 #include "NSDateComponentsInternal.h"
 
-@implementation NSDateComponents
+@implementation NSDateComponents {
+    NSInteger _week;
+}
 
 /**
  @Status Interoperable
@@ -265,6 +267,14 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     [coder encodeInteger:_weekOfMonth forKey:@"NS.weekofmonth"];
     [coder encodeInteger:_weekOfYear forKey:@"NS.weekofyear"];
     [coder encodeInteger:_yearForWeekOfYear forKey:@"NS.yearforweekofyear"];
+}
+
+- (void)setWeek:(NSInteger)v {
+    _week = v;
+}
+
+- (NSInteger)week {
+    return _week;
 }
 
 @end
