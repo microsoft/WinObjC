@@ -483,6 +483,10 @@
        and 2-stage loading.
   -->
   <Target Name="ComputeWholeArchiveLinkInputs" DependsOnTargets="ComputeStarboardReferencesRequiringObjectiveC">
+    <PropertyGroup Condition="'@(_StarboardReferencesRequiringObjectiveC)'!='' and '$(StarboardLinkWholeArchive)'=='true'">
+      <!-- The linker shipped with VS 2015 Updates 2 and 3 will not properly consume a /WHOLEARCHIVE during incremental linking. -->
+      <LinkIncremental>false</LinkIncremental>
+    </PropertyGroup>
     <ItemGroup Condition="'@(_StarboardReferencesRequiringObjectiveC)'!='' and '$(StarboardLinkWholeArchive)'=='true'">
       <Link>
         <AdditionalOptions>%(Link.AdditionalOptions) "/WHOLEARCHIVE:@(_StarboardReferencesRequiringObjectiveC, '" /WHOLEARCHIVE:"')"</AdditionalOptions>
