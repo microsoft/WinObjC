@@ -65,12 +65,14 @@ int ApplicationMainStart(const char* principalName,
         WAAToastNotificationActivatedEventArgs* toastArgument = [WAAToastNotificationActivatedEventArgs createWith:activationArg];
 
         // Convert to NSDictionary with NSStrings
-        NSMutableDictionary* userInput = [[NSMutableDictionary new] autorelease];
         ComPtr<IInspectable> comPtr = activationArg;
         ComPtr<ABI::Windows::ApplicationModel::Activation::IToastNotificationActivatedEventArgs> args;
         THROW_NS_IF_FAILED(comPtr.As(&args));
+
         ComPtr<ABI::Windows::Foundation::Collections::IPropertySet> map;
         THROW_NS_IF_FAILED(args->get_UserInput(&map));
+
+        NSMutableDictionary* userInput = nil;
         THROW_NS_IF_FAILED(Collections::WRLToNSCollection(map, &userInput));
 
         NSDictionary* toastAction = @{

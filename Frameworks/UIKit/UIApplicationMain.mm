@@ -333,10 +333,11 @@ extern "C" void UIApplicationMainHandleToastActionEvent(HSTRING toastArgument, I
     NSString* argument = Strings::WideToNSString(toastArgument);
 
     // Convert to NSDictionary with NSStrings
-    NSMutableDictionary* userInput = [[NSMutableDictionary new] autorelease];
     ComPtr<IInspectable> comPtr = toastUserInput;
     ComPtr<ABI::Windows::Foundation::Collections::IPropertySet> map;
     THROW_NS_IF_FAILED(comPtr.As(&map));
+
+    NSMutableDictionary* userInput = nil;
     THROW_NS_IF_FAILED(Collections::WRLToNSCollection(map, &userInput));
 
     NSDictionary* toastAction =

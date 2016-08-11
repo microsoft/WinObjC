@@ -88,24 +88,27 @@ HRESULT WRLToNSCollection<ABI::Windows::Foundation::Collections::IPropertySet>(A
                                                                                NSDictionary* __autoreleasing* pDictionary) {
     using NSType = Private::CollectionType<ABI::Windows::Foundation::Collections::IPropertySet>::NSMutableEquivalentType;
     NSType* collection = [[NSType alloc] init];
-    HRESULT hr = WRLHelpers::ForEach(
+    RETURN_IF_FAILED(WRLHelpers::ForEach(
         map,
         [&collection](const Microsoft::WRL::ComPtr<ABI::Windows::Foundation::Collections::IKeyValuePair<HSTRING, IInspectable*>>& pair,
                       boolean* stop) {
-            Microsoft::WRL::Wrappers::HString key, value;
-            Microsoft::WRL::ComPtr<IInspectable> inspectableValue;
-            Microsoft::WRL::ComPtr<ABI::Windows::Foundation::IPropertyValue> propertyValue;
+            Microsoft::WRL::Wrappers::HString key;
             RETURN_IF_FAILED(pair->get_Key(key.GetAddressOf()));
+
+            Microsoft::WRL::ComPtr<IInspectable> inspectableValue;
             RETURN_IF_FAILED(pair->get_Value(inspectableValue.GetAddressOf()));
+
+            Microsoft::WRL::ComPtr<ABI::Windows::Foundation::IPropertyValue> propertyValue;
             RETURN_IF_FAILED(inspectableValue.As(&propertyValue));
+
+            Microsoft::WRL::Wrappers::HString value;
             RETURN_IF_FAILED(propertyValue->GetString(value.GetAddressOf()));
 
             [collection setObject:Strings::WideToNSString(value.Get()) forKey:Strings::WideToNSString(key.Get())];
             return S_OK;
-        });
-    RETURN_IF_FAILED(hr);
+        }));
 
-    *pDictionary = collection;
+    *pDictionary = [collection autorelease];
     return S_OK;
 }
 
