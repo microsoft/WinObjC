@@ -29,17 +29,9 @@ int main(int argc, char** argv) {
     if (FAILED(initialize)) {
         return -1;
     }
-
-    testing::InitGoogleTest(&argc, argv);
-    LOG_INFO("Starting unit tests...");
-    auto result = RUN_ALL_TESTS();
-
-#else
-    testing::InitGoogleTest(&argc, argv);
-    printf("Starting unit tests...\n");
-    auto result = RUN_ALL_TESTS();
-
 #endif
-
+    LOG_INFO("Starting unit tests...\n");
+    testing::InitGoogleTest(&argc, argv);
+    auto result = RUN_ALL_TESTS();
     return result;
 }
