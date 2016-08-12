@@ -225,6 +225,13 @@ ABRecordRef ABAddressBookGetPersonWithRecordID(ABAddressBookRef addressBook, ABR
     }
 
     _ABAddressBookManager* addressBookManager = (__bridge _ABAddressBookManager*)addressBook;
+
+    // An astute reader may notice that this method is slow for a user with many contacts,
+    // having to look through all of a user's contacts. Ideally, making use of
+    // a Windows method like GetContactAsync (which requires a String id) would happen, but the
+    // requirement of an ABRecordID being an int32_t forced this decision. A future version
+    // may choose to make ABRecordID a String if customers are willing to modify their code
+    // as needed for the added performance benefit.
     NSArray* contacts = [addressBookManager getListOfContacts];
     if (contacts == nil) {
         return nullptr;
