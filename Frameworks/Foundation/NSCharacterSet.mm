@@ -194,6 +194,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSCharacterSet, NSMutableCharacterSetPrototype, CFChar
  @Status Interoperable
 */
 + (instancetype)characterSetWithBitmapRepresentation:(NSData*)data {
+    THROW_NS_IF_NULL(E_INVALIDARG, data);
     return [static_cast<NSCharacterSet*>(CFCharacterSetCreateWithBitmapRepresentation(nullptr, static_cast<CFDataRef>(data))) autorelease];
 }
 
@@ -201,6 +202,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSCharacterSet, NSMutableCharacterSetPrototype, CFChar
  @Status Interoperable
 */
 + (instancetype)characterSetWithContentsOfFile:(NSString*)path {
+    THROW_NS_IF_NULL(E_INVALIDARG, path);
     return [NSCharacterSet characterSetWithBitmapRepresentation:[NSData dataWithContentsOfFile:path]];
 }
 
