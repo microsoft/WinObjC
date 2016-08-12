@@ -19,18 +19,18 @@
 
 @interface TestRow : NSObject
 
-+ (TestRow*)row:(NSString*)name class:(Class) class;
++ (TestRow*)row:(NSString*)name testClass:(Class)testClass;
 @property (nonatomic, strong) NSString* name;
-@property (nonatomic, strong) Class class;
+@property (nonatomic, strong) Class testClass;
 
 @end
 
 @implementation TestRow
 
-+ (TestRow*)row:(NSString*)name class:(Class) class {
++ (TestRow*)row:(NSString*)name testClass:(Class)testClass {
     TestRow* row = [TestRow new];
     row.name = name;
-    row.class = class;
+    row.testClass = testClass;
     return row;
 }
 
@@ -38,7 +38,7 @@
 
 @interface CTCRootViewController () <UITableViewDelegate, UITableViewDataSource>
 
-@property (nonatomic, strong) NSArray <TestRow*>* tests;
+@property (nonatomic, strong) NSArray<TestRow*>* tests;
 
 @end
 
@@ -46,7 +46,7 @@
 
 - (NSArray*)tests {
     if (!_tests) {
-        _tests = @[ [TestRow row:@"CTCAlignmentTest" class:[CTCAlignmentTestViewController class]] ];
+        _tests = @[ [TestRow row:@"CTCAlignmentTest" testClass:[CTCAlignmentTestViewController class]] ];
     }
     return _tests;
 }
@@ -73,7 +73,7 @@
 // UITableViewDelegate
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-    [self.navigationController pushViewController:[[self.tests[indexPath.row].class alloc] init] animated:YES];
+    [self.navigationController pushViewController:[[self.tests[indexPath.row].testClass alloc] init] animated:YES];
 }
 
 // UITableViewDataSource

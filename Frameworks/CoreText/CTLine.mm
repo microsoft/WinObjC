@@ -138,9 +138,9 @@ CTLineRef CTLineCreateTruncatedLine(CTLineRef sourceLine, double width, CTLineTr
             return nil;
     }
 
-    CTTypesetterRef typeSetter = CTTypesetterCreateWithAttributedString((CFAttributedStringRef)finalString);
+    CTTypesetterRef typeSetter = CTTypesetterCreateWithAttributedString(static_cast<CFAttributedStringRef>(finalString));
     CFRange range = { 0, finalString.length };
-    CTLineRef ret = (CTLineRef)CTTypesetterCreateLine(typeSetter, range);
+    CTLineRef ret = static_cast<CTLineRef>(CTTypesetterCreateLine(typeSetter, range));
     CFRelease(typeSetter);
     [stringFromToken release];
 

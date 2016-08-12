@@ -136,21 +136,27 @@
     _leftView.backgroundColor = [UIColor whiteColor];
     _leftView.alignment = kCTLeftTextAlignment;
     _leftView.font = _font;
-    _leftView.text = [_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
+    _leftView.text =
+        [[_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"] stringByReplacingOccurrencesOfString:@"\\t"
+                                                                                                                  withString:@"\t"];
     [self.view addSubview:_leftView];
 
     _centerView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(20, 220, 400, 200)];
     _centerView.backgroundColor = [UIColor whiteColor];
     _centerView.alignment = kCTCenterTextAlignment;
     _centerView.font = _font;
-    _centerView.text = [_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
+    _centerView.text =
+        [[_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"] stringByReplacingOccurrencesOfString:@"\\t"
+                                                                                                                  withString:@"\t"];
     [self.view addSubview:_centerView];
 
     _rightView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(20, 420, 400, 200)];
     _rightView.backgroundColor = [UIColor whiteColor];
     _rightView.alignment = kCTRightTextAlignment;
     _rightView.font = _font;
-    _rightView.text = [_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
+    _rightView.text =
+        [[_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"] stringByReplacingOccurrencesOfString:@"\\t"
+                                                                                                                  withString:@"\t"];
     [self.view addSubview:_rightView];
 }
 

@@ -71,6 +71,10 @@ static const float default_system_font_size = 15.0f;
 }
 @end
 
+static bool isSpaceOrTab(int character) {
+    return (character == ' ' || character == '\t');
+}
+
 static CFIndex _DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthFunc, void* widthParam, double offset, CTLineRef* outLine) {
     _CTTypesetter* typeSetter = (_CTTypesetter*)ts;
     _CTLine* line = NULL;
@@ -99,9 +103,14 @@ static CFIndex _DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthF
 
     FT_Pos penX = 0;
 
+    // Width of the text for soft line breaks
     FT_Pos lastPossibleBreakWidth = 0;
-    int lastPossibleBreakPos = -1;
+
+    // Last character for soft line breaks to print
     int lastGlyphToPrintPos = -1;
+
+    // Cutoff character for soft line breaks, so next line will start with printable characters
+    int lastPossibleBreakPos = -1;
 
     lineStart = curIndex;
 
@@ -117,21 +126,26 @@ static CFIndex _DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthF
 
         int curChar = chars[curIndex];
 
-        if (curChar != 10 && curChar != 13 && curChar != 9) {
-            characters.push_back((WORD)curChar);
-        } else {
+        // FT does not seem to be able to print tabs, so we have to replace it with a space for now
+        if (curChar == '\t') {
+            curChar = ' ';
+        }
+
+        if (curChar == 10 || curChar == 13) {
             characters.push_back((WORD)0);
+        } else {
+            characters.push_back((WORD)curChar);
         }
 
         auto& glyphOrigin = glyphOrigins.back();
         auto& glyphAdvance = glyphAdvances.back();
 
-        if (chars[curIndex] == 10 || (curIndex > 0 && chars[curIndex - 1] == 13 && curIndex - 1 >= lineStart)) {
+        if ((chars[curIndex] == 10) || (curIndex > lineStart && chars[curIndex - 1] == 13)) {
             if ((curIndex > 0 && chars[curIndex - 1] == 13 && chars[curIndex] != 10)) {
                 --curIndex;
             }
 
-            if (curIndex > lineStart && chars[curIndex - 1] == ' ') {
+            if (curIndex > lineStart && isSpaceOrTab(chars[curIndex - 1])) {
                 // Ending line with trailing spaces, only want width up to last printable glyph
                 lineWidth = ((float)lastPossibleBreakWidth) / 64.0f;
             } else {
@@ -175,7 +189,8 @@ static CFIndex _DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthF
         FT_Error error;
 
         if (curChar != 13) {
-            FT_UInt index = FT_Get_Char_Index(curFace, curChar);
+            FT_UInt index = 0;
+            index = FT_Get_Char_Index(curFace, curChar);
 
             error = FT_Load_Glyph(curFace, index, FT_LOAD_NO_HINTING);
             FT_GlyphSlot slot = curFace->glyph;
@@ -186,14 +201,15 @@ static CFIndex _DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthF
                 TraceWarning(TAG, L"Glyph %d not found", curChar);
             }
 
-            if (curChar == ' ') {
+            if (isSpaceOrTab(curChar)) {
                 //  Soft linebreak possibility
                 lastPossibleBreakPos = curIndex;
-                if (curIndex > lineStart && chars[curIndex - 1] != ' ') {
+                if (curIndex > lineStart && !isSpaceOrTab(chars[curIndex - 1])) {
                     lastGlyphToPrintPos = curIndex - 1;
                     lastPossibleBreakWidth = penX;
                 }
             }
+
             penX += advance.x;
 
             glyphAdvance.width = ((float)advance.x) / 64.0f;
@@ -201,7 +217,7 @@ static CFIndex _DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthF
 
         float curWidth;
 
-        if ((penX / 64.0f) > maxWidth && curChar != ' ') {
+        if ((penX / 64.0f) > maxWidth && !isSpaceOrTab(curChar)) {
             if (lastPossibleBreakPos != -1) {
                 //  We must now perform a soft break
                 curIndex = lastPossibleBreakPos + 1;
@@ -227,12 +243,12 @@ static CFIndex _DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthF
 
     if (curIndex >= count && !hitLinebreak) {
         // Ran out of characters to print before establishing width
-        if (chars[count - 1] == ' ') {
+        if (isSpaceOrTab(chars[count - 1])) {
             // Ending line with trailing spaces, only want width up to last printable glyph
-            lineWidth = ((float)lastPossibleBreakWidth) / 64.0f;
+            lineWidth = (static_cast<float>(lastPossibleBreakWidth)) / 64.0f;
         } else {
             // No trailing spaces, so we print everything with the current width
-            lineWidth = ((float)penX) / 64.0f;
+            lineWidth = (static_cast<float>(penX)) / 64.0f;
             lastGlyphToPrintPos = count - 1;
         }
     }
@@ -341,7 +357,7 @@ CTTypesetterRef CTTypesetterCreateWithAttributedStringAndOptions(CFAttributedStr
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CTLineRef CTTypesetterCreateLine(CTTypesetterRef typesetter, CFRange stringRange) {
@@ -361,7 +377,7 @@ CTLineRef CTTypesetterCreateLineWithOffset(CTTypesetterRef ts, CFRange range, do
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFIndex CTTypesetterSuggestLineBreak(CTTypesetterRef typesetter, CFIndex startIndex, double width) {

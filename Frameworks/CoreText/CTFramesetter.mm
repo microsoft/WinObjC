@@ -37,13 +37,14 @@ static id _createFrame(_CTFrameSetter* frameSetter, CGRect frameSize, CGSize* si
     }
 
     // Only fill in frame if there is text
-    if (CFAttributedStringGetLength(reinterpret_cast<CFAttributedStringRef>(frameSetter->_typesetter->_attributedString))) {
+    if (CFAttributedStringGetLength(static_cast<CFAttributedStringRef>(frameSetter->_typesetter->_attributedString))) {
         // Paragraph settings are expected at effective range 0
-        NSDictionary* dict = [frameSetter->_typesetter->_attributedString attributesAtIndex:0 effectiveRange:NULL];
-        CTParagraphStyleRef style = (CTParagraphStyleRef)[dict valueForKey:(id)kCTParagraphStyleAttributeName];
+        NSDictionary* attributes = [frameSetter->_typesetter->_attributedString attributesAtIndex:0 effectiveRange:NULL];
+        CTParagraphStyleRef style = reinterpret_cast<CTParagraphStyleRef>([attributes valueForKey:(id)kCTParagraphStyleAttributeName]);
         CTTextAlignment alignment = kCTLeftTextAlignment;
         if (style != nil) {
             if (!CTParagraphStyleGetValueForSpecifier(style, kCTParagraphStyleSpecifierAlignment, sizeof(CTTextAlignment), &alignment)) {
+                // No alignment found, use default of left alignment
                 alignment = kCTLeftTextAlignment;
             }
         }
@@ -58,7 +59,7 @@ static id _createFrame(_CTFrameSetter* frameSetter, CGRect frameSize, CGSize* si
 
         for (;;) {
             CFIndex pos =
-                CTTypesetterSuggestLineBreak((CTTypesetterRef)(_CTTypesetter*)frameSetter->_typesetter, curIdx, frameSize.size.width);
+                CTTypesetterSuggestLineBreak(static_cast<CTTypesetterRef>(frameSetter->_typesetter.get()), curIdx, frameSize.size.width);
             if (pos == curIdx) {
                 break;
             }
@@ -67,11 +68,11 @@ static id _createFrame(_CTFrameSetter* frameSetter, CGRect frameSize, CGSize* si
             lineRange.location = curIdx;
             lineRange.length = pos - curIdx;
 
-            CTLineRef line = CTTypesetterCreateLine((CTTypesetterRef)(_CTTypesetter*)frameSetter->_typesetter, lineRange);
+            CTLineRef line = CTTypesetterCreateLine(static_cast<CTTypesetterRef>(frameSetter->_typesetter.get()), lineRange);
 
             float ascent = 0.0f, descent = 0.0f, leading = 0.0f;
-            float width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
-            float lineHeight = ascent - descent + leading;
+            const float width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+            const float lineHeight = ascent - descent + leading;
 
             if (ret) {
                 CGPoint lineOrigin;
