@@ -225,15 +225,14 @@ ARM_DISABLED_TEST(NSCharacterSet, ExceptionTests) {
     NSMutableCharacterSet* set;
     @try {
         set = [NSMutableCharacterSet characterSetWithBitmapRepresentation:nil];
-        EXPECT_TRUE_MSG(false, "NSCharacterSet should have thrown invalid argument exception.");
+        FAIL();
     } @catch (NSException* e) {
         ASSERT_OBJCEQ(e.name, @"NSInvalidArgumentException");
     }
 
-    @
-    try {
+    @try {
         set = [NSMutableCharacterSet characterSetWithContentsOfFile:nil];
-        EXPECT_TRUE_MSG(false, "NSCharacterSet should have thrown invalid argument exception.");
+        FAIL();
     } @catch (NSException* e) {
         ASSERT_OBJCEQ(e.name, @"NSInvalidArgumentException");
     }
