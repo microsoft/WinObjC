@@ -494,25 +494,19 @@ TEST(NSCalendar, NSRangeValidation) {
     ASSERT_EQ(range.length, 5);
 }
 
-ARM_DISABLED_TEST(NSCalendar, BadMatchingOptions) {
-    @try {
-        NSCalendar* calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+TEST(NSCalendar, BadMatchingOptions) {
+    NSCalendar* calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
 
-        // January 1st 2010
-        NSDate* constantDate = [calendar dateWithEra:1 year:2010 month:1 day:1 hour:0 minute:0 second:0 nanosecond:0];
-        // January 2nd 2010
-        NSDate* expectedNextDay = [calendar dateWithEra:1 year:2010 month:1 day:2 hour:0 minute:0 second:0 nanosecond:0];
+    // January 1st 2010
+    NSDate* constantDate = [calendar dateWithEra:1 year:2010 month:1 day:1 hour:0 minute:0 second:0 nanosecond:0];
+    // January 2nd 2010
+    NSDate* expectedNextDay = [calendar dateWithEra:1 year:2010 month:1 day:2 hour:0 minute:0 second:0 nanosecond:0];
 
-        NSDateComponents* comps = [[NSDateComponents alloc] init];
-        comps.day = 2;
+    NSDateComponents* comps = [[NSDateComponents alloc] init];
+    comps.day = 2;
 
-        // No matching options
-        NSDate* date = [calendar nextDateAfterDate:constantDate matchingComponents:comps options:0];
-
-        ASSERT_TRUE_MSG(false, "Should not have gotten here. nextDateAfterDate should throw an INVALID_ARG exception");
-    } @catch (NSException* e) {
-        ASSERT_OBJCEQ(e.name, @"NSInvalidArgumentException");
-    }
+    // No matching options should throw.
+    EXPECT_ANY_THROW(NSDate* date = [calendar nextDateAfterDate:constantDate matchingComponents:comps options:0]);
 }
 
 OSX_DISABLED_TEST(NSCalendar, NanoSecondComparison) {
@@ -528,7 +522,7 @@ OSX_DISABLED_TEST(NSCalendar, NanoSecondComparison) {
     ASSERT_EQ([calendar compareDate:date2 toDate:date1 toUnitGranularity:NSCalendarUnitNanosecond], NSOrderedDescending);
 }
 
-DISABLED_TEST(NSCalendar, rangeOfWeekOfMonthTest) {
+WIN32_DISABLED_TEST(NSCalendar, RangeOfWeekOfMonthTest) {
     // TODO 8463791 : rangeOfUnit can return incorrect results
     NSCalendar* calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
     NSDate* expectedDate = [calendar dateWithEra:1 year:2016 month:7 day:1 hour:0 minute:0 second:0 nanosecond:0];
