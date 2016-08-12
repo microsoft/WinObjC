@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Starboard OneCore Overrides">
+    <_SB_Local_VCInstallDir Condition="'$(_SB_Local_VCInstallDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\14.0\Setup\VC@ProductDir)</_SB_Local_VCInstallDir>
+    <_SB_Local_VCInstallDir Condition="'$(_SB_Local_VCInstallDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\14.0\Setup\VC@ProductDir)</_SB_Local_VCInstallDir>
+    <_SB_Local_VCInstallDir Condition="'$(_SB_Local_VCInstallDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VSWinExpress\14.0\Setup\VC@ProductDir)</_SB_Local_VCInstallDir>
+    <_SB_Local_VCInstallDir Condition="'$(_SB_Local_VCInstallDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VSWinExpress\14.0\Setup\VC@ProductDir)</_SB_Local_VCInstallDir>
+
+    <!-- We want to link the ARM unit test binaries against the store libraries without turning on WindowsAppContainer.
+         Therefore, we have to override the VC ARM library path early - before Microsoft.Cpp.Common.props is included.
+    -->
+    <StarboardUnitTestAPISet Condition="'$(StarboardUnitTestAPISet)'==''">onecore</StarboardUnitTestAPISet>
+    <VC_LibraryPath_VC_ARM>$(_SB_Local_VCInstallDir)lib\$(StarboardUnitTestAPISet)\ARM;</VC_LibraryPath_VC_ARM>
+  </PropertyGroup>
+</Project>
+

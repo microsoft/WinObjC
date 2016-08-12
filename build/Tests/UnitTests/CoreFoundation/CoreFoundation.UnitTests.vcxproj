@@ -62,6 +62,7 @@
     <StarboardIncludeDefaultLibs>false</StarboardIncludeDefaultLibs>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(RootNamespace)\</OutDir>
   </PropertyGroup>
+  <Import Project="$(StarboardBasePath)\msvc\ut-build-early.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
