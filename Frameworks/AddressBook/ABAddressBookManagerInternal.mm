@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import "ABAddressBookManagerInternal.h"
+#import "ABContactInternal.h"
 #import "UWP/WindowsApplicationModelContacts.h"
 
 @interface _ABAddressBookManager ()
@@ -53,6 +54,32 @@
     }
 
     return self;
+}
+
+- (NSArray*)getListOfContacts {
+    __block NSMutableArray* result = nil;
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+
+    [self.contactStore findContactsAsyncWithSuccess:^(NSArray* success) {
+        result = [NSMutableArray arrayWithCapacity:[success count]];
+
+        // Copy over the contacts wrapped in _ABContacts.
+        for (int i = 0; i < [success count]; i++) {
+            result[i] = [[_ABContact alloc] initWithContact:success[i]];
+        }
+
+        dispatch_semaphore_signal(semaphore);
+    }
+        failure:^(NSError* failure) {
+            // In the failure case, result will be nil.
+            dispatch_semaphore_signal(semaphore);
+        }];
+
+    // Wait until async method completes.
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    dispatch_release(semaphore);
+
+    return result;
 }
 
 @end

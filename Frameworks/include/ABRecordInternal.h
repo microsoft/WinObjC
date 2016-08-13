@@ -18,9 +18,6 @@
 
 #import "UWP/WindowsApplicationModelContacts.h"
 
-@interface _ABAddressBookManager : NSObject
-
-@property WACContactStore* contactStore;
-- (NSArray*)getListOfContacts;
+@interface _ABRecord : NSObject
 
 @end
