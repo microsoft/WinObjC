@@ -124,10 +124,14 @@
 }
 
 - (void)dealloc {
-    [_HTTPCookieStorage release];
-    [_URLCache release];
-    [_URLCredentialStorage release];
     [_identifier release];
+    [_HTTPAdditionalHeaders release];
+    [_sharedContainerIdentifier release];
+    [_HTTPCookieStorage release];
+    [_URLCredentialStorage release];
+    [_URLCache release];
+    [_protocolClasses release];
+    [_connectionProxyDictionary release];
     [super dealloc];
 }
 
