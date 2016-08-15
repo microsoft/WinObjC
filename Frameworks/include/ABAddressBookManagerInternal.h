@@ -21,5 +21,6 @@
 @interface _ABAddressBookManager : NSObject
 
 @property WACContactStore* contactStore;
+- (NSArray*)getListOfContacts;
 
 @end

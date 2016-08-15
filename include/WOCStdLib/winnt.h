@@ -16,9 +16,13 @@
 
 #pragma once
 
-#include <unicode/gregocal.h>
+#ifdef __OBJC__
+#pragma push_macro("DELETE")
+#endif
 
-@interface NSTimeZone (Internal)
-- (icu::TimeZone*)_createICUTimeZone;
-+ (instancetype)_gmtTimeZone;
-@end
+#include_next <winnt.h>
+
+#ifdef __OBJC__
+#pragma pop_macro("DELETE")
+#endif
+

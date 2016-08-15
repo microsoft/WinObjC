@@ -233,7 +233,7 @@
     <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_search.png" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo1.jpg" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo7.gif" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo2.jpg" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo2.png" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo3.jpg" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo5.jpg" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo6.jpg" />

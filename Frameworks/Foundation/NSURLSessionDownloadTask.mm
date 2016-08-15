@@ -19,7 +19,7 @@
 #import <Starboard.h>
 #import "NSURLSessionTask-Internal.h"
 
-#import <Windows.h>
+#import <windows.h>
 
 NSString* const NSURLSessionDownloadTaskResumeData = @"NSURLSessionDownloadTaskResumeData";
 @interface NSURLSessionDownloadTask () {

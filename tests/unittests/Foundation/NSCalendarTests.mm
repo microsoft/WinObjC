@@ -46,9 +46,10 @@ TEST(NSCalendar, GetDates) {
 
     // Find all leap days going backwards
     dateCount = 0;
+
     [calendar enumerateDatesStartingAfterDate:[NSDate dateWithTimeIntervalSinceReferenceDate:0]
                            matchingComponents:leapYearComponents
-                                      options:NSCalendarSearchBackwards
+                                      options:NSCalendarSearchBackwards | NSCalendarMatchStrictly
                                    usingBlock:^(NSDate* date, BOOL exactMatch, BOOL* stop) {
                                        NSString* result = [dateFormatter stringFromDate:date];
                                        ASSERT_OBJCEQ([result substringWithRange:NSMakeRange(0, 6)], @"Feb 29");
@@ -236,10 +237,6 @@ TEST(NSCalendar, CompareDates) {
     ASSERT_EQ([calendar compareDate:date2 toDate:date1 toUnitGranularity:NSCalendarUnitNanosecond], NSOrderedDescending);
 
     date1 = [NSDate dateWithTimeIntervalSinceReferenceDate:.1];
-    date2 = [NSDate dateWithTimeIntervalSinceReferenceDate:.9];
-    ASSERT_EQ([calendar compareDate:date1 toDate:date2 toUnitGranularity:NSCalendarUnitNanosecond], NSOrderedAscending);
-    ASSERT_EQ([calendar compareDate:date2 toDate:date1 toUnitGranularity:NSCalendarUnitNanosecond], NSOrderedDescending);
-
     date2 = [NSDate dateWithTimeIntervalSinceReferenceDate:.1];
     ASSERT_EQ([calendar compareDate:date2 toDate:date1 toUnitGranularity:NSCalendarUnitNanosecond], NSOrderedSame);
 
@@ -338,12 +335,6 @@ TEST(NSCalendar, PreserveSmallerUnitsMatching) {
 
     ASSERT_OBJCEQ(expectedDate, actualDate);
 
-    components.day = 29;
-    actualDate = [calendar nextDateAfterDate:date matchingComponents:components options:NSCalendarMatchNextTimePreservingSmallerUnits];
-    expectedDate = [calendar dateWithEra:1 year:2012 month:2 day:29 hour:3 minute:4 second:5 nanosecond:0];
-
-    ASSERT_OBJCEQ(expectedDate, actualDate);
-
     date = [calendar dateWithEra:1 year:1999 month:5 day:1 hour:0 minute:0 second:0 nanosecond:0];
     components.day = 1;
     components.month = 5;
@@ -355,6 +346,15 @@ TEST(NSCalendar, PreserveSmallerUnitsMatching) {
     date = [calendar dateWithEra:1 year:2000 month:5 day:1 hour:0 minute:0 second:0 nanosecond:0];
     actualDate = [calendar nextDateAfterDate:date matchingComponents:components options:NSCalendarMatchNextTimePreservingSmallerUnits];
     expectedDate = [calendar dateWithEra:1 year:2001 month:5 day:1 hour:0 minute:0 second:0 nanosecond:0];
+
+    ASSERT_OBJCEQ(expectedDate, actualDate);
+
+    components = [[[NSDateComponents alloc] init] autorelease];
+    components.day = 29;
+
+    date = [calendar dateWithEra:1 year:2012 month:2 day:20 hour:3 minute:4 second:5 nanosecond:0];
+    actualDate = [calendar nextDateAfterDate:date matchingComponents:components options:NSCalendarMatchNextTimePreservingSmallerUnits];
+    expectedDate = [calendar dateWithEra:1 year:2012 month:2 day:29 hour:0 minute:0 second:0 nanosecond:0];
 
     ASSERT_OBJCEQ(expectedDate, actualDate);
 }
@@ -400,12 +400,12 @@ TEST(NSCalendar, weekOfUnitMatching) {
 
     date = [calendar dateWithEra:1 year:2000 month:1 day:1 hour:0 minute:0 second:0 nanosecond:0];
     actualDate = [calendar nextDateAfterDate:date matchingComponents:components options:NSCalendarMatchStrictly];
-    expectedDate = [calendar dateWithEra:1 year:2000 month:2 day:5 hour:0 minute:0 second:0 nanosecond:0];
+    expectedDate = [calendar dateWithEra:1 year:2000 month:1 day:30 hour:0 minute:0 second:0 nanosecond:0];
 
     ASSERT_OBJCEQ(expectedDate, actualDate);
 
     actualDate = [calendar nextDateAfterDate:expectedDate matchingComponents:components options:NSCalendarMatchStrictly];
-    expectedDate = [calendar dateWithEra:1 year:2001 month:2 day:10 hour:0 minute:0 second:0 nanosecond:0];
+    expectedDate = [calendar dateWithEra:1 year:2001 month:2 day:4 hour:0 minute:0 second:0 nanosecond:0];
 
     ASSERT_OBJCEQ(expectedDate, actualDate);
 
@@ -481,15 +481,57 @@ TEST(NSCalendar, NSRangeValidation) {
     NSCalendar* calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
     NSDate* expectedDate = [calendar dateWithEra:1 year:2010 month:3 day:31 hour:0 minute:0 second:0 nanosecond:0];
 
-    NSRange range = [calendar rangeOfUnit:NSCalendarUnitWeekOfMonth inUnit:NSCalendarUnitYear forDate:expectedDate];
-    ASSERT_EQ(range.location, 1);
-    ASSERT_EQ(range.length, 5);
-
-    range = [calendar rangeOfUnit:NSCalendarUnitWeekOfYear inUnit:NSCalendarUnitMonth forDate:expectedDate];
+    NSRange range = [calendar rangeOfUnit:NSCalendarUnitWeekOfYear inUnit:NSCalendarUnitMonth forDate:expectedDate];
     ASSERT_EQ(range.location, 10);
     ASSERT_EQ(range.length, 5);
 
     range = [calendar rangeOfUnit:NSCalendarUnitHour inUnit:NSCalendarUnitWeekOfMonth forDate:expectedDate];
     ASSERT_EQ(range.location, 0);
     ASSERT_EQ(range.length, 24);
+
+    range = [calendar rangeOfUnit:NSCalendarUnitWeekOfMonth inUnit:NSCalendarUnitMonth forDate:expectedDate];
+    ASSERT_EQ(range.location, 1);
+    ASSERT_EQ(range.length, 5);
+}
+
+TEST(NSCalendar, BadMatchingOptions) {
+    NSCalendar* calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+
+    // January 1st 2010
+    NSDate* constantDate = [calendar dateWithEra:1 year:2010 month:1 day:1 hour:0 minute:0 second:0 nanosecond:0];
+    // January 2nd 2010
+    NSDate* expectedNextDay = [calendar dateWithEra:1 year:2010 month:1 day:2 hour:0 minute:0 second:0 nanosecond:0];
+
+    NSDateComponents* comps = [[NSDateComponents alloc] init];
+    comps.day = 2;
+
+    // No matching options should throw.
+    EXPECT_ANY_THROW(NSDate* date = [calendar nextDateAfterDate:constantDate matchingComponents:comps options:0]);
+}
+
+OSX_DISABLED_TEST(NSCalendar, NanoSecondComparison) {
+    // Nanosecond comparison is disabled on OSX as the behavior does not match the documentation. Nanosecond comparison will
+    // always return NSOrderedSame if the two dates are within the same second of each other. Thus, even though the two
+    // nanosecond values below are different, OSX will return that this comparison to the granularity of Nanoseconds will
+    // is the same.
+
+    NSCalendar* calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSDate* date1 = [NSDate dateWithTimeIntervalSinceReferenceDate:.1];
+    NSDate* date2 = [NSDate dateWithTimeIntervalSinceReferenceDate:.9];
+    ASSERT_EQ([calendar compareDate:date1 toDate:date2 toUnitGranularity:NSCalendarUnitNanosecond], NSOrderedAscending);
+    ASSERT_EQ([calendar compareDate:date2 toDate:date1 toUnitGranularity:NSCalendarUnitNanosecond], NSOrderedDescending);
+}
+
+WIN32_DISABLED_TEST(NSCalendar, RangeOfWeekOfMonthTest) {
+    // TODO 8463791 : rangeOfUnit can return incorrect results
+    NSCalendar* calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSDate* expectedDate = [calendar dateWithEra:1 year:2016 month:7 day:1 hour:0 minute:0 second:0 nanosecond:0];
+
+    NSRange range = [calendar rangeOfUnit:NSCalendarUnitWeekOfMonth inUnit:NSCalendarUnitYear forDate:expectedDate];
+    EXPECT_EQ(range.location, 1);
+    EXPECT_EQ(range.length, 6);
+
+    range = [calendar rangeOfUnit:NSCalendarUnitWeekOfYear inUnit:NSCalendarUnitMonth forDate:expectedDate];
+    EXPECT_EQ(range.location, 27);
+    EXPECT_EQ(range.length, 6);
 }

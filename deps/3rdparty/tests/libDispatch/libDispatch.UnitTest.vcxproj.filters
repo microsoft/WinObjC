@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Framework\Framework.cpp" />
+    <ClCompile Include="..\EntryPoint.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="dispatch.m">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="dispatch_after.m">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="dispatch_api.m">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="dispatch_apply.m">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="dispatch_autorelease.m">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="dispatch_c99.m">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="dispatch_cascade.m">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="dispatch_debug.m">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="dispatch_drift.m">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="dispatch_group.m">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="dispatch_pingpong.m">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="dispatch_priority.m">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="dispatch_sema.m">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="dispatch_starfish.m">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="dispatch_test.m">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="dispatch_timer_bit31.m">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="dispatch_timer_bit63.m">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="dispatch_timer_set_time.m">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{dfb0721f-65a1-4a5a-9649-a11afe8edf6c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dispatch_test.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

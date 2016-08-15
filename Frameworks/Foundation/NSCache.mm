@@ -105,6 +105,15 @@ using cacheType = std::list<StrongId<_NSCacheEntry>>;
         if (found != _iterators.end()) {
             auto cacheIterator = found->second;
             StrongId<_NSCacheEntry> cacheEntry(*cacheIterator);
+
+            if (_evictsObjectsWithDiscardedContent && [cacheEntry discardable]) {
+                id<NSDiscardableContent> discardable = (id<NSDiscardableContent>)[cacheEntry object];
+                if (discardable.isContentDiscarded) {
+                    [self _evictEntry:cacheEntry force:true];
+                    return nil;
+                }
+            }
+
             _cacheEntries.erase(cacheIterator);
             _iterators.erase(found);
             [self _insertEntry:cacheEntry];
@@ -246,28 +255,19 @@ using cacheType = std::list<StrongId<_NSCacheEntry>>;
         [_delegate cache:self willEvictObject:object];
     }
 
-    bool remove = true;
     if (entry.discardable) {
         id<NSDiscardableContent> discardable = (id<NSDiscardableContent>)object;
         [discardable discardContentIfPossible];
-        if ([discardable isContentDiscarded]) {
-            entry.cost = 0;
-            remove = force || _evictsObjectsWithDiscardedContent;
-        } else {
-            remove = force;
-        }
     }
 
     _totalCost -= cost;
 
-    if (remove) {
-        // std::unordered_map<K, V> will re-hash a value of type K on erase(iterator);
-        // since _cacheEntries holds the owning reference and _iterators does not, we need
-        // to ensure that entry (and therefore entry.key) outlive _cacheEntries' ownership of them.
-        const auto found = _iterators.find([entry key]);
-        _cacheEntries.erase(found->second);
-        _iterators.erase(found);
-    }
+    // std::unordered_map<K, V> will re-hash a value of type K on erase(iterator);
+    // since _cacheEntries holds the owning reference and _iterators does not, we need
+    // to ensure that entry (and therefore entry.key) outlive _cacheEntries' ownership of them.
+    const auto found = _iterators.find([entry key]);
+    _cacheEntries.erase(found->second);
+    _iterators.erase(found);
 
     return cost;
 }

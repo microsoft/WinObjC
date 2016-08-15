@@ -49,33 +49,15 @@ NSString* NSStringFromRange(NSRange range) {
  @Status Interoperable
 */
 NSRange NSRangeFromString(NSString* s) {
-    static NSCharacterSet* trimChars = [NSCharacterSet characterSetWithCharactersInString:@"{}- "];
+    unsigned long long position = 0;
+    unsigned long long length = 0;
 
-    // Valid string begins with '{' and ends with '}'
-    if ([s characterAtIndex:0] == '{' && [s characterAtIndex:([s length] - 1)] == '}') {
-        NSArray* components = [s componentsSeparatedByString:@","];
-
-        // The two components are position and length - any other number of components is invalid.
-        if ([components count] != 2) {
-            return NSMakeRange(0, 0);
-        }
-
-        unsigned long long position;
-        NSScanner* scanner = [NSScanner scannerWithString:[components[0] stringByTrimmingCharactersInSet:trimChars]];
-        if (![scanner scanUnsignedLongLong:&position]) {
-            return NSMakeRange(0, 0);
-        }
-
-        unsigned long long length;
-        scanner = [NSScanner scannerWithString:[components[1] stringByTrimmingCharactersInSet:trimChars]];
-        if (![scanner scanUnsignedLongLong:&length]) {
-            return NSMakeRange(0, 0);
-        }
-
-        return NSMakeRange(position, length);
+    const char* input = strpbrk([s UTF8String], "0123456789");
+    if (input) {
+        sscanf_s(input, "%llu%*[^0-9]%llu", &position, &length);
     }
 
-    return NSMakeRange(0, 0);
+    return NSMakeRange(position, length);
 }
 
 /**

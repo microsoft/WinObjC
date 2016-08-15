@@ -55,9 +55,9 @@ TEST(NSRegularExpression, CaptureGroupReplacementTest) {
     ASSERT_OBJCEQ(@"catx0 hatx0 batx0", result);
 
     result = [@"ネコ hat bat" stringByReplacingOccurrencesOfString:@"ネコ"
-                                                          withString:@"Japanese四Cat"
-                                                             options:NSRegularExpressionSearch
-                                                               range:NSMakeRange(0, 10)];
+                                                      withString:@"Japanese四Cat"
+                                                         options:NSRegularExpressionSearch
+                                                           range:NSMakeRange(0, 10)];
     ASSERT_OBJCEQ(@"Japanese四Cat hat bat", result);
 
     result = [@"I like cats" stringByReplacingOccurrencesOfString:@"(.)at"
@@ -109,6 +109,20 @@ TEST(NSRegularExpression, ReplacementTests) {
                                                                  withTemplate:@"Windows Objective C"];
 
     ASSERT_OBJCEQ(@"Windows Objective C bridge is amazing", outputString);
+}
+
+NSUInteger checkMatches(NSRegularExpression* regex, NSString* testString) {
+    NSRange range = { 0, [testString length] };
+    return [regex numberOfMatchesInString:testString options:0 range:range];
+}
+
+TEST(NSRegularExpression, MatchCaseInsensitiveTests) {
+    NSError* error = nil;
+    NSRegularExpression* regex =
+        [NSRegularExpression regularExpressionWithPattern:@"t.*t" options:NSRegularExpressionCaseInsensitive error:&error];
+
+    ASSERT_EQ(checkMatches(regex, @"test1"), 1);
+    ASSERT_EQ(checkMatches(regex, @"te.st1"), 1);
 }
 
 TEST(NSRegularExpression, MatchingTests) {

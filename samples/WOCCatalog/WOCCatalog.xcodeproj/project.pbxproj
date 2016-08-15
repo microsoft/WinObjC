@@ -30,7 +30,7 @@
 		4EE861DD1B5997A500682BDB /* XamlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861CE1B5997A500682BDB /* XamlViewController.m */; };
 		4EE861EB1B5997AD00682BDB /* blueButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861DE1B5997AD00682BDB /* blueButton.png */; };
 		4EE861EC1B5997AD00682BDB /* photo1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861DF1B5997AD00682BDB /* photo1.jpg */; };
-		4EE861ED1B5997AD00682BDB /* photo2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E01B5997AD00682BDB /* photo2.jpg */; };
+		4EE861ED1B5997AD00682BDB /* photo2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E01B5997AD00682BDB /* photo2.png */; };
 		4EE861EE1B5997AD00682BDB /* photo3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E11B5997AD00682BDB /* photo3.jpg */; };
 		4EE861EF1B5997AD00682BDB /* photo4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E21B5997AD00682BDB /* photo4.jpg */; };
 		4EE861F01B5997AD00682BDB /* photo5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E31B5997AD00682BDB /* photo5.jpg */; };
@@ -133,7 +133,7 @@
 		4EE861CE1B5997A500682BDB /* XamlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XamlViewController.m; sourceTree = "<group>"; };
 		4EE861DE1B5997AD00682BDB /* blueButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blueButton.png; path = WOCCatalog/Images/blueButton.png; sourceTree = "<group>"; };
 		4EE861DF1B5997AD00682BDB /* photo1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo1.jpg; path = WOCCatalog/Images/photo1.jpg; sourceTree = "<group>"; };
-		4EE861E01B5997AD00682BDB /* photo2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo2.jpg; path = WOCCatalog/Images/photo2.jpg; sourceTree = "<group>"; };
+		4EE861E01B5997AD00682BDB /* photo2.png */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo2.png; path = WOCCatalog/Images/photo2.png; sourceTree = "<group>"; };
 		4EE861E11B5997AD00682BDB /* photo3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo3.jpg; path = WOCCatalog/Images/photo3.jpg; sourceTree = "<group>"; };
 		4EE861E21B5997AD00682BDB /* photo4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo4.jpg; path = WOCCatalog/Images/photo4.jpg; sourceTree = "<group>"; };
 		4EE861E31B5997AD00682BDB /* photo5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo5.jpg; path = WOCCatalog/Images/photo5.jpg; sourceTree = "<group>"; };
@@ -375,7 +375,7 @@
 				D2AC20331C69733600D54717 /* photo9.jpg */,
 				4EE861DE1B5997AD00682BDB /* blueButton.png */,
 				4EE861DF1B5997AD00682BDB /* photo1.jpg */,
-				4EE861E01B5997AD00682BDB /* photo2.jpg */,
+				4EE861E01B5997AD00682BDB /* photo2.png */,
 				4EE861E11B5997AD00682BDB /* photo3.jpg */,
 				4EE861E21B5997AD00682BDB /* photo4.jpg */,
 				4EE861E31B5997AD00682BDB /* photo5.jpg */,
@@ -489,7 +489,7 @@
 				4EE861EC1B5997AD00682BDB /* photo1.jpg in Resources */,
 				4EE861F21B5997AD00682BDB /* photo7.gif in Resources */,
 				77E93C4A1D21D87C009F27A2 /* test.wav in Resources */,
-				4EE861ED1B5997AD00682BDB /* photo2.jpg in Resources */,
+				4EE861ED1B5997AD00682BDB /* photo2.png in Resources */,
 				4EE861EE1B5997AD00682BDB /* photo3.jpg in Resources */,
 				4EE861F01B5997AD00682BDB /* photo5.jpg in Resources */,
 				4EE861F11B5997AD00682BDB /* photo6.jpg in Resources */,

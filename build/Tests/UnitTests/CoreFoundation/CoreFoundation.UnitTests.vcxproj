@@ -171,7 +171,7 @@
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
-    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -233,6 +233,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreFoundation\CFURLTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreFoundation\CFAttributedStringTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreFoundation\CFStringTokenizerTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreFoundation\CFTimeZoneTests.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
