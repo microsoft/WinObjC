@@ -30,7 +30,6 @@ int main(int argc, char** argv) {
         return -1;
     }
 #endif
-    LOG_INFO("Starting unit tests...\n");
     testing::InitGoogleTest(&argc, argv);
     auto result = RUN_ALL_TESTS();
     return result;
