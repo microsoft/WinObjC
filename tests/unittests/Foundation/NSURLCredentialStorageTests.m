@@ -68,8 +68,8 @@ TEST(NSURLCredentialStorage, NonDefaultSession) {
     ASSERT_OBJCEQ_MSG(@"user", [[creden objectForKey:@"user"] user], "FAILED: Invalid username.");
 
     [storage removeCredential:credential forProtectionSpace:protectionSpace];
-    ASSERT_EQ_MSG(YES, [[storage credentialsForProtectionSpace:protectionSpace] count] == 0, "FAILED credentialsForProtectionSpace should be empty");
+    ASSERT_EQ_MSG(YES,
+                  [[storage credentialsForProtectionSpace:protectionSpace] count] == 0,
+                  "FAILED credentialsForProtectionSpace should be empty");
     [protectionSpace release];
-    [storage release];
-    [creden release];
 }
