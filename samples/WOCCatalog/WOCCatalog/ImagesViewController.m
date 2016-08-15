@@ -1,4 +1,4 @@
-so i//******************************************************************************
+//******************************************************************************
 //
 // Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
