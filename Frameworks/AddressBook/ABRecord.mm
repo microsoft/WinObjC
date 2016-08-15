@@ -51,11 +51,10 @@ ABRecordID ABRecordGetRecordID(ABRecordRef record) {
             return source.recordID;
         }
         case kABGroupType:
-            // Windows contacts doesn't support Group records, so return an invalid id.
+        // Windows contacts doesn't support Group records, so return an invalid id.
+        default:
             return kABRecordInvalidID;
     }
-
-    return kABRecordInvalidID;
 }
 
 /**
@@ -68,9 +67,9 @@ ABRecordType ABRecordGetRecordType(ABRecordRef record) {
         return kABPersonType;
     } else if ([_record isMemberOfClass:[_ABSource class]]) {
         return kABSourceType;
-    } else {
-        return kABGroupType;
     }
+
+    return kABGroupType;
 }
 
 /**
@@ -88,51 +87,46 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID property, CFTypeRef value
         (alternate birthday, creation/modification dates, person kind, phonetic middle name)
         don't have direct equivalents.
 */
-CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID property) {
+CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
     if (record == nullptr) {
         return nullptr;
     }
 
     _ABContact* person = (__bridge _ABContact*)record;
 
-    if (property == kABPersonFirstNameProperty) {
+    // Cases for various name properties.
+    if (contactProperty == kABPersonFirstNameProperty) {
         return (__bridge_retained CFTypeRef)person.contact.firstName;
-    } else if (property == kABPersonLastNameProperty) {
+    } else if (contactProperty == kABPersonLastNameProperty) {
         return (__bridge_retained CFTypeRef)person.contact.lastName;
-    } else if (property == kABPersonMiddleNameProperty) {
+    } else if (contactProperty == kABPersonMiddleNameProperty) {
         return (__bridge_retained CFTypeRef)person.contact.middleName;
-    } else if (property == kABPersonPrefixProperty) {
+    } else if (contactProperty == kABPersonPrefixProperty) {
         return (__bridge_retained CFTypeRef)person.contact.honorificNamePrefix;
-    } else if (property == kABPersonSuffixProperty) {
+    } else if (contactProperty == kABPersonSuffixProperty) {
         return (__bridge_retained CFTypeRef)person.contact.honorificNameSuffix;
-    } else if (property == kABPersonNicknameProperty) {
+    } else if (contactProperty == kABPersonNicknameProperty) {
         return (__bridge_retained CFTypeRef)person.contact.nickname;
-    } else if (property == kABPersonFirstNamePhoneticProperty) {
+    } else if (contactProperty == kABPersonFirstNamePhoneticProperty) {
         return (__bridge_retained CFTypeRef)person.contact.yomiGivenName;
-    } else if (property == kABPersonLastNamePhoneticProperty) {
+    } else if (contactProperty == kABPersonLastNamePhoneticProperty) {
         return (__bridge_retained CFTypeRef)person.contact.yomiFamilyName;
-    } else if (property == kABPersonOrganizationProperty) {
+    }
+
+    // Cases for job-related properties.
+    if (contactProperty == kABPersonOrganizationProperty) {
         NSArray* jobInfo = person.contact.jobInfo;
-        if ([jobInfo count] > 0) {
-            return (__bridge_retained CFTypeRef)((WACContactJobInfo*)jobInfo[0]).companyName;
-        } else {
-            return nullptr;
-        }
-    } else if (property == kABPersonJobTitleProperty) {
+        return [jobInfo count] > 0 ? (__bridge_retained CFTypeRef)((WACContactJobInfo*)jobInfo[0]).companyName : nullptr;
+    } else if (contactProperty == kABPersonJobTitleProperty) {
         NSArray* jobInfo = person.contact.jobInfo;
-        if ([jobInfo count] > 0) {
-            return (__bridge_retained CFTypeRef)((WACContactJobInfo*)jobInfo[0]).title;
-        } else {
-            return nullptr;
-        }
-    } else if (property == kABPersonDepartmentProperty) {
+        return [jobInfo count] > 0 ? (__bridge_retained CFTypeRef)((WACContactJobInfo*)jobInfo[0]).title : nullptr;
+    } else if (contactProperty == kABPersonDepartmentProperty) {
         NSArray* jobInfo = person.contact.jobInfo;
-        if ([jobInfo count] > 0) {
-            return (__bridge_retained CFTypeRef)((WACContactJobInfo*)jobInfo[0]).department;
-        } else {
-            return nullptr;
-        }
-    } else if (property == kABPersonBirthdayProperty) {
+        return [jobInfo count] > 0 ? (__bridge_retained CFTypeRef)((WACContactJobInfo*)jobInfo[0]).department : nullptr;
+    }
+
+    // Case for birthday-related property.
+    if (contactProperty == kABPersonBirthdayProperty) {
         NSArray* dates = person.contact.importantDates;
         NSUInteger birthdayIndex = [dates indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL* stop) {
             WACContactDate* date = (WACContactDate*)obj;
@@ -156,41 +150,47 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID property) {
             NSDate* resultDate = [calendar dateFromComponents:dateComponents];
             return (__bridge_retained CFTypeRef)resultDate;
         }
-    } else if (property == kABPersonNoteProperty) {
-        return (__bridge_retained CFTypeRef)person.contact.notes;
+    }
 
-        // The following properties either require the implementation of
-        // multi-values, or don't have a good 1-1 mapping between iOS contacts
-        // and Windows contacts (alternate birthday, creation/modification dates,
-        // phonetic middle name).
-    } else if (property == kABPersonMiddleNamePhoneticProperty) {
+    // Case for note-related property.
+    if (contactProperty == kABPersonNoteProperty) {
+        return (__bridge_retained CFTypeRef)person.contact.notes;
+    }
+
+    // The following properties either require the implementation of
+    // multi-values, or don't have a good 1-1 mapping between iOS contacts
+    // and Windows contacts (alternate birthday, creation/modification dates,
+    // phonetic middle name).
+
+    if (contactProperty == kABPersonMiddleNamePhoneticProperty) {
         // CFStringRef
-    } else if (property == kABPersonKindProperty) {
+    } else if (contactProperty == kABPersonKindProperty) {
         // CFNumberRef
-    } else if (property == kABPersonAlternateBirthdayProperty) {
+    } else if (contactProperty == kABPersonAlternateBirthdayProperty) {
         // CFDictionaryRef
-    } else if (property == kABPersonCreationDateProperty) {
+    } else if (contactProperty == kABPersonCreationDateProperty) {
         // CFDateRef
-    } else if (property == kABPersonModificationDateProperty) {
+    } else if (contactProperty == kABPersonModificationDateProperty) {
         // CFDateRef
-    } else if (property == kABPersonEmailProperty) {
+    }
+
+    // Cases for various multi-value properties.
+    if (contactProperty == kABPersonEmailProperty) {
         // ABMultiValueRef of CFStringRef
-    } else if (property == kABPersonAddressProperty) {
+    } else if (contactProperty == kABPersonAddressProperty) {
         // ABMultiValueRef of CFDictionaryRef
-    } else if (property == kABPersonDateProperty) {
+    } else if (contactProperty == kABPersonDateProperty) {
         // ABMultiValueRef of CFDateRef
-    } else if (property == kABPersonPhoneProperty) {
+    } else if (contactProperty == kABPersonPhoneProperty) {
         // ABMultiValueRef of CFStringRef
-    } else if (property == kABPersonInstantMessageProperty) {
+    } else if (contactProperty == kABPersonInstantMessageProperty) {
         // ABMultiValueRef of CFDictionaryRef
-    } else if (property == kABPersonSocialProfileProperty) {
+    } else if (contactProperty == kABPersonSocialProfileProperty) {
         // ABMultiValueRef of CFDictionaryRef
-    } else if (property == kABPersonURLProperty) {
+    } else if (contactProperty == kABPersonURLProperty) {
         // ABMultiValueRef of CFStringRef
-    } else if (property == kABPersonRelatedNamesProperty) {
+    } else if (contactProperty == kABPersonRelatedNamesProperty) {
         // ABMultiValueRef of CFStringRef
-    } else {
-        return nullptr;
     }
 
     return nullptr;
@@ -207,7 +207,8 @@ bool ABRecordRemoveValue(ABRecordRef record, ABPropertyID property, CFErrorRef* 
 
 /**
  @Status Interoperable
- @Notes
+ @Notes record is treated as a Person record, since Windows Contacts
+        doesn't support Group records.
 */
 CFStringRef ABRecordCopyCompositeName(ABRecordRef record) {
     // Behavior on the reference platform is undefined for Source records,

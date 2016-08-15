@@ -19,13 +19,4 @@
 
 @implementation _ABSource
 
-- (id)initWithRecordID:(ABRecordID)recordID {
-    self = [super init];
-    if (self) {
-        self.recordID = recordID;
-    }
-
-    return self;
-}
-
 @end

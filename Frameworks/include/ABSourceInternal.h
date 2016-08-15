@@ -22,7 +22,6 @@
 
 @interface _ABSource : _ABRecord
 
-@property ABRecordID recordID;
-- (id)initWithRecordID:(ABRecordID)recordID;
+@property (readonly) ABRecordID recordID;
 
 @end
