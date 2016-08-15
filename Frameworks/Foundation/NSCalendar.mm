@@ -22,7 +22,6 @@
 #include <Foundation/NSDate.h>
 #include <Foundation/NSString.h>
 #include <Foundation/NSCalendar.h>
-#include "NSTimeZoneInternal.h"
 #include "NSLocaleInternal.h"
 #include "NSDateComponentsInternal.h"
 

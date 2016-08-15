@@ -47,23 +47,33 @@
 - (void)incrementFoo {
     @synchronized(self) {
         self.foo += 1;
+        [_fooCondition lock];
         [_fooCondition broadcast];
+        [_fooCondition unlock];
     }
 }
 
 - (void)incrementBar:(NSNumber*)amount {
     @synchronized(self) {
         self.bar += [amount intValue];
+        [_barCondition lock];
         [_barCondition broadcast];
+        [_barCondition unlock];
     }
 }
 
 - (BOOL)waitOnFooForInterval:(NSTimeInterval)interval {
-    return [_fooCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:interval]];
+    [_fooCondition lock];
+    BOOL ret = [_fooCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:interval]];
+    [_fooCondition unlock];
+    return ret;
 }
 
 - (BOOL)waitOnBarForInterval:(NSTimeInterval)interval {
-    return [_barCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:interval]];
+    [_barCondition lock];
+    BOOL ret = [_barCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:interval]];
+    [_barCondition unlock];
+    return ret;
 }
 @end
 

@@ -62,7 +62,8 @@ TEST(NSAttributedString, AddBeforeAndAfter) {
     assertAttributeAt(aStr, c_defaultAttributeName, @"value1", 5, 1);
 }
 
-TEST(NSAttributedString, CoalesceOverlapAfter) {
+// Conflict resolution occurs lazily on OSX, but immediately on iOS
+OSX_DISABLED_TEST(NSAttributedString, CoalesceOverlapAfter) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(3, 2)];
@@ -70,7 +71,8 @@ TEST(NSAttributedString, CoalesceOverlapAfter) {
     assertAttributeAt(aStr, c_defaultAttributeName, @"value1", 2, 3);
 }
 
-TEST(NSAttributedString, CoalesceAdjacentAfter) {
+// Conflict resolution occurs lazily on OSX, but immediately on iOS
+OSX_DISABLED_TEST(NSAttributedString, CoalesceAdjacentAfter) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(4, 2)];
@@ -78,7 +80,8 @@ TEST(NSAttributedString, CoalesceAdjacentAfter) {
     assertAttributeAt(aStr, c_defaultAttributeName, @"value1", 2, 4);
 }
 
-TEST(NSAttributedString, CoalesceOverlapBefore) {
+// Conflict resolution occurs lazily on OSX, but immediately on iOS
+OSX_DISABLED_TEST(NSAttributedString, CoalesceOverlapBefore) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(1, 2)];
@@ -86,7 +89,8 @@ TEST(NSAttributedString, CoalesceOverlapBefore) {
     assertAttributeAt(aStr, c_defaultAttributeName, @"value1", 1, 3);
 }
 
-TEST(NSAttributedString, CoalesceAdjacentBefore) {
+// Conflict resolution occurs lazily on OSX, but immediately on iOS
+OSX_DISABLED_TEST(NSAttributedString, CoalesceAdjacentBefore) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(0, 2)];
@@ -94,7 +98,8 @@ TEST(NSAttributedString, CoalesceAdjacentBefore) {
     assertAttributeAt(aStr, c_defaultAttributeName, @"value1", 0, 4);
 }
 
-TEST(NSAttributedString, CoalesceComplex) {
+// Conflict resolution occurs lazily on OSX, but immediately on iOS
+OSX_DISABLED_TEST(NSAttributedString, CoalesceComplex) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(0, 2)];
@@ -141,7 +146,8 @@ TEST(NSAttributedString, RemoveAll) {
     assertAttributeAt(aStr, c_defaultAttributeName, nil, 0, 6);
 }
 
-TEST(NSAttributedString, OverwriteAfter) {
+// Conflict resolution occurs lazily on OSX, but immediately on iOS
+OSX_DISABLED_TEST(NSAttributedString, OverwriteAfter) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
     [aStr addAttribute:c_defaultAttributeName value:@"value2" range:NSMakeRange(3, 2)];
@@ -150,7 +156,8 @@ TEST(NSAttributedString, OverwriteAfter) {
     assertAttributeAt(aStr, c_defaultAttributeName, @"value2", 3, 2);
 }
 
-TEST(NSAttributedString, OverwriteBefore) {
+// Conflict resolution occurs lazily on OSX, but immediately on iOS
+OSX_DISABLED_TEST(NSAttributedString, OverwriteBefore) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value2" range:NSMakeRange(2, 2)];
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(1, 2)];
@@ -547,8 +554,10 @@ TEST(NSAttributedString, EnumerateAttribute) {
                      options:NSAttributedStringEnumerationReverse
                   usingBlock:^void(NSDictionary* val, NSRange range, BOOL* stop) {
                       ++timesEnumerated;
+                      ASSERT_EQ(0, [val count]);
+                      ASSERT_TRUE(NSEqualRanges(NSMakeRange(1, 3), range));
                   }];
-    ASSERT_EQ(0, timesEnumerated);
+    ASSERT_EQ(1, timesEnumerated);
 
     // test block to pass to enumerateAttribute:
     // iterates through expected data and validates that it's the same as the returned data
@@ -564,12 +573,15 @@ TEST(NSAttributedString, EnumerateAttribute) {
 
     // 1) basic test
     testAttributes.insert(testAttributes.end(),
-                          { { @"value1", NSMakeRange(1, 1) },
+                          { { nil, NSMakeRange(0, 1) },
+                            { @"value1", NSMakeRange(1, 1) },
                             { @"value2", NSMakeRange(2, 2) },
                             { @"value3", NSMakeRange(4, 1) },
                             { @"value4", NSMakeRange(5, 1) } });
     for (const auto& pair : testAttributes) {
-        [aStr addAttribute:@"key1" value:pair.first range:pair.second];
+        if (pair.first) {
+            [aStr addAttribute:@"key1" value:pair.first range:pair.second];
+        }
     }
 
     [aStr enumerateAttribute:@"key1"
@@ -585,15 +597,20 @@ TEST(NSAttributedString, EnumerateAttribute) {
     testAttributes.insert(testAttributes.end(),
                           { { @"value1", NSMakeRange(1, 1) },
                             { @"value2", NSMakeRange(2, 2) },
+                            { nil, NSMakeRange(4, 1) },
                             { @"value3", NSMakeRange(5, 1) },
+                            { nil, NSMakeRange(6, 1) },
                             { @"value4", NSMakeRange(7, 3) } });
 
     for (const auto& pair : testAttributes) {
-        [aStr addAttribute:@"key1" value:pair.first range:pair.second];
+        if (pair.first) {
+            [aStr addAttribute:@"key1" value:pair.first range:pair.second];
+        }
     }
 
-    // limit range to {2, 7}, excluding the first attribute and clipping part of the last (should still include the whole attribute)
+    // limit range to {2, 7}, excluding the first attribute and clipping part of the last
     index = 1;
+    testAttributes[5].second = NSMakeRange(7, 2);
     [aStr enumerateAttribute:@"key1"
                      inRange:NSMakeRange(2, 7)
                      options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired
@@ -606,12 +623,16 @@ TEST(NSAttributedString, EnumerateAttribute) {
     testAttributes.clear();
     testAttributes.insert(testAttributes.end(),
                           { { @"value4", NSMakeRange(7, 3) },
+                            { nil, NSMakeRange(6, 1) },
                             { @"value3", NSMakeRange(5, 1) },
+                            { nil, NSMakeRange(4, 1) },
                             { @"value2", NSMakeRange(2, 2) },
                             { @"value1", NSMakeRange(1, 1) } });
 
     for (const auto& pair : testAttributes) {
-        [aStr addAttribute:@"key1" value:pair.first range:pair.second];
+        if (pair.first) {
+            [aStr addAttribute:@"key1" value:pair.first range:pair.second];
+        }
     }
 
     // due to longest effective range being used, the expected range is different from the input
@@ -692,8 +713,10 @@ TEST(NSAttributedString, EnumerateAttributes) {
                              options:0
                           usingBlock:^void(NSDictionary* val, NSRange range, BOOL* stop) {
                               ++timesEnumerated;
+                              ASSERT_EQ(0, [val count]);
+                              ASSERT_TRUE(NSEqualRanges(NSMakeRange(1, 3), range));
                           }];
-    ASSERT_EQ(0, timesEnumerated);
+    ASSERT_EQ(1, timesEnumerated);
 
     [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 2)];
     [aStr addAttribute:@"key2" value:@"value2" range:NSMakeRange(1, 2)];

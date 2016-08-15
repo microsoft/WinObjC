@@ -49,7 +49,7 @@ FOUNDATION_EXPORT_CLASS
 @property (readonly, copy) NSArray<ObjectType>* allObjects;
 - (ObjectType)anyObject;
 - (BOOL)containsObject:(ObjectType)anObject;
-- (NSSet<ObjectType>*)filteredSetUsingPredicate:(NSPredicate*)predicate STUB_METHOD;
+- (NSSet<ObjectType>*)filteredSetUsingPredicate:(NSPredicate*)predicate;
 - (void)makeObjectsPerformSelector:(SEL)aSelector;
 - (void)makeObjectsPerformSelector:(SEL)aSelector withObject:(id)argument STUB_METHOD;
 - (ObjectType)member:(ObjectType)object;

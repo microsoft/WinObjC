@@ -85,7 +85,7 @@ static NSMutableDictionary* _constructCaseInsensitiveDictionary(NSDictionary* di
 
         // Parse the filename from the Content-Disposition header field.
         NSString* contentDisposition = [allHeaderFields objectForKey:@"Content-Disposition"];
-        NSRange filenameTagPosition = [contentDisposition rangeOfString:@"filename=" options:NSBackwardsSearch];
+        NSRange filenameTagPosition = [contentDisposition rangeOfString:@"filename=" options:0];
         NSCharacterSet* filenameEndDelimiter;
 
         if (filenameTagPosition.location != NSNotFound) {

@@ -97,12 +97,14 @@ TEST(NSCharacterSet, Bitmap) {
 
 TEST(NSCharacterSet, Mutables) {
     auto attachmentCharacterUnichar = static_cast<unichar>(0xFFFC);
-
-    NSRange attachmentCharacterRange =
-        NSMakeRange(attachmentCharacterUnichar, (attachmentCharacterUnichar - attachmentCharacterUnichar) + 1);
+    NSRange attachmentCharacterRange = NSMakeRange(attachmentCharacterUnichar, 1);
 
     NSRange initialSetRange = NSMakeRange(0, 0);
-    NSString* string = [[NSString alloc] initWithBytes:&attachmentCharacterUnichar length:2 encoding:NSUnicodeStringEncoding];
+#if defined(__LITTLE_ENDIAN__)
+    NSString* string = [[NSString alloc] initWithBytes:&attachmentCharacterUnichar length:2 encoding:NSUTF16LittleEndianStringEncoding];
+#else
+    NSString* string = [[NSString alloc] initWithBytes:&attachmentCharacterUnichar length:2 encoding:NSUTF16BigEndianStringEncoding];
+#endif
 
     NSMutableCharacterSet* mcset1 = [NSMutableCharacterSet characterSetWithRange:initialSetRange];
     [mcset1 addCharactersInRange:attachmentCharacterRange];

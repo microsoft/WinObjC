@@ -35,13 +35,13 @@ BundleArtifacts/
 [Oo]bj/
 [Oo]SX/
 *.o
-*.UnitTests.exe
 
 # Test results
 tmp
 
 # User-specific files
 *.suo
+*.swp
 *.user
 *.sln.docstates
 *.lock.json
@@ -60,7 +60,7 @@ ehthumbs.db
 Generated/
 Generated Files/
 
-# Ignore all CF public headers. They get copied in from the Frameworks directory as a pre build step. 
+# Ignore all CF public headers. They get copied in from the Frameworks directory as a pre build step.
 Include/CoreFoundation/CFStream.h
 Include/CoreFoundation/CFStringEncodingExt.h
 Include/CoreFoundation/CoreFoundation.h
@@ -106,7 +106,7 @@ Include/CoreFoundation/CFData.h
 Include/CoreFoundation/CFAttributedString.h
 Include/CoreFoundation/module.modulemap
 
-# Ignore all CF shared private headers. They get copied in from the Frameworks directory as a pre build step. 
+# Ignore all CF shared private headers. They get copied in from the Frameworks directory as a pre build step.
 Frameworks/Include/ForFoundationOnly.h
 Frameworks/Include/CFBundlePriv.h
 Frameworks/Include/CFPriv.h

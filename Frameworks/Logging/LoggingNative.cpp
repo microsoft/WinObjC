@@ -33,10 +33,10 @@ std::mutex s_isRegisteredMutex;
 
 // TODO: WIL logging hook
 // This is where we store the WIL hook
-//namespace wil {
-//namespace details {
+// namespace wil {
+// namespace details {
 //
-//void(__stdcall* g_pfnLoggingCallback)(wil::FailureInfo const& failure) WI_NOEXCEPT;
+// void(__stdcall* g_pfnLoggingCallback)(wil::FailureInfo const& failure) WI_NOEXCEPT;
 //
 //}
 //}
@@ -77,7 +77,7 @@ void TraceCritical(const wchar_t* tag, const wchar_t* format, ...) {
 }
 
 // TODO: WIL logging hook
-//void __stdcall _wilLoggingCallback(wil::FailureInfo const& failure) {
+// void __stdcall _wilLoggingCallback(wil::FailureInfo const& failure) {
 //    wchar_t debugString[2048];
 //    wil::GetFailureLogString(debugString, _countof(debugString), failure);
 //    TraceVerbose(L"WIL", debugString);
@@ -90,7 +90,7 @@ void TraceRegister() {
     }
 
     // TODO: WIL logging hook
-    //if (wil::details::g_pfnLoggingCallback == nullptr) {
+    // if (wil::details::g_pfnLoggingCallback == nullptr) {
     //    wil::details::g_pfnLoggingCallback = &_wilLoggingCallback;
     //}
 }
@@ -102,7 +102,7 @@ void TraceUnregister() {
     }
 
     // TODO: WIL logging hook
-    //if (wil::details::g_pfnLoggingCallback == &_wilLoggingCallback) {
+    // if (wil::details::g_pfnLoggingCallback == &_wilLoggingCallback) {
     //    wil::details::g_pfnLoggingCallback = nullptr;
     //}
 }

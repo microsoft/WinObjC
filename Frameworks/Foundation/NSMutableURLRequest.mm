@@ -22,9 +22,23 @@
 
 @implementation NSMutableURLRequest
 
+static Boolean _CFHTTPHeaderEqual(const void* obj1, const void* obj2) {
+    return [(id)obj1 caseInsensitiveCompare:(NSString*)obj2] == 0;
+}
+
+static CFHashCode _CFHTTPHeaderHash(const void* obj1) {
+    return [[(id)obj1 lowercaseString] hash];
+}
+
 - (void)_lazyInitAllHTTPHeaderFields {
     if (!_allHTTPHeaderFields) {
-        _allHTTPHeaderFields = [NSMutableDictionary new];
+        CFDictionaryKeyCallBacks caseInsensitiveKeyChecker = kCFTypeDictionaryKeyCallBacks;
+
+        caseInsensitiveKeyChecker.equal = _CFHTTPHeaderEqual;
+        caseInsensitiveKeyChecker.hash = _CFHTTPHeaderHash;
+
+        _allHTTPHeaderFields =
+            (NSMutableDictionary*)CFDictionaryCreateMutable(NULL, 0, &caseInsensitiveKeyChecker, &kCFTypeDictionaryValueCallBacks);
     }
 }
 
@@ -32,29 +46,14 @@
  @Status Interoperable
 */
 - (void)addValue:(NSString*)value forHTTPHeaderField:(NSString*)headerName {
-    id existing;
-
     @synchronized(self) {
         [self _lazyInitAllHTTPHeaderFields];
 
-        // Check if there is a case-sensitive variant of headerName in the dictionary
-        existing = [_allHTTPHeaderFields objectForKey:headerName];
-
-        // Check if there is a case-insensitive variant of headerName in the dictionary
-        if (!existing) {
-            for (NSString* key in _allHTTPHeaderFields) {
-                if ([headerName caseInsensitiveCompare:key] == NSOrderedSame) {
-                    // There should only ever be one case-insensitive variant of headerName in the dictionary at a time
-                    headerName = key;
-                    existing = [_allHTTPHeaderFields objectForKey:key];
-                    break;
-                }
-            }
+        id existingValue = [_allHTTPHeaderFields objectForKey:headerName];
+        if (existingValue) {
+            value = [[existingValue stringByAppendingString:@","] stringByAppendingString:value];
         }
 
-        if (existing) {
-            value = [[existing stringByAppendingString:@","] stringByAppendingString:value];
-        }
         [_allHTTPHeaderFields setObject:[value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] forKey:headerName];
     }
 }
@@ -66,19 +65,15 @@
     @synchronized(self) {
         [self _lazyInitAllHTTPHeaderFields];
 
-        // Remove any case-insensitive variants of headerName from the dictionary
-        if (![_allHTTPHeaderFields objectForKey:headerName]) {
-            for (NSString* key in _allHTTPHeaderFields) {
-                if ([headerName caseInsensitiveCompare:key] == NSOrderedSame) {
-                    // There should only ever be one case-insensitive variant of headerName in the dictionary at a time
-                    [_allHTTPHeaderFields removeObjectForKey:key];
-                    break;
-                }
-            }
-        }
-
         [_allHTTPHeaderFields setObject:[value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] forKey:headerName];
     }
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)copyWithZone:(NSZone*)zone {
+    return [self mutableCopyWithZone:zone];
 }
 
 @end

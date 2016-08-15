@@ -39,8 +39,8 @@ bool isSupportedLocaleAndTimeZone(NSLocale* locale, NSTimeZone* timezone) {
         @"",
         @"1/1/70, 12:00 AM",
         @"Jan 1, 1970, 12:00:00 AM",
-        @"January 1, 1970, 12:00:00 AM PST",
-        @"Thursday, January 1, 1970, 12:00:00 AM Pacific Standard Time"
+        @"January 1, 1970 at 12:00:00 AM PST",
+        @"Thursday, January 1, 1970 at 12:00:00 AM Pacific Standard Time"
     ];
 
     NSArray* expectedValuesGMT = @[

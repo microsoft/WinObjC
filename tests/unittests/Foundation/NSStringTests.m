@@ -596,11 +596,8 @@ TEST(NSString, Exceptions) {
     EXPECT_ANY_THROW([(NSMutableString*)immutableFormattedString replaceCharactersInRange:range withString:@"boom"]);
 }
 
-class StringsFormatPropertyList : public ::testing::TestWithParam<const wchar_t*> {};
-
-TEST_P(StringsFormatPropertyList, CanDeserialize) {
-    const wchar_t* data = GetParam();
-    NSString* string = [NSString stringWithCharacters:(const unichar*)data length:wcslen(data)];
+TEST(NSString, StringsFormatPropertyList) {
+    NSString* string = @"key1=value1;\n\"key2\"=\"value2\";";
 
     ASSERT_OBJCNE(nil, string);
 
@@ -611,9 +608,3 @@ TEST_P(StringsFormatPropertyList, CanDeserialize) {
     ASSERT_OBJCEQ(@"value1", propertyList[@"key1"]);
     ASSERT_OBJCEQ(@"value2", propertyList[@"key2"]);
 }
-
-INSTANTIATE_TEST_CASE_P(NSString,
-                        StringsFormatPropertyList,
-                        ::testing::Values(L"\uFEFFkey1=value1;\n\"key2\"=\"value2\";", // BOM
-                                          L"key1=value1;\n\"key2\"=\"value2\";" // No BOM
-                                          ));

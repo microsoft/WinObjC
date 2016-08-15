@@ -121,6 +121,39 @@
                             }())
 #endif
 
+// Macros to disable tests only for the WIN32 platform. This is for ensuring our tests match the reference platform's behavior
+// even if our tests do not. Another use case is validating tests and assumptions before our own implementation.
+#if TARGET_OS_WIN32
+
+#define WIN32_DISABLED_TEST(category, testName) DISABLED_TEST(category, testName)
+#define WIN32_DISABLED_TEST_F(category, testName) DISABLED_TEST_F(category, testName)
+#define WIN32_DISABLED_INSTANTIATE_TEST_CASE_P(instantiationName, testClass, values, disabledValues) \
+    DISABLED_INSTANTIATE_TEST_CASE_P(instantiationName, testClass, values, disabledValues)
+
+#else
+
+#define WIN32_DISABLED_TEST(category, testName) TEST(category, testName)
+#define WIN32_DISABLED_TEST_F(category, testName) TEST_F(category, testName)
+#define WIN32_DISABLED_INSTANTIATE_TEST_CASE_P(instantiationName, testClass, values, disabledValues)                \
+    INSTANTIATE_TEST_CASE_P(instantiationName,                                                                      \
+                            testClass,                                                                              \
+                            []() {                                                                                  \
+                                ::testing::internal::ParamGenerator<testClass::ParamType> values1 = values;         \
+                                ::testing::internal::ParamGenerator<testClass::ParamType> values2 = disabledValues; \
+                                std::vector<testClass::ParamType> combined;                                         \
+                                for (const auto& item : values1) {                                                  \
+                                    combined.push_back(item);                                                       \
+                                }                                                                                   \
+                                                                                                                    \
+                                for (const auto& item : values2) {                                                  \
+                                    combined.push_back(item);                                                       \
+                                }                                                                                   \
+                                                                                                                    \
+                                return ::testing::ValuesIn(combined);                                               \
+                                                                                                                    \
+                            }())
+#endif
+
 // OSX defines for compatibility
 #ifndef boolean
 #define boolean Boolean

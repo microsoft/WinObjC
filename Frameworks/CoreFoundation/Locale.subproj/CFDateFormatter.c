@@ -1865,7 +1865,7 @@ static void __CFDateFormatterSetProperty(CFDateFormatterRef formatter, CFStringR
         __CFGenericValidateType(value, CFNumberGetTypeID());
         int context = 0;
         CFNumberGetValue(static_cast<CFNumberRef>(value), kCFNumberIntType, &context);
-        // __cficu_udat_setContext(formatter->_df, static_cast<UDisplayContext>(context), &status); // HACKHACK: Don't have this symbol. Ignore for now.
+        __cficu_udat_setContext(formatter->_df, static_cast<UDisplayContext>(context), &status);
         if (!directToICU) {
             formatter->_property._FormattingContext = (CFNumberRef)CFRetain(value);
         }

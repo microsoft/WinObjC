@@ -88,11 +88,15 @@ static inline __CGSurfaceFormat _CGImageGetFormat(unsigned int bitsPerComponent,
                         fmt = _ColorARGB;
                     }
                     break;
-                case kCGImageAlphaNoneSkipLast:
                 case kCGImageAlphaLast:
                 case kCGImageAlphaPremultipliedLast:
+                    fmt = _ColorRGBA;
+                    break;
+                case kCGImageAlphaNoneSkipLast:
+                    fmt = _ColorXBGR;
+                    break;
                 default:
-                    UNIMPLEMENTED_WITH_MSG("RGBX and RGBA pixelformats unsupported");
+                    UNIMPLEMENTED_WITH_MSG("Unknown pixel format, assuming ARGB");
                     fmt = _ColorARGB;
                     break;
             }

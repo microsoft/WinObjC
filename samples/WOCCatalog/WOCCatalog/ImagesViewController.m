@@ -1,4 +1,4 @@
-//******************************************************************************
+so i//******************************************************************************
 //
 // Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
@@ -224,7 +224,7 @@
     UIImage* scaledPhotoNoInterpolation = [ImagesViewController scaleImage:photo.CGImage scaledRect:rect quality:kCGInterpolationNone];
 
     CIContext* context = [CIContext contextWithOptions:nil];
-    photo = [UIImage imageNamed:@"photo2.jpg"];
+    photo = [UIImage imageNamed:@"photo2.png"];
     CIImage* ciImage = [CIImage imageWithCGImage:photo.CGImage];
     CGImageRef cgImage = [context createCGImage:ciImage fromRect:CGRectMake(300, 600, 200, 200)];
 
@@ -233,7 +233,7 @@
     imagesView.animationImages = [NSArray arrayWithObjects:scaledPhotoHighInterpolation,
                                                            scaledPhotoNoInterpolation,
                                                            [UIImage imageNamed:@"photo1.jpg"],
-                                                           [UIImage imageNamed:@"photo2.jpg"],
+                                                           [UIImage imageNamed:@"photo2.png"],
                                                            cmyStripedAndBrightenedPhoto,
                                                            [UIImage imageWithCGImage:cgImage],
                                                            [UIImage imageNamed:@"photo3.jpg"],

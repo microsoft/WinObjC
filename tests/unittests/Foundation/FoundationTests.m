@@ -40,10 +40,8 @@ TEST(Sanity, SanityTest) {
 
     NSTimeZone* curTZ = [NSTimeZone timeZoneWithName:@"America/Los_Angeles"];
 
-    ASSERT_FALSE_MSG(([curTZ isDaylightSavingTimeForDate:startDate] != NO || [curTZ isDaylightSavingTimeForDate:endDate] != YES),
-                     "FAILED: timezone daylight savings time failure: %d %d\n",
-                     [curTZ isDaylightSavingTimeForDate:startDate],
-                     [curTZ isDaylightSavingTimeForDate:endDate]);
+    ASSERT_FALSE([curTZ isDaylightSavingTimeForDate:startDate]);
+    ASSERT_TRUE([curTZ isDaylightSavingTimeForDate:endDate]);
 
     NSCalendar* curCal = [NSCalendar currentCalendar];
     [curCal setTimeZone:curTZ];
