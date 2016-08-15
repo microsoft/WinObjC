@@ -28,6 +28,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "Foundation/NSLock.h"
 #import <time.h>
 #import "LoggingNative.h"
+#import "NSOperationInternal.h"
 
 static const wchar_t* TAG = L"NSOperationQueue";
 
@@ -41,8 +42,9 @@ typedef struct NSAtomicListNode* NSAtomicListRef;
 
 struct NSOperationQueuePriv {
     NSAtomicListRef myQueues[NSOperationQueuePriority_Count];
+    NSAtomicListRef queues[NSOperationQueuePriority_Count];
 
-    id _thread;
+    NSThread* _thread;
     pthread_mutex_t _threadRunningLock;
 
     DWORD _maxConcurrentOperationCount;
@@ -52,7 +54,6 @@ struct NSOperationQueuePriv {
     id curOperation;
     BOOL isSuspended;
 
-    void* queues[NSOperationQueuePriority_Count];
     id _name;
 
     NSOperationQueuePriv() {
@@ -132,6 +133,7 @@ static id _mainQueue;
 
 @interface NSOperationQueue () {
     struct NSOperationQueuePriv* priv;
+    dispatch_queue_t _completionQueue;
 }
 @end
 
@@ -161,7 +163,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
             *curOperation = nil;
         } else {
             NSAtomicListInsert(sourceListPtr, op);
-            return FALSE;
+            // We claim that we have done some work here.
+            // Otherwise, this work session is considered to be over and we clear the pending queue.
+            return TRUE;
         }
     }
 
@@ -202,7 +206,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
             }
             [priv->suspendedCondition unlock];
 
-            if (RunOperationFromLists(&priv->myQueues[i], (NSAtomicListRef*)(&priv->queues[i]), &priv->curOperation)) {
+            if (RunOperationFromLists(&priv->myQueues[i], &priv->queues[i], &priv->curOperation)) {
                 didWork = TRUE;
             }
         }
@@ -234,13 +238,17 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
  @Status Interoperable
 */
 - (id)init {
-    priv = new NSOperationQueuePriv();
+    if (self = [super init]) {
+        priv = new NSOperationQueuePriv();
 
-    priv->_maxConcurrentOperationCount = 1;
-    priv->workAvailable = [[NSCondition alloc] init];
-    priv->suspendedCondition = [[NSCondition alloc] init];
-    priv->allWorkDone = [[NSCondition alloc] init];
-    priv->isSuspended = 0;
+        priv->_maxConcurrentOperationCount = 1;
+        priv->workAvailable = [[NSCondition alloc] init];
+        priv->suspendedCondition = [[NSCondition alloc] init];
+        priv->allWorkDone = [[NSCondition alloc] init];
+        priv->isSuspended = 0;
+
+        _completionQueue = dispatch_queue_create("NSOperation finish queue", nullptr);
+    }
 
     return self;
 }
@@ -271,6 +279,8 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     }
     */
 
+    [op _setCompletionQueue:_completionQueue];
+
     unsigned priority = 1;
     if ([op queuePriority] < NSOperationQueuePriorityNormal) {
         priority = 2;
@@ -278,7 +288,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
         priority = 0;
     }
 
-    NSAtomicListInsert((NSAtomicListRef*)(&priv->queues[priority]), op);
+    NSAtomicListInsert(&priv->queues[priority], op);
     [priv->workAvailable signal];
 
     pthread_mutex_lock(&priv->_threadRunningLock);
@@ -345,7 +355,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
 
     for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
         if (priv->queues[i] != NULL) {
-            NSAtomicListNode* curNode = (NSAtomicListNode*)priv->queues[i];
+            NSAtomicListNode* curNode = priv->queues[i];
 
             while (curNode != NULL) {
                 id node = curNode->elt;
@@ -354,7 +364,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
             }
         }
         if (priv->myQueues[i] != NULL) {
-            NSAtomicListNode* curNode = (NSAtomicListNode*)priv->myQueues[i];
+            NSAtomicListNode* curNode = priv->myQueues[i];
 
             while (curNode != NULL) {
                 id node = curNode->elt;
@@ -379,7 +389,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     }
     for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
         if (priv->queues[i] != NULL) {
-            NSAtomicListNode* curNode = (NSAtomicListNode*)priv->queues[i];
+            NSAtomicListNode* curNode = priv->queues[i];
 
             while (curNode != NULL) {
                 ret++;
@@ -387,7 +397,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
             }
         }
         if (priv->myQueues[i] != NULL) {
-            NSAtomicListNode* curNode = (NSAtomicListNode*)priv->myQueues[i];
+            NSAtomicListNode* curNode = priv->myQueues[i];
 
             while (curNode != NULL) {
                 ret++;
@@ -412,7 +422,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
 
     for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
         if (priv->queues[i] != NULL) {
-            NSAtomicListNode* curNode = (NSAtomicListNode*)priv->queues[i];
+            NSAtomicListNode* curNode = priv->queues[i];
 
             while (curNode != NULL) {
                 id node = curNode->elt;
@@ -421,7 +431,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
             }
         }
         if (priv->myQueues[i] != NULL) {
-            NSAtomicListNode* curNode = (NSAtomicListNode*)priv->myQueues[i];
+            NSAtomicListNode* curNode = priv->myQueues[i];
 
             while (curNode != NULL) {
                 id node = curNode->elt;
@@ -537,6 +547,8 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     [priv->allWorkDone release];
     pthread_mutex_destroy(&priv->_threadRunningLock);
     delete priv;
+
+    dispatch_release(_completionQueue);
 
     [super dealloc];
 }
