@@ -95,8 +95,8 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     _fontSizeSlider = [[UISlider alloc] initWithFrame:CGRectMake(440, 240, 100, 100)];
-    _fontSizeSlider.minimumValue = 4.0;
-    _fontSizeSlider.maximumValue = 256.0;
+    _fontSizeSlider.minimumValue = 8.0;
+    _fontSizeSlider.maximumValue = 140.0;
     _fontSizeSlider.value = 20.0;
     _fontSizeSlider.continuous = YES;
     [_fontSizeSlider addTarget:self action:@selector(sizeChanged) forControlEvents:UIControlEventValueChanged];
