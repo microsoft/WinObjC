@@ -43,7 +43,12 @@ ABRecordID ABRecordGetRecordID(ABRecordRef record) {
             // Therefore, we trim off the last curly brace and split on periods, giving us:
             // ["{storeid", "itemtype", "id"], which we can then grab id from and convert
             // it to an int.
-            NSString* idAsString = [[fullId substringToIndex:(fullId.length - 1)] componentsSeparatedByString:@"."][2];
+            NSArray* idComponents = [[fullId substringToIndex:(fullId.length - 1)] componentsSeparatedByString:@"."];
+            if ([idComponents count] < 3) {
+                return kABRecordInvalidID;
+            }
+
+            NSString* idAsString = idComponents[2];
             return [idAsString integerValue];
         }
         case kABSourceType: {
@@ -128,6 +133,11 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
     // Case for birthday-related property.
     if (contactProperty == kABPersonBirthdayProperty) {
         NSArray* dates = person.contact.importantDates;
+
+        // Find the first date in the contact's important dates
+        // that is marked as a birthday, since a Windows contact stores
+        // all of its important dates in a list under a single property
+        // rather than explicitly storing the birthday.
         NSUInteger birthdayIndex = [dates indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL* stop) {
             WACContactDate* date = (WACContactDate*)obj;
             if (date.kind == WACContactDateKindBirthday) {
@@ -144,6 +154,11 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
             WACContactDate* date = dates[birthdayIndex];
             NSCalendar* calendar = [NSCalendar currentCalendar];
             NSDateComponents* dateComponents = [[NSDateComponents alloc] init];
+
+            // Grab the numerical values of the day/month/year,
+            // and create an NSDate to match the same day as their birthday.
+            // NSDate is toll-free bridged with CFDate, which is the type
+            // the user expects to receive.
             dateComponents.day = [date.day integerValue];
             dateComponents.month = [date.month integerValue];
             dateComponents.year = [date.year integerValue];
@@ -174,6 +189,7 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
         // CFDateRef
     }
 
+    // TODO #678
     // Cases for various multi-value properties.
     if (contactProperty == kABPersonEmailProperty) {
         // ABMultiValueRef of CFStringRef
@@ -207,12 +223,12 @@ bool ABRecordRemoveValue(ABRecordRef record, ABPropertyID property, CFErrorRef* 
 
 /**
  @Status Interoperable
- @Notes record is treated as a Person record, since Windows Contacts
-        doesn't support Group records.
+ @Notes record is treated as a Person record, since the Windows Contacts
+        Framework doesn't support Group records.
 */
 CFStringRef ABRecordCopyCompositeName(ABRecordRef record) {
     // Behavior on the reference platform is undefined for Source records,
-    // and Windows Contacts doesn't support Group records, so we can assume
+    // and the Windows Contacts Framework doesn't support Group records, so we can assume
     // it is a Person record.
     _ABContact* person = (__bridge _ABContact*)record;
     return (__bridge_retained CFStringRef)person.contact.fullName;

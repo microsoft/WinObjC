@@ -50,7 +50,9 @@ protected:
         job.companyAddress = @"Redmond, WA";
 
         [contact.jobInfo addObject:job];
+        [job release];
         _record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact];
+        [contact release];
     }
 
     virtual void TearDown() {
@@ -62,9 +64,9 @@ protected:
 
 TEST_P(AddressBookQueryTest, BasicContactQuery) {
     ABPropertyID property = ::testing::get<0>(GetParam());
-    ASSERT_OBJCEQ_MSG(::testing::get<1>(GetParam()),
-                      (__bridge_transfer NSString*)ABRecordCopyValue(_record, property),
-                      "FAILED: Incorrect property copied!\n");
+    CFStringRef recordValue = (CFStringRef)ABRecordCopyValue(_record, property);
+    ASSERT_OBJCEQ_MSG(::testing::get<1>(GetParam()), (__bridge NSString*)recordValue, "FAILED: Incorrect property copied!\n");
+    CFRelease(recordValue);
 }
 
 INSTANTIATE_TEST_CASE_P(AddressBook,
@@ -100,16 +102,19 @@ TEST(AddressBook, QueryContactBirthday) {
     dateComponents.month = 4;
     dateComponents.year = 1975;
     NSDate* date = [calendar dateFromComponents:dateComponents];
-    NSDate* contactBirthday = (__bridge_transfer NSDate*)ABRecordCopyValue(record, kABPersonBirthdayProperty);
-    ASSERT_TRUE_MSG([[NSCalendar currentCalendar] isDate:contactBirthday inSameDayAsDate:date],
+    CFDateRef contactBirthday = (CFDateRef)ABRecordCopyValue(record, kABPersonBirthdayProperty);
+    ASSERT_TRUE_MSG([[NSCalendar currentCalendar] isDate:(__bridge NSDate*)contactBirthday inSameDayAsDate:date],
                     "FAILED: Dates should be on the same day!\n");
     CFRelease(record);
+    CFRelease(contactBirthday);
+    [dateComponents release];
+    [contact release];
+    [birthday release];
 }
 
 TEST(AddressBook, GetRecordTypeAndID) {
     ASSERT_EQ_MSG(kABRecordInvalidID, ABRecordGetRecordID(nullptr), "FAILED: null record should have an invalid ID!\n");
     ABRecordRef record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:[WACContact make]];
-    ASSERT_NE_MSG(kABRecordInvalidID, ABRecordGetRecordID(record), "FAILED: Valid record should have a valid ID!\n");
     ASSERT_EQ_MSG(kABPersonType, ABRecordGetRecordType(record), "FAILED: Person record should have a person type!\n");
     CFRelease(record);
 }
