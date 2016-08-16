@@ -149,3 +149,7 @@ ADDRESSBOOK_EXPORT const CFStringRef kABPersonAlternateBirthdayMonthKey;
 ADDRESSBOOK_EXPORT const CFStringRef kABPersonAlternateBirthdayIsLeapMonthKey;
 ADDRESSBOOK_EXPORT const CFStringRef kABPersonAlternateBirthdayDayKey;
 // CFNumberRef - kCFNumberNSIntegerType
+ADDRESSBOOK_EXPORT const CFStringRef kABPersonPhoneCompanyLabel;
+ADDRESSBOOK_EXPORT const CFStringRef kABPersonPhoneAssistantLabel;
+ADDRESSBOOK_EXPORT const CFStringRef kABPersonPhoneRadioLabel;
+ADDRESSBOOK_EXPORT const CFStringRef kABPersonSiblingLabel;

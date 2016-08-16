@@ -28,4 +28,18 @@
     return self;
 }
 
++ (NSDate*)convertDate:(WACContactDate*)date {
+    NSCalendar* calendar = [NSCalendar currentCalendar];
+    NSDateComponents* dateComponents = [[NSDateComponents alloc] init];
+
+    // Grab the numerical values of the day/month/year,
+    // and create an NSDate to match the same day as the
+    // given NSDate.
+    dateComponents.day = [date.day integerValue];
+    dateComponents.month = [date.month integerValue];
+    dateComponents.year = [date.year integerValue];
+    NSDate* resultDate = [calendar dateFromComponents:dateComponents];
+    return resultDate;
+}
+
 @end

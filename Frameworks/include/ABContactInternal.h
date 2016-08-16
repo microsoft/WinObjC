@@ -24,4 +24,8 @@
 @property WACContact* contact;
 - (id)initWithContact:(WACContact*)contact;
 
+// Returns an NSDate* for the same day, month, and year
+// as the given WACContactDate*.
++ (NSDate*)convertDate:(WACContactDate*)date;
+
 @end

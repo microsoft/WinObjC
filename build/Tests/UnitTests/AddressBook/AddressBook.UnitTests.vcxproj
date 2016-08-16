@@ -238,6 +238,7 @@
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\AddressBook\AuthorizationTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\AddressBook\BasicQueryTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\AddressBook\MultiValueTests.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

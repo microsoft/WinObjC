@@ -19,74 +19,108 @@
 #import <StubReturn.h>
 #import "AssertARCEnabled.h"
 
+#import "ABMultiValueInternal.h"
+
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFTypeRef ABMultiValueCopyValueAtIndex(ABMultiValueRef multiValue, CFIndex index) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (multiValue == nullptr) {
+        return nullptr;
+    }
+
+    _ABMultiValue* multi = (__bridge _ABMultiValue*)multiValue;
+    return [multi copyValueAtIndex:index];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFArrayRef ABMultiValueCopyArrayOfAllValues(ABMultiValueRef multiValue) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (multiValue == nullptr) {
+        return nullptr;
+    }
+
+    _ABMultiValue* multi = (__bridge _ABMultiValue*)multiValue;
+    return [multi copyArrayOfAllValues];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFIndex ABMultiValueGetCount(ABMultiValueRef multiValue) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (multiValue == nullptr) {
+        return 0;
+    }
+
+    _ABMultiValue* multi = (__bridge _ABMultiValue*)multiValue;
+    return [multi getCount];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFIndex ABMultiValueGetFirstIndexOfValue(ABMultiValueRef multiValue, CFTypeRef value) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (multiValue == nullptr) {
+        return -1;
+    }
+
+    _ABMultiValue* multi = (__bridge _ABMultiValue*)multiValue;
+    return [multi getFirstIndexOfValue:value];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFStringRef ABMultiValueCopyLabelAtIndex(ABMultiValueRef multiValue, CFIndex index) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (multiValue == nullptr) {
+        return nullptr;
+    }
+
+    _ABMultiValue* multi = (__bridge _ABMultiValue*)multiValue;
+    return [multi copyLabelAtIndex:index];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 ABMultiValueIdentifier ABMultiValueGetIdentifierAtIndex(ABMultiValueRef multiValue, CFIndex index) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (multiValue == nullptr) {
+        return kABMultiValueInvalidIdentifier;
+    }
+
+    _ABMultiValue* multi = (__bridge _ABMultiValue*)multiValue;
+    return [multi getIdentifierAtIndex:index];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFIndex ABMultiValueGetIndexForIdentifier(ABMultiValueRef multiValue, ABMultiValueIdentifier identifier) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (multiValue == nullptr) {
+        return -1;
+    }
+
+    _ABMultiValue* multi = (__bridge _ABMultiValue*)multiValue;
+    return [multi getIndexForIdentifier:identifier];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 ABPropertyType ABMultiValueGetPropertyType(ABMultiValueRef multiValue) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (multiValue == nullptr) {
+        return kABInvalidPropertyType;
+    }
+
+    _ABMultiValue* multi = (__bridge _ABMultiValue*)multiValue;
+    return [multi getPropertyType];
 }
