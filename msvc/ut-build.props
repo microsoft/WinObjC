@@ -9,7 +9,7 @@
   </ItemDefinitionGroup>
 
   <PropertyGroup Label="Configuration">
-    <StarboardLinkWholeArchive>true</StarboardLinkWholeArchive>
+    <StarboardLinkWholeArchive>false</StarboardLinkWholeArchive>
   </PropertyGroup>
 
 </Project>

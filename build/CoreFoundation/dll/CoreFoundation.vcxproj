@@ -30,6 +30,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFRuntime.c" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
