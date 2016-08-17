@@ -250,6 +250,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\_NSKeyValueCodingAggregateFunctions.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCFTimeZone.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSString+HSTRING.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Foundation\_NSUndoCall.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Foundation\_NSUndoGroup.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Foundation\_NSUndoObject.mm" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCFArray.h" />

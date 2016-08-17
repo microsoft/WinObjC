@@ -36,24 +36,24 @@ FOUNDATION_EXPORT NSString* const NSUndoManagerDidCloseUndoGroupNotification;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSUndoManager : NSObject
-- (void)registerUndoWithTarget:(id)target selector:(SEL)aSelector object:(id)anObject STUB_METHOD;
+- (void)registerUndoWithTarget:(id)target selector:(SEL)aSelector object:(id)anObject;
 - (id)prepareWithInvocationTarget:(id)target STUB_METHOD;
-@property (readonly) BOOL canUndo STUB_PROPERTY;
-@property (readonly) BOOL canRedo STUB_PROPERTY;
-- (void)undo STUB_METHOD;
+@property (readonly) BOOL canUndo;
+@property (readonly) BOOL canRedo;
+- (void)undo;
 - (void)undoNestedGroup STUB_METHOD;
-- (void)redo STUB_METHOD;
+- (void)redo;
 @property NSUInteger levelsOfUndo STUB_PROPERTY;
 - (void)beginUndoGrouping STUB_METHOD;
 - (void)endUndoGrouping STUB_METHOD;
-@property BOOL groupsByEvent STUB_PROPERTY;
+@property BOOL groupsByEvent;
 @property (readonly) NSInteger groupingLevel STUB_PROPERTY;
-- (void)disableUndoRegistration STUB_METHOD;
-- (void)enableUndoRegistration STUB_METHOD;
-@property (readonly, getter=isUndoRegistrationEnabled) BOOL undoRegistrationEnabled STUB_PROPERTY;
-@property (readonly, getter=isUndoing) BOOL undoing STUB_PROPERTY;
-@property (readonly, getter=isRedoing) BOOL redoing STUB_PROPERTY;
-- (void)removeAllActions STUB_METHOD;
+- (void)disableUndoRegistration;
+- (void)enableUndoRegistration;
+@property (readonly, getter=isUndoRegistrationEnabled) BOOL undoRegistrationEnabled;
+@property (readonly, getter=isUndoing) BOOL undoing;
+@property (readonly, getter=isRedoing) BOOL redoing;
+- (void)removeAllActions;
 - (void)removeAllActionsWithTarget:(id)target STUB_METHOD;
 @property (readonly, copy) NSString* undoActionName STUB_PROPERTY;
 @property (readonly, copy) NSString* redoActionName STUB_PROPERTY;
