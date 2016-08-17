@@ -117,9 +117,9 @@ TEST_P(AddressBookMultiValueQueryTest, MultiValueStringQuery) {
     ABPropertyType propertyType = ABMultiValueGetPropertyType(multiValue);
 
     EXPECT_OBJCEQ_MSG((__bridge NSString*)actualValue, value, "FAILED: Incorrect value at specified index!\n");
-    ASSERT_OBJCEQ_MSG((__bridge NSString*)actualLabel, (__bridge NSString*)label, "FAILED: Incorrect label at specified index!\n");
-    ASSERT_EQ_MSG(actualCount, count, "FAILED: Incorrect count of MultiValue!\n");
-    ASSERT_EQ_MSG(propertyType, kABStringPropertyType, "FAILED: Incorrect property type!\n");
+    EXPECT_OBJCEQ_MSG((__bridge NSString*)actualLabel, (__bridge NSString*)label, "FAILED: Incorrect label at specified index!\n");
+    EXPECT_EQ_MSG(actualCount, count, "FAILED: Incorrect count of MultiValue!\n");
+    EXPECT_EQ_MSG(propertyType, kABStringPropertyType, "FAILED: Incorrect property type!\n");
 
     CFRelease(actualLabel);
     CFRelease(actualValue);

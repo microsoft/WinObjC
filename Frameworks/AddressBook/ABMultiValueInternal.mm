@@ -21,7 +21,7 @@
 // and value (along with an identifier).
 @interface __ABMultiValuePair : NSObject
 
-@property NSString* label;
+@property (copy) NSString* label;
 @property id value;
 @property ABMultiValueIdentifier identifier;
 
