@@ -30,38 +30,41 @@ FOUNDATION_EXPORT NSString* const NSDecimalNumberDivideByZeroException;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSDecimalNumber : NSNumber <NSCopying, NSSecureCoding>
-+ (NSDecimalNumber*)decimalNumberWithDecimal:(NSDecimal)decimal STUB_METHOD;
-+ (NSDecimalNumber*)decimalNumberWithMantissa:(unsigned long long)mantissa exponent:(short)exponent isNegative:(BOOL)isNegative STUB_METHOD;
-+ (NSDecimalNumber*)decimalNumberWithString:(NSString*)numericString;
+
++ (NSDecimalNumber*)one;
++ (NSDecimalNumber*)zero;
++ (NSDecimalNumber*)notANumber;
+- (instancetype)initWithDecimal:(NSDecimal)decimal;
+- (instancetype)initWithMantissa:(unsigned long long)mantissa exponent:(short)exponent isNegative:(BOOL)flag;
+
++ (NSDecimalNumber*)decimalNumberWithDecimal:(NSDecimal)decimal;
++ (NSDecimalNumber*)decimalNumberWithMantissa:(unsigned long long)mantissa exponent:(short)exponent isNegative:(BOOL)isNegative;
++ (NSDecimalNumber*)decimalNumberWithString:(NSString*)numericString STUB_METHOD;
 + (NSDecimalNumber*)decimalNumberWithString:(NSString*)numericString locale:(id)locale STUB_METHOD;
-+ (NSDecimalNumber*)one STUB_METHOD;
-+ (NSDecimalNumber*)zero STUB_METHOD;
-+ (NSDecimalNumber*)notANumber STUB_METHOD;
-- (instancetype)initWithDecimal:(NSDecimal)decimal STUB_METHOD;
-- (instancetype)initWithMantissa:(unsigned long long)mantissa exponent:(short)exponent isNegative:(BOOL)flag STUB_METHOD;
+
 - (instancetype)initWithString:(NSString*)numericString STUB_METHOD;
 - (instancetype)initWithString:(NSString*)numericString locale:(id)locale STUB_METHOD;
-- (NSDecimalNumber*)decimalNumberByAdding:(NSDecimalNumber*)decimalNumber STUB_METHOD;
-- (NSDecimalNumber*)decimalNumberBySubtracting:(NSDecimalNumber*)decimalNumber STUB_METHOD;
-- (NSDecimalNumber*)decimalNumberByMultiplyingBy:(NSDecimalNumber*)decimalNumber STUB_METHOD;
-- (NSDecimalNumber*)decimalNumberByDividingBy:(NSDecimalNumber*)decimalNumber STUB_METHOD;
-- (NSDecimalNumber*)decimalNumberByRaisingToPower:(NSUInteger)power STUB_METHOD;
-- (NSDecimalNumber*)decimalNumberByMultiplyingByPowerOf10:(short)power STUB_METHOD;
-- (NSDecimalNumber*)decimalNumberByAdding:(NSDecimalNumber*)decimalNumber withBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
-- (NSDecimalNumber*)decimalNumberBySubtracting:(NSDecimalNumber*)decimalNumber
-                                  withBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
-- (NSDecimalNumber*)decimalNumberByMultiplyingBy:(NSDecimalNumber*)decimalNumber
-                                    withBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
-- (NSDecimalNumber*)decimalNumberByDividingBy:(NSDecimalNumber*)decimalNumber
-                                 withBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
-- (NSDecimalNumber*)decimalNumberByRaisingToPower:(NSUInteger)power withBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
-- (NSDecimalNumber*)decimalNumberByMultiplyingByPowerOf10:(short)power withBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
-- (NSDecimalNumber*)decimalNumberByRoundingAccordingToBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
+
+- (NSDecimalNumber*)decimalNumberByAdding:(NSDecimalNumber*)decimalNumber;
+- (NSDecimalNumber*)decimalNumberBySubtracting:(NSDecimalNumber*)decimalNumber;
+- (NSDecimalNumber*)decimalNumberByMultiplyingBy:(NSDecimalNumber*)decimalNumber;
+- (NSDecimalNumber*)decimalNumberByDividingBy:(NSDecimalNumber*)decimalNumber;
+- (NSDecimalNumber*)decimalNumberByRaisingToPower:(NSUInteger)power;
+- (NSDecimalNumber*)decimalNumberByMultiplyingByPowerOf10:(short)power;
+- (NSDecimalNumber*)decimalNumberByAdding:(NSDecimalNumber*)decimalNumber withBehavior:(id<NSDecimalNumberBehaviors>)behavior;
+- (NSDecimalNumber*)decimalNumberBySubtracting:(NSDecimalNumber*)decimalNumber withBehavior:(id<NSDecimalNumberBehaviors>)behavior;
+- (NSDecimalNumber*)decimalNumberByMultiplyingBy:(NSDecimalNumber*)decimalNumber withBehavior:(id<NSDecimalNumberBehaviors>)behavior;
+- (NSDecimalNumber*)decimalNumberByDividingBy:(NSDecimalNumber*)decimalNumber withBehavior:(id<NSDecimalNumberBehaviors>)behavior;
+- (NSDecimalNumber*)decimalNumberByRaisingToPower:(NSUInteger)power withBehavior:(id<NSDecimalNumberBehaviors>)behavior;
+- (NSDecimalNumber*)decimalNumberByMultiplyingByPowerOf10:(short)power withBehavior:(id<NSDecimalNumberBehaviors>)behavior;
+- (NSDecimalNumber*)decimalNumberByRoundingAccordingToBehavior:(id<NSDecimalNumberBehaviors>)behavior;
 - (NSString*)descriptionWithLocale:(id)locale STUB_METHOD;
-@property (readonly) const char* objCType;
-+ (id<NSDecimalNumberBehaviors>)defaultBehavior STUB_METHOD;
 + (void)setDefaultBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
-- (NSComparisonResult)compare:(NSNumber*)decimalNumber STUB_METHOD;
-+ (NSDecimalNumber*)maximumDecimalNumber STUB_METHOD;
-+ (NSDecimalNumber*)minimumDecimalNumber STUB_METHOD;
+- (NSComparisonResult)compare:(NSNumber*)decimalNumber;
++ (NSDecimalNumber*)maximumDecimalNumber;
++ (NSDecimalNumber*)minimumDecimalNumber;
+
+@property (readonly) const char* objCType;
+@property (readonly) NSDecimal decimalValue;
++ (id<NSDecimalNumberBehaviors>)defaultBehavior;
 @end
