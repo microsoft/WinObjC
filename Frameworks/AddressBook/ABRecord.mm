@@ -24,6 +24,7 @@
 #import "ABRecordInternal.h"
 #import "ABSourceInternal.h"
 #import "ABMultiValueInternal.h"
+#import "NSDate+AddressBookAdditions.h"
 
 /**
  @Status Interoperable
@@ -160,7 +161,7 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
 
             // NSDate is toll-free bridged with CFDate, which is the type
             // the user expects to receive.
-            NSDate* resultDate = [_ABContact convertDate:date];
+            NSDate* resultDate = [NSDate dateWithWACContactDate:date];
             return (__bridge_retained CFTypeRef)resultDate;
         }
     }
@@ -170,25 +171,19 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
         return (__bridge_retained CFTypeRef)person.contact.notes;
     }
 
-    // The following properties don't have a good 1-1 mapping between iOS contacts
-    // and Windows contacts (alternate birthday, creation/modification dates,
-    // phonetic middle name, instant message/social profile).
+    /* The following properties don't have a good 1-1 mapping between iOS contacts
+       and Windows contacts (alternate birthday, creation/modification dates,
+       phonetic middle name, instant message/social profile). There is currently
+       no support planned for them.
 
-    if (contactProperty == kABPersonMiddleNamePhoneticProperty) {
-        // CFStringRef
-    } else if (contactProperty == kABPersonKindProperty) {
-        // CFNumberRef
-    } else if (contactProperty == kABPersonAlternateBirthdayProperty) {
-        // CFDictionaryRef
-    } else if (contactProperty == kABPersonCreationDateProperty) {
-        // CFDateRef
-    } else if (contactProperty == kABPersonModificationDateProperty) {
-        // CFDateRef
-    } else if (contactProperty == kABPersonInstantMessageProperty) {
-        // ABMultiValueRef of CFDictionaryRef
-    } else if (contactProperty == kABPersonSocialProfileProperty) {
-        // ABMultiValueRef of CFDictionaryRef
-    }
+        kABPersonMiddleNamePhoneticProperty
+        kABPersonKindProperty
+        kABPersonAlternateBirthdayProperty
+        kABPersonCreationDateProperty
+        kABPersonModificationDateProperty
+        kABPersonInstantMessageProperty
+        kABPersonSocialProfileProperty
+    */
 
     // Cases for various multi-value properties.
     if (contactProperty == kABPersonEmailProperty) {
@@ -205,6 +200,7 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
                     label = kABWorkLabel;
                     break;
                 case WACContactEmailKindOther:
+                default:
                     label = kABOtherLabel;
                     break;
             }
@@ -230,16 +226,17 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
                     label = kABWorkLabel;
                     break;
                 case WACContactAddressKindOther:
+                default:
                     label = kABOtherLabel;
                     break;
             }
 
             NSDictionary* dictionary = @{
-                (__bridge NSString*) kABPersonAddressStreetKey : address.streetAddress, (__bridge NSString*)
-                kABPersonAddressCityKey : address.locality, (__bridge NSString*)
-                kABPersonAddressStateKey : address.region, (__bridge NSString*)
-                kABPersonAddressZIPKey : address.postalCode, (__bridge NSString*)
-                kABPersonAddressCountryKey : address.country
+                ((__bridge NSString*)kABPersonAddressStreetKey) : address.streetAddress,
+                ((__bridge NSString*)kABPersonAddressCityKey) : address.locality,
+                ((__bridge NSString*)kABPersonAddressStateKey) : address.region,
+                ((__bridge NSString*)kABPersonAddressZIPKey) : address.postalCode,
+                ((__bridge NSString*)kABPersonAddressCountryKey) : address.country
             };
 
             [addressMultiValue appendPairWithLabel:(__bridge NSString*)label andValue:dictionary];
@@ -264,11 +261,12 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
                     label = kABPersonAnniversaryLabel;
                     break;
                 case WACContactDateKindOther:
+                default:
                     label = kABOtherLabel;
                     break;
             }
 
-            NSDate* resultDate = [_ABContact convertDate:date];
+            NSDate* resultDate = [NSDate dateWithWACContactDate:date];
             [dateMultiValue appendPairWithLabel:(__bridge NSString*)label andValue:resultDate];
         }];
 
@@ -311,6 +309,7 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
                     label = kABPersonPhoneRadioLabel;
                     break;
                 case WACContactPhoneKindOther:
+                default:
                     label = kABOtherLabel;
                     break;
             }
@@ -341,9 +340,6 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
             WACContactSignificantOther* significantOther = (WACContactSignificantOther*)obj;
             CFStringRef label;
             switch (significantOther.relationship) {
-                case WACContactRelationshipOther:
-                    label = kABOtherLabel;
-                    break;
                 case WACContactRelationshipSpouse:
                     label = kABPersonSpouseLabel;
                     break;
@@ -358,6 +354,10 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
                     break;
                 case WACContactRelationshipChild:
                     label = kABPersonChildLabel;
+                    break;
+                case WACContactRelationshipOther:
+                default:
+                    label = kABOtherLabel;
                     break;
             }
 

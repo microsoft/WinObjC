@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#import "ABMultiValueInternal.h"
+#import <ABMultiValueInternal.h>
 
 // Private helper class to represent the values
 // in an ABMultiValue, which are pairs of a label
@@ -25,15 +25,14 @@
 @property id value;
 @property ABMultiValueIdentifier identifier;
 
-- (id)initWithLabel:(NSString*)label andValue:(id)value withIdentifier:(ABMultiValueIdentifier)identifier;
+- (id)initWithLabel:(NSString*)label value:(id)value identifier:(ABMultiValueIdentifier)identifier;
 
 @end
 
 @implementation __ABMultiValuePair
 
-- (id)initWithLabel:(NSString*)label andValue:(id)value withIdentifier:(ABMultiValueIdentifier)identifier {
-    self = [super init];
-    if (self) {
+- (id)initWithLabel:(NSString*)label value:(id)value identifier:(ABMultiValueIdentifier)identifier {
+    if (self = [super init]) {
         self.label = label;
         self.value = value;
         self.identifier = identifier;
@@ -52,8 +51,7 @@
 }
 
 - (id)initWithPropertyType:(ABPropertyType)propertyType {
-    self = [super init];
-    if (self) {
+    if (self = [super init]) {
         self->_list = [[NSMutableArray alloc] init];
         self->_nextIdentifier = 0;
         self->_propertyType = propertyType;
@@ -74,28 +72,28 @@
 - (BOOL)appendPairWithLabel:(NSString*)label andValue:(id)value {
     if (![self isMutable]) {
         return NO;
-    } else {
-        [self->_list addObject:[[__ABMultiValuePair alloc] initWithLabel:label andValue:value withIdentifier:self->_nextIdentifier]];
-
-        // Increment the next usable identifier to ensure that each label/value pair has a unique identifier.
-        self->_nextIdentifier++;
-        return YES;
     }
+
+    [self->_list addObject:[[__ABMultiValuePair alloc] initWithLabel:label value:value identifier:self->_nextIdentifier]];
+
+    // Increment the next usable identifier to ensure that each label/value pair has a unique identifier.
+    self->_nextIdentifier++;
+    return YES;
 }
 
 - (CFTypeRef)copyValueAtIndex:(CFIndex)index {
     if ([self->_list count] <= index || index < 0) {
         return nullptr;
-    } else {
-        return (__bridge_retained CFTypeRef)((__ABMultiValuePair*)self->_list[index]).value;
     }
+
+    return (__bridge_retained CFTypeRef)(static_cast<__ABMultiValuePair*>(self->_list[index]).value);
 }
 
 - (CFArrayRef)copyArrayOfAllValues {
     NSMutableArray* result = [NSMutableArray arrayWithCapacity:[self->_list count]];
 
-    for (int i = 0; i < [self->_list count]; i++) {
-        result[i] = ((__ABMultiValuePair*)self->_list[i]).value;
+    for (__ABMultiValuePair* pair in self->_list) {
+        [result addObject:pair.value];
     }
 
     return (__bridge_retained CFArrayRef)result;
@@ -110,7 +108,7 @@
         return nullptr;
     }
 
-    return (__bridge_retained CFStringRef)((__ABMultiValuePair*)self->_list[index]).label;
+    return (__bridge_retained CFStringRef)(static_cast<__ABMultiValuePair*>(self->_list[index]).label);
 }
 
 - (ABMultiValueIdentifier)getIdentifierAtIndex:(CFIndex)index {
@@ -118,7 +116,7 @@
         return kABMultiValueInvalidIdentifier;
     }
 
-    return ((__ABMultiValuePair*)self->_list[index]).identifier;
+    return static_cast<__ABMultiValuePair*>(self->_list[index]).identifier;
 }
 
 - (ABPropertyType)getPropertyType {
@@ -138,9 +136,9 @@
 
     if (index == NSNotFound) {
         return -1;
-    } else {
-        return index;
     }
+
+    return index;
 }
 
 - (CFIndex)getIndexForIdentifier:(ABMultiValueIdentifier)identifier {
@@ -156,9 +154,9 @@
 
     if (index == NSNotFound) {
         return -1;
-    } else {
-        return index;
     }
+
+    return index;
 }
 
 @end

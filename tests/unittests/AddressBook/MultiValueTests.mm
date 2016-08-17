@@ -24,6 +24,7 @@
 #import <AddressBook/ABRecord.h>
 #import <AddressBook/ABPerson.h>
 #import <AddressBook/ABMultiValue.h>
+#import "NSDate+AddressBookAdditions.h"
 #import "ABContactInternal.h"
 
 class AddressBookMultiValueQueryTest
@@ -115,7 +116,7 @@ TEST_P(AddressBookMultiValueQueryTest, MultiValueStringQuery) {
     CFIndex actualCount = ABMultiValueGetCount(multiValue);
     ABPropertyType propertyType = ABMultiValueGetPropertyType(multiValue);
 
-    ASSERT_OBJCEQ_MSG((__bridge NSString*)actualValue, value, "FAILED: Incorrect value at specified index!\n");
+    EXPECT_OBJCEQ_MSG((__bridge NSString*)actualValue, value, "FAILED: Incorrect value at specified index!\n");
     ASSERT_OBJCEQ_MSG((__bridge NSString*)actualLabel, (__bridge NSString*)label, "FAILED: Incorrect label at specified index!\n");
     ASSERT_EQ_MSG(actualCount, count, "FAILED: Incorrect count of MultiValue!\n");
     ASSERT_EQ_MSG(propertyType, kABStringPropertyType, "FAILED: Incorrect property type!\n");
@@ -159,7 +160,7 @@ TEST(AddressBook, QueryContactDates) {
     anniversary.kind = WACContactDateKindAnniversary;
 
     [contact.importantDates addObject:anniversary];
-    NSDate* realAnniversary = [_ABContact convertDate:anniversary];
+    NSDate* realAnniversary = [NSDate dateWithWACContactDate:anniversary];
     [anniversary release];
 
     WACContactDate* other = [WACContactDate make];
@@ -169,7 +170,7 @@ TEST(AddressBook, QueryContactDates) {
     other.kind = WACContactDateKindOther;
 
     [contact.importantDates addObject:other];
-    NSDate* realOther = [_ABContact convertDate:other];
+    NSDate* realOther = [NSDate dateWithWACContactDate:other];
     [other release];
 
     ABRecordRef record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact];

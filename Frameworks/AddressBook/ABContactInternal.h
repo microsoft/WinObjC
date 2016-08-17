@@ -14,18 +14,14 @@
 //
 //******************************************************************************
 
-#import "ABContactInternal.h"
+#pragma once
+
 #import "UWP/WindowsApplicationModelContacts.h"
+#import "ABRecordInternal.h"
 
-@implementation _ABContact
+@interface _ABContact : _ABRecord
 
-- (id)initWithContact:(WACContact*)contact {
-    self = [super init];
-    if (self) {
-        self.contact = contact;
-    }
-
-    return self;
-}
+@property WACContact* contact;
+- (id)initWithContact:(WACContact*)contact;
 
 @end

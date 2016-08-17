@@ -26,12 +26,9 @@
  @Notes
 */
 CFTypeRef ABMultiValueCopyValueAtIndex(ABMultiValueRef multiValue, CFIndex index) {
-    if (multiValue == nullptr) {
-        return nullptr;
-    }
+    RETURN_NULL_IF(multiValue == nullptr);
 
-    _ABMultiValue* multi = (__bridge _ABMultiValue*)multiValue;
-    return [multi copyValueAtIndex:index];
+    return [(__bridge _ABMultiValue*)multiValue copyValueAtIndex:index];
 }
 
 /**
@@ -39,12 +36,9 @@ CFTypeRef ABMultiValueCopyValueAtIndex(ABMultiValueRef multiValue, CFIndex index
  @Notes
 */
 CFArrayRef ABMultiValueCopyArrayOfAllValues(ABMultiValueRef multiValue) {
-    if (multiValue == nullptr) {
-        return nullptr;
-    }
+    RETURN_NULL_IF(multiValue == nullptr);
 
-    _ABMultiValue* multi = (__bridge _ABMultiValue*)multiValue;
-    return [multi copyArrayOfAllValues];
+    return [(__bridge _ABMultiValue*)multiValue copyArrayOfAllValues];
 }
 
 /**
@@ -56,8 +50,7 @@ CFIndex ABMultiValueGetCount(ABMultiValueRef multiValue) {
         return 0;
     }
 
-    _ABMultiValue* multi = (__bridge _ABMultiValue*)multiValue;
-    return [multi getCount];
+    return [(__bridge _ABMultiValue*)multiValue getCount];
 }
 
 /**
@@ -69,8 +62,7 @@ CFIndex ABMultiValueGetFirstIndexOfValue(ABMultiValueRef multiValue, CFTypeRef v
         return -1;
     }
 
-    _ABMultiValue* multi = (__bridge _ABMultiValue*)multiValue;
-    return [multi getFirstIndexOfValue:value];
+    return [(__bridge _ABMultiValue*)multiValue getFirstIndexOfValue:value];
 }
 
 /**
@@ -78,12 +70,9 @@ CFIndex ABMultiValueGetFirstIndexOfValue(ABMultiValueRef multiValue, CFTypeRef v
  @Notes
 */
 CFStringRef ABMultiValueCopyLabelAtIndex(ABMultiValueRef multiValue, CFIndex index) {
-    if (multiValue == nullptr) {
-        return nullptr;
-    }
+    RETURN_NULL_IF(multiValue == nullptr);
 
-    _ABMultiValue* multi = (__bridge _ABMultiValue*)multiValue;
-    return [multi copyLabelAtIndex:index];
+    return [(__bridge _ABMultiValue*)multiValue copyLabelAtIndex:index];
 }
 
 /**
@@ -95,8 +84,7 @@ ABMultiValueIdentifier ABMultiValueGetIdentifierAtIndex(ABMultiValueRef multiVal
         return kABMultiValueInvalidIdentifier;
     }
 
-    _ABMultiValue* multi = (__bridge _ABMultiValue*)multiValue;
-    return [multi getIdentifierAtIndex:index];
+    return [(__bridge _ABMultiValue*)multiValue getIdentifierAtIndex:index];
 }
 
 /**
@@ -108,8 +96,7 @@ CFIndex ABMultiValueGetIndexForIdentifier(ABMultiValueRef multiValue, ABMultiVal
         return -1;
     }
 
-    _ABMultiValue* multi = (__bridge _ABMultiValue*)multiValue;
-    return [multi getIndexForIdentifier:identifier];
+    return [(__bridge _ABMultiValue*)multiValue getIndexForIdentifier:identifier];
 }
 
 /**
@@ -121,6 +108,5 @@ ABPropertyType ABMultiValueGetPropertyType(ABMultiValueRef multiValue) {
         return kABInvalidPropertyType;
     }
 
-    _ABMultiValue* multi = (__bridge _ABMultiValue*)multiValue;
-    return [multi getPropertyType];
+    return [(__bridge _ABMultiValue*)multiValue getPropertyType];
 }

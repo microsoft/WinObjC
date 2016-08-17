@@ -14,18 +14,12 @@
 //
 //******************************************************************************
 
-#pragma once
-
 #import "UWP/WindowsApplicationModelContacts.h"
-#import "ABRecordInternal.h"
 
-@interface _ABContact : _ABRecord
-
-@property WACContact* contact;
-- (id)initWithContact:(WACContact*)contact;
+@interface NSDate (AddressBookAdditions)
 
 // Returns an NSDate* for the same day, month, and year
 // as the given WACContactDate*.
-+ (NSDate*)convertDate:(WACContactDate*)date;
++ (NSDate*)dateWithWACContactDate:(WACContactDate*)date;
 
 @end
