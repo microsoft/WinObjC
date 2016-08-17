@@ -36,7 +36,7 @@ static const int MAX_DATEPICKER_COMPONENTS = 4;
     StrongId<NSMutableArray> _weekdays;
     StrongId<NSDate> _dayStartTime;
     UIDatePickerMode _mode;
-    StrongId<NSDate> __minimumDate, __maximumDate;
+    StrongId<NSDate> _minimumDate, _maximumDate;
     StrongId<UILabel> _hoursLabel, _minutesLabel;
     bool _didSnapTime;
 }
@@ -813,10 +813,24 @@ static void resetPickerPositions(UIDatePicker* self) {
 /**
  @Status Interoperable
 */
+- (NSDate*)minimumDate {
+    return _minimumDate;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)setMinimumDate:(NSDate*)date {
     _minimumDate = date;
     resetPickerPositions(self);
     [_pickerView _invalidateAllComponents];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSDate*)maximumDate {
+    return _maximumDate;
 }
 
 /**
