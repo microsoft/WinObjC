@@ -18,8 +18,11 @@
 #import <Starboard/SmartTypes.h>
 #import <Foundation/Foundation.h>
 #import "UWP/WindowsUICore.h"
+#import <UWP/WindowsDevicesGeolocation.h>
+#import <UWP/WindowsServicesMaps.h>
+#import <UWP/WindowsApplicationModel.h>
 
-static const NSTimeInterval c_testTimeoutInSec = 5;
+static const NSTimeInterval c_testTimeoutInSec = 60;
 
 TEST(Projection, WUCCoreDispatcherSanity) {
     LOG_INFO("Projection CoreDispatcher Sanity Test: ");
@@ -46,4 +49,33 @@ TEST(Projection, WUCCoreDispatcherSanity) {
     dispatch_release(semaphore);
 
     ASSERT_EQ_MSG(0, result, "FAILED: Test timed out, handler not called\n");
+}
+
+TEST(Projection, AsyncOnBackgroundThread) {
+    LOG_INFO("Validate callback on a background thread");
+    __block bool callbackCalled = false;
+
+    WDGBasicGeoposition* geoposition = [[WDGBasicGeoposition alloc] init];
+    geoposition.latitude = 47.6381966;
+    geoposition.longitude = -122.1313785;
+
+    WDGGeopoint* geopoint = [WDGGeopoint make:geoposition];
+
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_group_enter(group);
+
+    [WSMMapLocationFinder findLocationsAtAsync:geopoint
+        success:^void(WSMMapLocationFinderResult* results) {
+            callbackCalled = true;
+            dispatch_group_leave(group);
+        }
+        failure:^void(NSError* error) {
+            callbackCalled = true;
+            dispatch_group_leave(group);
+        }];
+
+    dispatch_group_wait(group, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(c_testTimeoutInSec * NSEC_PER_SEC)));
+    dispatch_release(group);
+
+    ASSERT_TRUE_MSG(callbackCalled, "FAILED: Test timed out before callback was invoked.\n");
 }

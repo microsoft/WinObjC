@@ -526,6 +526,8 @@ public:
 extern void ProjectionWUCCoreDispatcherSanity();
 extern void ProjectionHStringTest();
 extern void ProjectionCreateWithTest();
+extern void ProjectionAsyncOnUIThread();
+extern void ProjectionAsyncOnBackgroundThread();
 
 class ProjectionTest {
 public:
@@ -553,6 +555,10 @@ public:
 
     TEST_METHOD(ProjectionTest_CreateWithTest) {
         ProjectionCreateWithTest();
+    }
+
+    TEST_METHOD(ProjectionTest_AsyncOnBackgroundThread) {
+        ProjectionAsyncOnBackgroundThread();
     }
 
 }; /* class ProjectionTest */
