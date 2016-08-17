@@ -6,6 +6,9 @@
 #include <Windows.h>
 #include <concrt.h>
 #include <assert.h>
+#include <Windows.Foundation.h>
+#include <Windows.System.Threading.h>
+#include <wrl/event.h>
 
 #ifdef _MSC_VER
 
@@ -25,6 +28,11 @@
 #include "pthread.h"
 
 #define WINOBJC
+
+using namespace Microsoft::WRL;
+using namespace Microsoft::WRL::Wrappers;
+using namespace ABI::Windows::Foundation;
+using namespace ABI::Windows::System::Threading;
 
 typedef struct pthread_workqueue_attr
 {
@@ -335,33 +343,50 @@ int _pthread_workqueue_submit_workitem(pthread_workqueue_t workq, void (*workite
 	pw->q = workq;
 	pw->context = workitem_arg;
 
-    pwh.work = NULL;
+	pwh.work = NULL;
 
-    auto workItem = ref new Windows::System::Threading::WorkItemHandler([=](Windows::Foundation::IAsyncAction ^)
-    {
-        _native_work_callback(pw);
-    }, Platform::CallbackContext::Any);
+	auto workItem = Callback<
+		Implements<RuntimeClassFlags<ClassicCom>,
+		ABI::Windows::System::Threading::IWorkItemHandler,
+		FtmBase>>([pw](IAsyncAction* asyncAction)
+		{
+			UNREFERENCED_PARAMETER(asyncAction);
+			_native_work_callback(pw);
+			return S_OK;
+		});
 
 	if(workitem_handle)
 	{
 		workitem_handle->work = pwh.work;
 	}
 
-    Windows::System::Threading::WorkItemPriority prio = Windows::System::Threading::WorkItemPriority::Normal;
+	WorkItemPriority prio = WorkItemPriority::WorkItemPriority_Normal;
 
-    switch ( pw->q->attr->qprio ) {
-	    case WORKQ_HIGH_PRIOQUEUE:
-		    prio = Windows::System::Threading::WorkItemPriority::High;
-            break;
-	    case WORKQ_LOW_PRIOQUEUE:
-		    prio = Windows::System::Threading::WorkItemPriority::Low;
-            break;
-	    default:
-		    prio = Windows::System::Threading::WorkItemPriority::Normal;
-            break;
-    }
+	switch ( pw->q->attr->qprio ) {
+		case WORKQ_HIGH_PRIOQUEUE:
+			prio = WorkItemPriority::WorkItemPriority_High;
+			break;
+		case WORKQ_LOW_PRIOQUEUE:
+			prio = WorkItemPriority::WorkItemPriority_Low;
+			break;
+		default:
+			prio = WorkItemPriority::WorkItemPriority_Normal;
+			break;
+	}
 
-    Windows::System::Threading::ThreadPool::RunAsync(workItem, prio);
+	ComPtr<IThreadPoolStatics> threadPool;
+	HRESULT hr = GetActivationFactory(HStringReference(RuntimeClass_Windows_System_Threading_ThreadPool).Get(), &threadPool);
+	if (FAILED(hr))
+	{
+		abort();
+	}
+
+	ComPtr<IAsyncAction> asyncAction;
+	hr = threadPool->RunWithPriorityAsync(workItem.Get(), prio, &asyncAction);
+	if (FAILED(hr))
+	{
+		abort();
+	}
 
 	return 0;
 }
