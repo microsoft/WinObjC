@@ -24,7 +24,31 @@
 
 #include "ParameterTypes.h"
 #include "Windows.h"
-#include "WexTestClass.h"
+
+// Copying these macros from WexTestClass.h, but not including
+// it because it brings in dependencies on TAEF that we don't want
+// in Unit Tests.
+
+/// \internal
+/// <summary> Wide string conversion helper </summary>
+#define TAEF_WIDEN_INT(x) L ## x
+
+/// \internal
+/// <summary> Wide string version of "stringizing" operator </summary>
+#define TAEF_WIDEN(x) TAEF_WIDEN_INT(x)
+
+/// \internal
+/// <summary>Wide string version of __FUNCTION__ macro </summary>
+#define TAEF__WFUNCTION__ TAEF_WIDEN(__FUNCTION__)
+
+/// \internal
+/// <summary>Stringize internal macro </summary>
+#define TAEF_STRINGIZE_INT(x) #x
+
+/// \internal
+/// <summary>Stringize macro </summary>
+#define TAEF_STRINGIZE(x) TAEF_STRINGIZE_INT(x)
+
 
 #include <functional>
 #include <wrl/implements.h>
@@ -503,11 +527,20 @@ VERIFY_ARE_EQUAL(1, callCount);
 #if !defined CUSTOM_MOCK_CALLBACK_VALIDATOR
 namespace Test {
 namespace Mock {
+#ifdef VERIFY_IS_NOT_NULL
 template <typename TFunctor>
 void ValidateCallback(const TFunctor& functor, const wchar_t* name) {
     WEX::TestExecution::SetVerifyOutput verifySettings(WEX::TestExecution::VerifyOutputSettings::LogOnlyFailures);
     VERIFY_IS_NOT_NULL(functor, WEX::Common::String().Format(L"The callback for %s has not been set!", name));
 }
+#elif defined(ASSERT_NE_MSG)
+template <typename TFunctor>
+void ValidateCallback(const TFunctor& functor, const wchar_t* name) {
+    ASSERT_NE_MSG(functor, nullptr, "The callback for %s has not been set!", name);
+}
+#else
+#error "Unknown Test Framework!"
+#endif
 }
 }
 #endif

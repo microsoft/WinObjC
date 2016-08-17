@@ -64,7 +64,8 @@ TEST(NSValue, arbitraryStructCanBeRetrieved) {
     ASSERT_OBJCEQ(val, val2);
 }
 
-TEST(NSValue, arbitraryStructCanBeSerializedAndDeserialized) {
+// OSX cannot encode __m128 so the serialization will fail
+OSX_DISABLED_TEST(NSValue, arbitraryStructCanBeSerializedAndDeserialized) {
     using namespace std::complex_literals;
     ArbitrarilyComplexStruct acs{ { 3.14 }, 1.9i };
 

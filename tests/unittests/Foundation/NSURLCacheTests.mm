@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#import <TestFramework.h>
 #import <Foundation/Foundation.h>
 #import <Foundation/NSURLCache.h>
 
@@ -35,7 +35,7 @@ static void _addFakeCacheResponse(NSURLCache* cache, NSCachedURLResponse* respon
 }
 
 TEST(NSURLCache, StorageAndRetrieval) {
-    NSURLCache* cache = [[NSURLCache alloc] initWithMemoryCapacity:16 diskCapacity:0 diskPath:nil];
+    NSURLCache* cache = [[NSURLCache alloc] initWithMemoryCapacity:1024 diskCapacity:0 diskPath:nil];
     EXPECT_NO_THROW(_addFakeCacheResponse(cache, _fakeCachedResponse("http://one.com", 4))); // 4 bytes
 
     EXPECT_OBJCEQ(nil, [cache cachedResponseForRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://not_there.com"]]]);
@@ -45,13 +45,16 @@ TEST(NSURLCache, StorageAndRetrieval) {
     EXPECT_OBJCNE(nil, oneComCached);
 }
 
-TEST(NSURLCache, Eviction) {
+// The following two tests very closely test our specific eviction behaviour; the reference platform builds in
+// some (unknowable) size padding on cached responses, making them bigger than their raw byte values.
+// As such, we can't test the specific eviction behaviours and must trust that things do, in fact, evict.
+OSX_DISABLED_TEST(NSURLCache, Eviction) {
     NSURLCache* cache = [[NSURLCache alloc] initWithMemoryCapacity:16 diskCapacity:0 diskPath:nil];
 
     EXPECT_NO_THROW(_addFakeCacheResponse(cache, _fakeCachedResponse("http://one.com", 4))); // 4 bytes
     EXPECT_NO_THROW(_addFakeCacheResponse(cache, _fakeCachedResponse("http://two.com", 13))); // 13 bytes, enough to kick out one.com
 
-    EXPECT_EQ(13, [cache currentMemoryUsage]);
+    EXPECT_LE(13, [cache currentMemoryUsage]);
 
     {
         NSCachedURLResponse* oneComCached =
@@ -63,7 +66,7 @@ TEST(NSURLCache, Eviction) {
     EXPECT_EQ(0, [cache currentMemoryUsage]);
 }
 
-TEST(NSURLCache, Promotion) {
+OSX_DISABLED_TEST(NSURLCache, Promotion) {
     NSURLCache* cache = [[NSURLCache alloc] initWithMemoryCapacity:16 diskCapacity:0 diskPath:nil];
 
     EXPECT_NO_THROW(_addFakeCacheResponse(cache, _fakeCachedResponse("http://one.com", 4))); // 4 bytes

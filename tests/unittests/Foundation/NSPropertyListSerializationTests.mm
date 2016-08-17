@@ -29,10 +29,7 @@ TEST(NSPropertyListSerialization, PropertyListForDate) {
     });
     ASSERT_NE(nil, plistDict);
 
-    NSDateFormatter* formatter = [[NSDateFormatter new] autorelease];
-    ASSERT_NE(nil, formatter);
-    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
-    NSDate* date = [formatter dateFromString:@"2014-12-15T19:48:38Z"];
+    NSDate* date = [NSDate dateWithTimeIntervalSinceReferenceDate:440365718]; // Mon Dec 15 2014 19:48:38 GMT
     ASSERT_NE(nil, date);
     ASSERT_OBJCEQ(date, plistDict[@"Date Modified"]);
 

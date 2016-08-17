@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 #import <TestFramework.h>
+#import <Starboard/SmartTypes.h>
+#import <windows.h>
 #import "TestUtils.h"
 
 void assertOrderedSetContent(NSOrderedSet* set, NSObject* first, ...) {
@@ -32,3 +34,29 @@ void assertOrderedSetContent(NSOrderedSet* set, NSObject* first, ...) {
 
     ASSERT_EQ(i, [set count]);
 }
+
+NSString* getModulePath() {
+    char fullPath[_MAX_PATH];
+    GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
+    return [@(fullPath) stringByDeletingLastPathComponent];
+}
+
+NSString* getPathToFile(NSString* fileName) {
+    static StrongId<NSString*> refPath = getModulePath();
+    return [refPath stringByAppendingPathComponent:fileName];
+}
+
+void createFileWithContentAndVerify(NSString* fileName, NSString* content) {
+    NSString* fullPath = getPathToFile(fileName);
+    NSError* error = nil;
+    ASSERT_TRUE([content writeToFile:fullPath atomically:NO encoding:NSUTF8StringEncoding error:&error]);
+    ASSERT_EQ(nil, error);
+    ASSERT_TRUE([[NSFileManager defaultManager] fileExistsAtPath:fullPath]);
+}
+
+void deleteFile(NSString* name) {
+    NSString* fullPath = getPathToFile(name);
+    if ([[NSFileManager defaultManager] fileExistsAtPath:fullPath]) {
+        [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
+    }
+};

@@ -19,19 +19,22 @@
 
 void testStringFromRange(NSString* testString, NSRange expectedRange) {
     NSRange actualRange = NSRangeFromString(testString);
-    ASSERT_EQ(expectedRange.location, actualRange.location);
-    ASSERT_EQ(expectedRange.length, actualRange.length);
+    EXPECT_EQ(expectedRange.location, actualRange.location);
+    EXPECT_EQ(expectedRange.length, actualRange.length);
 }
 
 TEST(NSRange, NSRangeTests) {
     testStringFromRange(@"{1, 2}", { 1, 2 });
-    testStringFromRange(@"1, 2}", { 0, 0 });
-    testStringFromRange(@"{1, 2", { 0, 0 });
-    testStringFromRange(@"{a, 2}", { 0, 0 });
-    testStringFromRange(@"{1,, 2}", { 0, 0 });
-    testStringFromRange(@"{1.3, 2}", { 1, 2 });
+    testStringFromRange(@"1, 2}", { 1, 2 });
+    testStringFromRange(@"{1, 2", { 1, 2 });
+    testStringFromRange(@"{a, 2}", { 2, 0 });
+    testStringFromRange(@"{1,, 2}", { 1, 2 });
+    testStringFromRange(@"{1.3, 2}", { 1, 3 });
     testStringFromRange(@"{2147483648, 2}", { 2147483648, 2 });
-    testStringFromRange(@"\r\n{1, 2}", { 0, 0 });
+    testStringFromRange(@"\r\n{1, 2}", { 1, 2 });
     testStringFromRange(@"{  2, 4  }", { 2, 4 });
     testStringFromRange(@"{-1, -2}", { 1, 2 });
+    testStringFromRange(@"1 2", { 1, 2 });
+    testStringFromRange(@"{1,2,3}", { 1, 2 });
+    testStringFromRange(@"", { 0, 0 });
 }

@@ -158,10 +158,6 @@ struct EnumerationTraits<id> {
     static id getUnitWithoutLongestEffectiveRange(NSAttributedString* self, NSString* attrName, NSUInteger location, NSRange* range) {
         return [self attribute:attrName atIndex:location effectiveRange:range];
     }
-
-    static BOOL valid(id self) {
-        return (self != nil);
-    }
 };
 
 template <>
@@ -176,10 +172,6 @@ struct EnumerationTraits<NSDictionary*> {
                                                              NSUInteger location,
                                                              NSRange* range) {
         return [self attributesAtIndex:location effectiveRange:range];
-    }
-
-    static BOOL valid(NSDictionary* self) {
-        return (self) && ([self count] > 0);
     }
 };
 
@@ -216,19 +208,19 @@ static void _enumerateInRange(NSAttributedString* self,
                                                                                                 enumerationRange);
         }
 
-        if (EnumerationTraits<TEnumerationUnit>::valid(currentUnit) && block) {
-            block(currentUnit, currentRange, &stop);
+        // Clip currentRange to the bounds of the enumeration
+        currentRange = NSIntersectionRange(currentRange, enumerationRange);
+        block(currentUnit, currentRange, &stop);
 
-            // handle length changes by block
-            NSUInteger currentLength = [self length];
-            if (prevLength != currentLength) {
-                lengthDiff = currentLength - prevLength;
-                prevLength = currentLength;
-            }
+        // handle length changes by block
+        NSUInteger currentLength = [self length];
+        if (prevLength != currentLength) {
+            lengthDiff = currentLength - prevLength;
+            prevLength = currentLength;
+        }
 
-            if (stop) {
-                break;
-            }
+        if (stop) {
+            break;
         }
 
         if (reverse) {

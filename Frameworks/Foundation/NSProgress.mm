@@ -14,8 +14,9 @@
 //
 //******************************************************************************
 
-#import "Starboard.h"
-#import "Foundation/NSProgress.h"
+#import <Starboard.h>
+#import <Foundation/NSProgress.h>
+#import <Foundation/NSBundle.h>
 #import <memory>
 #import <stack>
 
@@ -310,7 +311,7 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
  @Status Interoperable
 */
 - (BOOL)isIndeterminate {
-    return (_totalUnitCount <= 0) || (_completedUnitCount <= 0);
+    return (_totalUnitCount <= 0) && (_completedUnitCount <= 0);
 }
 
 /**
@@ -342,32 +343,32 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
         // Otherwise, dynamically describe
         if ([_kind isEqual:NSProgressKindFile]) {
             NSString* operationKind = [_userInfo objectForKey:NSProgressFileOperationKindKey];
-            NSString* verbString = @"Processing";
+            NSString* verbString = NSLocalizedString(@"Processing", nil);
 
             if (operationKind) {
                 if ([operationKind isEqual:NSProgressFileOperationKindDownloading]) {
-                    verbString = @"Downloading";
+                    verbString = NSLocalizedString(@"Downloading", nil);
 
                 } else if ([operationKind isEqual:NSProgressFileOperationKindDecompressingAfterDownloading]) {
-                    verbString = @"Decompressing";
+                    verbString = NSLocalizedString(@"Decompressing", nil);
 
                 } else if ([operationKind isEqual:NSProgressFileOperationKindReceiving]) {
-                    verbString = @"Receiving";
+                    verbString = NSLocalizedString(@"Receiving", nil);
 
                 } else if ([operationKind isEqual:NSProgressFileOperationKindCopying]) {
-                    verbString = @"Copying";
+                    verbString = NSLocalizedString(@"Copying", nil);
                 }
             }
 
             NSNumber* totalFiles = [_userInfo objectForKey:NSProgressFileTotalCountKey];
             if (totalFiles) {
-                return [NSString stringWithFormat:@"%@ %d files...", verbString, [totalFiles intValue]];
+                return [NSString localizedStringWithFormat:@"%@ %d files...", verbString, [totalFiles intValue]];
             } else {
-                return [NSString stringWithFormat:@"%@ files...", verbString];
+                return [NSString localizedStringWithFormat:@"%@ files...", verbString];
             }
 
         } else {
-            return [NSString stringWithFormat:@"%.0f completed", [self fractionCompleted] * 100];
+            return [NSString localizedStringWithFormat:@"%.0f completed", [self fractionCompleted] * 100];
         }
 
         return @"";
@@ -397,32 +398,36 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
 
         // Otherwise, dynamically describe
         if ([_kind isEqual:NSProgressKindFile]) {
-            if ([_userInfo count] == 0) {
-                ret = [ret stringByAppendingFormat:@"%d bytes of %d bytes", _completedUnitCount, _totalUnitCount];
-            } else {
+            if ([_userInfo count] > 1) {
                 NSNumber* completedFiles = [_userInfo objectForKey:NSProgressFileCompletedCountKey];
                 NSNumber* totalFiles = [_userInfo objectForKey:NSProgressFileTotalCountKey];
                 if (completedFiles && totalFiles) {
-                    ret = [ret stringByAppendingFormat:@"%d of %d files", [totalFiles intValue], [completedFiles intValue]];
+                    ret = [ret stringByAppendingFormat:NSLocalizedString(@"%d of %d files", nil),
+                                                       [totalFiles intValue],
+                                                       [completedFiles intValue]];
                 }
 
                 NSNumber* bytesPerSecond = [_userInfo objectForKey:NSProgressThroughputKey];
                 if (bytesPerSecond) {
-                    ret = [ret stringByAppendingFormat:@"(%d bytes/second)", [bytesPerSecond intValue]];
+                    ret = [ret stringByAppendingFormat:NSLocalizedString(@"(%d bytes/second)", nil), [bytesPerSecond intValue]];
                 }
+
+            } else {
+                ret = [NSString
+                    localizedStringWithFormat:NSLocalizedString(@"%lld bytes of %lld bytes", nil), _completedUnitCount, _totalUnitCount];
             }
 
         } else {
-            ret = [ret stringByAppendingFormat:@"%d of %d", _completedUnitCount, _totalUnitCount];
+            ret = [ret stringByAppendingFormat:NSLocalizedString(@"%lld of %lld", nil), _completedUnitCount, _totalUnitCount];
         }
 
         NSNumber* secondsRemaining = [_userInfo objectForKey:NSProgressEstimatedTimeRemainingKey];
         if (secondsRemaining) {
             if ([ret length] > 0) {
-                ret = [ret stringByAppendingString:@" - "];
+                ret = [ret stringByAppendingString:NSLocalizedString(@" - ", nil)];
             }
 
-            ret = [ret stringByAppendingFormat:@"%d seconds remaining", [secondsRemaining intValue]];
+            ret = [ret stringByAppendingFormat:NSLocalizedString(@"%d seconds remaining", nil), [secondsRemaining intValue]];
         }
 
         return ret;
