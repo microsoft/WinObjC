@@ -24,7 +24,7 @@ static NSAttributedString* getMultilineAttributedString() {
     UIFont* font = [UIFont fontWithDescriptor:fontDescriptor size:40];
 
     NSRange wholeRange = NSMakeRange(0, 20);
-    NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@"hello \nworld goodbye"];
+    NSMutableAttributedString* string = [[[NSMutableAttributedString alloc] initWithString:@"hello \nworld goodbye"] autorelease];
     [string addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:wholeRange];
     [string addAttribute:NSFontAttributeName value:font range:wholeRange];
 

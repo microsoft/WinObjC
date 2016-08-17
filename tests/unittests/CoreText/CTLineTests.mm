@@ -23,7 +23,7 @@ NSAttributedString* getAttributedString() {
     UIFont* font = [UIFont fontWithDescriptor:fontDescriptor size:40];
 
     NSRange wholeRange = NSMakeRange(0, 5);
-    NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@"hello"];
+    NSMutableAttributedString* string = [[[NSMutableAttributedString alloc] initWithString:@"hello"] autorelease];
     [string addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:wholeRange];
     [string addAttribute:NSFontAttributeName value:font range:wholeRange];
 
