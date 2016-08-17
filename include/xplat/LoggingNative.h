@@ -15,8 +15,16 @@
 //******************************************************************************
 #pragma once
 
+#ifndef LOGGING_IMPEXP
+#define LOGGING_IMPEXP __declspec(dllimport)
+#endif
+
+#ifndef LOGGING_EXPORT
 #ifdef __cplusplus
-extern "C" {
+#define LOGGING_EXPORT extern "C" LOGGING_IMPEXP
+#else
+#define LOGGING_EXPORT extern LOGGING_IMPEXP
+#endif
 #endif
 
 //
@@ -27,7 +35,7 @@ extern "C" {
 // format - a "printf" style format string
 // ... - var args for printf.
 //
-void TraceVerbose(const wchar_t* tag, const wchar_t* format, ...);
+LOGGING_EXPORT void TraceVerbose(const wchar_t* tag, const wchar_t* format, ...);
 
 //
 // Trace an info message.
@@ -37,7 +45,7 @@ void TraceVerbose(const wchar_t* tag, const wchar_t* format, ...);
 // format - a "printf" style format string
 // ... - var args for printf.
 //
-void TraceInfo(const wchar_t* tag, const wchar_t* format, ...);
+LOGGING_EXPORT void TraceInfo(const wchar_t* tag, const wchar_t* format, ...);
 
 //
 // Trace a warning message.
@@ -47,7 +55,7 @@ void TraceInfo(const wchar_t* tag, const wchar_t* format, ...);
 // format - a "printf" style format string
 // ... - var args for printf.
 //
-void TraceWarning(const wchar_t* tag, const wchar_t* format, ...);
+LOGGING_EXPORT void TraceWarning(const wchar_t* tag, const wchar_t* format, ...);
 
 //
 // Trace an error message.
@@ -57,7 +65,7 @@ void TraceWarning(const wchar_t* tag, const wchar_t* format, ...);
 // format - a "printf" style format string
 // ... - var args for printf.
 //
-void TraceError(const wchar_t* tag, const wchar_t* format, ...);
+LOGGING_EXPORT void TraceError(const wchar_t* tag, const wchar_t* format, ...);
 
 //
 // Trace a critical message.
@@ -67,18 +75,14 @@ void TraceError(const wchar_t* tag, const wchar_t* format, ...);
 // format - a "printf" style format string
 // ... - var args for printf.
 //
-void TraceCritical(const wchar_t* tag, const wchar_t* format, ...);
+LOGGING_EXPORT void TraceCritical(const wchar_t* tag, const wchar_t* format, ...);
 
 //
 // Ensures the the trace logging provider is registered.
 //
-void TraceRegister();
+LOGGING_EXPORT void TraceRegister();
 
 //
 // Ensures the trace logging provider is unregistered.
 //
-void TraceUnregister();
-
-#ifdef __cplusplus
-}
-#endif
+LOGGING_EXPORT void TraceUnregister();
