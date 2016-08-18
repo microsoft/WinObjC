@@ -54,6 +54,21 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
 @implementation _UIHiddenButtonView
 @end
 
+void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlignment alignment) {
+    [control applyTemplate];
+    WXFrameworkElement* elem = FindTemplateChild(control, @"ContentElement");
+
+    // set verticalAligment of both content and placeholder of TextBox (or PasswordBox) to be the same value
+    if (elem != nullptr) {
+        elem.verticalAlignment = alignment;
+    }
+
+    elem = FindTemplateChild(control, @"PlaceholderTextContentPresenter");
+    if (elem != nullptr) {
+        elem.verticalAlignment = alignment;
+    }
+}
+
 @implementation UITextField {
     StrongId<NSString> _text;
     StrongId<NSString> _placeHolder;
@@ -959,6 +974,23 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
     [self becomeFirstResponder];
 }
 
+/**
+ @Status Interoperable
+*/
+- (void)setContentVerticalAlignment:(UIControlContentVerticalAlignment)alignment {
+    [super setContentVerticalAlignment:alignment];
+
+    WXVerticalAlignment verticalAlignment = ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(self.contentVerticalAlignment);
+
+    [_secureModeLock lock];
+    if (self.secureTextEntry) {
+        SetTextControlContentVerticalAlignment(self->_passwordBox, verticalAlignment);
+    } else {
+        SetTextControlContentVerticalAlignment(self->_textBox, verticalAlignment);
+    }
+    [_secureModeLock unlock];
+}
+
 //
 // UIKeyInput Protocol related methods
 //
@@ -1146,6 +1178,10 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
             strongSelf->_textBox.textAlignment = ConvertUITextAlignmentToWXTextAlignment(strongSelf.textAlignment);
 
             SetControlBorderStyle(strongSelf->_textBox, strongSelf.borderStyle);
+
+            WXVerticalAlignment verticalAlignment =
+                ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(strongSelf.contentVerticalAlignment);
+            SetTextControlContentVerticalAlignment(strongSelf->_textBox, verticalAlignment);
             strongSelf->_textBox.inputScope = ConvertKeyboardTypeToInputScope(strongSelf->_keyboardType, NO);
             strongSelf->_textBox.text = strongSelf.text;
             strongSelf->_textBox.placeholderText = strongSelf.placeholder;
@@ -1197,6 +1233,9 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
 
             // border manipulate the control tempate and must be done after loaded
             SetControlBorderStyle(strongSelf->_passwordBox, strongSelf.borderStyle);
+            WXVerticalAlignment verticalAlignment =
+                ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(strongSelf.contentVerticalAlignment);
+            SetTextControlContentVerticalAlignment(strongSelf->_passwordBox, verticalAlignment);
             strongSelf->_passwordBox.inputScope = ConvertKeyboardTypeToInputScope(strongSelf->_keyboardType, YES);
             strongSelf->_passwordBox.password = strongSelf.text;
             strongSelf->_passwordBox.placeholderText = strongSelf.placeholder;

@@ -45,8 +45,11 @@ WXTextAlignment ConvertUITextAlignmentToWXTextAlignment(UITextAlignment alignmen
 // Convert ios KeyboardType to Windows InputScope
 WUXIInputScope* ConvertKeyboardTypeToInputScope(UIKeyboardType keyboardType, BOOL secureTextMode);
 
+// Convert UIControlContentVerticalAlignment to Windows vertical Alignment
+WXVerticalAlignment ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(UIControlContentVerticalAlignment alignment);
+
 // Find the named template child in control tempate of a xaml control
-WXFrameworkElement* FindTemplateChild(WXCControl* control, NSString*name);
+WXFrameworkElement* FindTemplateChild(WXCControl* control, NSString* name);
 
 // Set up border style for a control
 void SetControlBorderStyle(WXCControl* control, UITextBorderStyle style);

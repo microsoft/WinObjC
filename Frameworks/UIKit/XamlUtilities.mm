@@ -112,6 +112,27 @@ WUXIInputScope* ConvertKeyboardTypeToInputScope(UIKeyboardType keyboardType, BOO
     return inputScope;
 }
 
+WXVerticalAlignment ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(UIControlContentVerticalAlignment alignment) {
+    WXVerticalAlignment ret = WXVerticalAlignmentTop;
+
+    switch (alignment) {
+        case UIControlContentVerticalAlignmentCenter:
+            ret = WXVerticalAlignmentCenter;
+            break;
+        case UIControlContentVerticalAlignmentTop:
+            ret = WXVerticalAlignmentTop;
+            break;
+        case UIControlContentVerticalAlignmentBottom:
+            ret = WXVerticalAlignmentBottom;
+            break;
+        case UIControlContentVerticalAlignmentFill:
+            ret = WXVerticalAlignmentStretch;
+            break;
+    }
+
+    return ret;
+}
+
 WXFrameworkElement* FindTemplateChild(WXCControl* control, NSString* name) {
     WXFrameworkElement* target = nullptr;
     unsigned int count = [WUXMVisualTreeHelper getChildrenCount:control];
