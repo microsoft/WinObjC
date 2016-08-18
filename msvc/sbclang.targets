@@ -199,9 +199,7 @@
     </MSBuild>
 
     <ItemGroup>
-      <Objc2WinmdHeaderListFile>
-        <DummyOutput>$(Objc2WinmdGeneratedFilesDir)\%(Filename).dummy</DummyOutput>
-      </Objc2WinmdHeaderListFile>
+      <Objc2WinmdInput Include="@(Objc2WinmdHeaderListFile);@(Objc2WinmdHeaderListFile->'%(ArgsFile)')" />
     </ItemGroup>
 
   </Target>
@@ -209,6 +207,7 @@
   <PropertyGroup>
     <ResolveAssemblyReferencesDependsOn>SetFirstTimeLoading;$(ResolveAssemblyReferencesDependsOn);</ResolveAssemblyReferencesDependsOn>
     <BeforeMidlCompileTargets>ComputeObjc2WinmdInputs;InvokeObjc2Winmd;ProcessObjc2WinmdGeneratedFiles;$(BeforeMidlTargets);</BeforeMidlCompileTargets>
+    <Objc2WinmdDummyOutput>$(Objc2WinmdGeneratedFilesDir)\InvokeObjc2Winmd.dummy</Objc2WinmdDummyOutput>
   </PropertyGroup>
   
   <Target Name="SetFirstTimeLoading">
@@ -219,31 +218,31 @@
   
   <Target
     Name="InvokeObjc2Winmd"
-    Condition="'$(FirstTimeLoading)' == 'false' And '$(IslandwoodConfigurationType)' == 'Projection' And '@(Objc2WinmdHeaderListFile)' != ''"
-    Inputs="%(Objc2WinmdHeaderListFile.Identity);%(Objc2WinmdHeaderListFile.ArgsFile)"
-    Outputs="%(Objc2WinmdHeaderListFile.DummyOutput)">
+    Condition="'$(FirstTimeLoading)' == 'false' And '$(IslandwoodConfigurationType)' == 'Projection' And '@(Objc2WinmdInput)' != ''"
+    Inputs="@(Objc2WinmdInput)"
+    Outputs="$(Objc2WinmdDummyOutput)">
     
     <MakeDir Directories="$(Objc2WinmdGeneratedFilesDir)" />
     
     <!-- Call objc2winmd -->
     <Exec
       Condition="'@(Objc2WinmdHeaderListFile)' != ''"
-      Command="&quot;$(Objc2WinmdExe)&quot; -r &quot;$(TargetName)&quot; -o &quot;$(Objc2WinmdGeneratedFilesDir)&quot; &quot;%(Objc2WinmdHeaderListFile.Identity)&quot; &quot;%(Objc2WinmdHeaderListFile.ArgsFile)&quot;" />
+      Command="&quot;$(Objc2WinmdExe)&quot; -r &quot;$(TargetName)&quot; -o &quot;$(Objc2WinmdGeneratedFilesDir)&quot; @(Objc2WinmdInput->'&quot;%(FullPath)&quot;', ' ')" />
     
     <!-- Use a dummy file for tracking when files were generated -->
     <Touch
-      Files="%(Objc2WinmdHeaderListFile.DummyOutput)"
+      Files="$(Objc2WinmdDummyOutput)"
       AlwaysCreate="true" />
 
     <WriteLinesToFile
       File="$(TLogLocation)$(ProjectName).read.objc2winmd.tlog"
-      Lines="^$(ProjectPath);@(Objc2WinmdHeaderListFile);@(Objc2WinmdHeaderListFile->Metadata('ArgsFile'))"
+      Lines="^$(ProjectPath);@(Objc2WinmdInput)"
       Overwrite="true"
       Encoding="Unicode" />
 
     <WriteLinesToFile
       File="$(TLogLocation)$(ProjectName).write.objc2winmd.tlog"
-      Lines="^$(ProjectPath);@(Objc2WinmdHeaderListFile->Metadata('DummyOutput'))"
+      Lines="^$(ProjectPath);$(Objc2WinmdDummyOutput)"
       Overwrite="true"
       Encoding="Unicode" />
 
