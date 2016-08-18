@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#import <ABMultiValueInternal.h>
+#import "ABMultiValueInternal.h"
 
 // Private helper class to represent the values
 // in an ABMultiValue, which are pairs of a label
