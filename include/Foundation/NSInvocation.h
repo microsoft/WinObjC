@@ -24,12 +24,7 @@
 #define MAX_ARGS 16
 
 FOUNDATION_EXPORT_CLASS
-@interface NSInvocation : NSObject {
-    NSMethodSignature* _methodSignature;
-    void* returnValue;
-    void* args[MAX_ARGS];
-    BOOL retainArguments;
-}
+@interface NSInvocation : NSObject
 
 + (NSInvocation*)invocationWithMethodSignature:(NSMethodSignature*)signature;
 @property SEL selector;

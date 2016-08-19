@@ -124,6 +124,17 @@ struct SmallDisparateAggregate4 { // on x86 and ARM, this will be returned in re
 };
 
 @interface NSIT_InvocationTestClass : NSObject
+@property (nonatomic, assign) char singleChar;
+@property (nonatomic, assign) short singleShort;
+@property (nonatomic, assign) int singleInt;
+@property (nonatomic, assign) long long singleLongLong;
+@property (nonatomic, assign) unsigned char singleUChar;
+@property (nonatomic, assign) unsigned short singleUShort;
+@property (nonatomic, assign) unsigned int singleUInt;
+@property (nonatomic, assign) unsigned long long singleULongLong;
+@property (nonatomic, assign) float singleFloat;
+@property (nonatomic, assign) double singleDouble;
+
 @property (nonatomic, assign) UniformAggregateF1 uniformAggregateF1;
 @property (nonatomic, assign) UniformAggregateD1 uniformAggregateD1;
 @property (nonatomic, assign) UniformAggregateF2 uniformAggregateF2;
@@ -142,21 +153,23 @@ struct SmallDisparateAggregate4 { // on x86 and ARM, this will be returned in re
 // properties synthesized here
 @end
 
-#define SET_AND_TEST(object, prop, ...)                                               \
+#define SET_AND_GET_VIA_INVOCATION(object, prop, ...)                                               \
     do {                                                                              \
         object.prop = __VA_ARGS__;                                                    \
-        _testInvocation<decltype(object.prop)>(object, @selector(prop), __VA_ARGS__); \
+        _testGetViaInvocation<decltype(object.prop)>(object, @selector(prop), __VA_ARGS__); \
                                                                                       \
     } while (0)
 
 template <typename T>
-static void _testInvocation(id object, SEL selector, T value) {
+static void _testGetViaInvocation(id object, SEL selector, T value) {
     NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:[object methodSignatureForSelector:selector]];
     invocation.target = object;
     invocation.selector = selector;
     [invocation invoke];
 
     T returnedValue;
+	// To avoid artifacts, stomp the buffer before we read into it.
+	memset(&returnedValue, 0xCD, sizeof(T));
     [invocation getReturnValue:&returnedValue];
 
     EXPECT_EQ_MSG(returnedValue, value, "property %s did not match.", sel_getName(selector));
@@ -165,28 +178,116 @@ static void _testInvocation(id object, SEL selector, T value) {
 TEST(NSInvocation, AggregateReturn) {
     NSIT_InvocationTestClass* tester = [[NSIT_InvocationTestClass alloc] init];
 
-    SET_AND_TEST(tester, uniformAggregateF1, { std::numeric_limits<float>::max() });
-    SET_AND_TEST(tester, uniformAggregateD1, { std::numeric_limits<double>::max() });
+    SET_AND_GET_VIA_INVOCATION(tester, singleChar, (char)0x3);
+    SET_AND_GET_VIA_INVOCATION(tester, singleChar, (char)-12);
+    SET_AND_GET_VIA_INVOCATION(tester, singleUChar, (unsigned char)0x3U);
 
-    SET_AND_TEST(tester, uniformAggregateF2, { std::numeric_limits<float>::max(), 1024.f });
-    SET_AND_TEST(tester, uniformAggregateD2, { std::numeric_limits<double>::max(), 2048. });
+    SET_AND_GET_VIA_INVOCATION(tester, singleShort, (short)0xABAB);
+    SET_AND_GET_VIA_INVOCATION(tester, singleShort, (short)-1024);
+    SET_AND_GET_VIA_INVOCATION(tester, singleUShort, (unsigned short)0xCDEFU);
 
-    SET_AND_TEST(tester, uniformAggregateF3, { { std::numeric_limits<float>::max() }, { 1024.f, 8192.f } });
-    SET_AND_TEST(tester, uniformAggregateD3, { { std::numeric_limits<double>::max() }, { 2048., 16384. } });
+    SET_AND_GET_VIA_INVOCATION(tester, singleInt, (int)1048576);
+    SET_AND_GET_VIA_INVOCATION(tester, singleInt, (int)-70000);
+    SET_AND_GET_VIA_INVOCATION(tester, singleUInt, (unsigned int)0xABCDEFU);
 
-    SET_AND_TEST(tester, uniformAggregateF4, { { std::numeric_limits<float>::max(), 1.f }, { 1024.f, 8192.f } });
-    SET_AND_TEST(tester, uniformAggregateD4, { { std::numeric_limits<double>::max(), 2.f }, { 2048., 16384. } });
+    SET_AND_GET_VIA_INVOCATION(tester, singleLongLong, (long long)(1024LL*1024LL*1024LL*1048576LL));
+    SET_AND_GET_VIA_INVOCATION(tester, singleLongLong, (long long)(-1LL*(1024LL*1024LL*1024LL*1048576LL)));
+    SET_AND_GET_VIA_INVOCATION(tester, singleULongLong, (unsigned long long)0xABCDEF010203ULL);
 
-    SET_AND_TEST(tester, disparateAggregateDF, { 1.0, 2.0f });
+	SET_AND_GET_VIA_INVOCATION(tester, singleFloat, 1024.0f);
+	SET_AND_GET_VIA_INVOCATION(tester, singleDouble, 2048.0);
 
-    SET_AND_TEST(tester, largeUniformAggregateF6, { 1.f, 2.f, { { 4.f, 8.f }, { 16.f, 32.f } } });
+    SET_AND_GET_VIA_INVOCATION(tester, uniformAggregateF1, { std::numeric_limits<float>::max() });
+    SET_AND_GET_VIA_INVOCATION(tester, uniformAggregateD1, { std::numeric_limits<double>::max() });
+
+    SET_AND_GET_VIA_INVOCATION(tester, uniformAggregateF2, { std::numeric_limits<float>::max(), 1024.f });
+    SET_AND_GET_VIA_INVOCATION(tester, uniformAggregateD2, { std::numeric_limits<double>::max(), 2048. });
+
+    SET_AND_GET_VIA_INVOCATION(tester, uniformAggregateF3, { { std::numeric_limits<float>::max() }, { 1024.f, 8192.f } });
+    SET_AND_GET_VIA_INVOCATION(tester, uniformAggregateD3, { { std::numeric_limits<double>::max() }, { 2048., 16384. } });
+
+    SET_AND_GET_VIA_INVOCATION(tester, uniformAggregateF4, { { std::numeric_limits<float>::max(), 1.f }, { 1024.f, 8192.f } });
+    SET_AND_GET_VIA_INVOCATION(tester, uniformAggregateD4, { { std::numeric_limits<double>::max(), 2.f }, { 2048., 16384. } });
+
+    SET_AND_GET_VIA_INVOCATION(tester, disparateAggregateDF, { 1.0, 2.0f });
+
+    SET_AND_GET_VIA_INVOCATION(tester, largeUniformAggregateF6, { 1.f, 2.f, { { 4.f, 8.f }, { 16.f, 32.f } } });
 
     const wchar_t hello[] = L"hello";
-    SET_AND_TEST(tester, largeDisparateAggregate, { 1048576, -1.0, hello });
+    SET_AND_GET_VIA_INVOCATION(tester, largeDisparateAggregate, { 1048576, -1.0, hello });
 
-    SET_AND_TEST(tester, smallDisparateAggregate8, { '\x7f', 0xafafafaf });
+    SET_AND_GET_VIA_INVOCATION(tester, smallDisparateAggregate8, { '\x7f', 0xafafafaf });
 
-    SET_AND_TEST(tester, smallDisparateAggregate4, { '\x1f', 0xbeef });
+    SET_AND_GET_VIA_INVOCATION(tester, smallDisparateAggregate4, { '\x1f', 0xbeef });
+
+    [tester release];
+}
+
+#define SET_VIA_INVOCATION_AND_GET(object, prop, ...)                                               \
+    do {                                                                              \
+		decltype(object.prop) expectedVal = __VA_ARGS__; \
+        _testSetViaInvocation<decltype(object.prop)>(object, @selector(prop), __VA_ARGS__); \
+auto actualVal = object.prop; \
+		EXPECT_EQ(expectedVal, actualVal); \
+                                                                                      \
+    } while (0)
+
+template <typename T>
+static void _testSetViaInvocation(id object, SEL selector, T value) {
+	const char* oldSel = sel_getName(selector);
+	NSString* newSelectorName = [NSString stringWithFormat:@"set%c%s:", toupper(oldSel[0]), oldSel+1];
+	selector = NSSelectorFromString(newSelectorName);
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:[object methodSignatureForSelector:selector]];
+    invocation.target = object;
+    invocation.selector = selector;
+	[invocation setArgument:&value atIndex:2];
+    [invocation invoke];
+}
+
+TEST(NSInvocation, AggregateFirstParam) {
+    NSIT_InvocationTestClass* tester = [[NSIT_InvocationTestClass alloc] init];
+
+    SET_VIA_INVOCATION_AND_GET(tester, singleChar, (char)0x3);
+    SET_VIA_INVOCATION_AND_GET(tester, singleChar, (char)-12);
+    SET_VIA_INVOCATION_AND_GET(tester, singleUChar, (unsigned char)0x3U);
+
+    SET_VIA_INVOCATION_AND_GET(tester, singleShort, (short)0xABAB);
+    SET_VIA_INVOCATION_AND_GET(tester, singleShort, (short)-1024);
+    SET_VIA_INVOCATION_AND_GET(tester, singleUShort, (unsigned short)0xCDEFU);
+
+    SET_VIA_INVOCATION_AND_GET(tester, singleInt, (int)1048576);
+    SET_VIA_INVOCATION_AND_GET(tester, singleInt, (int)-70000);
+    SET_VIA_INVOCATION_AND_GET(tester, singleUInt, (unsigned int)0xABCDEFU);
+
+    SET_VIA_INVOCATION_AND_GET(tester, singleLongLong, (long long)(1024LL*1024LL*1024LL*1048576LL));
+    SET_VIA_INVOCATION_AND_GET(tester, singleLongLong, (long long)(-1LL*(1024LL*1024LL*1024LL*1048576LL)));
+    SET_VIA_INVOCATION_AND_GET(tester, singleULongLong, (unsigned long long)0xABCDEF010203ULL);
+
+	SET_VIA_INVOCATION_AND_GET(tester, singleFloat, 1024.0f);
+	SET_VIA_INVOCATION_AND_GET(tester, singleDouble, 2048.0);
+
+    SET_VIA_INVOCATION_AND_GET(tester, uniformAggregateF1, { std::numeric_limits<float>::max() });
+    SET_VIA_INVOCATION_AND_GET(tester, uniformAggregateD1, { std::numeric_limits<double>::max() });
+
+    SET_VIA_INVOCATION_AND_GET(tester, uniformAggregateF2, { std::numeric_limits<float>::max(), 1024.f });
+    SET_VIA_INVOCATION_AND_GET(tester, uniformAggregateD2, { std::numeric_limits<double>::max(), 2048. });
+
+    SET_VIA_INVOCATION_AND_GET(tester, uniformAggregateF3, { { std::numeric_limits<float>::max() }, { 1024.f, 8192.f } });
+    SET_VIA_INVOCATION_AND_GET(tester, uniformAggregateD3, { { std::numeric_limits<double>::max() }, { 2048., 16384. } });
+
+    SET_VIA_INVOCATION_AND_GET(tester, uniformAggregateF4, { { std::numeric_limits<float>::max(), 1.f }, { 1024.f, 8192.f } });
+    SET_VIA_INVOCATION_AND_GET(tester, uniformAggregateD4, { { std::numeric_limits<double>::max(), 2.f }, { 2048., 16384. } });
+
+    SET_VIA_INVOCATION_AND_GET(tester, disparateAggregateDF, { 1.0, 2.0f });
+
+    SET_VIA_INVOCATION_AND_GET(tester, largeUniformAggregateF6, { 1.f, 2.f, { { 4.f, 8.f }, { 16.f, 32.f } } });
+
+    const wchar_t hello[] = L"hello";
+    SET_VIA_INVOCATION_AND_GET(tester, largeDisparateAggregate, { 1048576, -1.0, hello });
+
+    SET_VIA_INVOCATION_AND_GET(tester, smallDisparateAggregate8, { '\x7f', 0xafafafaf });
+
+    SET_VIA_INVOCATION_AND_GET(tester, smallDisparateAggregate4, { '\x1f', 0xbeef });
 
     [tester release];
 }
