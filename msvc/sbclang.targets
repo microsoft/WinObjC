@@ -78,7 +78,7 @@
     Name="CopyPublicHeaders"
     Condition="'@(PublicHeader)' != ''"
     DependsOnTargets="FindPublicHeaders"
-    BeforeTargets="Link;Lib"
+    BeforeTargets="BeforeBuild"
     Inputs="@(PublicHeader->'%(Source)')"
     Outputs="@(PublicHeader)">
     
