@@ -132,34 +132,3 @@ void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePoi
 	*call = {0,0,0,_impl->_returnType,_impl->_returnLength,returnValuePointer,functionPointer};
 	_CallFrameInternal(call, stack);
 }
-
-/* static */
-return_type _NSInvocationCallFrame::returnTypeFromEncoding(const char* returnTypeEncoding) {
-	return RETURN_TYPE_NONE;
-}
-
-/* static */
-size_t _NSInvocationCallFrame::padFrameLength(size_t frameLength) {
-	return frameLength;
-}
-
-
-/*
-// This method takes the approach of assuming that every type must be aligned to max(wordsize, typesize)
-size_t maximumArenaSizeForTypeEncoding(const char* typeEncoding) {
-	size_t length = 0;
-	// We don't care about the return type (first encoding) or official calculated frame length (first number)
-	const char* ptr = typeEncoding;
-	ptr = objc_skip_typespec(ptr);
-	while (*ptr && isdigit(*ptr)) {
-		ptr++;
-	}
-	while (*ptr) {
-		const char *typeBegin = ptr;
-		ptr = objc_skip_typespec(ptr);
-	while (*ptr && isdigit(*ptr)) {
-		ptr++;
-	}
-	}
-}
-*/

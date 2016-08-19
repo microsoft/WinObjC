@@ -30,40 +30,47 @@ static const wchar_t* TAG = L"NSInvocation";
 @implementation NSInvocation {
     NSMethodSignature* _methodSignature;
 
-	std::unique_ptr<_NSInvocationCallFrame> _callFrame;
-	std::vector<allocation_extent> _extents;
+    std::unique_ptr<_NSInvocationCallFrame> _callFrame;
+    std::vector<allocation_extent> _extents;
 
-	size_t _returnLength;
-    void* _returnValue;
+    size_t _returnLength;
     BOOL _retainArguments;
+
+    uint8_t _smallReturnValueOptimization[8];
+    void* _returnValue;
 }
 
 /**
  @Status Interoperable
 */
 + (NSInvocation*)invocationWithMethodSignature:(NSMethodSignature*)methodSignature {
-	return [[[self alloc] initWithMethodSignature:methodSignature] autorelease];
+    return [[[self alloc] initWithMethodSignature:methodSignature] autorelease];
 }
 
 /**
  @Status Interoperable
  */
 - (instancetype)initWithMethodSignature:(NSMethodSignature*)methodSignature {
-	if (self = [super init]) {
-		_methodSignature = [methodSignature retain];
+    if (self = [super init]) {
+        _methodSignature = [methodSignature retain];
 
-		_callFrame.reset(new _NSInvocationCallFrame(methodSignature));
+        _callFrame.reset(new _NSInvocationCallFrame(methodSignature));
 
-		// true _non-promoted_ return length.
-		_returnLength = methodSignature.methodReturnLength;//_callFrame->getReturnLength();
-		_returnValue = IwMalloc(_callFrame->getReturnLength()); // promoted return length
+        // true _non-promoted_ return length.
+        _returnLength = methodSignature.methodReturnLength;//_callFrame->getReturnLength();
+        auto promotedReturnLength = _callFrame->getReturnLength();
+        if (promotedReturnLength > 8) {
+            _returnValue = IwMalloc(promotedReturnLength); // promoted return length
+        } else {
+            _returnValue = &_smallReturnValueOptimization;
+        }
 
-		NSInteger nArgs = [methodSignature numberOfArguments];
-		for(NSInteger i = 0; i < nArgs; ++i) {
-			_extents.emplace_back(_callFrame->allocateArgument([methodSignature getArgumentTypeAtIndex:i]));
-		}
+        NSInteger nArgs = [methodSignature numberOfArguments];
+        for(NSInteger i = 0; i < nArgs; ++i) {
+            _extents.emplace_back(_callFrame->allocateArgument([methodSignature getArgumentTypeAtIndex:i]));
+        }
 
-	}
+    }
     return self;
 }
 
@@ -71,30 +78,32 @@ static const wchar_t* TAG = L"NSInvocation";
  @Status Interoperable
 */
 - (void)setTarget:(id)targetObj {
-	[self setArgument:&targetObj atIndex:0];
+    [self setArgument:&targetObj atIndex:0];
 }
 
 /**
  @Status Interoperable
 */
 - (id)target {
-	return nil;
-    //return *((id*)args[0]);
+    id target = nil;
+    [self getArgument:&target atIndex:0];
+    return target;
 }
 
 /**
  @Status Interoperable
 */
 - (void)setSelector:(SEL)targSelector {
-	[self setArgument:&targSelector atIndex:1];
+    [self setArgument:&targSelector atIndex:1];
 }
 
 /**
  @Status Interoperable
 */
 - (SEL)selector {
-	return nullptr;
-    //return *((SEL*)args[1]);
+    SEL selector = nil;
+    [self getArgument:&selector atIndex:1];
+    return selector;
 }
 
 /**
@@ -113,30 +122,23 @@ static const wchar_t* TAG = L"NSInvocation";
         [NSException raise:NSInvalidArgumentException format:@"The number of arguments exceeds the allowed limit."];
     }
 
-	allocation_extent &ext = _extents[index];
-	memcpy(ext.location, buf, ext.length);
-
-	/*
+    allocation_extent &ext = _extents[index];
     if (_retainArguments) {
-        char* type = (char*)[_methodSignature getArgumentTypeAtIndex:index];
-
-        if (strcmp(type, "@") == 0) {
-            id arg = *((id*)buf);
-            [arg retain];
-
-            if (args[index] != NULL) {
-                arg = *((id*)args[index]);
-                [arg release];
-            }
+        auto argumentType = [_methodSignature getArgumentTypeAtIndex:index];
+        if (argumentType[0] == '@') {
+            // Release old value:
+            id oldValue = nil;
+            [self getArgument:&oldValue atIndex:index];
+            [(*(id*)buf) retain];
+            [oldValue release];
+        } else if (argumentType[0] == '*') {
+            char *oldValue = nullptr;
+            [self getArgument:&oldValue atIndex:index];
+            IwFree(oldValue);
+            *(char**)buf = IwStrDup(*(char**)buf);
         }
     }
-
-    if (args[index]) {
-        IwFree(args[index]);
-    }
-
-    args[index] = copyArgument(self, buf, index);
-	*/
+    memcpy(ext.location, buf, ext.length);
 }
 
 /**
@@ -148,33 +150,35 @@ static const wchar_t* TAG = L"NSInvocation";
         assert(0);
     }
 
-	allocation_extent &ext = _extents[index];
-	memcpy(buf, ext.location, ext.length);
+    allocation_extent &ext = _extents[index];
+    memcpy(buf, ext.location, ext.length);
 }
 
 /**
  @Status Interoperable
 */
 - (void)retainArguments {
-	/*
     if (!_retainArguments) {
         _retainArguments = true;
 
-        DWORD numArgs = [_methodSignature numberOfArguments];
+        auto numArgs = [_methodSignature numberOfArguments];
 
-        //  retain arguments
         for (unsigned int i = 0; i < numArgs; i++) {
-            char* type = (char*)[_methodSignature getArgumentTypeAtIndex:i];
-
-            if (args[i] != NULL) {
-                if (strcmp(type, "@") == 0) {
-                    id arg = *((id*)args[i]);
-                    [arg retain];
-                }
+            auto type = [_methodSignature getArgumentTypeAtIndex:i];
+            if (type[0] == '@') {
+                // id or block
+                id arg = nil;
+                [self getArgument:&arg atIndex:i];
+                [arg retain];
+            } else if (type[0] == '*') {
+                // char*
+                char* arg = nullptr;
+                [self getArgument:&arg atIndex:i];
+                arg = IwStrDup(arg);
+                [self setArgument:&arg atIndex:i];
             }
         }
     }
-	*/
 }
 
 /**
@@ -195,47 +199,39 @@ static const wchar_t* TAG = L"NSInvocation";
  @Status Interoperable
 */
 - (void)dealloc {
-	/*
-    DWORD numArgs = [_methodSignature numberOfArguments];
-
-    //  release arguments
+    // Release retained/string-copied arguments
     if (_retainArguments) {
-        for (unsigned int i = 0; i < numArgs; i++) {
-            char* type = (char*)[_methodSignature getArgumentTypeAtIndex:i];
+        auto numArgs = [_methodSignature numberOfArguments];
 
-            if (args[i] != NULL) {
-                if (strcmp(type, "@") == 0) {
-                    id arg = *((id*)args[i]);
-                    [arg release];
-                }
+        for (unsigned int i = 0; i < numArgs; i++) {
+            auto type = [_methodSignature getArgumentTypeAtIndex:i];
+            if (type[0] == '@') {
+                // id or block
+                id arg = nil;
+                [self getArgument:&arg atIndex:i];
+                [arg release];
+            } else if (type[0] == '*') {
+                char* arg = nullptr;
+                [self getArgument:&arg atIndex:i];
+                IwFree(arg);
             }
         }
     }
-    for (unsigned int i = 0; i < numArgs; i++) {
-        if (args[i] != NULL) {
-            IwFree(args[i]);
-        }
-    }
 
-    if (returnValue) {
-        IwFree(returnValue);
+    if (_returnValue != &_smallReturnValueOptimization) {
+        IwFree(_returnValue);
     }
 
     [_methodSignature release];
 
     [super dealloc];
-	*/
-	IwFree(_returnValue);
-	[super dealloc];
 }
 
 /**
- @Status Caveat
- @Notes as above
+ @Status Interoperable
 */
 - (void)invokeWithTarget:(id)target {
     [self setTarget:target];
-
     [self invoke];
 }
 
@@ -322,17 +318,15 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
 #endif
 
 /**
- @Status Caveat
- @Notes For variadics, only works with 6 stack args max.
+ @Status Interoperable
 */
 - (void)invoke {
-	void* pfn = &objc_msgSend;
-	if (_callFrame->getRequiresStructReturn()) {
-		pfn = &objc_msgSend_stret;
-	}
+    void* pfn = &objc_msgSend;
+    if (_callFrame->getRequiresStructReturn()) {
+        pfn = &objc_msgSend_stret;
+    }
 
-	_callFrame->execute(pfn, _returnValue);
-	//CallWithAllocatedFrame(*_callFrame, _returnType, _returnLength, _returnValue, pfn);
+    _callFrame->execute(pfn, _returnValue);
 }
 
 @end
