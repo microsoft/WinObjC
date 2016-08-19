@@ -107,6 +107,7 @@
     Condition="'$(WritePublicHeaderList)' == 'true'"
     DependsOnTargets="CopyPublicHeaders"
     AfterTargets="Link;Lib"
+    Inputs="@(PublicHeader);$(ProjectPath)"
     Outputs="$(PublicHeaderListFile);$(PublicHeaderArgsFile)">
     
     <!-- Get project-wide Clang arguments -->
@@ -158,7 +159,7 @@
 
     <WriteLinesToFile
       File="$(TLogLocation)$(ProjectName).read.headerlist.tlog"
-      Lines="^$(ProjectPath)"
+      Lines="^$(ProjectPath);@(PublicHeader)"
       Overwrite="true"
       Encoding="Unicode" />
 
