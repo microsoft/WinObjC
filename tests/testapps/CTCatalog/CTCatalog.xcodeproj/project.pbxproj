@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		002AB41B1D6CA1F1002082A5 /* CTCFontTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 002AB4101D6CA1F1002082A5 /* CTCFontTestViewController.mm */; };
+		002AB41C1D6CA1F1002082A5 /* CTCFramesetterTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 002AB4121D6CA1F1002082A5 /* CTCFramesetterTestViewController.mm */; };
+		002AB41D1D6CA1F1002082A5 /* CTCFrameTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 002AB4141D6CA1F1002082A5 /* CTCFrameTestViewController.mm */; };
+		002AB41E1D6CA1F1002082A5 /* CTCLineTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 002AB4161D6CA1F1002082A5 /* CTCLineTestViewController.mm */; };
+		002AB41F1D6CA1F1002082A5 /* CTCParagraphStyleTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 002AB4181D6CA1F1002082A5 /* CTCParagraphStyleTestViewController.mm */; };
+		002AB4201D6CA1F1002082A5 /* CTCRunTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 002AB41A1D6CA1F1002082A5 /* CTCRunTestViewController.mm */; };
 		002E8D941D592A3500D5DC64 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 002E8D931D592A3500D5DC64 /* main.m */; };
 		002E8D971D592A3500D5DC64 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 002E8D961D592A3500D5DC64 /* AppDelegate.m */; };
 		002E8D9A1D592A3500D5DC64 /* CTCRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 002E8D991D592A3500D5DC64 /* CTCRootViewController.m */; };
@@ -18,6 +24,18 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		002AB40F1D6CA1F1002082A5 /* CTCFontTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTCFontTestViewController.h; path = Tests/CTCFontTestViewController.h; sourceTree = "<group>"; };
+		002AB4101D6CA1F1002082A5 /* CTCFontTestViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CTCFontTestViewController.mm; path = Tests/CTCFontTestViewController.mm; sourceTree = "<group>"; };
+		002AB4111D6CA1F1002082A5 /* CTCFramesetterTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTCFramesetterTestViewController.h; path = Tests/CTCFramesetterTestViewController.h; sourceTree = "<group>"; };
+		002AB4121D6CA1F1002082A5 /* CTCFramesetterTestViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CTCFramesetterTestViewController.mm; path = Tests/CTCFramesetterTestViewController.mm; sourceTree = "<group>"; };
+		002AB4131D6CA1F1002082A5 /* CTCFrameTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTCFrameTestViewController.h; path = Tests/CTCFrameTestViewController.h; sourceTree = "<group>"; };
+		002AB4141D6CA1F1002082A5 /* CTCFrameTestViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CTCFrameTestViewController.mm; path = Tests/CTCFrameTestViewController.mm; sourceTree = "<group>"; };
+		002AB4151D6CA1F1002082A5 /* CTCLineTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTCLineTestViewController.h; path = Tests/CTCLineTestViewController.h; sourceTree = "<group>"; };
+		002AB4161D6CA1F1002082A5 /* CTCLineTestViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CTCLineTestViewController.mm; path = Tests/CTCLineTestViewController.mm; sourceTree = "<group>"; };
+		002AB4171D6CA1F1002082A5 /* CTCParagraphStyleTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTCParagraphStyleTestViewController.h; path = Tests/CTCParagraphStyleTestViewController.h; sourceTree = "<group>"; };
+		002AB4181D6CA1F1002082A5 /* CTCParagraphStyleTestViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CTCParagraphStyleTestViewController.mm; path = Tests/CTCParagraphStyleTestViewController.mm; sourceTree = "<group>"; };
+		002AB4191D6CA1F1002082A5 /* CTCRunTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTCRunTestViewController.h; path = Tests/CTCRunTestViewController.h; sourceTree = "<group>"; };
+		002AB41A1D6CA1F1002082A5 /* CTCRunTestViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CTCRunTestViewController.mm; path = Tests/CTCRunTestViewController.mm; sourceTree = "<group>"; };
 		002E8D8F1D592A3500D5DC64 /* CTCatalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CTCatalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		002E8D931D592A3500D5DC64 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		002E8D951D592A3500D5DC64 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -91,6 +109,18 @@
 		002E8DAD1D59314E00D5DC64 /* Test */ = {
 			isa = PBXGroup;
 			children = (
+				002AB40F1D6CA1F1002082A5 /* CTCFontTestViewController.h */,
+				002AB4101D6CA1F1002082A5 /* CTCFontTestViewController.mm */,
+				002AB4111D6CA1F1002082A5 /* CTCFramesetterTestViewController.h */,
+				002AB4121D6CA1F1002082A5 /* CTCFramesetterTestViewController.mm */,
+				002AB4131D6CA1F1002082A5 /* CTCFrameTestViewController.h */,
+				002AB4141D6CA1F1002082A5 /* CTCFrameTestViewController.mm */,
+				002AB4151D6CA1F1002082A5 /* CTCLineTestViewController.h */,
+				002AB4161D6CA1F1002082A5 /* CTCLineTestViewController.mm */,
+				002AB4171D6CA1F1002082A5 /* CTCParagraphStyleTestViewController.h */,
+				002AB4181D6CA1F1002082A5 /* CTCParagraphStyleTestViewController.mm */,
+				002AB4191D6CA1F1002082A5 /* CTCRunTestViewController.h */,
+				002AB41A1D6CA1F1002082A5 /* CTCRunTestViewController.mm */,
 				002E8DAC1D5930F600D5DC64 /* CTCAlignmentTestViewController.h */,
 				002E8DAE1D59317500D5DC64 /* CTCAlignmentTestViewController.m */,
 			);
@@ -167,8 +197,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				002AB41F1D6CA1F1002082A5 /* CTCParagraphStyleTestViewController.mm in Sources */,
+				002AB41C1D6CA1F1002082A5 /* CTCFramesetterTestViewController.mm in Sources */,
+				002AB41D1D6CA1F1002082A5 /* CTCFrameTestViewController.mm in Sources */,
 				002E8D9A1D592A3500D5DC64 /* CTCRootViewController.m in Sources */,
 				002E8DAF1D59317500D5DC64 /* CTCAlignmentTestViewController.m in Sources */,
+				002AB4201D6CA1F1002082A5 /* CTCRunTestViewController.mm in Sources */,
+				002AB41E1D6CA1F1002082A5 /* CTCLineTestViewController.mm in Sources */,
+				002AB41B1D6CA1F1002082A5 /* CTCFontTestViewController.mm in Sources */,
 				002E8D971D592A3500D5DC64 /* AppDelegate.m in Sources */,
 				002E8DAB1D59302E00D5DC64 /* CTCBaseViewController.m in Sources */,
 				002E8D941D592A3500D5DC64 /* main.m in Sources */,
@@ -322,6 +358,7 @@
 				002E8DA81D592A3500D5DC64 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

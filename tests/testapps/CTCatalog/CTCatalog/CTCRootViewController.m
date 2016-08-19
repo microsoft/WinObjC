@@ -16,6 +16,12 @@
 
 #import "CTCRootViewController.h"
 #import "CTCAlignmentTestViewController.h"
+#import "CTCFontTestViewController.h"
+#import "CTCRunTestViewController.h"
+#import "CTCLineTestViewController.h"
+#import "CTCFrameTestViewController.h"
+#import "CTCParagraphStyleTestViewController.h"
+#import "CTCFramesetterTestViewController.h"
 
 @interface TestRow : NSObject
 
@@ -46,7 +52,15 @@
 
 - (NSArray*)tests {
     if (!_tests) {
-        _tests = @[ [TestRow row:@"CTCAlignmentTest" testClass:[CTCAlignmentTestViewController class]] ];
+        _tests = @[
+            [TestRow row:@"Alignment" testClass:[CTCAlignmentTestViewController class]],
+            [TestRow row:@"Font Functions" testClass:[CTCFontTestViewController class]],
+            [TestRow row:@"Run Functions" testClass:[CTCRunTestViewController class]],
+            [TestRow row:@"Frame Functions" testClass:[CTCFrameTestViewController class]],
+            [TestRow row:@"ParagraphStyle Tests" testClass:[CTCParagraphStyleTestViewController class]],
+            [TestRow row:@"Line Functions" testClass:[CTCLineTestViewController class]],
+            [TestRow row:@"Framesetter Functions" testClass:[CTCFramesetterTestViewController class]]
+        ];
     }
     return _tests;
 }

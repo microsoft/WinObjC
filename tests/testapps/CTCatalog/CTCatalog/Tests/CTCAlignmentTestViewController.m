@@ -153,7 +153,7 @@
 
 - (void)drawTests {
     // Create left-aligned text
-    _leftView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(20, 20, 400, 400)];
+    _leftView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(20, 20, 400, 200)];
     _leftView.backgroundColor = [UIColor whiteColor];
     _leftView.alignment = kCTLeftTextAlignment;
     _leftView.font = _font;
@@ -196,7 +196,7 @@
 // Font Picker Methods
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView*)pickerView {
-    // Only the one row of fonts
+    // Only the one column of fonts
     return 1;
 }
 

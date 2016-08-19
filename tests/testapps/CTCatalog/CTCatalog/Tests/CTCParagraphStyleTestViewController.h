@@ -14,22 +14,11 @@
 //
 //*****************************************************************************
 
-#import <UIKit/UIKit.h>
-#import <CoreText/CoreText.h>
+#pragma once
 
-// Convenience macro to create and add rows for unimplemented methods to the table
-#define ADD_UNIMPLEMENTED(ARRAY, METHOD_NAME) [ARRAY addObject:createTextCell(METHOD_NAME, @"UNIMPLEMENTED")]
+#import "CTCBaseViewController.h"
 
-// Creates a table cell with title and text value
-static UITableViewCell* createTextCell(NSString* title, NSString* value) {
-    UITableViewCell* cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-    cell.textLabel.text = title;
-    UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 20)];
-    textLabel.text = value;
-    cell.accessoryView = textLabel;
-    return cell;
-}
-
-@interface CTCBaseViewController : UIViewController
+@interface CTCParagraphStyleTestViewController
+    : CTCBaseViewController <UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UITableViewDataSource, UITableViewDelegate>
 
 @end

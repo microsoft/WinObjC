@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="CTCatalog">
@@ -20,6 +20,24 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\CTCBaseViewController.h">
       <Filter>CTCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCFontTestViewController.h">
+      <Filter>CTCatalog\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCFrameTestViewController.h">
+      <Filter>CTCatalog\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCFramesetterTestViewController.h">
+      <Filter>CTCatalog\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCLineTestViewController.h">
+      <Filter>CTCatalog\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCParagraphStyleTestViewController.h">
+      <Filter>CTCatalog\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCRunTestViewController.h">
+      <Filter>CTCatalog\Test</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

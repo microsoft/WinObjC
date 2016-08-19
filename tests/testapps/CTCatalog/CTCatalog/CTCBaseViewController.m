@@ -23,8 +23,7 @@
 @implementation CTCBaseViewController
 
 - (instancetype)init {
-    self = [super init];
-    if (self) {
+    if (self = [super init]) {
         self.title = [[NSStringFromClass([self class]) stringByReplacingOccurrencesOfString:@"CTC" withString:@""]
             stringByReplacingOccurrencesOfString:@"ViewController"
                                       withString:@""];

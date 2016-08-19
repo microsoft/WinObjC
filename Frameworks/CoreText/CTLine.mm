@@ -45,9 +45,10 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef li
 @end
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string) {
+    UNIMPLEMENTED();
     NSString* str = [(NSAttributedString*)string string];
     NSRange lineRange;
     lineRange.location = 0;

@@ -28,7 +28,7 @@ static NSAttributedString* getMultilineAttributedString() {
     [string addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:wholeRange];
     [string addAttribute:NSFontAttributeName value:font range:wholeRange];
 
-    return string;
+    return [string autorelease];
 }
 
 TEST(CTTypeSetter, SuggestLineBreak) {
