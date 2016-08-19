@@ -16,7 +16,7 @@
 
 #import <Foundation/NSURLSessionConfiguration.h>
 #import <Starboard.h>
-#import <Windows.h>
+#import <windows.h>
 
 @interface NSURLSessionConfiguration ()
 @property (readwrite, copy) NSString* identifier;
@@ -24,27 +24,33 @@
 
 @implementation NSURLSessionConfiguration
 
-- (instancetype)_initWithSharedDefaults {
+/**
+ @Status Interoperable
+*/
+- (instancetype)init {
     if (self = [super init]) {
         _allowsCellularAccess = YES;
         _timeoutIntervalForRequest = 60;
-        _timeoutIntervalForResource = 7;
+        _timeoutIntervalForResource = 7 * 24 * 60 * 60;
         _HTTPCookieAcceptPolicy = NSHTTPCookieAcceptPolicyOnlyFromMainDocumentDomain;
         _HTTPCookieStorage = [[NSHTTPCookieStorage sharedHTTPCookieStorage] retain];
         _HTTPShouldSetCookies = YES;
         _networkServiceType = NSURLNetworkServiceTypeDefault;
         _requestCachePolicy = NSURLRequestUseProtocolCachePolicy;
         _HTTPMaximumConnectionsPerHost = 6;
-        //_URLCredentialStorage = [[NSURLCredentialStorage sharedCredentialStorage] retain];
+        _TLSMaximumSupportedProtocol = kTLSProtocol12;
+        _TLSMinimumSupportedProtocol = kTLSProtocol1;
+        _URLCredentialStorage = [[NSURLCredentialStorage sharedCredentialStorage] retain];
     }
 
     return self;
 }
 
-- (instancetype)_initTLSAndCache {
-    if (self = [self _initWithSharedDefaults]) {
-        _TLSMaximumSupportedProtocol = kTLSProtocol12;
-        _TLSMinimumSupportedProtocol = kTLSProtocol1;
+/**
+ @Status Interoperable
+*/
+- (instancetype)initEphemeralSession {
+    if (self = [self init]) {
         _URLCache = [[NSURLCache sharedURLCache] retain];
     }
     return self;
@@ -53,28 +59,9 @@
 /**
  @Status Interoperable
 */
-- (instancetype)init {
-    if (self = [self _initWithSharedDefaults]) {
-        _TLSMaximumSupportedProtocol = kTLSProtocol12;
-        _TLSMinimumSupportedProtocol = kSSLProtocol3;
-    }
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)initEphemeralSession {
-    self = [self _initTLSAndCache];
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
 - (instancetype)initBackgroundSession:(NSString*)identifier {
-    if (self = [self _initTLSAndCache]) {
-        _identifier = identifier;
+    if (self = [self init]) {
+        _identifier = [identifier copy];
     }
     return self;
 }
@@ -134,6 +121,18 @@
 */
 + (NSURLSessionConfiguration*)backgroundSessionConfiguration:(NSString*)identifier {
     return [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
+}
+
+- (void)dealloc {
+    [_identifier release];
+    [_HTTPAdditionalHeaders release];
+    [_sharedContainerIdentifier release];
+    [_HTTPCookieStorage release];
+    [_URLCredentialStorage release];
+    [_URLCache release];
+    [_protocolClasses release];
+    [_connectionProxyDictionary release];
+    [super dealloc];
 }
 
 @end

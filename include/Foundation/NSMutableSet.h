@@ -29,7 +29,7 @@ FOUNDATION_EXPORT_CLASS
 + (instancetype)setWithCapacity:(NSUInteger)numItems;
 - (instancetype)initWithCapacity:(NSUInteger)numItems;
 - (void)addObject:(ObjectType)object;
-- (void)filterUsingPredicate:(NSPredicate*)predicate STUB_METHOD;
+- (void)filterUsingPredicate:(NSPredicate*)predicate;
 - (void)removeObject:(ObjectType)object;
 - (void)removeAllObjects;
 - (void)addObjectsFromArray:(NSArray<ObjectType>*)array;

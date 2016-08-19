@@ -126,145 +126,179 @@ TEST(Archival, NSKeyedUnarchiver) {
     [insecureUnarchiver release];
 }
 
-TEST(Archival, NSKeyedUnarchiver_Secure) {
+// The following test is disabled because OS X violates the contract set out in
+// https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSKeyedUnarchiver_Class/#//apple_ref/occ/instm/NSKeyedUnarchiver/setRequiresSecureCoding:
+// > Once enabled, attempting to call setRequiresSecureCoding: with a value of NO will throw an exception.
+//   This is to prevent classes from selectively turning secure coding off.
+OSX_DISABLED_TEST(NSKeyedUnarchiverSecure,
+                  SecureCodingCannotBeTurnedOff) { // it should be impossible to turn secure coding off once it's on.
     NSData* archive = createTestArchive();
     [TestCreationSignallingClass resetCreationCount];
+    NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
+    secureUnarchiver.requiresSecureCoding = YES;
+    EXPECT_ANY_THROW_MSG(secureUnarchiver.requiresSecureCoding = NO, "It should be impossible to turn off secure coding.");
+    [secureUnarchiver finishDecoding];
+    [secureUnarchiver release];
+}
 
-    EXPECT_EQ([TestCreationSignallingClass creationCount], 0);
+TEST(NSKeyedUnarchiverSecure,
+     RequestIncorrectClass) { // requesting an object with the wrong class should not result in the creation of the original object
+    NSData* archive = createTestArchive();
+    [TestCreationSignallingClass resetCreationCount];
+    NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
+    secureUnarchiver.requiresSecureCoding = YES;
+    EXPECT_ANY_THROW([secureUnarchiver decodeObjectOfClass:[InsecureObject class] forKey:@"creationSignalling"]);
+    EXPECT_EQ(0, [TestCreationSignallingClass creationCount]);
+    [secureUnarchiver finishDecoding];
+    [secureUnarchiver release];
+}
 
-    { // it should be impossible to turn secure coding off once it's on.
-        NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
-        secureUnarchiver.requiresSecureCoding = YES;
-        EXPECT_ANY_THROW_MSG(secureUnarchiver.requiresSecureCoding = NO, "It should be impossible to turn off secure coding.");
-        [secureUnarchiver finishDecoding];
-        [secureUnarchiver release];
-    }
+TEST(NSKeyedUnarchiverSecure, PODTypesDoNotRequireCheck) { // POD types should be passed through unharmed
+    NSData* archive = createTestArchive();
+    [TestCreationSignallingClass resetCreationCount];
+    NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
+    secureUnarchiver.requiresSecureCoding = YES;
+    EXPECT_EQ([secureUnarchiver decodeInt64ForKey:@"int64"], 84LL);
+    [secureUnarchiver finishDecoding];
+    [secureUnarchiver release];
+}
 
-    { // requesting an object with the wrong class should not result in the creation of the original object
-        NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
-        secureUnarchiver.requiresSecureCoding = YES;
-        EXPECT_ANY_THROW([secureUnarchiver decodeObjectOfClass:[InsecureObject class] forKey:@"creationSignalling"]);
-        EXPECT_EQ(0, [TestCreationSignallingClass creationCount]);
-        [secureUnarchiver finishDecoding];
-        [secureUnarchiver release];
-    }
+TEST(NSKeyedUnarchiverSecure, NSStringDoesNotRequireCheck) { // NSString should be passed through without a class check
+    NSData* archive = createTestArchive();
+    [TestCreationSignallingClass resetCreationCount];
+    NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
+    secureUnarchiver.requiresSecureCoding = YES;
+    id stringVal = nil;
+    EXPECT_NO_THROW(stringVal = [secureUnarchiver decodeObjectForKey:@"string"]);
+    EXPECT_OBJCEQ(stringVal, @"Hello");
+    [secureUnarchiver finishDecoding];
+    [secureUnarchiver release];
+}
 
-    { // POD types should be passed through unharmed
-        NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
-        secureUnarchiver.requiresSecureCoding = YES;
-        EXPECT_EQ([secureUnarchiver decodeInt64ForKey:@"int64"], 84LL);
-        [secureUnarchiver finishDecoding];
-        [secureUnarchiver release];
-    }
+TEST(NSKeyedUnarchiverSecure, NSNumberDoesNotRequireCheck) { // NSNumber should be passed through without a class check
+    NSData* archive = createTestArchive();
+    [TestCreationSignallingClass resetCreationCount];
+    NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
+    secureUnarchiver.requiresSecureCoding = YES;
+    EXPECT_OBJCEQ([secureUnarchiver decodeObjectForKey:@"number"], @40);
+    [secureUnarchiver finishDecoding];
+    [secureUnarchiver release];
+}
 
-    { // NSString should be passed through without a class check
-        NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
-        secureUnarchiver.requiresSecureCoding = YES;
-        id stringVal = nil;
-        EXPECT_NO_THROW(stringVal = [secureUnarchiver decodeObjectForKey:@"string"]);
-        EXPECT_OBJCEQ(stringVal, @"Hello");
-        [secureUnarchiver finishDecoding];
-        [secureUnarchiver release];
-    }
+TEST(NSKeyedUnarchiverSecure, NSDataRequiresCheck) { // NSData requires a class check
+    NSData* archive = createTestArchive();
+    [TestCreationSignallingClass resetCreationCount];
+    NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
+    secureUnarchiver.requiresSecureCoding = YES;
+    NSData* data = nil;
+    EXPECT_NO_THROW(data = [secureUnarchiver decodeObjectOfClass:[NSData class] forKey:@"data"]);
+    EXPECT_OBJCNE(nil, data);
+    EXPECT_EQ(sizeof(unsigned), [data length]);
+    unsigned rawValue = 0;
+    [data getBytes:&rawValue length:sizeof(unsigned)];
+    EXPECT_EQ(0xDEADBEEF, rawValue);
+    [secureUnarchiver finishDecoding];
+    [secureUnarchiver release];
+}
 
-    { // NSNumber should be passed through without a class check
-        NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
-        secureUnarchiver.requiresSecureCoding = YES;
-        EXPECT_OBJCEQ([secureUnarchiver decodeObjectForKey:@"number"], @40);
-        [secureUnarchiver finishDecoding];
-        [secureUnarchiver release];
-    }
+TEST(NSKeyedUnarchiverSecure, RequestDictionaryAsArray) { // A dictionary should not be requestable as an array
+    NSData* archive = createTestArchive();
+    [TestCreationSignallingClass resetCreationCount];
+    NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
+    secureUnarchiver.requiresSecureCoding = YES;
+    EXPECT_ANY_THROW([secureUnarchiver decodeObjectOfClass:[NSArray class] forKey:@"dictionary"]);
+    [secureUnarchiver finishDecoding];
+    [secureUnarchiver release];
+}
 
-    { // NSData requires a class check
-        NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
-        secureUnarchiver.requiresSecureCoding = YES;
-        NSData* data = nil;
-        EXPECT_NO_THROW(data = [secureUnarchiver decodeObjectOfClass:[NSData class] forKey:@"data"]);
-        EXPECT_OBJCNE(nil, data);
-        EXPECT_EQ(sizeof(unsigned), [data length]);
-        unsigned rawValue = 0;
-        [data getBytes:&rawValue length:sizeof(unsigned)];
-        EXPECT_EQ(0xDEADBEEF, rawValue);
-        [secureUnarchiver finishDecoding];
-        [secureUnarchiver release];
-    }
+TEST(NSKeyedUnarchiverSecure, NoClassesSpecified) { // requesting no classes is tantamount to requesting exceptions constantly
+    NSData* archive = createTestArchive();
+    [TestCreationSignallingClass resetCreationCount];
+    NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
+    secureUnarchiver.requiresSecureCoding = YES;
+    EXPECT_ANY_THROW([secureUnarchiver decodeObjectForKey:@"dictionary"]);
+    [secureUnarchiver finishDecoding];
+    [secureUnarchiver release];
+}
 
-    { // A dictionary should not be requestable as an array
-        NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
-        secureUnarchiver.requiresSecureCoding = YES;
-        EXPECT_ANY_THROW([secureUnarchiver decodeObjectOfClass:[NSArray class] forKey:@"dictionary"]);
-        [secureUnarchiver finishDecoding];
-        [secureUnarchiver release];
-    }
+TEST(NSKeyedUnarchiverSecure, NSArrayWithBasicEnclosedType) { // NSArray containing NSNumber should pass through
+    NSData* archive = createTestArchive();
+    [TestCreationSignallingClass resetCreationCount];
+    NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
+    secureUnarchiver.requiresSecureCoding = YES;
+    EXPECT_NO_THROW([secureUnarchiver decodeObjectOfClass:[NSArray class] forKey:@"array"]);
+    [secureUnarchiver finishDecoding];
+    [secureUnarchiver release];
+}
 
-    { // requesting no classes is tantamount to requesting exceptions constantly
-        NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
-        secureUnarchiver.requiresSecureCoding = YES;
-        EXPECT_ANY_THROW([secureUnarchiver decodeObjectForKey:@"dictionary"]);
-        [secureUnarchiver finishDecoding];
-        [secureUnarchiver release];
-    }
+TEST(NSKeyedUnarchiverSecure,
+     CustomClass) { // TestCreationSignallingClass (NSKeyedUnarchiverSecure) should pass through and create one instance
+    NSData* archive = createTestArchive();
+    [TestCreationSignallingClass resetCreationCount];
+    NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
+    secureUnarchiver.requiresSecureCoding = YES;
+    EXPECT_NO_THROW([secureUnarchiver decodeObjectOfClass:[TestCreationSignallingClass class] forKey:@"creationSignalling"]);
+    EXPECT_EQ(1, [TestCreationSignallingClass creationCount]);
+    [secureUnarchiver finishDecoding];
+    [secureUnarchiver release];
+}
 
-    { // NSArray containing NSNumber should pass through
-        NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
-        secureUnarchiver.requiresSecureCoding = YES;
-        EXPECT_NO_THROW([secureUnarchiver decodeObjectOfClass:[NSArray class] forKey:@"array"]);
-        [secureUnarchiver finishDecoding];
-        [secureUnarchiver release];
-    }
+TEST(NSKeyedUnarchiverSecure, ObjectThatDoesNotConform) { // An object that does not conform to NSKeyedUnarchiverSecure cannot be decoded
+    NSData* archive = createTestArchive();
+    [TestCreationSignallingClass resetCreationCount];
+    NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
+    secureUnarchiver.requiresSecureCoding = YES;
+    EXPECT_ANY_THROW([secureUnarchiver decodeObjectOfClass:[InsecureObject class] forKey:@"insecureObject"]);
+    [secureUnarchiver finishDecoding];
+    [secureUnarchiver release];
+}
 
-    { // TestCreationSignallingClass (NSSecureCoding) should pass through and create one instance
-        NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
-        secureUnarchiver.requiresSecureCoding = YES;
-        EXPECT_NO_THROW([secureUnarchiver decodeObjectOfClass:[TestCreationSignallingClass class] forKey:@"creationSignalling"]);
-        EXPECT_EQ(1, [TestCreationSignallingClass creationCount]);
-        [secureUnarchiver finishDecoding];
-        [secureUnarchiver release];
-    }
+TEST(NSKeyedUnarchiverSecure, NSArrayWithCustomEnclosedType1) { // Arrays must be decoded by specifying their enclosing AND enclosed types
+    NSData* archive = createTestArchive();
+    [TestCreationSignallingClass resetCreationCount];
+    NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
+    secureUnarchiver.requiresSecureCoding = YES;
+    EXPECT_ANY_THROW([secureUnarchiver decodeObjectOfClass:[TestCreationSignallingClass class] forKey:@"arrayOfSecureTypes"]);
+    [secureUnarchiver finishDecoding];
+    [secureUnarchiver release];
+}
 
-    { // An object that does not conform to NSSecureCoding cannot be decoded
-        NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
-        secureUnarchiver.requiresSecureCoding = YES;
-        EXPECT_ANY_THROW([secureUnarchiver decodeObjectOfClass:[InsecureObject class] forKey:@"insecureObject"]);
-        [secureUnarchiver finishDecoding];
-        [secureUnarchiver release];
-    }
+TEST(NSKeyedUnarchiverSecure,
+     NSArrayWithoutEnclosedTypeSpecified) { // Arrays must be decoded by specifying their enclosing AND enclosed types
+    NSData* archive = createTestArchive();
+    [TestCreationSignallingClass resetCreationCount];
+    NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
+    secureUnarchiver.requiresSecureCoding = YES;
+    EXPECT_ANY_THROW([secureUnarchiver decodeObjectOfClass:[NSArray class] forKey:@"arrayOfSecureTypes"]);
+    [secureUnarchiver finishDecoding];
+    [secureUnarchiver release];
+}
 
-    { // Arrays must be decoded by specifying their enclosing AND enclosed types
-        NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
-        secureUnarchiver.requiresSecureCoding = YES;
-        EXPECT_ANY_THROW([secureUnarchiver decodeObjectOfClass:[TestCreationSignallingClass class] forKey:@"arrayOfSecureTypes"]);
-        [secureUnarchiver finishDecoding];
-        [secureUnarchiver release];
-    }
+TEST(NSKeyedUnarchiverSecure, NSArrayWithCustomEnclosedType2) { // Arrays must be decoded by specifying their enclosing AND enclosed types
+    NSData* archive = createTestArchive();
+    [TestCreationSignallingClass resetCreationCount];
+    NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
+    secureUnarchiver.requiresSecureCoding = YES;
+    NSSet* allowedClasses = [NSSet setWithObjects:[TestCreationSignallingClass class], [NSArray class], nil];
+    EXPECT_NO_THROW([secureUnarchiver decodeObjectOfClasses:allowedClasses forKey:@"arrayOfSecureTypes"]);
+    [secureUnarchiver finishDecoding];
+    [secureUnarchiver release];
+}
 
-    { // Arrays must be decoded by specifying their enclosing AND enclosed types
-        NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
-        secureUnarchiver.requiresSecureCoding = YES;
-        EXPECT_ANY_THROW([secureUnarchiver decodeObjectOfClass:[NSArray class] forKey:@"arrayOfSecureTypes"]);
-        [secureUnarchiver finishDecoding];
-        [secureUnarchiver release];
-    }
-
-    { // Arrays must be decoded by specifying their enclosing AND enclosed types
-        NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
-        secureUnarchiver.requiresSecureCoding = YES;
-        NSSet* allowedClasses = [NSSet setWithObjects:[TestCreationSignallingClass class], [NSArray class], nil];
-        EXPECT_NO_THROW([secureUnarchiver decodeObjectOfClasses:allowedClasses forKey:@"arrayOfSecureTypes"]);
-        [secureUnarchiver finishDecoding];
-        [secureUnarchiver release];
-    }
-
-    { // Once a bad decode has occurred, all requests must return nil
-        NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
-        secureUnarchiver.requiresSecureCoding = YES;
-        EXPECT_ANY_THROW([secureUnarchiver decodeObjectOfClass:[InsecureObject class] forKey:@"insecureObject"]);
-        EXPECT_OBJCEQ(nil, [secureUnarchiver decodeObjectOfClass:[NSDictionary class] forKey:@"dictionary"]);
-        EXPECT_OBJCEQ(nil, [secureUnarchiver decodeObjectOfClass:[NSArray class] forKey:@"array"]);
-        EXPECT_OBJCEQ(nil, [secureUnarchiver decodeObjectOfClass:[NSNumber class] forKey:@"number"]);
-        [secureUnarchiver finishDecoding];
-        [secureUnarchiver release];
-    }
+// This is testing an implementation detail, but one that was true on OS X 10.10.
+// It fails on 10.11.
+OSX_DISABLED_TEST(NSKeyedUnarchiverSecure,
+                  BadDecodeLeavesUnarchiverInBadState) { // Once a bad decode has occurred, all requests must return nil
+    NSData* archive = createTestArchive();
+    [TestCreationSignallingClass resetCreationCount];
+    NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
+    secureUnarchiver.requiresSecureCoding = YES;
+    EXPECT_ANY_THROW([secureUnarchiver decodeObjectOfClass:[InsecureObject class] forKey:@"insecureObject"]);
+    EXPECT_OBJCEQ(nil, [secureUnarchiver decodeObjectOfClass:[NSDictionary class] forKey:@"dictionary"]);
+    EXPECT_OBJCEQ(nil, [secureUnarchiver decodeObjectOfClass:[NSArray class] forKey:@"array"]);
+    EXPECT_OBJCEQ(nil, [secureUnarchiver decodeObjectOfClass:[NSNumber class] forKey:@"number"]);
+    [secureUnarchiver finishDecoding];
+    [secureUnarchiver release];
 }
 
 @interface NSKAInstanceOriginalClass : NSObject <NSCoding>

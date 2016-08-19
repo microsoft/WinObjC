@@ -28,6 +28,7 @@
 #include <UIKit\UIKitExport.h>
 #include "StarboardXaml.h"
 #include "..\UIApplicationMainInternal.h"
+#include "UWPBackgroundTask.h"
 
 using namespace Windows::ApplicationModel::Activation;
 using namespace Windows::Media::SpeechRecognition;
@@ -61,15 +62,29 @@ Platform::Array<Xaml::Markup::XmlnsDefinition>^ App::GetXmlnsDefinitions() {
 }
 
 void AppEventListener::_RegisterEventHandlers() {
-    Windows::UI::Xaml::Application::Current->Suspending += ref new Xaml::SuspendingEventHandler(this, &AppEventListener::_OnSuspending);
-    Windows::UI::Xaml::Application::Current->Resuming += ref new Windows::Foundation::EventHandler<Platform::Object^>(this, &AppEventListener::_OnResuming);
+    Windows::UI::Xaml::Application::Current->UnhandledException +=
+        ref new Xaml::UnhandledExceptionEventHandler(this, &AppEventListener::_OnUnhandledException);
 
+    Windows::UI::Xaml::Application::Current->Suspending +=
+        ref new Xaml::SuspendingEventHandler(this, &AppEventListener::_OnSuspending);
+    Windows::UI::Xaml::Application::Current->Resuming +=
+        ref new Windows::Foundation::EventHandler<Platform::Object^>(this, &AppEventListener::_OnResuming);
+
+#ifdef ENABLE_BACKGROUND_TASK
+    Windows::UI::Xaml::Application::Current->EnteredBackground +=
+        ref new Xaml::EnteredBackgroundEventHandler(this, &AppEventListener::_OnEnteredBackground);
+    Windows::UI::Xaml::Application::Current->LeavingBackground +=
+        ref new Xaml::LeavingBackgroundEventHandler(this, &AppEventListener::_OnLeavingBackground);
+#else
     // Register for Window Visibility change event.
     // TODO: Move this out of the Windows Visibility event in future
-    Xaml::Window::Current->VisibilityChanged += ref new Xaml::WindowVisibilityChangedEventHandler(this, &AppEventListener::_OnAppVisibilityChanged);
+    Xaml::Window::Current->VisibilityChanged +=
+        ref new Xaml::WindowVisibilityChangedEventHandler(this, &AppEventListener::_OnAppVisibilityChanged);
+#endif
 
     // Register for Application Memory Usage Increase event.
-    MemoryManager::AppMemoryUsageIncreased += ref new Windows::Foundation::EventHandler<Platform::Object^>(this, &AppEventListener::_OnAppMemoryUsageChanged);
+    MemoryManager::AppMemoryUsageIncreased +=
+        ref new Windows::Foundation::EventHandler<Platform::Object^>(this, &AppEventListener::_OnAppMemoryUsageChanged);
 }
 
 void AppEventListener::_OnAppVisibilityChanged(Platform::Object^ sender, Core::VisibilityChangedEventArgs^ args)
@@ -104,6 +119,43 @@ void AppEventListener::_OnSuspending(Platform::Object^ sender, Windows::Applicat
     deferral->Complete();
 }
 
+#ifdef ENABLE_BACKGROUND_TASK
+void AppEventListener::_OnEnteredBackground(Platform::Object^ sender, Windows::ApplicationModel::EnteredBackgroundEventArgs^ args)
+{
+    TraceVerbose(TAG, L"EnteredBackground event received");
+    _enteredBackgroundEventDeferral = args->GetDeferral();
+    UIApplicationMainHandlePLMEvent(false);
+    _enteredBackgroundEventDeferral->Complete();
+    _enteredBackgroundEventDeferral = nullptr;
+}
+
+void AppEventListener::_OnLeavingBackground(Platform::Object^ sender, Windows::ApplicationModel::LeavingBackgroundEventArgs^ args)
+{
+    TraceVerbose(TAG, L"LeavingBackground event received");
+    UIApplicationMainHandlePLMEvent(true);
+}
+
+void AppEventListener::_OnBackgroundTaskCancelled(
+    Windows::ApplicationModel::Background::IBackgroundTaskInstance^ taskInstance,
+    Windows::ApplicationModel::Background::BackgroundTaskCancellationReason reason)
+{
+    TraceVerbose(TAG, L"Background task cancelled called for task %s", taskInstance->Task->Name->Data());
+    if (wcscmp(taskInstance->Task->Name->Data(), c_backgroundTaskName) == 0) {
+        TraceVerbose(TAG, L"Background task cancelled called for ApplicationTrigger task due to reason %ld", reason);
+        _applicationTriggerDeferral->Complete();
+        _applicationTriggerDeferral = nullptr;
+        taskInstance->Task->Unregister(true);
+    }
+}
+#endif
+
+void AppEventListener::_OnUnhandledException(Platform::Object^ sender, Xaml::UnhandledExceptionEventArgs^ args)
+{
+    TraceError(TAG, L"Application hit an unhandled exception %ld (%s)", args->Exception.Value, args->Message->Data());
+    FAIL_FAST();
+}
+
+
 static AppEventListener ^_appEvents;
 
 void App::InitializeComponent() {
@@ -120,9 +172,16 @@ void App::OnActivated(IActivatedEventArgs^ args) {
     UIApplicationActivated(args);
 }
 
+#ifdef ENABLE_BACKGROUND_TASK
+void App::OnBackgroundActivated(BackgroundActivatedEventArgs^ args) {
+    __super::OnBackgroundActivated(args);
+    UIApplicationBackgroundActivated(args);
+}
+#endif
+
+extern "C"
 void UIApplicationLaunched(LaunchActivatedEventArgs^ args) {
     TraceVerbose(TAG, L"OnLaunched event received for %d. Previous app state was %d", args->Kind, args->PreviousExecutionState);
-
     // Opt out of prelaunch for now. MSDN guidance is to check the flag and just return.
     // Or skip re-initializing as the app is being resumed from memory.
     bool initiateAppLaunch = (!(args->PrelaunchActivated)
@@ -135,6 +194,7 @@ void UIApplicationLaunched(LaunchActivatedEventArgs^ args) {
     }
 }
 
+extern "C"
 void UIApplicationActivated(IActivatedEventArgs^ args) {
     TraceVerbose(TAG, L"OnActivated event received for %d. Previous app state was %d", args->Kind, args->PreviousExecutionState);
     bool initiateAppLaunch = false;
@@ -164,6 +224,7 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
         }
 
         UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(result));
+
     } else if (args->Kind == ActivationKind::Protocol) {
         ProtocolActivatedEventArgs^ protocolArgs = safe_cast<ProtocolActivatedEventArgs^>(args);
         Windows::Foundation::Uri^ argUri = protocolArgs->Uri;
@@ -184,6 +245,22 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
     }
 }
 
+#ifdef ENABLE_BACKGROUND_TASK
+extern "C"
+void UIApplicationBackgroundActivated(BackgroundActivatedEventArgs^ args) {
+    TraceVerbose(TAG, L"OnBackgroundActivated called for task %s", args->TaskInstance->Task->Name->Data());
+
+    if (wcscmp(args->TaskInstance->Task->Name->Data(), c_backgroundTaskName) == 0) {
+        TraceVerbose(TAG, L"OnBackgroundActivated called for ApplicationTrigger task.");
+        FAIL_FAST_IF(_appEvents->_applicationTriggerDeferral != nullptr);
+        _appEvents->_applicationTriggerDeferral = args->TaskInstance->GetDeferral();
+    }
+
+    args->TaskInstance->Canceled +=
+        ref new Windows::ApplicationModel::Background::BackgroundTaskCanceledEventHandler(_appEvents,
+            &AppEventListener::_OnBackgroundTaskCancelled);
+}
+#endif
 
 void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
     auto uiElem = ref new Xaml::Controls::Grid();

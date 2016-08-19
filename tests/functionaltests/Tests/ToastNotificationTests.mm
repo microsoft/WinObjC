@@ -14,13 +14,13 @@
 //
 //******************************************************************************
 
+#include <TestFramework.h>
 #include <COMIncludes.h>
 #include "MockClass.h"
 #include <windows.applicationModel.activation.h>
 #include <COMIncludes_End.h>
 
 #include <UWP/WindowsApplicationModelActivation.h>
-#include <TestFramework.h>
 #include <Foundation/Foundation.h>
 #include "UIKit/UIApplication.h"
 #include "StringHelpers.h"

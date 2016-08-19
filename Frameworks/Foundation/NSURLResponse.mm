@@ -19,7 +19,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include <Foundation/NSURLResponse.h>
 #include "NSURLResponseInternal.h"
 
-@interface NSURLResponse() {
+@interface NSURLResponse () {
     int _expectedContentLength;
     StrongId<NSString> _mimeType;
     StrongId<NSString> _suggestedFilename;
@@ -30,7 +30,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 @implementation NSURLResponse
 
-static NSString* const s_invalidFileNameChars = @"\\/:;*\"<>|?";
+static NSString* const s_invalidFileNameChars = @"\\/:*\"<>|?";
 static NSString* const s_unknownFileName = @"Unknown";
 static NSString* const s_defaultMimeType = @"application/octet-stream";
 static NSString* const s_NSExpectedContentLength = @"NS.expectedContentLength";
@@ -40,10 +40,11 @@ static NSString* const s_NSArchivalSuggestedFilename = @"NS.suggestedFilename";
 static NSString* const s_NSArchivalURL = @"NS.url";
 
 NSString* _NSReplaceIllegalFileNameCharacters(NSString* fileName) {
-    static StrongId<NSCharacterSet> invalidFileNameCharacterSet = [NSCharacterSet characterSetWithCharactersInString:s_invalidFileNameChars];
+    static StrongId<NSCharacterSet> invalidFileNameCharacterSet =
+        [NSCharacterSet characterSetWithCharactersInString:s_invalidFileNameChars];
 
     if (fileName) {
-        if (!NSEqualRanges({NSNotFound, 0}, [fileName rangeOfCharacterFromSet:invalidFileNameCharacterSet])) {
+        if (!NSEqualRanges({ NSNotFound, 0 }, [fileName rangeOfCharacterFromSet:invalidFileNameCharacterSet])) {
             // remove illegal characters
             NSArray<NSString*>* substrings = [fileName componentsSeparatedByCharactersInSet:invalidFileNameCharacterSet];
             fileName = [substrings componentsJoinedByString:@"_"];
@@ -67,20 +68,22 @@ NSString* _NSReplaceIllegalFileNameCharacters(NSString* fileName) {
 /**
  @Status Interoperable
 */
-- (id)initWithURL:(NSURL*)url MIMEType:(NSString*)mimeType expectedContentLength:(NSInteger)expectedContentLength textEncodingName:(NSString*)textEncodingName {
+- (id)initWithURL:(NSURL*)url
+                 MIMEType:(NSString*)mimeType
+    expectedContentLength:(NSInteger)expectedContentLength
+         textEncodingName:(NSString*)textEncodingName {
     return [self _initWithURL:url
-        MIMEType:mimeType
+                     MIMEType:mimeType
         expectedContentLength:expectedContentLength
-        textEncodingName:textEncodingName
-        suggestedFilename:_NSReplaceIllegalFileNameCharacters([url lastPathComponent])];
+             textEncodingName:textEncodingName
+            suggestedFilename:_NSReplaceIllegalFileNameCharacters([url lastPathComponent])];
 }
 
 - (id)_initWithURL:(NSURL*)url
-        MIMEType:(NSString*)mimeType
-        expectedContentLength:(NSInteger)expectedContentLength
-        textEncodingName:(NSString*)textEncodingName
+                 MIMEType:(NSString*)mimeType
+    expectedContentLength:(NSInteger)expectedContentLength
+         textEncodingName:(NSString*)textEncodingName
         suggestedFilename:(NSString*)fileName {
-
     if (self = [super init]) {
         _expectedContentLength = expectedContentLength;
         _url.attach([url copy]);

@@ -39,17 +39,21 @@ While it's possible to checkout a separate git enlistment on an OSX machine and 
 
 #### Building & Running Foundation Unit Tests
 
-1. In a shell, cd to \<enlistment root\>/tests/unittests
+1. In a shell, cd to \<enlistment root\>/tests/unittests/Foundation
     * If your enlistment is shared from another machine, such as in the recommended steps above, your enlistment root will be in /Volumes/ (eg: /Volumes/WinObjC/)
 2. Run 'make Foundation.UnitTests.exe' - this creates Foundation.UnitTests.exe in your current directory
-3. Run './Foundation.UnitTests.exe' - --gtest_filter and similar options are available if wanted
+3. The makefile will print an output location for Foundation.UnitTests.exe, eg: 
+    * Done, please run from /Volumes/WinObjC/build/Tests/UnitTests/Foundation/OSX/Foundation.UnitTests.exe
+
+4. Run '/Volumes/WinObjC/build/Tests/UnitTests/Foundation/OSX/Foundation.UnitTests.exe', or your equivalent address - 
+    * --gtest_filter and similar options are available
 
 #### Current known failures:
 
 
-    * [==========] 821 tests from 74 test cases ran. (56608 ms total)
-    * [  PASSED  ] 698 tests.
-    * [  FAILED  ] 123 tests, listed below:
+    * [==========] 833 tests from 74 test cases ran. (58373 ms total)
+    * [  PASSED  ] 707 tests.
+    * [  FAILED  ] 126 tests, listed below:
     * [  FAILED  ] Archival.NSKeyedUnarchiver_Secure
     * [  FAILED  ] KVO.DerivedKeyOnSubpath1
     * [  FAILED  ] KVO.RemoveWithoutContext
@@ -137,11 +141,12 @@ While it's possible to checkout a separate git enlistment on an OSX machine and 
     * [  FAILED  ] NSPredicate.Like
     * [  FAILED  ] NSProgress.IsIndeterminate
     * [  FAILED  ] NSProgress.ChainImplicit
+    * [  FAILED  ] NSProgress.SingleParentEvenAcrossThreads
     * [  FAILED  ] NSProgress.CancelPauseResume
     * [  FAILED  ] NSProgress.LocalizedDescription
-    * [  FAILED  ] NSPropertyListSerialization.PropertyListForDate
     * [  FAILED  ] NSRange.NSRangeTests
     * [  FAILED  ] NSRegularExpression.NSMatchingOptionsTest
+    * [  FAILED  ] NSSet.ObjectsPassingTest
     * [  FAILED  ] NSString.NSStringTests
     * [  FAILED  ] NSString.IntegerValue
     * [  FAILED  ] NSString.IntValue
@@ -168,12 +173,13 @@ While it's possible to checkout a separate git enlistment on an OSX machine and 
     * [  FAILED  ] NSValue.arbitraryStructCanBeSerializedAndDeserialized
     * [  FAILED  ] NSPropertyList.Decode
     * [  FAILED  ] NSPropertyList.DecodeMutable
+    * [  FAILED  ] NSURLResponse.canBeArchived
     * [  FAILED  ] NSHTTPURLResponse.SuggestedFilename_3
     * [  FAILED  ] NSHTTPURLResponse.SuggestedFilename_4
+    * [  FAILED  ] NSHTTPURLResponse.canBeArchived
     * [  FAILED  ] NSString/StringsFormatPropertyList.CanDeserialize/0, where GetParam() = L"\xFEFFkey1=value1;\n\"key2\"=\"value2\";"
     * [  FAILED  ] NSString/StringsFormatPropertyList.CanDeserialize/1, where GetParam() = L"key1=value1;\n\"key2\"=\"value2\";"
-    * [  FAILED  ] NSString/ComparisonTests.PrefixSuffix/8, where GetParam() = (0x105cd4388, 0x105cd43c8, '\x1' (1), '\0', '\x1' (1), '\x1' (1), '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0')
+    * [  FAILED  ] NSString/ComparisonTests.PrefixSuffix/8, where GetParam() = (, , '\x1' (1), '\0', '\x1' (1), '\x1' (1), '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0')
 
-    * 123 FAILED TESTS
-    *  YOU HAVE 9 DISABLED TESTS
-
+    * 126 FAILED TESTS
+    *   YOU HAVE 9 DISABLED TESTS

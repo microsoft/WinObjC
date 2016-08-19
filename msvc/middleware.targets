@@ -15,6 +15,9 @@
       <SBResourceCopy
         Condition="$([System.Convert]::ToString(%(Link.AdditionalDependencies)).Contains('FBSDKCoreKit'))"
         Include="$(StarboardLibDirs)\SafariServices.dll" />
+      <SBResourceCopy
+        Condition="$([System.Convert]::ToString(%(Link.AdditionalDependencies)).Contains('FBSDKShareKit'))"
+        Include="$(StarboardLibDirs)\AssetsLibrary.dll" />
     </ItemGroup>
   </Target>
 </Project>

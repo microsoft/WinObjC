@@ -31,8 +31,11 @@ App::App() {
 }
 
 extern "C" int main(int argc, char* argv[]);
-extern "C" void UIApplicationActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ args);
-extern "C" void UIApplicationLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args);
+extern "C" void UIApplicationActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ e);
+extern "C" void UIApplicationLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ e);
+#ifdef ENABLE_BACKGROUND_TASK
+extern "C" void UIApplicationBackgroundActivated(Windows::ApplicationModel::Activation::BackgroundActivatedEventArgs^ e);
+#endif
 
 /// <summary>
 /// Invoked when the application is launched normally by the end user.  Other entry points
@@ -48,6 +51,13 @@ void App::OnActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs
     main(0, NULL);
     UIApplicationActivated(e);
 }
+
+#ifdef ENABLE_BACKGROUND_TASK
+void App::OnBackgroundActivated(Windows::ApplicationModel::Activation::BackgroundActivatedEventArgs^ e) {
+    __super ::OnBackgroundActivated(e);
+    UIApplicationBackgroundActivated(e);
+}
+#endif
 
 /// <summary>
 /// Invoked when application execution is being suspended.  Application state is saved

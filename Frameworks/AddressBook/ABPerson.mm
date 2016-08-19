@@ -19,6 +19,9 @@
 #import <StubReturn.h>
 #import "AssertARCEnabled.h"
 
+#import "ABAddressBookManagerInternal.h"
+#import "ABContactInternal.h"
+
 const ABPropertyID kABPersonFirstNameProperty = 101;
 const ABPropertyID kABPersonLastNameProperty = 102;
 const ABPropertyID kABPersonMiddleNameProperty = 103;
@@ -108,6 +111,11 @@ const CFStringRef kABPersonAlternateBirthdayYearKey = static_cast<const CFString
 const CFStringRef kABPersonAlternateBirthdayMonthKey = static_cast<const CFStringRef>(@"ABPersonAlternateBirthdayMonthKey");
 const CFStringRef kABPersonAlternateBirthdayIsLeapMonthKey = static_cast<const CFStringRef>(@"ABPersonAlternateBirthdayIsLeapMonthKey");
 const CFStringRef kABPersonAlternateBirthdayDayKey = static_cast<const CFStringRef>(@"ABPersonAlternateBirthdayDayKey");
+
+const CFStringRef kABPersonPhoneCompanyLabel = static_cast<const CFStringRef>(@"ABPersonPhoneCompanyLabel");
+const CFStringRef kABPersonPhoneAssistantLabel = static_cast<const CFStringRef>(@"ABPersonPhoneAssistantLabel");
+const CFStringRef kABPersonPhoneRadioLabel = static_cast<const CFStringRef>(@"ABPersonPhoneRadioLabel");
+const CFStringRef kABPersonSiblingLabel = static_cast<const CFStringRef>(@"ABPersonSiblingLabel");
 
 /**
  @Status Stub
@@ -200,30 +208,74 @@ bool ABPersonRemoveImageData(ABRecordRef person, CFErrorRef* error) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFIndex ABAddressBookGetPersonCount(ABAddressBookRef addressBook) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (addressBook == nullptr) {
+        return 0;
+    }
+    _ABAddressBookManager* addressBookManager = (__bridge _ABAddressBookManager*)addressBook;
+    NSArray* contacts = [addressBookManager getListOfContacts];
+    return [contacts count];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 ABRecordRef ABAddressBookGetPersonWithRecordID(ABAddressBookRef addressBook, ABRecordID recordID) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (addressBook == nullptr) {
+        return nullptr;
+    }
+
+    _ABAddressBookManager* addressBookManager = (__bridge _ABAddressBookManager*)addressBook;
+
+    // An astute reader may notice that this method is slow for a user with many contacts,
+    // having to look through all of a user's contacts. Ideally, making use of
+    // a Windows method like GetContactAsync (which requires a String id) would happen, but the
+    // requirement of an ABRecordID being an int32_t forced this decision. A future version
+    // may choose to make ABRecordID a String if customers are willing to modify their code
+    // as needed for the added performance benefit.
+    NSArray* contacts = [addressBookManager getListOfContacts];
+    if (contacts == nil) {
+        return nullptr;
+    }
+
+    // Windows Contacts have their IDs as a string in the format:
+    // {storeid.itemtype.id}
+    // We are interested in the last part (id), we can just ensure
+    // that the ID ends with ".id}".
+    NSString* ending = [NSString stringWithFormat:@".%d}", recordID];
+    NSUInteger index = [contacts indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL* stop) {
+        _ABContact* person = (_ABContact*)obj;
+        if ([person.contact.id hasSuffix:ending]) {
+            *stop = YES;
+            return YES;
+        } else {
+            return NO;
+        }
+    }];
+
+    if (index == NSNotFound) {
+        return nullptr;
+    } else {
+        return (__bridge ABRecordRef)contacts[index];
+    }
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFArrayRef ABAddressBookCopyArrayOfAllPeople(ABAddressBookRef addressBook) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (addressBook == nullptr) {
+        return nullptr;
+    }
+
+    _ABAddressBookManager* addressBookManager = (__bridge _ABAddressBookManager*)addressBook;
+    NSArray* contacts = [addressBookManager getListOfContacts];
+    return (__bridge_retained CFArrayRef)contacts;
 }
 
 /**

@@ -31,6 +31,13 @@ TEST(NSBundle, NSBundle_SanityTest) {
     ASSERT_EQ_MSG(nil, [NSBundle bundleWithPath:nil], @"Bundle with nil path somehow not nil");
 }
 
+// Add a new class that will definitely be part of the mainBundle for this UT executable.
+@interface Waffle : NSObject
+@property (nonatomic, assign) float bacon;
+@end
+@implementation Waffle
+@end
+
 TEST(NSBundle, ClassNamed) {
-    ASSERT_OBJCEQ([NSString class], [[NSBundle mainBundle] classNamed:@"NSString"]);
+    ASSERT_OBJCEQ([Waffle class], [[NSBundle mainBundle] classNamed:@"Waffle"]);
 }

@@ -15,19 +15,12 @@
 //******************************************************************************
 #include "_NSCFTemporaryRootObject.h"
 
-#include <Windows.h>
+#include <windows.h>
 
 @implementation _NSCFTemporaryRootObject
 - (void)doesNotRecognizeSelector:(SEL)selector {
     // According to the reference platform documentation, this method must never return.
-    EXCEPTION_RECORD record{
-        EXCEPTION_NONCONTINUABLE_EXCEPTION,
-        EXCEPTION_NONCONTINUABLE,
-        nullptr,
-        nullptr,
-        0,
-        {0}
-    };
+    EXCEPTION_RECORD record{ EXCEPTION_NONCONTINUABLE_EXCEPTION, EXCEPTION_NONCONTINUABLE, nullptr, nullptr, 0, { 0 } };
     RaiseFailFastException(&record, nullptr, FAIL_FAST_GENERATE_EXCEPTION_ADDRESS);
 }
 @end

@@ -4,63 +4,18 @@
 
 include $(CLEAR_VARS)
 
-CLANG := clang++
+TESTS_TO_BUILD := Foundation
 
-SRCDIR := Foundation
-SRCFILES := $(wildcard $(SRCDIR)/*.m*)
-RF_SRCFILES := $(wildcard $(SRCDIR)/ReferenceFoundation/*.mm)
+# Makefile Entrypoint: for running `make` without an argument.
+.PHONY: all
+all: $(foreach t,$(TESTS_TO_BUILD),$(t).UnitTests.exe)
 
-OUTDIR := ../../build/Tests/UnitTests/Foundation/OSX
-OUTTARGETS := $(addsuffix .o, $(addprefix $(OUTDIR)/, $(basename $(notdir $(SRCFILES)))))
-OUTTARGETS += $(addsuffix .o, $(addprefix $(OUTDIR)/ReferenceFoundation_, $(basename $(notdir $(RF_SRCFILES)))))
+.PHONY: $(TESTS_TO_BUILD)
 
-INC := ./Foundation/ReferenceFoundation ../frameworks/include ../frameworks/gtest ../frameworks/gtest/include 
-INC += ../frameworks/OSXShims/include Foundation/ReferenceFoundation ../../include/xplat
-INC_PARAMS := $(INC:%=-I %)
+Foundation.UnitTests.exe :
+	make -C Foundation Foundation.UnitTests.exe
 
-CFLAGS += -std=c++14
-CFLAGS += -x objective-c++
-CFLAGS += $(INC_PARAMS)
-CFLAGS += -DTARGET_OS_MAC
-CFLAGS += -DWINOBJCRT_IMPEXP -DWINOBJCRT_EXPORT=
-
-LDFLAGS := -framework Foundation
-
-Shims : $(OUTDIR)/windows.o $(OUTDIR)/IwMalloc.o $(OUTDIR)/LoggingNative.o
-
-$(OUTDIR)/IwMalloc.o : ../../Frameworks/WinObjCRT/MemoryManagement.cpp
-	mkdir -p $(OUTDIR)
-	$(CLANG) -c -o $@ $(CFLAGS) $<
-
-$(OUTDIR)/windows.o : ../frameworks/OSXShims/src/windows.cpp
-	mkdir -p $(OUTDIR)
-	$(CLANG) -c -o $@ $(CFLAGS) $<
-
-$(OUTDIR)/LoggingNative.o : ../frameworks/OSXShims/src/LoggingNative.mm
-	mkdir -p $(OUTDIR)
-	$(CLANG) -c -o $@ $(CFLAGS) $<
-
-$(OUTDIR)/%.o : $(SRCDIR)/%.m
-	mkdir -p $(OUTDIR)
-	$(CLANG) -c -o $@ $(CFLAGS) $^
-
-$(OUTDIR)/%.o : $(SRCDIR)/%.mm
-	mkdir -p $(OUTDIR)
-	$(CLANG) -c -o $@ $(CFLAGS) $^
-
-$(OUTDIR)/ReferenceFoundation_TestUtils.o : $(SRCDIR)/ReferenceFoundation/TestUtils.mm
-	mkdir -p $(OUTDIR)
-	$(CLANG) -c -o $@ $(CFLAGS) $<
-
-$(OUTDIR)/ReferenceFoundation_%.o : $(OUTDIR)/ReferenceFoundation_TestUtils.o $(SRCDIR)/ReferenceFoundation/%.mm
-	mkdir -p $(OUTDIR)
-	$(CLANG) -c -o $@ $(CFLAGS) $(word 2,$^) 
-
-.PHONY: clean Shims
+.PHONY: clean
 
 clean:
-	$(RM) $(OUTDIR)/*.o
-	$(RM) Foundation.UnitTests.exe
-
-Foundation.UnitTests.exe : Shims $(OUTTARGETS)
-	$(CLANG) -o $@ -std=c++14 $(INC_PARAMS) EntryPoint.cpp ../frameworks/gtest/src/gtest-all.cc $(LDFLAGS) ../../build/Tests/UnitTests/Foundation/OSX/*.o
+	make -C Foundation clean

@@ -38,7 +38,7 @@ static NSComparisonResult (^compareIntNSNumber)(id, id) = ^NSComparisonResult(id
     return NSOrderedDescending;
 };
 
-static int objectIndexInArray(NSArray* array, int value, int startingFrom, int length, NSBinarySearchingOptions options = 0) {
+static unsigned long int objectIndexInArray(NSArray* array, int value, int startingFrom, int length, NSBinarySearchingOptions options = 0) {
     return [array indexOfObject:[NSNumber numberWithInteger:value]
                   inSortedRange:NSMakeRange(startingFrom, length)
                         options:options
@@ -151,56 +151,56 @@ TEST(NSArray, BinarySearch) {
     //        auto _ = objectIndexInArray(array, 9, 0, 13, searchForBoth)
 
     auto notFound = objectIndexInArray(array, 11, 0, 13);
-    ASSERT_EQ_MSG(notFound, NSNotFound, @"NSArray return NSNotFound if object is not found.");
+    EXPECT_EQ_MSG(notFound, NSNotFound, @"NSArray return NSNotFound if object is not found.");
 
     auto notFoundInRange = objectIndexInArray(array, 7, 0, 5);
-    ASSERT_EQ_MSG(notFoundInRange, NSNotFound, @"NSArray return NSNotFound if object is not found.");
+    EXPECT_EQ_MSG(notFoundInRange, NSNotFound, @"NSArray return NSNotFound if object is not found.");
 
     auto indexOfAnySeven = objectIndexInArray(array, 7, 0, 13);
-    ASSERT_TRUE_MSG((indexOfAnySeven >= 8) && (indexOfAnySeven <= 10),
+    EXPECT_TRUE_MSG((indexOfAnySeven >= 8) && (indexOfAnySeven <= 10),
                     @"If no options provided NSArray returns an arbitrary matching object's index.");
 
     auto indexOfFirstNine = objectIndexInArray(array, 9, 7, 6, NSBinarySearchingFirstEqual);
-    ASSERT_TRUE_MSG(indexOfFirstNine == 12, @"If NSBinarySearchingFirstEqual is set NSArray returns the lowest index of equal objects.");
+    EXPECT_TRUE_MSG(indexOfFirstNine == 12, @"If NSBinarySearchingFirstEqual is set NSArray returns the lowest index of equal objects.");
 
     auto indexOfLastTwo = objectIndexInArray(array, 2, 1, 7, NSBinarySearchingLastEqual);
-    ASSERT_TRUE_MSG(indexOfLastTwo == 3, @"If NSBinarySearchingLastEqual is set NSArray returns the highest index of equal objects.");
+    EXPECT_TRUE_MSG(indexOfLastTwo == 3, @"If NSBinarySearchingLastEqual is set NSArray returns the highest index of equal objects.");
 
     auto anyIndexToInsertNine = objectIndexInArray(array, 9, 0, 13, NSBinarySearchingInsertionIndex);
-    ASSERT_TRUE_MSG(
+    EXPECT_TRUE_MSG(
         (anyIndexToInsertNine >= 12) && (anyIndexToInsertNine <= 14),
         @"If NSBinarySearchingInsertionIndex is specified and no other options provided NSArray returns any equal or one larger "
         @"index than any matching object’s index.");
 
     auto lowestIndexToInsertTwo = objectIndexInArray(array, 2, 0, 5, NSBinarySearchingInsertionIndex | NSBinarySearchingFirstEqual);
-    ASSERT_TRUE_MSG(lowestIndexToInsertTwo == 2,
+    EXPECT_TRUE_MSG(lowestIndexToInsertTwo == 2,
                     @"If both NSBinarySearchingInsertionIndex and NSBinarySearchingFirstEqual are specified "
                     @"NSArray returns the lowest index of equal objects.");
 
     auto highestIndexToInsertNine = objectIndexInArray(array, 9, 7, 6, NSBinarySearchingInsertionIndex | NSBinarySearchingLastEqual);
-    ASSERT_TRUE_MSG(highestIndexToInsertNine == 13,
+    EXPECT_TRUE_MSG(highestIndexToInsertNine == 13,
                     @"If both NSBinarySearchingInsertionIndex and NSBinarySearchingLastEqual are specified "
                     @"NSArray returns the index of the least greater object...");
 
     auto indexOfLeastGreaterObjectThanFive =
         objectIndexInArray(array, 5, 0, 10, NSBinarySearchingInsertionIndex | NSBinarySearchingLastEqual);
-    ASSERT_TRUE_MSG(indexOfLeastGreaterObjectThanFive == 7,
+    EXPECT_TRUE_MSG(indexOfLeastGreaterObjectThanFive == 7,
                     @"If both NSBinarySearchingInsertionIndex and NSBinarySearchingLastEqual are "
                     @"specified NSArray returns the index of the least greater object...");
 
     auto rangeStart = 0;
     auto rangeLength = 13;
     auto endOfArray = objectIndexInArray(array, 10, rangeStart, rangeLength, NSBinarySearchingInsertionIndex | NSBinarySearchingLastEqual);
-    ASSERT_TRUE_MSG(endOfArray == (rangeStart + rangeLength),
+    EXPECT_TRUE_MSG(endOfArray == (rangeStart + rangeLength),
                     @"...or the index at the end of the array if the object is larger than all other elements.");
 
     NSArray* arrayOfTwo = @[ [NSNumber numberWithInt:0], [NSNumber numberWithInt:2] ];
     auto indexInMiddle = objectIndexInArray(arrayOfTwo, 1, 0, 2, NSBinarySearchingInsertionIndex | NSBinarySearchingFirstEqual);
-    ASSERT_EQ_MSG(indexInMiddle, 1, @"If no match found item should be inserted before least greater object");
+    EXPECT_EQ_MSG(indexInMiddle, 1, @"If no match found item should be inserted before least greater object");
     auto indexInMiddle2 = objectIndexInArray(arrayOfTwo, 1, 0, 2, NSBinarySearchingInsertionIndex | NSBinarySearchingLastEqual);
-    ASSERT_EQ_MSG(indexInMiddle2, 1, @"If no match found item should be inserted before least greater object");
+    EXPECT_EQ_MSG(indexInMiddle2, 1, @"If no match found item should be inserted before least greater object");
     auto indexInMiddle3 = objectIndexInArray(arrayOfTwo, 1, 0, 2, NSBinarySearchingInsertionIndex);
-    ASSERT_EQ_MSG(indexInMiddle3, 1, @"If no match found item should be inserted before least greater object");
+    EXPECT_EQ_MSG(indexInMiddle3, 1, @"If no match found item should be inserted before least greater object");
 }
 
 TEST(NSArray, ArrayReplacement) {
@@ -307,28 +307,28 @@ TEST(NSArray, BinarySearchFringeCases) {
     //        auto _ = objectIndexInArray(emptyArray, 0, 0, 1)
 
     auto notFoundInEmptyArray = objectIndexInArray(emptyArray, 9, 0, 0);
-    ASSERT_EQ_MSG(notFoundInEmptyArray, NSNotFound, @"Empty NSArray return NSNotFound for any valid arguments.");
+    EXPECT_EQ_MSG(notFoundInEmptyArray, NSNotFound, @"Empty NSArray return NSNotFound for any valid arguments.");
 
     auto startIndex = objectIndexInArray(emptyArray, 7, 0, 0, NSBinarySearchingInsertionIndex);
-    ASSERT_TRUE_MSG(startIndex == 0, @"For Empty NSArray any objects should be inserted at start.");
+    EXPECT_TRUE_MSG(startIndex == 0, @"For Empty NSArray any objects should be inserted at start.");
 
     auto rangeStart = 0;
     auto rangeLength = 13;
 
     auto leastSearch = objectIndexInArray(array, -1, rangeStart, rangeLength);
-    ASSERT_TRUE_MSG(leastSearch == NSNotFound,
+    EXPECT_TRUE_MSG(leastSearch == NSNotFound,
                     @"If object is less than least object in the range then there is no change it could be found.");
 
     auto greatestSearch = objectIndexInArray(array, 15, rangeStart, rangeLength);
-    ASSERT_TRUE_MSG(greatestSearch == NSNotFound,
+    EXPECT_TRUE_MSG(greatestSearch == NSNotFound,
                     @"If object is greater than greatest object in the range then there is no change it could be found.");
 
     auto leastInsert = objectIndexInArray(array, -1, rangeStart, rangeLength, NSBinarySearchingInsertionIndex);
-    ASSERT_TRUE_MSG(leastInsert == rangeStart,
+    EXPECT_TRUE_MSG(leastInsert == rangeStart,
                     @"If object is less than least object in the range it should be inserted at range' location.");
 
     auto greatestInsert = objectIndexInArray(array, 15, rangeStart, rangeLength, NSBinarySearchingInsertionIndex);
-    ASSERT_TRUE_MSG(greatestInsert == (rangeStart + rangeLength),
+    EXPECT_TRUE_MSG(greatestInsert == (rangeStart + rangeLength),
                     @"If object is greater than greatest object in the range it should be inserted at range' end.");
 }
 

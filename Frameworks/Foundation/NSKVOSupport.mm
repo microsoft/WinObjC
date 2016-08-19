@@ -20,7 +20,7 @@
 #import <objc/objc-arc.h>
 
 #import <Starboard/String.h>
-#import <Windows.h>
+#import <windows.h>
 #import <string>
 #import <tuple>
 
@@ -116,7 +116,7 @@ NSString* const NSKeyValueChangeNotificationIsPriorKey = @"NSKeyValueChangeNotif
 @end
 #pragma endregion
 
-#pragma region Object-level Observation Info
+#pragma region Object - level Observation Info
 @implementation _NSKVOObservationInfo
 - (instancetype)init {
     if (self = [super init]) {
@@ -404,7 +404,11 @@ static void _removeKeypathObserver(id object, NSString* keypath, id observer, vo
 @Status Interoperable
 */
 - (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary<NSString*, id>*)change context:(void*)context {
-    [NSException raise:NSInternalInconsistencyException format:@"A key-value observation notification fired, but nobody responded to it: object %@, keypath %@, change %@.", object, keyPath, change];
+    [NSException raise:NSInternalInconsistencyException
+                format:@"A key-value observation notification fired, but nobody responded to it: object %@, keypath %@, change %@.",
+                       object,
+                       keyPath,
+                       change];
 }
 
 static void* s_kvoObservationInfoAssociationKey; // has no value; pointer used as an association key.
@@ -432,7 +436,7 @@ static void* s_kvoObservationInfoAssociationKey; // has no value; pointer used a
         auto selectorName = woc::string::format("automaticallyNotifiesObserversOf%c%s", toupper(rawKey[0]), rawKey + 1);
         SEL sel = sel_registerName(selectorName.c_str());
         if ([self respondsToSelector:sel]) {
-            return ((BOOL(*)(id, SEL))objc_msgSend)(self, sel);
+            return ((BOOL (*)(id, SEL))objc_msgSend)(self, sel);
         }
     }
     return YES;
@@ -463,7 +467,8 @@ static void* s_kvoObservationInfoAssociationKey; // has no value; pointer used a
     rootObserver.root = true;
 
     if ((options & NSKeyValueObservingOptionInitial)) {
-        NSMutableDictionary* change = [NSMutableDictionary dictionaryWithObjectsAndKeys:@(NSKeyValueChangeSetting), NSKeyValueChangeKindKey, nil];
+        NSMutableDictionary* change =
+            [NSMutableDictionary dictionaryWithObjectsAndKeys:@(NSKeyValueChangeSetting), NSKeyValueChangeKindKey, nil];
 
         if ((options & NSKeyValueObservingOptionNew)) {
             id newValue = [self valueForKeyPath:keyPath] ?: [NSNull null];
@@ -492,7 +497,8 @@ static void* s_kvoObservationInfoAssociationKey; // has no value; pointer used a
     [self removeObserver:observer forKeyPath:keyPath context:NULL];
 }
 
-static id _valueForPendingChange(id notifyingObject, NSString* key, id rootObject, NSString* keypath, _NSKVOKeyObserver* keyObserver, NSDictionary* pendingChange) {
+static id _valueForPendingChange(
+    id notifyingObject, NSString* key, id rootObject, NSString* keypath, _NSKVOKeyObserver* keyObserver, NSDictionary* pendingChange) {
     id value = nil;
     NSIndexSet* indexes = [pendingChange objectForKey:NSKeyValueChangeIndexesKey];
     if (!indexes) {
@@ -627,7 +633,7 @@ static void _dispatchDidChange(id notifyingObject, NSString* key) {
     if (![self observationInfo]) {
         return;
     }
-    _dispatchWillChange(self, key, @{ NSKeyValueChangeKindKey: @(change), NSKeyValueChangeIndexesKey: indexes });
+    _dispatchWillChange(self, key, @{ NSKeyValueChangeKindKey : @(change), NSKeyValueChangeIndexesKey : indexes });
 }
 
 /**

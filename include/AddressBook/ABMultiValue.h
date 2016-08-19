@@ -26,11 +26,11 @@
 typedef CFTypeRef ABMultiValueRef;
 typedef int32_t ABMultiValueIdentifier;
 
-ADDRESSBOOK_EXPORT CFTypeRef ABMultiValueCopyValueAtIndex(ABMultiValueRef multiValue, CFIndex index) STUB_METHOD;
-ADDRESSBOOK_EXPORT CFArrayRef ABMultiValueCopyArrayOfAllValues(ABMultiValueRef multiValue) STUB_METHOD;
-ADDRESSBOOK_EXPORT CFIndex ABMultiValueGetCount(ABMultiValueRef multiValue) STUB_METHOD;
-ADDRESSBOOK_EXPORT CFIndex ABMultiValueGetFirstIndexOfValue(ABMultiValueRef multiValue, CFTypeRef value) STUB_METHOD;
-ADDRESSBOOK_EXPORT CFStringRef ABMultiValueCopyLabelAtIndex(ABMultiValueRef multiValue, CFIndex index) STUB_METHOD;
-ADDRESSBOOK_EXPORT ABMultiValueIdentifier ABMultiValueGetIdentifierAtIndex(ABMultiValueRef multiValue, CFIndex index) STUB_METHOD;
-ADDRESSBOOK_EXPORT CFIndex ABMultiValueGetIndexForIdentifier(ABMultiValueRef multiValue, ABMultiValueIdentifier identifier) STUB_METHOD;
-ADDRESSBOOK_EXPORT ABPropertyType ABMultiValueGetPropertyType(ABMultiValueRef multiValue) STUB_METHOD;
+ADDRESSBOOK_EXPORT CFTypeRef ABMultiValueCopyValueAtIndex(ABMultiValueRef multiValue, CFIndex index);
+ADDRESSBOOK_EXPORT CFArrayRef ABMultiValueCopyArrayOfAllValues(ABMultiValueRef multiValue);
+ADDRESSBOOK_EXPORT CFIndex ABMultiValueGetCount(ABMultiValueRef multiValue);
+ADDRESSBOOK_EXPORT CFIndex ABMultiValueGetFirstIndexOfValue(ABMultiValueRef multiValue, CFTypeRef value);
+ADDRESSBOOK_EXPORT CFStringRef ABMultiValueCopyLabelAtIndex(ABMultiValueRef multiValue, CFIndex index);
+ADDRESSBOOK_EXPORT ABMultiValueIdentifier ABMultiValueGetIdentifierAtIndex(ABMultiValueRef multiValue, CFIndex index);
+ADDRESSBOOK_EXPORT CFIndex ABMultiValueGetIndexForIdentifier(ABMultiValueRef multiValue, ABMultiValueIdentifier identifier);
+ADDRESSBOOK_EXPORT ABPropertyType ABMultiValueGetPropertyType(ABMultiValueRef multiValue);

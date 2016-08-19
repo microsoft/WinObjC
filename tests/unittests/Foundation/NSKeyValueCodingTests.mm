@@ -17,6 +17,10 @@
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
 
+// Many of the tests in this file are disabled pending a fix for GH#800.
+// In short, we have known incompatibilities with aggregate function support vis-a-vis the reference platform.
+// Until we've fixed them, we're disabling the tests that are noncompliant.
+
 @interface KVCTestCoin : NSObject
 @property (assign) NSInteger coinValue;
 @property (retain) NSObject* testObj;
@@ -47,35 +51,35 @@ static NSMutableArray* obtainArrayOfCoins(unsigned int start, unsigned int end) 
 }
 
 static NSMutableSet* obtainSetOfCoins(unsigned int start, unsigned int end) {
-    return  [NSMutableSet setWithArray:obtainArrayOfCoins(start,end)];
+    return [NSMutableSet setWithArray:obtainArrayOfCoins(start, end)];
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionSum) {
+TEST(NSKeyValueCoding, AggregateFunctionSum) {
     NSMutableArray* coins = obtainArrayOfCoins(0, 10);
     ASSERT_EQ(45, [[coins valueForKeyPath:@"@sum.coinValue"] intValue]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionCount) {
+TEST(NSKeyValueCoding, AggregateFunctionCount) {
     NSMutableArray* coins = obtainArrayOfCoins(0, 10);
     ASSERT_EQ(10, [[coins valueForKeyPath:@"@count"] intValue]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionMax) {
+TEST(NSKeyValueCoding, AggregateFunctionMax) {
     NSMutableArray* coins = obtainArrayOfCoins(0, 10);
     ASSERT_EQ(9, [[coins valueForKeyPath:@"@max.coinValue"] intValue]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionMin) {
+TEST(NSKeyValueCoding, AggregateFunctionMin) {
     NSMutableArray* coins = obtainArrayOfCoins(0, 10);
     ASSERT_EQ(0, [[coins valueForKeyPath:@"@min.coinValue"] intValue]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionAvg) {
+TEST(NSKeyValueCoding, AggregateFunctionAvg) {
     NSMutableArray* coins = obtainArrayOfCoins(0, 10);
     ASSERT_EQ(4.5, [[coins valueForKeyPath:@"@avg.coinValue"] doubleValue]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionDistinctUnionOfObjects) {
+TEST(NSKeyValueCoding, AggregateFunctionDistinctUnionOfObjects) {
     NSMutableArray* coins = obtainArrayOfCoins(0, 10);
 
     for (int i = 0; i < 5; ++i) {
@@ -86,7 +90,7 @@ TEST(NSKeyValueCoding, AggerateFunctionDistinctUnionOfObjects) {
     ASSERT_EQ(10, [[coins valueForKeyPath:@"@distinctUnionOfObjects.coinValue"] count]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionUnionOfObjects) {
+TEST(NSKeyValueCoding, AggregateFunctionUnionOfObjects) {
     NSMutableArray* coins = obtainArrayOfCoins(0, 10);
 
     for (int i = 0; i < 5; ++i) {
@@ -97,7 +101,7 @@ TEST(NSKeyValueCoding, AggerateFunctionUnionOfObjects) {
     ASSERT_EQ(15, [[coins valueForKeyPath:@"@unionOfObjects.coinValue"] count]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionDistinctUnionOfArrays) {
+TEST(NSKeyValueCoding, AggregateFunctionDistinctUnionOfArrays) {
     NSMutableArray* lowValueCoins = obtainArrayOfCoins(0, 10);
     NSMutableArray* highValueCoins = obtainArrayOfCoins(5, 10);
 
@@ -106,7 +110,7 @@ TEST(NSKeyValueCoding, AggerateFunctionDistinctUnionOfArrays) {
     ASSERT_EQ(10, [[result valueForKeyPath:@"@distinctUnionOfArrays.coinValue"] count]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionUnionOfArrays) {
+TEST(NSKeyValueCoding, AggregateFunctionUnionOfArrays) {
     NSMutableArray* lowValueCoins = obtainArrayOfCoins(0, 10);
     NSMutableArray* highValueCoins = obtainArrayOfCoins(5, 10);
     NSArray* result = @[ lowValueCoins, highValueCoins, lowValueCoins ];
@@ -114,7 +118,7 @@ TEST(NSKeyValueCoding, AggerateFunctionUnionOfArrays) {
     ASSERT_EQ(25, [[result valueForKeyPath:@"@unionOfArrays.coinValue"] count]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionDistinctUnionOfSets) {
+TEST(NSKeyValueCoding, AggregateFunctionDistinctUnionOfSets) {
     NSMutableSet* lowValueCoins = obtainSetOfCoins(0, 10);
     NSMutableSet* highValueCoins = obtainSetOfCoins(5, 10);
 
@@ -125,32 +129,32 @@ TEST(NSKeyValueCoding, AggerateFunctionDistinctUnionOfSets) {
     ASSERT_EQ(10, [[result valueForKeyPath:@"@distinctUnionOfSets.coinValue"] count]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionSumSet) {
+TEST(NSKeyValueCoding, AggregateFunctionSumSet) {
     NSMutableSet* coins = obtainSetOfCoins(0, 10);
     ASSERT_EQ(45, [[coins valueForKeyPath:@"@sum.coinValue"] intValue]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionCountSet) {
+TEST(NSKeyValueCoding, AggregateFunctionCountSet) {
     NSMutableSet* coins = obtainSetOfCoins(0, 10);
     ASSERT_EQ(10, [[coins valueForKeyPath:@"@count"] intValue]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionMaxSet) {
+TEST(NSKeyValueCoding, AggregateFunctionMaxSet) {
     NSMutableSet* coins = obtainSetOfCoins(0, 10);
     ASSERT_EQ(9, [[coins valueForKeyPath:@"@max.coinValue"] intValue]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionMinSet) {
+TEST(NSKeyValueCoding, AggregateFunctionMinSet) {
     NSMutableSet* coins = obtainSetOfCoins(0, 10);
     ASSERT_EQ(0, [[coins valueForKeyPath:@"@min.coinValue"] intValue]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionAvgSet) {
+TEST(NSKeyValueCoding, AggregateFunctionAvgSet) {
     NSMutableSet* coins = obtainSetOfCoins(0, 10);
     ASSERT_EQ(4.5, [[coins valueForKeyPath:@"@avg.coinValue"] doubleValue]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionDistinctUnionOfObjectsSet) {
+TEST(NSKeyValueCoding, AggregateFunctionDistinctUnionOfObjectsSet) {
     NSMutableSet* coins = obtainSetOfCoins(0, 10);
 
     for (int i = 0; i < 5; ++i) {
@@ -161,7 +165,7 @@ TEST(NSKeyValueCoding, AggerateFunctionDistinctUnionOfObjectsSet) {
     ASSERT_EQ(10, [[coins valueForKeyPath:@"@distinctUnionOfObjects.coinValue"] count]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionUnionOfObjectsSet) {
+OSX_DISABLED_TEST(NSKeyValueCoding, AggregateFunctionUnionOfObjectsSet) {
     NSMutableSet* coins = obtainSetOfCoins(0, 10);
 
     for (int i = 0; i < 5; ++i) {
@@ -172,81 +176,86 @@ TEST(NSKeyValueCoding, AggerateFunctionUnionOfObjectsSet) {
     ASSERT_EQ(10, [[coins valueForKeyPath:@"@unionOfObjects.coinValue"] count]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionSumDict) {
+OSX_DISABLED_TEST(NSKeyValueCoding, AggregateFunctionSumDict) {
     NSDictionary* inventory = @{
         @"testKey" : @[ @1, @2, @3, @10 ],
     };
     ASSERT_EQ(16, [[inventory valueForKeyPath:@"@sum.testKey"] intValue]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionCountDict) {
+OSX_DISABLED_TEST(NSKeyValueCoding, AggregateFunctionCountDict) {
     NSDictionary* inventory = @{
         @"testKey" : @[ @1, @2, @3, @10 ],
     };
     ASSERT_EQ(1, [[inventory valueForKeyPath:@"@count"] intValue]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionMaxDict) {
+OSX_DISABLED_TEST(NSKeyValueCoding, AggregateFunctionMaxDict) {
     NSDictionary* inventory = @{
         @"testKey" : @[ @1, @2, @3, @10 ],
     };
     ASSERT_EQ(10, [[inventory valueForKeyPath:@"@max.testKey"] intValue]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionMinDict) {
+OSX_DISABLED_TEST(NSKeyValueCoding, AggregateFunctionMinDict) {
     NSDictionary* inventory = @{
         @"testKey" : @[ @1, @2, @3, @10 ],
     };
     ASSERT_EQ(1, [[inventory valueForKeyPath:@"@min.testKey"] intValue]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionAvgDict) {
+OSX_DISABLED_TEST(NSKeyValueCoding, AggregateFunctionAvgDict) {
     NSDictionary* inventory = @{
         @"testKey" : @[ @1, @2, @3, @10 ],
     };
     ASSERT_EQ(4, [[inventory valueForKeyPath:@"@avg.testKey"] doubleValue]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionDistinctUnionOfObjectsDict) {
+OSX_DISABLED_TEST(NSKeyValueCoding, AggregateFunctionDistinctUnionOfObjectsDict) {
     NSDictionary* inventory = @{
-        @"testKey" : @[ @1, @2, @3, @10 ],
+        @"testKey" : @[ @1, @2, @3, @3, @10 ],
     };
 
     ASSERT_EQ(4, [[inventory valueForKeyPath:@"@distinctUnionOfObjects.testKey"] count]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionUnionOfObjectsDict) {
+OSX_DISABLED_TEST(NSKeyValueCoding, AggregateFunctionUnionOfObjectsDict) {
     NSDictionary* inventory = @{
-        @"testKey" : @[ @1, @2, @3, @10 ],
+        @"testKey" : @[ @1, @2, @3, @3, @10 ],
     };
 
-    ASSERT_EQ(1, [[inventory valueForKeyPath:@"@count"] intValue]);
+    ASSERT_EQ(5, [[inventory valueForKeyPath:@"@unionOfObjects.testKey"] count]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionNullLeafArray) {
+// The following two tests are disabled because OS X violates the contract set out for these functions in
+// https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/KeyValueCoding/Articles/CollectionOperators.html
+// > @unionOfArrays
+// >   Important: This operator raises an exception if any of the leaf objects is nil.
+// Evidence shows that it does, in fact, not raise an exception if any of the leaf objects is nil.
+OSX_DISABLED_TEST(NSKeyValueCoding, AggregateFunctionNullLeafUnionArray) {
     NSMutableArray* result = obtainArrayOfCoins(0, 2);
     ASSERT_ANY_THROW([result valueForKeyPath:@"@unionOfArrays.testObj"]);
     ASSERT_ANY_THROW([result valueForKeyPath:@"@unionOfObjects.testObj"]);
     ASSERT_ANY_THROW([result valueForKeyPath:@"@distinctUnionOfObjects.testObj"]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionNullLeafSet) {
+OSX_DISABLED_TEST(NSKeyValueCoding, AggregateFunctionNullLeafUnionSet) {
     NSMutableSet* result = obtainSetOfCoins(0, 2);
     ASSERT_ANY_THROW([result valueForKeyPath:@"@distinctUnionOfSets.testObj"]);
     ASSERT_ANY_THROW([result valueForKeyPath:@"@unionOfObjects.testObj"]);
     ASSERT_ANY_THROW([result valueForKeyPath:@"@distinctUnionOfObjects.testObj"]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionNullLeafSet2) {
+TEST(NSKeyValueCoding, AggregateFunctionNullLeaf) {
     NSMutableArray* coins = obtainArrayOfCoins(0, 10);
     ASSERT_EQ(10, [[coins valueForKeyPath:@"@count.testObj"] intValue]);
     ASSERT_EQ(0, [[coins valueForKeyPath:@"@avg.testObj"] intValue]);
     ASSERT_EQ(0, [[coins valueForKeyPath:@"@sum.testObj"] intValue]);
-	ASSERT_EQ(nil, [coins valueForKeyPath:@"@max.testObj"]);
-	ASSERT_EQ(nil, [coins valueForKeyPath:@"@min.testObj"]);
+    ASSERT_EQ(nil, [coins valueForKeyPath:@"@max.testObj"]);
+    ASSERT_EQ(nil, [coins valueForKeyPath:@"@min.testObj"]);
 }
 
-TEST(NSKeyValueCoding, AggerateFunctionInvalid) {
+TEST(NSKeyValueCoding, AggregateFunctionInvalid) {
     NSMutableArray* coins = obtainArrayOfCoins(0, 10);
     ASSERT_ANY_THROW([coins valueForKeyPath:@"@foobar.coinValue"]);
 }

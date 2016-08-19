@@ -17,10 +17,11 @@
 #ifndef __ERRORHANDLING_H
 #define __ERRORHANDLING_H
 
+#include "LoggingNative.h"
+
 #include <sys/cdefs.h>
 #include <winerror.h>
 #include <stdarg.h>
-#include <StarboardExport.h>
 
 namespace wil {
 struct FailureInfo;
@@ -197,54 +198,50 @@ struct OBJC_ENUM_FLAG_SIZED_INTEGER {
 #pragma push_macro("InterlockedCompareExchangePointer")
 #undef InterlockedCompareExchangePointer
 
-__BEGIN_DECLS
-
 // Should hitting the UNIMPLEMENTED macro cause a fast fail? If this returns false, we still log unimplemented calls but they are not fatal.
-SB_EXPORT bool failFastOnUnimplemented();
+LOGGING_EXPORT bool _loggingFailFastOnUnimplemented();
 
 // Error-handling exports
-SB_EXPORT unsigned long starboardGetCurrentThreadId();
-SB_EXPORT long starboardInterlockedIncrementNoFence(long volatile* addend);
-SB_EXPORT unsigned long starboardGetLastError();
-SB_EXPORT void starboardCopyMemory(void* destination, const void* source, size_t length);
-SB_EXPORT void starboardZeroMemory(void* destination, size_t length);
-SB_EXPORT unsigned long starboardFormatMessageW(unsigned long flags,
-                                                const void* source,
-                                                unsigned long messageId,
-                                                unsigned long languageId,
-                                                wchar_t* buffer,
-                                                unsigned long size,
-                                                va_list* arguments);
-SB_EXPORT void starboardOutputDebugStringW(wchar_t* outputString);
-SB_EXPORT long starboardInterlockedDecrementRelease(long volatile* addend);
-SB_EXPORT void* starboardInterlockedCompareExchangePointer(void* volatile* destination, void* exchange, void* comparand);
+LOGGING_EXPORT unsigned long _loggingGetCurrentThreadId();
+LOGGING_EXPORT long _loggingInterlockedIncrementNoFence(long volatile* addend);
+LOGGING_EXPORT unsigned long _loggingGetLastError();
+LOGGING_EXPORT void _loggingCopyMemory(void* destination, const void* source, size_t length);
+LOGGING_EXPORT void _loggingZeroMemory(void* destination, size_t length);
+LOGGING_EXPORT unsigned long _loggingFormatMessageW(unsigned long flags,
+                                                    const void* source,
+                                                    unsigned long messageId,
+                                                    unsigned long languageId,
+                                                    wchar_t* buffer,
+                                                    unsigned long size,
+                                                    va_list* arguments);
+LOGGING_EXPORT void _loggingOutputDebugStringW(wchar_t* outputString);
+LOGGING_EXPORT long _loggingInterlockedDecrementRelease(long volatile* addend);
+LOGGING_EXPORT void* _loggingInterlockedCompareExchangePointer(void* volatile* destination, void* exchange, void* comparand);
 
-__END_DECLS
-
-#define GetCurrentThreadId starboardGetCurrentThreadId
+#define GetCurrentThreadId _loggingGetCurrentThreadId
 #ifdef InterlockedIncrementNoFence
 #undef InterlockedIncrementNoFence
 #endif
-#define InterlockedIncrementNoFence starboardInterlockedIncrementNoFence
-#define GetLastError starboardGetLastError
+#define InterlockedIncrementNoFence _loggingInterlockedIncrementNoFence
+#define GetLastError _loggingGetLastError
 #ifdef CopyMemory
 #undef CopyMemory
 #endif
-#define CopyMemory starboardCopyMemory
+#define CopyMemory _loggingCopyMemory
 #ifdef ZeroMemory
 #undef ZeroMemory
 #endif
-#define ZeroMemory starboardZeroMemory
-#define FormatMessageW starboardFormatMessageW
-#define OutputDebugStringW starboardOutputDebugStringW
+#define ZeroMemory _loggingZeroMemory
+#define FormatMessageW _loggingFormatMessageW
+#define OutputDebugStringW _loggingOutputDebugStringW
 #ifdef InterlockedDecrementRelease
 #undef InterlockedDecrementRelease
 #endif
-#define InterlockedDecrementRelease starboardInterlockedDecrementRelease
+#define InterlockedDecrementRelease _loggingInterlockedDecrementRelease
 #ifdef InterlockedCompareExchangePointer
 #undef InterlockedCompareExchangePointer
 #endif
-#define InterlockedCompareExchangePointer starboardInterlockedCompareExchangePointer
+#define InterlockedCompareExchangePointer _loggingInterlockedCompareExchangePointer
 
 // Ignore some warnings in result.h
 #if defined __clang__
@@ -314,7 +311,7 @@ __END_DECLS
 
 // This should be used for functions which have no implementation yet:
 #define UNIMPLEMENTED()                                    \
-    if (failFastOnUnimplemented()) {                       \
+    if (_loggingFailFastOnUnimplemented()) {               \
         FAIL_FAST_HR(E_NOTIMPL);                           \
     } else {                                               \
         LOG_HR_MSG(E_NOTIMPL, "Stubbed function called!"); \
@@ -323,7 +320,7 @@ __END_DECLS
 // This should be used to convey information along with the fact that something isn't implemented. For example, if we have a
 // portion of a function implemented but we've hit something unsupported:
 #define UNIMPLEMENTED_WITH_MSG(msg, ...)               \
-    if (failFastOnUnimplemented()) {                   \
+    if (_loggingFailFastOnUnimplemented()) {           \
         FAIL_FAST_HR_MSG(E_NOTIMPL, msg, __VA_ARGS__); \
     } else {                                           \
         LOG_HR_MSG(E_NOTIMPL, msg, __VA_ARGS__);       \

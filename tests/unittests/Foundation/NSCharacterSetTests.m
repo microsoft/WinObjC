@@ -22,7 +22,7 @@ void testCharacter(NSCharacterSet* charSet, NSString* testString) {
     unsigned int stringLength = [testString length];
     for (int i = 0; i < stringLength; i++) {
         unichar current = [testString characterAtIndex:i];
-        ASSERT_TRUE_MSG(
+        EXPECT_TRUE_MSG(
             [charSet characterIsMember:current],
             "FAILED: [CharacterSet characterIsMember:current] has mismatched character between expected and actual.\nCharacter: %c",
             current);
@@ -152,77 +152,89 @@ TEST(NSCharacterSet, Polymorphic_Creators) {
     // Make sure we get a mutable instance from each of these creators
 
     NSMutableCharacterSet* set = [NSMutableCharacterSet alphanumericCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet capitalizedLetterCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet controlCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet decimalDigitCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet decomposableCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet illegalCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet letterCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet lowercaseLetterCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet newlineCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet nonBaseCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet punctuationCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet symbolCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet uppercaseLetterCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet whitespaceCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet URLFragmentAllowedCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet URLHostAllowedCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet URLPasswordAllowedCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet URLPathAllowedCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet URLQueryAllowedCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet URLUserAllowedCharacterSet];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet characterSetWithCharactersInString:@"ABCDEFG"];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet characterSetWithRange:NSMakeRange(0, 32)];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+}
 
-    set = [NSMutableCharacterSet characterSetWithBitmapRepresentation:nil];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+ARM_DISABLED_TEST(NSCharacterSet, ExceptionTests) {
+    NSMutableCharacterSet* set;
+    @try {
+        set = [NSMutableCharacterSet characterSetWithBitmapRepresentation:nil];
+        FAIL();
+    } @catch (NSException* e) {
+        ASSERT_OBJCEQ(e.name, @"NSInvalidArgumentException");
+    }
 
-    set = [NSMutableCharacterSet characterSetWithContentsOfFile:nil];
-    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
+    @
+    try {
+        set = [NSMutableCharacterSet characterSetWithContentsOfFile:nil];
+        FAIL();
+    } @catch (NSException* e) {
+        ASSERT_OBJCEQ(e.name, @"NSInvalidArgumentException");
+    }
 }

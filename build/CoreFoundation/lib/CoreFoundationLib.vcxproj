@@ -284,6 +284,7 @@
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <PrefixHeader>$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\Base.subproj\CoreFoundation_Prefix.h</PrefixHeader>
       <CompileAs>CompileAsObjCpp</CompileAs>
+      <PreprocessorDefinitions>WIL_IGNORE_OBJC_EXCEPTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -310,6 +311,7 @@
       <OptimizationLevel>Full</OptimizationLevel>
       <PrefixHeader>$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\Base.subproj\CoreFoundation_Prefix.h</PrefixHeader>
       <CompileAs>CompileAsObjCpp</CompileAs>
+      <PreprocessorDefinitions>WIL_IGNORE_OBJC_EXCEPTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -336,6 +338,7 @@
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <PrefixHeader>$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\Base.subproj\CoreFoundation_Prefix.h</PrefixHeader>
       <CompileAs>CompileAsObjCpp</CompileAs>
+      <PreprocessorDefinitions>WIL_IGNORE_OBJC_EXCEPTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -362,8 +365,9 @@
       <OptimizationLevel>Full</OptimizationLevel>
       <PrefixHeader>$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\Base.subproj\CoreFoundation_Prefix.h</PrefixHeader>
       <CompileAs>CompileAsObjCpp</CompileAs>
+      <PreprocessorDefinitions>WIL_IGNORE_OBJC_EXCEPTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClangCompile>
-  </ItemDefinitionGroup> 
+  </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>

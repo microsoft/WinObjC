@@ -39,8 +39,9 @@
 *     - The instance Variables _xx or xx.
 *     - valueForKey:@"xx"
 * - If we used an ivar or valueForKey:, values of nil become empty arrays, @[].
-* - A mutable copy of the object we get back is made.
+* - If we used a getter, a mutable copy of the object we get back is made.
 * - The mutation is attempted.
+*     - If we used an ivar, this will fail for immutable members.
 * - If a method mutated the copy of xx, setters cascade as follows:
 *     - The setter setXx:
 *     - Directly into the instance variable _xx or xx.
@@ -158,10 +159,6 @@ struct ProxyInfo {
         } else {
             object = [_target valueForKey:_key];
         }
-
-        if (!object && _treatNilValueAsEmptyArray) {
-            object = [NSArray array];
-        }
         return object;
     }
 
@@ -179,7 +176,7 @@ struct ProxyInfo {
     void _getMutateAndSet(SEL cmd, Args... args) {
         id currentValue = _get();
 
-        if (!currentValue) {
+        if (!currentValue && !_treatNilValueAsEmptyArray) {
             [NSException raise:NSInvalidArgumentException
                         format:@"-[_NSKeyProxyArray %@]: value for key %@ on object %p is nil",
                                NSStringFromSelector(cmd),
@@ -187,7 +184,11 @@ struct ProxyInfo {
                                static_cast<id>(_target)];
         }
 
-        currentValue = [[currentValue mutableCopy] autorelease];
+        if (currentValue && !_ivar) {
+            currentValue = [[currentValue mutableCopy] autorelease];
+        } else if (!currentValue && _treatNilValueAsEmptyArray) {
+            currentValue = [NSMutableArray array];
+        }
 
         auto imp = objc_msg_lookup(currentValue, cmd);
         reinterpret_cast<void (*)(id, SEL, Args...)>(imp)(currentValue, cmd, args...);
@@ -250,7 +251,6 @@ struct ProxyInfo {
     }
 
     void removeObjectAtIndex(NSUInteger index) {
-
         if (_targetSelectors.removeAtOne) {
             _call<void>(_targetSelectors.removeAtOne, index);
             return;

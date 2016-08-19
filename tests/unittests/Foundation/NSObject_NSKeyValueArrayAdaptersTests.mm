@@ -24,6 +24,12 @@
 
     BOOL fakeMutableInserted;
 
+    // Named such to hide it from KVC.
+    NSArray* _internal_immutableWithAccessors;
+    BOOL immutableWithAccessorsSet;
+    NSArray* _internal_immutableThroughKVC;
+    BOOL immutableThroughKVCSet;
+
     NSObject* backedByIvar;
 }
 @end
@@ -34,6 +40,8 @@
     alreadyMutable = [[NSMutableArray alloc] init];
     [alreadyMutable addObject:@"testObject"];
     immutable = @[ @"y" ];
+    _internal_immutableWithAccessors = @[ @"y" ];
+    _internal_immutableThroughKVC = @[ @"y" ];
     notAnArray = [NSObject new];
     return self;
 }
@@ -58,8 +66,45 @@
     fakeMutableInserted = true;
 }
 
+- (void)removeObjectFromFakeMutableCollectionAtIndex:(NSUInteger)index {
+    // no-op: exists only to ensure that this class is KVC-compliant for fakeMutableCollection.
+}
+
 - (BOOL)fakeMutableInserted {
     return fakeMutableInserted;
+}
+
+- (NSArray*)immutableWithAccessors {
+    return _internal_immutableWithAccessors;
+}
+
+- (void)setImmutableWithAccessors:(NSArray*)value {
+    _internal_immutableWithAccessors = [[value copy] autorelease];
+    immutableWithAccessorsSet = YES;
+}
+
+- (BOOL)immutableWithAccessorsSet {
+    return immutableWithAccessorsSet;
+}
+
+- (id)valueForKey:(NSString*)key {
+    if ([@"immutableThroughKVC" isEqual:key]) {
+        return _internal_immutableThroughKVC;
+    }
+    return [super valueForKey:key];
+}
+
+- (void)setValue:(id)value forKey:(NSString*)key {
+    if ([@"immutableThroughKVC" isEqual:key]) {
+        _internal_immutableThroughKVC = [[value copy] autorelease];
+        immutableThroughKVCSet = YES;
+        return;
+    }
+    return [super setValue:value forKey:key];
+}
+
+- (BOOL)immutableThroughKVCSet {
+    return immutableThroughKVCSet;
 }
 @end
 
@@ -69,39 +114,73 @@ TEST(NSObject, KeyPathLookup) {
     EXPECT_OBJCEQ(@(1), [testDictionary valueForKeyPath:@"key.subkey.subkey2"]);
 }
 
-TEST(NSObject, KVCArrayAdapters) {
+TEST(NSObject, KVCArrayAdapters_CompliantIndexedAccessors) {
     TestArrayAdapterObject* testObject = [[[TestArrayAdapterObject alloc] init] autorelease];
 
     NSArray* fakeCollection = [testObject valueForKey:@"fakeCollection"];
     EXPECT_OBJCEQ(@(3), [fakeCollection objectAtIndex:3]);
 }
 
-TEST(NSObject, KVCArrayMutableAdapters) {
+TEST(NSObject, KVCArrayMutableAdapters_CompliantIndexedAccessors) {
     TestArrayAdapterObject* testObject = [[[TestArrayAdapterObject alloc] init] autorelease];
     NSMutableArray* fakeMutableCollection = [testObject mutableArrayValueForKey:@"fakeMutableCollection"];
-    EXPECT_NO_THROW([fakeMutableCollection addObject:@(10)]);
+    ([fakeMutableCollection addObject:@(10)]);
     EXPECT_OBJCEQ(@(10), [fakeMutableCollection objectAtIndex:10]);
     EXPECT_TRUE([testObject fakeMutableInserted]);
+}
 
-    id mutableMutable = [testObject mutableArrayValueForKey:@"alreadyMutable"];
-    EXPECT_TRUE([mutableMutable isKindOfClass:[NSMutableArray class]]);
-
-    id mutableImmutable = [testObject mutableArrayValueForKey:@"immutable"];
+TEST(NSObject, KVCArrayMutableAdapters_ImmutableWithBasicAccessors) {
+    TestArrayAdapterObject* testObject = [[[TestArrayAdapterObject alloc] init] autorelease];
+    id mutableImmutable = [testObject mutableArrayValueForKey:@"immutableWithAccessors"];
     EXPECT_TRUE([mutableImmutable isKindOfClass:[NSMutableArray class]]);
     EXPECT_NO_THROW([mutableImmutable addObject:@"Whatever"]);
 
-    // The setter should have stomped the original value of immutable, thus mutating it.
-    EXPECT_TRUE([[testObject valueForKey:@"immutable"] containsObject:@"Whatever"]);
+    ASSERT_TRUE([testObject immutableWithAccessorsSet]);
+    EXPECT_TRUE([[testObject immutableWithAccessors] containsObject:@"Whatever"]);
+}
 
+TEST(NSObject, KVCArrayMutableAdapters_ImmutableThroughKVC) {
+    TestArrayAdapterObject* testObject = [[[TestArrayAdapterObject alloc] init] autorelease];
+    id mutableImmutable = [testObject mutableArrayValueForKey:@"immutableThroughKVC"];
+    EXPECT_TRUE([mutableImmutable isKindOfClass:[NSMutableArray class]]);
+    EXPECT_NO_THROW([mutableImmutable addObject:@"Whatever"]);
+
+    ASSERT_TRUE([testObject immutableThroughKVCSet]);
+    EXPECT_TRUE([[testObject valueForKey:@"immutableThroughKVC"] containsObject:@"Whatever"]);
+}
+
+TEST(NSObject, KVCArrayMutableAdapters_MutableArrayIvar) {
+    TestArrayAdapterObject* testObject = [[[TestArrayAdapterObject alloc] init] autorelease];
+    id mutableMutable = [testObject mutableArrayValueForKey:@"alreadyMutable"];
+    EXPECT_TRUE([mutableMutable isKindOfClass:[NSMutableArray class]]);
+}
+
+TEST(NSObject, KVCArrayMutableAdapters_ImmutableArrayIvar) {
+    TestArrayAdapterObject* testObject = [[[TestArrayAdapterObject alloc] init] autorelease];
+    id mutableImmutable = [testObject mutableArrayValueForKey:@"immutable"];
+    EXPECT_TRUE([mutableImmutable isKindOfClass:[NSMutableArray class]]);
+    EXPECT_ANY_THROW([mutableImmutable addObject:@"Whatever"]);
+
+    // The setter should have not stomped the original value of immutable, since it is an ivar.
+    EXPECT_FALSE([[testObject valueForKey:@"immutable"] containsObject:@"Whatever"]);
+}
+
+TEST(NSObject, KVCArrayMutableAdapters_NonArrayIvar) {
+    TestArrayAdapterObject* testObject = [[[TestArrayAdapterObject alloc] init] autorelease];
     id mutableObject = [testObject mutableArrayValueForKey:@"notAnArray"];
     EXPECT_TRUE([mutableObject isKindOfClass:[NSMutableArray class]]);
     EXPECT_ANY_THROW([mutableObject addObject:@"Whatever"]);
+}
 
+TEST(NSObject, KVCArrayMutableAdapters_ImmutableArrayDictionaryLeaf) {
     NSDictionary* testDictionary = @{ @"key" : @{ @"subkey" : @{ @"subkey2" : @[ @"hello" ] } } };
     NSMutableArray* mutableSubArray = [testDictionary mutableArrayValueForKeyPath:@"key.subkey.subkey2"];
     EXPECT_TRUE([mutableSubArray isKindOfClass:[NSMutableArray class]]);
     EXPECT_ANY_THROW([mutableSubArray addObject:@"Invalid"]);
+}
 
+TEST(NSObject, KVCArrayMutableAdapters_EmptyIvar) {
+    TestArrayAdapterObject* testObject = [[[TestArrayAdapterObject alloc] init] autorelease];
     NSMutableArray* mutableWasNil = [testObject mutableArrayValueForKey:@"backedByIvar"];
     EXPECT_NO_THROW([mutableWasNil addObject:@"Hello"]);
     EXPECT_OBJCEQ(@"Hello", [[testObject valueForKey:@"backedByIvar"] firstObject]);

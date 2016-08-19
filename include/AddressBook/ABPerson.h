@@ -26,7 +26,7 @@
 
 typedef uint32_t ABPersonSortOrdering;
 typedef uint32_t ABPersonCompositeNameFormat;
-typedef enum ABPersonImageFormat;
+typedef enum { kABPersonImageFormatThumbnail = 0, kABPersonImageFormatOriginalSize = 2 } ABPersonImageFormat;
 
 ADDRESSBOOK_EXPORT ABRecordRef ABPersonCreate() STUB_METHOD;
 ADDRESSBOOK_EXPORT ABRecordRef ABPersonCreateInSource(ABRecordRef source) STUB_METHOD;
@@ -41,9 +41,9 @@ ADDRESSBOOK_EXPORT CFDataRef ABPersonCopyImageData(ABRecordRef person) STUB_METH
 ADDRESSBOOK_EXPORT CFDataRef ABPersonCopyImageDataWithFormat(ABRecordRef person, ABPersonImageFormat format) STUB_METHOD;
 ADDRESSBOOK_EXPORT bool ABPersonHasImageData(ABRecordRef person) STUB_METHOD;
 ADDRESSBOOK_EXPORT bool ABPersonRemoveImageData(ABRecordRef person, CFErrorRef* error) STUB_METHOD;
-ADDRESSBOOK_EXPORT CFIndex ABAddressBookGetPersonCount(ABAddressBookRef addressBook) STUB_METHOD;
-ADDRESSBOOK_EXPORT ABRecordRef ABAddressBookGetPersonWithRecordID(ABAddressBookRef addressBook, ABRecordID recordID) STUB_METHOD;
-ADDRESSBOOK_EXPORT CFArrayRef ABAddressBookCopyArrayOfAllPeople(ABAddressBookRef addressBook) STUB_METHOD;
+ADDRESSBOOK_EXPORT CFIndex ABAddressBookGetPersonCount(ABAddressBookRef addressBook);
+ADDRESSBOOK_EXPORT ABRecordRef ABAddressBookGetPersonWithRecordID(ABAddressBookRef addressBook, ABRecordID recordID);
+ADDRESSBOOK_EXPORT CFArrayRef ABAddressBookCopyArrayOfAllPeople(ABAddressBookRef addressBook);
 ADDRESSBOOK_EXPORT CFArrayRef ABAddressBookCopyArrayOfAllPeopleInSource(ABAddressBookRef addressBook, ABRecordRef source) STUB_METHOD;
 ADDRESSBOOK_EXPORT CFArrayRef ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering(ABAddressBookRef addressBook,
                                                                                         ABRecordRef source,
@@ -61,7 +61,6 @@ ADDRESSBOOK_EXPORT CFDataRef ABPersonCreateVCardRepresentationWithPeople(CFArray
 
 enum { kABPersonSortByFirstName = 0, kABPersonSortByLastName = 1 };
 enum { kABPersonCompositeNameFormatFirstNameFirst = 0, kABPersonCompositeNameFormatLastNameFirst = 1 };
-enum { kABPersonImageFormatThumbnail = 0, kABPersonImageFormatOriginalSize = 2 };
 
 ADDRESSBOOK_EXPORT const ABPropertyID kABPersonFirstNameProperty;
 ADDRESSBOOK_EXPORT const ABPropertyID kABPersonLastNameProperty;
@@ -150,3 +149,7 @@ ADDRESSBOOK_EXPORT const CFStringRef kABPersonAlternateBirthdayMonthKey;
 ADDRESSBOOK_EXPORT const CFStringRef kABPersonAlternateBirthdayIsLeapMonthKey;
 ADDRESSBOOK_EXPORT const CFStringRef kABPersonAlternateBirthdayDayKey;
 // CFNumberRef - kCFNumberNSIntegerType
+ADDRESSBOOK_EXPORT const CFStringRef kABPersonPhoneCompanyLabel;
+ADDRESSBOOK_EXPORT const CFStringRef kABPersonPhoneAssistantLabel;
+ADDRESSBOOK_EXPORT const CFStringRef kABPersonPhoneRadioLabel;
+ADDRESSBOOK_EXPORT const CFStringRef kABPersonSiblingLabel;

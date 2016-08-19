@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap">
+  <Identity Name="TAEF.AssetsLibrary"
+          ProcessorArchitecture="neutral"
+          Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+          Version="1.0.0.0"
+          ResourceId="en-us" />
+  <Properties>
+    <DisplayName>TAEF AssetsLibrary</DisplayName>
+    <PublisherDisplayName>Microsoft Corp.</PublisherDisplayName>
+    <Logo>taef.png</Logo>
+    <Description>TAEF AssetsLibrary</Description>
+  </Properties>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+  </Dependencies>
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+  <Applications>
+    <Application Id="TE.ProcessHost" Executable="TE.ProcessHost.UAP.exe" EntryPoint="ProcessHostApplication">
+      <uap:VisualElements DisplayName="TAEF AssetsLibrary" Square150x150Logo="taef.png" Square44x44Logo="taef.png" Description="TAEF AssetsLibrary" BackgroundColor="#222222">
+        <uap:SplashScreen Image="taef.png" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <uap:Capability Name="picturesLibrary" />
+  </Capabilities>
+</Package>

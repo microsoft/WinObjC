@@ -25,21 +25,19 @@
 #include <winmeta.h>
 #include <windows.h>
 #include <TraceLoggingProvider.h>
-// TODO: WIL logging hook
-// #include "ErrorHandling.h"
+
+// We export the WIL logging hook from this binary
+#include "ErrorHandling.h"
 
 bool s_isRegistered = false;
-std::mutex s_isRegisteredMutex;
 
-// TODO: WIL logging hook
-// This is where we store the WIL hook
-//namespace wil {
-//namespace details {
-//
-//void(__stdcall* g_pfnLoggingCallback)(wil::FailureInfo const& failure) WI_NOEXCEPT;
-//
-//}
-//}
+// This is where we store the WIL logging hook
+namespace wil {
+namespace details {
+
+void(__stdcall* g_pfnLoggingCallback)(wil::FailureInfo const& failure) WI_NOEXCEPT;
+}
+}
 
 void TraceVerbose(const wchar_t* tag, const wchar_t* format, ...) {
     va_list varArgs;
@@ -76,12 +74,12 @@ void TraceCritical(const wchar_t* tag, const wchar_t* format, ...) {
     va_end(varArgs);
 }
 
-// TODO: WIL logging hook
-//void __stdcall _wilLoggingCallback(wil::FailureInfo const& failure) {
-//    wchar_t debugString[2048];
-//    wil::GetFailureLogString(debugString, _countof(debugString), failure);
-//    TraceVerbose(L"WIL", debugString);
-//}
+// WIL logging hook
+void __stdcall _wilLoggingCallback(wil::FailureInfo const& failure) {
+    wchar_t debugString[2048];
+    wil::GetFailureLogString(debugString, _countof(debugString), failure);
+    TraceError(L"WIL", debugString);
+}
 
 void TraceRegister() {
     if (!s_isRegistered) {
@@ -89,10 +87,8 @@ void TraceRegister() {
         TraceLoggingRegister(s_traceLoggingProvider);
     }
 
-    // TODO: WIL logging hook
-    //if (wil::details::g_pfnLoggingCallback == nullptr) {
-    //    wil::details::g_pfnLoggingCallback = &_wilLoggingCallback;
-    //}
+    // Set WIL logging hook
+    wil::SetResultLoggingCallback(&_wilLoggingCallback);
 }
 
 void TraceUnregister() {
@@ -101,8 +97,6 @@ void TraceUnregister() {
         TraceLoggingUnregister(s_traceLoggingProvider);
     }
 
-    // TODO: WIL logging hook
-    //if (wil::details::g_pfnLoggingCallback == &_wilLoggingCallback) {
-    //    wil::details::g_pfnLoggingCallback = nullptr;
-    //}
+    // Clear WIL logging hook
+    wil::SetResultLoggingCallback(nullptr);
 }

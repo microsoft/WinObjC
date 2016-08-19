@@ -63,7 +63,7 @@ DWORD GetModuleFileNameW(void* hModule, wchar_t* lpFilename, DWORD nSize) {
     return mbstowcs(lpFilename, tempBuffer, nSize);
 }
 
-bool SetCurrentDirectoryW(wchar_t* lpPathName) {
+bool SetCurrentDirectoryW(const wchar_t* lpPathName) {
     char tempBuffer[_MAX_PATH];
     wcstombs(tempBuffer, lpPathName, _MAX_PATH);
 

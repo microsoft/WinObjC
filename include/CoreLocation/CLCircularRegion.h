@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -23,10 +24,8 @@
 
 CORELOCATION_EXPORT_CLASS
 @interface CLCircularRegion : CLRegion <NSCopying, NSSecureCoding>
-- (instancetype)initWithCenter:(CLLocationCoordinate2D)center
-                        radius:(CLLocationDistance)radius
-                    identifier:(NSString*)identifier STUB_METHOD;
-@property (readonly, nonatomic) CLLocationCoordinate2D center STUB_PROPERTY;
-@property (readonly, nonatomic) CLLocationDistance radius STUB_PROPERTY;
+- (instancetype)initWithCenter:(CLLocationCoordinate2D)center radius:(CLLocationDistance)radius identifier:(NSString*)identifier;
+@property (readonly, nonatomic) CLLocationCoordinate2D center;
+@property (readonly, nonatomic) CLLocationDistance radius;
 - (BOOL)containsCoordinate:(CLLocationCoordinate2D)coordinate STUB_METHOD;
 @end

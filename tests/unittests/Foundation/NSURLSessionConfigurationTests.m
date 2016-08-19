@@ -19,71 +19,74 @@
 
 TEST(NSURLSessionConfiguration, initValues) {
     NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    ASSERT_TRUE_MSG(sessionConfiguration != NULL, "FAILED: sessionConfiguration should be non-null!");
+    ASSERT_NE_MSG(nil, sessionConfiguration, "FAILED: sessionConfiguration should be non-null!");
 
-    ASSERT_EQ_MSG(YES, sessionConfiguration.allowsCellularAccess, "FAILED: allowsCellularAccess should be YES");
-    ASSERT_EQ_MSG(60, sessionConfiguration.timeoutIntervalForRequest, "FAILED: timeoutIntervalForRequest should be %d", 60);
-    ASSERT_EQ_MSG(7, sessionConfiguration.timeoutIntervalForResource, "FAILED: timeoutIntervalForResource should be %d", 7);
-    ASSERT_EQ_MSG(NSHTTPCookieAcceptPolicyOnlyFromMainDocumentDomain,
+    EXPECT_EQ_MSG(YES, sessionConfiguration.allowsCellularAccess, "FAILED: allowsCellularAccess should be YES");
+    EXPECT_EQ_MSG(60, sessionConfiguration.timeoutIntervalForRequest, "FAILED: timeoutIntervalForRequest should be %d", 60);
+    EXPECT_EQ_MSG(7 * 24 * 60 * 60,
+                  sessionConfiguration.timeoutIntervalForResource,
+                  "FAILED: timeoutIntervalForResource should be %d",
+                  7 * 24 * 60 * 60);
+    EXPECT_EQ_MSG(NSHTTPCookieAcceptPolicyOnlyFromMainDocumentDomain,
                   sessionConfiguration.HTTPCookieAcceptPolicy,
                   "FAILED: HTTPCookieAcceptPolicy should be %d",
                   NSHTTPCookieAcceptPolicyOnlyFromMainDocumentDomain);
-    ASSERT_EQ_MSG(YES, sessionConfiguration.HTTPShouldSetCookies, "FAILED: HTTPShouldSetCookies should be YES");
-    ASSERT_EQ_MSG(NSURLNetworkServiceTypeDefault,
+    EXPECT_EQ_MSG(YES, sessionConfiguration.HTTPShouldSetCookies, "FAILED: HTTPShouldSetCookies should be YES");
+    EXPECT_EQ_MSG(NSURLNetworkServiceTypeDefault,
                   sessionConfiguration.networkServiceType,
                   "FAILED: networkServiceType should be %d",
                   NSURLNetworkServiceTypeDefault);
-    ASSERT_EQ_MSG(NSURLRequestUseProtocolCachePolicy,
+    EXPECT_EQ_MSG(NSURLRequestUseProtocolCachePolicy,
                   sessionConfiguration.requestCachePolicy,
                   "FAILED: requestCachePolicy should be %d",
                   NSURLRequestUseProtocolCachePolicy);
-    ASSERT_EQ_MSG(6, sessionConfiguration.HTTPMaximumConnectionsPerHost, "FAILED: HTTPMaximumConnectionsPerHost should be %d", 6);
-    ASSERT_TRUE_MSG(sessionConfiguration.HTTPCookieStorage != NULL, "FAILED: HTTPCookieStorage should be non-null");
+    EXPECT_EQ_MSG(6, sessionConfiguration.HTTPMaximumConnectionsPerHost, "FAILED: HTTPMaximumConnectionsPerHost should be %d", 6);
+    EXPECT_NE_MSG(nil, sessionConfiguration.HTTPCookieStorage, "FAILED: HTTPCookieStorage should be non-null");
 }
 
 TEST(NSURLSessionConfiguration, defaultSessionConfiguration) {
     NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    ASSERT_TRUE_MSG(sessionConfiguration != NULL, "FAILED: sessionConfiguration should be non-null!");
+    ASSERT_NE_MSG(nil, sessionConfiguration, "FAILED: sessionConfiguration should be non-null!");
 
-    ASSERT_EQ_MSG(YES, sessionConfiguration.allowsCellularAccess, "FAILED: allowsCellularAccess should be YES");
-    ASSERT_EQ_MSG(kTLSProtocol12,
+    EXPECT_EQ_MSG(YES, sessionConfiguration.allowsCellularAccess, "FAILED: allowsCellularAccess should be YES");
+    EXPECT_EQ_MSG(kTLSProtocol12,
                   sessionConfiguration.TLSMaximumSupportedProtocol,
                   "FAILED: TLSMaximumSupportedProtocol should be %d",
                   kTLSProtocol12);
-    ASSERT_EQ_MSG(kSSLProtocol3,
+    EXPECT_EQ_MSG(kTLSProtocol1,
                   sessionConfiguration.TLSMinimumSupportedProtocol,
                   "FAILED: TLSMinimumSupportedProtocol should be %d",
-                  kSSLProtocol3);
+                  kTLSProtocol1);
 }
 
 TEST(NSURLSessionConfiguration, ephemeralSessionConfiguration) {
     NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
-    ASSERT_TRUE_MSG(sessionConfiguration != NULL, "FAILED: sessionConfiguration should be non-null!");
+    ASSERT_NE_MSG(nil, sessionConfiguration, "FAILED: sessionConfiguration should be non-null!");
 
-    ASSERT_EQ_MSG(kTLSProtocol12,
+    EXPECT_EQ_MSG(kTLSProtocol12,
                   sessionConfiguration.TLSMaximumSupportedProtocol,
                   "FAILED: TLSMaximumSupportedProtocol should be %d",
                   kTLSProtocol12);
-    ASSERT_EQ_MSG(kTLSProtocol1,
+    EXPECT_EQ_MSG(kTLSProtocol1,
                   sessionConfiguration.TLSMinimumSupportedProtocol,
                   "FAILED: TLSMinimumSupportedProtocol should be %d",
                   kTLSProtocol1);
-    ASSERT_TRUE_MSG(sessionConfiguration.URLCache != NULL, "FAILED: URLCache should be non-null");
+    EXPECT_NE_MSG(nil, sessionConfiguration.URLCache, "FAILED: URLCache should be non-null");
 }
 
 TEST(NSURLSessionConfiguration, backgroundSessionConfigurationWithIdentifier) {
     NSString* identifier = @"Microsoft";
     NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
-    ASSERT_TRUE_MSG(sessionConfiguration != NULL, "FAILED: sessionConfiguration should be non-null!");
+    ASSERT_NE_MSG(nil, sessionConfiguration, "FAILED: sessionConfiguration should be non-null!");
 
-    ASSERT_EQ_MSG(kTLSProtocol12,
+    EXPECT_EQ_MSG(kTLSProtocol12,
                   sessionConfiguration.TLSMaximumSupportedProtocol,
                   "FAILED: TLSMaximumSupportedProtocol should be %d",
                   kTLSProtocol12);
-    ASSERT_EQ_MSG(kTLSProtocol1,
+    EXPECT_EQ_MSG(kTLSProtocol1,
                   sessionConfiguration.TLSMinimumSupportedProtocol,
                   "FAILED: TLSMinimumSupportedProtocol should be %d",
                   kTLSProtocol1);
-    ASSERT_OBJCEQ_MSG(identifier, sessionConfiguration.identifier, "FAILED: identifier should be %d", identifier);
-    ASSERT_TRUE_MSG(sessionConfiguration.URLCache != NULL, "FAILED: URLCache should be non-null");
+    EXPECT_OBJCEQ_MSG(identifier, sessionConfiguration.identifier, "FAILED: identifier should be %d", identifier);
+    EXPECT_EQ_MSG(nil, sessionConfiguration.URLCache, "FAILED: URLCache should be nil for background sessions");
 }

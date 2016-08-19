@@ -45,8 +45,8 @@ static NSMutableDictionary* _constructCaseInsensitiveDictionary(NSDictionary* di
     caseInsensitiveKeyChecker.equal = _CFHTTPHeaderEqual;
     caseInsensitiveKeyChecker.hash = _CFHTTPHeaderHash;
 
-    NSMutableDictionary* ret = (NSMutableDictionary*)
-        CFDictionaryCreateMutable(NULL, [dict count], &caseInsensitiveKeyChecker, &kCFTypeDictionaryValueCallBacks);
+    NSMutableDictionary* ret =
+        (NSMutableDictionary*)CFDictionaryCreateMutable(NULL, [dict count], &caseInsensitiveKeyChecker, &kCFTypeDictionaryValueCallBacks);
 
     //  Case insensitive dictionary
     for (id key in [dict allKeys]) {
@@ -85,14 +85,14 @@ static NSMutableDictionary* _constructCaseInsensitiveDictionary(NSDictionary* di
 
         // Parse the filename from the Content-Disposition header field.
         NSString* contentDisposition = [allHeaderFields objectForKey:@"Content-Disposition"];
-        NSRange filenameTagPosition = [contentDisposition rangeOfString:@"filename=" options:NSBackwardsSearch];
+        NSRange filenameTagPosition = [contentDisposition rangeOfString:@"filename=" options:0];
         NSCharacterSet* filenameEndDelimiter;
 
         if (filenameTagPosition.location != NSNotFound) {
             NSUInteger startPos = NSMaxRange(filenameTagPosition); // denotes the start position of the file name
 
             // if a quote follows 'filename=', then use the entire quoted string
-            if ([[contentDisposition substringWithRange:{NSMaxRange(filenameTagPosition), 1}] isEqual:@"\""]) {
+            if ([[contentDisposition substringWithRange:{ NSMaxRange(filenameTagPosition), 1 }] isEqual:@"\""]) {
                 filenameEndDelimiter = [NSCharacterSet characterSetWithCharactersInString:@"\""];
                 startPos++; // " is not part of the file name, so start one character further
             } else {
@@ -100,7 +100,7 @@ static NSMutableDictionary* _constructCaseInsensitiveDictionary(NSDictionary* di
                 filenameEndDelimiter = [NSCharacterSet characterSetWithCharactersInString:@"; "];
             }
 
-            NSRange nameRange = {startPos, [contentDisposition length] - startPos};
+            NSRange nameRange = { startPos, [contentDisposition length] - startPos };
             NSRange filenameEndPosition = [contentDisposition rangeOfCharacterFromSet:filenameEndDelimiter options:0 range:nameRange];
             if (filenameEndPosition.location == NSNotFound) {
                 filenameEndPosition.location = [contentDisposition length] - 1;
@@ -108,7 +108,7 @@ static NSMutableDictionary* _constructCaseInsensitiveDictionary(NSDictionary* di
 
             // replace any illegal filename characters with underscores
             filename = _NSReplaceIllegalFileNameCharacters(
-                [contentDisposition substringWithRange:{startPos, filenameEndPosition.location - startPos}]);
+                [contentDisposition substringWithRange:{ startPos, filenameEndPosition.location - startPos }]);
         }
 
         // parse MIME type from content-type header field.
@@ -123,15 +123,17 @@ static NSMutableDictionary* _constructCaseInsensitiveDictionary(NSDictionary* di
         }
     }
 
-
-    if (self = [super _initWithURL:url MIMEType:mimeType expectedContentLength:expectedContentLength textEncodingName:textEncodingName suggestedFilename:filename]) {
+    if (self = [super _initWithURL:url
+                          MIMEType:mimeType
+             expectedContentLength:expectedContentLength
+                  textEncodingName:textEncodingName
+                 suggestedFilename:filename]) {
         _statusCode = statusCode;
         _HTTPVersion.attach([HTTPVersion copy]);
         _allHeaderFields = allHeaderFields;
     }
 
     return self;
-
 }
 
 /**

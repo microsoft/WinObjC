@@ -22,9 +22,15 @@
     <ProjectReference Include="..\..\AddressBook\lib\AddressBookLib.vcxproj">
       <Project>{E3250233-2EFE-4BFB-BDC3-1E4FD4B7B4F4}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="..\..\..\Frameworks\AddressBook\NSDate+AddressBookAdditions.mm" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AddressBook.def" />
@@ -48,7 +54,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AddressBook.def</ModuleDefinitionFile>
-      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;ObjCUWP.lib;RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -61,7 +67,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AddressBook.def</ModuleDefinitionFile>
-      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;ObjCUWP.lib;RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -74,7 +80,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AddressBook.def</ModuleDefinitionFile>
-      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;ObjCUWP.lib;RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -87,7 +93,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AddressBook.def</ModuleDefinitionFile>
-      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;ObjCUWP.lib;RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>

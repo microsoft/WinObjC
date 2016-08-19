@@ -17,7 +17,7 @@
 #include <Foundation/Foundation.h>
 #include <Starboard.h>
 #include <StubReturn.h>
-#include <Windows.h>
+#include <windows.h>
 
 #include <COMIncludes.h>
 #include <objbase.h>

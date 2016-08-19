@@ -19,7 +19,7 @@
 #import <Foundation/NSObject.h>
 
 #import <Foundation/NSPredicate.h>
-@class NSExpression;
+#import <Foundation/NSExpression.h>
 
 typedef NSUInteger NSComparisonPredicateModifier;
 typedef NSUInteger NSComparisonPredicateOptions;
