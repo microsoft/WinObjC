@@ -168,8 +168,8 @@ static void _testGetViaInvocation(id object, SEL selector, T value) {
     [invocation invoke];
 
     T returnedValue;
-	// To avoid artifacts, stomp the buffer before we read into it.
-	memset(&returnedValue, 0xCD, sizeof(T));
+    // To avoid artifacts, stomp the buffer before we read into it.
+    memset(&returnedValue, 0xCD, sizeof(T));
     [invocation getReturnValue:&returnedValue];
 
     EXPECT_EQ_MSG(returnedValue, value, "property %s did not match.", sel_getName(selector));
@@ -194,8 +194,8 @@ TEST(NSInvocation, AggregateReturn) {
     SET_AND_GET_VIA_INVOCATION(tester, singleLongLong, (long long)(-1LL*(1024LL*1024LL*1024LL*1048576LL)));
     SET_AND_GET_VIA_INVOCATION(tester, singleULongLong, (unsigned long long)0xABCDEF010203ULL);
 
-	SET_AND_GET_VIA_INVOCATION(tester, singleFloat, 1024.0f);
-	SET_AND_GET_VIA_INVOCATION(tester, singleDouble, 2048.0);
+    SET_AND_GET_VIA_INVOCATION(tester, singleFloat, 1024.0f);
+    SET_AND_GET_VIA_INVOCATION(tester, singleDouble, 2048.0);
 
     SET_AND_GET_VIA_INVOCATION(tester, uniformAggregateF1, { std::numeric_limits<float>::max() });
     SET_AND_GET_VIA_INVOCATION(tester, uniformAggregateD1, { std::numeric_limits<double>::max() });
@@ -225,22 +225,22 @@ TEST(NSInvocation, AggregateReturn) {
 
 #define SET_VIA_INVOCATION_AND_GET(object, prop, ...)                                               \
     do {                                                                              \
-		decltype(object.prop) expectedVal = __VA_ARGS__; \
+        decltype(object.prop) expectedVal = __VA_ARGS__; \
         _testSetViaInvocation<decltype(object.prop)>(object, @selector(prop), __VA_ARGS__); \
 auto actualVal = object.prop; \
-		EXPECT_EQ(expectedVal, actualVal); \
+        EXPECT_EQ(expectedVal, actualVal); \
                                                                                       \
     } while (0)
 
 template <typename T>
 static void _testSetViaInvocation(id object, SEL selector, T value) {
-	const char* oldSel = sel_getName(selector);
-	NSString* newSelectorName = [NSString stringWithFormat:@"set%c%s:", toupper(oldSel[0]), oldSel+1];
-	selector = NSSelectorFromString(newSelectorName);
+    const char* oldSel = sel_getName(selector);
+    NSString* newSelectorName = [NSString stringWithFormat:@"set%c%s:", toupper(oldSel[0]), oldSel+1];
+    selector = NSSelectorFromString(newSelectorName);
     NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:[object methodSignatureForSelector:selector]];
     invocation.target = object;
     invocation.selector = selector;
-	[invocation setArgument:&value atIndex:2];
+    [invocation setArgument:&value atIndex:2];
     [invocation invoke];
 }
 
@@ -263,8 +263,8 @@ TEST(NSInvocation, AggregateFirstParam) {
     SET_VIA_INVOCATION_AND_GET(tester, singleLongLong, (long long)(-1LL*(1024LL*1024LL*1024LL*1048576LL)));
     SET_VIA_INVOCATION_AND_GET(tester, singleULongLong, (unsigned long long)0xABCDEF010203ULL);
 
-	SET_VIA_INVOCATION_AND_GET(tester, singleFloat, 1024.0f);
-	SET_VIA_INVOCATION_AND_GET(tester, singleDouble, 2048.0);
+    SET_VIA_INVOCATION_AND_GET(tester, singleFloat, 1024.0f);
+    SET_VIA_INVOCATION_AND_GET(tester, singleDouble, 2048.0);
 
     SET_VIA_INVOCATION_AND_GET(tester, uniformAggregateF1, { std::numeric_limits<float>::max() });
     SET_VIA_INVOCATION_AND_GET(tester, uniformAggregateD1, { std::numeric_limits<double>::max() });
