@@ -39,7 +39,7 @@
     </ClCompile>
     <ClangCompile>
       <RuntimeLibrary VSImporterConfigName="Debug">MultiThreadedDebugDLL</RuntimeLibrary>
-	  <IncludePaths>$(SolutionPublicHeadersDir);$(WINOBJC_SDK_ROOT)\..\WinObjC_Internal\Source\winmd2objc\Support;$(WINOBJC_SDK_ROOT)\Frameworks\include;%(IncludePaths)</IncludePaths>
+	  <IncludePaths>$(SolutionPublicHeadersDir);$(WINOBJC_SDK_ROOT)\..\WinObjC_Internal\Source\winmd2objc\Support;$(WINOBJC_SDK_ROOT)\include\xplat;$(WINOBJC_SDK_ROOT)\Frameworks\include;%(IncludePaths)</IncludePaths>
     </ClangCompile>
     <Midl>
       <OutputDirectory>$(Objc2WinmdGeneratedFilesDir)</OutputDirectory>
@@ -51,7 +51,7 @@
       <GenerateServerFiles>None</GenerateServerFiles>
     </Midl>
 	<Link>
-	  <AdditionalDependencies>WinObjCRT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+	  <AdditionalDependencies>WinObjCRT.lib;Logging.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
 	</Link>
   </ItemDefinitionGroup>
