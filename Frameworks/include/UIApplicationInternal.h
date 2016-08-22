@@ -16,8 +16,6 @@
 #pragma once
 
 #import <UIKit/UIApplication.h>
-#import <UWP/WindowsMediaSpeechRecognition.h>
-#import <UWP/WindowsFoundation.h>
 
 @interface UIApplication (internal)
 - (UIWindow*)_popupWindow;
@@ -28,9 +26,9 @@
 - (void)_sendHighMemoryWarning;
 - (void)_sendSuspendEvent;
 - (void)_sendResumeEvent;
-- (void)_sendNotificationReceivedEvent:(NSString*)notificationData;
-- (void)_sendVoiceCommandReceivedEvent:(WMSSpeechRecognitionResult*)voiceCommandResult;
-- (void)_sendProtocolReceivedEvent:(WFUri*)protocolUri source:(NSString*)source;
+- (void)_sendToastActionReceivedEvent:(NSDictionary*)toastAction;
+- (void)_sendVoiceCommandReceivedEvent:(WMSSpeechRecognitionResult*)result;
+- (void)_sendProtocolReceivedEvent:(WFUri*)uri;
 @end
 
 @interface WOCDisplayMode (internal)

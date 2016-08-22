@@ -14,7 +14,11 @@
 //
 //******************************************************************************
 
+#include <COMIncludes.h>
 #import "ApplicationMain.h"
+#import <windows.foundation.h>
+#import <windows.applicationmodel.activation.h>
+#include <COMIncludes_End.h>
 
 #import <assert.h>
 #import <math.h>
@@ -29,12 +33,14 @@
 
 #import <Starboard.h>
 #import <StringHelpers.h>
+#import <CollectionHelpers.h>
 #import <UIInterface.h>
 #import <CACompositorClient.h>
 #import <UIApplicationInternal.h>
 #import <MainDispatcher.h>
-#import <UWP/WindowsMediaSpeechRecognition.h>
-#import <UWP/WindowsFoundation.h>
+#import <UWP/WindowsApplicationModelActivation.h>
+
+using namespace Microsoft::WRL;
 
 static CACompositorClientInterface* _compositorClient = NULL;
 
@@ -47,7 +53,7 @@ int ApplicationMainStart(const char* principalName,
                          float windowWidth,
                          float windowHeight,
                          ActivationType activationType,
-                         void* activationArg) {
+                         IInspectable* activationArg) {
     // Note: We must use nil rather than an empty string for these class names
     NSString* principalClassName = Strings::IsEmpty<const char*>(principalName) ? nil : [[NSString alloc] initWithCString:principalName];
     NSString* delegateClassName = Strings::IsEmpty<const char*>(delegateName) ? nil : [[NSString alloc] initWithCString:delegateName];
@@ -56,14 +62,30 @@ int ApplicationMainStart(const char* principalName,
 
     // Populate Objective C equivalent of activation argument
     if (activationType == ActivationTypeToast) {
-        NSString* toastArgument = Strings::WideToNSString(static_cast<HSTRING>(activationArg));
-        activationArgument = toastArgument;
+        WAAToastNotificationActivatedEventArgs* toastArgument = [WAAToastNotificationActivatedEventArgs createWith:activationArg];
+
+        // Convert to NSDictionary with NSStrings
+        ComPtr<IInspectable> comPtr = activationArg;
+        ComPtr<ABI::Windows::ApplicationModel::Activation::IToastNotificationActivatedEventArgs> args;
+        THROW_NS_IF_FAILED(comPtr.As(&args));
+
+        ComPtr<ABI::Windows::Foundation::Collections::IPropertySet> map;
+        THROW_NS_IF_FAILED(args->get_UserInput(&map));
+
+        NSMutableDictionary* userInput = nil;
+        THROW_NS_IF_FAILED(Collections::WRLToNSCollection(map, &userInput));
+
+        NSDictionary* toastAction = @{
+            UIApplicationLaunchOptionsToastActionArgumentKey : toastArgument.argument,
+            UIApplicationLaunchOptionsToastActionUserInputKey : userInput
+        };
+        activationArgument = toastAction;
     } else if (activationType == ActivationTypeVoiceCommand) {
-        WMSSpeechRecognitionResult* speechResult = [WMSSpeechRecognitionResult createWith:activationArg];
-        activationArgument = speechResult;
+        WMSSpeechRecognitionResult* result = [WMSSpeechRecognitionResult createWith:activationArg];
+        activationArgument = result;
     } else if (activationType == ActivationTypeProtocol) {
-        WFUri* protocolResult = [WFUri createWith:activationArg];
-        activationArgument = protocolResult;
+        WFUri* uri = [WFUri createWith:activationArg];
+        activationArgument = uri;
     }
 
     WOCDisplayMode* displayMode = [UIApplication displayMode];
@@ -76,17 +98,18 @@ int ApplicationMainStart(const char* principalName,
     if (infoDict != nil) {
         defaultOrientation = EbrGetWantedOrientation();
 
-        NSObject* orientation;
-        orientation = [infoDict objectForKey:@"UISupportedInterfaceOrientations"];
-        if (orientation == nil)
+        id orientation = [infoDict objectForKey:@"UISupportedInterfaceOrientations"];
+
+        if (orientation == nil) {
             orientation = [infoDict objectForKey:@"UIInterfaceOrientation"];
+        }
 
         if ([orientation isKindOfClass:[NSString class]]) {
             defaultOrientation = UIOrientationFromString(defaultOrientation, (NSString*)orientation);
         } else if ([orientation isKindOfClass:[NSArray class]]) {
             bool found = false;
 
-            for (NSString* curstr in (NSArray*)orientation) {
+            for (NSString* curstr in orientation) {
                 UIInterfaceOrientation newOrientation = UIOrientationFromString(defaultOrientation, curstr);
                 if (newOrientation == defaultOrientation) {
                     found = true;

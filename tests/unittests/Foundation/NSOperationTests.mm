@@ -22,7 +22,7 @@
 #import <condition_variable>
 #import <chrono>
 
-static void (^_completionBlockPopulatingConditionAndFlag(void(^completionBlock)(), NSCondition** condition, BOOL* flag))() {
+static void (^_completionBlockPopulatingConditionAndFlag(void (^completionBlock)(), NSCondition** condition, BOOL* flag))() {
     NSCondition* cond = [[NSCondition new] autorelease];
     *condition = cond;
     return Block_copy(^{
@@ -52,9 +52,9 @@ TEST(NSOperation, NSOperation) {
     NSCondition* completionCondition = nil;
     BOOL completionBlockCalled = NO;
     [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(^{
-        [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
-        ASSERT_TRUE([operation isFinished]);
-    }, &completionCondition, &completionBlockCalled)];
+                   [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
+                   ASSERT_TRUE([operation isFinished]);
+               }, &completionCondition, &completionBlockCalled)];
 
     [completionCondition lock];
 
@@ -78,9 +78,9 @@ TEST(NSOperation, NSOperationCancellation) {
     NSCondition* completionCondition = nil;
     BOOL completionBlockCalled = NO;
     [cancelledOperation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(^{
-        [cancelledOperation waitUntilFinished]; // Should not deadlock, but we cannot test this
-        ASSERT_TRUE([cancelledOperation isFinished]);
-    }, &completionCondition, &completionBlockCalled)];
+                            [cancelledOperation waitUntilFinished]; // Should not deadlock, but we cannot test this
+                            ASSERT_TRUE([cancelledOperation isFinished]);
+                        }, &completionCondition, &completionBlockCalled)];
 
     [completionCondition lock];
 
@@ -197,16 +197,16 @@ OSX_DISABLED_TEST(NSOperation, NSOperationKVO) {
     ASSERT_TRUE([observer didObserveExecuting]);
     ASSERT_TRUE([observer didObserveFinished]);
 
-   [operation removeObserver:observer forKeyPath:@"completionBlock" context:NULL];
-   [operation removeObserver:observer forKeyPath:@"isCancelled" context:NULL];
-   [operation removeObserver:observer forKeyPath:@"isExecuting" context:NULL];
-   [operation removeObserver:observer forKeyPath:@"isFinished" context:NULL];
+    [operation removeObserver:observer forKeyPath:@"completionBlock" context:NULL];
+    [operation removeObserver:observer forKeyPath:@"isCancelled" context:NULL];
+    [operation removeObserver:observer forKeyPath:@"isExecuting" context:NULL];
+    [operation removeObserver:observer forKeyPath:@"isFinished" context:NULL];
 }
 
 // Test asynchronous subclass for NSOperation
 @interface MyConcurrentOperation : NSOperation
-@property (assign, getter = isExecuting) BOOL executing;
-@property (assign, getter = isFinished, readonly) BOOL finished;
+@property (assign, getter=isExecuting) BOOL executing;
+@property (assign, getter=isFinished, readonly) BOOL finished;
 @end
 
 @implementation MyConcurrentOperation
@@ -214,8 +214,7 @@ OSX_DISABLED_TEST(NSOperation, NSOperationKVO) {
 @synthesize executing = _executing;
 @synthesize finished = _finished;
 
-- (void)setExecuting:(BOOL)executing
-{
+- (void)setExecuting:(BOOL)executing {
     [self willChangeValueForKey:@"isExecuting"];
     [self willChangeValueForKey:@"isFinished"];
 
@@ -226,18 +225,15 @@ OSX_DISABLED_TEST(NSOperation, NSOperationKVO) {
     [self didChangeValueForKey:@"isFinished"];
 }
 
-- (BOOL)isExecuting
-{
+- (BOOL)isExecuting {
     return _executing;
 }
 
-- (BOOL)isFinished
-{
+- (BOOL)isFinished {
     return _finished;
 }
 
-- (void)start
-{
+- (void)start {
     if (self.isCancelled) {
         return;
     }
@@ -246,17 +242,18 @@ OSX_DISABLED_TEST(NSOperation, NSOperationKVO) {
     [self doSomething];
 }
 
-- (void)doSomething
-{
+- (void)doSomething {
     // Do some async task.
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
+                   ^{
 
-        // Do another async task
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-            // Do some async task.
-            self.executing = NO;
-        });
-    });
+                       // Do another async task
+                       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
+                                      ^{
+                                          // Do some async task.
+                                          self.executing = NO;
+                                      });
+                   });
 }
 
 @end
@@ -269,9 +266,9 @@ TEST(NSOperation, NSOperationConcurrentSubclass) {
     NSCondition* completionCondition = nil;
     BOOL completionBlockCalled = NO;
     [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(^{
-        [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
-        ASSERT_TRUE([operation isFinished]);
-    }, &completionCondition, &completionBlockCalled)];
+                   [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
+                   ASSERT_TRUE([operation isFinished]);
+               }, &completionCondition, &completionBlockCalled)];
 
     [completionCondition lock];
 
@@ -295,8 +292,7 @@ TEST(NSOperation, NSOperationConcurrentSubclass) {
 
 @implementation MyNonconcurrentOperation
 
-- (void)main
-{
+- (void)main {
     if (self.isCancelled) {
         return;
     }
@@ -314,9 +310,9 @@ TEST(NSOperation, NSOperationNonconcurrentSubclass) {
     NSCondition* completionCondition = nil;
     BOOL completionBlockCalled = NO;
     [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(^{
-        [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
-        ASSERT_TRUE([operation isFinished]);
-    }, &completionCondition, &completionBlockCalled)];
+                   [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
+                   ASSERT_TRUE([operation isFinished]);
+               }, &completionCondition, &completionBlockCalled)];
 
     [completionCondition lock];
 
@@ -512,15 +508,16 @@ TEST(NSOperation, RunConcurrentOperationManually) {
     NSCondition* completionCondition = nil;
     BOOL completionBlockCalled = NO;
     [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(^{
-        [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
-        ASSERT_TRUE([operation isFinished]);
-    }, &completionCondition, &completionBlockCalled)];
+                   [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
+                   ASSERT_TRUE([operation isFinished]);
+               }, &completionCondition, &completionBlockCalled)];
 
     [completionCondition lock];
 
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [operation start];
-    });
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+                   ^{
+                       [operation start];
+                   });
 
     [operation waitUntilFinished];
 
@@ -539,15 +536,16 @@ TEST(NSOperation, RunNonconcurrentOperationManually) {
     NSCondition* completionCondition = nil;
     BOOL completionBlockCalled = NO;
     [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(^{
-        [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
-        ASSERT_TRUE([operation isFinished]);
-    }, &completionCondition, &completionBlockCalled)];
+                   [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
+                   ASSERT_TRUE([operation isFinished]);
+               }, &completionCondition, &completionBlockCalled)];
 
     [completionCondition lock];
 
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [operation start];
-    });
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+                   ^{
+                       [operation start];
+                   });
 
     [operation waitUntilFinished];
 
@@ -563,7 +561,6 @@ TEST(NSOperation, RunNonconcurrentOperationManually) {
 TEST(NSOperation, NSBlockOperationInQueue) {
     NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
 
-
     __block BOOL executedBlock = NO;
     NSOperation* operation = [NSBlockOperation blockOperationWithBlock:^{
         executedBlock = YES;
@@ -572,10 +569,10 @@ TEST(NSOperation, NSBlockOperationInQueue) {
     NSCondition* completionCondition = nil;
     BOOL completionBlockCalled = NO;
     [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(^{
-        [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
-        ASSERT_TRUE([operation isFinished]);
-        ASSERT_TRUE(executedBlock);
-    }, &completionCondition, &completionBlockCalled)];
+                   [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
+                   ASSERT_TRUE([operation isFinished]);
+                   ASSERT_TRUE(executedBlock);
+               }, &completionCondition, &completionBlockCalled)];
 
     [completionCondition lock];
 

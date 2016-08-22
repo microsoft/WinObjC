@@ -49,12 +49,12 @@ void _loggingZeroMemory(void* destination, size_t length) {
 }
 
 unsigned long _loggingFormatMessageW(unsigned long flags,
-                                  const void* source,
-                                  unsigned long messageId,
-                                  unsigned long languageId,
-                                  wchar_t* buffer,
-                                  unsigned long size,
-                                  va_list* arguments) {
+                                     const void* source,
+                                     unsigned long messageId,
+                                     unsigned long languageId,
+                                     wchar_t* buffer,
+                                     unsigned long size,
+                                     va_list* arguments) {
     return ::FormatMessageW(flags, source, messageId, languageId, buffer, size, arguments);
 }
 
@@ -73,4 +73,3 @@ void* _loggingInterlockedCompareExchangePointer(void* volatile* destination, voi
 bool _loggingFailFastOnUnimplemented() {
     return false;
 }
-

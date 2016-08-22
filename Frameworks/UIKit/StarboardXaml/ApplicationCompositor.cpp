@@ -64,25 +64,14 @@ extern "C" void RunApplicationMain(Platform::String^ principalClassName,
     InitializeApp();
 
     // Kick off iOS application main startup
-    if (activationType == ActivationTypeVoiceCommand){
-        // The activationArg is a Platform::String^, which is not an IInspectable* so it must be converted to an HSTRING before NSString*
-        ApplicationMainStart(
-                Strings::WideToNarrow(principalClassName->Data()).c_str(),
-                Strings::WideToNarrow(delegateClassName->Data()).c_str(),
-                windowWidth,
-                windowHeight,
-                activationType,
-                reinterpret_cast<HSTRING>(activationArg));
-    } else {
-        // Convert Object^ to IInspectable* so it can be passed into Objective C and there converted to its projection
-        ApplicationMainStart(
-                Strings::WideToNarrow(principalClassName->Data()).c_str(),
-                Strings::WideToNarrow(delegateClassName->Data()).c_str(),
-                windowWidth,
-                windowHeight,
-                activationType,
-                reinterpret_cast<IInspectable*>(activationArg));
-    }
+    // Convert Object^ to IInspectable* so it can be passed into Objective C and there converted to its projection
+    ApplicationMainStart(
+            Strings::WideToNarrow(principalClassName->Data()).c_str(),
+            Strings::WideToNarrow(delegateClassName->Data()).c_str(),
+            windowWidth,
+            windowHeight,
+            activationType,
+            reinterpret_cast<IInspectable*>(activationArg));
 }
 
 // clang-format off

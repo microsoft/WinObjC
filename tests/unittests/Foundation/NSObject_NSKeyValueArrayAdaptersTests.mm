@@ -127,7 +127,6 @@ TEST(NSObject, KVCArrayMutableAdapters_CompliantIndexedAccessors) {
     ([fakeMutableCollection addObject:@(10)]);
     EXPECT_OBJCEQ(@(10), [fakeMutableCollection objectAtIndex:10]);
     EXPECT_TRUE([testObject fakeMutableInserted]);
-
 }
 
 TEST(NSObject, KVCArrayMutableAdapters_ImmutableWithBasicAccessors) {
