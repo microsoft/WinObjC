@@ -19,7 +19,7 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <Foundation/Foundation.h>
 
-#import "UWP/WindowsApplicationModelContacts.h"
+#import <UWP/WindowsApplicationModelContacts.h>
 #import <AddressBook/ABAddressBook.h>
 #import <AddressBook/ABRecord.h>
 #import <AddressBook/ABPerson.h>
