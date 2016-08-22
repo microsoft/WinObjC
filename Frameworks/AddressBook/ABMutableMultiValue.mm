@@ -35,7 +35,7 @@ ABMutableMultiValueRef ABMultiValueCreateMutable(ABPropertyType type) {
 ABMutableMultiValueRef ABMultiValueCreateMutableCopy(ABMultiValueRef multiValue) {
     RETURN_NULL_IF(multiValue == nullptr);
 
-    return (__bridge_retained ABMutableMultiValueRef)[(__bridge _ABMultiValue*)multiValue createMutableCopy];
+    return (__bridge_retained ABMutableMultiValueRef)[(__bridge _ABMultiValue*)multiValue mutableCopy];
 }
 
 /**

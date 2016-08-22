@@ -159,7 +159,7 @@
     return index;
 }
 
-- (_ABMultiValue*)createMutableCopy {
+- (id)mutableCopyWithZone:(NSZone*)zone {
     _ABMultiValue* copy = [[_ABMultiValue alloc] initWithPropertyType:[self getPropertyType]];
     for (__ABMultiValuePair* pair in self->_list) {
         [copy appendPairWithLabel:pair.label andValue:pair.value];
@@ -169,6 +169,10 @@
 }
 
 - (bool)addValue:(CFTypeRef)value andLabel:(CFStringRef)label outIdentifier:(ABMultiValueIdentifier*)outIdentifier {
+    if (![self isMutable]) {
+        return false;
+    }
+
     bool result = [self appendPairWithLabel:(__bridge NSString*)label andValue:(__bridge id)value];
     if (result && outIdentifier) {
         *outIdentifier = [self getIdentifierAtIndex:([self getCount] - 1)];
