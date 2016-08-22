@@ -56,13 +56,13 @@ TEST(MutableMultiValue, CreateTest) {
     for (int i = 0; i < ABMultiValueGetCount(mutableMultiValue); i++) {
         CFStringRef value = (CFStringRef)ABMultiValueCopyValueAtIndex(multiValue, i);
         CFStringRef valueCopy = (CFStringRef)ABMultiValueCopyValueAtIndex(mutableMultiValue, i);
-        EXPECT_OBJCEQ_MSG((__bridge NSString*)value, (__bridge NSString*)valueCopy, "FAILED: Values should be the same!\n");
+        EXPECT_OBJCEQ((__bridge NSString*)value, (__bridge NSString*)valueCopy);
         CFRelease(value);
         CFRelease(valueCopy);
 
         CFStringRef label = ABMultiValueCopyLabelAtIndex(multiValue, i);
         CFStringRef labelCopy = ABMultiValueCopyLabelAtIndex(mutableMultiValue, i);
-        EXPECT_OBJCEQ_MSG((__bridge NSString*)label, (__bridge NSString*)labelCopy, "FAILED: Labels should be the same!\n");
+        EXPECT_OBJCEQ((__bridge NSString*)label, (__bridge NSString*)labelCopy);
         CFRelease(label);
         CFRelease(labelCopy);
     }
@@ -129,15 +129,15 @@ TEST(MutableMultiValue, InsertAndRemoveTest) {
     ASSERT_EQ_MSG(3, ABMultiValueGetCount(multiValue), "FAILED: Incorrect count after inserting at index!\n");
 
     CFStringRef value0 = (CFStringRef)ABMultiValueCopyValueAtIndex(multiValue, 0);
-    ASSERT_OBJCEQ_MSG((__bridge NSString*)value0, @"0000000000", "FAILED: Values should be the same!\n");
+    ASSERT_OBJCEQ((__bridge NSString*)value0, @"0000000000");
     CFRelease(value0);
 
     CFStringRef value1 = (CFStringRef)ABMultiValueCopyValueAtIndex(multiValue, 1);
-    ASSERT_OBJCEQ_MSG((__bridge NSString*)value1, @"2222222222", "FAILED: Values should be the same!\n");
+    ASSERT_OBJCEQ((__bridge NSString*)value1, @"2222222222");
     CFRelease(value1);
 
     CFStringRef value2 = (CFStringRef)ABMultiValueCopyValueAtIndex(multiValue, 2);
-    ASSERT_OBJCEQ_MSG((__bridge NSString*)value2, @"1111111111", "FAILED: Values should be the same!\n");
+    ASSERT_OBJCEQ((__bridge NSString*)value2, @"1111111111");
     CFRelease(value2);
 
     // Test removing at index.
@@ -145,10 +145,10 @@ TEST(MutableMultiValue, InsertAndRemoveTest) {
     ASSERT_EQ_MSG(2, ABMultiValueGetCount(multiValue), "FAILED: Incorrect count after removing at index!\n");
 
     CFStringRef value0PostDelete = (CFStringRef)ABMultiValueCopyValueAtIndex(multiValue, 0);
-    ASSERT_OBJCEQ_MSG((__bridge NSString*)value0PostDelete, @"2222222222", "FAILED: Values should be the same!\n");
+    ASSERT_OBJCEQ((__bridge NSString*)value0PostDelete, @"2222222222");
     CFRelease(value0PostDelete);
 
     CFStringRef value1PostDelete = (CFStringRef)ABMultiValueCopyValueAtIndex(multiValue, 1);
-    ASSERT_OBJCEQ_MSG((__bridge NSString*)value1PostDelete, @"1111111111", "FAILED: Values should be the same!\n");
+    ASSERT_OBJCEQ((__bridge NSString*)value1PostDelete, @"1111111111");
     CFRelease(value1PostDelete);
 }
