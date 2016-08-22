@@ -21,8 +21,6 @@
 
 @class NSMethodSignature;
 
-#define MAX_ARGS 16
-
 FOUNDATION_EXPORT_CLASS
 @interface NSInvocation : NSObject
 

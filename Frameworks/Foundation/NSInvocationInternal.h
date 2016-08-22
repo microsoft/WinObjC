@@ -19,6 +19,8 @@ struct allocation_extent {
 	size_t length;
 };
 
+#define NSINVOCATION_ALIGN(n, alignment) ((n + (alignment - 1)) & ~(alignment - 1))
+
 #ifdef __OBJC__
 #include <Foundation/NSMethodSignature.h>
 
@@ -31,9 +33,9 @@ public:
 	_NSInvocationCallFrame(NSMethodSignature* methodTypeEncoding);
 	~_NSInvocationCallFrame();
 
-	allocation_extent allocateArgument(const char* objcTypeEncoding);
+    void storeArgument(const void* value, unsigned int index);
+    void loadArgument(void* value, unsigned int index) const;
 
-	return_type getReturnType() const;
 	size_t getReturnLength() const;
 	bool getRequiresStructReturn() const;
 

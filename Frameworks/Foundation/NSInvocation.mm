@@ -14,14 +14,16 @@
 //
 //******************************************************************************
 
-#import "Starboard.h"
-#import "Foundation/NSInvocation.h"
+#import <Starboard.h>
+#import <Foundation/NSInvocation.h>
 #import <ctype.h>
-#import "LoggingNative.h"
 #import <objc/encoding.h>
+#import "LoggingNative.h"
 #import "ErrorHandling.h"
 
-#include "FrameAllocator.h"
+#import "NSMethodSignatureInternal.h"
+#import "NSInvocationInternal.h"
+
 #include <vector>
 #include <memory>
 
@@ -31,12 +33,11 @@ static const wchar_t* TAG = L"NSInvocation";
     NSMethodSignature* _methodSignature;
 
     std::unique_ptr<_NSInvocationCallFrame> _callFrame;
-    std::vector<allocation_extent> _extents;
 
     size_t _returnLength;
     BOOL _retainArguments;
 
-    uint8_t _smallReturnValueOptimization[8];
+    uint8_t _smallReturnValueOptimization[16];
     void* _returnValue;
 }
 
@@ -57,19 +58,15 @@ static const wchar_t* TAG = L"NSInvocation";
         _callFrame.reset(new _NSInvocationCallFrame(methodSignature));
 
         // true _non-promoted_ return length.
-        _returnLength = methodSignature.methodReturnLength;//_callFrame->getReturnLength();
+        // Used only for copying the argument back to the caller.
+        _returnLength = methodSignature.methodReturnLength;
+
         auto promotedReturnLength = _callFrame->getReturnLength();
-        if (promotedReturnLength > 8) {
+        if (promotedReturnLength > _countof(_smallReturnValueOptimization)) {
             _returnValue = IwMalloc(promotedReturnLength); // promoted return length
         } else {
             _returnValue = &_smallReturnValueOptimization;
         }
-
-        NSInteger nArgs = [methodSignature numberOfArguments];
-        for(NSInteger i = 0; i < nArgs; ++i) {
-            _extents.emplace_back(_callFrame->allocateArgument([methodSignature getArgumentTypeAtIndex:i]));
-        }
-
     }
     return self;
 }
@@ -117,12 +114,11 @@ static const wchar_t* TAG = L"NSInvocation";
  @Status Interoperable
 */
 - (void)setArgument:(void*)buf atIndex:(int)index {
-    if ((index < 0) || (index >= [_methodSignature numberOfArguments]) || (index >= MAX_ARGS)) {
-        TraceVerbose(TAG, L"index = %d, MAX_ARGS = %d, MethodSig arguments = %d", index, MAX_ARGS, [_methodSignature numberOfArguments]);
+    if ((index < 0) || (index >= [_methodSignature numberOfArguments])) {
+        TraceVerbose(TAG, L"index = %d, MethodSig arguments = %d", index, [_methodSignature numberOfArguments]);
         [NSException raise:NSInvalidArgumentException format:@"The number of arguments exceeds the allowed limit."];
     }
 
-    allocation_extent &ext = _extents[index];
     if (_retainArguments) {
         auto argumentType = [_methodSignature getArgumentTypeAtIndex:index];
         if (argumentType[0] == '@') {
@@ -132,26 +128,25 @@ static const wchar_t* TAG = L"NSInvocation";
             [(*(id*)buf) retain];
             [oldValue release];
         } else if (argumentType[0] == '*') {
-            char *oldValue = nullptr;
+            char* oldValue = nullptr;
             [self getArgument:&oldValue atIndex:index];
             IwFree(oldValue);
             *(char**)buf = IwStrDup(*(char**)buf);
         }
     }
-    memcpy(ext.location, buf, ext.length);
+    _callFrame->storeArgument(buf, index);
 }
 
 /**
  @Status Interoperable
 */
 - (void)getArgument:(void*)buf atIndex:(int)index {
-    if (index >= MAX_ARGS) {
-        TraceVerbose(TAG, L"index = %d, MAX_ARGS = %d!", index, MAX_ARGS);
-        assert(0);
+    if ((index < 0) || (index >= [_methodSignature numberOfArguments])) {
+        TraceVerbose(TAG, L"index = %d, MethodSig arguments = %d", index, [_methodSignature numberOfArguments]);
+        [NSException raise:NSInvalidArgumentException format:@"The number of arguments exceeds the allowed limit."];
     }
 
-    allocation_extent &ext = _extents[index];
-    memcpy(buf, ext.location, ext.length);
+    _callFrame->loadArgument(buf, index);
 }
 
 /**
@@ -234,88 +229,6 @@ static const wchar_t* TAG = L"NSInvocation";
     [self setTarget:target];
     [self invoke];
 }
-
-// uniformTypeFromStructSpecifier attempts to determine the common type for an aggregate.
-// For aggregates of disparate types or unknowable types, this function returns \0.
-// struct type encodings are generally of the form {name=mmm}, where m is a member encoding.
-// This function requires a char** so that it may advance the type encoding in the recursive case.
-//
-// Base case:
-// {CGSize=ff}
-//  ====f====  <- homogenous type is f
-//
-// {Struct=il}
-// --- no homogenous type ---
-//
-// Recursive case:
-// {CGRect={CGSize=ff}{CGPoint=ff}}
-//          ====f====  =====f==== <- recursively resolve homogenous type of sub-structures
-//              |           |
-//              v           v
-//  ==============f============== <- resolve homogenous type for CGRect to f
-char uniformTypeFromStructSpecifier(const char** type) {
-    char uniformType = '\0';
-    do {
-        ++(*type);
-        if (_C_STRUCT_E == **type) {
-            // premature end: forward-declared struct with unknown members.
-            return '\0';
-        }
-    } while ('=' != **type);
-
-    ++(*type); // skip the =
-
-    while (**type != _C_STRUCT_E) {
-        if (**type == '"') {
-            // Occasionally, struct encodings store field names as in {name="x"f"y"f}. Skip those.
-            do {
-                ++(*type);
-            } while ('"' != **type);
-            ++(*type);
-        }
-        char v = **type;
-        switch (v) {
-            case _C_STRUCT_B:
-                v = uniformTypeFromStructSpecifier(type);
-                if (!v) {
-                    return '\0';
-                }
-                break;
-            default:
-                *type = objc_skip_typespec(*type);
-                break;
-        }
-        if (!uniformType) {
-            uniformType = v;
-        } else if (uniformType != v) {
-            return '\0';
-        }
-    }
-
-    ++(*type);
-    return uniformType;
-}
-
-#if _M_IX86
-#define ARCH_SMALL_STRUCT_SIZE 8
-typedef uint64_t arch_small_struct_type;
-#elif _M_ARM
-#define ARCH_SMALL_STRUCT_SIZE 4
-typedef uint32_t arch_small_struct_type;
-#else
-#warning unsupported platform for struct returns
-#endif
-
-#if _M_ARM
-template <typename UniformType>
-struct uniformAggregate {
-    UniformType val[4];
-};
-template <typename UniformType, typename... Args>
-static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target, SEL selector, Args... args) {
-    return ((uniformAggregate<UniformType> (*)(id, SEL, Args...))imp)(target, selector, args...);
-}
-#endif
 
 /**
  @Status Interoperable
