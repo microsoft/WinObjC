@@ -14,15 +14,17 @@
 //
 //******************************************************************************
 
+#import <Starboard.h>
 #import <StubReturn.h>
 #import <Foundation/NSUndoManager.h>
 #import <Foundation/NSMutableArray.h>
-#import "_NSUndoCall.h"
-#import "_NSUndoGroup.h"
+#import "_NSUndoManagerInternal.h"
+
+NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDiscardableKey";
 
 @implementation NSUndoManager {
-    NSMutableArray<_NSUndoGroup*>* _undoStack;
-    NSMutableArray<_NSUndoGroup*>* _redoStack;
+    StrongId<NSMutableArray<_NSUndoGroup*>> _undoStack;
+    StrongId<NSMutableArray<_NSUndoGroup*>> _redoStack;
 }
 
 /**
@@ -34,11 +36,8 @@
         _NSUndoGroup* startingGroup = [[[_NSUndoGroup alloc] initWithOwner:self] autorelease];
         _NSUndoGroup* startingRedoGroup = [[[_NSUndoGroup alloc] initWithOwner:self] autorelease];
 
-        _undoStack = [NSMutableArray array];
-        _redoStack = [NSMutableArray array];
-
-        [_undoStack addObject:startingGroup];
-        [_redoStack addObject:startingRedoGroup];
+        _undoStack = [NSMutableArray arrayWithObject:startingGroup];
+        _redoStack = [NSMutableArray arrayWithObject:startingRedoGroup];
 
         _undoRegistrationEnabled = YES;
     }
@@ -49,16 +48,14 @@
  @Status Interoperable
 */
 - (void)registerUndoWithTarget:(id)target selector:(SEL)aSelector object:(id)anObject {
-    if (!(self.isUndoRegistrationEnabled)) {
-        return;
+    if (self.isUndoRegistrationEnabled) {
+        _NSUndoBasicAction* undoCall = [[[_NSUndoBasicAction alloc] _initWithTarget:target selector:aSelector object:anObject] autorelease];
+        [self _registerUndoAction:undoCall];
     }
-
-    _NSUndoCall* undoCall = [[[_NSUndoCall alloc] _initWithTarget:target selector:aSelector object:anObject] autorelease];
-    [self _registerUndoAction:undoCall];
 }
 
 // Internal function for proper registration of the deferred call.
-- (void)_registerUndoAction:(_NSUndoCall*)undoCall {
+- (void)_registerUndoAction:(_NSUndoBasicAction*)undoCall {
     // If groupsByEvent is set then have a top level undo group to catch all undo calls.
     if (_groupsByEvent) {
         if (self.isUndoing) {
@@ -78,6 +75,7 @@
         }
     } else {
         // TODO: Issue #811 - Support undo grouping.
+        UNIMPLEMENTED_WITH_MSG("Manual undo grouping not supported.");
     }
 }
 
@@ -97,21 +95,21 @@
     if (![self canUndo]) {
         return;
     }
-    _undoing = YES;
 
-    _NSUndoGroup* undoGroup = (_NSUndoGroup*)[_undoStack lastObject];
-    [undoGroup callUndoGroup];
-    [_undoStack removeLastObject];
-
-    _undoing = NO;
+    [self undoNestedGroup];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)undoNestedGroup {
-    UNIMPLEMENTED();
+    _undoing = YES;
+
+    _NSUndoGroup* undoGroup = [_undoStack lastObject];
+    [undoGroup undo];
+    [_undoStack removeLastObject];
+
+    _undoing = NO;
 }
 
 /**
@@ -123,27 +121,27 @@
     }
     _redoing = YES;
 
-    _NSUndoGroup* undoGroup = (_NSUndoGroup*)[_redoStack lastObject];
-    [undoGroup callUndoGroup];
+    _NSUndoGroup* undoGroup = [_redoStack lastObject];
+    [undoGroup undo];
     [_redoStack removeLastObject];
 
     _redoing = NO;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)beginUndoGrouping {
-    UNIMPLEMENTED();
+    _NSUndoGroup* undoGroup = [_redoStack lastObject];
+    [undoGroup createUndoGroup];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)endUndoGrouping {
-    UNIMPLEMENTED();
+    _NSUndoGroup* undoGroup = [_redoStack lastObject];
+    [undoGroup closeUndoGroup];
 }
 
 /**
@@ -161,8 +159,7 @@
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)removeAllActions {
     [self _removeUndoActions];
@@ -170,15 +167,21 @@
 }
 
 - (void)_removeUndoActions {
-    _undoStack = [NSMutableArray array];
-    _NSUndoGroup* startingGroup = [[[_NSUndoGroup alloc] initWithOwner:self] autorelease];
-    [_undoStack addObject:startingGroup];
+    if (_undoRegistrationEnabled) {
+        _NSUndoGroup* startingGroup = [[[_NSUndoGroup alloc] initWithOwner:self] autorelease];
+        _undoStack = [NSMutableArray arrayWithObject:startingGroup];
+    } else {
+        _undoStack = [NSMutableArray array];
+    }
 }
 
 - (void)_removeRedoActions {
-    _redoStack = [NSMutableArray array];
-    _NSUndoGroup* startingRedoGroup = [[[_NSUndoGroup alloc] initWithOwner:self] autorelease];
-    [_redoStack addObject:startingRedoGroup];
+    if (_undoRegistrationEnabled) {
+        _NSUndoGroup* startingRedoGroup = [[[_NSUndoGroup alloc] initWithOwner:self] autorelease];
+        _redoStack = [NSMutableArray arrayWithObject:startingRedoGroup];
+    } else {
+        _redoStack = [NSMutableArray array];
+    }
 }
 
 /**
@@ -227,14 +230,14 @@
  @Status Interoperable
 */
 - (BOOL)canUndo {
-    return [((_NSUndoGroup*)[_undoStack lastObject])canUndo];
+    return [[_undoStack lastObject] canUndo];
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)canRedo {
-    return [((_NSUndoGroup*)[_redoStack lastObject])canUndo];
+    return [[_redoStack lastObject] canUndo];
 }
 
 @end

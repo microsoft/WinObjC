@@ -1,7 +1,6 @@
 //******************************************************************************
 //
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
-// Copyright (c) 2006-2007 Christopher J. W. Lloyd
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,28 +13,42 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#import <Foundation/Foundation.h>
-#import <Foundation/NSMutableArray.h>
-#import <Foundation/NSUndoManager.h>
-#import "_NSUndoObject.h"
-#import "_NSUndoCall.h"
+#import <Starboard.h>
+#import <StubReturn.h>
+#import "_NSUndoManagerInternal.h"
+#import <objc/objc-arc.h>
 
-@interface _NSUndoGroup : _NSUndoObject
-@property NSMutableArray* undoGrouping;
-@property NSUndoManager* owningManager;
-@property NSUInteger undoLevel;
-@property BOOL isClosed;
+@implementation _NSUndoBasicAction {
+    StrongId<id> _object;
+    id _target;
+    SEL _undoAction;
+}
 
-- (id)initWithLevel:(NSUInteger)level;
-- (id)initWithOwner:(NSUndoManager*)manager;
-- (void)addUndoCallToUndoGroup:(_NSUndoCall*)undoCall;
-- (void)callUndoGroup;
-- (void)callOnlyNestedGroup;
-- (void)invokeAllInNestedGroup;
-- (NSUInteger)createUndoGroup;
-- (BOOL)closeUndoGroup;
-- (BOOL)canUndo;
+- (id)_initWithTarget:(id)target selector:(SEL)aSelector object:(id)anObject {
+    if (self = [super init]) {
+        _undoAction = aSelector;
+        _target = objc_storeWeak(&_target, target);
+        _object = [anObject retain];
+    }
+    return self;
+}
+
+- (void)undo {
+    [objc_loadWeak(&_target) performSelector:_undoAction withObject:_object];
+}
+
+- (BOOL)canUndo {
+    return YES;
+}
+
+- (void)dealloc {
+    [_object release];
+    objc_destroyWeak(&_target);
+}
+
+- (bool)isClosed {
+    return YES;
+}
 
 @end

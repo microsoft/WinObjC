@@ -30,41 +30,41 @@
 
 - (id)initWithValue:(NSNumber*)num {
     self = [super init];
-    self.undoManager = [[[NSUndoManager alloc] init] autorelease];
-    self.value = num;
-    self.arrayOfNumbers = nil;
+    _undoManager = [[[NSUndoManager alloc] init] autorelease];
+    _value = num;
+    _arrayOfNumbers = nil;
     return self;
 }
 
 - (id)initWithEmptyArray {
     self = [super init];
-    self.undoManager = [[[NSUndoManager alloc] init] autorelease];
-    self.value = nil;
-    self.arrayOfNumbers = [NSMutableArray array];
+    _undoManager = [[[NSUndoManager alloc] init] autorelease];
+    _value = nil;
+    _arrayOfNumbers = [NSMutableArray array];
     return self;
 }
 
 - (void)updateNumber:(NSNumber*)value {
-    [self.undoManager registerUndoWithTarget:self selector:@selector(updateNumber:) object:self.value];
-    self.value = value;
+    [_undoManager registerUndoWithTarget:self selector:@selector(updateNumber:) object:_value];
+    _value = value;
 }
 
 - (void)addToMutableArray:(NSNumber*)value {
-    [self.undoManager registerUndoWithTarget:self selector:@selector(removeFromMutableArray:) object:value];
-    [self.arrayOfNumbers addObject:value];
+    [_undoManager registerUndoWithTarget:self selector:@selector(removeFromMutableArray:) object:value];
+    [_arrayOfNumbers addObject:value];
 }
 
 - (void)removeFromMutableArray:(NSNumber*)value {
-    [self.undoManager registerUndoWithTarget:self selector:@selector(addToMutableArray:) object:value];
-    [self.arrayOfNumbers removeObject:value];
+    [_undoManager registerUndoWithTarget:self selector:@selector(addToMutableArray:) object:value];
+    [_arrayOfNumbers removeObject:value];
 }
 
 - (void)undo {
-    [self.undoManager undo];
+    [_undoManager undo];
 }
 
 - (void)redo {
-    [self.undoManager redo];
+    [_undoManager redo];
 }
 
 @end
@@ -158,4 +158,24 @@ TEST(NSUndoManager, undoRedoTestsWithMutableObject) {
     [object redo];
 
     EXPECT_OBJCEQ(comparisonArray, object.arrayOfNumbers);
+}
+
+TEST(NSUndoManager, ExtraUndoOperations) {
+    NSNumber* oldValue = [NSNumber numberWithInt:5];
+    NSNumber* newValue = [NSNumber numberWithInt:6];
+
+    someObject* object = [[[someObject alloc] initWithValue:oldValue] autorelease];
+
+    [object updateNumber:newValue];
+    EXPECT_EQ(object.value.intValue, newValue.intValue);
+
+    [object undo];
+    EXPECT_EQ(object.value.intValue, oldValue.intValue);
+    [object undo];
+    EXPECT_EQ(object.value.intValue, oldValue.intValue);
+
+    [object redo];
+    EXPECT_EQ(object.value.intValue, newValue.intValue);
+    [object redo];
+    EXPECT_EQ(object.value.intValue, newValue.intValue);
 }

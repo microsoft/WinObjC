@@ -1,6 +1,7 @@
 //******************************************************************************
 //
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2006-2007 Christopher J. W. Lloyd
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,31 +14,31 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <StubReturn.h>
+#import <Foundation/Foundation.h>
+#import <Foundation/NSMutableArray.h>
 #import <Foundation/NSUndoManager.h>
-#import "_NSUndoCall.h"
-#import "_NSUndoObject.h"
 
-NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDiscardableKey";
+@protocol _NSUndoable
+@required
+- (void)undo;
+- (BOOL)canUndo;
 
-@implementation _NSUndoCall : _NSUndoObject
+@end
 
-- (id)_initWithTarget:(id)target selector:(SEL)aSelector object:(id)anObject {
-    if (self = [super init]) {
-        self.undoAction = aSelector;
-        self.target = target;
-        self.object = [[anObject retain] autorelease];
-    }
-    return self;
-}
+@interface _NSUndoBasicAction : NSObject <_NSUndoable>
 
-- (void)_invokeBasicUndo {
-    [self.target performSelector:self.undoAction withObject:self.object];
-}
+- (id)_initWithTarget:(id)target selector:(SEL)aSelector object:(id)anObject;
 
-- (BOOL)canUndo {
-    return YES;
-}
+@end
+
+@interface _NSUndoGroup : NSObject <_NSUndoable>
+
+- (id)initWithLevel:(NSUInteger)level;
+- (id)initWithOwner:(NSUndoManager*)manager;
+- (void)addUndoCallToUndoGroup:(_NSUndoBasicAction*)undoCall;
+- (NSUInteger)createUndoGroup;
+- (BOOL)closeUndoGroup;
 
 @end

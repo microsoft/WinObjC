@@ -41,13 +41,13 @@ FOUNDATION_EXPORT_CLASS
 @property (readonly) BOOL canUndo;
 @property (readonly) BOOL canRedo;
 - (void)undo;
-- (void)undoNestedGroup STUB_METHOD;
+- (void)undoNestedGroup;
 - (void)redo;
 @property NSUInteger levelsOfUndo STUB_PROPERTY;
 - (void)beginUndoGrouping STUB_METHOD;
 - (void)endUndoGrouping STUB_METHOD;
 @property BOOL groupsByEvent;
-@property (readonly) NSInteger groupingLevel STUB_PROPERTY;
+@property (readonly) NSInteger groupingLevel;
 - (void)disableUndoRegistration;
 - (void)enableUndoRegistration;
 @property (readonly, getter=isUndoRegistrationEnabled) BOOL undoRegistrationEnabled;

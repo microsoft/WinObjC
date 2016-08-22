@@ -135,7 +135,7 @@
       <Filter>ReferenceFoundation</Filter>
     </ClangCompile>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLResponseTests.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\Foundation\NSUndoManagerTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSUndoManagerTests.mm" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" />

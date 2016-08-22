@@ -14,11 +14,16 @@
 //
 //******************************************************************************
 
+#import <Starboard.h>
 #import <Foundation/NSUndoManager.h>
-#import "_NSUndoGroup.h"
-#import "_NSUndoCall.h"
+#import "_NSUndoManagerInternal.h"
 
-@implementation _NSUndoGroup : _NSUndoObject
+@implementation _NSUndoGroup {
+    StrongId<NSMutableArray*> _undoGrouping;
+    StrongId<NSUndoManager*> _owningManager;
+    NSUInteger _undoLevel;
+    BOOL _isClosed;
+}
 
 - (id)initWithLevel:(NSUInteger)level {
     if (self = [super init]) {
@@ -30,57 +35,33 @@
 }
 
 - (id)initWithOwner:(NSUndoManager*)manager {
-    if (self = [self initWithLevel:0]) {
+    if (self = [self initWithLevel:1]) {
         _owningManager = manager;
     }
     return self;
 }
 
-- (void)addUndoCallToUndoGroup:(_NSUndoCall*)undoCall {
-    _NSUndoObject* topObjectInGroup = [_undoGrouping firstObject];
-    if ([topObjectInGroup isKindOfClass:[_NSUndoGroup class]] && ![topObjectInGroup isClosed]) {
+- (void)addUndoCallToUndoGroup:(_NSUndoBasicAction*)undoCall {
+    _NSUndoBasicAction* topObjectInGroup = [_undoGrouping firstObject];
+    if (topObjectInGroup != nil && ![topObjectInGroup isClosed]) {
         [topObjectInGroup addUndoCallToUndoGroup:undoCall];
+    } else {
+        [_undoGrouping insertObject:undoCall atIndex:0];
     }
-    [_undoGrouping insertObject:undoCall atIndex:0];
 }
 
-- (void)callUndoGroup {
+- (void)undo {
     while ([_undoGrouping count] > 0) {
-        _NSUndoObject* object = [_undoGrouping firstObject];
-        if ([object isKindOfClass:[_NSUndoGroup class]]) {
-            [_owningManager callNestedGroup];
-        } else {
-            [((_NSUndoCall*)object)_invokeBasicUndo];
-        }
-        [_undoGrouping removeObjectAtIndex:0];
-    }
-}
-
-- (void)callOnlyNestedGroup {
-    for (int i = 0; i < [_undoGrouping count]; i++) {
-        _NSUndoObject* object = [_undoGrouping objectAtIndex:i];
-        if ([object isKindOfClass:[_NSUndoGroup class]]) {
-            [((_NSUndoGroup*)object)invokeAllInNestedGroup];
-        }
-    }
-}
-
-- (void)invokeAllInNestedGroup {
-    while ([_undoGrouping count] > 0) {
-        _NSUndoObject* object = [_undoGrouping firstObject];
-        if ([object isKindOfClass:[_NSUndoGroup class]]) {
-            [((_NSUndoGroup*)object)invokeAllInNestedGroup];
-        } else {
-            [((_NSUndoCall*)object)_invokeBasicUndo];
-        }
+        _NSUndoBasicAction* object = [_undoGrouping firstObject];
+        [object undo];
         [_undoGrouping removeObjectAtIndex:0];
     }
 }
 
 - (NSUInteger)createUndoGroup {
     id topObjectInGroup = [_undoGrouping firstObject];
-    if ([topObjectInGroup isKindOfClass:[_NSUndoGroup class]] && [((_NSUndoGroup*)topObjectInGroup)isClosed]) {
-        return [((_NSUndoGroup*)topObjectInGroup)createUndoGroup];
+    if ([topObjectInGroup isKindOfClass:[_NSUndoGroup class]] && [topObjectInGroup isClosed]) {
+        return [(topObjectInGroup)createUndoGroup];
     }
 
     _NSUndoGroup* newGroup = [[[_NSUndoGroup alloc] initWithLevel:(_undoLevel + 1)] autorelease];
@@ -90,11 +71,8 @@
 
 - (BOOL)closeUndoGroup {
     id topObjectInGroup = [_undoGrouping firstObject];
-    if ([topObjectInGroup isKindOfClass:[_NSUndoGroup class]] && ![((_NSUndoGroup*)topObjectInGroup)isClosed]) {
-        return [((_NSUndoGroup*)topObjectInGroup)closeUndoGroup];
-    }
-    if (_isClosed) {
-        // error case, already closed, bad state
+    if (![topObjectInGroup isClosed]) {
+        return [topObjectInGroup closeUndoGroup];
     }
     _isClosed = YES;
     return YES;
@@ -102,9 +80,9 @@
 
 - (BOOL)canUndo {
     // Top level undo group does not need to be closed.
-    _NSUndoObject* topObjectInGroup = [_undoGrouping firstObject];
+    _NSUndoBasicAction* topObjectInGroup = [_undoGrouping firstObject];
 
-    if ([topObjectInGroup canUndo] && (_isClosed || _undoLevel == 0)) {
+    if ([topObjectInGroup canUndo] && (_isClosed || _undoLevel == 1)) {
         return YES;
     }
 
