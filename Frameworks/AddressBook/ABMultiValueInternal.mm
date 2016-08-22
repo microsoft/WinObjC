@@ -209,7 +209,7 @@
                       atIndex:index];
 
     // Increment the next usable identifier to ensure that each label/value pair has a unique identifier.
-    self->_nextIdentifier++;
+    (self->_nextIdentifier)++;
     if (outIdentifier) {
         *outIdentifier = [self getIdentifierAtIndex:index];
     }

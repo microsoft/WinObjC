@@ -47,7 +47,7 @@ ABMultiValueRef createMultiValue() {
     return multiValue;
 }
 
-TEST(AddressBook, MutableMultiValueCreateTest) {
+TEST(MutableMultiValue, CreateTest) {
     ABMultiValueRef multiValue = createMultiValue();
     ABMutableMultiValueRef mutableMultiValue = ABMultiValueCreateMutableCopy(multiValue);
     ASSERT_EQ_MSG(ABMultiValueGetCount(multiValue),
@@ -56,13 +56,13 @@ TEST(AddressBook, MutableMultiValueCreateTest) {
     for (int i = 0; i < ABMultiValueGetCount(mutableMultiValue); i++) {
         CFStringRef value = (CFStringRef)ABMultiValueCopyValueAtIndex(multiValue, i);
         CFStringRef valueCopy = (CFStringRef)ABMultiValueCopyValueAtIndex(mutableMultiValue, i);
-        ASSERT_OBJCEQ_MSG((__bridge NSString*)value, (__bridge NSString*)valueCopy, "FAILED: Values should be the same!\n");
+        EXPECT_OBJCEQ_MSG((__bridge NSString*)value, (__bridge NSString*)valueCopy, "FAILED: Values should be the same!\n");
         CFRelease(value);
         CFRelease(valueCopy);
 
         CFStringRef label = ABMultiValueCopyLabelAtIndex(multiValue, i);
         CFStringRef labelCopy = ABMultiValueCopyLabelAtIndex(mutableMultiValue, i);
-        ASSERT_OBJCEQ_MSG((__bridge NSString*)label, (__bridge NSString*)labelCopy, "FAILED: Labels should be the same!\n");
+        EXPECT_OBJCEQ_MSG((__bridge NSString*)label, (__bridge NSString*)labelCopy, "FAILED: Labels should be the same!\n");
         CFRelease(label);
         CFRelease(labelCopy);
     }
@@ -70,7 +70,7 @@ TEST(AddressBook, MutableMultiValueCreateTest) {
     CFRelease(multiValue);
 }
 
-TEST(AddressBook, MutableMultiValueAddAndReplaceTest) {
+TEST(MutableMultiValue, AddAndReplaceTest) {
     // Tests for adding label/value pairs.
     ABMutableMultiValueRef multiValue = ABMultiValueCreateMutable(kABStringPropertyType);
     ASSERT_EQ_MSG(0, ABMultiValueGetCount(multiValue), "FAILED: Count of multivalue should be 0!\n");
@@ -87,19 +87,19 @@ TEST(AddressBook, MutableMultiValueAddAndReplaceTest) {
     ASSERT_NE_MSG(identifier1, identifier2, "FAILED: Identifiers should be unique!\n");
 
     CFStringRef value1 = (CFStringRef)ABMultiValueCopyValueAtIndex(multiValue, 0);
-    ASSERT_OBJCEQ_MSG((__bridge NSString*)value1, @"0000000000", "FAILED: Values should be the same!\n");
+    EXPECT_OBJCEQ_MSG((__bridge NSString*)value1, @"0000000000", "FAILED: Values should be the same!\n");
     CFRelease(value1);
 
     CFStringRef label1 = ABMultiValueCopyLabelAtIndex(multiValue, 0);
-    ASSERT_OBJCEQ_MSG((__bridge NSString*)label1, (__bridge NSString*)kABHomeLabel, "FAILED: Labels should be the same!\n");
+    EXPECT_OBJCEQ_MSG((__bridge NSString*)label1, (__bridge NSString*)kABHomeLabel, "FAILED: Labels should be the same!\n");
     CFRelease(label1);
 
     CFStringRef value2 = (CFStringRef)ABMultiValueCopyValueAtIndex(multiValue, 1);
-    ASSERT_OBJCEQ_MSG((__bridge NSString*)value2, @"1111111111", "FAILED: Values should be the same!\n");
+    EXPECT_OBJCEQ_MSG((__bridge NSString*)value2, @"1111111111", "FAILED: Values should be the same!\n");
     CFRelease(value2);
 
     CFStringRef label2 = ABMultiValueCopyLabelAtIndex(multiValue, 1);
-    ASSERT_OBJCEQ_MSG((__bridge NSString*)label2, (__bridge NSString*)kABPersonPhoneMobileLabel, "FAILED: Labels should be the same!\n");
+    EXPECT_OBJCEQ_MSG((__bridge NSString*)label2, (__bridge NSString*)kABPersonPhoneMobileLabel, "FAILED: Labels should be the same!\n");
     CFRelease(label2);
 
     // Tests for replacing values.
@@ -116,7 +116,7 @@ TEST(AddressBook, MutableMultiValueAddAndReplaceTest) {
     CFRelease(label);
 }
 
-TEST(AddressBook, MutableMultiValueInsertAndRemoveTest) {
+TEST(MutableMultiValue, InsertAndRemoveTest) {
     ABMutableMultiValueRef multiValue = ABMultiValueCreateMutable(kABStringPropertyType);
     ASSERT_TRUE_MSG(ABMultiValueAddValueAndLabel(multiValue, @"0000000000", kABHomeLabel, nullptr),
                     "FAILED: Error adding first value/label pair!\n");

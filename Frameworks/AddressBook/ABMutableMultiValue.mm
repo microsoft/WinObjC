@@ -46,9 +46,7 @@ bool ABMultiValueAddValueAndLabel(ABMutableMultiValueRef multiValue,
                                   CFTypeRef value,
                                   CFStringRef label,
                                   ABMultiValueIdentifier* outIdentifier) {
-    if (multiValue == nullptr) {
-        return false;
-    }
+    RETURN_FALSE_IF(multiValue == nullptr);
 
     return [(__bridge _ABMultiValue*)multiValue addValue:value andLabel:label outIdentifier:outIdentifier];
 }
@@ -58,9 +56,7 @@ bool ABMultiValueAddValueAndLabel(ABMutableMultiValueRef multiValue,
  @Notes
 */
 bool ABMultiValueReplaceValueAtIndex(ABMutableMultiValueRef multiValue, CFTypeRef value, CFIndex index) {
-    if (multiValue == nullptr) {
-        return false;
-    }
+    RETURN_FALSE_IF(multiValue == nullptr);
 
     return [(__bridge _ABMultiValue*)multiValue replaceValue:value atIndex:index];
 }
@@ -70,9 +66,7 @@ bool ABMultiValueReplaceValueAtIndex(ABMutableMultiValueRef multiValue, CFTypeRe
  @Notes
 */
 bool ABMultiValueReplaceLabelAtIndex(ABMutableMultiValueRef multiValue, CFStringRef label, CFIndex index) {
-    if (multiValue == nullptr) {
-        return false;
-    }
+    RETURN_FALSE_IF(multiValue == nullptr);
 
     return [(__bridge _ABMultiValue*)multiValue replaceLabel:label atIndex:index];
 }
@@ -83,9 +77,7 @@ bool ABMultiValueReplaceLabelAtIndex(ABMutableMultiValueRef multiValue, CFString
 */
 bool ABMultiValueInsertValueAndLabelAtIndex(
     ABMutableMultiValueRef multiValue, CFTypeRef value, CFStringRef label, CFIndex index, ABMultiValueIdentifier* outIdentifier) {
-    if (multiValue == nullptr) {
-        return false;
-    }
+    RETURN_FALSE_IF(multiValue == nullptr);
 
     return [(__bridge _ABMultiValue*)multiValue insertValue:value andLabel:label atIndex:index outIdentifier:outIdentifier];
 }
@@ -95,9 +87,7 @@ bool ABMultiValueInsertValueAndLabelAtIndex(
  @Notes
 */
 bool ABMultiValueRemoveValueAndLabelAtIndex(ABMutableMultiValueRef multiValue, CFIndex index) {
-    if (multiValue == nullptr) {
-        return false;
-    }
+    RETURN_FALSE_IF(multiValue == nullptr);
 
     return [(__bridge _ABMultiValue*)multiValue removeValueAndLabelAtIndex:index];
 }
