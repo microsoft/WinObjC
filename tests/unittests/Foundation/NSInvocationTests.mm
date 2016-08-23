@@ -242,9 +242,9 @@ struct ThreeWordStruct {
     EXPECT_EQ(5, s.m5);
 }
 
-- (void)largeUniformVFPs:(UniformAggregateD4)
-                          one:(UniformAggregateD4)two
-           consumeVFPAndStack:(double)three
+- (void)largeUniformVFPs:(UniformAggregateD4)one
+                        :(UniformAggregateD4)two
+      consumeVFPAndStack:(double)three
     forcingStructOntoTheStack:(ThreeWordStruct)s {
     UniformAggregateD4 val1{ { 1024, 2048 }, { 4096, 8192 } };
     UniformAggregateD4 val2{ { 1000, 2000 }, { 4000, 8000 } };
@@ -258,21 +258,21 @@ struct ThreeWordStruct {
     EXPECT_EQ(0xF00DC01D, s.m3);
 }
 
-- (void)interleavedAlignmentsCharMax:(char)
-                                  c1:(std::max_align_t)
-                                  m1:(char)
-                                  c2:(std::max_align_t)
-                                  m2:(char)
-                                  c3:(std::max_align_t)
-                                  m3:(char)
-                                  c4:(std::max_align_t)
-                                  m4:(char)
-                                  c5:(std::max_align_t)
-                                  m5:(char)
-                                  c6:(std::max_align_t)
-                                  m6:(char)
-                                  c7:(std::max_align_t)
-                                  m7:(unsigned char)c8 {
+- (void)interleavedAlignmentsCharMax:(char)c1
+                                    :(std::max_align_t)m1
+                                    :(char)c2
+                                    :(std::max_align_t)m2
+                                    :(char)c3
+                                    :(std::max_align_t)m3
+                                    :(char)c4
+                                    :(std::max_align_t)m4
+                                    :(char)c5
+                                    :(std::max_align_t)m5
+                                    :(char)c6
+                                    :(std::max_align_t)m6
+                                    :(char)c7
+                                    :(std::max_align_t)m7
+                                    :(unsigned char)c8 {
     EXPECT_EQ(1, c1);
     EXPECT_EQ(2, c2);
     EXPECT_EQ(4, c3);

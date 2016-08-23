@@ -113,33 +113,33 @@ static size_t firstUnused(const std::bitset<N>& bitset, size_t start = 0) {
 
 static _arm_return_type _getReturnType(const char* typeEncoding) {
     switch (typeEncoding[0]) {
-        case 'c':
-        case 's':
-        case 'C':
-        case 'S':
-        case 'i':
-        case 'l':
-        case 'I':
-        case 'L':
-        case '@':
-        case '#':
-        case '^':
-        case ':':
-        case '*':
+        case _C_CHR:
+        case _C_SHT:
+        case _C_UCHR:
+        case _C_USHT:
+        case _C_INT:
+        case _C_LNG:
+        case _C_UINT:
+        case _C_ULNG:
+        case _C_ID:
+        case _C_CLASS:
+        case _C_PTR:
+        case _C_SEL:
+        case _C_CHARPTR:
             return ARM_INT;
-        case 'q':
-        case 'Q':
+        case _C_LNG_LNG:
+        case _C_ULNG_LNG:
             return ARM_INT64;
-        case '{': {
+        case _C_STRUCT_B: {
             const char* typeEncodingPtr = typeEncoding;
             size_t size = objc_sizeof_type(typeEncoding);
             char type = uniformTypeFromStructSpecifier(&typeEncodingPtr);
 
-            if (type == 'f' && size <= sizeof(float) * 4) {
+            if (type == _C_FLT && size <= sizeof(float) * 4) {
                 return ARM_VFP_HOMOGENOUS;
             }
 
-            if (type == 'd' && size <= sizeof(double) * 4) {
+            if (type == _C_DBL && size <= sizeof(double) * 4) {
                 return ARM_VFP_HOMOGENOUS;
             }
 
@@ -149,11 +149,11 @@ static _arm_return_type _getReturnType(const char* typeEncoding) {
 
             return ARM_STRUCT;
         }
-        case 'f':
+        case _C_FLT:
             return ARM_VFP_S;
-        case 'd':
+        case _C_DBL:
             return ARM_VFP_D;
-        case 'v':
+        case _C_VOID:
             return ARM_NONE;
     }
     return ARM_NONE;
@@ -190,10 +190,9 @@ struct _NSInvocationCallFrame::impl {
           _stret(false),
           _allocationExtents([methodSignature numberOfArguments]) {
         auto nArguments = [_methodSignature numberOfArguments];
-        // This is memoized, so it should be fast.
         _length = 0;
         for (int i = 0; i < nArguments; ++i) {
-            // promoted sizes only.
+            // Some arguments are <4 bytes, but we need to make sure that we only allocate in register-width chunks.
             _length += std::max(sizeof(uintptr_t), objc_aligned_size([_methodSignature getArgumentTypeAtIndex:i]));
         }
 
@@ -216,7 +215,7 @@ struct _NSInvocationCallFrame::impl {
             _returnLength = std::max(sizeof(uintptr_t), _returnLength);
         }
 
-        _buffer = new uint8_t[2 * _length];
+        _buffer = new uint8_t[_length];
 
         stack = _buffer + g_sfprLength + g_gprLength;
         registers = reinterpret_cast<uintptr_t*>(_buffer + g_sfprLength);
@@ -247,13 +246,18 @@ struct _NSInvocationCallFrame::impl {
     }
 
     allocation_extent _allocateMachineWords(unsigned int count, size_t alignment = alignof(uintptr_t)) {
+        // ARM: Many cases.
+        // 1. #words < 4*remaining_reg = all in registers (consecutive)
+        // 2. #words > 4*remaining_reg =
+        //   2a. Stack is UNUSED: fill registers where they will fit, then move to stack
+        //       Our allocator is great at this: they're laid out side-by-side.
+        //   2b. Stack is USED: put the entire batch onto the stack, and mark every register as used.
+        // Since we lay out regs right before stack, this will always be a single extent (!)
         auto nreg = 0;
     redo:
         nreg = firstUnused(gprUsage);
         if (nreg >= GPR_COUNT || (nreg + count >= GPR_COUNT && stackBytes != 0)) {
-            // Two cases: no free registers (nreg >= #regs), and
-            // "want to split onto stack + regs, but stack is unclean".
-            // Both cases: everything goes onto the stack.
+            // Case 2b.
             gprUsage.set();
             return _allocateStackWords(count, alignment);
         } else {
@@ -263,6 +267,7 @@ struct _NSInvocationCallFrame::impl {
                 goto redo;
             }
 
+            // Case 1.
             uintptr_t* start = &registers[nreg];
             auto unallocatedWords = count;
             for (; unallocatedWords > 0 && nreg < GPR_COUNT; ++nreg) {
@@ -274,7 +279,7 @@ struct _NSInvocationCallFrame::impl {
                 return { start, sizeof(uintptr_t) * count };
             }
 
-            // Spilled onto stack.
+            // Case 2b. Remaining words spilled onto stack.
             stackBytes += sizeof(uintptr_t) * unallocatedWords;
             return { start, sizeof(uintptr_t) * count };
         }
@@ -328,49 +333,42 @@ struct _NSInvocationCallFrame::impl {
     allocation_extent _allocateArgument(const char* typeEncoding) {
         switch (typeEncoding[0]) {
             // All integral types < qword are promoted.
-            case 'C':
-            case 'S':
-            case 'I':
-            case 'L':
-            case 'c':
-            case 's':
-            case 'i':
-            case 'l':
-            case '^':
-            case '*':
-            case '#':
-            case '@':
-            case ':':
+            case _C_UCHR:
+            case _C_USHT:
+            case _C_UINT:
+            case _C_ULNG:
+            case _C_CHR:
+            case _C_SHT:
+            case _C_INT:
+            case _C_LNG:
+            case _C_PTR:
+            case _C_CHARPTR:
+            case _C_CLASS:
+            case _C_ID:
+            case _C_SEL:
                 return _allocateMachineWords(1);
-            case 'q':
-            case 'Q': {
+            case _C_LNG_LNG:
+            case _C_ULNG_LNG: {
                 return _allocateMachineWords(2, alignof(uint64_t));
             }
-            case 'f':
+            case _C_FLT:
                 return _allocateFloats(1);
                 break;
-            case 'd':
+            case _C_DBL:
                 return _allocateDoubles(1);
                 break;
-            case '{': {
+            case _C_STRUCT_B: {
                 size_t size = std::max(sizeof(uintptr_t), objc_aligned_size(typeEncoding));
                 size_t nWords = size / sizeof(uintptr_t);
 
                 const char* te = typeEncoding;
                 char t = uniformTypeFromStructSpecifier(&te);
-                if (t == 'd' && size <= sizeof(double) * 4) {
+                if (t == _C_DBL && size <= sizeof(double) * 4) {
                     return _allocateDoubles(size / sizeof(double));
-                } else if (t == 'f' && size <= sizeof(float) * 4) {
+                } else if (t == _C_FLT && size <= sizeof(float) * 4) {
                     return _allocateFloats(size / sizeof(float));
                 }
 
-                // ARM: Many cases.
-                // Struct < 4*remaining_reg = all in reg
-                // Struct > 4*remaining_reg =
-                //   - Stack is UNTOUCHED: split regs/stack, fill regs
-                //   - Stack is TOUCHED: all on stack, *mark registers used*
-                // Since we lay out regs right before stack, this will always be a single extent (!)
-                // The machine word allocator has been enlightened to support splitting/not splitting.
                 return _allocateMachineWords(nWords);
             }
         }
@@ -387,7 +385,7 @@ struct _NSInvocationCallFrame::impl {
             intptr_t i;
         } itou; // "i" to "u"
 
-        { // sign extend, zero extend
+        { // integral arguments less than 4 bytes in width need sign- or zero-extension.
             switch (type[0]) {
                 case _C_CHR:
                     itou.i = *(signed char*)value;
@@ -451,13 +449,13 @@ bool _NSInvocationCallFrame::getRequiresStructReturn() const {
 }
 
 struct armFrame {
-    void* savedRegisters[2];
+    /* Populated by stm r1, {fp, lr} */
+    void* savedFramePointer;
+    void* savedLinkRegister;
+
     void* returnValue;
     _arm_return_type returnType;
 };
-
-extern "C" __declspec(naked) void _CallFrameInternal_VFP(void* arena, struct armFrame* frame, void* fp, unsigned int fpUsed);
-extern "C" __declspec(naked) void _CallFrameInternal(void* arena, struct armFrame* frame, void* fp);
 
 void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePointer) const {
     if (_impl->_stret) {
@@ -465,11 +463,15 @@ void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePoi
         memcpy(_impl->_stretExtent.location, &returnValuePointer, _impl->_stretExtent.length);
     }
 
+    // alloca is guaranteed to give us a 16-byte aligned return.
     auto frameLength = _impl->_length;
     auto promotedFrameLength = NSINVOCATION_ALIGN(frameLength, alignof(struct armFrame));
+
     uint8_t* arena = (uint8_t*)_alloca(promotedFrameLength + sizeof(struct armFrame));
     armFrame* frame = (armFrame*)(arena + promotedFrameLength);
-    memcpy(arena, _impl->_buffer, promotedFrameLength);
+
+    memcpy(arena, _impl->_buffer, frameLength);
+
     frame->returnValue = returnValuePointer;
     frame->returnType = _impl->_returnType;
 
@@ -477,6 +479,8 @@ void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePoi
     if (fpCount > 0) {
         _CallFrameInternal_VFP(arena, frame, functionPointer, (fpCount + 1) / 2 /* ceil */);
     } else {
+        // If we didn't use the floating-point registers at all, we can skip 64 bytes
+        // of register reads and go straight to the r0-3 + stack case.
         _CallFrameInternal(arena + g_sfprLength, frame, functionPointer);
     }
 }

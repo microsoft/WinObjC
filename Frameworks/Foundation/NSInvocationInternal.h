@@ -46,3 +46,10 @@ public:
 };
 
 #endif
+
+#if _M_IX86
+extern "C" __declspec(naked) void __fastcall _CallFrameInternal(struct x86Frame* call, void* stackBuffer);
+#elif _M_ARM
+extern "C" __declspec(naked) void _CallFrameInternal_VFP(void* arena, struct armFrame* frame, void* fp, unsigned int fpUsed);
+extern "C" __declspec(naked) void _CallFrameInternal(void* arena, struct armFrame* frame, void* fp);
+#endif

@@ -37,35 +37,35 @@ struct x86Frame {
 
 static return_type _getReturnType(const char* typeEncoding) {
     switch (typeEncoding[0]) {
-        case 'c':
+        case _C_CHR:
             return RETURN_TYPE_SINT8;
-        case 's':
+        case _C_SHT:
             return RETURN_TYPE_SINT16;
-        case 'C':
+        case _C_UCHR:
             return RETURN_TYPE_UINT8;
-        case 'S':
+        case _C_USHT:
             return RETURN_TYPE_UINT16;
-        case 'i':
-        case 'l':
-        case 'I':
-        case 'L':
+        case _C_INT:
+        case _C_LNG:
+        case _C_UINT:
+        case _C_ULNG:
             return RETURN_TYPE_INT32;
-        case 'q':
-        case 'Q':
+        case _C_LNG_LNG:
+        case _C_ULNG_LNG:
             return RETURN_TYPE_INT64;
-        case '@':
-        case '#':
-        case '^':
-        case ':':
-        case '*':
+        case _C_ID:
+        case _C_CLASS:
+        case _C_PTR:
+        case _C_SEL:
+        case _C_CHARPTR:
             return RETURN_TYPE_POINTER;
-        case '{':
+        case _C_STRUCT_B:
             return RETURN_TYPE_STRUCT;
-        case 'f':
+        case _C_FLT:
             return RETURN_TYPE_FLOAT;
-        case 'd':
+        case _C_DBL:
             return RETURN_TYPE_DOUBLE;
-        case 'v':
+        case _C_VOID:
             return RETURN_TYPE_NONE;
     }
     return RETURN_TYPE_NONE;
@@ -90,7 +90,7 @@ struct _NSInvocationCallFrame::impl {
             }
         }
 
-        _buffer = new uint8_t[2 * _length];
+        _buffer = new uint8_t[_length];
 
         if (_stret) {
             _stretExtent = _allocateArgument("^v");
@@ -121,7 +121,7 @@ struct _NSInvocationCallFrame::impl {
             intptr_t i;
         } itou; // "i" to "u"
 
-        { // sign extend, zero extend
+        { // integral arguments less than 4 bytes in width need sign- or zero-extension.
             switch (type[0]) {
                 case _C_CHR:
                     itou.i = *(signed char*)value;
@@ -196,7 +196,6 @@ bool _NSInvocationCallFrame::getRequiresStructReturn() const {
     return _impl->_stret;
 }
 
-extern "C" __declspec(naked) void __fastcall _CallFrameInternal(struct x86Frame* call, void* stackBuffer);
 void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePointer) const {
     if (_impl->_stret) {
         // populate stret out if necessary.
@@ -204,9 +203,14 @@ void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePoi
     }
 
     auto frameLength = _impl->_offset;
+
+    // alloca is guaranteed to give us a 16-byte aligned return.
     uint8_t* stack = (uint8_t*)alloca(frameLength + sizeof(struct x86Frame));
     x86Frame* frame = (x86Frame*)(stack + frameLength);
+
     memcpy(stack, _impl->_buffer, frameLength);
+
     *frame = { 0, 0, 0, _impl->_returnType, _impl->_returnLength, returnValuePointer, functionPointer };
+
     _CallFrameInternal(frame, stack);
 }
