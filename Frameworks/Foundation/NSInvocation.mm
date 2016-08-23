@@ -31,6 +31,7 @@ static const wchar_t* TAG = L"NSInvocation";
 static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
 
 @implementation NSInvocation {
+@public // must be visible to _NSInvocation_ForwardFrame
     StrongId<NSMethodSignature> _methodSignature;
 
     std::unique_ptr<_NSInvocationCallFrame> _callFrame;
@@ -76,6 +77,14 @@ static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
         } else {
             _returnValue = &_smallReturnValueOptimization;
         }
+    }
+    return self;
+}
+
+- (instancetype)_initWithMethodSignature:(NSMethodSignature*)methodSignature copyInFrame:(void*)frame {
+    if (self = [self initWithMethodSignature:methodSignature]) {
+        _callFrame->copyInExistingFrame(frame);
+        [self retainArguments];
     }
     return self;
 }
@@ -268,3 +277,33 @@ static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
 }
 
 @end
+
+extern "C" void _NSInvocation_ForwardFrame(void* stret, id self, SEL sel, void* frame, /* out */ _NSInvocationForwardReturnInfo* bridgeOut) {
+    NSMethodSignature* signature = [self methodSignatureForSelector:sel];
+    if (!signature) {
+        const char* types = nullptr;
+        types = sel_getType_np(sel);
+        if (!types) {
+            SEL typedSelector;
+            sel_copyTypedSelectors_np(sel_getName(sel), &typedSelector, 1);
+            if (typedSelector) {
+                types = sel_getType_np(typedSelector);
+            }
+        }
+        if (types) {
+            signature = [NSMethodSignature signatureWithObjCTypes:types];
+        }
+    }
+    if (!signature) {
+        TraceError(TAG, L"Unable to find a method signature"); // TODO(DH) Fix this message.
+    }
+
+    // frame is platform-specific; the _NSInvocationCallFrame knows what to do with it.
+    NSInvocation* invocation = [[[NSInvocation alloc] _initWithMethodSignature:signature copyInFrame:frame] autorelease];
+    auto &callFrame = *invocation->_callFrame.get();
+    [self forwardInvocation:invocation];
+    if (stret) {
+        [invocation getReturnValue:stret];
+    }
+    *bridgeOut = {invocation->_returnValue, callFrame.getOpaquePlatformReturnType()};
+}

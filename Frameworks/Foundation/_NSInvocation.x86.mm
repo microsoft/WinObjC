@@ -188,6 +188,14 @@ bool _NSInvocationCallFrame::getRequiresStructReturn() const {
     return _structReturn;
 }
 
+void _NSInvocationCallFrame::copyInExistingFrame(void* frame) {
+    memcpy(_buffer, frame, _offset);
+}
+
+unsigned int _NSInvocationCallFrame::getOpaquePlatformReturnType() const {
+    return _returnType;
+}
+
 void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePointer) const {
     size_t frameLength = _offset;
 
@@ -204,4 +212,8 @@ void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePoi
     *frame = { 0, 0, 0, _returnType, _returnLength, returnValuePointer, functionPointer };
 
     _CallFrameInternal(frame, stack);
+}
+
+extern "C" bool _NSInvocationTypeEncodingMandatesStructReturn(const char* typeEncoding) {
+    return _getReturnType(typeEncoding) == RETURN_TYPE_STRUCT;
 }

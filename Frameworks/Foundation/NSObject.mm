@@ -38,6 +38,7 @@
 #import <mutex>
 
 #import "ForFoundationOnly.h"
+#import "NSInvocationInternal.h"
 
 static void _NSObjCEnumerationMutation(id object) {
     [NSException raise:NSInternalInconsistencyException format:@"Collection <%s %p> mutated while being enumerated!", object_getClassName(object), object];
@@ -434,6 +435,7 @@ static id _NSForwardingDestination(id object, SEL selector) {
     if (class_respondsToSelector(cls, @selector(forwardingTargetForSelector:))) {
         return [(NSObject*)object forwardingTargetForSelector:selector];
     }
+
     return nil;
 }
 
@@ -446,11 +448,29 @@ static void _forwardThrow(id object, SEL selector) {
 }
 
 static IMP _NSIMPForward(id object, SEL selector) {
+    Class cls = object_getClass(object);
+    if (class_respondsToSelector(cls, @selector(forwardInvocation:))) {
+        const char* types = sel_getType_np(selector);
+        if (types && _NSInvocationTypeEncodingMandatesStructReturn(types)) {
+            return (IMP)&_NSInvocation_ForwardingBridge; // From NSInvocationInternal.h
+        }
+        return (IMP)&_NSInvocation_ForwardingBridgeNoStret; // From NSInvocationInternal.h
+    }
     return (IMP)&_forwardThrow;
 }
 
 static struct objc_slot _NSForwardSlot = { Nil, Nil, 0, 1, (IMP)_forwardThrow };
+static struct objc_slot _NSInvocationSlot = { Nil, Nil, 0, 1, (IMP)_NSInvocation_ForwardingBridgeNoStret };
+static struct objc_slot _NSInvocationStretSlot = { Nil, Nil, 0, 1, (IMP)_NSInvocation_ForwardingBridge };
 static struct objc_slot* _NSSlotForward(id object, SEL selector) {
+    Class cls = object_getClass(object);
+    if (class_respondsToSelector(cls, @selector(forwardInvocation:))) {
+        const char* types = sel_getType_np(selector);
+        if (types && _NSInvocationTypeEncodingMandatesStructReturn(types)) {
+            return &_NSInvocationStretSlot;
+        }
+        return &_NSInvocationSlot;
+    }
     return &_NSForwardSlot;
 }
 

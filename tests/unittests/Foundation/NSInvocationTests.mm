@@ -153,7 +153,60 @@ struct ThreeWordStruct {
     uintptr_t m3;
 };
 
-@interface NSIT_InvocationTestClass : NSObject
+@protocol _NSIT_InvocationProtocol
+@optional
+@property (nonatomic, assign) char singleChar;
+@property (nonatomic, assign) short singleShort;
+@property (nonatomic, assign) int singleInt;
+@property (nonatomic, assign) long long singleLongLong;
+@property (nonatomic, assign) unsigned char singleUChar;
+@property (nonatomic, assign) unsigned short singleUShort;
+@property (nonatomic, assign) unsigned int singleUInt;
+@property (nonatomic, assign) unsigned long long singleULongLong;
+@property (nonatomic, assign) float singleFloat;
+@property (nonatomic, assign) double singleDouble;
+
+@property (nonatomic, assign) UniformAggregateF1 uniformAggregateF1;
+@property (nonatomic, assign) UniformAggregateD1 uniformAggregateD1;
+@property (nonatomic, assign) UniformAggregateF2 uniformAggregateF2;
+@property (nonatomic, assign) UniformAggregateD2 uniformAggregateD2;
+@property (nonatomic, assign) UniformAggregateF3 uniformAggregateF3;
+@property (nonatomic, assign) UniformAggregateD3 uniformAggregateD3;
+@property (nonatomic, assign) UniformAggregateF4 uniformAggregateF4;
+@property (nonatomic, assign) UniformAggregateD4 uniformAggregateD4;
+@property (nonatomic, assign) DisparateAggregateDF disparateAggregateDF;
+@property (nonatomic, assign) LargeUniformAggregateF6 largeUniformAggregateF6;
+@property (nonatomic, assign) LargeDisparateAggregate largeDisparateAggregate;
+@property (nonatomic, assign) SmallDisparateAggregate8 smallDisparateAggregate8;
+@property (nonatomic, assign) SmallDisparateAggregate4 smallDisparateAggregate4;
+@property (nonatomic, assign) TinyAggregate tinyAggregate;
+@property (nonatomic, assign) HighlyAlignedAggregate1 highlyAlignedAggregate1;
+- (double)addInterleavedFloat:(float)f1 D:(double)d1 F:(float)f2 D:(double)d2 F:(float)f3 D:(double)d3 F:(float)f4 D:(double)d4 F:(float)f5 D:(double)d5 F:(float)f6 D:(double)d6 F:(float)f7 D:(double)d7 F:(float)f8;
+- (char)addPackedCharacters:(char)c1:(char)c2:(char)c3:(char)c4:(char)c5:(char)c6:(char)c7:(char)c8;
+- (void)structSplitOverRegistersAndStack:(FiveWordStruct)s;
+- (void)largeUniformVFPs:(UniformAggregateD4)one
+                        :(UniformAggregateD4)two
+      consumeVFPAndStack:(double)three
+    forcingStructOntoTheStack:(ThreeWordStruct)s;
+- (void)interleavedAlignmentsCharMax:(char)c1
+                                    :(std::max_align_t)m1
+                                    :(char)c2
+                                    :(std::max_align_t)m2
+                                    :(char)c3
+                                    :(std::max_align_t)m3
+                                    :(char)c4
+                                    :(std::max_align_t)m4
+                                    :(char)c5
+                                    :(std::max_align_t)m5
+                                    :(char)c6
+                                    :(std::max_align_t)m6
+                                    :(char)c7
+                                    :(std::max_align_t)m7
+                                    :(unsigned char)c8;
+- (void)ARMFirstThreeInRegisters:(uint32_t)third fourthOntoStackToRemainContiguous:(uint64_t)fourth;
+@end
+
+@interface NSIT_InvocationTestClass : NSObject <_NSIT_InvocationProtocol>
 @property (nonatomic, assign) char singleChar;
 @property (nonatomic, assign) short singleShort;
 @property (nonatomic, assign) int singleInt;
@@ -299,6 +352,26 @@ struct ThreeWordStruct {
 
 - (void)takesOneObject:(id)object andOneCharPointer:(char*)charPointer {
     // No-op
+}
+@end
+
+@interface _NSIT_InvocationForwardingFacade: NSObject <_NSIT_InvocationProtocol> {
+    NSIT_InvocationTestClass* _destination;
+}
+@end
+@implementation _NSIT_InvocationForwardingFacade
+- (instancetype)init {
+    if (self = [super init]) {
+        _destination = [[NSIT_InvocationTestClass alloc] init];
+    }
+    return self;
+}
+- (void)dealloc {
+    [_destination release];
+    [super dealloc];
+}
+- (void)forwardInvocation:(NSInvocation*)invocation {
+    [invocation invokeWithTarget:_destination];
 }
 @end
 
@@ -594,6 +667,65 @@ TEST(NSInvocation, ARMUInt64sContiguousRegistersOrStack) {
     [invocation invoke];
 
     [tester release];
+}
+
+#define SET_AND_GET_VIA_FACADE(object, prop, ...)                                       \
+    do {                                                                                    \
+        decltype(object.prop) expectedVal = __VA_ARGS__;                                    \
+        object.prop = expectedVal; \
+        decltype(object.prop) actualVal = object.prop; \
+        EXPECT_EQ_MSG(expectedVal, actualVal, "property %s", #prop); \
+    } while (0)
+
+TEST(NSInvocation, ForwardInvocation) {
+    _NSIT_InvocationForwardingFacade* facade = [[[_NSIT_InvocationForwardingFacade alloc] init] autorelease];
+
+    EXPECT_EQ(1348., [facade addInterleavedFloat:1 D:1 F:2 D:3 F:4 D:9 F:8 D:27 F:16 D:81 F:32 D:243 F:64 D:729 F:128]);
+    EXPECT_EQ(36, [facade addPackedCharacters:1:2:3:4:5:6:7:8]);
+
+    {
+        uint32_t arg2 = 0xABABABABUL;
+        uint64_t arg3 = 0x123409871234ABABULL;
+
+        [facade ARMFirstThreeInRegisters:arg2 fourthOntoStackToRemainContiguous:arg3];
+    }
+
+    {
+        UniformAggregateD4 arg2{ { 1024, 2048 }, { 4096, 8192 } };
+        UniformAggregateD4 arg3{ { 1000, 2000 }, { 4000, 8000 } };
+        double arg4 = 999.0;
+        ThreeWordStruct arg5{ 0xDEADBEEF, 0xCAFECAFE, 0xF00DC01D };
+        [facade largeUniformVFPs:arg2 :arg3 consumeVFPAndStack:arg4 forcingStructOntoTheStack:arg5];
+    }
+
+    {
+        SET_AND_GET_VIA_FACADE(facade, uniformAggregateF1, { std::numeric_limits<float>::max() });
+        SET_AND_GET_VIA_FACADE(facade, uniformAggregateD1, { std::numeric_limits<double>::max() });
+
+        SET_AND_GET_VIA_FACADE(facade, uniformAggregateF2, { std::numeric_limits<float>::max(), 1024.f });
+        SET_AND_GET_VIA_FACADE(facade, uniformAggregateD2, { std::numeric_limits<double>::max(), 2048. });
+
+        SET_AND_GET_VIA_FACADE(facade, uniformAggregateF3, { { std::numeric_limits<float>::max() }, { 1024.f, 8192.f } });
+        SET_AND_GET_VIA_FACADE(facade, uniformAggregateD3, { { std::numeric_limits<double>::max() }, { 2048., 16384. } });
+
+        SET_AND_GET_VIA_FACADE(facade, uniformAggregateF4, { { std::numeric_limits<float>::max(), 1.f }, { 1024.f, 8192.f } });
+        SET_AND_GET_VIA_FACADE(facade, uniformAggregateD4, { { std::numeric_limits<double>::max(), 2.f }, { 2048., 16384. } });
+
+        SET_AND_GET_VIA_FACADE(facade, disparateAggregateDF, { 1.0, 2.0f });
+
+        SET_AND_GET_VIA_FACADE(facade, largeUniformAggregateF6, { 1.f, 2.f, { { 4.f, 8.f }, { 16.f, 32.f } } });
+
+        const wchar_t hello[] = L"hello";
+        SET_AND_GET_VIA_FACADE(facade, largeDisparateAggregate, { 1048576, -1.0, hello });
+
+        SET_AND_GET_VIA_FACADE(facade, smallDisparateAggregate8, { '\x7f', 0xafafafaf });
+
+        SET_AND_GET_VIA_FACADE(facade, smallDisparateAggregate4, { '\x1f', 0xbeef });
+
+        SET_AND_GET_VIA_FACADE(facade, tinyAggregate, { 'a' });
+
+        SET_AND_GET_VIA_FACADE(facade, highlyAlignedAggregate1, { 10, 20, 30 });
+    }
 }
 
 // Disabled on ARM because it requires named exception catch.
