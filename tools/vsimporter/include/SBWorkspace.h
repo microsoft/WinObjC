@@ -21,6 +21,7 @@
 
 class XCWorkspace;
 class PBXProject;
+class PBXTarget;
 class XCScheme;
 class SBProject;
 class SBTarget;
@@ -54,6 +55,8 @@ private:
   typedef std::map<String, SBProject*> ProjectMap;
   typedef std::vector<SBProject*> SBProjectVec;
   typedef std::vector<const XCScheme*> SchemeVec;
+  typedef std::pair<const PBXTarget*, SBProject*> TargetProjectPair;
+  typedef std::vector<TargetProjectPair> PotentialTargetsVec;
 
   SBWorkspace();
   
@@ -63,10 +66,11 @@ private:
   SBProject* findOpenProject(const String& absProjPath) const;
   const XCScheme* getScheme(const String& schemeName) const;
   void getSchemes(const StringSet& schemeNames, SchemeVec& ret) const;
-  void selectTargets(std::vector<std::pair<String, SBProject*>>& ret);
+  void selectTargets(PotentialTargetsVec& ret);
   void detectProjectCollisions() const;
   VCProject* generateGlueProject() const;
-  void getAllTargets(std::vector<std::pair<String, SBProject*>>& targets) const;
+  void getAllTargets(PotentialTargetsVec& targets) const;
+  TargetProjectPair findTargetWithName(const String& targetName) const;
 
   // Relevant if Workspace was constructed from a workspace file
   XCWorkspace* m_workspace;

@@ -43,7 +43,6 @@ public:
   String getName() const;
   const StringSet& getSelectedConfigurations() const;
   void getQueuedTargets(SBTargetList& ret) const;
-  void getPossibleTargets(StringVec& ret) const;
   const BuildSettings& getBuildSettings() const;
   const PBXProject* getPBXProject() const;
 

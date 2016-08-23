@@ -63,8 +63,9 @@ void SBProject::printSummary()
   } else {
     std::cout << "Information about project \"" << getName() << "\":" << std::endl;
     std::cout << "    Targets:" << std::endl;
-    for (int i = 0; i < targets.size(); i++)
-      std::cout << "\t" << targets[i]->getName() << std::endl;
+    for (int i = 0; i < targets.size(); i++) {
+      std::cout << "\t" << targets[i]->getNameWithType() << std::endl;
+    }
     std::cout << std::endl;
 
     std::cout << "    Build Configurations:" << std::endl;
@@ -113,15 +114,6 @@ void SBProject::getQueuedTargets(SBTargetList& ret) const
   for (auto targetKV : m_existingTargets) {
     ret.push_back(targetKV.second);
   }
-}
-
-void SBProject::getPossibleTargets(StringVec& ret) const
-{
-  const PBXTargetList& projectTargets = m_project->getTargets();
-  std::transform(projectTargets.begin(),
-                 projectTargets.end(),
-                 back_inserter(ret),
-                 [](const PBXTarget* t) { return t->getName(); });
 }
 
 SBTarget* SBProject::queueTargetWithName(const String& targetName, const StringSet* configNames)

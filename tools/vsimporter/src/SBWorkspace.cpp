@@ -203,7 +203,7 @@ void SBWorkspace::printSummary() const
   }
 }
 
-void SBWorkspace::selectTargets(std::vector<std::pair<String, SBProject*>>& ret)
+void SBWorkspace::selectTargets(PotentialTargetsVec& ret)
 {
   String queryMessage;
   if (m_workspace) {
@@ -213,7 +213,7 @@ void SBWorkspace::selectTargets(std::vector<std::pair<String, SBProject*>>& ret)
   }
 
   // Get all possible targets in the solution
-  std::vector<std::pair<String, SBProject*>> allTargets;
+  PotentialTargetsVec allTargets;
   getAllTargets(allTargets);
 
   // Construct vector of target names for the query, maintaining order
@@ -221,7 +221,7 @@ void SBWorkspace::selectTargets(std::vector<std::pair<String, SBProject*>>& ret)
   std::transform(allTargets.begin(),
                  allTargets.end(),
                  back_inserter(targetNames),
-                 [](auto kv) { return kv.first; });
+                 [](auto kv) { return kv.first->getNameWithType(); });
 
   // Query the user for which targets should be queued
   std::vector<size_t> selection;
@@ -296,17 +296,16 @@ void SBWorkspace::queueSchemes(const StringSet& schemeNames, const StringSet& co
   }
 }
 
-void SBWorkspace::getAllTargets(std::vector<std::pair<String, SBProject*>>& targets) const
+void SBWorkspace::getAllTargets(PotentialTargetsVec& targets) const
 {
   for (auto projectKV : m_openProjects) {
-    SBProject* project = projectKV.second;
-    StringVec projectTargets;
-
-    project->getPossibleTargets(projectTargets);
+    SBProject* sbProject = projectKV.second;
+    const PBXProject* pbxProject = sbProject->getPBXProject();
+    const PBXTargetList& projectTargets = pbxProject->getTargets();
     std::transform(projectTargets.begin(),
                    projectTargets.end(),
                    back_inserter(targets),
-                   [project](const String& targetName) { return std::make_pair(targetName, project); });
+                   [sbProject](const PBXTarget* target) { return std::make_pair(target, sbProject); });
   }
 }
 
@@ -316,7 +315,7 @@ void SBWorkspace::queueTargets(const StringSet& targetNames, const StringSet& co
   bool isInteractive = bs.getValue("VSIMPORTER_INTERACTIVE") == "YES";
 
   // Get the specified targets
-  std::vector<std::pair<String, SBProject*>> selectedTargets;
+  PotentialTargetsVec selectedTargets;
   if (isInteractive) {
     // Query the user to select targets to be queued
     selectTargets(selectedTargets);
@@ -324,23 +323,18 @@ void SBWorkspace::queueTargets(const StringSet& targetNames, const StringSet& co
     // Queue up all targets
     getAllTargets(selectedTargets);
   } else {
-    std::transform(targetNames.begin(),
-                   targetNames.end(),
-                   back_inserter(selectedTargets),
-                   [](const String& targetName) { return make_pair(targetName, static_cast<SBProject*>(NULL)); });
+    // Try to find matching targets by name
+    for (auto targetName : targetNames) {
+      TargetProjectPair targetKV = findTargetWithName(targetName);
+      if (targetKV.first) {
+        selectedTargets.push_back(targetKV);
+      }
+    }
   }
 
   // Queue targets
   for (auto targetKV : selectedTargets) {
-    const String& targetName = targetKV.first;
-    SBProject* targetProject = targetKV.second;
-
-    SBTarget *target = NULL;
-    if (targetProject) {
-      target = targetProject->queueTargetWithName(targetName, &configNames);
-    } else {
-      target = queueTargetWithName(targetName, configNames);
-    }
+    SBTarget* target = targetKV.second->queueTarget(targetKV.first, &configNames);
 
     // Mark target as having been explicitly queued up
     if (target) {
@@ -405,6 +399,20 @@ SBTarget* SBWorkspace::queueTargetWithName(const String& targetName, const Strin
   }
 
   return target;
+}
+
+SBWorkspace::TargetProjectPair SBWorkspace::findTargetWithName(const String& targetName) const
+{
+  for (auto project : m_openProjects) {
+    SBProject* sbProject = project.second;
+    const PBXTarget* target = sbProject->getPBXProject()->getTargetWithName(targetName);
+    if (target) {
+      return make_pair(target, sbProject);
+    }
+  }
+
+  SBLog::warning() << "Failed to find \"" << targetName << "\" target in workspace." << std::endl;
+  return { NULL, NULL };
 }
 
 void SBWorkspace::detectProjectCollisions() const

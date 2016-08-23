@@ -120,3 +120,18 @@ void PBXNativeTarget::getBuildSettings(VariableCollection& settings) const
   settings.insert("FULL_PRODUCT_NAME", productNameFull);
   settings.insert("PRODUCT_TYPE", m_productType);
 }
+
+String PBXNativeTarget::getTargetType() const
+{
+  if (m_productType == "com.apple.product-type.library.static") {
+    return "StaticLib";
+  } else if (m_productType == "com.apple.product-type.framework") {
+    return "Framework";
+  } else if (m_productType == "com.apple.product-type.application") {
+    return "Application";
+  } else if (m_productType == "com.apple.product-type.bundle") {
+    return "Bundle";
+  } else {
+    return "Unknown";
+  }
+}

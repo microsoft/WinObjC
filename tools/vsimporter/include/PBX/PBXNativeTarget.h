@@ -33,6 +33,7 @@ public:
   virtual String getProductFileType() const;
   virtual String getProductReference() const { return m_productReferenceId; }
   virtual void getBuildSettings(VariableCollection& settings) const;
+  virtual String getTargetType() const;
   const String& getProductType() const { return m_productType; }
   const PBXFileReference* getProductFile() const { return m_productReferencePtr; }
   const BuildRuleList& getBuildRules() const { return m_buildRulePtrs; }
