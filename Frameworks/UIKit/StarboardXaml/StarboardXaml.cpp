@@ -29,12 +29,15 @@
 #include "StarboardXaml.h"
 #include "..\UIApplicationMainInternal.h"
 #include "UWPBackgroundTask.h"
+#include "ppltasks.h"
 
 using namespace Windows::ApplicationModel::Activation;
 using namespace Windows::Media::SpeechRecognition;
 using namespace Windows::Foundation;
 using namespace Windows::UI;
 using namespace Windows::System;
+using namespace Windows::UI::Core;
+using namespace Windows::ApplicationModel::Core;
 
 static Platform::String^ g_principalClassName;
 static Platform::String^ g_delegateClassName;
@@ -252,7 +255,7 @@ void UIApplicationBackgroundActivated(BackgroundActivatedEventArgs^ args) {
 }
 #endif
 
-void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
+void DoApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
     auto uiElem = ref new Xaml::Controls::Grid();
     auto rootFrame = ref new Xaml::Controls::Frame();
     rootFrame->Content = uiElem;
@@ -271,6 +274,20 @@ void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activat
     _appEvents->_RegisterEventHandlers();
 }
 
+void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
+    auto coreWindow = CoreWindow::GetForCurrentThread();
+    if (coreWindow == nullptr)
+    {
+        CoreDispatcher ^c = CoreApplication::MainView->Dispatcher;
+        auto task = concurrency::create_task(c->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, ref new Windows::UI::Core::DispatchedHandler([=]()
+        {
+            DoApplicationLaunch(activationType, activationArg);
+        })));
+        task.wait();
+    } else {
+        DoApplicationLaunch(activationType, activationArg);
+    }
+}
 
 // This is the actual entry point from the app into our framework.
 // Note: principalClassName and delegateClassName are actually NSString*s.
