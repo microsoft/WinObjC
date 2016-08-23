@@ -159,4 +159,75 @@
     return index;
 }
 
+- (id)mutableCopyWithZone:(NSZone*)zone {
+    _ABMultiValue* copy = [[_ABMultiValue alloc] initWithPropertyType:[self getPropertyType]];
+    for (__ABMultiValuePair* pair in self->_list) {
+        [copy appendPairWithLabel:pair.label andValue:pair.value];
+    }
+
+    return copy;
+}
+
+- (bool)addValue:(CFTypeRef)value andLabel:(CFStringRef)label outIdentifier:(ABMultiValueIdentifier*)outIdentifier {
+    if (![self isMutable]) {
+        return false;
+    }
+
+    bool result = [self appendPairWithLabel:(__bridge NSString*)label andValue:(__bridge id)value];
+    if (result && outIdentifier) {
+        *outIdentifier = [self getIdentifierAtIndex:([self getCount] - 1)];
+    }
+
+    return result;
+}
+
+- (bool)replaceValue:(CFTypeRef)value atIndex:(CFIndex)index {
+    if (![self isMutable] || [self->_list count] <= index || index < 0) {
+        return false;
+    }
+
+    static_cast<__ABMultiValuePair*>(self->_list[index]).value = (__bridge id)value;
+    return true;
+}
+
+- (bool)replaceLabel:(CFStringRef)label atIndex:(CFIndex)index {
+    if (![self isMutable] || [self->_list count] <= index || index < 0) {
+        return false;
+    }
+
+    static_cast<__ABMultiValuePair*>(self->_list[index]).label = (__bridge NSString*)label;
+    return true;
+}
+
+- (bool)insertValue:(CFTypeRef)value
+           andLabel:(CFStringRef)label
+            atIndex:(CFIndex)index
+      outIdentifier:(ABMultiValueIdentifier*)outIdentifier {
+    if (![self isMutable] || [self->_list count] <= index || index < 0) {
+        return false;
+    }
+
+    [self->_list insertObject:[[__ABMultiValuePair alloc] initWithLabel:(__bridge NSString*)label
+                                                                  value:(__bridge id)value
+                                                             identifier:self->_nextIdentifier]
+                      atIndex:index];
+
+    // Increment the next usable identifier to ensure that each label/value pair has a unique identifier.
+    (self->_nextIdentifier)++;
+    if (outIdentifier) {
+        *outIdentifier = [self getIdentifierAtIndex:index];
+    }
+
+    return true;
+}
+
+- (bool)removeValueAndLabelAtIndex:(CFIndex)index {
+    if (![self isMutable] || [self->_list count] <= index || index < 0) {
+        return false;
+    }
+
+    [self->_list removeObjectAtIndex:index];
+    return true;
+}
+
 @end

@@ -19,7 +19,7 @@
 #import <AddressBook/ABMultiValue.h>
 #import <Foundation/Foundation.h>
 
-@interface _ABMultiValue : NSObject
+@interface _ABMultiValue : NSObject <NSMutableCopying>
 
 - (id)initWithPropertyType:(ABPropertyType)propertyType;
 
@@ -40,5 +40,16 @@
 - (ABPropertyType)getPropertyType;
 - (CFIndex)getFirstIndexOfValue:(CFTypeRef)value;
 - (CFIndex)getIndexForIdentifier:(ABMultiValueIdentifier)identifier;
+
+// The following methods parallel those found in ABMutableMultiValue.mm.
+- (id)mutableCopyWithZone:(NSZone*)zone;
+- (bool)addValue:(CFTypeRef)value andLabel:(CFStringRef)label outIdentifier:(ABMultiValueIdentifier*)outIdentifier;
+- (bool)replaceValue:(CFTypeRef)value atIndex:(CFIndex)index;
+- (bool)replaceLabel:(CFStringRef)label atIndex:(CFIndex)index;
+- (bool)insertValue:(CFTypeRef)value
+           andLabel:(CFStringRef)label
+            atIndex:(CFIndex)index
+      outIdentifier:(ABMultiValueIdentifier*)outIdentifier;
+- (bool)removeValueAndLabelAtIndex:(CFIndex)index;
 
 @end
