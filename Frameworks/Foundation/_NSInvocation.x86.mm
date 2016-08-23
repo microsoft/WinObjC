@@ -59,8 +59,22 @@ static return_type _getReturnType(const char* typeEncoding) {
         case _C_SEL:
         case _C_CHARPTR:
             return RETURN_TYPE_POINTER;
-        case _C_STRUCT_B:
-            return RETURN_TYPE_STRUCT;
+        case _C_STRUCT_B: {
+            size_t size = objc_sizeof_type(typeEncoding);
+
+            switch (size) {
+                case 8:
+                    return RETURN_TYPE_INT64;
+                case 4:
+                    return RETURN_TYPE_INT32;
+                case 2:
+                    return RETURN_TYPE_UINT16;
+                case 1:
+                    return RETURN_TYPE_UINT8;
+                default:
+                    return RETURN_TYPE_STRUCT;
+            }
+        }
         case _C_FLT:
             return RETURN_TYPE_FLOAT;
         case _C_DBL:
@@ -80,14 +94,12 @@ struct _NSInvocationCallFrame::impl {
         _returnLength = [_methodSignature methodReturnLength];
 
         // 1, 2, 4, and 8-byte structs are returned in registers.
-        if (_returnType == RETURN_TYPE_STRUCT && (_returnLength > 8 || (_returnLength > 2 && _returnLength % 2 == 1))) {
+        if (_returnType == RETURN_TYPE_STRUCT) {
             _stret = true;
             _length += sizeof(void*);
-        } else {
-            if (_returnType != RETURN_TYPE_STRUCT) {
-                // Promote all non-stret return lengths to one machine word.
-                _returnLength = std::max(sizeof(uintptr_t), _returnLength);
-            }
+        } else if (_returnType != RETURN_TYPE_NONE) {
+            // Promote all non-stret return lengths to one machine word.
+            _returnLength = std::max(sizeof(uintptr_t), _returnLength);
         }
 
         _buffer = new uint8_t[_length];
