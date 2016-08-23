@@ -44,8 +44,8 @@ FOUNDATION_EXPORT_CLASS
 - (void)undoNestedGroup;
 - (void)redo;
 @property NSUInteger levelsOfUndo STUB_PROPERTY;
-- (void)beginUndoGrouping STUB_METHOD;
-- (void)endUndoGrouping STUB_METHOD;
+- (void)beginUndoGrouping;
+- (void)endUndoGrouping;
 @property BOOL groupsByEvent;
 @property (readonly) NSInteger groupingLevel;
 - (void)disableUndoRegistration;

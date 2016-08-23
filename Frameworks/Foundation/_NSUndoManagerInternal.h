@@ -35,10 +35,11 @@
 
 @interface _NSUndoGroup : NSObject <_NSUndoable>
 
-- (id)initWithLevel:(NSUInteger)level;
-- (id)initWithOwner:(NSUndoManager*)manager;
+- (id)initWithLevel:(NSInteger)level;
 - (void)addUndoCallToUndoGroup:(_NSUndoBasicAction*)undoCall;
-- (NSUInteger)createUndoGroup;
+- (NSInteger)createUndoGroupWithLevel:(NSInteger)level;
 - (BOOL)closeUndoGroup;
+- (BOOL)isClosed;
+- (NSInteger)_getDepth;
 
 @end

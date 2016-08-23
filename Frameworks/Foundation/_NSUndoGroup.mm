@@ -20,23 +20,19 @@
 
 @implementation _NSUndoGroup {
     StrongId<NSMutableArray*> _undoGrouping;
-    StrongId<NSUndoManager*> _owningManager;
-    NSUInteger _undoLevel;
-    BOOL _isClosed;
+    NSInteger _undoLevel;
+    NSInteger _depth;
 }
 
-- (id)initWithLevel:(NSUInteger)level {
+- (BOOL)isClosed {
+    return _depth == 0;
+}
+
+- (id)initWithLevel:(NSInteger)level {
     if (self = [super init]) {
         _undoGrouping = [NSMutableArray array];
         _undoLevel = level;
-        _isClosed = NO;
-    }
-    return self;
-}
-
-- (id)initWithOwner:(NSUndoManager*)manager {
-    if (self = [self initWithLevel:1]) {
-        _owningManager = manager;
+        _depth = 1;
     }
     return self;
 }
@@ -52,41 +48,46 @@
 
 - (void)undo {
     while ([_undoGrouping count] > 0) {
-        _NSUndoBasicAction* object = [_undoGrouping firstObject];
+        id<_NSUndoable> object = [_undoGrouping firstObject];
         [object undo];
         [_undoGrouping removeObjectAtIndex:0];
     }
 }
 
-- (NSUInteger)createUndoGroup {
-    id topObjectInGroup = [_undoGrouping firstObject];
-    if ([topObjectInGroup isKindOfClass:[_NSUndoGroup class]] && [topObjectInGroup isClosed]) {
-        return [(topObjectInGroup)createUndoGroup];
+- (NSInteger)createUndoGroupWithLevel:(NSInteger)level {
+    id<_NSUndoable> topObjectInGroup = [_undoGrouping firstObject];
+    if (topObjectInGroup != nil && ![topObjectInGroup isClosed]) {
+        _depth++;
+        // Object must be a group in order to be an open object. Cast to ensure proper return type, otherwise return type is default id.
+        return [(_NSUndoGroup*)topObjectInGroup createUndoGroupWithLevel:level + 1];
     }
 
-    _NSUndoGroup* newGroup = [[[_NSUndoGroup alloc] initWithLevel:(_undoLevel + 1)] autorelease];
+    _NSUndoGroup* newGroup = [[[_NSUndoGroup alloc] initWithLevel:level] autorelease];
     [_undoGrouping insertObject:newGroup atIndex:0];
-    return _undoLevel + 1;
+    return level;
 }
 
-- (BOOL)closeUndoGroup {
-    id topObjectInGroup = [_undoGrouping firstObject];
-    if (![topObjectInGroup isClosed]) {
-        return [topObjectInGroup closeUndoGroup];
+- (void)closeUndoGroup {
+    id<_NSUndoable> topObjectInGroup = [_undoGrouping firstObject];
+    if (topObjectInGroup != nil && ![topObjectInGroup isClosed]) {
+        [topObjectInGroup closeUndoGroup];
     }
-    _isClosed = YES;
-    return YES;
+    _depth--;
 }
 
 - (BOOL)canUndo {
     // Top level undo group does not need to be closed.
     _NSUndoBasicAction* topObjectInGroup = [_undoGrouping firstObject];
 
-    if ([topObjectInGroup canUndo] && (_isClosed || _undoLevel == 1)) {
+    if ([topObjectInGroup canUndo] && ([self isClosed] || _undoLevel == 1)) {
         return YES;
     }
 
     return NO;
+}
+
+- (NSInteger)_getDepth {
+    return _depth;
 }
 
 @end
