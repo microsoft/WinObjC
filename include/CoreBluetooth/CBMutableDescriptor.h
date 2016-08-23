@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,10 +16,10 @@
 #pragma once
 
 #import <CoreBluetooth/CoreBluetoothExport.h>
-
+#import <Foundation/NSObject.h>
 @class CBUUID;
 
 COREBLUETOOTH_EXPORT_CLASS
-@interface CBMutableDescriptor
+@interface CBMutableDescriptor : NSObject <NSObject>
 - (id)initWithType:(CBUUID*)UUID value:(id)value STUB_METHOD;
 @end

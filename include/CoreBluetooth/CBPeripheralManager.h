@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,7 +17,7 @@
 
 #import <CoreBluetooth/CoreBluetoothExport.h>
 #import <CoreBluetooth/CBConstants.h>
-
+#import <Foundation/NSObject.h>
 #import <dispatch/dispatch.h>
 #import <objc/runtime.h>
 
@@ -56,7 +56,7 @@ COREBLUETOOTH_EXPORT NSString* const CBPeripheralManagerOptionShowPowerAlertKey;
 COREBLUETOOTH_EXPORT NSString* const CBPeripheralManagerOptionRestoreIdentifierKey;
 COREBLUETOOTH_EXPORT_CLASS
 
-@interface CBPeripheralManager
+@interface CBPeripheralManager : NSObject <NSObject>
 - (id)initWithDelegate:(id<CBPeripheralManagerDelegate>)delegate queue:(dispatch_queue_t)queue STUB_METHOD;
 - (id)initWithDelegate:(id<CBPeripheralManagerDelegate>)delegate queue:(dispatch_queue_t)queue options:(NSDictionary*)options STUB_METHOD;
 @property (nonatomic, weak) id<CBPeripheralManagerDelegate> delegate STUB_PROPERTY;

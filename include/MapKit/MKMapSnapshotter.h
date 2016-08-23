@@ -26,7 +26,7 @@
 typedef void (^MKMapSnapshotCompletionHandler)(MKMapSnapshot* snapshot, NSError* error);
 
 MAPKIT_EXPORT_CLASS
-@interface MKMapSnapshotter
+@interface MKMapSnapshotter : NSObject <NSObject>
 - (instancetype)initWithOptions:(MKMapSnapshotOptions*)options STUB_METHOD;
 - (void)startWithCompletionHandler:(MKMapSnapshotCompletionHandler)completionHandler STUB_METHOD;
 - (void)startWithQueue:(dispatch_queue_t)queue completionHandler:(MKMapSnapshotCompletionHandler)completionHandler STUB_METHOD;
