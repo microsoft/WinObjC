@@ -53,7 +53,7 @@ bool SBNativeTarget::init()
       TELEMETRY_EVENT(L"VSImporterStaticLibTarget");
   } else if (productType == "com.apple.product-type.framework") {
       m_type = TargetStaticLib;
-      SBLog::warning() << "Treating \"" << getName() << "\" framework target as a static library. This is experimental behaviour." << std::endl;
+      SBLog::warning() << "Treating \"" << getName() << "\" framework target as a static library." << std::endl;
       TELEMETRY_EVENT(L"VSImporterStaticFrameworkTarget");
   } else if (productType == "com.apple.product-type.application") {
       m_type = TargetApplication;
