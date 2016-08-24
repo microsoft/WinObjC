@@ -88,38 +88,32 @@ static return_type _getReturnType(const char* typeEncoding) {
 struct _NSInvocationCallFrame::impl {
     impl(NSMethodSignature* methodSignature)
         : _methodSignature(methodSignature), _offset(0), _stret(false), _allocationExtents([_methodSignature numberOfArguments]) {
-        // This is memoized, so it should be fast.
-        _length = [_methodSignature frameLength];
         _returnType = _getReturnType([_methodSignature methodReturnType]);
         _returnLength = [_methodSignature methodReturnLength];
 
         // 1, 2, 4, and 8-byte structs are returned in registers.
         if (_returnType == RETURN_TYPE_STRUCT) {
             _stret = true;
-            _length += sizeof(void*);
+            _stretExtent = _allocateArgument("^v");
         } else if (_returnType != RETURN_TYPE_NONE) {
             // Promote all non-stret return lengths to one machine word.
             _returnLength = std::max(sizeof(uintptr_t), _returnLength);
-        }
-
-        _buffer = new uint8_t[_length];
-
-        if (_stret) {
-            _stretExtent = _allocateArgument("^v");
         }
 
         auto nArguments = [_methodSignature numberOfArguments];
         for (int i = 0; i < nArguments; ++i) {
             _allocationExtents[i] = std::move(_allocateArgument([_methodSignature getArgumentTypeAtIndex:i]));
         }
+
+        _buffer = new uint8_t[_offset];
     };
 
     allocation_extent _allocateArgument(const char* objcTypeEncoding) {
         size_t nWords = std::max(1U, objc_aligned_size(objcTypeEncoding) / sizeof(uintptr_t));
         auto length = nWords * sizeof(uintptr_t);
 
-        allocation_extent extent{ _buffer + _offset, length };
-        _offset += extent.length;
+        allocation_extent extent{ _offset, length };
+        _offset += length;
         return extent;
     }
 
@@ -161,21 +155,20 @@ struct _NSInvocationCallFrame::impl {
             }
         }
 
-        memcpy(extent.location, value, size);
+        memcpy(_buffer + extent.offset, value, size);
     }
 
     void loadArgument(void* value, unsigned int index) const {
         auto& extent = _allocationExtents[index];
         const char* type = [_methodSignature getArgumentTypeAtIndex:index];
         size_t size = objc_sizeof_type(type);
-        memcpy(value, extent.location, size);
+        memcpy(value, _buffer + extent.offset, size);
     }
 
     StrongId<NSMethodSignature> _methodSignature;
 
     uint8_t* _buffer;
     off_t _offset;
-    size_t _length;
     size_t _returnLength;
     return_type _returnType;
 
@@ -209,11 +202,6 @@ bool _NSInvocationCallFrame::getRequiresStructReturn() const {
 }
 
 void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePointer) const {
-    if (_impl->_stret) {
-        // populate stret out if necessary.
-        memcpy(_impl->_stretExtent.location, &returnValuePointer, _impl->_stretExtent.length);
-    }
-
     auto frameLength = _impl->_offset;
 
     // alloca is guaranteed to give us a 16-byte aligned return.
@@ -221,6 +209,10 @@ void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePoi
     x86Frame* frame = (x86Frame*)(stack + frameLength);
 
     memcpy(stack, _impl->_buffer, frameLength);
+    if (_impl->_stret) {
+        // populate stret out if necessary. we only do this on the local copy.
+        memcpy(stack + _impl->_stretExtent.offset, &returnValuePointer, _impl->_stretExtent.length);
+    }
 
     *frame = { 0, 0, 0, _impl->_returnType, _impl->_returnLength, returnValuePointer, functionPointer };
 

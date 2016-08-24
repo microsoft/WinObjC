@@ -167,12 +167,6 @@ struct _NSInvocationCallFrame::impl {
     _arm_return_type _returnType;
     size_t _returnLength;
 
-    /* views into _buffer */
-    uint8_t* stack;
-    uintptr_t* registers;
-    float* singleRegisters;
-    double* doubleRegisters;
-
     std::bitset<GPR_COUNT> gprUsage;
     std::bitset<SPFR_COUNT> spUsage;
     unsigned int stackBytes;
@@ -189,14 +183,6 @@ struct _NSInvocationCallFrame::impl {
           stackBytes(0),
           _stret(false),
           _allocationExtents([methodSignature numberOfArguments]) {
-        auto nArguments = [_methodSignature numberOfArguments];
-        _length = 0;
-        for (int i = 0; i < nArguments; ++i) {
-            // Some arguments are <4 bytes, but we need to make sure that we only allocate in register-width chunks.
-            _length += std::max(sizeof(uintptr_t), objc_aligned_size([_methodSignature getArgumentTypeAtIndex:i]));
-        }
-
-        _length += g_sfprLength + g_gprLength;
 
         _returnType = _getReturnType([_methodSignature methodReturnType]);
 
@@ -204,7 +190,7 @@ struct _NSInvocationCallFrame::impl {
 
         if (_returnType == ARM_STRUCT) {
             _stret = true;
-            _length += sizeof(void*);
+            _stretExtent = _allocateArgument("^v");
         } else if (_returnType == ARM_VFP_HOMOGENOUS) {
             // Promote all homogenous vfp returns to the size of all four double-width registers
             _returnLength = std::max(sizeof(double) * 4, _returnLength);
@@ -215,20 +201,23 @@ struct _NSInvocationCallFrame::impl {
             _returnLength = std::max(sizeof(uintptr_t), _returnLength);
         }
 
-        _buffer = new uint8_t[_length];
+        auto nArguments = [_methodSignature numberOfArguments];
 
-        stack = _buffer + g_sfprLength + g_gprLength;
-        registers = reinterpret_cast<uintptr_t*>(_buffer + g_sfprLength);
-        singleRegisters = reinterpret_cast<float*>(_buffer);
-        doubleRegisters = reinterpret_cast<double*>(singleRegisters);
-
-        if (_stret) {
-            _stretExtent = _allocateArgument("^v");
-        }
-
+        size_t length = 0;
         for (int i = 0; i < nArguments; ++i) {
-            _allocationExtents[i] = std::move(_allocateArgument([_methodSignature getArgumentTypeAtIndex:i]));
+            // Some arguments are <4 bytes, but we need to make sure that we only allocate in register-width chunks.
+            auto& extent = _allocationExtents[i] = std::move(_allocateArgument([_methodSignature getArgumentTypeAtIndex:i]));
+            if (length < extent.offset + extent.length) {
+                length = extent.offset + extent.length;
+            }
         }
+
+        // Because of how _CallFrame_Internal loads the registers, we
+        // always allocate enough space for them.
+        length = std::max(length, g_gprLength + g_sfprLength);
+
+        _length = length;
+        _buffer = new uint8_t[length];
     }
 
     void _alignStack(size_t alignment = 0) {
@@ -239,7 +228,7 @@ struct _NSInvocationCallFrame::impl {
 
     allocation_extent _allocateStackWords(size_t count, size_t alignment = alignof(uintptr_t)) {
         stackBytes = NSINVOCATION_ALIGN(stackBytes, alignment);
-        allocation_extent extent{ stack + stackBytes, count * sizeof(uintptr_t) };
+        allocation_extent extent{ g_sfprLength + g_gprLength + stackBytes, count * sizeof(uintptr_t) };
         stackBytes += extent.length;
 
         return extent;
@@ -268,7 +257,7 @@ struct _NSInvocationCallFrame::impl {
             }
 
             // Case 1.
-            uintptr_t* start = &registers[nreg];
+            off_t start = g_sfprLength + (nreg * sizeof(uintptr_t));
             auto unallocatedWords = count;
             for (; unallocatedWords > 0 && nreg < GPR_COUNT; ++nreg) {
                 gprUsage[nreg] = 1;
@@ -300,7 +289,7 @@ struct _NSInvocationCallFrame::impl {
                     goto redo;
                 }
             }
-            allocation_extent extent{ &singleRegisters[nreg], count * sizeof(float) };
+            allocation_extent extent{ nreg * sizeof(float), count * sizeof(float) };
             for (size_t i = 0; i < count; ++i) {
                 spUsage[nreg] = 1;
                 ++nreg;
@@ -320,7 +309,7 @@ struct _NSInvocationCallFrame::impl {
             spUsage.set(); // All FP regs are now used.
             return _allocateStackWords((count * sizeof(double)) / sizeof(uintptr_t), alignof(double));
         } else {
-            allocation_extent extent{ &doubleRegisters[nreg / 2], count * sizeof(double) };
+            allocation_extent extent{ (nreg / 2) * sizeof(double), count * sizeof(double) };
             for (size_t i = 0; i < count; ++i) {
                 spUsage[nreg] = 1; // A single double in a double register marks two single registers as used.
                 spUsage[nreg + 1] = 1;
@@ -372,7 +361,7 @@ struct _NSInvocationCallFrame::impl {
                 return _allocateMachineWords(nWords);
             }
         }
-        return { nullptr, 0 };
+        return { -1, 0 };
     }
 
     void storeArgument(const void* value, unsigned int index) {
@@ -413,14 +402,14 @@ struct _NSInvocationCallFrame::impl {
             }
         }
 
-        memcpy(extent.location, value, size);
+        memcpy(_buffer + extent.offset, value, size);
     }
 
     void loadArgument(void* value, unsigned int index) const {
         auto& extent = _allocationExtents[index];
         const char* type = [_methodSignature getArgumentTypeAtIndex:index];
         size_t size = objc_sizeof_type(type);
-        memcpy(value, extent.location, size);
+        memcpy(value, _buffer + extent.offset, size);
     }
 };
 
@@ -458,11 +447,6 @@ struct armFrame {
 };
 
 void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePointer) const {
-    if (_impl->_stret) {
-        // populate stret out if necessary.
-        memcpy(_impl->_stretExtent.location, &returnValuePointer, _impl->_stretExtent.length);
-    }
-
     // alloca is guaranteed to give us a 16-byte aligned return.
     auto frameLength = _impl->_length;
     auto promotedFrameLength = NSINVOCATION_ALIGN(frameLength, alignof(struct armFrame));
@@ -471,6 +455,11 @@ void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePoi
     armFrame* frame = (armFrame*)(arena + promotedFrameLength);
 
     memcpy(arena, _impl->_buffer, frameLength);
+
+    if (_impl->_stret) {
+        // populate stret out if necessary. we only do this on the local copy.
+        memcpy(arena + _impl->_stretExtent.offset, &returnValuePointer, _impl->_stretExtent.length);
+    }
 
     frame->returnValue = returnValuePointer;
     frame->returnType = _impl->_returnType;

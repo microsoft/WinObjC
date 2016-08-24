@@ -15,7 +15,7 @@ enum return_type {
 };
 
 struct allocation_extent {
-	void* location;
+	off_t offset;
 	size_t length;
 };
 
