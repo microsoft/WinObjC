@@ -76,6 +76,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <CompileAsWinRT>true</CompileAsWinRT>
+      <AdditionalOptions>"/DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Logging.def</ModuleDefinitionFile>
@@ -94,6 +95,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <CompileAsWinRT>true</CompileAsWinRT>
+      <AdditionalOptions>"/DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Logging.def</ModuleDefinitionFile>
@@ -112,6 +114,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
     <ClCompile>
       <CompileAsWinRT>true</CompileAsWinRT>
+      <AdditionalOptions>"/DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Logging.def</ModuleDefinitionFile>
@@ -130,6 +133,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
     <ClCompile>
       <CompileAsWinRT>true</CompileAsWinRT>
+      <AdditionalOptions>"/DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Logging.def</ModuleDefinitionFile>

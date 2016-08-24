@@ -29,7 +29,7 @@
     <ApplicationTypeRevision Condition="'$(ApplicationTypeRevision)'==''">10.0</ApplicationTypeRevision>
     <UseStarboardSourceSdk Condition="'$(UseStarboardSourceSdk)'==''">true</UseStarboardSourceSdk>
     <IslandwoodDRT Condition="'$(IslandwoodDRT)'==''">false</IslandwoodDRT>
-    <StarboardLinkWholeArchive Condition="'$(StarboardLinkWholeArchive)'==''">true</StarboardLinkWholeArchive>
+    <StarboardLinkWholeArchive Condition="'$(StarboardLinkWholeArchive)'==''">false</StarboardLinkWholeArchive>
     <WindowsTargetPlatformVersion Condition="'$(WindowsTargetPlatformVersion)'==''">10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion Condition="'$(WindowsTargetPlatformMinVersion)'==''">10.0.10586.0</WindowsTargetPlatformMinVersion>
     <EnableDotNetNativeCompatibleProfile Condition="'$(EnableDotNetNativeCompatibleProfile)'==''">true</EnableDotNetNativeCompatibleProfile>

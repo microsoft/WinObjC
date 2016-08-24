@@ -30,6 +30,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClangCompile Include="..\..\..\Frameworks\AddressBook\NSDate+AddressBookAdditions.mm" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="AddressBook.def" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

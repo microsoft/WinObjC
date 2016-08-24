@@ -22,7 +22,7 @@
     return [self initWithBytes:(void*)&value objCType:@encode(CLLocationCoordinate2D)];
 }
 
-+ (NSValue *)valueWithMKCoordinate:(CLLocationCoordinate2D)value {
++ (NSValue*)valueWithMKCoordinate:(CLLocationCoordinate2D)value {
     return [[self alloc] initWithMKCoordinate:value];
 }
 
@@ -32,3 +32,6 @@
     return val;
 }
 @end
+
+__attribute__((constructor)) static void _ForceTUInclusion() {
+}

@@ -15,7 +15,6 @@
 //*****************************************************************************/
 #pragma once
 
-
 // Nil is a C++/CX object and __alignof is a Microsoft specific operator so they need to be redefined for Objective C
 #ifdef __OBJC__
 #define Nil Nil2
@@ -31,7 +30,7 @@
 
 /// \internal
 /// <summary> Wide string conversion helper </summary>
-#define TAEF_WIDEN_INT(x) L ## x
+#define TAEF_WIDEN_INT(x) L##x
 
 /// \internal
 /// <summary> Wide string version of "stringizing" operator </summary>
@@ -48,7 +47,6 @@
 /// \internal
 /// <summary>Stringize macro </summary>
 #define TAEF_STRINGIZE(x) TAEF_STRINGIZE_INT(x)
-
 
 #include <functional>
 #include <wrl/implements.h>
@@ -647,15 +645,16 @@ void ValidateCallback(const TFunctor& functor, const wchar_t* name) {
 // Internally used by MOCK_* macros; do not call directly.
 /////////////////////////////////////////////////////////////
 #define BUILD_MOCK_METHOD_IMPL(METHOD_NAME, PARAMETER_COUNT, IS_CONST, ...)                                                               \
+    \
 private:                                                                                                                                  \
     std::function<WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::ReturnType(                                       \
         BUILD_VARIABLE_NAME(MOCK_NAMED_ARGS_, PARAMETER_COUNT)(METHOD_NAME))> BUILD_VARIABLE_NAME(m_, METHOD_NAME);                       \
-                                                                                                                                          \
+    \
 public:                                                                                                                                   \
     virtual WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::ReturnType __VA_ARGS__ METHOD_NAME(                     \
         BUILD_VARIABLE_NAME(MOCK_NAMED_ARGS_, PARAMETER_COUNT)(METHOD_NAME)) BUILD_VARIABLE_NAME(MEMBER_PARAMETER_TYPES_CONST_, IS_CONST) \
         override {                                                                                                                        \
-        Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, METHOD_NAME), TAEF_WIDEN(TAEF_STRINGIZE(METHOD_NAME)));         \
+        Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, METHOD_NAME), TAEF_WIDEN(TAEF_STRINGIZE(METHOD_NAME)));                      \
         return BUILD_VARIABLE_NAME(m_, METHOD_NAME)(BUILD_VARIABLE_NAME(MOCK_CALL_ARGS_, PARAMETER_COUNT));                               \
     }                                                                                                                                     \
     void BUILD_VARIABLE_NAME(Set, METHOD_NAME)(const decltype(BUILD_VARIABLE_NAME(m_, METHOD_NAME))& callback) {                          \
@@ -771,7 +770,7 @@ struct MockInterfaceCalled {
     typedef WEX::Common::ParameterTypes<decltype(&INTERFACE_NAME::METHOD_NAME)> BUILD_VARIABLE_NAME(METHOD_NAME, PARAMETER_TYPES);  \
     static_assert(PARAMETER_COUNT == BUILD_VARIABLE_NAME(METHOD_NAME, PARAMETER_TYPES)::ParameterCount,                             \
                   "Incorrect macro called for function; parameter count doesn't match!");                                           \
-                                                                                                                                    \
+    \
 private:                                                                                                                            \
     std::function<BUILD_VARIABLE_NAME(METHOD_NAME, PARAMETER_TYPES)::ReturnType(                                                    \
         BUILD_VARIABLE_NAME(MOCK_NAMED_ARGS_, PARAMETER_COUNT)(INTERFACE_NAME::METHOD_NAME))> BUILD_VARIABLE_NAME(m_, METHOD_NAME); \
@@ -779,7 +778,7 @@ private:                                                                        
     virtual BUILD_VARIABLE_NAME(METHOD_NAME, PARAMETER_TYPES)::ReturnType METHOD_NAME(                                              \
         BUILD_VARIABLE_NAME(MOCK_NAMED_ARGS_, PARAMETER_COUNT)(INTERFACE_NAME::METHOD_NAME))                                        \
         BUILD_VARIABLE_NAME(MOCK_OVERRIDE_, MOCK_TYPE) {                                                                            \
-        Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, METHOD_NAME), TAEF_WIDEN(TAEF_STRINGIZE(METHOD_NAME)));   \
+        Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, METHOD_NAME), TAEF_WIDEN(TAEF_STRINGIZE(METHOD_NAME)));                \
         return BUILD_VARIABLE_NAME(m_, METHOD_NAME)(BUILD_VARIABLE_NAME(MOCK_CALL_ARGS_, PARAMETER_COUNT));                         \
     }                                                                                                                               \
     internal:                                                                                                                       \
@@ -805,7 +804,7 @@ private:                                                                        
         BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, set), PARAMETER_TYPES);                                        \
     static_assert(1 == BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, set), PARAMETER_TYPES)::ParameterCount,         \
                   "Incorrect macro called for function; parameter count doesn't match!");                                     \
-                                                                                                                              \
+    \
 private:                                                                                                                      \
     std::function<BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ReturnType()>                \
         BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get));                                                     \
@@ -815,14 +814,14 @@ private:                                                                        
     property BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ReturnType PROPERTY_NAME {        \
         virtual BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ReturnType get()               \
             BUILD_VARIABLE_NAME(MOCK_OVERRIDE_, MOCK_TYPE) {                                                                  \
-            Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get)),       \
-                                                      TAEF_WIDEN(TAEF_STRINGIZE(PROPERTY_NAME))L"::get");                     \
+            Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get)),                    \
+                                         TAEF_WIDEN(TAEF_STRINGIZE(PROPERTY_NAME))L"::get");                                  \
             return BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get))();                                        \
         }                                                                                                                     \
         virtual void set(BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, set), PARAMETER_TYPES)::Parameter1 p1)        \
             BUILD_VARIABLE_NAME(MOCK_OVERRIDE_, MOCK_TYPE) {                                                                  \
-            Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, set)),       \
-                                                      TAEF_WIDEN(TAEF_STRINGIZE(PROPERTY_NAME))L"::set");                     \
+            Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, set)),                    \
+                                         TAEF_WIDEN(TAEF_STRINGIZE(PROPERTY_NAME))L"::set");                                  \
             return BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, set))(p1);                                      \
         }                                                                                                                     \
     }                                                                                                                         \
@@ -847,7 +846,7 @@ private:                                                                        
         BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES);                                        \
     static_assert(0 == BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ParameterCount,         \
                   "Incorrect macro called for function; parameter count doesn't match!");                                     \
-                                                                                                                              \
+    \
 private:                                                                                                                      \
     std::function<BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ReturnType()>                \
         BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get));                                                     \
@@ -855,8 +854,8 @@ private:                                                                        
     property BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ReturnType PROPERTY_NAME {        \
         virtual BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ReturnType get()               \
             BUILD_VARIABLE_NAME(MOCK_OVERRIDE_, MOCK_TYPE) {                                                                  \
-            Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get)),       \
-                                                      TAEF_WIDEN(TAEF_STRINGIZE(PROPERTY_NAME))L"::get");                     \
+            Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get)),                    \
+                                         TAEF_WIDEN(TAEF_STRINGIZE(PROPERTY_NAME))L"::get");                                  \
             return BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get))();                                        \
         }                                                                                                                     \
     }                                                                                                                         \

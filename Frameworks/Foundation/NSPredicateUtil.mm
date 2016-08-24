@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#import<NSPredicateUtil.h>
+#import <NSPredicateUtil.h>
 #import <Foundation/NSLocale.h>
 
 NSStringCompareOptions extractStringCompareOptions(NSComparisonPredicateOptions options) {

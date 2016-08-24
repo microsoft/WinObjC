@@ -55,9 +55,9 @@ TEST(NSRegularExpression, CaptureGroupReplacementTest) {
     ASSERT_OBJCEQ(@"catx0 hatx0 batx0", result);
 
     result = [@"ネコ hat bat" stringByReplacingOccurrencesOfString:@"ネコ"
-                                                      withString:@"Japanese四Cat"
-                                                         options:NSRegularExpressionSearch
-                                                           range:NSMakeRange(0, 10)];
+                                                          withString:@"Japanese四Cat"
+                                                             options:NSRegularExpressionSearch
+                                                               range:NSMakeRange(0, 10)];
     ASSERT_OBJCEQ(@"Japanese四Cat hat bat", result);
 
     result = [@"I like cats" stringByReplacingOccurrencesOfString:@"(.)at"

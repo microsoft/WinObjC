@@ -14,6 +14,10 @@
 //
 //******************************************************************************
 
+#include <COMIncludes.h>
+#import <windows.foundation.h>
+#include <COMIncludes_End.h>
+
 #import "Starboard.h"
 #import <Foundation/NSMutableArray.h>
 #import <Foundation/NSData.h>
@@ -28,6 +32,7 @@
 #import <UIKit/UINib.h>
 #import <UIKit/UIApplicationDelegate.h>
 #import <StringHelpers.h>
+#import <CollectionHelpers.h>
 #import "NSThread-Internal.h"
 #import "NSUserDefaultsInternal.h"
 #import "StarboardXaml/StarboardXaml.h"
@@ -39,10 +44,11 @@
 #import "UIDeviceInternal.h"
 #import <MainDispatcher.h>
 #import <CACompositor.h>
-#import <UWP/WindowsMediaSpeechRecognition.h>
-#import <UWP/WindowsFoundation.h>
+#import <UWP/WindowsApplicationModelActivation.h>
 
 static const wchar_t* TAG = L"UIApplicationMain";
+
+using namespace Microsoft::WRL;
 
 @interface NSAutoreleasePoolWarn : NSAutoreleasePool
 @end
@@ -122,6 +128,10 @@ int UIApplicationMainInit(NSString* principalClassName,
                           UIInterfaceOrientation defaultOrientation,
                           int activationType,
                           id activationArg) {
+    // Make sure we reference classes we need:
+    void ForceInclusion();
+    ForceInclusion();
+
     [[NSThread currentThread] _associateWithMainThread];
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
 
@@ -241,9 +251,7 @@ int UIApplicationMainInit(NSString* principalClassName,
     NSMutableDictionary* launchOption = [NSMutableDictionary dictionary];
     switch (activationType) {
         case ActivationTypeToast:
-            // As there is now way to distinguish remote notification from local, set both keys for now.
-            [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-            [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsLocalNotificationKey];
+            [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsToastActionKey];
             break;
         case ActivationTypeVoiceCommand:
             [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsVoiceCommandKey];
@@ -321,6 +329,22 @@ extern "C" void UIApplicationMainHandleResumeEvent() {
     [[NSUserDefaults _standardUserDefaultsNoInitialize] _resumeSynchronize];
 }
 
+extern "C" void UIApplicationMainHandleToastActionEvent(HSTRING toastArgument, IInspectable* toastUserInput) {
+    NSString* argument = Strings::WideToNSString(toastArgument);
+
+    // Convert to NSDictionary with NSStrings
+    ComPtr<IInspectable> comPtr = toastUserInput;
+    ComPtr<ABI::Windows::Foundation::Collections::IPropertySet> map;
+    THROW_NS_IF_FAILED(comPtr.As(&map));
+
+    NSMutableDictionary* userInput = nil;
+    THROW_NS_IF_FAILED(Collections::WRLToNSCollection(map, &userInput));
+
+    NSDictionary* toastAction =
+        @{ UIApplicationLaunchOptionsToastActionArgumentKey : argument, UIApplicationLaunchOptionsToastActionUserInputKey : userInput };
+    [[UIApplication sharedApplication] _sendToastActionReceivedEvent:toastAction];
+}
+
 extern "C" void UIApplicationMainHandlePLMEvent(bool isActive) {
     [[UIApplication sharedApplication] _sendActiveStatus:((isActive) ? YES : NO)];
 }
@@ -329,14 +353,9 @@ extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisibl
     [[UIApplication sharedApplication] _sendActiveStatus:((isVisible) ? YES : NO)];
 }
 
-extern "C" void UIApplicationMainHandleToastNotificationEvent(const char* notificationData) {
-    NSString* data = Strings::IsEmpty<const char*>(notificationData) ? nil : [[NSString alloc] initWithCString:notificationData];
-    [[UIApplication sharedApplication] _sendNotificationReceivedEvent:data];
-}
-
 extern "C" void UIApplicationMainHandleVoiceCommandEvent(IInspectable* voiceCommandResult) {
-    WMSSpeechRecognitionResult* speechResult = [WMSSpeechRecognitionResult createWith:voiceCommandResult];
-    [[UIApplication sharedApplication] _sendVoiceCommandReceivedEvent:speechResult];
+    WMSSpeechRecognitionResult* result = [WMSSpeechRecognitionResult createWith:voiceCommandResult];
+    [[UIApplication sharedApplication] _sendVoiceCommandReceivedEvent:result];
 }
 
 static NSString* _bundleIdFromPackageFamilyName(const wchar_t* packageFamily) {

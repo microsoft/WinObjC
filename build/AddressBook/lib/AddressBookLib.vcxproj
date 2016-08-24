@@ -29,6 +29,8 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AddressBook\ABAddressBookManagerInternal.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AddressBook\ABRecordInternal.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AddressBook\ABContactInternal.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AddressBook\ABSourceInternal.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AddressBook\ABMultiValueInternal.mm" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E3250233-2EFE-4BFB-BDC3-1E4FD4B7B4F4}</ProjectGuid>

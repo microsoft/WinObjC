@@ -347,9 +347,9 @@ public:
 extern void CortanaTestVoiceCommandForegroundActivation();
 extern void CortanaTestVoiceCommandForegroundActivationDelegateMethodsCalled();
 
-class CortanaVoiceCommandForeground {
+class CortanaVoiceCommandForegroundActivation {
 public:
-    BEGIN_TEST_CLASS(CortanaVoiceCommandForeground)
+    BEGIN_TEST_CLASS(CortanaVoiceCommandForegroundActivation)
     TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
     TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     END_TEST_CLASS()
@@ -367,14 +367,14 @@ public:
     TEST_METHOD(Cortana_VoiceCommandForegroundActivationDelegateMethodsCalled) {
         CortanaTestVoiceCommandForegroundActivationDelegateMethodsCalled();
     }
-}; /* class CortanaVoiceCommandForeground*/
+}; /* class CortanaVoiceCommandForegroundActivation */
 
 extern void CortanaTestProtocolForegroundActivation();
 extern void CortanaTestProtocolForegroundActivationDelegateMethodsCalled();
 
-class CortanaProtocolForeground {
+class CortanaProtocolForegroundActivation {
 public:
-    BEGIN_TEST_CLASS(CortanaProtocolForeground)
+    BEGIN_TEST_CLASS(CortanaProtocolForegroundActivation)
     TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
     TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     END_TEST_CLASS()
@@ -392,7 +392,54 @@ public:
     TEST_METHOD(Cortana_ProtocolForegroundActivationDelegateMethodsCalled) {
         CortanaTestProtocolForegroundActivationDelegateMethodsCalled();
     }
-}; /* class CortanaProtocolForeground*/
+}; /* class CortanaProtocolForegroundActivation */
+
+extern void ToastNotificationTestForegroundActivation();
+extern void ToastNotificationTestForegroundActivationDelegateMethodsCalled();
+
+class ToastNotificationForegroundActivation {
+    BEGIN_TEST_CLASS(ToastNotificationForegroundActivation)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(ToastNotificationForegroundTestClassSetup) {
+        // The class setup allows us to activate the app in our test method, but can only be done once per class
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&ToastNotificationTestForegroundActivation));
+    }
+
+    TEST_METHOD_CLEANUP(ToastNotificationForegroundCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
+    TEST_METHOD(ToastNotification_ForegroundActivationDelegateMethodsCalled) {
+        ToastNotificationTestForegroundActivationDelegateMethodsCalled();
+    }
+}; /* class ToastNotificationForeground */
+
+extern void ToastNotificationTestActivatedAppReceivesToastNotification();
+
+class ActivatedAppReceivesToastNotification {
+    BEGIN_TEST_CLASS(ActivatedAppReceivesToastNotification)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(ActivatedAppReceivesToastNotificationTestClassSetup) {
+        // The class setup allows us to activate the app in our test method, but can only be done once per class
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
+
+    TEST_METHOD_CLEANUP(ActivatedAppReceivesToastNotificationCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
+    TEST_METHOD(ToastNotification_ActivatedAppReceivesToastNotification) {
+        ToastNotificationTestActivatedAppReceivesToastNotification();
+    }
+}; /* class ActivatedAppReceivesToastNotification */
 
 // UIViewTests
 //

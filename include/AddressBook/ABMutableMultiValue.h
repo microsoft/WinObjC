@@ -22,19 +22,16 @@
 #import <CoreFoundation/CFString.h>
 
 typedef CFTypeRef ABMutableMultiValueRef;
-ADDRESSBOOK_EXPORT ABMutableMultiValueRef ABMultiValueCreateMutable(ABPropertyType type) STUB_METHOD;
-ADDRESSBOOK_EXPORT ABMutableMultiValueRef ABMultiValueCreateMutableCopy(ABMultiValueRef multiValue) STUB_METHOD;
+ADDRESSBOOK_EXPORT ABMutableMultiValueRef ABMultiValueCreateMutable(ABPropertyType type);
+ADDRESSBOOK_EXPORT ABMutableMultiValueRef ABMultiValueCreateMutableCopy(ABMultiValueRef multiValue);
 ADDRESSBOOK_EXPORT bool ABMultiValueAddValueAndLabel(ABMutableMultiValueRef multiValue,
                                                      CFTypeRef value,
                                                      CFStringRef label,
-                                                     ABMultiValueIdentifier* outIdentifier) STUB_METHOD;
+                                                     ABMultiValueIdentifier* outIdentifier);
 
-ADDRESSBOOK_EXPORT bool ABMultiValueReplaceValueAtIndex(ABMutableMultiValueRef multiValue, CFTypeRef value, CFIndex index) STUB_METHOD;
-ADDRESSBOOK_EXPORT bool ABMultiValueReplaceLabelAtIndex(ABMutableMultiValueRef multiValue, CFStringRef label, CFIndex index) STUB_METHOD;
-ADDRESSBOOK_EXPORT bool ABMultiValueInsertValueAndLabelAtIndex(ABMutableMultiValueRef multiValue,
-                                                               CFTypeRef value,
-                                                               CFStringRef label,
-                                                               CFIndex index,
-                                                               ABMultiValueIdentifier* outIdentifier) STUB_METHOD;
+ADDRESSBOOK_EXPORT bool ABMultiValueReplaceValueAtIndex(ABMutableMultiValueRef multiValue, CFTypeRef value, CFIndex index);
+ADDRESSBOOK_EXPORT bool ABMultiValueReplaceLabelAtIndex(ABMutableMultiValueRef multiValue, CFStringRef label, CFIndex index);
+ADDRESSBOOK_EXPORT bool ABMultiValueInsertValueAndLabelAtIndex(
+    ABMutableMultiValueRef multiValue, CFTypeRef value, CFStringRef label, CFIndex index, ABMultiValueIdentifier* outIdentifier);
 
-ADDRESSBOOK_EXPORT bool ABMultiValueRemoveValueAndLabelAtIndex(ABMutableMultiValueRef multiValue, CFIndex index) STUB_METHOD;
+ADDRESSBOOK_EXPORT bool ABMultiValueRemoveValueAndLabelAtIndex(ABMutableMultiValueRef multiValue, CFIndex index);

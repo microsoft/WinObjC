@@ -29,6 +29,10 @@
 
 static const wchar_t* TAG = L"NSString+UIKitAdditions";
 
+void NSStringForceinclude() {
+    [NSString class];
+}
+
 // Contingent upon VSO 5795281: All of these names need to be compatible with the reference platform.
 NSString* const UITextAttributeFont = NSFontAttributeName;
 NSString* const UITextAttributeTextColor = NSForegroundColorAttributeName;

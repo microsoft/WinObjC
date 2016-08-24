@@ -112,7 +112,7 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
                                                                        if (ret < 0.0f) {
                                                                            ret = 0.0f;
                                                                        }
-                                                                       if ( ret > 0.0f ) {
+                                                                       if (ret > 0.0f) {
                                                                            lastProposedSize = ret;
                                                                        }
                                                                        return ret;
@@ -126,7 +126,7 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
 
             //  In the case that the typesetter cannot fit one character into the container, and the
             //  proposed size is the full width of the container (there are no exclusions) draw one
-            //  glyph. One caveat is this does not take into account exclusion zones outside the 
+            //  glyph. One caveat is this does not take into account exclusion zones outside the
             //  container.
             if ((pos == curIdx) && ((lastProposedSize + container.lineFragmentPadding) >= containerSize.width)) {
                 pos = curIdx + 1;
@@ -139,7 +139,7 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
                 lineRange.location = curIdx;
                 lineRange.length = pos - curIdx;
 
-                CTLineRef line = CTTypesetterCreateLineWithOffset(ts, lineRange, 0.0f);
+                CTLineRef line = CTTypesetterCreateLine(ts, lineRange);
 
                 float ascent = 0.0f, descent = 0.0f, leading = 0.0f;
                 float width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);

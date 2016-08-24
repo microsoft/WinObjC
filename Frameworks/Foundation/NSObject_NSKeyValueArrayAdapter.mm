@@ -251,7 +251,6 @@ struct ProxyInfo {
     }
 
     void removeObjectAtIndex(NSUInteger index) {
-
         if (_targetSelectors.removeAtOne) {
             _call<void>(_targetSelectors.removeAtOne, index);
             return;

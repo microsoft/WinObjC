@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,6 +17,7 @@
 
 #import <CoreText/CoreTextExport.h>
 #import <CoreFoundation/CoreFoundation.h>
+#import <CoreGraphics/CGBase.h>
 
 typedef CGFloat (*CTRunDelegateGetAscentCallback)(void* refCon);
 typedef CGFloat (*CTRunDelegateGetDescentCallback)(void* refCon);

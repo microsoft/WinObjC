@@ -60,15 +60,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    
     // Geocoding
     [self addMenuItemViewController:[[GeocodingViewController alloc] init] andTitle:@"Geocoding"];
-    
+
     // AudioToolbox
     [self addMenuItemViewController:[[AudioToolboxViewController alloc] init] andTitle:@"AudioToolbox"];
     // CoreMotion
     [self addMenuItemViewController:[[CoreMotionViewController alloc] init] andTitle:@"CoreMotion"];
-    
+
     // CoreLocation
     [self addMenuItemViewController:[[CoreLocationViewController alloc] init] andTitle:@"CoreLocation"];
 

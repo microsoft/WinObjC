@@ -109,11 +109,12 @@ TEST(NSTimer, ScheduledTimerWithTimeInterval) {
     NSTimerTestObj* testObj = [[[NSTimerTestObj alloc] initWithValue:NO] autorelease];
     volatile long waitCompletion = 0;
 
-    auto selectorCalledAsync = std::async(std::launch::async, [&waitCompletion, testObj]() {
-        BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
-        _InterlockedExchange(&waitCompletion, 1L);
-        return fooChanged;
-    });
+    auto selectorCalledAsync = std::async(std::launch::async,
+                                          [&waitCompletion, testObj]() {
+                                              BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
+                                              _InterlockedExchange(&waitCompletion, 1L);
+                                              return fooChanged;
+                                          });
 
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
@@ -139,11 +140,12 @@ TEST(NSTimer, ScheduledTimerWithTimeIntervalRepeat) {
     NSTimerTestObj* testObj = [[[NSTimerTestObj alloc] initWithValue:NO count:5] autorelease];
     volatile long waitCompletion = 0;
 
-    auto selectorCalledAsync = std::async(std::launch::async, [&waitCompletion, testObj]() {
-        BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
-        _InterlockedExchange(&waitCompletion, 1L);
-        return fooChanged;
-    });
+    auto selectorCalledAsync = std::async(std::launch::async,
+                                          [&waitCompletion, testObj]() {
+                                              BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
+                                              _InterlockedExchange(&waitCompletion, 1L);
+                                              return fooChanged;
+                                          });
 
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
@@ -186,11 +188,12 @@ TEST(NSTimer, ScheduledTimerWithTimeIntervalFireRepeat) {
     NSTimerTestObj* testObj = [[[NSTimerTestObj alloc] initWithValue:NO count:5] autorelease];
     volatile long waitCompletion = 0;
 
-    auto selectorCalledAsync = std::async(std::launch::async, [&waitCompletion, testObj]() {
-        BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
-        _InterlockedExchange(&waitCompletion, 1L);
-        return fooChanged;
-    });
+    auto selectorCalledAsync = std::async(std::launch::async,
+                                          [&waitCompletion, testObj]() {
+                                              BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
+                                              _InterlockedExchange(&waitCompletion, 1L);
+                                              return fooChanged;
+                                          });
 
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
@@ -226,11 +229,12 @@ TEST(NSTimer, ScheduledTimerWithTimeIntervalWithInvocation) {
     NSTimerTestObj* testObj = [[[NSTimerTestObj alloc] initWithValue:NO] autorelease];
     volatile long waitCompletion = 0;
 
-    auto selectorCalledAsync = std::async(std::launch::async, [&waitCompletion, testObj]() {
-        BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
-        _InterlockedExchange(&waitCompletion, 1L);
-        return fooChanged;
-    });
+    auto selectorCalledAsync = std::async(std::launch::async,
+                                          [&waitCompletion, testObj]() {
+                                              BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
+                                              _InterlockedExchange(&waitCompletion, 1L);
+                                              return fooChanged;
+                                          });
 
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 

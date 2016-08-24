@@ -32,6 +32,7 @@ CFLAGS += -x objective-c++
 CFLAGS += $(INC_PARAMS)
 CFLAGS += -DTARGET_OS_MAC
 CFLAGS += -DWINOBJCRT_IMPEXP=
+CFLAGS += -DLOGGING_IMPEXP=
 CFLAGS += -mmacosx-version-min=$(OSX_VERSION_MIN)
 
 LDFLAGS := -framework Foundation -mmacosx-version-min=$(OSX_VERSION_MIN)

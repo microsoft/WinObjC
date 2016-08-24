@@ -203,19 +203,8 @@ LIBRARY Starboard
         EbrEventTimedMultipleWait
         EbrEventDestroy
 
-        ; Error Handling Internal
+        ; Platform support
         dbg_printf
-        failFastOnUnimplemented
-        starboardGetCurrentThreadId
-        starboardInterlockedIncrementNoFence
-        starboardGetLastError
-        starboardCopyMemory
-        starboardZeroMemory
-        starboardFormatMessageW
-        starboardOutputDebugStringW
-        starboardInterlockedDecrementRelease
-        starboardInterlockedCompareExchangePointer
-        __fastfail
 
         ; REMOVE / CLEANUP C++ EXPORTS
         ?format@string@woc@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PBDZZ

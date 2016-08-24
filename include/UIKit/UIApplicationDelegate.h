@@ -41,12 +41,13 @@
 */
 
 @class NSString, UIApplication, NSDictionary, NSCoder, UIViewController, NSArray, UIUserNotificationSettings, UILocalNotification, NSData,
-    NSError, NSUserActivity, UIApplicationShortcutItem, NSURL, UIWindow, WMSSpeechRecognitionResult, WFUri;
+    NSError, NSUserActivity, UIApplicationShortcutItem, NSURL, UIWindow, WFCValueSet, WMSSpeechRecognitionResult, WFUri;
 
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsURLKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsSourceApplicationKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsRemoteNotificationKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsLocalNotificationKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsToastActionKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsVoiceCommandKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsProtocolKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsAnnotationKey;
@@ -60,6 +61,8 @@ UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsUserActivityTypeKey;
 UIKIT_EXPORT NSString* const UIApplicationOpenURLOptionsSourceApplicationKey;
 UIKIT_EXPORT NSString* const UIApplicationOpenURLOptionsAnnotationKey;
 UIKIT_EXPORT NSString* const UIApplicationOpenURLOptionsOpenInPlaceKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsToastActionArgumentKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsToastActionUserInputKey;
 
 @protocol UIApplicationDelegate <NSObject>
 @optional
@@ -124,6 +127,7 @@ UIKIT_EXPORT NSString* const UIApplicationOpenURLOptionsOpenInPlaceKey;
          forRemoteNotification:(NSDictionary*)userInfo
              completionHandler:(void (^)(void))completionHandler;
 - (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo;
+- (void)application:(UIApplication*)application didReceiveToastAction:(NSDictionary*)action;
 - (void)application:(UIApplication*)application didReceiveVoiceCommand:(WMSSpeechRecognitionResult*)result;
 - (void)application:(UIApplication*)application didReceiveProtocol:(WFUri*)uri;
 - (void)application:(UIApplication*)application

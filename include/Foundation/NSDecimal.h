@@ -29,7 +29,7 @@ enum { NSCalculationNoError = 0, NSCalculationLossOfPrecision, NSCalculationUnde
 
 typedef uint32_t NSCalculationError;
 
-typedef struct {
+typedef struct NSDecimal {
     union {
         signed int _exponent : 8;
         unsigned int _length : 4;
