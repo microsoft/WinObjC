@@ -57,7 +57,6 @@
 
   <Target
     Name="FindPublicHeaders"
-    BeforeTargets="Link;Lib"
     Condition="'$(ConfigurationType)' == 'StaticLibrary' or '$(ConfigurationType)' == 'DynamicLibrary'" >
     
     <ItemGroup>
@@ -73,12 +72,18 @@
     </PropertyGroup>
     
   </Target>
+
+  <!-- Copy project's public headers before build starts -->
+  <PropertyGroup>
+    <BeforeBuildCompileTargets>CopyPublicHeaders;$(BeforeBuildCompileTargets)</BeforeBuildCompileTargets>
+  </PropertyGroup>
+
+  <!-- FindPublicHeaders must run before _CopyPublicHeaders's condition is evaluated -->
+  <Target Name="CopyPublicHeaders" DependsOnTargets="FindPublicHeaders;_CopyPublicHeaders" />
   
   <Target
-    Name="CopyPublicHeaders"
+    Name="_CopyPublicHeaders"
     Condition="'@(PublicHeader)' != ''"
-    DependsOnTargets="FindPublicHeaders"
-    BeforeTargets="BeforeBuild"
     Inputs="@(PublicHeader->'%(Source)')"
     Outputs="@(PublicHeader)">
     
