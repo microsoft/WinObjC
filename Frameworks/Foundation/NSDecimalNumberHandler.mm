@@ -17,19 +17,30 @@
 #import <StubReturn.h>
 #import <Foundation/NSDecimalNumberHandler.h>
 
-@implementation NSDecimalNumberHandler
-/**
- @Status Stub
- @Notes
-*/
-+ (NSDecimalNumberHandler*)defaultDecimalNumberHandler {
-    UNIMPLEMENTED();
-    return StubReturn();
+@implementation NSDecimalNumberHandler {
+    NSRoundingMode _roundingMode;
+    short _scale;
+    BOOL _raiseOnExactness;
+    BOOL _raiseOnOverflow;
+    BOOL _raiseOnUnderflow;
+    BOOL _raiseOnDivideByZero;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
+*/
++ (NSDecimalNumberHandler*)defaultDecimalNumberHandler {
+    static NSDecimalNumberHandler* defaultHandler = [[NSDecimalNumberHandler alloc] initWithRoundingMode:NSRoundPlain
+                                                                                                   scale:NSDecimalNoScale
+                                                                                        raiseOnExactness:NO
+                                                                                         raiseOnOverflow:YES
+                                                                                        raiseOnUnderflow:YES
+                                                                                     raiseOnDivideByZero:YES];
+    return defaultHandler;
+}
+
+/**
+ @Status Interoperable
 */
 + (instancetype)decimalNumberHandlerWithRoundingMode:(NSRoundingMode)roundingMode
                                                scale:(short)scale
@@ -37,13 +48,16 @@
                                      raiseOnOverflow:(BOOL)raiseOnOverflow
                                     raiseOnUnderflow:(BOOL)raiseOnUnderflow
                                  raiseOnDivideByZero:(BOOL)raiseOnDivideByZero {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [[[NSDecimalNumberHandler alloc] initWithRoundingMode:roundingMode
+                                                           scale:scale
+                                                raiseOnExactness:raiseOnExactness
+                                                 raiseOnOverflow:raiseOnOverflow
+                                                raiseOnUnderflow:raiseOnUnderflow
+                                             raiseOnDivideByZero:raiseOnDivideByZero] autorelease];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithRoundingMode:(NSRoundingMode)roundingMode
                                scale:(short)scale
@@ -51,8 +65,16 @@
                      raiseOnOverflow:(BOOL)raiseOnOverflow
                     raiseOnUnderflow:(BOOL)raiseOnUnderflow
                  raiseOnDivideByZero:(BOOL)raiseOnDivideByZero {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (self = [super init]) {
+        _roundingMode = roundingMode;
+        _scale = scale;
+        _raiseOnExactness = raiseOnExactness;
+        _raiseOnOverflow = raiseOnOverflow;
+        _raiseOnUnderflow = raiseOnUnderflow;
+        _raiseOnDivideByZero = raiseOnDivideByZero;
+    }
+
+    return self;
 }
 
 /**
@@ -73,21 +95,17 @@
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSRoundingMode)roundingMode {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return _roundingMode;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (short)scale {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return _scale;
 }
 
 /**

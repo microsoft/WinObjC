@@ -21,17 +21,19 @@
 
 FOUNDATION_EXPORT_CLASS
 @interface NSDecimalNumberHandler : NSObject <NSCoding, NSDecimalNumberBehaviors>
-+ (NSDecimalNumberHandler*)defaultDecimalNumberHandler STUB_METHOD;
++ (NSDecimalNumberHandler*)defaultDecimalNumberHandler;
+
 + (instancetype)decimalNumberHandlerWithRoundingMode:(NSRoundingMode)roundingMode
                                                scale:(short)scale
                                     raiseOnExactness:(BOOL)raiseOnExactness
                                      raiseOnOverflow:(BOOL)raiseOnOverflow
                                     raiseOnUnderflow:(BOOL)raiseOnUnderflow
-                                 raiseOnDivideByZero:(BOOL)raiseOnDivideByZero STUB_METHOD;
+                                 raiseOnDivideByZero:(BOOL)raiseOnDivideByZero;
+
 - (instancetype)initWithRoundingMode:(NSRoundingMode)roundingMode
                                scale:(short)scale
                     raiseOnExactness:(BOOL)raiseOnExactness
                      raiseOnOverflow:(BOOL)raiseOnOverflow
                     raiseOnUnderflow:(BOOL)raiseOnUnderflow
-                 raiseOnDivideByZero:(BOOL)raiseOnDivideByZero STUB_METHOD;
+                 raiseOnDivideByZero:(BOOL)raiseOnDivideByZero;
 @end
