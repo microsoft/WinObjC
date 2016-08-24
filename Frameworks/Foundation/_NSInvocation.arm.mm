@@ -30,14 +30,14 @@ constexpr size_t g_gprLength = GPR_COUNT * sizeof(uintptr_t); // 4 GPRs;
 constexpr size_t SPFR_COUNT = 16;
 constexpr size_t g_sfprLength = SPFR_COUNT * sizeof(float); // 16 single-precision float registers
 
-enum _arm_return_type {
-    ARM_NONE,
-    ARM_VFP_S,
-    ARM_VFP_D,
-    ARM_VFP_HOMOGENOUS,
-    ARM_INT,
-    ARM_INT64,
-    ARM_STRUCT,
+enum return_type {
+    RETURN_TYPE_NONE,
+    RETURN_TYPE_VFP_S,
+    RETURN_TYPE_VFP_D,
+    RETURN_TYPE_VFP_HOMOGENOUS,
+    RETURN_TYPE_INT,
+    RETURN_TYPE_INT64,
+    RETURN_TYPE_STRUCT,
 };
 
 // uniformTypeFromStructSpecifier attempts to determine the common type for an aggregate.
@@ -111,7 +111,7 @@ static size_t firstUnused(const std::bitset<N>& bitset, size_t start = 0) {
     return N;
 }
 
-static _arm_return_type _getReturnType(const char* typeEncoding) {
+static return_type _getReturnType(const char* typeEncoding) {
     switch (typeEncoding[0]) {
         case _C_CHR:
         case _C_SHT:
@@ -126,37 +126,37 @@ static _arm_return_type _getReturnType(const char* typeEncoding) {
         case _C_PTR:
         case _C_SEL:
         case _C_CHARPTR:
-            return ARM_INT;
+            return RETURN_TYPE_INT;
         case _C_LNG_LNG:
         case _C_ULNG_LNG:
-            return ARM_INT64;
+            return RETURN_TYPE_INT64;
         case _C_STRUCT_B: {
             const char* typeEncodingPtr = typeEncoding;
             size_t size = objc_sizeof_type(typeEncoding);
             char type = uniformTypeFromStructSpecifier(&typeEncodingPtr);
 
             if (type == _C_FLT && size <= sizeof(float) * 4) {
-                return ARM_VFP_HOMOGENOUS;
+                return RETURN_TYPE_VFP_HOMOGENOUS;
             }
 
             if (type == _C_DBL && size <= sizeof(double) * 4) {
-                return ARM_VFP_HOMOGENOUS;
+                return RETURN_TYPE_VFP_HOMOGENOUS;
             }
 
             if (size <= 4) {
-                return ARM_INT;
+                return RETURN_TYPE_INT;
             }
 
-            return ARM_STRUCT;
+            return RETURN_TYPE_STRUCT;
         }
         case _C_FLT:
-            return ARM_VFP_S;
+            return RETURN_TYPE_VFP_S;
         case _C_DBL:
-            return ARM_VFP_D;
+            return RETURN_TYPE_VFP_D;
         case _C_VOID:
-            return ARM_NONE;
+            return RETURN_TYPE_NONE;
     }
-    return ARM_NONE;
+    return RETURN_TYPE_NONE;
 }
 
 struct _NSInvocationCallFrame::impl {
@@ -164,7 +164,7 @@ struct _NSInvocationCallFrame::impl {
 
     uint8_t* _buffer;
     size_t _length;
-    _arm_return_type _returnType;
+    return_type _returnType;
     size_t _returnLength;
 
     std::bitset<GPR_COUNT> gprUsage;
@@ -188,15 +188,13 @@ struct _NSInvocationCallFrame::impl {
 
         _returnLength = [_methodSignature methodReturnLength];
 
-        if (_returnType == ARM_STRUCT) {
+        if (_returnType == RETURN_TYPE_STRUCT) {
             _stret = true;
             _stretExtent = _allocateArgument("^v");
-        } else if (_returnType == ARM_VFP_HOMOGENOUS) {
+        } else if (_returnType == RETURN_TYPE_VFP_HOMOGENOUS) {
             // Promote all homogenous vfp returns to the size of all four double-width registers
             _returnLength = std::max(sizeof(double) * 4, _returnLength);
-        } else if (_returnType == ARM_NONE) {
-            // Do nothing; there's no point in allocating for this.
-        } else {
+        } else if (_returnType != RETURN_TYPE_NONE) {
             // Promote all non-stret return lengths to one machine word.
             _returnLength = std::max(sizeof(uintptr_t), _returnLength);
         }
@@ -443,7 +441,7 @@ struct armFrame {
     void* savedLinkRegister;
 
     void* returnValue;
-    _arm_return_type returnType;
+    return_type returnType;
 };
 
 void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePointer) const {

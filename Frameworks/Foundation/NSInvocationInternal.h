@@ -16,20 +16,6 @@
 
 #pragma once
 
-enum return_type {
-	RETURN_TYPE_NONE,
-	RETURN_TYPE_SINT8,
-	RETURN_TYPE_UINT8,
-	RETURN_TYPE_SINT16,
-	RETURN_TYPE_UINT16,
-	RETURN_TYPE_INT32, // Only one: no need to sign-extend
-	RETURN_TYPE_INT64,
-	RETURN_TYPE_POINTER,
-	RETURN_TYPE_FLOAT,
-	RETURN_TYPE_DOUBLE,
-	RETURN_TYPE_STRUCT,
-};
-
 struct allocation_extent {
 	off_t offset;
 	size_t length;
@@ -56,9 +42,6 @@ public:
 	bool getRequiresStructReturn() const;
 
 	void execute(void*, void*) const;
-
-	static return_type returnTypeFromEncoding(const char* returnTypeEncoding);
-	static size_t padFrameLength(size_t frameLength);
 };
 
 #endif

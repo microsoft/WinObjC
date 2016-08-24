@@ -25,6 +25,20 @@
 #import <objc/runtime.h>
 #import <objc/encoding.h>
 
+enum return_type {
+	RETURN_TYPE_NONE,
+	RETURN_TYPE_SINT8,
+	RETURN_TYPE_UINT8,
+	RETURN_TYPE_SINT16,
+	RETURN_TYPE_UINT16,
+	RETURN_TYPE_INT32, // Only one: no need to sign-extend
+	RETURN_TYPE_INT64, // Only one: no need to sign-extend
+	RETURN_TYPE_POINTER,
+	RETURN_TYPE_FLOAT,
+	RETURN_TYPE_DOUBLE,
+	RETURN_TYPE_STRUCT,
+};
+
 struct x86Frame {
     void* ebp;
     void* retp;
