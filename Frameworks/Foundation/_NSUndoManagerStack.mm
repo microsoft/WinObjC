@@ -15,35 +15,33 @@
 //******************************************************************************
 
 #import <Starboard.h>
-#import <StubReturn.h>
 #import "_NSUndoManagerInternal.h"
-#import <objc/objc-arc.h>
+#include <list>
 
-@implementation _NSUndoBasicAction {
-    StrongId<id> _object;
-    id _target;
-    SEL _undoAction;
+@implementation _NSUndoManagerStack {
+    std::list<StrongId<id<_NSUndoable>>> _stack;
 }
 
-- (id)_initWithTarget:(id)target selector:(SEL)aSelector object:(id)anObject {
-    if (self = [super init]) {
-        _undoAction = aSelector;
-        _target = objc_storeWeak(&_target, target);
-        _object = anObject;
+- (void)pop {
+    if ([self count] > 0) {
+        _stack.pop_front();
     }
-    return self;
 }
 
-- (void)undo {
-    [objc_loadWeak(&_target) performSelector:_undoAction withObject:_object];
+- (id<_NSUndoable>)peek {
+    if ([self count] > 0) {
+        return _stack.front();
+    }
+    return nil;
 }
 
-- (void)dealloc {
-    objc_destroyWeak(&_target);
+- (void)push:(id<_NSUndoable>)undoObject {
+    _stack.push_front(undoObject);
+    [undoObject release];
 }
 
-- (bool)isClosed {
-    return YES;
+- (NSUInteger)count {
+    return _stack.size();
 }
 
 @end

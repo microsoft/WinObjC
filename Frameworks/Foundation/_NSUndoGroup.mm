@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -19,75 +19,65 @@
 #import "_NSUndoManagerInternal.h"
 
 @implementation _NSUndoGroup {
-    StrongId<NSMutableArray*> _undoGrouping;
+    StrongId<_NSUndoManagerStack*> _undoGrouping;
     NSInteger _undoLevel;
-    NSInteger _depth;
+    BOOL _isClosed;
 }
 
 - (BOOL)isClosed {
-    return _depth == 0;
+    return _isClosed;
 }
 
 - (id)initWithLevel:(NSInteger)level {
     if (self = [super init]) {
-        _undoGrouping = [NSMutableArray array];
+        _undoGrouping = [[_NSUndoManagerStack alloc] init];
         _undoLevel = level;
-        _depth = 1;
+        _isClosed = NO;
     }
     return self;
 }
 
 - (void)addUndoCallToUndoGroup:(_NSUndoBasicAction*)undoCall {
-    _NSUndoBasicAction* topObjectInGroup = [_undoGrouping firstObject];
+    _NSUndoBasicAction* topObjectInGroup = [_undoGrouping peek];
     if (topObjectInGroup != nil && ![topObjectInGroup isClosed]) {
         [topObjectInGroup addUndoCallToUndoGroup:undoCall];
     } else {
-        [_undoGrouping insertObject:undoCall atIndex:0];
+        [_undoGrouping push:undoCall];
     }
 }
 
 - (void)undo {
+    if ([_undoGrouping count] == 0) {
+        [NSException raise:NSInternalInconsistencyException format:@"No undo operations in undo group."];
+    }
+    if (!_isClosed) {
+        [NSException raise:NSInternalInconsistencyException format:@"Undo group was not closed."];
+    }
     while ([_undoGrouping count] > 0) {
-        id<_NSUndoable> object = [_undoGrouping firstObject];
+        id<_NSUndoable> object = [_undoGrouping peek];
         [object undo];
-        [_undoGrouping removeObjectAtIndex:0];
+        [_undoGrouping pop];
     }
 }
 
-- (NSInteger)createUndoGroupWithLevel:(NSInteger)level {
-    id<_NSUndoable> topObjectInGroup = [_undoGrouping firstObject];
+- (void)createUndoGroupWithLevel:(NSInteger)level {
+    id<_NSUndoable> topObjectInGroup = [_undoGrouping peek];
     if (topObjectInGroup != nil && ![topObjectInGroup isClosed]) {
-        _depth++;
         // Object must be a group in order to be an open object. Cast to ensure proper return type, otherwise return type is default id.
-        return [(_NSUndoGroup*)topObjectInGroup createUndoGroupWithLevel:level + 1];
+        [(_NSUndoGroup*)topObjectInGroup createUndoGroupWithLevel:level + 1];
     }
 
-    _NSUndoGroup* newGroup = [[[_NSUndoGroup alloc] initWithLevel:level] autorelease];
-    [_undoGrouping insertObject:newGroup atIndex:0];
-    return level;
+    _NSUndoGroup* newGroup = [[_NSUndoGroup alloc] initWithLevel:level];
+    [_undoGrouping push:newGroup];
 }
 
 - (void)closeUndoGroup {
-    id<_NSUndoable> topObjectInGroup = [_undoGrouping firstObject];
+    id<_NSUndoable> topObjectInGroup = [_undoGrouping peek];
     if (topObjectInGroup != nil && ![topObjectInGroup isClosed]) {
         [topObjectInGroup closeUndoGroup];
+    } else {
+        _isClosed = YES;
     }
-    _depth--;
-}
-
-- (BOOL)canUndo {
-    // Top level undo group does not need to be closed.
-    _NSUndoBasicAction* topObjectInGroup = [_undoGrouping firstObject];
-
-    if ([topObjectInGroup canUndo] && ([self isClosed] || _undoLevel == 1)) {
-        return YES;
-    }
-
-    return NO;
-}
-
-- (NSInteger)_getDepth {
-    return _depth;
 }
 
 @end

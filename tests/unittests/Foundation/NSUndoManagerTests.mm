@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,10 +17,10 @@
 #import <Foundation/Foundation.h>
 #import <TestFramework.h>
 
-@interface someObject : NSObject
-@property NSUndoManager* undoManager;
-@property NSNumber* value;
-@property NSMutableArray* arrayOfNumbers;
+@interface SomeObject : NSObject
+@property (retain) NSUndoManager* undoManager;
+@property (retain) NSNumber* value;
+@property (retain) NSMutableArray* arrayOfNumbers;
 - (id)initWithValue:(NSNumber*)num;
 - (id)initWithEmptyArray;
 - (void)updateNumber:(NSNumber*)value;
@@ -29,43 +29,49 @@
 - (void)removeFromMutableArray:(NSNumber*)value;
 @end
 
-@implementation someObject
+@implementation SomeObject
 
 - (id)initWithValue:(NSNumber*)num {
     self = [super init];
-    _undoManager = [[[NSUndoManager alloc] init] autorelease];
-    _value = num;
+    _undoManager = [[NSUndoManager alloc] init];
+    _value = [num retain];
     _arrayOfNumbers = nil;
     return self;
 }
 
 - (id)initWithEmptyArray {
     self = [super init];
-    _undoManager = [[[NSUndoManager alloc] init] autorelease];
+    _undoManager = [[NSUndoManager alloc] init];
     _value = nil;
-    _arrayOfNumbers = [NSMutableArray array];
+    _arrayOfNumbers = [[NSMutableArray array] retain];
     return self;
 }
 
-- (void)updateNumber:(NSNumber*)value {
-    [_undoManager registerUndoWithTarget:self selector:@selector(updateNumber:) object:_value];
-    _value = value;
+- (void)dealloc {
+    [_undoManager release];
+    [_value release];
+    [_arrayOfNumbers release];
+}
+
+- (void)updateNumber:(NSNumber*)newValue {
+    [self.undoManager registerUndoWithTarget:self selector:@selector(updateNumber:) object:self.value];
+    self.value = newValue;
 }
 
 - (void)updateNumberSingleUndoStep:(NSNumber*)value {
-    [_undoManager beginUndoGrouping];
+    [self.undoManager beginUndoGrouping];
     [self updateNumber:value];
-    [_undoManager endUndoGrouping];
+    [self.undoManager endUndoGrouping];
 }
 
 - (void)addToMutableArray:(NSNumber*)value {
-    [_undoManager registerUndoWithTarget:self selector:@selector(removeFromMutableArray:) object:value];
-    [_arrayOfNumbers addObject:value];
+    [self.undoManager registerUndoWithTarget:self selector:@selector(removeFromMutableArray:) object:value];
+    [self.arrayOfNumbers addObject:value];
 }
 
 - (void)removeFromMutableArray:(NSNumber*)value {
-    [_undoManager registerUndoWithTarget:self selector:@selector(addToMutableArray:) object:value];
-    [_arrayOfNumbers removeObject:value];
+    [self.undoManager registerUndoWithTarget:self selector:@selector(addToMutableArray:) object:value];
+    [self.arrayOfNumbers removeObject:value];
 }
 
 @end
@@ -74,7 +80,7 @@ TEST(NSUndoManager, BasicUndoTest) {
     NSNumber* oldValue = [NSNumber numberWithInt:5];
     NSNumber* newValue = [NSNumber numberWithInt:6];
 
-    someObject* object = [[[someObject alloc] initWithValue:oldValue] autorelease];
+    SomeObject* object = [[[SomeObject alloc] initWithValue:oldValue] autorelease];
     EXPECT_EQ([object.undoManager canUndo], NO);
 
     EXPECT_EQ(object.value.intValue, oldValue.intValue);
@@ -94,7 +100,7 @@ TEST(NSUndoManager, undoTests) {
     NSNumber* val3 = [NSNumber numberWithInt:7];
     NSNumber* val4 = [NSNumber numberWithInt:8];
 
-    someObject* object = [[[someObject alloc] initWithValue:val1] autorelease];
+    SomeObject* object = [[[SomeObject alloc] initWithValue:val1] autorelease];
     EXPECT_EQ([object.undoManager canUndo], NO);
 
     // Each undo operation here gets added to the single default undo group.
@@ -113,7 +119,7 @@ TEST(NSUndoManager, undoRedoTests) {
     NSNumber* val3 = [NSNumber numberWithInt:7];
     NSNumber* val4 = [NSNumber numberWithInt:8];
 
-    someObject* object = [[[someObject alloc] initWithValue:val1] autorelease];
+    SomeObject* object = [[[SomeObject alloc] initWithValue:val1] autorelease];
     EXPECT_EQ([object.undoManager canUndo], NO);
 
     [object updateNumber:val2];
@@ -138,7 +144,7 @@ TEST(NSUndoManager, undoRedoTestsWithMutableObject) {
     NSNumber* val3 = [NSNumber numberWithInt:7];
     NSNumber* val4 = [NSNumber numberWithInt:8];
 
-    someObject* object = [[[someObject alloc] initWithEmptyArray] autorelease];
+    SomeObject* object = [[[SomeObject alloc] initWithEmptyArray] autorelease];
     EXPECT_EQ([object.undoManager canUndo], NO);
 
     NSMutableArray* comparisonArray = [NSMutableArray array];
@@ -165,20 +171,15 @@ TEST(NSUndoManager, ExtraUndoOperations) {
     NSNumber* oldValue = [NSNumber numberWithInt:5];
     NSNumber* newValue = [NSNumber numberWithInt:6];
 
-    someObject* object = [[[someObject alloc] initWithValue:oldValue] autorelease];
+    SomeObject* object = [[[SomeObject alloc] initWithValue:oldValue] autorelease];
 
     [object updateNumber:newValue];
     EXPECT_EQ(object.value.intValue, newValue.intValue);
 
     [object.undoManager undo];
     EXPECT_EQ(object.value.intValue, oldValue.intValue);
-    [object.undoManager undo];
+    EXPECT_NO_THROW([object.undoManager undo]);
     EXPECT_EQ(object.value.intValue, oldValue.intValue);
-
-    [object.undoManager redo];
-    EXPECT_EQ(object.value.intValue, newValue.intValue);
-    [object.undoManager redo];
-    EXPECT_EQ(object.value.intValue, newValue.intValue);
 }
 
 TEST(NSUndoManager, IndividualUndoOperations) {
@@ -187,7 +188,7 @@ TEST(NSUndoManager, IndividualUndoOperations) {
     NSNumber* val3 = [NSNumber numberWithInt:7];
     NSNumber* val4 = [NSNumber numberWithInt:8];
 
-    someObject* object = [[[someObject alloc] initWithValue:val1] autorelease];
+    SomeObject* object = [[[SomeObject alloc] initWithValue:val1] autorelease];
 
     [object updateNumberSingleUndoStep:val1];
     [object updateNumberSingleUndoStep:val2];
@@ -210,7 +211,7 @@ TEST(NSUndoManager, IndividualUndoRedoOperations) {
     NSNumber* val2 = [NSNumber numberWithInt:6];
     NSNumber* val3 = [NSNumber numberWithInt:7];
     NSNumber* val4 = [NSNumber numberWithInt:8];
-    someObject* object = [[[someObject alloc] initWithValue:val1] autorelease];
+    SomeObject* object = [[[SomeObject alloc] initWithValue:val1] autorelease];
 
     [object updateNumberSingleUndoStep:val1];
     [object updateNumberSingleUndoStep:val2];
@@ -236,4 +237,30 @@ TEST(NSUndoManager, IndividualUndoRedoOperations) {
 
     [object.undoManager undoNestedGroup];
     EXPECT_EQ(object.value.intValue, val2.intValue);
+}
+
+TEST(NSUndoManager, InternalInconsistencyExceptions) {
+    NSNumber* val1 = [NSNumber numberWithInt:5];
+
+    SomeObject* object = [[[SomeObject alloc] initWithValue:val1] autorelease];
+    EXPECT_ANY_THROW([object.undoManager endUndoGrouping]);
+
+    object = [[[SomeObject alloc] initWithValue:val1] autorelease];
+    [object.undoManager beginUndoGrouping];
+    EXPECT_ANY_THROW([object.undoManager undo]);
+}
+
+TEST(NSUndoManager, IsRegistrationEnabled) {
+    NSNumber* val1 = [NSNumber numberWithInt:5];
+
+    SomeObject* object = [[[SomeObject alloc] initWithValue:val1] autorelease];
+    [object.undoManager disableUndoRegistration];
+    EXPECT_EQ(object.undoManager.isUndoRegistrationEnabled, NO);
+    [object.undoManager disableUndoRegistration];
+    EXPECT_EQ(object.undoManager.isUndoRegistrationEnabled, NO);
+    [object.undoManager enableUndoRegistration];
+    EXPECT_EQ(object.undoManager.isUndoRegistrationEnabled, NO);
+    [object.undoManager enableUndoRegistration];
+    EXPECT_EQ(object.undoManager.isUndoRegistrationEnabled, YES);
+    EXPECT_ANY_THROW([object.undoManager enableUndoRegistration]);
 }

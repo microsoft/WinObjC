@@ -1,7 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
-// Copyright (c) 2006-2007 Christopher J. W. Lloyd
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -23,8 +22,6 @@
 @protocol _NSUndoable
 @required
 - (void)undo;
-- (BOOL)canUndo;
-
 @end
 
 @interface _NSUndoBasicAction : NSObject <_NSUndoable>
@@ -37,9 +34,17 @@
 
 - (id)initWithLevel:(NSInteger)level;
 - (void)addUndoCallToUndoGroup:(_NSUndoBasicAction*)undoCall;
-- (NSInteger)createUndoGroupWithLevel:(NSInteger)level;
-- (BOOL)closeUndoGroup;
+- (void)createUndoGroupWithLevel:(NSInteger)level;
+- (void)closeUndoGroup;
 - (BOOL)isClosed;
-- (NSInteger)_getDepth;
+
+@end
+
+@interface _NSUndoManagerStack : NSObject
+
+- (void)pop;
+- (id<_NSUndoable>)peek;
+- (void)push:(id<_NSUndoable>)undoObject;
+- (NSUInteger)count;
 
 @end
