@@ -27,6 +27,7 @@ NSInvocation will rely on an internal platform-specific interface, `_NSInvocatio
 `_NSInvocationCallFrame` has only three responsibilities: determining whether a method requires special struct return handling, storing an argument, and loading an argument.
 
 Therefore, platform support for NSInvocation will be provided via two discrete modules:
+
 1. A conformant implementation of `_NSInvocationCallFrame`.
 2. An assembly thunk that will take the platform internal representation of `_NSInvocationCallFrame` and dispatch a call to a function pointer with the stored arguments.
 
