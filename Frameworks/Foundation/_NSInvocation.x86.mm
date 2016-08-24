@@ -122,6 +122,10 @@ struct _NSInvocationCallFrame::impl {
         _buffer = new uint8_t[_offset];
     };
 
+    ~impl() {
+        delete[] buffer;
+    }
+
     allocation_extent _allocateArgument(const char* objcTypeEncoding) {
         size_t nWords = std::max(1U, objc_aligned_size(objcTypeEncoding) / sizeof(uintptr_t));
         auto length = nWords * sizeof(uintptr_t);

@@ -218,6 +218,10 @@ struct _NSInvocationCallFrame::impl {
         _buffer = new uint8_t[length];
     }
 
+    ~impl() {
+        delete[] buffer;
+    }
+
     void _alignStack(size_t alignment = 0) {
         if (alignment) {
             stackBytes = NSINVOCATION_ALIGN(stackBytes, alignment);
