@@ -238,6 +238,7 @@
     <ClangCompile Include="..\..\..\..\tests\unittests\CoreText\CTLineTests.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\CoreText\CTParagraphStyleTests.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\CoreText\CTRunTests.mm" />
+    <ClangCompile Include="..\..\..\..\tests\unittests\CoreText\CTTypesetterTests.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
