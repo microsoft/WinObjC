@@ -19,17 +19,18 @@
 ; r1 = frame
 ; r2 = fn
 ; r3 = vfp count
-|_CallFrameInternal_VFP|
+    ALIGN
+|_CallFrameInternal_VFP| PROC
     GLOBAL _CallFrameInternal_VFP
-; FALL THROUGH TO NON-VFP CASE
+    GLOBAL _CallFrameInternal
     CMP r3, 1
     VLDREQ.64 d0, [r0]
     VLDMGT.64 r0, {d0-d7}
 
     ADD r0, r0, #64
-
-    GLOBAL _CallFrameInternal
-|_CallFrameInternal|
+    ; Fall through to non-VFP case
+|_CallFrameInternal_VFP| ENDP
+|_CallFrameInternal| PROC
     STM r1, {fp, lr}
     MOV fp, r1
 
@@ -39,41 +40,43 @@
     LDMIA sp!, {r0-r3}
     BLX lr
 
-    LDR r2, [fp, #8]
-    LDR r3, [fp, #12]
+    LDR r2, [fp, #8] ; return pointer
+    LDR r3, [fp, #12] ; return type
     MOV sp, fp
 
-    ADR ip, |JumpTable|
+    ADR ip, %F0
     LDR pc, [ip, r3, lsl #2]
 
-|_CASE_ARM_VFP_S|
+11 ; VFP_F
     VSTR s0, [r2]
     POP {fp, pc}
-|_CASE_ARM_VFP_D|
+12 ; VFP_D
     VSTR d0, [r2]
     POP {fp, pc}
-|_CASE_ARM_VFP_HOMOGENOUS|
+13 ; VFP_HOMOGENOUS
     VSTM r2, {d0-d3}
     POP {fp, pc}
 
-|_CASE_ARM_INT64|
+15 ; INT32
     STR r1, [r2, #4]
     ;; fall through
-|_CASE_ARM_INT|
+14 ; INT
     STR r0, [r2]
     ;; fall through
 
-|_CASE_ARM_STRUCT|
-|_CASE_ARM_NONE|
+16 ; STRUCT
+10 ; NONE
     POP {fp, pc}
 
-|JumpTable|
-    DCD |_CASE_ARM_NONE|
-    DCD |_CASE_ARM_VFP_S|
-    DCD |_CASE_ARM_VFP_D|
-    DCD |_CASE_ARM_VFP_HOMOGENOUS|
-    DCD |_CASE_ARM_INT|
-    DCD |_CASE_ARM_INT64|
-    DCD |_CASE_ARM_STRUCT|
+    ALIGN 4
+0
+    DCD %B10 ; |_CASE_ARM_NONE|
+    DCD %B11 ; |_CASE_ARM_VFP_S|
+    DCD %B12 ; |_CASE_ARM_VFP_D|
+    DCD %B13 ; |_CASE_ARM_VFP_HOMOGENOUS|
+    DCD %B14 ; |_CASE_ARM_INT|
+    DCD %B15 ; |_CASE_ARM_INT64|
+    DCD %B16 ; |_CASE_ARM_STRUCT|
+|_CallFrameInternal| ENDP
 
     END
