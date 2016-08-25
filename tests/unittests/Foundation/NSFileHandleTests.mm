@@ -29,10 +29,10 @@ TEST(NSFileHandle, ReadFile) {
     NSString* fullPath = getPathToFile(fileName);
     NSFileHandle* fh = [NSFileHandle fileHandleForReadingAtPath:fullPath];
     SCOPE_CLOSE_HANDLE(fh);
-    ASSERT_TRUE(fh != nil);
+    ASSERT_NE(fh, nil);
 
     NSData* fileData = [fh readDataToEndOfFile];
-    ASSERT_TRUE_MSG(fileData != nil, "FAILED: reading the entire file failed.");
+    ASSERT_NE_MSG(fileData, nil, "FAILED: reading the entire file failed.");
 
     NSString* str = [[[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding] autorelease];
     ASSERT_OBJCEQ_MSG(str, content, "FAILED: Unable to read the file content.");
@@ -46,7 +46,7 @@ TEST(NSFileHandle, UpdateAndSeeks) {
     NSString* fullPath = getPathToFile(fileName);
     NSFileHandle* fh = [NSFileHandle fileHandleForUpdatingAtPath:fullPath];
     SCOPE_CLOSE_HANDLE(fh);
-    ASSERT_TRUE(fh != nil);
+    ASSERT_NE(fh, nil);
 
     unsigned long long cursor = [fh seekToEndOfFile];
 
@@ -68,7 +68,7 @@ TEST(NSFileHandle, Offsets) {
     NSFileHandle* fh = [NSFileHandle fileHandleForReadingAtPath:getPathToFile(fileName)];
     SCOPE_CLOSE_HANDLE(fh);
 
-    ASSERT_TRUE(fh != nil);
+    ASSERT_NE(fh, nil);
 
     ASSERT_EQ([fh offsetInFile], 0);
 
@@ -94,10 +94,10 @@ TEST(NSFileHandle, WriteToNonExistentFileAndRead) {
 
     NSFileHandle* fh = [NSFileHandle fileHandleForReadingAtPath:getPathToFile(fileName)];
     SCOPE_CLOSE_HANDLE(fh);
-    ASSERT_TRUE(fh != nil);
+    ASSERT_NE(fh, nil);
 
     NSData* fileData = [fh readDataToEndOfFile];
-    ASSERT_TRUE_MSG(fileData != nil, "FAILED: reading the entire file failed.");
+    ASSERT_NE_MSG(fileData, nil, "FAILED: reading the entire file failed.");
 
     NSString* str = [[[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding] autorelease];
     ASSERT_OBJCEQ_MSG(str, testStr, "FAILED: Unable to read the file content.");
@@ -112,7 +112,7 @@ TEST(NSFileHandle, TruncateFileAtOffset) {
 
     NSFileHandle* fh = [NSFileHandle fileHandleForUpdatingAtPath:getPathToFile(fileName)];
     SCOPE_CLOSE_HANDLE(fh);
-    ASSERT_TRUE(fh != nil);
+    ASSERT_NE(fh, nil);
 
     unsigned long long endCursor = [fh seekToEndOfFile];
 
@@ -125,7 +125,7 @@ TEST(NSFileHandle, TruncateFileAtOffset) {
     fh = [NSFileHandle fileHandleForReadingAtPath:getPathToFile(fileName)];
     SCOPE_CLOSE_HANDLE(fh);
     NSData* fileData = [fh readDataToEndOfFile];
-    ASSERT_TRUE_MSG(fileData != nil, "FAILED: reading the entire file failed.");
+    ASSERT_NE_MSG(fileData, nil, "FAILED: reading the entire file failed.");
 
     NSString* str = [[[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding] autorelease];
     NSString* finalData = [NSString stringWithFormat:@"%@%@", testString, content];
@@ -145,7 +145,7 @@ TEST(NSFileHandle, TruncateFileAtOffset) {
     fh = [NSFileHandle fileHandleForReadingAtPath:getPathToFile(fileName)];
     SCOPE_CLOSE_HANDLE(fh);
     fileData = [fh readDataToEndOfFile];
-    ASSERT_TRUE_MSG(fileData != nil, "FAILED: reading the entire file failed.");
+    ASSERT_NE_MSG(fileData, nil, "FAILED: reading the entire file failed.");
 
     str = [[[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding] autorelease];
     ASSERT_OBJCEQ_MSG(str, testString, "FAILED: Unable to read the file content.");
@@ -156,7 +156,7 @@ TEST(NSFileHandle, TruncateFileAtOffset) {
 TEST(NSFileHandle, FileHandleWithNullDevice) {
     NSFileHandle* fh = [NSFileHandle fileHandleWithNullDevice];
     SCOPE_CLOSE_HANDLE(fh);
-    ASSERT_TRUE(fh != nil);
+    ASSERT_NE(fh, nil);
 
     // no-op
     [fh writeData:nil];
@@ -181,24 +181,24 @@ TEST(NSFileHandle, ReadDataOfLength) {
     NSFileHandle* fh = [NSFileHandle fileHandleForReadingAtPath:fullPath];
     SCOPE_CLOSE_HANDLE(fh);
 
-    ASSERT_TRUE(fh != nil);
+    ASSERT_NE(fh, nil);
 
     NSData* fileData = [fh readDataOfLength:9];
-    ASSERT_TRUE(fileData != nil);
+    ASSERT_NE(fileData, nil);
 
     NSString* str = [[[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding] autorelease];
     ASSERT_OBJCEQ_MSG(str, @"The Quick", "FAILED: Unable to read the file content.");
 
     // Try to read more than the max bytes.
     fileData = [fh readDataOfLength:30];
-    ASSERT_TRUE_MSG(fileData != nil, "FAILED: reading the file failed.");
+    ASSERT_NE_MSG(fileData, nil, "FAILED: reading the file failed.");
 
     str = [[[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding] autorelease];
     ASSERT_OBJCEQ_MSG(str, @" Brown Fox.", "FAILED: Unable to read the file content.");
 
     // Try to read again.
     fileData = [fh readDataOfLength:30000];
-    ASSERT_TRUE_MSG(fileData != nil, "FAILED: reading the file failed.");
+    ASSERT_NE_MSG(fileData, nil, "FAILED: reading the file failed.");
     ASSERT_OBJCEQ(fileData, [NSData data]);
 }
 
@@ -211,7 +211,7 @@ TEST(NSFileHandle, UpdatingURL) {
 
     NSFileHandle* fh = [NSFileHandle fileHandleForUpdatingURL:[NSURL fileURLWithPath:fullPath] error:&error];
     SCOPE_CLOSE_HANDLE(fh);
-    ASSERT_TRUE(fh != nil);
+    ASSERT_NE(fh, nil);
 
     unsigned long long cursor = [fh seekToEndOfFile];
 
@@ -235,10 +235,10 @@ TEST(NSFileHandle, ReadingFromURL) {
     NSError* error;
     NSFileHandle* fh = [NSFileHandle fileHandleForReadingFromURL:[NSURL fileURLWithPath:fullPath] error:&error];
     SCOPE_CLOSE_HANDLE(fh);
-    ASSERT_TRUE(fh != nil);
+    ASSERT_NE(fh, nil);
 
     NSData* fileData = [fh readDataToEndOfFile];
-    ASSERT_TRUE_MSG(fileData != nil, "FAILED: reading the entire file failed.");
+    ASSERT_NE_MSG(fileData, nil, "FAILED: reading the entire file failed.");
 
     NSString* str = [[[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding] autorelease];
     ASSERT_OBJCEQ_MSG(str, @"The Quick Brown Fox.", "FAILED: Unable to read the file content.");
@@ -247,14 +247,14 @@ TEST(NSFileHandle, ReadingFromURL) {
 TEST(NSFileHandle, WritingAtPath) {
     NSString* fileName = @"FileToDeleteWritingAtPath.txt";
     NSString* testStr = @"The Brown Fox.!";
-
+    createFileWithContentAndVerify(fileName, @"");
     NSString* fullPath = getPathToFile(fileName);
     NSError* error;
 
     SCOPE_DELETE_FILE(fileName);
     NSFileHandle* fh = [NSFileHandle fileHandleForWritingToURL:[NSURL fileURLWithPath:fullPath] error:&error];
     SCOPE_CLOSE_HANDLE(fh);
-    ASSERT_TRUE(fh != nil);
+    ASSERT_NE(fh, nil);
 
     NSData* data = [testStr dataUsingEncoding:NSUTF8StringEncoding];
     [fh writeData:data];
@@ -266,10 +266,10 @@ TEST(NSFileHandle, WritingAtPath) {
 
     fh = [NSFileHandle fileHandleForReadingAtPath:getPathToFile(fileName)];
     SCOPE_CLOSE_HANDLE(fh);
-    ASSERT_TRUE(fh != nil);
+    ASSERT_NE(fh, nil);
 
     NSData* fileData = [fh readDataToEndOfFile];
-    ASSERT_TRUE_MSG(fileData != nil, "FAILED: reading the entire file failed.");
+    ASSERT_NE_MSG(fileData, nil, "FAILED: reading the entire file failed.");
 
     NSString* str = [[[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding] autorelease];
     ASSERT_OBJCEQ_MSG(str, testStr, "FAILED: Unable to read the file content.");
@@ -279,6 +279,6 @@ TEST(NSFileHandle, ReadingNonExistentFile) {
     NSString* fullPath = getPathToFile(@"nonexisting.txt");
     NSError* error;
     NSFileHandle* fh = [NSFileHandle fileHandleForReadingFromURL:[NSURL fileURLWithPath:fullPath] error:&error];
-    ASSERT_TRUE(fh == nil);
-    ASSERT_TRUE(error != nil);
+    ASSERT_EQ(fh, nil);
+    ASSERT_NE(error, nil);
 }

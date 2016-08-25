@@ -183,18 +183,49 @@ TEST(NSData, Base64EncodeDecodeWrappers) {
                       base64EncodedDataWithOptions:NSDataBase64Encoding76CharacterLineLength]);
 }
 
+TEST(NSData, WriteToFile) {
+    // first, write the test string to NSURL which represents as a file
+    // ensure it succeeds
+    const char bytes[] = "Hello world";
+    StrongId<NSData> expectedData = [NSData dataWithBytes:bytes length:std::extent<decltype(bytes)>::value];
+
+    // Create the file or trying to write will fail
+    StrongId<NSString> filePath = @"./Helloworld.txt";
+    ASSERT_TRUE([[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil]);
+
+    NSError* error = nil;
+    EXPECT_TRUE_MSG([expectedData writeToFile:@"./Helloworld.txt" options:0 error:&error], "NSDataWriteToURL should succeed");
+    EXPECT_EQ(nil, error);
+
+    // second, read the file content back, compare with original content
+    // ensure they are equal
+    StrongId<NSData> actualData = [NSData dataWithContentsOfFile:filePath];
+    EXPECT_OBJCEQ_MSG(expectedData, actualData, "Data should be equal");
+
+    [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+}
+
 TEST(NSData, WriteToURL) {
     // first, write the test string to NSURL which represents as a file
     // ensure it succeeds
     const char bytes[] = "Hello world";
     StrongId<NSData> expectedData = [NSData dataWithBytes:bytes length:std::extent<decltype(bytes)>::value];
-    StrongId<NSURL> fileURL = [NSURL fileURLWithPath:@"./Library/Helloworld.txt"];
-    ASSERT_TRUE_MSG([expectedData writeToURL:fileURL options:0 error:nullptr], "NSDataWriteToURL should succeed");
+
+    // Create the file or trying to write will fail
+    StrongId<NSString> filePath = @"./Helloworld.txt";
+    ASSERT_TRUE([[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil]);
+
+    StrongId<NSURL> fileURL = [NSURL fileURLWithPath:filePath];
+    NSError* error = nil;
+    EXPECT_TRUE_MSG([expectedData writeToURL:fileURL options:0 error:&error], "NSDataWriteToURL should succeed");
+    EXPECT_EQ(nil, error);
 
     // second, read the file content back, compare with original content
     // ensure they are equal
     StrongId<NSData> actualData = [NSData dataWithContentsOfFile:[fileURL path]];
-    ASSERT_OBJCEQ_MSG(expectedData, actualData, "Data should be equal");
+    EXPECT_OBJCEQ_MSG(expectedData, actualData, "Data should be equal");
+
+    [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
 }
 
 TEST(NSData, MutableDataBasicTests) {
