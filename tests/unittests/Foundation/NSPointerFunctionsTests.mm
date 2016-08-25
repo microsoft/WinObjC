@@ -80,7 +80,8 @@ TEST(NSPointerFunctions, OpaquePersonality) {
     const void* ptr3 = (void*)((long)ptr1 + 1);
 
     testEqualFunction(functions, ptr1, ptr2, ptr3);
-    testHashFunction(functions, ptr1, ptr2, ptr3);
+    // Disabling hash function check here as performing hash on opaque values cannot be accurately matched with the reference platform.
+    // testHashFunction(functions, ptr1, ptr2, ptr3);
 }
 
 TEST(NSPointerFunctions, IntegerPersonality) {
@@ -95,7 +96,9 @@ TEST(NSPointerFunctions, IntegerPersonality) {
     testHashFunction(functions, (void*)int1, (void*)int2, (void*)int3);
 }
 
-TEST(NSPointerFunctions, InvalidConfig) {
+// Disabling test from running on OSX as the reference platform behavior is to log error and then return a nil when an invalid config
+// is used. We have decided to be a little more strict on our platform by throwing an exception instead.
+OSX_DISABLED_TEST(NSPointerFunctions, InvalidConfig) {
     LOG_INFO("Invalid config messages during this test are expected:");
 
     // Not a value of NSPointerFunctionsOptions

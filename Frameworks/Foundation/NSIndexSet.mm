@@ -247,10 +247,10 @@
         for (j = innerStart; NSLocationInRange(j, cur) && !stop; j += step) {
             if (options & NSEnumerationConcurrent) {
                 dispatch_group_async(group,
-                                        queue,
-                                        ^() {
-                                            block(j, &stop);
-                                        });
+                                     queue,
+                                     ^() {
+                                         block(j, &stop);
+                                     });
             } else {
                 block(j, &stop);
             }
@@ -315,8 +315,29 @@
  @Status Caveat
  @Notes Has known issues - does not detect equality in cases where the sets are logically equal but the ranges differ (VSO 6979799)
 */
+- (BOOL)isEqual:(id)other {
+    if (self == other) {
+        return YES;
+    }
+
+    if (![other isKindOfClass:[NSIndexSet class]]) {
+        return NO;
+    }
+
+    return [self isEqualToIndexSet:static_cast<NSIndexSet*>(other)];
+}
+
+/**
+ @Status Caveat
+ @Notes Has known issues - does not detect equality in cases where the sets are logically equal but the ranges differ (VSO 6979799)
+*/
 - (BOOL)isEqualToIndexSet:(NSIndexSet*)otherSet {
-    // : NSIndexSet isEqualToIndexSet relies on invariants that aren't kept by the implementation
+    // NSIndexSet isEqualToIndexSet relies on invariants that aren't kept by the implementation
+
+    if (self == otherSet) {
+        return YES;
+    }
+
     if (![otherSet isKindOfClass:[NSIndexSet class]]) {
         return NO;
     }

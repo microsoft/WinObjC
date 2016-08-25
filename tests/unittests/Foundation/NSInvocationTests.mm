@@ -191,23 +191,27 @@ TEST(NSInvocation, AggregateReturn) {
     [tester release];
 }
 
-ARM_DISABLED_TEST(NSInvocation, ArgumentLimit) {
+// Disabled on ARM because it requires named exception catch.
+ARM_DISABLED_TEST(NSInvocation, ArgumentsAboveLimit) {
     SEL selector = @selector(initWithFormat:locale:);
-    NSString* s = [[NSString alloc] initWithString:@"hello"];
-    NSString* format = @"%@";
-    NSMethodSignature* sig = [s methodSignatureForSelector:selector];
+    NSMethodSignature* sig = [NSString instanceMethodSignatureForSelector:selector];
     NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
-    [invocation setSelector:selector];
-    [invocation setTarget:s];
 
     BOOL exceptionThrown = NO;
-    [invocation setArgument:format atIndex:2];
     @try {
         [invocation setArgument:@"foo" atIndex:4];
     } @catch (NSException* exception) {
         exceptionThrown = (([[exception name] isEqual:NSInvalidArgumentException]) ? YES : NO);
     }
     ASSERT_TRUE_MSG(exceptionThrown, "FAILED: NSInvalidArgumentException was not thrown.");
+}
+
+// The following test is disabled because OS X allows you to set (and retrieve (!)) arguments at indices below 0,
+// but WinObjC does not. With the NSInvocation rewrite from GH#711, our implementation can be brought into compliance.
+OSX_DISABLED_TEST(NSInvocation, ArgumentsBelowZero) {
+    SEL selector = @selector(initWithFormat:locale:);
+    NSMethodSignature* sig = [NSString instanceMethodSignatureForSelector:selector];
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
 
     ASSERT_ANY_THROW([invocation setArgument:@"foo" atIndex:-1]);
 }

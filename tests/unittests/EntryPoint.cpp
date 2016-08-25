@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,25 +17,20 @@
 #include <windows.h>
 #include <TestFramework.h>
 
-int main(int argc, char** argv) {
-// ::CoInitialize, Uninitialize, don't exist on OSX, aren't needed
 #ifdef WIN32
-    // Initialize COM for all of the tests
-    ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
-
-    testing::InitGoogleTest(&argc, argv);
-    LOG_INFO("Starting unit tests...");
-    auto result = RUN_ALL_TESTS();
-
-    // TODO: Issue #689 move to a scopeguard when we have one in our codebase
-    ::CoUninitialize();
-
-#else
-    testing::InitGoogleTest(&argc, argv);
-    printf("Starting unit tests...\n");
-    auto result = RUN_ALL_TESTS();
-
+#include <wrl\wrappers\corewrappers.h>
+using namespace Microsoft::WRL::Wrappers;
 #endif
 
+int main(int argc, char** argv) {
+#ifdef WIN32
+    // Initialize the windows runtime, with uninitialized upon destructor invocation.
+    RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
+    if (FAILED(initialize)) {
+        return -1;
+    }
+#endif
+    testing::InitGoogleTest(&argc, argv);
+    auto result = RUN_ALL_TESTS();
     return result;
 }

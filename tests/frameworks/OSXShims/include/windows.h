@@ -33,6 +33,12 @@
 #define DWORD uint32_t
 #endif
 
+#if defined(__BIG_ENDIAN__)
+#define WCHAR_ENCODING NSUTF32BigEndianStringEncoding
+#elif defined(__LITTLE_ENDIAN__)
+#define WCHAR_ENCODING NSUTF32LittleEndianStringEncoding
+#endif
+
 long InterlockedExchange(long volatile* Target, long Value);
 long _InterlockedExchange(long volatile* Target, long Value);
 
@@ -46,7 +52,7 @@ void Sleep(DWORD dwMilliseconds);
 DWORD GetModuleFileNameA(void* hModule, char* lpFilename, DWORD nSize);
 DWORD GetModuleFileNameW(void* hModule, wchar_t* lpFilename, DWORD nSize);
 
-bool SetCurrentDirectoryW(wchar_t* lpPathName);
+bool SetCurrentDirectoryW(const wchar_t* lpPathName);
 DWORD GetCurrentDirectoryW(DWORD nBufferLength, wchar_t* lpBuffer);
 
 DWORD GetCurrentProcessId(void);

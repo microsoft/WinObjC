@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,7 +17,6 @@
 
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
-
 #import <Foundation/NSPathUtilities.h>
 
 @protocol NSCoding;
@@ -37,20 +36,20 @@ typedef enum : NSUInteger {
     NSVolumeEnumerationSkipHiddenVolumes = 1L << 1,
     NSVolumeEnumerationProduceFileReferenceURLs = 1L << 2
 } NSVolumeEnumerationOptions;
+
 typedef enum : NSUInteger {
     NSDirectoryEnumerationSkipsSubdirectoryDescendants = 1L << 0,
     NSDirectoryEnumerationSkipsPackageDescendants = 1L << 1,
     NSDirectoryEnumerationSkipsHiddenFiles = 1L << 2
 } NSDirectoryEnumerationOptions;
+
 typedef enum : NSUInteger {
     NSFileManagerItemReplacementUsingNewMetadataOnly = 1UL << 0,
     NSFileManagerItemReplacementWithoutDeletingBackupItem = 1UL << 1
 } NSFileManagerItemReplacementOptions;
+
 typedef enum NSURLRelationship : NSInteger { NSURLRelationshipContains, NSURLRelationshipSame, NSURLRelationshipOther } NSURLRelationship;
-@interface NSObject (NSFileManager)
-- (BOOL)fileManager:(NSFileManager*)manager shouldProceedAfterError:(NSDictionary*)errorInfo;
-- (void)fileManager:(NSFileManager*)manager willProcessPath:(NSString*)path;
-@end
+
 FOUNDATION_EXPORT NSString* const NSFileType;
 FOUNDATION_EXPORT NSString* const NSFileSize;
 FOUNDATION_EXPORT NSString* const NSFileModificationDate;
@@ -86,11 +85,17 @@ FOUNDATION_EXPORT NSString* const NSFileProtectionNone;
 FOUNDATION_EXPORT NSString* const NSFileProtectionComplete;
 FOUNDATION_EXPORT NSString* const NSFileProtectionCompleteUnlessOpen;
 FOUNDATION_EXPORT NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication;
+
 #define NSFoundationVersionWithFileManagerResourceForkSupport 412
 
 FOUNDATION_EXPORT NSString* const NSUbiquityIdentityDidChangeNotification;
 
 FOUNDATION_EXPORT NSString* NSOpenStepRootDirectory() STUB_METHOD;
+
+@interface NSObject (NSFileManager)
+- (BOOL)fileManager:(NSFileManager*)manager shouldProceedAfterError:(NSDictionary*)errorInfo;
+- (void)fileManager:(NSFileManager*)manager willProcessPath:(NSString*)path;
+@end
 
 FOUNDATION_EXPORT_CLASS
 @interface NSFileManager : NSObject
@@ -137,7 +142,6 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)copyItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath error:(NSError* _Nullable*)error;
 - (BOOL)moveItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError* _Nullable*)error;
 - (BOOL)moveItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath error:(NSError* _Nullable*)error;
-@property (readonly, copy) id<NSCopying, NSCoding> ubiquityIdentityToken;
 - (NSURL*)URLForUbiquityContainerIdentifier:(NSString*)containerID;
 - (BOOL)isUbiquitousItemAtURL:(NSURL*)url;
 - (BOOL)setUbiquitous:(BOOL)flag itemAtURL:(NSURL*)url destinationURL:(NSURL*)destinationURL error:(NSError* _Nullable*)errorOut;
@@ -173,9 +177,7 @@ FOUNDATION_EXPORT_CLASS
                   error:(NSError* _Nullable*)error;
 - (const char*)fileSystemRepresentationWithPath:(NSString*)path;
 - (NSString*)stringWithFileSystemRepresentation:(const char*)string length:(NSUInteger)len;
-@property (assign) id<NSFileManagerDelegate> delegate;
 - (BOOL)changeCurrentDirectoryPath:(NSString*)path;
-@property (readonly, copy) NSString* currentDirectoryPath;
 - (BOOL)changeFileAttributes:(NSDictionary<NSString*, id>*)attributes atPath:(NSString*)path;
 - (NSDictionary<NSString*, id>*)fileAttributesAtPath:(NSString*)path traverseLink:(BOOL)flag;
 - (NSDictionary<NSString*, id>*)fileSystemAttributesAtPath:(NSString*)path;
@@ -183,6 +185,9 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)createDirectoryAtPath:(NSString*)path attributes:(NSDictionary<NSString*, id>*)attributes;
 - (BOOL)createSymbolicLinkAtPath:(NSString*)path pathContent:(NSString*)otherPath;
 - (NSString*)pathContentOfSymbolicLinkAtPath:(NSString*)path;
+@property (assign) id<NSFileManagerDelegate> delegate;
+@property (readonly, copy) id<NSCopying, NSCoding> ubiquityIdentityToken;
+@property (readonly, copy) NSString* currentDirectoryPath;
 @end
 
 @protocol NSFileManagerDelegate <NSObject>

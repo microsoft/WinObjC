@@ -746,16 +746,29 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
  @Status Interoperable
 */
 - (NSString*)description {
+    thread_local unsigned int indent = 0;
     NSMutableString* s = [NSMutableString string];
-    [s appendString:@"("];
-    for (id val in self) {
-        [s appendFormat:@"%@, ", val];
+    for (unsigned int i = 0; i < indent; ++i) {
+        [s appendString:@"    "];
     }
+    [s appendString:@"(\n"];
+    {
+        ++indent;
+        auto deferPop = wil::ScopeExit([]() { --indent; });
+        for (id val in self) {
+            for (unsigned int i = 0; i < indent; ++i) {
+                [s appendString:@"    "];
+            }
+            [s appendFormat:@"%@,\n", val];
+        }
 
-    if ([self count] > 0) {
-        [s deleteCharactersInRange:{[s length] - 2, 2 }];
+        if ([self count] > 0) {
+            [s deleteCharactersInRange:{[s length] - 2, 1 }];
+        }
     }
-
+    for (unsigned int i = 0; i < indent; ++i) {
+        [s appendString:@"    "];
+    }
     [s appendString:@")"];
     return s;
 }
@@ -795,14 +808,16 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
         reverse = false;
     }
 
-    _enumerateWithBlock(enumerator, options, ^(id key, BOOL* stop) {
-        block(key, index, stop);
-        if (reverse) {
-            index--;
-        } else {
-            index++;
-        }
-    });
+    _enumerateWithBlock(enumerator,
+                        options,
+                        ^(id key, BOOL* stop) {
+                            block(key, index, stop);
+                            if (reverse) {
+                                index--;
+                            } else {
+                                index++;
+                            }
+                        });
 }
 
 /**

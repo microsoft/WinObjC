@@ -70,6 +70,8 @@ TEST(NSMapTable, StrongStrong) {
 }
 
 TEST(NSMapTable, WeakValue) {
+    // Create a autorelease pool for this test so that the value object created is managed locally
+    NSAutoreleasePool* pool = [NSAutoreleasePool new];
     StrongId<NSMapTable> mapTable = [NSMapTable strongToWeakObjectsMapTable];
     NSObject* objKey = [NSObject new];
     NSObject* objValue = [NSObject new];
@@ -80,12 +82,19 @@ TEST(NSMapTable, WeakValue) {
 
     // Verify that the stored value is autonilled on last release
     [objValue release];
+    // Clear the autorelease pool
+    [pool release];
     ASSERT_EQ(nil, [mapTable objectForKey:objKey]);
 
     [objKey release];
 }
 
-TEST(NSMapTable, WeakKey) {
+// Note: Test disabled on OSX
+// https://developer.apple.com/library/mac/releasenotes/Foundation/RN-FoundationOlderNotes/
+// NSMapTable zeroing weak changes - "weak-to-strong NSMapTables are not currently recommended, as the strong values for weak keys
+// which get zero'd out do not get cleared away (and released) until/unless the map table resizes itself"
+//
+OSX_DISABLED_TEST(NSMapTable, WeakKey) {
     StrongId<NSMapTable> mapTable = [NSMapTable weakToStrongObjectsMapTable];
     NSObject* objKey = [NSObject new];
     NSObject* objValue = [NSObject new];
@@ -102,7 +111,12 @@ TEST(NSMapTable, WeakKey) {
     [objValue release];
 }
 
-TEST(NSMapTable, MultipleWeakKey) {
+// Note: Test disabled on OSX
+// https://developer.apple.com/library/mac/releasenotes/Foundation/RN-FoundationOlderNotes/
+// NSMapTable zeroing weak changes - "weak-to-strong NSMapTables are not currently recommended, as the strong values for weak keys
+// which get zero'd out do not get cleared away (and released) until/unless the map table resizes itself"
+//
+OSX_DISABLED_TEST(NSMapTable, MultipleWeakKey) {
     StrongId<NSMapTable> mapTable = [NSMapTable weakToStrongObjectsMapTable];
     NSObject* objKey1 = [NSObject new];
     NSObject* objKey2 = [NSObject new];
@@ -125,7 +139,12 @@ TEST(NSMapTable, MultipleWeakKey) {
     [objValue release];
 }
 
-TEST(NSMapTable, WeakChain) {
+// Note: Test disabled on OSX
+// https://developer.apple.com/library/mac/releasenotes/Foundation/RN-FoundationOlderNotes/
+// NSMapTable zeroing weak changes - "weak-to-strong NSMapTables are not currently recommended, as the strong values for weak keys
+// which get zero'd out do not get cleared away (and released) until/unless the map table resizes itself"
+//
+OSX_DISABLED_TEST(NSMapTable, WeakChain) {
     StrongId<NSMapTable> mapTable = [NSMapTable weakToStrongObjectsMapTable];
     NSObject* obj1 = [NSObject new];
     NSObject* obj2 = [NSObject new];
@@ -148,7 +167,15 @@ TEST(NSMapTable, WeakChain) {
     ASSERT_EQ(0, [mapTable count]);
 }
 
-TEST(NSMapTable, WeakWeak) {
+// Note: Test disabled on OSX
+// https://developer.apple.com/library/mac/releasenotes/Foundation/RN-FoundationOlderNotes/
+// NSMapTable zeroing weak changes - "weak-to-strong NSMapTables are not currently recommended, as the strong values for weak keys
+// which get zero'd out do not get cleared away (and released) until/unless the map table resizes itself"
+//
+// Though this test is using weak-to-weak NSMapTables, weak keys do not get cleared away until/unless the map table resizes itself
+// similar to weak-to-strong NSMapTables.
+//
+OSX_DISABLED_TEST(NSMapTable, WeakWeak) {
     StrongId<NSMapTable> mapTable = [NSMapTable weakToWeakObjectsMapTable];
     NSObject* key1 = [NSObject new];
     NSObject* key2 = [NSObject new];
@@ -244,7 +271,12 @@ TEST(NSMapTable, RemoveAllObjects) {
     [value3 release];
 }
 
-TEST(NSMapTable, SameKey) {
+// Note: Test disabled on OSX
+// https://developer.apple.com/library/mac/releasenotes/Foundation/RN-FoundationOlderNotes/
+// NSMapTable zeroing weak changes - "weak-to-strong NSMapTables are not currently recommended, as the strong values for weak keys
+// which get zero'd out do not get cleared away (and released) until/unless the map table resizes itself"
+//
+OSX_DISABLED_TEST(NSMapTable, SameKey) {
     StrongId<NSMapTable> mapTable = [NSMapTable weakToStrongObjectsMapTable];
     NSObject* key1 = [NSObject new];
     NSObject* value1 = [NSObject new];
@@ -303,7 +335,12 @@ TEST(NSMapTable, Enumerators) {
     // keys, allObjects
     {
         StrongId<NSEnumerator> enumerator = [mapTable keyEnumerator];
-        ASSERT_OBJCEQ(keySet, [enumerator allObjects]);
+        NSArray* enumeratedKeySet = [enumerator allObjects];
+        // Note: Do not compare enumeratedKeySet with keySet directly as the reference platform seems to not return keys
+        // in the order they were added to the MapTable.
+        enumeratedKeySet = [enumeratedKeySet sortedArrayUsingSelector:@selector(compare:)];
+        NSArray* sortedKeySet = [keySet sortedArrayUsingSelector:@selector(compare:)];
+        ASSERT_OBJCEQ(sortedKeySet, enumeratedKeySet);
         ASSERT_OBJCEQ(nil, [enumerator nextObject]);
     }
 
@@ -311,7 +348,7 @@ TEST(NSMapTable, Enumerators) {
     {
         StrongId<NSEnumerator> enumerator = [mapTable keyEnumerator];
         for (size_t i = 0; i < [keySet count]; i++) {
-            ASSERT_OBJCEQ([keySet objectAtIndex:i], [enumerator nextObject]);
+            ASSERT_TRUE([keySet containsObject:[enumerator nextObject]]);
         }
         ASSERT_OBJCEQ(nil, [enumerator nextObject]);
     }
@@ -319,7 +356,12 @@ TEST(NSMapTable, Enumerators) {
     // values, allObjects
     {
         StrongId<NSEnumerator> enumerator = [mapTable objectEnumerator];
-        ASSERT_OBJCEQ(valueSet, [enumerator allObjects]);
+        NSArray* enumeratedValueSet = [enumerator allObjects];
+        // Note: Do not compare enumeratedValueSet with valueSet directly as the reference platform seems to not return values
+        // in the order they were added to the MapTable.
+        enumeratedValueSet = [enumeratedValueSet sortedArrayUsingSelector:@selector(compare:)];
+        NSArray* sortedValueSet = [valueSet sortedArrayUsingSelector:@selector(compare:)];
+        ASSERT_OBJCEQ(sortedValueSet, enumeratedValueSet);
         ASSERT_OBJCEQ(nil, [enumerator nextObject]);
     }
 
@@ -327,7 +369,7 @@ TEST(NSMapTable, Enumerators) {
     {
         StrongId<NSEnumerator> enumerator = [mapTable objectEnumerator];
         for (size_t i = 0; i < [valueSet count]; i++) {
-            ASSERT_OBJCEQ([valueSet objectAtIndex:i], [enumerator nextObject]);
+            ASSERT_TRUE([valueSet containsObject:[enumerator nextObject]]);
         }
         ASSERT_OBJCEQ(nil, [enumerator nextObject]);
     }
@@ -370,7 +412,15 @@ TEST(NSMapTable, DictionaryRepresentation) {
     }
 }
 
-TEST(NSMapTable, Copy) {
+// Note: Test disabled on OSX
+// https://developer.apple.com/library/mac/releasenotes/Foundation/RN-FoundationOlderNotes/
+// NSMapTable zeroing weak changes - "weak-to-strong NSMapTables are not currently recommended, as the strong values for weak keys
+// which get zero'd out do not get cleared away (and released) until/unless the map table resizes itself"
+//
+// Though this test is using weak-to-weak NSMapTables, weak keys do not get cleared away until/unless the map table resizes itself
+// similar to weak-to-strong NSMapTables.
+//
+OSX_DISABLED_TEST(NSMapTable, Copy) {
     StrongId<NSMapTable> mapTable = [NSMapTable weakToWeakObjectsMapTable];
     NSObject* key1 = [NSObject new];
     NSObject* key2 = [NSObject new];

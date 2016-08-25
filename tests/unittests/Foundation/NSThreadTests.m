@@ -42,6 +42,12 @@ static const double sExpectedHighThreadPriority = .87;
 static const double sExpectedLowThreadPriority = 0;
 static const double sExpectedMidThreadPriority = .5;
 
+// A thread never has a set priority. The system can always change it, in fact it will most likely change the priority.
+// Even still, the thread priority should be close enough to the actual requested value so we need to make sure it's sufficiently close.
+// The largest difference between thread priorities in Windows should be .07 units in difference as Windows pigeon holes priorities into
+// certain values.
+static const double sMarginOfError = .07;
+
 TEST(NSThread, Priority) {
     ThreadTestController* testController = [[[ThreadTestController alloc] init] autorelease];
     testController.stop = NO;
@@ -57,15 +63,15 @@ TEST(NSThread, Priority) {
     // THREAD_PRIORITY_HIGHEST and THREAD_PRIORITY_TIME_CRITICAL. Setting priority to half way between these makes it clear
     // what the priority is when conveyed back to the user.
 
-    EXPECT_EQ([myThread threadPriority], sExpectedHighThreadPriority);
+    EXPECT_NEAR([myThread threadPriority], sExpectedHighThreadPriority, sMarginOfError);
 
     // Change priority again.
     [myThread setThreadPriority:sOriginalLowThreadPriority];
-    EXPECT_EQ([myThread threadPriority], sExpectedLowThreadPriority);
+    EXPECT_NEAR([myThread threadPriority], sExpectedLowThreadPriority, sMarginOfError);
 
     // Once more.
     [myThread setThreadPriority:sOriginalMidThreadPriority];
-    EXPECT_EQ([myThread threadPriority], sExpectedMidThreadPriority);
+    EXPECT_NEAR([myThread threadPriority], sExpectedMidThreadPriority, sMarginOfError);
 
     // Let the thread die.
     testController.stop = YES;

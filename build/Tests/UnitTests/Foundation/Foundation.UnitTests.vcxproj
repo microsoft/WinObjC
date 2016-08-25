@@ -147,9 +147,6 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalOptions>-DSTARBOARD_PORT=1 -Werror=deprecated-declarations %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
-    <PostBuildEvent>
-      <Command>xcopy /y "$(ProjectDir)..\..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
@@ -174,9 +171,6 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalOptions>-DSTARBOARD_PORT=1 -Werror=deprecated-declarations %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
-    <PostBuildEvent>
-      <Command>xcopy /y "$(ProjectDir)..\..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -205,9 +199,6 @@
       <AdditionalOptions>-DSTARBOARD_PORT=1 -Werror=deprecated-declarations %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
-    <PostBuildEvent>
-      <Command>xcopy /y "$(ProjectDir)..\..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
@@ -236,9 +227,6 @@
       <AdditionalOptions>-DSTARBOARD_PORT=1 -Werror=deprecated-declarations %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
-    <PostBuildEvent>
-      <Command>xcopy /y "$(ProjectDir)..\..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\Framework\Framework.cpp" />
@@ -330,7 +318,9 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSObject_KeyValueObservationTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSNumberFormatter.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSCacheTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLResponseTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSPropertyList.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSTimeZone.mm" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt">
@@ -353,6 +343,12 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.targets" />
   </ImportGroup>
+  <Target Name="CopyTestResourcesToOutput" AfterTargets="AfterBuild">
+    <ItemGroup>
+      <TestResourceFile Include="$(MSBuildThisFileDirectory)..\..\..\..\tests\unittests\Foundation\data\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(TestResourceFile)" DestinationFolder="$(OutDir)\data" SkipUnchangedFiles="True" />
+  </Target>
   <Target Name="CopyReferenceFoundationTestResourcesToOutput" AfterTargets="AfterBuild">
     <ItemGroup>
       <ReferenceFoundationTestResourceFile Include="$(MSBuildThisFileDirectory)..\..\..\..\tests\unittests\Foundation\ReferenceFoundation\Resources\*" />

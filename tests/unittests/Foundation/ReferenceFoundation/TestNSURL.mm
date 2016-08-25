@@ -170,7 +170,7 @@ TEST(NSURL, FileURLWithPath_relativeToURL) {
     ASSERT_OBJCNE_MSG(nil, homeDirectory, @"Failed to find home directory");
     NSURL* homeURL = [NSURL fileURLWithPath:homeDirectory isDirectory:YES];
     ASSERT_OBJCNE_MSG(nil, homeURL, @"fileURLWithPath:isDirectory: failed");
-    ASSERT_OBJCEQ([NSString stringWithCString:gBaseCurrentWorkingDirectoryPath.data() encoding:NSUTF8StringEncoding], homeURL.path);
+    ASSERT_OBJCEQ(homeDirectory, homeURL.path);
 
     // #if os(OSX)
     NSURL* baseURL = [NSURL fileURLWithPath:homeDirectory isDirectory:YES];
@@ -477,16 +477,32 @@ TEST(NSURL, URLByResolvingSymlinksInPath) {
         NSURL* url = [NSURL fileURLWithPath:@"~"];
         ASSERT_OBJCEQ(url, [url copy]);
         auto result = [url URLByResolvingSymlinksInPath].absoluteString;
+
+// Absolute paths on OSX naturally begin with '/', not so on Windows, which begins with a drive.
+// An extra '/' is needed on Windows to match CF behavior
+#if TARGET_OS_WIN32
         auto expected =
             [[@"file:///" stringByAppendingString:[NSFileManager defaultManager].currentDirectoryPath] stringByAppendingString:@"/~"];
+#else
+        auto expected =
+            [[@"file://" stringByAppendingString:[NSFileManager defaultManager].currentDirectoryPath] stringByAppendingString:@"/~"];
+#endif
         ASSERT_OBJCEQ_MSG(result, expected, @"URLByResolvingSymlinksInPath resolves relative paths using current working directory.");
     }
 
     {
         NSURL* url = [NSURL fileURLWithPath:@"anysite.com/search"];
         auto result = [url URLByResolvingSymlinksInPath].absoluteString;
+
+// Absolute paths on OSX naturally begin with '/', not so on Windows, which begins with a drive.
+// An extra '/' is needed on Windows to match CF behavior
+#if TARGET_OS_WIN32
         auto expected = [[@"file:///" stringByAppendingString:[NSFileManager defaultManager].currentDirectoryPath]
             stringByAppendingString:@"/anysite.com/search"];
+#else
+        auto expected = [[@"file://" stringByAppendingString:[NSFileManager defaultManager].currentDirectoryPath]
+            stringByAppendingString:@"/anysite.com/search"];
+#endif
         ASSERT_OBJCEQ(result, expected);
     }
 

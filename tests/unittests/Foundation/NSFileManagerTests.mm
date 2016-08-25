@@ -24,41 +24,14 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <Starboard/SmartTypes.h>
-
-static NSString* getModulePath() {
-    char fullPath[_MAX_PATH];
-    GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
-    return [@(fullPath) stringByDeletingLastPathComponent];
-}
-
-static NSString* getPathToFile(NSString* fileName) {
-    static StrongId<NSString*> refPath = getModulePath();
-    return [refPath stringByAppendingPathComponent:fileName];
-}
-
-static void createFileWithContentAndVerify(NSString* fileName, NSString* content) {
-    NSString* fullPath = getPathToFile(fileName);
-    NSError* error = nil;
-    ASSERT_TRUE([content writeToFile:fullPath atomically:NO encoding:NSUTF8StringEncoding error:&error]);
-    ASSERT_EQ(nil, error);
-    ASSERT_TRUE([[NSFileManager defaultManager] fileExistsAtPath:fullPath]);
-}
-
-void deleteFile(NSString* name) {
-    NSString* fullPath = getPathToFile(name);
-    if ([[NSFileManager defaultManager] fileExistsAtPath:fullPath]) {
-        [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
-    }
-};
-
-using unique_fileDeleter = std::unique_ptr<NSString, decltype(&deleteFile)>;
+#include "TestUtils.h"
 
 TEST(NSFileManager, GetAttributes) {
     // get test startup full path
     wchar_t fullPath[_MAX_PATH];
     size_t len = GetModuleFileNameW(NULL, fullPath, _MAX_PATH);
 
-// Window needs extra handling for the drive character
+// Window needs extra handling for the drive character, OSX has twice-as-wide wchars
 #if TARGET_OS_WIN32
     // split test startup full path into components like drive, directory, filename and ext etc.
     wchar_t drive[_MAX_DRIVE];
@@ -68,8 +41,14 @@ TEST(NSFileManager, GetAttributes) {
     // reconstruct fullpath for test artifact file. e.g., C:\WinObjc\WinObjC\build\Debug\data\NSFileManagerUT.txt
     ASSERT_TRUE(wcscat_s(dir, _countof(dir), L"\\data\\") == 0);
     ASSERT_TRUE(::_wmakepath_s(fullPath, _countof(fullPath), drive, dir, L"NSFileManagerUT", L".txt") == 0);
-#endif
+
     NSString* testFileFullPath = [NSString stringWithCharacters:(const unichar*)fullPath length:len + 1];
+#else
+    NSString* testFileFullPath = [NSString stringWithBytes:fullPath length:sizeof(wchar_t) * len encoding:WCHAR_ENCODING];
+
+    // reconstruct fullpath for test artifact file. e.g., /Volumes/WinObjC/build/Tests/UnitTests/Foundation/OSX/data/NSFileManagerUT.txt
+    testFileFullPath = [[testFileFullPath stringByDeletingLastPathComponent] stringByAppendingString:@"/data/NSFileManagerUT.txt"];
+#endif
 
     LOG_INFO("this test try to validate file creation date and modification date and size for %@", testFileFullPath);
     NSFileManager* manager = [NSFileManager defaultManager];
@@ -85,9 +64,7 @@ TEST(NSFileManager, GetAttributes) {
     ASSERT_TRUE(::_wstat(fullPath, &fileStatus) == 0);
 #else
     struct stat fileStatus = { 0 };
-    char narrowFullPath[_MAX_PATH];
-    wcstombs(narrowFullPath, fullPath, _MAX_PATH);
-    ASSERT_TRUE(stat(narrowFullPath, &fileStatus) == 0);
+    ASSERT_TRUE(stat([testFileFullPath UTF8String], &fileStatus) == 0);
 #endif
 
     // check file creation date
@@ -118,14 +95,25 @@ TEST(NSFileManager, EnumateDirectoryUsingURL) {
     wchar_t dir[_MAX_DIR];
     ASSERT_TRUE(::_wsplitpath_s(startUpPath, drive, _countof(drive), dir, _countof(dir), NULL, 0, NULL, 0) == 0);
     ASSERT_TRUE(::_wmakepath_s(startUpPath, _countof(startUpPath), drive, dir, L"", L"") == 0);
-#endif
 
     // change current dir to app start up path
     ASSERT_TRUE(SetCurrentDirectoryW(startUpPath) != 0);
+#else
+    std::wstring startUpDir(startUpPath);
+    ASSERT_TRUE(SetCurrentDirectoryW(startUpDir.substr(0, startUpDir.find_last_of('/')).c_str()) != 0);
+#endif
+
     wchar_t currentDir[_MAX_PATH];
     DWORD ret = GetCurrentDirectoryW(_MAX_PATH, currentDir);
     ASSERT_TRUE(ret > 0 && ret < _MAX_PATH);
-    LOG_INFO("Change current dir to:%@", [NSString stringWithCharacters:(const unichar*)currentDir length:_MAX_PATH]);
+
+    // OSX wchar_t's are twice as wide
+    LOG_INFO("Change current dir to:%@",
+#if TARGET_OS_WIN32
+             [NSString stringWithCharacters:(const unichar*)currentDir length:ret]);
+#else
+             [NSString stringWithBytes:currentDir length:sizeof(wchar_t) * ret encoding:WCHAR_ENCODING]);
+#endif
 
     // construct target URL using current directory and relative URL
     NSFileManager* manager = [NSFileManager defaultManager];
@@ -156,7 +144,7 @@ TEST(NSFileManager, EnumateDirectoryUsingURL) {
     ASSERT_TRUE(wcscat_s(targetFileFullPath, _countof(targetFileFullPath), L"\\data\\NSFileManagerUT.txt") == 0);
 #else
     ASSERT_NE(nullptr, wcscpy(targetFileFullPath, currentDir));
-    ASSERT_NE(nullptr, wcscat(targetFileFullPath, L"\\data\\NSFileManagerUT.txt"));
+    ASSERT_NE(nullptr, wcscat(targetFileFullPath, L"/data/NSFileManagerUT.txt"));
 #endif
 
 // _stat and _wstat are MS extensions
@@ -193,14 +181,17 @@ TEST(NSFileManager, ChangeDirectory) {
 }
 
 TEST(NSFileManager, MoveFileViaPath) {
-    unique_fileDeleter srcName(@"NSFileManagerMoveTestFilePath.txt", deleteFile);
-    unique_fileDeleter destName(@"MovedFilePath.txt", deleteFile);
+    NSString* srcName = @"NSFileManagerMoveTestFilePath.txt";
+    NSString* destName = @"MovedFilePath.txt";
+
+    SCOPE_DELETE_FILE(srcName);
+    SCOPE_DELETE_FILE(destName);
 
     NSString* content = @"The Quick Brown Fox.";
-    createFileWithContentAndVerify(srcName.get(), content);
+    createFileWithContentAndVerify(srcName, content);
 
-    NSString* srcPath = getPathToFile(srcName.get());
-    NSString* destPath = getPathToFile(destName.get());
+    NSString* srcPath = getPathToFile(srcName);
+    NSString* destPath = getPathToFile(destName);
 
     NSFileManager* manager = [NSFileManager defaultManager];
 
@@ -218,14 +209,16 @@ TEST(NSFileManager, MoveFileViaPath) {
 }
 
 TEST(NSFileManager, MoveFileViaURL) {
-    unique_fileDeleter srcName(@"NSFileManagerMoveTestFileURL.txt", deleteFile);
-    unique_fileDeleter destName(@"MovedFileURL.txt", deleteFile);
+    NSString* srcName = @"NSFileManagerMoveTestFileURL.txt";
+    NSString* destName = @"MovedFileURL.txt";
+    SCOPE_DELETE_FILE(srcName);
+    SCOPE_DELETE_FILE(destName);
 
     NSString* content = @"The Quick Brown Fox.";
-    createFileWithContentAndVerify(srcName.get(), content);
+    createFileWithContentAndVerify(srcName, content);
 
-    NSURL* srcURL = [NSURL fileURLWithPath:getPathToFile(srcName.get())];
-    NSURL* destURL = [NSURL fileURLWithPath:getPathToFile(destName.get())];
+    NSURL* srcURL = [NSURL fileURLWithPath:getPathToFile(srcName)];
+    NSURL* destURL = [NSURL fileURLWithPath:getPathToFile(destName)];
 
     NSFileManager* manager = [NSFileManager defaultManager];
 

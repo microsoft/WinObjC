@@ -237,8 +237,10 @@ TEST(NSCache, DiscardableContent_DiscardAndRemoveOnEvict) {
     EXPECT_OBJCEQ(nil, [cache objectForKey:@"disc"]);
 }
 
-/* Discard unaccessed objects on cost evict, but keep them in the cache. */
-TEST(NSCache, DiscardableContent_DiscardButKeepOnEvict) {
+/* The above test, but with the option for retaining discardable content turned on.
+   It should act exactly the same, as this option does not govern whether discardables can be evicted.
+*/
+TEST(NSCache, DiscardableContent_DiscardAndRemoveOnEvictWithEvictionFlag) {
     NSCache* cache = nil;
     ASSERT_NO_THROW(cache = [[NSCache new] autorelease]);
     ASSERT_NO_THROW(cache.totalCostLimit = 50);
@@ -249,6 +251,45 @@ TEST(NSCache, DiscardableContent_DiscardButKeepOnEvict) {
     [disc endContentAccess];
     ASSERT_NO_THROW([cache setObject:disc forKey:@"disc" cost:100]); // Intentionally add over cost to force eviction.
     EXPECT_TRUE([disc isContentDiscarded]);
+    EXPECT_OBJCEQ(nil, [cache objectForKey:@"disc"]);
+}
+
+/* Discardable objects are usually removed on access from NSCache if they've been discarded. */
+TEST(NSCache, DiscardableContent_DiscardAndRemoveIfAlreadyDiscardedOnAccess) {
+    NSCache* cache = nil;
+    ASSERT_NO_THROW(cache = [[NSCache new] autorelease]);
+    ASSERT_NO_THROW(cache.evictsObjectsWithDiscardedContent = YES);
+
+    __block BOOL delegateTripped = NO;
+    id<NSCacheDelegate> delegate = [TEST_IDENT(BlockDelegate) delegateWithBlock:^(NSCache* cache, id object) {
+        delegateTripped = YES;
+    }];
+
+    ASSERT_NO_THROW(cache.delegate = delegate);
+
+    StrongId<id<NSDiscardableContent>> disc = [[TEST_IDENT(Discardable) new] autorelease];
+
+    [disc endContentAccess];
+    ASSERT_NO_THROW([cache setObject:disc forKey:@"disc"]);
+
+    [disc discardContentIfPossible];
+    EXPECT_OBJCEQ(nil, [cache objectForKey:@"disc"]);
+
+    EXPECT_TRUE(delegateTripped);
+}
+
+/* The above test, but with the option flipped so that the object is retained. */
+TEST(NSCache, DiscardableContent_DiscardButKeepIfAlreadyDiscardedOnAccess) {
+    NSCache* cache = nil;
+    ASSERT_NO_THROW(cache = [[NSCache new] autorelease]);
+    ASSERT_NO_THROW(cache.evictsObjectsWithDiscardedContent = NO);
+
+    StrongId<id<NSDiscardableContent>> disc = [[TEST_IDENT(Discardable) new] autorelease];
+
+    [disc endContentAccess];
+    ASSERT_NO_THROW([cache setObject:disc forKey:@"disc"]);
+
+    [disc discardContentIfPossible];
     EXPECT_OBJCNE(nil, [cache objectForKey:@"disc"]);
 }
 

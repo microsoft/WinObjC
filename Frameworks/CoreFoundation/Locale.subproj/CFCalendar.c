@@ -776,6 +776,7 @@ static CFRange __CFCalendarGetRangeOfUnit2(CFCalendarRef calendar, CFCalendarUni
     }
     return range;
 
+    // TODO 8463791 : rangeOfUnit can return incorrect results
     calculate:;
     ucal_clear(calendar->_cal);
     UCalendarDateFields smallField = __CFCalendarGetICUFieldCode(smallerUnit);
@@ -961,6 +962,13 @@ Boolean _CFCalendarAddComponentsV(CFCalendarRef calendar, /* inout */ CFAbsolute
     ucal_setMillis(calendar->_cal, udate, &status);
     char ch = *componentDesc;
     while (ch) {
+        // WINOBJC: ICU function ucal_add does not accept Nanoseconds. Skip this component as it causes failure.
+        if (ch == '#') {
+            vector++;
+            componentDesc++;
+            ch = *componentDesc;
+            continue;
+        }
         UCalendarDateFields field = __CFCalendarGetICUFieldCodeFromChar(ch);
             int amount = *vector;
         if (options & kCFCalendarComponentsWrap) {

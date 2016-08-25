@@ -85,10 +85,10 @@ TEST(NSString, IntegerValue) {
     ASSERT_EQ([string8 integerValue], 0);
 
     NSString* string9 = @"999999999999999999999999999999";
-    ASSERT_EQ([string9 integerValue], INT_MAX);
+    ASSERT_EQ([string9 integerValue], LONG_MAX);
 
     NSString* string10 = @"-999999999999999999999999999999";
-    ASSERT_EQ([string10 integerValue], INT_MIN);
+    ASSERT_EQ([string10 integerValue], LONG_MIN);
 }
 
 TEST(NSString, IntValue) {
@@ -117,10 +117,10 @@ TEST(NSString, IntValue) {
     ASSERT_EQ([string8 intValue], 0);
 
     NSString* string9 = @"999999999999999999999999999999";
-    ASSERT_EQ([string9 intValue], LONG_MAX);
+    ASSERT_EQ([string9 intValue], INT_MAX);
 
     NSString* string10 = @"-999999999999999999999999999999";
-    ASSERT_EQ([string10 intValue], LONG_MIN);
+    ASSERT_EQ([string10 intValue], INT_MIN);
 }
 
 TEST(NSString, IsEqualToStringWithSwiftString) {
@@ -635,10 +635,11 @@ TEST(NSString, StringByResolvingSymlinksInPath) {
         NSString* path = @"/tmp/..";
         auto result = path.stringByResolvingSymlinksInPath;
 
-#if 0 // WINOBJC: never true // #if os(OSX)
-        auto expected = @"/private";
-#else
+// #if below is from the original Swift tests - platform differences were already known
+#if TARGET_OS_WIN32
         auto expected = @"/";
+#else
+        auto expected = @"/private";
 #endif
 
         ASSERT_OBJCEQ_MSG(result, expected, @"For absolute paths, all symbolic links are guaranteed to be removed.");
@@ -983,7 +984,7 @@ TEST_P(ComparisonTests, PrefixSuffix) {
     checkHasPrefixHasSuffix(combinerWithLhs, rhs, ::testing::get<12>(GetParam()), ::testing::get<13>(GetParam()));
 }
 
-INSTANTIATE_TEST_CASE_P(
+OSX_DISABLED_INSTANTIATE_TEST_CASE_P(
     NSString,
     ComparisonTests,
     ::testing::Values(::testing::make_tuple(@"", @"", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
@@ -996,7 +997,6 @@ INSTANTIATE_TEST_CASE_P(
                       ::testing::make_tuple(@"\u0000", @"\u0000", YES, YES, YES, YES, YES, NO, NO, YES, YES, NO, NO, YES),
                       ::testing::make_tuple(@"\r\n", @"t", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
                       ::testing::make_tuple(@"\r\n", @"\n", NO, YES, NO, NO, NO, NO, NO, YES, NO, NO, NO, YES),
-                      ::testing::make_tuple(@"\u0000", @"\u0000\u0000", YES, NO, YES, YES, NO, NO, NO, NO, NO, NO, NO, NO),
 
                       // Whitespace
                       // U+000A LINE FEED (LF)
@@ -1076,7 +1076,13 @@ INSTANTIATE_TEST_CASE_P(
                       // U+0341 has a canonical decomposition mapping of U+0301.
                       ::testing::make_tuple(@"\u0301", @"\u0341", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
                       ::testing::make_tuple(@"\u0301", @"\u0954", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
-                      ::testing::make_tuple(@"\u0341", @"\u0954", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO)));
+                      ::testing::make_tuple(@"\u0341", @"\u0954", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO)),
+    // DISABLED TESTS
+    // Due to a difference in CFConstantString implementation, this test fails on the reference platform. Essientially the issue comes down
+    // to how embedded null characters are handled and thus how the string length is computed. WinObjC does not handle them and thus sees
+    // @"\u0000\u0000" as equivalent to @"\u0000" meaning that, in a sense, [@"u0000" hasPrefix:@"\u0000\u0000"] is true. The expected
+    // results should change when compiler generated builtin constant strings are supported.
+    ::testing::Values(::testing::make_tuple(@"\u0000", @"\u0000\u0000", YES, NO, YES, YES, NO, NO, NO, NO, NO, NO, NO, NO)));
 
 // WINOBJC: No playground support for ObjC
 /*

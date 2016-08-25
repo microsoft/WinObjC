@@ -96,11 +96,18 @@ TEST(NSData, Base64EncodeWithOptions) {
                       base64EncodedStringWithOptions:NSDataBase64Encoding76CharacterLineLength | NSDataBase64EncodingEndLineWithLineFeed]);
 }
 
-TEST(NSData, Base64DecodeWithOptions) {
-    // Invalid input should return nil
-    StrongId<NSData> invalidDecoded = [[[NSData alloc] initWithBase64Encoding:@"%"] autorelease];
-    ASSERT_OBJCEQ(nil, invalidDecoded);
+TEST(NSData, Base64InvalidInitialization) {
+    // Documentation states that invalid input should return nil, but reference platform tests show it returns an empty NSData object
+    StrongId<NSString> invalidString = @"%";
+    StrongId<NSData> invalidDecoded = [[[NSData alloc] initWithBase64Encoding:invalidString] autorelease];
+    ASSERT_OBJCEQ(@"<>", [invalidDecoded description]);
 
+    // Should match documentation and return nil
+    invalidDecoded = [[[NSData alloc] initWithBase64EncodedString:invalidString options:0] autorelease];
+    ASSERT_OBJCEQ(nil, invalidDecoded);
+}
+
+TEST(NSData, Base64DecodeWithOptions) {
     // Basic testing
     testDecode(@"QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB",
                @"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -285,30 +292,30 @@ TEST(NSData, MutableCopyExpandBeyondCapacity) {
 TEST(NSData, Copying_NSMutableData) {
     NSMutableData* mutableData = [NSMutableData dataWithBytes:"hello" length:5];
     NSData* copiedData = [[mutableData copy] autorelease];
-    
+
     // A mutable->immutable copy should result in a different pointer...
     ASSERT_NE(copiedData, mutableData);
     // ...which points to identical data...
     ASSERT_OBJCEQ(copiedData, mutableData);
     // ...but does not reflect mutations...
-    [mutableData replaceBytesInRange:(NSRange){0,1} withBytes:"good" length:4];
+    [mutableData replaceBytesInRange:(NSRange) { 0, 1 } withBytes:"good" length:4];
     ASSERT_OBJCNE(copiedData, mutableData);
 }
 
 TEST(NSData, Copying_CustomBufferWithOwnership) {
     woc::unique_iw<char> backingBuffer(IwStrDup("hello world"));
-    NSData *originalOwningData = [NSData dataWithBytesNoCopy:backingBuffer.release() length:11 freeWhenDone:YES];
+    NSData* originalOwningData = [NSData dataWithBytesNoCopy:backingBuffer.release() length:11 freeWhenDone:YES];
     NSData* copiedData = [[originalOwningData copy] autorelease];
-    
+
     // An owning->immutable copy should result in the same pointer...
     ASSERT_EQ(copiedData, originalOwningData);
 }
 
 TEST(NSData, Copying_CustomBufferWithoutOwnership) {
     woc::unique_iw<char> backingBuffer(IwStrDup("hello world"));
-    NSData *originalNonOwningData = [NSData dataWithBytesNoCopy:backingBuffer.get() length:11 freeWhenDone:NO];
+    NSData* originalNonOwningData = [NSData dataWithBytesNoCopy:backingBuffer.get() length:11 freeWhenDone:NO];
     NSData* copiedData = [[originalNonOwningData copy] autorelease];
-    
+
     // An un-owning->immutable copy should result in a different pointer...
     ASSERT_NE(copiedData, originalNonOwningData);
     // ...which does not reflect changes to the backing buffer...

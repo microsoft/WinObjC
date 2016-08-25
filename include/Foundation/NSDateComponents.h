@@ -38,7 +38,6 @@ FOUNDATION_EXPORT_CLASS
 @property NSInteger minute;
 @property NSInteger second;
 @property NSInteger nanosecond;
-@property NSInteger week;
 @property NSInteger weekday;
 @property NSInteger weekdayOrdinal;
 @property NSInteger quarter;
@@ -48,4 +47,6 @@ FOUNDATION_EXPORT_CLASS
 @property (getter=isLeapMonth) BOOL leapMonth;
 - (NSInteger)valueForComponent:(NSCalendarUnit)unit;
 - (void)setValue:(NSInteger)value forComponent:(NSCalendarUnit)unit;
+- (NSInteger)week;
+- (void)setWeek:(NSInteger)v;
 @end

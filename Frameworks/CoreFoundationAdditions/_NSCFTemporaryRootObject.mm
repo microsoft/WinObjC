@@ -15,7 +15,7 @@
 //******************************************************************************
 #include "_NSCFTemporaryRootObject.h"
 
-#include <Windows.h>
+#include <windows.h>
 
 @implementation _NSCFTemporaryRootObject
 - (void)doesNotRecognizeSelector:(SEL)selector {

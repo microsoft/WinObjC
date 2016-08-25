@@ -44,8 +44,8 @@ CFDateFormatterRef _getLocaleDescriptionFormatter(NSLocale* locale) {
                                                          static_cast<CFLocaleRef>(locale),
                                                          kCFDateFormatterFullStyle,
                                                          kCFDateFormatterFullStyle);
-    CFDateFormatterSetProperty(formatter, kCFDateFormatterTimeZone, CFTimeZoneCopySystem());
-    return formatter;
+    CFDateFormatterSetProperty(formatter, kCFDateFormatterTimeZone, CFAutorelease(CFTimeZoneCopySystem()));
+    return (CFDateFormatterRef)CFAutorelease(formatter);
 }
 
 @implementation NSDate

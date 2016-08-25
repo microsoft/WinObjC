@@ -26,12 +26,12 @@ typedef int32_t ABPropertyID;
 typedef uint32_t ABRecordType;
 typedef uint16_t ABPropertyType;
 
-ADDRESSBOOK_EXPORT ABRecordID ABRecordGetRecordID(ABRecordRef record) STUB_METHOD;
-ADDRESSBOOK_EXPORT ABRecordType ABRecordGetRecordType(ABRecordRef record) STUB_METHOD;
+ADDRESSBOOK_EXPORT ABRecordID ABRecordGetRecordID(ABRecordRef record);
+ADDRESSBOOK_EXPORT ABRecordType ABRecordGetRecordType(ABRecordRef record);
 ADDRESSBOOK_EXPORT bool ABRecordSetValue(ABRecordRef record, ABPropertyID property, CFTypeRef value, CFErrorRef* error) STUB_METHOD;
-ADDRESSBOOK_EXPORT CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID property) STUB_METHOD;
+ADDRESSBOOK_EXPORT CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID property);
 ADDRESSBOOK_EXPORT bool ABRecordRemoveValue(ABRecordRef record, ABPropertyID property, CFErrorRef* error) STUB_METHOD;
-ADDRESSBOOK_EXPORT CFStringRef ABRecordCopyCompositeName(ABRecordRef record) STUB_METHOD;
+ADDRESSBOOK_EXPORT CFStringRef ABRecordCopyCompositeName(ABRecordRef record);
 
 enum { kABPersonType = 0, kABGroupType = 1, kABSourceType = 2 };
 

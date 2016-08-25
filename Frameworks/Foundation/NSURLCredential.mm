@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #import <Starboard.h>
-#import <Windows.h>
+#import <windows.h>
 #import <Foundation/NSURLCredential.h>
 
 @interface NSURLCredential ()
@@ -58,6 +58,10 @@
 - (instancetype)initWithIdentity:(SecIdentityRef)identity
                     certificates:(NSArray*)certArray
                      persistence:(NSURLCredentialPersistence)persistence {
+    if (!identity || !certArray || !certArray.count) {
+        [self release];
+        return nil;
+    }
     if (self = [self _initWithPersistence:persistence]) {
         _identity = identity;
         _certificates = [certArray copy];
@@ -69,7 +73,7 @@
  @Status Interoperable
 */
 - (instancetype)initWithTrust:(SecTrustRef)trust {
-    if (self = [super init]) {
+    if (self = [self _initWithPersistence:NSURLCredentialPersistenceForSession]) {
         _trust = trust;
     }
     return self;
