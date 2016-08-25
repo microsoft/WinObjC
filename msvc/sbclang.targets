@@ -20,9 +20,10 @@
 
   <PropertyGroup>
     <ClangCompileDependsOn>_SelectedFiles;MakeDirsForClang;GenerateHeaderMaps;ComputeClangOptions</ClangCompileDependsOn>
-    <ClangCompileBeforeTargets>Link;Lib;ImpLib</ClangCompileBeforeTargets>
-    <ClangCompileAfterTargets>ClCompile</ClangCompileAfterTargets>
-    <BuildCompileTargets>$(BuildCompileTargets);_ClangCompile</BuildCompileTargets>
+    <ClangCompileBeforeTargets>ClCompile;Link;Lib;ImpLib</ClangCompileBeforeTargets>
+    <ClangCompileAfterTargets></ClangCompileAfterTargets>
+    <BeforeClCompileTargets>_ClangCompile;AddObjCTwoStageInitFile;$(BeforeClCompileTargets)</BeforeClCompileTargets>
+    <BuildCompileTargets>_ClangCompile;$(BuildCompileTargets)</BuildCompileTargets>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -360,12 +361,19 @@
   </Target>
 
   <PropertyGroup>
-    <ResolveSDKReferencesDependsOn>ComputeStarboardCRT;$(ResolveSDKReferencesDependsOn)</ResolveSDKReferencesDependsOn>
+    <ResolveSDKReferencesDependsOn>ComputeStarboardCRT;AddRuntimeComponentFile;$(ResolveSDKReferencesDependsOn)</ResolveSDKReferencesDependsOn>
   </PropertyGroup>
 
-  <Target
-    Name="ComputeStarboardCRT"
-    DependsOnTargets="ComputeStarboardHasObjCSources">
+  <Target Name="ComputeStarboardCRT">
+
+    <!-- Inject a dummy ClangCompile file to gain access to autocomplete arguments for the project.
+         If the project doesn't contain any explicit ClangCompile files, this also helps with the
+         computation of the StarboardCRT. -->
+    <ItemGroup>
+      <ClangCompile Include="$(DummyClangFile)">
+        <ExcludedFromBuild>true</ExcludedFromBuild>
+      </ClangCompile>
+    </ItemGroup>
 
     <PropertyGroup>
       <!-- Choose a CRT to use -->
@@ -409,22 +417,6 @@
       Importance="High"
       Text="Using $(StarboardCRTConfig) WinObjC libraries due to $(StarboardCRT) CRT." />
       
-    <ItemGroup Condition="'$(AppContainerApplication)' == 'true' And '$(IslandwoodDRT)' == 'true'">
-      <ClCompile Include="$(MSBuildThisFileDirectory)ConsumeRuntimeComponent.cpp">
-        <PrecompiledHeader>NotUsing</PrecompiledHeader>
-        <RuntimeLibrary>$(StarboardCRT)</RuntimeLibrary>
-        <AdditionalOptions Condition="'$(ConfigurationType)' == 'Application'">$(AdditionalOptions) -D_WOC_APP</AdditionalOptions>
-      </ClCompile>
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(StarboardHasObjCSources)' == 'true'">
-      <ClCompile Include="$(MSBuildThisFileDirectory)\objcrt\objc_2stage_init.cpp">
-        <PrecompiledHeader>NotUsing</PrecompiledHeader>
-        <RuntimeLibrary>$(StarboardCRT)</RuntimeLibrary>
-        <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      </ClCompile>
-    </ItemGroup>
-    
     <!-- UIKit.dll inherits type information from UIKit.Xaml.dll, but the build system doesn't know that, so we have to manually reference it -->
     <ItemGroup>
       <Reference Include="UIKit" Condition="'$(AppContainerApplication)' == 'true' And ('$(IslandwoodDRT)' == 'true' Or $(Link.Contains('UIKit.lib')))">
@@ -433,7 +425,38 @@
         <Implementation>UIKit.Xaml.dll</Implementation>
       </Reference>
     </ItemGroup>
-    
+
+  </Target>
+
+  <!-- In cases when the project doesn't contain any explicit ClCompile items, adding this file
+       ensures that the SDK references are resolved correctly. Otherwise, the APPX will be missing
+       the runtime libraries, such as vccorlib140d_app.DLL. -->
+  <Target
+    Name="AddRuntimeComponentFile"
+    DependsOnTargets="ComputeStarboardCRT">
+
+    <ItemGroup Condition="'$(AppContainerApplication)' == 'true' And '$(IslandwoodDRT)' == 'true'">
+      <ClCompile Include="$(MSBuildThisFileDirectory)ConsumeRuntimeComponent.cpp">
+        <PrecompiledHeader>NotUsing</PrecompiledHeader>
+        <RuntimeLibrary>$(StarboardCRT)</RuntimeLibrary>
+        <AdditionalOptions Condition="'$(ConfigurationType)' == 'Application'">$(AdditionalOptions) -D_WOC_APP</AdditionalOptions>
+      </ClCompile>
+    </ItemGroup>
+
+  </Target>
+
+  <Target
+    Name="AddObjCTwoStageInitFile"
+    DependsOnTargets="ComputeStarboardCRT;ComputeStarboardHasObjCSources">
+
+    <ItemGroup Condition="'$(StarboardHasObjCSources)' == 'true'">
+      <ClCompile Include="$(MSBuildThisFileDirectory)\objcrt\objc_2stage_init.cpp">
+        <PrecompiledHeader>NotUsing</PrecompiledHeader>
+        <RuntimeLibrary>$(StarboardCRT)</RuntimeLibrary>
+        <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      </ClCompile>
+    </ItemGroup>
+
   </Target>
 
   <Target
@@ -583,14 +606,10 @@
     <MakeDir Directories="@(ClangCompile->Metadata('ObjectFileName')->DirectoryName()->Distinct()->ClearMetadata())" />
   </Target>
   
-  <Target Name="ComputeClangOptions">
-    <!-- Inject a dummy ClangCompile file to gain access to autocomplete arguments for the project -->
-    <ItemGroup>
-      <ClangCompile Include="$(DummyClangFile)">
-        <ExcludedFromBuild>true</ExcludedFromBuild>
-      </ClangCompile>
-    </ItemGroup>
-    
+  <Target
+    Name="ComputeClangOptions"
+    DependsOnTargets="ComputeStarboardCRT">
+
     <!-- Figure out what to compile each file as -->
     <ItemGroup>
       <ClangCompile Condition="'%(ClangCompile.CompileAs)' == 'Default' or '%(ClangCompile.CompileAs)' == ''">
