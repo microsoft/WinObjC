@@ -300,36 +300,10 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
   // Get the output format and directory
   String outputDir = m_buildSettings->getValue("VSIMPORTER_OUTPUT_DIR");
 
-  // Create a solution folder for the project
-  VSSolutionFolderProject* projFolder = sln.addFolder(getName());
-
-  // Get all header files from the Xcode project and add them to the target
-  VCProject* headerProj = NULL;
-  ConstFileList headerFiles;
-  getMatchingFiles(&headerTypeMatch, headerFiles);
-  if (!headerFiles.empty()) {
-    // Get the template
-    VSTemplate* vstemplate = VSTemplate::getTemplate("SharedHeaders");
-    sbAssert(vstemplate);
-
-    // Set up basis template parameters
-    VSTemplateParameters templateParams;
-    templateParams.setProjectName(getName() + "-Headers");
-
-    // Expand the template and get the template project
-    vstemplate->expand(outputDir, templateParams);
-    const VSTemplateProjectVec& projTemplates = vstemplate->getProjects();
-    sbAssert(projTemplates.size() == 1);
-
-    // Create a shared project with all the headers
-    VCItemHint headerHint = { "ClInclude", "", "" };
-    headerProj = new VCSharedProject(projTemplates.front());
-    for (auto file : headerFiles) {
-      addFileToVS(file, *headerProj, getBuildSettings(), &headerHint);
-    }
-
-    // Add the project to the solution
-    sln.addProject(headerProj, projFolder);
+  // Create a solution folder for the project iff we're importing multiple targets
+  VSSolutionFolderProject* projFolder = NULL;
+  if (m_existingTargets.size() > 1) {
+    projFolder = sln.addFolder(getName());
   }
 
   // Get the default project configuration
@@ -337,6 +311,7 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
   String defaultConfig = buildConfigList->getDefaultConfigurationName();
 
   // Create VS projects from targets
+  std::list<VCProject*> compilableProjects;
   for (auto target : m_existingTargets) {
     // Construct template name
     String templateName;
@@ -376,13 +351,12 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
       for (auto platformName : projTemplate->getPlatforms()) {
         sln.addPlatform(platformName);
       }
-    
-      // Add a referenced to the shared headers project to targets that compile things
-      if (productType == TargetApplication || productType == TargetStaticLib)
-      {
-        proj->addSharedProject(headerProj);
+
+      // Keep track of projects that compile things
+      if (productType == TargetApplication || productType == TargetStaticLib) {
+        compilableProjects.push_back(proj);
       }
-    
+
       // Add the project to the solution
       VSBuildableSolutionProject* slnProj = sln.addProject(proj, projFolder);
 
@@ -393,6 +367,46 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
         } else {
           slnProj->mapConfiguration(slnConfig, defaultConfig);
         }
+      }
+    }
+  }
+
+  // Get all header files from the Xcode project
+  VCProject* headerProj = NULL;
+  ConstFileList headerFiles;
+  getMatchingFiles(&headerTypeMatch, headerFiles);
+  if (compilableProjects.size() == 1) {
+    headerProj = compilableProjects.front();
+  } else if (!headerFiles.empty()) {
+    // Get the template
+    VSTemplate* vstemplate = VSTemplate::getTemplate("SharedHeaders");
+    sbAssert(vstemplate);
+
+    // Set up basis template parameters
+    VSTemplateParameters templateParams;
+    templateParams.setProjectName(getName() + "-Headers");
+
+    // Expand the template and get the template project
+    vstemplate->expand(outputDir, templateParams);
+    const VSTemplateProjectVec& projTemplates = vstemplate->getProjects();
+    sbAssert(projTemplates.size() == 1);
+
+    // Create a shared project for the headers and add it to the solution
+    headerProj = new VCSharedProject(projTemplates.front());
+    sln.addProject(headerProj, projFolder);
+  }
+
+  // Add projects headers
+  if (headerProj) {
+    VCItemHint headerHint = { "ClInclude", "", "" };
+    for (auto file : headerFiles) {
+      addFileToVS(file, *headerProj, getBuildSettings(), &headerHint);
+    }
+
+    // If headers were added to a shared project, add appropriate references
+    if (headerProj->getSubType() == VCShared) {
+      for (auto project : compilableProjects) {
+        project->addSharedProject(headerProj);
       }
     }
   }
