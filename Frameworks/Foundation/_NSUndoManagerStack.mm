@@ -37,7 +37,6 @@
 
 - (void)push:(id<_NSUndoable>)undoObject {
     _stack.push_front(undoObject);
-    [undoObject release];
 }
 
 - (NSUInteger)count {

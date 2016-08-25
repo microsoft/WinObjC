@@ -49,7 +49,7 @@ FOUNDATION_EXPORT_CLASS
 @property (readonly) NSInteger groupingLevel;
 - (void)disableUndoRegistration;
 - (void)enableUndoRegistration;
-@property (readonly, getter=isUndoRegistrationEnabled) BOOL undoRegistrationEnabled;
+- (BOOL)isUndoRegistrationEnabled;
 @property (readonly, getter=isUndoing) BOOL undoing;
 @property (readonly, getter=isRedoing) BOOL redoing;
 - (void)removeAllActions;

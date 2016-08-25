@@ -19,19 +19,21 @@
 #import "_NSUndoManagerInternal.h"
 
 @implementation _NSUndoGroup {
-    StrongId<_NSUndoManagerStack*> _undoGrouping;
-    NSInteger _undoLevel;
+    StrongId<_NSUndoManagerStack> _undoGrouping;
     BOOL _isClosed;
+}
+
+- (NSUInteger)count {
+    return [_undoGrouping count];
 }
 
 - (BOOL)isClosed {
     return _isClosed;
 }
 
-- (id)initWithLevel:(NSInteger)level {
+- (id)init {
     if (self = [super init]) {
         _undoGrouping = [[_NSUndoManagerStack alloc] init];
-        _undoLevel = level;
         _isClosed = NO;
     }
     return self;
@@ -46,29 +48,27 @@
     }
 }
 
-- (void)undo {
-    if ([_undoGrouping count] == 0) {
-        [NSException raise:NSInternalInconsistencyException format:@"No undo operations in undo group."];
-    }
-    if (!_isClosed) {
+- (void)undo:(BOOL)undoAll {
+    if (!_isClosed && undoAll) {
         [NSException raise:NSInternalInconsistencyException format:@"Undo group was not closed."];
     }
-    while ([_undoGrouping count] > 0) {
+    do {
         id<_NSUndoable> object = [_undoGrouping peek];
-        [object undo];
+        [object undo:YES];
         [_undoGrouping pop];
-    }
+    } while (undoAll && [_undoGrouping count] > 0);
 }
 
-- (void)createUndoGroupWithLevel:(NSInteger)level {
+- (void)createUndoGroup {
     id<_NSUndoable> topObjectInGroup = [_undoGrouping peek];
     if (topObjectInGroup != nil && ![topObjectInGroup isClosed]) {
         // Object must be a group in order to be an open object. Cast to ensure proper return type, otherwise return type is default id.
-        [(_NSUndoGroup*)topObjectInGroup createUndoGroupWithLevel:level + 1];
+        [(_NSUndoGroup*)topObjectInGroup createUndoGroup];
+    } else {
+        _NSUndoGroup* newGroup = [[_NSUndoGroup alloc] init];
+        [_undoGrouping push:newGroup];
+        [newGroup release];
     }
-
-    _NSUndoGroup* newGroup = [[_NSUndoGroup alloc] initWithLevel:level];
-    [_undoGrouping push:newGroup];
 }
 
 - (void)closeUndoGroup {

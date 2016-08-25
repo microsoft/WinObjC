@@ -21,7 +21,7 @@
 
 @protocol _NSUndoable
 @required
-- (void)undo;
+- (void)undo:(BOOL)undoAll;
 @end
 
 @interface _NSUndoBasicAction : NSObject <_NSUndoable>
@@ -32,11 +32,12 @@
 
 @interface _NSUndoGroup : NSObject <_NSUndoable>
 
-- (id)initWithLevel:(NSInteger)level;
+- (id)init;
 - (void)addUndoCallToUndoGroup:(_NSUndoBasicAction*)undoCall;
-- (void)createUndoGroupWithLevel:(NSInteger)level;
+- (void)createUndoGroup;
 - (void)closeUndoGroup;
 - (BOOL)isClosed;
+- (NSUInteger)count;
 
 @end
 

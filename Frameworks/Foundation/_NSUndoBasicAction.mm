@@ -34,7 +34,7 @@
     return self;
 }
 
-- (void)undo {
+- (void)undo:(BOOL)undoAll {
     [objc_loadWeak(&_target) performSelector:_undoAction withObject:_object];
 }
 
