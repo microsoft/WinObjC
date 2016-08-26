@@ -24,9 +24,14 @@
     GLOBAL _CallFrameInternal_VFP
     GLOBAL _CallFrameInternal
     CMP r3, 1
-    VLDREQ.64 d0, [r0]
-    VLDMGT.64 r0, {d0-d7}
+    BNE %F0
+    VLDR.64 d0, [r0]
+    B %F1
 
+0
+    VLDM.64 r0, {d0-d7}
+
+1
     ADD r0, r0, #64
     ; Fall through to non-VFP case
 |_CallFrameInternal_VFP| ENDP
