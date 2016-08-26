@@ -145,30 +145,33 @@
 
 
   <ItemGroup>
-    <ProjectToBuild Include="$(MSBuildThisFileDirectory)..\build.sln">
-      <Properties>Configuration=$(Configuration);Platform=x86</Properties>
-    </ProjectToBuild>
-    <ProjectToBuild Include="$(MSBuildThisFileDirectory)..\build.sln">
+    <ARMProjectToBuild Include="$(MSBuildThisFileDirectory)..\build.sln">
       <Properties>Configuration=$(Configuration);Platform=ARM</Properties>
-    </ProjectToBuild>
+    </ARMProjectToBuild>
+    <X86ProjectToBuild Include="$(MSBuildThisFileDirectory)..\build.sln">
+      <Properties>Configuration=$(Configuration);Platform=x86</Properties>
+    </X86ProjectToBuild>
 
     <!-- Build WinObjCRT for the opposite configuration. This is the only project that always needs to be built for all configurations to generate a package. -->
-    <ProjectToBuild Include="$(MSBuildThisFileDirectory)..\WinObjCRT\dll\WinObjCRT.vcxproj">
-      <Properties>Configuration=$(OppositeConfiguration);Platform=x86</Properties>
-    </ProjectToBuild>
-    <ProjectToBuild Include="$(MSBuildThisFileDirectory)..\WinObjCRT\dll\WinObjCRT.vcxproj">
+    <ARMProjectToBuild Include="$(MSBuildThisFileDirectory)..\WinObjCRT\dll\WinObjCRT.vcxproj">
       <Properties>Configuration=$(OppositeConfiguration);Platform=ARM</Properties>
-    </ProjectToBuild>
+    </ARMProjectToBuild>
+    <X86ProjectToBuild Include="$(MSBuildThisFileDirectory)..\WinObjCRT\dll\WinObjCRT.vcxproj">
+      <Properties>Configuration=$(OppositeConfiguration);Platform=x86</Properties>
+    </X86ProjectToBuild>
   </ItemGroup>
 
   <Target Name="CompileSDKs" DependsOnTargets="CheckSolution">
-    <Message Importance="high" Text="Building SDK" />
-    <MSBuild Projects="@(ProjectToBuild)" BuildInParallel="true"/>
+    <Message Importance="high" Text="Building x86 SDK" />
+    <MSBuild Projects="@(X86ProjectToBuild)" BuildInParallel="true"/>
+    <Message Importance="high" Text="Building ARM SDK" />
+    <MSBuild Projects="@(ARMProjectToBuild)" BuildInParallel="true"/>
   </Target>
 
   <Target Name="CleanSDKs">
     <Message Importance="high" Text="Cleaning SDK" />
-    <MSBuild Projects="@(ProjectToBuild)" BuildInParallel="true" Targets="clean"/>
+    <MSBuild Projects="@(X86ProjectToBuild)" BuildInParallel="true" Targets="clean"/>
+    <MSBuild Projects="@(ARMProjectToBuild)" BuildInParallel="true" Targets="clean"/>
   </Target>
   
   <Target Name="Build" DependsOnTargets="CompileSDKs;ComputeBuildTarget">
