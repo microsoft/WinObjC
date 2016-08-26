@@ -49,39 +49,39 @@
     LDR r3, [fp, #12] ; return type
     MOV sp, fp
 
-    ADR ip, %F0
-    LDR pc, [ip, r3, lsl #2]
+    ADR ip, %F101
+    TBB [ip, r3]
 
-11 ; VFP_F
+100
+111 ; VFP_F
     VSTR s0, [r2]
     POP {fp, pc}
-12 ; VFP_D
+112 ; VFP_D
     VSTR d0, [r2]
     POP {fp, pc}
-13 ; VFP_HOMOGENOUS
+113 ; VFP_HOMOGENOUS
     VSTM r2, {d0-d3}
     POP {fp, pc}
 
-15 ; INT32
+115 ; INT32
     STR r1, [r2, #4]
     ;; fall through
-14 ; INT
+114 ; INT
     STR r0, [r2]
     ;; fall through
 
-16 ; STRUCT
-10 ; NONE
+116 ; STRUCT
+110 ; NONE
     POP {fp, pc}
 
-    ALIGN 4
-0
-    DCD %B10 ; |_CASE_ARM_NONE|
-    DCD %B11 ; |_CASE_ARM_VFP_S|
-    DCD %B12 ; |_CASE_ARM_VFP_D|
-    DCD %B13 ; |_CASE_ARM_VFP_HOMOGENOUS|
-    DCD %B14 ; |_CASE_ARM_INT|
-    DCD %B15 ; |_CASE_ARM_INT64|
-    DCD %B16 ; |_CASE_ARM_STRUCT|
+101 ; Must be kept in the order from _NSInvocation.arm.mm
+    DCB (%B110-%B100)/2 ; RETURN_TYPE_NONE
+    DCB (%B111-%B100)/2 ; RETURN_TYPE_VFP_S
+    DCB (%B112-%B100)/2 ; RETURN_TYPE_VFP_D
+    DCB (%B113-%B100)/2 ; RETURN_TYPE_VFP_HOMOGENOUS
+    DCB (%B114-%B100)/2 ; RETURN_TYPE_INT
+    DCB (%B115-%B100)/2 ; RETURN_TYPE_INT64
+    DCB (%B116-%B100)/2 ; RETURN_TYPE_STRUCT
 |_CallFrameInternal| ENDP
 
     END
