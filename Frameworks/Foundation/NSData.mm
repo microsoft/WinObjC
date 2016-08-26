@@ -352,6 +352,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
         return TRUE;
     } else {
         TraceVerbose(TAG, L"NSData couldn't open %hs for write (with options)", fname);
+        *error = [NSError errorWithDomain:NSCocoaErrorDomain code:4 userInfo:@{ NSFilePathErrorKey : filename }];
         return FALSE;
     }
 }
