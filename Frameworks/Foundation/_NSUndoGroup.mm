@@ -80,4 +80,12 @@
     }
 }
 
+- (BOOL)targets:(id)target {
+    return NO;
+}
+
+- (void)removeAllWithTarget:(id)target {
+    [_undoGrouping removeAllWithTarget:target];
+}
+
 @end

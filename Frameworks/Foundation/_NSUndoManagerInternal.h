@@ -22,11 +22,13 @@
 @protocol _NSUndoable
 @required
 - (void)undo:(BOOL)undoAll;
+- (BOOL)targets:(id)target;
+- (void)removeAllWithTarget:(id)target;
 @end
 
 @interface _NSUndoBasicAction : NSObject <_NSUndoable>
 
-- (id)_initWithTarget:(id)target selector:(SEL)aSelector object:(id)anObject;
+- (id)_initWithTarget:(id)target selector:(SEL)aSelector object:(id)anObject modes:(NSArray<NSString*>*)runLoopModes;
 
 @end
 

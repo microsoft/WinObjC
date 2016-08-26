@@ -28,6 +28,12 @@
     }
 }
 
+- (void)popBack {
+    if ([self count] > 0) {
+        _stack.pop_back();
+    }
+}
+
 - (id<_NSUndoable>)peek {
     if ([self count] > 0) {
         return _stack.front();
@@ -41,6 +47,21 @@
 
 - (NSUInteger)count {
     return _stack.size();
+}
+
+- (void)removeAllWithTarget:(id)target {
+    std::list<StrongId<id<_NSUndoable>>>::const_iterator iterator = _stack.begin();
+
+    while (iterator != _stack.end()) {
+        if ([*iterator targets:target]) {
+            std::list<StrongId<id<_NSUndoable>>>::const_iterator toRemove = iterator;
+            ++iterator;
+            _stack.erase(toRemove);
+        } else {
+            [*iterator removeAllWithTarget:target];
+            ++iterator;
+        }
+    }
 }
 
 @end

@@ -16,6 +16,7 @@
 
 #import <Starboard.h>
 #import <StubReturn.h>
+#import <Foundation/NSRunLoop.h>
 #import "_NSUndoManagerInternal.h"
 #import <objc/objc-arc.h>
 
@@ -23,18 +24,21 @@
     StrongId<id> _object;
     id _target;
     SEL _undoAction;
+    StrongId<NSArray<NSString*>*> _modes;
 }
 
-- (id)_initWithTarget:(id)target selector:(SEL)aSelector object:(id)anObject {
+- (id)_initWithTarget:(id)target selector:(SEL)aSelector object:(id)anObject modes:(NSArray<NSString*>*)runLoopModes {
     if (self = [super init]) {
         _undoAction = aSelector;
         _target = objc_storeWeak(&_target, target);
         _object = anObject;
+        _modes = runLoopModes;
     }
     return self;
 }
 
 - (void)undo:(BOOL)undoAll {
+    //[[NSRunLoop currentRunLoop] performSelector:_undoAction target:objc_loadWeak(&_target) argument : _object order :0 modes:_modes];
     [objc_loadWeak(&_target) performSelector:_undoAction withObject:_object];
 }
 
@@ -44,6 +48,14 @@
 
 - (bool)isClosed {
     return YES;
+}
+
+- (BOOL)targets:(id)target {
+    return _target == target;
+}
+
+- (void)removeAllWithTarget:(id)target {
+    // Nothing more to remove
 }
 
 @end

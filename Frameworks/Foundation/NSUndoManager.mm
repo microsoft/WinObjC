@@ -36,6 +36,7 @@ NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDisca
 */
 - (id)init {
     if (self = [super init]) {
+        _runLoopModes = @[ NSDefaultRunLoopMode ];
         _groupsByEvent = YES;
 
         _disableCount = 0;
@@ -53,13 +54,14 @@ NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDisca
 */
 - (void)registerUndoWithTarget:(id)target selector:(SEL)aSelector object:(id)anObject {
     if (_disableCount == 0) {
-        _NSUndoBasicAction* undoCall = [[_NSUndoBasicAction alloc] _initWithTarget:target selector:aSelector object:anObject];
+        _NSUndoBasicAction* undoCall =
+            [[_NSUndoBasicAction alloc] _initWithTarget:target selector:aSelector object:anObject modes:self.runLoopModes];
         [self _registerUndoAction:undoCall];
     }
 }
 
 - (void)_createAutomaticUndoGroup {
-    if (!_isAutomaticGroupOpen && _undoGroupingLevel == 0) {
+    if (!_isAutomaticGroupOpen && _undoGroupingLevel == 0 && _groupsByEvent) {
         _isAutomaticGroupOpen = YES;
         [self beginUndoGrouping];
     }
@@ -67,34 +69,29 @@ NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDisca
 
 // Internal function for proper registration of the deferred call.
 - (void)_registerUndoAction:(_NSUndoBasicAction*)undoCall {
-    // If groupsByEvent is set then have a top level undo group to catch all undo calls.
-    if (_groupsByEvent) {
-        if (_undoing) {
-            if ([_redoStack count] == 0) {
-                _NSUndoGroup* startingRedoGroup = [[_NSUndoGroup alloc] init];
-                [_redoStack push:startingRedoGroup];
-                [startingRedoGroup release];
-            }
-            _NSUndoGroup* redoGroup = [_redoStack peek];
-            if (redoGroup == nil) {
-                [NSException raise:NSInternalInconsistencyException format:@"Registered action with no undo group open."];
-            }
-            [redoGroup addUndoCallToUndoGroup:undoCall];
-        } else {
-            // Any new actions invalidate any redo actions
-            if (!_redoing) {
-                [self _removeRedoActions];
-            }
-            [self _createAutomaticUndoGroup];
-            _NSUndoGroup* undoGroup = [_undoStack peek];
-            if (undoGroup == nil) {
-                [NSException raise:NSInternalInconsistencyException format:@"Registered action with no undo group open."];
-            }
-            [undoGroup addUndoCallToUndoGroup:undoCall];
+    if (_undoing) {
+        if ([_redoStack count] == 0) {
+            _NSUndoGroup* startingRedoGroup = [[_NSUndoGroup alloc] init];
+            [_redoStack push:startingRedoGroup];
+            [startingRedoGroup release];
         }
+        _NSUndoGroup* redoGroup = [_redoStack peek];
+        if (redoGroup == nil) {
+            [NSException raise:NSInternalInconsistencyException format:@"Registered action with no undo group open."];
+        }
+        [redoGroup addUndoCallToUndoGroup:undoCall];
     } else {
-    } // TODO: Issue #811 - Support undo grouping.
-    UNIMPLEMENTED_WITH_MSG("Manual undo grouping not supported.");
+        // Any new actions invalidate any redo actions
+        if (!_redoing) {
+            [self _removeRedoActions];
+        }
+        [self _createAutomaticUndoGroup];
+        _NSUndoGroup* undoGroup = [_undoStack peek];
+        if (undoGroup == nil) {
+            [NSException raise:NSInternalInconsistencyException format:@"Registered action with no undo group open."];
+        }
+        [undoGroup addUndoCallToUndoGroup:undoCall];
+    }
 }
 
 /**
@@ -110,7 +107,7 @@ NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDisca
  @Status Interoperable
 */
 - (void)undo {
-    if (_undoGroupingLevel == 1) {
+    if (_undoGroupingLevel == 1 && _groupsByEvent) {
         [self endUndoGrouping];
     }
 
@@ -189,6 +186,13 @@ NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDisca
  @Status Interoperable
 */
 - (void)beginUndoGrouping {
+    if (_undoing) {
+        return;
+    }
+    // Over the limit on undo operations
+    if (self.levelsOfUndo != 0 && _undoGroupingLevel == 0 && [_undoStack count] >= self.levelsOfUndo) {
+        [_undoStack popBack];
+    }
     if (_groupsByEvent && !_isAutomaticGroupOpen) {
         [self _createAutomaticUndoGroup];
     }
@@ -214,6 +218,9 @@ NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDisca
  @Status Interoperable
 */
 - (void)endUndoGrouping {
+    if (_undoing) {
+        return;
+    }
     // No group to close.
     if ([_undoStack count] == 0) {
         [NSException raise:NSInternalInconsistencyException format:@"endUndoGrouping called with no open group."];
@@ -304,19 +311,24 @@ NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDisca
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (void)removeAllActionsWithTarget:(id)target {
-    UNIMPLEMENTED();
+    [_undoStack removeAllWithTarget:target];
+    [_redoStack removeAllWithTarget:target];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (void)setActionName:(NSString*)actionName {
-    UNIMPLEMENTED();
+    if (_undoing) {
+        _redoActionName = [actionName copy];
+    } else {
+        _undoActionName = [actionName copy];
+    }
 }
 
 /**
