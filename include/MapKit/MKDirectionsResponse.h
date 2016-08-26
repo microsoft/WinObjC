@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,12 +16,13 @@
 #pragma once
 
 #import <MapKit/MapKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class MKMapItem;
 @class NSArray;
 
 MAPKIT_EXPORT_CLASS
-@interface MKDirectionsResponse
+@interface MKDirectionsResponse : NSObject <NSObject>
 @property (readonly, nonatomic) MKMapItem* source STUB_PROPERTY;
 @property (readonly, nonatomic) MKMapItem* destination STUB_PROPERTY;
 @property (readonly, nonatomic) NSArray* routes STUB_PROPERTY;

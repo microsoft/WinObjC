@@ -14,7 +14,8 @@
 //
 //******************************************************************************
 
-#include "ErrorHandling.h"
+#import "ErrorHandling.h"
+#import <StubReturn.h>
 #import <MessageUI/MFMessageComposeViewController.h>
 
 NSString* const MFMessageComposeViewControllerTextMessageAvailabilityKey = @"MFMessageComposeViewControllerTextMessageAvailabilityKey";
@@ -81,6 +82,104 @@ NSString* const MFMessageComposeViewControllerAttachmentAlternateFilename = @"MF
  @Notes
 */
 - (void)disableUserAttachments {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes Conform to UIContentContainer.h
+*/
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes Conform to UIContentContainer.h
+*/
+- (void)willTransitionToTraitCollection:(UITraitCollection*)newCollection
+              withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes Conform to UIContentContainer.h
+*/
+- (CGSize)sizeForChildContentContainer:(id<UIContentContainer>)container withParentContainerSize:(CGSize)parentSize {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes Conform to UIContentContainer.h
+*/
+- (void)preferredContentSizeDidChangeForChildContentContainer:(id<UIContentContainer>)container {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes Conform to UIContentContainer.h
+*/
+- (void)systemLayoutFittingSizeDidChangeForChildContentContainer:(id<UIContentContainer>)container {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes Conform to UIFocusEnvironment.h
+*/
+- (void)setNeedsFocusUpdate {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes Conform to UIFocusEnvironment.h
+*/
+- (void)updateFocusIfNeeded {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes Conform to UIFocusEnvironment.h
+*/
+- (BOOL)shouldUpdateFocusInContext:(UIFocusUpdateContext*)context {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes Conform to UIFocusEnvironment.h
+*/
+- (void)didUpdateFocusInContext:(UIFocusUpdateContext*)context withAnimationCoordinator:(UIFocusAnimationCoordinator*)coordinator {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes Conform to UITraitEnvironment.h
+*/
+- (void)traitCollectionDidChange:(UITraitCollection*)previousTraitCollection {
     UNIMPLEMENTED();
 }
 
