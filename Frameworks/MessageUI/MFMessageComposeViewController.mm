@@ -14,7 +14,8 @@
 //
 //******************************************************************************
 
-#include "ErrorHandling.h"
+#import "ErrorHandling.h"
+#import <StubReturn.h>
 #import <MessageUI/MFMessageComposeViewController.h>
 
 NSString* const MFMessageComposeViewControllerTextMessageAvailabilityKey = @"MFMessageComposeViewControllerTextMessageAvailabilityKey";

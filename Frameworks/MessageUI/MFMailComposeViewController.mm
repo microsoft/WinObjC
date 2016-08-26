@@ -14,7 +14,8 @@
 //
 //******************************************************************************
 
-#include "ErrorHandling.h"
+#import "ErrorHandling.h"
+#import <StubReturn.h>
 #import <MessageUI/MFMailComposeViewController.h>
 
 NSString* const MFMailComposeErrorDomain = @"MFMailComposeErrorDomain";

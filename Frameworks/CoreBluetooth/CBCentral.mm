@@ -25,7 +25,7 @@
 */
 - (id)copyWithZone:(NSZone*)zone {
     UNIMPLEMENTED();
-    return [self retain];
+    return self;
 }
 
 @end
