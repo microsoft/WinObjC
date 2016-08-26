@@ -57,9 +57,6 @@
     <ClangCompile Include="..\..\CTCatalog\AppDelegate.m">
       <Filter>CTCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\CTCatalog\CTCBaseViewController.m">
-      <Filter>CTCatalog</Filter>
-    </ClangCompile>
     <ClangCompile Include="..\..\CTCatalog\main.m">
       <Filter>CTCatalog\Supporting Files</Filter>
     </ClangCompile>
@@ -109,6 +106,9 @@
     </ClangCompile>
     <ClangCompile Include="..\..\CTCatalog\Tests\CTCRunTestViewController.mm">
       <Filter>CTCatalog\Test</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\CTCBaseViewController.mm">
+      <Filter>CTCatalog</Filter>
     </ClangCompile>
   </ItemGroup>
 </Project>

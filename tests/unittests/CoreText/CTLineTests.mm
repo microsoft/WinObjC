@@ -27,7 +27,7 @@ NSAttributedString* getAttributedString() {
     [string addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:wholeRange];
     [string addAttribute:NSFontAttributeName value:font range:wholeRange];
 
-    return [string autorelease];
+    return string;
 }
 
 extern bool isValid(double testValue, double expectedValue, double delta);

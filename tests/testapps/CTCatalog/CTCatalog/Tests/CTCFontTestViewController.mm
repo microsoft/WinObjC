@@ -121,9 +121,7 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
         // Query all available fonts and add them to array by name
         NSMutableArray* fonts = [NSMutableArray new];
         for (NSString* familyName in [UIFont familyNames]) {
-            for (NSString* fontName in [UIFont fontNamesForFamilyName:familyName]) {
-                [fonts addObject:fontName];
-            }
+            [fonts addObjectsFromArray:[UIFont fontNamesForFamilyName:familyName]];
         }
         _fonts = [fonts sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 
@@ -243,7 +241,7 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
     [_rows addObject:createTextCell(@"CTFontGetDescent", [NSString stringWithFormat:@"%f", CTFontGetDescent(_font)])];
     [_rows addObject:createTextCell(@"CTFontGetSize", [NSString stringWithFormat:@"%f", CTFontGetSize(_font)])];
 
-    // Glyph indicies for "Glyphs" in default font as CTLineCreateWithAttributdString does not currently function
+    // Glyph indicies for "Glyphs" in default font as CTLineCreateWithAttributedString does not currently function
     CGGlyph glyphs[6] = { 42, 79, 92, 83, 75, 86 };
     CGSize advances[6];
     double totalWidth = CTFontGetAdvancesForGlyphs(_font, kCTFontDefaultOrientation, glyphs, advances, 6);

@@ -122,9 +122,7 @@
     // Query all available fonts and add them to array by name
     NSMutableArray* fonts = [NSMutableArray new];
     for (NSString* familyName in [UIFont familyNames]) {
-        for (NSString* fontName in [UIFont fontNamesForFamilyName:familyName]) {
-            [fonts addObject:fontName];
-        }
+        [fonts addObjectsFromArray:[UIFont fontNamesForFamilyName:familyName]];
     }
 
     _fonts = [fonts sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];

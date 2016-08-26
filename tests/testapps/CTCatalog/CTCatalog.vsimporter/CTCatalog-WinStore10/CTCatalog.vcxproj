@@ -195,7 +195,7 @@
     <ClangCompile Include="..\..\CTCatalog\CTCRootViewController.m" />
     <ClangCompile Include="..\..\CTCatalog\Tests\CTCAlignmentTestViewController.m" />
     <ClangCompile Include="..\..\CTCatalog\AppDelegate.m" />
-    <ClangCompile Include="..\..\CTCatalog\CTCBaseViewController.m" />
+    <ClangCompile Include="..\..\CTCatalog\CTCBaseViewController.mm" />
     <ClangCompile Include="..\..\CTCatalog\main.m" />
     <StoryboardCompile Include="..\..\CTCatalog\Base.lproj\LaunchScreen.storyboard">
       <VariantDir>Base.lproj</VariantDir>

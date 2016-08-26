@@ -21,14 +21,7 @@
 #define ADD_UNIMPLEMENTED(ARRAY, METHOD_NAME) [ARRAY addObject:createTextCell(METHOD_NAME, @"UNIMPLEMENTED")]
 
 // Creates a table cell with title and text value
-static UITableViewCell* createTextCell(NSString* title, NSString* value) {
-    UITableViewCell* cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-    cell.textLabel.text = title;
-    UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 20)];
-    textLabel.text = value;
-    cell.accessoryView = textLabel;
-    return cell;
-}
+UITableViewCell* createTextCell(NSString* title, NSString* value);
 
 @interface CTCBaseViewController : UIViewController
 

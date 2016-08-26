@@ -16,6 +16,15 @@
 
 #import "CTCBaseViewController.h"
 
+UITableViewCell* createTextCell(NSString* title, NSString* value) {
+    UITableViewCell* cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    cell.textLabel.text = title;
+    UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 20)];
+    textLabel.text = value;
+    cell.accessoryView = textLabel;
+    return cell;
+}
+
 @interface CTCBaseViewController ()
 
 @end
