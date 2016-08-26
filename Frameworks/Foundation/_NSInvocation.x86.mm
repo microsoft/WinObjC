@@ -123,7 +123,7 @@ struct _NSInvocationCallFrame::impl {
     };
 
     ~impl() {
-        delete[] buffer;
+        delete[] _buffer;
     }
 
     allocation_extent _allocateArgument(const char* objcTypeEncoding) {

@@ -219,7 +219,7 @@ struct _NSInvocationCallFrame::impl {
     }
 
     ~impl() {
-        delete[] buffer;
+        delete[] _buffer;
     }
 
     void _alignStack(size_t alignment = 0) {
