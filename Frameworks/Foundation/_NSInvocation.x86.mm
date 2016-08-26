@@ -114,21 +114,21 @@ struct _NSInvocationCallFrame::impl {
             _returnLength = std::max(sizeof(uintptr_t), _returnLength);
         }
 
-        auto nArguments = [_methodSignature numberOfArguments];
-        for (int i = 0; i < nArguments; ++i) {
+        unsigned int nArguments = [_methodSignature numberOfArguments];
+        for (unsigned int i = 0; i < nArguments; ++i) {
             _allocationExtents[i] = std::move(_allocateArgument([_methodSignature getArgumentTypeAtIndex:i]));
         }
 
-        _buffer = new uint8_t[_offset];
+        _buffer = static_cast<uint8_t*>(IwCalloc(_offset, 1));
     };
 
     ~impl() {
-        delete[] _buffer;
+        IwFree(_buffer);
     }
 
     allocation_extent _allocateArgument(const char* objcTypeEncoding) {
         size_t nWords = std::max(1U, objc_aligned_size(objcTypeEncoding) / sizeof(uintptr_t));
-        auto length = nWords * sizeof(uintptr_t);
+        size_t length = nWords * sizeof(uintptr_t);
 
         allocation_extent extent{ _offset, length };
         _offset += length;
@@ -220,7 +220,7 @@ bool _NSInvocationCallFrame::getRequiresStructReturn() const {
 }
 
 void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePointer) const {
-    auto frameLength = _impl->_offset;
+    size_t frameLength = _impl->_offset;
 
     // alloca is guaranteed to give us a 16-byte aligned return.
     uint8_t* stack = (uint8_t*)alloca(frameLength + sizeof(struct x86Frame));

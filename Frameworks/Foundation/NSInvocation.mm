@@ -52,6 +52,12 @@ static const wchar_t* TAG = L"NSInvocation";
  @Status Interoperable
  */
 - (instancetype)initWithMethodSignature:(NSMethodSignature*)methodSignature {
+    if (!methodSignature) {
+        [NSException raise:NSInvalidArgumentException format:@"-[NSInvocation initWithMethodSignature:]: method signature must not be nil."];
+        [self release];
+        return nil;
+    }
+
     if (self = [super init]) {
         _methodSignature = [methodSignature retain];
 
@@ -61,9 +67,9 @@ static const wchar_t* TAG = L"NSInvocation";
         // Used only for copying the argument back to the caller.
         _returnLength = methodSignature.methodReturnLength;
 
-        auto promotedReturnLength = _callFrame->getReturnLength();
-        if (promotedReturnLength > _countof(_smallReturnValueOptimization)) {
-            _returnValue = IwMalloc(promotedReturnLength); // promoted return length
+        size_t promotedReturnLength = _callFrame->getReturnLength();
+        if (promotedReturnLength > sizeof(_smallReturnValueOptimization)) {
+            _returnValue = IwCalloc(promotedReturnLength, 1); // promoted return length
         } else {
             _returnValue = &_smallReturnValueOptimization;
         }
@@ -120,18 +126,24 @@ static const wchar_t* TAG = L"NSInvocation";
     }
 
     if (_retainArguments) {
-        auto argumentType = [_methodSignature getArgumentTypeAtIndex:index];
+        const char* argumentType = [_methodSignature getArgumentTypeAtIndex:index];
         if (argumentType[0] == '@') {
             // Release old value:
             id oldValue = nil;
             [self getArgument:&oldValue atIndex:index];
             [(*(id*)buf) retain];
-            [oldValue release];
+            if (oldValue) {
+                [oldValue release];
+            }
         } else if (argumentType[0] == '*') {
             char* oldValue = nullptr;
             [self getArgument:&oldValue atIndex:index];
-            IwFree(oldValue);
-            *(char**)buf = IwStrDup(*(char**)buf);
+            if (oldValue) {
+                IwFree(oldValue);
+            }
+            char* newValue = IwStrDup(*(char**)buf);
+            _callFrame->storeArgument(&newValue, index);
+            return;
         }
     }
     _callFrame->storeArgument(buf, index);
@@ -154,23 +166,27 @@ static const wchar_t* TAG = L"NSInvocation";
 */
 - (void)retainArguments {
     if (!_retainArguments) {
-        _retainArguments = true;
+        _retainArguments = YES;
 
-        auto numArgs = [_methodSignature numberOfArguments];
+        unsigned int numArgs = [_methodSignature numberOfArguments];
 
         for (unsigned int i = 0; i < numArgs; i++) {
-            auto type = [_methodSignature getArgumentTypeAtIndex:i];
+            const char* type = [_methodSignature getArgumentTypeAtIndex:i];
             if (type[0] == '@') {
                 // id or block
                 id arg = nil;
                 [self getArgument:&arg atIndex:i];
-                [arg retain];
+                if (arg) {
+                    [arg retain];
+                }
             } else if (type[0] == '*') {
                 // char*
                 char* arg = nullptr;
                 [self getArgument:&arg atIndex:i];
-                arg = IwStrDup(arg);
-                [self setArgument:&arg atIndex:i];
+                if (arg) {
+                    arg = IwStrDup(arg);
+                    [self setArgument:&arg atIndex:i];
+                }
             }
         }
     }
@@ -196,10 +212,10 @@ static const wchar_t* TAG = L"NSInvocation";
 - (void)dealloc {
     // Release retained/string-copied arguments
     if (_retainArguments) {
-        auto numArgs = [_methodSignature numberOfArguments];
+        unsigned int numArgs = [_methodSignature numberOfArguments];
 
         for (unsigned int i = 0; i < numArgs; i++) {
-            auto type = [_methodSignature getArgumentTypeAtIndex:i];
+            const char* type = [_methodSignature getArgumentTypeAtIndex:i];
             if (type[0] == '@') {
                 // id or block
                 id arg = nil;

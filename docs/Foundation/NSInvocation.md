@@ -36,8 +36,8 @@ Therefore, platform support for NSInvocation will be provided via two discrete m
 X86 is the easier of the two currently-supported architectures for which to allocate arguments.
 
 * Every argument is placed on the stack, in stack-ascending order.
-* Arguments less than four bytes in width are sign- or zero-extended and stored in one doubleword and emitted onto the stack.
-* Arguments greater than four bytes in width are promoted to an even number of doublewords and emitted onto the stack.
+* Arguments less than four bytes in width are sign- or zero-extended and stored in one 32-bit doubleword and emitted onto the stack.
+* Arguments greater than four bytes in width are promoted to an even number of 32-bit doubleword and emitted onto the stack.
 * Values are returned in `eax` (if less than or equal to four bytes), `eax+edx` (if between four and eight bytes) and via hidden struct parameter.
 
 ### ARM details

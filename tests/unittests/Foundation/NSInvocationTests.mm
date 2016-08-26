@@ -180,6 +180,7 @@ struct ThreeWordStruct {
 @property (nonatomic, assign) SmallDisparateAggregate4 smallDisparateAggregate4;
 @property (nonatomic, assign) TinyAggregate tinyAggregate;
 @property (nonatomic, assign) HighlyAlignedAggregate1 highlyAlignedAggregate1;
+- (void)takesOneObject:(id)object andOneCharPointer:(char*)charPointer;
 @end
 @implementation NSIT_InvocationTestClass
 // properties synthesized here
@@ -294,6 +295,10 @@ struct ThreeWordStruct {
 - (void)ARMFirstThreeInRegisters:(uint32_t)third fourthOntoStackToRemainContiguous:(uint64_t)fourth {
     EXPECT_EQ(0xABABABABUL, third);
     EXPECT_EQ(0x123409871234ABABULL, fourth);
+}
+
+- (void)takesOneObject:(id)object andOneCharPointer:(char*)charPointer {
+    // No-op
 }
 @end
 
@@ -631,4 +636,27 @@ ARM_DISABLED_TEST(NSInvocation, PropertyMethod) {
         exceptionThrown = (([[exception name] isEqual:NSInvalidArgumentException]) ? YES : NO);
     }
     ASSERT_TRUE_MSG(exceptionThrown, "FAILED: NSInvalidArgumentException was not thrown.");
+}
+
+TEST(NSInvocation, RetainArguments) {
+    id arg2 = [NSObject new];
+    char* arg3 = "I am a constant string!";
+
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:[NSIT_InvocationTestClass instanceMethodSignatureForSelector:@selector(takesOneObject:andOneCharPointer:)]];
+    ASSERT_OBJCNE(nil, invocation);
+
+    [invocation setSelector:@selector(takesOneObject:andOneCharPointer:)];
+    [invocation setArgument:&arg2 atIndex:2];
+    [invocation retainArguments];
+    [invocation setArgument:&arg3 atIndex:3];
+    [arg2 release];
+
+    id readbackArg2 = nil;
+    char* readbackArg3 = nullptr;
+
+    [invocation getArgument:&readbackArg2 atIndex:2];
+    [invocation getArgument:&readbackArg3 atIndex:3];
+
+    EXPECT_NO_THROW([readbackArg2 self]); // Should have been retained.
+    EXPECT_NE(readbackArg3, arg3); // Should have been IwStrDup'd.
 }

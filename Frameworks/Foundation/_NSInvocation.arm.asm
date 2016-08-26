@@ -63,10 +63,10 @@
     VSTM r2, {d0-d3}
     POP {fp, pc}
 
-115 ; INT32
+115 ; INT64
     STR r1, [r2, #4]
     ;; fall through
-114 ; INT
+114 ; INT32
     STR r0, [r2]
     ;; fall through
 

@@ -17,8 +17,8 @@
 #pragma once
 
 struct allocation_extent {
-	off_t offset;
-	size_t length;
+    off_t offset;
+    size_t length;
 };
 
 #define NSINVOCATION_ALIGN(n, alignment) ((n + (alignment - 1)) & ~(alignment - 1))
@@ -29,19 +29,20 @@ struct allocation_extent {
 // It is a _NSInvocationCallFrame's job to carve out allocation extents from a buffer.
 class _NSInvocationCallFrame {
 private:
-	struct impl; // pImpl idiom
-	impl* _impl;
+    struct impl; // pImpl idiom
+    impl* _impl;
+
 public:
-	_NSInvocationCallFrame(NSMethodSignature* methodTypeEncoding);
-	~_NSInvocationCallFrame();
+    _NSInvocationCallFrame(NSMethodSignature* methodTypeEncoding);
+    ~_NSInvocationCallFrame();
 
     void storeArgument(const void* value, unsigned int index);
     void loadArgument(void* value, unsigned int index) const;
 
-	size_t getReturnLength() const;
-	bool getRequiresStructReturn() const;
+    size_t getReturnLength() const;
+    bool getRequiresStructReturn() const;
 
-	void execute(void*, void*) const;
+    void execute(void*, void*) const;
 };
 
 #endif

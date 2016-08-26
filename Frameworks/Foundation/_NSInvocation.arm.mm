@@ -199,10 +199,10 @@ struct _NSInvocationCallFrame::impl {
             _returnLength = std::max(sizeof(uintptr_t), _returnLength);
         }
 
-        auto nArguments = [_methodSignature numberOfArguments];
-
         size_t length = 0;
-        for (int i = 0; i < nArguments; ++i) {
+
+        unsigned int nArguments = [_methodSignature numberOfArguments];
+        for (unsigned int i = 0; i < nArguments; ++i) {
             // Some arguments are <4 bytes, but we need to make sure that we only allocate in register-width chunks.
             auto& extent = _allocationExtents[i] = std::move(_allocateArgument([_methodSignature getArgumentTypeAtIndex:i]));
             if (length < extent.offset + extent.length) {
@@ -215,11 +215,11 @@ struct _NSInvocationCallFrame::impl {
         length = std::max(length, g_gprLength + g_sfprLength);
 
         _length = length;
-        _buffer = new uint8_t[length];
+        _buffer = static_cast<uint8_t*>(IwCalloc(length, 1));
     }
 
     ~impl() {
-        delete[] _buffer;
+        IwFree(_buffer);
     }
 
     void _alignStack(size_t alignment = 0) {
@@ -244,7 +244,7 @@ struct _NSInvocationCallFrame::impl {
         //       Our allocator is great at this: they're laid out side-by-side.
         //   2b. Stack is USED: put the entire batch onto the stack, and mark every register as used.
         // Since we lay out regs right before stack, this will always be a single extent (!)
-        auto nreg = 0;
+        unsigned int nreg = 0;
     redo:
         nreg = firstUnused(gprUsage);
         if (nreg >= GPR_COUNT || (nreg + count >= GPR_COUNT && stackBytes != 0)) {
@@ -260,7 +260,7 @@ struct _NSInvocationCallFrame::impl {
 
             // Case 1.
             off_t start = g_sfprLength + (nreg * sizeof(uintptr_t));
-            auto unallocatedWords = count;
+            unsigned int unallocatedWords = count;
             for (; unallocatedWords > 0 && nreg < GPR_COUNT; ++nreg) {
                 gprUsage[nreg] = 1;
                 unallocatedWords--;
@@ -301,7 +301,7 @@ struct _NSInvocationCallFrame::impl {
     }
 
     allocation_extent _allocateDoubles(size_t count) {
-        auto nreg = firstUnused(spUsage);
+        unsigned int nreg = firstUnused(spUsage);
         if (nreg % 2 == 1) {
             ++nreg; // doubles take up even-numbered single-precision registers.
         }
@@ -450,8 +450,8 @@ struct armFrame {
 
 void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePointer) const {
     // alloca is guaranteed to give us a 16-byte aligned return.
-    auto frameLength = _impl->_length;
-    auto promotedFrameLength = NSINVOCATION_ALIGN(frameLength, alignof(struct armFrame));
+    size_t frameLength = _impl->_length;
+    size_t promotedFrameLength = NSINVOCATION_ALIGN(frameLength, alignof(struct armFrame));
 
     uint8_t* arena = (uint8_t*)_alloca(promotedFrameLength + sizeof(struct armFrame));
     armFrame* frame = (armFrame*)(arena + promotedFrameLength);
