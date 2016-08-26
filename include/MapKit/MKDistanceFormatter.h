@@ -36,7 +36,7 @@ typedef enum {
 } MKDistanceFormatterUnitStyle;
 
 MAPKIT_EXPORT_CLASS
-@interface MKDistanceFormatter : NSObject <NSObject>
+@interface MKDistanceFormatter : NSObject <NSObject, NSCopying, NSCoding>
 - (NSString*)stringFromDistance:(CLLocationDistance)distance STUB_METHOD;
 - (CLLocationDistance)distanceFromString:(NSString*)distance STUB_METHOD;
 @property (copy, nonatomic) NSLocale* locale STUB_PROPERTY;

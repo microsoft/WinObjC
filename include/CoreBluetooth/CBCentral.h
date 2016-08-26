@@ -24,7 +24,7 @@
 @class NSUUID;
 
 COREBLUETOOTH_EXPORT_CLASS
-@interface CBCentral : NSObject <NSObject>
+@interface CBCentral : NSObject <NSObject, NSCopying>
 @property (readonly, nonatomic) CFUUIDRef UUID STUB_PROPERTY;
 @property (readonly, nonatomic) NSUUID* identifier STUB_PROPERTY;
 @property (readonly, nonatomic) NSUInteger maximumUpdateValueLength STUB_PROPERTY;

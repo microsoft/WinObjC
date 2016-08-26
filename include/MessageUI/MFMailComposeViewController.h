@@ -19,11 +19,16 @@
 #import <MessageUI/MessageUIExport.h>
 #import <MessageUI/MFMailComposeViewControllerDelegate.h>
 #import <UIKit/UINavigationController.h>
+#import <UIKit/UIAppearanceContainer.h>
+#import <UIKit/UIContentContainer.h>
+#import <UIKit/UIFocusEnvironment.h>
+#import <UIKit/UITraitEnvironment.h>
 
 MESSAGEUI_EXPORT NSString* const MFMailComposeErrorDomain;
 
 MESSAGEUI_EXPORT_CLASS
-@interface MFMailComposeViewController : UINavigationController <NSCoding, UIAppearanceContainer>
+@interface MFMailComposeViewController
+    : UINavigationController <NSCoding, NSObject, UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
 
 + (BOOL)canSendMail;
 

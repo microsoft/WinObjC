@@ -22,7 +22,7 @@
 @class CLLocation;
 
 EVENTKIT_EXPORT_CLASS
-@interface EKStructuredLocation : NSObject <NSObject>
+@interface EKStructuredLocation : NSObject <NSObject, NSCopying>
 + (EKStructuredLocation*)locationWithTitle:(NSString*)title STUB_METHOD;
 @property (retain, nonatomic) NSString* title STUB_PROPERTY;
 @property (retain, nonatomic) CLLocation* geoLocation STUB_PROPERTY;
