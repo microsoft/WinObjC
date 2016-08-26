@@ -46,10 +46,7 @@ _TEXT SEGMENT
 
     mov ecx, [ebp + 20] ; return out pointer
     mov ebx, [ebp + 12] ; return type
-    shl ebx, 2
-    add ebx, JUMPTABLE
-    mov ebx, [ebx]
-    jmp ebx
+    jmp JUMPTABLE[ebx * 4]
 
 _CASE_RETURN_TYPE_FLOAT:
     fstp DWORD PTR [ecx]
