@@ -663,4 +663,16 @@ TEST(NSString, LastPathComponent) {
 
     string = @"/.";
     EXPECT_OBJCEQ(@".", string.lastPathComponent);
+
+    string = @"/foo/bar/.";
+    EXPECT_OBJCEQ(@".", string.lastPathComponent);
+
+    string = @"/baz/bar/.foo";
+    EXPECT_OBJCEQ(@".foo", string.lastPathComponent);
+
+    string = @"/tmp/foo.";
+    EXPECT_OBJCEQ(@"foo.", string.lastPathComponent);
+
+    string = @"/tmp/foo///";
+    EXPECT_OBJCEQ(@"foo", string.lastPathComponent);
 }

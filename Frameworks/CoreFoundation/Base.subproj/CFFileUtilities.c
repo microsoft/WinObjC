@@ -988,7 +988,8 @@ CF_PRIVATE CFIndex _CFStartOfLastPathComponent(UniChar *unichars, CFIndex length
         return 0;
     }
     for (idx = length - 1; idx; idx--) {
-        if (IS_SLASH(unichars[idx - 1])) {
+        // WinObjC change - handle cases of multiple trailing slashes
+        if (IS_SLASH(unichars[idx - 1]) && !IS_SLASH(unichars[idx])) {
             return idx;
         }
     }
@@ -1004,7 +1005,8 @@ CF_PRIVATE CFIndex _CFStartOfLastPathComponent2(CFStringRef path) {
         return 0;
     }
     for (CFIndex idx = length - 1; idx; idx--) {
-        if (IS_SLASH(CFStringGetCharacterAtIndex(path, idx - 1))) {
+        // WinObjC change - handle cases of multiple trailing slashes
+        if (IS_SLASH(CFStringGetCharacterAtIndex(path, idx - 1)) && !IS_SLASH(CFStringGetCharacterAtIndex(path, idx))) {
             return idx;
         }
     }

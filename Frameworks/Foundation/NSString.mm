@@ -689,14 +689,17 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
     if (IS_SLASH([self characterAtIndex:index])) {
         if ([self length] == 1) {
+            // Substring is @"/" so we just return it
             return substring;
         }
 
-        // only way we could have ended up here is, if we have a string with multiple leading slashes.
+        // The only way we could have ended up here is if we have a string with multiple leading slashes.
+        // Splitting "foobar" on slash will return @["foobar"] if there are no slashes making this safe
         NSArray<NSString*>* tokens = [self componentsSeparatedByString:_NSGetSlashStr()];
         return ([tokens[0] isEqualToString:@""]) ? _NSGetSlashStr() : tokens[0];
     }
 
+    // Remove trailing slashes
     NSArray<NSString*>* tokens = [substring componentsSeparatedByString:_NSGetSlashStr()];
     return tokens[0];
 }
