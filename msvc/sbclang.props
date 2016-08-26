@@ -63,6 +63,7 @@
 
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardSdkRoot)\include\VCInclude</AdditionalIncludeDirectories>
+      <DebugInformationFormat Condition="'%(ClCompile.DebugInformationFormat)'=='EditAndContinue'">ProgramDatabase</DebugInformationFormat>
     </ClCompile>
   </ItemDefinitionGroup>
 </Project>

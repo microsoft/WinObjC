@@ -394,13 +394,23 @@
 
   </Target>
 
-  <!-- Sets StarboardHasObjCSources based on whether any files in this project are being built as Objective-C -->
+  <!-- Sets StarboardHasObjCSources based on whether any non-excluded files in this project are being built as Objective-C -->
   <Target Name="ComputeStarboardHasObjCSources" DependsOnTargets="ComputeClangOptions">
-    <PropertyGroup Condition="'$(StarboardHasObjCSources)' == ''">
+    <ItemGroup>
+      <ClangCompileNonExcluded Include="@(ClangCompile)" Condition="'%(ClangCompile.ExcludedFromBuild)' != 'true'">
+        <CompileAs>%(ClangCompile.CompileAs)</CompileAs>
+      </ClangCompileNonExcluded>
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(StarboardHasObjCSources)' == '' And '@(ClangCompileNonExcluded)' != ''">
       <!-- ComputeClangOptions fills CompileAs based on file extension in the absence of other information. -->
-      <StarboardHasObjCSources Condition="'@(ClangCompile->WithMetadataValue('CompileAs', 'CompileAsObjC'))' != ''">true</StarboardHasObjCSources>
-      <StarboardHasObjCSources Condition="'@(ClangCompile->WithMetadataValue('CompileAs', 'CompileAsObjCpp'))' != ''">true</StarboardHasObjCSources>
+      <StarboardHasObjCSources Condition="@(ClangCompileNonExcluded->AnyHaveMetadataValue('CompileAs', 'CompileAsObjC'))">true</StarboardHasObjCSources>
+      <StarboardHasObjCSources Condition="@(ClangCompileNonExcluded->AnyHaveMetadataValue('CompileAs', 'CompileAsObjCpp'))">true</StarboardHasObjCSources>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ClangCompileNonExcluded Remove="@(ClangCompileNonExcluded)"/>
+    </ItemGroup>
   </Target>
 
   <!-- Sets StarboardRequiresObjectiveCRuntime based on whether this project has either Objective-C sources itself or
@@ -483,6 +493,10 @@
        and 2-stage loading.
   -->
   <Target Name="ComputeWholeArchiveLinkInputs" DependsOnTargets="ComputeStarboardReferencesRequiringObjectiveC">
+    <PropertyGroup Condition="'@(_StarboardReferencesRequiringObjectiveC)'!='' and '$(StarboardLinkWholeArchive)'=='true'">
+      <!-- The linker shipped with VS 2015 Updates 2 and 3 will not properly consume a /WHOLEARCHIVE during incremental linking. -->
+      <LinkIncremental>false</LinkIncremental>
+    </PropertyGroup>
     <ItemGroup Condition="'@(_StarboardReferencesRequiringObjectiveC)'!='' and '$(StarboardLinkWholeArchive)'=='true'">
       <Link>
         <AdditionalOptions>%(Link.AdditionalOptions) "/WHOLEARCHIVE:@(_StarboardReferencesRequiringObjectiveC, '" /WHOLEARCHIVE:"')"</AdditionalOptions>
