@@ -144,6 +144,7 @@ CTTypesetterRef CTFramesetterGetTypesetter(CTFramesetterRef framesetter) {
 
 /**
  @Status Caveat
+ @Notes Always sets out parameter fitRange to stringRange value
 */
 CGSize CTFramesetterSuggestFrameSizeWithConstraints(
     CTFramesetterRef framesetter, CFRange stringRange, CFDictionaryRef frameAttributes, CGSize constraints, CFRange* fitRange) {

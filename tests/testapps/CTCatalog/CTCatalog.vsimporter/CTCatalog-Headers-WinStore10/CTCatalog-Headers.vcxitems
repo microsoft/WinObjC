@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
     <HasSharedItems>true</HasSharedItems>
@@ -13,6 +13,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCAlignmentTestViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\CTCRootViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\CTCBaseViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCFontTestViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCFramesetterTestViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCFrameTestViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCLineTestViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCParagraphStyleTestViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCRunTestViewController.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />

@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
@@ -57,9 +57,6 @@
     <ClangCompile Include="..\..\CTCatalog\AppDelegate.m">
       <Filter>CTCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\CTCatalog\CTCBaseViewController.m">
-      <Filter>CTCatalog</Filter>
-    </ClangCompile>
     <ClangCompile Include="..\..\CTCatalog\main.m">
       <Filter>CTCatalog\Supporting Files</Filter>
     </ClangCompile>
@@ -79,5 +76,39 @@
     <Text Include="CTCatalog-Release-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.xaml.cpp" />
+    <ClCompile Include="pch.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCFontTestViewController.mm">
+      <Filter>CTCatalog\Test</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCFrameTestViewController.mm">
+      <Filter>CTCatalog\Test</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCFramesetterTestViewController.mm">
+      <Filter>CTCatalog\Test</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCLineTestViewController.mm">
+      <Filter>CTCatalog\Test</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCParagraphStyleTestViewController.mm">
+      <Filter>CTCatalog\Test</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCRunTestViewController.mm">
+      <Filter>CTCatalog\Test</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\CTCBaseViewController.mm">
+      <Filter>CTCatalog</Filter>
+    </ClangCompile>
   </ItemGroup>
 </Project>

@@ -27,7 +27,7 @@ typedef const struct __CTLine* CTLineRef;
 typedef uint32_t CTLineTruncationType;
 enum { kCTLineTruncationStart = 0, kCTLineTruncationEnd = 1, kCTLineTruncationMiddle = 2 };
 
-CORETEXT_EXPORT CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef attrString);
+CORETEXT_EXPORT CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef attrString) STUB_METHOD;
 CORETEXT_EXPORT CTLineRef CTLineCreateTruncatedLine(CTLineRef line,
                                                     double width,
                                                     CTLineTruncationType truncationType,

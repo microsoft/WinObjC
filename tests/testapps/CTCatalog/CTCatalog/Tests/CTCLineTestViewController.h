@@ -14,15 +14,15 @@
 //
 //*****************************************************************************
 
-#import <UIKit/UIKit.h>
-#import <CoreText/CoreText.h>
+#pragma once
 
-// Convenience macro to create and add rows for unimplemented methods to the table
-#define ADD_UNIMPLEMENTED(ARRAY, METHOD_NAME) [ARRAY addObject:createTextCell(METHOD_NAME, @"UNIMPLEMENTED")]
+#import "CTCBaseViewController.h"
 
-// Creates a table cell with title and text value
-UITableViewCell* createTextCell(NSString* title, NSString* value);
+@protocol CTLineTestViewDelegate
+- (void)refreshValuesForLine:(CTLineRef)line;
+@end
 
-@interface CTCBaseViewController : UIViewController
+@interface CTCLineTestViewController
+    : CTCBaseViewController <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, CTLineTestViewDelegate>
 
 @end
