@@ -85,27 +85,14 @@ _CASE_RETURN_TYPE_INT32:
     jmp LOCAL_ret
 
 _CASE_RETURN_TYPE_NONE:
-
+_CASE_RETURN_TYPE_STRUCT:
+    ; Only 1/2/3/4-byte structs can be returned in registers, but they
+    ; have been handled by the return type generator.
 LOCAL_ret:
     mov ebx, [ebp + 8] ; +8 = saved EBX
     mov esp, ebp
     pop ebp
     ret
-
-_CASE_RETURN_TYPE_STRUCT:
-    ; ebx got us in here, we can stomp it now
-    mov ebx, [ebp + 16] ; +16 = returnLength
-    cmp ebx, 8 ; Only 8, 4, 2, 1 length structs can be returned in registers
-    jg LOCAL_ret
-    je _CASE_RETURN_TYPE_INT64
-    cmp ebx, 4
-    je _CASE_RETURN_TYPE_INT32
-    cmp ebx, 2
-    je _CASE_RETURN_TYPE_UINT16
-    cmp ebx, 1
-    je _CASE_RETURN_TYPE_UINT8
-    ; everything else has already been handled by stret out; unwind
-    jmp LOCAL_ret
 
 JUMPTABLE:
     ; MUST BE KEPT IN THE ORDER FROM _NSInvocation.x86.mm
