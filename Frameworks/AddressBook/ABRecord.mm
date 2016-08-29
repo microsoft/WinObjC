@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -80,6 +80,8 @@ static void _updateManager(_ABContact* person) {
 }
 
 // The maximum allowed String length of various Windows Contacts properties.
+// Values obtained from https://msdn.microsoft.com/en-us/library/windows/apps/windows.applicationmodel.contacts.contact
+// (click on a given property to see any potential length limitations).
 static const NSUInteger kABPersonFirstNameLength = 64;
 static const NSUInteger kABPersonLastNameLength = 64;
 static const NSUInteger kABPersonMiddleNameLength = 64;

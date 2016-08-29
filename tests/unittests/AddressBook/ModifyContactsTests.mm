@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -106,7 +106,9 @@ TEST_P(AddressBookMultiValueModifyTest, MultiValueFields) {
         ASSERT_TRUE(ABMultiValueAddValueAndLabel(multiValue, (__bridge CFStringRef)values[i], (__bridge CFStringRef)labels[i], NULL));
     }
 
-    ASSERT_TRUE(ABRecordSetValue(_record, property, multiValue, NULL));
+    CFErrorRef error = NULL;
+    ASSERT_TRUE(ABRecordSetValue(_record, property, multiValue, &error));
+    ASSERT_TRUE(error == nullptr);
     ABMultiValueRef result = ABRecordCopyValue(_record, property);
 
     for (int i = 0; i < [labels count]; i++) {
@@ -114,8 +116,8 @@ TEST_P(AddressBookMultiValueModifyTest, MultiValueFields) {
         NSString* actualLabel = (__bridge NSString*)ABMultiValueCopyLabelAtIndex(result, i);
         NSString* expectedValue = (__bridge NSString*)ABMultiValueCopyValueAtIndex(multiValue, i);
         NSString* actualValue = (__bridge NSString*)ABMultiValueCopyValueAtIndex(result, i);
-        ASSERT_OBJCEQ(expectedValue, actualValue);
-        ASSERT_OBJCEQ(expectedLabel, actualLabel);
+        EXPECT_OBJCEQ(expectedValue, actualValue);
+        EXPECT_OBJCEQ(expectedLabel, actualLabel);
         [expectedLabel release];
         [actualLabel release];
         [expectedValue release];

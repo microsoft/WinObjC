@@ -58,7 +58,7 @@ protected:
         addSO(contact, WACContactRelationshipParent, @"Pops");
         addSO(contact, WACContactRelationshipChild, @"Sun Ray");
 
-        _record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact];
+        _record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact andType:kAddressBookNewContact];
         [contact release];
     }
 
@@ -173,7 +173,7 @@ TEST(AddressBook, QueryContactDates) {
     NSDate* realOther = [NSDate dateWithWACContactDate:other];
     [other release];
 
-    ABRecordRef record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact];
+    ABRecordRef record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact andType:kAddressBookNewContact];
     ABMultiValueRef multiValue = (ABMultiValueRef)ABRecordCopyValue(record, kABPersonDateProperty);
 
     CFArrayRef dates = ABMultiValueCopyArrayOfAllValues(multiValue);
@@ -214,7 +214,7 @@ TEST(AddressBook, QueryContactAddress) {
     [contact.addresses addObject:address];
     [address release];
 
-    ABRecordRef record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact];
+    ABRecordRef record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact andType:kAddressBookNewContact];
     ABMultiValueRef multiValue = (ABMultiValueRef)ABRecordCopyValue(record, kABPersonAddressProperty);
     CFDictionaryRef dict = (CFDictionaryRef)ABMultiValueCopyValueAtIndex(multiValue, 0);
     NSDictionary* addressInfo = (__bridge NSDictionary*)dict;

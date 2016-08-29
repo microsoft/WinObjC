@@ -40,7 +40,7 @@ ABMultiValueRef createMultiValue() {
     WACContact* contact = [WACContact make];
     addPhone(contact, WACContactPhoneKindHome, @"0000000000");
     addPhone(contact, WACContactPhoneKindMobile, @"1111111111");
-    ABRecordRef record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact];
+    ABRecordRef record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact andType:kAddressBookNewContact];
     [contact release];
     ABMultiValueRef multiValue = (ABMultiValueRef)ABRecordCopyValue(record, kABPersonPhoneProperty);
     CFRelease(record);

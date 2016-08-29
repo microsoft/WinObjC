@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -116,7 +116,16 @@ bool ABAddressBookHasUnsavedChanges(ABAddressBookRef addressBook) {
  @Notes
 */
 bool ABAddressBookSave(ABAddressBookRef addressBook, CFErrorRef* error) {
-    return [(__bridge _ABAddressBookManager*)addressBook save];
+    bool result = [(__bridge _ABAddressBookManager*)addressBook save];
+    if ((!result) && error) {
+        NSDictionary* userInfo = @{
+            NSLocalizedDescriptionKey : NSLocalizedString(@"Error saving AddressBook.\n", nil),
+        };
+        *error = (__bridge_retained CFErrorRef)[NSError errorWithDomain:(__bridge NSString*)ABAddressBookErrorDomain
+                                                                   code:kABOperationNotPermittedByStoreError
+                                                               userInfo:userInfo];
+    }
+    return result;
 }
 
 /**

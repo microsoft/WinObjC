@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -18,15 +18,6 @@
 #import "ABContactInternal.h"
 #import "UWP/WindowsApplicationModelContacts.h"
 
-@interface __ABContactOperation : NSObject
-
-@property BOOL shouldDelete;
-@property WACContact* contact;
-
-- (id)initWithContact:(WACContact*)contact shouldDelete:(BOOL)shouldDelete;
-
-@end
-
 @implementation __ABContactOperation
 
 - (id)initWithContact:(WACContact*)contact shouldDelete:(BOOL)shouldDelete {
@@ -40,11 +31,17 @@
 
 @end
 
-@interface _ABAddressBookManager ()
-
-- (void)_setError:(CFErrorRef*)error message:(NSString*)message;
-
-@end
+static void _setError(CFErrorRef* error, NSString* message) {
+    if (error) {
+        NSDictionary* userInfo = @{
+            NSLocalizedDescriptionKey : NSLocalizedString(@"Error updating AddressBook.\n", nil),
+            NSLocalizedFailureReasonErrorKey : NSLocalizedString(message, nil)
+        };
+        *error = (__bridge_retained CFErrorRef)[NSError errorWithDomain:(__bridge NSString*)ABAddressBookErrorDomain
+                                                                   code:kABOperationNotPermittedByStoreError
+                                                               userInfo:userInfo];
+    }
+}
 
 @implementation _ABAddressBookManager {
     NSMutableSet<WACContact*>* _toAdd;
@@ -56,8 +53,8 @@
 - (id)init {
     self = [super init];
     if (self) {
-        self->_toAdd = [[NSMutableSet alloc] init];
-        self->_operations = [[NSMutableDictionary alloc] init];
+        _toAdd = [[NSMutableSet alloc] init];
+        _operations = [[NSMutableDictionary alloc] init];
 
         __block WACContactStore* result = nil;
         __block BOOL failed = YES;
@@ -226,18 +223,6 @@
     return result;
 }
 
-- (void)_setError:(CFErrorRef*)error message:(NSString*)message {
-    if (error) {
-        NSDictionary* userInfo = @{
-            NSLocalizedDescriptionKey : NSLocalizedString(@"Error updating AddressBook.\n", nil),
-            NSLocalizedFailureReasonErrorKey : NSLocalizedString(message, nil)
-        };
-        *error = (__bridge_retained CFErrorRef)[NSError errorWithDomain:(__bridge NSString*)ABAddressBookErrorDomain
-                                                                   code:kABOperationNotPermittedByStoreError
-                                                               userInfo:userInfo];
-    }
-}
-
 - (bool)addContact:(ABRecordRef)record error:(CFErrorRef*)error {
     _ABContact* contact = (__bridge _ABContact*)record;
 
@@ -245,7 +230,7 @@
         case kAddressBookNewContact: {
             // New contacts can't be added twice.
             if ([self->_toAdd containsObject:contact.contact]) {
-                [self _setError:error message:@"This contact has already been added.\n"];
+                _setError(error, @"This contact has already been added.\n");
                 return false;
             }
 
@@ -259,7 +244,7 @@
             // so ensure that the current operation does exist and that it is marked
             // for deletion.
             if (operation == nil || (!operation.shouldDelete)) {
-                [self _setError:error message:@"This contact already exists in the AddressBook.\n"];
+                _setError(error, @"This contact already exists in the AddressBook.\n");
                 return false;
             }
 
@@ -268,7 +253,7 @@
         }
         case kAddressBookReadOnlyContact:
         default:
-            [self _setError:error message:@"This contact already exists in the AddressBook.\n"];
+            _setError(error, @"This contact already exists in the AddressBook.\n");
             return false;
     }
 }
@@ -285,7 +270,7 @@
                 return true;
             }
 
-            [self _setError:error message:@"Only existing contacts can be removed from the AddressBook.\n"];
+            _setError(error, @"Only existing contacts can be removed from the AddressBook.\n");
             return false;
         }
         case kAddressBookReadWriteContact: {
@@ -299,7 +284,7 @@
                 self->_operations[contact.contact.id] = operation;
                 return true;
             } else if (operation.shouldDelete) {
-                [self _setError:error message:@"This contact has already been deleted.\n"];
+                _setError(error, @"This contact has already been deleted.\n");
                 return false;
             } else {
                 operation.shouldDelete = YES;
@@ -308,9 +293,9 @@
         }
         case kAddressBookReadOnlyContact:
         default:
-            [self _setError:error
-                    message:@"Read-only contacts cannot be deleted. Use ABAddressBookCopyArrayOfAllUserAppPeople to get contacts that can "
-                            @"be deleted.\n"];
+            _setError(error,
+                      @"Read-only contacts cannot be deleted. Use ABAddressBookCopyArrayOfAllUserAppPeople to get contacts that can "
+                      @"be deleted.\n");
             return false;
     }
 }
@@ -340,7 +325,7 @@
 }
 
 - (bool)save {
-    // TODO: When the projections for WACContactList's saveContactAsync and deleteContactAsync
+    // TODO #942: When the projections for WACContactList's saveContactAsync and deleteContactAsync
     // get success/fail blocks, use a dispatch_group_t to spawn off all async calls at the same
     // time rather than the blocking WFIASyncAction getResults, and return false in the case
     // that the fail block is called (rather than just returning true always).
