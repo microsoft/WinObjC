@@ -276,9 +276,8 @@ void DoApplicationLaunch(ActivationType activationType, Platform::Object^ activa
 
 void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
     auto coreWindow = CoreWindow::GetForCurrentThread();
-    if (coreWindow == nullptr)
-    {
-        CoreDispatcher ^c = CoreApplication::MainView->Dispatcher;
+    if (coreWindow == nullptr) {
+        CoreDispatcher^ c = CoreApplication::MainView->Dispatcher;
         auto task = concurrency::create_task(c->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, ref new Windows::UI::Core::DispatchedHandler([=]()
         {
             DoApplicationLaunch(activationType, activationArg);
