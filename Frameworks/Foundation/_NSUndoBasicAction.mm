@@ -38,7 +38,6 @@
 }
 
 - (void)undo:(BOOL)undoAll {
-    //[[NSRunLoop currentRunLoop] performSelector:_undoAction target:objc_loadWeak(&_target) argument : _object order :0 modes:_modes];
     [objc_loadWeak(&_target) performSelector:_undoAction withObject:_object];
 }
 

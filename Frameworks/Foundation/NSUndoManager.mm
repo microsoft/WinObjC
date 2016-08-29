@@ -222,7 +222,7 @@ NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDisca
         return;
     }
     // No group to close.
-    if ([_undoStack count] == 0) {
+    if (_undoGroupingLevel == 0) {
         [NSException raise:NSInternalInconsistencyException format:@"endUndoGrouping called with no open group."];
     }
     _NSUndoGroup* undoGroup = [_undoStack peek];
@@ -252,7 +252,7 @@ NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDisca
 
 - (void)_endRedoGrouping {
     // No group to close.
-    if ([_redoStack count] == 0) {
+    if (_redoGroupingLevel == 0) {
         [NSException raise:NSInternalInconsistencyException format:@"Attempted to close a redo group with no open redo group."];
     }
     _NSUndoGroup* redoGroup = [_redoStack peek];
