@@ -553,7 +553,8 @@ TEST(NSInvocation, HeterogenousArgumentsWithStructs) {
     [tester release];
 }
 
-TEST(NSInvocation, ArgumentsOfAlternatingAlignment) {
+// Disabled on OS X: It does not appear to properly allocate these arguments.
+OSX_DISABLED_TEST(NSInvocation, ArgumentsOfAlternatingAlignment) {
     NSIT_InvocationTestClass* tester = [[NSIT_InvocationTestClass alloc] init];
 
     SEL selector = @selector(interleavedAlignmentsCharMax:: :: :: :: :: :: :::);
