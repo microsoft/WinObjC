@@ -104,47 +104,44 @@ void ABAddressBookRequestAccessWithCompletion(ABAddressBookRef addressBook, ABAd
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 bool ABAddressBookHasUnsavedChanges(ABAddressBookRef addressBook) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [(__bridge _ABAddressBookManager*)addressBook hasUnsavedChanges];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 bool ABAddressBookSave(ABAddressBookRef addressBook, CFErrorRef* error) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [(__bridge _ABAddressBookManager*)addressBook save];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 void ABAddressBookRevert(ABAddressBookRef addressBook) {
-    UNIMPLEMENTED();
+    [(__bridge _ABAddressBookManager*)addressBook revert];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 bool ABAddressBookAddRecord(ABAddressBookRef addressBook, ABRecordRef record, CFErrorRef* error) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [(__bridge _ABAddressBookManager*)addressBook addContact:record error:error];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Records can only be removed if they are retrieved with ABAddressBookCopyArrayOfAllUserAppPeople
+ -- contacts from ABAddressBookCopyArrayOfAllPeople are read-only and cannot be removed.
 */
 bool ABAddressBookRemoveRecord(ABAddressBookRef addressBook, ABRecordRef record, CFErrorRef* error) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [(__bridge _ABAddressBookManager*)addressBook removeContact:record error:error];
 }
 
 /**

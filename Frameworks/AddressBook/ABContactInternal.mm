@@ -15,14 +15,17 @@
 //******************************************************************************
 
 #import "ABContactInternal.h"
+#import "ABAddressBookManagerInternal.h"
 #import "UWP/WindowsApplicationModelContacts.h"
 
 @implementation _ABContact
 
-- (id)initWithContact:(WACContact*)contact {
+- (id)initWithContact:(WACContact*)contact andType:(ABRecordContactType)type {
     self = [super init];
     if (self) {
         self.contact = contact;
+        self.manager = nil;
+        self->_type = type;
     }
 
     return self;

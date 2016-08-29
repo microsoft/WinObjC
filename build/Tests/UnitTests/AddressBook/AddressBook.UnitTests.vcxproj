@@ -240,6 +240,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\AddressBook\BasicQueryTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\AddressBook\MultiValueTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\AddressBook\MutableMultiValueTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\AddressBook\ModifyContactsTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\Frameworks\AddressBook\NSDate+AddressBookAdditions.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

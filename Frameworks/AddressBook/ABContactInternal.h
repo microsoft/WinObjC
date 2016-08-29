@@ -18,10 +18,19 @@
 
 #import "UWP/WindowsApplicationModelContacts.h"
 #import "ABRecordInternal.h"
+#import <AddressBook/ABAddressBook.h>
+
+typedef enum ABRecordContactType {
+    kAddressBookNewContact = 0,
+    kAddressBookReadOnlyContact,
+    kAddressBookReadWriteContact
+} ABRecordContactType;
 
 @interface _ABContact : _ABRecord
 
 @property WACContact* contact;
-- (id)initWithContact:(WACContact*)contact;
+@property ABAddressBookRef manager;
+@property (readonly) ABRecordContactType type;
+- (id)initWithContact:(WACContact*)contact andType:(ABRecordContactType)type;
 
 @end

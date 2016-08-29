@@ -86,6 +86,9 @@ LIBRARY AddressBook
         kABPersonPhoneWorkFAXLabel DATA
         kABPersonPhoneOtherFAXLabel DATA
         kABPersonPhonePagerLabel DATA
+        kABPersonPhoneCompanyLabel DATA
+        kABPersonPhoneAssistantLabel DATA
+        kABPersonPhoneRadioLabel DATA
         kABPersonInstantMessageProperty DATA
         kABPersonInstantMessageServiceKey DATA
         kABPersonInstantMessageUsernameKey DATA
@@ -125,6 +128,7 @@ LIBRARY AddressBook
         kABPersonPartnerLabel DATA
         kABPersonManagerLabel DATA
         kABPersonAssistantLabel DATA
+        kABPersonSiblingLabel DATA
         kABWorkLabel DATA
         kABHomeLabel DATA
         kABOtherLabel DATA
@@ -148,6 +152,7 @@ LIBRARY AddressBook
         ABAddressBookGetPersonCount
         ABAddressBookGetPersonWithRecordID
         ABAddressBookCopyArrayOfAllPeople
+        ABAddressBookCopyArrayOfAllUserAppPeople
         ABAddressBookCopyArrayOfAllPeopleInSource
         ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering
         ABAddressBookCopyPeopleWithName

@@ -17,10 +17,17 @@
 #pragma once
 
 #import "UWP/WindowsApplicationModelContacts.h"
+#import <AddressBook/ABRecord.h>
 
 @interface _ABAddressBookManager : NSObject
 
 @property WACContactStore* contactStore;
 - (NSArray*)getListOfContacts;
-
+- (NSArray*)getListOfModifiableContacts;
+- (bool)addContact:(ABRecordRef)record error:(CFErrorRef*)error;
+- (bool)removeContact:(ABRecordRef)record error:(CFErrorRef*)error;
+- (void)modifyContact:(ABRecordRef)record;
+- (bool)hasUnsavedChanges;
+- (void)revert;
+- (bool)save;
 @end

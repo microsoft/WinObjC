@@ -41,8 +41,20 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    self.contacts = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeople(_addressBook);
+    if (self.contactOperation == kAddressBookViewContact) {
+        self.contacts = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeople(_addressBook);
+    } else {
+        self.contacts = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllUserAppPeople(_addressBook);
+    }
     [self.tableView reloadData];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if (self.contactOperation == kAddressBookRemoveContact) {
+        self.contacts = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllUserAppPeople(_addressBook);
+        [self.tableView reloadData];
+    }
 }
 
 /**
