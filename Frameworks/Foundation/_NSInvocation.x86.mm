@@ -53,6 +53,9 @@ static return_type _getReturnType(const char* typeEncoding) {
             return RETURN_TYPE_UINT8;
         case _C_USHT:
             return RETURN_TYPE_UINT16;
+        case _C_BOOL:
+        // On Win32, due to Windows.h, BOOL is 4 bytes wide.
+        // Fall through.
         case _C_INT:
         case _C_LNG:
         case _C_UINT:

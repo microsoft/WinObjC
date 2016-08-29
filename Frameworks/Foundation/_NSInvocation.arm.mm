@@ -106,6 +106,7 @@ static size_t firstUnused(const std::bitset<N>& bitset, size_t start = 0) {
 
 static return_type _getReturnType(const char* typeEncoding) {
     switch (typeEncoding[0]) {
+        case _C_BOOL:
         case _C_CHR:
         case _C_SHT:
         case _C_UCHR:
@@ -293,6 +294,7 @@ allocation_extent _NSInvocationCallFrame::_allocateDoubles(size_t count) {
 allocation_extent _NSInvocationCallFrame::_allocateArgument(const char* typeEncoding) {
     switch (typeEncoding[0]) {
         // All integral types < qword are promoted.
+        case _C_BOOL:
         case _C_UCHR:
         case _C_USHT:
         case _C_UINT:
