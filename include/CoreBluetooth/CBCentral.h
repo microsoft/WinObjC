@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -24,7 +24,7 @@
 @class NSUUID;
 
 COREBLUETOOTH_EXPORT_CLASS
-@interface CBCentral
+@interface CBCentral : NSObject <NSObject, NSCopying>
 @property (readonly, nonatomic) CFUUIDRef UUID STUB_PROPERTY;
 @property (readonly, nonatomic) NSUUID* identifier STUB_PROPERTY;
 @property (readonly, nonatomic) NSUInteger maximumUpdateValueLength STUB_PROPERTY;
