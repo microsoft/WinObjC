@@ -38,11 +38,10 @@
     }
     return self;
 }
-
-- (void)addUndoCallToUndoGroup:(_NSUndoBasicAction*)undoCall {
+- (void)addUndoable:(id<_NSUndoable>)undoCall {
     _NSUndoBasicAction* topObjectInGroup = [_undoGrouping peek];
     if (topObjectInGroup != nil && ![topObjectInGroup isClosed]) {
-        [topObjectInGroup addUndoCallToUndoGroup:undoCall];
+        [topObjectInGroup addUndoable:undoCall];
     } else {
         [_undoGrouping push:undoCall];
     }
@@ -62,7 +61,6 @@
 - (void)createUndoGroup {
     id<_NSUndoable> topObjectInGroup = [_undoGrouping peek];
     if (topObjectInGroup != nil && ![topObjectInGroup isClosed]) {
-        // Object must be a group in order to be an open object. Cast to ensure proper return type, otherwise return type is default id.
         [(_NSUndoGroup*)topObjectInGroup createUndoGroup];
     } else {
         _NSUndoGroup* newGroup = [[_NSUndoGroup alloc] init];
@@ -86,6 +84,21 @@
 
 - (void)removeAllWithTarget:(id)target {
     [_undoGrouping removeAllWithTarget:target];
+}
+
+- (NSUInteger)updateLevel {
+    if (!_isClosed) {
+        return [[_undoGrouping peek] updateLevel] + 1;
+    }
+    return 0;
+}
+
+- (BOOL)hasNestedGroup {
+    if ([[_undoGrouping peek] isKindOfClass:[_NSUndoGroup class]]) {
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 @end

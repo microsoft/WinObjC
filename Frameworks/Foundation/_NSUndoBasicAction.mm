@@ -32,7 +32,7 @@
         _undoAction = aSelector;
         _target = objc_storeWeak(&_target, target);
         _object = anObject;
-        _modes = runLoopModes;
+        _modes = [runLoopModes copy];
     }
     return self;
 }
@@ -43,9 +43,10 @@
 
 - (void)dealloc {
     objc_destroyWeak(&_target);
+    [super dealloc];
 }
 
-- (bool)isClosed {
+- (BOOL)isClosed {
     return YES;
 }
 
@@ -55,6 +56,14 @@
 
 - (void)removeAllWithTarget:(id)target {
     // Nothing more to remove
+}
+
+- (NSUInteger)count {
+    return 1;
+}
+
+- (NSUInteger)updateLevel {
+    return 0;
 }
 
 @end

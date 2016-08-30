@@ -630,9 +630,89 @@ TEST(NSUndoManager, limitUndoActions) {
     EXPECT_EQ(object.value.intValue, val2.intValue);
 }
 
-TEST(NSUndoManager, runLoopModes) {
+TEST(NSUndoManager, RunLoopModes) {
     NSNumber* val1 = [NSNumber numberWithInt:1];
     UndoTestObject* object = [[[UndoTestObject alloc] initWithValue:val1] autorelease];
     EXPECT_EQ([object.undoManager.runLoopModes count], 1);
     EXPECT_OBJCEQ([object.undoManager.runLoopModes objectAtIndex:0], NSDefaultRunLoopMode);
+}
+
+TEST(NSUndoManager, EmptyUndoGroup) {
+    NSUndoManager* manager = [[NSUndoManager alloc] init];
+    manager.groupsByEvent = NO;
+    [manager beginUndoGrouping];
+    [manager endUndoGrouping];
+
+    // An empty undo group will remain in the stack even when closed. This is why canUndo reports yes.
+    EXPECT_EQ(manager.canUndo, YES);
+}
+
+// Test that when a target is removed, all undo groups are updated properly. If an undo group remains,
+TEST(NSUndoManager, RemovingOneTarget) {
+    NSNumber* target1val1 = [NSNumber numberWithInt:15];
+    NSNumber* target1val2 = [NSNumber numberWithInt:16];
+    NSNumber* target1val3 = [NSNumber numberWithInt:17];
+    NSNumber* target2val1 = [NSNumber numberWithInt:25];
+    NSNumber* target2val2 = [NSNumber numberWithInt:26];
+    NSNumber* target2val3 = [NSNumber numberWithInt:27];
+
+    NSUndoManager* manager = [[NSUndoManager alloc] init];
+    manager.groupsByEvent = NO;
+
+    UndoTestObjectWithSharedManager* firstTargetWithNumbers =
+        [[UndoTestObjectWithSharedManager alloc] initWithValue:target1val1 undoManager:manager];
+    UndoTestObjectWithSharedManager* secondTargetWithNumbers =
+        [[UndoTestObjectWithSharedManager alloc] initWithValue:target2val1 undoManager:manager];
+
+    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val1.intValue); // 15
+    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val1.intValue); // 25
+
+    [manager beginUndoGrouping];
+    [secondTargetWithNumbers updateValue:target2val2];
+    [manager endUndoGrouping];
+
+    [manager beginUndoGrouping];
+    [secondTargetWithNumbers updateValue:target2val3];
+    [manager endUndoGrouping];
+
+    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val1.intValue); // 17
+    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val3.intValue); // 27
+
+    [manager beginUndoGrouping];
+    [manager beginUndoGrouping];
+    [firstTargetWithNumbers updateValue:target1val2];
+    [manager endUndoGrouping];
+    [manager endUndoGrouping];
+
+    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val2.intValue); // 16
+    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val3.intValue); // 27
+
+    [manager beginUndoGrouping];
+    [firstTargetWithNumbers updateValue:target1val3];
+    [manager endUndoGrouping];
+
+    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val3.intValue); // 17
+    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val3.intValue); // 27
+
+    // Should remove the groups containing firstTarget making undo
+    [manager removeAllActionsWithTarget:firstTargetWithNumbers];
+
+    [manager undo];
+
+    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val3.intValue); // 17
+    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val2.intValue); // 27
+    EXPECT_EQ(manager.canUndo, YES);
+
+    [manager undo];
+
+    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val3.intValue); // 17
+    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val1.intValue); // 27
+    EXPECT_EQ(manager.canUndo, NO);
+
+    [manager undo];
+
+    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val3.intValue); // 17
+    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val1.intValue); // 27
+
+    [manager release];
 }

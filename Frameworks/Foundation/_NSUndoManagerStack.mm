@@ -50,16 +50,23 @@
 }
 
 - (void)removeAllWithTarget:(id)target {
-    std::list<StrongId<id<_NSUndoable>>>::const_iterator iterator = _stack.begin();
+    auto iterator = _stack.begin();
 
     while (iterator != _stack.end()) {
         if ([*iterator targets:target]) {
-            std::list<StrongId<id<_NSUndoable>>>::const_iterator toRemove = iterator;
+            auto toRemove = iterator;
             ++iterator;
             _stack.erase(toRemove);
         } else {
             [*iterator removeAllWithTarget:target];
-            ++iterator;
+            if ([*iterator count] == 0 && [*iterator isClosed]) {
+                auto toRemove = iterator;
+                ++iterator;
+                _stack.erase(toRemove);
+            } else {
+                // Must do this in else as ordering of iterator must be incremented before removing.
+                ++iterator;
+            }
         }
     }
 }

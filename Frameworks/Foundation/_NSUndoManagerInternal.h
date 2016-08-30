@@ -24,6 +24,10 @@
 - (void)undo:(BOOL)undoAll;
 - (BOOL)targets:(id)target;
 - (void)removeAllWithTarget:(id)target;
+- (NSUInteger)count;
+- (BOOL)isClosed;
+- (NSUInteger)updateLevel;
+
 @end
 
 @interface _NSUndoBasicAction : NSObject <_NSUndoable>
@@ -35,17 +39,17 @@
 @interface _NSUndoGroup : NSObject <_NSUndoable>
 
 - (id)init;
-- (void)addUndoCallToUndoGroup:(_NSUndoBasicAction*)undoCall;
+- (void)addUndoable:(id<_NSUndoable>)undoCall;
 - (void)createUndoGroup;
 - (void)closeUndoGroup;
-- (BOOL)isClosed;
-- (NSUInteger)count;
+- (BOOL)hasNestedGroup;
 
 @end
 
 @interface _NSUndoManagerStack : NSObject
 
 - (void)pop;
+- (void)popBack;
 - (id<_NSUndoable>)peek;
 - (void)push:(id<_NSUndoable>)undoObject;
 - (NSUInteger)count;
