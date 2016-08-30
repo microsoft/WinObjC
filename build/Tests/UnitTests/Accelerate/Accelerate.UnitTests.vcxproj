@@ -28,8 +28,11 @@
     <ProjectReference Include="..\..\..\Starboard\dll\Starboard.vcxproj">
       <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Accelerate\lib\AccelerateLib.vcxproj">
-      <Project>{05EB0ADE-A598-42BA-BA3D-960AEEAA3C95}</Project>
+    <ProjectReference Include="..\..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+      <Project>{26da08da-d0b9-4579-b168-e7f0a5f20e57}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Accelerate\dll\Accelerate.vcxproj">
+      <Project>{DA69DBB8-B7E0-42C1-95B5-06D4E5288BAF}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
       <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>

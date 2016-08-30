@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -18,6 +19,7 @@
 #import <CoreImage/CIImage.h>
 #import <CoreImage/CIContext.h>
 #import <CoreGraphics/CGImage.h>
+#import <Accelerate/Accelerate.h>
 
 @implementation ImagesViewController
 
