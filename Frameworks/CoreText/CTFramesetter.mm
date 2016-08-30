@@ -16,8 +16,12 @@
 
 #import <CoreText/CTFrameSetter.h>
 #import <StubReturn.h>
+#import <algorithm>
 #import "CoreTextInternal.h"
 #import "CGPathInternal.h"
+#import "DWriteWrapper.h"
+
+using namespace std;
 
 @implementation _CTFrameSetter : NSObject
 - (void)dealloc {
@@ -25,87 +29,40 @@
 }
 @end
 
-static id _createFrame(_CTFrameSetter* frameSetter, CGRect frameSize, CGSize* sizeOut, bool createFrame) {
+static _CTFrame* _createFrame(_CTFrameSetter* frameSetter, CGRect frameSize, CGSize* sizeOut, bool createFrame) {
     _CTFrame* ret = nil;
 
     if (createFrame) {
-        ret = [_CTFrame alloc];
+        ret = [_CTFrame new];
         ret->_frameSetter = [frameSetter retain];
         ret->_frameRect = frameSize;
-
-        ret->_lines.attach([NSMutableArray new]);
     }
 
-    // Only fill in frame if there is text
-    if (CFAttributedStringGetLength(static_cast<CFAttributedStringRef>(frameSetter->_typesetter->_attributedString))) {
-        // Paragraph settings are expected at effective range 0
-        NSDictionary* attributes = [frameSetter->_typesetter->_attributedString attributesAtIndex:0 effectiveRange:NULL];
-        CTParagraphStyleRef style = reinterpret_cast<CTParagraphStyleRef>([attributes valueForKey:(id)kCTParagraphStyleAttributeName]);
-        CTTextAlignment alignment = kCTLeftTextAlignment;
-        if (style != nil) {
-            if (!CTParagraphStyleGetValueForSpecifier(style, kCTParagraphStyleSpecifierAlignment, sizeof(CTTextAlignment), &alignment)) {
-                // No alignment found, use default of left alignment
-                alignment = kCTLeftTextAlignment;
-            }
-        }
-
-        sizeOut->width = 0;
-        sizeOut->height = 0;
-
-        float y = frameSize.size.height; //[font ascender];
-        CFIndex curIdx = 0;
-        NSString* string = [frameSetter->_typesetter->_attributedString string];
-        CFIndex stringRange = [string length];
-
-        for (;;) {
-            CFIndex pos =
-                CTTypesetterSuggestLineBreak(static_cast<CTTypesetterRef>(frameSetter->_typesetter.get()), curIdx, frameSize.size.width);
-            if (pos == curIdx) {
-                break;
-            }
-
-            CFRange lineRange;
-            lineRange.location = curIdx;
-            lineRange.length = pos - curIdx;
-
-            CTLineRef line = CTTypesetterCreateLine(static_cast<CTTypesetterRef>(frameSetter->_typesetter.get()), lineRange);
-
-            float ascent = 0.0f, descent = 0.0f, leading = 0.0f;
-            const float width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
-            const float lineHeight = ascent - descent + leading;
-
-            if (ret) {
-                CGPoint lineOrigin;
-                switch (alignment) {
-                    case kCTRightTextAlignment:
-                        lineOrigin.x = frameSize.size.width - width;
-                        break;
-                    case kCTCenterTextAlignment:
-                        lineOrigin.x = (frameSize.size.width - width) / 2;
-                        break;
-                    default: // kCTLeftTextAlignment
-                        lineOrigin.x = 0.0f;
-                        break;
-                }
-                lineOrigin.y = y - ascent;
-                [ret->_lines addObject:(id)line];
-                ret->_lineOrigins.push_back(lineOrigin);
-            }
-            [static_cast<_CTLine*>(line) release];
-
-            curIdx = pos;
-            if (width > sizeOut->width) {
-                sizeOut->width = width;
-            }
-
-            sizeOut->height += lineHeight;
-
-            y -= lineHeight;
-        }
+    // Call _DWriteWrapper to get _CTLine object list that makes up this frame
+    _CTTypesetter* typesetter = static_cast<_CTTypesetter*>(frameSetter->_typesetter);
+    CFRange range = CFRangeMake(0, typesetter->_charactersLen);
+    NSArray<_CTLine*>* lines = _dwriteGetLines(typesetter, range, frameSize);
+    if (createFrame) {
+        ret->_lines = lines;
     }
 
-    if (ret) {
-        ret->_totalSize = *sizeOut;
+    if (sizeOut) {
+        // TODO::
+        // Is there a better way to do this - Investigate.
+        // For now the below logic is ued to calculate the frame size required to fit the text in -
+        //     width = max of (_yPos of the last glyph in every line + _glyphAdvances in that glyph) all the lines
+        //     height = min(_lineOrigin.y of the last line in the frame + the _lineOrigin.y of the first line (so we have some buffer
+        //              space after the last line), frameSize.size.height)
+        sizeOut->width = frameSize.size.width;
+
+        // Calculate
+        _CTLine* firstLine = static_cast<_CTLine*>([lines objectAtIndex:0]);
+        _CTLine* lastLine = static_cast<_CTLine*>([lines objectAtIndex:[lines count] - 1]);
+        // TODO::
+        // Modify this code once we move away from Cairo Freetype for rasterizing text.
+        CGFloat originYFirstLine = frameSize.size.height - firstLine->_lineOrigin.y - frameSize.origin.y;
+        CGFloat originYLastLine = frameSize.size.height - lastLine->_lineOrigin.y - frameSize.origin.y;
+        sizeOut->height = min(originYLastLine + originYFirstLine, frameSize.size.height);
     }
 
     return ret;
@@ -128,7 +85,7 @@ CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange string
     _CGPathGetBoundingBoxInternal(path, &frameSize);
 
     CGSize sizeOut;
-    id ret = _createFrame((_CTFrameSetter*)framesetter, frameSize, &sizeOut, true);
+    _CTFrame* ret = _createFrame((_CTFrameSetter*)framesetter, frameSize, &sizeOut, true);
 
     return (CTFrameRef)ret;
 }

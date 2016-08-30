@@ -106,8 +106,7 @@ const CGPoint* CTRunGetPositionsPtr(CTRunRef run) {
 
 /**
  @Status Caveat
- @Notes Only font face, size and text color attributes are supported.  Background fill is
-        always white.
+ @Notes Only the starting position of the glyph run is handled.
 */
 void CTRunGetPositions(CTRunRef run, CFRange runRange, CGPoint* outPositions) {
     _CTRun* curRun = (_CTRun*)run;
@@ -117,7 +116,14 @@ void CTRunGetPositions(CTRunRef run, CFRange runRange, CGPoint* outPositions) {
         runRange.length = curRun->_range.length;
     }
 
-    memcpy(outPositions, &curRun->_glyphOrigins[runRange.location], sizeof(CGPoint) * runRange.length);
+    if (runRange.location != 0) {
+         UNIMPLEMENTED();
+         return;
+    }
+
+    //memcpy(outPositions, &curRun->_glyphOrigins[runRange.location], sizeof(CGPoint) * runRange.length);
+    outPositions->x = curRun->_xPos;
+    outPositions->y = curRun->_yPos;
 }
 
 /**
@@ -130,9 +136,19 @@ const CGSize* CTRunGetAdvancesPtr(CTRunRef run) {
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 void CTRunGetAdvances(CTRunRef run, CFRange runRange, CGSize* outAdvances) {
+    // TODO::
+    // Would it be possible to use CTFontGetAdvancesForGlyphs here to get the Advance value?
+    // There will some work to be done here to get this method working -
+    //    1. Get individual glyphs from the run's _stringFragment
+    //    2. Use the characters from the specified range to get their glyph information
+    //    3. Return the Advance for these glyphs.
+
+    UNIMPLEMENTED();
+
+    /*
     _CTRun* curRun = (_CTRun*)run;
 
     if (runRange.length == 0) {
@@ -141,6 +157,7 @@ void CTRunGetAdvances(CTRunRef run, CFRange runRange, CGSize* outAdvances) {
     }
 
     memcpy(outAdvances, &curRun->_glyphAdvances[runRange.location], sizeof(CGSize) * runRange.length);
+    */
 }
 
 /**
@@ -256,11 +273,15 @@ void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
         range.length = [string length];
     }
 
-    int numGlyphs = curRun->_characters.size();
+    int numGlyphs = [string length];
     WORD* glyphs = (WORD*)IwMalloc(sizeof(WORD) * numGlyphs);
 
+    WORD* characters = (WORD*)IwMalloc(sizeof(WORD) * numGlyphs);
+    [string getCharacters:characters];
+
     id font = [curRun->_attributes objectForKey:(id)kCTFontAttributeName];
-    CGFontGetGlyphsForUnichars(font, curRun->_characters.data(), glyphs, numGlyphs);
+
+    CGFontGetGlyphsForUnichars(font, characters, glyphs, numGlyphs);
     CGContextSetFont(ctx, font);
     CGContextSetFontSize(ctx, [font pointSize]);
 

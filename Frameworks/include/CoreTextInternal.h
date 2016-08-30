@@ -19,7 +19,11 @@
 #import <CoreText/CTParagraphStyle.h>
 
 #import "Starboard.h"
-#include <vector>
+#include <COMIncludes.h>
+#import <DWrite.h>
+#import <wrl/client.h>
+#include <COMIncludes_End.h>
+#import <vector>
 
 @interface _CTTypesetter : NSObject {
 @public
@@ -32,7 +36,7 @@
 
 @interface _CTFrameSetter : NSObject {
 @public
-    idretaintype(_CTTypesetter) _typesetter;
+    StrongId<_CTTypesetter> _typesetter;
 }
 @end
 
@@ -40,27 +44,39 @@
 @public
     _CTFrameSetter* _frameSetter;
     CGRect _frameRect;
+    StrongId<NSMutableArray> _lines;
+
+    // TODO::
+    // Do we need these anymore?
     CGSize _totalSize;
-    idretaintype(NSMutableArray) _lines;
     std::vector<CGPoint> _lineOrigins;
 }
 @end
 
 @interface _CTLine : NSObject {
 @public
-    NSRange _strRange;
+    _CTTypesetter* _typeSetter;
+    CFRange _strRange;
+    CGPoint _lineOrigin;
+    StrongId<NSMutableArray> _runs;
+
+    // TODO::
+    // Do we need these anymore?
     CGFloat _width;
     CGFloat _ascent, _descent, _leading;
-    idretaintype(NSMutableArray) _runs;
 }
 @end
 
 @interface _CTRun : NSObject {
 @public
-    idretaintype(NSMutableDictionary) _attributes;
+    StrongId<NSMutableDictionary> _attributes;
     CFRange _range;
     float _xPos;
-    idretaintype(NSString) _stringFragment;
+    float _yPos;
+    StrongId<NSString> _stringFragment;
+
+    // TODO::
+    // Do we need these anymore?
     std::vector<CGPoint> _glyphOrigins;
     std::vector<CGSize> _glyphAdvances;
     std::vector<WORD> _characters;

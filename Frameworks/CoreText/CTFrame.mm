@@ -96,12 +96,17 @@ void CTFrameGetLineOrigins(CTFrameRef frame, CFRange range, CGPoint origins[]) {
         range.length = 0x7FFFFFF;
     }
 
+    /*
     unsigned count = [((_CTFrame*)frame)->_lines count];
     int idx = 0;
 
     for (unsigned i = range.location; i < count && i < range.location + range.length; i++) {
         origins[idx] = ((_CTFrame*)frame)->_lineOrigins[i];
         idx++;
+    }
+    */
+    for (unsigned index = 0; index < [((_CTFrame*)frame)->_lines count]; index++) {
+        origins[index] = ((_CTLine*)((_CTFrame*)frame)->_lines[index])->_lineOrigin;
     }
 }
 
@@ -117,7 +122,8 @@ void CTFrameDraw(CTFrameRef frame, CGContextRef ctx) {
     for (unsigned i = 0; i < count; i++) {
         _CTLine* curLine = [((_CTFrame*)frame)->_lines objectAtIndex:i];
 
-        CGPoint newPos = curTextPos + ((_CTFrame*)frame)->_lineOrigins[i];
+        // CGPoint newPos = curTextPos + ((_CTFrame*)frame)->_lineOrigins[i];
+        CGPoint newPos = curTextPos + curLine->_lineOrigin;
         CGContextSetTextPosition(ctx, newPos.x, newPos.y);
         CTLineDraw((CTLineRef)curLine, ctx);
     }
