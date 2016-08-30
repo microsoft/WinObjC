@@ -41,18 +41,26 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
+#ifdef WINOBJC
     if (self.contactOperation == kAddressBookViewContact) {
         self.contacts = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeople(_addressBook);
     } else {
         self.contacts = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllUserAppPeople(_addressBook);
     }
+#else
+    self.contacts = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeople(_addressBook);
+#endif
     [self.tableView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     if (self.contactOperation == kAddressBookRemoveContact) {
+#ifdef WINOBJC
         self.contacts = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllUserAppPeople(_addressBook);
+#else
+        self.contacts = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeople(_addressBook);
+#endif
         [self.tableView reloadData];
     }
 }
