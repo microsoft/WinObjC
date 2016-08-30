@@ -603,6 +603,15 @@ BASE_CLASS_REQUIRED_IMPLS(NSURL, NSURLPrototype, CFURLGetTypeID);
  @Status Interoperable
 */
 - (NSURL*)URLByAppendingPathComponent:(NSString*)pathComponent {
+    if (pathComponent.length == 0) {
+        // When given an empty path component, we just append a slash if there isn't already one
+        if ([[self relativeString] hasSuffix:_NSGetSlashStr()]) {
+            return [self copy];
+        } else {
+            return [self URLByAppendingPathComponent:_NSGetSlashStr() isDirectory:NO];
+        }
+    }
+
     // Ensure exactly one slash exists between the original URL and pathComponent
     NSString* originalURL = _ensureLastPathSeparator([self relativeString]);
     if ([pathComponent hasPrefix:_NSGetSlashStr()]) {
