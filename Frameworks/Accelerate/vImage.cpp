@@ -1533,7 +1533,9 @@ vImage_Error vImageConvert_PlanarFtoPlanar8(
             srcRowStart += srcRowPitch;
             destRowStart += destRowPitch;
         }
+#if (VIMAGE_SSE == 1)
     }
+#endif
 
     return kvImageNoError;
 }
@@ -1689,7 +1691,9 @@ inline vImage_Error _vImageUnpremultiplyData_8888(const vImage_Buffer* src, cons
             srcRowStart += srcRowPitch;
             destRowStart += destRowPitch;
         }
+#if (VIMAGE_SSE == 1)
     }
+#endif
 
     return kvImageNoError;
 }
