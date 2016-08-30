@@ -36,7 +36,7 @@ NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDisca
 */
 - (id)init {
     if (self = [super init]) {
-        _runLoopModes = [[NSArray alloc] initWithObjects:NSDefaultRunLoopMode, nil];
+        _runLoopModes = [@[ NSDefaultRunLoopMode ] retain];
         _groupsByEvent = YES;
 
         _disableCount = 0;
