@@ -22,6 +22,9 @@
     <ProjectReference Include="..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
       <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\UIKit.Xaml\dll\UIKit.Xaml.vcxproj">
+      <Project>{1884D8F8-2C05-4334-A778-7D3C5A6736E8}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
       <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
     </ProjectReference>
@@ -121,10 +124,10 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\..\deps\prebuilt\TAEF\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>..\..\..\include;..\..\..\Frameworks\include;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>..\..\..\include;..\..\..\Frameworks\include;..\..\..\Frameworks\UIKit.Xaml;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK</PreprocessorDefinitions>
@@ -153,10 +156,10 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\..\deps\prebuilt\TAEF\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>..\..\..\Frameworks\include;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>..\..\..\Frameworks\include;..\..\..\Frameworks\UIKit.Xaml;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK</PreprocessorDefinitions>
@@ -181,10 +184,10 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\..\deps\prebuilt\TAEF\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>..\..\..\Frameworks\include;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>..\..\..\Frameworks\include;..\..\..\Frameworks\UIKit.Xaml;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK</PreprocessorDefinitions>
@@ -213,10 +216,10 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\..\deps\prebuilt\TAEF\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>..\..\..\Frameworks\include;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>..\..\..\Frameworks\include;..\..\..\Frameworks\UIKit.Xaml;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK</PreprocessorDefinitions>
@@ -247,19 +250,23 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSURLSession.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\ProjectionTests\*.mm">
-      <ObjectiveCARC>true</ObjectiveCARC>
-    </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSUserDefaultsTests.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSBundleTests.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\SampleTest.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\CortanaTests.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIViewTests.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIActivityIndicatorTests.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIButtonTests.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIScrollViewTests.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UISliderTests.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UITextFieldTests.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\FunctionalTestHelpers.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIApplicationTests.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\ToastNotificationTests.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibraryTests.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibraryTestHelpers.mm" />
+    <ClangCompile Include="..\..\..\tests\functionaltests\Tests\ProjectionTests\CoreDispatcherTests.mm" />
+    <ClangCompile Include="..\..\..\tests\functionaltests\Tests\ProjectionTests\SanityTests.mm" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSURL.AppxManifest.xml" />

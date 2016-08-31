@@ -1,23 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{5e1d8c21-db75-4ac7-ab6a-ee6d67dfc350}</UniqueIdentifier>
+      <UniqueIdentifier>{f939d6a1-4f91-4201-b38a-24edd790e1ce}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{f8a58446-c727-4df3-b062-8df026def734}</UniqueIdentifier>
+      <UniqueIdentifier>{90a6809e-64b6-4d8a-9aa5-14b6d6977de5}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog">
-      <UniqueIdentifier>{BC24BAA8-953E-4351-B79A-F5DF3A97D3FC}</UniqueIdentifier>
+      <UniqueIdentifier>{3DB0B2CA-72CF-4FDE-8B63-35D5400227DC}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\Supporting Files">
-      <UniqueIdentifier>{62830486-8C8B-489A-B90B-14016E5818BE}</UniqueIdentifier>
+      <UniqueIdentifier>{7061AEB8-2AC7-437E-A515-A323D14C5819}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\UIKitControls">
-      <UniqueIdentifier>{7A1519BB-8DC7-4102-B2E0-329B37EB9C12}</UniqueIdentifier>
+      <UniqueIdentifier>{1DCAF78B-738F-4176-AC7A-A50DDE931B85}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{7BA1840E-EF4D-48B8-BA07-2BAF6CC5849F}</UniqueIdentifier>
+      <UniqueIdentifier>{806C73D9-F6F7-4933-B57A-521789FA9A53}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +57,9 @@
     <ClangCompile Include="..\..\XAMLCatalog\UIActivityIndicatorViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\XAMLCatalog\UISliderViewController.m">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\main.m">
       <Filter>XAMLCatalog\Supporting Files</Filter>
     </ClangCompile>
@@ -76,10 +79,5 @@
     <Text Include="XAMLCatalog-Release-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <ClangCompile Include="..\..\XAMLCatalog\UISliderViewController.m">
-      <Filter>XAMLCatalog\UIKitControls</Filter>
-    </ClangCompile>    
   </ItemGroup>
 </Project>

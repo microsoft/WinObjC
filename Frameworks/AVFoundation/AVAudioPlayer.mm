@@ -69,7 +69,7 @@ using namespace Microsoft::WRL;
         _mediaElement.autoPlay = NO;
         _mediaElement.volume = 1.0f;
         _hiddenView = [[_UIHiddenMediaView alloc] initWithFrame:{ 0, 0, 0, 0 }];
-        [_hiddenView setNativeElement:_mediaElement];
+        [_hiddenView setXamlElement:_mediaElement];
 
         _lastState = _mediaElement.currentState;
 

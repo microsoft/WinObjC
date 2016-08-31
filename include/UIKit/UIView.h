@@ -155,7 +155,6 @@ UIKIT_EXPORT const CGFloat UIViewNoIntrinsicMetric;
 
 @class UIColor, CALayer, NSArray, UIWindow, NSLayoutYAxisAnchor, NSLayoutXAxisAnchor, NSLayoutDimension, UILayoutGuide,
     UIViewPrintFormatter, UIGestureRecognizer, NSString, NSDate, UIMotionEffect, NSCoder, UIEvent;
-@class WXFrameworkElement;
 
 UIKIT_EXPORT_CLASS
 @interface UIView : UIResponder <UIAccessibility,
@@ -377,8 +376,12 @@ UIKIT_EXPORT_CLASS
 @property BOOL shouldGroupAccessibilityChildren;
 @property BOOL accessibilityViewIsModal;
 @property (copy) NSString* accessibilityIdentifier;
+@end
 
-- (void)setNativeElement:(WXFrameworkElement*)nativeElement;
+// WinObjC Xaml Extensions
+@class WXFrameworkElement;
+@interface UIView (UIKitXamlExtensions)
+@property (nonatomic, retain) WXFrameworkElement* xamlElement;
 @end
 
 @interface UIView (StarboardActions)

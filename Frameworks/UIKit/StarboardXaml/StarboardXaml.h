@@ -26,6 +26,7 @@ typedef enum {
     ActivationTypeToast = 1,
     ActivationTypeVoiceCommand = 2,
     ActivationTypeProtocol = 3,
+    ActivationTypeLibrary = 4,
 } ActivationType;
 
 #ifdef __cplusplus_winrt

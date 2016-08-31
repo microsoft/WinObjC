@@ -269,8 +269,10 @@ void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activat
 
     SetXamlRoot(uiElem);
 
-    Xaml::Window::Current->Content = rootFrame;
-    Xaml::Window::Current->Activate();
+    if (activationType != ActivationTypeLibrary) {
+        Xaml::Window::Current->Content = rootFrame;
+        Xaml::Window::Current->Activate();
+    }
 
     auto startupRect = Xaml::Window::Current->Bounds;
     RunApplicationMain(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height, activationType, activationArg);
@@ -331,9 +333,6 @@ int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* de
 // test executables and general WinRT apps that want to call Islandwood libraries
 UIKIT_EXPORT
 void UIApplicationInitialize(const wchar_t* principalClassName, const wchar_t* delegateClassName) {
-    // Initialize COM on this thread
-    ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-
     // Register tracelogging
     TraceRegister();
 
@@ -349,7 +348,7 @@ void UIApplicationInitialize(const wchar_t* principalClassName, const wchar_t* d
         g_delegateClassName = ref new Platform::String();
     }
 
-    _ApplicationLaunch(ActivationTypeNone, nullptr);
+    _ApplicationLaunch(ActivationTypeLibrary, nullptr);
 }
 
 // Note: Like UIApplicationMain, delegateClassName is actually an NSString*.

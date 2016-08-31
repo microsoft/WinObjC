@@ -7,7 +7,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MainViewController">
             <connections>
-                <outlet property="view" destination="iN0-l3-epB" id="y3a-Wt-T9k"/>
+                <outlet property="button" destination="g6j-0Z-VtO" id="p4S-k8-fCs"/>
+                <outlet property="slider" destination="FBI-dl-NoZ" id="QeI-AP-alh"/>
+                <outlet property="spinner" destination="TkE-1D-fO6" id="9cg-XW-6qB"/>
+                <outlet property="text" destination="g8b-Rs-BUP" id="ovM-YJ-oTG"/>
+                <outlet property="view" destination="iN0-l3-epB" id="3ZC-EH-fjO"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -15,13 +19,6 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="XAML Test" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MYL-Mf-4cj">
-                    <rect key="frame" x="8" y="25" width="208" height="21"/>
-                    <animations/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g6j-0Z-VtO">
                     <rect key="frame" x="8" y="125" width="208" height="30"/>
                     <animations/>
@@ -36,10 +33,20 @@
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
                     <connections>
-                        <action selector="textFieldEditingBegin:" destination="-1" eventType="editingDidBegin" id="Kje-yX-vpz"/>
-                        <!-- action selector="textFieldEditingDidEnd:" destination="-1" eventType="editingDidEnd" id="HFh-B4-XSV"/ -->
+                        <action selector="textFieldEditingChanged:" destination="-1" eventType="editingChanged" id="0Fc-xY-0hp"/>
                     </connections>
                 </textField>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="TkE-1D-fO6">
+                    <rect key="frame" x="102" y="163" width="20" height="20"/>
+                    <animations/>
+                </activityIndicatorView>
+                <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="FBI-dl-NoZ">
+                    <rect key="frame" x="59" y="191" width="118" height="31"/>
+                    <animations/>
+                    <connections>
+                        <action selector="sliderValueChanged:" destination="-1" eventType="valueChanged" id="lTL-lo-aJa"/>
+                    </connections>
+                </slider>
             </subviews>
             <animations/>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>

@@ -194,6 +194,5 @@ CA_EXPORT_CLASS
 
 // Adding by MS.
 + (CGPoint)convertPoint:(CGPoint)point fromLayer:(CALayer*)layer toLayer:(CALayer*)layer;
-@property WXFrameworkElement* contentsElement;
 
 @end

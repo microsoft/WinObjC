@@ -34,20 +34,17 @@
 #import "UINibInternal.h"
 #import "CACompositor.h"
 
-typedef id idweak;
-
 static const wchar_t* TAG = L"UITableView";
 
 NSString* const UITableViewIndexSearch = @"UITableViewIndexSearch";
+
 /** @Status Stub */
 const CGFloat UITableViewAutomaticDimension = StubConstant();
 
 UIKIT_EXPORT NSString* const UITableViewSelectionDidChangeNotification = @"UITableViewSelectionDidChangeNotification";
 
-// narsty hack
+// TODO: Nasty hack
 extern id _curFirstResponder;
-
-extern "C" bool doLog;
 
 class VisibleComponent : public LLTreeNode<VisibleComponent, VisibleComponent> {
 public:
@@ -56,6 +53,7 @@ public:
     VisibleComponent(TableViewNode* node) {
         _node = node;
     }
+
     ~VisibleComponent();
 };
 
@@ -649,7 +647,7 @@ static void initInternal(UITableView* self) {
  @Status Interoperable
 */
 - (void)setShowsHorizontalScrollIndicator:(BOOL)show {
-    [super setShowsHorizontalScrollIndicator:FALSE];
+    [super setShowsHorizontalScrollIndicator:show];
 }
 
 /**
@@ -1210,7 +1208,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
         return;
     }
 
-    if (frame.size.width != tablePriv->_lastSize.width && frame.size.height != tablePriv->_lastSize.height) {
+    // update size when frame width or height changed. So when resizing the window
+    // scrollbar can be resized to reflect correct length or position
+    if (frame.size.width != tablePriv->_lastSize.width || frame.size.height != tablePriv->_lastSize.height) {
         bool changedWidth = frame.size.width != tablePriv->_lastSize.width;
         tablePriv->_lastSize = frame.size;
         recalcTableSize(self, changedWidth);

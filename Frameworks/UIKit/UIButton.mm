@@ -20,6 +20,7 @@
 #import "CALayerInternal.h"
 #import "UIFontInternal.h"
 #import "UIButtonContent.h"
+#import "XamlControls.h"
 
 static const wchar_t* TAG = L"UIButton";
 
@@ -763,10 +764,10 @@ static UIImage* selectedBackgroundImageForButtonType(UIButtonType type) {
     pos.size.width = 30;
     pos.size.height = 30;
 
-    id background = backgroundImageForButtonType(type);
-    id selectedBackground = selectedBackgroundImageForButtonType(type);
-    id image = imageForButtonType(type);
-    id selectedImage = selectedImageForButtonType(type);
+    UIImage* background = backgroundImageForButtonType(type);
+    UIImage* selectedBackground = selectedBackgroundImageForButtonType(type);
+    UIImage* image = imageForButtonType(type);
+    UIImage* selectedImage = selectedImageForButtonType(type);
 
     if (background || image) {
         if (background) {
@@ -825,7 +826,7 @@ static UIImage* selectedBackgroundImageForButtonType(UIButtonType type) {
     }
 
     if (getBackgroundImage(self)) {
-        id background = getBackgroundImage(self);
+        UIImage* background = getBackgroundImage(self);
         CGSize size;
 
         size = [background size];
@@ -874,7 +875,7 @@ static UIImage* selectedBackgroundImageForButtonType(UIButtonType type) {
 static CGSize getTitleSize(UIButton* self, CGRect bounds) {
     CGSize textSize = { 0 };
 
-    id title = getTitle(self);
+    NSString* title = getTitle(self);
     if ([title length] > 0) {
         textSize = [title sizeWithFont:(id)getFont(self) constrainedToSize:CGSizeMake(10000.0f, 10000.0f)];
     }
@@ -887,7 +888,7 @@ static CGSize getTitleSize(UIButton* self, CGRect bounds) {
 
 static CGSize getImageSize(UIButton* self) {
     CGSize ret = { 0, 0 };
-    id img = getImage(self);
+    UIImage* img = getImage(self);
 
     if (img != nil) {
         ret = [img size];
@@ -1096,7 +1097,7 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
     }
 
     if (getBackgroundImage(self)) {
-        id background = getBackgroundImage(self);
+        UIImage* background = getBackgroundImage(self);
         CGSize size;
 
         size = [background size];

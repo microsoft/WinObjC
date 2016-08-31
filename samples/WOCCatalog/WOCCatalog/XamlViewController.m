@@ -91,13 +91,13 @@
     if (indexPath.row == 0) {
         WXCDatePicker* datePicker = [WXCDatePicker make];
         UIView* datePickerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 280.0f, cell.frame.size.height)];
-        [datePickerView setNativeElement:datePicker];
+        [datePickerView setXamlElement:datePicker];
         cell.textLabel.text = @"DatePicker";
         cell.accessoryView = datePickerView;
 
     } else if (indexPath.row == 1) {
         UIView* buttonView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 100.0f, cell.frame.size.height)];
-        [buttonView setNativeElement:self.playPauseButton];
+        [buttonView setXamlElement:self.playPauseButton];
         cell.textLabel.text = @"Button";
         cell.accessoryView = buttonView;
     } else if (indexPath.row == 2) {
@@ -109,14 +109,14 @@
         checkBox.requestedTheme = WXApplicationThemeDark;
         checkBox.content = [WFPropertyValue createString:@"Check"];
         UIView* checkBoxView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 100.0f, cell.frame.size.height)];
-        [checkBoxView setNativeElement:checkBox];
+        [checkBoxView setXamlElement:checkBox];
         cell.textLabel.text = @"Check Box";
         cell.accessoryView = checkBoxView;
     } else if (indexPath.row == 3) {
         self.mediaElement = [WXCMediaElement make];
         UIView* meView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 300.0f, 300.f)];
         self.mediaElement.autoPlay = YES;
-        [meView setNativeElement:self.mediaElement];
+        [meView setXamlElement:self.mediaElement];
         self.mediaElement.source = [WFUri makeUri:@"http://video.ch9.ms/ch9/189c/72816d8e-6ccb-4b42-aebd-325363c8189c/win10.mp4"];
         cell.textLabel.text = @"MSDN tv";
         cell.accessoryView = meView;
@@ -129,14 +129,14 @@
         slider.smallChange = 5.0;
         slider.largeChange = 20.0;
         UIView* sliderView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 300.0f, cell.frame.size.height)];
-        [sliderView setNativeElement:slider];
+        [sliderView setXamlElement:slider];
         cell.textLabel.text = @"Slider";
         cell.accessoryView = sliderView;
     } else {
 #ifdef __MAPSUPPORT
         self.mapElement = [WUXCMMapControl create];
         UIView* mapView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 400.0f, 300.f)];
-        [mapView setNativeElement:self.mapElement];
+        [mapView setXamlElement:self.mapElement];
         cell.textLabel.text = @"Map Control";
         cell.accessoryView = mapView;
 #endif

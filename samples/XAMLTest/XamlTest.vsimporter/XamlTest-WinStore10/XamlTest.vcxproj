@@ -30,7 +30,7 @@
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{EAE9A640-F166-44E8-8FFF-884F7F8114D2}</ProjectGuid>
+    <ProjectGuid>{BA9B01FA-CC9B-4679-B203-7BEE51C2AD02}</ProjectGuid>
     <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

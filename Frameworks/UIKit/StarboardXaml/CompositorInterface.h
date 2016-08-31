@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 #pragma once
+#include <deque>
+#include <map>
 
 #include "CACompositor.h"
 #include "winobjc\winobjc.h"
@@ -170,12 +172,33 @@ class DisplayNode : public RefCountedType {
     friend class CAXamlCompositor;
 
 public:
-    winobjc::Id _xamlNode;
     bool isRoot;
     DisplayNode* parent;
     std::set<DisplayNodeRef> _subnodes;
     DisplayTextureRef currentTexture;
     bool topMost;
+
+    // A DisplayNode map to a visual control which participates in layout. During layout, a display node will be positioned
+    // within its parent display node. Also, The visual control in a display node must maintain and arrange visual elements
+    // represented by child display nodes
+    //
+    // The visual control can be simple control control, etc Canvas, Grid.  In this case, the control itself is naturally
+    // used for participating layout within its parent visual control as well as laying out its child visual elements purpose.
+    //
+    // For complex (or composite) control, e.g., UIScrollView - which is a control with several layer, e.g.,
+    // an backing panel behind, the scrollViewer in the middle and the cavas on the top layer. The backing panel should particiate
+    // the layout with its parent. But it is the canvas is responsbile for laying out child visual elements represented
+    // by the child display node
+    //
+    // For this reason, we differentiate two types of visual elements for a DisplayNode - the layoutElement and the
+    // contentElement. For simple case, both refer to the same visual element. For compoiste control case, they refer to
+    // different visual elements.
+    //
+    // Conceptually, you can consider layoutElement as the root visual layer in a display node, and contentElement as
+    // the top most visual layer in the display node. Both has implicit requirements - they must be sublcass of Panel
+
+    winobjc::Id _layoutElement; // used for layout with parent of the display node
+    winobjc::Id _contentElement; // used for layout with the children of the display node
 
 public:
     DisplayNode();
@@ -195,6 +218,11 @@ public:
     void SetContentsElement(winobjc::Id& elem);
 
     void SetShouldRasterize(bool shouldRasterize);
+
+    // Setting the root control and the content control for scrollviewer
+    // this is needed because root control will be the first child of CALayerXaml
+    // and the content control will be the one to layout children
+    void SetScrollviewerControls(IInspectable* rootControl, IInspectable* contentControl);
 
     float GetPresentationPropertyValue(const char* name);
     void AddToRoot();

@@ -16,16 +16,24 @@
 
 #include "Starboard.h"
 
-#import <UIKit/UIPanGestureRecognizer.h>
-#import <UIKit/UIScrollView.h>
-#import <Foundation/NSException.h>
-#import <UIKit/UIPageViewController.h>
-#import "NSLogging.h"
-#import <objc/blocks_runtime.h>
-
 #include <algorithm>
 
+#import <Foundation/NSException.h>
+#import <UIKit/UIPanGestureRecognizer.h>
+#import <UIKit/UIScrollView.h>
+#import <UIKit/UIPageViewController.h>
+
+#import <objc/blocks_runtime.h>
+
+#import "NSLogging.h"
+#import "UIScrollViewInternal.h"
+
 static const wchar_t* TAG = L"UIPageViewController";
+
+static const bool DEBUG_ALL = false;
+static const bool DEBUG_VERBOSE = DEBUG_ALL || false;
+static const bool DEBUG_DELEGATE = DEBUG_ALL || false;
+
 NSString* const UIPageViewControllerOptionSpineLocationKey = @"SpineLocation";
 NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 
@@ -122,6 +130,10 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
                          direction:(UIPageViewControllerNavigationDirection)direction
                           animated:(BOOL)animated
                         completion:(void (^)(BOOL finished))completion {
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG, L"scrollToNewViewController");
+    }
+
     CGRect currentFrame = self.frame;
     CGPoint currentOffset = self.contentOffset;
 
@@ -133,19 +145,13 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     }
 
     if (animated) {
-        CGPoint targetOffset = CGPointMake(0, 0);
-
+        // populate adjacent pages before scrolling
+        CGPoint targetOffset = self.contentOffset;
+        _keepAdjacent = TRUE;
+        [self _populatePagesWithOffset:&targetOffset interactive:YES];
         auto copiedCompletion = Block_copy(completion);
         _completion = copiedCompletion; // retained
         Block_release(copiedCompletion);
-
-        _previousControllers = [self _currentPages];
-
-        [self _resetToCurrent];
-
-        _keepAdjacent = TRUE;
-
-        [self _pushController:controller direction:direction targetOffset:&targetOffset];
 
         // TODO: Vertical pages.
         switch (direction) {
@@ -153,7 +159,7 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
                 [self setContentOffset:CGPointMake(self.contentOffset.x + currentFrame.size.width, 0) animated:YES];
                 break;
             case UIPageViewControllerNavigationDirectionReverse:
-                [self setContentOffset:CGPointMake(0, 0) animated:YES];
+                [self setContentOffset:CGPointMake(self.contentOffset.x - currentFrame.size.width, 0) animated:YES];
                 break;
             default:
                 NSTraceCritical(TAG, @"Parameter 'direction' out of range");
@@ -186,6 +192,10 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 }
 
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG, L"touchesBegan");
+    }
+
     _previousControllers = [self _currentPages];
     if (self.decelerating) {
         [super touchesBegan:touches withEvent:event];
@@ -198,13 +208,11 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     }
 }
 
-- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
-    CGPoint targetOffset = self.contentOffset;
-    [super touchesEnded:touches withEvent:event];
-    [self _populatePagesWithOffset:&targetOffset interactive:NO];
-}
-
 - (void)_resetToCurrent {
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG, L"resetToCurrent");
+    }
+
     _skipUpdates = TRUE;
 
     NSArray* currentControllers = [self _currentPages];
@@ -236,6 +244,10 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 }
 
 - (void)_updateVisible {
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG, L"updateVisible");
+    }
+
     CGRect currentFrame = self.frame;
     CGPoint currentOffset = self.contentOffset;
     int begin = static_cast<int>(floorf(currentOffset.x / currentFrame.size.width));
@@ -260,6 +272,10 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
             [[_pages objectAtIndex:i] unhide];
             if (self.tracking) {
                 if ([[_viewController delegate] respondsToSelector:@selector(pageViewController:willTransitionToViewControllers:)]) {
+                    if (DEBUG_DELEGATE) {
+                        TraceVerbose(TAG, L"updateVisible: invoking delegate willTransitionToViewControllers");
+                    }
+
                     [[_viewController delegate] pageViewController:_viewController
                                    willTransitionToViewControllers:[NSArray arrayWithObjects:[_controllers objectAtIndex:i], nil]];
                 }
@@ -271,15 +287,34 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 - (void)_pushController:(UIViewController*)controller
               direction:(UIPageViewControllerNavigationDirection)direction
            targetOffset:(inout CGPoint*)targetContentOffset {
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG,
+                     L"pushController-Begin:direction=%d, targetOffset.x=%f, targetOffset.y=%f",
+                     direction,
+                     targetContentOffset->x,
+                     targetContentOffset->y);
+    }
+
     _UIPageViewPage* newPage = [[_UIPageViewPage alloc] initWithFrame:self.frame viewController:controller];
 
     switch (direction) {
         case UIPageViewControllerNavigationDirectionForward:
+            // adding new controller to right most, increase contentsize based on total controllers
+            if (DEBUG_VERBOSE) {
+                TraceVerbose(TAG, L"Appending new controller to the right most, increasing contentsize");
+            }
+
             [_controllers addObject:controller];
             [_pages addObject:newPage];
             [self setContentSize:CGSizeMake(self.frame.size.width * [_controllers count], 0)];
             break;
         case UIPageViewControllerNavigationDirectionReverse:
+            // inserting new controller to left most, increase contentsize
+            // and contentOffset based on avaiable view controllers
+            if (DEBUG_VERBOSE) {
+                TraceVerbose(TAG, L"Inserting new controller to the left most, increasing content size and content offset");
+            }
+
             [_controllers insertObject:controller atIndex:0];
             [_pages insertObject:newPage atIndex:0];
             [self setContentSize:CGSizeMake(self.frame.size.width * [_controllers count], 0)];
@@ -291,20 +326,47 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     [self _updateVisible];
     [self setNeedsLayout];
     [newPage release];
+
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG,
+                     L"pushController-end:direction=%d, targetOffset.x=%f, targetOffset.y=%f",
+                     direction,
+                     targetContentOffset->x,
+                     targetContentOffset->y);
+    }
 }
 
 - (void)_popControllerWithDirection:(UIPageViewControllerNavigationDirection)direction {
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG, L"popControllerWithDirection:direction:%d", direction);
+    }
+
     switch (direction) {
         case UIPageViewControllerNavigationDirectionForward:
+            // removing the right most view controller, updtae contentsize based on avaiable view controllers
+            if (DEBUG_VERBOSE) {
+                TraceVerbose(TAG,
+                             L"removing the right most controller, reduce content size, Before removing [_controllers count]=%d",
+                             [_controllers count]);
+            }
+
             [[_pages objectAtIndex:([_controllers count] - 1)] removeFromSuperview];
             [_controllers removeObjectAtIndex:([_controllers count] - 1)];
             [_pages removeObjectAtIndex:([_pages count] - 1)];
             [self setContentSize:CGSizeMake(self.frame.size.width * [_controllers count], 0)];
             break;
         case UIPageViewControllerNavigationDirectionReverse:
+            // removing the left most view controller, update contentsize and contentOffset based on avaiable view controllers
             [[_pages objectAtIndex:0] removeFromSuperview];
             [_controllers removeObjectAtIndex:0];
             [_pages removeObjectAtIndex:0];
+
+            if (DEBUG_VERBOSE) {
+                TraceVerbose(TAG,
+                             L"removing the left most controller, reduce content size and offset, after removing [controller count]=%d",
+                             [_controllers count]);
+            }
+
             [self setContentSize:CGSizeMake(self.frame.size.width * [_controllers count], 0)];
             [self setContentOffset:CGPointMake(self.contentOffset.x - self.frame.size.width, 0)];
             break;
@@ -316,22 +378,29 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 - (void)scrollViewWillEndDragging:(UIScrollView*)scrollView
                      withVelocity:(CGPoint)velocity
               targetContentOffset:(inout CGPoint*)targetContentOffset {
-    [self _populatePagesWithOffset:targetContentOffset interactive:YES];
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG, L"scrollViewWillEndDragging");
+    }
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView*)scrollView {
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG, L"scrollViewDidEndScrollingAnimation");
+    }
+
     if (_completion) {
         _completion(!self.tracking);
         _completion = nil;
     }
 
     _previousControllers = nil;
-
-    CGPoint targetOffset = self.contentOffset;
-    [self _populatePagesWithOffset:&targetOffset interactive:NO];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView*)scrollView {
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG, L"scrollViewDidEndDecelerating");
+    }
+
     if (_completion) {
         _completion(!self.tracking);
         _completion = nil;
@@ -341,6 +410,10 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     // this may not be correct for multipage.
     if ([[_viewController delegate]
             respondsToSelector:@selector(pageViewController:didFinishAnimating:previousViewControllers:transitionCompleted:)]) {
+        if (DEBUG_DELEGATE) {
+            TraceVerbose(TAG, L"scrollViewDidEndDecelerating");
+        }
+
         [[_viewController delegate] pageViewController:_viewController
                                     didFinishAnimating:!self.tracking
                                previousViewControllers:_previousControllers
@@ -348,16 +421,17 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     }
 
     _previousControllers = nil;
-
-    CGPoint targetOffset = self.contentOffset;
-    [self _populatePagesWithOffset:&targetOffset interactive:NO];
 }
 
 - (void)layoutSubviews {
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG, L"layoutSubviews");
+    }
+
     CGRect frame = self.frame;
 
     // TODO: Vertical layout
-    
+
     [self _updateVisible];
 
     for (int i = 0; i < [_pages count]; i++) {
@@ -371,6 +445,15 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 }
 
 - (void)_populatePagesWithOffset:(inout CGPoint*)targetOffset interactive:(BOOL)interactive {
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG,
+                     L"populatePagesWithOffset: targetOffset=[%f, %f], interactive=%d, keepAdjacent=%d",
+                     targetOffset->x,
+                     targetOffset->y,
+                     interactive,
+                     _keepAdjacent);
+    }
+
     if ([_controllers count] == 0 && _skipUpdates) {
         return;
     }
@@ -381,32 +464,116 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     // TODO: Multiple pages
     // TODO: Probably shouldn't hammer the dataSource when it returns nil.
     if (interactive || _keepAdjacent) {
-        if ((self.contentOffset.x + currentFrame.size.width) >= ([_controllers count] * currentFrame.size.width)) {
+        float viewPortRightEdge = self.contentOffset.x + currentFrame.size.width;
+        float lastControllerRightEdge = [_controllers count] * currentFrame.size.width;
+
+        if (DEBUG_VERBOSE) {
+            TraceVerbose(TAG,
+                         L"populatePagesWithOffset: viewPortRightEdge=%f,  lastControllerRightEdge=%f, [controllers count]=%d, "
+                         L"interactive:%d, keepAdjacent=%d",
+                         viewPortRightEdge,
+                         lastControllerRightEdge,
+                         [_controllers count],
+                         interactive,
+                         _keepAdjacent);
+        }
+
+        if (viewPortRightEdge >= lastControllerRightEdge) {
             // BUG: See https://github.com/Microsoft/WinObjC/issues/291 for the cast
+
+            // Viewport right edge is outside of viewable controller edge now
+            // need to get the last (right most) controller and then push it forward to cause further right scrolling
             UIViewController* nextController = [(id<UIPageViewControllerDataSource>)[_viewController dataSource]
                                pageViewController:_viewController
                 viewControllerAfterViewController:[_controllers objectAtIndex:([_controllers count] - 1)]];
+
             if (nextController != nil) {
+                if (DEBUG_VERBOSE) {
+                    TraceVerbose(TAG, L"populatePagesWithOffset: push forward");
+                }
                 [self _pushController:nextController direction:UIPageViewControllerNavigationDirectionForward targetOffset:targetOffset];
+            } else {
+                TraceWarning(TAG, L"populatePagesWithOffset: next controller is nil, nothing to push forward");
             }
+        } else if (DEBUG_VERBOSE) {
+            TraceVerbose(TAG, L"populatePagesWithOffset: nothing to push forward");
         }
+
+        // When detecting scrollview scrolls to its left edge, get left most controller and
+        // push in reverse direction to cause further left scrolling
         if (self.contentOffset.x <= 0) {
-            UIViewController* nextController =
-                [(id<UIPageViewControllerDataSource>)[_viewController dataSource] pageViewController:_viewController
-                                                                  viewControllerBeforeViewController:[_controllers objectAtIndex:0]];
-            if (nextController != nil) {
-                [self _pushController:nextController direction:UIPageViewControllerNavigationDirectionReverse targetOffset:targetOffset];
+            if (DEBUG_VERBOSE) {
+                TraceVerbose(TAG, L"populatePagesWithOffset: left edge reached, need insert new controller");
             }
+
+            UIViewController* nextController = nil;
+            if ([_controllers count] > 0) {
+                nextController =
+                    [(id<UIPageViewControllerDataSource>)[_viewController dataSource] pageViewController:_viewController
+                                                                      viewControllerBeforeViewController:[_controllers objectAtIndex:0]];
+            }
+
+            if (nextController != nil) {
+                if (DEBUG_VERBOSE) {
+                    TraceVerbose(TAG, L"populatePagesWithOffset: push controller in reverse direction");
+                }
+                [self _pushController:nextController direction:UIPageViewControllerNavigationDirectionReverse targetOffset:targetOffset];
+            } else {
+                TraceWarning(TAG, L"populatePagesWithOffset: next controller is nil, nothing to push in reverse direction");
+            }
+        } else if (DEBUG_VERBOSE) {
+            TraceVerbose(TAG, L"populatePagesWithOffset: No controller to push in reverse");
         }
+
+        // Re-caculating the viewPortRightEdge and lastControllerRightEdge
+        viewPortRightEdge = self.contentOffset.x + currentFrame.size.width;
+        lastControllerRightEdge = [_controllers count] * currentFrame.size.width;
+        float leftEdgeOfLastController = lastControllerRightEdge - currentFrame.size.width;
+
+        BOOL controllerPopout = NO;
+
         // This clears out any view not visible, keeps adjacent
-        while ((self.contentOffset.x > 0) && ((self.contentOffset.x + currentFrame.size.width) <
-                                              (([_controllers count] * currentFrame.size.width) - currentFrame.size.width))) {
+        while ((self.contentOffset.x > 0) && (viewPortRightEdge < leftEdgeOfLastController)) {
+            // viewPortRightEdge is on the left of left edge of last controller
+            // we should pop out the controllers on the right hand which is invisible
+            controllerPopout = YES;
+            if (DEBUG_VERBOSE) {
+                TraceVerbose(TAG, L"populatePagesWithOffset: pop out controller forward");
+            }
             [self _popControllerWithDirection:UIPageViewControllerNavigationDirectionForward];
+
+            viewPortRightEdge = self.contentOffset.x + currentFrame.size.width;
+            lastControllerRightEdge = [_controllers count] * currentFrame.size.width;
+            leftEdgeOfLastController = lastControllerRightEdge - currentFrame.size.width;
         }
-        while (((self.contentOffset.x + currentFrame.size.width) < ([_controllers count] * currentFrame.size.width)) &&
-               (self.contentOffset.x > currentFrame.size.width)) {
+
+        if (!controllerPopout && DEBUG_VERBOSE) {
+            TraceVerbose(TAG, L"populatePagesWithOffset: no controller has been pop forward");
+        }
+
+        controllerPopout = NO;
+
+        viewPortRightEdge = self.contentOffset.x + currentFrame.size.width;
+        lastControllerRightEdge = [_controllers count] * currentFrame.size.width;
+
+        while ((viewPortRightEdge < lastControllerRightEdge) && (self.contentOffset.x > currentFrame.size.width)) {
+            // ViewPortRightEdge is on the left of right edge of last view controller
+            // and current content offset is on the right of right edge of first controller
+            // we should pop out the control on the left which is invislbe
+            controllerPopout = YES;
+            if (DEBUG_VERBOSE) {
+                TraceVerbose(TAG, L"populatePagesWithOffset: pop out controller in reverse");
+            }
             [self _popControllerWithDirection:UIPageViewControllerNavigationDirectionReverse];
+
+            viewPortRightEdge = self.contentOffset.x + currentFrame.size.width;
+            lastControllerRightEdge = [_controllers count] * currentFrame.size.width;
         }
+
+        if (!controllerPopout && DEBUG_VERBOSE) {
+            TraceVerbose(TAG, L"populatePagesWithOffset: no controller has been popped out in reverse");
+        }
+
     } else {
         // This clears out any view not visible and adjacent
         while ((self.contentOffset.x + currentFrame.size.width) <=
@@ -420,9 +587,20 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 }
 
 - (void)scrollViewDidScroll:(UIScrollView*)scrollView {
-    CGPoint targetOffset = self.contentOffset;
-    [self _populatePagesWithOffset:&targetOffset interactive:(self.tracking || self.decelerating)];
-    [self _updateVisible];
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG, L"scrollViewDidScroll, _isAnimating=%d, tracking =%d", [self _isAnimating], self.tracking);
+    }
+
+    if (![self _isAnimating] && !self.tracking) {
+        // TODO: when view is not animating and user is not tracking the view by tap and hold on the view
+        // we should popout controller here if necessary since we know view change finished
+        if (DEBUG_VERBOSE) {
+            TraceVerbose(TAG, L"scrollViewDidScroll, currently scrollview is not animating or being tracked");
+        }
+    } else if (DEBUG_VERBOSE) {
+        // Otherwise, do nothing
+        TraceVerbose(TAG, L"scrollViewDidScroll, currently scrollview is animating or tracking, avoid changing content size");
+    }
 }
 
 @end
@@ -552,8 +730,7 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 
     switch (style) {
         case UIPageViewControllerTransitionStylePageCurl:
-            NSTraceWarning(TAG,
-                                 @"UIPageViewControllerTransitionStylePageCurl unsupported. Transition style will fall back to Scroll.");
+            NSTraceWarning(TAG, @"UIPageViewControllerTransitionStylePageCurl unsupported. Transition style will fall back to Scroll.");
         // Fallthrough
         case UIPageViewControllerTransitionStyleScroll:
             _transitionStyle = style;

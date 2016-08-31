@@ -1171,3 +1171,4 @@ LIBRARY UIKit
         UIRequestTransactionProcessing
         UIOrientationFromString
         UIApplicationDidChangeDisplayModeNofication
+        UIViewControllerFirePageEvent
