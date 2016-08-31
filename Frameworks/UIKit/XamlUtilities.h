@@ -14,23 +14,53 @@
 //
 //******************************************************************************
 
+#import <Starboard.h>
+
+#import "StringHelpers.h"
+
 #import <UIKit/UIControl.h>
-#import <UWP/WindowsUIXamlControls.h>
 
-@interface XamlUtilities : NSObject
-// convert UIColor to Color on windows
-+ (WUColor*)convertUIColorToWUColor:(UIColor*)uiColor;
+#import "UWP/WindowsUIXaml.h"
+#import "UWP/WindowsUIXamlControls.h"
 
-// convert UITextAlignment to TextAlignment on windows
-+ (WXTextAlignment)convertUITextAlignmentToWXTextAlignment:(UITextAlignment)alignment;
+// NOTE: These need to stay #includes
+#include "COMIncludes.h"
+#include "WinString.h"
+#include "RoApi.h"
+#include "Windows.UI.Xaml.Markup.h"
+#include "COMIncludes_End.h"
 
-// convert ios KeyboardType to Windows InputScope
-+ (WUXIInputScope*)convertKeyboardTypeToInputScope:(UIKeyboardType)keyboardType secureTextMode:(BOOL)secureTextMode;
+using namespace ABI::Windows::UI::Xaml;
+using namespace Microsoft::WRL;
+using namespace Windows::Foundation;
+
+NSString* const XamlAutoGenNamespace = @"IslandwoodAutoGenNamespace";
+
+// Convert UIColor to Color on windows
+WUColor* ConvertUIColorToWUColor(UIColor* uiColor);
+
+// Convert UITextAlignment to TextAlignment on windows
+WXTextAlignment ConvertUITextAlignmentToWXTextAlignment(UITextAlignment alignment);
+
+// Convert ios KeyboardType to Windows InputScope
+WUXIInputScope* ConvertKeyboardTypeToInputScope(UIKeyboardType keyboardType, BOOL secureTextMode);
+
+// Convert UIControlContentVerticalAlignment to Windows vertical Alignment
+WXVerticalAlignment ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(UIControlContentVerticalAlignment alignment);
 
 // Find the named template child in control tempate of a xaml control
-+ (WXFrameworkElement*)findTemplateChild:(WXCControl*)control name:(NSString*)name;
+WXFrameworkElement* FindTemplateChild(WXCControl* control, NSString* name);
 
-// set up border style for a control
-+ (void)setControlBorderStyle:(WXCControl*)control borderStyle:(UITextBorderStyle)style;
+// Set up border style for a control
+void SetControlBorderStyle(WXCControl* control, UITextBorderStyle style);
 
-@end
+// Determine if the XAML type specified by the class name is activatable
+ComPtr<Markup::IXamlType> ReturnXamlType(NSString* xamlClassName);
+
+// Determine the type of XAML control and generate the UIKit equivalent
+UIView* GenerateUIKitControlFromXamlType(RTObject* xamlObject);
+
+// TODO: GitHub issue 508 and 509
+// We need a type-safe way to do this with projections.  This is copied verbatim from the projections
+// code and works perfectly for this limited usage, but we don't do any type validation below.
+id CreateRtProxy(Class cls, IInspectable* iface);

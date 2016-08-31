@@ -347,9 +347,9 @@ public:
 extern void CortanaTestVoiceCommandForegroundActivation();
 extern void CortanaTestVoiceCommandForegroundActivationDelegateMethodsCalled();
 
-class CortanaVoiceCommandForeground {
+class CortanaVoiceCommandForegroundActivation {
 public:
-    BEGIN_TEST_CLASS(CortanaVoiceCommandForeground)
+    BEGIN_TEST_CLASS(CortanaVoiceCommandForegroundActivation)
     TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
     TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     END_TEST_CLASS()
@@ -367,14 +367,14 @@ public:
     TEST_METHOD(Cortana_VoiceCommandForegroundActivationDelegateMethodsCalled) {
         CortanaTestVoiceCommandForegroundActivationDelegateMethodsCalled();
     }
-}; /* class CortanaVoiceCommandForeground*/
+}; /* class CortanaVoiceCommandForegroundActivation */
 
 extern void CortanaTestProtocolForegroundActivation();
 extern void CortanaTestProtocolForegroundActivationDelegateMethodsCalled();
 
-class CortanaProtocolForeground {
+class CortanaProtocolForegroundActivation {
 public:
-    BEGIN_TEST_CLASS(CortanaProtocolForeground)
+    BEGIN_TEST_CLASS(CortanaProtocolForegroundActivation)
     TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
     TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     END_TEST_CLASS()
@@ -392,36 +392,139 @@ public:
     TEST_METHOD(Cortana_ProtocolForegroundActivationDelegateMethodsCalled) {
         CortanaTestProtocolForegroundActivationDelegateMethodsCalled();
     }
-}; /* class CortanaProtocolForeground*/
+}; /* class CortanaProtocolForegroundActivation */
 
-// UIViewTests
-//
-extern void UIViewTestsCreate();
+extern void ToastNotificationTestForegroundActivation();
+extern void ToastNotificationTestForegroundActivationDelegateMethodsCalled();
 
-class UIViewTests {
-public:
-    BEGIN_TEST_CLASS(UIViewTests)
+class ToastNotificationForegroundActivation {
+    BEGIN_TEST_CLASS(ToastNotificationForegroundActivation)
     TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
     TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     END_TEST_CLASS()
 
-    TEST_CLASS_SETUP(UIViewTestsSetup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    TEST_CLASS_SETUP(ToastNotificationForegroundTestClassSetup) {
+        // The class setup allows us to activate the app in our test method, but can only be done once per class
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&ToastNotificationTestForegroundActivation));
     }
 
-    TEST_METHOD_CLEANUP(UIViewCleanup) {
+    TEST_METHOD_CLEANUP(ToastNotificationForegroundCleanup) {
         FunctionalTestCleanupUIApplication();
         return true;
     }
 
-    TEST_METHOD(UIViewTests_Create) {
-        UIViewTestsCreate();
+    TEST_METHOD(ToastNotification_ForegroundActivationDelegateMethodsCalled) {
+        ToastNotificationTestForegroundActivationDelegateMethodsCalled();
     }
-}; /* class UIViewTests */
+}; /* class ToastNotificationForeground */
+
+extern void ToastNotificationTestActivatedAppReceivesToastNotification();
+
+class ActivatedAppReceivesToastNotification {
+    BEGIN_TEST_CLASS(ActivatedAppReceivesToastNotification)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(ActivatedAppReceivesToastNotificationTestClassSetup) {
+        // The class setup allows us to activate the app in our test method, but can only be done once per class
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
+
+    TEST_METHOD_CLEANUP(ActivatedAppReceivesToastNotificationCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
+    TEST_METHOD(ToastNotification_ActivatedAppReceivesToastNotification) {
+        ToastNotificationTestActivatedAppReceivesToastNotification();
+    }
+}; /* class ActivatedAppReceivesToastNotification */
+
+// UIKitTests
+//
+extern void UIViewCreate();
+extern void UIViewGetXamlElement();
+extern void UIActivityIndicatorViewCreateXamlElement();
+extern void UIActivityIndicatorViewGetXamlElement();
+extern void UIButtonCreateXamlElement();
+extern void UIButtonGetXamlElement();
+extern void UIScrollViewCreateXamlElement();
+extern void UIScrollViewGetXamlElement();
+extern void UISliderCreateXamlElement();
+extern void UISliderGetXamlElement();
+extern void UITextFieldCreateXamlElement();
+extern void UITextFieldGetXamlElement();
+
+class UIKitTests {
+public:
+    BEGIN_TEST_CLASS(UIKitTests)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(UIKitTestsSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
+
+    TEST_METHOD_CLEANUP(UIKitTestsCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
+    TEST_METHOD(UIView_Create) {
+        UIViewCreate();
+    }
+
+    TEST_METHOD(UIView_GetXamlElement) {
+        UIViewGetXamlElement();
+    }
+
+    TEST_METHOD(UIActivityIndicatorView_CreateXamlElement) {
+        UIActivityIndicatorViewCreateXamlElement();
+    }
+
+    TEST_METHOD(UIActivityIndicatorView_GetXamlElement) {
+        UIActivityIndicatorViewGetXamlElement();
+    }
+
+    TEST_METHOD(UIButton_CreateXamlElement) {
+        UIButtonCreateXamlElement();
+    }
+
+    TEST_METHOD(UIButton_GetXamlElement) {
+        UIButtonGetXamlElement();
+    }
+
+    TEST_METHOD(UIScrollView_CreateXamlElement) {
+        UIScrollViewCreateXamlElement();
+    }
+
+    TEST_METHOD(UIScrollView_GetXamlElement) {
+        UIScrollViewGetXamlElement();
+    }
+
+    TEST_METHOD(UISlider_CreateXamlElement) {
+        UISliderCreateXamlElement();
+    }
+
+    TEST_METHOD(UISlider_GetXamlElement) {
+        UISliderGetXamlElement();
+    }
+
+    TEST_METHOD(UITextField_CreateXamlElement) {
+        UITextFieldCreateXamlElement();
+    }
+
+    TEST_METHOD(UITextField_GetXamlElement) {
+        UITextFieldGetXamlElement();
+    }
+}; /* class UIKitTests */
 
 // Projection Tests
 //
 extern void ProjectionWUCCoreDispatcherSanity();
+extern void ProjectionHStringTest();
 
 class ProjectionTest {
 public:
@@ -441,6 +544,10 @@ public:
 
     TEST_METHOD(ProjectionTest_WUCCoreDispatcherSanity) {
         ProjectionWUCCoreDispatcherSanity();
+    }
+
+    TEST_METHOD(ProjectionTest_HStringTest) {
+        ProjectionHStringTest();
     }
 
 }; /* class ProjectionTest */

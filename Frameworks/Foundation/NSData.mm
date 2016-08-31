@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -348,12 +348,14 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
     if (fpOut) {
         EbrFwrite([self bytes], 1, [self length], fpOut);
         EbrFclose(fpOut);
-
-        return TRUE;
-    } else {
-        TraceVerbose(TAG, L"NSData couldn't open %hs for write (with options)", fname);
-        return FALSE;
+        return YES;
     }
+
+    TraceVerbose(TAG, L"NSData couldn't open %hs for write (with options)", fname);
+    if (error) {
+        *error = [NSError errorWithDomain:NSCocoaErrorDomain code:NSFileNoSuchFileError userInfo:@{ NSFilePathErrorKey : filename }];
+    }
+    return NO;
 }
 
 /**

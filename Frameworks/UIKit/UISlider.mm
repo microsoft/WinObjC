@@ -15,35 +15,41 @@
 //******************************************************************************
 
 #import "AssertARCEnabled.h"
-#import "Starboard.h"
-#import "StubReturn.h"
-#import "UIKit/UIView.h"
-#import "UIKit/UIControl.h"
-#import "UIKit/UIImage.h"
-#import "UIKit/UIImageView.h"
-#import "UIKit/UIGestureRecognizer.h"
-#import "UIKit/UISlider.h"
+#import <Starboard.h>
+#import <StubReturn.h>
+
+#import <UIKit/UIView.h>
+#import <UIKit/UIControl.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UIGestureRecognizer.h>
+#import <UIKit/UISlider.h>
 
 #import "UIGestureRecognizerInternal.h"
+
 #import "UWP/WindowsUIXamlControls.h"
 
 static const double c_defaultStepFrequency = 0.1;
 
 @implementation UISlider {
-    float _value;
     BOOL _continuous;
 
     // Since xaml Slider does not support minimumValueImage and maximumValueImage, hence we have
     // _rootPanel, which is a panel that holds the xaml slider and minimumValueImage and maximumValueImage.
     StrongId<WXCGrid> _rootPanel;
     StrongId<WXCSlider> _xamlSlider;
+
     EventRegistrationToken _manipulationStartingEvent;
     EventRegistrationToken _manipulationCompletedEvent;
     EventRegistrationToken _valueChangedEvent;
 }
 
-- (void)_UISlider_initInternal {
-    _xamlSlider = [WXCSlider make];
+- (void)_UISlider_initInternal:(WXFrameworkElement*)xamlElement {
+    if (xamlElement != nil && [xamlElement isKindOfClass:[WXCSlider class]]) {
+        _xamlSlider = static_cast<WXCSlider*>(xamlElement);
+    } else {
+        _xamlSlider = [WXCSlider make];
+    }
 
     // BUG:7911911 - [XAMLCatalog] UISlider not rendering the right track image of XAML slider on ARM
     _xamlSlider.requestedTheme = WXElementThemeLight;
@@ -53,7 +59,7 @@ static const double c_defaultStepFrequency = 0.1;
 
     _rootPanel = [WXCGrid make];
     [_rootPanel.children addObject:_xamlSlider];
-    [self layer].contentsElement = _rootPanel;
+    [self setXamlElement:_rootPanel];
     [self _updateStepFrequency];
     [self setContinuous:YES];
     [self _registerForEventsWithXaml];
@@ -83,12 +89,11 @@ static const double c_defaultStepFrequency = 0.1;
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
-        [self _UISlider_initInternal];
+        [self _UISlider_initInternal:nil];
 
         if ([coder containsValueForKey:@"UIValue"]) {
             id valueStr = [coder decodeObjectForKey:@"UIValue"];
-            _value = [valueStr floatValue];
-            _xamlSlider.value = _value;
+            _xamlSlider.value = [valueStr floatValue];
         }
 
         if ([coder containsValueForKey:@"UIMaxValue"]) {
@@ -106,8 +111,12 @@ static const double c_defaultStepFrequency = 0.1;
  @Status Interoperable
 */
 - (instancetype)initWithFrame:(CGRect)frame {
+    return [self _initWithFrame:frame xamlElement:nil];
+}
+
+- (instancetype)_initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
     if (self = [super initWithFrame:frame]) {
-        [self _UISlider_initInternal];
+        [self _UISlider_initInternal:xamlElement];
     }
 
     return self;
@@ -117,7 +126,7 @@ static const double c_defaultStepFrequency = 0.1;
  @Status Interoperable
 */
 - (float)value {
-    return _value;
+    return _xamlSlider.value;
 }
 
 /**
@@ -133,7 +142,6 @@ static const double c_defaultStepFrequency = 0.1;
     _valueChangedEvent = [_xamlSlider addValueChangedEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
         __strong UISlider* strongSelf = weakSelf;
         if (strongSelf && strongSelf->_continuous) {
-            strongSelf->_value = strongSelf->_xamlSlider.value;
             [strongSelf _sendValueChangedEvents];
         }
     }];
@@ -150,10 +158,7 @@ static const double c_defaultStepFrequency = 0.1;
         [_xamlSlider addManipulationStartingEvent:^void(RTObject* sender, WUXIManipulationStartingRoutedEventArgs* e) {
             __strong UISlider* strongSelf = weakSelf;
             if (strongSelf && (strongSelf->_continuous == NO)) {
-                if (strongSelf->_value != strongSelf->_xamlSlider.value) {
-                    strongSelf->_value = strongSelf->_xamlSlider.value;
-                    [strongSelf _sendValueChangedEvents];
-                }
+                [strongSelf _sendValueChangedEvents];
             }
         }];
 
@@ -163,10 +168,7 @@ static const double c_defaultStepFrequency = 0.1;
         [_xamlSlider addManipulationCompletedEvent:^void(RTObject* sender, WUXIManipulationCompletedRoutedEventArgs* e) {
             __strong UISlider* strongSelf = weakSelf;
             if (strongSelf && (strongSelf->_continuous == NO)) {
-                if (strongSelf->_value != strongSelf->_xamlSlider.value) {
-                    strongSelf->_value = strongSelf->_xamlSlider.value;
-                    [strongSelf _sendValueChangedEvents];
-                }
+                [strongSelf _sendValueChangedEvents];
                 [strongSelf sendActionsForControlEvents:UIControlEventTouchUpInside];
             }
         }];
@@ -209,11 +211,7 @@ static const double c_defaultStepFrequency = 0.1;
  @Notes animation is not supported
 */
 - (void)setValue:(float)value animated:(BOOL)animated {
-    if (_value != value) {
-        // Xaml takes care of validating the input value, we copy the value from xaml slider back to our ivar
-        _xamlSlider.value = value;
-        _value = _xamlSlider.value;
-    }
+    _xamlSlider.value = value;
 }
 
 /**

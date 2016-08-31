@@ -51,7 +51,7 @@ static NSMutableArray* obtainArrayOfCoins(unsigned int start, unsigned int end) 
 }
 
 static NSMutableSet* obtainSetOfCoins(unsigned int start, unsigned int end) {
-    return  [NSMutableSet setWithArray:obtainArrayOfCoins(start,end)];
+    return [NSMutableSet setWithArray:obtainArrayOfCoins(start, end)];
 }
 
 TEST(NSKeyValueCoding, AggregateFunctionSum) {
@@ -230,7 +230,7 @@ OSX_DISABLED_TEST(NSKeyValueCoding, AggregateFunctionUnionOfObjectsDict) {
 // The following two tests are disabled because OS X violates the contract set out for these functions in
 // https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/KeyValueCoding/Articles/CollectionOperators.html
 // > @unionOfArrays
-// >   Important: This operator raises an exception if any of the leaf objects is nil. 
+// >   Important: This operator raises an exception if any of the leaf objects is nil.
 // Evidence shows that it does, in fact, not raise an exception if any of the leaf objects is nil.
 OSX_DISABLED_TEST(NSKeyValueCoding, AggregateFunctionNullLeafUnionArray) {
     NSMutableArray* result = obtainArrayOfCoins(0, 2);
@@ -251,8 +251,8 @@ TEST(NSKeyValueCoding, AggregateFunctionNullLeaf) {
     ASSERT_EQ(10, [[coins valueForKeyPath:@"@count.testObj"] intValue]);
     ASSERT_EQ(0, [[coins valueForKeyPath:@"@avg.testObj"] intValue]);
     ASSERT_EQ(0, [[coins valueForKeyPath:@"@sum.testObj"] intValue]);
-	ASSERT_EQ(nil, [coins valueForKeyPath:@"@max.testObj"]);
-	ASSERT_EQ(nil, [coins valueForKeyPath:@"@min.testObj"]);
+    ASSERT_EQ(nil, [coins valueForKeyPath:@"@max.testObj"]);
+    ASSERT_EQ(nil, [coins valueForKeyPath:@"@min.testObj"]);
 }
 
 TEST(NSKeyValueCoding, AggregateFunctionInvalid) {

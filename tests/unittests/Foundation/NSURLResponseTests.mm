@@ -12,20 +12,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-//****************************************************************************** 
+//******************************************************************************
 
 #import <Foundation/Foundation.h>
 #import <TestFramework.h>
 
 TEST(NSURLResponse, SuggestedFilename_MatchingMIME) {
     NSURL* url = [NSURL URLWithString:@"a/test/name.extension.txt"];
-    NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
+    NSURLResponse* res =
+        [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
     ASSERT_OBJCEQ(@"name.extension.txt", res.suggestedFilename);
 }
 
 TEST(NSURLResponse, SuggestedFilename_QueryParameter_MatchingMIME) {
     NSURL* url = [NSURL URLWithString:@"a/test/name.extension.txt?foo=bar"];
-    NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
+    NSURLResponse* res =
+        [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
     ASSERT_OBJCEQ(@"name.extension.txt", res.suggestedFilename);
 }
 
@@ -34,9 +36,9 @@ TEST(NSURLResponse, SuggestedFilename_QueryParameter_MatchingMIME) {
 // On OS X, NSURLResponse isEqual: only does a pointer comparison.
 TEST(NSURLResponse, CanBeArchivedWithoutFullFidelity) {
     NSURLResponse* expected = [[[NSURLResponse alloc] initWithURL:[NSURL URLWithString:@"test"]
-                                                MIMEType:@"text/plain"
-                                                expectedContentLength:100
-                                                textEncodingName:@"utf8"] autorelease];
+                                                         MIMEType:@"text/plain"
+                                            expectedContentLength:100
+                                                 textEncodingName:@"utf8"] autorelease];
 
     id data = nil;
     EXPECT_NO_THROW(data = [NSKeyedArchiver archivedDataWithRootObject:expected]);

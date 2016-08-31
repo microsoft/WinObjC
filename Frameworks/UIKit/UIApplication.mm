@@ -98,9 +98,13 @@ NSString* const UIApplicationLaunchOptionsSourceApplicationKey = @"UIApplication
 NSString* const UIApplicationLaunchOptionsRemoteNotificationKey = @"UIApplicationLaunchOptionsRemoteNotificationKey";
 NSString* const UIApplicationLaunchOptionsAnnotationKey = @"UIApplicationLaunchOptionsAnnotationKey";
 NSString* const UIApplicationLaunchOptionsLocalNotificationKey = @"UIApplicationLaunchOptionsLocalNotificationKey";
+NSString* const UIApplicationLaunchOptionsToastActionKey = @"UIApplicationLaunchOptionsToastActionKey";
 NSString* const UIApplicationLaunchOptionsVoiceCommandKey = @"UIApplicationLaunchOptionsVoiceCommandKey";
 NSString* const UIApplicationLaunchOptionsProtocolKey = @"UIApplicationLaunchOptionsProtocolKey";
 NSString* const UIApplicationLaunchOptionsLocationKey = @"UIApplicationLaunchOptionsLocationKey";
+
+NSString* const UIApplicationLaunchOptionsToastActionArgumentKey = @"UIApplicationLaunchOptionsToastActionArgumentKey";
+NSString* const UIApplicationLaunchOptionsToastActionUserInputKey = @"UIApplicationLaunchOptionsToastActionUserInputKey";
 
 NSString* const UIApplicationDidReceiveMemoryWarningNotification = @"UIApplicationDidReceiveMemoryWarningNotification";
 NSString* const UIApplicationWillChangeStatusBarFrameNotification = @"UIApplicationWillChangeStatusBarFrameNotification";
@@ -1236,6 +1240,12 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
     }
 }
 
+- (void)_sendToastActionReceivedEvent:(NSDictionary*)toastAction {
+    if ([self.delegate respondsToSelector:@selector(application:didReceiveToastAction:)]) {
+        [self.delegate application:sharedApplication didReceiveToastAction:toastAction];
+    }
+}
+
 - (void)_sendNotificationReceivedEvent:(NSString*)notificationData {
     NSMutableDictionary* data = [NSMutableDictionary dictionary];
     [data setValue:notificationData forKey:UIApplicationLaunchOptionsRemoteNotificationKey];
@@ -1258,14 +1268,11 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
     } else if ([self.delegate respondsToSelector:@selector(application:didReceiveRemoteNotification:)]) {
         [self.delegate application:self didReceiveRemoteNotification:data];
     }
-
-    // TODO::
-    // todo-nithishm-05262016 - Implement UILocalNotification and call LocalNotification delegate here.
 }
 
-- (void)_sendVoiceCommandReceivedEvent:(WMSSpeechRecognitionResult*)voiceCommandResult {
+- (void)_sendVoiceCommandReceivedEvent:(WMSSpeechRecognitionResult*)result {
     if ([self.delegate respondsToSelector:@selector(application:didReceiveVoiceCommand:)]) {
-        [self.delegate application:sharedApplication didReceiveVoiceCommand:voiceCommandResult];
+        [self.delegate application:sharedApplication didReceiveVoiceCommand:result];
     }
 }
 

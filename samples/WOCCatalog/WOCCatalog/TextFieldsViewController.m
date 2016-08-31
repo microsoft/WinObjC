@@ -46,6 +46,7 @@ static const CGFloat c_labelFontSize = 17.0f;
     textField.borderStyle = borderStyle;
     textField.textAlignment = textAlignment;
     textField.spellCheckingType = spellCheckingType;
+    textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     textField.delegate = self;
     return textField;
 }
@@ -61,6 +62,7 @@ static const CGFloat c_labelFontSize = 17.0f;
     textField.placeholder = placeHolder;
     textField.borderStyle = borderStyle;
     textField.background = backgroundImage;
+    textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     textField.delegate = self;
     return textField;
 }

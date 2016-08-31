@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{6e6ca7df-bfd4-40c4-b1cf-e625ab85db80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{ad4673cb-a820-4bfe-b446-190d3bf556c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CTCatalog">
+      <UniqueIdentifier>{D2BAA059-E159-4ABE-A0ED-A1562E718663}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CTCatalog\Base">
+      <UniqueIdentifier>{42DA03FC-D882-48FB-9010-60F908D41C6A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CTCatalog\Supporting Files">
+      <UniqueIdentifier>{D5DB8565-C35E-479E-9409-FC6D49A3E1B7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CTCatalog\Test">
+      <UniqueIdentifier>{08802CCA-A494-487F-9716-72A80C203399}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xcode Variable Files">
+      <UniqueIdentifier>{BDC46CE2-FE5D-4106-8EB2-1B1052607374}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="default.rd.xml" />
+    <AppxManifest Include="Package.appxmanifest" />
+    <None Include="CTCatalog_TemporaryKey.pfx" />
+    <Image Include="Assets\LockScreenLogo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square150x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Wide310x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <ClangCompile Include="..\..\CTCatalog\CTCRootViewController.m">
+      <Filter>CTCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCAlignmentTestViewController.m">
+      <Filter>CTCatalog\Test</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\AppDelegate.m">
+      <Filter>CTCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\main.m">
+      <Filter>CTCatalog\Supporting Files</Filter>
+    </ClangCompile>
+    <StoryboardCompile Include="..\..\CTCatalog\Base.lproj\LaunchScreen.storyboard">
+      <Filter>CTCatalog\Base</Filter>
+    </StoryboardCompile>
+    <AssetCatalogCompile Include="..\..\CTCatalog\Assets.xcassets">
+      <Filter>CTCatalog</Filter>
+    </AssetCatalogCompile>
+    <StoryboardCompile Include="..\..\CTCatalog\Base.lproj\Main.storyboard">
+      <Filter>CTCatalog\Base</Filter>
+    </StoryboardCompile>
+    <SBInfoPlistCopy Include="..\..\CTCatalog\Info.plist" />
+    <Text Include="CTCatalog-Debug-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+    <Text Include="CTCatalog-Release-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.xaml.cpp" />
+    <ClCompile Include="pch.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCFontTestViewController.mm">
+      <Filter>CTCatalog\Test</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCFrameTestViewController.mm">
+      <Filter>CTCatalog\Test</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCFramesetterTestViewController.mm">
+      <Filter>CTCatalog\Test</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCLineTestViewController.mm">
+      <Filter>CTCatalog\Test</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCParagraphStyleTestViewController.mm">
+      <Filter>CTCatalog\Test</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCRunTestViewController.mm">
+      <Filter>CTCatalog\Test</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\CTCBaseViewController.mm">
+      <Filter>CTCatalog</Filter>
+    </ClangCompile>
+  </ItemGroup>
+</Project>

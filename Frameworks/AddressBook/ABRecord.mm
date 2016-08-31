@@ -23,6 +23,8 @@
 #import "ABContactInternal.h"
 #import "ABRecordInternal.h"
 #import "ABSourceInternal.h"
+#import "ABMultiValueInternal.h"
+#import "NSDate+AddressBookAdditions.h"
 
 /**
  @Status Interoperable
@@ -88,9 +90,13 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID property, CFTypeRef value
 
 /**
  @Status Caveat
- @Notes Properties that return a Multi-Value are not yet supported, and a few properties
-        (alternate birthday, creation/modification dates, person kind, phonetic middle name)
+ @Notes A few properties (alternate birthday, creation/modification dates, person kind,
+        phonetic middle name, and instant message/social profile accounts)
         don't have direct equivalents.
+
+        For kABPersonRelatedNamesProperty, there is a new label, kABPersonSiblingLabel.
+        For kABPersonPhoneProperty, there are 3 new labels: kABPersonPhoneCompanyLabel,
+        kABPersonPhoneAssistantLabel, and kABPersonPhoneRadioLabel.
 */
 CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
     if (record == nullptr) {
@@ -152,17 +158,10 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
             return nullptr;
         } else {
             WACContactDate* date = dates[birthdayIndex];
-            NSCalendar* calendar = [NSCalendar currentCalendar];
-            NSDateComponents* dateComponents = [[NSDateComponents alloc] init];
 
-            // Grab the numerical values of the day/month/year,
-            // and create an NSDate to match the same day as their birthday.
             // NSDate is toll-free bridged with CFDate, which is the type
             // the user expects to receive.
-            dateComponents.day = [date.day integerValue];
-            dateComponents.month = [date.month integerValue];
-            dateComponents.year = [date.year integerValue];
-            NSDate* resultDate = [calendar dateFromComponents:dateComponents];
+            NSDate* resultDate = [NSDate dateWithWACContactDate:date];
             return (__bridge_retained CFTypeRef)resultDate;
         }
     }
@@ -172,41 +171,201 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
         return (__bridge_retained CFTypeRef)person.contact.notes;
     }
 
-    // The following properties either require the implementation of
-    // multi-values, or don't have a good 1-1 mapping between iOS contacts
-    // and Windows contacts (alternate birthday, creation/modification dates,
-    // phonetic middle name).
+    /* The following properties don't have a good 1-1 mapping between iOS contacts
+       and Windows contacts (alternate birthday, creation/modification dates,
+       phonetic middle name, instant message/social profile). There is currently
+       no support planned for them.
 
-    if (contactProperty == kABPersonMiddleNamePhoneticProperty) {
-        // CFStringRef
-    } else if (contactProperty == kABPersonKindProperty) {
-        // CFNumberRef
-    } else if (contactProperty == kABPersonAlternateBirthdayProperty) {
-        // CFDictionaryRef
-    } else if (contactProperty == kABPersonCreationDateProperty) {
-        // CFDateRef
-    } else if (contactProperty == kABPersonModificationDateProperty) {
-        // CFDateRef
-    }
+        kABPersonMiddleNamePhoneticProperty
+        kABPersonKindProperty
+        kABPersonAlternateBirthdayProperty
+        kABPersonCreationDateProperty
+        kABPersonModificationDateProperty
+        kABPersonInstantMessageProperty
+        kABPersonSocialProfileProperty
+    */
 
-    // TODO #678
     // Cases for various multi-value properties.
     if (contactProperty == kABPersonEmailProperty) {
-        // ABMultiValueRef of CFStringRef
-    } else if (contactProperty == kABPersonAddressProperty) {
-        // ABMultiValueRef of CFDictionaryRef
-    } else if (contactProperty == kABPersonDateProperty) {
-        // ABMultiValueRef of CFDateRef
-    } else if (contactProperty == kABPersonPhoneProperty) {
-        // ABMultiValueRef of CFStringRef
-    } else if (contactProperty == kABPersonInstantMessageProperty) {
-        // ABMultiValueRef of CFDictionaryRef
-    } else if (contactProperty == kABPersonSocialProfileProperty) {
-        // ABMultiValueRef of CFDictionaryRef
-    } else if (contactProperty == kABPersonURLProperty) {
-        // ABMultiValueRef of CFStringRef
-    } else if (contactProperty == kABPersonRelatedNamesProperty) {
-        // ABMultiValueRef of CFStringRef
+        _ABMultiValue* emailMultiValue = [[_ABMultiValue alloc] initWithPropertyType:kABStringPropertyType];
+        NSArray* emails = person.contact.emails;
+        [emails enumerateObjectsUsingBlock:^void(id obj, NSUInteger idx, BOOL* stop) {
+            WACContactEmail* email = (WACContactEmail*)obj;
+            CFStringRef label;
+            switch (email.kind) {
+                case WACContactEmailKindPersonal:
+                    label = kABHomeLabel;
+                    break;
+                case WACContactEmailKindWork:
+                    label = kABWorkLabel;
+                    break;
+                case WACContactEmailKindOther:
+                default:
+                    label = kABOtherLabel;
+                    break;
+            }
+
+            [emailMultiValue appendPairWithLabel:(__bridge NSString*)label andValue:email.address];
+        }];
+
+        [emailMultiValue makeImmutable];
+        return (__bridge_retained CFTypeRef)emailMultiValue;
+    }
+
+    if (contactProperty == kABPersonAddressProperty) {
+        _ABMultiValue* addressMultiValue = [[_ABMultiValue alloc] initWithPropertyType:kABDictionaryPropertyType];
+        NSArray* addresses = person.contact.addresses;
+        [addresses enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL* stop) {
+            WACContactAddress* address = (WACContactAddress*)obj;
+            CFStringRef label;
+            switch (address.kind) {
+                case WACContactAddressKindHome:
+                    label = kABHomeLabel;
+                    break;
+                case WACContactAddressKindWork:
+                    label = kABWorkLabel;
+                    break;
+                case WACContactAddressKindOther:
+                default:
+                    label = kABOtherLabel;
+                    break;
+            }
+
+            NSDictionary* dictionary = @{
+                ((__bridge NSString*)kABPersonAddressStreetKey) : address.streetAddress,
+                ((__bridge NSString*)kABPersonAddressCityKey) : address.locality,
+                ((__bridge NSString*)kABPersonAddressStateKey) : address.region,
+                ((__bridge NSString*)kABPersonAddressZIPKey) : address.postalCode,
+                ((__bridge NSString*)kABPersonAddressCountryKey) : address.country
+            };
+
+            [addressMultiValue appendPairWithLabel:(__bridge NSString*)label andValue:dictionary];
+        }];
+
+        [addressMultiValue makeImmutable];
+        return (__bridge_retained CFTypeRef)addressMultiValue;
+    }
+
+    if (contactProperty == kABPersonDateProperty) {
+        _ABMultiValue* dateMultiValue = [[_ABMultiValue alloc] initWithPropertyType:kABDateTimePropertyType];
+        NSArray* dates = person.contact.importantDates;
+        [dates enumerateObjectsUsingBlock:^void(id obj, NSUInteger idx, BOOL* stop) {
+            WACContactDate* date = (WACContactDate*)obj;
+            CFStringRef label;
+            switch (date.kind) {
+                case WACContactDateKindBirthday:
+                    // Ignore the contact's birthday, since iOS
+                    // has a separate property for the user's birthday.
+                    return;
+                case WACContactDateKindAnniversary:
+                    label = kABPersonAnniversaryLabel;
+                    break;
+                case WACContactDateKindOther:
+                default:
+                    label = kABOtherLabel;
+                    break;
+            }
+
+            NSDate* resultDate = [NSDate dateWithWACContactDate:date];
+            [dateMultiValue appendPairWithLabel:(__bridge NSString*)label andValue:resultDate];
+        }];
+
+        [dateMultiValue makeImmutable];
+        return (__bridge_retained CFTypeRef)dateMultiValue;
+    }
+
+    if (contactProperty == kABPersonPhoneProperty) {
+        _ABMultiValue* phoneMultiValue = [[_ABMultiValue alloc] initWithPropertyType:kABStringPropertyType];
+        NSArray* phoneNumbers = person.contact.phones;
+        [phoneNumbers enumerateObjectsUsingBlock:^void(id obj, NSUInteger idx, BOOL* stop) {
+            WACContactPhone* phoneNumber = (WACContactPhone*)obj;
+            CFStringRef label;
+            switch (phoneNumber.kind) {
+                case WACContactPhoneKindHome:
+                    label = kABHomeLabel;
+                    break;
+                case WACContactPhoneKindMobile:
+                    label = kABPersonPhoneMobileLabel;
+                    break;
+                case WACContactPhoneKindWork:
+                    label = kABWorkLabel;
+                    break;
+                case WACContactPhoneKindPager:
+                    label = kABPersonPhonePagerLabel;
+                    break;
+                case WACContactPhoneKindBusinessFax:
+                    label = kABPersonPhoneWorkFAXLabel;
+                    break;
+                case WACContactPhoneKindHomeFax:
+                    label = kABPersonPhoneHomeFAXLabel;
+                    break;
+                case WACContactPhoneKindCompany:
+                    label = kABPersonPhoneCompanyLabel;
+                    break;
+                case WACContactPhoneKindAssistant:
+                    label = kABPersonPhoneAssistantLabel;
+                    break;
+                case WACContactPhoneKindRadio:
+                    label = kABPersonPhoneRadioLabel;
+                    break;
+                case WACContactPhoneKindOther:
+                default:
+                    label = kABOtherLabel;
+                    break;
+            }
+
+            [phoneMultiValue appendPairWithLabel:(__bridge NSString*)label andValue:phoneNumber.number];
+        }];
+
+        [phoneMultiValue makeImmutable];
+        return (__bridge_retained CFTypeRef)phoneMultiValue;
+    }
+
+    if (contactProperty == kABPersonURLProperty) {
+        _ABMultiValue* urlMultiValue = [[_ABMultiValue alloc] initWithPropertyType:kABStringPropertyType];
+        NSArray* websites = person.contact.websites;
+        [websites enumerateObjectsUsingBlock:^void(id obj, NSUInteger idx, BOOL* stop) {
+            WACContactWebsite* website = (WACContactWebsite*)obj;
+            [urlMultiValue appendPairWithLabel:(__bridge NSString*)kABPersonHomePageLabel andValue:website.rawValue];
+        }];
+
+        [urlMultiValue makeImmutable];
+        return (__bridge_retained CFTypeRef)urlMultiValue;
+    }
+
+    if (contactProperty == kABPersonRelatedNamesProperty) {
+        _ABMultiValue* relatedNamesMultiValue = [[_ABMultiValue alloc] initWithPropertyType:kABStringPropertyType];
+        NSArray* significantOthers = person.contact.significantOthers;
+        [significantOthers enumerateObjectsUsingBlock:^void(id obj, NSUInteger idx, BOOL* stop) {
+            WACContactSignificantOther* significantOther = (WACContactSignificantOther*)obj;
+            CFStringRef label;
+            switch (significantOther.relationship) {
+                case WACContactRelationshipSpouse:
+                    label = kABPersonSpouseLabel;
+                    break;
+                case WACContactRelationshipPartner:
+                    label = kABPersonPartnerLabel;
+                    break;
+                case WACContactRelationshipSibling:
+                    label = kABPersonSiblingLabel;
+                    break;
+                case WACContactRelationshipParent:
+                    label = kABPersonParentLabel;
+                    break;
+                case WACContactRelationshipChild:
+                    label = kABPersonChildLabel;
+                    break;
+                case WACContactRelationshipOther:
+                default:
+                    label = kABOtherLabel;
+                    break;
+            }
+
+            [relatedNamesMultiValue appendPairWithLabel:(__bridge NSString*)label andValue:significantOther.name];
+        }];
+
+        [relatedNamesMultiValue makeImmutable];
+        return (__bridge_retained CFTypeRef)relatedNamesMultiValue;
     }
 
     return nullptr;

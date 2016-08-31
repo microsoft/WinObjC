@@ -17,6 +17,11 @@
 #import <StubReturn.h>
 #import "Starboard.h"
 
+#import <unordered_map>
+
+#import "StringHelpers.h"
+#import "XamlUtilities.h"
+
 #import "Foundation/NSBundle.h"
 #import "Foundation/NSMutableArray.h"
 #import "Foundation/NSMutableDictionary.h"
@@ -32,30 +37,27 @@
 #import "UIKit/UIPopoverPresentationController.h"
 #import "UIKit/UIView.h"
 #import "UIKit/UIViewController.h"
+
+#import "AutoLayout.h"
+#import "CACompositor.h"
 #import "CoreGraphics/CGContext.h"
 #import "CoreGraphics/CGAffineTransform.h"
-#import "AutoLayout.h"
-#import "UIViewControllerInternal.h"
-#import "UIApplicationInternal.h"
 
+#import "UIApplicationInternal.h"
 #import "UIEmptyView.h"
 #import "UIViewInternal.h"
 #import "UIViewControllerInternal.h"
+#import "UIPopoverPresentationControllerInternal.h"
 #import "UIStoryboardInternal.h"
 #import "UIResponderInternal.h"
 #import "NSCoderInternal.h"
-#import "UIPopoverPresentationControllerInternal.h"
 
 #import "UWP/WindowsUIXaml.h"
 #import "UWP/WindowsFoundation.h"
 
-#import "StringHelpers.h"
+extern BOOL g_presentingAnimated;
 
-#include "COMIncludes.h"
-#include "WinString.h"
-#include "RoApi.h"
-#include "Windows.UI.Xaml.Markup.h"
-#include "COMIncludes_End.h"
+static const wchar_t* TAG = L"UIViewController";
 
 NSString* const UIViewControllerHierarchyInconsistencyException = @"UIViewControllerHierarchyInconsistencyException";
 NSString* const UIViewControllerShowDetailTargetDidChangeNotification = @"UIViewControllerShowDetailTargetDidChangeNotification";
@@ -80,24 +82,6 @@ NSString* const UIViewControllerShowDetailTargetDidChangeNotification = @"UIView
     _animDelegate = nil;
 }
 @end
-
-#import <UIKit/UIStoryboardPushSegueTemplate.h>
-
-#import "CACompositor.h"
-
-#import "Etc.h"
-
-extern "C" bool doLog;
-extern bool g_doLog;
-extern BOOL g_presentingAnimated;
-
-void EbrDumpStack();
-
-// UIView -> UIViewController mapping:
-#import <unordered_map>
-#import "LoggingNative.h"
-
-static const wchar_t* TAG = L"UIViewController";
 
 namespace {
 std::unordered_map<UIView*, UIViewController*> viewMap;
@@ -230,9 +214,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
                                                                    UIInterfaceOrientationLandscapeRight,
                                                                    UIInterfaceOrientationLandscapeLeft };
 
-            int i;
-
-            for (i = 0; i < 4; i++) {
+            for (int i = 0; i < 4; i++) {
                 orientation = orientations[i];
 
                 if ([controller shouldAutorotateToInterfaceOrientation:orientation]) {
@@ -356,6 +338,8 @@ class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArg
         return S_OK;
     }
 };
+
+NSMutableDictionary *_pageMappings;
 
 @implementation UIViewController : UIResponder
 
@@ -676,14 +660,16 @@ class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArg
     if ([coder respondsToSelector:@selector(_bundle)]) {
         priv->nibBundle = [coder _bundle];
     }
-    priv->tabBarItem = [coder decodeObjectForKey:@"UITabBarItem"];
 
+    priv->tabBarItem = [coder decodeObjectForKey:@"UITabBarItem"];
     priv->toolbarItems = [coder decodeObjectForKey:@"UIToolbarItems"];
 
     if ([coder containsValueForKey:@"UIAutoresizesArchivedViewToFullSize"]) {
         priv->_autoresize = [coder decodeIntForKey:@"UIAutoresizesArchivedViewToFullSize"] != FALSE;
-    } else
+    } else {
         priv->_autoresize = true;
+    }
+
     if ([coder containsValueForKey:@"UIWantsFullScreenLayout"]) {
         priv->_wantsFullScreenLayout = [coder decodeIntForKey:@"UIWantsFullScreenLayout"] != FALSE;
     };
@@ -695,7 +681,6 @@ class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArg
     }
 
     priv->_childViewControllers = [coder decodeObjectForKey:@"UIChildViewControllers"];
-
     priv->_edgesForExtendedLayout = [coder decodeIntForKey:@"UIKeyEdgesForExtendedLayout"];
 
     return self;
@@ -783,8 +768,8 @@ class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArg
         }
 
         // Load the XAML version if found. First prepend the auto-generated XAML namespace to the XAML class name
-        NSString* xamlClassName = [NSString stringWithFormat:@"IslandwoodAutoGenNamespace.%@", strNib];
-        auto xamlType = [self _returnXamlType:xamlClassName];
+        NSString* xamlClassName = [NSString stringWithFormat:@"%@.%@", XamlAutoGenNamespace, strNib];
+        auto xamlType = ReturnXamlType(xamlClassName);
         if (xamlType.Get() != nullptr) {
             priv->_xamlClassName = xamlClassName;
         }
@@ -1219,8 +1204,8 @@ class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArg
             [[self parentViewController] dismissViewControllerAnimated:animated completion:completion];
             return;
         }
+
         TraceWarning(TAG, L"dismissModalViewController invalid!");
-        // assert(0);
         return;
     }
 
@@ -1275,7 +1260,6 @@ class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArg
         } else {
             curPos.x -= GetCACompositor()->screenWidth();
         }
-        // curPos.y += GetCACompositor()->screenHeight();
 
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         [animation setToValue:[NSValue valueWithCGPoint:curPos]];
@@ -1302,9 +1286,13 @@ class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArg
 
         [curController _notifyViewDidDisappear:FALSE];
         [self _notifyViewDidAppear:animated];
+
         TraceVerbose(TAG, L"Preparing completion");
-        if (completion)
+
+        if (completion) {
             completion();
+        }
+
         TraceVerbose(TAG, L"Done completion");
     }
 }
@@ -1326,6 +1314,7 @@ class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArg
     if ([self _hidesParent]) {
         [[[self parentViewController] view] setHidden:TRUE];
     }
+
     [self _notifyDidAppearAnimated:view];
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
 }
@@ -1494,6 +1483,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
             orientation = parentOrientation;
         }
     }
+
     return orientation;
 }
 
@@ -1777,24 +1767,13 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     return priv->_isEditing;
 }
 
-- (Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType>)_returnXamlType:(NSString*)xamlClassName {
-    Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlMetadataProvider> xamlMetaProvider = nullptr;
-    auto inspApplicationCurrent = [WXApplication.current comObj];
-    inspApplicationCurrent.As(&xamlMetaProvider);
-
-    auto hClassName = Strings::NarrowToWide<HSTRING>(xamlClassName);
-    Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> xamlType = nullptr;
-    HRESULT hr = xamlMetaProvider->GetXamlTypeByFullName(hClassName.Get(), xamlType.GetAddressOf());
-    if (SUCCEEDED(hr) && xamlType.Get() != nullptr) {
-        return xamlType;
-    }
-
-    return nullptr;
-}
-
 - (void)_loadXamlPage {
     if (priv->_xamlClassName == nil) {
         return;
+    }
+
+    if (_pageMappings == nil) {
+        _pageMappings = (NSMutableDictionary *)CFDictionaryCreateMutable(NULL, 10, NULL, NULL);
     }
 
     CGRect frame = [[UIScreen mainScreen] applicationFrame];
@@ -1809,11 +1788,11 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 
     // Activate an instance of the XAML class and its page
     Microsoft::WRL::ComPtr<IInspectable> pageObj = nullptr;
-    auto xamlType = [self _returnXamlType:priv->_xamlClassName];
+    auto xamlType = ReturnXamlType(priv->_xamlClassName);
     xamlType->ActivateInstance(pageObj.GetAddressOf());
 
-    priv->_page = (WXCPage*)NSAllocateObject([WXCPage class], 0, NULL);
-    [priv->_page setComObj:pageObj];
+    priv->_page = CreateRtProxy([WXCPage class], pageObj.Get());
+    [_pageMappings setObject: self forKey: (id) (void *) pageObj.Get()];
 
     // Walk the list of outlets and assign them to the corresponding XAML UIElement
     unsigned int propListCount = 0;
@@ -1826,14 +1805,14 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         if (propName) {
             NSString* propNameString = [NSString stringWithCString:propName];
             RTObject* obj = [priv->_page findName:propNameString];
-            if (obj) {
-                // Store the XAML element found on the page for each public facing property
-                [self setValue:obj forKey:propNameString];
+            UIView* control = GenerateUIKitControlFromXamlType(obj);
+            if (control != nil) {
+                [self setValue:control forKey:propNameString];
             }
         }
     }
 
-    [self.view setNativeElement:priv->_page];
+    [self.view setXamlElement:priv->_page];
 }
 
 /**
@@ -2804,3 +2783,11 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 }
 
 @end
+
+extern "C" void UIViewControllerFirePageEvent(void *pageController, const char *selector)
+{
+    id obj = [_pageMappings objectForKey: (id)pageController];
+    SEL sel = sel_registerName(selector);
+    [obj performSelector: sel withObject: nil];
+}
+

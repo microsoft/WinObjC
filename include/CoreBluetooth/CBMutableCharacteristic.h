@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,6 +17,7 @@
 
 #import <CoreBluetooth/CoreBluetoothExport.h>
 #import <CoreBluetooth/CBCharacteristic.h>
+#import <Foundation/NSObject.h>
 
 @class CBUUID;
 @class NSData;
@@ -30,7 +31,7 @@ typedef enum {
 } CBAttributePermissions;
 
 COREBLUETOOTH_EXPORT_CLASS
-@interface CBMutableCharacteristic
+@interface CBMutableCharacteristic : NSObject <NSObject>
 - (id)initWithType:(CBUUID*)UUID
         properties:(CBCharacteristicProperties)properties
              value:(NSData*)value

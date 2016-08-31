@@ -31,6 +31,8 @@
 #include "UWPBackgroundTask.h"
 
 using namespace Windows::ApplicationModel::Activation;
+using namespace Windows::Media::SpeechRecognition;
+using namespace Windows::Foundation;
 using namespace Windows::UI;
 using namespace Windows::System;
 
@@ -195,7 +197,6 @@ void UIApplicationLaunched(LaunchActivatedEventArgs^ args) {
 extern "C"
 void UIApplicationActivated(IActivatedEventArgs^ args) {
     TraceVerbose(TAG, L"OnActivated event received for %d. Previous app state was %d", args->Kind, args->PreviousExecutionState);
-
     bool initiateAppLaunch = false;
     if ((args->PreviousExecutionState != ApplicationExecutionState::Running) &&
         (args->PreviousExecutionState != ApplicationExecutionState::Suspended)) {
@@ -204,22 +205,26 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
     }
 
     if (args->Kind == ActivationKind::ToastNotification) {
-        Platform::String^ argsString = safe_cast<ToastNotificationActivatedEventArgs^>(args)->Argument;
-        TraceVerbose(TAG, L"Received toast notification with argument - %s", argsString->Data());
+        ToastNotificationActivatedEventArgs^ toastArgs = safe_cast<ToastNotificationActivatedEventArgs^>(args);
+        TraceVerbose(TAG, L"Received toast notification with argument - %ls", toastArgs->Argument->Data());
 
         if (initiateAppLaunch) {
-            _ApplicationLaunch(ActivationTypeToast, argsString);
+            _ApplicationLaunch(ActivationTypeToast, toastArgs);
         }
 
-        UIApplicationMainHandleToastNotificationEvent(Strings::WideToNarrow(argsString->Data()).c_str());
+        UIApplicationMainHandleToastActionEvent(reinterpret_cast<HSTRING>(toastArgs->Argument),
+            reinterpret_cast<IInspectable*>(toastArgs->UserInput));
+
     } else if (args->Kind == ActivationKind::VoiceCommand) {
-        Windows::Media::SpeechRecognition::SpeechRecognitionResult^ argResult = safe_cast<VoiceCommandActivatedEventArgs^>(args)->Result;
-        TraceVerbose(TAG, L"Received voice command with argument - %s", argResult->Text->Data());
+        SpeechRecognitionResult^ result = safe_cast<VoiceCommandActivatedEventArgs^>(args)->Result;
+        TraceVerbose(TAG, L"Received voice command with argument - %ls", result->Text->Data());
 
         if (initiateAppLaunch) {
-            _ApplicationLaunch(ActivationTypeVoiceCommand, argResult);
+            _ApplicationLaunch(ActivationTypeVoiceCommand, result);
         }
-        UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(argResult));
+
+        UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(result));
+
     } else if (args->Kind == ActivationKind::Protocol) {
         ProtocolActivatedEventArgs^ protocolArgs = safe_cast<ProtocolActivatedEventArgs^>(args);
         Windows::Foundation::Uri^ argUri = protocolArgs->Uri;
@@ -232,7 +237,7 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
 
         UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri), caller);
     } else {
-        TraceVerbose(TAG, L"Received unhandled activation kind - %d", args->Kind);
+        TraceWarning(TAG, L"Received unhandled activation kind - %d", args->Kind);
 
         if (initiateAppLaunch) {
             _ApplicationLaunch(ActivationTypeNone, nullptr);
@@ -264,8 +269,10 @@ void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activat
 
     SetXamlRoot(uiElem);
 
-    Xaml::Window::Current->Content = rootFrame;
-    Xaml::Window::Current->Activate();
+    if (activationType != ActivationTypeLibrary) {
+        Xaml::Window::Current->Content = rootFrame;
+        Xaml::Window::Current->Activate();
+    }
 
     auto startupRect = Xaml::Window::Current->Bounds;
     RunApplicationMain(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height, activationType, activationArg);
@@ -326,9 +333,6 @@ int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* de
 // test executables and general WinRT apps that want to call Islandwood libraries
 UIKIT_EXPORT
 void UIApplicationInitialize(const wchar_t* principalClassName, const wchar_t* delegateClassName) {
-    // Initialize COM on this thread
-    ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-
     // Register tracelogging
     TraceRegister();
 
@@ -344,7 +348,7 @@ void UIApplicationInitialize(const wchar_t* principalClassName, const wchar_t* d
         g_delegateClassName = ref new Platform::String();
     }
 
-    _ApplicationLaunch(ActivationTypeNone, nullptr);
+    _ApplicationLaunch(ActivationTypeLibrary, nullptr);
 }
 
 // Note: Like UIApplicationMain, delegateClassName is actually an NSString*.

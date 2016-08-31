@@ -27,6 +27,12 @@
     <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\msvcp140_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vccorlib140.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vccorlib140d.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
     <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vccorlib140d_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>

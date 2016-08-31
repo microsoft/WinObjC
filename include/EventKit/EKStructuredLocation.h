@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,12 +16,13 @@
 #pragma once
 
 #import <EventKit/EventKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class NSString;
 @class CLLocation;
 
 EVENTKIT_EXPORT_CLASS
-@interface EKStructuredLocation
+@interface EKStructuredLocation : NSObject <NSObject, NSCopying>
 + (EKStructuredLocation*)locationWithTitle:(NSString*)title STUB_METHOD;
 @property (retain, nonatomic) NSString* title STUB_PROPERTY;
 @property (retain, nonatomic) CLLocation* geoLocation STUB_PROPERTY;

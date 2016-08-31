@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsRootNamespace>CTCatalog_Headers</ItemsRootNamespace>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <Keyword>IslandwoodProj</Keyword>
+    <ItemsProjectGuid>{61E054FF-D4F5-442E-87F4-8D3026A68E26}</ItemsProjectGuid>
+    <SharedGUID>{D4B70E65-6173-4B74-B014-E9586BF011AE}</SharedGUID>
+  </PropertyGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\AppDelegate.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCAlignmentTestViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\CTCRootViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\CTCBaseViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCFontTestViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCFramesetterTestViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCFrameTestViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCLineTestViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCParagraphStyleTestViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCRunTestViewController.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+</Project>

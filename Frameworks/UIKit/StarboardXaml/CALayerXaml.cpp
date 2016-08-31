@@ -1296,6 +1296,7 @@ void CALayerXaml::SizeChangedCallback(DependencyObject^ d, DependencyPropertyCha
 }
 
 CALayerXaml::CALayerXaml() {
+    Name = L"LayoutElement";
     m_invOriginTransform = ref new TranslateTransform();
     m_clipGeometry = ref new RectangleGeometry();
     m_clipGeometry->Transform = m_invOriginTransform;
@@ -1474,13 +1475,15 @@ Size CALayerXaml::ArrangeOverride(Size finalSize) {
 
     unsigned int childrenSize = Children->Size;
     for (unsigned int index = 0; index < childrenSize; index++) {
-        UIElement^ curChild = Children->GetAt(index);
+        FrameworkElement^ curChild = static_cast<FrameworkElement^>(Children->GetAt(index));
         if (curChild == m_content) {
             continue;
         }
         CALayerXaml^ subLayer = dynamic_cast<CALayerXaml^>(curChild);
         if (subLayer != nullptr) {
             subLayer->Arrange(Rect(0, 0, 1.0, 1.0));
+        }  else {
+            curChild->Arrange(Rect(0, 0, curWidth, curHeight));
         }
     }
 
@@ -1495,6 +1498,18 @@ Size CALayerXaml::ArrangeOverride(Size finalSize) {
 }
 
 Size CALayerXaml::MeasureOverride(Size availableSize) {
+    unsigned int childrenSize = Children->Size;
+    for (unsigned int index = 0; index < childrenSize; index++) {
+        FrameworkElement^ curChild = (FrameworkElement^)Children->GetAt(index);
+        if (curChild == m_content) {
+            continue;
+        }
+
+        if (!Util::isInstanceOf<CALayerXaml^>(curChild)) {
+            curChild->Measure(availableSize);
+        }
+    }
+
     return m_size;
 }
 

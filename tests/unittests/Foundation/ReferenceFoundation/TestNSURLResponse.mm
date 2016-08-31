@@ -31,7 +31,8 @@
 
 TEST(NSURLResponse, URL) {
     NSURL* url = [NSURL URLWithString:@"a/test/path"];
-    NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
+    NSURLResponse* res =
+        [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
     ASSERT_OBJCEQ_MSG(url, res.URL, @"should be the expected url");
 }
 
@@ -78,20 +79,23 @@ TEST(NSURLResponse, TextEncodingName) {
 // Disabled pending GH#832; we do not respect the incoming MIME type when generating filenames. OS X does.
 OSX_DISABLED_TEST(NSURLResponse, SuggestedFilename) {
     NSURL* url = [NSURL URLWithString:@"a/test/name.extension"];
-    NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
+    NSURLResponse* res =
+        [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
     ASSERT_OBJCEQ(@"name.extension", res.suggestedFilename);
 }
 
 // Disabled pending GH#832; we do not respect the incoming MIME type when generating filenames. OS X does.
 OSX_DISABLED_TEST(NSURLResponse, SuggestedFilename_2) {
     NSURL* url = [NSURL URLWithString:@"a/test/name.extension?foo=bar"];
-    NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
+    NSURLResponse* res =
+        [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
     ASSERT_OBJCEQ(@"name.extension", res.suggestedFilename);
 }
 
 TEST(NSURLResponse, SuggestedFilename_3) {
     NSURL* url = [NSURL URLWithString:@"a://bar"];
-    NSURLResponse* res = [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
+    NSURLResponse* res =
+        [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
     ASSERT_OBJCEQ(@"Unknown", res.suggestedFilename);
 }
 
@@ -329,9 +333,9 @@ TEST(NSHTTPURLResponse, mimetypeAndCharacterEncoding_3) {
 // Archival
 OSX_DISABLED_TEST(NSURLResponse, canBeArchived) {
     NSURLResponse* expected = [[[NSURLResponse alloc] initWithURL:[NSURL URLWithString:@"test"]
-                                                MIMEType:@"text/plain"
-                                                expectedContentLength:100
-                                                textEncodingName:@"utf8"] autorelease];
+                                                         MIMEType:@"text/plain"
+                                            expectedContentLength:100
+                                                 textEncodingName:@"utf8"] autorelease];
 
     id data = [NSKeyedArchiver archivedDataWithRootObject:expected];
     id actual = [NSKeyedUnarchiver unarchiveObjectWithData:data];

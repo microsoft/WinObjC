@@ -36,6 +36,7 @@ class LLTreeNode {
 private:
     template <typename O>
     using _hasPrivateT = std::is_same<decltype(std::declval<O*>()->priv), T*>;
+
 public:
     id self;
     T* parent;
@@ -61,7 +62,9 @@ public:
 
     ~LLTreeNode() {
         if (cachedSubnodesArray != nil) {
+#if !__has_feature(objc_arc)
             [cachedSubnodesArray release];
+#endif
         }
     }
 

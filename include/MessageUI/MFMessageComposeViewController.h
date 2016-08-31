@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -18,6 +18,10 @@
 #import <MessageUI/MessageUIExport.h>
 #import <MessageUI/MFMessageComposeViewControllerDelegate.h>
 #import <UIKit/UINavigationController.h>
+#import <UIKit/UIAppearanceContainer.h>
+#import <UIKit/UIContentContainer.h>
+#import <UIKit/UIFocusEnvironment.h>
+#import <UIKit/UITraitEnvironment.h>
 
 @class NSString;
 @class NSArray;
@@ -29,7 +33,8 @@ MESSAGEUI_EXPORT NSString* const MFMessageComposeViewControllerAttachmentURL;
 MESSAGEUI_EXPORT NSString* const MFMessageComposeViewControllerAttachmentAlternateFilename;
 
 MESSAGEUI_EXPORT_CLASS
-@interface MFMessageComposeViewController : UINavigationController <NSCoding, UIAppearanceContainer>
+@interface MFMessageComposeViewController
+    : UINavigationController <NSCoding, NSObject, UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
 
 + (BOOL)canSendText;
 + (BOOL)canSendAttachments;

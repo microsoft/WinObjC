@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -18,6 +18,7 @@
 
 #import <WebKit/WebKitExport.h>
 #import <Foundation/NSObject.h>
+#import <CoreGraphics/CGBase.h>
 
 WEBKIT_EXPORT_CLASS
 @interface WKPreferences : NSObject

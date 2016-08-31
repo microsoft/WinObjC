@@ -20,7 +20,7 @@
 #import <StubReturn.h>
 #import <AddressBook/ABPerson.h>
 
-@interface CLPlacemark()
+@interface CLPlacemark ()
 
 @property (readwrite, nonatomic) CLLocation* location;
 @property (readwrite, nonatomic) NSString* name;
@@ -53,9 +53,7 @@
     return self;
 }
 
-- (instancetype)initWithLocation:(CLLocation*)location
-                dictionary:(NSMutableDictionary*)dictionary
-{
+- (instancetype)initWithLocation:(CLLocation*)location dictionary:(NSMutableDictionary*)dictionary {
     if (self = [super init]) {
         _location = location;
         _name = [dictionary objectForKey:@"placemarkName"];
@@ -76,7 +74,7 @@
 /**
 @Status Interoperable
 */
--(instancetype)initWithPlacemark:(CLPlacemark*)placemark {
+- (instancetype)initWithPlacemark:(CLPlacemark*)placemark {
     if (self = [super init]) {
         _location = placemark.location;
         _name = [placemark.name copy];
@@ -103,7 +101,7 @@
 /**
 @Status Stub
 */
--(id)copyWithZone:(NSZone*)zone {
+- (id)copyWithZone:(NSZone*)zone {
     CLPlacemark* newPlacemark = [[[self class] allocWithZone:zone] init];
     if (newPlacemark) {
         newPlacemark->_location = _location;

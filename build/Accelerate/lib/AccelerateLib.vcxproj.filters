@@ -387,6 +387,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Accelerate\ErrorHandler.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Accelerate\vImage.mm" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CBLAS">

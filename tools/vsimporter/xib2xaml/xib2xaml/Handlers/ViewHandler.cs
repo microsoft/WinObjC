@@ -243,7 +243,7 @@ namespace Xib2Xaml.Handlers
         {
             string value = null;
 
-            //Image doesn't have a background but the XIB file allows setting it
+            // Image doesn't have a background but the XIB file allows setting it
             if (colorMember == null && domObject.Type.UnderlyingType == typeof(Image))
             {
                 return;
@@ -364,32 +364,10 @@ namespace Xib2Xaml.Handlers
                 var widthAttr = frame.Attribute(XName.Get("width"));
                 var heightAttr = frame.Attribute(XName.Get("height"));
 
-                // Certain controls have a 12 pixel border around them.  Make them look normal
-                if (domObject.Type.CanAssignTo(domObject.SchemaContext.GetXamlType(typeof(TextBox))) ||
-                    domObject.Type.CanAssignTo(domObject.SchemaContext.GetXamlType(typeof(Button)))
-                    )
-                {
-                    var left = int.Parse(xAttr.Value) - 12; // XamlXibReader.WIDTHMULTIPLIER);
-                    var top = int.Parse(yAttr.Value) - 12; // * XamlXibReader.HEIGHTMULTIPLIER);
-                    var width = int.Parse(widthAttr.Value) + 24; // * XamlXibReader.WIDTHMULTIPLIER);
-                    var height = int.Parse(heightAttr.Value) + 24; // * XamlXibReader.HEIGHTMULTIPLIER);
-
-                    domObject.SetAttachableMemberValue(typeof(Canvas), "Left", left.ToString());
-                    domObject.SetAttachableMemberValue(typeof(Canvas), "Top", top.ToString());
-
-                    domObject.SetMemberValue("Width", width.ToString());
-                    domObject.SetMemberValue("Height", height.ToString());
-
-                    domObject.SetMemberValue("MinWidth", "0");
-                    domObject.SetMemberValue("MinHeight", "0");
-                }
-                else
-                {
-                    domObject.SetAttachableMemberValue(typeof(Canvas), "Left", xAttr.Value);
-                    domObject.SetAttachableMemberValue(typeof(Canvas), "Top", yAttr.Value);
-                    domObject.SetMemberValue("Width", widthAttr.Value);
-                    domObject.SetMemberValue("Height", heightAttr.Value);
-                }
+                domObject.SetAttachableMemberValue(typeof(Canvas), "Left", xAttr.Value);
+                domObject.SetAttachableMemberValue(typeof(Canvas), "Top", yAttr.Value);
+                domObject.SetMemberValue("Width", widthAttr.Value);
+                domObject.SetMemberValue("Height", heightAttr.Value);
             }
             else
             {

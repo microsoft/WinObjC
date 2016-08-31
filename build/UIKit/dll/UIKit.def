@@ -292,6 +292,7 @@ LIBRARY UIKit
         UIApplicationLaunchOptionsSourceApplicationKey DATA
         UIApplicationLaunchOptionsRemoteNotificationKey DATA
         UIApplicationLaunchOptionsLocalNotificationKey DATA
+        UIApplicationLaunchOptionsToastActionKey DATA
         UIApplicationLaunchOptionsVoiceCommandKey DATA
         UIApplicationLaunchOptionsProtocolKey DATA
         UIApplicationLaunchOptionsAnnotationKey DATA
@@ -305,6 +306,9 @@ LIBRARY UIKit
         UIApplicationOpenURLOptionsSourceApplicationKey DATA
         UIApplicationOpenURLOptionsAnnotationKey DATA
         UIApplicationOpenURLOptionsOpenInPlaceKey DATA
+
+        UIApplicationLaunchOptionsToastActionArgumentKey DATA
+        UIApplicationLaunchOptionsToastActionUserInputKey DATA
 
         ; UIApplicationShortcutIcon.mm
         _OBJC_CLASS_UIApplicationShortcutIcon DATA
@@ -1167,3 +1171,4 @@ LIBRARY UIKit
         UIRequestTransactionProcessing
         UIOrientationFromString
         UIApplicationDidChangeDisplayModeNofication
+        UIViewControllerFirePageEvent

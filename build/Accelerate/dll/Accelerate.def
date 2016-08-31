@@ -242,3 +242,16 @@ LIBRARY Accelerate
           vDSP_DFT_ExecuteD
           vImageBoxConvolve_ARGB8888
           vImageMatrixMultiply_ARGB8888
+          vImageBuffer_Init
+          vImageBuffer_InitWithCGImage
+          vImageCreateCGImageFromBuffer
+          vImageConvert_ARGB8888toPlanar8
+          vImageConvert_BGRA8888toPlanar8
+          vImageConvert_RGBA8888toPlanar8
+          vImageConvert_Planar8toRGB888
+          vImageConvert_Planar8toARGB8888
+          vImageConvert_Planar8toPlanarF
+          vImageConvert_PlanarFtoPlanar8
+          vImageUnpremultiplyData_ARGB8888
+          vImageUnpremultiplyData_RGBA8888
+          vImageUnpremultiplyData_BGRA8888

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,6 +17,7 @@
 
 #import <QuartzCore/CoreAnimationExport.h>
 #import <ApplicationServices/ApplicationServices.h>
+#import <Foundation/NSObject.h>
 
 @class CALayer;
 @class CVTimeStamp;

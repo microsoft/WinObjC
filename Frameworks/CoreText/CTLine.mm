@@ -45,9 +45,10 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef li
 @end
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string) {
+    UNIMPLEMENTED();
     NSString* str = [(NSAttributedString*)string string];
     NSRange lineRange;
     lineRange.location = 0;
@@ -138,9 +139,9 @@ CTLineRef CTLineCreateTruncatedLine(CTLineRef sourceLine, double width, CTLineTr
             return nil;
     }
 
-    CTTypesetterRef typeSetter = CTTypesetterCreateWithAttributedString((CFAttributedStringRef)finalString);
+    CTTypesetterRef typeSetter = CTTypesetterCreateWithAttributedString(static_cast<CFAttributedStringRef>(finalString));
     CFRange range = { 0, finalString.length };
-    CTLineRef ret = (CTLineRef)CTTypesetterCreateLineWithOffset(typeSetter, range, 0);
+    CTLineRef ret = static_cast<CTLineRef>(CTTypesetterCreateLine(typeSetter, range));
     CFRelease(typeSetter);
     [stringFromToken release];
 

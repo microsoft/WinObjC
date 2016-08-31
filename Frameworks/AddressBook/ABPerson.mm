@@ -112,6 +112,11 @@ const CFStringRef kABPersonAlternateBirthdayMonthKey = static_cast<const CFStrin
 const CFStringRef kABPersonAlternateBirthdayIsLeapMonthKey = static_cast<const CFStringRef>(@"ABPersonAlternateBirthdayIsLeapMonthKey");
 const CFStringRef kABPersonAlternateBirthdayDayKey = static_cast<const CFStringRef>(@"ABPersonAlternateBirthdayDayKey");
 
+const CFStringRef kABPersonPhoneCompanyLabel = static_cast<const CFStringRef>(@"ABPersonPhoneCompanyLabel");
+const CFStringRef kABPersonPhoneAssistantLabel = static_cast<const CFStringRef>(@"ABPersonPhoneAssistantLabel");
+const CFStringRef kABPersonPhoneRadioLabel = static_cast<const CFStringRef>(@"ABPersonPhoneRadioLabel");
+const CFStringRef kABPersonSiblingLabel = static_cast<const CFStringRef>(@"ABPersonSiblingLabel");
+
 /**
  @Status Stub
  @Notes

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -18,11 +18,17 @@
 #import <Foundation/Foundation.h>
 #import <MessageUI/MessageUIExport.h>
 #import <MessageUI/MFMailComposeViewControllerDelegate.h>
+#import <UIKit/UINavigationController.h>
+#import <UIKit/UIAppearanceContainer.h>
+#import <UIKit/UIContentContainer.h>
+#import <UIKit/UIFocusEnvironment.h>
+#import <UIKit/UITraitEnvironment.h>
 
 MESSAGEUI_EXPORT NSString* const MFMailComposeErrorDomain;
 
 MESSAGEUI_EXPORT_CLASS
 @interface MFMailComposeViewController
+    : UINavigationController <NSCoding, NSObject, UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
 
 + (BOOL)canSendMail;
 

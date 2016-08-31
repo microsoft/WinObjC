@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -24,7 +24,7 @@
 @class NSData;
 
 COREBLUETOOTH_EXPORT_CLASS
-@interface CBATTRequest
+@interface CBATTRequest : NSObject <NSObject>
 @property (readonly, retain, nonatomic) CBCentral* central STUB_PROPERTY;
 @property (readonly, retain, nonatomic) CBCharacteristic* characteristic STUB_PROPERTY;
 @property (readwrite, copy) NSData* value STUB_PROPERTY;

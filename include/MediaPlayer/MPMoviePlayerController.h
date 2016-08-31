@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -18,6 +18,7 @@
 #import <MediaPlayer/MediaPlayerExport.h>
 #import <Foundation/NSObject.h>
 #import <MediaPlayer/MPMediaPlayback.h>
+#import <CoreGraphics/CGBase.h>
 
 @class NSString;
 @class NSURL;
@@ -34,13 +35,9 @@ typedef NS_ENUM(NSUInteger, MPMovieScalingMode) {
     MPMovieScalingModeAspectFit,
     MPMovieScalingModeAspectFill,
     MPMovieScalingModeFill
-} ;
-
-typedef NS_ENUM(NSUInteger, MPMovieControlMode) { 
-    MPMovieControlModeDefault, 
-    MPMovieControlModeVolumeOnly, 
-    MPMovieControlModeHidden 
 };
+
+typedef NS_ENUM(NSUInteger, MPMovieControlMode) { MPMovieControlModeDefault, MPMovieControlModeVolumeOnly, MPMovieControlModeHidden };
 
 typedef NS_ENUM(NSUInteger, MPMovieLoadState) {
     MPMovieLoadStateUnknown = 0,
@@ -59,7 +56,7 @@ typedef NS_ENUM(NSUInteger, MPMovieControlStyle) {
 typedef NS_ENUM(NSUInteger, MPMovieFinishReason) {
     MPMovieFinishReasonPlaybackEnded,
     MPMovieFinishReasonPlaybackError,
-    MPMovieFinishReasonUserExited 
+    MPMovieFinishReasonUserExited
 };
 
 typedef NS_ENUM(NSUInteger, MPMoviePlaybackState) {
@@ -75,7 +72,11 @@ typedef NS_ENUM(NSUInteger, MPMovieRepeatMode) { MPMovieRepeatModeNone, MPMovieR
 
 typedef NS_OPTIONS(NSUInteger, MPMovieTimeOption) { MPMovieTimeOptionNearestKeyFrame, MPMovieTimeOptionExact };
 
-typedef NS_ENUM(NSUInteger, MPMovieMediaTypeMask) { MPMovieMediaTypeMaskNone = 0, MPMovieMediaTypeMaskVideo = 1 << 0, MPMovieMediaTypeMaskAudio = 1 << 1 };
+typedef NS_ENUM(NSUInteger, MPMovieMediaTypeMask) {
+    MPMovieMediaTypeMaskNone = 0,
+    MPMovieMediaTypeMaskVideo = 1 << 0,
+    MPMovieMediaTypeMaskAudio = 1 << 1
+};
 
 typedef NS_ENUM(NSUInteger, MPMovieSourceType) { MPMovieSourceTypeUnknown, MPMovieSourceTypeFile, MPMovieSourceTypeStreaming };
 
