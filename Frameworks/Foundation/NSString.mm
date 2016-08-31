@@ -1448,9 +1448,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
     return mutableCopy;
 }
 
-NSString* s_percentEncodedFormat = @"%%%s%X";
-const int s_oneByte = 16;
-
 /**
  @Status Interoperable
  @Notes This API was deprecated in favor of stringByAddingPercentEncodingWithAllowedCharacters. APIs to decode anything other than
