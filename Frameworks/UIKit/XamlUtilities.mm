@@ -47,21 +47,52 @@ WUXMImageBrush* ConvertUIImageToWUXMImageBrush(UIImage* image) {
     return imageBrush;
 }
 
+WUXMIBitmapSource* ConvertUIImageToWUXMIBitmapSource(UIImage* image) {
+    if (!image) {
+        return nil;
+    }
+
+    CGImageRef cgImg = [image CGImage];
+    Microsoft::WRL::ComPtr<IInspectable> inspectableNode(GetCACompositor()->GetBitmapForCGImage(cgImg));
+    WUXMIBitmapSource* bitmapImageSource = CreateRtProxy([WUXMIBitmapSource class], inspectableNode.Get());
+
+    return bitmapImageSource;
+}
+
 WXTextAlignment ConvertUITextAlignmentToWXTextAlignment(UITextAlignment alignment) {
-    WXTextAlignment ret = UITextAlignmentLeft;
     switch (alignment) {
         case UITextAlignmentLeft:
-            ret = WXTextAlignmentLeft;
+            return WXTextAlignmentLeft;
             break;
+
         case UITextAlignmentCenter:
-            ret = WXTextAlignmentCenter;
+            return WXTextAlignmentCenter;
             break;
+
         case UITextAlignmentRight:
-            ret = WXTextAlignmentRight;
+            return WXTextAlignmentRight;
             break;
     }
 
-    return ret;
+    return UITextAlignmentLeft;
+}
+
+UITextAlignment ConvertWXTextAlignmentToUITextAlignment(WXTextAlignment alignment) {
+    switch (alignment) {
+        case WXTextAlignmentLeft:
+            return UITextAlignmentLeft;
+            break;
+
+        case WXTextAlignmentCenter:
+            return UITextAlignmentCenter;
+            break;
+
+        case WXTextAlignmentRight:
+            return UITextAlignmentRight;
+            break;
+    }
+
+    return UITextAlignmentLeft;
 }
 
 WUXIInputScope* ConvertKeyboardTypeToInputScope(UIKeyboardType keyboardType, BOOL secureTextMode) {

@@ -65,7 +65,7 @@
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 12;
+    return 14;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
@@ -231,6 +231,42 @@
         [button setImage:[UIImage imageNamed:@"button_image.PNG"] forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageNamed:@"blue_background.jpg"] forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageNamed:@"yellow_background.jpg"] forState:UIControlStateHighlighted];
+
+        [cell addSubview:label];
+        [cell addSubview:button];
+    } else if (indexPath.row == 12) {
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
+        label.text = @"UIButton, font changed via titleLabel";
+
+        UIButton* button =
+            [[UIButton alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop + _labelHeight, _defaultWidth, _defaultHeight)];
+        [button setTitle:@"Courier Button center with Word Wrap" forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+
+        button.titleLabel.font = [UIFont fontWithName:@"Courier New" size:[UIFont buttonFontSize]];
+        button.titleLabel.lineBreakMode = UILineBreakModeWordWrap;
+        button.titleLabel.numberOfLines = 0;
+        button.titleLabel.textAlignment = UITextAlignmentCenter;
+
+        [cell addSubview:label];
+        [cell addSubview:button];
+    } else if (indexPath.row == 13) {
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
+        label.text = @"UIButton, title set to imageView width and height";
+
+        UIButton* button =
+            [[UIButton alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop + _labelHeight, _defaultWidth, _defaultHeight)];
+        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [button setImage:[UIImage imageNamed:@"button_image.PNG"] forState:UIControlStateNormal];
+        [button setBackgroundImage:[UIImage imageNamed:@"blue_background.jpg"] forState:UIControlStateNormal];
+        [button setBackgroundImage:[UIImage imageNamed:@"yellow_background.jpg"] forState:UIControlStateHighlighted];
+
+        CGSize imageSize = [button.imageView sizeThatFits:CGSizeZero];
+
+        [button setTitle:[NSString stringWithFormat:@"W (%d) H (%d)", (int)imageSize.width, (int)imageSize.height] forState:UIControlStateNormal];
+
+        // Call to an unsupported API, should show up in Output window
+        [button.imageView sizeToFit];
 
         [cell addSubview:label];
         [cell addSubview:button];

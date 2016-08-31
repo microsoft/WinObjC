@@ -49,7 +49,8 @@ UIKIT_XAML_EXPORT void XamlSetBackgroundImage(const Microsoft::WRL::ComPtr<IInsp
                                               const Microsoft::WRL::ComPtr<IInspectable>& inspectableBackground,
                                               int state,
                                               float width,
-                                              float height);
+                                              float height,
+                                              const RECT insets);
 
 UIKIT_XAML_EXPORT void XamlSetTitleForState(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
                                             const Microsoft::WRL::ComPtr<IInspectable>& inspectableText,

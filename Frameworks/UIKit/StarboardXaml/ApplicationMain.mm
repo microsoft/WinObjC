@@ -81,10 +81,10 @@ int ApplicationMainStart(const char* principalName,
         };
         activationArgument = toastAction;
     } else if (activationType == ActivationTypeVoiceCommand) {
-        WMSSpeechRecognitionResult* result = [WMSSpeechRecognitionResult createWith:activationArg];
+        WMSSpeechRecognitionResult* result = [WMSSpeechRecognitionResult createWith:(IInspectable*)activationArg];
         activationArgument = result;
     } else if (activationType == ActivationTypeProtocol) {
-        WFUri* uri = [WFUri createWith:activationArg];
+        WFUri* uri = [WFUri createWith:(IInspectable*)activationArg];
         activationArgument = uri;
     }
 

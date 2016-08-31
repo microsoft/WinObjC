@@ -5,10 +5,12 @@
     xmlns:local="using:UIKit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Width="50"
+    Height="50">
     <Button.Template>
         <ControlTemplate TargetType="Button" x:Name="UIKitButtonControlTemplate">
-            <Grid x:Name="RootGrid" Background="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NormalBackground}">
+            <Grid x:Name="RootGrid" Background="Transparent">
                 <VisualStateManager.VisualStateGroups>
                     <VisualStateGroup x:Name="CommonStates">
                         <VisualState x:Name="Normal"/>
@@ -23,7 +25,7 @@
                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Text" Storyboard.TargetName="buttonText">
                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NormalText}"/>
                                 </ObjectAnimationUsingKeyFrames>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Source" Storyboard.TargetName="backgroundImage">
                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NormalBackground}"/>
                                 </ObjectAnimationUsingKeyFrames>
                                 <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
@@ -40,7 +42,7 @@
                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Text" Storyboard.TargetName="buttonText">
                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=PressedText}"/>
                                 </ObjectAnimationUsingKeyFrames>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Source" Storyboard.TargetName="backgroundImage">
                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=PressedBackground}"/>
                                 </ObjectAnimationUsingKeyFrames>
                                 <PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
@@ -57,21 +59,28 @@
                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="buttonText">
                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DisabledForeground}"/>
                                 </ObjectAnimationUsingKeyFrames>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Source" Storyboard.TargetName="backgroundImage">
                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DisabledBackground}"/>
                                 </ObjectAnimationUsingKeyFrames>
                             </Storyboard>
                         </VisualState>
                     </VisualStateGroup>
                 </VisualStateManager.VisualStateGroups>
-                <Grid x:Name="contentGrid"
-                      FlowDirection="LeftToRight" VerticalAlignment="Center"
+                <!-- TODO: Since NineGrid works on image pixels, to support an image with 2x scaling we need to multiply the Size and NineGrid, 
+                     and inverse render transform it back to the right size. Grid clips its children, so we need to host it in a Canvas first. -->
+                <Image x:Name="backgroundImage" Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NormalBackground}" 
+                       Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" IsHitTestVisible="False" Stretch="Fill"
+                       NineGrid="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ButtonBackgroundInsets}"/>
+                <Grid x:Name="contentGrid" MaxWidth="{TemplateBinding Width}" MaxHeight="{TemplateBinding Height}" 
+                      FlowDirection="LeftToRight" VerticalAlignment="Center" 
+                      Width="Auto" Height="Auto"
                       HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Image x:Name="buttonImage" Stretch="Uniform"
+                           Width="Auto" Height="Auto" MaxWidth="{TemplateBinding Width}" MaxHeight="{TemplateBinding Height}"
                            IsHitTestVisible="False" Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ButtonImageSourceNormal}"/>
                     
                     <TextBlock x:Name="buttonText" MaxLines="1" Grid.Column="1" TextTrimming="CharacterEllipsis" IsHitTestVisible="False"

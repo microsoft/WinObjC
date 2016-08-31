@@ -22,6 +22,7 @@
 #import "UIFontInternal.h"
 #import "UIViewInternal.h"
 #import "UIButtonContent.h"
+#import "UIButtonProxies.h"
 #import "UIEventInternal.h"
 #import "UITouchInternal.h"
 
@@ -49,6 +50,10 @@ struct ButtonState {
 @implementation UIButton {
     StrongId<WXCButton> _xamlButton;
     std::map<UIControlState, ButtonState> _states;
+
+    // Proxies
+    StrongId<_UILabel_Proxy> _proxyLabel;
+    StrongId<_UIImageView_Proxy> _proxyImageView;
 }
 
 /**
@@ -140,6 +145,20 @@ struct ButtonState {
         _xamlButton.attach(XamlControls::CreateButton());
     }
 
+    // Force-load the template, and get the TextBlock and Image for use in our proxies.
+    [_xamlButton applyTemplate];
+
+    WXCImage* templateImage = rt_dynamic_cast([WXCImage class], [_xamlButton getTemplateChild:@"buttonImage"]);
+    WXCTextBlock* templateText = rt_dynamic_cast([WXCTextBlock class], [_xamlButton getTemplateChild:@"buttonText"]);
+
+    if (templateText) {
+        _proxyLabel = [[_UILabel_Proxy alloc] initWithXamlElement:templateText font:[UIFont buttonFont]];
+    }
+
+    if (templateImage) {
+        _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:templateImage];
+    }
+
     // Set the XAML element's name so it's easily found in the VS live tree viewer
     [_xamlButton setName:[NSString stringWithUTF8String:object_getClassName(self)]];
 
@@ -222,6 +241,11 @@ struct ButtonState {
         return;
     }
 
+    if (state == UIControlStateNormal) {
+        // TODO: Do we key off of VSM changes and set the image from our state, or reconstruct a UIImage from the Xaml image?
+        [_proxyImageView setImage:image];
+    }
+
     WUXMImageBrush* imageBrush = ConvertUIImageToWUXMImageBrush(image);
     if (!imageBrush) {
         XamlSetButtonImage([_xamlButton comObj], nullptr, state, 0, 0);
@@ -255,11 +279,15 @@ struct ButtonState {
 
     _states[state].backgroundImage = image;
 
-    WUXMImageBrush* imageBrush = ConvertUIImageToWUXMImageBrush(image);
-    if (!imageBrush) {
-        XamlSetBackgroundImage([_xamlButton comObj], nullptr, state, 0, 0);
+    WUXMIBitmapSource* bitmapSource = ConvertUIImageToWUXMIBitmapSource(image);
+    if (!bitmapSource) {
+        XamlSetBackgroundImage([_xamlButton comObj], nullptr, state, 0, 0, { 0, 0, 0, 0 });
     } else {
-        XamlSetBackgroundImage([_xamlButton comObj], [imageBrush comObj], state, image.size.width, image.size.height);
+        RECT insets = { image.capInsets.left * image.scale, 
+                        image.capInsets.top * image.scale, 
+                        image.capInsets.right * image.scale, 
+                        image.capInsets.bottom * image.scale };
+        XamlSetBackgroundImage([_xamlButton comObj], [bitmapSource comObj], state, image.size.width, image.size.height, insets);
     }
 }
 
@@ -466,18 +494,17 @@ struct ButtonState {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setFont:(UIFont*)font {
-    UNIMPLEMENTED();
+    self.titleLabel.font = font;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (UIFont*)font {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return self.titleLabel.font;
 }
 
 /**
@@ -598,45 +625,33 @@ static bool validateState(UIControlState state) {
 }
 
 /**
- @Status Caveat
- @Notes The xaml element may be modified directly and we could still return stale values.
+ @Status Interoperable
 */
 - (NSString*)currentTitle {
-    if (self->_states[self->_curState].title != nil) {
-        return self->_states[self->_curState].title;
-    }
+    return self.titleLabel.text;
+}
 
-    return self->_states[UIControlStateNormal].title;
+/**
+ @Status Interoperable
+*/
+- (UIColor*)currentTitleColor {
+    return self.titleLabel.textColor;
 }
 
 /**
  @Status Caveat
- @Notes The xaml element may be modified directly and we could still return stale values.
-*/
-- (UIColor*)currentTitleColor {
-    if (self->_states[self->_curState].textColor != nil) {
-        return self->_states[self->_curState].textColor;
-    } else if (self->_states[UIControlStateNormal].textColor != nil) {
-        return self->_states[UIControlStateNormal].textColor;
-    } else {
-        return [UIColor whiteColor];
-    }
-}
-
-/**
- @Status Stub
+ @Notes Returns a mock UILabel that proxies some common properties and selectors to the underlying TextBlock
 */
 - (UILabel*)titleLabel {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return (UILabel*)[[_proxyLabel retain] autorelease];
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Returns a mock UIImageView that proxies some common properties and selectors to the underlying Image
 */
 - (UIImageView*)imageView {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return (UIImageView*)[[_proxyImageView retain] autorelease];
 }
 
 /**
@@ -651,8 +666,28 @@ static bool validateState(UIControlState state) {
  @Status Stub
 */
 - (CGSize)intrinsicContentSize {
-    SIZE sizeFromXaml = XamlGetIntrinsicContentSizeFromXaml([_xamlButton comObj]);
-    CGSize ret = { (float)sizeFromXaml.cx, (float)sizeFromXaml.cy };
+    // Initial size set to padding
+    CGSize ret = { 20, 20 };
+
+    CGSize imageIntrinsicSize = [self.imageView intrinsicContentSize];
+    CGSize labelIntrinsicSize = [self.titleLabel intrinsicContentSize];
+
+    ret.width += labelIntrinsicSize.width;
+
+    if (imageIntrinsicSize.height > labelIntrinsicSize.height) {
+        ret.height += imageIntrinsicSize.height;
+    } else {
+        ret.height += labelIntrinsicSize.height;
+    }
+
+    if (imageIntrinsicSize.width != UIViewNoIntrinsicMetric && imageIntrinsicSize.width != 0) {
+        ret.width += 5.0f; // Margins between image and label
+        ret.width += imageIntrinsicSize.width;
+    }
+
+    /*SIZE sizeFromXaml = getIntrinsicContentSizeFromXaml([_xamlButton comObj]);
+    ret.width = (float)sizeFromXaml.cx;
+    ret.height = (float)sizeFromXaml.cy;*/
 
     return ret;
 }

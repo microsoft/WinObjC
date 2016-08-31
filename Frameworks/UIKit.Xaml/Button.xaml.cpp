@@ -33,6 +33,9 @@ DependencyProperty^ Button::s_buttonImageSourceNormalProperty = nullptr;
 DependencyProperty^ Button::s_buttonImageSourcePressedProperty = nullptr;
 DependencyProperty^ Button::s_buttonImageSourceDisabledProperty = nullptr;
 
+// DependencyProperties for Button Image insets
+DependencyProperty^ Button::s_buttonBackgroundInsetsProperty = nullptr;
+
 // DependencyProperties for background Image
 DependencyProperty^ Button::s_pressedBackgroundProperty = nullptr;
 DependencyProperty^ Button::s_disabledBackgroundProperty = nullptr;
@@ -50,13 +53,8 @@ DependencyProperty^ Button::s_disabledTextColorProperty = nullptr;
 
 static const float button_padding = 20.0f;
 
-// Method to get default Background and default text Foreground
-Brush^ GetDefaultTransparentBackgroundImage() {
-    static auto ret = ref new SolidColorBrush(Windows::UI::Colors::Transparent);
-    return ret;
-}
-
-Brush^ GetDefaultWhiteForeground() {
+// Method to get default text Foreground brush
+Brush^ GetDefaultWhiteForegroundBrush() {
     static auto ret = ref new SolidColorBrush(Windows::UI::Colors::White);
     return ret;
 }
@@ -67,13 +65,13 @@ Button::Button() {
 
     // Set the default Background image for all states as DefaultTransparentBackgroundImage.
     // Also, by default the values of PressedBackground and DisabledBackground is same as NormalBackground. This is the default on ios.
-    NormalBackground = GetDefaultTransparentBackgroundImage();
+    NormalBackground = nullptr;
     PressedBackground = NormalBackground;
     DisabledBackground = NormalBackground;
 
     // Set the Title color to be DefaultWhiteForeground(white) by default. This is the default on ios.
     // Also, by default the values of PressedForeground and DisabledForeground is same as NormalForeground. This is the default on ios.
-    NormalForeground = GetDefaultWhiteForeground();
+    NormalForeground = GetDefaultWhiteForegroundBrush();
     PressedForeground = NormalForeground;
     DisabledForeground = NormalForeground;
 }
@@ -150,7 +148,7 @@ void Button::_registerDependencyProperties() {
     if (!s_pressedBackgroundProperty) {
         s_pressedBackgroundProperty = DependencyProperty::Register(
             "PressedBackground",
-            Brush::typeid,
+            ImageSource::typeid,
             Windows::UI::Xaml::Controls::Button::typeid,
             nullptr);
     }
@@ -158,7 +156,7 @@ void Button::_registerDependencyProperties() {
     if (!s_disabledBackgroundProperty) {
         s_disabledBackgroundProperty = DependencyProperty::Register(
             "DisabledBackground",
-            Brush::typeid,
+            ImageSource::typeid,
             Windows::UI::Xaml::Controls::Button::typeid,
             nullptr);
     }
@@ -166,7 +164,7 @@ void Button::_registerDependencyProperties() {
     if (!s_normalBackgroundProperty) {
         s_normalBackgroundProperty = DependencyProperty::Register(
             "NormalBackground",
-            Brush::typeid,
+            ImageSource::typeid,
             Windows::UI::Xaml::Controls::Button::typeid,
             nullptr);
     }
@@ -244,6 +242,14 @@ void Button::_registerDependencyProperties() {
             Windows::UI::Xaml::Controls::Button::typeid,
             nullptr);
     }
+
+    if (!s_buttonBackgroundInsetsProperty) {
+        s_buttonBackgroundInsetsProperty = DependencyProperty::Register(
+            "ButtonBackgroundInsets",
+            Windows::UI::Xaml::Thickness::typeid,
+            Windows::UI::Xaml::Controls::Button::typeid,
+            nullptr);
+    }
 }
 
 // Implementing getter and setters for button image for all states
@@ -271,29 +277,37 @@ void Button::ButtonImageSourceDisabled::set(Windows::UI::Xaml::Media::Imaging::B
     SetValue(ButtonImageSourceDisabledProperty, value);
 }
 
-// Implementing getter and setters for background image for all states
-Brush^ Button::PressedBackground::get() {
-    return dynamic_cast<Brush^>(GetValue(PressedBackgroundProperty));
+Windows::UI::Xaml::Thickness Button::ButtonBackgroundInsets::get() {
+    return static_cast<Windows::UI::Xaml::Thickness>(GetValue(ButtonBackgroundInsetsProperty));
 }
 
-void Button::PressedBackground::set(Brush^ value) {
+void Button::ButtonBackgroundInsets::set(Windows::UI::Xaml::Thickness value) {
+    SetValue(ButtonBackgroundInsetsProperty, value);
+}
+
+// Implementing getter and setters for background image for all states
+ImageSource^ Button::PressedBackground::get() {
+    return dynamic_cast<ImageSource^>(GetValue(PressedBackgroundProperty));
+}
+
+void Button::PressedBackground::set(ImageSource^ value) {
     SetValue(PressedBackgroundProperty, value);
 }
 
 
-Brush^ Button::DisabledBackground::get() {
-    return dynamic_cast<Brush^>(GetValue(DisabledBackgroundProperty));
+ImageSource^ Button::DisabledBackground::get() {
+    return dynamic_cast<ImageSource^>(GetValue(DisabledBackgroundProperty));
 }
 
-void Button::DisabledBackground::set(Brush^ value) {
+void Button::DisabledBackground::set(ImageSource^ value) {
     SetValue(DisabledBackgroundProperty, value);
 }
 
-Brush^ Button::NormalBackground::get() {
-    return dynamic_cast<Brush^>(GetValue(NormalBackgroundProperty));
+ImageSource^ Button::NormalBackground::get() {
+    return dynamic_cast<ImageSource^>(GetValue(NormalBackgroundProperty));
 }
 
-void Button::NormalBackground::set(Brush^ value) {
+void Button::NormalBackground::set(ImageSource^ value) {
     SetValue(NormalBackgroundProperty, value);
 }
 
@@ -371,7 +385,8 @@ void Button::HookPointerEvents(
 // ObjectiveC Interop
 ////////////////////////////////////////////////////////////////////////////////////
 UIKIT_XAML_EXPORT IInspectable* XamlCreateButton() {
-    return InspectableFromObject(ref new UIKit::Button()).Detach();
+    UIKit::Button^ button = ref new UIKit::Button();
+    return InspectableFromObject(button).Detach();
 }
 
 void Button::RemovePointerEvents() {
@@ -513,40 +528,37 @@ UIKIT_XAML_EXPORT void XamlSetButtonImage(const ComPtr<IInspectable>& inspectabl
 }
 
 // Only UIControlStateNormal, UIControlStateHighlighted and UIControlStateDisabled states are supported
+// TODO: insets only get set once on Normal state, all others are assumed to have the same insets, this 
+// will be ameliorated when UIKit::Image work completes
 UIKIT_XAML_EXPORT void XamlSetBackgroundImage(const ComPtr<IInspectable>& inspectableButton,
-    const ComPtr<IInspectable>& inspectableBackground, int state, float width, float height) {
+    const ComPtr<IInspectable>& inspectableBackground, int state, float width, float height, const RECT insets) {
     auto button = safe_cast<UIKit::Button^>(reinterpret_cast<Platform::Object^>(inspectableButton.Get()));
-    auto backgroundImage = safe_cast<Brush^>(reinterpret_cast<Platform::Object^>(inspectableBackground.Get()));
-
-    // If the background provided is nil, then we map it to a SolidColorBrush with Transparent color.
-    // We cannot use nullptr value for background, as that will make the Button unclickable.
-    if (!backgroundImage) {
-        backgroundImage = GetDefaultTransparentBackgroundImage();
-    }
+    auto backgroundImage = safe_cast<ImageSource^>(reinterpret_cast<Platform::Object^>(inspectableBackground.Get()));
 
     switch(state) {
         case ControlStateNormal :
             button->NormalBackground = backgroundImage;
             button->backgroundSizeNormal.Width = width;
             button->backgroundSizeNormal.Height = height;
+            button->ButtonBackgroundInsets = ThicknessHelper::FromLengths(insets.left, insets.top, insets.right, insets.bottom);
 
             // If PressedBackground or DisabledBackground is transparent, which is equivalent to nil for iOS, we use NormalBackground as fallback value.
             // This is the default behavior on iOS platform.
             // The background width and height are used for intrinsic content size calculation of UIButton
-            if (button->PressedBackground == GetDefaultTransparentBackgroundImage()) {
+            if (!button->PressedBackground) {
                 button->PressedBackground = button->NormalBackground;
                 button->backgroundSizePressed.Width = button->backgroundSizeNormal.Width;
                 button->backgroundSizePressed.Height = button->backgroundSizeNormal.Height;
             }
 
-            if (button->DisabledBackground == GetDefaultTransparentBackgroundImage()) {
+            if (!button->DisabledBackground) {
                 button->DisabledBackground = button->NormalBackground;
                 button->backgroundSizeDisabled.Width = button->backgroundSizeNormal.Width;
                 button->backgroundSizeDisabled.Height = button->backgroundSizeNormal.Height;
             }
             break;
         case ControlStateHighlighted :
-            if (backgroundImage == GetDefaultTransparentBackgroundImage()) {
+            if (!backgroundImage) {
                 button->PressedBackground = button->NormalBackground;
                 button->backgroundSizePressed.Width = button->backgroundSizeNormal.Width;
                 button->backgroundSizePressed.Height = button->backgroundSizeNormal.Height;
@@ -557,7 +569,7 @@ UIKIT_XAML_EXPORT void XamlSetBackgroundImage(const ComPtr<IInspectable>& inspec
             }
             break;
         case ControlStateDisabled :
-            if (backgroundImage == GetDefaultTransparentBackgroundImage()) {
+            if (!backgroundImage) {
                 button->DisabledBackground = button->NormalBackground;
                 button->backgroundSizeDisabled.Width = button->backgroundSizeNormal.Width;
                 button->backgroundSizeDisabled.Height = button->backgroundSizeNormal.Height;
@@ -609,7 +621,7 @@ UIKIT_XAML_EXPORT void XamlSetTitleColorForState(const ComPtr<IInspectable>& ins
     auto titleColor = safe_cast<Brush^>(reinterpret_cast<Platform::Object^>(inspectableTitleColor.Get()));
     
     if (!titleColor) {
-        titleColor = GetDefaultWhiteForeground();
+        titleColor = GetDefaultWhiteForegroundBrush();
     }
 
     switch(state) {
@@ -617,11 +629,11 @@ UIKIT_XAML_EXPORT void XamlSetTitleColorForState(const ComPtr<IInspectable>& ins
             button->NormalForeground = titleColor;
 
             // If no other title color is set for other states, then NormalForeground will be used
-            if (button->PressedForeground == GetDefaultWhiteForeground()) {
+            if (button->PressedForeground == GetDefaultWhiteForegroundBrush()) {
                 button->PressedForeground = titleColor;
             }
 
-            if (button->DisabledForeground == GetDefaultWhiteForeground()) {
+            if (button->DisabledForeground == GetDefaultWhiteForegroundBrush()) {
                 button->DisabledForeground = titleColor;
             }
             break;

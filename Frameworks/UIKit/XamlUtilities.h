@@ -38,8 +38,14 @@ WUColor* ConvertUIColorToWUColor(UIColor* uiColor);
 // Convert UIImage to WUXMImageBrush on windows
 WUXMImageBrush* ConvertUIImageToWUXMImageBrush(UIImage* image);
 
+// Convert UIImage to WUXMIBitmapSource on windows
+WUXMIBitmapSource* ConvertUIImageToWUXMIBitmapSource(UIImage* image);
+
 // Convert UITextAlignment to TextAlignment on windows
 WXTextAlignment ConvertUITextAlignmentToWXTextAlignment(UITextAlignment alignment);
+
+// Convert TextAlignment to UITextAlignment
+UITextAlignment ConvertWXTextAlignmentToUITextAlignment(WXTextAlignment alignment);
 
 // Convert ios KeyboardType to Windows InputScope
 WUXIInputScope* ConvertKeyboardTypeToInputScope(UIKeyboardType keyboardType, BOOL secureTextMode);
