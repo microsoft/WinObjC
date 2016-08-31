@@ -1348,7 +1348,7 @@ CF_EXPORT CFStringRef CFURLCreateStringByAddingPercentEscapesWithCharacterSets(C
     if (length == 0) return (CFStringRef)CFStringCreateCopy(allocator, originalString);
     CFStringInitInlineBuffer(originalString, &buf, CFRangeMake(0, length));
 
-    for (idx = 0; idx < length; idx++) {
+    for (idx = 0; idx < length; idx ++) {
         UniChar ch = __CFStringGetCharacterFromInlineBufferQuick(&buf, idx);
         Boolean shouldReplace = (isURLLegalCharacter(ch) == false);
         if (shouldReplace) {
@@ -1358,13 +1358,13 @@ CF_EXPORT CFStringRef CFURLCreateStringByAddingPercentEscapesWithCharacterSets(C
         } else if (legalURLCharactersToBeEscaped && CFCharacterSetIsCharacterMember(legalURLCharactersToBeEscaped, ch)) {
             shouldReplace = true;
         }
-
+        
         if (shouldReplace) {
             enum {
                 kMaxBytesPerUniChar = 8,    // 8 bytes is the maximum a single UniChar can require in any current encodings; future encodings could require more
                 kMaxPercentEncodedUniChars = kMaxBytesPerUniChar * 3
             };
-
+            
             static const UInt8 hexchars[] = "0123456789ABCDEF";
             uint8_t bytes[kMaxBytesPerUniChar];
             uint8_t *bytePtr = bytes;
@@ -1373,22 +1373,22 @@ CF_EXPORT CFStringRef CFURLCreateStringByAddingPercentEscapesWithCharacterSets(C
             CFIndex byteLength;
 
             // Perform the replacement
-            if (!newString) {
+            if ( !newString ) {
                 newString = CFStringCreateMutableCopy(CFGetAllocator(originalString), 0, originalString);
-                CFStringDelete(newString, CFRangeMake(idx, length - idx));
+                CFStringDelete(newString, CFRangeMake(idx, length-idx));
             }
             // make sure charBuffer has enough room
-            if (charBufferIndex >= (kCharBufferMax - kMaxPercentEncodedUniChars)) {
+            if ( charBufferIndex >= (kCharBufferMax - kMaxPercentEncodedUniChars) ) {
                 // make room
                 CFStringAppendCharacters(newString, charBuffer, charBufferIndex);
                 charBufferIndex = 0;
             }
-
+            
             // convert the UniChar to bytes
-            if (CFStringEncodingUnicodeToBytes(encoding, 0, &ch, 1, NULL, bytePtr, 8, &byteLength) == kCFStringEncodingConversionSuccess) {
+            if ( CFStringEncodingUnicodeToBytes(encoding, 0, &ch, 1, NULL, bytePtr, 8, &byteLength) == kCFStringEncodingConversionSuccess ) {
                 // percent-encode the bytes
                 endPtr = bytePtr + byteLength;
-                for (currByte = bytePtr; currByte < endPtr; currByte++) {
+                for ( currByte = bytePtr; currByte < endPtr; currByte++ ) {
                     charBuffer[charBufferIndex++] = '%';
                     charBuffer[charBufferIndex++] = hexchars[*currByte >> 4];
                     charBuffer[charBufferIndex++] = hexchars[*currByte & 0x0f];
@@ -1396,7 +1396,7 @@ CF_EXPORT CFStringRef CFURLCreateStringByAddingPercentEscapesWithCharacterSets(C
             }
             else {
                 // FIXME: once CFString supports finding glyph boundaries walk by glyph boundaries instead of by unichars
-                if (encoding == kCFStringEncodingUTF8 && CFCharacterSetIsSurrogateHighCharacter(ch) && idx + 1 < length && CFCharacterSetIsSurrogateLowCharacter(__CFStringGetCharacterFromInlineBufferQuick(&buf, idx + 1))) {
+                if ( encoding == kCFStringEncodingUTF8 && CFCharacterSetIsSurrogateHighCharacter(ch) && idx + 1 < length && CFCharacterSetIsSurrogateLowCharacter(__CFStringGetCharacterFromInlineBufferQuick(&buf, idx + 1)) ) {
                     UniChar surrogate[2];
                     uint8_t *currByte;
 
@@ -1411,8 +1411,7 @@ CF_EXPORT CFStringRef CFURLCreateStringByAddingPercentEscapesWithCharacterSets(C
                             charBuffer[charBufferIndex++] = hexchars[*currByte & 0x0f];
                         }
                         idx++; // We consumed 2 characters, not 1
-                    }
-                    else {
+                    } else {
                         // surrogate pair conversion failed
                         break;
                     }
@@ -1422,10 +1421,9 @@ CF_EXPORT CFStringRef CFURLCreateStringByAddingPercentEscapesWithCharacterSets(C
                     break;
                 }
             }
-        }
-        else if (newString) {
+        } else if ( newString ) {
             charBuffer[charBufferIndex++] = ch;
-            if (charBufferIndex == kCharBufferMax) {
+            if ( charBufferIndex == kCharBufferMax ) {
                 CFStringAppendCharacters(newString, charBuffer, charBufferIndex);
                 charBufferIndex = 0;
             }
@@ -1435,14 +1433,12 @@ CF_EXPORT CFStringRef CFURLCreateStringByAddingPercentEscapesWithCharacterSets(C
         // Ran into an encoding failure
         if (newString) CFRelease(newString);
         return NULL;
-    }
-    else if (newString) {
-        if (charBufferIndex != 0) {
+    } else if ( newString ) {
+        if ( charBufferIndex != 0 ) {
             CFStringAppendCharacters(newString, charBuffer, charBufferIndex);
         }
         return newString;
-    }
-    else {
+    } else {
         return (CFStringRef)CFStringCreateCopy(CFGetAllocator(originalString), originalString);
     }
 }
