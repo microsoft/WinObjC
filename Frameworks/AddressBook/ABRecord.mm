@@ -196,8 +196,6 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
         }
 
         person.contact.firstName = firstName;
-        _updateManager(person);
-        return true;
     } else if (contactProperty == kABPersonLastNameProperty) {
         NSString* lastName = (__bridge NSString*)value;
         if (!_checkLength(lastName, kABPersonLastNameLength, error, @"last name")) {
@@ -205,8 +203,6 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
         }
 
         person.contact.lastName = lastName;
-        _updateManager(person);
-        return true;
     } else if (contactProperty == kABPersonMiddleNameProperty) {
         NSString* middleName = (__bridge NSString*)value;
         if (!_checkLength(middleName, kABPersonMiddleNameLength, error, @"middle name")) {
@@ -214,8 +210,6 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
         }
 
         person.contact.middleName = middleName;
-        _updateManager(person);
-        return true;
     } else if (contactProperty == kABPersonPrefixProperty) {
         NSString* prefix = (__bridge NSString*)value;
         if (!_checkLength(prefix, kABPersonPrefixLength, error, @"prefix")) {
@@ -223,8 +217,6 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
         }
 
         person.contact.honorificNamePrefix = prefix;
-        _updateManager(person);
-        return true;
     } else if (contactProperty == kABPersonSuffixProperty) {
         NSString* suffix = (__bridge NSString*)value;
         if (!_checkLength(suffix, kABPersonSuffixLength, error, @"suffix")) {
@@ -232,13 +224,9 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
         }
 
         person.contact.honorificNameSuffix = suffix;
-        _updateManager(person);
-        return true;
     } else if (contactProperty == kABPersonNicknameProperty) {
         NSString* nickname = (__bridge NSString*)value;
         person.contact.nickname = nickname;
-        _updateManager(person);
-        return true;
     } else if (contactProperty == kABPersonFirstNamePhoneticProperty) {
         NSString* phoneticFirstName = (__bridge NSString*)value;
         if (!_checkLength(phoneticFirstName, kABPersonFirstNamePhoneticLength, error, @"first name phonetic")) {
@@ -246,8 +234,6 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
         }
 
         person.contact.yomiGivenName = phoneticFirstName;
-        _updateManager(person);
-        return true;
     } else if (contactProperty == kABPersonLastNamePhoneticProperty) {
         NSString* phoneticLastName = (__bridge NSString*)value;
         if (!_checkLength(phoneticLastName, kABPersonLastNamePhoneticLength, error, @"last name phonetic")) {
@@ -255,12 +241,9 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
         }
 
         person.contact.yomiFamilyName = phoneticLastName;
-        _updateManager(person);
-        return true;
-    }
 
-    // Cases for job-related properties.
-    if (contactProperty == kABPersonOrganizationProperty) {
+        // Cases for job-related properties.
+    } else if (contactProperty == kABPersonOrganizationProperty) {
         NSString* organization = (__bridge NSString*)value;
         if (!_checkLength(organization, kABPersonOrganizationLength, error, @"organization")) {
             return false;
@@ -273,8 +256,6 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
 
         WACContactJobInfo* job = jobInfo[0];
         job.companyName = organization;
-        _updateManager(person);
-        return true;
     } else if (contactProperty == kABPersonJobTitleProperty) {
         NSString* jobTitle = (__bridge NSString*)value;
         if (!_checkLength(jobTitle, kABPersonJobTitleLength, error, @"job title")) {
@@ -288,8 +269,6 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
 
         WACContactJobInfo* job = jobInfo[0];
         job.title = jobTitle;
-        _updateManager(person);
-        return true;
     } else if (contactProperty == kABPersonDepartmentProperty) {
         NSString* department = (__bridge NSString*)value;
         if (!_checkLength(department, kABPersonDepartmentLength, error, @"department")) {
@@ -303,12 +282,9 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
 
         WACContactJobInfo* job = jobInfo[0];
         job.department = department;
-        _updateManager(person);
-        return true;
-    }
 
-    // Case for birthday-related property.
-    if (contactProperty == kABPersonBirthdayProperty) {
+        // Case for birthday-related property.
+    } else if (contactProperty == kABPersonBirthdayProperty) {
         NSMutableArray* dates = person.contact.importantDates;
 
         // Find the first date in the contact's important dates
@@ -344,24 +320,18 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
         date.year = @([components year]);
         date.month = @([components month]);
         date.day = @([components day]);
-        _updateManager(person);
-        return true;
-    }
 
-    // Case for note-related property.
-    if (contactProperty == kABPersonNoteProperty) {
+        // Case for note-related property.
+    } else if (contactProperty == kABPersonNoteProperty) {
         NSString* note = (__bridge NSString*)value;
         if (!_checkLength(note, kABPersonNoteLength, error, @"note")) {
             return false;
         }
 
         person.contact.notes = note;
-        _updateManager(person);
-        return true;
-    }
 
-    // Cases for various multi-value properties.
-    if (contactProperty == kABPersonEmailProperty) {
+        // Cases for various multi-value properties.
+    } else if (contactProperty == kABPersonEmailProperty) {
         _ABMultiValue* multiValue = (__bridge _ABMultiValue*)value;
         if (!_checkType(kABStringPropertyType, multiValue, error)) {
             return false;
@@ -393,12 +363,7 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
             email.kind = dict[label] == nil ? WACContactEmailKindOther : [dict[label] integerValue];
             [emails addObject:email];
         }
-
-        _updateManager(person);
-        return true;
-    }
-
-    if (contactProperty == kABPersonAddressProperty) {
+    } else if (contactProperty == kABPersonAddressProperty) {
         _ABMultiValue* multiValue = (__bridge _ABMultiValue*)value;
         if (!_checkType(kABDictionaryPropertyType, multiValue, error)) {
             return false;
@@ -437,12 +402,7 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
 
             [addresses addObject:address];
         }
-
-        _updateManager(person);
-        return true;
-    }
-
-    if (contactProperty == kABPersonDateProperty) {
+    } else if (contactProperty == kABPersonDateProperty) {
         _ABMultiValue* multiValue = (__bridge _ABMultiValue*)value;
         if (!_checkType(kABDateTimePropertyType, multiValue, error)) {
             return false;
@@ -478,12 +438,7 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
 
             [importantDates addObject:date];
         }
-
-        _updateManager(person);
-        return true;
-    }
-
-    if (contactProperty == kABPersonPhoneProperty) {
+    } else if (contactProperty == kABPersonPhoneProperty) {
         _ABMultiValue* multiValue = (__bridge _ABMultiValue*)value;
         if (!_checkType(kABStringPropertyType, multiValue, error)) {
             return false;
@@ -522,12 +477,7 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
             phone.kind = dict[label] == nil ? WACContactPhoneKindOther : [dict[label] integerValue];
             [phones addObject:phone];
         }
-
-        _updateManager(person);
-        return true;
-    }
-
-    if (contactProperty == kABPersonURLProperty) {
+    } else if (contactProperty == kABPersonURLProperty) {
         _ABMultiValue* multiValue = (__bridge _ABMultiValue*)value;
         if (!_checkType(kABStringPropertyType, multiValue, error)) {
             return false;
@@ -542,12 +492,7 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
             website.rawValue = value;
             [websites addObject:website];
         }
-
-        _updateManager(person);
-        return true;
-    }
-
-    if (contactProperty == kABPersonRelatedNamesProperty) {
+    } else if (contactProperty == kABPersonRelatedNamesProperty) {
         _ABMultiValue* multiValue = (__bridge _ABMultiValue*)value;
         if (!_checkType(kABStringPropertyType, multiValue, error)) {
             return false;
@@ -582,22 +527,23 @@ bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRe
             significantOther.relationship = dict[label] == nil ? WACContactRelationshipOther : [dict[label] integerValue];
             [significantOthers addObject:significantOther];
         }
+    } else {
+        // No matching property was found.
+        if (error) {
+            NSDictionary* userInfo = @{
+                NSLocalizedDescriptionKey : NSLocalizedString(@"Error setting record value.\n", nil),
+                NSLocalizedFailureReasonErrorKey : NSLocalizedString(@"The property id was not recognized or supported!\n", nil)
+            };
+            *error = (__bridge_retained CFErrorRef)[NSError errorWithDomain:(__bridge NSString*)ABAddressBookErrorDomain
+                                                                       code:kABOperationNotPermittedByStoreError
+                                                                   userInfo:userInfo];
+        }
 
-        _updateManager(person);
-        return true;
+        return false;
     }
 
-    if (error) {
-        NSDictionary* userInfo = @{
-            NSLocalizedDescriptionKey : NSLocalizedString(@"Error setting record value.\n", nil),
-            NSLocalizedFailureReasonErrorKey : NSLocalizedString(@"The property id was not recognized or supported!\n", nil)
-        };
-        *error = (__bridge_retained CFErrorRef)[NSError errorWithDomain:(__bridge NSString*)ABAddressBookErrorDomain
-                                                                   code:kABOperationNotPermittedByStoreError
-                                                               userInfo:userInfo];
-    }
-
-    return false;
+    _updateManager(person);
+    return true;
 }
 
 /**
