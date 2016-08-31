@@ -38,8 +38,8 @@ CORETEXT_EXPORT const CFStringRef kCTFramePathWidthAttributeName;
 CORETEXT_EXPORT const CFStringRef kCTFrameClippingPathsAttributeName;
 CORETEXT_EXPORT const CFStringRef kCTFramePathClippingPathAttributeName;
 
-CORETEXT_EXPORT CFRange CTFrameGetStringRange(CTFrameRef frame) STUB_METHOD;
-CORETEXT_EXPORT CFRange CTFrameGetVisibleStringRange(CTFrameRef frame) STUB_METHOD;
+CORETEXT_EXPORT CFRange CTFrameGetStringRange(CTFrameRef frame);
+CORETEXT_EXPORT CFRange CTFrameGetVisibleStringRange(CTFrameRef frame);
 CORETEXT_EXPORT CGPathRef CTFrameGetPath(CTFrameRef frame) STUB_METHOD;
 CORETEXT_EXPORT CFDictionaryRef CTFrameGetFrameAttributes(CTFrameRef frame) STUB_METHOD;
 CORETEXT_EXPORT CFArrayRef CTFrameGetLines(CTFrameRef frame);

@@ -28,8 +28,6 @@
 }
 
 - (void)drawRect:(CGRect)rect {
-    UIColor* color = [UIColor blueColor];
-
     CGContextRef context = UIGraphicsGetCurrentContext();
 
     // Aligns origin for our frame
@@ -119,6 +117,7 @@
     CTFrameTestView* _frameView;
     UITableView* _linesView;
     UITextField* _textField;
+    UIButton* _refreshButton;
     NSMutableArray* _lineCells;
 }
 
@@ -130,6 +129,12 @@
     _textField.text = @"the quick brown fox jumps over the lazy dog. THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG";
     _textField.delegate = self;
     [self.view addSubview:_textField];
+    
+    _refreshButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    _refreshButton.frame = CGRectMake(400, 40, 200, 50);
+    [_refreshButton addTarget:self action:@selector(refreshViews) forControlEvents:UIControlEventTouchDown];
+    [_refreshButton setTitle:@"Refresh" forState:UIControlStateNormal];
+    [self.view addSubview:_refreshButton];
 
     // Create table view to pair lines with frame origins
     _linesView = [[UITableView alloc] initWithFrame:CGRectMake(40, 320, 1000, 400) style:UITableViewStylePlain];
@@ -192,8 +197,16 @@
         [_lineCells addObject:cell];
     }
 
-    ADD_UNIMPLEMENTED(_lineCells, @"CTFrameGetStringRange");
-    ADD_UNIMPLEMENTED(_lineCells, @"CTFrameGetVisibleStringRange");
+    [_lineCells addObject:createTextCell(@"CTFrameGetStringRange",
+                                         [NSString stringWithFormat:@"{ %ld, %ld }",
+                                                                    CTFrameGetStringRange(frame).location,
+                                                                    CTFrameGetStringRange(frame).length])];
+
+    [_lineCells addObject:createTextCell(@"CTFrameGetVisibleStringRange",
+                                         [NSString stringWithFormat:@"{ %ld, %ld }",
+                                                                    CTFrameGetVisibleStringRange(frame).location,
+                                                                    CTFrameGetVisibleStringRange(frame).length])];
+
     ADD_UNIMPLEMENTED(_lineCells, @"CTFrameGetPath");
     ADD_UNIMPLEMENTED(_lineCells, @"CTFrameGetFrameAttributes");
     ADD_UNIMPLEMENTED(_lineCells, @"CTFrameGetTypeID");
