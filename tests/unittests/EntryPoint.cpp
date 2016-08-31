@@ -24,6 +24,7 @@ using namespace Microsoft::WRL::Wrappers;
 
 int main(int argc, char** argv) {
 #ifdef WIN32
+    SetConsoleOutputCP(CP_UTF8);
     // Initialize the windows runtime, with uninitialized upon destructor invocation.
     RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
     if (FAILED(initialize)) {
