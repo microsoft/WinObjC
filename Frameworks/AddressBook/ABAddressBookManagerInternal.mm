@@ -101,7 +101,7 @@ static void _setError(CFErrorRef* error, NSString* message) {
             dispatch_release(semaphore);
             return nil;
         } else {
-            self->_writableStore = result;
+            _writableStore = result;
         }
 
         __block WACContactList* list = nil;
@@ -109,7 +109,7 @@ static void _setError(CFErrorRef* error, NSString* message) {
 
         // Get the contact list associated with the user's app for adding/removing contacts.
         // If no such list exists yet, create a new one.
-        [self->_writableStore findContactListsAsyncWithSuccess:^(NSArray* success) {
+        [_writableStore findContactListsAsyncWithSuccess:^(NSArray* success) {
             if ([success count] == 0) {
                 shouldCreateList = YES;
             } else {
@@ -133,7 +133,7 @@ static void _setError(CFErrorRef* error, NSString* message) {
         }
 
         if (shouldCreateList) {
-            [self->_writableStore createContactListAsync:@"ABAddressBook"
+            [_writableStore createContactListAsync:@"ABAddressBook"
                 success:^(WACContactList* success) {
                     list = success;
                     failed = NO;
@@ -154,7 +154,7 @@ static void _setError(CFErrorRef* error, NSString* message) {
         if (failed) {
             return nil;
         } else {
-            self->_contactList = list;
+            _contactList = list;
         }
     }
 
@@ -191,7 +191,7 @@ static void _setError(CFErrorRef* error, NSString* message) {
 
 - (NSArray*)getListOfModifiableContacts {
     NSMutableArray* result = [[NSMutableArray alloc] init];
-    WACContactReader* reader = [self->_contactList getContactReader];
+    WACContactReader* reader = [_contactList getContactReader];
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
     __block BOOL shouldContinue = YES;
@@ -229,16 +229,16 @@ static void _setError(CFErrorRef* error, NSString* message) {
     switch (contact.type) {
         case kAddressBookNewContact: {
             // New contacts can't be added twice.
-            if ([self->_toAdd containsObject:contact.contact]) {
+            if ([_toAdd containsObject:contact.contact]) {
                 _setError(error, @"This contact has already been added.\n");
                 return false;
             }
 
-            [self->_toAdd addObject:contact.contact];
+            [_toAdd addObject:contact.contact];
             return true;
         }
         case kAddressBookReadWriteContact: {
-            __ABContactOperation* operation = self->_operations[contact.contact.id];
+            __ABContactOperation* operation = _operations[contact.contact.id];
 
             // A read-write contact can only be added if it was previously deleted,
             // so ensure that the current operation does exist and that it is marked
@@ -265,8 +265,8 @@ static void _setError(CFErrorRef* error, NSString* message) {
         case kAddressBookNewContact: {
             // New contacts can only be removed if they were
             // previously marked to be added.
-            if ([self->_toAdd containsObject:contact.contact]) {
-                [self->_toAdd removeObject:contact.contact];
+            if ([_toAdd containsObject:contact.contact]) {
+                [_toAdd removeObject:contact.contact];
                 return true;
             }
 
@@ -274,14 +274,14 @@ static void _setError(CFErrorRef* error, NSString* message) {
             return false;
         }
         case kAddressBookReadWriteContact: {
-            __ABContactOperation* operation = self->_operations[contact.contact.id];
+            __ABContactOperation* operation = _operations[contact.contact.id];
 
             // A read/write contact can be deleted in 2 cases: if no operation was associated,
             // or if the associated operation is that it has been modified. In the case that
             // it is already marked to delete, deleting twice doesn't make sense.
             if (operation == nil) {
                 operation = [[__ABContactOperation alloc] initWithContact:contact.contact shouldDelete:YES];
-                self->_operations[contact.contact.id] = operation;
+                _operations[contact.contact.id] = operation;
                 return true;
             } else if (operation.shouldDelete) {
                 _setError(error, @"This contact has already been deleted.\n");
@@ -302,7 +302,7 @@ static void _setError(CFErrorRef* error, NSString* message) {
 
 - (void)modifyContact:(ABRecordRef)record {
     _ABContact* contact = (__bridge _ABContact*)record;
-    __ABContactOperation* operation = self->_operations[contact.contact.id];
+    __ABContactOperation* operation = _operations[contact.contact.id];
 
     // If there was no operation previously associated with this record, then
     // set it to be modified. The other two cases are that the contact was
@@ -311,17 +311,17 @@ static void _setError(CFErrorRef* error, NSString* message) {
     // it is to be deleted, there is no need to worry about any modifications.
     if (operation == nil) {
         operation = [[__ABContactOperation alloc] initWithContact:contact.contact shouldDelete:NO];
-        self->_operations[contact.contact.id] = operation;
+        _operations[contact.contact.id] = operation;
     }
 }
 
 - (bool)hasUnsavedChanges {
-    return (self->_toAdd).count + (self->_operations).count > 0;
+    return _toAdd.count + _operations.count > 0;
 }
 
 - (void)revert {
-    [self->_toAdd removeAllObjects];
-    [self->_operations removeAllObjects];
+    [_toAdd removeAllObjects];
+    [_operations removeAllObjects];
 }
 
 - (bool)save {
@@ -332,22 +332,22 @@ static void _setError(CFErrorRef* error, NSString* message) {
 
     // Go through all contacts that were newly created and need to be added,
     // and save them to this app's contact list.
-    for (WACContact* contact in self->_toAdd) {
-        RTObject<WFIAsyncAction>* asyncAction = [self->_contactList saveContactAsync:contact];
+    for (WACContact* contact in _toAdd) {
+        RTObject<WFIAsyncAction>* asyncAction = [_contactList saveContactAsync:contact];
         [asyncAction getResults];
     }
 
     // Go through all contacts that were pre-existing and need to either be
     // saved due to modification, or need to be deleted due to be removed.
-    for (NSString* key in self->_operations) {
-        __ABContactOperation* operation = self->_operations[key];
+    for (NSString* key in _operations) {
+        __ABContactOperation* operation = _operations[key];
         BOOL shouldDelete = operation.shouldDelete;
         WACContact* contact = operation.contact;
         if (shouldDelete) {
-            RTObject<WFIAsyncAction>* asyncAction = [self->_contactList deleteContactAsync:contact];
+            RTObject<WFIAsyncAction>* asyncAction = [_contactList deleteContactAsync:contact];
             [asyncAction getResults];
         } else {
-            RTObject<WFIAsyncAction>* asyncAction = [self->_contactList saveContactAsync:contact];
+            RTObject<WFIAsyncAction>* asyncAction = [_contactList saveContactAsync:contact];
             [asyncAction getResults];
         }
     }
