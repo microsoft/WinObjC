@@ -395,10 +395,10 @@ static long _throwUnrecognizedSelectorException(id self, Class isa, SEL sel) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)forwardInvocation:(NSInvocation*)invocation {
-    UNIMPLEMENTED();
+    [self doesNotRecognizeSelector:[invocation selector]];
 }
 
 /**
@@ -452,9 +452,9 @@ static IMP _NSIMPForward(id object, SEL selector) {
     if (class_respondsToSelector(cls, @selector(forwardInvocation:))) {
         const char* types = sel_getType_np(selector);
         if (types && _NSInvocationTypeEncodingMandatesStructReturn(types)) {
-            return (IMP)&_NSInvocation_ForwardingBridge; // From NSInvocationInternal.h
+            return (IMP)&_NSInvocation_ForwardingBridge;
         }
-        return (IMP)&_NSInvocation_ForwardingBridgeNoStret; // From NSInvocationInternal.h
+        return (IMP)&_NSInvocation_ForwardingBridgeNoStret;
     }
     return (IMP)&_forwardThrow;
 }
