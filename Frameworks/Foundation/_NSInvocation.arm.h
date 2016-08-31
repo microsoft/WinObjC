@@ -12,7 +12,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-//****************************************************************************** 
+//******************************************************************************
 
 #pragma once
 
@@ -30,7 +30,8 @@ constexpr size_t SPFR_COUNT = 16;
 // It is a _NSInvocationCallFrame's job to carve out allocation extents from a buffer.
 class _NSInvocationCallFrame {
 private:
-    StrongId<NSMethodSignature> _methodSignature;
+    // Reference guaranteed owned by NSInvocation
+    NSMethodSignature* _methodSignature;
 
     uint8_t* _buffer;
     size_t _length;
@@ -41,16 +42,16 @@ private:
     std::bitset<SPFR_COUNT> spUsage;
     unsigned int stackBytes;
 
-    bool _stret;
-    allocation_extent _stretExtent;
+    bool _structReturn;
+    _NSInvocationAllocationExtent _structReturnExtent;
 
-    std::vector<allocation_extent> _allocationExtents;
+    std::vector<_NSInvocationAllocationExtent> _allocationExtents;
 
-    allocation_extent _allocateStackWords(size_t count, size_t alignment = alignof(uintptr_t));
-    allocation_extent _allocateMachineWords(unsigned int count, size_t alignment = alignof(uintptr_t));
-    allocation_extent _allocateFloats(size_t count);
-    allocation_extent _allocateDoubles(size_t count);
-    allocation_extent _allocateArgument(const char* typeEncoding);
+    _NSInvocationAllocationExtent _allocateStackWords(size_t count, size_t alignment = alignof(uintptr_t));
+    _NSInvocationAllocationExtent _allocateMachineWords(unsigned int count, size_t alignment = alignof(uintptr_t));
+    _NSInvocationAllocationExtent _allocateFloats(size_t count);
+    _NSInvocationAllocationExtent _allocateDoubles(size_t count);
+    _NSInvocationAllocationExtent _allocateArgument(const char* typeEncoding);
 
 public:
     _NSInvocationCallFrame(NSMethodSignature* methodTypeEncoding);

@@ -26,18 +26,19 @@
 // It is a _NSInvocationCallFrame's job to carve out allocation extents from a buffer.
 class _NSInvocationCallFrame {
 private:
-    StrongId<NSMethodSignature> _methodSignature;
+    // Reference guaranteed owned by NSInvocation
+    NSMethodSignature* _methodSignature;
 
     uint8_t* _buffer;
     off_t _offset;
     size_t _returnLength;
     unsigned int _returnType; /* platform-specific/opaque */
 
-    bool _stret;
-    allocation_extent _stretExtent;
-    std::vector<allocation_extent> _allocationExtents;
+    bool _structReturn;
+    _NSInvocationAllocationExtent _structReturnExtent;
+    std::vector<_NSInvocationAllocationExtent> _allocationExtents;
 
-    allocation_extent _allocateArgument(const char* objcTypeEncoding);
+    _NSInvocationAllocationExtent _allocateArgument(const char* objcTypeEncoding);
 
 public:
     _NSInvocationCallFrame(NSMethodSignature* methodTypeEncoding);

@@ -158,15 +158,15 @@ _NSInvocationCallFrame::_NSInvocationCallFrame(NSMethodSignature* methodSignatur
       gprUsage(0),
       spUsage(0),
       stackBytes(0),
-      _stret(false),
+      _structReturn(false),
       _allocationExtents([methodSignature numberOfArguments]) {
     _returnType = _getReturnType([_methodSignature methodReturnType]);
 
     _returnLength = [_methodSignature methodReturnLength];
 
     if (_returnType == RETURN_TYPE_STRUCT) {
-        _stret = true;
-        _stretExtent = _allocateArgument("^v");
+        _structReturn = true;
+        _structReturnExtent = _allocateArgument("^v");
     } else if (_returnType == RETURN_TYPE_VFP_HOMOGENOUS) {
         // Promote all homogenous vfp returns to the size of all four double-width registers
         _returnLength = std::max(sizeof(double) * 4, _returnLength);
@@ -198,15 +198,15 @@ _NSInvocationCallFrame::~_NSInvocationCallFrame() {
     IwFree(_buffer);
 }
 
-allocation_extent _NSInvocationCallFrame::_allocateStackWords(size_t count, size_t alignment) {
+_NSInvocationAllocationExtent _NSInvocationCallFrame::_allocateStackWords(size_t count, size_t alignment) {
     stackBytes = NSINVOCATION_ALIGN(stackBytes, alignment);
-    allocation_extent extent{ g_sfprLength + g_gprLength + stackBytes, count * sizeof(uintptr_t) };
+    _NSInvocationAllocationExtent extent{ g_sfprLength + g_gprLength + stackBytes, count * sizeof(uintptr_t) };
     stackBytes += extent.length;
 
     return extent;
 }
 
-allocation_extent _NSInvocationCallFrame::_allocateMachineWords(unsigned int count, size_t alignment) {
+_NSInvocationAllocationExtent _NSInvocationCallFrame::_allocateMachineWords(unsigned int count, size_t alignment) {
     // ARM: Many cases.
     // 1. #words < 4*remaining_reg = all in registers (consecutive)
     // 2. #words > 4*remaining_reg =
@@ -229,7 +229,7 @@ redo:
         }
 
         // Case 1.
-        off_t start = g_sfprLength + (nreg * sizeof(uintptr_t));
+        std::ptrdiff_t start = g_sfprLength + (nreg * sizeof(uintptr_t));
         unsigned int unallocatedWords = count;
         for (; unallocatedWords > 0 && nreg < GPR_COUNT; ++nreg) {
             gprUsage[nreg] = 1;
@@ -246,7 +246,7 @@ redo:
     }
 }
 
-allocation_extent _NSInvocationCallFrame::_allocateFloats(size_t count) {
+_NSInvocationAllocationExtent _NSInvocationCallFrame::_allocateFloats(size_t count) {
     size_t nreg = 0;
 redo:
     nreg = firstUnused(spUsage, nreg);
@@ -261,7 +261,7 @@ redo:
                 goto redo;
             }
         }
-        allocation_extent extent{ nreg * sizeof(float), count * sizeof(float) };
+        _NSInvocationAllocationExtent extent{ nreg * sizeof(float), count * sizeof(float) };
         for (size_t i = 0; i < count; ++i) {
             spUsage[nreg] = 1;
             ++nreg;
@@ -270,7 +270,7 @@ redo:
     }
 }
 
-allocation_extent _NSInvocationCallFrame::_allocateDoubles(size_t count) {
+_NSInvocationAllocationExtent _NSInvocationCallFrame::_allocateDoubles(size_t count) {
     unsigned int nreg = firstUnused(spUsage);
     if (nreg % 2 == 1) {
         ++nreg; // doubles take up even-numbered single-precision registers.
@@ -281,7 +281,7 @@ allocation_extent _NSInvocationCallFrame::_allocateDoubles(size_t count) {
         spUsage.set(); // All FP regs are now used.
         return _allocateStackWords((count * sizeof(double)) / sizeof(uintptr_t), alignof(double));
     } else {
-        allocation_extent extent{ (nreg / 2) * sizeof(double), count * sizeof(double) };
+        _NSInvocationAllocationExtent extent{ (nreg / 2) * sizeof(double), count * sizeof(double) };
         for (size_t i = 0; i < count; ++i) {
             spUsage[nreg] = 1; // A single double in a double register marks two single registers as used.
             spUsage[nreg + 1] = 1;
@@ -291,7 +291,7 @@ allocation_extent _NSInvocationCallFrame::_allocateDoubles(size_t count) {
     }
 }
 
-allocation_extent _NSInvocationCallFrame::_allocateArgument(const char* typeEncoding) {
+_NSInvocationAllocationExtent _NSInvocationCallFrame::_allocateArgument(const char* typeEncoding) {
     switch (typeEncoding[0]) {
         // All integral types < qword are promoted.
         case _C_BOOL:
@@ -390,7 +390,7 @@ size_t _NSInvocationCallFrame::getReturnLength() const {
 }
 
 bool _NSInvocationCallFrame::getRequiresStructReturn() const {
-    return _stret;
+    return _structReturn;
 }
 
 struct armFrame {
@@ -412,9 +412,9 @@ void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePoi
 
     memcpy(arena, _buffer, frameLength);
 
-    if (_stret) {
+    if (_structReturn) {
         // populate stret out if necessary. we only do this on the local copy.
-        memcpy(arena + _stretExtent.offset, &returnValuePointer, _stretExtent.length);
+        memcpy(arena + _structReturnExtent.offset, &returnValuePointer, _structReturnExtent.length);
     }
 
     frame->returnValue = returnValuePointer;

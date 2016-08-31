@@ -28,17 +28,19 @@
 #include <memory>
 
 static const wchar_t* TAG = L"NSInvocation";
+static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
 
 @implementation NSInvocation {
-    NSMethodSignature* _methodSignature;
+    StrongId<NSMethodSignature> _methodSignature;
 
     std::unique_ptr<_NSInvocationCallFrame> _callFrame;
 
     size_t _returnLength;
     BOOL _retainArguments;
 
-    uint8_t _smallReturnValueOptimization[16];
     void* _returnValue;
+
+    uint64_t _smallReturnValueOptimization[NSINVOCATION_SMALL_RETURN_VALUE_SIZE / sizeof(uint64_t)] __attribute__((aligned(16)));
 }
 
 /**
@@ -53,15 +55,16 @@ static const wchar_t* TAG = L"NSInvocation";
  */
 - (instancetype)initWithMethodSignature:(NSMethodSignature*)methodSignature {
     if (!methodSignature) {
-        [NSException raise:NSInvalidArgumentException format:@"-[NSInvocation initWithMethodSignature:]: method signature must not be nil."];
+        [NSException raise:NSInvalidArgumentException
+                    format:@"-[NSInvocation initWithMethodSignature:]: method signature must not be nil."];
         [self release];
         return nil;
     }
 
     if (self = [super init]) {
-        _methodSignature = [methodSignature retain];
+        _methodSignature = methodSignature;
 
-        _callFrame.reset(new _NSInvocationCallFrame(methodSignature));
+        _callFrame = std::make_unique<_NSInvocationCallFrame>(methodSignature);
 
         // true _non-promoted_ return length.
         // Used only for copying the argument back to the caller.
@@ -119,10 +122,12 @@ static const wchar_t* TAG = L"NSInvocation";
 /**
  @Status Interoperable
 */
-- (void)setArgument:(void*)buf atIndex:(int)index {
+- (void)setArgument:(void*)buf atIndex:(NSInteger)index {
     if ((index < 0) || (index >= [_methodSignature numberOfArguments])) {
-        TraceVerbose(TAG, L"index = %d, MethodSig arguments = %d", index, [_methodSignature numberOfArguments]);
-        [NSException raise:NSInvalidArgumentException format:@"The number of arguments exceeds the allowed limit."];
+        [NSException raise:NSRangeException
+                    format:@"-[NSInvocation setArgument:atIndex:]: index %d lies outside the range [0, %d).",
+                           index,
+                           [_methodSignature numberOfArguments]];
     }
 
     if (_retainArguments) {
@@ -152,10 +157,12 @@ static const wchar_t* TAG = L"NSInvocation";
 /**
  @Status Interoperable
 */
-- (void)getArgument:(void*)buf atIndex:(int)index {
+- (void)getArgument:(void*)buf atIndex:(NSInteger)index {
     if ((index < 0) || (index >= [_methodSignature numberOfArguments])) {
-        TraceVerbose(TAG, L"index = %d, MethodSig arguments = %d", index, [_methodSignature numberOfArguments]);
-        [NSException raise:NSInvalidArgumentException format:@"The number of arguments exceeds the allowed limit."];
+        [NSException raise:NSRangeException
+                    format:@"-[NSInvocation getArgument:atIndex:]: index %d lies outside the range [0, %d).",
+                           index,
+                           [_methodSignature numberOfArguments]];
     }
 
     _callFrame->loadArgument(buf, index);
@@ -233,8 +240,6 @@ static const wchar_t* TAG = L"NSInvocation";
         IwFree(_returnValue);
     }
 
-    [_methodSignature release];
-
     [super dealloc];
 }
 
@@ -250,8 +255,12 @@ static const wchar_t* TAG = L"NSInvocation";
  @Status Interoperable
 */
 - (void)invoke {
+    // {type} objc_msgSend(id self, SEL _cmd, {args...});
     void* pfn = &objc_msgSend;
+
+    // Methods that require struct returns need the three-argument version of objc_msgSend.
     if (_callFrame->getRequiresStructReturn()) {
+        // void objc_msgSend_stret(void* outPointer, id self, SEL _cmd, {args...});
         pfn = &objc_msgSend_stret;
     }
 

@@ -16,8 +16,10 @@
 
 #pragma once
 
-struct allocation_extent {
-    off_t offset;
+#import <cstddef>
+
+struct _NSInvocationAllocationExtent {
+    std::ptrdiff_t offset;
     size_t length;
 };
 

@@ -97,14 +97,14 @@ static return_type _getReturnType(const char* typeEncoding) {
 }
 
 _NSInvocationCallFrame::_NSInvocationCallFrame(NSMethodSignature* methodSignature)
-    : _methodSignature(methodSignature), _offset(0), _stret(false), _allocationExtents([_methodSignature numberOfArguments]) {
+    : _methodSignature(methodSignature), _offset(0), _structReturn(false), _allocationExtents([_methodSignature numberOfArguments]) {
     _returnType = _getReturnType([_methodSignature methodReturnType]);
     _returnLength = [_methodSignature methodReturnLength];
 
     // 1, 2, 4, and 8-byte structs are returned in registers.
     if (_returnType == RETURN_TYPE_STRUCT) {
-        _stret = true;
-        _stretExtent = _allocateArgument("^v");
+        _structReturn = true;
+        _structReturnExtent = _allocateArgument("^v");
     } else if (_returnType != RETURN_TYPE_NONE) {
         // Promote all non-stret return lengths to one machine word.
         _returnLength = std::max(sizeof(uintptr_t), _returnLength);
@@ -123,11 +123,11 @@ _NSInvocationCallFrame::~_NSInvocationCallFrame() {
 }
 
 /* private */
-allocation_extent _NSInvocationCallFrame::_allocateArgument(const char* objcTypeEncoding) {
+_NSInvocationAllocationExtent _NSInvocationCallFrame::_allocateArgument(const char* objcTypeEncoding) {
     size_t nWords = std::max(1U, objc_aligned_size(objcTypeEncoding) / sizeof(uintptr_t));
     size_t length = nWords * sizeof(uintptr_t);
 
-    allocation_extent extent{ _offset, length };
+    _NSInvocationAllocationExtent extent{ _offset, length };
     _offset += length;
     return extent;
 }
@@ -185,7 +185,7 @@ size_t _NSInvocationCallFrame::getReturnLength() const {
 }
 
 bool _NSInvocationCallFrame::getRequiresStructReturn() const {
-    return _stret;
+    return _structReturn;
 }
 
 void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePointer) const {
@@ -196,9 +196,9 @@ void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePoi
     x86Frame* frame = (x86Frame*)(stack + frameLength);
 
     memcpy(stack, _buffer, frameLength);
-    if (_stret) {
+    if (_structReturn) {
         // populate stret out if necessary. we only do this on the local copy.
-        memcpy(stack + _stretExtent.offset, &returnValuePointer, _stretExtent.length);
+        memcpy(stack + _structReturnExtent.offset, &returnValuePointer, _structReturnExtent.length);
     }
 
     *frame = { 0, 0, 0, _returnType, _returnLength, returnValuePointer, functionPointer };
