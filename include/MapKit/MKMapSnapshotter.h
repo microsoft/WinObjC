@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,6 +16,7 @@
 #pragma once
 
 #import <MapKit/MapKitExport.h>
+#import <Foundation/NSObject.h>
 #import <objc/runtime.h>
 #import <objc/toydispatch.h>
 
@@ -26,7 +27,7 @@
 typedef void (^MKMapSnapshotCompletionHandler)(MKMapSnapshot* snapshot, NSError* error);
 
 MAPKIT_EXPORT_CLASS
-@interface MKMapSnapshotter
+@interface MKMapSnapshotter : NSObject <NSObject>
 - (instancetype)initWithOptions:(MKMapSnapshotOptions*)options STUB_METHOD;
 - (void)startWithCompletionHandler:(MKMapSnapshotCompletionHandler)completionHandler STUB_METHOD;
 - (void)startWithQueue:(dispatch_queue_t)queue completionHandler:(MKMapSnapshotCompletionHandler)completionHandler STUB_METHOD;

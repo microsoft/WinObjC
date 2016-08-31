@@ -409,3 +409,184 @@ TEST(Accelerate, MatrixMultiply) {
         }
     }
 }
+
+static inline void vImageBufferFree(vImage_Buffer* buffer) {
+    if (buffer->data) {
+        free(buffer->data);
+        buffer->data = nullptr;
+    }
+}
+
+static void vImageFillBufferWithRandomData8(vImage_Buffer* buffer) {
+    unsigned char* rowPtr = reinterpret_cast<unsigned char*>(buffer->data);
+
+    for (uint32_t y = 0; y < buffer->height; y++) {
+        for (uint32_t x = 0; x < buffer->width; x++) {
+            rowPtr[x] = (unsigned char)((double)rand() / (RAND_MAX + 1) * (256));
+        }
+
+        rowPtr += buffer->rowBytes;
+    }
+}
+
+static void vImageFillBufferWithRandomDataF(vImage_Buffer* buffer) {
+    unsigned char* rowPtr = reinterpret_cast<unsigned char*>(buffer->data);
+    float* rowPtrFloats;
+
+    for (uint32_t y = 0; y < buffer->height; y++) {
+        rowPtrFloats = reinterpret_cast<float*>(rowPtr);
+
+        for (uint32_t x = 0; x < buffer->width; x++) {
+            rowPtrFloats[x] = (float)((double)rand() / (RAND_MAX));
+        }
+
+        rowPtr += buffer->rowBytes;
+    }
+}
+
+TEST(Accelerate, BufferInit) {
+    const vImagePixelCount width = 10;
+    const vImagePixelCount height = 10;
+    const uint32_t bitsPerPixel = 32;
+    const int32_t flags = kvImageNoFlags;
+    int32_t alignment;
+
+    vImage_Buffer buffer = {.data = nullptr, .height = 0xDEADBEEF, .width = 0xDEADBEEF, .rowBytes = 0xDEADBEEF };
+
+    // GetBuffer create with noAllocate flag
+    alignment = vImageBuffer_Init(&buffer, width, height, bitsPerPixel, kvImageNoAllocate);
+    ASSERT_TRUE(alignment > 0);
+    ASSERT_EQ(buffer.data, nullptr);
+
+    // Buffer create (allocate)
+    ASSERT_EQ(vImageBuffer_Init(&buffer, width, height, bitsPerPixel, flags), kvImageNoError);
+    ASSERT_NE(buffer.data, nullptr);
+
+    // Padding & Alignment applied
+    ASSERT_GE(buffer.rowBytes, ((width * (bitsPerPixel >> 3) + alignment - 1) & ~(alignment - 1)));
+
+    // Clean up
+    vImageBufferFree(&buffer);
+
+    // Invalid params
+    ASSERT_EQ(vImageBuffer_Init(&buffer, width, height, bitsPerPixel, kvImageBackgroundColorFill), kvImageUnknownFlagsBit);
+    ASSERT_EQ(buffer.data, nullptr);
+}
+
+TEST(Accelerate, Convert) {
+    const vImagePixelCount width = 256;
+    const vImagePixelCount height = 256;
+    const int32_t flags = kvImageNoFlags;
+
+    vImage_Buffer planar8Buffer = {.data = nullptr, .height = 0xDEADBEEF, .width = 0xDEADBEEF, .rowBytes = 0xDEADBEEF };
+    vImage_Buffer planarFBuffer = {.data = nullptr, .height = 0xDEADBEEF, .width = 0xDEADBEEF, .rowBytes = 0xDEADBEEF };
+
+    // Mismatched dimensions
+    ASSERT_EQ(vImageBuffer_Init(&planar8Buffer, width, height, 8, flags), kvImageNoError);
+    ASSERT_EQ(vImageBuffer_Init(&planarFBuffer, width - 1, height, 32, flags), kvImageNoError);
+    ASSERT_EQ(vImageConvert_Planar8toPlanarF(&planar8Buffer, &planarFBuffer, 1.0f, 0.0f, kvImageNoFlags), kvImageBufferSizeMismatch);
+    vImageBufferFree(&planar8Buffer);
+    vImageBufferFree(&planarFBuffer);
+
+    ASSERT_EQ(vImageBuffer_Init(&planar8Buffer, width, height - 1, 8, flags), kvImageNoError);
+    ASSERT_EQ(vImageBuffer_Init(&planarFBuffer, width, height, 32, flags), kvImageNoError);
+    ASSERT_EQ(vImageConvert_Planar8toPlanarF(&planar8Buffer, &planarFBuffer, 1.0f, 0.0f, kvImageNoFlags), kvImageBufferSizeMismatch);
+    vImageBufferFree(&planar8Buffer);
+    vImageBufferFree(&planarFBuffer);
+
+    // Mismatched rowbytes from expected (done by switching float plane with byte plane)
+    ASSERT_EQ(vImageBuffer_Init(&planar8Buffer, width, height, 8, flags), kvImageNoError);
+    ASSERT_EQ(vImageBuffer_Init(&planarFBuffer, width, height, 32, flags), kvImageNoError);
+    ASSERT_EQ(vImageConvert_Planar8toPlanarF(&planarFBuffer, &planar8Buffer, 1.0f, 0.0f, kvImageNoFlags), kvImageBufferSizeMismatch);
+    vImageBufferFree(&planar8Buffer);
+    vImageBufferFree(&planarFBuffer);
+
+    // Clip checking
+    ASSERT_EQ(vImageBuffer_Init(&planar8Buffer, width, height, 8, flags), kvImageNoError);
+    ASSERT_EQ(vImageBuffer_Init(&planarFBuffer, width, height, 32, flags), kvImageNoError);
+    vImageFillBufferWithRandomData8(&planar8Buffer);
+
+    // Convert and clip planar8 to planarF with a range [0.5f, 1.0f]
+    ASSERT_EQ(vImageConvert_Planar8toPlanarF(&planar8Buffer, &planarFBuffer, 1.0f, 0.5f, kvImageNoFlags), kvImageNoFlags);
+
+    unsigned char* rowPtr = reinterpret_cast<unsigned char*>(planarFBuffer.data);
+    float* rowPtrFloats;
+
+    for (uint32_t y = 0; y < height; y++) {
+        rowPtrFloats = reinterpret_cast<float*>(rowPtr);
+        for (uint32_t x = 0; x < width; x++) {
+            const float pixel = rowPtrFloats[x];
+            ASSERT_TRUE(pixel >= 0.5f && pixel <= 1.0f);
+        }
+
+        rowPtr += planarFBuffer.rowBytes;
+    }
+
+    // Clamp float buffer with range [0.5 1.0f] to a range [0.0f 0.5f] and convert and saturate to uint8 effectively making all values 255
+    ASSERT_EQ(vImageConvert_PlanarFtoPlanar8(&planarFBuffer, &planar8Buffer, 0.5f, 0.0f, kvImageNoFlags), kvImageNoFlags);
+
+    rowPtr = reinterpret_cast<unsigned char*>(planar8Buffer.data);
+
+    for (uint32_t y = 0; y < height; y++) {
+        for (uint32_t x = 0; x < width; x++) {
+            const unsigned char pixel = rowPtr[x];
+            ASSERT_TRUE_MSG(pixel == 255, "vImageConvert: PlanarFtoPlanar8 pixel <%d, %d> not properly clamped to range below input", x, y);
+        }
+
+        rowPtr += planar8Buffer.rowBytes;
+    }
+
+    // Clamp float buffer with range [0.5 1.0f] to a range [1.5f 1.0f] and convert and saturate to uint8 effectively making all values 0
+    ASSERT_EQ(vImageConvert_PlanarFtoPlanar8(&planarFBuffer, &planar8Buffer, 1.5f, 1.0f, kvImageNoFlags), kvImageNoFlags);
+
+    rowPtr = reinterpret_cast<unsigned char*>(planar8Buffer.data);
+
+    for (uint32_t y = 0; y < height; y++) {
+        for (uint32_t x = 0; x < width; x++) {
+            const unsigned char pixel = rowPtr[x];
+            ASSERT_TRUE_MSG(pixel == 0, "vImageConvert: PlanarFtoPlanar8 pixel <%d, %d> not properly clamped to range above input", x, y);
+        }
+
+        rowPtr += planar8Buffer.rowBytes;
+    }
+
+    vImageBufferFree(&planar8Buffer);
+    vImageBufferFree(&planarFBuffer);
+
+    /// Planar8toRGB888
+    vImage_Buffer rgbDest;
+    vImage_Buffer planarGreen, planarBlue, planarRed;
+
+    ASSERT_EQ(vImageBuffer_Init(&planarRed, width, height, 8, flags), kvImageNoError);
+    ASSERT_EQ(vImageBuffer_Init(&planarGreen, width, height, 8, flags), kvImageNoError);
+    ASSERT_EQ(vImageBuffer_Init(&planarBlue, width, height, 8, flags), kvImageNoError);
+    ASSERT_EQ(vImageBuffer_Init(&rgbDest, width, height, 24, flags), kvImageNoError);
+
+    // Set planarRed, planarGreen and planarBlue to 1, 2 and 3 respectively
+    memset(planarRed.data, 1, planarRed.rowBytes * planarRed.height);
+    memset(planarGreen.data, 2, planarGreen.rowBytes * planarGreen.height);
+    memset(planarBlue.data, 3, planarBlue.rowBytes * planarBlue.height);
+
+    ASSERT_EQ(vImageConvert_Planar8toRGB888(&planarRed, &planarGreen, &planarBlue, &rgbDest, kvImageNoFlags), kvImageNoError);
+
+    const Pixel_888_s rgbPixelGolden = { 1, 2, 3 };
+    rowPtr = reinterpret_cast<unsigned char*>(rgbDest.data);
+    Pixel_888_s* rowPtrRgbPixels;
+
+    for (uint32_t y = 0; y < height; y++) {
+        rowPtrRgbPixels = reinterpret_cast<Pixel_888_s*>(rowPtr);
+        for (uint32_t x = 0; x < width; x++) {
+            Pixel_888_s pixel = rowPtrRgbPixels[x];
+            ASSERT_TRUE(pixel.val[0] == rgbPixelGolden.val[0]);
+            ASSERT_TRUE(pixel.val[1] == rgbPixelGolden.val[1]);
+            ASSERT_TRUE(pixel.val[2] == rgbPixelGolden.val[2]);
+        }
+
+        rowPtr += rgbDest.rowBytes;
+    }
+
+    vImageBufferFree(&planarRed);
+    vImageBufferFree(&planarGreen);
+    vImageBufferFree(&planarBlue);
+    vImageBufferFree(&rgbDest);
+}

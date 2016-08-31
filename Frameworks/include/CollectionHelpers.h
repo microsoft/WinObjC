@@ -20,11 +20,11 @@
 #include "Starboard.h"
 
 #import <Foundation/NSString.h>
+#import <UWP/InteropBase.h>
 #include <COMIncludes.h>
 
 #include <wrl\client.h>
 #include <wrl\wrappers\corewrappers.h>
-#include <Windows.Foundation.Collections.h>
 #include "WRLHelpers.h"
 #include "StringHelpers.h"
 
@@ -45,6 +45,12 @@ template <typename T>
 struct CollectionType<ABI::Windows::Foundation::Collections::IVector<T>> {
     using NSEquivalentType = NSArray;
     using NSMutableEquivalentType = NSMutableArray;
+};
+
+template <>
+struct CollectionType<ABI::Windows::Foundation::Collections::IPropertySet> {
+    using NSEquivalentType = NSDictionary;
+    using NSMutableEquivalentType = NSMutableDictionary;
 };
 }
 
@@ -75,10 +81,42 @@ HRESULT WRLToNSCollection<ABI::Windows::Foundation::Collections::IMap<HSTRING, H
     return S_OK;
 }
 
+// Specified for converting IPropertyValue of String to NSString for Toast Action conversion
+// TODO 8218419: Cannot currently consume values in Objective C projection without first converting to IPropertyValue
+template <>
+HRESULT WRLToNSCollection<ABI::Windows::Foundation::Collections::IPropertySet>(ABI::Windows::Foundation::Collections::IPropertySet* map,
+                                                                               NSDictionary* __autoreleasing* pDictionary) {
+    using NSType = Private::CollectionType<ABI::Windows::Foundation::Collections::IPropertySet>::NSMutableEquivalentType;
+    NSType* collection = [[NSType alloc] init];
+    RETURN_IF_FAILED(WRLHelpers::ForEach(
+        map,
+        [&collection](const Microsoft::WRL::ComPtr<ABI::Windows::Foundation::Collections::IKeyValuePair<HSTRING, IInspectable*>>& pair,
+                      boolean* stop) {
+            Microsoft::WRL::Wrappers::HString key;
+            RETURN_IF_FAILED(pair->get_Key(key.GetAddressOf()));
+
+            Microsoft::WRL::ComPtr<IInspectable> inspectableValue;
+            RETURN_IF_FAILED(pair->get_Value(inspectableValue.GetAddressOf()));
+
+            Microsoft::WRL::ComPtr<ABI::Windows::Foundation::IPropertyValue> propertyValue;
+            RETURN_IF_FAILED(inspectableValue.As(&propertyValue));
+
+            Microsoft::WRL::Wrappers::HString value;
+            RETURN_IF_FAILED(propertyValue->GetString(value.GetAddressOf()));
+
+            [collection setObject:Strings::WideToNSString(value.Get()) forKey:Strings::WideToNSString(key.Get())];
+            return S_OK;
+        }));
+
+    *pDictionary = [collection autorelease];
+    return S_OK;
+}
+
 template <typename T>
 HRESULT WRLToNSCollection(const Microsoft::WRL::ComPtr<T>& collection,
                           typename Private::CollectionType<T>::NSEquivalentType* __autoreleasing* pNSCollection) {
     return WRLToNSCollection(collection.Get(), pNSCollection);
 }
+
 #endif
 }

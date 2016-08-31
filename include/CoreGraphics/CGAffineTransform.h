@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,7 +17,6 @@
 
 #import <CoreGraphics/CoreGraphicsExport.h>
 #import <CoreGraphics/CGGeometry.h>
-#import <Foundation/NSValue.h>
 
 typedef struct {
     CGFloat a;
@@ -51,8 +50,3 @@ COREGRAPHICS_EXPORT CGAffineTransform CGAffineTransformTranslate(CGAffineTransfo
 COREGRAPHICS_EXPORT bool CGAffineTransformIsIdentity(CGAffineTransform t);
 
 COREGRAPHICS_EXPORT bool CGAffineTransformEqualToTransform(CGAffineTransform t1, CGAffineTransform t2);
-
-@interface NSValue (CGAffineTransformAdditions)
-- (CGAffineTransform)CGAffineTransformValue;
-+ (NSValue*)valueWithCGAffineTransform:(CGAffineTransform)transform;
-@end

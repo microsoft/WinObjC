@@ -170,7 +170,7 @@ using cacheType = std::list<StrongId<_NSCacheEntry>>;
 */
 - (void)removeAllObjects {
     @synchronized(self) {
-        for (auto& entry: _cacheEntries) {
+        for (auto& entry : _cacheEntries) {
             if (_delegateFlags.hasWillEvict) {
                 [_delegate cache:self willEvictObject:[entry object]];
             }
@@ -286,7 +286,7 @@ using cacheType = std::list<StrongId<_NSCacheEntry>>;
 
     auto rit = _cacheEntries.end();
     do {
-        _NSCacheEntry* entry = (id)*--rit;
+        _NSCacheEntry* entry = (id) * --rit;
         auto cost = [entry cost];
         bool evict = (overCount > 0 || (cost > 0 && overCost > 0));
         if (evict) {

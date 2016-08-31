@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,7 +16,7 @@
 #pragma once
 
 #import <MapKit/MapKitExport.h>
-#import <CoreFoundation/CFBase.h>
+#import <CoreGraphics/CGBase.h>
 #import <CoreLocation/CLLocation.h>
 #import <Foundation/NSValue.h>
 

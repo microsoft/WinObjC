@@ -1,0 +1,366 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		002AB41B1D6CA1F1002082A5 /* CTCFontTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 002AB4101D6CA1F1002082A5 /* CTCFontTestViewController.mm */; };
+		002AB41C1D6CA1F1002082A5 /* CTCFramesetterTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 002AB4121D6CA1F1002082A5 /* CTCFramesetterTestViewController.mm */; };
+		002AB41D1D6CA1F1002082A5 /* CTCFrameTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 002AB4141D6CA1F1002082A5 /* CTCFrameTestViewController.mm */; };
+		002AB41E1D6CA1F1002082A5 /* CTCLineTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 002AB4161D6CA1F1002082A5 /* CTCLineTestViewController.mm */; };
+		002AB41F1D6CA1F1002082A5 /* CTCParagraphStyleTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 002AB4181D6CA1F1002082A5 /* CTCParagraphStyleTestViewController.mm */; };
+		002AB4201D6CA1F1002082A5 /* CTCRunTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 002AB41A1D6CA1F1002082A5 /* CTCRunTestViewController.mm */; };
+		002E8D941D592A3500D5DC64 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 002E8D931D592A3500D5DC64 /* main.m */; };
+		002E8D971D592A3500D5DC64 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 002E8D961D592A3500D5DC64 /* AppDelegate.m */; };
+		002E8D9A1D592A3500D5DC64 /* CTCRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 002E8D991D592A3500D5DC64 /* CTCRootViewController.m */; };
+		002E8D9D1D592A3500D5DC64 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 002E8D9B1D592A3500D5DC64 /* Main.storyboard */; };
+		002E8D9F1D592A3500D5DC64 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 002E8D9E1D592A3500D5DC64 /* Assets.xcassets */; };
+		002E8DA21D592A3500D5DC64 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 002E8DA01D592A3500D5DC64 /* LaunchScreen.storyboard */; };
+		002E8DAB1D59302E00D5DC64 /* CTCBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 002E8DAA1D59302E00D5DC64 /* CTCBaseViewController.m */; };
+		002E8DAF1D59317500D5DC64 /* CTCAlignmentTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 002E8DAE1D59317500D5DC64 /* CTCAlignmentTestViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		002AB40F1D6CA1F1002082A5 /* CTCFontTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTCFontTestViewController.h; path = Tests/CTCFontTestViewController.h; sourceTree = "<group>"; };
+		002AB4101D6CA1F1002082A5 /* CTCFontTestViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CTCFontTestViewController.mm; path = Tests/CTCFontTestViewController.mm; sourceTree = "<group>"; };
+		002AB4111D6CA1F1002082A5 /* CTCFramesetterTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTCFramesetterTestViewController.h; path = Tests/CTCFramesetterTestViewController.h; sourceTree = "<group>"; };
+		002AB4121D6CA1F1002082A5 /* CTCFramesetterTestViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CTCFramesetterTestViewController.mm; path = Tests/CTCFramesetterTestViewController.mm; sourceTree = "<group>"; };
+		002AB4131D6CA1F1002082A5 /* CTCFrameTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTCFrameTestViewController.h; path = Tests/CTCFrameTestViewController.h; sourceTree = "<group>"; };
+		002AB4141D6CA1F1002082A5 /* CTCFrameTestViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CTCFrameTestViewController.mm; path = Tests/CTCFrameTestViewController.mm; sourceTree = "<group>"; };
+		002AB4151D6CA1F1002082A5 /* CTCLineTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTCLineTestViewController.h; path = Tests/CTCLineTestViewController.h; sourceTree = "<group>"; };
+		002AB4161D6CA1F1002082A5 /* CTCLineTestViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CTCLineTestViewController.mm; path = Tests/CTCLineTestViewController.mm; sourceTree = "<group>"; };
+		002AB4171D6CA1F1002082A5 /* CTCParagraphStyleTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTCParagraphStyleTestViewController.h; path = Tests/CTCParagraphStyleTestViewController.h; sourceTree = "<group>"; };
+		002AB4181D6CA1F1002082A5 /* CTCParagraphStyleTestViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CTCParagraphStyleTestViewController.mm; path = Tests/CTCParagraphStyleTestViewController.mm; sourceTree = "<group>"; };
+		002AB4191D6CA1F1002082A5 /* CTCRunTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTCRunTestViewController.h; path = Tests/CTCRunTestViewController.h; sourceTree = "<group>"; };
+		002AB41A1D6CA1F1002082A5 /* CTCRunTestViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CTCRunTestViewController.mm; path = Tests/CTCRunTestViewController.mm; sourceTree = "<group>"; };
+		002E8D8F1D592A3500D5DC64 /* CTCatalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CTCatalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		002E8D931D592A3500D5DC64 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		002E8D951D592A3500D5DC64 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		002E8D961D592A3500D5DC64 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		002E8D981D592A3500D5DC64 /* CTCRootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CTCRootViewController.h; sourceTree = "<group>"; };
+		002E8D991D592A3500D5DC64 /* CTCRootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CTCRootViewController.m; sourceTree = "<group>"; };
+		002E8D9C1D592A3500D5DC64 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		002E8D9E1D592A3500D5DC64 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		002E8DA11D592A3500D5DC64 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		002E8DA31D592A3500D5DC64 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		002E8DA91D592FDD00D5DC64 /* CTCBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CTCBaseViewController.h; sourceTree = "<group>"; };
+		002E8DAA1D59302E00D5DC64 /* CTCBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTCBaseViewController.m; sourceTree = "<group>"; };
+		002E8DAC1D5930F600D5DC64 /* CTCAlignmentTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CTCAlignmentTestViewController.h; path = Tests/CTCAlignmentTestViewController.h; sourceTree = "<group>"; };
+		002E8DAE1D59317500D5DC64 /* CTCAlignmentTestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CTCAlignmentTestViewController.m; path = Tests/CTCAlignmentTestViewController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		002E8D8C1D592A3500D5DC64 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		002E8D861D592A3500D5DC64 = {
+			isa = PBXGroup;
+			children = (
+				002E8D911D592A3500D5DC64 /* CTCatalog */,
+				002E8D901D592A3500D5DC64 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		002E8D901D592A3500D5DC64 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				002E8D8F1D592A3500D5DC64 /* CTCatalog.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		002E8D911D592A3500D5DC64 /* CTCatalog */ = {
+			isa = PBXGroup;
+			children = (
+				002E8D951D592A3500D5DC64 /* AppDelegate.h */,
+				002E8D961D592A3500D5DC64 /* AppDelegate.m */,
+				002E8DAD1D59314E00D5DC64 /* Test */,
+				002E8D981D592A3500D5DC64 /* CTCRootViewController.h */,
+				002E8D991D592A3500D5DC64 /* CTCRootViewController.m */,
+				002E8DA91D592FDD00D5DC64 /* CTCBaseViewController.h */,
+				002E8DAA1D59302E00D5DC64 /* CTCBaseViewController.m */,
+				002E8D9B1D592A3500D5DC64 /* Main.storyboard */,
+				002E8D9E1D592A3500D5DC64 /* Assets.xcassets */,
+				002E8DA01D592A3500D5DC64 /* LaunchScreen.storyboard */,
+				002E8DA31D592A3500D5DC64 /* Info.plist */,
+				002E8D921D592A3500D5DC64 /* Supporting Files */,
+			);
+			path = CTCatalog;
+			sourceTree = "<group>";
+		};
+		002E8D921D592A3500D5DC64 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				002E8D931D592A3500D5DC64 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		002E8DAD1D59314E00D5DC64 /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				002AB40F1D6CA1F1002082A5 /* CTCFontTestViewController.h */,
+				002AB4101D6CA1F1002082A5 /* CTCFontTestViewController.mm */,
+				002AB4111D6CA1F1002082A5 /* CTCFramesetterTestViewController.h */,
+				002AB4121D6CA1F1002082A5 /* CTCFramesetterTestViewController.mm */,
+				002AB4131D6CA1F1002082A5 /* CTCFrameTestViewController.h */,
+				002AB4141D6CA1F1002082A5 /* CTCFrameTestViewController.mm */,
+				002AB4151D6CA1F1002082A5 /* CTCLineTestViewController.h */,
+				002AB4161D6CA1F1002082A5 /* CTCLineTestViewController.mm */,
+				002AB4171D6CA1F1002082A5 /* CTCParagraphStyleTestViewController.h */,
+				002AB4181D6CA1F1002082A5 /* CTCParagraphStyleTestViewController.mm */,
+				002AB4191D6CA1F1002082A5 /* CTCRunTestViewController.h */,
+				002AB41A1D6CA1F1002082A5 /* CTCRunTestViewController.mm */,
+				002E8DAC1D5930F600D5DC64 /* CTCAlignmentTestViewController.h */,
+				002E8DAE1D59317500D5DC64 /* CTCAlignmentTestViewController.m */,
+			);
+			name = Test;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		002E8D8E1D592A3500D5DC64 /* CTCatalog */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 002E8DA61D592A3500D5DC64 /* Build configuration list for PBXNativeTarget "CTCatalog" */;
+			buildPhases = (
+				002E8D8B1D592A3500D5DC64 /* Sources */,
+				002E8D8C1D592A3500D5DC64 /* Frameworks */,
+				002E8D8D1D592A3500D5DC64 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CTCatalog;
+			productName = CTCatalog;
+			productReference = 002E8D8F1D592A3500D5DC64 /* CTCatalog.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		002E8D871D592A3500D5DC64 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = Microsoft;
+				TargetAttributes = {
+					002E8D8E1D592A3500D5DC64 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 002E8D8A1D592A3500D5DC64 /* Build configuration list for PBXProject "CTCatalog" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 002E8D861D592A3500D5DC64;
+			productRefGroup = 002E8D901D592A3500D5DC64 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				002E8D8E1D592A3500D5DC64 /* CTCatalog */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		002E8D8D1D592A3500D5DC64 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				002E8DA21D592A3500D5DC64 /* LaunchScreen.storyboard in Resources */,
+				002E8D9F1D592A3500D5DC64 /* Assets.xcassets in Resources */,
+				002E8D9D1D592A3500D5DC64 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		002E8D8B1D592A3500D5DC64 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				002AB41F1D6CA1F1002082A5 /* CTCParagraphStyleTestViewController.mm in Sources */,
+				002AB41C1D6CA1F1002082A5 /* CTCFramesetterTestViewController.mm in Sources */,
+				002AB41D1D6CA1F1002082A5 /* CTCFrameTestViewController.mm in Sources */,
+				002E8D9A1D592A3500D5DC64 /* CTCRootViewController.m in Sources */,
+				002E8DAF1D59317500D5DC64 /* CTCAlignmentTestViewController.m in Sources */,
+				002AB4201D6CA1F1002082A5 /* CTCRunTestViewController.mm in Sources */,
+				002AB41E1D6CA1F1002082A5 /* CTCLineTestViewController.mm in Sources */,
+				002AB41B1D6CA1F1002082A5 /* CTCFontTestViewController.mm in Sources */,
+				002E8D971D592A3500D5DC64 /* AppDelegate.m in Sources */,
+				002E8DAB1D59302E00D5DC64 /* CTCBaseViewController.m in Sources */,
+				002E8D941D592A3500D5DC64 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		002E8D9B1D592A3500D5DC64 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				002E8D9C1D592A3500D5DC64 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		002E8DA01D592A3500D5DC64 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				002E8DA11D592A3500D5DC64 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		002E8DA41D592A3500D5DC64 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		002E8DA51D592A3500D5DC64 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		002E8DA71D592A3500D5DC64 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = CTCatalog/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = MSFT.CTCatalog;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		002E8DA81D592A3500D5DC64 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = CTCatalog/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = MSFT.CTCatalog;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		002E8D8A1D592A3500D5DC64 /* Build configuration list for PBXProject "CTCatalog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				002E8DA41D592A3500D5DC64 /* Debug */,
+				002E8DA51D592A3500D5DC64 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		002E8DA61D592A3500D5DC64 /* Build configuration list for PBXNativeTarget "CTCatalog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				002E8DA71D592A3500D5DC64 /* Debug */,
+				002E8DA81D592A3500D5DC64 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 002E8D871D592A3500D5DC64 /* Project object */;
+}

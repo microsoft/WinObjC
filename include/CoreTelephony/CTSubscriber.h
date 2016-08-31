@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,12 +17,13 @@
 #pragma once
 
 #import <CoreTelephony/CoreTelephonyExport.h>
+#import <Foundation/NSObject.h>
 
 @class NSString;
 @class NSData;
 
 CORETELEPHONY_EXPORT NSString* const CTSubscriberTokenRefreshed;
 CORETELEPHONY_EXPORT_CLASS
-@interface CTSubscriber
+@interface CTSubscriber : NSObject <NSObject>
 @property (readonly, retain, nonatomic) NSData* carrierToken STUB_PROPERTY;
 @end

@@ -1,7 +1,7 @@
 //******************************************************************************
 //
 // Copyright (c) 2016 Intel Corporation. All rights reserved.
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,6 +17,7 @@
 #pragma once
 
 #import <CoreGraphics/CoreGraphicsExport.h>
+#import <CoreGraphics/CGBase.h>
 #import <CoreGraphics/CGDataProvider.h>
 
 COREGRAPHICS_EXPORT void CGColorSpaceRelease(CGColorSpaceRef space);
@@ -24,7 +25,7 @@ COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceRetain(CGColorSpaceRef space);
 COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceGenericGray;
 COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceGenericRGB;
 COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceGenericCMYK;
-;COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceGenericRGBLinear;
+COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceGenericRGBLinear;
 COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceAdobeRGB1998;
 COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceSRGB;
 COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceGenericGrayGamma2_2;
@@ -57,9 +58,7 @@ COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateLab(const CGFloat whitePoi
                                                           const CGFloat range[4]) STUB_METHOD;
 
 COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateWithPlatformColorSpace(const void* ref) STUB_METHOD;
-COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateIndexed(CGColorSpaceRef baseSpace,
-                                                              size_t lastIndex,
-                                                              const unsigned char* colorTable);
+COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateIndexed(CGColorSpaceRef baseSpace, size_t lastIndex, const unsigned char* colorTable);
 COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateWithName(CFStringRef name);
 COREGRAPHICS_EXPORT CFDataRef CGColorSpaceCopyICCProfile(CGColorSpaceRef space) STUB_METHOD;
 COREGRAPHICS_EXPORT CFTypeID CGColorSpaceGetTypeID() STUB_METHOD;

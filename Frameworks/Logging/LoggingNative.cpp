@@ -36,7 +36,6 @@ namespace wil {
 namespace details {
 
 void(__stdcall* g_pfnLoggingCallback)(wil::FailureInfo const& failure) WI_NOEXCEPT;
-
 }
 }
 

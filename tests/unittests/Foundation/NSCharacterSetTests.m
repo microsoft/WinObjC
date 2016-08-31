@@ -230,7 +230,8 @@ ARM_DISABLED_TEST(NSCharacterSet, ExceptionTests) {
         ASSERT_OBJCEQ(e.name, @"NSInvalidArgumentException");
     }
 
-    @try {
+    @
+    try {
         set = [NSMutableCharacterSet characterSetWithContentsOfFile:nil];
         FAIL();
     } @catch (NSException* e) {

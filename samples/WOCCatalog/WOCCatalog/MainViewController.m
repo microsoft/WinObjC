@@ -39,6 +39,7 @@
 #import "FoundationsViewController.h"
 #import "BasicAnimationViewController.h"
 #import "AccelerateViewController.h"
+#import "AccelerateViewController2.h"
 #import "CoreMotionViewController.h"
 #import "ShadowViewController.h"
 #import "UIPasteboardViewController.h"
@@ -60,15 +61,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    
     // Geocoding
     [self addMenuItemViewController:[[GeocodingViewController alloc] init] andTitle:@"Geocoding"];
-    
+
     // AudioToolbox
     [self addMenuItemViewController:[[AudioToolboxViewController alloc] init] andTitle:@"AudioToolbox"];
     // CoreMotion
     [self addMenuItemViewController:[[CoreMotionViewController alloc] init] andTitle:@"CoreMotion"];
-    
+
     // CoreLocation
     [self addMenuItemViewController:[[CoreLocationViewController alloc] init] andTitle:@"CoreLocation"];
 
@@ -140,9 +140,12 @@
     // Basic Animation
     [self addMenuItemViewController:[[BasicAnimationViewController alloc] init] andTitle:@"Animation"];
 
-    // Accelerate
-    [self addMenuItemViewController:[[AccelerateViewController alloc] init] andTitle:@"Accelerate"];
+    // Accelerate 1
+    [self addMenuItemViewController:[[AccelerateViewController alloc] init] andTitle:@"Accelerate 1"];
 
+    // Accelerate 2
+    [self addMenuItemViewController:[[AccelerateViewController2 alloc] init] andTitle:@"Accelerate 2"];
+    
     // Shadow
     [self addMenuItemViewController:[[ShadowViewController alloc] init] andTitle:@"Shadow"];
 

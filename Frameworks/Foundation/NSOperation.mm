@@ -46,7 +46,7 @@ static wchar_t TAG[] = L"NSOperation";
 @implementation NSOperation {
     StrongId<NSMutableSet> _dependencies;
     NSUInteger _outstandingDependenciesCount;
-    StrongId<void(^)()> _completionBlock;
+    StrongId<void (^)()> _completionBlock;
     std::condition_variable_any _finishCondition;
 
     // The locks. _finishLock should be taken before _completionBlockLock if both need to be taken. No other locks should overlap.
@@ -98,19 +98,20 @@ static const NSString* NSOperationContext = @"context";
         completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     }
 
-    dispatch_async(completionQueue, ^{
-        decltype(_completionBlock) localCompletion;
+    dispatch_async(completionQueue,
+                   ^{
+                       decltype(_completionBlock) localCompletion;
 
-        { // _completionBlockLock scope
-            std::lock_guard<std::recursive_mutex> lock(_completionBlockLock);
-            localCompletion = std::move(_completionBlock);
-            _completionBlock = nil;
-        } // end _completionBlockLock scope
+                       { // _completionBlockLock scope
+                           std::lock_guard<std::recursive_mutex> lock(_completionBlockLock);
+                           localCompletion = std::move(_completionBlock);
+                           _completionBlock = nil;
+                       } // end _completionBlockLock scope
 
-        if (localCompletion) {
-            localCompletion();
-        }
-    });
+                       if (localCompletion) {
+                           localCompletion();
+                       }
+                   });
 }
 
 - (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
@@ -182,7 +183,6 @@ static const NSString* NSOperationContext = @"context";
         [self _checkReady];
     }
 }
-
 
 /**
  @Status Stub
@@ -261,7 +261,7 @@ static const NSString* NSOperationContext = @"context";
     }
 
     THROW_NS_IF(E_INVALIDARG, (_executing || ![self isReady]));
-    
+
     BOOL shouldExecute;
     { // _finishLock scope
         std::lock_guard<std::recursive_mutex> lock(_finishLock);
@@ -273,7 +273,7 @@ static const NSString* NSOperationContext = @"context";
             [self didChangeValueForKey:@"isExecuting"];
         }
     }
-    
+
     if (shouldExecute) {
         NSAutoreleasePool* pool = [NSAutoreleasePool new];
         [self main];
@@ -340,7 +340,7 @@ static const NSString* NSOperationContext = @"context";
 - (void)dealloc {
     { // _dependenciesLock scope
         std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
-        for(NSOperation* op in (NSSet*)_dependencies) {
+        for (NSOperation* op in(NSSet*)_dependencies) {
             [op removeObserver:self forKeyPath:@"isFinished" context:(void*)NSOperationContext];
         }
     }

@@ -129,8 +129,9 @@ TEST(Archival, NSKeyedUnarchiver) {
 // The following test is disabled because OS X violates the contract set out in
 // https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSKeyedUnarchiver_Class/#//apple_ref/occ/instm/NSKeyedUnarchiver/setRequiresSecureCoding:
 // > Once enabled, attempting to call setRequiresSecureCoding: with a value of NO will throw an exception.
-//   This is to prevent classes from selectively turning secure coding off. 
-OSX_DISABLED_TEST(NSKeyedUnarchiverSecure, SecureCodingCannotBeTurnedOff) { // it should be impossible to turn secure coding off once it's on.
+//   This is to prevent classes from selectively turning secure coding off.
+OSX_DISABLED_TEST(NSKeyedUnarchiverSecure,
+                  SecureCodingCannotBeTurnedOff) { // it should be impossible to turn secure coding off once it's on.
     NSData* archive = createTestArchive();
     [TestCreationSignallingClass resetCreationCount];
     NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
@@ -140,7 +141,8 @@ OSX_DISABLED_TEST(NSKeyedUnarchiverSecure, SecureCodingCannotBeTurnedOff) { // i
     [secureUnarchiver release];
 }
 
-TEST(NSKeyedUnarchiverSecure, RequestIncorrectClass) { // requesting an object with the wrong class should not result in the creation of the original object
+TEST(NSKeyedUnarchiverSecure,
+     RequestIncorrectClass) { // requesting an object with the wrong class should not result in the creation of the original object
     NSData* archive = createTestArchive();
     [TestCreationSignallingClass resetCreationCount];
     NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
@@ -229,7 +231,8 @@ TEST(NSKeyedUnarchiverSecure, NSArrayWithBasicEnclosedType) { // NSArray contain
     [secureUnarchiver release];
 }
 
-TEST(NSKeyedUnarchiverSecure, CustomClass) { // TestCreationSignallingClass (NSKeyedUnarchiverSecure) should pass through and create one instance
+TEST(NSKeyedUnarchiverSecure,
+     CustomClass) { // TestCreationSignallingClass (NSKeyedUnarchiverSecure) should pass through and create one instance
     NSData* archive = createTestArchive();
     [TestCreationSignallingClass resetCreationCount];
     NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
@@ -260,7 +263,8 @@ TEST(NSKeyedUnarchiverSecure, NSArrayWithCustomEnclosedType1) { // Arrays must b
     [secureUnarchiver release];
 }
 
-TEST(NSKeyedUnarchiverSecure, NSArrayWithoutEnclosedTypeSpecified) { // Arrays must be decoded by specifying their enclosing AND enclosed types
+TEST(NSKeyedUnarchiverSecure,
+     NSArrayWithoutEnclosedTypeSpecified) { // Arrays must be decoded by specifying their enclosing AND enclosed types
     NSData* archive = createTestArchive();
     [TestCreationSignallingClass resetCreationCount];
     NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];
@@ -283,7 +287,8 @@ TEST(NSKeyedUnarchiverSecure, NSArrayWithCustomEnclosedType2) { // Arrays must b
 
 // This is testing an implementation detail, but one that was true on OS X 10.10.
 // It fails on 10.11.
-OSX_DISABLED_TEST(NSKeyedUnarchiverSecure, BadDecodeLeavesUnarchiverInBadState) { // Once a bad decode has occurred, all requests must return nil
+OSX_DISABLED_TEST(NSKeyedUnarchiverSecure,
+                  BadDecodeLeavesUnarchiverInBadState) { // Once a bad decode has occurred, all requests must return nil
     NSData* archive = createTestArchive();
     [TestCreationSignallingClass resetCreationCount];
     NSKeyedUnarchiver* secureUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:archive];

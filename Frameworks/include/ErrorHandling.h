@@ -310,20 +310,20 @@ LOGGING_EXPORT void* _loggingInterlockedCompareExchangePointer(void* volatile* d
 //*****************************************************************************
 
 // This should be used for functions which have no implementation yet:
-#define UNIMPLEMENTED() \
-    if (_loggingFailFastOnUnimplemented()) { \
-        FAIL_FAST_HR(E_NOTIMPL); \
-    } else { \
+#define UNIMPLEMENTED()                                    \
+    if (_loggingFailFastOnUnimplemented()) {               \
+        FAIL_FAST_HR(E_NOTIMPL);                           \
+    } else {                                               \
         LOG_HR_MSG(E_NOTIMPL, "Stubbed function called!"); \
     }
 
 // This should be used to convey information along with the fact that something isn't implemented. For example, if we have a
 // portion of a function implemented but we've hit something unsupported:
-#define UNIMPLEMENTED_WITH_MSG(msg, ...) \
-    if (_loggingFailFastOnUnimplemented()) { \
+#define UNIMPLEMENTED_WITH_MSG(msg, ...)               \
+    if (_loggingFailFastOnUnimplemented()) {           \
         FAIL_FAST_HR_MSG(E_NOTIMPL, msg, __VA_ARGS__); \
-    } else { \
-        LOG_HR_MSG(E_NOTIMPL, msg, __VA_ARGS__); \
+    } else {                                           \
+        LOG_HR_MSG(E_NOTIMPL, msg, __VA_ARGS__);       \
     }
 
 #endif // __ERRORHANDLING_H

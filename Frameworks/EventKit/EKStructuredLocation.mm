@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -25,6 +25,14 @@
 + (EKStructuredLocation*)locationWithTitle:(NSString*)title {
     UNIMPLEMENTED();
     return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (id)copyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return [self retain];
 }
 
 @end

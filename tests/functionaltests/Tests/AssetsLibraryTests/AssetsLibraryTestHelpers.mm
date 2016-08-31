@@ -32,28 +32,32 @@ static bool copyFileToPicturesLibrary(NSString* fullPathToFile, NSString* fileNa
     };
 
     // Get StorageFile reference for file in local folder
-    [WSStorageFile getFileFromPathAsync:fullPathToFile
-        success:^void(WSStorageFile* storageFile) {
-            // Get StorageFolder for Picture Library known folder
-            [WSStorageLibrary getLibraryAsync:WSKnownLibraryIdPictures
-                success:^void(WSStorageLibrary* picturesLibrary) {
-                    [picturesLibrary.saveFolder tryGetItemAsync:fileName
-                        success:^void(RTObject<WSIStorageItem>* storageItem) {
-                            if (storageItem == nil) {
-                                [storageFile copyOverloadDefaultNameAndOptions:picturesLibrary.saveFolder
-                                    success:^void(WSStorageFile* storageFile) {
-                                        dispatch_group_leave(group);
-                                    }
-                                    failure:onFailure];
-                            } else {
-                                dispatch_group_leave(group);
-                            }
-                        }
-                        failure:onFailure];
-                }
-                failure:onFailure];
-        }
-        failure:onFailure];
+    [WSStorageFile
+        getFileFromPathAsync:fullPathToFile
+                     success:^void(WSStorageFile* storageFile) {
+                         // Get StorageFolder for Picture Library known folder
+                         [WSStorageLibrary
+                             getLibraryAsync:WSKnownLibraryIdPictures
+                                     success:^void(WSStorageLibrary* picturesLibrary) {
+                                         [picturesLibrary.saveFolder
+                                             tryGetItemAsync:fileName
+                                                     success:^void(RTObject<WSIStorageItem>* storageItem) {
+                                                         if (storageItem == nil) {
+                                                             [storageFile
+                                                                 copyOverloadDefaultNameAndOptions:picturesLibrary.saveFolder
+                                                                                           success:^void(WSStorageFile* storageFile) {
+                                                                                               dispatch_group_leave(group);
+                                                                                           }
+                                                                                           failure:onFailure];
+                                                         } else {
+                                                             dispatch_group_leave(group);
+                                                         }
+                                                     }
+                                                     failure:onFailure];
+                                     }
+                                     failure:onFailure];
+                     }
+                     failure:onFailure];
 
     dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
     dispatch_release(group);
@@ -83,16 +87,16 @@ bool AssetsLibraryTestVideoCleanup(const char* fileNameTemp) {
     };
 
     [WSStorageLibrary getLibraryAsync:WSKnownLibraryIdPictures
-        success:^void(WSStorageLibrary* picturesLibrary) {
-            [picturesLibrary.saveFolder getFileAsync:fileName
-                success:^void(WSStorageFile* storageFile) {
-                    // Delete permantently so the Recycle Bin doesn't get filled up
-                    [storageFile deleteAsync:WSStorageDeleteOptionPermanentDelete];
-                    dispatch_group_leave(group);
-                }
-                failure:onFailure];
-        }
-        failure:onFailure];
+                              success:^void(WSStorageLibrary* picturesLibrary) {
+                                  [picturesLibrary.saveFolder getFileAsync:fileName
+                                                                   success:^void(WSStorageFile* storageFile) {
+                                                                       // Delete permantently so the Recycle Bin doesn't get filled up
+                                                                       [storageFile deleteAsync:WSStorageDeleteOptionPermanentDelete];
+                                                                       dispatch_group_leave(group);
+                                                                   }
+                                                                   failure:onFailure];
+                              }
+                              failure:onFailure];
 
     dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
     dispatch_release(group);

@@ -18,70 +18,76 @@
 
 #import <StubReturn.h>
 #import "AssertARCEnabled.h"
+#import "ABMultiValueInternal.h"
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 ABMutableMultiValueRef ABMultiValueCreateMutable(ABPropertyType type) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return (__bridge_retained ABMutableMultiValueRef)[[_ABMultiValue alloc] initWithPropertyType:type];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 ABMutableMultiValueRef ABMultiValueCreateMutableCopy(ABMultiValueRef multiValue) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    RETURN_NULL_IF(multiValue == nullptr);
+
+    return (__bridge_retained ABMutableMultiValueRef)[(__bridge _ABMultiValue*)multiValue mutableCopy];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 bool ABMultiValueAddValueAndLabel(ABMutableMultiValueRef multiValue,
                                   CFTypeRef value,
                                   CFStringRef label,
                                   ABMultiValueIdentifier* outIdentifier) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    RETURN_FALSE_IF(multiValue == nullptr);
+
+    return [(__bridge _ABMultiValue*)multiValue addValue:value andLabel:label outIdentifier:outIdentifier];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 bool ABMultiValueReplaceValueAtIndex(ABMutableMultiValueRef multiValue, CFTypeRef value, CFIndex index) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    RETURN_FALSE_IF(multiValue == nullptr);
+
+    return [(__bridge _ABMultiValue*)multiValue replaceValue:value atIndex:index];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 bool ABMultiValueReplaceLabelAtIndex(ABMutableMultiValueRef multiValue, CFStringRef label, CFIndex index) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    RETURN_FALSE_IF(multiValue == nullptr);
+
+    return [(__bridge _ABMultiValue*)multiValue replaceLabel:label atIndex:index];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 bool ABMultiValueInsertValueAndLabelAtIndex(
     ABMutableMultiValueRef multiValue, CFTypeRef value, CFStringRef label, CFIndex index, ABMultiValueIdentifier* outIdentifier) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    RETURN_FALSE_IF(multiValue == nullptr);
+
+    return [(__bridge _ABMultiValue*)multiValue insertValue:value andLabel:label atIndex:index outIdentifier:outIdentifier];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 bool ABMultiValueRemoveValueAndLabelAtIndex(ABMutableMultiValueRef multiValue, CFIndex index) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    RETURN_FALSE_IF(multiValue == nullptr);
+
+    return [(__bridge _ABMultiValue*)multiValue removeValueAndLabelAtIndex:index];
 }
