@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -18,6 +18,7 @@
 
 #import <UIKit/UIKitExport.h>
 #import <Foundation/NSMutableAttributedString.h>
+#import <CoreGraphics/CGBase.h>
 
 @class NSLayoutManager;
 @protocol NSTextStorageDelegate;

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,6 +17,7 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
+#import <Foundation/Foundation.h>
 #import <CoreGraphics/CGGeometry.h>
 
 typedef NS_ENUM(NSInteger, AVAudioQuality) { AVAudioQualityMin = 0, AVAudioQualityLow = 0x20, AVAudioQualityMedium = 0x40, AVAudioQualityHigh = 0x60, AVAudioQualityMax = 0x7F };

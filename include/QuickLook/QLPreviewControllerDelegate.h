@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,6 +16,7 @@
 #pragma once
 
 #import <QuickLook/QuickLookExport.h>
+#import <Foundation/NSObject.h>
 #import <CoreGraphics/CGGeometry.h>
 
 @class QLPreviewController;
