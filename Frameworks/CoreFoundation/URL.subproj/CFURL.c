@@ -1333,7 +1333,7 @@ static Boolean _stringContainsCharacter(CFStringRef string, UniChar ch) {
 CF_EXPORT CFStringRef CFURLCreateStringByAddingPercentEscapes(CFAllocatorRef allocator, CFStringRef originalString, CFStringRef charactersToLeaveUnescaped, CFStringRef legalURLCharactersToBeEscaped, CFStringEncoding encoding) {
     CFCharacterSetRef allowedCharacterSet = CFCharacterSetCreateWithCharactersInString(allocator, charactersToLeaveUnescaped);
     CFCharacterSetRef legalEscapedCharacterSet = CFCharacterSetCreateWithCharactersInString(allocator, legalURLCharactersToBeEscaped);
-    CFStringRef escapedString = CFURLCreateStringByAddingPercentEscapesWithCharacterSets(allocator, originalString, CFCharacterSetCreateWithCharactersInString(allocator, charactersToLeaveUnescaped), CFCharacterSetCreateWithCharactersInString(allocator, legalURLCharactersToBeEscaped), encoding);
+    CFStringRef escapedString = CFURLCreateStringByAddingPercentEscapesWithCharacterSets(allocator, originalString, allowedCharacterSet, legalEscapedCharacterSet, encoding);
     CFRelease(allowedCharacterSet);
     CFRelease(legalEscapedCharacterSet);
 
