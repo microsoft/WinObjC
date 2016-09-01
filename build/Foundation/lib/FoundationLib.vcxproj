@@ -19,6 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <MASM Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\_NSInvocation.x86.asm">
+      <ExcludedFromBuild Condition="'$(Platform)'!='Win32'">true</ExcludedFromBuild>
+      <UseSafeExceptionHandlers>true</UseSafeExceptionHandlers>
+    </MASM>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\_NSInvocation.x86.mm">
+      <ExcludedFromBuild Condition="'$(Platform)'!='Win32'">true</ExcludedFromBuild>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\Foundation\_NSInvocation.arm.mm">
+      <ExcludedFromBuild Condition="'$(Platform)'!='ARM'">true</ExcludedFromBuild>
+    </ClangCompile>
+    <ARMASM Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\_NSInvocation.arm.asm">
+      <ExcludedFromBuild Condition="'$(Platform)'!='ARM'">true</ExcludedFromBuild>
+    </ARMASM>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\CFBridgeBase.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\CFHelpers.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSArray.mm" />
@@ -220,8 +233,8 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\lex.yy.m">
       <AdditionalOptions>-Wno-incompatible-pointer-types-discards-qualifiers -Wno-deprecated-declarations %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\rules.tab.m" >
-        <AdditionalOptions>-Wno-implicit-function-declaration %(AdditionalOptions)</AdditionalOptions>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\rules.tab.m">
+      <AdditionalOptions>-Wno-implicit-function-declaration %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\MainDispatcher.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCFString.mm" />
@@ -283,6 +296,7 @@
   </PropertyGroup>
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
   </ImportGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -342,5 +356,36 @@
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
   </ImportGroup>
+  <ItemDefinitionGroup>
+    <ARMASM>
+      <ObjectFileName>$(IntDir)%(FileName).obj</ObjectFileName>
+    </ARMASM>
+  </ItemDefinitionGroup>
+  <PropertyGroup Condition="'$(Platform)'=='ARM'">
+    <ComputeLinkInputsTargets>
+      $(ComputeLinkInputsTargets);
+      ComputeARMASMOutput;
+    </ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>
+      $(ComputeLibInputsTargets);
+      ComputeARMASMOutput;
+    </ComputeLibInputsTargets>
+  </PropertyGroup>
+  <Target
+    Name="ComputeARMASMOutput"
+    Condition="'@(ARMASM)' != ''">
+    <ItemGroup>
+      <Link Include="@(ARMASM->Metadata('ObjectFileName')->Distinct()->ClearMetadata())" Condition="'%(ARMASM.ExcludedFromBuild)' != 'true'"/>
+      <Lib Include="@(ARMASM->Metadata('ObjectFileName')->Distinct()->ClearMetadata())" Condition="'%(ARMASM.ExcludedFromBuild)' != 'true'"/>
+    </ItemGroup>
+  </Target>
+  <Target Name="ARMASM" AfterTargets="CustomBuild" DependsOnTargets="_SelectedFiles" Inputs="@(ARMASM)" Outputs="%(ARMASM.ObjectFileName)">
+    <ItemGroup Condition="'@(SelectedFiles)' != ''">
+      <ARMASM Remove="@(ARMASM)" Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+    <Message Condition="'@(ARMASM)' != '' and '%(ARMASM.ExcludedFromBuild)' != 'true'" Importance="High" Text="Assembling %(ARMASM.Identity)..."/>
+    <Exec Condition="'@(ARMASM)' != '' and '%(ARMASM.ExcludedFromBuild)' != 'true'" Command="armasm.exe -oldit -16 -g %(ARMASM.FullPath) -o %(ARMASM.ObjectFileName)" />
+  </Target>
 </Project>
