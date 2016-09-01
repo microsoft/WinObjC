@@ -105,17 +105,16 @@ public:
 @public
     UIViewPrivateState* priv;
 }
+
 - (void)_initPriv;
 + (void)_setPageTransitionForView:(UIView*)view fromLeft:(BOOL)fromLeft;
-- (UIViewPrivateState*)_privateState;
-
 - (void)_applyConstraints;
 - (void)_setShouldLayout;
 + (void)_setNestedAnimationsEnabled:(BOOL)enable;
-- (void)_setBoundsOrigin:(CGPoint)origin;
 - (void)__setContentsImage:(id)image;
 - (UIWindow*)_getWindowInternal;
 - (BOOL)_isEnabled;
+
 @end
 
 @interface NSLayoutConstraint ()
@@ -131,7 +130,7 @@ public:
 - (void)_setInternalTotalBounds:(CGRect)rect;
 @end
 
-inline void RunSynchronouslyOnMainThread(void(^block)()) {
+inline void RunSynchronouslyOnMainThread(void (^block)()) {
     if ([NSThread isMainThread]) {
         block();
     } else {

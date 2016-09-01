@@ -17,10 +17,22 @@
 #include <TestFramework.h>
 #import <Foundation/NSThread.h>
 #import <UIKit/UIView.h>
+#import "UWP/WindowsUIXamlControls.h"
 
-TEST(UIViewTests, Create) {
+TEST(UIView, Create) {
     EXPECT_FALSE([NSThread isMainThread]);
 
     // Try to create and destroy a UIView on a non-UI thread
     [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)] release];
+}
+
+TEST(UIView, GetXamlElement) {
+    dispatch_sync(dispatch_get_main_queue(),
+                  ^{
+                      UIView* view = [[[UIView alloc] init] autorelease];
+                      WXFrameworkElement* backingElement = [view xamlElement];
+                      ASSERT_TRUE(backingElement);
+                      ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
+                      ASSERT_TRUE([backingElement.name isEqualToString:@"UIView"]);
+                  });
 }

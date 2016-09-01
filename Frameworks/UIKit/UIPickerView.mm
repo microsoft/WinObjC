@@ -28,6 +28,12 @@
 #import <UIKit/UIView.h>
 #import <UIViewInternal.h>
 #import "UIDatePicker+Internal.h"
+#import "UIScrollViewInternal.h"
+
+static const wchar_t* TAG = L"UIPickerView";
+
+static const bool DEBUG_ALL = false;
+static const bool DEBUG_VERBOSE = DEBUG_ALL || true;
 
 struct RowData {
     float _yPos;
@@ -64,6 +70,13 @@ struct RowData {
     [self setBackgroundColor:[UIColor windowsControlDefaultBackgroundColor]];
 
     return self;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setBackgroundColor:(UIColor*)color {
+    [self _setBackgroundColor:color];
 }
 
 - (id)reloadComponent {
@@ -121,26 +134,44 @@ struct RowData {
         memcpy(&_curSize, &bounds, sizeof(CGRect));
 
         if (_selectedRow < _numRows && _selectedRow >= 0) {
-            int row = _selectedRow;
-            CGRect bounds;
-            bounds = [self bounds];
-            [self setContentOffset:CGPointMake(0, _rowData[row]._yPos - bounds.size.height / 2.0f + _rowHeight / 2.0f) animated:NO];
+            CGRect bounds = [self bounds];
+            [self setContentOffset:CGPointMake(0, _rowData[_selectedRow]._yPos - bounds.size.height / 2.0f + _rowHeight / 2.0f)
+                          animated:NO];
         }
     }
 }
 
 static void showVisibleCells(UIPickerSubView* self) {
-    CGPoint scrollPoint = { 0.0f, 0.0f };
-    scrollPoint = [self contentOffset];
-
-    CGRect bounds;
-    bounds = [self bounds];
+    CGPoint scrollPoint = [self contentOffset];
+    CGRect bounds = [self bounds];
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG,
+                     L"showVisibleCells: scrollPoint=[%f,%f], bounds=[origin=[%f, %f], size=[%f, %f]]",
+                     scrollPoint.x,
+                     scrollPoint.y,
+                     bounds.origin.x,
+                     bounds.origin.y,
+                     bounds.size.width,
+                     bounds.size.height);
+    }
 
     for (int j = 0; j < self->_numRows; j++) {
         RowData* curRow = &self->_rowData[j];
 
         if (curRow->_yPos + self->_rowHeight < scrollPoint.y || curRow->_yPos > scrollPoint.y + bounds.size.height) {
             if (curRow->_rowCell != nil) {
+                if (DEBUG_VERBOSE) {
+                    TraceVerbose(TAG,
+                                 L"showVisibleCells: removing cell[%d] with rowString=%hs, curRow->_yPos=%f, self->_rowHeight=%f, "
+                                 L"scrollPoint.y=%f,  bounds.size.height=%f",
+                                 j,
+                                 [curRow->_rowString UTF8String],
+                                 curRow->_yPos,
+                                 self->_rowHeight,
+                                 scrollPoint.y,
+                                 bounds.size.height);
+                }
+
                 [curRow->_rowCell removeFromSuperview];
                 curRow->_rowCell = nil;
             }
@@ -160,6 +191,10 @@ static void showVisibleCells(UIPickerSubView* self) {
                     } else {
                         rowString = [[self->_dataSource pickerView:self->_parent titleForRow:j forComponent:self->_componentNum] retain];
                         rowColor = [UIColor blackColor];
+                    }
+
+                    if (DEBUG_VERBOSE) {
+                        TraceVerbose(TAG, L"showVisibleCells: adding cell[%d] with rowString=%hs", j, [rowString UTF8String]);
                     }
 
                     curRow->_rowString = rowString;
@@ -192,6 +227,10 @@ static void showVisibleCells(UIPickerSubView* self) {
                     [self addSubview:curRow->_rowCell];
                 }
             } else {
+                if (DEBUG_VERBOSE) {
+                    TraceVerbose(TAG, L"showVisibleCells: show cell[%d] with rowString=%hs", j, [curRow->_rowString UTF8String]);
+                }
+
                 [curRow->_rowCell setHidden:0];
             }
         }

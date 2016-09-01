@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resources">
+      <UniqueIdentifier>fdf2a6dd-2b2b-4f37-b944-5929bc530601</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Button.xaml.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\pch.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ProgressRing.xaml.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ScrollViewer.xaml.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Slider.xaml.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\TextBox.xaml.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Button.xaml.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\pch.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ProgressRing.xaml.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ScrollViewer.xaml.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Slider.xaml.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\TextBox.xaml.h" />
+    <ClInclude Include="..\..\..\Frameworks\UIKit.Xaml\ObjCXamlControls.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Button.xaml" />
+    <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ProgressRing.xaml" />
+    <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ScrollViewer.xaml" />
+    <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Slider.xaml" />
+    <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\TextBox.xaml" />
+    <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Themes\Generic.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DummyObjC.m" />
+  </ItemGroup>
+</Project>

@@ -18,15 +18,17 @@
 #import <Starboard.h>
 #import <StubReturn.h>
 
+#import "XamlUtilities.h"
+
 #import "CGContextInternal.h"
 #import <CoreGraphics/CGContext.h>
 
 #import "CACompositor.h"
 #import "UIApplicationInternal.h"
 #import "UIResponderInternal.h"
-#import "XamlUtilities.h"
 #import <Foundation/NSNotificationCenter.h>
 #import <Foundation/NSTimer.h>
+
 #import <UIKit/UIColor.h>
 #import <UIKit/UIControl.h>
 #import <UIKit/UIFont.h>
@@ -36,6 +38,7 @@
 #import <UIKit/UITextField.h>
 #import <UIKit/UIView.h>
 #import <UIKit/UIViewController.h>
+
 #import <UWP/WindowsUIXamlControls.h>
 
 static const wchar_t* TAG = L"UITextField";
@@ -51,6 +54,21 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
 @implementation _UIHiddenButtonView
 @end
 
+void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlignment alignment) {
+    [control applyTemplate];
+    WXFrameworkElement* elem = FindTemplateChild(control, @"ContentElement");
+
+    // set verticalAligment of both content and placeholder of TextBox (or PasswordBox) to be the same value
+    if (elem != nullptr) {
+        elem.verticalAlignment = alignment;
+    }
+
+    elem = FindTemplateChild(control, @"PlaceholderTextContentPresenter");
+    if (elem != nullptr) {
+        elem.verticalAlignment = alignment;
+    }
+}
+
 @implementation UITextField {
     StrongId<NSString> _text;
     StrongId<NSString> _placeHolder;
@@ -58,8 +76,10 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
     StrongId<UIColor> _textColor;
     StrongId<UIColor> _backgroundColor;
     StrongId<UIImage> _backgroundImage;
+
     UITextAlignment _alignment;
     UITextBorderStyle _borderStyle;
+
     BOOL _secureTextMode;
     BOOL _isFirstResponder;
 
@@ -212,11 +232,14 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
 - (void)setTextColor:(UIColor*)color {
     _textColor = color;
 
+    WUColor* convertedColor = ConvertUIColorToWUColor(_textColor);
+    WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
+
     [_secureModeLock lock];
     if (_secureTextMode) {
-        _passwordBox.foreground = [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:_textColor]];
+        _passwordBox.foreground = brush;
     } else {
-        _textBox.foreground = [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:_textColor]];
+        _textBox.foreground = brush;
     }
     [_secureModeLock unlock];
 }
@@ -238,11 +261,14 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
     // When setting background color, clear out _backgroundImage assigning it to nil.
     _backgroundImage = nil;
 
+    WUColor* convertedColor = ConvertUIColorToWUColor(_backgroundColor);
+    WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
+
     [_secureModeLock lock];
     if (_secureTextMode) {
-        _passwordBox.background = [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:_backgroundColor]];
+        _passwordBox.background = brush;
     } else {
-        _textBox.background = [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:_backgroundColor]];
+        _textBox.background = brush;
     }
     [_secureModeLock unlock];
 }
@@ -263,7 +289,7 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
     [_secureModeLock lock];
     if (!_secureTextMode) {
         // passwordBox does not support text alignment
-        _textBox.textAlignment = [XamlUtilities convertUITextAlignmentToWXTextAlignment:_alignment];
+        _textBox.textAlignment = ConvertUITextAlignmentToWXTextAlignment(_alignment);
     }
     [_secureModeLock unlock];
 }
@@ -392,10 +418,13 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
 
         [_secureModeLock lock];
         if (_secureTextMode) {
-            [XamlUtilities setControlBorderStyle:_passwordBox borderStyle:_borderStyle];
+            SetControlBorderStyle(_passwordBox, _borderStyle);
         } else {
-            [XamlUtilities setControlBorderStyle:_textBox borderStyle:_borderStyle];
+            SetControlBorderStyle(_textBox, _borderStyle);
         }
+
+        WUColor* convertedColor = ConvertUIColorToWUColor(_backgroundColor);
+        WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
 
         // If _borderStyle is set to the UITextBorderStyleRoundedRect,
         // the custom background image associated with the text field is ignored.
@@ -403,10 +432,9 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
         // change _borderStyle from another style to UITextBorderStyleRoundedRect.
         if (_borderStyle == UITextBorderStyleRoundedRect && _backgroundImage != nil) {
             if (_secureTextMode) {
-                _passwordBox.background =
-                    [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:_backgroundColor]];
+                _passwordBox.background = brush;
             } else {
-                _textBox.background = [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:_backgroundColor]];
+                _textBox.background = brush;
             }
         }
         [_secureModeLock unlock];
@@ -428,19 +456,6 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
     return _borderStyle;
 }
 
-// TODO: GitHub issue 508 and 509
-// We need a type-safe way to do this with projections.  This is copied verbatim from the projections
-// code and works perfectly for this limited usage, but we don't do any type validation below.
-inline id _createRtProxy(Class cls, IInspectable* iface) {
-    if (!iface) {
-        return nil;
-    }
-
-    RTObject* ret = [NSAllocateObject(cls, 0, 0) init];
-    [ret setComObj:iface];
-    return ret;
-}
-
 /**
  @Status Caveat
  @Notes Does not support UIImage object that was initialized using a CIImage object
@@ -457,7 +472,7 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
 
     if (_borderStyle != UITextBorderStyleRoundedRect) {
         Microsoft::WRL::ComPtr<IInspectable> inspectableNode(GetCACompositor()->GetBitmapForCGImage(cgImg));
-        WUXMIBitmapSource* bitmapImageSource = _createRtProxy([WUXMIBitmapSource class], inspectableNode.Get());
+        WUXMIBitmapSource* bitmapImageSource = CreateRtProxy([WUXMIBitmapSource class], inspectableNode.Get());
         WUXMImageBrush* imageBrush = [WUXMImageBrush make];
         imageBrush.imageSource = bitmapImageSource;
 
@@ -761,9 +776,9 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
 
     [_secureModeLock lock];
     if (_secureTextMode) {
-        _passwordBox.inputScope = [XamlUtilities convertKeyboardTypeToInputScope:_keyboardType secureTextMode:YES];
+        _passwordBox.inputScope = ConvertKeyboardTypeToInputScope(_keyboardType, YES);
     } else {
-        _textBox.inputScope = [XamlUtilities convertKeyboardTypeToInputScope:_keyboardType secureTextMode:NO];
+        _textBox.inputScope = ConvertKeyboardTypeToInputScope(_keyboardType, NO);
     }
     [_secureModeLock unlock];
 }
@@ -798,11 +813,11 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
     if (_secureTextMode != secure) {
         _secureTextMode = secure;
         if (_secureTextMode) {
-            [self _initPasswordBox];
-            [self layer].contentsElement = _passwordBox;
+            [self _initPasswordBox:nil];
+            [self setXamlElement:_passwordBox];
         } else {
-            [self _initTextBox];
-            [self layer].contentsElement = _textBox;
+            [self _initTextBox:nil];
+            [self setXamlElement:_textBox];
         }
     }
     [_secureModeLock unlock];
@@ -829,13 +844,16 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
         _text = [coder decodeObjectForKey:@"UIText"];
         _placeHolder = [coder decodeObjectForKey:@"UIPlaceholder"];
         _textColor = [coder decodeObjectForKey:@"UITextColor"];
+
         if (_textColor == nil) {
             _textColor = [UIColor blackColor];
         }
+
         _backgroundColor = [UIColor lightGrayColor];
         _backgroundImage = nil;
         _isFirstResponder = NO;
-        [self _initTextField];
+
+        [self _initTextField:nil];
     }
 
     return self;
@@ -845,6 +863,10 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
  @Status Interoperable
 */
 - (instancetype)initWithFrame:(CGRect)frame {
+    return [self _initWithFrame:frame xamlElement:nil];
+}
+
+- (id)_initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
     if (self = [super initWithFrame:frame]) {
         _font = [UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]];
         _alignment = UITextAlignmentLeft;
@@ -856,7 +878,8 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
         _backgroundImage = nil;
         _spellCheckingType = UITextSpellCheckingTypeDefault;
         _isFirstResponder = NO;
-        [self _initTextField];
+
+        [self _initTextField:xamlElement];
     }
 
     return self;
@@ -951,6 +974,23 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
     [self becomeFirstResponder];
 }
 
+/**
+ @Status Interoperable
+*/
+- (void)setContentVerticalAlignment:(UIControlContentVerticalAlignment)alignment {
+    [super setContentVerticalAlignment:alignment];
+
+    WXVerticalAlignment verticalAlignment = ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(self.contentVerticalAlignment);
+
+    [_secureModeLock lock];
+    if (self.secureTextEntry) {
+        SetTextControlContentVerticalAlignment(self->_passwordBox, verticalAlignment);
+    } else {
+        SetTextControlContentVerticalAlignment(self->_textBox, verticalAlignment);
+    }
+    [_secureModeLock unlock];
+}
+
 //
 // UIKeyInput Protocol related methods
 //
@@ -1016,6 +1056,7 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
 // Handler when control GotFocus
 - (void)_setupControlGotFocusHandler:(WXCControl*)control {
     __weak UITextField* weakSelf = self;
+
     [control addGotFocusEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
         __strong UITextField* strongSelf = weakSelf;
         if (strongSelf) {
@@ -1050,6 +1091,7 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
 - (void)_setupControlLostFocusHandler:(WXCControl*)control {
     __weak WXCControl* weakControl = control;
     __weak UITextField* weakSelf = self;
+
     [control addLostFocusEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
         __strong UITextField* strongSelf = weakSelf;
         if (strongSelf) {
@@ -1100,6 +1142,7 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
             if (dismissKeyboard) {
                 [strongSelf resignFirstResponder];
             }
+
             e.handled = YES;
         } else {
             e.handled = NO;
@@ -1107,9 +1150,14 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
     }];
 }
 
-// Helper to Initialize textbox
-- (void)_initTextBox {
-    self->_textBox = [WXCTextBox make];
+// Helper to initialize textbox
+- (void)_initTextBox:(WXFrameworkElement*)xamlElement {
+    if (xamlElement != nil && [xamlElement isKindOfClass:[WXCTextBox class]]) {
+        self->_textBox = static_cast<WXCTextBox*>(xamlElement);
+    } else {
+        self->_textBox = [WXCTextBox make];
+    }
+
     self->_passwordBox = nil;
     __weak UITextField* weakSelf = self;
 
@@ -1118,14 +1166,23 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
         __strong UITextField* strongSelf = weakSelf;
         if (strongSelf) {
             if (strongSelf->_backgroundImage == nil || _borderStyle == UITextBorderStyleRoundedRect) {
-                strongSelf->_textBox.background =
-                    [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:strongSelf.backgroundColor]];
+                WUColor* convertedColor = ConvertUIColorToWUColor(strongSelf.backgroundColor);
+                WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
+                strongSelf->_textBox.background = brush;
             }
-            strongSelf->_textBox.foreground =
-                [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:strongSelf.textColor]];
-            strongSelf->_textBox.textAlignment = [XamlUtilities convertUITextAlignmentToWXTextAlignment:strongSelf.textAlignment];
-            [XamlUtilities setControlBorderStyle:strongSelf->_textBox borderStyle:strongSelf.borderStyle];
-            strongSelf->_textBox.inputScope = [XamlUtilities convertKeyboardTypeToInputScope:strongSelf->_keyboardType secureTextMode:NO];
+
+            WUColor* convertedTextColor = ConvertUIColorToWUColor(strongSelf.textColor);
+            WUXMSolidColorBrush* textBrush = [WUXMSolidColorBrush makeInstanceWithColor:convertedTextColor];
+            strongSelf->_textBox.foreground = textBrush;
+
+            strongSelf->_textBox.textAlignment = ConvertUITextAlignmentToWXTextAlignment(strongSelf.textAlignment);
+
+            SetControlBorderStyle(strongSelf->_textBox, strongSelf.borderStyle);
+
+            WXVerticalAlignment verticalAlignment =
+                ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(strongSelf.contentVerticalAlignment);
+            SetTextControlContentVerticalAlignment(strongSelf->_textBox, verticalAlignment);
+            strongSelf->_textBox.inputScope = ConvertKeyboardTypeToInputScope(strongSelf->_keyboardType, NO);
             strongSelf->_textBox.text = strongSelf.text;
             strongSelf->_textBox.placeholderText = strongSelf.placeholder;
             strongSelf->_textBox.isSpellCheckEnabled = (strongSelf.spellCheckingType == UITextSpellCheckingTypeYes);
@@ -1153,10 +1210,10 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
 }
 
 // Helper to Initialize passwordBox
-- (void)_initPasswordBox {
+- (void)_initPasswordBox:(WXFrameworkElement*)xamlElement {
     self->_passwordBox = [WXCPasswordBox make];
-    self->_textBox = nil;
 
+    self->_textBox = nil;
     __weak UITextField* weakSelf = self;
 
     // setting up loadedEvent to update properties
@@ -1164,17 +1221,22 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
         __strong UITextField* strongSelf = weakSelf;
         if (strongSelf) {
             if (strongSelf->_backgroundImage == nil || _borderStyle == UITextBorderStyleRoundedRect) {
-                strongSelf->_passwordBox.background =
-                    [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:strongSelf.backgroundColor]];
+                WUColor* convertedColor = ConvertUIColorToWUColor(strongSelf.backgroundColor);
+                WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
+                strongSelf->_passwordBox.background = brush;
             }
-            strongSelf->_passwordBox.foreground =
-                [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:strongSelf.textColor]];
+
+            WUColor* convertedTextColor = ConvertUIColorToWUColor(strongSelf.textColor);
+            WUXMSolidColorBrush* textBrush = [WUXMSolidColorBrush makeInstanceWithColor:convertedTextColor];
+            strongSelf->_passwordBox.foreground = textBrush;
             // passwordBox does not support textAlignment
 
             // border manipulate the control tempate and must be done after loaded
-            [XamlUtilities setControlBorderStyle:strongSelf->_passwordBox borderStyle:strongSelf.borderStyle];
-            strongSelf->_passwordBox.inputScope =
-                [XamlUtilities convertKeyboardTypeToInputScope:strongSelf->_keyboardType secureTextMode:YES];
+            SetControlBorderStyle(strongSelf->_passwordBox, strongSelf.borderStyle);
+            WXVerticalAlignment verticalAlignment =
+                ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(strongSelf.contentVerticalAlignment);
+            SetTextControlContentVerticalAlignment(strongSelf->_passwordBox, verticalAlignment);
+            strongSelf->_passwordBox.inputScope = ConvertKeyboardTypeToInputScope(strongSelf->_keyboardType, YES);
             strongSelf->_passwordBox.password = strongSelf.text;
             strongSelf->_passwordBox.placeholderText = strongSelf.placeholder;
         }
@@ -1198,8 +1260,8 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
     [self _setupControlKeyDownHandler:_passwordBox];
 }
 
-// main entrance to initialize TextField
-- (void)_initTextField {
+// Main entrance to initialize TextField
+- (void)_initTextField:(WXFrameworkElement*)xamlElement {
     self->_secureModeLock = [NSRecursiveLock new];
 
     // creating dummy button and hidden view so that it can be used to steal/kill the focus for this UITextField
@@ -1208,16 +1270,16 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
     self->_dummyButton.isEnabled = YES;
     self->_dummyButton.isTabStop = YES;
 
-    self->_hiddenView = [[_UIHiddenButtonView alloc] initWithFrame:{ 0, 0, 0, 0 }];
-    [self->_hiddenView setNativeElement:self->_dummyButton];
+    self->_hiddenView = [[_UIHiddenButtonView alloc] initWithFrame:CGRectZero];
+    [self->_hiddenView setXamlElement:self->_dummyButton];
     [self addSubview:self->_hiddenView];
 
     if (self->_secureTextMode) {
-        [self _initPasswordBox];
-        [self layer].contentsElement = self->_passwordBox;
+        [self _initPasswordBox:nil];
+        [self setXamlElement:self->_passwordBox];
     } else {
-        [self _initTextBox];
-        [self layer].contentsElement = self->_textBox;
+        [self _initTextBox:xamlElement];
+        [self setXamlElement:self->_textBox];
     }
 }
 

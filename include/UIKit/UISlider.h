@@ -40,6 +40,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 @class UIImageView, UIImage;
+@class WXCControl;
 
 UIKIT_EXPORT_CLASS
 @interface UISlider : UIControl
@@ -56,4 +57,5 @@ UIKIT_EXPORT_CLASS
 - (void)setMinimumTrackImage:(UIImage*)image forState:(UIControlState)state;
 - (void)setMaximumTrackImage:(UIImage*)image forState:(UIControlState)state;
 - (void)setValue:(float)value animated:(BOOL)animated;
+
 @end

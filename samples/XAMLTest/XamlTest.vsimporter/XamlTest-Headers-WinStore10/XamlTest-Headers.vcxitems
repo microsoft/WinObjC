@@ -5,8 +5,8 @@
     <ItemsRootNamespace>XamlTest_Headers</ItemsRootNamespace>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <Keyword>IslandwoodProj</Keyword>
-    <ItemsProjectGuid>{2DCC58E2-7345-4C41-9DE1-3500B1286A1E}</ItemsProjectGuid>
-    <SharedGUID>{AA73286D-CBBF-4A5E-98DE-EA00FF42F97D}</SharedGUID>
+    <ItemsProjectGuid>{E9A505B7-CD12-4ADF-A234-891BC3123E0D}</ItemsProjectGuid>
+    <SharedGUID>{48778809-6AC6-488E-8E29-B3C9853FAED7}</SharedGUID>
   </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XamlTest\MainViewController.h" />

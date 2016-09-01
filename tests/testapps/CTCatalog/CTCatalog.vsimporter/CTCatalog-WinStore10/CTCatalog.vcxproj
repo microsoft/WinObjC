@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -177,6 +177,12 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCFontTestViewController.mm" />
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCFramesetterTestViewController.mm" />
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCFrameTestViewController.mm" />
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCLineTestViewController.mm" />
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCParagraphStyleTestViewController.mm" />
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCRunTestViewController.mm" />
     <Xml Include="default.rd.xml" />
     <None Include="CTCatalog_TemporaryKey.pfx" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
@@ -189,7 +195,7 @@
     <ClangCompile Include="..\..\CTCatalog\CTCRootViewController.m" />
     <ClangCompile Include="..\..\CTCatalog\Tests\CTCAlignmentTestViewController.m" />
     <ClangCompile Include="..\..\CTCatalog\AppDelegate.m" />
-    <ClangCompile Include="..\..\CTCatalog\CTCBaseViewController.m" />
+    <ClangCompile Include="..\..\CTCatalog\CTCBaseViewController.mm" />
     <ClangCompile Include="..\..\CTCatalog\main.m" />
     <StoryboardCompile Include="..\..\CTCatalog\Base.lproj\LaunchScreen.storyboard">
       <VariantDir>Base.lproj</VariantDir>

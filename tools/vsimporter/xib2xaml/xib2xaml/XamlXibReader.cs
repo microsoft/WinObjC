@@ -134,7 +134,31 @@ namespace Xib2Xaml
                 }
             }
 
+            // Second pass over the outlets to insert x:Name and x:Bind against added controls
+            WireNamesAndEvents(placeholderTag);
+
             return rootDomObject;
+        }
+
+        private void WireNamesAndEvents(XElement placeholderTag)
+        {
+            // Handle names
+            foreach (var outletElement in placeholderTag.Descendants(XName.Get("outlet")))
+            {
+                XamlDomObject targetObject;
+                var destinationId = outletElement.Attribute(XName.Get("destination")).Value;
+                if (IdToObjectMap.TryGetValue(destinationId, out targetObject))
+                {
+                    var name = outletElement.Attribute(XName.Get("property")).Value;
+                    if (!string.IsNullOrWhiteSpace(name))
+                    {
+                        // x:Name is always the first element so replace it with the outlet property
+                        targetObject.MemberNodes[0] = new XamlDomMember(XamlLanguage.Name, name);
+                    }
+                }
+            }
+
+            // TODO: Handle events
         }
 
         internal static XElement GetReference(XDocument document, string reference)

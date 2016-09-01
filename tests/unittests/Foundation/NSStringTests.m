@@ -608,3 +608,71 @@ TEST(NSString, StringsFormatPropertyList) {
     ASSERT_OBJCEQ(@"value1", propertyList[@"key1"]);
     ASSERT_OBJCEQ(@"value2", propertyList[@"key2"]);
 }
+
+TEST(NSString, LastPathComponent) {
+    NSString* string = @"";
+    EXPECT_OBJCEQ(@"", string.lastPathComponent);
+
+    string = @"hello.world";
+    EXPECT_OBJCEQ(@"hello.world", string.lastPathComponent);
+
+    string = @"/";
+    EXPECT_OBJCEQ(@"/", string.lastPathComponent);
+
+#if TARGET_OS_WIN32
+    // Backward slash isn't properly supported in OSX, you end up getting FolderA\file.plist
+    string = @"C:\\FolderA\\file.plist";
+    EXPECT_OBJCEQ(@"file.plist", string.lastPathComponent);
+#endif
+
+    string = @"/tmp/scratch.tiff";
+    EXPECT_OBJCEQ(@"scratch.tiff", string.lastPathComponent);
+
+    string = @".scratch.tiff";
+    EXPECT_OBJCEQ(@".scratch.tiff", string.lastPathComponent);
+
+    string = @"/tmp/scratch";
+    EXPECT_OBJCEQ(@"scratch", string.lastPathComponent);
+
+    string = @".tiff";
+    EXPECT_OBJCEQ(@".tiff", string.lastPathComponent);
+
+    string = @".";
+    EXPECT_OBJCEQ(@".", string.lastPathComponent);
+
+    string = @"foo.";
+    EXPECT_OBJCEQ(@"foo.", string.lastPathComponent);
+
+    string = @"/tmp/";
+    EXPECT_OBJCEQ(@"tmp", string.lastPathComponent);
+
+    string = @"scratch///";
+    EXPECT_OBJCEQ(@"scratch", string.lastPathComponent);
+
+    string = @"////";
+    EXPECT_OBJCEQ(@"/", string.lastPathComponent);
+
+    string = @"/tmp/scratch..tiff";
+    EXPECT_OBJCEQ(@"scratch..tiff", string.lastPathComponent);
+
+    string = @"/tmp/random.foo.tiff";
+    EXPECT_OBJCEQ(@"random.foo.tiff", string.lastPathComponent);
+
+    string = @"/temp//foo//bar.txt";
+    EXPECT_OBJCEQ(@"bar.txt", string.lastPathComponent);
+
+    string = @"/.";
+    EXPECT_OBJCEQ(@".", string.lastPathComponent);
+
+    string = @"/foo/bar/.";
+    EXPECT_OBJCEQ(@".", string.lastPathComponent);
+
+    string = @"/baz/bar/.foo";
+    EXPECT_OBJCEQ(@".foo", string.lastPathComponent);
+
+    string = @"/tmp/foo.";
+    EXPECT_OBJCEQ(@"foo.", string.lastPathComponent);
+
+    string = @"/tmp/foo///";
+    EXPECT_OBJCEQ(@"foo", string.lastPathComponent);
+}

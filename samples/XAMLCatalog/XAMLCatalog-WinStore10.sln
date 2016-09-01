@@ -2,16 +2,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XAMLCatalog", "XAMLCatalog", "{015DAF9F-93DB-4099-B62D-6C76698CD277}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XAMLCatalog", "XAMLCatalog", "{C18F87DB-02DD-43C4-9A71-F506989F3DB2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XAMLCatalog-Headers", "XAMLCatalog.vsimporter\XAMLCatalog-Headers-WinStore10\XAMLCatalog-Headers.vcxitems", "{168899D4-299A-483A-9A01-586571BB4632}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XAMLCatalog-Headers", "XAMLCatalog.vsimporter\XAMLCatalog-Headers-WinStore10\XAMLCatalog-Headers.vcxitems", "{54559247-8B43-41C7-B5F4-86DC0EE443AD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XAMLCatalog", "XAMLCatalog.vsimporter\XAMLCatalog-WinStore10\XAMLCatalog.vcxproj", "{365DDC7D-A411-418B-85D0-BE5EEEE34F22}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XAMLCatalog", "XAMLCatalog.vsimporter\XAMLCatalog-WinStore10\XAMLCatalog.vcxproj", "{57765C7E-E763-4FA8-A786-73CADD51A57F}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		XAMLCatalog.vsimporter\XAMLCatalog-Headers-WinStore10\XAMLCatalog-Headers.vcxitems*{168899D4-299A-483A-9A01-586571BB4632}*SharedItemsImports = 9
-		XAMLCatalog.vsimporter\XAMLCatalog-Headers-WinStore10\XAMLCatalog-Headers.vcxitems*{365DDC7D-A411-418B-85D0-BE5EEEE34F22}*SharedItemsImports = 4
+		XAMLCatalog.vsimporter\XAMLCatalog-Headers-WinStore10\XAMLCatalog-Headers.vcxitems*{54559247-8B43-41C7-B5F4-86DC0EE443AD}*SharedItemsImports = 9
+		XAMLCatalog.vsimporter\XAMLCatalog-Headers-WinStore10\XAMLCatalog-Headers.vcxitems*{57765C7E-E763-4FA8-A786-73CADD51A57F}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -20,24 +20,24 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{365DDC7D-A411-418B-85D0-BE5EEEE34F22}.Debug|ARM.ActiveCfg = Debug|ARM
-		{365DDC7D-A411-418B-85D0-BE5EEEE34F22}.Debug|ARM.Build.0 = Debug|ARM
-		{365DDC7D-A411-418B-85D0-BE5EEEE34F22}.Debug|ARM.Deploy.0 = Debug|ARM
-		{365DDC7D-A411-418B-85D0-BE5EEEE34F22}.Debug|Win32.ActiveCfg = Debug|Win32
-		{365DDC7D-A411-418B-85D0-BE5EEEE34F22}.Debug|Win32.Build.0 = Debug|Win32
-		{365DDC7D-A411-418B-85D0-BE5EEEE34F22}.Debug|Win32.Deploy.0 = Debug|Win32
-		{365DDC7D-A411-418B-85D0-BE5EEEE34F22}.Release|ARM.ActiveCfg = Release|ARM
-		{365DDC7D-A411-418B-85D0-BE5EEEE34F22}.Release|ARM.Build.0 = Release|ARM
-		{365DDC7D-A411-418B-85D0-BE5EEEE34F22}.Release|ARM.Deploy.0 = Release|ARM
-		{365DDC7D-A411-418B-85D0-BE5EEEE34F22}.Release|Win32.ActiveCfg = Release|Win32
-		{365DDC7D-A411-418B-85D0-BE5EEEE34F22}.Release|Win32.Build.0 = Release|Win32
-		{365DDC7D-A411-418B-85D0-BE5EEEE34F22}.Release|Win32.Deploy.0 = Release|Win32
+		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Debug|ARM.ActiveCfg = Debug|ARM
+		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Debug|ARM.Build.0 = Debug|ARM
+		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Debug|ARM.Deploy.0 = Debug|ARM
+		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Debug|Win32.Build.0 = Debug|Win32
+		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Debug|Win32.Deploy.0 = Debug|Win32
+		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Release|ARM.ActiveCfg = Release|ARM
+		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Release|ARM.Build.0 = Release|ARM
+		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Release|ARM.Deploy.0 = Release|ARM
+		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Release|Win32.ActiveCfg = Release|Win32
+		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Release|Win32.Build.0 = Release|Win32
+		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Release|Win32.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{168899D4-299A-483A-9A01-586571BB4632} = {015DAF9F-93DB-4099-B62D-6C76698CD277}
-		{365DDC7D-A411-418B-85D0-BE5EEEE34F22} = {015DAF9F-93DB-4099-B62D-6C76698CD277}
+		{54559247-8B43-41C7-B5F4-86DC0EE443AD} = {C18F87DB-02DD-43C4-9A71-F506989F3DB2}
+		{57765C7E-E763-4FA8-A786-73CADD51A57F} = {C18F87DB-02DD-43C4-9A71-F506989F3DB2}
 	EndGlobalSection
 EndGlobal

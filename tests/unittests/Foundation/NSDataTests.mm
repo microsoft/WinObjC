@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,8 +16,9 @@
 
 #import <TestFramework.h>
 #import <Starboard/SmartTypes.h>
-
 #import <Foundation/Foundation.h>
+
+#import "TestUtils.h"
 
 // TODO: BUG 5403859: Enable ARC on this test file once load order issue is fixed
 
@@ -183,18 +184,63 @@ TEST(NSData, Base64EncodeDecodeWrappers) {
                       base64EncodedDataWithOptions:NSDataBase64Encoding76CharacterLineLength]);
 }
 
+TEST(NSData, WriteToFile) {
+    // first, write the test string to NSURL which represents as a file
+    // ensure it succeeds
+    const char bytes[] = "Hello world";
+    StrongId<NSData> expectedData = [NSData dataWithBytes:bytes length:std::extent<decltype(bytes)>::value];
+
+    // Create the file or trying to write will fail
+    StrongId<NSString> filePath = @"./Helloworld.txt";
+    SCOPE_DELETE_FILE(filePath);
+
+    NSError* error = nil;
+    EXPECT_TRUE_MSG([expectedData writeToFile:@"./Helloworld.txt" options:0 error:&error], "NSDataWriteToURL should succeed");
+    EXPECT_EQ(nil, error);
+
+    // second, read the file content back, compare with original content
+    // ensure they are equal
+    StrongId<NSData> actualData = [NSData dataWithContentsOfFile:filePath];
+    EXPECT_OBJCEQ_MSG(expectedData, actualData, "Data should be equal");
+}
+
 TEST(NSData, WriteToURL) {
     // first, write the test string to NSURL which represents as a file
     // ensure it succeeds
     const char bytes[] = "Hello world";
     StrongId<NSData> expectedData = [NSData dataWithBytes:bytes length:std::extent<decltype(bytes)>::value];
-    StrongId<NSURL> fileURL = [NSURL fileURLWithPath:@"./Library/Helloworld.txt"];
-    ASSERT_TRUE_MSG([expectedData writeToURL:fileURL options:0 error:nullptr], "NSDataWriteToURL should succeed");
+
+    // Create the file or trying to write will fail
+    StrongId<NSString> filePath = @"./Helloworld.txt";
+    SCOPE_DELETE_FILE(filePath);
+
+    StrongId<NSURL> fileURL = [NSURL fileURLWithPath:filePath];
+    NSError* error = nil;
+    EXPECT_TRUE_MSG([expectedData writeToURL:fileURL options:0 error:&error], "NSDataWriteToURL should succeed");
+    EXPECT_EQ(nil, error);
 
     // second, read the file content back, compare with original content
     // ensure they are equal
     StrongId<NSData> actualData = [NSData dataWithContentsOfFile:[fileURL path]];
-    ASSERT_OBJCEQ_MSG(expectedData, actualData, "Data should be equal");
+    EXPECT_OBJCEQ_MSG(expectedData, actualData, "Data should be equal");
+}
+
+TEST(NSData, WriteToNonexistentDirectory) {
+    // first, write the test string to NSURL which represents as a file
+    // ensure it succeeds
+    const char bytes[] = "Hello world";
+    StrongId<NSData> expectedData = [NSData dataWithBytes:bytes length:std::extent<decltype(bytes)>::value];
+
+    // Create the file or trying to write will fail
+    StrongId<NSString> filePath = @"./NONEXISTENT/Helloworld.txt";
+    SCOPE_DELETE_FILE(filePath);
+
+    StrongId<NSURL> fileURL = [NSURL fileURLWithPath:filePath];
+    NSError* error = nil;
+    EXPECT_FALSE_MSG([expectedData writeToURL:fileURL options:0 error:&error],
+                     "NSDataWriteToURL should fail for nonexistent directory path");
+
+    EXPECT_NE_MSG(nil, error, "NSDataWriteToURL should create an error for failure");
 }
 
 TEST(NSData, MutableDataBasicTests) {

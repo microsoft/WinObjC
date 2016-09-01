@@ -49,7 +49,7 @@ namespace Xib2Xaml.Handlers
             var maxValue = float.Parse(tag.Attribute(XName.Get("maxValue")).Value);
 
             domObject.SetMemberValue("Value", value.ToString());
-            domObject.SetMemberValue("Minimum", maxValue.ToString());
+            domObject.SetMemberValue("Minimum", minValue.ToString());
             domObject.SetMemberValue("Maximum", maxValue.ToString());
         }
     }

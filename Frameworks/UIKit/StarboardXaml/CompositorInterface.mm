@@ -1291,7 +1291,7 @@ public:
     }
 
     virtual Microsoft::WRL::ComPtr<IInspectable> GetXamlLayoutElement(DisplayNode* displayNode) override {
-        Microsoft::WRL::ComPtr<IUnknown> xamlNode(static_cast<IUnknown*>(displayNode->_xamlNode));
+        Microsoft::WRL::ComPtr<IUnknown> xamlNode(static_cast<IUnknown*>(displayNode->_layoutElement));
         Microsoft::WRL::ComPtr<IInspectable> inspectableNode;
         xamlNode.As(&inspectableNode);
         return inspectableNode;

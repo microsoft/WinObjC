@@ -24,14 +24,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    //  To be re-enabled once we can wrap projected controls as UIKit controls
-    /*
-    self.text.text = @"UITextField";
-    self.text.delegate = self;
+    // This demonstrates that the UIViewController is hooked up all the way to XAML backing control
+    self.text.text = @"All hooked up!";
+    self.slider.value = 0.33;
 
-    // Programmatic selector
-    [self.text addTarget:self action:@selector(textFieldEditingChanged) forControlEvents:UIControlEventEditingChanged];
-    */
+    // Spinners should be spinning
+    [self.spinner setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
+    [self.spinner startAnimating];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -40,20 +39,26 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)textFieldEditingBegin:(id)sender {
-    NSLog(@"textFieldEditingBegin");
-}
-
-- (IBAction)textFieldEditingDidEnd:(id)sender {
-    NSLog(@"textFieldEditingDidEnd");
-}
-
-- (void)textFieldEditingChanged {
+- (IBAction)textFieldEditingChanged:(id)sender {
     NSLog(@"textFieldEditingChanged: %@", self.text.text);
+
+    // Change the label text
+    self.label.text = self.text.text;
 }
 
 - (IBAction)buttonClicked:(id)sender {
     NSLog(@"buttonClicked");
+
+    // Change the label text
+    self.text.text = @"You clicked a button";
 }
+
+- (IBAction)sliderValueChanged:(id)sender {
+    NSLog(@"sliderValueChangedChanged: %@", self.text.text);
+
+    // Change the label text
+    self.text.text = [NSString stringWithFormat:@"Slider value: %f", self.slider.value];
+}
+
 
 @end

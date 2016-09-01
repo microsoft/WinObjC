@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #include <TestFramework.h>
-
+#import <Starboard/SmartTypes.h>
 #import <Foundation/Foundation.h>
 #import "UWP/WindowsUICore.h"
 
@@ -32,7 +32,7 @@ TEST(Projection, WUCCoreDispatcherSanity) {
         dispatch_semaphore_signal(semaphore);
     };
 
-    __block WUCCoreDispatcher* coreDispatcher;
+    __block StrongId<WUCCoreDispatcher> coreDispatcher;
 
     // Get the dispatcher for the main thread.
     // RunAsync needs to be called on the dispatcher for main thread.
