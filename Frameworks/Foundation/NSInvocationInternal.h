@@ -1,7 +1,6 @@
 //******************************************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Copyright (c) 2006-2007 Christopher J. W. Lloyd
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,26 +13,23 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
 #pragma once
 
-#import <Foundation/FoundationExport.h>
-#import <Foundation/NSObject.h>
+#import <cstddef>
 
-@class NSMethodSignature;
+struct _NSInvocationAllocationExtent {
+    std::ptrdiff_t offset;
+    size_t length;
+};
 
-FOUNDATION_EXPORT_CLASS
-@interface NSInvocation : NSObject
+#define NSINVOCATION_ALIGN(n, alignment) ((n + (alignment - 1)) & ~(alignment - 1))
 
-+ (NSInvocation*)invocationWithMethodSignature:(NSMethodSignature*)signature;
-@property SEL selector;
-@property (assign) id target;
-- (void)setArgument:(void*)buffer atIndex:(NSInteger)index;
-- (void)getArgument:(void*)buffer atIndex:(NSInteger)index;
-@property (readonly) BOOL argumentsRetained;
-- (void)retainArguments;
-- (void)setReturnValue:(void*)buffer;
-- (void)getReturnValue:(void*)buffer;
-- (void)invoke;
-- (void)invokeWithTarget:(id)anObject;
-@property (readonly, retain) NSMethodSignature* methodSignature;
-@end
+#if _M_IX86
+extern "C" __declspec(naked) void __fastcall _CallFrameInternal(struct x86Frame* call, void* stackBuffer);
+#include "_NSInvocation.x86.h"
+#elif _M_ARM
+extern "C" __declspec(naked) void _CallFrameInternal_VFP(void* arena, struct armFrame* frame, void* fp, unsigned int fpUsed);
+extern "C" __declspec(naked) void _CallFrameInternal(void* arena, struct armFrame* frame, void* fp);
+#include "_NSInvocation.arm.h"
+#endif
