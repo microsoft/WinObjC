@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,7 +17,7 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
-#import <Foundation/NSObject.h>
+#import <Foundation/Foundation.h>
 #import <CoreGraphics/CGGeometry.h>
 #import <AVFoundation/AVCaptureOutput.h>
 @protocol AVCaptureMetadataOutputObjectsDelegate;
