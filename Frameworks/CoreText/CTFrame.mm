@@ -33,27 +33,32 @@ const CFStringRef kCTFramePathClippingPathAttributeName = static_cast<CFStringRe
 @end
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFRange CTFrameGetStringRange(CTFrameRef frame) {
+    _CTFrame* framePtr = static_cast<_CTFrame*>(frame);
     CFIndex count = 0;
-    for (_CTLine* line in [static_cast<_CTFrame*>(frame)->_lines objectEnumerator]) {
-        count += line->_strRange.length;
+    if (framePtr) {
+        for (_CTLine* line in [framePtr->_lines objectEnumerator]) {
+            count += line->_strRange.length;
+        }
     }
     return CFRangeMake(0, count);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFRange CTFrameGetVisibleStringRange(CTFrameRef frame) {
     _CTFrame* framePtr = static_cast<_CTFrame*>(frame);
     CFIndex count = 0;
-    for (CFIndex i = 0; i < framePtr->_lineOrigins.size() && framePtr->_lineOrigins[i].y > 0; ++i) {
-        // Lines are ordered vertically so we can stop once we find one outside of the frame
-        count += static_cast<_CTLine*>([framePtr->_lines objectAtIndex:i])->_strRange.length;
+    if (framePtr) {
+        for (CFIndex i = 0; i < framePtr->_lineOrigins.size() && framePtr->_lineOrigins[i].y > 0; ++i) {
+            // Lines are ordered vertically so we can stop once we find one outside of the frame
+            count += static_cast<_CTLine*>([framePtr->_lines objectAtIndex:i])->_strRange.length;
+        }
     }
     return CFRangeMake(0, count);
 }

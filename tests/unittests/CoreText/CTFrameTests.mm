@@ -35,6 +35,11 @@ static NSAttributedString* getAttributedString(NSString* str) {
 }
 
 TEST(CTFrame, GetStringRange) {
+    EXPECT_EQ(0, CTFrameGetStringRange(nil).location);
+    EXPECT_EQ(0, CTFrameGetStringRange(nil).length);
+    EXPECT_EQ(0, CTFrameGetVisibleStringRange(nil).location);
+    EXPECT_EQ(0, CTFrameGetVisibleStringRange(nil).length);
+
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString(@"");
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(string);
     CGMutablePathRef path = CGPathCreateMutable();
@@ -44,6 +49,8 @@ TEST(CTFrame, GetStringRange) {
     EXPECT_EQ(0, CTFrameGetStringRange(frame).length);
     EXPECT_EQ(0, CTFrameGetVisibleStringRange(frame).location);
     EXPECT_EQ(0, CTFrameGetVisibleStringRange(frame).length);
+    CFRelease(framesetter);
+    CFRelease(frame);
 
     // Can fit all of the text in frame, so visible range should be equal to string range
     string = (__bridge CFAttributedStringRef)getAttributedString(@"foo");
@@ -53,6 +60,8 @@ TEST(CTFrame, GetStringRange) {
     EXPECT_EQ(3, CTFrameGetStringRange(frame).length);
     EXPECT_EQ(0, CTFrameGetVisibleStringRange(frame).location);
     EXPECT_EQ(3, CTFrameGetVisibleStringRange(frame).length);
+    CFRelease(framesetter);
+    CFRelease(frame);
 
     // Can only fit "foob" so visible range and string range should NOT be equal
     string = (__bridge CFAttributedStringRef)getAttributedString(@"foobar");
@@ -63,5 +72,7 @@ TEST(CTFrame, GetStringRange) {
     EXPECT_EQ(0, CTFrameGetVisibleStringRange(frame).location);
     EXPECT_EQ(4, CTFrameGetVisibleStringRange(frame).length);
 
+    CFRelease(framesetter);
+    CFRelease(frame);
     CGPathRelease(path);
 }
