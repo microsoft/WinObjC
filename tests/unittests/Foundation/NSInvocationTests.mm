@@ -355,7 +355,7 @@ struct ThreeWordStruct {
 }
 @end
 
-@interface _NSIT_InvocationForwardingFacade: NSObject <_NSIT_InvocationProtocol> {
+@interface _NSIT_InvocationForwardingFacade : NSObject <_NSIT_InvocationProtocol> {
     NSIT_InvocationTestClass* _destination;
 }
 @end
@@ -669,11 +669,11 @@ TEST(NSInvocation, ARMUInt64sContiguousRegistersOrStack) {
     [tester release];
 }
 
-#define SET_AND_GET_VIA_FACADE(object, prop, ...)                                       \
-    do {                                                                                    \
-        decltype(object.prop) expectedVal = __VA_ARGS__;                                    \
-        object.prop = expectedVal; \
-        decltype(object.prop) actualVal = object.prop; \
+#define SET_AND_GET_VIA_FACADE(object, prop, ...)                    \
+    do {                                                             \
+        decltype(object.prop) expectedVal = __VA_ARGS__;             \
+        object.prop = expectedVal;                                   \
+        decltype(object.prop) actualVal = object.prop;               \
         EXPECT_EQ_MSG(expectedVal, actualVal, "property %s", #prop); \
     } while (0)
 
@@ -775,7 +775,9 @@ TEST(NSInvocation, RetainArguments) {
     id arg2 = [NSObject new];
     char* arg3 = "I am a constant string!";
 
-    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:[NSIT_InvocationTestClass instanceMethodSignatureForSelector:@selector(takesOneObject:andOneCharPointer:)]];
+    NSInvocation* invocation =
+        [NSInvocation invocationWithMethodSignature:[NSIT_InvocationTestClass
+                                                        instanceMethodSignatureForSelector:@selector(takesOneObject:andOneCharPointer:)]];
     ASSERT_OBJCNE(nil, invocation);
 
     [invocation setSelector:@selector(takesOneObject:andOneCharPointer:)];
