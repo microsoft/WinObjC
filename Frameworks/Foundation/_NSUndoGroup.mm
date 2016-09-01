@@ -19,12 +19,12 @@
 #import "_NSUndoManagerInternal.h"
 
 @implementation _NSUndoGroup {
-    StrongId<_NSUndoManagerStack> _undoObjectsInGroup;
+    StrongId<_NSUndoManagerStack> _undoablesInGroup;
     BOOL _isClosed;
 }
 
 - (NSUInteger)count {
-    return [_undoObjectsInGroup count];
+    return [_undoablesInGroup count];
 }
 
 - (BOOL)isClosed {
@@ -33,17 +33,17 @@
 
 - (id)init {
     if (self = [super init]) {
-        _undoObjectsInGroup = [[_NSUndoManagerStack alloc] init];
+        _undoablesInGroup = [[_NSUndoManagerStack alloc] init];
         _isClosed = NO;
     }
     return self;
 }
 - (void)addUndoable:(id<_NSUndoable>)undoCall {
-    _NSUndoBasicAction* topObjectInGroup = [_undoObjectsInGroup peek];
+    _NSUndoBasicAction* topObjectInGroup = [_undoablesInGroup peek];
     if (topObjectInGroup != nil && ![topObjectInGroup isClosed]) {
         [topObjectInGroup addUndoable:undoCall];
     } else {
-        [_undoObjectsInGroup push:undoCall];
+        [_undoablesInGroup push:undoCall];
     }
 }
 
@@ -52,27 +52,27 @@
         [NSException raise:NSInternalInconsistencyException format:@"Undo group was not closed."];
     }
     do {
-        id<_NSUndoable> object = [_undoObjectsInGroup peek];
+        id<_NSUndoable> object = [_undoablesInGroup peek];
         [object undo:YES];
-        [_undoObjectsInGroup pop];
-    } while (undoAll && [_undoObjectsInGroup count] > 0);
+        [_undoablesInGroup pop];
+    } while (undoAll && [_undoablesInGroup count] > 0);
 }
 
 - (void)createUndoSubGroup {
-    id<_NSUndoable> topObjectInGroup = [_undoObjectsInGroup peek];
+    id<_NSUndoable> topObjectInGroup = [_undoablesInGroup peek];
 
     // If there is an open sub group to pass this call onto, do so.
     if (topObjectInGroup != nil && ![topObjectInGroup isClosed]) {
         [(_NSUndoGroup*)topObjectInGroup createUndoSubGroup];
     } else {
         _NSUndoGroup* newGroup = [[_NSUndoGroup alloc] init];
-        [_undoObjectsInGroup push:newGroup];
+        [_undoablesInGroup push:newGroup];
         [newGroup release];
     }
 }
 
 - (void)closeUndoGroup {
-    id<_NSUndoable> topObjectInGroup = [_undoObjectsInGroup peek];
+    id<_NSUndoable> topObjectInGroup = [_undoablesInGroup peek];
     if (topObjectInGroup != nil && ![topObjectInGroup isClosed]) {
         [topObjectInGroup closeUndoGroup];
     } else {
@@ -85,18 +85,18 @@
 }
 
 - (void)removeAllWithTarget:(id)target {
-    [_undoObjectsInGroup removeAllWithTarget:target];
+    [_undoablesInGroup removeAllWithTarget:target];
 }
 
 - (NSUInteger)getNumberOfOpenGroups {
     if (!_isClosed) {
-        return [[_undoObjectsInGroup peek] getNumberOfOpenGroups] + 1;
+        return [[_undoablesInGroup peek] getNumberOfOpenGroups] + 1;
     }
     return 0;
 }
 
 - (BOOL)hasNestedGroup {
-    if ([[_undoObjectsInGroup peek] isKindOfClass:[_NSUndoGroup class]]) {
+    if ([[_undoablesInGroup peek] isKindOfClass:[_NSUndoGroup class]]) {
         return YES;
     } else {
         return NO;

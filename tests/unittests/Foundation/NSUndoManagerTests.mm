@@ -84,15 +84,15 @@ TEST(NSUndoManager, BasicUndoTest) {
     UndoTestObject* object = [[[UndoTestObject alloc] initWithValue:oldValue] autorelease];
     EXPECT_EQ([object.undoManager canUndo], NO);
 
-    EXPECT_EQ(object.value.intValue, oldValue.intValue);
+    EXPECT_OBJCEQ(object.value, oldValue);
     [object updateNumber:newValue];
 
     EXPECT_EQ([object.undoManager canUndo], YES);
-    EXPECT_EQ(object.value.intValue, newValue.intValue);
+    EXPECT_OBJCEQ(object.value, newValue);
 
     [object.undoManager undo];
 
-    EXPECT_EQ(object.value.intValue, oldValue.intValue);
+    EXPECT_OBJCEQ(object.value, oldValue);
     EXPECT_EQ([object.undoManager canUndo], NO);
 }
 
@@ -109,9 +109,9 @@ TEST(NSUndoManager, MultipleUndoTests) {
     [object updateNumber:val2];
     [object updateNumber:val3];
     [object updateNumber:val4];
-    EXPECT_EQ(object.value.intValue, val4.intValue);
+    EXPECT_OBJCEQ(object.value, val4);
     [object.undoManager undo];
-    EXPECT_EQ(object.value.intValue, val1.intValue);
+    EXPECT_OBJCEQ(object.value, val1);
     EXPECT_EQ([object.undoManager canUndo], NO);
 }
 
@@ -128,15 +128,15 @@ TEST(NSUndoManager, UndoRedoTests) {
     [object updateNumber:val3];
     [object updateNumber:val4];
     EXPECT_EQ([object.undoManager canUndo], YES);
-    EXPECT_EQ(object.value.intValue, val4.intValue);
+    EXPECT_OBJCEQ(object.value, val4);
     [object.undoManager undo];
     EXPECT_EQ([object.undoManager canRedo], YES);
-    EXPECT_EQ(object.value.intValue, val1.intValue);
+    EXPECT_OBJCEQ(object.value, val1);
     [object.undoManager redo];
-    EXPECT_EQ(object.value.intValue, val4.intValue);
+    EXPECT_OBJCEQ(object.value, val4);
     EXPECT_EQ([object.undoManager canRedo], NO);
     [object.undoManager undo];
-    EXPECT_EQ(object.value.intValue, val1.intValue);
+    EXPECT_OBJCEQ(object.value, val1);
     EXPECT_EQ([object.undoManager canRedo], YES);
 }
 
@@ -176,14 +176,14 @@ TEST(NSUndoManager, UndoWithoutAnyUndoableActions) {
     UndoTestObject* object = [[[UndoTestObject alloc] initWithValue:oldValue] autorelease];
 
     [object updateNumber:newValue];
-    EXPECT_EQ(object.value.intValue, newValue.intValue);
+    EXPECT_OBJCEQ(object.value, newValue);
 
     [object.undoManager undo];
-    EXPECT_EQ(object.value.intValue, oldValue.intValue);
+    EXPECT_OBJCEQ(object.value, oldValue);
 
     // Attempt to call undo without an undo action available.
     EXPECT_NO_THROW([object.undoManager undo]);
-    EXPECT_EQ(object.value.intValue, oldValue.intValue);
+    EXPECT_OBJCEQ(object.value, oldValue);
 }
 
 TEST(NSUndoManager, IndividualUndoOperations) {
@@ -199,16 +199,16 @@ TEST(NSUndoManager, IndividualUndoOperations) {
     [object updateNumberSingleUndoStep:val3];
     [object updateNumberSingleUndoStep:val4];
 
-    EXPECT_EQ(object.value.intValue, val4.intValue);
+    EXPECT_OBJCEQ(object.value, val4);
 
     [object.undoManager undoNestedGroup];
-    EXPECT_EQ(object.value.intValue, val3.intValue);
+    EXPECT_OBJCEQ(object.value, val3);
 
     [object.undoManager undoNestedGroup];
-    EXPECT_EQ(object.value.intValue, val2.intValue);
+    EXPECT_OBJCEQ(object.value, val2);
 
     [object.undoManager undoNestedGroup];
-    EXPECT_EQ(object.value.intValue, val1.intValue);
+    EXPECT_OBJCEQ(object.value, val1);
 }
 
 // Similar test as above, but call undo instead of nested group as each undo operation should be
@@ -226,16 +226,16 @@ TEST(NSUndoManager, IndividualUndoOperationsWithUndoCallAndGroupsByEventOff) {
     [object updateNumberSingleUndoStep:val2];
     [object updateNumberSingleUndoStep:val3];
     [object updateNumberSingleUndoStep:val4];
-    EXPECT_EQ(object.value.intValue, val4.intValue);
+    EXPECT_OBJCEQ(object.value, val4);
 
     [object.undoManager undo];
-    EXPECT_EQ(object.value.intValue, val3.intValue);
+    EXPECT_OBJCEQ(object.value, val3);
 
     [object.undoManager undo];
-    EXPECT_EQ(object.value.intValue, val2.intValue);
+    EXPECT_OBJCEQ(object.value, val2);
 
     [object.undoManager undo];
-    EXPECT_EQ(object.value.intValue, val1.intValue);
+    EXPECT_OBJCEQ(object.value, val1);
 }
 
 TEST(NSUndoManager, IndividualUndoRedoOperations) {
@@ -250,25 +250,25 @@ TEST(NSUndoManager, IndividualUndoRedoOperations) {
     [object updateNumberSingleUndoStep:val3];
     [object updateNumberSingleUndoStep:val4];
 
-    EXPECT_EQ(object.value.intValue, val4.intValue);
+    EXPECT_OBJCEQ(object.value, val4);
 
     [object.undoManager undoNestedGroup];
-    EXPECT_EQ(object.value.intValue, val3.intValue);
+    EXPECT_OBJCEQ(object.value, val3);
 
     [object.undoManager undoNestedGroup];
-    EXPECT_EQ(object.value.intValue, val2.intValue);
+    EXPECT_OBJCEQ(object.value, val2);
 
     [object.undoManager redo];
-    EXPECT_EQ(object.value.intValue, val3.intValue);
+    EXPECT_OBJCEQ(object.value, val3);
 
     [object.undoManager redo];
-    EXPECT_EQ(object.value.intValue, val4.intValue);
+    EXPECT_OBJCEQ(object.value, val4);
 
     [object.undoManager undoNestedGroup];
-    EXPECT_EQ(object.value.intValue, val3.intValue);
+    EXPECT_OBJCEQ(object.value, val3);
 
     [object.undoManager undoNestedGroup];
-    EXPECT_EQ(object.value.intValue, val2.intValue);
+    EXPECT_OBJCEQ(object.value, val2);
 }
 
 TEST(NSUndoManager, InternalInconsistencyExceptions) {
@@ -332,7 +332,7 @@ TEST(NSUndoManager, GroupingLevel) {
     [object.undoManager undo];
 
     EXPECT_EQ(object.undoManager.groupingLevel, 0);
-    EXPECT_EQ(object.value.intValue, 5);
+    EXPECT_OBJCEQ(object.value, val1);
 
     [object.undoManager beginUndoGrouping];
     [object updateNumberSingleUndoStep:val2];
@@ -368,18 +368,18 @@ TEST(NSUndoManager, UndoNestedGroup) {
     UndoTestObject* object = [[[UndoTestObject alloc] initWithValue:oldValue] autorelease];
     EXPECT_EQ([object.undoManager canUndo], NO);
 
-    EXPECT_EQ(object.value.intValue, oldValue.intValue);
+    EXPECT_OBJCEQ(object.value, oldValue);
     [object updateNumber:newValue];
     [object updateNumber:newValue2];
     EXPECT_EQ(object.undoManager.groupingLevel, 1);
 
     EXPECT_EQ([object.undoManager canUndo], YES);
-    EXPECT_EQ(object.value.intValue, newValue2.intValue);
+    EXPECT_OBJCEQ(object.value, newValue2);
     [object.undoManager endUndoGrouping];
 
     [object.undoManager undoNestedGroup];
 
-    EXPECT_EQ(object.value.intValue, oldValue.intValue);
+    EXPECT_OBJCEQ(object.value, oldValue);
 }
 
 TEST(NSUndoManager, BasicUndoNotAutomaticGroups) {
@@ -390,17 +390,17 @@ TEST(NSUndoManager, BasicUndoNotAutomaticGroups) {
     object.undoManager.groupsByEvent = NO;
     [object.undoManager beginUndoGrouping];
 
-    EXPECT_EQ(object.value.intValue, oldValue.intValue);
+    EXPECT_OBJCEQ(object.value, oldValue);
 
     [object updateNumber:newValue];
 
     EXPECT_EQ([object.undoManager canUndo], YES);
-    EXPECT_EQ(object.value.intValue, newValue.intValue);
+    EXPECT_OBJCEQ(object.value, newValue);
 
     [object.undoManager endUndoGrouping];
     [object.undoManager undo];
 
-    EXPECT_EQ(object.value.intValue, oldValue.intValue);
+    EXPECT_OBJCEQ(object.value, oldValue);
     EXPECT_EQ([object.undoManager canUndo], NO);
 }
 
@@ -418,7 +418,7 @@ TEST(NSUndoManager, NestedUndoGroupsAndActionsNoAuto) {
     [object updateNumber:val2];
     [object.undoManager endUndoGrouping];
 
-    EXPECT_EQ(object.value.intValue, val2.intValue);
+    EXPECT_OBJCEQ(object.value, val2);
 
     [object.undoManager beginUndoGrouping];
     [object.undoManager beginUndoGrouping];
@@ -427,13 +427,13 @@ TEST(NSUndoManager, NestedUndoGroupsAndActionsNoAuto) {
     [object updateNumber:val4];
     [object.undoManager endUndoGrouping];
 
-    EXPECT_EQ(object.value.intValue, val4.intValue);
+    EXPECT_OBJCEQ(object.value, val4);
 
     [object.undoManager undo];
 
-    EXPECT_EQ(object.value.intValue, val2.intValue);
+    EXPECT_OBJCEQ(object.value, val2);
     [object.undoManager undo];
-    EXPECT_EQ(object.value.intValue, val1.intValue);
+    EXPECT_OBJCEQ(object.value, val1);
 }
 
 TEST(NSUndoManager, NestedUndoNestedGroupsAndActionsNoAuto) {
@@ -459,10 +459,10 @@ TEST(NSUndoManager, NestedUndoNestedGroupsAndActionsNoAuto) {
     [object.undoManager endUndoGrouping];
 
     [object.undoManager undoNestedGroup];
-    EXPECT_EQ(object.value.intValue, val3.intValue);
+    EXPECT_OBJCEQ(object.value, val3);
 
     [object.undoManager undoNestedGroup];
-    EXPECT_EQ(object.value.intValue, val2.intValue);
+    EXPECT_OBJCEQ(object.value, val2);
 }
 
 // Undo test object that references an externally owned undo manager.
@@ -517,39 +517,39 @@ TEST(NSUndoManager, MultipleUndoTargets) {
     UndoTestObjectWithSharedManager* thirdTargetWithNumbers =
         [[UndoTestObjectWithSharedManager alloc] initWithValue:target3val1 undoManager:manager];
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val1.intValue); // 15
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val1.intValue); // 25
-    EXPECT_EQ(thirdTargetWithNumbers.value.intValue, target3val1.intValue); // 35
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val1); // 15
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value, target2val1); // 25
+    EXPECT_OBJCEQ(thirdTargetWithNumbers.value, target3val1); // 35
 
     [firstTargetWithNumbers updateValue:target1val2];
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val2.intValue); // 16
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val1.intValue); // 25
-    EXPECT_EQ(thirdTargetWithNumbers.value.intValue, target3val1.intValue); // 35
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val2); // 16
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value, target2val1); // 25
+    EXPECT_OBJCEQ(thirdTargetWithNumbers.value, target3val1); // 35
 
     [secondTargetWithNumbers updateValue:target2val2];
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val2.intValue); // 16
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val2.intValue); // 26
-    EXPECT_EQ(thirdTargetWithNumbers.value.intValue, target3val1.intValue); // 35
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val2); // 16
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value, target2val2); // 26
+    EXPECT_OBJCEQ(thirdTargetWithNumbers.value, target3val1); // 35
 
     [firstTargetWithNumbers updateValue:target1val3];
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val3.intValue); // 17
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val2.intValue); // 26
-    EXPECT_EQ(thirdTargetWithNumbers.value.intValue, target3val1.intValue); // 35
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val3); // 17
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value, target2val2); // 26
+    EXPECT_OBJCEQ(thirdTargetWithNumbers.value, target3val1); // 35
 
     [manager undoNestedGroup]; // Undo the most recent update, revert first target to target1val2
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val2.intValue); // 16
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val2.intValue); // 26
-    EXPECT_EQ(thirdTargetWithNumbers.value.intValue, target3val1.intValue); // 35
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val2); // 16
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value, target2val2); // 26
+    EXPECT_OBJCEQ(thirdTargetWithNumbers.value, target3val1); // 35
 
     [thirdTargetWithNumbers updateValue:target3val2];
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val2.intValue); // 16
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val2.intValue); // 26
-    EXPECT_EQ(thirdTargetWithNumbers.value.intValue, target3val2.intValue); // 36
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val2); // 16
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value, target2val2); // 26
+    EXPECT_OBJCEQ(thirdTargetWithNumbers.value, target3val2); // 36
 
     // Update all to their third values as a single operation.
     [manager beginUndoGrouping];
@@ -558,44 +558,44 @@ TEST(NSUndoManager, MultipleUndoTargets) {
     [thirdTargetWithNumbers updateValue:target3val3];
     [manager endUndoGrouping];
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val3.intValue); // 17
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val3.intValue); // 27
-    EXPECT_EQ(thirdTargetWithNumbers.value.intValue, target3val3.intValue); // 37
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val3); // 17
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value, target2val3); // 27
+    EXPECT_OBJCEQ(thirdTargetWithNumbers.value, target3val3); // 37
 
     [manager undoNestedGroup]; // Revert all values to their targetxvalue2 in a single call.
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val2.intValue); // 16
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val2.intValue); // 26
-    EXPECT_EQ(thirdTargetWithNumbers.value.intValue, target3val2.intValue); // 36
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val2); // 16
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value, target2val2); // 26
+    EXPECT_OBJCEQ(thirdTargetWithNumbers.value, target3val2); // 36
 
     [manager redo]; // Bring them back to their third values.
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val3.intValue); // 17
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val3.intValue); // 27
-    EXPECT_EQ(thirdTargetWithNumbers.value.intValue, target3val3.intValue); // 37
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val3); // 17
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value, target2val3); // 27
+    EXPECT_OBJCEQ(thirdTargetWithNumbers.value, target3val3); // 37
 
     // Remove all undo operations targeting the second object.
     [manager removeAllActionsWithTarget:secondTargetWithNumbers];
 
     [manager undoNestedGroup]; // Revert all values to their targetxvalue2 in a single call except for the removed target, target 2
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val2.intValue); // 16
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val3.intValue); // 36
-    EXPECT_EQ(thirdTargetWithNumbers.value.intValue, target3val2.intValue); // 36
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val2); // 16
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value, target2val3); // 36
+    EXPECT_OBJCEQ(thirdTargetWithNumbers.value, target3val2); // 36
 
     [manager undoNestedGroup];
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val2.intValue); // 16
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue,
-              target2val3.intValue); // 27 (secondTarget should not ever be changed as all of its actions have been removed.)
-    EXPECT_EQ(thirdTargetWithNumbers.value.intValue, target3val1.intValue); // 35
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val2); // 16
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value,
+                  target2val3); // 27 (secondTarget should not ever be changed as all of its actions have been removed.)
+    EXPECT_OBJCEQ(thirdTargetWithNumbers.value, target3val1); // 35
 
     [manager undo];
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val1.intValue); // 15
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue,
-              target2val3.intValue); // 27 (secondTarget should not ever be changed as all of its actions have been removed.)
-    EXPECT_EQ(thirdTargetWithNumbers.value.intValue, target3val1.intValue); // 35
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val1); // 15
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value,
+                  target2val3); // 27 (secondTarget should not ever be changed as all of its actions have been removed.)
+    EXPECT_OBJCEQ(thirdTargetWithNumbers.value, target3val1); // 35
 }
 
 TEST(NSUndoManager, LimitUndoActions) {
@@ -610,7 +610,7 @@ TEST(NSUndoManager, LimitUndoActions) {
     // Can only hold 3 top level undo actions.
     object.undoManager.levelsOfUndo = 3;
 
-    EXPECT_EQ(object.value.intValue, val1.intValue);
+    EXPECT_OBJCEQ(object.value, val1);
 
     // Add operations that never return to val1
     [object updateNumberSingleUndoStep:val2];
@@ -618,7 +618,7 @@ TEST(NSUndoManager, LimitUndoActions) {
     [object updateNumberSingleUndoStep:val4];
     [object updateNumberSingleUndoStep:val5];
 
-    EXPECT_EQ(object.value.intValue, val5.intValue);
+    EXPECT_OBJCEQ(object.value, val5);
 
     // Undo should undo everything possible.
     EXPECT_EQ([object.undoManager canUndo], YES);
@@ -631,7 +631,7 @@ TEST(NSUndoManager, LimitUndoActions) {
 
     // Should do nothing.
     EXPECT_NO_THROW([object.undoManager undo]);
-    EXPECT_EQ(object.value.intValue, val2.intValue);
+    EXPECT_OBJCEQ(object.value, val2);
 }
 
 TEST(NSUndoManager, RunLoopModes) {
@@ -669,8 +669,8 @@ TEST(NSUndoManager, RemovingOneTarget) {
     UndoTestObjectWithSharedManager* secondTargetWithNumbers =
         [[UndoTestObjectWithSharedManager alloc] initWithValue:target2val1 undoManager:manager];
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val1.intValue); // 15
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val1.intValue); // 25
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val1); // 15
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value, target2val1); // 25
 
     [manager beginUndoGrouping];
     [secondTargetWithNumbers updateValue:target2val2];
@@ -680,8 +680,8 @@ TEST(NSUndoManager, RemovingOneTarget) {
     [secondTargetWithNumbers updateValue:target2val3];
     [manager endUndoGrouping];
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val1.intValue); // 17
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val3.intValue); // 27
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val1); // 17
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value, target2val3); // 27
 
     [manager beginUndoGrouping];
     [manager beginUndoGrouping];
@@ -689,33 +689,33 @@ TEST(NSUndoManager, RemovingOneTarget) {
     [manager endUndoGrouping];
     [manager endUndoGrouping];
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val2.intValue); // 16
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val3.intValue); // 27
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val2); // 16
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value, target2val3); // 27
 
     [manager beginUndoGrouping];
     [firstTargetWithNumbers updateValue:target1val3];
     [manager endUndoGrouping];
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val3.intValue); // 17
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val3.intValue); // 27
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val3); // 17
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value, target2val3); // 27
 
     // Should remove the groups containing firstTarget making undo
     [manager removeAllActionsWithTarget:firstTargetWithNumbers];
 
     [manager undo];
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val3.intValue); // 17
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val2.intValue); // 27
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val3); // 17
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value, target2val2); // 27
     EXPECT_EQ(manager.canUndo, YES);
 
     [manager undo];
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val3.intValue); // 17
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val1.intValue); // 27
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val3); // 17
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value, target2val1); // 27
     EXPECT_EQ(manager.canUndo, NO);
 
     [manager undo];
 
-    EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val3.intValue); // 17
-    EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val1.intValue); // 27
+    EXPECT_OBJCEQ(firstTargetWithNumbers.value, target1val3); // 17
+    EXPECT_OBJCEQ(secondTargetWithNumbers.value, target2val1); // 27
 }
