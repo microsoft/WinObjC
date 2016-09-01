@@ -23,11 +23,24 @@
 #import <Foundation/NSObject.h>
 #import <vector>
 
+// Based off DWRITE_GLYPH_RUN structure
+struct _DWriteGlyphRun {
+    uint32_t _glyphCount;
+    std::vector<uint16_t> _glyphIndices;
+    std::vector<CGSize> _glyphAdvances;
+};
+
+// Based off DWRITE_GLYPH_RUN_DESCRIPTION structure
+struct _DWriteGlyphRunDescription {
+    uint32_t _stringLength;
+    uint32_t _textPosition;
+};
+
 struct _DWriteGlyphRunDetails {
     std::vector<float> _baselineOriginX;
     std::vector<float> _baselineOriginY;
-    std::vector<DWRITE_GLYPH_RUN> _glyphRuns;
-    std::vector<DWRITE_GLYPH_RUN_DESCRIPTION> _glyphRunDescriptions;
+    std::vector<_DWriteGlyphRun> _glyphRuns;
+    std::vector<_DWriteGlyphRunDescription> _glyphRunDescriptions;
 };
 
 NSArray<NSString*>* _dwriteGetFamilyNames();

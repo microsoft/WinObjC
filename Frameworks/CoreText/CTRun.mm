@@ -55,7 +55,7 @@ CFIndex CTRunGetGlyphCount(CTRunRef run) {
     }
 
     _CTRun* ctRun = (_CTRun*)run;
-    return ctRun->_characters.size();
+    return ctRun->_glyphAdvances.size();
 }
 
 /**
@@ -117,11 +117,10 @@ void CTRunGetPositions(CTRunRef run, CFRange runRange, CGPoint* outPositions) {
     }
 
     if (runRange.location != 0) {
-         UNIMPLEMENTED();
-         return;
+        UNIMPLEMENTED();
+        return;
     }
 
-    //memcpy(outPositions, &curRun->_glyphOrigins[runRange.location], sizeof(CGPoint) * runRange.length);
     outPositions->x = curRun->_xPos;
     outPositions->y = curRun->_yPos;
 }
@@ -139,16 +138,6 @@ const CGSize* CTRunGetAdvancesPtr(CTRunRef run) {
  @Status Stub
 */
 void CTRunGetAdvances(CTRunRef run, CFRange runRange, CGSize* outAdvances) {
-    // TODO::
-    // Would it be possible to use CTFontGetAdvancesForGlyphs here to get the Advance value?
-    // There will some work to be done here to get this method working -
-    //    1. Get individual glyphs from the run's _stringFragment
-    //    2. Use the characters from the specified range to get their glyph information
-    //    3. Return the Advance for these glyphs.
-
-    UNIMPLEMENTED();
-
-    /*
     _CTRun* curRun = (_CTRun*)run;
 
     if (runRange.length == 0) {
@@ -157,7 +146,6 @@ void CTRunGetAdvances(CTRunRef run, CFRange runRange, CGSize* outAdvances) {
     }
 
     memcpy(outAdvances, &curRun->_glyphAdvances[runRange.location], sizeof(CGSize) * runRange.length);
-    */
 }
 
 /**

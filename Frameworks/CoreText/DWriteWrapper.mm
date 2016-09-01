@@ -214,8 +214,20 @@ public:
         _DWriteGlyphRunDetails* glyphs = static_cast<_DWriteGlyphRunDetails*>(clientDrawingContext);
         glyphs->_baselineOriginX.push_back(baselineOriginX);
         glyphs->_baselineOriginY.push_back(baselineOriginY);
-        glyphs->_glyphRuns.push_back(*glyphRun);
-        glyphs->_glyphRunDescriptions.push_back(*glyphRunDescription);
+
+        _DWriteGlyphRun glyphRunInfo;
+        glyphRunInfo._glyphCount = glyphRun->glyphCount;
+        for (int index = 0; index < glyphRun->glyphCount; index++) {
+            glyphRunInfo._glyphIndices.push_back(glyphRun->glyphIndices[index]);
+            glyphRunInfo._glyphAdvances.push_back(CGSizeMake(glyphRun->glyphAdvances[index], 0));
+        }
+        glyphs->_glyphRuns.push_back(glyphRunInfo);
+
+        _DWriteGlyphRunDescription glyphRunDescriptionInfo;
+        glyphRunDescriptionInfo._stringLength = glyphRunDescription->stringLength;
+        glyphRunDescriptionInfo._textPosition = glyphRunDescription->textPosition;
+        glyphs->_glyphRunDescriptions.push_back(glyphRunDescriptionInfo);
+
         return S_OK;
     };
 
@@ -353,8 +365,8 @@ static NSArray<_CTLine*>* _dwriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
         while (i < j) {
             // Create _CTRun objects and make them part of _CTLine
             _CTRun* run = [[_CTRun new] autorelease];
-            run->_range.location = glyphRunDetails._glyphRunDescriptions[i].textPosition;
-            run->_range.length = glyphRunDetails._glyphRunDescriptions[i].stringLength;
+            run->_range.location = glyphRunDetails._glyphRunDescriptions[i]._textPosition;
+            run->_range.length = glyphRunDetails._glyphRunDescriptions[i]._stringLength;
             run->_stringFragment = [ts->_string substringWithRange:NSMakeRangeFromCF(run->_range)];
             run->_xPos = frameSize.origin.x + glyphRunDetails._baselineOriginX[i];
             // TODO::
@@ -363,6 +375,7 @@ static NSArray<_CTLine*>* _dwriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
             // Cairo FreeType has its from bottom left.
             run->_yPos = frameSize.origin.y + frameSize.size.height - glyphRunDetails._baselineOriginY[i];
             run->_attributes = [ts->_attributedString attributesAtIndex:run->_range.location effectiveRange:NULL];
+            run->_glyphAdvances = move(glyphRunDetails._glyphRuns[i]._glyphAdvances);
 
             [runs addObject:run];
             stringRange += run->_range.length;

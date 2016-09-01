@@ -79,7 +79,6 @@
     // TODO::
     // Do we need these anymore?
     std::vector<CGPoint> _glyphOrigins;
-    std::vector<WORD> _characters;
 }
 @end
 

@@ -50,12 +50,14 @@ static _CTFrame* _createFrame(_CTFrameSetter* frameSetter, CGRect frameSize, CGS
         // TODO::
         // Is there a better way to do this - Investigate.
         // For now the below logic is ued to calculate the frame size required to fit the text in -
-        //     width = max of (_yPos of the last glyph in every line + _glyphAdvances in that glyph) all the lines
+        //     width = frame width as it is the constraint passed to DWrite to calculate renderable area width
         //     height = min(_lineOrigin.y of the last line in the frame + the _lineOrigin.y of the first line (so we have some buffer
         //              space after the last line), frameSize.size.height)
+
+        // Calculate width
         sizeOut->width = frameSize.size.width;
 
-        // Calculate
+        // Calculate heigth
         _CTLine* firstLine = static_cast<_CTLine*>([lines objectAtIndex:0]);
         _CTLine* lastLine = static_cast<_CTLine*>([lines objectAtIndex:[lines count] - 1]);
         // TODO::
