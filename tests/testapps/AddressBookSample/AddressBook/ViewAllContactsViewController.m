@@ -41,6 +41,10 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
+// Since Windows Contacts are read-only for those not created by the user's app,
+// the cases for modifying and deleting make use of the new method, ABAddressBookCopyArrayOfAllUserAppPeople,
+// which returns the contacts that can be modified or deleted. In iOS, all contacts have read-write permission,
+// so ABAddressBookCopyArrayOfAllPeople is sufficient.
 #ifdef WINOBJC
     if (self.contactOperation == kAddressBookViewContact) {
         self.contacts = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeople(_addressBook);

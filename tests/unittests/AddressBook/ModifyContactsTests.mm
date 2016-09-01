@@ -241,3 +241,23 @@ TEST(AddressBookModify, AddressMultiValues) {
     CFRelease(multiValue);
     CFRelease(person);
 }
+
+TEST(AddressBookModify, ModifyError) {
+    ABRecordRef person = ABPersonCreate();
+    CFErrorRef error = NULL;
+
+    // Test case where invalid property id is given.
+    ASSERT_FALSE(ABRecordSetValue(person, -1, @"hello", &error));
+    ASSERT_FALSE(error == NULL);
+    CFRelease(error);
+
+    // Test case where length of String is longer than the allowed length.
+    error = NULL;
+    ASSERT_FALSE(ABRecordSetValue(person,
+                                  kABPersonFirstNameProperty,
+                                  @"this is a name that is much longer than the allowed length for a first name!",
+                                  &error));
+    ASSERT_FALSE(error == NULL);
+    CFRelease(error);
+    CFRelease(person);
+}
