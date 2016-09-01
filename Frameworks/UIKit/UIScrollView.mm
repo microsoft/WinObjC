@@ -214,6 +214,11 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     // by default enable chaining
     _scrollViewer.isVerticalScrollChainingEnabled = YES;
     _scrollViewer.isHorizontalScrollChainingEnabled = YES;
+
+    // by default disable railing
+    _scrollViewer.isHorizontalRailEnabled = NO;
+    _scrollViewer.isVerticalRailEnabled = NO;
+
     _loaded = NO;
 
     // setting the rootElement and the content element for scroll viewer
@@ -249,10 +254,6 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
 - (BOOL)_isAnimating {
     return _isAnimating;
-}
-
-- (void)_setBackgroundColor:(UIColor*)color {
-    _scrollViewer.background = [WUXMSolidColorBrush makeInstanceWithColor:ConvertUIColorToWUColor(color)];
 }
 
 - (void)_setupViewChangingHandler {
@@ -318,16 +319,22 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
                             strongSelf->_decelerating = YES;
 
                             if (strongSelf->_pagingEnabled) {
-                                // TODO: currently horizonal only and also consider using windows Snappoints for paging in the future
+                                strongSelf->_decelerating = NO;
 
                                 // cancel the direct manipulation before we do manual animating to page boundary
-                                strongSelf->_decelerating = NO;
                                 [strongSelf->_scrollViewer cancelDirectManipulations];
 
                                 // re-caculate scrolling boundary based on the predicted finalview offset
                                 CGRect bound = [strongSelf bounds];
-                                int curScrollPage = int((arg.finalView.horizontalOffset + bound.size.width / 2.0f) / bound.size.width);
-                                CGPoint offset = { curScrollPage * bound.size.width, 0 };
+                                CGPoint offset;
+                                if (strongSelf->_scrollViewer.horizontalOffset != arg.nextView.horizontalOffset) {
+                                    int curScrollPage = int((arg.finalView.horizontalOffset + bound.size.width / 2.0f) / bound.size.width);
+                                    offset = { curScrollPage * bound.size.width, 0 };
+
+                                } else {
+                                    int curScrollPage = int((arg.finalView.verticalOffset + bound.size.height / 2.0f) / bound.size.height);
+                                    offset = { 0, curScrollPage * bound.size.height };
+                                }
 
                                 // re-target the scrollview to be the page boundary
                                 changeContentOffset(strongSelf, offset, YES);
@@ -610,7 +617,6 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 - (instancetype)initWithFrame:(CGRect)frame {
     return [self _initWithFrame:frame xamlElement:nil];
 }
-
 
 - (instancetype)_initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
     if (self = [super initWithFrame:frame]) {
