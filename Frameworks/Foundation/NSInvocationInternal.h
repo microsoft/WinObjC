@@ -35,14 +35,15 @@ struct _NSInvocationForwardReturnInfo {
 extern "C" bool _NSInvocationTypeEncodingMandatesStructReturn(const char* typeEncoding);
 extern "C" void _NSInvocation_ForwardFrame(void* stret, id self, SEL sel, void* frame, /* out */ _NSInvocationForwardReturnInfo* bridgeOut);
 
-extern "C" __declspec(naked) void __cdecl _NSInvocation_ForwardingBridgeNoStret(void*, void*);
-extern "C" __declspec(naked) void __cdecl _NSInvocation_ForwardingBridge(void*, void*, void*);
-
 #if _M_IX86
 extern "C" __declspec(naked) void __fastcall _CallFrameInternal(struct x86Frame* call, void* stackBuffer);
+extern "C" __declspec(naked) void __cdecl _NSInvocation_ForwardingBridgeNoStret(void*, void*);
+extern "C" __declspec(naked) void __cdecl _NSInvocation_ForwardingBridge(void*, void*, void*);
 #include "_NSInvocation.x86.h"
 #elif _M_ARM
 extern "C" __declspec(naked) void _CallFrameInternal_VFP(void* arena, struct armFrame* frame, void* fp, unsigned int fpUsed);
 extern "C" __declspec(naked) void _CallFrameInternal(void* arena, struct armFrame* frame, void* fp);
+extern "C" __declspec(naked) void _NSInvocation_ForwardingBridgeNoStret(void*, void*);
+extern "C" __declspec(naked) void _NSInvocation_ForwardingBridge(void*, void*, void*);
 #include "_NSInvocation.arm.h"
 #endif

@@ -278,32 +278,43 @@ static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
 
 @end
 
-extern "C" void _NSInvocation_ForwardFrame(void* stret, id self, SEL sel, void* frame, /* out */ _NSInvocationForwardReturnInfo* bridgeOut) {
+extern "C" void _NSInvocation_ForwardFrame(
+    void* stret, id self, SEL sel, void* frame, /* out */ _NSInvocationForwardReturnInfo* bridgeOut) {
     NSMethodSignature* signature = [self methodSignatureForSelector:sel];
     if (!signature) {
         const char* types = nullptr;
         types = sel_getType_np(sel);
         if (!types) {
-            SEL typedSelector;
+            SEL typedSelector = nullptr;
             sel_copyTypedSelectors_np(sel_getName(sel), &typedSelector, 1);
             if (typedSelector) {
                 types = sel_getType_np(typedSelector);
             }
         }
+
         if (types) {
             signature = [NSMethodSignature signatureWithObjCTypes:types];
         }
     }
+
     if (!signature) {
-        TraceError(TAG, L"Unable to find a method signature"); // TODO(DH) Fix this message.
+        Class cls = object_getClass(self);
+        TraceError(TAG,
+                   L"%c[%ls %ls]: unable to find method signature for forwarding.",
+                   class_isMetaClass(cls) ? '+' : '-',
+                   class_getName(cls),
+                   sel_getName(sel));
+        [self doesNotRecognizeSelector:sel]; // This should not return...
+        *bridgeOut = { nullptr, 0 }; // ...but if it does, populate the output anyway.
+        return;
     }
 
     // frame is platform-specific; the _NSInvocationCallFrame knows what to do with it.
     NSInvocation* invocation = [[[NSInvocation alloc] _initWithMethodSignature:signature copyInFrame:frame] autorelease];
-    auto &callFrame = *invocation->_callFrame.get();
+    auto& callFrame = *invocation->_callFrame.get();
     [self forwardInvocation:invocation];
     if (stret) {
         [invocation getReturnValue:stret];
     }
-    *bridgeOut = {invocation->_returnValue, callFrame.getOpaquePlatformReturnType()};
+    *bridgeOut = { invocation->_returnValue, callFrame.getOpaquePlatformReturnType() };
 }

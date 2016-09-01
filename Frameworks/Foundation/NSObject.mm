@@ -451,9 +451,27 @@ static IMP _NSIMPForward(id object, SEL selector) {
     Class cls = object_getClass(object);
     if (class_respondsToSelector(cls, @selector(forwardInvocation:))) {
         const char* types = sel_getType_np(selector);
-        if (types && _NSInvocationTypeEncodingMandatesStructReturn(types)) {
+        if (!types) {
+            SEL typedSelector = nullptr;
+            sel_copyTypedSelectors_np(sel_getName(selector), &typedSelector, 1);
+            if (typedSelector) {
+                types = sel_getType_np(typedSelector);
+            }
+        }
+
+        if (!types) {
+            TraceWarning(TAG,
+                         L"%c[%ls %ls]: attempting to forward method of unknown type; bailing out.",
+                         class_isMetaClass(cls) ? '+' : '-',
+                         class_getName(cls),
+                         sel_getName(selector));
+            return (IMP)&_forwardThrow;
+        }
+
+        if (_NSInvocationTypeEncodingMandatesStructReturn(types)) {
             return (IMP)&_NSInvocation_ForwardingBridge;
         }
+
         return (IMP)&_NSInvocation_ForwardingBridgeNoStret;
     }
     return (IMP)&_forwardThrow;
@@ -466,9 +484,27 @@ static struct objc_slot* _NSSlotForward(id object, SEL selector) {
     Class cls = object_getClass(object);
     if (class_respondsToSelector(cls, @selector(forwardInvocation:))) {
         const char* types = sel_getType_np(selector);
-        if (types && _NSInvocationTypeEncodingMandatesStructReturn(types)) {
+        if (!types) {
+            SEL typedSelector = nullptr;
+            sel_copyTypedSelectors_np(sel_getName(selector), &typedSelector, 1);
+            if (typedSelector) {
+                types = sel_getType_np(typedSelector);
+            }
+        }
+
+        if (!types) {
+            TraceWarning(TAG,
+                         L"%c[%ls %ls]: attempting to forward method of unknown type; bailing out.",
+                         class_isMetaClass(cls) ? '+' : '-',
+                         class_getName(cls),
+                         sel_getName(selector));
+            return &_NSForwardSlot;
+        }
+
+        if (_NSInvocationTypeEncodingMandatesStructReturn(types)) {
             return &_NSInvocationStretSlot;
         }
+
         return &_NSInvocationSlot;
     }
     return &_NSForwardSlot;
