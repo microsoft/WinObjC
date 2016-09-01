@@ -51,7 +51,7 @@ protected:
 
         [contact.jobInfo addObject:job];
         [job release];
-        _record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact];
+        _record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact andType:kAddressBookNewContact];
         [contact release];
     }
 
@@ -94,7 +94,7 @@ TEST(AddressBook, QueryContactBirthday) {
     birthday.kind = WACContactDateKindBirthday;
 
     [contact.importantDates addObject:birthday];
-    ABRecordRef record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact];
+    ABRecordRef record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:contact andType:kAddressBookNewContact];
 
     NSCalendar* calendar = [NSCalendar currentCalendar];
     NSDateComponents* dateComponents = [[NSDateComponents alloc] init];
@@ -114,7 +114,8 @@ TEST(AddressBook, QueryContactBirthday) {
 
 TEST(AddressBook, GetRecordTypeAndID) {
     ASSERT_EQ_MSG(kABRecordInvalidID, ABRecordGetRecordID(nullptr), "FAILED: null record should have an invalid ID!\n");
-    ABRecordRef record = (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:[WACContact make]];
+    ABRecordRef record =
+        (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:[WACContact make] andType:kAddressBookNewContact];
     ASSERT_EQ_MSG(kABPersonType, ABRecordGetRecordType(record), "FAILED: Person record should have a person type!\n");
     CFRelease(record);
 }

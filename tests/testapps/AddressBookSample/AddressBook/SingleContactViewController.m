@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -370,7 +370,7 @@
 
     CFTypeRef phoneNumber = [self _copyContactInfoFrom:self.phoneNumber];
     if (phoneNumber) {
-        ABMutableMultiValueRef phoneNumbers = ABMultiValueCreateMutable(kABMultiStringPropertyType);
+        ABMutableMultiValueRef phoneNumbers = ABMultiValueCreateMutable(kABStringPropertyType);
         succeeded = succeeded && ABMultiValueAddValueAndLabel(phoneNumbers, phoneNumber, kABPersonPhoneMainLabel, NULL);
         succeeded = succeeded && ABRecordSetValue(self.contact, kABPersonPhoneProperty, phoneNumbers, &error);
         CFRelease(phoneNumbers);
@@ -379,7 +379,7 @@
 
     CFTypeRef email = [self _copyContactInfoFrom:self.email];
     if (email) {
-        ABMutableMultiValueRef emails = ABMultiValueCreateMutable(kABMultiStringPropertyType);
+        ABMutableMultiValueRef emails = ABMultiValueCreateMutable(kABStringPropertyType);
         succeeded = succeeded && ABMultiValueAddValueAndLabel(emails, email, kABWorkLabel, NULL);
         succeeded = succeeded && ABRecordSetValue(self.contact, kABPersonEmailProperty, emails, &error);
         CFRelease(emails);
@@ -388,8 +388,8 @@
 
     CFTypeRef address = [self _copyContactInfoFrom:self.address];
     if (address) {
-        ABMutableMultiValueRef addresses = ABMultiValueCreateMutable(kABMultiDictionaryPropertyType);
-        NSDictionary* homeAddress = @{ (NSString*)kABPersonAddressStreetKey : (__bridge NSString*)address };
+        ABMutableMultiValueRef addresses = ABMultiValueCreateMutable(kABDictionaryPropertyType);
+        NSDictionary* homeAddress = @{ (NSString*) kABPersonAddressStreetKey : (__bridge NSString*)address };
         succeeded = succeeded && ABMultiValueAddValueAndLabel(addresses, (__bridge CFTypeRef)homeAddress, kABHomeLabel, NULL);
         succeeded = succeeded && ABRecordSetValue(self.contact, kABPersonAddressProperty, addresses, &error);
         CFRelease(addresses);

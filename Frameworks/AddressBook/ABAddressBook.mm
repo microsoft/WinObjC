@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -104,47 +104,53 @@ void ABAddressBookRequestAccessWithCompletion(ABAddressBookRef addressBook, ABAd
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 bool ABAddressBookHasUnsavedChanges(ABAddressBookRef addressBook) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [(__bridge _ABAddressBookManager*)addressBook hasUnsavedChanges];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 bool ABAddressBookSave(ABAddressBookRef addressBook, CFErrorRef* error) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    bool result = [(__bridge _ABAddressBookManager*)addressBook save];
+    if ((!result) && error) {
+        NSDictionary* userInfo = @{
+            NSLocalizedDescriptionKey : NSLocalizedString(@"Error saving AddressBook.\n", nil),
+        };
+        *error = (__bridge_retained CFErrorRef)[NSError errorWithDomain:(__bridge NSString*)ABAddressBookErrorDomain
+                                                                   code:kABOperationNotPermittedByStoreError
+                                                               userInfo:userInfo];
+    }
+    return result;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 void ABAddressBookRevert(ABAddressBookRef addressBook) {
-    UNIMPLEMENTED();
+    [(__bridge _ABAddressBookManager*)addressBook revert];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 bool ABAddressBookAddRecord(ABAddressBookRef addressBook, ABRecordRef record, CFErrorRef* error) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [(__bridge _ABAddressBookManager*)addressBook addContact:record error:error];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Records can only be removed if they are retrieved with ABAddressBookCopyArrayOfAllUserAppPeople
+ -- contacts from ABAddressBookCopyArrayOfAllPeople are read-only and cannot be removed.
 */
 bool ABAddressBookRemoveRecord(ABAddressBookRef addressBook, ABRecordRef record, CFErrorRef* error) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [(__bridge _ABAddressBookManager*)addressBook removeContact:record error:error];
 }
 
 /**

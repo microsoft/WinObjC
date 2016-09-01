@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,10 +17,25 @@
 #pragma once
 
 #import "UWP/WindowsApplicationModelContacts.h"
+#import <AddressBook/ABRecord.h>
 
 @interface _ABAddressBookManager : NSObject
 
 @property WACContactStore* contactStore;
 - (NSArray*)getListOfContacts;
+- (NSArray*)getListOfModifiableContacts;
+- (bool)addContact:(ABRecordRef)record error:(CFErrorRef*)error;
+- (bool)removeContact:(ABRecordRef)record error:(CFErrorRef*)error;
+- (void)modifyContact:(ABRecordRef)record;
+- (bool)hasUnsavedChanges;
+- (void)revert;
+- (bool)save;
+@end
+
+@interface __ABContactOperation : NSObject
+
+@property BOOL shouldDelete;
+@property WACContact* contact;
+- (id)initWithContact:(WACContact*)contact shouldDelete:(BOOL)shouldDelete;
 
 @end

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,7 +28,7 @@ typedef uint32_t ABPersonSortOrdering;
 typedef uint32_t ABPersonCompositeNameFormat;
 typedef enum { kABPersonImageFormatThumbnail = 0, kABPersonImageFormatOriginalSize = 2 } ABPersonImageFormat;
 
-ADDRESSBOOK_EXPORT ABRecordRef ABPersonCreate() STUB_METHOD;
+ADDRESSBOOK_EXPORT ABRecordRef ABPersonCreate();
 ADDRESSBOOK_EXPORT ABRecordRef ABPersonCreateInSource(ABRecordRef source) STUB_METHOD;
 ADDRESSBOOK_EXPORT CFComparisonResult ABPersonComparePeopleByName(ABRecordRef person1,
                                                                   ABRecordRef person2,
@@ -43,6 +43,7 @@ ADDRESSBOOK_EXPORT bool ABPersonHasImageData(ABRecordRef person) STUB_METHOD;
 ADDRESSBOOK_EXPORT bool ABPersonRemoveImageData(ABRecordRef person, CFErrorRef* error) STUB_METHOD;
 ADDRESSBOOK_EXPORT CFIndex ABAddressBookGetPersonCount(ABAddressBookRef addressBook);
 ADDRESSBOOK_EXPORT ABRecordRef ABAddressBookGetPersonWithRecordID(ABAddressBookRef addressBook, ABRecordID recordID);
+ADDRESSBOOK_EXPORT CFArrayRef ABAddressBookCopyArrayOfAllUserAppPeople(ABAddressBookRef addressBook);
 ADDRESSBOOK_EXPORT CFArrayRef ABAddressBookCopyArrayOfAllPeople(ABAddressBookRef addressBook);
 ADDRESSBOOK_EXPORT CFArrayRef ABAddressBookCopyArrayOfAllPeopleInSource(ABAddressBookRef addressBook, ABRecordRef source) STUB_METHOD;
 ADDRESSBOOK_EXPORT CFArrayRef ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering(ABAddressBookRef addressBook,

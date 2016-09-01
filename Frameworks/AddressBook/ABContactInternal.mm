@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,14 +15,16 @@
 //******************************************************************************
 
 #import "ABContactInternal.h"
+#import "ABAddressBookManagerInternal.h"
 #import "UWP/WindowsApplicationModelContacts.h"
 
 @implementation _ABContact
 
-- (id)initWithContact:(WACContact*)contact {
-    self = [super init];
-    if (self) {
-        self.contact = contact;
+- (id)initWithContact:(WACContact*)contact andType:(ABRecordContactType)type {
+    if (self = [super init]) {
+        self->_contact = contact;
+        self->_manager = nil;
+        self->_type = type;
     }
 
     return self;

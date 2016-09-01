@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -118,12 +118,11 @@ const CFStringRef kABPersonPhoneRadioLabel = static_cast<const CFStringRef>(@"AB
 const CFStringRef kABPersonSiblingLabel = static_cast<const CFStringRef>(@"ABPersonSiblingLabel");
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 ABRecordRef ABPersonCreate() {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return (__bridge_retained ABRecordRef)[[_ABContact alloc] initWithContact:[WACContact make] andType:kAddressBookNewContact];
 }
 
 /**
@@ -266,7 +265,8 @@ ABRecordRef ABAddressBookGetPersonWithRecordID(ABAddressBookRef addressBook, ABR
 
 /**
  @Status Interoperable
- @Notes
+ @Notes The contacts returned from this method are read-only -- for modifiable
+ or deletable contacts, use ABAddressBookCopyArrayOfAllUserAppPeople.
 */
 CFArrayRef ABAddressBookCopyArrayOfAllPeople(ABAddressBookRef addressBook) {
     if (addressBook == nullptr) {
@@ -275,6 +275,22 @@ CFArrayRef ABAddressBookCopyArrayOfAllPeople(ABAddressBookRef addressBook) {
 
     _ABAddressBookManager* addressBookManager = (__bridge _ABAddressBookManager*)addressBook;
     NSArray* contacts = [addressBookManager getListOfContacts];
+    return (__bridge_retained CFArrayRef)contacts;
+}
+
+/**
+ @Status Interoperable
+ @Notes If contacts need to be modified or deleted, this method should
+ be called, as it returns contacts that have been created by the user's app
+ and are modifiable/deletable.
+*/
+CFArrayRef ABAddressBookCopyArrayOfAllUserAppPeople(ABAddressBookRef addressBook) {
+    if (addressBook == nullptr) {
+        return nullptr;
+    }
+
+    _ABAddressBookManager* addressBookManager = (__bridge _ABAddressBookManager*)addressBook;
+    NSArray* contacts = [addressBookManager getListOfModifiableContacts];
     return (__bridge_retained CFArrayRef)contacts;
 }
 

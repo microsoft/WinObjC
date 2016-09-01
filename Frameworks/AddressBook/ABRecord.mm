@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -20,11 +20,83 @@
 #import <StubReturn.h>
 #import "AssertARCEnabled.h"
 
+#import "ABAddressBookManagerInternal.h"
 #import "ABContactInternal.h"
 #import "ABRecordInternal.h"
 #import "ABSourceInternal.h"
 #import "ABMultiValueInternal.h"
 #import "NSDate+AddressBookAdditions.h"
+
+// Verifies that the given value doesn't have a length greater than the given length. If value's length
+// is longer, returns false and, if error is not null, creates an error with the given propertyName.
+// Otherwise, returns true and does nothing with error.
+static bool _checkLength(NSString* value, NSUInteger length, CFErrorRef* error, NSString* propertyName) {
+    if ([value length] > length) {
+        if (error) {
+            NSString* reason = [NSString stringWithFormat:@"The %@ property must not be more than %d characters\n", propertyName, length];
+            NSDictionary* userInfo = @{
+                NSLocalizedDescriptionKey : NSLocalizedString(@"Error setting record value.\n", nil),
+                NSLocalizedFailureReasonErrorKey : NSLocalizedString(reason, nil)
+            };
+            *error = (__bridge_retained CFErrorRef)[NSError errorWithDomain:(__bridge NSString*)ABAddressBookErrorDomain
+                                                                       code:kABOperationNotPermittedByStoreError
+                                                                   userInfo:userInfo];
+        }
+
+        return false;
+    }
+
+    return true;
+}
+
+// Ensures that the property type of the multiValue matches the expected ABPropertyType. If they don't
+// match, returns false and, if error is not null, creates an error describing the problem.
+// Otherwise, returns true and does nothing with error.
+static bool _checkType(ABPropertyType expected, _ABMultiValue* multiValue, CFErrorRef* error) {
+    if (expected != [multiValue getPropertyType]) {
+        if (error) {
+            NSDictionary* userInfo = @{
+                NSLocalizedDescriptionKey : NSLocalizedString(@"Error setting record value.\n", nil),
+                NSLocalizedFailureReasonErrorKey : NSLocalizedString(@"The property type of the multi-value was incorrect!\n", nil)
+            };
+            *error = (__bridge_retained CFErrorRef)[NSError errorWithDomain:(__bridge NSString*)ABAddressBookErrorDomain
+                                                                       code:kABOperationNotPermittedByStoreError
+                                                                   userInfo:userInfo];
+        }
+
+        return false;
+    }
+
+    return true;
+}
+
+// Updates the address book manager if a read-write
+// contact is modified to ensure changes persist if
+// the address book is saved.
+static void _updateManager(_ABContact* person) {
+    if (person.type == kAddressBookReadWriteContact) {
+        [(__bridge _ABAddressBookManager*)person.manager modifyContact:(__bridge ABRecordRef)person];
+    }
+}
+
+// The maximum allowed String length of various Windows Contacts properties.
+// Values obtained from https://msdn.microsoft.com/en-us/library/windows/apps/windows.applicationmodel.contacts.contact
+// (click on a given property to see any potential length limitations).
+static const NSUInteger kABPersonFirstNameLength = 64;
+static const NSUInteger kABPersonLastNameLength = 64;
+static const NSUInteger kABPersonMiddleNameLength = 64;
+static const NSUInteger kABPersonPrefixLength = 32;
+static const NSUInteger kABPersonSuffixLength = 32;
+static const NSUInteger kABPersonFirstNamePhoneticLength = 120;
+static const NSUInteger kABPersonLastNamePhoneticLength = 120;
+static const NSUInteger kABPersonOrganizationLength = 64;
+static const NSUInteger kABPersonJobTitleLength = 1024;
+static const NSUInteger kABPersonDepartmentLength = 100;
+static const NSUInteger kABPersonNoteLength = 4096;
+static const NSUInteger kABPersonEmailLength = 321;
+static const NSUInteger kABPersonAddressLength = 1024;
+static const NSUInteger kABPersonPhoneLength = 50;
+static const NSUInteger kABPersonRelatedNamesLength = 256;
 
 /**
  @Status Interoperable
@@ -80,18 +152,404 @@ ABRecordType ABRecordGetRecordType(ABRecordRef record) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Records can only be modified if they are newly created (with ABPersonCreate)
+ or are retrieved with ABAddressBookCopyArrayOfAllUserAppPeople -- contacts from
+ ABAddressBookCopyArrayOfAllPeople are read-only and cannot have their properties changed.
 */
-bool ABRecordSetValue(ABRecordRef record, ABPropertyID property, CFTypeRef value, CFErrorRef* error) {
-    UNIMPLEMENTED();
-    return StubReturn();
+bool ABRecordSetValue(ABRecordRef record, ABPropertyID contactProperty, CFTypeRef value, CFErrorRef* error) {
+    if (record == nullptr) {
+        if (error) {
+            NSDictionary* userInfo = @{
+                NSLocalizedDescriptionKey : NSLocalizedString(@"Error setting record value.\n", nil),
+                NSLocalizedFailureReasonErrorKey : NSLocalizedString(@"The record should not be null!\n", nil)
+            };
+            *error = (__bridge_retained CFErrorRef)[NSError errorWithDomain:(__bridge NSString*)ABAddressBookErrorDomain
+                                                                       code:kABOperationNotPermittedByStoreError
+                                                                   userInfo:userInfo];
+        }
+
+        return false;
+    }
+
+    _ABContact* person = (__bridge _ABContact*)record;
+
+    if (person.type == kAddressBookReadOnlyContact) {
+        if (error) {
+            NSDictionary* userInfo = @{
+                NSLocalizedDescriptionKey : NSLocalizedString(@"Error setting record value.\n", nil),
+                NSLocalizedFailureReasonErrorKey : NSLocalizedString(@"You can only modify contacts created by your app!\n", nil)
+            };
+            *error = (__bridge_retained CFErrorRef)[NSError errorWithDomain:(__bridge NSString*)ABAddressBookErrorDomain
+                                                                       code:kABOperationNotPermittedByStoreError
+                                                                   userInfo:userInfo];
+        }
+
+        return false;
+    }
+
+    // Cases for various name properties.
+    if (contactProperty == kABPersonFirstNameProperty) {
+        NSString* firstName = (__bridge NSString*)value;
+        if (!_checkLength(firstName, kABPersonFirstNameLength, error, @"first name")) {
+            return false;
+        }
+
+        person.contact.firstName = firstName;
+    } else if (contactProperty == kABPersonLastNameProperty) {
+        NSString* lastName = (__bridge NSString*)value;
+        if (!_checkLength(lastName, kABPersonLastNameLength, error, @"last name")) {
+            return false;
+        }
+
+        person.contact.lastName = lastName;
+    } else if (contactProperty == kABPersonMiddleNameProperty) {
+        NSString* middleName = (__bridge NSString*)value;
+        if (!_checkLength(middleName, kABPersonMiddleNameLength, error, @"middle name")) {
+            return false;
+        }
+
+        person.contact.middleName = middleName;
+    } else if (contactProperty == kABPersonPrefixProperty) {
+        NSString* prefix = (__bridge NSString*)value;
+        if (!_checkLength(prefix, kABPersonPrefixLength, error, @"prefix")) {
+            return false;
+        }
+
+        person.contact.honorificNamePrefix = prefix;
+    } else if (contactProperty == kABPersonSuffixProperty) {
+        NSString* suffix = (__bridge NSString*)value;
+        if (!_checkLength(suffix, kABPersonSuffixLength, error, @"suffix")) {
+            return false;
+        }
+
+        person.contact.honorificNameSuffix = suffix;
+    } else if (contactProperty == kABPersonNicknameProperty) {
+        NSString* nickname = (__bridge NSString*)value;
+        person.contact.nickname = nickname;
+    } else if (contactProperty == kABPersonFirstNamePhoneticProperty) {
+        NSString* phoneticFirstName = (__bridge NSString*)value;
+        if (!_checkLength(phoneticFirstName, kABPersonFirstNamePhoneticLength, error, @"first name phonetic")) {
+            return false;
+        }
+
+        person.contact.yomiGivenName = phoneticFirstName;
+    } else if (contactProperty == kABPersonLastNamePhoneticProperty) {
+        NSString* phoneticLastName = (__bridge NSString*)value;
+        if (!_checkLength(phoneticLastName, kABPersonLastNamePhoneticLength, error, @"last name phonetic")) {
+            return false;
+        }
+
+        person.contact.yomiFamilyName = phoneticLastName;
+
+        // Cases for job-related properties.
+    } else if (contactProperty == kABPersonOrganizationProperty) {
+        NSString* organization = (__bridge NSString*)value;
+        if (!_checkLength(organization, kABPersonOrganizationLength, error, @"organization")) {
+            return false;
+        }
+
+        NSMutableArray* jobInfo = person.contact.jobInfo;
+        if ([jobInfo count] == 0) {
+            [jobInfo addObject:[WACContactJobInfo make]];
+        }
+
+        WACContactJobInfo* job = jobInfo[0];
+        job.companyName = organization;
+    } else if (contactProperty == kABPersonJobTitleProperty) {
+        NSString* jobTitle = (__bridge NSString*)value;
+        if (!_checkLength(jobTitle, kABPersonJobTitleLength, error, @"job title")) {
+            return false;
+        }
+
+        NSMutableArray* jobInfo = person.contact.jobInfo;
+        if ([jobInfo count] == 0) {
+            [jobInfo addObject:[WACContactJobInfo make]];
+        }
+
+        WACContactJobInfo* job = jobInfo[0];
+        job.title = jobTitle;
+    } else if (contactProperty == kABPersonDepartmentProperty) {
+        NSString* department = (__bridge NSString*)value;
+        if (!_checkLength(department, kABPersonDepartmentLength, error, @"department")) {
+            return false;
+        }
+
+        NSMutableArray* jobInfo = person.contact.jobInfo;
+        if ([jobInfo count] == 0) {
+            [jobInfo addObject:[WACContactJobInfo make]];
+        }
+
+        WACContactJobInfo* job = jobInfo[0];
+        job.department = department;
+
+        // Case for birthday-related property.
+    } else if (contactProperty == kABPersonBirthdayProperty) {
+        NSMutableArray* dates = person.contact.importantDates;
+
+        // Find the first date in the contact's important dates
+        // that is marked as a birthday, since a Windows contact stores
+        // all of its important dates in a list under a single property
+        // rather than explicitly storing the birthday.
+        NSUInteger birthdayIndex = [dates indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL* stop) {
+            WACContactDate* date = (WACContactDate*)obj;
+            if (date.kind == WACContactDateKindBirthday) {
+                *stop = YES;
+                return YES;
+            } else {
+                return NO;
+            }
+        }];
+
+        // If not birthday was found, create a new date for it --
+        // otherwise, just use the existing birthday.
+        WACContactDate* date;
+        if (birthdayIndex == NSNotFound) {
+            date = [WACContactDate make];
+            date.kind = WACContactDateKindBirthday;
+            [dates addObject:date];
+        } else {
+            date = dates[birthdayIndex];
+        }
+
+        NSDate* birthday = (__bridge NSDate*)value;
+        unsigned int units = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+        NSCalendar* calendar = [NSCalendar currentCalendar];
+        NSDateComponents* components = [calendar components:units fromDate:birthday];
+
+        date.year = @([components year]);
+        date.month = @([components month]);
+        date.day = @([components day]);
+
+        // Case for note-related property.
+    } else if (contactProperty == kABPersonNoteProperty) {
+        NSString* note = (__bridge NSString*)value;
+        if (!_checkLength(note, kABPersonNoteLength, error, @"note")) {
+            return false;
+        }
+
+        person.contact.notes = note;
+
+        // Cases for various multi-value properties.
+    } else if (contactProperty == kABPersonEmailProperty) {
+        _ABMultiValue* multiValue = (__bridge _ABMultiValue*)value;
+        if (!_checkType(kABStringPropertyType, multiValue, error)) {
+            return false;
+        }
+
+        // Ensure that none of the values violate the allowed length of Windows
+        // Contacts properties.
+        for (int i = 0; i < [multiValue getCount]; i++) {
+            NSString* value = (__bridge_transfer NSString*)[multiValue copyValueAtIndex:i];
+            if (!_checkLength(value, kABPersonEmailLength, error, @"email")) {
+                return false;
+            }
+        }
+
+        NSMutableArray* emails = person.contact.emails;
+        [emails removeAllObjects];
+
+        NSDictionary* dict = @{
+            ((__bridge NSString*)kABHomeLabel) : @(WACContactEmailKindPersonal),
+            ((__bridge NSString*)kABWorkLabel) : @(WACContactEmailKindWork),
+            ((__bridge NSString*)kABOtherLabel) : @(WACContactEmailKindOther)
+        };
+
+        for (int i = 0; i < [multiValue getCount]; i++) {
+            NSString* label = (__bridge_transfer NSString*)[multiValue copyLabelAtIndex:i];
+            NSString* value = (__bridge_transfer NSString*)[multiValue copyValueAtIndex:i];
+            WACContactEmail* email = [WACContactEmail make];
+            email.address = value;
+            email.kind = dict[label] == nil ? WACContactEmailKindOther : [dict[label] integerValue];
+            [emails addObject:email];
+        }
+    } else if (contactProperty == kABPersonAddressProperty) {
+        _ABMultiValue* multiValue = (__bridge _ABMultiValue*)value;
+        if (!_checkType(kABDictionaryPropertyType, multiValue, error)) {
+            return false;
+        }
+
+        // Ensure that none of the values violate the allowed length of Windows
+        // Contacts properties.
+        for (int i = 0; i < [multiValue getCount]; i++) {
+            NSDictionary* dict = (__bridge_transfer NSDictionary*)[multiValue copyValueAtIndex:i];
+            for (NSString* key in dict) {
+                if (!_checkLength(dict[key], kABPersonAddressLength, error, @"address")) {
+                    return false;
+                }
+            }
+        }
+
+        NSMutableArray* addresses = person.contact.addresses;
+        [addresses removeAllObjects];
+
+        NSDictionary* dict = @{
+            ((__bridge NSString*)kABHomeLabel) : @(WACContactAddressKindHome),
+            ((__bridge NSString*)kABWorkLabel) : @(WACContactAddressKindWork),
+            ((__bridge NSString*)kABOtherLabel) : @(WACContactAddressKindOther)
+        };
+
+        for (int i = 0; i < [multiValue getCount]; i++) {
+            NSString* label = (__bridge_transfer NSString*)[multiValue copyLabelAtIndex:i];
+            NSDictionary* value = (__bridge_transfer NSDictionary*)[multiValue copyValueAtIndex:i];
+            WACContactAddress* address = [WACContactAddress make];
+            address.kind = dict[label] == nil ? WACContactAddressKindOther : [dict[label] integerValue];
+            address.streetAddress = value[(__bridge NSString*)kABPersonAddressStreetKey];
+            address.locality = value[(__bridge NSString*)kABPersonAddressCityKey];
+            address.region = value[(__bridge NSString*)kABPersonAddressStateKey];
+            address.postalCode = value[(__bridge NSString*)kABPersonAddressZIPKey];
+            address.country = value[(__bridge NSString*)kABPersonAddressCountryKey];
+
+            [addresses addObject:address];
+        }
+    } else if (contactProperty == kABPersonDateProperty) {
+        _ABMultiValue* multiValue = (__bridge _ABMultiValue*)value;
+        if (!_checkType(kABDateTimePropertyType, multiValue, error)) {
+            return false;
+        }
+
+        // Filter importantDates so it only contains birthdays (since those should
+        // not be removed in this case.)
+        NSMutableArray* importantDates = person.contact.importantDates;
+        NSPredicate* predicate = [NSPredicate predicateWithBlock:^BOOL(id obj, NSDictionary* bindings) {
+            return ((WACContactDate*)obj).kind == WACContactDateKindBirthday;
+        }];
+
+        [importantDates filterUsingPredicate:predicate];
+
+        NSDictionary* dict = @{
+            ((__bridge NSString*)kABPersonAnniversaryLabel) : @(WACContactDateKindAnniversary),
+            ((__bridge NSString*)kABOtherLabel) : @(WACContactDateKindOther)
+        };
+
+        for (int i = 0; i < [multiValue getCount]; i++) {
+            NSString* label = (__bridge_transfer NSString*)[multiValue copyLabelAtIndex:i];
+            NSDate* value = (__bridge_transfer NSDate*)[multiValue copyValueAtIndex:i];
+            WACContactDate* date = [WACContactDate make];
+            date.kind = dict[label] == nil ? WACContactDateKindOther : [dict[label] integerValue];
+
+            unsigned int units = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+            NSCalendar* calendar = [NSCalendar currentCalendar];
+            NSDateComponents* components = [calendar components:units fromDate:value];
+
+            date.year = @([components year]);
+            date.month = @([components month]);
+            date.day = @([components day]);
+
+            [importantDates addObject:date];
+        }
+    } else if (contactProperty == kABPersonPhoneProperty) {
+        _ABMultiValue* multiValue = (__bridge _ABMultiValue*)value;
+        if (!_checkType(kABStringPropertyType, multiValue, error)) {
+            return false;
+        }
+
+        // Ensure that none of the values violate the allowed length of Windows
+        // Contacts properties.
+        for (int i = 0; i < [multiValue getCount]; i++) {
+            NSString* value = (__bridge_transfer NSString*)[multiValue copyValueAtIndex:i];
+            if (!_checkLength(value, kABPersonPhoneLength, error, @"phone")) {
+                return false;
+            }
+        }
+
+        NSMutableArray* phones = person.contact.phones;
+        [phones removeAllObjects];
+
+        NSDictionary* dict = @{
+            ((__bridge NSString*)kABHomeLabel) : @(WACContactPhoneKindHome),
+            ((__bridge NSString*)kABPersonPhoneMobileLabel) : @(WACContactPhoneKindMobile),
+            ((__bridge NSString*)kABWorkLabel) : @(WACContactPhoneKindWork),
+            ((__bridge NSString*)kABPersonPhonePagerLabel) : @(WACContactPhoneKindPager),
+            ((__bridge NSString*)kABPersonPhoneWorkFAXLabel) : @(WACContactPhoneKindBusinessFax),
+            ((__bridge NSString*)kABPersonPhoneHomeFAXLabel) : @(WACContactPhoneKindHomeFax),
+            ((__bridge NSString*)kABPersonPhoneCompanyLabel) : @(WACContactPhoneKindCompany),
+            ((__bridge NSString*)kABPersonPhoneAssistantLabel) : @(WACContactPhoneKindAssistant),
+            ((__bridge NSString*)kABPersonPhoneRadioLabel) : @(WACContactPhoneKindRadio),
+            ((__bridge NSString*)kABOtherLabel) : @(WACContactPhoneKindOther)
+        };
+
+        for (int i = 0; i < [multiValue getCount]; i++) {
+            NSString* label = (__bridge_transfer NSString*)[multiValue copyLabelAtIndex:i];
+            NSString* value = (__bridge_transfer NSString*)[multiValue copyValueAtIndex:i];
+            WACContactPhone* phone = [WACContactPhone make];
+            phone.number = value;
+            phone.kind = dict[label] == nil ? WACContactPhoneKindOther : [dict[label] integerValue];
+            [phones addObject:phone];
+        }
+    } else if (contactProperty == kABPersonURLProperty) {
+        _ABMultiValue* multiValue = (__bridge _ABMultiValue*)value;
+        if (!_checkType(kABStringPropertyType, multiValue, error)) {
+            return false;
+        }
+
+        NSMutableArray* websites = person.contact.websites;
+        [websites removeAllObjects];
+
+        for (int i = 0; i < [multiValue getCount]; i++) {
+            NSString* value = (__bridge_transfer NSString*)[multiValue copyValueAtIndex:i];
+            WACContactWebsite* website = [WACContactWebsite make];
+            website.rawValue = value;
+            [websites addObject:website];
+        }
+    } else if (contactProperty == kABPersonRelatedNamesProperty) {
+        _ABMultiValue* multiValue = (__bridge _ABMultiValue*)value;
+        if (!_checkType(kABStringPropertyType, multiValue, error)) {
+            return false;
+        }
+
+        // Ensure that none of the values violate the allowed length of Windows
+        // Contacts properties.
+        for (int i = 0; i < [multiValue getCount]; i++) {
+            NSString* value = (__bridge_transfer NSString*)[multiValue copyValueAtIndex:i];
+            if (!_checkLength(value, kABPersonRelatedNamesLength, error, @"related name")) {
+                return false;
+            }
+        }
+
+        NSMutableArray* significantOthers = person.contact.significantOthers;
+        [significantOthers removeAllObjects];
+
+        NSDictionary* dict = @{
+            ((__bridge NSString*)kABPersonSpouseLabel) : @(WACContactRelationshipSpouse),
+            ((__bridge NSString*)kABPersonPartnerLabel) : @(WACContactRelationshipPartner),
+            ((__bridge NSString*)kABPersonSiblingLabel) : @(WACContactRelationshipSibling),
+            ((__bridge NSString*)kABPersonParentLabel) : @(WACContactRelationshipParent),
+            ((__bridge NSString*)kABPersonChildLabel) : @(WACContactRelationshipChild),
+            ((__bridge NSString*)kABOtherLabel) : @(WACContactRelationshipOther)
+        };
+
+        for (int i = 0; i < [multiValue getCount]; i++) {
+            NSString* label = (__bridge_transfer NSString*)[multiValue copyLabelAtIndex:i];
+            NSString* value = (__bridge_transfer NSString*)[multiValue copyValueAtIndex:i];
+            WACContactSignificantOther* significantOther = [WACContactSignificantOther make];
+            significantOther.name = value;
+            significantOther.relationship = dict[label] == nil ? WACContactRelationshipOther : [dict[label] integerValue];
+            [significantOthers addObject:significantOther];
+        }
+    } else {
+        // No matching property was found.
+        if (error) {
+            NSDictionary* userInfo = @{
+                NSLocalizedDescriptionKey : NSLocalizedString(@"Error setting record value.\n", nil),
+                NSLocalizedFailureReasonErrorKey : NSLocalizedString(@"The property id was not recognized or supported!\n", nil)
+            };
+            *error = (__bridge_retained CFErrorRef)[NSError errorWithDomain:(__bridge NSString*)ABAddressBookErrorDomain
+                                                                       code:kABOperationNotPermittedByStoreError
+                                                                   userInfo:userInfo];
+        }
+
+        return false;
+    }
+
+    _updateManager(person);
+    return true;
 }
 
 /**
  @Status Caveat
  @Notes A few properties (alternate birthday, creation/modification dates, person kind,
-        phonetic middle name, and instant message/social profile accounts)
+        phonetic middle name, address country code and instant message/social profile accounts)
         don't have direct equivalents.
 
         For kABPersonRelatedNamesProperty, there is a new label, kABPersonSiblingLabel.
@@ -372,12 +830,13 @@ CFTypeRef ABRecordCopyValue(ABRecordRef record, ABPropertyID contactProperty) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Records can only be modified if they are newly created (with ABPersonCreate)
+ or are retrieved with ABAddressBookCopyArrayOfAllUserAppPeople -- contacts from
+ ABAddressBookCopyArrayOfAllPeople are read-only and cannot have their properties changed.
 */
 bool ABRecordRemoveValue(ABRecordRef record, ABPropertyID property, CFErrorRef* error) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return ABRecordSetValue(record, property, nullptr, error);
 }
 
 /**

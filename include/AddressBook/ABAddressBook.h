@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -38,11 +38,11 @@ ADDRESSBOOK_EXPORT ABAuthorizationStatus ABAddressBookGetAuthorizationStatus();
 ADDRESSBOOK_EXPORT void ABAddressBookRequestAccessWithCompletion(ABAddressBookRef addressBook,
                                                                  ABAddressBookRequestAccessCompletionHandler completion);
 
-ADDRESSBOOK_EXPORT bool ABAddressBookHasUnsavedChanges(ABAddressBookRef addressBook) STUB_METHOD;
-ADDRESSBOOK_EXPORT bool ABAddressBookSave(ABAddressBookRef addressBook, CFErrorRef* error) STUB_METHOD;
-ADDRESSBOOK_EXPORT void ABAddressBookRevert(ABAddressBookRef addressBook) STUB_METHOD;
-ADDRESSBOOK_EXPORT bool ABAddressBookAddRecord(ABAddressBookRef addressBook, ABRecordRef record, CFErrorRef* error) STUB_METHOD;
-ADDRESSBOOK_EXPORT bool ABAddressBookRemoveRecord(ABAddressBookRef addressBook, ABRecordRef record, CFErrorRef* error) STUB_METHOD;
+ADDRESSBOOK_EXPORT bool ABAddressBookHasUnsavedChanges(ABAddressBookRef addressBook);
+ADDRESSBOOK_EXPORT bool ABAddressBookSave(ABAddressBookRef addressBook, CFErrorRef* error);
+ADDRESSBOOK_EXPORT void ABAddressBookRevert(ABAddressBookRef addressBook);
+ADDRESSBOOK_EXPORT bool ABAddressBookAddRecord(ABAddressBookRef addressBook, ABRecordRef record, CFErrorRef* error);
+ADDRESSBOOK_EXPORT bool ABAddressBookRemoveRecord(ABAddressBookRef addressBook, ABRecordRef record, CFErrorRef* error);
 ADDRESSBOOK_EXPORT void ABAddressBookRegisterExternalChangeCallback(ABAddressBookRef addressBook,
                                                                     ABExternalChangeCallback callback,
                                                                     void* context) STUB_METHOD;
