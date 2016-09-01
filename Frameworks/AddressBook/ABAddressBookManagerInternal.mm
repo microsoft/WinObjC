@@ -43,6 +43,17 @@ static void _setError(CFErrorRef* error, NSString* message) {
     }
 }
 
+static void _copyWrappedContacts(NSArray* /* WACContact* */ source,
+                                 NSMutableArray* /* _ABContact* */ destination,
+                                 ABRecordContactType type,
+                                 ABRecordRef manager) {
+    for (WACContact* contact in source) {
+        _ABContact* wrappedContact = [[_ABContact alloc] initWithContact:contact andType:type];
+        wrappedContact.manager = manager;
+        [destination addObject:wrappedContact];
+    }
+}
+
 @implementation _ABAddressBookManager {
     NSMutableSet<WACContact*>* _toAdd;
     NSMutableDictionary<NSString*, __ABContactOperation*>* _operations;
@@ -169,11 +180,7 @@ static void _setError(CFErrorRef* error, NSString* message) {
         result = [NSMutableArray arrayWithCapacity:[success count]];
 
         // Copy over the contacts wrapped in _ABContacts.
-        for (int i = 0; i < [success count]; i++) {
-            _ABContact* contact = [[_ABContact alloc] initWithContact:success[i] andType:kAddressBookReadOnlyContact];
-            contact.manager = (__bridge ABRecordRef)self;
-            result[i] = contact;
-        }
+        _copyWrappedContacts(success, result, kAddressBookReadOnlyContact, (__bridge ABRecordRef)self);
 
         dispatch_semaphore_signal(semaphore);
     }
@@ -202,11 +209,7 @@ static void _setError(CFErrorRef* error, NSString* message) {
                 shouldContinue = NO;
             } else {
                 shouldContinue = YES;
-                for (WACContact* contact in success.contacts) {
-                    _ABContact* wrappedContact = [[_ABContact alloc] initWithContact:contact andType:kAddressBookReadWriteContact];
-                    wrappedContact.manager = (__bridge ABRecordRef)self;
-                    [result addObject:wrappedContact];
-                }
+                _copyWrappedContacts(success.contacts, result, kAddressBookReadWriteContact, (__bridge ABRecordRef)self);
             }
             dispatch_semaphore_signal(semaphore);
         }
@@ -253,7 +256,7 @@ static void _setError(CFErrorRef* error, NSString* message) {
         }
         case kAddressBookReadOnlyContact:
         default:
-            _setError(error, @"This contact already exists in the AddressBook.\n");
+            _setError(error, @"This contact cannot be added to the AddressBook.\n");
             return false;
     }
 }
