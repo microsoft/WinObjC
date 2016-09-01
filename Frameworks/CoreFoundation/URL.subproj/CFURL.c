@@ -1323,13 +1323,21 @@ static Boolean _stringContainsCharacter(CFStringRef string, UniChar ch) {
     return false;
 }
 
-// WINOBJC : A function for creating percent escapes based on character sets instead of strings has been added. This is used for stringByAddingPercentEscapesUsingEncoding which operates on a valid set of 
-// the URLFragmentAllowedCharacterSet. Converting a character set to a string is expensive, but converting a string to a character set is not. Lookup in a character set is also significantly more efficient.
-// As such, an extra function for using character sets has been added instead, and the string version has been modified to use this.
+// WINOBJC : A function for creating percent escapes based on character sets instead of strings has been added. This is used for 
+// stringByAddingPercentEscapesUsingEncoding which operates on a valid set of the URLFragmentAllowedCharacterSet. Converting a
+// character set to a string is expensive, but converting a string to a character set is not. Lookup in a character set is also
+// significantly more efficient. As such, an extra function for using character sets has been added instead, and the string version
+// has been modified to use this.
 
 // Note: charactersToLeaveUnescaped and legalURLCharactersToBeEscaped only work for characters which can be represented as a single UTF16 codepoint.
 CF_EXPORT CFStringRef CFURLCreateStringByAddingPercentEscapes(CFAllocatorRef allocator, CFStringRef originalString, CFStringRef charactersToLeaveUnescaped, CFStringRef legalURLCharactersToBeEscaped, CFStringEncoding encoding) {
-    return CFURLCreateStringByAddingPercentEscapesWithCharacterSets(allocator, originalString, CFCharacterSetCreateWithCharactersInString(allocator, charactersToLeaveUnescaped), CFCharacterSetCreateWithCharactersInString(allocator, legalURLCharactersToBeEscaped), encoding);
+    CFCharacterSetRef allowedCharacterSet = CFCharacterSetCreateWithCharactersInString(allocator, charactersToLeaveUnescaped);
+    CFCharacterSetRef legalEscapedCharacterSet = CFCharacterSetCreateWithCharactersInString(allocator, legalURLCharactersToBeEscaped);
+    CFStringRef escapedString = CFURLCreateStringByAddingPercentEscapesWithCharacterSets(allocator, originalString, CFCharacterSetCreateWithCharactersInString(allocator, charactersToLeaveUnescaped), CFCharacterSetCreateWithCharactersInString(allocator, legalURLCharactersToBeEscaped), encoding);
+    CFRelease(allowedCharacterSet);
+    CFRelease(legalEscapedCharacterSet);
+
+    return escapedString;
 }
 
 // Note: charactersToLeaveUnescaped and legalURLCharactersToBeEscaped only work for characters which can be represented as a single UTF16 codepoint.
@@ -1396,32 +1404,32 @@ CF_EXPORT CFStringRef CFURLCreateStringByAddingPercentEscapesWithCharacterSets(C
             }
             else {
                 // FIXME: once CFString supports finding glyph boundaries walk by glyph boundaries instead of by unichars
-                if ( encoding == kCFStringEncodingUTF8 && CFCharacterSetIsSurrogateHighCharacter(ch) && idx + 1 < length && CFCharacterSetIsSurrogateLowCharacter(__CFStringGetCharacterFromInlineBufferQuick(&buf, idx + 1)) ) {
+                if ( encoding == kCFStringEncodingUTF8 && CFCharacterSetIsSurrogateHighCharacter(ch) && idx+1 < length && CFCharacterSetIsSurrogateLowCharacter(__CFStringGetCharacterFromInlineBufferQuick(&buf, idx + 1)) ) {
                     UniChar surrogate[2];
                     uint8_t *currByte;
-
+                    
                     surrogate[0] = ch;
-                    surrogate[1] = __CFStringGetCharacterFromInlineBufferQuick(&buf, idx + 1);
+                    surrogate[1] = __CFStringGetCharacterFromInlineBufferQuick(&buf, idx+1);
                     // Aki sez it should never take more than 6 bytes
                     if (CFStringEncodingUnicodeToBytes(kCFStringEncodingUTF8, 0, surrogate, 2, NULL, bytes, 6, &byteLength) == kCFStringEncodingConversionSuccess) {
                         endPtr = bytePtr + byteLength;
-                        for (currByte = bytes; currByte < endPtr; currByte++) {
+                        for ( currByte = bytes; currByte < endPtr; currByte++ ) {
                             charBuffer[charBufferIndex++] = '%';
                             charBuffer[charBufferIndex++] = hexchars[*currByte >> 4];
                             charBuffer[charBufferIndex++] = hexchars[*currByte & 0x0f];
                         }
                         idx++; // We consumed 2 characters, not 1
-                    } else {
+                    }
+                    else {
                         // surrogate pair conversion failed
                         break;
                     }
-                }
-                else {
+                } else {
                     // not a surrogate pair
                     break;
                 }
             }
-        } else if ( newString ) {
+        } else if (newString) {
             charBuffer[charBufferIndex++] = ch;
             if ( charBufferIndex == kCharBufferMax ) {
                 CFStringAppendCharacters(newString, charBuffer, charBufferIndex);
@@ -1433,7 +1441,7 @@ CF_EXPORT CFStringRef CFURLCreateStringByAddingPercentEscapesWithCharacterSets(C
         // Ran into an encoding failure
         if (newString) CFRelease(newString);
         return NULL;
-    } else if ( newString ) {
+    } else if (newString) {
         if ( charBufferIndex != 0 ) {
             CFStringAppendCharacters(newString, charBuffer, charBufferIndex);
         }

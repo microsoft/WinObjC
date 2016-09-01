@@ -629,8 +629,7 @@ TEST(NSString, StringByAddingPercentEscapesUsingEncodingTest) {
     EXPECT_OBJCEQ(originalString, escapedString.stringByRemovingPercentEncoding);
     EXPECT_OBJCEQ(originalString, [escapedString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]);
 
-    // Removing percent encoding is unsupported on the reference platform for anything other than UTF8 which is why the reference platform
-    // has deprecated this API.
+    // Removing percent encoding is unsupported on the reference platform for anything other than UTF8.
     // This test is to ensure the percent encoding matches the reference platform's behavior.
     originalString = @"abcdefghijklmnopqrstuvwxyz : !@#$%^&*()_+1234567890-=`~\\|]}[{'\";:.>,</?";
     expectedEscapedString = @"abcdefghijklmnopqrstuvwxyz%FF%FE%20%00:%FF%FE%20%00!@%FF%FE%23%00$%FF%FE%25%00%FF%FE%5E%00&*()_+1234567890-=%"

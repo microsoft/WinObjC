@@ -1451,7 +1451,7 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 /**
  @Status Interoperable
  @Notes This API was deprecated in favor of stringByAddingPercentEncodingWithAllowedCharacters. APIs to decode anything other than
- UTF8StringEncoding is unsupported both here and on the reference platform.
+ UTF8StringEncoding are unsupported both here and on the reference platform.
 */
 - (NSString*)stringByAddingPercentEscapesUsingEncoding:(NSStringEncoding)encoding {
     // Allowed characters in this escape api.
