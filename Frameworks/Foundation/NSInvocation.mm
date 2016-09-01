@@ -124,7 +124,7 @@ static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
 */
 - (void)setArgument:(void*)buf atIndex:(NSInteger)index {
     if ((index < 0) || (index >= [_methodSignature numberOfArguments])) {
-        [NSException raise:NSRangeException
+        [NSException raise:NSInvalidArgumentException
                     format:@"-[NSInvocation setArgument:atIndex:]: index %d lies outside the range [0, %d).",
                            index,
                            [_methodSignature numberOfArguments]];
@@ -159,7 +159,7 @@ static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
 */
 - (void)getArgument:(void*)buf atIndex:(NSInteger)index {
     if ((index < 0) || (index >= [_methodSignature numberOfArguments])) {
-        [NSException raise:NSRangeException
+        [NSException raise:NSInvalidArgumentException
                     format:@"-[NSInvocation getArgument:atIndex:]: index %d lies outside the range [0, %d).",
                            index,
                            [_methodSignature numberOfArguments]];
