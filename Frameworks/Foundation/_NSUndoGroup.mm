@@ -88,9 +88,9 @@
     [_undoObjectsInGroup removeAllWithTarget:target];
 }
 
-- (NSUInteger)updateLevel {
+- (NSUInteger)getNumberOfOpenGroups {
     if (!_isClosed) {
-        return [[_undoObjectsInGroup peek] updateLevel] + 1;
+        return [[_undoObjectsInGroup peek] getNumberOfOpenGroups] + 1;
     }
     return 0;
 }

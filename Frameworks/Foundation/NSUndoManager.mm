@@ -72,7 +72,8 @@ NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDisca
     } else {
         // Any new actions invalidate any redo actions
         if (!_redoing) {
-            [self _removeRedoActions];
+            _redoStack.attach([[_NSUndoManagerStack alloc] init]);
+            _redoGroupingLevel = 0;
         }
         [self _createAutomaticUndoGroup];
         _NSUndoGroup* undoGroup = [_undoStack peek];
@@ -205,7 +206,7 @@ NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDisca
         _undoGroupingLevel = 1;
         _hasNestedGroup = NO;
     } else {
-        [undoGroup createUndoGroup];
+        [undoGroup createUndoSubGroup];
         _undoGroupingLevel++;
         _hasNestedGroup = YES;
     }
@@ -242,7 +243,7 @@ NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDisca
         [_redoStack push:newGroup];
         [newGroup release];
     } else {
-        [redoGroup createUndoGroup];
+        [redoGroup createUndoSubGroup];
     }
     _redoGroupingLevel++;
     if (!_redoing) {
@@ -298,21 +299,14 @@ NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDisca
  @Status Interoperable
 */
 - (void)removeAllActions {
-    [self _removeUndoActions];
-    [self _removeRedoActions];
+    _undoStack.attach([[_NSUndoManagerStack alloc] init]);
+    _redoStack.attach([[_NSUndoManagerStack alloc] init]);
 
     _undoGroupingLevel = 0;
     _redoGroupingLevel = 0;
+
     _isAutomaticGroupOpen = NO;
     _hasNestedGroup = NO;
-}
-
-- (void)_removeUndoActions {
-    _undoStack.attach([[_NSUndoManagerStack alloc] init]);
-}
-
-- (void)_removeRedoActions {
-    _redoStack.attach([[_NSUndoManagerStack alloc] init]);
 }
 
 /**
@@ -323,8 +317,8 @@ NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDisca
     [_undoStack removeAllWithTarget:target];
     [_redoStack removeAllWithTarget:target];
 
-    _undoGroupingLevel = [[_undoStack peek] updateLevel];
-    _redoGroupingLevel = [[_undoStack peek] updateLevel];
+    _undoGroupingLevel = [[_undoStack peek] getNumberOfOpenGroups];
+    _redoGroupingLevel = [[_undoStack peek] getNumberOfOpenGroups];
     _isAutomaticGroupOpen = (_undoGroupingLevel != 0);
     _hasNestedGroup = [((_NSUndoGroup*)[_undoStack peek])hasNestedGroup];
 }
@@ -335,14 +329,10 @@ NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDisca
 */
 - (void)setActionName:(NSString*)actionName {
     if (_undoing) {
-        if (_redoActionName) {
-            [_redoActionName release];
-        }
+        [_redoActionName release];
         _redoActionName = [actionName copy];
     } else {
-        if (_undoActionName) {
-            [_undoActionName release];
-        }
+        [_undoActionName release];
         _undoActionName = [actionName copy];
     }
 }
@@ -385,6 +375,14 @@ NSString* const NSUndoManagerGroupIsDiscardableKey = @"NSUndoManagerGroupIsDisca
 */
 - (BOOL)canRedo {
     return [_redoStack count] > 0;
+}
+
+- (void)dealloc {
+    [_undoActionName release];
+    [_redoActionName release];
+    [_runLoopModes release];
+
+    [super dealloc];
 }
 
 @end

@@ -62,7 +62,7 @@
     return 1;
 }
 
-- (NSUInteger)updateLevel {
+- (NSUInteger)getNumberOfOpenGroups {
     return 0;
 }
 

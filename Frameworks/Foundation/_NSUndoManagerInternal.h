@@ -26,7 +26,7 @@
 - (void)removeAllWithTarget:(id)target;
 - (NSUInteger)count;
 - (BOOL)isClosed;
-- (NSUInteger)updateLevel;
+- (NSUInteger)getNumberOfOpenGroups;
 
 @end
 
@@ -40,7 +40,7 @@
 
 - (id)init;
 - (void)addUndoable:(id<_NSUndoable>)undoCall;
-- (void)createUndoGroup;
+- (void)createUndoSubGroup;
 - (void)closeUndoGroup;
 - (BOOL)hasNestedGroup;
 

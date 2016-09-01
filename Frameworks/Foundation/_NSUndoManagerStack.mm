@@ -55,6 +55,7 @@
     while (iterator != _stack.end()) {
         if ([*iterator targets:target]) {
             auto toRemove = iterator;
+            // Incrememting the iterator must happen before removing the object that iterator represents from the list.
             ++iterator;
             _stack.erase(toRemove);
         } else {
@@ -64,7 +65,7 @@
                 ++iterator;
                 _stack.erase(toRemove);
             } else {
-                // Must do this in else as ordering of iterator must be incremented before removing.
+                // Must update iterator in else case to avoid updating iterator too far.
                 ++iterator;
             }
         }
