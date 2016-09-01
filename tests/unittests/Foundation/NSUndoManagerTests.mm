@@ -51,6 +51,7 @@
     [_undoManager release];
     [_value release];
     [_arrayOfNumbers release];
+    [super dealloc];
 }
 
 - (void)updateNumber:(NSNumber*)newValue {
@@ -114,7 +115,7 @@ TEST(NSUndoManager, MultipleUndoTests) {
     EXPECT_EQ([object.undoManager canUndo], NO);
 }
 
-TEST(NSUndoManager, undoRedoTests) {
+TEST(NSUndoManager, UndoRedoTests) {
     NSNumber* val1 = [NSNumber numberWithInt:5];
     NSNumber* val2 = [NSNumber numberWithInt:6];
     NSNumber* val3 = [NSNumber numberWithInt:7];
@@ -139,7 +140,7 @@ TEST(NSUndoManager, undoRedoTests) {
     EXPECT_EQ([object.undoManager canRedo], YES);
 }
 
-TEST(NSUndoManager, undoRedoTestsWithMutableObject) {
+TEST(NSUndoManager, UndoRedoTestsWithMutableObject) {
     NSNumber* val1 = [NSNumber numberWithInt:5];
     NSNumber* val2 = [NSNumber numberWithInt:6];
     NSNumber* val3 = [NSNumber numberWithInt:7];
@@ -168,7 +169,7 @@ TEST(NSUndoManager, undoRedoTestsWithMutableObject) {
     EXPECT_OBJCEQ(comparisonArray, object.arrayOfNumbers);
 }
 
-TEST(NSUndoManager, ExtraUndoOperations) {
+TEST(NSUndoManager, UndoWithoutAnyUndoableActions) {
     NSNumber* oldValue = [NSNumber numberWithInt:5];
     NSNumber* newValue = [NSNumber numberWithInt:6];
 
@@ -179,6 +180,8 @@ TEST(NSUndoManager, ExtraUndoOperations) {
 
     [object.undoManager undo];
     EXPECT_EQ(object.value.intValue, oldValue.intValue);
+
+    // Attempt to call undo without an undo action available.
     EXPECT_NO_THROW([object.undoManager undo]);
     EXPECT_EQ(object.value.intValue, oldValue.intValue);
 }
@@ -208,13 +211,16 @@ TEST(NSUndoManager, IndividualUndoOperations) {
     EXPECT_EQ(object.value.intValue, val1.intValue);
 }
 
-TEST(NSUndoManager, IndividualUndoOperationsUndoCall) {
+// Similar test as above, but call undo instead of nested group as each undo operation should be
+// it's own top level undo group.
+TEST(NSUndoManager, IndividualUndoOperationsWithUndoCallAndGroupsByEventOff) {
     NSNumber* val1 = [NSNumber numberWithInt:5];
     NSNumber* val2 = [NSNumber numberWithInt:6];
     NSNumber* val3 = [NSNumber numberWithInt:7];
     NSNumber* val4 = [NSNumber numberWithInt:8];
 
     UndoTestObject* object = [[[UndoTestObject alloc] initWithValue:val1] autorelease];
+    object.undoManager.groupsByEvent = NO;
 
     [object updateNumberSingleUndoStep:val1];
     [object updateNumberSingleUndoStep:val2];
@@ -222,13 +228,13 @@ TEST(NSUndoManager, IndividualUndoOperationsUndoCall) {
     [object updateNumberSingleUndoStep:val4];
     EXPECT_EQ(object.value.intValue, val4.intValue);
 
-    [object.undoManager undoNestedGroup];
+    [object.undoManager undo];
     EXPECT_EQ(object.value.intValue, val3.intValue);
 
-    [object.undoManager undoNestedGroup];
+    [object.undoManager undo];
     EXPECT_EQ(object.value.intValue, val2.intValue);
 
-    [object.undoManager undoNestedGroup];
+    [object.undoManager undo];
     EXPECT_EQ(object.value.intValue, val1.intValue);
 }
 
@@ -470,7 +476,7 @@ TEST(NSUndoManager, NestedUndoNestedGroupsAndActionsNoAuto) {
 @implementation UndoTestObjectWithSharedManager
 - (id)initWithValue:(NSNumber*)num undoManager:(NSUndoManager*)manager {
     self = [super init];
-    _undoManager = manager;
+    _undoManager = [manager retain];
     _value = [num retain];
     return self;
 }
@@ -486,6 +492,7 @@ TEST(NSUndoManager, NestedUndoNestedGroupsAndActionsNoAuto) {
 - (void)dealloc {
     [_undoManager release];
     [_value release];
+    [super dealloc];
 }
 
 @end
@@ -501,7 +508,7 @@ TEST(NSUndoManager, MultipleUndoTargets) {
     NSNumber* target3val2 = [NSNumber numberWithInt:36];
     NSNumber* target3val3 = [NSNumber numberWithInt:37];
 
-    NSUndoManager* manager = [[NSUndoManager alloc] init];
+    NSUndoManager* manager = [[[NSUndoManager alloc] init] autorelease];
 
     UndoTestObjectWithSharedManager* firstTargetWithNumbers =
         [[UndoTestObjectWithSharedManager alloc] initWithValue:target1val1 undoManager:manager];
@@ -589,11 +596,9 @@ TEST(NSUndoManager, MultipleUndoTargets) {
     EXPECT_EQ(secondTargetWithNumbers.value.intValue,
               target2val3.intValue); // 27 (secondTarget should not ever be changed as all of its actions have been removed.)
     EXPECT_EQ(thirdTargetWithNumbers.value.intValue, target3val1.intValue); // 35
-
-    [manager release];
 }
 
-TEST(NSUndoManager, limitUndoActions) {
+TEST(NSUndoManager, LimitUndoActions) {
     NSNumber* val1 = [NSNumber numberWithInt:1];
     NSNumber* val2 = [NSNumber numberWithInt:2];
     NSNumber* val3 = [NSNumber numberWithInt:3];
@@ -625,8 +630,7 @@ TEST(NSUndoManager, limitUndoActions) {
     EXPECT_EQ([object.undoManager canUndo], NO);
 
     // Should do nothing.
-    [object.undoManager undo];
-
+    EXPECT_NO_THROW([object.undoManager undo]);
     EXPECT_EQ(object.value.intValue, val2.intValue);
 }
 
@@ -638,7 +642,7 @@ TEST(NSUndoManager, RunLoopModes) {
 }
 
 TEST(NSUndoManager, EmptyUndoGroup) {
-    NSUndoManager* manager = [[NSUndoManager alloc] init];
+    NSUndoManager* manager = [[[NSUndoManager alloc] init] autorelease];
     manager.groupsByEvent = NO;
     [manager beginUndoGrouping];
     [manager endUndoGrouping];
@@ -648,6 +652,7 @@ TEST(NSUndoManager, EmptyUndoGroup) {
 }
 
 // Test that when a target is removed, all undo groups are updated properly. If an undo group remains,
+// canUndo will be incorrect as an empty undo group results in canUndo being YES.
 TEST(NSUndoManager, RemovingOneTarget) {
     NSNumber* target1val1 = [NSNumber numberWithInt:15];
     NSNumber* target1val2 = [NSNumber numberWithInt:16];
@@ -656,7 +661,7 @@ TEST(NSUndoManager, RemovingOneTarget) {
     NSNumber* target2val2 = [NSNumber numberWithInt:26];
     NSNumber* target2val3 = [NSNumber numberWithInt:27];
 
-    NSUndoManager* manager = [[NSUndoManager alloc] init];
+    NSUndoManager* manager = [[[NSUndoManager alloc] init] autorelease];
     manager.groupsByEvent = NO;
 
     UndoTestObjectWithSharedManager* firstTargetWithNumbers =
@@ -713,6 +718,4 @@ TEST(NSUndoManager, RemovingOneTarget) {
 
     EXPECT_EQ(firstTargetWithNumbers.value.intValue, target1val3.intValue); // 17
     EXPECT_EQ(secondTargetWithNumbers.value.intValue, target2val1.intValue); // 27
-
-    [manager release];
 }
