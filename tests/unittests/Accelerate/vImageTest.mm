@@ -667,11 +667,11 @@ static void vImageTestSetAlphaAndUnpremultiply(CGImageRef imageRef, vImage_Buffe
 
     CGColorSpaceRelease(format.colorSpace);
 
-    free(imageBuffer8888.data);
-    free(planeBuffer[0].data);
-    free(planeBuffer[1].data);
-    free(planeBuffer[2].data);
-    free(planeBuffer[3].data);
+    vImageTestBufferFree(&imageBuffer8888);
+    vImageTestBufferFree(&planeBuffer[0]);
+    vImageTestBufferFree(&planeBuffer[1]);
+    vImageTestBufferFree(&planeBuffer[2]);
+    vImageTestBufferFree(&planeBuffer[3]);
 }
 
 TEST(Accelerate, BufferInit) {
