@@ -1404,7 +1404,7 @@ CF_EXPORT CFStringRef CFURLCreateStringByAddingPercentEscapesWithCharacterSets(C
             }
             else {
                 // FIXME: once CFString supports finding glyph boundaries walk by glyph boundaries instead of by unichars
-                if ( encoding == kCFStringEncodingUTF8 && CFCharacterSetIsSurrogateHighCharacter(ch) && idx+1 < length && CFCharacterSetIsSurrogateLowCharacter(__CFStringGetCharacterFromInlineBufferQuick(&buf, idx + 1)) ) {
+                if ( encoding == kCFStringEncodingUTF8 && CFCharacterSetIsSurrogateHighCharacter(ch) && idx + 1 < length && CFCharacterSetIsSurrogateLowCharacter(__CFStringGetCharacterFromInlineBufferQuick(&buf, idx+1)) ) {
                     UniChar surrogate[2];
                     uint8_t *currByte;
                     
