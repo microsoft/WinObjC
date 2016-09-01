@@ -74,11 +74,11 @@
     float _xPos;
     float _yPos;
     StrongId<NSString> _stringFragment;
+    std::vector<CGSize> _glyphAdvances;
 
     // TODO::
     // Do we need these anymore?
     std::vector<CGPoint> _glyphOrigins;
-    std::vector<CGSize> _glyphAdvances;
     std::vector<WORD> _characters;
 }
 @end
