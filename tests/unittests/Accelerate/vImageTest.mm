@@ -424,11 +424,11 @@ static inline void vImageTestBufferFree(vImage_Buffer* buffer) {
 }
 
 static void vImageTestFillBufferWithRandomData8(vImage_Buffer* buffer) {
-    unsigned char* rowPtr = reinterpret_cast<unsigned char*>(buffer->data);
+    uint8_t* rowPtr = reinterpret_cast<uint8_t*>(buffer->data);
 
     for (uint32_t y = 0; y < buffer->height; y++) {
         for (uint32_t x = 0; x < buffer->width; x++) {
-            rowPtr[x] = (unsigned char)((double)rand() / (RAND_MAX + 1) * (256));
+            rowPtr[x] = (uint8_t)((double)rand() / (RAND_MAX + 1) * (256));
         }
 
         rowPtr += buffer->rowBytes;
@@ -436,7 +436,7 @@ static void vImageTestFillBufferWithRandomData8(vImage_Buffer* buffer) {
 }
 
 static void vImageTestFillBufferWithRandomDataF(vImage_Buffer* buffer) {
-    unsigned char* rowPtr = reinterpret_cast<unsigned char*>(buffer->data);
+    uint8_t* rowPtr = reinterpret_cast<uint8_t*>(buffer->data);
     float* rowPtrFloats;
 
     for (uint32_t y = 0; y < buffer->height; y++) {
@@ -450,14 +450,7 @@ static void vImageTestFillBufferWithRandomDataF(vImage_Buffer* buffer) {
     }
 }
 
-static void vImageTestCompare8888Buffers(const vImage_Buffer* bufferA, const vImage_Buffer* bufferB) {
-    ASSERT_TRUE(bufferA != nullptr);
-    ASSERT_TRUE(bufferB != nullptr);
-    ASSERT_TRUE(bufferA->rowBytes >= bufferA->width * 4);
-    ASSERT_TRUE(bufferB->rowBytes >= bufferB->width * 4);
-    ASSERT_TRUE(bufferA->width == bufferB->width);
-    ASSERT_TRUE(bufferA->height == bufferB->height);
-
+static bool vImageTestCompare8888Buffers(const vImage_Buffer* bufferA, const vImage_Buffer* bufferB) {
     const uint32_t width = static_cast<uint32_t>(bufferA->width);
     const uint32_t height = static_cast<uint32_t>(bufferA->height);
     uint8_t* rowPtrA = reinterpret_cast<uint8_t*>(bufferA->data);
@@ -465,17 +458,29 @@ static void vImageTestCompare8888Buffers(const vImage_Buffer* bufferA, const vIm
     uint32_t* rowPtrAUInts;
     uint32_t* rowPtrBUInts;
 
+    bool buffersEqual = true;
+
     for (uint32_t y = 0; y < height; y++) {
         rowPtrAUInts = reinterpret_cast<uint32_t*>(rowPtrA);
         rowPtrBUInts = reinterpret_cast<uint32_t*>(rowPtrB);
 
         for (uint32_t x = 0; x < width; x++) {
-            ASSERT_TRUE_MSG(rowPtrAUInts[x] == rowPtrBUInts[x], "Buffers mismatch at <%d, %d>", x, y);
+            if (rowPtrAUInts[x] != rowPtrBUInts[x]) {
+                LOG_INFO("vImageTestCompare8888Buffers: Buffer mismatch at <%d, %d>", x, y);
+                buffersEqual = false;
+                break;
+            }
+        }
+
+        if (buffersEqual == false) {
+            break;
         }
 
         rowPtrA += bufferA->rowBytes;
         rowPtrB += bufferB->rowBytes;
     }
+
+    return buffersEqual;
 }
 
 static void vImageTestGetFormatFromCgImage(CGImageRef imageRef, vImage_CGImageFormat* format) {
@@ -601,14 +606,12 @@ static void vImageTestSetAlphaAndUnpremultiply(CGImageRef imageRef, vImage_Buffe
     }
 
     ASSERT_TRUE(result == kvImageNoError);
+
     const uint32_t height = (uint32_t)imageBuffer8888.height;
+    const uint32_t rowPitch = (uint32_t)planeBuffer[indexA].rowBytes;
+    uint8_t* colorData = (uint8_t*)(planeBuffer[indexA].data);
 
-    unsigned char* colorData;
-    uint32_t rowPitch;
-
-    // Set alpha value to 128 (effectively 0.5f) to make image more saturated when unpremultiplied
-    rowPitch = (uint32_t)planeBuffer[indexA].rowBytes;
-    colorData = (unsigned char*)(planeBuffer[indexA].data);
+    // Set alpha value
     for (uint32_t i = 0; i < height; i++) {
         memset(colorData, alphaVal, rowPitch);
         colorData += rowPitch;
@@ -736,7 +739,7 @@ TEST(Accelerate, Convert) {
     // Convert and clip planar8 to planarF with a range [0.5f, 1.0f]
     ASSERT_EQ(vImageConvert_Planar8toPlanarF(&planar8Buffer, &planarFBuffer, 1.0f, 0.5f, kvImageNoFlags), kvImageNoFlags);
 
-    unsigned char* rowPtr = reinterpret_cast<unsigned char*>(planarFBuffer.data);
+    uint8_t* rowPtr = reinterpret_cast<uint8_t*>(planarFBuffer.data);
     float* rowPtrFloats;
 
     for (uint32_t y = 0; y < height; y++) {
@@ -752,11 +755,11 @@ TEST(Accelerate, Convert) {
     // Clamp float buffer with range [0.5 1.0f] to a range [0.0f 0.5f] and convert and saturate to uint8 effectively making all values 255
     ASSERT_EQ(vImageConvert_PlanarFtoPlanar8(&planarFBuffer, &planar8Buffer, 0.5f, 0.0f, kvImageNoFlags), kvImageNoFlags);
 
-    rowPtr = reinterpret_cast<unsigned char*>(planar8Buffer.data);
+    rowPtr = reinterpret_cast<uint8_t*>(planar8Buffer.data);
 
     for (uint32_t y = 0; y < height; y++) {
         for (uint32_t x = 0; x < width; x++) {
-            const unsigned char pixel = rowPtr[x];
+            const uint8_t pixel = rowPtr[x];
             ASSERT_TRUE_MSG(pixel == 255, "vImageConvert: PlanarFtoPlanar8 pixel <%d, %d> not properly clamped to range below input", x, y);
         }
 
@@ -766,11 +769,11 @@ TEST(Accelerate, Convert) {
     // Clamp float buffer with range [0.5 1.0f] to a range [1.5f 1.0f] and convert and saturate to uint8 effectively making all values 0
     ASSERT_EQ(vImageConvert_PlanarFtoPlanar8(&planarFBuffer, &planar8Buffer, 1.5f, 1.0f, kvImageNoFlags), kvImageNoFlags);
 
-    rowPtr = reinterpret_cast<unsigned char*>(planar8Buffer.data);
+    rowPtr = reinterpret_cast<uint8_t*>(planar8Buffer.data);
 
     for (uint32_t y = 0; y < height; y++) {
         for (uint32_t x = 0; x < width; x++) {
-            const unsigned char pixel = rowPtr[x];
+            const uint8_t pixel = rowPtr[x];
             ASSERT_TRUE_MSG(pixel == 0, "vImageConvert: PlanarFtoPlanar8 pixel <%d, %d> not properly clamped to range above input", x, y);
         }
 
@@ -797,7 +800,7 @@ TEST(Accelerate, Convert) {
     ASSERT_EQ(vImageConvert_Planar8toRGB888(&planarRed, &planarGreen, &planarBlue, &rgbDest, kvImageNoFlags), kvImageNoError);
 
     const Pixel_888_s rgbPixelGolden = { 1, 2, 3 };
-    rowPtr = reinterpret_cast<unsigned char*>(rgbDest.data);
+    rowPtr = reinterpret_cast<uint8_t*>(rgbDest.data);
     Pixel_888_s* rowPtrRgbPixels;
 
     for (uint32_t y = 0; y < height; y++) {
@@ -837,8 +840,9 @@ TEST(Accelerate, AlphaUnpremultiply) {
     _vImageSetSimdOptmizationsState(true);
     vImageTestSetAlphaAndUnpremultiply(photo.CGImage, &unpremultipliedBufferSimd, alphaVal);
 
-    vImageTestCompare8888Buffers(&unpremultipliedBufferSimd, &unpremultipliedBufferNormal);
+    ASSERT_TRUE_MSG(vImageTestCompare8888Buffers(&unpremultipliedBufferSimd, &unpremultipliedBufferNormal),
+                    "SIMD and non-SIMD output of AlphaUnpremultiply do not match");
 
-    free(unpremultipliedBufferSimd.data);
-    free(unpremultipliedBufferNormal.data);
+    vImageTestBufferFree(&unpremultipliedBufferSimd);
+    vImageTestBufferFree(&unpremultipliedBufferNormal);
 }
