@@ -19,8 +19,8 @@
 		002E8D9D1D592A3500D5DC64 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 002E8D9B1D592A3500D5DC64 /* Main.storyboard */; };
 		002E8D9F1D592A3500D5DC64 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 002E8D9E1D592A3500D5DC64 /* Assets.xcassets */; };
 		002E8DA21D592A3500D5DC64 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 002E8DA01D592A3500D5DC64 /* LaunchScreen.storyboard */; };
-		002E8DAB1D59302E00D5DC64 /* CTCBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 002E8DAA1D59302E00D5DC64 /* CTCBaseViewController.m */; };
 		002E8DAF1D59317500D5DC64 /* CTCAlignmentTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 002E8DAE1D59317500D5DC64 /* CTCAlignmentTestViewController.m */; };
+		005B291F1D77545600789716 /* CTCBaseViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 005B291E1D77545600789716 /* CTCBaseViewController.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,9 +47,9 @@
 		002E8DA11D592A3500D5DC64 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		002E8DA31D592A3500D5DC64 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		002E8DA91D592FDD00D5DC64 /* CTCBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CTCBaseViewController.h; sourceTree = "<group>"; };
-		002E8DAA1D59302E00D5DC64 /* CTCBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTCBaseViewController.m; sourceTree = "<group>"; };
 		002E8DAC1D5930F600D5DC64 /* CTCAlignmentTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CTCAlignmentTestViewController.h; path = Tests/CTCAlignmentTestViewController.h; sourceTree = "<group>"; };
 		002E8DAE1D59317500D5DC64 /* CTCAlignmentTestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CTCAlignmentTestViewController.m; path = Tests/CTCAlignmentTestViewController.m; sourceTree = "<group>"; };
+		005B291E1D77545600789716 /* CTCBaseViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CTCBaseViewController.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,13 +82,13 @@
 		002E8D911D592A3500D5DC64 /* CTCatalog */ = {
 			isa = PBXGroup;
 			children = (
+				005B291E1D77545600789716 /* CTCBaseViewController.mm */,
 				002E8D951D592A3500D5DC64 /* AppDelegate.h */,
 				002E8D961D592A3500D5DC64 /* AppDelegate.m */,
 				002E8DAD1D59314E00D5DC64 /* Test */,
 				002E8D981D592A3500D5DC64 /* CTCRootViewController.h */,
 				002E8D991D592A3500D5DC64 /* CTCRootViewController.m */,
 				002E8DA91D592FDD00D5DC64 /* CTCBaseViewController.h */,
-				002E8DAA1D59302E00D5DC64 /* CTCBaseViewController.m */,
 				002E8D9B1D592A3500D5DC64 /* Main.storyboard */,
 				002E8D9E1D592A3500D5DC64 /* Assets.xcassets */,
 				002E8DA01D592A3500D5DC64 /* LaunchScreen.storyboard */,
@@ -206,7 +206,7 @@
 				002AB41E1D6CA1F1002082A5 /* CTCLineTestViewController.mm in Sources */,
 				002AB41B1D6CA1F1002082A5 /* CTCFontTestViewController.mm in Sources */,
 				002E8D971D592A3500D5DC64 /* AppDelegate.m in Sources */,
-				002E8DAB1D59302E00D5DC64 /* CTCBaseViewController.m in Sources */,
+				005B291F1D77545600789716 /* CTCBaseViewController.mm in Sources */,
 				002E8D941D592A3500D5DC64 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
