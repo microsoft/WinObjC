@@ -128,6 +128,10 @@ TEST_P(AddressBookMultiValueModifyTest, MultiValueFields) {
     CFRelease(result);
 }
 
+// TODO: 955 AddressBook ModifyContactsTests Crashes Visual Studio Project #955
+// This test has been disabled due to an issue in Visual Studio attempting to parse the contents of this test.
+
+/*
 INSTANTIATE_TEST_CASE_P(
     AddressBook,
     AddressBookMultiValueModifyTest,
@@ -175,6 +179,7 @@ INSTANTIATE_TEST_CASE_P(
                               @[ @"Random Name", @"Wife's Name", @"Buzz", @"Link", @"Pops", @"Sun Ray" ])
 
             ));
+*/
 
 TEST(AddressBookModify, DateMultiValues) {
     ABRecordRef person = ABPersonCreate();
