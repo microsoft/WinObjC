@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="WOCCatalog">
@@ -115,16 +115,17 @@
       <Filter>WOCCatalog</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\UIPasteboardViewController.h">
-		<Filter>WOCCatalog</Filter>
+      <Filter>WOCCatalog</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AudioToolboxViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\GeocodingViewController.h">
-    <Filter>WOCCatalog</Filter>
-        </ClInclude>
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\CoreLocationViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AccelerateViewController2.h" />
   </ItemGroup>
 </Project>
