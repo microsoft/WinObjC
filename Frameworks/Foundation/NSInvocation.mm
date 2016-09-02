@@ -31,7 +31,6 @@ static const wchar_t* TAG = L"NSInvocation";
 static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
 
 @implementation NSInvocation {
-@public // must be visible to _NSInvocation_ForwardFrame
     StrongId<NSMethodSignature> _methodSignature;
 
     std::unique_ptr<_NSInvocationCallFrame> _callFrame;
@@ -276,14 +275,21 @@ static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
     _callFrame->execute(pfn, _returnValue);
 }
 
+- (void*)_returnValuePointer {
+    return _returnValue;
+}
+
+- (unsigned int)_opaquePlatformReturnType {
+    return _callFrame->getOpaquePlatformReturnType();
+}
+
 @end
 
 extern "C" void _NSInvocation_ForwardFrame(
     void* stret, id self, SEL sel, void* frame, /* out */ _NSInvocationForwardReturnInfo* bridgeOut) {
     NSMethodSignature* signature = [self methodSignatureForSelector:sel];
     if (!signature) {
-        const char* types = nullptr;
-        types = sel_getType_np(sel);
+        const char* types = sel_getType_np(sel);
         if (!types) {
             SEL typedSelector = nullptr;
             sel_copyTypedSelectors_np(sel_getName(sel), &typedSelector, 1);
@@ -311,10 +317,11 @@ extern "C" void _NSInvocation_ForwardFrame(
 
     // frame is platform-specific; the _NSInvocationCallFrame knows what to do with it.
     NSInvocation* invocation = [[[NSInvocation alloc] _initWithMethodSignature:signature copyInFrame:frame] autorelease];
-    auto& callFrame = *invocation->_callFrame.get();
+    void* returnValuePointer = [invocation _returnValuePointer];
+    unsigned int opaqueReturnType = [invocation _opaquePlatformReturnType];
     [self forwardInvocation:invocation];
     if (stret) {
         [invocation getReturnValue:stret];
     }
-    *bridgeOut = { invocation->_returnValue, callFrame.getOpaquePlatformReturnType() };
+    *bridgeOut = { returnValuePointer, opaqueReturnType };
 }
