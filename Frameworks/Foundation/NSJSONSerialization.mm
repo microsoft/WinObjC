@@ -80,6 +80,11 @@ ComPtr<IJsonValue> _NSJSONToWDJJsonValue(id object, BOOL isTop) {
         }
     } else if ((!isTop) && [object isKindOfClass:[NSString class]]) {
         THROW_NS_IF_FAILED(jsonValueStatics->CreateStringValue(Strings::NarrowToWide<HSTRING>(object).Get(), ret.GetAddressOf()));
+    } else if ((!isTop) && [object isKindOfClass:[NSNull class]]) {
+        ComPtr<IJsonValueStatics2> jsonValueStatics2;
+
+        THROW_NS_IF_FAILED(jsonValueStatics.As(&jsonValueStatics2));
+        THROW_NS_IF_FAILED(jsonValueStatics2->CreateNullValue(ret.GetAddressOf()));
     } else {
         // Top level object must be one of NSDictionary or NSArray
         if (isTop) {

@@ -86,6 +86,7 @@ TEST(NSJSON, JSONObjectWithDataTests) {
     NSString* testString6 = @"{\"foo\":\"1\",\"bar\":\"2\"}";
     NSString* testString7 = @"{\"foo\"::::::\"1\",\"bar\":\"2\"}";
     NSString* testString8 = nil;
+    NSString* testString9 = @"{\"key\":\"value\",\"nullkey\":null,\"array\":[{\"subnullkey\":null}]}";
 
     // success cases
     VerifyJSONObjectWithDataSucceeds(testString1, 4, [NSNumber numberWithInteger:1]);
@@ -95,6 +96,12 @@ TEST(NSJSON, JSONObjectWithDataTests) {
     VerifyJSONObjectWithDataSucceeds(testString6, 0, @{ @"foo" : @"1", @"bar" : @"2" });
     VerifyJSONObjectWithDataSucceeds(testString5, 1, @[ @1, @2, @3, @4, @5 ]);
     VerifyJSONObjectWithDataSucceeds(testString6, 1, @{ @"foo" : @"1", @"bar" : @"2" });
+    VerifyJSONObjectWithDataSucceeds(
+        testString9,
+        0,
+        @{ @"key" : @"value",
+           @"nullkey" : [NSNull null],
+           @"array" : @[ @{ @"subnullkey" : [NSNull null] } ] });
 
     // error cases
     VerifyJSONObjectWithDataFails(testString1, 0, 3840);
@@ -117,11 +124,13 @@ TEST(NSJSON, DataWithJSONObjectTests) {
     id testObject6 = @{ @"foo" : @"1", @"bar" : @"2" };
     id testObject7 = @{ @"foo" : @{ @"bar" : @"1" }, @"foo2" : @{ @"bar2" : @"2" } };
     id testObject8 = [NSUUID UUID];
+    id testObject9 = @{ @"key" : @"value", @"nullkey" : [NSNull null], @"array" : @[ @{ @"subnullkey" : [NSNull null] } ] };
 
     // success cases
     VerifyDataWithJSONObjectSucceeds(testObject5, @"[1,2,3,4,5]");
     VerifyDataWithJSONObjectSucceeds(testObject6, @"{\"foo\":\"1\",\"bar\":\"2\"}");
     VerifyDataWithJSONObjectSucceeds(testObject7, @"{\"foo\":{\"bar\":\"1\"},\"foo2\":{\"bar2\":\"2\"}}");
+    VerifyDataWithJSONObjectSucceeds(testObject9, @"{\"key\":\"value\",\"array\":[{\"subnullkey\":null}],\"nullkey\":null}");
 
     // error case
     VerifyDataWithJSONObjectThrows(testObject2);
