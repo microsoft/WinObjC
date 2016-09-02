@@ -84,6 +84,10 @@ TEST(AddressBookModify, ContactBirthday) {
     [dateComponents release];
 }
 
+// TODO: 955 AddressBook ModifyContactsTests Crashes Visual Studio Project #955
+// This test has been disabled due to an issue in Visual Studio attempting to parse the contents of this test.
+
+/*
 class AddressBookMultiValueModifyTest : public ::testing::TestWithParam<::testing::tuple<ABPropertyID, NSArray*, NSArray*>> {
 protected:
     virtual void SetUp() {
@@ -128,14 +132,11 @@ TEST_P(AddressBookMultiValueModifyTest, MultiValueFields) {
     CFRelease(result);
 }
 
-// TODO: 955 AddressBook ModifyContactsTests Crashes Visual Studio Project #955
-// This test has been disabled due to an issue in Visual Studio attempting to parse the contents of this test.
-
-/*
 INSTANTIATE_TEST_CASE_P(
     AddressBook,
     AddressBookMultiValueModifyTest,
     ::testing::Values(
+    // TODO: 955 : Particularly this first tuple causes the issue.
         ::testing::make_tuple(kABPersonPhoneProperty,
                               @[
                                  (__bridge NSString*)kABHomeLabel,
