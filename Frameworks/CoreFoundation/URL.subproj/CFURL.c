@@ -1323,8 +1323,25 @@ static Boolean _stringContainsCharacter(CFStringRef string, UniChar ch) {
     return false;
 }
 
+// WINOBJC : A function for creating percent escapes based on character sets instead of strings has been added. This is used for 
+// stringByAddingPercentEscapesUsingEncoding which operates on a valid set of the URLFragmentAllowedCharacterSet. Converting a
+// character set to a string is expensive, but converting a string to a character set is not. Lookup in a character set is also
+// significantly more efficient. As such, an extra function for using character sets has been added instead, and the string version
+// has been modified to use this.
+
 // Note: charactersToLeaveUnescaped and legalURLCharactersToBeEscaped only work for characters which can be represented as a single UTF16 codepoint.
 CF_EXPORT CFStringRef CFURLCreateStringByAddingPercentEscapes(CFAllocatorRef allocator, CFStringRef originalString, CFStringRef charactersToLeaveUnescaped, CFStringRef legalURLCharactersToBeEscaped, CFStringEncoding encoding) {
+    CFCharacterSetRef allowedCharacterSet = CFCharacterSetCreateWithCharactersInString(allocator, charactersToLeaveUnescaped);
+    CFCharacterSetRef legalEscapedCharacterSet = CFCharacterSetCreateWithCharactersInString(allocator, legalURLCharactersToBeEscaped);
+    CFStringRef escapedString = CFURLCreateStringByAddingPercentEscapesWithCharacterSets(allocator, originalString, allowedCharacterSet, legalEscapedCharacterSet, encoding);
+    CFRelease(allowedCharacterSet);
+    CFRelease(legalEscapedCharacterSet);
+
+    return escapedString;
+}
+
+// Note: charactersToLeaveUnescaped and legalURLCharactersToBeEscaped only work for characters which can be represented as a single UTF16 codepoint.
+CF_EXPORT CFStringRef CFURLCreateStringByAddingPercentEscapesWithCharacterSets(CFAllocatorRef allocator, CFStringRef originalString, CFCharacterSetRef charactersToLeaveUnescaped, CFCharacterSetRef legalURLCharactersToBeEscaped, CFStringEncoding encoding) {
     CFMutableStringRef newString = NULL;
     CFIndex idx, length;
     CFStringInlineBuffer buf;
@@ -1343,10 +1360,10 @@ CF_EXPORT CFStringRef CFURLCreateStringByAddingPercentEscapes(CFAllocatorRef all
         UniChar ch = __CFStringGetCharacterFromInlineBufferQuick(&buf, idx);
         Boolean shouldReplace = (isURLLegalCharacter(ch) == false);
         if (shouldReplace) {
-            if (charactersToLeaveUnescaped && _stringContainsCharacter(charactersToLeaveUnescaped, ch)) {
+            if (charactersToLeaveUnescaped && CFCharacterSetIsCharacterMember(charactersToLeaveUnescaped, ch)) {
                 shouldReplace = false;
             }
-        } else if (legalURLCharactersToBeEscaped && _stringContainsCharacter(legalURLCharactersToBeEscaped, ch)) {
+        } else if (legalURLCharactersToBeEscaped && CFCharacterSetIsCharacterMember(legalURLCharactersToBeEscaped, ch)) {
             shouldReplace = true;
         }
         

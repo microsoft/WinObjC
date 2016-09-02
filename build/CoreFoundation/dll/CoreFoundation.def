@@ -1141,6 +1141,7 @@ LIBRARY CoreFoundation
         CFURLIsFileReferenceURL
         CFURLCreateData
         CFURLCreateStringByAddingPercentEscapes
+        CFURLCreateStringByAddingPercentEscapesWithCharacterSets
         CFURLCreateStringByReplacingPercentEscapes
         CFURLCreateStringByReplacingPercentEscapesUsingEncoding
         CFURLGetFileSystemRepresentation
