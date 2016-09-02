@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -193,16 +193,14 @@ BASE_CLASS_REQUIRED_IMPLS(NSCharacterSet, NSMutableCharacterSetPrototype, CFChar
 /**
  @Status Interoperable
 */
-+ (instancetype)characterSetWithBitmapRepresentation:(NSData*)data {
-    THROW_NS_IF_NULL(E_INVALIDARG, data);
++ (instancetype)characterSetWithBitmapRepresentation:(NSData* _Nonnull)data {
     return [static_cast<NSCharacterSet*>(CFCharacterSetCreateWithBitmapRepresentation(nullptr, static_cast<CFDataRef>(data))) autorelease];
 }
 
 /**
  @Status Interoperable
 */
-+ (instancetype)characterSetWithContentsOfFile:(NSString*)path {
-    THROW_NS_IF_NULL(E_INVALIDARG, path);
++ (instancetype)characterSetWithContentsOfFile:(NSString* _Nonnull)path {
     return [NSCharacterSet characterSetWithBitmapRepresentation:[NSData dataWithContentsOfFile:path]];
 }
 

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -219,22 +219,7 @@ TEST(NSCharacterSet, Polymorphic_Creators) {
 
     set = [NSMutableCharacterSet characterSetWithRange:NSMakeRange(0, 32)];
     EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
-}
 
-ARM_DISABLED_TEST(NSCharacterSet, ExceptionTests) {
-    NSMutableCharacterSet* set;
-    @try {
-        set = [NSMutableCharacterSet characterSetWithBitmapRepresentation:nil];
-        FAIL();
-    } @catch (NSException* e) {
-        ASSERT_OBJCEQ(e.name, @"NSInvalidArgumentException");
-    }
-
-    @
-    try {
-        set = [NSMutableCharacterSet characterSetWithContentsOfFile:nil];
-        FAIL();
-    } @catch (NSException* e) {
-        ASSERT_OBJCEQ(e.name, @"NSInvalidArgumentException");
-    }
+    set = [NSMutableCharacterSet characterSetWithBitmapRepresentation:nil];
+    EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 }
