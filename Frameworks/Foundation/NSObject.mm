@@ -483,7 +483,15 @@ static struct objc_slot* _NSSlotForward(id object, SEL selector) {
     }
 
     if (class_respondsToSelector(cls, @selector(forwardInvocation:))) {
-        return structReturn ? &_NSInvocationStretSlot : &_NSInvocationSlot;
+        if (class_respondsToSelector(cls, @selector(methodSignatureForSelector:))) {
+            return structReturn ? &_NSInvocationStretSlot : &_NSInvocationSlot;
+        } else {
+            TraceWarning(TAG,
+                         L"%hs responds to %cforwardInvocation but not %cmethodSignatureForSelector:. This will not end well.",
+                         class_getName(cls),
+                         class_isMetaClass(cls) ? '+' : '-',
+                         class_isMetaClass(cls) ? '+' : '-');
+        }
     }
 
     return structReturn ? &_NSForwardStretSlot : &_NSForwardSlot;
