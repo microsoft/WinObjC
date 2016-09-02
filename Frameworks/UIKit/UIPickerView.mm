@@ -28,7 +28,6 @@
 #import <UIKit/UIView.h>
 #import <UIViewInternal.h>
 #import "UIDatePicker+Internal.h"
-#import "UIScrollViewInternal.h"
 
 static const wchar_t* TAG = L"UIPickerView";
 
@@ -70,13 +69,6 @@ struct RowData {
     [self setBackgroundColor:[UIColor windowsControlDefaultBackgroundColor]];
 
     return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setBackgroundColor:(UIColor*)color {
-    [self _setBackgroundColor:color];
 }
 
 - (id)reloadComponent {
