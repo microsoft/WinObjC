@@ -55,6 +55,11 @@ static void deleteTouch(UIPinchGestureRecognizer* self, UITouch* touch) {
     }
 }
 
+static void deleteAllTouches(UIPinchGestureRecognizer* self) {
+    ::memset(&self->_touches, 0, sizeof(self->_touches));
+    self->_numTouches = 0;
+}
+
 /**
  @Status Interoperable
 */
@@ -101,6 +106,13 @@ static void deleteTouch(UIPinchGestureRecognizer* self, UITouch* touch) {
     } else if (_numTouches == 1) {
         _state = UIGestureRecognizerStatePossible;
     }
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event {
+    deleteAllTouches(self);
 }
 
 /**

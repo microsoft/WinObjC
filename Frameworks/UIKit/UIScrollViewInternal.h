@@ -19,5 +19,4 @@
 @interface UIScrollView ()
 - (void)_clampOffset;
 - (BOOL)_isAnimating;
-- (void)_setBackgroundColor:(UIColor*)color;
 @end

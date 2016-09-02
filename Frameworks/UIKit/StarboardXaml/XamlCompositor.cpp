@@ -130,7 +130,6 @@ void DisplayNode::SetScrollviewerControls(IInspectable* rootControl, IInspectabl
     winobjc::Id root = rootControl;
     Windows::UI::Xaml::Controls::ContentControl^ rootContentControl = (Windows::UI::Xaml::Controls::ContentControl^)(Platform::Object^)root;
     rootContentControl->Name = L"ContentControl";
-    layoutPanel->Children->Clear();
     layoutPanel->Children->Append(rootContentControl);
 
     _contentElement = contentControl;
