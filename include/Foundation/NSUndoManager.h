@@ -1,7 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
-// Copyright (c) 2006-2007 Christopher J. W. Lloyd
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -36,33 +35,33 @@ FOUNDATION_EXPORT NSString* const NSUndoManagerDidCloseUndoGroupNotification;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSUndoManager : NSObject
-- (void)registerUndoWithTarget:(id)target selector:(SEL)aSelector object:(id)anObject STUB_METHOD;
+- (void)registerUndoWithTarget:(id)target selector:(SEL)aSelector object:(id)anObject;
 - (id)prepareWithInvocationTarget:(id)target STUB_METHOD;
-@property (readonly) BOOL canUndo STUB_PROPERTY;
-@property (readonly) BOOL canRedo STUB_PROPERTY;
-- (void)undo STUB_METHOD;
-- (void)undoNestedGroup STUB_METHOD;
-- (void)redo STUB_METHOD;
-@property NSUInteger levelsOfUndo STUB_PROPERTY;
-- (void)beginUndoGrouping STUB_METHOD;
-- (void)endUndoGrouping STUB_METHOD;
-@property BOOL groupsByEvent STUB_PROPERTY;
-@property (readonly) NSInteger groupingLevel STUB_PROPERTY;
-- (void)disableUndoRegistration STUB_METHOD;
-- (void)enableUndoRegistration STUB_METHOD;
-@property (readonly, getter=isUndoRegistrationEnabled) BOOL undoRegistrationEnabled STUB_PROPERTY;
-@property (readonly, getter=isUndoing) BOOL undoing STUB_PROPERTY;
-@property (readonly, getter=isRedoing) BOOL redoing STUB_PROPERTY;
-- (void)removeAllActions STUB_METHOD;
-- (void)removeAllActionsWithTarget:(id)target STUB_METHOD;
-@property (readonly, copy) NSString* undoActionName STUB_PROPERTY;
-@property (readonly, copy) NSString* redoActionName STUB_PROPERTY;
-- (void)setActionName:(NSString*)actionName STUB_METHOD;
+@property (readonly) BOOL canUndo;
+@property (readonly) BOOL canRedo;
+- (void)undo;
+- (void)undoNestedGroup;
+- (void)redo;
+@property NSUInteger levelsOfUndo;
+- (void)beginUndoGrouping;
+- (void)endUndoGrouping;
+@property BOOL groupsByEvent;
+@property (readonly) NSInteger groupingLevel;
+- (void)disableUndoRegistration;
+- (void)enableUndoRegistration;
+- (BOOL)isUndoRegistrationEnabled;
+@property (readonly, getter=isUndoing) BOOL undoing;
+@property (readonly, getter=isRedoing) BOOL redoing;
+- (void)removeAllActions;
+- (void)removeAllActionsWithTarget:(id)target;
+@property (readonly, copy) NSString* undoActionName;
+@property (readonly, copy) NSString* redoActionName;
+- (void)setActionName:(NSString*)actionName;
 @property (readonly, copy) NSString* undoMenuItemTitle STUB_PROPERTY;
 @property (readonly, copy) NSString* redoMenuItemTitle STUB_PROPERTY;
 - (NSString*)undoMenuTitleForUndoActionName:(NSString*)actionName STUB_METHOD;
 - (NSString*)redoMenuTitleForUndoActionName:(NSString*)actionName STUB_METHOD;
-@property (copy) NSArray* runLoopModes STUB_PROPERTY;
+@property (copy) NSArray* runLoopModes;
 - (void)setActionIsDiscardable:(BOOL)discardable STUB_METHOD;
 @property (readonly) BOOL undoActionIsDiscardable STUB_PROPERTY;
 @property (readonly) BOOL redoActionIsDiscardable STUB_PROPERTY;
