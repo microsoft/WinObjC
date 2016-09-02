@@ -296,7 +296,14 @@ void testOption(
                          usingBlock:^void(NSTextCheckingResult* textResult, NSMatchingFlags flags, BOOL* stop) {
                              count++;
                          }];
-    ASSERT_EQ(count, expected);
+
+    // NSMatchingReportProgress can match longer than expected based on the running time. This should call the block no fewer than the
+    // expected number of times.
+    if (NSMatchingReportProgress & options) {
+        ASSERT_GE(count, expected);
+    } else {
+        ASSERT_EQ(count, expected);
+    }
 }
 
 void testOption(StrongId<NSRegularExpression> regex, StrongId<NSString> testString, NSMatchingOptions options, int expected) {
