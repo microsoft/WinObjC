@@ -75,9 +75,8 @@
     float _yPos;
     StrongId<NSString> _stringFragment;
     std::vector<CGSize> _glyphAdvances;
-
     // TODO::
-    // Do we need these anymore?
+    // How do we get this data? DWrite does not seem to provide it to us directly today.
     std::vector<CGPoint> _glyphOrigins;
 }
 @end

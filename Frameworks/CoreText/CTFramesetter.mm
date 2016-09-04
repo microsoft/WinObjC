@@ -49,15 +49,15 @@ static _CTFrame* _createFrame(_CTFrameSetter* frameSetter, CGRect frameSize, CGS
     if (sizeOut) {
         // TODO::
         // Is there a better way to do this - Investigate.
-        // For now the below logic is ued to calculate the frame size required to fit the text in -
+        // For now the below logic is used to calculate the frame size required to fit the text in -
         //     width = frame width as it is the constraint passed to DWrite to calculate renderable area width
-        //     height = min(_lineOrigin.y of the last line in the frame + the _lineOrigin.y of the first line (so we have some buffer
-        //              space after the last line), frameSize.size.height)
+        //     height = min(_lineOrigin.y of the last line in the frame + the _lineOrigin.y of the first line (so we atlease get the
+        //              empty space that the first line got), frameSize.size.height)
 
         // Calculate width
         sizeOut->width = frameSize.size.width;
 
-        // Calculate heigth
+        // Calculate height
         _CTLine* firstLine = static_cast<_CTLine*>([lines objectAtIndex:0]);
         _CTLine* lastLine = static_cast<_CTLine*>([lines objectAtIndex:[lines count] - 1]);
         // TODO::

@@ -96,8 +96,12 @@ void CTFrameGetLineOrigins(CTFrameRef frame, CFRange range, CGPoint origins[]) {
         range.length = 0x7FFFFFF;
     }
 
-    for (uint32_t index = 0; index < [((_CTFrame*)frame)->_lines count]; index++) {
-        origins[index] = ((_CTLine*)((_CTFrame*)frame)->_lines[index])->_lineOrigin;
+    unsigned count = [((_CTFrame*)frame)->_lines count];
+    int idx = 0;
+
+    for (unsigned i = range.location; i < count && i < range.location + range.length; i++) {
+        origins[idx] = ((_CTLine*)((_CTFrame*)frame)->_lines[idx])->_lineOrigin;
+        idx++;
     }
 }
 

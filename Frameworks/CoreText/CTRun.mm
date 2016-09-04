@@ -261,7 +261,7 @@ void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
         range.length = [string length];
     }
 
-    int numGlyphs = [string length];
+    int numGlyphs = curRun->_glyphAdvances.size();
     WORD* glyphs = (WORD*)IwMalloc(sizeof(WORD) * numGlyphs);
 
     WORD* characters = (WORD*)IwMalloc(sizeof(WORD) * numGlyphs);
