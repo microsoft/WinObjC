@@ -659,7 +659,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
     self->priv->_pointerPressedEventRegistration =
         [self->priv->_xamlInputElement addPointerPressedEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
             // Capture the pointer within this xaml element
-            if (![self->priv->_xamlInputElement capturePointer:e.pointer]) {
+            if (![weakSelf->priv->_xamlInputElement capturePointer:e.pointer]) {
                 TraceWarning(TAG, L"Failed to capture pointer...");
             }
 
@@ -682,7 +682,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
             [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseEnded];
 
             // release the pointer capture
-            [self->priv->_xamlInputElement releasePointerCapture:e.pointer];
+            [weakSelf->priv->_xamlInputElement releasePointerCapture:e.pointer];
         }];
 
     self->priv->_pointerCanceledEventRegistration =
