@@ -19,7 +19,13 @@
 #import "NSStringInternal.h"
 #import "CoreTextInternal.h"
 #import "CGContextInternal.h"
+#import "DWriteWrapper.h"
 #import <CoreText/CTTypesetter.h>
+
+#include <algorithm>
+
+static IWLazyClassLookup _LazyUIFont("UIFont");
+static const float c_default_system_font_size = 15.0f;
 
 static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef line,
                                                                     CTLineTruncationType truncationType,
@@ -38,7 +44,7 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef li
     ret->_ascent = _ascent;
     ret->_descent = _descent;
     ret->_leading = _leading;
-    ret->_runs = [_runs copy];
+    ret->_runs = [[NSMutableArray alloc] initWithArray:_runs copyItems:YES];
 
     return ret;
 }
@@ -48,16 +54,7 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef li
  @Status Stub
 */
 CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string) {
-    UNIMPLEMENTED();
-    NSString* str = [(NSAttributedString*)string string];
-    CFRange lineRange;
-    lineRange.location = 0;
-    lineRange.length = [str length];
-
-    _CTLine* line = [_CTLine new];
-    line->_strRange = lineRange;
-
-    return (CTLineRef)line;
+    return static_cast<CTLineRef>(_DWriteGetLine(string));
 }
 
 /**
@@ -139,10 +136,7 @@ CTLineRef CTLineCreateTruncatedLine(CTLineRef sourceLine, double width, CTLineTr
             return nil;
     }
 
-    CTTypesetterRef typeSetter = CTTypesetterCreateWithAttributedString(static_cast<CFAttributedStringRef>(finalString));
-    CFRange range = { 0, finalString.length };
-    CTLineRef ret = static_cast<CTLineRef>(CTTypesetterCreateLine(typeSetter, range));
-    CFRelease(typeSetter);
+    CTLineRef ret = CTLineCreateWithAttributedString(static_cast<CFAttributedStringRef>(finalString));
     [stringFromToken release];
 
     return ret;
@@ -231,7 +225,6 @@ void _CTLineDraw(CTLineRef lineRef, CGContextRef ctx, bool adjustTextPosition) {
     }
 
     for (_CTRun* curRun in static_cast<NSArray*>(line->_runs)) {
-        CFRange range = { 0 };
         _CTRunDraw(static_cast<CTRunRef>(curRun), ctx, range, false);
     }
 }
@@ -247,12 +240,8 @@ void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
  @Status Interoperable
 */
 CFIndex CTLineGetGlyphCount(CTLineRef lineRef) {
-    if (lineRef == nil) {
-        return 0;
-    }
-
     _CTLine* line = (_CTLine*)lineRef;
-    return (line->_strRange).length;
+    return line ? (line->_strRange).length : 0;
 }
 
 /**

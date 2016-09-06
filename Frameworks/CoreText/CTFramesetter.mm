@@ -46,7 +46,7 @@ static _CTFrame* _createFrame(_CTFrameSetter* frameSetter, CGRect frameSize, CGS
         ret->_lines = lines;
     }
 
-    if (sizeOut) {
+    if (sizeOut && range.length != 0) {
         // TODO::
         // Is there a better way to do this - Investigate.
         // For now the below logic is used to calculate the frame size required to fit the text in -

@@ -655,12 +655,17 @@ CFArrayRef CTFontCopyFeatureSettings(CTFontRef font) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 bool CTFontGetGlyphsForCharacters(CTFontRef font, const UniChar characters[], CGGlyph glyphs[], CFIndex count) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    bool succeeded = true;
+    FT_Face face = (FT_Face)[(UIFont*)font _sizingFontHandle];
+    for (CFIndex i = 0; i < count; ++i) {
+        glyphs[i] = FT_Get_Char_Index(face, characters[i]);
+        succeeded = succeeded && glyphs[i];
+    }
+    return succeeded;
 }
 
 /**

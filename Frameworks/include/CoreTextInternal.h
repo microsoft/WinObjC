@@ -54,6 +54,10 @@ inline void _SafeRelease(T** p) {
     CFRange _range;
     StrongId<NSString> _stringFragment;
     DWRITE_GLYPH_RUN _dwriteGlyphRun;
+    std::vector<CFIndex> _stringIndices;
+
+    // TODO::
+    // How do we get this data? DWrite does not seem to provide it to us directly today.
     std::vector<CGPoint> _glyphOrigins;
     CGFloat _relativeXOffset;
     CGFloat _relativeYOffset;

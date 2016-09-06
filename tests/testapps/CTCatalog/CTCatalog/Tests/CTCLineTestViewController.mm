@@ -28,8 +28,6 @@
 }
 
 - (void)drawRect:(CGRect)rect {
-    UIColor* color = [UIColor blueColor];
-
     CGContextRef context = UIGraphicsGetCurrentContext();
 
     // Aligns origin for our frame
@@ -69,15 +67,6 @@
     CGMutablePathRef path = CGPathCreateMutable();
     CGPathAddRect(path, NULL, self.bounds);
 
-    // Create style setting to match given alignment
-    CTParagraphStyleSetting setting;
-
-    setting.spec = kCTParagraphStyleSpecifierAlignment;
-    setting.valueSize = sizeof(CTTextAlignment);
-    CTTextAlignment alignment = kCTCenterTextAlignment;
-    setting.value = &alignment;
-    CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(&setting, 1);
-
     UIFont* font = [UIFont systemFontOfSize:20];
     CTFontRef myCFFont = CTFontCreateWithName((__bridge CFStringRef)[font fontName], [font pointSize], NULL);
     // Make dictionary for attributed string with font, color, and alignment
@@ -85,36 +74,27 @@
                                                                               (id)kCTFontAttributeName,
                                                                               color.CGColor,
                                                                               (id)kCTForegroundColorAttributeName,
-                                                                              (__bridge id)paragraphStyle,
-                                                                              (id)kCTParagraphStyleAttributeName,
                                                                               nil];
 
     CFAttributedStringRef attrString =
         CFAttributedStringCreate(kCFAllocatorDefault, (__bridge CFStringRef)_text, (__bridge CFDictionaryRef)attributesDict);
 
-    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(attrString);
+    CTLineRef line = CTLineCreateWithAttributedString(attrString);
     CFRelease(attrString);
 
-    // Creates frame for framesetter with current attributed string
-    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
-    CFArrayRef lines = CTFrameGetLines(frame);
-    if (CFArrayGetCount(lines) > 0) {
-        CTLineRef line = static_cast<CTLineRef>(CFArrayGetValueAtIndex(lines, 0));
+    CGContextSetTextPosition(context, 0.0, 10.0);
+    CTLineDraw(line, context);
 
-        CGContextSetTextPosition(context, 0.0, 10.0);
-        CTLineDraw(line, context);
+    // Creates outline
+    CGContextSetLineWidth(context, 2.0);
+    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+    CGContextSetStrokeColorWithColor(context, color.CGColor);
+    CGContextMoveToPoint(context, 0, 0);
+    CGContextAddRect(context, rect);
+    CGContextStrokePath(context);
 
-        // Creates outline
-        CGContextSetLineWidth(context, 2.0);
-        CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-        CGContextSetStrokeColorWithColor(context, color.CGColor);
-        CGContextMoveToPoint(context, 0, 0);
-        CGContextAddRect(context, rect);
-        CGContextStrokePath(context);
-
-        CGColorSpaceRelease(colorspace);
-        [_drawDelegate refreshValuesForLine:line];
-    }
+    CGColorSpaceRelease(colorspace);
+    [_drawDelegate refreshValuesForLine:line];
 }
 
 @end
@@ -192,7 +172,6 @@
 - (void)refreshValuesForLine:(CTLineRef)line {
     _truncatedLineView = [[CTTruncatedLineTestView alloc] initWithFrame:CGRectMake(40, 180, 400, 60)];
     _truncatedLineView.backgroundColor = [UIColor whiteColor];
-    // Allows input of \n and \t to insert newlines and tabs respectively
     _truncatedLineView.lineRef = CTLineCreateTruncatedLine(line, _truncationSlider.value, kCTLineTruncationEnd, NULL);
     [self.view addSubview:_truncatedLineView];
 
@@ -221,7 +200,6 @@
                                              [NSString stringWithFormat:@"primary %f, secondary %f", primaryOffset, secondaryOffset])];
 
     ADD_UNIMPLEMENTED(_functionCells, @"CTLineCreateJustifiedLine");
-    ADD_UNIMPLEMENTED(_functionCells, @"CTLineCreateWithAttributedString");
     ADD_UNIMPLEMENTED(_functionCells, @"CTLineGetPenOffsetForFlush");
     ADD_UNIMPLEMENTED(_functionCells, @"CTLineGetImageBounds");
     ADD_UNIMPLEMENTED(_functionCells, @"CTLineGetTrailingWhitespaceWidth");

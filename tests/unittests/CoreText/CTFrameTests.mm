@@ -44,7 +44,7 @@ DISABLED_TEST(CTFrame, GetStringRange) {
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString(@"");
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(string);
     CGMutablePathRef path = CGPathCreateMutable();
-    CGPathAddRect(path, NULL, CGRectMake(0, 0, 100, 50));
+    CGPathAddRect(path, NULL, CGRectMake(0, 0, 60, 57));
     CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
     EXPECT_EQ(0, CTFrameGetStringRange(frame).location);
     EXPECT_EQ(0, CTFrameGetStringRange(frame).length);

@@ -241,8 +241,15 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
     [_rows addObject:createTextCell(@"CTFontGetDescent", [NSString stringWithFormat:@"%f", CTFontGetDescent(_font)])];
     [_rows addObject:createTextCell(@"CTFontGetSize", [NSString stringWithFormat:@"%f", CTFontGetSize(_font)])];
 
-    // Glyph indicies for "Glyphs" in default font as CTLineCreateWithAttributedString does not currently function
-    CGGlyph glyphs[6] = { 42, 79, 92, 83, 75, 86 };
+    UniChar characters[6];
+    [@"Glyphs" getCharacters:characters range:NSMakeRange(0, 6)];
+    CGGlyph glyphs[6];
+    CTFontGetGlyphsForCharacters(_font, characters, glyphs, 6);
+    [_rows
+        addObject:createTextCell(
+                      @"CTFontGetGlyphsForCharacters:Glyphs",
+                      [NSString stringWithFormat:@"%d %d %d %d %d %d", glyphs[0], glyphs[1], glyphs[2], glyphs[3], glyphs[4], glyphs[5]])];
+
     CGSize advances[6];
     double totalWidth = CTFontGetAdvancesForGlyphs(_font, kCTFontDefaultOrientation, glyphs, advances, 6);
     [_rows addObject:createTextCell(@"CTFontGetAdvancesForGlyphs:Glyphs - Total Width", [NSString stringWithFormat:@"%f", totalWidth])];
@@ -282,7 +289,6 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
     ADD_UNIMPLEMENTED(_rows, @"CTFontGetCapHeight");
     ADD_UNIMPLEMENTED(_rows, @"CTFontGetGlyphCount");
     ADD_UNIMPLEMENTED(_rows, @"CTFontGetGlyphWithName");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontGetGlyphsForCharacters");
     ADD_UNIMPLEMENTED(_rows, @"CTFontGetLeading");
     ADD_UNIMPLEMENTED(_rows, @"CTFontGetLigatureCaretPositions");
     ADD_UNIMPLEMENTED(_rows, @"CTFontGetMatrix");

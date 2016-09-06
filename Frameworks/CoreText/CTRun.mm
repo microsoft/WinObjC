@@ -52,18 +52,27 @@ static IWLazyClassLookup _LazyUIColor("UIColor");
     return self;
 }
 
+- (instancetype)copyWithZone:(NSZone*)zone {
+    _CTRun* ret = [_CTRun new];
+    ret->_attributes = [_attributes copy];
+    ret->_range = _range;
+    ret->_xPos = _xPos;
+    ret->_stringFragment = [_stringFragment copy];
+    ret->_glyphOrigins = _glyphOrigins;
+    ret->_glyphAdvances = _glyphAdvances;
+    ret->_glyphs = _glyphs;
+    ret->_stringIndices = _stringIndices;
+    return ret;
+}
+
 @end
 
 /**
 @Status Interoperable
 */
 CFIndex CTRunGetGlyphCount(CTRunRef run) {
-    if (run == nil) {
-        return 0;
-    }
-
     _CTRun* ctRun = (_CTRun*)run;
-    return ctRun->_dwriteGlyphRun.glyphCount;
+    return ctRun ? ctRun->_dwriteGlyphRun.glyphCount : 0;
 }
 
 /**
@@ -87,94 +96,114 @@ CTRunStatus CTRunGetStatus(CTRunRef run) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 const CGGlyph* CTRunGetGlyphsPtr(CTRunRef run) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    _CTRun* runPtr = static_cast<_CTRun*>(run);
+    return runPtr && runPtr->_glyphs.size() ? runPtr->_glyphs.data() : NULL;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 void CTRunGetGlyphs(CTRunRef run, CFRange range, CGGlyph buffer[]) {
-    UNIMPLEMENTED();
+    _CTRun* runPtr = static_cast<_CTRun*>(run);
+    if (runPtr) {
+        if (range.location < 0) {
+            range.location = 0;
+        }
+
+        if (range.length == 0 || range.length + range.location >= runPtr->_glyphs.size()) {
+            range.length = runPtr->_glyphs.size() - range.location;
+        }
+
+        memcpy(buffer, &(runPtr->_glyphs[range.location]), sizeof(CGGlyph) * range.length);
+    }
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 const CGPoint* CTRunGetPositionsPtr(CTRunRef run) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    _CTRun* runPtr = static_cast<_CTRun*>(run);
+    return runPtr && runPtr->_glyphOrigins.size() ? runPtr->_glyphOrigins.data() : NULL;
 }
 
 /**
- @Status Caveat
- @Notes Only the starting position of the glyph run is handled.
+ @Status Interoperable
+ @Notes
 */
 void CTRunGetPositions(CTRunRef run, CFRange runRange, CGPoint* outPositions) {
     _CTRun* curRun = (_CTRun*)run;
+    if (curRun) {
+        if (runRange.location < 0) {
+            runRange.location = 0;
+        }
 
-    if (runRange.length == 0) {
-        runRange.location = 0;
-        runRange.length = curRun->_range.length;
+        if (runRange.length == 0 || runRange.location + runRange.length > curRun->_glyphOrigins.size()) {
+            runRange.length = curRun->_range.length - runRange.location;
+        }
+
+        memcpy(outPositions, &(curRun->_glyphOrigins[runRange.location]), sizeof(CGPoint) * runRange.length);
     }
-
-    // TODO::
-    // Investigate on how to calculate this from whatever DWrite provides.
-    if (runRange.location != 0) {
-        UNIMPLEMENTED_WITH_MSG("CTRunGetPositions only supports when the position for the first glyph in the glyph run is requesed!");
-        return;
-    }
-
-    outPositions->x = curRun->_glyphOrigins[0].x;
-    outPositions->y = curRun->_glyphOrigins[0].y;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 const CGSize* CTRunGetAdvancesPtr(CTRunRef run) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    _CTRun* runPtr = static_cast<_CTRun*>(run);
+    return runPtr && runPtr->_glyphAdvances.size() ? runPtr->_glyphAdvances.data() : NULL;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CTRunGetAdvances(CTRunRef run, CFRange runRange, CGSize* outAdvances) {
     _CTRun* curRun = (_CTRun*)run;
+    if (curRun) {
+        if (runRange.location < 0) {
+            runRange.location = 0;
+        }
 
-    if (runRange.length == 0) {
-        runRange.location = 0;
-        runRange.length = curRun->_range.length;
+        if (runRange.length == 0 || runRange.location + runRange.length > curRun->_glyphAdvances.size()) {
+            runRange.length = curRun->_range.length - runRange.location;
+        }
+
+        memcpy(outAdvances, &(curRun->_glyphAdvances[runRange.location]), sizeof(CGSize) * runRange.length);
     }
-
-    // TODO::
-    // This will be fixed as soon _glyphAdvances is supported.
-    // memcpy(outAdvances, &curRun->_glyphAdvances[runRange.location], sizeof(CGSize) * runRange.length);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 const CFIndex* CTRunGetStringIndicesPtr(CTRunRef run) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    _CTRun* runPtr = static_cast<_CTRun*>(run);
+    return runPtr && runPtr->_stringIndices.size() ? runPtr->_stringIndices.data() : NULL;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 void CTRunGetStringIndices(CTRunRef run, CFRange range, CFIndex buffer[]) {
-    UNIMPLEMENTED();
+    _CTRun* curRun = (_CTRun*)run;
+    if (curRun) {
+        if (range.location < 0) {
+            range.location = 0;
+        }
+
+        if (range.length == 0 || range.location + range.length > curRun->_stringIndices.size()) {
+            range.length = curRun->_range.length - range.location;
+        }
+
+        memcpy(buffer, &(curRun->_stringIndices[range.location]), sizeof(CGSize) * range.length);
+    }
 }
 
 /**
@@ -182,8 +211,7 @@ void CTRunGetStringIndices(CTRunRef run, CFRange range, CFIndex buffer[]) {
 */
 CFRange CTRunGetStringRange(CTRunRef run) {
     _CTRun* curRun = (_CTRun*)run;
-
-    return curRun->_range;
+    return curRun ? curRun->_range : CFRangeMake(0, 0);
 }
 
 /**
