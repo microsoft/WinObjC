@@ -48,6 +48,9 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
+    <ClangCompile Include="..\..\WOCCatalog\AccelerateViewController2.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\XamlViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>

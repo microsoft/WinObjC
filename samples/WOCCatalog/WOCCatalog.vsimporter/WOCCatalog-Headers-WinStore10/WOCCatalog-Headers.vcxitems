@@ -15,6 +15,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AudioToolboxViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\CoreMotionViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AccelerateViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AccelerateViewController2.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\PopoverViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\BasicAnimationViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\ApplicationViewController.h" />
