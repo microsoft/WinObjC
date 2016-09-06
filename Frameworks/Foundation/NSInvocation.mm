@@ -83,7 +83,6 @@ static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
 - (instancetype)_initWithMethodSignature:(NSMethodSignature*)methodSignature copyInFrame:(void*)frame {
     if (self = [self initWithMethodSignature:methodSignature]) {
         _callFrame->copyInExistingFrame(frame);
-        [self retainArguments];
     }
     return self;
 }

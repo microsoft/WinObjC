@@ -204,6 +204,7 @@ struct ThreeWordStruct {
                                     :(std::max_align_t)m7
                                     :(unsigned char)c8;
 - (void)ARMFirstThreeInRegisters:(uint32_t)third fourthOntoStackToRemainContiguous:(uint64_t)fourth;
+- (BOOL)charPointer:(char*)charPointer equalsVoidPointer:(void*)voidPointer;
 @end
 
 @interface NSIT_InvocationTestClass : NSObject <_NSIT_InvocationProtocol>
@@ -352,6 +353,10 @@ struct ThreeWordStruct {
 
 - (void)takesOneObject:(id)object andOneCharPointer:(char*)charPointer {
     // No-op
+}
+
+- (BOOL)charPointer:(char*)charPointer equalsVoidPointer:(void*)voidPointer {
+    return charPointer == voidPointer;
 }
 @end
 
@@ -794,4 +799,10 @@ TEST(NSInvocation, RetainArguments) {
 
     EXPECT_NO_THROW([readbackArg2 self]); // Should have been retained.
     EXPECT_NE(readbackArg3, arg3); // Should have been IwStrDup'd.
+}
+
+TEST(NSInvocation, ForwardingDoesNotRetainArguments) {
+    char* arg = "I am a constant string!";
+    _NSIT_InvocationForwardingFacade* facade = [[[_NSIT_InvocationForwardingFacade alloc] init] autorelease];
+    EXPECT_TRUE([facade charPointer:arg equalsVoidPointer:arg]);
 }
