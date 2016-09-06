@@ -320,6 +320,13 @@ extern "C" void _NSInvocation_ForwardFrame(
     void* returnValuePointer = [invocation _returnValuePointer];
     unsigned int opaqueReturnType = [invocation _opaquePlatformReturnType];
     [self forwardInvocation:invocation];
+
+    // stret will only be populated by the ForwardBridge struct return entrypoint.
+    // Every other return value type will result in a nullptr stret, and the return value
+    // will be handled by the register unpackers in the platform-specific assembly thunk.
+    //
+    // This is paired with code in each assembly thunk that explicitly _skips_ struct return
+    // types, since they've already been handled here.
     if (stret) {
         [invocation getReturnValue:stret];
     }
