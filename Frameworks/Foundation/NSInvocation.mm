@@ -190,17 +190,18 @@ static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
             if (type[0] == '@') {
                 // id or block
                 id arg = nil;
-                [self getArgument:&arg atIndex:i];
+                _callFrame->loadArgument(&arg, i);
                 if (arg) {
-                    [arg retain];
+                    arg = [arg retain];
+                    _callFrame->storeArgument(&arg, i);
                 }
             } else if (type[0] == '*') {
                 // char*
                 char* arg = nullptr;
-                [self getArgument:&arg atIndex:i];
+                _callFrame->loadArgument(&arg, i);
                 if (arg) {
                     arg = IwStrDup(arg);
-                    [self setArgument:&arg atIndex:i];
+                    _callFrame->storeArgument(&arg, i);
                 }
             }
         }
