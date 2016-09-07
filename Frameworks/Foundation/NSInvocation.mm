@@ -80,6 +80,13 @@ static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
     return self;
 }
 
+- (instancetype)_initWithMethodSignature:(NSMethodSignature*)methodSignature copyInFrame:(void*)frame {
+    if (self = [self initWithMethodSignature:methodSignature]) {
+        _callFrame->copyInExistingFrame(frame);
+    }
+    return self;
+}
+
 /**
  @Status Interoperable
 */
@@ -182,17 +189,18 @@ static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
             if (type[0] == '@') {
                 // id or block
                 id arg = nil;
-                [self getArgument:&arg atIndex:i];
+                _callFrame->loadArgument(&arg, i);
                 if (arg) {
-                    [arg retain];
+                    arg = [arg retain];
+                    _callFrame->storeArgument(&arg, i);
                 }
             } else if (type[0] == '*') {
                 // char*
                 char* arg = nullptr;
-                [self getArgument:&arg atIndex:i];
+                _callFrame->loadArgument(&arg, i);
                 if (arg) {
                     arg = IwStrDup(arg);
-                    [self setArgument:&arg atIndex:i];
+                    _callFrame->storeArgument(&arg, i);
                 }
             }
         }
@@ -267,4 +275,60 @@ static constexpr unsigned int NSINVOCATION_SMALL_RETURN_VALUE_SIZE = 16;
     _callFrame->execute(pfn, _returnValue);
 }
 
+- (void*)_returnValuePointer {
+    return _returnValue;
+}
+
+- (unsigned int)_opaquePlatformReturnType {
+    return _callFrame->getOpaquePlatformReturnType();
+}
+
 @end
+
+extern "C" void _NSInvocation_ForwardFrame(
+    void* stret, id self, SEL sel, void* frame, /* out */ _NSInvocationForwardReturnInfo* bridgeOut) {
+    NSMethodSignature* signature = [self methodSignatureForSelector:sel];
+    if (!signature) {
+        const char* types = sel_getType_np(sel);
+        if (!types) {
+            SEL typedSelector = nullptr;
+            sel_copyTypedSelectors_np(sel_getName(sel), &typedSelector, 1);
+            if (typedSelector) {
+                types = sel_getType_np(typedSelector);
+            }
+        }
+
+        if (types) {
+            signature = [NSMethodSignature signatureWithObjCTypes:types];
+        }
+    }
+
+    if (!signature) {
+        Class cls = object_getClass(self);
+        TraceError(TAG,
+                   L"%c[%ls %ls]: unable to find method signature for forwarding.",
+                   class_isMetaClass(cls) ? '+' : '-',
+                   class_getName(cls),
+                   sel_getName(sel));
+        [self doesNotRecognizeSelector:sel]; // This should not return...
+        *bridgeOut = { nullptr, 0 }; // ...but if it does, populate the output anyway.
+        return;
+    }
+
+    // frame is platform-specific; the _NSInvocationCallFrame knows what to do with it.
+    NSInvocation* invocation = [[[NSInvocation alloc] _initWithMethodSignature:signature copyInFrame:frame] autorelease];
+    void* returnValuePointer = [invocation _returnValuePointer];
+    unsigned int opaqueReturnType = [invocation _opaquePlatformReturnType];
+    [self forwardInvocation:invocation];
+
+    // stret will only be populated by the ForwardBridge struct return entrypoint.
+    // Every other return value type will result in a nullptr stret, and the return value
+    // will be handled by the register unpackers in the platform-specific assembly thunk.
+    //
+    // This is paired with code in each assembly thunk that explicitly _skips_ struct return
+    // types, since they've already been handled here.
+    if (stret) {
+        [invocation getReturnValue:stret];
+    }
+    *bridgeOut = { returnValuePointer, opaqueReturnType };
+}

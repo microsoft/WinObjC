@@ -38,6 +38,7 @@
 #import <mutex>
 
 #import "ForFoundationOnly.h"
+#import "NSInvocationInternal.h"
 
 static void _NSObjCEnumerationMutation(id object) {
     [NSException raise:NSInternalInconsistencyException format:@"Collection <%s %p> mutated while being enumerated!", object_getClassName(object), object];
@@ -394,10 +395,10 @@ static long _throwUnrecognizedSelectorException(id self, Class isa, SEL sel) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)forwardInvocation:(NSInvocation*)invocation {
-    UNIMPLEMENTED();
+    [self doesNotRecognizeSelector:[invocation selector]];
 }
 
 /**
@@ -434,10 +435,11 @@ static id _NSForwardingDestination(id object, SEL selector) {
     if (class_respondsToSelector(cls, @selector(forwardingTargetForSelector:))) {
         return [(NSObject*)object forwardingTargetForSelector:selector];
     }
+
     return nil;
 }
 
-static void _forwardThrow(id object, SEL selector) {
+static inline void _forwardThrowStret(void* structReturn, id object, SEL selector) {
     if (class_respondsToSelector(object_getClass(object), @selector(doesNotRecognizeSelector:))) {
         [object doesNotRecognizeSelector:selector];
         return;
@@ -445,14 +447,62 @@ static void _forwardThrow(id object, SEL selector) {
     _throwUnrecognizedSelectorException(object, object_getClass(object), selector);
 }
 
-static IMP _NSIMPForward(id object, SEL selector) {
-    return (IMP)&_forwardThrow;
+static void _forwardThrow(id object, SEL selector) {
+    _forwardThrowStret(nullptr, object, selector);
+}
+
+static const char* _typesFromSelector(SEL selector) {
+    const char* types = sel_getType_np(selector);
+    if (!types) {
+        SEL typedSelector = nullptr;
+        sel_copyTypedSelectors_np(sel_getName(selector), &typedSelector, 1);
+        if (typedSelector) {
+            types = sel_getType_np(typedSelector);
+        }
+    }
+    return types;
 }
 
 static struct objc_slot _NSForwardSlot = { Nil, Nil, 0, 1, (IMP)_forwardThrow };
+static struct objc_slot _NSForwardStretSlot = { Nil, Nil, 0, 1, (IMP)_forwardThrowStret };
+static struct objc_slot _NSInvocationSlot = { Nil, Nil, 0, 1, (IMP)_NSInvocation_ForwardingBridgeNoStret };
+static struct objc_slot _NSInvocationStretSlot = { Nil, Nil, 0, 1, (IMP)_NSInvocation_ForwardingBridge };
 static struct objc_slot* _NSSlotForward(id object, SEL selector) {
-    return &_NSForwardSlot;
+    Class cls = object_getClass(object);
+    const char* types = _typesFromSelector(selector);
+    bool structReturn = false;
+
+    if (!types) {
+        TraceWarning(TAG,
+                     L"%c[%hs %hs]: attempting to forward method of unknown type; preferring POD return.",
+                     class_isMetaClass(cls) ? '+' : '-',
+                     class_getName(cls),
+                     sel_getName(selector));
+    } else {
+        structReturn = _NSInvocationTypeEncodingMandatesStructReturn(types);
+    }
+
+    if (class_respondsToSelector(cls, @selector(forwardInvocation:))) {
+        if (class_respondsToSelector(cls, @selector(methodSignatureForSelector:))) {
+            return structReturn ? &_NSInvocationStretSlot : &_NSInvocationSlot;
+        } else {
+            TraceWarning(TAG,
+                         L"%hs responds to %cforwardInvocation but not %cmethodSignatureForSelector:. This will not end well.",
+                         class_getName(cls),
+                         class_isMetaClass(cls) ? '+' : '-',
+                         class_isMetaClass(cls) ? '+' : '-');
+        }
+    }
+
+    return structReturn ? &_NSForwardStretSlot : &_NSForwardSlot;
 }
+
+static IMP _NSIMPForward(id object, SEL selector) {
+    // _NSSlotForward does the heavy lifting for forwarding.
+    // _NSIMPForward is just a compatibility adapter for non-msgSend consumers.
+    return _NSSlotForward(object, selector)->method;
+}
+
 
 /**
  @Status Interoperable

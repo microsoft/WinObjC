@@ -14,6 +14,8 @@
 ;
 ;******************************************************************************
 
+#include <kxarm.h>
+
     AREA |.text|,ALIGN=4,THUMB,CODE,READONLY
 ; r0 = arena start
 ; r1 = frame
@@ -83,5 +85,99 @@
     DCB (%B115-%B100)/2 ; RETURN_TYPE_INT64
     DCB (%B116-%B100)/2 ; RETURN_TYPE_STRUCT
 |_CallFrameInternal| ENDP
+
+    EXTERN _NSInvocation_ForwardFrame
+
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ; _NSInvocation_ForwardingBridge(void* stret, id self, SEL _cmd, ...)
+    ; Second entrypoint to this function; called when there is a struct return pointer.
+    ; r0 = struct return pointer
+    ; r1 = self
+    ; r2 = _cmd
+    NESTED_ENTRY _NSInvocation_ForwardingBridge
+    PROLOG_PUSH {r0-r3}
+    PROLOG_VPUSH {d0-d7}
+    PROLOG_NOP mov r3, sp
+    PROLOG_PUSH {r4, r11, lr}
+    PROLOG_STACK_ALLOC 12
+
+    ADD fp, sp, #16
+    ADD r4, sp, #4
+    STR r4, [sp]
+    BLX _NSInvocation_ForwardFrame ; (stret, self, sel, frame, bridgeInfo)
+
+    ; We don't need to derive the return value here: it was already handled by the struct return pointer.
+
+    EPILOG_STACK_FREE 12
+    EPILOG_POP {r4, r11, lr}
+    EPILOG_STACK_FREE 0x50
+    EPILOG_RETURN
+    NESTED_END
+
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ; _NSInvocation_ForwardingBridgeNoStret(id self, SEL _cmd, ...)
+    ; r0 = self
+    ; r1 = _cmd
+    ; Saves the first four registers and the VFP argument registers in the ARM call frame format
+    ; expected by NSInvocation. Shifts r0 and r1 up to r1 and r2 to make space for the struct return
+    ; parameter. r0 is filled with nullptr, as there is no struct return.
+    NESTED_ENTRY _NSInvocation_ForwardingBridgeNoStret
+    PROLOG_PUSH {r0-r3}
+    PROLOG_VPUSH {d0-d7}
+    PROLOG_NOP mov r3, sp
+    PROLOG_PUSH {r4, r11, lr}
+    PROLOG_STACK_ALLOC 12
+
+    MOV r2, r1 ; sel
+    MOV r1, r0 ; self
+    MOVS r0, #0 ; stret
+
+    ADD fp, sp, #16
+    ADD r4, sp, #4
+    STR r4, [sp]
+    BLX _NSInvocation_ForwardFrame ; (stret, self, sel, frame, bridgeInfo)
+
+    LDR r1, [r4, #4] ; return type
+    LDR r0, [r4, #0] ; return pointer
+
+    EPILOG_STACK_FREE 12
+    EPILOG_POP {r4, r11, lr}
+    EPILOG_STACK_FREE 0x50
+
+    ADR ip, %F101
+    TBB [ip, r1]
+
+100
+111 ; VFP_F
+    VLDR s0, [r0]
+    BX lr
+112 ; VFP_D
+    VLDR d0, [r0]
+    BX lr
+113 ; VFP_HOMOGENOUS
+    VLDM r0, {d0-d3}
+    BX lr
+
+115 ; INT64
+    LDR r1, [r0, #4]
+    ;; fall through
+114 ; INT32
+    LDR r0, [r0]
+    ;; fall through
+
+116 ; STRUCT
+110 ; NONE
+    BX lr
+
+101 ; Must be kept in the order from _NSInvocation.arm.mm
+    DCB (%B110-%B100)/2 ; RETURN_TYPE_NONE
+    DCB (%B111-%B100)/2 ; RETURN_TYPE_VFP_S
+    DCB (%B112-%B100)/2 ; RETURN_TYPE_VFP_D
+    DCB (%B113-%B100)/2 ; RETURN_TYPE_VFP_HOMOGENOUS
+    DCB (%B114-%B100)/2 ; RETURN_TYPE_INT
+    DCB (%B115-%B100)/2 ; RETURN_TYPE_INT64
+    DCB (%B116-%B100)/2 ; RETURN_TYPE_STRUCT
+
+    NESTED_END
 
     END

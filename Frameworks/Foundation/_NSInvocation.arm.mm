@@ -393,6 +393,18 @@ bool _NSInvocationCallFrame::getRequiresStructReturn() const {
     return _structReturn;
 }
 
+void _NSInvocationCallFrame::copyInExistingFrame(void* frame) {
+    // On x86, we can copy the frame as-is; for ARM we have to only copy the allocated portions.
+    uint8_t* base = _buffer;
+    for(auto& extent: _allocationExtents) {
+        memcpy(base + extent.offset, (uint8_t*)frame + extent.offset, extent.length);
+    }
+}
+
+unsigned int _NSInvocationCallFrame::getOpaquePlatformReturnType() const {
+    return _returnType;
+}
+
 struct armFrame {
     /* Populated by stm r1, {fp, lr} */
     void* savedFramePointer;
@@ -428,4 +440,8 @@ void _NSInvocationCallFrame::execute(void* functionPointer, void* returnValuePoi
         // of register reads and go straight to the r0-3 + stack case.
         _CallFrameInternal(arena + g_sfprLength, frame, functionPointer);
     }
+}
+
+extern "C" bool _NSInvocationTypeEncodingMandatesStructReturn(const char* typeEncoding) {
+    return _getReturnType(typeEncoding) == RETURN_TYPE_STRUCT;
 }

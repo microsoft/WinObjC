@@ -46,8 +46,10 @@ public:
 
     void storeArgument(const void* value, unsigned int index);
     void loadArgument(void* value, unsigned int index) const;
+    void copyInExistingFrame(void* frame);
 
     size_t getReturnLength() const;
+    unsigned int getOpaquePlatformReturnType() const;
     bool getRequiresStructReturn() const;
 
     void execute(void*, void*) const;
