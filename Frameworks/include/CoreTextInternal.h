@@ -55,7 +55,6 @@
 
 @interface _CTLine : NSObject {
 @public
-    _CTTypesetter* _typeSetter;
     CFRange _strRange;
     CGPoint _lineOrigin;
     StrongId<NSMutableArray> _runs;

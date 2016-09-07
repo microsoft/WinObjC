@@ -354,7 +354,7 @@ static NSArray<_CTLine*>* _dwriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
 
     while (j < numOfGlyphRuns) {
         _CTLine* line = [[_CTLine new] autorelease];
-        NSMutableArray<_CTRun*>* runs = [[NSMutableArray array] retain];
+        NSMutableArray<_CTRun*>* runs = [NSMutableArray array];
         uint32_t stringRange = 0;
         // Glyph runs that have the same _baselineOriginY value are part of the the same Line.
         while ((j < numOfGlyphRuns) && (glyphRunDetails._baselineOriginY[i] == glyphRunDetails._baselineOriginY[j])) {
@@ -380,8 +380,7 @@ static NSArray<_CTLine*>* _dwriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
             i++;
         }
 
-        line->_typeSetter = [ts retain];
-        line->_runs.attach(runs);
+        line->_runs = runs;
         line->_strRange.location = static_cast<_CTRun*>(line->_runs[0])->_range.location;
         line->_lineOrigin.x = static_cast<_CTRun*>(line->_runs[0])->_xPos;
         line->_lineOrigin.y = static_cast<_CTRun*>(line->_runs[0])->_yPos;

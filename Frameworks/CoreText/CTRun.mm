@@ -282,6 +282,8 @@ void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
 
     CGPoint curTextPos = CGContextGetTextPosition(ctx);
     CGContextShowGlyphsAtPoint(ctx, curTextPos.x, curTextPos.y, glyphs, numGlyphs);
+
+    IwFree(characters);
     IwFree(glyphs);
 }
 
