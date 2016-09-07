@@ -84,10 +84,6 @@ TEST(AddressBookModify, ContactBirthday) {
     [dateComponents release];
 }
 
-// TODO: 955 AddressBook ModifyContactsTests Crashes Visual Studio Project #955
-// This test has been disabled due to an issue in Visual Studio attempting to parse the contents of this test.
-
-/*
 class AddressBookMultiValueModifyTest : public ::testing::TestWithParam<::testing::tuple<ABPropertyID, NSArray*, NSArray*>> {
 protected:
     virtual void SetUp() {
@@ -136,9 +132,8 @@ INSTANTIATE_TEST_CASE_P(
     AddressBook,
     AddressBookMultiValueModifyTest,
     ::testing::Values(
-    // TODO: 955 : Particularly this first tuple causes the issue.
         ::testing::make_tuple(kABPersonPhoneProperty,
-                              @[
+                              [NSArray arrayWithObjects:
                                  (__bridge NSString*)kABHomeLabel,
                                  (__bridge NSString*)kABPersonPhoneMobileLabel,
                                  (__bridge NSString*)kABWorkLabel,
@@ -148,9 +143,10 @@ INSTANTIATE_TEST_CASE_P(
                                  (__bridge NSString*)kABPersonPhoneCompanyLabel,
                                  (__bridge NSString*)kABPersonPhoneAssistantLabel,
                                  (__bridge NSString*)kABPersonPhoneRadioLabel,
-                                 (__bridge NSString*)kABOtherLabel
+                                 (__bridge NSString*)kABOtherLabel,
+                                 nil
                               ],
-                              @[
+                              [NSArray arrayWithObjects:
                                  @"0000000000",
                                  @"1111111111",
                                  @"2222222222",
@@ -160,27 +156,28 @@ INSTANTIATE_TEST_CASE_P(
                                  @"6666666666",
                                  @"7777777777",
                                  @"8888888888",
-                                 @"9999999999"
+                                 @"9999999999",
+                                 nil
                               ]),
         ::testing::make_tuple(kABPersonURLProperty,
-                              @[ (__bridge NSString*)kABPersonHomePageLabel, (__bridge NSString*)kABPersonHomePageLabel ],
-                              @[ @"bing.com", @"microsoft.com" ]),
+                              [NSArray arrayWithObjects:(__bridge NSString*)kABPersonHomePageLabel, (__bridge NSString*)kABPersonHomePageLabel, nil],
+                              [NSArray arrayWithObjects:@"bing.com", @"microsoft.com", nil]),
         ::testing::make_tuple(kABPersonEmailProperty,
-                              @[ (__bridge NSString*)kABHomeLabel, (__bridge NSString*)kABWorkLabel, (__bridge NSString*)kABOtherLabel ],
-                              @[ @"a@ms.com", @"b@ms.com", @"c@ms.com" ]),
+                              [NSArray arrayWithObjects:(__bridge NSString*)kABHomeLabel, (__bridge NSString*)kABWorkLabel, (__bridge NSString*)kABOtherLabel, nil],
+                              [NSArray arrayWithObjects:@"a@ms.com", @"b@ms.com", @"c@ms.com", nil]),
         ::testing::make_tuple(kABPersonRelatedNamesProperty,
-                              @[
+                              [NSArray arrayWithObjects:
                                  (__bridge NSString*)kABOtherLabel,
                                  (__bridge NSString*)kABPersonSpouseLabel,
                                  (__bridge NSString*)kABPersonPartnerLabel,
                                  (__bridge NSString*)kABPersonSiblingLabel,
                                  (__bridge NSString*)kABPersonParentLabel,
-                                 (__bridge NSString*)kABPersonChildLabel
+                                 (__bridge NSString*)kABPersonChildLabel,
+                                 nil
                               ],
-                              @[ @"Random Name", @"Wife's Name", @"Buzz", @"Link", @"Pops", @"Sun Ray" ])
+                              [NSArray arrayWithObjects:@"Random Name", @"Wife's Name", @"Buzz", @"Link", @"Pops", @"Sun Ray", nil])
 
             ));
-*/
 
 TEST(AddressBookModify, DateMultiValues) {
     ABRecordRef person = ABPersonCreate();
