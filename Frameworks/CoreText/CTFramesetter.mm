@@ -41,7 +41,7 @@ static _CTFrame* _createFrame(_CTFrameSetter* frameSetter, CGRect frameSize, CGS
     // Call _DWriteWrapper to get _CTLine object list that makes up this frame
     _CTTypesetter* typesetter = static_cast<_CTTypesetter*>(frameSetter->_typesetter);
     CFRange range = CFRangeMake(0, typesetter->_charactersLen);
-    NSArray<_CTLine*>* lines = _dwriteGetLines(typesetter, range, frameSize);
+    NSArray<_CTLine*>* lines = _DWriteGetLines(typesetter, range, frameSize);
     if (createFrame) {
         ret->_lines = lines;
     }

@@ -116,8 +116,10 @@ void CTRunGetPositions(CTRunRef run, CFRange runRange, CGPoint* outPositions) {
         runRange.length = curRun->_range.length;
     }
 
+    // TODO::
+    // Investigate on how to calculate this from whatever DWrite provides.
     if (runRange.location != 0) {
-        UNIMPLEMENTED();
+        UNIMPLEMENTED_WITH_MSG("CTRunGetPositions only supports when the position for the first glyph in the glyph run is requesed!");
         return;
     }
 

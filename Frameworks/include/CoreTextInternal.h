@@ -40,32 +40,6 @@
 }
 @end
 
-@interface _CTFrame : NSObject {
-@public
-    _CTFrameSetter* _frameSetter;
-    CGRect _frameRect;
-    StrongId<NSMutableArray> _lines;
-
-    // TODO::
-    // Do we need these anymore?
-    CGSize _totalSize;
-    std::vector<CGPoint> _lineOrigins;
-}
-@end
-
-@interface _CTLine : NSObject {
-@public
-    CFRange _strRange;
-    CGPoint _lineOrigin;
-    StrongId<NSMutableArray> _runs;
-
-    // TODO::
-    // Do we need these anymore?
-    CGFloat _width;
-    CGFloat _ascent, _descent, _leading;
-}
-@end
-
 @interface _CTRun : NSObject {
 @public
     StrongId<NSMutableDictionary> _attributes;
@@ -77,6 +51,32 @@
     // TODO::
     // How do we get this data? DWrite does not seem to provide it to us directly today.
     std::vector<CGPoint> _glyphOrigins;
+}
+@end
+
+@interface _CTLine : NSObject {
+@public
+    CFRange _strRange;
+    CGPoint _lineOrigin;
+    StrongId<NSMutableArray<_CTRun*>> _runs;
+
+    // TODO::
+    // Do we need these anymore?
+    CGFloat _width;
+    CGFloat _ascent, _descent, _leading;
+}
+@end
+
+@interface _CTFrame : NSObject {
+@public
+    _CTFrameSetter* _frameSetter;
+    CGRect _frameRect;
+    StrongId<NSMutableArray<_CTLine*>> _lines;
+
+    // TODO::
+    // Do we need these anymore?
+    CGSize _totalSize;
+    std::vector<CGPoint> _lineOrigins;
 }
 @end
 

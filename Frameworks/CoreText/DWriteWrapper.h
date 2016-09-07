@@ -43,5 +43,5 @@ struct _DWriteGlyphRunDetails {
     std::vector<_DWriteGlyphRunDescription> _glyphRunDescriptions;
 };
 
-NSArray<NSString*>* _dwriteGetFamilyNames();
-NSArray<_CTLine*>* _dwriteGetLines(_CTTypesetter* ts, CFRange range, CGRect frameSize);
+NSArray<NSString*>* _DWriteGetFamilyNames();
+NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRect frameSize);
