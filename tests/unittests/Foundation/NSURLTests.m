@@ -176,12 +176,23 @@ TEST(NSURL, StandardizedURL) {
 TEST(NSURL, URLByAppendingPathComponent) {
     NSURL* fileURL = [NSURL fileURLWithPath:@"."];
     NSURL* newFileURL = [fileURL URLByAppendingPathComponent:@"Hello.txt"];
-    ASSERT_TRUE_MSG([newFileURL isFileURL], "The passed URL should be a file URL type");
+    ASSERT_TRUE([newFileURL isFileURL]);
 
     NSString* fileURLString = [fileURL absoluteString];
     NSString* newFileURLString = [newFileURL absoluteString];
     fileURLString = [fileURLString stringByAppendingString:@"Hello.txt"];
-    ASSERT_OBJCEQ_MSG(fileURLString, newFileURLString, "File URLs do not match!");
+    ASSERT_OBJCEQ(fileURLString, newFileURLString);
+
+    // Appending "" should just add a slash
+    newFileURL = [newFileURL URLByAppendingPathComponent:@""];
+    fileURLString = [fileURLString stringByAppendingString:@"/"];
+    newFileURLString = [newFileURL absoluteString];
+    ASSERT_OBJCEQ(fileURLString, newFileURLString);
+
+    // But only once
+    newFileURL = [newFileURL URLByAppendingPathComponent:@""];
+    newFileURLString = [newFileURL absoluteString];
+    ASSERT_OBJCEQ(fileURLString, newFileURLString);
 }
 
 TEST(NSURL, URLByAppendingPathExtension) {
