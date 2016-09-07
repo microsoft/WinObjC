@@ -23,6 +23,8 @@
 #import <Foundation/NSObject.h>
 #import <vector>
 
+#define NSMakeRangeFromCF(cfr) NSMakeRange(cfr.location == kCFNotFound ? NSNotFound : cfr.location, cfr.length)
+
 // Based off DWRITE_GLYPH_RUN structure
 struct _DWriteGlyphRun {
     uint32_t _glyphCount;

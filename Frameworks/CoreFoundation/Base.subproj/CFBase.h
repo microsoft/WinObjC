@@ -498,8 +498,6 @@ CF_INLINE CFRange CFRangeMake(CFIndex loc, CFIndex len) {
 CF_EXPORT
 CFRange __CFRangeMake(CFIndex loc, CFIndex len);
 
-#define NSMakeRangeFromCF(cfr) NSMakeRange(cfr.location == kCFNotFound ? NSNotFound : cfr.location, cfr.length)
-
 /* Null representant */
 
 typedef const struct CF_BRIDGED_TYPE(NSNull) __CFNull * CFNullRef;
