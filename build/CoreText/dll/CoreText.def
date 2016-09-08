@@ -33,6 +33,17 @@ LIBRARY CoreText
         ; Core Text Utilities Reference.mm
         CTGetCoreTextVersion
 
+        ; DWriteWrapper Additions
+        _DWriteGetFontFamilyNames
+        _DWriteGetFontNamesForFamilyName
+        _DWriteGetFamilyNameForFontName
+
+        ; Core Text Constant additions
+        kCTFontLabelFontSize
+        kCTFontButtonFontSize
+        kCTFontSmallSystemFontSize
+        kCTFontSystemFontSize
+
         ; CTFont Reference.mm
         kCTFontCopyrightNameKey DATA
         kCTFontFamilyNameKey DATA

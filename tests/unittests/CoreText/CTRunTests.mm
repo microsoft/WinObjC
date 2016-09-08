@@ -62,7 +62,7 @@ protected:
 
         _attributedStringRef = static_cast<CFAttributedStringRef>([[NSMutableAttributedString alloc] initWithString:c_testString]);
 
-        UIFont* font = [UIFont fontWithName:@"SegoeUI" size:12.0];
+        UIFont* font = [UIFont fontWithName:@"Segoe UI" size:12.0];
         ASSERT_TRUE_MSG(font != nullptr, "FAILED: Font not available!");
 
         CTFontRef fontRef = CTFontCreateWithName(static_cast<CFStringRef>(font.fontName), font.pointSize, NULL);

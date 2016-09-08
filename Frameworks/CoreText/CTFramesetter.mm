@@ -19,7 +19,7 @@
 #import <algorithm>
 #import "CoreTextInternal.h"
 #import "CGPathInternal.h"
-#import "DWriteWrapper.h"
+#import <CoreText/DWriteWrapper.h>
 
 using namespace std;
 

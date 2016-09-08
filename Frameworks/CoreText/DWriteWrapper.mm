@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,15 +14,20 @@
 //
 //******************************************************************************
 
+// Do not move this block, it has to come first for some reason
 #include <COMIncludes.h>
 #import <wrl/implements.h>
 #include <COMIncludes_End.h>
-#import <mutex>
-#import <vector>
-#import <algorithm>
+
+#import <CoreText/DWriteWrapper.h>
+#import <Starboard.h>
+
 #import <CoreFoundation/CFBase.h>
 #import "CoreTextInternal.h"
-#import "DWriteWrapper.h"
+
+#import <LoggingNative.h>
+#import <mutex>
+#import <vector>
 
 using namespace std;
 using namespace Microsoft::WRL;
@@ -36,14 +41,16 @@ static const wchar_t* c_defaultFontName = L"Gabriola";
 static IWLazyClassLookup s_lazyUIFont("UIFont");
 static const float c_defaultSystemFontSize = 15.0f;
 
-static ComPtr<IDWriteFactory> CreateDWriteFactoryInstance() {
+// Private helper for creating a DWriteFactory
+static ComPtr<IDWriteFactory> __CreateDWriteFactoryInstance() {
     ComPtr<IDWriteFactory> dwriteFactory;
     THROW_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
     return dwriteFactory;
 }
 
-static ComPtr<IDWriteFactory> GetDWriteFactoryInstance() {
-    static ComPtr<IDWriteFactory> s_dwriteFactory = CreateDWriteFactoryInstance();
+// Private helper for accessing a single static DWriteFactory instance
+static ComPtr<IDWriteFactory> __GetDWriteFactoryInstance() {
+    static ComPtr<IDWriteFactory> s_dwriteFactory = __CreateDWriteFactoryInstance();
     return s_dwriteFactory;
 }
 
@@ -52,7 +59,7 @@ static ComPtr<IDWriteFactory> GetDWriteFactoryInstance() {
  *
  * @return use set locale string as wstring.
  */
-static wstring _GetUserDefaultLocaleName() {
+static wstring __GetUserDefaultLocaleName() {
     wchar_t localeName[LOCALE_NAME_MAX_LENGTH];
     int defaultLocaleSuccess = GetUserDefaultLocaleName(localeName, LOCALE_NAME_MAX_LENGTH);
 
@@ -78,7 +85,7 @@ static NSString* _ConvertLocalizedStringToNSString(IDWriteLocalizedStrings* loca
     }
 
     // Get the default locale for this user.
-    wstring localeName = _GetUserDefaultLocaleName();
+    wstring localeName = __GetUserDefaultLocaleName();
 
     uint32_t index = 0;
     BOOL exists = false;
@@ -102,8 +109,7 @@ static NSString* _ConvertLocalizedStringToNSString(IDWriteLocalizedStrings* loca
     vector<wchar_t> wcharString = std::vector<wchar_t>(length + 1);
     THROW_IF_FAILED(localizedString->GetString(index, wcharString.data(), length + 1));
 
-    return [[[NSString alloc] initWithBytesNoCopy:wcharString.data() length:length + 1 encoding:NSUTF16StringEncoding freeWhenDone:YES]
-        autorelease];
+    return [NSString stringWithCharacters:reinterpret_cast<UniChar*>(wcharString.data()) length:length];
 }
 
 /**
@@ -114,9 +120,9 @@ static NSString* _ConvertLocalizedStringToNSString(IDWriteLocalizedStrings* loca
  *
  * @return the created IDWriteTextFormat object.
  */
-static ComPtr<IDWriteTextFormat> _CreateDWriteTextFormat(_CTTypesetter* ts, CFRange range) {
+static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(_CTTypesetter* ts, CFRange range) {
     // Get the direct write factory instance
-    ComPtr<IDWriteFactory> dwriteFactory = GetDWriteFactoryInstance();
+    ComPtr<IDWriteFactory> dwriteFactory = __GetDWriteFactoryInstance();
 
     // TODO::
     // Get font family name details so that can be used here. For now this is hardcoded to "Gabriola".
@@ -152,8 +158,8 @@ static ComPtr<IDWriteTextFormat> _CreateDWriteTextFormat(_CTTypesetter* ts, CFRa
  *
  * @return the created IDWriteTextLayout object.
  */
-static ComPtr<IDWriteTextLayout> _CreateDWriteTextLayout(_CTTypesetter* ts, CFRange range, CGRect frameSize) {
-    ComPtr<IDWriteTextFormat> textFormat = _CreateDWriteTextFormat(ts, range);
+static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFRange range, CGRect frameSize) {
+    ComPtr<IDWriteTextFormat> textFormat = __CreateDWriteTextFormat(ts, range);
 
     // TODO::
     // Iterate through all attributed string ranges and identify attributes so they can be used to -
@@ -181,7 +187,7 @@ static ComPtr<IDWriteTextLayout> _CreateDWriteTextLayout(_CTTypesetter* ts, CFRa
     // float width = widthFunc(widthParam, 0, 0, fontSize);
 
     // Get the direct write factory instance
-    ComPtr<IDWriteFactory> dwriteFactory = GetDWriteFactoryInstance();
+    ComPtr<IDWriteFactory> dwriteFactory = __GetDWriteFactoryInstance();
 
     ComPtr<IDWriteTextLayout> textLayout;
     THROW_IF_FAILED(dwriteFactory->CreateTextLayout(
@@ -286,44 +292,10 @@ HRESULT CustomDWriteTextRenderer::RuntimeClassInitialize() {
  * @parameter frameSize frame constrains to render the text on.
  * @parameter glyphDetails pointer to the _DWriteGlyphRunDetails object that contains the glyph run details that was rendeered.
  */
-static void _GetGlyphRunDetails(_CTTypesetter* ts, CFRange range, CGRect frameSize, _DWriteGlyphRunDetails* glyphDetails) {
-    ComPtr<IDWriteTextLayout> textLayout = _CreateDWriteTextLayout(ts, range, frameSize);
+static void __GetGlyphRunDetails(_CTTypesetter* ts, CFRange range, CGRect frameSize, _DWriteGlyphRunDetails* glyphDetails) {
+    ComPtr<IDWriteTextLayout> textLayout = __CreateDWriteTextLayout(ts, range, frameSize);
     ComPtr<CustomDWriteTextRenderer> textRenderer = Make<CustomDWriteTextRenderer>();
     textLayout->Draw(glyphDetails, textRenderer.Get(), 0, 0);
-}
-
-/**
- * Helper method to retrieve font fmaly names installed in the system.
- *
- * @return Unmutable array of font family name strings that are installed in the system.
- */
-static NSArray<NSString*>* _DWriteGetFamilyNames() {
-    NSMutableArray<NSString*>* fontFamilyNames = [NSMutableArray<NSString*> array];
-
-    // Get the direct write factory instance
-    ComPtr<IDWriteFactory> dwriteFactory = GetDWriteFactoryInstance();
-
-    // Get the system font collection.
-    ComPtr<IDWriteFontCollection> fontCollection;
-    THROW_IF_FAILED(dwriteFactory->GetSystemFontCollection(&fontCollection));
-
-    // Get the number of font families in the collection.
-    uint32_t count = 0;
-    count = fontCollection->GetFontFamilyCount();
-
-    for (uint32_t i = 0; i < count; ++i) {
-        // Get the font family.
-        ComPtr<IDWriteFontFamily> fontFamily;
-        THROW_IF_FAILED(fontCollection->GetFontFamily(i, &fontFamily));
-
-        // Get a list of localized strings for the family name.
-        ComPtr<IDWriteLocalizedStrings> familyNames;
-        THROW_IF_FAILED(fontFamily->GetFamilyNames(&familyNames));
-
-        [fontFamilyNames addObject:_ConvertLocalizedStringToNSString(familyNames.Get())];
-    }
-
-    return [fontFamilyNames autorelease];
 }
 
 /**
@@ -338,7 +310,7 @@ static NSArray<NSString*>* _DWriteGetFamilyNames() {
 static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRect frameSize) {
     // Call custom renderer to get all glyph run details
     _DWriteGlyphRunDetails glyphRunDetails;
-    _GetGlyphRunDetails(ts, range, frameSize, &glyphRunDetails);
+    __GetGlyphRunDetails(ts, range, frameSize, &glyphRunDetails);
 
     // Create _CTLine objects from the the obtained glyph run details
     int numOfGlyphRuns = glyphRunDetails._glyphRuns.size();
@@ -384,4 +356,269 @@ static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
     }
 
     return lines;
+}
+
+/**
+ * Helper method to retrieve font fmaly names installed in the system.
+ *
+ * @return Unmutable array of font family name strings that are installed in the system.
+ */
+static NSArray<NSString*>* _DWriteGetFontFamilyNames() {
+    NSMutableArray<NSString*>* fontFamilyNames = [NSMutableArray<NSString*> array];
+
+    // Get the direct write factory instance
+    ComPtr<IDWriteFactory> dwriteFactory = __GetDWriteFactoryInstance();
+
+    // Get the system font collection.
+    ComPtr<IDWriteFontCollection> fontCollection;
+    THROW_IF_FAILED(dwriteFactory->GetSystemFontCollection(&fontCollection));
+
+    // Get the number of font families in the collection.
+    uint32_t count = 0;
+    count = fontCollection->GetFontFamilyCount();
+
+    for (uint32_t i = 0; i < count; ++i) {
+        // Get the font family.
+        ComPtr<IDWriteFontFamily> fontFamily;
+        THROW_IF_FAILED(fontCollection->GetFontFamily(i, &fontFamily));
+
+        // Get a list of localized strings for the family name.
+        ComPtr<IDWriteLocalizedStrings> familyNames;
+        THROW_IF_FAILED(fontFamily->GetFamilyNames(&familyNames));
+
+        [fontFamilyNames addObject:_ConvertLocalizedStringToNSString(familyNames.Get())];
+    }
+
+    return fontFamilyNames;
+}
+
+NSArray<NSString*>* _DWriteGetFontNamesForFamilyName(NSString* familyName) {
+    NSMutableArray<NSString*>* fontNames = [NSMutableArray<NSString*> array];
+
+    ComPtr<IDWriteFactory> dwriteFactory = __GetDWriteFactoryInstance();
+
+    // Get the system font collection.
+    ComPtr<IDWriteFontCollection> fontCollection;
+    THROW_IF_FAILED(dwriteFactory->GetSystemFontCollection(&fontCollection));
+
+    // Get the font family.
+    UINT32 index = 0;
+    BOOL exists = false;
+
+    NSUInteger familyNameLength = familyName.length;
+    std::vector<UniChar> unicharFamilyName(familyNameLength + 1);
+    [familyName getCharacters:unicharFamilyName.data() range:NSMakeRange(0, familyNameLength)];
+
+    THROW_IF_FAILED(fontCollection->FindFamilyName(reinterpret_cast<wchar_t*>(unicharFamilyName.data()), &index, &exists));
+    if (!exists) {
+        TraceError(TAG, L"Failed to find the font family name.");
+        return fontNames;
+    }
+
+    ComPtr<IDWriteFontFamily> fontFamily;
+    THROW_IF_FAILED(fontCollection->GetFontFamily(index, &fontFamily));
+
+    ComPtr<IDWriteFontList> fontList;
+    THROW_IF_FAILED(
+        fontFamily->GetMatchingFonts(DWRITE_FONT_WEIGHT_THIN, DWRITE_FONT_STRETCH_UNDEFINED, DWRITE_FONT_STYLE_NORMAL, &fontList));
+
+    UINT32 count = 0;
+    count = fontList->GetFontCount();
+
+    for (UINT32 i = 0; i < count; i++) {
+        ComPtr<IDWriteFont> font;
+        THROW_IF_FAILED(fontList->GetFont(i, &font));
+
+        ComPtr<IDWriteLocalizedStrings> fullName;
+        BOOL exist = FALSE;
+        THROW_IF_FAILED(font->GetInformationalStrings(DWRITE_INFORMATIONAL_STRING_FULL_NAME, &fullName, &exist));
+
+        if (exist) {
+            NSString* name = _ConvertLocalizedStringToNSString(fullName.Get());
+            if (name.length == 0) {
+                TraceError(TAG, L"Failed to convert the localized string to wide string.");
+                return fontNames;
+            }
+
+            [fontNames addObject:name];
+        }
+    }
+
+    return fontNames;
+}
+
+NSString* _DWriteGetFamilyNameForFontName(CFStringRef fontName) {
+    static NSDictionary<NSString*, NSString*>* fontToFamilyMap = nil;
+
+    static dispatch_once_t initOnce = 0;
+    dispatch_once(&initOnce,
+                  ^{
+                      // initialize fontToFamilyMap
+                      NSMutableDictionary<NSString*, NSString*>* initMap = [NSMutableDictionary<NSString*, NSString*> dictionary];
+                      NSArray<NSString*>* familyNames = _DWriteGetFontFamilyNames();
+
+                      for (NSString* familyName in familyNames) {
+                          NSArray<NSString*>* fontNames = _DWriteGetFontNamesForFamilyName(familyName);
+
+                          for (NSString* fontName in fontNames) {
+                              [initMap setObject:familyName forKey:fontName];
+                          }
+                      }
+
+                      fontToFamilyMap = [initMap copy];
+                  });
+
+    return [fontToFamilyMap objectForKey:(__bridge NSString*)fontName];
+}
+
+// Private helper that acquires an IDWriteFontFamily object for a given family name
+static ComPtr<IDWriteFontFamily> __GetDWriteFontFamily(NSString* familyName) {
+    ComPtr<IDWriteFontFamily> fontFamily;
+
+    ComPtr<IDWriteFactory> factory = __GetDWriteFactoryInstance();
+
+    ComPtr<IDWriteFontCollection> systemFontCollection;
+    THROW_IF_FAILED(factory->GetSystemFontCollection(&systemFontCollection));
+
+    NSUInteger familyNameLength = familyName.length;
+    std::vector<UniChar> unicharFamilyName(familyNameLength + 1);
+    [familyName getCharacters:unicharFamilyName.data() range:NSMakeRange(0, familyNameLength)];
+
+    UINT32 fontFamilyIndex;
+    BOOL fontFamilyExists;
+
+    THROW_IF_FAILED(systemFontCollection->FindFamilyName(reinterpret_cast<const wchar_t*>(unicharFamilyName.data()),
+                                                         &fontFamilyIndex,
+                                                         &fontFamilyExists));
+
+    if (!fontFamilyExists) {
+        TraceError(TAG, L"Unable to find font family \"%ws\"", unicharFamilyName.data());
+        return fontFamily;
+    }
+
+    THROW_IF_FAILED(systemFontCollection->GetFontFamily(fontFamilyIndex, &fontFamily));
+    return fontFamily;
+}
+
+// Private helper that parses a font name, and returns appropriate weight, stretch, and style values for DWrite accordingly
+static void __InitDWriteFontPropertiesFromName(CFStringRef fontName,
+                                               DWRITE_FONT_WEIGHT* weight,
+                                               DWRITE_FONT_STRETCH* stretch,
+                                               DWRITE_FONT_STYLE* style) {
+    // Set some defaults for when weight/stretch/style are not mentioned in the name
+    *weight = DWRITE_FONT_WEIGHT_NORMAL;
+    *stretch = DWRITE_FONT_STRETCH_NORMAL;
+    *style = DWRITE_FONT_STYLE_NORMAL;
+
+    NSString* familyName = _DWriteGetFamilyNameForFontName(fontName);
+
+    // Relationship of family name -> font name not always consistent
+    // Usually, properties are added to the end (eg: Arial -> Arial Narrow Bold)
+    // However, this is not always the case (eg: Eras ITC -> Eras Bold ITC)
+    // In addition, some fonts with properties are occasionally placed into their own family (eg: Segoe WP SemiLight -> Segoe WP SemiLight)
+    // Try to be more prudent about these edge cases, by looking only at the difference between the font name and family name
+    NSArray<NSString*>* fontNameTokens = [(__bridge NSString*)fontName componentsSeparatedByString:@" "];
+    NSMutableSet<NSString*>* propertyTokens = [NSMutableSet<NSString*> setWithArray:fontNameTokens];
+
+    if (familyName) {
+        NSArray<NSString*>* familyNameTokens = [familyName componentsSeparatedByString:@" "];
+        [propertyTokens minusSet:[NSSet setWithArray:familyNameTokens]];
+    }
+
+    for (NSString* propertyToken in propertyTokens) {
+        NSString* upperPropertyToken = [propertyToken uppercaseString];
+
+        if ([upperPropertyToken isEqual:@"THIN"]) {
+            *weight = DWRITE_FONT_WEIGHT_THIN;
+        } else if ([upperPropertyToken isEqual:@"EXTRALIGHT"]) {
+            *weight = DWRITE_FONT_WEIGHT_EXTRA_LIGHT;
+        } else if ([upperPropertyToken isEqual:@"ULTRALIGHT"]) {
+            *weight = DWRITE_FONT_WEIGHT_ULTRA_LIGHT;
+        } else if ([upperPropertyToken isEqual:@"LIGHT"]) {
+            *weight = DWRITE_FONT_WEIGHT_LIGHT;
+        } else if ([upperPropertyToken isEqual:@"SEMILIGHT"]) {
+            *weight = DWRITE_FONT_WEIGHT_SEMI_LIGHT;
+            // skip since this is the default
+            // } else if ([upperPropertyToken isEqual:@"NORMAL"]) {
+            //     *weight = DWRITE_FONT_WEIGHT_NORMAL;
+        } else if ([upperPropertyToken isEqual:@"REGULAR"]) {
+            *weight = DWRITE_FONT_WEIGHT_REGULAR;
+        } else if ([upperPropertyToken isEqual:@"MEDIUM"]) {
+            *weight = DWRITE_FONT_WEIGHT_MEDIUM;
+        } else if ([upperPropertyToken isEqual:@"DEMIBOLD"]) {
+            *weight = DWRITE_FONT_WEIGHT_DEMI_BOLD;
+        } else if ([upperPropertyToken isEqual:@"SEMIBOLD"]) {
+            *weight = DWRITE_FONT_WEIGHT_SEMI_BOLD;
+        } else if ([upperPropertyToken isEqual:@"BOLD"]) {
+            *weight = DWRITE_FONT_WEIGHT_BOLD;
+        } else if ([upperPropertyToken isEqual:@"EXTRABOLD"]) {
+            *weight = DWRITE_FONT_WEIGHT_EXTRA_BOLD;
+        } else if ([upperPropertyToken isEqual:@"ULTRABOLD"]) {
+            *weight = DWRITE_FONT_WEIGHT_ULTRA_BOLD;
+        } else if ([upperPropertyToken isEqual:@"BLACK"]) {
+            *weight = DWRITE_FONT_WEIGHT_BLACK;
+        } else if ([upperPropertyToken isEqual:@"HEAVY"]) {
+            *weight = DWRITE_FONT_WEIGHT_HEAVY;
+        } else if ([upperPropertyToken isEqual:@"EXTRABLACK"]) {
+            *weight = DWRITE_FONT_WEIGHT_EXTRA_BLACK;
+        } else if ([upperPropertyToken isEqual:@"ULTRABLACK"]) {
+            *weight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
+
+        } else if ([upperPropertyToken isEqual:@"UNDEFINED"]) {
+            *stretch = DWRITE_FONT_STRETCH_UNDEFINED;
+        } else if ([upperPropertyToken isEqual:@"ULTRACONDENSED"]) {
+            *stretch = DWRITE_FONT_STRETCH_ULTRA_CONDENSED;
+        } else if ([upperPropertyToken isEqual:@"EXTRACONDENSED"]) {
+            *stretch = DWRITE_FONT_STRETCH_EXTRA_CONDENSED;
+        } else if ([upperPropertyToken isEqual:@"CONDENSED"] || [upperPropertyToken isEqual:@"NARROW"]) {
+            *stretch = DWRITE_FONT_STRETCH_CONDENSED;
+        } else if ([upperPropertyToken isEqual:@"SEMICONDENSED"]) {
+            *stretch = DWRITE_FONT_STRETCH_SEMI_CONDENSED;
+            // skip since this is the default
+            // } else if ([upperPropertyToken isEqual:@"NORMAL"]) {
+            //     *stretch = DWRITE_FONT_STRETCH_NORMAL;
+        } else if ([upperPropertyToken isEqual:@"MEDIUM"]) {
+            *stretch = DWRITE_FONT_STRETCH_MEDIUM;
+        } else if ([upperPropertyToken isEqual:@"SEMIEXPANDED"]) {
+            *stretch = DWRITE_FONT_STRETCH_SEMI_EXPANDED;
+        } else if ([upperPropertyToken isEqual:@"EXPANDED"]) {
+            *stretch = DWRITE_FONT_STRETCH_EXPANDED;
+        } else if ([upperPropertyToken isEqual:@"EXTRAEXPANDED"]) {
+            *stretch = DWRITE_FONT_STRETCH_EXTRA_EXPANDED;
+        } else if ([upperPropertyToken isEqual:@"ULTRAEXPANDED"]) {
+            *stretch = DWRITE_FONT_STRETCH_ULTRA_EXPANDED;
+
+            // skip since this is the default
+            // } else if ([upperPropertyToken isEqual:@"NORMAL"]) {
+            //     *style = DWRITE_FONT_STYLE_NORMAL;
+        } else if ([upperPropertyToken isEqual:@"OBLIQUE"]) {
+            *style = DWRITE_FONT_STYLE_OBLIQUE;
+        } else if ([upperPropertyToken isEqual:@"ITALIC"]) {
+            *style = DWRITE_FONT_STYLE_ITALIC;
+        }
+    }
+}
+
+HRESULT _DWriteCreateFontWithName(CFStringRef name, IDWriteFont** outFont) {
+    // Parse the font name for font weight, stretch, and style
+    // Eg: Bold, Condensed, Light, Italic
+    DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_NORMAL;
+    DWRITE_FONT_STRETCH stretch = DWRITE_FONT_STRETCH_NORMAL;
+    DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
+
+    __InitDWriteFontPropertiesFromName(name, &weight, &stretch, &style);
+
+    NSString* familyName = _DWriteGetFamilyNameForFontName(name);
+    if (!familyName) {
+        TraceError(TAG, L"Unable to find family for font name \"%hs\"", [static_cast<NSString*>(name) UTF8String]);
+        return E_INVALIDARG;
+    }
+
+    ComPtr<IDWriteFontFamily> fontFamily = __GetDWriteFontFamily(familyName);
+    if (!fontFamily) {
+        TraceError(TAG, L"Unable to find family for font name \"%hs\"", [static_cast<NSString*>(name) UTF8String]);
+        return E_INVALIDARG;
+    }
+
+    return fontFamily->GetFirstMatchingFont(weight, stretch, style, outFont);
 }
