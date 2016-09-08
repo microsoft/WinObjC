@@ -55,7 +55,7 @@ CFIndex CTRunGetGlyphCount(CTRunRef run) {
     }
 
     _CTRun* ctRun = (_CTRun*)run;
-    return ctRun->_characters.size();
+    return ctRun->_glyphAdvances.size();
 }
 
 /**
@@ -106,8 +106,7 @@ const CGPoint* CTRunGetPositionsPtr(CTRunRef run) {
 
 /**
  @Status Caveat
- @Notes Only font face, size and text color attributes are supported.  Background fill is
-        always white.
+ @Notes Only the starting position of the glyph run is handled.
 */
 void CTRunGetPositions(CTRunRef run, CFRange runRange, CGPoint* outPositions) {
     _CTRun* curRun = (_CTRun*)run;
@@ -117,7 +116,15 @@ void CTRunGetPositions(CTRunRef run, CFRange runRange, CGPoint* outPositions) {
         runRange.length = curRun->_range.length;
     }
 
-    memcpy(outPositions, &curRun->_glyphOrigins[runRange.location], sizeof(CGPoint) * runRange.length);
+    // TODO::
+    // Investigate on how to calculate this from whatever DWrite provides.
+    if (runRange.location != 0) {
+        UNIMPLEMENTED_WITH_MSG("CTRunGetPositions only supports when the position for the first glyph in the glyph run is requesed!");
+        return;
+    }
+
+    outPositions->x = curRun->_xPos;
+    outPositions->y = curRun->_yPos;
 }
 
 /**
@@ -130,7 +137,7 @@ const CGSize* CTRunGetAdvancesPtr(CTRunRef run) {
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 void CTRunGetAdvances(CTRunRef run, CFRange runRange, CGSize* outAdvances) {
     _CTRun* curRun = (_CTRun*)run;
@@ -256,11 +263,15 @@ void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
         range.length = [string length];
     }
 
-    int numGlyphs = curRun->_characters.size();
+    int numGlyphs = curRun->_glyphAdvances.size();
     WORD* glyphs = (WORD*)IwMalloc(sizeof(WORD) * numGlyphs);
 
+    WORD* characters = (WORD*)IwMalloc(sizeof(WORD) * numGlyphs);
+    [string getCharacters:characters];
+
     id font = [curRun->_attributes objectForKey:(id)kCTFontAttributeName];
-    CGFontGetGlyphsForUnichars(font, curRun->_characters.data(), glyphs, numGlyphs);
+
+    CGFontGetGlyphsForUnichars(font, characters, glyphs, numGlyphs);
     CGContextSetFont(ctx, font);
     CGContextSetFontSize(ctx, [font pointSize]);
 
@@ -273,6 +284,8 @@ void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
 
     CGPoint curTextPos = CGContextGetTextPosition(ctx);
     CGContextShowGlyphsAtPoint(ctx, curTextPos.x, curTextPos.y, glyphs, numGlyphs);
+
+    IwFree(characters);
     IwFree(glyphs);
 }
 

@@ -19,7 +19,11 @@
 #import <CoreText/CTParagraphStyle.h>
 
 #import "Starboard.h"
-#include <vector>
+#include <COMIncludes.h>
+#import <DWrite.h>
+#import <wrl/client.h>
+#include <COMIncludes_End.h>
+#import <vector>
 
 @interface _CTTypesetter : NSObject {
 @public
@@ -32,7 +36,34 @@
 
 @interface _CTFrameSetter : NSObject {
 @public
-    idretaintype(_CTTypesetter) _typesetter;
+    StrongId<_CTTypesetter> _typesetter;
+}
+@end
+
+@interface _CTRun : NSObject {
+@public
+    StrongId<NSMutableDictionary> _attributes;
+    CFRange _range;
+    float _xPos;
+    float _yPos;
+    StrongId<NSString> _stringFragment;
+    std::vector<CGSize> _glyphAdvances;
+    // TODO::
+    // How do we get this data? DWrite does not seem to provide it to us directly today.
+    std::vector<CGPoint> _glyphOrigins;
+}
+@end
+
+@interface _CTLine : NSObject {
+@public
+    CFRange _strRange;
+    CGPoint _lineOrigin;
+    StrongId<NSMutableArray<_CTRun*>> _runs;
+
+    // TODO::
+    // Do we need these anymore?
+    CGFloat _width;
+    CGFloat _ascent, _descent, _leading;
 }
 @end
 
@@ -40,30 +71,12 @@
 @public
     _CTFrameSetter* _frameSetter;
     CGRect _frameRect;
+    StrongId<NSMutableArray<_CTLine*>> _lines;
+
+    // TODO::
+    // Do we need these anymore?
     CGSize _totalSize;
-    idretaintype(NSMutableArray) _lines;
     std::vector<CGPoint> _lineOrigins;
-}
-@end
-
-@interface _CTLine : NSObject {
-@public
-    NSRange _strRange;
-    CGFloat _width;
-    CGFloat _ascent, _descent, _leading;
-    idretaintype(NSMutableArray) _runs;
-}
-@end
-
-@interface _CTRun : NSObject {
-@public
-    idretaintype(NSMutableDictionary) _attributes;
-    CFRange _range;
-    float _xPos;
-    idretaintype(NSString) _stringFragment;
-    std::vector<CGPoint> _glyphOrigins;
-    std::vector<CGSize> _glyphAdvances;
-    std::vector<WORD> _characters;
 }
 @end
 

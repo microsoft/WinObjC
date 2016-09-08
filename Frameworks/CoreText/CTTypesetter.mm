@@ -84,6 +84,7 @@ static float fractionPixels(float pixels) {
 
 static CFIndex _DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthFunc, void* widthParam, double offset, CTLineRef* outLine) {
     _CTTypesetter* typeSetter = (_CTTypesetter*)ts;
+
     _CTLine* line = NULL;
 
     if (outLine) {
@@ -267,7 +268,7 @@ static CFIndex _DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthF
             characters.erase(characters.begin() + (lastGlyphToPrintPos - lineStart + 1), characters.end());
         }
 
-        NSRange lineRange = NSMakeRange(lineStart, lastGlyphToPrintPos - lineStart + 1);
+        CFRange lineRange = CFRangeMake(range.location, range.length);
         line->_runs.attach([NSMutableArray new]);
         line->_strRange = lineRange;
         line->_width = lineWidth;
@@ -321,8 +322,6 @@ static CFIndex _DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthF
             run->_stringFragment = [typeSetter->_string substringWithRange:runRange];
             run->_glyphOrigins.assign(glyphOrigins.begin() + glyphIdx, glyphOrigins.begin() + glyphIdx + runRange.length);
             run->_glyphAdvances.assign(glyphAdvances.begin() + glyphIdx, glyphAdvances.begin() + glyphIdx + runRange.length);
-            run->_characters.assign(characters.begin() + glyphIdx, characters.begin() + glyphIdx + runRange.length);
-            run->_characters.erase(std::remove(run->_characters.begin(), run->_characters.end(), 0), run->_characters.end());
             glyphIdx += runRange.length;
             [line->_runs addObject:(id)run];
             CFRelease(run);

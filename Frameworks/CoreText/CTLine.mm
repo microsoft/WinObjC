@@ -50,7 +50,7 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef li
 CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string) {
     UNIMPLEMENTED();
     NSString* str = [(NSAttributedString*)string string];
-    NSRange lineRange;
+    CFRange lineRange;
     lineRange.location = 0;
     lineRange.length = [str length];
 
@@ -230,7 +230,7 @@ void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
 
     CGPoint start = CGContextGetTextPosition(ctx);
 
-    for (_CTRun* curRun in(NSArray*)line->_runs) {
+    for (_CTRun* curRun in (NSArray*)line->_runs) {
         CFRange range = { 0 };
 
         CGPoint outputPoint = start;
@@ -274,12 +274,7 @@ CFRange CTLineGetStringRange(CTLineRef line) {
         return { 0, 0 };
     }
 
-    CFRange ret;
-    NSRange range = ((_CTLine*)line)->_strRange;
-    ret.length = range.length;
-    ret.location = range.location;
-
-    return ret;
+    return ((_CTLine*)line)->_strRange;
 }
 
 /**
