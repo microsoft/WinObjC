@@ -52,7 +52,7 @@ static ComPtr<IDWriteFactory> GetDWriteFactoryInstance() {
  *
  * @return use set locale string as wstring.
  */
-static wstring _getUserDefaultLocaleName() {
+static wstring _GetUserDefaultLocaleName() {
     wchar_t localeName[LOCALE_NAME_MAX_LENGTH];
     int defaultLocaleSuccess = GetUserDefaultLocaleName(localeName, LOCALE_NAME_MAX_LENGTH);
 
@@ -71,14 +71,14 @@ static wstring _getUserDefaultLocaleName() {
  *
  * @return NSString object.
  */
-static NSString* _convertLocalizedStringToNSString(IDWriteLocalizedStrings* localizedString) {
+static NSString* _ConvertLocalizedStringToNSString(IDWriteLocalizedStrings* localizedString) {
     if (localizedString == NULL) {
         TraceError(TAG, L"The input parameter is invalid!");
         return nil;
     }
 
     // Get the default locale for this user.
-    wstring localeName = _getUserDefaultLocaleName();
+    wstring localeName = _GetUserDefaultLocaleName();
 
     uint32_t index = 0;
     BOOL exists = false;
@@ -114,7 +114,7 @@ static NSString* _convertLocalizedStringToNSString(IDWriteLocalizedStrings* loca
  *
  * @return the created IDWriteTextFormat object.
  */
-static ComPtr<IDWriteTextFormat> _createDWriteTextFormat(_CTTypesetter* ts, CFRange range) {
+static ComPtr<IDWriteTextFormat> _CreateDWriteTextFormat(_CTTypesetter* ts, CFRange range) {
     // Get the direct write factory instance
     ComPtr<IDWriteFactory> dwriteFactory = GetDWriteFactoryInstance();
 
@@ -122,7 +122,7 @@ static ComPtr<IDWriteTextFormat> _createDWriteTextFormat(_CTTypesetter* ts, CFRa
     // Get font family name details so that can be used here. For now this is hardcoded to "Gabriola".
 
     // Note here we only look at attribute value at first index of the specified range as we can get a default faont size to use here.
-    // Per string range attribute handling will be done in _createDWriteTextLayout.
+    // Per string range attribute handling will be done in _CreateDWriteTextLayout.
     NSDictionary* attribs = [ts->_attributedString attributesAtIndex:range.location effectiveRange:NULL];
     UIFont* font = [attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)];
     if (font == nil) {
@@ -152,8 +152,8 @@ static ComPtr<IDWriteTextFormat> _createDWriteTextFormat(_CTTypesetter* ts, CFRa
  *
  * @return the created IDWriteTextLayout object.
  */
-static ComPtr<IDWriteTextLayout> _createDWriteTextLayout(_CTTypesetter* ts, CFRange range, CGRect frameSize) {
-    ComPtr<IDWriteTextFormat> textFormat = _createDWriteTextFormat(ts, range);
+static ComPtr<IDWriteTextLayout> _CreateDWriteTextLayout(_CTTypesetter* ts, CFRange range, CGRect frameSize) {
+    ComPtr<IDWriteTextFormat> textFormat = _CreateDWriteTextFormat(ts, range);
 
     // TODO::
     // Iterate through all attributed string ranges and identify attributes so they can be used to -
@@ -287,7 +287,7 @@ HRESULT CustomDWriteTextRenderer::RuntimeClassInitialize() {
  * @parameter glyphDetails pointer to the _DWriteGlyphRunDetails object that contains the glyph run details that was rendeered.
  */
 static void _GetGlyphRunDetails(_CTTypesetter* ts, CFRange range, CGRect frameSize, _DWriteGlyphRunDetails* glyphDetails) {
-    ComPtr<IDWriteTextLayout> textLayout = _createDWriteTextLayout(ts, range, frameSize);
+    ComPtr<IDWriteTextLayout> textLayout = _CreateDWriteTextLayout(ts, range, frameSize);
     ComPtr<CustomDWriteTextRenderer> textRenderer = Make<CustomDWriteTextRenderer>();
     textLayout->Draw(glyphDetails, textRenderer.Get(), 0, 0);
 }
@@ -297,7 +297,7 @@ static void _GetGlyphRunDetails(_CTTypesetter* ts, CFRange range, CGRect frameSi
  *
  * @return Unmutable array of font family name strings that are installed in the system.
  */
-static NSArray<NSString*>* _dwriteGetFamilyNames() {
+static NSArray<NSString*>* _DWriteGetFamilyNames() {
     NSMutableArray<NSString*>* fontFamilyNames = [NSMutableArray<NSString*> array];
 
     // Get the direct write factory instance
@@ -320,7 +320,7 @@ static NSArray<NSString*>* _dwriteGetFamilyNames() {
         ComPtr<IDWriteLocalizedStrings> familyNames;
         THROW_IF_FAILED(fontFamily->GetFamilyNames(&familyNames));
 
-        [fontFamilyNames addObject:_convertLocalizedStringToNSString(familyNames.Get())];
+        [fontFamilyNames addObject:_ConvertLocalizedStringToNSString(familyNames.Get())];
     }
 
     return [fontFamilyNames autorelease];
