@@ -113,3 +113,11 @@ Frameworks/Include/CFPriv.h
 Frameworks/Include/CFRuntime.h
 Frameworks/Include/CFStreamPriv.h
 Frameworks/Include/CFRegularExpression.h
+
+#### DO NOT IGNORE ####
+# The prebuilts! We want those.
+!deps/prebuilt/**/[Dd]ebug
+!deps/prebuilt/**/[Rr]elease
+# The repository root /bin, and the build tools bin/
+!/bin
+!/msvc/**/bin
