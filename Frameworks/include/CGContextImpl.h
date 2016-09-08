@@ -178,6 +178,8 @@ public:
     virtual void CGContextSetShadow(CGSize offset, float blur);
     virtual bool CGContextIsPointInPath(bool eoFill, float x, float y);
     virtual CGPathRef CGContextCopyPath(void);
+
+    virtual void CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun);
 };
 
 #define LOCK_CAIRO() pthread_mutex_lock(&_cairoLock);

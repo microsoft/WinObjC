@@ -33,7 +33,7 @@ using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"_DWriteWrapper";
 static const wchar_t* c_defaultUserLanguage = L"en-us";
-static const wchar_t* c_defaultFontName = L"Gabriola";
+static const wchar_t* c_defaultFontName = L"Segoe UI";
 
 // TODO::
 // These should be removed once CTFont and UIFont are bridged.
@@ -51,6 +51,50 @@ static ComPtr<IDWriteFactory> __CreateDWriteFactoryInstance() {
 static ComPtr<IDWriteFactory> __GetDWriteFactoryInstance() {
     static ComPtr<IDWriteFactory> s_dwriteFactory = __CreateDWriteFactoryInstance();
     return s_dwriteFactory;
+}
+
+template <typename TElement>
+bool __CloneArray(_In_reads_opt_(count) TElement const* source,
+                  _In_ size_t count,
+                  _Outptr_result_buffer_all_maybenull_(count) TElement const** result) {
+    bool ret = true;
+
+    *result = nullptr;
+
+    if (source != nullptr) {
+        TElement* array = new TElement[count];
+        ret = (array != nullptr) ? true : false;
+        if (ret) {
+            memcpy(array, source, sizeof(TElement) * count);
+            *result = array;
+        }
+    }
+
+    return ret;
+}
+
+bool __CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Out_ DWRITE_GLYPH_RUN* dest) {
+    bool ret = true;
+
+    if (src) {
+        dest->fontFace = src->fontFace;
+        dest->fontFace->AddRef();
+
+        dest->fontEmSize = src->fontEmSize;
+        dest->glyphCount = src->glyphCount;
+        dest->isSideways = src->isSideways;
+        dest->bidiLevel = src->bidiLevel;
+
+        bool ret = __CloneArray(src->glyphIndices, src->glyphCount, &dest->glyphIndices);
+        if (ret) {
+            ret = __CloneArray(src->glyphAdvances, src->glyphCount, &dest->glyphAdvances);
+        }
+        if (ret) {
+            ret = __CloneArray(src->glyphOffsets, src->glyphCount, &dest->glyphOffsets);
+        }
+    }
+
+    return ret;
 }
 
 /**
@@ -219,16 +263,13 @@ public:
                                            _In_ DWRITE_GLYPH_RUN_DESCRIPTION const* glyphRunDescription,
                                            _In_ IUnknown* clientDrawingEffects) throw() {
         _DWriteGlyphRunDetails* glyphs = static_cast<_DWriteGlyphRunDetails*>(clientDrawingContext);
+
+        DWRITE_GLYPH_RUN dwriteGlyphRun = {};
+        __CloneDWriteGlyphRun(glyphRun, &dwriteGlyphRun);
+        glyphs->_dwriteGlyphRun.push_back(dwriteGlyphRun);
+
         glyphs->_baselineOriginX.push_back(baselineOriginX);
         glyphs->_baselineOriginY.push_back(baselineOriginY);
-
-        _DWriteGlyphRun glyphRunInfo;
-        glyphRunInfo._glyphCount = glyphRun->glyphCount;
-        for (int index = 0; index < glyphRun->glyphCount; index++) {
-            glyphRunInfo._glyphIndices.push_back(glyphRun->glyphIndices[index]);
-            glyphRunInfo._glyphAdvances.push_back(CGSizeMake(glyphRun->glyphAdvances[index], 0));
-        }
-        glyphs->_glyphRuns.push_back(glyphRunInfo);
 
         _DWriteGlyphRunDescription glyphRunDescriptionInfo;
         glyphRunDescriptionInfo._stringLength = glyphRunDescription->stringLength;
@@ -311,21 +352,33 @@ static void __GetGlyphRunDetails(_CTTypesetter* ts, CFRange range, CGRect frameS
  * @return Unmutable array of _CTLine objects created with the requested parameters.
  */
 static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRect frameSize) {
+    NSMutableArray<_CTLine*>* lines = [NSMutableArray array];
+    if (range.length == 0) {
+        return lines;
+    }
+
     // Call custom renderer to get all glyph run details
-    _DWriteGlyphRunDetails glyphRunDetails;
+    _DWriteGlyphRunDetails glyphRunDetails = {};
     __GetGlyphRunDetails(ts, range, frameSize, &glyphRunDetails);
 
     // Create _CTLine objects from the the obtained glyph run details
-    int numOfGlyphRuns = glyphRunDetails._glyphRuns.size();
+    int numOfGlyphRuns = glyphRunDetails._dwriteGlyphRun.size();
     int i = 0;
     int j = 0;
 
-    NSMutableArray<_CTLine*>* lines = [NSMutableArray array];
+    // Relative offsets for each run and line that will be used by CTLineDraw and CTRunDRaw methods to render.
+    float prevXPosForDraw = 0;
+    float prevYPosForDraw = 0;
 
     while (j < numOfGlyphRuns) {
         _CTLine* line = [[_CTLine new] autorelease];
         NSMutableArray<_CTRun*>* runs = [NSMutableArray array];
         uint32_t stringRange = 0;
+        prevXPosForDraw = 0;
+
+        float xPos;
+        float yPos;
+
         // Glyph runs that have the same _baselineOriginY value are part of the the same Line.
         while ((j < numOfGlyphRuns) && (glyphRunDetails._baselineOriginY[i] == glyphRunDetails._baselineOriginY[j])) {
             j++;
@@ -336,25 +389,41 @@ static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
             run->_range.location = glyphRunDetails._glyphRunDescriptions[i]._textPosition;
             run->_range.length = glyphRunDetails._glyphRunDescriptions[i]._stringLength;
             run->_stringFragment = [ts->_string substringWithRange:NSMakeRangeFromCF(run->_range)];
-            run->_xPos = frameSize.origin.x + glyphRunDetails._baselineOriginX[i];
-            // TODO::
-            // This is a temp work around to get DWrite measurements to be usable with Cairo FreeType rasterizer. Remove this when
-            // we move away from Cairo Freetype. We need this workaround because DWrite coordinate system begins from top left but
-            // Cairo FreeType has its from bottom left.
-            run->_yPos = frameSize.origin.y + frameSize.size.height - glyphRunDetails._baselineOriginY[i];
+            run->_dwriteGlyphRun = move(glyphRunDetails._dwriteGlyphRun[i]);
             run->_attributes = [ts->_attributedString attributesAtIndex:run->_range.location effectiveRange:NULL];
-            run->_glyphAdvances = move(glyphRunDetails._glyphRuns[i]._glyphAdvances);
+
+            xPos = glyphRunDetails._baselineOriginX[i];
+            yPos = glyphRunDetails._baselineOriginY[i];
+
+            // Calculate the relative offset of each glyph run and store it. This will be useful while drawing individual glpyh runs or
+            // lines.
+            run->_relativeXOffset = xPos - prevXPosForDraw;
+            run->_relativeYOffset = yPos - prevYPosForDraw;
+            prevXPosForDraw = xPos;
+
+            // TODO::
+            // This is a temp workaround until we can have actual glyph origins
+            run->_glyphOrigins.emplace_back(CGPoint{ xPos, yPos });
+            for (int index = 0; index < glyphRunDetails._dwriteGlyphRun[i].glyphCount - 1; index++) {
+                run->_glyphOrigins.emplace_back(CGPoint{ xPos + glyphRunDetails._dwriteGlyphRun[i].glyphAdvances[index], yPos });
+                xPos += glyphRunDetails._dwriteGlyphRun[i].glyphAdvances[index];
+                line->_width += glyphRunDetails._dwriteGlyphRun[i].glyphAdvances[index];
+            }
 
             [runs addObject:run];
             stringRange += run->_range.length;
             i++;
         }
 
+        prevYPosForDraw = yPos;
+
         line->_runs = runs;
         line->_strRange.location = static_cast<_CTRun*>(line->_runs[0])->_range.location;
-        line->_lineOrigin.x = static_cast<_CTRun*>(line->_runs[0])->_xPos;
-        line->_lineOrigin.y = static_cast<_CTRun*>(line->_runs[0])->_yPos;
+        line->_lineOrigin.x = static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].x;
+        line->_lineOrigin.y = static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].y;
         line->_strRange.length = stringRange;
+        line->_relativeXOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeXOffset;
+        line->_relativeYOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeYOffset;
         [lines addObject:line];
     }
 

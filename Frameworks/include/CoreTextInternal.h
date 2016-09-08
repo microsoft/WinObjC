@@ -25,6 +25,14 @@
 #include <COMIncludes_End.h>
 #import <vector>
 
+template <typename T>
+inline void _SafeRelease(T** p) {
+    if ((*p) != nullptr) {
+        (*p)->Release();
+        *p = nullptr;
+    }
+}
+
 @interface _CTTypesetter : NSObject {
 @public
     NSAttributedString* _attributedString;
@@ -44,13 +52,11 @@
 @public
     StrongId<NSMutableDictionary> _attributes;
     CFRange _range;
-    float _xPos;
-    float _yPos;
     StrongId<NSString> _stringFragment;
-    std::vector<CGSize> _glyphAdvances;
-    // TODO::
-    // How do we get this data? DWrite does not seem to provide it to us directly today.
+    DWRITE_GLYPH_RUN _dwriteGlyphRun;
     std::vector<CGPoint> _glyphOrigins;
+    CGFloat _relativeXOffset;
+    CGFloat _relativeYOffset;
 }
 @end
 
@@ -58,11 +64,13 @@
 @public
     CFRange _strRange;
     CGPoint _lineOrigin;
+    CGFloat _relativeXOffset;
+    CGFloat _relativeYOffset;
+    CGFloat _width;
     StrongId<NSMutableArray<_CTRun*>> _runs;
 
     // TODO::
     // Do we need these anymore?
-    CGFloat _width;
     CGFloat _ascent, _descent, _leading;
 }
 @end
@@ -71,12 +79,12 @@
 @public
     _CTFrameSetter* _frameSetter;
     CGRect _frameRect;
+    std::vector<CGPoint> _lineOrigins;
     StrongId<NSMutableArray<_CTLine*>> _lines;
 
     // TODO::
     // Do we need these anymore?
     CGSize _totalSize;
-    std::vector<CGPoint> _lineOrigins;
 }
 @end
 
@@ -130,3 +138,9 @@ typedef float (*WidthFinderFunc)(void* opaque, CFIndex idx, float offset, float 
 
 CORETEXT_EXPORT CFIndex _CTTypesetterSuggestLineBreakWithOffsetAndCallback(
     CTTypesetterRef ts, CFIndex index, double offset, WidthFinderFunc callback, void* opaque);
+
+// Note: For some reason namemangling does not happen for these functions causing a linker error. Bug??
+CORETEXT_EXTERNC_BEGIN
+void _CTLineDraw(CTLineRef line, CGContextRef ctx, bool adjustTextPosition);
+void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTextPosition);
+CORETEXT_EXTERNC_END

@@ -33,13 +33,6 @@
 
 #define NSMakeRangeFromCF(cfr) NSMakeRange(cfr.location == kCFNotFound ? NSNotFound : cfr.location, cfr.length)
 
-// Based off DWRITE_GLYPH_RUN structure
-struct _DWriteGlyphRun {
-    uint32_t _glyphCount;
-    std::vector<uint16_t> _glyphIndices;
-    std::vector<CGSize> _glyphAdvances;
-};
-
 // Based off DWRITE_GLYPH_RUN_DESCRIPTION structure
 struct _DWriteGlyphRunDescription {
     uint32_t _stringLength;
@@ -49,7 +42,7 @@ struct _DWriteGlyphRunDescription {
 struct _DWriteGlyphRunDetails {
     std::vector<float> _baselineOriginX;
     std::vector<float> _baselineOriginY;
-    std::vector<_DWriteGlyphRun> _glyphRuns;
+    std::vector<DWRITE_GLYPH_RUN> _dwriteGlyphRun;
     std::vector<_DWriteGlyphRunDescription> _glyphRunDescriptions;
 };
 
@@ -58,6 +51,6 @@ NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRect fram
 
 CFArrayRef _DWriteGetFontFamilyNames();
 CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName);
-CORETEXT_EXPORT CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName);
+CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName);
 
 HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace);

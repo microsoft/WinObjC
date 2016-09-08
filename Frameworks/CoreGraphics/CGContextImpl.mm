@@ -787,3 +787,6 @@ bool CGContextImpl::CGContextIsPointInPath(bool eoFill, float x, float y) {
 CGPathRef CGContextImpl::CGContextCopyPath(void) {
     return NULL;
 }
+
+void CGContextImpl::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
+}

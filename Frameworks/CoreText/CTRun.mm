@@ -16,10 +16,14 @@
 
 #import <CoreText/CTRun.h>
 #import <StubReturn.h>
-
-#include "CoreTextInternal.h"
-#include "CGContextInternal.h"
-#include "CGFontInternal.h"
+#include <COMIncludes.h>
+#import <Wincodec.h>
+#import <D2d1.h>
+#include <COMIncludes_End.h>
+#import <CoreText/DWriteWrapper.h>
+#import "CoreTextInternal.h"
+#import "CGContextInternal.h"
+#import "CGFontInternal.h"
 
 const CFStringRef kCTBackgroundStrokeColorAttributeName = static_cast<CFStringRef>(@"kCTBackgroundStrokeColorAttributeName");
 const CFStringRef kCTBackgroundFillColorAttributeName = static_cast<CFStringRef>(@"kCTBackgroundFillColorAttributeName");
@@ -32,6 +36,10 @@ static IWLazyClassLookup _LazyUIColor("UIColor");
 - (void)dealloc {
     _stringFragment = nil;
     _attributes = nil;
+    _SafeRelease(&_dwriteGlyphRun.fontFace);
+    delete[] _dwriteGlyphRun.glyphIndices;
+    delete[] _dwriteGlyphRun.glyphAdvances;
+    delete[] _dwriteGlyphRun.glyphOffsets;
 
     [super dealloc];
 }
@@ -55,7 +63,7 @@ CFIndex CTRunGetGlyphCount(CTRunRef run) {
     }
 
     _CTRun* ctRun = (_CTRun*)run;
-    return ctRun->_glyphAdvances.size();
+    return ctRun->_dwriteGlyphRun.glyphCount;
 }
 
 /**
@@ -123,8 +131,8 @@ void CTRunGetPositions(CTRunRef run, CFRange runRange, CGPoint* outPositions) {
         return;
     }
 
-    outPositions->x = curRun->_xPos;
-    outPositions->y = curRun->_yPos;
+    outPositions->x = curRun->_glyphOrigins[0].x;
+    outPositions->y = curRun->_glyphOrigins[0].y;
 }
 
 /**
@@ -147,7 +155,9 @@ void CTRunGetAdvances(CTRunRef run, CFRange runRange, CGSize* outAdvances) {
         runRange.length = curRun->_range.length;
     }
 
-    memcpy(outAdvances, &curRun->_glyphAdvances[runRange.location], sizeof(CGSize) * runRange.length);
+    // TODO::
+    // This will be fixed as soon _glyphAdvances is supported.
+    // memcpy(outAdvances, &curRun->_glyphAdvances[runRange.location], sizeof(CGSize) * runRange.length);
 }
 
 /**
@@ -222,11 +232,8 @@ double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, C
 
     // Calculate the typographic width for the specified range
     double typographicWidth = 0;
-    auto it = curRun->_glyphAdvances.begin() + range.location;
-    auto rangeEnd = it + range.length;
-    while (it != rangeEnd) {
-        typographicWidth += it->width;
-        it++;
+    for (int index = range.location; index < curRun->_dwriteGlyphRun.glyphCount; index++) {
+        typographicWidth += curRun->_dwriteGlyphRun.glyphAdvances[index];
     }
 
     return typographicWidth;
@@ -241,52 +248,33 @@ CGRect CTRunGetImageBounds(CTRunRef run, CGContextRef context, CFRange range) {
     return StubReturn();
 }
 
-/**
- @Status Caveat
- @Notes textRange parameter not supported
-*/
-void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
+void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTextPosition) {
     if (!run) {
         return;
     }
 
     _CTRun* curRun = (_CTRun*)run;
-
-    NSString* string = curRun->_stringFragment;
-
-    NSRange range;
-    range.location = textRange.location;
-    range.length = textRange.length;
-
-    if (range.length == 0) {
-        range.location = 0;
-        range.length = [string length];
+    if (adjustTextPosition) {
+        CGPoint curTextPos = CGContextGetTextPosition(ctx);
+        CGContextSetTextPosition(ctx, curTextPos.x + curRun->_relativeXOffset, curTextPos.y + curRun->_relativeYOffset);
     }
 
-    int numGlyphs = curRun->_glyphAdvances.size();
-    WORD* glyphs = (WORD*)IwMalloc(sizeof(WORD) * numGlyphs);
-
-    WORD* characters = (WORD*)IwMalloc(sizeof(WORD) * numGlyphs);
-    [string getCharacters:characters];
-
-    id font = [curRun->_attributes objectForKey:(id)kCTFontAttributeName];
-
-    CGFontGetGlyphsForUnichars(font, characters, glyphs, numGlyphs);
-    CGContextSetFont(ctx, font);
-    CGContextSetFontSize(ctx, [font pointSize]);
-
+    // TODO::
+    // Fix this once CTFont and UIFont become bridgable classes.
     id fontColor = [curRun->_attributes objectForKey:(id)kCTForegroundColorAttributeName];
     if (fontColor == nil) {
         fontColor = [_LazyUIColor blackColor];
     }
-    CGContextSetFillColorWithColor(ctx, (CGColorRef)fontColor);
-    CGContextSetStrokeColorWithColor(ctx, (CGColorRef)(id)CGColorGetConstantColor((CFStringRef) @"WHITE"));
+    CGContextSetFillColorWithColor(ctx, reinterpret_cast<CGColorRef>(fontColor));
+    CGContextDrawGlyphRun(ctx, &curRun->_dwriteGlyphRun);
+}
 
-    CGPoint curTextPos = CGContextGetTextPosition(ctx);
-    CGContextShowGlyphsAtPoint(ctx, curTextPos.x, curTextPos.y, glyphs, numGlyphs);
-
-    IwFree(characters);
-    IwFree(glyphs);
+/**
+ @Status Caveat
+ @Notes textRange parameter not supported
+*/
+void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
+    _CTRunDraw(run, ctx, textRange, true);
 }
 
 /**

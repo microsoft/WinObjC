@@ -169,7 +169,7 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef so
         _CTRun* run = static_cast<_CTRun*>(currentRun);
         NSMutableString* runString = [NSMutableString new];
 
-        int numberOfGlyphs = run->_glyphAdvances.size();
+        int numberOfGlyphs = run->_dwriteGlyphRun.glyphCount;
         for (int j = 0; j < numberOfGlyphs; ++j) {
             int glyphIndex;
             if (truncationType == kCTLineTruncationStart) {
@@ -178,12 +178,12 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef so
                 glyphIndex = j;
             }
 
-            if (extractedWidth + run->_glyphAdvances[glyphIndex].width > widthToExtract) {
+            if (extractedWidth + run->_dwriteGlyphRun.glyphAdvances[glyphIndex] > widthToExtract) {
                 done = 1;
                 break;
             }
 
-            extractedWidth += run->_glyphAdvances[glyphIndex].width;
+            extractedWidth += run->_dwriteGlyphRun.glyphAdvances[glyphIndex];
             char glyph = [run->_stringFragment characterAtIndex:glyphIndex];
             [runString appendString:[NSString stringWithFormat:@"%c", glyph]];
         }
@@ -218,30 +218,29 @@ CTLineRef CTLineCreateJustifiedLine(CTLineRef line, CGFloat justificationFactor,
     return StubReturn();
 }
 
-/**
- @Status Interoperable
-*/
-void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
+void _CTLineDraw(CTLineRef lineRef, CGContextRef ctx, bool adjustTextPosition) {
     if (!lineRef) {
         return;
     }
 
-    _CTLine* line = (_CTLine*)lineRef;
-
-    CGPoint start = CGContextGetTextPosition(ctx);
-
-    for (_CTRun* curRun in (NSArray*)line->_runs) {
-        CFRange range = { 0 };
-
-        CGPoint outputPoint = start;
-        if (curRun->_glyphOrigins.size() > 0) {
-            outputPoint = CGPointMake(start.x + curRun->_glyphOrigins[0].x, start.y + +curRun->_glyphOrigins[0].y);
-        }
-
-        CGContextSetTextPosition(ctx, outputPoint.x, outputPoint.y);
-
-        CTRunDraw((CTRunRef)curRun, ctx, range);
+    _CTLine* line = static_cast<_CTLine*>(lineRef);
+    CGPoint curTextPos = { 0, 0 };
+    if (adjustTextPosition) {
+        curTextPos = CGContextGetTextPosition(ctx);
+        CGContextSetTextPosition(ctx, curTextPos.x + line->_relativeXOffset, curTextPos.y + line->_relativeYOffset);
     }
+
+    for (_CTRun* curRun in static_cast<NSArray*>(line->_runs)) {
+        CFRange range = { 0 };
+        _CTRunDraw(static_cast<CTRunRef>(curRun), ctx, range, false);
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
+    _CTLineDraw(lineRef, ctx, true);
 }
 
 /**
@@ -343,12 +342,12 @@ CFIndex CTLineGetStringIndexForPosition(CTLineRef lineRef, CGPoint position) {
     CFIndex numberOfRuns = CFArrayGetCount(glyphRuns);
 
     for (int i = 0; i < numberOfRuns; i++) {
-        CTRunRef run = (CTRunRef)CFArrayGetValueAtIndex(glyphRuns, i);
+        CTRunRef run = static_cast<CTRunRef>(CFArrayGetValueAtIndex(glyphRuns, i));
         CFIndex glyphsCount = CTRunGetGlyphCount(run);
 
         for (int i = 0; i < glyphsCount; i++) {
             ret++;
-            currPos += ((_CTRun*)run)->_glyphAdvances[i].width;
+            currPos += static_cast<_CTRun*>(run)->_dwriteGlyphRun.glyphAdvances[i];
             if (currPos >= position.x) {
                 return ret;
             }
