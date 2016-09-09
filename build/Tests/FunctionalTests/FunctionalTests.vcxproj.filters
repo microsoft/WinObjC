@@ -78,6 +78,7 @@
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UISliderTests.mm">
       <Filter>Tests</Filter>
+    </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIApplicationTests.mm">
       <Filter>Tests</Filter>
     </ClangCompile>
