@@ -34,7 +34,8 @@ static NSAttributedString* getAttributedString(NSString* str) {
     return string;
 }
 
-TEST(CTFrame, GetStringRange) {
+// TODO: #1001 Re-enable this test
+DISABLED_TEST(CTFrame, GetStringRange) {
     EXPECT_EQ(0, CTFrameGetStringRange(nil).location);
     EXPECT_EQ(0, CTFrameGetStringRange(nil).length);
     EXPECT_EQ(0, CTFrameGetVisibleStringRange(nil).location);

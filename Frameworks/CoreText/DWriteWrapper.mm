@@ -26,7 +26,6 @@
 #import "CoreTextInternal.h"
 
 #import <LoggingNative.h>
-#import <mutex>
 #import <vector>
 
 using namespace std;
@@ -129,6 +128,8 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(_CTTypesetter* ts, CFR
 
     // Note here we only look at attribute value at first index of the specified range as we can get a default faont size to use here.
     // Per string range attribute handling will be done in _CreateDWriteTextLayout.
+
+    // TODO: #1001 attribs can be nil here?
     NSDictionary* attribs = [ts->_attributedString attributesAtIndex:range.location effectiveRange:NULL];
     UIFont* font = [attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)];
     if (font == nil) {
@@ -359,7 +360,7 @@ static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
 }
 
 /**
- * Helper method to retrieve font fmaly names installed in the system.
+ * Helper method to retrieve font family names installed in the system.
  *
  * @return Unmutable array of font family name strings that are installed in the system.
  */
@@ -392,6 +393,9 @@ static NSArray<NSString*>* _DWriteGetFontFamilyNames() {
     return fontFamilyNames;
 }
 
+/**
+ * Helper method to retrieve names of individual fonts under a font family.
+ */
 NSArray<NSString*>* _DWriteGetFontNamesForFamilyName(NSString* familyName) {
     NSMutableArray<NSString*>* fontNames = [NSMutableArray<NSString*> array];
 
@@ -402,7 +406,7 @@ NSArray<NSString*>* _DWriteGetFontNamesForFamilyName(NSString* familyName) {
     THROW_IF_FAILED(dwriteFactory->GetSystemFontCollection(&fontCollection));
 
     // Get the font family.
-    UINT32 index = 0;
+    size_t index = 0;
     BOOL exists = false;
 
     NSUInteger familyNameLength = familyName.length;
@@ -422,10 +426,9 @@ NSArray<NSString*>* _DWriteGetFontNamesForFamilyName(NSString* familyName) {
     THROW_IF_FAILED(
         fontFamily->GetMatchingFonts(DWRITE_FONT_WEIGHT_THIN, DWRITE_FONT_STRETCH_UNDEFINED, DWRITE_FONT_STYLE_NORMAL, &fontList));
 
-    UINT32 count = 0;
-    count = fontList->GetFontCount();
+    size_t count = fontList->GetFontCount();
 
-    for (UINT32 i = 0; i < count; i++) {
+    for (size_t i = 0; i < count; i++) {
         ComPtr<IDWriteFont> font;
         THROW_IF_FAILED(fontList->GetFont(i, &font));
 
@@ -447,6 +450,11 @@ NSArray<NSString*>* _DWriteGetFontNamesForFamilyName(NSString* familyName) {
     return fontNames;
 }
 
+/**
+ * Helper method that maps a font name to the name of its family.
+ *
+ * Note: This function currently uses a cache, meaning that fonts installed during runtime will not be reflected
+ */
 NSString* _DWriteGetFamilyNameForFontName(CFStringRef fontName) {
     static NSDictionary<NSString*, NSString*>* fontToFamilyMap = nil;
 
@@ -471,7 +479,9 @@ NSString* _DWriteGetFamilyNameForFontName(CFStringRef fontName) {
     return [fontToFamilyMap objectForKey:(__bridge NSString*)fontName];
 }
 
-// Private helper that acquires an IDWriteFontFamily object for a given family name
+/**
+ * Private helper that acquires an IDWriteFontFamily object for a given family name
+ */
 static ComPtr<IDWriteFontFamily> __GetDWriteFontFamily(NSString* familyName) {
     ComPtr<IDWriteFontFamily> fontFamily;
 
@@ -484,7 +494,7 @@ static ComPtr<IDWriteFontFamily> __GetDWriteFontFamily(NSString* familyName) {
     std::vector<UniChar> unicharFamilyName(familyNameLength + 1);
     [familyName getCharacters:unicharFamilyName.data() range:NSMakeRange(0, familyNameLength)];
 
-    UINT32 fontFamilyIndex;
+    size_t fontFamilyIndex;
     BOOL fontFamilyExists;
 
     THROW_IF_FAILED(systemFontCollection->FindFamilyName(reinterpret_cast<const wchar_t*>(unicharFamilyName.data()),
@@ -500,12 +510,15 @@ static ComPtr<IDWriteFontFamily> __GetDWriteFontFamily(NSString* familyName) {
     return fontFamily;
 }
 
-// Private helper that parses a font name, and returns appropriate weight, stretch, and style values for DWrite accordingly
+/**
+ * Private helper that parses a font name, and returns appropriate weight, stretch, and style values for DWrite accordingly
+ */
 static void __InitDWriteFontPropertiesFromName(CFStringRef fontName,
                                                DWRITE_FONT_WEIGHT* weight,
                                                DWRITE_FONT_STRETCH* stretch,
                                                DWRITE_FONT_STYLE* style) {
     // Set some defaults for when weight/stretch/style are not mentioned in the name
+    // Since this is a file-private helper, assume the pointers are safe to dereference.
     *weight = DWRITE_FONT_WEIGHT_NORMAL;
     *stretch = DWRITE_FONT_STRETCH_NORMAL;
     *style = DWRITE_FONT_STYLE_NORMAL;
@@ -599,7 +612,10 @@ static void __InitDWriteFontPropertiesFromName(CFStringRef fontName,
     }
 }
 
-HRESULT _DWriteCreateFontWithName(CFStringRef name, IDWriteFont** outFont) {
+/**
+ * Helper function that creates an IDWriteFontFace object for a given font name.
+ */
+HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace) {
     // Parse the font name for font weight, stretch, and style
     // Eg: Bold, Condensed, Light, Italic
     DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_NORMAL;
@@ -620,5 +636,12 @@ HRESULT _DWriteCreateFontWithName(CFStringRef name, IDWriteFont** outFont) {
         return E_INVALIDARG;
     }
 
-    return fontFamily->GetFirstMatchingFont(weight, stretch, style, outFont);
+    ComPtr<IDWriteFont> font;
+    HRESULT hr = fontFamily->GetFirstMatchingFont(weight, stretch, style, &font);
+    if (FAILED(hr)) {
+        TraceError(TAG, L"Unable to create font for name \"%hs\"", [static_cast<NSString*>(name) UTF8String]);
+        return hr;
+    }
+
+    return font->CreateFontFace(outFontFace);
 }

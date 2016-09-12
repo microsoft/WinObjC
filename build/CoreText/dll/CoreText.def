@@ -39,10 +39,10 @@ LIBRARY CoreText
         _DWriteGetFamilyNameForFontName
 
         ; Core Text Constant additions
-        kCTFontLabelFontSize
-        kCTFontButtonFontSize
-        kCTFontSmallSystemFontSize
-        kCTFontSystemFontSize
+        kCTFontLabelFontSize DATA
+        kCTFontButtonFontSize DATA
+        kCTFontSmallSystemFontSize DATA
+        kCTFontSystemFontSize DATA
 
         ; CTFont Reference.mm
         kCTFontCopyrightNameKey DATA

@@ -212,7 +212,7 @@ CORETEXT_EXPORT CGFloat CTFontGetAscent(CTFontRef font);
 CORETEXT_EXPORT CGFloat CTFontGetDescent(CTFontRef font);
 CORETEXT_EXPORT CGFloat CTFontGetLeading(CTFontRef font) STUB_METHOD;
 CORETEXT_EXPORT unsigned int CTFontGetUnitsPerEm(CTFontRef font);
-CORETEXT_EXPORT CFIndex CTFontGetGlyphCount(CTFontRef font) STUB_METHOD;
+CORETEXT_EXPORT CFIndex CTFontGetGlyphCount(CTFontRef font);
 CORETEXT_EXPORT CGRect CTFontGetBoundingBox(CTFontRef font) STUB_METHOD;
 CORETEXT_EXPORT CGFloat CTFontGetUnderlinePosition(CTFontRef font);
 CORETEXT_EXPORT CGFloat CTFontGetUnderlineThickness(CTFontRef font);

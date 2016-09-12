@@ -78,7 +78,8 @@ NSMutableAttributedString* SixCharacterTestString() {
 
 // Exercise the CFAttrList functions
 
-TEST(NSAttributedString, InitWithData_HtmlBasic) {
+// TODO: #730 Reenable this test along with UIFontDescriptor
+DISABLED_TEST(NSAttributedString, InitWithData_HtmlBasic) {
     NSAttributedString* aStr = [[[NSAttributedString alloc] initWithData:[@"<b>OBJ</b>" dataUsingEncoding:NSUTF8StringEncoding]
                                                                  options:@{
                                                                      NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType
@@ -89,7 +90,8 @@ TEST(NSAttributedString, InitWithData_HtmlBasic) {
     assertFontTraitAt(aStr, 0, 3, UIFontDescriptorTraitBold);
 }
 
-TEST(NSAttributedString, InitWithData_HtmlFontTraitsAndBreak) {
+// TODO: #730 Reenable this test along with UIFontDescriptor
+DISABLED_TEST(NSAttributedString, InitWithData_HtmlFontTraitsAndBreak) {
     NSAttributedString* aStr =
         [[[NSAttributedString alloc] initWithData:[@"<b>AAA<i>BBB<u>C<br></u></i>AAAA</b>" dataUsingEncoding:NSUTF8StringEncoding]
                                           options:@{

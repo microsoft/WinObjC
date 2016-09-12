@@ -36,12 +36,12 @@ extern "C" {
 }
 
 #include <COMIncludes.h>
-#import <DWrite.h>
 #import <DWrite_3.h>
 #import <wrl/client.h>
 #include <COMIncludes_End.h>
 
 #import <map>
+#import <memory>
 #import <vector>
 
 static const wchar_t* g_logTag = L"CTFont";
@@ -121,14 +121,22 @@ using namespace Microsoft::WRL;
 
 struct __CTFont {
     CFRuntimeBase _base;
-    ComPtr<IDWriteFont> _dwriteFont;
-    CGFloat _size;
+    ComPtr<IDWriteFontFace> _dwriteFontFace;
+    CGFloat _pointSize;
+
+    struct DWRITE_FONT_METRICS _metrics;
+    bool _cachedMetrics; // Set to true when _metrics is init'd
 };
 
 static Boolean __CTFontEqual(CFTypeRef cf1, CFTypeRef cf2) {
     struct __CTFont* font1 = (struct __CTFont*)cf1;
     struct __CTFont* font2 = (struct __CTFont*)cf2;
-    return (font1->_size == font2->_size) && (static_cast<IDWriteFont3*>(font1->_dwriteFont.Get())->Equals(font2->_dwriteFont.Get()));
+
+    if (font1->_pointSize != font2->_pointSize) {
+        return false;
+    }
+
+    return font1->_dwriteFontFace == font2->_dwriteFontFace;
 }
 
 static CFHashCode __CTFontHash(CFTypeRef cf) {
@@ -140,19 +148,32 @@ static CFStringRef __CTFontCopyDescription(CFTypeRef cf) {
     CTFontRef font = (CTFontRef)cf;
     return CFStringCreateWithFormat(kCFAllocatorSystemDefault,
                                     NULL,
-                                    CFSTR("<CTFont %p>{font-family: %hs; font-size: %.2f}"),
+                                    CFSTR("<CTFont %p>{font-family: %@; font-size: %.2f}"),
                                     cf,
-                                    [[static_cast<NSString*>(CTFontCopyFamilyName(font)) autorelease] UTF8String],
+                                    CFAutorelease(CTFontCopyFamilyName(font)),
                                     CTFontGetSize(font));
+}
+
+static void __CTFontInit(CFTypeRef cf) {
+    CTFontRef font = (CTFontRef)cf;
+    // ComPtr needs to be manually new'd, to avoid calling Create functions to an incomplete out-pointer
+    struct __CTFont* mutableFont = const_cast<struct __CTFont*>(font);
+    new (std::addressof(mutableFont->_dwriteFontFace)) ComPtr<IDWriteFontFace>();
+}
+
+static void __CTFontDeallocate(CFTypeRef cf) {
+    CTFontRef font = (CTFontRef)cf;
+    // ComPtr needs to be manually destructed, since CFTypes do a memset(0) on dealloc
+    font->_dwriteFontFace.~ComPtr();
 }
 
 static CFTypeID __kCTFontTypeID = _kCFRuntimeNotATypeID;
 
 static const CFRuntimeClass __CTFontClass = { 0,
                                               "CTFont",
-                                              NULL, // init
+                                              __CTFontInit, // init
                                               NULL, // copy
-                                              NULL, // deallocate (ComPtr takes care of RAII)
+                                              __CTFontDeallocate, // deallocate
                                               __CTFontEqual,
                                               __CTFontHash,
                                               NULL, //
@@ -171,12 +192,17 @@ CTFontRef CTFontCreateWithName(CFStringRef name, CGFloat size, const CGAffineTra
  @Notes matrix parameter not supported
 */
 CTFontRef CTFontCreateWithNameAndOptions(CFStringRef name, CGFloat size, const CGAffineTransform* matrix, CTFontOptions options) {
-    uint32_t memSize = sizeof(struct __CTFont) - sizeof(CFRuntimeBase);
-    CTFontRef ret = (CTFontRef)_CFRuntimeCreateInstance(kCFAllocatorDefault, CTFontGetTypeID(), memSize, NULL);
+    size_t memSize = sizeof(struct __CTFont) - sizeof(CFRuntimeBase);
+    CTFontRef ret = static_cast<CTFontRef>(_CFRuntimeCreateInstance(kCFAllocatorDefault, CTFontGetTypeID(), memSize, NULL));
+    struct __CTFont* mutableRet = const_cast<struct __CTFont*>(ret);
 
-    THROW_IF_FAILED(_DWriteCreateFontWithName(name, &(((struct __CTFont*)ret)->_dwriteFont)));
+    if (FAILED(_DWriteCreateFontFaceWithName(name, &mutableRet->_dwriteFontFace))) {
+        TraceError(g_logTag, L"Failed to create font.");
+        CFRelease(ret);
+        return nullptr;
+    }
 
-    ((struct __CTFont*)ret)->_size = size > 0 ? size : kCTFontSystemFontSize;
+    mutableRet->_pointSize = size > 0 ? size : kCTFontSystemFontSize;
     return ret;
 }
 
@@ -284,7 +310,7 @@ CFTypeRef CTFontCopyAttribute(CTFontRef font, CFStringRef attribute) {
  @Status Interoperable
 */
 CGFloat CTFontGetSize(CTFontRef font) {
-    return font->_size;
+    return font->_pointSize;
 }
 
 /**
@@ -355,6 +381,9 @@ CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
     BOOL exists;
     DWRITE_INFORMATIONAL_STRING_ID informationalStringId;
 
+    ComPtr<IDWriteFontFace3> dwriteFontFace3;
+    font->_dwriteFontFace.As(&dwriteFontFace3);
+
     if (CFEqual(nameKey, kCTFontCopyrightNameKey)) {
         informationalStringId = DWRITE_INFORMATIONAL_STRING_COPYRIGHT_NOTICE;
     } else if (CFEqual(nameKey, kCTFontFamilyNameKey)) {
@@ -362,7 +391,7 @@ CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
     } else if (CFEqual(nameKey, kCTFontSubFamilyNameKey)) {
         informationalStringId = DWRITE_INFORMATIONAL_STRING_WIN32_SUBFAMILY_NAMES;
     } else if (CFEqual(nameKey, kCTFontStyleNameKey)) {
-        THROW_IF_FAILED(font->_dwriteFont->GetFaceNames(&name));
+        THROW_IF_FAILED(dwriteFontFace3->GetFaceNames(&name));
         return (__bridge CFStringRef)[_ConvertLocalizedStringToNSString(name.Get()) retain];
 
     } else if (CFEqual(nameKey, kCTFontUniqueNameKey)) {
@@ -402,7 +431,7 @@ CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
         informationalStringId = DWRITE_INFORMATIONAL_STRING_NONE;
     }
 
-    THROW_IF_FAILED(font->_dwriteFont->GetInformationalStrings(informationalStringId, &name, &exists));
+    THROW_IF_FAILED(dwriteFontFace3->GetInformationalStrings(informationalStringId, &name, &exists));
     return exists ? (__bridge CFStringRef)[_ConvertLocalizedStringToNSString(name.Get()) retain] : nullptr;
 }
 
@@ -444,9 +473,21 @@ CFArrayRef CTFontCopySupportedLanguages(CTFontRef font) {
 
 // Private helper for getting a DWRITE_FONT_METRICS struct, to avoid code duplication
 static struct DWRITE_FONT_METRICS __CTFontGetDWriteMetrics(CTFontRef font) {
-    struct DWRITE_FONT_METRICS metrics;
-    font->_dwriteFont->GetMetrics(&metrics);
-    return metrics;
+    if (!font->_cachedMetrics) {
+        font->_dwriteFontFace->GetMetrics(&const_cast<struct __CTFont*>(font)->_metrics);
+    }
+    return font->_metrics;
+}
+
+// Private helper for converting a DWRITE_FONT_METRIC unit to a CTFont API unit
+// DWRITE_FONT_METRICS measures its metrics in 'design units'
+// CTFont APIs generally return in terms of point size
+static CGFloat __CTFontScaleMetric(CTFontRef font, CGFloat metric) {
+    // design units * (pt / em) / (design units / em)
+    // = design units * (pt / em) * (em / design units)
+    // = pt * (design units / design units) * (em / em)
+    // = pt
+    return metric * font->_pointSize / CTFontGetUnitsPerEm(font);
 }
 
 /**
@@ -454,7 +495,7 @@ static struct DWRITE_FONT_METRICS __CTFontGetDWriteMetrics(CTFontRef font) {
  @Notes
 */
 CGFloat CTFontGetAscent(CTFontRef font) {
-    return __CTFontGetDWriteMetrics(font).ascent;
+    return __CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).ascent);
 }
 
 /**
@@ -462,7 +503,8 @@ CGFloat CTFontGetAscent(CTFontRef font) {
  @Notes
 */
 CGFloat CTFontGetDescent(CTFontRef font) {
-    return __CTFontGetDWriteMetrics(font).descent;
+    // DWRITE_FONT_METRICS keeps an unsigned value for descent, but CTFontGetDescent is expected to return a negative value
+    return -__CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).descent);
 }
 
 /**
@@ -483,12 +525,11 @@ unsigned int CTFontGetUnitsPerEm(CTFontRef font) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFIndex CTFontGetGlyphCount(CTFontRef font) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return font->_dwriteFontFace->GetGlyphCount();
 }
 
 /**
@@ -505,7 +546,7 @@ CGRect CTFontGetBoundingBox(CTFontRef font) {
  @Notes
 */
 CGFloat CTFontGetUnderlinePosition(CTFontRef font) {
-    return __CTFontGetDWriteMetrics(font).underlinePosition;
+    return __CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).underlinePosition);
 }
 
 /**
@@ -513,7 +554,7 @@ CGFloat CTFontGetUnderlinePosition(CTFontRef font) {
  @Notes
 */
 CGFloat CTFontGetUnderlineThickness(CTFontRef font) {
-    return __CTFontGetDWriteMetrics(font).underlineThickness;
+    return __CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).underlineThickness);
 }
 
 /**
@@ -530,7 +571,7 @@ CGFloat CTFontGetSlantAngle(CTFontRef font) {
  @Notes
 */
 CGFloat CTFontGetCapHeight(CTFontRef font) {
-    return __CTFontGetDWriteMetrics(font).capHeight;
+    return __CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).capHeight);
 }
 
 /**
@@ -538,7 +579,7 @@ CGFloat CTFontGetCapHeight(CTFontRef font) {
  @Notes
 */
 CGFloat CTFontGetXHeight(CTFontRef font) {
-    return __CTFontGetDWriteMetrics(font).xHeight;
+    return __CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).xHeight);
 }
 
 /**

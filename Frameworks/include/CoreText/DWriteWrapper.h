@@ -60,4 +60,4 @@ NSArray<NSString*>* _DWriteGetFontFamilyNames();
 NSArray<NSString*>* _DWriteGetFontNamesForFamilyName(NSString* familyName);
 CORETEXT_EXPORT NSString* _DWriteGetFamilyNameForFontName(CFStringRef fontName);
 
-HRESULT _DWriteCreateFontWithName(CFStringRef name, IDWriteFont** outFont);
+HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace);
