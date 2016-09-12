@@ -174,7 +174,7 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UICTFont, CTFontGetTypeID);
  @Status Interoperable
 */
 + (NSArray<NSString*>*)fontNamesForFamilyName:(NSString*)familyName {
-    return _DWriteGetFontNamesForFamilyName(familyName);
+    return static_cast<NSArray<NSString*>*>(_DWriteGetFontNamesForFamilyName((__bridge CFStringRef)familyName));
 }
 
 /**

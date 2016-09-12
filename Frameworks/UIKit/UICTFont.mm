@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #import "UICTFont.h"
-#import "CFFoundationInternal.h"
+#import <CFFoundationInternal.h>
 #import <BridgeHelpers.h>
 
 @implementation UICTFont

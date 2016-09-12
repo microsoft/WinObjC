@@ -77,37 +77,37 @@ static const std::map<const CFStringRef, FT_UInt> g_nameIdMap = {
     { kCTFontPostScriptCIDNameKey, 20 },
 };
 
-const CFStringRef kCTFontCopyrightNameKey = static_cast<CFStringRef>(@"kCTFontCopyrightNameKey");
-const CFStringRef kCTFontFamilyNameKey = static_cast<CFStringRef>(@"kCTFontFamilyNameKey");
-const CFStringRef kCTFontSubFamilyNameKey = static_cast<CFStringRef>(@"kCTFontSubFamilyNameKey");
-const CFStringRef kCTFontStyleNameKey = static_cast<CFStringRef>(@"kCTFontStyleNameKey");
-const CFStringRef kCTFontUniqueNameKey = static_cast<CFStringRef>(@"kCTFontUniqueNameKey");
-const CFStringRef kCTFontFullNameKey = static_cast<CFStringRef>(@"kCTFontFullNameKey");
-const CFStringRef kCTFontVersionNameKey = static_cast<CFStringRef>(@"kCTFontVersionNameKey");
-const CFStringRef kCTFontPostScriptNameKey = static_cast<CFStringRef>(@"kCTFontPostScriptNameKey");
-const CFStringRef kCTFontTrademarkNameKey = static_cast<CFStringRef>(@"kCTFontTrademarkNameKey");
-const CFStringRef kCTFontManufacturerNameKey = static_cast<CFStringRef>(@"kCTFontManufacturerNameKey");
-const CFStringRef kCTFontDesignerNameKey = static_cast<CFStringRef>(@"kCTFontDesignerNameKey");
-const CFStringRef kCTFontDescriptionNameKey = static_cast<CFStringRef>(@"kCTFontDescriptionNameKey");
-const CFStringRef kCTFontVendorURLNameKey = static_cast<CFStringRef>(@"kCTFontVendorURLNameKey");
-const CFStringRef kCTFontDesignerURLNameKey = static_cast<CFStringRef>(@"kCTFontDesignerURLNameKey");
-const CFStringRef kCTFontLicenseNameKey = static_cast<CFStringRef>(@"kCTFontLicenseNameKey");
-const CFStringRef kCTFontLicenseURLNameKey = static_cast<CFStringRef>(@"kCTFontLicenseURLNameKey");
-const CFStringRef kCTFontSampleTextNameKey = static_cast<CFStringRef>(@"kCTFontSampleTextNameKey");
-const CFStringRef kCTFontPostScriptCIDNameKey = static_cast<CFStringRef>(@"kCTFontPostScriptCIDNameKey");
-const CFStringRef kCTFontVariationAxisIdentifierKey = static_cast<CFStringRef>(@"kCTFontVariationAxisIdentifierKey");
-const CFStringRef kCTFontVariationAxisMinimumValueKey = static_cast<CFStringRef>(@"kCTFontVariationAxisMinimumValueKey");
-const CFStringRef kCTFontVariationAxisMaximumValueKey = static_cast<CFStringRef>(@"kCTFontVariationAxisMaximumValueKey");
-const CFStringRef kCTFontVariationAxisDefaultValueKey = static_cast<CFStringRef>(@"kCTFontVariationAxisDefaultValueKey");
-const CFStringRef kCTFontVariationAxisNameKey = static_cast<CFStringRef>(@"kCTFontVariationAxisNameKey");
-const CFStringRef kCTFontFeatureTypeIdentifierKey = static_cast<CFStringRef>(@"kCTFontFeatureTypeIdentifierKey");
-const CFStringRef kCTFontFeatureTypeNameKey = static_cast<CFStringRef>(@"kCTFontFeatureTypeNameKey");
-const CFStringRef kCTFontFeatureTypeExclusiveKey = static_cast<CFStringRef>(@"kCTFontFeatureTypeExclusiveKey");
-const CFStringRef kCTFontFeatureTypeSelectorsKey = static_cast<CFStringRef>(@"kCTFontFeatureTypeSelectorsKey");
-const CFStringRef kCTFontFeatureSelectorIdentifierKey = static_cast<CFStringRef>(@"kCTFontFeatureSelectorIdentifierKey");
-const CFStringRef kCTFontFeatureSelectorNameKey = static_cast<CFStringRef>(@"kCTFontFeatureSelectorNameKey");
-const CFStringRef kCTFontFeatureSelectorDefaultKey = static_cast<CFStringRef>(@"kCTFontFeatureSelectorDefaultKey");
-const CFStringRef kCTFontFeatureSelectorSettingKey = static_cast<CFStringRef>(@"kCTFontFeatureSelectorSettingKey");
+const CFStringRef kCTFontCopyrightNameKey = static_cast<CFStringRef>(@"CTFontCopyrightName");
+const CFStringRef kCTFontFamilyNameKey = static_cast<CFStringRef>(@"CTFontFamilyName");
+const CFStringRef kCTFontSubFamilyNameKey = static_cast<CFStringRef>(@"CTFontSubFamilyName");
+const CFStringRef kCTFontStyleNameKey = static_cast<CFStringRef>(@"CTFontStyleName");
+const CFStringRef kCTFontUniqueNameKey = static_cast<CFStringRef>(@"CTFontUniqueName");
+const CFStringRef kCTFontFullNameKey = static_cast<CFStringRef>(@"CTFontFullName");
+const CFStringRef kCTFontVersionNameKey = static_cast<CFStringRef>(@"CTFontVersionName");
+const CFStringRef kCTFontPostScriptNameKey = static_cast<CFStringRef>(@"CTFontPostScriptName");
+const CFStringRef kCTFontTrademarkNameKey = static_cast<CFStringRef>(@"CTFontTrademarkName");
+const CFStringRef kCTFontManufacturerNameKey = static_cast<CFStringRef>(@"CTFontManufacturerName");
+const CFStringRef kCTFontDesignerNameKey = static_cast<CFStringRef>(@"CTFontDesignerName");
+const CFStringRef kCTFontDescriptionNameKey = static_cast<CFStringRef>(@"CTFontDescriptionName");
+const CFStringRef kCTFontVendorURLNameKey = static_cast<CFStringRef>(@"CTFontVendorURLName");
+const CFStringRef kCTFontDesignerURLNameKey = static_cast<CFStringRef>(@"CTFontDesignerURLName");
+const CFStringRef kCTFontLicenseNameKey = static_cast<CFStringRef>(@"CTFontLicenseName");
+const CFStringRef kCTFontLicenseURLNameKey = static_cast<CFStringRef>(@"CTFontLicenseURLName");
+const CFStringRef kCTFontSampleTextNameKey = static_cast<CFStringRef>(@"CTFontSampleTextName");
+const CFStringRef kCTFontPostScriptCIDNameKey = static_cast<CFStringRef>(@"CTFontPostScriptCIDName");
+const CFStringRef kCTFontVariationAxisIdentifierKey = static_cast<CFStringRef>(@"CTFontVariationAxisIdentifier");
+const CFStringRef kCTFontVariationAxisMinimumValueKey = static_cast<CFStringRef>(@"CTFontVariationAxisMinimumValue");
+const CFStringRef kCTFontVariationAxisMaximumValueKey = static_cast<CFStringRef>(@"CTFontVariationAxisMaximumValue");
+const CFStringRef kCTFontVariationAxisDefaultValueKey = static_cast<CFStringRef>(@"CTFontVariationAxisDefaultValue");
+const CFStringRef kCTFontVariationAxisNameKey = static_cast<CFStringRef>(@"CTFontVariationAxisName");
+const CFStringRef kCTFontFeatureTypeIdentifierKey = static_cast<CFStringRef>(@"CTFontFeatureTypeIdentifier");
+const CFStringRef kCTFontFeatureTypeNameKey = static_cast<CFStringRef>(@"CTFontFeatureTypeName");
+const CFStringRef kCTFontFeatureTypeExclusiveKey = static_cast<CFStringRef>(@"CTFontFeatureTypeExclusive");
+const CFStringRef kCTFontFeatureTypeSelectorsKey = static_cast<CFStringRef>(@"CTFontFeatureTypeSelectors");
+const CFStringRef kCTFontFeatureSelectorIdentifierKey = static_cast<CFStringRef>(@"CTFontFeatureSelectorIdentifier");
+const CFStringRef kCTFontFeatureSelectorNameKey = static_cast<CFStringRef>(@"CTFontFeatureSelectorName");
+const CFStringRef kCTFontFeatureSelectorDefaultKey = static_cast<CFStringRef>(@"CTFontFeatureSelectorDefault");
+const CFStringRef kCTFontFeatureSelectorSettingKey = static_cast<CFStringRef>(@"CTFontFeatureSelectorSetting");
 
 /**
  All these values are fixed number in IOS no matter on iphone* or ipad*.
@@ -392,7 +392,7 @@ CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
         informationalStringId = DWRITE_INFORMATIONAL_STRING_WIN32_SUBFAMILY_NAMES;
     } else if (CFEqual(nameKey, kCTFontStyleNameKey)) {
         THROW_IF_FAILED(dwriteFontFace3->GetFaceNames(&name));
-        return (__bridge CFStringRef)[_ConvertLocalizedStringToNSString(name.Get()) retain];
+        return static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(name.Get())));
 
     } else if (CFEqual(nameKey, kCTFontUniqueNameKey)) {
         return CFStringCreateWithFormat(kCFAllocatorDefault,
@@ -432,7 +432,7 @@ CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
     }
 
     THROW_IF_FAILED(dwriteFontFace3->GetInformationalStrings(informationalStringId, &name, &exists));
-    return exists ? (__bridge CFStringRef)[_ConvertLocalizedStringToNSString(name.Get()) retain] : nullptr;
+    return exists ? static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(name.Get()))) : nullptr;
 }
 
 /**

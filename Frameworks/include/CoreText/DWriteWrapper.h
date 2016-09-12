@@ -53,11 +53,11 @@ struct _DWriteGlyphRunDetails {
     std::vector<_DWriteGlyphRunDescription> _glyphRunDescriptions;
 };
 
-NSString* _ConvertLocalizedStringToNSString(IDWriteLocalizedStrings* localizedString);
+CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedString);
 NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRect frameSize);
 
-NSArray<NSString*>* _DWriteGetFontFamilyNames();
-NSArray<NSString*>* _DWriteGetFontNamesForFamilyName(NSString* familyName);
-CORETEXT_EXPORT NSString* _DWriteGetFamilyNameForFontName(CFStringRef fontName);
+CFArrayRef _DWriteGetFontFamilyNames();
+CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName);
+CORETEXT_EXPORT CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName);
 
 HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace);
