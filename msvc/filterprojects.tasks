@@ -5,6 +5,7 @@
     <ParameterGroup>
       <Projects ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
       <TargetName ParameterType="System.String" Required="true" />
+      <WinobjcSDKRoot ParameterType="System.String" Required="true" />
       <FilteredProjects ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true" />
     </ParameterGroup>
     <Task>
@@ -17,7 +18,7 @@
           var filteredProjects = new List<ITaskItem>();
           foreach (var projItem in Projects) {
             var projectPath = Path.GetFullPath(projItem.ItemSpec);
-            var project = ProjectCollection.GlobalProjectCollection.GetLoadedProjects(projectPath).FirstOrDefault() ?? new Project(projectPath);
+            var project = ProjectCollection.GlobalProjectCollection.GetLoadedProjects(projectPath).FirstOrDefault() ?? new Project(projectPath, new Dictionary<string, string>{{"WINOBJC_SDK_ROOT", WinobjcSDKRoot}}, null);
             if (project.Targets.ContainsKey(TargetName)) {
               filteredProjects.Add(projItem);
             }
