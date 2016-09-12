@@ -121,15 +121,27 @@ TEST(CTLine, CTLineCreateWithAttributedString) {
     // Glyphs for h, e, and l respectively
     const CGGlyph* helGlyphs = CTRunGetGlyphsPtr(static_cast<CTRunRef>(CFArrayGetValueAtIndex(runs, 0)));
     ASSERT_NE(nullptr, helGlyphs);
-    EXPECT_EQ(75, *helGlyphs);
-    EXPECT_EQ(72, *(++helGlyphs));
-    EXPECT_EQ(79, *(++helGlyphs));
+
+    std::vector<WORD> characters(4);
+    [@"hel" getCharacters:characters.data()];
+    std::vector<CGGlyph> actualGlyphs(4);
+    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Times New Roman" size:40];
+    UIFont* font = [UIFont fontWithDescriptor:fontDescriptor size:40];
+    CTFontGetGlyphsForCharacters(static_cast<CTFontRef>(font), characters.data(), actualGlyphs.data(), 3);
+
+    EXPECT_EQ(actualGlyphs[0], *helGlyphs);
+    EXPECT_EQ(actualGlyphs[1], *(++helGlyphs));
+    EXPECT_EQ(actualGlyphs[2], *(++helGlyphs));
 
     // Glyphs for l and o respectively
-    helGlyphs = CTRunGetGlyphsPtr(static_cast<CTRunRef>(CFArrayGetValueAtIndex(runs, 1)));
-    ASSERT_NE(nullptr, helGlyphs);
-    EXPECT_EQ(79, *helGlyphs);
-    EXPECT_EQ(82, *(++helGlyphs));
+    const CGGlyph* loGlyphs = CTRunGetGlyphsPtr(static_cast<CTRunRef>(CFArrayGetValueAtIndex(runs, 1)));
+    ASSERT_NE(nullptr, loGlyphs);
+
+    [@"lo" getCharacters:characters.data()];
+    CTFontGetGlyphsForCharacters(static_cast<CTFontRef>([UIFont systemFontOfSize:20]), characters.data(), actualGlyphs.data(), 2);
+
+    EXPECT_EQ(actualGlyphs[0], *loGlyphs);
+    EXPECT_EQ(actualGlyphs[1], *(++loGlyphs));
 
     CFRelease(runs);
     CFRelease(line);

@@ -24,9 +24,6 @@
 
 #include <algorithm>
 
-static IWLazyClassLookup _LazyUIFont("UIFont");
-static const float c_default_system_font_size = 15.0f;
-
 static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef line,
                                                                     CTLineTruncationType truncationType,
                                                                     double widthToExtract);
@@ -44,7 +41,8 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef li
     ret->_ascent = _ascent;
     ret->_descent = _descent;
     ret->_leading = _leading;
-    ret->_runs = [[NSMutableArray alloc] initWithArray:_runs copyItems:YES];
+    ret->_glyphCount = _glyphCount;
+    ret->_runs = [_runs copy];
 
     return ret;
 }
@@ -241,7 +239,7 @@ void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
 */
 CFIndex CTLineGetGlyphCount(CTLineRef lineRef) {
     _CTLine* line = (_CTLine*)lineRef;
-    return line ? (line->_strRange).length : 0;
+    return line ? line->_glyphCount : 0;
 }
 
 /**

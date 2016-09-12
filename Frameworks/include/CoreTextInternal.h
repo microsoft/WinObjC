@@ -72,6 +72,8 @@ inline void _SafeRelease(T** p) {
     CGFloat _relativeYOffset;
     CGFloat _width;
     StrongId<NSMutableArray<_CTRun*>> _runs;
+    CGFloat _width;
+    CFIndex _glyphCount;
 
     // TODO::
     // Do we need these anymore?
