@@ -54,22 +54,12 @@ NSString* const NSUnionOfObjectsKeyValueOperator = @"NSUnionOfObjectsKeyValueOpe
 NSString* const NSUnionOfSetsKeyValueOperator = @"NSUnionOfSetsKeyValueOperator";
 
 NSString* _NSKVCSplitKeypath(NSString* keyPath, NSString* __autoreleasing* pRemainder) {
-    NSData* utf8String = [keyPath dataUsingEncoding:NSUTF8StringEncoding];
-    const char* buffer = static_cast<const char*>(utf8String.bytes);
-    NSInteger length = utf8String.length;
-    int i = 0;
-    UChar32 currentCharacter = 0;
-    while (i < length) {
-        U8_NEXT(buffer, i, length, currentCharacter);
-        if (currentCharacter == '.') {
-            *pRemainder = [[[NSString alloc] initWithBytesNoCopy:const_cast<char*>(buffer + i)
-                                                          length:length - i
-                                                        encoding:NSUTF8StringEncoding
-                                                    freeWhenDone:NO] autorelease];
-            return
-                [[[NSString alloc] initWithBytesNoCopy:const_cast<char*>(buffer) length:i - 1 encoding:NSUTF8StringEncoding freeWhenDone:NO]
-                    autorelease];
-        }
+    static woc::unique_cf<CFCharacterSetRef> dot{CFCharacterSetCreateWithCharactersInRange(nullptr, (CFRange){'.', 1})};
+    CFRange result;
+    CFIndex length = CFStringGetLength((CFStringRef)keyPath);
+    if (length > 0 && CFStringFindCharacterFromSet((CFStringRef)keyPath, dot.get(), (CFRange){0, length}, 0, &result)) {
+        *pRemainder = [(NSString*)CFStringCreateWithSubstring(nullptr, (CFStringRef)keyPath, (CFRange){result.location + 1, length - (result.location + 1)}) autorelease];
+        return [(NSString*)CFStringCreateWithSubstring(nullptr, (CFStringRef)keyPath, (CFRange){0, result.location}) autorelease];
     }
     *pRemainder = nil;
     return keyPath;
