@@ -525,6 +525,7 @@ public:
 //
 extern void ProjectionWUCCoreDispatcherSanity();
 extern void ProjectionHStringTest();
+extern void ProjectionCreateWithTest();
 
 class ProjectionTest {
 public:
@@ -548,6 +549,10 @@ public:
 
     TEST_METHOD(ProjectionTest_HStringTest) {
         ProjectionHStringTest();
+    }
+
+    TEST_METHOD(ProjectionTest_CreateWithTest) {
+        ProjectionCreateWithTest();
     }
 
 }; /* class ProjectionTest */
