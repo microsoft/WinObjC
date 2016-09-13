@@ -173,6 +173,7 @@ typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINo
 
 WINRT_EXPORT
 @interface WUXINotifyCollectionChangedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WUXINotifyCollectionChangedAction action;
 @property (readonly) RTObject<WUXIIBindableVector>* newItems;
 @property (readonly) int newStartingIndex;

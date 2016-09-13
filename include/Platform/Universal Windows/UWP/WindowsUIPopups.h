@@ -77,6 +77,7 @@ WINRT_EXPORT
 @interface WUPMessageDialog : RTObject
 + (WUPMessageDialog*)make:(NSString*)content ACTIVATOR;
 + (WUPMessageDialog*)makeWithTitle:(NSString*)content title:(NSString*)title ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* title;
 @property WUPMessageDialogOptions options;
 @property unsigned int defaultCommandIndex;
@@ -98,6 +99,7 @@ WINRT_EXPORT
 + (WUPUICommand*)makeWithHandler:(NSString*)label action:(WUPUICommandInvokedHandler)action ACTIVATOR;
 + (WUPUICommand*)makeWithHandlerAndId:(NSString*)label action:(WUPUICommandInvokedHandler)action commandId:(RTObject*)commandId ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* label;
 @property (copy) WUPUICommandInvokedHandler invoked;
 @property (retain) RTObject* id;
@@ -112,6 +114,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUPUICommandSeparator : RTObject <WUPIUICommand>
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* label;
 @property (copy) WUPUICommandInvokedHandler invoked;
 @property (retain) RTObject* id;
@@ -126,6 +129,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUPPopupMenu : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSMutableArray* /* RTObject<WUPIUICommand>* */ commands;
 - (void)showAsync:(WFPoint*)invocationPoint success:(void (^)(RTObject<WUPIUICommand>*))success failure:(void (^)(NSError*))failure;
 - (void)showAsyncWithRect:(WFRect*)selection success:(void (^)(RTObject<WUPIUICommand>*))success failure:(void (^)(NSError*))failure;

@@ -67,6 +67,7 @@ typedef unsigned WAAAppServiceResponseStatus;
 
 WINRT_EXPORT
 @interface WAAAppServiceRequest : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFCValueSet* message;
 - (void)sendResponseAsync:(WFCValueSet*)message success:(void (^)(WAAAppServiceResponseStatus))success failure:(void (^)(NSError*))failure;
 @end
@@ -79,6 +80,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppServiceDeferral : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)complete;
 @end
 
@@ -90,6 +92,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppServiceResponse : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFCValueSet* message;
 @property (readonly) WAAAppServiceResponseStatus status;
 @end
@@ -113,6 +116,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAAppServiceConnection : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* packageFamilyName;
 @property (retain) NSString* appServiceName;
 - (EventRegistrationToken)addRequestReceivedEvent:(void (^)(WAAAppServiceConnection*, WAAAppServiceRequestReceivedEventArgs*))del;
@@ -132,6 +136,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppServiceRequestReceivedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WAAAppServiceRequest* request;
 - (WAAAppServiceDeferral*)getDeferral;
 @end
@@ -144,6 +149,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppServiceClosedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WAAAppServiceClosedStatus status;
 @end
 
@@ -155,6 +161,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppServiceTriggerDetails : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WAAAppServiceConnection* appServiceConnection;
 @property (readonly) NSString* callerPackageFamilyName;
 @property (readonly) NSString* name;

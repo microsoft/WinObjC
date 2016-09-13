@@ -100,6 +100,7 @@ WINRT_EXPORT
 @interface WAWWalletBarcode : RTObject
 + (WAWWalletBarcode*)makeWalletBarcode:(WAWWalletBarcodeSymbology)symbology value:(NSString*)value ACTIVATOR;
 + (WAWWalletBarcode*)makeCustomWalletBarcode:(RTObject<WSSIRandomAccessStreamReference>*)streamToBarcodeImage ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WAWWalletBarcodeSymbology symbology;
 @property (readonly) NSString* value;
 - (void)getImageAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamReference>*))success failure:(void (^)(NSError*))failure;
@@ -114,6 +115,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAWWalletTransaction : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) id /* WFDateTime* */ transactionDate;
 @property BOOL isLaunchable;
 @property BOOL ignoreTimeOfDay;
@@ -131,6 +133,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAWWalletRelevantLocation : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) WDGBasicGeoposition* position;
 @property (retain) NSString* displayMessage;
 @end
@@ -144,6 +147,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAWWalletItemCustomProperty : RTObject
 + (WAWWalletItemCustomProperty*)makeWalletItemCustomProperty:(NSString*)name value:(NSString*)value ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* value;
 @property WAWWalletSummaryViewPosition summaryViewPosition;
 @property (retain) NSString* name;
@@ -160,6 +164,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAWWalletVerb : RTObject
 + (WAWWalletVerb*)makeWalletVerb:(NSString*)name ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* name;
 @end
 
@@ -172,6 +177,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAWWalletItem : RTObject
 + (WAWWalletItem*)makeWalletItem:(WAWWalletItemKind)kind displayName:(NSString*)displayName ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* displayName;
 @property (retain) NSString* displayMessage;
 @property (retain) WUColor* bodyFontColor;
@@ -211,6 +217,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAWWalletItemStore : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (RTObject<WFIAsyncAction>*)addAsync:(NSString*)id item:(WAWWalletItem*)item;
 - (RTObject<WFIAsyncAction>*)clearAsync;
 - (void)getWalletItemAsync:(NSString*)id success:(void (^)(WAWWalletItem*))success failure:(void (^)(NSError*))failure;

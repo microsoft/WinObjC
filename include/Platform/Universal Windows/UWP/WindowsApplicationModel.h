@@ -83,6 +83,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAppDisplayInfo : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* Description;
 @property (readonly) NSString* displayName;
 - (WSSRandomAccessStreamReference*)getLogo:(WFSize*)size;
@@ -96,6 +97,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAppInfo : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* appUserModelId;
 @property (readonly) WAAppDisplayInfo* displayInfo;
 @property (readonly) NSString* id;
@@ -110,6 +112,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASuspendingEventArgs : RTObject <WAISuspendingEventArgs>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WASuspendingOperation* suspendingOperation;
 @end
 
@@ -121,6 +124,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASuspendingDeferral : RTObject <WAISuspendingDeferral>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)complete;
 @end
 
@@ -132,6 +136,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASuspendingOperation : RTObject <WAISuspendingOperation>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFDateTime* deadline;
 - (WASuspendingDeferral*)getDeferral;
 @end
@@ -144,6 +149,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAPackageStatus : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL dataOffline;
 @property (readonly) BOOL dependencyIssue;
 @property (readonly) BOOL deploymentInProgress;
@@ -166,6 +172,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAPackageId : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WSProcessorArchitecture architecture;
 @property (readonly) NSString* familyName;
 @property (readonly) NSString* fullName;
@@ -186,6 +193,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAPackage : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* WAPackage* */ dependencies;
 @property (readonly) WAPackageId* id;
 @property (readonly) WSStorageFolder* installedLocation;

@@ -107,6 +107,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDDeploymentResult : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFGUID* activityId;
 @property (readonly) NSString* errorText;
 @property (readonly) HRESULT extendedErrorCode;
@@ -120,6 +121,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDPackageUserInformation : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMDPackageInstallState installState;
 @property (readonly) NSString* userSecurityId;
 @end
@@ -132,6 +134,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDPackageVolume : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL isOffline;
 @property (readonly) BOOL isSystemVolume;
 @property (readonly) NSString* mountPoint;
@@ -176,6 +179,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDPackageManager : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)addPackageAsync:(WFUri*)packageUri
   dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris
       deploymentOptions:(WMDDeploymentOptions)deploymentOptions

@@ -77,6 +77,7 @@ typedef unsigned WMDDialDeviceDisplayStatus;
 
 WINRT_EXPORT
 @interface WMDDialAppStateDetails : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* fullXml;
 @property (readonly) WMDDialAppState state;
 @end
@@ -89,6 +90,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDDialApp : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* appName;
 - (void)requestLaunchAsync:(NSString*)appArgument success:(void (^)(WMDDialAppLaunchResult))success failure:(void (^)(NSError*))failure;
 - (void)stopAsyncWithSuccess:(void (^)(WMDDialAppStopResult))success failure:(void (^)(NSError*))failure;
@@ -106,6 +108,7 @@ WINRT_EXPORT
 + (NSString*)getDeviceSelector:(NSString*)appName;
 + (void)fromIdAsync:(NSString*)value success:(void (^)(WMDDialDevice*))success failure:(void (^)(NSError*))failure;
 + (void)deviceInfoSupportsDialAsync:(WDEDeviceInformation*)device success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* id;
 - (WMDDialApp*)getDialApp:(NSString*)appName;
 @end
@@ -118,6 +121,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDDialDeviceSelectedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMDDialDevice* selectedDialDevice;
 @end
 
@@ -129,6 +133,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDDialDisconnectButtonClickedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMDDialDevice* device;
 @end
 
@@ -140,6 +145,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDDialDevicePickerFilter : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSMutableArray* /* NSString * */ supportedAppNames;
 @end
 
@@ -152,6 +158,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDDialDevicePicker : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDEDevicePickerAppearance* appearance;
 @property (readonly) WMDDialDevicePickerFilter* filter;
 - (EventRegistrationToken)addDialDevicePickerDismissedEvent:(void (^)(WMDDialDevicePicker*, RTObject*))del;

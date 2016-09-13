@@ -51,6 +51,7 @@ typedef unsigned WMDCFrameFlashMode;
 
 WINRT_EXPORT
 @interface WMDCCameraIntrinsics : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFNVector2* focalLength;
 @property (readonly) unsigned int imageHeight;
 @property (readonly) unsigned int imageWidth;
@@ -71,6 +72,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCVariablePhotoSequenceController : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property float photosPerSecondLimit;
 @property (readonly) NSMutableArray* /* WMDCFrameController* */ desiredFrameControllers;
 @property (readonly) WMDCFrameControlCapabilities* frameCapabilities;
@@ -88,6 +90,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameExposureCapabilities : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFTimeSpan* max;
 @property (readonly) WFTimeSpan* min;
 @property (readonly) WFTimeSpan* step;
@@ -102,6 +105,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameExposureCompensationCapabilities : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) float max;
 @property (readonly) float min;
 @property (readonly) float step;
@@ -116,6 +120,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameIsoSpeedCapabilities : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int max;
 @property (readonly) unsigned int min;
 @property (readonly) unsigned int step;
@@ -130,6 +135,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameFocusCapabilities : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int max;
 @property (readonly) unsigned int min;
 @property (readonly) unsigned int step;
@@ -144,6 +150,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameFlashCapabilities : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL powerSupported;
 @property (readonly) BOOL redEyeReductionSupported;
 @property (readonly) BOOL supported;
@@ -157,6 +164,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameControlCapabilities : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMDCFrameExposureCapabilities* exposure;
 @property (readonly) WMDCFrameExposureCompensationCapabilities* exposureCompensation;
 @property (readonly) WMDCFrameFocusCapabilities* focus;
@@ -173,6 +181,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameExposureControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) id /* WFTimeSpan* */ value;
 @property BOOL Auto;
 @end
@@ -185,6 +194,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameExposureCompensationControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) id /* float */ value;
 @end
 
@@ -196,6 +206,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameIsoSpeedControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) id /* unsigned int */ value;
 @property BOOL Auto;
 @end
@@ -208,6 +219,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameFocusControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) id /* unsigned int */ value;
 @end
 
@@ -219,6 +231,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameFlashControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property BOOL redEyeReduction;
 @property float powerPercent;
 @property WMDCFrameFlashMode mode;
@@ -234,6 +247,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDCFrameController : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) id /* BOOL */ photoConfirmationEnabled;
 @property (readonly) WMDCFrameExposureCompensationControl* exposureCompensationControl;
 @property (readonly) WMDCFrameExposureControl* exposureControl;

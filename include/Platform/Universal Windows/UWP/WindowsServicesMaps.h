@@ -124,6 +124,7 @@ typedef unsigned WSMMapRouteFinderStatus;
 
 WINRT_EXPORT
 @interface WSMMapAddress : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* buildingFloor;
 @property (readonly) NSString* buildingName;
 @property (readonly) NSString* buildingRoom;
@@ -150,6 +151,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSMMapLocation : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WSMMapAddress* address;
 @property (readonly) NSString* Description;
 @property (readonly) NSString* displayName;
@@ -164,6 +166,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSMMapRouteManeuver : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* exitNumber;
 @property (readonly) NSString* instructionText;
 @property (readonly) WSMMapRouteManeuverKind kind;
@@ -183,6 +186,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSMMapRouteLeg : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDGGeoboundingBox* boundingBox;
 @property (readonly) WFTimeSpan* estimatedDuration;
 @property (readonly) double lengthInMeters;
@@ -198,6 +202,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSMMapRoute : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDGGeoboundingBox* boundingBox;
 @property (readonly) WFTimeSpan* estimatedDuration;
 @property (readonly) BOOL isTrafficBased;
@@ -216,6 +221,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSMMapLocationFinderResult : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* WSMMapLocation* */ locations;
 @property (readonly) WSMMapLocationFinderStatus status;
 @end
@@ -228,6 +234,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSMMapRouteFinderResult : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WSMMapRoute* route;
 @property (readonly) WSMMapRouteFinderStatus status;
 @property (readonly) NSArray* /* WSMMapRoute* */ alternateRoutes;
@@ -242,6 +249,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSMMapRouteDrivingOptions : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WSMMapRouteRestrictions routeRestrictions;
 @property WSMMapRouteOptimization routeOptimization;
 @property unsigned int maxAlternateRouteCount;

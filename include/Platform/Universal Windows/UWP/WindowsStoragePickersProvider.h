@@ -62,6 +62,7 @@ typedef unsigned WSPPSetFileNameResult;
 
 WINRT_EXPORT
 @interface WSPPFileRemovedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* id;
 @end
 
@@ -73,6 +74,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPPFileOpenPickerUI : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* title;
 @property (readonly) NSArray* /* NSString * */ allowedFileTypes;
 @property (readonly) WSPPFileSelectionMode selectionMode;
@@ -95,6 +97,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPPPickerClosingEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WSPPPickerClosingOperation* closingOperation;
 @property (readonly) BOOL isCanceled;
 @end
@@ -107,6 +110,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPPPickerClosingOperation : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFDateTime* deadline;
 - (WSPPPickerClosingDeferral*)getDeferral;
 @end
@@ -119,6 +123,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPPPickerClosingDeferral : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)complete;
 @end
 
@@ -130,6 +135,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPPFileSavePickerUI : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* title;
 @property (readonly) NSArray* /* NSString * */ allowedFileTypes;
 @property (readonly) NSString* fileName;
@@ -149,6 +155,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPPTargetFileRequestedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WSPPTargetFileRequest* request;
 @end
 
@@ -160,6 +167,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPPTargetFileRequest : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) RTObject<WSIStorageFile>* targetFile;
 - (WSPPTargetFileRequestDeferral*)getDeferral;
 @end
@@ -172,6 +180,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPPTargetFileRequestDeferral : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)complete;
 @end
 

@@ -56,6 +56,7 @@
 
 WINRT_EXPORT
 @interface WWAResourceCollection : RTObject <WWSISyndicationNode>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* NSString * */ accepts;
 @property (readonly) NSArray* /* WWSSyndicationCategory* */ categories;
 @property (readonly) RTObject<WWSISyndicationText>* title;
@@ -78,6 +79,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWAWorkspace : RTObject <WWSISyndicationNode>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* WWAResourceCollection* */ collections;
 @property (readonly) RTObject<WWSISyndicationText>* title;
 @property (retain) NSString* nodeValue;
@@ -98,6 +100,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWAServiceDocument : RTObject <WWSISyndicationNode>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* WWAWorkspace* */ workspaces;
 @property (retain) NSString* nodeValue;
 @property (retain) NSString* nodeNamespace;
@@ -138,6 +141,7 @@ WINRT_EXPORT
 @interface WWAAtomPubClient : RTObject <WWSISyndicationClient>
 + (WWAAtomPubClient*)makeAtomPubClientWithCredentials:(WSCPasswordCredential*)serverCredential ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property unsigned int timeout;
 @property (retain) WSCPasswordCredential* serverCredential;
 @property (retain) WSCPasswordCredential* proxyCredential;

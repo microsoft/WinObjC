@@ -79,6 +79,7 @@ typedef void (^WSLicenseChangedEventHandler)();
 
 WINRT_EXPORT
 @interface WSLicenseInformation : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFDateTime* expirationDate;
 @property (readonly) BOOL isActive;
 @property (readonly) BOOL isTrial;
@@ -95,6 +96,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSListingInformation : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int ageRating;
 @property (readonly) NSString* currentMarket;
 @property (readonly) NSString* Description;
@@ -111,6 +113,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPurchaseResults : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* offerId;
 @property (readonly) NSString* receiptXml;
 @property (readonly) WSProductPurchaseStatus status;
@@ -127,6 +130,7 @@ WINRT_EXPORT
 @interface WSProductPurchaseDisplayProperties : RTObject
 + (WSProductPurchaseDisplayProperties*)makeProductPurchaseDisplayProperties:(NSString*)name ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* name;
 @property (retain) WFUri* image;
 @property (retain) NSString* Description;
@@ -140,6 +144,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSUnfulfilledConsumable : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* offerId;
 @property (readonly) NSString* productId;
 @property (readonly) WFGUID* transactionId;
@@ -153,6 +158,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSProductLicense : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFDateTime* expirationDate;
 @property (readonly) BOOL isActive;
 @property (readonly) NSString* productId;
@@ -167,6 +173,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSProductListing : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* formattedPrice;
 @property (readonly) NSString* name;
 @property (readonly) NSString* productId;

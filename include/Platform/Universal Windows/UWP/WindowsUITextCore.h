@@ -161,6 +161,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextTextRequest : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* text;
 @property (readonly) BOOL isCanceled;
 @property (readonly) WUTCCoreTextRange* range;
@@ -175,6 +176,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextSelectionRequest : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) WUTCCoreTextRange* selection;
 @property (readonly) BOOL isCanceled;
 - (WFDeferral*)getDeferral;
@@ -188,6 +190,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextLayoutBounds : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) WFRect* textBounds;
 @property (retain) WFRect* controlBounds;
 @end
@@ -200,6 +203,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextLayoutRequest : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL isCanceled;
 @property (readonly) WUTCCoreTextLayoutBounds* layoutBounds;
 @property (readonly) WUTCCoreTextRange* range;
@@ -214,6 +218,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextCompositionSegment : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* preconversionString;
 @property (readonly) WUTCCoreTextRange* range;
 @end
@@ -226,6 +231,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextEditContext : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* name;
 @property BOOL isReadOnly;
 @property WUTCCoreTextInputScope inputScope;
@@ -263,6 +269,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextTextRequestedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WUTCCoreTextTextRequest* request;
 @end
 
@@ -274,6 +281,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextSelectionRequestedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WUTCCoreTextSelectionRequest* request;
 @end
 
@@ -285,6 +293,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextLayoutRequestedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WUTCCoreTextLayoutRequest* request;
 @end
 
@@ -296,6 +305,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextTextUpdatingEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WUTCCoreTextTextUpdatingResult result;
 @property (readonly) WGLanguage* inputLanguage;
 @property (readonly) BOOL isCanceled;
@@ -313,6 +323,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextSelectionUpdatingEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WUTCCoreTextSelectionUpdatingResult result;
 @property (readonly) BOOL isCanceled;
 @property (readonly) WUTCCoreTextRange* selection;
@@ -327,6 +338,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextFormatUpdatingEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WUTCCoreTextFormatUpdatingResult result;
 @property (readonly) id /* WUVUIElementType */ backgroundColor;
 @property (readonly) BOOL isCanceled;
@@ -346,6 +358,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextCompositionStartedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL isCanceled;
 - (WFDeferral*)getDeferral;
 @end
@@ -358,6 +371,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextCompositionCompletedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* WUTCCoreTextCompositionSegment* */ compositionSegments;
 @property (readonly) BOOL isCanceled;
 - (WFDeferral*)getDeferral;
@@ -372,6 +386,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUTCCoreTextServicesManager : RTObject
 + (WUTCCoreTextServicesManager*)getForCurrentView;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WGLanguage* inputLanguage;
 - (EventRegistrationToken)addInputLanguageChangedEvent:(void (^)(WUTCCoreTextServicesManager*, RTObject*))del;
 - (void)removeInputLanguageChangedEvent:(EventRegistrationToken)tok;

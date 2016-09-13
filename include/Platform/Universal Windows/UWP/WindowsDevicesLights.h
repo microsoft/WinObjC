@@ -49,6 +49,7 @@ WINRT_EXPORT
 + (NSString*)getDeviceSelector;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDLLamp*))success failure:(void (^)(NSError*))failure;
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDLLamp*))success failure:(void (^)(NSError*))failure;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property BOOL isEnabled;
 @property (retain) WUColor* color;
 @property float brightnessLevel;
@@ -67,6 +68,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDLLampAvailabilityChangedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL isAvailable;
 @end
 

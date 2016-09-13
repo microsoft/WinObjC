@@ -324,6 +324,7 @@ typedef unsigned WSLaunchUriStatus;
 
 WINRT_EXPORT
 @interface WSAppMemoryUsageLimitChangingEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) uint64_t newLimit;
 @property (readonly) uint64_t oldLimit;
 @end
@@ -336,6 +337,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAppMemoryReport : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) uint64_t peakPrivateCommitUsage;
 @property (readonly) uint64_t privateCommitUsage;
 @property (readonly) uint64_t totalCommitLimit;
@@ -350,6 +352,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSProcessMemoryReport : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) uint64_t privateWorkingSetUsage;
 @property (readonly) uint64_t totalWorkingSetUsage;
 @end
@@ -383,6 +386,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSProtocolForResultsOperation : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)reportCompleted:(WFCValueSet*)data;
 @end
 
@@ -394,6 +398,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSUserWatcher : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WSUserWatcherStatus status;
 - (EventRegistrationToken)addAddedEvent:(void (^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
 - (void)removeAddedEvent:(EventRegistrationToken)tok;
@@ -429,6 +434,7 @@ WINRT_EXPORT
                             success:(void (^)(NSArray* /* WSUser* */))success
                             failure:(void (^)(NSError*))failure;
 + (WSUser*)getFromId:(NSString*)nonRoamableId;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WSUserAuthenticationStatus authenticationStatus;
 @property (readonly) NSString* nonRoamableId;
 @property (readonly) WSUserType type;
@@ -449,6 +455,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSUserChangedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WSUser* user;
 @end
 
@@ -460,6 +467,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSUserAuthenticationStatusChangingEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WSUserAuthenticationStatus currentStatus;
 @property (readonly) WSUserAuthenticationStatus newStatus;
 @property (readonly) WSUser* user;
@@ -474,6 +482,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSUserAuthenticationStatusChangeDeferral : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)complete;
 @end
 
@@ -504,6 +513,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSLaunchUriResult : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFCValueSet* result;
 @property (readonly) WSLaunchUriStatus status;
 @end
@@ -516,6 +526,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSLauncherUIOptions : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) id /* WFRect* */ selectionRect;
 @property WUPPlacement preferredPlacement;
 @property (retain) id /* WFPoint* */ invocationPoint;
@@ -530,6 +541,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSLauncherOptions : RTObject <WSILauncherViewOptions>
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property BOOL treatAsUntrusted;
 @property (retain) NSString* preferredApplicationPackageFamilyName;
 @property (retain) NSString* preferredApplicationDisplayName;
@@ -551,6 +563,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSFolderLauncherOptions : RTObject <WSILauncherViewOptions>
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSMutableArray* /* RTObject<WSIStorageItem>* */ itemsToSelect;
 @property WUVViewSizePreference desiredRemainingView;
 @end

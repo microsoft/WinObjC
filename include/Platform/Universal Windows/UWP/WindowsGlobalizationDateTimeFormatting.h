@@ -125,6 +125,7 @@ WINRT_EXPORT
                                              geographicRegion:(NSString*)geographicRegion
                                                      calendar:(NSString*)calendar
                                                         clock:(NSString*)clock ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* numeralSystem;
 @property (readonly) NSString* clock;
 @property (readonly) NSString* geographicRegion;

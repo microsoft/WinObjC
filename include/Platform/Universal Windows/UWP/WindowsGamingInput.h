@@ -99,6 +99,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGIHeadset : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* captureDeviceId;
 @property (readonly) NSString* renderDeviceId;
 @end
@@ -111,6 +112,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGIGamepad : RTObject <WGIIGameController>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WGIHeadset* headset;
 @property (readonly) BOOL isWireless;
 @property (readonly) WSUser* user;

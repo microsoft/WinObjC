@@ -250,6 +250,7 @@ typedef unsigned WMDMediaCaptureOptimization;
 
 WINRT_EXPORT
 @interface WMDDefaultAudioCaptureDeviceChangedEventArgs : RTObject <WMDIDefaultAudioDeviceChangedEventArgs>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* id;
 @property (readonly) WMDAudioDeviceRole role;
 @end
@@ -262,6 +263,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDDefaultAudioRenderDeviceChangedEventArgs : RTObject <WMDIDefaultAudioDeviceChangedEventArgs>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* id;
 @property (readonly) WMDAudioDeviceRole role;
 @end
@@ -293,6 +295,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDAudioDeviceController : RTObject <WMDIMediaDeviceController>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property float volumePercent;
 @property BOOL muted;
 - (NSArray* /* RTObject<WMMIMediaEncodingProperties>* */)getAvailableMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
@@ -309,6 +312,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDVideoDeviceController : RTObject <WMDIMediaDeviceController>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WMDCaptureUse primaryUse;
 @property (readonly) WMDIsoSpeedControl* isoSpeedControl;
 @property (readonly) WMDFlashControl* flashControl;
@@ -358,6 +362,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDSceneModeControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* WMDCaptureSceneMode */ supportedModes;
 @property (readonly) WMDCaptureSceneMode value;
 - (RTObject<WFIAsyncAction>*)setValueAsync:(WMDCaptureSceneMode)sceneMode;
@@ -371,6 +376,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDTorchControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property float powerPercent;
 @property BOOL enabled;
 @property (readonly) BOOL powerSupported;
@@ -385,6 +391,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDFlashControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property BOOL redEyeReduction;
 @property float powerPercent;
 @property BOOL enabled;
@@ -404,6 +411,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDExposureCompensationControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) float max;
 @property (readonly) float min;
 @property (readonly) float step;
@@ -420,6 +428,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDIsoSpeedControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMDIsoSpeedPreset preset;
 @property (readonly) BOOL supported;
 @property (readonly) NSArray* /* WMDIsoSpeedPreset */ supportedPresets;
@@ -441,6 +450,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDWhiteBalanceControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int max;
 @property (readonly) unsigned int min;
 @property (readonly) WMDColorTemperaturePreset preset;
@@ -459,6 +469,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDExposureControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL Auto;
 @property (readonly) WFTimeSpan* max;
 @property (readonly) WFTimeSpan* min;
@@ -478,6 +489,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDZoomSettings : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property float value;
 @property WMDZoomTransitionMode mode;
 @end
@@ -490,6 +502,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDZoomControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property float value;
 @property (readonly) float max;
 @property (readonly) float min;
@@ -509,6 +522,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDFocusSettings : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property BOOL waitForFocus;
 @property (retain) id /* unsigned int */ value;
 @property WMDFocusMode mode;
@@ -525,6 +539,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDFocusControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int max;
 @property (readonly) unsigned int min;
 @property (readonly) WMDFocusPreset preset;
@@ -557,6 +572,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDRegionOfInterest : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) WFRect* bounds;
 @property BOOL autoWhiteBalanceEnabled;
 @property BOOL autoFocusEnabled;
@@ -574,6 +590,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDRegionsOfInterestControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL autoExposureSupported;
 @property (readonly) BOOL autoFocusSupported;
 @property (readonly) BOOL autoWhiteBalanceSupported;
@@ -591,6 +608,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDExposurePriorityVideoControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property BOOL enabled;
 @property (readonly) BOOL supported;
 @end
@@ -603,6 +621,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDHdrVideoControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WMDHdrVideoMode mode;
 @property (readonly) BOOL supported;
 @property (readonly) NSArray* /* WMDHdrVideoMode */ supportedModes;
@@ -617,6 +636,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDAdvancedPhotoCaptureSettings : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WMDAdvancedPhotoMode mode;
 @end
 
@@ -628,6 +648,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDAdvancedPhotoControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMDAdvancedPhotoMode mode;
 @property (readonly) BOOL supported;
 @property (readonly) NSArray* /* WMDAdvancedPhotoMode */ supportedModes;
@@ -642,6 +663,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDOpticalImageStabilizationControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WMDOpticalImageStabilizationMode mode;
 @property (readonly) BOOL supported;
 @property (readonly) NSArray* /* WMDOpticalImageStabilizationMode */ supportedModes;
@@ -655,6 +677,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDMediaDeviceControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMDMediaDeviceControlCapabilities* capabilities;
 - (BOOL)tryGetValue:(double*)value;
 - (BOOL)trySetValue:(double)value;
@@ -670,6 +693,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDLowLagPhotoSequenceControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WMMMediaThumbnailFormat thumbnailFormat;
 @property BOOL thumbnailEnabled;
 @property float photosPerSecondLimit;
@@ -691,6 +715,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDLowLagPhotoControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WMMMediaThumbnailFormat thumbnailFormat;
 @property BOOL thumbnailEnabled;
 @property unsigned int desiredThumbnailSize;
@@ -707,6 +732,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDPhotoConfirmationControl : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WMMMediaPixelFormat pixelFormat;
 @property BOOL enabled;
 @property (readonly) BOOL supported;
@@ -720,6 +746,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDMediaDeviceControlCapabilities : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL autoModeSupported;
 @property (readonly) double Default;
 @property (readonly) double max;

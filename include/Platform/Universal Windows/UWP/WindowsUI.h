@@ -45,6 +45,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUColorHelper : RTObject
 + (WUColor*)fromArgb:(uint8_t)a r:(uint8_t)r g:(uint8_t)g b:(uint8_t)b;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @end
 
 #endif // __WUColorHelper_DEFINED__
@@ -55,6 +56,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUColors : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 + (WUColor*)aliceBlue;
 + (WUColor*)antiqueWhite;
 + (WUColor*)aqua;

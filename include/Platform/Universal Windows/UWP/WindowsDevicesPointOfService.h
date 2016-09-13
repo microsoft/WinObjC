@@ -452,6 +452,7 @@ typedef unsigned WDPMagneticStripeReaderTrackErrorType;
 
 WINRT_EXPORT
 @interface WDPUnifiedPosErrorData : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int extendedReason;
 @property (readonly) NSString* message;
 @property (readonly) WDPUnifiedPosErrorReason reason;
@@ -466,6 +467,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPBarcodeScannerStatusUpdatedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int extendedStatus;
 @property (readonly) WDPBarcodeScannerStatus status;
 @end
@@ -582,6 +584,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPBarcodeScannerReport : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* scanData;
 @property (readonly) RTObject<WSSIBuffer>* scanDataLabel;
 @property (readonly) unsigned int scanDataType;
@@ -595,6 +598,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPBarcodeScannerDataReceivedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDPBarcodeScannerReport* report;
 @end
 
@@ -606,6 +610,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPBarcodeScannerErrorOccurredEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDPUnifiedPosErrorData* errorData;
 @property (readonly) BOOL isRetriable;
 @property (readonly) WDPBarcodeScannerReport* partialInputData;
@@ -619,6 +624,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPBarcodeScannerImagePreviewReceivedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) RTObject<WSSIRandomAccessStreamWithContentType>* preview;
 @end
 
@@ -630,6 +636,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPBarcodeScannerCapabilities : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL isImagePreviewSupported;
 @property (readonly) BOOL isStatisticsReportingSupported;
 @property (readonly) BOOL isStatisticsUpdatingSupported;
@@ -648,6 +655,7 @@ WINRT_EXPORT
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDPBarcodeScanner*))success failure:(void (^)(NSError*))failure;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDPBarcodeScanner*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDPBarcodeScannerCapabilities* capabilities;
 @property (readonly) NSString* deviceId;
 - (EventRegistrationToken)addStatusUpdatedEvent:(void (^)(WDPBarcodeScanner*, WDPBarcodeScannerStatusUpdatedEventArgs*))del;
@@ -681,6 +689,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPClaimedBarcodeScanner : RTObject <WFIClosable>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property BOOL isDisabledOnDataReceived;
 @property BOOL isDecodeDataEnabled;
 @property (readonly) NSString* deviceId;
@@ -745,6 +754,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPMagneticStripeReaderTrackData : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* data;
 @property (readonly) RTObject<WSSIBuffer>* discretionaryData;
 @property (readonly) RTObject<WSSIBuffer>* encryptedData;
@@ -758,6 +768,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPMagneticStripeReaderReport : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* additionalSecurityInformation;
 @property (readonly) RTObject<WSSIBuffer>* cardAuthenticationData;
 @property (readonly) unsigned int cardAuthenticationDataLength;
@@ -777,6 +788,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPMagneticStripeReaderBankCardDataReceivedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* accountNumber;
 @property (readonly) NSString* expirationDate;
 @property (readonly) NSString* firstName;
@@ -796,6 +808,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPMagneticStripeReaderAamvaCardDataReceivedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* address;
 @property (readonly) NSString* birthDate;
 @property (readonly) NSString* city;
@@ -825,6 +838,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDPMagneticStripeReaderReport* report;
 @end
 
@@ -836,6 +850,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPMagneticStripeReaderErrorOccurredEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDPUnifiedPosErrorData* errorData;
 @property (readonly) WDPMagneticStripeReaderReport* partialInputData;
 @property (readonly) WDPMagneticStripeReaderTrackErrorType track1Status;
@@ -852,6 +867,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPMagneticStripeReaderStatusUpdatedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int extendedStatus;
 @property (readonly) WDPMagneticStripeReaderStatus status;
 @end
@@ -864,6 +880,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPMagneticStripeReaderCapabilities : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDPMagneticStripeReaderAuthenticationLevel authenticationLevel;
 @property (readonly) NSString* cardAuthentication;
 @property (readonly) BOOL isIsoSupported;
@@ -885,6 +902,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPClaimedMagneticStripeReader : RTObject <WFIClosable>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WDPMagneticStripeReaderTrackIds tracksToRead;
 @property BOOL isTransmitSentinelsEnabled;
 @property BOOL isDisabledOnDataReceived;
@@ -931,6 +949,7 @@ WINRT_EXPORT
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDPMagneticStripeReader*))success failure:(void (^)(NSError*))failure;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDPMagneticStripeReader*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDPMagneticStripeReaderCapabilities* capabilities;
 @property (readonly) WDPMagneticStripeReaderAuthenticationProtocol deviceAuthenticationProtocol;
 @property (readonly) NSString* deviceId;
@@ -966,6 +985,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPReceiptPrinterCapabilities : RTObject <WDPICommonReceiptSlipCapabilities, WDPICommonPosPrintStationCapabilities>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDPPosPrinterColorCapabilities colorCartridgeCapabilities;
 @property (readonly) BOOL isBoldSupported;
 @property (readonly) BOOL isDoubleHighDoubleWidePrintSupported;
@@ -1001,6 +1021,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPSlipPrinterCapabilities : RTObject <WDPICommonReceiptSlipCapabilities, WDPICommonPosPrintStationCapabilities>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL isBoldSupported;
 @property (readonly) BOOL isDoubleHighDoubleWidePrintSupported;
 @property (readonly) BOOL isDoubleWidePrintSupported;
@@ -1035,6 +1056,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPJournalPrinterCapabilities : RTObject <WDPICommonPosPrintStationCapabilities>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDPPosPrinterCartridgeSensors cartridgeSensors;
 @property (readonly) WDPPosPrinterColorCapabilities colorCartridgeCapabilities;
 @property (readonly) BOOL isBoldSupported;
@@ -1058,6 +1080,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPPosPrinterCapabilities : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL canMapCharacterSet;
 @property (readonly) unsigned int defaultCharacterSet;
 @property (readonly) BOOL hasCoverSensor;
@@ -1078,6 +1101,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPPosPrinterStatus : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int extendedStatus;
 @property (readonly) WDPPosPrinterStatusKind statusKind;
 @end
@@ -1090,6 +1114,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPPosPrinterStatusUpdatedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDPPosPrinterStatus* status;
 @end
 
@@ -1101,6 +1126,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPPosPrinterReleaseDeviceRequestedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @end
 
 #endif // __WDPPosPrinterReleaseDeviceRequestedEventArgs_DEFINED__
@@ -1114,6 +1140,7 @@ WINRT_EXPORT
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDPPosPrinter*))success failure:(void (^)(NSError*))failure;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDPPosPrinter*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDPPosPrinterCapabilities* capabilities;
 @property (readonly) NSString* deviceId;
 @property (readonly) WDPPosPrinterStatus* status;
@@ -1136,6 +1163,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPClaimedPosPrinter : RTObject <WFIClosable>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WDPPosPrinterMapMode mapMode;
 @property BOOL isCharacterSetMappingEnabled;
 @property unsigned int characterSet;
@@ -1168,6 +1196,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPReceiptPrintJob : RTObject <WDPIReceiptOrSlipJob, WDPIPosPrinterJob>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)markFeed:(WDPPosPrinterMarkFeedKind)kind;
 - (void)cutPaper:(double)percentage;
 - (void)cutPaperDefault;
@@ -1222,6 +1251,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPSlipPrintJob : RTObject <WDPIReceiptOrSlipJob, WDPIPosPrinterJob>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)setBarcodeRotation:(WDPPosPrinterRotation)value;
 - (void)setPrintRotation:(WDPPosPrinterRotation)value includeBitmaps:(BOOL)includeBitmaps;
 - (void)setPrintArea:(WFRect*)value;
@@ -1273,6 +1303,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPJournalPrintJob : RTObject <WDPIPosPrinterJob>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)print:(NSString*)data;
 - (void)printLine:(NSString*)data;
 - (void)printNewline;
@@ -1287,6 +1318,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPClaimedReceiptPrinter : RTObject <WDPICommonClaimedPosPrinterStation>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int linesToPaperCut;
 @property (readonly) WFSize* pageSize;
 @property (readonly) WFRect* printArea;
@@ -1317,6 +1349,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPClaimedSlipPrinter : RTObject <WDPICommonClaimedPosPrinterStation>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int linesNearEndToEnd;
 @property (readonly) unsigned int maxLines;
 @property (readonly) WFSize* pageSize;
@@ -1354,6 +1387,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPClaimedJournalPrinter : RTObject <WDPICommonClaimedPosPrinterStation>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property BOOL isLetterQuality;
 @property WDPPosPrinterColorCartridge colorCartridge;
 @property unsigned int charactersPerLine;
@@ -1379,6 +1413,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPCashDrawerStatus : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int extendedStatus;
 @property (readonly) WDPCashDrawerStatusKind statusKind;
 @end
@@ -1391,6 +1426,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPCashDrawerStatusUpdatedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDPCashDrawerStatus* status;
 @end
 
@@ -1402,6 +1438,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPCashDrawerCapabilities : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL isDrawerOpenSensorAvailable;
 @property (readonly) BOOL isStatisticsReportingSupported;
 @property (readonly) BOOL isStatisticsUpdatingSupported;
@@ -1421,6 +1458,7 @@ WINRT_EXPORT
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDPCashDrawer*))success failure:(void (^)(NSError*))failure;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDPCashDrawer*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDPCashDrawerCapabilities* capabilities;
 @property (readonly) NSString* deviceId;
 @property (readonly) WDPCashDrawerEventSource* drawerEventSource;
@@ -1443,6 +1481,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPCashDrawerClosedEventArgs : RTObject <WDPICashDrawerEventSourceEventArgs>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDPCashDrawer* cashDrawer;
 @end
 
@@ -1454,6 +1493,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPCashDrawerOpenedEventArgs : RTObject <WDPICashDrawerEventSourceEventArgs>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDPCashDrawer* cashDrawer;
 @end
 
@@ -1465,6 +1505,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPCashDrawerEventSource : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (EventRegistrationToken)addDrawerClosedEvent:(void (^)(WDPCashDrawerEventSource*, WDPCashDrawerClosedEventArgs*))del;
 - (void)removeDrawerClosedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addDrawerOpenedEvent:(void (^)(WDPCashDrawerEventSource*, WDPCashDrawerOpenedEventArgs*))del;
@@ -1479,6 +1520,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPClaimedCashDrawer : RTObject <WFIClosable>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDPCashDrawerCloseAlarm* closeAlarm;
 @property (readonly) NSString* deviceId;
 @property (readonly) BOOL isDrawerOpen;
@@ -1506,6 +1548,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPCashDrawerCloseAlarm : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property unsigned int beepFrequency;
 @property (retain) WFTimeSpan* beepDuration;
 @property (retain) WFTimeSpan* beepDelay;

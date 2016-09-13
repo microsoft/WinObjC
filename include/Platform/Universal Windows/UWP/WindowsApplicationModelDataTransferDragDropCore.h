@@ -66,6 +66,7 @@ typedef unsigned WADDCCoreDragUIContentMode;
 
 WINRT_EXPORT
 @interface WADDCCoreDragInfo : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WADDataPackageView* data;
 @property (readonly) WADDDragDropModifiers modifiers;
 @property (readonly) WFPoint* position;
@@ -79,6 +80,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADDCCoreDragUIOverride : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property BOOL isGlyphVisible;
 @property BOOL isContentVisible;
 @property BOOL isCaptionVisible;
@@ -97,6 +99,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WADDCCoreDragDropManager : RTObject
 + (WADDCCoreDragDropManager*)getForCurrentView;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property BOOL areConcurrentOperationsEnabled;
 - (EventRegistrationToken)addTargetRequestedEvent:(void (^)(WADDCCoreDragDropManager*, WADDCCoreDropOperationTargetRequestedEventArgs*))del;
 - (void)removeTargetRequestedEvent:(EventRegistrationToken)tok;
@@ -110,6 +113,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADDCCoreDropOperationTargetRequestedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)setTarget:(RTObject<WADDCICoreDropOperationTarget>*)target;
 @end
 
@@ -122,6 +126,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WADDCCoreDragOperation : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WADDCCoreDragUIContentMode dragUIContentMode;
 @property (readonly) WADDataPackage* data;
 - (void)setPointerId:(unsigned int)pointerId;

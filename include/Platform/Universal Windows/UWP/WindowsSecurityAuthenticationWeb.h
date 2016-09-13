@@ -61,6 +61,7 @@ typedef unsigned WSAWWebAuthenticationOptions;
 
 WINRT_EXPORT
 @interface WSAWWebAuthenticationResult : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* responseData;
 @property (readonly) unsigned int responseErrorDetail;
 @property (readonly) WSAWWebAuthenticationStatus responseStatus;

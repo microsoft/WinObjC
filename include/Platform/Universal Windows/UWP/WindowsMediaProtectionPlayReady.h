@@ -518,6 +518,7 @@ WINRT_EXPORT
                                          customAttributes:(NSString*)customAttributes
                                           domainServiceId:(WFGUID*)domainServiceId ACTIVATOR;
 + (WMPPPlayReadyContentHeader*)makeInstanceFromPlayReadyHeader:(NSArray* /* uint8_t */)headerBytes ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* customAttributes;
 @property (readonly) WMPPPlayReadyDecryptorSetup decryptorSetup;
 @property (readonly) WFGUID* domainServiceId;
@@ -540,6 +541,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadySoapMessage : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) RTObject<WFCIPropertySet>* messageHeaders;
 @property (readonly) WFUri* uri;
 - (NSArray* /* uint8_t */)getMessageBody;
@@ -565,6 +567,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPPlayReadyIndividualizationServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
 @property (retain) WFUri* uri;
@@ -585,6 +588,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPPlayReadyDomainJoinServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
 @property WFGUID* domainServiceId;
@@ -608,6 +612,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPPlayReadyDomainLeaveServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
 @property WFGUID* domainServiceId;
@@ -631,6 +636,7 @@ WINRT_EXPORT
 @interface WMPPPlayReadyLicenseAcquisitionServiceRequest
     : RTObject <WMPPIPlayReadyLicenseAcquisitionServiceRequest, WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
 @property WFGUID* domainServiceId;
@@ -653,6 +659,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPPlayReadyMeteringReportServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
 @property (retain) NSArray* /* uint8_t */ meteringCertificate;
@@ -674,6 +681,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPPlayReadyRevocationServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
 @property (retain) WFUri* uri;
@@ -704,6 +712,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyLicense : RTObject <WMPPIPlayReadyLicense>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int chainDepth;
 @property (readonly) WFGUID* domainAccountID;
 @property (readonly) id /* WFDateTime* */ expirationDate;
@@ -723,6 +732,7 @@ WINRT_EXPORT
 @interface WMPPPlayReadyLicenseIterable : RTObject
 + (WMPPPlayReadyLicenseIterable*)makeInstance:(WMPPPlayReadyContentHeader*)contentHeader fullyEvaluated:(BOOL)fullyEvaluated ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @end
 
 #endif // __WMPPPlayReadyLicenseIterable_DEFINED__
@@ -733,6 +743,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyLicenseIterator : RTObject
+// Failed to get type for default interface: Can't marshal
+// Windows.Foundation.Collections.IIterator`1<Windows.Media.Protection.PlayReady.IPlayReadyLicense>
 @property (readonly) RTObject<WMPPIPlayReadyLicense>* current;
 @property (readonly) BOOL hasCurrent;
 // Could not find base class Windows.Foundation.Collections.IIterator`1<Windows.Media.Protection.PlayReady.IPlayReadyLicense> type
@@ -747,6 +759,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyDomain : RTObject <WMPPIPlayReadyDomain>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFGUID* accountId;
 @property (readonly) WFUri* domainJoinUrl;
 @property (readonly) NSString* friendlyName;
@@ -763,6 +776,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPPlayReadyDomainIterable : RTObject
 + (WMPPPlayReadyDomainIterable*)makeInstance:(WFGUID*)domainAccountId ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @end
 
 #endif // __WMPPPlayReadyDomainIterable_DEFINED__
@@ -773,6 +787,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyDomainIterator : RTObject
+// Failed to get type for default interface: Can't marshal
+// Windows.Foundation.Collections.IIterator`1<Windows.Media.Protection.PlayReady.IPlayReadyDomain>
 @property (readonly) RTObject<WMPPIPlayReadyDomain>* current;
 @property (readonly) BOOL hasCurrent;
 // Could not find base class Windows.Foundation.Collections.IIterator`1<Windows.Media.Protection.PlayReady.IPlayReadyDomain> type
@@ -812,6 +828,7 @@ WINRT_EXPORT
 + (WMPPPlayReadySecureStopServiceRequest*)makeInstance:(NSArray* /* uint8_t */)publisherCertBytes ACTIVATOR;
 + (WMPPPlayReadySecureStopServiceRequest*)makeInstanceFromSessionID:(WFGUID*)sessionID
                                                  publisherCertBytes:(NSArray* /* uint8_t */)publisherCertBytes ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
 @property (readonly) NSArray* /* uint8_t */ publisherCertificate;
@@ -837,6 +854,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPPlayReadySecureStopIterable : RTObject
 + (WMPPPlayReadySecureStopIterable*)makeInstance:(NSArray* /* uint8_t */)publisherCertBytes ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @end
 
 #endif // __WMPPPlayReadySecureStopIterable_DEFINED__
@@ -847,6 +865,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadySecureStopIterator : RTObject
+// Failed to get type for default interface: Can't marshal
+// Windows.Foundation.Collections.IIterator`1<Windows.Media.Protection.PlayReady.IPlayReadySecureStopServiceRequest>
 @property (readonly) RTObject<WMPPIPlayReadySecureStopServiceRequest>* current;
 @property (readonly) BOOL hasCurrent;
 // Could not find base class
@@ -862,6 +882,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPPlayReadyITADataGenerator : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (NSArray* /* uint8_t */)generateData:(WFGUID*)guidCPSystemId
                         countOfStreams:(unsigned int)countOfStreams
                          configuration:(RTObject<WFCIPropertySet>*)configuration
@@ -877,6 +898,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPPlayReadyLicenseSession : RTObject <WMPPIPlayReadyLicenseSession>
 + (WMPPPlayReadyLicenseSession*)makeInstance:(RTObject<WFCIPropertySet>*)configuration ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (RTObject<WMPPIPlayReadyLicenseAcquisitionServiceRequest>*)createLAServiceRequest;
 - (void)configureMediaProtectionManager:(WMPMediaProtectionManager*)mpm;
 @end
@@ -890,6 +912,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPNDDownloadEngineNotifier : RTObject <WMPPINDDownloadEngineNotifier>
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)onStreamOpened;
 - (void)onPlayReadyObjectReceived:(NSArray* /* uint8_t */)dataBytes;
 - (void)onContentIDReceived:(RTObject<WMPPINDLicenseFetchDescriptor>*)licenseFetchDescriptor;
@@ -907,6 +930,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPNDStreamParserNotifier : RTObject <WMPPINDStreamParserNotifier>
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)onContentIDReceived:(RTObject<WMPPINDLicenseFetchDescriptor>*)licenseFetchDescriptor;
 - (void)onMediaStreamDescriptorCreated:(NSMutableArray* /* WMCAudioStreamDescriptor* */)audioStreamDescriptors
                 videoStreamDescriptors:(NSMutableArray* /* WMCVideoStreamDescriptor* */)videoStreamDescriptors;
@@ -930,6 +954,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPNDTCPMessenger : RTObject <WMPPINDMessenger>
 + (WMPPNDTCPMessenger*)makeInstance:(NSString*)remoteHostName remoteHostPort:(unsigned int)remoteHostPort ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)sendRegistrationRequestAsync:(NSArray* /* uint8_t */)sessionIDBytes
                   challengeDataBytes:(NSArray* /* uint8_t */)challengeDataBytes
                              success:(void (^)(RTObject<WMPPINDSendResult>*))success
@@ -963,6 +988,7 @@ WINRT_EXPORT
 + (WMPPNDLicenseFetchDescriptor*)makeInstance:(WMPPNDContentIDType)contentIDType
                                contentIDBytes:(NSArray* /* uint8_t */)contentIDBytes
               licenseFetchChallengeCustomData:(RTObject<WMPPINDCustomData>*)licenseFetchChallengeCustomData ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) RTObject<WMPPINDCustomData>* licenseFetchChallengeCustomData;
 @property (readonly) NSArray* /* uint8_t */ contentID;
 @property (readonly) WMPPNDContentIDType contentIDType;
@@ -978,6 +1004,7 @@ WINRT_EXPORT
 @interface WMPPNDCustomData : RTObject <WMPPINDCustomData>
 + (WMPPNDCustomData*)makeInstance:(NSArray* /* uint8_t */)customDataTypeIDBytes
                   customDataBytes:(NSArray* /* uint8_t */)customDataBytes ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* uint8_t */ customData;
 @property (readonly) NSArray* /* uint8_t */ customDataTypeID;
 @end
@@ -993,6 +1020,7 @@ WINRT_EXPORT
 + (WMPPNDClient*)makeInstance:(RTObject<WMPPINDDownloadEngine>*)downloadEngine
                  streamParser:(RTObject<WMPPINDStreamParser>*)streamParser
                    pMessenger:(RTObject<WMPPINDMessenger>*)pMessenger ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (EventRegistrationToken)addClosedCaptionDataReceivedEvent:(void (^)(WMPPNDClient*,
                                                                       RTObject<WMPPINDClosedCaptionDataReceivedEventArgs>*))del;
 - (void)removeClosedCaptionDataReceivedEvent:(EventRegistrationToken)tok;
@@ -1027,6 +1055,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPNDStorageFileHelper : RTObject <WMPPINDStorageFileHelper>
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (NSMutableArray* /* NSString * */)getFileURLs:(RTObject<WSIStorageFile>*)file;
 @end
 

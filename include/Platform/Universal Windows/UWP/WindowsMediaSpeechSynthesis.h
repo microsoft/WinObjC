@@ -44,6 +44,7 @@ typedef unsigned WMSVoiceGender;
 
 WINRT_EXPORT
 @interface WMSVoiceInformation : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* Description;
 @property (readonly) NSString* displayName;
 @property (readonly) WMSVoiceGender gender;
@@ -170,6 +171,7 @@ WINRT_EXPORT
                                                 WSSIOutputStream,
                                                 WFIClosable,
                                                 WSSIInputStream>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* RTObject<WMIMediaMarker>* */ markers;
 @property (readonly) NSString* contentType;
 @property uint64_t size;
@@ -203,6 +205,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMSSpeechSynthesizer : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) WMSVoiceInformation* voice;
 + (NSArray* /* WMSVoiceInformation* */)allVoices;
 + (WMSVoiceInformation*)defaultVoice;

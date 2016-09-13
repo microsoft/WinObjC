@@ -47,6 +47,7 @@
 WINRT_EXPORT
 @interface WUXRCustomXamlResourceLoader : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 + (WUXRCustomXamlResourceLoader*)current;
 + (void)setCurrent:(WUXRCustomXamlResourceLoader*)value;
 - (RTObject*)getResource:(NSString*)resourceId

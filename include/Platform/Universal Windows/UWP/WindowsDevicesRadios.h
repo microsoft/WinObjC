@@ -67,6 +67,7 @@ WINRT_EXPORT
 + (NSString*)getDeviceSelector;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDRRadio*))success failure:(void (^)(NSError*))failure;
 + (void)requestAccessAsyncWithSuccess:(void (^)(WDRRadioAccessStatus))success failure:(void (^)(NSError*))failure;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDRRadioKind kind;
 @property (readonly) NSString* name;
 @property (readonly) WDRRadioState state;

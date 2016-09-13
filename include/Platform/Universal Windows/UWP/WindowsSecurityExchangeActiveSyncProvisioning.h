@@ -34,6 +34,7 @@
 WINRT_EXPORT
 @interface WSEEasClientDeviceInformation : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* friendlyName;
 @property (readonly) WFGUID* id;
 @property (readonly) NSString* operatingSystem;

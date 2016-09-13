@@ -57,6 +57,7 @@ WINRT_EXPORT
 + (WSTCSignalNotifier*)attachToEventWithTimeout:(NSString*)name handler:(WSTCSignalHandler)handler timeout:(WFTimeSpan*)timeout;
 + (WSTCSignalNotifier*)attachToSemaphore:(NSString*)name handler:(WSTCSignalHandler)handler;
 + (WSTCSignalNotifier*)attachToSemaphoreWithTimeout:(NSString*)name handler:(WSTCSignalHandler)handler timeout:(WFTimeSpan*)timeout;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)enable;
 - (void)terminate;
 @end
@@ -74,6 +75,7 @@ WINRT_EXPORT
 + (WSTCPreallocatedWorkItem*)makeWorkItemWithPriorityAndOptions:(WSTWorkItemHandler)handler
                                                        priority:(WSTWorkItemPriority)priority
                                                         options:(WSTWorkItemOptions)options ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (RTObject<WFIAsyncAction>*)runAsync;
 @end
 

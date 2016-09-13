@@ -33,6 +33,7 @@
 
 WINRT_EXPORT
 @interface WGCCharacterGrouping : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* first;
 @property (readonly) NSString* label;
 @end
@@ -46,6 +47,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WGCCharacterGroupings : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;

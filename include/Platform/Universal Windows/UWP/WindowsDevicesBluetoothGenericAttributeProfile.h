@@ -104,6 +104,7 @@ WINRT_EXPORT
 + (NSString*)getDeviceSelectorFromUuid:(WFGUID*)serviceUuid;
 + (NSString*)getDeviceSelectorFromShortId:(unsigned short)serviceShortId;
 + (WFGUID*)convertShortIdToUuid:(unsigned short)shortId;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned short attributeHandle;
 @property (readonly) NSString* deviceId;
 @property (readonly) WFGUID* uuid;
@@ -125,6 +126,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDBGGattCharacteristic : RTObject
 + (WFGUID*)convertShortIdToUuid:(unsigned short)shortId;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WDBGGattProtectionLevel protectionLevel;
 @property (readonly) unsigned short attributeHandle;
 @property (readonly) WDBGGattCharacteristicProperties characteristicProperties;
@@ -165,6 +167,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDBGGattDescriptor : RTObject
 + (WFGUID*)convertShortIdToUuid:(unsigned short)shortId;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WDBGGattProtectionLevel protectionLevel;
 @property (readonly) unsigned short attributeHandle;
 @property (readonly) WFGUID* uuid;
@@ -185,6 +188,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBGGattPresentationFormat : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned short Description;
 @property (readonly) int exponent;
 @property (readonly) uint8_t formatType;
@@ -201,6 +205,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBGGattReadResult : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDBGGattCommunicationStatus status;
 @property (readonly) RTObject<WSSIBuffer>* value;
 @end
@@ -213,6 +218,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBGGattReadClientCharacteristicConfigurationDescriptorResult : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDBGGattClientCharacteristicConfigurationDescriptorValue clientCharacteristicConfigurationDescriptor;
 @property (readonly) WDBGGattCommunicationStatus status;
 @end
@@ -225,6 +231,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBGGattValueChangedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* characteristicValue;
 @property (readonly) WFDateTime* timestamp;
 @end
@@ -377,6 +384,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDBGGattReliableWriteTransaction : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)writeValue:(WDBGGattCharacteristic*)characteristic value:(RTObject<WSSIBuffer>*)value;
 - (void)commitAsyncWithSuccess:(void (^)(WDBGGattCommunicationStatus))success failure:(void (^)(NSError*))failure;
 @end

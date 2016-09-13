@@ -210,6 +210,7 @@ typedef unsigned WAAAppointmentStoreChangeType;
 WINRT_EXPORT
 @interface WAAAppointment : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* location;
 @property BOOL allDay;
 @property (retain) WAAAppointmentOrganizer* organizer;
@@ -248,6 +249,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppointmentStore : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WAAAppointmentStoreChangeTracker* changeTracker;
 - (EventRegistrationToken)addStoreChangedEvent:(void (^)(WAAAppointmentStore*, WAAAppointmentStoreChangedEventArgs*))del;
 - (void)removeStoreChangedEvent:(EventRegistrationToken)tok;
@@ -332,6 +334,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAAppointmentOrganizer : RTObject <WAAIAppointmentParticipant>
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* displayName;
 @property (retain) NSString* address;
 @end
@@ -345,6 +348,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAAppointmentInvitee : RTObject <WAAIAppointmentParticipant>
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WAAAppointmentParticipantRole role;
 @property WAAAppointmentParticipantResponse response;
 @property (retain) NSString* displayName;
@@ -360,6 +364,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAAppointmentRecurrence : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WAAAppointmentRecurrenceUnit unit;
 @property (retain) id /* unsigned int */ occurrences;
 @property unsigned int month;
@@ -441,6 +446,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAFindAppointmentsOptions : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property unsigned int maxCount;
 @property BOOL includeHidden;
 @property (readonly) NSMutableArray* /* NSString * */ calendarIds;
@@ -455,6 +461,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppointmentException : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WAAAppointment* appointment;
 @property (readonly) NSArray* /* NSString * */ exceptionProperties;
 @property (readonly) BOOL isDeleted;
@@ -468,6 +475,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppointmentCalendarSyncManager : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFDateTime* lastAttemptedSyncTime;
 @property (readonly) WFDateTime* lastSuccessfulSyncTime;
 @property (readonly) WAAAppointmentCalendarSyncStatus status;
@@ -484,6 +492,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppointmentCalendar : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WAAAppointmentSummaryCardView summaryCardView;
 @property WAAAppointmentCalendarOtherAppWriteAccess otherAppWriteAccess;
 @property (retain) WUColor* displayColor;
@@ -580,6 +589,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppointmentStoreChange : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WAAAppointment* appointment;
 @property (readonly) WAAAppointmentStoreChangeType changeType;
 @property (readonly) WAAAppointmentCalendar* appointmentCalendar;
@@ -593,6 +603,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppointmentStoreChangeReader : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WAAAppointmentStoreChange* */))success failure:(void (^)(NSError*))failure;
 - (void)acceptChanges;
 - (void)acceptChangesThrough:(WAAAppointmentStoreChange*)lastChangeToAccept;
@@ -606,6 +617,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppointmentStoreChangedDeferral : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)complete;
 @end
 
@@ -617,6 +629,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppointmentStoreChangeTracker : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (WAAAppointmentStoreChangeReader*)getChangeReader;
 - (void)enable;
 - (void)reset;
@@ -630,6 +643,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppointmentConflictResult : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFDateTime* date;
 @property (readonly) WAAAppointmentConflictType type;
 @end
@@ -642,6 +656,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppointmentStoreChangedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (WAAAppointmentStoreChangedDeferral*)getDeferral;
 @end
 
@@ -689,6 +704,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppointmentStoreNotificationTriggerDetails : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @end
 
 #endif // __WAAAppointmentStoreNotificationTriggerDetails_DEFINED__

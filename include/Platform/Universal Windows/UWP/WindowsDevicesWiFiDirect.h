@@ -100,6 +100,7 @@ WINRT_EXPORT
     connectionParameters:(WDWWiFiDirectConnectionParameters*)connectionParameters
                  success:(void (^)(WDWWiFiDirectDevice*))success
                  failure:(void (^)(NSError*))failure;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDWWiFiDirectConnectionStatus connectionStatus;
 @property (readonly) NSString* deviceId;
 - (EventRegistrationToken)addConnectionStatusChangedEvent:(void (^)(WDWWiFiDirectDevice*, RTObject*))del;
@@ -117,6 +118,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDWWiFiDirectConnectionParameters : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property int16_t groupOwnerIntent;
 @end
 
@@ -131,6 +133,7 @@ WINRT_EXPORT
 + (NSMutableArray* /* WDWWiFiDirectInformationElement* */)createFromBuffer:(RTObject<WSSIBuffer>*)buffer;
 + (NSMutableArray* /* WDWWiFiDirectInformationElement* */)createFromDeviceInformation:(WDEDeviceInformation*)deviceInformation;
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) RTObject<WSSIBuffer>* value;
 @property uint8_t ouiType;
 @property (retain) RTObject<WSSIBuffer>* oui;
@@ -144,6 +147,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDWWiFiDirectLegacySettings : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* ssid;
 @property (retain) WSCPasswordCredential* passphrase;
 @property BOOL isEnabled;
@@ -157,6 +161,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDWWiFiDirectAdvertisement : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WDWWiFiDirectAdvertisementListenStateDiscoverability listenStateDiscoverability;
 @property BOOL isAutonomousGroupOwnerEnabled;
 @property (retain) NSMutableArray* /* WDWWiFiDirectInformationElement* */ informationElements;
@@ -171,6 +176,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDWWiFiDirectAdvertisementPublisherStatusChangedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDWWiFiDirectError error;
 @property (readonly) WDWWiFiDirectAdvertisementPublisherStatus status;
 @end
@@ -184,6 +190,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDWWiFiDirectAdvertisementPublisher : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDWWiFiDirectAdvertisement* advertisement;
 @property (readonly) WDWWiFiDirectAdvertisementPublisherStatus status;
 - (EventRegistrationToken)addStatusChangedEvent:(void (^)(WDWWiFiDirectAdvertisementPublisher*,
@@ -201,6 +208,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDWWiFiDirectConnectionRequest : RTObject <WFIClosable>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDEDeviceInformation* deviceInformation;
 - (void)close;
 @end
@@ -213,6 +221,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDWWiFiDirectConnectionRequestedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (WDWWiFiDirectConnectionRequest*)getConnectionRequest;
 @end
 
@@ -225,6 +234,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDWWiFiDirectConnectionListener : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (EventRegistrationToken)addConnectionRequestedEvent:(void (^)(WDWWiFiDirectConnectionListener*,
                                                                 WDWWiFiDirectConnectionRequestedEventArgs*))del;
 - (void)removeConnectionRequestedEvent:(EventRegistrationToken)tok;

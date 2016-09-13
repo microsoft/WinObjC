@@ -94,6 +94,7 @@ WINRT_EXPORT
                                  httpClient:(WWHHttpClient*)httpClient
                                     success:(void (^)(WMSAAdaptiveMediaSourceCreationResult*))success
                                     failure:(void (^)(NSError*))failure;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property unsigned int initialBitrate;
 @property (retain) WFTimeSpan* inboundBitsPerSecondWindow;
 @property (retain) id /* unsigned int */ desiredMinBitrate;
@@ -129,6 +130,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSAAdaptiveMediaSourceCreationResult : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WWHHttpResponseMessage* httpResponseMessage;
 @property (readonly) WMSAAdaptiveMediaSource* mediaSource;
 @property (readonly) WMSAAdaptiveMediaSourceCreationStatus status;
@@ -142,6 +144,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadBitrateChangedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int newValue;
 @property (readonly) unsigned int oldValue;
 @end
@@ -154,6 +157,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSAAdaptiveMediaSourcePlaybackBitrateChangedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL audioOnly;
 @property (readonly) unsigned int newValue;
 @property (readonly) unsigned int oldValue;
@@ -167,6 +171,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadRequestedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) id /* uint64_t */ resourceByteRangeLength;
 @property (readonly) id /* uint64_t */ resourceByteRangeOffset;
 @property (readonly) WMSAAdaptiveMediaSourceResourceType resourceType;
@@ -183,6 +188,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadCompletedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WWHHttpResponseMessage* httpResponseMessage;
 @property (readonly) id /* uint64_t */ resourceByteRangeLength;
 @property (readonly) id /* uint64_t */ resourceByteRangeOffset;
@@ -198,6 +204,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadFailedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WWHHttpResponseMessage* httpResponseMessage;
 @property (readonly) id /* uint64_t */ resourceByteRangeLength;
 @property (readonly) id /* uint64_t */ resourceByteRangeOffset;
@@ -213,6 +220,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadResult : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) WFUri* resourceUri;
 @property (retain) RTObject<WSSIInputStream>* inputStream;
 @property unsigned int extendedStatus;
@@ -228,6 +236,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadRequestedDeferral : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)complete;
 @end
 

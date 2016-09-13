@@ -85,6 +85,7 @@ WINRT_EXPORT
 + (WACPhoneCallHistoryEntryAddress*)make:(NSString*)rawAddress
                           rawAddressKind:(WACPhoneCallHistoryEntryRawAddressKind)rawAddressKind ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WACPhoneCallHistoryEntryRawAddressKind rawAddressKind;
 @property (retain) NSString* rawAddress;
 @property (retain) NSString* displayName;
@@ -100,6 +101,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACPhoneCallHistoryEntry : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WACPhoneCallHistoryEntryMedia media;
 @property BOOL isMissed;
 @property BOOL isIncoming;
@@ -128,6 +130,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACPhoneCallHistoryEntryReader : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WACPhoneCallHistoryEntry* */))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -140,6 +143,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACPhoneCallHistoryEntryQueryOptions : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WACPhoneCallHistoryEntryQueryDesiredMedia desiredMedia;
 @property (readonly) NSMutableArray* /* NSString * */ sourceIds;
 @end
@@ -152,6 +156,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACPhoneCallHistoryStore : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)getEntryAsync:(NSString*)callHistoryEntryId
               success:(void (^)(WACPhoneCallHistoryEntry*))success
               failure:(void (^)(NSError*))failure;

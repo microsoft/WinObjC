@@ -43,6 +43,7 @@
 
 WINRT_EXPORT
 @interface WDBBRfcommInboundConnectionInformation : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WDBBluetoothServiceCapabilities serviceCapabilities;
 @property (retain) RTObject<WSSIBuffer>* sdpRecord;
 @property (retain) WDBRRfcommServiceId* localServiceId;
@@ -56,6 +57,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBBRfcommOutboundConnectionInformation : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) WDBRRfcommServiceId* remoteServiceId;
 @end
 
@@ -67,6 +69,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBBRfcommConnectionTriggerDetails : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL incoming;
 @property (readonly) WDBBluetoothDevice* remoteDevice;
 @property (readonly) WNSStreamSocket* socket;
@@ -80,6 +83,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBBGattCharacteristicNotificationTriggerDetails : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDBGGattCharacteristic* characteristic;
 @property (readonly) RTObject<WSSIBuffer>* value;
 @end
@@ -92,6 +96,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBBBluetoothLEAdvertisementWatcherTriggerDetails : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* WDBABluetoothLEAdvertisementReceivedEventArgs* */ advertisements;
 @property (readonly) WDBBluetoothError error;
 @property (readonly) WDBBluetoothSignalStrengthFilter* signalStrengthFilter;
@@ -105,6 +110,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBBBluetoothLEAdvertisementPublisherTriggerDetails : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDBBluetoothError error;
 @property (readonly) WDBABluetoothLEAdvertisementPublisherStatus status;
 @end

@@ -144,6 +144,7 @@ typedef unsigned WMSSpeechContinuousRecognitionMode;
 
 WINRT_EXPORT
 @interface WMSSpeechRecognitionSemanticInterpretation : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSDictionary* /* NSString *, NSArray* < NSString * > */ properties;
 @end
 
@@ -155,6 +156,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechRecognitionResult : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMSSpeechRecognitionConfidence confidence;
 @property (readonly) RTObject<WMSISpeechRecognitionConstraint>* constraint;
 @property (readonly) double rawConfidence;
@@ -179,6 +181,7 @@ WINRT_EXPORT
 + (WMSSpeechRecognitionTopicConstraint*)makeWithTag:(WMSSpeechRecognitionScenario)scenario
                                           topicHint:(NSString*)topicHint
                                                 tag:(NSString*)tag ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* tag;
 @property WMSSpeechRecognitionConstraintProbability probability;
 @property BOOL isEnabled;
@@ -197,6 +200,7 @@ WINRT_EXPORT
 @interface WMSSpeechRecognitionListConstraint : RTObject <WMSISpeechRecognitionConstraint>
 + (WMSSpeechRecognitionListConstraint*)make:(id<NSFastEnumeration> /* NSString * */)commands ACTIVATOR;
 + (WMSSpeechRecognitionListConstraint*)makeWithTag:(id<NSFastEnumeration> /* NSString * */)commands tag:(NSString*)tag ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* tag;
 @property WMSSpeechRecognitionConstraintProbability probability;
 @property BOOL isEnabled;
@@ -214,6 +218,7 @@ WINRT_EXPORT
 @interface WMSSpeechRecognitionGrammarFileConstraint : RTObject <WMSISpeechRecognitionConstraint>
 + (WMSSpeechRecognitionGrammarFileConstraint*)make:(WSStorageFile*)file ACTIVATOR;
 + (WMSSpeechRecognitionGrammarFileConstraint*)makeWithTag:(WSStorageFile*)file tag:(NSString*)tag ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* tag;
 @property WMSSpeechRecognitionConstraintProbability probability;
 @property BOOL isEnabled;
@@ -229,6 +234,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechRecognizerTimeouts : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) WFTimeSpan* initialSilenceTimeout;
 @property (retain) WFTimeSpan* endSilenceTimeout;
 @property (retain) WFTimeSpan* babbleTimeout;
@@ -242,6 +248,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechRecognizerUIOptions : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property BOOL showConfirmation;
 @property BOOL isReadBackEnabled;
 @property (retain) NSString* exampleText;
@@ -256,6 +263,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechRecognitionCompilationResult : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMSSpeechRecognitionResultStatus status;
 @end
 
@@ -279,6 +287,7 @@ WINRT_EXPORT
 @interface WMSSpeechRecognizer : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 + (WMSSpeechRecognizer*)make:(WGLanguage*)language ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSMutableArray* /* RTObject<WMSISpeechRecognitionConstraint>* */ constraints;
 @property (readonly) WGLanguage* currentLanguage;
 @property (readonly) WMSSpeechRecognizerTimeouts* timeouts;
@@ -311,6 +320,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechRecognitionQualityDegradingEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMSSpeechRecognitionAudioProblem problem;
 @end
 
@@ -322,6 +332,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechRecognizerStateChangedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMSSpeechRecognizerState state;
 @end
 
@@ -333,6 +344,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechRecognitionVoiceCommandDefinitionConstraint : RTObject <WMSISpeechRecognitionConstraint>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* tag;
 @property WMSSpeechRecognitionConstraintProbability probability;
 @property BOOL isEnabled;
@@ -347,6 +359,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechContinuousRecognitionSession : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) WFTimeSpan* autoStopSilenceTimeout;
 - (EventRegistrationToken)addCompletedEvent:(void (^)(WMSSpeechContinuousRecognitionSession*,
                                                       WMSSpeechContinuousRecognitionCompletedEventArgs*))del;
@@ -370,6 +383,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechRecognitionHypothesisGeneratedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMSSpeechRecognitionHypothesis* hypothesis;
 @end
 
@@ -381,6 +395,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechRecognitionHypothesis : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* text;
 @end
 
@@ -392,6 +407,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechContinuousRecognitionCompletedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMSSpeechRecognitionResultStatus status;
 @end
 
@@ -403,6 +419,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechContinuousRecognitionResultGeneratedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMSSpeechRecognitionResult* result;
 @end
 

@@ -83,6 +83,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADDataPackagePropertySetView : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFUri* applicationListingUri;
 @property (readonly) NSString* applicationName;
 @property (readonly) NSString* Description;
@@ -113,6 +114,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADDataPackagePropertySet : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
 @property (retain) NSString* title;
 @property (retain) NSString* Description;
@@ -151,6 +153,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADDataProviderDeferral : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)complete;
 @end
 
@@ -162,6 +165,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADDataProviderRequest : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFDateTime* deadline;
 @property (readonly) NSString* formatId;
 - (WADDataProviderDeferral*)getDeferral;
@@ -176,6 +180,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADOperationCompletedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WADDataPackageOperation operation;
 @end
 
@@ -187,6 +192,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADDataPackageView : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* NSString * */ availableFormats;
 @property (readonly) WADDataPackagePropertySetView* properties;
 @property (readonly) WADDataPackageOperation requestedOperation;
@@ -220,6 +226,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WADDataPackage : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WADDataPackageOperation requestedOperation;
 @property (readonly) WADDataPackagePropertySet* properties;
 @property (readonly) NSMutableDictionary* /* NSString *, WSSRandomAccessStreamReference* */ resourceMap;
@@ -277,6 +284,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADDataRequestDeferral : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)complete;
 @end
 
@@ -288,6 +296,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADDataRequest : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) WADDataPackage* data;
 @property (readonly) WFDateTime* deadline;
 - (void)failWithDisplayText:(NSString*)value;
@@ -302,6 +311,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADDataRequestedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WADDataRequest* request;
 @end
 
@@ -313,6 +323,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADTargetApplicationChosenEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* applicationName;
 @end
 
@@ -326,6 +337,7 @@ WINRT_EXPORT
 @interface WADDataTransferManager : RTObject
 + (void)showShareUI;
 + (WADDataTransferManager*)getForCurrentView;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (EventRegistrationToken)addDataRequestedEvent:(void (^)(WADDataTransferManager*, WADDataRequestedEventArgs*))del;
 - (void)removeDataRequestedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addTargetApplicationChosenEvent:(void (^)(WADDataTransferManager*, WADTargetApplicationChosenEventArgs*))del;

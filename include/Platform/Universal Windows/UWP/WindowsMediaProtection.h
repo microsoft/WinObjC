@@ -118,6 +118,7 @@ typedef void (^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager* se
 WINRT_EXPORT
 @interface WMPMediaProtectionManager : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 - (EventRegistrationToken)addComponentLoadFailedEvent:(WMPComponentLoadFailedEventHandler)del;
 - (void)removeComponentLoadFailedEvent:(EventRegistrationToken)tok;
@@ -135,6 +136,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPServiceRequestedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMPMediaProtectionServiceCompletion* completion;
 @property (readonly) RTObject<WMPIMediaProtectionServiceRequest>* request;
 @property (readonly) WMPMediaPlaybackItem* mediaPlaybackItem;
@@ -148,6 +150,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPComponentLoadFailedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMPMediaProtectionServiceCompletion* completion;
 @property (readonly) WMPRevocationAndRenewalInformation* information;
 @end
@@ -160,6 +163,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPMediaProtectionServiceCompletion : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)complete:(BOOL)success;
 @end
 
@@ -171,6 +175,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPRevocationAndRenewalInformation : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSMutableArray* /* WMPRevocationAndRenewalItem* */ items;
 @end
 
@@ -182,6 +187,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPRevocationAndRenewalItem : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* headerHash;
 @property (readonly) NSString* name;
 @property (readonly) NSString* publicKeyHash;
@@ -198,6 +204,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPMediaProtectionPMPServer : RTObject
 + (WMPMediaProtectionPMPServer*)makePMPServer:(RTObject<WFCIPropertySet>*)pProperties ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 

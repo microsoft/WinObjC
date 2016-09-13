@@ -58,6 +58,7 @@ typedef unsigned WNSDDnssdServiceWatcherStatus;
 
 WINRT_EXPORT
 @interface WNSDDnssdServiceWatcher : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WNSDDnssdServiceWatcherStatus status;
 - (EventRegistrationToken)addAddedEvent:(void (^)(WNSDDnssdServiceWatcher*, WNSDDnssdServiceInstance*))del;
 - (void)removeAddedEvent:(EventRegistrationToken)tok;
@@ -88,6 +89,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSDDnssdServiceInstance : RTObject <WFIStringable>
 + (WNSDDnssdServiceInstance*)make:(NSString*)dnssdServiceInstanceName hostName:(WNHostName*)hostName port:(unsigned short)port ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property unsigned short weight;
 @property unsigned short priority;
 @property unsigned short port;
@@ -120,6 +122,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSDDnssdRegistrationResult : RTObject <WFIStringable>
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL hasInstanceNameChanged;
 @property (readonly) WNHostName* iPAddress;
 @property (readonly) WNSDDnssdRegistrationStatus status;
@@ -134,6 +137,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSDDnssdServiceInstanceCollection : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;

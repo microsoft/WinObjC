@@ -149,6 +149,7 @@ typedef unsigned WDEDevicePickerDisplayStatusOptions;
 
 WINRT_EXPORT
 @interface WDEDeviceConnectionChangeTriggerDetails : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* deviceId;
 @end
 
@@ -271,6 +272,7 @@ WINRT_EXPORT
                                           WSSIOutputStream,
                                           WFIClosable,
                                           WSSIInputStream>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* contentType;
 @property uint64_t size;
 @property (readonly) BOOL canRead;
@@ -302,6 +304,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEEnclosureLocation : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL inDock;
 @property (readonly) BOOL inLid;
 @property (readonly) WDEPanel panel;
@@ -315,6 +318,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDeviceInformationUpdate : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* id;
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) WDEDeviceInformationKind kind;
@@ -328,6 +332,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDeviceInformationCollection : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -343,6 +348,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDeviceWatcher : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDEDeviceWatcherStatus status;
 - (EventRegistrationToken)addAddedEvent:(void (^)(WDEDeviceWatcher*, WDEDeviceInformation*))del;
 - (void)removeAddedEvent:(EventRegistrationToken)tok;
@@ -402,6 +408,7 @@ WINRT_EXPORT
 + (WDEDeviceWatcher*)createWatcherAqsFilter:(NSString*)aqsFilter;
 + (WDEDeviceWatcher*)createWatcherAqsFilterAndAdditionalProperties:(NSString*)aqsFilter
                                               additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDEEnclosureLocation* enclosureLocation;
 @property (readonly) NSString* id;
 @property (readonly) BOOL isDefault;
@@ -423,6 +430,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDevicePairingResult : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDEDevicePairingProtectionLevel protectionLevelUsed;
 @property (readonly) WDEDevicePairingResultStatus status;
 @end
@@ -435,6 +443,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDeviceInformationPairing : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL canPair;
 @property (readonly) BOOL isPaired;
 - (void)pairAsyncWithSuccess:(void (^)(WDEDevicePairingResult*))success failure:(void (^)(NSError*))failure;
@@ -451,6 +460,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDeviceAccessChangedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDEDeviceAccessStatus status;
 @end
 
@@ -465,6 +475,7 @@ WINRT_EXPORT
 + (WDEDeviceAccessInformation*)createFromId:(NSString*)deviceId;
 + (WDEDeviceAccessInformation*)createFromDeviceClassId:(WFGUID*)deviceClassId;
 + (WDEDeviceAccessInformation*)createFromDeviceClass:(WDEDeviceClass)deviceClass;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDEDeviceAccessStatus currentStatus;
 - (EventRegistrationToken)addAccessChangedEvent:(void (^)(WDEDeviceAccessInformation*, WDEDeviceAccessChangedEventArgs*))del;
 - (void)removeAccessChangedEvent:(EventRegistrationToken)tok;
@@ -478,6 +489,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDevicePickerAppearance : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* title;
 @property (retain) WUColor* selectedForegroundColor;
 @property (retain) WUColor* selectedBackgroundColor;
@@ -495,6 +507,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDeviceSelectedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDEDeviceInformation* selectedDevice;
 @end
 
@@ -506,6 +519,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDeviceDisconnectButtonClickedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDEDeviceInformation* device;
 @end
 
@@ -517,6 +531,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDevicePickerFilter : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSMutableArray* /* WDEDeviceClass */ supportedDeviceClasses;
 @property (readonly) NSMutableArray* /* NSString * */ supportedDeviceSelectors;
 @end
@@ -530,6 +545,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDEDevicePicker : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDEDevicePickerAppearance* appearance;
 @property (readonly) WDEDevicePickerFilter* filter;
 @property (readonly) NSMutableArray* /* NSString * */ requestedProperties;
@@ -558,6 +574,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDeviceWatcherEvent : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDEDeviceInformation* deviceInformation;
 @property (readonly) WDEDeviceInformationUpdate* deviceInformationUpdate;
 @property (readonly) WDEDeviceWatcherEventKind kind;
@@ -571,6 +588,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDeviceWatcherTriggerDetails : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* WDEDeviceWatcherEvent* */ deviceWatcherEvents;
 @end
 

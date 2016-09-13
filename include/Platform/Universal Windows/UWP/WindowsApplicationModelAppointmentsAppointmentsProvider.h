@@ -53,6 +53,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAAddAppointmentOperation : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WAAAppointment* appointmentInformation;
 @property (readonly) NSString* sourcePackageFamilyName;
 - (void)reportCompleted:(NSString*)itemId;
@@ -69,6 +70,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAReplaceAppointmentOperation : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* appointmentId;
 @property (readonly) WAAAppointment* appointmentInformation;
 @property (readonly) id /* WFDateTime* */ instanceStartDate;
@@ -87,6 +89,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAARemoveAppointmentOperation : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* appointmentId;
 @property (readonly) id /* WFDateTime* */ instanceStartDate;
 @property (readonly) NSString* sourcePackageFamilyName;

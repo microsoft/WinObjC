@@ -118,6 +118,7 @@ typedef unsigned WGPOPrintOptionType;
 
 WINRT_EXPORT
 @interface WGPOPrintCopiesOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintNumberOptionDetails>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int maxValue;
 @property (readonly) unsigned int minValue;
 @property WGPOPrintOptionStates state;
@@ -136,6 +137,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintMediaSizeOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* RTObject* */ items;
 @property WGPOPrintOptionStates state;
 @property (retain) NSString* errorText;
@@ -153,6 +155,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintMediaTypeOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* RTObject* */ items;
 @property WGPOPrintOptionStates state;
 @property (retain) NSString* errorText;
@@ -170,6 +173,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintOrientationOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* RTObject* */ items;
 @property WGPOPrintOptionStates state;
 @property (retain) NSString* errorText;
@@ -187,6 +191,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintQualityOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* RTObject* */ items;
 @property WGPOPrintOptionStates state;
 @property (retain) NSString* errorText;
@@ -204,6 +209,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintColorModeOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* RTObject* */ items;
 @property WGPOPrintOptionStates state;
 @property (retain) NSString* errorText;
@@ -221,6 +227,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintDuplexOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* RTObject* */ items;
 @property WGPOPrintOptionStates state;
 @property (retain) NSString* errorText;
@@ -238,6 +245,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintCollationOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* RTObject* */ items;
 @property WGPOPrintOptionStates state;
 @property (retain) NSString* errorText;
@@ -255,6 +263,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintStapleOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* RTObject* */ items;
 @property WGPOPrintOptionStates state;
 @property (retain) NSString* errorText;
@@ -272,6 +281,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintHolePunchOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* RTObject* */ items;
 @property WGPOPrintOptionStates state;
 @property (retain) NSString* errorText;
@@ -289,6 +299,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintBindingOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* RTObject* */ items;
 @property WGPOPrintOptionStates state;
 @property (retain) NSString* errorText;
@@ -306,6 +317,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintCustomTextOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintCustomOptionDetails>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* displayName;
 @property unsigned int maxCharacters;
 @property WGPOPrintOptionStates state;
@@ -324,6 +336,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintCustomItemDetails : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* itemDisplayName;
 @property (readonly) NSString* itemId;
 @end
@@ -337,6 +350,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WGPOPrintCustomItemListOptionDetails
     : RTObject <WGPOIPrintOptionDetails, WGPOIPrintCustomOptionDetails, WGPOIPrintItemListOptionDetails>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* displayName;
 @property (readonly) NSArray* /* RTObject* */ items;
 @property WGPOPrintOptionStates state;
@@ -356,6 +370,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintTaskOptionChangedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) RTObject* optionId;
 @end
 
@@ -388,6 +403,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WGPOPrintTaskOptionDetails : RTObject <WGPIPrintTaskOptionsCore, WGPIPrintTaskOptionsCoreUIConfiguration>
 + (WGPOPrintTaskOptionDetails*)getFromPrintTaskOptions:(WGPPrintTaskOptions*)printTaskOptions;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSMutableArray* /* NSString * */ displayedOptions;
 @property (readonly) NSDictionary* /* NSString *, RTObject<WGPOIPrintOptionDetails>* */ options;
 - (EventRegistrationToken)addBeginValidationEvent:(void (^)(WGPOPrintTaskOptionDetails*, RTObject*))del;

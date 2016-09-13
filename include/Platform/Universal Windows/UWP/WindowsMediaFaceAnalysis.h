@@ -36,6 +36,7 @@
 
 WINRT_EXPORT
 @interface WMFDetectedFace : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WGIBitmapBounds* faceBox;
 @end
 
@@ -50,6 +51,7 @@ WINRT_EXPORT
 + (void)createAsyncWithSuccess:(void (^)(WMFFaceTracker*))success failure:(void (^)(NSError*))failure;
 + (NSArray* /* WGIBitmapPixelFormat */)getSupportedBitmapPixelFormats;
 + (BOOL)isBitmapPixelFormatSupported:(WGIBitmapPixelFormat)bitmapPixelFormat;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) WGIBitmapSize* minDetectableFaceSize;
 @property (retain) WGIBitmapSize* maxDetectableFaceSize;
 + (BOOL)isSupported;
@@ -69,6 +71,7 @@ WINRT_EXPORT
 + (void)createAsyncWithSuccess:(void (^)(WMFFaceDetector*))success failure:(void (^)(NSError*))failure;
 + (NSArray* /* WGIBitmapPixelFormat */)getSupportedBitmapPixelFormats;
 + (BOOL)isBitmapPixelFormatSupported:(WGIBitmapPixelFormat)bitmapPixelFormat;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) WGIBitmapSize* minDetectableFaceSize;
 @property (retain) WGIBitmapSize* maxDetectableFaceSize;
 + (BOOL)isSupported;

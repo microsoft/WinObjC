@@ -98,6 +98,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAAccessListEntryView : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -113,6 +114,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAStorageItemMostRecentlyUsedList : RTObject <WSAIStorageItemAccessList>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WSAAccessListEntryView* entries;
 @property (readonly) unsigned int maximumItemsAllowed;
 - (EventRegistrationToken)addItemRemovedEvent:(void (^)(WSAStorageItemMostRecentlyUsedList*, WSAItemRemovedEventArgs*))del;
@@ -157,6 +159,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAItemRemovedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WSAAccessListEntry* removedEntry;
 @end
 
@@ -168,6 +171,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAStorageItemAccessList : RTObject <WSAIStorageItemAccessList>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WSAAccessListEntryView* entries;
 @property (readonly) unsigned int maximumItemsAllowed;
 - (NSString*)addOverloadDefaultMetadata:(RTObject<WSIStorageItem>*)file;

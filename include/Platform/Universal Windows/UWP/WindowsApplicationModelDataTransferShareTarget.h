@@ -37,6 +37,7 @@
 WINRT_EXPORT
 @interface WADSQuickLink : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* title;
 @property (retain) WSSRandomAccessStreamReference* thumbnail;
 @property (retain) NSString* id;
@@ -52,6 +53,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADSShareOperation : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WADDataPackageView* data;
 @property (readonly) NSString* quickLinkId;
 - (void)removeThisQuickLink;

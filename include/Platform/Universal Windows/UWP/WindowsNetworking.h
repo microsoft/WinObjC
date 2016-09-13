@@ -71,6 +71,7 @@ WINRT_EXPORT
 @interface WNHostName : RTObject <WFIStringable>
 + (int)compare:(NSString*)value1 value2:(NSString*)value2;
 + (WNHostName*)makeHostName:(NSString*)hostName ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* canonicalName;
 @property (readonly) NSString* displayName;
 @property (readonly) WNCIPInformation* iPInformation;
@@ -92,6 +93,7 @@ WINRT_EXPORT
                    localServiceName:(NSString*)localServiceName
                      remoteHostName:(WNHostName*)remoteHostName
                   remoteServiceName:(NSString*)remoteServiceName ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* remoteServiceName;
 @property (retain) WNHostName* remoteHostName;
 @property (retain) NSString* localServiceName;

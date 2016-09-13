@@ -213,6 +213,7 @@ typedef void (^WMCRecordLimitationExceededEventHandler)(WMCMediaCapture* sender)
 
 WINRT_EXPORT
 @interface WMCCameraCaptureUIPhotoCaptureSettings : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WMCCameraCaptureUIMaxPhotoResolution maxResolution;
 @property WMCCameraCaptureUIPhotoFormat format;
 @property (retain) WFSize* croppedSizeInPixels;
@@ -228,6 +229,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCCameraCaptureUIVideoCaptureSettings : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WMCCameraCaptureUIMaxVideoResolution maxResolution;
 @property float maxDurationInSeconds;
 @property WMCCameraCaptureUIVideoFormat format;
@@ -243,6 +245,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCCameraCaptureUI : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMCCameraCaptureUIPhotoCaptureSettings* photoSettings;
 @property (readonly) WMCCameraCaptureUIVideoCaptureSettings* videoSettings;
 - (void)captureFileAsync:(WMCCameraCaptureUIMode)mode success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
@@ -256,6 +259,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaCaptureFailedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int code;
 @property (readonly) NSString* message;
 @end
@@ -283,6 +287,7 @@ WINRT_EXPORT
 + (NSArray* /* WMCMediaCaptureVideoProfile* */)findConcurrentProfiles:(NSString*)videoDeviceId;
 + (NSArray* /* WMCMediaCaptureVideoProfile* */)findKnownVideoProfiles:(NSString*)videoDeviceId name:(WMCKnownVideoProfile)name;
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMDAudioDeviceController* audioDeviceController;
 @property (readonly) WMCMediaCaptureSettings* mediaCaptureSettings;
 @property (readonly) WMDVideoDeviceController* videoDeviceController;
@@ -386,6 +391,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaCaptureVideoProfileMediaDescription : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) double frameRate;
 @property (readonly) unsigned int height;
 @property (readonly) BOOL isHdrVideoSupported;
@@ -401,6 +407,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaCaptureVideoProfile : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* id;
 @property (readonly) NSArray* /* WMCMediaCaptureVideoProfileMediaDescription* */ supportedPhotoMediaDescription;
 @property (readonly) NSArray* /* WMCMediaCaptureVideoProfileMediaDescription* */ supportedPreviewMediaDescription;
@@ -418,6 +425,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCMediaCaptureInitializationSettings : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* videoDeviceId;
 @property WMCStreamingCaptureMode streamingCaptureMode;
 @property WMCPhotoCaptureSource photoCaptureSource;
@@ -440,6 +448,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaCaptureSettings : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* audioDeviceId;
 @property (readonly) WMCPhotoCaptureSource photoCaptureSource;
 @property (readonly) WMCStreamingCaptureMode streamingCaptureMode;
@@ -463,6 +472,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCLowLagMediaRecording : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (RTObject<WFIAsyncAction>*)startAsync;
 - (RTObject<WFIAsyncAction>*)stopAsync;
 - (RTObject<WFIAsyncAction>*)finishAsync;
@@ -478,6 +488,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCLowLagPhotoCapture : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)captureAsyncWithSuccess:(void (^)(WMCCapturedPhoto*))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)finishAsync;
 @end
@@ -490,6 +501,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCLowLagPhotoSequenceCapture : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (EventRegistrationToken)addPhotoCapturedEvent:(void (^)(WMCLowLagPhotoSequenceCapture*, WMCPhotoCapturedEventArgs*))del;
 - (void)removePhotoCapturedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)startAsync;
@@ -505,6 +517,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaCaptureFocusChangedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMDMediaCaptureFocusState focusState;
 @end
 
@@ -516,6 +529,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCPhotoConfirmationCapturedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFTimeSpan* captureTimeOffset;
 @property (readonly) WMCCapturedFrame* frame;
 @end
@@ -528,6 +542,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCAdvancedPhotoCapture : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (EventRegistrationToken)addAllPhotosCapturedEvent:(void (^)(WMCAdvancedPhotoCapture*, RTObject*))del;
 - (void)removeAllPhotosCapturedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addOptionalReferencePhotoCapturedEvent:(void (^)(WMCAdvancedPhotoCapture*,
@@ -546,6 +561,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCCapturedPhoto : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMCCapturedFrame* frame;
 @property (readonly) WMCCapturedFrame* thumbnail;
 @end
@@ -558,6 +574,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCAdvancedCapturedPhoto : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) RTObject* context;
 @property (readonly) WMCCapturedFrame* frame;
 @property (readonly) WMDAdvancedPhotoMode mode;
@@ -571,6 +588,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCOptionalReferencePhotoCapturedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) RTObject* context;
 @property (readonly) WMCCapturedFrame* frame;
 @end
@@ -684,6 +702,7 @@ WINRT_EXPORT
                                         WSSIOutputStream,
                                         WFIClosable,
                                         WSSIInputStream>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int height;
 @property (readonly) unsigned int width;
 @property (readonly) WGISoftwareBitmap* softwareBitmap;
@@ -718,6 +737,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCPhotoCapturedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFTimeSpan* captureTimeOffset;
 @property (readonly) WMCCapturedFrame* frame;
 @property (readonly) WMCCapturedFrame* thumbnail;
@@ -731,6 +751,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCCapturedFrameControlValues : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) id /* WFTimeSpan* */ exposure;
 @property (readonly) id /* float */ exposureCompensation;
 @property (readonly) id /* float */ flashPowerPercent;
@@ -755,6 +776,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCVideoStreamConfiguration : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WMMVideoEncodingProperties* inputProperties;
 @property (readonly) WMMVideoEncodingProperties* outputProperties;
 @end

@@ -52,6 +52,7 @@ WINRT_EXPORT
 @interface WDBRRfcommDeviceService : RTObject <WFIClosable>
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDBRRfcommDeviceService*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector:(WDBRRfcommServiceId*)serviceId;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WNHostName* connectionHostName;
 @property (readonly) NSString* connectionServiceName;
 @property (readonly) WNSSocketProtectionLevel maxProtectionLevel;
@@ -76,6 +77,7 @@ WINRT_EXPORT
 @interface WDBRRfcommServiceId : RTObject
 + (WDBRRfcommServiceId*)fromUuid:(WFGUID*)uuid;
 + (WDBRRfcommServiceId*)fromShortId:(unsigned int)shortId;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFGUID* uuid;
 + (WDBRRfcommServiceId*)genericFileTransfer;
 + (WDBRRfcommServiceId*)obexFileTransfer;
@@ -98,6 +100,7 @@ WINRT_EXPORT
 + (void)createAsync:(WDBRRfcommServiceId*)serviceId
             success:(void (^)(WDBRRfcommServiceProvider*))success
             failure:(void (^)(NSError*))failure;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSMutableDictionary* /* unsigned int, RTObject<WSSIBuffer>* */ sdpRawAttributes;
 @property (readonly) WDBRRfcommServiceId* serviceId;
 - (void)startAdvertising:(WNSStreamSocketListener*)listener;

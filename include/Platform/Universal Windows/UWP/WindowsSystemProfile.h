@@ -33,6 +33,7 @@
 
 WINRT_EXPORT
 @interface WSPAnalyticsVersionInfo : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* deviceFamily;
 @property (readonly) NSString* deviceFamilyVersion;
 @end

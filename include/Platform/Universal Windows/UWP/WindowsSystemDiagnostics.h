@@ -39,6 +39,7 @@ WINRT_EXPORT
 @interface WSDProcessDiagnosticInfo : RTObject
 + (NSArray* /* WSDProcessDiagnosticInfo* */)getForProcesses;
 + (WSDProcessDiagnosticInfo*)getForCurrentProcess;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WSDProcessCpuUsage* cpuUsage;
 @property (readonly) WSDProcessDiskUsage* diskUsage;
 @property (readonly) NSString* executableFileName;
@@ -56,6 +57,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSDProcessDiskUsage : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (WSDProcessDiskUsageReport*)getReport;
 @end
 
@@ -67,6 +69,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSDProcessMemoryUsage : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (WSDProcessMemoryUsageReport*)getReport;
 @end
 
@@ -78,6 +81,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSDProcessCpuUsage : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (WSDProcessCpuUsageReport*)getReport;
 @end
 
@@ -89,6 +93,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSDProcessMemoryUsageReport : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) uint64_t nonPagedPoolSizeInBytes;
 @property (readonly) unsigned int pageFaultCount;
 @property (readonly) uint64_t pageFileSizeInBytes;
@@ -111,6 +116,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSDProcessDiskUsageReport : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) int64_t bytesReadCount;
 @property (readonly) int64_t bytesWrittenCount;
 @property (readonly) int64_t otherBytesCount;
@@ -127,6 +133,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSDProcessCpuUsageReport : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WFTimeSpan* kernelTime;
 @property (readonly) WFTimeSpan* userTime;
 @end

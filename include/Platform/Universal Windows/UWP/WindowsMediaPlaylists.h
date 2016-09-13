@@ -46,6 +46,7 @@ WINRT_EXPORT
 @interface WMPPlaylist : RTObject
 + (void)loadAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WMPPlaylist*))success failure:(void (^)(NSError*))failure;
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSMutableArray* /* WSStorageFile* */ files;
 - (RTObject<WFIAsyncAction>*)saveAsync;
 - (void)saveAsAsync:(RTObject<WSIStorageFolder>*)saveLocation

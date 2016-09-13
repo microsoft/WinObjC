@@ -242,6 +242,7 @@ typedef unsigned WUNToastHistoryChangedType;
 
 WINRT_EXPORT
 @interface WUNTileUpdater : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WUNNotificationSetting setting;
 - (void)update:(WUNTileNotification*)notification;
 - (void)clear;
@@ -273,6 +274,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUNTileNotification : RTObject
 + (WUNTileNotification*)makeTileNotification:(WDXDXmlDocument*)content ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* tag;
 @property (retain) id /* WFDateTime* */ expirationTime;
 @property (readonly) WDXDXmlDocument* content;
@@ -287,6 +289,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUNScheduledTileNotification : RTObject
 + (WUNScheduledTileNotification*)makeScheduledTileNotification:(WDXDXmlDocument*)content deliveryTime:(WFDateTime*)deliveryTime ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* tag;
 @property (retain) NSString* id;
 @property (retain) id /* WFDateTime* */ expirationTime;
@@ -302,6 +305,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNTileFlyoutUpdater : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WUNNotificationSetting setting;
 - (void)update:(WUNTileFlyoutNotification*)notification;
 - (void)clear;
@@ -321,6 +325,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUNTileFlyoutNotification : RTObject
 + (WUNTileFlyoutNotification*)makeTileFlyoutNotification:(WDXDXmlDocument*)content ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) id /* WFDateTime* */ expirationTime;
 @property (readonly) WDXDXmlDocument* content;
 @end
@@ -333,6 +338,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNBadgeUpdater : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)update:(WUNBadgeNotification*)notification;
 - (void)clear;
 - (void)startPeriodicUpdate:(WFUri*)badgeContent requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
@@ -351,6 +357,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUNBadgeNotification : RTObject
 + (WUNBadgeNotification*)makeBadgeNotification:(WDXDXmlDocument*)content ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) id /* WFDateTime* */ expirationTime;
 @property (readonly) WDXDXmlDocument* content;
 @end
@@ -363,6 +370,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNToastNotifier : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WUNNotificationSetting setting;
 - (void)show:(WUNToastNotification*)notification;
 - (void)hide:(WUNToastNotification*)notification;
@@ -380,6 +388,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUNToastNotification : RTObject
 + (WUNToastNotification*)makeToastNotification:(WDXDXmlDocument*)content ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) id /* WFDateTime* */ expirationTime;
 @property (readonly) WDXDXmlDocument* content;
 @property (retain) NSString* tag;
@@ -406,6 +415,7 @@ WINRT_EXPORT
                                                              deliveryTime:(WFDateTime*)deliveryTime
                                                            snoozeInterval:(WFTimeSpan*)snoozeInterval
                                                        maximumSnoozeCount:(unsigned int)maximumSnoozeCount ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* id;
 @property (readonly) WDXDXmlDocument* content;
 @property (readonly) WFDateTime* deliveryTime;
@@ -424,6 +434,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNToastDismissedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WUNToastDismissalReason reason;
 @end
 
@@ -435,6 +446,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNToastFailedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) HRESULT errorCode;
 @end
 
@@ -446,6 +458,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNToastNotificationHistory : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)removeGroup:(NSString*)group;
 - (void)removeGroupWithId:(NSString*)group applicationId:(NSString*)applicationId;
 - (void)removeGroupedTagWithId:(NSString*)tag group:(NSString*)group applicationId:(NSString*)applicationId;
@@ -521,6 +534,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNToastActivatedEventArgs : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* arguments;
 @end
 
@@ -532,6 +546,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNToastNotificationHistoryChangedTriggerDetail : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WUNToastHistoryChangedType changeType;
 @end
 
@@ -543,6 +558,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNToastNotificationActionTriggerDetail : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* argument;
 @property (readonly) WFCValueSet* userInput;
 @end

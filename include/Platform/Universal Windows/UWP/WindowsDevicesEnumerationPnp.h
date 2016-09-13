@@ -49,6 +49,7 @@ typedef unsigned WDEPPnpObjectType;
 
 WINRT_EXPORT
 @interface WDEPPnpObjectUpdate : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* id;
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) WDEPPnpObjectType type;
@@ -62,6 +63,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEPPnpObjectCollection : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -77,6 +79,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEPPnpObjectWatcher : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WDEDeviceWatcherStatus status;
 - (EventRegistrationToken)addAddedEvent:(void (^)(WDEPPnpObjectWatcher*, WDEPPnpObject*))del;
 - (void)removeAddedEvent:(EventRegistrationToken)tok;
@@ -119,6 +122,7 @@ WINRT_EXPORT
 + (WDEPPnpObjectWatcher*)createWatcherAqsFilter:(WDEPPnpObjectType)type
                             requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties
                                       aqsFilter:(NSString*)aqsFilter;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* id;
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) WDEPPnpObjectType type;

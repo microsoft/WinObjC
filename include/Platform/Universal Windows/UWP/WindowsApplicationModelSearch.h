@@ -38,6 +38,7 @@
 
 WINRT_EXPORT
 @interface WASSearchPaneQueryLinguisticDetails : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* NSString * */ queryTextAlternatives;
 @property (readonly) unsigned int queryTextCompositionLength;
 @property (readonly) unsigned int queryTextCompositionStart;
@@ -51,6 +52,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASSearchSuggestionCollection : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int size;
 - (void)appendQuerySuggestion:(NSString*)text;
 - (void)appendQuerySuggestions:(id<NSFastEnumeration> /* NSString * */)suggestions;
@@ -71,6 +73,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WASLocalContentSuggestionSettings : RTObject
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property BOOL enabled;
 @property (retain) NSString* aqsFilter;
 @property (readonly) NSMutableArray* /* WSStorageFolder* */ locations;
@@ -88,6 +91,7 @@ WINRT_EXPORT
 + (WASSearchQueryLinguisticDetails*)makeInstance:(id<NSFastEnumeration> /* NSString * */)queryTextAlternatives
                        queryTextCompositionStart:(unsigned int)queryTextCompositionStart
                       queryTextCompositionLength:(unsigned int)queryTextCompositionLength ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSArray* /* NSString * */ queryTextAlternatives;
 @property (readonly) unsigned int queryTextCompositionLength;
 @property (readonly) unsigned int queryTextCompositionStart;
@@ -101,6 +105,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASSearchSuggestionsRequestDeferral : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (void)complete;
 @end
 
@@ -112,6 +117,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASSearchSuggestionsRequest : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) BOOL isCanceled;
 @property (readonly) WASSearchSuggestionCollection* searchSuggestionCollection;
 - (WASSearchSuggestionsRequestDeferral*)getDeferral;

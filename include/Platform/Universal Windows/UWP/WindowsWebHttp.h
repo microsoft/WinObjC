@@ -207,6 +207,7 @@ WINRT_EXPORT
 @interface WWHHttpRequestMessage : RTObject <WFIClosable, WFIStringable>
 + (instancetype)make ACTIVATOR;
 + (WWHHttpRequestMessage*)make:(WWHHttpMethod*)method uri:(WFUri*)uri ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) WFUri* requestUri;
 @property (retain) WWHHttpMethod* method;
 @property (retain) RTObject<WWHIHttpContent>* content;
@@ -227,6 +228,7 @@ WINRT_EXPORT
 @interface WWHHttpResponseMessage : RTObject <WFIClosable, WFIStringable>
 + (instancetype)make ACTIVATOR;
 + (WWHHttpResponseMessage*)make:(WWHHttpStatusCode)statusCode ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property WWHHttpVersion Version;
 @property WWHHttpStatusCode statusCode;
 @property WWHHttpResponseMessageSource source;
@@ -250,6 +252,7 @@ WINRT_EXPORT
 @interface WWHHttpClient : RTObject <WFIClosable, WFIStringable>
 + (instancetype)make ACTIVATOR;
 + (WWHHttpClient*)make:(RTObject<WWHFIHttpFilter>*)filter ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WWHHHttpRequestHeaderCollection* defaultRequestHeaders;
 - (void)deleteAsync:(WFUri*)uri
             success:(void (^)(WWHHttpResponseMessage*))success
@@ -308,6 +311,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WWHHttpCookie : RTObject <WFIStringable>
 + (WWHHttpCookie*)make:(NSString*)name domain:(NSString*)domain path:(NSString*)path ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (retain) NSString* value;
 @property BOOL secure;
 @property BOOL httpOnly;
@@ -326,6 +330,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpCookieCollection : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -342,6 +347,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WWHHttpMethod : RTObject <WFIStringable>
 + (WWHHttpMethod*)make:(NSString*)method ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) NSString* method;
 + (WWHHttpMethod*)Delete;
 + (WWHHttpMethod*)get;
@@ -361,6 +367,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpTransportInformation : RTObject <WFIStringable>
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WSCCCertificate* serverCertificate;
 @property (readonly) WNSSocketSslErrorSeverity serverCertificateErrorSeverity;
 @property (readonly) NSArray* /* WSCCChainValidationResult */ serverCertificateErrors;
@@ -381,6 +388,7 @@ WINRT_EXPORT
 + (WWHHttpStringContent*)makeFromStringWithEncodingAndMediaType:(NSString*)content
                                                        encoding:(WSSUnicodeEncoding)encoding
                                                       mediaType:(NSString*)mediaType ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsBufferAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success
@@ -411,6 +419,7 @@ WINRT_EXPORT
 + (WWHHttpBufferContent*)makeFromBufferWithOffset:(RTObject<WSSIBuffer>*)content
                                            offset:(unsigned int)offset
                                             count:(unsigned int)count ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsBufferAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success
@@ -438,6 +447,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WWHHttpStreamContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpStreamContent*)makeFromInputStream:(RTObject<WSSIInputStream>*)content ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsBufferAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success
@@ -465,6 +475,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WWHHttpFormUrlEncodedContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpFormUrlEncodedContent*)make:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)content ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsBufferAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success
@@ -494,6 +505,7 @@ WINRT_EXPORT
 + (WWHHttpMultipartContent*)makeWithSubtype:(NSString*)subtype ACTIVATOR;
 + (WWHHttpMultipartContent*)makeWithSubtypeAndBoundary:(NSString*)subtype boundary:(NSString*)boundary ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsBufferAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success
@@ -523,6 +535,7 @@ WINRT_EXPORT
 @interface WWHHttpMultipartFormDataContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpMultipartFormDataContent*)makeWithBoundary:(NSString*)boundary ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsBufferAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success
@@ -552,6 +565,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpCookieManager : RTObject
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 - (BOOL)setCookie:(WWHHttpCookie*)cookie;
 - (BOOL)setCookieWithThirdParty:(WWHHttpCookie*)cookie thirdParty:(BOOL)thirdParty;
 - (void)deleteCookie:(WWHHttpCookie*)cookie;
