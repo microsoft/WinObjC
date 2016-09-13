@@ -175,13 +175,12 @@ bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret) {
         return false;
     }
 
-    if (0
-#define APPLY_TYPE(type, name, capitalizedName, encodingChar) || (valueType[0] == encodingChar && (*ret = quickGet<type>(self, getter)))
-        APPLY_TYPE(id, object, Object, '@') APPLY_TYPE(Class, class, Class, '#')
+    switch (valueType[0]) {
+#define APPLY_TYPE(type, name, capitalizedName, encodingChar) case encodingChar: *ret = quickGet<type>(self, getter); return true;
+        APPLY_TYPE(id, object, Object, '@')
+        APPLY_TYPE(Class, class, Class, '#')
 #include "type_encoding_cases.h"
 #undef APPLY_TYPE
-            ) {
-        return true;
     }
 
     NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
@@ -407,14 +406,17 @@ bool KVCSetViaAccessor(NSObject* self, SEL setter, id value) {
     if (sig && [sig numberOfArguments] == 3) {
         const char* valueType = [sig getArgumentTypeAtIndex:2];
 
-        if (0
+        switch (valueType[0]) {
 #define APPLY_TYPE(type, name, capitalizedName, encodingChar) \
-    || (valueType[0] == encodingChar && quickSet<type>(self, setter, value, valueType))
-            APPLY_TYPE(id, object, Object, '@') APPLY_TYPE(Class, class, Class, '#')
+            case encodingChar: \
+                if (quickSet<type>(self, setter, value, valueType)) { \
+                    return true; \
+                } \
+                break;
+            APPLY_TYPE(id, object, Object, '@')
+            APPLY_TYPE(Class, class, Class, '#')
 #include "type_encoding_cases.h"
 #undef APPLY_TYPE
-                ) {
-            return true;
         }
 
         uint8_t* data = static_cast<uint8_t*>(_alloca(objc_sizeof_type(valueType)));
