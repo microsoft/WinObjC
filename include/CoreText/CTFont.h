@@ -163,11 +163,16 @@ CORETEXT_EXPORT const CFStringRef kCTFontFeatureSelectorNameKey;
 CORETEXT_EXPORT const CFStringRef kCTFontFeatureSelectorDefaultKey;
 CORETEXT_EXPORT const CFStringRef kCTFontFeatureSelectorSettingKey;
 
+CORETEXT_EXPORT const CGFloat kCTFontLabelFontSize;
+CORETEXT_EXPORT const CGFloat kCTFontButtonFontSize;
+CORETEXT_EXPORT const CGFloat kCTFontSmallSystemFontSize;
+CORETEXT_EXPORT const CGFloat kCTFontSystemFontSize;
+
 CORETEXT_EXPORT CTFontRef CTFontCreateWithName(CFStringRef name, CGFloat size, const CGAffineTransform* matrix);
 CORETEXT_EXPORT CTFontRef CTFontCreateWithNameAndOptions(CFStringRef name,
                                                          CGFloat size,
                                                          const CGAffineTransform* matrix,
-                                                         CTFontOptions options) STUB_METHOD;
+                                                         CTFontOptions options);
 CORETEXT_EXPORT CTFontRef CTFontCreateWithFontDescriptor(CTFontDescriptorRef descriptor,
                                                          CGFloat size,
                                                          const CGAffineTransform* matrix) STUB_METHOD;
@@ -197,7 +202,7 @@ CORETEXT_EXPORT CFDictionaryRef CTFontCopyTraits(CTFontRef font) STUB_METHOD;
 CORETEXT_EXPORT CFStringRef CTFontCopyPostScriptName(CTFontRef font);
 CORETEXT_EXPORT CFStringRef CTFontCopyFamilyName(CTFontRef font);
 CORETEXT_EXPORT CFStringRef CTFontCopyFullName(CTFontRef font);
-CORETEXT_EXPORT CFStringRef CTFontCopyDisplayName(CTFontRef font) STUB_METHOD;
+CORETEXT_EXPORT CFStringRef CTFontCopyDisplayName(CTFontRef font);
 CORETEXT_EXPORT CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey);
 CORETEXT_EXPORT CFStringRef CTFontCopyLocalizedName(CTFontRef font, CFStringRef nameKey, CFStringRef _Nullable* actualLanguage) STUB_METHOD;
 CORETEXT_EXPORT CFCharacterSetRef CTFontCopyCharacterSet(CTFontRef font) STUB_METHOD;
@@ -206,14 +211,14 @@ CORETEXT_EXPORT CFArrayRef CTFontCopySupportedLanguages(CTFontRef font) STUB_MET
 CORETEXT_EXPORT CGFloat CTFontGetAscent(CTFontRef font);
 CORETEXT_EXPORT CGFloat CTFontGetDescent(CTFontRef font);
 CORETEXT_EXPORT CGFloat CTFontGetLeading(CTFontRef font) STUB_METHOD;
-CORETEXT_EXPORT unsigned int CTFontGetUnitsPerEm(CTFontRef font) STUB_METHOD;
-CORETEXT_EXPORT CFIndex CTFontGetGlyphCount(CTFontRef font) STUB_METHOD;
+CORETEXT_EXPORT unsigned int CTFontGetUnitsPerEm(CTFontRef font);
+CORETEXT_EXPORT CFIndex CTFontGetGlyphCount(CTFontRef font);
 CORETEXT_EXPORT CGRect CTFontGetBoundingBox(CTFontRef font) STUB_METHOD;
-CORETEXT_EXPORT CGFloat CTFontGetUnderlinePosition(CTFontRef font) STUB_METHOD;
-CORETEXT_EXPORT CGFloat CTFontGetUnderlineThickness(CTFontRef font) STUB_METHOD;
+CORETEXT_EXPORT CGFloat CTFontGetUnderlinePosition(CTFontRef font);
+CORETEXT_EXPORT CGFloat CTFontGetUnderlineThickness(CTFontRef font);
 CORETEXT_EXPORT CGFloat CTFontGetSlantAngle(CTFontRef font) STUB_METHOD;
-CORETEXT_EXPORT CGFloat CTFontGetCapHeight(CTFontRef font) STUB_METHOD;
-CORETEXT_EXPORT CGFloat CTFontGetXHeight(CTFontRef font) STUB_METHOD;
+CORETEXT_EXPORT CGFloat CTFontGetCapHeight(CTFontRef font);
+CORETEXT_EXPORT CGFloat CTFontGetXHeight(CTFontRef font);
 CORETEXT_EXPORT CGPathRef CTFontCreatePathForGlyph(CTFontRef font, CGGlyph glyph, const CGAffineTransform* matrix) STUB_METHOD;
 CORETEXT_EXPORT CGGlyph CTFontGetGlyphWithName(CTFontRef font, CFStringRef glyphName) STUB_METHOD;
 CORETEXT_EXPORT CGRect CTFontGetBoundingRectsForGlyphs(
@@ -238,4 +243,4 @@ CORETEXT_EXPORT CTFontRef CTFontCreateWithGraphicsFont(CGFontRef graphicsFont,
                                                        CTFontDescriptorRef attributes);
 CORETEXT_EXPORT CFArrayRef CTFontCopyAvailableTables(CTFontRef font, CTFontTableOptions options) STUB_METHOD;
 CORETEXT_EXPORT CFDataRef CTFontCopyTable(CTFontRef font, CTFontTableTag table, CTFontTableOptions options) STUB_METHOD;
-CORETEXT_EXPORT CFTypeID CTFontGetTypeID() STUB_METHOD;
+CORETEXT_EXPORT CFTypeID CTFontGetTypeID();

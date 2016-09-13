@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
+#import <TestFramework.h>
 #import <Foundation/Foundation.h>
 #import <CoreText/CoreText.h>
 
@@ -25,9 +25,9 @@ public:
 
 protected:
     virtual void SetUp() {
-        const CFStringRef fontName = static_cast<CFStringRef>(@"SegoeUI");
+        const CFStringRef fontName = static_cast<CFStringRef>(@"Segoe UI");
         _font = CTFontCreateWithName(fontName, 0.0, NULL);
-        ASSERT_TRUE_MSG(_font != nil, "Failed: Font is nil.");
+        EXPECT_TRUE_MSG(_font != nil, "Failed: Font is nil.");
     }
 
     virtual void TearDown() {
@@ -41,7 +41,7 @@ protected:
 
 TEST_P(FontCopyName, VerifyProperties) {
     const CFStringRef propertyValue = CTFontCopyName(_font, ::testing::get<0>(GetParam()));
-    ASSERT_OBJCEQ(static_cast<NSString*>(propertyValue), ::testing::get<1>(GetParam()));
+    EXPECT_OBJCEQ(static_cast<NSString*>(propertyValue), ::testing::get<1>(GetParam()));
     CFRelease(propertyValue);
 }
 
@@ -70,7 +70,7 @@ const NSString* c_licenseURLName = @"http://www.microsoft.com/typography/fonts/"
 const NSString* c_sampleTextName = nullptr;
 const NSString* c_postscriptCIDName = nullptr;
 
-INSTANTIATE_TEST_CASE_P(CoreText,
+INSTANTIATE_TEST_CASE_P(CTFont,
                         FontCopyName,
                         ::testing::Values(::testing::make_tuple(kCTFontCopyrightNameKey, c_copyrightName),
                                           ::testing::make_tuple(kCTFontFamilyNameKey, c_familyName),
@@ -89,3 +89,96 @@ INSTANTIATE_TEST_CASE_P(CoreText,
                                           ::testing::make_tuple(kCTFontSampleTextNameKey, c_sampleTextName),
                                           ::testing::make_tuple(kCTFontVersionNameKey, c_versionName),
                                           ::testing::make_tuple(kCTFontPostScriptCIDNameKey, c_postscriptCIDName)));
+
+TEST(CTFont, EqualHash) {
+    CTFontRef font1 = CTFontCreateWithName(CFSTR("Times New Roman"), 12.0, NULL);
+    CTFontRef font2 = CTFontCreateWithName(CFSTR("Times New Roman"), 12.0, NULL);
+    CTFontRef font3 = CTFontCreateWithName(CFSTR("Times New Roman Bold"), 12.0, NULL);
+    CTFontRef font4 = CTFontCreateWithName(CFSTR("Times New Roman"), 14.0, NULL);
+    CFAutorelease(font1);
+    CFAutorelease(font2);
+    CFAutorelease(font3);
+    CFAutorelease(font4);
+
+    EXPECT_TRUE(CFEqual(font1, font2));
+    EXPECT_FALSE(CFEqual(font1, font3));
+    EXPECT_FALSE(CFEqual(font1, font4));
+
+    EXPECT_EQ(CFHash(font1), CFHash(font2));
+    EXPECT_NE(CFHash(font1), CFHash(font3));
+    EXPECT_NE(CFHash(font1), CFHash(font4));
+}
+
+TEST(CTFont, Description) {
+    CTFontRef font1 = CTFontCreateWithName(CFSTR("Arial"), 10.0, NULL);
+    CFAutorelease(font1);
+
+    EXPECT_OBJCNE(nil, (id)CFAutorelease(CFCopyDescription(font1)));
+}
+
+TEST(CTFont, CopyNameHelpers) {
+    CTFontRef font = CTFontCreateWithName(CFSTR("Arial Italic"), 15.0, NULL);
+    CFAutorelease(font);
+
+    EXPECT_OBJCEQ(@"Arial-ItalicMT", (id)CFAutorelease(CTFontCopyPostScriptName(font)));
+    EXPECT_OBJCEQ(@"Arial", (id)CFAutorelease(CTFontCopyFamilyName(font)));
+    EXPECT_OBJCEQ(@"Arial Italic", (id)CFAutorelease(CTFontCopyFullName(font)));
+    EXPECT_OBJCEQ(@"Arial Italic", (id)CFAutorelease(CTFontCopyDisplayName(font)));
+
+    font = CTFontCreateWithName(CFSTR("Arial Narrow"), 15.0, NULL);
+    CFAutorelease(font);
+
+    EXPECT_OBJCEQ(@"ArialNarrow", (id)CFAutorelease(CTFontCopyPostScriptName(font)));
+    EXPECT_OBJCEQ(@"Arial Narrow", (id)CFAutorelease(CTFontCopyFamilyName(font)));
+    EXPECT_OBJCEQ(@"Arial Narrow", (id)CFAutorelease(CTFontCopyFullName(font)));
+    EXPECT_OBJCEQ(@"Arial Narrow", (id)CFAutorelease(CTFontCopyDisplayName(font)));
+}
+
+TEST(CTFont, Metrics) {
+    CTFontRef font = CTFontCreateWithName(CFSTR("Courier New Bold Italic"), 15.0, NULL);
+    CFAutorelease(font);
+
+    EXPECT_OBJCEQ(@"Courier New Bold Italic", (id)CFAutorelease(CTFontCopyFullName(font)));
+
+    EXPECT_NE(0, CTFontGetAscent(font));
+    EXPECT_NE(0, CTFontGetDescent(font));
+    EXPECT_NE(0, CTFontGetUnitsPerEm(font));
+    EXPECT_NE(0, CTFontGetUnderlinePosition(font));
+    EXPECT_NE(0, CTFontGetUnderlineThickness(font));
+    EXPECT_NE(0, CTFontGetCapHeight(font));
+    EXPECT_NE(0, CTFontGetXHeight(font));
+}
+
+TEST(CTFont, GlyphCount) {
+    CTFontRef font = CTFontCreateWithName(CFSTR("Arial"), 15.0, NULL);
+    CFAutorelease(font);
+    // Test for reasonable bounds on number of unique glyphs in a font
+    EXPECT_LE(3000, CTFontGetGlyphCount(font));
+    EXPECT_GE(8000, CTFontGetGlyphCount(font));
+
+    font = CTFontCreateWithName(CFSTR("Courier New"), 9.0, NULL);
+    CFAutorelease(font);
+    // Test for reasonable bounds on number of unique glyphs in a font
+    EXPECT_LE(3000, CTFontGetGlyphCount(font));
+    EXPECT_GE(8000, CTFontGetGlyphCount(font));
+}
+
+TEST(CTFont, UnknownName) {
+    EXPECT_OBJCEQ(nil, (id)CFAutorelease(CTFontCreateWithName(CFSTR("DoesNotExistFont"), 12.0, NULL)));
+}
+
+// TODO: Do we care enough about fixing this?
+DISABLED_TEST(CTFont, CaseInsensitive) {
+    CTFontRef font1 = CTFontCreateWithName(CFSTR("Arial"), 12.0, NULL);
+    CTFontRef font2 = CTFontCreateWithName(CFSTR("ARIAL"), 12.0, NULL);
+    CTFontRef font3 = CTFontCreateWithName(CFSTR("arial"), 12.0, NULL);
+    CTFontRef font4 = CTFontCreateWithName(CFSTR("aRiAL"), 12.0, NULL);
+    CFAutorelease(font1);
+    CFAutorelease(font2);
+    CFAutorelease(font3);
+    CFAutorelease(font4);
+
+    EXPECT_TRUE(CFEqual(font1, font2));
+    EXPECT_TRUE(CFEqual(font1, font3));
+    EXPECT_TRUE(CFEqual(font1, font4));
+}

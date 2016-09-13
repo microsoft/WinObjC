@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,7 +13,13 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
 #pragma once
+
+#import <CoreFoundation/CoreFoundation.h>
+#import <CoreText/CoreTextExport.h>
+#import <CoreGraphics/CoreGraphics.h>
+#import <CoreTextInternal.h>
 
 #include <COMIncludes.h>
 #import <DWrite.h>
@@ -21,6 +27,8 @@
 #include <COMIncludes_End.h>
 
 #import <Foundation/NSObject.h>
+#import <Foundation/NSArray.h>
+#import <Foundation/NSString.h>
 #import <vector>
 
 #define NSMakeRangeFromCF(cfr) NSMakeRange(cfr.location == kCFNotFound ? NSNotFound : cfr.location, cfr.length)
@@ -45,5 +53,11 @@ struct _DWriteGlyphRunDetails {
     std::vector<_DWriteGlyphRunDescription> _glyphRunDescriptions;
 };
 
-NSArray<NSString*>* _DWriteGetFamilyNames();
+CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedString);
 NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRect frameSize);
+
+CFArrayRef _DWriteGetFontFamilyNames();
+CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName);
+CORETEXT_EXPORT CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName);
+
+HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace);

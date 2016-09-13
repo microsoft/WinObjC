@@ -14,18 +14,19 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
+#import <TestFramework.h>
 #import <UIKit/UIFont.h>
+#import <CoreText/CoreText.h>
 
-TEST(UIFontTest, FamilyName) {
-    UIFont* font = [UIFont fontWithName:@"SegoeUI" size:22];
+TEST(UIFont, FamilyName) {
+    UIFont* font = [UIFont fontWithName:@"Segoe UI" size:22];
     ASSERT_TRUE_MSG(font != nil, "Failed: Font is nil.");
 
     NSString* familyName = [font familyName];
     ASSERT_OBJCEQ_MSG(familyName, @"Segoe UI", "Failed: Incorrect font family name");
 }
 
-TEST(UIFontTest, FamilyNames) {
+TEST(UIFont, FamilyNames) {
     NSArray<NSString*>* familyNames = [UIFont familyNames];
     ASSERT_TRUE_MSG(familyNames != nil, "Failed: familyNames is nil.");
     ASSERT_TRUE_MSG(familyNames.count > 0, "Failed: familyNames is empty.");
@@ -36,7 +37,7 @@ TEST(UIFontTest, FamilyNames) {
     }
 }
 
-TEST(UIFontTest, FontNamesForFamilyName) {
+TEST(UIFont, FontNamesForFamilyName) {
     NSArray<NSString*>* familyNames = [UIFont familyNames];
     ASSERT_TRUE_MSG(familyNames != nil, "Failed: familyNames is nil.");
     ASSERT_TRUE_MSG(familyNames.count > 0, "Failed: familyNames is empty.");
@@ -54,8 +55,8 @@ TEST(UIFontTest, FontNamesForFamilyName) {
     }
 }
 
-TEST(UIFontTest, CopyWithZone) {
-    UIFont* font = [UIFont fontWithName:@"SegoeUI" size:22];
+TEST(UIFont, CopyWithZone) {
+    UIFont* font = [UIFont fontWithName:@"Segoe UI" size:22];
     NSUInteger count = [font retainCount];
 
     id newFont = [font copy];
@@ -68,18 +69,18 @@ TEST(UIFontTest, CopyWithZone) {
     [newFont release];
 }
 
-TEST(UIFontTest, FontWithName) {
-    UIFont* fontPositiveWithName = [UIFont fontWithName:@"SegoeUI" size:10];
-    UIFont* fontZeroWithName = [UIFont fontWithName:@"SegoeUI" size:0];
-    UIFont* fontNegativeWithName = [UIFont fontWithName:@"SegoeUI" size:-10];
+TEST(UIFont, FontWithName) {
+    UIFont* fontPositiveWithName = [UIFont fontWithName:@"Segoe UI" size:10];
+    UIFont* fontZeroWithName = [UIFont fontWithName:@"Segoe UI" size:0];
+    UIFont* fontNegativeWithName = [UIFont fontWithName:@"Segoe UI" size:-10];
 
     ASSERT_TRUE_MSG([fontPositiveWithName pointSize] == 10, "Failed: Size of fontPositiveWithName is not positive.");
-    ASSERT_TRUE_MSG([fontZeroWithName pointSize] == 14, "Failed: Size of fontZeroWithName is not systemtFontSize.");
-    ASSERT_TRUE_MSG([fontNegativeWithName pointSize] == 14, "Failed: Size of fontNegativeWithName is not systemtFontSize.");
+    ASSERT_EQ_MSG([UIFont systemFontSize], [fontZeroWithName pointSize], "Failed: Size of fontZeroWithName is not systemFontSize.");
+    ASSERT_EQ_MSG([UIFont systemFontSize], [fontNegativeWithName pointSize], "Failed: Size of fontNegativeWithName is not systemFontSize.");
 }
 
-TEST(UIFontTest, FontWithSize) {
-    UIFont* font = [UIFont fontWithName:@"SegoeUI" size:10];
+TEST(UIFont, FontWithSize) {
+    UIFont* font = [UIFont fontWithName:@"Segoe UI" size:10];
 
     UIFont* fontPositiveWithSize = [font fontWithSize:10];
     UIFont* fontZeroWithSize = [font fontWithSize:0];
@@ -90,8 +91,8 @@ TEST(UIFontTest, FontWithSize) {
     ASSERT_TRUE_MSG([fontNegativeWithSize pointSize] == 14, "Failed: Size of fontNegativeWithSize is not systemtFontSize.");
 }
 
-TEST(UIFontTest, FontWithDescriptor) {
-    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"SegoeUI" size:-10];
+TEST(UIFont, FontWithDescriptor) {
+    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Segoe UI" size:-10];
     UIFont* fontPositiveWithDescriptor = [UIFont fontWithDescriptor:fontDescriptor size:10];
     UIFont* fontZeroWithDescriptor = [UIFont fontWithDescriptor:fontDescriptor size:0];
     UIFont* fontNegativeWithDescriptor = [UIFont fontWithDescriptor:fontDescriptor size:-10];
@@ -99,4 +100,38 @@ TEST(UIFontTest, FontWithDescriptor) {
     ASSERT_TRUE_MSG([fontPositiveWithDescriptor pointSize] == 10, "Failed: Size of fontPositiveWithDescriptor is not positive.");
     ASSERT_TRUE_MSG([fontZeroWithDescriptor pointSize] == 14, "Failed: Size of fontZeroWithDescriptor is not systemtFontSize.");
     ASSERT_TRUE_MSG([fontNegativeWithDescriptor pointSize] == 14, "Failed: Size of fontNegativeWithDescriptor is not systemtFontSize.");
+}
+
+TEST(UIFont, Description) {
+    ASSERT_OBJCNE(nil, [[UIFont systemFontOfSize:12.0f] description]);
+}
+
+TEST(UIFont, Metrics) {
+    float size = 22.0f;
+    UIFont* font = [UIFont fontWithName:@"Segoe UI Semibold Italic" size:size];
+    ASSERT_OBJCEQ(@"Segoe UI Semibold Italic", [font fontName]);
+
+    ASSERT_NE(0, [font descender]);
+    ASSERT_NE(0, [font ascender]);
+    ASSERT_NE(0, [font capHeight]);
+    ASSERT_NE(0, [font xHeight]);
+
+    ASSERT_EQ(size, [font pointSize]);
+}
+
+TEST(UIFont, Bridging) {
+    float size = 14.5f;
+    NSString* name = @"Lucida Sans Demibold Italic";
+
+    UIFont* uiFont = [UIFont fontWithName:name size:size];
+    CTFontRef ctFont = CTFontCreateWithName((__bridge CFStringRef)name, size, nullptr);
+    CFAutorelease(ctFont);
+
+    ASSERT_OBJCEQ(uiFont, (id)ctFont);
+
+    // Call CoreText function on UIFont
+    ASSERT_OBJCEQ(name, (id)CFAutorelease(CTFontCopyFullName((__bridge CTFontRef)uiFont)));
+
+    // Call UIKit function on CTFont
+    ASSERT_EQ(size, [(__bridge UIFont*)ctFont pointSize]);
 }

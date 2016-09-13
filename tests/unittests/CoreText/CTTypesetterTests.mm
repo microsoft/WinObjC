@@ -31,7 +31,8 @@ static NSAttributedString* getMultilineAttributedString() {
     return string;
 }
 
-TEST(CTTypeSetter, SuggestLineBreak) {
+// TODO: #998 Reenable this test
+DISABLED_TEST(CTTypeSetter, SuggestLineBreak) {
     const double errorDelta = 1;
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getMultilineAttributedString();
     CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(string);
@@ -47,7 +48,8 @@ TEST(CTTypeSetter, SuggestLineBreak) {
                   "SuggestLineBreak should end line at space when soft line break is possible and the text is longer than the width");
 }
 
-TEST(CTTypeSetter, CreateLineShouldTrimWhitespace) {
+// TODO: #998 Reenable this test
+DISABLED_TEST(CTTypeSetter, CreateLineShouldTrimWhitespace) {
     const double errorDelta = 1;
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getMultilineAttributedString();
     CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(string);
@@ -56,7 +58,8 @@ TEST(CTTypeSetter, CreateLineShouldTrimWhitespace) {
     ASSERT_EQ_MSG(5, CTLineGetGlyphCount(line), "CreateLine should trim whitespace from the end of the line");
 }
 
-TEST(CTTypeSetter, LinesShouldDefaultToZeroOffset) {
+// TODO: #998 Reenable this test
+DISABLED_TEST(CTTypeSetter, LinesShouldDefaultToZeroOffset) {
     const double errorDelta = 1;
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getMultilineAttributedString();
     CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(string);

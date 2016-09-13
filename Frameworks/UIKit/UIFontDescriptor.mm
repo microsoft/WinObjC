@@ -51,7 +51,7 @@ NSString* const UIFontSlantTrait = @"UIFontSlantTrait";
 NSString* const UIFontFeatureTypeIdentifierKey = @"UIFontFeatureTypeIdentifierKey";
 NSString* const UIFontFeatureSelectorIdentifierKey = @"UIFontFeatureSelectorIdentifierKey";
 
-NSString* const SystemFontName = @"SegoeUI";
+NSString* const SystemFontName = @"Segoe UI";
 
 /**@Status Stub */
 const CGFloat UIFontWeightUltraLight = StubConstant();
@@ -71,14 +71,6 @@ const CGFloat UIFontWeightBold = StubConstant();
 const CGFloat UIFontWeightHeavy = StubConstant();
 /**@Status Stub */
 const CGFloat UIFontWeightBlack = StubConstant();
-
-/**
- All these values are fixed number in IOS no matter on iphone* or ipad*.
- */
-const float c_smallSystemFontSize = 12.0f;
-const float c_systemFontSize = 14.0f;
-const float c_labelFontSize = 17.0f;
-const float c_buttonFontSize = 14.0f;
 
 @implementation UIFontDescriptor {
 @private
@@ -129,26 +121,10 @@ const float c_buttonFontSize = 14.0f;
 
 + (float)_getFallBackFontSize:(float)size {
     if (size <= 0) {
-        return c_systemFontSize;
+        return kCTFontSystemFontSize;
     } else {
         return size;
     }
-}
-
-+ (float)_getSystemSmallFontSize {
-    return c_smallSystemFontSize;
-}
-
-+ (float)_getSystemFontSize {
-    return c_systemFontSize;
-}
-
-+ (float)_getLabelFontSize {
-    return c_labelFontSize;
-}
-
-+ (float)_getButtonFontSize {
-    return c_buttonFontSize;
 }
 
 /**

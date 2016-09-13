@@ -234,12 +234,13 @@
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="..\..\..\..\tests\unittests\CoreText\CTFontTests.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\CoreText\CTFrameTests.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\CoreText\CTLineTests.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\CoreText\CTParagraphStyleTests.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\CoreText\CTRunTests.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\CoreText\CTTypesetterTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreText\CTFontTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreText\CTFrameTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreText\CTLineTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreText\CTParagraphStyleTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreText\CTRunTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreText\CTTypesetterTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreText\DWriteWrapperTests.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

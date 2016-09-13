@@ -32,7 +32,8 @@ NSAttributedString* getAttributedString() {
 
 extern bool isValid(double testValue, double expectedValue, double delta);
 
-TEST(CoreText, CTLineGetStringIndexForPosition) {
+// TODO: #1000 Re-enable this test
+DISABLED_TEST(CoreText, CTLineGetStringIndexForPosition) {
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString();
     CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(string);
     CFRange range = { 0, CFAttributedStringGetLength(string) };
@@ -61,7 +62,8 @@ TEST(CoreText, CTLineGetStringIndexForPosition) {
     ASSERT_EQ_MSG(index, 3, "Failed: Wrong Index for given position");
 }
 
-TEST(CoreGraphics, CTLineGetOffsetForStringIndex) {
+// TODO: #1000 Re-enable this test
+DISABLED_TEST(CoreGraphics, CTLineGetOffsetForStringIndex) {
     const double errorDelta = 1;
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString();
     CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(string);
