@@ -30,8 +30,6 @@ NSMutableAttributedString* getAttributedString(NSString* str) {
     return string;
 }
 
-extern bool isValid(double testValue, double expectedValue, double delta);
-
 TEST(CTLine, CTLineGetStringIndexForPosition) {
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString(@"hello");
     CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(string);
@@ -86,14 +84,14 @@ TEST(CTLine, CTLineGetOffsetForStringIndex) {
     // These values are very close to values obtained on our implementation. Here we are using these values as source of truth for our test
     // cases.
     offset = CTLineGetOffsetForStringIndex(line, 2, &secOffset);
-    ASSERT_TRUE_MSG(isValid(offset, 44.4, errorDelta), "Failed: Wrong offset for given index");
+    EXPECT_NEAR_MSG(44.4, offset, errorDelta, "Failed: Wrong offset for given index");
 
     offset = CTLineGetOffsetForStringIndex(line, 4, &secOffset);
-    ASSERT_TRUE_MSG(isValid(offset, 62.26, errorDelta), "Failed: Wrong offset for given index");
+    EXPECT_NEAR_MSG(62.26, offset, errorDelta, "Failed: Wrong offset for given index");
 
     // passing secondaryOffset reference as NULL
     offset = CTLineGetOffsetForStringIndex(line, 4, NULL);
-    ASSERT_TRUE_MSG(isValid(offset, 62.26, errorDelta), "Failed: Wrong offset for given index");
+    EXPECT_NEAR_MSG(62.26, offset, errorDelta, "Failed: Wrong offset for given index");
 
     // comparing secondaryOffset and offset.
     offset = CTLineGetOffsetForStringIndex(line, 4, &secOffset);
@@ -160,7 +158,7 @@ TEST(CTLine, CTLineCreateWithAttributedString) {
     CFRelease(line);
 }
 
-TEST(CTLine, CreateTruncatedLineTest) {
+TEST(CTLine, CreateTruncatedLineNoTruncationToken) {
     NSMutableAttributedString* string = getAttributedString(@"ABCDEF");
     [string addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:20] range:NSMakeRange(0, 6)];
     CTLineRef line = CTLineCreateWithAttributedString(static_cast<CFAttributedStringRef>(string));
@@ -199,16 +197,27 @@ TEST(CTLine, CreateTruncatedLineTest) {
     EXPECT_EQ(*(originalGlyphs + 4), *(middleTruncatedGlyphs + 2));
     EXPECT_EQ(*(originalGlyphs + 5), *(middleTruncatedGlyphs + 3));
     CFRelease(middleTruncated);
+    CFRelease(line);
+}
+
+TEST(CTLine, CreateTruncatedLineTruncationToken) {
+    NSMutableAttributedString* string = getAttributedString(@"ABCDEF");
+    [string addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:20] range:NSMakeRange(0, 6)];
+    CTLineRef line = CTLineCreateWithAttributedString(static_cast<CFAttributedStringRef>(string));
+
+    // "ABCDEF"
+    const CGGlyph* originalGlyphs = CTRunGetGlyphsPtr(static_cast<CTRunRef>(CFArrayGetValueAtIndex(CTLineGetGlyphRuns(line), 0)));
 
     CFAttributedStringRef ellipsisString = (__bridge CFAttributedStringRef)getAttributedString(@"...");
     CTLineRef ellipsis = CTLineCreateWithAttributedString(ellipsisString);
     const CGGlyph* ellipsisGlyphs = CTRunGetGlyphsPtr(static_cast<CTRunRef>(CFArrayGetValueAtIndex(CTLineGetGlyphRuns(ellipsis), 0)));
 
-    startTruncated = CTLineCreateTruncatedLine(line, 40.0, kCTLineTruncationStart, ellipsis);
+    CTLineRef startTruncated = CTLineCreateTruncatedLine(line, 40.0, kCTLineTruncationStart, ellipsis);
     EXPECT_EQ(5, CTLineGetGlyphCount(startTruncated));
 
     // Truncated should be ...EF in two runs (..., EF)
-    startTruncatedGlyphs = CTRunGetGlyphsPtr(static_cast<CTRunRef>(CFArrayGetValueAtIndex(CTLineGetGlyphRuns(startTruncated), 0)));
+    const CGGlyph* startTruncatedGlyphs =
+        CTRunGetGlyphsPtr(static_cast<CTRunRef>(CFArrayGetValueAtIndex(CTLineGetGlyphRuns(startTruncated), 0)));
     EXPECT_EQ(*ellipsisGlyphs, *startTruncatedGlyphs);
     EXPECT_EQ(*ellipsisGlyphs, *(startTruncatedGlyphs + 2));
 
@@ -217,11 +226,12 @@ TEST(CTLine, CreateTruncatedLineTest) {
     EXPECT_EQ(*(originalGlyphs + 5), *(startTruncatedGlyphs + 1));
     CFRelease(startTruncated);
 
-    endTruncated = CTLineCreateTruncatedLine(line, 40.0, kCTLineTruncationEnd, ellipsis);
+    CTLineRef endTruncated = CTLineCreateTruncatedLine(line, 40.0, kCTLineTruncationEnd, ellipsis);
     EXPECT_EQ(5, CTLineGetGlyphCount(endTruncated));
 
     // Truncated should be AB... in two runs (AB, ...)
-    endTruncatedGlyphs = CTRunGetGlyphsPtr(static_cast<CTRunRef>(CFArrayGetValueAtIndex(CTLineGetGlyphRuns(endTruncated), 0)));
+    const CGGlyph* endTruncatedGlyphs =
+        CTRunGetGlyphsPtr(static_cast<CTRunRef>(CFArrayGetValueAtIndex(CTLineGetGlyphRuns(endTruncated), 0)));
     EXPECT_EQ(*originalGlyphs, *endTruncatedGlyphs);
     EXPECT_EQ(*(originalGlyphs + 1), *(endTruncatedGlyphs + 1));
 
@@ -230,11 +240,12 @@ TEST(CTLine, CreateTruncatedLineTest) {
     EXPECT_EQ(*ellipsisGlyphs, *(endTruncatedGlyphs + 2));
     CFRelease(endTruncated);
 
-    middleTruncated = CTLineCreateTruncatedLine(line, 40.0, kCTLineTruncationMiddle, ellipsis);
+    CTLineRef middleTruncated = CTLineCreateTruncatedLine(line, 40.0, kCTLineTruncationMiddle, ellipsis);
     EXPECT_EQ(5, CTLineGetGlyphCount(middleTruncated));
 
     // Truncated should be A...F in three runs (A, ..., F)
-    middleTruncatedGlyphs = CTRunGetGlyphsPtr(static_cast<CTRunRef>(CFArrayGetValueAtIndex(CTLineGetGlyphRuns(middleTruncated), 0)));
+    const CGGlyph* middleTruncatedGlyphs =
+        CTRunGetGlyphsPtr(static_cast<CTRunRef>(CFArrayGetValueAtIndex(CTLineGetGlyphRuns(middleTruncated), 0)));
     EXPECT_EQ(*originalGlyphs, *middleTruncatedGlyphs);
 
     middleTruncatedGlyphs = CTRunGetGlyphsPtr(static_cast<CTRunRef>(CFArrayGetValueAtIndex(CTLineGetGlyphRuns(middleTruncated), 1)));
