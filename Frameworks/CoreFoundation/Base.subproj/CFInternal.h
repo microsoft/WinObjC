@@ -100,6 +100,9 @@
 // WINOBJC: Extra includes for bridging
 #include "_NSCFNumber.h"
 
+// WINOBJC: Move some parts of this file into a separate header, so that it can be reused by the other Core* frameworks
+#include "CFBridgeUtilities.h"
+
 CF_EXTERN_C_BEGIN
 
 #include <limits.h>
@@ -215,13 +218,6 @@ CF_PRIVATE CFIndex __CFActiveProcessorCount();
 
 // This CF-only log function uses no CF functionality, so it may be called anywhere within CF - including thread teardown or prior to full CF setup
 CF_PRIVATE void _CFLogSimple(int32_t lev, char *format, ...);
-
-#if defined(DEBUG)
-extern void __CFGenericValidateType_(CFTypeRef cf, CFTypeID type, const char *func);
-#define __CFGenericValidateType(cf, type) __CFGenericValidateType_(cf, type, __PRETTY_FUNCTION__)
-#else
-#define __CFGenericValidateType(cf, type) ((void)0)
-#endif
 
 #define CF_INFO_BITS (!!(__CF_BIG_ENDIAN__) * 3)
 #define CF_RC_BITS (!!(__CF_LITTLE_ENDIAN__) * 3)
@@ -363,10 +359,9 @@ CF_PRIVATE Boolean __CFProcessIsRestricted();
 
 // WINOBJC: The reference platform uses a special compiler option not available to us to 
 // get __CFConstantStringClassReferencePtr filled out with the correct "Class". Since this isn't
-// an option here, use &_OBJC_CLASS__NSCFString instead.
+// an option here, use &_OBJC_CLASS__NSCFString from CFBridgeUtilities.h instead.
 // CF_EXPORT void * __CFConstantStringClassReferencePtrPtr;
 // CF_EXPORT void *__CFConstantStringClassReferencePtr[];
-extern "C" Class _OBJC_CLASS__NSCFString;
 
 // WINOBJC: Compilation can't find these class names
 // Needed for class checks against cfisa, _CFRuntimeBridgeTypeToClass
@@ -681,27 +676,9 @@ CF_PRIVATE void _CFIterateDirectory(CFStringRef directoryPath, Boolean appendSla
 
 extern void _CFRuntimeSetInstanceTypeIDAndIsa(CFTypeRef cf, CFTypeID newTypeID);
 
-#define CF_OBJC_FUNCDISPATCHV(type, ret, obj, ...) do { \
-    if ( CF_IS_OBJC(type, obj) ) { \
-        return (ret)CF_OBJC_CALLV(obj, ##__VA_ARGS__); \
-    } \
-} while (0)
-
-#define CF_OBJC_CALLV(obj, ...) [(obj) __VA_ARGS__]
-#define CF_IS_OBJC(typeID, obj) ( \
-    (!obj) || \
-    ((((CFRuntimeBase*)(obj))->_cfisa != 0) && \
-    (((CFRuntimeBase*)(obj))->_cfisa != (uintptr_t)(&_OBJC_CLASS__NSCFString)) && \
-    (__CFISAForTypeID(typeID) != ((CFRuntimeBase*)(obj))->_cfisa) && \
-    (![(id)(((CFRuntimeBase*)(obj)))->_cfisa isSubclassOfClass:(Class)__CFISAForTypeID(typeID)])))
-
 #define CF_SWIFT_CALLV(obj, fn, ...) __CFSwiftBridge.fn((CFSwiftRef)obj, ##__VA_ARGS__)
 
 extern uintptr_t __CFRuntimeObjCClassTable[];
-
-CF_INLINE uintptr_t __CFISAForTypeID(CFTypeID typeID) {
-    return (typeID < __CFRuntimeClassTableSize) ? __CFRuntimeObjCClassTable[typeID] : 0;
-}
 
 // WINOBJC: helper function to determine if a cf object is a bridged CF object.
 CF_INLINE bool __CF_IsBridgedObject(CFTypeRef obj) {

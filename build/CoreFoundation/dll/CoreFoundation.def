@@ -29,6 +29,8 @@ LIBRARY CoreFoundation
         _CFAppendPathExtension2
         _CFApplicationPreferencesCopyRepresentation
         _CFRuntimeBridgeTypeToClass
+		__CFISAForTypeID
+		__CFGenericValidateType_
         _CFStartOfLastPathComponent2
         _CFStartOfPathExtension2
         _CFGetSlash

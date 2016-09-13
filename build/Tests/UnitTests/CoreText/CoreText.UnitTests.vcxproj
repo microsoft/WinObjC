@@ -235,6 +235,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreText\CTFontTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreText\CTFontDescriptorTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreText\CTFrameTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreText\CTLineTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreText\CTParagraphStyleTests.mm" />

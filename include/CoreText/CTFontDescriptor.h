@@ -110,10 +110,9 @@ CORETEXT_EXPORT const CFStringRef kCTFontWeightTrait;
 CORETEXT_EXPORT const CFStringRef kCTFontWidthTrait;
 CORETEXT_EXPORT const CFStringRef kCTFontSlantTrait;
 
-CORETEXT_EXPORT CTFontDescriptorRef CTFontDescriptorCreateWithNameAndSize(CFStringRef name, CGFloat size) STUB_METHOD;
+CORETEXT_EXPORT CTFontDescriptorRef CTFontDescriptorCreateWithNameAndSize(CFStringRef name, CGFloat size);
 CORETEXT_EXPORT CTFontDescriptorRef CTFontDescriptorCreateWithAttributes(CFDictionaryRef attributes);
-CORETEXT_EXPORT CTFontDescriptorRef CTFontDescriptorCreateCopyWithAttributes(CTFontDescriptorRef original,
-                                                                             CFDictionaryRef attributes) STUB_METHOD;
+CORETEXT_EXPORT CTFontDescriptorRef CTFontDescriptorCreateCopyWithAttributes(CTFontDescriptorRef original, CFDictionaryRef attributes);
 CORETEXT_EXPORT CTFontDescriptorRef CTFontDescriptorCreateCopyWithVariation(CTFontDescriptorRef original,
                                                                             CFNumberRef variationIdentifier,
                                                                             CGFloat variationValue) STUB_METHOD;
@@ -124,9 +123,9 @@ CORETEXT_EXPORT CFArrayRef CTFontDescriptorCreateMatchingFontDescriptors(CTFontD
                                                                          CFSetRef mandatoryAttributes) STUB_METHOD;
 CORETEXT_EXPORT CTFontDescriptorRef CTFontDescriptorCreateMatchingFontDescriptor(CTFontDescriptorRef descriptor,
                                                                                  CFSetRef mandatoryAttributes) STUB_METHOD;
-CORETEXT_EXPORT CFDictionaryRef CTFontDescriptorCopyAttributes(CTFontDescriptorRef descriptor) STUB_METHOD;
-CORETEXT_EXPORT CFTypeRef CTFontDescriptorCopyAttribute(CTFontDescriptorRef descriptor, CFStringRef attribute) STUB_METHOD;
+CORETEXT_EXPORT CFDictionaryRef CTFontDescriptorCopyAttributes(CTFontDescriptorRef descriptor);
+CORETEXT_EXPORT CFTypeRef CTFontDescriptorCopyAttribute(CTFontDescriptorRef descriptor, CFStringRef attribute);
 CORETEXT_EXPORT CFTypeRef CTFontDescriptorCopyLocalizedAttribute(CTFontDescriptorRef descriptor,
                                                                  CFStringRef attribute,
-                                                                 CFStringRef _Nullable* language) STUB_METHOD;
-CORETEXT_EXPORT CFTypeID CTFontDescriptorGetTypeID() STUB_METHOD;
+                                                                 CFStringRef _Nullable* language);
+CORETEXT_EXPORT CFTypeID CTFontDescriptorGetTypeID();

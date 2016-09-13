@@ -22,9 +22,9 @@
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <Foundation/NSFastEnumeration.h>
+#include <CFBridgeUtilities.h>
 
 CF_EXTERN_C_BEGIN
-CF_PRIVATE void _CFRuntimeBridgeTypeToClass(CFTypeID type, const void* isa);
 CF_PRIVATE void _CFAppendPathComponent2(CFMutableStringRef path, CFStringRef component);
 CF_PRIVATE Boolean _CFAppendPathExtension2(CFMutableStringRef path, CFStringRef extension);
 CF_PRIVATE CFIndex _CFStartOfPathExtension2(CFStringRef path);
