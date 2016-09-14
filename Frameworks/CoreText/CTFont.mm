@@ -249,7 +249,7 @@ CTFontRef CTFontCreateCopyWithAttributes(CTFontRef font, CGFloat size, const CGA
 }
 
 /**
- @Status Caveat
+ @Status Stub
  @Notes matrix parameter not supported
 */
 CTFontRef CTFontCreateCopyWithSymbolicTraits(
@@ -257,17 +257,8 @@ CTFontRef CTFontCreateCopyWithSymbolicTraits(
     if (font == nil) {
         return nullptr;
     }
-
-    UIFontDescriptorSymbolicTraits existingTraits = [(UIFont*)font fontDescriptor].symbolicTraits;
-    UIFontDescriptor* newFontDescriptor =
-        [[(UIFont*)font fontDescriptor] fontDescriptorWithSymbolicTraits:(existingTraits | symTraitValue) & symTraitMask];
-
-    if (size == 0.0f) {
-        size = ((UIFont*)font).pointSize;
-    }
-    UIFont* ret = [[_LazyUIFont fontWithDescriptor:newFontDescriptor size:size] retain];
-
-    return (CTFontRef)ret;
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
