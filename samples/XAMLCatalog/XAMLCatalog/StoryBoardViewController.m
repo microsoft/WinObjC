@@ -39,9 +39,13 @@
     // IMPORTANT: Each UIKit control that is added to XAMLCatalog should be contained within its own storyboard file (.storyboard)
     // This will ensure that when we use VSIMPORTER on XAMLCatalog, we can easily verify our storyboard coverage
 
+    // UIActionSheet
+    UIViewController* actionSheetVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UIActionSheetSB"];
+    [self addMenuItemViewController:actionSheetVC andTitle:@"UIActionSheetSB"];
+
     // UIActivityIndicatorView
     UIViewController* activityIndicatorVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UIActivityIndicatorViewSB"];
-    [self addMenuItemViewController:activityIndicatorVC andTitle:@"UIActivityIndicatorView"];
+    [self addMenuItemViewController:activityIndicatorVC andTitle:@"UIActivityIndicatorViewSB"];
 
     // UISlider
     UIViewController* sliderVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UISliderSB"];

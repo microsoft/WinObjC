@@ -33,6 +33,7 @@
 
 namespace XamlControls {
 
+#if !__has_feature(objc_arc)
 ////////////////////////////////////////////////////////////////////////////////////
 // Shared Helpers
 ////////////////////////////////////////////////////////////////////////////////////
@@ -48,7 +49,8 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
 
     RTObject* ret = [NSAllocateObject(cls, 0, 0) init];
     [ret setComObj:iface];
-    return [ret autorelease];
+
+    return[ret autorelease];
 }
 
 inline RTObject* _createBareRTObj(IInspectable* obj) {
@@ -63,11 +65,11 @@ inline I* _createRtProxy(IInspectable* iface) {
 // TODO: Remove when we move our controls over to actual XAML-build control implementations
 class WUXIPointerEventHandler_shim
     : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::WinRtClassicComMix>,
-                                          ABI::Windows::UI::Xaml::Input::IPointerEventHandler> {
-    void (^_delegate)(RTObject*, WUXIPointerRoutedEventArgs*);
+    ABI::Windows::UI::Xaml::Input::IPointerEventHandler> {
+    void(^_delegate)(RTObject*, WUXIPointerRoutedEventArgs*);
 
 public:
-    WUXIPointerEventHandler_shim(void (^del)(RTObject*, WUXIPointerRoutedEventArgs*)) : _delegate([del copy]) {
+    WUXIPointerEventHandler_shim(void(^del)(RTObject*, WUXIPointerRoutedEventArgs*)) : _delegate([del copy]) {
     }
     ~WUXIPointerEventHandler_shim() {
         [_delegate release];
@@ -79,10 +81,13 @@ public:
     virtual HRESULT STDMETHODCALLTYPE Invoke(IInspectable* arg0, ABI::Windows::UI::Xaml::Input::IPointerRoutedEventArgs* arg1) override {
         NSAutoreleasePool* p = [NSAutoreleasePool new];
         _delegate(_createBareRTObj(arg0), _createRtProxy<WUXIPointerRoutedEventArgs>(arg1));
+
         [p release];
+
         return 0;
     }
 };
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Button
@@ -95,5 +100,12 @@ void HookButtonPointerEvents(WXCButton* button,
                              WUXIPointerEventHandler pointerReleasedHook,
                              WUXIPointerEventHandler pointerCanceledHook,
                              WUXIPointerEventHandler pointerCaptureLostHook);
+
+////////////////////////////////////////////////////////////////////////////////////
+// ContentDialog
+////////////////////////////////////////////////////////////////////////////////////
+WXCContentDialog* CreateContentDialog();
+
+int XamlContentDialogPressedIndex(WXCContentDialog* contentDialog);
 
 } // namespace XamlControls

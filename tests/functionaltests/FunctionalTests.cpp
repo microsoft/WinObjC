@@ -445,14 +445,23 @@ class ActivatedAppReceivesToastNotification {
 //
 extern void UIViewCreate();
 extern void UIViewGetXamlElement();
+
+extern void UIActionSheetCreateXamlElement();
+extern void UIActionSheetGetXamlElement();
+extern void UIActionSheetNilParameters();
+
 extern void UIActivityIndicatorViewCreateXamlElement();
 extern void UIActivityIndicatorViewGetXamlElement();
+
 extern void UIButtonCreateXamlElement();
 extern void UIButtonGetXamlElement();
+
 extern void UIScrollViewCreateXamlElement();
 extern void UIScrollViewGetXamlElement();
+
 extern void UISliderCreateXamlElement();
 extern void UISliderGetXamlElement();
+
 extern void UITextFieldCreateXamlElement();
 extern void UITextFieldGetXamlElement();
 
@@ -478,6 +487,18 @@ public:
 
     TEST_METHOD(UIView_GetXamlElement) {
         UIViewGetXamlElement();
+    }
+
+    TEST_METHOD(UIActionSheet_CreateXamlElement) {
+        UIActionSheetCreateXamlElement();
+    }
+
+    TEST_METHOD(UIActionSheet_GetXamlElement) {
+        UIActionSheetGetXamlElement();
+    }
+
+    TEST_METHOD(UIActionSheet_NilParameters) {
+        UIActionSheetNilParameters();
     }
 
     TEST_METHOD(UIActivityIndicatorView_CreateXamlElement) {

@@ -43,4 +43,17 @@ void HookButtonPointerEvents(WXCButton* button,
                                                          nullptr);
 }
 
+////////////////////////////////////////////////////////////////////////////////////
+// ContentDialog
+////////////////////////////////////////////////////////////////////////////////////
+WXCContentDialog* CreateContentDialog() {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlCreateContentDialog());
+    return _createRtProxy([WXCContentDialog class], inspectable.Get());
+}
+
+int XamlContentDialogPressedIndex(WXCContentDialog* contentDialog) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable([contentDialog comObj]);
+    return XamlContentDialogPressedIndex(inspectable);
+}
+
 } // namespace XamlControls

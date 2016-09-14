@@ -30,7 +30,7 @@
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{57765C7E-E763-4FA8-A786-73CADD51A57F}</ProjectGuid>
+    <ProjectGuid>{B1F2BA95-1915-4104-B1D3-21700E6D4C38}</ProjectGuid>
     <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -193,6 +193,7 @@
     <ClangCompile Include="..\..\XAMLCatalog\UISliderViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\main.m" />
     <ClangCompile Include="..\..\XAMLCatalog\MenuTableViewController.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\UIActionSheetViewController.m" />
     <AssetCatalogCompile Include="..\..\XAMLCatalog\Assets.xcassets" />
     <StoryboardCompile Include="..\..\XAMLCatalog\XAMLCatalog.storyboard" />
     <SBInfoPlistCopy Include="..\..\XAMLCatalog\Info.plist">

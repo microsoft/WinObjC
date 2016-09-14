@@ -233,10 +233,10 @@
             </objects>
             <point key="canvasLocation" x="1803" y="1329"/>
         </scene>
-        <!--UIActivityViewIndicatorSB-->
+        <!--UIActivityIndicatorViewSB-->
         <scene sceneID="uP4-Tz-tD5">
             <objects>
-                <viewController storyboardIdentifier="UIActivityIndicatorViewSB" title="UIActivityViewIndicatorSB" useStoryboardIdentifierAsRestorationIdentifier="YES" id="gZm-6Y-raz" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="UIActivityIndicatorViewSB" title="UIActivityIndicatorViewSB" useStoryboardIdentifierAsRestorationIdentifier="YES" id="gZm-6Y-raz" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="vbf-bd-keH"/>
                         <viewControllerLayoutGuide type="bottom" id="55A-aW-8ID"/>
@@ -264,7 +264,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vJQ-8Z-nuI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1251" y="1449"/>
+            <point key="canvasLocation" x="-1271" y="2261"/>
         </scene>
         <!--UISliderSB-->
         <scene sceneID="QXA-3Z-gKw">
@@ -296,7 +296,26 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ikk-4t-UDx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-338" y="1449"/>
+            <point key="canvasLocation" x="-526" y="2261"/>
+        </scene>
+        <!--UIActionSheetSB-->
+        <scene sceneID="cOz-yc-3fz">
+            <objects>
+                <viewController storyboardIdentifier="UIActionSheetSB" title="UIActionSheetSB" useStoryboardIdentifierAsRestorationIdentifier="YES" id="DXr-m3-gTz" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="FD9-p5-hMH"/>
+                        <viewControllerLayoutGuide type="bottom" id="rfl-Fk-DLY"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="GKr-Uh-980">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rzw-kb-FB4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="207" y="2256"/>
         </scene>
     </scenes>
 </document>

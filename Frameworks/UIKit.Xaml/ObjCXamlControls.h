@@ -15,8 +15,9 @@
 //******************************************************************************
 #pragma once
 
-#include "ErrorHandling.h"
 #include <wrl/client.h>
+
+#include "ErrorHandling.h"
 #include "UIKit.Xaml.Export.h"
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -61,6 +62,16 @@ UIKIT_XAML_EXPORT IInspectable* XamlCreateSlider();
 
 // Returns a UIKit::TextBox as an IInspectable
 UIKIT_XAML_EXPORT IInspectable* XamlCreateTextBox();
+
+////////////////////////////////////////////////////////////////////////////////////
+// ContentDialog.xaml.cpp
+////////////////////////////////////////////////////////////////////////////////////
+
+// Returns a UIKit::ContentDialog as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlCreateContentDialog();
+
+// Get the index of the button pressed
+UIKIT_XAML_EXPORT int XamlContentDialogPressedIndex(const Microsoft::WRL::ComPtr<IInspectable>& inspectableContentDialog);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Shared Helpers

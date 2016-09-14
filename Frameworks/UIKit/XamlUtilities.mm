@@ -17,6 +17,9 @@
 #import "XamlUtilities.h"
 #import "UIViewInternal+Xaml.h"
 
+using namespace Microsoft::WRL;
+using namespace Windows::Foundation;
+
 // cornerRadius when border style is set to round rectangle
 static const int c_borderCornerRadius = 8;
 static const wchar_t* TAG = L"XamlUtilities";
@@ -146,6 +149,28 @@ WXFrameworkElement* FindTemplateChild(WXCControl* control, NSString* name) {
     return target;
 }
 
+NSString* NSStringFromPropertyValue(RTObject* rtPropertyValue) {
+    // BUGBUG:8791977 - WFIPropertyValue is not publicly exposed via projections so we used a workaround
+    ComPtr<IInspectable> inspPtr = [rtPropertyValue comObj];
+    if (inspPtr) {
+        ComPtr<ABI::Windows::Foundation::IPropertyValue> propVal;
+        HRESULT hr = inspPtr.As(&propVal);
+        if (SUCCEEDED(hr)) {
+            HSTRING str;
+            auto freeHSTRING = wil::ScopeExit([&]() {
+                WindowsDeleteString(str);
+            });
+
+            hr = propVal->GetString(&str);
+            if (SUCCEEDED(hr)) {
+                return Strings::WideToNSString<HSTRING>(str);
+            }
+        }
+    }
+
+    return nil;
+}
+
 // Setup control border style
 void SetControlBorderStyle(WXCControl* control, UITextBorderStyle style) {
     switch (style) {
@@ -176,15 +201,15 @@ void SetControlBorderStyle(WXCControl* control, UITextBorderStyle style) {
     }
 }
 
-ComPtr<Markup::IXamlType> ReturnXamlType(NSString* xamlClassName) {
-    static ComPtr<Markup::IXamlMetadataProvider> xamlMetaProvider = nullptr;
+ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> ReturnXamlType(NSString* xamlClassName) {
+    static ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlMetadataProvider> xamlMetaProvider;
 
     if (!xamlMetaProvider) {
         auto inspApplicationCurrent = [WXApplication.current comObj];
         inspApplicationCurrent.As(&xamlMetaProvider);
     }
 
-    ComPtr<Markup::IXamlType> xamlType = nullptr;
+    ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> xamlType;
     auto className = Strings::NarrowToWide<HSTRING>(xamlClassName);
     HRESULT hr = xamlMetaProvider->GetXamlTypeByFullName(className.Get(), xamlType.GetAddressOf());
     if (SUCCEEDED(hr) && xamlType.Get() != nullptr) {
@@ -237,7 +262,7 @@ id CreateRtProxy(Class cls, IInspectable* iface) {
     }
 
     RTObject* ret = [NSAllocateObject(cls, 0, 0) init];
-    [ret setComObj:iface];
+    [ret setComObj : iface];
 
     return ret;
 }

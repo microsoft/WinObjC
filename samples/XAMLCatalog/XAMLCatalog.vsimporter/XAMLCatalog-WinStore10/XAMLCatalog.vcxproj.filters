@@ -2,22 +2,22 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{f939d6a1-4f91-4201-b38a-24edd790e1ce}</UniqueIdentifier>
+      <UniqueIdentifier>{37e65a22-3df9-41cb-8d04-8c4fd7f12cee}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{90a6809e-64b6-4d8a-9aa5-14b6d6977de5}</UniqueIdentifier>
+      <UniqueIdentifier>{e054729d-21f6-4b8f-ad61-3aef820f669e}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog">
-      <UniqueIdentifier>{3DB0B2CA-72CF-4FDE-8B63-35D5400227DC}</UniqueIdentifier>
+      <UniqueIdentifier>{0B055B67-CFB4-49C7-92D4-F4BEEF3E0507}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\Supporting Files">
-      <UniqueIdentifier>{7061AEB8-2AC7-437E-A515-A323D14C5819}</UniqueIdentifier>
+      <UniqueIdentifier>{39384A06-7216-4518-9F5B-1A36104F959D}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\UIKitControls">
-      <UniqueIdentifier>{1DCAF78B-738F-4176-AC7A-A50DDE931B85}</UniqueIdentifier>
+      <UniqueIdentifier>{E754E36B-3E82-4043-BA97-16D8F11B54B5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{806C73D9-F6F7-4933-B57A-521789FA9A53}</UniqueIdentifier>
+      <UniqueIdentifier>{3F19AA04-C168-49E2-B150-AD549E9465A8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -65,6 +65,9 @@
     </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\MenuTableViewController.m">
       <Filter>XAMLCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\XAMLCatalog\UIActionSheetViewController.m">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClangCompile>
     <AssetCatalogCompile Include="..\..\XAMLCatalog\Assets.xcassets">
       <Filter>XAMLCatalog</Filter>
