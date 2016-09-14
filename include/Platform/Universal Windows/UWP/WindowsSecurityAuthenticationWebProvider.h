@@ -151,7 +151,9 @@ typedef unsigned WSAWPWebAccountScope;
 
 WINRT_EXPORT
 @interface WSAWPWebProviderTokenRequest : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WFUri* applicationCallbackUri;
 @property (readonly) WSAWCWebTokenRequest* clientRequest;
 @property (readonly) WSAWPWebAccountSelectionOptions webAccountSelectionOptions;
@@ -171,7 +173,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSAWPWebProviderTokenResponse : RTObject
 + (WSAWPWebProviderTokenResponse*)make:(WSAWCWebTokenResponse*)webTokenResponse ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSAWCWebTokenResponse* clientResponse;
 @end
 
@@ -187,7 +191,9 @@ WINRT_EXPORT
 + (WSAWPWebAccountClientView*)makeWithPairwiseId:(WSAWPWebAccountClientViewType)viewType
                           applicationCallbackUri:(WFUri*)applicationCallbackUri
                                accountPairwiseId:(NSString*)accountPairwiseId ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* accountPairwiseId;
 @property (readonly) WFUri* applicationCallbackUri;
 @property (readonly) WSAWPWebAccountClientViewType type;
@@ -241,7 +247,9 @@ WINRT_EXPORT
                                                                     WSAWPIWebAccountProviderOperation,
                                                                     WSAWPIWebAccountProviderUIReportOperation,
                                                                     WSAWPIWebAccountProviderBaseReportOperation>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSAWPWebAccountProviderOperationKind kind;
 @property (retain) WFDateTime* cacheExpirationTime;
 @property (readonly) WSAWPWebProviderTokenRequest* providerRequest;
@@ -262,7 +270,9 @@ WINRT_EXPORT
                                                                       WSAWPIWebAccountProviderOperation,
                                                                       WSAWPIWebAccountProviderSilentReportOperation,
                                                                       WSAWPIWebAccountProviderBaseReportOperation>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSAWPWebAccountProviderOperationKind kind;
 @property (retain) WFDateTime* cacheExpirationTime;
 @property (readonly) WSAWPWebProviderTokenRequest* providerRequest;
@@ -281,7 +291,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAWPWebAccountProviderAddAccountOperation : RTObject <WSAWPIWebAccountProviderOperation>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSAWPWebAccountProviderOperationKind kind;
 - (void)reportCompleted;
 @end
@@ -294,7 +306,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAWPWebAccountProviderManageAccountOperation : RTObject <WSAWPIWebAccountProviderOperation>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSCWebAccount* webAccount;
 @property (readonly) WSAWPWebAccountProviderOperationKind kind;
 - (void)reportCompleted;
@@ -309,7 +323,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSAWPWebAccountProviderDeleteAccountOperation
     : RTObject <WSAWPIWebAccountProviderOperation, WSAWPIWebAccountProviderBaseReportOperation>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSCWebAccount* webAccount;
 @property (readonly) WSAWPWebAccountProviderOperationKind kind;
 - (void)reportCompleted;
@@ -325,7 +341,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSAWPWebAccountProviderSignOutAccountOperation
     : RTObject <WSAWPIWebAccountProviderOperation, WSAWPIWebAccountProviderBaseReportOperation>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSAWPWebAccountProviderOperationKind kind;
 @property (readonly) WFUri* applicationCallbackUri;
 @property (readonly) NSString* clientId;
@@ -343,7 +361,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSAWPWebAccountProviderRetrieveCookiesOperation
     : RTObject <WSAWPIWebAccountProviderOperation, WSAWPIWebAccountProviderBaseReportOperation>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSAWPWebAccountProviderOperationKind kind;
 @property (retain) WFUri* uri;
 @property (readonly) WFUri* applicationCallbackUri;
@@ -361,7 +381,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAWPWebAccountProviderTriggerDetails : RTObject <WSAWPIWebAccountProviderTokenObjects>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) RTObject<WSAWPIWebAccountProviderOperation>* operation;
 @end
 

@@ -51,7 +51,9 @@ typedef unsigned WMDCFrameFlashMode;
 
 WINRT_EXPORT
 @interface WMDCCameraIntrinsics : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WFNVector2* focalLength;
 @property (readonly) unsigned int imageHeight;
 @property (readonly) unsigned int imageWidth;
@@ -72,7 +74,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCVariablePhotoSequenceController : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property float photosPerSecondLimit;
 @property (readonly) NSMutableArray* /* WMDCFrameController* */ desiredFrameControllers;
 @property (readonly) WMDCFrameControlCapabilities* frameCapabilities;
@@ -90,7 +94,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameExposureCapabilities : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WFTimeSpan* max;
 @property (readonly) WFTimeSpan* min;
 @property (readonly) WFTimeSpan* step;
@@ -105,7 +111,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameExposureCompensationCapabilities : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) float max;
 @property (readonly) float min;
 @property (readonly) float step;
@@ -120,7 +128,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameIsoSpeedCapabilities : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) unsigned int max;
 @property (readonly) unsigned int min;
 @property (readonly) unsigned int step;
@@ -135,7 +145,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameFocusCapabilities : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) unsigned int max;
 @property (readonly) unsigned int min;
 @property (readonly) unsigned int step;
@@ -150,7 +162,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameFlashCapabilities : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) BOOL powerSupported;
 @property (readonly) BOOL redEyeReductionSupported;
 @property (readonly) BOOL supported;
@@ -164,7 +178,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameControlCapabilities : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WMDCFrameExposureCapabilities* exposure;
 @property (readonly) WMDCFrameExposureCompensationCapabilities* exposureCompensation;
 @property (readonly) WMDCFrameFocusCapabilities* focus;
@@ -181,7 +197,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameExposureControl : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) id /* WFTimeSpan* */ value;
 @property BOOL Auto;
 @end
@@ -194,7 +212,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameExposureCompensationControl : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) id /* float */ value;
 @end
 
@@ -206,7 +226,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameIsoSpeedControl : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) id /* unsigned int */ value;
 @property BOOL Auto;
 @end
@@ -219,7 +241,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameFocusControl : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) id /* unsigned int */ value;
 @end
 
@@ -231,7 +255,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameFlashControl : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property BOOL redEyeReduction;
 @property float powerPercent;
 @property WMDCFrameFlashMode mode;
@@ -247,7 +273,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDCFrameController : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) id /* BOOL */ photoConfirmationEnabled;
 @property (readonly) WMDCFrameExposureCompensationControl* exposureCompensationControl;
 @property (readonly) WMDCFrameExposureControl* exposureControl;

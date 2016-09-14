@@ -345,7 +345,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WFDeferral : RTObject <WFIClosable>
 + (WFDeferral*)make:(WFDeferralCompletedHandler)handler ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)complete;
 - (void)close;
 @end
@@ -359,7 +361,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WFWwwFormUrlDecoder : RTObject
 + (WFWwwFormUrlDecoder*)makeWwwFormUrlDecoder:(NSString*)query ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -380,7 +384,9 @@ WINRT_EXPORT
 + (NSString*)escapeComponent:(NSString*)toEscape;
 + (WFUri*)makeUri:(NSString*)uri ACTIVATOR;
 + (WFUri*)makeWithRelativeUri:(NSString*)baseUri relativeUri:(NSString*)relativeUri ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* absoluteUri;
 @property (readonly) NSString* displayUri;
 @property (readonly) NSString* domain;
@@ -411,7 +417,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFWwwFormUrlDecoderEntry : RTObject <WFIWwwFormUrlDecoderEntry>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* name;
 @property (readonly) NSString* value;
 @end
@@ -425,7 +433,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WFMemoryBuffer : RTObject <WFIMemoryBuffer, WFIClosable>
 + (WFMemoryBuffer*)make:(unsigned int)capacity ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (RTObject<WFIMemoryBufferReference>*)createReference;
 - (void)close;
 @end

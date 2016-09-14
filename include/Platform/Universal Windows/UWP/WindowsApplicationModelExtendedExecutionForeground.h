@@ -58,7 +58,9 @@ typedef unsigned WAEFExtendedExecutionForegroundReason;
 
 WINRT_EXPORT
 @interface WAEFExtendedExecutionForegroundRevokedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WAEFExtendedExecutionForegroundRevokedReason reason;
 @end
 
@@ -81,7 +83,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAEFExtendedExecutionForegroundSession : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property WAEFExtendedExecutionForegroundReason reason;
 @property (retain) NSString* Description;
 - (EventRegistrationToken)addRevokedEvent:(void (^)(RTObject*, WAEFExtendedExecutionForegroundRevokedEventArgs*))del;

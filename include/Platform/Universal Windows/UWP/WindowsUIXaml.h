@@ -706,7 +706,9 @@ typedef void (^WXBindingFailedEventHandler)(RTObject* sender, WXBindingFailedEve
 WINRT_EXPORT
 @interface WXDispatcherTimer : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) WFTimeSpan* interval;
 @property (readonly) BOOL isEnabled;
 - (EventRegistrationToken)addTickEvent:(void (^)(RTObject*, RTObject*))del;
@@ -725,7 +727,9 @@ WINRT_EXPORT
 @interface WXCornerRadiusHelper : RTObject
 + (WXCornerRadius*)fromRadii:(double)topLeft topRight:(double)topRight bottomRight:(double)bottomRight bottomLeft:(double)bottomLeft;
 + (WXCornerRadius*)fromUniformRadius:(double)uniformRadius;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WXCornerRadiusHelper_DEFINED__
@@ -742,7 +746,9 @@ WINRT_EXPORT
 + (WXDuration*)add:(WXDuration*)target duration:(WXDuration*)duration;
 + (BOOL)equals:(WXDuration*)target value:(WXDuration*)value;
 + (WXDuration*)subtract:(WXDuration*)target duration:(WXDuration*)duration;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 + (WXDuration*)automatic;
 + (WXDuration*)forever;
 @end
@@ -761,7 +767,9 @@ WINRT_EXPORT
 + (BOOL)getIsAuto:(WXGridLength*)target;
 + (BOOL)getIsStar:(WXGridLength*)target;
 + (BOOL)equals:(WXGridLength*)target value:(WXGridLength*)value;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 + (WXGridLength*)Auto;
 @end
 
@@ -775,7 +783,9 @@ WINRT_EXPORT
 @interface WXThicknessHelper : RTObject
 + (WXThickness*)fromLengths:(double)left top:(double)top right:(double)right bottom:(double)bottom;
 + (WXThickness*)fromUniformLength:(double)uniformLength;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WXThicknessHelper_DEFINED__
@@ -786,7 +796,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXApplicationInitializationCallbackParams : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WXApplicationInitializationCallbackParams_DEFINED__
@@ -797,7 +809,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -824,7 +838,9 @@ WINRT_EXPORT
                              propertyType:(WUXITypeName*)propertyType
                                 ownerType:(WUXITypeName*)ownerType
                           defaultMetadata:(WXPropertyMetadata*)defaultMetadata;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 + (RTObject*)unsetValue;
 - (WXPropertyMetadata*)getMetadata:(WUXITypeName*)forType;
 @end
@@ -837,7 +853,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyPropertyChangedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) RTObject* newValue;
 @property (readonly) RTObject* oldValue;
 @property (readonly) WXDependencyProperty* property ;
@@ -852,7 +870,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) RTObject* originalSource;
 @end
 
@@ -864,7 +884,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXUnhandledExceptionEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property BOOL handled;
 @property (readonly) HRESULT exception;
 @property (readonly) NSString* message;
@@ -879,7 +901,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXVisualStateChangedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) WXVisualState* oldState;
 @property (retain) WXVisualState* newState;
 @property (retain) WXCControl* control;
@@ -893,7 +917,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDataContextChangedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property BOOL handled;
 @property (readonly) RTObject* newValue;
 @end
@@ -907,7 +933,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXDataTemplateKey : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) RTObject* dataType;
 @end
 
@@ -925,7 +953,9 @@ WINRT_EXPORT
 + (WXPropertyMetadata*)createWithFactory:(WXCreateDefaultValueCallback)createDefaultValueCallback;
 + (WXPropertyMetadata*)createWithFactoryAndCallback:(WXCreateDefaultValueCallback)createDefaultValueCallback
                             propertyChangedCallback:(WXPropertyChangedCallback)propertyChangedCallback;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WXCreateDefaultValueCallback createDefaultValueCallback;
 @property (readonly) RTObject* defaultValue;
 @end
@@ -938,7 +968,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDragOperationDeferral : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)complete;
 @end
 
@@ -950,7 +982,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDragUI : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)setContentFromBitmapImage:(WUXMIBitmapImage*)bitmapImage;
 - (void)setContentFromBitmapImageWithAnchorPoint:(WUXMIBitmapImage*)bitmapImage anchorPoint:(WFPoint*)anchorPoint;
 - (void)setContentFromSoftwareBitmap:(WGISoftwareBitmap*)softwareBitmap;
@@ -966,7 +1000,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDragUIOverride : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property BOOL isGlyphVisible;
 @property BOOL isContentVisible;
 @property BOOL isCaptionVisible;
@@ -1001,7 +1037,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXFrameworkView : RTObject <WACIFrameworkView>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)Initialize:(WACCoreApplicationView*)applicationView;
 - (void)setWindow:(WUCCoreWindow*)window;
 - (void)Load:(NSString*)entryPoint;
@@ -1017,7 +1055,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXRoutedEvent : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WXRoutedEvent_DEFINED__
@@ -1029,7 +1069,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXSetterBaseCollection : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) unsigned int size;
 @property (readonly) BOOL isSealed;
 - (unsigned int)count;
@@ -1054,7 +1096,9 @@ WINRT_EXPORT
 @interface WXTargetPropertyPath : RTObject
 + (WXTargetPropertyPath*)makeInstance:(WXDependencyProperty*)targetProperty ACTIVATOR;
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) RTObject* target;
 @property (retain) WXPropertyPath* path;
 @end
@@ -1068,7 +1112,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXTriggerActionCollection : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -1090,7 +1136,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXTriggerCollection : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -1112,7 +1160,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXWindow : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) WXUIElement* content;
 @property (readonly) WFRect* bounds;
 @property (readonly) WUCCoreWindow* coreWindow;
@@ -1140,7 +1190,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXWindowCreatedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WXWindow* window;
 @end
 
@@ -1153,7 +1205,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXDependencyObjectCollection : WXDependencyObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) unsigned int size;
 // Could not generate add_VectorChanged (Can't marshal
 // Windows.Foundation.Collections.VectorChangedEventHandler`1<Windows.UI.Xaml.DependencyObject>)
@@ -1180,7 +1234,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDragEventArgs : WXRoutedEventArgs
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property BOOL handled;
 @property (retain) WADDataPackage* data;
 @property WADDataPackageOperation acceptedOperation;
@@ -1199,7 +1255,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDragStartingEventArgs : WXRoutedEventArgs
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property BOOL cancel;
 @property (readonly) WADDataPackage* data;
 @property (readonly) WXDragUI* dragUI;
@@ -1215,7 +1273,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDropCompletedEventArgs : WXRoutedEventArgs
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WADDataPackageOperation dropResult;
 @end
 
@@ -1227,7 +1287,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXExceptionRoutedEventArgs : WXRoutedEventArgs
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* errorMessage;
 @end
 
@@ -1239,7 +1301,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXFrameworkTemplate : WXDependencyObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WXFrameworkTemplate_DEFINED__
@@ -1253,7 +1317,9 @@ WINRT_EXPORT
 + (RTObject<WXIDataTemplateExtension>*)getExtensionInstance:(WXFrameworkElement*)element;
 + (void)setExtensionInstance:(WXFrameworkElement*)element value:(RTObject<WXIDataTemplateExtension>*)value;
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 + (WXDependencyProperty*)extensionInstanceProperty;
 - (WXDependencyObject*)loadContent;
 @end
@@ -1267,7 +1333,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXPropertyPath : WXDependencyObject
 + (WXPropertyPath*)makeInstance:(NSString*)path ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* path;
 @end
 
@@ -1280,7 +1348,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXResourceDictionary : WXDependencyObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) unsigned int size;
 @property (retain) WFUri* source;
 @property (readonly) NSMutableArray* /* WXResourceDictionary* */ mergedDictionaries;
@@ -1310,7 +1380,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXSetterBase : WXDependencyObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) BOOL isSealed;
 @end
 
@@ -1322,7 +1394,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXSizeChangedEventArgs : WXRoutedEventArgs
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WFSize* newSize;
 @property (readonly) WFSize* previousSize;
 @end
@@ -1335,7 +1409,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXStateTriggerBase : WXDependencyObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)setActive:(BOOL)IsActive;
 @end
 
@@ -1349,7 +1425,9 @@ WINRT_EXPORT
 @interface WXStyle : WXDependencyObject
 + (WXStyle*)makeInstance:(WUXITypeName*)targetType ACTIVATOR;
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) WUXITypeName* targetType;
 @property (retain) WXStyle* basedOn;
 @property (readonly) BOOL isSealed;
@@ -1365,7 +1443,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXTriggerAction : WXDependencyObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WXTriggerAction_DEFINED__
@@ -1376,7 +1456,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXTriggerBase : WXDependencyObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WXTriggerBase_DEFINED__
@@ -1388,7 +1470,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property BOOL isRightTapEnabled;
 @property (retain) WUXMProjection* projection;
 @property BOOL allowDrop;
@@ -1538,7 +1622,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXVisualState : WXDependencyObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) WUXMAStoryboard* storyboard;
 @property (readonly) NSString* name;
 @property (readonly) WXSetterBaseCollection* setters;
@@ -1554,7 +1640,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXVisualStateGroup : WXDependencyObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WXVisualState* currentState;
 @property (readonly) NSString* name;
 @property (readonly) NSMutableArray* /* WXVisualState* */ states;
@@ -1578,7 +1666,9 @@ WINRT_EXPORT
 + (void)setCustomVisualStateManager:(WXFrameworkElement*)obj value:(WXVisualStateManager*)value;
 + (BOOL)goToState:(WXCControl*)control stateName:(NSString*)stateName useTransitions:(BOOL)useTransitions;
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 + (WXDependencyProperty*)customVisualStateManagerProperty;
 - (BOOL)goToStateCore:(WXCControl*)control
          templateRoot:(WXFrameworkElement*)templateRoot
@@ -1605,7 +1695,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXVisualTransition : WXDependencyObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) NSString* to;
 @property (retain) WUXMAStoryboard* storyboard;
 @property (retain) WUXMAEasingFunctionBase* generatedEasingFunction;
@@ -1622,7 +1714,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXAdaptiveTrigger : WXStateTriggerBase
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property double minWindowWidth;
 @property double minWindowHeight;
 + (WXDependencyProperty*)minWindowHeightProperty;
@@ -1638,7 +1732,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXEventTrigger : WXTriggerBase
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) WXRoutedEvent* routedEvent;
 @property (readonly) WXTriggerActionCollection* actions;
 @end
@@ -1651,7 +1747,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXFrameworkElement : WXUIElement
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) WXThickness* margin;
 @property (retain) NSString* language;
 @property WXHorizontalAlignment horizontalAlignment;
@@ -1721,7 +1819,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXMediaFailedRoutedEventArgs : WXExceptionRoutedEventArgs
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* errorTrace;
 @end
 
@@ -1735,7 +1835,9 @@ WINRT_EXPORT
 @interface WXSetter : WXSetterBase
 + (WXSetter*)makeInstance:(WXDependencyProperty*)targetProperty value:(RTObject*)value ACTIVATOR;
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) RTObject* value;
 @property (retain) WXDependencyProperty* property ;
 @property (retain) WXTargetPropertyPath* target;
@@ -1750,7 +1852,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXStateTrigger : WXStateTriggerBase
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property BOOL isActive;
 + (WXDependencyProperty*)isActiveProperty;
 @end
@@ -1763,7 +1867,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXBindingFailedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* message;
 @end
 
@@ -1775,7 +1881,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDebugSettings : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property BOOL isOverdrawHeatMapEnabled;
 @property BOOL isBindingTracingEnabled;
 @property BOOL enableFrameRateCounter;
@@ -1799,7 +1907,9 @@ WINRT_EXPORT
                           resourceLocator:(WFUri*)resourceLocator
                 componentResourceLocation:(WUXCPComponentResourceLocation)componentResourceLocation;
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) WXResourceDictionary* resources;
 @property WXApplicationTheme requestedTheme;
 @property (readonly) WXDebugSettings* debugSettings;
@@ -1841,7 +1951,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXFrameworkViewSource : RTObject <WACIFrameworkViewSource>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (RTObject<WACIFrameworkView>*)createView;
 @end
 
@@ -1854,7 +1966,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXPointHelper : RTObject
 + (WFPoint*)fromCoordinates:(float)x y:(float)y;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WXPointHelper_DEFINED__
@@ -1878,7 +1992,9 @@ WINRT_EXPORT
 + (WFRect*)intersect:(WFRect*)target rect:(WFRect*)rect;
 + (WFRect*)unionWithPoint:(WFRect*)target point:(WFPoint*)point;
 + (WFRect*)unionWithRect:(WFRect*)target rect:(WFRect*)rect;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 + (WFRect*)empty;
 @end
 
@@ -1893,7 +2009,9 @@ WINRT_EXPORT
 + (WFSize*)fromDimensions:(float)width height:(float)height;
 + (BOOL)getIsEmpty:(WFSize*)target;
 + (BOOL)equals:(WFSize*)target value:(WFSize*)value;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 + (WFSize*)empty;
 @end
 

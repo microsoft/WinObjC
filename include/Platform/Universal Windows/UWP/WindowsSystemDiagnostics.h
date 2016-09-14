@@ -39,7 +39,9 @@ WINRT_EXPORT
 @interface WSDProcessDiagnosticInfo : RTObject
 + (NSArray* /* WSDProcessDiagnosticInfo* */)getForProcesses;
 + (WSDProcessDiagnosticInfo*)getForCurrentProcess;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSDProcessCpuUsage* cpuUsage;
 @property (readonly) WSDProcessDiskUsage* diskUsage;
 @property (readonly) NSString* executableFileName;
@@ -57,7 +59,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSDProcessDiskUsage : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (WSDProcessDiskUsageReport*)getReport;
 @end
 
@@ -69,7 +73,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSDProcessMemoryUsage : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (WSDProcessMemoryUsageReport*)getReport;
 @end
 
@@ -81,7 +87,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSDProcessCpuUsage : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (WSDProcessCpuUsageReport*)getReport;
 @end
 
@@ -93,7 +101,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSDProcessMemoryUsageReport : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) uint64_t nonPagedPoolSizeInBytes;
 @property (readonly) unsigned int pageFaultCount;
 @property (readonly) uint64_t pageFileSizeInBytes;
@@ -116,7 +126,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSDProcessDiskUsageReport : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) int64_t bytesReadCount;
 @property (readonly) int64_t bytesWrittenCount;
 @property (readonly) int64_t otherBytesCount;
@@ -133,7 +145,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSDProcessCpuUsageReport : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WFTimeSpan* kernelTime;
 @property (readonly) WFTimeSpan* userTime;
 @end

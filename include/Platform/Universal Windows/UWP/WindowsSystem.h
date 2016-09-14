@@ -324,7 +324,9 @@ typedef unsigned WSLaunchUriStatus;
 
 WINRT_EXPORT
 @interface WSAppMemoryUsageLimitChangingEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) uint64_t newLimit;
 @property (readonly) uint64_t oldLimit;
 @end
@@ -337,7 +339,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAppMemoryReport : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) uint64_t peakPrivateCommitUsage;
 @property (readonly) uint64_t privateCommitUsage;
 @property (readonly) uint64_t totalCommitLimit;
@@ -352,7 +356,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSProcessMemoryReport : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) uint64_t privateWorkingSetUsage;
 @property (readonly) uint64_t totalWorkingSetUsage;
 @end
@@ -386,7 +392,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSProtocolForResultsOperation : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)reportCompleted:(WFCValueSet*)data;
 @end
 
@@ -398,7 +406,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSUserWatcher : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSUserWatcherStatus status;
 - (EventRegistrationToken)addAddedEvent:(void (^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
 - (void)removeAddedEvent:(EventRegistrationToken)tok;
@@ -434,7 +444,9 @@ WINRT_EXPORT
                             success:(void (^)(NSArray* /* WSUser* */))success
                             failure:(void (^)(NSError*))failure;
 + (WSUser*)getFromId:(NSString*)nonRoamableId;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSUserAuthenticationStatus authenticationStatus;
 @property (readonly) NSString* nonRoamableId;
 @property (readonly) WSUserType type;
@@ -455,7 +467,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSUserChangedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSUser* user;
 @end
 
@@ -467,7 +481,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSUserAuthenticationStatusChangingEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSUserAuthenticationStatus currentStatus;
 @property (readonly) WSUserAuthenticationStatus newStatus;
 @property (readonly) WSUser* user;
@@ -482,7 +498,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSUserAuthenticationStatusChangeDeferral : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)complete;
 @end
 
@@ -513,7 +531,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSLaunchUriResult : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WFCValueSet* result;
 @property (readonly) WSLaunchUriStatus status;
 @end
@@ -526,7 +546,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSLauncherUIOptions : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) id /* WFRect* */ selectionRect;
 @property WUPPlacement preferredPlacement;
 @property (retain) id /* WFPoint* */ invocationPoint;
@@ -541,7 +563,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSLauncherOptions : RTObject <WSILauncherViewOptions>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property BOOL treatAsUntrusted;
 @property (retain) NSString* preferredApplicationPackageFamilyName;
 @property (retain) NSString* preferredApplicationDisplayName;
@@ -563,7 +587,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSFolderLauncherOptions : RTObject <WSILauncherViewOptions>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSMutableArray* /* RTObject<WSIStorageItem>* */ itemsToSelect;
 @property WUVViewSizePreference desiredRemainingView;
 @end

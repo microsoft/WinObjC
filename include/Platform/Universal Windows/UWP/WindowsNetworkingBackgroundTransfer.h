@@ -164,7 +164,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNBDownloadOperation : RTObject <WNBIBackgroundTransferOperation, WNBIBackgroundTransferOperationPriority>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property WNBBackgroundTransferCostPolicy costPolicy;
 @property (readonly) NSString* group;
 @property (readonly) WFGUID* guid;
@@ -194,7 +196,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNBUnconstrainedTransferRequestResult : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) BOOL isUnconstrained;
 @end
 
@@ -206,7 +210,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNBUploadOperation : RTObject <WNBIBackgroundTransferOperation, WNBIBackgroundTransferOperationPriority>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property WNBBackgroundTransferCostPolicy costPolicy;
 @property (readonly) NSString* group;
 @property (readonly) WFGUID* guid;
@@ -235,7 +241,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNBBackgroundTransferGroup : RTObject
 + (WNBBackgroundTransferGroup*)createGroup:(NSString*)name;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property WNBBackgroundTransferBehavior transferBehavior;
 @property (readonly) NSString* name;
 @end
@@ -249,7 +257,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNBBackgroundTransferCompletionGroup : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) BOOL isEnabled;
 @property (readonly) RTObject<WABIBackgroundTrigger>* trigger;
 - (void)enable;
@@ -266,7 +276,9 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WNBBackgroundTransferContentPart*)makeWithName:(NSString*)name ACTIVATOR;
 + (WNBBackgroundTransferContentPart*)makeWithNameAndFileName:(NSString*)name fileName:(NSString*)fileName ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)setHeader:(NSString*)headerName headerValue:(NSString*)headerValue;
 - (void)setText:(NSString*)value;
 - (void)setFile:(RTObject<WSIStorageFile>*)value;
@@ -280,7 +292,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNBResponseInformation : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WFUri* actualUri;
 @property (readonly) NSDictionary* /* NSString *, NSString * */ headers;
 @property (readonly) BOOL isResumable;
@@ -307,7 +321,9 @@ WINRT_EXPORT
                                    failure:(void (^)(NSError*))failure;
 + (WNBBackgroundDownloader*)makeWithCompletionGroup:(WNBBackgroundTransferCompletionGroup*)completionGroup ACTIVATOR;
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) WUNToastNotification* failureToastNotification;
 @property (retain) WUNTileNotification* successTileNotification;
 @property (retain) WUNToastNotification* successToastNotification;
@@ -351,7 +367,9 @@ WINRT_EXPORT
                                        failure:(void (^)(NSError*))failure;
 + (instancetype)make ACTIVATOR;
 + (WNBBackgroundUploader*)makeWithCompletionGroup:(WNBBackgroundTransferCompletionGroup*)completionGroup ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) WSCPasswordCredential* serverCredential;
 @property (retain) WSCPasswordCredential* proxyCredential;
 @property (retain) NSString* method;
@@ -419,7 +437,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNBBackgroundTransferCompletionGroupTriggerDetails : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSArray* /* WNBDownloadOperation* */ downloads;
 @property (readonly) NSArray* /* WNBUploadOperation* */ uploads;
 @end

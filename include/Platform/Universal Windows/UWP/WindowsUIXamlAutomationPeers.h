@@ -361,7 +361,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -382,7 +384,9 @@ WINRT_EXPORT
 @interface WUXAPAutomationPeer : WXDependencyObject
 + (BOOL)listenerExists:(WUXAPAutomationEvents)eventId;
 + (WUXAPRawElementProviderRuntimeId*)generateRawElementProviderRuntimeId;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) WUXAPAutomationPeer* eventsSource;
 - (RTObject*)getPattern:(WUXAPPatternInterface)patternInterface;
 - (void)raiseAutomationEvent:(WUXAPAutomationEvents)eventId;
@@ -479,7 +483,9 @@ WINRT_EXPORT
 + (WUXAPAutomationPeerAnnotation*)makeInstance:(WUXAAnnotationType)type ACTIVATOR;
 + (WUXAPAutomationPeerAnnotation*)makeWithPeerParameter:(WUXAAnnotationType)type peer:(WUXAPAutomationPeer*)peer ACTIVATOR;
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property WUXAAnnotationType type;
 @property (retain) WUXAPAutomationPeer* peer;
 + (WXDependencyProperty*)peerProperty;
@@ -496,7 +502,9 @@ WINRT_EXPORT
 @interface WUXAPFrameworkElementAutomationPeer : WUXAPAutomationPeer
 + (WUXAPAutomationPeer*)fromElement:(WXUIElement*)element;
 + (WUXAPAutomationPeer*)createPeerForElement:(WXUIElement*)element;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WXUIElement* owner;
 @end
 
@@ -508,7 +516,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPButtonBaseAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPButtonBaseAutomationPeer_DEFINED__
@@ -519,7 +529,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPCaptureElementAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPCaptureElementAutomationPeer_DEFINED__
@@ -530,7 +542,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPComboBoxItemAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPComboBoxItemAutomationPeer_DEFINED__
@@ -541,7 +555,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPFlipViewItemAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPFlipViewItemAutomationPeer_DEFINED__
@@ -552,7 +568,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPGroupItemAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPGroupItemAutomationPeer_DEFINED__
@@ -563,7 +581,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPImageAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPImageAutomationPeer_DEFINED__
@@ -574,7 +594,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPListBoxItemAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPListBoxItemAutomationPeer_DEFINED__
@@ -585,7 +607,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPMediaTransportControlsAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPMediaTransportControlsAutomationPeer_DEFINED__
@@ -596,7 +620,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPPasswordBoxAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPPasswordBoxAutomationPeer_DEFINED__
@@ -607,7 +633,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPProgressRingAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPProgressRingAutomationPeer_DEFINED__
@@ -618,7 +646,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPRichEditBoxAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPRichEditBoxAutomationPeer_DEFINED__
@@ -629,7 +659,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPRichTextBlockAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPRichTextBlockAutomationPeer_DEFINED__
@@ -640,7 +672,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPRichTextBlockOverflowAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPRichTextBlockOverflowAutomationPeer_DEFINED__
@@ -651,7 +685,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPSettingsFlyoutAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPSettingsFlyoutAutomationPeer_DEFINED__
@@ -662,7 +698,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPTextBlockAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPTextBlockAutomationPeer_DEFINED__
@@ -673,7 +711,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPTextBoxAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPTextBoxAutomationPeer_DEFINED__
@@ -684,7 +724,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPThumbAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPThumbAutomationPeer_DEFINED__
@@ -696,7 +738,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXAPAutoSuggestBoxAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPAutoSuggestBoxAutomationPeer*)makeInstanceWithOwner:(WXCAutoSuggestBox*)owner ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPAutoSuggestBoxAutomationPeer_DEFINED__
@@ -707,7 +751,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPDatePickerAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPDatePickerAutomationPeer_DEFINED__
@@ -718,7 +764,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPFlyoutPresenterAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPFlyoutPresenterAutomationPeer_DEFINED__
@@ -729,7 +777,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPGridViewItemAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPGridViewItemAutomationPeer_DEFINED__
@@ -740,7 +790,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPHubAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPHubAutomationPeer_DEFINED__
@@ -751,7 +803,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPListViewBaseHeaderItemAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPListViewBaseHeaderItemAutomationPeer_DEFINED__
@@ -762,7 +816,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPListViewItemAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPListViewItemAutomationPeer_DEFINED__
@@ -773,7 +829,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPMediaElementAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPMediaElementAutomationPeer_DEFINED__
@@ -784,7 +842,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPSearchBoxAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPSearchBoxAutomationPeer_DEFINED__
@@ -795,7 +855,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPTimePickerAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPTimePickerAutomationPeer_DEFINED__
@@ -806,7 +868,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPGridViewHeaderItemAutomationPeer : WUXAPListViewBaseHeaderItemAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPGridViewHeaderItemAutomationPeer_DEFINED__
@@ -817,7 +881,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPListViewHeaderItemAutomationPeer : WUXAPListViewBaseHeaderItemAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPListViewHeaderItemAutomationPeer_DEFINED__
@@ -838,7 +904,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPButtonAutomationPeer : WUXAPButtonBaseAutomationPeer <WUXAPIInvokeProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)invoke;
 @end
 
@@ -850,7 +918,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPHyperlinkButtonAutomationPeer : WUXAPButtonBaseAutomationPeer <WUXAPIInvokeProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)invoke;
 @end
 
@@ -862,7 +932,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPRepeatButtonAutomationPeer : WUXAPButtonBaseAutomationPeer <WUXAPIInvokeProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)invoke;
 @end
 
@@ -874,7 +946,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPMenuFlyoutItemAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIInvokeProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)invoke;
 @end
 
@@ -886,7 +960,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPAppBarButtonAutomationPeer : WUXAPButtonAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPAppBarButtonAutomationPeer_DEFINED__
@@ -909,7 +985,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPItemsControlAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIItemContainerProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (WUXAPIRawElementProviderSimple*)findItemByProperty:(WUXAPIRawElementProviderSimple*)startAfter
                                    automationProperty:(WUXAAutomationProperty*)automationProperty
                                                 value:(RTObject*)value;
@@ -925,7 +1003,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPMenuFlyoutPresenterAutomationPeer : WUXAPItemsControlAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPMenuFlyoutPresenterAutomationPeer_DEFINED__
@@ -952,7 +1032,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPRangeBaseAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIRangeValueProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) BOOL isReadOnly;
 @property (readonly) double largeChange;
 @property (readonly) double maximum;
@@ -970,7 +1052,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPProgressBarAutomationPeer : WUXAPRangeBaseAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPProgressBarAutomationPeer_DEFINED__
@@ -981,7 +1065,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPScrollBarAutomationPeer : WUXAPRangeBaseAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPScrollBarAutomationPeer_DEFINED__
@@ -992,7 +1078,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPSliderAutomationPeer : WUXAPRangeBaseAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPSliderAutomationPeer_DEFINED__
@@ -1013,7 +1101,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPHubSectionAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIScrollItemProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)scrollIntoView;
 @end
 
@@ -1042,7 +1132,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPScrollViewerAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIScrollProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) double horizontalScrollPercent;
 @property (readonly) double horizontalViewSize;
 @property (readonly) BOOL horizontallyScrollable;
@@ -1073,7 +1165,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPSelectorAutomationPeer : WUXAPItemsControlAutomationPeer <WUXAPISelectionProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) BOOL canSelectMultiple;
 @property (readonly) BOOL isSelectionRequired;
 - (NSArray* /* WUXAPIRawElementProviderSimple* */)getSelection;
@@ -1087,7 +1181,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPFlipViewAutomationPeer : WUXAPSelectorAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPFlipViewAutomationPeer_DEFINED__
@@ -1098,7 +1194,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPListBoxAutomationPeer : WUXAPSelectorAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPListBoxAutomationPeer_DEFINED__
@@ -1120,7 +1218,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPListViewBaseAutomationPeer : WUXAPSelectorAutomationPeer <WUXAPIDropTargetProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* dropEffect;
 @property (readonly) NSArray* /* NSString * */ dropEffects;
 @end
@@ -1133,7 +1233,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPGridViewAutomationPeer : WUXAPListViewBaseAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPGridViewAutomationPeer_DEFINED__
@@ -1144,7 +1246,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPListViewAutomationPeer : WUXAPListViewBaseAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPListViewAutomationPeer_DEFINED__
@@ -1166,7 +1270,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPSemanticZoomAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIToggleProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUXAToggleState toggleState;
 - (void)toggle;
 @end
@@ -1179,7 +1285,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPToggleSwitchAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIToggleProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUXAToggleState toggleState;
 - (void)toggle;
 @end
@@ -1192,7 +1300,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPToggleButtonAutomationPeer : WUXAPButtonBaseAutomationPeer <WUXAPIToggleProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUXAToggleState toggleState;
 - (void)toggle;
 @end
@@ -1205,7 +1315,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPCheckBoxAutomationPeer : WUXAPToggleButtonAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPCheckBoxAutomationPeer_DEFINED__
@@ -1230,7 +1342,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPRadioButtonAutomationPeer : WUXAPToggleButtonAutomationPeer <WUXAPISelectionItemProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) BOOL isSelected;
 @property (readonly) WUXAPIRawElementProviderSimple* selectionContainer;
 - (void)addToSelection;
@@ -1258,7 +1372,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPAppBarAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIToggleProvider, WUXAPIExpandCollapseProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUXAExpandCollapseState expandCollapseState;
 @property (readonly) WUXAToggleState toggleState;
 - (void)toggle;
@@ -1274,7 +1390,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPToggleMenuFlyoutItemAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIToggleProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUXAToggleState toggleState;
 - (void)toggle;
 @end
@@ -1287,7 +1405,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPAppBarToggleButtonAutomationPeer : WUXAPToggleButtonAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPAppBarToggleButtonAutomationPeer_DEFINED__
@@ -1310,7 +1430,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPComboBoxAutomationPeer : WUXAPSelectorAutomationPeer <WUXAPIExpandCollapseProvider, WUXAPIValueProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUXAExpandCollapseState expandCollapseState;
 @property (readonly) BOOL isReadOnly;
 @property (readonly) NSString* value;
@@ -1337,7 +1459,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPItemAutomationPeer : WUXAPAutomationPeer <WUXAPIVirtualizedItemProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) RTObject* item;
 @property (readonly) WUXAPItemsControlAutomationPeer* itemsControlAutomationPeer;
 - (void)realize;
@@ -1351,7 +1475,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPSelectorItemAutomationPeer : WUXAPItemAutomationPeer <WUXAPISelectionItemProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) BOOL isSelected;
 @property (readonly) WUXAPIRawElementProviderSimple* selectionContainer;
 - (void)addToSelection;
@@ -1367,7 +1493,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPComboBoxItemDataAutomationPeer : WUXAPSelectorItemAutomationPeer <WUXAPIScrollItemProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)scrollIntoView;
 @end
 
@@ -1379,7 +1507,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPFlipViewItemDataAutomationPeer : WUXAPSelectorItemAutomationPeer <WUXAPIScrollItemProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)scrollIntoView;
 @end
 
@@ -1391,7 +1521,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPListBoxItemDataAutomationPeer : WUXAPSelectorItemAutomationPeer <WUXAPIScrollItemProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)scrollIntoView;
 @end
 
@@ -1403,7 +1535,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPGridViewItemDataAutomationPeer : WUXAPSelectorItemAutomationPeer <WUXAPIScrollItemProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)scrollIntoView;
 @end
 
@@ -1415,7 +1549,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPListViewItemDataAutomationPeer : WUXAPSelectorItemAutomationPeer <WUXAPIScrollItemProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)scrollIntoView;
 @end
 
@@ -1427,7 +1563,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPMapControlAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPMapControlAutomationPeer_DEFINED__
@@ -1438,7 +1576,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPLoopingSelectorItemDataAutomationPeer : WUXAPAutomationPeer <WUXAPIVirtualizedItemProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)realize;
 @end
 
@@ -1450,7 +1590,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPDatePickerFlyoutPresenterAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPDatePickerFlyoutPresenterAutomationPeer_DEFINED__
@@ -1461,7 +1603,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPListPickerFlyoutPresenterAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPListPickerFlyoutPresenterAutomationPeer_DEFINED__
@@ -1475,7 +1619,9 @@ WINRT_EXPORT
                                                                                      WUXAPIItemContainerProvider,
                                                                                      WUXAPIScrollProvider,
                                                                                      WUXAPISelectionProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUXAExpandCollapseState expandCollapseState;
 @property (readonly) double horizontalScrollPercent;
 @property (readonly) double horizontalViewSize;
@@ -1504,7 +1650,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXAPLoopingSelectorItemAutomationPeer
     : WUXAPFrameworkElementAutomationPeer <WUXAPIScrollItemProvider, WUXAPISelectionItemProvider>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) BOOL isSelected;
 @property (readonly) WUXAPIRawElementProviderSimple* selectionContainer;
 - (void)scrollIntoView;
@@ -1521,7 +1669,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPPickerFlyoutPresenterAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPPickerFlyoutPresenterAutomationPeer_DEFINED__
@@ -1533,7 +1683,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXAPPivotItemAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPPivotItemAutomationPeer*)makeInstanceWithOwner:(WXCPivotItem*)owner ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPPivotItemAutomationPeer_DEFINED__
@@ -1546,7 +1698,9 @@ WINRT_EXPORT
 @interface WUXAPPivotItemDataAutomationPeer
     : WUXAPItemAutomationPeer <WUXAPIScrollItemProvider, WUXAPISelectionItemProvider, WUXAPIVirtualizedItemProvider>
 + (WUXAPPivotItemDataAutomationPeer*)makeInstanceWithParentAndItem:(RTObject*)item parent:(WUXAPPivotAutomationPeer*)parent ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) BOOL isSelected;
 @property (readonly) WUXAPIRawElementProviderSimple* selectionContainer;
 - (void)scrollIntoView;
@@ -1564,7 +1718,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPTimePickerFlyoutPresenterAutomationPeer : WUXAPFrameworkElementAutomationPeer
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPTimePickerFlyoutPresenterAutomationPeer_DEFINED__
@@ -1576,7 +1732,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXAPPivotAutomationPeer : WUXAPItemsControlAutomationPeer <WUXAPIScrollProvider, WUXAPISelectionProvider>
 + (WUXAPPivotAutomationPeer*)makeInstanceWithOwner:(WXCPivot*)owner ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) double horizontalScrollPercent;
 @property (readonly) double horizontalViewSize;
 @property (readonly) BOOL horizontallyScrollable;

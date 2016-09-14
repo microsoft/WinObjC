@@ -48,7 +48,9 @@ typedef unsigned WDPPdfPageRotation;
 WINRT_EXPORT
 @interface WDPPdfPageRenderOptions : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) WFRect* sourceRect;
 @property BOOL isIgnoringHighContrast;
 @property unsigned int destinationWidth;
@@ -65,7 +67,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPPdfPageDimensions : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WFRect* artBox;
 @property (readonly) WFRect* bleedBox;
 @property (readonly) WFRect* cropBox;
@@ -91,7 +95,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPPdfPage : RTObject <WFIClosable>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WDPPdfPageDimensions* dimensions;
 @property (readonly) unsigned int index;
 @property (readonly) float preferredZoom;
@@ -124,7 +130,9 @@ WINRT_EXPORT
                                password:(NSString*)password
                                 success:(void (^)(WDPPdfDocument*))success
                                 failure:(void (^)(NSError*))failure;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) BOOL isPasswordProtected;
 @property (readonly) unsigned int pageCount;
 - (WDPPdfPage*)getPage:(unsigned int)pageIndex;

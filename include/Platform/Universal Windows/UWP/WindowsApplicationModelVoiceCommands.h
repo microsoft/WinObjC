@@ -68,7 +68,9 @@ typedef unsigned WAVVoiceCommandCompletionReason;
 
 WINRT_EXPORT
 @interface WAVVoiceCommandDefinition : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* language;
 @property (readonly) NSString* name;
 - (RTObject<WFIAsyncAction>*)setPhraseListAsync:(NSString*)phraseListName phraseList:(id<NSFastEnumeration> /* NSString * */)phraseList;
@@ -95,7 +97,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAVVoiceCommandContentTile : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) NSString* title;
 @property (retain) NSString* textLine3;
 @property (retain) NSString* textLine2;
@@ -115,7 +119,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAVVoiceCommandUserMessage : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) NSString* spokenMessage;
 @property (retain) NSString* displayMessage;
 @end
@@ -128,7 +134,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAVVoiceCommand : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* commandName;
 @property (readonly) NSDictionary* /* NSString *, NSArray* < NSString * > */ properties;
 @property (readonly) WMSSpeechRecognitionResult* speechRecognitionResult;
@@ -150,7 +158,9 @@ WINRT_EXPORT
 + (WAVVoiceCommandResponse*)createResponseForPromptWithTiles:(WAVVoiceCommandUserMessage*)message
                                                repeatMessage:(WAVVoiceCommandUserMessage*)repeatMessage
                                                 contentTiles:(id<NSFastEnumeration> /* WAVVoiceCommandContentTile* */)contentTiles;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) WAVVoiceCommandUserMessage* repeatMessage;
 @property (retain) WAVVoiceCommandUserMessage* message;
 @property (retain) NSString* appLaunchArgument;
@@ -166,7 +176,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAVVoiceCommandConfirmationResult : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) BOOL confirmed;
 @end
 
@@ -178,7 +190,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAVVoiceCommandDisambiguationResult : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WAVVoiceCommandContentTile* selectedItem;
 @end
 
@@ -191,7 +205,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAVVoiceCommandServiceConnection : RTObject
 + (WAVVoiceCommandServiceConnection*)fromAppServiceTriggerDetails:(WAAAppServiceTriggerDetails*)triggerDetails;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WGLanguage* language;
 - (EventRegistrationToken)addVoiceCommandCompletedEvent:(void (^)(WAVVoiceCommandServiceConnection*,
                                                                   WAVVoiceCommandCompletedEventArgs*))del;
@@ -217,7 +233,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAVVoiceCommandCompletedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WAVVoiceCommandCompletionReason reason;
 @end
 

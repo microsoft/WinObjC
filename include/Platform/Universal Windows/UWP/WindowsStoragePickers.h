@@ -60,7 +60,9 @@ typedef unsigned WSPPickerLocationId;
 
 WINRT_EXPORT
 @interface WSPFilePickerSelectedFilesArray : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -76,7 +78,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPFilePickerFileTypesOrderedMap : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) unsigned int size;
 - (id)objectForKey:(id)key;
 - (NSArray*)allKeys;
@@ -103,7 +107,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPFileExtensionVector : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -127,7 +133,9 @@ WINRT_EXPORT
 @interface WSPFileOpenPicker : RTObject
 + (void)resumePickSingleFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property WSPPickerViewMode viewMode;
 @property WSPPickerLocationId suggestedStartLocation;
 @property (retain) NSString* settingsIdentifier;
@@ -150,7 +158,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSPFileSavePicker : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property WSPPickerLocationId suggestedStartLocation;
 @property (retain) WSStorageFile* suggestedSaveFile;
 @property (retain) NSString* suggestedFileName;
@@ -173,7 +183,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSPFolderPicker : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property WSPPickerViewMode viewMode;
 @property WSPPickerLocationId suggestedStartLocation;
 @property (retain) NSString* settingsIdentifier;

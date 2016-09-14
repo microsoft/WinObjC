@@ -153,7 +153,9 @@ WINRT_EXPORT
 + (void)createAsync:(WMAAudioGraphSettings*)settings
             success:(void (^)(WMACreateAudioGraphResult*))success
             failure:(void (^)(NSError*))failure;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) uint64_t completedQuantumCount;
 @property (readonly) WMMAudioEncodingProperties* encodingProperties;
 @property (readonly) int latencyInSamples;
@@ -210,7 +212,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMACreateAudioGraphResult : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WMAAudioGraph* graph;
 @property (readonly) WMAAudioGraphCreationStatus status;
 @end
@@ -224,7 +228,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMAAudioGraphSettings : RTObject
 + (WMAAudioGraphSettings*)make:(WMRAudioRenderCategory)audioRenderCategory ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property WMAQuantumSizeSelectionMode quantumSizeSelectionMode;
 @property (retain) WDEDeviceInformation* primaryRenderDevice;
 @property (retain) WMMAudioEncodingProperties* encodingProperties;
@@ -241,7 +247,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMAAudioDeviceInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WDEDeviceInformation* device;
 @property (readonly) NSArray* /* WMAAudioGraphConnection* */ outgoingConnections;
 @property double outgoingGain;
@@ -267,7 +275,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMACreateAudioDeviceInputNodeResult : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WMAAudioDeviceInputNode* deviceInputNode;
 @property (readonly) WMAAudioDeviceNodeCreationStatus status;
 @end
@@ -280,7 +290,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMAAudioDeviceOutputNode : RTObject <WMAIAudioNode, WFIClosable>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WDEDeviceInformation* device;
 @property double outgoingGain;
 @property BOOL consumeInput;
@@ -302,7 +314,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMACreateAudioDeviceOutputNodeResult : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WMAAudioDeviceOutputNode* deviceOutputNode;
 @property (readonly) WMAAudioDeviceNodeCreationStatus status;
 @end
@@ -315,7 +329,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMAAudioFileInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property double playbackSpeedFactor;
 @property (retain) id /* int */ loopCount;
 @property (retain) id /* WFTimeSpan* */ endTime;
@@ -350,7 +366,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMACreateAudioFileInputNodeResult : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WMAAudioFileInputNode* fileInputNode;
 @property (readonly) WMAAudioFileNodeCreationStatus status;
 @end
@@ -363,7 +381,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMAAudioFileOutputNode : RTObject <WMAIAudioNode, WFIClosable>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) RTObject<WSIStorageFile>* file;
 @property (readonly) WMMMediaEncodingProfile* fileEncodingProfile;
 @property double outgoingGain;
@@ -387,7 +407,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMACreateAudioFileOutputNodeResult : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WMAAudioFileOutputNode* fileOutputNode;
 @property (readonly) WMAAudioFileNodeCreationStatus status;
 @end
@@ -400,7 +422,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMAAudioGraphUnrecoverableErrorOccurredEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WMAAudioGraphUnrecoverableError error;
 @end
 
@@ -412,7 +436,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMAAudioFrameInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property double playbackSpeedFactor;
 @property (readonly) uint64_t queuedSampleCount;
 @property (readonly) NSArray* /* WMAAudioGraphConnection* */ outgoingConnections;
@@ -445,7 +471,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMAAudioFrameOutputNode : RTObject <WMAIAudioNode, WFIClosable>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property double outgoingGain;
 @property BOOL consumeInput;
 @property (readonly) NSMutableArray* /* RTObject<WMEIAudioEffectDefinition>* */ effectDefinitions;
@@ -467,7 +495,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMAAudioSubmixNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSArray* /* WMAAudioGraphConnection* */ outgoingConnections;
 @property double outgoingGain;
 @property BOOL consumeInput;
@@ -492,7 +522,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMAAudioGraphConnection : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property double gain;
 @property (readonly) RTObject<WMAIAudioNode>* destination;
 @end
@@ -505,7 +537,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMAAudioFrameCompletedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WMAudioFrame* frame;
 @end
 
@@ -517,7 +551,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMAFrameInputNodeQuantumStartedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) int requiredSamples;
 @end
 
@@ -529,7 +565,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMAEqualizerBand : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property double gain;
 @property double frequencyCenter;
 @property double bandwidth;
@@ -555,7 +593,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMAEqualizerEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 + (WMAEqualizerEffectDefinition*)make:(WMAAudioGraph*)audioGraph ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSArray* /* WMAEqualizerBand* */ bands;
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
@@ -570,7 +610,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMAReverbEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 + (WMAReverbEffectDefinition*)make:(WMAAudioGraph*)audioGraph ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property uint8_t highEQGain;
 @property uint8_t highEQCutoff;
 @property BOOL disableLateField;
@@ -607,7 +649,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMAEchoEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 + (WMAEchoEffectDefinition*)make:(WMAAudioGraph*)audioGraph ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property double wetDryMix;
 @property double feedback;
 @property double delay;
@@ -624,7 +668,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMALimiterEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 + (WMALimiterEffectDefinition*)make:(WMAAudioGraph*)audioGraph ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property unsigned int Release;
 @property unsigned int loudness;
 @property (readonly) NSString* activatableClassId;

@@ -67,7 +67,9 @@ typedef unsigned WAAAppServiceResponseStatus;
 
 WINRT_EXPORT
 @interface WAAAppServiceRequest : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WFCValueSet* message;
 - (void)sendResponseAsync:(WFCValueSet*)message success:(void (^)(WAAAppServiceResponseStatus))success failure:(void (^)(NSError*))failure;
 @end
@@ -80,7 +82,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppServiceDeferral : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)complete;
 @end
 
@@ -92,7 +96,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppServiceResponse : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WFCValueSet* message;
 @property (readonly) WAAAppServiceResponseStatus status;
 @end
@@ -116,7 +122,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAAppServiceConnection : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) NSString* packageFamilyName;
 @property (retain) NSString* appServiceName;
 - (EventRegistrationToken)addRequestReceivedEvent:(void (^)(WAAAppServiceConnection*, WAAAppServiceRequestReceivedEventArgs*))del;
@@ -136,7 +144,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppServiceRequestReceivedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WAAAppServiceRequest* request;
 - (WAAAppServiceDeferral*)getDeferral;
 @end
@@ -149,7 +159,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppServiceClosedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WAAAppServiceClosedStatus status;
 @end
 
@@ -161,7 +173,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppServiceTriggerDetails : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WAAAppServiceConnection* appServiceConnection;
 @property (readonly) NSString* callerPackageFamilyName;
 @property (readonly) NSString* name;

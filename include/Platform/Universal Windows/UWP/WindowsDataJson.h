@@ -86,7 +86,9 @@ WINRT_EXPORT
 + (WDJJsonArray*)parse:(NSString*)input;
 + (BOOL)tryParse:(NSString*)input result:(WDJJsonArray**)result;
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WDJJsonValueType valueType;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -124,7 +126,9 @@ WINRT_EXPORT
 + (WDJJsonObject*)parse:(NSString*)input;
 + (BOOL)tryParse:(NSString*)input result:(WDJJsonObject**)result;
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WDJJsonValueType valueType;
 @property (readonly) unsigned int size;
 - (id)objectForKey:(id)key;
@@ -178,7 +182,9 @@ WINRT_EXPORT
 + (WDJJsonValue*)createNumberValue:(double)input;
 + (WDJJsonValue*)createStringValue:(NSString*)input;
 + (WDJJsonValue*)createNullValue;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WDJJsonValueType valueType;
 - (NSString*)stringify;
 - (NSString*)getString;

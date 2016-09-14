@@ -100,7 +100,9 @@ typedef unsigned WSCKeyCredentialCreationOption;
 WINRT_EXPORT
 @interface WSCWebAccountProvider : RTObject
 + (WSCWebAccountProvider*)makeWebAccountProvider:(NSString*)id displayName:(NSString*)displayName iconUri:(WFUri*)iconUri ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* displayName;
 @property (readonly) WFUri* iconUri;
 @property (readonly) NSString* id;
@@ -120,7 +122,9 @@ WINRT_EXPORT
 + (WSCWebAccount*)makeWebAccount:(WSCWebAccountProvider*)webAccountProvider
                         userName:(NSString*)userName
                            state:(WSCWebAccountState)state ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSCWebAccountState state;
 @property (readonly) NSString* userName;
 @property (readonly) WSCWebAccountProvider* webAccountProvider;
@@ -141,7 +145,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCKeyCredentialRetrievalResult : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSCKeyCredential* credential;
 @property (readonly) WSCKeyCredentialStatus status;
 @end
@@ -154,7 +160,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCKeyCredentialOperationResult : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) RTObject<WSSIBuffer>* result;
 @property (readonly) WSCKeyCredentialStatus status;
 @end
@@ -167,7 +175,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCKeyCredentialAttestationResult : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) RTObject<WSSIBuffer>* attestationBuffer;
 @property (readonly) RTObject<WSSIBuffer>* certificateChainBuffer;
 @property (readonly) WSCKeyCredentialAttestationStatus status;
@@ -181,7 +191,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCKeyCredential : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* name;
 - (RTObject<WSSIBuffer>*)retrievePublicKey;
 - (void)requestSignAsync:(RTObject<WSSIBuffer>*)data
@@ -218,7 +230,9 @@ WINRT_EXPORT
 @interface WSCPasswordCredential : RTObject
 + (instancetype)make ACTIVATOR;
 + (WSCPasswordCredential*)makePasswordCredential:(NSString*)resource userName:(NSString*)userName password:(NSString*)password ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) NSString* userName;
 @property (retain) NSString* resource;
 @property (retain) NSString* password;
@@ -235,7 +249,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCPasswordVault : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)add:(WSCPasswordCredential*)credential;
 - (void)remove:(WSCPasswordCredential*)credential;
 - (WSCPasswordCredential*)retrieve:(NSString*)resource userName:(NSString*)userName;
@@ -279,7 +295,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCPasswordCredentialPropertyStore : RTObject <WFCIPropertySet>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)
 - (void)removeMapChangedEvent:(EventRegistrationToken)tok;

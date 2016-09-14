@@ -49,7 +49,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSUUserProfilePersonalizationSettings : RTObject
 + (BOOL)isSupported;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 + (WSUUserProfilePersonalizationSettings*)current;
 - (void)trySetLockScreenImageAsync:(WSStorageFile*)imageFile success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)trySetWallpaperImageAsync:(WSStorageFile*)imageFile success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
@@ -80,7 +82,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSUFirstSignInSettings : RTObject
 + (WSUFirstSignInSettings*)getDefault;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) unsigned int size;
 - (id)objectForKey:(id)key;
 - (NSArray*)allKeys;

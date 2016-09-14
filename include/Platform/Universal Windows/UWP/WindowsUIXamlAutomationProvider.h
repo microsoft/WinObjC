@@ -539,7 +539,9 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -558,7 +560,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPIRawElementProviderSimple : WXDependencyObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXAPIRawElementProviderSimple_DEFINED__

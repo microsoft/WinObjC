@@ -160,7 +160,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIEdgeGestureEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUIEdgeGestureKind kind;
 @end
 
@@ -173,7 +175,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIEdgeGesture : RTObject
 + (WUIEdgeGesture*)getForCurrentView;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (EventRegistrationToken)addCanceledEvent:(void (^)(WUIEdgeGesture*, WUIEdgeGestureEventArgs*))del;
 - (void)removeCanceledEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addCompletedEvent:(void (^)(WUIEdgeGesture*, WUIEdgeGestureEventArgs*))del;
@@ -190,7 +194,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIMouseWheelParameters : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) WFPoint* pageTranslation;
 @property float deltaScale;
 @property float deltaRotationAngle;
@@ -206,7 +212,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIGestureRecognizer : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property float inertiaRotationDeceleration;
 @property float inertiaRotationAngle;
 @property float inertiaExpansionDeceleration;
@@ -261,7 +269,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUITappedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
 @property (readonly) WFPoint* position;
 @property (readonly) unsigned int tapCount;
@@ -275,7 +285,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIRightTappedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
 @property (readonly) WFPoint* position;
 @end
@@ -288,7 +300,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIHoldingEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUIHoldingState holdingState;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
 @property (readonly) WFPoint* position;
@@ -302,7 +316,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIDraggingEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUIDraggingState draggingState;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
 @property (readonly) WFPoint* position;
@@ -316,7 +332,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIManipulationStartedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUIManipulationDelta* cumulative;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
 @property (readonly) WFPoint* position;
@@ -330,7 +348,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIManipulationUpdatedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUIManipulationDelta* cumulative;
 @property (readonly) WUIManipulationDelta* delta;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
@@ -346,7 +366,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIManipulationInertiaStartingEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUIManipulationDelta* cumulative;
 @property (readonly) WUIManipulationDelta* delta;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
@@ -362,7 +384,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIManipulationCompletedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUIManipulationDelta* cumulative;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
 @property (readonly) WFPoint* position;
@@ -377,7 +401,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUICrossSlidingEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUICrossSlidingState crossSlidingState;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
 @property (readonly) WFPoint* position;
@@ -396,7 +422,9 @@ WINRT_EXPORT
 + (WUIPointerPoint*)getCurrentPointTransformed:(unsigned int)pointerId transform:(RTObject<WUIIPointerPointTransform>*)transform;
 + (NSMutableArray* /* WUIPointerPoint* */)getIntermediatePointsTransformed:(unsigned int)pointerId
                                                                  transform:(RTObject<WUIIPointerPointTransform>*)transform;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) unsigned int frameId;
 @property (readonly) BOOL isInContact;
 @property (readonly) WDIPointerDevice* pointerDevice;
@@ -415,7 +443,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIPointerPointProperties : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WFRect* contactRect;
 @property (readonly) WFRect* contactRectRaw;
 @property (readonly) BOOL isBarrelButtonPressed;
@@ -452,7 +482,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIPointerVisualizationSettings : RTObject
 + (WUIPointerVisualizationSettings*)getForCurrentView;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property BOOL isContactFeedbackEnabled;
 @property BOOL isBarrelButtonFeedbackEnabled;
 @end

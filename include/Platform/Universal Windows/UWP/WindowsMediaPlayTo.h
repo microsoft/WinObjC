@@ -62,7 +62,9 @@ typedef unsigned WMPPlayToConnectionError;
 
 WINRT_EXPORT
 @interface WMPSourceChangeRequestedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* album;
 @property (readonly) NSString* author;
 @property (readonly) id /* WFDateTime* */ date;
@@ -83,7 +85,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPlaybackRateChangeRequestedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) double rate;
 @end
 
@@ -95,7 +99,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPCurrentTimeChangeRequestedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WFTimeSpan* time;
 @end
 
@@ -107,7 +113,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPMuteChangeRequestedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) BOOL mute;
 @end
 
@@ -119,7 +127,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPVolumeChangeRequestedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) double volume;
 @end
 
@@ -132,7 +142,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPlayToReceiver : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property BOOL supportsVideo;
 @property BOOL supportsImage;
 @property BOOL supportsAudio;
@@ -180,7 +192,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPlayToConnection : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WMPPlayToConnectionState state;
 - (EventRegistrationToken)addErrorEvent:(void (^)(WMPPlayToConnection*, WMPPlayToConnectionErrorEventArgs*))del;
 - (void)removeErrorEvent:(EventRegistrationToken)tok;
@@ -198,7 +212,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPlayToSource : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) WMPPlayToSource* next;
 @property (readonly) WMPPlayToConnection* connection;
 @property (retain) WFUri* preferredSourceUri;
@@ -213,7 +229,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPlayToConnectionStateChangedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WMPPlayToConnectionState currentState;
 @property (readonly) WMPPlayToConnectionState previousState;
 @end
@@ -226,7 +244,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPlayToConnectionTransferredEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WMPPlayToSource* currentSource;
 @property (readonly) WMPPlayToSource* previousSource;
 @end
@@ -239,7 +259,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPlayToConnectionErrorEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WMPPlayToConnectionError code;
 @property (readonly) NSString* message;
 @end
@@ -252,7 +274,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPlayToSourceSelectedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* friendlyName;
 @property (readonly) RTObject<WSSIRandomAccessStreamWithContentType>* icon;
 @property (readonly) BOOL supportsAudio;
@@ -268,7 +292,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPlayToSourceDeferral : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)complete;
 @end
 
@@ -280,7 +306,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPlayToSourceRequest : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WFDateTime* deadline;
 - (void)displayErrorString:(NSString*)errorString;
 - (WMPPlayToSourceDeferral*)getDeferral;
@@ -295,7 +323,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPlayToSourceRequestedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WMPPlayToSourceRequest* sourceRequest;
 @end
 
@@ -309,7 +339,9 @@ WINRT_EXPORT
 @interface WMPPlayToManager : RTObject
 + (WMPPlayToManager*)getForCurrentView;
 + (void)showPlayToUI;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property BOOL defaultSourceSelection;
 - (EventRegistrationToken)addSourceRequestedEvent:(void (^)(WMPPlayToManager*, WMPPlayToSourceRequestedEventArgs*))del;
 - (void)removeSourceRequestedEvent:(EventRegistrationToken)tok;

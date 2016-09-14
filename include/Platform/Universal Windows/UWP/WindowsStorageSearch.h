@@ -187,7 +187,9 @@ WINRT_EXPORT
 @interface WSSContentIndexer : RTObject
 + (WSSContentIndexer*)getIndexerWithName:(NSString*)indexName;
 + (WSSContentIndexer*)getIndexer;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) uint64_t revision;
 - (RTObject<WFIAsyncAction>*)addAsync:(RTObject<WSSIIndexableContent>*)indexableContent;
 - (RTObject<WFIAsyncAction>*)updateAsync:(RTObject<WSSIIndexableContent>*)indexableContent;
@@ -218,7 +220,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSSValueAndLanguage : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) RTObject* value;
 @property (retain) NSString* language;
 @end
@@ -231,7 +235,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSContentIndexerQuery : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSStorageFolder* queryFolder;
 - (void)getCountAsyncWithSuccess:(void (^)(unsigned int))success failure:(void (^)(NSError*))failure;
 - (void)getPropertiesAsyncWithSuccess:(void (^)(NSArray* /* NSDictionary* < NSString *, RTObject* > */))success
@@ -256,7 +262,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSSIndexableContent : RTObject <WSSIIndexableContent>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) NSString* streamContentType;
 @property (retain) RTObject<WSSIRandomAccessStream>* stream;
 @property (retain) NSString* id;
@@ -275,7 +283,9 @@ WINRT_EXPORT
                          fileTypeFilter:(id<NSFastEnumeration> /* NSString * */)fileTypeFilter ACTIVATOR;
 + (WSSQueryOptions*)makeCommonFolderQuery:(WSSCommonFolderQuery)query ACTIVATOR;
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) NSString* userSearchFilter;
 @property (retain) NSString* language;
 @property WSSIndexerOption indexerOption;
@@ -301,7 +311,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSStorageFileQueryResult : RTObject <WSSIStorageQueryResultBase>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSStorageFolder* folder;
 - (EventRegistrationToken)addContentsChangedEvent:(void (^)(RTObject<WSSIStorageQueryResultBase>*, RTObject*))del;
 - (void)removeContentsChangedEvent:(EventRegistrationToken)tok;
@@ -327,7 +339,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSStorageFolderQueryResult : RTObject <WSSIStorageQueryResultBase>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSStorageFolder* folder;
 - (EventRegistrationToken)addContentsChangedEvent:(void (^)(RTObject<WSSIStorageQueryResultBase>*, RTObject*))del;
 - (void)removeContentsChangedEvent:(EventRegistrationToken)tok;
@@ -353,7 +367,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSStorageItemQueryResult : RTObject <WSSIStorageQueryResultBase>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSStorageFolder* folder;
 - (EventRegistrationToken)addContentsChangedEvent:(void (^)(RTObject<WSSIStorageQueryResultBase>*, RTObject*))del;
 - (void)removeContentsChangedEvent:(EventRegistrationToken)tok;
@@ -379,7 +395,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSSortEntryVector : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -401,7 +419,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSStorageLibraryContentChangedTriggerDetails : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WSStorageFolder* folder;
 - (WSSStorageItemQueryResult*)createModifiedSinceQuery:(WFDateTime*)lastQueryTime;
 @end

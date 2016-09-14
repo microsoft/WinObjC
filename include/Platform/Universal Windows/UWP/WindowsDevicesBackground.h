@@ -35,7 +35,9 @@
 
 WINRT_EXPORT
 @interface WDBDeviceUseDetails : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* arguments;
 @property (readonly) NSString* deviceId;
 @end
@@ -48,7 +50,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBDeviceServicingDetails : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* arguments;
 @property (readonly) NSString* deviceId;
 @property (readonly) WFTimeSpan* expectedDuration;

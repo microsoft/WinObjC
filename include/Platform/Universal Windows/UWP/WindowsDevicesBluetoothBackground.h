@@ -43,7 +43,9 @@
 
 WINRT_EXPORT
 @interface WDBBRfcommInboundConnectionInformation : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property WDBBluetoothServiceCapabilities serviceCapabilities;
 @property (retain) RTObject<WSSIBuffer>* sdpRecord;
 @property (retain) WDBRRfcommServiceId* localServiceId;
@@ -57,7 +59,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBBRfcommOutboundConnectionInformation : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) WDBRRfcommServiceId* remoteServiceId;
 @end
 
@@ -69,7 +73,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBBRfcommConnectionTriggerDetails : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) BOOL incoming;
 @property (readonly) WDBBluetoothDevice* remoteDevice;
 @property (readonly) WNSStreamSocket* socket;
@@ -83,7 +89,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBBGattCharacteristicNotificationTriggerDetails : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WDBGGattCharacteristic* characteristic;
 @property (readonly) RTObject<WSSIBuffer>* value;
 @end
@@ -96,7 +104,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBBBluetoothLEAdvertisementWatcherTriggerDetails : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSArray* /* WDBABluetoothLEAdvertisementReceivedEventArgs* */ advertisements;
 @property (readonly) WDBBluetoothError error;
 @property (readonly) WDBBluetoothSignalStrengthFilter* signalStrengthFilter;
@@ -110,7 +120,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBBBluetoothLEAdvertisementPublisherTriggerDetails : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WDBBluetoothError error;
 @property (readonly) WDBABluetoothLEAdvertisementPublisherStatus status;
 @end

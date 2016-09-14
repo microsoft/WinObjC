@@ -36,7 +36,9 @@
 WINRT_EXPORT
 @interface WMCApplicationDataManager : RTObject
 + (WSApplicationData*)createForPackageFamily:(NSString*)packageFamilyName;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WMCApplicationDataManager_DEFINED__

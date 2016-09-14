@@ -185,7 +185,9 @@ WINRT_EXPORT
 @interface WMEVideoCompositorDefinition : RTObject <WMEIVideoCompositorDefinition>
 + (WMEVideoCompositorDefinition*)make:(NSString*)activatableClassId ACTIVATOR;
 + (WMEVideoCompositorDefinition*)makeWithProperties:(NSString*)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
@@ -198,7 +200,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMECompositeVideoFrameContext : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WMVideoFrame* backgroundFrame;
 @property (readonly) WMVideoFrame* outputFrame;
 @property (readonly) NSArray* /* RTObject<WGDDIDirect3DSurface>* */ surfacesToOverlay;
@@ -213,7 +217,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMEAudioEffect : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WMEAudioEffectType audioEffectType;
 @end
 
@@ -225,7 +231,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMEAudioRenderEffectsManager : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* effectsProviderSettingsLabel;
 @property (readonly) RTObject<WSSIRandomAccessStreamWithContentType>* effectsProviderThumbnail;
 - (EventRegistrationToken)addAudioRenderEffectsChangedEvent:(void (^)(WMEAudioRenderEffectsManager*, RTObject*))del;
@@ -242,7 +250,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMEAudioCaptureEffectsManager : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (EventRegistrationToken)addAudioCaptureEffectsChangedEvent:(void (^)(WMEAudioCaptureEffectsManager*, RTObject*))del;
 - (void)removeAudioCaptureEffectsChangedEvent:(EventRegistrationToken)tok;
 - (NSArray* /* WMEAudioEffect* */)getAudioCaptureEffects;
@@ -276,7 +286,9 @@ WINRT_EXPORT
 @interface WMEVideoEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 + (WMEVideoEffectDefinition*)make:(NSString*)activatableClassId ACTIVATOR;
 + (WMEVideoEffectDefinition*)makeWithProperties:(NSString*)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
@@ -291,7 +303,9 @@ WINRT_EXPORT
 @interface WMEAudioEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 + (WMEAudioEffectDefinition*)make:(NSString*)activatableClassId ACTIVATOR;
 + (WMEAudioEffectDefinition*)makeWithProperties:(NSString*)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
@@ -304,7 +318,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMEProcessVideoFrameContext : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WMVideoFrame* inputFrame;
 @property (readonly) WMVideoFrame* outputFrame;
 @end
@@ -317,7 +333,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMEProcessAudioFrameContext : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WMAudioFrame* inputFrame;
 @property (readonly) WMAudioFrame* outputFrame;
 @end
@@ -331,7 +349,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMEVideoTransformEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @property WMMMediaRotation rotation;

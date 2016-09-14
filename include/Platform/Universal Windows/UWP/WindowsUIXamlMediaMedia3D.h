@@ -85,7 +85,9 @@ WINRT_EXPORT
 + (BOOL)getHasInverse:(WUXMMMatrix3D*)target;
 + (BOOL)getIsIdentity:(WUXMMMatrix3D*)target;
 + (WUXMMMatrix3D*)invert:(WUXMMMatrix3D*)target;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 + (WUXMMMatrix3D*)identity;
 @end
 
@@ -97,7 +99,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -116,7 +120,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMMTransform3D : WXDependencyObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @end
 
 #endif // __WUXMMTransform3D_DEFINED__
@@ -128,7 +134,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMMCompositeTransform3D : WUXMMTransform3D
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property double rotationZ;
 @property double rotationY;
 @property double rotationX;
@@ -164,7 +172,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMMPerspectiveTransform3D : WUXMMTransform3D
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property double offsetY;
 @property double offsetX;
 @property double depth;

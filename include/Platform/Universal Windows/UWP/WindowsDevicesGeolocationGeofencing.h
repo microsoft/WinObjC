@@ -89,7 +89,9 @@ WINRT_EXPORT
                                                           dwellTime:(WFTimeSpan*)dwellTime
                                                           startTime:(WFDateTime*)startTime
                                                            duration:(WFTimeSpan*)duration ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WFTimeSpan* duration;
 @property (readonly) WFTimeSpan* dwellTime;
 @property (readonly) RTObject<WDGIGeoshape>* geoshape;
@@ -107,7 +109,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDGGGeofenceMonitor : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSMutableArray* /* WDGGGeofence* */ geofences;
 @property (readonly) WDGGeoposition* lastKnownGeoposition;
 @property (readonly) WDGGGeofenceMonitorStatus status;
@@ -127,7 +131,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDGGGeofenceStateChangeReport : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WDGGGeofence* geofence;
 @property (readonly) WDGGeoposition* geoposition;
 @property (readonly) WDGGGeofenceState newState;

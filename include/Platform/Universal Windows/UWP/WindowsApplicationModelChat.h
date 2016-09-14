@@ -196,7 +196,9 @@ typedef unsigned WACChatItemKind;
 
 WINRT_EXPORT
 @interface WACChatMessageTransportConfiguration : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ extendedProperties;
 @property (readonly) int maxAttachmentCount;
 @property (readonly) int maxMessageSizeInKilobytes;
@@ -213,7 +215,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACChatMessage : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) NSString* transportId;
 @property (retain) WFDateTime* networkTimestamp;
 @property (retain) WFDateTime* localTimestamp;
@@ -251,7 +255,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageChange : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WACChatMessageChangeType changeType;
 @property (readonly) WACChatMessage* message;
 @end
@@ -264,7 +270,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageChangeReader : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)acceptChanges;
 - (void)acceptChangesThrough:(WACChatMessageChange*)lastChangeToAcknowledge;
 - (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WACChatMessageChange* */))success failure:(void (^)(NSError*))failure;
@@ -280,7 +288,9 @@ WINRT_EXPORT
 @interface WACChatMessageAttachment : RTObject
 + (WACChatMessageAttachment*)makeChatMessageAttachment:(NSString*)mimeType
                                    dataStreamReference:(RTObject<WSSIRandomAccessStreamReference>*)dataStreamReference ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) NSString* text;
 @property (retain) NSString* mimeType;
 @property unsigned int groupId;
@@ -299,7 +309,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACChatConversationThreadingInfo : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property WACChatConversationThreadingKind kind;
 @property (retain) NSString* custom;
 @property (retain) NSString* conversationId;
@@ -316,7 +328,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACChatRecipientDeliveryInfo : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) NSString* transportAddress;
 @property (retain) id /* WFDateTime* */ readTime;
 @property (retain) id /* WFDateTime* */ deliveryTime;
@@ -335,7 +349,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageChangeTracker : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)enable;
 - (WACChatMessageChangeReader*)getChangeReader;
 - (void)reset;
@@ -349,7 +365,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageReader : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WACChatMessage* */))success failure:(void (^)(NSError*))failure;
 - (void)readBatchWithCountAsync:(int)count success:(void (^)(NSArray* /* WACChatMessage* */))success failure:(void (^)(NSError*))failure;
 @end
@@ -362,7 +380,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageValidationResult : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) id /* unsigned int */ maxPartCount;
 @property (readonly) id /* unsigned int */ partCount;
 @property (readonly) id /* unsigned int */ remainingCharacterCountInPart;
@@ -377,7 +397,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageStore : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WACChatMessageChangeTracker* changeTracker;
 - (EventRegistrationToken)addMessageChangedEvent:(void (^)(WACChatMessageStore*, WACChatMessageChangedEventArgs*))del;
 - (void)removeMessageChangedEvent:(EventRegistrationToken)tok;
@@ -430,7 +452,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageChangedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (WACChatMessageChangedDeferral*)getDeferral;
 @end
 
@@ -442,7 +466,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatConversation : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) NSString* subject;
 @property BOOL isConversationMuted;
 @property (readonly) BOOL hasUnreadMessages;
@@ -474,7 +500,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatConversationReader : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WACChatConversation* */))success failure:(void (^)(NSError*))failure;
 - (void)readBatchWithCountAsync:(int)count
                         success:(void (^)(NSArray* /* WACChatConversation* */))success
@@ -490,7 +518,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACChatQueryOptions : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (retain) NSString* searchString;
 @end
 
@@ -502,7 +532,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatSearchReader : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* RTObject<WACIChatItem>* */))success failure:(void (^)(NSError*))failure;
 - (void)readBatchWithCountAsync:(int)count
                         success:(void (^)(NSArray* /* RTObject<WACIChatItem>* */))success
@@ -517,7 +549,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageStoreChangedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* id;
 @property (readonly) WACChatStoreChangedEventKind kind;
 @end
@@ -530,7 +564,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageChangedDeferral : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)complete;
 @end
 
@@ -542,7 +578,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageTransport : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) BOOL isActive;
 @property (readonly) BOOL isAppSetAsNotificationProvider;
 @property (readonly) NSString* transportFriendlyName;
@@ -560,7 +598,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatCapabilities : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) BOOL isChatCapable;
 @property (readonly) BOOL isFileTransferCapable;
 @property (readonly) BOOL isGeoLocationPushCapable;
@@ -576,7 +616,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACRemoteParticipantComposingChangedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) BOOL isComposing;
 @property (readonly) NSString* participantAddress;
 @property (readonly) NSString* transportId;
@@ -590,7 +632,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACRcsEndUserMessageManager : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (EventRegistrationToken)addMessageAvailableChangedEvent:(void (^)(WACRcsEndUserMessageManager*,
                                                                     WACRcsEndUserMessageAvailableEventArgs*))del;
 - (void)removeMessageAvailableChangedEvent:(EventRegistrationToken)tok;
@@ -604,7 +648,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACRcsTransport : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WACRcsTransportConfiguration* configuration;
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ extendedProperties;
 @property (readonly) BOOL isActive;
@@ -624,7 +670,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACRcsTransportConfiguration : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) int maxAttachmentCount;
 @property (readonly) int maxFileSizeInKilobytes;
 @property (readonly) int maxGroupMessageSizeInKilobytes;
@@ -641,7 +689,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACRcsServiceKindSupportedChangedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WACRcsServiceKind serviceKind;
 @end
 
@@ -653,7 +703,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACRcsEndUserMessageAvailableEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) BOOL isMessageAvailable;
 @property (readonly) WACRcsEndUserMessage* message;
 @end
@@ -666,7 +718,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACRcsEndUserMessageAction : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* label;
 @end
 
@@ -678,7 +732,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACRcsEndUserMessage : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSArray* /* WACRcsEndUserMessageAction* */ actions;
 @property (readonly) BOOL isPinRequired;
 @property (readonly) NSString* text;
@@ -716,7 +772,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageNotificationTriggerDetails : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WACChatMessage* chatMessage;
 @property (readonly) BOOL shouldDisplayToast;
 @property (readonly) BOOL shouldUpdateActionCenter;
@@ -771,7 +829,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACRcsEndUserMessageAvailableTriggerDetails : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* text;
 @property (readonly) NSString* title;
 @end

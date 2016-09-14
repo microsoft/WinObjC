@@ -37,7 +37,9 @@
 
 WINRT_EXPORT
 @interface WMOOcrWord : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WFRect* boundingRect;
 @property (readonly) NSString* text;
 @end
@@ -50,7 +52,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMOOcrLine : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSString* text;
 @property (readonly) NSArray* /* WMOOcrWord* */ words;
 @end
@@ -63,7 +67,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMOOcrResult : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) NSArray* /* WMOOcrLine* */ lines;
 @property (readonly) NSString* text;
 @property (readonly) id /* double */ textAngle;
@@ -80,7 +86,9 @@ WINRT_EXPORT
 + (BOOL)isLanguageSupported:(WGLanguage*)language;
 + (WMOOcrEngine*)tryCreateFromLanguage:(WGLanguage*)language;
 + (WMOOcrEngine*)tryCreateFromUserProfileLanguages;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WGLanguage* recognizerLanguage;
 + (NSArray* /* WGLanguage* */)availableRecognizerLanguages;
 + (unsigned int)maxImageDimension;

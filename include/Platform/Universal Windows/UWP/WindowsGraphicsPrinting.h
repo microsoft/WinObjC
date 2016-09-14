@@ -451,7 +451,9 @@ typedef void (^WGPPrintTaskSourceRequestedHandler)(WGPPrintTaskSourceRequestedAr
 WINRT_EXPORT
 @interface WGPPrintTaskOptions
     : RTObject <WGPIPrintTaskOptionsCore, WGPIPrintTaskOptionsCoreProperties, WGPIPrintTaskOptionsCoreUIConfiguration>
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property WGPPrintMediaSize mediaSize;
 @property WGPPrintMediaType mediaType;
 @property WGPPrintHolePunch holePunch;
@@ -500,7 +502,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPPrintTaskProgressingEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) unsigned int documentPageCount;
 @end
 
@@ -512,7 +516,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPPrintTaskCompletedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WGPPrintTaskCompletion completion;
 @end
 
@@ -524,7 +530,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPPrintTask : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WGPPrintTaskOptions* options;
 @property (readonly) WADDataPackagePropertySet* properties;
 @property (readonly) RTObject<WGPIPrintDocumentSource>* source;
@@ -548,7 +556,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPPrintTaskSourceRequestedDeferral : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)complete;
 @end
 
@@ -560,7 +570,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPPrintTaskSourceRequestedArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WFDateTime* deadline;
 - (void)setSource:(RTObject<WGPIPrintDocumentSource>*)source;
 - (WGPPrintTaskSourceRequestedDeferral*)getDeferral;
@@ -574,7 +586,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPPrintTaskRequestedDeferral : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (void)complete;
 @end
 
@@ -586,7 +600,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPPrintTaskRequest : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WFDateTime* deadline;
 - (WGPPrintTask*)createPrintTask:(NSString*)title handler:(WGPPrintTaskSourceRequestedHandler)handler;
 - (WGPPrintTaskRequestedDeferral*)getDeferral;
@@ -600,7 +616,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPPrintTaskRequestedEventArgs : RTObject
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WGPPrintTaskRequest* request;
 @end
 
@@ -614,7 +632,9 @@ WINRT_EXPORT
 @interface WGPPrintManager : RTObject
 + (WGPPrintManager*)getForCurrentView;
 + (void)showPrintUIAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+#if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 - (EventRegistrationToken)addPrintTaskRequestedEvent:(void (^)(WGPPrintManager*, WGPPrintTaskRequestedEventArgs*))del;
 - (void)removePrintTaskRequestedEvent:(EventRegistrationToken)tok;
 @end
