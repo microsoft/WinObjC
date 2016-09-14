@@ -183,7 +183,9 @@
     [_functionCells
         addObject:createTextCell(@"CTFramesetterSuggestFrameSizeWithConstraints",
                                  [NSString stringWithFormat:@"width: %f, height: %f", suggestedSize.width, suggestedSize.height])];
-    ADD_UNIMPLEMENTED(_functionCells, @"CTFramesetterGetTypesetter");
+    [_functionCells addObject:createTextCell(@"CTFramesetterGetTypeSetter",
+                                             [NSString stringWithFormat:@"%@", CTFramesetterGetTypesetter(framesetter)])];
+
     ADD_UNIMPLEMENTED(_functionCells, @"CTFramesetterGetTypeID");
     [_functionsView reloadData];
 

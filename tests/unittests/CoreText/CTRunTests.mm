@@ -1,6 +1,6 @@
-//******************************************************************************
+﻿//******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -23,18 +23,15 @@
 
 #include <functional>
 
-bool isValid(double testValue, double expectedValue, double delta) {
-    double upperBound = testValue + delta;
-    double lowerBound = testValue - delta;
-    return ((expectedValue <= upperBound) && (expectedValue >= lowerBound));
-}
+static constexpr double c_errorDelta = 0.0005;
+static constexpr float c_arbitraryFloat = 114138.2292;
 
-NSAttributedString* getString() {
+NSMutableAttributedString* getString(NSString* str) {
     UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Times New Roman" size:40];
     UIFont* font = [UIFont fontWithDescriptor:fontDescriptor size:40];
 
-    NSRange wholeRange = NSMakeRange(0, 5);
-    NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@"hello"];
+    NSRange wholeRange = NSMakeRange(0, str.length);
+    NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:str];
     [string addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:wholeRange];
     [string addAttribute:NSFontAttributeName value:font range:wholeRange];
     [string addAttribute:@"testKey" value:[UIColor blueColor] range:wholeRange];
@@ -110,10 +107,9 @@ protected:
     CFRange _runRange;
 
     static constexpr NSString* const c_testString = @"bp";
-    static constexpr double c_errorDelta = 0.0005;
-    static constexpr float c_ascentExpected = 10.8633f;
-    static constexpr float c_descentExpected = -2.542969f;
-    static constexpr float c_leadingExpected = 0.392578f;
+    static constexpr float c_ascentExpected = 10.8634f;
+    static constexpr float c_descentExpected = -2.543f;
+    static constexpr float c_leadingExpected = 0.0f;
 };
 
 // TODO 6697587: Re-enable this test once ARM exceptions are fixed.
@@ -152,34 +148,28 @@ TEST_P(TypographicBounds, VerifyBounds) {
     CGFloat leading = 0.0;
 
     double width = CTRunGetTypographicBounds(_run, ::testing::get<0>(GetParam())(_runRange), &ascent, &descent, &leading);
-    ASSERT_TRUE_MSG(isValid(ascent, c_ascentExpected, c_errorDelta), "Failed: Run ascent value is incorrect");
-    ASSERT_TRUE_MSG(isValid(descent, c_descentExpected, c_errorDelta), "Failed: Run descent value is incorrect");
-
-    // TODO: #921 - need to implement leading in CTFont, requires figuring out how to get info down from DWriteTextLayout
-    // ASSERT_TRUE_MSG(isValid(leading, c_leadingExpected, c_errorDelta), "Failed: Run leading value is incorrect");
-
-    // TODO: #961 - need proper width return
-    // ASSERT_TRUE_MSG(isValid(width, ::testing::get<1>(GetParam()), c_errorDelta), "Failed: Typographic width is incorrect");
+    EXPECT_NEAR_MSG(ascent, c_ascentExpected, c_errorDelta, "Failed: Run ascent value is incorrect");
+    EXPECT_NEAR_MSG(descent, c_descentExpected, c_errorDelta, "Failed: Run descent value is incorrect");
+    EXPECT_NEAR_MSG(leading, c_leadingExpected, c_errorDelta, "Failed: Run leading value is incorrect");
+    EXPECT_NEAR_MSG(width, ::testing::get<1>(GetParam()), c_errorDelta, "Failed: Typographic width is incorrect");
 }
 
-const double widthExpected = 14.125f;
-const double reducedWidthExpected = 7.0625f;
+const double widthExpected = 14.1094;
+const double reducedWidthExpected = 7.0547;
 
-INSTANTIATE_TEST_CASE_P(CoreText,
+INSTANTIATE_TEST_CASE_P(CTRun,
                         TypographicBounds,
                         ::testing::Values(::testing::make_tuple([](CFRange range) { return range; }, widthExpected),
                                           ::testing::make_tuple([](CFRange range) { return CFRangeMake(-1, 2); }, reducedWidthExpected),
                                           ::testing::make_tuple([](CFRange range) { return CFRangeMake(-1, 1); }, 0),
                                           ::testing::make_tuple([](CFRange range) { return CFRangeMake(-1, 0); }, widthExpected)));
 
-// TODO: #1000 Re-enable this test
-DISABLED_TEST(CoreText, CTRunGetAttributes) {
-    CFAttributedStringRef string = (__bridge CFAttributedStringRef)getString();
-    CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(string);
-    CFRange range = { 0, CFAttributedStringGetLength(string) };
-    CTLineRef line = CTTypesetterCreateLine(ts, range);
+TEST(CTRun, GetAttributes) {
+    CTLineRef line = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef)getString(@"hello"));
     CFArrayRef runsArray = CTLineGetGlyphRuns(line);
     CTRunRef run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 0);
+
+    EXPECT_EQ(nil, CTRunGetAttributes(nullptr));
 
     CFDictionaryRef dictionary = CTRunGetAttributes(run);
     UIFont* font = (UIFont*)CFDictionaryGetValue(dictionary, NSFontAttributeName);
@@ -194,4 +184,213 @@ DISABLED_TEST(CoreText, CTRunGetAttributes) {
     color = (UIColor*)CFDictionaryGetValue(dictionary, @"testKey");
     ASSERT_TRUE_MSG([color isKindOfClass:[UIColor class]], "Failed: Wrong object type in dictionary");
     ASSERT_TRUE_MSG([color isEqual:[UIColor blueColor]], "Failed: Wrong object type in dictionary");
+}
+
+TEST(CTRun, GetAdvances) {
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)getString(@"hello");
+    CTLineRef line = CTLineCreateWithAttributedString(string);
+    CFArrayRef runsArray = CTLineGetGlyphRuns(line);
+    CTRunRef run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 0);
+    std::vector<CGSize> advances(6);
+
+    EXPECT_NO_THROW(CTRunGetAdvances(nullptr, CFRangeMake(0, 0), nullptr));
+    EXPECT_NO_THROW(CTRunGetAdvances(run, CFRangeMake(0, 0), nullptr));
+
+    std::fill(advances.begin(), advances.end(), CGSizeMake(c_arbitraryFloat, c_arbitraryFloat));
+    EXPECT_NO_THROW(CTRunGetAdvances(nullptr, CFRangeMake(0, 0), advances.data()));
+
+    std::fill(advances.begin(), advances.end(), CGSizeMake(c_arbitraryFloat, c_arbitraryFloat));
+    CTRunGetAdvances(run, CFRangeMake(10, 1), advances.data());
+    EXPECT_EQ(c_arbitraryFloat, advances[0].height);
+    EXPECT_EQ(c_arbitraryFloat, advances[0].width);
+
+    std::fill(advances.begin(), advances.end(), CGSizeMake(c_arbitraryFloat, c_arbitraryFloat));
+    CTRunGetAdvances(run, CFRangeMake(1, 1), advances.data());
+    EXPECT_EQ(0, advances[0].height);
+    EXPECT_NEAR(20.918, advances[0].width, c_errorDelta);
+    EXPECT_EQ(c_arbitraryFloat, advances[1].height);
+    EXPECT_EQ(c_arbitraryFloat, advances[1].width);
+
+    std::fill(advances.begin(), advances.end(), CGSizeMake(c_arbitraryFloat, c_arbitraryFloat));
+    CTRunGetAdvances(run, CFRangeMake(0, 0), advances.data());
+    EXPECT_EQ(0, advances[0].height);
+    EXPECT_NEAR(22.637, advances[0].width, c_errorDelta);
+    EXPECT_EQ(0, advances[1].height);
+    EXPECT_NEAR(20.918, advances[1].width, c_errorDelta);
+    EXPECT_EQ(0, advances[2].height);
+    EXPECT_NEAR(9.6875, advances[2].width, c_errorDelta);
+    EXPECT_EQ(0, advances[3].height);
+    EXPECT_NEAR(9.6875, advances[3].width, c_errorDelta);
+    EXPECT_EQ(0, advances[4].height);
+    EXPECT_NEAR(23.438, advances[4].width, c_errorDelta);
+    EXPECT_EQ(c_arbitraryFloat, advances[5].height);
+    EXPECT_EQ(c_arbitraryFloat, advances[5].width);
+
+    std::fill(advances.begin(), advances.end(), CGSizeMake(c_arbitraryFloat, c_arbitraryFloat));
+    CTRunGetAdvances(run, CFRangeMake(0, 5000), advances.data());
+    EXPECT_EQ(0, advances[0].height);
+    EXPECT_NEAR(22.637, advances[0].width, c_errorDelta);
+    EXPECT_EQ(0, advances[1].height);
+    EXPECT_NEAR(20.918, advances[1].width, c_errorDelta);
+    EXPECT_EQ(0, advances[2].height);
+    EXPECT_NEAR(9.6875, advances[2].width, c_errorDelta);
+    EXPECT_EQ(0, advances[3].height);
+    EXPECT_NEAR(9.6875, advances[3].width, c_errorDelta);
+    EXPECT_EQ(0, advances[4].height);
+    EXPECT_NEAR(23.438, advances[4].width, c_errorDelta);
+    EXPECT_EQ(c_arbitraryFloat, advances[5].height);
+    EXPECT_EQ(c_arbitraryFloat, advances[5].width);
+
+    CFRelease(line);
+}
+
+TEST(CTRun, GetAdvancesPtr) {
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)getString(@"hello");
+    CTLineRef line = CTLineCreateWithAttributedString(string);
+    CFArrayRef runsArray = CTLineGetGlyphRuns(line);
+    CTRunRef run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 0);
+
+    EXPECT_EQ(nullptr, CTRunGetAdvancesPtr(nullptr));
+
+    const CGSize* advancesPtr = CTRunGetAdvancesPtr(run);
+    advancesPtr = CTRunGetAdvancesPtr(run);
+    EXPECT_EQ(0, (*(advancesPtr + 0)).height);
+    EXPECT_NEAR(22.637, (*(advancesPtr + 0)).width, c_errorDelta);
+    EXPECT_EQ(0, (*(advancesPtr + 1)).height);
+    EXPECT_NEAR(20.918, (*(advancesPtr + 1)).width, c_errorDelta);
+    EXPECT_EQ(0, (*(advancesPtr + 2)).height);
+    EXPECT_NEAR(9.6875, (*(advancesPtr + 2)).width, c_errorDelta);
+    EXPECT_EQ(0, (*(advancesPtr + 3)).height);
+    EXPECT_NEAR(9.6875, (*(advancesPtr + 3)).width, c_errorDelta);
+    EXPECT_EQ(0, (*(advancesPtr + 4)).height);
+    EXPECT_NEAR(23.438, (*(advancesPtr + 4)).width, c_errorDelta);
+
+    CFRelease(line);
+}
+
+TEST(CTRun, GetGlyphCount) {
+    EXPECT_EQ(0, CTRunGetGlyphCount(nullptr));
+
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)getString(@"foobar");
+    CTLineRef line = CTLineCreateWithAttributedString(string);
+    CFArrayRef runsArray = CTLineGetGlyphRuns(line);
+    CTRunRef run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 0);
+    EXPECT_EQ(6, CTRunGetGlyphCount(run));
+
+    CFRelease(line);
+}
+
+TEST(CTRun, GetStringRange) {
+    EXPECT_EQ(0, CTRunGetStringRange(nullptr).location);
+    EXPECT_EQ(0, CTRunGetStringRange(nullptr).length);
+
+    NSMutableAttributedString* string = getString(@"foobar");
+    [string addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:20] range:NSMakeRange(3, 3)];
+    CTLineRef line = CTLineCreateWithAttributedString(static_cast<CFAttributedStringRef>(string));
+    CFArrayRef runsArray = CTLineGetGlyphRuns(line);
+
+    CTRunRef run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 0);
+    EXPECT_EQ(0, CTRunGetStringRange(run).location);
+    EXPECT_EQ(3, CTRunGetStringRange(run).length);
+
+    run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 1);
+    EXPECT_EQ(3, CTRunGetStringRange(run).location);
+    EXPECT_EQ(3, CTRunGetStringRange(run).length);
+
+    CFRelease(line);
+}
+
+TEST(CTRun, GetPositions) {
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)getString(@"foobar");
+    CTLineRef line = CTLineCreateWithAttributedString(string);
+    CFArrayRef runsArray = CTLineGetGlyphRuns(line);
+    CTRunRef run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 0);
+    std::vector<CGPoint> positions(7);
+
+    EXPECT_NO_THROW(CTRunGetPositions(nullptr, CFRangeMake(0, 0), nullptr));
+    EXPECT_NO_THROW(CTRunGetPositions(run, CFRangeMake(0, 0), nullptr));
+
+    std::fill(positions.begin(), positions.end(), CGPointMake(c_arbitraryFloat, c_arbitraryFloat));
+    EXPECT_NO_THROW(CTRunGetPositions(nullptr, CFRangeMake(0, 0), positions.data()));
+    EXPECT_EQ(c_arbitraryFloat, positions[0].x);
+    EXPECT_EQ(c_arbitraryFloat, positions[0].y);
+    EXPECT_EQ(c_arbitraryFloat, positions[6].x);
+    EXPECT_EQ(c_arbitraryFloat, positions[6].y);
+
+    std::fill(positions.begin(), positions.end(), CGPointMake(c_arbitraryFloat, c_arbitraryFloat));
+    CTRunGetPositions(run, CFRangeMake(10, 0), positions.data());
+    EXPECT_EQ(c_arbitraryFloat, positions[0].x);
+    EXPECT_EQ(c_arbitraryFloat, positions[0].y);
+    EXPECT_EQ(c_arbitraryFloat, positions[6].x);
+    EXPECT_EQ(c_arbitraryFloat, positions[6].y);
+
+    std::fill(positions.begin(), positions.end(), CGPointMake(c_arbitraryFloat, c_arbitraryFloat));
+    CTRunGetPositions(run, CFRangeMake(0, 5000), positions.data());
+    EXPECT_NEAR(0, positions[0].x, c_errorDelta);
+    EXPECT_NEAR(43.1641, positions[0].y, c_errorDelta);
+    EXPECT_NEAR(12.5197, positions[1].x, c_errorDelta);
+    EXPECT_NEAR(43.1641, positions[1].y, c_errorDelta);
+    EXPECT_NEAR(35.9570, positions[2].x, c_errorDelta);
+    EXPECT_NEAR(43.1641, positions[2].y, c_errorDelta);
+    EXPECT_NEAR(59.3945, positions[3].x, c_errorDelta);
+    EXPECT_NEAR(43.1641, positions[3].y, c_errorDelta);
+    EXPECT_NEAR(82.9101, positions[4].x, c_errorDelta);
+    EXPECT_NEAR(43.1641, positions[4].y, c_errorDelta);
+    EXPECT_NEAR(103.2617, positions[5].x, c_errorDelta);
+    EXPECT_NEAR(43.1641, positions[5].y, c_errorDelta);
+    EXPECT_NEAR(c_arbitraryFloat, positions[6].x, c_errorDelta);
+    EXPECT_NEAR(c_arbitraryFloat, positions[6].y, c_errorDelta);
+
+    std::fill(positions.begin(), positions.end(), CGPointMake(c_arbitraryFloat, c_arbitraryFloat));
+    CTRunGetPositions(run, CFRangeMake(1, 2), positions.data());
+    EXPECT_NEAR(12.5197, positions[0].x, c_errorDelta);
+    EXPECT_NEAR(43.1641, positions[0].y, c_errorDelta);
+    EXPECT_NEAR(35.9570, positions[1].x, c_errorDelta);
+    EXPECT_NEAR(43.1641, positions[1].y, c_errorDelta);
+    EXPECT_NEAR(c_arbitraryFloat, positions[2].x, c_errorDelta);
+    EXPECT_NEAR(c_arbitraryFloat, positions[2].y, c_errorDelta);
+
+    std::fill(positions.begin(), positions.end(), CGPointMake(c_arbitraryFloat, c_arbitraryFloat));
+    CTRunGetPositions(run, CFRangeMake(0, 0), positions.data());
+    EXPECT_NEAR(0, positions[0].x, c_errorDelta);
+    EXPECT_NEAR(43.1641, positions[0].y, c_errorDelta);
+    EXPECT_NEAR(12.5197, positions[1].x, c_errorDelta);
+    EXPECT_NEAR(43.1641, positions[1].y, c_errorDelta);
+    EXPECT_NEAR(35.9570, positions[2].x, c_errorDelta);
+    EXPECT_NEAR(43.1641, positions[2].y, c_errorDelta);
+    EXPECT_NEAR(59.3945, positions[3].x, c_errorDelta);
+    EXPECT_NEAR(43.1641, positions[3].y, c_errorDelta);
+    EXPECT_NEAR(82.9101, positions[4].x, c_errorDelta);
+    EXPECT_NEAR(43.1641, positions[4].y, c_errorDelta);
+    EXPECT_NEAR(103.2617, positions[5].x, c_errorDelta);
+    EXPECT_NEAR(43.1641, positions[5].y, c_errorDelta);
+    EXPECT_NEAR(c_arbitraryFloat, positions[6].x, c_errorDelta);
+    EXPECT_NEAR(c_arbitraryFloat, positions[6].y, c_errorDelta);
+
+    CFRelease(line);
+}
+
+TEST(CTRun, GetPositionsPtr) {
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)getString(@"foobar");
+    CTLineRef line = CTLineCreateWithAttributedString(string);
+    CFArrayRef runsArray = CTLineGetGlyphRuns(line);
+    CTRunRef run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 0);
+
+    EXPECT_NO_THROW(CTRunGetPositionsPtr(nullptr));
+
+    const CGPoint* positionsPtr = CTRunGetPositionsPtr(run);
+    EXPECT_NEAR(0, (positionsPtr + 0)->x, c_errorDelta);
+    EXPECT_NEAR(43.1641, (positionsPtr + 0)->y, c_errorDelta);
+    EXPECT_NEAR(12.5197, (positionsPtr + 1)->x, c_errorDelta);
+    EXPECT_NEAR(43.1641, (positionsPtr + 1)->y, c_errorDelta);
+    EXPECT_NEAR(35.9570, (positionsPtr + 2)->x, c_errorDelta);
+    EXPECT_NEAR(43.1641, (positionsPtr + 2)->y, c_errorDelta);
+    EXPECT_NEAR(59.3945, (positionsPtr + 3)->x, c_errorDelta);
+    EXPECT_NEAR(43.1641, (positionsPtr + 3)->y, c_errorDelta);
+    EXPECT_NEAR(82.9101, (positionsPtr + 4)->x, c_errorDelta);
+    EXPECT_NEAR(43.1641, (positionsPtr + 4)->y, c_errorDelta);
+    EXPECT_NEAR(103.2617, (positionsPtr + 5)->x, c_errorDelta);
+    EXPECT_NEAR(43.1641, (positionsPtr + 5)->y, c_errorDelta);
+
+    CFRelease(line);
 }

@@ -73,7 +73,7 @@ bool __CloneArray(_In_reads_opt_(count) TElement const* source,
     return ret;
 }
 
-bool __CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Out_ DWRITE_GLYPH_RUN* dest) {
+bool _CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Out_ DWRITE_GLYPH_RUN* dest) {
     bool ret = true;
 
     if (src) {
@@ -232,7 +232,7 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
 
     ComPtr<IDWriteTextLayout> textLayout;
     THROW_IF_FAILED(dwriteFactory->CreateTextLayout(
-        wcharString, ts->_charactersLen, textFormat.Get(), frameSize.size.width, frameSize.size.height, &textLayout));
+        wcharString, ts->_characters.size(), textFormat.Get(), frameSize.size.width, frameSize.size.height, &textLayout));
 
     // TODO::
     // Iterate through all attributed string ranges and identify attributes so they can be used to -
@@ -241,10 +241,10 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
     //  - etc.
     //  These can be done using the DWrite IDWriteTextFormat range property methods.
     NSRange attributeRange;
-    for (size_t i = 0; i < ts->_attributedString.length; i += attributeRange.length) {
+    for (size_t i = 0; i < [ts->_attributedString length]; i += attributeRange.length) {
         NSDictionary* attribs = [ts->_attributedString attributesAtIndex:i
                                                    longestEffectiveRange:&attributeRange
-                                                                 inRange:{ i, ts->_attributedString.length - i }];
+                                                                 inRange:{ i, [ts->_attributedString length] - i }];
         UIFont* font = [attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)];
         if (font == nil) {
             font = [s_lazyUIFont systemFontOfSize:c_defaultSystemFontSize];
@@ -276,7 +276,7 @@ public:
         _DWriteGlyphRunDetails* glyphs = static_cast<_DWriteGlyphRunDetails*>(clientDrawingContext);
 
         DWRITE_GLYPH_RUN dwriteGlyphRun = {};
-        __CloneDWriteGlyphRun(glyphRun, &dwriteGlyphRun);
+        _CloneDWriteGlyphRun(glyphRun, &dwriteGlyphRun);
         glyphs->_dwriteGlyphRun.push_back(dwriteGlyphRun);
 
         glyphs->_baselineOriginX.push_back(baselineOriginX);
@@ -285,7 +285,9 @@ public:
         _DWriteGlyphRunDescription glyphRunDescriptionInfo;
         glyphRunDescriptionInfo._stringLength = glyphRunDescription->stringLength;
         glyphRunDescriptionInfo._textPosition = glyphRunDescription->textPosition;
-        //TODO STRINGINDICES
+        std::for_each(glyphRunDescription->clusterMap,
+                      glyphRunDescription->clusterMap + glyphRun->glyphCount,
+                      [&](uint16_t val) { glyphRunDescriptionInfo._clusterMap.emplace_back(val); });
         glyphs->_glyphRunDescriptions.push_back(glyphRunDescriptionInfo);
 
         return S_OK;
@@ -355,58 +357,6 @@ static void __GetGlyphRunDetails(_CTTypesetter* ts, CFRange range, CGRect frameS
 }
 
 /**
-<<<<<<< 88106f35a8a31a467bd173b38ece88ae88d662cd
-<<<<<<< 30ea1a26b7958aabec8324626dcc35d7242eeaf7
-=======
- * Helper method that will create a TextLayout and TextRenderer object with the given _CTTypesetter object, string range and frame size
- * to render to.
- *
- * @parameter string NSAttributedString* with text and attributes for styling
- * @parameter glyphDetails pointer to the _DWriteGlyphRunDetails object that contains the glyph run details that was rendeered.
- */
-static void _GetGlyphRunDetails(NSAttributedString* string, _DWriteGlyphRunDetails* glyphDetails) {
-    ComPtr<IDWriteTextLayout> textLayout = _CreateDWriteTextLayout(string);
-    ComPtr<CustomDWriteTextRenderer> textRenderer = Make<CustomDWriteTextRenderer>();
-    textLayout->Draw(glyphDetails, textRenderer.Get(), 0, 0);
-}
-
-/**
-=======
->>>>>>> Address CR feedback
- * Helper method to retrieve font fmaly names installed in the system.
- *
- * @return Unmutable array of font family name strings that are installed in the system.
- */
-static NSArray<NSString*>* _DWriteGetFamilyNames() {
-    NSMutableArray<NSString*>* fontFamilyNames = [NSMutableArray<NSString*> array];
-
-    // Get the direct write factory instance
-    ComPtr<IDWriteFactory> dwriteFactory = GetDWriteFactoryInstance();
-
-    // Get the system font collection.
-    ComPtr<IDWriteFontCollection> fontCollection;
-    THROW_IF_FAILED(dwriteFactory->GetSystemFontCollection(&fontCollection));
-
-    // Get the number of font families in the collection.
-    uint32_t count = 0;
-    count = fontCollection->GetFontFamilyCount();
-
-    for (uint32_t i = 0; i < count; ++i) {
-        // Get the font family.
-        ComPtr<IDWriteFontFamily> fontFamily;
-        THROW_IF_FAILED(fontCollection->GetFontFamily(i, &fontFamily));
-
-        // Get a list of localized strings for the family name.
-        ComPtr<IDWriteLocalizedStrings> familyNames;
-        THROW_IF_FAILED(fontFamily->GetFamilyNames(&familyNames));
-
-        [fontFamilyNames addObject:_ConvertLocalizedStringToNSString(familyNames.Get())];
-    }
-
-    return [fontFamilyNames autorelease];
-}
-
-/**
  * Helper method to create _CTLine object given a CFAttributedStringRef
  *
  * @parameter string CFAttributedStringRef containing text and styling
@@ -421,13 +371,10 @@ static _CTLine* _DWriteGetLine(CFAttributedStringRef string) {
         return [lines[0] retain];
     }
 
-    _CTLine* line = [_CTLine new];
-    line->_runs = [NSMutableArray array];
-    return line;
+    return [_CTLine new];
 }
 
 /**
->>>>>>> Implement CTLineCreateWithAttributedString, CTRunGetGlyphs, CTRun GetPtr functions, and add CTLine tests
  * Helper method to create _CTLine objects given a _CTTypesetter, attributed string range to use and frame size to fit in.
  *
  * @parameter ts _CTTypesetter object to use.
@@ -475,6 +422,7 @@ static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
             run->_range.length = glyphRunDetails._glyphRunDescriptions[i]._stringLength;
             run->_stringFragment = [ts->_string substringWithRange:NSMakeRangeFromCF(run->_range)];
             run->_dwriteGlyphRun = move(glyphRunDetails._dwriteGlyphRun[i]);
+            run->_stringIndices = move(glyphRunDetails._glyphRunDescriptions[i]._clusterMap);
             run->_attributes = [ts->_attributedString attributesAtIndex:run->_range.location effectiveRange:NULL];
 
             xPos = glyphRunDetails._baselineOriginX[i];
@@ -488,16 +436,16 @@ static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
 
             // TODO::
             // This is a temp workaround until we can have actual glyph origins
-            run->_glyphOrigins.emplace_back(CGPoint{ xPos, yPos });
-            for (int index = 0; index < glyphRunDetails._dwriteGlyphRun[i].glyphCount - 1; index++) {
-                run->_glyphOrigins.emplace_back(CGPoint{ xPos + glyphRunDetails._dwriteGlyphRun[i].glyphAdvances[index], yPos });
+            for (int index = 0; index < glyphRunDetails._dwriteGlyphRun[i].glyphCount; index++) {
+                run->_glyphOrigins.emplace_back(CGPoint{ xPos, yPos });
+                run->_glyphAdvances.emplace_back(CGSize{ glyphRunDetails._dwriteGlyphRun[i].glyphAdvances[index], 0.0f });
                 xPos += glyphRunDetails._dwriteGlyphRun[i].glyphAdvances[index];
                 line->_width += glyphRunDetails._dwriteGlyphRun[i].glyphAdvances[index];
             }
 
             [runs addObject:run];
             stringRange += run->_range.length;
-            line->_glyphCount += run->_glyphs.size();
+            line->_glyphCount += run->_dwriteGlyphRun.glyphCount;
             i++;
         }
 

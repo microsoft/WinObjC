@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#import <CoreText/CTFrameSetter.h>
+#import <CoreText/CTFramesetter.h>
 #import <StubReturn.h>
 #import <algorithm>
 #import "CoreTextInternal.h"
@@ -23,24 +23,25 @@
 
 using namespace std;
 
-@implementation _CTFrameSetter : NSObject
+@implementation _CTFramesetter : NSObject
 - (void)dealloc {
+    _typesetter = nil;
     [super dealloc];
 }
 @end
 
-static _CTFrame* _createFrame(_CTFrameSetter* frameSetter, CGRect frameSize, CGSize* sizeOut, bool createFrame) {
+static _CTFrame* _createFrame(_CTFramesetter* framesetter, CGRect frameSize, CGSize* sizeOut, bool createFrame) {
     _CTFrame* ret = nil;
 
     if (createFrame) {
         ret = [_CTFrame new];
-        ret->_frameSetter = [frameSetter retain];
+        ret->_framesetter = framesetter;
         ret->_frameRect = frameSize;
     }
 
     // Call _DWriteWrapper to get _CTLine object list that makes up this frame
-    _CTTypesetter* typesetter = static_cast<_CTTypesetter*>(frameSetter->_typesetter);
-    CFRange range = CFRangeMake(0, typesetter->_charactersLen);
+    _CTTypesetter* typesetter = static_cast<_CTTypesetter*>(framesetter->_typesetter);
+    CFRange range = CFRangeMake(0, typesetter->_characters.size());
     NSArray<_CTLine*>* lines = _DWriteGetLines(typesetter, range, frameSize);
     if (createFrame) {
         ret->_lines = lines;
@@ -74,9 +75,9 @@ static _CTFrame* _createFrame(_CTFrameSetter* frameSetter, CGRect frameSize, CGS
  @Status Interoperable
 */
 CTFramesetterRef CTFramesetterCreateWithAttributedString(CFAttributedStringRef string) {
-    _CTFrameSetter* ret = [_CTFrameSetter alloc];
-    ret->_typesetter = (_CTTypesetter*)CTTypesetterCreateWithAttributedString(string);
-    return (CTFramesetterRef)ret;
+    _CTFramesetter* ret = [_CTFramesetter alloc];
+    ret->_typesetter = static_cast<_CTTypesetter*>(CTTypesetterCreateWithAttributedString(string));
+    return static_cast<CTFramesetterRef>(ret);
 }
 
 /**
@@ -87,9 +88,14 @@ CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange string
     _CGPathGetBoundingBoxInternal(path, &frameSize);
 
     CGSize sizeOut;
-    _CTFrame* ret = _createFrame((_CTFrameSetter*)framesetter, frameSize, &sizeOut, true);
+    _CTFrame* ret = _createFrame((_CTFramesetter*)framesetter, frameSize, &sizeOut, true);
+    if (ret->_lineOrigins.size() == 0) {
+        for (_CTLine* line in [ret->_lines objectEnumerator]) {
+            ret->_lineOrigins.emplace_back(line->_lineOrigin);
+        }
+    }
 
-    return (CTFrameRef)ret;
+    return static_cast<CTFrameRef>(ret);
 }
 
 /**
@@ -97,8 +103,7 @@ CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange string
  @Notes
 */
 CTTypesetterRef CTFramesetterGetTypesetter(CTFramesetterRef framesetter) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return framesetter ? static_cast<CTTypesetterRef>(static_cast<_CTFramesetter*>(framesetter)->_typesetter.get()) : nil;
 }
 
 /**
@@ -114,8 +119,7 @@ CGSize CTFramesetterSuggestFrameSizeWithConstraints(
     CGRect frameSize = { 0, 0, 0, 0 };
     frameSize.size = constraints;
 
-    _createFrame((_CTFrameSetter*)framesetter, frameSize, &ret, false);
-
+    _createFrame(static_cast<_CTFramesetter*>(framesetter), frameSize, &ret, false);
     return ret;
 }
 

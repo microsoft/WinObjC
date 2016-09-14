@@ -658,14 +658,12 @@ CFArrayRef CTFontCopyFeatureSettings(CTFontRef font) {
  @Status Interoperable
  @Notes
 */
-bool CTFontGetGlyphsForCharacters(CTFontRef font, const UniChar characters[], CGGlyph glyphs[], CFIndex count) {
-    bool succeeded = true;
-    FT_Face face = (FT_Face)[(UIFont*)font _sizingFontHandle];
-    for (CFIndex i = 0; i < count; ++i) {
-        glyphs[i] = FT_Get_Char_Index(face, characters[i]);
-        succeeded = succeeded && glyphs[i];
-    }
-    return succeeded;
+bool CTFontGetGlyphsForCharacters(CTFontRef fontRef, const UniChar characters[], CGGlyph glyphs[], CFIndex count) {
+    struct __CTFont* font = const_cast<struct __CTFont*>(fontRef);
+    std::vector<uint32_t> chars(count);
+    std::transform(characters, characters + count, chars.begin(), [](UniChar character) { return character; });
+    font->_dwriteFontFace->GetGlyphIndices(chars.data(), count, glyphs);
+    return std::none_of(glyphs, glyphs + count, [](CGGlyph glyph) { return glyph == 0; });
 }
 
 /**

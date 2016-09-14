@@ -129,7 +129,7 @@
     _textField.text = @"the quick brown fox jumps over the lazy dog. THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG";
     _textField.delegate = self;
     [self.view addSubview:_textField];
-    
+
     _refreshButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     _refreshButton.frame = CGRectMake(400, 40, 200, 50);
     [_refreshButton addTarget:self action:@selector(refreshViews) forControlEvents:UIControlEventTouchDown];
@@ -165,6 +165,7 @@
     _frameView.text =
         [[_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"] stringByReplacingOccurrencesOfString:@"\\t"
                                                                                                                   withString:@"\t"];
+    _frameView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 
     // Sets view to call updateTableViews when done drawing
     _frameView.drawDelegate = self;
