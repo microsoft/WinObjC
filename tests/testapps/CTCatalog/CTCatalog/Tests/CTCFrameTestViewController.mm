@@ -1,4 +1,3 @@
-
 //******************************************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
@@ -37,6 +36,7 @@
     CGContextScaleCTM(context, 1.0f, -1.0f);
     CGContextSetTextPosition(context, 0.0, 10.0);
     CTLineDraw(_lineRef, context);
+    CFRelease(_lineRef);
 }
 
 @end
@@ -124,20 +124,21 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    CGFloat width = CGRectGetWidth(self.view.bounds);
     // Adds textbox to change text
-    _textField = [[UITextField alloc] initWithFrame:CGRectMake(40, 40, 300, 30)];
+    _textField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 2 * width / 3, 50)];
     _textField.text = @"the quick brown fox jumps over the lazy dog. THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG";
     _textField.delegate = self;
     [self.view addSubview:_textField];
 
     _refreshButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    _refreshButton.frame = CGRectMake(400, 40, 200, 50);
+    _refreshButton.frame = CGRectMake(2 * width / 3, 0, width / 3, 50);
     [_refreshButton addTarget:self action:@selector(refreshViews) forControlEvents:UIControlEventTouchDown];
     [_refreshButton setTitle:@"Refresh" forState:UIControlStateNormal];
     [self.view addSubview:_refreshButton];
 
     // Create table view to pair lines with frame origins
-    _linesView = [[UITableView alloc] initWithFrame:CGRectMake(40, 320, 1000, 400) style:UITableViewStylePlain];
+    _linesView = [[UITableView alloc] initWithFrame:CGRectMake(0, 250, width, 400) style:UITableViewStylePlain];
     _linesView.dataSource = self;
     _linesView.delegate = self;
     [self.view addSubview:_linesView];
@@ -159,7 +160,8 @@
 
 - (void)drawTests {
     // Create frame of text
-    _frameView = [[CTFrameTestView alloc] initWithFrame:CGRectMake(40, 100, 400, 200)];
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    _frameView = [[CTFrameTestView alloc] initWithFrame:CGRectMake(0, 50, 2 * width / 3, 200)];
     _frameView.backgroundColor = [UIColor whiteColor];
     // Allows input of \n and \t to insert newlines and tabs respectively
     _frameView.text =
@@ -181,7 +183,8 @@
 
 // Called by text frame when done drawing to get lines from frame
 - (void)refreshValuesForFrame:(CTFrameRef)frame {
-    [_lineCells addObject:createTextCell(@"CTFrameGetLineOrigins", @"CTFrameGetLines")];
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    [_lineCells addObject:createTextCell(@"CTFrameGetLineOrigins", @"CTFrameGetLines", width / 2)];
 
     CFArrayRef lines = CTFrameGetLines(frame);
     CFIndex count = CFArrayGetCount(lines);
@@ -191,7 +194,7 @@
     for (CFIndex i = 0; i < count; ++i) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"FrameLines"];
         cell.textLabel.text = [NSString stringWithFormat:@"X: %f, Y: %f", lineOrigins[i].x, lineOrigins[i].y];
-        CTFrameLineTestView* textLabel = [[CTFrameLineTestView alloc] initWithFrame:CGRectMake(0, 0, 400, 60)];
+        CTFrameLineTestView* textLabel = [[CTFrameLineTestView alloc] initWithFrame:CGRectMake(0, 0, 2 * width / 3, 60)];
         textLabel.backgroundColor = [UIColor whiteColor];
         textLabel.lineRef = static_cast<CTLineRef>(CFArrayGetValueAtIndex(lines, i));
         cell.accessoryView = textLabel;
@@ -201,16 +204,18 @@
     [_lineCells addObject:createTextCell(@"CTFrameGetStringRange",
                                          [NSString stringWithFormat:@"{ %ld, %ld }",
                                                                     CTFrameGetStringRange(frame).location,
-                                                                    CTFrameGetStringRange(frame).length])];
+                                                                    CTFrameGetStringRange(frame).length],
+                                         width / 2)];
 
     [_lineCells addObject:createTextCell(@"CTFrameGetVisibleStringRange",
                                          [NSString stringWithFormat:@"{ %ld, %ld }",
                                                                     CTFrameGetVisibleStringRange(frame).location,
-                                                                    CTFrameGetVisibleStringRange(frame).length])];
+                                                                    CTFrameGetVisibleStringRange(frame).length],
+                                         width / 2)];
 
-    ADD_UNIMPLEMENTED(_lineCells, @"CTFrameGetPath");
-    ADD_UNIMPLEMENTED(_lineCells, @"CTFrameGetFrameAttributes");
-    ADD_UNIMPLEMENTED(_lineCells, @"CTFrameGetTypeID");
+    ADD_UNIMPLEMENTED(_lineCells, @"CTFrameGetPath", width / 2);
+    ADD_UNIMPLEMENTED(_lineCells, @"CTFrameGetFrameAttributes", width / 2);
+    ADD_UNIMPLEMENTED(_lineCells, @"CTFrameGetTypeID", width / 2);
 
     [_linesView reloadData];
 }

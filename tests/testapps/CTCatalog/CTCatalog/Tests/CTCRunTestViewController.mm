@@ -71,6 +71,7 @@
 
     // Creates frame for framesetter with current attributed string
     CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    CFRelease(framesetter);
     CFArrayRef lines = CTFrameGetLines(frame);
     CTLineRef line = static_cast<CTLineRef>(CFArrayGetValueAtIndex(lines, 0));
     CFArrayRef runs = CTLineGetGlyphRuns(line);
@@ -104,8 +105,9 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
 
+    CGFloat width = CGRectGetWidth(self.view.bounds);
     // Create table view to pair lines with frame origins
-    _testsView = [[UITableView alloc] initWithFrame:CGRectMake(40, 320, 1000, 400) style:UITableViewStylePlain];
+    _testsView = [[UITableView alloc] initWithFrame:CGRectMake(0, 200, width, 400) style:UITableViewStylePlain];
     _testsView.dataSource = self;
     _testsView.delegate = self;
     [self.view addSubview:_testsView];
@@ -126,8 +128,9 @@
 }
 
 - (void)drawTests {
+    CGFloat width = CGRectGetWidth(self.view.bounds);
     // Create frame of text
-    _runView = [[CTRunTestView alloc] initWithFrame:CGRectMake(40, 100, 400, 200)];
+    _runView = [[CTRunTestView alloc] initWithFrame:CGRectMake(0, 0, width, 200)];
     _runView.backgroundColor = [UIColor whiteColor];
 
     // Sets view to call updateTableViews when done drawing
@@ -144,11 +147,12 @@
 
 // Called by text frame when done drawing to get lines from frame
 - (void)refreshValuesForRun:(CTRunRef)run {
-    [_testCells addObject:createTextCell(@"CTRunGetGlyphCount", [NSString stringWithFormat:@"%ld", CTRunGetGlyphCount(run)])];
-    [_testCells addObject:createTextCell(@"CTRunGetAttributes - Attributes:", @"Values:")];
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    [_testCells addObject:createTextCell(@"CTRunGetGlyphCount", [NSString stringWithFormat:@"%ld", CTRunGetGlyphCount(run)], width / 2)];
+    [_testCells addObject:createTextCell(@"CTRunGetAttributes - Attributes:", @"Values:", width / 2)];
     NSDictionary* attributes = (__bridge NSDictionary*)CTRunGetAttributes(run);
     for (NSString* key in attributes.allKeys) {
-        [_testCells addObject:createTextCell(key, [[attributes objectForKey:key] description])];
+        [_testCells addObject:createTextCell(key, [[attributes objectForKey:key] description], width / 2)];
     }
 
     CGPoint points[5];
@@ -187,7 +191,7 @@
     }
 
     CGFloat ascent, descent, leading;
-    double width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, &leading);
+    double totalWidth = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, &leading);
     [_testCells
         addObject:createTextCell(
                       @"CTRunGetTypographicBounds",

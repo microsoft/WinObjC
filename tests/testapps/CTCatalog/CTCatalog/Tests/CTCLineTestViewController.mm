@@ -111,22 +111,23 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    CGFloat width = CGRectGetWidth(self.view.bounds);
     // Adds textbox to change text
-    _textField = [[UITextField alloc] initWithFrame:CGRectMake(40, 40, 300, 30)];
+    _textField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, width, 30)];
     _textField.text = @"the quick brown fox jumps over the lazy dog.";
     _textField.delegate = self;
     [self.view addSubview:_textField];
 
-    _truncationSlider = [[UISlider alloc] initWithFrame:CGRectMake(440, 40, 100, 100)];
+    _truncationSlider = [[UISlider alloc] initWithFrame:CGRectMake(0, 30, width, 70)];
     _truncationSlider.minimumValue = 0.0;
-    _truncationSlider.maximumValue = 400.0;
-    _truncationSlider.value = 200.0;
+    _truncationSlider.maximumValue = width;
+    _truncationSlider.value = width / 2;
     _truncationSlider.continuous = NO;
     [_truncationSlider addTarget:self action:@selector(refreshViews) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:_truncationSlider];
 
     // Create table view to pair lines with frame origins
-    _linesView = [[UITableView alloc] initWithFrame:CGRectMake(40, 300, 1000, 400) style:UITableViewStylePlain];
+    _linesView = [[UITableView alloc] initWithFrame:CGRectMake(0, 240, width, 400) style:UITableViewStylePlain];
     _linesView.dataSource = self;
     _linesView.delegate = self;
     [self.view addSubview:_linesView];
@@ -148,7 +149,8 @@
 
 - (void)drawTests {
     // Create frame of text
-    _lineView = [[CTLineTestView alloc] initWithFrame:CGRectMake(40, 100, 400, 60)];
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    _lineView = [[CTLineTestView alloc] initWithFrame:CGRectMake(0, 100, width, 60)];
     _lineView.backgroundColor = [UIColor whiteColor];
     // Allows input of \n and \t to insert newlines and tabs respectively
     _lineView.text =
@@ -170,29 +172,35 @@
 
 // Called by text frame when done drawing to get lines from frame
 - (void)refreshValuesForLine:(CTLineRef)line {
-    _truncatedLineView = [[CTTruncatedLineTestView alloc] initWithFrame:CGRectMake(40, 180, 400, 60)];
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    _truncatedLineView = [[CTTruncatedLineTestView alloc] initWithFrame:CGRectMake(0, 160, width, 60)];
     _truncatedLineView.backgroundColor = [UIColor whiteColor];
     _truncatedLineView.lineRef = CTLineCreateTruncatedLine(line, _truncationSlider.value, kCTLineTruncationEnd, NULL);
     [self.view addSubview:_truncatedLineView];
 
-    [_functionCells addObject:createTextCell(@"CTLineGetGlyphCount", [NSString stringWithFormat:@"%d", CTLineGetGlyphCount(line)])];
+    [_functionCells
+        addObject:createTextCell(@"CTLineGetGlyphCount", [NSString stringWithFormat:@"%d", CTLineGetGlyphCount(line)], width / 2)];
     [_functionCells addObject:createTextCell(@"CTLineGetGlyphRuns- should be 1",
-                                             [NSString stringWithFormat:@"%d", CFArrayGetCount(CTLineGetGlyphRuns(line))])];
+                                             [NSString stringWithFormat:@"%d", CFArrayGetCount(CTLineGetGlyphRuns(line))],
+                                             width / 2)];
     [_functionCells addObject:createTextCell(@"CTLineGetStringRange",
                                              [NSString stringWithFormat:@"{ %d, %d }",
                                                                         CTLineGetStringRange(line).location,
-                                                                        CTLineGetStringRange(line).length])];
+                                                                        CTLineGetStringRange(line).length],
+                                             width / 2)];
 
     CGFloat ascent, descent, leading;
-    double width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+    double totalWidth = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
     [_functionCells
-        addObject:createTextCell(@"CTLineGetTypographicBounds",
-                                 [NSString
-                                     stringWithFormat:@"width: %f, ascent %f, descent %f, leading %f", width, ascent, descent, leading])];
+        addObject:createTextCell(
+                      @"CTLineGetTypographicBounds",
+                      [NSString stringWithFormat:@"width: %f, ascent %f, descent %f, leading %f", totalWidth, ascent, descent, leading],
+                      width / 2)];
 
     [_functionCells
-        addObject:createTextCell(@"CTLineGetStringIndexForPosition (200px)",
-                                 [NSString stringWithFormat:@"%d", CTLineGetStringIndexForPosition(line, CGPointMake(200.0, 0.0))])];
+        addObject:createTextCell(@"CTLineGetStringIndexForPosition (width / 2px)",
+                                 [NSString stringWithFormat:@"%d", CTLineGetStringIndexForPosition(line, CGPointMake(width / 2.0, 0.0))],
+                                 width / 2)];
 
     CGFloat secondaryOffset;
     CGFloat primaryOffset = CTLineGetOffsetForStringIndex(line, 5, &secondaryOffset);
@@ -205,6 +213,7 @@
     ADD_UNIMPLEMENTED(_functionCells, @"CTLineGetTrailingWhitespaceWidth");
     ADD_UNIMPLEMENTED(_functionCells, @"CTLineGetTypeID");
     [_linesView reloadData];
+    CFRelease(line);
 }
 
 // Text Field Methods

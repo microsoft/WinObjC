@@ -82,6 +82,8 @@
     CGContextStrokePath(context);
 
     CGColorSpaceRelease(colorspace);
+    CFRelease(frame);
+    CFRelease(framesetter);
 }
 @end
 
@@ -105,8 +107,9 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
 
+    CGFloat width = CGRectGetWidth(self.view.bounds);
     // Adds slider to change font size
-    _fontSizeSlider = [[UISlider alloc] initWithFrame:CGRectMake(440, 240, 100, 100)];
+    _fontSizeSlider = [[UISlider alloc] initWithFrame:CGRectMake(width / 2, 200, width / 2, 100)];
     _fontSizeSlider.minimumValue = 8.0;
     _fontSizeSlider.maximumValue = 140.0;
     _fontSizeSlider.value = 20.0;
@@ -115,7 +118,7 @@
     [self.view addSubview:_fontSizeSlider];
 
     // Adds textbox to change text
-    _textField = [[UITextField alloc] initWithFrame:CGRectMake(440, 360, 300, 30)];
+    _textField = [[UITextField alloc] initWithFrame:CGRectMake(width / 2, 300, width / 2, 30)];
     _textField.text = @"the quick brown fox jumps over the lazy dog. THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG";
     _textField.delegate = self;
     [self.view addSubview:_textField];
@@ -135,7 +138,7 @@
     [self drawTests];
 
     // Creates picker to choose font by name
-    _fontPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(500, 20, 200, 200)];
+    _fontPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(width / 2, 0, width / 2, 200)];
     _fontPicker.delegate = self;
     _fontPicker.dataSource = self;
     [self.view addSubview:_fontPicker];
@@ -151,8 +154,9 @@
 }
 
 - (void)drawTests {
+    CGFloat width = CGRectGetWidth(self.view.bounds);
     // Create left-aligned text
-    _leftView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(20, 20, 400, 200)];
+    _leftView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(0, 0, width / 2, 200)];
     _leftView.backgroundColor = [UIColor whiteColor];
     _leftView.alignment = kCTLeftTextAlignment;
     _leftView.font = _font;
@@ -164,7 +168,7 @@
     [self.view addSubview:_leftView];
 
     // Create centered text
-    _centerView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(20, 220, 400, 200)];
+    _centerView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(0, 200, width / 2, 200)];
     _centerView.backgroundColor = [UIColor whiteColor];
     _centerView.alignment = kCTCenterTextAlignment;
     _centerView.font = _font;
@@ -174,7 +178,7 @@
     [self.view addSubview:_centerView];
 
     // Create right-aligned text
-    _rightView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(20, 420, 400, 200)];
+    _rightView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(0, 400, width / 2, 200)];
     _rightView.backgroundColor = [UIColor whiteColor];
     _rightView.alignment = kCTRightTextAlignment;
     _rightView.font = _font;

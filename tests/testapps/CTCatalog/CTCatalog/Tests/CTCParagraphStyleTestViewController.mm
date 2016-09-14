@@ -1,4 +1,3 @@
-
 //******************************************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
@@ -23,19 +22,19 @@
 
 // We need the references to the pickers to be able to get the correct data for each one
 // So we can't create it in a function like we do for text cells
-#define ADD_PICKER(ARRAY, PICKER, TITLE)                                                                              \
+#define ADD_PICKER(ARRAY, PICKER, TITLE, WIDTH)                                                                       \
 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SHARED_PARAGRAPH_INPUT"]; \
 cell.textLabel.text = TITLE;                                                                                          \
-PICKER = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 0, 200, 200)];                                             \
+PICKER = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 200)];                                           \
 PICKER.delegate = self;                                                                                               \
 PICKER.dataSource = self;                                                                                             \
 cell.accessoryView = PICKER;                                                                                          \
 [ARRAY addObject:cell];
 
-#define ADD_TEXT_FIELD(ARRAY, FIELD, TITLE, DEFAULT_VALUE)                                                            \
+#define ADD_TEXT_FIELD(ARRAY, FIELD, TITLE, DEFAULT_VALUE, WIDTH)                                                     \
 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SHARED_PARAGRAPH_INPUT"]; \
 cell.textLabel.text = TITLE;                                                                                          \
-FIELD = [[UITextField alloc] initWithFrame:CGRectMake(0, 10, 200, 30)];                                               \
+FIELD = [[UITextField alloc] initWithFrame:CGRectMake(0, 10, WIDTH, 30)];                                             \
 FIELD.text = DEFAULT_VALUE;                                                                                           \
 FIELD.delegate = self;                                                                                                \
 cell.accessoryView = FIELD;                                                                                           \
@@ -100,6 +99,9 @@ cell.accessoryView = FIELD;                                                     
     CGContextStrokePath(context);
 
     CGColorSpaceRelease(colorspace);
+    CFRelease(_paragraphStyle);
+    CFRelease(framesetter);
+    CFRelease(frame);
 }
 
 @end
@@ -108,7 +110,6 @@ cell.accessoryView = FIELD;                                                     
     CTParagraphStyleTestView* _styleView;
     CTParagraphStyleTestView* _styleCopyView;
     UITableView* _inputsTable;
-    UITableView* _outputsTable;
 
     UITextField* _specifierFirstLineHeadIndent;
     UITextField* _specifierHeadIndent;
@@ -129,7 +130,6 @@ cell.accessoryView = FIELD;                                                     
     UIPickerView* _specifierBaseWritingDirection;
 
     NSMutableArray* _inputCells;
-    NSMutableArray* _outputCells;
 
     NSArray* _alignments;
     NSArray* _lineBreakModes;
@@ -145,7 +145,6 @@ cell.accessoryView = FIELD;                                                     
     self.view.backgroundColor = [UIColor whiteColor];
 
     _inputCells = [NSMutableArray new];
-    _outputCells = [NSMutableArray new];
 
     _alignments = @[
         @"kCTLeftTextAlignment",
@@ -168,27 +167,28 @@ cell.accessoryView = FIELD;                                                     
 
     UITableViewCell* cell;
 
-    ADD_PICKER(_inputCells, _specifierAlignment, @"kCTParagraphStyleSpecifierAlignment");
-    ADD_PICKER(_inputCells, _specifierLineBreakMode, @"kCTParagraphStyleSpecifierLineBreakMode");
-    ADD_PICKER(_inputCells, _specifierBaseWritingDirection, @"kCTParagraphStyleSpecifierBaseWritingDirection");
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    ADD_PICKER(_inputCells, _specifierAlignment, @"kCTParagraphStyleSpecifierAlignment", width / 2);
+    ADD_PICKER(_inputCells, _specifierLineBreakMode, @"kCTParagraphStyleSpecifierLineBreakMode", width / 2);
+    ADD_PICKER(_inputCells, _specifierBaseWritingDirection, @"kCTParagraphStyleSpecifierBaseWritingDirection", width / 2);
 
-    ADD_TEXT_FIELD(_inputCells, _specifierFirstLineHeadIndent, @"kCTParagraphStyleSpecifierFirstLineHeadIndent", @"0.0");
-    ADD_TEXT_FIELD(_inputCells, _specifierHeadIndent, @"kCTParagraphStyleSpecifierHeadIndent", @"0.0");
-    ADD_TEXT_FIELD(_inputCells, _specifierTailIndent, @"kCTParagraphStyleSpecifierTailIndent", @"0.0");
-    ADD_TEXT_FIELD(_inputCells, _specifierDefaultTabInterval, @"kCTParagraphStyleSpecifierDefaultTabInterval", @"0.0");
-    ADD_TEXT_FIELD(_inputCells, _specifierLineHeightMultiple, @"kCTParagraphStyleSpecifierLineHeightMultiple", @"0.0");
-    ADD_TEXT_FIELD(_inputCells, _specifierMaximumLineHeight, @"kCTParagraphStyleSpecifierMaximumLineHeight", @"0.0");
-    ADD_TEXT_FIELD(_inputCells, _specifierMinimumLineHeight, @"kCTParagraphStyleSpecifierMinimumLineHeight", @"0.0");
-    ADD_TEXT_FIELD(_inputCells, _specifierLineSpacing, @"kCTParagraphStyleSpecifierLineSpacing", @"0.0");
-    ADD_TEXT_FIELD(_inputCells, _specifierParagraphSpacing, @"kCTParagraphStyleSpecifierParagraphSpacing", @"0.0");
-    ADD_TEXT_FIELD(_inputCells, _specifierParagraphSpacingBefore, @"kCTParagraphStyleSpecifierParagraphSpacingBefore", @"0.0");
-    ADD_TEXT_FIELD(_inputCells, _specifierMaximumLineSpacing, @"kCTParagraphStyleSpecifierMaximumLineSpacing", @"10000000.0");
-    ADD_TEXT_FIELD(_inputCells, _specifierMinimumLineSpacing, @"kCTParagraphStyleSpecifierMinimumLineSpacing", @"0.0");
-    ADD_TEXT_FIELD(_inputCells, _specifierLineSpacingAdjustment, @"kCTParagraphStyleSpecifierLineSpacingAdjustment", @"0.0");
+    ADD_TEXT_FIELD(_inputCells, _specifierFirstLineHeadIndent, @"kCTParagraphStyleSpecifierFirstLineHeadIndent", @"0.0", width / 2);
+    ADD_TEXT_FIELD(_inputCells, _specifierHeadIndent, @"kCTParagraphStyleSpecifierHeadIndent", @"0.0", width / 2);
+    ADD_TEXT_FIELD(_inputCells, _specifierTailIndent, @"kCTParagraphStyleSpecifierTailIndent", @"0.0", width / 2);
+    ADD_TEXT_FIELD(_inputCells, _specifierDefaultTabInterval, @"kCTParagraphStyleSpecifierDefaultTabInterval", @"0.0", width / 2);
+    ADD_TEXT_FIELD(_inputCells, _specifierLineHeightMultiple, @"kCTParagraphStyleSpecifierLineHeightMultiple", @"0.0", width / 2);
+    ADD_TEXT_FIELD(_inputCells, _specifierMaximumLineHeight, @"kCTParagraphStyleSpecifierMaximumLineHeight", @"0.0", width / 2);
+    ADD_TEXT_FIELD(_inputCells, _specifierMinimumLineHeight, @"kCTParagraphStyleSpecifierMinimumLineHeight", @"0.0", width / 2);
+    ADD_TEXT_FIELD(_inputCells, _specifierLineSpacing, @"kCTParagraphStyleSpecifierLineSpacing", @"0.0", width / 2);
+    ADD_TEXT_FIELD(_inputCells, _specifierParagraphSpacing, @"kCTParagraphStyleSpecifierParagraphSpacing", @"0.0", width / 2);
+    ADD_TEXT_FIELD(_inputCells, _specifierParagraphSpacingBefore, @"kCTParagraphStyleSpecifierParagraphSpacingBefore", @"0.0", width / 2);
+    ADD_TEXT_FIELD(_inputCells, _specifierMaximumLineSpacing, @"kCTParagraphStyleSpecifierMaximumLineSpacing", @"10000000.0", width / 2);
+    ADD_TEXT_FIELD(_inputCells, _specifierMinimumLineSpacing, @"kCTParagraphStyleSpecifierMinimumLineSpacing", @"0.0", width / 2);
+    ADD_TEXT_FIELD(_inputCells, _specifierLineSpacingAdjustment, @"kCTParagraphStyleSpecifierLineSpacingAdjustment", @"0.0", width / 2);
 
-    ADD_UNIMPLEMENTED(_inputCells, @"kCTParagraphStyleSpecifierTabStops");
+    ADD_UNIMPLEMENTED(_inputCells, @"kCTParagraphStyleSpecifierTabStops", width / 2);
 
-    _inputsTable = [[UITableView alloc] initWithFrame:CGRectMake(40, 420, 600, 400) style:UITableViewStylePlain];
+    _inputsTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 220, width, 400) style:UITableViewStylePlain];
     _inputsTable.dataSource = self;
     _inputsTable.delegate = self;
     [self.view addSubview:_inputsTable];
@@ -306,7 +306,8 @@ cell.accessoryView = FIELD;                                                     
     CTParagraphStyleRef style = CTParagraphStyleCreate(&settings[0], settings.size());
 
     // Create original view with input style settings
-    _styleView = [[CTParagraphStyleTestView alloc] initWithFrame:CGRectMake(40, 40, 400, 200)];
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    _styleView = [[CTParagraphStyleTestView alloc] initWithFrame:CGRectMake(0, 20, width / 2, 200)];
     _styleView.backgroundColor = [UIColor whiteColor];
     _styleView.paragraphStyle = style;
     [self.view addSubview:_styleView];
@@ -315,127 +316,16 @@ cell.accessoryView = FIELD;                                                     
     CTParagraphStyleRef styleCopy = CTParagraphStyleCreateCopy(style);
 
     // Create new view with copied style to show no changes
-    _styleCopyView = [[CTParagraphStyleTestView alloc] initWithFrame:CGRectMake(660, 40, 400, 200)];
+    _styleCopyView = [[CTParagraphStyleTestView alloc] initWithFrame:CGRectMake(width / 2, 20, width / 2, 200)];
     _styleCopyView.backgroundColor = [UIColor whiteColor];
     _styleCopyView.paragraphStyle = styleCopy;
     [self.view addSubview:_styleCopyView];
-
-    // Add row for each style specifier based on values in copied style
-
-    // Add row for alignment
-    CTParagraphStyleGetValueForSpecifier(styleCopy, kCTParagraphStyleSpecifierAlignment, sizeof(alignment), &alignment);
-    NSString* alignmentValue = nil;
-    switch (alignment) {
-        case kCTLeftTextAlignment:
-            alignmentValue = @"kCTLeftTextAlignment";
-            break;
-        case kCTRightTextAlignment:
-            alignmentValue = @"kCTRightTextAlignment";
-            break;
-        case kCTCenterTextAlignment:
-            alignmentValue = @"kCTCenterTextAlignment";
-            break;
-        case kCTJustifiedTextAlignment:
-            alignmentValue = @"kCTJustifiedTextAlignment";
-            break;
-        default:
-            alignmentValue = @"kCTNaturalTextAlignment";
-    }
-    [_outputCells addObject:createTextCell(@"kCTParagraphStyleSpecifierAlignment", alignmentValue)];
-
-    // Add row for line break
-    CTParagraphStyleGetValueForSpecifier(styleCopy, kCTParagraphStyleSpecifierLineBreakMode, sizeof(lineBreakMode), &lineBreakMode);
-    NSString* lineBreakModeValue = nil;
-    switch (lineBreakMode) {
-        case kCTLineBreakByWordWrapping:
-            lineBreakModeValue = @"kCTLineBreakByWordWrapping";
-            break;
-        case kCTLineBreakByCharWrapping:
-            lineBreakModeValue = @"kCTLineBreakByCharWrapping";
-            break;
-        case kCTLineBreakByClipping:
-            lineBreakModeValue = @"kCTLineBreakByClipping";
-            break;
-        case kCTLineBreakByTruncatingHead:
-            lineBreakModeValue = @"kCTLineBreakByTruncatingHead";
-            break;
-        case kCTLineBreakByTruncatingTail:
-            lineBreakModeValue = @"kCTLineBreakByTruncatingTail";
-            break;
-        default:
-            lineBreakModeValue = @"kCTLineBreakByTruncatingMiddle";
-    }
-    [_outputCells addObject:createTextCell(@"kCTParagraphStyleSpecifierLineBreakMode", lineBreakModeValue)];
-
-    // Add row for base writing direction
-    CTParagraphStyleGetValueForSpecifier(styleCopy, kCTParagraphStyleSpecifierBaseWritingDirection, sizeof(direction), &direction);
-    NSString* directionValue = nil;
-    switch (direction) {
-        case kCTWritingDirectionNatural:
-            directionValue = @"kCTWritingDirectionNatural";
-            break;
-        case kCTWritingDirectionLeftToRight:
-            directionValue = @"kCTWritingDirectionLeftToRight";
-            break;
-        default:
-            directionValue = @"kCTWritingDirectionRightToLeft";
-    }
-    [_outputCells addObject:createTextCell(@"kCTParagraphStyleSpecifierBaseWritingDirection", directionValue)];
-
-    // Add rows for the rest of the supported styles, which are all CGFloats
-    CGFloat value;
-    CTParagraphStyleGetValueForSpecifier(styleCopy, kCTParagraphStyleSpecifierFirstLineHeadIndent, sizeof(CGFloat), &value);
-    [_outputCells addObject:createTextCell(@"kCTParagraphStyleSpecifierFirstLineHeadIndent", [NSString stringWithFormat:@"%f", value])];
-
-    CTParagraphStyleGetValueForSpecifier(styleCopy, kCTParagraphStyleSpecifierHeadIndent, sizeof(CGFloat), &value);
-    [_outputCells addObject:createTextCell(@"kCTParagraphStyleSpecifierHeadIndent", [NSString stringWithFormat:@"%f", value])];
-
-    CTParagraphStyleGetValueForSpecifier(styleCopy, kCTParagraphStyleSpecifierTailIndent, sizeof(CGFloat), &value);
-    [_outputCells addObject:createTextCell(@"kCTParagraphStyleSpecifierTailIndent", [NSString stringWithFormat:@"%f", value])];
-
-    CTParagraphStyleGetValueForSpecifier(styleCopy, kCTParagraphStyleSpecifierDefaultTabInterval, sizeof(CGFloat), &value);
-    [_outputCells addObject:createTextCell(@"kCTParagraphStyleSpecifierDefaultTabInterval", [NSString stringWithFormat:@"%f", value])];
-
-    CTParagraphStyleGetValueForSpecifier(styleCopy, kCTParagraphStyleSpecifierLineHeightMultiple, sizeof(CGFloat), &value);
-    [_outputCells addObject:createTextCell(@"kCTParagraphStyleSpecifierLineHeightMultiple", [NSString stringWithFormat:@"%f", value])];
-
-    CTParagraphStyleGetValueForSpecifier(styleCopy, kCTParagraphStyleSpecifierMaximumLineHeight, sizeof(CGFloat), &value);
-    [_outputCells addObject:createTextCell(@"kCTParagraphStyleSpecifierMaximumLineHeight", [NSString stringWithFormat:@"%f", value])];
-
-    CTParagraphStyleGetValueForSpecifier(styleCopy, kCTParagraphStyleSpecifierMinimumLineHeight, sizeof(CGFloat), &value);
-    [_outputCells addObject:createTextCell(@"kCTParagraphStyleSpecifierMinimumLineHeight", [NSString stringWithFormat:@"%f", value])];
-
-    CTParagraphStyleGetValueForSpecifier(styleCopy, kCTParagraphStyleSpecifierLineSpacing, sizeof(CGFloat), &value);
-    [_outputCells addObject:createTextCell(@"kCTParagraphStyleSpecifierLineSpacing", [NSString stringWithFormat:@"%f", value])];
-
-    CTParagraphStyleGetValueForSpecifier(styleCopy, kCTParagraphStyleSpecifierParagraphSpacing, sizeof(CGFloat), &value);
-    [_outputCells addObject:createTextCell(@"kCTParagraphStyleSpecifierParagraphSpacing", [NSString stringWithFormat:@"%f", value])];
-
-    CTParagraphStyleGetValueForSpecifier(styleCopy, kCTParagraphStyleSpecifierParagraphSpacingBefore, sizeof(CGFloat), &value);
-    [_outputCells addObject:createTextCell(@"kCTParagraphStyleSpecifierParagraphSpacingBefore", [NSString stringWithFormat:@"%f", value])];
-
-    CTParagraphStyleGetValueForSpecifier(styleCopy, kCTParagraphStyleSpecifierMaximumLineSpacing, sizeof(CGFloat), &value);
-    [_outputCells addObject:createTextCell(@"kCTParagraphStyleSpecifierMaximumLineSpacing", [NSString stringWithFormat:@"%f", value])];
-
-    CTParagraphStyleGetValueForSpecifier(styleCopy, kCTParagraphStyleSpecifierMinimumLineSpacing, sizeof(CGFloat), &value);
-    [_outputCells addObject:createTextCell(@"kCTParagraphStyleSpecifierMinimumLineSpacing", [NSString stringWithFormat:@"%f", value])];
-
-    CTParagraphStyleGetValueForSpecifier(styleCopy, kCTParagraphStyleSpecifierLineSpacingAdjustment, sizeof(CGFloat), &value);
-    [_outputCells addObject:createTextCell(@"kCTParagraphStyleSpecifierLineSpacingAdjustment", [NSString stringWithFormat:@"%f", value])];
-
-    ADD_UNIMPLEMENTED(_outputCells, @"kCTParagraphStyleSpecifierTabStops");
-
-    _outputsTable = [[UITableView alloc] initWithFrame:CGRectMake(660, 420, 600, 400) style:UITableViewStylePlain];
-    _outputsTable.dataSource = self;
-    _outputsTable.delegate = self;
-    [self.view addSubview:_outputsTable];
 }
 
 // Update texts to new font/size
 - (void)refreshViews {
     [_styleView removeFromSuperview];
     [_styleCopyView removeFromSuperview];
-    [_outputCells removeAllObjects];
     [self drawTests];
 }
 
@@ -457,17 +347,11 @@ cell.accessoryView = FIELD;                                                     
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    if (tableView == _inputsTable) {
-        return [_inputCells count];
-    }
-    return [_outputCells count];
+    return [_inputCells count];
 }
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
-    if (tableView == _inputsTable) {
-        return [_inputCells objectAtIndex:indexPath.row];
-    }
-    return [_outputCells objectAtIndex:indexPath.row];
+    return [_inputCells objectAtIndex:indexPath.row];
 }
 
 // Picker Methods

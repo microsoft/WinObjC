@@ -84,6 +84,7 @@
 
     CGColorSpaceRelease(colorspace);
     [_drawDelegate refreshValuesForFramesetter:framesetter];
+    CFRelease(frame);
 }
 
 @end
@@ -101,30 +102,31 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    CGFloat width = CGRectGetWidth(self.view.bounds);
     // Adds textbox to change text
-    _textField = [[UITextField alloc] initWithFrame:CGRectMake(40, 40, 300, 30)];
+    _textField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, width, 30)];
     _textField.text = @"the quick brown fox jumps over the lazy dog. THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG";
     _textField.delegate = self;
     [self.view addSubview:_textField];
 
-    _widthSlider = [[UISlider alloc] initWithFrame:CGRectMake(40, 80, 100, 100)];
+    _widthSlider = [[UISlider alloc] initWithFrame:CGRectMake(0, 30, width / 2, 70)];
     _widthSlider.minimumValue = 20.0;
-    _widthSlider.maximumValue = 800.0;
-    _widthSlider.value = 400.0;
+    _widthSlider.maximumValue = width;
+    _widthSlider.value = width / 2;
     _widthSlider.continuous = NO;
     [_widthSlider addTarget:self action:@selector(refreshViews) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:_widthSlider];
 
-    _heightSlider = [[UISlider alloc] initWithFrame:CGRectMake(170, 80, 100, 100)];
+    _heightSlider = [[UISlider alloc] initWithFrame:CGRectMake(width / 2, 30, width / 2, 70)];
     _heightSlider.minimumValue = 20.0;
-    _heightSlider.maximumValue = 400.0;
-    _heightSlider.value = 200.0;
+    _heightSlider.maximumValue = 100.0;
+    _heightSlider.value = 100.0;
     _heightSlider.continuous = NO;
     [_heightSlider addTarget:self action:@selector(refreshViews) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:_heightSlider];
 
     // Create table view to pair function names with results/UNIMPLEMENTED
-    _functionsView = [[UITableView alloc] initWithFrame:CGRectMake(40, 420, 1000, 600) style:UITableViewStylePlain];
+    _functionsView = [[UITableView alloc] initWithFrame:CGRectMake(0, 300, width, 300) style:UITableViewStylePlain];
     _functionsView.dataSource = self;
     _functionsView.delegate = self;
     [self.view addSubview:_functionsView];
@@ -145,8 +147,9 @@
 }
 
 - (void)drawTests {
+    CGFloat width = CGRectGetWidth(self.view.bounds);
     // Create frame of text
-    _framesetterView = [[CTFramesetterTestView alloc] initWithFrame:CGRectMake(40, 200, 400, 200)];
+    _framesetterView = [[CTFramesetterTestView alloc] initWithFrame:CGRectMake(0, 100, width, 100)];
     _framesetterView.backgroundColor = [UIColor whiteColor];
     // Allows input of \n and \t to insert newlines and tabs respectively
     _framesetterView.text =
@@ -175,6 +178,7 @@
 
 // Called by framesetter test view to give us framesetter for testing
 - (void)refreshValuesForFramesetter:(CTFramesetterRef)framesetter {
+    CGFloat width = CGRectGetWidth(self.view.bounds);
     CGSize suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter,
                                                                         CFRangeMake(0, 0),
                                                                         nullptr,
@@ -189,12 +193,13 @@
     ADD_UNIMPLEMENTED(_functionCells, @"CTFramesetterGetTypeID");
     [_functionsView reloadData];
 
-    _suggestedFrameSizeView = [[CTFramesetterTestView alloc] initWithFrame:CGRectMake(480, 40, suggestedSize.width, suggestedSize.height)];
+    _suggestedFrameSizeView = [[CTFramesetterTestView alloc] initWithFrame:CGRectMake(0, 200, suggestedSize.width, suggestedSize.height)];
     _suggestedFrameSizeView.backgroundColor = [UIColor whiteColor];
     _suggestedFrameSizeView.text =
         [[_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"] stringByReplacingOccurrencesOfString:@"\\t"
                                                                                                                   withString:@"\t"];
     [self.view addSubview:_suggestedFrameSizeView];
+    CFRelease(framesetter);
 }
 
 // Table View Methods
