@@ -26,6 +26,10 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CTFontRef, CTFontGetTypeID, UIFont, UICTFont)
     return [(__bridge UIFont*)CTFontCreateWithName((__bridge CFStringRef)name, size, nullptr) autorelease];
 }
 
++ (UIFont*)fontWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)fontSize {
+    return [(__bridge UIFont*)CTFontCreateWithFontDescriptor((__bridge CTFontDescriptorRef)descriptor, size, nullptr) autorelease];
+}
+
 - (NSString*)fontName {
     return [(__bridge NSString*)CTFontCopyFullName((CTFontRef)self) autorelease];
 }
@@ -52,6 +56,14 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CTFontRef, CTFontGetTypeID, UIFont, UICTFont)
 
 - (CGFloat)pointSize {
     return CTFontGetSize((CTFontRef)self);
+}
+
+- (CGFloat)leading {
+    return CTFontGetLeading((CTFontRef)self);
+}
+
+- (UIFontDescriptor*)fontDescriptor {
+    return [(__bridge UIFontDescriptor*)CTFontCopyFontDescriptor((CTFontRef)self) autorelease];
 }
 
 - (NSUInteger)hash {

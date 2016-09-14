@@ -57,18 +57,15 @@ NSString* const UIFontSlantTrait = static_cast<NSString*>(kCTFontSlantTrait);
 NSString* const UIFontFeatureTypeIdentifierKey = @"CTFeatureTypeIdentifier";
 NSString* const UIFontFeatureSelectorIdentifierKey = @"CTFeatureSelectorIdentifier";
 
-NSString* const SystemFontName = @"Segoe UI";
-
-// Below values match the reference platform
-const CGFloat UIFontWeightUltraLight = -0.80f;
-const CGFloat UIFontWeightThin = -0.60f;
-const CGFloat UIFontWeightLight = -0.40f;
-const CGFloat UIFontWeightRegular = 0.00f;
-const CGFloat UIFontWeightMedium = 0.23f;
-const CGFloat UIFontWeightSemibold = 0.30f;
-const CGFloat UIFontWeightBold = 0.40f;
-const CGFloat UIFontWeightHeavy = 0.56f;
-const CGFloat UIFontWeightBlack = 0.62f;
+const CGFloat UIFontWeightUltraLight = kCTFontWeightUltraLight;
+const CGFloat UIFontWeightThin = kCTFontWeightThin;
+const CGFloat UIFontWeightLight = kCTFontWeightLight;
+const CGFloat UIFontWeightRegular = kCTFontWeightRegular;
+const CGFloat UIFontWeightMedium = kCTFontWeightMedium;
+const CGFloat UIFontWeightSemibold = kCTFontWeightSemibold;
+const CGFloat UIFontWeightBold = kCTFontWeightBold;
+const CGFloat UIFontWeightHeavy = kCTFontWeightHeavy;
+const CGFloat UIFontWeightBlack = kCTFontWeightBlack;
 
 @implementation UIFontDescriptor
 
@@ -90,11 +87,13 @@ BASE_CLASS_REQUIRED_IMPLS(UIFontDescriptor, UIFontDescriptorPrototype, CTFontDes
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (UIFontDescriptor*)fontDescriptorWithName:(NSString*)fontName matrix:(CGAffineTransform)matrix {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self fontDescriptorWithFontAttributes:@{
+        UIFontDescriptorNameAttribute : fontName,
+        UIFontDescriptorMatrixAttribute : [NSData dataWithBytes:reinterpret_cast<byte*>(&matrix) length:sizeof(CGAffineTransform)]
+    }];
 }
 
 /**
@@ -117,35 +116,38 @@ BASE_CLASS_REQUIRED_IMPLS(UIFontDescriptor, UIFontDescriptorPrototype, CTFontDes
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (UIFontDescriptor*)fontDescriptorWithFace:(NSString*)newFace {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self fontDescriptorByAddingAttributes:@{ UIFontDescriptorFaceAttribute : newFace }];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (UIFontDescriptor*)fontDescriptorWithFamily:(NSString*)newFamily {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSMutableDictionary* newAttributes = [[[self fontAttributes] mutableCopy] autorelease];
+
+    [newAttributes removeObjectForKey:UIFontDescriptorNameAttribute];
+    [newAttributes setObject:newFamily forKey:UIFontDescriptorFamilyAttribute];
+
+    return [UIFontDescriptor fontDescriptorWithFontAttributes:newAttributes];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (UIFontDescriptor*)fontDescriptorWithMatrix:(CGAffineTransform)matrix {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self fontDescriptorByAddingAttributes:@{
+        UIFontDescriptorMatrixAttribute : [NSData dataWithBytes:reinterpret_cast<byte*>(&matrix) length:sizeof(CGAffineTransform)]
+    }];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (UIFontDescriptor*)fontDescriptorWithSize:(CGFloat)newPointSize {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self fontDescriptorByAddingAttributes:@{ UIFontDescriptorSizeAttribute : [NSNumber numberWithFloat:newPointSize] }];
 }
 
 /**
@@ -181,6 +183,20 @@ BASE_CLASS_REQUIRED_IMPLS(UIFontDescriptor, UIFontDescriptorPrototype, CTFontDes
 /**
  @Status Interoperable
 */
+- (CGAffineTransform)matrix {
+    NSData* data = [self objectForKey:UIFontDescriptorMatrixAttribute];
+    if (data) {
+        CGAffineTransform ret;
+        [data getBytes:reinterpret_cast<byte*>(&ret) length:sizeof(CGAffineTransform)];
+    } else {
+        // Identity matrix seems like a decent default return
+        return CGAffineTransformIdentity;
+    }
+}
+
+/**
+ @Status Interoperable
+*/
 - (id)objectForKey:(NSString*)anAttribute {
     return NSInvalidAbstractInvocationReturn();
 }
@@ -194,11 +210,18 @@ BASE_CLASS_REQUIRED_IMPLS(UIFontDescriptor, UIFontDescriptorPrototype, CTFontDes
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (UIFontDescriptorSymbolicTraits)symbolicTraits {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSDictionary* traits = [self objectForKey:UIFontDescriptorTraitsAttribute];
+    if (traits) {
+        NSNumber* symbolicTraits = [traits objectForKey:UIFontSymbolicTrait];
+
+        if (symbolicTraits) {
+            return [symbolicTraits unsignedIntValue];
+        }
+    }
+    return 0;
 }
 
 /**

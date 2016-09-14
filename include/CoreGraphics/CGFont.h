@@ -20,7 +20,7 @@
 #import <CoreGraphics/CGDataProvider.h>
 
 typedef unsigned short CGFontIndex;
-typedef unsigned short CGGlyph;
+typedef CGFontIndex CGGlyph;
 
 typedef enum {
     kCGFontPostScriptFormatType1 = 1,

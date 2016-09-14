@@ -15,7 +15,6 @@
 //******************************************************************************
 
 #include <TestFramework.h>
-#include "Starboard.h"
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <CoreText/CoreText.h>

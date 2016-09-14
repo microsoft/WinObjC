@@ -98,18 +98,18 @@ UIKIT_EXPORT_CLASS
 @interface UIFontDescriptor : NSObject <NSCopying, NSObject, NSSecureCoding>
 + (UIFontDescriptor*)preferredFontDescriptorWithTextStyle:(NSString*)style;
 + (UIFontDescriptor*)fontDescriptorWithFontAttributes:(NSDictionary*)attributes;
-+ (UIFontDescriptor*)fontDescriptorWithName:(NSString*)fontName matrix:(CGAffineTransform)matrix STUB_METHOD;
++ (UIFontDescriptor*)fontDescriptorWithName:(NSString*)fontName matrix:(CGAffineTransform)matrix;
 + (UIFontDescriptor*)fontDescriptorWithName:(NSString*)fontName size:(CGFloat)size;
 - (UIFontDescriptor*)fontDescriptorByAddingAttributes:(NSDictionary*)attributes;
-- (UIFontDescriptor*)fontDescriptorWithFace:(NSString*)newFace STUB_METHOD;
-- (UIFontDescriptor*)fontDescriptorWithFamily:(NSString*)newFamily STUB_METHOD;
-- (UIFontDescriptor*)fontDescriptorWithMatrix:(CGAffineTransform)matrix STUB_METHOD;
-- (UIFontDescriptor*)fontDescriptorWithSize:(CGFloat)newPointSize STUB_METHOD;
+- (UIFontDescriptor*)fontDescriptorWithFace:(NSString*)newFace;
+- (UIFontDescriptor*)fontDescriptorWithFamily:(NSString*)newFamily;
+- (UIFontDescriptor*)fontDescriptorWithMatrix:(CGAffineTransform)matrix;
+- (UIFontDescriptor*)fontDescriptorWithSize:(CGFloat)newPointSize;
 - (UIFontDescriptor*)fontDescriptorWithSymbolicTraits:(UIFontDescriptorSymbolicTraits)symbolicTraits STUB_METHOD;
 - (instancetype)initWithFontAttributes:(NSDictionary*)attributes;
 - (NSArray*)matchingFontDescriptorsWithMandatoryKeys:(NSSet*)mandatoryKeys STUB_METHOD;
 - (NSDictionary<NSString*, id>*)fontAttributes;
-@property (readonly, nonatomic) CGAffineTransform matrix STUB_PROPERTY;
+@property (readonly, nonatomic) CGAffineTransform matrix;
 - (id)objectForKey:(NSString*)anAttribute;
 @property (readonly, nonatomic) CGFloat pointSize;
 @property (readonly, nonatomic) NSString* postscriptName STUB_PROPERTY;
