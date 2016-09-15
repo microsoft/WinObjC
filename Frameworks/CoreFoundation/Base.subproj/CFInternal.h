@@ -219,6 +219,13 @@ CF_PRIVATE CFIndex __CFActiveProcessorCount();
 // This CF-only log function uses no CF functionality, so it may be called anywhere within CF - including thread teardown or prior to full CF setup
 CF_PRIVATE void _CFLogSimple(int32_t lev, char *format, ...);
 
+#if defined(DEBUG)
+extern void __CFGenericValidateType_(CFTypeRef cf, CFTypeID type, const char* func);
+#define __CFGenericValidateType(cf, type) __CFGenericValidateType_(cf, type, __PRETTY_FUNCTION__)
+#else
+#define __CFGenericValidateType(cf, type) ((void)0)
+#endif
+
 #define CF_INFO_BITS (!!(__CF_BIG_ENDIAN__) * 3)
 #define CF_RC_BITS (!!(__CF_LITTLE_ENDIAN__) * 3)
 

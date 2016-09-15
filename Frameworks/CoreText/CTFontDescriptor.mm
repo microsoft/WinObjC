@@ -20,33 +20,33 @@
 #import <Starboard.h>
 #import <StubReturn.h>
 
-const CFStringRef kCTFontURLAttribute = static_cast<CFStringRef>(@"NSFontURLAttribute");
-const CFStringRef kCTFontNameAttribute = static_cast<CFStringRef>(@"NSFontNameAttribute");
-const CFStringRef kCTFontDisplayNameAttribute = static_cast<CFStringRef>(@"NSFontVisibleNameAttribute");
-const CFStringRef kCTFontFamilyNameAttribute = static_cast<CFStringRef>(@"NSFontFamilyAttribute");
-const CFStringRef kCTFontStyleNameAttribute = static_cast<CFStringRef>(@"NSFontFaceAttribute");
-const CFStringRef kCTFontTraitsAttribute = static_cast<CFStringRef>(@"NSFontTraitsAttribute");
-const CFStringRef kCTFontVariationAttribute = static_cast<CFStringRef>(@"NSFontVariationAttribute");
-const CFStringRef kCTFontSizeAttribute = static_cast<CFStringRef>(@"NSFontSizeAttribute");
-const CFStringRef kCTFontMatrixAttribute = static_cast<CFStringRef>(@"NSFontMatrixAttribute");
-const CFStringRef kCTFontCascadeListAttribute = static_cast<CFStringRef>(@"NSFontCascadeListAttribute");
-const CFStringRef kCTFontCharacterSetAttribute = static_cast<CFStringRef>(@"NSFontCharacterSetAttribute");
-const CFStringRef kCTFontLanguagesAttribute = static_cast<CFStringRef>(@"NSFontLanguagesAttribute");
-const CFStringRef kCTFontBaselineAdjustAttribute = static_cast<CFStringRef>(@"NSFontBaselineAdjustAttribute");
-const CFStringRef kCTFontMacintoshEncodingsAttribute = static_cast<CFStringRef>(@"NSFontMacintoshEncodingsAttribute");
-const CFStringRef kCTFontFeaturesAttribute = static_cast<CFStringRef>(@"NSFontFeaturesAttribute");
-const CFStringRef kCTFontFeatureSettingsAttribute = static_cast<CFStringRef>(@"NSFontFeatureSettingsAttribute");
-const CFStringRef kCTFontFixedAdvanceAttribute = static_cast<CFStringRef>(@"NSFontFixedAdvanceAttribute");
-const CFStringRef kCTFontOrientationAttribute = static_cast<CFStringRef>(@"NSFontOrientationAttribute");
-const CFStringRef kCTFontFormatAttribute = static_cast<CFStringRef>(@"NSFontFormatAttribute");
-const CFStringRef kCTFontRegistrationScopeAttribute = static_cast<CFStringRef>(@"NSFontRegistrationScopeAttribute");
-const CFStringRef kCTFontPriorityAttribute = static_cast<CFStringRef>(@"NSFontPriorityAttribute");
-const CFStringRef kCTFontEnabledAttribute = static_cast<CFStringRef>(@"NSFontEnabledAttribute");
+const CFStringRef kCTFontURLAttribute = CFSTR("NSFontURLAttribute");
+const CFStringRef kCTFontNameAttribute = CFSTR("NSFontNameAttribute");
+const CFStringRef kCTFontDisplayNameAttribute = CFSTR("NSFontVisibleNameAttribute");
+const CFStringRef kCTFontFamilyNameAttribute = CFSTR("NSFontFamilyAttribute");
+const CFStringRef kCTFontStyleNameAttribute = CFSTR("NSFontFaceAttribute");
+const CFStringRef kCTFontTraitsAttribute = CFSTR("NSFontTraitsAttribute");
+const CFStringRef kCTFontVariationAttribute = CFSTR("NSFontVariationAttribute");
+const CFStringRef kCTFontSizeAttribute = CFSTR("NSFontSizeAttribute");
+const CFStringRef kCTFontMatrixAttribute = CFSTR("NSFontMatrixAttribute");
+const CFStringRef kCTFontCascadeListAttribute = CFSTR("NSFontCascadeListAttribute");
+const CFStringRef kCTFontCharacterSetAttribute = CFSTR("NSFontCharacterSetAttribute");
+const CFStringRef kCTFontLanguagesAttribute = CFSTR("NSFontLanguagesAttribute");
+const CFStringRef kCTFontBaselineAdjustAttribute = CFSTR("NSFontBaselineAdjustAttribute");
+const CFStringRef kCTFontMacintoshEncodingsAttribute = CFSTR("NSFontMacintoshEncodingsAttribute");
+const CFStringRef kCTFontFeaturesAttribute = CFSTR("NSFontFeaturesAttribute");
+const CFStringRef kCTFontFeatureSettingsAttribute = CFSTR("NSFontFeatureSettingsAttribute");
+const CFStringRef kCTFontFixedAdvanceAttribute = CFSTR("NSFontFixedAdvanceAttribute");
+const CFStringRef kCTFontOrientationAttribute = CFSTR("NSFontOrientationAttribute");
+const CFStringRef kCTFontFormatAttribute = CFSTR("NSFontFormatAttribute");
+const CFStringRef kCTFontRegistrationScopeAttribute = CFSTR("NSFontRegistrationScopeAttribute");
+const CFStringRef kCTFontPriorityAttribute = CFSTR("NSFontPriorityAttribute");
+const CFStringRef kCTFontEnabledAttribute = CFSTR("NSFontEnabledAttribute");
 
-const CFStringRef kCTFontSymbolicTrait = static_cast<CFStringRef>(@"NSCTFontSymbolicTrait");
-const CFStringRef kCTFontWeightTrait = static_cast<CFStringRef>(@"NSCTFontWeightTrait");
-const CFStringRef kCTFontWidthTrait = static_cast<CFStringRef>(@"NSCTFontWidthTrait");
-const CFStringRef kCTFontSlantTrait = static_cast<CFStringRef>(@"NSCTFontSlantTrait");
+const CFStringRef kCTFontSymbolicTrait = CFSTR("NSCTFontSymbolicTrait");
+const CFStringRef kCTFontWeightTrait = CFSTR("NSCTFontWeightTrait");
+const CFStringRef kCTFontWidthTrait = CFSTR("NSCTFontWidthTrait");
+const CFStringRef kCTFontSlantTrait = CFSTR("NSCTFontSlantTrait");
 
 struct __CTFontDescriptor {
     CFRuntimeBase _base;
@@ -125,6 +125,7 @@ CTFontDescriptorRef CTFontDescriptorCreateWithAttributes(CFDictionaryRef attribu
 CTFontDescriptorRef CTFontDescriptorCreateCopyWithAttributes(CTFontDescriptorRef original, CFDictionaryRef attributes) {
     // New attributes override old ones
     CFMutableDictionaryRef newAttributes = CFDictionaryCreateMutableCopy(kCFAllocatorDefault, 0, original->_dictionary);
+    CFAutorelease(newAttributes);
 
     CFDictionaryApplyFunction(attributes,
                               [](const void* key, const void* value, void* context) {
@@ -181,7 +182,6 @@ CTFontDescriptorRef CTFontDescriptorCreateMatchingFontDescriptor(CTFontDescripto
 */
 CFDictionaryRef CTFontDescriptorCopyAttributes(CTFontDescriptorRef descriptor) {
     CF_OBJC_FUNCDISPATCHV(CTFontDescriptorGetTypeID(), CFDictionaryRef, (UIFontDescriptor*)descriptor, fontAttributes);
-    __CFGenericValidateType(descriptor, CTFontDescriptorGetTypeID());
     return CFDictionaryCreateCopy(CFGetAllocator(descriptor->_dictionary), descriptor->_dictionary);
 }
 
@@ -192,7 +192,6 @@ CFDictionaryRef CTFontDescriptorCopyAttributes(CTFontDescriptorRef descriptor) {
 CFTypeRef CTFontDescriptorCopyAttribute(CTFontDescriptorRef descriptor, CFStringRef attribute) {
     CF_OBJC_FUNCDISPATCHV(CTFontDescriptorGetTypeID(), CFTypeRef, (UIFontDescriptor*)descriptor, objectForKey
                           : static_cast<NSString*>(attribute));
-    __CFGenericValidateType(descriptor, CTFontDescriptorGetTypeID());
 
     // Use CFRetain instead of a true copy here
     //  - A generic 'CFCopy' is not available, as not all types are copyable

@@ -55,7 +55,7 @@ TEST(UIFontDescriptor, BadPointSize) {
     ASSERT_OBJCNE(nil, fd);
     ASSERT_EQ(0, [fd pointSize]);
 
-    fd = fd = [UIFontDescriptor fontDescriptorWithFontAttributes:@{ UIFontDescriptorSizeAttribute : @"shouldn't be a string" }];
+    fd = [UIFontDescriptor fontDescriptorWithFontAttributes:@{ UIFontDescriptorSizeAttribute : @"shouldn't be a string" }];
     ASSERT_OBJCNE(nil, fd);
     ASSERT_EQ(0, [fd pointSize]);
 }

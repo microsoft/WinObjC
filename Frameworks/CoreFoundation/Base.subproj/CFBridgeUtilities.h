@@ -14,7 +14,8 @@
 //
 //******************************************************************************
 
-// WINOBJC: The following functions/macros are separated into this header, so that their code can be more broadly reused among the other
+// WINOBJC: The following functions/macros were originally from CFInternal.h, or CFFoundationInternal.h
+// They have been separated into this header, so that their code can be more broadly reused among the other
 // Core* (CoreText, CoreGraphics) frameworks with bridged types.
 
 #pragma once
@@ -50,19 +51,16 @@ CF_EXPORT Class _OBJC_CLASS__NSCFString;
 // easier to read without clang-format here
 // clang-format off
 #define CF_IS_OBJC(typeID, obj) ( \
+    /* Treat nil as ObjC */ \
     (!obj) || \
+    /* Any isa means ObjC but make sure it isn't a bridge */ \
     ((((CFRuntimeBase*)(obj))->_cfisa != 0) && \
-    (((CFRuntimeBase*)(obj))->_cfisa != (uintptr_t)(&_OBJC_CLASS__NSCFString)) && \
-    (__CFISAForTypeID(typeID) != ((CFRuntimeBase*)(obj))->_cfisa) && \
+    /* Special handling for String (see above) */ \
+    (((CFRuntimeBase*)(obj))->_cfisa != (uintptr_t)(&_OBJC_CLASS__NSCFString)) &&  \
+    /* Make sure that obj isn't the concrete impl, otherwise FUNCDISPATCHV would infinitely recurse */ \
+    (__CFISAForTypeID(typeID) != ((CFRuntimeBase*)(obj))->_cfisa) &&  \
+    /* Make sure obj isn't a subclass (should only be KVO of the concrete bridged impl) */ \
     (![(id)(((CFRuntimeBase*)(obj)))->_cfisa isSubclassOfClass:(Class)__CFISAForTypeID(typeID)])))
 // clang-format on
-
-// For debugging C-style classes
-#if defined(DEBUG)
-extern void __CFGenericValidateType_(CFTypeRef cf, CFTypeID type, const char* func);
-#define __CFGenericValidateType(cf, type) __CFGenericValidateType_(cf, type, __PRETTY_FUNCTION__)
-#else
-#define __CFGenericValidateType(cf, type) ((void)0)
-#endif
 
 CF_EXTERN_C_END

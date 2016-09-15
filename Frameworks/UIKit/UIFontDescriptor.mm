@@ -59,6 +59,7 @@ NSString* const UIFontFeatureSelectorIdentifierKey = @"CTFeatureSelectorIdentifi
 
 NSString* const SystemFontName = @"Segoe UI";
 
+// Below values match the reference platform
 const CGFloat UIFontWeightUltraLight = -0.80f;
 const CGFloat UIFontWeightThin = -0.60f;
 const CGFloat UIFontWeightLight = -0.40f;
