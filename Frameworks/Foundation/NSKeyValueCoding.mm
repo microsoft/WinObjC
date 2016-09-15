@@ -26,6 +26,7 @@
 #import "NSValueTransformers.h"
 #import "Starboard.h"
 #import "StubReturn.h"
+#import "type_encoding_cases.h"
 #import <_NSKeyValueCodingAggregateFunctions.h>
 
 #import <unicode/utf8.h>
@@ -162,6 +163,10 @@ id quickGet<Class>(id self, SEL getter) {
     return ((id (*)(id, SEL))objc_msgSend)(self, getter);
 }
 
+#define QUICK_GET_CASE(type, name, capitalizedName, encodingChar) \
+    case encodingChar: \
+        *ret = quickGet<type>(self, getter); \
+        return true;
 bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret) {
     if (!getter) {
         return false;
@@ -176,11 +181,9 @@ bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret) {
     }
 
     switch (valueType[0]) {
-#define APPLY_TYPE(type, name, capitalizedName, encodingChar) case encodingChar: *ret = quickGet<type>(self, getter); return true;
-        APPLY_TYPE(id, object, Object, '@')
-        APPLY_TYPE(Class, class, Class, '#')
-#include "type_encoding_cases.h"
-#undef APPLY_TYPE
+        OBJC_APPLY_NUMERIC_TYPE_ENCODINGS(QUICK_GET_CASE);
+        QUICK_GET_CASE(id, object, Object, '@');
+        QUICK_GET_CASE(Class, class, Class, '#');
     }
 
     NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
@@ -395,6 +398,12 @@ bool quickSet<Class>(id self, SEL setter, id value, const char* valueType) {
     return true;
 }
 
+#define QUICK_SET_CASE(type, name, capitalizedName, encodingChar) \
+    case encodingChar: \
+        if (quickSet<type>(self, setter, value, valueType)) { \
+            return true; \
+        } \
+        break;
 bool KVCSetViaAccessor(NSObject* self, SEL setter, id value) {
     if (!setter) {
         return false;
@@ -407,16 +416,9 @@ bool KVCSetViaAccessor(NSObject* self, SEL setter, id value) {
         const char* valueType = [sig getArgumentTypeAtIndex:2];
 
         switch (valueType[0]) {
-#define APPLY_TYPE(type, name, capitalizedName, encodingChar) \
-            case encodingChar: \
-                if (quickSet<type>(self, setter, value, valueType)) { \
-                    return true; \
-                } \
-                break;
-            APPLY_TYPE(id, object, Object, '@')
-            APPLY_TYPE(Class, class, Class, '#')
-#include "type_encoding_cases.h"
-#undef APPLY_TYPE
+            OBJC_APPLY_NUMERIC_TYPE_ENCODINGS(QUICK_SET_CASE);
+            QUICK_SET_CASE(id, object, Object, '@');
+            QUICK_SET_CASE(Class, class, Class, '#');
         }
 
         uint8_t* data = static_cast<uint8_t*>(_alloca(objc_sizeof_type(valueType)));
