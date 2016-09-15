@@ -27,10 +27,14 @@ CF_EXTERN_C_BEGIN
 CF_PRIVATE void _CFRuntimeBridgeTypeToClass(CFTypeID type, const void* isa);
 CF_PRIVATE uintptr_t __CFISAForTypeID(CFTypeID typeID);
 
+// WINOBJC:
 // Because registration happens at runtime, static constant CFStrings don't have yet have type ids in the class table when initialized
 // NSCFString thus requires explicit handling below
 // The reference platform uses a special compiler option not available to us to
-// get __CFConstantStringClassReferencePtr filled out with the correct "Class".
+// get __CFConstantStringClassReferencePtr filled out with the correct "Class". Since this isn't
+// an option here, use &_OBJC_CLASS__NSCFString instead.
+// CF_EXPORT void * __CFConstantStringClassReferencePtrPtr;
+// CF_EXPORT void *__CFConstantStringClassReferencePtr[];
 CF_EXPORT Class _OBJC_CLASS__NSCFString;
 
 // For bridged classes, which under certain circumstances, dispatch a function from C side to Objective-C side

@@ -113,5 +113,5 @@ UIKIT_EXPORT_CLASS
 - (id)objectForKey:(NSString*)anAttribute;
 @property (readonly, nonatomic) CGFloat pointSize;
 @property (readonly, nonatomic) NSString* postscriptName STUB_PROPERTY;
-@property (readonly, nonatomic) UIFontDescriptorSymbolicTraits symbolicTraits STUB_PROPERTY;
+@property (readonly, nonatomic) UIFontDescriptorSymbolicTraits symbolicTraits;
 @end

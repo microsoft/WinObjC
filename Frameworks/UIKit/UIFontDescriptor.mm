@@ -110,7 +110,7 @@ BASE_CLASS_REQUIRED_IMPLS(UIFontDescriptor, UIFontDescriptorPrototype, CTFontDes
  @Status Interoperable
 */
 - (UIFontDescriptor*)fontDescriptorByAddingAttributes:(NSDictionary*)attributes {
-    NSMutableDictionary* newAttributes = [[self fontAttributes] mutableCopy];
+    NSMutableDictionary* newAttributes = [[[self fontAttributes] mutableCopy] autorelease];
     [newAttributes addEntriesFromDictionary:attributes];
     return [UIFontDescriptor fontDescriptorWithFontAttributes:newAttributes];
 }

@@ -357,12 +357,6 @@ CF_PRIVATE Boolean __CFProcessIsRestricted();
 #define STACK_BUFFER_DECL(T, N, C) T N[C]
 #endif
 
-// WINOBJC: The reference platform uses a special compiler option not available to us to 
-// get __CFConstantStringClassReferencePtr filled out with the correct "Class". Since this isn't
-// an option here, use &_OBJC_CLASS__NSCFString from CFBridgeUtilities.h instead.
-// CF_EXPORT void * __CFConstantStringClassReferencePtrPtr;
-// CF_EXPORT void *__CFConstantStringClassReferencePtr[];
-
 // WINOBJC: Compilation can't find these class names
 // Needed for class checks against cfisa, _CFRuntimeBridgeTypeToClass
 extern "C" Class _OBJC_CLASS__NSCFNumber;
