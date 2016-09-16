@@ -149,6 +149,16 @@
     [self drawTests];
 }
 
+- (void)viewDidLayoutSubviews {
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    _textField.frame = CGRectMake(0, 0, 2 * width / 3, 50);
+    [_textField setNeedsDisplay];
+    _refreshButton.frame = CGRectMake(2 * width / 3, 0, width / 3, 50);
+    [_refreshButton setNeedsDisplay];
+    _linesView.frame = CGRectMake(0, 250, width, 400);
+    [_linesView setNeedsDisplay];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

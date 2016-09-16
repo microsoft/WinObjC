@@ -99,6 +99,18 @@
     NSMutableArray* _functionCells;
 }
 
+- (void)viewDidLayoutSubviews {
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    _textField.frame = CGRectMake(0, 0, width, 30);
+    [_textField setNeedsDisplay];
+    _widthSlider.frame = CGRectMake(0, 30, width / 2, 70);
+    [_widthSlider setNeedsDisplay];
+    _heightSlider.frame = CGRectMake(width / 2, 30, width / 2, 70);
+    [_heightSlider setNeedsDisplay];
+    _functionsView.frame = CGRectMake(0, 300, width, 300);
+    [_functionsView setNeedsDisplay];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];

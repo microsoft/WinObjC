@@ -206,6 +206,12 @@ cell.accessoryView = FIELD;                                                     
     [super viewDidAppear:animated];
 }
 
+- (void)viewDidLayoutSubviews {
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    _inputsTable.frame = CGRectMake(0, 220, width, 400);
+    [_inputsTable setNeedsDisplay];
+}
+
 - (void)drawTests {
     // Creates array to hold all of the settings which will be used to create CTParagraphStyleRef
     std::vector<CTParagraphStyleSetting> settings;

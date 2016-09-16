@@ -144,6 +144,20 @@
     [self.view addSubview:_fontPicker];
 }
 
+- (void)viewDidLayoutSubviews {
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    _leftView.frame = CGRectMake(0, 0, width / 2, 150);
+    [_leftView setNeedsDisplay];
+    _centerView.frame = CGRectMake(0, 150, width / 2, 150);
+    [_centerView setNeedsDisplay];
+    _rightView.frame = CGRectMake(0, 300, width / 2, 150);
+    [_rightView setNeedsDisplay];
+    _fontSizeSlider.frame = CGRectMake(width / 2, 200, width / 2, 100);
+    [_fontSizeSlider setNeedsDisplay];
+    _fontPicker.frame = CGRectMake(width / 2, 0, width / 2, 200);
+    [_fontPicker setNeedsDisplay];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -156,7 +170,7 @@
 - (void)drawTests {
     CGFloat width = CGRectGetWidth(self.view.bounds);
     // Create left-aligned text
-    _leftView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(0, 0, width / 2, 200)];
+    _leftView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(0, 0, width / 2, 150)];
     _leftView.backgroundColor = [UIColor whiteColor];
     _leftView.alignment = kCTLeftTextAlignment;
     _leftView.font = _font;
@@ -168,7 +182,7 @@
     [self.view addSubview:_leftView];
 
     // Create centered text
-    _centerView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(0, 200, width / 2, 200)];
+    _centerView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(0, 150, width / 2, 150)];
     _centerView.backgroundColor = [UIColor whiteColor];
     _centerView.alignment = kCTCenterTextAlignment;
     _centerView.font = _font;
@@ -178,7 +192,7 @@
     [self.view addSubview:_centerView];
 
     // Create right-aligned text
-    _rightView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(0, 400, width / 2, 200)];
+    _rightView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(0, 300, width / 2, 150)];
     _rightView.backgroundColor = [UIColor whiteColor];
     _rightView.alignment = kCTRightTextAlignment;
     _rightView.font = _font;

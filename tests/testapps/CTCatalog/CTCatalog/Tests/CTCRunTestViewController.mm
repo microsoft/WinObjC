@@ -118,6 +118,14 @@
     [self drawTests];
 }
 
+- (void)viewDidLayoutSubviews {
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    _testsView.frame = CGRectMake(0, 200, width, 400);
+    [_testsView setNeedsDisplay];
+    _runView.frame = CGRectMake(0, 0, width, 200);
+    [_runView setNeedsDisplay];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

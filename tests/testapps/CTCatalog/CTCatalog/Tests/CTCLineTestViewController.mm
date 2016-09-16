@@ -147,6 +147,17 @@
     [super viewDidAppear:animated];
 }
 
+- (void)viewDidLayoutSubviews {
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    _textField.frame = CGRectMake(0, 0, width, 50);
+    [_textField setNeedsDisplay];
+    _linesView.frame = CGRectMake(0, 240, width, 400);
+    [_linesView setNeedsDisplay];
+    _truncationSlider.frame = CGRectMake(0, 30, width, 70);
+    _truncationSlider.maximumValue = width;
+    [_truncationSlider setNeedsDisplay];
+}
+
 - (void)drawTests {
     // Create frame of text
     CGFloat width = CGRectGetWidth(self.view.bounds);
