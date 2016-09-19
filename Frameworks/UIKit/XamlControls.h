@@ -107,6 +107,11 @@ void HookButtonPointerEvents(WXCButton* button,
 WXCContentDialog* CreateContentDialog();
 
 int XamlContentDialogPressedIndex(WXCContentDialog* contentDialog);
+unsigned int XamlContentDialogAddButtonWithTitle(WXCContentDialog* contentDialog, NSString* buttonTitle);
+NSString* XamlContentDialogButtonTitleAtIndex(WXCContentDialog* contentDialog, unsigned int buttonIndex);
+unsigned int XamlContentDialogNumberOfButtons(WXCContentDialog* contentDialog);
+void XamlContentDialogSetCancelButtonIndex(WXCContentDialog* contentDialog, unsigned int cancelButtonIndex);
+void XamlContentDialogSetDestructiveButtonIndex(WXCContentDialog* contentDialog, unsigned int destructiveButtonIndex);
 
 void HookLayoutEvent(WXCButton* button, WUXIPointerEventHandler autoLayoutHook);
 

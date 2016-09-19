@@ -52,6 +52,7 @@ WXFrameworkElement* FindTemplateChild(WXCControl* control, NSString* name);
 
 // Passing a string between ObjC and WRL requires encasing an NSString within a WFPropertyValue/WFIPropertyValue
 // BUGBUG:8791977 - WFIPropertyValue is not publicly exposed via projections so we used a workaround
+NSString* NSStringFromPropertyValue(const Microsoft::WRL::ComPtr<IInspectable>& inspPropValue);
 NSString* NSStringFromPropertyValue(RTObject* rtPropertyValue);
 
 // Set up border style for a control

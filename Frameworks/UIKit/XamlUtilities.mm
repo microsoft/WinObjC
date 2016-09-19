@@ -166,18 +166,20 @@ WXFrameworkElement* FindTemplateChild(WXCControl* control, NSString* name) {
 
 NSString* NSStringFromPropertyValue(RTObject* rtPropertyValue) {
     // BUGBUG:8791977 - WFIPropertyValue is not publicly exposed via projections so we used a workaround
-    ComPtr<IInspectable> inspPtr = [rtPropertyValue comObj];
-    if (inspPtr) {
-        ComPtr<ABI::Windows::Foundation::IPropertyValue> propVal;
-        HRESULT hr = inspPtr.As(&propVal);
-        if (SUCCEEDED(hr)) {
-            HSTRING str;
-            auto freeHSTRING = wil::ScopeExit([&]() { WindowsDeleteString(str); });
+    ComPtr<IInspectable> inspPropVal = [rtPropertyValue comObj];
+    return NSStringFromPropertyValue(inspPropVal);
+}
 
-            hr = propVal->GetString(&str);
-            if (SUCCEEDED(hr)) {
-                return Strings::WideToNSString<HSTRING>(str);
-            }
+NSString* NSStringFromPropertyValue(const ComPtr<IInspectable>& inspPropertyValue) {
+    ComPtr<ABI::Windows::Foundation::IPropertyValue> propVal;
+    HRESULT hr = inspPropertyValue.As(&propVal);
+    if (SUCCEEDED(hr)) {
+        HSTRING str;
+        auto freeHSTRING = wil::ScopeExit([&]() { WindowsDeleteString(str); });
+
+        hr = propVal->GetString(&str);
+        if (SUCCEEDED(hr)) {
+            return Strings::WideToNSString<HSTRING>(str);
         }
     }
 

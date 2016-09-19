@@ -104,7 +104,7 @@
             </Border>
         </ControlTemplate>
     </ContentDialog.Template>
-    <ListView x:Name="ActionsListView" 
+    <ListView x:Name="ActionsListView"
         SelectionMode="Single"
         IsItemClickEnabled="False"
         SelectionChanged="OnSelectionChanged"
@@ -113,11 +113,13 @@
         ScrollViewer.ZoomMode="Disabled"
         HorizontalAlignment="Stretch"
         HorizontalContentAlignment="Stretch"
+        CanDragItems="False"
+        CanReorderItems="False"
         Margin="0, 20, 0, 20">
         <ListView.ItemTemplate>
-            <DataTemplate>
+            <DataTemplate x:DataType="local:Item">
                 <!-- Consider making these buttons for accessibility purposes -->
-                <TextBlock Text="{Binding}" />
+                <TextBlock Text="{x:Bind Title}" HorizontalAlignment="Left" TextTrimming="WordEllipsis" />
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>

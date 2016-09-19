@@ -25,6 +25,20 @@
 
 namespace UIKit {
 
+[Windows::UI::Xaml::Data::Bindable]
+[Windows::Foundation::Metadata::WebHostHidden]
+public ref class Item sealed
+{
+public:
+    Item(Platform::String^ title, unsigned int index) {
+        Title = title;
+        Index = index;
+    }
+
+    property Platform::String^ Title;
+    property unsigned int Index;
+};
+
 [Windows::Foundation::Metadata::WebHostHidden]
 public ref class ContentDialog sealed {
 public:
@@ -34,6 +48,13 @@ public:
     property int PressedIndex {
         int get() { return _buttonPressedIndex; }
     }
+
+    // Getter that returns the total number of items
+    property unsigned int NumberOfItems {
+        unsigned int get() { return ObservableItems->Size; }
+    }
+
+    property Windows::Foundation::Collections::IObservableVector<Item^>^ ObservableItems;
 
 private:
     int _buttonPressedIndex;

@@ -109,6 +109,25 @@ UIKIT_XAML_EXPORT IInspectable* XamlCreateContentDialog();
 // Get the index of the button pressed
 UIKIT_XAML_EXPORT int XamlContentDialogPressedIndex(const Microsoft::WRL::ComPtr<IInspectable>& inspectableContentDialog);
 
+// Append a new button to the list
+UIKIT_XAML_EXPORT unsigned int XamlContentDialogAddButtonWithTitle(const Microsoft::WRL::ComPtr<IInspectable>& inspectableContentDialog,
+                                                                   const std::wstring& buttonTitle);
+
+// Get the title for the button at the specified index
+UIKIT_XAML_EXPORT IInspectable* XamlContentDialogButtonTitleAtIndex(const Microsoft::WRL::ComPtr<IInspectable>& inspectableContentDialog,
+                                                                    unsigned int buttonIndex);
+
+// Get the total number of buttons in the list
+UIKIT_XAML_EXPORT unsigned int XamlContentDialogNumberOfButtons(const Microsoft::WRL::ComPtr<IInspectable>& inspectableContentDialog);
+
+// Set the cancel button index and apply the appropriate theme
+UIKIT_XAML_EXPORT void XamlContentDialogSetCancelButtonIndex(const Microsoft::WRL::ComPtr<IInspectable>& inspectableContentDialog,
+                                                             unsigned int cancelButtonIndex);
+
+// Set the destructive button index and apply the appropriate theme
+UIKIT_XAML_EXPORT void XamlContentDialogSetDestructiveButtonIndex(const Microsoft::WRL::ComPtr<IInspectable>& inspectableContentDialog,
+                                                                  unsigned int destructiveButtonIndex);
+
 ////////////////////////////////////////////////////////////////////////////////////
 // Shared Helpers
 ////////////////////////////////////////////////////////////////////////////////////

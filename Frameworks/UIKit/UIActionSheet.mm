@@ -47,11 +47,9 @@ static const int s_InvalidButtonIndex = -1;
     // XAML ContentDialog
     StrongId<WXCContentDialog> _contentDialog;
 
-    // Internal reference to the ContentDialog's ListView - optimized to avoid multiple XAML findChild calls
-    StrongId<WXCItemCollection> _listViewItems;
-
     // Track these events on ContentDialog
     EventRegistrationToken _contentDialogOpenedEventToken;
+    EventRegistrationToken _contentDialogClosingEventToken;
     EventRegistrationToken _contentDialogClosedEventToken;
 
     // Boolean to indicate whether ContentDialog is displayed or hidden
@@ -60,15 +58,17 @@ static const int s_InvalidButtonIndex = -1;
     // TODO: We should remove these and move them into ContentDialog
     int _cancelButtonIndex;
     int _destructiveButtonIndex;
-    int _otherButtonIndex;
+
+    // It seems that this index is static once set via initWithTitle:.... in iOS even if cancel or destructive indices are updated
+    int _firstOtherButtonIndex;
 }
 
-- (void)buttonClicked:(NSInteger)buttonIndex {
-    TraceVerbose(TAG, L"buttonClicked index: %ld", buttonIndex);
+- (void)_buttonClicked:(NSInteger)buttonIndex {
+    TraceVerbose(TAG, L"_buttonClicked index: %ld", buttonIndex);
 
     // ActionSheetCancel is invoked before the action sheet is canceled
     if (buttonIndex == _cancelButtonIndex) {
-        if ([_delegate respondsToSelector : @selector(actionSheetCancel:)]) {
+        if ([_delegate respondsToSelector:@selector(actionSheetCancel:)]) {
             [_delegate actionSheetCancel:self];
         }
     }
@@ -90,24 +90,16 @@ static const int s_InvalidButtonIndex = -1;
     }
 }
 
--(void)_UIActionSheet_initInternal:(WXFrameworkElement*)xamlElement {
+- (void)_UIActionSheet_initInternal:(WXFrameworkElement*)xamlElement {
     if (xamlElement) {
         _contentDialog = static_cast<WXCContentDialog*>(xamlElement);
     } else {
         _contentDialog = XamlControls::CreateContentDialog();
     }
 
-    RTObject* xamlObject = [_contentDialog findName : @"ActionsListView"];
-    if (xamlObject) {
-        WXCListView* listView = rt_dynamic_cast<WXCListView>(xamlObject);
-        if (listView) {
-            _listViewItems = [listView items];
-        }
-    }
-
-    // Only used to update _isContentDialogVisible - if we move to XAML Popup, we might be able to leverage isOpen instead
+    // Only used to update _isContentDialogVisible - if we move to XAML Popup, we might be able to leverage isOpen property instead
     __weak UIActionSheet* weakSelf = self;
-    _contentDialogOpenedEventToken = [_contentDialog addOpenedEvent:^void(RTObject* sender, RTObject* e) {
+    _contentDialogOpenedEventToken = [_contentDialog addOpenedEvent:^void(WXCContentDialog* sender, WXCContentDialogOpenedEventArgs* e) {
         __strong UIActionSheet* strongSelf = weakSelf;
 
         strongSelf->_isContentDialogVisible = YES;
@@ -117,7 +109,20 @@ static const int s_InvalidButtonIndex = -1;
         }
     }];
 
-    _contentDialogClosedEventToken = [_contentDialog addClosedEvent:^void(RTObject* sender, RTObject* e) {
+    // Block the closing of the dialog via ESC if _cancelButtonIndex is invalid
+    _contentDialogClosingEventToken = [_contentDialog addClosingEvent:^void(WXCContentDialog* sender, WXCContentDialogClosingEventArgs* e) {
+        __strong UIActionSheet* strongSelf = weakSelf;
+
+        // Verify whether a button was pressed or if we dismissed the dialog via ESC
+        int pressedIndex = XamlControls::XamlContentDialogPressedIndex(strongSelf->_contentDialog);
+        if (pressedIndex == s_InvalidButtonIndex && strongSelf->_cancelButtonIndex == s_InvalidButtonIndex) {
+            // Cancel closing the dialog if ESC was pressed and cancelButtonIndex is invalid
+            e.cancel = YES;
+        }
+    }];
+
+    // Only used to update _isContentDialogVisible - if we move to XAML Popup, we might be able to leverage isOpen property instead
+    _contentDialogClosedEventToken = [_contentDialog addClosedEvent:^void(WXCContentDialog* sender, WXCContentDialogClosedEventArgs* e) {
         __strong UIActionSheet* strongSelf = weakSelf;
 
         strongSelf->_isContentDialogVisible = NO;
@@ -133,7 +138,7 @@ static const int s_InvalidButtonIndex = -1;
 
         _cancelButtonIndex = s_InvalidButtonIndex;
         _destructiveButtonIndex = s_InvalidButtonIndex;
-        _otherButtonIndex = s_InvalidButtonIndex;
+        _firstOtherButtonIndex = s_InvalidButtonIndex;
 
         // Create XAML-backing control
         [self _UIActionSheet_initInternal:nil];
@@ -154,6 +159,22 @@ static const int s_InvalidButtonIndex = -1;
         [self setTitle:title];
         [self setDelegate:delegate];
 
+        // The other button/s category
+        va_list pReader;
+        va_start(pReader, otherButtonTitles);
+
+        id otherButtonTitle = otherButtonTitles;
+        while (otherButtonTitle != nil) {
+            NSInteger buttonIndex = [self addButtonWithTitle:otherButtonTitle];
+            if (_firstOtherButtonIndex == s_InvalidButtonIndex) {
+                _firstOtherButtonIndex = buttonIndex;
+            }
+
+            otherButtonTitle = va_arg(pReader, id);
+        }
+
+        va_end(pReader);
+
         // The destructive button category
         if (destructiveButtonTitle != nil) {
             _destructiveButtonIndex = [self addButtonWithTitle:destructiveButtonTitle];
@@ -162,32 +183,18 @@ static const int s_InvalidButtonIndex = -1;
         // The cancel button category
         if (cancelButtonTitle != nil) {
             _cancelButtonIndex = [self addButtonWithTitle:cancelButtonTitle];
+            XamlControls::XamlContentDialogSetCancelButtonIndex(_contentDialog, _cancelButtonIndex);
         }
-
-        // The other button/s category
-        va_list pReader;
-        va_start(pReader, otherButtonTitles);
-
-        id otherButtonTitle = otherButtonTitles;
-        while (otherButtonTitle != nil) {
-            NSInteger otherButtonsCount = [self addButtonWithTitle:otherButtonTitle];
-            if (_otherButtonIndex == s_InvalidButtonIndex) {
-                _otherButtonIndex = otherButtonsCount;
-            }
-
-            otherButtonTitle = va_arg(pReader, id);
-        }
-
-        va_end(pReader);
     }
 
     return self;
 }
 
--(void)dealloc {
+- (void)dealloc {
     _delegate = nil;
 
     [_contentDialog removeOpenedEvent:_contentDialogOpenedEventToken];
+    [_contentDialog removeClosedEvent:_contentDialogClosingEventToken];
     [_contentDialog removeClosedEvent:_contentDialogClosedEventToken];
 
     [_contentDialog hide];
@@ -198,11 +205,15 @@ static const int s_InvalidButtonIndex = -1;
 @Status Interoperable
 */
 - (NSInteger)addButtonWithTitle:(NSString*)title {
-    RTObject* propVal = [WFPropertyValue createString:title];
-    [_listViewItems addObject:propVal];
+    unsigned int newIndex = XamlControls::XamlContentDialogAddButtonWithTitle(_contentDialog, title);
+
+    // If cancel button is already set, we need to make sure it is the last item in the list
+    if (_cancelButtonIndex != s_InvalidButtonIndex) {
+        XamlControls::XamlContentDialogSetCancelButtonIndex(_contentDialog, _cancelButtonIndex);
+    }
 
     // Return the index of the appended button (0-based index)
-    return [self numberOfButtons] - 1;
+    return newIndex;
 }
 
 /**
@@ -220,7 +231,7 @@ static const int s_InvalidButtonIndex = -1;
     }
 
     // Prematurely indicate that action sheet is visible which is only confirmed after the asynchronous "Opened" event is triggered
-    // However on iOS, a call to isVisible indicates it visible almost as soon as showInView is called
+    // However on iOS, a call to isVisible indicates it is visible almost as soon as showInView: is called
     _isContentDialogVisible = YES;
 
     // Display the ContentDialog and ultimately capture its dismissal events in either the success or failure blocks
@@ -228,12 +239,12 @@ static const int s_InvalidButtonIndex = -1;
     [_contentDialog showAsyncWithSuccess:^void(WXCContentDialogResult result) {
         __strong UIActionSheet* strongSelf = weakSelf;
 
-        int customResult = XamlControls::XamlContentDialogPressedIndex(strongSelf->_contentDialog);
-        if (customResult != s_InvalidButtonIndex) {
-            [strongSelf buttonClicked:customResult];
-        } else if (_cancelButtonIndex != s_InvalidButtonIndex) {
-            // Dismissed the dialog via ESC which is equivalent of cancel button option
-            [strongSelf buttonClicked:_cancelButtonIndex];
+        int pressedIndex = XamlControls::XamlContentDialogPressedIndex(strongSelf->_contentDialog);
+        if (pressedIndex != s_InvalidButtonIndex) {
+            [strongSelf _buttonClicked:pressedIndex];
+        } else {
+            // Dismissed the dialog via ESC which imitates the cancel button being pressed
+            [strongSelf _buttonClicked:_cancelButtonIndex];
         }
     }
     failure:^void(NSError* error) {
@@ -254,7 +265,7 @@ static const int s_InvalidButtonIndex = -1;
         UNIMPLEMENTED_WITH_MSG("dismissWithClickedButtonIndex with animation is not supported");
     }
 
-    [self buttonClicked:buttonIndex];
+    [self _buttonClicked:buttonIndex];
 }
 
 /**
@@ -289,6 +300,7 @@ static const int s_InvalidButtonIndex = -1;
 @Status Interoperable
 */
 - (void)setTitle:(NSString*)title {
+    // Strings are passed via PropertyValues to C++/CX
     RTObject* propVal = [WFPropertyValue createString:title];
     _contentDialog.title = propVal;
 }
@@ -310,7 +322,7 @@ static const int s_InvalidButtonIndex = -1;
 /**
 @Status Interoperable
 */
--(BOOL)isVisible {
+- (BOOL)isVisible {
     // TODO: If we move to XAML Popup, we might be able to leverage the IsOpen property
     return _isContentDialogVisible;
 }
@@ -319,16 +331,14 @@ static const int s_InvalidButtonIndex = -1;
  @Status Interoperable
 */
 - (NSString*)buttonTitleAtIndex:(NSInteger)index {
-    return NSStringFromPropertyValue([_listViewItems objectAtIndex:index]);
+    return XamlControls::XamlContentDialogButtonTitleAtIndex(_contentDialog, index);
 }
 
 /**
  @Status Interoperable
 */
 - (NSInteger)numberOfButtons {
-    NSInteger itemCount = [_listViewItems count];
-
-    return itemCount;
+    return XamlControls::XamlContentDialogNumberOfButtons(_contentDialog);
 }
 
 /**
@@ -343,11 +353,15 @@ static const int s_InvalidButtonIndex = -1;
 */
 - (void)setCancelButtonIndex:(NSInteger)index {
     //
-    // NOTE: Apple docs recommend this value should not be changed if the index was automatically generated within the initWithTitle.... initializer
+    // NOTE: Apple docs recommend this value should not be changed if the index was automatically generated within the initWithTitle....
+    // initializer
     //
-    if (index < [self numberOfButtons]) {
-        _cancelButtonIndex = index;
+    if (_cancelButtonIndex != s_InvalidButtonIndex) {
+        TraceVerbose(TAG, L"Cancel button index has already been set");
     }
+
+    XamlControls::XamlContentDialogSetCancelButtonIndex(_contentDialog, index);
+    _cancelButtonIndex = index;
 }
 
 /**
@@ -362,18 +376,22 @@ static const int s_InvalidButtonIndex = -1;
 */
 - (void)setDestructiveButtonIndex:(NSInteger)index {
     //
-    // NOTE: Apple docs recommend this value should not be changed if the index was automatically generated within the initWithTitle.... initializer
+    // NOTE: Apple docs recommend this value should not be changed if the index was automatically generated within the initWithTitle....
+    // initializer
     //
-    if (index < [self numberOfButtons]) {
-        _destructiveButtonIndex = index;
+    if (_destructiveButtonIndex != s_InvalidButtonIndex) {
+        TraceVerbose(TAG, L"Destructive button index has already been set");
     }
+
+    XamlControls::XamlContentDialogSetDestructiveButtonIndex(_contentDialog, index);
+    _destructiveButtonIndex = index;
 }
 
 /**
  @Status Interoperable
 */
 - (NSInteger)firstOtherButtonIndex {
-    return _otherButtonIndex;
+    return _firstOtherButtonIndex;
 }
 
 /**

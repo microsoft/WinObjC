@@ -27,7 +27,7 @@
         _menuItems = @[
             @"Show Basic Action",
             @"Show OK-Cancelable Action",
-            @"Show Custom Action",
+            @"Show Dynamic Action",
             @"Show Custom Buttons With Cancelable Action",
             @"Show Multiple Buttons on Action Sheet",
             @"Show Action on Button"
@@ -80,7 +80,7 @@
     } else if (indexPath.row == 1) {
         [self showOkAction];
     } else if (indexPath.row == 2) {
-        [self showCustomAction];
+        [self showDynamicAction];
     } else if (indexPath.row == 3) {
         [self showCustomActionWithCancelButton];
     } else if (indexPath.row == 4) {
@@ -114,23 +114,34 @@
 
     NSLog(@"Total number of buttons: %ld", [actionSheet numberOfButtons]);
     NSLog(@"Title of button at index 0: %@", [actionSheet buttonTitleAtIndex:0]);
-    NSLog(@"Title of button at index 1: %@", [actionSheet buttonTitleAtIndex:1]);
 
     [actionSheet showInView:self.view];
 }
 
-- (void)showCustomAction {
-    UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:@"UIActionSheet Custom"
-                                                             delegate:self
-                                                    cancelButtonTitle:nil
-                                               destructiveButtonTitle:nil
-                                                    otherButtonTitles:@"Button 1", @"Button 2", nil];
+- (void)showDynamicAction {
+    UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:@"UIActionSheet Dynamic"
+                                                              delegate:self
+                                                     cancelButtonTitle:nil
+                                                destructiveButtonTitle:nil
+                                                     otherButtonTitles:@"Button 1", @"Cancel", @"Button 2", nil];
     actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
-    actionSheet.destructiveButtonIndex = 1;
+    actionSheet.destructiveButtonIndex = 0;
+
+    NSLog(@"First other button index (before): %ld", [actionSheet firstOtherButtonIndex]);
+
+    // Mark this button as the cancel button in the initial list
+    actionSheet.cancelButtonIndex = 1;
+
+    // Add another button and ensure that the cancel button is still in the same place
+    [actionSheet addButtonWithTitle:@"Button 3"];
+
+    NSLog(@"First other button index (after): %ld", [actionSheet firstOtherButtonIndex]);
 
     NSLog(@"Total number of buttons: %ld", [actionSheet numberOfButtons]);
     NSLog(@"Title of button at index 0: %@", [actionSheet buttonTitleAtIndex:0]);
     NSLog(@"Title of button at index 1: %@", [actionSheet buttonTitleAtIndex:1]);
+    NSLog(@"Title of button at index 2: %@", [actionSheet buttonTitleAtIndex:2]);
+    NSLog(@"Title of button at index 3: %@", [actionSheet buttonTitleAtIndex:3]);
 
     [actionSheet showInView:self.view];
 }
@@ -188,7 +199,6 @@
     }
 
     NSLog(@"Total number of buttons (after): %ld", [actionSheet numberOfButtons]);
-    NSLog(@"Title of button at index 3: %@", [actionSheet buttonTitleAtIndex:3]);
 
     [actionSheet showInView:self.view];
 }
@@ -223,6 +233,12 @@
 
 -(void)actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSLog(@"Triggered delegate clickedButtonAtIndex - button index: %ld", buttonIndex);
+
+    NSLog(@"Title of button at index %ld: %@", buttonIndex, [actionSheet buttonTitleAtIndex:buttonIndex]);
+    NSLog(@"IsCancelButtonIndex: %@", buttonIndex == [actionSheet cancelButtonIndex] ? @"YES" : @"NO");
+    NSLog(@"IsDestructiveButtonIndex: %@", buttonIndex == [actionSheet destructiveButtonIndex] ? @"YES" : @"NO");
+    NSLog(@"First other button index: %ld", [actionSheet firstOtherButtonIndex]);
+
     NSLog(@"UIActionSheet visible: %@", [actionSheet isVisible] ? @"YES" : @"NO");
 }
 

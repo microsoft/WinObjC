@@ -169,6 +169,16 @@
         <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       </ClCompile>
     </ItemGroup>
+    
+    <!-- UIKit.dll inherits type information from UIKit.Xaml.dll, but the build system doesn't know that, so we have to manually reference it -->
+    <ItemGroup>
+      <Reference Include="UIKit" Condition="'$(AppContainerApplication)' == 'true' And ('$(IslandwoodDRT)' == 'true' Or $(Link.Contains('UIKit.lib')))">
+        <HintPath>$(StarboardLibDirs)\UIKit.winmd</HintPath>
+        <CopyLocal>false</CopyLocal>
+        <Implementation>UIKit.Xaml.dll</Implementation>
+      </Reference>
+    </ItemGroup>
+    
   </Target>
 
   <Target

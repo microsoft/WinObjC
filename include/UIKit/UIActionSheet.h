@@ -48,11 +48,11 @@ typedef enum {
 UIKIT_EXPORT_CLASS
 @interface UIActionSheet : UIView
 
-- (id)initWithTitle:(NSString*)title
-                  delegate:(id<UIActionSheetDelegate>)delegate
-         cancelButtonTitle:(NSString*)cancelButtonTitle
-    destructiveButtonTitle:(NSString*)destructiveButtonTitle
-         otherButtonTitles:(NSString*)otherButtonTitles, ...;
+- (instancetype)initWithTitle:(NSString*)title
+                     delegate:(id<UIActionSheetDelegate>)delegate
+            cancelButtonTitle:(NSString*)cancelButtonTitle
+       destructiveButtonTitle:(NSString*)destructiveButtonTitle
+            otherButtonTitles:(NSString*)otherButtonTitles, ...;
 - (NSInteger)addButtonWithTitle:(NSString*)title;
 
 - (void)showInView:(UIView*)view;
