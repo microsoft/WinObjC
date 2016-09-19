@@ -21,6 +21,7 @@
 
 @class UIWindow;
 @class WXFrameworkElement;
+@class WUXIPointerRoutedEventArgs;
 
 class UIViewPrivateState : public LLTreeNode<UIViewPrivateState, UIView> {
 public:
@@ -106,6 +107,7 @@ public:
     UIViewPrivateState* priv;
 }
 
+- (UITouchPhase)_processPointerEvent:(WUXIPointerRoutedEventArgs*)pointerEventArgs forTouchPhase:(UITouchPhase)touchPhase;
 - (void)_initPriv;
 + (void)_setPageTransitionForView:(UIView*)view fromLeft:(BOOL)fromLeft;
 - (void)_applyConstraints;

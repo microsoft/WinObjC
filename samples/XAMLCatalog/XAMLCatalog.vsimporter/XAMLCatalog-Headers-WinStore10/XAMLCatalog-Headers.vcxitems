@@ -5,10 +5,12 @@
     <ItemsRootNamespace>XAMLCatalog_Headers</ItemsRootNamespace>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <Keyword>IslandwoodProj</Keyword>
-    <ItemsProjectGuid>{35D29AC3-11CB-4F5A-8648-B8933B783E0C}</ItemsProjectGuid>
-    <SharedGUID>{010CBE6D-6B8D-4F16-A7CC-E5A56E017DF0}</SharedGUID>
+    <ItemsProjectGuid>{D43483E7-5DDF-4C36-B1C1-232640B174DE}</ItemsProjectGuid>
+    <SharedGUID>{DDE3EAA2-E224-4A46-A850-D6E0D7FEF036}</SharedGUID>
   </PropertyGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\MiscellaneousViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UIButtonViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\AppDelegate.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\MenuTableViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\ProgrammaticViewController.h" />

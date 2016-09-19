@@ -50,7 +50,7 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
     RTObject* ret = [NSAllocateObject(cls, 0, 0) init];
     [ret setComObj:iface];
 
-    return[ret autorelease];
+    return [ret autorelease];
 }
 
 inline RTObject* _createBareRTObj(IInspectable* obj) {
@@ -65,11 +65,11 @@ inline I* _createRtProxy(IInspectable* iface) {
 // TODO: Remove when we move our controls over to actual XAML-build control implementations
 class WUXIPointerEventHandler_shim
     : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::WinRtClassicComMix>,
-    ABI::Windows::UI::Xaml::Input::IPointerEventHandler> {
-    void(^_delegate)(RTObject*, WUXIPointerRoutedEventArgs*);
+                                          ABI::Windows::UI::Xaml::Input::IPointerEventHandler> {
+    void (^_delegate)(RTObject*, WUXIPointerRoutedEventArgs*);
 
 public:
-    WUXIPointerEventHandler_shim(void(^del)(RTObject*, WUXIPointerRoutedEventArgs*)) : _delegate([del copy]) {
+    WUXIPointerEventHandler_shim(void (^del)(RTObject*, WUXIPointerRoutedEventArgs*)) : _delegate([del copy]) {
     }
     ~WUXIPointerEventHandler_shim() {
         [_delegate release];
@@ -107,5 +107,7 @@ void HookButtonPointerEvents(WXCButton* button,
 WXCContentDialog* CreateContentDialog();
 
 int XamlContentDialogPressedIndex(WXCContentDialog* contentDialog);
+
+void HookLayoutEvent(WXCButton* button, WUXIPointerEventHandler autoLayoutHook);
 
 } // namespace XamlControls

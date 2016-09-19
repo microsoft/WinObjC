@@ -56,4 +56,8 @@ int XamlContentDialogPressedIndex(WXCContentDialog* contentDialog) {
     return XamlContentDialogPressedIndex(inspectable);
 }
 
+void HookLayoutEvent(WXCButton* button, WUXIPointerEventHandler layoutHook) {
+    XamlHookLayoutEvent([button comObj], layoutHook ? Microsoft::WRL::Make<WUXIPointerEventHandler_shim>(layoutHook) : nullptr);
+}
+
 } // namespace XamlControls

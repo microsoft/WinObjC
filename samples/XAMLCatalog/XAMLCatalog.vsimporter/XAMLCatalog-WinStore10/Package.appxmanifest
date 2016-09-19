@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="bf8d23fa-d7c1-408c-a1ad-8505c8cd29f0"
+    Name="0b75acd0-df3e-4edb-bebc-847b0ca4bffb"
     Publisher="islandwood"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="bf8d23fa-d7c1-408c-a1ad-8505c8cd29f0" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="0b75acd0-df3e-4edb-bebc-847b0ca4bffb" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>XAMLCatalog</DisplayName>
-    <PublisherDisplayName>oliversa</PublisherDisplayName>
+    <PublisherDisplayName>amaga</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

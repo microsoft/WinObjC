@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="XAMLCatalog">
@@ -30,5 +30,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UIActivityIndicatorViewController.h">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\MiscellaneousViewController.h">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UIButtonViewController.h">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UISliderViewController.h" />
   </ItemGroup>
 </Project>

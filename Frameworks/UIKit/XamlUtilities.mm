@@ -16,6 +16,7 @@
 
 #import "XamlUtilities.h"
 #import "UIViewInternal+Xaml.h"
+#import "CACompositor.h"
 
 using namespace Microsoft::WRL;
 using namespace Windows::Foundation;
@@ -30,6 +31,20 @@ WUColor* ConvertUIColorToWUColor(UIColor* uiColor) {
 
     return
         [WUColorHelper fromArgb:(unsigned char)(a * 255) r:(unsigned char)(r * 255) g:(unsigned char)(g * 255) b:(unsigned char)(b * 255)];
+}
+
+WUXMImageBrush* ConvertUIImageToWUXMImageBrush(UIImage* image) {
+    if (!image) {
+        return nil;
+    }
+
+    CGImageRef cgImg = [image CGImage];
+    Microsoft::WRL::ComPtr<IInspectable> inspectableNode(GetCACompositor()->GetBitmapForCGImage(cgImg));
+    WUXMIBitmapSource* bitmapImageSource = CreateRtProxy([WUXMIBitmapSource class], inspectableNode.Get());
+    WUXMImageBrush* imageBrush = [WUXMImageBrush make];
+    imageBrush.imageSource = bitmapImageSource;
+
+    return imageBrush;
 }
 
 WXTextAlignment ConvertUITextAlignmentToWXTextAlignment(UITextAlignment alignment) {
@@ -157,9 +172,7 @@ NSString* NSStringFromPropertyValue(RTObject* rtPropertyValue) {
         HRESULT hr = inspPtr.As(&propVal);
         if (SUCCEEDED(hr)) {
             HSTRING str;
-            auto freeHSTRING = wil::ScopeExit([&]() {
-                WindowsDeleteString(str);
-            });
+            auto freeHSTRING = wil::ScopeExit([&]() { WindowsDeleteString(str); });
 
             hr = propVal->GetString(&str);
             if (SUCCEEDED(hr)) {
@@ -262,7 +275,7 @@ id CreateRtProxy(Class cls, IInspectable* iface) {
     }
 
     RTObject* ret = [NSAllocateObject(cls, 0, 0) init];
-    [ret setComObj : iface];
+    [ret setComObj:iface];
 
     return ret;
 }

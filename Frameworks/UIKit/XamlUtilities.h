@@ -35,6 +35,9 @@ NSString* const XamlAutoGenNamespace = @"IslandwoodAutoGenNamespace";
 // Convert UIColor to Color on windows
 WUColor* ConvertUIColorToWUColor(UIColor* uiColor);
 
+// Convert UIImage to WUXMImageBrush on windows
+WUXMImageBrush* ConvertUIImageToWUXMImageBrush(UIImage* image);
+
 // Convert UITextAlignment to TextAlignment on windows
 WXTextAlignment ConvertUITextAlignmentToWXTextAlignment(UITextAlignment alignment);
 

@@ -18,7 +18,10 @@
 
 #import "UIActionSheetViewController.h"
 #import "UIActivityIndicatorViewController.h"
+#import "UIButtonViewController.h"
 #import "UISliderViewController.h"
+
+#import "MiscellaneousViewController.h"
 
 @implementation ProgrammaticViewController
 
@@ -31,8 +34,14 @@
     // UIActivityIndicatorView
     [self addMenuItemViewController:[[UIActivityIndicatorViewController alloc] init] andTitle:@"UIActivityIndicatorView"];
 
+    // UIButton
+    [self addMenuItemViewController:[[UIButtonViewController alloc] init] andTitle:@"UIButton"];
+
     // UISlider
     [self addMenuItemViewController:[[UISliderViewController alloc] init] andTitle:@"UISlider"];
+
+    // MiscellaneousViewController
+    [self addMenuItemViewController:[[MiscellaneousViewController alloc] init] andTitle:@"MiscellaneousViews"];
 }
 
 - (void)didReceiveMemoryWarning {

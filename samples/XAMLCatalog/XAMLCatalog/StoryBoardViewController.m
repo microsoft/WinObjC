@@ -18,18 +18,6 @@
 
 @implementation StoryBoardViewController
 
-- (id)init {
-    self = [super init];
-
-    return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder*)aDecoder {
-    self = [super initWithCoder:aDecoder];
-
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -47,13 +35,13 @@
     UIViewController* activityIndicatorVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UIActivityIndicatorViewSB"];
     [self addMenuItemViewController:activityIndicatorVC andTitle:@"UIActivityIndicatorViewSB"];
 
+    // UIButton
+    UIViewController* buttonVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UIButtonSB"];
+    [self addMenuItemViewController:buttonVC andTitle:@"UIButtonSB"];
+
     // UISlider
     UIViewController* sliderVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UISliderSB"];
     [self addMenuItemViewController:sliderVC andTitle:@"UISliderSB"];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
 }
 
 @end

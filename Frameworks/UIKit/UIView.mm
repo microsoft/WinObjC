@@ -137,6 +137,7 @@ BOOL g_resetAllTrackingGestures = TRUE;
 
     UIView* views[128];
     int viewDepth = 0;
+
     if (g_resetAllTrackingGestures) {
         g_resetAllTrackingGestures = FALSE;
         //  Find gesture recognizers in the heirarchy, back-first
@@ -392,7 +393,9 @@ static std::string _printViewHeirarchy(UIView* leafView) {
     }
 
     // Update the touch info for this pointer event
-    [touchPoint.touch _updateWithPoint:pointerPoint forPhase:touchPhase];
+    // Also, adding pointerEventArgs to the specific Touch so that it can be used in UIButton's touchesBegan:withEvent method
+    // to mark the event as unhandled
+    [touchPoint.touch _updateWithPoint:pointerPoint routedEventArgs:pointerEventArgs forPhase:touchPhase];
 
     // Preprocess pointer event
     SEL touchEventName;
@@ -3491,6 +3494,9 @@ static float doRound(float f) {
 */
 - (void)invalidateIntrinsicContentSize {
     [self autoLayoutInvalidateContentSize];
+
+    // The parent is always responsible for autolaying out its children
+    [self.superview setNeedsLayout];
 }
 
 /**

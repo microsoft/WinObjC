@@ -8,56 +8,79 @@
     mc:Ignorable="d">
     <Button.Template>
         <ControlTemplate TargetType="Button" x:Name="UIKitButtonControlTemplate">
-            <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+            <Grid x:Name="RootGrid" Background="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NormalBackground}">
                 <VisualStateManager.VisualStateGroups>
                     <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="Normal">
-                            <Storyboard>
-                                <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
-                            </Storyboard>
-                        </VisualState>
-                        <!-- TODO: Add new property setters for UIKit states (pressed background, pressed text, etc.).-->
+                        <VisualState x:Name="Normal"/>
                         <VisualState x:Name="PointerOver">
                             <Storyboard>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}"/>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Source" Storyboard.TargetName="buttonImage">
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ButtonImageSourceNormal}"/>
                                 </ObjectAnimationUsingKeyFrames>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}"/>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="buttonText">
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NormalForeground}"/>
+                                </ObjectAnimationUsingKeyFrames>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Text" Storyboard.TargetName="buttonText">
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NormalText}"/>
+                                </ObjectAnimationUsingKeyFrames>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NormalBackground}"/>
                                 </ObjectAnimationUsingKeyFrames>
                                 <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
                             </Storyboard>
                         </VisualState>
                         <VisualState x:Name="Pressed">
                             <Storyboard>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Source" Storyboard.TargetName="buttonImage">
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ButtonImageSourcePressed}"/>
+                                </ObjectAnimationUsingKeyFrames>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="buttonText">
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=PressedForeground}"/>
+                                </ObjectAnimationUsingKeyFrames>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Text" Storyboard.TargetName="buttonText">
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=PressedText}"/>
+                                </ObjectAnimationUsingKeyFrames>
                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
-                                </ObjectAnimationUsingKeyFrames>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}"/>
-                                </ObjectAnimationUsingKeyFrames>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}"/>
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=PressedBackground}"/>
                                 </ObjectAnimationUsingKeyFrames>
                                 <PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
                             </Storyboard>
                         </VisualState>
                         <VisualState x:Name="Disabled">
                             <Storyboard>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Source" Storyboard.TargetName="buttonImage">
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ButtonImageSourceDisabled}"/>
+                                </ObjectAnimationUsingKeyFrames>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Text" Storyboard.TargetName="buttonText">
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DisabledText}"/>
+                                </ObjectAnimationUsingKeyFrames>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="buttonText">
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DisabledForeground}"/>
+                                </ObjectAnimationUsingKeyFrames>
                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
-                                </ObjectAnimationUsingKeyFrames>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
-                                </ObjectAnimationUsingKeyFrames>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}"/>
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DisabledBackground}"/>
                                 </ObjectAnimationUsingKeyFrames>
                             </Storyboard>
                         </VisualState>
                     </VisualStateGroup>
                 </VisualStateManager.VisualStateGroups>
-                <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                <Grid x:Name="contentGrid" MaxWidth="{TemplateBinding Width}" MaxHeight="{TemplateBinding Height}" 
+                      FlowDirection="LeftToRight" VerticalAlignment="Center" 
+                      Width="Auto" Height="Auto"
+                      HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image x:Name="buttonImage" Stretch="Uniform" 
+                           Width="Auto" Height="Auto" MaxWidth="{TemplateBinding Width}" MaxHeight="{TemplateBinding Height}"
+                           IsHitTestVisible="False" Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ButtonImageSourceNormal}"/>
+                    
+                    <TextBlock x:Name="buttonText" MaxLines="1" Grid.Column="1" TextTrimming="CharacterEllipsis" IsHitTestVisible="False"
+                               Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NormalText}"
+                               HorizontalAlignment="Center" Foreground="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NormalForeground}"
+                               VerticalAlignment="Center"/>
+                </Grid>
             </Grid>
         </ControlTemplate>
     </Button.Template>

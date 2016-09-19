@@ -20,6 +20,10 @@
 #include "ErrorHandling.h"
 #include "UIKit.Xaml.Export.h"
 
+// The values in this enum are copied from UIControl.h, use this enum for custom controls in C++ to compare state information
+// passed from UIKit to XAML.
+enum ControlStates { ControlStateNormal = 0, ControlStateHighlighted = 1 << 0, ControlStateDisabled = 1 << 1 };
+
 ////////////////////////////////////////////////////////////////////////////////////
 // Button.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
@@ -34,6 +38,38 @@ UIKIT_XAML_EXPORT void XamlHookButtonPointerEvents(const Microsoft::WRL::ComPtr<
                                                    const Microsoft::WRL::ComPtr<IInspectable>& pointerReleasedHook,
                                                    const Microsoft::WRL::ComPtr<IInspectable>& pointerCanceledHook,
                                                    const Microsoft::WRL::ComPtr<IInspectable>& pointerCaptureLostHook);
+
+// Hooks other events on a UIKit::Button passed in as IInspectable
+UIKIT_XAML_EXPORT void XamlHookLayoutEvent(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
+                                           const Microsoft::WRL::ComPtr<IInspectable>& layoutHook);
+
+// We will call these methods from objC to c++, eg from setBackgroundImage:forState we call setBackgroundImage
+// to set the background on Xaml Button
+UIKIT_XAML_EXPORT void XamlSetBackgroundImage(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
+                                              const Microsoft::WRL::ComPtr<IInspectable>& inspectableBackground,
+                                              int state,
+                                              float width,
+                                              float height);
+
+UIKIT_XAML_EXPORT void XamlSetTitleForState(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
+                                            const Microsoft::WRL::ComPtr<IInspectable>& inspectableText,
+                                            int state);
+
+UIKIT_XAML_EXPORT void XamlSetTitleColorForState(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
+                                                 const Microsoft::WRL::ComPtr<IInspectable>& inspectableTitleColor,
+                                                 int state);
+
+UIKIT_XAML_EXPORT void XamlSetButtonImage(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
+                                          const Microsoft::WRL::ComPtr<IInspectable>& inspectableImage,
+                                          int state,
+                                          float width,
+                                          float height);
+
+UIKIT_XAML_EXPORT SIZE XamlGetIntrinsicContentSizeFromXaml(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton);
+
+UIKIT_XAML_EXPORT void XamlRemovePointerEvents(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton);
+
+UIKIT_XAML_EXPORT void XamlRemoveLayoutEvent(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // ProgressRing.xaml.cpp
@@ -79,7 +115,7 @@ UIKIT_XAML_EXPORT int XamlContentDialogPressedIndex(const Microsoft::WRL::ComPtr
 #ifndef __OBJC__
 
 // Converts a Platform::Object^ to a ComPtr<IInspectable>; throws on failure.
-inline Microsoft::WRL::ComPtr<IInspectable> InspectableFromObject(Platform::Object^ object) {
+inline Microsoft::WRL::ComPtr<IInspectable> InspectableFromObject(Platform::Object ^ object) {
     Microsoft::WRL::ComPtr<IUnknown> unknown(reinterpret_cast<IUnknown*>(object));
     Microsoft::WRL::ComPtr<IInspectable> inspectable;
     THROW_IF_FAILED(unknown.As(&inspectable));
@@ -96,7 +132,7 @@ Microsoft::WRL::ComPtr<T> InspectableToType(const Microsoft::WRL::ComPtr<IInspec
 }
 
 template <typename T>
-Microsoft::WRL::ComPtr<T> ObjectToType(Platform::Object^ object) {
+Microsoft::WRL::ComPtr<T> ObjectToType(Platform::Object ^ object) {
     return InspectableToType<T>(InspectableFromObject(object));
 }
 
