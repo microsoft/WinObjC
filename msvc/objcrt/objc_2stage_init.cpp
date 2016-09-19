@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#pragma comment(lib, "libobjc2")
+
 // Legacy Loading
 // --------------
 // Each TU containing an Objective-C class emits a user init call to __objc_exec_module with a module.

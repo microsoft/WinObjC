@@ -47,8 +47,6 @@
     <StarboardDefaultLibs Condition="'$(StarboardIncludeDefaultLibs)' == 'true'">Accelerate.lib;Accounts.lib;AddressBook.lib;AddressBookUI.lib;AdSupport.lib;AssetsLibrary.lib;AudioToolbox.lib;AudioUnit.lib;AVFoundation.lib;AVKit.lib;CFNetwork.lib;CloudKit.lib;Contacts.lib;CoreAudio.lib;CoreAudioKit.lib;CoreBluetooth.lib;CoreData.lib;CoreFoundation.lib;CoreGraphics.lib;CoreImage.lib;CoreLocation.lib;CoreMedia.lib;CoreMIDI.lib;CoreMotion.lib;CoreTelephony.lib;CoreText.lib;CoreVideo.lib;EventKit.lib;EventKitUI.lib;Foundation.lib;GameController.lib;GameKit.lib;GameplayKit.lib;GLKit.lib;HealthKit.lib;HomeKit.lib;iAd.lib;ImageIO.lib;LocalAuthentication.lib;MapKit.lib;MediaAccessibility.lib;MediaPlayer.lib;MessageUI.lib;Metal.lib;MobileCoreServices.lib;OpenAL.lib;OpenGLES.lib;QuartzCore.lib;QuickLook.lib;Security.lib;Social.lib;Starboard.lib;StoreKit.lib;SafariServices.lib;SystemConfiguration.lib;Twitter.lib;UIKit.lib;WebKit.lib;libdispatch.lib;objcuwp.lib;RTObjCInterop.lib</StarboardDefaultLibs>
     <StarboardLinkObjCRuntime Condition="'$(StarboardLinkObjCRuntime)' == ''">true</StarboardLinkObjCRuntime>
     <StarboardObjCRuntimeLib>libobjc2.lib</StarboardObjCRuntimeLib>
-    <StarboardObjectiveCPinningSymbolName Condition="'$(Platform)' != 'ARM'">____pin_objc_init</StarboardObjectiveCPinningSymbolName>
-    <StarboardObjectiveCPinningSymbolName Condition="'$(Platform)' == 'ARM'">___pin_objc_init</StarboardObjectiveCPinningSymbolName>
     <IslandwoodDRT Condition="'$(IslandwoodDRT)' == ''">true</IslandwoodDRT>
     <StarboardLinkWholeArchive Condition="'$(StarboardLinkWholeArchive)' == ''">false</StarboardLinkWholeArchive>
     <CopyStarboardLibraries Condition="'$(ConfigurationType)' == 'Application'">true</CopyStarboardLibraries>
