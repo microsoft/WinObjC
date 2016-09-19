@@ -134,4 +134,6 @@ public:
     virtual CGSize CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, float x, float y);
     virtual bool CGContextIsPointInPath(bool eoFill, float x, float y);
     virtual CGPathRef CGContextCopyPath(void);
+
+    virtual void CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun);
 };

@@ -208,13 +208,13 @@ CTFontRef CTFontCreateWithNameAndOptions(CFStringRef name, CGFloat size, const C
 
 /**
  @Status Stub
- @Notes Always returns Helvetica 12-point font
+ @Notes Always returns Segoe UI 12-point font
 */
 CTFontRef CTFontCreateWithFontDescriptor(CTFontDescriptorRef descriptor, CGFloat size, const CGAffineTransform* matrix) {
     UNIMPLEMENTED();
     if (size == 0.0f)
         size = 12.0f;
-    id ret = [[_LazyUIFont fontWithName:@"Helvetica" size:size] retain];
+    id ret = [[_LazyUIFont fontWithName:@"Segoe UI" size:size] retain];
     return (CTFontRef)ret;
 }
 
@@ -611,38 +611,12 @@ CGRect CTFontGetBoundingRectsForGlyphs(
 }
 
 /**
- @Status Caveat
+ @Status Stub
  @Notes Orientation parameter is not supported
 */
 double CTFontGetAdvancesForGlyphs(CTFontRef font, CTFontOrientation orientation, const CGGlyph glyphs[], CGSize* advances, CFIndex count) {
-    DWORD i;
-    double total = 0.0f;
-
-    _CGFontLock();
-    //  Get the font
-    FT_Face face = (FT_Face)[(UIFont*)font _sizingFontHandle];
-    CGFontSetFTFontSize((CGFontRef)font, face, [(UIFont*)font pointSize]);
-
-    FT_Error error;
-    FT_GlyphSlot slot = face->glyph;
-
-    //  Lookup each glyph
-    for (i = 0; i < count; i++) {
-        error = FT_Load_Glyph(face, glyphs[i], FT_LOAD_NO_HINTING);
-        FT_GlyphSlot slot = face->glyph;
-
-        CGSize size = { 0, 0 };
-        if (error == 0) {
-            size.width = ((float)(slot->advance.x)) / 64.0f;
-        }
-
-        if (advances)
-            advances[i] = size;
-        total += size.width;
-    }
-    _CGFontUnlock();
-
-    return total;
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**

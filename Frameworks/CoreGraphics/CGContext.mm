@@ -1243,3 +1243,7 @@ CGImageRef CGJPEGImageCreateFromData(NSData* data) {
 bool CGContextIsPointInPath(CGContextRef c, bool eoFill, float x, float y) {
     return c->Backing()->CGContextIsPointInPath(eoFill, x, y);
 }
+
+void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun) {
+    ctx->Backing()->CGContextDrawGlyphRun(glyphRun);
+}

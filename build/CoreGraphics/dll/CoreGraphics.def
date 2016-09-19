@@ -217,6 +217,7 @@ LIBRARY CoreGraphics
         CGContextReleaseLock
         CGContextSetDirty
         CGContextGetBacking
+        CGContextDrawGlyphRun
         EbrCenterTextInRectVertically
 
         ; CGDataConsumer.mm

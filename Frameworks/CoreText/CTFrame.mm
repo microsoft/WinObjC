@@ -17,7 +17,7 @@
 #import <CoreText/CTFrame.h>
 #import <StubReturn.h>
 
-#include "CoreTextInternal.h"
+#import "CoreTextInternal.h"
 
 const CFStringRef kCTFrameProgressionAttributeName = static_cast<CFStringRef>(@"kCTFrameProgressionAttributeName");
 const CFStringRef kCTFramePathFillRuleAttributeName = static_cast<CFStringRef>(@"kCTFramePathFillRuleAttributeName");
@@ -110,15 +110,13 @@ void CTFrameGetLineOrigins(CTFrameRef frame, CFRange range, CGPoint origins[]) {
 */
 void CTFrameDraw(CTFrameRef frame, CGContextRef ctx) {
     uint32_t count = [((_CTFrame*)frame)->_lines count];
-    CGPoint curTextPos;
-
-    curTextPos = CGContextGetTextPosition(ctx);
+    CGPoint curTextPos = CGContextGetTextPosition(ctx);
 
     for (uint32_t i = 0; i < count; i++) {
-        _CTLine* curLine = [((_CTFrame*)frame)->_lines objectAtIndex:i];
+        _CTLine* curLine = [static_cast<_CTFrame*>(frame)->_lines objectAtIndex:i];
         CGPoint newPos = curTextPos + curLine->_lineOrigin;
         CGContextSetTextPosition(ctx, newPos.x, newPos.y);
-        CTLineDraw((CTLineRef)curLine, ctx);
+        _CTLineDraw(static_cast<CTLineRef>(curLine), ctx, false);
     }
 }
 
