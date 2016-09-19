@@ -1168,7 +1168,6 @@ LIBRARY UIKit
 
         ; Extra stuff for WinObjC:
         UIShutdown
-        UIRequestTransactionProcessing
         UIOrientationFromString
         UIApplicationDidChangeDisplayModeNofication
         UIViewControllerFirePageEvent

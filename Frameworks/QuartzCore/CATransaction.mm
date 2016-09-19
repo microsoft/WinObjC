@@ -196,6 +196,7 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
                                           [layer _priv]->_presentationNode,
                                           [propertyName UTF8String],
                                           newValue);
+    [layer _displayChanged];
 }
 
 + (std::shared_ptr<DisplayTransaction>)_currentDisplayTransaction {
@@ -250,8 +251,10 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
     GetCACompositor()->removeNode([self _currentTransaction]->_transactionQueue, [layer _priv]->_presentationNode);
 }
 
-+ (void)_addAnimationToLayer:(CALayer*)layer animation:(CAAnimation*)anim forKey:(NSString*)key;
-{ GetCACompositor()->addAnimation([self _currentTransaction]->_transactionQueue, layer, anim, key); }
++ (void)_addAnimationToLayer:(CALayer*)layer animation:(CAAnimation*)anim forKey:(NSString*)key {
+    GetCACompositor()->addAnimation([self _currentTransaction]->_transactionQueue, layer, anim, key);
+    [layer _displayChanged];
+}
 
 + (void)_removeAnimationFromLayer:(CALayer*)layer animation:(DisplayAnimation*)anim {
     UNIMPLEMENTED_WITH_MSG("_removeAnimationFromLayer not currently supported.");

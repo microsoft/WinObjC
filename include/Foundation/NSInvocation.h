@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 // Copyright (c) 2006-2007 Christopher J. W. Lloyd
 //
 // This code is licensed under the MIT License (MIT).
@@ -21,15 +21,8 @@
 
 @class NSMethodSignature;
 
-#define MAX_ARGS 16
-
 FOUNDATION_EXPORT_CLASS
-@interface NSInvocation : NSObject {
-    NSMethodSignature* _methodSignature;
-    void* returnValue;
-    void* args[MAX_ARGS];
-    BOOL retainArguments;
-}
+@interface NSInvocation : NSObject
 
 + (NSInvocation*)invocationWithMethodSignature:(NSMethodSignature*)signature;
 @property SEL selector;

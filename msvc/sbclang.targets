@@ -463,9 +463,12 @@
   -->
   <Target Name="ComputeStarboardReferencesRequiringObjectiveC">
     <!-- Not all references are guaranteed to contain the target, so filter out the ones that don't -->
+    <!-- NOTE: We must explicitly pass in any properties needed to load referenced projects.
+         Msbuild mandates that any properties needed by the task must be explicitly passed -->
     <ProjectsWithTarget
       Projects="@(_MSBuildProjectReferenceExistent)"
-      TargetName="_ComputeStarboardReferencedProjectRequiresObjectiveC">
+      TargetName="_ComputeStarboardReferencedProjectRequiresObjectiveC"
+      WinobjcSDKRoot="$(WINOBJC_SDK_ROOT)">
       <Output TaskParameter="FilteredProjects" ItemName="ProjectReferencesFiltered" />
     </ProjectsWithTarget>
 

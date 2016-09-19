@@ -93,6 +93,9 @@ WINRT_EXPORT
 + (WSTThreadPoolTimer*)createTimerWithCompletion:(WSTTimerElapsedHandler)handler
                                            delay:(WFTimeSpan*)delay
                                        destroyed:(WSTTimerDestroyedHandler)destroyed;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
+#endif
 @property (readonly) WFTimeSpan* delay;
 @property (readonly) WFTimeSpan* period;
 - (void)cancel;

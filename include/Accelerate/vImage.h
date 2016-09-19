@@ -38,21 +38,21 @@ typedef float CGFloat;
 #import <CoreImage/CIContext.h>
 #endif
 
-
-
-
+#if !defined(__clang__)
 #if defined(_M_IX86) || defined(_M_X64)
 #define VIMAGE_SSE 1
 static const uint32_t c_vImageBlockSizeBytes = 16;
-#include <xmmintrin.h>
 #include <emmintrin.h>
+#include <xmmintrin.h>
 #else
 #define VIMAGE_SSE 0
 static const uint32_t c_vImageBlockSizeBytes = 1;
 #endif
 
-static const bool c_vImagePadAllocs = (VIMAGE_SSE == 1);
-static const bool c_vImageUseSse2 = c_vImagePadAllocs && (VIMAGE_SSE == 1);
+static bool c_vImagePadAllocs = (VIMAGE_SSE == 1);
+static bool c_vImageUseSse2 = c_vImagePadAllocs && (VIMAGE_SSE == 1);
+
+#endif
 
 enum {
     kvImageNoError = 0,
@@ -146,7 +146,7 @@ ACCELERATE_EXPORT vImage_Error vImageConvert_ARGB8888toPlanar8(const vImage_Buff
                                                                vImage_Flags flags);
 
 // vImageConvert_BGRA8888toPlanar8 and vImageConvert_RGBA8888toPlanar8 have nearly identical functionality to
-// vImageConvert_ARGB8888toPlanar8. The only difference is that the client swizzles the input so they can be 
+// vImageConvert_ARGB8888toPlanar8. The only difference is that the client swizzles the input so they can be
 // safely aliased using _vImageFunctionInterfaceCvt8888ToPlanar8
 typedef vImage_Error (*_vImageFunctionInterfaceCvt8888ToPlanar8)(
     const vImage_Buffer*, const vImage_Buffer*, const vImage_Buffer*, const vImage_Buffer*, const vImage_Buffer*, vImage_Flags);
@@ -202,9 +202,9 @@ static inline float _vImageMaxFloat(const float val1, const float val2) {
 
 static inline unsigned char _vImageDivideAndSaturateUint8(const unsigned int val1, const unsigned int val2) {
     if (val2 == 0) {
-        return 255;
+        return 0;
     } else {
-        return (unsigned char)(_vImageMinFloat(((1.0f * val1) / val2 * 255.0f), 255.0f));
+        return ((((val1 > val2) ? val2 : val1) * 255 + (val2 >> 1)) / val2);
     }
 }
 
@@ -228,6 +228,8 @@ static inline bool _vImageBitsPerComponentIsValidFromCgImage(const uint32_t bits
 static inline bool _vImageBitsPerComponentIsValidToCGImage(const uint32_t bitsPerComp) {
     return (bitsPerComp == 5 || bitsPerComp == 8 || bitsPerComp == 16 || bitsPerComp == 32);
 }
+
+ACCELERATE_EXPORT void _vImageSetSimdOptmizationsState(const bool newState);
 
 #if defined(__clang__)
 ACCELERATE_EXPORT vImage_Error vImageBuffer_InitWithCGImage(
