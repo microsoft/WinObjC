@@ -19,6 +19,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <MASM Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\_NSInvocation.x86.asm">
+      <ExcludedFromBuild Condition="'$(Platform)'!='Win32'">true</ExcludedFromBuild>
+      <UseSafeExceptionHandlers>true</UseSafeExceptionHandlers>
+    </MASM>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\_NSInvocation.x86.mm">
+      <ExcludedFromBuild Condition="'$(Platform)'!='Win32'">true</ExcludedFromBuild>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\Foundation\_NSInvocation.arm.mm">
+      <ExcludedFromBuild Condition="'$(Platform)'!='ARM'">true</ExcludedFromBuild>
+    </ClangCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\_NSInvocation.arm.asm">
+      <ARMASM>true</ARMASM>
+      <PreprocessToFile>true</PreprocessToFile>
+      <ExcludedFromBuild Condition="'$(Platform)'!='ARM'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\CFBridgeBase.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\CFHelpers.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSArray.mm" />
@@ -220,8 +235,8 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\lex.yy.m">
       <AdditionalOptions>-Wno-incompatible-pointer-types-discards-qualifiers -Wno-deprecated-declarations %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\rules.tab.m" >
-        <AdditionalOptions>-Wno-implicit-function-declaration %(AdditionalOptions)</AdditionalOptions>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\rules.tab.m">
+      <AdditionalOptions>-Wno-implicit-function-declaration %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\MainDispatcher.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCFString.mm" />
@@ -237,6 +252,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\_NSKeyValueCodingAggregateFunctions.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCFTimeZone.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSString+HSTRING.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\_NSUndoBasicAction.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\_NSUndoGroup.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\_NSUndoManagerStack.mm" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCFArray.h" />
@@ -283,6 +301,7 @@
   </PropertyGroup>
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
   </ImportGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -342,5 +361,17 @@
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
   </ImportGroup>
+  <Target Condition="'$(Platform)'=='ARM'" Name="ComputeARMASMInput" AfterTargets="ClCompile">
+    <ItemGroup>
+      <ARMASM Include="@(ClCompile->WithMetadataValue('ARMASM', 'true')->'$(IntDir)%(Filename).i')"  Condition="'%(ClCompile.ExcludedFromBuild)' != 'true'">
+        <ObjectFileName>$(IntDir)\%(Filename).obj</ObjectFileName>
+      </ARMASM>
+    </ItemGroup>
+  </Target>
+  <Target Condition="'$(Platform)'=='ARM'" Name="ARMASM" AfterTargets="ClCompile" Outputs="%(ARMASM.ObjectFileName)">
+    <Message Condition="'@(ARMASM)' != '' and '%(ARMASM.ExcludedFromBuild)' != 'true'" Importance="High" Text="Assembling %(ARMASM.Identity)..."/>
+    <Exec Condition="'@(ARMASM)' != '' and '%(ARMASM.ExcludedFromBuild)' != 'true'" Command="armasm.exe -16 -g &quot;%(ARMASM.FullPath)&quot; -o &quot;%(ARMASM.ObjectFileName)&quot;" />
+  </Target>
 </Project>

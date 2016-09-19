@@ -18,6 +18,12 @@
 #include "gtest-api.h"
 #import <Foundation/Foundation.h>
 #import <Accelerate/Accelerate.h>
+#import <CoreGraphics/CGImage.h>
+#import <CoreGraphics/CoreGraphics.h>
+#import <UIKit/UIKit.h>
+#import "Starboard/SmartTypes.h"
+#import "CALayerInternal.h"
+#import "../UIKit/NullCompositor.h"
 
 vImage_Buffer src, dest;
 vImage_Error Error;
@@ -410,27 +416,27 @@ TEST(Accelerate, MatrixMultiply) {
     }
 }
 
-static inline void vImageBufferFree(vImage_Buffer* buffer) {
+static inline void vImageTestBufferFree(vImage_Buffer* buffer) {
     if (buffer->data) {
         free(buffer->data);
         buffer->data = nullptr;
     }
 }
 
-static void vImageFillBufferWithRandomData8(vImage_Buffer* buffer) {
-    unsigned char* rowPtr = reinterpret_cast<unsigned char*>(buffer->data);
+static void vImageTestFillBufferWithRandomData8(vImage_Buffer* buffer) {
+    uint8_t* rowPtr = reinterpret_cast<uint8_t*>(buffer->data);
 
     for (uint32_t y = 0; y < buffer->height; y++) {
         for (uint32_t x = 0; x < buffer->width; x++) {
-            rowPtr[x] = (unsigned char)((double)rand() / (RAND_MAX + 1) * (256));
+            rowPtr[x] = (uint8_t)((double)rand() / (RAND_MAX + 1) * (256));
         }
 
         rowPtr += buffer->rowBytes;
     }
 }
 
-static void vImageFillBufferWithRandomDataF(vImage_Buffer* buffer) {
-    unsigned char* rowPtr = reinterpret_cast<unsigned char*>(buffer->data);
+static void vImageTestFillBufferWithRandomDataF(vImage_Buffer* buffer) {
+    uint8_t* rowPtr = reinterpret_cast<uint8_t*>(buffer->data);
     float* rowPtrFloats;
 
     for (uint32_t y = 0; y < buffer->height; y++) {
@@ -442,6 +448,230 @@ static void vImageFillBufferWithRandomDataF(vImage_Buffer* buffer) {
 
         rowPtr += buffer->rowBytes;
     }
+}
+
+static bool vImageTestCompare8888Buffers(const vImage_Buffer* bufferA, const vImage_Buffer* bufferB) {
+    const uint32_t width = static_cast<uint32_t>(bufferA->width);
+    const uint32_t height = static_cast<uint32_t>(bufferA->height);
+    uint8_t* rowPtrA = reinterpret_cast<uint8_t*>(bufferA->data);
+    uint8_t* rowPtrB = reinterpret_cast<uint8_t*>(bufferB->data);
+    uint32_t* rowPtrAUInts;
+    uint32_t* rowPtrBUInts;
+
+    bool buffersEqual = true;
+
+    for (uint32_t y = 0; y < height; y++) {
+        rowPtrAUInts = reinterpret_cast<uint32_t*>(rowPtrA);
+        rowPtrBUInts = reinterpret_cast<uint32_t*>(rowPtrB);
+
+        for (uint32_t x = 0; x < width; x++) {
+            if (rowPtrAUInts[x] != rowPtrBUInts[x]) {
+                LOG_INFO("vImageTestCompare8888Buffers: Buffer mismatch at <%d, %d>", x, y);
+                buffersEqual = false;
+                break;
+            }
+        }
+
+        if (buffersEqual == false) {
+            break;
+        }
+
+        rowPtrA += bufferA->rowBytes;
+        rowPtrB += bufferB->rowBytes;
+    }
+
+    return buffersEqual;
+}
+
+static void vImageTestGetFormatFromCgImage(CGImageRef imageRef, vImage_CGImageFormat* format) {
+    ASSERT_TRUE(format != nullptr);
+    ASSERT_TRUE(imageRef != nullptr);
+
+    format->bitmapInfo = CGImageGetBitmapInfo(imageRef);
+    format->colorSpace = CGImageGetColorSpace(imageRef);
+    format->bitsPerComponent = (uint32_t)CGImageGetBitsPerComponent(imageRef);
+
+    const uint32_t alphaInfo = format->bitmapInfo & kCGBitmapAlphaInfoMask;
+    const uint32_t byteOrder = format->bitmapInfo & kCGBitmapByteOrderMask;
+
+    const uint32_t numColorComponents = (uint32_t)CGColorSpaceGetNumberOfComponents(format->colorSpace);
+    const uint32_t numAlphaOrPaddingComponents = (kCGImageAlphaNone != alphaInfo) ? 1 : 0;
+
+    format->bitsPerPixel = format->bitsPerComponent * (numColorComponents + numAlphaOrPaddingComponents);
+    format->decode = NULL;
+    format->version = 0;
+    format->renderingIntent = (CGColorRenderingIntent)0;
+
+    ASSERT_TRUE(format->bitsPerComponent == 8);
+    ASSERT_TRUE(CGColorSpaceGetModel(format->colorSpace) == kCGColorSpaceModelRGB);
+    ASSERT_TRUE((numColorComponents == 3) && (numAlphaOrPaddingComponents == 1));
+    ASSERT_TRUE((byteOrder != kCGBitmapByteOrder16Little) && (byteOrder != kCGBitmapByteOrder16Big));
+}
+
+static void vImageTestSetAlphaAndUnpremultiply(CGImageRef imageRef, vImage_Buffer* imageBufferUnPremultiplied8888, uint8_t alphaVal) {
+    vImage_CGImageFormat format;
+
+    vImageTestGetFormatFromCgImage(imageRef, &format);
+
+    int indexR, indexG, indexB, indexA;
+    const uint32_t alphaInfo = format.bitmapInfo & kCGBitmapAlphaInfoMask;
+    const uint32_t byteOrder = format.bitmapInfo & kCGBitmapByteOrderMask;
+
+    // Use the byteorder and alpha info of the input image to get the byte index of each component
+    // Note: vImage uses little endian notation for byte order as opposed to CoreGraphics which uses big endian or networkByte order
+    // notation
+    if (byteOrder == kCGBitmapByteOrder32Big) {
+        // XBGR_le or BGRX_le
+        if (alphaInfo == kCGImageAlphaLast || alphaInfo == kCGImageAlphaNoneSkipLast) {
+            indexA = 0;
+            indexB = 1;
+            indexG = 2;
+            indexR = 3;
+        } else {
+            indexB = 0;
+            indexG = 1;
+            indexR = 2;
+            indexA = 3;
+        }
+    } else {
+        // RGBX_le or XRGB_le
+        if (alphaInfo == kCGImageAlphaLast || alphaInfo == kCGImageAlphaNoneSkipLast) {
+            indexR = 0;
+            indexG = 1;
+            indexB = 2;
+            indexA = 3;
+        } else {
+            indexA = 0;
+            indexR = 1;
+            indexG = 2;
+            indexB = 3;
+        }
+    }
+
+    vImage_Error result;
+    vImage_Buffer imageBuffer8888;
+    result = vImageBuffer_InitWithCGImage(&imageBuffer8888, &format, nil, imageRef, 0);
+
+    ASSERT_TRUE(result == kvImageNoError);
+
+    // Create plane buffers
+    vImage_Buffer planeBuffer[4];
+
+    result = vImageBuffer_Init(&planeBuffer[0], imageBuffer8888.height, imageBuffer8888.width, format.bitsPerComponent, 0);
+    ASSERT_TRUE(result == kvImageNoError);
+    result = vImageBuffer_Init(&planeBuffer[1], planeBuffer[0].height, planeBuffer[0].width, format.bitsPerComponent, 0);
+    ASSERT_TRUE(result == kvImageNoError);
+    result = vImageBuffer_Init(&planeBuffer[2], planeBuffer[0].height, planeBuffer[0].width, format.bitsPerComponent, 0);
+    ASSERT_TRUE(result == kvImageNoError);
+    result = vImageBuffer_Init(&planeBuffer[3], planeBuffer[0].height, planeBuffer[0].width, format.bitsPerComponent, 0);
+    ASSERT_TRUE(result == kvImageNoError);
+
+    // Note: Although the function calls for ARGB input, a different input format can be used if the output planes are swizzled
+    if (indexA == 0) {
+        if (indexR == 1) {
+            // XRGB or ARGB
+            result = vImageConvert_ARGB8888toPlanar8(&imageBuffer8888,
+                                                     &planeBuffer[indexA],
+                                                     &planeBuffer[indexR],
+                                                     &planeBuffer[indexG],
+                                                     &planeBuffer[indexB],
+                                                     0);
+        } else {
+            // XBGR or ABGR
+            result = vImageConvert_ARGB8888toPlanar8(&imageBuffer8888,
+                                                     &planeBuffer[indexA],
+                                                     &planeBuffer[indexB],
+                                                     &planeBuffer[indexG],
+                                                     &planeBuffer[indexR],
+                                                     0);
+        }
+    } else if (indexA == 3) {
+        if (indexR == 0) {
+            // RGBX or RGBA
+            result = vImageConvert_ARGB8888toPlanar8(&imageBuffer8888,
+                                                     &planeBuffer[indexR],
+                                                     &planeBuffer[indexG],
+                                                     &planeBuffer[indexB],
+                                                     &planeBuffer[indexA],
+                                                     0);
+        } else {
+            // BGRX or BGRA
+            result = vImageConvert_ARGB8888toPlanar8(&imageBuffer8888,
+                                                     &planeBuffer[indexB],
+                                                     &planeBuffer[indexG],
+                                                     &planeBuffer[indexR],
+                                                     &planeBuffer[indexA],
+                                                     0);
+        }
+    }
+
+    ASSERT_TRUE(result == kvImageNoError);
+
+    const uint32_t height = (uint32_t)imageBuffer8888.height;
+    const uint32_t rowPitch = (uint32_t)planeBuffer[indexA].rowBytes;
+    uint8_t* colorData = (uint8_t*)(planeBuffer[indexA].data);
+
+    // Set alpha value
+    for (uint32_t i = 0; i < height; i++) {
+        memset(colorData, alphaVal, rowPitch);
+        colorData += rowPitch;
+    }
+
+    // Note: Although the function calls for ARGB input, a different input format can be used if the output planes are swizzled
+    if (indexA == 0) {
+        if (indexR == 1) {
+            // XRGB or ARGB
+            result = vImageConvert_Planar8toARGB8888(&planeBuffer[indexA],
+                                                     &planeBuffer[indexR],
+                                                     &planeBuffer[indexG],
+                                                     &planeBuffer[indexB],
+                                                     &imageBuffer8888,
+                                                     0);
+        } else {
+            // XBGR or ABGR
+            result = vImageConvert_Planar8toARGB8888(&planeBuffer[indexA],
+                                                     &planeBuffer[indexB],
+                                                     &planeBuffer[indexG],
+                                                     &planeBuffer[indexR],
+                                                     &imageBuffer8888,
+                                                     0);
+        }
+    } else if (indexA == 3) {
+        if (indexR == 0) {
+            // RGBX or RGBA
+            result = vImageConvert_Planar8toARGB8888(&planeBuffer[indexR],
+                                                     &planeBuffer[indexG],
+                                                     &planeBuffer[indexB],
+                                                     &planeBuffer[indexA],
+                                                     &imageBuffer8888,
+                                                     0);
+        } else {
+            // BGRX or BGRA
+            result = vImageConvert_Planar8toARGB8888(&planeBuffer[indexB],
+                                                     &planeBuffer[indexG],
+                                                     &planeBuffer[indexR],
+                                                     &planeBuffer[indexA],
+                                                     &imageBuffer8888,
+                                                     0);
+        }
+    }
+
+    result = vImageBuffer_Init(imageBufferUnPremultiplied8888, imageBuffer8888.height, imageBuffer8888.width, 32, kvImageNoFlags);
+    ASSERT_TRUE(result == kvImageNoError);
+
+    if (indexA == 3) {
+        vImageUnpremultiplyData_RGBA8888(&imageBuffer8888, imageBufferUnPremultiplied8888, 0);
+    } else {
+        vImageUnpremultiplyData_ARGB8888(&imageBuffer8888, imageBufferUnPremultiplied8888, 0);
+    }
+
+    CGColorSpaceRelease(format.colorSpace);
+
+    vImageTestBufferFree(&imageBuffer8888);
+    vImageTestBufferFree(&planeBuffer[0]);
+    vImageTestBufferFree(&planeBuffer[1]);
+    vImageTestBufferFree(&planeBuffer[2]);
+    vImageTestBufferFree(&planeBuffer[3]);
 }
 
 TEST(Accelerate, BufferInit) {
@@ -466,7 +696,7 @@ TEST(Accelerate, BufferInit) {
     ASSERT_GE(buffer.rowBytes, ((width * (bitsPerPixel >> 3) + alignment - 1) & ~(alignment - 1)));
 
     // Clean up
-    vImageBufferFree(&buffer);
+    vImageTestBufferFree(&buffer);
 
     // Invalid params
     ASSERT_EQ(vImageBuffer_Init(&buffer, width, height, bitsPerPixel, kvImageBackgroundColorFill), kvImageUnknownFlagsBit);
@@ -485,31 +715,31 @@ TEST(Accelerate, Convert) {
     ASSERT_EQ(vImageBuffer_Init(&planar8Buffer, width, height, 8, flags), kvImageNoError);
     ASSERT_EQ(vImageBuffer_Init(&planarFBuffer, width - 1, height, 32, flags), kvImageNoError);
     ASSERT_EQ(vImageConvert_Planar8toPlanarF(&planar8Buffer, &planarFBuffer, 1.0f, 0.0f, kvImageNoFlags), kvImageBufferSizeMismatch);
-    vImageBufferFree(&planar8Buffer);
-    vImageBufferFree(&planarFBuffer);
+    vImageTestBufferFree(&planar8Buffer);
+    vImageTestBufferFree(&planarFBuffer);
 
     ASSERT_EQ(vImageBuffer_Init(&planar8Buffer, width, height - 1, 8, flags), kvImageNoError);
     ASSERT_EQ(vImageBuffer_Init(&planarFBuffer, width, height, 32, flags), kvImageNoError);
     ASSERT_EQ(vImageConvert_Planar8toPlanarF(&planar8Buffer, &planarFBuffer, 1.0f, 0.0f, kvImageNoFlags), kvImageBufferSizeMismatch);
-    vImageBufferFree(&planar8Buffer);
-    vImageBufferFree(&planarFBuffer);
+    vImageTestBufferFree(&planar8Buffer);
+    vImageTestBufferFree(&planarFBuffer);
 
     // Mismatched rowbytes from expected (done by switching float plane with byte plane)
     ASSERT_EQ(vImageBuffer_Init(&planar8Buffer, width, height, 8, flags), kvImageNoError);
     ASSERT_EQ(vImageBuffer_Init(&planarFBuffer, width, height, 32, flags), kvImageNoError);
     ASSERT_EQ(vImageConvert_Planar8toPlanarF(&planarFBuffer, &planar8Buffer, 1.0f, 0.0f, kvImageNoFlags), kvImageBufferSizeMismatch);
-    vImageBufferFree(&planar8Buffer);
-    vImageBufferFree(&planarFBuffer);
+    vImageTestBufferFree(&planar8Buffer);
+    vImageTestBufferFree(&planarFBuffer);
 
     // Clip checking
     ASSERT_EQ(vImageBuffer_Init(&planar8Buffer, width, height, 8, flags), kvImageNoError);
     ASSERT_EQ(vImageBuffer_Init(&planarFBuffer, width, height, 32, flags), kvImageNoError);
-    vImageFillBufferWithRandomData8(&planar8Buffer);
+    vImageTestFillBufferWithRandomData8(&planar8Buffer);
 
     // Convert and clip planar8 to planarF with a range [0.5f, 1.0f]
     ASSERT_EQ(vImageConvert_Planar8toPlanarF(&planar8Buffer, &planarFBuffer, 1.0f, 0.5f, kvImageNoFlags), kvImageNoFlags);
 
-    unsigned char* rowPtr = reinterpret_cast<unsigned char*>(planarFBuffer.data);
+    uint8_t* rowPtr = reinterpret_cast<uint8_t*>(planarFBuffer.data);
     float* rowPtrFloats;
 
     for (uint32_t y = 0; y < height; y++) {
@@ -525,11 +755,11 @@ TEST(Accelerate, Convert) {
     // Clamp float buffer with range [0.5 1.0f] to a range [0.0f 0.5f] and convert and saturate to uint8 effectively making all values 255
     ASSERT_EQ(vImageConvert_PlanarFtoPlanar8(&planarFBuffer, &planar8Buffer, 0.5f, 0.0f, kvImageNoFlags), kvImageNoFlags);
 
-    rowPtr = reinterpret_cast<unsigned char*>(planar8Buffer.data);
+    rowPtr = reinterpret_cast<uint8_t*>(planar8Buffer.data);
 
     for (uint32_t y = 0; y < height; y++) {
         for (uint32_t x = 0; x < width; x++) {
-            const unsigned char pixel = rowPtr[x];
+            const uint8_t pixel = rowPtr[x];
             ASSERT_TRUE_MSG(pixel == 255, "vImageConvert: PlanarFtoPlanar8 pixel <%d, %d> not properly clamped to range below input", x, y);
         }
 
@@ -539,19 +769,19 @@ TEST(Accelerate, Convert) {
     // Clamp float buffer with range [0.5 1.0f] to a range [1.5f 1.0f] and convert and saturate to uint8 effectively making all values 0
     ASSERT_EQ(vImageConvert_PlanarFtoPlanar8(&planarFBuffer, &planar8Buffer, 1.5f, 1.0f, kvImageNoFlags), kvImageNoFlags);
 
-    rowPtr = reinterpret_cast<unsigned char*>(planar8Buffer.data);
+    rowPtr = reinterpret_cast<uint8_t*>(planar8Buffer.data);
 
     for (uint32_t y = 0; y < height; y++) {
         for (uint32_t x = 0; x < width; x++) {
-            const unsigned char pixel = rowPtr[x];
+            const uint8_t pixel = rowPtr[x];
             ASSERT_TRUE_MSG(pixel == 0, "vImageConvert: PlanarFtoPlanar8 pixel <%d, %d> not properly clamped to range above input", x, y);
         }
 
         rowPtr += planar8Buffer.rowBytes;
     }
 
-    vImageBufferFree(&planar8Buffer);
-    vImageBufferFree(&planarFBuffer);
+    vImageTestBufferFree(&planar8Buffer);
+    vImageTestBufferFree(&planarFBuffer);
 
     /// Planar8toRGB888
     vImage_Buffer rgbDest;
@@ -570,7 +800,7 @@ TEST(Accelerate, Convert) {
     ASSERT_EQ(vImageConvert_Planar8toRGB888(&planarRed, &planarGreen, &planarBlue, &rgbDest, kvImageNoFlags), kvImageNoError);
 
     const Pixel_888_s rgbPixelGolden = { 1, 2, 3 };
-    rowPtr = reinterpret_cast<unsigned char*>(rgbDest.data);
+    rowPtr = reinterpret_cast<uint8_t*>(rgbDest.data);
     Pixel_888_s* rowPtrRgbPixels;
 
     for (uint32_t y = 0; y < height; y++) {
@@ -585,8 +815,34 @@ TEST(Accelerate, Convert) {
         rowPtr += rgbDest.rowBytes;
     }
 
-    vImageBufferFree(&planarRed);
-    vImageBufferFree(&planarGreen);
-    vImageBufferFree(&planarBlue);
-    vImageBufferFree(&rgbDest);
+    vImageTestBufferFree(&planarRed);
+    vImageTestBufferFree(&planarGreen);
+    vImageTestBufferFree(&planarBlue);
+    vImageTestBufferFree(&rgbDest);
+}
+
+TEST(Accelerate, AlphaUnpremultiply) {
+    SetCACompositor(new NullCompositor);
+
+    char fullPath[_MAX_PATH];
+    GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
+    char* executablePath = strrchr(fullPath, '\\');
+    const char* relativePathToPhoto = "\\Photo2.jpg";
+    strncpy(executablePath, relativePathToPhoto, strlen(relativePathToPhoto) + 1);
+    UIImage* photo = [UIImage imageNamed:[NSString stringWithCString:fullPath]];
+
+    vImage_Buffer unpremultipliedBufferSimd, unpremultipliedBufferNormal;
+    const uint8_t alphaVal = 0x80;
+
+    _vImageSetSimdOptmizationsState(false);
+    vImageTestSetAlphaAndUnpremultiply(photo.CGImage, &unpremultipliedBufferNormal, alphaVal);
+
+    _vImageSetSimdOptmizationsState(true);
+    vImageTestSetAlphaAndUnpremultiply(photo.CGImage, &unpremultipliedBufferSimd, alphaVal);
+
+    ASSERT_TRUE_MSG(vImageTestCompare8888Buffers(&unpremultipliedBufferSimd, &unpremultipliedBufferNormal),
+                    "SIMD and non-SIMD output of AlphaUnpremultiply do not match");
+
+    vImageTestBufferFree(&unpremultipliedBufferSimd);
+    vImageTestBufferFree(&unpremultipliedBufferNormal);
 }

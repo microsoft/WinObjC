@@ -987,17 +987,6 @@ vImage_Error vImageConvert_ARGB8888toPlanar8(const vImage_Buffer* srcARGB,
         unsigned int blocksPerRow = width / pixelsPerBlock;
         unsigned int leftoverElements = width % pixelsPerBlock;
 
-        if (leftoverElements > 0) {
-            const unsigned int blockAlignedWidth = _vImageAlignUInt(width, pixelsPerBlock);
-            unsigned int minPlanarPitchPixels = std::min(alphaRowPitch, std::min(redRowPitch, std::min(greenRowPitch, blueRowPitch)));
-
-            // If there is enough padding in both row pitches for a whole block, round up to the next block
-            if ((minPlanarPitchPixels >= blockAlignedWidth) && (pixelRowPitch >= (blockAlignedWidth * sizeof(Pixel_8888)))) {
-                leftoverElements = 0;
-                blocksPerRow += 1;
-            }
-        }
-
         __m128i vPixelBlocks[4], vBlocks02[2], vBlocks13[2], vBlocks_02A_13A[2], vBlocks_02B_13B[2];
         __m128i vAlphaRedEven, vAlphaRedOdd, vGreenBlueEven, vGreenBlueOdd;
         __m128i vAlpha, vRed, vGreen, vBlue;
@@ -1146,17 +1135,6 @@ vImage_Error vImageConvert_Planar8toARGB8888(const vImage_Buffer* srcA,
         unsigned int blocksPerRow = width / pixelsPerBlock;
         unsigned int leftoverElements = width % pixelsPerBlock;
 
-        if (leftoverElements > 0) {
-            const unsigned int blockAlignedWidth = _vImageAlignUInt(width, pixelsPerBlock);
-            const unsigned int minPlanarPitchPixels = std::min(alphaRowPitch, std::min(redRowPitch, std::min(greenRowPitch, blueRowPitch)));
-
-            // If there is enough padding in both row pitches, round up to the next block
-            if ((minPlanarPitchPixels >= blockAlignedWidth) && (pixelRowPitch >= (blockAlignedWidth * sizeof(Pixel_8888)))) {
-                leftoverElements = 0;
-                blocksPerRow += 1;
-            }
-        }
-
         __m128i vA, vR, vG, vB, vAG[2], vRB[2], vARGB[4];
         unsigned int offset;
 
@@ -1268,16 +1246,6 @@ vImage_Error vImageConvert_Planar8toPlanarF(
     if ((c_vImageUseSse2 == true) && (width >= unitsPerBlock)) {
         unsigned int blocksPerRow = width / unitsPerBlock;
         unsigned int leftoverElements = width % unitsPerBlock;
-
-        if (leftoverElements > 0) {
-            const unsigned int blockAlignedWidth = _vImageAlignUInt(width, unitsPerBlock);
-
-            // If there is enough padding in both row pitches for a whole block, round up to the next block
-            if ((srcRowPitch >= blockAlignedWidth) && (destRowPitch >= (blockAlignedWidth * sizeof(Pixel_F)))) {
-                leftoverElements = 0;
-                blocksPerRow += 1;
-            }
-        }
 
         __declspec(align(16)) const float scalingFactor = (maxFloat - minFloat) / 255.0f;
         __m128i vInt8, vInt16[2], vInt32[4];
@@ -1450,16 +1418,6 @@ vImage_Error vImageConvert_PlanarFtoPlanar8(
         unsigned int blocksPerRow = width / unitsPerBlock;
         unsigned int leftoverElements = width % unitsPerBlock;
 
-        if (leftoverElements > 0) {
-            const unsigned int blockAlignedWidth = _vImageAlignUInt(width, unitsPerBlock);
-
-            // If there is enough padding in both row pitches for a whole block, round up to the next block
-            if ((destRowPitch >= blockAlignedWidth) && (srcRowPitch >= (blockAlignedWidth * sizeof(Pixel_F)))) {
-                leftoverElements = 0;
-                blocksPerRow += 1;
-            }
-        }
-
         __declspec(align(16)) const float scalingFactor = 255.0f / (maxFloat - minFloat);
         __m128i vInt8, vInt16[2], vInt32[4];
         __m128 vFloat32[4];
@@ -1570,17 +1528,6 @@ inline vImage_Error _vImageUnpremultiplyData_8888(const vImage_Buffer* src, cons
     if (width >= pixelsPerBlock) {
         unsigned int blocksPerRow = width / pixelsPerBlock;
         unsigned int leftoverElements = width % pixelsPerBlock;
-
-        if (leftoverElements > 0) {
-            const unsigned int blockAlignedWidth = _vImageAlignUInt(width, pixelsPerBlock);
-
-            unsigned int minPitch = std::min(srcRowPitch, destRowPitch);
-            // If there is enough padding in both row pitches for a whole block, round up to the next block
-            if (minPitch >= (blockAlignedWidth * sizeof(Pixel_8888))) {
-                leftoverElements = 0;
-                blocksPerRow += 1;
-            }
-        }
 
         const unsigned int alphaMaskUInt32 = 0xFF << (alphaPos << 3);
         const unsigned int colorMaskUInt32 = ~alphaMaskUInt32;
@@ -1807,6 +1754,10 @@ vImage_Error vImageBuffer_Init(
     }
 
     return returnCode;
+}
+
+void _vImageSetSimdOptmizationsState(const bool newState) {
+    c_vImageUseSse2 = newState;
 }
 
 // Alias vImageConvert_ARGB8888toPlanar8 with vImageConvert_BGRA8888toPlanar8 and vImageConvert_RGBA8888toPlanar8
