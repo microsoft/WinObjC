@@ -2029,11 +2029,15 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     renderTarget->BeginDraw();
 
     // Apply the required transformations as set in the context.
+    // We need some special handling in transform as CoreText in iOS renders from bottom left but DWrite on Windows does top left.
+    //     1. Scaling - to handle scaling once text has been scaled, apply translation to the scaled height
+    //     2. Rotation - CoreText rotates text anti-clockwise but DWrite performs clockwise rotation
     CGAffineTransform transform = CGAffineTransformConcat(curState->curTransform, curState->curTextMatrix);
-    // Special handling for translation as CoreText in iOS renders from bottom left.
+    // Perform translation required to handle scaling.
     CGFloat verticalScalingFactor = sqrt((transform.b * transform.b) + (transform.d * transform.d));
     transform = CGAffineTransformTranslate(transform, 0, (height / verticalScalingFactor) - height);
-    renderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, -transform.b, -transform.c, transform.d, transform.tx, transform.ty));
+    // Perform anti-clockwise rotation required to match the reference platform.
+    renderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, -transform.b, transform.c, transform.d, transform.tx, transform.ty));
 
     // Draw the glyph using ID2D1RenderTarget
     ComPtr<ID2D1SolidColorBrush> brush;
