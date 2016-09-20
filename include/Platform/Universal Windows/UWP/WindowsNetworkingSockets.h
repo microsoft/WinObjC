@@ -231,7 +231,7 @@ WINRT_EXPORT
 @interface WNSSocketActivityContext : RTObject
 + (WNSSocketActivityContext*)make:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WSSIBuffer>* data;
 @end
@@ -255,7 +255,7 @@ WINRT_EXPORT
                                      failure:(void (^)(NSError*))failure;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNSDatagramSocketControl* control;
 @property (readonly) WNSDatagramSocketInformation* information;
@@ -297,7 +297,7 @@ WINRT_EXPORT
 @interface WNSStreamSocket : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNSStreamSocketControl* control;
 @property (readonly) WNSStreamSocketInformation* information;
@@ -337,7 +337,7 @@ WINRT_EXPORT
 @interface WNSStreamSocketListener : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNSStreamSocketListenerControl* control;
 @property (readonly) WNSStreamSocketListenerInformation* information;
@@ -369,7 +369,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSSocketActivityInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNSSocketActivityContext* context;
 @property (readonly) WNSDatagramSocket* datagramSocket;
@@ -390,7 +390,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSDatagramSocketControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WNSSocketQualityOfService qualityOfService;
 @property uint8_t outboundUnicastHopLimit;
@@ -408,7 +408,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSDatagramSocketInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNHostName* localAddress;
 @property (readonly) NSString* localPort;
@@ -425,7 +425,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSDatagramSocketMessageReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNHostName* localAddress;
 @property (readonly) WNHostName* remoteAddress;
@@ -443,7 +443,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSStreamSocketControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WNSSocketQualityOfService qualityOfService;
 @property uint8_t outboundUnicastHopLimit;
@@ -464,7 +464,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSStreamSocketInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNSBandwidthStatistics* bandwidthStatistics;
 @property (readonly) WNHostName* localAddress;
@@ -491,7 +491,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSStreamSocketListenerControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WNSSocketQualityOfService qualityOfService;
 @property uint8_t outboundUnicastHopLimit;
@@ -509,7 +509,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSStreamSocketListenerInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* localPort;
 @end
@@ -523,7 +523,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSStreamSocketListenerConnectionReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNSStreamSocket* socket;
 @end
@@ -537,7 +537,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSWebSocketClosedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned short code;
 @property (readonly) NSString* reason;
@@ -552,7 +552,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSMessageWebSocketControl : RTObject <WNSIWebSocketControl>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WNSSocketMessageType messageType;
 @property unsigned int maxMessageSize;
@@ -571,7 +571,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSMessageWebSocketInformation : RTObject <WNSIWebSocketInformation>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNSBandwidthStatistics* bandwidthStatistics;
 @property (readonly) WNHostName* localAddress;
@@ -588,7 +588,7 @@ WINRT_EXPORT
 @interface WNSMessageWebSocket : RTObject <WNSIWebSocket, WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNSMessageWebSocketControl* control;
 @property (readonly) WNSMessageWebSocketInformation* information;
@@ -612,7 +612,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSMessageWebSocketMessageReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNSSocketMessageType messageType;
 - (WSSDataReader*)getDataReader;
@@ -628,7 +628,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSStreamWebSocketControl : RTObject <WNSIWebSocketControl>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL noDelay;
 @property (retain) WSCPasswordCredential* serverCredential;
@@ -646,7 +646,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSStreamWebSocketInformation : RTObject <WNSIWebSocketInformation>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNSBandwidthStatistics* bandwidthStatistics;
 @property (readonly) WNHostName* localAddress;
@@ -663,7 +663,7 @@ WINRT_EXPORT
 @interface WNSStreamWebSocket : RTObject <WNSIWebSocket, WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNSStreamWebSocketControl* control;
 @property (readonly) WNSStreamWebSocketInformation* information;
@@ -697,7 +697,7 @@ WINRT_EXPORT
 @interface WNSWebSocketKeepAlive : RTObject <WABIBackgroundTask>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)run:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
 @end
@@ -733,7 +733,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSSocketActivityTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNSSocketActivityTriggerReason reason;
 @property (readonly) WNSSocketActivityInformation* socketInformation;

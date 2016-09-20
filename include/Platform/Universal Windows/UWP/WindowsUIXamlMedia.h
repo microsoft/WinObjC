@@ -290,7 +290,7 @@ WINRT_EXPORT
 + (void)disconnectChildrenRecursive:(WXUIElement*)element;
 + (NSArray* /* WUXCPPopup* */)getOpenPopups:(WXWindow*)window;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -304,7 +304,7 @@ WINRT_EXPORT
 @interface WUXMPartialMediaFailureDetectedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPFailedMediaStreamKind streamKind;
 @end
@@ -321,7 +321,7 @@ WINRT_EXPORT
 + (BOOL)getIsIdentity:(WUXMMatrix*)target;
 + (WFPoint*)transform:(WUXMMatrix*)target point:(WFPoint*)point;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 + (WUXMMatrix*)identity;
 @end
@@ -335,7 +335,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMCompositionTarget : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 + (EventRegistrationToken)addRenderingEvent:(void (^)(RTObject*, RTObject*))del;
 + (void)removeRenderingEvent:(EventRegistrationToken)tok;
@@ -353,7 +353,7 @@ WINRT_EXPORT
 @interface WUXMDoubleCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -377,7 +377,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMFontFamily : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* source;
 @end
@@ -392,7 +392,7 @@ WINRT_EXPORT
 @interface WUXMGeometryCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -417,7 +417,7 @@ WINRT_EXPORT
 @interface WUXMGradientStopCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -442,7 +442,7 @@ WINRT_EXPORT
 @interface WUXMPathFigureCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -467,7 +467,7 @@ WINRT_EXPORT
 @interface WUXMPathSegmentCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -492,7 +492,7 @@ WINRT_EXPORT
 @interface WUXMPointCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -516,7 +516,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMRenderingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFTimeSpan* renderingTime;
 @end
@@ -531,7 +531,7 @@ WINRT_EXPORT
 @interface WUXMTimelineMarkerCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -556,7 +556,7 @@ WINRT_EXPORT
 @interface WUXMTransformCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -580,7 +580,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -601,7 +601,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMBrush : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMTransform* transform;
 @property (retain) WUXMTransform* relativeTransform;
@@ -620,7 +620,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMCacheMode : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -633,7 +633,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMGeneralTransform : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUXMGeneralTransform* inverse;
 @property (readonly) WUXMGeneralTransform* inverseCore;
@@ -653,7 +653,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMGeometry : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMTransform* transform;
 @property (readonly) WFRect* bounds;
@@ -672,7 +672,7 @@ WINRT_EXPORT
 @interface WUXMGradientStop : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double offset;
 @property (retain) WUColor* color;
@@ -689,7 +689,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMImageSource : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -703,7 +703,7 @@ WINRT_EXPORT
 @interface WUXMPathFigure : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFPoint* startPoint;
 @property (retain) WUXMPathSegmentCollection* segments;
@@ -724,7 +724,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMPathSegment : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -737,7 +737,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMProjection : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -751,7 +751,7 @@ WINRT_EXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject* originalSource;
 @end
@@ -766,7 +766,7 @@ WINRT_EXPORT
 @interface WUXMRateChangedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -780,7 +780,7 @@ WINRT_EXPORT
 @interface WUXMTimelineMarker : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* type;
 @property (retain) WFTimeSpan* time;
@@ -800,7 +800,7 @@ WINRT_EXPORT
 @interface WUXMTimelineMarkerRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMTimelineMarker* marker;
 @end
@@ -815,7 +815,7 @@ WINRT_EXPORT
 @interface WUXMArcSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUXMSweepDirection sweepDirection;
 @property (retain) WFSize* size;
@@ -839,7 +839,7 @@ WINRT_EXPORT
 @interface WUXMBezierSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFPoint* point3;
 @property (retain) WFPoint* point2;
@@ -859,7 +859,7 @@ WINRT_EXPORT
 @interface WUXMBitmapCache : WUXMCacheMode
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -873,7 +873,7 @@ WINRT_EXPORT
 @interface WUXMEllipseGeometry : WUXMGeometry
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double radiusY;
 @property double radiusX;
@@ -893,7 +893,7 @@ WINRT_EXPORT
 @interface WUXMGeometryGroup : WUXMGeometry
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUXMFillRule fillRule;
 @property (retain) WUXMGeometryCollection* children;
@@ -910,7 +910,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMGradientBrush : WUXMBrush
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUXMGradientSpreadMethod spreadMethod;
 @property WUXMBrushMappingMode mappingMode;
@@ -932,7 +932,7 @@ WINRT_EXPORT
 @interface WUXMLineGeometry : WUXMGeometry
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFPoint* startPoint;
 @property (retain) WFPoint* endPoint;
@@ -950,7 +950,7 @@ WINRT_EXPORT
 @interface WUXMLineSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFPoint* point;
 + (WXDependencyProperty*)pointProperty;
@@ -966,7 +966,7 @@ WINRT_EXPORT
 @interface WUXMMatrix3DProjection : WUXMProjection
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMMMatrix3D* projectionMatrix;
 + (WXDependencyProperty*)projectionMatrixProperty;
@@ -982,7 +982,7 @@ WINRT_EXPORT
 @interface WUXMPathGeometry : WUXMGeometry
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUXMFillRule fillRule;
 @property (retain) WUXMPathFigureCollection* figures;
@@ -1000,7 +1000,7 @@ WINRT_EXPORT
 @interface WUXMPlaneProjection : WUXMProjection
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double localOffsetX;
 @property double globalOffsetZ;
@@ -1040,7 +1040,7 @@ WINRT_EXPORT
 @interface WUXMPolyBezierSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMPointCollection* points;
 + (WXDependencyProperty*)pointsProperty;
@@ -1056,7 +1056,7 @@ WINRT_EXPORT
 @interface WUXMPolyLineSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMPointCollection* points;
 + (WXDependencyProperty*)pointsProperty;
@@ -1072,7 +1072,7 @@ WINRT_EXPORT
 @interface WUXMPolyQuadraticBezierSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMPointCollection* points;
 + (WXDependencyProperty*)pointsProperty;
@@ -1088,7 +1088,7 @@ WINRT_EXPORT
 @interface WUXMQuadraticBezierSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFPoint* point2;
 @property (retain) WFPoint* point1;
@@ -1106,7 +1106,7 @@ WINRT_EXPORT
 @interface WUXMRectangleGeometry : WUXMGeometry
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFRect* rect;
 + (WXDependencyProperty*)rectProperty;
@@ -1123,7 +1123,7 @@ WINRT_EXPORT
 + (WUXMSolidColorBrush*)makeInstanceWithColor:(WUColor*)color ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUColor* color;
 + (WXDependencyProperty*)colorProperty;
@@ -1138,7 +1138,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMTileBrush : WUXMBrush
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUXMStretch stretch;
 @property WUXMAlignmentY alignmentY;
@@ -1157,7 +1157,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMTransform : WUXMGeneralTransform
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -1171,7 +1171,7 @@ WINRT_EXPORT
 @interface WUXMCompositeTransform : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double translateY;
 @property double translateX;
@@ -1203,7 +1203,7 @@ WINRT_EXPORT
 @interface WUXMImageBrush : WUXMTileBrush
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMImageSource* imageSource;
 + (WXDependencyProperty*)imageSourceProperty;
@@ -1225,7 +1225,7 @@ WINRT_EXPORT
                                                                      angle:(double)angle ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFPoint* startPoint;
 @property (retain) WFPoint* endPoint;
@@ -1243,7 +1243,7 @@ WINRT_EXPORT
 @interface WUXMMatrixTransform : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMMatrix* matrix;
 + (WXDependencyProperty*)matrixProperty;
@@ -1259,7 +1259,7 @@ WINRT_EXPORT
 @interface WUXMRotateTransform : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double centerY;
 @property double centerX;
@@ -1279,7 +1279,7 @@ WINRT_EXPORT
 @interface WUXMScaleTransform : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double scaleY;
 @property double scaleX;
@@ -1301,7 +1301,7 @@ WINRT_EXPORT
 @interface WUXMSkewTransform : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double centerY;
 @property double centerX;
@@ -1323,7 +1323,7 @@ WINRT_EXPORT
 @interface WUXMTransformGroup : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMTransformCollection* children;
 @property (readonly) WUXMMatrix* value;
@@ -1340,7 +1340,7 @@ WINRT_EXPORT
 @interface WUXMTranslateTransform : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double y;
 @property double x;

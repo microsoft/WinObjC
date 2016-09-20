@@ -61,7 +61,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WARCResourceMap : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFUri* uri;
 @property (readonly) unsigned int size;
@@ -96,7 +96,7 @@ WINRT_EXPORT
 + (WARCResourceContext*)getForViewIndependentUse;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSArray* /* NSString * */ languages;
 @property (readonly) NSMutableDictionary<RTObservableCollection>* /* NSString *, NSString * */ qualifierValues;
@@ -115,7 +115,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WARCNamedResource : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WARCResourceCandidate* */ candidates;
 @property (readonly) WFUri* uri;
@@ -135,7 +135,7 @@ WINRT_EXPORT
 @interface WARCResourceManager : RTObject
 + (BOOL)isResourceReference:(NSString*)resourceReference;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSDictionary* /* NSString *, WARCResourceMap* */ allResourceMaps;
 @property (readonly) WARCResourceContext* defaultContext;
@@ -158,7 +158,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WARCResourceQualifier : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isDefault;
 @property (readonly) BOOL isMatch;
@@ -176,7 +176,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WARCResourceCandidate : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isDefault;
 @property (readonly) BOOL isMatch;
@@ -214,7 +214,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WARCResourceMapMapView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (id)objectForKey:(id)key;
@@ -252,7 +252,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WARCResourceQualifierObservableMap : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,String>)
@@ -285,7 +285,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WARCResourceQualifierMapView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (id)objectForKey:(id)key;
@@ -306,7 +306,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WARCResourceQualifierVectorView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -324,7 +324,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WARCResourceCandidateVectorView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -342,7 +342,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WARCResourceContextLanguagesVectorView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;

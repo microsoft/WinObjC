@@ -219,7 +219,7 @@ typedef void (^WUXITappedEventHandler)(RTObject* sender, WUXITappedRoutedEventAr
 WINRT_EXPORT
 @interface WUXIPointer : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isInContact;
 @property (readonly) BOOL isInRange;
@@ -240,7 +240,7 @@ WINRT_EXPORT
 + (WXUIElement*)findNextFocusableElement:(WUXIFocusNavigationDirection)focusNavigationDirection;
 + (WXUIElement*)findNextFocusableElementWithHint:(WUXIFocusNavigationDirection)focusNavigationDirection hintRect:(WFRect*)hintRect;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -253,7 +253,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXIInertiaExpansionBehavior : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double desiredExpansion;
 @property double desiredDeceleration;
@@ -268,7 +268,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXIInertiaRotationBehavior : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double desiredRotation;
 @property double desiredDeceleration;
@@ -283,7 +283,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXIInertiaTranslationBehavior : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double desiredDisplacement;
 @property double desiredDeceleration;
@@ -300,7 +300,7 @@ WINRT_EXPORT
 + (WUXIManipulationPivot*)makeInstanceWithCenterAndRadius:(WFPoint*)center radius:(double)radius ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double radius;
 @property (retain) WFPoint* center;
@@ -316,7 +316,7 @@ WINRT_EXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject* originalSource;
 @end
@@ -331,7 +331,7 @@ WINRT_EXPORT
 @interface WUXIDoubleTappedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL handled;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
@@ -348,7 +348,7 @@ WINRT_EXPORT
 @interface WUXIHoldingRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL handled;
 @property (readonly) WUIHoldingState holdingState;
@@ -365,7 +365,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -387,7 +387,7 @@ WINRT_EXPORT
 @interface WUXIInputScope : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSMutableArray* /* WUXIInputScopeName* */ names;
 @end
@@ -403,7 +403,7 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WUXIInputScopeName*)makeInstance:(WUXIInputScopeNameValue)nameValue ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUXIInputScopeNameValue nameValue;
 @end
@@ -417,7 +417,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXIKeyRoutedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL handled;
 @property (readonly) WSVirtualKey key;
@@ -435,7 +435,7 @@ WINRT_EXPORT
 @interface WUXIManipulationCompletedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL handled;
 @property (readonly) WXUIElement* container;
@@ -456,7 +456,7 @@ WINRT_EXPORT
 @interface WUXIManipulationDeltaRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL handled;
 @property (readonly) WXUIElement* container;
@@ -479,7 +479,7 @@ WINRT_EXPORT
 @interface WUXIManipulationInertiaStartingRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXIInertiaTranslationBehavior* translationBehavior;
 @property (retain) WUXIInertiaRotationBehavior* rotationBehavior;
@@ -502,7 +502,7 @@ WINRT_EXPORT
 @interface WUXIManipulationStartedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL handled;
 @property (readonly) WXUIElement* container;
@@ -522,7 +522,7 @@ WINRT_EXPORT
 @interface WUXIManipulationStartingRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXIManipulationPivot* pivot;
 @property WUXIManipulationModes mode;
@@ -539,7 +539,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXIPointerRoutedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL handled;
 @property (readonly) WSVirtualKeyModifiers keyModifiers;
@@ -558,7 +558,7 @@ WINRT_EXPORT
 @interface WUXIRightTappedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL handled;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
@@ -575,7 +575,7 @@ WINRT_EXPORT
 @interface WUXITappedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL handled;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;

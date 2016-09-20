@@ -37,7 +37,7 @@ WINRT_EXPORT
 @interface WDXXXsltProcessor : RTObject
 + (WDXXXsltProcessor*)makeInstance:(WDXDXmlDocument*)document ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (NSString*)transformToString:(RTObject<WDXDIXmlNode>*)inputNode;
 - (WDXDXmlDocument*)transformToDocument:(RTObject<WDXDIXmlNode>*)inputNode;

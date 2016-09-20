@@ -148,7 +148,7 @@ WINRT_EXPORT
                                  outputStreams:(NSMutableArray* /* RTObject<WSSIRandomAccessStream>* */)outputStreams
                           xamlMetadataProvider:(RTObject<WUXMIXamlMetadataProvider>*)xamlMetadataProvider;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -163,7 +163,7 @@ WINRT_EXPORT
 + (RTObject*)Load:(NSString*)xaml;
 + (RTObject*)loadWithInitialTemplateValidation:(NSString*)xaml;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -198,7 +198,7 @@ WINRT_EXPORT
 + (void)setPropertyFromUri:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(WFUri*)value;
 + (void)setPropertyFromObject:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(RTObject*)value;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 + (WXDependencyProperty*)dataTemplateComponentProperty;
 @end

@@ -79,7 +79,7 @@
 WINRT_EXPORT
 @interface WACAppListEntry : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAppDisplayInfo* displayInfo;
 - (void)launchAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
@@ -125,7 +125,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACCoreApplicationView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUCCoreWindow* coreWindow;
 @property (readonly) BOOL isHosted;
@@ -148,7 +148,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACCoreApplicationViewTitleBar : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL extendViewIntoTitleBar;
 @property (readonly) double height;
@@ -170,7 +170,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACUnhandledErrorDetectedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WACUnhandledError* unhandledError;
 @end
@@ -184,7 +184,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACHostedViewClosingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (WFDeferral*)getDeferral;
 @end
@@ -198,7 +198,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACUnhandledError : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL handled;
 - (void)propagate;

@@ -34,7 +34,7 @@
 WINRT_EXPORT
 @interface WGCCharacterGrouping : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* first;
 @property (readonly) NSString* label;
@@ -50,7 +50,7 @@ WINRT_EXPORT
 @interface WGCCharacterGroupings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;

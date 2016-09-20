@@ -131,7 +131,7 @@ WINRT_EXPORT
 + (WDTSemanticTextQuery*)make:(NSString*)aqsFilter ACTIVATOR;
 + (WDTSemanticTextQuery*)makeWithLanguage:(NSString*)aqsFilter filterLanguage:(NSString*)filterLanguage ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (NSArray* /* WDTTextSegment* */)find:(NSString*)content;
 - (NSArray* /* WDTTextSegment* */)findInProperty:(NSString*)propertyContent propertyName:(NSString*)propertyName;
@@ -173,7 +173,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDTAlternateWordForm : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* alternateText;
 @property (readonly) WDTAlternateNormalizationFormat normalizationFormat;
@@ -189,7 +189,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDTWordSegment : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WDTAlternateWordForm* */ alternateForms;
 @property (readonly) WDTTextSegment* sourceTextSegment;
@@ -206,7 +206,7 @@ WINRT_EXPORT
 @interface WDTWordsSegmenter : RTObject
 + (WDTWordsSegmenter*)makeWithLanguage:(NSString*)language ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* resolvedLanguage;
 - (WDTWordSegment*)getTokenAt:(NSString*)text startIndex:(unsigned int)startIndex;
@@ -223,7 +223,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDTSelectableWordSegment : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDTTextSegment* sourceTextSegment;
 @property (readonly) NSString* text;
@@ -239,7 +239,7 @@ WINRT_EXPORT
 @interface WDTSelectableWordsSegmenter : RTObject
 + (WDTSelectableWordsSegmenter*)makeWithLanguage:(NSString*)language ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* resolvedLanguage;
 - (WDTSelectableWordSegment*)getTokenAt:(NSString*)text startIndex:(unsigned int)startIndex;
@@ -257,7 +257,7 @@ WINRT_EXPORT
 @interface WDTTextPredictionGenerator : RTObject
 + (WDTTextPredictionGenerator*)make:(NSString*)languageTag ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL languageAvailableButNotInstalled;
 @property (readonly) NSString* resolvedLanguage;
@@ -278,7 +278,7 @@ WINRT_EXPORT
 @interface WDTTextConversionGenerator : RTObject
 + (WDTTextConversionGenerator*)make:(NSString*)languageTag ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL languageAvailableButNotInstalled;
 @property (readonly) NSString* resolvedLanguage;
@@ -299,7 +299,7 @@ WINRT_EXPORT
 @interface WDTTextReverseConversionGenerator : RTObject
 + (WDTTextReverseConversionGenerator*)make:(NSString*)languageTag ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL languageAvailableButNotInstalled;
 @property (readonly) NSString* resolvedLanguage;

@@ -430,7 +430,7 @@ WINRT_EXPORT
 @interface WSStorageLibrary : RTObject
 + (void)getLibraryAsync:(WSKnownLibraryId)libraryId success:(void (^)(WSStorageLibrary*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSMutableArray<RTObservableCollection>* /* WSStorageFolder* */ folders;
 @property (readonly) WSStorageFolder* saveFolder;
@@ -498,7 +498,7 @@ WINRT_EXPORT
                                        WSIStorageItemPropertiesWithProvider>
 + (void)getFolderFromPathAsync:(NSString*)path success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSFileAttributes attributes;
 @property (readonly) WFDateTime* dateCreated;
@@ -662,7 +662,7 @@ WINRT_EXPORT
                                     success:(void (^)(WSStorageFile*))success
                                     failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* contentType;
 @property (readonly) NSString* fileType;
@@ -797,7 +797,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSStreamedFileDataRequest : RTObject <WSSIOutputStream, WFIClosable, WSIStreamedFileDataRequest>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
            success:(void (^)(unsigned int))success
@@ -817,7 +817,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSStorageStreamTransaction : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WSSIRandomAccessStream>* stream;
 - (RTObject<WFIAsyncAction>*)commitAsync;
@@ -833,7 +833,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSStorageProvider : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* displayName;
 @property (readonly) NSString* id;
@@ -946,7 +946,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSSystemAudioProperties : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* encodingBitrate;
 @end
@@ -960,7 +960,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSSystemGPSProperties : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* latitudeDecimal;
 @property (readonly) NSString* longitudeDecimal;
@@ -975,7 +975,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSSystemImageProperties : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* horizontalSize;
 @property (readonly) NSString* verticalSize;
@@ -990,7 +990,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSSystemMediaProperties : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* duration;
 @property (readonly) NSString* producer;
@@ -1009,7 +1009,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSSystemMusicProperties : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* albumArtist;
 @property (readonly) NSString* albumTitle;
@@ -1030,7 +1030,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSSystemPhotoProperties : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* cameraManufacturer;
 @property (readonly) NSString* cameraModel;
@@ -1048,7 +1048,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSSystemVideoProperties : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* director;
 @property (readonly) NSString* frameHeight;
@@ -1090,7 +1090,7 @@ WINRT_EXPORT
 @interface WSApplicationData : RTObject
 + (void)getForUserAsync:(WSUser*)user success:(void (^)(WSApplicationData*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSStorageFolder* localFolder;
 @property (readonly) WSApplicationDataContainer* localSettings;
@@ -1121,7 +1121,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSSetVersionRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int currentVersion;
 @property (readonly) unsigned int desiredVersion;
@@ -1137,7 +1137,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSApplicationDataContainer : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSDictionary* /* NSString *, WSApplicationDataContainer* */ containers;
 @property (readonly) WSApplicationDataLocality locality;
@@ -1156,7 +1156,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSSetVersionDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)complete;
 @end
@@ -1196,7 +1196,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSApplicationDataContainerSettings : RTObject <WFCIPropertySet>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)
@@ -1230,7 +1230,7 @@ WINRT_EXPORT
 @interface WSApplicationDataCompositeValue : RTObject <WFCIPropertySet>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)

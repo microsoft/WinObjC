@@ -99,7 +99,7 @@ WINRT_EXPORT
 @interface WDUUsbControlRequestType : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WDUUsbControlRecipient recipient;
 @property WDUUsbTransferDirection direction;
@@ -118,7 +118,7 @@ WINRT_EXPORT
 + (WDUUsbSetupPacket*)makeWithEightByteBuffer:(RTObject<WSSIBuffer>*)eightByteBuffer ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int value;
 @property (retain) WDUUsbControlRequestType* requestType;
@@ -137,7 +137,7 @@ WINRT_EXPORT
 @interface WDUUsbDeviceClass : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) id /* uint8_t */ subclassCode;
 @property (retain) id /* uint8_t */ protocolCode;
@@ -153,7 +153,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbDeviceClasses : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 + (WDUUsbDeviceClass*)activeSync;
 + (WDUUsbDeviceClass*)cdcControl;
@@ -190,7 +190,7 @@ WINRT_EXPORT
 + (NSString*)getDeviceClassSelector:(WDUUsbDeviceClass*)usbClass;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDUUsbDevice*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDUUsbConfiguration* configuration;
 @property (readonly) WDUUsbInterface* defaultInterface;
@@ -221,7 +221,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbInterface : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WDUUsbBulkInPipe* */ bulkInPipes;
 @property (readonly) NSArray* /* WDUUsbBulkOutPipe* */ bulkOutPipes;
@@ -241,7 +241,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbDeviceDescriptor : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int bcdDeviceRevision;
 @property (readonly) unsigned int bcdUsb;
@@ -260,7 +260,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbConfiguration : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDUUsbConfigurationDescriptor* configurationDescriptor;
 @property (readonly) NSArray* /* WDUUsbDescriptor* */ descriptors;
@@ -276,7 +276,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbDescriptor : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint8_t descriptorType;
 @property (readonly) uint8_t length;
@@ -294,7 +294,7 @@ WINRT_EXPORT
 + (BOOL)tryParse:(WDUUsbDescriptor*)descriptor parsed:(WDUUsbConfigurationDescriptor**)parsed;
 + (WDUUsbConfigurationDescriptor*)parse:(WDUUsbDescriptor*)descriptor;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint8_t configurationValue;
 @property (readonly) unsigned int maxPowerMilliamps;
@@ -313,7 +313,7 @@ WINRT_EXPORT
 + (BOOL)tryParse:(WDUUsbDescriptor*)descriptor parsed:(WDUUsbInterfaceDescriptor**)parsed;
 + (WDUUsbInterfaceDescriptor*)parse:(WDUUsbDescriptor*)descriptor;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint8_t alternateSettingNumber;
 @property (readonly) uint8_t classCode;
@@ -331,7 +331,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbBulkInEndpointDescriptor : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint8_t endpointNumber;
 @property (readonly) unsigned int maxPacketSize;
@@ -347,7 +347,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbInterruptInEndpointDescriptor : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint8_t endpointNumber;
 @property (readonly) WFTimeSpan* interval;
@@ -364,7 +364,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbBulkOutEndpointDescriptor : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint8_t endpointNumber;
 @property (readonly) unsigned int maxPacketSize;
@@ -380,7 +380,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbInterruptOutEndpointDescriptor : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint8_t endpointNumber;
 @property (readonly) WFTimeSpan* interval;
@@ -399,7 +399,7 @@ WINRT_EXPORT
 + (BOOL)tryParse:(WDUUsbDescriptor*)descriptor parsed:(WDUUsbEndpointDescriptor**)parsed;
 + (WDUUsbEndpointDescriptor*)parse:(WDUUsbDescriptor*)descriptor;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDUUsbBulkInEndpointDescriptor* asBulkInEndpointDescriptor;
 @property (readonly) WDUUsbBulkOutEndpointDescriptor* asBulkOutEndpointDescriptor;
@@ -419,7 +419,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbInterruptInEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WSSIBuffer>* interruptData;
 @end
@@ -433,7 +433,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbInterruptInPipe : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDUUsbInterruptInEndpointDescriptor* endpointDescriptor;
 - (EventRegistrationToken)addDataReceivedEvent:(void (^)(WDUUsbInterruptInPipe*, WDUUsbInterruptInEventArgs*))del;
@@ -450,7 +450,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbBulkInPipe : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WDUUsbReadOptions readOptions;
 @property (readonly) WDUUsbBulkInEndpointDescriptor* endpointDescriptor;
@@ -469,7 +469,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbBulkOutPipe : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WDUUsbWriteOptions writeOptions;
 @property (readonly) WDUUsbBulkOutEndpointDescriptor* endpointDescriptor;
@@ -486,7 +486,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbInterruptOutPipe : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WDUUsbWriteOptions writeOptions;
 @property (readonly) WDUUsbInterruptOutEndpointDescriptor* endpointDescriptor;
@@ -503,7 +503,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbInterfaceSetting : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WDUUsbBulkInEndpointDescriptor* */ bulkInEndpoints;
 @property (readonly) NSArray* /* WDUUsbBulkOutEndpointDescriptor* */ bulkOutEndpoints;

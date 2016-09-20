@@ -126,7 +126,7 @@ WINRT_EXPORT
                                                      calendar:(NSString*)calendar
                                                         clock:(NSString*)clock ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* numeralSystem;
 @property (readonly) NSString* clock;

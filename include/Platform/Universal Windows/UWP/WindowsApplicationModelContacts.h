@@ -336,7 +336,7 @@ WINRT_EXPORT
 @interface WACContact : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
 @property (retain) NSString* name;
@@ -399,7 +399,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactCardDelayedDataLoader : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)setData:(WACContact*)contact;
 - (void)close;
@@ -414,7 +414,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactStore : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WACAggregateContactManager* aggregateContactManager;
 @property (readonly) WACContactChangeTracker* changeTracker;
@@ -446,7 +446,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactAnnotationStore : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)findContactIdsByEmailAsync:(NSString*)emailAddress
                            success:(void (^)(NSArray* /* NSString * */))success
@@ -478,7 +478,7 @@ WINRT_EXPORT
 @interface WACContactCardOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WACContactCardTabKind initialTabKind;
 @property WACContactCardHeaderKind headerKind;
@@ -494,7 +494,7 @@ WINRT_EXPORT
 @interface WACFullContactCardOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUVViewSizePreference desiredRemainingView;
 @end
@@ -509,7 +509,7 @@ WINRT_EXPORT
 @interface WACContactAnnotation : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WACContactAnnotationOperations supportedOperations;
 @property (retain) NSString* remoteId;
@@ -529,7 +529,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactAnnotationList : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* id;
 @property (readonly) NSString* providerPackageFamilyName;
@@ -553,7 +553,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactChangeTracker : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)enable;
 - (WACContactChangeReader*)getChangeReader;
@@ -569,7 +569,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (WACContactChangedDeferral*)getDeferral;
 @end
@@ -583,7 +583,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACAggregateContactManager : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)findRawContactsAsync:(WACContact*)contact success:(void (^)(NSArray* /* WACContact* */))success failure:(void (^)(NSError*))failure;
 - (void)tryLinkContactsAsync:(WACContact*)primaryContact
@@ -606,7 +606,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactList : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WACContactListOtherAppWriteAccess otherAppWriteAccess;
 @property WACContactListOtherAppReadAccess otherAppReadAccess;
@@ -640,7 +640,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactReader : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)readBatchAsyncWithSuccess:(void (^)(WACContactBatch*))success failure:(void (^)(NSError*))failure;
 - (NSArray* /* WACContactMatchReason* */)getMatchingPropertiesWithMatchReason:(WACContact*)contact;
@@ -658,7 +658,7 @@ WINRT_EXPORT
 + (WACContactQueryOptions*)makeWithText:(NSString*)text ACTIVATOR;
 + (WACContactQueryOptions*)makeWithTextAndFields:(NSString*)text fields:(WACContactQuerySearchFields)fields ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL includeContactsFromHiddenLists;
 @property WACContactAnnotationOperations desiredOperations;
@@ -677,7 +677,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactListSyncManager : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* lastAttemptedSyncTime;
 @property (readonly) WFDateTime* lastSuccessfulSyncTime;
@@ -697,7 +697,7 @@ WINRT_EXPORT
 @interface WACContactPhone : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* number;
 @property WACContactPhoneKind kind;
@@ -714,7 +714,7 @@ WINRT_EXPORT
 @interface WACContactEmail : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WACContactEmailKind kind;
 @property (retain) NSString* Description;
@@ -731,7 +731,7 @@ WINRT_EXPORT
 @interface WACContactAddress : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* streetAddress;
 @property (retain) NSString* region;
@@ -752,7 +752,7 @@ WINRT_EXPORT
 @interface WACContactConnectedServiceAccount : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* serviceName;
 @property (retain) NSString* id;
@@ -768,7 +768,7 @@ WINRT_EXPORT
 @interface WACContactDate : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) id /* int */ year;
 @property (retain) id /* unsigned int */ month;
@@ -787,7 +787,7 @@ WINRT_EXPORT
 @interface WACContactJobInfo : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* title;
 @property (retain) NSString* office;
@@ -809,7 +809,7 @@ WINRT_EXPORT
 @interface WACContactSignificantOther : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* name;
 @property (retain) NSString* Description;
@@ -826,7 +826,7 @@ WINRT_EXPORT
 @interface WACContactWebsite : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFUri* uri;
 @property (retain) NSString* Description;
@@ -842,7 +842,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactChangedDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)complete;
 @end
@@ -856,7 +856,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactChange : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WACContactChangeType changeType;
 @property (readonly) WACContact* contact;
@@ -871,7 +871,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactChangeReader : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)acceptChanges;
 - (void)acceptChangesThrough:(WACContactChange*)lastChangeToAccept;
@@ -887,7 +887,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactBatch : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WACContact* */ contacts;
 @property (readonly) WACContactBatchStatus status;
@@ -902,7 +902,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactMatchReason : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WACContactMatchReasonKind field;
 @property (readonly) NSArray* /* WDTTextSegment* */ segments;
@@ -918,7 +918,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactQueryTextSearch : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* text;
 @property WACContactQuerySearchScope searchScope;
@@ -934,7 +934,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactStoreNotificationTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -1026,7 +1026,7 @@ WINRT_EXPORT
                                 type:(WACContactFieldType)type
                             category:(WACContactFieldCategory)category ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WACContactFieldCategory category;
 @property (readonly) NSString* name;
@@ -1052,7 +1052,7 @@ WINRT_EXPORT
                                      country:(NSString*)country
                                   postalCode:(NSString*)postalCode ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WACContactFieldCategory category;
 @property (readonly) NSString* name;
@@ -1082,7 +1082,7 @@ WINRT_EXPORT
                                              displayText:(NSString*)displayText
                                                     verb:(WFUri*)verb ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WACContactFieldCategory category;
 @property (readonly) NSString* name;
@@ -1119,7 +1119,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WACContactField* */ customFields;
 @property (readonly) NSArray* /* WACContactField* */ emails;
@@ -1143,7 +1143,7 @@ WINRT_EXPORT
     : RTObject <WACIContactFieldFactory, WACIContactLocationFieldFactory, WACIContactInstantMessageFieldFactory>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (WACContactField*)createField_Default:(NSString*)value type:(WACContactFieldType)type;
 - (WACContactField*)createField_Category:(NSString*)value type:(WACContactFieldType)type category:(WACContactFieldCategory)category;
@@ -1179,7 +1179,7 @@ WINRT_EXPORT
 @interface WACContactPicker : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WACContactSelectionMode selectionMode;
 @property (retain) NSString* commitButtonText;

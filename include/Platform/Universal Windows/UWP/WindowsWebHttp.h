@@ -208,7 +208,7 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WWHHttpRequestMessage*)make:(WWHHttpMethod*)method uri:(WFUri*)uri ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFUri* requestUri;
 @property (retain) WWHHttpMethod* method;
@@ -231,7 +231,7 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WWHHttpResponseMessage*)make:(WWHHttpStatusCode)statusCode ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WWHHttpVersion Version;
 @property WWHHttpStatusCode statusCode;
@@ -257,7 +257,7 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WWHHttpClient*)make:(RTObject<WWHFIHttpFilter>*)filter ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WWHHHttpRequestHeaderCollection* defaultRequestHeaders;
 - (void)deleteAsync:(WFUri*)uri
@@ -318,7 +318,7 @@ WINRT_EXPORT
 @interface WWHHttpCookie : RTObject <WFIStringable>
 + (WWHHttpCookie*)make:(NSString*)name domain:(NSString*)domain path:(NSString*)path ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* value;
 @property BOOL secure;
@@ -339,7 +339,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WWHHttpCookieCollection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -358,7 +358,7 @@ WINRT_EXPORT
 @interface WWHHttpMethod : RTObject <WFIStringable>
 + (WWHHttpMethod*)make:(NSString*)method ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* method;
 + (WWHHttpMethod*)Delete;
@@ -380,7 +380,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WWHHttpTransportInformation : RTObject <WFIStringable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSCCCertificate* serverCertificate;
 @property (readonly) WNSSocketSslErrorSeverity serverCertificateErrorSeverity;
@@ -403,7 +403,7 @@ WINRT_EXPORT
                                                        encoding:(WSSUnicodeEncoding)encoding
                                                       mediaType:(NSString*)mediaType ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -436,7 +436,7 @@ WINRT_EXPORT
                                            offset:(unsigned int)offset
                                             count:(unsigned int)count ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -466,7 +466,7 @@ WINRT_EXPORT
 @interface WWHHttpStreamContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpStreamContent*)makeFromInputStream:(RTObject<WSSIInputStream>*)content ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -496,7 +496,7 @@ WINRT_EXPORT
 @interface WWHHttpFormUrlEncodedContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpFormUrlEncodedContent*)make:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)content ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -528,7 +528,7 @@ WINRT_EXPORT
 + (WWHHttpMultipartContent*)makeWithSubtypeAndBoundary:(NSString*)subtype boundary:(NSString*)boundary ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -560,7 +560,7 @@ WINRT_EXPORT
 + (WWHHttpMultipartFormDataContent*)makeWithBoundary:(NSString*)boundary ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -592,7 +592,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WWHHttpCookieManager : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (BOOL)setCookie:(WWHHttpCookie*)cookie;
 - (BOOL)setCookieWithThirdParty:(WWHHttpCookie*)cookie thirdParty:(BOOL)thirdParty;

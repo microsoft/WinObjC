@@ -92,7 +92,7 @@ WINRT_EXPORT
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDWWiFiAdapter*))success failure:(void (^)(NSError*))failure;
 + (void)requestAccessAsyncWithSuccess:(void (^)(WDWWiFiAccessStatus))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNCNetworkAdapter* networkAdapter;
 @property (readonly) WDWWiFiNetworkReport* networkReport;
@@ -126,7 +126,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDWWiFiNetworkReport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WDWWiFiAvailableNetwork* */ availableNetworks;
 @property (readonly) WFDateTime* timestamp;
@@ -141,7 +141,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDWWiFiAvailableNetwork : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFTimeSpan* beaconInterval;
 @property (readonly) NSString* bssid;
@@ -165,7 +165,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDWWiFiConnectionResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDWWiFiConnectionStatus connectionStatus;
 @end

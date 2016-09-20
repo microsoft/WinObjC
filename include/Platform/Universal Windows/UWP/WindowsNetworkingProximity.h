@@ -127,7 +127,7 @@ typedef void (^WNPDeviceDepartedEventHandler)(WNPProximityDevice* sender);
 WINRT_EXPORT
 @interface WNPProximityMessage : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WSSIBuffer>* data;
 @property (readonly) NSString* dataAsString;
@@ -147,7 +147,7 @@ WINRT_EXPORT
 + (WNPProximityDevice*)getDefault;
 + (WNPProximityDevice*)fromId:(NSString*)deviceId;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint64_t bitsPerSecond;
 @property (readonly) NSString* deviceId;
@@ -180,7 +180,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNPTriggeredConnectionStateChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int id;
 @property (readonly) WNSStreamSocket* socket;
@@ -196,7 +196,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNPPeerInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* displayName;
 @property (readonly) RTObject<WSSIBuffer>* discoveryData;
@@ -214,7 +214,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNPConnectionRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNPPeerInformation* peerInformation;
 @end
@@ -228,7 +228,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNPPeerWatcher : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNPPeerWatcherStatus status;
 - (EventRegistrationToken)addAddedEvent:(void (^)(WNPPeerWatcher*, WNPPeerInformation*))del;

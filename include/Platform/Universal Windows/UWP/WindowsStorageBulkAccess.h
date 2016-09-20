@@ -72,7 +72,7 @@ WINRT_EXPORT
                                                    thumbnailOptions:(WSFThumbnailOptions)thumbnailOptions
                                                           delayLoad:(BOOL)delayLoad ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)getItemsAsync:(unsigned int)startIndex
    maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
@@ -287,7 +287,7 @@ WINRT_EXPORT
                                           WSIStorageFilePropertiesWithAvailability,
                                           WSIStorageFile2>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSFBasicProperties* basicProperties;
 @property (readonly) WSFDocumentProperties* documentProperties;
@@ -471,7 +471,7 @@ WINRT_EXPORT
                                             WSIStorageFolder2,
                                             WSIStorageItemPropertiesWithProvider>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSFBasicProperties* basicProperties;
 @property (readonly) WSFDocumentProperties* documentProperties;

@@ -186,7 +186,7 @@ WINRT_EXPORT
 + (WMEVideoCompositorDefinition*)make:(NSString*)activatableClassId ACTIVATOR;
 + (WMEVideoCompositorDefinition*)makeWithProperties:(NSString*)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
@@ -201,7 +201,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMECompositeVideoFrameContext : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMVideoFrame* backgroundFrame;
 @property (readonly) WMVideoFrame* outputFrame;
@@ -218,7 +218,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMEAudioEffect : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMEAudioEffectType audioEffectType;
 @end
@@ -232,7 +232,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMEAudioRenderEffectsManager : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* effectsProviderSettingsLabel;
 @property (readonly) RTObject<WSSIRandomAccessStreamWithContentType>* effectsProviderThumbnail;
@@ -251,7 +251,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMEAudioCaptureEffectsManager : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (EventRegistrationToken)addAudioCaptureEffectsChangedEvent:(void (^)(WMEAudioCaptureEffectsManager*, RTObject*))del;
 - (void)removeAudioCaptureEffectsChangedEvent:(EventRegistrationToken)tok;
@@ -287,7 +287,7 @@ WINRT_EXPORT
 + (WMEVideoEffectDefinition*)make:(NSString*)activatableClassId ACTIVATOR;
 + (WMEVideoEffectDefinition*)makeWithProperties:(NSString*)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
@@ -304,7 +304,7 @@ WINRT_EXPORT
 + (WMEAudioEffectDefinition*)make:(NSString*)activatableClassId ACTIVATOR;
 + (WMEAudioEffectDefinition*)makeWithProperties:(NSString*)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
@@ -319,7 +319,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMEProcessVideoFrameContext : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMVideoFrame* inputFrame;
 @property (readonly) WMVideoFrame* outputFrame;
@@ -334,7 +334,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMEProcessAudioFrameContext : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMAudioFrame* inputFrame;
 @property (readonly) WMAudioFrame* outputFrame;
@@ -350,7 +350,7 @@ WINRT_EXPORT
 @interface WMEVideoTransformEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;

@@ -76,7 +76,7 @@ typedef unsigned WASPStoreSystemFeature;
 WINRT_EXPORT
 @interface WASPStorePreviewSkuInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* currencyCode;
 @property (readonly) NSString* customDeveloperData;
@@ -98,7 +98,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WASPStorePreviewPurchaseResults : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WASPStorePreviewProductPurchaseStatus productPurchaseStatus;
 @end
@@ -112,7 +112,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WASPStorePreviewProductInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* Description;
 @property (readonly) NSString* productId;
@@ -130,7 +130,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WASPStoreHardwareManufacturerInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* hardwareManufacturerId;
 @property (readonly) NSString* manufacturerName;

@@ -49,7 +49,7 @@ WINRT_EXPORT
 @interface WDPPdfPageRenderOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFRect* sourceRect;
 @property BOOL isIgnoringHighContrast;
@@ -68,7 +68,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDPPdfPageDimensions : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFRect* artBox;
 @property (readonly) WFRect* bleedBox;
@@ -96,7 +96,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDPPdfPage : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPPdfPageDimensions* dimensions;
 @property (readonly) unsigned int index;
@@ -131,7 +131,7 @@ WINRT_EXPORT
                                 success:(void (^)(WDPPdfDocument*))success
                                 failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isPasswordProtected;
 @property (readonly) unsigned int pageCount;

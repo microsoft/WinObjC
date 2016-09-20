@@ -58,7 +58,7 @@ typedef unsigned WAEExtendedExecutionRevokedReason;
 WINRT_EXPORT
 @interface WAEExtendedExecutionRevokedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAEExtendedExecutionRevokedReason reason;
 @end
@@ -83,7 +83,7 @@ WINRT_EXPORT
 @interface WAEExtendedExecutionSession : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WAEExtendedExecutionReason reason;
 @property unsigned int percentProgress;

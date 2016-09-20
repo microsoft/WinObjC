@@ -119,7 +119,7 @@ WINRT_EXPORT
                                      label:(NSString*)label
                                    handler:(WUPUICommandInvokedHandler)handler ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* label;
 @property (copy) WUPUICommandInvokedHandler invoked;
@@ -138,7 +138,7 @@ WINRT_EXPORT
 + (WUAWebAccountProviderCommand*)makeWebAccountProviderCommand:(WSCWebAccountProvider*)webAccountProvider
                                                        invoked:(WUAWebAccountProviderCommandInvokedHandler)invoked ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUAWebAccountProviderCommandInvokedHandler invoked;
 @property (readonly) WSCWebAccountProvider* webAccountProvider;
@@ -156,7 +156,7 @@ WINRT_EXPORT
                                        invoked:(WUAWebAccountCommandInvokedHandler)invoked
                                        actions:(WUASupportedWebAccountActions)actions ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUASupportedWebAccountActions actions;
 @property (readonly) WUAWebAccountCommandInvokedHandler invoked;
@@ -172,7 +172,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUAWebAccountInvokedArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUAWebAccountAction action;
 @end
@@ -189,7 +189,7 @@ WINRT_EXPORT
 + (WUACredentialCommand*)makeCredentialCommandWithHandler:(WSCPasswordCredential*)passwordCredential
                                                   deleted:(WUACredentialCommandCredentialDeletedHandler)deleted ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUACredentialCommandCredentialDeletedHandler credentialDeleted;
 @property (readonly) WSCPasswordCredential* passwordCredential;
@@ -204,7 +204,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUAAccountsSettingsPaneEventDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)complete;
 @end
@@ -218,7 +218,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUAAccountsSettingsPaneCommandsRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* headerText;
 @property (readonly) NSMutableArray* /* WUASettingsCommand* */ commands;
@@ -239,7 +239,7 @@ WINRT_EXPORT
 + (WUAAccountsSettingsPane*)getForCurrentView;
 + (void)show;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (EventRegistrationToken)addAccountCommandsRequestedEvent:(void (^)(WUAAccountsSettingsPane*,
                                                                      WUAAccountsSettingsPaneCommandsRequestedEventArgs*))del;

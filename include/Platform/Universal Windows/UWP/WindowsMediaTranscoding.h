@@ -57,7 +57,7 @@ typedef unsigned WMTTranscodeFailureReason;
 WINRT_EXPORT
 @interface WMTPrepareTranscodeResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL canTranscode;
 @property (readonly) WMTTranscodeFailureReason failureReason;
@@ -74,7 +74,7 @@ WINRT_EXPORT
 @interface WMTMediaTranscoder : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFTimeSpan* trimStopTime;
 @property (retain) WFTimeSpan* trimStartTime;
