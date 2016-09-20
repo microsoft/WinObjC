@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_SMARTCARDS_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_SMARTCARDS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Devices_SmartCards.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDSSmartCardReader, WDSSmartCard, WDSCardAddedEventArgs, WDSCardRemovedEventArgs, WDSSmartCardProvisioning, WDSSmartCardPinPolicy,
@@ -84,13 +88,13 @@ typedef void (^WDSSmartCardPinResetHandler)(WDSSmartCardProvisioning* sender, WD
 #ifndef __WDSSmartCardReader_DEFINED__
 #define __WDSSmartCardReader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMARTCARDS_EXPORT
 @interface WDSSmartCardReader : RTObject
 + (NSString*)getDeviceSelector;
 + (NSString*)getDeviceSelectorWithKind:(WDSSmartCardReaderKind)kind;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDSSmartCardReader*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* deviceId;
 @property (readonly) WDSSmartCardReaderKind kind;
@@ -109,10 +113,10 @@ WINRT_EXPORT
 #ifndef __WDSSmartCard_DEFINED__
 #define __WDSSmartCard_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMARTCARDS_EXPORT
 @interface WDSSmartCard : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSSmartCardReader* reader;
 - (void)getStatusAsyncWithSuccess:(void (^)(WDSSmartCardStatus))success failure:(void (^)(NSError*))failure;
@@ -126,10 +130,10 @@ WINRT_EXPORT
 #ifndef __WDSCardAddedEventArgs_DEFINED__
 #define __WDSCardAddedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMARTCARDS_EXPORT
 @interface WDSCardAddedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSSmartCard* smartCard;
 @end
@@ -140,10 +144,10 @@ WINRT_EXPORT
 #ifndef __WDSCardRemovedEventArgs_DEFINED__
 #define __WDSCardRemovedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMARTCARDS_EXPORT
 @interface WDSCardRemovedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSSmartCard* smartCard;
 @end
@@ -154,7 +158,7 @@ WINRT_EXPORT
 #ifndef __WDSSmartCardProvisioning_DEFINED__
 #define __WDSSmartCardProvisioning_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMARTCARDS_EXPORT
 @interface WDSSmartCardProvisioning : RTObject
 + (void)fromSmartCardAsync:(WDSSmartCard*)card success:(void (^)(WDSSmartCardProvisioning*))success failure:(void (^)(NSError*))failure;
 + (void)requestVirtualSmartCardCreationAsync:(NSString*)friendlyName
@@ -181,7 +185,7 @@ WINRT_EXPORT
                                                        success:(void (^)(WDSSmartCardProvisioning*))success
                                                        failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSSmartCard* smartCard;
 - (void)getIdAsyncWithSuccess:(void (^)(WFGUID*))success failure:(void (^)(NSError*))failure;
@@ -198,11 +202,11 @@ WINRT_EXPORT
 #ifndef __WDSSmartCardPinPolicy_DEFINED__
 #define __WDSSmartCardPinPolicy_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMARTCARDS_EXPORT
 @interface WDSSmartCardPinPolicy : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WDSSmartCardPinCharacterPolicyOption uppercaseLetters;
 @property WDSSmartCardPinCharacterPolicyOption specialCharacters;
@@ -228,10 +232,10 @@ WINRT_EXPORT
 #ifndef __WDSSmartCardChallengeContext_DEFINED__
 #define __WDSSmartCardChallengeContext_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMARTCARDS_EXPORT
 @interface WDSSmartCardChallengeContext : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) RTObject<WSSIBuffer>* challenge;
 - (void)verifyResponseAsync:(RTObject<WSSIBuffer>*)response success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
@@ -250,10 +254,10 @@ WINRT_EXPORT
 #ifndef __WDSSmartCardPinResetRequest_DEFINED__
 #define __WDSSmartCardPinResetRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMARTCARDS_EXPORT
 @interface WDSSmartCardPinResetRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) RTObject<WSSIBuffer>* challenge;
 @property (readonly) WFDateTime* deadline;
@@ -267,10 +271,10 @@ WINRT_EXPORT
 #ifndef __WDSSmartCardPinResetDeferral_DEFINED__
 #define __WDSSmartCardPinResetDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMARTCARDS_EXPORT
 @interface WDSSmartCardPinResetDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (void)complete;
 @end
@@ -281,10 +285,10 @@ WINRT_EXPORT
 #ifndef __WDSSmartCardConnection_DEFINED__
 #define __WDSSmartCardConnection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMARTCARDS_EXPORT
 @interface WDSSmartCardConnection : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (void)transmitAsync:(RTObject<WSSIBuffer>*)command success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 - (void)close;

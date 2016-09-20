@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Devices_SerialCommunication.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDSSerialDevice, WDSErrorReceivedEventArgs, WDSPinChangedEventArgs;
@@ -91,14 +95,14 @@ typedef unsigned WDSSerialPinChange;
 #ifndef __WDSSerialDevice_DEFINED__
 #define __WDSSerialDevice_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 @interface WDSSerialDevice : RTObject <WFIClosable>
 + (NSString*)getDeviceSelector;
 + (NSString*)getDeviceSelectorFromPortName:(NSString*)portName;
 + (NSString*)getDeviceSelectorFromUsbVidPid:(unsigned short)vendorId productId:(unsigned short)productId;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDSSerialDevice*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isDataTerminalReadyEnabled;
 @property unsigned short dataBits;
@@ -132,10 +136,10 @@ WINRT_EXPORT
 #ifndef __WDSErrorReceivedEventArgs_DEFINED__
 #define __WDSErrorReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 @interface WDSErrorReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSSerialError error;
 @end
@@ -146,10 +150,10 @@ WINRT_EXPORT
 #ifndef __WDSPinChangedEventArgs_DEFINED__
 #define __WDSPinChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 @interface WDSPinChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSSerialPinChange pinChange;
 @end

@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
+#define OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Networking_PushNotifications.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WNPPushNotificationChannel, WNPPushNotificationReceivedEventArgs, WNPRawNotification, WNPPushNotificationChannelManager;
@@ -44,10 +48,10 @@ typedef unsigned WNPPushNotificationType;
 #ifndef __WNPPushNotificationChannel_DEFINED__
 #define __WNPPushNotificationChannel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 @interface WNPPushNotificationChannel : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFDateTime* expirationTime;
 @property (readonly) NSString* uri;
@@ -63,10 +67,10 @@ WINRT_EXPORT
 #ifndef __WNPPushNotificationReceivedEventArgs_DEFINED__
 #define __WNPPushNotificationReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 @interface WNPPushNotificationReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL cancel;
 @property (readonly) WUNBadgeNotification* badgeNotification;
@@ -82,10 +86,10 @@ WINRT_EXPORT
 #ifndef __WNPRawNotification_DEFINED__
 #define __WNPRawNotification_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 @interface WNPRawNotification : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* content;
 @end
@@ -96,7 +100,7 @@ WINRT_EXPORT
 #ifndef __WNPPushNotificationChannelManager_DEFINED__
 #define __WNPPushNotificationChannelManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 @interface WNPPushNotificationChannelManager : RTObject
 + (void)createPushNotificationChannelForApplicationAsyncWithSuccess:(void (^)(WNPPushNotificationChannel*))success
                                                             failure:(void (^)(NSError*))failure;

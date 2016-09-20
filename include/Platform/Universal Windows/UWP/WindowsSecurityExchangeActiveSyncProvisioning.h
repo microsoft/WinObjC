@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SECURITY_EXCHANGEACTIVESYNCPROVISIONING_EXPORT
+#define OBJCUWP_WINDOWS_SECURITY_EXCHANGEACTIVESYNCPROVISIONING_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Security_ExchangeActiveSyncProvisioning.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WSEEasClientDeviceInformation;
@@ -31,11 +35,11 @@
 #ifndef __WSEEasClientDeviceInformation_DEFINED__
 #define __WSEEasClientDeviceInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_EXCHANGEACTIVESYNCPROVISIONING_EXPORT
 @interface WSEEasClientDeviceInformation : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* friendlyName;
 @property (readonly) WFGUID* id;

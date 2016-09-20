@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Perception.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDPPerceptionColorFrameSourceWatcher, WDPPerceptionColorFrameSourceAddedEventArgs, WDPPerceptionColorFrameSourceRemovedEventArgs,
@@ -83,10 +87,10 @@ typedef unsigned WDPPerceptionFrameSourcePropertyChangeStatus;
 #ifndef __WDPPerceptionColorFrameSourceWatcher_DEFINED__
 #define __WDPPerceptionColorFrameSourceWatcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionColorFrameSourceWatcher : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDEDeviceWatcherStatus status;
 - (EventRegistrationToken)addEnumerationCompletedEvent:(void (^)(WDPPerceptionColorFrameSourceWatcher*, RTObject*))del;
@@ -109,10 +113,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionColorFrameSourceAddedEventArgs_DEFINED__
 #define __WDPPerceptionColorFrameSourceAddedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionColorFrameSourceAddedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDPPerceptionColorFrameSource* frameSource;
 @end
@@ -123,10 +127,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionColorFrameSourceRemovedEventArgs_DEFINED__
 #define __WDPPerceptionColorFrameSourceRemovedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionColorFrameSourceRemovedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDPPerceptionColorFrameSource* frameSource;
 @end
@@ -137,10 +141,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionDepthFrameSourceWatcher_DEFINED__
 #define __WDPPerceptionDepthFrameSourceWatcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionDepthFrameSourceWatcher : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDEDeviceWatcherStatus status;
 - (EventRegistrationToken)addEnumerationCompletedEvent:(void (^)(WDPPerceptionDepthFrameSourceWatcher*, RTObject*))del;
@@ -163,10 +167,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionDepthFrameSourceAddedEventArgs_DEFINED__
 #define __WDPPerceptionDepthFrameSourceAddedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionDepthFrameSourceAddedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDPPerceptionDepthFrameSource* frameSource;
 @end
@@ -177,10 +181,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionDepthFrameSourceRemovedEventArgs_DEFINED__
 #define __WDPPerceptionDepthFrameSourceRemovedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionDepthFrameSourceRemovedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDPPerceptionDepthFrameSource* frameSource;
 @end
@@ -191,10 +195,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionInfraredFrameSourceWatcher_DEFINED__
 #define __WDPPerceptionInfraredFrameSourceWatcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionInfraredFrameSourceWatcher : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDEDeviceWatcherStatus status;
 - (EventRegistrationToken)addEnumerationCompletedEvent:(void (^)(WDPPerceptionInfraredFrameSourceWatcher*, RTObject*))del;
@@ -217,10 +221,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionInfraredFrameSourceAddedEventArgs_DEFINED__
 #define __WDPPerceptionInfraredFrameSourceAddedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionInfraredFrameSourceAddedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDPPerceptionInfraredFrameSource* frameSource;
 @end
@@ -231,10 +235,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionInfraredFrameSourceRemovedEventArgs_DEFINED__
 #define __WDPPerceptionInfraredFrameSourceRemovedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionInfraredFrameSourceRemovedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDPPerceptionInfraredFrameSource* frameSource;
 @end
@@ -245,14 +249,14 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionColorFrameSource_DEFINED__
 #define __WDPPerceptionColorFrameSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionColorFrameSource : RTObject
 + (WDPPerceptionColorFrameSourceWatcher*)createWatcher;
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WDPPerceptionColorFrameSource* */))success failure:(void (^)(NSError*))failure;
 + (void)fromIdAsync:(NSString*)id success:(void (^)(WDPPerceptionColorFrameSource*))success failure:(void (^)(NSError*))failure;
 + (void)requestAccessAsyncWithSuccess:(void (^)(WDPPerceptionFrameSourceAccessStatus))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL active;
 @property (readonly) BOOL available;
@@ -300,14 +304,14 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionDepthFrameSource_DEFINED__
 #define __WDPPerceptionDepthFrameSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionDepthFrameSource : RTObject
 + (WDPPerceptionDepthFrameSourceWatcher*)createWatcher;
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WDPPerceptionDepthFrameSource* */))success failure:(void (^)(NSError*))failure;
 + (void)fromIdAsync:(NSString*)id success:(void (^)(WDPPerceptionDepthFrameSource*))success failure:(void (^)(NSError*))failure;
 + (void)requestAccessAsyncWithSuccess:(void (^)(WDPPerceptionFrameSourceAccessStatus))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL active;
 @property (readonly) BOOL available;
@@ -355,14 +359,14 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionInfraredFrameSource_DEFINED__
 #define __WDPPerceptionInfraredFrameSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionInfraredFrameSource : RTObject
 + (WDPPerceptionInfraredFrameSourceWatcher*)createWatcher;
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WDPPerceptionInfraredFrameSource* */))success failure:(void (^)(NSError*))failure;
 + (void)fromIdAsync:(NSString*)id success:(void (^)(WDPPerceptionInfraredFrameSource*))success failure:(void (^)(NSError*))failure;
 + (void)requestAccessAsyncWithSuccess:(void (^)(WDPPerceptionFrameSourceAccessStatus))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL active;
 @property (readonly) BOOL available;
@@ -420,10 +424,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionControlSession_DEFINED__
 #define __WDPPerceptionControlSession_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionControlSession : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (EventRegistrationToken)addControlLostEvent:(void (^)(WDPPerceptionControlSession*, RTObject*))del;
 - (void)removeControlLostEvent:(EventRegistrationToken)tok;
@@ -440,10 +444,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionFrameSourcePropertyChangeResult_DEFINED__
 #define __WDPPerceptionFrameSourcePropertyChangeResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionFrameSourcePropertyChangeResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) RTObject* newValue;
 @property (readonly) WDPPerceptionFrameSourcePropertyChangeStatus status;
@@ -455,10 +459,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionFrameSourcePropertiesChangedEventArgs_DEFINED__
 #define __WDPPerceptionFrameSourcePropertiesChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionFrameSourcePropertiesChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFCCollectionChange collectionChange;
 @property (readonly) NSString* key;
@@ -470,10 +474,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionVideoProfile_DEFINED__
 #define __WDPPerceptionVideoProfile_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionVideoProfile : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WGIBitmapAlphaMode bitmapAlphaMode;
 @property (readonly) WGIBitmapPixelFormat bitmapPixelFormat;
@@ -489,10 +493,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionDepthCorrelatedCameraIntrinsics_DEFINED__
 #define __WDPPerceptionDepthCorrelatedCameraIntrinsics_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionDepthCorrelatedCameraIntrinsics : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (WFNVector3*)unprojectPixelAtCorrelatedDepth:(WFPoint*)pixelCoordinate depthFrame:(WDPPerceptionDepthFrame*)depthFrame;
 - (void)unprojectPixelsAtCorrelatedDepth:(NSArray* /* WFPoint* */)sourceCoordinates
@@ -511,10 +515,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionDepthCorrelatedCoordinateMapper_DEFINED__
 #define __WDPPerceptionDepthCorrelatedCoordinateMapper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionDepthCorrelatedCoordinateMapper : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (WFPoint*)mapPixelToTarget:(WFPoint*)sourcePixelCoordinate depthFrame:(WDPPerceptionDepthFrame*)depthFrame;
 - (void)mapPixelsToTarget:(NSArray* /* WFPoint* */)sourceCoordinates
@@ -533,10 +537,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionColorFrameReader_DEFINED__
 #define __WDPPerceptionColorFrameReader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionColorFrameReader : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isPaused;
 @property (readonly) WDPPerceptionColorFrameSource* source;
@@ -552,10 +556,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionDepthFrameReader_DEFINED__
 #define __WDPPerceptionDepthFrameReader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionDepthFrameReader : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isPaused;
 @property (readonly) WDPPerceptionDepthFrameSource* source;
@@ -571,10 +575,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionInfraredFrameReader_DEFINED__
 #define __WDPPerceptionInfraredFrameReader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionInfraredFrameReader : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isPaused;
 @property (readonly) WDPPerceptionInfraredFrameSource* source;
@@ -591,10 +595,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionColorFrameArrivedEventArgs_DEFINED__
 #define __WDPPerceptionColorFrameArrivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionColorFrameArrivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFTimeSpan* relativeTime;
 - (WDPPerceptionColorFrame*)tryOpenFrame;
@@ -606,10 +610,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionColorFrame_DEFINED__
 #define __WDPPerceptionColorFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionColorFrame : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WMVideoFrame* videoFrame;
 - (void)close;
@@ -621,10 +625,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionDepthFrameArrivedEventArgs_DEFINED__
 #define __WDPPerceptionDepthFrameArrivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionDepthFrameArrivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFTimeSpan* relativeTime;
 - (WDPPerceptionDepthFrame*)tryOpenFrame;
@@ -636,10 +640,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionDepthFrame_DEFINED__
 #define __WDPPerceptionDepthFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionDepthFrame : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WMVideoFrame* videoFrame;
 - (void)close;
@@ -651,10 +655,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionInfraredFrameArrivedEventArgs_DEFINED__
 #define __WDPPerceptionInfraredFrameArrivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionInfraredFrameArrivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFTimeSpan* relativeTime;
 - (WDPPerceptionInfraredFrame*)tryOpenFrame;
@@ -666,10 +670,10 @@ WINRT_EXPORT
 #ifndef __WDPPerceptionInfraredFrame_DEFINED__
 #define __WDPPerceptionInfraredFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionInfraredFrame : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WMVideoFrame* videoFrame;
 - (void)close;
@@ -681,7 +685,7 @@ WINRT_EXPORT
 #ifndef __WDPKnownPerceptionFrameSourceProperties_DEFINED__
 #define __WDPKnownPerceptionFrameSourceProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPKnownPerceptionFrameSourceProperties : RTObject
 + (NSString*)deviceModelVersion;
 + (NSString*)enclosureLocation;
@@ -696,7 +700,7 @@ WINRT_EXPORT
 #ifndef __WDPKnownPerceptionVideoFrameSourceProperties_DEFINED__
 #define __WDPKnownPerceptionVideoFrameSourceProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPKnownPerceptionVideoFrameSourceProperties : RTObject
 + (NSString*)availableVideoProfiles;
 + (NSString*)cameraIntrinsics;
@@ -711,7 +715,7 @@ WINRT_EXPORT
 #ifndef __WDPKnownPerceptionInfraredFrameSourceProperties_DEFINED__
 #define __WDPKnownPerceptionInfraredFrameSourceProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPKnownPerceptionInfraredFrameSourceProperties : RTObject
 + (NSString*)activeIlluminationEnabled;
 + (NSString*)ambientSubtractionEnabled;
@@ -728,7 +732,7 @@ WINRT_EXPORT
 #ifndef __WDPKnownPerceptionDepthFrameSourceProperties_DEFINED__
 #define __WDPKnownPerceptionDepthFrameSourceProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPKnownPerceptionDepthFrameSourceProperties : RTObject
 + (NSString*)maxDepth;
 + (NSString*)minDepth;
@@ -740,7 +744,7 @@ WINRT_EXPORT
 #ifndef __WDPKnownPerceptionColorFrameSourceProperties_DEFINED__
 #define __WDPKnownPerceptionColorFrameSourceProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPKnownPerceptionColorFrameSourceProperties : RTObject
 + (NSString*)autoExposureEnabled;
 + (NSString*)exposure;
@@ -753,7 +757,7 @@ WINRT_EXPORT
 #ifndef __WDPKnownPerceptionVideoProfileProperties_DEFINED__
 #define __WDPKnownPerceptionVideoProfileProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPKnownPerceptionVideoProfileProperties : RTObject
 + (NSString*)bitmapAlphaMode;
 + (NSString*)bitmapPixelFormat;
@@ -768,7 +772,7 @@ WINRT_EXPORT
 #ifndef __WDPKnownCameraIntrinsicsProperties_DEFINED__
 #define __WDPKnownCameraIntrinsicsProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPKnownCameraIntrinsicsProperties : RTObject
 + (NSString*)focalLength;
 + (NSString*)principalPoint;

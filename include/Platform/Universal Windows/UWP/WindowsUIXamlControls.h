@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WXCBackClickEventArgs, WXCDragItemsStartingEventArgs, WXCNotifyEventArgs, WXCSemanticZoomViewChangedEventArgs,
@@ -1221,11 +1225,11 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 #ifndef __WXCBackClickEventArgs_DEFINED__
 #define __WXCBackClickEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCBackClickEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL handled;
 @end
@@ -1236,11 +1240,11 @@ WINRT_EXPORT
 #ifndef __WXCDragItemsStartingEventArgs_DEFINED__
 #define __WXCDragItemsStartingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCDragItemsStartingEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL cancel;
 @property (readonly) WADDataPackage* data;
@@ -1253,10 +1257,10 @@ WINRT_EXPORT
 #ifndef __WXCNotifyEventArgs_DEFINED__
 #define __WXCNotifyEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCNotifyEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* value;
 @property (readonly) WFUri* callingUri;
@@ -1268,11 +1272,11 @@ WINRT_EXPORT
 #ifndef __WXCSemanticZoomViewChangedEventArgs_DEFINED__
 #define __WXCSemanticZoomViewChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCSemanticZoomViewChangedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXCSemanticZoomLocation* sourceItem;
 @property BOOL isSourceZoomedInView;
@@ -1285,10 +1289,10 @@ WINRT_EXPORT
 #ifndef __WXCTextControlPasteEventArgs_DEFINED__
 #define __WXCTextControlPasteEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCTextControlPasteEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL handled;
 @end
@@ -1299,11 +1303,11 @@ WINRT_EXPORT
 #ifndef __WXCContainerContentChangingEventArgs_DEFINED__
 #define __WXCContainerContentChangingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCContainerContentChangingEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL handled;
 @property (readonly) BOOL inRecycleQueue;
@@ -1322,11 +1326,11 @@ WINRT_EXPORT
 #ifndef __WXCSemanticZoomLocation_DEFINED__
 #define __WXCSemanticZoomLocation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCSemanticZoomLocation : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) RTObject* item;
 @property (retain) WFRect* bounds;
@@ -1338,10 +1342,10 @@ WINRT_EXPORT
 #ifndef __WXCCandidateWindowBoundsChangedEventArgs_DEFINED__
 #define __WXCCandidateWindowBoundsChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCCandidateWindowBoundsChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFRect* bounds;
 @end
@@ -1352,11 +1356,11 @@ WINRT_EXPORT
 #ifndef __WXCChoosingGroupHeaderContainerEventArgs_DEFINED__
 #define __WXCChoosingGroupHeaderContainerEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCChoosingGroupHeaderContainerEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXCListViewBaseHeaderItem* groupHeaderContainer;
 @property (readonly) RTObject* group;
@@ -1369,11 +1373,11 @@ WINRT_EXPORT
 #ifndef __WXCChoosingItemContainerEventArgs_DEFINED__
 #define __WXCChoosingItemContainerEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCChoosingItemContainerEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WUXCPSelectorItem* itemContainer;
 @property BOOL isContainerPrepared;
@@ -1387,10 +1391,10 @@ WINRT_EXPORT
 #ifndef __WXCColumnDefinitionCollection_DEFINED__
 #define __WXCColumnDefinitionCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCColumnDefinitionCollection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -1411,11 +1415,11 @@ WINRT_EXPORT
 #ifndef __WXCDataTemplateSelector_DEFINED__
 #define __WXCDataTemplateSelector_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCDataTemplateSelector : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (WXDataTemplate*)selectTemplate:(RTObject*)item container:(WXDependencyObject*)container;
 - (WXDataTemplate*)selectTemplateCore:(RTObject*)item container:(WXDependencyObject*)container;
@@ -1429,10 +1433,10 @@ WINRT_EXPORT
 #ifndef __WXCDragItemsCompletedEventArgs_DEFINED__
 #define __WXCDragItemsCompletedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCDragItemsCompletedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WADDataPackageOperation dropResult;
 @property (readonly) NSArray* /* RTObject* */ items;
@@ -1444,11 +1448,11 @@ WINRT_EXPORT
 #ifndef __WXCStyleSelector_DEFINED__
 #define __WXCStyleSelector_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCStyleSelector : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (WXStyle*)selectStyle:(RTObject*)item container:(WXDependencyObject*)container;
 - (WXStyle*)selectStyleCore:(RTObject*)item container:(WXDependencyObject*)container;
@@ -1471,11 +1475,11 @@ WINRT_EXPORT
 #ifndef __WXCGroupStyle_DEFINED__
 #define __WXCGroupStyle_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCGroupStyle : RTObject <WUXDINotifyPropertyChanged>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXCItemsPanelTemplate* panel;
 @property BOOL hidesIfEmpty;
@@ -1494,11 +1498,11 @@ WINRT_EXPORT
 #ifndef __WXCGroupStyleSelector_DEFINED__
 #define __WXCGroupStyleSelector_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCGroupStyleSelector : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (WXCGroupStyle*)selectGroupStyle:(RTObject*)group level:(unsigned int)level;
 - (WXCGroupStyle*)selectGroupStyleCore:(RTObject*)group level:(unsigned int)level;
@@ -1510,10 +1514,10 @@ WINRT_EXPORT
 #ifndef __WXCItemCollection_DEFINED__
 #define __WXCItemCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCItemCollection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int size;
 // Could not generate add_VectorChanged (Can't marshal Windows.Foundation.Collections.VectorChangedEventHandler`1<System.Object>)
@@ -1538,10 +1542,10 @@ WINRT_EXPORT
 #ifndef __WXCItemContainerGenerator_DEFINED__
 #define __WXCItemContainerGenerator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCItemContainerGenerator : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (EventRegistrationToken)addItemsChangedEvent:(WUXCPItemsChangedEventHandler)del;
 - (void)removeItemsChangedEvent:(EventRegistrationToken)tok;
@@ -1569,12 +1573,12 @@ WINRT_EXPORT
 #ifndef __WXCMediaTransportControlsHelper_DEFINED__
 #define __WXCMediaTransportControlsHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCMediaTransportControlsHelper : RTObject
 + (id /* int */)getDropoutOrder:(WXUIElement*)element;
 + (void)setDropoutOrder:(WXUIElement*)element value:(id /* int */)value;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WXDependencyProperty*)dropoutOrderProperty;
 @end
@@ -1585,10 +1589,10 @@ WINRT_EXPORT
 #ifndef __WXCRichEditBoxTextChangingEventArgs_DEFINED__
 #define __WXCRichEditBoxTextChangingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCRichEditBoxTextChangingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -1598,10 +1602,10 @@ WINRT_EXPORT
 #ifndef __WXCRowDefinitionCollection_DEFINED__
 #define __WXCRowDefinitionCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCRowDefinitionCollection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -1622,10 +1626,10 @@ WINRT_EXPORT
 #ifndef __WXCTextBoxTextChangingEventArgs_DEFINED__
 #define __WXCTextBoxTextChangingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCTextBoxTextChangingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -1635,10 +1639,10 @@ WINRT_EXPORT
 #ifndef __WXCTextCompositionChangedEventArgs_DEFINED__
 #define __WXCTextCompositionChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCTextCompositionChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) int length;
 @property (readonly) int startIndex;
@@ -1650,10 +1654,10 @@ WINRT_EXPORT
 #ifndef __WXCTextCompositionEndedEventArgs_DEFINED__
 #define __WXCTextCompositionEndedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCTextCompositionEndedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) int length;
 @property (readonly) int startIndex;
@@ -1665,10 +1669,10 @@ WINRT_EXPORT
 #ifndef __WXCTextCompositionStartedEventArgs_DEFINED__
 #define __WXCTextCompositionStartedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCTextCompositionStartedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) int length;
 @property (readonly) int startIndex;
@@ -1680,7 +1684,7 @@ WINRT_EXPORT
 #ifndef __WXCToolTipService_DEFINED__
 #define __WXCToolTipService_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCToolTipService : RTObject
 + (WUXCPPlacementMode)getPlacement:(WXDependencyObject*)element;
 + (void)setPlacement:(WXDependencyObject*)element value:(WUXCPPlacementMode)value;
@@ -1689,7 +1693,7 @@ WINRT_EXPORT
 + (RTObject*)getToolTip:(WXDependencyObject*)element;
 + (void)setToolTip:(WXDependencyObject*)element value:(RTObject*)value;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WXDependencyProperty*)placementProperty;
 + (WXDependencyProperty*)placementTargetProperty;
@@ -1702,10 +1706,10 @@ WINRT_EXPORT
 #ifndef __WXCUIElementCollection_DEFINED__
 #define __WXCUIElementCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCUIElementCollection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -1727,10 +1731,10 @@ WINRT_EXPORT
 #ifndef __WXCCalendarViewDayItemChangingEventArgs_DEFINED__
 #define __WXCCalendarViewDayItemChangingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCCalendarViewDayItemChangingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL inRecycleQueue;
 @property (readonly) WXCCalendarViewDayItem* item;
@@ -1746,11 +1750,11 @@ WINRT_EXPORT
 #ifndef __WXCHubSectionHeaderClickEventArgs_DEFINED__
 #define __WXCHubSectionHeaderClickEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCHubSectionHeaderClickEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WXCHubSection* section;
 @end
@@ -1761,10 +1765,10 @@ WINRT_EXPORT
 #ifndef __WXCSectionsInViewChangedEventArgs_DEFINED__
 #define __WXCSectionsInViewChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCSectionsInViewChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSMutableArray* /* WXCHubSection* */ addedSections;
 @property (readonly) NSMutableArray* /* WXCHubSection* */ removedSections;
@@ -1776,10 +1780,10 @@ WINRT_EXPORT
 #ifndef __WXCWebViewNavigationFailedEventArgs_DEFINED__
 #define __WXCWebViewNavigationFailedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCWebViewNavigationFailedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFUri* uri;
 @property (readonly) WWWebErrorStatus webErrorStatus;
@@ -1791,10 +1795,10 @@ WINRT_EXPORT
 #ifndef __WXCCalendarDatePickerDateChangedEventArgs_DEFINED__
 #define __WXCCalendarDatePickerDateChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCCalendarDatePickerDateChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) id /* WFDateTime* */ newDate;
 @property (readonly) id /* WFDateTime* */ oldDate;
@@ -1806,10 +1810,10 @@ WINRT_EXPORT
 #ifndef __WXCCalendarViewSelectedDatesChangedEventArgs_DEFINED__
 #define __WXCCalendarViewSelectedDatesChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCCalendarViewSelectedDatesChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSArray* /* WFDateTime* */ addedDates;
 @property (readonly) NSArray* /* WFDateTime* */ removedDates;
@@ -1821,10 +1825,10 @@ WINRT_EXPORT
 #ifndef __WXCContentDialogButtonClickDeferral_DEFINED__
 #define __WXCContentDialogButtonClickDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCContentDialogButtonClickDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (void)complete;
 @end
@@ -1835,10 +1839,10 @@ WINRT_EXPORT
 #ifndef __WXCContentDialogButtonClickEventArgs_DEFINED__
 #define __WXCContentDialogButtonClickEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCContentDialogButtonClickEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL cancel;
 - (WXCContentDialogButtonClickDeferral*)getDeferral;
@@ -1850,10 +1854,10 @@ WINRT_EXPORT
 #ifndef __WXCContentDialogClosedEventArgs_DEFINED__
 #define __WXCContentDialogClosedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCContentDialogClosedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WXCContentDialogResult result;
 @end
@@ -1864,10 +1868,10 @@ WINRT_EXPORT
 #ifndef __WXCContentDialogClosingDeferral_DEFINED__
 #define __WXCContentDialogClosingDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCContentDialogClosingDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (void)complete;
 @end
@@ -1878,10 +1882,10 @@ WINRT_EXPORT
 #ifndef __WXCContentDialogClosingEventArgs_DEFINED__
 #define __WXCContentDialogClosingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCContentDialogClosingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL cancel;
 @property (readonly) WXCContentDialogResult result;
@@ -1894,10 +1898,10 @@ WINRT_EXPORT
 #ifndef __WXCContentDialogOpenedEventArgs_DEFINED__
 #define __WXCContentDialogOpenedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCContentDialogOpenedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -1907,10 +1911,10 @@ WINRT_EXPORT
 #ifndef __WXCDatePickerValueChangedEventArgs_DEFINED__
 #define __WXCDatePickerValueChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCDatePickerValueChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFDateTime* newDate;
 @property (readonly) WFDateTime* oldDate;
@@ -1922,10 +1926,10 @@ WINRT_EXPORT
 #ifndef __WXCHubSectionCollection_DEFINED__
 #define __WXCHubSectionCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCHubSectionCollection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -1946,12 +1950,12 @@ WINRT_EXPORT
 #ifndef __WXCListViewPersistenceHelper_DEFINED__
 #define __WXCListViewPersistenceHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCListViewPersistenceHelper : RTObject
 + (NSString*)getRelativeScrollPosition:(WXCListViewBase*)listViewBase itemToKeyHandler:(WXCListViewItemToKeyHandler)itemToKeyHandler;
 // Failed to generate member SetRelativeScrollPositionAsync (Can't marshal Windows.Foundation.IAsyncOperation`1<System.Object>)
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -1961,10 +1965,10 @@ WINRT_EXPORT
 #ifndef __WXCScrollViewerView_DEFINED__
 #define __WXCScrollViewerView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCScrollViewerView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) double horizontalOffset;
 @property (readonly) double verticalOffset;
@@ -1977,11 +1981,11 @@ WINRT_EXPORT
 #ifndef __WXCScrollViewerViewChangedEventArgs_DEFINED__
 #define __WXCScrollViewerViewChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCScrollViewerViewChangedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL isIntermediate;
 @end
@@ -1992,10 +1996,10 @@ WINRT_EXPORT
 #ifndef __WXCScrollViewerViewChangingEventArgs_DEFINED__
 #define __WXCScrollViewerViewChangingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCScrollViewerViewChangingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WXCScrollViewerView* finalView;
 @property (readonly) BOOL isInertial;
@@ -2008,10 +2012,10 @@ WINRT_EXPORT
 #ifndef __WXCSearchBoxQueryChangedEventArgs_DEFINED__
 #define __WXCSearchBoxQueryChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCSearchBoxQueryChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* language;
 @property (readonly) WASSearchQueryLinguisticDetails* linguisticDetails;
@@ -2024,10 +2028,10 @@ WINRT_EXPORT
 #ifndef __WXCSearchBoxQuerySubmittedEventArgs_DEFINED__
 #define __WXCSearchBoxQuerySubmittedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCSearchBoxQuerySubmittedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WSVirtualKeyModifiers keyModifiers;
 @property (readonly) NSString* language;
@@ -2041,11 +2045,11 @@ WINRT_EXPORT
 #ifndef __WXCSearchBoxResultSuggestionChosenEventArgs_DEFINED__
 #define __WXCSearchBoxResultSuggestionChosenEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCSearchBoxResultSuggestionChosenEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WSVirtualKeyModifiers keyModifiers;
 @property (readonly) NSString* tag;
@@ -2057,10 +2061,10 @@ WINRT_EXPORT
 #ifndef __WXCSearchBoxSuggestionsRequestedEventArgs_DEFINED__
 #define __WXCSearchBoxSuggestionsRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCSearchBoxSuggestionsRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* language;
 @property (readonly) WASSearchQueryLinguisticDetails* linguisticDetails;
@@ -2074,10 +2078,10 @@ WINRT_EXPORT
 #ifndef __WXCSplitViewPaneClosingEventArgs_DEFINED__
 #define __WXCSplitViewPaneClosingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCSplitViewPaneClosingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL cancel;
 @end
@@ -2088,10 +2092,10 @@ WINRT_EXPORT
 #ifndef __WXCTimePickerValueChangedEventArgs_DEFINED__
 #define __WXCTimePickerValueChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCTimePickerValueChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFTimeSpan* newTime;
 @property (readonly) WFTimeSpan* oldTime;
@@ -2103,10 +2107,10 @@ WINRT_EXPORT
 #ifndef __WXCWebViewContentLoadingEventArgs_DEFINED__
 #define __WXCWebViewContentLoadingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCWebViewContentLoadingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFUri* uri;
 @end
@@ -2117,10 +2121,10 @@ WINRT_EXPORT
 #ifndef __WXCWebViewDeferredPermissionRequest_DEFINED__
 #define __WXCWebViewDeferredPermissionRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCWebViewDeferredPermissionRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int id;
 @property (readonly) WXCWebViewPermissionType permissionType;
@@ -2135,10 +2139,10 @@ WINRT_EXPORT
 #ifndef __WXCWebViewDOMContentLoadedEventArgs_DEFINED__
 #define __WXCWebViewDOMContentLoadedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCWebViewDOMContentLoadedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFUri* uri;
 @end
@@ -2149,10 +2153,10 @@ WINRT_EXPORT
 #ifndef __WXCWebViewLongRunningScriptDetectedEventArgs_DEFINED__
 #define __WXCWebViewLongRunningScriptDetectedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCWebViewLongRunningScriptDetectedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL stopPageScriptExecution;
 @property (readonly) WFTimeSpan* executionTime;
@@ -2164,10 +2168,10 @@ WINRT_EXPORT
 #ifndef __WXCWebViewNavigationCompletedEventArgs_DEFINED__
 #define __WXCWebViewNavigationCompletedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCWebViewNavigationCompletedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL isSuccess;
 @property (readonly) WFUri* uri;
@@ -2180,10 +2184,10 @@ WINRT_EXPORT
 #ifndef __WXCWebViewNavigationStartingEventArgs_DEFINED__
 #define __WXCWebViewNavigationStartingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCWebViewNavigationStartingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL cancel;
 @property (readonly) WFUri* uri;
@@ -2195,10 +2199,10 @@ WINRT_EXPORT
 #ifndef __WXCWebViewNewWindowRequestedEventArgs_DEFINED__
 #define __WXCWebViewNewWindowRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCWebViewNewWindowRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL handled;
 @property (readonly) WFUri* referrer;
@@ -2211,10 +2215,10 @@ WINRT_EXPORT
 #ifndef __WXCWebViewPermissionRequest_DEFINED__
 #define __WXCWebViewPermissionRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCWebViewPermissionRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int id;
 @property (readonly) WXCWebViewPermissionType permissionType;
@@ -2231,10 +2235,10 @@ WINRT_EXPORT
 #ifndef __WXCWebViewPermissionRequestedEventArgs_DEFINED__
 #define __WXCWebViewPermissionRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCWebViewPermissionRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WXCWebViewPermissionRequest* permissionRequest;
 @end
@@ -2245,10 +2249,10 @@ WINRT_EXPORT
 #ifndef __WXCWebViewSettings_DEFINED__
 #define __WXCWebViewSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCWebViewSettings : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isJavaScriptEnabled;
 @property BOOL isIndexedDBEnabled;
@@ -2260,10 +2264,10 @@ WINRT_EXPORT
 #ifndef __WXCWebViewUnsupportedUriSchemeIdentifiedEventArgs_DEFINED__
 #define __WXCWebViewUnsupportedUriSchemeIdentifiedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCWebViewUnsupportedUriSchemeIdentifiedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL handled;
 @property (readonly) WFUri* uri;
@@ -2275,10 +2279,10 @@ WINRT_EXPORT
 #ifndef __WXCWebViewUnviewableContentIdentifiedEventArgs_DEFINED__
 #define __WXCWebViewUnviewableContentIdentifiedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCWebViewUnviewableContentIdentifiedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFUri* referrer;
 @property (readonly) WFUri* uri;
@@ -2291,10 +2295,10 @@ WINRT_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -2312,11 +2316,11 @@ WINRT_EXPORT
 #ifndef __WXCColumnDefinition_DEFINED__
 #define __WXCColumnDefinition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCColumnDefinition : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXGridLength* width;
 @property double minWidth;
@@ -2333,11 +2337,11 @@ WINRT_EXPORT
 #ifndef __WXCRowDefinition_DEFINED__
 #define __WXCRowDefinition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCRowDefinition : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property double minHeight;
 @property double maxHeight;
@@ -2354,11 +2358,11 @@ WINRT_EXPORT
 #ifndef __WXCAutoSuggestBoxQuerySubmittedEventArgs_DEFINED__
 #define __WXCAutoSuggestBoxQuerySubmittedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCAutoSuggestBoxQuerySubmittedEventArgs : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) RTObject* chosenSuggestion;
 @property (readonly) NSString* queryText;
@@ -2370,11 +2374,11 @@ WINRT_EXPORT
 #ifndef __WXCAutoSuggestBoxSuggestionChosenEventArgs_DEFINED__
 #define __WXCAutoSuggestBoxSuggestionChosenEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCAutoSuggestBoxSuggestionChosenEventArgs : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) RTObject* selectedItem;
 @end
@@ -2385,11 +2389,11 @@ WINRT_EXPORT
 #ifndef __WXCAutoSuggestBoxTextChangedEventArgs_DEFINED__
 #define __WXCAutoSuggestBoxTextChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCAutoSuggestBoxTextChangedEventArgs : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WXCAutoSuggestionBoxTextChangeReason reason;
 + (WXDependencyProperty*)reasonProperty;
@@ -2412,13 +2416,13 @@ WINRT_EXPORT
 #ifndef __WUXCPFlyoutBase_DEFINED__
 #define __WUXCPFlyoutBase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPFlyoutBase : WXDependencyObject
 + (WUXCPFlyoutBase*)getAttachedFlyout:(WXFrameworkElement*)element;
 + (void)setAttachedFlyout:(WXFrameworkElement*)element value:(WUXCPFlyoutBase*)value;
 + (void)showAttachedFlyout:(WXFrameworkElement*)flyoutOwner;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WUXCPFlyoutPlacementMode placement;
 + (WXDependencyProperty*)attachedFlyoutProperty;
@@ -2440,11 +2444,11 @@ WINRT_EXPORT
 #ifndef __WXCFlyout_DEFINED__
 #define __WXCFlyout_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCFlyout : WUXCPFlyoutBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXStyle* flyoutPresenterStyle;
 @property (retain) WXUIElement* content;
@@ -2458,11 +2462,11 @@ WINRT_EXPORT
 #ifndef __WXCMenuFlyout_DEFINED__
 #define __WXCMenuFlyout_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCMenuFlyout : WUXCPFlyoutBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXStyle* menuFlyoutPresenterStyle;
 @property (readonly) NSMutableArray* /* WXCMenuFlyoutItemBase* */ items;
@@ -2476,11 +2480,11 @@ WINRT_EXPORT
 #ifndef __WXRoutedEventArgs_DEFINED__
 #define __WXRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) RTObject* originalSource;
 @end
@@ -2491,10 +2495,10 @@ WINRT_EXPORT
 #ifndef __WXCCleanUpVirtualizedItemEventArgs_DEFINED__
 #define __WXCCleanUpVirtualizedItemEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCCleanUpVirtualizedItemEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL cancel;
 @property (readonly) WXUIElement* uIElement;
@@ -2507,10 +2511,10 @@ WINRT_EXPORT
 #ifndef __WXCContextMenuEventArgs_DEFINED__
 #define __WXCContextMenuEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCContextMenuEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL handled;
 @property (readonly) double cursorLeft;
@@ -2523,11 +2527,11 @@ WINRT_EXPORT
 #ifndef __WXCItemClickEventArgs_DEFINED__
 #define __WXCItemClickEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCItemClickEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) RTObject* clickedItem;
 @end
@@ -2538,10 +2542,10 @@ WINRT_EXPORT
 #ifndef __WXCSelectionChangedEventArgs_DEFINED__
 #define __WXCSelectionChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCSelectionChangedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSMutableArray* /* RTObject* */ addedItems;
 @property (readonly) NSMutableArray* /* RTObject* */ removedItems;
@@ -2553,10 +2557,10 @@ WINRT_EXPORT
 #ifndef __WXCTextChangedEventArgs_DEFINED__
 #define __WXCTextChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCTextChangedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -2566,10 +2570,10 @@ WINRT_EXPORT
 #ifndef __WXFrameworkTemplate_DEFINED__
 #define __WXFrameworkTemplate_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXFrameworkTemplate : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -2579,11 +2583,11 @@ WINRT_EXPORT
 #ifndef __WXCItemsPanelTemplate_DEFINED__
 #define __WXCItemsPanelTemplate_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCItemsPanelTemplate : WXFrameworkTemplate
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -2628,11 +2632,11 @@ WINRT_EXPORT
 #ifndef __WXUIElement_DEFINED__
 #define __WXUIElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isRightTapEnabled;
 @property (retain) WUXMProjection* projection;
@@ -2780,10 +2784,10 @@ WINRT_EXPORT
 #ifndef __WXFrameworkElement_DEFINED__
 #define __WXFrameworkElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXFrameworkElement : WXUIElement
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXThickness* margin;
 @property (retain) NSString* language;
@@ -2852,10 +2856,10 @@ WINRT_EXPORT
 #ifndef __WXCPanel_DEFINED__
 #define __WXCPanel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCPanel : WXFrameworkElement
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WUXMATransitionCollection* childrenTransitions;
 @property (retain) WUXMBrush* background;
@@ -2872,11 +2876,11 @@ WINRT_EXPORT
 #ifndef __WXCBorder_DEFINED__
 #define __WXCBorder_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCBorder : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXThickness* padding;
 @property (retain) WXCornerRadius* cornerRadius;
@@ -2899,11 +2903,11 @@ WINRT_EXPORT
 #ifndef __WXCCaptureElement_DEFINED__
 #define __WXCCaptureElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCCaptureElement : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WUXMStretch stretch;
 @property (retain) WMCMediaCapture* source;
@@ -2917,11 +2921,11 @@ WINRT_EXPORT
 #ifndef __WXCContentPresenter_DEFINED__
 #define __WXCContentPresenter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCContentPresenter : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WUXMFontFamily* fontFamily;
 @property (retain) WUXMATransitionCollection* contentTransitions;
@@ -2984,11 +2988,11 @@ WINRT_EXPORT
 #ifndef __WXCImage_DEFINED__
 #define __WXCImage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCImage : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WUXMStretch stretch;
 @property (retain) WUXMImageSource* source;
@@ -3028,11 +3032,11 @@ WINRT_EXPORT
 #ifndef __WXCItemsPresenter_DEFINED__
 #define __WXCItemsPresenter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCItemsPresenter : WXFrameworkElement <WUXCPIScrollSnapPointsInfo>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXThickness* padding;
 @property (retain) WUXMATransitionCollection* headerTransitions;
@@ -3064,11 +3068,11 @@ WINRT_EXPORT
 #ifndef __WXCRichTextBlockOverflow_DEFINED__
 #define __WXCRichTextBlockOverflow_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCRichTextBlockOverflow : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXThickness* padding;
 @property (retain) WXCRichTextBlockOverflow* overflowContentTarget;
@@ -3092,11 +3096,11 @@ WINRT_EXPORT
 #ifndef __WXCRichTextBlock_DEFINED__
 #define __WXCRichTextBlock_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCRichTextBlock : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WUTFontStretch fontStretch;
 @property (retain) WUXMBrush* foreground;
@@ -3170,11 +3174,11 @@ WINRT_EXPORT
 #ifndef __WXCTextBlock_DEFINED__
 #define __WXCTextBlock_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCTextBlock : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WUTFontStyle fontStyle;
 @property WXLineStackingStrategy lineStackingStrategy;
@@ -3243,11 +3247,11 @@ WINRT_EXPORT
 #ifndef __WXCViewbox_DEFINED__
 #define __WXCViewbox_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCViewbox : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WXCStretchDirection stretchDirection;
 @property WUXMStretch stretch;
@@ -3262,7 +3266,7 @@ WINRT_EXPORT
 #ifndef __WXCCanvas_DEFINED__
 #define __WXCCanvas_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCCanvas : WXCPanel
 + (double)getLeft:(WXUIElement*)element;
 + (void)setLeft:(WXUIElement*)element length:(double)length;
@@ -3272,7 +3276,7 @@ WINRT_EXPORT
 + (void)setZIndex:(WXUIElement*)element value:(int)value;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WXDependencyProperty*)leftProperty;
 + (WXDependencyProperty*)topProperty;
@@ -3285,7 +3289,7 @@ WINRT_EXPORT
 #ifndef __WXCGrid_DEFINED__
 #define __WXCGrid_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCGrid : WXCPanel
 + (int)getRow:(WXFrameworkElement*)element;
 + (void)setRow:(WXFrameworkElement*)element value:(int)value;
@@ -3297,7 +3301,7 @@ WINRT_EXPORT
 + (void)setColumnSpan:(WXFrameworkElement*)element value:(int)value;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WXCColumnDefinitionCollection* columnDefinitions;
 @property (readonly) WXCRowDefinitionCollection* rowDefinitions;
@@ -3321,7 +3325,7 @@ WINRT_EXPORT
 #ifndef __WXCRelativePanel_DEFINED__
 #define __WXCRelativePanel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCRelativePanel : WXCPanel
 + (RTObject*)getLeftOf:(WXUIElement*)element;
 + (void)setLeftOf:(WXUIElement*)element value:(RTObject*)value;
@@ -3357,7 +3361,7 @@ WINRT_EXPORT
 + (void)setAlignVerticalCenterWithPanel:(WXUIElement*)element value:(BOOL)value;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXThickness* padding;
 @property (retain) WXCornerRadius* cornerRadius;
@@ -3391,11 +3395,11 @@ WINRT_EXPORT
 #ifndef __WXCStackPanel_DEFINED__
 #define __WXCStackPanel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCStackPanel : WXCPanel <WUXCPIScrollSnapPointsInfo>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WXCOrientation orientation;
 @property BOOL areScrollSnapPointsRegular;
@@ -3425,7 +3429,7 @@ WINRT_EXPORT
 #ifndef __WXCVariableSizedWrapGrid_DEFINED__
 #define __WXCVariableSizedWrapGrid_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCVariableSizedWrapGrid : WXCPanel
 + (int)getRowSpan:(WXUIElement*)element;
 + (void)setRowSpan:(WXUIElement*)element value:(int)value;
@@ -3433,7 +3437,7 @@ WINRT_EXPORT
 + (void)setColumnSpan:(WXUIElement*)element value:(int)value;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WXVerticalAlignment verticalChildrenAlignment;
 @property WXCOrientation orientation;
@@ -3457,10 +3461,10 @@ WINRT_EXPORT
 #ifndef __WXCVirtualizingPanel_DEFINED__
 #define __WXCVirtualizingPanel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCVirtualizingPanel : WXCPanel
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WXCItemContainerGenerator* itemContainerGenerator;
 - (void)onItemsChanged:(RTObject*)sender args:(WUXCPItemsChangedEventArgs*)args;
@@ -3477,10 +3481,10 @@ WINRT_EXPORT
 #ifndef __WUXCPOrientedVirtualizingPanel_DEFINED__
 #define __WUXCPOrientedVirtualizingPanel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPOrientedVirtualizingPanel : WXCVirtualizingPanel <WUXCPIScrollSnapPointsInfo>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) RTObject* scrollOwner;
 @property BOOL canVerticallyScroll;
@@ -3522,14 +3526,14 @@ WINRT_EXPORT
 #ifndef __WXCVirtualizingStackPanel_DEFINED__
 #define __WXCVirtualizingStackPanel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCVirtualizingStackPanel : WUXCPOrientedVirtualizingPanel
 + (WXCVirtualizationMode)getVirtualizationMode:(WXDependencyObject*)element;
 + (void)setVirtualizationMode:(WXDependencyObject*)element value:(WXCVirtualizationMode)value;
 + (BOOL)getIsVirtualizing:(WXDependencyObject*)o;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WXCOrientation orientation;
 @property BOOL areScrollSnapPointsRegular;
@@ -3548,10 +3552,10 @@ WINRT_EXPORT
 #ifndef __WXCIconElement_DEFINED__
 #define __WXCIconElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCIconElement : WXFrameworkElement
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WUXMBrush* foreground;
 + (WXDependencyProperty*)foregroundProperty;
@@ -3563,11 +3567,11 @@ WINRT_EXPORT
 #ifndef __WXCInkCanvas_DEFINED__
 #define __WXCInkCanvas_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCInkCanvas : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WUIIInkPresenter* inkPresenter;
 @end
@@ -3578,11 +3582,11 @@ WINRT_EXPORT
 #ifndef __WXCMediaElement_DEFINED__
 #define __WXCMediaElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCMediaElement : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property double playbackRate;
 @property BOOL autoPlay;
@@ -3706,13 +3710,13 @@ WINRT_EXPORT
 #ifndef __WXCWebView_DEFINED__
 #define __WXCWebView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCWebView : WXFrameworkElement
 + (RTObject<WFIAsyncAction>*)clearTemporaryWebDataAsync;
 + (WXCWebView*)makeInstanceWithExecutionMode:(WXCWebViewExecutionMode)executionMode ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WFUri* source;
 @property (retain) NSMutableArray* /* WFUri* */ allowedScriptNotifyUris;
@@ -3799,11 +3803,11 @@ WINRT_EXPORT
 #ifndef __WXCBitmapIcon_DEFINED__
 #define __WXCBitmapIcon_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCBitmapIcon : WXCIconElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WFUri* uriSource;
 + (WXDependencyProperty*)uriSourceProperty;
@@ -3815,11 +3819,11 @@ WINRT_EXPORT
 #ifndef __WXCFontIcon_DEFINED__
 #define __WXCFontIcon_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCFontIcon : WXCIconElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* glyph;
 @property (retain) WUTFontWeight* fontWeight;
@@ -3843,11 +3847,11 @@ WINRT_EXPORT
 #ifndef __WXCItemsStackPanel_DEFINED__
 #define __WXCItemsStackPanel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCItemsStackPanel : WXCPanel
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WUXCPGroupHeaderPlacement groupHeaderPlacement;
 @property WXCItemsUpdatingScrollMode itemsUpdatingScrollMode;
@@ -3873,11 +3877,11 @@ WINRT_EXPORT
 #ifndef __WXCItemsWrapGrid_DEFINED__
 #define __WXCItemsWrapGrid_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCItemsWrapGrid : WXCPanel
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXThickness* groupPadding;
 @property WUXCPGroupHeaderPlacement groupHeaderPlacement;
@@ -3908,11 +3912,11 @@ WINRT_EXPORT
 #ifndef __WXCPathIcon_DEFINED__
 #define __WXCPathIcon_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCPathIcon : WXCIconElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WUXMGeometry* data;
 + (WXDependencyProperty*)dataProperty;
@@ -3924,11 +3928,11 @@ WINRT_EXPORT
 #ifndef __WXCScrollContentPresenter_DEFINED__
 #define __WXCScrollContentPresenter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCScrollContentPresenter : WXCContentPresenter
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) RTObject* scrollOwner;
 @property BOOL canVerticallyScroll;
@@ -3962,12 +3966,12 @@ WINRT_EXPORT
 #ifndef __WXCSymbolIcon_DEFINED__
 #define __WXCSymbolIcon_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCSymbolIcon : WXCIconElement
 + (instancetype)make ACTIVATOR;
 + (WXCSymbolIcon*)makeInstanceWithSymbol:(WXCSymbol)symbol ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WXCSymbol symbol;
 + (WXDependencyProperty*)symbolProperty;
@@ -3979,11 +3983,11 @@ WINRT_EXPORT
 #ifndef __WXCSwapChainBackgroundPanel_DEFINED__
 #define __WXCSwapChainBackgroundPanel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCSwapChainBackgroundPanel : WXCGrid
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (WUCCoreIndependentInputSource*)createCoreIndependentInputSource:(WUCCoreInputDeviceTypes)deviceTypes;
 @end
@@ -3994,11 +3998,11 @@ WINRT_EXPORT
 #ifndef __WXCSwapChainPanel_DEFINED__
 #define __WXCSwapChainPanel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCSwapChainPanel : WXCGrid
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) float compositionScaleX;
 @property (readonly) float compositionScaleY;
@@ -4015,11 +4019,11 @@ WINRT_EXPORT
 #ifndef __WXCWrapGrid_DEFINED__
 #define __WXCWrapGrid_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCWrapGrid : WUXCPOrientedVirtualizingPanel
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WXVerticalAlignment verticalChildrenAlignment;
 @property WXCOrientation orientation;
@@ -4041,10 +4045,10 @@ WINRT_EXPORT
 #ifndef __WUXMBrush_DEFINED__
 #define __WUXMBrush_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMBrush : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WUXMTransform* transform;
 @property (retain) WUXMTransform* relativeTransform;
@@ -4060,10 +4064,10 @@ WINRT_EXPORT
 #ifndef __WUXMTileBrush_DEFINED__
 #define __WUXMTileBrush_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMTileBrush : WUXMBrush
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WUXMStretch stretch;
 @property WUXMAlignmentY alignmentY;
@@ -4079,11 +4083,11 @@ WINRT_EXPORT
 #ifndef __WXCWebViewBrush_DEFINED__
 #define __WXCWebViewBrush_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCWebViewBrush : WUXMTileBrush
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* sourceName;
 + (WXDependencyProperty*)sourceNameProperty;
@@ -4097,11 +4101,11 @@ WINRT_EXPORT
 #ifndef __WXCControlTemplate_DEFINED__
 #define __WXCControlTemplate_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCControlTemplate : WXFrameworkTemplate
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WUXITypeName* targetType;
 @end
@@ -4112,12 +4116,12 @@ WINRT_EXPORT
 #ifndef __WXCControl_DEFINED__
 #define __WXCControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCControl : WXFrameworkElement
 + (BOOL)getIsTemplateFocusTarget:(WXFrameworkElement*)element;
 + (void)setIsTemplateFocusTarget:(WXFrameworkElement*)element value:(BOOL)value;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WUTFontWeight* fontWeight;
 @property WUTFontStyle fontStyle;
@@ -4202,11 +4206,11 @@ WINRT_EXPORT
 #ifndef __WXCSemanticZoom_DEFINED__
 #define __WXCSemanticZoom_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCSemanticZoom : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) RTObject<WXCISemanticZoomInformation>* zoomedOutView;
 @property (retain) RTObject<WXCISemanticZoomInformation>* zoomedInView;
@@ -4231,11 +4235,11 @@ WINRT_EXPORT
 #ifndef __WXCContentControl_DEFINED__
 #define __WXCContentControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCContentControl : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WUXMATransitionCollection* contentTransitions;
 @property (retain) WXCDataTemplateSelector* contentTemplateSelector;
@@ -4258,10 +4262,10 @@ WINRT_EXPORT
 #ifndef __WXCListViewBaseHeaderItem_DEFINED__
 #define __WXCListViewBaseHeaderItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCListViewBaseHeaderItem : WXCContentControl
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -4271,13 +4275,13 @@ WINRT_EXPORT
 #ifndef __WXCItemsControl_DEFINED__
 #define __WXCItemsControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCItemsControl : WXCControl <WXCIItemContainerMapping>
 + (WXCItemsControl*)getItemsOwner:(WXDependencyObject*)element;
 + (WXCItemsControl*)itemsControlFromItemContainer:(WXDependencyObject*)container;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXCItemsPanelTemplate* itemsPanel;
 @property (retain) RTObject* itemsSource;
@@ -4329,11 +4333,11 @@ WINRT_EXPORT
 #ifndef __WXCMediaTransportControls_DEFINED__
 #define __WXCMediaTransportControls_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCMediaTransportControls : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isPlaybackRateEnabled;
 @property BOOL isPlaybackRateButtonVisible;
@@ -4377,11 +4381,11 @@ WINRT_EXPORT
 #ifndef __WXCPasswordBox_DEFINED__
 #define __WXCPasswordBox_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCPasswordBox : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* passwordChar;
 @property (retain) NSString* password;
@@ -4422,11 +4426,11 @@ WINRT_EXPORT
 #ifndef __WXCProgressRing_DEFINED__
 #define __WXCProgressRing_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCProgressRing : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isActive;
 @property (readonly) WUXCPProgressRingTemplateSettings* templateSettings;
@@ -4439,11 +4443,11 @@ WINRT_EXPORT
 #ifndef __WXCRichEditBox_DEFINED__
 #define __WXCRichEditBox_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCRichEditBox : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WXTextWrapping textWrapping;
 @property WXTextAlignment textAlignment;
@@ -4502,11 +4506,11 @@ WINRT_EXPORT
 #ifndef __WXCTextBox_DEFINED__
 #define __WXCTextBox_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCTextBox : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* text;
 @property int selectionStart;
@@ -4574,11 +4578,11 @@ WINRT_EXPORT
 #ifndef __WXCToggleSwitch_DEFINED__
 #define __WXCToggleSwitch_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCToggleSwitch : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXDataTemplate* onContentTemplate;
 @property (retain) RTObject* onContent;
@@ -4609,11 +4613,11 @@ WINRT_EXPORT
 #ifndef __WXCUserControl_DEFINED__
 #define __WXCUserControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCUserControl : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXUIElement* content;
 + (WXDependencyProperty*)contentProperty;
@@ -4625,11 +4629,11 @@ WINRT_EXPORT
 #ifndef __WXCGroupItem_DEFINED__
 #define __WXCGroupItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCGroupItem : WXCContentControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -4639,11 +4643,11 @@ WINRT_EXPORT
 #ifndef __WXCSettingsFlyout_DEFINED__
 #define __WXCSettingsFlyout_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCSettingsFlyout : WXCContentControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* title;
 @property (retain) WUXMImageSource* iconSource;
@@ -4667,11 +4671,11 @@ WINRT_EXPORT
 #ifndef __WXCToolTip_DEFINED__
 #define __WXCToolTip_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCToolTip : WXCContentControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property double verticalOffset;
 @property (retain) WXUIElement* placementTarget;
@@ -4696,10 +4700,10 @@ WINRT_EXPORT
 #ifndef __WUXCPSelectorItem_DEFINED__
 #define __WUXCPSelectorItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPSelectorItem : WXCContentControl
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isSelected;
 + (WXDependencyProperty*)isSelectedProperty;
@@ -4711,11 +4715,11 @@ WINRT_EXPORT
 #ifndef __WXCComboBoxItem_DEFINED__
 #define __WXCComboBoxItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCComboBoxItem : WUXCPSelectorItem
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -4725,11 +4729,11 @@ WINRT_EXPORT
 #ifndef __WXCFlipViewItem_DEFINED__
 #define __WXCFlipViewItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCFlipViewItem : WUXCPSelectorItem
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -4739,11 +4743,11 @@ WINRT_EXPORT
 #ifndef __WXCListBoxItem_DEFINED__
 #define __WXCListBoxItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCListBoxItem : WUXCPSelectorItem
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -4765,10 +4769,10 @@ WINRT_EXPORT
 #ifndef __WUXCPRangeBase_DEFINED__
 #define __WUXCPRangeBase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPRangeBase : WXCControl
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property double value;
 @property double smallChange;
@@ -4793,11 +4797,11 @@ WINRT_EXPORT
 #ifndef __WXCProgressBar_DEFINED__
 #define __WXCProgressBar_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCProgressBar : WUXCPRangeBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL showPaused;
 @property BOOL showError;
@@ -4814,11 +4818,11 @@ WINRT_EXPORT
 #ifndef __WXCSlider_DEFINED__
 #define __WXCSlider_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCSlider : WUXCPRangeBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property double stepFrequency;
 @property WUXCPSliderSnapsTo snapsTo;
@@ -4850,10 +4854,10 @@ WINRT_EXPORT
 #ifndef __WUXCPButtonBase_DEFINED__
 #define __WUXCPButtonBase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPButtonBase : WXCContentControl
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) RTObject* commandParameter;
 @property (retain) RTObject<WUXIICommand>* command;
@@ -4875,11 +4879,11 @@ WINRT_EXPORT
 #ifndef __WXCButton_DEFINED__
 #define __WXCButton_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCButton : WUXCPButtonBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WUXCPFlyoutBase* flyout;
 + (WXDependencyProperty*)flyoutProperty;
@@ -4891,11 +4895,11 @@ WINRT_EXPORT
 #ifndef __WXCHyperlinkButton_DEFINED__
 #define __WXCHyperlinkButton_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCHyperlinkButton : WUXCPButtonBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WFUri* navigateUri;
 + (WXDependencyProperty*)navigateUriProperty;
@@ -4907,11 +4911,11 @@ WINRT_EXPORT
 #ifndef __WUXCPSelector_DEFINED__
 #define __WUXCPSelector_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPSelector : WXCItemsControl
 + (BOOL)getIsSelectionActive:(WXDependencyObject*)element;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* selectedValuePath;
 @property (retain) RTObject* selectedValue;
@@ -4933,10 +4937,10 @@ WINRT_EXPORT
 #ifndef __WXCListViewBase_DEFINED__
 #define __WXCListViewBase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCListViewBase : WUXCPSelector <WXCISemanticZoomInformation>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isSwipeEnabled;
 @property BOOL isItemClickEnabled;
@@ -5014,11 +5018,11 @@ WINRT_EXPORT
 #ifndef __WXCComboBox_DEFINED__
 #define __WXCComboBox_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCComboBox : WUXCPSelector
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property double maxDropDownHeight;
 @property BOOL isDropDownOpen;
@@ -5049,11 +5053,11 @@ WINRT_EXPORT
 #ifndef __WXCFlipView_DEFINED__
 #define __WXCFlipView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCFlipView : WUXCPSelector
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL useTouchAnimationsForAllNavigation;
 + (WXDependencyProperty*)useTouchAnimationsForAllNavigationProperty;
@@ -5065,11 +5069,11 @@ WINRT_EXPORT
 #ifndef __WXCListBox_DEFINED__
 #define __WXCListBox_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCListBox : WUXCPSelector
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WXCSelectionMode selectionMode;
 @property (readonly) NSMutableArray* /* RTObject* */ selectedItems;
@@ -5094,11 +5098,11 @@ WINRT_EXPORT
 #ifndef __WUXCPToggleButton_DEFINED__
 #define __WUXCPToggleButton_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPToggleButton : WUXCPButtonBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isThreeState;
 @property (retain) id /* BOOL */ isChecked;
@@ -5119,11 +5123,11 @@ WINRT_EXPORT
 #ifndef __WXCCheckBox_DEFINED__
 #define __WXCCheckBox_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCCheckBox : WUXCPToggleButton
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -5133,11 +5137,11 @@ WINRT_EXPORT
 #ifndef __WXCRadioButton_DEFINED__
 #define __WXCRadioButton_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCRadioButton : WUXCPToggleButton
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* groupName;
 + (WXDependencyProperty*)groupNameProperty;
@@ -5149,11 +5153,11 @@ WINRT_EXPORT
 #ifndef __WXCCalendarView_DEFINED__
 #define __WXCCalendarView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCCalendarView : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WUXMBrush* calendarItemForeground;
 @property (retain) WXThickness* calendarItemBorderThickness;
@@ -5271,11 +5275,11 @@ WINRT_EXPORT
 #ifndef __WXCCalendarViewDayItem_DEFINED__
 #define __WXCCalendarViewDayItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCCalendarViewDayItem : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isBlackout;
 @property (readonly) WFDateTime* date;
@@ -5290,11 +5294,11 @@ WINRT_EXPORT
 #ifndef __WXCHubSection_DEFINED__
 #define __WXCHubSection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCHubSection : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isHeaderInteractive;
 @property (retain) WXDataTemplate* headerTemplate;
@@ -5312,10 +5316,10 @@ WINRT_EXPORT
 #ifndef __WXCMenuFlyoutItemBase_DEFINED__
 #define __WXCMenuFlyoutItemBase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCMenuFlyoutItemBase : WXCControl
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -5325,11 +5329,11 @@ WINRT_EXPORT
 #ifndef __WXCAppBarSeparator_DEFINED__
 #define __WXCAppBarSeparator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCAppBarSeparator : WXCControl <WXCICommandBarElement>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isCompact;
 + (WXDependencyProperty*)isCompactProperty;
@@ -5341,11 +5345,11 @@ WINRT_EXPORT
 #ifndef __WXCCalendarDatePicker_DEFINED__
 #define __WXCCalendarDatePicker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCCalendarDatePicker : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) RTObject* header;
 @property BOOL isGroupLabelVisible;
@@ -5397,11 +5401,11 @@ WINRT_EXPORT
 #ifndef __WXCDatePicker_DEFINED__
 #define __WXCDatePicker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCDatePicker : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WFDateTime* maxYear;
 @property (retain) WXDataTemplate* headerTemplate;
@@ -5439,11 +5443,11 @@ WINRT_EXPORT
 #ifndef __WXCHub_DEFINED__
 #define __WXCHub_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCHub : WXCControl <WXCISemanticZoomInformation>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WXCOrientation orientation;
 @property (retain) WXDataTemplate* headerTemplate;
@@ -5482,11 +5486,11 @@ WINRT_EXPORT
 #ifndef __WXCSearchBox_DEFINED__
 #define __WXCSearchBox_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCSearchBox : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL searchHistoryEnabled;
 @property (retain) NSString* searchHistoryContext;
@@ -5519,11 +5523,11 @@ WINRT_EXPORT
 #ifndef __WXCSplitView_DEFINED__
 #define __WXCSplitView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCSplitView : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WXCSplitViewPanePlacement panePlacement;
 @property (retain) WUXMBrush* paneBackground;
@@ -5555,11 +5559,11 @@ WINRT_EXPORT
 #ifndef __WXCTimePicker_DEFINED__
 #define __WXCTimePicker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCTimePicker : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WFTimeSpan* time;
 @property int minuteIncrement;
@@ -5581,11 +5585,11 @@ WINRT_EXPORT
 #ifndef __WXCAppBar_DEFINED__
 #define __WXCAppBar_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCAppBar : WXCContentControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isSticky;
 @property BOOL isOpen;
@@ -5614,11 +5618,11 @@ WINRT_EXPORT
 #ifndef __WXCAutoSuggestBox_DEFINED__
 #define __WXCAutoSuggestBox_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCAutoSuggestBox : WXCItemsControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL updateTextOnSelect;
 @property (retain) NSString* textMemberPath;
@@ -5654,11 +5658,11 @@ WINRT_EXPORT
 #ifndef __WXCCommandBarOverflowPresenter_DEFINED__
 #define __WXCCommandBarOverflowPresenter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCCommandBarOverflowPresenter : WXCItemsControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -5668,11 +5672,11 @@ WINRT_EXPORT
 #ifndef __WXCContentDialog_DEFINED__
 #define __WXCContentDialog_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCContentDialog : WXCContentControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* primaryButtonText;
 @property (retain) RTObject* primaryButtonCommandParameter;
@@ -5716,11 +5720,11 @@ WINRT_EXPORT
 #ifndef __WXCFlyoutPresenter_DEFINED__
 #define __WXCFlyoutPresenter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCFlyoutPresenter : WXCContentControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -5730,11 +5734,11 @@ WINRT_EXPORT
 #ifndef __WXCFrame_DEFINED__
 #define __WXCFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCFrame : WXCContentControl <WXCINavigate>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WUXITypeName* sourcePageType;
 @property int cacheSize;
@@ -5776,11 +5780,11 @@ WINRT_EXPORT
 #ifndef __WXCMenuFlyoutItem_DEFINED__
 #define __WXCMenuFlyoutItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCMenuFlyoutItem : WXCMenuFlyoutItemBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* text;
 @property (retain) RTObject* commandParameter;
@@ -5798,11 +5802,11 @@ WINRT_EXPORT
 #ifndef __WXCMenuFlyoutPresenter_DEFINED__
 #define __WXCMenuFlyoutPresenter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCMenuFlyoutPresenter : WXCItemsControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -5812,11 +5816,11 @@ WINRT_EXPORT
 #ifndef __WXCMenuFlyoutSeparator_DEFINED__
 #define __WXCMenuFlyoutSeparator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCMenuFlyoutSeparator : WXCMenuFlyoutItemBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -5826,11 +5830,11 @@ WINRT_EXPORT
 #ifndef __WXCMenuFlyoutSubItem_DEFINED__
 #define __WXCMenuFlyoutSubItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCMenuFlyoutSubItem : WXCMenuFlyoutItemBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* text;
 @property (readonly) NSMutableArray* /* WXCMenuFlyoutItemBase* */ items;
@@ -5843,11 +5847,11 @@ WINRT_EXPORT
 #ifndef __WXCPage_DEFINED__
 #define __WXCPage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCPage : WXCUserControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXCAppBar* topAppBar;
 @property WUXNNavigationCacheMode navigationCacheMode;
@@ -5867,7 +5871,7 @@ WINRT_EXPORT
 #ifndef __WXCScrollViewer_DEFINED__
 #define __WXCScrollViewer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCScrollViewer : WXCContentControl
 + (WXCScrollBarVisibility)getHorizontalScrollBarVisibility:(WXDependencyObject*)element;
 + (void)setHorizontalScrollBarVisibility:(WXDependencyObject*)element
@@ -5903,7 +5907,7 @@ WINRT_EXPORT
 + (void)setBringIntoViewOnFocusChange:(WXDependencyObject*)element bringIntoViewOnFocusChange:(BOOL)bringIntoViewOnFocusChange;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WXCScrollBarVisibility horizontalScrollBarVisibility;
 @property BOOL isZoomInertiaEnabled;
@@ -6002,11 +6006,11 @@ WINRT_EXPORT
 #ifndef __WXCCommandBar_DEFINED__
 #define __WXCCommandBar_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCCommandBar : WXCAppBar
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSMutableArray<RTObservableCollection>* /* RTObject<WXCICommandBarElement>* */ primaryCommands;
 @property (readonly) NSMutableArray<RTObservableCollection>* /* RTObject<WXCICommandBarElement>* */ secondaryCommands;
@@ -6023,11 +6027,11 @@ WINRT_EXPORT
 #ifndef __WXCGridViewHeaderItem_DEFINED__
 #define __WXCGridViewHeaderItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCGridViewHeaderItem : WXCListViewBaseHeaderItem
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -6037,11 +6041,11 @@ WINRT_EXPORT
 #ifndef __WXCGridViewItem_DEFINED__
 #define __WXCGridViewItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCGridViewItem : WUXCPSelectorItem
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WUXCPGridViewItemTemplateSettings* templateSettings;
 @end
@@ -6052,11 +6056,11 @@ WINRT_EXPORT
 #ifndef __WXCListViewHeaderItem_DEFINED__
 #define __WXCListViewHeaderItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCListViewHeaderItem : WXCListViewBaseHeaderItem
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -6066,11 +6070,11 @@ WINRT_EXPORT
 #ifndef __WXCListViewItem_DEFINED__
 #define __WXCListViewItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCListViewItem : WUXCPSelectorItem
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WUXCPListViewItemTemplateSettings* templateSettings;
 @end
@@ -6081,11 +6085,11 @@ WINRT_EXPORT
 #ifndef __WXCToggleMenuFlyoutItem_DEFINED__
 #define __WXCToggleMenuFlyoutItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCToggleMenuFlyoutItem : WXCMenuFlyoutItem
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isChecked;
 + (WXDependencyProperty*)isCheckedProperty;
@@ -6097,11 +6101,11 @@ WINRT_EXPORT
 #ifndef __WXCAppBarButton_DEFINED__
 #define __WXCAppBarButton_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCAppBarButton : WXCButton <WXCICommandBarElement>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* label;
 @property (retain) WXCIconElement* icon;
@@ -6117,11 +6121,11 @@ WINRT_EXPORT
 #ifndef __WXCAppBarToggleButton_DEFINED__
 #define __WXCAppBarToggleButton_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCAppBarToggleButton : WUXCPToggleButton <WXCICommandBarElement>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* label;
 @property (retain) WXCIconElement* icon;
@@ -6137,11 +6141,11 @@ WINRT_EXPORT
 #ifndef __WXCGridView_DEFINED__
 #define __WXCGridView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCGridView : WXCListViewBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -6151,11 +6155,11 @@ WINRT_EXPORT
 #ifndef __WXCListView_DEFINED__
 #define __WXCListView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCListView : WXCListViewBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -6165,11 +6169,11 @@ WINRT_EXPORT
 #ifndef __WXCPivotItemEventArgs_DEFINED__
 #define __WXCPivotItemEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCPivotItemEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXCPivotItem* item;
 @end
@@ -6180,11 +6184,11 @@ WINRT_EXPORT
 #ifndef __WXCDatePickedEventArgs_DEFINED__
 #define __WXCDatePickedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCDatePickedEventArgs : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFDateTime* newDate;
 @property (readonly) WFDateTime* oldDate;
@@ -6209,10 +6213,10 @@ WINRT_EXPORT
 #ifndef __WXCDatePickerFlyoutItem_DEFINED__
 #define __WXCDatePickerFlyoutItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCDatePickerFlyoutItem : WXDependencyObject <WUXDICustomPropertyProvider>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* secondaryText;
 @property (retain) NSString* primaryText;
@@ -6230,11 +6234,11 @@ WINRT_EXPORT
 #ifndef __WXCItemsPickedEventArgs_DEFINED__
 #define __WXCItemsPickedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCItemsPickedEventArgs : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSMutableArray* /* RTObject* */ addedItems;
 @property (readonly) NSMutableArray* /* RTObject* */ removedItems;
@@ -6246,11 +6250,11 @@ WINRT_EXPORT
 #ifndef __WXCPickerConfirmedEventArgs_DEFINED__
 #define __WXCPickerConfirmedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCPickerConfirmedEventArgs : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -6260,11 +6264,11 @@ WINRT_EXPORT
 #ifndef __WXCTimePickedEventArgs_DEFINED__
 #define __WXCTimePickedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCTimePickedEventArgs : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFTimeSpan* newTime;
 @property (readonly) WFTimeSpan* oldTime;
@@ -6276,10 +6280,10 @@ WINRT_EXPORT
 #ifndef __WXCDatePickerFlyoutPresenter_DEFINED__
 #define __WXCDatePickerFlyoutPresenter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCDatePickerFlyoutPresenter : WXCControl
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -6289,10 +6293,10 @@ WINRT_EXPORT
 #ifndef __WXCListPickerFlyoutPresenter_DEFINED__
 #define __WXCListPickerFlyoutPresenter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCListPickerFlyoutPresenter : WXCControl
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -6302,10 +6306,10 @@ WINRT_EXPORT
 #ifndef __WXCTimePickerFlyoutPresenter_DEFINED__
 #define __WXCTimePickerFlyoutPresenter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCTimePickerFlyoutPresenter : WXCControl
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -6315,10 +6319,10 @@ WINRT_EXPORT
 #ifndef __WXCPickerFlyoutPresenter_DEFINED__
 #define __WXCPickerFlyoutPresenter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCPickerFlyoutPresenter : WXCContentControl
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -6328,13 +6332,13 @@ WINRT_EXPORT
 #ifndef __WXCPivot_DEFINED__
 #define __WXCPivot_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCPivot : WXCItemsControl
 + (WXCPivotSlideInAnimationGroup)getSlideInAnimationGroup:(WXFrameworkElement*)element;
 + (void)setSlideInAnimationGroup:(WXFrameworkElement*)element value:(WXCPivotSlideInAnimationGroup)value;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXDataTemplate* titleTemplate;
 @property (retain) RTObject* title;
@@ -6375,11 +6379,11 @@ WINRT_EXPORT
 #ifndef __WXCPivotItem_DEFINED__
 #define __WXCPivotItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCPivotItem : WXCContentControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) RTObject* header;
 + (WXDependencyProperty*)headerProperty;
@@ -6402,12 +6406,12 @@ WINRT_EXPORT
 #ifndef __WUXCPPickerFlyoutBase_DEFINED__
 #define __WUXCPPickerFlyoutBase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPPickerFlyoutBase : WUXCPFlyoutBase
 + (NSString*)getTitle:(WXDependencyObject*)element;
 + (void)setTitle:(WXDependencyObject*)element value:(NSString*)value;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WXDependencyProperty*)titleProperty;
 - (void)onConfirmed;
@@ -6420,11 +6424,11 @@ WINRT_EXPORT
 #ifndef __WXCDatePickerFlyout_DEFINED__
 #define __WXCDatePickerFlyout_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCDatePickerFlyout : WUXCPPickerFlyoutBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL yearVisible;
 @property BOOL monthVisible;
@@ -6457,11 +6461,11 @@ WINRT_EXPORT
 #ifndef __WXCListPickerFlyout_DEFINED__
 #define __WXCListPickerFlyout_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCListPickerFlyout : WUXCPPickerFlyoutBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WXCListPickerFlyoutSelectionMode selectionMode;
 @property (retain) NSString* selectedValuePath;
@@ -6491,11 +6495,11 @@ WINRT_EXPORT
 #ifndef __WXCPickerFlyout_DEFINED__
 #define __WXCPickerFlyout_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCPickerFlyout : WUXCPPickerFlyoutBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXUIElement* content;
 @property BOOL confirmationButtonsVisible;
@@ -6512,11 +6516,11 @@ WINRT_EXPORT
 #ifndef __WXCTimePickerFlyout_DEFINED__
 #define __WXCTimePickerFlyout_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCTimePickerFlyout : WUXCPPickerFlyoutBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WFTimeSpan* time;
 @property int minuteIncrement;

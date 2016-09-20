@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
+#define OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Networking_ServiceDiscovery_Dnssd.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WNSDDnssdServiceWatcher, WNSDDnssdServiceInstance, WNSDDnssdRegistrationResult, WNSDDnssdServiceInstanceCollection;
@@ -56,10 +60,10 @@ typedef unsigned WNSDDnssdServiceWatcherStatus;
 #ifndef __WNSDDnssdServiceWatcher_DEFINED__
 #define __WNSDDnssdServiceWatcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
 @interface WNSDDnssdServiceWatcher : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WNSDDnssdServiceWatcherStatus status;
 - (EventRegistrationToken)addAddedEvent:(void (^)(WNSDDnssdServiceWatcher*, WNSDDnssdServiceInstance*))del;
@@ -88,11 +92,11 @@ WINRT_EXPORT
 #ifndef __WNSDDnssdServiceInstance_DEFINED__
 #define __WNSDDnssdServiceInstance_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
 @interface WNSDDnssdServiceInstance : RTObject <WFIStringable>
 + (WNSDDnssdServiceInstance*)make:(NSString*)dnssdServiceInstanceName hostName:(WNHostName*)hostName port:(unsigned short)port ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property unsigned short weight;
 @property unsigned short priority;
@@ -123,11 +127,11 @@ WINRT_EXPORT
 #ifndef __WNSDDnssdRegistrationResult_DEFINED__
 #define __WNSDDnssdRegistrationResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
 @interface WNSDDnssdRegistrationResult : RTObject <WFIStringable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL hasInstanceNameChanged;
 @property (readonly) WNHostName* iPAddress;
@@ -141,10 +145,10 @@ WINRT_EXPORT
 #ifndef __WNSDDnssdServiceInstanceCollection_DEFINED__
 #define __WNSDDnssdServiceInstanceCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
 @interface WNSDDnssdServiceInstanceCollection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;

@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Media_Core_Capture_Devices_Protection_Playback.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WMDDefaultAudioCaptureDeviceChangedEventArgs, WMDDefaultAudioRenderDeviceChangedEventArgs, WMDMediaDevice, WMDAudioDeviceController,
@@ -248,10 +252,10 @@ typedef unsigned WMDMediaCaptureOptimization;
 #ifndef __WMDDefaultAudioCaptureDeviceChangedEventArgs_DEFINED__
 #define __WMDDefaultAudioCaptureDeviceChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDDefaultAudioCaptureDeviceChangedEventArgs : RTObject <WMDIDefaultAudioDeviceChangedEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* id;
 @property (readonly) WMDAudioDeviceRole role;
@@ -263,10 +267,10 @@ WINRT_EXPORT
 #ifndef __WMDDefaultAudioRenderDeviceChangedEventArgs_DEFINED__
 #define __WMDDefaultAudioRenderDeviceChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDDefaultAudioRenderDeviceChangedEventArgs : RTObject <WMDIDefaultAudioDeviceChangedEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* id;
 @property (readonly) WMDAudioDeviceRole role;
@@ -278,7 +282,7 @@ WINRT_EXPORT
 #ifndef __WMDMediaDevice_DEFINED__
 #define __WMDMediaDevice_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDMediaDevice : RTObject
 + (NSString*)getAudioCaptureSelector;
 + (NSString*)getAudioRenderSelector;
@@ -297,10 +301,10 @@ WINRT_EXPORT
 #ifndef __WMDAudioDeviceController_DEFINED__
 #define __WMDAudioDeviceController_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDAudioDeviceController : RTObject <WMDIMediaDeviceController>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property float volumePercent;
 @property BOOL muted;
@@ -316,10 +320,10 @@ WINRT_EXPORT
 #ifndef __WMDVideoDeviceController_DEFINED__
 #define __WMDVideoDeviceController_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDVideoDeviceController : RTObject <WMDIMediaDeviceController>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WMDCaptureUse primaryUse;
 @property (readonly) WMDIsoSpeedControl* isoSpeedControl;
@@ -368,10 +372,10 @@ WINRT_EXPORT
 #ifndef __WMDSceneModeControl_DEFINED__
 #define __WMDSceneModeControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDSceneModeControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSArray* /* WMDCaptureSceneMode */ supportedModes;
 @property (readonly) WMDCaptureSceneMode value;
@@ -384,10 +388,10 @@ WINRT_EXPORT
 #ifndef __WMDTorchControl_DEFINED__
 #define __WMDTorchControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDTorchControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property float powerPercent;
 @property BOOL enabled;
@@ -401,10 +405,10 @@ WINRT_EXPORT
 #ifndef __WMDFlashControl_DEFINED__
 #define __WMDFlashControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDFlashControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL redEyeReduction;
 @property float powerPercent;
@@ -423,10 +427,10 @@ WINRT_EXPORT
 #ifndef __WMDExposureCompensationControl_DEFINED__
 #define __WMDExposureCompensationControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDExposureCompensationControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) float max;
 @property (readonly) float min;
@@ -442,10 +446,10 @@ WINRT_EXPORT
 #ifndef __WMDIsoSpeedControl_DEFINED__
 #define __WMDIsoSpeedControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDIsoSpeedControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WMDIsoSpeedPreset preset;
 @property (readonly) BOOL supported;
@@ -466,10 +470,10 @@ WINRT_EXPORT
 #ifndef __WMDWhiteBalanceControl_DEFINED__
 #define __WMDWhiteBalanceControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDWhiteBalanceControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int max;
 @property (readonly) unsigned int min;
@@ -487,10 +491,10 @@ WINRT_EXPORT
 #ifndef __WMDExposureControl_DEFINED__
 #define __WMDExposureControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDExposureControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL Auto;
 @property (readonly) WFTimeSpan* max;
@@ -508,11 +512,11 @@ WINRT_EXPORT
 #ifndef __WMDZoomSettings_DEFINED__
 #define __WMDZoomSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDZoomSettings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property float value;
 @property WMDZoomTransitionMode mode;
@@ -524,10 +528,10 @@ WINRT_EXPORT
 #ifndef __WMDZoomControl_DEFINED__
 #define __WMDZoomControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDZoomControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property float value;
 @property (readonly) float max;
@@ -545,11 +549,11 @@ WINRT_EXPORT
 #ifndef __WMDFocusSettings_DEFINED__
 #define __WMDFocusSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDFocusSettings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL waitForFocus;
 @property (retain) id /* unsigned int */ value;
@@ -565,10 +569,10 @@ WINRT_EXPORT
 #ifndef __WMDFocusControl_DEFINED__
 #define __WMDFocusControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDFocusControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int max;
 @property (readonly) unsigned int min;
@@ -599,11 +603,11 @@ WINRT_EXPORT
 #ifndef __WMDRegionOfInterest_DEFINED__
 #define __WMDRegionOfInterest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDRegionOfInterest : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WFRect* bounds;
 @property BOOL autoWhiteBalanceEnabled;
@@ -620,10 +624,10 @@ WINRT_EXPORT
 #ifndef __WMDRegionsOfInterestControl_DEFINED__
 #define __WMDRegionsOfInterestControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDRegionsOfInterestControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL autoExposureSupported;
 @property (readonly) BOOL autoFocusSupported;
@@ -640,10 +644,10 @@ WINRT_EXPORT
 #ifndef __WMDExposurePriorityVideoControl_DEFINED__
 #define __WMDExposurePriorityVideoControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDExposurePriorityVideoControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL enabled;
 @property (readonly) BOOL supported;
@@ -655,10 +659,10 @@ WINRT_EXPORT
 #ifndef __WMDHdrVideoControl_DEFINED__
 #define __WMDHdrVideoControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDHdrVideoControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WMDHdrVideoMode mode;
 @property (readonly) BOOL supported;
@@ -671,11 +675,11 @@ WINRT_EXPORT
 #ifndef __WMDAdvancedPhotoCaptureSettings_DEFINED__
 #define __WMDAdvancedPhotoCaptureSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDAdvancedPhotoCaptureSettings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WMDAdvancedPhotoMode mode;
 @end
@@ -686,10 +690,10 @@ WINRT_EXPORT
 #ifndef __WMDAdvancedPhotoControl_DEFINED__
 #define __WMDAdvancedPhotoControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDAdvancedPhotoControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WMDAdvancedPhotoMode mode;
 @property (readonly) BOOL supported;
@@ -703,10 +707,10 @@ WINRT_EXPORT
 #ifndef __WMDOpticalImageStabilizationControl_DEFINED__
 #define __WMDOpticalImageStabilizationControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDOpticalImageStabilizationControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WMDOpticalImageStabilizationMode mode;
 @property (readonly) BOOL supported;
@@ -719,10 +723,10 @@ WINRT_EXPORT
 #ifndef __WMDMediaDeviceControl_DEFINED__
 #define __WMDMediaDeviceControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDMediaDeviceControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WMDMediaDeviceControlCapabilities* capabilities;
 - (BOOL)tryGetValue:(double*)value;
@@ -737,10 +741,10 @@ WINRT_EXPORT
 #ifndef __WMDLowLagPhotoSequenceControl_DEFINED__
 #define __WMDLowLagPhotoSequenceControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDLowLagPhotoSequenceControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WMMMediaThumbnailFormat thumbnailFormat;
 @property BOOL thumbnailEnabled;
@@ -761,10 +765,10 @@ WINRT_EXPORT
 #ifndef __WMDLowLagPhotoControl_DEFINED__
 #define __WMDLowLagPhotoControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDLowLagPhotoControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WMMMediaThumbnailFormat thumbnailFormat;
 @property BOOL thumbnailEnabled;
@@ -780,10 +784,10 @@ WINRT_EXPORT
 #ifndef __WMDPhotoConfirmationControl_DEFINED__
 #define __WMDPhotoConfirmationControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDPhotoConfirmationControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WMMMediaPixelFormat pixelFormat;
 @property BOOL enabled;
@@ -796,10 +800,10 @@ WINRT_EXPORT
 #ifndef __WMDMediaDeviceControlCapabilities_DEFINED__
 #define __WMDMediaDeviceControlCapabilities_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMDMediaDeviceControlCapabilities : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL autoModeSupported;
 @property (readonly) double Default;

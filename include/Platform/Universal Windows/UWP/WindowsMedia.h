@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Media.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WMMediaProcessingTriggerDetails, WMVideoFrame, WMAudioBuffer, WMAudioFrame, WMMediaMarkerTypes,
@@ -179,10 +183,10 @@ typedef unsigned WMAudioProcessing;
 #ifndef __WMMediaProcessingTriggerDetails_DEFINED__
 #define __WMMediaProcessingTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMMediaProcessingTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFCValueSet* arguments;
 @end
@@ -193,12 +197,12 @@ WINRT_EXPORT
 #ifndef __WMVideoFrame_DEFINED__
 #define __WMVideoFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMVideoFrame : RTObject <WMIMediaFrame, WFIClosable>
 + (WMVideoFrame*)make:(WGIBitmapPixelFormat)format width:(int)width height:(int)height ACTIVATOR;
 + (WMVideoFrame*)makeWithAlpha:(WGIBitmapPixelFormat)format width:(int)width height:(int)height alpha:(WGIBitmapAlphaMode)alpha ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) id /* WFTimeSpan* */ systemRelativeTime;
 @property (retain) id /* WFTimeSpan* */ relativeTime;
@@ -230,10 +234,10 @@ WINRT_EXPORT
 #ifndef __WMAudioBuffer_DEFINED__
 #define __WMAudioBuffer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMAudioBuffer : RTObject <WFIMemoryBuffer, WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property unsigned int length;
 @property (readonly) unsigned int capacity;
@@ -247,11 +251,11 @@ WINRT_EXPORT
 #ifndef __WMAudioFrame_DEFINED__
 #define __WMAudioFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMAudioFrame : RTObject <WMIMediaFrame, WFIClosable>
 + (WMAudioFrame*)make:(unsigned int)capacity ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) id /* WFTimeSpan* */ systemRelativeTime;
 @property (retain) id /* WFTimeSpan* */ relativeTime;
@@ -270,7 +274,7 @@ WINRT_EXPORT
 #ifndef __WMMediaMarkerTypes_DEFINED__
 #define __WMMediaMarkerTypes_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMMediaMarkerTypes : RTObject
 + (NSString*)bookmark;
 @end
@@ -281,11 +285,11 @@ WINRT_EXPORT
 #ifndef __WMSystemMediaTransportControlsTimelineProperties_DEFINED__
 #define __WMSystemMediaTransportControlsTimelineProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMSystemMediaTransportControlsTimelineProperties : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WFTimeSpan* startTime;
 @property (retain) WFTimeSpan* position;
@@ -300,10 +304,10 @@ WINRT_EXPORT
 #ifndef __WMMusicDisplayProperties_DEFINED__
 #define __WMMusicDisplayProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMMusicDisplayProperties : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* title;
 @property (retain) NSString* artist;
@@ -319,10 +323,10 @@ WINRT_EXPORT
 #ifndef __WMVideoDisplayProperties_DEFINED__
 #define __WMVideoDisplayProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMVideoDisplayProperties : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* title;
 @property (retain) NSString* subtitle;
@@ -335,10 +339,10 @@ WINRT_EXPORT
 #ifndef __WMImageDisplayProperties_DEFINED__
 #define __WMImageDisplayProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMImageDisplayProperties : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* title;
 @property (retain) NSString* subtitle;
@@ -350,10 +354,10 @@ WINRT_EXPORT
 #ifndef __WMSystemMediaTransportControlsDisplayUpdater_DEFINED__
 #define __WMSystemMediaTransportControlsDisplayUpdater_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMSystemMediaTransportControlsDisplayUpdater : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WMMediaPlaybackType type;
 @property (retain) WSSRandomAccessStreamReference* thumbnail;
@@ -375,10 +379,10 @@ WINRT_EXPORT
 #ifndef __WMSystemMediaTransportControlsButtonPressedEventArgs_DEFINED__
 #define __WMSystemMediaTransportControlsButtonPressedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMSystemMediaTransportControlsButtonPressedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WMSystemMediaTransportControlsButton button;
 @end
@@ -389,10 +393,10 @@ WINRT_EXPORT
 #ifndef __WMSystemMediaTransportControlsPropertyChangedEventArgs_DEFINED__
 #define __WMSystemMediaTransportControlsPropertyChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMSystemMediaTransportControlsPropertyChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WMSystemMediaTransportControlsProperty property ;
 @end
@@ -403,10 +407,10 @@ WINRT_EXPORT
 #ifndef __WMPlaybackPositionChangeRequestedEventArgs_DEFINED__
 #define __WMPlaybackPositionChangeRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMPlaybackPositionChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFTimeSpan* requestedPlaybackPosition;
 @end
@@ -417,10 +421,10 @@ WINRT_EXPORT
 #ifndef __WMPlaybackRateChangeRequestedEventArgs_DEFINED__
 #define __WMPlaybackRateChangeRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMPlaybackRateChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) double requestedPlaybackRate;
 @end
@@ -431,10 +435,10 @@ WINRT_EXPORT
 #ifndef __WMShuffleEnabledChangeRequestedEventArgs_DEFINED__
 #define __WMShuffleEnabledChangeRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMShuffleEnabledChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL requestedShuffleEnabled;
 @end
@@ -445,10 +449,10 @@ WINRT_EXPORT
 #ifndef __WMAutoRepeatModeChangeRequestedEventArgs_DEFINED__
 #define __WMAutoRepeatModeChangeRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMAutoRepeatModeChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WMMediaPlaybackAutoRepeatMode requestedAutoRepeatMode;
 @end
@@ -459,11 +463,11 @@ WINRT_EXPORT
 #ifndef __WMSystemMediaTransportControls_DEFINED__
 #define __WMSystemMediaTransportControls_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMSystemMediaTransportControls : RTObject
 + (WMSystemMediaTransportControls*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isRewindEnabled;
 @property BOOL isNextEnabled;
@@ -509,11 +513,11 @@ WINRT_EXPORT
 #ifndef __WMMediaExtensionManager_DEFINED__
 #define __WMMediaExtensionManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMMediaExtensionManager : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (void)registerSchemeHandler:(NSString*)activatableClassId scheme:(NSString*)scheme;
 - (void)registerSchemeHandlerWithSettings:(NSString*)activatableClassId
@@ -552,7 +556,7 @@ WINRT_EXPORT
 #ifndef __WMVideoEffects_DEFINED__
 #define __WMVideoEffects_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMVideoEffects : RTObject
 + (NSString*)videoStabilization;
 @end

@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WSAWCWebTokenRequest, WSAWCWebAuthenticationCoreManager, WSAWCWebProviderError, WSAWCWebTokenResponse, WSAWCWebTokenRequestResult;
@@ -55,7 +59,7 @@ typedef unsigned WSAWCWebTokenRequestStatus;
 #ifndef __WSAWCWebTokenRequest_DEFINED__
 #define __WSAWCWebTokenRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSAWCWebTokenRequest : RTObject
 + (WSAWCWebTokenRequest*)make:(WSCWebAccountProvider*)provider scope:(NSString*)scope clientId:(NSString*)clientId ACTIVATOR;
 + (WSAWCWebTokenRequest*)makeWithPromptType:(WSCWebAccountProvider*)provider
@@ -65,7 +69,7 @@ WINRT_EXPORT
 + (WSAWCWebTokenRequest*)makeWithProvider:(WSCWebAccountProvider*)provider ACTIVATOR;
 + (WSAWCWebTokenRequest*)makeWithScope:(WSCWebAccountProvider*)provider scope:(NSString*)scope ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* clientId;
 @property (readonly) WSAWCWebTokenRequestPromptType promptType;
@@ -80,7 +84,7 @@ WINRT_EXPORT
 #ifndef __WSAWCWebAuthenticationCoreManager_DEFINED__
 #define __WSAWCWebAuthenticationCoreManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSAWCWebAuthenticationCoreManager : RTObject
 + (void)getTokenSilentlyAsync:(WSAWCWebTokenRequest*)request
                       success:(void (^)(WSAWCWebTokenRequestResult*))success
@@ -145,11 +149,11 @@ WINRT_EXPORT
 #ifndef __WSAWCWebProviderError_DEFINED__
 #define __WSAWCWebProviderError_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSAWCWebProviderError : RTObject
 + (WSAWCWebProviderError*)make:(unsigned int)errorCode errorMessage:(NSString*)errorMessage ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int errorCode;
 @property (readonly) NSString* errorMessage;
@@ -162,7 +166,7 @@ WINRT_EXPORT
 #ifndef __WSAWCWebTokenResponse_DEFINED__
 #define __WSAWCWebTokenResponse_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSAWCWebTokenResponse : RTObject
 + (instancetype)make ACTIVATOR;
 + (WSAWCWebTokenResponse*)makeWithToken:(NSString*)token ACTIVATOR;
@@ -171,7 +175,7 @@ WINRT_EXPORT
                                             webAccount:(WSCWebAccount*)webAccount
                                                  error:(WSAWCWebProviderError*)error ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSMutableDictionary* /* NSString *, NSString * */ properties;
 @property (readonly) WSAWCWebProviderError* providerError;
@@ -185,10 +189,10 @@ WINRT_EXPORT
 #ifndef __WSAWCWebTokenRequestResult_DEFINED__
 #define __WSAWCWebTokenRequestResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSAWCWebTokenRequestResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSArray* /* WSAWCWebTokenResponse* */ responseData;
 @property (readonly) WSAWCWebProviderError* responseError;

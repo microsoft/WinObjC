@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Sensors.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDSAccelerometer, WDSAccelerometerReading, WDSAccelerometerReadingChangedEventArgs, WDSAccelerometerShakenEventArgs, WDSInclinometer,
@@ -115,11 +119,11 @@ typedef unsigned WDSPedometerStepKind;
 #ifndef __WDSAccelerometer_DEFINED__
 #define __WDSAccelerometer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSAccelerometer : RTObject
 + (WDSAccelerometer*)getDefault;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property unsigned int reportInterval;
 @property (readonly) unsigned int minimumReportInterval;
@@ -140,10 +144,10 @@ WINRT_EXPORT
 #ifndef __WDSAccelerometerReading_DEFINED__
 #define __WDSAccelerometerReading_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSAccelerometerReading : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) double accelerationX;
 @property (readonly) double accelerationY;
@@ -157,10 +161,10 @@ WINRT_EXPORT
 #ifndef __WDSAccelerometerReadingChangedEventArgs_DEFINED__
 #define __WDSAccelerometerReadingChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSAccelerometerReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSAccelerometerReading* reading;
 @end
@@ -171,10 +175,10 @@ WINRT_EXPORT
 #ifndef __WDSAccelerometerShakenEventArgs_DEFINED__
 #define __WDSAccelerometerShakenEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSAccelerometerShakenEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFDateTime* timestamp;
 @end
@@ -185,12 +189,12 @@ WINRT_EXPORT
 #ifndef __WDSInclinometer_DEFINED__
 #define __WDSInclinometer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSInclinometer : RTObject
 + (WDSInclinometer*)getDefaultForRelativeReadings;
 + (WDSInclinometer*)getDefault;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property unsigned int reportInterval;
 @property (readonly) unsigned int minimumReportInterval;
@@ -208,10 +212,10 @@ WINRT_EXPORT
 #ifndef __WDSInclinometerReading_DEFINED__
 #define __WDSInclinometerReading_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSInclinometerReading : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) float pitchDegrees;
 @property (readonly) float rollDegrees;
@@ -226,10 +230,10 @@ WINRT_EXPORT
 #ifndef __WDSInclinometerReadingChangedEventArgs_DEFINED__
 #define __WDSInclinometerReadingChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSInclinometerReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSInclinometerReading* reading;
 @end
@@ -240,11 +244,11 @@ WINRT_EXPORT
 #ifndef __WDSGyrometer_DEFINED__
 #define __WDSGyrometer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSGyrometer : RTObject
 + (WDSGyrometer*)getDefault;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property unsigned int reportInterval;
 @property (readonly) unsigned int minimumReportInterval;
@@ -261,10 +265,10 @@ WINRT_EXPORT
 #ifndef __WDSGyrometerReading_DEFINED__
 #define __WDSGyrometerReading_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSGyrometerReading : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) double angularVelocityX;
 @property (readonly) double angularVelocityY;
@@ -278,10 +282,10 @@ WINRT_EXPORT
 #ifndef __WDSGyrometerReadingChangedEventArgs_DEFINED__
 #define __WDSGyrometerReadingChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSGyrometerReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSGyrometerReading* reading;
 @end
@@ -292,11 +296,11 @@ WINRT_EXPORT
 #ifndef __WDSCompass_DEFINED__
 #define __WDSCompass_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSCompass : RTObject
 + (WDSCompass*)getDefault;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property unsigned int reportInterval;
 @property (readonly) unsigned int minimumReportInterval;
@@ -313,10 +317,10 @@ WINRT_EXPORT
 #ifndef __WDSCompassReading_DEFINED__
 #define __WDSCompassReading_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSCompassReading : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) double headingMagneticNorth;
 @property (readonly) id /* double */ headingTrueNorth;
@@ -330,10 +334,10 @@ WINRT_EXPORT
 #ifndef __WDSCompassReadingChangedEventArgs_DEFINED__
 #define __WDSCompassReadingChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSCompassReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSCompassReading* reading;
 @end
@@ -344,11 +348,11 @@ WINRT_EXPORT
 #ifndef __WDSLightSensor_DEFINED__
 #define __WDSLightSensor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSLightSensor : RTObject
 + (WDSLightSensor*)getDefault;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property unsigned int reportInterval;
 @property (readonly) unsigned int minimumReportInterval;
@@ -364,10 +368,10 @@ WINRT_EXPORT
 #ifndef __WDSLightSensorReading_DEFINED__
 #define __WDSLightSensorReading_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSLightSensorReading : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) float illuminanceInLux;
 @property (readonly) WFDateTime* timestamp;
@@ -379,10 +383,10 @@ WINRT_EXPORT
 #ifndef __WDSLightSensorReadingChangedEventArgs_DEFINED__
 #define __WDSLightSensorReadingChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSLightSensorReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSLightSensorReading* reading;
 @end
@@ -393,10 +397,10 @@ WINRT_EXPORT
 #ifndef __WDSSensorRotationMatrix_DEFINED__
 #define __WDSSensorRotationMatrix_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSSensorRotationMatrix : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) float m11;
 @property (readonly) float m12;
@@ -415,10 +419,10 @@ WINRT_EXPORT
 #ifndef __WDSSensorQuaternion_DEFINED__
 #define __WDSSensorQuaternion_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSSensorQuaternion : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) float w;
 @property (readonly) float x;
@@ -432,12 +436,12 @@ WINRT_EXPORT
 #ifndef __WDSOrientationSensor_DEFINED__
 #define __WDSOrientationSensor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSOrientationSensor : RTObject
 + (WDSOrientationSensor*)getDefault;
 + (WDSOrientationSensor*)getDefaultForRelativeReadings;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property unsigned int reportInterval;
 @property (readonly) unsigned int minimumReportInterval;
@@ -455,10 +459,10 @@ WINRT_EXPORT
 #ifndef __WDSOrientationSensorReading_DEFINED__
 #define __WDSOrientationSensorReading_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSOrientationSensorReading : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSSensorQuaternion* quaternion;
 @property (readonly) WDSSensorRotationMatrix* rotationMatrix;
@@ -472,10 +476,10 @@ WINRT_EXPORT
 #ifndef __WDSOrientationSensorReadingChangedEventArgs_DEFINED__
 #define __WDSOrientationSensorReadingChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSOrientationSensorReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSOrientationSensorReading* reading;
 @end
@@ -486,11 +490,11 @@ WINRT_EXPORT
 #ifndef __WDSSimpleOrientationSensor_DEFINED__
 #define __WDSSimpleOrientationSensor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSSimpleOrientationSensor : RTObject
 + (WDSSimpleOrientationSensor*)getDefault;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WGDDisplayOrientations readingTransform;
 @property (readonly) NSString* deviceId;
@@ -506,10 +510,10 @@ WINRT_EXPORT
 #ifndef __WDSSimpleOrientationSensorOrientationChangedEventArgs_DEFINED__
 #define __WDSSimpleOrientationSensorOrientationChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSSimpleOrientationSensorOrientationChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSSimpleOrientation orientation;
 @property (readonly) WFDateTime* timestamp;
@@ -521,11 +525,11 @@ WINRT_EXPORT
 #ifndef __WDSMagnetometer_DEFINED__
 #define __WDSMagnetometer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSMagnetometer : RTObject
 + (WDSMagnetometer*)getDefault;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property unsigned int reportInterval;
 @property (readonly) unsigned int minimumReportInterval;
@@ -542,10 +546,10 @@ WINRT_EXPORT
 #ifndef __WDSMagnetometerReading_DEFINED__
 #define __WDSMagnetometerReading_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSMagnetometerReading : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSMagnetometerAccuracy directionalAccuracy;
 @property (readonly) float magneticFieldX;
@@ -560,10 +564,10 @@ WINRT_EXPORT
 #ifndef __WDSMagnetometerReadingChangedEventArgs_DEFINED__
 #define __WDSMagnetometerReadingChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSMagnetometerReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSMagnetometerReading* reading;
 @end
@@ -574,7 +578,7 @@ WINRT_EXPORT
 #ifndef __WDSActivitySensor_DEFINED__
 #define __WDSActivitySensor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSActivitySensor : RTObject
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDSActivitySensor*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
@@ -587,7 +591,7 @@ WINRT_EXPORT
                                   success:(void (^)(NSArray* /* WDSActivitySensorReading* */))success
                                   failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* deviceId;
 @property (readonly) unsigned int minimumReportInterval;
@@ -605,10 +609,10 @@ WINRT_EXPORT
 #ifndef __WDSActivitySensorReading_DEFINED__
 #define __WDSActivitySensorReading_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSActivitySensorReading : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSActivityType activity;
 @property (readonly) WDSActivitySensorReadingConfidence confidence;
@@ -621,10 +625,10 @@ WINRT_EXPORT
 #ifndef __WDSActivitySensorReadingChangedEventArgs_DEFINED__
 #define __WDSActivitySensorReadingChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSActivitySensorReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSActivitySensorReading* reading;
 @end
@@ -635,10 +639,10 @@ WINRT_EXPORT
 #ifndef __WDSActivitySensorReadingChangeReport_DEFINED__
 #define __WDSActivitySensorReadingChangeReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSActivitySensorReadingChangeReport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSActivitySensorReading* reading;
 @end
@@ -649,10 +653,10 @@ WINRT_EXPORT
 #ifndef __WDSActivitySensorTriggerDetails_DEFINED__
 #define __WDSActivitySensorTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSActivitySensorTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (NSArray* /* WDSActivitySensorReadingChangeReport* */)readReports;
 @end
@@ -663,11 +667,11 @@ WINRT_EXPORT
 #ifndef __WDSBarometer_DEFINED__
 #define __WDSBarometer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSBarometer : RTObject
 + (WDSBarometer*)getDefault;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property unsigned int reportInterval;
 @property (readonly) NSString* deviceId;
@@ -683,10 +687,10 @@ WINRT_EXPORT
 #ifndef __WDSBarometerReading_DEFINED__
 #define __WDSBarometerReading_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSBarometerReading : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) double stationPressureInHectopascals;
 @property (readonly) WFDateTime* timestamp;
@@ -698,10 +702,10 @@ WINRT_EXPORT
 #ifndef __WDSBarometerReadingChangedEventArgs_DEFINED__
 #define __WDSBarometerReadingChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSBarometerReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSBarometerReading* reading;
 @end
@@ -712,10 +716,10 @@ WINRT_EXPORT
 #ifndef __WDSPedometerReading_DEFINED__
 #define __WDSPedometerReading_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSPedometerReading : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) int cumulativeSteps;
 @property (readonly) WFTimeSpan* cumulativeStepsDuration;
@@ -729,7 +733,7 @@ WINRT_EXPORT
 #ifndef __WDSPedometer_DEFINED__
 #define __WDSPedometer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSPedometer : RTObject
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDSPedometer*))success failure:(void (^)(NSError*))failure;
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDSPedometer*))success failure:(void (^)(NSError*))failure;
@@ -742,7 +746,7 @@ WINRT_EXPORT
                                   success:(void (^)(NSArray* /* WDSPedometerReading* */))success
                                   failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property unsigned int reportInterval;
 @property (readonly) NSString* deviceId;
@@ -758,10 +762,10 @@ WINRT_EXPORT
 #ifndef __WDSPedometerReadingChangedEventArgs_DEFINED__
 #define __WDSPedometerReadingChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSPedometerReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSPedometerReading* reading;
 @end
@@ -772,12 +776,12 @@ WINRT_EXPORT
 #ifndef __WDSProximitySensor_DEFINED__
 #define __WDSProximitySensor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSProximitySensor : RTObject
 + (NSString*)getDeviceSelector;
 + (WDSProximitySensor*)fromId:(NSString*)sensorId;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* deviceId;
 @property (readonly) id /* unsigned int */ maxDistanceInMillimeters;
@@ -794,10 +798,10 @@ WINRT_EXPORT
 #ifndef __WDSProximitySensorReading_DEFINED__
 #define __WDSProximitySensorReading_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSProximitySensorReading : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) id /* unsigned int */ distanceInMillimeters;
 @property (readonly) BOOL isDetected;
@@ -810,10 +814,10 @@ WINRT_EXPORT
 #ifndef __WDSProximitySensorReadingChangedEventArgs_DEFINED__
 #define __WDSProximitySensorReadingChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSProximitySensorReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSProximitySensorReading* reading;
 @end
@@ -834,10 +838,10 @@ WINRT_EXPORT
 #ifndef __WDSProximitySensorDisplayOnOffController_DEFINED__
 #define __WDSProximitySensorDisplayOnOffController_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSProximitySensorDisplayOnOffController : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (void)close;
 @end
@@ -848,11 +852,11 @@ WINRT_EXPORT
 #ifndef __WDSAltimeter_DEFINED__
 #define __WDSAltimeter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSAltimeter : RTObject
 + (WDSAltimeter*)getDefault;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property unsigned int reportInterval;
 @property (readonly) NSString* deviceId;
@@ -868,10 +872,10 @@ WINRT_EXPORT
 #ifndef __WDSAltimeterReading_DEFINED__
 #define __WDSAltimeterReading_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSAltimeterReading : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) double altitudeChangeInMeters;
 @property (readonly) WFDateTime* timestamp;
@@ -883,10 +887,10 @@ WINRT_EXPORT
 #ifndef __WDSAltimeterReadingChangedEventArgs_DEFINED__
 #define __WDSAltimeterReadingChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 @interface WDSAltimeterReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSAltimeterReading* reading;
 @end

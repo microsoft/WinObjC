@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Media_DialProtocol.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WMDDialAppStateDetails, WMDDialApp, WMDDialDevice, WMDDialDeviceSelectedEventArgs, WMDDialDisconnectButtonClickedEventArgs,
@@ -75,10 +79,10 @@ typedef unsigned WMDDialDeviceDisplayStatus;
 #ifndef __WMDDialAppStateDetails_DEFINED__
 #define __WMDDialAppStateDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 @interface WMDDialAppStateDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* fullXml;
 @property (readonly) WMDDialAppState state;
@@ -90,10 +94,10 @@ WINRT_EXPORT
 #ifndef __WMDDialApp_DEFINED__
 #define __WMDDialApp_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 @interface WMDDialApp : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* appName;
 - (void)requestLaunchAsync:(NSString*)appArgument success:(void (^)(WMDDialAppLaunchResult))success failure:(void (^)(NSError*))failure;
@@ -107,13 +111,13 @@ WINRT_EXPORT
 #ifndef __WMDDialDevice_DEFINED__
 #define __WMDDialDevice_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 @interface WMDDialDevice : RTObject
 + (NSString*)getDeviceSelector:(NSString*)appName;
 + (void)fromIdAsync:(NSString*)value success:(void (^)(WMDDialDevice*))success failure:(void (^)(NSError*))failure;
 + (void)deviceInfoSupportsDialAsync:(WDEDeviceInformation*)device success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* id;
 - (WMDDialApp*)getDialApp:(NSString*)appName;
@@ -125,10 +129,10 @@ WINRT_EXPORT
 #ifndef __WMDDialDeviceSelectedEventArgs_DEFINED__
 #define __WMDDialDeviceSelectedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 @interface WMDDialDeviceSelectedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WMDDialDevice* selectedDialDevice;
 @end
@@ -139,10 +143,10 @@ WINRT_EXPORT
 #ifndef __WMDDialDisconnectButtonClickedEventArgs_DEFINED__
 #define __WMDDialDisconnectButtonClickedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 @interface WMDDialDisconnectButtonClickedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WMDDialDevice* device;
 @end
@@ -153,10 +157,10 @@ WINRT_EXPORT
 #ifndef __WMDDialDevicePickerFilter_DEFINED__
 #define __WMDDialDevicePickerFilter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 @interface WMDDialDevicePickerFilter : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSMutableArray* /* NSString * */ supportedAppNames;
 @end
@@ -167,11 +171,11 @@ WINRT_EXPORT
 #ifndef __WMDDialDevicePicker_DEFINED__
 #define __WMDDialDevicePicker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 @interface WMDDialDevicePicker : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDEDevicePickerAppearance* appearance;
 @property (readonly) WMDDialDevicePickerFilter* filter;

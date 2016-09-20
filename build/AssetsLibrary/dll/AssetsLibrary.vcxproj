@@ -60,7 +60,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AssetsLibrary.def</ModuleDefinitionFile>
-      <AdditionalDependencies>libdispatch.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
@@ -72,7 +72,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AssetsLibrary.def</ModuleDefinitionFile>
-      <AdditionalDependencies>libdispatch.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
@@ -84,7 +84,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AssetsLibrary.def</ModuleDefinitionFile>
-      <AdditionalDependencies>libdispatch.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
@@ -96,7 +96,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AssetsLibrary.def</ModuleDefinitionFile>
-      <AdditionalDependencies>libdispatch.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>

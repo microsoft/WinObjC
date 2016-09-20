@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Devices_HumanInterfaceDevice.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDHHidDevice, WDHHidInputReport, WDHHidFeatureReport, WDHHidOutputReport, WDHHidBooleanControlDescription,
@@ -68,7 +72,7 @@ typedef unsigned WDHHidCollectionType;
 #ifndef __WDHHidDevice_DEFINED__
 #define __WDHHidDevice_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidDevice : RTObject <WFIClosable>
 + (NSString*)getDeviceSelector:(unsigned short)usagePage usageId:(unsigned short)usageId;
 + (NSString*)getDeviceSelectorVidPid:(unsigned short)usagePage
@@ -80,7 +84,7 @@ WINRT_EXPORT
             success:(void (^)(WDHHidDevice*))success
             failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned short productId;
 @property (readonly) unsigned short usageId;
@@ -118,10 +122,10 @@ WINRT_EXPORT
 #ifndef __WDHHidInputReport_DEFINED__
 #define __WDHHidInputReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidInputReport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSArray* /* WDHHidBooleanControl* */ activatedBooleanControls;
 @property (readonly) RTObject<WSSIBuffer>* data;
@@ -139,10 +143,10 @@ WINRT_EXPORT
 #ifndef __WDHHidFeatureReport_DEFINED__
 #define __WDHHidFeatureReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidFeatureReport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) RTObject<WSSIBuffer>* data;
 @property (readonly) unsigned short id;
@@ -158,10 +162,10 @@ WINRT_EXPORT
 #ifndef __WDHHidOutputReport_DEFINED__
 #define __WDHHidOutputReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidOutputReport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) RTObject<WSSIBuffer>* data;
 @property (readonly) unsigned short id;
@@ -177,10 +181,10 @@ WINRT_EXPORT
 #ifndef __WDHHidBooleanControlDescription_DEFINED__
 #define __WDHHidBooleanControlDescription_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidBooleanControlDescription : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int id;
 @property (readonly) NSArray* /* WDHHidCollection* */ parentCollections;
@@ -196,10 +200,10 @@ WINRT_EXPORT
 #ifndef __WDHHidNumericControlDescription_DEFINED__
 #define __WDHHidNumericControlDescription_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidNumericControlDescription : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL hasNull;
 @property (readonly) unsigned int id;
@@ -225,10 +229,10 @@ WINRT_EXPORT
 #ifndef __WDHHidInputReportReceivedEventArgs_DEFINED__
 #define __WDHHidInputReportReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidInputReportReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDHHidInputReport* report;
 @end
@@ -239,10 +243,10 @@ WINRT_EXPORT
 #ifndef __WDHHidCollection_DEFINED__
 #define __WDHHidCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidCollection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int id;
 @property (readonly) WDHHidCollectionType type;
@@ -256,10 +260,10 @@ WINRT_EXPORT
 #ifndef __WDHHidBooleanControl_DEFINED__
 #define __WDHHidBooleanControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidBooleanControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isActive;
 @property (readonly) WDHHidBooleanControlDescription* controlDescription;
@@ -274,10 +278,10 @@ WINRT_EXPORT
 #ifndef __WDHHidNumericControl_DEFINED__
 #define __WDHHidNumericControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidNumericControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property int64_t value;
 @property int64_t scaledValue;

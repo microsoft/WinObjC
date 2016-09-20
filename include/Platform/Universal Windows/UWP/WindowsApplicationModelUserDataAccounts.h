@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_USERDATAACCOUNTS_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_USERDATAACCOUNTS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_UserDataAccounts.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WAUUserDataAccount, WAUUserDataAccountStore, WAUUserDataAccountManager;
@@ -59,10 +63,10 @@ typedef unsigned WAUUserDataAccountContentKinds;
 #ifndef __WAUUserDataAccount_DEFINED__
 #define __WAUUserDataAccount_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_USERDATAACCOUNTS_EXPORT
 @interface WAUUserDataAccount : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* userDisplayName;
 @property WAUUserDataAccountOtherAppReadAccess otherAppReadAccess;
@@ -86,10 +90,10 @@ WINRT_EXPORT
 #ifndef __WAUUserDataAccountStore_DEFINED__
 #define __WAUUserDataAccountStore_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_USERDATAACCOUNTS_EXPORT
 @interface WAUUserDataAccountStore : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (void)findAccountsAsyncWithSuccess:(void (^)(NSArray* /* WAUUserDataAccount* */))success failure:(void (^)(NSError*))failure;
 - (void)getAccountAsync:(NSString*)id success:(void (^)(WAUUserDataAccount*))success failure:(void (^)(NSError*))failure;
@@ -102,7 +106,7 @@ WINRT_EXPORT
 #ifndef __WAUUserDataAccountManager_DEFINED__
 #define __WAUUserDataAccountManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_USERDATAACCOUNTS_EXPORT
 @interface WAUUserDataAccountManager : RTObject
 + (void)requestStoreAsync:(WAUUserDataAccountStoreAccessType)storeAccessType
                   success:(void (^)(WAUUserDataAccountStore*))success

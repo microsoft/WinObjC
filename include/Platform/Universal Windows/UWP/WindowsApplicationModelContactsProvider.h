@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_PROVIDER_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_PROVIDER_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Contacts_Provider.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WACPContactRemovedEventArgs, WACPContactPickerUI;
@@ -42,10 +46,10 @@ typedef unsigned WACPAddContactResult;
 #ifndef __WACPContactRemovedEventArgs_DEFINED__
 #define __WACPContactRemovedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_PROVIDER_EXPORT
 @interface WACPContactRemovedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* id;
 @end
@@ -56,10 +60,10 @@ WINRT_EXPORT
 #ifndef __WACPContactPickerUI_DEFINED__
 #define __WACPContactPickerUI_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_PROVIDER_EXPORT
 @interface WACPContactPickerUI : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSArray* /* NSString * */ desiredFields;
 @property (readonly) WACContactSelectionMode selectionMode;

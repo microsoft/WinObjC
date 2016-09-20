@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Media_Core_Capture_Devices_Protection_Playback.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WMCCVariablePhotoSequenceCapture, WMCCVariablePhotoCapturedEventArgs;
@@ -34,10 +38,10 @@
 #ifndef __WMCCVariablePhotoSequenceCapture_DEFINED__
 #define __WMCCVariablePhotoSequenceCapture_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCCVariablePhotoSequenceCapture : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (EventRegistrationToken)addPhotoCapturedEvent:(void (^)(WMCCVariablePhotoSequenceCapture*, WMCCVariablePhotoCapturedEventArgs*))del;
 - (void)removePhotoCapturedEvent:(EventRegistrationToken)tok;
@@ -55,10 +59,10 @@ WINRT_EXPORT
 #ifndef __WMCCVariablePhotoCapturedEventArgs_DEFINED__
 #define __WMCCVariablePhotoCapturedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCCVariablePhotoCapturedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFTimeSpan* captureTimeOffset;
 @property (readonly) WMCCapturedFrameControlValues* capturedFrameControlValues;

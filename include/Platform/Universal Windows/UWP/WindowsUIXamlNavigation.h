@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXNNavigationEventArgs, WUXNNavigatingCancelEventArgs, WUXNNavigationFailedEventArgs, WUXNPageStackEntry;
@@ -90,10 +94,10 @@ typedef void (^WUXNNavigationStoppedEventHandler)(RTObject* sender, WUXNNavigati
 #ifndef __WUXNNavigationEventArgs_DEFINED__
 #define __WUXNNavigationEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXNNavigationEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WFUri* uri;
 @property (readonly) RTObject* content;
@@ -109,10 +113,10 @@ WINRT_EXPORT
 #ifndef __WUXNNavigatingCancelEventArgs_DEFINED__
 #define __WUXNNavigatingCancelEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXNNavigatingCancelEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL cancel;
 @property (readonly) WUXNNavigationMode navigationMode;
@@ -127,10 +131,10 @@ WINRT_EXPORT
 #ifndef __WUXNNavigationFailedEventArgs_DEFINED__
 #define __WUXNNavigationFailedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXNNavigationFailedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL handled;
 @property (readonly) HRESULT exception;
@@ -143,10 +147,10 @@ WINRT_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -164,13 +168,13 @@ WINRT_EXPORT
 #ifndef __WUXNPageStackEntry_DEFINED__
 #define __WUXNPageStackEntry_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXNPageStackEntry : WXDependencyObject
 + (WUXNPageStackEntry*)makeInstance:(WUXITypeName*)sourcePageType
                           parameter:(RTObject*)parameter
            navigationTransitionInfo:(WUXMANavigationTransitionInfo*)navigationTransitionInfo ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WUXMANavigationTransitionInfo* navigationTransitionInfo;
 @property (readonly) RTObject* parameter;

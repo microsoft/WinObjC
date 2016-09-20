@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUCCoreDispatcher, WUCCoreCursor, WUCCoreWindow, WUCWindowActivatedEventArgs, WUCAutomationProviderRequestedEventArgs,
@@ -153,7 +157,7 @@ typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Core.CorePhysicalKeyStatus
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCorePhysicalKeyStatus : NSObject
 + (instancetype) new;
 @property unsigned int repeatCount;
@@ -165,7 +169,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.UI.Core.CoreProximityEvaluation
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCoreProximityEvaluation : NSObject
 + (instancetype) new;
 @property int score;
@@ -318,10 +322,10 @@ typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 #ifndef __WUCCoreDispatcher_DEFINED__
 #define __WUCCoreDispatcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCoreDispatcher : RTObject <WUCICoreAcceleratorKeys>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL hasThreadAccess;
 @property WUCCoreDispatcherPriority currentPriority;
@@ -346,11 +350,11 @@ WINRT_EXPORT
 #ifndef __WUCCoreCursor_DEFINED__
 #define __WUCCoreCursor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCoreCursor : RTObject
 + (WUCCoreCursor*)makeCursor:(WUCCoreCursorType)type id:(unsigned int)id ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int id;
 @property (readonly) WUCCoreCursorType type;
@@ -362,11 +366,11 @@ WINRT_EXPORT
 #ifndef __WUCCoreWindow_DEFINED__
 #define __WUCCoreWindow_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCoreWindow : RTObject <WUCICoreWindow>
 + (WUCCoreWindow*)getForCurrentThread;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WFPoint* pointerPosition;
 @property (retain) WUCCoreCursor* pointerCursor;
@@ -425,10 +429,10 @@ WINRT_EXPORT
 #ifndef __WUCWindowActivatedEventArgs_DEFINED__
 #define __WUCWindowActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCWindowActivatedEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL handled;
 @property (readonly) WUCCoreWindowActivationState windowActivationState;
@@ -440,10 +444,10 @@ WINRT_EXPORT
 #ifndef __WUCAutomationProviderRequestedEventArgs_DEFINED__
 #define __WUCAutomationProviderRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCAutomationProviderRequestedEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) RTObject* automationProvider;
 @property BOOL handled;
@@ -455,10 +459,10 @@ WINRT_EXPORT
 #ifndef __WUCCharacterReceivedEventArgs_DEFINED__
 #define __WUCCharacterReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCharacterReceivedEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int keyCode;
 @property (readonly) WUCCorePhysicalKeyStatus* keyStatus;
@@ -471,10 +475,10 @@ WINRT_EXPORT
 #ifndef __WUCCoreWindowEventArgs_DEFINED__
 #define __WUCCoreWindowEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCoreWindowEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL handled;
 @end
@@ -485,10 +489,10 @@ WINRT_EXPORT
 #ifndef __WUCInputEnabledEventArgs_DEFINED__
 #define __WUCInputEnabledEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCInputEnabledEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL handled;
 @property (readonly) BOOL inputEnabled;
@@ -500,10 +504,10 @@ WINRT_EXPORT
 #ifndef __WUCKeyEventArgs_DEFINED__
 #define __WUCKeyEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCKeyEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL handled;
 @property (readonly) WUCCorePhysicalKeyStatus* keyStatus;
@@ -516,10 +520,10 @@ WINRT_EXPORT
 #ifndef __WUCPointerEventArgs_DEFINED__
 #define __WUCPointerEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCPointerEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL handled;
 @property (readonly) WUIPointerPoint* currentPoint;
@@ -533,10 +537,10 @@ WINRT_EXPORT
 #ifndef __WUCTouchHitTestingEventArgs_DEFINED__
 #define __WUCTouchHitTestingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCTouchHitTestingEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL handled;
 @property (retain) WUCCoreProximityEvaluation* proximityEvaluation;
@@ -552,10 +556,10 @@ WINRT_EXPORT
 #ifndef __WUCWindowSizeChangedEventArgs_DEFINED__
 #define __WUCWindowSizeChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCWindowSizeChangedEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL handled;
 @property (readonly) WFSize* size;
@@ -567,10 +571,10 @@ WINRT_EXPORT
 #ifndef __WUCVisibilityChangedEventArgs_DEFINED__
 #define __WUCVisibilityChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCVisibilityChangedEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL handled;
 @property (readonly) BOOL visible;
@@ -582,10 +586,10 @@ WINRT_EXPORT
 #ifndef __WUCIdleDispatchedHandlerArgs_DEFINED__
 #define __WUCIdleDispatchedHandlerArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCIdleDispatchedHandlerArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL isDispatcherIdle;
 @end
@@ -596,10 +600,10 @@ WINRT_EXPORT
 #ifndef __WUCAcceleratorKeyEventArgs_DEFINED__
 #define __WUCAcceleratorKeyEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCAcceleratorKeyEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WUCCoreAcceleratorKeyEventType eventType;
 @property (readonly) WUCCorePhysicalKeyStatus* keyStatus;
@@ -613,10 +617,10 @@ WINRT_EXPORT
 #ifndef __WUCCoreAcceleratorKeys_DEFINED__
 #define __WUCCoreAcceleratorKeys_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCoreAcceleratorKeys : RTObject <WUCICoreAcceleratorKeys>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (EventRegistrationToken)addAcceleratorKeyActivatedEvent:(void (^)(WUCCoreDispatcher*, WUCAcceleratorKeyEventArgs*))del;
 - (void)removeAcceleratorKeyActivatedEvent:(EventRegistrationToken)tok;
@@ -628,11 +632,11 @@ WINRT_EXPORT
 #ifndef __WUCCoreWindowResizeManager_DEFINED__
 #define __WUCCoreWindowResizeManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCoreWindowResizeManager : RTObject
 + (WUCCoreWindowResizeManager*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL shouldWaitForLayoutCompletion;
 - (void)notifyLayoutCompleted;
@@ -644,10 +648,10 @@ WINRT_EXPORT
 #ifndef __WUCCoreIndependentInputSource_DEFINED__
 #define __WUCCoreIndependentInputSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCoreIndependentInputSource : RTObject <WUCICoreInputSourceBase, WUCICorePointerInputSource>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL isInputEnabled;
 @property (readonly) WUCCoreDispatcher* dispatcher;
@@ -680,10 +684,10 @@ WINRT_EXPORT
 #ifndef __WUCCoreComponentInputSource_DEFINED__
 #define __WUCCoreComponentInputSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCoreComponentInputSource : RTObject <WUCICoreInputSourceBase, WUCICorePointerInputSource>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL hasFocus;
 @property BOOL isInputEnabled;
@@ -730,10 +734,10 @@ WINRT_EXPORT
 #ifndef __WUCBackRequestedEventArgs_DEFINED__
 #define __WUCBackRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCBackRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL handled;
 @end
@@ -744,11 +748,11 @@ WINRT_EXPORT
 #ifndef __WUCSystemNavigationManager_DEFINED__
 #define __WUCSystemNavigationManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCSystemNavigationManager : RTObject
 + (WUCSystemNavigationManager*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WUCAppViewBackButtonVisibility appViewBackButtonVisibility;
 - (EventRegistrationToken)addBackRequestedEvent:(void (^)(RTObject*, WUCBackRequestedEventArgs*))del;

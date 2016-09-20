@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
+#define OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Management_Deployment.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WMDDeploymentResult, WMDPackageUserInformation, WMDPackageVolume, WMDPackageManager;
@@ -94,7 +98,7 @@ typedef unsigned WMDPackageStatus;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Management.Deployment.DeploymentProgress
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WMDDeploymentProgress : NSObject
 + (instancetype) new;
 @property WMDDeploymentProgressState state;
@@ -105,10 +109,10 @@ WINRT_EXPORT
 #ifndef __WMDDeploymentResult_DEFINED__
 #define __WMDDeploymentResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WMDDeploymentResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFGUID* activityId;
 @property (readonly) NSString* errorText;
@@ -121,10 +125,10 @@ WINRT_EXPORT
 #ifndef __WMDPackageUserInformation_DEFINED__
 #define __WMDPackageUserInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WMDPackageUserInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WMDPackageInstallState installState;
 @property (readonly) NSString* userSecurityId;
@@ -136,10 +140,10 @@ WINRT_EXPORT
 #ifndef __WMDPackageVolume_DEFINED__
 #define __WMDPackageVolume_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WMDPackageVolume : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL isOffline;
 @property (readonly) BOOL isSystemVolume;
@@ -182,11 +186,11 @@ WINRT_EXPORT
 #ifndef __WMDPackageManager_DEFINED__
 #define __WMDPackageManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WMDPackageManager : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (void)addPackageAsync:(WFUri*)packageUri
   dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris

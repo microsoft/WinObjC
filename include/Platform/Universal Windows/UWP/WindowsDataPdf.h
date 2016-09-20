@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DATA_PDF_EXPORT
+#define OBJCUWP_WINDOWS_DATA_PDF_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Data_Pdf.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDPPdfPageRenderOptions, WDPPdfPageDimensions, WDPPdfPage, WDPPdfDocument;
@@ -45,11 +49,11 @@ typedef unsigned WDPPdfPageRotation;
 #ifndef __WDPPdfPageRenderOptions_DEFINED__
 #define __WDPPdfPageRenderOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 @interface WDPPdfPageRenderOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WFRect* sourceRect;
 @property BOOL isIgnoringHighContrast;
@@ -65,10 +69,10 @@ WINRT_EXPORT
 #ifndef __WDPPdfPageDimensions_DEFINED__
 #define __WDPPdfPageDimensions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 @interface WDPPdfPageDimensions : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFRect* artBox;
 @property (readonly) WFRect* bleedBox;
@@ -93,10 +97,10 @@ WINRT_EXPORT
 #ifndef __WDPPdfPage_DEFINED__
 #define __WDPPdfPage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 @interface WDPPdfPage : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDPPdfPageDimensions* dimensions;
 @property (readonly) unsigned int index;
@@ -116,7 +120,7 @@ WINRT_EXPORT
 #ifndef __WDPPdfDocument_DEFINED__
 #define __WDPPdfDocument_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 @interface WDPPdfDocument : RTObject
 + (void)loadFromFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WDPPdfDocument*))success failure:(void (^)(NSError*))failure;
 + (void)loadFromFileWithPasswordAsync:(RTObject<WSIStorageFile>*)file
@@ -131,7 +135,7 @@ WINRT_EXPORT
                                 success:(void (^)(WDPPdfDocument*))success
                                 failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL isPasswordProtected;
 @property (readonly) unsigned int pageCount;

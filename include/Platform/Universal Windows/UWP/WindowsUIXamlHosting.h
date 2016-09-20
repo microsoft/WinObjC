@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Hosting.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXHElementCompositionPreview;
@@ -33,11 +37,11 @@
 #ifndef __WUXHElementCompositionPreview_DEFINED__
 #define __WUXHElementCompositionPreview_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT
 @interface WUXHElementCompositionPreview : RTObject
 + (RTObject*)getContainerVisual:(WXUIElement*)element;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 

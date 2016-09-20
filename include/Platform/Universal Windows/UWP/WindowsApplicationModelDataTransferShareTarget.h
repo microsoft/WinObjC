@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_SHARETARGET_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_SHARETARGET_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_DataTransfer_ShareTarget.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WADSQuickLink, WADSShareOperation;
@@ -34,11 +38,11 @@
 #ifndef __WADSQuickLink_DEFINED__
 #define __WADSQuickLink_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_SHARETARGET_EXPORT
 @interface WADSQuickLink : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* title;
 @property (retain) WSSRandomAccessStreamReference* thumbnail;
@@ -53,10 +57,10 @@ WINRT_EXPORT
 #ifndef __WADSShareOperation_DEFINED__
 #define __WADSShareOperation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_SHARETARGET_EXPORT
 @interface WADSShareOperation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WADDataPackageView* data;
 @property (readonly) NSString* quickLinkId;

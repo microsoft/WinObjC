@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_RADIOS_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_RADIOS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Radios.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDRRadio;
@@ -61,14 +65,14 @@ typedef unsigned WDRRadioAccessStatus;
 #ifndef __WDRRadio_DEFINED__
 #define __WDRRadio_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_RADIOS_EXPORT
 @interface WDRRadio : RTObject
 + (void)getRadiosAsyncWithSuccess:(void (^)(NSArray* /* WDRRadio* */))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDRRadio*))success failure:(void (^)(NSError*))failure;
 + (void)requestAccessAsyncWithSuccess:(void (^)(WDRRadioAccessStatus))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDRRadioKind kind;
 @property (readonly) NSString* name;

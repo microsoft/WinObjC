@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Calls.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WACPhoneCallHistoryEntryAddress, WACPhoneCallHistoryEntry, WACPhoneCallHistoryEntryReader, WACPhoneCallHistoryEntryQueryOptions,
@@ -80,13 +84,13 @@ typedef unsigned WACPhoneCallHistorySourceIdKind;
 #ifndef __WACPhoneCallHistoryEntryAddress_DEFINED__
 #define __WACPhoneCallHistoryEntryAddress_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
 @interface WACPhoneCallHistoryEntryAddress : RTObject
 + (WACPhoneCallHistoryEntryAddress*)make:(NSString*)rawAddress
                           rawAddressKind:(WACPhoneCallHistoryEntryRawAddressKind)rawAddressKind ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WACPhoneCallHistoryEntryRawAddressKind rawAddressKind;
 @property (retain) NSString* rawAddress;
@@ -100,11 +104,11 @@ WINRT_EXPORT
 #ifndef __WACPhoneCallHistoryEntry_DEFINED__
 #define __WACPhoneCallHistoryEntry_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
 @interface WACPhoneCallHistoryEntry : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WACPhoneCallHistoryEntryMedia media;
 @property BOOL isMissed;
@@ -132,10 +136,10 @@ WINRT_EXPORT
 #ifndef __WACPhoneCallHistoryEntryReader_DEFINED__
 #define __WACPhoneCallHistoryEntryReader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
 @interface WACPhoneCallHistoryEntryReader : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WACPhoneCallHistoryEntry* */))success failure:(void (^)(NSError*))failure;
 @end
@@ -146,11 +150,11 @@ WINRT_EXPORT
 #ifndef __WACPhoneCallHistoryEntryQueryOptions_DEFINED__
 #define __WACPhoneCallHistoryEntryQueryOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
 @interface WACPhoneCallHistoryEntryQueryOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WACPhoneCallHistoryEntryQueryDesiredMedia desiredMedia;
 @property (readonly) NSMutableArray* /* NSString * */ sourceIds;
@@ -162,10 +166,10 @@ WINRT_EXPORT
 #ifndef __WACPhoneCallHistoryStore_DEFINED__
 #define __WACPhoneCallHistoryStore_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
 @interface WACPhoneCallHistoryStore : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (void)getEntryAsync:(NSString*)callHistoryEntryId
               success:(void (^)(WACPhoneCallHistoryEntry*))success
@@ -191,7 +195,7 @@ WINRT_EXPORT
 #ifndef __WACPhoneCallHistoryManager_DEFINED__
 #define __WACPhoneCallHistoryManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
 @interface WACPhoneCallHistoryManager : RTObject
 + (void)requestStoreAsync:(WACPhoneCallHistoryStoreAccessType)accessType
                   success:(void (^)(WACPhoneCallHistoryStore*))success

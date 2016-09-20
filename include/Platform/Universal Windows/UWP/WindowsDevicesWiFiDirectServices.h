@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Devices_WiFiDirect_Services.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDWSWiFiDirectServiceProvisioningInfo, WDWSWiFiDirectServiceSession, WDWSWiFiDirectServiceAutoAcceptSessionConnectedEventArgs,
@@ -104,10 +108,10 @@ typedef unsigned WDWSWiFiDirectServiceIPProtocol;
 #ifndef __WDWSWiFiDirectServiceProvisioningInfo_DEFINED__
 #define __WDWSWiFiDirectServiceProvisioningInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceProvisioningInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL isGroupFormationNeeded;
 @property (readonly) WDWSWiFiDirectServiceConfigurationMethod selectedConfigurationMethod;
@@ -129,10 +133,10 @@ WINRT_EXPORT
 #ifndef __WDWSWiFiDirectServiceSession_DEFINED__
 #define __WDWSWiFiDirectServiceSession_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceSession : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int advertisementId;
 @property (readonly) WDWSWiFiDirectServiceSessionErrorStatus errorStatus;
@@ -158,10 +162,10 @@ WINRT_EXPORT
 #ifndef __WDWSWiFiDirectServiceAutoAcceptSessionConnectedEventArgs_DEFINED__
 #define __WDWSWiFiDirectServiceAutoAcceptSessionConnectedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceAutoAcceptSessionConnectedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDWSWiFiDirectServiceSession* session;
 @property (readonly) RTObject<WSSIBuffer>* sessionInfo;
@@ -173,10 +177,10 @@ WINRT_EXPORT
 #ifndef __WDWSWiFiDirectServiceRemotePortAddedEventArgs_DEFINED__
 #define __WDWSWiFiDirectServiceRemotePortAddedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceRemotePortAddedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSArray* /* WNEndpointPair* */ endpointPairs;
 @property (readonly) WDWSWiFiDirectServiceIPProtocol protocol;
@@ -188,10 +192,10 @@ WINRT_EXPORT
 #ifndef __WDWSWiFiDirectServiceSessionDeferredEventArgs_DEFINED__
 #define __WDWSWiFiDirectServiceSessionDeferredEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceSessionDeferredEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) RTObject<WSSIBuffer>* deferredSessionInfo;
 @end
@@ -202,10 +206,10 @@ WINRT_EXPORT
 #ifndef __WDWSWiFiDirectServiceSessionRequest_DEFINED__
 #define __WDWSWiFiDirectServiceSessionRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceSessionRequest : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDEDeviceInformation* deviceInformation;
 @property (readonly) WDWSWiFiDirectServiceProvisioningInfo* provisioningInfo;
@@ -219,10 +223,10 @@ WINRT_EXPORT
 #ifndef __WDWSWiFiDirectServiceSessionRequestedEventArgs_DEFINED__
 #define __WDWSWiFiDirectServiceSessionRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceSessionRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (WDWSWiFiDirectServiceSessionRequest*)getSessionRequest;
 @end
@@ -233,11 +237,11 @@ WINRT_EXPORT
 #ifndef __WDWSWiFiDirectServiceAdvertiser_DEFINED__
 #define __WDWSWiFiDirectServiceAdvertiser_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceAdvertiser : RTObject
 + (WDWSWiFiDirectServiceAdvertiser*)makeWiFiDirectServiceAdvertiser:(NSString*)serviceName ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WDWSWiFiDirectServiceStatus serviceStatus;
 @property (retain) RTObject<WSSIBuffer>* serviceInfo;
@@ -275,13 +279,13 @@ WINRT_EXPORT
 #ifndef __WDWSWiFiDirectService_DEFINED__
 #define __WDWSWiFiDirectService_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectService : RTObject
 + (NSString*)getSelector:(NSString*)serviceName;
 + (NSString*)getSelectorWithFilter:(NSString*)serviceName serviceInfoFilter:(RTObject<WSSIBuffer>*)serviceInfoFilter;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDWSWiFiDirectService*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) RTObject<WSSIBuffer>* sessionInfo;
 @property BOOL preferGroupOwnerMode;

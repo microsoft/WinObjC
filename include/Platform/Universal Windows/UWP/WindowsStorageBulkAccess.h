@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+#define OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Storage_BulkAccess.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WSBFileInformationFactory, WSBFileInformation, WSBFolderInformation;
@@ -56,7 +60,7 @@
 #ifndef __WSBFileInformationFactory_DEFINED__
 #define __WSBFileInformationFactory_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 @interface WSBFileInformationFactory : RTObject
 + (WSBFileInformationFactory*)makeWithMode:(RTObject<WSSIStorageQueryResultBase>*)queryResult mode:(WSFThumbnailMode)mode ACTIVATOR;
 + (WSBFileInformationFactory*)makeWithModeAndSize:(RTObject<WSSIStorageQueryResultBase>*)queryResult
@@ -72,7 +76,7 @@ WINRT_EXPORT
                                                    thumbnailOptions:(WSFThumbnailOptions)thumbnailOptions
                                                           delayLoad:(BOOL)delayLoad ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (void)getItemsAsync:(unsigned int)startIndex
    maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
@@ -275,7 +279,7 @@ WINRT_EXPORT
 #ifndef __WSBFileInformation_DEFINED__
 #define __WSBFileInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 @interface WSBFileInformation : RTObject <WSBIStorageItemInformation,
                                           WSIStorageFile,
                                           WSSIInputStreamReference,
@@ -287,7 +291,7 @@ WINRT_EXPORT
                                           WSIStorageFilePropertiesWithAvailability,
                                           WSIStorageFile2>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WSFBasicProperties* basicProperties;
 @property (readonly) WSFDocumentProperties* documentProperties;
@@ -461,7 +465,7 @@ WINRT_EXPORT
 #ifndef __WSBFolderInformation_DEFINED__
 #define __WSBFolderInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 @interface WSBFolderInformation : RTObject <WSBIStorageItemInformation,
                                             WSIStorageFolder,
                                             WSIStorageItem,
@@ -471,7 +475,7 @@ WINRT_EXPORT
                                             WSIStorageFolder2,
                                             WSIStorageItemPropertiesWithProvider>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WSFBasicProperties* basicProperties;
 @property (readonly) WSFDocumentProperties* documentProperties;

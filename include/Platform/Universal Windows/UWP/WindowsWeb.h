@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_WEB_EXPORT
+#define OBJCUWP_WINDOWS_WEB_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Web.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WWWebError;
@@ -102,7 +106,7 @@ typedef unsigned WWWebErrorStatus;
 #ifndef __WWWebError_DEFINED__
 #define __WWWebError_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_WEB_EXPORT
 @interface WWWebError : RTObject
 + (WWWebErrorStatus)getStatus:(int)hresult;
 @end

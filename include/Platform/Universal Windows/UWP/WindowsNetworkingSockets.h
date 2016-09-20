@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WNSSocketActivityContext, WNSDatagramSocket, WNSStreamSocket, WNSStreamSocketListener, WNSSocketActivityInformation,
@@ -151,7 +155,7 @@ typedef unsigned WNSSocketActivityConnectedStandbyAction;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Networking.Sockets.RoundTripTimeStatistics
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSRoundTripTimeStatistics : NSObject
 + (instancetype) new;
 @property unsigned int variance;
@@ -161,7 +165,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Networking.Sockets.BandwidthStatistics
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSBandwidthStatistics : NSObject
 + (instancetype) new;
 @property uint64_t outboundBitsPerSecond;
@@ -227,11 +231,11 @@ WINRT_EXPORT
 #ifndef __WNSSocketActivityContext_DEFINED__
 #define __WNSSocketActivityContext_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSSocketActivityContext : RTObject
 + (WNSSocketActivityContext*)make:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) RTObject<WSSIBuffer>* data;
 @end
@@ -242,7 +246,7 @@ WINRT_EXPORT
 #ifndef __WNSDatagramSocket_DEFINED__
 #define __WNSDatagramSocket_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSDatagramSocket : RTObject <WFIClosable>
 + (void)getEndpointPairsAsync:(WNHostName*)remoteHostName
             remoteServiceName:(NSString*)remoteServiceName
@@ -255,7 +259,7 @@ WINRT_EXPORT
                                      failure:(void (^)(NSError*))failure;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WNSDatagramSocketControl* control;
 @property (readonly) WNSDatagramSocketInformation* information;
@@ -293,11 +297,11 @@ WINRT_EXPORT
 #ifndef __WNSStreamSocket_DEFINED__
 #define __WNSStreamSocket_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamSocket : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WNSStreamSocketControl* control;
 @property (readonly) WNSStreamSocketInformation* information;
@@ -333,11 +337,11 @@ WINRT_EXPORT
 #ifndef __WNSStreamSocketListener_DEFINED__
 #define __WNSStreamSocketListener_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamSocketListener : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WNSStreamSocketListenerControl* control;
 @property (readonly) WNSStreamSocketListenerInformation* information;
@@ -366,10 +370,10 @@ WINRT_EXPORT
 #ifndef __WNSSocketActivityInformation_DEFINED__
 #define __WNSSocketActivityInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSSocketActivityInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WNSSocketActivityContext* context;
 @property (readonly) WNSDatagramSocket* datagramSocket;
@@ -387,10 +391,10 @@ WINRT_EXPORT
 #ifndef __WNSDatagramSocketControl_DEFINED__
 #define __WNSDatagramSocketControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSDatagramSocketControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WNSSocketQualityOfService qualityOfService;
 @property uint8_t outboundUnicastHopLimit;
@@ -405,10 +409,10 @@ WINRT_EXPORT
 #ifndef __WNSDatagramSocketInformation_DEFINED__
 #define __WNSDatagramSocketInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSDatagramSocketInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WNHostName* localAddress;
 @property (readonly) NSString* localPort;
@@ -422,10 +426,10 @@ WINRT_EXPORT
 #ifndef __WNSDatagramSocketMessageReceivedEventArgs_DEFINED__
 #define __WNSDatagramSocketMessageReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSDatagramSocketMessageReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WNHostName* localAddress;
 @property (readonly) WNHostName* remoteAddress;
@@ -440,10 +444,10 @@ WINRT_EXPORT
 #ifndef __WNSStreamSocketControl_DEFINED__
 #define __WNSStreamSocketControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamSocketControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WNSSocketQualityOfService qualityOfService;
 @property uint8_t outboundUnicastHopLimit;
@@ -461,10 +465,10 @@ WINRT_EXPORT
 #ifndef __WNSStreamSocketInformation_DEFINED__
 #define __WNSStreamSocketInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamSocketInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WNSBandwidthStatistics* bandwidthStatistics;
 @property (readonly) WNHostName* localAddress;
@@ -488,10 +492,10 @@ WINRT_EXPORT
 #ifndef __WNSStreamSocketListenerControl_DEFINED__
 #define __WNSStreamSocketListenerControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamSocketListenerControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WNSSocketQualityOfService qualityOfService;
 @property uint8_t outboundUnicastHopLimit;
@@ -506,10 +510,10 @@ WINRT_EXPORT
 #ifndef __WNSStreamSocketListenerInformation_DEFINED__
 #define __WNSStreamSocketListenerInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamSocketListenerInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* localPort;
 @end
@@ -520,10 +524,10 @@ WINRT_EXPORT
 #ifndef __WNSStreamSocketListenerConnectionReceivedEventArgs_DEFINED__
 #define __WNSStreamSocketListenerConnectionReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamSocketListenerConnectionReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WNSStreamSocket* socket;
 @end
@@ -534,10 +538,10 @@ WINRT_EXPORT
 #ifndef __WNSWebSocketClosedEventArgs_DEFINED__
 #define __WNSWebSocketClosedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSWebSocketClosedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned short code;
 @property (readonly) NSString* reason;
@@ -549,10 +553,10 @@ WINRT_EXPORT
 #ifndef __WNSMessageWebSocketControl_DEFINED__
 #define __WNSMessageWebSocketControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSMessageWebSocketControl : RTObject <WNSIWebSocketControl>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WNSSocketMessageType messageType;
 @property unsigned int maxMessageSize;
@@ -568,10 +572,10 @@ WINRT_EXPORT
 #ifndef __WNSMessageWebSocketInformation_DEFINED__
 #define __WNSMessageWebSocketInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSMessageWebSocketInformation : RTObject <WNSIWebSocketInformation>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WNSBandwidthStatistics* bandwidthStatistics;
 @property (readonly) WNHostName* localAddress;
@@ -584,11 +588,11 @@ WINRT_EXPORT
 #ifndef __WNSMessageWebSocket_DEFINED__
 #define __WNSMessageWebSocket_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSMessageWebSocket : RTObject <WNSIWebSocket, WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WNSMessageWebSocketControl* control;
 @property (readonly) WNSMessageWebSocketInformation* information;
@@ -609,10 +613,10 @@ WINRT_EXPORT
 #ifndef __WNSMessageWebSocketMessageReceivedEventArgs_DEFINED__
 #define __WNSMessageWebSocketMessageReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSMessageWebSocketMessageReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WNSSocketMessageType messageType;
 - (WSSDataReader*)getDataReader;
@@ -625,10 +629,10 @@ WINRT_EXPORT
 #ifndef __WNSStreamWebSocketControl_DEFINED__
 #define __WNSStreamWebSocketControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamWebSocketControl : RTObject <WNSIWebSocketControl>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL noDelay;
 @property (retain) WSCPasswordCredential* serverCredential;
@@ -643,10 +647,10 @@ WINRT_EXPORT
 #ifndef __WNSStreamWebSocketInformation_DEFINED__
 #define __WNSStreamWebSocketInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamWebSocketInformation : RTObject <WNSIWebSocketInformation>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WNSBandwidthStatistics* bandwidthStatistics;
 @property (readonly) WNHostName* localAddress;
@@ -659,11 +663,11 @@ WINRT_EXPORT
 #ifndef __WNSStreamWebSocket_DEFINED__
 #define __WNSStreamWebSocket_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamWebSocket : RTObject <WNSIWebSocket, WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WNSStreamWebSocketControl* control;
 @property (readonly) WNSStreamWebSocketInformation* information;
@@ -693,11 +697,11 @@ WINRT_EXPORT
 #ifndef __WNSWebSocketKeepAlive_DEFINED__
 #define __WNSWebSocketKeepAlive_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSWebSocketKeepAlive : RTObject <WABIBackgroundTask>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (void)run:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
 @end
@@ -708,7 +712,7 @@ WINRT_EXPORT
 #ifndef __WNSSocketError_DEFINED__
 #define __WNSSocketError_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSSocketError : RTObject
 + (WNSSocketErrorStatus)getStatus:(int)hresult;
 @end
@@ -719,7 +723,7 @@ WINRT_EXPORT
 #ifndef __WNSWebSocketError_DEFINED__
 #define __WNSWebSocketError_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSWebSocketError : RTObject
 + (WWWebErrorStatus)getStatus:(int)hresult;
 @end
@@ -730,10 +734,10 @@ WINRT_EXPORT
 #ifndef __WNSSocketActivityTriggerDetails_DEFINED__
 #define __WNSSocketActivityTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSSocketActivityTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WNSSocketActivityTriggerReason reason;
 @property (readonly) WNSSocketActivityInformation* socketInformation;

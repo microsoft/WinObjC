@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXDCurrentChangingEventArgs, WUXDPropertyChangedEventArgs, WUXDBindingExpressionBase, WUXDBindingOperations, WUXDBindingBase,
@@ -82,7 +86,7 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Data.LoadMoreItemsResult
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDLoadMoreItemsResult : NSObject
 + (instancetype) new;
 @property unsigned int count;
@@ -260,11 +264,11 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 #ifndef __WUXDCurrentChangingEventArgs_DEFINED__
 #define __WUXDCurrentChangingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDCurrentChangingEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL cancel;
 @property (readonly) BOOL isCancelable;
@@ -276,10 +280,10 @@ WINRT_EXPORT
 #ifndef __WUXDPropertyChangedEventArgs_DEFINED__
 #define __WUXDPropertyChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDPropertyChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* propertyName;
 @end
@@ -290,10 +294,10 @@ WINRT_EXPORT
 #ifndef __WUXDBindingExpressionBase_DEFINED__
 #define __WUXDBindingExpressionBase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDBindingExpressionBase : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -303,11 +307,11 @@ WINRT_EXPORT
 #ifndef __WUXDBindingOperations_DEFINED__
 #define __WUXDBindingOperations_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDBindingOperations : RTObject
 + (void)setBinding:(WXDependencyObject*)target dp:(WXDependencyProperty*)dp binding:(WUXDBindingBase*)binding;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -317,10 +321,10 @@ WINRT_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -338,11 +342,11 @@ WINRT_EXPORT
 #ifndef __WUXDBindingBase_DEFINED__
 #define __WUXDBindingBase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDBindingBase : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -352,10 +356,10 @@ WINRT_EXPORT
 #ifndef __WUXDBindingExpression_DEFINED__
 #define __WUXDBindingExpression_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDBindingExpression : WUXDBindingExpressionBase
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) RTObject* dataItem;
 @property (readonly) WUXDBinding* parentBinding;
@@ -368,11 +372,11 @@ WINRT_EXPORT
 #ifndef __WUXDCollectionViewSource_DEFINED__
 #define __WUXDCollectionViewSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDCollectionViewSource : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) RTObject* source;
 @property (retain) WXPropertyPath* itemsPath;
@@ -390,11 +394,11 @@ WINRT_EXPORT
 #ifndef __WUXDRelativeSource_DEFINED__
 #define __WUXDRelativeSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDRelativeSource : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WUXDRelativeSourceMode mode;
 @end
@@ -405,11 +409,11 @@ WINRT_EXPORT
 #ifndef __WUXDBinding_DEFINED__
 #define __WUXDBinding_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDBinding : WUXDBindingBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WXPropertyPath* path;
 @property WUXDBindingMode mode;
@@ -430,10 +434,10 @@ WINRT_EXPORT
 #ifndef __WUXDItemIndexRange_DEFINED__
 #define __WUXDItemIndexRange_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDItemIndexRange : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) int firstIndex;
 @property (readonly) int lastIndex;

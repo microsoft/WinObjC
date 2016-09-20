@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Sensors_Custom.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDSCCustomSensor, WDSCCustomSensorReading, WDSCCustomSensorReadingChangedEventArgs;
@@ -33,12 +37,12 @@
 #ifndef __WDSCCustomSensor_DEFINED__
 #define __WDSCCustomSensor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
 @interface WDSCCustomSensor : RTObject
 + (NSString*)getDeviceSelector:(WFGUID*)interfaceId;
 + (void)fromIdAsync:(NSString*)sensorId success:(void (^)(WDSCCustomSensor*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property unsigned int reportInterval;
 @property (readonly) NSString* deviceId;
@@ -54,10 +58,10 @@ WINRT_EXPORT
 #ifndef __WDSCCustomSensorReading_DEFINED__
 #define __WDSCCustomSensorReading_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
 @interface WDSCCustomSensorReading : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) WFDateTime* timestamp;
@@ -69,10 +73,10 @@ WINRT_EXPORT
 #ifndef __WDSCCustomSensorReadingChangedEventArgs_DEFINED__
 #define __WDSCCustomSensorReadingChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
 @interface WDSCCustomSensorReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDSCCustomSensorReading* reading;
 @end

@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SYSTEM_DISPLAY_EXPORT
+#define OBJCUWP_WINDOWS_SYSTEM_DISPLAY_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_System_Display.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WSDDisplayRequest;
@@ -30,11 +34,11 @@
 #ifndef __WSDDisplayRequest_DEFINED__
 #define __WSDDisplayRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_DISPLAY_EXPORT
 @interface WSDDisplayRequest : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (void)requestActive;
 - (void)requestRelease;

@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXMMMatrix3DHelper, WUXMMTransform3D, WUXMMCompositeTransform3D, WUXMMPerspectiveTransform3D;
@@ -38,7 +42,7 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Media.Media3D.Matrix3D
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMMMatrix3D : NSObject
 + (instancetype) new;
 @property double m11;
@@ -63,7 +67,7 @@ WINRT_EXPORT
 #ifndef __WUXMMMatrix3DHelper_DEFINED__
 #define __WUXMMMatrix3DHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMMMatrix3DHelper : RTObject
 + (WUXMMMatrix3D*)multiply:(WUXMMMatrix3D*)matrix1 matrix2:(WUXMMMatrix3D*)matrix2;
 + (WUXMMMatrix3D*)fromElements:(double)m11
@@ -86,7 +90,7 @@ WINRT_EXPORT
 + (BOOL)getIsIdentity:(WUXMMMatrix3D*)target;
 + (WUXMMMatrix3D*)invert:(WUXMMMatrix3D*)target;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXMMMatrix3D*)identity;
 @end
@@ -97,10 +101,10 @@ WINRT_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -118,10 +122,10 @@ WINRT_EXPORT
 #ifndef __WUXMMTransform3D_DEFINED__
 #define __WUXMMTransform3D_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMMTransform3D : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -131,11 +135,11 @@ WINRT_EXPORT
 #ifndef __WUXMMCompositeTransform3D_DEFINED__
 #define __WUXMMCompositeTransform3D_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMMCompositeTransform3D : WUXMMTransform3D
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property double rotationZ;
 @property double rotationY;
@@ -169,11 +173,11 @@ WINRT_EXPORT
 #ifndef __WUXMMPerspectiveTransform3D_DEFINED__
 #define __WUXMMPerspectiveTransform3D_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMMPerspectiveTransform3D : WUXMMTransform3D
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property double offsetY;
 @property double offsetX;

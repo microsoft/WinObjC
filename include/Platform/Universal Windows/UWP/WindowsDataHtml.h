@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DATA_HTML_EXPORT
+#define OBJCUWP_WINDOWS_DATA_HTML_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Data_Html.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDHHtmlUtilities;
@@ -30,7 +34,7 @@
 #ifndef __WDHHtmlUtilities_DEFINED__
 #define __WDHHtmlUtilities_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_HTML_EXPORT
 @interface WDHHtmlUtilities : RTObject
 + (NSString*)convertToText:(NSString*)html;
 @end

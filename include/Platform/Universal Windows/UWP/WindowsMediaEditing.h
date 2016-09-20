@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Media_Effects_Editing.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WMEMediaOverlay, WMEMediaClip, WMEEmbeddedAudioTrack, WMEBackgroundAudioTrack, WMEMediaComposition, WMEMediaOverlayLayer;
@@ -58,12 +62,12 @@ typedef unsigned WMEMediaTrimmingPreference;
 #ifndef __WMEMediaOverlay_DEFINED__
 #define __WMEMediaOverlay_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEMediaOverlay : RTObject
 + (WMEMediaOverlay*)make:(WMEMediaClip*)clip ACTIVATOR;
 + (WMEMediaOverlay*)makeWithPositionAndOpacity:(WMEMediaClip*)clip position:(WFRect*)position opacity:(double)opacity ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WFRect* position;
 @property double opacity;
@@ -79,7 +83,7 @@ WINRT_EXPORT
 #ifndef __WMEMediaClip_DEFINED__
 #define __WMEMediaClip_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEMediaClip : RTObject
 + (WMEMediaClip*)createFromSurface:(RTObject<WGDDIDirect3DSurface>*)surface originalDuration:(WFTimeSpan*)originalDuration;
 + (WMEMediaClip*)createFromColor:(WUColor*)color originalDuration:(WFTimeSpan*)originalDuration;
@@ -89,7 +93,7 @@ WINRT_EXPORT
                          success:(void (^)(WMEMediaClip*))success
                          failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property unsigned int selectedEmbeddedAudioTrackIndex;
 @property (retain) WFTimeSpan* trimTimeFromEnd;
@@ -113,10 +117,10 @@ WINRT_EXPORT
 #ifndef __WMEEmbeddedAudioTrack_DEFINED__
 #define __WMEEmbeddedAudioTrack_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEEmbeddedAudioTrack : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (WMMAudioEncodingProperties*)getAudioEncodingProperties;
 @end
@@ -127,14 +131,14 @@ WINRT_EXPORT
 #ifndef __WMEBackgroundAudioTrack_DEFINED__
 #define __WMEBackgroundAudioTrack_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEBackgroundAudioTrack : RTObject
 + (WMEBackgroundAudioTrack*)createFromEmbeddedAudioTrack:(WMEEmbeddedAudioTrack*)embeddedAudioTrack;
 + (void)createFromFileAsync:(RTObject<WSIStorageFile>*)file
                     success:(void (^)(WMEBackgroundAudioTrack*))success
                     failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property double volume;
 @property (retain) WFTimeSpan* trimTimeFromStart;
@@ -154,12 +158,12 @@ WINRT_EXPORT
 #ifndef __WMEMediaComposition_DEFINED__
 #define __WMEMediaComposition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEMediaComposition : RTObject
 + (void)loadAsync:(WSStorageFile*)file success:(void (^)(WMEMediaComposition*))success failure:(void (^)(NSError*))failure;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSMutableArray* /* WMEBackgroundAudioTrack* */ backgroundAudioTracks;
 @property (readonly) NSMutableArray* /* WMEMediaClip* */ clips;
@@ -207,12 +211,12 @@ WINRT_EXPORT
 #ifndef __WMEMediaOverlayLayer_DEFINED__
 #define __WMEMediaOverlayLayer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEMediaOverlayLayer : RTObject
 + (instancetype)make ACTIVATOR;
 + (WMEMediaOverlayLayer*)makeWithCompositorDefinition:(RTObject<WMEIVideoCompositorDefinition>*)compositorDefinition ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) RTObject<WMEIVideoCompositorDefinition>* customCompositorDefinition;
 @property (readonly) NSMutableArray* /* WMEMediaOverlay* */ overlays;

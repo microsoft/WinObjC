@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_OCR_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_OCR_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Media_Ocr.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WMOOcrWord, WMOOcrLine, WMOOcrResult, WMOOcrEngine;
@@ -35,10 +39,10 @@
 #ifndef __WMOOcrWord_DEFINED__
 #define __WMOOcrWord_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_OCR_EXPORT
 @interface WMOOcrWord : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFRect* boundingRect;
 @property (readonly) NSString* text;
@@ -50,10 +54,10 @@ WINRT_EXPORT
 #ifndef __WMOOcrLine_DEFINED__
 #define __WMOOcrLine_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_OCR_EXPORT
 @interface WMOOcrLine : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* text;
 @property (readonly) NSArray* /* WMOOcrWord* */ words;
@@ -65,10 +69,10 @@ WINRT_EXPORT
 #ifndef __WMOOcrResult_DEFINED__
 #define __WMOOcrResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_OCR_EXPORT
 @interface WMOOcrResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSArray* /* WMOOcrLine* */ lines;
 @property (readonly) NSString* text;
@@ -81,13 +85,13 @@ WINRT_EXPORT
 #ifndef __WMOOcrEngine_DEFINED__
 #define __WMOOcrEngine_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_OCR_EXPORT
 @interface WMOOcrEngine : RTObject
 + (BOOL)isLanguageSupported:(WGLanguage*)language;
 + (WMOOcrEngine*)tryCreateFromLanguage:(WGLanguage*)language;
 + (WMOOcrEngine*)tryCreateFromUserProfileLanguages;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WGLanguage* recognizerLanguage;
 + (NSArray* /* WGLanguage* */)availableRecognizerLanguages;

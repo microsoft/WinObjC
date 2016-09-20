@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
+#define OBJCUWP_WINDOWS_UI_POPUPS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Popups.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUPMessageDialog, WUPUICommand, WUPUICommandSeparator, WUPPopupMenu;
@@ -73,12 +77,12 @@ typedef void (^WUPUICommandInvokedHandler)(RTObject<WUPIUICommand>* command);
 #ifndef __WUPMessageDialog_DEFINED__
 #define __WUPMessageDialog_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 @interface WUPMessageDialog : RTObject
 + (WUPMessageDialog*)make:(NSString*)content ACTIVATOR;
 + (WUPMessageDialog*)makeWithTitle:(NSString*)content title:(NSString*)title ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* title;
 @property WUPMessageDialogOptions options;
@@ -95,14 +99,14 @@ WINRT_EXPORT
 #ifndef __WUPUICommand_DEFINED__
 #define __WUPUICommand_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 @interface WUPUICommand : RTObject <WUPIUICommand>
 + (WUPUICommand*)make:(NSString*)label ACTIVATOR;
 + (WUPUICommand*)makeWithHandler:(NSString*)label action:(WUPUICommandInvokedHandler)action ACTIVATOR;
 + (WUPUICommand*)makeWithHandlerAndId:(NSString*)label action:(WUPUICommandInvokedHandler)action commandId:(RTObject*)commandId ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* label;
 @property (copy) WUPUICommandInvokedHandler invoked;
@@ -115,11 +119,11 @@ WINRT_EXPORT
 #ifndef __WUPUICommandSeparator_DEFINED__
 #define __WUPUICommandSeparator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 @interface WUPUICommandSeparator : RTObject <WUPIUICommand>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* label;
 @property (copy) WUPUICommandInvokedHandler invoked;
@@ -132,11 +136,11 @@ WINRT_EXPORT
 #ifndef __WUPPopupMenu_DEFINED__
 #define __WUPPopupMenu_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 @interface WUPPopupMenu : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSMutableArray* /* RTObject<WUPIUICommand>* */ commands;
 - (void)showAsync:(WFPoint*)invocationPoint success:(void (^)(RTObject<WUPIUICommand>*))success failure:(void (^)(NSError*))failure;

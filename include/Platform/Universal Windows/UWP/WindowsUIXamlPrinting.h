@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Printing.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXPAddPagesEventArgs, WUXPGetPreviewPageEventArgs, WUXPPaginateEventArgs, WUXPPrintDocument;
@@ -84,11 +88,11 @@ typedef void (^WUXPPaginateEventHandler)(RTObject* sender, WUXPPaginateEventArgs
 #ifndef __WUXPAddPagesEventArgs_DEFINED__
 #define __WUXPAddPagesEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 @interface WUXPAddPagesEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WGPPrintTaskOptions* printTaskOptions;
 @end
@@ -99,11 +103,11 @@ WINRT_EXPORT
 #ifndef __WUXPGetPreviewPageEventArgs_DEFINED__
 #define __WUXPGetPreviewPageEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 @interface WUXPGetPreviewPageEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) int pageNumber;
 @end
@@ -114,11 +118,11 @@ WINRT_EXPORT
 #ifndef __WUXPPaginateEventArgs_DEFINED__
 #define __WUXPPaginateEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 @interface WUXPPaginateEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) int currentPreviewPageNumber;
 @property (readonly) WGPPrintTaskOptions* printTaskOptions;
@@ -130,10 +134,10 @@ WINRT_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -151,11 +155,11 @@ WINRT_EXPORT
 #ifndef __WUXPPrintDocument_DEFINED__
 #define __WUXPPrintDocument_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 @interface WUXPPrintDocument : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) RTObject<WGPIPrintDocumentSource>* documentSource;
 + (WXDependencyProperty*)documentSourceProperty;

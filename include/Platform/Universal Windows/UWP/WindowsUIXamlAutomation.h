@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXAAutomationProperty, WUXAAnnotationPatternIdentifiers, WUXAAutomationElementIdentifiers, WUXAAutomationProperties,
@@ -291,10 +295,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 #ifndef __WUXAAutomationProperty_DEFINED__
 #define __WUXAAutomationProperty_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXAAutomationProperty : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @end
 
@@ -304,10 +308,10 @@ WINRT_EXPORT
 #ifndef __WUXAAnnotationPatternIdentifiers_DEFINED__
 #define __WUXAAnnotationPatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXAAnnotationPatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)annotationTypeIdProperty;
 + (WUXAAutomationProperty*)annotationTypeNameProperty;
@@ -322,10 +326,10 @@ WINRT_EXPORT
 #ifndef __WUXAAutomationElementIdentifiers_DEFINED__
 #define __WUXAAutomationElementIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXAAutomationElementIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)clickablePointProperty;
 + (WUXAAutomationProperty*)acceleratorKeyProperty;
@@ -363,7 +367,7 @@ WINRT_EXPORT
 #ifndef __WUXAAutomationProperties_DEFINED__
 #define __WUXAAutomationProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXAAutomationProperties : RTObject
 + (WUXAPAccessibilityView)getAccessibilityView:(WXDependencyObject*)element;
 + (void)setAccessibilityView:(WXDependencyObject*)element value:(WUXAPAccessibilityView)value;
@@ -396,7 +400,7 @@ WINRT_EXPORT
 + (void)setLevel:(WXDependencyObject*)element value:(int)value;
 + (NSMutableArray* /* WUXAAutomationAnnotation* */)getAnnotations:(WXDependencyObject*)element;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WXDependencyProperty*)itemTypeProperty;
 + (WXDependencyProperty*)acceleratorKeyProperty;
@@ -422,10 +426,10 @@ WINRT_EXPORT
 #ifndef __WUXADockPatternIdentifiers_DEFINED__
 #define __WUXADockPatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXADockPatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)dockPositionProperty;
 @end
@@ -436,10 +440,10 @@ WINRT_EXPORT
 #ifndef __WUXADragPatternIdentifiers_DEFINED__
 #define __WUXADragPatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXADragPatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)dropEffectProperty;
 + (WUXAAutomationProperty*)dropEffectsProperty;
@@ -453,10 +457,10 @@ WINRT_EXPORT
 #ifndef __WUXADropTargetPatternIdentifiers_DEFINED__
 #define __WUXADropTargetPatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXADropTargetPatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)dropTargetEffectProperty;
 + (WUXAAutomationProperty*)dropTargetEffectsProperty;
@@ -468,10 +472,10 @@ WINRT_EXPORT
 #ifndef __WUXAExpandCollapsePatternIdentifiers_DEFINED__
 #define __WUXAExpandCollapsePatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXAExpandCollapsePatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)expandCollapseStateProperty;
 @end
@@ -482,10 +486,10 @@ WINRT_EXPORT
 #ifndef __WUXAGridItemPatternIdentifiers_DEFINED__
 #define __WUXAGridItemPatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXAGridItemPatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)columnProperty;
 + (WUXAAutomationProperty*)columnSpanProperty;
@@ -500,10 +504,10 @@ WINRT_EXPORT
 #ifndef __WUXAGridPatternIdentifiers_DEFINED__
 #define __WUXAGridPatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXAGridPatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)columnCountProperty;
 + (WUXAAutomationProperty*)rowCountProperty;
@@ -515,10 +519,10 @@ WINRT_EXPORT
 #ifndef __WUXAMultipleViewPatternIdentifiers_DEFINED__
 #define __WUXAMultipleViewPatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXAMultipleViewPatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)currentViewProperty;
 + (WUXAAutomationProperty*)supportedViewsProperty;
@@ -530,10 +534,10 @@ WINRT_EXPORT
 #ifndef __WUXARangeValuePatternIdentifiers_DEFINED__
 #define __WUXARangeValuePatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXARangeValuePatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)isReadOnlyProperty;
 + (WUXAAutomationProperty*)largeChangeProperty;
@@ -549,10 +553,10 @@ WINRT_EXPORT
 #ifndef __WUXAScrollPatternIdentifiers_DEFINED__
 #define __WUXAScrollPatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXAScrollPatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)horizontalScrollPercentProperty;
 + (WUXAAutomationProperty*)horizontalViewSizeProperty;
@@ -569,10 +573,10 @@ WINRT_EXPORT
 #ifndef __WUXASelectionItemPatternIdentifiers_DEFINED__
 #define __WUXASelectionItemPatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXASelectionItemPatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)isSelectedProperty;
 + (WUXAAutomationProperty*)selectionContainerProperty;
@@ -584,10 +588,10 @@ WINRT_EXPORT
 #ifndef __WUXASelectionPatternIdentifiers_DEFINED__
 #define __WUXASelectionPatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXASelectionPatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)canSelectMultipleProperty;
 + (WUXAAutomationProperty*)isSelectionRequiredProperty;
@@ -600,10 +604,10 @@ WINRT_EXPORT
 #ifndef __WUXASpreadsheetItemPatternIdentifiers_DEFINED__
 #define __WUXASpreadsheetItemPatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXASpreadsheetItemPatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)formulaProperty;
 @end
@@ -614,10 +618,10 @@ WINRT_EXPORT
 #ifndef __WUXAStylesPatternIdentifiers_DEFINED__
 #define __WUXAStylesPatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXAStylesPatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)extendedPropertiesProperty;
 + (WUXAAutomationProperty*)fillColorProperty;
@@ -634,10 +638,10 @@ WINRT_EXPORT
 #ifndef __WUXATableItemPatternIdentifiers_DEFINED__
 #define __WUXATableItemPatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXATableItemPatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)columnHeaderItemsProperty;
 + (WUXAAutomationProperty*)rowHeaderItemsProperty;
@@ -649,10 +653,10 @@ WINRT_EXPORT
 #ifndef __WUXATablePatternIdentifiers_DEFINED__
 #define __WUXATablePatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXATablePatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)columnHeadersProperty;
 + (WUXAAutomationProperty*)rowHeadersProperty;
@@ -665,10 +669,10 @@ WINRT_EXPORT
 #ifndef __WUXATogglePatternIdentifiers_DEFINED__
 #define __WUXATogglePatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXATogglePatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)toggleStateProperty;
 @end
@@ -679,10 +683,10 @@ WINRT_EXPORT
 #ifndef __WUXATransformPattern2Identifiers_DEFINED__
 #define __WUXATransformPattern2Identifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXATransformPattern2Identifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)canZoomProperty;
 + (WUXAAutomationProperty*)maxZoomProperty;
@@ -696,10 +700,10 @@ WINRT_EXPORT
 #ifndef __WUXATransformPatternIdentifiers_DEFINED__
 #define __WUXATransformPatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXATransformPatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)canMoveProperty;
 + (WUXAAutomationProperty*)canResizeProperty;
@@ -712,10 +716,10 @@ WINRT_EXPORT
 #ifndef __WUXAValuePatternIdentifiers_DEFINED__
 #define __WUXAValuePatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXAValuePatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)isReadOnlyProperty;
 + (WUXAAutomationProperty*)valueProperty;
@@ -727,10 +731,10 @@ WINRT_EXPORT
 #ifndef __WUXAWindowPatternIdentifiers_DEFINED__
 #define __WUXAWindowPatternIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXAWindowPatternIdentifiers : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 + (WUXAAutomationProperty*)canMaximizeProperty;
 + (WUXAAutomationProperty*)canMinimizeProperty;
@@ -746,10 +750,10 @@ WINRT_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -767,13 +771,13 @@ WINRT_EXPORT
 #ifndef __WUXAAutomationAnnotation_DEFINED__
 #define __WUXAAutomationAnnotation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXAAutomationAnnotation : WXDependencyObject
 + (WUXAAutomationAnnotation*)makeInstance:(WUXAAnnotationType)type ACTIVATOR;
 + (WUXAAutomationAnnotation*)makeWithElementParameter:(WUXAAnnotationType)type element:(WXUIElement*)element ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WUXAAnnotationType type;
 @property (retain) WXUIElement* element;

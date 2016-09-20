@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DATA_JSON_EXPORT
+#define OBJCUWP_WINDOWS_DATA_JSON_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Data_Json.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDJJsonArray, WDJJsonObject, WDJJsonValue, WDJJsonError;
@@ -81,13 +85,13 @@ typedef unsigned WDJJsonErrorStatus;
 #ifndef __WDJJsonArray_DEFINED__
 #define __WDJJsonArray_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 @interface WDJJsonArray : RTObject <WDJIJsonValue, WFIStringable>
 + (WDJJsonArray*)parse:(NSString*)input;
 + (BOOL)tryParse:(NSString*)input result:(WDJJsonArray**)result;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDJJsonValueType valueType;
 @property (readonly) unsigned int size;
@@ -121,13 +125,13 @@ WINRT_EXPORT
 #ifndef __WDJJsonObject_DEFINED__
 #define __WDJJsonObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 @interface WDJJsonObject : RTObject <WDJIJsonValue, WFIStringable>
 + (WDJJsonObject*)parse:(NSString*)input;
 + (BOOL)tryParse:(NSString*)input result:(WDJJsonObject**)result;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDJJsonValueType valueType;
 @property (readonly) unsigned int size;
@@ -174,7 +178,7 @@ WINRT_EXPORT
 #ifndef __WDJJsonValue_DEFINED__
 #define __WDJJsonValue_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 @interface WDJJsonValue : RTObject <WDJIJsonValue, WFIStringable>
 + (WDJJsonValue*)parse:(NSString*)input;
 + (BOOL)tryParse:(NSString*)input result:(WDJJsonValue**)result;
@@ -183,7 +187,7 @@ WINRT_EXPORT
 + (WDJJsonValue*)createStringValue:(NSString*)input;
 + (WDJJsonValue*)createNullValue;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDJJsonValueType valueType;
 - (NSString*)stringify;
@@ -201,7 +205,7 @@ WINRT_EXPORT
 #ifndef __WDJJsonError_DEFINED__
 #define __WDJJsonError_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 @interface WDJJsonError : RTObject
 + (WDJJsonErrorStatus)getJsonStatus:(int)hresult;
 + (WDJJsonErrorStatus)getStatus:(int)hresult;

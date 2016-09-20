@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Bluetooth.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDBRRfcommDeviceService, WDBRRfcommServiceId, WDBRRfcommServiceProvider;
@@ -48,12 +52,12 @@
 #ifndef __WDBRRfcommDeviceService_DEFINED__
 #define __WDBRRfcommDeviceService_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBRRfcommDeviceService : RTObject <WFIClosable>
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDBRRfcommDeviceService*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector:(WDBRRfcommServiceId*)serviceId;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WNHostName* connectionHostName;
 @property (readonly) NSString* connectionServiceName;
@@ -75,12 +79,12 @@ WINRT_EXPORT
 #ifndef __WDBRRfcommServiceId_DEFINED__
 #define __WDBRRfcommServiceId_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBRRfcommServiceId : RTObject
 + (WDBRRfcommServiceId*)fromUuid:(WFGUID*)uuid;
 + (WDBRRfcommServiceId*)fromShortId:(unsigned int)shortId;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFGUID* uuid;
 + (WDBRRfcommServiceId*)genericFileTransfer;
@@ -99,13 +103,13 @@ WINRT_EXPORT
 #ifndef __WDBRRfcommServiceProvider_DEFINED__
 #define __WDBRRfcommServiceProvider_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBRRfcommServiceProvider : RTObject
 + (void)createAsync:(WDBRRfcommServiceId*)serviceId
             success:(void (^)(WDBRRfcommServiceProvider*))success
             failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSMutableDictionary* /* unsigned int, RTObject<WSSIBuffer>* */ sdpRawAttributes;
 @property (readonly) WDBRRfcommServiceId* serviceId;

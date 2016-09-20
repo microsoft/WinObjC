@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
+#define OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Data_Xml_Dom.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDXDXmlNodeList, WDXDXmlNamedNodeMap, WDXDXmlDocument, WDXDXmlAttribute, WDXDXmlDocumentType, WDXDXmlDomImplementation,
@@ -172,10 +176,10 @@ typedef unsigned WDXDNodeType;
 #ifndef __WDXDXmlNodeList_DEFINED__
 #define __WDXDXmlNodeList_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
 @interface WDXDXmlNodeList : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int length;
 @property (readonly) unsigned int size;
@@ -192,10 +196,10 @@ WINRT_EXPORT
 #ifndef __WDXDXmlNamedNodeMap_DEFINED__
 #define __WDXDXmlNamedNodeMap_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
 @interface WDXDXmlNamedNodeMap : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int length;
 @property (readonly) unsigned int size;
@@ -218,7 +222,7 @@ WINRT_EXPORT
 #ifndef __WDXDXmlDocument_DEFINED__
 #define __WDXDXmlDocument_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
 @interface WDXDXmlDocument : RTObject <WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
 + (void)loadFromUriAsync:(WFUri*)uri success:(void (^)(WDXDXmlDocument*))success failure:(void (^)(NSError*))failure;
 + (void)loadFromUriWithSettingsAsync:(WFUri*)uri
@@ -232,7 +236,7 @@ WINRT_EXPORT
                               failure:(void (^)(NSError*))failure;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDXDXmlDocumentType* doctype;
 @property (readonly) WDXDXmlElement* documentElement;
@@ -291,10 +295,10 @@ WINRT_EXPORT
 #ifndef __WDXDXmlAttribute_DEFINED__
 #define __WDXDXmlAttribute_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
 @interface WDXDXmlAttribute : RTObject <WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* value;
 @property (readonly) BOOL specified;
@@ -334,10 +338,10 @@ WINRT_EXPORT
 #ifndef __WDXDXmlDocumentType_DEFINED__
 #define __WDXDXmlDocumentType_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
 @interface WDXDXmlDocumentType : RTObject <WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDXDXmlNamedNodeMap* entities;
 @property (readonly) NSString* name;
@@ -377,10 +381,10 @@ WINRT_EXPORT
 #ifndef __WDXDXmlDomImplementation_DEFINED__
 #define __WDXDXmlDomImplementation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
 @interface WDXDXmlDomImplementation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (BOOL)hasFeature:(NSString*)feature version:(RTObject*)version;
 @end
@@ -391,10 +395,10 @@ WINRT_EXPORT
 #ifndef __WDXDXmlElement_DEFINED__
 #define __WDXDXmlElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
 @interface WDXDXmlElement : RTObject <WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* tagName;
 @property (retain) RTObject* prefix;
@@ -444,10 +448,10 @@ WINRT_EXPORT
 #ifndef __WDXDXmlDocumentFragment_DEFINED__
 #define __WDXDXmlDocumentFragment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
 @interface WDXDXmlDocumentFragment : RTObject <WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) RTObject* prefix;
 @property (retain) RTObject* nodeValue;
@@ -484,10 +488,10 @@ WINRT_EXPORT
 #ifndef __WDXDXmlText_DEFINED__
 #define __WDXDXmlText_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
 @interface WDXDXmlText : RTObject <WDXDIXmlText, WDXDIXmlCharacterData, WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* data;
 @property (readonly) unsigned int length;
@@ -532,10 +536,10 @@ WINRT_EXPORT
 #ifndef __WDXDXmlComment_DEFINED__
 #define __WDXDXmlComment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
 @interface WDXDXmlComment : RTObject <WDXDIXmlCharacterData, WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* data;
 @property (readonly) unsigned int length;
@@ -579,10 +583,10 @@ WINRT_EXPORT
 #ifndef __WDXDXmlProcessingInstruction_DEFINED__
 #define __WDXDXmlProcessingInstruction_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
 @interface WDXDXmlProcessingInstruction : RTObject <WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) RTObject* prefix;
 @property (retain) RTObject* nodeValue;
@@ -621,10 +625,10 @@ WINRT_EXPORT
 #ifndef __WDXDXmlEntityReference_DEFINED__
 #define __WDXDXmlEntityReference_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
 @interface WDXDXmlEntityReference : RTObject <WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) RTObject* prefix;
 @property (retain) RTObject* nodeValue;
@@ -661,10 +665,10 @@ WINRT_EXPORT
 #ifndef __WDXDXmlCDataSection_DEFINED__
 #define __WDXDXmlCDataSection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
 @interface WDXDXmlCDataSection : RTObject <WDXDIXmlText, WDXDIXmlCharacterData, WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* data;
 @property (readonly) unsigned int length;
@@ -709,11 +713,11 @@ WINRT_EXPORT
 #ifndef __WDXDXmlLoadSettings_DEFINED__
 #define __WDXDXmlLoadSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
 @interface WDXDXmlLoadSettings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property BOOL validateOnParse;
 @property BOOL resolveExternals;
@@ -728,10 +732,10 @@ WINRT_EXPORT
 #ifndef __WDXDDtdNotation_DEFINED__
 #define __WDXDDtdNotation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
 @interface WDXDDtdNotation : RTObject <WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) RTObject* publicId;
 @property (readonly) RTObject* systemId;
@@ -770,10 +774,10 @@ WINRT_EXPORT
 #ifndef __WDXDDtdEntity_DEFINED__
 #define __WDXDDtdEntity_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
 @interface WDXDDtdEntity : RTObject <WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) RTObject* notationName;
 @property (readonly) RTObject* publicId;

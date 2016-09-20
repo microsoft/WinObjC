@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Resources_Core.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WARCResourceMap, WARCResourceContext, WARCNamedResource, WARCResourceManager, WARCResourceQualifier, WARCResourceCandidate,
@@ -44,7 +48,7 @@ typedef unsigned WARCResourceQualifierPersistence;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.ApplicationModel.Resources.Core.ResourceLayoutInfo
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceLayoutInfo : NSObject
 + (instancetype) new;
 @property unsigned int majorVersion;
@@ -58,10 +62,10 @@ WINRT_EXPORT
 #ifndef __WARCResourceMap_DEFINED__
 #define __WARCResourceMap_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceMap : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFUri* uri;
 @property (readonly) unsigned int size;
@@ -83,7 +87,7 @@ WINRT_EXPORT
 #ifndef __WARCResourceContext_DEFINED__
 #define __WARCResourceContext_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceContext : RTObject
 + (void)setGlobalQualifierValueWithPersistence:(NSString*)key
                                          value:(NSString*)value
@@ -96,7 +100,7 @@ WINRT_EXPORT
 + (WARCResourceContext*)getForViewIndependentUse;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSArray* /* NSString * */ languages;
 @property (readonly) NSMutableDictionary<RTObservableCollection>* /* NSString *, NSString * */ qualifierValues;
@@ -112,10 +116,10 @@ WINRT_EXPORT
 #ifndef __WARCNamedResource_DEFINED__
 #define __WARCNamedResource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCNamedResource : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSArray* /* WARCResourceCandidate* */ candidates;
 @property (readonly) WFUri* uri;
@@ -131,11 +135,11 @@ WINRT_EXPORT
 #ifndef __WARCResourceManager_DEFINED__
 #define __WARCResourceManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceManager : RTObject
 + (BOOL)isResourceReference:(NSString*)resourceReference;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSDictionary* /* NSString *, WARCResourceMap* */ allResourceMaps;
 @property (readonly) WARCResourceContext* defaultContext;
@@ -155,10 +159,10 @@ WINRT_EXPORT
 #ifndef __WARCResourceQualifier_DEFINED__
 #define __WARCResourceQualifier_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceQualifier : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL isDefault;
 @property (readonly) BOOL isMatch;
@@ -173,10 +177,10 @@ WINRT_EXPORT
 #ifndef __WARCResourceCandidate_DEFINED__
 #define __WARCResourceCandidate_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceCandidate : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) BOOL isDefault;
 @property (readonly) BOOL isMatch;
@@ -194,7 +198,7 @@ WINRT_EXPORT
 #ifndef __WARCResourceMapIterator_DEFINED__
 #define __WARCResourceMapIterator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceMapIterator : RTObject
 // Failed to get type for default interface: Can't marshal
 // Windows.Foundation.Collections.IIterator`1<Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.NamedResource>>
@@ -211,10 +215,10 @@ WINRT_EXPORT
 #ifndef __WARCResourceMapMapView_DEFINED__
 #define __WARCResourceMapMapView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceMapMapView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int size;
 - (id)objectForKey:(id)key;
@@ -232,7 +236,7 @@ WINRT_EXPORT
 #ifndef __WARCResourceMapMapViewIterator_DEFINED__
 #define __WARCResourceMapMapViewIterator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceMapMapViewIterator : RTObject
 // Failed to get type for default interface: Can't marshal
 // Windows.Foundation.Collections.IIterator`1<Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.ResourceMap>>
@@ -249,10 +253,10 @@ WINRT_EXPORT
 #ifndef __WARCResourceQualifierObservableMap_DEFINED__
 #define __WARCResourceQualifierObservableMap_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceQualifierObservableMap : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,String>)
@@ -282,10 +286,10 @@ WINRT_EXPORT
 #ifndef __WARCResourceQualifierMapView_DEFINED__
 #define __WARCResourceQualifierMapView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceQualifierMapView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int size;
 - (id)objectForKey:(id)key;
@@ -303,10 +307,10 @@ WINRT_EXPORT
 #ifndef __WARCResourceQualifierVectorView_DEFINED__
 #define __WARCResourceQualifierVectorView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceQualifierVectorView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -321,10 +325,10 @@ WINRT_EXPORT
 #ifndef __WARCResourceCandidateVectorView_DEFINED__
 #define __WARCResourceCandidateVectorView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceCandidateVectorView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -339,10 +343,10 @@ WINRT_EXPORT
 #ifndef __WARCResourceContextLanguagesVectorView_DEFINED__
 #define __WARCResourceContextLanguagesVectorView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceContextLanguagesVectorView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;

@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_GEOFENCING_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_GEOFENCING_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Geolocation_Geofencing.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDGGGeofence, WDGGGeofenceMonitor, WDGGGeofenceStateChangeReport;
@@ -70,7 +74,7 @@ typedef unsigned WDGGGeofenceRemovalReason;
 #ifndef __WDGGGeofence_DEFINED__
 #define __WDGGGeofence_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_GEOFENCING_EXPORT
 @interface WDGGGeofence : RTObject
 + (WDGGGeofence*)make:(NSString*)id geoshape:(RTObject<WDGIGeoshape>*)geoshape ACTIVATOR;
 + (WDGGGeofence*)makeWithMonitorStates:(NSString*)id
@@ -90,7 +94,7 @@ WINRT_EXPORT
                                                           startTime:(WFDateTime*)startTime
                                                            duration:(WFTimeSpan*)duration ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFTimeSpan* duration;
 @property (readonly) WFTimeSpan* dwellTime;
@@ -107,10 +111,10 @@ WINRT_EXPORT
 #ifndef __WDGGGeofenceMonitor_DEFINED__
 #define __WDGGGeofenceMonitor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_GEOFENCING_EXPORT
 @interface WDGGGeofenceMonitor : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSMutableArray* /* WDGGGeofence* */ geofences;
 @property (readonly) WDGGeoposition* lastKnownGeoposition;
@@ -129,10 +133,10 @@ WINRT_EXPORT
 #ifndef __WDGGGeofenceStateChangeReport_DEFINED__
 #define __WDGGGeofenceStateChangeReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_GEOFENCING_EXPORT
 @interface WDGGGeofenceStateChangeReport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WDGGGeofence* geofence;
 @property (readonly) WDGGeoposition* geoposition;

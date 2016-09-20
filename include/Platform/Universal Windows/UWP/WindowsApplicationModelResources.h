@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Resources.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WARResourceLoader;
@@ -33,7 +37,7 @@
 #ifndef __WARResourceLoader_DEFINED__
 #define __WARResourceLoader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_EXPORT
 @interface WARResourceLoader : RTObject
 + (WARResourceLoader*)getForCurrentView;
 + (WARResourceLoader*)getForCurrentViewWithName:(NSString*)name;
@@ -43,7 +47,7 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WARResourceLoader*)makeResourceLoaderByName:(NSString*)name ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (NSString*)getString:(NSString*)resource;
 - (NSString*)getStringForUri:(WFUri*)uri;

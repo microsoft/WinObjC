@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_USERDATAACCOUNTS_SYSTEMACCESS_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_USERDATAACCOUNTS_SYSTEMACCESS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_UserDataAccounts_SystemAccess.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WAUSDeviceAccountConfiguration, WAUSUserDataAccountSystemAccessManager;
@@ -39,11 +43,11 @@ typedef unsigned WAUSDeviceAccountServerType;
 #ifndef __WAUSDeviceAccountConfiguration_DEFINED__
 #define __WAUSDeviceAccountConfiguration_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_USERDATAACCOUNTS_SYSTEMACCESS_EXPORT
 @interface WAUSDeviceAccountConfiguration : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* incomingServerAddress;
 @property (retain) NSString* incomingServerUsername;
@@ -69,7 +73,7 @@ WINRT_EXPORT
 #ifndef __WAUSUserDataAccountSystemAccessManager_DEFINED__
 #define __WAUSUserDataAccountSystemAccessManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_USERDATAACCOUNTS_SYSTEMACCESS_EXPORT
 @interface WAUSUserDataAccountSystemAccessManager : RTObject
 + (void)addAndShowDeviceAccountsAsync:(id<NSFastEnumeration> /* WAUSDeviceAccountConfiguration* */)accounts
                               success:(void (^)(NSArray* /* NSString * */))success

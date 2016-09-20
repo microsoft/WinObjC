@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Perception_Provider.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDPPPerceptionFrameProviderInfo, WDPPPerceptionPropertyChangeRequest, WDPPPerceptionFaceAuthenticationGroup,
@@ -104,11 +108,11 @@ typedef void (^WDPPPerceptionStopFaceAuthenticationHandler)(WDPPPerceptionFaceAu
 #ifndef __WDPPPerceptionFrameProviderInfo_DEFINED__
 #define __WDPPPerceptionFrameProviderInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 @interface WDPPPerceptionFrameProviderInfo : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) NSString* id;
 @property BOOL hidden;
@@ -123,10 +127,10 @@ WINRT_EXPORT
 #ifndef __WDPPPerceptionPropertyChangeRequest_DEFINED__
 #define __WDPPPerceptionPropertyChangeRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 @interface WDPPPerceptionPropertyChangeRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property WDPPerceptionFrameSourcePropertyChangeStatus status;
 @property (readonly) NSString* name;
@@ -140,13 +144,13 @@ WINRT_EXPORT
 #ifndef __WDPPPerceptionFaceAuthenticationGroup_DEFINED__
 #define __WDPPPerceptionFaceAuthenticationGroup_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 @interface WDPPPerceptionFaceAuthenticationGroup : RTObject
 + (WDPPPerceptionFaceAuthenticationGroup*)make:(id<NSFastEnumeration> /* NSString * */)ids
                                   startHandler:(WDPPPerceptionStartFaceAuthenticationHandler)startHandler
                                    stopHandler:(WDPPPerceptionStopFaceAuthenticationHandler)stopHandler ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSArray* /* NSString * */ frameProviderIds;
 @end
@@ -157,11 +161,11 @@ WINRT_EXPORT
 #ifndef __WDPPPerceptionControlGroup_DEFINED__
 #define __WDPPPerceptionControlGroup_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 @interface WDPPPerceptionControlGroup : RTObject
 + (WDPPPerceptionControlGroup*)make:(id<NSFastEnumeration> /* NSString * */)ids ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSArray* /* NSString * */ frameProviderIds;
 @end
@@ -172,11 +176,11 @@ WINRT_EXPORT
 #ifndef __WDPPPerceptionCorrelationGroup_DEFINED__
 #define __WDPPPerceptionCorrelationGroup_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 @interface WDPPPerceptionCorrelationGroup : RTObject
 + (WDPPPerceptionCorrelationGroup*)make:(id<NSFastEnumeration> /* WDPPPerceptionCorrelation* */)relativeLocations ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSArray* /* WDPPPerceptionCorrelation* */ relativeLocations;
 @end
@@ -187,10 +191,10 @@ WINRT_EXPORT
 #ifndef __WDPPPerceptionFrame_DEFINED__
 #define __WDPPPerceptionFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 @interface WDPPPerceptionFrame : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (retain) WFTimeSpan* relativeTime;
 @property (readonly) RTObject<WFIMemoryBuffer>* frameData;
@@ -203,11 +207,11 @@ WINRT_EXPORT
 #ifndef __WDPPPerceptionCorrelation_DEFINED__
 #define __WDPPPerceptionCorrelation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 @interface WDPPPerceptionCorrelation : RTObject
 + (WDPPPerceptionCorrelation*)make:(NSString*)targetId position:(WFNVector3*)position orientation:(WFNQuaternion*)orientation ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WFNQuaternion* orientation;
 @property (readonly) WFNVector3* position;
@@ -220,14 +224,14 @@ WINRT_EXPORT
 #ifndef __WDPPPerceptionVideoFrameAllocator_DEFINED__
 #define __WDPPPerceptionVideoFrameAllocator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 @interface WDPPPerceptionVideoFrameAllocator : RTObject <WFIClosable>
 + (WDPPPerceptionVideoFrameAllocator*)make:(unsigned int)maxOutstandingFrameCountForWrite
                                     format:(WGIBitmapPixelFormat)format
                                 resolution:(WFSize*)resolution
                                      alpha:(WGIBitmapAlphaMode)alpha ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 - (WDPPPerceptionFrame*)allocateFrame;
 - (WDPPPerceptionFrame*)copyFromVideoFrame:(WMVideoFrame*)frame;
@@ -240,7 +244,7 @@ WINRT_EXPORT
 #ifndef __WDPPPerceptionFrameProviderManagerService_DEFINED__
 #define __WDPPPerceptionFrameProviderManagerService_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 @interface WDPPPerceptionFrameProviderManagerService : RTObject
 + (void)registerFrameProviderInfo:(RTObject<WDPPIPerceptionFrameProviderManager>*)manager
                 frameProviderInfo:(WDPPPerceptionFrameProviderInfo*)frameProviderInfo;
@@ -267,7 +271,7 @@ WINRT_EXPORT
 #ifndef __WDPPKnownPerceptionFrameKind_DEFINED__
 #define __WDPPKnownPerceptionFrameKind_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 @interface WDPPKnownPerceptionFrameKind : RTObject
 + (NSString*)color;
 + (NSString*)depth;

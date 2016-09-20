@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Appointments_AppointmentsProvider.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WAAAAppointmentsProviderLaunchActionVerbs, WAAAAddAppointmentOperation, WAAAReplaceAppointmentOperation,
@@ -36,7 +40,7 @@
 #ifndef __WAAAAppointmentsProviderLaunchActionVerbs_DEFINED__
 #define __WAAAAppointmentsProviderLaunchActionVerbs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
 @interface WAAAAppointmentsProviderLaunchActionVerbs : RTObject
 + (NSString*)addAppointment;
 + (NSString*)removeAppointment;
@@ -51,10 +55,10 @@ WINRT_EXPORT
 #ifndef __WAAAAddAppointmentOperation_DEFINED__
 #define __WAAAAddAppointmentOperation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
 @interface WAAAAddAppointmentOperation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) WAAAppointment* appointmentInformation;
 @property (readonly) NSString* sourcePackageFamilyName;
@@ -70,10 +74,10 @@ WINRT_EXPORT
 #ifndef __WAAAReplaceAppointmentOperation_DEFINED__
 #define __WAAAReplaceAppointmentOperation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
 @interface WAAAReplaceAppointmentOperation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* appointmentId;
 @property (readonly) WAAAppointment* appointmentInformation;
@@ -91,10 +95,10 @@ WINRT_EXPORT
 #ifndef __WAAARemoveAppointmentOperation_DEFINED__
 #define __WAAARemoveAppointmentOperation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
 @interface WAAARemoveAppointmentOperation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
 #endif
 @property (readonly) NSString* appointmentId;
 @property (readonly) id /* WFDateTime* */ instanceStartDate;
