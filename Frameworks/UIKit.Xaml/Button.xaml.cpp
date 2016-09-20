@@ -129,10 +129,8 @@ void Button::OnPointerCanceled(PointerRoutedEventArgs^ e) {
             ObjectToType<ABI::Windows::UI::Xaml::Input::IPointerRoutedEventArgs>(e).Get());
     }
 
-    // If the pointer hook didn't handle the event, call into our base class
-    if (!e->Handled) {
-        __super::OnPointerCanceled(e);
-    }
+    // Call into our base class regardless of whether or not the UIKit subclass, etc. 'handled' the event
+    __super::OnPointerCanceled(e);
 }
 
 void Button::OnPointerCaptureLost(PointerRoutedEventArgs^ e) {
@@ -143,10 +141,8 @@ void Button::OnPointerCaptureLost(PointerRoutedEventArgs^ e) {
             ObjectToType<ABI::Windows::UI::Xaml::Input::IPointerRoutedEventArgs>(e).Get());
     }
 
-    // If the pointer hook didn't handle the event, call into our base class
-    if (!e->Handled) {
-        __super::OnPointerCaptureLost(e);
-    }
+    // Call into our base class regardless of whether or not the UIKit subclass, etc. 'handled' the event
+    __super::OnPointerCaptureLost(e);
 }
 
 void Button::_registerDependencyProperties() {

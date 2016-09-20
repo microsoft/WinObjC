@@ -438,6 +438,9 @@ struct ButtonState {
 
     _curState &= ~UIControlStateHighlighted;
     [super touchesCancelled:touchSet withEvent:event];
+
+    // Release the pointer capture so Xaml knows we're no longer in a pressed state
+    [_xamlButton releasePointerCapture:routedEvent.pointer];
 }
 
 /**
