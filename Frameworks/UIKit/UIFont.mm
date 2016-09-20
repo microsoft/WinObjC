@@ -35,7 +35,6 @@
 #import "LoggingNative.h"
 #import "UICTFont.h"
 #import "UIFontInternal.h"
-#import "UIFontDescriptorInternal.h"
 
 #include <COMIncludes.h>
 #import <DWrite.h>
@@ -93,7 +92,7 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UICTFont, CTFontGetTypeID);
         fontSize = descriptor.pointSize;
     }
 
-    UIFont* font = [UIFont fontWithName:[descriptor _getFontName] size:fontSize];
+    UIFont* font = [UIFont fontWithName:[descriptor objectForKey:UIFontDescriptorNameAttribute] size:fontSize];
     return font;
 }
 

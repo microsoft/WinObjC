@@ -77,37 +77,37 @@ static const std::map<const CFStringRef, FT_UInt> g_nameIdMap = {
     { kCTFontPostScriptCIDNameKey, 20 },
 };
 
-const CFStringRef kCTFontCopyrightNameKey = static_cast<CFStringRef>(@"CTFontCopyrightName");
-const CFStringRef kCTFontFamilyNameKey = static_cast<CFStringRef>(@"CTFontFamilyName");
-const CFStringRef kCTFontSubFamilyNameKey = static_cast<CFStringRef>(@"CTFontSubFamilyName");
-const CFStringRef kCTFontStyleNameKey = static_cast<CFStringRef>(@"CTFontStyleName");
-const CFStringRef kCTFontUniqueNameKey = static_cast<CFStringRef>(@"CTFontUniqueName");
-const CFStringRef kCTFontFullNameKey = static_cast<CFStringRef>(@"CTFontFullName");
-const CFStringRef kCTFontVersionNameKey = static_cast<CFStringRef>(@"CTFontVersionName");
-const CFStringRef kCTFontPostScriptNameKey = static_cast<CFStringRef>(@"CTFontPostScriptName");
-const CFStringRef kCTFontTrademarkNameKey = static_cast<CFStringRef>(@"CTFontTrademarkName");
-const CFStringRef kCTFontManufacturerNameKey = static_cast<CFStringRef>(@"CTFontManufacturerName");
-const CFStringRef kCTFontDesignerNameKey = static_cast<CFStringRef>(@"CTFontDesignerName");
-const CFStringRef kCTFontDescriptionNameKey = static_cast<CFStringRef>(@"CTFontDescriptionName");
-const CFStringRef kCTFontVendorURLNameKey = static_cast<CFStringRef>(@"CTFontVendorURLName");
-const CFStringRef kCTFontDesignerURLNameKey = static_cast<CFStringRef>(@"CTFontDesignerURLName");
-const CFStringRef kCTFontLicenseNameKey = static_cast<CFStringRef>(@"CTFontLicenseName");
-const CFStringRef kCTFontLicenseURLNameKey = static_cast<CFStringRef>(@"CTFontLicenseURLName");
-const CFStringRef kCTFontSampleTextNameKey = static_cast<CFStringRef>(@"CTFontSampleTextName");
-const CFStringRef kCTFontPostScriptCIDNameKey = static_cast<CFStringRef>(@"CTFontPostScriptCIDName");
-const CFStringRef kCTFontVariationAxisIdentifierKey = static_cast<CFStringRef>(@"CTFontVariationAxisIdentifier");
-const CFStringRef kCTFontVariationAxisMinimumValueKey = static_cast<CFStringRef>(@"CTFontVariationAxisMinimumValue");
-const CFStringRef kCTFontVariationAxisMaximumValueKey = static_cast<CFStringRef>(@"CTFontVariationAxisMaximumValue");
-const CFStringRef kCTFontVariationAxisDefaultValueKey = static_cast<CFStringRef>(@"CTFontVariationAxisDefaultValue");
-const CFStringRef kCTFontVariationAxisNameKey = static_cast<CFStringRef>(@"CTFontVariationAxisName");
-const CFStringRef kCTFontFeatureTypeIdentifierKey = static_cast<CFStringRef>(@"CTFontFeatureTypeIdentifier");
-const CFStringRef kCTFontFeatureTypeNameKey = static_cast<CFStringRef>(@"CTFontFeatureTypeName");
-const CFStringRef kCTFontFeatureTypeExclusiveKey = static_cast<CFStringRef>(@"CTFontFeatureTypeExclusive");
-const CFStringRef kCTFontFeatureTypeSelectorsKey = static_cast<CFStringRef>(@"CTFontFeatureTypeSelectors");
-const CFStringRef kCTFontFeatureSelectorIdentifierKey = static_cast<CFStringRef>(@"CTFontFeatureSelectorIdentifier");
-const CFStringRef kCTFontFeatureSelectorNameKey = static_cast<CFStringRef>(@"CTFontFeatureSelectorName");
-const CFStringRef kCTFontFeatureSelectorDefaultKey = static_cast<CFStringRef>(@"CTFontFeatureSelectorDefault");
-const CFStringRef kCTFontFeatureSelectorSettingKey = static_cast<CFStringRef>(@"CTFontFeatureSelectorSetting");
+const CFStringRef kCTFontCopyrightNameKey = CFSTR("CTFontCopyrightName");
+const CFStringRef kCTFontFamilyNameKey = CFSTR("CTFontFamilyName");
+const CFStringRef kCTFontSubFamilyNameKey = CFSTR("CTFontSubFamilyName");
+const CFStringRef kCTFontStyleNameKey = CFSTR("CTFontStyleName");
+const CFStringRef kCTFontUniqueNameKey = CFSTR("CTFontUniqueName");
+const CFStringRef kCTFontFullNameKey = CFSTR("CTFontFullName");
+const CFStringRef kCTFontVersionNameKey = CFSTR("CTFontVersionName");
+const CFStringRef kCTFontPostScriptNameKey = CFSTR("CTFontPostScriptName");
+const CFStringRef kCTFontTrademarkNameKey = CFSTR("CTFontTrademarkName");
+const CFStringRef kCTFontManufacturerNameKey = CFSTR("CTFontManufacturerName");
+const CFStringRef kCTFontDesignerNameKey = CFSTR("CTFontDesignerName");
+const CFStringRef kCTFontDescriptionNameKey = CFSTR("CTFontDescriptionName");
+const CFStringRef kCTFontVendorURLNameKey = CFSTR("CTFontVendorURLName");
+const CFStringRef kCTFontDesignerURLNameKey = CFSTR("CTFontDesignerURLName");
+const CFStringRef kCTFontLicenseNameKey = CFSTR("CTFontLicenseName");
+const CFStringRef kCTFontLicenseURLNameKey = CFSTR("CTFontLicenseURLName");
+const CFStringRef kCTFontSampleTextNameKey = CFSTR("CTFontSampleTextName");
+const CFStringRef kCTFontPostScriptCIDNameKey = CFSTR("CTFontPostScriptCIDName");
+const CFStringRef kCTFontVariationAxisIdentifierKey = CFSTR("CTFontVariationAxisIdentifier");
+const CFStringRef kCTFontVariationAxisMinimumValueKey = CFSTR("CTFontVariationAxisMinimumValue");
+const CFStringRef kCTFontVariationAxisMaximumValueKey = CFSTR("CTFontVariationAxisMaximumValue");
+const CFStringRef kCTFontVariationAxisDefaultValueKey = CFSTR("CTFontVariationAxisDefaultValue");
+const CFStringRef kCTFontVariationAxisNameKey = CFSTR("CTFontVariationAxisName");
+const CFStringRef kCTFontFeatureTypeIdentifierKey = CFSTR("CTFontFeatureTypeIdentifier");
+const CFStringRef kCTFontFeatureTypeNameKey = CFSTR("CTFontFeatureTypeName");
+const CFStringRef kCTFontFeatureTypeExclusiveKey = CFSTR("CTFontFeatureTypeExclusive");
+const CFStringRef kCTFontFeatureTypeSelectorsKey = CFSTR("CTFontFeatureTypeSelectors");
+const CFStringRef kCTFontFeatureSelectorIdentifierKey = CFSTR("CTFontFeatureSelectorIdentifier");
+const CFStringRef kCTFontFeatureSelectorNameKey = CFSTR("CTFontFeatureSelectorName");
+const CFStringRef kCTFontFeatureSelectorDefaultKey = CFSTR("CTFontFeatureSelectorDefault");
+const CFStringRef kCTFontFeatureSelectorSettingKey = CFSTR("CTFontFeatureSelectorSetting");
 
 /**
  All these values are fixed number in IOS no matter on iphone* or ipad*.
@@ -249,7 +249,7 @@ CTFontRef CTFontCreateCopyWithAttributes(CTFontRef font, CGFloat size, const CGA
 }
 
 /**
- @Status Caveat
+ @Status Stub
  @Notes matrix parameter not supported
 */
 CTFontRef CTFontCreateCopyWithSymbolicTraits(
@@ -257,17 +257,8 @@ CTFontRef CTFontCreateCopyWithSymbolicTraits(
     if (font == nil) {
         return nullptr;
     }
-
-    UIFontDescriptorSymbolicTraits existingTraits = [(UIFont*)font fontDescriptor].symbolicTraits;
-    UIFontDescriptor* newFontDescriptor =
-        [[(UIFont*)font fontDescriptor] fontDescriptorWithSymbolicTraits:(existingTraits | symTraitValue) & symTraitMask];
-
-    if (size == 0.0f) {
-        size = ((UIFont*)font).pointSize;
-    }
-    UIFont* ret = [[_LazyUIFont fontWithDescriptor:newFontDescriptor size:size] retain];
-
-    return (CTFontRef)ret;
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**

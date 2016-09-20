@@ -155,7 +155,7 @@ TEST_P(TypographicBounds, VerifyBounds) {
     ASSERT_TRUE_MSG(isValid(ascent, c_ascentExpected, c_errorDelta), "Failed: Run ascent value is incorrect");
     ASSERT_TRUE_MSG(isValid(descent, c_descentExpected, c_errorDelta), "Failed: Run descent value is incorrect");
 
-    // TODO: #729 - need to implement leading in CTFont, requires figuring out how to get info down from DWriteTextLayout
+    // TODO: #921 - need to implement leading in CTFont, requires figuring out how to get info down from DWriteTextLayout
     // ASSERT_TRUE_MSG(isValid(leading, c_leadingExpected, c_errorDelta), "Failed: Run leading value is incorrect");
 
     // TODO: #961 - need proper width return

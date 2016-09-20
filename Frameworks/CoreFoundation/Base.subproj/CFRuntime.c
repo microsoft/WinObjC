@@ -275,6 +275,10 @@ void _CFRuntimeBridgeTypeToClass(CFTypeID cf_typeID, const void *cls_ref) {
     __CFUnlock(&__CFBigRuntimeFunnel);
 }
 
+uintptr_t __CFISAForTypeID(CFTypeID typeID) {
+    return (typeID < __CFRuntimeClassTableSize) ? __CFRuntimeObjCClassTable[typeID] : 0;
+}
+
 const CFRuntimeClass * _CFRuntimeGetClassWithTypeID(CFTypeID typeID) {
     return __CFRuntimeClassTable[typeID]; // hopelessly unthreadsafe
 }
