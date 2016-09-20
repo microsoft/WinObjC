@@ -26,6 +26,7 @@
 #import "NSValueTransformers.h"
 #import "Starboard.h"
 #import "StubReturn.h"
+#import "type_encoding_cases.h"
 #import <_NSKeyValueCodingAggregateFunctions.h>
 
 #import <unicode/utf8.h>
@@ -54,22 +55,12 @@ NSString* const NSUnionOfObjectsKeyValueOperator = @"NSUnionOfObjectsKeyValueOpe
 NSString* const NSUnionOfSetsKeyValueOperator = @"NSUnionOfSetsKeyValueOperator";
 
 NSString* _NSKVCSplitKeypath(NSString* keyPath, NSString* __autoreleasing* pRemainder) {
-    NSData* utf8String = [keyPath dataUsingEncoding:NSUTF8StringEncoding];
-    const char* buffer = static_cast<const char*>(utf8String.bytes);
-    NSInteger length = utf8String.length;
-    int i = 0;
-    UChar32 currentCharacter = 0;
-    while (i < length) {
-        U8_NEXT(buffer, i, length, currentCharacter);
-        if (currentCharacter == '.') {
-            *pRemainder = [[[NSString alloc] initWithBytesNoCopy:const_cast<char*>(buffer + i)
-                                                          length:length - i
-                                                        encoding:NSUTF8StringEncoding
-                                                    freeWhenDone:NO] autorelease];
-            return
-                [[[NSString alloc] initWithBytesNoCopy:const_cast<char*>(buffer) length:i - 1 encoding:NSUTF8StringEncoding freeWhenDone:NO]
-                    autorelease];
-        }
+    static woc::unique_cf<CFCharacterSetRef> dot{CFCharacterSetCreateWithCharactersInRange(nullptr, (CFRange){'.', 1})};
+    CFRange result;
+    CFIndex length = CFStringGetLength((CFStringRef)keyPath);
+    if (length > 0 && CFStringFindCharacterFromSet((CFStringRef)keyPath, dot.get(), (CFRange){0, length}, 0, &result)) {
+        *pRemainder = [(NSString*)CFStringCreateWithSubstring(nullptr, (CFStringRef)keyPath, (CFRange){result.location + 1, length - (result.location + 1)}) autorelease];
+        return [(NSString*)CFStringCreateWithSubstring(nullptr, (CFStringRef)keyPath, (CFRange){0, result.location}) autorelease];
     }
     *pRemainder = nil;
     return keyPath;
@@ -172,6 +163,10 @@ id quickGet<Class>(id self, SEL getter) {
     return ((id (*)(id, SEL))objc_msgSend)(self, getter);
 }
 
+#define QUICK_GET_CASE(type, name, capitalizedName, encodingChar) \
+    case encodingChar: \
+        *ret = quickGet<type>(self, getter); \
+        return true;
 bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret) {
     if (!getter) {
         return false;
@@ -185,13 +180,10 @@ bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret) {
         return false;
     }
 
-    if (0
-#define APPLY_TYPE(type, name, capitalizedName, encodingChar) || (valueType[0] == encodingChar && (*ret = quickGet<type>(self, getter)))
-        APPLY_TYPE(id, object, Object, '@') APPLY_TYPE(Class, class, Class, '#')
-#include "type_encoding_cases.h"
-#undef APPLY_TYPE
-            ) {
-        return true;
+    switch (valueType[0]) {
+        OBJC_APPLY_NUMERIC_TYPE_ENCODINGS(QUICK_GET_CASE);
+        QUICK_GET_CASE(id, object, Object, '@');
+        QUICK_GET_CASE(Class, class, Class, '#');
     }
 
     NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
@@ -406,6 +398,12 @@ bool quickSet<Class>(id self, SEL setter, id value, const char* valueType) {
     return true;
 }
 
+#define QUICK_SET_CASE(type, name, capitalizedName, encodingChar) \
+    case encodingChar: \
+        if (quickSet<type>(self, setter, value, valueType)) { \
+            return true; \
+        } \
+        break;
 bool KVCSetViaAccessor(NSObject* self, SEL setter, id value) {
     if (!setter) {
         return false;
@@ -417,14 +415,10 @@ bool KVCSetViaAccessor(NSObject* self, SEL setter, id value) {
     if (sig && [sig numberOfArguments] == 3) {
         const char* valueType = [sig getArgumentTypeAtIndex:2];
 
-        if (0
-#define APPLY_TYPE(type, name, capitalizedName, encodingChar) \
-    || (valueType[0] == encodingChar && quickSet<type>(self, setter, value, valueType))
-            APPLY_TYPE(id, object, Object, '@') APPLY_TYPE(Class, class, Class, '#')
-#include "type_encoding_cases.h"
-#undef APPLY_TYPE
-                ) {
-            return true;
+        switch (valueType[0]) {
+            OBJC_APPLY_NUMERIC_TYPE_ENCODINGS(QUICK_SET_CASE);
+            QUICK_SET_CASE(id, object, Object, '@');
+            QUICK_SET_CASE(Class, class, Class, '#');
         }
 
         uint8_t* data = static_cast<uint8_t*>(_alloca(objc_sizeof_type(valueType)));
