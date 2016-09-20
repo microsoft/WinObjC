@@ -225,8 +225,7 @@ double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, C
     // Calculate the typographic width for the specified range
     return std::accumulate(curRun->_dwriteGlyphRun.glyphAdvances + range.location,
                            curRun->_dwriteGlyphRun.glyphAdvances + range.location + range.length,
-                           0.0,
-                           [](double width, float size) { return width + size; });
+                           0.0);
 }
 
 /**

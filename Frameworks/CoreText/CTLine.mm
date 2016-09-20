@@ -324,19 +324,13 @@ CFIndex CTLineGetStringIndexForPosition(CTLineRef lineRef, CGPoint position) {
         return kCFNotFound;
     }
 
-    CFRange lineRange = CTLineGetStringRange(lineRef);
     CGFloat currPos = 0;
-    CFArrayRef glyphRuns = CTLineGetGlyphRuns(lineRef);
-    CFIndex numberOfRuns = CFArrayGetCount(glyphRuns);
 
-    for (int i = 0; i < numberOfRuns; i++) {
-        _CTRun* run = static_cast<_CTRun*>(CFArrayGetValueAtIndex(glyphRuns, i));
-        CFIndex glyphsCount = run->_dwriteGlyphRun.glyphCount;
-
-        for (int j = 0; j < glyphsCount; j++) {
-            currPos += run->_dwriteGlyphRun.glyphAdvances[j];
+    for (_CTRun* run in [line->_runs objectEnumerator]) {
+        for (int i = 0; i < run->_dwriteGlyphRun.glyphCount; i++) {
+            currPos += run->_dwriteGlyphRun.glyphAdvances[i];
             if (currPos >= position.x) {
-                return run->_stringIndices[j];
+                return run->_stringIndices[i];
             }
         }
     }
@@ -360,16 +354,19 @@ CGFloat CTLineGetOffsetForStringIndex(CTLineRef lineRef, CFIndex charIndex, CGFl
         } else {
             for (_CTRun* run in [line->_runs objectEnumerator]) {
                 if (run->_range.location + run->_range.length >= charIndex && run->_stringIndices.size() > 0) {
-                    size_t index = std::upper_bound(run->_stringIndices.begin(), run->_stringIndices.end(), charIndex) -
-                                   run->_stringIndices.begin() - 1;
+                    int index = std::upper_bound(run->_stringIndices.begin(), run->_stringIndices.end(), charIndex) -
+                                run->_stringIndices.begin() - 1;
 
-                    ret += std::accumulate(run->_dwriteGlyphRun.glyphAdvances, run->_dwriteGlyphRun.glyphAdvances + index, 0.0f);
+                    if (index >= 0) {
+                        ret = std::accumulate(run->_dwriteGlyphRun.glyphAdvances, run->_dwriteGlyphRun.glyphAdvances + index, ret);
+                    }
 
                     break;
                 }
-                ret += std::accumulate(run->_dwriteGlyphRun.glyphAdvances,
-                                       run->_dwriteGlyphRun.glyphAdvances + run->_dwriteGlyphRun.glyphCount,
-                                       0.0f);
+
+                ret = std::accumulate(run->_dwriteGlyphRun.glyphAdvances,
+                                      run->_dwriteGlyphRun.glyphAdvances + run->_dwriteGlyphRun.glyphCount,
+                                      ret);
             }
         }
     }

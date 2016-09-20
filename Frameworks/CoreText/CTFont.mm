@@ -659,10 +659,15 @@ CFArrayRef CTFontCopyFeatureSettings(CTFontRef font) {
  @Notes
 */
 bool CTFontGetGlyphsForCharacters(CTFontRef fontRef, const UniChar characters[], CGGlyph glyphs[], CFIndex count) {
+    if (!fontRef || !characters || !glyphs || count <= 0) {
+        return false;
+    }
+
     struct __CTFont* font = const_cast<struct __CTFont*>(fontRef);
-    std::vector<uint32_t> chars(count);
-    std::transform(characters, characters + count, chars.begin(), [](UniChar character) { return character; });
+    std::vector<uint32_t> chars(characters, characters + count);
     font->_dwriteFontFace->GetGlyphIndices(chars.data(), count, glyphs);
+
+    // Failed to get all glyphs if any of the indices are 0
     return std::none_of(glyphs, glyphs + count, [](CGGlyph glyph) { return glyph == 0; });
 }
 

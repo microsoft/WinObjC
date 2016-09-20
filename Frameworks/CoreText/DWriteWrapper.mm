@@ -27,6 +27,7 @@
 
 #import <LoggingNative.h>
 #import <vector>
+#import <iterator>
 
 using namespace std;
 using namespace Microsoft::WRL;
@@ -285,9 +286,9 @@ public:
         _DWriteGlyphRunDescription glyphRunDescriptionInfo;
         glyphRunDescriptionInfo._stringLength = glyphRunDescription->stringLength;
         glyphRunDescriptionInfo._textPosition = glyphRunDescription->textPosition;
-        std::for_each(glyphRunDescription->clusterMap,
-                      glyphRunDescription->clusterMap + glyphRun->glyphCount,
-                      [&](uint16_t val) { glyphRunDescriptionInfo._clusterMap.emplace_back(val); });
+        std::copy(glyphRunDescription->clusterMap,
+                  glyphRunDescription->clusterMap + glyphRun->glyphCount,
+                  std::back_inserter(glyphRunDescriptionInfo._clusterMap));
         glyphs->_glyphRunDescriptions.push_back(glyphRunDescriptionInfo);
 
         return S_OK;
