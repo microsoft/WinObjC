@@ -142,6 +142,9 @@ TEST(CTLine, CTLineCreateWithAttributedString) {
     EXPECT_NE(runs, nil);
     EXPECT_EQ(0, CFArrayGetCount(runs));
     CFRelease(line);
+
+    line = CTLineCreateWithAttributedString(nil);
+    EXPECT_EQ(line, nil);
 }
 
 TEST(CTLine, CreateTruncatedLineNoTruncationToken) {

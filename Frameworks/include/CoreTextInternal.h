@@ -29,7 +29,7 @@
 // Helper method for validating range and copying internal data to given outData
 template <typename T>
 void _boundedCopy(CFRange range, CFIndex size, const T inData[], T outData[]) {
-    if (outData && range.location < size && range.length >= 0L) {
+    if (inData && outData && range.location < size && range.length >= 0L) {
         range.location = std::max(range.location, 0L);
         if (range.length == 0L || range.location + range.length >= size) {
             range.length = size - range.location;

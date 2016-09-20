@@ -60,10 +60,6 @@
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;</IncludePaths>
       <AdditionalOptions>"-DCORETEXT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
-      <OtherCFlags>
-      </OtherCFlags>
-      <OtherCPlusPlusFlags>
-      </OtherCPlusPlusFlags>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

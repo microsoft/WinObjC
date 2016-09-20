@@ -45,6 +45,9 @@ static _CTFrame* _createFrame(_CTFramesetter* framesetter, CGRect frameSize, CGS
     NSArray<_CTLine*>* lines = _DWriteGetLines(typesetter, range, frameSize);
     if (createFrame) {
         ret->_lines = lines;
+        for (_CTLine* line in [ret->_lines objectEnumerator]) {
+            ret->_lineOrigins.emplace_back(line->_lineOrigin);
+        }
     }
 
     if (sizeOut && range.length != 0) {
@@ -89,11 +92,6 @@ CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange string
 
     CGSize sizeOut;
     _CTFrame* ret = _createFrame((_CTFramesetter*)framesetter, frameSize, &sizeOut, true);
-    if (ret->_lineOrigins.size() == 0) {
-        for (_CTLine* line in [ret->_lines objectEnumerator]) {
-            ret->_lineOrigins.emplace_back(line->_lineOrigin);
-        }
-    }
 
     return static_cast<CTFrameRef>(ret);
 }

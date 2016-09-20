@@ -35,8 +35,8 @@ static IWLazyClassLookup _LazyUIFont("UIFont");
 
 @implementation _CTTypesetter
 - (instancetype)initWithAttributedString:(NSAttributedString*)str {
-    _attributedString.attach([str retain]);
-    _string.attach([[str string] copy]);
+    _attributedString = str;
+    _string = [str string];
 
     //  Measure the string
     _characters.resize(str.length);

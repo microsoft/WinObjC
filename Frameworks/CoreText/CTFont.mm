@@ -665,10 +665,7 @@ bool CTFontGetGlyphsForCharacters(CTFontRef fontRef, const UniChar characters[],
 
     struct __CTFont* font = const_cast<struct __CTFont*>(fontRef);
     std::vector<uint32_t> chars(characters, characters + count);
-    font->_dwriteFontFace->GetGlyphIndices(chars.data(), count, glyphs);
-
-    // Failed to get all glyphs if any of the indices are 0
-    return std::none_of(glyphs, glyphs + count, [](CGGlyph glyph) { return glyph == 0; });
+    return SUCCEEDED(font->_dwriteFontFace->GetGlyphIndices(chars.data(), count, glyphs));
 }
 
 /**

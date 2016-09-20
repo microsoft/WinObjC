@@ -36,11 +36,6 @@ static const wchar_t* TAG = L"_DWriteWrapper";
 static const wchar_t* c_defaultUserLanguage = L"en-us";
 static const wchar_t* c_defaultFontName = L"Segoe UI";
 
-// TODO::
-// These should be removed once CTFont and UIFont are bridged.
-static IWLazyClassLookup s_lazyUIFont("UIFont");
-static const float c_defaultSystemFontSize = 15.0f;
-
 // Private helper for creating a DWriteFactory
 static ComPtr<IDWriteFactory> __CreateDWriteFactoryInstance() {
     ComPtr<IDWriteFactory> dwriteFactory;
@@ -179,10 +174,10 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(_CTTypesetter* ts, CFR
     // TODO: #1001 attribs can be nil here?
     NSDictionary* attribs = [ts->_attributedString attributesAtIndex:range.location effectiveRange:NULL];
     UIFont* font = [attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)];
-    if (font == nil) {
-        font = [s_lazyUIFont systemFontOfSize:c_defaultSystemFontSize];
+    CGFloat fontSize = kCTFontSystemFontSize;
+    if (font != nil) {
+        fontSize = [font pointSize];
     }
-    float fontSize = [font pointSize];
 
     ComPtr<IDWriteTextFormat> textFormat;
     THROW_IF_FAILED(dwriteFactory->CreateTextFormat(c_defaultFontName,
@@ -210,15 +205,6 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
     ComPtr<IDWriteTextFormat> textFormat = __CreateDWriteTextFormat(ts, range);
 
     NSRange curRange = NSMakeRangeFromCF(range);
-    /*
-    NSDictionary* attribs = [ts->_attributedString attributesAtIndex:0 effectiveRange:&curRange];
-    UIFont* font = [attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)];
-    if (font == nil) {
-        font = [s_lazyUIFont systemFontOfSize:c_defaultSystemFontSize];
-    }
-    float fontSize = [font pointSize];
-    */
-
     wchar_t* wcharString = reinterpret_cast<wchar_t*>(
         const_cast<char*>([[ts->_string substringWithRange:curRange] cStringUsingEncoding:NSUTF16StringEncoding]));
 
@@ -246,11 +232,12 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
         NSDictionary* attribs = [ts->_attributedString attributesAtIndex:i
                                                    longestEffectiveRange:&attributeRange
                                                                  inRange:{ i, [ts->_attributedString length] - i }];
+        CGFloat fontSize = kCTFontSystemFontSize;
         UIFont* font = [attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)];
-        if (font == nil) {
-            font = [s_lazyUIFont systemFontOfSize:c_defaultSystemFontSize];
+        if (font != nil) {
+            fontSize = [font pointSize];
         }
-        THROW_IF_FAILED(textLayout->SetFontSize([font pointSize], DWRITE_TEXT_RANGE{ attributeRange.location, attributeRange.length }));
+        THROW_IF_FAILED(textLayout->SetFontSize(fontSize, DWRITE_TEXT_RANGE{ attributeRange.location, attributeRange.length }));
     }
     return textLayout;
 }

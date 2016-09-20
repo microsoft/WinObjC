@@ -98,7 +98,7 @@ CTRunStatus CTRunGetStatus(CTRunRef run) {
 */
 const CGGlyph* CTRunGetGlyphsPtr(CTRunRef run) {
     _CTRun* runPtr = static_cast<_CTRun*>(run);
-    return runPtr && runPtr->_dwriteGlyphRun.glyphCount ? runPtr->_dwriteGlyphRun.glyphIndices : nullptr;
+    return (runPtr && runPtr->_dwriteGlyphRun.glyphCount) ? runPtr->_dwriteGlyphRun.glyphIndices : nullptr;
 }
 
 /**
@@ -118,7 +118,7 @@ void CTRunGetGlyphs(CTRunRef run, CFRange range, CGGlyph buffer[]) {
 */
 const CGPoint* CTRunGetPositionsPtr(CTRunRef run) {
     _CTRun* runPtr = static_cast<_CTRun*>(run);
-    return runPtr && runPtr->_glyphOrigins.size() ? runPtr->_glyphOrigins.data() : nullptr;
+    return (runPtr && runPtr->_glyphOrigins.size()) ? runPtr->_glyphOrigins.data() : nullptr;
 }
 
 /**
@@ -138,7 +138,7 @@ void CTRunGetPositions(CTRunRef run, CFRange runRange, CGPoint outPositions[]) {
 */
 const CGSize* CTRunGetAdvancesPtr(CTRunRef run) {
     _CTRun* runPtr = static_cast<_CTRun*>(run);
-    return runPtr && runPtr->_glyphAdvances.size() ? runPtr->_glyphAdvances.data() : nullptr;
+    return (runPtr && runPtr->_glyphAdvances.size()) ? runPtr->_glyphAdvances.data() : nullptr;
 }
 
 /**
@@ -157,7 +157,7 @@ void CTRunGetAdvances(CTRunRef run, CFRange runRange, CGSize outAdvances[]) {
 */
 const CFIndex* CTRunGetStringIndicesPtr(CTRunRef run) {
     _CTRun* runPtr = static_cast<_CTRun*>(run);
-    return runPtr && runPtr->_stringIndices.size() ? runPtr->_stringIndices.data() : nullptr;
+    return (runPtr && runPtr->_stringIndices.size()) ? runPtr->_stringIndices.data() : nullptr;
 }
 
 /**
