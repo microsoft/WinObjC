@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -24,6 +24,20 @@
 #import <wrl/client.h>
 #include <COMIncludes_End.h>
 #import <vector>
+#import <algorithm>
+
+// Helper method for validating range and copying internal data to given outData
+template <typename T>
+void _boundedCopy(CFRange range, CFIndex size, const T inData[], T outData[]) {
+    if (inData && outData && range.location < size && range.length >= 0L) {
+        range.location = std::max(range.location, 0L);
+        if (range.length == 0L || range.location + range.length >= size) {
+            range.length = size - range.location;
+        }
+
+        memcpy(outData, inData + range.location, sizeof(T) * range.length);
+    }
+}
 
 template <typename T>
 inline void _SafeRelease(T** p) {
@@ -35,14 +49,13 @@ inline void _SafeRelease(T** p) {
 
 @interface _CTTypesetter : NSObject {
 @public
-    NSAttributedString* _attributedString;
-    NSString* _string;
-    WORD* _characters;
-    CFIndex _charactersLen;
+    StrongId<NSAttributedString> _attributedString;
+    StrongId<NSString> _string;
+    std::vector<WORD> _characters;
 }
 @end
 
-@interface _CTFrameSetter : NSObject {
+@interface _CTFramesetter : NSObject {
 @public
     StrongId<_CTTypesetter> _typesetter;
 }
@@ -50,10 +63,15 @@ inline void _SafeRelease(T** p) {
 
 @interface _CTRun : NSObject {
 @public
-    StrongId<NSMutableDictionary> _attributes;
+    StrongId<NSMutableDictionary<NSString*, id>> _attributes;
     CFRange _range;
     StrongId<NSString> _stringFragment;
     DWRITE_GLYPH_RUN _dwriteGlyphRun;
+    std::vector<CFIndex> _stringIndices;
+
+    // TODO::
+    // How do we get this data? DWrite does not seem to provide it to us directly today.
+    std::vector<CGSize> _glyphAdvances;
     std::vector<CGPoint> _glyphOrigins;
     CGFloat _relativeXOffset;
     CGFloat _relativeYOffset;
@@ -68,6 +86,7 @@ inline void _SafeRelease(T** p) {
     CGFloat _relativeYOffset;
     CGFloat _width;
     StrongId<NSMutableArray<_CTRun*>> _runs;
+    CFIndex _glyphCount;
 
     // TODO::
     // Do we need these anymore?
@@ -77,7 +96,7 @@ inline void _SafeRelease(T** p) {
 
 @interface _CTFrame : NSObject {
 @public
-    _CTFrameSetter* _frameSetter;
+    StrongId<_CTFramesetter> _framesetter;
     CGRect _frameRect;
     std::vector<CGPoint> _lineOrigins;
     StrongId<NSMutableArray<_CTLine*>> _lines;

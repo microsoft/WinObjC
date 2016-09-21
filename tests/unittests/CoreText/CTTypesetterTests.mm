@@ -46,6 +46,8 @@ DISABLED_TEST(CTTypeSetter, SuggestLineBreak) {
     EXPECT_EQ_MSG(13,
                   index,
                   "SuggestLineBreak should end line at space when soft line break is possible and the text is longer than the width");
+
+    CFRelease(ts);
 }
 
 // TODO: #998 Reenable this test
@@ -56,6 +58,8 @@ DISABLED_TEST(CTTypeSetter, CreateLineShouldTrimWhitespace) {
     CFRange range = { 0, 7 };
     CTLineRef line = CTTypesetterCreateLine(ts, range);
     ASSERT_EQ_MSG(5, CTLineGetGlyphCount(line), "CreateLine should trim whitespace from the end of the line");
+    CFRelease(ts);
+    CFRelease(line);
 }
 
 // TODO: #998 Reenable this test
@@ -81,4 +85,7 @@ DISABLED_TEST(CTTypeSetter, LinesShouldDefaultToZeroOffset) {
     EXPECT_EQ(ascentWithOffset, ascent);
     EXPECT_EQ(descentWithOffset, descent);
     EXPECT_EQ(leadingWithOffset, leading);
+    CFRelease(ts);
+    CFRelease(line);
+    CFRelease(lineWithOffset);
 }

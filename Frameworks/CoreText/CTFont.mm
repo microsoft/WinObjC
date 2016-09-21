@@ -655,12 +655,17 @@ CFArrayRef CTFontCopyFeatureSettings(CTFontRef font) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
-bool CTFontGetGlyphsForCharacters(CTFontRef font, const UniChar characters[], CGGlyph glyphs[], CFIndex count) {
-    UNIMPLEMENTED();
-    return StubReturn();
+bool CTFontGetGlyphsForCharacters(CTFontRef fontRef, const UniChar characters[], CGGlyph glyphs[], CFIndex count) {
+    if (!fontRef || !characters || !glyphs || count <= 0) {
+        return false;
+    }
+
+    struct __CTFont* font = const_cast<struct __CTFont*>(fontRef);
+    std::vector<uint32_t> chars(characters, characters + count);
+    return SUCCEEDED(font->_dwriteFontFace->GetGlyphIndices(chars.data(), count, glyphs));
 }
 
 /**

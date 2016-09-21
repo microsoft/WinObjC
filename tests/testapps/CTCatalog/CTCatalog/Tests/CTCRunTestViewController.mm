@@ -153,18 +153,37 @@
 
     CGPoint points[5];
     CTRunGetPositions(run, CFRangeMake(0, 0), points);
-    [_testCells addObject:createTextCell(@"CTRunGetPositions - Index:", @"Point: {x, y}")];
+    const CGPoint* pointPtr = CTRunGetPositionsPtr(run);
+    [_testCells addObject:createTextCell(@"CTRunGetPositions - {x, y}:", @"CTRunGetPositionsPtr - {x, y}")];
     for (CFIndex i = 0; i < 5; ++i) {
-        [_testCells addObject:createTextCell([NSString stringWithFormat:@"%ld", i],
-                                             [NSString stringWithFormat:@"{%f, %f}", points[i].x, points[i].y])];
+        [_testCells addObject:createTextCell([NSString stringWithFormat:@"{%f, %f}", points[i].x, points[i].y],
+                                             [NSString stringWithFormat:@"{%f, %f}", pointPtr[i].x, pointPtr[i].y])];
     }
 
     CGSize advances[5];
     CTRunGetAdvances(run, CFRangeMake(0, 0), advances);
-    [_testCells addObject:createTextCell(@"CTRunGetAdvances - Index:", @"Advance: {width, height}")];
+    const CGSize* advancePtr = CTRunGetAdvancesPtr(run);
+    [_testCells addObject:createTextCell(@"CTRunGetAdvances - {width, height}:", @"CTRunGetAdvancesPtr {width, height}")];
     for (CFIndex i = 0; i < 5; ++i) {
-        [_testCells addObject:createTextCell([NSString stringWithFormat:@"%ld", i],
-                                             [NSString stringWithFormat:@"{%f, %f}", advances[i].width, advances[i].height])];
+        [_testCells addObject:createTextCell([NSString stringWithFormat:@"{%f, %f}", advances[i].width, advances[i].height],
+                                             [NSString stringWithFormat:@"{%f, %f}", advancePtr[i].width, advancePtr[i].height])];
+    }
+
+    CGGlyph glyphs[5];
+    CTRunGetGlyphs(run, CFRangeMake(0, 0), glyphs);
+    const CGGlyph* glyphPtr = CTRunGetGlyphsPtr(run);
+    [_testCells addObject:createTextCell(@"CTRunGetGlyphs:", @"CTRunGetGlyphsPtr:")];
+    for (CFIndex i = 0; i < 5; ++i) {
+        [_testCells addObject:createTextCell([NSString stringWithFormat:@"%d", glyphs[i]], [NSString stringWithFormat:@"%d", glyphPtr[i]])];
+    }
+
+    CFIndex indices[5];
+    CTRunGetStringIndices(run, CFRangeMake(0, 0), indices);
+    const CFIndex* indicesPtr = CTRunGetStringIndicesPtr(run);
+    [_testCells addObject:createTextCell(@"CTRunGetStringIndices:", @"CTRunGetStringIndicesPtr:")];
+    for (CFIndex i = 0; i < 5; ++i) {
+        [_testCells
+            addObject:createTextCell([NSString stringWithFormat:@"%d", indices[i]], [NSString stringWithFormat:@"%d", indicesPtr[i]])];
     }
 
     CGFloat ascent, descent, leading;
@@ -175,12 +194,6 @@
                       [NSString stringWithFormat:@"width: %f, ascent: %f, descent: %f, leading: %f", width, ascent, descent, leading])];
 
     ADD_UNIMPLEMENTED(_testCells, @"CTRunGetStatus");
-    ADD_UNIMPLEMENTED(_testCells, @"CTRunGetGlyphsPtr");
-    ADD_UNIMPLEMENTED(_testCells, @"CTRunGetGlyphs");
-    ADD_UNIMPLEMENTED(_testCells, @"CTRunGetPositionsPtr");
-    ADD_UNIMPLEMENTED(_testCells, @"CTRunGetAdvancesPtr");
-    ADD_UNIMPLEMENTED(_testCells, @"CTRunGetStringIndicesPtr");
-    ADD_UNIMPLEMENTED(_testCells, @"CTRunGetStringIndices");
     ADD_UNIMPLEMENTED(_testCells, @"CTRunGetImageBounds");
     ADD_UNIMPLEMENTED(_testCells, @"CTRunGetTextMatrix");
     ADD_UNIMPLEMENTED(_testCells, @"CTRunGetTypeID");

@@ -19,13 +19,24 @@
 #import "NSStringInternal.h"
 #import "CoreTextInternal.h"
 #import "CGContextInternal.h"
+#import <CoreText/DWriteWrapper.h>
 #import <CoreText/CTTypesetter.h>
+
+#include <algorithm>
+#include <numeric>
 
 static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef line,
                                                                     CTLineTruncationType truncationType,
                                                                     double widthToExtract);
 
 @implementation _CTLine : NSObject
+- (instancetype)init {
+    if (self = [super init]) {
+        _runs.attach([NSMutableArray new]);
+    }
+    return self;
+}
+
 - (void)dealloc {
     _runs = nil;
     [super dealloc];
@@ -38,7 +49,8 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef li
     ret->_ascent = _ascent;
     ret->_descent = _descent;
     ret->_leading = _leading;
-    ret->_runs = [_runs copy];
+    ret->_glyphCount = _glyphCount;
+    ret->_runs.attach([_runs copy]);
 
     return ret;
 }
@@ -48,16 +60,7 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef li
  @Status Stub
 */
 CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string) {
-    UNIMPLEMENTED();
-    NSString* str = [(NSAttributedString*)string string];
-    CFRange lineRange;
-    lineRange.location = 0;
-    lineRange.length = [str length];
-
-    _CTLine* line = [_CTLine new];
-    line->_strRange = lineRange;
-
-    return (CTLineRef)line;
+    return string ? static_cast<CTLineRef>(_DWriteGetLine(string)) : nil;
 }
 
 /**
@@ -139,10 +142,7 @@ CTLineRef CTLineCreateTruncatedLine(CTLineRef sourceLine, double width, CTLineTr
             return nil;
     }
 
-    CTTypesetterRef typeSetter = CTTypesetterCreateWithAttributedString(static_cast<CFAttributedStringRef>(finalString));
-    CFRange range = { 0, finalString.length };
-    CTLineRef ret = static_cast<CTLineRef>(CTTypesetterCreateLine(typeSetter, range));
-    CFRelease(typeSetter);
+    CTLineRef ret = CTLineCreateWithAttributedString(static_cast<CFAttributedStringRef>(finalString));
     [stringFromToken release];
 
     return ret;
@@ -230,7 +230,7 @@ void _CTLineDraw(CTLineRef lineRef, CGContextRef ctx, bool adjustTextPosition) {
         CGContextSetTextPosition(ctx, curTextPos.x + line->_relativeXOffset, curTextPos.y + line->_relativeYOffset);
     }
 
-    for (_CTRun* curRun in static_cast<NSArray*>(line->_runs)) {
+    for (_CTRun* curRun in static_cast<id<NSFastEnumeration>>(line->_runs)) {
         CFRange range = { 0 };
         _CTRunDraw(static_cast<CTRunRef>(curRun), ctx, range, false);
     }
@@ -246,34 +246,22 @@ void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
 /**
  @Status Interoperable
 */
-CFIndex CTLineGetGlyphCount(CTLineRef lineRef) {
-    if (lineRef == nil) {
-        return 0;
-    }
-
-    _CTLine* line = (_CTLine*)lineRef;
-    return (line->_strRange).length;
+CFIndex CTLineGetGlyphCount(CTLineRef line) {
+    return line ? static_cast<_CTLine*>(line)->_glyphCount : 0;
 }
 
 /**
  @Status Interoperable
 */
 CFArrayRef CTLineGetGlyphRuns(CTLineRef line) {
-    if (!line) {
-        return nil;
-    }
-    return (CFArrayRef)[((_CTLine*)line)->_runs retain];
+    return line ? static_cast<CFArrayRef>(static_cast<_CTLine*>(line)->_runs.get()) : nil;
 }
 
 /**
  @Status Interoperable
 */
 CFRange CTLineGetStringRange(CTLineRef line) {
-    if (!line) {
-        return { 0, 0 };
-    }
-
-    return ((_CTLine*)line)->_strRange;
+    return line ? static_cast<_CTLine*>(line)->_strRange : CFRangeMake(0, 0);
 }
 
 /**
@@ -304,7 +292,7 @@ double CTLineGetTypographicBounds(CTLineRef lineRef, CGFloat* ascent, CGFloat* d
         return 0;
     }
 
-    _CTLine* line = (_CTLine*)lineRef;
+    _CTLine* line = static_cast<_CTLine*>(lineRef);
     if (ascent) {
         *ascent = line->_ascent;
     }
@@ -331,32 +319,24 @@ double CTLineGetTrailingWhitespaceWidth(CTLineRef line) {
  @Status Interoperable
 */
 CFIndex CTLineGetStringIndexForPosition(CTLineRef lineRef, CGPoint position) {
-    if (CTLineGetGlyphCount(lineRef) == 0 || lineRef == nil) {
+    _CTLine* line = static_cast<_CTLine*>(lineRef);
+    if (!line || line->_glyphCount == 0) {
         return kCFNotFound;
     }
 
-    CFRange lineRange = CTLineGetStringRange(lineRef);
-    CFIndex ret = lineRange.location - 1;
     CGFloat currPos = 0;
-    CFArrayRef glyphRuns = CTLineGetGlyphRuns(lineRef);
-    CFIndex numberOfRuns = CFArrayGetCount(glyphRuns);
 
-    for (int i = 0; i < numberOfRuns; i++) {
-        CTRunRef run = static_cast<CTRunRef>(CFArrayGetValueAtIndex(glyphRuns, i));
-        CFIndex glyphsCount = CTRunGetGlyphCount(run);
-
-        for (int i = 0; i < glyphsCount; i++) {
-            ret++;
-            currPos += static_cast<_CTRun*>(run)->_dwriteGlyphRun.glyphAdvances[i];
+    for (_CTRun* run in static_cast<id<NSFastEnumeration>>(line->_runs)) {
+        for (int i = 0; i < run->_dwriteGlyphRun.glyphCount; i++) {
+            currPos += run->_dwriteGlyphRun.glyphAdvances[i];
             if (currPos >= position.x) {
-                return ret;
+                return run->_stringIndices[i];
             }
         }
     }
 
-    // if the given input position is beyond the length of line, return last string index plus one
     if (currPos < position.x) {
-        return CTLineGetGlyphCount(lineRef) + lineRange.location;
+        return line->_strRange.length;
     }
 
     return kCFNotFound;
@@ -367,43 +347,33 @@ CFIndex CTLineGetStringIndexForPosition(CTLineRef lineRef, CGPoint position) {
 */
 CGFloat CTLineGetOffsetForStringIndex(CTLineRef lineRef, CFIndex charIndex, CGFloat* secondaryOffset) {
     CGFloat ret = 0.0;
-    if (secondaryOffset) {
-        *secondaryOffset = 0.0;
-    }
+    if (lineRef && charIndex >= 0) {
+        _CTLine* line = static_cast<_CTLine*>(lineRef);
+        if (charIndex > line->_strRange.location + line->_strRange.length) {
+            ret = line->_width;
+        } else {
+            for (_CTRun* run in static_cast<id<NSFastEnumeration>>(line->_runs)) {
+                if (run->_range.location + run->_range.length >= charIndex && run->_stringIndices.size() > 0) {
+                    int index = std::upper_bound(run->_stringIndices.begin(), run->_stringIndices.end(), charIndex) -
+                                run->_stringIndices.begin() - 1;
 
-    if (lineRef == nil || charIndex < 0) {
-        return ret;
-    }
+                    if (index >= 0) {
+                        ret = std::accumulate(run->_dwriteGlyphRun.glyphAdvances, run->_dwriteGlyphRun.glyphAdvances + index, ret);
+                    }
 
-    // if charIndex is greater than the last string index, return line's width as offset
-    if (charIndex > (CTLineGetGlyphCount(lineRef) - 1)) {
-        ret = (static_cast<_CTLine*>(lineRef))->_width;
-        if (secondaryOffset) {
-            *secondaryOffset = ret;
-        }
+                    break;
+                }
 
-        return ret;
-    }
-
-    CFArrayRef glyphRuns = CTLineGetGlyphRuns(lineRef);
-    CFIndex numberOfRuns = CFArrayGetCount(glyphRuns);
-    CFIndex currentIndex = -1;
-
-    for (int i = 0; i < numberOfRuns; i++) {
-        CTRunRef currRun = (CTRunRef)CFArrayGetValueAtIndex(glyphRuns, i);
-        CFIndex glyphCount = CTRunGetGlyphCount(currRun);
-
-        if (currentIndex + glyphCount >= charIndex) {
-            ret = (static_cast<_CTRun*>(currRun))->_glyphOrigins[charIndex - currentIndex - 1].x;
-            if (secondaryOffset) {
-                *secondaryOffset = ret;
+                ret = std::accumulate(run->_dwriteGlyphRun.glyphAdvances,
+                                      run->_dwriteGlyphRun.glyphAdvances + run->_dwriteGlyphRun.glyphCount,
+                                      ret);
             }
-            return ret;
         }
-
-        currentIndex += glyphCount;
     }
 
+    if (secondaryOffset) {
+        *secondaryOffset = ret;
+    }
     return ret;
 }
 

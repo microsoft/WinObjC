@@ -37,6 +37,7 @@
 struct _DWriteGlyphRunDescription {
     uint32_t _stringLength;
     uint32_t _textPosition;
+    std::vector<CFIndex> _clusterMap;
 };
 
 struct _DWriteGlyphRunDetails {
@@ -48,9 +49,11 @@ struct _DWriteGlyphRunDetails {
 
 CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedString);
 NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRect frameSize);
+_CTLine* _DWriteGetLine(CFAttributedStringRef string);
 
 CFArrayRef _DWriteGetFontFamilyNames();
 CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName);
 CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName);
 
 HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace);
+bool _CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Out_ DWRITE_GLYPH_RUN* dest);

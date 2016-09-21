@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,7 +27,8 @@ const CFStringRef kCTFramePathClippingPathAttributeName = static_cast<CFStringRe
 
 @implementation _CTFrame : NSObject
 - (void)dealloc {
-    [_frameSetter release];
+    _framesetter = nil;
+    _lines = nil;
     [super dealloc];
 }
 @end
@@ -40,7 +41,7 @@ CFRange CTFrameGetStringRange(CTFrameRef frame) {
     _CTFrame* framePtr = static_cast<_CTFrame*>(frame);
     CFIndex count = 0;
     if (framePtr) {
-        for (_CTLine* line in [framePtr->_lines objectEnumerator]) {
+        for (_CTLine* line in static_cast<id<NSFastEnumeration>>(framePtr->_lines)) {
             count += line->_strRange.length;
         }
     }
@@ -55,9 +56,10 @@ CFRange CTFrameGetVisibleStringRange(CTFrameRef frame) {
     _CTFrame* framePtr = static_cast<_CTFrame*>(frame);
     CFIndex count = 0;
     if (framePtr) {
-        for (CFIndex i = 0; i < framePtr->_lineOrigins.size() && framePtr->_lineOrigins[i].y > 0; ++i) {
-            // Lines are ordered vertically so we can stop once we find one outside of the frame
-            count += static_cast<_CTLine*>([framePtr->_lines objectAtIndex:i])->_strRange.length;
+        for (_CTLine* line in static_cast<id<NSFastEnumeration>>(framePtr->_lines)) {
+            if (line->_lineOrigin.y < framePtr->_frameRect.size.height && line->_lineOrigin.y > 0) {
+                count += line->_strRange.length;
+            }
         }
     }
     return CFRangeMake(0, count);
@@ -85,23 +87,16 @@ CFDictionaryRef CTFrameGetFrameAttributes(CTFrameRef frame) {
  @Status Interoperable
 */
 CFArrayRef CTFrameGetLines(CTFrameRef frame) {
-    return (CFArrayRef)(id)((_CTFrame*)frame)->_lines;
+    return frame ? static_cast<CFArrayRef>(static_cast<_CTFrame*>(frame)->_lines.get()) : nil;
 }
 
 /**
  @Status Interoperable
 */
-void CTFrameGetLineOrigins(CTFrameRef frame, CFRange range, CGPoint origins[]) {
-    if (range.length == 0) {
-        range.length = 0x7FFFFFF;
-    }
-
-    unsigned count = [((_CTFrame*)frame)->_lines count];
-    int idx = 0;
-
-    for (unsigned i = range.location; i < count && i < range.location + range.length; i++) {
-        origins[idx] = ((_CTLine*)((_CTFrame*)frame)->_lines[idx])->_lineOrigin;
-        idx++;
+void CTFrameGetLineOrigins(CTFrameRef frameRef, CFRange range, CGPoint origins[]) {
+    _CTFrame* frame = static_cast<_CTFrame*>(frameRef);
+    if (frame) {
+        _boundedCopy(range, frame->_lineOrigins.size(), frame->_lineOrigins.data(), origins);
     }
 }
 
@@ -111,12 +106,13 @@ void CTFrameGetLineOrigins(CTFrameRef frame, CFRange range, CGPoint origins[]) {
 void CTFrameDraw(CTFrameRef frame, CGContextRef ctx) {
     uint32_t count = [((_CTFrame*)frame)->_lines count];
     CGPoint curTextPos = CGContextGetTextPosition(ctx);
-
-    for (uint32_t i = 0; i < count; i++) {
-        _CTLine* curLine = [static_cast<_CTFrame*>(frame)->_lines objectAtIndex:i];
-        CGPoint newPos = curTextPos + curLine->_lineOrigin;
-        CGContextSetTextPosition(ctx, newPos.x, newPos.y);
-        _CTLineDraw(static_cast<CTLineRef>(curLine), ctx, false);
+    if (frame && ctx) {
+        CGPoint curTextPos = CGContextGetTextPosition(ctx);
+        for (_CTLine* line in static_cast<id<NSFastEnumeration>>(static_cast<_CTFrame*>(frame)->_lines)) {
+            CGPoint newPos = curTextPos + line->_lineOrigin;
+            CGContextSetTextPosition(ctx, newPos.x, newPos.y);
+            _CTLineDraw(static_cast<CTLineRef>(line), ctx, false);
+        }
     }
 }
 

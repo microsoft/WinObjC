@@ -27,6 +27,7 @@
 
 #import <LoggingNative.h>
 #import <vector>
+#import <iterator>
 
 using namespace std;
 using namespace Microsoft::WRL;
@@ -34,11 +35,6 @@ using namespace Microsoft::WRL;
 static const wchar_t* TAG = L"_DWriteWrapper";
 static const wchar_t* c_defaultUserLanguage = L"en-us";
 static const wchar_t* c_defaultFontName = L"Segoe UI";
-
-// TODO::
-// These should be removed once CTFont and UIFont are bridged.
-static IWLazyClassLookup s_lazyUIFont("UIFont");
-static const float c_defaultSystemFontSize = 15.0f;
 
 // Private helper for creating a DWriteFactory
 static ComPtr<IDWriteFactory> __CreateDWriteFactoryInstance() {
@@ -73,7 +69,7 @@ bool __CloneArray(_In_reads_opt_(count) TElement const* source,
     return ret;
 }
 
-bool __CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Out_ DWRITE_GLYPH_RUN* dest) {
+bool _CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Out_ DWRITE_GLYPH_RUN* dest) {
     bool ret = true;
 
     if (src) {
@@ -178,10 +174,10 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(_CTTypesetter* ts, CFR
     // TODO: #1001 attribs can be nil here?
     NSDictionary* attribs = [ts->_attributedString attributesAtIndex:range.location effectiveRange:NULL];
     UIFont* font = [attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)];
-    if (font == nil) {
-        font = [s_lazyUIFont systemFontOfSize:c_defaultSystemFontSize];
+    CGFloat fontSize = kCTFontSystemFontSize;
+    if (font != nil) {
+        fontSize = [font pointSize];
     }
-    float fontSize = [font pointSize];
 
     ComPtr<IDWriteTextFormat> textFormat;
     THROW_IF_FAILED(dwriteFactory->CreateTextFormat(c_defaultFontName,
@@ -208,22 +204,7 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(_CTTypesetter* ts, CFR
 static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFRange range, CGRect frameSize) {
     ComPtr<IDWriteTextFormat> textFormat = __CreateDWriteTextFormat(ts, range);
 
-    // TODO::
-    // Iterate through all attributed string ranges and identify attributes so they can be used to -
-    //  - set indentation
-    //  - set font characteristics
-    //  - etc.
-    //  These can be done using the DWrite IDWriteTextFormat range property methods.
     NSRange curRange = NSMakeRangeFromCF(range);
-    /*
-    NSDictionary* attribs = [ts->_attributedString attributesAtIndex:0 effectiveRange:&curRange];
-    UIFont* font = [attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)];
-    if (font == nil) {
-        font = [s_lazyUIFont systemFontOfSize:c_defaultSystemFontSize];
-    }
-    float fontSize = [font pointSize];
-    */
-
     wchar_t* wcharString = reinterpret_cast<wchar_t*>(
         const_cast<char*>([[ts->_string substringWithRange:curRange] cStringUsingEncoding:NSUTF16StringEncoding]));
 
@@ -238,8 +219,26 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
 
     ComPtr<IDWriteTextLayout> textLayout;
     THROW_IF_FAILED(dwriteFactory->CreateTextLayout(
-        wcharString, ts->_charactersLen, textFormat.Get(), frameSize.size.width, frameSize.size.height, &textLayout));
+        wcharString, ts->_characters.size(), textFormat.Get(), frameSize.size.width, frameSize.size.height, &textLayout));
 
+    // TODO::
+    // Iterate through all attributed string ranges and identify attributes so they can be used to -
+    //  - set indentation
+    //  - set font characteristics
+    //  - etc.
+    //  These can be done using the DWrite IDWriteTextFormat range property methods.
+    NSRange attributeRange;
+    for (size_t i = 0; i < [ts->_attributedString length]; i += attributeRange.length) {
+        NSDictionary* attribs = [ts->_attributedString attributesAtIndex:i
+                                                   longestEffectiveRange:&attributeRange
+                                                                 inRange:{ i, [ts->_attributedString length] - i }];
+        CGFloat fontSize = kCTFontSystemFontSize;
+        UIFont* font = [attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)];
+        if (font != nil) {
+            fontSize = [font pointSize];
+        }
+        THROW_IF_FAILED(textLayout->SetFontSize(fontSize, DWRITE_TEXT_RANGE{ attributeRange.location, attributeRange.length }));
+    }
     return textLayout;
 }
 
@@ -265,7 +264,7 @@ public:
         _DWriteGlyphRunDetails* glyphs = static_cast<_DWriteGlyphRunDetails*>(clientDrawingContext);
 
         DWRITE_GLYPH_RUN dwriteGlyphRun = {};
-        __CloneDWriteGlyphRun(glyphRun, &dwriteGlyphRun);
+        _CloneDWriteGlyphRun(glyphRun, &dwriteGlyphRun);
         glyphs->_dwriteGlyphRun.push_back(dwriteGlyphRun);
 
         glyphs->_baselineOriginX.push_back(baselineOriginX);
@@ -274,6 +273,9 @@ public:
         _DWriteGlyphRunDescription glyphRunDescriptionInfo;
         glyphRunDescriptionInfo._stringLength = glyphRunDescription->stringLength;
         glyphRunDescriptionInfo._textPosition = glyphRunDescription->textPosition;
+        std::copy(glyphRunDescription->clusterMap,
+                  glyphRunDescription->clusterMap + glyphRun->glyphCount,
+                  std::back_inserter(glyphRunDescriptionInfo._clusterMap));
         glyphs->_glyphRunDescriptions.push_back(glyphRunDescriptionInfo);
 
         return S_OK;
@@ -343,6 +345,24 @@ static void __GetGlyphRunDetails(_CTTypesetter* ts, CFRange range, CGRect frameS
 }
 
 /**
+ * Helper method to create _CTLine object given a CFAttributedStringRef
+ *
+ * @parameter string CFAttributedStringRef containing text and styling
+ *
+ * @return Unmutable array of _CTLine objects created with the requested parameters.
+ */
+static _CTLine* _DWriteGetLine(CFAttributedStringRef string) {
+    _CTTypesetter* typesetter = static_cast<_CTTypesetter*>(CTTypesetterCreateWithAttributedString(string));
+    CFRange range = CFRangeMake(0, CFAttributedStringGetLength(string));
+    NSArray<_CTLine*>* lines = _DWriteGetLines(typesetter, range, CGRectMake(0, 0, FLT_MAX, FLT_MAX));
+    if (lines.count > 0) {
+        return [lines[0] retain];
+    }
+
+    return [_CTLine new];
+}
+
+/**
  * Helper method to create _CTLine objects given a _CTTypesetter, attributed string range to use and frame size to fit in.
  *
  * @parameter ts _CTTypesetter object to use.
@@ -390,6 +410,7 @@ static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
             run->_range.length = glyphRunDetails._glyphRunDescriptions[i]._stringLength;
             run->_stringFragment = [ts->_string substringWithRange:NSMakeRangeFromCF(run->_range)];
             run->_dwriteGlyphRun = move(glyphRunDetails._dwriteGlyphRun[i]);
+            run->_stringIndices = move(glyphRunDetails._glyphRunDescriptions[i]._clusterMap);
             run->_attributes = [ts->_attributedString attributesAtIndex:run->_range.location effectiveRange:NULL];
 
             xPos = glyphRunDetails._baselineOriginX[i];
@@ -403,15 +424,16 @@ static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
 
             // TODO::
             // This is a temp workaround until we can have actual glyph origins
-            run->_glyphOrigins.emplace_back(CGPoint{ xPos, yPos });
-            for (int index = 0; index < glyphRunDetails._dwriteGlyphRun[i].glyphCount - 1; index++) {
-                run->_glyphOrigins.emplace_back(CGPoint{ xPos + glyphRunDetails._dwriteGlyphRun[i].glyphAdvances[index], yPos });
+            for (int index = 0; index < glyphRunDetails._dwriteGlyphRun[i].glyphCount; index++) {
+                run->_glyphOrigins.emplace_back(CGPoint{ xPos, yPos });
+                run->_glyphAdvances.emplace_back(CGSize{ glyphRunDetails._dwriteGlyphRun[i].glyphAdvances[index], 0.0f });
                 xPos += glyphRunDetails._dwriteGlyphRun[i].glyphAdvances[index];
                 line->_width += glyphRunDetails._dwriteGlyphRun[i].glyphAdvances[index];
             }
 
             [runs addObject:run];
             stringRange += run->_range.length;
+            line->_glyphCount += run->_dwriteGlyphRun.glyphCount;
             i++;
         }
 
