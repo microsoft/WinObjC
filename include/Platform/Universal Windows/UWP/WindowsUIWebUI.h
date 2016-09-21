@@ -181,7 +181,7 @@ WINRT_EXPORT
 @interface WUWWebUIVoiceCommandActivatedEventArgs
     : RTObject <WAAIVoiceCommandActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -199,7 +199,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUWActivatedDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)complete;
 @end
@@ -213,7 +213,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUWActivatedOperation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (WUWActivatedDeferral*)getDeferral;
 @end
@@ -262,7 +262,7 @@ WINRT_EXPORT
                                                         WAAIApplicationViewActivatedEventArgs,
                                                         WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -294,7 +294,7 @@ WINRT_EXPORT
 @interface WUWWebUIShareTargetActivatedEventArgs
     : RTObject <WAAIShareTargetActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -337,7 +337,7 @@ WINRT_EXPORT
                                                       WUWIActivatedEventArgsDeferral,
                                                       WAAIFileActivatedEventArgsWithNeighboringFiles>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -383,7 +383,7 @@ WINRT_EXPORT
                                                           WAAIApplicationViewActivatedEventArgs,
                                                           WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -419,7 +419,7 @@ WINRT_EXPORT
                                                                     WAAIApplicationViewActivatedEventArgs,
                                                                     WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -464,7 +464,7 @@ WINRT_EXPORT
                                                                 WAAIFileOpenPickerActivatedEventArgs2,
                                                                 WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -507,7 +507,7 @@ WINRT_EXPORT
                                                                 WAAIFileSavePickerActivatedEventArgs2,
                                                                 WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -538,7 +538,7 @@ WINRT_EXPORT
 @interface WUWWebUICachedFileUpdaterActivatedEventArgs
     : RTObject <WAAICachedFileUpdaterActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -568,7 +568,7 @@ WINRT_EXPORT
 @interface WUWWebUIDeviceActivatedEventArgs
     : RTObject <WAAIDeviceActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -612,7 +612,7 @@ WINRT_EXPORT
                 WAAIActivatedEventArgs,
                 WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -645,7 +645,7 @@ WINRT_EXPORT
                 WAAIActivatedEventArgs,
                 WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -678,7 +678,7 @@ WINRT_EXPORT
                 WAAIActivatedEventArgs,
                 WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -714,7 +714,7 @@ WINRT_EXPORT
                 WAAIActivatedEventArgs,
                 WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -749,7 +749,7 @@ WINRT_EXPORT
                                                                                    WAAIActivatedEventArgs,
                                                                                    WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -782,7 +782,7 @@ WINRT_EXPORT
                                                             WAAIApplicationViewActivatedEventArgs,
                                                             WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -812,7 +812,7 @@ WINRT_EXPORT
 @interface WUWWebUIRestrictedLaunchActivatedEventArgs
     : RTObject <WAAIRestrictedLaunchActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -853,7 +853,7 @@ WINRT_EXPORT
                                                                    WAAIActivatedEventArgs,
                                                                    WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -885,7 +885,7 @@ WINRT_EXPORT
                                                                    WAAIActivatedEventArgs,
                                                                    WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -917,7 +917,7 @@ WINRT_EXPORT
                                                                  WAAIActivatedEventArgs,
                                                                  WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -949,7 +949,7 @@ WINRT_EXPORT
                                                                             WAAIActivatedEventArgs,
                                                                             WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -979,7 +979,7 @@ WINRT_EXPORT
 @interface WUWWebUIWebAccountProviderActivatedEventArgs
     : RTObject <WAAIWebAccountProviderActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -1011,7 +1011,7 @@ WINRT_EXPORT
                                                               WAAIApplicationViewActivatedEventArgs,
                                                               WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -1044,7 +1044,7 @@ WINRT_EXPORT
 @interface WUWWebUIToastNotificationActivatedEventArgs
     : RTObject <WAAIToastNotificationActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
@@ -1063,7 +1063,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUWWebUINavigatedOperation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (WUWWebUINavigatedDeferral*)getDeferral;
 @end
@@ -1087,7 +1087,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUWSuspendingDeferral : RTObject <WAISuspendingDeferral>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)complete;
 @end
@@ -1112,7 +1112,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUWSuspendingOperation : RTObject <WAISuspendingOperation>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* deadline;
 - (WASuspendingDeferral*)getDeferral;
@@ -1137,7 +1137,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUWSuspendingEventArgs : RTObject <WAISuspendingEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WASuspendingOperation* suspendingOperation;
 @end
@@ -1168,7 +1168,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUWWebUIBackgroundTaskInstanceRuntimeClass : RTObject <WUWIWebUIBackgroundTaskInstance, WABIBackgroundTaskInstance>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int progress;
 @property (readonly) WFGUID* instanceId;
@@ -1201,7 +1201,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUWWebUINavigatedDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)complete;
 @end
@@ -1215,7 +1215,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUWWebUINavigatedEventArgs : RTObject <WUWIWebUINavigatedEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUWWebUINavigatedOperation* navigatedOperation;
 @end
@@ -1266,7 +1266,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUWHtmlPrintDocumentSource : RTObject <WGPIPrintDocumentSource, WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property float topMargin;
 @property BOOL shrinkToFit;

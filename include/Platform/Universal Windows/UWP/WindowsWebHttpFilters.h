@@ -78,7 +78,7 @@ typedef unsigned WWHFHttpCacheWriteBehavior;
 WINRT_EXPORT
 @interface WWHFHttpCacheControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WWHFHttpCacheWriteBehavior writeBehavior;
 @property WWHFHttpCacheReadBehavior readBehavior;
@@ -94,7 +94,7 @@ WINRT_EXPORT
 @interface WWHFHttpBaseProtocolFilter : RTObject <WWHFIHttpFilter, WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL useProxy;
 @property (retain) WSCPasswordCredential* serverCredential;

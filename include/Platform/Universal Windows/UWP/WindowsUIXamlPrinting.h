@@ -88,7 +88,7 @@ WINRT_EXPORT
 @interface WUXPAddPagesEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WGPPrintTaskOptions* printTaskOptions;
 @end
@@ -103,7 +103,7 @@ WINRT_EXPORT
 @interface WUXPGetPreviewPageEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) int pageNumber;
 @end
@@ -118,7 +118,7 @@ WINRT_EXPORT
 @interface WUXPPaginateEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) int currentPreviewPageNumber;
 @property (readonly) WGPPrintTaskOptions* printTaskOptions;
@@ -133,7 +133,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -155,7 +155,7 @@ WINRT_EXPORT
 @interface WUXPPrintDocument : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WGPIPrintDocumentSource>* documentSource;
 + (WXDependencyProperty*)documentSourceProperty;

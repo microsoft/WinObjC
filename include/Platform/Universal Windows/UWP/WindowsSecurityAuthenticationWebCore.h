@@ -65,7 +65,7 @@ WINRT_EXPORT
 + (WSAWCWebTokenRequest*)makeWithProvider:(WSCWebAccountProvider*)provider ACTIVATOR;
 + (WSAWCWebTokenRequest*)makeWithScope:(WSCWebAccountProvider*)provider scope:(NSString*)scope ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* clientId;
 @property (readonly) WSAWCWebTokenRequestPromptType promptType;
@@ -149,7 +149,7 @@ WINRT_EXPORT
 @interface WSAWCWebProviderError : RTObject
 + (WSAWCWebProviderError*)make:(unsigned int)errorCode errorMessage:(NSString*)errorMessage ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int errorCode;
 @property (readonly) NSString* errorMessage;
@@ -171,7 +171,7 @@ WINRT_EXPORT
                                             webAccount:(WSCWebAccount*)webAccount
                                                  error:(WSAWCWebProviderError*)error ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSMutableDictionary* /* NSString *, NSString * */ properties;
 @property (readonly) WSAWCWebProviderError* providerError;
@@ -188,7 +188,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSAWCWebTokenRequestResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WSAWCWebTokenResponse* */ responseData;
 @property (readonly) WSAWCWebProviderError* responseError;

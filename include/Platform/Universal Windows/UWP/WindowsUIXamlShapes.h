@@ -171,7 +171,7 @@ typedef void (^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventAr
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -193,7 +193,7 @@ WINRT_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL isRightTapEnabled;
 @property (retain) WUXMProjection* projection;
@@ -344,7 +344,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXFrameworkElement : WXUIElement
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WXThickness* margin;
 @property (retain) NSString* language;
@@ -416,7 +416,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXSShape : WXFrameworkElement
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMDoubleCollection* strokeDashArray;
 @property (retain) WUXMBrush* stroke;
@@ -453,7 +453,7 @@ WINRT_EXPORT
 @interface WUXSEllipse : WUXSShape
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -467,7 +467,7 @@ WINRT_EXPORT
 @interface WUXSLine : WUXSShape
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double y2;
 @property double y1;
@@ -489,7 +489,7 @@ WINRT_EXPORT
 @interface WUXSPath : WUXSShape
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMGeometry* data;
 + (WXDependencyProperty*)dataProperty;
@@ -505,7 +505,7 @@ WINRT_EXPORT
 @interface WUXSPolygon : WUXSShape
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMPointCollection* points;
 @property WUXMFillRule fillRule;
@@ -523,7 +523,7 @@ WINRT_EXPORT
 @interface WUXSPolyline : WUXSShape
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMPointCollection* points;
 @property WUXMFillRule fillRule;
@@ -541,7 +541,7 @@ WINRT_EXPORT
 @interface WUXSRectangle : WUXSShape
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double radiusY;
 @property double radiusX;

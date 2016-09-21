@@ -687,7 +687,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUTFontWeights : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 + (WUTFontWeight*)black;
 + (WUTFontWeight*)bold;

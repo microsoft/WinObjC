@@ -107,7 +107,7 @@ typedef unsigned WMMMediaMirroringOptions;
 WINRT_EXPORT
 @interface WMMMediaRatio : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int numerator;
 @property unsigned int denominator;
@@ -123,7 +123,7 @@ WINRT_EXPORT
 @interface WMMMediaPropertySet : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (id)objectForKey:(id)key;
@@ -160,7 +160,7 @@ WINRT_EXPORT
 + (WMMAudioEncodingProperties*)createWma:(unsigned int)sampleRate channelCount:(unsigned int)channelCount bitrate:(unsigned int)bitrate;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int sampleRate;
 @property unsigned int channelCount;
@@ -271,7 +271,7 @@ WINRT_EXPORT
 + (WMMVideoEncodingProperties*)createUncompressed:(NSString*)subtype width:(unsigned int)width height:(unsigned int)height;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* subtype;
 @property (readonly) WMMMediaPropertySet* properties;
@@ -301,7 +301,7 @@ WINRT_EXPORT
 + (WMMImageEncodingProperties*)createJpegXR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int width;
 @property unsigned int height;
@@ -320,7 +320,7 @@ WINRT_EXPORT
 @interface WMMContainerEncodingProperties : RTObject <WMMIMediaEncodingProperties>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* subtype;
 @property (readonly) WMMMediaPropertySet* properties;
@@ -350,7 +350,7 @@ WINRT_EXPORT
 + (WMMMediaEncodingProfile*)createAvi:(WMMVideoEncodingQuality)quality;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WMMVideoEncodingProperties* video;
 @property (retain) WMMContainerEncodingProperties* container;

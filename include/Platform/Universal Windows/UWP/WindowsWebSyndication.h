@@ -145,7 +145,7 @@ WINRT_EXPORT
                                   attributeNamespace:(NSString*)attributeNamespace
                                       attributeValue:(NSString*)attributeValue ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* value;
 @property (retain) NSString* Namespace;
@@ -165,7 +165,7 @@ WINRT_EXPORT
                                  nodeValue:(NSString*)nodeValue ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* nodeValue;
 @property (retain) NSString* nodeNamespace;
@@ -188,7 +188,7 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WWSSyndicationGenerator*)makeSyndicationGenerator:(NSString*)text ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* Version;
 @property (retain) WFUri* uri;
@@ -215,7 +215,7 @@ WINRT_EXPORT
 + (WWSSyndicationText*)makeSyndicationTextEx:(NSString*)text type:(WWSSyndicationTextType)type ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* nodeValue;
 @property (retain) NSString* nodeNamespace;
@@ -242,7 +242,7 @@ WINRT_EXPORT
 + (WWSSyndicationContent*)makeSyndicationContentWithSourceUri:(WFUri*)sourceUri ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFUri* sourceUri;
 @property (retain) NSString* nodeValue;
@@ -274,7 +274,7 @@ WINRT_EXPORT
                                    mediaType:(NSString*)mediaType
                                       length:(unsigned int)length ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFUri* uri;
 @property (retain) NSString* title;
@@ -304,7 +304,7 @@ WINRT_EXPORT
 + (WWSSyndicationPerson*)makeSyndicationPersonEx:(NSString*)name email:(NSString*)email uri:(WFUri*)uri ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* nodeValue;
 @property (retain) NSString* nodeNamespace;
@@ -331,7 +331,7 @@ WINRT_EXPORT
 + (WWSSyndicationCategory*)makeSyndicationCategoryEx:(NSString*)term scheme:(NSString*)scheme label:(NSString*)label ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* term;
 @property (retain) NSString* scheme;
@@ -357,7 +357,7 @@ WINRT_EXPORT
 + (WWSSyndicationFeed*)makeSyndicationFeed:(NSString*)title subtitle:(NSString*)subtitle uri:(WFUri*)uri ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) RTObject<WWSISyndicationText>* title;
 @property (retain) RTObject<WWSISyndicationText>* subtitle;
@@ -400,7 +400,7 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WWSSyndicationItem*)makeSyndicationItem:(NSString*)title content:(WWSSyndicationContent*)content uri:(WFUri*)uri ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) RTObject<WWSISyndicationText>* title;
 @property (retain) WWSSyndicationFeed* source;
@@ -442,7 +442,7 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WWSSyndicationClient*)makeSyndicationClient:(WSCPasswordCredential*)serverCredential ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int timeout;
 @property (retain) WSCPasswordCredential* serverCredential;

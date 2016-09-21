@@ -549,6 +549,7 @@ extern void ProjectionHStringTest();
 extern void ProjectionCreateWithTest();
 extern void ProjectionAsyncOnUIThread();
 extern void ProjectionAsyncOnBackgroundThread();
+extern void ProjectionCreateWithARCEnabled();
 
 class ProjectionTest {
 public:
@@ -580,6 +581,10 @@ public:
 
     TEST_METHOD(ProjectionTest_AsyncOnBackgroundThread) {
         ProjectionAsyncOnBackgroundThread();
+    }
+
+    TEST_METHOD(ProjectionTest_CreateWithARCEnabled) {
+        ProjectionCreateWithARCEnabled();
     }
 
 }; /* class ProjectionTest */

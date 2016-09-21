@@ -51,6 +51,7 @@ TEST(Projection, HStringTest) {
 }
 
 TEST(Projection, CreateWithTest) {
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     ComPtr<ABI::Windows::UI::Xaml::Media::IFontFamilyFactory> fontFamilyFactory;
     ASSERT_HRESULT_SUCCEEDED_MSG(ABI::Windows::Foundation::GetActivationFactory(
         Microsoft::WRL::Wrappers::HString::MakeReference(L"Windows.UI.Xaml.Media.FontFamily").Get(), 
@@ -69,4 +70,8 @@ TEST(Projection, CreateWithTest) {
             ASSERT_NO_THROW_MSG(fontFamily = [WUXMFontFamily createWith:fontFamilyInstance.Get()], "Failed: createWith failed");
             ASSERT_NE_MSG(fontFamily, nil, "Failed: CreateWithTest failed");
         });
+
+    // createWith method returns autoreleased object.
+    // So draining the pool should not throw.
+    EXPECT_NO_THROW([pool release]);
 }

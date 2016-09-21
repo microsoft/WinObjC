@@ -39,7 +39,7 @@
 WINRT_EXPORT
 @interface WASSearchPaneQueryLinguisticDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* NSString * */ queryTextAlternatives;
 @property (readonly) unsigned int queryTextCompositionLength;
@@ -55,7 +55,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WASSearchSuggestionCollection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (void)appendQuerySuggestion:(NSString*)text;
@@ -78,7 +78,7 @@ WINRT_EXPORT
 @interface WASLocalContentSuggestionSettings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL enabled;
 @property (retain) NSString* aqsFilter;
@@ -98,7 +98,7 @@ WINRT_EXPORT
                        queryTextCompositionStart:(unsigned int)queryTextCompositionStart
                       queryTextCompositionLength:(unsigned int)queryTextCompositionLength ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* NSString * */ queryTextAlternatives;
 @property (readonly) unsigned int queryTextCompositionLength;
@@ -114,7 +114,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WASSearchSuggestionsRequestDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)complete;
 @end
@@ -128,7 +128,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WASSearchSuggestionsRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isCanceled;
 @property (readonly) WASSearchSuggestionCollection* searchSuggestionCollection;

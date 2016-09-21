@@ -52,7 +52,7 @@ WINRT_EXPORT
 + (WSAOOnlineIdServiceTicketRequest*)makeOnlineIdServiceTicketRequest:(NSString*)service policy:(NSString*)policy ACTIVATOR;
 + (WSAOOnlineIdServiceTicketRequest*)makeOnlineIdServiceTicketRequestAdvanced:(NSString*)service ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* policy;
 @property (readonly) NSString* service;
@@ -67,7 +67,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSAOOnlineIdServiceTicket : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) int errorCode;
 @property (readonly) WSAOOnlineIdServiceTicketRequest* request;
@@ -130,7 +130,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSAOSignOutUserOperation : RTObject <WFIAsyncAction, WFIAsyncInfo>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) HRESULT errorCode;
 @property (readonly) unsigned int id;
@@ -150,7 +150,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSAOUserIdentity : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* firstName;
 @property (readonly) NSString* id;
@@ -172,7 +172,7 @@ WINRT_EXPORT
 @interface WSAOOnlineIdAuthenticator : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WFGUID* applicationId;
 @property (readonly) NSString* authenticatedSafeCustomerId;

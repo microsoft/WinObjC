@@ -97,7 +97,7 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WDBABluetoothLEManufacturerData*)make:(unsigned short)companyId data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) RTObject<WSSIBuffer>* data;
 @property unsigned short companyId;
@@ -114,7 +114,7 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WDBABluetoothLEAdvertisementDataSection*)make:(uint8_t)dataType data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property uint8_t dataType;
 @property (retain) RTObject<WSSIBuffer>* data;
@@ -130,7 +130,7 @@ WINRT_EXPORT
 @interface WDBABluetoothLEAdvertisement : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* localName;
 @property (retain) id /* WDBABluetoothLEAdvertisementFlags */ flags;
@@ -152,7 +152,7 @@ WINRT_EXPORT
 + (WDBABluetoothLEAdvertisementBytePattern*)make:(uint8_t)dataType offset:(int16_t)offset data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property int16_t offset;
 @property uint8_t dataType;
@@ -169,7 +169,7 @@ WINRT_EXPORT
 @interface WDBABluetoothLEAdvertisementFilter : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WDBABluetoothLEAdvertisement* advertisement;
 @property (readonly) NSMutableArray* /* WDBABluetoothLEAdvertisementBytePattern* */ bytePatterns;
@@ -184,7 +184,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDBABluetoothLEAdvertisementWatcherStoppedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDBBluetoothError error;
 @end
@@ -200,7 +200,7 @@ WINRT_EXPORT
 + (WDBABluetoothLEAdvertisementWatcher*)make:(WDBABluetoothLEAdvertisementFilter*)advertisementFilter ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WDBBluetoothSignalStrengthFilter* signalStrengthFilter;
 @property WDBABluetoothLEScanningMode scanningMode;
@@ -229,7 +229,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDBABluetoothLEAdvertisementReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDBABluetoothLEAdvertisement* advertisement;
 @property (readonly) WDBABluetoothLEAdvertisementType advertisementType;
@@ -279,7 +279,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDBABluetoothLEAdvertisementPublisherStatusChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDBBluetoothError error;
 @property (readonly) WDBABluetoothLEAdvertisementPublisherStatus status;
@@ -296,7 +296,7 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WDBABluetoothLEAdvertisementPublisher*)make:(WDBABluetoothLEAdvertisement*)advertisement ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDBABluetoothLEAdvertisement* advertisement;
 @property (readonly) WDBABluetoothLEAdvertisementPublisherStatus status;

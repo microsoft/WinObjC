@@ -119,7 +119,7 @@ WINRT_EXPORT
 @interface WMPMediaProtectionManager : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 - (EventRegistrationToken)addComponentLoadFailedEvent:(WMPComponentLoadFailedEventHandler)del;
@@ -139,7 +139,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPServiceRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPMediaProtectionServiceCompletion* completion;
 @property (readonly) RTObject<WMPIMediaProtectionServiceRequest>* request;
@@ -155,7 +155,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPComponentLoadFailedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPMediaProtectionServiceCompletion* completion;
 @property (readonly) WMPRevocationAndRenewalInformation* information;
@@ -170,7 +170,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPMediaProtectionServiceCompletion : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)complete:(BOOL)success;
 @end
@@ -184,7 +184,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPRevocationAndRenewalInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSMutableArray* /* WMPRevocationAndRenewalItem* */ items;
 @end
@@ -198,7 +198,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPRevocationAndRenewalItem : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* headerHash;
 @property (readonly) NSString* name;
@@ -217,7 +217,7 @@ WINRT_EXPORT
 @interface WMPMediaProtectionPMPServer : RTObject
 + (WMPMediaProtectionPMPServer*)makePMPServer:(RTObject<WFCIPropertySet>*)pProperties ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end

@@ -425,7 +425,7 @@ typedef void (^WUXCPScrollEventHandler)(RTObject* sender, WUXCPScrollEventArgs* 
 WINRT_EXPORT
 @interface WUXCPItemsChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) int action;
 @property (readonly) int itemCount;
@@ -445,7 +445,7 @@ WINRT_EXPORT
 + (WXUIElement*)getLayoutExceptionElement:(RTObject*)dispatcher;
 + (WFRect*)getLayoutSlot:(WXFrameworkElement*)element;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -459,7 +459,7 @@ WINRT_EXPORT
 @interface WUXCPGeneratorPositionHelper : RTObject
 + (WUXCPGeneratorPosition*)fromIndexAndOffset:(int)index offset:(int)offset;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -472,7 +472,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -493,7 +493,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPProgressRingTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) double ellipseDiameter;
 @property (readonly) WXThickness* ellipseOffset;
@@ -509,7 +509,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPToggleSwitchTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) double curtainCurrentToOffOffset;
 @property (readonly) double curtainCurrentToOnOffset;
@@ -530,7 +530,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPProgressBarTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) double containerAnimationEndPosition;
 @property (readonly) double containerAnimationStartPosition;
@@ -550,7 +550,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPSettingsFlyoutTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUXMBrush* borderBrush;
 @property (readonly) WXThickness* borderThickness;
@@ -569,7 +569,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPToolTipTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) double fromHorizontalOffset;
 @property (readonly) double fromVerticalOffset;
@@ -587,7 +587,7 @@ WINRT_EXPORT
 + (void)setAttachedFlyout:(WXFrameworkElement*)element value:(WUXCPFlyoutBase*)value;
 + (void)showAttachedFlyout:(WXFrameworkElement*)flyoutOwner;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUXCPFlyoutPlacementMode placement;
 + (WXDependencyProperty*)attachedFlyoutProperty;
@@ -612,7 +612,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPComboBoxTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) double dropDownClosedHeight;
 @property (readonly) double dropDownOffset;
@@ -629,7 +629,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPGridViewItemTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) int dragItemsCount;
 @end
@@ -643,7 +643,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPListViewItemTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) int dragItemsCount;
 @end
@@ -657,7 +657,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPCalendarViewTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) double centerX;
 @property (readonly) double centerY;
@@ -685,7 +685,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPSplitViewTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WXGridLength* compactPaneGridLength;
 @property (readonly) double negativeOpenPaneLength;
@@ -704,7 +704,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPAppBarTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFRect* clipRect;
 @property (readonly) WXThickness* compactRootMargin;
@@ -724,7 +724,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPCommandBarTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) double contentHeight;
 @property (readonly) double negativeOverflowContentHeight;
@@ -745,7 +745,7 @@ WINRT_EXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject* originalSource;
 @end
@@ -759,7 +759,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPDragCompletedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL canceled;
 @property (readonly) double horizontalChange;
@@ -775,7 +775,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPDragDeltaEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) double horizontalChange;
 @property (readonly) double verticalChange;
@@ -790,7 +790,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPDragStartedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) double horizontalOffset;
 @property (readonly) double verticalOffset;
@@ -805,7 +805,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPRangeBaseValueChangedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) double newValue;
 @property (readonly) double oldValue;
@@ -821,7 +821,7 @@ WINRT_EXPORT
 @interface WUXCPScrollEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) double newValue;
 @property (readonly) WUXCPScrollEventType scrollEventType;
@@ -872,7 +872,7 @@ WINRT_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL isRightTapEnabled;
 @property (retain) WUXMProjection* projection;
@@ -1023,7 +1023,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXFrameworkElement : WXUIElement
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WXThickness* margin;
 @property (retain) NSString* language;
@@ -1096,7 +1096,7 @@ WINRT_EXPORT
 @interface WUXCPPopup : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double verticalOffset;
 @property BOOL isOpen;
@@ -1126,7 +1126,7 @@ WINRT_EXPORT
 @interface WUXCPTickBar : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMBrush* fill;
 + (WXDependencyProperty*)fillProperty;
@@ -1153,7 +1153,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXCPanel : WXFrameworkElement
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMATransitionCollection* childrenTransitions;
 @property (retain) WUXMBrush* background;
@@ -1173,7 +1173,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXCVirtualizingPanel : WXCPanel
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WXCItemContainerGenerator* itemContainerGenerator;
 - (void)onItemsChanged:(RTObject*)sender args:(WUXCPItemsChangedEventArgs*)args;
@@ -1194,7 +1194,7 @@ WINRT_EXPORT
 @interface WUXCPCarouselPanel : WXCVirtualizingPanel <WUXCPIScrollSnapPointsInfo>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) RTObject* scrollOwner;
 @property BOOL canVerticallyScroll;
@@ -1239,7 +1239,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPOrientedVirtualizingPanel : WXCVirtualizingPanel <WUXCPIScrollSnapPointsInfo>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) RTObject* scrollOwner;
 @property BOOL canVerticallyScroll;
@@ -1285,7 +1285,7 @@ WINRT_EXPORT
 @interface WUXCPCalendarPanel : WXCPanel
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -1311,7 +1311,7 @@ WINRT_EXPORT
 @interface WXCContentPresenter : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMFontFamily* fontFamily;
 @property (retain) WUXMATransitionCollection* contentTransitions;
@@ -1378,7 +1378,7 @@ WINRT_EXPORT
 @interface WUXCPGridViewItemPresenter : WXCContentPresenter
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMBrush* dragBackground;
 @property double disabledOpacity;
@@ -1436,7 +1436,7 @@ WINRT_EXPORT
 @interface WUXCPListViewItemPresenter : WXCContentPresenter
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMBrush* checkBrush;
 @property (retain) WUXMBrush* dragForeground;
@@ -1554,7 +1554,7 @@ WINRT_EXPORT
 + (BOOL)getIsTemplateFocusTarget:(WXFrameworkElement*)element;
 + (void)setIsTemplateFocusTarget:(WXFrameworkElement*)element value:(BOOL)value;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUTFontWeight* fontWeight;
 @property WUTFontStyle fontStyle;
@@ -1643,7 +1643,7 @@ WINRT_EXPORT
 @interface WXCContentControl : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMATransitionCollection* contentTransitions;
 @property (retain) WXCDataTemplateSelector* contentTemplateSelector;
@@ -1669,7 +1669,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPSelectorItem : WXCContentControl
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL isSelected;
 + (WXDependencyProperty*)isSelectedProperty;
@@ -1684,7 +1684,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPRangeBase : WXCControl
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double value;
 @property double smallChange;
@@ -1713,7 +1713,7 @@ WINRT_EXPORT
 @interface WUXCPThumb : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isDragging;
 + (WXDependencyProperty*)isDraggingProperty;
@@ -1735,7 +1735,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPButtonBase : WXCContentControl
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) RTObject* commandParameter;
 @property (retain) RTObject<WUXIICommand>* command;
@@ -1761,7 +1761,7 @@ WINRT_EXPORT
 @interface WUXCPScrollBar : WUXCPRangeBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double viewportSize;
 @property WXCOrientation orientation;
@@ -1820,7 +1820,7 @@ WINRT_EXPORT
 + (WXCItemsControl*)itemsControlFromItemContainer:(WXDependencyObject*)container;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WXCItemsPanelTemplate* itemsPanel;
 @property (retain) RTObject* itemsSource;
@@ -1876,7 +1876,7 @@ WINRT_EXPORT
 @interface WUXCPSelector : WXCItemsControl
 + (BOOL)getIsSelectionActive:(WXDependencyObject*)element;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* selectedValuePath;
 @property (retain) RTObject* selectedValue;
@@ -1902,7 +1902,7 @@ WINRT_EXPORT
 @interface WUXCPRepeatButton : WUXCPButtonBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property int interval;
 @property int delay;
@@ -1920,7 +1920,7 @@ WINRT_EXPORT
 @interface WUXCPToggleButton : WUXCPButtonBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL isThreeState;
 @property (retain) id /* BOOL */ isChecked;
@@ -1956,7 +1956,7 @@ WINRT_EXPORT
 @interface WUXCPJumpListItemBackgroundConverter : WXDependencyObject <WUXDIValueConverter>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMBrush* enabled;
 @property (retain) WUXMBrush* disabled;
@@ -1976,7 +1976,7 @@ WINRT_EXPORT
 @interface WUXCPJumpListItemForegroundConverter : WXDependencyObject <WUXDIValueConverter>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMBrush* enabled;
 @property (retain) WUXMBrush* disabled;
@@ -1997,7 +1997,7 @@ WINRT_EXPORT
 + (NSString*)getTitle:(WXDependencyObject*)element;
 + (void)setTitle:(WXDependencyObject*)element value:(NSString*)value;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 + (WXDependencyProperty*)titleProperty;
 - (void)onConfirmed;
@@ -2013,7 +2013,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPLoopingSelector : WXCControl
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL shouldLoop;
 @property (retain) RTObject* selectedItem;
@@ -2043,7 +2043,7 @@ WINRT_EXPORT
 @interface WUXCPPivotPanel : WXCPanel <WUXCPIScrollSnapPointsInfo>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL areHorizontalSnapPointsRegular;
 @property (readonly) BOOL areVerticalSnapPointsRegular;
@@ -2064,7 +2064,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPLoopingSelectorItem : WXCContentControl
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -2084,7 +2084,7 @@ WINRT_EXPORT
 + (void)setZIndex:(WXUIElement*)element value:(int)value;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 + (WXDependencyProperty*)leftProperty;
 + (WXDependencyProperty*)topProperty;
@@ -2100,7 +2100,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPLoopingSelectorPanel : WXCCanvas <WUXCPIScrollSnapPointsInfo>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL areHorizontalSnapPointsRegular;
 @property (readonly) BOOL areVerticalSnapPointsRegular;
@@ -2122,7 +2122,7 @@ WINRT_EXPORT
 @interface WUXCPPivotHeaderItem : WXCContentControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -2136,7 +2136,7 @@ WINRT_EXPORT
 @interface WUXCPPivotHeaderPanel : WXCCanvas
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 

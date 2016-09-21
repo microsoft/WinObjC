@@ -78,7 +78,7 @@ typedef unsigned WMDDialDeviceDisplayStatus;
 WINRT_EXPORT
 @interface WMDDialAppStateDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* fullXml;
 @property (readonly) WMDDialAppState state;
@@ -93,7 +93,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDDialApp : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* appName;
 - (void)requestLaunchAsync:(NSString*)appArgument success:(void (^)(WMDDialAppLaunchResult))success failure:(void (^)(NSError*))failure;
@@ -113,7 +113,7 @@ WINRT_EXPORT
 + (void)fromIdAsync:(NSString*)value success:(void (^)(WMDDialDevice*))success failure:(void (^)(NSError*))failure;
 + (void)deviceInfoSupportsDialAsync:(WDEDeviceInformation*)device success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* id;
 - (WMDDialApp*)getDialApp:(NSString*)appName;
@@ -128,7 +128,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDDialDeviceSelectedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMDDialDevice* selectedDialDevice;
 @end
@@ -142,7 +142,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDDialDisconnectButtonClickedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMDDialDevice* device;
 @end
@@ -156,7 +156,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDDialDevicePickerFilter : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSMutableArray* /* NSString * */ supportedAppNames;
 @end
@@ -171,7 +171,7 @@ WINRT_EXPORT
 @interface WMDDialDevicePicker : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDevicePickerAppearance* appearance;
 @property (readonly) WMDDialDevicePickerFilter* filter;

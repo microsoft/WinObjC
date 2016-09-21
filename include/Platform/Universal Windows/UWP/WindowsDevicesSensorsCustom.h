@@ -38,7 +38,7 @@ WINRT_EXPORT
 + (NSString*)getDeviceSelector:(WFGUID*)interfaceId;
 + (void)fromIdAsync:(NSString*)sensorId success:(void (^)(WDSCCustomSensor*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int reportInterval;
 @property (readonly) NSString* deviceId;
@@ -57,7 +57,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDSCCustomSensorReading : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) WFDateTime* timestamp;
@@ -72,7 +72,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDSCCustomSensorReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDSCCustomSensorReading* reading;
 @end

@@ -62,7 +62,7 @@ typedef unsigned WAUUserDataAccountContentKinds;
 WINRT_EXPORT
 @interface WAUUserDataAccount : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* userDisplayName;
 @property WAUUserDataAccountOtherAppReadAccess otherAppReadAccess;
@@ -89,7 +89,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAUUserDataAccountStore : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)findAccountsAsyncWithSuccess:(void (^)(NSArray* /* WAUUserDataAccount* */))success failure:(void (^)(NSError*))failure;
 - (void)getAccountAsync:(NSString*)id success:(void (^)(WAUUserDataAccount*))success failure:(void (^)(NSError*))failure;

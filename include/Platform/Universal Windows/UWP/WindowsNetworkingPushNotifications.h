@@ -47,7 +47,7 @@ typedef unsigned WNPPushNotificationType;
 WINRT_EXPORT
 @interface WNPPushNotificationChannel : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* expirationTime;
 @property (readonly) NSString* uri;
@@ -66,7 +66,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNPPushNotificationReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL cancel;
 @property (readonly) WUNBadgeNotification* badgeNotification;
@@ -85,7 +85,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNPRawNotification : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* content;
 @end

@@ -155,7 +155,7 @@ WINRT_EXPORT
 + (BOOL)tryUnsnapToFullscreen;
 + (int)getApplicationViewIdForWindow:(RTObject<WUCICoreWindow>*)window;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL isScreenCaptureEnabled;
 @property (retain) NSString* title;
@@ -199,7 +199,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUVApplicationViewConsolidatedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isUserInitiated;
 @end
@@ -213,7 +213,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUVApplicationViewTitleBar : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) id /* WUColor* */ buttonInactiveBackgroundColor;
 @property (retain) id /* WUColor* */ buttonHoverForegroundColor;
@@ -271,7 +271,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUVActivationViewSwitcher : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (RTObject<WFIAsyncAction>*)showAsStandaloneAsync:(int)viewId;
 - (RTObject<WFIAsyncAction>*)showAsStandaloneWithSizePreferenceAsync:(int)viewId sizePreference:(WUVViewSizePreference)sizePreference;
@@ -287,7 +287,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUVInputPaneVisibilityEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL ensuredFocusedElementInView;
 @property (readonly) WFRect* occludedRect;
@@ -303,7 +303,7 @@ WINRT_EXPORT
 @interface WUVInputPane : RTObject
 + (WUVInputPane*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFRect* occludedRect;
 @property BOOL visible;
@@ -356,7 +356,7 @@ WINRT_EXPORT
 @interface WUVUIViewSettings : RTObject
 + (WUVUIViewSettings*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUVUserInteractionMode userInteractionMode;
 @end
@@ -371,7 +371,7 @@ WINRT_EXPORT
 @interface WUVAccessibilitySettings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL highContrast;
 @property (readonly) NSString* highContrastScheme;
@@ -389,7 +389,7 @@ WINRT_EXPORT
 @interface WUVUISettings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL animationsEnabled;
 @property (readonly) unsigned int caretBlinkRate;

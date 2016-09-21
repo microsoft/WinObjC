@@ -124,7 +124,7 @@ WINRT_EXPORT
                                              altitudeReferenceSystem:(WDGAltitudeReferenceSystem)altitudeReferenceSystem
                                                   spatialReferenceId:(unsigned int)spatialReferenceId ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDGBasicGeoposition* position;
 @property (readonly) WDGAltitudeReferenceSystem altitudeReferenceSystem;
@@ -147,7 +147,7 @@ WINRT_EXPORT
                                     altitudeReferenceSystem:(WDGAltitudeReferenceSystem)altitudeReferenceSystem
                                          spatialReferenceId:(unsigned int)spatialReferenceId ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WDGBasicGeoposition* */ positions;
 @property (readonly) WDGAltitudeReferenceSystem altitudeReferenceSystem;
@@ -178,7 +178,7 @@ WINRT_EXPORT
                                            altitudeReferenceSystem:(WDGAltitudeReferenceSystem)altitudeReferenceSystem
                                                 spatialReferenceId:(unsigned int)spatialReferenceId ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDGBasicGeoposition* center;
 @property (readonly) double maxAltitude;
@@ -199,7 +199,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDGGeocoordinateSatelliteData : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) id /* double */ horizontalDilutionOfPrecision;
 @property (readonly) id /* double */ positionDilutionOfPrecision;
@@ -215,7 +215,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDGVenueData : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* id;
 @property (readonly) NSString* level;
@@ -230,7 +230,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDGGeocoordinate : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) double accuracy;
 @property (readonly) id /* double */ altitude;
@@ -255,7 +255,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDGCivicAddress : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* city;
 @property (readonly) NSString* country;
@@ -273,7 +273,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDGGeoposition : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDGCivicAddress* civicAddress;
 @property (readonly) WDGGeocoordinate* coordinate;
@@ -289,7 +289,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDGPositionChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDGGeoposition* position;
 @end
@@ -303,7 +303,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDGStatusChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDGPositionStatus status;
 @end
@@ -326,7 +326,7 @@ WINRT_EXPORT
                                        failure:(void (^)(NSError*))failure;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int reportInterval;
 @property double movementThreshold;
@@ -361,7 +361,7 @@ WINRT_EXPORT
                                               altitudeReferenceSystem:(WDGAltitudeReferenceSystem)altitudeReferenceSystem
                                                    spatialReferenceId:(unsigned int)spatialReferenceId ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDGBasicGeoposition* center;
 @property (readonly) double radius;

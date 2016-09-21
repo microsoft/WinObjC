@@ -46,7 +46,7 @@ typedef unsigned WAWSWalletItemAppAssociation;
 WINRT_EXPORT
 @interface WAWSWalletItemSystemStore : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (EventRegistrationToken)addItemsChangedEvent:(void (^)(WAWSWalletItemSystemStore*, RTObject*))del;
 - (void)removeItemsChangedEvent:(EventRegistrationToken)tok;

@@ -39,7 +39,7 @@ WINRT_EXPORT
 @interface WUIICCoreInkIndependentInputSource : RTObject
 + (WUIICCoreInkIndependentInputSource*)create:(WUIIInkPresenter*)inkPresenter;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUIIInkPresenter* inkPresenter;
 - (EventRegistrationToken)addPointerEnteringEvent:(void (^)(WUIICCoreInkIndependentInputSource*, WUCPointerEventArgs*))del;

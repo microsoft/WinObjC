@@ -161,7 +161,7 @@ WINRT_EXPORT
 @interface WGNSignificantDigitsNumberRounder : RTObject <WGNINumberRounder>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int significantDigits;
 @property WGNRoundingAlgorithm roundingAlgorithm;
@@ -183,7 +183,7 @@ WINRT_EXPORT
 @interface WGNIncrementNumberRounder : RTObject <WGNINumberRounder>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WGNRoundingAlgorithm roundingAlgorithm;
 @property double increment;
@@ -213,7 +213,7 @@ WINRT_EXPORT
 + (WGNDecimalFormatter*)makeDecimalFormatter:(id<NSFastEnumeration> /* NSString * */)languages
                             geographicRegion:(NSString*)geographicRegion ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL isDecimalPointAlwaysDisplayed;
 @property int integerDigits;
@@ -253,7 +253,7 @@ WINRT_EXPORT
                             geographicRegion:(NSString*)geographicRegion ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL isDecimalPointAlwaysDisplayed;
 @property int integerDigits;
@@ -293,7 +293,7 @@ WINRT_EXPORT
                               geographicRegion:(NSString*)geographicRegion ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL isDecimalPointAlwaysDisplayed;
 @property int integerDigits;
@@ -334,7 +334,7 @@ WINRT_EXPORT
                                                 languages:(id<NSFastEnumeration> /* NSString * */)languages
                                          geographicRegion:(NSString*)geographicRegion ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* currency;
 @property WGNCurrencyFormatterMode mode;
@@ -370,7 +370,7 @@ WINRT_EXPORT
 + (WGNNumeralSystemTranslator*)make:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* numeralSystem;
 @property (readonly) NSArray* /* NSString * */ languages;

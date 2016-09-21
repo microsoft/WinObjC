@@ -145,7 +145,7 @@ WINRT_EXPORT
 + (WMPPlaybackMediaMarker*)makeFromTime:(WFTimeSpan*)value ACTIVATOR;
 + (WMPPlaybackMediaMarker*)make:(WFTimeSpan*)value mediaMarketType:(NSString*)mediaMarketType text:(NSString*)text ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* mediaMarkerType;
 @property (readonly) NSString* text;
@@ -161,7 +161,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPlaybackMediaMarkerSequence : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (void)insert:(WMPPlaybackMediaMarker*)value;
@@ -177,7 +177,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPMediaPlayerFailedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPMediaPlayerError error;
 @property (readonly) NSString* errorMessage;
@@ -193,7 +193,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPMediaPlayerRateChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) double newRate;
 @end
@@ -207,7 +207,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPlaybackMediaMarkerReachedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPPlaybackMediaMarker* playbackMediaMarker;
 @end
@@ -221,7 +221,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPMediaPlayerDataReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFCValueSet* data;
 @end
@@ -235,7 +235,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPMediaPlayer : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double volume;
 @property (retain) WFTimeSpan* position;
@@ -312,7 +312,7 @@ WINRT_EXPORT
 @interface WMPMediaPlaybackItem : RTObject <WMPIMediaPlaybackSource>
 + (WMPMediaPlaybackItem*)make:(WMCMediaSource*)source ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPMediaPlaybackAudioTrackList* audioTracks;
 @property (readonly) WMCMediaSource* source;
@@ -347,7 +347,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPMediaPlaybackAudioTrackList : RTObject <WMCISingleSelectMediaTrackList>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 @property int selectedIndex;
@@ -368,7 +368,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPMediaPlaybackVideoTrackList : RTObject <WMCISingleSelectMediaTrackList>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 @property int selectedIndex;
@@ -389,7 +389,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPMediaPlaybackTimedMetadataTrackList : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (EventRegistrationToken)addPresentationModeChangedEvent:(void (^)(WMPMediaPlaybackTimedMetadataTrackList*,
@@ -412,7 +412,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPMediaPlaybackItemError : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPMediaPlaybackItemErrorCode errorCode;
 @property (readonly) HRESULT extendedError;
@@ -428,7 +428,7 @@ WINRT_EXPORT
 @interface WMPMediaPlaybackList : RTObject <WMPIMediaPlaybackSource>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL shuffleEnabled;
 @property BOOL autoRepeatEnabled;
@@ -455,7 +455,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPMediaPlaybackItemFailedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPMediaPlaybackItemError* error;
 @property (readonly) WMPMediaPlaybackItem* item;
@@ -470,7 +470,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPCurrentMediaPlaybackItemChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPMediaPlaybackItem* newItem;
 @property (readonly) WMPMediaPlaybackItem* oldItem;
@@ -485,7 +485,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPMediaPlaybackItemOpenedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPMediaPlaybackItem* item;
 @end
@@ -499,7 +499,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPTimedMetadataPresentationModeChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPTimedMetadataTrackPresentationMode newPresentationMode;
 @property (readonly) WMPTimedMetadataTrackPresentationMode oldPresentationMode;

@@ -155,7 +155,7 @@ WINRT_EXPORT
                 success:(void (^)(WMIPhotoImportSource*))success
                 failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) id /* unsigned int */ batteryLevelPercent;
 @property (readonly) NSString* connectionProtocol;
@@ -185,7 +185,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMIPhotoImportOperation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 // Failed to generate property ContinueDeletingImportedItemsFromSourceAsync (Cannot marshal
 // Windows.Foundation.IAsyncOperationWithProgress`2<Windows.Media.Import.PhotoImportDeleteImportedItemsFromSourceResult,Double>)
@@ -229,7 +229,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMIPhotoImportSession : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WMIPhotoImportSubfolderCreationMode subfolderCreationMode;
 @property (retain) RTObject<WSIStorageFolder>* destinationFolder;
@@ -254,7 +254,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMIPhotoImportFindItemsResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WMIPhotoImportItem* */ foundItems;
 @property (readonly) BOOL hasSucceeded;
@@ -302,7 +302,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMIPhotoImportImportItemsResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL hasSucceeded;
 @property (readonly) NSArray* /* WMIPhotoImportItem* */ importedItems;
@@ -331,7 +331,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMIPhotoImportDeleteImportedItemsFromSourceResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WMIPhotoImportItem* */ deletedItems;
 @property (readonly) BOOL hasSucceeded;
@@ -357,7 +357,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMIPhotoImportStorageMedium : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint64_t availableSpaceInBytes;
 @property (readonly) uint64_t capacityInBytes;
@@ -378,7 +378,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMIPhotoImportSidecar : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* date;
 @property (readonly) NSString* name;
@@ -394,7 +394,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMIPhotoImportVideoSegment : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* date;
 @property (readonly) NSString* name;
@@ -412,7 +412,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMIPhotoImportItem : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL isSelected;
 @property (readonly) WMIPhotoImportContentType contentType;
@@ -437,7 +437,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMIPhotoImportSelectionChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isSelectionEmpty;
 @end
@@ -451,7 +451,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMIPhotoImportItemImportedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMIPhotoImportItem* importedItem;
 @end

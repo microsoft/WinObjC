@@ -80,7 +80,7 @@ typedef void (^WSLicenseChangedEventHandler)();
 WINRT_EXPORT
 @interface WSLicenseInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* expirationDate;
 @property (readonly) BOOL isActive;
@@ -99,7 +99,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSListingInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int ageRating;
 @property (readonly) NSString* currentMarket;
@@ -118,7 +118,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSPurchaseResults : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* offerId;
 @property (readonly) NSString* receiptXml;
@@ -137,7 +137,7 @@ WINRT_EXPORT
 + (WSProductPurchaseDisplayProperties*)makeProductPurchaseDisplayProperties:(NSString*)name ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* name;
 @property (retain) WFUri* image;
@@ -153,7 +153,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSUnfulfilledConsumable : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* offerId;
 @property (readonly) NSString* productId;
@@ -169,7 +169,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSProductLicense : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* expirationDate;
 @property (readonly) BOOL isActive;
@@ -186,7 +186,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSProductListing : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* formattedPrice;
 @property (readonly) NSString* name;

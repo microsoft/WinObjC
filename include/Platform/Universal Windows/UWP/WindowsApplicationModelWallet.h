@@ -101,7 +101,7 @@ WINRT_EXPORT
 + (WAWWalletBarcode*)makeWalletBarcode:(WAWWalletBarcodeSymbology)symbology value:(NSString*)value ACTIVATOR;
 + (WAWWalletBarcode*)makeCustomWalletBarcode:(RTObject<WSSIRandomAccessStreamReference>*)streamToBarcodeImage ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAWWalletBarcodeSymbology symbology;
 @property (readonly) NSString* value;
@@ -118,7 +118,7 @@ WINRT_EXPORT
 @interface WAWWalletTransaction : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) id /* WFDateTime* */ transactionDate;
 @property BOOL isLaunchable;
@@ -138,7 +138,7 @@ WINRT_EXPORT
 @interface WAWWalletRelevantLocation : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WDGBasicGeoposition* position;
 @property (retain) NSString* displayMessage;
@@ -154,7 +154,7 @@ WINRT_EXPORT
 @interface WAWWalletItemCustomProperty : RTObject
 + (WAWWalletItemCustomProperty*)makeWalletItemCustomProperty:(NSString*)name value:(NSString*)value ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* value;
 @property WAWWalletSummaryViewPosition summaryViewPosition;
@@ -173,7 +173,7 @@ WINRT_EXPORT
 @interface WAWWalletVerb : RTObject
 + (WAWWalletVerb*)makeWalletVerb:(NSString*)name ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* name;
 @end
@@ -188,7 +188,7 @@ WINRT_EXPORT
 @interface WAWWalletItem : RTObject
 + (WAWWalletItem*)makeWalletItem:(WAWWalletItemKind)kind displayName:(NSString*)displayName ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* displayName;
 @property (retain) NSString* displayMessage;
@@ -230,7 +230,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAWWalletItemStore : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (RTObject<WFIAsyncAction>*)addAsync:(NSString*)id item:(WAWWalletItem*)item;
 - (RTObject<WFIAsyncAction>*)clearAsync;

@@ -138,7 +138,7 @@ typedef unsigned WUCCompositionStretch;
 WINRT_EXPORT
 @interface WUCCompositionObject : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUCCompositor* compositor;
 @property (readonly) WUCCoreDispatcher* dispatcher;
@@ -157,7 +157,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCCompositionEffect : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (RTObject<WUCICompositionSurface>*)getSourceParameter:(NSString*)name;
 - (void)setSourceParameter:(NSString*)name source:(RTObject<WUCICompositionSurface>*)source;
@@ -172,7 +172,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCCompositionEffectFactoryLoadResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) HRESULT extendedError;
 @property (readonly) WUCCompositionEffectFactoryLoadStatus status;
@@ -197,7 +197,7 @@ WINRT_EXPORT
 @interface WUCCompositionEffectSourceParameter : RTObject <WGEIGraphicsEffectSource>
 + (WUCCompositionEffectSourceParameter*)make:(NSString*)name ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* name;
 @end
@@ -212,7 +212,7 @@ WINRT_EXPORT
 @interface WUCCompositionImageOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property int decodeWidth;
 @property int decodeHeight;
@@ -227,7 +227,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCCompositionImage : WUCCompositionObject <WUCICompositionSurface>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFSize* size;
 - (void)completeLoadAsyncWithSuccess:(void (^)(WUCCompositionImageLoadResult*))success
@@ -244,7 +244,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCCompositionImageLoadResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) HRESULT extendedError;
 @property (readonly) WUCCompositionImageLoadStatus status;
@@ -260,7 +260,7 @@ WINRT_EXPORT
 @interface WUCCompositor : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUCCompositionGraphicsDevice* defaultGraphicsDevice;
 - (WUCContainerVisual*)createContainerVisual;
@@ -297,7 +297,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCCompositionAnimation : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)clearAllParameters;
 - (void)clearParameter:(NSString*)key;
@@ -319,7 +319,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCCompositionPropertyAnimator : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (EventRegistrationToken)addAnimationEndedEvent:(void (^)(WUCCompositionPropertyAnimator*, WUCAnimationEndedEventArgs*))del;
 - (void)removeAnimationEndedEvent:(EventRegistrationToken)tok;
@@ -337,7 +337,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCAnimationEndedEventArgs : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUCAnimationEndReason actualEndReason;
 @end
@@ -351,7 +351,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCCompositionPropertySet : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)insertMatrix3x2:(NSString*)propertyName value:(WFNMatrix3x2*)value;
 - (void)insertMatrix4x4:(NSString*)propertyName value:(WFNMatrix4x4*)value;
@@ -376,7 +376,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCCompositionGraphicsDevice : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (WUCCompositionImage*)createImageFromUri:(WFUri*)uri;
 - (WUCCompositionImage*)createImageFromUriWithOptions:(WFUri*)uri options:(WUCCompositionImageOptions*)options;
@@ -391,7 +391,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCCompositionEffectFactory : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (WUCCompositionEffect*)createEffect;
 - (void)completeLoadAsyncWithSuccess:(void (^)(WUCCompositionEffectFactoryLoadResult*))success failure:(void (^)(NSError*))failure;
@@ -406,7 +406,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCCompositionTarget : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUCVisual* root;
 @end
@@ -420,7 +420,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCExpressionAnimation : WUCCompositionAnimation
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* expression;
 @end
@@ -434,7 +434,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCCompositionEasingFunction : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -447,7 +447,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCCubicBezierEasingFunction : WUCCompositionEasingFunction
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFNVector2* controlPoint1;
 @property (readonly) WFNVector2* controlPoint2;
@@ -462,7 +462,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCLinearEasingFunction : WUCCompositionEasingFunction
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -475,7 +475,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCVisual : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFNQuaternion* orientation;
 @property float opacity;
@@ -499,7 +499,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCContainerVisual : WUCVisual
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUCVisualCollection* children;
 @end
@@ -513,7 +513,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCEffectVisual : WUCContainerVisual
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUCCompositionEffect* effect;
 @end
@@ -527,7 +527,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCImageVisual : WUCContainerVisual
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property float verticalAlignmentRatio;
 @property WUCCompositionStretch stretch;
@@ -544,7 +544,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCSolidColorVisual : WUCContainerVisual
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUColor* color;
 @end
@@ -558,7 +558,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCCompositionClip : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -571,7 +571,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCInsetClip : WUCCompositionClip
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property float topInset;
 @property float rightInset;
@@ -588,7 +588,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCVisualCollection : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) int count;
 - (void)insertAbove:(WUCVisual*)newChild sibling:(WUCVisual*)sibling;
@@ -608,7 +608,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCKeyFrameAnimation : WUCCompositionAnimation
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUCAnimationStopBehavior stopBehavior;
 @property int iterationCount;
@@ -631,7 +631,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCScalarKeyFrameAnimation : WUCKeyFrameAnimation
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)insertKeyFrame:(float)normalizedProgressKey value:(float)value;
 - (void)insertKeyFrameWithEasingFunction:(float)normalizedProgressKey
@@ -648,7 +648,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCVector2KeyFrameAnimation : WUCKeyFrameAnimation
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)insertKeyFrame:(float)normalizedProgressKey value:(WFNVector2*)value;
 - (void)insertKeyFrameWithEasingFunction:(float)normalizedProgressKey
@@ -665,7 +665,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCVector3KeyFrameAnimation : WUCKeyFrameAnimation
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)insertKeyFrame:(float)normalizedProgressKey value:(WFNVector3*)value;
 - (void)insertKeyFrameWithEasingFunction:(float)normalizedProgressKey
@@ -682,7 +682,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCVector4KeyFrameAnimation : WUCKeyFrameAnimation
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)insertKeyFrame:(float)normalizedProgressKey value:(WFNVector4*)value;
 - (void)insertKeyFrameWithEasingFunction:(float)normalizedProgressKey
