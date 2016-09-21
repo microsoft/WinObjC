@@ -36,7 +36,6 @@
     CGContextScaleCTM(context, 1.0f, -1.0f);
     CGContextSetTextPosition(context, 0.0, 10.0);
     CTLineDraw(_lineRef, context);
-    CFRelease(_lineRef);
 }
 
 @end

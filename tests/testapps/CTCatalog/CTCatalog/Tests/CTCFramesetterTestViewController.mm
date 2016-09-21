@@ -89,7 +89,6 @@
     CGPathRelease(path);
     CGColorSpaceRelease(colorspace);
 
-    CFRetain(framesetter);
     [_drawDelegate refreshValuesForFramesetter:framesetter];
 }
 
@@ -217,7 +216,6 @@
         [[_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"] stringByReplacingOccurrencesOfString:@"\\t"
                                                                                                                   withString:@"\t"];
     [self.view addSubview:_suggestedFrameSizeView];
-    CFRelease(framesetter);
 }
 
 // Table View Methods

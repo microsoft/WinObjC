@@ -105,7 +105,6 @@
 
         CGContextSetTextPosition(context, 0.0, 10.0);
 
-        CFRetain(line);
         CTLineDraw(line, context);
 
         // Creates outline
@@ -250,7 +249,6 @@
     ADD_UNIMPLEMENTED(_functionCells, @"CTLineGetTrailingWhitespaceWidth");
     ADD_UNIMPLEMENTED(_functionCells, @"CTLineGetTypeID");
     [_linesView reloadData];
-    CFRelease(line);
 }
 
 // Text Field Methods

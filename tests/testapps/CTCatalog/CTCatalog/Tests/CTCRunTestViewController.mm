@@ -95,7 +95,6 @@
 
     CGColorSpaceRelease(colorspace);
 
-    CFRetain(run);
     [_drawDelegate refreshValuesForRun:run];
 }
 
@@ -217,7 +216,6 @@
     ADD_UNIMPLEMENTED(_testCells, @"CTRunGetTypeID");
 
     [_testsView reloadData];
-    CFRelease(run);
 }
 
 // Text Field Methods
