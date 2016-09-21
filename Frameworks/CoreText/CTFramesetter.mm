@@ -45,7 +45,7 @@ static _CTFrame* _createFrame(_CTFramesetter* framesetter, CGRect frameSize, CGS
     NSArray<_CTLine*>* lines = _DWriteGetLines(typesetter, range, frameSize);
     if (createFrame) {
         ret->_lines = lines;
-        for (_CTLine* line in [ret->_lines objectEnumerator]) {
+        for (_CTLine* line in static_cast<id<NSFastEnumeration>>(ret->_lines)) {
             ret->_lineOrigins.emplace_back(line->_lineOrigin);
         }
     }

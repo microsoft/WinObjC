@@ -230,7 +230,7 @@ void _CTLineDraw(CTLineRef lineRef, CGContextRef ctx, bool adjustTextPosition) {
         CGContextSetTextPosition(ctx, curTextPos.x + line->_relativeXOffset, curTextPos.y + line->_relativeYOffset);
     }
 
-    for (_CTRun* curRun in [line->_runs objectEnumerator]) {
+    for (_CTRun* curRun in static_cast<id<NSFastEnumeration>>(line->_runs)) {
         CFRange range = { 0 };
         _CTRunDraw(static_cast<CTRunRef>(curRun), ctx, range, false);
     }
@@ -326,7 +326,7 @@ CFIndex CTLineGetStringIndexForPosition(CTLineRef lineRef, CGPoint position) {
 
     CGFloat currPos = 0;
 
-    for (_CTRun* run in [line->_runs objectEnumerator]) {
+    for (_CTRun* run in static_cast<id<NSFastEnumeration>>(line->_runs)) {
         for (int i = 0; i < run->_dwriteGlyphRun.glyphCount; i++) {
             currPos += run->_dwriteGlyphRun.glyphAdvances[i];
             if (currPos >= position.x) {
@@ -352,7 +352,7 @@ CGFloat CTLineGetOffsetForStringIndex(CTLineRef lineRef, CFIndex charIndex, CGFl
         if (charIndex > line->_strRange.location + line->_strRange.length) {
             ret = line->_width;
         } else {
-            for (_CTRun* run in [line->_runs objectEnumerator]) {
+            for (_CTRun* run in static_cast<id<NSFastEnumeration>>(line->_runs)) {
                 if (run->_range.location + run->_range.length >= charIndex && run->_stringIndices.size() > 0) {
                     int index = std::upper_bound(run->_stringIndices.begin(), run->_stringIndices.end(), charIndex) -
                                 run->_stringIndices.begin() - 1;

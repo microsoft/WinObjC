@@ -41,7 +41,7 @@ CFRange CTFrameGetStringRange(CTFrameRef frame) {
     _CTFrame* framePtr = static_cast<_CTFrame*>(frame);
     CFIndex count = 0;
     if (framePtr) {
-        for (_CTLine* line in [framePtr->_lines objectEnumerator]) {
+        for (_CTLine* line in static_cast<id<NSFastEnumeration>>(framePtr->_lines)) {
             count += line->_strRange.length;
         }
     }
@@ -56,7 +56,7 @@ CFRange CTFrameGetVisibleStringRange(CTFrameRef frame) {
     _CTFrame* framePtr = static_cast<_CTFrame*>(frame);
     CFIndex count = 0;
     if (framePtr) {
-        for (_CTLine* line in [framePtr->_lines objectEnumerator]) {
+        for (_CTLine* line in static_cast<id<NSFastEnumeration>>(framePtr->_lines)) {
             if (line->_lineOrigin.y < framePtr->_frameRect.size.height && line->_lineOrigin.y > 0) {
                 count += line->_strRange.length;
             }
@@ -108,7 +108,7 @@ void CTFrameDraw(CTFrameRef frame, CGContextRef ctx) {
     CGPoint curTextPos = CGContextGetTextPosition(ctx);
     if (frame && ctx) {
         CGPoint curTextPos = CGContextGetTextPosition(ctx);
-        for (_CTLine* line in [static_cast<_CTFrame*>(frame)->_lines objectEnumerator]) {
+        for (_CTLine* line in static_cast<id<NSFastEnumeration>>(static_cast<_CTFrame*>(frame)->_lines)) {
             CGPoint newPos = curTextPos + line->_lineOrigin;
             CGContextSetTextPosition(ctx, newPos.x, newPos.y);
             _CTLineDraw(static_cast<CTLineRef>(line), ctx, false);
