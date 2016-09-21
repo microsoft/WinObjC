@@ -31,8 +31,7 @@ static NSAttributedString* getMultilineAttributedString() {
     return string;
 }
 
-// TODO: #998 Reenable this test
-DISABLED_TEST(CTTypeSetter, SuggestLineBreak) {
+TEST(CTTypeSetter, SuggestLineBreak) {
     const double errorDelta = 1;
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getMultilineAttributedString();
     CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(string);
@@ -42,7 +41,7 @@ DISABLED_TEST(CTTypeSetter, SuggestLineBreak) {
     index = CTTypesetterSuggestLineBreak(ts, 0, 100.0f);
     EXPECT_EQ_MSG(7, index, "SuggestLineBreak should end line when hard line break is hit");
 
-    index = CTTypesetterSuggestLineBreak(ts, 7, 250.0f);
+    index = CTTypesetterSuggestLineBreak(ts, 7, 275.0f);
     EXPECT_EQ_MSG(13,
                   index,
                   "SuggestLineBreak should end line at space when soft line break is possible and the text is longer than the width");
@@ -50,20 +49,18 @@ DISABLED_TEST(CTTypeSetter, SuggestLineBreak) {
     CFRelease(ts);
 }
 
-// TODO: #998 Reenable this test
-DISABLED_TEST(CTTypeSetter, CreateLineShouldTrimWhitespace) {
+TEST(CTTypeSetter, CreateLineShouldTrimHardLineBreak) {
     const double errorDelta = 1;
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getMultilineAttributedString();
     CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(string);
     CFRange range = { 0, 7 };
     CTLineRef line = CTTypesetterCreateLine(ts, range);
-    ASSERT_EQ_MSG(5, CTLineGetGlyphCount(line), "CreateLine should trim whitespace from the end of the line");
+    ASSERT_EQ_MSG(6, CTLineGetGlyphCount(line), "CreateLine should trim hard line break from the end of the line");
     CFRelease(ts);
     CFRelease(line);
 }
 
-// TODO: #998 Reenable this test
-DISABLED_TEST(CTTypeSetter, LinesShouldDefaultToZeroOffset) {
+TEST(CTTypeSetter, LinesShouldDefaultToZeroOffset) {
     const double errorDelta = 1;
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getMultilineAttributedString();
     CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(string);
@@ -77,6 +74,9 @@ DISABLED_TEST(CTTypeSetter, LinesShouldDefaultToZeroOffset) {
     CTLineRef lineWithOffset = CTTypesetterCreateLineWithOffset(ts, range, 0.0f);
     EXPECT_EQ(CTLineGetGlyphCount(lineWithOffset), CTLineGetGlyphCount(line));
 
+    // TODO::
+    // Re-enable this code once CTLineGetTypographicBounds is supported #1019
+    /*
     CGFloat ascent, descent, leading, ascentWithOffset, descentWithOffset, leadingWithOffset;
     double width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
     double widthWithOffset = CTLineGetTypographicBounds(line, &ascentWithOffset, &descentWithOffset, &leadingWithOffset);
@@ -88,4 +88,5 @@ DISABLED_TEST(CTTypeSetter, LinesShouldDefaultToZeroOffset) {
     CFRelease(ts);
     CFRelease(line);
     CFRelease(lineWithOffset);
+    */
 }

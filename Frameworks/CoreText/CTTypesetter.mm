@@ -29,10 +29,6 @@ static const wchar_t* TAG = L"CTTypesetter";
 const CFStringRef kCTTypesetterOptionDisableBidiProcessing = static_cast<CFStringRef>(@"kCTTypesetterOptionDisableBidiProcessing");
 const CFStringRef kCTTypesetterOptionForcedEmbeddingLevel = static_cast<CFStringRef>(@"kCTTypesetterOptionForcedEmbeddingLevel");
 
-// TODO::
-// Remove once CTFont and UIFont are bridgable classes
-static IWLazyClassLookup _LazyUIFont("UIFont");
-
 @implementation _CTTypesetter
 - (instancetype)initWithAttributedString:(NSAttributedString*)str {
     _attributedString = str;
@@ -51,13 +47,6 @@ static IWLazyClassLookup _LazyUIFont("UIFont");
     [super dealloc];
 }
 @end
-
-static CFIndex _DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthFunc, void* widthParam, double offset, CTLineRef* outLine) {
-    // TODO::
-    // Replace this with DWrite
-    UNIMPLEMENTED();
-    return StubReturn();
-}
 
 static float FixedWidthFinderFunc(void* opaque, CFIndex idx, float offset, float height) {
     return *((double*)opaque) - offset;
@@ -125,7 +114,10 @@ CFIndex _CTTypesetterSuggestLineBreakWithOffsetAndCallback(
  @Notes
 */
 CFIndex CTTypesetterSuggestLineBreakWithOffset(CTTypesetterRef ts, CFIndex index, double width, double offset) {
-    return _CTTypesetterSuggestLineBreakWithOffsetAndCallback(ts, index, offset, FixedWidthFinderFunc, &width);
+    _CTTypesetter* typesetter = static_cast<_CTTypesetter*>(ts);
+    NSArray<_CTLine*>* lines =
+        _DWriteGetLines(typesetter, CFRangeMake(index, typesetter->_characters.size() - index), CGRectMake(offset, 0, width, FLT_MAX));
+    return (lines) ? lines[0]->_strRange.length : 0;
 }
 
 /**

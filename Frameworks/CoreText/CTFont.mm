@@ -46,8 +46,6 @@ extern "C" {
 
 static const wchar_t* g_logTag = L"CTFont";
 
-static IWLazyClassLookup _LazyUIFont("UIFont");
-
 static const std::map<const CFStringRef, FT_UInt> g_nameIdMap = {
     { kCTFontCopyrightNameKey, 0 },
     { kCTFontFamilyNameKey, 1 },
@@ -212,10 +210,11 @@ CTFontRef CTFontCreateWithNameAndOptions(CFStringRef name, CGFloat size, const C
 */
 CTFontRef CTFontCreateWithFontDescriptor(CTFontDescriptorRef descriptor, CGFloat size, const CGAffineTransform* matrix) {
     UNIMPLEMENTED();
-    if (size == 0.0f)
+    if (size == 0.0f) {
         size = 12.0f;
-    id ret = [[_LazyUIFont fontWithName:@"Segoe UI" size:size] retain];
-    return (CTFontRef)ret;
+    }
+
+    return CTFontCreateWithName(CFSTR("Segoe UI"), size, nullptr);
 }
 
 /**

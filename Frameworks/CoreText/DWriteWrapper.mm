@@ -205,8 +205,8 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
     ComPtr<IDWriteTextFormat> textFormat = __CreateDWriteTextFormat(ts, range);
 
     NSRange curRange = NSMakeRangeFromCF(range);
-    wchar_t* wcharString = reinterpret_cast<wchar_t*>(
-        const_cast<char*>([[ts->_string substringWithRange:curRange] cStringUsingEncoding:NSUTF16StringEncoding]));
+    NSString* subString = [ts->_string substringWithRange:curRange];
+    wchar_t* wcharString = reinterpret_cast<wchar_t*>(const_cast<char*>([subString cStringUsingEncoding:NSUTF16StringEncoding]));
 
     // TODO::
     // We need too support widthFunc semantic to be able to support NSLayout*. We could either change the API signature of this API or
@@ -219,7 +219,7 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
 
     ComPtr<IDWriteTextLayout> textLayout;
     THROW_IF_FAILED(dwriteFactory->CreateTextLayout(
-        wcharString, ts->_characters.size(), textFormat.Get(), frameSize.size.width, frameSize.size.height, &textLayout));
+        wcharString, [subString length], textFormat.Get(), frameSize.size.width, frameSize.size.height, &textLayout));
 
     // TODO::
     // Iterate through all attributed string ranges and identify attributes so they can be used to -
@@ -394,6 +394,7 @@ static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
         _CTLine* line = [[_CTLine new] autorelease];
         NSMutableArray<_CTRun*>* runs = [NSMutableArray array];
         uint32_t stringRange = 0;
+        uint32_t glyphCount = 0;
         prevXPosForDraw = 0;
 
         float xPos;
@@ -408,10 +409,10 @@ static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
             _CTRun* run = [[_CTRun new] autorelease];
             run->_range.location = glyphRunDetails._glyphRunDescriptions[i]._textPosition;
             run->_range.length = glyphRunDetails._glyphRunDescriptions[i]._stringLength;
-            run->_stringFragment = [ts->_string substringWithRange:NSMakeRangeFromCF(run->_range)];
+            run->_stringFragment = [ts->_string substringWithRange:NSMakeRange(range.location + run->_range.location, run->_range.length)];
             run->_dwriteGlyphRun = move(glyphRunDetails._dwriteGlyphRun[i]);
             run->_stringIndices = move(glyphRunDetails._glyphRunDescriptions[i]._clusterMap);
-            run->_attributes = [ts->_attributedString attributesAtIndex:run->_range.location effectiveRange:NULL];
+            run->_attributes = [ts->_attributedString attributesAtIndex:(range.location + run->_range.location) effectiveRange:NULL];
 
             xPos = glyphRunDetails._baselineOriginX[i];
             yPos = glyphRunDetails._baselineOriginY[i];
@@ -433,7 +434,7 @@ static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
 
             [runs addObject:run];
             stringRange += run->_range.length;
-            line->_glyphCount += run->_dwriteGlyphRun.glyphCount;
+            glyphCount += glyphRunDetails._dwriteGlyphRun[i].glyphCount;
             i++;
         }
 
@@ -444,6 +445,7 @@ static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
         line->_lineOrigin.x = static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].x;
         line->_lineOrigin.y = static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].y;
         line->_strRange.length = stringRange;
+        line->_glyphCount = glyphCount;
         line->_relativeXOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeXOffset;
         line->_relativeYOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeYOffset;
         [lines addObject:line];
