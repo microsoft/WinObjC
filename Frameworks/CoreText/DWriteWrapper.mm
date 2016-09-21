@@ -36,6 +36,11 @@ static const wchar_t* TAG = L"_DWriteWrapper";
 static const wchar_t* c_defaultUserLanguage = L"en-us";
 static const wchar_t* c_defaultFontName = L"Segoe UI";
 
+static void __InitDWriteFontPropertiesFromName(CFStringRef fontName,
+                                               DWRITE_FONT_WEIGHT* weight,
+                                               DWRITE_FONT_STRETCH* stretch,
+                                               DWRITE_FONT_STYLE* style);
+
 // Private helper for creating a DWriteFactory
 static ComPtr<IDWriteFactory> __CreateDWriteFactoryInstance() {
     ComPtr<IDWriteFactory> dwriteFactory;
@@ -171,21 +176,74 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(_CTTypesetter* ts, CFR
 
     // TODO: #1001 attribs can be nil here?
     NSDictionary* attribs = [ts->_attributedString attributesAtIndex:range.location effectiveRange:NULL];
-    UIFont* font = [attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)];
+    CTFontRef font = static_cast<CTFontRef>([attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
+
     CGFloat fontSize = kCTFontSystemFontSize;
+    std::vector<wchar_t> fontName(c_defaultFontName, c_defaultFontName + wcslen(c_defaultFontName));
+    DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_REGULAR;
+    DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
+    DWRITE_FONT_STRETCH stretch = DWRITE_FONT_STRETCH_NORMAL;
     if (font != nil) {
-        fontSize = [font pointSize];
+        fontSize = CTFontGetSize(font);
+        __InitDWriteFontPropertiesFromName(CTFontCopyName(font, kCTFontFullNameKey), &weight, &stretch, &style);
+        CFStringRef name = _DWriteGetFamilyNameForFontName(CTFontCopyName(font, kCTFontFullNameKey));
+        fontName.resize(CFStringGetLength(name) + 1);
+        CFStringGetCharacters(name, CFRangeMake(0, fontName.size()), reinterpret_cast<UniChar*>(fontName.data()));
     }
 
     ComPtr<IDWriteTextFormat> textFormat;
-    THROW_IF_FAILED(dwriteFactory->CreateTextFormat(c_defaultFontName,
-                                                    NULL,
-                                                    DWRITE_FONT_WEIGHT_REGULAR,
-                                                    DWRITE_FONT_STYLE_NORMAL,
-                                                    DWRITE_FONT_STRETCH_NORMAL,
-                                                    fontSize,
-                                                    c_defaultUserLanguage,
-                                                    &textFormat));
+    THROW_IF_FAILED(
+        dwriteFactory->CreateTextFormat(fontName.data(), NULL, weight, style, stretch, fontSize, c_defaultUserLanguage, &textFormat));
+
+    CTParagraphStyleRef settings =
+        static_cast<CTParagraphStyleRef>([attribs valueForKey:static_cast<NSString*>(kCTParagraphStyleAttributeName)]);
+    if (settings) {
+        CTTextAlignment alignment = kCTNaturalTextAlignment;
+        if (CTParagraphStyleGetValueForSpecifier(settings, kCTParagraphStyleSpecifierAlignment, sizeof(CTTextAlignment), &alignment)) {
+            DWRITE_TEXT_ALIGNMENT dwriteAlignment = DWRITE_TEXT_ALIGNMENT_LEADING;
+            switch (alignment) {
+                case kCTRightTextAlignment:
+                    dwriteAlignment = DWRITE_TEXT_ALIGNMENT_TRAILING;
+                    break;
+                case kCTCenterTextAlignment:
+                    dwriteAlignment = DWRITE_TEXT_ALIGNMENT_CENTER;
+                    break;
+                case kCTJustifiedTextAlignment:
+                    dwriteAlignment = DWRITE_TEXT_ALIGNMENT_JUSTIFIED;
+                    break;
+                case kCTLeftTextAlignment:
+                case kCTNaturalTextAlignment:
+                default:
+                    dwriteAlignment = DWRITE_TEXT_ALIGNMENT_LEADING;
+            }
+
+            THROW_IF_FAILED(textFormat->SetTextAlignment(dwriteAlignment));
+        }
+
+        CTWritingDirection direction;
+        if (CTParagraphStyleGetValueForSpecifier(settings, kCTParagraphStyleSpecifierBaseWritingDirection, sizeof(direction), &direction)) {
+            DWRITE_READING_DIRECTION dwriteDirection = DWRITE_READING_DIRECTION_LEFT_TO_RIGHT;
+            switch (direction) {
+                case kCTWritingDirectionRightToLeft:
+                    dwriteDirection = DWRITE_READING_DIRECTION_RIGHT_TO_LEFT;
+
+                    // DWrite alignment is based upon reading direction whereas CoreText alignment is constant
+                    // so we have to flip the writing direction
+                    if (alignment == kCTRightTextAlignment || alignment == kCTNaturalTextAlignment) {
+                        THROW_IF_FAILED(textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING));
+                    } else if (alignment == kCTLeftTextAlignment) {
+                        THROW_IF_FAILED(textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING));
+                    }
+                    break;
+                case kCTWritingDirectionLeftToRight:
+                case kCTWritingDirectionNatural:
+                default:
+                    dwriteDirection = DWRITE_READING_DIRECTION_LEFT_TO_RIGHT;
+            }
+
+            THROW_IF_FAILED(textFormat->SetReadingDirection(dwriteDirection));
+        }
+    }
 
     return textFormat;
 }
@@ -230,12 +288,25 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
         NSDictionary* attribs = [ts->_attributedString attributesAtIndex:i
                                                    longestEffectiveRange:&attributeRange
                                                                  inRange:{ i, [ts->_attributedString length] - i }];
-        CGFloat fontSize = kCTFontSystemFontSize;
-        UIFont* font = [attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)];
+
+        CTFontRef font = static_cast<CTFontRef>([attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
         if (font != nil) {
-            fontSize = [font pointSize];
+            CGFloat fontSize = CTFontGetSize(font);
+            DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_REGULAR;
+            DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
+            DWRITE_FONT_STRETCH stretch = DWRITE_FONT_STRETCH_NORMAL;
+            __InitDWriteFontPropertiesFromName(CTFontCopyName(font, kCTFontFullNameKey), &weight, &stretch, &style);
+            CFStringRef name = _DWriteGetFamilyNameForFontName(CTFontCopyName(font, kCTFontFullNameKey));
+            std::vector<wchar_t> fontName(CFStringGetLength(name) + 1);
+            CFStringGetCharacters(name, CFRangeMake(0, fontName.size()), reinterpret_cast<UniChar*>(fontName.data()));
+
+            THROW_IF_FAILED(textLayout->SetFontSize(fontSize, DWRITE_TEXT_RANGE{ attributeRange.location, attributeRange.length }));
+            THROW_IF_FAILED(textLayout->SetFontWeight(weight, DWRITE_TEXT_RANGE{ attributeRange.location, attributeRange.length }));
+            THROW_IF_FAILED(textLayout->SetFontStretch(stretch, DWRITE_TEXT_RANGE{ attributeRange.location, attributeRange.length }));
+            THROW_IF_FAILED(textLayout->SetFontStyle(style, DWRITE_TEXT_RANGE{ attributeRange.location, attributeRange.length }));
+            THROW_IF_FAILED(
+                textLayout->SetFontFamilyName(fontName.data(), DWRITE_TEXT_RANGE{ attributeRange.location, attributeRange.length }));
         }
-        THROW_IF_FAILED(textLayout->SetFontSize(fontSize, DWRITE_TEXT_RANGE{ attributeRange.location, attributeRange.length }));
     }
     return textLayout;
 }

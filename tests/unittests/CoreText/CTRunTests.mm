@@ -27,7 +27,7 @@ static constexpr double c_errorDelta = 0.0005;
 static constexpr float c_arbitraryFloat = 114138.2292;
 
 NSMutableAttributedString* getString(NSString* str) {
-    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Times New Roman" size:40];
+    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Segoe UI" size:40];
     UIFont* font = [UIFont fontWithDescriptor:fontDescriptor size:40];
 
     NSRange wholeRange = NSMakeRange(0, str.length);
@@ -154,8 +154,8 @@ TEST_P(TypographicBounds, VerifyBounds) {
     EXPECT_NEAR_MSG(width, ::testing::get<1>(GetParam()), c_errorDelta, "Failed: Typographic width is incorrect");
 }
 
-const double widthExpected = 14.1094;
-const double reducedWidthExpected = 7.0547;
+const double widthExpected = 13.3477;
+const double reducedWidthExpected = 6.6738;
 
 INSTANTIATE_TEST_CASE_P(CTRun,
                         TypographicBounds,
@@ -175,7 +175,7 @@ TEST(CTRun, GetAttributes) {
     UIFont* font = (UIFont*)CFDictionaryGetValue(dictionary, NSFontAttributeName);
     ASSERT_TRUE_MSG([font isKindOfClass:[UIFont class]], "Failed: Wrong object type in dictionary");
     NSString* fontName = ((UIFont*)font).fontName;
-    ASSERT_OBJCEQ_MSG(fontName, @"Times New Roman", "Failed: Wrong data in dictionary");
+    ASSERT_OBJCEQ_MSG(fontName, @"Segoe UI", "Failed: Wrong data in dictionary");
 
     UIColor* color = (UIColor*)CFDictionaryGetValue(dictionary, NSForegroundColorAttributeName);
     ASSERT_TRUE_MSG([color isKindOfClass:[UIColor class]], "Failed: Wrong object type in dictionary");

@@ -19,7 +19,7 @@
 #import <CoreFoundation/CoreFoundation.h>
 
 NSMutableAttributedString* getAttributedString(NSString* str) {
-    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Times New Roman" size:40];
+    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Segoe UI" size:40];
     UIFont* font = [UIFont fontWithDescriptor:fontDescriptor size:40];
 
     NSRange wholeRange = NSMakeRange(0, str.length);
@@ -166,24 +166,23 @@ TEST(CTLine, CreateTruncatedLineNoTruncationToken) {
     CFRelease(startTruncated);
 
     CTLineRef endTruncated = CTLineCreateTruncatedLine(line, 40.0, kCTLineTruncationEnd, NULL);
-    EXPECT_EQ(3, CTLineGetGlyphCount(endTruncated));
+    EXPECT_EQ(2, CTLineGetGlyphCount(endTruncated));
 
-    // Truncated should be ABC in one run
+    // Truncated should be AB in one run
     const CGGlyph* endTruncatedGlyphs =
         CTRunGetGlyphsPtr(static_cast<CTRunRef>(CFArrayGetValueAtIndex(CTLineGetGlyphRuns(endTruncated), 0)));
     EXPECT_EQ(*originalGlyphs, *endTruncatedGlyphs);
-    EXPECT_EQ(*(originalGlyphs + 2), *(endTruncatedGlyphs + 2));
+    EXPECT_EQ(*(originalGlyphs + 1), *(endTruncatedGlyphs + 1));
     CFRelease(endTruncated);
 
     CTLineRef middleTruncated = CTLineCreateTruncatedLine(line, 40.0, kCTLineTruncationMiddle, NULL);
-    EXPECT_EQ(3, CTLineGetGlyphCount(middleTruncated));
+    EXPECT_EQ(2, CTLineGetGlyphCount(middleTruncated));
 
-    // Truncated should be AEF in one run
+    // Truncated should be AF in one run
     const CGGlyph* middleTruncatedGlyphs =
         CTRunGetGlyphsPtr(static_cast<CTRunRef>(CFArrayGetValueAtIndex(CTLineGetGlyphRuns(middleTruncated), 0)));
     EXPECT_EQ(*originalGlyphs, *middleTruncatedGlyphs);
-    EXPECT_EQ(*(originalGlyphs + 4), *(middleTruncatedGlyphs + 1));
-    EXPECT_EQ(*(originalGlyphs + 5), *(middleTruncatedGlyphs + 2));
+    EXPECT_EQ(*(originalGlyphs + 5), *(middleTruncatedGlyphs + 1));
     CFRelease(middleTruncated);
     CFRelease(line);
 }
