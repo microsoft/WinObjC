@@ -64,16 +64,14 @@
                         </VisualState>
                     </VisualStateGroup>
                 </VisualStateManager.VisualStateGroups>
-                <Grid x:Name="contentGrid" MaxWidth="{TemplateBinding Width}" MaxHeight="{TemplateBinding Height}" 
-                      FlowDirection="LeftToRight" VerticalAlignment="Center" 
-                      Width="Auto" Height="Auto"
+                <Grid x:Name="contentGrid"
+                      FlowDirection="LeftToRight" VerticalAlignment="Center"
                       HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Image x:Name="buttonImage" Stretch="Uniform" 
-                           Width="Auto" Height="Auto" MaxWidth="{TemplateBinding Width}" MaxHeight="{TemplateBinding Height}"
+                    <Image x:Name="buttonImage" Stretch="Uniform"
                            IsHitTestVisible="False" Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ButtonImageSourceNormal}"/>
                     
                     <TextBlock x:Name="buttonText" MaxLines="1" Grid.Column="1" TextTrimming="CharacterEllipsis" IsHitTestVisible="False"
