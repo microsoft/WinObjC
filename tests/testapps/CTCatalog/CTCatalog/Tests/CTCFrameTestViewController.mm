@@ -36,6 +36,7 @@
     CGContextScaleCTM(context, 1.0f, -1.0f);
     CGContextSetTextPosition(context, 0.0, 10.0);
     CTLineDraw(_lineRef, context);
+    CFRelease(_lineRef);
 }
 
 @end
@@ -113,7 +114,6 @@
     CGPathRelease(path);
     CGColorSpaceRelease(colorspace);
 
-    CFRetain(frame);
     [_drawDelegate refreshValuesForFrame:frame];
 }
 
@@ -213,6 +213,7 @@
         CTFrameLineTestView* textLabel = [[CTFrameLineTestView alloc] initWithFrame:CGRectMake(0, 0, 2 * width / 3, 60)];
         textLabel.backgroundColor = [UIColor whiteColor];
         textLabel.lineRef = static_cast<CTLineRef>(CFArrayGetValueAtIndex(lines, i));
+        CFRetain(textLabel.lineRef);
         cell.accessoryView = textLabel;
         [_lineCells addObject:cell];
     }
