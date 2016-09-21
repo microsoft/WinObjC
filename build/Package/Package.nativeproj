@@ -47,6 +47,7 @@
       <MSVCFiles Include="..\..\msvc\*.dll" />
       <MSVCFiles Include="..\..\msvc\*.cpp" />
       <MSVCObjCRTFiles Include="..\..\msvc\objcrt\*.cpp" />
+      <MSVCObjCRTFiles Include="..\..\msvc\objcrt\*.h" />
       <SBIncludes Include="..\..\include\**\*" />
       <SBIncludes Include="..\..\deps\prebuilt\include\zlib.h" />
       <SBIncludes Include="..\..\deps\prebuilt\include\zconf.h" />
