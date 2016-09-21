@@ -685,18 +685,14 @@ static ComPtr<IDWriteFontFamily> __GetDWriteFontFamily(CFStringRef familyName) {
  * Private helper that parses a font name, and returns appropriate weight, stretch, style, and family name values
  */
 static void __InitDWriteFontPropertiesFromName(
-    CFStringRef fontName, DWRITE_FONT_WEIGHT* weight, DWRITE_FONT_STRETCH* stretch, DWRITE_FONT_STYLE* style, CFStringRef* fontFamilyName) {
+    CFStringRef fontName, DWRITE_FONT_WEIGHT* weight, DWRITE_FONT_STRETCH* stretch, DWRITE_FONT_STYLE* style, CFStringRef* familyName) {
     // Set some defaults for when weight/stretch/style are not mentioned in the name
     // Since this is a file-private helper, assume the pointers are safe to dereference.
     *weight = DWRITE_FONT_WEIGHT_NORMAL;
     *stretch = DWRITE_FONT_STRETCH_NORMAL;
     *style = DWRITE_FONT_STYLE_NORMAL;
 
-    CFStringRef familyName = _DWriteGetFamilyNameForFontName(fontName);
-
-    if (fontFamilyName) {
-        *fontFamilyName = familyName;
-    }
+    *familyName = _DWriteGetFamilyNameForFontName(fontName);
 
     // Relationship of family name -> font name not always consistent
     // Usually, properties are added to the end (eg: Arial -> Arial Narrow Bold)
@@ -712,8 +708,8 @@ static void __InitDWriteFontPropertiesFromName(
         CFSetAddValue(propertyTokens, CFArrayGetValueAtIndex(fontNameTokens, i));
     }
 
-    if (familyName) {
-        CFArrayRef familyNameTokens = CFStringCreateArrayBySeparatingStrings(kCFAllocatorDefault, familyName, CFSTR(" "));
+    if (*familyName) {
+        CFArrayRef familyNameTokens = CFStringCreateArrayBySeparatingStrings(kCFAllocatorDefault, *familyName, CFSTR(" "));
         CFAutorelease(familyNameTokens);
         for (size_t i = 0; i < CFArrayGetCount(familyNameTokens); ++i) {
             CFSetRemoveValue(propertyTokens, CFArrayGetValueAtIndex(familyNameTokens, i));
@@ -822,9 +818,9 @@ HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFon
     DWRITE_FONT_STRETCH stretch = DWRITE_FONT_STRETCH_NORMAL;
     DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
 
-    __InitDWriteFontPropertiesFromName(name, &weight, &stretch, &style, nullptr);
+    CFStringRef familyName;
+    __InitDWriteFontPropertiesFromName(name, &weight, &stretch, &style, &familyName);
 
-    CFStringRef familyName = _DWriteGetFamilyNameForFontName(name);
     if (!familyName) {
         TraceError(TAG, L"Unable to find family for font name \"%hs\"", [static_cast<NSString*>(name) UTF8String]);
         return E_INVALIDARG;
