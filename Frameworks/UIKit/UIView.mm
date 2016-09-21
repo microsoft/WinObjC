@@ -3550,11 +3550,9 @@ static float doRound(float f) {
 
 // Retrieves the XAML FrameworkElement backing this UIView.
 - (WXFrameworkElement*)xamlElement {
-    // Derived UIViews currently assign their backing XAML FrameworkElement (if any) to their
-    // root CALayer's contentsElement property.  Setting a CALayer's contentsElement (which is null by default) results in
-    // the specified XAML FrameworkElement being added as a child of that CALayer.
-    WXFrameworkElement* layerContentElement = [self layer].contentsElement;
-    return layerContentElement ? layerContentElement : priv->_xamlInputElement.get();
+    // Return the CALayerXaml element *backing* this UIView, as opposed to any Xaml element *contained* within the CALayerXaml.
+    // Note: These will be converged into the same Xaml element in the upcoming compositor refactor.
+    return priv->_xamlInputElement.get();
 }
 
 // Sets the backing CALayer's XAML contentsElement (which is null by default)
