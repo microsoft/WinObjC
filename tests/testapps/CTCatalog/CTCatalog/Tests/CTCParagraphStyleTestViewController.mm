@@ -68,6 +68,7 @@ cell.accessoryView = FIELD;                                                     
 
     UIFont* font = [UIFont systemFontOfSize:20];
     CTFontRef myCFFont = CTFontCreateWithName((__bridge CFStringRef)[font fontName], [font pointSize], NULL);
+    CFAutorelease(myCFFont);
     // Make dictionary for attributed string with font, color, and alignment
     NSDictionary* attributesDict = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)myCFFont,
                                                                               (id)kCTFontAttributeName,
@@ -80,12 +81,14 @@ cell.accessoryView = FIELD;                                                     
     NSString* text = @"The quick brown fox jumps over the lazy dog.";
     CFAttributedStringRef attrString =
         CFAttributedStringCreate(kCFAllocatorDefault, (__bridge CFStringRef)text, (__bridge CFDictionaryRef)attributesDict);
+    CFAutorelease(attrString);
 
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(attrString);
-    CFRelease(attrString);
+    CFAutorelease(framesetter);
 
     // Creates frame for framesetter with current attributed string
     CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    CFAutorelease(frame);
 
     // Draws the text in the frame
     CTFrameDraw(frame, context);
@@ -98,10 +101,9 @@ cell.accessoryView = FIELD;                                                     
     CGContextAddRect(context, rect);
     CGContextStrokePath(context);
 
+    CGPathRelease(path);
     CGColorSpaceRelease(colorspace);
     CFRelease(_paragraphStyle);
-    CFRelease(framesetter);
-    CFRelease(frame);
 }
 
 @end

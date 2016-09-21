@@ -21,7 +21,7 @@
 #define ADD_UNIMPLEMENTED(ARRAY, METHOD_NAME, WIDTH) [ARRAY addObject:createTextCell(METHOD_NAME, @"UNIMPLEMENTED", WIDTH)]
 
 // Creates a table cell with title and text value
-UITableViewCell* createTextCell(NSString* title, NSString* value, CGFloat withd);
+UITableViewCell* createTextCell(NSString* title, NSString* value, CGFloat width);
 
 @interface CTCBaseViewController : UIViewController
 

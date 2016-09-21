@@ -37,6 +37,7 @@
     CGContextScaleCTM(context, 1.0f, -1.0f);
     CGContextSetTextPosition(context, 0.0, 10.0);
     CTLineDraw(_lineRef, context);
+    CFRelease(_lineRef);
 }
 
 @end
@@ -67,8 +68,19 @@
     CGMutablePathRef path = CGPathCreateMutable();
     CGPathAddRect(path, NULL, self.bounds);
 
+    // Create style setting to match given alignment
+    CTParagraphStyleSetting setting;
+
+    setting.spec = kCTParagraphStyleSpecifierAlignment;
+    setting.valueSize = sizeof(CTTextAlignment);
+    CTTextAlignment alignment = kCTCenterTextAlignment;
+    setting.value = &alignment;
+    CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(&setting, 1);
+    CFAutorelease(paragraphStyle);
+
     UIFont* font = [UIFont systemFontOfSize:20];
     CTFontRef myCFFont = CTFontCreateWithName((__bridge CFStringRef)[font fontName], [font pointSize], NULL);
+    CFAutorelease(myCFFont);
     // Make dictionary for attributed string with font, color, and alignment
     NSDictionary* attributesDict = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)myCFFont,
                                                                               (id)kCTFontAttributeName,
@@ -78,23 +90,37 @@
 
     CFAttributedStringRef attrString =
         CFAttributedStringCreate(kCFAllocatorDefault, (__bridge CFStringRef)_text, (__bridge CFDictionaryRef)attributesDict);
+    CFAutorelease(attrString);
 
-    CTLineRef line = CTLineCreateWithAttributedString(attrString);
-    CFRelease(attrString);
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(attrString);
+    CFAutorelease(framesetter);
 
-    CGContextSetTextPosition(context, 0.0, 10.0);
-    CTLineDraw(line, context);
+    // Creates frame for framesetter with current attributed string
+    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    CFAutorelease(frame);
 
-    // Creates outline
-    CGContextSetLineWidth(context, 2.0);
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    CGContextSetStrokeColorWithColor(context, color.CGColor);
-    CGContextMoveToPoint(context, 0, 0);
-    CGContextAddRect(context, rect);
-    CGContextStrokePath(context);
+    CFArrayRef lines = CTFrameGetLines(frame);
+    if (CFArrayGetCount(lines) > 0) {
+        CTLineRef line = static_cast<CTLineRef>(CFArrayGetValueAtIndex(lines, 0));
 
-    CGColorSpaceRelease(colorspace);
-    [_drawDelegate refreshValuesForLine:line];
+        CGContextSetTextPosition(context, 0.0, 10.0);
+
+        CFRetain(line);
+        CTLineDraw(line, context);
+
+        // Creates outline
+        CGContextSetLineWidth(context, 2.0);
+        CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+        CGContextSetStrokeColorWithColor(context, color.CGColor);
+        CGContextMoveToPoint(context, 0, 0);
+        CGContextAddRect(context, rect);
+        CGContextStrokePath(context);
+
+        CGColorSpaceRelease(colorspace);
+        [_drawDelegate refreshValuesForLine:line];
+    }
+
+    CGPathRelease(path);
 }
 
 @end

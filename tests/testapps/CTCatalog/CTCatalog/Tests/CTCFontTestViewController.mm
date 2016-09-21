@@ -61,8 +61,10 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
     CTTextAlignment alignment = kCTRightTextAlignment;
     setting.value = &alignment;
     CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(&setting, 1);
+    CFAutorelease(paragraphStyle);
 
     CTFontRef myCFFont = CTFontCreateWithName(CTFontCopyFullName(_font), CTFontGetSize(_font), NULL);
+    CFAutorelease(myCFFont);
 
     // Make dictionary for attributed string with font, color, and alignment
     NSDictionary* attributesDict = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)myCFFont,
@@ -76,12 +78,14 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
     NSString* text = @"jackdaws love my big sphinx of quartz. JACKDAWS LOVE MY BIG SPHINX OF QUARTZ.";
     CFAttributedStringRef attrString =
         CFAttributedStringCreate(kCFAllocatorDefault, (__bridge CFStringRef)text, (__bridge CFDictionaryRef)attributesDict);
+    CFAutorelease(attrString);
 
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(attrString);
-    CFRelease(attrString);
+    CFAutorelease(framesetter);
 
     // Creates frame for framesetter with current attributed string
     CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    CFAutorelease(frame);
 
     // Draws the text in the frame
     CTFrameDraw(frame, context);
@@ -95,8 +99,7 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
     CGContextStrokePath(context);
 
     CGColorSpaceRelease(colorspace);
-    CFRelease(framesetter);
-    CFRelease(frame);
+    CGPathRelease(path);
 }
 @end
 

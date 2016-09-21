@@ -49,8 +49,10 @@
     setting.valueSize = sizeof(CTTextAlignment);
     setting.value = &_alignment;
     CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(&setting, 1);
+    CFAutorelease(paragraphStyle);
 
     CTFontRef myCFFont = CTFontCreateWithName((__bridge CFStringRef)[_font fontName], [_font pointSize], NULL);
+    CFAutorelease(myCFFont);
 
     // Make dictionary for attributed string with font, color, and alignment
     NSDictionary* attributesDict = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)myCFFont,
@@ -63,12 +65,14 @@
 
     CFAttributedStringRef attrString =
         CFAttributedStringCreate(kCFAllocatorDefault, (__bridge CFStringRef)_text, (__bridge CFDictionaryRef)attributesDict);
+    CFAutorelease(attrString);
 
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(attrString);
-    CFRelease(attrString);
+    CFAutorelease(framesetter);
 
     // Creates frame for framesetter with current attributed string
     CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    CFAutorelease(frame);
 
     // Draws the text in the frame
     CTFrameDraw(frame, context);
@@ -81,9 +85,8 @@
     CGContextAddRect(context, rect);
     CGContextStrokePath(context);
 
+    CGPathRelease(path);
     CGColorSpaceRelease(colorspace);
-    CFRelease(frame);
-    CFRelease(framesetter);
 }
 @end
 
