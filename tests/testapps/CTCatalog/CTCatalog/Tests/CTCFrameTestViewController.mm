@@ -26,6 +26,11 @@
 @implementation CTFrameLineTestView {
 }
 
+- (void)setLineRef:(CTLineRef)lineRef {
+    _lineRef = lineRef;
+    CFRetain(_lineRef);
+}
+
 - (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
 
@@ -213,7 +218,6 @@
         CTFrameLineTestView* textLabel = [[CTFrameLineTestView alloc] initWithFrame:CGRectMake(0, 0, 2 * width / 3, 60)];
         textLabel.backgroundColor = [UIColor whiteColor];
         textLabel.lineRef = static_cast<CTLineRef>(CFArrayGetValueAtIndex(lines, i));
-        CFRetain(textLabel.lineRef);
         cell.accessoryView = textLabel;
         [_lineCells addObject:cell];
     }
