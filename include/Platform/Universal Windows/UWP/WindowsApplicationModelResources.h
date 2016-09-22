@@ -42,6 +42,9 @@ WINRT_EXPORT
 + (NSString*)getStringForReference:(WFUri*)uri;
 + (instancetype)make ACTIVATOR;
 + (WARResourceLoader*)makeResourceLoaderByName:(NSString*)name ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (NSString*)getString:(NSString*)resource;
 - (NSString*)getStringForUri:(WFUri*)uri;
 @end

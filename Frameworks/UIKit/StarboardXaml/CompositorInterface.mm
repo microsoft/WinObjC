@@ -366,10 +366,11 @@ public:
 
     void Completed() {
         id animHandler = _animHandler; // Save in a local for the block to retain.
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [animHandler animationDidStop:TRUE];
-            [animHandler _removeAnimationsFromLayer];
-        });
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           [animHandler animationDidStop:TRUE];
+                           [animHandler _removeAnimationsFromLayer];
+                       });
     }
 
     DisplayAnimationTransition(id animHandler, NSString* type, NSString* subType) {
@@ -732,10 +733,11 @@ public:
 
     void Completed() {
         id animHandler = _animHandler; // Save in a local for the block to retain.
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [animHandler animationDidStop:TRUE];
-            [animHandler _removeAnimationsFromLayer];
-        });
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           [animHandler animationDidStop:TRUE];
+                           [animHandler _removeAnimationsFromLayer];
+                       });
     }
 
     DisplayAnimationBasic(id animHandler,
@@ -1280,11 +1282,6 @@ deque<std::shared_ptr<DisplayTransaction>> s_queuedTransactions;
 
 class CAXamlCompositor : public CACompositorInterface {
 public:
-    virtual void DisplayTreeChanged() override {
-        // Trigger a UI update
-        UIRequestTransactionProcessing();
-    }
-
     virtual DisplayNode* CreateDisplayNode() override {
         DisplayNode* ret = new DisplayNodeXaml();
         return ret;
@@ -1333,7 +1330,6 @@ public:
 
     virtual void addAnimation(const std::shared_ptr<DisplayTransaction>& transaction, id layer, id animation, id forKey) override {
         transaction->QueueAnimation(std::make_shared<QueuedAnimation>(layer, animation, forKey));
-        DisplayTreeChanged();
     }
 
     virtual void setNodeTexture(const std::shared_ptr<DisplayTransaction>& transaction,
@@ -1342,7 +1338,6 @@ public:
                                 CGSize contentsSize,
                                 float contentsScale) override {
         transaction->QueueProperty(std::make_shared<QueuedProperty>(node, newTexture, contentsSize, contentsScale));
-        DisplayTreeChanged();
     }
 
     virtual void setNodeMaskNode(DisplayNode* node, DisplayNode* maskNode) override {
@@ -1356,7 +1351,6 @@ public:
                                     const char* propertyName,
                                     NSObject* newValue) override {
         transaction->QueueProperty(std::make_shared<QueuedProperty>(node, propertyName, newValue));
-        DisplayTreeChanged();
     }
 
     virtual void setNodeTopMost(DisplayNode* node, bool topMost) override {

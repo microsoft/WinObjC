@@ -20,5 +20,6 @@
 #include "fileutils.h"
 #include "stringutils.h"
 #include "miscutils.h"
+#include "telemetryutils.h"
 
 #endif /* _UTILS_H_ */

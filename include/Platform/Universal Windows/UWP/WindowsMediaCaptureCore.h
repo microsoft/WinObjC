@@ -36,6 +36,9 @@
 
 WINRT_EXPORT
 @interface WMCCVariablePhotoSequenceCapture : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (EventRegistrationToken)addPhotoCapturedEvent:(void (^)(WMCCVariablePhotoSequenceCapture*, WMCCVariablePhotoCapturedEventArgs*))del;
 - (void)removePhotoCapturedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addStoppedEvent:(void (^)(WMCCVariablePhotoSequenceCapture*, RTObject*))del;
@@ -54,6 +57,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCCVariablePhotoCapturedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WFTimeSpan* captureTimeOffset;
 @property (readonly) WMCCapturedFrameControlValues* capturedFrameControlValues;
 @property (readonly) WMCCapturedFrame* frame;

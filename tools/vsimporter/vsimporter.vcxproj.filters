@@ -278,6 +278,9 @@
     <ClCompile Include="third-party\sole\sole.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\utils\telemetryutils.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\windows\dirent.h">
@@ -534,6 +537,9 @@
     </ClInclude>
     <ClInclude Include="third-party\sole\sole.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\telemetryutils.h">
+      <Filter>Header Files\utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

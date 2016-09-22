@@ -158,7 +158,7 @@ static UIInterfaceOrientation _internalOrientation = UIInterfaceOrientationPortr
 extern int requestDeviceOrientation;
 extern UIWindow* _curKeyWindow;
 
-NSArray* windows;
+NSArray<UIWindow*>* g_windows;
 UIWindow* popupWindow;
 UIApplication* sharedApplication;
 int showKeyboard, forceHideKeyboard;
@@ -267,37 +267,14 @@ static idretaintype(WSDDisplayRequest) _screenActive;
                 keyboardVisible = false;
             }
 
-            if ([windows count] > 0) {
-                int windowCount = [windows count];
-
-                for (int i = 0; i < windowCount; i++) {
-                    id window = [windows objectAtIndex:i];
-                    id windowLayer = [window layer];
-                    [windowLayer validateDisplayHierarchy];
-                }
-
-                [CATransaction _commitRootQueue];
-                GetCACompositor()->ProcessTransactions();
+            for (UIWindow* window in g_windows) {
+                [[window layer] _displayChanged];
             }
         }
     }
 }
 
-+ (void)viewChanged {
-    if (!refreshPending) {
-        id mainRunLoop = [NSRunLoop mainRunLoop];
-        id currentRunLoop = [NSRunLoop currentRunLoop];
-        if (mainRunLoop != currentRunLoop) {
-            TraceError(TAG, L"**** Error - UI updated on non-UI thread ******");
-        }
-
-        refreshPending = TRUE;
-
-        [[NSRunLoop mainRunLoop] _wakeUp];
-    }
-}
-
-+ (void)viewTreeChanged {
++ (void)_viewTreeChanged {
     if (!refreshPending) {
         refreshPending = TRUE;
         [[NSRunLoop mainRunLoop] _wakeUp];
@@ -922,8 +899,8 @@ static void printViews(id curView, int level) {
 /**
  @Status Interoperable
 */
-- (NSArray*)windows {
-    return windows;
+- (NSArray<UIWindow*>*)windows {
+    return g_windows;
 }
 
 /**
@@ -937,7 +914,7 @@ static void printViews(id curView, int level) {
  @Status Interoperable
 */
 - (instancetype)init {
-    windows = (id)CFArrayCreateMutable(NULL, 32, NULL);
+    g_windows = [[NSMutableArray alloc] init];
 
     if (statusBar == nil) {
         CGRect frame;
@@ -955,7 +932,6 @@ static void printViews(id curView, int level) {
         popupRotationLayer = [[UIKeyboardRotationView alloc] initWithFrame:frame];
 
         CALayer* layer = [statusBarRotationLayer layer];
-        [layer validateDisplayHierarchy];
         GetCACompositor()->setNodeTopMost((DisplayNode*)[layer _presentationNode], true);
         [CATransaction _addSublayerToTop:layer];
         GetCACompositor()->setNodeTopMost((DisplayNode*)[[popupRotationLayer layer] _presentationNode], true);
@@ -1296,9 +1272,7 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidReceiveMemoryWarningNotification" object:self];
 
-    int windowCount = [windows count];
-    for (int i = 0; i < windowCount; i++) {
-        UIView* window = [windows objectAtIndex:i];
+    for (UIWindow* window in g_windows) {
         _sendMemoryWarningToViewControllers(window);
     }
 }
@@ -1774,10 +1748,6 @@ static void evaluateKeyboard(id self) {
 
 @end
 
-void UIRequestTransactionProcessing() {
-    [UIApplication viewChanged];
-}
-
 void UIShutdown() {
     [UIApplication _shutdownEvent];
     [[NSRunLoop mainRunLoop] _wakeUp];
@@ -1957,7 +1927,7 @@ void UIShutdown() {
     curBounds.size.width = newWidth;
     curBounds.size.height = newHeight;
     bool isFrameSet = false;
-    for (UIWindow* current in windows) {
+    for (UIWindow* current in g_windows) {
         if (current.sizeUIWindowToFit) {
             [current setFrame:curBounds];
             isFrameSet = true;
@@ -1970,7 +1940,7 @@ void UIShutdown() {
     }
 
     if (isFrameSet) {
-        [UIApplication viewTreeChanged];
+        [UIApplication _viewTreeChanged];
     }
 
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidChangeDisplayModeNofication object:self];

@@ -126,6 +126,9 @@ typedef void (^WNPDeviceDepartedEventHandler)(WNPProximityDevice* sender);
 
 WINRT_EXPORT
 @interface WNPProximityMessage : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) RTObject<WSSIBuffer>* data;
 @property (readonly) NSString* dataAsString;
 @property (readonly) NSString* messageType;
@@ -143,6 +146,9 @@ WINRT_EXPORT
 + (NSString*)getDeviceSelector;
 + (WNPProximityDevice*)getDefault;
 + (WNPProximityDevice*)fromId:(NSString*)deviceId;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) uint64_t bitsPerSecond;
 @property (readonly) NSString* deviceId;
 @property (readonly) unsigned int maxMessageBytes;
@@ -173,6 +179,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNPTriggeredConnectionStateChangedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) unsigned int id;
 @property (readonly) WNSStreamSocket* socket;
 @property (readonly) WNPTriggeredConnectState state;
@@ -186,6 +195,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNPPeerInformation : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* displayName;
 @property (readonly) RTObject<WSSIBuffer>* discoveryData;
 @property (readonly) NSString* id;
@@ -201,6 +213,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNPConnectionRequestedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WNPPeerInformation* peerInformation;
 @end
 
@@ -212,6 +227,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNPPeerWatcher : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WNPPeerWatcherStatus status;
 - (EventRegistrationToken)addAddedEvent:(void (^)(WNPPeerWatcher*, WNPPeerInformation*))del;
 - (void)removeAddedEvent:(EventRegistrationToken)tok;

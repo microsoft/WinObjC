@@ -36,6 +36,9 @@
 
 WINRT_EXPORT
 @interface WDPBatteryReport : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) id /* int */ chargeRateInMilliwatts;
 @property (readonly) id /* int */ designCapacityInMilliwattHours;
 @property (readonly) id /* int */ fullChargeCapacityInMilliwattHours;
@@ -53,6 +56,9 @@ WINRT_EXPORT
 @interface WDPBattery : RTObject
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDPBattery*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* deviceId;
 + (WDPBattery*)aggregateBattery;
 - (EventRegistrationToken)addReportUpdatedEvent:(void (^)(WDPBattery*, RTObject*))del;

@@ -89,6 +89,9 @@ WINRT_EXPORT
 + (NSString*)getDeviceSelector;
 + (NSString*)getDeviceSelectorWithKind:(WDSSmartCardReaderKind)kind;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDSSmartCardReader*))success failure:(void (^)(NSError*))failure;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* deviceId;
 @property (readonly) WDSSmartCardReaderKind kind;
 @property (readonly) NSString* name;
@@ -108,6 +111,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmartCard : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WDSSmartCardReader* reader;
 - (void)getStatusAsyncWithSuccess:(void (^)(WDSSmartCardStatus))success failure:(void (^)(NSError*))failure;
 - (void)getAnswerToResetAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
@@ -122,6 +128,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSCardAddedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WDSSmartCard* smartCard;
 @end
 
@@ -133,6 +142,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSCardRemovedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WDSSmartCard* smartCard;
 @end
 
@@ -168,6 +180,9 @@ WINRT_EXPORT
                                                         cardId:(WFGUID*)cardId
                                                        success:(void (^)(WDSSmartCardProvisioning*))success
                                                        failure:(void (^)(NSError*))failure;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WDSSmartCard* smartCard;
 - (void)getIdAsyncWithSuccess:(void (^)(WFGUID*))success failure:(void (^)(NSError*))failure;
 - (void)getNameAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
@@ -186,6 +201,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDSSmartCardPinPolicy : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property WDSSmartCardPinCharacterPolicyOption uppercaseLetters;
 @property WDSSmartCardPinCharacterPolicyOption specialCharacters;
 @property unsigned int minLength;
@@ -212,6 +230,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmartCardChallengeContext : RTObject <WFIClosable>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) RTObject<WSSIBuffer>* challenge;
 - (void)verifyResponseAsync:(RTObject<WSSIBuffer>*)response success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)provisionAsync:(RTObject<WSSIBuffer>*)response formatCard:(BOOL)formatCard;
@@ -231,6 +252,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmartCardPinResetRequest : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) RTObject<WSSIBuffer>* challenge;
 @property (readonly) WFDateTime* deadline;
 - (WDSSmartCardPinResetDeferral*)getDeferral;
@@ -245,6 +269,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmartCardPinResetDeferral : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)complete;
 @end
 
@@ -256,6 +283,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmartCardConnection : RTObject <WFIClosable>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)transmitAsync:(RTObject<WSSIBuffer>*)command success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end

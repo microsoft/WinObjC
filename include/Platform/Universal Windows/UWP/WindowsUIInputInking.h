@@ -143,6 +143,9 @@ typedef unsigned WUIIPenTipShape;
 
 WINRT_EXPORT
 @interface WUIIInkUnprocessedInput : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WUIIInkPresenter* inkPresenter;
 - (EventRegistrationToken)addPointerEnteredEvent:(void (^)(WUIIInkUnprocessedInput*, WUCPointerEventArgs*))del;
 - (void)removePointerEnteredEvent:(EventRegistrationToken)tok;
@@ -168,6 +171,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkStrokeInput : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WUIIInkPresenter* inkPresenter;
 - (EventRegistrationToken)addStrokeCanceledEvent:(void (^)(WUIIInkStrokeInput*, WUCPointerEventArgs*))del;
 - (void)removeStrokeCanceledEvent:(EventRegistrationToken)tok;
@@ -187,6 +193,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkInputProcessingConfiguration : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property WUIIInkInputRightDragAction rightDragAction;
 @property WUIIInkInputProcessingMode mode;
 @end
@@ -199,6 +208,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkSynchronizer : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (NSArray* /* WUIIInkStroke* */)beginDry;
 - (void)endDry;
 @end
@@ -211,6 +223,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkPresenter : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WUIIInkStrokeContainer* strokeContainer;
 @property BOOL isInputEnabled;
 @property WUCCoreInputDeviceTypes inputDeviceTypes;
@@ -235,6 +250,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkStrokesCollectedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSArray* /* WUIIInkStroke* */ strokes;
 @end
 
@@ -246,6 +264,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkStrokesErasedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSArray* /* WUIIInkStroke* */ strokes;
 @end
 
@@ -258,6 +279,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIIInkPoint : RTObject
 + (WUIIInkPoint*)makeInkPoint:(WFPoint*)position pressure:(float)pressure ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WFPoint* position;
 @property (readonly) float pressure;
 @end
@@ -271,6 +295,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIIInkDrawingAttributes : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WFSize* size;
 @property WUIIPenTipShape penTip;
 @property BOOL ignorePressure;
@@ -288,6 +315,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkStrokeRenderingSegment : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WFPoint* bezierControlPoint1;
 @property (readonly) WFPoint* bezierControlPoint2;
 @property (readonly) WFPoint* position;
@@ -305,6 +335,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkStroke : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property BOOL selected;
 @property (retain) WUIIInkDrawingAttributes* drawingAttributes;
 @property (readonly) WFRect* boundingRect;
@@ -324,6 +357,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIIInkStrokeBuilder : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)beginStroke:(WUIPointerPoint*)pointerPoint;
 - (WUIPointerPoint*)appendToStroke:(WUIPointerPoint*)pointerPoint;
 - (WUIIInkStroke*)endStroke:(WUIPointerPoint*)pointerPoint;
@@ -340,6 +376,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkRecognitionResult : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WFRect* boundingRect;
 - (NSArray* /* NSString * */)getTextCandidates;
 - (NSArray* /* WUIIInkStroke* */)getStrokes;
@@ -354,6 +393,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIIInkStrokeContainer : RTObject <WUIIIInkStrokeContainer>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WFRect* boundingRect;
 - (void)addStroke:(WUIIInkStroke*)stroke;
 - (WFRect*)deleteSelected;
@@ -383,6 +425,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkRecognizer : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* name;
 @end
 
@@ -395,6 +440,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIIInkRecognizerContainer : RTObject <WUIIIInkRecognizerContainer>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)setDefaultRecognizer:(WUIIInkRecognizer*)recognizer;
 - (void)recognizeAsync:(WUIIInkStrokeContainer*)strokeCollection
      recognitionTarget:(WUIIInkRecognitionTarget)recognitionTarget
@@ -412,6 +460,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIIInkManager : RTObject <WUIIIInkRecognizerContainer, WUIIIInkStrokeContainer>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property WUIIInkManipulationMode mode;
 @property (readonly) WFRect* boundingRect;
 - (void)processPointerDown:(WUIPointerPoint*)pointerPoint;

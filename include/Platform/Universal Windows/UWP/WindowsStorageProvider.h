@@ -88,6 +88,9 @@ typedef unsigned WSPWriteActivationMode;
 
 WINRT_EXPORT
 @interface WSPCachedFileUpdaterUI : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* title;
 @property (readonly) WSPUIStatus uIStatus;
 @property (readonly) WSPCachedFileTarget updateTarget;
@@ -107,6 +110,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPFileUpdateRequestedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WSPFileUpdateRequest* request;
 @end
 
@@ -118,6 +124,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPFileUpdateRequest : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property WSPFileUpdateStatus status;
 @property (readonly) NSString* contentId;
 @property (readonly) WSStorageFile* file;
@@ -134,6 +143,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPFileUpdateRequestDeferral : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)complete;
 @end
 

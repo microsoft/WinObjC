@@ -281,6 +281,7 @@ typedef unsigned WSSInputStreamOptions;
 
 WINRT_EXPORT
 @interface WSSDataReaderLoadOperation : RTObject <WFIAsyncInfo>
+// Failed to get type for default interface: Can't marshal Windows.Foundation.IAsyncOperation`1<UInt32>
 @property (readonly) HRESULT errorCode;
 @property (readonly) unsigned int id;
 @property (readonly) WFAsyncStatus status;
@@ -300,6 +301,9 @@ WINRT_EXPORT
 @interface WSSDataReader : RTObject <WSSIDataReader, WFIClosable>
 + (WSSDataReader*)fromBuffer:(RTObject<WSSIBuffer>*)buffer;
 + (WSSDataReader*)makeDataReader:(RTObject<WSSIInputStream>*)inputStream ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property WSSUnicodeEncoding unicodeEncoding;
 @property WSSInputStreamOptions inputStreamOptions;
 @property WSSByteOrder byteOrder;
@@ -334,6 +338,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSDataWriterStoreOperation : RTObject <WFIAsyncInfo>
+// Failed to get type for default interface: Can't marshal Windows.Foundation.IAsyncOperation`1<UInt32>
 @property (readonly) HRESULT errorCode;
 @property (readonly) unsigned int id;
 @property (readonly) WFAsyncStatus status;
@@ -353,6 +358,9 @@ WINRT_EXPORT
 @interface WSSDataWriter : RTObject <WSSIDataWriter, WFIClosable>
 + (WSSDataWriter*)makeDataWriter:(RTObject<WSSIOutputStream>*)outputStream ACTIVATOR;
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property WSSUnicodeEncoding unicodeEncoding;
 @property WSSByteOrder byteOrder;
 @property (readonly) unsigned int unstoredBufferLength;
@@ -418,6 +426,9 @@ WINRT_EXPORT
 + (WSSBuffer*)createCopyFromMemoryBuffer:(RTObject<WFIMemoryBuffer>*)input;
 + (WFMemoryBuffer*)createMemoryBufferOverIBuffer:(RTObject<WSSIBuffer>*)input;
 + (WSSBuffer*)make:(unsigned int)capacity ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property unsigned int length;
 @property (readonly) unsigned int capacity;
 @end
@@ -433,6 +444,9 @@ WINRT_EXPORT
 + (WSSRandomAccessStreamReference*)createFromFile:(RTObject<WSIStorageFile>*)file;
 + (WSSRandomAccessStreamReference*)createFromUri:(WFUri*)uri;
 + (WSSRandomAccessStreamReference*)createFromStream:(RTObject<WSSIRandomAccessStream>*)stream;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)openReadAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -444,6 +458,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSFileRandomAccessStream : RTObject <WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property uint64_t size;
 @property (readonly) BOOL canRead;
 @property (readonly) BOOL canWrite;
@@ -474,6 +491,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSFileInputStream : RTObject <WSSIInputStream, WFIClosable>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)readAsync:(RTObject<WSSIBuffer>*)buffer
             count:(unsigned int)count
           options:(WSSInputStreamOptions)options
@@ -491,6 +511,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSFileOutputStream : RTObject <WSSIOutputStream, WFIClosable>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
            success:(void (^)(unsigned int))success
           progress:(void (^)(unsigned int))progress
@@ -507,6 +530,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSRandomAccessStreamOverStream : RTObject <WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property uint64_t size;
 @property (readonly) BOOL canRead;
 @property (readonly) BOOL canWrite;
@@ -537,6 +563,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSInputStreamOverStream : RTObject <WSSIInputStream, WFIClosable>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)readAsync:(RTObject<WSSIBuffer>*)buffer
             count:(unsigned int)count
           options:(WSSInputStreamOptions)options
@@ -554,6 +583,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSOutputStreamOverStream : RTObject <WSSIOutputStream, WFIClosable>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
            success:(void (^)(unsigned int))success
           progress:(void (^)(unsigned int))progress
@@ -571,6 +603,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSSInMemoryRandomAccessStream : RTObject <WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property uint64_t size;
 @property (readonly) BOOL canRead;
 @property (readonly) BOOL canWrite;

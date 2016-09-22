@@ -337,6 +337,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCAudioStreamDescriptor : RTObject <WMCIMediaStreamDescriptor>
 + (WMCAudioStreamDescriptor*)make:(WMMAudioEncodingProperties*)encodingProperties ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WMMAudioEncodingProperties* encodingProperties;
 @property (retain) NSString* name;
 @property (retain) NSString* language;
@@ -352,6 +355,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCVideoStreamDescriptor : RTObject <WMCIMediaStreamDescriptor>
 + (WMCVideoStreamDescriptor*)make:(WMMVideoEncodingProperties*)encodingProperties ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* name;
 @property (retain) NSString* language;
 @property (readonly) BOOL isSelected;
@@ -369,6 +375,9 @@ WINRT_EXPORT
 + (WMCMediaStreamSource*)makeFromDescriptor:(RTObject<WMCIMediaStreamDescriptor>*)descriptor ACTIVATOR;
 + (WMCMediaStreamSource*)makeFromDescriptors:(RTObject<WMCIMediaStreamDescriptor>*)descriptor
                                  descriptor2:(RTObject<WMCIMediaStreamDescriptor>*)descriptor2 ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
 @property (retain) WMPMediaProtectionManager* mediaProtectionManager;
 @property (retain) WFTimeSpan* duration;
@@ -403,6 +412,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSourceClosedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WMCMediaStreamSourceClosedRequest* request;
 @end
 
@@ -414,6 +426,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSourceStartingEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WMCMediaStreamSourceStartingRequest* request;
 @end
 
@@ -425,6 +440,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSourceSampleRequestedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WMCMediaStreamSourceSampleRequest* request;
 @end
 
@@ -436,6 +454,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSourceSwitchStreamsRequestedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WMCMediaStreamSourceSwitchStreamsRequest* request;
 @end
 
@@ -447,6 +468,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSamplePropertySet : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) unsigned int size;
 - (id)objectForKey:(id)key;
 - (NSArray*)allKeys;
@@ -479,6 +503,9 @@ WINRT_EXPORT
                     timestamp:(WFTimeSpan*)timestamp
                       success:(void (^)(WMCMediaStreamSample*))success
                       failure:(void (^)(NSError*))failure;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property BOOL keyFrame;
 @property (retain) WFTimeSpan* duration;
 @property BOOL discontinuous;
@@ -499,6 +526,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSampleProtectionProperties : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)setKeyIdentifier:(NSArray* /* uint8_t */)value;
 - (void)getKeyIdentifier:(NSArray* /* uint8_t */*)value;
 - (void)setInitializationVector:(NSArray* /* uint8_t */)value;
@@ -515,6 +545,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSourceClosedRequest : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WMCMediaStreamSourceClosedReason reason;
 @end
 
@@ -526,6 +559,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSourceStartingRequestDeferral : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)complete;
 @end
 
@@ -537,6 +573,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSourceStartingRequest : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) id /* WFTimeSpan* */ startPosition;
 - (WMCMediaStreamSourceStartingRequestDeferral*)getDeferral;
 - (void)setActualStartPosition:(WFTimeSpan*)position;
@@ -550,6 +589,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSourceSampleRequestDeferral : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)complete;
 @end
 
@@ -561,6 +603,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSourceSampleRequest : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WMCMediaStreamSample* sample;
 @property (readonly) RTObject<WMCIMediaStreamDescriptor>* streamDescriptor;
 - (WMCMediaStreamSourceSampleRequestDeferral*)getDeferral;
@@ -575,6 +620,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSourceSwitchStreamsRequestDeferral : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)complete;
 @end
 
@@ -586,6 +634,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSourceSwitchStreamsRequest : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) RTObject<WMCIMediaStreamDescriptor>* newStreamDescriptor;
 @property (readonly) RTObject<WMCIMediaStreamDescriptor>* oldStreamDescriptor;
 - (WMCMediaStreamSourceSwitchStreamsRequestDeferral*)getDeferral;
@@ -601,6 +652,9 @@ WINRT_EXPORT
 @interface WMCMseStreamSource : RTObject <WMCIMediaSource>
 + (BOOL)isContentTypeSupported:(NSString*)contentType;
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) id /* WFTimeSpan* */ duration;
 @property (readonly) WMCMseSourceBufferList* activeSourceBuffers;
 @property (readonly) WMCMseReadyState readyState;
@@ -624,6 +678,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMseSourceBufferList : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSArray* /* WMCMseSourceBuffer* */ buffers;
 - (EventRegistrationToken)addSourceBufferAddedEvent:(void (^)(WMCMseSourceBufferList*, RTObject*))del;
 - (void)removeSourceBufferAddedEvent:(EventRegistrationToken)tok;
@@ -639,6 +696,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMseSourceBuffer : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WFTimeSpan* timestampOffset;
 @property WMCMseAppendMode mode;
 @property (retain) WFTimeSpan* appendWindowStart;
@@ -670,6 +730,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCHighDynamicRangeControl : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property BOOL enabled;
 @end
 
@@ -691,6 +754,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCSceneAnalysisEffect : RTObject <WMIMediaExtension>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WFTimeSpan* desiredAnalysisInterval;
 @property (readonly) WMCHighDynamicRangeControl* highDynamicRangeAnalyzer;
 - (EventRegistrationToken)addSceneAnalyzedEvent:(void (^)(WMCSceneAnalysisEffect*, WMCSceneAnalyzedEventArgs*))del;
@@ -706,6 +772,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCSceneAnalyzedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WMCSceneAnalysisEffectFrame* resultFrame;
 @end
 
@@ -717,6 +786,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCHighDynamicRangeOutput : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) double certainty;
 @property (readonly) NSArray* /* WMDCFrameController* */ frameControllers;
 @end
@@ -756,6 +828,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCSceneAnalysisEffectFrame : RTObject <WMIMediaFrame, WFIClosable>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WMCCapturedFrameControlValues* frameControlValues;
 @property (readonly) WMCHighDynamicRangeOutput* highDynamicRange;
 @property (retain) id /* WFTimeSpan* */ systemRelativeTime;
@@ -788,6 +863,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCSceneAnalysisEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
@@ -800,6 +878,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCFaceDetectionEffectFrame : RTObject <WMIMediaFrame, WFIClosable>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSArray* /* WMFDetectedFace* */ detectedFaces;
 @property (retain) id /* WFTimeSpan* */ systemRelativeTime;
 @property (retain) id /* WFTimeSpan* */ relativeTime;
@@ -819,6 +900,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCFaceDetectedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WMCFaceDetectionEffectFrame* resultFrame;
 @end
 
@@ -830,6 +914,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCFaceDetectionEffect : RTObject <WMIMediaExtension>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property BOOL enabled;
 @property (retain) WFTimeSpan* desiredDetectionInterval;
 - (EventRegistrationToken)addFaceDetectedEvent:(void (^)(WMCFaceDetectionEffect*, WMCFaceDetectedEventArgs*))del;
@@ -846,6 +933,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCFaceDetectionEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property BOOL synchronousDetectionEnabled;
 @property WMCFaceDetectionMode detectionMode;
 @property (readonly) NSString* activatableClassId;
@@ -860,6 +950,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCVideoStabilizationEffectEnabledChangedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WMCVideoStabilizationEffectEnabledChangedReason reason;
 @end
 
@@ -871,6 +964,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCVideoStabilizationEffect : RTObject <WMIMediaExtension>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property BOOL enabled;
 - (EventRegistrationToken)addEnabledChangedEvent:(void (^)(WMCVideoStabilizationEffect*,
                                                            WMCVideoStabilizationEffectEnabledChangedEventArgs*))del;
@@ -889,6 +985,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCVideoStabilizationEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
@@ -901,6 +1000,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaSourceError : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) HRESULT extendedError;
 @end
 
@@ -929,6 +1031,9 @@ WINRT_EXPORT
 + (WMCMediaSource*)createFromStream:(RTObject<WSSIRandomAccessStream>*)stream contentType:(NSString*)contentType;
 + (WMCMediaSource*)createFromStreamReference:(RTObject<WSSIRandomAccessStreamReference>*)stream contentType:(NSString*)contentType;
 + (WMCMediaSource*)createFromUri:(WFUri*)uri;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WFCValueSet* customProperties;
 @property (readonly) id /* WFTimeSpan* */ duration;
 @property (readonly) NSMutableArray<RTObservableCollection>* /* WMCTimedMetadataTrack* */ externalTimedMetadataTracks;
@@ -947,6 +1052,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaSourceOpenOperationCompletedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WMCMediaSourceError* error;
 @end
 
@@ -962,6 +1070,9 @@ WINRT_EXPORT
 + (WMCTimedTextSource*)createFromUri:(WFUri*)uri;
 + (WMCTimedTextSource*)createFromStreamWithLanguage:(RTObject<WSSIRandomAccessStream>*)stream defaultLanguage:(NSString*)defaultLanguage;
 + (WMCTimedTextSource*)createFromUriWithLanguage:(WFUri*)uri defaultLanguage:(NSString*)defaultLanguage;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (EventRegistrationToken)addResolvedEvent:(void (^)(WMCTimedTextSource*, WMCTimedTextSourceResolveResultEventArgs*))del;
 - (void)removeResolvedEvent:(EventRegistrationToken)tok;
 @end
@@ -975,6 +1086,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCTimedMetadataTrack : RTObject <WMCIMediaTrack>
 + (WMCTimedMetadataTrack*)make:(NSString*)id language:(NSString*)language kind:(WMCTimedMetadataKind)kind ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* label;
 @property (readonly) NSString* id;
 @property (readonly) NSString* language;
@@ -1002,6 +1116,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCTimedTextRegion : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* name;
 @property (retain) WMCTimedTextDouble* lineHeight;
 @property BOOL isOverflowClipped;
@@ -1025,6 +1142,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCTimedTextStyle : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WUColor* foreground;
 @property WMCTimedTextWeight fontWeight;
 @property (retain) WMCTimedTextDouble* fontSize;
@@ -1048,6 +1168,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCTimedTextLine : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* text;
 @property (readonly) NSMutableArray* /* WMCTimedTextSubformat* */ subformats;
 @end
@@ -1061,6 +1184,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCTimedTextSubformat : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WMCTimedTextStyle* subformatStyle;
 @property int startIndex;
 @property int length;
@@ -1074,6 +1200,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCTimedMetadataTrackError : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WMCTimedMetadataTrackErrorCode errorCode;
 @property (readonly) HRESULT extendedError;
 @end
@@ -1086,6 +1215,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaCueEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) RTObject<WMCIMediaCue>* cue;
 @end
 
@@ -1097,6 +1229,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCTimedMetadataTrackFailedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WMCTimedMetadataTrackError* error;
 @end
 
@@ -1108,6 +1243,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCTimedTextSourceResolveResultEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WMCTimedMetadataTrackError* error;
 @property (readonly) NSArray* /* WMCTimedMetadataTrack* */ tracks;
 @end
@@ -1121,6 +1259,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCTimedTextCue : RTObject <WMCIMediaCue>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WFTimeSpan* startTime;
 @property (retain) NSString* id;
 @property (retain) WFTimeSpan* duration;
@@ -1138,6 +1279,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCDataCue : RTObject <WMCIMediaCue>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) RTObject<WSSIBuffer>* data;
 @property (retain) WFTimeSpan* startTime;
 @property (retain) NSString* id;
@@ -1152,6 +1296,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCVideoTrack : RTObject <WMCIMediaTrack>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* label;
 @property (readonly) NSString* id;
 @property (readonly) NSString* language;
@@ -1166,6 +1313,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCAudioTrack : RTObject <WMCIMediaTrack>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* label;
 @property (readonly) NSString* id;
 @property (readonly) NSString* language;

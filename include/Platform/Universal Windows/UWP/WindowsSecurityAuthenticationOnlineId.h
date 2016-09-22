@@ -51,6 +51,9 @@ WINRT_EXPORT
 @interface WSAOOnlineIdServiceTicketRequest : RTObject
 + (WSAOOnlineIdServiceTicketRequest*)makeOnlineIdServiceTicketRequest:(NSString*)service policy:(NSString*)policy ACTIVATOR;
 + (WSAOOnlineIdServiceTicketRequest*)makeOnlineIdServiceTicketRequestAdvanced:(NSString*)service ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* policy;
 @property (readonly) NSString* service;
 @end
@@ -63,6 +66,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAOOnlineIdServiceTicket : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) int errorCode;
 @property (readonly) WSAOOnlineIdServiceTicketRequest* request;
 @property (readonly) NSString* value;
@@ -90,6 +96,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAOUserAuthenticationOperation : RTObject <WFIAsyncInfo>
+// Failed to get type for default interface: Can't marshal
+// Windows.Foundation.IAsyncOperation`1<Windows.Security.Authentication.OnlineId.UserIdentity>
 @property (readonly) HRESULT errorCode;
 @property (readonly) unsigned int id;
 @property (readonly) WFAsyncStatus status;
@@ -121,6 +129,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAOSignOutUserOperation : RTObject <WFIAsyncAction, WFIAsyncInfo>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) HRESULT errorCode;
 @property (readonly) unsigned int id;
 @property (readonly) WFAsyncStatus status;
@@ -138,6 +149,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAOUserIdentity : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* firstName;
 @property (readonly) NSString* id;
 @property (readonly) BOOL isBetaAccount;
@@ -157,6 +171,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSAOOnlineIdAuthenticator : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property WFGUID* applicationId;
 @property (readonly) NSString* authenticatedSafeCustomerId;
 @property (readonly) BOOL canSignOut;

@@ -147,6 +147,9 @@ WINRT_EXPORT
 + (WUXMXamlBinaryWriterErrorInformation*)write:(NSMutableArray* /* RTObject<WSSIRandomAccessStream>* */)inputStreams
                                  outputStreams:(NSMutableArray* /* RTObject<WSSIRandomAccessStream>* */)outputStreams
                           xamlMetadataProvider:(RTObject<WUXMIXamlMetadataProvider>*)xamlMetadataProvider;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @end
 
 #endif // __WUXMXamlBinaryWriter_DEFINED__
@@ -159,6 +162,9 @@ WINRT_EXPORT
 @interface WUXMXamlReader : RTObject
 + (RTObject*)Load:(NSString*)xaml;
 + (RTObject*)loadWithInitialTemplateValidation:(NSString*)xaml;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @end
 
 #endif // __WUXMXamlReader_DEFINED__
@@ -191,6 +197,9 @@ WINRT_EXPORT
 + (void)setPropertyFromByte:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(uint8_t)value;
 + (void)setPropertyFromUri:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(WFUri*)value;
 + (void)setPropertyFromObject:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(RTObject*)value;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 + (WXDependencyProperty*)dataTemplateComponentProperty;
 @end
 

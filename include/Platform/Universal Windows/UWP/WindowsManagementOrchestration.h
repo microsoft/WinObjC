@@ -36,6 +36,9 @@
 WINRT_EXPORT
 @interface WMOCurrentAppOrchestration : RTObject
 + (WMOCurrentAppOrchestration*)getForCurrentView;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (WMOSingleAppModeContext*)startSingleAppMode;
 @end
 
@@ -57,6 +60,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMOSingleAppModeContext : RTObject <WFIClosable>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)close;
 @end
 

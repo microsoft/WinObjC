@@ -31,7 +31,7 @@ To get started using the bridge to bring your iOS app to Windows, you'll need:
     1. Programming Languages -> Visual C++
     2. Universal Windows App Development Tools (all)
 
-- (Optional) Windows 10 1511 Standalone SDK (Updated on November 30th, 2015) from [here](https://dev.windows.com/en-US/downloads/windows-10-sdk).  Note: this step is new and is not required if you already installed Visual Studio 2015 Update 1.
+- (Optional) Windows 10 1511 Standalone SDK (Updated on November 30th, 2015) from [here](https://dev.windows.com/en-US/downloads/windows-10-sdk).  Note: this step is new and is not required if you already installed Visual Studio 2015 Update 3.
 
 The best way to get started with the bridge is to run one of the samples. We recommend starting with the **WOCCatalog** sample app, which demonstrates an assortment of iOS and XAML UI controls.
 

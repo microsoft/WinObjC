@@ -91,6 +91,9 @@ WINRT_EXPORT
                                      suppPubInfo:(RTObject<WSSIBuffer>*)suppPubInfo
                                     suppPrivInfo:(RTObject<WSSIBuffer>*)suppPrivInfo;
 + (WSCCKeyDerivationParameters*)buildForCapi1Kdf:(WSCCCapi1KdfTargetAlgorithm)capi1KdfTargetAlgorithm;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) RTObject<WSSIBuffer>* kdfGenericBinary;
 @property (readonly) unsigned int iterationCount;
 @property WSCCCapi1KdfTargetAlgorithm capi1KdfTargetAlgorithm;
@@ -104,6 +107,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCCryptographicKey : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) unsigned int keySize;
 - (RTObject<WSSIBuffer>*)exportDefaultPrivateKeyBlobType;
 - (RTObject<WSSIBuffer>*)exportPrivateKeyWithBlobType:(WSCCCryptographicPrivateKeyBlobType)BlobType;
@@ -119,6 +125,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCCryptographicHash : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)append:(RTObject<WSSIBuffer>*)data;
 - (RTObject<WSSIBuffer>*)getValueAndReset;
 @end
@@ -149,6 +158,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCEncryptedAndAuthenticatedData : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) RTObject<WSSIBuffer>* authenticationTag;
 @property (readonly) RTObject<WSSIBuffer>* encryptedData;
 @end
@@ -203,6 +215,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCCHashAlgorithmProvider : RTObject
 + (WSCCHashAlgorithmProvider*)openAlgorithm:(NSString*)algorithm;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* algorithmName;
 @property (readonly) unsigned int hashLength;
 - (RTObject<WSSIBuffer>*)hashData:(RTObject<WSSIBuffer>*)data;
@@ -218,6 +233,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCCMacAlgorithmProvider : RTObject
 + (WSCCMacAlgorithmProvider*)openAlgorithm:(NSString*)algorithm;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* algorithmName;
 @property (readonly) unsigned int macLength;
 - (WSCCCryptographicKey*)createKey:(RTObject<WSSIBuffer>*)keyMaterial;
@@ -233,6 +251,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCCKeyDerivationAlgorithmProvider : RTObject
 + (WSCCKeyDerivationAlgorithmProvider*)openAlgorithm:(NSString*)algorithm;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* algorithmName;
 - (WSCCCryptographicKey*)createKey:(RTObject<WSSIBuffer>*)keyMaterial;
 @end
@@ -246,6 +267,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCCSymmetricKeyAlgorithmProvider : RTObject
 + (WSCCSymmetricKeyAlgorithmProvider*)openAlgorithm:(NSString*)algorithm;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* algorithmName;
 @property (readonly) unsigned int blockLength;
 - (WSCCCryptographicKey*)createSymmetricKey:(RTObject<WSSIBuffer>*)keyMaterial;
@@ -260,6 +284,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCCAsymmetricKeyAlgorithmProvider : RTObject
 + (WSCCAsymmetricKeyAlgorithmProvider*)openAlgorithm:(NSString*)algorithm;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* algorithmName;
 - (WSCCCryptographicKey*)createKeyPair:(unsigned int)keySize;
 - (WSCCCryptographicKey*)importDefaultPrivateKeyBlob:(RTObject<WSSIBuffer>*)keyBlob;

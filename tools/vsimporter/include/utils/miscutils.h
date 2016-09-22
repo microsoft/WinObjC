@@ -29,6 +29,4 @@ void removeDupes(StringVec& in);
 bool checkTelemetryOptIn();
 bool isMSFTInternalMachine();
 std::string getMachineID();
-
-
 #endif /* _MISCUTILS_H_ */

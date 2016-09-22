@@ -83,6 +83,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAppDisplayInfo : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* Description;
 @property (readonly) NSString* displayName;
 - (WSSRandomAccessStreamReference*)getLogo:(WFSize*)size;
@@ -96,6 +99,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAppInfo : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* appUserModelId;
 @property (readonly) WAAppDisplayInfo* displayInfo;
 @property (readonly) NSString* id;
@@ -110,6 +116,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASuspendingEventArgs : RTObject <WAISuspendingEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WASuspendingOperation* suspendingOperation;
 @end
 
@@ -121,6 +130,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASuspendingDeferral : RTObject <WAISuspendingDeferral>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)complete;
 @end
 
@@ -132,6 +144,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASuspendingOperation : RTObject <WAISuspendingOperation>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WFDateTime* deadline;
 - (WASuspendingDeferral*)getDeferral;
 @end
@@ -144,6 +159,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAPackageStatus : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) BOOL dataOffline;
 @property (readonly) BOOL dependencyIssue;
 @property (readonly) BOOL deploymentInProgress;
@@ -166,6 +184,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAPackageId : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WSProcessorArchitecture architecture;
 @property (readonly) NSString* familyName;
 @property (readonly) NSString* fullName;
@@ -186,6 +207,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAPackage : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSArray* /* WAPackage* */ dependencies;
 @property (readonly) WAPackageId* id;
 @property (readonly) WSStorageFolder* installedLocation;

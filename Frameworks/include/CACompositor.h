@@ -33,7 +33,6 @@ struct CAMediaTimingProperties;
 
 class CACompositorInterface {
 public:
-    virtual void DisplayTreeChanged() = 0;
     virtual void ProcessTransactions() = 0;
     virtual void RequestRedraw() = 0;
 

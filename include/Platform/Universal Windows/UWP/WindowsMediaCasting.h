@@ -71,6 +71,9 @@ typedef unsigned WMCCastingConnectionState;
 
 WINRT_EXPORT
 @interface WMCCastingSource : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WFUri* preferredSourceUri;
 @end
 
@@ -82,6 +85,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCCastingConnectionErrorOccurredEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WMCCastingConnectionErrorStatus errorStatus;
 @property (readonly) NSString* message;
 @end
@@ -100,6 +106,9 @@ WINRT_EXPORT
                                         failure:(void (^)(NSError*))failure;
 + (void)fromIdAsync:(NSString*)value success:(void (^)(WMCCastingDevice*))success failure:(void (^)(NSError*))failure;
 + (void)deviceInfoSupportsCastingAsync:(WDEDeviceInformation*)device success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* friendlyName;
 @property (readonly) RTObject<WSSIRandomAccessStreamWithContentType>* icon;
 @property (readonly) NSString* id;
@@ -125,6 +134,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCCastingConnection : RTObject <WFIClosable>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WMCCastingSource* source;
 @property (readonly) WMCCastingDevice* device;
 @property (readonly) WMCCastingConnectionState state;
@@ -147,6 +159,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCCastingDeviceSelectedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WMCCastingDevice* selectedCastingDevice;
 @end
 
@@ -158,6 +173,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCCastingDevicePickerFilter : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property BOOL supportsVideo;
 @property BOOL supportsPictures;
 @property BOOL supportsAudio;
@@ -173,6 +191,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCCastingDevicePicker : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WDEDevicePickerAppearance* appearance;
 @property (readonly) WMCCastingDevicePickerFilter* filter;
 - (EventRegistrationToken)addCastingDevicePickerDismissedEvent:(void (^)(WMCCastingDevicePicker*, RTObject*))del;

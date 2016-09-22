@@ -301,7 +301,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
     for (UIView* current = leafView; current != nil; current = current->priv->superview) {
         int charactersWritten = sprintf_s(&buffer[0],
                                           ARRAYSIZE(buffer) - 1, // Leave room for our null terminator
-                                          "%hs(0x%08x, _isHitTestable=%hs, XAML_HitTestable=%hs)<-",
+                                          "%hs(0x%p, _isHitTestable=%hs, XAML_HitTestable=%hs)<-",
                                           object_getClassName(current),
                                           current,
                                           [current _isHitTestable] ? "true" : "false",
@@ -341,7 +341,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
         // Note: This functionality will be deprecated in future releases
         if (UIApplication.displayMode.useLegacyHitTesting) {
             TraceWarning(TAG,
-                         L"Returning legacy hit test view %hs(0x%08x) because UIApplication.displayMode.useLegacyHitTesting is enabled.",
+                         L"Returning legacy hit test view %hs(0x%p) because UIApplication.displayMode.useLegacyHitTesting is enabled.",
                          object_getClassName(hitTestResult),
                          hitTestResult);
             return hitTestResult;
@@ -367,7 +367,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
     // At least log for now in case we see any strange behavior that results from this.
     if (!owningWindow) {
         TraceVerbose(TAG,
-                     L"Touched view %hs(0x%08x) for phase %d doesn't have a parent window with which to translate the touch point "
+                     L"Touched view %hs(0x%p) for phase %d doesn't have a parent window with which to translate the touch point "
                      L"coordinates; falling back to XAML's root coordinate space.",
                      object_getClassName(self),
                      self,
@@ -434,7 +434,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
 
     // Set the touch's view
     if (DEBUG_HIT_TESTING_LIGHT) {
-        TraceVerbose(TAG, L"Hit testing view %hs(0x%08x) for touchPhase %d.", object_getClassName(self), self, touchPhase);
+        TraceVerbose(TAG, L"Hit testing view %hs(0x%p) for touchPhase %d.", object_getClassName(self), self, touchPhase);
     }
     touchPoint.touch->_view = [self _doHitTest:touchPoint.touch allTouches:s_allTouches];
 
@@ -452,7 +452,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
         // Ignore if the pointer isn't captured
         if (DEBUG_TOUCHES_LIGHT) {
             TraceVerbose(TAG,
-                         L"View %hs(0x%08x) not aware of touch, ignoring touch for touchPhase %d.",
+                         L"View %hs(0x%p) not aware of touch, ignoring touch for touchPhase %d.",
                          object_getClassName(touchPoint.touch->_view),
                          static_cast<UIView*>(touchPoint.touch->_view),
                          touchPhase);
@@ -462,7 +462,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
         // Ignore if we already have a touch for this view and !multipleTouchEnabled
         if (DEBUG_TOUCHES_LIGHT) {
             TraceVerbose(TAG,
-                         L"View %hs(0x%08x) already has a touch, ignoring this subsequent touch due to !multipleTouchEnabled.",
+                         L"View %hs(0x%p) already has a touch, ignoring this subsequent touch due to !multipleTouchEnabled.",
                          object_getClassName(touchPoint.touch->_view),
                          static_cast<UIView*>(touchPoint.touch->_view));
         }
@@ -476,7 +476,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
 
                 if (DEBUG_TOUCHES_LIGHT) {
                     TraceVerbose(TAG,
-                                 L"Firing UITouchPhaseBegan to %hs(0x%08x).",
+                                 L"Firing UITouchPhaseBegan to %hs(0x%p).",
                                  object_getClassName(touchPoint.touch->_view),
                                  static_cast<UIView*>(touchPoint.touch->_view));
                 }
@@ -489,7 +489,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
             case UITouchPhaseMoved:
                 if (DEBUG_TOUCHES_LIGHT) {
                     TraceVerbose(TAG,
-                                 L"Firing UITouchPhaseMoved to %hs(0x%08x).",
+                                 L"Firing UITouchPhaseMoved to %hs(0x%p).",
                                  object_getClassName(touchPoint.touch->_view),
                                  static_cast<UIView*>(touchPoint.touch->_view));
                 }
@@ -503,7 +503,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
             case UITouchPhaseCancelled:
                 if (DEBUG_TOUCHES_LIGHT) {
                     TraceVerbose(TAG,
-                                 L"Firing %hs to %hs(0x%08x).",
+                                 L"Firing %hs to %hs(0x%p).",
                                  (touchPoint.touch->_phase == UITouchPhaseEnded) ? "UITouchPhaseEnded" : "UITouchPhaseCancelled",
                                  object_getClassName(touchPoint.touch->_view),
                                  static_cast<UIView*>(touchPoint.touch->_view));
@@ -577,7 +577,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
     if (!priv->userInteractionEnabled) {
         if (DEBUG_HIT_TESTING) {
             TraceVerbose(TAG,
-                         L"_isHitTestable returning NO for %hs(0x%08x) because !priv->userInteractionEnabled.",
+                         L"_isHitTestable returning NO for %hs(0x%p) because !priv->userInteractionEnabled.",
                          object_getClassName(self),
                          self);
         }
@@ -586,7 +586,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
 
     if ([self isHidden]) {
         if (DEBUG_HIT_TESTING) {
-            TraceVerbose(TAG, L"_isHitTestable returning NO for %hs(0x%08x) because [self isHidden].", object_getClassName(self), self);
+            TraceVerbose(TAG, L"_isHitTestable returning NO for %hs(0x%p) because [self isHidden].", object_getClassName(self), self);
         }
         return NO;
     }
@@ -594,7 +594,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
     if ([self alpha] <= 0.01f) {
         if (DEBUG_HIT_TESTING) {
             TraceVerbose(TAG,
-                         L"_isHitTestable returning NO for %hs(0x%08x) because [self alpha] <= 0.01f.",
+                         L"_isHitTestable returning NO for %hs(0x%p) because [self alpha] <= 0.01f.",
                          object_getClassName(self),
                          self);
         }
@@ -612,13 +612,13 @@ static std::string _printViewHeirarchy(UIView* leafView) {
     if (DEBUG_HIT_TESTING) {
         if ([self->priv->_xamlInputElement isHitTestVisible] != isHitTestable) {
             TraceVerbose(TAG,
-                         L"Changing the XAML element for %hs(0x%08x) to hit-testable=%hs.",
+                         L"Changing the XAML element for %hs(0x%p) to hit-testable=%hs.",
                          object_getClassName(self),
                          self,
                          isHitTestable ? "true" : "false");
         } else {
             TraceVerbose(TAG,
-                         L"The XAML element for %hs(0x%08x) is already set to hit-testable=%hs.",
+                         L"The XAML element for %hs(0x%p) is already set to hit-testable=%hs.",
                          object_getClassName(self),
                          self,
                          isHitTestable ? "true" : "false");
@@ -849,7 +849,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
         if ([self respondsToSelector:@selector(setDelegate:)]) {
             [self performSelector:@selector(setDelegate:) withObject:uiDelegate];
         } else {
-            TraceWarning(TAG, L"UIDelegate decoded but %hs(0x%08x) doesn't support setDelegate!", object_getClassName(self), self);
+            TraceWarning(TAG, L"UIDelegate decoded but %hs(0x%p) doesn't support setDelegate!", object_getClassName(self), self);
         }
     }
 
@@ -1235,7 +1235,7 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
 
                 if (DEBUG_LAYOUT) {
                     TraceVerbose(TAG,
-                                 L"Resizing %hs(0x%08x) (%f, %f, %f, %f) -> (%f, %f, %f, %f)",
+                                 L"Resizing %hs(0x%p) (%f, %f, %f, %f) -> (%f, %f, %f, %f)",
                                  object_getClassName(subview),
                                  subview,
                                  origFrame.origin.x,
@@ -1291,7 +1291,7 @@ static float doRound(float f) {
 
     if (DEBUG_LAYOUT) {
         TraceVerbose(TAG,
-                     L"SetFrame %hs(0x%08x): %f, %f, %f, %f",
+                     L"SetFrame %hs(0x%p): %f, %f, %f, %f",
                      object_getClassName(self),
                      self,
                      frame.origin.x,
@@ -1372,7 +1372,7 @@ static float doRound(float f) {
 
     if (DEBUG_LAYOUT) {
         TraceVerbose(TAG,
-                     L"Resizing %hs(0x%08x) (%f, %f, %f, %f)",
+                     L"Resizing %hs(0x%p) (%f, %f, %f, %f)",
                      object_getClassName(self),
                      self,
                      curBounds.origin.x,
@@ -1575,7 +1575,7 @@ static float doRound(float f) {
 
     if (DEBUG_LAYOUT) {
         TraceVerbose(TAG,
-                     L"Adding subview %hs(0x%08x) to %hs(0x%08x)",
+                     L"Adding subview %hs(0x%p) to %hs(0x%p)",
                      object_getClassName(subview),
                      subview,
                      object_getClassName(self),
@@ -1911,7 +1911,7 @@ static float doRound(float f) {
     [layer setHidden:hide];
 
     if (DEBUG_HIT_TESTING) {
-        TraceVerbose(TAG, L"Setting %hs(0x%08x) to hidden=%hs.", object_getClassName(self), self, hide ? "true" : "false");
+        TraceVerbose(TAG, L"Setting %hs(0x%p) to hidden=%hs.", object_getClassName(self), self, hide ? "true" : "false");
     }
 
     // Keep our hit test state up to date
@@ -1949,34 +1949,34 @@ static float doRound(float f) {
 
     if ([self isHidden]) {
         if (DEBUG_HIT_TESTING) {
-            TraceVerbose(TAG, L"hitTest ignoring hidden view %hs(0x%08x)", object_getClassName(self), self);
+            TraceVerbose(TAG, L"hitTest ignoring hidden view %hs(0x%p)", object_getClassName(self), self);
         }
         return nil;
     }
 
     if (![self isUserInteractionEnabled]) {
         if (DEBUG_HIT_TESTING) {
-            TraceVerbose(TAG, L"hitTest ignoring disabled view %hs(0x%08x)", object_getClassName(self), self);
+            TraceVerbose(TAG, L"hitTest ignoring disabled view %hs(0x%p)", object_getClassName(self), self);
         }
         return nil;
     }
 
     if ([self alpha] <= 0.01f) {
         if (DEBUG_HIT_TESTING) {
-            TraceVerbose(TAG, L"hitTest ignoring alpha view %hs(0x%08x)", object_getClassName(self), self);
+            TraceVerbose(TAG, L"hitTest ignoring alpha view %hs(0x%p)", object_getClassName(self), self);
         }
         return nil;
     }
 
     if (![self pointInside:point withEvent:event]) {
         if (DEBUG_HIT_TESTING) {
-            TraceVerbose(TAG, L"hitTest rejected; outside of view %hs(0x%08x)", object_getClassName(self), self);
+            TraceVerbose(TAG, L"hitTest rejected; outside of view %hs(0x%p)", object_getClassName(self), self);
         }
         return nil;
     }
 
     if (DEBUG_HIT_TESTING) {
-        TraceVerbose(TAG, L"HitTest inside %hs(0x%08x)", object_getClassName(self), self);
+        TraceVerbose(TAG, L"HitTest inside %hs(0x%p)", object_getClassName(self), self);
     }
 
     //  Go through subviews backwards until we find the furthest descendant
@@ -1992,21 +1992,21 @@ static float doRound(float f) {
 
         if ([view isHidden]) {
             if (DEBUG_HIT_TESTING) {
-                TraceVerbose(TAG, L"hitTest skipping hidden subview %hs(0x%08x)", object_getClassName(view), view);
+                TraceVerbose(TAG, L"hitTest skipping hidden subview %hs(0x%p)", object_getClassName(view), view);
             }
             continue;
         }
 
         if (![view isUserInteractionEnabled]) {
             if (DEBUG_HIT_TESTING) {
-                TraceVerbose(TAG, L"hitTest skipping disabled subview %hs(0x%08x)", object_getClassName(view), view);
+                TraceVerbose(TAG, L"hitTest skipping disabled subview %hs(0x%p)", object_getClassName(view), view);
             }
             continue;
         }
 
         if ([view alpha] <= 0.01f) {
             if (DEBUG_HIT_TESTING) {
-                TraceVerbose(TAG, L"hitTest skipping alpha subview %hs(0x%08x)", object_getClassName(view), view);
+                TraceVerbose(TAG, L"hitTest skipping alpha subview %hs(0x%p)", object_getClassName(view), view);
             }
             continue;
         }
@@ -2014,7 +2014,7 @@ static float doRound(float f) {
         CGPoint newPoint = [window convertPoint:point fromView:self toView:view];
         if ([view pointInside:newPoint withEvent:event]) {
             if (DEBUG_HIT_TESTING) {
-                TraceVerbose(TAG, L"Point (%f, %f) was inside %hs(0x%08x).", newPoint.x, newPoint.y, object_getClassName(view), view);
+                TraceVerbose(TAG, L"Point (%f, %f) was inside %hs(0x%p).", newPoint.x, newPoint.y, object_getClassName(view), view);
             }
 
             // The point was inside, so hit test this view
@@ -2022,7 +2022,7 @@ static float doRound(float f) {
             if (ret != nil) {
                 if (DEBUG_HIT_TESTING_LIGHT) {
                     TraceVerbose(TAG,
-                                 L"Found the hit test view %hs(0x%08x) within view: %hs(0x%08x).",
+                                 L"Found the hit test view %hs(0x%p) within view: %hs(0x%p).",
                                  object_getClassName(ret),
                                  ret,
                                  object_getClassName(view),
@@ -2031,7 +2031,7 @@ static float doRound(float f) {
                 return ret;
             }
         } else if (DEBUG_HIT_TESTING) {
-            TraceVerbose(TAG, L"Point (%f, %f) was NOT inside %hs(0x%08x).", newPoint.x, newPoint.y, object_getClassName(view), view);
+            TraceVerbose(TAG, L"Point (%f, %f) was NOT inside %hs(0x%p).", newPoint.x, newPoint.y, object_getClassName(view), view);
         }
     }
 
@@ -2230,7 +2230,7 @@ static float doRound(float f) {
     [layer setOpacity:alpha];
 
     if (DEBUG_HIT_TESTING) {
-        TraceVerbose(TAG, L"Setting %hs(0x%08x) to alpha=%f.", object_getClassName(self), self, alpha);
+        TraceVerbose(TAG, L"Setting %hs(0x%p) to alpha=%f.", object_getClassName(self), self, alpha);
     }
 
     // Keep our hit test state up to date
@@ -2289,7 +2289,7 @@ static float doRound(float f) {
 
     if (DEBUG_HIT_TESTING) {
         TraceVerbose(TAG,
-                     L"Setting %hs(0x%08x) to userInteractionEnabled=%hs.",
+                     L"Setting %hs(0x%p) to userInteractionEnabled=%hs.",
                      object_getClassName(self),
                      self,
                      enabled ? "true" : "false");
@@ -2720,7 +2720,7 @@ static float doRound(float f) {
 */
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     if (DEBUG_TOUCHES_LIGHT) {
-        TraceVerbose(TAG, L"touchesBegan: %hs(0x%08x)", object_getClassName(self), self);
+        TraceVerbose(TAG, L"touchesBegan: %hs(0x%p)", object_getClassName(self), self);
     }
 
     UIResponder* nextResponder = [self nextResponder];
@@ -2734,7 +2734,7 @@ static float doRound(float f) {
 */
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
     if (DEBUG_TOUCHES_LIGHT) {
-        TraceVerbose(TAG, L"touchesMoved: %hs(0x%08x)", object_getClassName(self), self);
+        TraceVerbose(TAG, L"touchesMoved: %hs(0x%p)", object_getClassName(self), self);
     }
 
     UIResponder* nextResponder = [self nextResponder];
@@ -2748,7 +2748,7 @@ static float doRound(float f) {
 */
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
     if (DEBUG_TOUCHES_LIGHT) {
-        TraceVerbose(TAG, L"touchesEnded: %hs(0x%08x)", object_getClassName(self), self);
+        TraceVerbose(TAG, L"touchesEnded: %hs(0x%p)", object_getClassName(self), self);
     }
 
     UIResponder* nextResponder = [self nextResponder];
@@ -2762,7 +2762,7 @@ static float doRound(float f) {
 */
 - (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event {
     if (DEBUG_TOUCHES_LIGHT) {
-        TraceVerbose(TAG, L"touchesCancelled: %hs(0x%08x)", object_getClassName(self), self);
+        TraceVerbose(TAG, L"touchesCancelled: %hs(0x%p)", object_getClassName(self), self);
     }
 
     UIResponder* nextResponder = [self nextResponder];
@@ -3300,7 +3300,7 @@ static float doRound(float f) {
 
     _deallocating = true;
     viewCount--;
-    TraceInfo(TAG, L"%d: dealloc %hs %x", viewCount, object_getClassName(self), self);
+    TraceInfo(TAG, L"%d: dealloc %hs 0x%p: layer 0x%p", viewCount, object_getClassName(self), self, self->layer.get());
 
     // Unsubscribe from pointer events
     [self->priv->_xamlInputElement removePointerPressedEvent:self->priv->_pointerPressedEventRegistration];
@@ -3332,7 +3332,8 @@ static float doRound(float f) {
     }
     [priv->gestures release];
     [priv->currentTouches release];
-    layer = nil;
+
+    [self->layer setDelegate:nil];
 
     [self autoLayoutDealloc];
 

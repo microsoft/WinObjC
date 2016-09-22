@@ -78,6 +78,9 @@ typedef unsigned WSCUUserConsentVerificationResult;
 WINRT_EXPORT
 @interface WSCUCredentialPickerOptions : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* targetName;
 @property (retain) RTObject<WSSIBuffer>* previousCredential;
 @property (retain) NSString* message;
@@ -98,6 +101,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCUCredentialPickerResults : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) RTObject<WSSIBuffer>* credential;
 @property (readonly) NSString* credentialDomainName;
 @property (readonly) NSString* credentialPassword;

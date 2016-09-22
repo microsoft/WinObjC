@@ -19,8 +19,6 @@
 
 class NullCompositor : public CACompositorInterface {
 public:
-    void DisplayTreeChanged() override {
-    }
     void ProcessTransactions() override {
     }
     void RequestRedraw() override {

@@ -44,6 +44,9 @@ typedef unsigned WACPAddContactResult;
 
 WINRT_EXPORT
 @interface WACPContactRemovedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* id;
 @end
 
@@ -55,6 +58,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACPContactPickerUI : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSArray* /* NSString * */ desiredFields;
 @property (readonly) WACContactSelectionMode selectionMode;
 @property (readonly) NSMutableArray* /* WACContactFieldType */ desiredFieldsWithContactFieldType;

@@ -190,9 +190,9 @@ TEST(Security, GenericPasswordHandler_Query) {
         (__bridge id)(kSecMatchLimit) : (__bridge id)kSecMatchLimitOne,
     };
 
-    // lmiit one specified so just go directly to dictionary.
+    // limit one specified so just go directly to dictionary.
     NSDictionary* attributes;
-    [handler query:attrQuery1 withResult:&attributes];
+    ASSERT_EQ(errSecSuccess, [handler query:attrQuery1 withResult:&attributes]);
 
     // Make sure that the returned attributes match what is set.
     // Note that this assumes return order is the same as add order which isn't necessarily true
@@ -200,6 +200,24 @@ TEST(Security, GenericPasswordHandler_Query) {
     ASSERT_OBJCEQ((__bridge id)(kSecClassGenericPassword), [attributes objectForKey:(__bridge id)(kSecClass)]);
     ASSERT_OBJCEQ(@"fakeAccount@fakeEmail.com", [attributes objectForKey:(__bridge id)(kSecAttrAccount)]);
     ASSERT_OBJCEQ(@"www.fakeWebService.com", [attributes objectForKey:(__bridge id)(kSecAttrService)]);
+
+    [attributes release];
+
+    // Query for the second item in the vault.
+    NSDictionary* attrQuery2 = @{
+        (__bridge id)(kSecClass) : (__bridge id)(kSecClassGenericPassword),
+        (__bridge id)(kSecAttrService) : @"www.ADifferentFakeWebService.com",
+        (__bridge id)(kSecReturnAttributes) : (__bridge id)kCFBooleanTrue,
+        (__bridge id)(kSecMatchLimit) : (__bridge id)kSecMatchLimitOne,
+    };
+
+    // limit one specified so just go directly to dictionary.
+    ASSERT_EQ(errSecSuccess, [handler query:attrQuery2 withResult:&attributes]);
+
+    // Make sure that the returned attributes match what is set.
+    ASSERT_OBJCEQ((__bridge id)(kSecClassGenericPassword), [attributes objectForKey:(__bridge id)(kSecClass)]);
+    ASSERT_OBJCEQ(@"fakeAccount@fakeEmail.com", [attributes objectForKey:(__bridge id)(kSecAttrAccount)]);
+    ASSERT_OBJCEQ(@"www.ADifferentFakeWebService.com", [attributes objectForKey:(__bridge id)(kSecAttrService)]);
 
     [attributes release];
 
@@ -212,7 +230,7 @@ TEST(Security, GenericPasswordHandler_Query) {
     };
 
     NSArray* outArray;
-    [handler query:dataQuery1 withResult:&outArray];
+    ASSERT_EQ(errSecSuccess, [handler query:dataQuery1 withResult:&outArray]);
     ASSERT_EQ(2, [outArray count]);
 
     // Note that this assumes return order is the same as add order which isn't necessarily true
@@ -224,15 +242,14 @@ TEST(Security, GenericPasswordHandler_Query) {
     outArray = nil;
 
     // Query for something not there.
-    NSDictionary* attrQuery2 = @{
+    NSDictionary* attrQuery3 = @{
         (__bridge id)(kSecClass) : (__bridge id)(kSecClassGenericPassword),
         (__bridge id)(kSecAttrService) : @"www.aNonExistentWebService.com",
         (__bridge id)(kSecReturnAttributes) : (__bridge id)kCFBooleanTrue,
         (__bridge id)(kSecMatchLimit) : (__bridge id)kSecMatchLimitOne,
     };
 
-    OSStatus result = [handler query:attrQuery2 withResult:&outArray];
-    ASSERT_EQ(result, errSecItemNotFound);
+    ASSERT_EQ(errSecItemNotFound, [handler query:attrQuery3 withResult:&outArray]);
     ASSERT_EQ(nil, outArray);
 
     [mockVault release];

@@ -507,6 +507,9 @@ typedef unsigned WAAActivationKind;
 
 WINRT_EXPORT
 @interface WAASplashScreen : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WFRect* imageLocation;
 - (EventRegistrationToken)addDismissedEvent:(void (^)(WAASplashScreen*, RTObject*))del;
 - (void)removeDismissedEvent:(EventRegistrationToken)tok;
@@ -524,6 +527,9 @@ WINRT_EXPORT
                                                    WAAIApplicationViewActivatedEventArgs,
                                                    WAAIPrelaunchActivatedEventArgs,
                                                    WAAIViewSwitcherProvider>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -546,6 +552,9 @@ WINRT_EXPORT
                                                    WAAIApplicationViewActivatedEventArgs,
                                                    WAAISearchActivatedEventArgsWithLinguisticDetails,
                                                    WAAIViewSwitcherProvider>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -564,6 +573,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAShareTargetActivatedEventArgs : RTObject <WAAIShareTargetActivatedEventArgs, WAAIActivatedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -583,6 +595,9 @@ WINRT_EXPORT
                                                  WAAIFileActivatedEventArgsWithCallerPackageFamilyName,
                                                  WAAIApplicationViewActivatedEventArgs,
                                                  WAAIViewSwitcherProvider>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -606,6 +621,9 @@ WINRT_EXPORT
                                                      WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData,
                                                      WAAIApplicationViewActivatedEventArgs,
                                                      WAAIViewSwitcherProvider>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -629,6 +647,9 @@ WINRT_EXPORT
                                                                WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData,
                                                                WAAIApplicationViewActivatedEventArgs,
                                                                WAAIViewSwitcherProvider>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -649,6 +670,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAFileOpenPickerActivatedEventArgs
     : RTObject <WAAIFileOpenPickerActivatedEventArgs, WAAIActivatedEventArgs, WAAIFileOpenPickerActivatedEventArgs2>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -665,6 +689,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAFileSavePickerActivatedEventArgs
     : RTObject <WAAIFileSavePickerActivatedEventArgs, WAAIActivatedEventArgs, WAAIFileSavePickerActivatedEventArgs2>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -681,6 +708,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAACachedFileUpdaterActivatedEventArgs : RTObject <WAAICachedFileUpdaterActivatedEventArgs, WAAIActivatedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -696,6 +726,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAADeviceActivatedEventArgs
     : RTObject <WAAIDeviceActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WAAIViewSwitcherProvider>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -715,6 +748,9 @@ WINRT_EXPORT
 @interface WAAAppointmentsProviderAddAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderAddAppointmentActivatedEventArgs,
                                                                                WAAIAppointmentsProviderActivatedEventArgs,
                                                                                WAAIActivatedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -733,6 +769,9 @@ WINRT_EXPORT
     : RTObject <WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs,
                 WAAIAppointmentsProviderActivatedEventArgs,
                 WAAIActivatedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -748,6 +787,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAPickerReturnedActivatedEventArgs : RTObject <WAAIPickerReturnedActivatedEventArgs, WAAIActivatedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -765,6 +807,9 @@ WINRT_EXPORT
     : RTObject <WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs,
                 WAAIAppointmentsProviderActivatedEventArgs,
                 WAAIActivatedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -783,6 +828,9 @@ WINRT_EXPORT
     : RTObject <WAAIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs,
                 WAAIAppointmentsProviderActivatedEventArgs,
                 WAAIActivatedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -801,6 +849,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAAppointmentsProviderShowTimeFrameActivatedEventArgs
     : RTObject <WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs, WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -817,6 +868,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAARestrictedLaunchActivatedEventArgs : RTObject <WAAIRestrictedLaunchActivatedEventArgs, WAAIActivatedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -831,6 +885,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAALockScreenActivatedEventArgs : RTObject <WAAILockScreenActivatedEventArgs, WAAIActivatedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -846,6 +903,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAFileOpenPickerContinuationEventArgs
     : RTObject <WAAIFileOpenPickerContinuationEventArgs, WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -862,6 +922,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAFileSavePickerContinuationEventArgs
     : RTObject <WAAIFileSavePickerContinuationEventArgs, WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -878,6 +941,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAFolderPickerContinuationEventArgs
     : RTObject <WAAIFolderPickerContinuationEventArgs, WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -894,6 +960,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAWebAuthenticationBrokerContinuationEventArgs
     : RTObject <WAAIWebAuthenticationBrokerContinuationEventArgs, WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -909,6 +978,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAWebAccountProviderActivatedEventArgs : RTObject <WAAIWebAccountProviderActivatedEventArgs, WAAIActivatedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -923,6 +995,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAToastNotificationActivatedEventArgs : RTObject <WAAIToastNotificationActivatedEventArgs, WAAIActivatedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -942,6 +1017,9 @@ WINRT_EXPORT
                                                          WAAIActivatedEventArgs,
                                                          WAAIApplicationViewActivatedEventArgs,
                                                          WAAIViewSwitcherProvider>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
@@ -960,6 +1038,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAVoiceCommandActivatedEventArgs : RTObject <WAAIVoiceCommandActivatedEventArgs, WAAIActivatedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;

@@ -243,6 +243,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WGIBitmapTransform : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property unsigned int scaledWidth;
 @property unsigned int scaledHeight;
 @property WGIBitmapRotation rotation;
@@ -260,6 +263,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WGIBitmapTypedValue : RTObject
 + (WGIBitmapTypedValue*)make:(RTObject*)value type:(WFPropertyType)type ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WFPropertyType type;
 @property (readonly) RTObject* value;
 @end
@@ -273,6 +279,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WGIBitmapPropertySet : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) unsigned int size;
 - (id)objectForKey:(id)key;
 - (NSArray*)allKeys;
@@ -299,6 +308,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGIBitmapPropertiesView : RTObject <WGIIBitmapPropertiesView>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)getPropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve
                    success:(void (^)(WGIBitmapPropertySet*))success
                    failure:(void (^)(NSError*))failure;
@@ -312,6 +324,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGIBitmapProperties : RTObject <WGIIBitmapPropertiesView>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (RTObject<WFIAsyncAction>*)setPropertiesAsync:
     (id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, WGIBitmapTypedValue* > */)propertiesToSet;
 - (void)getPropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve
@@ -327,6 +342,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGIPixelDataProvider : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (NSArray* /* uint8_t */)detachPixelData;
 @end
 
@@ -449,6 +467,9 @@ WINRT_EXPORT
                                       WSSIOutputStream,
                                       WFIClosable,
                                       WSSIInputStream>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* contentType;
 @property uint64_t size;
 @property (readonly) BOOL canRead;
@@ -480,6 +501,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGIBitmapFrame : RTObject <WGIIBitmapFrame, WGIIBitmapFrameWithSoftwareBitmap>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WGIBitmapAlphaMode bitmapAlphaMode;
 @property (readonly) WGIBitmapPixelFormat bitmapPixelFormat;
 @property (readonly) WGIBitmapPropertiesView* bitmapProperties;
@@ -520,6 +544,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGIBitmapCodecInformation : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WFGUID* codecId;
 @property (readonly) NSArray* /* NSString * */ fileExtensions;
 @property (readonly) NSString* friendlyName;
@@ -542,6 +569,9 @@ WINRT_EXPORT
                    stream:(RTObject<WSSIRandomAccessStream>*)stream
                   success:(void (^)(WGIBitmapDecoder*))success
                   failure:(void (^)(NSError*))failure;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WGIBitmapPropertiesView* bitmapContainerProperties;
 @property (readonly) WGIBitmapCodecInformation* decoderInformation;
 @property (readonly) unsigned int frameCount;
@@ -611,6 +641,9 @@ WINRT_EXPORT
 + (void)createForInPlacePropertyEncodingAsync:(WGIBitmapDecoder*)bitmapDecoder
                                       success:(void (^)(WGIBitmapEncoder*))success
                                       failure:(void (^)(NSError*))failure;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property BOOL isThumbnailGenerated;
 @property unsigned int generatedThumbnailWidth;
 @property unsigned int generatedThumbnailHeight;
@@ -657,6 +690,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGIBitmapBuffer : RTObject <WFIMemoryBuffer, WFIClosable>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (int)getPlaneCount;
 - (WGIBitmapPlaneDescription*)getPlaneDescription:(int)index;
 - (RTObject<WFIMemoryBufferReference>*)createReference;
@@ -695,6 +731,9 @@ WINRT_EXPORT
                               width:(int)width
                              height:(int)height
                               alpha:(WGIBitmapAlphaMode)alpha ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property double dpiY;
 @property double dpiX;
 @property (readonly) WGIBitmapAlphaMode bitmapAlphaMode;

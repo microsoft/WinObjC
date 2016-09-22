@@ -129,6 +129,9 @@ typedef unsigned WSCCSignatureValidationResult;
 WINRT_EXPORT
 @interface WSCCCertificate : RTObject
 + (WSCCCertificate*)makeCertificate:(RTObject<WSSIBuffer>*)certBlob ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* friendlyName;
 @property (readonly) NSArray* /* NSString * */ enhancedKeyUsages;
 @property (readonly) BOOL hasPrivateKey;
@@ -165,6 +168,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCCCertificateRequestProperties : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* subject;
 @property WSCCEnrollKeyUsages keyUsages;
 @property (retain) NSString* keyStorageProviderName;
@@ -192,6 +198,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCUserCertificateEnrollmentManager : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)createRequestAsync:(WSCCCertificateRequestProperties*)request
                    success:(void (^)(NSString*))success
                    failure:(void (^)(NSError*))failure;
@@ -223,6 +232,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCCPfxImportParameters : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* readerName;
 @property (retain) NSString* keyStorageProviderName;
 @property WSCCKeyProtectionLevel keyProtectionLevel;
@@ -288,6 +300,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCCCertificateQuery : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSArray* /* uint8_t */ thumbprint;
 @property (retain) NSString* issuerName;
 @property BOOL hardwareOnly;
@@ -306,6 +321,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCCertificateStore : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* name;
 - (void)add:(WSCCCertificate*)certificate;
 - (void)Delete:(WSCCCertificate*)certificate;
@@ -371,6 +389,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCCChainBuildingParameters : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WFDateTime* validationTimestamp;
 @property BOOL revocationCheckEnabled;
 @property BOOL networkRetrievalEnabled;
@@ -389,6 +410,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCCChainValidationParameters : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WNHostName* serverDnsName;
 @property WSCCCertificateChainPolicy certificateChainPolicy;
 @end
@@ -401,6 +425,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCCertificateChain : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (WSCCChainValidationResult)validate;
 - (WSCCChainValidationResult)validateWithParameters:(WSCCChainValidationParameters*)parameter;
 - (NSArray* /* WSCCCertificate* */)getCertificates:(BOOL)includeRoot;
@@ -415,6 +442,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCCCertificateKeyUsages : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property BOOL nonRepudiation;
 @property BOOL keyEncipherment;
 @property BOOL keyCertificateSign;
@@ -434,6 +464,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCCSubjectAlternativeNameInfo : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSArray* /* NSString * */ distinguishedName;
 @property (readonly) NSArray* /* NSString * */ dnsName;
 @property (readonly) NSArray* /* NSString * */ emailName;
@@ -450,6 +483,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCCmsTimestampInfo : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSArray* /* WSCCCertificate* */ certificates;
 @property (readonly) WSCCCertificate* signingCertificate;
 @property (readonly) WFDateTime* timestamp;
@@ -464,6 +500,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCCCmsSignerInfo : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* hashAlgorithmName;
 @property (retain) WSCCCertificate* certificate;
 @property (readonly) WSCCCmsTimestampInfo* timestampInfo;
@@ -483,6 +522,9 @@ WINRT_EXPORT
                        success:(void (^)(RTObject<WSSIBuffer>*))success
                        failure:(void (^)(NSError*))failure;
 + (WSCCCmsAttachedSignature*)makeCmsAttachedSignature:(RTObject<WSSIBuffer>*)inputBlob ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSArray* /* WSCCCertificate* */ certificates;
 @property (readonly) NSArray* /* uint8_t */ content;
 @property (readonly) NSArray* /* WSCCCmsSignerInfo* */ signers;
@@ -503,6 +545,9 @@ WINRT_EXPORT
                        success:(void (^)(RTObject<WSSIBuffer>*))success
                        failure:(void (^)(NSError*))failure;
 + (WSCCCmsDetachedSignature*)makeCmsDetachedSignature:(RTObject<WSSIBuffer>*)inputBlob ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSArray* /* WSCCCertificate* */ certificates;
 @property (readonly) NSArray* /* WSCCCmsSignerInfo* */ signers;
 - (void)verifySignatureAsync:(RTObject<WSSIInputStream>*)data

@@ -311,6 +311,9 @@ WINRT_EXPORT
 + (BOOL)isSupported:(NSString*)geographicRegionCode;
 + (WGGeographicRegion*)makeGeographicRegion:(NSString*)geographicRegionCode ACTIVATOR;
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* code;
 @property (readonly) NSString* codeThreeDigit;
 @property (readonly) NSString* codeThreeLetter;
@@ -331,6 +334,9 @@ WINRT_EXPORT
 + (BOOL)trySetInputMethodLanguageTag:(NSString*)languageTag;
 + (BOOL)isWellFormed:(NSString*)languageTag;
 + (WGLanguage*)makeLanguage:(NSString*)languageTag ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* displayName;
 @property (readonly) NSString* languageTag;
 @property (readonly) NSString* nativeName;
@@ -354,6 +360,9 @@ WINRT_EXPORT
                                calendar:(NSString*)calendar
                                   clock:(NSString*)clock
                              timeZoneId:(NSString*)timeZoneId ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property int year;
 @property int second;
 @property int period;

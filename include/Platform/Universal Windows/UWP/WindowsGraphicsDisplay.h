@@ -80,6 +80,9 @@ typedef void (^WGDDisplayPropertiesEventHandler)(RTObject* sender);
 WINRT_EXPORT
 @interface WGDDisplayInformation : RTObject
 + (WGDDisplayInformation*)getForCurrentView;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WGDDisplayOrientations currentOrientation;
 @property (readonly) float logicalDpi;
 @property (readonly) WGDDisplayOrientations nativeOrientation;
