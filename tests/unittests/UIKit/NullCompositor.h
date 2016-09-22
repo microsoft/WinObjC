@@ -185,4 +185,8 @@ public:
 
     virtual void SetShouldRasterize(DisplayNode* node, bool rasterize) override {
     }
+
+    virtual bool IsRunningAsFramework() override {
+        return false;
+    }
 };
