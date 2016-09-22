@@ -205,7 +205,7 @@
     [self.view addSubview:_rightView];
 
     // Create justified text
-    _justifiedView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(20, 620, 400, 200)];
+    _justifiedView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(0, 450, width / 2, 150)];
     _justifiedView.backgroundColor = [UIColor whiteColor];
     _justifiedView.alignment = kCTJustifiedTextAlignment;
     _justifiedView.font = _font;

@@ -241,13 +241,14 @@
     CGFloat secondaryOffset;
     CGFloat primaryOffset = CTLineGetOffsetForStringIndex(line, 5, &secondaryOffset);
     [_functionCells addObject:createTextCell(@"CTLineGetOffsetForStringIndex (5)",
-                                             [NSString stringWithFormat:@"primary %f, secondary %f", primaryOffset, secondaryOffset])];
+                                             [NSString stringWithFormat:@"primary %f, secondary %f", primaryOffset, secondaryOffset],
+                                             width / 2)];
 
-    ADD_UNIMPLEMENTED(_functionCells, @"CTLineCreateJustifiedLine");
-    ADD_UNIMPLEMENTED(_functionCells, @"CTLineGetPenOffsetForFlush");
-    ADD_UNIMPLEMENTED(_functionCells, @"CTLineGetImageBounds");
-    ADD_UNIMPLEMENTED(_functionCells, @"CTLineGetTrailingWhitespaceWidth");
-    ADD_UNIMPLEMENTED(_functionCells, @"CTLineGetTypeID");
+    ADD_UNIMPLEMENTED(_functionCells, @"CTLineCreateJustifiedLine", width / 2);
+    ADD_UNIMPLEMENTED(_functionCells, @"CTLineGetPenOffsetForFlush", width / 2);
+    ADD_UNIMPLEMENTED(_functionCells, @"CTLineGetImageBounds", width / 2);
+    ADD_UNIMPLEMENTED(_functionCells, @"CTLineGetTrailingWhitespaceWidth", width / 2);
+    ADD_UNIMPLEMENTED(_functionCells, @"CTLineGetTypeID", width / 2);
     [_linesView reloadData];
 }
 

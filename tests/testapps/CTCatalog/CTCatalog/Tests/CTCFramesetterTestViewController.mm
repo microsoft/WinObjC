@@ -203,11 +203,13 @@
                                                                         nullptr);
     [_functionCells
         addObject:createTextCell(@"CTFramesetterSuggestFrameSizeWithConstraints",
-                                 [NSString stringWithFormat:@"width: %f, height: %f", suggestedSize.width, suggestedSize.height])];
+                                 [NSString stringWithFormat:@"width: %f, height: %f", suggestedSize.width, suggestedSize.height],
+                                 width / 2)];
     [_functionCells addObject:createTextCell(@"CTFramesetterGetTypeSetter",
-                                             [NSString stringWithFormat:@"%@", CTFramesetterGetTypesetter(framesetter)])];
+                                             [NSString stringWithFormat:@"%@", CTFramesetterGetTypesetter(framesetter)],
+                                             width / 2)];
 
-    ADD_UNIMPLEMENTED(_functionCells, @"CTFramesetterGetTypeID");
+    ADD_UNIMPLEMENTED(_functionCells, @"CTFramesetterGetTypeID", width / 2);
     [_functionsView reloadData];
 
     _suggestedFrameSizeView = [[CTFramesetterTestView alloc] initWithFrame:CGRectMake(0, 200, suggestedSize.width, suggestedSize.height)];

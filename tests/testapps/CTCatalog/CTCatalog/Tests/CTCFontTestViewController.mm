@@ -252,10 +252,10 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
     [@"Glyphs" getCharacters:characters range:NSMakeRange(0, 6)];
     CGGlyph glyphs[6];
     CTFontGetGlyphsForCharacters(_font, characters, glyphs, 6);
-    [_rows
-        addObject:createTextCell(
-                      @"CTFontGetGlyphsForCharacters:Glyphs",
-                      [NSString stringWithFormat:@"%d %d %d %d %d %d", glyphs[0], glyphs[1], glyphs[2], glyphs[3], glyphs[4], glyphs[5]])];
+    [_rows addObject:createTextCell(
+                         @"CTFontGetGlyphsForCharacters:Glyphs",
+                         [NSString stringWithFormat:@"%d %d %d %d %d %d", glyphs[0], glyphs[1], glyphs[2], glyphs[3], glyphs[4], glyphs[5]],
+                         width / 2)];
 
     CGSize advances[6];
     double totalWidth = CTFontGetAdvancesForGlyphs(_font, kCTFontDefaultOrientation, glyphs, advances, 6);

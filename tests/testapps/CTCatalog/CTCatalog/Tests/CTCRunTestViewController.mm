@@ -171,49 +171,55 @@
     CGPoint points[5];
     CTRunGetPositions(run, CFRangeMake(0, 0), points);
     const CGPoint* pointPtr = CTRunGetPositionsPtr(run);
-    [_testCells addObject:createTextCell(@"CTRunGetPositions - {x, y}:", @"CTRunGetPositionsPtr - {x, y}")];
+    [_testCells addObject:createTextCell(@"CTRunGetPositions - {x, y}:", @"CTRunGetPositionsPtr - {x, y}", width / 2)];
     for (CFIndex i = 0; i < 5; ++i) {
         [_testCells addObject:createTextCell([NSString stringWithFormat:@"{%f, %f}", points[i].x, points[i].y],
-                                             [NSString stringWithFormat:@"{%f, %f}", pointPtr[i].x, pointPtr[i].y])];
+                                             [NSString stringWithFormat:@"{%f, %f}", pointPtr[i].x, pointPtr[i].y],
+                                             width / 2)];
     }
 
     CGSize advances[5];
     CTRunGetAdvances(run, CFRangeMake(0, 0), advances);
     const CGSize* advancePtr = CTRunGetAdvancesPtr(run);
-    [_testCells addObject:createTextCell(@"CTRunGetAdvances - {width, height}:", @"CTRunGetAdvancesPtr {width, height}")];
+    [_testCells addObject:createTextCell(@"CTRunGetAdvances - {width, height}:", @"CTRunGetAdvancesPtr {width, height}", width / 2)];
     for (CFIndex i = 0; i < 5; ++i) {
         [_testCells addObject:createTextCell([NSString stringWithFormat:@"{%f, %f}", advances[i].width, advances[i].height],
-                                             [NSString stringWithFormat:@"{%f, %f}", advancePtr[i].width, advancePtr[i].height])];
+                                             [NSString stringWithFormat:@"{%f, %f}", advancePtr[i].width, advancePtr[i].height],
+                                             width / 2)];
     }
 
     CGGlyph glyphs[5];
     CTRunGetGlyphs(run, CFRangeMake(0, 0), glyphs);
     const CGGlyph* glyphPtr = CTRunGetGlyphsPtr(run);
-    [_testCells addObject:createTextCell(@"CTRunGetGlyphs:", @"CTRunGetGlyphsPtr:")];
+    [_testCells addObject:createTextCell(@"CTRunGetGlyphs:", @"CTRunGetGlyphsPtr:", width / 2)];
     for (CFIndex i = 0; i < 5; ++i) {
-        [_testCells addObject:createTextCell([NSString stringWithFormat:@"%d", glyphs[i]], [NSString stringWithFormat:@"%d", glyphPtr[i]])];
+        [_testCells addObject:createTextCell([NSString stringWithFormat:@"%d", glyphs[i]],
+                                             [NSString stringWithFormat:@"%d", glyphPtr[i]],
+                                             width / 2)];
     }
 
     CFIndex indices[5];
     CTRunGetStringIndices(run, CFRangeMake(0, 0), indices);
     const CFIndex* indicesPtr = CTRunGetStringIndicesPtr(run);
-    [_testCells addObject:createTextCell(@"CTRunGetStringIndices:", @"CTRunGetStringIndicesPtr:")];
+    [_testCells addObject:createTextCell(@"CTRunGetStringIndices:", @"CTRunGetStringIndicesPtr:", width / 2)];
     for (CFIndex i = 0; i < 5; ++i) {
-        [_testCells
-            addObject:createTextCell([NSString stringWithFormat:@"%d", indices[i]], [NSString stringWithFormat:@"%d", indicesPtr[i]])];
+        [_testCells addObject:createTextCell([NSString stringWithFormat:@"%d", indices[i]],
+                                             [NSString stringWithFormat:@"%d", indicesPtr[i]],
+                                             width / 2)];
     }
 
     CGFloat ascent, descent, leading;
     double totalWidth = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, &leading);
     [_testCells
-        addObject:createTextCell(
-                      @"CTRunGetTypographicBounds",
-                      [NSString stringWithFormat:@"width: %f, ascent: %f, descent: %f, leading: %f", width, ascent, descent, leading])];
+        addObject:createTextCell(@"CTRunGetTypographicBounds",
+                                 [NSString
+                                     stringWithFormat:@"width: %f, ascent: %f, descent: %f, leading: %f", width, ascent, descent, leading],
+                                 width / 2)];
 
-    ADD_UNIMPLEMENTED(_testCells, @"CTRunGetStatus");
-    ADD_UNIMPLEMENTED(_testCells, @"CTRunGetImageBounds");
-    ADD_UNIMPLEMENTED(_testCells, @"CTRunGetTextMatrix");
-    ADD_UNIMPLEMENTED(_testCells, @"CTRunGetTypeID");
+    ADD_UNIMPLEMENTED(_testCells, @"CTRunGetStatus", width / 2);
+    ADD_UNIMPLEMENTED(_testCells, @"CTRunGetImageBounds", width / 2);
+    ADD_UNIMPLEMENTED(_testCells, @"CTRunGetTextMatrix", width / 2);
+    ADD_UNIMPLEMENTED(_testCells, @"CTRunGetTypeID", width / 2);
 
     [_testsView reloadData];
 }
