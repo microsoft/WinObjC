@@ -20,7 +20,7 @@
 #import <CoreFoundation/CoreFoundation.h>
 
 static NSAttributedString* getMultilineAttributedString() {
-    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Times New Roman" size:40];
+    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Segoe UI" size:40];
     UIFont* font = [UIFont fontWithDescriptor:fontDescriptor size:40];
 
     NSRange wholeRange = NSMakeRange(0, 20);
