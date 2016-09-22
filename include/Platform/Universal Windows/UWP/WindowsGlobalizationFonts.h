@@ -40,7 +40,7 @@
 OBJCUWP_WINDOWS_GLOBALIZATION_FONTS_EXPORT
 @interface WGFLanguageFont : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* fontFamily;
 @property (readonly) WUTFontStretch fontStretch;
@@ -59,7 +59,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_FONTS_EXPORT
 @interface WGFLanguageFontGroup : RTObject
 + (WGFLanguageFontGroup*)makeLanguageFontGroup:(NSString*)languageTag ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WGFLanguageFont* documentAlternate1Font;
 @property (readonly) WGFLanguageFont* documentAlternate2Font;

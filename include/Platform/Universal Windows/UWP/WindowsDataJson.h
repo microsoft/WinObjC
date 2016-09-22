@@ -91,7 +91,7 @@ OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 + (BOOL)tryParse:(NSString*)input result:(WDJJsonArray**)result;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDJJsonValueType valueType;
 @property (readonly) unsigned int size;
@@ -131,7 +131,7 @@ OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 + (BOOL)tryParse:(NSString*)input result:(WDJJsonObject**)result;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDJJsonValueType valueType;
 @property (readonly) unsigned int size;
@@ -187,7 +187,7 @@ OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 + (WDJJsonValue*)createStringValue:(NSString*)input;
 + (WDJJsonValue*)createNullValue;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDJJsonValueType valueType;
 - (NSString*)stringify;

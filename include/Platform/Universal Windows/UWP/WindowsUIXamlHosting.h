@@ -41,7 +41,7 @@ OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT
 @interface WUXHElementCompositionPreview : RTObject
 + (RTObject*)getContainerVisual:(WXUIElement*)element;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 

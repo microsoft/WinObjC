@@ -154,7 +154,7 @@ typedef unsigned WDEDevicePickerDisplayStatusOptions;
 OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceConnectionChangeTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* deviceId;
 @end
@@ -279,7 +279,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
                                           WFIClosable,
                                           WSSIInputStream>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* contentType;
 @property uint64_t size;
@@ -313,7 +313,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEEnclosureLocation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL inDock;
 @property (readonly) BOOL inLid;
@@ -329,7 +329,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceInformationUpdate : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* id;
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
@@ -345,7 +345,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceInformationCollection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -363,7 +363,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceWatcher : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDeviceWatcherStatus status;
 - (EventRegistrationToken)addAddedEvent:(void (^)(WDEDeviceWatcher*, WDEDeviceInformation*))del;
@@ -425,7 +425,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 + (WDEDeviceWatcher*)createWatcherAqsFilterAndAdditionalProperties:(NSString*)aqsFilter
                                               additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEEnclosureLocation* enclosureLocation;
 @property (readonly) NSString* id;
@@ -449,7 +449,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDevicePairingResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDevicePairingProtectionLevel protectionLevelUsed;
 @property (readonly) WDEDevicePairingResultStatus status;
@@ -464,7 +464,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceInformationPairing : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL canPair;
 @property (readonly) BOOL isPaired;
@@ -483,7 +483,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceAccessChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDeviceAccessStatus status;
 @end
@@ -500,7 +500,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 + (WDEDeviceAccessInformation*)createFromDeviceClassId:(WFGUID*)deviceClassId;
 + (WDEDeviceAccessInformation*)createFromDeviceClass:(WDEDeviceClass)deviceClass;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDeviceAccessStatus currentStatus;
 - (EventRegistrationToken)addAccessChangedEvent:(void (^)(WDEDeviceAccessInformation*, WDEDeviceAccessChangedEventArgs*))del;
@@ -516,7 +516,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDevicePickerAppearance : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* title;
 @property (retain) WUColor* selectedForegroundColor;
@@ -536,7 +536,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceSelectedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDeviceInformation* selectedDevice;
 @end
@@ -550,7 +550,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceDisconnectButtonClickedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDeviceInformation* device;
 @end
@@ -564,7 +564,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDevicePickerFilter : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSMutableArray* /* WDEDeviceClass */ supportedDeviceClasses;
 @property (readonly) NSMutableArray* /* NSString * */ supportedDeviceSelectors;
@@ -580,7 +580,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDevicePicker : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDevicePickerAppearance* appearance;
 @property (readonly) WDEDevicePickerFilter* filter;
@@ -611,7 +611,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceWatcherEvent : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDeviceInformation* deviceInformation;
 @property (readonly) WDEDeviceInformationUpdate* deviceInformationUpdate;
@@ -627,7 +627,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceWatcherTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WDEDeviceWatcherEvent* */ deviceWatcherEvents;
 @end

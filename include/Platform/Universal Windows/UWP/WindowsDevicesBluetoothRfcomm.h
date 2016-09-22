@@ -57,7 +57,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDBRRfcommDeviceService*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector:(WDBRRfcommServiceId*)serviceId;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNHostName* connectionHostName;
 @property (readonly) NSString* connectionServiceName;
@@ -84,7 +84,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 + (WDBRRfcommServiceId*)fromUuid:(WFGUID*)uuid;
 + (WDBRRfcommServiceId*)fromShortId:(unsigned int)shortId;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFGUID* uuid;
 + (WDBRRfcommServiceId*)genericFileTransfer;
@@ -109,7 +109,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
             success:(void (^)(WDBRRfcommServiceProvider*))success
             failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSMutableDictionary* /* unsigned int, RTObject<WSSIBuffer>* */ sdpRawAttributes;
 @property (readonly) WDBRRfcommServiceId* serviceId;

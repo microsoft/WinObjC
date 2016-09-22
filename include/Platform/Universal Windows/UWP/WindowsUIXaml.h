@@ -711,7 +711,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDispatcherTimer : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFTimeSpan* interval;
 @property (readonly) BOOL isEnabled;
@@ -732,7 +732,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (WXCornerRadius*)fromRadii:(double)topLeft topRight:(double)topRight bottomRight:(double)bottomRight bottomLeft:(double)bottomLeft;
 + (WXCornerRadius*)fromUniformRadius:(double)uniformRadius;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -751,7 +751,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (BOOL)equals:(WXDuration*)target value:(WXDuration*)value;
 + (WXDuration*)subtract:(WXDuration*)target duration:(WXDuration*)duration;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 + (WXDuration*)automatic;
 + (WXDuration*)forever;
@@ -772,7 +772,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (BOOL)getIsStar:(WXGridLength*)target;
 + (BOOL)equals:(WXGridLength*)target value:(WXGridLength*)value;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 + (WXGridLength*)Auto;
 @end
@@ -788,7 +788,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (WXThickness*)fromLengths:(double)left top:(double)top right:(double)right bottom:(double)bottom;
 + (WXThickness*)fromUniformLength:(double)uniformLength;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -801,7 +801,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXApplicationInitializationCallbackParams : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -814,7 +814,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -843,7 +843,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
                                 ownerType:(WUXITypeName*)ownerType
                           defaultMetadata:(WXPropertyMetadata*)defaultMetadata;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 + (RTObject*)unsetValue;
 - (WXPropertyMetadata*)getMetadata:(WUXITypeName*)forType;
@@ -858,7 +858,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyPropertyChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject* newValue;
 @property (readonly) RTObject* oldValue;
@@ -875,7 +875,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject* originalSource;
 @end
@@ -889,7 +889,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXUnhandledExceptionEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL handled;
 @property (readonly) HRESULT exception;
@@ -906,7 +906,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXVisualStateChangedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WXVisualState* oldState;
 @property (retain) WXVisualState* newState;
@@ -922,7 +922,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDataContextChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL handled;
 @property (readonly) RTObject* newValue;
@@ -938,7 +938,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDataTemplateKey : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) RTObject* dataType;
 @end
@@ -957,8 +957,11 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (WXPropertyMetadata*)createWithFactory:(WXCreateDefaultValueCallback)createDefaultValueCallback;
 + (WXPropertyMetadata*)createWithFactoryAndCallback:(WXCreateDefaultValueCallback)createDefaultValueCallback
                             propertyChangedCallback:(WXPropertyChangedCallback)propertyChangedCallback;
++ (WXPropertyMetadata*)makeInstanceWithDefaultValue:(RTObject*)defaultValue ACTIVATOR;
++ (WXPropertyMetadata*)makeInstanceWithDefaultValueAndCallback:(RTObject*)defaultValue
+                                       propertyChangedCallback:(WXPropertyChangedCallback)propertyChangedCallback ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WXCreateDefaultValueCallback createDefaultValueCallback;
 @property (readonly) RTObject* defaultValue;
@@ -973,7 +976,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDragOperationDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)complete;
 @end
@@ -987,7 +990,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDragUI : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)setContentFromBitmapImage:(WUXMIBitmapImage*)bitmapImage;
 - (void)setContentFromBitmapImageWithAnchorPoint:(WUXMIBitmapImage*)bitmapImage anchorPoint:(WFPoint*)anchorPoint;
@@ -1005,7 +1008,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDragUIOverride : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL isGlyphVisible;
 @property BOOL isContentVisible;
@@ -1042,7 +1045,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXFrameworkView : RTObject <WACIFrameworkView>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)Initialize:(WACCoreApplicationView*)applicationView;
 - (void)setWindow:(WUCCoreWindow*)window;
@@ -1060,7 +1063,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXRoutedEvent : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -1074,7 +1077,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXSetterBaseCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 @property (readonly) BOOL isSealed;
@@ -1101,7 +1104,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (WXTargetPropertyPath*)makeInstance:(WXDependencyProperty*)targetProperty ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) RTObject* target;
 @property (retain) WXPropertyPath* path;
@@ -1117,7 +1120,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXTriggerActionCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -1141,7 +1144,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXTriggerCollection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -1165,7 +1168,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXWindow : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WXUIElement* content;
 @property (readonly) WFRect* bounds;
@@ -1195,7 +1198,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXWindowCreatedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WXWindow* window;
 @end
@@ -1210,7 +1213,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObjectCollection : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 // Could not generate add_VectorChanged (Can't marshal
@@ -1239,7 +1242,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDragEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL handled;
 @property (retain) WADDataPackage* data;
@@ -1260,7 +1263,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDragStartingEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL cancel;
 @property (readonly) WADDataPackage* data;
@@ -1278,7 +1281,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDropCompletedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WADDataPackageOperation dropResult;
 @end
@@ -1292,7 +1295,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXExceptionRoutedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* errorMessage;
 @end
@@ -1306,7 +1309,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXFrameworkTemplate : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -1322,7 +1325,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (void)setExtensionInstance:(WXFrameworkElement*)element value:(RTObject<WXIDataTemplateExtension>*)value;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 + (WXDependencyProperty*)extensionInstanceProperty;
 - (WXDependencyObject*)loadContent;
@@ -1338,7 +1341,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXPropertyPath : WXDependencyObject
 + (WXPropertyPath*)makeInstance:(NSString*)path ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* path;
 @end
@@ -1353,7 +1356,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXResourceDictionary : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 @property (retain) WFUri* source;
@@ -1385,7 +1388,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXSetterBase : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isSealed;
 @end
@@ -1399,7 +1402,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXSizeChangedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFSize* newSize;
 @property (readonly) WFSize* previousSize;
@@ -1414,7 +1417,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXStateTriggerBase : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)setActive:(BOOL)IsActive;
 @end
@@ -1430,7 +1433,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (WXStyle*)makeInstance:(WUXITypeName*)targetType ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXITypeName* targetType;
 @property (retain) WXStyle* basedOn;
@@ -1448,7 +1451,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXTriggerAction : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -1461,7 +1464,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXTriggerBase : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -1475,7 +1478,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL isRightTapEnabled;
 @property (retain) WUXMProjection* projection;
@@ -1627,7 +1630,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXVisualState : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMAStoryboard* storyboard;
 @property (readonly) NSString* name;
@@ -1645,7 +1648,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXVisualStateGroup : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WXVisualState* currentState;
 @property (readonly) NSString* name;
@@ -1671,7 +1674,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (BOOL)goToState:(WXCControl*)control stateName:(NSString*)stateName useTransitions:(BOOL)useTransitions;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 + (WXDependencyProperty*)customVisualStateManagerProperty;
 - (BOOL)goToStateCore:(WXCControl*)control
@@ -1700,7 +1703,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXVisualTransition : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* to;
 @property (retain) WUXMAStoryboard* storyboard;
@@ -1719,7 +1722,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXAdaptiveTrigger : WXStateTriggerBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double minWindowWidth;
 @property double minWindowHeight;
@@ -1737,7 +1740,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXEventTrigger : WXTriggerBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WXRoutedEvent* routedEvent;
 @property (readonly) WXTriggerActionCollection* actions;
@@ -1752,7 +1755,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXFrameworkElement : WXUIElement
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WXThickness* margin;
 @property (retain) NSString* language;
@@ -1824,7 +1827,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXMediaFailedRoutedEventArgs : WXExceptionRoutedEventArgs
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* errorTrace;
 @end
@@ -1840,7 +1843,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (WXSetter*)makeInstance:(WXDependencyProperty*)targetProperty value:(RTObject*)value ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) RTObject* value;
 @property (retain) WXDependencyProperty* property ;
@@ -1857,7 +1860,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXStateTrigger : WXStateTriggerBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL isActive;
 + (WXDependencyProperty*)isActiveProperty;
@@ -1872,7 +1875,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXBindingFailedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* message;
 @end
@@ -1886,7 +1889,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDebugSettings : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL isOverdrawHeatMapEnabled;
 @property BOOL isBindingTracingEnabled;
@@ -1912,7 +1915,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
                 componentResourceLocation:(WUXCPComponentResourceLocation)componentResourceLocation;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WXResourceDictionary* resources;
 @property WXApplicationTheme requestedTheme;
@@ -1956,7 +1959,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXFrameworkViewSource : RTObject <WACIFrameworkViewSource>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (RTObject<WACIFrameworkView>*)createView;
 @end
@@ -1971,7 +1974,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXPointHelper : RTObject
 + (WFPoint*)fromCoordinates:(float)x y:(float)y;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -1997,7 +2000,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (WFRect*)unionWithPoint:(WFRect*)target point:(WFPoint*)point;
 + (WFRect*)unionWithRect:(WFRect*)target rect:(WFRect*)rect;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 + (WFRect*)empty;
 @end
@@ -2014,7 +2017,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (BOOL)getIsEmpty:(WFSize*)target;
 + (BOOL)equals:(WFSize*)target value:(WFSize*)value;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 + (WFSize*)empty;
 @end

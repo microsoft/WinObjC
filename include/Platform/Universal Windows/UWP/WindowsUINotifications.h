@@ -247,7 +247,7 @@ typedef unsigned WUNToastHistoryChangedType;
 OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNTileUpdater : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUNNotificationSetting setting;
 - (void)update:(WUNTileNotification*)notification;
@@ -281,7 +281,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNTileNotification : RTObject
 + (WUNTileNotification*)makeTileNotification:(WDXDXmlDocument*)content ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* tag;
 @property (retain) id /* WFDateTime* */ expirationTime;
@@ -298,7 +298,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNScheduledTileNotification : RTObject
 + (WUNScheduledTileNotification*)makeScheduledTileNotification:(WDXDXmlDocument*)content deliveryTime:(WFDateTime*)deliveryTime ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* tag;
 @property (retain) NSString* id;
@@ -316,7 +316,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNTileFlyoutUpdater : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUNNotificationSetting setting;
 - (void)update:(WUNTileFlyoutNotification*)notification;
@@ -338,7 +338,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNTileFlyoutNotification : RTObject
 + (WUNTileFlyoutNotification*)makeTileFlyoutNotification:(WDXDXmlDocument*)content ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) id /* WFDateTime* */ expirationTime;
 @property (readonly) WDXDXmlDocument* content;
@@ -353,7 +353,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNBadgeUpdater : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)update:(WUNBadgeNotification*)notification;
 - (void)clear;
@@ -374,7 +374,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNBadgeNotification : RTObject
 + (WUNBadgeNotification*)makeBadgeNotification:(WDXDXmlDocument*)content ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) id /* WFDateTime* */ expirationTime;
 @property (readonly) WDXDXmlDocument* content;
@@ -389,7 +389,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNToastNotifier : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUNNotificationSetting setting;
 - (void)show:(WUNToastNotification*)notification;
@@ -409,7 +409,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNToastNotification : RTObject
 + (WUNToastNotification*)makeToastNotification:(WDXDXmlDocument*)content ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) id /* WFDateTime* */ expirationTime;
 @property (readonly) WDXDXmlDocument* content;
@@ -438,7 +438,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
                                                            snoozeInterval:(WFTimeSpan*)snoozeInterval
                                                        maximumSnoozeCount:(unsigned int)maximumSnoozeCount ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* id;
 @property (readonly) WDXDXmlDocument* content;
@@ -459,7 +459,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNToastDismissedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUNToastDismissalReason reason;
 @end
@@ -473,7 +473,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNToastFailedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) HRESULT errorCode;
 @end
@@ -487,7 +487,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNToastNotificationHistory : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)removeGroup:(NSString*)group;
 - (void)removeGroupWithId:(NSString*)group applicationId:(NSString*)applicationId;
@@ -565,7 +565,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNToastActivatedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* arguments;
 @end
@@ -579,7 +579,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNToastNotificationHistoryChangedTriggerDetail : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUNToastHistoryChangedType changeType;
 @end
@@ -593,7 +593,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNToastNotificationActionTriggerDetail : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* argument;
 @property (readonly) WFCValueSet* userInput;

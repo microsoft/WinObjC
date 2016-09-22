@@ -58,7 +58,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
 @interface WAAAAddAppointmentOperation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAAppointment* appointmentInformation;
 @property (readonly) NSString* sourcePackageFamilyName;
@@ -77,7 +77,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
 @interface WAAAReplaceAppointmentOperation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* appointmentId;
 @property (readonly) WAAAppointment* appointmentInformation;
@@ -98,7 +98,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
 @interface WAAARemoveAppointmentOperation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* appointmentId;
 @property (readonly) id /* WFDateTime* */ instanceStartDate;

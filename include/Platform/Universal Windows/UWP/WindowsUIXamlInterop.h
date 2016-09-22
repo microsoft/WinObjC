@@ -177,8 +177,13 @@ typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINo
 
 OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
 @interface WUXINotifyCollectionChangedEventArgs : RTObject
++ (WUXINotifyCollectionChangedEventArgs*)makeInstanceWithAllParameters:(WUXINotifyCollectionChangedAction)action
+                                                              newItems:(RTObject<WUXIIBindableVector>*)newItems
+                                                              oldItems:(RTObject<WUXIIBindableVector>*)oldItems
+                                                              newIndex:(int)newIndex
+                                                              oldIndex:(int)oldIndex ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUXINotifyCollectionChangedAction action;
 @property (readonly) RTObject<WUXIIBindableVector>* newItems;

@@ -63,7 +63,7 @@ typedef unsigned WNSDDnssdServiceWatcherStatus;
 OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
 @interface WNSDDnssdServiceWatcher : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNSDDnssdServiceWatcherStatus status;
 - (EventRegistrationToken)addAddedEvent:(void (^)(WNSDDnssdServiceWatcher*, WNSDDnssdServiceInstance*))del;
@@ -96,7 +96,7 @@ OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
 @interface WNSDDnssdServiceInstance : RTObject <WFIStringable>
 + (WNSDDnssdServiceInstance*)make:(NSString*)dnssdServiceInstanceName hostName:(WNHostName*)hostName port:(unsigned short)port ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned short weight;
 @property unsigned short priority;
@@ -131,7 +131,7 @@ OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
 @interface WNSDDnssdRegistrationResult : RTObject <WFIStringable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL hasInstanceNameChanged;
 @property (readonly) WNHostName* iPAddress;
@@ -148,7 +148,7 @@ OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
 @interface WNSDDnssdServiceInstanceCollection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;

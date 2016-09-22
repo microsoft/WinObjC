@@ -93,7 +93,7 @@ typedef unsigned WSPWriteActivationMode;
 OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSPCachedFileUpdaterUI : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* title;
 @property (readonly) WSPUIStatus uIStatus;
@@ -115,7 +115,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSPFileUpdateRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSPFileUpdateRequest* request;
 @end
@@ -129,7 +129,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSPFileUpdateRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WSPFileUpdateStatus status;
 @property (readonly) NSString* contentId;
@@ -148,7 +148,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSPFileUpdateRequestDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)complete;
 @end

@@ -47,7 +47,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WARResourceLoader*)makeResourceLoaderByName:(NSString*)name ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (NSString*)getString:(NSString*)resource;
 - (NSString*)getStringForUri:(WFUri*)uri;

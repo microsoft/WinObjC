@@ -98,7 +98,7 @@ OBJCUWP_WINDOWS_SYSTEM_THREADING_EXPORT
                                            delay:(WFTimeSpan*)delay
                                        destroyed:(WSTTimerDestroyedHandler)destroyed;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFTimeSpan* delay;
 @property (readonly) WFTimeSpan* period;

@@ -329,7 +329,7 @@ typedef unsigned WSLaunchUriStatus;
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSAppMemoryUsageLimitChangingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint64_t newLimit;
 @property (readonly) uint64_t oldLimit;
@@ -344,7 +344,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSAppMemoryReport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint64_t peakPrivateCommitUsage;
 @property (readonly) uint64_t privateCommitUsage;
@@ -361,7 +361,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSProcessMemoryReport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint64_t privateWorkingSetUsage;
 @property (readonly) uint64_t totalWorkingSetUsage;
@@ -397,7 +397,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSProtocolForResultsOperation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)reportCompleted:(WFCValueSet*)data;
 @end
@@ -411,7 +411,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSUserWatcher : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSUserWatcherStatus status;
 - (EventRegistrationToken)addAddedEvent:(void (^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
@@ -449,7 +449,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
                             failure:(void (^)(NSError*))failure;
 + (WSUser*)getFromId:(NSString*)nonRoamableId;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSUserAuthenticationStatus authenticationStatus;
 @property (readonly) NSString* nonRoamableId;
@@ -472,7 +472,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSUserChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSUser* user;
 @end
@@ -486,7 +486,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSUserAuthenticationStatusChangingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSUserAuthenticationStatus currentStatus;
 @property (readonly) WSUserAuthenticationStatus newStatus;
@@ -503,7 +503,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSUserAuthenticationStatusChangeDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)complete;
 @end
@@ -536,7 +536,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSLaunchUriResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFCValueSet* result;
 @property (readonly) WSLaunchUriStatus status;
@@ -551,7 +551,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSLauncherUIOptions : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) id /* WFRect* */ selectionRect;
 @property WUPPlacement preferredPlacement;
@@ -568,7 +568,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSLauncherOptions : RTObject <WSILauncherViewOptions>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL treatAsUntrusted;
 @property (retain) NSString* preferredApplicationPackageFamilyName;
@@ -592,7 +592,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSFolderLauncherOptions : RTObject <WSILauncherViewOptions>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSMutableArray* /* RTObject<WSIStorageItem>* */ itemsToSelect;
 @property WUVViewSizePreference desiredRemainingView;

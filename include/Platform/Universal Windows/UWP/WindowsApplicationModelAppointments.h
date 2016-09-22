@@ -215,7 +215,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointment : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* location;
 @property BOOL allDay;
@@ -256,7 +256,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentStore : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAAppointmentStoreChangeTracker* changeTracker;
 - (EventRegistrationToken)addStoreChangedEvent:(void (^)(WAAAppointmentStore*, WAAAppointmentStoreChangedEventArgs*))del;
@@ -343,7 +343,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentOrganizer : RTObject <WAAIAppointmentParticipant>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* displayName;
 @property (retain) NSString* address;
@@ -359,7 +359,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentInvitee : RTObject <WAAIAppointmentParticipant>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WAAAppointmentParticipantRole role;
 @property WAAAppointmentParticipantResponse response;
@@ -377,7 +377,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentRecurrence : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WAAAppointmentRecurrenceUnit unit;
 @property (retain) id /* unsigned int */ occurrences;
@@ -461,7 +461,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAFindAppointmentsOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int maxCount;
 @property BOOL includeHidden;
@@ -478,7 +478,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentException : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAAppointment* appointment;
 @property (readonly) NSArray* /* NSString * */ exceptionProperties;
@@ -494,7 +494,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentCalendarSyncManager : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* lastAttemptedSyncTime;
 @property (readonly) WFDateTime* lastSuccessfulSyncTime;
@@ -513,7 +513,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentCalendar : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WAAAppointmentSummaryCardView summaryCardView;
 @property WAAAppointmentCalendarOtherAppWriteAccess otherAppWriteAccess;
@@ -612,7 +612,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentStoreChange : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAAppointment* appointment;
 @property (readonly) WAAAppointmentStoreChangeType changeType;
@@ -628,7 +628,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentStoreChangeReader : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WAAAppointmentStoreChange* */))success failure:(void (^)(NSError*))failure;
 - (void)acceptChanges;
@@ -644,7 +644,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentStoreChangedDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)complete;
 @end
@@ -658,7 +658,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentStoreChangeTracker : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (WAAAppointmentStoreChangeReader*)getChangeReader;
 - (void)enable;
@@ -674,7 +674,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentConflictResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* date;
 @property (readonly) WAAAppointmentConflictType type;
@@ -689,7 +689,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentStoreChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (WAAAppointmentStoreChangedDeferral*)getDeferral;
 @end
@@ -739,7 +739,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentStoreNotificationTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 

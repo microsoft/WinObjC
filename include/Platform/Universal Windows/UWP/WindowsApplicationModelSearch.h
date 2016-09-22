@@ -43,7 +43,7 @@
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchPaneQueryLinguisticDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* NSString * */ queryTextAlternatives;
 @property (readonly) unsigned int queryTextCompositionLength;
@@ -59,7 +59,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchSuggestionCollection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (void)appendQuerySuggestion:(NSString*)text;
@@ -82,7 +82,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASLocalContentSuggestionSettings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL enabled;
 @property (retain) NSString* aqsFilter;
@@ -102,7 +102,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
                        queryTextCompositionStart:(unsigned int)queryTextCompositionStart
                       queryTextCompositionLength:(unsigned int)queryTextCompositionLength ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* NSString * */ queryTextAlternatives;
 @property (readonly) unsigned int queryTextCompositionLength;
@@ -118,7 +118,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchSuggestionsRequestDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)complete;
 @end
@@ -132,7 +132,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchSuggestionsRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isCanceled;
 @property (readonly) WASSearchSuggestionCollection* searchSuggestionCollection;

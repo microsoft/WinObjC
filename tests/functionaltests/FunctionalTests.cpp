@@ -529,6 +529,7 @@ extern void ProjectionCreateWithTest();
 extern void ProjectionAsyncOnUIThread();
 extern void ProjectionAsyncOnBackgroundThread();
 extern void ProjectionCreateWithARCEnabled();
+extern void ProjectionComposableAttrClass();
 
 class ProjectionTest {
 public:
@@ -564,6 +565,10 @@ public:
 
     TEST_METHOD(ProjectionTest_CreateWithARCEnabled) {
         ProjectionCreateWithARCEnabled();
+    }
+
+    TEST_METHOD(ProjectionTest_ComposableAttrClass) {
+        ProjectionComposableAttrClass();
     }
 
 }; /* class ProjectionTest */

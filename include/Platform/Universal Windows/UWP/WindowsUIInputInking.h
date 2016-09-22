@@ -148,7 +148,7 @@ typedef unsigned WUIIPenTipShape;
 OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkUnprocessedInput : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUIIInkPresenter* inkPresenter;
 - (EventRegistrationToken)addPointerEnteredEvent:(void (^)(WUIIInkUnprocessedInput*, WUCPointerEventArgs*))del;
@@ -176,7 +176,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkStrokeInput : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUIIInkPresenter* inkPresenter;
 - (EventRegistrationToken)addStrokeCanceledEvent:(void (^)(WUIIInkStrokeInput*, WUCPointerEventArgs*))del;
@@ -198,7 +198,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkInputProcessingConfiguration : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUIIInkInputRightDragAction rightDragAction;
 @property WUIIInkInputProcessingMode mode;
@@ -213,7 +213,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkSynchronizer : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (NSArray* /* WUIIInkStroke* */)beginDry;
 - (void)endDry;
@@ -228,7 +228,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkPresenter : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUIIInkStrokeContainer* strokeContainer;
 @property BOOL isInputEnabled;
@@ -255,7 +255,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkStrokesCollectedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WUIIInkStroke* */ strokes;
 @end
@@ -269,7 +269,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkStrokesErasedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WUIIInkStroke* */ strokes;
 @end
@@ -284,7 +284,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkPoint : RTObject
 + (WUIIInkPoint*)makeInkPoint:(WFPoint*)position pressure:(float)pressure ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFPoint* position;
 @property (readonly) float pressure;
@@ -300,7 +300,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkDrawingAttributes : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFSize* size;
 @property WUIIPenTipShape penTip;
@@ -320,7 +320,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkStrokeRenderingSegment : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFPoint* bezierControlPoint1;
 @property (readonly) WFPoint* bezierControlPoint2;
@@ -340,7 +340,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkStroke : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL selected;
 @property (retain) WUIIInkDrawingAttributes* drawingAttributes;
@@ -362,7 +362,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkStrokeBuilder : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)beginStroke:(WUIPointerPoint*)pointerPoint;
 - (WUIPointerPoint*)appendToStroke:(WUIPointerPoint*)pointerPoint;
@@ -381,7 +381,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkRecognitionResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFRect* boundingRect;
 - (NSArray* /* NSString * */)getTextCandidates;
@@ -398,7 +398,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkStrokeContainer : RTObject <WUIIIInkStrokeContainer>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFRect* boundingRect;
 - (void)addStroke:(WUIIInkStroke*)stroke;
@@ -430,7 +430,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkRecognizer : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* name;
 @end
@@ -445,7 +445,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkRecognizerContainer : RTObject <WUIIIInkRecognizerContainer>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)setDefaultRecognizer:(WUIIInkRecognizer*)recognizer;
 - (void)recognizeAsync:(WUIIInkStrokeContainer*)strokeCollection
@@ -465,7 +465,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkManager : RTObject <WUIIIInkRecognizerContainer, WUIIIInkStrokeContainer>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUIIInkManipulationMode mode;
 @property (readonly) WFRect* boundingRect;

@@ -62,7 +62,7 @@ OBJCUWP_WINDOWS_SYSTEM_THREADING_CORE_EXPORT
 + (WSTCSignalNotifier*)attachToSemaphore:(NSString*)name handler:(WSTCSignalHandler)handler;
 + (WSTCSignalNotifier*)attachToSemaphoreWithTimeout:(NSString*)name handler:(WSTCSignalHandler)handler timeout:(WFTimeSpan*)timeout;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)enable;
 - (void)terminate;
@@ -82,7 +82,7 @@ OBJCUWP_WINDOWS_SYSTEM_THREADING_CORE_EXPORT
                                                        priority:(WSTWorkItemPriority)priority
                                                         options:(WSTWorkItemOptions)options ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (RTObject<WFIAsyncAction>*)runAsync;
 @end

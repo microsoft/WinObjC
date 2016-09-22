@@ -81,7 +81,7 @@ OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
                          algorithm:(WSCCompressAlgorithm)algorithm
                          blockSize:(unsigned int)blockSize ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)finishAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (RTObject<WSSIOutputStream>*)detachStream;
@@ -119,7 +119,7 @@ OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
 @interface WSCDecompressor : RTObject <WSSIInputStream, WFIClosable>
 + (WSCDecompressor*)makeDecompressor:(RTObject<WSSIInputStream>*)underlyingStream ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (RTObject<WSSIInputStream>*)detachStream;
 - (void)readAsync:(RTObject<WSSIBuffer>*)buffer

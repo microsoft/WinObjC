@@ -56,7 +56,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 + (WSAOOnlineIdServiceTicketRequest*)makeOnlineIdServiceTicketRequest:(NSString*)service policy:(NSString*)policy ACTIVATOR;
 + (WSAOOnlineIdServiceTicketRequest*)makeOnlineIdServiceTicketRequestAdvanced:(NSString*)service ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* policy;
 @property (readonly) NSString* service;
@@ -71,7 +71,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 @interface WSAOOnlineIdServiceTicket : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) int errorCode;
 @property (readonly) WSAOOnlineIdServiceTicketRequest* request;
@@ -134,7 +134,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 @interface WSAOSignOutUserOperation : RTObject <WFIAsyncAction, WFIAsyncInfo>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) HRESULT errorCode;
 @property (readonly) unsigned int id;
@@ -154,7 +154,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 @interface WSAOUserIdentity : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* firstName;
 @property (readonly) NSString* id;
@@ -176,7 +176,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 @interface WSAOOnlineIdAuthenticator : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WFGUID* applicationId;
 @property (readonly) NSString* authenticatedSafeCustomerId;

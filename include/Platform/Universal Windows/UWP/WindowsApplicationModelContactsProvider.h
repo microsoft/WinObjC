@@ -49,7 +49,7 @@ typedef unsigned WACPAddContactResult;
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_PROVIDER_EXPORT
 @interface WACPContactRemovedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* id;
 @end
@@ -63,7 +63,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_PROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_PROVIDER_EXPORT
 @interface WACPContactPickerUI : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* NSString * */ desiredFields;
 @property (readonly) WACContactSelectionMode selectionMode;

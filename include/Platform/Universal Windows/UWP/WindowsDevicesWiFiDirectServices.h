@@ -111,7 +111,7 @@ typedef unsigned WDWSWiFiDirectServiceIPProtocol;
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceProvisioningInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isGroupFormationNeeded;
 @property (readonly) WDWSWiFiDirectServiceConfigurationMethod selectedConfigurationMethod;
@@ -136,7 +136,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceSession : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int advertisementId;
 @property (readonly) WDWSWiFiDirectServiceSessionErrorStatus errorStatus;
@@ -165,7 +165,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceAutoAcceptSessionConnectedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDWSWiFiDirectServiceSession* session;
 @property (readonly) RTObject<WSSIBuffer>* sessionInfo;
@@ -180,7 +180,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceRemotePortAddedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WNEndpointPair* */ endpointPairs;
 @property (readonly) WDWSWiFiDirectServiceIPProtocol protocol;
@@ -195,7 +195,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceSessionDeferredEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WSSIBuffer>* deferredSessionInfo;
 @end
@@ -209,7 +209,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceSessionRequest : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDeviceInformation* deviceInformation;
 @property (readonly) WDWSWiFiDirectServiceProvisioningInfo* provisioningInfo;
@@ -226,7 +226,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceSessionRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (WDWSWiFiDirectServiceSessionRequest*)getSessionRequest;
 @end
@@ -241,7 +241,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceAdvertiser : RTObject
 + (WDWSWiFiDirectServiceAdvertiser*)makeWiFiDirectServiceAdvertiser:(NSString*)serviceName ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WDWSWiFiDirectServiceStatus serviceStatus;
 @property (retain) RTObject<WSSIBuffer>* serviceInfo;
@@ -285,7 +285,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 + (NSString*)getSelectorWithFilter:(NSString*)serviceName serviceInfoFilter:(RTObject<WSSIBuffer>*)serviceInfoFilter;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDWSWiFiDirectService*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) RTObject<WSSIBuffer>* sessionInfo;
 @property BOOL preferGroupOwnerMode;

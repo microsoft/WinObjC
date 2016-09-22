@@ -109,7 +109,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 + (NSString*)getDeviceSelectorFromShortId:(unsigned short)serviceShortId;
 + (WFGUID*)convertShortIdToUuid:(unsigned short)shortId;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned short attributeHandle;
 @property (readonly) NSString* deviceId;
@@ -133,7 +133,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattCharacteristic : RTObject
 + (WFGUID*)convertShortIdToUuid:(unsigned short)shortId;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WDBGGattProtectionLevel protectionLevel;
 @property (readonly) unsigned short attributeHandle;
@@ -176,7 +176,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattDescriptor : RTObject
 + (WFGUID*)convertShortIdToUuid:(unsigned short)shortId;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WDBGGattProtectionLevel protectionLevel;
 @property (readonly) unsigned short attributeHandle;
@@ -199,7 +199,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattPresentationFormat : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned short Description;
 @property (readonly) int exponent;
@@ -218,7 +218,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattReadResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDBGGattCommunicationStatus status;
 @property (readonly) RTObject<WSSIBuffer>* value;
@@ -233,7 +233,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattReadClientCharacteristicConfigurationDescriptorResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDBGGattClientCharacteristicConfigurationDescriptorValue clientCharacteristicConfigurationDescriptor;
 @property (readonly) WDBGGattCommunicationStatus status;
@@ -248,7 +248,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattValueChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WSSIBuffer>* characteristicValue;
 @property (readonly) WFDateTime* timestamp;
@@ -403,7 +403,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattReliableWriteTransaction : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)writeValue:(WDBGGattCharacteristic*)characteristic value:(RTObject<WSSIBuffer>*)value;
 - (void)commitAsyncWithSuccess:(void (^)(WDBGGattCommunicationStatus))success failure:(void (^)(NSError*))failure;

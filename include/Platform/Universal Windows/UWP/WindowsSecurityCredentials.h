@@ -105,7 +105,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCWebAccountProvider : RTObject
 + (WSCWebAccountProvider*)makeWebAccountProvider:(NSString*)id displayName:(NSString*)displayName iconUri:(WFUri*)iconUri ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* displayName;
 @property (readonly) WFUri* iconUri;
@@ -127,7 +127,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
                         userName:(NSString*)userName
                            state:(WSCWebAccountState)state ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSCWebAccountState state;
 @property (readonly) NSString* userName;
@@ -150,7 +150,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCKeyCredentialRetrievalResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSCKeyCredential* credential;
 @property (readonly) WSCKeyCredentialStatus status;
@@ -165,7 +165,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCKeyCredentialOperationResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WSSIBuffer>* result;
 @property (readonly) WSCKeyCredentialStatus status;
@@ -180,7 +180,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCKeyCredentialAttestationResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WSSIBuffer>* attestationBuffer;
 @property (readonly) RTObject<WSSIBuffer>* certificateChainBuffer;
@@ -196,7 +196,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCKeyCredential : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* name;
 - (RTObject<WSSIBuffer>*)retrievePublicKey;
@@ -235,7 +235,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WSCPasswordCredential*)makePasswordCredential:(NSString*)resource userName:(NSString*)userName password:(NSString*)password ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* userName;
 @property (retain) NSString* resource;
@@ -254,7 +254,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCPasswordVault : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)add:(WSCPasswordCredential*)credential;
 - (void)remove:(WSCPasswordCredential*)credential;
@@ -300,7 +300,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCPasswordCredentialPropertyStore : RTObject <WFCIPropertySet>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)

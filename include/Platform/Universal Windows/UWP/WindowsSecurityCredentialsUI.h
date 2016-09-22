@@ -83,7 +83,7 @@ OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
 @interface WSCUCredentialPickerOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* targetName;
 @property (retain) RTObject<WSSIBuffer>* previousCredential;
@@ -106,7 +106,7 @@ OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
 OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
 @interface WSCUCredentialPickerResults : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WSSIBuffer>* credential;
 @property (readonly) NSString* credentialDomainName;

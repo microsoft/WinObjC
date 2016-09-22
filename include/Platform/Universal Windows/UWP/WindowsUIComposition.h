@@ -142,7 +142,7 @@ typedef unsigned WUCCompositionStretch;
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionObject : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUCCompositor* compositor;
 @property (readonly) WUCCoreDispatcher* dispatcher;
@@ -161,7 +161,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionEffect : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (RTObject<WUCICompositionSurface>*)getSourceParameter:(NSString*)name;
 - (void)setSourceParameter:(NSString*)name source:(RTObject<WUCICompositionSurface>*)source;
@@ -176,7 +176,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionEffectFactoryLoadResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) HRESULT extendedError;
 @property (readonly) WUCCompositionEffectFactoryLoadStatus status;
@@ -201,7 +201,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionEffectSourceParameter : RTObject <WGEIGraphicsEffectSource>
 + (WUCCompositionEffectSourceParameter*)make:(NSString*)name ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* name;
 @end
@@ -216,7 +216,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionImageOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property int decodeWidth;
 @property int decodeHeight;
@@ -231,7 +231,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionImage : WUCCompositionObject <WUCICompositionSurface>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFSize* size;
 - (void)completeLoadAsyncWithSuccess:(void (^)(WUCCompositionImageLoadResult*))success
@@ -248,7 +248,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionImageLoadResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) HRESULT extendedError;
 @property (readonly) WUCCompositionImageLoadStatus status;
@@ -264,7 +264,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositor : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUCCompositionGraphicsDevice* defaultGraphicsDevice;
 - (WUCContainerVisual*)createContainerVisual;
@@ -301,7 +301,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionAnimation : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)clearAllParameters;
 - (void)clearParameter:(NSString*)key;
@@ -323,7 +323,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionPropertyAnimator : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (EventRegistrationToken)addAnimationEndedEvent:(void (^)(WUCCompositionPropertyAnimator*, WUCAnimationEndedEventArgs*))del;
 - (void)removeAnimationEndedEvent:(EventRegistrationToken)tok;
@@ -341,7 +341,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCAnimationEndedEventArgs : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUCAnimationEndReason actualEndReason;
 @end
@@ -355,7 +355,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionPropertySet : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)insertMatrix3x2:(NSString*)propertyName value:(WFNMatrix3x2*)value;
 - (void)insertMatrix4x4:(NSString*)propertyName value:(WFNMatrix4x4*)value;
@@ -380,7 +380,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionGraphicsDevice : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (WUCCompositionImage*)createImageFromUri:(WFUri*)uri;
 - (WUCCompositionImage*)createImageFromUriWithOptions:(WFUri*)uri options:(WUCCompositionImageOptions*)options;
@@ -395,7 +395,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionEffectFactory : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (WUCCompositionEffect*)createEffect;
 - (void)completeLoadAsyncWithSuccess:(void (^)(WUCCompositionEffectFactoryLoadResult*))success failure:(void (^)(NSError*))failure;
@@ -410,7 +410,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionTarget : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUCVisual* root;
 @end
@@ -424,7 +424,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCExpressionAnimation : WUCCompositionAnimation
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* expression;
 @end
@@ -438,7 +438,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionEasingFunction : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -451,7 +451,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCubicBezierEasingFunction : WUCCompositionEasingFunction
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFNVector2* controlPoint1;
 @property (readonly) WFNVector2* controlPoint2;
@@ -466,7 +466,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCLinearEasingFunction : WUCCompositionEasingFunction
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -479,7 +479,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCVisual : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFNQuaternion* orientation;
 @property float opacity;
@@ -503,7 +503,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCContainerVisual : WUCVisual
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUCVisualCollection* children;
 @end
@@ -517,7 +517,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCEffectVisual : WUCContainerVisual
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUCCompositionEffect* effect;
 @end
@@ -531,7 +531,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCImageVisual : WUCContainerVisual
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property float verticalAlignmentRatio;
 @property WUCCompositionStretch stretch;
@@ -548,7 +548,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCSolidColorVisual : WUCContainerVisual
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUColor* color;
 @end
@@ -562,7 +562,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionClip : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -575,7 +575,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCInsetClip : WUCCompositionClip
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property float topInset;
 @property float rightInset;
@@ -592,7 +592,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCVisualCollection : WUCCompositionObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) int count;
 - (void)insertAbove:(WUCVisual*)newChild sibling:(WUCVisual*)sibling;
@@ -612,7 +612,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCKeyFrameAnimation : WUCCompositionAnimation
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUCAnimationStopBehavior stopBehavior;
 @property int iterationCount;
@@ -635,7 +635,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCScalarKeyFrameAnimation : WUCKeyFrameAnimation
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)insertKeyFrame:(float)normalizedProgressKey value:(float)value;
 - (void)insertKeyFrameWithEasingFunction:(float)normalizedProgressKey
@@ -652,7 +652,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCVector2KeyFrameAnimation : WUCKeyFrameAnimation
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)insertKeyFrame:(float)normalizedProgressKey value:(WFNVector2*)value;
 - (void)insertKeyFrameWithEasingFunction:(float)normalizedProgressKey
@@ -669,7 +669,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCVector3KeyFrameAnimation : WUCKeyFrameAnimation
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)insertKeyFrame:(float)normalizedProgressKey value:(WFNVector3*)value;
 - (void)insertKeyFrameWithEasingFunction:(float)normalizedProgressKey
@@ -686,7 +686,7 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCVector4KeyFrameAnimation : WUCKeyFrameAnimation
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)insertKeyFrame:(float)normalizedProgressKey value:(WFNVector4*)value;
 - (void)insertKeyFrameWithEasingFunction:(float)normalizedProgressKey

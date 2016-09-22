@@ -38,7 +38,7 @@
 OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
 @interface WSPAnalyticsVersionInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* deviceFamily;
 @property (readonly) NSString* deviceFamilyVersion;

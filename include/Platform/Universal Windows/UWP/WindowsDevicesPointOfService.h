@@ -457,7 +457,7 @@ typedef unsigned WDPMagneticStripeReaderTrackErrorType;
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPUnifiedPosErrorData : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int extendedReason;
 @property (readonly) NSString* message;
@@ -474,7 +474,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPBarcodeScannerStatusUpdatedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int extendedStatus;
 @property (readonly) WDPBarcodeScannerStatus status;
@@ -593,7 +593,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPBarcodeScannerReport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WSSIBuffer>* scanData;
 @property (readonly) RTObject<WSSIBuffer>* scanDataLabel;
@@ -609,7 +609,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPBarcodeScannerDataReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPBarcodeScannerReport* report;
 @end
@@ -623,7 +623,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPBarcodeScannerErrorOccurredEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPUnifiedPosErrorData* errorData;
 @property (readonly) BOOL isRetriable;
@@ -639,7 +639,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPBarcodeScannerImagePreviewReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WSSIRandomAccessStreamWithContentType>* preview;
 @end
@@ -653,7 +653,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPBarcodeScannerCapabilities : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isImagePreviewSupported;
 @property (readonly) BOOL isStatisticsReportingSupported;
@@ -674,7 +674,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDPBarcodeScanner*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPBarcodeScannerCapabilities* capabilities;
 @property (readonly) NSString* deviceId;
@@ -710,7 +710,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPClaimedBarcodeScanner : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL isDisabledOnDataReceived;
 @property BOOL isDecodeDataEnabled;
@@ -777,7 +777,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPMagneticStripeReaderTrackData : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WSSIBuffer>* data;
 @property (readonly) RTObject<WSSIBuffer>* discretionaryData;
@@ -793,7 +793,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPMagneticStripeReaderReport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WSSIBuffer>* additionalSecurityInformation;
 @property (readonly) RTObject<WSSIBuffer>* cardAuthenticationData;
@@ -815,7 +815,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPMagneticStripeReaderBankCardDataReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* accountNumber;
 @property (readonly) NSString* expirationDate;
@@ -837,7 +837,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPMagneticStripeReaderAamvaCardDataReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* address;
 @property (readonly) NSString* birthDate;
@@ -869,7 +869,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPMagneticStripeReaderReport* report;
 @end
@@ -883,7 +883,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPMagneticStripeReaderErrorOccurredEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPUnifiedPosErrorData* errorData;
 @property (readonly) WDPMagneticStripeReaderReport* partialInputData;
@@ -902,7 +902,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPMagneticStripeReaderStatusUpdatedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int extendedStatus;
 @property (readonly) WDPMagneticStripeReaderStatus status;
@@ -917,7 +917,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPMagneticStripeReaderCapabilities : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPMagneticStripeReaderAuthenticationLevel authenticationLevel;
 @property (readonly) NSString* cardAuthentication;
@@ -941,7 +941,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPClaimedMagneticStripeReader : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WDPMagneticStripeReaderTrackIds tracksToRead;
 @property BOOL isTransmitSentinelsEnabled;
@@ -990,7 +990,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDPMagneticStripeReader*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPMagneticStripeReaderCapabilities* capabilities;
 @property (readonly) WDPMagneticStripeReaderAuthenticationProtocol deviceAuthenticationProtocol;
@@ -1028,7 +1028,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPReceiptPrinterCapabilities : RTObject <WDPICommonReceiptSlipCapabilities, WDPICommonPosPrintStationCapabilities>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPPosPrinterColorCapabilities colorCartridgeCapabilities;
 @property (readonly) BOOL isBoldSupported;
@@ -1066,7 +1066,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPSlipPrinterCapabilities : RTObject <WDPICommonReceiptSlipCapabilities, WDPICommonPosPrintStationCapabilities>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isBoldSupported;
 @property (readonly) BOOL isDoubleHighDoubleWidePrintSupported;
@@ -1103,7 +1103,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPJournalPrinterCapabilities : RTObject <WDPICommonPosPrintStationCapabilities>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPPosPrinterCartridgeSensors cartridgeSensors;
 @property (readonly) WDPPosPrinterColorCapabilities colorCartridgeCapabilities;
@@ -1129,7 +1129,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPPosPrinterCapabilities : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL canMapCharacterSet;
 @property (readonly) unsigned int defaultCharacterSet;
@@ -1152,7 +1152,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPPosPrinterStatus : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int extendedStatus;
 @property (readonly) WDPPosPrinterStatusKind statusKind;
@@ -1167,7 +1167,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPPosPrinterStatusUpdatedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPPosPrinterStatus* status;
 @end
@@ -1181,7 +1181,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPPosPrinterReleaseDeviceRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -1197,7 +1197,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDPPosPrinter*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPPosPrinterCapabilities* capabilities;
 @property (readonly) NSString* deviceId;
@@ -1222,7 +1222,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPClaimedPosPrinter : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WDPPosPrinterMapMode mapMode;
 @property BOOL isCharacterSetMappingEnabled;
@@ -1257,7 +1257,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPReceiptPrintJob : RTObject <WDPIReceiptOrSlipJob, WDPIPosPrinterJob>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)markFeed:(WDPPosPrinterMarkFeedKind)kind;
 - (void)cutPaper:(double)percentage;
@@ -1314,7 +1314,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPSlipPrintJob : RTObject <WDPIReceiptOrSlipJob, WDPIPosPrinterJob>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)setBarcodeRotation:(WDPPosPrinterRotation)value;
 - (void)setPrintRotation:(WDPPosPrinterRotation)value includeBitmaps:(BOOL)includeBitmaps;
@@ -1368,7 +1368,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPJournalPrintJob : RTObject <WDPIPosPrinterJob>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)print:(NSString*)data;
 - (void)printLine:(NSString*)data;
@@ -1385,7 +1385,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPClaimedReceiptPrinter : RTObject <WDPICommonClaimedPosPrinterStation>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int linesToPaperCut;
 @property (readonly) WFSize* pageSize;
@@ -1418,7 +1418,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPClaimedSlipPrinter : RTObject <WDPICommonClaimedPosPrinterStation>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int linesNearEndToEnd;
 @property (readonly) unsigned int maxLines;
@@ -1458,7 +1458,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPClaimedJournalPrinter : RTObject <WDPICommonClaimedPosPrinterStation>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL isLetterQuality;
 @property WDPPosPrinterColorCartridge colorCartridge;
@@ -1486,7 +1486,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPCashDrawerStatus : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int extendedStatus;
 @property (readonly) WDPCashDrawerStatusKind statusKind;
@@ -1501,7 +1501,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPCashDrawerStatusUpdatedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPCashDrawerStatus* status;
 @end
@@ -1515,7 +1515,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPCashDrawerCapabilities : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isDrawerOpenSensorAvailable;
 @property (readonly) BOOL isStatisticsReportingSupported;
@@ -1537,7 +1537,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDPCashDrawer*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPCashDrawerCapabilities* capabilities;
 @property (readonly) NSString* deviceId;
@@ -1562,7 +1562,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPCashDrawerClosedEventArgs : RTObject <WDPICashDrawerEventSourceEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPCashDrawer* cashDrawer;
 @end
@@ -1576,7 +1576,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPCashDrawerOpenedEventArgs : RTObject <WDPICashDrawerEventSourceEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPCashDrawer* cashDrawer;
 @end
@@ -1590,7 +1590,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPCashDrawerEventSource : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (EventRegistrationToken)addDrawerClosedEvent:(void (^)(WDPCashDrawerEventSource*, WDPCashDrawerClosedEventArgs*))del;
 - (void)removeDrawerClosedEvent:(EventRegistrationToken)tok;
@@ -1607,7 +1607,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPClaimedCashDrawer : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPCashDrawerCloseAlarm* closeAlarm;
 @property (readonly) NSString* deviceId;
@@ -1637,7 +1637,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPCashDrawerCloseAlarm : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int beepFrequency;
 @property (retain) WFTimeSpan* beepDuration;

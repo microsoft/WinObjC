@@ -67,7 +67,7 @@ typedef unsigned WMPPlayToConnectionError;
 OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPSourceChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* album;
 @property (readonly) NSString* author;
@@ -90,7 +90,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlaybackRateChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) double rate;
 @end
@@ -104,7 +104,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPCurrentTimeChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFTimeSpan* time;
 @end
@@ -118,7 +118,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPMuteChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL mute;
 @end
@@ -132,7 +132,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPVolumeChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) double volume;
 @end
@@ -147,7 +147,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToReceiver : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL supportsVideo;
 @property BOOL supportsImage;
@@ -197,7 +197,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToConnection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPPlayToConnectionState state;
 - (EventRegistrationToken)addErrorEvent:(void (^)(WMPPlayToConnection*, WMPPlayToConnectionErrorEventArgs*))del;
@@ -217,7 +217,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToSource : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WMPPlayToSource* next;
 @property (readonly) WMPPlayToConnection* connection;
@@ -234,7 +234,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToConnectionStateChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPPlayToConnectionState currentState;
 @property (readonly) WMPPlayToConnectionState previousState;
@@ -249,7 +249,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToConnectionTransferredEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPPlayToSource* currentSource;
 @property (readonly) WMPPlayToSource* previousSource;
@@ -264,7 +264,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToConnectionErrorEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPPlayToConnectionError code;
 @property (readonly) NSString* message;
@@ -279,7 +279,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToSourceSelectedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* friendlyName;
 @property (readonly) RTObject<WSSIRandomAccessStreamWithContentType>* icon;
@@ -297,7 +297,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToSourceDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)complete;
 @end
@@ -311,7 +311,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToSourceRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* deadline;
 - (void)displayErrorString:(NSString*)errorString;
@@ -328,7 +328,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToSourceRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPPlayToSourceRequest* sourceRequest;
 @end
@@ -344,7 +344,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 + (WMPPlayToManager*)getForCurrentView;
 + (void)showPlayToUI;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL defaultSourceSelection;
 - (EventRegistrationToken)addSourceRequestedEvent:(void (^)(WMPPlayToManager*, WMPPlayToSourceRequestedEventArgs*))del;

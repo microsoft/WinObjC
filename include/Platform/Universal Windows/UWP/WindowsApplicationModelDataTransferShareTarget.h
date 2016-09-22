@@ -42,7 +42,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_SHARETARGET_EXPORT
 @interface WADSQuickLink : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* title;
 @property (retain) WSSRandomAccessStreamReference* thumbnail;
@@ -60,7 +60,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_SHARETARGET_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_SHARETARGET_EXPORT
 @interface WADSShareOperation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WADDataPackageView* data;
 @property (readonly) NSString* quickLinkId;

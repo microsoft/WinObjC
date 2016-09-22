@@ -270,7 +270,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailMessage : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* body;
 @property (retain) NSString* subject;
@@ -318,7 +318,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailStore : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)findMailboxesAsyncWithSuccess:(void (^)(NSArray* /* WAEEmailMailbox* */))success failure:(void (^)(NSError*))failure;
 - (WAEEmailConversationReader*)getConversationReader;
@@ -349,7 +349,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailMailbox : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WAEEmailMailboxOtherAppWriteAccess otherAppWriteAccess;
 @property (retain) NSString* mailAddress;
@@ -452,7 +452,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailConversationReader : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)readBatchAsyncWithSuccess:(void (^)(WAEEmailConversationBatch*))success failure:(void (^)(NSError*))failure;
 @end
@@ -469,7 +469,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 + (WAEEmailQueryOptions*)makeWithTextAndFields:(NSString*)text fields:(WAEEmailQuerySearchFields)fields ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WAEEmailQuerySortProperty sortProperty;
 @property WAEEmailQuerySortDirection sortDirection;
@@ -487,7 +487,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailMessageReader : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)readBatchAsyncWithSuccess:(void (^)(WAEEmailMessageBatch*))success failure:(void (^)(NSError*))failure;
 @end
@@ -501,7 +501,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailConversation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAEEmailFlagState flagState;
 @property (readonly) BOOL hasAttachment;
@@ -531,7 +531,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailFolder : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* remoteId;
 @property (retain) WFDateTime* lastSuccessfulSyncTime;
@@ -571,7 +571,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 + (WAEEmailRecipient*)makeWithName:(NSString*)address name:(NSString*)name ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* name;
 @property (retain) NSString* address;
@@ -588,7 +588,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 + (WAEEmailIrmTemplate*)make:(NSString*)id name:(NSString*)name description:(NSString*)description ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* name;
 @property (retain) NSString* id;
@@ -606,7 +606,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WAEEmailIrmInfo*)make:(WFDateTime*)expiration irmTemplate:(WAEEmailIrmTemplate*)irmTemplate ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL canRemoveIrmOnResponse;
 @property BOOL canPrintData;
@@ -636,7 +636,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
                        data:(RTObject<WSSIRandomAccessStreamReference>*)data
                    mimeType:(NSString*)mimeType ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* fileName;
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* data;
@@ -660,7 +660,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailMeetingInfo : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* location;
 @property BOOL isResponseRequested;
@@ -686,7 +686,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailMailboxChangedDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)complete;
 @end
@@ -700,7 +700,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailMailboxCapabilities : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL canForwardMeetings;
 @property (readonly) BOOL canGetAndSetExternalAutoReplies;
@@ -721,7 +721,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailMailboxChangeTracker : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isTracking;
 - (void)enable;
@@ -738,7 +738,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailMailboxPolicies : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL allowSmimeSoftCertificates;
 @property (readonly) WAEEmailMailboxAllowedSmimeEncryptionAlgorithmNegotiation allowedSmimeEncryptionAlgorithmNegotiation;
@@ -755,7 +755,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailMailboxSyncManager : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* lastAttemptedSyncTime;
 @property (readonly) WFDateTime* lastSuccessfulSyncTime;
@@ -774,7 +774,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailMailboxChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (WAEEmailMailboxChangedDeferral*)getDeferral;
 @end
@@ -789,7 +789,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailMailboxAutoReplySettings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) id /* WFDateTime* */ startTime;
 @property WAEEmailMailboxAutoReplyMessageResponseKind responseKind;
@@ -809,7 +809,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailMailboxAutoReply : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* response;
 @property BOOL isEnabled;
@@ -824,7 +824,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailItemCounts : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int flagged;
 @property (readonly) unsigned int important;
@@ -841,7 +841,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailQueryTextSearch : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* text;
 @property WAEEmailQuerySearchScope searchScope;
@@ -857,7 +857,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailConversationBatch : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WAEEmailConversation* */ conversations;
 @property (readonly) WAEEmailBatchStatus status;
@@ -872,7 +872,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailMessageBatch : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WAEEmailMessage* */ messages;
 @property (readonly) WAEEmailBatchStatus status;
@@ -887,7 +887,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailMailboxAction : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint64_t changeNumber;
 @property (readonly) WAEEmailMailboxActionKind kind;
@@ -902,7 +902,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailMailboxChange : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAEEmailMailboxChangeType changeType;
 @property (readonly) WAEEmailFolder* folder;
@@ -919,7 +919,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailMailboxChangeReader : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)acceptChanges;
 - (void)acceptChangesThrough:(WAEEmailMailboxChange*)lastChangeToAcknowledge;
@@ -947,7 +947,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_EXPORT
 @interface WAEEmailStoreNotificationTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 

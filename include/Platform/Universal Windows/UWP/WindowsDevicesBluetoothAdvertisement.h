@@ -101,7 +101,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WDBABluetoothLEManufacturerData*)make:(unsigned short)companyId data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) RTObject<WSSIBuffer>* data;
 @property unsigned short companyId;
@@ -118,7 +118,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WDBABluetoothLEAdvertisementDataSection*)make:(uint8_t)dataType data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property uint8_t dataType;
 @property (retain) RTObject<WSSIBuffer>* data;
@@ -134,7 +134,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 @interface WDBABluetoothLEAdvertisement : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* localName;
 @property (retain) id /* WDBABluetoothLEAdvertisementFlags */ flags;
@@ -156,7 +156,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 + (WDBABluetoothLEAdvertisementBytePattern*)make:(uint8_t)dataType offset:(int16_t)offset data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property int16_t offset;
 @property uint8_t dataType;
@@ -173,7 +173,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 @interface WDBABluetoothLEAdvertisementFilter : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WDBABluetoothLEAdvertisement* advertisement;
 @property (readonly) NSMutableArray* /* WDBABluetoothLEAdvertisementBytePattern* */ bytePatterns;
@@ -188,7 +188,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 @interface WDBABluetoothLEAdvertisementWatcherStoppedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDBBluetoothError error;
 @end
@@ -204,7 +204,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 + (WDBABluetoothLEAdvertisementWatcher*)make:(WDBABluetoothLEAdvertisementFilter*)advertisementFilter ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WDBBluetoothSignalStrengthFilter* signalStrengthFilter;
 @property WDBABluetoothLEScanningMode scanningMode;
@@ -233,7 +233,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 @interface WDBABluetoothLEAdvertisementReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDBABluetoothLEAdvertisement* advertisement;
 @property (readonly) WDBABluetoothLEAdvertisementType advertisementType;
@@ -283,7 +283,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 @interface WDBABluetoothLEAdvertisementPublisherStatusChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDBBluetoothError error;
 @property (readonly) WDBABluetoothLEAdvertisementPublisherStatus status;
@@ -300,7 +300,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WDBABluetoothLEAdvertisementPublisher*)make:(WDBABluetoothLEAdvertisement*)advertisement ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDBABluetoothLEAdvertisement* advertisement;
 @property (readonly) WDBABluetoothLEAdvertisementPublisherStatus status;

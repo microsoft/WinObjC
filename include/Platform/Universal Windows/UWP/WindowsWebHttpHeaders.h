@@ -87,7 +87,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHHttpContentHeaderCollection : RTObject <WFIStringable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 @property (retain) id /* uint64_t */ contentLength;
@@ -129,7 +129,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHHttpRequestHeaderCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 @property (retain) WWHHHttpCredentialsHeaderValue* authorization;
@@ -179,7 +179,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHHttpResponseHeaderCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 @property (retain) id /* WFDateTime* */ date;
@@ -224,7 +224,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (BOOL)tryParse:(NSString*)input contentDispositionHeaderValue:(WWHHHttpContentDispositionHeaderValue**)contentDispositionHeaderValue;
 + (WWHHHttpContentDispositionHeaderValue*)make:(NSString*)dispositionType ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) id /* uint64_t */ size;
 @property (retain) NSString* name;
@@ -244,7 +244,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHHttpContentCodingHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -271,7 +271,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHHttpLanguageHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -303,7 +303,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WWHHHttpContentRangeHeaderValue*)makeFromRange:(uint64_t)from to:(uint64_t)to ACTIVATOR;
 + (WWHHHttpContentRangeHeaderValue*)makeFromRangeWithLength:(uint64_t)from to:(uint64_t)to length:(uint64_t)length ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* unit;
 @property (readonly) id /* uint64_t */ firstBytePosition;
@@ -324,7 +324,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (BOOL)tryParse:(NSString*)input mediaTypeHeaderValue:(WWHHHttpMediaTypeHeaderValue**)mediaTypeHeaderValue;
 + (WWHHHttpMediaTypeHeaderValue*)make:(NSString*)mediaType ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* mediaType;
 @property (retain) NSString* charSet;
@@ -341,7 +341,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHHttpMediaTypeWithQualityHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -368,7 +368,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHHttpContentCodingWithQualityHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -395,7 +395,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHHttpLanguageRangeWithQualityHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -426,7 +426,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WWHHHttpCredentialsHeaderValue*)makeFromScheme:(NSString*)scheme ACTIVATOR;
 + (WWHHHttpCredentialsHeaderValue*)makeFromSchemeWithToken:(NSString*)scheme token:(NSString*)token ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSMutableArray* /* WWHHHttpNameValueHeaderValue* */ parameters;
 @property (readonly) NSString* scheme;
@@ -443,7 +443,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHHttpCacheDirectiveHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 @property (retain) id /* WFTimeSpan* */ sharedMaxAge;
@@ -474,7 +474,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHHttpConnectionOptionHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -501,7 +501,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHHttpCookiePairHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -528,7 +528,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHHttpExpectationHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -555,7 +555,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHHttpTransferCodingHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -582,7 +582,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHHttpProductInfoHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -609,7 +609,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHHttpMethodHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -636,7 +636,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHHttpChallengeHeaderValueCollection : RTObject <WFIStringable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -665,7 +665,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WWHHHttpDateOrDeltaHeaderValue*)parse:(NSString*)input;
 + (BOOL)tryParse:(NSString*)input dateOrDeltaHeaderValue:(WWHHHttpDateOrDeltaHeaderValue**)dateOrDeltaHeaderValue;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) id /* WFDateTime* */ date;
 @property (readonly) id /* WFTimeSpan* */ delta;
@@ -685,7 +685,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WWHHHttpNameValueHeaderValue*)makeFromName:(NSString*)name ACTIVATOR;
 + (WWHHHttpNameValueHeaderValue*)makeFromNameWithValue:(NSString*)name value:(NSString*)value ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* value;
 @property (readonly) NSString* name;
@@ -705,7 +705,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WWHHHttpChallengeHeaderValue*)makeFromScheme:(NSString*)scheme ACTIVATOR;
 + (WWHHHttpChallengeHeaderValue*)makeFromSchemeWithToken:(NSString*)scheme token:(NSString*)token ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSMutableArray* /* WWHHHttpNameValueHeaderValue* */ parameters;
 @property (readonly) NSString* scheme;
@@ -725,7 +725,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (BOOL)tryParse:(NSString*)input connectionOptionHeaderValue:(WWHHHttpConnectionOptionHeaderValue**)connectionOptionHeaderValue;
 + (WWHHHttpConnectionOptionHeaderValue*)make:(NSString*)token ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* token;
 - (NSString*)toString;
@@ -743,7 +743,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (BOOL)tryParse:(NSString*)input contentCodingHeaderValue:(WWHHHttpContentCodingHeaderValue**)contentCodingHeaderValue;
 + (WWHHHttpContentCodingHeaderValue*)make:(NSString*)contentCoding ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* contentCoding;
 - (NSString*)toString;
@@ -762,7 +762,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WWHHHttpCookiePairHeaderValue*)makeFromName:(NSString*)name ACTIVATOR;
 + (WWHHHttpCookiePairHeaderValue*)makeFromNameWithValue:(NSString*)name value:(NSString*)value ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* value;
 @property (readonly) NSString* name;
@@ -782,7 +782,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WWHHHttpExpectationHeaderValue*)makeFromName:(NSString*)name ACTIVATOR;
 + (WWHHHttpExpectationHeaderValue*)makeFromNameWithValue:(NSString*)name value:(NSString*)value ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* value;
 @property (readonly) NSString* name;
@@ -804,7 +804,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WWHHHttpLanguageRangeWithQualityHeaderValue*)makeFromLanguageRange:(NSString*)languageRange ACTIVATOR;
 + (WWHHHttpLanguageRangeWithQualityHeaderValue*)makeFromLanguageRangeWithQuality:(NSString*)languageRange quality:(double)quality ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* languageRange;
 @property (readonly) id /* double */ quality;
@@ -825,7 +825,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WWHHHttpMediaTypeWithQualityHeaderValue*)makeFromMediaType:(NSString*)mediaType ACTIVATOR;
 + (WWHHHttpMediaTypeWithQualityHeaderValue*)makeFromMediaTypeWithQuality:(NSString*)mediaType quality:(double)quality ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) id /* double */ quality;
 @property (retain) NSString* mediaType;
@@ -847,7 +847,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WWHHHttpProductHeaderValue*)makeFromName:(NSString*)productName ACTIVATOR;
 + (WWHHHttpProductHeaderValue*)makeFromNameWithVersion:(NSString*)productName productVersion:(NSString*)productVersion ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* name;
 @property (readonly) NSString* Version;
@@ -867,7 +867,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WWHHHttpProductInfoHeaderValue*)makeFromComment:(NSString*)productComment ACTIVATOR;
 + (WWHHHttpProductInfoHeaderValue*)makeFromNameWithVersion:(NSString*)productName productVersion:(NSString*)productVersion ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* comment;
 @property (readonly) WWHHHttpProductHeaderValue* product;
@@ -888,7 +888,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WWHHHttpContentCodingWithQualityHeaderValue*)makeFromValue:(NSString*)contentCoding ACTIVATOR;
 + (WWHHHttpContentCodingWithQualityHeaderValue*)makeFromValueWithQuality:(NSString*)contentCoding quality:(double)quality ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* contentCoding;
 @property (readonly) id /* double */ quality;
@@ -907,7 +907,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (BOOL)tryParse:(NSString*)input transferCodingHeaderValue:(WWHHHttpTransferCodingHeaderValue**)transferCodingHeaderValue;
 + (WWHHHttpTransferCodingHeaderValue*)make:(NSString*)input ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSMutableArray* /* WWHHHttpNameValueHeaderValue* */ parameters;
 @property (readonly) NSString* value;

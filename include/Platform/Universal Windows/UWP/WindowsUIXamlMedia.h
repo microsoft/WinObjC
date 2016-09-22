@@ -294,7 +294,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (void)disconnectChildrenRecursive:(WXUIElement*)element;
 + (NSArray* /* WUXCPPopup* */)getOpenPopups:(WXWindow*)window;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -308,7 +308,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPartialMediaFailureDetectedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPFailedMediaStreamKind streamKind;
 @end
@@ -325,7 +325,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (BOOL)getIsIdentity:(WUXMMatrix*)target;
 + (WFPoint*)transform:(WUXMMatrix*)target point:(WFPoint*)point;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 + (WUXMMatrix*)identity;
 @end
@@ -339,7 +339,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMCompositionTarget : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 + (EventRegistrationToken)addRenderingEvent:(void (^)(RTObject*, RTObject*))del;
 + (void)removeRenderingEvent:(EventRegistrationToken)tok;
@@ -357,7 +357,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMDoubleCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -380,8 +380,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMFontFamily : RTObject
++ (WUXMFontFamily*)makeInstanceWithName:(NSString*)familyName ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* source;
 @end
@@ -396,7 +397,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMGeometryCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -421,7 +422,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMGradientStopCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -446,7 +447,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPathFigureCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -471,7 +472,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPathSegmentCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -496,7 +497,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPointCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -520,7 +521,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMRenderingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFTimeSpan* renderingTime;
 @end
@@ -535,7 +536,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMTimelineMarkerCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -560,7 +561,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMTransformCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -584,7 +585,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -605,7 +606,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMBrush : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMTransform* transform;
 @property (retain) WUXMTransform* relativeTransform;
@@ -624,7 +625,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMCacheMode : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -637,7 +638,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMGeneralTransform : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUXMGeneralTransform* inverse;
 @property (readonly) WUXMGeneralTransform* inverseCore;
@@ -657,7 +658,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMGeometry : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMTransform* transform;
 @property (readonly) WFRect* bounds;
@@ -676,7 +677,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMGradientStop : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double offset;
 @property (retain) WUColor* color;
@@ -693,7 +694,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMImageSource : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -707,7 +708,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPathFigure : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFPoint* startPoint;
 @property (retain) WUXMPathSegmentCollection* segments;
@@ -728,7 +729,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPathSegment : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -741,7 +742,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMProjection : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -755,7 +756,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject* originalSource;
 @end
@@ -770,7 +771,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMRateChangedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -784,7 +785,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMTimelineMarker : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* type;
 @property (retain) WFTimeSpan* time;
@@ -804,7 +805,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMTimelineMarkerRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMTimelineMarker* marker;
 @end
@@ -819,7 +820,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMArcSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUXMSweepDirection sweepDirection;
 @property (retain) WFSize* size;
@@ -843,7 +844,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMBezierSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFPoint* point3;
 @property (retain) WFPoint* point2;
@@ -863,7 +864,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMBitmapCache : WUXMCacheMode
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -877,7 +878,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMEllipseGeometry : WUXMGeometry
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double radiusY;
 @property double radiusX;
@@ -897,7 +898,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMGeometryGroup : WUXMGeometry
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUXMFillRule fillRule;
 @property (retain) WUXMGeometryCollection* children;
@@ -914,7 +915,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMGradientBrush : WUXMBrush
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUXMGradientSpreadMethod spreadMethod;
 @property WUXMBrushMappingMode mappingMode;
@@ -936,7 +937,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMLineGeometry : WUXMGeometry
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFPoint* startPoint;
 @property (retain) WFPoint* endPoint;
@@ -954,7 +955,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMLineSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFPoint* point;
 + (WXDependencyProperty*)pointProperty;
@@ -970,7 +971,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMMatrix3DProjection : WUXMProjection
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMMMatrix3D* projectionMatrix;
 + (WXDependencyProperty*)projectionMatrixProperty;
@@ -986,7 +987,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPathGeometry : WUXMGeometry
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUXMFillRule fillRule;
 @property (retain) WUXMPathFigureCollection* figures;
@@ -1004,7 +1005,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPlaneProjection : WUXMProjection
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double localOffsetX;
 @property double globalOffsetZ;
@@ -1044,7 +1045,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPolyBezierSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMPointCollection* points;
 + (WXDependencyProperty*)pointsProperty;
@@ -1060,7 +1061,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPolyLineSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMPointCollection* points;
 + (WXDependencyProperty*)pointsProperty;
@@ -1076,7 +1077,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPolyQuadraticBezierSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMPointCollection* points;
 + (WXDependencyProperty*)pointsProperty;
@@ -1092,7 +1093,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMQuadraticBezierSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFPoint* point2;
 @property (retain) WFPoint* point1;
@@ -1110,7 +1111,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMRectangleGeometry : WUXMGeometry
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFRect* rect;
 + (WXDependencyProperty*)rectProperty;
@@ -1127,7 +1128,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (WUXMSolidColorBrush*)makeInstanceWithColor:(WUColor*)color ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUColor* color;
 + (WXDependencyProperty*)colorProperty;
@@ -1142,7 +1143,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMTileBrush : WUXMBrush
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUXMStretch stretch;
 @property WUXMAlignmentY alignmentY;
@@ -1161,7 +1162,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMTransform : WUXMGeneralTransform
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -1175,7 +1176,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMCompositeTransform : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double translateY;
 @property double translateX;
@@ -1207,7 +1208,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMImageBrush : WUXMTileBrush
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMImageSource* imageSource;
 + (WXDependencyProperty*)imageSourceProperty;
@@ -1229,7 +1230,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
                                                                      angle:(double)angle ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFPoint* startPoint;
 @property (retain) WFPoint* endPoint;
@@ -1247,7 +1248,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMMatrixTransform : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMMatrix* matrix;
 + (WXDependencyProperty*)matrixProperty;
@@ -1263,7 +1264,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMRotateTransform : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double centerY;
 @property double centerX;
@@ -1283,7 +1284,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMScaleTransform : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double scaleY;
 @property double scaleX;
@@ -1305,7 +1306,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMSkewTransform : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double centerY;
 @property double centerX;
@@ -1327,7 +1328,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMTransformGroup : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUXMTransformCollection* children;
 @property (readonly) WUXMMatrix* value;
@@ -1344,7 +1345,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMTranslateTransform : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double y;
 @property double x;

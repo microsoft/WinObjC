@@ -166,7 +166,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextTextRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* text;
 @property (readonly) BOOL isCanceled;
@@ -183,7 +183,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextSelectionRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUTCCoreTextRange* selection;
 @property (readonly) BOOL isCanceled;
@@ -199,7 +199,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextLayoutBounds : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFRect* textBounds;
 @property (retain) WFRect* controlBounds;
@@ -214,7 +214,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextLayoutRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isCanceled;
 @property (readonly) WUTCCoreTextLayoutBounds* layoutBounds;
@@ -231,7 +231,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextCompositionSegment : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* preconversionString;
 @property (readonly) WUTCCoreTextRange* range;
@@ -246,7 +246,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextEditContext : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* name;
 @property BOOL isReadOnly;
@@ -286,7 +286,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextTextRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUTCCoreTextTextRequest* request;
 @end
@@ -300,7 +300,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextSelectionRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUTCCoreTextSelectionRequest* request;
 @end
@@ -314,7 +314,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextLayoutRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUTCCoreTextLayoutRequest* request;
 @end
@@ -328,7 +328,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextTextUpdatingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUTCCoreTextTextUpdatingResult result;
 @property (readonly) WGLanguage* inputLanguage;
@@ -348,7 +348,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextSelectionUpdatingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUTCCoreTextSelectionUpdatingResult result;
 @property (readonly) BOOL isCanceled;
@@ -365,7 +365,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextFormatUpdatingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUTCCoreTextFormatUpdatingResult result;
 @property (readonly) id /* WUVUIElementType */ backgroundColor;
@@ -387,7 +387,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextCompositionStartedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isCanceled;
 - (WFDeferral*)getDeferral;
@@ -402,7 +402,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextCompositionCompletedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WUTCCoreTextCompositionSegment* */ compositionSegments;
 @property (readonly) BOOL isCanceled;
@@ -419,7 +419,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextServicesManager : RTObject
 + (WUTCCoreTextServicesManager*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WGLanguage* inputLanguage;
 - (EventRegistrationToken)addInputLanguageChangedEvent:(void (^)(WUTCCoreTextServicesManager*, RTObject*))del;

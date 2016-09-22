@@ -49,7 +49,7 @@ typedef unsigned WMSVoiceGender;
 OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 @interface WMSVoiceInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* Description;
 @property (readonly) NSString* displayName;
@@ -178,7 +178,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
                                                 WFIClosable,
                                                 WSSIInputStream>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* RTObject<WMIMediaMarker>* */ markers;
 @property (readonly) NSString* contentType;
@@ -214,7 +214,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 @interface WMSSpeechSynthesizer : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WMSVoiceInformation* voice;
 + (NSArray* /* WMSVoiceInformation* */)allVoices;

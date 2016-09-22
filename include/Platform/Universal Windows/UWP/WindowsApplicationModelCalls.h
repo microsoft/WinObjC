@@ -90,7 +90,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
                           rawAddressKind:(WACPhoneCallHistoryEntryRawAddressKind)rawAddressKind ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WACPhoneCallHistoryEntryRawAddressKind rawAddressKind;
 @property (retain) NSString* rawAddress;
@@ -108,7 +108,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
 @interface WACPhoneCallHistoryEntry : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WACPhoneCallHistoryEntryMedia media;
 @property BOOL isMissed;
@@ -139,7 +139,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
 @interface WACPhoneCallHistoryEntryReader : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WACPhoneCallHistoryEntry* */))success failure:(void (^)(NSError*))failure;
 @end
@@ -154,7 +154,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
 @interface WACPhoneCallHistoryEntryQueryOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WACPhoneCallHistoryEntryQueryDesiredMedia desiredMedia;
 @property (readonly) NSMutableArray* /* NSString * */ sourceIds;
@@ -169,7 +169,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
 @interface WACPhoneCallHistoryStore : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)getEntryAsync:(NSString*)callHistoryEntryId
               success:(void (^)(WACPhoneCallHistoryEntry*))success

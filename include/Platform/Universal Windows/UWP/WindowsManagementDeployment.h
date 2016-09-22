@@ -112,7 +112,7 @@ OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WMDDeploymentResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFGUID* activityId;
 @property (readonly) NSString* errorText;
@@ -128,7 +128,7 @@ OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WMDPackageUserInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMDPackageInstallState installState;
 @property (readonly) NSString* userSecurityId;
@@ -143,7 +143,7 @@ OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WMDPackageVolume : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isOffline;
 @property (readonly) BOOL isSystemVolume;
@@ -190,7 +190,7 @@ OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WMDPackageManager : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)addPackageAsync:(WFUri*)packageUri
   dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris

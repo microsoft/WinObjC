@@ -244,7 +244,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
                                                WFIClosable,
                                                WSSIInputStream>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int originalHeight;
 @property (readonly) unsigned int originalWidth;
@@ -282,7 +282,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFMusicProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int rating;
 @property (retain) NSString* albumArtist;
@@ -316,7 +316,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFVideoProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int year;
 @property (retain) NSString* title;
@@ -350,7 +350,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFImageProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* title;
 @property unsigned int rating;
@@ -380,7 +380,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFDocumentProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* title;
 @property (retain) NSString* comment;
@@ -402,7 +402,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFStorageItemContentProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)getMusicPropertiesAsyncWithSuccess:(void (^)(WSFMusicProperties*))success failure:(void (^)(NSError*))failure;
 - (void)getVideoPropertiesAsyncWithSuccess:(void (^)(WSFVideoProperties*))success failure:(void (^)(NSError*))failure;
@@ -424,7 +424,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFBasicProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* dateModified;
 @property (readonly) WFDateTime* itemDate;

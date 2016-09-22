@@ -169,7 +169,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @interface WNBDownloadOperation : RTObject <WNBIBackgroundTransferOperation, WNBIBackgroundTransferOperationPriority>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WNBBackgroundTransferCostPolicy costPolicy;
 @property (readonly) NSString* group;
@@ -201,7 +201,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @interface WNBUnconstrainedTransferRequestResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isUnconstrained;
 @end
@@ -215,7 +215,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @interface WNBUploadOperation : RTObject <WNBIBackgroundTransferOperation, WNBIBackgroundTransferOperationPriority>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WNBBackgroundTransferCostPolicy costPolicy;
 @property (readonly) NSString* group;
@@ -246,7 +246,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @interface WNBBackgroundTransferGroup : RTObject
 + (WNBBackgroundTransferGroup*)createGroup:(NSString*)name;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WNBBackgroundTransferBehavior transferBehavior;
 @property (readonly) NSString* name;
@@ -262,7 +262,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @interface WNBBackgroundTransferCompletionGroup : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isEnabled;
 @property (readonly) RTObject<WABIBackgroundTrigger>* trigger;
@@ -281,7 +281,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 + (WNBBackgroundTransferContentPart*)makeWithName:(NSString*)name ACTIVATOR;
 + (WNBBackgroundTransferContentPart*)makeWithNameAndFileName:(NSString*)name fileName:(NSString*)fileName ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)setHeader:(NSString*)headerName headerValue:(NSString*)headerValue;
 - (void)setText:(NSString*)value;
@@ -297,7 +297,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @interface WNBResponseInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFUri* actualUri;
 @property (readonly) NSDictionary* /* NSString *, NSString * */ headers;
@@ -326,7 +326,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 + (WNBBackgroundDownloader*)makeWithCompletionGroup:(WNBBackgroundTransferCompletionGroup*)completionGroup ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WUNToastNotification* failureToastNotification;
 @property (retain) WUNTileNotification* successTileNotification;
@@ -372,7 +372,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WNBBackgroundUploader*)makeWithCompletionGroup:(WNBBackgroundTransferCompletionGroup*)completionGroup ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WSCPasswordCredential* serverCredential;
 @property (retain) WSCPasswordCredential* proxyCredential;
@@ -442,7 +442,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @interface WNBBackgroundTransferCompletionGroupTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WNBDownloadOperation* */ downloads;
 @property (readonly) NSArray* /* WNBUploadOperation* */ uploads;

@@ -47,7 +47,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_USERDATAACCOUNTS_SYSTEMACCESS_EXPORT
 @interface WAUSDeviceAccountConfiguration : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* incomingServerAddress;
 @property (retain) NSString* incomingServerUsername;

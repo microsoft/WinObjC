@@ -90,7 +90,7 @@ OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
 @interface WFCPropertySet : RTObject <WFCIPropertySet>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)
@@ -124,7 +124,7 @@ OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
 @interface WFCValueSet : RTObject <WFCIPropertySet>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)
@@ -158,7 +158,7 @@ OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
 @interface WFCStringMap : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,String>)

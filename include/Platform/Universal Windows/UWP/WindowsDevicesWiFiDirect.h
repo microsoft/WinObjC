@@ -105,7 +105,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
                  success:(void (^)(WDWWiFiDirectDevice*))success
                  failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDWWiFiDirectConnectionStatus connectionStatus;
 @property (readonly) NSString* deviceId;
@@ -125,7 +125,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectConnectionParameters : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property int16_t groupOwnerIntent;
 @end
@@ -142,7 +142,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 + (NSMutableArray* /* WDWWiFiDirectInformationElement* */)createFromDeviceInformation:(WDEDeviceInformation*)deviceInformation;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) RTObject<WSSIBuffer>* value;
 @property uint8_t ouiType;
@@ -158,7 +158,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectLegacySettings : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* ssid;
 @property (retain) WSCPasswordCredential* passphrase;
@@ -174,7 +174,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectAdvertisement : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WDWWiFiDirectAdvertisementListenStateDiscoverability listenStateDiscoverability;
 @property BOOL isAutonomousGroupOwnerEnabled;
@@ -191,7 +191,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectAdvertisementPublisherStatusChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDWWiFiDirectError error;
 @property (readonly) WDWWiFiDirectAdvertisementPublisherStatus status;
@@ -207,7 +207,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectAdvertisementPublisher : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDWWiFiDirectAdvertisement* advertisement;
 @property (readonly) WDWWiFiDirectAdvertisementPublisherStatus status;
@@ -227,7 +227,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectConnectionRequest : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDeviceInformation* deviceInformation;
 - (void)close;
@@ -242,7 +242,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectConnectionRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (WDWWiFiDirectConnectionRequest*)getConnectionRequest;
 @end
@@ -257,7 +257,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectConnectionListener : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (EventRegistrationToken)addConnectionRequestedEvent:(void (^)(WDWWiFiDirectConnectionListener*,
                                                                 WDWWiFiDirectConnectionRequestedEventArgs*))del;

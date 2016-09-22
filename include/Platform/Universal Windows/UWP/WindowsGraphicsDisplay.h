@@ -85,7 +85,7 @@ OBJCUWP_WINDOWS_GRAPHICS_DISPLAY_EXPORT
 @interface WGDDisplayInformation : RTObject
 + (WGDDisplayInformation*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WGDDisplayOrientations currentOrientation;
 @property (readonly) float logicalDpi;

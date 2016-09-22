@@ -309,7 +309,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABAppointmentStoreNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -323,7 +323,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABApplicationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)requestAsyncWithSuccess:(void (^)(WABApplicationTriggerResult))success failure:(void (^)(NSError*))failure;
 - (void)requestAsyncWithArguments:(WFCValueSet*)arguments
@@ -340,7 +340,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABApplicationTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFCValueSet* arguments;
 @end
@@ -373,7 +373,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABMediaProcessingTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)requestAsyncWithSuccess:(void (^)(WABMediaProcessingTriggerResult))success failure:(void (^)(NSError*))failure;
 - (void)requestAsyncWithArguments:(WFCValueSet*)arguments
@@ -390,7 +390,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABBackgroundTaskRegistration : RTObject <WABIBackgroundTaskRegistration, WABIBackgroundTaskRegistration2>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* name;
 @property (readonly) WFGUID* taskId;
@@ -412,7 +412,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABBackgroundTaskDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)complete;
 @end
@@ -426,7 +426,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABBackgroundTaskProgressEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFGUID* instanceId;
 @property (readonly) unsigned int progress;
@@ -441,7 +441,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABBackgroundTaskCompletedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFGUID* instanceId;
 - (void)checkResult;
@@ -457,7 +457,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABBackgroundTaskBuilder : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* taskEntryPoint;
 @property (retain) NSString* name;
@@ -489,7 +489,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABChatMessageNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -503,7 +503,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABChatMessageReceivedNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -517,7 +517,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABRcsEndUserMessageAvailableTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -531,7 +531,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABContactStoreNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -546,7 +546,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 + (WABContentPrefetchTrigger*)make:(WFTimeSpan*)waitInterval ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFTimeSpan* waitInterval;
 @end
@@ -561,7 +561,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABEmailStoreNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -575,7 +575,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABMobileBroadbandRegistrationStateChangeTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -589,7 +589,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABMobileBroadbandRadioStateChangeTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -603,7 +603,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABMobileBroadbandPinLockStateChangeTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -617,7 +617,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABMobileBroadbandDeviceServiceNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -631,7 +631,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABSmsMessageReceivedTrigger : RTObject <WABIBackgroundTrigger>
 + (WABSmsMessageReceivedTrigger*)make:(WDSSmsFilterRules*)filterRules ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -646,7 +646,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 + (WABStorageLibraryContentChangedTrigger*)create:(WSStorageLibrary*)storageLibrary;
 + (WABStorageLibraryContentChangedTrigger*)createFromLibraries:(id<NSFastEnumeration> /* WSStorageLibrary* */)storageLibraries;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -660,7 +660,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABSystemTrigger : RTObject <WABIBackgroundTrigger>
 + (WABSystemTrigger*)make:(WABSystemTriggerType)triggerType oneShot:(BOOL)oneShot ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL oneShot;
 @property (readonly) WABSystemTriggerType triggerType;
@@ -676,7 +676,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABSystemCondition : RTObject <WABIBackgroundCondition>
 + (WABSystemCondition*)make:(WABSystemConditionType)conditionType ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WABSystemConditionType conditionType;
 @end
@@ -691,7 +691,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABNetworkOperatorNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (WABNetworkOperatorNotificationTrigger*)make:(NSString*)networkAccountId ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* networkAccountId;
 @end
@@ -706,7 +706,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABDeviceManufacturerNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (WABDeviceManufacturerNotificationTrigger*)make:(NSString*)triggerQualifier oneShot:(BOOL)oneShot ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL oneShot;
 @property (readonly) NSString* triggerQualifier;
@@ -721,7 +721,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABCachedFileUpdaterTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL canRequestUserInput;
 @property (readonly) WSPFileUpdateRequest* updateRequest;
@@ -738,7 +738,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABCachedFileUpdaterTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -752,7 +752,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABTimeTrigger : RTObject <WABIBackgroundTrigger>
 + (WABTimeTrigger*)make:(unsigned int)freshnessTime oneShot:(BOOL)oneShot ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int freshnessTime;
 @property (readonly) BOOL oneShot;
@@ -768,7 +768,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABMaintenanceTrigger : RTObject <WABIBackgroundTrigger>
 + (WABMaintenanceTrigger*)make:(unsigned int)freshnessTime oneShot:(BOOL)oneShot ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int freshnessTime;
 @property (readonly) BOOL oneShot;
@@ -784,7 +784,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABDeviceUseTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)requestAsyncSimple:(NSString*)deviceId success:(void (^)(WABDeviceTriggerResult))success failure:(void (^)(NSError*))failure;
 - (void)requestAsyncWithArguments:(NSString*)deviceId
@@ -803,7 +803,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABDeviceServicingTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)requestAsyncSimple:(NSString*)deviceId
           expectedDuration:(WFTimeSpan*)expectedDuration
@@ -826,7 +826,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABRfcommConnectionTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WNHostName* remoteHostName;
 @property WNSSocketProtectionLevel protectionLevel;
@@ -845,7 +845,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABDeviceConnectionChangeTrigger : RTObject <WABIBackgroundTrigger>
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WABDeviceConnectionChangeTrigger*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL maintainConnection;
 @property (readonly) BOOL canMaintainConnection;
@@ -862,7 +862,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABGattCharacteristicNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (WABGattCharacteristicNotificationTrigger*)make:(WDBGGattCharacteristic*)characteristic ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDBGGattCharacteristic* characteristic;
 @end
@@ -877,7 +877,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABBluetoothLEAdvertisementWatcherTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WDBBluetoothSignalStrengthFilter* signalStrengthFilter;
 @property (retain) WDBABluetoothLEAdvertisementFilter* advertisementFilter;
@@ -897,7 +897,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABBluetoothLEAdvertisementPublisherTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDBABluetoothLEAdvertisement* advertisement;
 @end
@@ -911,7 +911,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABDeviceWatcherTrigger : RTObject <WABIBackgroundTrigger>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -925,7 +925,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABLocationTrigger : RTObject <WABIBackgroundTrigger>
 + (WABLocationTrigger*)make:(WABLocationTriggerType)triggerType ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WABLocationTriggerType triggerType;
 @end
@@ -940,7 +940,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABActivitySensorTrigger : RTObject <WABIBackgroundTrigger>
 + (WABActivitySensorTrigger*)make:(unsigned int)reportIntervalInMilliseconds ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int minimumReportInterval;
 @property (readonly) unsigned int reportInterval;
@@ -958,7 +958,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABNetworkOperatorHotspotAuthenticationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -972,7 +972,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 @interface WABSocketActivityTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -987,7 +987,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 + (WABPushNotificationTrigger*)make:(NSString*)applicationId ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -1002,7 +1002,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 + (WABToastNotificationHistoryChangedTrigger*)make:(NSString*)applicationId ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
@@ -1017,7 +1017,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
 + (WABToastNotificationActionTrigger*)make:(NSString*)applicationId ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 

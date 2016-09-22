@@ -103,7 +103,7 @@ OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 @interface WSAAccessListEntryView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -121,7 +121,7 @@ OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 @interface WSAStorageItemMostRecentlyUsedList : RTObject <WSAIStorageItemAccessList>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSAAccessListEntryView* entries;
 @property (readonly) unsigned int maximumItemsAllowed;
@@ -168,7 +168,7 @@ OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 @interface WSAItemRemovedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSAAccessListEntry* removedEntry;
 @end
@@ -182,7 +182,7 @@ OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 @interface WSAStorageItemAccessList : RTObject <WSAIStorageItemAccessList>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSAAccessListEntryView* entries;
 @property (readonly) unsigned int maximumItemsAllowed;

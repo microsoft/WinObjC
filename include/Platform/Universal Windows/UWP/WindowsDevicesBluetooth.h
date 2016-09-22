@@ -181,7 +181,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
                              minorClass:(WDBBluetoothMinorClass)minorClass
                     serviceCapabilities:(WDBBluetoothServiceCapabilities)serviceCapabilities;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDBBluetoothMajorClass majorClass;
 @property (readonly) WDBBluetoothMinorClass minorClass;
@@ -212,7 +212,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 + (void)fromBluetoothAddressAsync:(uint64_t)address success:(void (^)(WDBBluetoothDevice*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint64_t bluetoothAddress;
 @property (readonly) WDBBluetoothClassOfDevice* classOfDevice;
@@ -245,7 +245,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
                           failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint64_t bluetoothAddress;
 @property (readonly) WDBBluetoothConnectionStatus connectionStatus;
@@ -272,7 +272,7 @@ OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBBluetoothSignalStrengthFilter : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) id /* WFTimeSpan* */ samplingInterval;
 @property (retain) id /* WFTimeSpan* */ outOfRangeTimeout;

@@ -128,7 +128,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
                                              altitudeReferenceSystem:(WDGAltitudeReferenceSystem)altitudeReferenceSystem
                                                   spatialReferenceId:(unsigned int)spatialReferenceId ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDGBasicGeoposition* position;
 @property (readonly) WDGAltitudeReferenceSystem altitudeReferenceSystem;
@@ -151,7 +151,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
                                     altitudeReferenceSystem:(WDGAltitudeReferenceSystem)altitudeReferenceSystem
                                          spatialReferenceId:(unsigned int)spatialReferenceId ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WDGBasicGeoposition* */ positions;
 @property (readonly) WDGAltitudeReferenceSystem altitudeReferenceSystem;
@@ -182,7 +182,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
                                            altitudeReferenceSystem:(WDGAltitudeReferenceSystem)altitudeReferenceSystem
                                                 spatialReferenceId:(unsigned int)spatialReferenceId ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDGBasicGeoposition* center;
 @property (readonly) double maxAltitude;
@@ -203,7 +203,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 @interface WDGGeocoordinateSatelliteData : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) id /* double */ horizontalDilutionOfPrecision;
 @property (readonly) id /* double */ positionDilutionOfPrecision;
@@ -219,7 +219,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 @interface WDGVenueData : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* id;
 @property (readonly) NSString* level;
@@ -234,7 +234,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 @interface WDGGeocoordinate : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) double accuracy;
 @property (readonly) id /* double */ altitude;
@@ -259,7 +259,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 @interface WDGCivicAddress : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* city;
 @property (readonly) NSString* country;
@@ -277,7 +277,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 @interface WDGGeoposition : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDGCivicAddress* civicAddress;
 @property (readonly) WDGGeocoordinate* coordinate;
@@ -293,7 +293,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 @interface WDGPositionChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDGGeoposition* position;
 @end
@@ -307,7 +307,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 @interface WDGStatusChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDGPositionStatus status;
 @end
@@ -330,7 +330,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
                                        failure:(void (^)(NSError*))failure;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int reportInterval;
 @property double movementThreshold;
@@ -365,7 +365,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
                                               altitudeReferenceSystem:(WDGAltitudeReferenceSystem)altitudeReferenceSystem
                                                    spatialReferenceId:(unsigned int)spatialReferenceId ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDGBasicGeoposition* center;
 @property (readonly) double radius;

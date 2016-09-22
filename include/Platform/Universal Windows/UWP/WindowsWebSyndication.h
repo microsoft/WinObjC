@@ -149,7 +149,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
                                   attributeNamespace:(NSString*)attributeNamespace
                                       attributeValue:(NSString*)attributeValue ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* value;
 @property (retain) NSString* Namespace;
@@ -169,7 +169,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
                                  nodeValue:(NSString*)nodeValue ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* nodeValue;
 @property (retain) NSString* nodeNamespace;
@@ -192,7 +192,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WWSSyndicationGenerator*)makeSyndicationGenerator:(NSString*)text ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* Version;
 @property (retain) WFUri* uri;
@@ -219,7 +219,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 + (WWSSyndicationText*)makeSyndicationTextEx:(NSString*)text type:(WWSSyndicationTextType)type ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* nodeValue;
 @property (retain) NSString* nodeNamespace;
@@ -246,7 +246,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 + (WWSSyndicationContent*)makeSyndicationContentWithSourceUri:(WFUri*)sourceUri ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFUri* sourceUri;
 @property (retain) NSString* nodeValue;
@@ -278,7 +278,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
                                    mediaType:(NSString*)mediaType
                                       length:(unsigned int)length ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WFUri* uri;
 @property (retain) NSString* title;
@@ -308,7 +308,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 + (WWSSyndicationPerson*)makeSyndicationPersonEx:(NSString*)name email:(NSString*)email uri:(WFUri*)uri ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* nodeValue;
 @property (retain) NSString* nodeNamespace;
@@ -335,7 +335,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 + (WWSSyndicationCategory*)makeSyndicationCategoryEx:(NSString*)term scheme:(NSString*)scheme label:(NSString*)label ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* term;
 @property (retain) NSString* scheme;
@@ -361,7 +361,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 + (WWSSyndicationFeed*)makeSyndicationFeed:(NSString*)title subtitle:(NSString*)subtitle uri:(WFUri*)uri ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) RTObject<WWSISyndicationText>* title;
 @property (retain) RTObject<WWSISyndicationText>* subtitle;
@@ -404,7 +404,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WWSSyndicationItem*)makeSyndicationItem:(NSString*)title content:(WWSSyndicationContent*)content uri:(WFUri*)uri ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) RTObject<WWSISyndicationText>* title;
 @property (retain) WWSSyndicationFeed* source;
@@ -446,7 +446,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 + (instancetype)make ACTIVATOR;
 + (WWSSyndicationClient*)makeSyndicationClient:(WSCPasswordCredential*)serverCredential ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int timeout;
 @property (retain) WSCPasswordCredential* serverCredential;

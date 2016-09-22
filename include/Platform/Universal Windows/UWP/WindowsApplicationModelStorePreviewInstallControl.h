@@ -76,7 +76,7 @@ typedef unsigned WASPIAutoUpdateSetting;
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 @interface WASPIAppInstallStatus : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint64_t bytesDownloaded;
 @property (readonly) uint64_t downloadSizeInBytes;
@@ -94,7 +94,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 @interface WASPIAppInstallItem : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WASPIAppInstallType installType;
 @property (readonly) BOOL isUserInitiated;
@@ -119,7 +119,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 @interface WASPIAppInstallManagerItemEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WASPIAppInstallItem* item;
 @end
@@ -134,7 +134,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 @interface WASPIAppInstallManager : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WASPIAutoUpdateSetting autoUpdateSetting;
 @property (retain) NSString* acquisitionIdentity;

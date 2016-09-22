@@ -201,7 +201,7 @@ typedef unsigned WACChatItemKind;
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageTransportConfiguration : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ extendedProperties;
 @property (readonly) int maxAttachmentCount;
@@ -220,7 +220,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessage : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* transportId;
 @property (retain) WFDateTime* networkTimestamp;
@@ -260,7 +260,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageChange : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WACChatMessageChangeType changeType;
 @property (readonly) WACChatMessage* message;
@@ -275,7 +275,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageChangeReader : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)acceptChanges;
 - (void)acceptChangesThrough:(WACChatMessageChange*)lastChangeToAcknowledge;
@@ -293,7 +293,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 + (WACChatMessageAttachment*)makeChatMessageAttachment:(NSString*)mimeType
                                    dataStreamReference:(RTObject<WSSIRandomAccessStreamReference>*)dataStreamReference ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* text;
 @property (retain) NSString* mimeType;
@@ -314,7 +314,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatConversationThreadingInfo : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WACChatConversationThreadingKind kind;
 @property (retain) NSString* custom;
@@ -333,7 +333,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatRecipientDeliveryInfo : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* transportAddress;
 @property (retain) id /* WFDateTime* */ readTime;
@@ -354,7 +354,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageChangeTracker : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)enable;
 - (WACChatMessageChangeReader*)getChangeReader;
@@ -370,7 +370,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageReader : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WACChatMessage* */))success failure:(void (^)(NSError*))failure;
 - (void)readBatchWithCountAsync:(int)count success:(void (^)(NSArray* /* WACChatMessage* */))success failure:(void (^)(NSError*))failure;
@@ -385,7 +385,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageValidationResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) id /* unsigned int */ maxPartCount;
 @property (readonly) id /* unsigned int */ partCount;
@@ -402,7 +402,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageStore : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WACChatMessageChangeTracker* changeTracker;
 - (EventRegistrationToken)addMessageChangedEvent:(void (^)(WACChatMessageStore*, WACChatMessageChangedEventArgs*))del;
@@ -457,7 +457,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (WACChatMessageChangedDeferral*)getDeferral;
 @end
@@ -471,7 +471,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatConversation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* subject;
 @property BOOL isConversationMuted;
@@ -505,7 +505,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatConversationReader : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WACChatConversation* */))success failure:(void (^)(NSError*))failure;
 - (void)readBatchWithCountAsync:(int)count
@@ -523,7 +523,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatQueryOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) NSString* searchString;
 @end
@@ -537,7 +537,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatSearchReader : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* RTObject<WACIChatItem>* */))success failure:(void (^)(NSError*))failure;
 - (void)readBatchWithCountAsync:(int)count
@@ -554,7 +554,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageStoreChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* id;
 @property (readonly) WACChatStoreChangedEventKind kind;
@@ -569,7 +569,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageChangedDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)complete;
 @end
@@ -583,7 +583,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageTransport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isActive;
 @property (readonly) BOOL isAppSetAsNotificationProvider;
@@ -603,7 +603,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatCapabilities : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isChatCapable;
 @property (readonly) BOOL isFileTransferCapable;
@@ -621,7 +621,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRemoteParticipantComposingChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isComposing;
 @property (readonly) NSString* participantAddress;
@@ -637,7 +637,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRcsEndUserMessageManager : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (EventRegistrationToken)addMessageAvailableChangedEvent:(void (^)(WACRcsEndUserMessageManager*,
                                                                     WACRcsEndUserMessageAvailableEventArgs*))del;
@@ -653,7 +653,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRcsTransport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WACRcsTransportConfiguration* configuration;
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ extendedProperties;
@@ -675,7 +675,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRcsTransportConfiguration : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) int maxAttachmentCount;
 @property (readonly) int maxFileSizeInKilobytes;
@@ -694,7 +694,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRcsServiceKindSupportedChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WACRcsServiceKind serviceKind;
 @end
@@ -708,7 +708,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRcsEndUserMessageAvailableEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isMessageAvailable;
 @property (readonly) WACRcsEndUserMessage* message;
@@ -723,7 +723,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRcsEndUserMessageAction : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* label;
 @end
@@ -737,7 +737,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRcsEndUserMessage : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WACRcsEndUserMessageAction* */ actions;
 @property (readonly) BOOL isPinRequired;
@@ -777,7 +777,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageNotificationTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WACChatMessage* chatMessage;
 @property (readonly) BOOL shouldDisplayToast;
@@ -834,7 +834,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRcsEndUserMessageAvailableTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* text;
 @property (readonly) NSString* title;

@@ -131,7 +131,7 @@ typedef void (^WNPDeviceDepartedEventHandler)(WNPProximityDevice* sender);
 OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 @interface WNPProximityMessage : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WSSIBuffer>* data;
 @property (readonly) NSString* dataAsString;
@@ -151,7 +151,7 @@ OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 + (WNPProximityDevice*)getDefault;
 + (WNPProximityDevice*)fromId:(NSString*)deviceId;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint64_t bitsPerSecond;
 @property (readonly) NSString* deviceId;
@@ -184,7 +184,7 @@ OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 @interface WNPTriggeredConnectionStateChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int id;
 @property (readonly) WNSStreamSocket* socket;
@@ -200,7 +200,7 @@ OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 @interface WNPPeerInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* displayName;
 @property (readonly) RTObject<WSSIBuffer>* discoveryData;
@@ -218,7 +218,7 @@ OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 @interface WNPConnectionRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNPPeerInformation* peerInformation;
 @end
@@ -232,7 +232,7 @@ OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 @interface WNPPeerWatcher : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNPPeerWatcherStatus status;
 - (EventRegistrationToken)addAddedEvent:(void (^)(WNPPeerWatcher*, WNPPeerInformation*))del;

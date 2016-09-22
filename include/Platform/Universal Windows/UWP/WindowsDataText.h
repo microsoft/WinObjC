@@ -135,7 +135,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 + (WDTSemanticTextQuery*)make:(NSString*)aqsFilter ACTIVATOR;
 + (WDTSemanticTextQuery*)makeWithLanguage:(NSString*)aqsFilter filterLanguage:(NSString*)filterLanguage ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (NSArray* /* WDTTextSegment* */)find:(NSString*)content;
 - (NSArray* /* WDTTextSegment* */)findInProperty:(NSString*)propertyContent propertyName:(NSString*)propertyName;
@@ -177,7 +177,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTAlternateWordForm : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* alternateText;
 @property (readonly) WDTAlternateNormalizationFormat normalizationFormat;
@@ -193,7 +193,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTWordSegment : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WDTAlternateWordForm* */ alternateForms;
 @property (readonly) WDTTextSegment* sourceTextSegment;
@@ -210,7 +210,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTWordsSegmenter : RTObject
 + (WDTWordsSegmenter*)makeWithLanguage:(NSString*)language ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* resolvedLanguage;
 - (WDTWordSegment*)getTokenAt:(NSString*)text startIndex:(unsigned int)startIndex;
@@ -227,7 +227,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTSelectableWordSegment : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDTTextSegment* sourceTextSegment;
 @property (readonly) NSString* text;
@@ -243,7 +243,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTSelectableWordsSegmenter : RTObject
 + (WDTSelectableWordsSegmenter*)makeWithLanguage:(NSString*)language ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSString* resolvedLanguage;
 - (WDTSelectableWordSegment*)getTokenAt:(NSString*)text startIndex:(unsigned int)startIndex;
@@ -261,7 +261,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTTextPredictionGenerator : RTObject
 + (WDTTextPredictionGenerator*)make:(NSString*)languageTag ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL languageAvailableButNotInstalled;
 @property (readonly) NSString* resolvedLanguage;
@@ -282,7 +282,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTTextConversionGenerator : RTObject
 + (WDTTextConversionGenerator*)make:(NSString*)languageTag ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL languageAvailableButNotInstalled;
 @property (readonly) NSString* resolvedLanguage;
@@ -303,7 +303,7 @@ OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTTextReverseConversionGenerator : RTObject
 + (WDTTextReverseConversionGenerator*)make:(NSString*)languageTag ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL languageAvailableButNotInstalled;
 @property (readonly) NSString* resolvedLanguage;

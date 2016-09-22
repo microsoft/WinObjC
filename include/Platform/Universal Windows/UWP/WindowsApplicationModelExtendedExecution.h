@@ -62,7 +62,7 @@ typedef unsigned WAEExtendedExecutionRevokedReason;
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_EXPORT
 @interface WAEExtendedExecutionRevokedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAEExtendedExecutionRevokedReason reason;
 @end
@@ -87,7 +87,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_EXPORT
 @interface WAEExtendedExecutionSession : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WAEExtendedExecutionReason reason;
 @property unsigned int percentProgress;

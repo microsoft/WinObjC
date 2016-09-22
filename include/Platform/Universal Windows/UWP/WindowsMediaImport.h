@@ -159,7 +159,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
                 success:(void (^)(WMIPhotoImportSource*))success
                 failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) id /* unsigned int */ batteryLevelPercent;
 @property (readonly) NSString* connectionProtocol;
@@ -189,7 +189,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportOperation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 // Failed to generate property ContinueDeletingImportedItemsFromSourceAsync (Cannot marshal
 // Windows.Foundation.IAsyncOperationWithProgress`2<Windows.Media.Import.PhotoImportDeleteImportedItemsFromSourceResult,Double>)
@@ -233,7 +233,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportSession : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WMIPhotoImportSubfolderCreationMode subfolderCreationMode;
 @property (retain) RTObject<WSIStorageFolder>* destinationFolder;
@@ -258,7 +258,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportFindItemsResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WMIPhotoImportItem* */ foundItems;
 @property (readonly) BOOL hasSucceeded;
@@ -306,7 +306,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportImportItemsResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL hasSucceeded;
 @property (readonly) NSArray* /* WMIPhotoImportItem* */ importedItems;
@@ -335,7 +335,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportDeleteImportedItemsFromSourceResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WMIPhotoImportItem* */ deletedItems;
 @property (readonly) BOOL hasSucceeded;
@@ -361,7 +361,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportStorageMedium : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint64_t availableSpaceInBytes;
 @property (readonly) uint64_t capacityInBytes;
@@ -382,7 +382,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportSidecar : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* date;
 @property (readonly) NSString* name;
@@ -398,7 +398,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportVideoSegment : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* date;
 @property (readonly) NSString* name;
@@ -416,7 +416,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportItem : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL isSelected;
 @property (readonly) WMIPhotoImportContentType contentType;
@@ -441,7 +441,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportSelectionChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isSelectionEmpty;
 @end
@@ -455,7 +455,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportItemImportedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMIPhotoImportItem* importedItem;
 @end

@@ -76,7 +76,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
                                                    thumbnailOptions:(WSFThumbnailOptions)thumbnailOptions
                                                           delayLoad:(BOOL)delayLoad ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)getItemsAsync:(unsigned int)startIndex
    maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
@@ -291,7 +291,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
                                           WSIStorageFilePropertiesWithAvailability,
                                           WSIStorageFile2>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSFBasicProperties* basicProperties;
 @property (readonly) WSFDocumentProperties* documentProperties;
@@ -475,7 +475,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
                                             WSIStorageFolder2,
                                             WSIStorageItemPropertiesWithProvider>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSFBasicProperties* basicProperties;
 @property (readonly) WSFDocumentProperties* documentProperties;

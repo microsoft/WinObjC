@@ -92,7 +92,7 @@ OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 @interface WUXPAddPagesEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WGPPrintTaskOptions* printTaskOptions;
 @end
@@ -107,7 +107,7 @@ OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 @interface WUXPGetPreviewPageEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) int pageNumber;
 @end
@@ -122,7 +122,7 @@ OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 @interface WUXPPaginateEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) int currentPreviewPageNumber;
 @property (readonly) WGPPrintTaskOptions* printTaskOptions;
@@ -137,7 +137,7 @@ OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -159,7 +159,7 @@ OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 @interface WUXPPrintDocument : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj ACTIVATOR;
++ (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WGPIPrintDocumentSource>* documentSource;
 + (WXDependencyProperty*)documentSourceProperty;
