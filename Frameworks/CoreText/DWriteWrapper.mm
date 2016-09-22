@@ -28,6 +28,7 @@
 #import <LoggingNative.h>
 #import <vector>
 #import <iterator>
+#import <numeric>
 
 using namespace std;
 using namespace Microsoft::WRL;
@@ -50,6 +51,17 @@ static ComPtr<IDWriteFactory> __CreateDWriteFactoryInstance() {
 static ComPtr<IDWriteFactory> __GetDWriteFactoryInstance() {
     static ComPtr<IDWriteFactory> s_dwriteFactory = __CreateDWriteFactoryInstance();
     return s_dwriteFactory;
+}
+
+// Private helper for converting a DWRITE_FONT_METRIC unit to a CTFont API unit
+// DWRITE_FONT_METRICS measures its metrics in 'design units'
+// CTFont APIs generally return in terms of point size
+CGFloat _CoreTextScaleMetric(CGFloat metric, CGFloat pointSize, CGFloat unitsPerEm) {
+    // design units * (pt / em) / (design units / em)
+    // = design units * (pt / em) * (em / design units)
+    // = pt * (design units / design units) * (em / em)
+    // = pt
+    return metric * pointSize / unitsPerEm;
 }
 
 static DWRITE_TEXT_ALIGNMENT __CoreTextAlignmentToDwrite(CTTextAlignment alignment) {
@@ -460,6 +472,8 @@ static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
 
         float xPos;
         float yPos;
+        line->_ascent = FLT_MIN;
+        line->_descent = FLT_MIN;
 
         // Glyph runs that have the same _baselineOriginY value are part of the the same Line.
         while ((j < numOfGlyphRuns) && (glyphRunDetails._baselineOriginY[i] == glyphRunDetails._baselineOriginY[j])) {
@@ -493,6 +507,42 @@ static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
                 line->_width += glyphRunDetails._dwriteGlyphRun[i].glyphAdvances[index];
             }
 
+            DWRITE_GLYPH_METRICS glyphMetrics[run->_dwriteGlyphRun.glyphCount];
+            THROW_IF_FAILED(run->_dwriteGlyphRun.fontFace->GetDesignGlyphMetrics(run->_dwriteGlyphRun.glyphIndices,
+                                                                                 run->_dwriteGlyphRun.glyphCount,
+                                                                                 glyphMetrics,
+                                                                                 run->_dwriteGlyphRun.isSideways));
+
+            CTFontRef font = static_cast<CTFontRef>([run->_attributes objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
+            CGFloat pointSize = kCTFontSystemFontSize;
+            if (font) {
+                pointSize = CTFontGetSize(font);
+            }
+
+            DWRITE_FONT_METRICS fontMetrics;
+            run->_dwriteGlyphRun.fontFace->GetMetrics(&fontMetrics);
+
+            line->_ascent =
+                std::accumulate(glyphMetrics,
+                                glyphMetrics + run->_dwriteGlyphRun.glyphCount,
+                                line->_ascent,
+                                [&](CGFloat ascent, DWRITE_GLYPH_METRICS metrics) {
+                                    return std::max(ascent,
+                                                    _CoreTextScaleMetric(metrics.verticalOriginY, pointSize, fontMetrics.designUnitsPerEm));
+                                });
+
+            line->_descent = std::accumulate(glyphMetrics,
+                                             glyphMetrics + run->_dwriteGlyphRun.glyphCount,
+                                             line->_descent,
+                                             [&](CGFloat descent, DWRITE_GLYPH_METRICS metrics) {
+                                                 return std::max(descent,
+                                                                 _CoreTextScaleMetric(metrics.bottomSideBearing,
+                                                                                      pointSize,
+                                                                                      fontMetrics.designUnitsPerEm));
+                                             });
+
+            line->_leading = std::max(line->_leading, _CoreTextScaleMetric(fontMetrics.lineGap, pointSize, fontMetrics.designUnitsPerEm));
+
             [runs addObject:run];
             stringRange += run->_range.length;
             glyphCount += glyphRunDetails._dwriteGlyphRun[i].glyphCount;
@@ -509,6 +559,7 @@ static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
         line->_glyphCount = glyphCount;
         line->_relativeXOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeXOffset;
         line->_relativeYOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeYOffset;
+
         [lines addObject:line];
     }
 

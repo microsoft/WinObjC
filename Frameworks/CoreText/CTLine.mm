@@ -283,9 +283,8 @@ CGRect CTLineGetImageBounds(CTLineRef line, CGContextRef context) {
 }
 
 /**
- @Status Caveat
- @Notes Values only reflect the typographical maximums for the font - string is only evaulated
-        for width
+ @Status Interoperable
+ @Notes
 */
 double CTLineGetTypographicBounds(CTLineRef lineRef, CGFloat* ascent, CGFloat* descent, CGFloat* leading) {
     if (!lineRef) {

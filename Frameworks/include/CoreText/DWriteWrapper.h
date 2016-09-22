@@ -57,3 +57,4 @@ CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName);
 
 HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace);
 bool _CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Out_ DWRITE_GLYPH_RUN* dest);
+CGFloat _CoreTextScaleMetric(CGFloat metric, CGFloat pointSize, CGFloat unitsPerEm);
