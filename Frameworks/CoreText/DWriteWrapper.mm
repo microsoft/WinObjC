@@ -187,7 +187,6 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(_CTTypesetter* ts, CFR
     // Note here we only look at attribute value at first index of the specified range as we can get a default faont size to use here.
     // Per string range attribute handling will be done in _CreateDWriteTextLayout.
 
-    // TODO: #1001 attribs can be nil here?
     NSDictionary* attribs = [ts->_attributedString attributesAtIndex:range.location effectiveRange:NULL];
 
     CGFloat fontSize = kCTFontSystemFontSize;
@@ -282,7 +281,6 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
                                                    longestEffectiveRange:&attributeRange
                                                                  inRange:{ i, [ts->_attributedString length] - i }];
 
-        const DWRITE_TEXT_RANGE dwriteRange = { attributeRange.location, attributeRange.length };
         CTFontRef font = static_cast<CTFontRef>([attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
         if (font != nil) {
             CGFloat fontSize = CTFontGetSize(font);
@@ -294,6 +292,7 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
             std::vector<wchar_t> familyName(CFStringGetLength(fontFamilyName) + 1);
             CFStringGetCharacters(fontFamilyName, CFRangeMake(0, familyName.size()), reinterpret_cast<UniChar*>(familyName.data()));
 
+            const DWRITE_TEXT_RANGE dwriteRange = { attributeRange.location, attributeRange.length };
             THROW_IF_FAILED(textLayout->SetFontSize(fontSize, dwriteRange));
             THROW_IF_FAILED(textLayout->SetFontWeight(weight, dwriteRange));
             THROW_IF_FAILED(textLayout->SetFontStretch(stretch, dwriteRange));
