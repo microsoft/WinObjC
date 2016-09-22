@@ -27,8 +27,18 @@
 }
 
 - (void)setLineRef:(CTLineRef)lineRef {
+    if (_lineRef) {
+        CFRelease(_lineRef);
+    }
+
     _lineRef = lineRef;
     CFRetain(_lineRef);
+}
+
+- (void)dealloc {
+    if (_lineRef) {
+        CFRelease(_lineRef);
+    }
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -41,7 +51,6 @@
     CGContextScaleCTM(context, 1.0f, -1.0f);
     CGContextSetTextPosition(context, 0.0, 10.0);
     CTLineDraw(_lineRef, context);
-    CFRelease(_lineRef);
 }
 
 @end
