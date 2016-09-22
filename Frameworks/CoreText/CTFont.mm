@@ -24,17 +24,6 @@
 #import <CoreText/DWriteWrapper.h>
 #import "UIFontInternal.h"
 
-extern "C" {
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include <ftglyph.h>
-#include <tttables.h>
-#include <ftadvanc.h>
-#include <ftsizes.h>
-#include <ftsnames.h>
-#include <ttnameid.h>
-}
-
 #include <COMIncludes.h>
 #import <DWrite_3.h>
 #import <wrl/client.h>
@@ -45,37 +34,6 @@ extern "C" {
 #import <vector>
 
 static const wchar_t* g_logTag = L"CTFont";
-
-static IWLazyClassLookup _LazyUIFont("UIFont");
-
-static const std::map<const CFStringRef, FT_UInt> g_nameIdMap = {
-    { kCTFontCopyrightNameKey, 0 },
-    { kCTFontFamilyNameKey, 1 },
-    { kCTFontSubFamilyNameKey, 2 },
-    { kCTFontUniqueNameKey, 3 },
-    { kCTFontFullNameKey, 4 },
-    { kCTFontVersionNameKey, 5 },
-    { kCTFontPostScriptNameKey, 6 },
-    { kCTFontTrademarkNameKey, 7 },
-    { kCTFontManufacturerNameKey, 8 },
-    { kCTFontDesignerNameKey, 9 },
-    { kCTFontDescriptionNameKey, 10 },
-    { kCTFontVendorURLNameKey, 11 },
-    { kCTFontDesignerURLNameKey, 12 },
-    { kCTFontLicenseNameKey, 13 },
-    { kCTFontLicenseURLNameKey, 14 },
-
-    // https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html
-    // Name index 15 is reserved.
-    // Name index 16 is not a CTFont name specifier constant.
-    // Name index 17 is not a CTFont name specifier constant.
-    // Name index 18 is not a CTFont name specifier constant.
-
-    { kCTFontSampleTextNameKey, 19 },
-
-    // http://scripts.sil.org/cms/scripts/page.php?item_id=IWS-Chapter08
-    { kCTFontPostScriptCIDNameKey, 20 },
-};
 
 const CFStringRef kCTFontCopyrightNameKey = CFSTR("CTFontCopyrightName");
 const CFStringRef kCTFontFamilyNameKey = CFSTR("CTFontFamilyName");
@@ -212,10 +170,11 @@ CTFontRef CTFontCreateWithNameAndOptions(CFStringRef name, CGFloat size, const C
 */
 CTFontRef CTFontCreateWithFontDescriptor(CTFontDescriptorRef descriptor, CGFloat size, const CGAffineTransform* matrix) {
     UNIMPLEMENTED();
-    if (size == 0.0f)
+    if (size == 0.0f) {
         size = 12.0f;
-    id ret = [[_LazyUIFont fontWithName:@"Segoe UI" size:size] retain];
-    return (CTFontRef)ret;
+    }
+
+    return CTFontCreateWithName(CFSTR("Segoe UI"), size, nullptr);
 }
 
 /**

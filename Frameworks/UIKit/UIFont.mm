@@ -120,10 +120,7 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UICTFont, CTFontGetTypeID);
  @Status Interoperable
 */
 + (UIFont*)systemFontOfSize:(CGFloat)size {
-    // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
-    // Clean this up a bit once fontDescriptor gets better support
-    UIFont* ret = [self fontWithDescriptor:[UIFontDescriptor fontDescriptorWithName:c_defaultFontName size:size] size:size];
-
+    UIFont* ret = [self fontWithName:c_defaultFontName size:size];
     return ret;
 }
 
@@ -139,12 +136,8 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UICTFont, CTFontGetTypeID);
  @Status Interoperable
 */
 + (UIFont*)boldSystemFontOfSize:(CGFloat)size {
-    // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
-    // Clean this up a bit once fontDescriptor gets better support
-    UIFontDescriptor* fontDes =
-        [[UIFontDescriptor fontDescriptorWithName:@"Arial Bold" size:size] fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold];
+    UIFontDescriptor* fontDes = [UIFontDescriptor fontDescriptorWithName:@"Arial Bold" size:size];
     UIFont* ret = [self fontWithDescriptor:fontDes size:size];
-
     return ret;
 }
 
@@ -152,12 +145,8 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UICTFont, CTFontGetTypeID);
  @Status Interoperable
 */
 + (UIFont*)italicSystemFontOfSize:(CGFloat)size {
-    // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
-    // Clean this up a bit once fontDescriptor gets better support
-    UIFontDescriptor* fontDes =
-        [[UIFontDescriptor fontDescriptorWithName:@"Arial Oblique" size:size] fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitItalic];
+    UIFontDescriptor* fontDes = [UIFontDescriptor fontDescriptorWithName:@"Arial Oblique" size:size];
     UIFont* ret = [self fontWithDescriptor:fontDes size:size];
-
     return ret;
 }
 
@@ -330,21 +319,6 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UICTFont, CTFontGetTypeID);
 }
 
 - (uint32_t)_sizingFontHandle {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-// Internal methods
-
-// Private message sent from CTFontManager for the implementation of CTFontManagerRegisterGraphicsFont
-- (bool)_CTFontManagerRegisterGraphicsFont:(CGFontRef)font withError:(CFErrorRef*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-// Internal methods
-// Private message sent from CTFontManager for the implementation of CTFontManagerRegisterFontsForURL in CTFontManager
-+ (bool)_CTFontManagerRegisterFontsForURL:(CFURLRef)fontURL withScope:(CTFontManagerScope)scope withError:(CFErrorRef*)error {
     UNIMPLEMENTED();
     return StubReturn();
 }

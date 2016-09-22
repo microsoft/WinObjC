@@ -26,6 +26,4 @@
 + (UIFont*)buttonFont;
 - (void)_setName:(NSString*)name;
 - (uint32_t)_sizingFontHandle;
-- (bool)_CTFontManagerRegisterGraphicsFont:(CGFontRef)font withError:(CFErrorRef*)error;
-+ (bool)_CTFontManagerRegisterFontsForURL:(CFURLRef)fontURL withScope:(CTFontManagerScope)scope withError:(CFErrorRef*)error;
 @end

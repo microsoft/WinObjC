@@ -68,13 +68,10 @@ inline void _SafeRelease(T** p) {
     StrongId<NSString> _stringFragment;
     DWRITE_GLYPH_RUN _dwriteGlyphRun;
     std::vector<CFIndex> _stringIndices;
-
-    // TODO::
-    // How do we get this data? DWrite does not seem to provide it to us directly today.
-    std::vector<CGSize> _glyphAdvances;
-    std::vector<CGPoint> _glyphOrigins;
     CGFloat _relativeXOffset;
     CGFloat _relativeYOffset;
+    std::vector<CGSize> _glyphAdvances;
+    std::vector<CGPoint> _glyphOrigins;
 }
 @end
 
@@ -85,11 +82,8 @@ inline void _SafeRelease(T** p) {
     CGFloat _relativeXOffset;
     CGFloat _relativeYOffset;
     CGFloat _width;
+    NSUInteger _glyphCount;
     StrongId<NSMutableArray<_CTRun*>> _runs;
-    CFIndex _glyphCount;
-
-    // TODO::
-    // Do we need these anymore?
     CGFloat _ascent, _descent, _leading;
 }
 @end
@@ -100,10 +94,6 @@ inline void _SafeRelease(T** p) {
     CGRect _frameRect;
     std::vector<CGPoint> _lineOrigins;
     StrongId<NSMutableArray<_CTLine*>> _lines;
-
-    // TODO::
-    // Do we need these anymore?
-    CGSize _totalSize;
 }
 @end
 
