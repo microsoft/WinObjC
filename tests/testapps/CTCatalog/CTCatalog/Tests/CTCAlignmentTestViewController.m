@@ -93,6 +93,7 @@
     CTAlignmentTestView* _leftView;
     CTAlignmentTestView* _centerView;
     CTAlignmentTestView* _rightView;
+    CTAlignmentTestView* _justifiedView;
     UITextField* _textField;
     UISlider* _fontSizeSlider;
     UIPickerView* _fontPicker;
@@ -181,6 +182,16 @@
         [[_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"] stringByReplacingOccurrencesOfString:@"\\t"
                                                                                                                   withString:@"\t"];
     [self.view addSubview:_rightView];
+
+    // Create justified text
+    _justifiedView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(20, 620, 400, 200)];
+    _justifiedView.backgroundColor = [UIColor whiteColor];
+    _justifiedView.alignment = kCTJustifiedTextAlignment;
+    _justifiedView.font = _font;
+    _justifiedView.text =
+        [[_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"] stringByReplacingOccurrencesOfString:@"\\t"
+                                                                                                                  withString:@"\t"];
+    [self.view addSubview:_justifiedView];
 }
 
 // Update texts to new font/size
@@ -188,6 +199,7 @@
     [_leftView removeFromSuperview];
     [_centerView removeFromSuperview];
     [_rightView removeFromSuperview];
+    [_justifiedView removeFromSuperview];
     [self drawTests];
 }
 

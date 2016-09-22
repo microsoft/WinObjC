@@ -25,7 +25,7 @@ static constexpr double c_errorDelta = 0.0005;
 static constexpr float c_arbitraryFloat = 314159.2717;
 
 static NSAttributedString* getAttributedString(NSString* str) {
-    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Times New Roman" size:40];
+    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Segoe UI" size:40];
     UIFont* font = [UIFont fontWithDescriptor:fontDescriptor size:40];
 
     NSRange wholeRange = NSMakeRange(0, str.length);
