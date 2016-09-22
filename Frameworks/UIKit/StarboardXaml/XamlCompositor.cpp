@@ -624,11 +624,9 @@ void SetScreenParameters(float width, float height, float magnification, float r
     XamlCompositor::Controls::CALayerXaml::ApplyMagnificationFactor(windowCollection, magnification, rotation);
 }
 
-void CreateXamlCompositor(winobjc::Id& root);
-
-extern "C" void SetXamlRoot(Windows::UI::Xaml::Controls::Grid^ grid) {
+extern "C" void SetXamlRoot(Windows::UI::Xaml::Controls::Grid^ grid, ActivationType activationType) {
     winobjc::Id gridObj((Platform::Object^)grid);
-    CreateXamlCompositor(gridObj);
+    CreateXamlCompositor(gridObj, ((activationType == ActivationTypeLibrary) ? CompositionModeLibrary : CompositionModeDefault));
 }
 
 void DispatchCompositorTransactions(
