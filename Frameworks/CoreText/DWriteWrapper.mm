@@ -166,8 +166,6 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(_CTTypesetter* ts, CFR
     ComPtr<IDWriteFactory> dwriteFactory = __GetDWriteFactoryInstance();
 
     // TODO::
-    // Get font family name details so that can be used here. For now this is hardcoded to "Gabriola".
-
     // Note here we only look at attribute value at first index of the specified range as we can get a default faont size to use here.
     // Per string range attribute handling will be done in _CreateDWriteTextLayout.
 

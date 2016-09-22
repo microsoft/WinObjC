@@ -35,35 +35,6 @@
 
 static const wchar_t* g_logTag = L"CTFont";
 
-static const std::map<const CFStringRef, FT_UInt> g_nameIdMap = {
-    { kCTFontCopyrightNameKey, 0 },
-    { kCTFontFamilyNameKey, 1 },
-    { kCTFontSubFamilyNameKey, 2 },
-    { kCTFontUniqueNameKey, 3 },
-    { kCTFontFullNameKey, 4 },
-    { kCTFontVersionNameKey, 5 },
-    { kCTFontPostScriptNameKey, 6 },
-    { kCTFontTrademarkNameKey, 7 },
-    { kCTFontManufacturerNameKey, 8 },
-    { kCTFontDesignerNameKey, 9 },
-    { kCTFontDescriptionNameKey, 10 },
-    { kCTFontVendorURLNameKey, 11 },
-    { kCTFontDesignerURLNameKey, 12 },
-    { kCTFontLicenseNameKey, 13 },
-    { kCTFontLicenseURLNameKey, 14 },
-
-    // https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html
-    // Name index 15 is reserved.
-    // Name index 16 is not a CTFont name specifier constant.
-    // Name index 17 is not a CTFont name specifier constant.
-    // Name index 18 is not a CTFont name specifier constant.
-
-    { kCTFontSampleTextNameKey, 19 },
-
-    // http://scripts.sil.org/cms/scripts/page.php?item_id=IWS-Chapter08
-    { kCTFontPostScriptCIDNameKey, 20 },
-};
-
 const CFStringRef kCTFontCopyrightNameKey = CFSTR("CTFontCopyrightName");
 const CFStringRef kCTFontFamilyNameKey = CFSTR("CTFontFamilyName");
 const CFStringRef kCTFontSubFamilyNameKey = CFSTR("CTFontSubFamilyName");
