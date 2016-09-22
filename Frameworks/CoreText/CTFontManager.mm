@@ -20,17 +20,6 @@
 #import <UIFontInternal.h>
 #import <UIKit/UIFont.h>
 
-extern "C" {
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include <ftglyph.h>
-#include <tttables.h>
-#include <ftadvanc.h>
-#include <ftsizes.h>
-#include <ftsnames.h>
-#include <ttnameid.h>
-}
-
 const CFStringRef kCTFontManagerRegisteredFontsChangedNotification =
     static_cast<CFStringRef>(@"kCTFontManagerRegisteredFontsChangedNotification");
 const CFStringRef kCTFontManagerErrorDomain = static_cast<CFStringRef>(@"kCTFontManagerErrorDomain");

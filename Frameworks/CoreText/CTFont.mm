@@ -24,17 +24,6 @@
 #import <CoreText/DWriteWrapper.h>
 #import "UIFontInternal.h"
 
-extern "C" {
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include <ftglyph.h>
-#include <tttables.h>
-#include <ftadvanc.h>
-#include <ftsizes.h>
-#include <ftsnames.h>
-#include <ttnameid.h>
-}
-
 #include <COMIncludes.h>
 #import <DWrite_3.h>
 #import <wrl/client.h>
