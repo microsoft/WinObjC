@@ -15,6 +15,7 @@
 //******************************************************************************
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace WOCCatalogTest
 {
@@ -45,17 +46,22 @@ namespace WOCCatalogTest
         public void TextFields_Password()
         {
             // Action
-            var passwordTextField = TestCommon.WOCCatalogSession.FindElementsByName("password");
-
-            // Verify
-            Assert.IsTrue(passwordTextField.Count > 0);
+            var passwordTextField = TestCommon.WOCCatalogSession.FindElementByAccessibilityId("textField_0");
 
             var newText = "MySecretPassword";
-            passwordTextField[0].SendKeys(newText);
+            passwordTextField.SendKeys(newText);
 
             // Verify
-            //var currentHiddenText = passwordTextField[0].Text;
-            //Assert.AreNotSame(newText, currentHiddenText);
+            try
+            {
+                var currentHiddenText = passwordTextField.Text;
+                Assert.AreEqual(newText, currentHiddenText);
+            }
+            catch (Exception ex)
+            {
+                // Verify that the text of a password box generated an exception with this result
+                Assert.AreEqual(ex.HResult, -2146233088);
+            }
         }
 
         [TestMethod]

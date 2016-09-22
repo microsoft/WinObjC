@@ -66,6 +66,7 @@
 
     // AudioToolbox
     [self addMenuItemViewController:[[AudioToolboxViewController alloc] init] andTitle:@"AudioToolbox"];
+
     // CoreMotion
     [self addMenuItemViewController:[[CoreMotionViewController alloc] init] andTitle:@"CoreMotion"];
 

@@ -48,6 +48,10 @@ static const CGFloat c_labelFontSize = 17.0f;
     textField.spellCheckingType = spellCheckingType;
     textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     textField.delegate = self;
+
+    // Set the accessibility identifier so we can access these controls via automation
+    textField.accessibilityIdentifier = [NSString stringWithFormat:@"textField_%ld", [_textFields count]];
+
     return textField;
 }
 
@@ -64,6 +68,10 @@ static const CGFloat c_labelFontSize = 17.0f;
     textField.background = backgroundImage;
     textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     textField.delegate = self;
+
+    // Set the accessibility identifier so we can access these controls via automation
+    textField.accessibilityIdentifier = [NSString stringWithFormat:@"textField_%ld", [_textFields count]];
+
     return textField;
 }
 
@@ -206,6 +214,7 @@ static const CGFloat c_labelFontSize = 17.0f;
     if (textField == _textFields[3]) {
         return NO;
     }
+
     return YES;
 }
 

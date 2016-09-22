@@ -54,6 +54,9 @@ namespace WOCCatalogTest
                 {
                     backButton = WOCCatalogSession.FindElementByAccessibilityId("Back");
                     backButton.Click();
+
+                    // What does this do differently
+                    //WOCCatalogSession.Navigate().Back();
                 }
                 while (backButton != null);
             }
