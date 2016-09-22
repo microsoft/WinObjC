@@ -157,7 +157,7 @@ static const wchar_t* tag = L"UIButtonProxies";
     ComPtr<ABI::Windows::UI::Xaml::Media::IFontFamily> fontFamily;
     auto fontName = Strings::NarrowToWide<HSTRING>([_font fontName]);
     fontFamilyFactory->CreateInstanceWithName(fontName.Get(), nullptr, nullptr, fontFamily.GetAddressOf());
-    _xamlTextBlock.fontFamily = [[WUXMFontFamily createWith:fontFamily.Get()] performSelector:NSSelectorFromString(@"retain")]; // <- remove after muktesh's change to projections
+    _xamlTextBlock.fontFamily = [WUXMFontFamily createWith:fontFamily.Get()];
 
     _xamlTextBlock.lineStackingStrategy = WXLineStackingStrategyBlockLineHeight;
     _xamlTextBlock.lineHeight = [_font ascender] - [_font descender];
