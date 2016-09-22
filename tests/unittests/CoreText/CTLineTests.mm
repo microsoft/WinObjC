@@ -258,3 +258,30 @@ TEST(CTLine, CTLineGetGlyphCount) {
     EXPECT_EQ(9, CTLineGetGlyphCount(line));
     CFRelease(line);
 }
+
+TEST(CTLine, CTLineGetTypographicBounds) {
+    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Segoe UI" size:40];
+    CTFontRef font = (__bridge CTFontRef)[UIFont fontWithDescriptor:fontDescriptor size:40];
+    CFAttributedStringRef baseString = (__bridge CFAttributedStringRef)getAttributedString(@"x");
+    CFAttributedStringRef variableString = (__bridge CFAttributedStringRef)getAttributedString(@"gH");
+    CTLineRef baseLine = CTLineCreateWithAttributedString(baseString);
+    CFAutorelease(baseLine);
+    CTLineRef variableLine = CTLineCreateWithAttributedString(variableString);
+    CFAutorelease(variableLine);
+
+    CGFloat baseAscent, variableAscent, baseDescent, variableDescent, baseLeading, variableLeading;
+    CGFloat baseWidth = CTLineGetTypographicBounds(baseLine, &baseAscent, &baseDescent, &baseLeading);
+    EXPECT_LT(0, baseWidth);
+    EXPECT_EQ_MSG(CTFontGetLeading(font), baseLeading, "Leading should always be the same as the font");
+    EXPECT_GE_MSG(CTFontGetAscent(font), baseAscent, "Ascent should never exceed the maximum font ascent");
+    EXPECT_LE_MSG(CTFontGetDescent(font), baseDescent, "Descent should never exceed the maximum font descent");
+
+    CGFloat variableWidth = CTLineGetTypographicBounds(variableLine, &variableAscent, &variableDescent, &variableLeading);
+    EXPECT_EQ_MSG(CTFontGetLeading(font), variableLeading, "Leading should always be the same as the font");
+    EXPECT_LT(0, variableWidth);
+    EXPECT_GE_MSG(CTFontGetAscent(font), variableAscent, "Ascent should never exceed the maximum font ascent");
+    EXPECT_LE_MSG(CTFontGetDescent(font), variableDescent, "Descent should never exceed the maximum font descent");
+
+    EXPECT_LE_MSG(baseAscent, variableAscent, "The ascent with \'H\' should be no less than the ascent with \'x\'");
+    EXPECT_GE_MSG(baseDescent, variableDescent, "The descent with \'g\' should be no greater than the descent with \'x\'");
+}

@@ -283,16 +283,46 @@ CGRect CTLineGetImageBounds(CTLineRef line, CGContextRef context) {
 }
 
 /**
- @Status Caveat
- @Notes Values only reflect the typographical maximums for the font - string is only evaulated
-        for width
+ @Status Interoperable
+ @Notes
 */
 double CTLineGetTypographicBounds(CTLineRef lineRef, CGFloat* ascent, CGFloat* descent, CGFloat* leading) {
-    if (!lineRef) {
+    _CTLine* line = static_cast<_CTLine*>(lineRef);
+
+    if (!line || [line->_runs count] == 0) {
         return 0;
     }
 
-    _CTLine* line = static_cast<_CTLine*>(lineRef);
+    // Created with impossible values -FLT_MAX which signify they need to be populated
+    if (line->_ascent == -FLT_MAX || line->_descent == -FLT_MAX || line->_leading == -FLT_MAX) {
+        for (_CTRun* run in static_cast<id<NSFastEnumeration>>(line->_runs)) {
+            DWRITE_GLYPH_METRICS glyphMetrics[run->_dwriteGlyphRun.glyphCount];
+            THROW_IF_FAILED(run->_dwriteGlyphRun.fontFace->GetDesignGlyphMetrics(run->_dwriteGlyphRun.glyphIndices,
+                                                                                 run->_dwriteGlyphRun.glyphCount,
+                                                                                 glyphMetrics,
+                                                                                 run->_dwriteGlyphRun.isSideways));
+
+            CTFontRef font = static_cast<CTFontRef>([run->_attributes objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
+            CGFloat pointSize = kCTFontSystemFontSize;
+            if (font) {
+                pointSize = CTFontGetSize(font);
+            }
+
+            DWRITE_FONT_METRICS fontMetrics;
+            run->_dwriteGlyphRun.fontFace->GetMetrics(&fontMetrics);
+
+            // Need scaling factor to convert from design units to pointSize
+            CGFloat scalingFactor = pointSize / fontMetrics.designUnitsPerEm;
+
+            for (size_t i = 0; i < run->_dwriteGlyphRun.glyphCount; ++i) {
+                line->_ascent = std::max(line->_ascent, glyphMetrics[i].verticalOriginY * scalingFactor);
+                line->_descent = std::max(line->_descent, glyphMetrics[i].bottomSideBearing * scalingFactor);
+            }
+
+            line->_leading = std::max(line->_leading, fontMetrics.lineGap * scalingFactor);
+        }
+    }
+
     if (ascent) {
         *ascent = line->_ascent;
     }

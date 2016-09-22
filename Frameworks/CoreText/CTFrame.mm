@@ -26,6 +26,14 @@ const CFStringRef kCTFrameClippingPathsAttributeName = static_cast<CFStringRef>(
 const CFStringRef kCTFramePathClippingPathAttributeName = static_cast<CFStringRef>(@"kCTFramePathClippingPathAttributeName");
 
 @implementation _CTFrame : NSObject
+- (instancetype)init {
+    if ([super init]) {
+        _lines.attach([NSMutableArray new]);
+    }
+
+    return self;
+}
+
 - (void)dealloc {
     _framesetter = nil;
     _lines = nil;

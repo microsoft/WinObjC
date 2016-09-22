@@ -74,9 +74,6 @@ TEST(CTTypeSetter, LinesShouldDefaultToZeroOffset) {
     CTLineRef lineWithOffset = CTTypesetterCreateLineWithOffset(ts, range, 0.0f);
     EXPECT_EQ(CTLineGetGlyphCount(lineWithOffset), CTLineGetGlyphCount(line));
 
-    // TODO::
-    // Re-enable this code once CTLineGetTypographicBounds is supported #1019
-    /*
     CGFloat ascent, descent, leading, ascentWithOffset, descentWithOffset, leadingWithOffset;
     double width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
     double widthWithOffset = CTLineGetTypographicBounds(line, &ascentWithOffset, &descentWithOffset, &leadingWithOffset);
@@ -88,5 +85,4 @@ TEST(CTTypeSetter, LinesShouldDefaultToZeroOffset) {
     CFRelease(ts);
     CFRelease(line);
     CFRelease(lineWithOffset);
-    */
 }

@@ -86,10 +86,10 @@ CTLineRef CTTypesetterCreateLine(CTTypesetterRef typesetter, CFRange stringRange
  @Notes
 */
 CTLineRef CTTypesetterCreateLineWithOffset(CTTypesetterRef ts, CFRange range, double offset) {
-    NSArray<_CTLine*>* lines = _DWriteGetLines(static_cast<_CTTypesetter*>(ts), range, CGRectMake(offset, 0, FLT_MAX, FLT_MAX));
-    THROW_NS_IF_FALSE(E_UNEXPECTED, [lines count] == 1);
+    _CTFrame* frame = _DWriteGetFrame(static_cast<_CTTypesetter*>(ts), range, CGRectMake(offset, 0, FLT_MAX, FLT_MAX));
+    THROW_NS_IF_FALSE(E_UNEXPECTED, [frame->_lines count] == 1);
 
-    return static_cast<CTLineRef>([[lines objectAtIndex:0] retain]);
+    return static_cast<CTLineRef>([[frame->_lines firstObject] retain]);
 }
 
 /**
@@ -115,9 +115,9 @@ CFIndex _CTTypesetterSuggestLineBreakWithOffsetAndCallback(
 */
 CFIndex CTTypesetterSuggestLineBreakWithOffset(CTTypesetterRef ts, CFIndex index, double width, double offset) {
     _CTTypesetter* typesetter = static_cast<_CTTypesetter*>(ts);
-    NSArray<_CTLine*>* lines =
-        _DWriteGetLines(typesetter, CFRangeMake(index, typesetter->_characters.size() - index), CGRectMake(offset, 0, width, FLT_MAX));
-    return (lines) ? lines[0]->_strRange.length : 0;
+    _CTFrame* frame =
+        _DWriteGetFrame(typesetter, CFRangeMake(index, typesetter->_characters.size() - index), CGRectMake(offset, 0, width, FLT_MAX));
+    return ([frame->_lines count] > 0) ? static_cast<_CTLine*>([frame->_lines firstObject])->_strRange.length : 0;
 }
 
 /**
