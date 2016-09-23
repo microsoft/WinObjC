@@ -5,13 +5,28 @@
     <ItemsRootNamespace>CGCatalog_Headers</ItemsRootNamespace>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <Keyword>IslandwoodProj</Keyword>
-    <ItemsProjectGuid>{447F47EB-9467-4A50-ACDF-8398CD122BEA}</ItemsProjectGuid>
-    <SharedGUID>{14203671-73E4-4EC6-8B3E-434FE894FB7F}</SharedGUID>
+    <ItemsProjectGuid>{051E6BC6-C73D-4F73-AB25-9E7005FC91E2}</ItemsProjectGuid>
+    <SharedGUID>{DF9B3EC9-827C-4E4B-9524-00D12D9CC529}</SharedGUID>
   </PropertyGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddCurveToPointView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddElipseView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddLineToPointView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddPathView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddQuadCurveToPointView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddRectView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathApplyView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathCloseSubpathView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathContainsPointView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathGetBoundingBoxView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGDrawView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGSamplePage.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\AppDelegate.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGCRootViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGCBaseViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGContextSampleRow.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGContextNewTestsController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGContextSamplesRootViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGPathApplyViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGBitmapContentViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextViewController.h" />

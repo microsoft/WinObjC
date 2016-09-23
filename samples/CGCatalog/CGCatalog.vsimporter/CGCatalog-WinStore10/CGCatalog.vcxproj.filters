@@ -2,25 +2,28 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{270d9c0e-63a9-4dfc-ba5d-912514a41a27}</UniqueIdentifier>
+      <UniqueIdentifier>{2bddc3c7-7709-432f-aed0-44cd7b46de37}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{867977e9-8c15-496f-a466-7b337b99fd99}</UniqueIdentifier>
+      <UniqueIdentifier>{515f1f5a-d00e-482e-b246-71f0e35ce82d}</UniqueIdentifier>
     </Filter>
     <Filter Include="CGCatalog">
-      <UniqueIdentifier>{0AB024E2-F359-4E03-8CAB-376809FB966D}</UniqueIdentifier>
+      <UniqueIdentifier>{6A874057-D243-4828-940E-E1E4B89680DC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CGCatalog\NewSamples">
+      <UniqueIdentifier>{8116C0EE-180D-4FF4-8BF5-42CE1A427543}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CGCatalog\OldSamples">
+      <UniqueIdentifier>{5F824D94-5978-4B5D-993E-4B161606213B}</UniqueIdentifier>
     </Filter>
     <Filter Include="CGCatalog\Resources">
-      <UniqueIdentifier>{9523F5F9-6260-4987-80EF-F5C30F32A1DF}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="CGCatalog\Samples">
-      <UniqueIdentifier>{5403C5AD-0772-4B42-A2F7-90EC4CB645DB}</UniqueIdentifier>
+      <UniqueIdentifier>{CDFA1AD8-EEA3-43F7-BE00-0BA5228C6A09}</UniqueIdentifier>
     </Filter>
     <Filter Include="CGCatalog\Supporting Files">
-      <UniqueIdentifier>{85FB1B27-4FA9-4FD1-A242-955400128368}</UniqueIdentifier>
+      <UniqueIdentifier>{82711D6E-3595-4265-83BC-C1653D649509}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{590101F6-7C6F-4DE0-A19B-EA54ACB37030}</UniqueIdentifier>
+      <UniqueIdentifier>{E9A98009-E756-44D2-88DB-7F1741E885E2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,38 +51,80 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
+    <ClangCompile Include="..\..\CGCatalog\CGPathGetBoundingBoxView.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathApplyView.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathCloseSubpathView.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGContextNewTestsController.m">
+      <Filter>CGCatalog</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\CGCRootViewController.m">
       <Filter>CGCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextReplacePathWithStrokedPath.m">
-      <Filter>CGCatalog\Samples</Filter>
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddCurveToPointView.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGContextSamplesRootViewController.m">
+      <Filter>CGCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathContainsPointView.m">
+      <Filter>CGCatalog\NewSamples</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextBeginEndTransparencyLayer.m">
-      <Filter>CGCatalog\Samples</Filter>
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddPathView.m">
+      <Filter>CGCatalog\NewSamples</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextSetPatternPhase.m">
-      <Filter>CGCatalog\Samples</Filter>
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGDrawView.m">
+      <Filter>CGCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextViewController.m">
-      <Filter>CGCatalog\Samples</Filter>
+      <Filter>CGCatalog\OldSamples</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGPathContainsPointViewController.m">
-      <Filter>CGCatalog\Samples</Filter>
+      <Filter>CGCatalog\OldSamples</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\AppDelegate.m">
+      <Filter>CGCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGContextSampleRow.m">
       <Filter>CGCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\CGCBaseViewController.m">
       <Filter>CGCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextBeginTransparencyLayerWithRect.m">
-      <Filter>CGCatalog\Samples</Filter>
+      <Filter>CGCatalog\OldSamples</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGBitmapContentViewController.m">
-      <Filter>CGCatalog\Samples</Filter>
+      <Filter>CGCatalog\OldSamples</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGPathApplyViewController.m">
-      <Filter>CGCatalog\Samples</Filter>
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddLineToPointView.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddRectView.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddElipseView.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddQuadCurveToPointView.m">
+      <Filter>CGCatalog\NewSamples</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\main.m">
       <Filter>CGCatalog\Supporting Files</Filter>

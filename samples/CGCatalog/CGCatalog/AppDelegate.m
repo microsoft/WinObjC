@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #import "AppDelegate.h"
-#import "CGCRootViewController.h"
+#import "CGContextSamplesRootViewController.h"
 
 @interface AppDelegate ()
 
@@ -27,7 +27,8 @@
     // Override point for customization after application launch.
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [self.window setRootViewController:[[UINavigationController alloc] initWithRootViewController:[[CGCRootViewController alloc] init]]];
+    [self.window setRootViewController:[[UINavigationController alloc]
+                                           initWithRootViewController:[[CGContextSamplesRootViewController alloc] init]]];
     [self.window makeKeyAndVisible];
 
     return YES;

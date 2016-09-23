@@ -14,37 +14,26 @@
 //
 //******************************************************************************
 
+#import "CGContextSamplesRootViewController.h"
+
 #import "CGCRootViewController.h"
-#import "CGCCGBitmapContentViewController.h"
-#import "CGCCGContextBeginEndTransparencyLayer.h"
-#import "CGCCGContextBeginTransparencyLayerWithRect.h"
-#import "CGCCGContextReplacePathWithStrokedPath.h"
-#import "CGCCGContextSetPatternPhase.h"
-#import "CGCCGContextViewController.h"
-#import "CGCCGPathApplyViewController.h"
-#import "CGCCGPathContainsPointViewController.h"
+#import "CGContextNewTestsController.h"
 
 #import "CGContextSampleRow.h"
 
-@interface CGCRootViewController () <UITableViewDelegate, UITableViewDataSource>
+@interface CGContextSamplesRootViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) NSArray<CGContextSampleRow*>* samples;
 
 @end
 
-@implementation CGCRootViewController
+@implementation CGContextSamplesRootViewController
 
 - (NSArray*)samples {
     if (!_samples) {
         _samples = @[
-            [CGContextSampleRow row:@"CGPathApply" class:[CGCCGPathApplyViewController class]],
-            [CGContextSampleRow row:@"CGContext" class:[CGCCGContextViewController class]],
-            [CGContextSampleRow row:@"CGBitmapContext" class:[CGCCGBitmapContentViewController class]],
-            [CGContextSampleRow row:@"CGContextBeginEndTransparencyLayer" class:[CGCCGContextBeginEndTransparencyLayer class]],
-            [CGContextSampleRow row:@"CGContextBeginTransparencyLayerWithRect" class:[CGCCGContextBeginTransparencyLayerWithRect class]],
-            [CGContextSampleRow row:@"CGContextSetPatternPhase" class:[CGCCGContextSetPatternPhase class]],
-            [CGContextSampleRow row:@"CGContextReplacePathWithStrokedPath" class:[CGCCGContextReplacePathWithStrokedPath class]],
-            [CGContextSampleRow row:@"CGCCGPathContainsPointViewController" class:[CGCCGPathContainsPointViewController class]],
+            [CGContextSampleRow row:@"CGOldTests" class:[CGCRootViewController class]],
+            [CGContextSampleRow row:@"CGNewTests" class:[CGContextNewTestsController class]],
         ];
     }
     return _samples;
