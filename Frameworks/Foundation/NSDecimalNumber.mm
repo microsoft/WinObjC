@@ -395,29 +395,33 @@ static NSDecimalNumber* _minNumber;
     return [NSDecimalNumber decimalNumberWithDecimal:result];
 }
 
-/**
- @Status Interoperable
+/** 
+ @Status Caveat 
+ @Notes NSDecimalNumberBehaviors roundingMode is not supported.
 */
 - (NSDecimalNumber*)decimalNumberByAdding:(NSDecimalNumber*)decimalNumber withBehavior:(id<NSDecimalNumberBehaviors>)behavior {
     return [self _decimalOperation:_Addition decimalNumber:decimalNumber withBehavior:behavior];
 }
 
-/**
- @Status Interoperable
+/** 
+ @Status Caveat 
+ @Notes NSDecimalNumberBehaviors roundingMode is not supported.
 */
 - (NSDecimalNumber*)decimalNumberByAdding:(NSDecimalNumber*)decimalNumber {
     return [self decimalNumberByAdding:decimalNumber withBehavior:[NSDecimalNumber defaultBehavior]];
 }
 
-/**
- @Status Interoperable
+/** 
+ @Status Caveat 
+ @Notes NSDecimalNumberBehaviors roundingMode is not supported.
 */
 - (NSDecimalNumber*)decimalNumberBySubtracting:(NSDecimalNumber*)decimalNumber withBehavior:(id<NSDecimalNumberBehaviors>)behavior {
     return [self _decimalOperation:_Subtraction decimalNumber:decimalNumber withBehavior:behavior];
 }
 
-/**
- @Status Interoperable
+/** 
+ @Status Caveat 
+ @Notes NSDecimalNumberBehaviors roundingMode is not supported.
 */
 - (NSDecimalNumber*)decimalNumberBySubtracting:(NSDecimalNumber*)decimalNumber {
     return [self decimalNumberBySubtracting:decimalNumber withBehavior:[NSDecimalNumber defaultBehavior]];

@@ -44,12 +44,12 @@ NSDecimalCompact(decimal);
         return NSCalculationOverflow;                                                \
     }
 
-#define REMINDER(decimal) (decimal->_reminder)
+#define REMINDER(decimal) (decimal->_remainder)
 
 typedef struct {
     NSDecimal decimal;
     unsigned short* _mantissa;
-    unsigned short _reminder;
+    unsigned short _remainder;
     // only used for cases where we have carryover
     unsigned int _extendedLen;
 } NSDecimalInternal;
@@ -207,13 +207,13 @@ NSCalculationError NSDecimalDivide(NSDecimal* result,
 
 NSCalculationError _mantissaDivision(NSDecimalInternal* result, NSDecimalInternal* dividend, unsigned short divisor) {
     if (!divisor) {
-        INVALIDATE_DECIMAL(result);
+        INVALIDATE_DECIMAL((&result->decimal));
         return NSCalculationDivideByZero;
     }
 
     for (int index = dividend->decimal._length - 1; index >= 0; --index) {
-        unsigned int res = static_cast<unsigned int>((dividend->_mantissa)[index]) | (result->_reminder << 16);
-        result->_reminder = res % divisor;
+        unsigned int res = static_cast<unsigned int>((dividend->_mantissa)[index]) | (result->_remainder << 16);
+        result->_remainder = res % divisor;
         (result->_mantissa)[index] = res / divisor;
     }
 
@@ -239,7 +239,7 @@ NSCalculationError compactMantissa(NSDecimalInternal* iDecimal, NSRoundingMode r
     result.decimal._exponent += exponent;
 
     // TODO: Add Support for rounding
-    if (result._reminder != 0) {
+    if (result._remainder != 0) {
     }
 
     return NSCalculationNoError;
@@ -302,8 +302,9 @@ NSComparisonResult NSDecimalCompare(const NSDecimal* leftOperand, const NSDecima
     return NSOrderedSame;
 }
 
-/**
- @Status Interoperable
+/** 
+ @Status Caveat 
+ @Notes roundingMode is not supported.
 */
 NSCalculationError NSDecimalNormalize(NSDecimal* number1, NSDecimal* number2, NSRoundingMode roundingMode) {
     THROW_NS_IF_FALSE(E_INVALIDARG,
@@ -330,7 +331,7 @@ NSCalculationError NSDecimalNormalize(NSDecimal* number1, NSDecimal* number2, NS
 
     NSDecimalCopy(&internalResult.decimal, decimalToNormalize);
     internalResult._mantissa = internalResult.decimal._mantissa;
-    internalResult._reminder = 0;
+    internalResult._remainder = 0;
     internalResult._extendedLen = NSDecimalMaxSize;
 
     NSCalculationError error = NSCalculationNoError;
@@ -361,18 +362,18 @@ void NSDecimalCompact(NSDecimal* number) {
     // reduce by 10 as much as we can
     NSDecimalCopy(&internalResult.decimal, number);
     internalResult._mantissa = internalResult.decimal._mantissa;
-    internalResult._reminder = 0;
+    internalResult._remainder = 0;
     internalResult._extendedLen = number->_length;
 
     do {
         _mantissaDivision(&internalResult, &internalResult, 10);
         exponent++;
-    } while (!internalResult._reminder);
+    } while (!internalResult._remainder);
 
     // put back the leftover reminder.
     _mantissaMultiplication(&internalResult, &internalResult, 10);
     exponent--;
-    _mantissaAddition(&internalResult, &internalResult, internalResult._reminder);
+    _mantissaAddition(&internalResult, &internalResult, internalResult._remainder);
 
     while (exponent > 127) {
         // refit
@@ -442,8 +443,9 @@ NSCalculationError _handleDifferenceOfSignAddition(NSDecimal* result, NSDecimal*
     return NSCalculationNoError;
 }
 
-/**
- @Status Interoperable
+/** 
+ @Status Caveat 
+ @Notes roundingMode is not supported.
 */
 NSCalculationError NSDecimalAdd(NSDecimal* result,
                                 const NSDecimal* leftOperand,
@@ -525,7 +527,7 @@ NSCalculationError NSDecimalAdd(NSDecimal* result,
         NSDecimalInternal internalResult = { 0 };
         NSDecimalCopy(&internalResult.decimal, result);
         internalResult._mantissa = finalResult;
-        internalResult._reminder = 0;
+        internalResult._remainder = 0;
         internalResult._extendedLen = NSDecimalMaxSize + 1;
 
         NSCalculationError error = compactMantissa(&internalResult, roundingMode);
@@ -543,8 +545,9 @@ NSCalculationError NSDecimalAdd(NSDecimal* result,
     return _handleDifferenceOfSignAddition(result, &left, &right, roundingMode);
 }
 
-/**
- @Status Interoperable
+/** 
+ @Status Caveat 
+ @Notes roundingMode is not supported.
 */
 NSCalculationError NSDecimalSubtract(NSDecimal* result,
                                      const NSDecimal* leftOperand,
