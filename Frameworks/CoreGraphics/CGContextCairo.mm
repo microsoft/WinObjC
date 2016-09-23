@@ -965,7 +965,6 @@ void CGContextCairo::CGContextMoveToPoint(float x, float y) {
 void CGContextCairo::CGContextAddArc(float x, float y, float radius, float startAngle, float endAngle, int clockwise) {
     ObtainLock();
 
-    CGContextAddLineToPoint(x + radius * cos(startAngle), y + radius * sin(startAngle));
     LOCK_CAIRO();
     if (clockwise) {
         cairo_arc_negative(_drawContext, x, y, radius, startAngle, endAngle);
@@ -1252,7 +1251,7 @@ void CGContextCairo::CGContextFillPath() {
     cairo_set_matrix(_drawContext, &m);
     setFillColorSource();
     cairo_set_fill_rule(_drawContext, CAIRO_FILL_RULE_WINDING);
-    cairo_fill_preserve(_drawContext);
+    cairo_fill(_drawContext);
 
     cairo_restore(_drawContext);
     UNLOCK_CAIRO();
@@ -1280,7 +1279,7 @@ void CGContextCairo::CGContextEOFillPath() {
     cairo_set_matrix(_drawContext, &m);
     setFillColorSource();
     cairo_set_fill_rule(_drawContext, CAIRO_FILL_RULE_EVEN_ODD);
-    cairo_fill_preserve(_drawContext);
+    cairo_fill(_drawContext);
 
     cairo_restore(_drawContext);
     UNLOCK_CAIRO();
@@ -1583,7 +1582,7 @@ void CGContextCairo::CGContextSetInterpolationQuality(CGInterpolationQuality qua
     }
 }
 
-void CGContextCairo::CGContextSetLineDash(float phase, float* lengths, DWORD count) {
+void CGContextCairo::CGContextSetLineDash(float phase, const float* lengths, DWORD count) {
     ObtainLock();
 
     double* dLengths = (double*)IwMalloc(count * sizeof(double));
