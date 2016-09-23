@@ -56,12 +56,12 @@ static ComPtr<IDWriteFactory> __GetDWriteFactoryInstance() {
 // Private helper for converting a DWRITE_FONT_METRIC unit to a CTFont API unit
 // DWRITE_FONT_METRICS measures its metrics in 'design units'
 // CTFont APIs generally return in terms of point size
-CGFloat _CoreTextScaleMetric(CGFloat metric, CGFloat pointSize, CGFloat unitsPerEm) {
+CGFloat _CoreTextScaleMetric(CGFloat metric, CGFloat pointSizeUnitsPerEm) {
     // design units * (pt / em) / (design units / em)
     // = design units * (pt / em) * (em / design units)
     // = pt * (design units / design units) * (em / em)
     // = pt
-    return metric * pointSize / unitsPerEm;
+    return metric * pointSizeUnitsPerEm;
 }
 
 static DWRITE_TEXT_ALIGNMENT __CoreTextAlignmentToDwrite(CTTextAlignment alignment) {
@@ -521,27 +521,14 @@ static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
 
             DWRITE_FONT_METRICS fontMetrics;
             run->_dwriteGlyphRun.fontFace->GetMetrics(&fontMetrics);
+            CGFloat pointSizeUnitsPerEm = pointSize / fontMetrics.designUnitsPerEm;
 
-            line->_ascent =
-                std::accumulate(glyphMetrics,
-                                glyphMetrics + run->_dwriteGlyphRun.glyphCount,
-                                line->_ascent,
-                                [&](CGFloat ascent, DWRITE_GLYPH_METRICS metrics) {
-                                    return std::max(ascent,
-                                                    _CoreTextScaleMetric(metrics.verticalOriginY, pointSize, fontMetrics.designUnitsPerEm));
-                                });
+            for (size_t k = 0; k < run->_dwriteGlyphRun.glyphCount; ++k) {
+                line->_ascent = std::max(line->_ascent, _CoreTextScaleMetric(glyphMetrics[k].verticalOriginY, pointSizeUnitsPerEm));
+                line->_descent = std::max(line->_descent, _CoreTextScaleMetric(glyphMetrics[k].bottomSideBearing, pointSizeUnitsPerEm));
+            }
 
-            line->_descent = std::accumulate(glyphMetrics,
-                                             glyphMetrics + run->_dwriteGlyphRun.glyphCount,
-                                             line->_descent,
-                                             [&](CGFloat descent, DWRITE_GLYPH_METRICS metrics) {
-                                                 return std::max(descent,
-                                                                 _CoreTextScaleMetric(metrics.bottomSideBearing,
-                                                                                      pointSize,
-                                                                                      fontMetrics.designUnitsPerEm));
-                                             });
-
-            line->_leading = std::max(line->_leading, _CoreTextScaleMetric(fontMetrics.lineGap, pointSize, fontMetrics.designUnitsPerEm));
+            line->_leading = std::max(line->_leading, _CoreTextScaleMetric(fontMetrics.lineGap, pointSizeUnitsPerEm));
 
             [runs addObject:run];
             stringRange += run->_range.length;

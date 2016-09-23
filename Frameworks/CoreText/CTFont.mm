@@ -430,7 +430,7 @@ static struct DWRITE_FONT_METRICS __CTFontGetDWriteMetrics(CTFontRef font) {
 }
 
 static CGFloat __CTFontScaleMetric(CTFontRef font, CGFloat metric) {
-    return _CoreTextScaleMetric(metric, font->_pointSize, CTFontGetUnitsPerEm(font));
+    return _CoreTextScaleMetric(metric, font->_pointSize / CTFontGetUnitsPerEm(font));
 }
 
 /**
