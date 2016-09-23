@@ -56,12 +56,9 @@ static ComPtr<IDWriteFactory> __GetDWriteFactoryInstance() {
 // Private helper for converting a DWRITE_FONT_METRIC unit to a CTFont API unit
 // DWRITE_FONT_METRICS measures its metrics in 'design units'
 // CTFont APIs generally return in terms of point size
-CGFloat _CoreTextScaleMetric(CGFloat metric, CGFloat pointSizeUnitsPerEm) {
-    // design units * (pt / em) / (design units / em)
-    // = design units * (pt / em) * (em / design units)
-    // = pt * (design units / design units) * (em / em)
-    // = pt
-    return metric * pointSizeUnitsPerEm;
+// pointPerDesignUnit is the ratio of (pt/em) / (design units/em)
+CGFloat _CoreTextScaleMetric(CGFloat metric, CGFloat pointPerDesignUnit) {
+    return metric * pointPerDesignUnit;
 }
 
 static DWRITE_TEXT_ALIGNMENT __CoreTextAlignmentToDwrite(CTTextAlignment alignment) {
@@ -403,21 +400,6 @@ HRESULT CustomDWriteTextRenderer::RuntimeClassInitialize() {
 }
 
 /**
- * Helper method that will create a TextLayout and TextRenderer object with the given _CTTypesetter object, string range and frame size
- * to render to.
- *
- * @parameter ts _CTTypesetter object.
- * @parameter range string range to consider for rendering.
- * @parameter frameSize frame constrains to render the text on.
- * @parameter glyphDetails pointer to the _DWriteGlyphRunDetails object that contains the glyph run details that was rendeered.
- */
-static void __GetGlyphRunDetails(_CTTypesetter* ts, CFRange range, CGRect frameSize, _DWriteGlyphRunDetails* glyphDetails) {
-    ComPtr<IDWriteTextLayout> textLayout = __CreateDWriteTextLayout(ts, range, frameSize);
-    ComPtr<CustomDWriteTextRenderer> textRenderer = Make<CustomDWriteTextRenderer>();
-    textLayout->Draw(glyphDetails, textRenderer.Get(), 0, 0);
-}
-
-/**
  * Helper method to create _CTLine object given a CFAttributedStringRef
  *
  * @parameter string CFAttributedStringRef containing text and styling
@@ -427,9 +409,9 @@ static void __GetGlyphRunDetails(_CTTypesetter* ts, CFRange range, CGRect frameS
 static _CTLine* _DWriteGetLine(CFAttributedStringRef string) {
     _CTTypesetter* typesetter = static_cast<_CTTypesetter*>(CTTypesetterCreateWithAttributedString(string));
     CFRange range = CFRangeMake(0, CFAttributedStringGetLength(string));
-    NSArray<_CTLine*>* lines = _DWriteGetLines(typesetter, range, CGRectMake(0, 0, FLT_MAX, FLT_MAX));
-    if (lines.count > 0) {
-        return [lines[0] retain];
+    _CTFrame* frame = _DWriteGetFrame(typesetter, range, CGRectMake(0, 0, FLT_MAX, FLT_MAX));
+    if ([frame->_lines count] > 0) {
+        return [[frame->_lines firstObject] retain];
     }
 
     return [_CTLine new];
@@ -442,17 +424,26 @@ static _CTLine* _DWriteGetLine(CFAttributedStringRef string) {
  * @parameter range attributed string range to use.
  * @parameter frameSize size parameters of the frame to fit the text into.
  *
- * @return Unmutable array of _CTLine objects created with the requested parameters.
+ * @return _CTFrame* created using the given parameters
  */
-static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRect frameSize) {
-    NSMutableArray<_CTLine*>* lines = [NSMutableArray array];
+static _CTFrame* _DWriteGetFrame(_CTTypesetter* ts, CFRange range, CGRect frameSize) {
+    _CTFrame* frame = [_CTFrame new];
     if (range.length == 0) {
-        return lines;
+        return frame;
     }
 
     // Call custom renderer to get all glyph run details
+    ComPtr<IDWriteTextLayout> textLayout = __CreateDWriteTextLayout(ts, range, frameSize);
+    ComPtr<CustomDWriteTextRenderer> textRenderer = Make<CustomDWriteTextRenderer>();
     _DWriteGlyphRunDetails glyphRunDetails = {};
-    __GetGlyphRunDetails(ts, range, frameSize, &glyphRunDetails);
+    textLayout->Draw(&glyphRunDetails, textRenderer.Get(), 0, 0);
+    DWRITE_TEXT_METRICS textMetrics;
+    THROW_IF_FAILED(textLayout->GetMetrics(&textMetrics));
+    frame->_frameRect = frameSize;
+
+    // TODO:: find more precise value than 1.0 to increase width by to fully enclose frame
+    frame->_frameRect.size.width = std::min(frameSize.size.width, textMetrics.widthIncludingTrailingWhitespace + 1.0f);
+    frame->_frameRect.size.height = std::min(frameSize.size.height, textMetrics.height);
 
     // Create _CTLine objects from the the obtained glyph run details
     int numOfGlyphRuns = glyphRunDetails._dwriteGlyphRun.size();
@@ -507,29 +498,6 @@ static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
                 line->_width += glyphRunDetails._dwriteGlyphRun[i].glyphAdvances[index];
             }
 
-            DWRITE_GLYPH_METRICS glyphMetrics[run->_dwriteGlyphRun.glyphCount];
-            THROW_IF_FAILED(run->_dwriteGlyphRun.fontFace->GetDesignGlyphMetrics(run->_dwriteGlyphRun.glyphIndices,
-                                                                                 run->_dwriteGlyphRun.glyphCount,
-                                                                                 glyphMetrics,
-                                                                                 run->_dwriteGlyphRun.isSideways));
-
-            CTFontRef font = static_cast<CTFontRef>([run->_attributes objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
-            CGFloat pointSize = kCTFontSystemFontSize;
-            if (font) {
-                pointSize = CTFontGetSize(font);
-            }
-
-            DWRITE_FONT_METRICS fontMetrics;
-            run->_dwriteGlyphRun.fontFace->GetMetrics(&fontMetrics);
-            CGFloat pointSizeUnitsPerEm = pointSize / fontMetrics.designUnitsPerEm;
-
-            for (size_t k = 0; k < run->_dwriteGlyphRun.glyphCount; ++k) {
-                line->_ascent = std::max(line->_ascent, _CoreTextScaleMetric(glyphMetrics[k].verticalOriginY, pointSizeUnitsPerEm));
-                line->_descent = std::max(line->_descent, _CoreTextScaleMetric(glyphMetrics[k].bottomSideBearing, pointSizeUnitsPerEm));
-            }
-
-            line->_leading = std::max(line->_leading, _CoreTextScaleMetric(fontMetrics.lineGap, pointSizeUnitsPerEm));
-
             [runs addObject:run];
             stringRange += run->_range.length;
             glyphCount += glyphRunDetails._dwriteGlyphRun[i].glyphCount;
@@ -547,10 +515,11 @@ static NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRe
         line->_relativeXOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeXOffset;
         line->_relativeYOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeYOffset;
 
-        [lines addObject:line];
+        [frame->_lines addObject:line];
+        frame->_lineOrigins.emplace_back(line->_lineOrigin);
     }
 
-    return lines;
+    return [frame autorelease];
 }
 
 /**

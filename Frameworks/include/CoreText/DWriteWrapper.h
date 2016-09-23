@@ -48,7 +48,7 @@ struct _DWriteGlyphRunDetails {
 };
 
 CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedString);
-NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRect frameSize);
+_CTFrame* _DWriteGetFrame(_CTTypesetter* ts, CFRange range, CGRect frameSize);
 _CTLine* _DWriteGetLine(CFAttributedStringRef string);
 
 CFArrayRef _DWriteGetFontFamilyNames();
@@ -57,4 +57,4 @@ CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName);
 
 HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace);
 bool _CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Out_ DWRITE_GLYPH_RUN* dest);
-CGFloat _CoreTextScaleMetric(CGFloat metric, CGFloat pointSizeUnitsPerEm);
+CGFloat _CoreTextScaleMetric(CGFloat metric, CGFloat pointsPerDesignUnit);

@@ -287,11 +287,40 @@ CGRect CTLineGetImageBounds(CTLineRef line, CGContextRef context) {
  @Notes
 */
 double CTLineGetTypographicBounds(CTLineRef lineRef, CGFloat* ascent, CGFloat* descent, CGFloat* leading) {
-    if (!lineRef) {
+    _CTLine* line = static_cast<_CTLine*>(lineRef);
+
+    if (!line || [line->_runs count] == 0) {
         return 0;
     }
 
-    _CTLine* line = static_cast<_CTLine*>(lineRef);
+    // Created with impossible values FLT_MIN which signify they need to be populated
+    if (line->_ascent == FLT_MIN || line->_descent == FLT_MIN) {
+        for (_CTRun* run in static_cast<id<NSFastEnumeration>>(line->_runs)) {
+            DWRITE_GLYPH_METRICS glyphMetrics[run->_dwriteGlyphRun.glyphCount];
+            THROW_IF_FAILED(run->_dwriteGlyphRun.fontFace->GetDesignGlyphMetrics(run->_dwriteGlyphRun.glyphIndices,
+                                                                                 run->_dwriteGlyphRun.glyphCount,
+                                                                                 glyphMetrics,
+                                                                                 run->_dwriteGlyphRun.isSideways));
+
+            CTFontRef font = static_cast<CTFontRef>([run->_attributes objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
+            CGFloat pointSize = kCTFontSystemFontSize;
+            if (font) {
+                pointSize = CTFontGetSize(font);
+            }
+
+            DWRITE_FONT_METRICS fontMetrics;
+            run->_dwriteGlyphRun.fontFace->GetMetrics(&fontMetrics);
+            CGFloat pointsPerDesignUnit = pointSize / fontMetrics.designUnitsPerEm;
+
+            for (size_t i = 0; i < run->_dwriteGlyphRun.glyphCount; ++i) {
+                line->_ascent = std::max(line->_ascent, _CoreTextScaleMetric(glyphMetrics[i].verticalOriginY, pointsPerDesignUnit));
+                line->_descent = std::max(line->_descent, _CoreTextScaleMetric(glyphMetrics[i].bottomSideBearing, pointsPerDesignUnit));
+            }
+
+            line->_leading = std::max(line->_leading, _CoreTextScaleMetric(fontMetrics.lineGap, pointsPerDesignUnit));
+        }
+    }
+
     if (ascent) {
         *ascent = line->_ascent;
     }
