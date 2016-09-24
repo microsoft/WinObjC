@@ -2424,23 +2424,28 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
             ^{
                 // If we have a valid non-dealloc'd object, run its display update pass
                 if (strongSuperLayer) {
-                    strongSuperLayer->priv->_displayPending = false;
+                    // Only run the update pass for this superLayer if it's a 'root layer' - aka a UIWindow layer,
+                    // or if we're running as a framework - aka for middleware scenarios - where the layer won't have
+                    // a 'root' superlayer.
+                    if (strongSuperLayer->priv->isRootLayer || GetCACompositor()->IsRunningAsFramework()) {
+                        strongSuperLayer->priv->_displayPending = false;
 
-                    if (DEBUG_VERBOSE) {
-                        TraceVerbose(
-                            TAG,
-                            L"Performing _displayChanged work for superlayer (%hs - 0x%p, %hs - 0x%p).",
-                            object_getClassName(strongSuperLayer),
-                            strongSuperLayer,
-                            strongSuperLayer->priv->delegate ? object_getClassName(strongSuperLayer->priv->delegate) : "nil",
-                            strongSuperLayer->priv->delegate);
+                        if (DEBUG_VERBOSE) {
+                            TraceVerbose(
+                                TAG,
+                                L"Performing _displayChanged work for superlayer (%hs - 0x%p, %hs - 0x%p).",
+                                object_getClassName(strongSuperLayer),
+                                strongSuperLayer,
+                                strongSuperLayer->priv->delegate ? object_getClassName(strongSuperLayer->priv->delegate) : "nil",
+                                strongSuperLayer->priv->delegate);
+                        }
+
+                        // Recalculate layouts
+                        DoLayerLayouts(strongSuperLayer, true);
+
+                        // Redisplay anything necessary
+                        DoDisplayList(strongSuperLayer);
                     }
-
-                    // Recalculate layouts
-                    DoLayerLayouts(strongSuperLayer, true);
-
-                    // Redisplay anything necessary
-                    DoDisplayList(strongSuperLayer);
                 } else if (DEBUG_VERBOSE) {
                     TraceVerbose(TAG, L"Skipping _displayChanged work for currently-dealloc'd object (0x%p).", rawSuperLayerForLog);
                 }

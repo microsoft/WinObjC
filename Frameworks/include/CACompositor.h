@@ -133,6 +133,8 @@ public:
     virtual void DisableDisplaySyncNotification() = 0;
 
     virtual void SetShouldRasterize(DisplayNode* node, bool rasterize) = 0;
+
+    virtual bool IsRunningAsFramework() = 0;
 };
 
 extern CACompositorInterface* _globalCompositor;

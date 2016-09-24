@@ -55,6 +55,7 @@ static const wchar_t* TAG = L"CompositorInterface";
 
 @class RTObject;
 
+CompositionMode g_compositionMode = CompositionModeDefault;
 bool dxLandscape = false;
 
 float screenWidth = 320.0f;
@@ -1609,9 +1610,14 @@ public:
     virtual void SetShouldRasterize(DisplayNode* node, bool rasterize) override {
         node->SetShouldRasterize(rasterize);
     }
+
+    virtual bool IsRunningAsFramework() override {
+        return g_compositionMode == CompositionModeLibrary;
+    }
 };
 
-void CreateXamlCompositor(winobjc::Id& root) {
+void CreateXamlCompositor(winobjc::Id& root, CompositionMode compositionMode) {
+    g_compositionMode = compositionMode;
     CGImageAddDestructionListener(UIReleaseDisplayTextureForCGImage);
     static CAXamlCompositor* compIntr = new CAXamlCompositor();
     SetCACompositor(compIntr);
