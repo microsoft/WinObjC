@@ -420,54 +420,6 @@ Windows::Foundation::Size Button::ArrangeOverride(Windows::Foundation::Size fina
     return finalSize;
 }
 
-// In ArrangeOverride we explicitly ask UIKit to invalidate the intrinsic content sizeof the UIButton.
-// This method is then called by UIButton to get the intrinsic content size.
-UIKIT_XAML_EXPORT SIZE XamlGetIntrinsicContentSizeFromXaml(const ComPtr<IInspectable>& inspectableButton) {
-    auto button = safe_cast<UIKit::Button^>(reinterpret_cast<Platform::Object^>(inspectableButton.Get()));
-
-    // get the size of image based on current state
-    float imageWidth = button->imageSizeNormal.Width;
-    float imageHeight = button->imageSizeNormal.Height;
-    float backgroundWidth = button->backgroundSizeNormal.Width;
-    float backgroundHeight = button->backgroundSizeNormal.Height;
-    Platform::String^ text = button->NormalText;
-
-    if (button->IsPressed) {
-        imageWidth = button->imageSizePressed.Width;
-        imageHeight = button->imageSizePressed.Height;
-        text = button->PressedText;
-        backgroundWidth = button->backgroundSizePressed.Width;
-        backgroundHeight = button->backgroundSizePressed.Height;
-    } else if (!button->IsEnabled) {
-        imageWidth = button->imageSizeDisabled.Width;
-        imageHeight = button->imageSizeDisabled.Height;
-        text = button->DisabledText;
-        backgroundWidth = button->backgroundSizeDisabled.Width;
-        backgroundHeight = button->backgroundSizeDisabled.Height;
-    }
-
-    // XAML TextBlock uses the constraints set on the TextBlock to give its desired size. Rather we want
-    // the textblock's desired size without any constraints for UIButton.
-    // The sole purpose of this textblock is size calculation for UIButton without any constraints.
-    static TextBlock^ textBlock = ref new TextBlock();
-    textBlock->Text = text;
-    static Windows::Foundation::Size infinity(FLT_MAX, FLT_MAX);
-    textBlock->Measure(infinity);
-
-    SIZE ret = { 0 };
-    ret.cx = (LONG)(textBlock->DesiredSize.Width + imageWidth + button_padding);
-    ret.cy = (LONG)(textBlock->DesiredSize.Height + imageHeight);
-
-    if (backgroundWidth > ret.cx) {
-        ret.cx = (LONG)backgroundWidth;
-    }
-    if (backgroundHeight > ret.cy) {
-        ret.cy = (LONG)backgroundHeight;
-    }
-
-    return ret;
-}
-
 // Only UIControlStateNormal, UIControlStateHighlighted and UIControlStateDisabled states are supported
 UIKIT_XAML_EXPORT void XamlSetButtonImage(const ComPtr<IInspectable>& inspectableButton,
     const ComPtr<IInspectable>& inspectableImage, int state, float width, float height) {
@@ -482,44 +434,29 @@ UIKIT_XAML_EXPORT void XamlSetButtonImage(const ComPtr<IInspectable>& inspectabl
 
     switch(state) {
         case ControlStateNormal :
-            button->imageSizeNormal.Width = width;
-            button->imageSizeNormal.Height = height;
-
             button->ButtonImageSourceNormal = bitmapSource;
 
             // If image source for Pressed and Disabled states are nil, we use image source for normal state as fallback value.
             if (!button->ButtonImageSourcePressed) {
                 button->ButtonImageSourcePressed = button->ButtonImageSourceNormal;
-                button->imageSizePressed.Width = button->imageSizeNormal.Width;
-                button->imageSizePressed.Height = button->imageSizeNormal.Height;
             }
 
             if (!button->ButtonImageSourceDisabled) {
                 button->ButtonImageSourceDisabled = button->ButtonImageSourceNormal;
-                button->imageSizeDisabled.Width = button->imageSizeNormal.Width;
-                button->imageSizeDisabled.Height = button->imageSizeNormal.Height;
             }
             break;
         case ControlStateHighlighted :
             if (!bitmapSource) {
                 button->ButtonImageSourcePressed = button->ButtonImageSourceNormal;
-                button->imageSizePressed.Width = button->imageSizeNormal.Width;
-                button->imageSizePressed.Height = button->imageSizeNormal.Height;
             } else {
                 button->ButtonImageSourcePressed = bitmapSource;
-                button->imageSizePressed.Width = width;
-                button->imageSizePressed.Height = height;
             }
             break;
         case ControlStateDisabled :
             if (!bitmapSource) {
                 button->ButtonImageSourceDisabled = button->ButtonImageSourceNormal;
-                button->imageSizeDisabled.Width = button->imageSizeNormal.Width;
-                button->imageSizeDisabled.Height = button->imageSizeNormal.Height;
             } else {
                 button->ButtonImageSourceDisabled = bitmapSource;
-                button->imageSizeDisabled.Width = width;
-                button->imageSizeDisabled.Height = height;
             }
             break;
         default:
@@ -538,45 +475,30 @@ UIKIT_XAML_EXPORT void XamlSetBackgroundImage(const ComPtr<IInspectable>& inspec
     switch(state) {
         case ControlStateNormal :
             button->NormalBackground = backgroundImage;
-            button->backgroundSizeNormal.Width = width;
-            button->backgroundSizeNormal.Height = height;
             button->ButtonBackgroundInsets = ThicknessHelper::FromLengths(insets.left, insets.top, insets.right, insets.bottom);
 
             // If PressedBackground or DisabledBackground is transparent, which is equivalent to nil for iOS, we use NormalBackground as fallback value.
             // This is the default behavior on iOS platform.
-            // The background width and height are used for intrinsic content size calculation of UIButton
             if (!button->PressedBackground) {
                 button->PressedBackground = button->NormalBackground;
-                button->backgroundSizePressed.Width = button->backgroundSizeNormal.Width;
-                button->backgroundSizePressed.Height = button->backgroundSizeNormal.Height;
             }
 
             if (!button->DisabledBackground) {
                 button->DisabledBackground = button->NormalBackground;
-                button->backgroundSizeDisabled.Width = button->backgroundSizeNormal.Width;
-                button->backgroundSizeDisabled.Height = button->backgroundSizeNormal.Height;
             }
             break;
         case ControlStateHighlighted :
             if (!backgroundImage) {
                 button->PressedBackground = button->NormalBackground;
-                button->backgroundSizePressed.Width = button->backgroundSizeNormal.Width;
-                button->backgroundSizePressed.Height = button->backgroundSizeNormal.Height;
             } else {
                 button->PressedBackground = backgroundImage;
-                button->backgroundSizePressed.Width = width;
-                button->backgroundSizePressed.Height = height;
             }
             break;
         case ControlStateDisabled :
             if (!backgroundImage) {
                 button->DisabledBackground = button->NormalBackground;
-                button->backgroundSizeDisabled.Width = button->backgroundSizeNormal.Width;
-                button->backgroundSizeDisabled.Height = button->backgroundSizeNormal.Height;
             } else {
                 button->DisabledBackground = backgroundImage;
-                button->backgroundSizeDisabled.Width = width;
-                button->backgroundSizeDisabled.Height = height;
             }
             break;
         default:

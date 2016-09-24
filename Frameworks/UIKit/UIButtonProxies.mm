@@ -70,9 +70,7 @@ static const wchar_t* tag = L"UIButtonProxies";
 
 @end
 
-@implementation _UIView_Proxy {
-    StrongId<WXFrameworkElement> _element;
-}
+@implementation _UIView_Proxy 
 
 + (Class)_mockClass {
     return [UIView class];
@@ -80,29 +78,63 @@ static const wchar_t* tag = L"UIButtonProxies";
 
 - (instancetype)initWithXamlElement:(WXFrameworkElement*)xamlElement {
     if (self = [super init]) {
-        _element = xamlElement;
+        _xamlElement = xamlElement;
     }
     return self;
+}
+
+- (void)setFrame:(CGRect)frame {
+    // We're assuming everything will be held in a Canvas
+    [WXCCanvas setTop:_xamlElement length:frame.origin.y];
+    [WXCCanvas setLeft:_xamlElement length:frame.origin.x];
+
+    _xamlElement.width = frame.size.width;
+    _xamlElement.height = frame.size.height;
+}
+
+- (CGRect)frame {
+    CGRect ret = {0};
+
+    // We're assuming everything will be held in a Canvas
+    [WXCCanvas getTop:_xamlElement];
+    [WXCCanvas getLeft:_xamlElement];
+
+    ret.size.width = _xamlElement.width;
+    ret.size.height = _xamlElement.height;
+
+    return ret;
 }
 
 @end
 
 @implementation _UILabel_Proxy {
     StrongId<UIFont> _font;
-    StrongId<WXCTextBlock> _xamlTextBlock;
     StrongId<WXCTextBlock> _dummyTextBlock;
+
+    // For convenience
+    WXCTextBlock* _xamlTextBlock;
 }
 
 + (Class)_mockClass {
     return [UILabel class];
 }
 
+- (void)setFrame:(CGRect)frame {
+    // UILabels are vertically aligned 
+    [super setFrame:frame];
+    [_xamlTextBlock measure:[WXSizeHelper fromDimensions:frame.size.width height:frame.size.height]];
+
+    float centerOffset = (frame.size.height - _xamlTextBlock.actualHeight) / 2.0f;
+    _xamlTextBlock.margin = [WXThicknessHelper fromLengths:0 top:centerOffset right:0 bottom:0];
+}
+
 - (instancetype)initWithXamlElement:(WXFrameworkElement*)xamlElement font:(UIFont*)font {
     FAIL_FAST_IF_NULL(xamlElement);
+    WXCTextBlock* textBlock = rt_dynamic_cast<WXCTextBlock>(xamlElement);
+    FAIL_FAST_IF_NULL(textBlock);
 
-    if (self = [super initWithXamlElement:xamlElement]) {
-        _xamlTextBlock = rt_dynamic_cast<WXCTextBlock>(xamlElement);
-        FAIL_FAST_IF_NULL(_xamlTextBlock);
+    if (self = [super initWithXamlElement:textBlock]) {
+        _xamlTextBlock = textBlock;
 
         // TODO: Copy attributes from xamlElement?
         _dummyTextBlock = [WXCTextBlock make];
@@ -144,6 +176,10 @@ static const wchar_t* tag = L"UIButtonProxies";
 }
 
 - (void)setFont:(UIFont*)font {
+    if ([font isEqual:_font]) {
+        return;
+    }
+
     _font = font;
     _xamlTextBlock.fontSize = [_font pointSize];
 
@@ -264,7 +300,8 @@ static const wchar_t* tag = L"UIButtonProxies";
 @end
 
 @implementation _UIImageView_Proxy {
-    StrongId<WXCImage> _xamlImage;
+    // For convenience
+    WXCImage* _xamlImage;
 }
 
 + (Class)_mockClass {
@@ -273,10 +310,11 @@ static const wchar_t* tag = L"UIButtonProxies";
 
 - (instancetype)initWithXamlElement:(WXFrameworkElement*)xamlElement {
     FAIL_FAST_IF_NULL(xamlElement);
+    WXCImage* image = rt_dynamic_cast<WXCImage>(xamlElement);
+    FAIL_FAST_IF_NULL(image);
 
     if (self = [super initWithXamlElement:xamlElement]) {
-        _xamlImage = rt_dynamic_cast<WXCImage>(xamlElement);
-        FAIL_FAST_IF_NULL(_xamlImage);        
+        _xamlImage = image;
     }
 
     return self;

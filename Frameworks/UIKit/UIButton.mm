@@ -35,7 +35,8 @@
 static const wchar_t* TAG = L"UIButton";
 
 struct ButtonState {
-    StrongId<UIImage> image, backgroundImage;
+    StrongId<UIImage> image;
+    StrongId<UIImage> backgroundImage;
     StrongId<UIColor> textColor;
     StrongId<NSString> title;
 };
@@ -50,6 +51,10 @@ struct ButtonState {
 @implementation UIButton {
     StrongId<WXCButton> _xamlButton;
     std::map<UIControlState, ButtonState> _states;
+
+    UIEdgeInsets _contentInsets;
+    UIEdgeInsets _imageInsets;
+    UIEdgeInsets _titleInsets;
 
     // Proxies
     StrongId<_UILabel_Proxy> _proxyLabel;
@@ -159,6 +164,9 @@ struct ButtonState {
         _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:templateImage];
     }
 
+    _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    _contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+
     // Set the XAML element's name so it's easily found in the VS live tree viewer
     [_xamlButton setName:[NSString stringWithUTF8String:object_getClassName(self)]];
 
@@ -241,6 +249,8 @@ struct ButtonState {
         return;
     }
 
+    _states[state].backgroundImage = image;
+
     if (state == UIControlStateNormal) {
         // TODO: Do we key off of VSM changes and set the image from our state, or reconstruct a UIImage from the Xaml image?
         [_proxyImageView setImage:image];
@@ -252,6 +262,140 @@ struct ButtonState {
     } else {
         XamlSetButtonImage([_xamlButton comObj], [imageBrush comObj], state, image.size.width, image.size.height);
     }
+}
+
+static CGSize getTitleSize(UIButton* self, CGRect bounds) {
+    CGSize textSize = { 0 };
+
+    NSString* title = self.currentTitle;
+    if ([title length] > 0) {
+        textSize = [title sizeWithFont:self.font constrainedToSize:CGSizeMake(10000.0f, 10000.0f)];
+    }
+
+    return textSize;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)layoutSubviews {
+    CGRect bounds = { 0 };
+
+    bounds = [self bounds];
+    bounds = UIEdgeInsetsInsetRect([self bounds], self.contentEdgeInsets);
+
+    CGRect contentFrame = [self contentRectForBounds:bounds];
+    CGRect textFrame = [self titleRectForContentRect:contentFrame];
+    CGRect imageFrame = [self imageRectForContentRect:contentFrame];
+
+    self.titleLabel.frame = textFrame;
+    self.imageView.frame = imageFrame;
+
+    // Probably important to keep around for after the refactor.
+    [super layoutSubviews];
+}
+
+static CGRect calcComponentRect(UIButton* self, CGSize size, CGRect contentRect) {
+    CGRect rect;
+
+    rect.origin = contentRect.origin;
+    rect.size = size;
+
+    if (CGRectGetMaxX(rect) > CGRectGetMaxX(contentRect)) {
+        rect.size.width -= CGRectGetMaxX(rect) - CGRectGetMaxX(contentRect);
+    }
+    if (CGRectGetMaxY(rect) > CGRectGetMaxY(contentRect)) {
+        rect.size.height -= CGRectGetMaxY(rect) - CGRectGetMaxY(contentRect);
+    }
+
+    switch (self.contentHorizontalAlignment) {
+        case UIControlContentHorizontalAlignmentCenter:
+            rect.origin.x += floorf((contentRect.size.width / 2.f) - (rect.size.width / 2.f));
+            break;
+
+        case UIControlContentHorizontalAlignmentRight:
+            rect.origin.x += contentRect.size.width - rect.size.width;
+            break;
+
+        case UIControlContentHorizontalAlignmentFill:
+            rect.size.width = contentRect.size.width;
+            break;
+
+        case UIControlContentHorizontalAlignmentLeft:
+            break;
+    }
+
+    switch (self.contentVerticalAlignment) {
+        case UIControlContentVerticalAlignmentCenter:
+            rect.origin.y += floorf((contentRect.size.height / 2.f) - (rect.size.height / 2.f));
+            break;
+
+        case UIControlContentVerticalAlignmentBottom:
+            rect.origin.y += contentRect.size.height - rect.size.height;
+            break;
+
+        case UIControlContentVerticalAlignmentFill:
+            rect.size.height = contentRect.size.height;
+            break;
+
+        case UIControlContentVerticalAlignmentTop:
+            break;
+    }
+
+    return rect;
+}
+
+/**
+ @Status Interoperable
+*/
+- (CGRect)contentRectForBounds:(CGRect)bounds {
+    return bounds;
+}
+
+/**
+ @Status Interoperable
+*/
+- (CGRect)imageRectForContentRect:(CGRect)contentRect {
+    CGSize titleSize = [self.currentTitle sizeWithFont:self.font];
+    CGSize imageSize = { 0 };
+    
+    if (self.currentImage) {
+        imageSize = self.currentImage.size;
+    }
+
+    CGSize totalSize = imageSize;
+    totalSize.width += titleSize.width;
+
+    CGRect ret = calcComponentRect(self, totalSize, UIEdgeInsetsInsetRect(contentRect, self.imageEdgeInsets));
+
+    if (ret.size.width > imageSize.width) {
+        ret.size.width = imageSize.width;
+    }
+    if (ret.size.height > imageSize.height) {
+        ret.size.height = imageSize.height;
+    }
+
+    return ret;
+}
+
+/**
+ @Status Interoperable
+*/
+- (CGRect)titleRectForContentRect:(CGRect)contentRect {
+    CGSize titleSize = [self.currentTitle sizeWithFont:self.font];
+    CGSize totalSize = titleSize;
+    CGSize imageSize = { 0 };
+    
+    if (self.currentImage) {
+        imageSize = self.currentImage.size;
+    }
+
+    totalSize.width += imageSize.width;
+
+    CGRect ret = calcComponentRect(self, totalSize, UIEdgeInsetsInsetRect(contentRect, self.titleEdgeInsets));
+    ret.origin.x += imageSize.width;
+
+    return ret;
 }
 
 /**
@@ -308,6 +452,18 @@ struct ButtonState {
  @Notes The xaml element may be modified directly and we could still return stale values.
 */
 - (UIImage*)currentImage {
+    if (self->_states[self->_curState].image != nil) {
+        return self->_states[self->_curState].image;
+    }
+
+    return self->_states[UIControlStateNormal].image;
+}
+
+/**
+ @Status Caveat
+ @Notes The xaml element may be modified directly and we could still return stale values.
+*/
+- (UIImage*)currentBackgroundImage {
     if (self->_states[self->_curState].backgroundImage != nil) {
         return self->_states[self->_curState].backgroundImage;
     }
@@ -516,48 +672,48 @@ struct ButtonState {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setTitleEdgeInsets:(UIEdgeInsets)insets {
-    UNIMPLEMENTED();
+    _titleInsets = insets;
+    [self setNeedsLayout];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setImageEdgeInsets:(UIEdgeInsets)insets {
-    UNIMPLEMENTED();
+    _imageInsets = insets;
+    [self setNeedsLayout];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setContentEdgeInsets:(UIEdgeInsets)insets {
-    UNIMPLEMENTED();
+    _contentInsets = insets;
+    [self setNeedsLayout];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (UIEdgeInsets)imageEdgeInsets {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return _imageInsets;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (UIEdgeInsets)titleEdgeInsets {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return _titleInsets;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (UIEdgeInsets)contentEdgeInsets {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return _contentInsets;
 }
 
 /**
@@ -663,31 +819,52 @@ static bool validateState(UIControlState state) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (CGSize)intrinsicContentSize {
-    // Initial size set to padding
-    CGSize ret = { 20, 20 };
+    CGSize ret = { 0 };
+    UIImage* img = _states[UIControlStateNormal].image;
+    UIEdgeInsets contentInsets = self.contentEdgeInsets;
 
-    CGSize imageIntrinsicSize = [self.imageView intrinsicContentSize];
-    CGSize labelIntrinsicSize = [self.titleLabel intrinsicContentSize];
-
-    ret.width += labelIntrinsicSize.width;
-
-    if (imageIntrinsicSize.height > labelIntrinsicSize.height) {
-        ret.height += imageIntrinsicSize.height;
-    } else {
-        ret.height += labelIntrinsicSize.height;
+    if (img != nil) {
+        ret = [img size];
     }
 
-    if (imageIntrinsicSize.width != UIViewNoIntrinsicMetric && imageIntrinsicSize.width != 0) {
-        ret.width += 5.0f; // Margins between image and label
-        ret.width += imageIntrinsicSize.width;
+    if ([self currentTitle].length) {
+        CGSize size;
+
+        size = [[self currentTitle] sizeWithFont:self.font];
+        size.width += 20.0f; // Padding
+
+        // Size should at least fit the image in a normal state.
+        if (size.width > ret.width) {
+            ret.width = size.width;
+        }
+        if (size.height > ret.height) {
+            ret.height = size.height;
+        }
     }
 
-    /*SIZE sizeFromXaml = getIntrinsicContentSizeFromXaml([_xamlButton comObj]);
-    ret.width = (float)sizeFromXaml.cx;
-    ret.height = (float)sizeFromXaml.cy;*/
+    if (self.currentBackgroundImage) {
+        UIImage* background = self.currentBackgroundImage;
+        CGSize size;
+
+        size = [background size];
+
+        if (size.width > ret.width) {
+            ret.width = size.width;
+        }
+        if (size.height > ret.height) {
+            ret.height = size.height;
+        }
+    }
+
+    ret.width += (contentInsets.right + contentInsets.left);
+    ret.height += (contentInsets.top + contentInsets.bottom);
+
+    if (ret.height < 30.0f) {
+        ret.height = 30.0f;
+    }
 
     return ret;
 }
@@ -696,30 +873,6 @@ static bool validateState(UIControlState state) {
  @Status Stub
 */
 - (CGRect)backgroundRectForBounds:(CGRect)bounds {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-- (CGRect)contentRectForBounds:(CGRect)bounds {
-    UNIMPLEMENTED();
-    return bounds;
-}
-
-/**
- @Status Stub
-*/
-- (CGRect)imageRectForContentRect:(CGRect)contentRect {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-- (CGRect)titleRectForContentRect:(CGRect)contentRect {
     UNIMPLEMENTED();
     return StubReturn();
 }

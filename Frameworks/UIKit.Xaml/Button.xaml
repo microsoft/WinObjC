@@ -71,23 +71,12 @@
                 <Image x:Name="backgroundImage" Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NormalBackground}" 
                        Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" IsHitTestVisible="False" Stretch="Fill"
                        NineGrid="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ButtonBackgroundInsets}"/>
-                <Grid x:Name="contentGrid" MaxWidth="{TemplateBinding Width}" MaxHeight="{TemplateBinding Height}" 
-                      FlowDirection="LeftToRight" VerticalAlignment="Center" 
-                      Width="Auto" Height="Auto"
-                      HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Image x:Name="buttonImage" Stretch="Uniform"
-                           Width="Auto" Height="Auto" MaxWidth="{TemplateBinding Width}" MaxHeight="{TemplateBinding Height}"
-                           IsHitTestVisible="False" Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ButtonImageSourceNormal}"/>
-                    
-                    <TextBlock x:Name="buttonText" MaxLines="1" Grid.Column="1" TextTrimming="CharacterEllipsis" IsHitTestVisible="False"
+                <Canvas x:Name="contentGrid" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
+                    <Image x:Name="buttonImage" Stretch="Uniform" IsHitTestVisible="False" Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ButtonImageSourceNormal}"/>
+                    <TextBlock x:Name="buttonText" MaxLines="1" TextTrimming="CharacterEllipsis" IsHitTestVisible="False"
                                Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NormalText}"
-                               HorizontalAlignment="Center" Foreground="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NormalForeground}"
-                               VerticalAlignment="Center"/>
-                </Grid>
+                               Foreground="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NormalForeground}"/>
+                </Canvas>
             </Grid>
         </ControlTemplate>
     </Button.Template>

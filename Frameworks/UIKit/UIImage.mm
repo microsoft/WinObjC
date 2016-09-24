@@ -973,6 +973,7 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
         ret->_imageStretch.origin.x = leftCap / imgSize.width;
         ret->_imageStretch.size.width = 1.0f / imgSize.width;
         if (leftCap < imgSize.width) {
+            // As per UIImage documentation, left/top caps create cap insets with a center section of 1x1 logical pixels
             ret->_imageInsets.right = imgSize.width - (ret->_imageInsets.left + 1);
         }
     }

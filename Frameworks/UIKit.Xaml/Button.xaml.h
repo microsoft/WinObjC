@@ -186,18 +186,6 @@ public:
     }
 
 internal:
-    // Setting the image width and height to 0. This will be updated once setImage:forState is called in UIButton
-    // This data will be used for the calculation of intrinsicContentSize of UIButton.
-    Windows::Foundation::Size imageSizeNormal = { 0, 0 };
-    Windows::Foundation::Size imageSizePressed = { 0, 0 };
-    Windows::Foundation::Size imageSizeDisabled = { 0, 0 };
-
-    // Setting the background width and height to 0. This will be updated once setBackgroundImage:forState is called in UIButton
-    // This data will be used for the calculation of intrinsicContentSize of UIButton.
-    Windows::Foundation::Size backgroundSizeNormal = { 0, 0 };
-    Windows::Foundation::Size backgroundSizePressed = { 0, 0 };
-    Windows::Foundation::Size backgroundSizeDisabled = { 0, 0 };
-
     void HookPointerEvents(
         const Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler>& pointerPressedHook,
         const Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler>& pointerMovedHook,

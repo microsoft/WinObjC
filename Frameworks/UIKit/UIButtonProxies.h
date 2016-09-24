@@ -16,7 +16,7 @@
 
 #pragma once
 
-@class UIFont;
+@class UIFont, WXFrameworkElement;
 
 // Provides basic mocking support
 @interface _MockObjectBase : NSObject
@@ -28,6 +28,10 @@
 
 // Provides basic UIView pass-throughs
 @interface _UIView_Proxy : _MockObjectBase
+
+- (instancetype)initWithXamlElement:(WXFrameworkElement*)xamlElement;
+
+@property (nonatomic, readonly, retain) WXFrameworkElement* xamlElement;
 
 @end
 
@@ -42,8 +46,6 @@
 @end
 
 @interface _UIImageView_Proxy : _UIView_Proxy
-
-- (instancetype)initWithXamlElement:(WXFrameworkElement*)xamlElement;
 
 @property (nonatomic, retain) UIImage* image;
 

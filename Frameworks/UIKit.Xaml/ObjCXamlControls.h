@@ -66,8 +66,6 @@ UIKIT_XAML_EXPORT void XamlSetButtonImage(const Microsoft::WRL::ComPtr<IInspecta
                                           float width,
                                           float height);
 
-UIKIT_XAML_EXPORT SIZE XamlGetIntrinsicContentSizeFromXaml(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton);
-
 UIKIT_XAML_EXPORT void XamlRemovePointerEvents(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton);
 
 UIKIT_XAML_EXPORT void XamlRemoveLayoutEvent(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton);
