@@ -16,7 +16,7 @@
 
 #import "CGCCGContextReplacePathWithStrokedPath.h"
 
-static const CGFloat c_LineWidth = 20;
+static const CGFloat c_LineWidth = 15;
 
 @protocol DrawRectCompletionDelegate <NSObject>
 
@@ -24,9 +24,21 @@ static const CGFloat c_LineWidth = 20;
 
 @end
 
+typedef NS_ENUM(NSInteger, StrokedPathType) {
+    StrokedPathTypeLine = 0,
+    StrokedPathTypeReplaceStroke, // Left to right drawing
+    StrokedPathTypeLine2,
+    StrokedPathTypeReplaceStroke2 // Right to left drawing
+};
+
+typedef NS_ENUM(NSInteger, DrawMode) { DrawModeFill = 0, DrawModeStroke };
+
 @interface StrokeView : UIView
 
-@property (assign, nonatomic) BOOL drawStrokedPath;
+@property (assign, nonatomic) StrokedPathType strokedPathType;
+@property (assign, nonatomic) CGLineCap lineCapType;
+@property (assign, nonatomic) CGLineJoin lineJoinType;
+@property (assign, nonatomic) DrawMode drawMode;
 @property (strong, atomic, nullable) NSMutableArray<NSString*>* logs;
 @property (assign, nonatomic) CGPoint highlightedPoint;
 @property (weak, nonatomic, nullable) id<DrawRectCompletionDelegate> delegate;
@@ -38,72 +50,147 @@ static const CGFloat c_LineWidth = 20;
 - (void)drawRect:(CGRect)rect {
     [self.logs removeAllObjects];
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGFloat maxWidth = rect.size.width;
-    CGFloat maxHeight = rect.size.height;
 
     // White background
     CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
-    CGContextFillRect(context, CGRectMake(0, 0, maxWidth, maxHeight));
+    CGContextFillRect(context, rect);
 
     // Create original path
     NSDictionary* params;
     NSMutableArray<NSValue*>* originalPoints = [NSMutableArray new];
     CGMutablePathRef path = CGPathCreateMutable();
     CGContextSetLineWidth(context, c_LineWidth);
-    CGPathMoveToPoint(path, NULL, 10, maxHeight / 2);
-    CGPathAddLineToPoint(path, NULL, maxWidth / 4, maxHeight / 2);
-    CGPathAddArcToPoint(path, NULL, maxWidth / 4 + 50, maxHeight * 2 + 50, maxWidth / 2, maxHeight * 3 / 4, 50);
-    CGPathAddQuadCurveToPoint(path, NULL, maxWidth * 3 / 4, maxHeight * 1 / 4, maxWidth - 10, 10);
+    CGContextSetLineCap(context, self.lineCapType);
+    CGContextSetLineJoin(context, self.lineJoinType);
+    CGContextSetMiterLimit(context, 2);
+
+    if (self.strokedPathType == StrokedPathTypeReplaceStroke2 || self.strokedPathType == StrokedPathTypeLine2) {
+        CGPathMoveToPoint(path, NULL, 200, 100);
+        CGPathAddLineToPoint(path, NULL, 16, 16);
+
+        CGPathMoveToPoint(path, NULL, 400, 16);
+        CGPathAddQuadCurveToPoint(path, NULL, 300, 100, 200, 200);
+        CGPathAddArcToPoint(path, NULL, 200, 100, 0, 100, 50);
+        CGPathAddLineToPoint(path, NULL, 100, 200);
+        CGPathAddLineToPoint(path, NULL, 10, 180);
+
+        CGPathMoveToPoint(path, NULL, 400, 200);
+        CGPathAddLineToPoint(path, NULL, 400, 250);
+        CGPathAddLineToPoint(path, NULL, 400, 200);
+        CGPathAddLineToPoint(path, NULL, 450, 200);
+        CGPathAddLineToPoint(path, NULL, 400, 200);
+        CGPathAddLineToPoint(path, NULL, 400, 150);
+        CGPathAddLineToPoint(path, NULL, 400, 200);
+        CGPathAddLineToPoint(path, NULL, 350, 200);
+        CGPathAddLineToPoint(path, NULL, 400, 200);
+
+        CGPathMoveToPoint(path, NULL, 500, 25);
+        CGPathAddLineToPoint(path, NULL, 500, 75);
+        CGPathAddLineToPoint(path, NULL, 500, 25);
+
+        CGPathMoveToPoint(path, NULL, 500, 150);
+        CGPathAddLineToPoint(path, NULL, 500, 100);
+        CGPathAddLineToPoint(path, NULL, 500, 150);
+
+        CGPathMoveToPoint(path, NULL, 575, 100);
+        CGPathAddLineToPoint(path, NULL, 525, 100);
+        CGPathAddLineToPoint(path, NULL, 575, 100);
+
+        CGPathMoveToPoint(path, NULL, 425, 100);
+        CGPathAddLineToPoint(path, NULL, 475, 100);
+        CGPathAddLineToPoint(path, NULL, 425, 100);
+
+    } else {
+        CGPathMoveToPoint(path, NULL, 50, 100);
+        CGPathAddLineToPoint(path, NULL, 100, 100);
+        CGPathAddLineToPoint(path, NULL, 150, 50);
+        CGPathAddLineToPoint(path, NULL, 180, 90);
+        CGPathAddLineToPoint(path, NULL, 60, 140);
+        CGPathAddLineToPoint(path, NULL, 90, 170);
+
+        CGPathMoveToPoint(path, NULL, 350, 170);
+        CGPathAddLineToPoint(path, NULL, 260, 140);
+        CGPathAddArcToPoint(path, NULL, 500, 500, 450, 350, 50);
+        CGPathAddQuadCurveToPoint(path, NULL, 100, 100, 100, 200);
+        CGPathAddLineToPoint(path, NULL, 270, 170);
+    }
+
     // Log original path info
     [self.logs addObject:@"Original Path:"];
     params = @{ @"logs" : self.logs, @"points" : originalPoints };
     CGPathApply(path, (__bridge void*)params, _Applier);
 
-    // Create stroked path
-    // TODO: Change this to use CGContextReplacePathWithStrokedPath()
-    NSMutableArray<NSValue*>* strokedPoints = [NSMutableArray new];
-    CGPathRef newPath = CGPathCreateCopyByStrokingPath(path, NULL, c_LineWidth, kCGLineCapButt, kCGLineJoinMiter, 1);
-    // Log stroked path info
-    [self.logs addObject:@"New Path:"];
-    params = @{ @"logs" : self.logs, @"points" : strokedPoints };
-    CGPathApply(newPath, (__bridge void*)params, _Applier);
-
     // Draw the path
     NSMutableArray<NSValue*>* points;
-    if (self.drawStrokedPath) {
-        CGContextSetFillColorWithColor(context, [UIColor blueColor].CGColor);
-        CGContextAddPath(context, newPath);
-        CGContextFillPath(context);
-        points = strokedPoints;
-    } else {
-        CGContextSetStrokeColorWithColor(context, [UIColor greenColor].CGColor);
-        CGContextAddPath(context, path);
-        CGContextStrokePath(context);
-        points = originalPoints;
+    switch (self.strokedPathType) {
+        case StrokedPathTypeLine: {
+            CGContextSetStrokeColorWithColor(context, [UIColor greenColor].CGColor);
+            CGContextAddPath(context, path);
+            CGContextStrokePath(context);
+            points = originalPoints;
+        } break;
+        case StrokedPathTypeLine2: {
+            CGContextSetStrokeColorWithColor(context, [UIColor greenColor].CGColor);
+            CGContextAddPath(context, path);
+            CGContextStrokePath(context);
+            points = originalPoints;
+        } break;
+
+        case StrokedPathTypeReplaceStroke2:
+        case StrokedPathTypeReplaceStroke: {
+            CGContextSetStrokeColorWithColor(context, [UIColor purpleColor].CGColor);
+            CGContextAddPath(context, path);
+            CGContextReplacePathWithStrokedPath(context);
+
+            CGPathRef newPath = CGContextCopyPath(context);
+            NSMutableArray<NSValue*>* strokedPoints = [NSMutableArray new];
+            [self.logs addObject:@"Replace Stroke:"];
+            params = @{ @"logs" : self.logs, @"points" : strokedPoints };
+            CGPathApply(newPath, (__bridge void*)params, _Applier);
+
+            if (self.strokedPathType == StrokedPathTypeReplaceStroke) {
+                CGContextSetFillColorWithColor(context, [UIColor orangeColor].CGColor);
+            } else {
+                CGContextSetFillColorWithColor(context, [UIColor purpleColor].CGColor);
+            }
+            CGContextSetLineWidth(context, 1);
+            // CGContextStrokePath(context);
+            //            CGContextFillPath(context);
+            CGContextDrawPath(context, self.drawMode == DrawModeFill ? kCGPathFill : kCGPathStroke);
+
+            points = strokedPoints;
+            CGPathRelease(newPath);
+        } break;
     }
 
+    CGContextBeginTransparencyLayerWithRect(context, rect, NULL);
     // Draw connecting points of elements
     CGContextSetLineWidth(context, 1);
-    CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
+    CGContextSetFillColorWithColor(context, [UIColor grayColor].CGColor);
     for (NSValue* value in points) {
         CGPoint point = value.CGPointValue;
-        CGContextAddArc(context, point.x, point.y, 4, 0.0, M_PI * 2, YES);
-        CGContextFillPath(context);
+        _drawMarker(context, point, 4);
     }
-
+    CGContextEndTransparencyLayer(context);
     // Draw highlighted point
     if (self.highlightedPoint.x != 0 && self.highlightedPoint.y != 0) {
+        CGContextBeginTransparencyLayerWithRect(context, rect, NULL);
         CGContextSetLineWidth(context, 1);
         CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);
-        CGContextAddArc(context, self.highlightedPoint.x, self.highlightedPoint.y, 4, 0.0, M_PI * 2, YES);
-        CGContextFillPath(context);
+        _drawMarker(context, self.highlightedPoint, 4);
+        CGContextEndTransparencyLayer(context);
     }
 
     CGPathRelease(path);
-    CGPathRelease(newPath);
     if ([self.delegate respondsToSelector:@selector(didFinishDrawing)]) {
         [self.delegate didFinishDrawing];
     }
+}
+
+void _drawMarker(CGContextRef context, CGPoint point, CGFloat size) {
+    CGFloat halfSize = size / 2;
+    CGContextAddRect(context, CGRectMake(point.x - halfSize, point.y - halfSize, size, size));
+    CGContextFillPath(context);
 }
 
 void _Applier(void* info, const CGPathElement* element) {
@@ -153,7 +240,10 @@ void _Applier(void* info, const CGPathElement* element) {
 @interface CGCCGContextReplacePathWithStrokedPath () <UITableViewDataSource, UITableViewDelegate, DrawRectCompletionDelegate>
 
 @property (strong, nonatomic, nullable) StrokeView* customView;
-@property (strong, nonatomic, nullable) UISwitch* pathSwitch;
+@property (strong, nonatomic, nullable) UISegmentedControl* pathSegmentControl;
+@property (strong, nonatomic, nullable) UISegmentedControl* lineJoinSegmentControl;
+@property (strong, nonatomic, nullable) UISegmentedControl* lineCapSegmentControl;
+@property (strong, nonatomic, nullable) UISegmentedControl* drawModeSegmentControl;
 @property (strong, nonatomic, nullable) UITableView* consoleView;
 @property (strong, nonatomic, nullable) NSNumberFormatter* formatter;
 
@@ -169,9 +259,10 @@ void _Applier(void* info, const CGPathElement* element) {
 
     self.view.backgroundColor = [UIColor whiteColor];
 
-    self.customView = [[StrokeView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height / 2)];
+    self.customView =
+        [[StrokeView alloc] initWithFrame:CGRectMake(0, 90, self.view.bounds.size.width, (self.view.bounds.size.height / 2) - 90)];
     self.customView.delegate = self;
-    self.customView.drawStrokedPath = NO;
+    self.customView.strokedPathType = StrokedPathTypeLine;
     self.customView.logs = [NSMutableArray new];
     [self.view addSubview:self.customView];
 
@@ -179,10 +270,43 @@ void _Applier(void* info, const CGPathElement* element) {
     switchLabel.text = @"Show Stroked Path:";
     [self.view addSubview:switchLabel];
 
-    self.pathSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(155, self.view.bounds.size.height / 2, 30, 30)];
-    [self.pathSwitch setOn:NO];
-    [self.pathSwitch addTarget:self action:@selector(pathSwitchValueChanged:) forControlEvents:UIControlEventValueChanged];
-    [self.view addSubview:self.pathSwitch];
+    self.pathSegmentControl = [[UISegmentedControl alloc] initWithFrame:CGRectMake(10, 2, self.view.frame.size.width - 20, 20)];
+    [self.pathSegmentControl addTarget:self action:@selector(segmentedControlValueDidChange:) forControlEvents:UIControlEventValueChanged];
+    [self.pathSegmentControl insertSegmentWithTitle:@"Line_1" atIndex:0 animated:false];
+    [self.pathSegmentControl insertSegmentWithTitle:@"Replace_1" atIndex:1 animated:false];
+    [self.pathSegmentControl insertSegmentWithTitle:@"Line_2" atIndex:2 animated:false];
+    [self.pathSegmentControl insertSegmentWithTitle:@"Replace_2" atIndex:3 animated:false];
+    [self.pathSegmentControl setSelectedSegmentIndex:self.customView.strokedPathType];
+    [self.view addSubview:self.self.pathSegmentControl];
+
+    self.lineJoinSegmentControl = [[UISegmentedControl alloc] initWithFrame:CGRectMake(10, 24, self.view.frame.size.width - 20, 20)];
+    [self.lineJoinSegmentControl addTarget:self
+                                    action:@selector(segmentedControlValueDidChange:)
+                          forControlEvents:UIControlEventValueChanged];
+    [self.lineJoinSegmentControl insertSegmentWithTitle:@"J_Miter" atIndex:0 animated:false];
+    [self.lineJoinSegmentControl insertSegmentWithTitle:@"J_Round" atIndex:1 animated:false];
+    [self.lineJoinSegmentControl insertSegmentWithTitle:@"J_Bevel" atIndex:2 animated:false];
+    [self.lineJoinSegmentControl setSelectedSegmentIndex:self.customView.strokedPathType];
+    [self.view addSubview:self.self.lineJoinSegmentControl];
+
+    self.lineCapSegmentControl = [[UISegmentedControl alloc] initWithFrame:CGRectMake(10, 46, self.view.frame.size.width - 20, 20)];
+    [self.lineCapSegmentControl addTarget:self
+                                   action:@selector(segmentedControlValueDidChange:)
+                         forControlEvents:UIControlEventValueChanged];
+    [self.lineCapSegmentControl insertSegmentWithTitle:@"C_Butt" atIndex:0 animated:false];
+    [self.lineCapSegmentControl insertSegmentWithTitle:@"C_Round" atIndex:1 animated:false];
+    [self.lineCapSegmentControl insertSegmentWithTitle:@"C_Square" atIndex:2 animated:false];
+    [self.lineCapSegmentControl setSelectedSegmentIndex:self.customView.strokedPathType];
+    [self.view addSubview:self.self.lineCapSegmentControl];
+
+    self.drawModeSegmentControl = [[UISegmentedControl alloc] initWithFrame:CGRectMake(10, 68, self.view.frame.size.width - 20, 20)];
+    [self.drawModeSegmentControl addTarget:self
+                                    action:@selector(segmentedControlValueDidChange:)
+                          forControlEvents:UIControlEventValueChanged];
+    [self.drawModeSegmentControl insertSegmentWithTitle:@"Fill" atIndex:0 animated:false];
+    [self.drawModeSegmentControl insertSegmentWithTitle:@"Stroke" atIndex:1 animated:false];
+    [self.drawModeSegmentControl setSelectedSegmentIndex:self.customView.drawMode];
+    [self.view addSubview:self.self.drawModeSegmentControl];
 
     self.consoleView = [[UITableView alloc] initWithFrame:CGRectMake(0,
                                                                      self.view.bounds.size.height / 2 + 30,
@@ -194,8 +318,17 @@ void _Applier(void* info, const CGPathElement* element) {
     [self.view addSubview:self.consoleView];
 }
 
-- (void)pathSwitchValueChanged:(UISwitch*)theSwitch {
-    self.customView.drawStrokedPath = [theSwitch isOn];
+- (void)segmentedControlValueDidChange:(UISegmentedControl*)segment {
+    if (segment == self.lineJoinSegmentControl) {
+        self.customView.lineJoinType = (CGLineJoin)segment.selectedSegmentIndex;
+    } else if (segment == self.lineCapSegmentControl) {
+        self.customView.lineCapType = (CGLineCap)segment.selectedSegmentIndex;
+    } else if (segment == self.pathSegmentControl) {
+        self.customView.strokedPathType = segment.selectedSegmentIndex;
+    } else if (segment == self.drawModeSegmentControl) {
+        self.customView.drawMode = segment.selectedSegmentIndex;
+    }
+
     self.customView.highlightedPoint = CGPointMake(0, 0);
     [self.customView setNeedsDisplay];
 }

@@ -158,6 +158,7 @@ public:
     virtual void CGContextSetLineCap(DWORD lineCap);
     virtual void CGContextSetLineWidth(float width);
     virtual void CGContextSetShouldAntialias(DWORD shouldAntialias);
+    virtual void CGContextReplacePathWithStrokedPath(CGContextRef context);
     virtual void CGContextClip();
     virtual void CGContextGetClipBoundingBox(CGRect* ret);
     virtual void CGContextGetPathBoundingBox(CGRect* ret);
