@@ -152,7 +152,7 @@ public:
     virtual void CGContextDrawLayerAtPoint(CGPoint destPoint, CGLayerRef layer);
     virtual CGInterpolationQuality CGContextGetInterpolationQuality();
     virtual void CGContextSetInterpolationQuality(CGInterpolationQuality quality);
-    virtual void CGContextSetLineDash(float phase, float* lengths, DWORD count);
+    virtual void CGContextSetLineDash(float phase, const float* lengths, DWORD count);
     virtual void CGContextSetMiterLimit(float limit);
     virtual void CGContextSetLineJoin(DWORD lineJoin);
     virtual void CGContextSetLineCap(DWORD lineCap);

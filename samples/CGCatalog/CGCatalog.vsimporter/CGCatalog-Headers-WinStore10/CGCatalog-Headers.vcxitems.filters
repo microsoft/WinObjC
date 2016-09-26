@@ -2,10 +2,10 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="CGCatalog">
-      <UniqueIdentifier>{12C2F85C-4398-411D-8614-8BBD784B6671}</UniqueIdentifier>
+      <UniqueIdentifier>{1C2DD6E5-2462-49CD-8149-3454D23715EB}</UniqueIdentifier>
     </Filter>
     <Filter Include="CGCatalog\Samples">
-      <UniqueIdentifier>{A21B1485-64D9-405A-AFB2-9A57D078CC2F}</UniqueIdentifier>
+      <UniqueIdentifier>{0708C75A-E4E8-4D09-AC81-3FFCD47B63E9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

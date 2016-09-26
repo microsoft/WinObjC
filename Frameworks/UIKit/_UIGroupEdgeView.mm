@@ -92,8 +92,7 @@ static UIImage* findGroupBackgroundTexture(DWORD style, UIColor* color) {
         CGContextClosePath(ctx);
 
         CGContextSetLineWidth(ctx, 1.0f);
-        CGContextFillPath(ctx);
-        CGContextStrokePath(ctx);
+        CGContextDrawPath(ctx, kCGPathFillStroke);
 
         UIImage* uiImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();

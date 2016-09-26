@@ -2,25 +2,25 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{8f35a040-837f-4e8a-9d4d-9330b6b87e87}</UniqueIdentifier>
+      <UniqueIdentifier>{270d9c0e-63a9-4dfc-ba5d-912514a41a27}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{f69ade3e-f1dc-472b-9d4e-e26120af6184}</UniqueIdentifier>
+      <UniqueIdentifier>{867977e9-8c15-496f-a466-7b337b99fd99}</UniqueIdentifier>
     </Filter>
     <Filter Include="CGCatalog">
-      <UniqueIdentifier>{A40230AF-A60D-4963-83C0-F77FD0107797}</UniqueIdentifier>
+      <UniqueIdentifier>{0AB024E2-F359-4E03-8CAB-376809FB966D}</UniqueIdentifier>
     </Filter>
     <Filter Include="CGCatalog\Resources">
-      <UniqueIdentifier>{D20814C5-6BD9-4D30-98AE-A7005D9C50F2}</UniqueIdentifier>
+      <UniqueIdentifier>{9523F5F9-6260-4987-80EF-F5C30F32A1DF}</UniqueIdentifier>
     </Filter>
     <Filter Include="CGCatalog\Samples">
-      <UniqueIdentifier>{FBE9E107-FCFD-4593-AB19-4C27321BD656}</UniqueIdentifier>
+      <UniqueIdentifier>{5403C5AD-0772-4B42-A2F7-90EC4CB645DB}</UniqueIdentifier>
     </Filter>
     <Filter Include="CGCatalog\Supporting Files">
-      <UniqueIdentifier>{DB575B17-322F-43D7-8038-8F0D3F25FA65}</UniqueIdentifier>
+      <UniqueIdentifier>{85FB1B27-4FA9-4FD1-A242-955400128368}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{4F2ED9E1-F740-4210-A6F7-C67CB874B09E}</UniqueIdentifier>
+      <UniqueIdentifier>{590101F6-7C6F-4DE0-A19B-EA54ACB37030}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
