@@ -29,12 +29,13 @@ NSString* const NSDecimalNumberUnderflowException = @"NSDecimalNumberUnderflowEx
 NSString* const NSDecimalNumberDivideByZeroException = @"NSDecimalNumberDivideByZeroException";
 
 typedef NS_ENUM(NSInteger, _DecimalOperations) { _Addition, _Subtraction, _Multiplication, _Division };
+const int _MAX_EXP = 127;
 
-static NSDecimalNumber* _zero;
-static NSDecimalNumber* _one;
-static NSDecimalNumber* _notANumber;
-static NSDecimalNumber* _maxNumber;
-static NSDecimalNumber* _minNumber;
+static NSDecimalNumber* s_zero;
+static NSDecimalNumber* s_one;
+static NSDecimalNumber* s_notANumber;
+static NSDecimalNumber* s_maxNumber;
+static NSDecimalNumber* s_minNumber;
 
 @implementation NSDecimalNumber {
     NSDecimal _decimal;
@@ -69,9 +70,9 @@ static NSDecimalNumber* _minNumber;
 + (NSDecimalNumber*)one {
     static dispatch_once_t __oneOnce;
     dispatch_once(&__oneOnce, ^{
-        _one = [[NSDecimalNumber alloc] initWithMantissa:1 exponent:0 isNegative:NO];
+        s_one = [[NSDecimalNumber alloc] initWithMantissa:1 exponent:0 isNegative:NO];
     });
-    return _one;
+    return s_one;
 }
 
 /**
@@ -80,9 +81,9 @@ static NSDecimalNumber* _minNumber;
 + (NSDecimalNumber*)zero {
     static dispatch_once_t __zeroOnce;
     dispatch_once(&__zeroOnce, ^{
-        _zero = [[NSDecimalNumber alloc] initWithMantissa:0 exponent:0 isNegative:NO];
+        s_zero = [[NSDecimalNumber alloc] initWithMantissa:0 exponent:0 isNegative:NO];
     });
-    return _zero;
+    return s_zero;
 }
 
 /**
@@ -91,9 +92,9 @@ static NSDecimalNumber* _minNumber;
 + (NSDecimalNumber*)notANumber {
     static dispatch_once_t __notANumberOnce;
     dispatch_once(&__notANumberOnce, ^{
-        _notANumber = [[NSDecimalNumber alloc] initWithMantissa:0 exponent:0 isNegative:YES];
+        s_notANumber = [[NSDecimalNumber alloc] initWithMantissa:0 exponent:0 isNegative:YES];
     });
-    return _notANumber;
+    return s_notANumber;
 }
 
 /**
@@ -102,9 +103,10 @@ static NSDecimalNumber* _minNumber;
 + (NSDecimalNumber*)maximumDecimalNumber {
     static dispatch_once_t __maxNumberOnce;
     dispatch_once(&__maxNumberOnce, ^{
-        _maxNumber = [[NSDecimalNumber alloc] initWithMantissa:std::numeric_limits<unsigned long long>::max() exponent:127 isNegative:NO];
+        s_maxNumber =
+            [[NSDecimalNumber alloc] initWithMantissa:std::numeric_limits<unsigned long long>::max() exponent:_MAX_EXP isNegative:NO];
     });
-    return _maxNumber;
+    return s_maxNumber;
 }
 
 /**
@@ -113,9 +115,10 @@ static NSDecimalNumber* _minNumber;
 + (NSDecimalNumber*)minimumDecimalNumber {
     static dispatch_once_t __minNumberOnce;
     dispatch_once(&__minNumberOnce, ^{
-        _minNumber = [[NSDecimalNumber alloc] initWithMantissa:std::numeric_limits<unsigned long long>::max() exponent:127 isNegative:YES];
+        s_minNumber =
+            [[NSDecimalNumber alloc] initWithMantissa:std::numeric_limits<unsigned long long>::max() exponent:_MAX_EXP isNegative:YES];
     });
-    return _minNumber;
+    return s_minNumber;
 }
 
 /**
@@ -165,16 +168,19 @@ static NSDecimalNumber* _minNumber;
         res *= -1;
     }
 
-    if (res > 1.8e146) {
-        return [self initWithMantissa:ULONG_LONG_MAX exponent:0x7f isNegative:(value < 0)];
+    if (res == DBL_MIN) {
+        return [self initWithMantissa:0 exponent:0 isNegative:0];
     }
-    // Attempt best for smaller numbers (this will be compacted later on)
+
+    if (res > 1.8e146) {
+        return [self initWithMantissa:ULLONG_MAX exponent:0x7f isNegative:(value < 0)];
+    }
+    // Attempt best for smaller numbers (this is being compacted via NSDecimalCompact in initWithMantissa)
     while ((res != 0) && (res < static_cast<double>(ULLONG_MAX))) {
         res *= 10;
         exp--;
     }
 
-    // refit
     while (res > static_cast<double>(ULLONG_MAX)) {
         res /= 10.0;
         exp++;
@@ -377,12 +383,12 @@ static NSDecimalNumber* _minNumber;
         case _Subtraction:
             error = NSDecimalSubtract(&result, &a, &b, [behavior roundingMode]);
             break;
-        case _Multiplication:
-            error = NSDecimalMultiply(&result, &a, &b, [behavior roundingMode]);
-            break;
-        case _Division:
-            error = NSDecimalDivide(&result, &a, &b, [behavior roundingMode]);
-            break;
+        // case _Multiplication:
+        //    error = NSDecimalMultiply(&result, &a, &b, [behavior roundingMode]);
+        //   break;
+        //  case _Division:
+        //  error = NSDecimalDivide(&result, &a, &b, [behavior roundingMode]);
+        // break;
         default:
             return nil;
     }
@@ -391,36 +397,37 @@ static NSDecimalNumber* _minNumber;
         return [behavior exceptionDuringOperation:_cmd error:error leftOperand:self rightOperand:decimalNumber];
     }
 
-    NSDecimalRound(&result, &result, [behavior scale], [behavior roundingMode]);
+    // TODO: Implement NSDecimalRound
+    // NSDecimalRound(&result, &result, [behavior scale], [behavior roundingMode]);
     return [NSDecimalNumber decimalNumberWithDecimal:result];
 }
 
-/** 
- @Status Caveat 
+/**
+ @Status Caveat
  @Notes NSDecimalNumberBehaviors roundingMode is not supported.
 */
 - (NSDecimalNumber*)decimalNumberByAdding:(NSDecimalNumber*)decimalNumber withBehavior:(id<NSDecimalNumberBehaviors>)behavior {
     return [self _decimalOperation:_Addition decimalNumber:decimalNumber withBehavior:behavior];
 }
 
-/** 
- @Status Caveat 
+/**
+ @Status Caveat
  @Notes NSDecimalNumberBehaviors roundingMode is not supported.
 */
 - (NSDecimalNumber*)decimalNumberByAdding:(NSDecimalNumber*)decimalNumber {
     return [self decimalNumberByAdding:decimalNumber withBehavior:[NSDecimalNumber defaultBehavior]];
 }
 
-/** 
- @Status Caveat 
+/**
+ @Status Caveat
  @Notes NSDecimalNumberBehaviors roundingMode is not supported.
 */
 - (NSDecimalNumber*)decimalNumberBySubtracting:(NSDecimalNumber*)decimalNumber withBehavior:(id<NSDecimalNumberBehaviors>)behavior {
     return [self _decimalOperation:_Subtraction decimalNumber:decimalNumber withBehavior:behavior];
 }
 
-/** 
- @Status Caveat 
+/**
+ @Status Caveat
  @Notes NSDecimalNumberBehaviors roundingMode is not supported.
 */
 - (NSDecimalNumber*)decimalNumberBySubtracting:(NSDecimalNumber*)decimalNumber {

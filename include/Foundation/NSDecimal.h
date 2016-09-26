@@ -27,7 +27,7 @@ typedef NSUInteger NSCalculationError;
 #define NSDecimalMaxSize (8)
 #define NSDecimalNoScale SHRT_MAX
 
-typedef struct {
+typedef struct NSDecimal {
     signed int _exponent : 8;
     unsigned int _length : 4;
     unsigned int _isNegative : 1;

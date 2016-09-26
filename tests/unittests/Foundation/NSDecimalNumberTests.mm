@@ -16,11 +16,12 @@
 
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
+#import <cmath>
 
-#define ASSERT_ARRAY_EQUAL(a, b)                     \
+#define EXPECT_ARRAY_EQUAL(a, b)                     \
     do {                                             \
         for (int i = 0; i < NSDecimalMaxSize; ++i) { \
-            ASSERT_EQ(a[i], b[i]);                   \
+            EXPECT_EQ(a[i], b[i]);                   \
         }                                            \
     } while (0, 0)
 
@@ -34,6 +35,56 @@ static void testAddition(NSDecimalNumber* x, NSDecimalNumber* y, NSDecimalNumber
     EXPECT_OBJCEQ(expected, result);
 }
 
+#define VALIDATE(decimal, len, exp, isNegative, mantissa) \
+    EXPECT_EQ(len, decimal._length);                      \
+    EXPECT_EQ(exp, decimal._exponent);                    \
+    EXPECT_EQ(isNegative, decimal._isNegative);           \
+    EXPECT_ARRAY_EQUAL(mantissa, decimal._mantissa);
+
+TEST(NSDecimalNumber, Limits) {
+    // SCHAR_MIN
+    unsigned short mantissaSCHAR_MIN[] = { 128, 0, 0, 0, 0, 0, 0, 0, 0 };
+    NSDecimalNumber* dNumber = [[[NSDecimalNumber alloc] initWithShort:SCHAR_MIN] autorelease];
+    NSDecimal decimal = [dNumber decimalValue];
+    VALIDATE(decimal, 1, 0, 1, mantissaSCHAR_MIN);
+
+    // SCHAR_MAX
+    unsigned short mantissaSCHAR_MAX[] = { 127, 0, 0, 0, 0, 0, 0, 0, 0 };
+    dNumber = [[[NSDecimalNumber alloc] initWithShort:SCHAR_MAX] autorelease];
+    decimal = [dNumber decimalValue];
+    VALIDATE(decimal, 1, 0, 0, mantissaSCHAR_MAX);
+
+    // LLONG_MIN
+    unsigned short mantissaLLMin[] = { 0, 0, 0, 32768, 0, 0, 0, 0, 0 };
+    dNumber = [[[NSDecimalNumber alloc] initWithLongLong:LLONG_MIN] autorelease];
+    decimal = [dNumber decimalValue];
+    VALIDATE(decimal, 4, 0, 1, mantissaLLMin);
+
+    // LLONG_MAX
+    unsigned short mantissaLLMax[] = { 65535, 65535, 65535, 32767, 0, 0, 0, 0, 0 };
+    dNumber = [[[NSDecimalNumber alloc] initWithLongLong:LLONG_MAX] autorelease];
+    decimal = [dNumber decimalValue];
+    VALIDATE(decimal, 4, 0, 0, mantissaLLMax);
+
+    // DBL_MIN
+    unsigned short mantissaDBLMin[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    dNumber = [[[NSDecimalNumber alloc] initWithDouble:DBL_MIN] autorelease];
+    decimal = [dNumber decimalValue];
+    VALIDATE(decimal, 0, 0, 0, mantissaDBLMin);
+
+    // DBL_MAX
+    unsigned short mantissaDBLMax[] = { 65535, 65535, 65535, 65535, 0, 0, 0, 0, 0 };
+    dNumber = [[[NSDecimalNumber alloc] initWithDouble:DBL_MAX] autorelease];
+    decimal = [dNumber decimalValue];
+    VALIDATE(decimal, 4, 127, 0, mantissaDBLMax);
+
+    // ULLONG_MAX
+    unsigned short mantissaULLLongMax[] = { 65535, 65535, 65535, 65535, 0, 0, 0, 0, 0 };
+    dNumber = [[[NSDecimalNumber alloc] initWithUnsignedLongLong:ULLONG_MAX] autorelease];
+    decimal = [dNumber decimalValue];
+    VALIDATE(decimal, 4, 0, 0, mantissaULLLongMax);
+}
+
 TEST(NSDecimalNumber, InitWithLongLong) {
     unsigned short mantissa[] = { 21495, 42467, 50331, 32, 0, 0, 0, 0, 0 };
     NSDecimalNumber* dNumber = [[[NSDecimalNumber alloc] initWithLongLong:9223372036854775] autorelease];
@@ -43,7 +94,7 @@ TEST(NSDecimalNumber, InitWithLongLong) {
     ASSERT_EQ(0, decimal._exponent);
     ASSERT_EQ(0, decimal._isNegative);
 
-    ASSERT_ARRAY_EQUAL(mantissa, decimal._mantissa);
+    EXPECT_ARRAY_EQUAL(mantissa, decimal._mantissa);
 
     dNumber = [[[NSDecimalNumber alloc] initWithLongLong:-9223372036854775] autorelease];
     decimal = [dNumber decimalValue];
@@ -52,7 +103,7 @@ TEST(NSDecimalNumber, InitWithLongLong) {
     ASSERT_EQ(0, decimal._exponent);
     ASSERT_EQ(1, decimal._isNegative);
 
-    ASSERT_ARRAY_EQUAL(mantissa, decimal._mantissa);
+    EXPECT_ARRAY_EQUAL(mantissa, decimal._mantissa);
 }
 
 TEST(NSDecimalNumber, InitWithUnsignedLongLong) {
@@ -64,7 +115,7 @@ TEST(NSDecimalNumber, InitWithUnsignedLongLong) {
     ASSERT_EQ(0, decimal._exponent);
     ASSERT_EQ(0, decimal._isNegative);
 
-    ASSERT_ARRAY_EQUAL(mantissa, decimal._mantissa);
+    EXPECT_ARRAY_EQUAL(mantissa, decimal._mantissa);
 }
 
 TEST(NSDecimalNumber, InitWithDouble) {
@@ -76,7 +127,7 @@ TEST(NSDecimalNumber, InitWithDouble) {
     EXPECT_EQ(18, decimal._exponent);
     EXPECT_EQ(0, decimal._isNegative);
 
-    ASSERT_ARRAY_EQUAL(mantissa, decimal._mantissa);
+    EXPECT_ARRAY_EQUAL(mantissa, decimal._mantissa);
 
     //
     dNumber = [[[NSDecimalNumber alloc] initWithDouble:9223372534876e-24] autorelease];
@@ -85,7 +136,7 @@ TEST(NSDecimalNumber, InitWithDouble) {
     EXPECT_EQ(-30, decimal._exponent);
     EXPECT_EQ(0, decimal._isNegative);
 
-    ASSERT_ARRAY_EQUAL(mantissa, decimal._mantissa);
+    EXPECT_ARRAY_EQUAL(mantissa, decimal._mantissa);
 
     //
     unsigned short ma[] = { 63488, 50716, 31416, 35167, 0, 0, 0, 0, 0 };
@@ -96,7 +147,7 @@ TEST(NSDecimalNumber, InitWithDouble) {
     EXPECT_EQ(-16, decimal._exponent);
     EXPECT_EQ(0, decimal._isNegative);
 
-    ASSERT_ARRAY_EQUAL(ma, decimal._mantissa);
+    EXPECT_ARRAY_EQUAL(ma, decimal._mantissa);
 }
 
 TEST(NSDecimalNumber, DecimalNotANumber) {
@@ -128,7 +179,7 @@ TEST(NSDecimalNumber, Subtraction1) {
     NSDecimal result = { 0 };
 
     NSDecimalSubtract(&result, &left, &right, 0);
-    ASSERT_ARRAY_EQUAL(mantissa, result._mantissa);
+    EXPECT_ARRAY_EQUAL(mantissa, result._mantissa);
     EXPECT_EQ(4, result._length);
     EXPECT_EQ(1, result._isNegative);
     EXPECT_EQ(0, result._exponent);
@@ -175,7 +226,7 @@ TEST(NSDecimalNumber, Subtraction2) {
     right = [[[[NSDecimalNumber alloc] initWithDouble:-1e3] autorelease] decimalValue];
 
     NSDecimalSubtract(&result, &left, &right, 0);
-    ASSERT_ARRAY_EQUAL(mantissa, result._mantissa);
+    EXPECT_ARRAY_EQUAL(mantissa, result._mantissa);
     EXPECT_EQ(5, result._length);
     EXPECT_EQ(0, result._isNegative);
     EXPECT_EQ(-18, result._exponent);
@@ -204,7 +255,7 @@ TEST(NSDecimalNumber, Subtraction2) {
 }
 
 TEST(NSDecimalNumber, addition) {
-    // Note: Since Subtraction tests addition, since NSDecimalSubtract gets converted to NSDecimalAdd
+    // Note: Subtraction tests addition, since NSDecimalSubtract gets converted to NSDecimalAdd
     unsigned short mantissa[NSDecimalMaxSize] = { 5272, 10, 0, 0, 0, 0, 0, 0 };
     NSDecimalNumber* dNumber = [[[NSDecimalNumber alloc] initWithLongLong:6560451.0] autorelease];
     NSDecimal decimal1 = [dNumber decimalValue];
@@ -221,7 +272,7 @@ TEST(NSDecimalNumber, addition) {
     ASSERT_EQ(1, result._exponent);
     ASSERT_EQ(0, result._isNegative);
 
-    ASSERT_ARRAY_EQUAL(mantissa, result._mantissa);
+    EXPECT_ARRAY_EQUAL(mantissa, result._mantissa);
 
     testAddition([[[NSDecimalNumber alloc] initWithDouble:19605] autorelease],
                  [[[NSDecimalNumber alloc] initWithDouble:6536] autorelease],
@@ -272,4 +323,8 @@ TEST(NSDecimalNumber, NSDecimalCompare) {
     right = [[[[NSDecimalNumber alloc] initWithLongLong:3] autorelease] decimalValue];
     EXPECT_EQ(NSOrderedAscending, NSDecimalCompare(&left, &right));
     EXPECT_EQ(NSOrderedDescending, NSDecimalCompare(&right, &left));
+}
+
+TEST(NSDecimalNumber, NSNumberCompare) {
+    EXPECT_OBJCEQ([NSNumber numberWithDouble:55.0], [NSDecimalNumber numberWithDouble:55.0]);
 }

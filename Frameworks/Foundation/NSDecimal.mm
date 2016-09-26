@@ -17,6 +17,7 @@
 #import <Starboard.h>
 #import <StubReturn.h>
 #import <Foundation/NSDecimal.h>
+#import <algorithm>
 
 #define IS_NEGATIVE(decimal) (decimal)->_isNegative
 
@@ -44,7 +45,7 @@ NSDecimalCompact(decimal);
         return NSCalculationOverflow;                                                \
     }
 
-#define REMINDER(decimal) (decimal->_remainder)
+const int _MAX_EXP = 127;
 
 typedef struct {
     NSDecimal decimal;
@@ -78,7 +79,7 @@ BOOL NSDecimalIsNotANumber(const NSDecimal* dcm) {
     return !dcm->_length && IS_NEGATIVE(dcm);
 }
 
-void _InternalDecimalCopy(NSDecimal* destination, NSDecimalInternal* source) {
+static void _InternalDecimalCopy(NSDecimal* destination, NSDecimalInternal* source) {
     if (!source || !destination) {
         return;
     }
@@ -86,11 +87,13 @@ void _InternalDecimalCopy(NSDecimal* destination, NSDecimalInternal* source) {
     memcpy(destination->_mantissa, source->_mantissa, NSDecimalMaxSize * sizeof(unsigned short));
 }
 
-NSCalculationError _subtraction(NSDecimal* result, const NSDecimal* left, const NSDecimal* right) {
-    unsigned int commonLength = (left->_length < right->_length) ? left->_length : right->_length;
+static NSCalculationError _subtraction(NSDecimal* result, const NSDecimal* left, const NSDecimal* right) {
+    // Note: All inputs have been normalized via NSDecimalNormalize
+    unsigned int commonLength = std::min(left->_length, right->_length);
 
     unsigned int overflow = 1;
 
+    // subtract the numbers in the same size
     for (int index = 0; index < commonLength; index++) {
         overflow += USHRT_MAX + ((left->_mantissa)[index] - (right->_mantissa)[index]);
         (result->_mantissa)[index] = overflow;
@@ -99,6 +102,7 @@ NSCalculationError _subtraction(NSDecimal* result, const NSDecimal* left, const 
 
     unsigned int length = right->_length;
 
+    // handle the rest of the length.
     if (right->_length < left->_length) {
         while (length < left->_length && overflow == 0) {
             overflow = USHRT_MAX + (left->_mantissa)[length];
@@ -116,7 +120,8 @@ NSCalculationError _subtraction(NSDecimal* result, const NSDecimal* left, const 
     return NSCalculationNoError;
 }
 
-NSCalculationError _mantissaAddition(NSDecimalInternal* result, NSDecimalInternal* augend, unsigned short addend) {
+static NSCalculationError _mantissaAddition(NSDecimalInternal* result, NSDecimalInternal* augend, unsigned short addend) {
+    // Note: All inputs have been normalized via NSDecimalNormalize
     for (int index = 0; index < augend->decimal._length; ++index) {
         unsigned int res = static_cast<unsigned int>((augend->_mantissa)[index]) + static_cast<unsigned int>(addend);
         (result->_mantissa)[index] = res;
@@ -149,7 +154,8 @@ NSCalculationError NSDecimalMultiply(NSDecimal* result,
     return StubReturn();
 }
 
-NSCalculationError _mantissaMultiplication(NSDecimalInternal* result, NSDecimalInternal* multiplicand, unsigned short multiplier) {
+static NSCalculationError _mantissaMultiplication(NSDecimalInternal* result, NSDecimalInternal* multiplicand, unsigned short multiplier) {
+    // Note: All inputs have been normalized via NSDecimalNormalize
     // This will be used for by hand style multiplication
     if (multiplier == 0 || multiplicand->decimal._length == 0) {
         result->decimal._length = 0;
@@ -181,7 +187,7 @@ NSCalculationError _mantissaMultiplication(NSDecimalInternal* result, NSDecimalI
     return NSCalculationNoError;
 }
 
-unsigned int _obtainLength(unsigned short* mantissa, int length) {
+static unsigned int _obtainLength(unsigned short* mantissa, int length) {
     unsigned int result = 0;
     for (int i = length - 1; i >= 0; --i) {
         result = i + 1;
@@ -205,7 +211,8 @@ NSCalculationError NSDecimalDivide(NSDecimal* result,
     return StubReturn();
 }
 
-NSCalculationError _mantissaDivision(NSDecimalInternal* result, NSDecimalInternal* dividend, unsigned short divisor) {
+static NSCalculationError _mantissaDivision(NSDecimalInternal* result, NSDecimalInternal* dividend, unsigned short divisor) {
+    // Note: All inputs have been normalized via NSDecimalNormalize
     if (!divisor) {
         INVALIDATE_DECIMAL((&result->decimal));
         return NSCalculationDivideByZero;
@@ -222,7 +229,8 @@ NSCalculationError _mantissaDivision(NSDecimalInternal* result, NSDecimalInterna
     return NSCalculationNoError;
 }
 
-NSCalculationError compactMantissa(NSDecimalInternal* iDecimal, NSRoundingMode roundingMode) {
+static NSCalculationError _compactMantissa(NSDecimalInternal* iDecimal, NSRoundingMode roundingMode) {
+    // Note: All inputs have been normalized via NSDecimalNormalize
     // divide by 10 until we can compact it.
     int exponent = 0;
 
@@ -302,13 +310,13 @@ NSComparisonResult NSDecimalCompare(const NSDecimal* leftOperand, const NSDecima
     return NSOrderedSame;
 }
 
-/** 
- @Status Caveat 
+/**
+ @Status Caveat
  @Notes roundingMode is not supported.
 */
 NSCalculationError NSDecimalNormalize(NSDecimal* number1, NSDecimal* number2, NSRoundingMode roundingMode) {
     THROW_NS_IF_FALSE(E_INVALIDARG,
-                      (number1 == NULL) && (number2 == NULL) && NSDecimalIsNotANumber(number1) && NSDecimalIsNotANumber(number2));
+                      (number1 != NULL) && (number2 != NULL) && !NSDecimalIsNotANumber(number1) && !NSDecimalIsNotANumber(number2));
 
     if (number1->_exponent == number2->_exponent) {
         return NSCalculationNoError;
@@ -375,7 +383,7 @@ void NSDecimalCompact(NSDecimal* number) {
     exponent--;
     _mantissaAddition(&internalResult, &internalResult, internalResult._remainder);
 
-    while (exponent > 127) {
+    while (exponent > _MAX_EXP) {
         // refit
         _mantissaMultiplication(&internalResult, &internalResult, 10);
         exponent--;
@@ -387,7 +395,8 @@ void NSDecimalCompact(NSDecimal* number) {
     number->_isCompact = 1;
 }
 
-NSComparisonResult _compareMantissa(NSDecimal* left, NSDecimal* right) {
+static NSComparisonResult _compareMantissa(NSDecimal* left, NSDecimal* right) {
+    // Note: All inputs have been normalized via NSDecimalNormalize
     if (left->_length > right->_length) {
         return NSOrderedDescending;
     }
@@ -410,7 +419,11 @@ NSComparisonResult _compareMantissa(NSDecimal* left, NSDecimal* right) {
     return NSOrderedSame;
 }
 
-NSCalculationError _handleDifferenceOfSignAddition(NSDecimal* result, NSDecimal* left, NSDecimal* right, NSRoundingMode roundingMode) {
+static NSCalculationError _handleDifferenceOfSignAddition(NSDecimal* result,
+                                                          NSDecimal* left,
+                                                          NSDecimal* right,
+                                                          NSRoundingMode roundingMode) {
+    // Note: All inputs have been normalized via NSDecimalNormalize
     // Since these are normalized and to account for unsigned subtraction we have to do mantissa based comparison.
 
     NSComparisonResult res = _compareMantissa(left, right);
@@ -443,8 +456,8 @@ NSCalculationError _handleDifferenceOfSignAddition(NSDecimal* result, NSDecimal*
     return NSCalculationNoError;
 }
 
-/** 
- @Status Caveat 
+/**
+ @Status Caveat
  @Notes roundingMode is not supported.
 */
 NSCalculationError NSDecimalAdd(NSDecimal* result,
@@ -530,7 +543,7 @@ NSCalculationError NSDecimalAdd(NSDecimal* result,
         internalResult._remainder = 0;
         internalResult._extendedLen = NSDecimalMaxSize + 1;
 
-        NSCalculationError error = compactMantissa(&internalResult, roundingMode);
+        NSCalculationError error = _compactMantissa(&internalResult, roundingMode);
         if (error != NSCalculationNoError) {
             INVALIDATE_DECIMAL(result);
             return error;
@@ -545,8 +558,8 @@ NSCalculationError NSDecimalAdd(NSDecimal* result,
     return _handleDifferenceOfSignAddition(result, &left, &right, roundingMode);
 }
 
-/** 
- @Status Caveat 
+/**
+ @Status Caveat
  @Notes roundingMode is not supported.
 */
 NSCalculationError NSDecimalSubtract(NSDecimal* result,
