@@ -42,7 +42,7 @@ static _CTFrame* _createFrame(_CTFramesetter* framesetter, CGRect frameSize, CFR
     }
     _CTFrame* ret = _DWriteGetFrame(typesetter, range, frameSize);
     ret->_framesetter = framesetter;
-    return [ret retain];
+    return ret;
 }
 
 /**
@@ -63,7 +63,7 @@ CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange string
 
     _CTFrame* ret = _createFrame(static_cast<_CTFramesetter*>(framesetter), frameSize, stringRange);
 
-    return static_cast<CTFrameRef>(ret);
+    return static_cast<CTFrameRef>([ret retain]);
 }
 
 /**
@@ -90,7 +90,6 @@ CGSize CTFramesetterSuggestFrameSizeWithConstraints(
         *fitRange = CTFrameGetVisibleStringRange(static_cast<CTFrameRef>(frame));
     }
 
-    [frame release];
     return ret;
 }
 
