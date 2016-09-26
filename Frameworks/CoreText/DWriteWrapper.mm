@@ -463,8 +463,11 @@ static _CTFrame* _DWriteGetFrame(_CTTypesetter* ts, CFRange range, CGRect frameS
 
         float xPos;
         float yPos;
-        line->_ascent = FLT_MIN;
-        line->_descent = FLT_MIN;
+
+        // These are created lazily in the first call to CTLineGetTypographicBounds, so initialize with impossible values
+        line->_ascent = -FLT_MAX;
+        line->_descent = -FLT_MAX;
+        line->_leading = -FLT_MAX;
 
         // Glyph runs that have the same _baselineOriginY value are part of the the same Line.
         while ((j < numOfGlyphRuns) && (glyphRunDetails._baselineOriginY[i] == glyphRunDetails._baselineOriginY[j])) {

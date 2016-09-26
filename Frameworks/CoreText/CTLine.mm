@@ -293,8 +293,8 @@ double CTLineGetTypographicBounds(CTLineRef lineRef, CGFloat* ascent, CGFloat* d
         return 0;
     }
 
-    // Created with impossible values FLT_MIN which signify they need to be populated
-    if (line->_ascent == FLT_MIN || line->_descent == FLT_MIN) {
+    // Created with impossible values -FLT_MAX which signify they need to be populated
+    if (line->_ascent == -FLT_MAX || line->_descent == -FLT_MAX || line->_leading == -FLT_MAX) {
         for (_CTRun* run in static_cast<id<NSFastEnumeration>>(line->_runs)) {
             DWRITE_GLYPH_METRICS glyphMetrics[run->_dwriteGlyphRun.glyphCount];
             THROW_IF_FAILED(run->_dwriteGlyphRun.fontFace->GetDesignGlyphMetrics(run->_dwriteGlyphRun.glyphIndices,
