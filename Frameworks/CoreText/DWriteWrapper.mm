@@ -191,20 +191,22 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(_CTTypesetter* ts, CFR
     NSDictionary* attribs = [ts->_attributedString attributesAtIndex:range.location effectiveRange:NULL];
 
     CGFloat fontSize = kCTFontSystemFontSize;
-    std::vector<wchar_t> familyName;
     DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_REGULAR;
     DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
     DWRITE_FONT_STRETCH stretch = DWRITE_FONT_STRETCH_NORMAL;
     CTFontRef font = static_cast<CTFontRef>([attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
+    std::vector<wchar_t> familyName;
+    CFStringRef fontFamilyName = kCTFontDefaultFontName;
+
     if (font) {
         fontSize = CTFontGetSize(font);
         CFStringRef fontFullName = CTFontCopyName(font, kCTFontFullNameKey);
         CFAutorelease(fontFullName);
-        CFStringRef fontFamilyName;
         __InitDWriteFontPropertiesFromName(fontFullName, &weight, &stretch, &style, &fontFamilyName);
-        familyName.resize(CFStringGetLength(fontFamilyName) + 1, 0);
-        CFStringGetCharacters(fontFamilyName, CFRangeMake(0, familyName.size()), reinterpret_cast<UniChar*>(familyName.data()));
     }
+
+    familyName.resize(CFStringGetLength(fontFamilyName) + 1, 0);
+    CFStringGetCharacters(fontFamilyName, CFRangeMake(0, familyName.size()), reinterpret_cast<UniChar*>(familyName.data()));
 
     ComPtr<IDWriteTextFormat> textFormat;
     THROW_IF_FAILED(

@@ -27,7 +27,7 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CTFontRef, CTFontGetTypeID, UIFont, UICTFont)
 }
 
 + (UIFont*)fontWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)fontSize {
-    return [(__bridge UIFont*)CTFontCreateWithFontDescriptor((__bridge CTFontDescriptorRef)descriptor, size, nullptr) autorelease];
+    return [(__bridge UIFont*)CTFontCreateWithFontDescriptor((__bridge CTFontDescriptorRef)descriptor, fontSize, nullptr) autorelease];
 }
 
 - (NSString*)fontName {

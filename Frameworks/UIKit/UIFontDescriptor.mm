@@ -188,6 +188,7 @@ BASE_CLASS_REQUIRED_IMPLS(UIFontDescriptor, UIFontDescriptorPrototype, CTFontDes
     if (data) {
         CGAffineTransform ret;
         [data getBytes:reinterpret_cast<byte*>(&ret) length:sizeof(CGAffineTransform)];
+        return ret;
     } else {
         // Identity matrix seems like a decent default return
         return CGAffineTransformIdentity;

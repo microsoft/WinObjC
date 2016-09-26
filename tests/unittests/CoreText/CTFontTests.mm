@@ -403,7 +403,6 @@ TEST(CTFont, GetAdvancesForGlyphs) {
     CGSize horAdvances[count];
     CGSize verAdvances[count];
 
-    // #if !TARGET_OS_WIN32
     CGFloat expectedWidths[count] = { 5.25391f, 5.57129f, 4.59961f, 5.57129f, 5.37109f, 4.01367f, 5.01953f, 5.57129f, 3.06641f,
                                       3.66699f, 5.04395f, 3.20312f, 8.30078f, 3.67188f, 7.06055f, 5.24414f, 5.24414f, 5.24414f,
                                       5.24414f, 5.24414f, 5.24414f, 6.00098f, 5.50293f, 5.24414f, 3.0127f,  3.67188f };
