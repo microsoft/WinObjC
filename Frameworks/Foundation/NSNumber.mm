@@ -520,7 +520,7 @@ static NSComparisonResult _NSNumberCompareUnsignedSigned(unsigned long long unsi
  @Status Interoperable
 */
 - (NSDecimal)decimalValue {
-    return [[[[NSDecimalNumber alloc] initWithDouble:[self doubleValue]] autorelease] decimalValue];
+    return [[NSDecimalNumber numberWithDouble:[self doubleValue]] decimalValue];
 }
 
 /**

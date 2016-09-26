@@ -289,18 +289,20 @@ TEST(NSDecimalNumber, NSDecimalCompare) {
 
     NSDecimal left = { 0 };
     unsigned long long value = 10;
-    memcpy(&left._mantissa, &value, NSDecimalMaxSize * sizeof(short));
+    memcpy(&left._mantissa, &value, NSDecimalMaxSize * sizeof(unsigned short));
     left._exponent = 4;
     left._length = 1;
     EXPECT_EQ(NSOrderedAscending, NSDecimalCompare(&left, &right));
 
     //
     right = [[[[NSDecimalNumber alloc] initWithUnsignedLongLong:9223372534876] autorelease] decimalValue];
+    NSDecimal right2 = [[NSDecimalNumber numberWithUnsignedLongLong:9223372534876] decimalValue];
 
     left = [[[[NSDecimalNumber alloc] initWithInteger:-1] autorelease] decimalValue];
 
     EXPECT_EQ(NSOrderedAscending, NSDecimalCompare(&left, &right));
     EXPECT_EQ(NSOrderedSame, NSDecimalCompare(&right, &right));
+    EXPECT_EQ(NSOrderedSame, NSDecimalCompare(&right, &right2));
     EXPECT_EQ(NSOrderedSame, NSDecimalCompare(&left, &left));
 
     //

@@ -394,7 +394,10 @@ static NSDecimalNumber* s_minNumber;
     }
 
     if (error != NSCalculationNoError) {
-        return [behavior exceptionDuringOperation:_cmd error:error leftOperand:self rightOperand:decimalNumber];
+        NSDecimalNumber* result = [behavior exceptionDuringOperation:_cmd error:error leftOperand:self rightOperand:decimalNumber];
+        if (result != nil) {
+            return result;
+        }
     }
 
     // TODO: Implement NSDecimalRound

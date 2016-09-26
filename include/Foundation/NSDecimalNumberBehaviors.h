@@ -16,6 +16,7 @@
 #pragma once
 
 #import <Foundation/FoundationExport.h>
+#import <Foundation/NSCoder.h>
 #import <Foundation/NSObject.h>
 
 @class NSDecimalNumber;

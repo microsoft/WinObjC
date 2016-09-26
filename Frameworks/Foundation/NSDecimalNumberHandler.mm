@@ -16,6 +16,9 @@
 
 #import <StubReturn.h>
 #import <Foundation/NSDecimalNumberHandler.h>
+#import <Foundation/NSNumber.h>
+#import <Foundation/NSDecimal.h>
+#import <Foundation/NSDecimalNumber.h>
 
 @implementation NSDecimalNumberHandler {
     NSRoundingMode _roundingMode;
@@ -78,20 +81,30 @@
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (self == [self init]) {
+        _roundingMode = [[decoder decodeObjectOfClass:[NSNumber class] forKey:@"NS.roundingMode"] unsignedIntegerValue];
+        _scale = [[decoder decodeObjectOfClass:[NSNumber class] forKey:@"NS.scale"] shortValue];
+        _raiseOnExactness = [decoder decodeBoolForKey:@"NS.raiseOnExactness"];
+        _raiseOnOverflow = [decoder decodeBoolForKey:@"NS.raiseOnOverflow"];
+        _raiseOnUnderflow = [decoder decodeBoolForKey:@"NS.raiseOnUnderflow"];
+        _raiseOnDivideByZero = [decoder decodeBoolForKey:@"NS.raiseOnDivideByZero"];
+    }
+    return self;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)encoder {
-    UNIMPLEMENTED();
+    [encoder encodeObject:[NSNumber numberWithUnsignedInteger:_roundingMode] forKey:@"NS.roundingMode"];
+    [encoder encodeObject:[NSNumber numberWithShort:_scale] forKey:@"NS.scale"];
+    [encoder encodeBool:_raiseOnExactness forKey:@"NS.raiseOnExactness"];
+    [encoder encodeBool:_raiseOnOverflow forKey:@"NS.raiseOnOverflow"];
+    [encoder encodeBool:_raiseOnUnderflow forKey:@"NS.raiseOnUnderflow"];
+    [encoder encodeBool:_raiseOnDivideByZero forKey:@"NS.raiseOnDivideByZero"];
 }
 
 /**
@@ -109,15 +122,37 @@
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSDecimalNumber*)exceptionDuringOperation:(SEL)method
                                        error:(NSCalculationError)error
                                  leftOperand:(NSDecimalNumber*)leftOperand
                                 rightOperand:(NSDecimalNumber*)rightOperand {
-    UNIMPLEMENTED();
-    return StubReturn();
+    switch (error) {
+        case NSCalculationUnderflow:
+            if (_raiseOnUnderflow) {
+                [NSException raise:NSDecimalNumberUnderflowException format:@"NSDecimalNumber underflow"];
+            }
+            return [NSDecimalNumber notANumber];
+        case NSCalculationOverflow:
+            if (_raiseOnOverflow) {
+                [NSException raise:NSDecimalNumberOverflowException format:@"NSDecimalNumber overflow"];
+            }
+            return [NSDecimalNumber notANumber];
+
+        case NSCalculationLossOfPrecision:
+            if (_raiseOnExactness) {
+                [NSException raise:NSDecimalNumberExactnessException format:@"NSDecimalNumber exactness exception"];
+            }
+            return nil;
+        case NSCalculationDivideByZero:
+            if (_raiseOnDivideByZero) {
+                [NSException raise:NSDecimalNumberDivideByZeroException format:@"Attempt to divide by 0"];
+            }
+            return [NSDecimalNumber notANumber];
+    }
+
+    return nil;
 }
 
 @end
