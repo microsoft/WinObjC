@@ -56,9 +56,8 @@ static ComPtr<IDWriteFactory> __GetDWriteFactoryInstance() {
 // Private helper for converting a DWRITE_FONT_METRIC unit to a CTFont API unit
 // DWRITE_FONT_METRICS measures its metrics in 'design units'
 // CTFont APIs generally return in terms of point size
-// pointPerDesignUnit is the ratio of (pt/em) / (design units/em)
-CGFloat _CoreTextScaleMetric(CGFloat metric, CGFloat pointPerDesignUnit) {
-    return metric * pointPerDesignUnit;
+CGFloat _CoreTextScaleMetric(CGFloat metric, CGFloat pointSize, CGFloat designUnitsPerEm) {
+    return metric * pointSize / designUnitsPerEm;
 }
 
 static DWRITE_TEXT_ALIGNMENT __CoreTextAlignmentToDwrite(CTTextAlignment alignment) {
