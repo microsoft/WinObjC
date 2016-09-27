@@ -139,6 +139,10 @@ CTFontDescriptorRef CTFontDescriptorCreateWithAttributes(CFDictionaryRef attribu
  @Notes
 */
 CTFontDescriptorRef CTFontDescriptorCreateCopyWithAttributes(CTFontDescriptorRef original, CFDictionaryRef attributes) {
+    if (!original) {
+        return nullptr;
+    }
+
     // New attributes override old ones
     CFMutableDictionaryRef newAttributes = CFDictionaryCreateMutableCopy(kCFAllocatorDefault, 0, original->_attributes);
     CFAutorelease(newAttributes);
@@ -197,6 +201,9 @@ CTFontDescriptorRef CTFontDescriptorCreateMatchingFontDescriptor(CTFontDescripto
  @Notes
 */
 CFDictionaryRef CTFontDescriptorCopyAttributes(CTFontDescriptorRef descriptor) {
+    if (!descriptor) {
+        return nullptr;
+    }
     CF_OBJC_FUNCDISPATCHV(CTFontDescriptorGetTypeID(), CFDictionaryRef, (UIFontDescriptor*)descriptor, fontAttributes);
     return CFDictionaryCreateCopy(CFGetAllocator(descriptor->_attributes), descriptor->_attributes);
 }
@@ -206,6 +213,10 @@ CFDictionaryRef CTFontDescriptorCopyAttributes(CTFontDescriptorRef descriptor) {
  @Notes
 */
 CFTypeRef CTFontDescriptorCopyAttribute(CTFontDescriptorRef descriptor, CFStringRef attribute) {
+    if (!descriptor) {
+        return nullptr;
+    }
+
     CF_OBJC_FUNCDISPATCHV(CTFontDescriptorGetTypeID(), CFTypeRef, (UIFontDescriptor*)descriptor, objectForKey
                           : static_cast<NSString*>(attribute));
 

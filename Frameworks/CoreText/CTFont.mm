@@ -285,6 +285,10 @@ CTFontRef CTFontCreateUIFontForLanguage(CTFontUIFontType uiType, CGFloat size, C
  @Notes matrix parameter stored but not used
 */
 CTFontRef CTFontCreateCopyWithAttributes(CTFontRef font, CGFloat size, const CGAffineTransform* matrix, CTFontDescriptorRef attributes) {
+    if (!font) {
+        return nullptr;
+    }
+
     CFDictionaryRef originalAttributes = CTFontDescriptorCopyAttributes(font->_descriptor);
     CFAutorelease(originalAttributes);
 
@@ -348,6 +352,10 @@ CTFontRef CTFontCreateCopyWithSymbolicTraits(
  @Notes matrix parameter stored but not used
 */
 CTFontRef CTFontCreateCopyWithFamily(CTFontRef font, CGFloat size, const CGAffineTransform* matrix, CFStringRef family) {
+    if (!font) {
+        return nullptr;
+    }
+
     CFMutableDictionaryRef attributesToUse = __CTFontCopyAutoreleasedMutableAttributes(font);
 
     // Make sure attributes have the correct traits
@@ -387,6 +395,9 @@ CTFontDescriptorRef CTFontCopyFontDescriptor(CTFontRef font) {
  @Notes
 */
 CFTypeRef CTFontCopyAttribute(CTFontRef font, CFStringRef attribute) {
+    if (!font) {
+        return nullptr;
+    }
     return CTFontDescriptorCopyAttribute(font->_descriptor, attribute);
 }
 
@@ -395,6 +406,10 @@ CFTypeRef CTFontCopyAttribute(CTFontRef font, CFStringRef attribute) {
 */
 CGFloat CTFontGetSize(CTFontRef font) {
     CF_OBJC_FUNCDISPATCHV(CTFontGetTypeID(), CGFloat, (UIFont*)font, pointSize);
+
+    if (!font) {
+        return 0;
+    }
     return font->_pointSize;
 }
 
@@ -436,6 +451,9 @@ CTFontSymbolicTraits CTFontGetSymbolicTraits(CTFontRef font) {
  @Notes
 */
 CFDictionaryRef CTFontCopyTraits(CTFontRef font) {
+    if (!font) {
+        return nullptr;
+    }
     return static_cast<CFDictionaryRef>(CTFontDescriptorCopyAttribute(font->_descriptor, kCTFontTraitsAttribute));
 }
 
@@ -474,7 +492,10 @@ CFStringRef CTFontCopyDisplayName(CTFontRef font) {
  @Status Interoperable
 */
 CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
-    return font ? _DWriteFontCopyName(font->_dwriteFontFace, nameKey) : nullptr;
+    if (!font) {
+        return nullptr;
+    }
+    return _DWriteFontCopyName(font->_dwriteFontFace, nameKey);
 }
 
 /**
@@ -533,6 +554,9 @@ static CGFloat __CTFontScaleMetric(CTFontRef font, CGFloat metric) {
  @Notes
 */
 CGFloat CTFontGetAscent(CTFontRef font) {
+    if (!font) {
+        return 0;
+    }
     CF_OBJC_FUNCDISPATCHV(CTFontGetTypeID(), CGFloat, (UIFont*)font, ascender);
     return __CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).ascent);
 }
@@ -542,6 +566,9 @@ CGFloat CTFontGetAscent(CTFontRef font) {
  @Notes
 */
 CGFloat CTFontGetDescent(CTFontRef font) {
+    if (!font) {
+        return 0;
+    }
     CF_OBJC_FUNCDISPATCHV(CTFontGetTypeID(), CGFloat, (UIFont*)font, descender);
     // DWRITE_FONT_METRICS keeps an unsigned value for descent, but CTFontGetDescent is expected to return a negative value
     return -__CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).descent);
@@ -552,6 +579,9 @@ CGFloat CTFontGetDescent(CTFontRef font) {
  @Notes
 */
 CGFloat CTFontGetLeading(CTFontRef font) {
+    if (!font) {
+        return 0;
+    }
     return __CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).lineGap);
 }
 
@@ -560,6 +590,9 @@ CGFloat CTFontGetLeading(CTFontRef font) {
  @Notes
 */
 unsigned int CTFontGetUnitsPerEm(CTFontRef font) {
+    if (!font) {
+        return 0;
+    }
     return __CTFontGetDWriteMetrics(font).designUnitsPerEm;
 }
 
@@ -568,6 +601,9 @@ unsigned int CTFontGetUnitsPerEm(CTFontRef font) {
  @Notes
 */
 CFIndex CTFontGetGlyphCount(CTFontRef font) {
+    if (!font) {
+        return 0;
+    }
     return font->_dwriteFontFace->GetGlyphCount();
 }
 
@@ -585,6 +621,9 @@ CGRect CTFontGetBoundingBox(CTFontRef font) {
  @Notes
 */
 CGFloat CTFontGetUnderlinePosition(CTFontRef font) {
+    if (!font) {
+        return 0;
+    }
     return __CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).underlinePosition);
 }
 
@@ -593,6 +632,9 @@ CGFloat CTFontGetUnderlinePosition(CTFontRef font) {
  @Notes
 */
 CGFloat CTFontGetUnderlineThickness(CTFontRef font) {
+    if (!font) {
+        return 0;
+    }
     return __CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).underlineThickness);
 }
 
@@ -601,6 +643,9 @@ CGFloat CTFontGetUnderlineThickness(CTFontRef font) {
  @Notes
 */
 CGFloat CTFontGetSlantAngle(CTFontRef font) {
+    if (!font) {
+        return 0;
+    }
     return _DWriteFontGetSlantDegrees(font->_dwriteFontFace);
 }
 
@@ -609,6 +654,9 @@ CGFloat CTFontGetSlantAngle(CTFontRef font) {
  @Notes
 */
 CGFloat CTFontGetCapHeight(CTFontRef font) {
+    if (!font) {
+        return 0;
+    }
     CF_OBJC_FUNCDISPATCHV(CTFontGetTypeID(), CGFloat, (UIFont*)font, capHeight);
     return __CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).capHeight);
 }
@@ -618,6 +666,9 @@ CGFloat CTFontGetCapHeight(CTFontRef font) {
  @Notes
 */
 CGFloat CTFontGetXHeight(CTFontRef font) {
+    if (!font) {
+        return 0;
+    }
     CF_OBJC_FUNCDISPATCHV(CTFontGetTypeID(), CGFloat, (UIFont*)font, xHeight);
     return __CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).xHeight);
 }
@@ -655,6 +706,9 @@ CGRect CTFontGetBoundingRectsForGlyphs(
  @Notes  kCTFontVerticalOrientation returns an imprecise, equal advance for each glyph
 */
 double CTFontGetAdvancesForGlyphs(CTFontRef font, CTFontOrientation orientation, const CGGlyph glyphs[], CGSize* advances, CFIndex count) {
+    if (!font) {
+        return 0;
+    }
     ComPtr<IDWriteFontFace1> fontFace1;
     font->_dwriteFontFace.As(&fontFace1);
 

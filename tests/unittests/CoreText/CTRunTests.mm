@@ -109,7 +109,7 @@ protected:
     static constexpr NSString* const c_testString = @"bp";
     static constexpr float c_ascentExpected = 10.8634f;
     static constexpr float c_descentExpected = -2.543f;
-    static constexpr float c_leadingExpected = 0.0f;
+    static constexpr float c_leadingExpected = 0.392578f;
 };
 
 // TODO 6697587: Re-enable this test once ARM exceptions are fixed.
