@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -31,6 +31,16 @@
     }
     return self;
 }
+
+-(instancetype) initWithLineWidth:(CGFloat)width Color:(CGColorRef)colorRef {
+    if (self = [self init]) {
+        _lineWidth = width;
+        _lineColor = colorRef;
+        CGColorRetain(colorRef);
+    }
+    return self;
+}
+
 - (void)loadView {
     CGRect frame = self.navigationController.view.bounds;
     frame.size.height = frame.size.height - CGRectGetMaxY(self.navigationController.navigationBar.frame);
@@ -39,6 +49,10 @@
 
     self.view.backgroundColor = [UIColor whiteColor];
     self.edgesForExtendedLayout = UIRectEdgeNone;
+}
+
+-(void)dealloc {
+    CGColorRelease(_lineColor);
 }
 
 @end

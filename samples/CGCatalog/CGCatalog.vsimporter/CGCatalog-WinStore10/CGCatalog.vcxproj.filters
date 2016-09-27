@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
@@ -51,15 +51,6 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
-    <ClangCompile Include="..\..\CGCatalog\CGPathGetBoundingBoxView.m">
-      <Filter>CGCatalog\NewSamples</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\CGCatalog\CGPathApplyView.m">
-      <Filter>CGCatalog\NewSamples</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\CGCatalog\CGPathCloseSubpathView.m">
-      <Filter>CGCatalog\NewSamples</Filter>
-    </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\Samples\CGContextNewTestsController.m">
       <Filter>CGCatalog</Filter>
     </ClangCompile>
@@ -69,20 +60,11 @@
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextReplacePathWithStrokedPath.m">
       <Filter>CGCatalog\OldSamples</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddCurveToPointView.m">
-      <Filter>CGCatalog\NewSamples</Filter>
-    </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\CGContextSamplesRootViewController.m">
       <Filter>CGCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\CGCatalog\CGPathContainsPointView.m">
-      <Filter>CGCatalog\NewSamples</Filter>
-    </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextBeginEndTransparencyLayer.m">
       <Filter>CGCatalog\OldSamples</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddPathView.m">
-      <Filter>CGCatalog\NewSamples</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextSetPatternPhase.m">
       <Filter>CGCatalog\OldSamples</Filter>
@@ -114,18 +96,6 @@
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGPathApplyViewController.m">
       <Filter>CGCatalog\OldSamples</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddLineToPointView.m">
-      <Filter>CGCatalog\NewSamples</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddRectView.m">
-      <Filter>CGCatalog\NewSamples</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddElipseView.m">
-      <Filter>CGCatalog\NewSamples</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddQuadCurveToPointView.m">
-      <Filter>CGCatalog\NewSamples</Filter>
-    </ClangCompile>
     <ClangCompile Include="..\..\CGCatalog\main.m">
       <Filter>CGCatalog\Supporting Files</Filter>
     </ClangCompile>
@@ -145,5 +115,48 @@
     <Text Include="CGCatalog-Release-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.xaml.cpp" />
+    <ClCompile Include="pch.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddCurveToPointViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddElipseViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddLineToPointViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddPathViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddQuadCurveToPointViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddRectViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathApplyViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathCloseSubpathViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathContainsPointViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathGetBoundingBoxViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -20,7 +20,5 @@
 #import <Foundation/Foundation.h>
 #import "CGSamplePage.h"
 
-@interface CGPathAddQuadCurveToPointView : CGCBaseViewController <CGSamplePage>
-@property CGFloat lineWidth;
-@property CGColorRef lineColor;
+@interface CGPathCloseSubpathViewController : CGCBaseViewController <CGSamplePage>
 @end

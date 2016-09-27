@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,16 +14,13 @@
 //
 //******************************************************************************
 
-#import "CGPathAddRectView.h"
+#import "CGPathAddQuadCurveToPointViewController.h"
 #import "CGDrawView.h"
 
-@implementation CGPathAddRectView
+@implementation CGPathAddQuadCurveToPointViewController
 
 - (id)initWithLineWidth:(CGFloat)width LineColor:(CGColorRef)color {
-    if (self = [super init]) {
-        _lineColor = color;
-        _lineWidth = width;
-    }
+    self = [super initWithLineWidth : width Color : color];
     return self;
 }
 
@@ -40,10 +37,17 @@
 
         CGMutablePathRef thePath = CGPathCreateMutable();
 
-        CGPathMoveToPoint(thePath, NULL, 50, 50);
-        CGPathAddLineToPoint(thePath, NULL, 100, 100);
+        CGPathMoveToPoint(thePath, NULL, 100, 50);
+        CGPathAddQuadCurveToPoint(thePath, NULL, 125, 25, 150, 50);
 
-        CGPathAddRect(thePath, NULL, CGRectMake(100, 100, 200, 100));
+        CGPathMoveToPoint(thePath, NULL, 200, 50);
+        CGPathAddQuadCurveToPoint(thePath, NULL, 225, 25, 250, 50);
+
+        CGPathMoveToPoint(thePath, NULL, 100, 150);
+        CGPathAddQuadCurveToPoint(thePath, NULL, 200, 200, 300, 100);
+
+        CGPathMoveToPoint(thePath, NULL, 285, 105);
+        CGPathAddQuadCurveToPoint(thePath, NULL, 300, 90, 310, 110);
 
         CGContextAddPath(currentContext, thePath);
 
@@ -53,13 +57,6 @@
     }];
 
     [self.view addSubview:drawView];
-}
-
-- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-}
-
-- (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
 }
 
 @end

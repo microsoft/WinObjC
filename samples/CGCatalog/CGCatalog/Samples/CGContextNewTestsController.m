@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,16 +17,16 @@
 #import "CGContextNewTestsController.h"
 
 #import "CGContextSampleRow.h"
-#import "CGPathAddCurveToPointView.h"
-#import "CGPathAddElipseView.h"
-#import "CGPathAddLineToPointView.h"
-#import "CGPathAddPathView.h"
-#import "CGPathAddQuadCurveToPointView.h"
-#import "CGPathAddRectView.h"
-#import "CGPathApplyView.h"
-#import "CGPathCloseSubpathView.h"
-#import "CGPathContainsPointView.h"
-#import "CGPathGetBoundingBoxView.h"
+#import "CGPathAddCurveToPointViewController.h"
+#import "CGPathAddElipseViewController.h"
+#import "CGPathAddLineToPointViewController.h"
+#import "CGPathAddPathViewController.h"
+#import "CGPathAddQuadCurveToPointViewController.h"
+#import "CGPathAddRectViewController.h"
+#import "CGPathApplyViewController.h"
+#import "CGPathCloseSubpathViewController.h"
+#import "CGPathContainsPointViewController.h"
+#import "CGPathGetBoundingBoxViewController.h"
 
 @interface CGContextNewTestsController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -46,16 +46,16 @@
 - (NSArray*)samples {
     if (!_samples) {
         _samples = @[
-            [CGContextSampleRow row:@"CGPathAddCurveToPoint" class:[CGPathAddCurveToPointView class]],
-            [CGContextSampleRow row:@"CGPathAddEllipse" class:[CGPathAddElipseView class]],
-            [CGContextSampleRow row:@"CGPathAddLineToPoint" class:[CGPathAddLineToPointView class]],
-            [CGContextSampleRow row:@"CGPathAddPath" class:[CGPathAddPathView class]],
-            [CGContextSampleRow row:@"CGPathAddQuadCurveToPoint" class:[CGPathAddQuadCurveToPointView class]],
-            [CGContextSampleRow row:@"CGPathAddRect" class:[CGPathAddRectView class]],
-            [CGContextSampleRow row:@"CGPathApply" class:[CGPathApplyView class]],
-            [CGContextSampleRow row:@"CGPathCloseSubpath" class:[CGPathCloseSubpathView class]],
-            [CGContextSampleRow row:@"CGPathContainsPoint" class:[CGPathContainsPointView class]],
-            [CGContextSampleRow row:@"CGPathGetBoundingBox" class:[CGPathGetBoundingBoxView class]],
+            [CGContextSampleRow row:@"CGPathAddCurveToPoint" class:[CGPathAddCurveToPointViewController class]],
+            [CGContextSampleRow row:@"CGPathAddEllipse" class:[CGPathAddElipseViewController class]],
+            [CGContextSampleRow row:@"CGPathAddLineToPoint" class:[CGPathAddLineToPointViewController class]],
+            [CGContextSampleRow row:@"CGPathAddPath" class:[CGPathAddPathViewController class]],
+            [CGContextSampleRow row:@"CGPathAddQuadCurveToPoint" class:[CGPathAddQuadCurveToPointViewController class]],
+            [CGContextSampleRow row:@"CGPathAddRect" class:[CGPathAddRectViewController class]],
+            [CGContextSampleRow row:@"CGPathApply" class:[CGPathApplyViewController class]],
+            [CGContextSampleRow row:@"CGPathCloseSubpath" class:[CGPathCloseSubpathViewController class]],
+            [CGContextSampleRow row:@"CGPathContainsPoint" class:[CGPathContainsPointViewController class]],
+            [CGContextSampleRow row:@"CGPathGetBoundingBox" class:[CGPathGetBoundingBoxViewController class]],
         ];
     }
     return _samples;

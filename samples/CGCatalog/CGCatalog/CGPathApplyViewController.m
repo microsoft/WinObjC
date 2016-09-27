@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#import "CGPathApplyView.h"
+#import "CGPathApplyViewController.h"
 
 @interface CGPathApplyDrawView : UIView
 @property (assign) CGFloat lineWidth;
@@ -26,8 +26,13 @@
     if (self = [super initWithFrame:rect]) {
         _lineWidth = width;
         _lineColor = color;
+        CGColorRetain(color);
     }
     return self;
+}
+
+-(void)dealloc {
+    CGColorRelease(_lineColor);
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -72,12 +77,12 @@ void CGPathApplyCallback(void* context, const CGPathElement* element) {
 
 @end
 
-@implementation CGPathApplyView
+@implementation CGPathApplyViewController
 
 - (id)initWithLineWidth:(CGFloat)width LineColor:(CGColorRef)color {
     if (self = [super init]) {
-        _lineColor = color;
-        _lineWidth = width;
+        self = [super initWithLineWidth : width Color : color];
+        return self;
     }
     return self;
 }
@@ -89,13 +94,6 @@ void CGPathApplyCallback(void* context, const CGPathElement* element) {
                                                       lineWidth:self.lineWidth
                                                           color:self.lineColor];
     [self.view addSubview:cgView];
-}
-
-- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-}
-
-- (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
 }
 
 @end

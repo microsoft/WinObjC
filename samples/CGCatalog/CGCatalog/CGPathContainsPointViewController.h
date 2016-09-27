@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -20,7 +20,7 @@
 #import <Foundation/Foundation.h>
 #import "CGSamplePage.h"
 
-@interface CGPathAddCurveToPointView : CGCBaseViewController <CGSamplePage>
-@property CGFloat lineWidth;
-@property CGColorRef lineColor;
+@interface CGPathContainsPointViewController : CGCBaseViewController <CGSamplePage>
+@property UILabel* containsPoint;
+- (void)event:(UIEvent*)event;
 @end

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,16 +14,13 @@
 //
 //******************************************************************************
 
-#import "CGPathGetBoundingBoxView.h"
+#import "CGPathCloseSubpathViewController.h"
 #import "CGDrawView.h"
 
-@implementation CGPathGetBoundingBoxView
+@implementation CGPathCloseSubpathViewController
 
 - (id)initWithLineWidth:(CGFloat)width LineColor:(CGColorRef)color {
-    if (self = [super init]) {
-        _lineColor = color;
-        _lineWidth = width;
-    }
+    self = [super initWithLineWidth : width Color : color];
     return self;
 }
 
@@ -38,38 +35,30 @@
 
         CGContextSetStrokeColorWithColor(currentContext, self.lineColor);
 
-        CGMutablePathRef thepath = CGPathCreateMutable();
-        CGPathMoveToPoint(thepath, NULL, 200, 35);
-        CGPathAddLineToPoint(thepath, NULL, 165, 100);
-        CGPathAddLineToPoint(thepath, NULL, 100, 100);
-        CGPathAddLineToPoint(thepath, NULL, 150, 150);
-        CGPathAddLineToPoint(thepath, NULL, 135, 225);
-        CGPathAddLineToPoint(thepath, NULL, 200, 170);
-        CGPathAddLineToPoint(thepath, NULL, 265, 225);
-        CGPathAddLineToPoint(thepath, NULL, 250, 150);
-        CGPathAddLineToPoint(thepath, NULL, 300, 100);
-        CGPathAddLineToPoint(thepath, NULL, 235, 100);
-        CGPathAddLineToPoint(thepath, NULL, 200, 35);
+        CGMutablePathRef thePath = CGPathCreateMutable();
+        CGPathMoveToPoint(thePath, NULL, 50, 50);
+        CGPathAddLineToPoint(thePath, NULL, 50, 100);
+        CGPathAddLineToPoint(thePath, NULL, 100, 100);
+        CGPathCloseSubpath(thePath);
 
-        CGRect boundingBox = CGPathGetBoundingBox(thepath);
+        CGPathMoveToPoint(thePath, NULL, 200, 50);
+        CGPathAddLineToPoint(thePath, NULL, 200, 100);
+        CGPathAddLineToPoint(thePath, NULL, 150, 100);
+        CGPathCloseSubpath(thePath);
 
-        CGContextStrokeRect(currentContext, boundingBox);
+        CGPathMoveToPoint(thePath, NULL, 100, 200);
+        CGPathAddLineToPoint(thePath, NULL, 125, 150);
+        CGPathAddLineToPoint(thePath, NULL, 150, 200);
+        CGPathCloseSubpath(thePath);
 
-        CGPathCloseSubpath(thepath);
-        CGContextAddPath(currentContext, thepath);
+        CGPathCloseSubpath(thePath);
+        CGContextAddPath(currentContext, thePath);
         CGContextStrokePath(currentContext);
 
-        CGPathRelease(thepath);
+        CGPathRelease(thePath);
     }];
 
     [self.view addSubview:drawView];
-}
-
-- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-}
-
-- (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
 }
 
 @end

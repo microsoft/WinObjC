@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -19,5 +19,7 @@
 #import <UIKit/UIKit.h>
 
 @interface CGCBaseViewController : UIViewController
-
+- (instancetype)initWithLineWidth : (CGFloat)width Color : (CGColorRef)colorRef;
+@property (readonly) CGFloat lineWidth;
+@property (readonly) CGColorRef lineColor;
 @end

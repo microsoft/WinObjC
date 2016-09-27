@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -21,6 +21,6 @@
 @interface CGDrawView : UIView
 - (id)initWithFrame:(CGRect)rect lineWidth:(CGFloat)width color:(CGColorRef)color;
 - (void)setDrawBlock:(void (^)(void))block;
-@property (assign) CGFloat lineWidth;
-@property (assign) CGColorRef lineColor;
+@property CGFloat lineWidth;
+@property CGColorRef lineColor;
 @end

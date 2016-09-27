@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,21 +14,19 @@
 //
 //******************************************************************************
 
-#import "CGPathAddLineToPointView.h"
+#import "CGPathAddCurveToPointViewController.h"
 #import "CGDrawView.h"
 
-@implementation CGPathAddLineToPointView
+@implementation CGPathAddCurveToPointViewController
 
 - (id)initWithLineWidth:(CGFloat)width LineColor:(CGColorRef)color {
-    if (self = [super init]) {
-        _lineColor = color;
-        _lineWidth = width;
-    }
+    self = [super initWithLineWidth : width Color : color];
     return self;
 }
 
 - (void)loadView {
     [super loadView];
+    [self.view setBackgroundColor:[UIColor clearColor]];
 
     CGDrawView* drawView = [[CGDrawView alloc] initWithFrame:self.view.bounds lineWidth:self.lineWidth color:self.lineColor];
     [drawView setDrawBlock:^(void) {
@@ -39,35 +37,22 @@
         CGContextSetStrokeColorWithColor(currentContext, self.lineColor);
 
         CGMutablePathRef thepath = CGPathCreateMutable();
-        CGPathMoveToPoint(thepath, NULL, 200, 35);
-        CGPathAddLineToPoint(thepath, NULL, 165, 100);
-        CGPathAddLineToPoint(thepath, NULL, 100, 100);
-        CGPathAddLineToPoint(thepath, NULL, 150, 150);
-        CGPathAddLineToPoint(thepath, NULL, 135, 225);
-        CGPathAddLineToPoint(thepath, NULL, 200, 170);
-        CGPathAddLineToPoint(thepath, NULL, 265, 225);
-        CGPathAddLineToPoint(thepath, NULL, 250, 150);
-        CGPathAddLineToPoint(thepath, NULL, 300, 100);
-        CGPathAddLineToPoint(thepath, NULL, 235, 100);
+        CGPathMoveToPoint(thepath, NULL, 30, 100);
+        CGPathAddCurveToPoint(thepath, NULL, 47.0f, 67.0f, 50.0f, 55.0f, 45.0f, 50.0f);
+        CGPathAddCurveToPoint(thepath, NULL, 42.0f, 47.0f, 37.0f, 46.0f, 30.0f, 55.0f);
 
-        // Unnecessary as close subpath will finish this line off but for the sake of consistency, have this here.
-        CGPathAddLineToPoint(thepath, NULL, 200, 35);
+        CGPathAddCurveToPoint(thepath, NULL, 23.0f, 46.0f, 18.0f, 47.0f, 15.0f, 50.0f);
+        CGPathAddCurveToPoint(thepath, NULL, 10.0f, 55.0f, 13.0f, 67.0f, 30.0f, 100.0f);
 
         CGPathCloseSubpath(thepath);
         CGContextAddPath(currentContext, thepath);
+
         CGContextStrokePath(currentContext);
 
         CGPathRelease(thepath);
     }];
 
     [self.view addSubview:drawView];
-}
-
-- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-}
-
-- (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
 }
 
 @end

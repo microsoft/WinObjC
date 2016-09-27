@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,16 +14,13 @@
 //
 //******************************************************************************
 
-#import "CGPathAddElipseView.h"
+#import "CGPathGetBoundingBoxViewController.h"
 #import "CGDrawView.h"
 
-@implementation CGPathAddElipseView
+@implementation CGPathGetBoundingBoxViewController
 
 - (id)initWithLineWidth:(CGFloat)width LineColor:(CGColorRef)color {
-    if (self = [super init]) {
-        _lineColor = color;
-        _lineWidth = width;
-    }
+    self = [super initWithLineWidth:width Color:color];
     return self;
 }
 
@@ -38,32 +35,30 @@
 
         CGContextSetStrokeColorWithColor(currentContext, self.lineColor);
 
-        CGRect theRectangle = CGRectMake(50, 50, 300, 200);
-
         CGMutablePathRef thepath = CGPathCreateMutable();
-
-        CGPathAddEllipseInRect(thepath, NULL, theRectangle);
-        CGPathCloseSubpath(thepath);
+        CGPathMoveToPoint(thepath, NULL, 200, 35);
+        CGPathAddLineToPoint(thepath, NULL, 165, 100);
+        CGPathAddLineToPoint(thepath, NULL, 100, 100);
+        CGPathAddLineToPoint(thepath, NULL, 150, 150);
+        CGPathAddLineToPoint(thepath, NULL, 135, 225);
+        CGPathAddLineToPoint(thepath, NULL, 200, 170);
+        CGPathAddLineToPoint(thepath, NULL, 265, 225);
+        CGPathAddLineToPoint(thepath, NULL, 250, 150);
+        CGPathAddLineToPoint(thepath, NULL, 300, 100);
+        CGPathAddLineToPoint(thepath, NULL, 235, 100);
+        CGPathAddLineToPoint(thepath, NULL, 200, 35);
+        CGPathCloseSubpath(thepath);        
+        
         CGContextAddPath(currentContext, thepath);
         CGContextStrokePath(currentContext);
 
-        // A very transparent rectangle to show where the elipse has been drawn inside of.
-        CGFloat colorComponents[] = { 1, 1, 1, .2 };
-        CGContextSetStrokeColor(currentContext, colorComponents);
-        // Draw the rectangle individually just to show where the elipse should be.
-        CGContextStrokeRect(currentContext, theRectangle);
+        CGRect boundingBox = CGPathGetBoundingBox(thepath);
+        CGContextStrokeRect(currentContext, boundingBox);
 
         CGPathRelease(thepath);
     }];
 
     [self.view addSubview:drawView];
-}
-
-- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-}
-
-- (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
 }
 
 @end

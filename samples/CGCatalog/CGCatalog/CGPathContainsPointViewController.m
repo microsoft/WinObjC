@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,21 +14,27 @@
 //
 //******************************************************************************
 
-#import "CGPathContainsPointView.h"
+#import "CGPathContainsPointViewController.h"
 
 @interface CGPathContainsPointDrawView : UIView
-@property CGFloat lineWidth;
-@property CGColorRef lineColor;
+@property (readonly) CGFloat lineWidth;
+@property (readonly) CGColorRef lineColor;
 @property CGMutablePathRef thePath;
 @end
 
 @implementation CGPathContainsPointDrawView
+
 - (id)initWithFrame:(CGRect)rect lineWidth:(CGFloat)width color:(CGColorRef)color {
     if (self = [super initWithFrame:rect]) {
         _lineWidth = width;
         _lineColor = color;
+        CGColorRetain(color);
     }
     return self;
+}
+
+-(void)dealloc {
+    CGColorRelease(_lineColor);
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -52,17 +58,15 @@
 
     // Unnecessary as close subpath will finish this line off but for the sake of consistency, have this here.
     CGPathAddLineToPoint(self.thePath, NULL, 200, 35);
-
     CGPathCloseSubpath(self.thePath);
+
     CGContextAddPath(currentContext, self.thePath);
     CGContextStrokePath(currentContext);
-
-    CGPathRelease(self.thePath);
 }
 
 @end
 
-@implementation CGPathContainsPointView {
+@implementation CGPathContainsPointViewController {
     CGPathContainsPointDrawView* _theDrawnView;
 }
 
@@ -76,8 +80,8 @@
 
 - (id)initWithLineWidth:(CGFloat)width LineColor:(CGColorRef)color {
     if (self = [super init]) {
-        _lineColor = color;
-        _lineWidth = width;
+        self = [super initWithLineWidth : width Color : color];
+        return self;
     }
     return self;
 }
@@ -103,13 +107,6 @@
     [instructions setBackgroundColor:[UIColor whiteColor]];
     [instructions setText:@"Click inside the star."];
     [self.view addSubview:instructions];
-}
-
-- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-}
-
-- (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
 }
 
 @end

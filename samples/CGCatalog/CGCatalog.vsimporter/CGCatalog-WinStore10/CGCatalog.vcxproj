@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -186,17 +186,17 @@
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathGetBoundingBoxView.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathApplyView.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathCloseSubpathView.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathGetBoundingBoxViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathApplyViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathCloseSubpathViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\Samples\CGContextNewTestsController.m" />
     <ClangCompile Include="..\..\CGCatalog\CGCRootViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextReplacePathWithStrokedPath.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddCurveToPointView.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddCurveToPointViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\CGContextSamplesRootViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathContainsPointView.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathContainsPointViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextBeginEndTransparencyLayer.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddPathView.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddPathViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextSetPatternPhase.m" />
     <ClangCompile Include="..\..\CGCatalog\CGDrawView.m" />
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextViewController.m" />
@@ -207,10 +207,10 @@
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextBeginTransparencyLayerWithRect.m" />
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGBitmapContentViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGPathApplyViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddLineToPointView.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddRectView.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddElipseView.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddQuadCurveToPointView.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddLineToPointViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddRectViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddElipseViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddQuadCurveToPointViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\main.m" />
     <SBResourceCopy Include="..\..\CGCatalog\Resources\LogoAutodesk.png" />
     <StoryboardCompile Include="..\..\CGCatalog\Resources\Launch Screen.storyboard" />
