@@ -624,6 +624,9 @@ CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName) {
 CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName) {
     static CFDictionaryRef fontToFamilyMap = nullptr;
 
+    CFLocaleRef locale = CFLocaleCopyCurrent();
+    CFAutorelease(locale);
+
     static dispatch_once_t initOnce = 0;
     dispatch_once(&initOnce,
                   ^{
@@ -645,7 +648,7 @@ CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName) {
                               CFMutableStringRef upperSystemFontName =
                                   CFStringCreateMutableCopy(nullptr, CFStringGetLength(systemFontName), systemFontName);
                               CFAutorelease(upperSystemFontName);
-                              CFStringUppercase(upperSystemFontName, CFLocaleCopyCurrent());
+                              CFStringUppercase(upperSystemFontName, locale);
                               CFDictionaryAddValue(initMap, upperSystemFontName, familyName);
                           }
                       }
@@ -655,7 +658,7 @@ CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName) {
 
     CFMutableStringRef upperFontName = CFStringCreateMutableCopy(nullptr, CFStringGetLength(fontName), fontName);
     CFAutorelease(upperFontName);
-    CFStringUppercase(upperFontName, CFLocaleCopyCurrent());
+    CFStringUppercase(upperFontName, locale);
     return static_cast<CFStringRef>(CFDictionaryGetValue(fontToFamilyMap, upperFontName));
 }
 
