@@ -271,10 +271,11 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 
 - (void)drawBackgroundForGlyphRange:(NSRange)range atPoint:(CGPoint)position {
+    UNIMPLEMENTED();
 }
 
 /**

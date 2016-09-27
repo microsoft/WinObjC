@@ -252,12 +252,12 @@ cell.accessoryView = FIELD;                                                     
 
     // Add base writing direction based on selection
     CTWritingDirection direction;
-    if ([_baseWritingDirection isEqualToString:@"kCTWritingDirectionNatural"]) {
-        direction = kCTWritingDirectionNatural;
+    if ([_baseWritingDirection isEqualToString:@"kCTWritingDirectionRightToLeft"]) {
+        direction = kCTWritingDirectionRightToLeft;
     } else if ([_baseWritingDirection isEqualToString:@"kCTWritingDirectionLeftToRight"]) {
         direction = kCTWritingDirectionLeftToRight;
     } else {
-        direction = kCTWritingDirectionRightToLeft;
+        direction = kCTWritingDirectionNatural;
     }
     settings.emplace_back(CTParagraphStyleSetting{ kCTParagraphStyleSpecifierBaseWritingDirection, sizeof(direction), &direction });
 

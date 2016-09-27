@@ -48,7 +48,7 @@ struct _DWriteGlyphRunDetails {
 };
 
 CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedString);
-NSArray<_CTLine*>* _DWriteGetLines(_CTTypesetter* ts, CFRange range, CGRect frameSize);
+_CTFrame* _DWriteGetFrame(_CTTypesetter* ts, CFRange range, CGRect frameSize);
 _CTLine* _DWriteGetLine(CFAttributedStringRef string);
 
 CFArrayRef _DWriteGetFontFamilyNames();

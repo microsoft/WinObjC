@@ -20,6 +20,8 @@
 #import <UIKit/UIKit.h>
 #import <StubReturn.h>
 
+static const float c_errorDelta = 0.0005f;
+
 static NSAttributedString* getAttributedString(NSString* str) {
     UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Times New Roman" size:40];
     UIFont* font = [UIFont fontWithDescriptor:fontDescriptor size:40];
@@ -50,4 +52,43 @@ TEST(CTFramesetter, GetTypesetter) {
     CFAutorelease(framesetter);
     typesetter = CTFramesetterGetTypesetter(framesetter);
     EXPECT_NE(nil, typesetter);
+}
+
+TEST(CTFramesetter, SuggestFrameSizeWithConstraints) {
+    CFRange fitRange = { 0 };
+    CGSize size = CTFramesetterSuggestFrameSizeWithConstraints(nil, CFRangeMake(0, 0), nil, CGSizeMake(FLT_MAX, FLT_MAX), &fitRange);
+    EXPECT_NEAR(0.0f, size.height, c_errorDelta);
+    EXPECT_NEAR(0.0f, size.width, c_errorDelta);
+    EXPECT_EQ(0, fitRange.location);
+    EXPECT_EQ(0, fitRange.length);
+
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString(@"");
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(string);
+    CFAutorelease(framesetter);
+    size = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, 0), nil, CGSizeMake(FLT_MAX, FLT_MAX), &fitRange);
+    EXPECT_NEAR(0.0f, size.height, c_errorDelta);
+    EXPECT_NEAR(0.0f, size.width, c_errorDelta);
+    EXPECT_EQ(0, fitRange.location);
+    EXPECT_EQ(0, fitRange.length);
+
+    string = (__bridge CFAttributedStringRef)getAttributedString(@"ABCD");
+    framesetter = CTFramesetterCreateWithAttributedString(string);
+    CFAutorelease(framesetter);
+    size = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, 0), nil, CGSizeMake(FLT_MAX, FLT_MAX), &fitRange);
+    EXPECT_LT(size.height, FLT_MAX);
+    EXPECT_LT(size.width, FLT_MAX);
+    EXPECT_EQ(0, fitRange.location);
+    EXPECT_EQ(4, fitRange.length);
+
+    size = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, 3), nil, CGSizeMake(FLT_MAX, FLT_MAX), &fitRange);
+    EXPECT_LT(size.height, FLT_MAX);
+    EXPECT_LT(size.width, FLT_MAX);
+    EXPECT_EQ(0, fitRange.location);
+    EXPECT_EQ(3, fitRange.length);
+
+    size = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, 0), nil, CGSizeMake(50, 50), &fitRange);
+    EXPECT_LE(size.height, 50);
+    EXPECT_LE(size.width, 50);
+    EXPECT_EQ(0, fitRange.location);
+    EXPECT_LT(fitRange.length, 4);
 }
