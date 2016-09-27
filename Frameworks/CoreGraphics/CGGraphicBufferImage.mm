@@ -51,47 +51,69 @@ extern int imgDataCount;
 
 class CGGraphicBufferWICBitmap;
 
-class CGGraphicBufferWICBitmapLock : public RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::RuntimeClassType::ClassicCom>,
-                                                         IAgileObject,
-                                                         Microsoft::WRL::FtmBase,
-                                                         IWICBitmapLock> {
+class CGGraphicBufferWICBitmapLock
+    : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::ClassicCom>, IAgileObject, FtmBase, IWICBitmapLock> {
 public:
-    CGGraphicBufferWICBitmapLock();
+    CGGraphicBufferWICBitmapLock(
+        _In_ UINT width, _In_ UINT height, _In_ UINT stride, _In_ WICPixelFormatGUID pixelFormat, _In_ BYTE* dataBuffer);
 
-    HRESULT RuntimeClassInitialize(_In_ CGGraphicBufferWICBitmap* imageWICBitmap);
+    HRESULT STDMETHODCALLTYPE GetSize(_Out_ UINT* width, _Out_ UINT* height) {
+        *width = m_width;
+        *height = m_height;
+        return S_OK;
+    }
 
-    HRESULT STDMETHODCALLTYPE GetSize(_Out_ UINT* width, _Out_ UINT* height);
-    HRESULT STDMETHODCALLTYPE GetStride(_Out_ UINT* stride);
-    HRESULT STDMETHODCALLTYPE GetDataPointer(_Out_ UINT* bufferSize, _Outptr_ WICInProcPointer* data);
-    HRESULT STDMETHODCALLTYPE GetPixelFormat(_Out_ WICPixelFormatGUID* pixelFormat);
+    HRESULT STDMETHODCALLTYPE GetStride(_Out_ UINT* stride) {
+        *stride = m_stride;
+        return S_OK;
+    }
+
+    HRESULT STDMETHODCALLTYPE GetDataPointer(_Out_ UINT* bufferSize, _Outptr_ WICInProcPointer* data) {
+        *bufferSize = m_height * m_stride;
+        *data = m_dataBuffer;
+        return S_OK;
+    }
+
+    HRESULT STDMETHODCALLTYPE GetPixelFormat(_Out_ WICPixelFormatGUID* pixelFormat) {
+        *pixelFormat = m_pixelFormat;
+        return S_OK;
+    }
 
 private:
-    CGGraphicBufferWICBitmap* m_imageWICBitmap;
+    UINT m_width;
+    UINT m_height;
+    UINT m_stride;
+    WICPixelFormatGUID m_pixelFormat;
+    BYTE* m_dataBuffer;
 };
 
-class CGGraphicBufferWICBitmap : public RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::RuntimeClassType::ClassicCom>,
-                                                     IAgileObject,
-                                                     Microsoft::WRL::FtmBase,
-                                                     IWICBitmap> {
-public:
-    CGGraphicBufferWICBitmap();
+CGGraphicBufferWICBitmapLock::CGGraphicBufferWICBitmapLock(
+    UINT width, UINT height, UINT stride, WICPixelFormatGUID pixelFormat, BYTE* dataBuffer)
+    : m_width(width), m_height(height), m_stride(stride), m_pixelFormat(pixelFormat), m_dataBuffer(dataBuffer) {
+}
 
-    HRESULT RuntimeClassInitialize(
+class CGGraphicBufferWICBitmap : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::ClassicCom>, IAgileObject, FtmBase, IWICBitmap> {
+public:
+    CGGraphicBufferWICBitmap(
         _In_ UINT width, _In_ UINT height, _In_ UINT stride, _In_ WICPixelFormatGUID pixelFormat, _In_ BYTE* dataBuffer);
 
     // IWICBitmap interface
+    // TODO::
+    // Today we do not support locking a region of the WIC bitmap for rendering. We only support locking the complete bitmap. This will
+    // suffice CoreText requirement but needs to be revisted for CoreGraphics usage in future.
     HRESULT STDMETHODCALLTYPE Lock(_In_ const WICRect* lockRect, _In_ DWORD flags, _COM_Outptr_ IWICBitmapLock** outLock) {
-        ComPtr<IWICBitmapLock> lock;
-        MakeAndInitialize<CGGraphicBufferWICBitmapLock>(&lock, this);
+        ComPtr<IWICBitmapLock> lock = Make<CGGraphicBufferWICBitmapLock>(m_width, m_height, m_stride, m_pixelFormat, m_dataBuffer);
         *outLock = lock.Detach();
         return S_OK;
     }
 
     HRESULT STDMETHODCALLTYPE SetPalette(_In_ IWICPalette* palette) {
+        UNIMPLEMENTED();
         return E_NOTIMPL;
     }
 
     HRESULT STDMETHODCALLTYPE SetResolution(_In_ double dpiX, _In_ double dpiY) {
+        UNIMPLEMENTED();
         return E_NOTIMPL;
     }
 
@@ -108,10 +130,12 @@ public:
     }
 
     HRESULT STDMETHODCALLTYPE GetResolution(_Out_ double* dpiX, _Out_ double* dpiY) {
+        UNIMPLEMENTED();
         return E_NOTIMPL;
     }
 
     HRESULT STDMETHODCALLTYPE CopyPalette(_In_ IWICPalette* palette) {
+        UNIMPLEMENTED();
         return E_NOTIMPL;
     }
 
@@ -119,10 +143,11 @@ public:
                                          _In_ UINT stride,
                                          _In_ UINT bufferSize,
                                          _Out_writes_all_(cbBufferSize) BYTE* buffer) {
+        UNIMPLEMENTED();
         return E_NOTIMPL;
     }
 
-public:
+private:
     UINT m_width;
     UINT m_height;
     UINT m_stride;
@@ -130,48 +155,8 @@ public:
     BYTE* m_dataBuffer;
 };
 
-CGGraphicBufferWICBitmap::CGGraphicBufferWICBitmap()
-    : m_width(0), m_height(0), m_stride(0), m_pixelFormat(GUID_WICPixelFormat32bppPBGRA), m_dataBuffer(nullptr) {
-}
-
-HRESULT CGGraphicBufferWICBitmap::RuntimeClassInitialize(
-    UINT width, UINT height, UINT stride, WICPixelFormatGUID pixelFormat, BYTE* dataBuffer) {
-    m_width = width;
-    m_height = height;
-    m_stride = stride;
-    m_pixelFormat = pixelFormat;
-    m_dataBuffer = dataBuffer;
-    return S_OK;
-}
-
-CGGraphicBufferWICBitmapLock::CGGraphicBufferWICBitmapLock() : m_imageWICBitmap(nullptr) {
-}
-
-HRESULT CGGraphicBufferWICBitmapLock::RuntimeClassInitialize(CGGraphicBufferWICBitmap* imageWICBitmap) {
-    m_imageWICBitmap = imageWICBitmap;
-    return S_OK;
-}
-
-HRESULT STDMETHODCALLTYPE CGGraphicBufferWICBitmapLock::GetStride(_Out_ UINT* stride) {
-    *stride = m_imageWICBitmap->m_stride;
-    return S_OK;
-}
-
-HRESULT STDMETHODCALLTYPE CGGraphicBufferWICBitmapLock::GetSize(_Out_ UINT* width, _Out_ UINT* height) {
-    *width = m_imageWICBitmap->m_width;
-    *height = m_imageWICBitmap->m_height;
-    return S_OK;
-}
-
-HRESULT STDMETHODCALLTYPE CGGraphicBufferWICBitmapLock::GetDataPointer(_Out_ UINT* bufferSize, _Outptr_ WICInProcPointer* data) {
-    *bufferSize = m_imageWICBitmap->m_height * m_imageWICBitmap->m_stride;
-    *data = m_imageWICBitmap->m_dataBuffer;
-    return S_OK;
-}
-
-HRESULT STDMETHODCALLTYPE CGGraphicBufferWICBitmapLock::GetPixelFormat(_Out_ WICPixelFormatGUID* pixelFormat) {
-    *pixelFormat = m_imageWICBitmap->m_pixelFormat;
-    return S_OK;
+CGGraphicBufferWICBitmap::CGGraphicBufferWICBitmap(UINT width, UINT height, UINT stride, WICPixelFormatGUID pixelFormat, BYTE* dataBuffer)
+    : m_width(width), m_height(height), m_stride(stride), m_pixelFormat(pixelFormat), m_dataBuffer(dataBuffer) {
 }
 
 CGGraphicBufferImage::CGGraphicBufferImage(int width, int height, __CGSurfaceFormat fmt) {
@@ -295,9 +280,8 @@ int CGGraphicBufferImageBacking::BitsPerComponent() {
 ID2D1RenderTarget* CGGraphicBufferImageBacking::GetRenderTarget() {
     if (_renderTarget == nullptr) {
         BYTE* imageData = static_cast<BYTE*>(LockImageData());
-        ComPtr<IWICBitmap> wicBitmap;
-        THROW_IF_FAILED(MakeAndInitialize<CGGraphicBufferWICBitmap>(
-            &wicBitmap, _width, _height, BytesPerRow(), GUID_WICPixelFormat32bppPBGRA, imageData));
+        ComPtr<IWICBitmap> wicBitmap =
+            Make<CGGraphicBufferWICBitmap>(_width, _height, BytesPerRow(), GUID_WICPixelFormat32bppPBGRA, imageData);
         ComPtr<ID2D1Factory> d2dFactory;
         THROW_IF_FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &d2dFactory));
         ComPtr<ID2D1RenderTarget> renderTarget;
