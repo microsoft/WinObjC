@@ -30,7 +30,7 @@ using namespace std;
 }
 @end
 
-static _CTFrame* _createFrame(_CTFramesetter* framesetter, CGRect frameSize, CFRange range) {
+static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameSize, CFRange range) {
     if (!framesetter) {
         return nil;
     }
@@ -40,9 +40,10 @@ static _CTFrame* _createFrame(_CTFramesetter* framesetter, CGRect frameSize, CFR
     if (range.length == 0) {
         range.length = typesetter->_characters.size();
     }
+
     _CTFrame* ret = _DWriteGetFrame(typesetter, range, frameSize);
     ret->_framesetter = framesetter;
-    return ret;
+    return [ret retain];
 }
 
 /**
@@ -61,9 +62,9 @@ CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange string
     CGRect frameSize;
     _CGPathGetBoundingBoxInternal(path, &frameSize);
 
-    _CTFrame* ret = _createFrame(static_cast<_CTFramesetter*>(framesetter), frameSize, stringRange);
+    _CTFrame* ret = __CreateFrame(static_cast<_CTFramesetter*>(framesetter), frameSize, stringRange);
 
-    return static_cast<CTFrameRef>([ret retain]);
+    return static_cast<CTFrameRef>(ret);
 }
 
 /**
@@ -83,13 +84,14 @@ CGSize CTFramesetterSuggestFrameSizeWithConstraints(
     CGRect frameSize = { 0 };
     frameSize.size = constraints;
 
-    _CTFrame* frame = _createFrame(static_cast<_CTFramesetter*>(framesetter), frameSize, stringRange);
+    _CTFrame* frame = __CreateFrame(static_cast<_CTFramesetter*>(framesetter), frameSize, stringRange);
     CGSize ret = frame ? frame->_frameRect.size : CGSize{ 0, 0 };
 
     if (fitRange) {
         *fitRange = CTFrameGetVisibleStringRange(static_cast<CTFrameRef>(frame));
     }
 
+    [frame release];
     return ret;
 }
 

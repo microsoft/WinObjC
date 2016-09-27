@@ -209,7 +209,7 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(_CTTypesetter* ts, CFR
         CFAutorelease(fontFullName);
         CFStringRef fontFamilyName;
         __InitDWriteFontPropertiesFromName(fontFullName, &weight, &stretch, &style, &fontFamilyName);
-        familyName.resize(CFStringGetLength(fontFamilyName) + 1);
+        familyName.resize(CFStringGetLength(fontFamilyName) + 1, 0);
         CFStringGetCharacters(fontFamilyName, CFRangeMake(0, familyName.size()), reinterpret_cast<UniChar*>(familyName.data()));
     }
 
