@@ -167,8 +167,7 @@ TEST(CTFont, UnknownName) {
     EXPECT_OBJCEQ(nil, (id)CFAutorelease(CTFontCreateWithName(CFSTR("DoesNotExistFont"), 12.0, NULL)));
 }
 
-// TODO: Do we care enough about fixing this?
-DISABLED_TEST(CTFont, CaseInsensitive) {
+TEST(CTFont, CaseInsensitive) {
     CTFontRef font1 = CTFontCreateWithName(CFSTR("Arial"), 12.0, NULL);
     CTFontRef font2 = CTFontCreateWithName(CFSTR("ARIAL"), 12.0, NULL);
     CTFontRef font3 = CTFontCreateWithName(CFSTR("arial"), 12.0, NULL);

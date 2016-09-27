@@ -641,14 +641,22 @@ CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName) {
                           CFArrayRef fontNames = _DWriteGetFontNamesForFamilyName(familyName);
 
                           for (size_t j = 0; j < CFArrayGetCount(fontNames); j++) {
-                              CFDictionaryAddValue(initMap, static_cast<CFStringRef>(CFArrayGetValueAtIndex(fontNames, j)), familyName);
+                              CFStringRef systemFontName = static_cast<CFStringRef>(CFArrayGetValueAtIndex(fontNames, j));
+                              CFMutableStringRef upperSystemFontName =
+                                  CFStringCreateMutableCopy(nullptr, CFStringGetLength(systemFontName), systemFontName);
+                              CFAutorelease(upperSystemFontName);
+                              CFStringUppercase(upperSystemFontName, CFLocaleCopyCurrent());
+                              CFDictionaryAddValue(initMap, upperSystemFontName, familyName);
                           }
                       }
 
                       fontToFamilyMap = CFDictionaryCreateCopy(kCFAllocatorSystemDefault, initMap);
                   });
 
-    return static_cast<CFStringRef>(CFDictionaryGetValue(fontToFamilyMap, fontName));
+    CFMutableStringRef upperFontName = CFStringCreateMutableCopy(nullptr, CFStringGetLength(fontName), fontName);
+    CFAutorelease(upperFontName);
+    CFStringUppercase(upperFontName, CFLocaleCopyCurrent());
+    return static_cast<CFStringRef>(CFDictionaryGetValue(fontToFamilyMap, upperFontName));
 }
 
 /**
