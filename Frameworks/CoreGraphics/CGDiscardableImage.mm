@@ -115,6 +115,12 @@ int CGDiscardableImageBacking::BitsPerComponent() {
     return _forward->BitsPerComponent();
 }
 
+ID2D1RenderTarget* CGDiscardableImageBacking::GetRenderTarget() {
+    ConstructIfNeeded();
+
+    return _forward->GetRenderTarget();
+}
+
 void CGDiscardableImageBacking::GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo) {
     ConstructIfNeeded();
 

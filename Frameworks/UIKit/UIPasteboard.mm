@@ -14,11 +14,6 @@
 //
 //******************************************************************************
 
-#import <COMIncludes.h>
-#import <windows.storage.streams.h>
-#import "RawBuffer.h"
-#import <COMIncludes_End.h>
-
 #import "Starboard.h"
 #import "UIKit/UIPasteboard.h"
 #import "NSLogging.h"
@@ -27,6 +22,11 @@
 #import "UWP/WindowsApplicationModelDataTransfer.h"
 #import "CGImageInternal.h"
 #import "MobileCoreServices/UTType.h"
+
+#include <COMIncludes.h>
+#import <windows.storage.streams.h>
+#import "RawBuffer.h"
+#include <COMIncludes_End.h>
 
 static const wchar_t* TAG = L"UIPasteboard";
 NSString* const UIPasteboardNameGeneral = @"UIPasteboardNameGeneral";

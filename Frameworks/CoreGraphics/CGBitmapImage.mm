@@ -444,6 +444,11 @@ int CGBitmapImageBacking::BitsPerComponent() {
     return _data->_bitsPerComponent;
 }
 
+ID2D1RenderTarget* CGBitmapImageBacking::GetRenderTarget() {
+    UNIMPLEMENTED_WITH_MSG("D2D render target is not supported with CGImageData!");
+    return nullptr;
+}
+
 void CGBitmapImageBacking::GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo) {
     surfaceInfo->width = _data->_width;
     surfaceInfo->height = _data->_height;

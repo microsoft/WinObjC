@@ -40,6 +40,7 @@ private:
     DWORD _bytesPerRow;
     DWORD _bytesPerPixel;
     DWORD _bitsPerComponent;
+    ID2D1RenderTarget* _renderTarget;
 
 public:
     DisplayTexture* _nativeTexture;
@@ -59,6 +60,7 @@ public:
     int BytesPerRow();
     int BytesPerPixel();
     int BitsPerComponent();
+    ID2D1RenderTarget* GetRenderTarget();
     void GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo);
     __CGSurfaceFormat SurfaceFormat();
     CGColorSpaceModel ColorSpaceModel();
