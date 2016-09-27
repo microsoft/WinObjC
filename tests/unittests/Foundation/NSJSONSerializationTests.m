@@ -53,7 +53,7 @@ void VerifyDataWithJSONObjectSucceeds(id testObject, NSString* expectedResult) {
     NSString* actualResult = [[[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding] autorelease];
 
     ASSERT_EQ_MSG(nil, err, "FAILED: err != nil");
-    ASSERT_OBJCEQ_MSG(expectedResult, actualResult, "FAILED: expected (%@) != actual (%@)", expectedResult, actualResult);
+    ASSERT_OBJCEQ(expectedResult, actualResult);
 }
 
 void VerifyDataWithJSONObjectFails(id testObject, NSInteger expectedErrorCode, NSString* expectedErrorDescription) {
@@ -124,13 +124,13 @@ TEST(NSJSON, DataWithJSONObjectTests) {
     id testObject6 = @{ @"foo" : @"1", @"bar" : @"2" };
     id testObject7 = @{ @"foo" : @{ @"bar" : @"1" }, @"foo2" : @{ @"bar2" : @"2" } };
     id testObject8 = [NSUUID UUID];
-    id testObject9 = @{ @"key" : @"value", @"nullkey" : [NSNull null], @"array" : @[ @{ @"subnullkey" : [NSNull null] } ] };
+    id testObject9 = @{ @"key" : @"value", @"array" : @[ @{ @"subnullkey" : [NSNull null] } ] };
 
     // success cases
     VerifyDataWithJSONObjectSucceeds(testObject5, @"[1,2,3,4,5]");
     VerifyDataWithJSONObjectSucceeds(testObject6, @"{\"foo\":\"1\",\"bar\":\"2\"}");
     VerifyDataWithJSONObjectSucceeds(testObject7, @"{\"foo\":{\"bar\":\"1\"},\"foo2\":{\"bar2\":\"2\"}}");
-    VerifyDataWithJSONObjectSucceeds(testObject9, @"{\"key\":\"value\",\"array\":[{\"subnullkey\":null}],\"nullkey\":null}");
+    VerifyDataWithJSONObjectSucceeds(testObject9, @"{\"key\":\"value\",\"array\":[{\"subnullkey\":null}]}");
 
     // error case
     VerifyDataWithJSONObjectThrows(testObject2);
