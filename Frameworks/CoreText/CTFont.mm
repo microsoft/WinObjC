@@ -429,8 +429,11 @@ static struct DWRITE_FONT_METRICS __CTFontGetDWriteMetrics(CTFontRef font) {
     return font->_metrics;
 }
 
+// Private helper for converting a DWRITE_FONT_METRIC unit to a CTFont API unit
+// DWRITE_FONT_METRICS measures its metrics in 'design units'
+// CTFont APIs generally return in terms of point size
 static CGFloat __CTFontScaleMetric(CTFontRef font, CGFloat metric) {
-    return _CoreTextScaleMetric(metric, font->_pointSize, CTFontGetUnitsPerEm(font));
+    return metric * font->_pointSize / CTFontGetUnitsPerEm(font);
 }
 
 /**

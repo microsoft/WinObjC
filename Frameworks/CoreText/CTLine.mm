@@ -311,14 +311,15 @@ double CTLineGetTypographicBounds(CTLineRef lineRef, CGFloat* ascent, CGFloat* d
             DWRITE_FONT_METRICS fontMetrics;
             run->_dwriteGlyphRun.fontFace->GetMetrics(&fontMetrics);
 
+            // Need scaling factor to convert from design units to pointSize
+            CGFloat scalingFactor = pointSize / fontMetrics.designUnitsPerEm;
+
             for (size_t i = 0; i < run->_dwriteGlyphRun.glyphCount; ++i) {
-                line->_ascent =
-                    std::max(line->_ascent, _CoreTextScaleMetric(glyphMetrics[i].verticalOriginY, pointSize, fontMetrics.designUnitsPerEm));
-                line->_descent = std::max(line->_descent,
-                                          _CoreTextScaleMetric(glyphMetrics[i].bottomSideBearing, pointSize, fontMetrics.designUnitsPerEm));
+                line->_ascent = std::max(line->_ascent, glyphMetrics[i].verticalOriginY * scalingFactor);
+                line->_descent = std::max(line->_descent, glyphMetrics[i].bottomSideBearing * scalingFactor);
             }
 
-            line->_leading = std::max(line->_leading, _CoreTextScaleMetric(fontMetrics.lineGap, pointSize, fontMetrics.designUnitsPerEm));
+            line->_leading = std::max(line->_leading, fontMetrics.lineGap * scalingFactor);
         }
     }
 
