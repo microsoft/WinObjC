@@ -20,6 +20,7 @@
 #include <COMIncludes_End.h>
 
 #import <CoreText/DWriteWrapper.h>
+#import <CoreText/CTFont.h>
 #import <Starboard.h>
 
 #import <CoreFoundation/CFBase.h>
@@ -35,7 +36,6 @@ using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"_DWriteWrapper";
 static const wchar_t* c_defaultUserLanguage = L"en-us";
-static const wchar_t* c_defaultFontName = L"Segoe UI";
 
 void __InitDWriteFontPropertiesFromName(
     CFStringRef fontName, DWRITE_FONT_WEIGHT* weight, DWRITE_FONT_STRETCH* stretch, DWRITE_FONT_STYLE* style, CFStringRef* familyName);
@@ -191,20 +191,22 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(_CTTypesetter* ts, CFR
     NSDictionary* attribs = [ts->_attributedString attributesAtIndex:range.location effectiveRange:NULL];
 
     CGFloat fontSize = kCTFontSystemFontSize;
-    std::vector<wchar_t> familyName(c_defaultFontName, c_defaultFontName + wcslen(c_defaultFontName));
     DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_REGULAR;
     DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
     DWRITE_FONT_STRETCH stretch = DWRITE_FONT_STRETCH_NORMAL;
     CTFontRef font = static_cast<CTFontRef>([attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
+    std::vector<wchar_t> familyName;
+    CFStringRef fontFamilyName = kCTFontDefaultFontName;
+
     if (font) {
         fontSize = CTFontGetSize(font);
         CFStringRef fontFullName = CTFontCopyName(font, kCTFontFullNameKey);
         CFAutorelease(fontFullName);
-        CFStringRef fontFamilyName;
         __InitDWriteFontPropertiesFromName(fontFullName, &weight, &stretch, &style, &fontFamilyName);
-        familyName.resize(CFStringGetLength(fontFamilyName) + 1, 0);
-        CFStringGetCharacters(fontFamilyName, CFRangeMake(0, familyName.size()), reinterpret_cast<UniChar*>(familyName.data()));
     }
+
+    familyName.resize(CFStringGetLength(fontFamilyName) + 1, 0);
+    CFStringGetCharacters(fontFamilyName, CFRangeMake(0, familyName.size()), reinterpret_cast<UniChar*>(familyName.data()));
 
     ComPtr<IDWriteTextFormat> textFormat;
     THROW_IF_FAILED(
@@ -693,6 +695,36 @@ static ComPtr<IDWriteFontFamily> __GetDWriteFontFamily(CFStringRef familyName) {
     return fontFamily;
 }
 
+// Represents a mapping between multiple representations of the same font weight across font names, DWrite, and CoreText
+// eg: CFSTR("BOLD") = DWRITE_FONT_WEIGHT_BOLD = kCTFontWeightBold
+struct WeightMapping {
+    CFStringRef stringValue;
+    DWRITE_FONT_WEIGHT dwriteValue;
+    CGFloat ctValue;
+};
+
+// Mapping for weight
+// Some loss of precision here as CT presents fewer values than DWrite
+// Note also that Thin and Ultra/Extra-Light are in opposite order in DWrite and CoreText/UIKit constants
+// (However, "Thin" fonts on the reference platform have UIFontWeightUltraLight...)
+static const struct WeightMapping c_weightMap[] = { { CFSTR("THIN"), DWRITE_FONT_WEIGHT_THIN, kCTFontWeightUltraLight },
+                                                    { CFSTR("EXTRALIGHT"), DWRITE_FONT_WEIGHT_EXTRA_LIGHT, kCTFontWeightThin },
+                                                    { CFSTR("ULTRALIGHT"), DWRITE_FONT_WEIGHT_ULTRA_LIGHT, kCTFontWeightThin },
+                                                    { CFSTR("LIGHT"), DWRITE_FONT_WEIGHT_LIGHT, kCTFontWeightLight },
+                                                    { CFSTR("SEMILIGHT"), DWRITE_FONT_WEIGHT_SEMI_LIGHT, kCTFontWeightLight },
+                                                    { CFSTR("NORMAL"), DWRITE_FONT_WEIGHT_NORMAL, kCTFontWeightRegular },
+                                                    { CFSTR("REGULAR"), DWRITE_FONT_WEIGHT_REGULAR, kCTFontWeightRegular },
+                                                    { CFSTR("MEDIUM"), DWRITE_FONT_WEIGHT_MEDIUM, kCTFontWeightMedium },
+                                                    { CFSTR("DEMIBOLD"), DWRITE_FONT_WEIGHT_DEMI_BOLD, kCTFontWeightSemibold },
+                                                    { CFSTR("SEMIBOLD"), DWRITE_FONT_WEIGHT_SEMI_BOLD, kCTFontWeightSemibold },
+                                                    { CFSTR("BOLD"), DWRITE_FONT_WEIGHT_BOLD, kCTFontWeightBold },
+                                                    { CFSTR("EXTRABOLD"), DWRITE_FONT_WEIGHT_EXTRA_BOLD, kCTFontWeightHeavy },
+                                                    { CFSTR("ULTRABOLD"), DWRITE_FONT_WEIGHT_ULTRA_BOLD, kCTFontWeightHeavy },
+                                                    { CFSTR("BLACK"), DWRITE_FONT_WEIGHT_BLACK, kCTFontWeightBlack },
+                                                    { CFSTR("HEAVY"), DWRITE_FONT_WEIGHT_HEAVY, kCTFontWeightBlack },
+                                                    { CFSTR("EXTRABLACK"), DWRITE_FONT_WEIGHT_EXTRA_BLACK, kCTFontWeightBlack },
+                                                    { CFSTR("ULTRABLACK"), DWRITE_FONT_WEIGHT_ULTRA_BLACK, kCTFontWeightBlack } };
+
 /**
  * Private helper that parses a font name, and returns appropriate weight, stretch, style, and family name values
  */
@@ -745,45 +777,16 @@ static void __InitDWriteFontPropertiesFromName(
         // Standardize on uppercase
         CFStringUppercase(propertyToken, CFLocaleGetSystem());
 
-        // Possible optimization here that can be done by using a dictionary to functions,
+        // Possible optimization here that can be done by using a dictionary,
         // but seems excessive given that font names generally don't have more than three modifiers
-        if (CFEqual(propertyToken, CFSTR("THIN"))) {
-            *pPropertyContext->weight = DWRITE_FONT_WEIGHT_THIN;
-        } else if (CFEqual(propertyToken, CFSTR("EXTRALIGHT"))) {
-            *pPropertyContext->weight = DWRITE_FONT_WEIGHT_EXTRA_LIGHT;
-        } else if (CFEqual(propertyToken, CFSTR("ULTRALIGHT"))) {
-            *pPropertyContext->weight = DWRITE_FONT_WEIGHT_ULTRA_LIGHT;
-        } else if (CFEqual(propertyToken, CFSTR("LIGHT"))) {
-            *pPropertyContext->weight = DWRITE_FONT_WEIGHT_LIGHT;
-        } else if (CFEqual(propertyToken, CFSTR("SEMILIGHT"))) {
-            *pPropertyContext->weight = DWRITE_FONT_WEIGHT_SEMI_LIGHT;
-            // skip since this is the default
-            // } else if (CFEqual(propertyToken, CFSTR("NORMAL"))) {
-            //     *pPropertyContext->weight = DWRITE_FONT_WEIGHT_NORMAL;
-        } else if (CFEqual(propertyToken, CFSTR("REGULAR"))) {
-            *pPropertyContext->weight = DWRITE_FONT_WEIGHT_REGULAR;
-        } else if (CFEqual(propertyToken, CFSTR("MEDIUM"))) {
-            *pPropertyContext->weight = DWRITE_FONT_WEIGHT_MEDIUM;
-        } else if (CFEqual(propertyToken, CFSTR("DEMIBOLD"))) {
-            *pPropertyContext->weight = DWRITE_FONT_WEIGHT_DEMI_BOLD;
-        } else if (CFEqual(propertyToken, CFSTR("SEMIBOLD"))) {
-            *pPropertyContext->weight = DWRITE_FONT_WEIGHT_SEMI_BOLD;
-        } else if (CFEqual(propertyToken, CFSTR("BOLD"))) {
-            *pPropertyContext->weight = DWRITE_FONT_WEIGHT_BOLD;
-        } else if (CFEqual(propertyToken, CFSTR("EXTRABOLD"))) {
-            *pPropertyContext->weight = DWRITE_FONT_WEIGHT_EXTRA_BOLD;
-        } else if (CFEqual(propertyToken, CFSTR("ULTRABOLD"))) {
-            *pPropertyContext->weight = DWRITE_FONT_WEIGHT_ULTRA_BOLD;
-        } else if (CFEqual(propertyToken, CFSTR("BLACK"))) {
-            *pPropertyContext->weight = DWRITE_FONT_WEIGHT_BLACK;
-        } else if (CFEqual(propertyToken, CFSTR("HEAVY"))) {
-            *pPropertyContext->weight = DWRITE_FONT_WEIGHT_HEAVY;
-        } else if (CFEqual(propertyToken, CFSTR("EXTRABLACK"))) {
-            *pPropertyContext->weight = DWRITE_FONT_WEIGHT_EXTRA_BLACK;
-        } else if (CFEqual(propertyToken, CFSTR("ULTRABLACK"))) {
-            *pPropertyContext->weight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
+        for (const auto& weightMapping : c_weightMap) {
+            if (CFEqual(propertyToken, weightMapping.stringValue)) {
+                *pPropertyContext->weight = weightMapping.dwriteValue;
+                break;
+            }
+        }
 
-        } else if (CFEqual(propertyToken, CFSTR("UNDEFINED"))) {
+        if (CFEqual(propertyToken, CFSTR("UNDEFINED"))) {
             *pPropertyContext->stretch = DWRITE_FONT_STRETCH_UNDEFINED;
         } else if (CFEqual(propertyToken, CFSTR("ULTRACONDENSED"))) {
             *pPropertyContext->stretch = DWRITE_FONT_STRETCH_ULTRA_CONDENSED;
@@ -852,4 +855,340 @@ HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFon
     }
 
     return font->CreateFontFace(outFontFace);
+}
+
+/**
+ * Creates an IDWriteFontFace given the attributes of a CTFontDescriptor
+ * Currently, font name, family name, kCTFontWeight/Slant/Width, and part of SymbolicTrait, are taken into account
+ */
+HRESULT _DWriteCreateFontFaceWithFontDescriptor(CTFontDescriptorRef fontDescriptor, IDWriteFontFace** outFontFace) {
+    CFStringRef fontName = static_cast<CFStringRef>(CFAutorelease(CTFontDescriptorCopyAttribute(fontDescriptor, kCTFontNameAttribute)));
+    CFStringRef familyName =
+        static_cast<CFStringRef>(CFAutorelease(CTFontDescriptorCopyAttribute(fontDescriptor, kCTFontFamilyNameAttribute)));
+
+    // font name takes precedence
+    if (fontName) {
+        if (familyName && !CFEqual(familyName, _DWriteGetFamilyNameForFontName(fontName))) {
+            TraceError(TAG,
+                       L"Mismatched font name \"%hs\" and family name \"%hs\"",
+                       [static_cast<NSString*>(fontName) UTF8String],
+                       [static_cast<NSString*>(familyName) UTF8String]);
+            return E_INVALIDARG;
+        }
+
+        // familyName is either valid for fontName, or unspecified
+        // just use fontName, then
+        return _DWriteCreateFontFaceWithName(fontName, outFontFace);
+    }
+
+    // otherwise, look at family name and other attributes
+    if (familyName) {
+        DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_NORMAL;
+        DWRITE_FONT_STRETCH stretch = DWRITE_FONT_STRETCH_NORMAL;
+        DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
+
+        // Look for traits that may specify weight, stretch, style
+        CFDictionaryRef traits =
+            static_cast<CFDictionaryRef>(CFAutorelease(CTFontDescriptorCopyAttribute(fontDescriptor, kCTFontTraitsAttribute)));
+
+        if (traits) {
+            // kCTFontWeightTrait, kCTFontWidthTrait, kCTFontSlantTrait take precedence over symbolic traits
+            CFNumberRef weightTrait = static_cast<CFNumberRef>(CFDictionaryGetValue(traits, kCTFontWeightTrait));
+            CFNumberRef widthTrait = static_cast<CFNumberRef>(CFDictionaryGetValue(traits, kCTFontWidthTrait));
+            CFNumberRef slantTrait = static_cast<CFNumberRef>(CFDictionaryGetValue(traits, kCTFontSlantTrait));
+
+            CFNumberRef cfSymbolicTrait = static_cast<CFNumberRef>(CFDictionaryGetValue(traits, kCTFontSymbolicTrait));
+            uint32_t symbolicTrait = cfSymbolicTrait ? _CTFontSymbolicTraitsFromCFNumber(cfSymbolicTrait) : 0;
+
+            if (weightTrait) {
+                CGFloat weightFloat;
+                CFNumberGetValue(weightTrait, kCFNumberCGFloatType, &weightFloat);
+
+                // Consult c_weightMap
+                for (const auto& weightMapping : c_weightMap) {
+                    if (weightFloat == weightMapping.ctValue) {
+                        weight = weightMapping.dwriteValue;
+                        break;
+                    }
+                }
+            } else if (symbolicTrait & kCTFontBoldTrait) {
+                weight = DWRITE_FONT_WEIGHT_BOLD;
+            }
+
+            if (widthTrait) {
+                CGFloat widthFloat;
+                CFNumberGetValue(widthTrait, kCFNumberCGFloatType, &widthFloat);
+
+                // Treat above 0 as expanded, below 0 as condensed
+                if (widthFloat > 0) {
+                    stretch = DWRITE_FONT_STRETCH_EXPANDED;
+                } else if (widthFloat < 0) {
+                    stretch = DWRITE_FONT_STRETCH_CONDENSED;
+                }
+            } else if (symbolicTrait & kCTFontExpandedTrait) {
+                stretch = DWRITE_FONT_STRETCH_EXPANDED;
+            } else if (symbolicTrait & kCTFontCondensedTrait) {
+                stretch = DWRITE_FONT_STRETCH_CONDENSED;
+            }
+
+            if (slantTrait) {
+                CGFloat slantFloat;
+                CFNumberGetValue(slantTrait, kCFNumberCGFloatType, &slantFloat);
+
+                // Treat anything above 0 as italic
+                if (slantFloat > 0) {
+                    style = DWRITE_FONT_STYLE_ITALIC;
+                }
+            } else if (symbolicTrait & kCTFontItalicTrait) {
+                style = DWRITE_FONT_STYLE_ITALIC;
+            }
+        }
+
+        // Create a best matching font based on the family name and weight/stretch/style
+        ComPtr<IDWriteFontFamily> fontFamily = __GetDWriteFontFamily(familyName);
+        if (!fontFamily) {
+            TraceError(TAG, L"Unable to find font family named \"%hs\"", [static_cast<NSString*>(familyName) UTF8String]);
+            return E_INVALIDARG;
+        }
+
+        ComPtr<IDWriteFont> font;
+        HRESULT hr = fontFamily->GetFirstMatchingFont(weight, stretch, style, &font);
+        if (FAILED(hr)) {
+            TraceError(TAG,
+                       L"Unable to create font for family name \"%hs\" and specified traits",
+                       [static_cast<NSString*>(familyName) UTF8String]);
+            return hr;
+        }
+
+        return font->CreateFontFace(outFontFace);
+    }
+
+    TraceError(TAG, L"Must specify either kCTFontFamilyNameAttribute or kCTFontNameAttribute in font descriptor");
+    return E_INVALIDARG;
+}
+
+/**
+ * Helper function to box a CTFontSymbolicTraits in a CFNumber
+ */
+CFNumberRef _CFNumberCreateFromSymbolicTraits(CTFontSymbolicTraits symbolicTraits) {
+    // symbolic traits are an unsigned 32-bit int
+    // CFNumber doesn't support unsigned ints
+    // get around this by storing in a signed 64-bit int
+    int64_t signedTraits = static_cast<int64_t>(symbolicTraits);
+    return CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt64Type, &signedTraits);
+}
+
+/**
+ * Helper function to unbox a CTFontSymbolicTraits from a CFNumber
+ */
+CTFontSymbolicTraits _CTFontSymbolicTraitsFromCFNumber(CFNumberRef num) {
+    // symbolic traits are an unsigned 32-bit int, but were stored in a signed 64-bit int
+    int64_t ret;
+    CFNumberGetValue(static_cast<CFNumberRef>(num), kCFNumberSInt64Type, &ret);
+    return static_cast<CTFontSymbolicTraits>(ret);
+}
+
+/**
+ * Helper function to retrieve the DWRITE_CARET_METRICS struct from a  DWrite font face.
+ */
+DWRITE_CARET_METRICS _DWriteFontGetCaretMetrics(ComPtr<IDWriteFontFace> fontFace) {
+    ComPtr<IDWriteFontFace1> fontFace1;
+    fontFace.As(&fontFace1);
+
+    DWRITE_CARET_METRICS ret;
+    fontFace1->GetCaretMetrics(&ret);
+    return ret;
+}
+
+/**
+ * Helper function that converts a DWRITE_FONT_WEIGHT into a float usable for kCTFontWeightTrait.
+ */
+CGFloat __DWriteGetCTFontWeight(DWRITE_FONT_WEIGHT weight) {
+    for (const auto& weightMapping : c_weightMap) {
+        if (weight == weightMapping.dwriteValue) {
+            return weightMapping.ctValue;
+        }
+    }
+
+    return kCTFontWeightRegular;
+}
+
+/**
+ * Helper function that converts a DWRITE_FONT_STRETCH into a float usable for kCTFontWidthTrait.
+ */
+CGFloat __DWriteGetCTFontWidth(DWRITE_FONT_STRETCH stretch) {
+    // kCTFontWidthTrait is documented to range from -1.0 to 1.0, centered at 0,
+    // with 'Condensed' fonts returning -0.2 on the reference platform
+    // DWrite stretch ranges from 0-9, centered at 5
+
+    // Reference platform lacks fonts with stretch besides 'normal' or 'condensed',
+    // and it is not yet clear how these values are used
+    // Do an approximate conversion for now
+    return (static_cast<float>(stretch) / 10.0f) - 0.5f;
+}
+
+/**
+ * Helper function that gets the slant angle, in degrees, from a DWrite font face.
+ */
+CGFloat _DWriteFontGetSlantDegrees(ComPtr<IDWriteFontFace> fontFace) {
+    ComPtr<IDWriteFontFace1> fontFace1;
+    fontFace.As(&fontFace1);
+
+    DWRITE_CARET_METRICS caretMetrics;
+    fontFace1->GetCaretMetrics(&caretMetrics);
+    if (caretMetrics.slopeRun && caretMetrics.slopeRise) {
+        CGFloat riseOverRun = static_cast<CGFloat>(caretMetrics.slopeRise) / static_cast<CGFloat>(caretMetrics.slopeRun);
+        return (atan(riseOverRun) * 180 / M_PI) - 90.0f; // Degrees returned by this function must be negative
+    } else {
+        // Avoid dividing by 0, skip math for dividing with 0
+        return -0.0f;
+    }
+}
+
+/**
+ * Helper function that reads certain properties from a DWrite font face,
+ * then parses them into a dictionary suitable for kCTFontTraitsAttribute
+ */
+static CFDictionaryRef _DWriteFontCreateTraitsDict(ComPtr<IDWriteFontFace> fontFace) {
+    // Get pointers for the additional FontFace interfaces
+    ComPtr<IDWriteFontFace1> fontFace1;
+    fontFace.As(&fontFace1);
+    ComPtr<IDWriteFontFace2> fontFace2;
+    fontFace.As(&fontFace2);
+    ComPtr<IDWriteFontFace3> fontFace3;
+    fontFace.As(&fontFace3);
+
+    DWRITE_FONT_WEIGHT weight = fontFace3->GetWeight();
+    DWRITE_FONT_STRETCH stretch = fontFace3->GetStretch();
+    DWRITE_FONT_STYLE style = fontFace3->GetStyle();
+
+    CGFloat weightTrait = __DWriteGetCTFontWeight(weight);
+    CGFloat widthTrait = __DWriteGetCTFontWidth(stretch);
+
+    // kCTFontSlantTrait appears scaled to be 1.0 = 180 degrees, rather than = 30 degrees as documentation claims
+    CGFloat slantTrait = _DWriteFontGetSlantDegrees(fontFace) / -180.0f; // kCTFontSlantTrait is positive for negative angles
+
+    // symbolic traits are a bit mask - evaluate the trueness of each flag
+    CTFontSymbolicTraits symbolicTraits = 0;
+
+    if (style != DWRITE_FONT_STYLE_NORMAL) {
+        symbolicTraits |= kCTFontItalicTrait;
+    }
+
+    if (weight > DWRITE_FONT_WEIGHT_MEDIUM) {
+        symbolicTraits |= kCTFontBoldTrait;
+    }
+
+    if (stretch > DWRITE_FONT_STRETCH_MEDIUM) {
+        symbolicTraits |= kCTFontExpandedTrait;
+    } else if (stretch < DWRITE_FONT_STRETCH_NORMAL) {
+        symbolicTraits |= kCTFontCondensedTrait;
+    }
+
+    if (fontFace1->IsMonospacedFont()) {
+        symbolicTraits |= kCTFontMonoSpaceTrait;
+    }
+
+    if (fontFace1->HasVerticalGlyphVariants()) {
+        symbolicTraits |= kCTFontVerticalTrait;
+    }
+
+    if (fontFace2->IsColorFont()) {
+        symbolicTraits |= kCTFontColorGlyphsTrait;
+    }
+
+    // TODO: The symbolic traits below are poorly documented/have no clear DWrite mapping
+    // if (fontFace->IsFoo()) {
+    //     symbolicTraits |= kCTFontUIOptimizedTrait;
+    // }
+    // if (fontFace->IsFoo()) {
+    //     symbolicTraits |= kCTFontCompositeTrait;
+    // }
+
+    // TODO: The upper 16 bits of symbolic traits describe stylistic aspects of a font, specifically its serifs,
+    // such as modern, ornamental, or sans (no serifs)
+    // DWrite has no such API for characterizing fonts
+    // if (fontFace->IsFoo()) {
+    //     symbolicTraits |= kCTFontOldStyleSerifsClass;
+    // }
+
+    // Keys and values for the final trait dictionary
+    CFTypeRef traitKeys[] = { kCTFontSymbolicTrait, kCTFontWeightTrait, kCTFontWidthTrait, kCTFontSlantTrait };
+    CFTypeRef traitValues[] = { CFAutorelease(_CFNumberCreateFromSymbolicTraits(symbolicTraits)),
+                                CFAutorelease(CFNumberCreate(kCFAllocatorDefault, kCFNumberCGFloatType, &weightTrait)),
+                                CFAutorelease(CFNumberCreate(kCFAllocatorDefault, kCFNumberCGFloatType, &widthTrait)),
+                                CFAutorelease(CFNumberCreate(kCFAllocatorDefault, kCFNumberCGFloatType, &slantTrait)) };
+
+    return CFDictionaryCreate(kCFAllocatorDefault,
+                              traitKeys,
+                              traitValues,
+                              4,
+                              &kCFTypeDictionaryKeyCallBacks,
+                              &kCFTypeDictionaryValueCallBacks);
+}
+
+/**
+ * Gets a name/informational string from a DWrite font face corresponding to a CTFont constant
+ */
+CFStringRef _DWriteFontCopyName(Microsoft::WRL::ComPtr<IDWriteFontFace> fontFace, CFStringRef nameKey) {
+    if (nameKey == nullptr || fontFace == nullptr) {
+        return nullptr;
+    }
+
+    ComPtr<IDWriteLocalizedStrings> name;
+    BOOL exists;
+    DWRITE_INFORMATIONAL_STRING_ID informationalStringId;
+
+    ComPtr<IDWriteFontFace3> dwriteFontFace3;
+    fontFace.As(&dwriteFontFace3);
+
+    if (CFEqual(nameKey, kCTFontCopyrightNameKey)) {
+        informationalStringId = DWRITE_INFORMATIONAL_STRING_COPYRIGHT_NOTICE;
+    } else if (CFEqual(nameKey, kCTFontFamilyNameKey)) {
+        informationalStringId = DWRITE_INFORMATIONAL_STRING_WIN32_FAMILY_NAMES;
+    } else if (CFEqual(nameKey, kCTFontSubFamilyNameKey)) {
+        informationalStringId = DWRITE_INFORMATIONAL_STRING_WIN32_SUBFAMILY_NAMES;
+    } else if (CFEqual(nameKey, kCTFontStyleNameKey)) {
+        THROW_IF_FAILED(dwriteFontFace3->GetFaceNames(&name));
+        return static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(name.Get())));
+
+    } else if (CFEqual(nameKey, kCTFontUniqueNameKey)) {
+        return CFStringCreateWithFormat(kCFAllocatorDefault,
+                                        nullptr,
+                                        CFSTR("%@ %@"),
+                                        CFAutorelease(_DWriteFontCopyName(fontFace, kCTFontFullNameKey)),
+                                        CFAutorelease(_DWriteFontCopyName(fontFace, kCTFontStyleNameKey)));
+
+    } else if (CFEqual(nameKey, kCTFontFullNameKey)) {
+        informationalStringId = DWRITE_INFORMATIONAL_STRING_FULL_NAME;
+    } else if (CFEqual(nameKey, kCTFontVersionNameKey)) {
+        informationalStringId = DWRITE_INFORMATIONAL_STRING_VERSION_STRINGS;
+    } else if (CFEqual(nameKey, kCTFontPostScriptNameKey)) {
+        informationalStringId = DWRITE_INFORMATIONAL_STRING_POSTSCRIPT_NAME;
+    } else if (CFEqual(nameKey, kCTFontTrademarkNameKey)) {
+        informationalStringId = DWRITE_INFORMATIONAL_STRING_TRADEMARK;
+    } else if (CFEqual(nameKey, kCTFontManufacturerNameKey)) {
+        informationalStringId = DWRITE_INFORMATIONAL_STRING_MANUFACTURER;
+    } else if (CFEqual(nameKey, kCTFontDesignerNameKey)) {
+        informationalStringId = DWRITE_INFORMATIONAL_STRING_DESIGNER;
+    } else if (CFEqual(nameKey, kCTFontDescriptionNameKey)) {
+        informationalStringId = DWRITE_INFORMATIONAL_STRING_DESCRIPTION;
+    } else if (CFEqual(nameKey, kCTFontVendorURLNameKey)) {
+        informationalStringId = DWRITE_INFORMATIONAL_STRING_FONT_VENDOR_URL;
+    } else if (CFEqual(nameKey, kCTFontDesignerURLNameKey)) {
+        informationalStringId = DWRITE_INFORMATIONAL_STRING_DESIGNER_URL;
+    } else if (CFEqual(nameKey, kCTFontLicenseNameKey)) {
+        informationalStringId = DWRITE_INFORMATIONAL_STRING_LICENSE_DESCRIPTION;
+    } else if (CFEqual(nameKey, kCTFontLicenseURLNameKey)) {
+        informationalStringId = DWRITE_INFORMATIONAL_STRING_LICENSE_INFO_URL;
+    } else if (CFEqual(nameKey, kCTFontSampleTextNameKey)) {
+        informationalStringId = DWRITE_INFORMATIONAL_STRING_SAMPLE_TEXT;
+    } else if (CFEqual(nameKey, kCTFontPostScriptCIDNameKey)) {
+        informationalStringId = DWRITE_INFORMATIONAL_STRING_POSTSCRIPT_CID_NAME;
+    } else {
+        informationalStringId = DWRITE_INFORMATIONAL_STRING_NONE;
+    }
+
+    THROW_IF_FAILED(dwriteFontFace3->GetInformationalStrings(informationalStringId, &name, &exists));
+    return exists ? static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(name.Get()))) : nullptr;
 }

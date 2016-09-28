@@ -75,3 +75,28 @@ TEST(UIFontDescriptor, ByAddingAttributes) {
            UIFontDescriptorNameAttribute : name };
     ASSERT_OBJCEQ(expectedAttributes, [newFd fontAttributes]);
 }
+
+TEST(UIFontDescriptor, FontDescriptorWith) {
+    NSString* name = @"FakeFontName";
+    CGFloat size = 100.0f;
+    UIFontDescriptor* fd = [UIFontDescriptor fontDescriptorWithName:name size:size];
+
+    NSString* style = @"FakeFontStyle";
+    UIFontDescriptor* fdWithFace = [fd fontDescriptorWithFace:style];
+    EXPECT_OBJCEQ(style, [fdWithFace objectForKey:UIFontDescriptorFaceAttribute]);
+
+    NSString* familyName = @"FakeFamilyName";
+    UIFontDescriptor* fdWithFamily = [fd fontDescriptorWithFamily:familyName];
+    EXPECT_OBJCEQ(familyName, [fdWithFamily objectForKey:UIFontDescriptorFamilyAttribute]);
+    EXPECT_OBJCEQ(nil, [fdWithFamily objectForKey:UIFontDescriptorNameAttribute]);
+
+    CGAffineTransform matrix = CGAffineTransformMakeRotation(12.42f);
+    UIFontDescriptor* fdWithMatrix = [fd fontDescriptorWithMatrix:matrix];
+    CGAffineTransform outMatrix = [fdWithMatrix matrix];
+    EXPECT_EQ(0, memcmp(&matrix, &outMatrix, sizeof(CGAffineTransform)));
+
+    CGFloat newSize = 120.0f;
+    UIFontDescriptor* fdWithSize = [fd fontDescriptorWithSize:newSize];
+    EXPECT_EQ(newSize, [fdWithSize pointSize]);
+    EXPECT_OBJCEQ(name, [fdWithSize objectForKey:UIFontDescriptorNameAttribute]);
+}

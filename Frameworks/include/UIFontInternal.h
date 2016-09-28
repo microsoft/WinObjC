@@ -24,6 +24,5 @@
 + (UIFont*)titleFont;
 + (UIFont*)messageFont;
 + (UIFont*)buttonFont;
-- (void)_setName:(NSString*)name;
 - (uint32_t)_sizingFontHandle;
 @end

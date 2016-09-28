@@ -47,7 +47,7 @@ UIKIT_EXPORT_CLASS
 + (UIFont*)systemFontOfSize:(CGFloat)fontSize weight:(CGFloat)weight STUB_METHOD;
 + (UIFont*)boldSystemFontOfSize:(CGFloat)fontSize;
 + (UIFont*)italicSystemFontOfSize:(CGFloat)fontSize;
-+ (UIFont*)monospacedDigitSystemFontOfSize:(CGFloat)fontSize weight:(CGFloat)weight STUB_METHOD;
++ (UIFont*)monospacedDigitSystemFontOfSize:(CGFloat)fontSize weight:(CGFloat)weight;
 
 + (NSArray<NSString*>*)familyNames;
 + (NSArray<NSString*>*)fontNamesForFamilyName:(NSString*)familyName;

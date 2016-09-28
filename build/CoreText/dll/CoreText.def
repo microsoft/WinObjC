@@ -43,6 +43,19 @@ LIBRARY CoreText
         kCTFontButtonFontSize DATA
         kCTFontSmallSystemFontSize DATA
         kCTFontSystemFontSize DATA
+        kCTFontWeightUltraLight DATA
+        kCTFontWeightThin DATA
+        kCTFontWeightLight DATA
+        kCTFontWeightRegular DATA
+        kCTFontWeightMedium DATA
+        kCTFontWeightSemibold DATA
+        kCTFontWeightBold DATA
+        kCTFontWeightHeavy DATA
+        kCTFontWeightBlack DATA
+        kCTFontDefaultFontName DATA;
+        kCTFontDefaultBoldFontName DATA;
+        kCTFontDefaultItalicFontName DATA;
+        kCTFontDefaultMonospacedFontName DATA;
 
         ; CTFont Reference.mm
         kCTFontCopyrightNameKey DATA

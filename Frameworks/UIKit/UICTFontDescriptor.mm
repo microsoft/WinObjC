@@ -50,5 +50,21 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CTFontDescriptorRef, CTFontDescriptorGetTypeID, UIF
         autorelease];
 }
 
+- (NSUInteger)hash {
+    return CFHash((CTFontRef)self);
+}
+
+- (NSString*)description {
+    return [(__bridge NSString*)CFCopyDescription((CTFontDescriptorRef)self) autorelease];
+}
+
+- (BOOL)isEqual:(UIFont*)other {
+    if (![other isKindOfClass:[UICTFontDescriptor class]]) {
+        return [super isEqual:other];
+    }
+
+    return CFEqual((CTFontDescriptorRef)self, (CTFontDescriptorRef)other);
+}
+
 @end
 #pragma endregion

@@ -43,8 +43,6 @@
 
 using namespace Microsoft::WRL;
 
-NSString* const c_defaultFontName = @"Arial";
-
 @implementation UIFont
 
 BASE_CLASS_REQUIRED_IMPLS(UIFont, UICTFont, CTFontGetTypeID);
@@ -80,20 +78,12 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UICTFont, CTFontGetTypeID);
 }
 
 /**
- @Status Caveat
- @Notes  Currently only takes the name, and possibly size, from the font descriptor
+ @Status Interoperable
  @Tags          Font
  @Public        Yes
 */
 + (UIFont*)fontWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)fontSize {
-    // TODO: Needs to more deeply read the font descriptor - this is probably fine as a placeholder
-    // Needs to probably also not rely on a private function
-    if (fontSize <= 0) {
-        fontSize = descriptor.pointSize;
-    }
-
-    UIFont* font = [UIFont fontWithName:[descriptor objectForKey:UIFontDescriptorNameAttribute] size:fontSize];
-    return font;
+    return [UICTFont fontWithDescriptor:descriptor size:fontSize];
 }
 
 + (UIFont*)messageFont {
@@ -120,8 +110,7 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UICTFont, CTFontGetTypeID);
  @Status Interoperable
 */
 + (UIFont*)systemFontOfSize:(CGFloat)size {
-    UIFont* ret = [self fontWithName:c_defaultFontName size:size];
-    return ret;
+    return [self fontWithName:(__bridge NSString*)kCTFontDefaultFontName size:size];
 }
 
 /**
@@ -136,26 +125,21 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UICTFont, CTFontGetTypeID);
  @Status Interoperable
 */
 + (UIFont*)boldSystemFontOfSize:(CGFloat)size {
-    UIFontDescriptor* fontDes = [UIFontDescriptor fontDescriptorWithName:@"Arial Bold" size:size];
-    UIFont* ret = [self fontWithDescriptor:fontDes size:size];
-    return ret;
+    return [self fontWithName:(__bridge NSString*)kCTFontDefaultBoldFontName size:size];
 }
 
 /**
  @Status Interoperable
 */
 + (UIFont*)italicSystemFontOfSize:(CGFloat)size {
-    UIFontDescriptor* fontDes = [UIFontDescriptor fontDescriptorWithName:@"Arial Oblique" size:size];
-    UIFont* ret = [self fontWithDescriptor:fontDes size:size];
-    return ret;
+    return [self fontWithName:(__bridge NSString*)kCTFontDefaultItalicFontName size:size];
 }
 
 /**
  @Status Stub
 */
 + (UIFont*)monospacedDigitSystemFontOfSize:(CGFloat)size weight:(CGFloat)weight {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self fontWithName:(__bridge NSString*)kCTFontDefaultMonospacedFontName size:size];
 }
 
 /**
@@ -230,11 +214,10 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UICTFont, CTFontGetTypeID);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (CGFloat)leading {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -243,8 +226,7 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UICTFont, CTFontGetTypeID);
  @Public        Yes
 */
 - (UIFontDescriptor*)fontDescriptor {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -307,15 +289,6 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UICTFont, CTFontGetTypeID);
 */
 - (instancetype)copyWithZone:(NSZone*)zone {
     return [self retain];
-}
-
-- (void)_setName:(NSString*)name {
-    UNIMPLEMENTED();
-}
-
-- (uint32_t)_fontHandle {
-    UNIMPLEMENTED();
-    return StubReturn();
 }
 
 - (uint32_t)_sizingFontHandle {
