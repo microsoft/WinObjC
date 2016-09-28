@@ -19,11 +19,10 @@
 #import <UIKit/UIFont.h>
 #import <UIKit/UIFontDescriptor.h>
 
-#import <CGFontInternal.h>
 #import <CGDataProviderInternal.h>
 
+#import <CoreGraphics/DWriteWrapper.h>
 #import <CoreText/CTFont.h>
-#import <CoreText/DWriteWrapper.h>
 
 #import <NSRaise.h>
 #import <BridgeHelpers.h>
@@ -289,11 +288,6 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UIFontPrototype, CTFontGetTypeID);
 */
 - (instancetype)copyWithZone:(NSZone*)zone {
     return [self retain];
-}
-
-- (uint32_t)_sizingFontHandle {
-    UNIMPLEMENTED();
-    return StubReturn();
 }
 
 // WinObjC-only extension for UINibUnarchiver

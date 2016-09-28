@@ -17,9 +17,8 @@
 #import <CoreText/CTTypesetter.h>
 #import <StubReturn.h>
 #import "CoreTextInternal.h"
-#import "CGFontInternal.h"
 #import "UIFontInternal.h"
-#import <CoreText/DWriteWrapper.h>
+#import "DWriteWrapper_CoreText.h"
 #import <Foundation/NSAttributedString.h>
 #import <algorithm>
 #import "LoggingNative.h"

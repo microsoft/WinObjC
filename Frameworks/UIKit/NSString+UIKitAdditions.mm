@@ -21,7 +21,6 @@
 #import <UIFontInternal.h>
 #import <Foundation/NSMutableDictionary.h>
 #import "CoreGraphics/CGContext.h"
-#import "CGFontInternal.h"
 #import "CoreTextInternal.h"
 #import <assert.h>
 #import "LoggingNative.h"

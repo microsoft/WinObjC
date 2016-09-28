@@ -436,3 +436,104 @@ TEST(CTFont, GetAdvancesForGlyphs) {
     }
 #endif
 }
+
+TEST(CTFont, GetBoundingBox) {
+// Font names differ slightly between platforms
+// Windows may have slightly different versions of the same fonts compared to the reference platform
+#if TARGET_OS_WIN32
+    CFStringRef name = CFSTR("Arial Italic");
+    CGRect expectedBox = { { -36.9264, -23.188 }, { 133.967, 94.4256 } };
+#else
+    CFStringRef name = CFSTR("Arial-ItalicMT");
+    CGRect expectedBox = { { -36.9264, -23.188 }, { 135.432, 94.4256 } };
+#endif
+
+    CTFontRef font = CTFontCreateWithName(name, 71.412f, nullptr);
+    CFAutorelease(font);
+
+    CGRect box = CTFontGetBoundingBox(font);
+    EXPECT_NEAR(expectedBox.origin.x, box.origin.x, c_errorMargin);
+    EXPECT_NEAR(expectedBox.origin.y, box.origin.y, c_errorMargin);
+    EXPECT_NEAR(expectedBox.size.width, box.size.width, c_errorMargin);
+    EXPECT_NEAR(expectedBox.size.height, box.size.height, c_errorMargin);
+}
+
+TEST(CTFont, GetBoundingBoxes) {
+// Font names differ slightly between platforms
+#if TARGET_OS_WIN32
+    CFStringRef name = CFSTR("Arial Bold Italic");
+#else
+    CFStringRef name = CFSTR("Arial-BoldItalicMT");
+#endif
+
+    CTFontRef font = CTFontCreateWithName(name, 585.45f, nullptr);
+    CFAutorelease(font);
+
+    const size_t count = 3;
+    CGGlyph glyphs[count] = { 68, 40, 22 };
+    CGRect boxes[count];
+
+    // Default/horizontal orientation
+    CGRect expectedBoxes[count] = {
+        { { 26.2995, -7.14661 }, { 285.864, 317.881 } },
+        { { 24.0126, 0 }, { 398.209, 419.077 } },
+        { { 29.7299, -7.14661 }, { 298.156, 427.939 } },
+    };
+
+    CGRect expectedTotalBox = { { 24.0126, -7.14661 }, { 398.209, 427.939 } };
+
+    CGRect totalBox = CTFontGetBoundingRectsForGlyphs(font, kCTFontDefaultOrientation, glyphs, boxes, count);
+    EXPECT_NEAR(expectedTotalBox.origin.x, totalBox.origin.x, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBox.origin.y, totalBox.origin.y, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBox.size.width, totalBox.size.width, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBox.size.height, totalBox.size.height, c_errorMargin);
+
+    for (size_t i = 0; i < count; ++i) {
+        EXPECT_NEAR(expectedBoxes[i].origin.x, boxes[i].origin.x, c_errorMargin);
+        EXPECT_NEAR(expectedBoxes[i].origin.y, boxes[i].origin.y, c_errorMargin);
+        EXPECT_NEAR(expectedBoxes[i].size.width, boxes[i].size.width, c_errorMargin);
+        EXPECT_NEAR(expectedBoxes[i].size.height, boxes[i].size.height, c_errorMargin);
+    }
+
+    totalBox = CTFontGetBoundingRectsForGlyphs(font, kCTFontHorizontalOrientation, glyphs, boxes, count);
+    EXPECT_NEAR(expectedTotalBox.origin.x, totalBox.origin.x, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBox.origin.y, totalBox.origin.y, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBox.size.width, totalBox.size.width, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBox.size.height, totalBox.size.height, c_errorMargin);
+    for (size_t i = 0; i < count; ++i) {
+        EXPECT_NEAR(expectedBoxes[i].origin.x, boxes[i].origin.x, c_errorMargin);
+        EXPECT_NEAR(expectedBoxes[i].origin.y, boxes[i].origin.y, c_errorMargin);
+        EXPECT_NEAR(expectedBoxes[i].size.width, boxes[i].size.width, c_errorMargin);
+        EXPECT_NEAR(expectedBoxes[i].size.height, boxes[i].size.height, c_errorMargin);
+    }
+
+    // Null outpointer for boxes should evaluate just the total box
+    totalBox = CTFontGetBoundingRectsForGlyphs(font, kCTFontHorizontalOrientation, glyphs, nullptr, count);
+    EXPECT_NEAR(expectedTotalBox.origin.x, totalBox.origin.x, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBox.origin.y, totalBox.origin.y, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBox.size.width, totalBox.size.width, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBox.size.height, totalBox.size.height, c_errorMargin);
+
+// DWrite seems to not respect orientation
+#if !TARGET_OS_WIN32
+    // Vertical orientation
+    CGRect expectedBoxesVert[count] = {
+        { { 29.158, -136.357 }, { 317.881, 285.864 } },
+        { { 29.158, -171.233 }, { 419.077, 398.209 } },
+        { { 29.158, -132.927 }, { 427.939, 298.156 } },
+    };
+    CGRect expectedTotalBoxVert = { { 29.158, -171.233 }, { 427.939, 398.209 } };
+
+    totalBox = CTFontGetBoundingRectsForGlyphs(font, kCTFontVerticalOrientation, glyphs, boxes, count);
+    EXPECT_NEAR(expectedTotalBoxVert.origin.x, totalBox.origin.x, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBoxVert.origin.y, totalBox.origin.y, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBoxVert.size.width, totalBox.size.width, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBoxVert.size.height, totalBox.size.height, c_errorMargin);
+    for (size_t i = 0; i < count; ++i) {
+        EXPECT_NEAR(expectedBoxesVert[i].origin.x, boxes[i].origin.x, c_errorMargin);
+        EXPECT_NEAR(expectedBoxesVert[i].origin.y, boxes[i].origin.y, c_errorMargin);
+        EXPECT_NEAR(expectedBoxesVert[i].size.width, boxes[i].size.width, c_errorMargin);
+        EXPECT_NEAR(expectedBoxesVert[i].size.height, boxes[i].size.height, c_errorMargin);
+    }
+#endif
+}

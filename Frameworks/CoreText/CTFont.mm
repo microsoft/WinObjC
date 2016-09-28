@@ -15,21 +15,22 @@
 //******************************************************************************
 
 #import <CoreText/CTFont.h>
-#import <CGFontInternal.h>
+#import <CoreGraphics/CGFont.h>
 #import <LoggingNative.h>
 #import <Starboard.h>
 #import <StubReturn.h>
 #import <CoreFoundation/CFString.h>
 #import <CFRuntime.h>
 #import <CFBridgeUtilities.h>
-#import <CoreText/DWriteWrapper.h>
-#import "UIFontInternal.h"
+#import <UIKit/UIFont.h>
 
 #import <CoreText/CTFontDescriptor.h>
 #include <COMIncludes.h>
 #import <DWrite_3.h>
 #import <wrl/client.h>
 #include <COMIncludes_End.h>
+
+#import "DWriteWrapper_CoreText.h"
 
 #import <map>
 #import <memory>
@@ -608,12 +609,23 @@ CFIndex CTFontGetGlyphCount(CTFontRef font) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGRect CTFontGetBoundingBox(CTFontRef font) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!font) {
+        return { { 0, 0 }, { 0, 0 } };
+    }
+
+    CGRect ret = _DWriteFontGetBoundingBox(font->_dwriteFontFace);
+
+    // Scale the bounding box
+    ret.origin.x = __CTFontScaleMetric(font, ret.origin.x);
+    ret.origin.y = __CTFontScaleMetric(font, ret.origin.y);
+    ret.size.width = __CTFontScaleMetric(font, ret.size.width);
+    ret.size.height = __CTFontScaleMetric(font, ret.size.height);
+
+    return ret;
 }
 
 /**
@@ -692,13 +704,50 @@ CGGlyph CTFontGetGlyphWithName(CTFontRef font, CFStringRef glyphName) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes  kCTFontVerticalOrientation is unsupported, returns the same as default and horizontal orientations
 */
 CGRect CTFontGetBoundingRectsForGlyphs(
     CTFontRef font, CTFontOrientation orientation, const CGGlyph glyphs[], CGRect* boundingRects, CFIndex count) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!glyphs || count <= 0) {
+        TraceError(g_logTag, L"No glyphs were specified");
+        return CGRectNull;
+    }
+
+    if (boundingRects) {
+        if (FAILED(_DWriteFontGetBoundingBoxesForGlyphs(
+                font->_dwriteFontFace, glyphs, boundingRects, count, (orientation == kCTFontVerticalOrientation)))) {
+            TraceError(g_logTag, L"Unable to get glyph bounding boxes");
+            return CGRectNull;
+
+        } else {
+            CGRect ret = { { std::numeric_limits<CGFloat>::max(), std::numeric_limits<CGFloat>::max() },
+                           { std::numeric_limits<CGFloat>::lowest(), std::numeric_limits<CGFloat>::lowest() } };
+            for (size_t i = 0; i < count; ++i) {
+                // DWrite uses design units, where as CTFont uses point size
+                // Scale all the boundingRects
+                boundingRects[i].origin.x = __CTFontScaleMetric(font, boundingRects[i].origin.x);
+                boundingRects[i].origin.y = __CTFontScaleMetric(font, boundingRects[i].origin.y);
+                boundingRects[i].size.width = __CTFontScaleMetric(font, boundingRects[i].size.width);
+                boundingRects[i].size.height = __CTFontScaleMetric(font, boundingRects[i].size.height);
+
+                // Find the overall bounding rect
+                // This can probably be made more efficient by putting all of each attribute in an array and sorting it,
+                // but that seems like overkill for now
+                ret.origin.x = std::min(ret.origin.x, boundingRects[i].origin.x);
+                ret.origin.y = std::min(ret.origin.y, boundingRects[i].origin.y);
+                ret.size.width = std::max(ret.size.width, boundingRects[i].size.width);
+                ret.size.height = std::max(ret.size.height, boundingRects[i].size.height);
+            }
+            return ret;
+        }
+
+    } else {
+        // Caller doesn't care about boundingRects, but still needs to calculate the overall rect
+        // Call the boundingRects code path above with a temporary buffer
+        std::vector<CGRect> rects = std::vector<CGRect>(count);
+        return CTFontGetBoundingRectsForGlyphs(font, orientation, glyphs, rects.data(), count);
+    }
 }
 
 /**
@@ -838,12 +887,11 @@ CFArrayRef CTFontCopyAvailableTables(CTFontRef font, CTFontTableOptions options)
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
+ @Notes options is not supported, and is deprecated anyway
 */
 CFDataRef CTFontCopyTable(CTFontRef font, CTFontTableTag table, CTFontTableOptions options) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return _DWriteFontCopyTable(font->_dwriteFontFace, table);
 }
 
 /**

@@ -19,7 +19,7 @@
 #import "NSStringInternal.h"
 #import "CoreTextInternal.h"
 #import "CGContextInternal.h"
-#import <CoreText/DWriteWrapper.h>
+#import "DWriteWrapper_CoreText.h"
 #import <CoreText/CTTypesetter.h>
 
 #include <algorithm>
