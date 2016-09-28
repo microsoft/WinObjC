@@ -425,6 +425,7 @@ public:
     } else {
         if (layoutProperties->_contentHuggingConstraint[Horizontal].FIsInSolver()) {
             if (contentSize.width != layoutProperties->_contentHuggingConstraint[Horizontal].Expression().Constant()) {
+                // Changing constants on constraints while they're in a solver is ineffectual. Explicitly add/remove.
                 c_solver.RemoveConstraint(&layoutProperties->_contentHuggingConstraint[Horizontal]);
                 c_solver.RemoveConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Horizontal]);
                 layoutProperties->_contentHuggingConstraint[Horizontal].ChangeConstant(contentSize.width);
@@ -468,6 +469,7 @@ public:
     } else {
         if (layoutProperties->_contentHuggingConstraint[Vertical].FIsInSolver()) {
             if (contentSize.height != layoutProperties->_contentHuggingConstraint[Vertical].Expression().Constant()) {
+                // Changing constants on constraints while they're in a solver is ineffectual. Explicitly add/remove.
                 c_solver.RemoveConstraint(&layoutProperties->_contentHuggingConstraint[Vertical]);
                 c_solver.RemoveConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Vertical]);
                 layoutProperties->_contentHuggingConstraint[Vertical].ChangeConstant(contentSize.height);

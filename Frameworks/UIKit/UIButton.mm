@@ -264,17 +264,6 @@ struct ButtonState {
     }
 }
 
-static CGSize getTitleSize(UIButton* self, CGRect bounds) {
-    CGSize textSize = { 0 };
-
-    NSString* title = self.currentTitle;
-    if ([title length] > 0) {
-        textSize = [title sizeWithFont:self.font constrainedToSize:CGSizeMake(10000.0f, 10000.0f)];
-    }
-
-    return textSize;
-}
-
 /**
  @Status Interoperable
 */

@@ -64,6 +64,14 @@
     touchUpInsideCount = 0;
 }
 
++ (UIImage*)scaledTestImage {
+    static UIImage* image;
+    if (!image) {
+        image = [UIImage imageWithCGImage:[UIImage imageNamed:@"button_image.PNG"].CGImage scale:3.0f orientation:UIImageOrientationUp];
+    }
+    return image;
+}
+
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
     return 14;
 }
@@ -216,7 +224,7 @@
             [[UIButton alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop + _labelHeight, _defaultWidth, _defaultHeight)];
         [button setTitle:@"Image Button" forState:UIControlStateNormal];
         [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [button setImage:[UIImage imageNamed:@"button_image.PNG"] forState:UIControlStateNormal];
+        [button setImage:[UIButtonViewController scaledTestImage] forState:UIControlStateNormal];
 
         [cell addSubview:label];
         [cell addSubview:button];
@@ -228,7 +236,7 @@
             [[UIButton alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop + _labelHeight, _defaultWidth, _defaultHeight)];
         [button setTitle:@"Image Button" forState:UIControlStateNormal];
         [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [button setImage:[UIImage imageNamed:@"button_image.PNG"] forState:UIControlStateNormal];
+        [button setImage:[UIButtonViewController scaledTestImage] forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageNamed:@"blue_background.jpg"] forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageNamed:@"yellow_background.jpg"] forState:UIControlStateHighlighted];
 
@@ -257,7 +265,7 @@
         UIButton* button =
             [[UIButton alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop + _labelHeight, _defaultWidth, _defaultHeight)];
         [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [button setImage:[UIImage imageNamed:@"button_image.PNG"] forState:UIControlStateNormal];
+        [button setImage:[UIButtonViewController scaledTestImage] forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageNamed:@"blue_background.jpg"] forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageNamed:@"yellow_background.jpg"] forState:UIControlStateHighlighted];
 
