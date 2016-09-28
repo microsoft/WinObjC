@@ -69,6 +69,9 @@ WINRT_EXPORT
 @interface WDIPointerDevice : RTObject
 + (WDIPointerDevice*)getPointerDevice:(unsigned int)pointerId;
 + (NSArray* /* WDIPointerDevice* */)getPointerDevices;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) BOOL isIntegrated;
 @property (readonly) unsigned int maxContacts;
 @property (readonly) WFRect* physicalDeviceRect;
@@ -87,6 +90,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDIMouseDevice : RTObject
 + (WDIMouseDevice*)getForCurrentView;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (EventRegistrationToken)addMouseMovedEvent:(void (^)(WDIMouseDevice*, WDIMouseEventArgs*))del;
 - (void)removeMouseMovedEvent:(EventRegistrationToken)tok;
 @end
@@ -99,6 +105,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDIMouseEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WDIMouseDelta* mouseDelta;
 @end
 
@@ -111,6 +120,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDIMouseCapabilities : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) int horizontalWheelPresent;
 @property (readonly) int mousePresent;
 @property (readonly) unsigned int numberOfButtons;
@@ -127,6 +139,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDIKeyboardCapabilities : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) int keyboardPresent;
 @end
 
@@ -139,6 +154,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDITouchCapabilities : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) unsigned int contacts;
 @property (readonly) int touchPresent;
 @end

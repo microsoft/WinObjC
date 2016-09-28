@@ -138,6 +138,7 @@
     <ClCompile Include="src\utils\miscutils.cpp" />
     <ClCompile Include="src\utils\sbassert.cpp" />
     <ClCompile Include="src\utils\stringutils.cpp" />
+    <ClCompile Include="src\utils\telemetryutils.cpp" />
     <ClCompile Include="src\utils\tokenizer.cpp" />
     <ClCompile Include="src\utils\wildcardmatch.cpp" />
     <ClCompile Include="src\utils\xc2vs.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="include\utils\miscutils.h" />
     <ClInclude Include="include\utils\sbassert.h" />
     <ClInclude Include="include\utils\stringutils.h" />
+    <ClInclude Include="include\utils\telemetryutils.h" />
     <ClInclude Include="include\utils\tokenizer.h" />
     <ClInclude Include="include\utils\wildcardmatch.h" />
     <ClInclude Include="include\utils\xc2vs.h" />

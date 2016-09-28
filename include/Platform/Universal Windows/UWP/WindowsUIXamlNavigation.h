@@ -92,6 +92,9 @@ typedef void (^WUXNNavigationStoppedEventHandler)(RTObject* sender, WUXNNavigati
 
 WINRT_EXPORT
 @interface WUXNNavigationEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WFUri* uri;
 @property (readonly) RTObject* content;
 @property (readonly) WUXNNavigationMode navigationMode;
@@ -108,6 +111,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXNNavigatingCancelEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property BOOL cancel;
 @property (readonly) WUXNNavigationMode navigationMode;
 @property (readonly) WUXITypeName* sourcePageType;
@@ -123,6 +129,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXNNavigationFailedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property BOOL handled;
 @property (readonly) HRESULT exception;
 @property (readonly) WUXITypeName* sourcePageType;
@@ -136,6 +145,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -157,6 +169,9 @@ WINRT_EXPORT
 + (WUXNPageStackEntry*)makeInstance:(WUXITypeName*)sourcePageType
                           parameter:(RTObject*)parameter
            navigationTransitionInfo:(WUXMANavigationTransitionInfo*)navigationTransitionInfo ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WUXMANavigationTransitionInfo* navigationTransitionInfo;
 @property (readonly) RTObject* parameter;
 @property (readonly) WUXITypeName* sourcePageType;

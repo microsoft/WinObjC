@@ -395,10 +395,10 @@ std::vector<StrongId<WSCPasswordCredentialWrapper>> FindMatchingCredentials(NSDi
 
         if (validCredential) {
             validCredentials.emplace_back(std::move(wrapper));
-        }
 
-        if (!findAll) {
-            break;
+            if (!findAll) {
+                break;
+            }
         }
     }
 

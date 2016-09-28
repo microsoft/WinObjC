@@ -52,7 +52,7 @@ static const CGFloat c_LineWidth = 20;
     CGContextSetLineWidth(context, c_LineWidth);
     CGPathMoveToPoint(path, NULL, 10, maxHeight / 2);
     CGPathAddLineToPoint(path, NULL, maxWidth / 4, maxHeight / 2);
-    CGPathAddArcToPoint(path, NULL, maxWidth / 4 + 50, maxHeight * 2 + 50, maxWidth / 2, maxHeight * 3 / 4, 50);
+    CGPathAddArcToPoint(path, NULL, maxWidth / 4 + 25, maxHeight + 50, maxWidth / 2, maxHeight * 3 / 4, 50);
     CGPathAddQuadCurveToPoint(path, NULL, maxWidth * 3 / 4, maxHeight * 1 / 4, maxWidth - 10, 10);
     // Log original path info
     [self.logs addObject:@"Original Path:"];

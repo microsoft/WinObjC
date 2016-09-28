@@ -37,10 +37,10 @@ static void checkWinObjCSDK()
   const BuildSettings bs(NULL);
   String sdkRoot = bs.getValue("WINOBJC_SDK_ROOT");
   String baseErrMsg = "Invalid WINOBJC_SDK_ROOT specified: \"" + platformPath(sdkRoot) + "\". ";
-  sbValidate(!sb_realpath(sdkRoot).empty(), baseErrMsg + "The SDK directory does not exist.");
+  sbValidateWithTelemetry(!sb_realpath(sdkRoot).empty(), baseErrMsg + "The SDK directory does not exist.");
 
   String templateDir = bs.getValue("VSIMPORTER_TEMPLATES_DIR");
-  sbValidate(!sb_realpath(templateDir).empty(), baseErrMsg + "The SDK directory is missing vsimporter templates.");
+  sbValidateWithTelemetry(!sb_realpath(templateDir).empty(), baseErrMsg + "The SDK directory is missing vsimporter templates.");
 }
 
 void printVersion(const char *execName)
@@ -207,12 +207,13 @@ int main(int argc, char* argv[])
     String arg = argv[optind];
     if (arg == "/?") {
         // Due to issue 6715724, flush before exiting
-        TELEMETRY_FLUSH();
+		TELEMETRY_EVENT_DATA(L"VSImporterIncomplete", "printUsage");
+		TELEMETRY_FLUSH();
         printUsage(argv[0], true, EXIT_SUCCESS);
     } else if (arg.find_first_of('=') != String::npos) {
       settingsManager.processGlobalAssignment(arg);
     } else {
-      sbValidate(0, "Unsupported argument: " + arg);
+		sbValidateWithTelemetry(0, "Unsupported argument: " + arg);
     }
     optind++;
   }
@@ -230,8 +231,9 @@ int main(int argc, char* argv[])
     logLevel = SB_WARN;
   else if (logVerbosity == "error")
     logLevel = SB_ERROR;
-  else if (!logVerbosity.empty())
-    sbValidate(0, "Unrecognized logging verbosity: " + logVerbosity);
+  else if (!logVerbosity.empty()) {
+	  sbValidateWithTelemetry(0, "Unrecognized logging verbosity: " + logVerbosity);
+  }
   SBLog::setVerbosity(logLevel);
 
   // Look for a project file in current directory, if one hasn't been explicitly specified 
@@ -242,15 +244,16 @@ int main(int argc, char* argv[])
     findFiles(".", "*.xcworkspace", DT_DIR, false, workspaces);
 
     if (!workspaces.empty()) {
-      sbValidate(workspaces.size() == 1, "Multiple workspaces found. Select the workspace to use with the -workspace option.");
+      sbValidateWithTelemetry(workspaces.size() == 1, "Multiple workspaces found. Select the workspace to use with the -workspace option.");
       workspacePath = workspaces.front();
       workspaceSet = 1;
-    } else if (!projects.empty()) {
-      sbValidate(projects.size() == 1, "Multiple projects found. Select the project to use with the -project option.");
-      projectPath = projects.front();
-      projectSet = 1;
-    } else {
-      sbValidate(0, "The current directory does not contain a project or workspace.");
+	}
+	else if (!projects.empty()) {
+		sbValidateWithTelemetry(projects.size() == 1, "Multiple projects found. Select the project to use with the -project option.");
+		projectPath = projects.front();
+		projectSet = 1;
+	} else {
+		sbValidateWithTelemetry(0, "The current directory does not contain a project or workspace.");
     }
   }
 
@@ -261,12 +264,12 @@ int main(int argc, char* argv[])
 
   // Make sure workspace arguments are valid
   if (workspaceSet) {
-    sbValidate(!projectSet, "Cannot specify both a project and a workspace.");
-    sbValidate(targets.empty(), "Cannot specify target(s) when specifying a workspace.");
+	  sbValidateWithTelemetry(!projectSet, "Cannot specify both a project and a workspace.");
+	sbValidateWithTelemetry(targets.empty(), "Cannot specify target(s) when specifying a workspace.");
   }
 
   // Disallow specifying schemes and targets together
-  sbValidate((schemes.empty() && !allSchemes) || (targets.empty() && !allTargets), "Cannot specify schemes and targets together.");
+  sbValidateWithTelemetry((schemes.empty() && !allSchemes) || (targets.empty() && !allTargets), "Cannot specify schemes and targets together.");
 
   // Process allTargets and allSchemes flags
   if (allSchemes)
@@ -276,7 +279,7 @@ int main(int argc, char* argv[])
 
   // Initialize global settings
   String binaryDir = sb_dirname(getBinaryLocation());
-  sbValidate(!binaryDir.empty(), "Failed to resolve binary directory.");
+  sbValidateWithTelemetry(!binaryDir.empty(), "Failed to resolve binary directory.");
   settingsManager.setGlobalVar("VSIMPORTER_BINARY_DIR", binaryDir);
   settingsManager.setGlobalVar("VSIMPORTER_INTERACTIVE", interactiveFlag ? "YES" : "NO");
   settingsManager.setGlobalVar("VSIMPORTER_RELATIVE_SDK_PATH", relativeSdkFlag ? "YES" : "NO");
@@ -289,7 +292,7 @@ int main(int argc, char* argv[])
 
   // Add useful environment variables to global settings
   String username;
-  sbValidate(sb_getenv("USERNAME", username), "Failed to get current username.");
+  sbValidateWithTelemetry(sb_getenv("USERNAME", username), "Failed to get current username.");
   settingsManager.setGlobalVar("USER", username);
 
   // Read xcconfig file specified from the command line
@@ -311,7 +314,7 @@ int main(int argc, char* argv[])
   } else if (projectSet) {
     mainWorkspace = SBWorkspace::createFromProject(projectPath);
   } else {
-    sbAssert(0); // non-reachable
+	  sbAssertWithTelemetry(0); // non-reachable
   }
 
   if (mode == ListMode) {
@@ -324,11 +327,11 @@ int main(int argc, char* argv[])
     } else if (workspaceSet) {
       mainWorkspace->queueSchemes(schemes, configurations);
     } else {
-      sbAssert(0); // non-reachable
+		sbAssertWithTelemetry(0); // non-reachable
     }
     mainWorkspace->generateFiles();
   } else {
-    sbAssert(0); // non-reachable
+	  sbAssertWithTelemetry(0); // non-reachable
   }
 
   TELEMETRY_EVENT_DATA(L"VSImporterComplete", "WinStore10");

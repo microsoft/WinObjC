@@ -192,6 +192,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDSSmsTextMessage2 : RTObject <WDSISmsMessageBase>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WDSSmsMessageType messageType;
 @property (readonly) NSString* deviceId;
 @property (readonly) WDSCellularClass cellularClass;
@@ -217,6 +220,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsWapMessage : RTObject <WDSISmsMessageBase>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WDSCellularClass cellularClass;
 @property (readonly) NSString* deviceId;
 @property (readonly) WDSSmsMessageClass messageClass;
@@ -240,6 +246,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDSSmsAppMessage : RTObject <WDSISmsMessageBase>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property int protocolId;
 @property int portNumber;
 @property BOOL isDeliveryNotificationEnabled;
@@ -267,6 +276,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsBroadcastMessage : RTObject <WDSISmsMessageBase>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* body;
 @property (readonly) WDSSmsBroadcastType broadcastType;
 @property (readonly) int channel;
@@ -292,6 +304,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsVoicemailMessage : RTObject <WDSISmsMessageBase>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WDSCellularClass cellularClass;
 @property (readonly) NSString* deviceId;
 @property (readonly) WDSSmsMessageClass messageClass;
@@ -311,6 +326,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsStatusMessage : RTObject <WDSISmsMessageBase>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WDSCellularClass cellularClass;
 @property (readonly) NSString* deviceId;
 @property (readonly) WDSSmsMessageClass messageClass;
@@ -333,6 +351,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsSendMessageResult : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WDSCellularClass cellularClass;
 @property (readonly) BOOL isErrorTransient;
 @property (readonly) BOOL isSuccessful;
@@ -354,6 +375,9 @@ WINRT_EXPORT
 + (WDSSmsDevice2*)fromId:(NSString*)deviceId;
 + (WDSSmsDevice2*)getDefault;
 + (WDSSmsDevice2*)fromParentId:(NSString*)parentDeviceId;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* smscAddress;
 @property (readonly) NSString* accountPhoneNumber;
 @property (readonly) WDSCellularClass cellularClass;
@@ -376,6 +400,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsMessageReceivedTriggerDetails : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WDSSmsAppMessage* appMessage;
 @property (readonly) WDSSmsBroadcastMessage* broadcastMessage;
 @property (readonly) WDSSmsMessageType messageType;
@@ -396,6 +423,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDSSmsFilterRule : RTObject
 + (WDSSmsFilterRule*)makeFilterRule:(WDSSmsMessageType)messageType ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property WDSCellularClass cellularClass;
 @property (readonly) NSMutableArray* /* int */ broadcastChannels;
 @property (readonly) NSMutableArray* /* WDSSmsBroadcastType */ broadcastTypes;
@@ -420,6 +450,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDSSmsFilterRules : RTObject
 + (WDSSmsFilterRules*)makeFilterRules:(WDSSmsFilterActionType)actionType ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WDSSmsFilterActionType actionType;
 @property (readonly) NSMutableArray* /* WDSSmsFilterRule* */ rules;
 @end
@@ -433,6 +466,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDSSmsMessageRegistration : RTObject
 + (WDSSmsMessageRegistration*)Register:(NSString*)id filterRules:(WDSSmsFilterRules*)filterRules;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* id;
 + (NSArray* /* WDSSmsMessageRegistration* */)allRegistrations;
 - (EventRegistrationToken)addMessageReceivedEvent:(void (^)(WDSSmsMessageRegistration*, WDSSmsMessageReceivedTriggerDetails*))del;

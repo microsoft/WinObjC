@@ -176,6 +176,9 @@ WINRT_EXPORT
 + (WDBBluetoothClassOfDevice*)fromParts:(WDBBluetoothMajorClass)majorClass
                              minorClass:(WDBBluetoothMinorClass)minorClass
                     serviceCapabilities:(WDBBluetoothServiceCapabilities)serviceCapabilities;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WDBBluetoothMajorClass majorClass;
 @property (readonly) WDBBluetoothMinorClass minorClass;
 @property (readonly) unsigned int rawValue;
@@ -204,6 +207,9 @@ WINRT_EXPORT
 + (void)fromHostNameAsync:(WNHostName*)hostName success:(void (^)(WDBBluetoothDevice*))success failure:(void (^)(NSError*))failure;
 + (void)fromBluetoothAddressAsync:(uint64_t)address success:(void (^)(WDBBluetoothDevice*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) uint64_t bluetoothAddress;
 @property (readonly) WDBBluetoothClassOfDevice* classOfDevice;
 @property (readonly) WDBBluetoothConnectionStatus connectionStatus;
@@ -234,6 +240,9 @@ WINRT_EXPORT
                           success:(void (^)(WDBBluetoothLEDevice*))success
                           failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) uint64_t bluetoothAddress;
 @property (readonly) WDBBluetoothConnectionStatus connectionStatus;
 @property (readonly) NSString* deviceId;
@@ -258,6 +267,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDBBluetoothSignalStrengthFilter : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) id /* WFTimeSpan* */ samplingInterval;
 @property (retain) id /* WFTimeSpan* */ outOfRangeTimeout;
 @property (retain) id /* int16_t */ outOfRangeThresholdInDBm;

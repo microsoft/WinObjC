@@ -109,21 +109,24 @@ static const wchar_t* TAG = L"SFSafariOAuthViewController";
     WFUri* callbackUri = [WFUri makeUri:_substituteRedirectURL];
 
     void (^success)(WSAWWebAuthenticationResult*) = ^void(WSAWWebAuthenticationResult* result) {
-        switch (result.responseStatus) {
-            case WSAWWebAuthenticationStatusSuccess:
-                break;
+        if (result.responseStatus != WSAWWebAuthenticationStatusSuccess) {
+            switch (result.responseStatus) {
+                case WSAWWebAuthenticationStatusUserCancel:
+                    NSTraceInfo(TAG, @"User cancelled web authentication");
+                    break;
 
-            case WSAWWebAuthenticationStatusUserCancel:
-                NSTraceWarning(TAG, @"User cancelled web authentication");
-                return;
+                case WSAWWebAuthenticationStatusErrorHttp:
+                    NSTraceError(TAG, @"Web authentication failed with HTTP code %u", result.responseErrorDetail);
+                    break;
 
-            case WSAWWebAuthenticationStatusErrorHttp:
-                NSTraceError(TAG, @"Web authentication failed with HTTP code %u", result.responseErrorDetail);
-                return;
+                default:
+                    NSTraceError(TAG, @"Unrecognized web authentication status");
+                    break;
+            }
 
-            default:
-                NSTraceError(TAG, @"Unrecognized web authentication status");
-                return;
+            // Seems odd to dismiss oneself, but this matches the reference platform
+            [self dismissViewControllerAnimated:NO completion:nil];
+            return;
         }
 
         NSString* redirectUri = result.responseData;
@@ -151,6 +154,7 @@ static const wchar_t* TAG = L"SFSafariOAuthViewController";
 
     void (^failure)(NSError*) = ^void(NSError* error) {
         NSTraceError(TAG, @"Web authentication failed: %@", error.localizedDescription);
+        [self dismissViewControllerAnimated:NO completion:nil];
     };
 
     [WSAWWebAuthenticationBroker authenticateWithCallbackUriAsync:WSAWWebAuthenticationOptionsNone

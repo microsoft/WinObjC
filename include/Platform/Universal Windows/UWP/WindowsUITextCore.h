@@ -161,6 +161,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextTextRequest : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* text;
 @property (readonly) BOOL isCanceled;
 @property (readonly) WUTCCoreTextRange* range;
@@ -175,6 +178,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextSelectionRequest : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WUTCCoreTextRange* selection;
 @property (readonly) BOOL isCanceled;
 - (WFDeferral*)getDeferral;
@@ -188,6 +194,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextLayoutBounds : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WFRect* textBounds;
 @property (retain) WFRect* controlBounds;
 @end
@@ -200,6 +209,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextLayoutRequest : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) BOOL isCanceled;
 @property (readonly) WUTCCoreTextLayoutBounds* layoutBounds;
 @property (readonly) WUTCCoreTextRange* range;
@@ -214,6 +226,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextCompositionSegment : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* preconversionString;
 @property (readonly) WUTCCoreTextRange* range;
 @end
@@ -226,6 +241,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextEditContext : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* name;
 @property BOOL isReadOnly;
 @property WUTCCoreTextInputScope inputScope;
@@ -263,6 +281,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextTextRequestedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WUTCCoreTextTextRequest* request;
 @end
 
@@ -274,6 +295,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextSelectionRequestedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WUTCCoreTextSelectionRequest* request;
 @end
 
@@ -285,6 +309,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextLayoutRequestedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WUTCCoreTextLayoutRequest* request;
 @end
 
@@ -296,6 +323,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextTextUpdatingEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property WUTCCoreTextTextUpdatingResult result;
 @property (readonly) WGLanguage* inputLanguage;
 @property (readonly) BOOL isCanceled;
@@ -313,6 +343,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextSelectionUpdatingEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property WUTCCoreTextSelectionUpdatingResult result;
 @property (readonly) BOOL isCanceled;
 @property (readonly) WUTCCoreTextRange* selection;
@@ -327,6 +360,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextFormatUpdatingEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property WUTCCoreTextFormatUpdatingResult result;
 @property (readonly) id /* WUVUIElementType */ backgroundColor;
 @property (readonly) BOOL isCanceled;
@@ -346,6 +382,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextCompositionStartedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) BOOL isCanceled;
 - (WFDeferral*)getDeferral;
 @end
@@ -358,6 +397,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextCompositionCompletedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSArray* /* WUTCCoreTextCompositionSegment* */ compositionSegments;
 @property (readonly) BOOL isCanceled;
 - (WFDeferral*)getDeferral;
@@ -372,6 +414,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUTCCoreTextServicesManager : RTObject
 + (WUTCCoreTextServicesManager*)getForCurrentView;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WGLanguage* inputLanguage;
 - (EventRegistrationToken)addInputLanguageChangedEvent:(void (^)(WUTCCoreTextServicesManager*, RTObject*))del;
 - (void)removeInputLanguageChangedEvent:(EventRegistrationToken)tok;

@@ -69,6 +69,9 @@ typedef unsigned WUSForegroundText;
 
 WINRT_EXPORT
 @interface WUSSecondaryTileVisualElements : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WFUri* square150x150Logo;
 @property BOOL showNameOnWide310x150Logo;
 @property BOOL showNameOnSquare310x310Logo;
@@ -117,6 +120,9 @@ WINRT_EXPORT
                     logoReference:(WFUri*)logoReference
                 wideLogoReference:(WFUri*)wideLogoReference ACTIVATOR;
 + (WUSSecondaryTile*)makeWithId:(NSString*)tileId ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* shortName;
 @property (retain) WFUri* logo;
 @property (retain) NSString* tileId;
@@ -159,6 +165,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUSVisualElementsRequestedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WUSVisualElementsRequest* request;
 @end
 
@@ -170,6 +179,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUSVisualElementsRequest : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSArray* /* WUSSecondaryTileVisualElements* */ alternateVisualElements;
 @property (readonly) WFDateTime* deadline;
 @property (readonly) WUSSecondaryTileVisualElements* visualElements;
@@ -184,6 +196,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUSVisualElementsRequestDeferral : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)complete;
 @end
 

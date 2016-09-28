@@ -37,6 +37,9 @@
 
 WINRT_EXPORT
 @interface WALLockScreenInfo : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) RTObject<WSSIRandomAccessStream>* alarmIcon;
 @property (readonly) NSArray* /* WALLockScreenBadge* */ badges;
 @property (readonly) NSArray* /* NSString * */ detailText;
@@ -59,6 +62,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WALLockScreenBadge : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* automationName;
 @property (readonly) RTObject<WSSIRandomAccessStream>* glyph;
 @property (readonly) RTObject<WSSIRandomAccessStream>* logo;
@@ -74,6 +80,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WALLockScreenUnlockingDeferral : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)complete;
 @end
 
@@ -86,6 +95,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WALLockApplicationHost : RTObject
 + (WALLockApplicationHost*)getForCurrentView;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (EventRegistrationToken)addUnlockingEvent:(void (^)(WALLockApplicationHost*, WALLockScreenUnlockingEventArgs*))del;
 - (void)removeUnlockingEvent:(EventRegistrationToken)tok;
 - (void)requestUnlock;
@@ -99,6 +111,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WALLockScreenUnlockingEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WFDateTime* deadline;
 - (WALLockScreenUnlockingDeferral*)getDeferral;
 @end

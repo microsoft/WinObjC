@@ -79,6 +79,9 @@ WINRT_EXPORT
          accessMode:(WSFileAccessMode)accessMode
             success:(void (^)(WDHHidDevice*))success
             failure:(void (^)(NSError*))failure;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) unsigned short productId;
 @property (readonly) unsigned short usageId;
 @property (readonly) unsigned short usagePage;
@@ -117,6 +120,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDHHidInputReport : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSArray* /* WDHHidBooleanControl* */ activatedBooleanControls;
 @property (readonly) RTObject<WSSIBuffer>* data;
 @property (readonly) unsigned short id;
@@ -135,6 +141,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDHHidFeatureReport : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) RTObject<WSSIBuffer>* data;
 @property (readonly) unsigned short id;
 - (WDHHidBooleanControl*)getBooleanControl:(unsigned short)usagePage usageId:(unsigned short)usageId;
@@ -151,6 +160,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDHHidOutputReport : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) RTObject<WSSIBuffer>* data;
 @property (readonly) unsigned short id;
 - (WDHHidBooleanControl*)getBooleanControl:(unsigned short)usagePage usageId:(unsigned short)usageId;
@@ -167,6 +179,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDHHidBooleanControlDescription : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) unsigned int id;
 @property (readonly) NSArray* /* WDHHidCollection* */ parentCollections;
 @property (readonly) unsigned short reportId;
@@ -183,6 +198,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDHHidNumericControlDescription : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) BOOL hasNull;
 @property (readonly) unsigned int id;
 @property (readonly) BOOL isAbsolute;
@@ -209,6 +227,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDHHidInputReportReceivedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WDHHidInputReport* report;
 @end
 
@@ -220,6 +241,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDHHidCollection : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) unsigned int id;
 @property (readonly) WDHHidCollectionType type;
 @property (readonly) unsigned int usageId;
@@ -234,6 +258,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDHHidBooleanControl : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property BOOL isActive;
 @property (readonly) WDHHidBooleanControlDescription* controlDescription;
 @property (readonly) unsigned int id;
@@ -249,6 +276,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDHHidNumericControl : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property int64_t value;
 @property int64_t scaledValue;
 @property (readonly) WDHHidNumericControlDescription* controlDescription;

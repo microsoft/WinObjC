@@ -25,6 +25,13 @@ class DisplayNode;
 class DisplayTexture;
 class DisplayAnimation;
 
+typedef enum {
+    CompositionModeDefault = 0,
+    CompositionModeLibrary = 1,
+} CompositionMode;
+
+void CreateXamlCompositor(winobjc::Id& root, CompositionMode compositionMode);
+
 template <class T>
 class RefCounted;
 

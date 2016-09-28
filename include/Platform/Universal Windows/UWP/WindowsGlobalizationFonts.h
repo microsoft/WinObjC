@@ -35,6 +35,9 @@
 
 WINRT_EXPORT
 @interface WGFLanguageFont : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* fontFamily;
 @property (readonly) WUTFontStretch fontStretch;
 @property (readonly) WUTFontStyle fontStyle;
@@ -51,6 +54,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WGFLanguageFontGroup : RTObject
 + (WGFLanguageFontGroup*)makeLanguageFontGroup:(NSString*)languageTag ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WGFLanguageFont* documentAlternate1Font;
 @property (readonly) WGFLanguageFont* documentAlternate2Font;
 @property (readonly) WGFLanguageFont* documentHeadingFont;

@@ -71,7 +71,7 @@ UIKIT_EXPORT_CLASS
 - (void)removeAllPoints STUB_METHOD;
 - (void)appendPath:(UIBezierPath*)bezierPath;
 
-@property (nonatomic) CGPathRef CGPath;
+@property (nonatomic) CGPathRef CGPath NS_RETURNS_INNER_POINTER CF_RETURNS_NOT_RETAINED;
 @property (nonatomic, readonly) CGPoint currentPoint;
 
 @property (nonatomic) CGFloat lineWidth;

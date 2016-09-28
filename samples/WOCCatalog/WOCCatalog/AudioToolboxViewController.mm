@@ -27,7 +27,7 @@ void soundCompletion(SystemSoundID ssID, void* self);
     
     scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, bounds.size.width, bounds.size.height)];
     scrollView.backgroundColor = [UIColor whiteColor];
-    scrollView.contentSize = CGSizeMake(450, 900);
+    scrollView.contentSize = CGSizeMake(bounds.size.width, 900);
     scrollView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 
     // Currently using the example wav file located at deps/3rdparty/openal-soft-winphone/examples.
@@ -36,7 +36,7 @@ void soundCompletion(SystemSoundID ssID, void* self);
 
     AudioServicesCreateSystemSoundID(url, &sid);
 
-    systemSoundLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 50, 200, 50)];
+    systemSoundLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 50, 190, 50)];
     [systemSoundLabel setBackgroundColor:[UIColor whiteColor]];
     [systemSoundLabel setText:@"System Sound Services"];
     [systemSoundLabel setTextAlignment:NSTextAlignmentLeft];
@@ -44,23 +44,23 @@ void soundCompletion(SystemSoundID ssID, void* self);
 
     playAlertSound = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [playAlertSound setTitle:@"Alert Sound" forState:UIControlStateNormal];
-    playAlertSound.frame = CGRectMake(210, 50, 230, 40);
+    playAlertSound.frame = CGRectMake(10, 110, 200, 40);
     [playAlertSound addTarget:self action:@selector(playAlertSoundPressed:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:playAlertSound];
 
     playSystemSound = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [playSystemSound setTitle:@"System Sound" forState:UIControlStateNormal];
-    playSystemSound.frame = CGRectMake(210, 100, 230, 40);
+    playSystemSound.frame = CGRectMake(10, 170, 200, 40);
     [playSystemSound addTarget:self action:@selector(playSystemSoundPressed:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:playSystemSound];
 
-    completionLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 150, 350, 50)];
+    completionLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 225, 320, 50)];
     [completionLabel setBackgroundColor:[UIColor whiteColor]];
     [completionLabel setText:@"Completion Callback"];
     [completionLabel setTextAlignment:NSTextAlignmentLeft];
     [scrollView addSubview:completionLabel];
 
-    callbackFunction = [[UISwitch alloc] initWithFrame:CGRectMake(400, 165, 100, 40)];
+    callbackFunction = [[UISwitch alloc] initWithFrame:CGRectMake(bounds.size.width - 80, 230, 90, 40)];
     [callbackFunction setBackgroundColor:[UIColor whiteColor]];
     [callbackFunction addTarget:self action:@selector(callbackFunctionChanged:) forControlEvents:UIControlEventValueChanged];
     [scrollView addSubview:callbackFunction];
@@ -93,7 +93,7 @@ void soundCompletion(SystemSoundID ssID, void* self);
 
 - (void)completionLabel:(BOOL)show {
     if (show) {
-        [completionLabel setText:@"Completion Callback\tFinished Playing"];
+        [completionLabel setText:@"Completion Callback: Done."];
     } else {
         [completionLabel setText:@"Completion Callback"];
     }

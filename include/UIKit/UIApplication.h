@@ -266,7 +266,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, copy) NSString* preferredContentSizeCategory;
 @property (nonatomic, getter=isStatusBarHidden) BOOL statusBarHidden;
 @property (nonatomic, readonly) CGRect statusBarFrame;
-@property (nonatomic, readonly) NSArray* windows;
+@property (nonatomic, readonly) NSArray<UIWindow*>* windows;
 @property (nonatomic, readonly) NSTimeInterval statusBarOrientationAnimationDuration;
 @property (nonatomic, readonly) UIApplicationState applicationState; // see notes near UIApplicationState struct for details!
 @property (nonatomic, readonly) UIUserInterfaceLayoutDirection userInterfaceLayoutDirection;

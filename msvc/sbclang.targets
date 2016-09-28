@@ -16,6 +16,8 @@
     TaskName="Clang"
     AssemblyFile="ClangCompileTask.dll"/>
 
+  <Import Project="$(MSBuildThisFileDirectory)filterprojects.tasks" />
+
   <PropertyGroup>
     <ClangCompileDependsOn>_SelectedFiles;MakeDirsForClang;GenerateHeaderMaps;ComputeClangOptions</ClangCompileDependsOn>
     <ClangCompileBeforeTargets>Link;Lib;ImpLib</ClangCompileBeforeTargets>
@@ -353,6 +355,14 @@
       </ClangCompile>
     </ItemGroup>
 
+    <!-- Figure out whether Objective-C should be pinned -->
+    <ItemGroup>
+      <ClangCompile>
+        <InternalForceIncludes Condition="'%(ClangCompile.CompileAs)' == 'CompileAsObjC' or
+                                          '%(ClangCompile.CompileAs)' == 'CompileAsObjCpp'">$(MSBuildThisFileDirectory)\objcrt\objc_2stage_init.h;%(InternalForceIncludes)</InternalForceIncludes>
+      </ClangCompile>
+    </ItemGroup>
+
   </Target>
 
   <!-- Ensure Link/Lib/ImpLib pick up the object files -->
@@ -365,7 +375,7 @@
   </ItemDefinitionGroup>
 
   <PropertyGroup>
-    <ComputeLinkInputsTargets>$(ComputeLinkInputsTargets);ComputeClangLinkInputs;ComputeRuntimeInputs;ComputeWholeArchiveLinkInputs;ComputeObjectiveCLinkInputs</ComputeLinkInputsTargets>
+    <ComputeLinkInputsTargets>$(ComputeLinkInputsTargets);ComputeClangLinkInputs;ComputeRuntimeInputs</ComputeLinkInputsTargets>
     <ComputeLibInputsTargets>$(ComputeLibInputsTargets);ComputeClangLibInputs;</ComputeLibInputsTargets>
     <ComputeImpLibInputsTargets>$(ComputeImpLibInputsTargets);ComputeClangImpLibInputs;</ComputeImpLibInputsTargets>
   </PropertyGroup>
@@ -411,10 +421,8 @@
     </PropertyGroup>
   </Target>
 
-  <!-- Sets StarboardRequiresObjectiveCRuntime based on whether this project has either Objective-C sources itself or
-       a reference to a statically-linked library that has Objective-C sources.
-  -->
-  <Target Name="ComputeStarboardRequiresObjectiveCRuntime" DependsOnTargets="ComputeStarboardHasObjCSources;ComputeStarboardReferencesRequiringObjectiveC">
+  <!-- Sets StarboardRequiresObjectiveCRuntime based on whether this project has Objective-C sources non-recursively. -->
+  <Target Name="ComputeStarboardRequiresObjectiveCRuntime" DependsOnTargets="ComputeStarboardHasObjCSources">
     <PropertyGroup Condition="'$(StarboardRequiresObjectiveCRuntime)' == ''">
       <StarboardRequiresObjectiveCRuntime Condition="'@(_StarboardReferencesRequiringObjectiveC)' != ''">true</StarboardRequiresObjectiveCRuntime>
       <StarboardRequiresObjectiveCRuntime Condition="'$(StarboardHasObjCSources)' == 'true'">true</StarboardRequiresObjectiveCRuntime>
@@ -450,16 +458,30 @@
        invoking _ComputeStarboardReferencedProjectRequiresObjectiveC on them.
   -->
   <Target Name="ComputeStarboardReferencesRequiringObjectiveC">
-    <MSBuild
+    <!-- Not all references are guaranteed to contain the target, so filter out the ones that don't -->
+    <!-- NOTE: We must explicitly pass in any properties needed to load referenced projects.
+         Msbuild mandates that any properties needed by the task must be explicitly passed -->
+    <ProjectsWithTarget
       Projects="@(_MSBuildProjectReferenceExistent)"
+      TargetName="_ComputeStarboardReferencedProjectRequiresObjectiveC"
+      WinobjcSDKRoot="$(WINOBJC_SDK_ROOT)">
+      <Output TaskParameter="FilteredProjects" ItemName="ProjectReferencesFiltered" />
+    </ProjectsWithTarget>
+
+    <MSBuild
+      Projects="@(ProjectReferencesFiltered)"
       Targets="_ComputeStarboardReferencedProjectRequiresObjectiveC"
       BuildInParallel="$(BuildInParallel)"
-      Properties="%(_MSBuildProjectReferenceExistent.SetConfiguration); %(_MSBuildProjectReferenceExistent.SetPlatform)"
-      Condition="'%(_MSBuildProjectReferenceExistent.Extension)' == '.vcxproj' and '@(ProjectReferenceWithConfiguration)' != '' and '@(_MSBuildProjectReferenceExistent)' != ''"
+      Properties="%(ProjectReferencesFiltered.SetConfiguration); %(ProjectReferencesFiltered.SetPlatform)"
+      Condition="'%(ProjectReferencesFiltered.Extension)' == '.vcxproj' and '@(ProjectReferenceWithConfiguration)' != '' and '@(ProjectReferencesFiltered)' != ''"
       ContinueOnError="!$(BuildingProject)"
-      RemoveProperties="%(_MSBuildProjectReferenceExistent.GlobalPropertiesToRemove)">
+      RemoveProperties="%(ProjectReferencesFiltered.GlobalPropertiesToRemove)">
       <Output TaskParameter="TargetOutputs" ItemName="_StarboardReferencesRequiringObjectiveC"/>
     </MSBuild>
+
+    <ItemGroup>
+      <ProjectReferencesFiltered Remove="@(ProjectReferencesFiltered)" />
+    </ItemGroup>
   </Target>
 
   <!-- Returns every output from <Lib> in this project if we include Objective-C code.
@@ -494,14 +516,6 @@
     <ItemGroup Condition="'@(_StarboardReferencesRequiringObjectiveC)'!='' and '$(StarboardLinkWholeArchive)'=='true'">
       <Link>
         <AdditionalOptions>%(Link.AdditionalOptions) "/WHOLEARCHIVE:@(_StarboardReferencesRequiringObjectiveC, '" /WHOLEARCHIVE:"')"</AdditionalOptions>
-      </Link>
-    </ItemGroup>
-  </Target>
-
-  <Target Name="ComputeObjectiveCLinkInputs" DependsOnTargets="ComputeStarboardReferencesRequiringObjectiveC">
-    <ItemGroup Condition="'@(_StarboardReferencesRequiringObjectiveC)'!=''">
-      <Link>
-        <AdditionalOptions>%(Link.AdditionalOptions) /INCLUDE:$(StarboardObjectiveCPinningSymbolName)</AdditionalOptions>
       </Link>
     </ItemGroup>
   </Target>

@@ -36,6 +36,9 @@
 WINRT_EXPORT
 @interface WUXHElementCompositionPreview : RTObject
 + (RTObject*)getContainerVisual:(WXUIElement*)element;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @end
 
 #endif // __WUXHElementCompositionPreview_DEFINED__

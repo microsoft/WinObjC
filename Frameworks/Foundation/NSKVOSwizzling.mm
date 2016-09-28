@@ -20,6 +20,7 @@
 #import "NSMethodSignatureInternal.h"
 #import <objc/encoding.h>
 #import <objc/runtime.h>
+#import "type_encoding_cases.h"
 
 #include <memory>
 
@@ -282,6 +283,10 @@ static void NSKVO$removeObjectForKey$(id self, SEL _cmd, NSString* key) {
 }
 #pragma endregion
 
+#define KVO_SET_IMPL_CASE(type, name, capitalizedName, encodingChar) \
+    case encodingChar: \
+        newImpl = reinterpret_cast<IMP>(&notifyingSetImpl<type>); \
+        break;
 // invariant: rawKey has already been capitalized
 static void _NSKVOEnsureSimpleKeyWillNotify(id object, NSString* key, const char* rawKey) {
     auto sel = KVCSetterForPropertyName(object, rawKey);
@@ -298,15 +303,7 @@ static void _NSKVOEnsureSimpleKeyWillNotify(id object, NSString* key, const char
     IMP newImpl = NULL;
 
     switch (valueType[0]) {
-#define APPLY_TYPE(type, name, capitalizedName, encodingChar)             \
-        case encodingChar:                                            \
-            newImpl = reinterpret_cast<IMP>(&notifyingSetImpl<type>); \
-            break;
-
-        APPLY_TYPE(id, object, Object, '@')
-        APPLY_TYPE(Class, class, Class, '#')
-#include "type_encoding_cases.h"
-#undef APPLY_TYPE
+        OBJC_APPLY_ALL_TYPE_ENCODINGS(KVO_SET_IMPL_CASE);
         case '{':
         case '[': {
             size_t valueSize = objc_sizeof_type(valueType);

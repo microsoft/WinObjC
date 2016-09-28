@@ -33,7 +33,6 @@ struct CAMediaTimingProperties;
 
 class CACompositorInterface {
 public:
-    virtual void DisplayTreeChanged() = 0;
     virtual void ProcessTransactions() = 0;
     virtual void RequestRedraw() = 0;
 
@@ -134,6 +133,8 @@ public:
     virtual void DisableDisplaySyncNotification() = 0;
 
     virtual void SetShouldRasterize(DisplayNode* node, bool rasterize) = 0;
+
+    virtual bool IsRunningAsFramework() = 0;
 };
 
 extern CACompositorInterface* _globalCompositor;

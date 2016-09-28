@@ -235,6 +235,9 @@ typedef unsigned WFDLoggingFieldFormat;
 
 WINRT_EXPORT
 @interface WFDTracingStatusChangedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) BOOL enabled;
 @property (readonly) WFDCausalityTraceLevel traceLevel;
 @end
@@ -284,6 +287,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WFDRuntimeBrokerErrorSettings : RTObject <WFDIErrorReportingSettings>
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)setErrorOptions:(WFDErrorOptions)value;
 - (WFDErrorOptions)getErrorOptions;
 @end
@@ -297,6 +303,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WFDErrorDetails : RTObject
 + (void)createFromHResultAsync:(int)errorCode success:(void (^)(WFDErrorDetails*))success failure:(void (^)(NSError*))failure;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* Description;
 @property (readonly) WFUri* helpUri;
 @property (readonly) NSString* longDescription;
@@ -312,6 +321,9 @@ WINRT_EXPORT
 @interface WFDLoggingOptions : RTObject
 + (instancetype)make ACTIVATOR;
 + (WFDLoggingOptions*)makeWithKeywords:(int64_t)keywords ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property int16_t task;
 @property int tags;
 @property WFGUID* relatedActivityId;
@@ -330,6 +342,9 @@ WINRT_EXPORT
 @interface WFDLoggingChannelOptions : RTObject
 + (WFDLoggingChannelOptions*)make:(WFGUID*)group ACTIVATOR;
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property WFGUID* group;
 @end
 
@@ -342,6 +357,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WFDLoggingFields : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)clear;
 - (void)beginStruct:(NSString*)name;
 - (void)beginStructWithTags:(NSString*)name tags:(int)tags;
@@ -522,6 +540,9 @@ WINRT_EXPORT
 + (WFDLoggingActivity*)makeLoggingActivityWithLevel:(NSString*)activityName
                                      loggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel
                                               level:(WFDLoggingLevel)level ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WFGUID* id;
 @property (readonly) NSString* name;
 @property (readonly) WFDLoggingChannel* channel;
@@ -561,6 +582,9 @@ WINRT_EXPORT
 + (WFDLoggingChannel*)make:(NSString*)name ACTIVATOR;
 + (WFDLoggingChannel*)makeWithOptions:(NSString*)name options:(WFDLoggingChannelOptions*)options ACTIVATOR;
 + (WFDLoggingChannel*)makeWithOptionsAndId:(NSString*)name options:(WFDLoggingChannelOptions*)options id:(WFGUID*)id ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) BOOL enabled;
 @property (readonly) WFDLoggingLevel level;
 @property (readonly) NSString* name;
@@ -602,6 +626,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WFDLoggingSession : RTObject <WFDILoggingSession, WFIClosable>
 + (WFDLoggingSession*)make:(NSString*)name ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* name;
 - (void)saveToFileAsync:(RTObject<WSIStorageFolder>*)folder
                fileName:(NSString*)fileName
@@ -621,6 +648,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFDLogFileGeneratedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WSStorageFile* file;
 @end
 
@@ -633,6 +663,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WFDFileLoggingSession : RTObject <WFDIFileLoggingSession, WFIClosable>
 + (WFDFileLoggingSession*)make:(NSString*)name ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) NSString* name;
 - (EventRegistrationToken)addLogFileGeneratedEvent:(void (^)(RTObject<WFDIFileLoggingSession>*, WFDLogFileGeneratedEventArgs*))del;
 - (void)removeLogFileGeneratedEvent:(EventRegistrationToken)tok;

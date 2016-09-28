@@ -55,6 +55,15 @@ static void deleteTouch(UIPinchGestureRecognizer* self, UITouch* touch) {
     }
 }
 
+- (void)reset {
+    [super reset];
+
+    _curScale = 1.0f;
+    _startScale = 1.0f;
+    _startedPinch = false;
+    _numTouches = 0;
+}
+
 static void deleteAllTouches(UIPinchGestureRecognizer* self) {
     ::memset(&self->_touches, 0, sizeof(self->_touches));
     self->_numTouches = 0;

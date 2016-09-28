@@ -104,14 +104,14 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
 
     _shapeImage.position = bbox.origin;
 
-    CGContextAddPath(drawContext, _path);
-
     if (_fillColor) {
+        CGContextAddPath(drawContext, _path);
         CGContextSetFillColorWithColor(drawContext, _fillColor);
         CGContextEOFillPath(drawContext);
     }
 
     if (_strokeColor) {
+        CGContextAddPath(drawContext, _path);
         CGContextSetStrokeColorWithColor(drawContext, _strokeColor);
         CGContextSetLineWidth(drawContext, _lineWidth);
         CGContextStrokePath(drawContext);

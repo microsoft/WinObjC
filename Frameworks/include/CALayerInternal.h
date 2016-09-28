@@ -70,8 +70,6 @@ public:
     CGColorRef _backgroundColor, _borderColor;
     BOOL needsDisplayOnBoundsChange;
 
-    BOOL _isPresentationLayer;
-
     BOOL _shouldRasterize;
 
     DisplayNode* _presentationNode;
@@ -84,12 +82,13 @@ public:
     BOOL needsLayout;
     BOOL didLayout;
     BOOL alwaysLayout;
+    bool _displayPending;
 
     CALayer* maskLayer;
 
     DisplayTexture* _textureOverride;
 
-    CAPrivateInfo(CALayer* self, bool bPresentationLayer = false);
+    explicit CAPrivateInfo(CALayer* self);
     ~CAPrivateInfo();
 };
 
@@ -112,8 +111,9 @@ public:
 - (void)exchangeSubviewAtIndex:(int)index1 withSubviewAtIndex:(int)index2;
 - (void)sendSublayerToBack:(CALayer*)sublayer;
 - (void)bringSublayerToFront:(CALayer*)sublayer;
-- (void)validateDisplayHierarchy;
-- (void)discardDisplayHierarchy;
+
+// Kicks off an update to the layer's layout and display hierarchy if needed
+- (void)_displayChanged;
 
 - (void)updateAccessibilityInfo:(const IWAccessibilityInfo*)info;
 

@@ -239,6 +239,9 @@ WINRT_EXPORT
                                                WSSIOutputStream,
                                                WFIClosable,
                                                WSSIInputStream>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) unsigned int originalHeight;
 @property (readonly) unsigned int originalWidth;
 @property (readonly) BOOL returnedSmallerCachedSize;
@@ -274,6 +277,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSFMusicProperties : RTObject <WSFIStorageItemExtraProperties>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property unsigned int rating;
 @property (retain) NSString* albumArtist;
 @property (retain) NSString* album;
@@ -305,6 +311,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSFVideoProperties : RTObject <WSFIStorageItemExtraProperties>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property unsigned int year;
 @property (retain) NSString* title;
 @property (retain) NSString* subtitle;
@@ -336,6 +345,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSFImageProperties : RTObject <WSFIStorageItemExtraProperties>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* title;
 @property unsigned int rating;
 @property (retain) WFDateTime* dateTaken;
@@ -363,6 +375,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSFDocumentProperties : RTObject <WSFIStorageItemExtraProperties>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* title;
 @property (retain) NSString* comment;
 @property (readonly) NSMutableArray* /* NSString * */ author;
@@ -382,6 +397,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSFStorageItemContentProperties : RTObject <WSFIStorageItemExtraProperties>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 - (void)getMusicPropertiesAsyncWithSuccess:(void (^)(WSFMusicProperties*))success failure:(void (^)(NSError*))failure;
 - (void)getVideoPropertiesAsyncWithSuccess:(void (^)(WSFVideoProperties*))success failure:(void (^)(NSError*))failure;
 - (void)getImagePropertiesAsyncWithSuccess:(void (^)(WSFImageProperties*))success failure:(void (^)(NSError*))failure;
@@ -401,6 +419,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSFBasicProperties : RTObject <WSFIStorageItemExtraProperties>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WFDateTime* dateModified;
 @property (readonly) WFDateTime* itemDate;
 @property (readonly) uint64_t size;

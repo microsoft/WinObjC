@@ -97,6 +97,9 @@ WINRT_EXPORT
 + (NSString*)getDeviceSelectorFromPortName:(NSString*)portName;
 + (NSString*)getDeviceSelectorFromUsbVidPid:(unsigned short)vendorId productId:(unsigned short)productId;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDSSerialDevice*))success failure:(void (^)(NSError*))failure;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property BOOL isDataTerminalReadyEnabled;
 @property unsigned short dataBits;
 @property WDSSerialHandshake handshake;
@@ -131,6 +134,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSErrorReceivedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WDSSerialError error;
 @end
 
@@ -142,6 +148,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSPinChangedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WDSSerialPinChange pinChange;
 @end
 

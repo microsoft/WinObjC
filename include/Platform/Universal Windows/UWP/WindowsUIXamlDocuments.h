@@ -165,6 +165,9 @@ typedef void (^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventAr
 
 WINRT_EXPORT
 @interface WUXDBlockCollection : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -186,6 +189,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDInlineCollection : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -207,6 +213,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDTextPointer : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WUXDLogicalDirection logicalDirection;
 @property (readonly) int offset;
 @property (readonly) WXDependencyObject* parent;
@@ -309,6 +318,9 @@ WINRT_EXPORT
 + (void)setMathematicalGreek:(WXDependencyObject*)element value:(BOOL)value;
 + (WXFontVariants)getVariants:(WXDependencyObject*)element;
 + (void)setVariants:(WXDependencyObject*)element value:(WXFontVariants)value;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 + (WXDependencyProperty*)annotationAlternatesProperty;
 + (WXDependencyProperty*)capitalSpacingProperty;
 + (WXDependencyProperty*)capitalsProperty;
@@ -362,6 +374,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -380,6 +395,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDTextElement : WXDependencyObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* language;
 @property (retain) WUXMBrush* foreground;
 @property (retain) WUTFontWeight* fontWeight;
@@ -415,6 +433,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDBlock : WUXDTextElement
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property WXTextAlignment textAlignment;
 @property (retain) WXThickness* margin;
 @property WXLineStackingStrategy lineStackingStrategy;
@@ -433,6 +454,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDInline : WUXDTextElement
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @end
 
 #endif // __WUXDInline_DEFINED__
@@ -444,6 +468,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXDInlineUIContainer : WUXDInline
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WXUIElement* child;
 @end
 
@@ -456,6 +483,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXDLineBreak : WUXDInline
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @end
 
 #endif // __WUXDLineBreak_DEFINED__
@@ -467,6 +497,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXDParagraph : WUXDBlock
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property double textIndent;
 @property (readonly) WUXDInlineCollection* inlines;
 + (WXDependencyProperty*)textIndentProperty;
@@ -481,6 +514,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXDRun : WUXDInline
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* text;
 @property WXFlowDirection flowDirection;
 + (WXDependencyProperty*)flowDirectionProperty;
@@ -495,6 +531,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXDSpan : WUXDInline
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WUXDInlineCollection* inlines;
 @end
 
@@ -507,6 +546,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXDBold : WUXDSpan
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @end
 
 #endif // __WUXDBold_DEFINED__
@@ -518,6 +560,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXDItalic : WUXDSpan
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @end
 
 #endif // __WUXDItalic_DEFINED__
@@ -529,6 +574,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXDUnderline : WUXDSpan
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @end
 
 #endif // __WUXDUnderline_DEFINED__
@@ -540,6 +588,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXDHyperlink : WUXDSpan
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WFUri* navigateUri;
 @property WUXDUnderlineStyle underlineStyle;
 + (WXDependencyProperty*)navigateUriProperty;
@@ -557,6 +608,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) RTObject* originalSource;
 @end
 
@@ -568,6 +622,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDHyperlinkClickEventArgs : WXRoutedEventArgs
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @end
 
 #endif // __WUXDHyperlinkClickEventArgs_DEFINED__
@@ -614,6 +671,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property BOOL isRightTapEnabled;
 @property (retain) WUXMProjection* projection;
 @property BOOL allowDrop;
@@ -762,6 +822,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXFrameworkElement : WXUIElement
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) WXThickness* margin;
 @property (retain) NSString* language;
 @property WXHorizontalAlignment horizontalAlignment;
@@ -832,6 +895,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXDGlyphs : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (retain) NSString* unicodeString;
 @property WUXMStyleSimulations styleSimulations;
 @property double originY;

@@ -668,7 +668,7 @@ void CGContextImpl::CGContextSetInterpolationQuality(CGInterpolationQuality) {
     // CGContextImpl is not being currently used but, by convention we add the method here
 }
 
-void CGContextImpl::CGContextSetLineDash(float phase, float* lengths, DWORD count) {
+void CGContextImpl::CGContextSetLineDash(float phase, const float* lengths, DWORD count) {
 }
 
 void CGContextImpl::CGContextSetMiterLimit(float limit) {

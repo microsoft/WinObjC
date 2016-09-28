@@ -1,0 +1,29 @@
+<RepositoryConfig>
+    <VSO>
+        <Instance>winobjc.visualstudio.com</Instance>
+        <Project>WinObjC</Project>
+        <BuildDefinitions>
+            <BuildDefinitionSet Name="Github Pull Request" MatchRemote="*github*">
+                <ID Configuration="Debug">74</ID>
+                <ID Configuration="Release">72</ID>
+                <ConfigMappings>
+                    <Parameter Key="PullRequest">$REMOTEURL $BRANCH</Parameter>
+                </ConfigMappings>
+            </BuildDefinitionSet>
+            <BuildDefinitionSet Name="VSO Any Branch" MatchRemote="*visualstudio*">
+                <ID Configuration="Debug">78</ID>
+                <ID Configuration="Release">79</ID>
+                <ConfigMappings>
+                    <SourceBranch>$BRANCH</SourceBranch>
+                </ConfigMappings>
+            </BuildDefinitionSet>
+            <BuildDefinitionSet Name="VSO Full"> <!-- No MatchRemote as this one must be specified by BuildFilter -->
+                <ID Configuration="Debug">89</ID>
+                <ID Configuration="Release">90</ID>
+                <ConfigMappings>
+                    <SourceBranch>$BRANCH</SourceBranch>
+                </ConfigMappings>
+            </BuildDefinitionSet>
+        </BuildDefinitions>
+    </VSO>
+</RepositoryConfig>

@@ -71,6 +71,9 @@ typedef unsigned WASPIAutoUpdateSetting;
 
 WINRT_EXPORT
 @interface WASPIAppInstallStatus : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) uint64_t bytesDownloaded;
 @property (readonly) uint64_t downloadSizeInBytes;
 @property (readonly) HRESULT errorCode;
@@ -86,6 +89,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASPIAppInstallItem : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WASPIAppInstallType installType;
 @property (readonly) BOOL isUserInitiated;
 @property (readonly) NSString* packageFamilyName;
@@ -108,6 +114,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASPIAppInstallManagerItemEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property (readonly) WASPIAppInstallItem* item;
 @end
 
@@ -120,6 +129,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WASPIAppInstallManager : RTObject
 + (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
 @property WASPIAutoUpdateSetting autoUpdateSetting;
 @property (retain) NSString* acquisitionIdentity;
 @property (readonly) NSArray* /* WASPIAppInstallItem* */ appInstallItems;

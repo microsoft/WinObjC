@@ -17,10 +17,6 @@
 #ifndef __STARBOARD_ADDITIONAL_DEFINES
 #define __STARBOARD_ADDITIONAL_DEFINES
 
-#ifndef TARGET_IPHONE_SIMULATOR
-#define TARGET_IPHONE_SIMULATOR 1 //  Temporary for Cocos2D compat, for now
-#endif
-
 enum { noErr = 0 };
 
 typedef unsigned int uint;

@@ -2,16 +2,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CGCatalog", "CGCatalog", "{B4EFCFF5-F91B-4331-A4FA-5348AFC8D4F1}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CGCatalog", "CGCatalog", "{5438B49E-5410-44A0-9243-B26B7E51C378}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CGCatalog-Headers", "CGCatalog.vsimporter\CGCatalog-Headers-WinStore10\CGCatalog-Headers.vcxitems", "{FE207736-031B-4029-A356-58C9F94038D2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CGCatalog-Headers", "CGCatalog.vsimporter\CGCatalog-Headers-WinStore10\CGCatalog-Headers.vcxitems", "{447F47EB-9467-4A50-ACDF-8398CD122BEA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CGCatalog", "CGCatalog.vsimporter\CGCatalog-WinStore10\CGCatalog.vcxproj", "{941A8C6E-B738-4A69-937E-C7F26FFE11CF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CGCatalog", "CGCatalog.vsimporter\CGCatalog-WinStore10\CGCatalog.vcxproj", "{669D56B1-2C33-4B83-9D9D-690882CFA3F3}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		CGCatalog.vsimporter\CGCatalog-Headers-WinStore10\CGCatalog-Headers.vcxitems*{FE207736-031B-4029-A356-58C9F94038D2}*SharedItemsImports = 9
-		CGCatalog.vsimporter\CGCatalog-Headers-WinStore10\CGCatalog-Headers.vcxitems*{941A8C6E-B738-4A69-937E-C7F26FFE11CF}*SharedItemsImports = 4
+		CGCatalog.vsimporter\CGCatalog-Headers-WinStore10\CGCatalog-Headers.vcxitems*{447F47EB-9467-4A50-ACDF-8398CD122BEA}*SharedItemsImports = 9
+		CGCatalog.vsimporter\CGCatalog-Headers-WinStore10\CGCatalog-Headers.vcxitems*{669D56B1-2C33-4B83-9D9D-690882CFA3F3}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -20,24 +20,24 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{941A8C6E-B738-4A69-937E-C7F26FFE11CF}.Debug|ARM.ActiveCfg = Debug|ARM
-		{941A8C6E-B738-4A69-937E-C7F26FFE11CF}.Debug|ARM.Build.0 = Debug|ARM
-		{941A8C6E-B738-4A69-937E-C7F26FFE11CF}.Debug|ARM.Deploy.0 = Debug|ARM
-		{941A8C6E-B738-4A69-937E-C7F26FFE11CF}.Debug|Win32.ActiveCfg = Debug|Win32
-		{941A8C6E-B738-4A69-937E-C7F26FFE11CF}.Debug|Win32.Build.0 = Debug|Win32
-		{941A8C6E-B738-4A69-937E-C7F26FFE11CF}.Debug|Win32.Deploy.0 = Debug|Win32
-		{941A8C6E-B738-4A69-937E-C7F26FFE11CF}.Release|ARM.ActiveCfg = Release|ARM
-		{941A8C6E-B738-4A69-937E-C7F26FFE11CF}.Release|ARM.Build.0 = Release|ARM
-		{941A8C6E-B738-4A69-937E-C7F26FFE11CF}.Release|ARM.Deploy.0 = Release|ARM
-		{941A8C6E-B738-4A69-937E-C7F26FFE11CF}.Release|Win32.ActiveCfg = Release|Win32
-		{941A8C6E-B738-4A69-937E-C7F26FFE11CF}.Release|Win32.Build.0 = Release|Win32
-		{941A8C6E-B738-4A69-937E-C7F26FFE11CF}.Release|Win32.Deploy.0 = Release|Win32
+		{669D56B1-2C33-4B83-9D9D-690882CFA3F3}.Debug|ARM.ActiveCfg = Debug|ARM
+		{669D56B1-2C33-4B83-9D9D-690882CFA3F3}.Debug|ARM.Build.0 = Debug|ARM
+		{669D56B1-2C33-4B83-9D9D-690882CFA3F3}.Debug|ARM.Deploy.0 = Debug|ARM
+		{669D56B1-2C33-4B83-9D9D-690882CFA3F3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{669D56B1-2C33-4B83-9D9D-690882CFA3F3}.Debug|Win32.Build.0 = Debug|Win32
+		{669D56B1-2C33-4B83-9D9D-690882CFA3F3}.Debug|Win32.Deploy.0 = Debug|Win32
+		{669D56B1-2C33-4B83-9D9D-690882CFA3F3}.Release|ARM.ActiveCfg = Release|ARM
+		{669D56B1-2C33-4B83-9D9D-690882CFA3F3}.Release|ARM.Build.0 = Release|ARM
+		{669D56B1-2C33-4B83-9D9D-690882CFA3F3}.Release|ARM.Deploy.0 = Release|ARM
+		{669D56B1-2C33-4B83-9D9D-690882CFA3F3}.Release|Win32.ActiveCfg = Release|Win32
+		{669D56B1-2C33-4B83-9D9D-690882CFA3F3}.Release|Win32.Build.0 = Release|Win32
+		{669D56B1-2C33-4B83-9D9D-690882CFA3F3}.Release|Win32.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{FE207736-031B-4029-A356-58C9F94038D2} = {B4EFCFF5-F91B-4331-A4FA-5348AFC8D4F1}
-		{941A8C6E-B738-4A69-937E-C7F26FFE11CF} = {B4EFCFF5-F91B-4331-A4FA-5348AFC8D4F1}
+		{447F47EB-9467-4A50-ACDF-8398CD122BEA} = {5438B49E-5410-44A0-9243-B26B7E51C378}
+		{669D56B1-2C33-4B83-9D9D-690882CFA3F3} = {5438B49E-5410-44A0-9243-B26B7E51C378}
 	EndGlobalSection
 EndGlobal

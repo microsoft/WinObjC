@@ -294,13 +294,13 @@ static const wchar_t* TAG = L"CAAnimation";
         [CATransaction _removeAnimationFromLayer:layer animation:_runningAnimation];
         _globalCompositor->ReleaseAnimation(_runningAnimation);
         _runningAnimation = NULL;
-        _globalCompositor->DisplayTreeChanged();
+        [layer _displayChanged];
     }
     if (_runningAnimation2) {
         [CATransaction _removeAnimationFromLayer:layer animation:_runningAnimation2];
         _globalCompositor->ReleaseAnimation(_runningAnimation2);
         _runningAnimation2 = NULL;
-        _globalCompositor->DisplayTreeChanged();
+        [layer _displayChanged];
     }
     [_attachedLayer _removeAnimation:self];
     _attachedLayer = nil;
@@ -317,13 +317,13 @@ static const wchar_t* TAG = L"CAAnimation";
         [CATransaction _removeAnimationFromLayer:layer animation:_runningAnimation];
         _globalCompositor->ReleaseAnimation(_runningAnimation);
         _runningAnimation = NULL;
-        _globalCompositor->DisplayTreeChanged();
+        [layer _displayChanged];
     }
     if (_runningAnimation2) {
         [CATransaction _removeAnimationFromLayer:layer animation:_runningAnimation2];
         _globalCompositor->ReleaseAnimation(_runningAnimation2);
         _runningAnimation2 = NULL;
-        _globalCompositor->DisplayTreeChanged();
+        [layer _displayChanged];
     }
     [_attachedLayer _removeAnimation:self];
     _attachedLayer = nil;

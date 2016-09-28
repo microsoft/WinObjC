@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask TaskName="ProjectsWithTarget" TaskFactory="CodeTaskFactory" AssemblyName="Microsoft.Build.Tasks.v12.0">
+    <ParameterGroup>
+      <Projects ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <TargetName ParameterType="System.String" Required="true" />
+      <WinobjcSDKRoot ParameterType="System.String" Required="false" />
+      <FilteredProjects ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Reference Include="Microsoft.Build" />
+      <Reference Include="System.Xml" />
+      <Using Namespace="Microsoft.Build.Evaluation" />
+      <Using Namespace="Microsoft.Build.Framework" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+          Dictionary<string, string> properties = string.IsNullOrEmpty(WinobjcSDKRoot) ? null : new Dictionary<string, string>{{"WINOBJC_SDK_ROOT", WinobjcSDKRoot}};
+          var filteredProjects = new List<ITaskItem>();
+          foreach (var projItem in Projects) {
+            var projectPath = Path.GetFullPath(projItem.ItemSpec);
+            var project = ProjectCollection.GlobalProjectCollection.GetLoadedProjects(projectPath).FirstOrDefault() ?? new Project(projectPath, properties, null);
+            if (project.Targets.ContainsKey(TargetName)) {
+              filteredProjects.Add(projItem);
+            }
+          }
+          FilteredProjects = filteredProjects.ToArray();
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+</Project>

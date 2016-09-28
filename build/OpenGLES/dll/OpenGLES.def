@@ -209,3 +209,4 @@ LIBRARY OpenGLES
         glGenVertexArraysOES = EXPORT_glGenVertexArraysOES
         glIsVertexArrayOES = EXPORT_glIsVertexArrayOES
         glRenderbufferStorageMultisampleANGLE = EXPORT_glRenderbufferStorageMultisampleANGLE
+        glTexStorage2DEXT  = EXPORT_glTexStorage2DEXT

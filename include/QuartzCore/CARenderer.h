@@ -20,7 +20,6 @@
 #import <Foundation/NSObject.h>
 
 @class CALayer;
-@class CVTimeStamp;
 
 @interface CARenderer : NSObject {
     void* _cglContext;
@@ -33,7 +32,7 @@
 
 + (CARenderer*)rendererWithCGLContext:(void*)cglContext options:(NSDictionary*)options STUB_METHOD;
 
-- (void)beginFrameAtTime:(CFTimeInterval)currentTime timeStamp:(CVTimeStamp*)timeStamp STUB_METHOD;
+- (void)beginFrameAtTime:(CFTimeInterval)currentTime timeStamp:(struct CVTimeStamp*)timeStamp STUB_METHOD;
 - (CGRect)updateBounds STUB_METHOD;
 - (void)addUpdateRect:(CGRect)aRect STUB_METHOD;
 - (void)render STUB_METHOD;

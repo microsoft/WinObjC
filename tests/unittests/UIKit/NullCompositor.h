@@ -19,8 +19,6 @@
 
 class NullCompositor : public CACompositorInterface {
 public:
-    void DisplayTreeChanged() override {
-    }
     void ProcessTransactions() override {
     }
     void RequestRedraw() override {
@@ -186,5 +184,9 @@ public:
     }
 
     virtual void SetShouldRasterize(DisplayNode* node, bool rasterize) override {
+    }
+
+    virtual bool IsRunningAsFramework() override {
+        return false;
     }
 };
