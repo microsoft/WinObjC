@@ -20,15 +20,7 @@
 #import <stdlib.h>
 #import "CGContextCairo.h"
 #import "CGSurfaceInfoInternal.h"
-
-#include <COMIncludes.h>
-#import <WRLHelpers.h>
-#import <ErrorHandling.h>
-#import <wrl/client.h>
-#import <wrl/implements.h>
-#import <Wincodec.h>
-#import <D2d1.h>
-#include <COMIncludes_End.h>
+#import "CGIWICBitmap.h"
 
 #import "LoggingNative.h"
 #import <CGGraphicBufferImage.h>
@@ -44,119 +36,6 @@ using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"CGGraphicBufferImage";
 extern int imgDataCount;
-
-/**
- * Custom Core Graphic IWICBitmap interface that uses the backing image buffer without copying.
- */
-
-class CGGraphicBufferWICBitmap;
-
-class CGGraphicBufferWICBitmapLock
-    : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::ClassicCom>, IAgileObject, FtmBase, IWICBitmapLock> {
-public:
-    CGGraphicBufferWICBitmapLock(
-        _In_ UINT width, _In_ UINT height, _In_ UINT stride, _In_ WICPixelFormatGUID pixelFormat, _In_ BYTE* dataBuffer)
-        : m_width(width), m_height(height), m_stride(stride), m_pixelFormat(pixelFormat), m_dataBuffer(dataBuffer) {
-    }
-
-    HRESULT STDMETHODCALLTYPE GetSize(_Out_ UINT* width, _Out_ UINT* height) {
-        *width = m_width;
-        *height = m_height;
-        return S_OK;
-    }
-
-    HRESULT STDMETHODCALLTYPE GetStride(_Out_ UINT* stride) {
-        *stride = m_stride;
-        return S_OK;
-    }
-
-    HRESULT STDMETHODCALLTYPE GetDataPointer(_Out_ UINT* bufferSize, _Outptr_ WICInProcPointer* data) {
-        *bufferSize = m_height * m_stride;
-        *data = m_dataBuffer;
-        return S_OK;
-    }
-
-    HRESULT STDMETHODCALLTYPE GetPixelFormat(_Out_ WICPixelFormatGUID* pixelFormat) {
-        *pixelFormat = m_pixelFormat;
-        return S_OK;
-    }
-
-private:
-    UINT m_width;
-    UINT m_height;
-    UINT m_stride;
-    WICPixelFormatGUID m_pixelFormat;
-    BYTE* m_dataBuffer;
-};
-
-class CGGraphicBufferWICBitmap : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::ClassicCom>, IAgileObject, FtmBase, IWICBitmap> {
-public:
-    CGGraphicBufferWICBitmap(_In_ CGGraphicBufferImageBacking* imageBacking) : m_imageBacking(imageBacking) {
-    }
-
-    ~CGGraphicBufferWICBitmap() {
-        m_imageBacking->ReleaseImageData();
-        m_imageBacking = nullptr;
-    }
-
-    // IWICBitmap interface
-    // TODO::
-    // Today we do not support locking a region of the WIC bitmap for rendering. We only support locking the complete bitmap. This will
-    // suffice CoreText requirement but needs to be revisted for CoreGraphics usage in future.
-    HRESULT STDMETHODCALLTYPE Lock(_In_ const WICRect* lockRect, _In_ DWORD flags, _COM_Outptr_ IWICBitmapLock** outLock) {
-        BYTE* dataBuffer = static_cast<BYTE*>(m_imageBacking->LockImageData());
-        ComPtr<IWICBitmapLock> lock = Make<CGGraphicBufferWICBitmapLock>(m_imageBacking->Width(),
-                                                                         m_imageBacking->Height(),
-                                                                         m_imageBacking->BytesPerRow(),
-                                                                         GUID_WICPixelFormat32bppPBGRA,
-                                                                         dataBuffer);
-        *outLock = lock.Detach();
-        return S_OK;
-    }
-
-    HRESULT STDMETHODCALLTYPE SetPalette(_In_ IWICPalette* palette) {
-        UNIMPLEMENTED();
-        return E_NOTIMPL;
-    }
-
-    HRESULT STDMETHODCALLTYPE SetResolution(_In_ double dpiX, _In_ double dpiY) {
-        UNIMPLEMENTED();
-        return E_NOTIMPL;
-    }
-
-    // IWICBitmapSource interface (that IWICBitmap inherits)
-    HRESULT STDMETHODCALLTYPE GetSize(_Out_ UINT* width, _Out_ UINT* height) {
-        *width = m_imageBacking->Width();
-        *height = m_imageBacking->Height();
-        return S_OK;
-    }
-
-    HRESULT STDMETHODCALLTYPE GetPixelFormat(_Out_ WICPixelFormatGUID* pixelFormat) {
-        *pixelFormat = GUID_WICPixelFormat32bppPBGRA;
-        return S_OK;
-    }
-
-    HRESULT STDMETHODCALLTYPE GetResolution(_Out_ double* dpiX, _Out_ double* dpiY) {
-        UNIMPLEMENTED();
-        return E_NOTIMPL;
-    }
-
-    HRESULT STDMETHODCALLTYPE CopyPalette(_In_ IWICPalette* palette) {
-        UNIMPLEMENTED();
-        return E_NOTIMPL;
-    }
-
-    HRESULT STDMETHODCALLTYPE CopyPixels(_In_opt_ const WICRect* copyRect,
-                                         _In_ UINT stride,
-                                         _In_ UINT bufferSize,
-                                         _Out_writes_all_(cbBufferSize) BYTE* buffer) {
-        UNIMPLEMENTED();
-        return E_NOTIMPL;
-    }
-
-private:
-    CGGraphicBufferImageBacking* m_imageBacking;
-};
 
 CGGraphicBufferImage::CGGraphicBufferImage(int width, int height, __CGSurfaceFormat fmt) {
     __CGSurfaceInfo surfaceInfo = _CGSurfaceInfoInit(width, height, fmt);
@@ -279,7 +158,7 @@ int CGGraphicBufferImageBacking::BitsPerComponent() {
 ID2D1RenderTarget* CGGraphicBufferImageBacking::GetRenderTarget() {
     if (_renderTarget == nullptr) {
         BYTE* imageData = static_cast<BYTE*>(LockImageData());
-        ComPtr<IWICBitmap> wicBitmap = Make<CGGraphicBufferWICBitmap>(this);
+        ComPtr<IWICBitmap> wicBitmap = Make<CGIWICBitmap>(this, GUID_WICPixelFormat32bppPBGRA);
         ComPtr<ID2D1Factory> d2dFactory;
         THROW_IF_FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &d2dFactory));
         ComPtr<ID2D1RenderTarget> renderTarget;

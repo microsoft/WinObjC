@@ -48,6 +48,7 @@ public:
 class CGBitmapImageBacking : public CGImageBacking {
 private:
     CGImageData* _data;
+    ID2D1RenderTarget* _renderTarget;
 
 public:
     CGBitmapImageBacking(const __CGSurfaceInfo& surfaceInfo);
