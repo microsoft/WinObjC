@@ -249,7 +249,7 @@ struct ButtonState {
         return;
     }
 
-    _states[state].backgroundImage = image;
+    _states[state].image = image;
 
     if (state == UIControlStateNormal) {
         // TODO: Do we key off of VSM changes and set the image from our state, or reconstruct a UIImage from the Xaml image?
@@ -281,10 +281,7 @@ static CGSize getTitleSize(UIButton* self, CGRect bounds) {
 - (void)layoutSubviews {
     CGRect bounds = { 0 };
 
-    bounds = [self bounds];
-    bounds = UIEdgeInsetsInsetRect([self bounds], self.contentEdgeInsets);
-
-    CGRect contentFrame = [self contentRectForBounds:bounds];
+    CGRect contentFrame = [self contentRectForBounds:self.bounds];
     CGRect textFrame = [self titleRectForContentRect:contentFrame];
     CGRect imageFrame = [self imageRectForContentRect:contentFrame];
 
@@ -295,50 +292,44 @@ static CGSize getTitleSize(UIButton* self, CGRect bounds) {
     [super layoutSubviews];
 }
 
-static CGRect calcComponentRect(UIButton* self, CGSize size, CGRect contentRect) {
-    CGRect rect;
-
-    rect.origin = contentRect.origin;
-    rect.size = size;
-
-    if (CGRectGetMaxX(rect) > CGRectGetMaxX(contentRect)) {
-        rect.size.width -= CGRectGetMaxX(rect) - CGRectGetMaxX(contentRect);
-    }
-    if (CGRectGetMaxY(rect) > CGRectGetMaxY(contentRect)) {
-        rect.size.height -= CGRectGetMaxY(rect) - CGRectGetMaxY(contentRect);
-    }
+static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRect) {
+    CGRect rect = { { 0, 0 }, size };
 
     switch (self.contentHorizontalAlignment) {
         case UIControlContentHorizontalAlignmentCenter:
-            rect.origin.x += floorf((contentRect.size.width / 2.f) - (rect.size.width / 2.f));
+            rect.origin.x = contentRect.origin.x + floorf((contentRect.size.width - rect.size.width) / 2.f);
             break;
 
         case UIControlContentHorizontalAlignmentRight:
-            rect.origin.x += contentRect.size.width - rect.size.width;
+            rect.origin.x = contentRect.size.width - rect.size.width;
             break;
 
         case UIControlContentHorizontalAlignmentFill:
             rect.size.width = contentRect.size.width;
+            rect.origin.x = contentRect.origin.x;
             break;
 
         case UIControlContentHorizontalAlignmentLeft:
+            rect.origin.x = contentRect.origin.x;
             break;
     }
 
     switch (self.contentVerticalAlignment) {
         case UIControlContentVerticalAlignmentCenter:
-            rect.origin.y += floorf((contentRect.size.height / 2.f) - (rect.size.height / 2.f));
+            rect.origin.y = contentRect.origin.y + floorf((contentRect.size.height - rect.size.height) / 2.f);
             break;
 
         case UIControlContentVerticalAlignmentBottom:
-            rect.origin.y += contentRect.size.height - rect.size.height;
+            rect.origin.y = contentRect.size.height - rect.size.height;
             break;
 
         case UIControlContentVerticalAlignmentFill:
             rect.size.height = contentRect.size.height;
+            rect.origin.y = contentRect.origin.y;
             break;
 
         case UIControlContentVerticalAlignmentTop:
+            rect.origin.y = contentRect.origin.y;
             break;
     }
 
@@ -349,7 +340,7 @@ static CGRect calcComponentRect(UIButton* self, CGSize size, CGRect contentRect)
  @Status Interoperable
 */
 - (CGRect)contentRectForBounds:(CGRect)bounds {
-    return bounds;
+    return UIEdgeInsetsInsetRect(bounds, self.contentEdgeInsets);
 }
 
 /**
@@ -358,22 +349,28 @@ static CGRect calcComponentRect(UIButton* self, CGSize size, CGRect contentRect)
 - (CGRect)imageRectForContentRect:(CGRect)contentRect {
     CGSize titleSize = [self.currentTitle sizeWithFont:self.font];
     CGSize imageSize = { 0 };
-    
-    if (self.currentImage) {
-        imageSize = self.currentImage.size;
+    CGRect insetsRect = UIEdgeInsetsInsetRect(contentRect, self.imageEdgeInsets);
+
+    if (!self.currentImage) {
+        return CGRectZero;
     }
+
+    imageSize = self.currentImage.size;
 
     CGSize totalSize = imageSize;
     totalSize.width += titleSize.width;
 
-    CGRect ret = calcComponentRect(self, totalSize, UIEdgeInsetsInsetRect(contentRect, self.imageEdgeInsets));
-
-    if (ret.size.width > imageSize.width) {
-        ret.size.width = imageSize.width;
-    }
-    if (ret.size.height > imageSize.height) {
-        ret.size.height = imageSize.height;
-    }
+    // Get the frame based on the control alignment.
+    CGRect ret = calculateContentRect(self, totalSize, insetsRect);
+    
+    ret.size.width -= titleSize.width;
+    
+    // Always try to fit the entire image on screen.
+    ret.origin.x = std::max(ret.origin.x, insetsRect.origin.x);
+    ret.origin.y = std::max(ret.origin.y, insetsRect.origin.y);
+    
+    // Intersect with the content rect
+    ret = CGRectIntersection(ret, insetsRect);
 
     return ret;
 }
@@ -384,16 +381,30 @@ static CGRect calcComponentRect(UIButton* self, CGSize size, CGRect contentRect)
 - (CGRect)titleRectForContentRect:(CGRect)contentRect {
     CGSize titleSize = [self.currentTitle sizeWithFont:self.font];
     CGSize totalSize = titleSize;
-    CGSize imageSize = { 0 };
+    CGSize imageSize = [self.currentImage size];
+    CGRect insetsRect = UIEdgeInsetsInsetRect(contentRect, self.titleEdgeInsets);
     
-    if (self.currentImage) {
-        imageSize = self.currentImage.size;
+    if ([self currentTitle].length == 0) {
+        return CGRectZero;
     }
 
     totalSize.width += imageSize.width;
 
-    CGRect ret = calcComponentRect(self, totalSize, UIEdgeInsetsInsetRect(contentRect, self.titleEdgeInsets));
-    ret.origin.x += imageSize.width;
+    // Get the frame based on the control alignment.
+    CGRect ret = calculateContentRect(self, totalSize, insetsRect);
+
+    if (!CGSizeEqualToSize(imageSize, CGSizeZero)) {
+        // Always try to fit the entire image on screen.
+        ret.origin.x = std::max(ret.origin.x, insetsRect.origin.x);
+        ret.origin.y = std::max(ret.origin.y, insetsRect.origin.y);
+
+        // Remove the image portion
+        ret.origin.x += imageSize.width;
+        ret.size.width -= imageSize.width;
+    }
+
+    // Intersect with the content rect
+    ret = CGRectIntersection(ret, insetsRect);
 
     return ret;
 }
@@ -823,48 +834,37 @@ static bool validateState(UIControlState state) {
 */
 - (CGSize)intrinsicContentSize {
     CGSize ret = { 0 };
-    UIImage* img = _states[UIControlStateNormal].image;
+    UIImage* img = self.currentImage;
     UIEdgeInsets contentInsets = self.contentEdgeInsets;
+    CGSize textSize = [[self currentTitle] sizeWithFont:self.font];
 
+    // Size should at least fit the image in a normal state.
     if (img != nil) {
         ret = [img size];
     }
 
     if ([self currentTitle].length) {
-        CGSize size;
-
-        size = [[self currentTitle] sizeWithFont:self.font];
-        size.width += 20.0f; // Padding
-
-        // Size should at least fit the image in a normal state.
-        if (size.width > ret.width) {
-            ret.width = size.width;
-        }
-        if (size.height > ret.height) {
-            ret.height = size.height;
-        }
+        ret.width = std::max(textSize.width, ret.width);
+        ret.height = std::max(textSize.height, ret.height);
     }
 
+    // If we have a background, its image size dictates the smallest size.
     if (self.currentBackgroundImage) {
         UIImage* background = self.currentBackgroundImage;
         CGSize size;
 
         size = [background size];
 
-        if (size.width > ret.width) {
-            ret.width = size.width;
-        }
-        if (size.height > ret.height) {
-            ret.height = size.height;
-        }
+        ret.width = std::max(size.width, ret.width);
+        ret.height = std::max(size.height, ret.height);
+    } else if (UIEdgeInsetsEqualToEdgeInsets(contentInsets, UIEdgeInsetsZero)) {
+        // Min values found emperically; set if no contentInsets are set.
+        ret.width = std::max(ret.width, 30.0f);
+        ret.height = std::max(ret.height, 12 + textSize.height);
     }
 
     ret.width += (contentInsets.right + contentInsets.left);
     ret.height += (contentInsets.top + contentInsets.bottom);
-
-    if (ret.height < 30.0f) {
-        ret.height = 30.0f;
-    }
 
     return ret;
 }

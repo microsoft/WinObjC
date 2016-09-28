@@ -285,6 +285,9 @@ static const wchar_t* tag = L"UIButtonProxies";
 }
 
 - (void)_updateDummyTextBlock {
+    // When a TextBlock is in the scene graph, it may have implicit constraints on it keeping it from being
+    // correctly Measured. To ensure an unbounded Measure we replicate the TextBlock, but never add it to 
+    // the graph; it's used solely for measurement.
     _dummyTextBlock.textWrapping = _xamlTextBlock.textWrapping;
     _dummyTextBlock.textTrimming = _xamlTextBlock.textTrimming;
     _dummyTextBlock.lineStackingStrategy = _xamlTextBlock.lineStackingStrategy;

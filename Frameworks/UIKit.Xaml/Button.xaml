@@ -72,7 +72,7 @@
                        Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" IsHitTestVisible="False" Stretch="Fill"
                        NineGrid="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ButtonBackgroundInsets}"/>
                 <Canvas x:Name="contentGrid" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
-                    <Image x:Name="buttonImage" Stretch="Uniform" IsHitTestVisible="False" Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ButtonImageSourceNormal}"/>
+                    <Image x:Name="buttonImage" Stretch="Fill" IsHitTestVisible="False" Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ButtonImageSourceNormal}"/>
                     <TextBlock x:Name="buttonText" MaxLines="1" TextTrimming="CharacterEllipsis" IsHitTestVisible="False"
                                Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NormalText}"
                                Foreground="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NormalForeground}"/>
