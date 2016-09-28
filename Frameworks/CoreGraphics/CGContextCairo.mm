@@ -1995,8 +1995,6 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
 
     CGContextStrokePath();
 
-    // Lock the data that is backing the layer.
-    _imgDest->Backing()->LockImageData();
     float height = _imgDest->Backing()->Height();
 
     ID2D1RenderTarget* imgRenderTarget = _imgDest->Backing()->GetRenderTarget();
@@ -2028,7 +2026,4 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
                                   DWRITE_MEASURING_MODE_NATURAL);
 
     THROW_IF_FAILED(imgRenderTarget->EndDraw());
-
-    // Release the backing data.
-    _imgDest->Backing()->ReleaseImageData();
 }
