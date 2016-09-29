@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 // Copyright (c) 2007 Christopher J. W. Lloyd
 //
 // This code is licensed under the MIT License (MIT).
@@ -49,8 +49,8 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)isEqualToIndexSet:(NSIndexSet*)indexSet;
 @property (readonly) NSUInteger firstIndex;
 @property (readonly) NSUInteger lastIndex;
-- (NSUInteger)indexLessThanIndex:(NSUInteger)index STUB_METHOD;
-- (NSUInteger)indexLessThanOrEqualToIndex:(NSUInteger)index STUB_METHOD;
+- (NSUInteger)indexLessThanIndex:(NSUInteger)index;
+- (NSUInteger)indexLessThanOrEqualToIndex:(NSUInteger)index;
 - (NSUInteger)indexGreaterThanOrEqualToIndex:(NSUInteger)index;
 - (NSUInteger)indexGreaterThanIndex:(NSUInteger)index;
 - (NSUInteger)getIndexes:(NSUInteger*)indexBuffer maxCount:(NSUInteger)bufferSize inIndexRange:(NSRangePointer)indexRange STUB_METHOD;
