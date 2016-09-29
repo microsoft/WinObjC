@@ -1987,11 +1987,6 @@ CGPathRef CGContextCairo::CGContextCopyPath(void) {
 
 /**
  * Helper method to render text with the given DWRITE_GLYPH_RUN.
- * Today we create a IWICBitmap with the underlying XAML Writable Bitmap raw bytes and rasterize to it before copying it back to the
- * original buffer.
- * TODO::
- *    1. There is double copy happening here - first when the IWICBitmap is created and later the rasterized image is copied back
- *       Implementing our own IWICBitmap interface should fix this issue.
  *
  * @parameter glyphRun DWRITE_GLYPH_RUN object to render
  */
@@ -2000,32 +1995,16 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
 
     CGContextStrokePath();
 
-    // Lock the data that is backing the layer.
-    BYTE* buffer = static_cast<BYTE*>(_imgDest->Backing()->LockImageData());
-    THROW_NS_IF_NULL(E_UNEXPECTED, buffer);
-    int stride = _imgDest->Backing()->BytesPerRow();
-    float width = _imgDest->Backing()->Width();
     float height = _imgDest->Backing()->Height();
 
-    // Create a IWICBitmap object out of the memory that is backing the layer.
-    ComPtr<IWICImagingFactory> wicFactory;
-    THROW_IF_FAILED(CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, __uuidof(IWICImagingFactory), &wicFactory));
-
-    ComPtr<IWICBitmap> wicBitmap;
-    THROW_IF_FAILED(
-        wicFactory->CreateBitmapFromMemory(width, height, GUID_WICPixelFormat32bppPBGRA, stride, height * stride, buffer, &wicBitmap));
-
-    // Create a ID2D1RenderTarget from the newly created IWICBitmap object.
-    ComPtr<ID2D1Factory> d2dFactory;
-    THROW_IF_FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &d2dFactory));
-    ComPtr<ID2D1RenderTarget> renderTarget;
-    THROW_IF_FAILED(d2dFactory->CreateWicBitmapRenderTarget(wicBitmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
+    ID2D1RenderTarget* imgRenderTarget = _imgDest->Backing()->GetRenderTarget();
+    THROW_NS_IF_NULL(E_UNEXPECTED, imgRenderTarget);
 
     // Set the brush color to the current values from the context.
     D2D1::ColorF brushColor =
         D2D1::ColorF(curState->curFillColor.r, curState->curFillColor.g, curState->curFillColor.b, curState->curFillColor.a);
 
-    renderTarget->BeginDraw();
+    imgRenderTarget->BeginDraw();
 
     // Apply the required transformations as set in the context.
     // We need some special handling in transform as CoreText in iOS renders from bottom left but DWrite on Windows does top left.
@@ -2036,20 +2015,15 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     CGFloat verticalScalingFactor = sqrt((transform.b * transform.b) + (transform.d * transform.d));
     transform = CGAffineTransformTranslate(transform, 0, (height / verticalScalingFactor) - height);
     // Perform anti-clockwise rotation required to match the reference platform.
-    renderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, -transform.b, transform.c, transform.d, transform.tx, transform.ty));
+    imgRenderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, -transform.b, transform.c, transform.d, transform.tx, transform.ty));
 
     // Draw the glyph using ID2D1RenderTarget
     ComPtr<ID2D1SolidColorBrush> brush;
-    THROW_IF_FAILED(renderTarget->CreateSolidColorBrush(brushColor, &brush));
-    renderTarget->DrawGlyphRun(D2D1::Point2F(curState->curTextPosition.x, curState->curTextPosition.y),
-                               glyphRun,
-                               brush.Get(),
-                               DWRITE_MEASURING_MODE_NATURAL);
+    THROW_IF_FAILED(imgRenderTarget->CreateSolidColorBrush(brushColor, &brush));
+    imgRenderTarget->DrawGlyphRun(D2D1::Point2F(curState->curTextPosition.x, curState->curTextPosition.y),
+                                  glyphRun,
+                                  brush.Get(),
+                                  DWRITE_MEASURING_MODE_NATURAL);
 
-    THROW_IF_FAILED(renderTarget->EndDraw());
-
-    // Copy back the updated IWICBitmap pixels into layer's backing memory
-    THROW_IF_FAILED(wicBitmap->CopyPixels(NULL, stride, height * stride, buffer));
-
-    _imgDest->Backing()->ReleaseImageData();
+    THROW_IF_FAILED(imgRenderTarget->EndDraw());
 }
