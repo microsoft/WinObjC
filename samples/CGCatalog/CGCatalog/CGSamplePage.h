@@ -16,5 +16,9 @@
 
 @protocol CGSamplePage
 @required
-- (id)initWithLineWidth:(CGFloat)width LineColor:(CGColorRef)color;
+- (id)initWithLineWidth:(CGFloat)width
+              lineColor:(CGColorRef)color
+            dashPattern:(CGFloat*)pattern
+                  phase:(CGFloat)phase
+              dashCount:(size_t)count;
 @end

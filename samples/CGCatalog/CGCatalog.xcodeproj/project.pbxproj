@@ -11,20 +11,29 @@
 		552816081D062F6B0082C178 /* CGCCGContextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 552816071D062F6B0082C178 /* CGCCGContextViewController.m */; };
 		5528160A1D0630300082C178 /* LogoAutodesk.png in Resources */ = {isa = PBXBuildFile; fileRef = 552816091D0630300082C178 /* LogoAutodesk.png */; };
 		5579D6771D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5579D6761D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m */; };
-		8B0DD3421D91E4A5009CADE6 /* CGPathAddCurveToPointView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0DD32A1D91E4A5009CADE6 /* CGPathAddCurveToPointView.m */; };
-		8B0DD3431D91E4A5009CADE6 /* CGPathAddElipseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0DD32C1D91E4A5009CADE6 /* CGPathAddElipseView.m */; };
-		8B0DD3441D91E4A5009CADE6 /* CGPathAddLineToPointView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0DD32E1D91E4A5009CADE6 /* CGPathAddLineToPointView.m */; };
-		8B0DD3451D91E4A5009CADE6 /* CGPathAddPathView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0DD32F1D91E4A5009CADE6 /* CGPathAddPathView.m */; };
-		8B0DD3461D91E4A5009CADE6 /* CGPathAddQuadCurveToPointView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0DD3311D91E4A5009CADE6 /* CGPathAddQuadCurveToPointView.m */; };
-		8B0DD3471D91E4A5009CADE6 /* CGPathAddRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0DD3331D91E4A5009CADE6 /* CGPathAddRectView.m */; };
-		8B0DD3481D91E4A5009CADE6 /* CGPathApplyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0DD3351D91E4A5009CADE6 /* CGPathApplyView.m */; };
-		8B0DD3491D91E4A5009CADE6 /* CGPathCloseSubpathView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0DD3371D91E4A5009CADE6 /* CGPathCloseSubpathView.m */; };
-		8B0DD34A1D91E4A5009CADE6 /* CGPathContainsPointView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0DD3391D91E4A5009CADE6 /* CGPathContainsPointView.m */; };
-		8B0DD34C1D91E4A5009CADE6 /* CGPathGetBoundingBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0DD33D1D91E4A5009CADE6 /* CGPathGetBoundingBoxView.m */; };
 		8B6186D31D89CD1800DA47F4 /* CGContextSamplesRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B6186D21D89CD1800DA47F4 /* CGContextSamplesRootViewController.m */; };
 		8B8A9A701D95AD32006CB438 /* CGDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B8A9A6F1D95AD32006CB438 /* CGDrawView.m */; };
 		8B9D65101D89C42800153CCF /* CGContextNewTestsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9D650F1D89C42800153CCF /* CGContextNewTestsController.m */; };
 		8B9D65131D89C5EB00153CCF /* CGContextSampleRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9D65121D89C5EB00153CCF /* CGContextSampleRow.m */; };
+		8BF7B3F01D9C63FA00C25A86 /* CGPathAddCurveToPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3DD1D9C63FA00C25A86 /* CGPathAddCurveToPointViewController.m */; };
+		8BF7B3F11D9C63FA00C25A86 /* CGPathAddElipseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3DF1D9C63FA00C25A86 /* CGPathAddElipseViewController.m */; };
+		8BF7B3F21D9C63FA00C25A86 /* CGPathAddLineToPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3E11D9C63FA00C25A86 /* CGPathAddLineToPointViewController.m */; };
+		8BF7B3F31D9C63FA00C25A86 /* CGPathAddPathViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3E31D9C63FA00C25A86 /* CGPathAddPathViewController.m */; };
+		8BF7B3F41D9C63FA00C25A86 /* CGPathAddQuadCurveToPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3E51D9C63FA00C25A86 /* CGPathAddQuadCurveToPointViewController.m */; };
+		8BF7B3F51D9C63FA00C25A86 /* CGPathAddRectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3E71D9C63FA00C25A86 /* CGPathAddRectViewController.m */; };
+		8BF7B3F61D9C63FA00C25A86 /* CGPathApplyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3E91D9C63FA00C25A86 /* CGPathApplyViewController.m */; };
+		8BF7B3F71D9C63FA00C25A86 /* CGPathCloseSubpathViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3EB1D9C63FA00C25A86 /* CGPathCloseSubpathViewController.m */; };
+		8BF7B3F81D9C63FA00C25A86 /* CGPathContainsPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3ED1D9C63FA00C25A86 /* CGPathContainsPointViewController.m */; };
+		8BF7B3F91D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3EF1D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.m */; };
+		8BF7B3FF1D9C6DB700C25A86 /* AddCurveToPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BF7B3FA1D9C6DB700C25A86 /* AddCurveToPoint.png */; };
+		8BF7B4001D9C6DB700C25A86 /* AddElipseToRect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BF7B3FB1D9C6DB700C25A86 /* AddElipseToRect.png */; };
+		8BF7B4011D9C6DB700C25A86 /* AddLineToPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BF7B3FC1D9C6DB700C25A86 /* AddLineToPoint.png */; };
+		8BF7B4021D9C6DB700C25A86 /* AddPath.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BF7B3FD1D9C6DB700C25A86 /* AddPath.png */; };
+		8BF7B4031D9C6DB700C25A86 /* AddQuadCurveToPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BF7B3FE1D9C6DB700C25A86 /* AddQuadCurveToPoint.png */; };
+		8BF7B4061D9C6DDF00C25A86 /* CloseSubPath.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BF7B4041D9C6DDF00C25A86 /* CloseSubPath.png */; };
+		8BF7B4071D9C6DDF00C25A86 /* GetBoundingBox.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BF7B4051D9C6DDF00C25A86 /* GetBoundingBox.png */; };
+		8BF7B40A1D9C6E0500C25A86 /* PathAddRect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BF7B4081D9C6E0500C25A86 /* PathAddRect.png */; };
+		8BF7B40B1D9C6E0500C25A86 /* PathApply.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BF7B4091D9C6E0500C25A86 /* PathApply.png */; };
 		F0D21C831D05FEF9002C32EE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D21C821D05FEF9002C32EE /* main.m */; };
 		F0D21C861D05FEF9002C32EE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D21C851D05FEF9002C32EE /* AppDelegate.m */; };
 		F0D21C891D05FEF9002C32EE /* CGCRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D21C881D05FEF9002C32EE /* CGCRootViewController.m */; };
@@ -46,25 +55,6 @@
 		552816091D0630300082C178 /* LogoAutodesk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LogoAutodesk.png; sourceTree = "<group>"; };
 		5579D6751D1B73EC00B33059 /* CGCCGPathContainsPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGCCGPathContainsPointViewController.h; sourceTree = "<group>"; };
 		5579D6761D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGCCGPathContainsPointViewController.m; sourceTree = "<group>"; };
-		8B0DD3291D91E4A5009CADE6 /* CGPathAddCurveToPointView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddCurveToPointView.h; sourceTree = "<group>"; };
-		8B0DD32A1D91E4A5009CADE6 /* CGPathAddCurveToPointView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddCurveToPointView.m; sourceTree = "<group>"; };
-		8B0DD32B1D91E4A5009CADE6 /* CGPathAddElipseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddElipseView.h; sourceTree = "<group>"; };
-		8B0DD32C1D91E4A5009CADE6 /* CGPathAddElipseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddElipseView.m; sourceTree = "<group>"; };
-		8B0DD32D1D91E4A5009CADE6 /* CGPathAddLineToPointView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddLineToPointView.h; sourceTree = "<group>"; };
-		8B0DD32E1D91E4A5009CADE6 /* CGPathAddLineToPointView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddLineToPointView.m; sourceTree = "<group>"; };
-		8B0DD32F1D91E4A5009CADE6 /* CGPathAddPathView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddPathView.m; sourceTree = "<group>"; };
-		8B0DD3301D91E4A5009CADE6 /* CGPathAddQuadCurveToPointView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddQuadCurveToPointView.h; sourceTree = "<group>"; };
-		8B0DD3311D91E4A5009CADE6 /* CGPathAddQuadCurveToPointView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddQuadCurveToPointView.m; sourceTree = "<group>"; };
-		8B0DD3321D91E4A5009CADE6 /* CGPathAddRectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddRectView.h; sourceTree = "<group>"; };
-		8B0DD3331D91E4A5009CADE6 /* CGPathAddRectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddRectView.m; sourceTree = "<group>"; };
-		8B0DD3341D91E4A5009CADE6 /* CGPathApplyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathApplyView.h; sourceTree = "<group>"; };
-		8B0DD3351D91E4A5009CADE6 /* CGPathApplyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathApplyView.m; sourceTree = "<group>"; };
-		8B0DD3361D91E4A5009CADE6 /* CGPathCloseSubpathView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathCloseSubpathView.h; sourceTree = "<group>"; };
-		8B0DD3371D91E4A5009CADE6 /* CGPathCloseSubpathView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathCloseSubpathView.m; sourceTree = "<group>"; };
-		8B0DD3381D91E4A5009CADE6 /* CGPathContainsPointView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathContainsPointView.h; sourceTree = "<group>"; };
-		8B0DD3391D91E4A5009CADE6 /* CGPathContainsPointView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathContainsPointView.m; sourceTree = "<group>"; };
-		8B0DD33C1D91E4A5009CADE6 /* CGPathGetBoundingBoxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathGetBoundingBoxView.h; sourceTree = "<group>"; };
-		8B0DD33D1D91E4A5009CADE6 /* CGPathGetBoundingBoxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathGetBoundingBoxView.m; sourceTree = "<group>"; };
 		8B2F03A11D93665900A662A3 /* CGSamplePage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CGSamplePage.h; sourceTree = "<group>"; };
 		8B6186D11D89CC6D00DA47F4 /* CGContextSamplesRootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CGContextSamplesRootViewController.h; sourceTree = "<group>"; };
 		8B6186D21D89CD1800DA47F4 /* CGContextSamplesRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGContextSamplesRootViewController.m; sourceTree = "<group>"; };
@@ -74,7 +64,35 @@
 		8B9D650F1D89C42800153CCF /* CGContextNewTestsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CGContextNewTestsController.m; path = Samples/CGContextNewTestsController.m; sourceTree = "<group>"; };
 		8B9D65111D89C5BF00153CCF /* CGContextSampleRow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CGContextSampleRow.h; sourceTree = "<group>"; };
 		8B9D65121D89C5EB00153CCF /* CGContextSampleRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGContextSampleRow.m; sourceTree = "<group>"; };
-		8BFBACBB1D9203F70003131F /* CGPathAddPathView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddPathView.h; sourceTree = "<group>"; };
+		8BF7B3DC1D9C63FA00C25A86 /* CGPathAddCurveToPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddCurveToPointViewController.h; sourceTree = "<group>"; };
+		8BF7B3DD1D9C63FA00C25A86 /* CGPathAddCurveToPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddCurveToPointViewController.m; sourceTree = "<group>"; };
+		8BF7B3DE1D9C63FA00C25A86 /* CGPathAddElipseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddElipseViewController.h; sourceTree = "<group>"; };
+		8BF7B3DF1D9C63FA00C25A86 /* CGPathAddElipseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddElipseViewController.m; sourceTree = "<group>"; };
+		8BF7B3E01D9C63FA00C25A86 /* CGPathAddLineToPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddLineToPointViewController.h; sourceTree = "<group>"; };
+		8BF7B3E11D9C63FA00C25A86 /* CGPathAddLineToPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddLineToPointViewController.m; sourceTree = "<group>"; };
+		8BF7B3E21D9C63FA00C25A86 /* CGPathAddPathViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddPathViewController.h; sourceTree = "<group>"; };
+		8BF7B3E31D9C63FA00C25A86 /* CGPathAddPathViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddPathViewController.m; sourceTree = "<group>"; };
+		8BF7B3E41D9C63FA00C25A86 /* CGPathAddQuadCurveToPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddQuadCurveToPointViewController.h; sourceTree = "<group>"; };
+		8BF7B3E51D9C63FA00C25A86 /* CGPathAddQuadCurveToPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddQuadCurveToPointViewController.m; sourceTree = "<group>"; };
+		8BF7B3E61D9C63FA00C25A86 /* CGPathAddRectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddRectViewController.h; sourceTree = "<group>"; };
+		8BF7B3E71D9C63FA00C25A86 /* CGPathAddRectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddRectViewController.m; sourceTree = "<group>"; };
+		8BF7B3E81D9C63FA00C25A86 /* CGPathApplyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathApplyViewController.h; sourceTree = "<group>"; };
+		8BF7B3E91D9C63FA00C25A86 /* CGPathApplyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathApplyViewController.m; sourceTree = "<group>"; };
+		8BF7B3EA1D9C63FA00C25A86 /* CGPathCloseSubpathViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathCloseSubpathViewController.h; sourceTree = "<group>"; };
+		8BF7B3EB1D9C63FA00C25A86 /* CGPathCloseSubpathViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathCloseSubpathViewController.m; sourceTree = "<group>"; };
+		8BF7B3EC1D9C63FA00C25A86 /* CGPathContainsPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathContainsPointViewController.h; sourceTree = "<group>"; };
+		8BF7B3ED1D9C63FA00C25A86 /* CGPathContainsPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathContainsPointViewController.m; sourceTree = "<group>"; };
+		8BF7B3EE1D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathGetBoundingBoxViewController.h; sourceTree = "<group>"; };
+		8BF7B3EF1D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathGetBoundingBoxViewController.m; sourceTree = "<group>"; };
+		8BF7B3FA1D9C6DB700C25A86 /* AddCurveToPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddCurveToPoint.png; path = CGCatalog/AddCurveToPoint.png; sourceTree = SOURCE_ROOT; };
+		8BF7B3FB1D9C6DB700C25A86 /* AddElipseToRect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddElipseToRect.png; path = CGCatalog/AddElipseToRect.png; sourceTree = SOURCE_ROOT; };
+		8BF7B3FC1D9C6DB700C25A86 /* AddLineToPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddLineToPoint.png; path = CGCatalog/AddLineToPoint.png; sourceTree = SOURCE_ROOT; };
+		8BF7B3FD1D9C6DB700C25A86 /* AddPath.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddPath.png; path = CGCatalog/AddPath.png; sourceTree = SOURCE_ROOT; };
+		8BF7B3FE1D9C6DB700C25A86 /* AddQuadCurveToPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddQuadCurveToPoint.png; path = CGCatalog/AddQuadCurveToPoint.png; sourceTree = SOURCE_ROOT; };
+		8BF7B4041D9C6DDF00C25A86 /* CloseSubPath.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CloseSubPath.png; path = CGCatalog/CloseSubPath.png; sourceTree = SOURCE_ROOT; };
+		8BF7B4051D9C6DDF00C25A86 /* GetBoundingBox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = GetBoundingBox.png; path = CGCatalog/GetBoundingBox.png; sourceTree = SOURCE_ROOT; };
+		8BF7B4081D9C6E0500C25A86 /* PathAddRect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PathAddRect.png; path = CGCatalog/PathAddRect.png; sourceTree = SOURCE_ROOT; };
+		8BF7B4091D9C6E0500C25A86 /* PathApply.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PathApply.png; path = CGCatalog/PathApply.png; sourceTree = SOURCE_ROOT; };
 		F0D21C7E1D05FEF9002C32EE /* CGCatalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CGCatalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0D21C821D05FEF9002C32EE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = main.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		F0D21C841D05FEF9002C32EE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AppDelegate.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -112,26 +130,26 @@
 		8BC8830E1D90A33F009115D0 /* NewSamples */ = {
 			isa = PBXGroup;
 			children = (
-				8B0DD3291D91E4A5009CADE6 /* CGPathAddCurveToPointView.h */,
-				8B0DD32A1D91E4A5009CADE6 /* CGPathAddCurveToPointView.m */,
-				8B0DD32B1D91E4A5009CADE6 /* CGPathAddElipseView.h */,
-				8B0DD32C1D91E4A5009CADE6 /* CGPathAddElipseView.m */,
-				8B0DD32D1D91E4A5009CADE6 /* CGPathAddLineToPointView.h */,
-				8B0DD32E1D91E4A5009CADE6 /* CGPathAddLineToPointView.m */,
-				8BFBACBB1D9203F70003131F /* CGPathAddPathView.h */,
-				8B0DD32F1D91E4A5009CADE6 /* CGPathAddPathView.m */,
-				8B0DD3301D91E4A5009CADE6 /* CGPathAddQuadCurveToPointView.h */,
-				8B0DD3311D91E4A5009CADE6 /* CGPathAddQuadCurveToPointView.m */,
-				8B0DD3321D91E4A5009CADE6 /* CGPathAddRectView.h */,
-				8B0DD3331D91E4A5009CADE6 /* CGPathAddRectView.m */,
-				8B0DD3341D91E4A5009CADE6 /* CGPathApplyView.h */,
-				8B0DD3351D91E4A5009CADE6 /* CGPathApplyView.m */,
-				8B0DD3361D91E4A5009CADE6 /* CGPathCloseSubpathView.h */,
-				8B0DD3371D91E4A5009CADE6 /* CGPathCloseSubpathView.m */,
-				8B0DD3381D91E4A5009CADE6 /* CGPathContainsPointView.h */,
-				8B0DD3391D91E4A5009CADE6 /* CGPathContainsPointView.m */,
-				8B0DD33C1D91E4A5009CADE6 /* CGPathGetBoundingBoxView.h */,
-				8B0DD33D1D91E4A5009CADE6 /* CGPathGetBoundingBoxView.m */,
+				8BF7B3DC1D9C63FA00C25A86 /* CGPathAddCurveToPointViewController.h */,
+				8BF7B3DD1D9C63FA00C25A86 /* CGPathAddCurveToPointViewController.m */,
+				8BF7B3DE1D9C63FA00C25A86 /* CGPathAddElipseViewController.h */,
+				8BF7B3DF1D9C63FA00C25A86 /* CGPathAddElipseViewController.m */,
+				8BF7B3E01D9C63FA00C25A86 /* CGPathAddLineToPointViewController.h */,
+				8BF7B3E11D9C63FA00C25A86 /* CGPathAddLineToPointViewController.m */,
+				8BF7B3E21D9C63FA00C25A86 /* CGPathAddPathViewController.h */,
+				8BF7B3E31D9C63FA00C25A86 /* CGPathAddPathViewController.m */,
+				8BF7B3E41D9C63FA00C25A86 /* CGPathAddQuadCurveToPointViewController.h */,
+				8BF7B3E51D9C63FA00C25A86 /* CGPathAddQuadCurveToPointViewController.m */,
+				8BF7B3E61D9C63FA00C25A86 /* CGPathAddRectViewController.h */,
+				8BF7B3E71D9C63FA00C25A86 /* CGPathAddRectViewController.m */,
+				8BF7B3E81D9C63FA00C25A86 /* CGPathApplyViewController.h */,
+				8BF7B3E91D9C63FA00C25A86 /* CGPathApplyViewController.m */,
+				8BF7B3EA1D9C63FA00C25A86 /* CGPathCloseSubpathViewController.h */,
+				8BF7B3EB1D9C63FA00C25A86 /* CGPathCloseSubpathViewController.m */,
+				8BF7B3EC1D9C63FA00C25A86 /* CGPathContainsPointViewController.h */,
+				8BF7B3ED1D9C63FA00C25A86 /* CGPathContainsPointViewController.m */,
+				8BF7B3EE1D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.h */,
+				8BF7B3EF1D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.m */,
 			);
 			name = NewSamples;
 			sourceTree = "<group>";
@@ -214,6 +232,15 @@
 		F0D21CB81D0605E1002C32EE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8BF7B4081D9C6E0500C25A86 /* PathAddRect.png */,
+				8BF7B4091D9C6E0500C25A86 /* PathApply.png */,
+				8BF7B4041D9C6DDF00C25A86 /* CloseSubPath.png */,
+				8BF7B4051D9C6DDF00C25A86 /* GetBoundingBox.png */,
+				8BF7B3FA1D9C6DB700C25A86 /* AddCurveToPoint.png */,
+				8BF7B3FB1D9C6DB700C25A86 /* AddElipseToRect.png */,
+				8BF7B3FC1D9C6DB700C25A86 /* AddLineToPoint.png */,
+				8BF7B3FD1D9C6DB700C25A86 /* AddPath.png */,
+				8BF7B3FE1D9C6DB700C25A86 /* AddQuadCurveToPoint.png */,
 				552816091D0630300082C178 /* LogoAutodesk.png */,
 				F0D21CB91D0605E1002C32EE /* Assets.xcassets */,
 				F0D21CBB1D0605ED002C32EE /* Launch Screen.storyboard */,
@@ -279,9 +306,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8BF7B4031D9C6DB700C25A86 /* AddQuadCurveToPoint.png in Resources */,
+				8BF7B4061D9C6DDF00C25A86 /* CloseSubPath.png in Resources */,
+				8BF7B40A1D9C6E0500C25A86 /* PathAddRect.png in Resources */,
+				8BF7B4021D9C6DB700C25A86 /* AddPath.png in Resources */,
 				5528160A1D0630300082C178 /* LogoAutodesk.png in Resources */,
+				8BF7B4011D9C6DB700C25A86 /* AddLineToPoint.png in Resources */,
+				8BF7B3FF1D9C6DB700C25A86 /* AddCurveToPoint.png in Resources */,
+				8BF7B40B1D9C6E0500C25A86 /* PathApply.png in Resources */,
+				8BF7B4071D9C6DDF00C25A86 /* GetBoundingBox.png in Resources */,
 				F0D21CBC1D0605ED002C32EE /* Launch Screen.storyboard in Resources */,
 				F0D21CBA1D0605E1002C32EE /* Assets.xcassets in Resources */,
+				8BF7B4001D9C6DB700C25A86 /* AddElipseToRect.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,32 +328,32 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8B0DD34C1D91E4A5009CADE6 /* CGPathGetBoundingBoxView.m in Sources */,
-				8B0DD3481D91E4A5009CADE6 /* CGPathApplyView.m in Sources */,
-				8B0DD3491D91E4A5009CADE6 /* CGPathCloseSubpathView.m in Sources */,
+				8BF7B3F71D9C63FA00C25A86 /* CGPathCloseSubpathViewController.m in Sources */,
 				8B9D65101D89C42800153CCF /* CGContextNewTestsController.m in Sources */,
 				F0D21C891D05FEF9002C32EE /* CGCRootViewController.m in Sources */,
+				8BF7B3F01D9C63FA00C25A86 /* CGPathAddCurveToPointViewController.m in Sources */,
 				FBA3A50C1D132C9A00C3C011 /* CGCCGContextReplacePathWithStrokedPath.m in Sources */,
-				8B0DD3421D91E4A5009CADE6 /* CGPathAddCurveToPointView.m in Sources */,
+				8BF7B3F21D9C63FA00C25A86 /* CGPathAddLineToPointViewController.m in Sources */,
 				8B6186D31D89CD1800DA47F4 /* CGContextSamplesRootViewController.m in Sources */,
-				8B0DD34A1D91E4A5009CADE6 /* CGPathContainsPointView.m in Sources */,
 				FB1264921D0A0484007C907C /* CGCCGContextBeginEndTransparencyLayer.m in Sources */,
-				8B0DD3451D91E4A5009CADE6 /* CGPathAddPathView.m in Sources */,
+				8BF7B3F51D9C63FA00C25A86 /* CGPathAddRectViewController.m in Sources */,
 				FB10A19A1D10792E008EA8A1 /* CGCCGContextSetPatternPhase.m in Sources */,
+				8BF7B3F31D9C63FA00C25A86 /* CGPathAddPathViewController.m in Sources */,
 				8B8A9A701D95AD32006CB438 /* CGDrawView.m in Sources */,
 				552816081D062F6B0082C178 /* CGCCGContextViewController.m in Sources */,
+				8BF7B3F81D9C63FA00C25A86 /* CGPathContainsPointViewController.m in Sources */,
 				5579D6771D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m in Sources */,
 				F0D21C861D05FEF9002C32EE /* AppDelegate.m in Sources */,
 				8B9D65131D89C5EB00153CCF /* CGContextSampleRow.m in Sources */,
 				F0D21CBF1D06078D002C32EE /* CGCBaseViewController.m in Sources */,
 				FB18A4BA1D1AD10A00A9555A /* CGCCGContextBeginTransparencyLayerWithRect.m in Sources */,
 				552816051D062EC90082C178 /* CGCCGBitmapContentViewController.m in Sources */,
+				8BF7B3F61D9C63FA00C25A86 /* CGPathApplyViewController.m in Sources */,
+				8BF7B3F41D9C63FA00C25A86 /* CGPathAddQuadCurveToPointViewController.m in Sources */,
 				F0D21CB71D060466002C32EE /* CGCCGPathApplyViewController.m in Sources */,
-				8B0DD3441D91E4A5009CADE6 /* CGPathAddLineToPointView.m in Sources */,
-				8B0DD3471D91E4A5009CADE6 /* CGPathAddRectView.m in Sources */,
-				8B0DD3431D91E4A5009CADE6 /* CGPathAddElipseView.m in Sources */,
-				8B0DD3461D91E4A5009CADE6 /* CGPathAddQuadCurveToPointView.m in Sources */,
 				F0D21C831D05FEF9002C32EE /* main.m in Sources */,
+				8BF7B3F91D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.m in Sources */,
+				8BF7B3F11D9C63FA00C25A86 /* CGPathAddElipseViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -31,7 +31,7 @@
     return self;
 }
 
--(void)dealloc {
+- (void)dealloc {
     CGColorRelease(_lineColor);
 }
 
@@ -39,7 +39,6 @@
     CGContextRef currentContext = UIGraphicsGetCurrentContext();
 
     CGContextSetLineWidth(currentContext, self.lineWidth);
-
     CGContextSetStrokeColorWithColor(currentContext, self.lineColor);
 
     CGMutablePathRef thepath = CGPathCreateMutable();
@@ -66,6 +65,16 @@
     CGContextStrokePath(currentContext);
 
     CGPathRelease(thepath);
+
+    UIImage* comparisonImage = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"PathApply" ofType:@"png"]];
+    CGAffineTransform flip = CGAffineTransformMakeScale(1, -1);
+    CGAffineTransform shift = CGAffineTransformTranslate(flip, 0, comparisonImage.size.height * -1);
+    CGContextConcatCTM(currentContext, shift);
+
+    UIGraphicsBeginImageContext(comparisonImage.size);
+    CGContextDrawImage(currentContext,
+                       CGRectMake(50, -300, comparisonImage.size.width, comparisonImage.size.height),
+                       comparisonImage.CGImage);
 }
 
 void CGPathApplyCallback(void* context, const CGPathElement* element) {
@@ -79,11 +88,12 @@ void CGPathApplyCallback(void* context, const CGPathElement* element) {
 
 @implementation CGPathApplyViewController
 
-- (id)initWithLineWidth:(CGFloat)width LineColor:(CGColorRef)color {
-    if (self = [super init]) {
-        self = [super initWithLineWidth : width Color : color];
-        return self;
-    }
+- (id)initWithLineWidth:(CGFloat)width
+              lineColor:(CGColorRef)color
+            dashPattern:(CGFloat*)pattern
+                  phase:(CGFloat)phase
+              dashCount:(size_t)count {
+    self = [super initWithLineWidth:width color:color dashPattern:pattern phase:phase dashCount:count];
     return self;
 }
 
@@ -94,6 +104,8 @@ void CGPathApplyCallback(void* context, const CGPathElement* element) {
                                                       lineWidth:self.lineWidth
                                                           color:self.lineColor];
     [self.view addSubview:cgView];
+
+    [super addComparisonLabel];
 }
 
 @end

@@ -19,7 +19,16 @@
 #import <UIKit/UIKit.h>
 
 @interface CGCBaseViewController : UIViewController
-- (instancetype)initWithLineWidth : (CGFloat)width Color : (CGColorRef)colorRef;
+- (instancetype)initWithLineWidth:(CGFloat)width
+                            color:(CGColorRef)colorRef
+                      dashPattern:(CGFloat*)pattern
+                            phase:(CGFloat)phase
+                        dashCount:(size_t)count;
+- (void)drawComparisonCGImageFromImageName:(NSString*)name intoContext:(CGContextRef)context;
+- (void)addComparisonLabel;
 @property (readonly) CGFloat lineWidth;
 @property (readonly) CGColorRef lineColor;
+@property (readonly) CGFloat* lineDashPattern;
+@property (readonly) CGFloat linePhase;
+@property (readonly) size_t lineDashCount;
 @end

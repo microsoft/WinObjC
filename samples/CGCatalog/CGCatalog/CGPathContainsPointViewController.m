@@ -33,7 +33,7 @@
     return self;
 }
 
--(void)dealloc {
+- (void)dealloc {
     CGColorRelease(_lineColor);
 }
 
@@ -41,7 +41,6 @@
     CGContextRef currentContext = UIGraphicsGetCurrentContext();
 
     CGContextSetLineWidth(currentContext, self.lineWidth);
-
     CGContextSetStrokeColorWithColor(currentContext, self.lineColor);
 
     self.thePath = CGPathCreateMutable();
@@ -78,11 +77,12 @@
     }
 }
 
-- (id)initWithLineWidth:(CGFloat)width LineColor:(CGColorRef)color {
-    if (self = [super init]) {
-        self = [super initWithLineWidth : width Color : color];
-        return self;
-    }
+- (id)initWithLineWidth:(CGFloat)width
+              lineColor:(CGColorRef)color
+            dashPattern:(CGFloat*)pattern
+                  phase:(CGFloat)phase
+              dashCount:(size_t)count {
+    self = [super initWithLineWidth:width color:color dashPattern:pattern phase:phase dashCount:count];
     return self;
 }
 

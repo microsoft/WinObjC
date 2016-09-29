@@ -31,13 +31,18 @@
 @interface CGContextNewTestsController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) NSArray<CGContextSampleRow*>* samples;
-@property (retain) UITextField* redColor;
-@property (retain) UITextField* greenColor;
-@property (retain) UITextField* blueColor;
-@property (retain) UITextField* alphaColor;
+@property UITextField* lineWidthTextBox;
+@property UITextField* redColor;
+@property UITextField* greenColor;
+@property UITextField* blueColor;
+@property UITextField* alphaColor;
+@property UITextField* dashPatternText;
 
-@property (assign) CGColorRef lineColor;
-@property (assign) CGFloat lineWidth;
+@property CGColorRef lineColor;
+@property CGFloat lineWidth;
+@property CGFloat* dashComponents;
+@property CGFloat dashPhase;
+@property size_t dashCount;
 
 @end
 
@@ -67,10 +72,10 @@
 
 - (void)createLineWidthFromText:(UITextField*)sender {
     NSCharacterSet* notNumericOrDeci = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789."] invertedSet];
-    if ([sender.text rangeOfCharacterFromSet:notNumericOrDeci].location == NSNotFound) {
+    if ([self.lineWidthTextBox.text rangeOfCharacterFromSet:notNumericOrDeci].location == NSNotFound) {
         NSNumberFormatter* formatter = [[NSNumberFormatter alloc] init];
         formatter.numberStyle = NSNumberFormatterDecimalStyle;
-        CGFloat lineValue = [formatter numberFromString:sender.text].floatValue;
+        CGFloat lineValue = [formatter numberFromString:self.lineWidthTextBox.text].floatValue;
 
         if (lineValue < 0) {
             lineValue = 0;
@@ -120,15 +125,39 @@
 
 - (void)colorTextBoxCallBack:(UITextField*)sender {
     NSCharacterSet* notNumericOrDeci = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789."] invertedSet];
-    if ([sender.text rangeOfCharacterFromSet:notNumericOrDeci].location == NSNotFound) {
+    if ([self.dashPatternText.text rangeOfCharacterFromSet:notNumericOrDeci].location == NSNotFound) {
         [self createNewColorFromTextBoxes];
+    }
+}
+
+- (void)dashPatternCallback:(UITextField*)sender {
+    if (self.dashComponents) {
+        free(self.dashComponents);
+    }
+
+    NSCharacterSet* notAllowedCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789., "] invertedSet];
+
+    if ([sender.text rangeOfCharacterFromSet:notAllowedCharacters].location != NSNotFound) {
+        self.dashComponents = malloc(sizeof(CGFloat));
+        self.dashComponents[0] = 0;
+        return;
+    }
+
+    NSArray* components = [self.dashPatternText.text componentsSeparatedByString:@","];
+
+    self.dashCount = components.count;
+    self.dashComponents = malloc(sizeof(CGFloat) * self.dashCount);
+
+    NSNumberFormatter* formatter = [[NSNumberFormatter alloc] init];
+    formatter.numberStyle = NSNumberFormatterDecimalStyle;
+
+    for (int i = 0; i < self.dashCount; i++) {
+        self.dashComponents[i] = [formatter numberFromString:[components objectAtIndex:i]].floatValue;
     }
 }
 
 - (void)loadView {
     [super loadView];
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-
     [self.view setBackgroundColor:[UIColor clearColor]];
 
     UILabel* lineWidthText = [[UILabel alloc] initWithFrame:CGRectMake(0, 60, 100, 40)];
@@ -136,11 +165,11 @@
     [lineWidthText setText:@"LineWidth:"];
     [self.view addSubview:lineWidthText];
 
-    UITextField* cgLineWidthInput = [[UITextField alloc] initWithFrame:CGRectMake(82, 60, 50, 40)];
-    [cgLineWidthInput setBackgroundColor:[UIColor whiteColor]];
-    [cgLineWidthInput setText:@"2.0"];
-    [cgLineWidthInput addTarget:self action:@selector(createLineWidthFromText:) forControlEvents:UIControlEventEditingChanged];
-    [self.view addSubview:cgLineWidthInput];
+    self.lineWidthTextBox = [[UITextField alloc] initWithFrame:CGRectMake(82, 60, 50, 40)];
+    [self.lineWidthTextBox setBackgroundColor:[UIColor whiteColor]];
+    [self.lineWidthTextBox setText:@"2.0"];
+    [self.lineWidthTextBox addTarget:self action:@selector(createLineWidthFromText:) forControlEvents:UIControlEventEditingChanged];
+    [self.view addSubview:self.lineWidthTextBox];
 
     UILabel* lineColorText = [[UILabel alloc] initWithFrame:CGRectMake(122, 60, 100, 40)];
     [lineColorText setBackgroundColor:[UIColor whiteColor]];
@@ -171,23 +200,39 @@
     [self.alphaColor addTarget:self action:@selector(colorTextBoxCallBack:) forControlEvents:UIControlEventEditingChanged];
     [self.view addSubview:self.alphaColor];
 
+    UILabel* dashText = [[UILabel alloc] initWithFrame:CGRectMake(0, 100, 150, 40)];
+    [dashText setBackgroundColor:[UIColor whiteColor]];
+    [dashText setText:@"Dash Pattern:"];
+    [self.view addSubview:dashText];
+
+    self.dashPatternText = [[UITextField alloc] initWithFrame:CGRectMake(150, 100, 200, 40)];
+    [self.dashPatternText setBackgroundColor:[UIColor whiteColor]];
+    [self.dashPatternText setText:@"1.0"];
+    [self.dashPatternText addTarget:self action:@selector(dashPatternCallback:) forControlEvents:UIControlEventEditingChanged];
+    [self.view addSubview:self.dashPatternText];
+
     [self createNewColorFromTextBoxes];
-    self.lineWidth = 2.0;
+    [self createLineWidthFromText:nil];
+    [self dashPatternCallback:nil];
+    self.dashPhase = 0;
 
     UITableView* tableView = [[UITableView alloc] init];
     [tableView setDelegate:self];
     [tableView setDataSource:self];
     CGRect viewBounds = self.view.bounds;
 
-    CGRect newTableBounds = CGRectMake(0, 100, viewBounds.origin.x + viewBounds.size.width, viewBounds.origin.y + viewBounds.size.height);
+    CGRect newTableBounds = CGRectMake(0, 150, viewBounds.origin.x + viewBounds.size.width, viewBounds.origin.y + viewBounds.size.height);
     [tableView setFrame:newTableBounds];
     [self.view addSubview:tableView];
 }
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-    [self.navigationController
-        pushViewController:[[self.samples[indexPath.row].class alloc] initWithLineWidth:self.lineWidth LineColor:self.lineColor]
-                  animated:YES];
+    [self.navigationController pushViewController:[[self.samples[indexPath.row].class alloc] initWithLineWidth:self.lineWidth
+                                                                                                     lineColor:self.lineColor
+                                                                                                   dashPattern:self.dashComponents
+                                                                                                         phase:self.dashPhase
+                                                                                                     dashCount:self.dashCount]
+                                         animated:YES];
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {

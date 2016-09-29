@@ -20,7 +20,9 @@
 
 @end
 
-@implementation CGCBaseViewController
+@implementation CGCBaseViewController {
+    BOOL _drawComparisonImage;
+}
 
 - (instancetype)init {
     self = [super init];
@@ -28,17 +30,37 @@
         self.title = [[NSStringFromClass([self class]) stringByReplacingOccurrencesOfString:@"CGC" withString:@""]
             stringByReplacingOccurrencesOfString:@"ViewController"
                                       withString:@""];
+        _drawComparisonImage = NO;
     }
     return self;
 }
 
--(instancetype) initWithLineWidth:(CGFloat)width Color:(CGColorRef)colorRef {
+- (instancetype)initWithLineWidth:(CGFloat)width
+                            color:(CGColorRef)colorRef
+                      dashPattern:(CGFloat*)pattern
+                            phase:(CGFloat)phase
+                        dashCount:(size_t)count {
     if (self = [self init]) {
         _lineWidth = width;
         _lineColor = colorRef;
+        _lineDashPattern = pattern;
+        _linePhase = phase;
+        _lineDashCount = count;
         CGColorRetain(colorRef);
     }
     return self;
+}
+
+- (void)drawComparisonCGImageFromImageName:(NSString*)name intoContext:(CGContextRef)context {
+    // Draw the reference platform's screenshot image
+
+    UIImage* comparisonImage = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:name ofType:@"png"]];
+    CGAffineTransform flip = CGAffineTransformMakeScale(1, -1);
+    CGAffineTransform shift = CGAffineTransformTranslate(flip, 0, comparisonImage.size.height * -1);
+    CGContextConcatCTM(context, shift);
+
+    UIGraphicsBeginImageContext(comparisonImage.size);
+    CGContextDrawImage(context, CGRectMake(50, -300, comparisonImage.size.width, comparisonImage.size.height), comparisonImage.CGImage);
 }
 
 - (void)loadView {
@@ -51,7 +73,14 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
 }
 
--(void)dealloc {
+- (void)addComparisonLabel {
+    UILabel* comparisonText = [[UILabel alloc] initWithFrame:CGRectMake(50, 250, 200, 50)];
+    [comparisonText setBackgroundColor:[UIColor whiteColor]];
+    [comparisonText setText:@"Comparison Image"];
+    [self.view addSubview:comparisonText];
+}
+
+- (void)dealloc {
     CGColorRelease(_lineColor);
 }
 

@@ -19,8 +19,12 @@
 
 @implementation CGPathAddQuadCurveToPointViewController
 
-- (id)initWithLineWidth:(CGFloat)width LineColor:(CGColorRef)color {
-    self = [super initWithLineWidth : width Color : color];
+- (id)initWithLineWidth:(CGFloat)width
+              lineColor:(CGColorRef)color
+            dashPattern:(CGFloat*)pattern
+                  phase:(CGFloat)phase
+              dashCount:(size_t)count {
+    self = [super initWithLineWidth:width color:color dashPattern:pattern phase:phase dashCount:count];
     return self;
 }
 
@@ -32,8 +36,8 @@
         CGContextRef currentContext = UIGraphicsGetCurrentContext();
 
         CGContextSetLineWidth(currentContext, self.lineWidth);
-
         CGContextSetStrokeColorWithColor(currentContext, self.lineColor);
+        CGContextSetLineDash(currentContext, self.linePhase, self.lineDashPattern, self.lineDashCount);
 
         CGMutablePathRef thePath = CGPathCreateMutable();
 
@@ -54,9 +58,13 @@
         CGContextStrokePath(currentContext);
 
         CGPathRelease(thePath);
+
+        [super drawComparisonCGImageFromImageName:@"AddQuadCurveToPoint" intoContext:currentContext];
     }];
 
     [self.view addSubview:drawView];
+
+    [super addComparisonLabel];
 }
 
 @end
