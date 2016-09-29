@@ -632,6 +632,8 @@ static IMP _NSIMPForward(id object, SEL selector) {
  @Status Interoperable
 */
 + (void)load {
+    class_setSuperclass(objc_getClass("_NSCFType"), self);
+
     objc_proxy_lookup = _NSForwardingDestination;
     __objc_msg_forward2 = _NSIMPForward;
     __objc_msg_forward3 = _NSSlotForward;

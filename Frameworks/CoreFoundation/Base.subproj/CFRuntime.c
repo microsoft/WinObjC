@@ -1118,6 +1118,11 @@ void __CFInitialize(void) {
         memset(__CFRuntimeClassTable, 0, sizeof(__CFRuntimeClassTable));
         memset(__CFRuntimeObjCClassTable, 0, sizeof(__CFRuntimeObjCClassTable));
 
+#if WINOBJC
+        for (CFIndex idx = 1; idx < __CFRuntimeClassTableSize; ++idx) {
+            __CFRuntimeObjCClassTable[idx] = (uintptr_t)&_OBJC_CLASS__NSCFType;
+        }
+#endif
         
 #if DEPLOYMENT_RUNTIME_SWIFT
 
