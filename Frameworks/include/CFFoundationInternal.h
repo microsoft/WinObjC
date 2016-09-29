@@ -65,5 +65,10 @@ CF_EXTERN_C_END
 #define IS_SLASH(C) ((C) == '/')
 #endif
 
+// From CFRuntime.c, for object zombification.
+CF_EXPORT void (*__CFZombifyNSObjectHook)(id);
+CF_EXPORT void _CFEnableZombies(void);
+CF_EXPORT void _CFDisableZombies(void);
+
 // Expose current directory functionality from CFURL
 CF_EXPORT CFURLRef _CFURLCreateCurrentDirectoryURL(CFAllocatorRef allocator) CF_RETURNS_RETAINED;
