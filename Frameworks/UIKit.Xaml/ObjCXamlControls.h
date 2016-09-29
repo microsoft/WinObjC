@@ -31,6 +31,13 @@ enum ControlStates { ControlStateNormal = 0, ControlStateHighlighted = 1 << 0, C
 // Returns a UIKit::Button as an IInspectable
 UIKIT_XAML_EXPORT IInspectable* XamlCreateButton();
 
+UIKIT_XAML_EXPORT void XamlButtonApplyVisuals(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
+                                              const Microsoft::WRL::ComPtr<IInspectable>& inspectableText,
+                                              const Microsoft::WRL::ComPtr<IInspectable>& inspectableImage,
+                                              const Microsoft::WRL::ComPtr<IInspectable>& inspectableBackgroundImage,
+                                              const RECT insets,
+                                              const Microsoft::WRL::ComPtr<IInspectable>& inspectableTitleColor);
+
 // Hooks pointer events on a UIKit::Button passed in as IInspectable
 UIKIT_XAML_EXPORT void XamlHookButtonPointerEvents(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
                                                    const Microsoft::WRL::ComPtr<IInspectable>& pointerPressedHook,
@@ -42,29 +49,6 @@ UIKIT_XAML_EXPORT void XamlHookButtonPointerEvents(const Microsoft::WRL::ComPtr<
 // Hooks other events on a UIKit::Button passed in as IInspectable
 UIKIT_XAML_EXPORT void XamlHookLayoutEvent(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
                                            const Microsoft::WRL::ComPtr<IInspectable>& layoutHook);
-
-// We will call these methods from objC to c++, eg from setBackgroundImage:forState we call setBackgroundImage
-// to set the background on Xaml Button
-UIKIT_XAML_EXPORT void XamlSetBackgroundImage(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
-                                              const Microsoft::WRL::ComPtr<IInspectable>& inspectableBackground,
-                                              int state,
-                                              float width,
-                                              float height,
-                                              const RECT insets);
-
-UIKIT_XAML_EXPORT void XamlSetTitleForState(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
-                                            const Microsoft::WRL::ComPtr<IInspectable>& inspectableText,
-                                            int state);
-
-UIKIT_XAML_EXPORT void XamlSetTitleColorForState(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
-                                                 const Microsoft::WRL::ComPtr<IInspectable>& inspectableTitleColor,
-                                                 int state);
-
-UIKIT_XAML_EXPORT void XamlSetButtonImage(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
-                                          const Microsoft::WRL::ComPtr<IInspectable>& inspectableImage,
-                                          int state,
-                                          float width,
-                                          float height);
 
 UIKIT_XAML_EXPORT void XamlRemovePointerEvents(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton);
 

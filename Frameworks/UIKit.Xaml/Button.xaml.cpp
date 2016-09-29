@@ -28,29 +28,6 @@ using namespace Windows::UI::Xaml::Controls;
 
 namespace UIKit {
 
-// DependencyProperties for Button Image
-DependencyProperty^ Button::s_buttonImageSourceNormalProperty = nullptr;
-DependencyProperty^ Button::s_buttonImageSourcePressedProperty = nullptr;
-DependencyProperty^ Button::s_buttonImageSourceDisabledProperty = nullptr;
-
-// DependencyProperties for Button Image insets
-DependencyProperty^ Button::s_buttonBackgroundInsetsProperty = nullptr;
-
-// DependencyProperties for background Image
-DependencyProperty^ Button::s_pressedBackgroundProperty = nullptr;
-DependencyProperty^ Button::s_disabledBackgroundProperty = nullptr;
-DependencyProperty^ Button::s_normalBackgroundProperty = nullptr;
-
-// DependencyProperties for button text
-DependencyProperty^ Button::s_normalTextProperty = nullptr;
-DependencyProperty^ Button::s_pressedTextProperty = nullptr;
-DependencyProperty^ Button::s_disabledTextProperty = nullptr;
-
-// DependencyProperties for button text color
-DependencyProperty^ Button::s_normalTextColorProperty = nullptr;
-DependencyProperty^ Button::s_pressedTextColorProperty = nullptr;
-DependencyProperty^ Button::s_disabledTextColorProperty = nullptr;
-
 static const float button_padding = 20.0f;
 
 // Method to get default text Foreground brush
@@ -61,19 +38,6 @@ Brush^ GetDefaultWhiteForegroundBrush() {
 
 Button::Button() {
     InitializeComponent();
-    _registerDependencyProperties(); // No-op if already registered
-
-    // Set the default Background image for all states as DefaultTransparentBackgroundImage.
-    // Also, by default the values of PressedBackground and DisabledBackground is same as NormalBackground. This is the default on ios.
-    NormalBackground = nullptr;
-    PressedBackground = NormalBackground;
-    DisabledBackground = NormalBackground;
-
-    // Set the Title color to be DefaultWhiteForeground(white) by default. This is the default on ios.
-    // Also, by default the values of PressedForeground and DisabledForeground is same as NormalForeground. This is the default on ios.
-    NormalForeground = GetDefaultWhiteForegroundBrush();
-    PressedForeground = NormalForeground;
-    DisabledForeground = NormalForeground;
 }
 
 void Button::OnPointerPressed(PointerRoutedEventArgs^ e) {
@@ -143,224 +107,6 @@ void Button::OnPointerCaptureLost(PointerRoutedEventArgs^ e) {
     __super::OnPointerCaptureLost(e);
 }
 
-void Button::_registerDependencyProperties() {
-    // Register DependencyProperties for Background Image
-    if (!s_pressedBackgroundProperty) {
-        s_pressedBackgroundProperty = DependencyProperty::Register(
-            "PressedBackground",
-            ImageSource::typeid,
-            Windows::UI::Xaml::Controls::Button::typeid,
-            nullptr);
-    }
-
-    if (!s_disabledBackgroundProperty) {
-        s_disabledBackgroundProperty = DependencyProperty::Register(
-            "DisabledBackground",
-            ImageSource::typeid,
-            Windows::UI::Xaml::Controls::Button::typeid,
-            nullptr);
-    }
-
-    if (!s_normalBackgroundProperty) {
-        s_normalBackgroundProperty = DependencyProperty::Register(
-            "NormalBackground",
-            ImageSource::typeid,
-            Windows::UI::Xaml::Controls::Button::typeid,
-            nullptr);
-    }
-
-    // Register DependencyProperties for text color
-    if (!s_normalTextColorProperty) {
-        s_normalTextColorProperty = DependencyProperty::Register(
-            "NormalForeground",
-            Brush::typeid,
-            Windows::UI::Xaml::Controls::Button::typeid,
-            nullptr);
-    }
-
-    if (!s_pressedTextColorProperty) {
-        s_pressedTextColorProperty = DependencyProperty::Register(
-            "PressedForeground",
-            Brush::typeid,
-            Windows::UI::Xaml::Controls::Button::typeid,
-            nullptr);
-    }
-
-    if (!s_disabledTextColorProperty) {
-        s_disabledTextColorProperty = DependencyProperty::Register(
-            "DisabledForeground",
-            Brush::typeid,
-            Windows::UI::Xaml::Controls::Button::typeid,
-            nullptr);
-    }
-
-    // Register DependencyProperties for text
-    if (!s_normalTextProperty) {
-        s_normalTextProperty = DependencyProperty::Register(
-            "NormalText",
-            String::typeid,
-            Windows::UI::Xaml::Controls::Button::typeid,
-            nullptr);
-    }
-
-    if (!s_pressedTextProperty) {
-        s_pressedTextProperty = DependencyProperty::Register(
-            "PressedText",
-            String::typeid,
-            Windows::UI::Xaml::Controls::Button::typeid,
-            nullptr);
-    }
-
-    if (!s_disabledTextProperty) {
-        s_disabledTextProperty = DependencyProperty::Register(
-            "DisabledText",
-            String::typeid,
-            Windows::UI::Xaml::Controls::Button::typeid,
-            nullptr);
-    }
-
-    if (!s_buttonImageSourceNormalProperty) {
-        s_buttonImageSourceNormalProperty = DependencyProperty::Register(
-            "ButtonImageSourceNormal",
-            Windows::UI::Xaml::Media::Imaging::BitmapSource::typeid,
-            Windows::UI::Xaml::Controls::Button::typeid,
-            nullptr);
-    }
-
-    if (!s_buttonImageSourcePressedProperty) {
-        s_buttonImageSourcePressedProperty = DependencyProperty::Register(
-            "ButtonImageSourcePressed",
-            Windows::UI::Xaml::Media::Imaging::BitmapSource::typeid,
-            Windows::UI::Xaml::Controls::Button::typeid,
-            nullptr);
-    }
-
-    if (!s_buttonImageSourceDisabledProperty) {
-        s_buttonImageSourceDisabledProperty = DependencyProperty::Register(
-            "ButtonImageSourceDisabled",
-            Windows::UI::Xaml::Media::Imaging::BitmapSource::typeid,
-            Windows::UI::Xaml::Controls::Button::typeid,
-            nullptr);
-    }
-
-    if (!s_buttonBackgroundInsetsProperty) {
-        s_buttonBackgroundInsetsProperty = DependencyProperty::Register(
-            "ButtonBackgroundInsets",
-            Windows::UI::Xaml::Thickness::typeid,
-            Windows::UI::Xaml::Controls::Button::typeid,
-            nullptr);
-    }
-}
-
-// Implementing getter and setters for button image for all states
-Windows::UI::Xaml::Media::Imaging::BitmapSource^ Button::ButtonImageSourceNormal::get() {
-    return dynamic_cast<Windows::UI::Xaml::Media::Imaging::BitmapSource^>(GetValue(ButtonImageSourceNormalProperty));
-}
-
-void Button::ButtonImageSourceNormal::set(Windows::UI::Xaml::Media::Imaging::BitmapSource^ value) {
-    SetValue(ButtonImageSourceNormalProperty, value);
-}
-
-Windows::UI::Xaml::Media::Imaging::BitmapSource^ Button::ButtonImageSourcePressed::get() {
-    return dynamic_cast<Windows::UI::Xaml::Media::Imaging::BitmapSource^>(GetValue(ButtonImageSourcePressedProperty));
-}
-
-void Button::ButtonImageSourcePressed::set(Windows::UI::Xaml::Media::Imaging::BitmapSource^ value) {
-    SetValue(ButtonImageSourcePressedProperty, value);
-}
-
-Windows::UI::Xaml::Media::Imaging::BitmapSource^ Button::ButtonImageSourceDisabled::get() {
-    return dynamic_cast<Windows::UI::Xaml::Media::Imaging::BitmapSource^>(GetValue(ButtonImageSourceDisabledProperty));
-}
-
-void Button::ButtonImageSourceDisabled::set(Windows::UI::Xaml::Media::Imaging::BitmapSource^ value) {
-    SetValue(ButtonImageSourceDisabledProperty, value);
-}
-
-Windows::UI::Xaml::Thickness Button::ButtonBackgroundInsets::get() {
-    return static_cast<Windows::UI::Xaml::Thickness>(GetValue(ButtonBackgroundInsetsProperty));
-}
-
-void Button::ButtonBackgroundInsets::set(Windows::UI::Xaml::Thickness value) {
-    SetValue(ButtonBackgroundInsetsProperty, value);
-}
-
-// Implementing getter and setters for background image for all states
-ImageSource^ Button::PressedBackground::get() {
-    return dynamic_cast<ImageSource^>(GetValue(PressedBackgroundProperty));
-}
-
-void Button::PressedBackground::set(ImageSource^ value) {
-    SetValue(PressedBackgroundProperty, value);
-}
-
-
-ImageSource^ Button::DisabledBackground::get() {
-    return dynamic_cast<ImageSource^>(GetValue(DisabledBackgroundProperty));
-}
-
-void Button::DisabledBackground::set(ImageSource^ value) {
-    SetValue(DisabledBackgroundProperty, value);
-}
-
-ImageSource^ Button::NormalBackground::get() {
-    return dynamic_cast<ImageSource^>(GetValue(NormalBackgroundProperty));
-}
-
-void Button::NormalBackground::set(ImageSource^ value) {
-    SetValue(NormalBackgroundProperty, value);
-}
-
-// Implementing getter and setters for text for all states
-String^ Button::PressedText::get() {
-    return dynamic_cast<String^>(GetValue(PressedTextProperty));
-}
-
-void Button::PressedText::set(String^ value) {
-    SetValue(PressedTextProperty, value);
-}
-
-String^ Button::NormalText::get() {
-    return dynamic_cast<String^>(GetValue(NormalTextProperty));
-}
-
-void Button::NormalText::set(String^ value) {
-    SetValue(NormalTextProperty, value);
-}
-
-String^ Button::DisabledText::get() {
-    return dynamic_cast<String^>(GetValue(DisabledTextProperty));
-}
-
-void Button::DisabledText::set(String^ value) {
-    SetValue(DisabledTextProperty, value);
-}
-
-// Implementing getter and setters for text color for all states
-Brush^ Button::NormalForeground::get() {
-    return dynamic_cast<Brush^>(GetValue(NormalForegroundProperty));
-}
-
-void Button::NormalForeground::set(Brush^ value) {
-    SetValue(NormalForegroundProperty, value);
-}
-
-Brush^ Button::PressedForeground::get() {
-    return dynamic_cast<Brush^>(GetValue(PressedForegroundProperty));
-}
-
-void Button::PressedForeground::set(Brush^ value) {
-    SetValue(PressedForegroundProperty, value);
-}
-
-Brush^ Button::DisabledForeground::get() {
-    return dynamic_cast<Brush^>(GetValue(DisabledForegroundProperty));
-}
-
-void Button::DisabledForeground::set(Brush^ value) {
-    SetValue(DisabledForegroundProperty, value);
-}
-
 // Hook other events
 void Button::HookLayoutEvent(
     const Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler>& layoutHook) {
@@ -420,153 +166,46 @@ Windows::Foundation::Size Button::ArrangeOverride(Windows::Foundation::Size fina
     return finalSize;
 }
 
-// Only UIControlStateNormal, UIControlStateHighlighted and UIControlStateDisabled states are supported
-UIKIT_XAML_EXPORT void XamlSetButtonImage(const ComPtr<IInspectable>& inspectableButton,
-    const ComPtr<IInspectable>& inspectableImage, int state, float width, float height) {
-    auto button = safe_cast<UIKit::Button^>(reinterpret_cast<Platform::Object^>(inspectableButton.Get()));
-    auto image = safe_cast<Brush^>(reinterpret_cast<Platform::Object^>(inspectableImage.Get()));
-
-    Windows::UI::Xaml::Media::Imaging::BitmapSource^ bitmapSource = nullptr;
-    if (image) {
-        Windows::UI::Xaml::Media::ImageBrush^ imageBrush = (Windows::UI::Xaml::Media::ImageBrush^)image;
-        bitmapSource = (Windows::UI::Xaml::Media::Imaging::BitmapSource^)(imageBrush->ImageSource);
-    }
-
-    switch(state) {
-        case ControlStateNormal :
-            button->ButtonImageSourceNormal = bitmapSource;
-
-            // If image source for Pressed and Disabled states are nil, we use image source for normal state as fallback value.
-            if (!button->ButtonImageSourcePressed) {
-                button->ButtonImageSourcePressed = button->ButtonImageSourceNormal;
-            }
-
-            if (!button->ButtonImageSourceDisabled) {
-                button->ButtonImageSourceDisabled = button->ButtonImageSourceNormal;
-            }
-            break;
-        case ControlStateHighlighted :
-            if (!bitmapSource) {
-                button->ButtonImageSourcePressed = button->ButtonImageSourceNormal;
-            } else {
-                button->ButtonImageSourcePressed = bitmapSource;
-            }
-            break;
-        case ControlStateDisabled :
-            if (!bitmapSource) {
-                button->ButtonImageSourceDisabled = button->ButtonImageSourceNormal;
-            } else {
-                button->ButtonImageSourceDisabled = bitmapSource;
-            }
-            break;
-        default:
-            break;
-    }
+void Button::OnApplyTemplate() {
+    // Call GetTemplateChild to grab references to UIElements in our custom control template
+    _textBlock = safe_cast<TextBlock^>(GetTemplateChild("buttonText"));
+    _image = safe_cast<Image^>(GetTemplateChild("buttonImage"));
+    _backgroundImage = safe_cast<Image^>(GetTemplateChild("backgroundImage"));
 }
 
-// Only UIControlStateNormal, UIControlStateHighlighted and UIControlStateDisabled states are supported
-// TODO: insets only get set once on Normal state, all others are assumed to have the same insets, this 
-// will be ameliorated when UIKit::Image work completes
-UIKIT_XAML_EXPORT void XamlSetBackgroundImage(const ComPtr<IInspectable>& inspectableButton,
-    const ComPtr<IInspectable>& inspectableBackground, int state, float width, float height, const RECT insets) {
-    auto button = safe_cast<UIKit::Button^>(reinterpret_cast<Platform::Object^>(inspectableButton.Get()));
-    auto backgroundImage = safe_cast<ImageSource^>(reinterpret_cast<Platform::Object^>(inspectableBackground.Get()));
+UIKIT_XAML_EXPORT void XamlButtonApplyVisuals(const ComPtr<IInspectable>& inspectableButton,
+    const ComPtr<IInspectable>& inspectableText,
+    const ComPtr<IInspectable>& inspectableButtonImage,
+    const ComPtr<IInspectable>& inspectableBackgroundImage,
+    const RECT insets,
+    const ComPtr<IInspectable>& inspectableTitleColor) {
 
-    switch(state) {
-        case ControlStateNormal :
-            button->NormalBackground = backgroundImage;
-            button->ButtonBackgroundInsets = ThicknessHelper::FromLengths(insets.left, insets.top, insets.right, insets.bottom);
-
-            // If PressedBackground or DisabledBackground is transparent, which is equivalent to nil for iOS, we use NormalBackground as fallback value.
-            // This is the default behavior on iOS platform.
-            if (!button->PressedBackground) {
-                button->PressedBackground = button->NormalBackground;
-            }
-
-            if (!button->DisabledBackground) {
-                button->DisabledBackground = button->NormalBackground;
-            }
-            break;
-        case ControlStateHighlighted :
-            if (!backgroundImage) {
-                button->PressedBackground = button->NormalBackground;
-            } else {
-                button->PressedBackground = backgroundImage;
-            }
-            break;
-        case ControlStateDisabled :
-            if (!backgroundImage) {
-                button->DisabledBackground = button->NormalBackground;
-            } else {
-                button->DisabledBackground = backgroundImage;
-            }
-            break;
-        default:
-            break;
-    }
-}
-
-// Only UIControlStateNormal, UIControlStateHighlighted and UIControlStateDisabled states are supported
-UIKIT_XAML_EXPORT void XamlSetTitleForState(const ComPtr<IInspectable>& inspectableButton,
-    const ComPtr<IInspectable>& inspectableText, int state) {
     auto button = safe_cast<UIKit::Button^>(reinterpret_cast<Platform::Object^>(inspectableButton.Get()));
     auto title = safe_cast<Platform::String^>(reinterpret_cast<Platform::Object^>(inspectableText.Get()));
-
-    switch(state) {
-        case ControlStateNormal :
-            button->NormalText = title;
-
-            // If no other Title is set for other states, then NormalText will be used, this is the behavior on ios platform
-            if (!button->PressedText) {
-                button->PressedText = title;
-            }
-
-            if (!button->DisabledText) {
-                button->DisabledText = title;
-            }
-            break;
-        case ControlStateHighlighted :
-            button->PressedText = title;
-            break;
-        case ControlStateDisabled :
-            button->DisabledText = title;
-            break;
-        default:
-            break;
-    }
-}
-
-// Only UIControlStateNormal, UIControlStateHighlighted and UIControlStateDisabled states are supported
-UIKIT_XAML_EXPORT void XamlSetTitleColorForState(const ComPtr<IInspectable>& inspectableButton,
-    const ComPtr<IInspectable>& inspectableTitleColor, int state) {
-    auto button = safe_cast<UIKit::Button^>(reinterpret_cast<Platform::Object^>(inspectableButton.Get()));
     auto titleColor = safe_cast<Brush^>(reinterpret_cast<Platform::Object^>(inspectableTitleColor.Get()));
-    
     if (!titleColor) {
         titleColor = GetDefaultWhiteForegroundBrush();
     }
 
-    switch(state) {
-        case ControlStateNormal :
-            button->NormalForeground = titleColor;
+    // Set the Textblock's title and Foreground Brush color
+    button->_textBlock->Text = title;
+    button->_textBlock->Foreground = titleColor;
 
-            // If no other title color is set for other states, then NormalForeground will be used
-            if (button->PressedForeground == GetDefaultWhiteForegroundBrush()) {
-                button->PressedForeground = titleColor;
-            }
+    // Set the background Image and its nine grid
+    auto backgroundImage = safe_cast<Brush^>(reinterpret_cast<Platform::Object^>(inspectableBackgroundImage.Get()));
+    if (backgroundImage) {
+        ImageBrush^ backgroundImageBrush = safe_cast<ImageBrush^>(backgroundImage);
+        button->_backgroundImage->Source = safe_cast<BitmapSource^>(backgroundImageBrush->ImageSource);;
 
-            if (button->DisabledForeground == GetDefaultWhiteForegroundBrush()) {
-                button->DisabledForeground = titleColor;
-            }
-            break;
-        case ControlStateHighlighted :
-            button->PressedForeground = titleColor;
-            break;
-        case ControlStateDisabled :
-            button->DisabledForeground = titleColor;
-            break;
-        default:
-            break;
+        // Set the NineGrid on the Button's background image which is actually a XAML Image in the Control Template
+        button->_backgroundImage->NineGrid = ThicknessHelper::FromLengths(insets.left, insets.top, insets.right, insets.bottom);
+    }
+
+    // Set the Button's Image
+    auto image = safe_cast<Brush^>(reinterpret_cast<Platform::Object^>(inspectableButtonImage.Get()));
+    if (image) {
+        ImageBrush^ imageBrush = safe_cast<ImageBrush^>(image);
+        button->_image->Source = safe_cast<BitmapSource^>(imageBrush->ImageSource);
     }
 }
 

@@ -124,8 +124,11 @@ static const wchar_t* TAG = L"SFSafariOAuthViewController";
                     break;
             }
 
-            // Seems odd to dismiss oneself, but this matches the reference platform
-            [self dismissViewControllerAnimated:NO completion:nil];
+            dispatch_sync(dispatch_get_main_queue(),
+                          ^{
+                              [self dismissViewControllerAnimated:NO completion:nil];
+                          });
+
             return;
         }
 
@@ -154,7 +157,11 @@ static const wchar_t* TAG = L"SFSafariOAuthViewController";
 
     void (^failure)(NSError*) = ^void(NSError* error) {
         NSTraceError(TAG, @"Web authentication failed: %@", error.localizedDescription);
-        [self dismissViewControllerAnimated:NO completion:nil];
+
+        dispatch_sync(dispatch_get_main_queue(),
+                      ^{
+                          [self dismissViewControllerAnimated:NO completion:nil];
+                      });
     };
 
     [WSAWWebAuthenticationBroker authenticateWithCallbackUriAsync:WSAWWebAuthenticationOptionsNone

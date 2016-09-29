@@ -27,163 +27,13 @@ namespace UIKit {
 public ref class Button sealed {
 public:
     Button();
+    void OnApplyTemplate() override;
     Windows::Foundation::Size ArrangeOverride(Windows::Foundation::Size finalSize) override;
     void OnPointerPressed(Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e) override;
     void OnPointerMoved(Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e) override;
     void OnPointerReleased(Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e) override;
     void OnPointerCanceled(Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e) override;
     void OnPointerCaptureLost(Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e) override;
-
-    // Dependency properties for backing button image for different states
-    static property Windows::UI::Xaml::DependencyProperty^ ButtonImageSourceNormalProperty {
-        Windows::UI::Xaml::DependencyProperty^ get() {
-            return s_buttonImageSourceNormalProperty;
-        }
-    }
-
-    static property Windows::UI::Xaml::DependencyProperty^ ButtonImageSourcePressedProperty {
-        Windows::UI::Xaml::DependencyProperty^ get() {
-            return s_buttonImageSourcePressedProperty;
-        }
-    }
-
-    static property Windows::UI::Xaml::DependencyProperty^ ButtonImageSourceDisabledProperty {
-        Windows::UI::Xaml::DependencyProperty^ get() {
-            return s_buttonImageSourceDisabledProperty;
-        }
-    }
-
-    static property Windows::UI::Xaml::DependencyProperty^ ButtonBackgroundInsetsProperty {
-        Windows::UI::Xaml::DependencyProperty^ get() {
-            return s_buttonBackgroundInsetsProperty;
-        }
-    }
-
-    // Button image for all states : Normal, Pressed and Disabled
-    property Windows::UI::Xaml::Media::Imaging::BitmapSource^ ButtonImageSourceNormal {
-        Windows::UI::Xaml::Media::Imaging::BitmapSource^ get();
-        void set(Windows::UI::Xaml::Media::Imaging::BitmapSource^ value);
-    }
-
-    property Windows::UI::Xaml::Media::Imaging::BitmapSource^ ButtonImageSourcePressed {
-        Windows::UI::Xaml::Media::Imaging::BitmapSource^ get();
-        void set(Windows::UI::Xaml::Media::Imaging::BitmapSource^ value);
-    }
-
-    property Windows::UI::Xaml::Media::Imaging::BitmapSource^ ButtonImageSourceDisabled {
-        Windows::UI::Xaml::Media::Imaging::BitmapSource^ get();
-        void set(Windows::UI::Xaml::Media::Imaging::BitmapSource^ value);
-    }
-
-    property Windows::UI::Xaml::Thickness ButtonBackgroundInsets {
-        Windows::UI::Xaml::Thickness get();
-        void set(Windows::UI::Xaml::Thickness value);
-    }
-
-    // Dependency properties for backing background image for different states
-    static property Windows::UI::Xaml::DependencyProperty^ PressedBackgroundProperty {
-        Windows::UI::Xaml::DependencyProperty^ get() {
-            return s_pressedBackgroundProperty;
-        }
-    }
-
-    static property Windows::UI::Xaml::DependencyProperty^ DisabledBackgroundProperty {
-        Windows::UI::Xaml::DependencyProperty^ get() {
-            return s_disabledBackgroundProperty;
-        }
-    }
-
-    static property Windows::UI::Xaml::DependencyProperty^ NormalBackgroundProperty {
-        Windows::UI::Xaml::DependencyProperty^ get() {
-            return s_normalBackgroundProperty;
-        }
-    }
-
-    // Background for all states : Pressed, Normal and Disabled
-    property Windows::UI::Xaml::Media::ImageSource^ PressedBackground {
-        Windows::UI::Xaml::Media::ImageSource^ get();
-        void set(Windows::UI::Xaml::Media::ImageSource^ value);
-    }
-
-    property Windows::UI::Xaml::Media::ImageSource^ DisabledBackground {
-        Windows::UI::Xaml::Media::ImageSource^ get();
-        void set(Windows::UI::Xaml::Media::ImageSource^ value);
-    }
-
-    property Windows::UI::Xaml::Media::ImageSource^ NormalBackground {
-        Windows::UI::Xaml::Media::ImageSource^ get();
-        void set(Windows::UI::Xaml::Media::ImageSource^ value);
-    }
-
-    // Dependency properties for backing text for different states
-    static property Windows::UI::Xaml::DependencyProperty^ PressedTextProperty {
-        Windows::UI::Xaml::DependencyProperty^ get() {
-            return s_pressedTextProperty;
-        }
-    }
-
-    static property Windows::UI::Xaml::DependencyProperty^ NormalTextProperty {
-        Windows::UI::Xaml::DependencyProperty^ get() {
-            return s_normalTextProperty;
-        }
-    }
-
-    static property Windows::UI::Xaml::DependencyProperty^ DisabledTextProperty {
-        Windows::UI::Xaml::DependencyProperty^ get() {
-            return s_disabledTextProperty;
-        }
-    }
-
-    // Text for all states : Pressed, Normal and Disabled
-    property Platform::String^ PressedText {
-        Platform::String^ get();
-        void set(Platform::String^ value);
-    }
-
-    property Platform::String^ NormalText {
-        Platform::String^ get();
-        void set(Platform::String^ value);
-    }
-
-    property Platform::String^ DisabledText {
-        Platform::String^ get();
-        void set(Platform::String^ value);
-    }
-
-    // Dependency properties for backing text color for different states
-    static property Windows::UI::Xaml::DependencyProperty^ NormalForegroundProperty {
-        Windows::UI::Xaml::DependencyProperty^ get() {
-            return s_normalTextColorProperty;
-        }
-    }
-
-    static property Windows::UI::Xaml::DependencyProperty^ PressedForegroundProperty {
-        Windows::UI::Xaml::DependencyProperty^ get() {
-            return s_pressedTextColorProperty;
-        }
-    }
-
-    static property Windows::UI::Xaml::DependencyProperty^ DisabledForegroundProperty {
-        Windows::UI::Xaml::DependencyProperty^ get() {
-            return s_disabledTextColorProperty;
-        }
-    }
-
-    // TextColor for all states : Pressed, Normal and Disabled
-    property Windows::UI::Xaml::Media::Brush^ NormalForeground {
-        Windows::UI::Xaml::Media::Brush^ get();
-        void set(Windows::UI::Xaml::Media::Brush^ value);
-    }
-
-    property Windows::UI::Xaml::Media::Brush^ PressedForeground {
-        Windows::UI::Xaml::Media::Brush^ get();
-        void set(Windows::UI::Xaml::Media::Brush^ value);
-    }
-
-    property Windows::UI::Xaml::Media::Brush^ DisabledForeground {
-        Windows::UI::Xaml::Media::Brush^ get();
-        void set(Windows::UI::Xaml::Media::Brush^ value);
-    }
 
 internal:
     void HookPointerEvents(
@@ -200,6 +50,10 @@ internal:
     void RemovePointerEvents();
     void RemoveLayoutEvent();
 
+    Windows::UI::Xaml::Controls::TextBlock^ _textBlock;
+    Windows::UI::Xaml::Controls::Image^ _image;
+    Windows::UI::Xaml::Controls::Image^ _backgroundImage;
+
 private:
 
     Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler> _pointerPressedHook;
@@ -210,30 +64,6 @@ private:
 
     // Auto Layout hook, change name and type later
     Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler> _layoutHook;
-
-    // DependencyProperties for background image
-    static void _registerDependencyProperties();
-    static Windows::UI::Xaml::DependencyProperty^ s_pressedBackgroundProperty;
-    static Windows::UI::Xaml::DependencyProperty^ s_disabledBackgroundProperty;
-    static Windows::UI::Xaml::DependencyProperty^ s_normalBackgroundProperty;
-    
-    // TODO: This will move to UIKit::Image when that becomes available
-    static Windows::UI::Xaml::DependencyProperty^ s_buttonBackgroundInsetsProperty;
-
-    // DependencyProperties for text
-    static Windows::UI::Xaml::DependencyProperty^ s_pressedTextProperty;
-    static Windows::UI::Xaml::DependencyProperty^ s_normalTextProperty;
-    static Windows::UI::Xaml::DependencyProperty^ s_disabledTextProperty;
-
-    // DependencyProperties for text color
-    static Windows::UI::Xaml::DependencyProperty^ s_pressedTextColorProperty;
-    static Windows::UI::Xaml::DependencyProperty^ s_normalTextColorProperty;
-    static Windows::UI::Xaml::DependencyProperty^ s_disabledTextColorProperty;
-
-    // DependencyProperties for Button image
-    static Windows::UI::Xaml::DependencyProperty^ s_buttonImageSourceNormalProperty;
-    static Windows::UI::Xaml::DependencyProperty^ s_buttonImageSourcePressedProperty;
-    static Windows::UI::Xaml::DependencyProperty^ s_buttonImageSourceDisabledProperty;
 };
 
 }
