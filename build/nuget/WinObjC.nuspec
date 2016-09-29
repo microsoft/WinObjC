@@ -39,7 +39,7 @@
     <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\libpng.dll"                                                    target="runtimes\win10-x86\native" />
     <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\libxml2.dll"                                                   target="runtimes\win10-x86\native" />
     <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\libz.dll"                                                      target="runtimes\win10-x86\native" />
-    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\objcuwp.dll"                                                   target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\objcuwp*.dll"                                                  target="runtimes\win10-x86\native" />
     <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\rtobjcinterop.dll"                                             target="runtimes\win10-x86\native" />
 
     <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\release\libdispatch.dll"                                       target="runtimes\win10-x86\native" />
