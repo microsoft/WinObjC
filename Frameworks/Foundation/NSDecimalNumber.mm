@@ -28,13 +28,10 @@ NSString* const NSDecimalNumberOverflowException = @"NSDecimalNumberOverflowExce
 NSString* const NSDecimalNumberUnderflowException = @"NSDecimalNumberUnderflowException";
 NSString* const NSDecimalNumberDivideByZeroException = @"NSDecimalNumberDivideByZeroException";
 
-const int _MAX_EXP = 127;
+static const int _MAX_EXP = 127;
 
-static NSDecimalNumber* s_zero;
-static NSDecimalNumber* s_one;
-static NSDecimalNumber* s_notANumber;
-static NSDecimalNumber* s_maxNumber;
-static NSDecimalNumber* s_minNumber;
+// This is the limit of initWithDouble on the reference platform.
+static const double _DOUBLE_LIMIT = 1.8e146;
 
 @implementation NSDecimalNumber {
     NSDecimal _decimal;
@@ -93,10 +90,7 @@ static NSDecimalNumber* s_minNumber;
  @Status Interoperable
 */
 + (NSDecimalNumber*)one {
-    static dispatch_once_t __oneOnce;
-    dispatch_once(&__oneOnce, ^{
-        s_one = [[NSDecimalNumber alloc] initWithMantissa:1 exponent:0 isNegative:NO];
-    });
+    static NSDecimalNumber* s_one = [[NSDecimalNumber alloc] initWithMantissa:1 exponent:0 isNegative:NO];
     return s_one;
 }
 
@@ -104,10 +98,8 @@ static NSDecimalNumber* s_minNumber;
  @Status Interoperable
 */
 + (NSDecimalNumber*)zero {
-    static dispatch_once_t __zeroOnce;
-    dispatch_once(&__zeroOnce, ^{
-        s_zero = [[NSDecimalNumber alloc] initWithMantissa:0 exponent:0 isNegative:NO];
-    });
+    static NSDecimalNumber* s_zero = [[NSDecimalNumber alloc] initWithMantissa:0 exponent:0 isNegative:NO];
+
     return s_zero;
 }
 
@@ -115,10 +107,8 @@ static NSDecimalNumber* s_minNumber;
  @Status Interoperable
 */
 + (NSDecimalNumber*)notANumber {
-    static dispatch_once_t __notANumberOnce;
-    dispatch_once(&__notANumberOnce, ^{
-        s_notANumber = [[NSDecimalNumber alloc] initWithMantissa:0 exponent:0 isNegative:YES];
-    });
+    static NSDecimalNumber* s_notANumber = [[NSDecimalNumber alloc] initWithMantissa:0 exponent:0 isNegative:YES];
+
     return s_notANumber;
 }
 
@@ -126,11 +116,8 @@ static NSDecimalNumber* s_minNumber;
  @Status Interoperable
 */
 + (NSDecimalNumber*)maximumDecimalNumber {
-    static dispatch_once_t __maxNumberOnce;
-    dispatch_once(&__maxNumberOnce, ^{
-        s_maxNumber =
-            [[NSDecimalNumber alloc] initWithMantissa:std::numeric_limits<unsigned long long>::max() exponent:_MAX_EXP isNegative:NO];
-    });
+    static NSDecimalNumber* s_maxNumber =
+        [[NSDecimalNumber alloc] initWithMantissa:std::numeric_limits<unsigned long long>::max() exponent:_MAX_EXP isNegative:NO];
     return s_maxNumber;
 }
 
@@ -138,11 +125,8 @@ static NSDecimalNumber* s_minNumber;
  @Status Interoperable
 */
 + (NSDecimalNumber*)minimumDecimalNumber {
-    static dispatch_once_t __minNumberOnce;
-    dispatch_once(&__minNumberOnce, ^{
-        s_minNumber =
-            [[NSDecimalNumber alloc] initWithMantissa:std::numeric_limits<unsigned long long>::max() exponent:_MAX_EXP isNegative:YES];
-    });
+    static NSDecimalNumber* s_minNumber =
+        [[NSDecimalNumber alloc] initWithMantissa:std::numeric_limits<unsigned long long>::max() exponent:_MAX_EXP isNegative:YES];
     return s_minNumber;
 }
 
@@ -197,7 +181,7 @@ static NSDecimalNumber* s_minNumber;
         return [self initWithMantissa:0 exponent:0 isNegative:0];
     }
 
-    if (res > 1.8e146) {
+    if (res > _DOUBLE_LIMIT) {
         return [self initWithMantissa:ULLONG_MAX exponent:0x7f isNegative:(value < 0)];
     }
     // Attempt best for smaller numbers (this is being compacted via NSDecimalCompact in initWithMantissa)
@@ -308,7 +292,7 @@ static NSDecimalNumber* s_minNumber;
 */
 - (instancetype)initWithDecimal:(NSDecimal)decimal {
     if (self = [super init]) {
-        _decimal = { 0 };
+        _decimal = {};
         NSDecimalCopy(&_decimal, &decimal);
         NSDecimalCompact(&_decimal);
     }
@@ -320,7 +304,7 @@ static NSDecimalNumber* s_minNumber;
  @Status Interoperable
 */
 - (instancetype)initWithMantissa:(unsigned long long)mantissa exponent:(short)exponent isNegative:(BOOL)flag {
-    NSDecimal decimal = { 0 };
+    NSDecimal decimal = {};
     decimal._exponent = exponent;
     decimal._isNegative = flag;
 
@@ -386,7 +370,7 @@ static NSDecimalNumber* s_minNumber;
 */
 - (NSDecimal)decimalValue {
     // Read-Only
-    NSDecimal decimal = { 0 };
+    NSDecimal decimal = {};
     NSDecimalCopy(&decimal, &_decimal);
     return decimal;
 }

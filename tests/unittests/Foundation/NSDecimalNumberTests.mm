@@ -178,7 +178,7 @@ TEST(NSDecimalNumber, Subtraction1) {
 
     NSDecimal right = [dNumber decimalValue];
 
-    NSDecimal result = { 0 };
+    NSDecimal result = {};
 
     NSDecimalSubtract(&result, &left, &right, NSRoundPlain);
     EXPECT_ARRAY_EQUAL(mantissa, result._mantissa);
@@ -193,7 +193,7 @@ TEST(NSDecimalNumber, Subtraction2) {
     NSDecimal left = [[[[NSDecimalNumber alloc] initWithInteger:5] autorelease] decimalValue];
     NSDecimal right = [[[[NSDecimalNumber alloc] initWithUnsignedLongLong:3] autorelease] decimalValue];
 
-    NSDecimal result = { 0 };
+    NSDecimal result = {};
 
     NSDecimalSubtract(&result, &left, &right, NSRoundPlain);
     EXPECT_EQ(2, result._mantissa[0]);
@@ -223,7 +223,7 @@ TEST(NSDecimalNumber, Subtraction2) {
 
     //
     unsigned short mantissa[NSDecimalMaxSize] = { 2048, 25428, 61485, 43339, 53, 0, 0, 0 };
-    result = { 0 };
+    result = {};
     left = [[[[NSDecimalNumber alloc] initWithDouble:-10123456e-6] autorelease] decimalValue];
     right = [[[[NSDecimalNumber alloc] initWithDouble:-1e3] autorelease] decimalValue];
 
@@ -270,7 +270,7 @@ TEST(NSDecimalNumber, addition) {
     double maxx = DBL_MAX;
     NSDecimal decimal2 = [dNumber decimalValue];
 
-    NSDecimal result = { 0 };
+    NSDecimal result = {};
 
     NSDecimalAdd(&result, &decimal1, &decimal2, NSRoundPlain);
 
@@ -293,7 +293,7 @@ TEST(NSDecimalNumber, NSDecimalCompare) {
     NSDecimalNumber* dNumber = [[[NSDecimalNumber alloc] initWithUnsignedLongLong:9223372534876] autorelease];
     NSDecimal right = [dNumber decimalValue];
 
-    NSDecimal left = { 0 };
+    NSDecimal left = {};
     unsigned long long value = 10;
     memcpy(&left._mantissa, &value, NSDecimalMaxSize * sizeof(unsigned short));
     left._exponent = 4;
@@ -338,10 +338,8 @@ TEST(NSDecimalNumber, NSDecimalCompare) {
 }
 
 TEST(NSDecimalNumber, NSNumberCompare) {
-
-	NSDecimalNumber* zero = [NSDecimalNumber zero];
-	NSDecimalNumber* zero2 = [NSDecimalNumber zero];
-
+    NSDecimalNumber* zero = [NSDecimalNumber zero];
+    NSDecimalNumber* zero2 = [NSDecimalNumber zero];
 
     EXPECT_OBJCEQ([NSNumber numberWithDouble:55.0], [NSDecimalNumber numberWithDouble:55.0]);
 
