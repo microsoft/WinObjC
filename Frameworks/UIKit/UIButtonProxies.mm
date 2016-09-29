@@ -84,9 +84,13 @@ static const wchar_t* tag = L"UIButtonProxies";
 }
 
 - (void)setFrame:(CGRect)frame {
-    // We're assuming everything will be held in a Canvas
-    [WXCCanvas setTop:_xamlElement length:frame.origin.y];
-    [WXCCanvas setLeft:_xamlElement length:frame.origin.x];
+    // Only set canvas top/left values if we have a non-null frame.
+    // Otherwise we set them to infinity, which causes touch input issues.
+    if (!CGRectIsNull(frame)) {
+        // We're assuming everything will be held in a Canvas
+        [WXCCanvas setTop:_xamlElement length:frame.origin.y];
+        [WXCCanvas setLeft:_xamlElement length:frame.origin.x];
+    }
 
     _xamlElement.width = frame.size.width;
     _xamlElement.height = frame.size.height;
