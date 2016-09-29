@@ -186,6 +186,8 @@ NSCalculationError NSDecimalNormalize(NSDecimal* number1, NSDecimal* number2, NS
     internalResult._extendedLen = NSDecimalMaxSize;
 
     NSCalculationError error = NSCalculationNoError;
+    // TODO: this can be better done, by creating a mantissa out of the 10^exp and doing mantissa by mantissa multiplication.
+    // This should be changed when NSDecimalMultiplication is implemented.
     while (exponent > 0) {
         error = _mantissaMultiplication(&internalResult, &internalResult, 10);
         if (error != NSCalculationNoError) {

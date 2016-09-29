@@ -338,9 +338,6 @@ TEST(NSDecimalNumber, NSDecimalCompare) {
 }
 
 TEST(NSDecimalNumber, NSNumberCompare) {
-    NSDecimalNumber* zero = [NSDecimalNumber zero];
-    NSDecimalNumber* zero2 = [NSDecimalNumber zero];
-
     EXPECT_OBJCEQ([NSNumber numberWithDouble:55.0], [NSDecimalNumber numberWithDouble:55.0]);
 
     //
