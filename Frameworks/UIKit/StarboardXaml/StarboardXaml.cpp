@@ -62,9 +62,6 @@ Platform::Array<Xaml::Markup::XmlnsDefinition>^ App::GetXmlnsDefinitions() {
 }
 
 void AppEventListener::_RegisterEventHandlers() {
-    Windows::UI::Xaml::Application::Current->UnhandledException +=
-        ref new Xaml::UnhandledExceptionEventHandler(this, &AppEventListener::_OnUnhandledException);
-
     Windows::UI::Xaml::Application::Current->Suspending +=
         ref new Xaml::SuspendingEventHandler(this, &AppEventListener::_OnSuspending);
     Windows::UI::Xaml::Application::Current->Resuming +=
@@ -148,13 +145,6 @@ void AppEventListener::_OnBackgroundTaskCancelled(
     }
 }
 #endif
-
-void AppEventListener::_OnUnhandledException(Platform::Object^ sender, Xaml::UnhandledExceptionEventArgs^ args)
-{
-    TraceError(TAG, L"Application hit an unhandled exception %ld (%s)", args->Exception.Value, args->Message->Data());
-    FAIL_FAST();
-}
-
 
 static AppEventListener ^_appEvents;
 
