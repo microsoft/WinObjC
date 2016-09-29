@@ -40,6 +40,7 @@
     <ClangCompile>
       <RuntimeLibrary VSImporterConfigName="Debug">MultiThreadedDebugDLL</RuntimeLibrary>
 	  <IncludePaths>$(SolutionPublicHeadersDir);$(WINOBJC_SDK_ROOT)\..\WinObjC_Internal\Source\winmd2objc\Support;$(WINOBJC_SDK_ROOT)\include\xplat;$(WINOBJC_SDK_ROOT)\Frameworks\include;%(IncludePaths)</IncludePaths>
+      <PreprocessorDefinitions>__MIDL_USE_C_ENUM</PreprocessorDefinitions>
     </ClangCompile>
     <Midl>
       <OutputDirectory>$(Objc2WinmdGeneratedFilesDir)</OutputDirectory>
