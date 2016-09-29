@@ -34,6 +34,7 @@
 #import "CGPatternInternal.h"
 #import "UIColorInternal.h"
 #import "CGSurfaceInfoInternal.h"
+#import "UWP/WindowsGraphicsDisplay.h"
 
 #define CAIRO_WIN32_STATIC_BUILD
 
@@ -2013,6 +2014,16 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     CGAffineTransform transform = CGAffineTransformConcat(curState->curTransform, curState->curTextMatrix);
     // Perform translation required to handle scaling.
     CGFloat verticalScalingFactor = sqrt((transform.b * transform.b) + (transform.d * transform.d));
+    // TODO::
+    // Issue #1057 - CG today talks in Pixels but DirectWrite and D2D only understand DIPs. Because CG talks in Pixels,
+    // curState->curTransform contains both the device scaling factor and any user scale applied to it causing the below D2D render target
+    // transform calculation to be way off on devices that have scaling. Workaround for now is to divide the verticalScalingFactor and
+    // height here with the device scaling factor so they get converted to DIPs and then apply the transform to the D2D render target.
+    // Though this workaround is sufficient to get text rendered on the user screen on all Windows form factor devices, this will not work
+    // when text is rendered on a PDF or printer.
+    float hostDisplayScale = static_cast<float>([[WGDDisplayInformation getForCurrentView] resolutionScale] / 100.0f);
+    verticalScalingFactor /= hostDisplayScale;
+    height /= hostDisplayScale;
     transform = CGAffineTransformTranslate(transform, 0, (height / verticalScalingFactor) - height);
     // Perform anti-clockwise rotation required to match the reference platform.
     imgRenderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, -transform.b, transform.c, transform.d, transform.tx, transform.ty));
