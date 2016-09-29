@@ -19,20 +19,26 @@
 #include <limits.h>
 #import <Foundation/NSObjCRuntime.h>
 
-enum { NSRoundPlain, NSRoundDown, NSRoundUp, NSRoundBankers };
-typedef NSUInteger NSRoundingMode;
+typedef NS_ENUM(NSUInteger, NSRoundingMode) { NSRoundPlain, NSRoundDown, NSRoundUp, NSRoundBankers };
 
-enum { NSCalculationNoError = 0, NSCalculationLossOfPrecision, NSCalculationUnderflow, NSCalculationOverflow, NSCalculationDivideByZero };
-typedef NSUInteger NSCalculationError;
+typedef NS_ENUM(NSUInteger, NSCalculationError) {
+    NSCalculationNoError = 0,
+    NSCalculationLossOfPrecision,
+    NSCalculationUnderflow,
+    NSCalculationOverflow,
+    NSCalculationDivideByZero
+};
 
 #define NSDecimalMaxSize (8)
 #define NSDecimalNoScale SHRT_MAX
 
 typedef struct NSDecimal {
     signed int _exponent : 8;
+    // indicates the length occupied by the value in the mantissa array
     unsigned int _length : 4;
     unsigned int _isNegative : 1;
     unsigned int _isCompact : 1;
+    // Not being used
     unsigned int _reserved : 18;
     unsigned short _mantissa[NSDecimalMaxSize];
 } NSDecimal;

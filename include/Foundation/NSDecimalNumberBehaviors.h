@@ -21,9 +21,6 @@
 
 @class NSDecimalNumber;
 
-typedef NSUInteger NSRoundingMode;
-typedef NSUInteger NSCalculationError;
-
 @protocol NSDecimalNumberBehaviors <NSObject>
 
 - (NSRoundingMode)roundingMode;

@@ -19,6 +19,7 @@
 #import <Foundation/NSObject.h>
 
 #import <Foundation/NSNumber.h>
+#import <Foundation/NSDecimal.h>
 
 @class NSString;
 @protocol NSDecimalNumberBehaviors;

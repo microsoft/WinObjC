@@ -25,15 +25,17 @@
         }                                            \
     } while (0, 0)
 
-static void testSubtract(NSDecimalNumber* x, NSDecimalNumber* y, NSDecimalNumber* expected) {
-    NSDecimalNumber* result = [x decimalNumberBySubtracting:y];
-    EXPECT_OBJCEQ(expected, result);
-}
+#define TEST_SUBTRACT(x, y, expected)                               \
+    do {                                                            \
+        NSDecimalNumber* result = [x decimalNumberBySubtracting:y]; \
+        EXPECT_OBJCEQ(expected, result);                            \
+    } while (0, 0)
 
-static void testAddition(NSDecimalNumber* x, NSDecimalNumber* y, NSDecimalNumber* expected) {
-    NSDecimalNumber* result = [x decimalNumberByAdding:y];
-    EXPECT_OBJCEQ(expected, result);
-}
+#define TEST_ADDITION(x, y, expected)                          \
+    do {                                                       \
+        NSDecimalNumber* result = [x decimalNumberByAdding:y]; \
+        EXPECT_OBJCEQ(expected, result);                       \
+    } while (0, 0)
 
 #define VALIDATE(decimal, len, exp, isNegative, mantissa) \
     EXPECT_EQ(len, decimal._length);                      \
@@ -90,18 +92,18 @@ TEST(NSDecimalNumber, InitWithLongLong) {
     NSDecimalNumber* dNumber = [[[NSDecimalNumber alloc] initWithLongLong:9223372036854775] autorelease];
 
     NSDecimal decimal = [dNumber decimalValue];
-    ASSERT_EQ(4, decimal._length);
-    ASSERT_EQ(0, decimal._exponent);
-    ASSERT_EQ(0, decimal._isNegative);
+    EXPECT_EQ(4, decimal._length);
+    EXPECT_EQ(0, decimal._exponent);
+    EXPECT_EQ(0, decimal._isNegative);
 
     EXPECT_ARRAY_EQUAL(mantissa, decimal._mantissa);
 
     dNumber = [[[NSDecimalNumber alloc] initWithLongLong:-9223372036854775] autorelease];
     decimal = [dNumber decimalValue];
 
-    ASSERT_EQ(4, decimal._length);
-    ASSERT_EQ(0, decimal._exponent);
-    ASSERT_EQ(1, decimal._isNegative);
+    EXPECT_EQ(4, decimal._length);
+    EXPECT_EQ(0, decimal._exponent);
+    EXPECT_EQ(1, decimal._isNegative);
 
     EXPECT_ARRAY_EQUAL(mantissa, decimal._mantissa);
 }
@@ -111,9 +113,9 @@ TEST(NSDecimalNumber, InitWithUnsignedLongLong) {
     NSDecimalNumber* dNumber = [[[NSDecimalNumber alloc] initWithUnsignedLongLong:9223372534876] autorelease];
     NSDecimal decimal = [dNumber decimalValue];
 
-    ASSERT_EQ(3, decimal._length);
-    ASSERT_EQ(0, decimal._exponent);
-    ASSERT_EQ(0, decimal._isNegative);
+    EXPECT_EQ(3, decimal._length);
+    EXPECT_EQ(0, decimal._exponent);
+    EXPECT_EQ(0, decimal._isNegative);
 
     EXPECT_ARRAY_EQUAL(mantissa, decimal._mantissa);
 }
@@ -154,7 +156,7 @@ TEST(NSDecimalNumber, DecimalNotANumber) {
     NSDecimalNumber* dNumber = [[[NSDecimalNumber alloc] initWithMantissa:0 exponent:0 isNegative:YES] autorelease];
     NSDecimal decimal = [dNumber decimalValue];
 
-    ASSERT_TRUE(NSDecimalIsNotANumber(&decimal));
+    EXPECT_TRUE(NSDecimalIsNotANumber(&decimal));
 }
 
 TEST(NSDecimalNumber, DecimalCompact) {
@@ -162,9 +164,9 @@ TEST(NSDecimalNumber, DecimalCompact) {
     NSDecimal decimal = [dNumber decimalValue];
     NSDecimalCompact(&decimal);
 
-    ASSERT_EQ(1, decimal._length);
-    ASSERT_EQ(4, decimal._exponent);
-    ASSERT_EQ(0, decimal._isNegative);
+    EXPECT_EQ(1, decimal._length);
+    EXPECT_EQ(4, decimal._exponent);
+    EXPECT_EQ(0, decimal._isNegative);
 }
 
 TEST(NSDecimalNumber, Subtraction1) {
@@ -178,13 +180,13 @@ TEST(NSDecimalNumber, Subtraction1) {
 
     NSDecimal result = { 0 };
 
-    NSDecimalSubtract(&result, &left, &right, 0);
+    NSDecimalSubtract(&result, &left, &right, NSRoundPlain);
     EXPECT_ARRAY_EQUAL(mantissa, result._mantissa);
     EXPECT_EQ(4, result._length);
     EXPECT_EQ(1, result._isNegative);
     EXPECT_EQ(0, result._exponent);
 
-    NSDecimalSubtract(&result, &right, &left, 0);
+    NSDecimalSubtract(&result, &right, &left, NSRoundPlain);
 }
 
 TEST(NSDecimalNumber, Subtraction2) {
@@ -193,13 +195,13 @@ TEST(NSDecimalNumber, Subtraction2) {
 
     NSDecimal result = { 0 };
 
-    NSDecimalSubtract(&result, &left, &right, 0);
+    NSDecimalSubtract(&result, &left, &right, NSRoundPlain);
     EXPECT_EQ(2, result._mantissa[0]);
     EXPECT_EQ(1, result._length);
     EXPECT_EQ(0, result._exponent);
     EXPECT_EQ(0, result._isNegative);
 
-    NSDecimalSubtract(&result, &right, &left, 0);
+    NSDecimalSubtract(&result, &right, &left, NSRoundPlain);
     EXPECT_EQ(2, result._mantissa[0]);
     EXPECT_EQ(1, result._length);
     EXPECT_EQ(0, result._exponent);
@@ -209,14 +211,14 @@ TEST(NSDecimalNumber, Subtraction2) {
     left = [[[[NSDecimalNumber alloc] initWithInteger:100000] autorelease] decimalValue];
     right = [[[[NSDecimalNumber alloc] initWithDouble:1e5] autorelease] decimalValue];
 
-    NSDecimalSubtract(&result, &left, &right, 0);
+    NSDecimalSubtract(&result, &left, &right, NSRoundPlain);
     EXPECT_EQ(0, result._length);
     EXPECT_EQ(0, result._isNegative);
     //
     left = [[[[NSDecimalNumber alloc] initWithUnsignedLongLong:9223372534876] autorelease] decimalValue];
     right = [[[[NSDecimalNumber alloc] initWithDouble:0] autorelease] decimalValue];
 
-    NSDecimalSubtract(&result, &left, &right, 0);
+    NSDecimalSubtract(&result, &left, &right, NSRoundPlain);
     EXPECT_EQ(NSOrderedSame, NSDecimalCompare(&result, &left));
 
     //
@@ -225,33 +227,37 @@ TEST(NSDecimalNumber, Subtraction2) {
     left = [[[[NSDecimalNumber alloc] initWithDouble:-10123456e-6] autorelease] decimalValue];
     right = [[[[NSDecimalNumber alloc] initWithDouble:-1e3] autorelease] decimalValue];
 
-    NSDecimalSubtract(&result, &left, &right, 0);
+    NSDecimalSubtract(&result, &left, &right, NSRoundPlain);
     EXPECT_ARRAY_EQUAL(mantissa, result._mantissa);
     EXPECT_EQ(5, result._length);
     EXPECT_EQ(0, result._isNegative);
     EXPECT_EQ(-18, result._exponent);
 
     //
-    testSubtract([[[NSDecimalNumber alloc] initWithDouble:10.5] autorelease],
-                 [[[NSDecimalNumber alloc] initWithDouble:10] autorelease],
-                 [[[NSDecimalNumber alloc] initWithDouble:0.5] autorelease]);
+    TEST_SUBTRACT([[[NSDecimalNumber alloc] initWithDouble:10.5] autorelease],
+                  [[[NSDecimalNumber alloc] initWithDouble:10] autorelease],
+                  [[[NSDecimalNumber alloc] initWithDouble:0.5] autorelease]);
 
-    testSubtract([[[NSDecimalNumber alloc] initWithDouble:10.5] autorelease],
-                 [[[NSDecimalNumber alloc] initWithDouble:1000] autorelease],
-                 [[[NSDecimalNumber alloc] initWithDouble:-989.5] autorelease]);
+    TEST_SUBTRACT([[[NSDecimalNumber alloc] initWithDouble:10.5] autorelease],
+                  [[[NSDecimalNumber alloc] initWithDouble:1000] autorelease],
+                  [[[NSDecimalNumber alloc] initWithDouble:-989.5] autorelease]);
 
-    testSubtract([[[NSDecimalNumber alloc] initWithDouble:-10.5] autorelease],
-                 [[[NSDecimalNumber alloc] initWithDouble:10] autorelease],
-                 [[[NSDecimalNumber alloc] initWithDouble:-20.5] autorelease]);
+    TEST_SUBTRACT([[[NSDecimalNumber alloc] initWithDouble:-10.5] autorelease],
+                  [[[NSDecimalNumber alloc] initWithDouble:10] autorelease],
+                  [[[NSDecimalNumber alloc] initWithDouble:-20.5] autorelease]);
 
-    testSubtract([[[NSDecimalNumber alloc] initWithDouble:10.5] autorelease],
-                 [[[NSDecimalNumber alloc] initWithDouble:-1e3] autorelease],
-                 [[[NSDecimalNumber alloc] initWithDouble:1010.5] autorelease]);
+    TEST_SUBTRACT([[[NSDecimalNumber alloc] initWithDouble:10.5] autorelease],
+                  [[[NSDecimalNumber alloc] initWithDouble:-1e3] autorelease],
+                  [[[NSDecimalNumber alloc] initWithDouble:1010.5] autorelease]);
 
     NSDecimalNumber* d = [[[NSDecimalNumber alloc] initWithDouble:1012345678912345e-120] autorelease];
-    testSubtract(d, d, [NSDecimalNumber zero]);
+    TEST_SUBTRACT(d, d, [NSDecimalNumber zero]);
 
-    testSubtract([[[NSDecimalNumber alloc] initWithInteger:2] autorelease], [NSDecimalNumber one], [NSDecimalNumber one]);
+    TEST_SUBTRACT([[[NSDecimalNumber alloc] initWithInteger:2] autorelease], [NSDecimalNumber one], [NSDecimalNumber one]);
+
+    TEST_SUBTRACT([[[NSDecimalNumber alloc] initWithInt:(2 * USHRT_MAX)] autorelease],
+                  [[[NSDecimalNumber alloc] initWithInt:USHRT_MAX] autorelease],
+                  [[[NSDecimalNumber alloc] initWithInt:USHRT_MAX] autorelease]);
 }
 
 TEST(NSDecimalNumber, addition) {
@@ -266,21 +272,21 @@ TEST(NSDecimalNumber, addition) {
 
     NSDecimal result = { 0 };
 
-    NSDecimalAdd(&result, &decimal1, &decimal2, 0);
+    NSDecimalAdd(&result, &decimal1, &decimal2, NSRoundPlain);
 
-    ASSERT_EQ(2, result._length);
-    ASSERT_EQ(1, result._exponent);
-    ASSERT_EQ(0, result._isNegative);
+    EXPECT_EQ(2, result._length);
+    EXPECT_EQ(1, result._exponent);
+    EXPECT_EQ(0, result._isNegative);
 
     EXPECT_ARRAY_EQUAL(mantissa, result._mantissa);
 
-    testAddition([[[NSDecimalNumber alloc] initWithDouble:19605] autorelease],
-                 [[[NSDecimalNumber alloc] initWithDouble:6536] autorelease],
-                 [[[NSDecimalNumber alloc] initWithDouble:26141] autorelease]);
+    TEST_ADDITION([[[NSDecimalNumber alloc] initWithDouble:19605] autorelease],
+                  [[[NSDecimalNumber alloc] initWithDouble:6536] autorelease],
+                  [[[NSDecimalNumber alloc] initWithDouble:26141] autorelease]);
 
-    testAddition([[[NSDecimalNumber alloc] initWithDouble:10.5] autorelease],
-                 [[[NSDecimalNumber alloc] initWithDouble:-1e3] autorelease],
-                 [[[NSDecimalNumber alloc] initWithDouble:-989.5] autorelease]);
+    TEST_ADDITION([[[NSDecimalNumber alloc] initWithDouble:10.5] autorelease],
+                  [[[NSDecimalNumber alloc] initWithDouble:-1e3] autorelease],
+                  [[[NSDecimalNumber alloc] initWithDouble:-989.5] autorelease]);
 }
 
 TEST(NSDecimalNumber, NSDecimalCompare) {
@@ -325,8 +331,31 @@ TEST(NSDecimalNumber, NSDecimalCompare) {
     right = [[[[NSDecimalNumber alloc] initWithLongLong:3] autorelease] decimalValue];
     EXPECT_EQ(NSOrderedAscending, NSDecimalCompare(&left, &right));
     EXPECT_EQ(NSOrderedDescending, NSDecimalCompare(&right, &left));
+
+    left = [[[[NSDecimalNumber alloc] initWithDouble:(2 * DBL_MAX)] autorelease] decimalValue];
+    right = [[[[NSDecimalNumber alloc] initWithDouble:5] autorelease] decimalValue];
+    EXPECT_EQ(NSOrderedDescending, NSDecimalCompare(&left, &right));
 }
 
 TEST(NSDecimalNumber, NSNumberCompare) {
+
+	NSDecimalNumber* zero = [NSDecimalNumber zero];
+	NSDecimalNumber* zero2 = [NSDecimalNumber zero];
+
+
     EXPECT_OBJCEQ([NSNumber numberWithDouble:55.0], [NSDecimalNumber numberWithDouble:55.0]);
+
+    //
+    EXPECT_OBJCEQ([[[NSDecimalNumber alloc] initWithMantissa:0 exponent:0 isNegative:YES] autorelease],
+                  [[[NSDecimalNumber alloc] initWithMantissa:0 exponent:0 isNegative:YES] autorelease]);
+
+    //
+    EXPECT_EQ(NSOrderedAscending,
+              [[[[NSDecimalNumber alloc] initWithMantissa:0 exponent:0 isNegative:YES] autorelease]
+                  compare:[NSNumber numberWithDouble:55.0]]);
+
+    //
+    EXPECT_EQ(NSOrderedDescending,
+              [[NSNumber numberWithDouble:55.0]
+                  compare:[[[NSDecimalNumber alloc] initWithMantissa:0 exponent:0 isNegative:YES] autorelease]]);
 }

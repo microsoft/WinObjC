@@ -28,7 +28,6 @@ NSString* const NSDecimalNumberOverflowException = @"NSDecimalNumberOverflowExce
 NSString* const NSDecimalNumberUnderflowException = @"NSDecimalNumberUnderflowException";
 NSString* const NSDecimalNumberDivideByZeroException = @"NSDecimalNumberDivideByZeroException";
 
-typedef NS_ENUM(NSInteger, _DecimalOperations) { _Addition, _Subtraction, _Multiplication, _Division };
 const int _MAX_EXP = 127;
 
 static NSDecimalNumber* s_zero;
@@ -39,6 +38,32 @@ static NSDecimalNumber* s_minNumber;
 
 @implementation NSDecimalNumber {
     NSDecimal _decimal;
+}
+
+- (NSDecimalNumber*)_decimalOperation:(NSCalculationError (*)(NSDecimal* result,
+                                                              const NSDecimal* leftOperand,
+                                                              const NSDecimal* rightOperand,
+                                                              NSRoundingMode roundingMode))operand
+                        decimalNumber:(NSDecimalNumber*)decimalNumber
+                         withBehavior:(id<NSDecimalNumberBehaviors>)behavior {
+    RETURN_NULL_IF(!decimalNumber);
+
+    NSDecimal a = [self decimalValue];
+    NSDecimal b = [decimalNumber decimalValue];
+
+    NSDecimal result;
+    NSCalculationError error = operand(&result, &a, &b, [behavior roundingMode]);
+
+    if (error != NSCalculationNoError) {
+        NSDecimalNumber* res = [behavior exceptionDuringOperation:_cmd error:error leftOperand:self rightOperand:decimalNumber];
+        if (res != nil) {
+            return res;
+        }
+    }
+
+    // TODO: Implement NSDecimalRound
+    // NSDecimalRound(&result, &result, [behavior scale], [behavior roundingMode]);
+    return [NSDecimalNumber decimalNumberWithDecimal:result];
 }
 
 /**
@@ -186,6 +211,7 @@ static NSDecimalNumber* s_minNumber;
         exp++;
     }
 
+    // we made sure that the mantissa is with in the limits of ULLONG_MAX
     return [self initWithMantissa:static_cast<unsigned long long>(res) exponent:exp isNegative:(value < 0.0)];
 }
 
@@ -365,52 +391,12 @@ static NSDecimalNumber* s_minNumber;
     return decimal;
 }
 
-- (NSDecimalNumber*)_decimalOperation:(_DecimalOperations)operand
-                        decimalNumber:(NSDecimalNumber*)decimalNumber
-                         withBehavior:(id<NSDecimalNumberBehaviors>)behavior {
-    RETURN_NULL_IF(!decimalNumber);
-
-    NSDecimal a = [self decimalValue];
-    NSDecimal b = [decimalNumber decimalValue];
-
-    NSDecimal result;
-    NSCalculationError error = NSCalculationNoError;
-
-    switch (operand) {
-        case _Addition:
-            error = NSDecimalAdd(&result, &a, &b, [behavior roundingMode]);
-            break;
-        case _Subtraction:
-            error = NSDecimalSubtract(&result, &a, &b, [behavior roundingMode]);
-            break;
-        // case _Multiplication:
-        //    error = NSDecimalMultiply(&result, &a, &b, [behavior roundingMode]);
-        //   break;
-        //  case _Division:
-        //  error = NSDecimalDivide(&result, &a, &b, [behavior roundingMode]);
-        // break;
-        default:
-            return nil;
-    }
-
-    if (error != NSCalculationNoError) {
-        NSDecimalNumber* result = [behavior exceptionDuringOperation:_cmd error:error leftOperand:self rightOperand:decimalNumber];
-        if (result != nil) {
-            return result;
-        }
-    }
-
-    // TODO: Implement NSDecimalRound
-    // NSDecimalRound(&result, &result, [behavior scale], [behavior roundingMode]);
-    return [NSDecimalNumber decimalNumberWithDecimal:result];
-}
-
 /**
  @Status Caveat
  @Notes NSDecimalNumberBehaviors roundingMode is not supported.
 */
 - (NSDecimalNumber*)decimalNumberByAdding:(NSDecimalNumber*)decimalNumber withBehavior:(id<NSDecimalNumberBehaviors>)behavior {
-    return [self _decimalOperation:_Addition decimalNumber:decimalNumber withBehavior:behavior];
+    return [self _decimalOperation:&NSDecimalAdd decimalNumber:decimalNumber withBehavior:behavior];
 }
 
 /**
@@ -426,7 +412,7 @@ static NSDecimalNumber* s_minNumber;
  @Notes NSDecimalNumberBehaviors roundingMode is not supported.
 */
 - (NSDecimalNumber*)decimalNumberBySubtracting:(NSDecimalNumber*)decimalNumber withBehavior:(id<NSDecimalNumberBehaviors>)behavior {
-    return [self _decimalOperation:_Subtraction decimalNumber:decimalNumber withBehavior:behavior];
+    return [self _decimalOperation:&NSDecimalSubtract decimalNumber:decimalNumber withBehavior:behavior];
 }
 
 /**

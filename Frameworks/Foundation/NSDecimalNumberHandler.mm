@@ -16,9 +16,8 @@
 
 #import <StubReturn.h>
 #import <Foundation/NSDecimalNumberHandler.h>
-#import <Foundation/NSNumber.h>
-#import <Foundation/NSDecimal.h>
 #import <Foundation/NSDecimalNumber.h>
+#import <Foundation/NSNumber.h>
 
 @implementation NSDecimalNumberHandler {
     NSRoundingMode _roundingMode;
@@ -85,7 +84,7 @@
 */
 - (instancetype)initWithCoder:(NSCoder*)decoder {
     if (self == [self init]) {
-        _roundingMode = [[decoder decodeObjectOfClass:[NSNumber class] forKey:@"NS.roundingMode"] unsignedIntegerValue];
+        _roundingMode = static_cast<NSRoundingMode>([decoder decodeInt64ForKey:@"NS.roundingMode"]);
         _scale = [[decoder decodeObjectOfClass:[NSNumber class] forKey:@"NS.scale"] shortValue];
         _raiseOnExactness = [decoder decodeBoolForKey:@"NS.raiseOnExactness"];
         _raiseOnOverflow = [decoder decodeBoolForKey:@"NS.raiseOnOverflow"];
@@ -99,7 +98,7 @@
  @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)encoder {
-    [encoder encodeObject:[NSNumber numberWithUnsignedInteger:_roundingMode] forKey:@"NS.roundingMode"];
+    [encoder encodeInt64:_roundingMode forKey:@"NS.roundingMode"];
     [encoder encodeObject:[NSNumber numberWithShort:_scale] forKey:@"NS.scale"];
     [encoder encodeBool:_raiseOnExactness forKey:@"NS.raiseOnExactness"];
     [encoder encodeBool:_raiseOnOverflow forKey:@"NS.raiseOnOverflow"];
