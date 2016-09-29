@@ -111,6 +111,14 @@
     self.view.backgroundColor = [UIColor whiteColor];
 
     CGFloat width = CGRectGetWidth(self.view.bounds);
+
+    // Create frame of text
+    _runView = [[CTRunTestView alloc] initWithFrame:CGRectMake(0, 0, width, 200)];
+    _runView.backgroundColor = [UIColor whiteColor];
+    // Sets view to call updateTableViews when done drawing
+    _runView.drawDelegate = self;
+    [self.view addSubview:_runView];
+
     // Create table view to pair lines with frame origins
     _testsView = [[UITableView alloc] initWithFrame:CGRectMake(0, 200, width, 400) style:UITableViewStylePlain];
     _testsView.dataSource = self;
@@ -141,19 +149,11 @@
 }
 
 - (void)drawTests {
-    CGFloat width = CGRectGetWidth(self.view.bounds);
-    // Create frame of text
-    _runView = [[CTRunTestView alloc] initWithFrame:CGRectMake(0, 0, width, 200)];
-    _runView.backgroundColor = [UIColor whiteColor];
-
-    // Sets view to call updateTableViews when done drawing
-    _runView.drawDelegate = self;
-    [self.view addSubview:_runView];
+    [_runView setNeedsDisplay];
 }
 
 // Update texts to new font/size
 - (void)refreshViews {
-    [_runView removeFromSuperview];
     [_testCells removeAllObjects];
     [self drawTests];
 }

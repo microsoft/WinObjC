@@ -148,7 +148,18 @@
     _functionsView.delegate = self;
     [self.view addSubview:_functionsView];
 
+    // Create frame of text
+    _framesetterView = [[CTFramesetterTestView alloc] initWithFrame:CGRectMake(0, 100, width, 100)];
+    _framesetterView.backgroundColor = [UIColor whiteColor];
+    // Sets view to call updateTableViews when done drawing
+    _framesetterView.drawDelegate = self;
+    [self.view addSubview:_framesetterView];
+
     _functionCells = [NSMutableArray new];
+
+    _suggestedFrameSizeView = [[CTFramesetterTestView alloc] initWithFrame:CGRectMake(0, 200, 100, 100)];
+    _suggestedFrameSizeView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:_suggestedFrameSizeView];
 
     // Draws the three alignment boxes
     [self drawTests];
@@ -164,24 +175,16 @@
 }
 
 - (void)drawTests {
-    CGFloat width = CGRectGetWidth(self.view.bounds);
-    // Create frame of text
-    _framesetterView = [[CTFramesetterTestView alloc] initWithFrame:CGRectMake(0, 100, width, 100)];
-    _framesetterView.backgroundColor = [UIColor whiteColor];
+    // Update the text in the frame
     // Allows input of \n and \t to insert newlines and tabs respectively
     _framesetterView.text =
         [[_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"] stringByReplacingOccurrencesOfString:@"\\t"
                                                                                                                   withString:@"\t"];
-
-    // Sets view to call updateTableViews when done drawing
-    _framesetterView.drawDelegate = self;
-    [self.view addSubview:_framesetterView];
+    [_framesetterView setNeedsDisplay];
 }
 
 // Update frameview for new text or new boxsize
 - (void)refreshViews {
-    [_framesetterView removeFromSuperview];
-    [_suggestedFrameSizeView removeFromSuperview];
     [_functionCells removeAllObjects];
     [self drawTests];
 }
@@ -212,12 +215,14 @@
     ADD_UNIMPLEMENTED(_functionCells, @"CTFramesetterGetTypeID", width / 2);
     [_functionsView reloadData];
 
-    _suggestedFrameSizeView = [[CTFramesetterTestView alloc] initWithFrame:CGRectMake(0, 200, suggestedSize.width, suggestedSize.height)];
-    _suggestedFrameSizeView.backgroundColor = [UIColor whiteColor];
+    CGRect frame = _suggestedFrameSizeView.frame;
+    frame.size.width = suggestedSize.width;
+    frame.size.height = suggestedSize.height;
+    _suggestedFrameSizeView.frame = frame;
     _suggestedFrameSizeView.text =
         [[_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"] stringByReplacingOccurrencesOfString:@"\\t"
                                                                                                                   withString:@"\t"];
-    [self.view addSubview:_suggestedFrameSizeView];
+    [_suggestedFrameSizeView setNeedsDisplay];
 }
 
 // Table View Methods

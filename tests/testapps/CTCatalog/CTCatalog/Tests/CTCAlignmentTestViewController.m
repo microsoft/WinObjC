@@ -126,6 +126,30 @@
     _textField.delegate = self;
     [self.view addSubview:_textField];
 
+    // Create text view for left-aligned text
+    _leftView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(0, 0, width / 2, 150)];
+    _leftView.backgroundColor = [UIColor whiteColor];
+    _leftView.alignment = kCTLeftTextAlignment;
+    [self.view addSubview:_leftView];
+
+    // Create text view for center-aligned text
+    _centerView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(0, 150, width / 2, 150)];
+    _centerView.backgroundColor = [UIColor whiteColor];
+    _centerView.alignment = kCTCenterTextAlignment;
+    [self.view addSubview:_centerView];
+
+    // Create text view for right-aligned text
+    _rightView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(0, 300, width / 2, 150)];
+    _rightView.backgroundColor = [UIColor whiteColor];
+    _rightView.alignment = kCTRightTextAlignment;
+    [self.view addSubview:_rightView];
+
+    // Create text view for justified text
+    _justifiedView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(0, 450, width / 2, 150)];
+    _justifiedView.backgroundColor = [UIColor whiteColor];
+    _justifiedView.alignment = kCTJustifiedTextAlignment;
+    [self.view addSubview:_justifiedView];
+
     // Query all available fonts and add them to array by name
     NSMutableArray* fonts = [NSMutableArray new];
     for (NSString* familyName in [UIFont familyNames]) {
@@ -172,55 +196,38 @@
 
 - (void)drawTests {
     CGFloat width = CGRectGetWidth(self.view.bounds);
-    // Create left-aligned text
-    _leftView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(0, 0, width / 2, 150)];
-    _leftView.backgroundColor = [UIColor whiteColor];
-    _leftView.alignment = kCTLeftTextAlignment;
+    // Update left-aligned text
     _leftView.font = _font;
-
     // Allows input of \n and \t to insert newlines and tabs respectively
     _leftView.text =
         [[_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"] stringByReplacingOccurrencesOfString:@"\\t"
                                                                                                                   withString:@"\t"];
-    [self.view addSubview:_leftView];
+    [_leftView setNeedsDisplay];
 
-    // Create centered text
-    _centerView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(0, 150, width / 2, 150)];
-    _centerView.backgroundColor = [UIColor whiteColor];
-    _centerView.alignment = kCTCenterTextAlignment;
+    // Update centered text
     _centerView.font = _font;
     _centerView.text =
         [[_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"] stringByReplacingOccurrencesOfString:@"\\t"
                                                                                                                   withString:@"\t"];
-    [self.view addSubview:_centerView];
+    [_centerView setNeedsDisplay];
 
-    // Create right-aligned text
-    _rightView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(0, 300, width / 2, 150)];
-    _rightView.backgroundColor = [UIColor whiteColor];
-    _rightView.alignment = kCTRightTextAlignment;
+    // Update right-aligned text
     _rightView.font = _font;
     _rightView.text =
         [[_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"] stringByReplacingOccurrencesOfString:@"\\t"
                                                                                                                   withString:@"\t"];
-    [self.view addSubview:_rightView];
+    [_rightView setNeedsDisplay];
 
-    // Create justified text
-    _justifiedView = [[CTAlignmentTestView alloc] initWithFrame:CGRectMake(0, 450, width / 2, 150)];
-    _justifiedView.backgroundColor = [UIColor whiteColor];
-    _justifiedView.alignment = kCTJustifiedTextAlignment;
+    // Update justified text
     _justifiedView.font = _font;
     _justifiedView.text =
         [[_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"] stringByReplacingOccurrencesOfString:@"\\t"
                                                                                                                   withString:@"\t"];
-    [self.view addSubview:_justifiedView];
+    [_justifiedView setNeedsDisplay];
 }
 
 // Update texts to new font/size
 - (void)refreshViews {
-    [_leftView removeFromSuperview];
-    [_centerView removeFromSuperview];
-    [_rightView removeFromSuperview];
-    [_justifiedView removeFromSuperview];
     [self drawTests];
 }
 

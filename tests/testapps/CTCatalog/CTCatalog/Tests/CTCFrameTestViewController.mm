@@ -157,6 +157,14 @@
     [_refreshButton setTitle:@"Refresh" forState:UIControlStateNormal];
     [self.view addSubview:_refreshButton];
 
+    // Create frame of text
+    _frameView = [[CTFrameTestView alloc] initWithFrame:CGRectMake(0, 50, 2 * width / 3, 200)];
+    _frameView.backgroundColor = [UIColor whiteColor];
+    _frameView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    // Sets view to call updateTableViews when done drawing
+    _frameView.drawDelegate = self;
+    [self.view addSubview:_frameView];
+
     // Create table view to pair lines with frame origins
     _linesView = [[UITableView alloc] initWithFrame:CGRectMake(0, 250, width, 400) style:UITableViewStylePlain];
     _linesView.dataSource = self;
@@ -189,24 +197,16 @@
 }
 
 - (void)drawTests {
-    // Create frame of text
-    CGFloat width = CGRectGetWidth(self.view.bounds);
-    _frameView = [[CTFrameTestView alloc] initWithFrame:CGRectMake(0, 50, 2 * width / 3, 200)];
-    _frameView.backgroundColor = [UIColor whiteColor];
+    // Update the text in the frame
     // Allows input of \n and \t to insert newlines and tabs respectively
     _frameView.text =
         [[_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"] stringByReplacingOccurrencesOfString:@"\\t"
                                                                                                                   withString:@"\t"];
-    _frameView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-
-    // Sets view to call updateTableViews when done drawing
-    _frameView.drawDelegate = self;
-    [self.view addSubview:_frameView];
+    [_frameView setNeedsDisplay];
 }
 
 // Update texts to new font/size
 - (void)refreshViews {
-    [_frameView removeFromSuperview];
     [_lineCells removeAllObjects];
     [self drawTests];
 }
