@@ -30,6 +30,7 @@ typedef NS_ENUM(NSUInteger, NSCalculationError) {
 };
 
 #define NSDecimalMaxSize (8)
+#define NSDecimalMaxExponent 127
 #define NSDecimalNoScale SHRT_MAX
 
 typedef struct NSDecimal {

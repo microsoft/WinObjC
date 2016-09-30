@@ -187,6 +187,10 @@ TEST(NSDecimalNumber, Subtraction1) {
     EXPECT_EQ(0, result._exponent);
 
     NSDecimalSubtract(&result, &right, &left, NSRoundPlain);
+    EXPECT_ARRAY_EQUAL(mantissa, result._mantissa);
+    EXPECT_EQ(4, result._length);
+    EXPECT_EQ(0, result._isNegative);
+    EXPECT_EQ(0, result._exponent);
 }
 
 TEST(NSDecimalNumber, Subtraction2) {
@@ -258,6 +262,18 @@ TEST(NSDecimalNumber, Subtraction2) {
     TEST_SUBTRACT([[[NSDecimalNumber alloc] initWithInt:(2 * USHRT_MAX)] autorelease],
                   [[[NSDecimalNumber alloc] initWithInt:USHRT_MAX] autorelease],
                   [[[NSDecimalNumber alloc] initWithInt:USHRT_MAX] autorelease]);
+
+    TEST_SUBTRACT([[[NSDecimalNumber alloc] initWithDouble:1186805866786] autorelease],
+                  [[[NSDecimalNumber alloc] initWithDouble:212169414290] autorelease],
+                  [[[NSDecimalNumber alloc] initWithDouble:974636452496] autorelease]);
+
+    TEST_SUBTRACT([[[NSDecimalNumber alloc] initWithDouble:8589869055] autorelease],
+                  [[[NSDecimalNumber alloc] initWithDouble:65537] autorelease],
+                  [[[NSDecimalNumber alloc] initWithDouble:8589803518] autorelease]);
+
+    TEST_SUBTRACT([[[NSDecimalNumber alloc] initWithDouble:11453246122] autorelease],
+                  [[[NSDecimalNumber alloc] initWithDouble:3166485692] autorelease],
+                  [[[NSDecimalNumber alloc] initWithDouble:8286760430] autorelease]);
 }
 
 TEST(NSDecimalNumber, addition) {
@@ -334,6 +350,11 @@ TEST(NSDecimalNumber, NSDecimalCompare) {
 
     left = [[[[NSDecimalNumber alloc] initWithDouble:(2 * DBL_MAX)] autorelease] decimalValue];
     right = [[[[NSDecimalNumber alloc] initWithDouble:5] autorelease] decimalValue];
+    EXPECT_EQ(NSOrderedDescending, NSDecimalCompare(&left, &right));
+
+    //
+    left = [[[[NSDecimalNumber alloc] initWithDouble:9223372534876] autorelease] decimalValue];
+    right = [[[[NSDecimalNumber alloc] initWithDouble:10] autorelease] decimalValue];
     EXPECT_EQ(NSOrderedDescending, NSDecimalCompare(&left, &right));
 }
 

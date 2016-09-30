@@ -28,10 +28,8 @@ NSString* const NSDecimalNumberOverflowException = @"NSDecimalNumberOverflowExce
 NSString* const NSDecimalNumberUnderflowException = @"NSDecimalNumberUnderflowException";
 NSString* const NSDecimalNumberDivideByZeroException = @"NSDecimalNumberDivideByZeroException";
 
-static const int _MAX_EXP = 127;
-
 // This is the limit of initWithDouble on the reference platform.
-static const double _DOUBLE_LIMIT = 1.8e146;
+static const double kDoubleLimit = 1.8e146;
 
 @implementation NSDecimalNumber {
     NSDecimal _decimal;
@@ -116,8 +114,9 @@ static const double _DOUBLE_LIMIT = 1.8e146;
  @Status Interoperable
 */
 + (NSDecimalNumber*)maximumDecimalNumber {
-    static NSDecimalNumber* s_maxNumber =
-        [[NSDecimalNumber alloc] initWithMantissa:std::numeric_limits<unsigned long long>::max() exponent:_MAX_EXP isNegative:NO];
+    static NSDecimalNumber* s_maxNumber = [[NSDecimalNumber alloc] initWithMantissa:std::numeric_limits<unsigned long long>::max()
+                                                                           exponent:NSDecimalMaxExponent
+                                                                         isNegative:NO];
     return s_maxNumber;
 }
 
@@ -125,8 +124,9 @@ static const double _DOUBLE_LIMIT = 1.8e146;
  @Status Interoperable
 */
 + (NSDecimalNumber*)minimumDecimalNumber {
-    static NSDecimalNumber* s_minNumber =
-        [[NSDecimalNumber alloc] initWithMantissa:std::numeric_limits<unsigned long long>::max() exponent:_MAX_EXP isNegative:YES];
+    static NSDecimalNumber* s_minNumber = [[NSDecimalNumber alloc] initWithMantissa:std::numeric_limits<unsigned long long>::max()
+                                                                           exponent:NSDecimalMaxExponent
+                                                                         isNegative:YES];
     return s_minNumber;
 }
 
@@ -181,18 +181,22 @@ static const double _DOUBLE_LIMIT = 1.8e146;
         return [self initWithMantissa:0 exponent:0 isNegative:0];
     }
 
-    if (res > _DOUBLE_LIMIT) {
-        return [self initWithMantissa:ULLONG_MAX exponent:0x7f isNegative:(value < 0)];
+    if (res > kDoubleLimit) {
+        return [self initWithMantissa:ULLONG_MAX exponent:NSDecimalMaxExponent isNegative:(value < 0)];
     }
     // Attempt best for smaller numbers (this is being compacted via NSDecimalCompact in initWithMantissa)
-    while ((res != 0) && (res < static_cast<double>(ULLONG_MAX))) {
-        res *= 10;
-        exp--;
-    }
+    if (res != 0) {
+        if (floor(res) != res) {
+            while ((res < static_cast<double>(ULLONG_MAX))) {
+                res *= 10;
+                exp--;
+            }
+        }
 
-    while (res > static_cast<double>(ULLONG_MAX)) {
-        res /= 10.0;
-        exp++;
+        while (res > static_cast<double>(ULLONG_MAX)) {
+            res /= 10.0;
+            exp++;
+        }
     }
 
     // we made sure that the mantissa is with in the limits of ULLONG_MAX
