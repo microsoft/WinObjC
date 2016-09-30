@@ -190,6 +190,16 @@ cell.accessoryView = FIELD;                                                     
 
     ADD_UNIMPLEMENTED(_inputCells, @"kCTParagraphStyleSpecifierTabStops", width / 2);
 
+    // Create original view with input style settings
+    _styleView = [[CTParagraphStyleTestView alloc] initWithFrame:CGRectMake(0, 20, width / 2, 200)];
+    _styleView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:_styleView];
+
+    // Create new view with copied style to show no changes
+    _styleCopyView = [[CTParagraphStyleTestView alloc] initWithFrame:CGRectMake(width / 2, 20, width / 2, 200)];
+    _styleCopyView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:_styleCopyView];
+
     _inputsTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 220, width, 400) style:UITableViewStylePlain];
     _inputsTable.dataSource = self;
     _inputsTable.delegate = self;
@@ -313,27 +323,20 @@ cell.accessoryView = FIELD;                                                     
     // Create the style with the array of settings
     CTParagraphStyleRef style = CTParagraphStyleCreate(&settings[0], settings.size());
 
-    // Create original view with input style settings
-    CGFloat width = CGRectGetWidth(self.view.bounds);
-    _styleView = [[CTParagraphStyleTestView alloc] initWithFrame:CGRectMake(0, 20, width / 2, 200)];
-    _styleView.backgroundColor = [UIColor whiteColor];
+    // Update the view with input style settings
     _styleView.paragraphStyle = style;
-    [self.view addSubview:_styleView];
+    [_styleView setNeedsDisplay];
 
     // Copy style
     CTParagraphStyleRef styleCopy = CTParagraphStyleCreateCopy(style);
 
-    // Create new view with copied style to show no changes
-    _styleCopyView = [[CTParagraphStyleTestView alloc] initWithFrame:CGRectMake(width / 2, 20, width / 2, 200)];
-    _styleCopyView.backgroundColor = [UIColor whiteColor];
+    // Update new view with copied style to show no changes
     _styleCopyView.paragraphStyle = styleCopy;
-    [self.view addSubview:_styleCopyView];
+    [_styleCopyView setNeedsDisplay];
 }
 
 // Update texts to new font/size
 - (void)refreshViews {
-    [_styleView removeFromSuperview];
-    [_styleCopyView removeFromSuperview];
     [self drawTests];
 }
 

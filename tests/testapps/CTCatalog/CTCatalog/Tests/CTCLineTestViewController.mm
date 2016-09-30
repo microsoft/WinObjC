@@ -151,6 +151,17 @@
     [_truncationSlider addTarget:self action:@selector(refreshViews) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:_truncationSlider];
 
+    // Create frame for the text
+    _lineView = [[CTLineTestView alloc] initWithFrame:CGRectMake(0, 100, width, 60)];
+    _lineView.backgroundColor = [UIColor whiteColor];
+    // Sets view to call updateTableViews when done drawing
+    _lineView.drawDelegate = self;
+    [self.view addSubview:_lineView];
+
+    _truncatedLineView = [[CTTruncatedLineTestView alloc] initWithFrame:CGRectMake(0, 160, width, 60)];
+    _truncatedLineView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:_truncatedLineView];
+
     // Create table view to pair lines with frame origins
     _linesView = [[UITableView alloc] initWithFrame:CGRectMake(0, 240, width, 400) style:UITableViewStylePlain];
     _linesView.dataSource = self;
@@ -184,24 +195,16 @@
 }
 
 - (void)drawTests {
-    // Create frame of text
-    CGFloat width = CGRectGetWidth(self.view.bounds);
-    _lineView = [[CTLineTestView alloc] initWithFrame:CGRectMake(0, 100, width, 60)];
-    _lineView.backgroundColor = [UIColor whiteColor];
+    // Update text in the frame
     // Allows input of \n and \t to insert newlines and tabs respectively
     _lineView.text =
         [[_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"] stringByReplacingOccurrencesOfString:@"\\t"
                                                                                                                   withString:@"\t"];
-
-    // Sets view to call updateTableViews when done drawing
-    _lineView.drawDelegate = self;
-    [self.view addSubview:_lineView];
+    [_lineView setNeedsDisplay];
 }
 
 // Update texts to new font/size
 - (void)refreshViews {
-    [_lineView removeFromSuperview];
-    [_truncatedLineView removeFromSuperview];
     [_functionCells removeAllObjects];
     [self drawTests];
 }
@@ -209,10 +212,9 @@
 // Called by text frame when done drawing to get lines from frame
 - (void)refreshValuesForLine:(CTLineRef)line {
     CGFloat width = CGRectGetWidth(self.view.bounds);
-    _truncatedLineView = [[CTTruncatedLineTestView alloc] initWithFrame:CGRectMake(0, 160, width, 60)];
-    _truncatedLineView.backgroundColor = [UIColor whiteColor];
+
     _truncatedLineView.lineRef = CTLineCreateTruncatedLine(line, _truncationSlider.value, kCTLineTruncationEnd, NULL);
-    [self.view addSubview:_truncatedLineView];
+    [_truncatedLineView setNeedsDisplay];
 
     [_functionCells
         addObject:createTextCell(@"CTLineGetGlyphCount", [NSString stringWithFormat:@"%d", CTLineGetGlyphCount(line)], width / 2)];
