@@ -1129,6 +1129,7 @@ void __CFInitialize(void) {
         memset(__CFRuntimeObjCClassTable, 0, sizeof(__CFRuntimeObjCClassTable));
 
 #if WINOBJC
+        // WINOBJC: Under the WinObjC runtime, all CFTypeRefs are _NSCFTypes or a toll-free bridged type
         for (CFIndex idx = 1; idx < __CFRuntimeClassTableSize; ++idx) {
             __CFRuntimeObjCClassTable[idx] = (uintptr_t)&_OBJC_CLASS__NSCFType;
         }
