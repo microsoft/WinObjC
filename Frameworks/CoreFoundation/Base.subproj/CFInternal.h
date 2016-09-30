@@ -367,6 +367,7 @@ CF_PRIVATE Boolean __CFProcessIsRestricted();
 // CF_EXPORT void * __CFConstantStringClassReferencePtrPtr;
 // CF_EXPORT void *__CFConstantStringClassReferencePtr[];
 extern "C" Class _OBJC_CLASS__NSCFString;
+extern "C" Class _OBJC_CLASS__NSCFType;
 
 // WINOBJC: Compilation can't find these class names
 // Needed for class checks against cfisa, _CFRuntimeBridgeTypeToClass
@@ -691,6 +692,7 @@ extern void _CFRuntimeSetInstanceTypeIDAndIsa(CFTypeRef cf, CFTypeID newTypeID);
 #define CF_IS_OBJC(typeID, obj) ( \
     (!obj) || \
     ((((CFRuntimeBase*)(obj))->_cfisa != 0) && \
+    (((CFRuntimeBase*)(obj))->_cfisa != (uintptr_t)(&_OBJC_CLASS__NSCFType)) && \
     (((CFRuntimeBase*)(obj))->_cfisa != (uintptr_t)(&_OBJC_CLASS__NSCFString)) && \
     (__CFISAForTypeID(typeID) != ((CFRuntimeBase*)(obj))->_cfisa) && \
     (![(id)(((CFRuntimeBase*)(obj)))->_cfisa isSubclassOfClass:(Class)__CFISAForTypeID(typeID)])))
@@ -711,7 +713,8 @@ CF_INLINE bool __CF_IsBridgedObject(CFTypeRef obj) {
         return false;
     }
 
-    if ((object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFString)) || 
+    if ((object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFType)) || 
+        (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFString)) || 
         (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFNumber)) || 
         (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFBoolean))) {
         return true;
@@ -734,6 +737,7 @@ CF_INLINE bool __CF_IsBridgedObject(CFTypeRef obj) {
 CF_INLINE bool __CF_IsCFObject(CFTypeRef obj) {
     CFRuntimeBase* object = (CFRuntimeBase*)obj;
     if ((object->_cfisa == 0) || 
+        (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFType)) ||
         (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFString)) ||
         (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFNumber)) ||
         (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFBoolean)) ||
