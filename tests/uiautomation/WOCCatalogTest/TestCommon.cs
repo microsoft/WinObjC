@@ -43,8 +43,6 @@ namespace WOCCatalogTest
             WOCCatalogSession = new IOSDriver<IOSElement>(RemoteHarnessUrl, appCapabilities);
             Assert.IsNotNull(WOCCatalogSession);
             WOCCatalogSession.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(2));
-
-            ReturnToMainPage();
         }
 
         static public void ReturnToMainPage()
