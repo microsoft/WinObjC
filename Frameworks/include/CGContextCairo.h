@@ -27,6 +27,10 @@ class CGContextCairo : public CGContextImpl {
 private:
     cairo_filter_t _filter;
 
+    // TODO::
+    // Remove this once issue #1057 is resolved.
+    float _hostDisplayScale;
+
     // Filter is assigned for each pattern. If the pattern is getting destroyed we must
     // reset the filter as well.
     // pattern: The pattern for which current filter should be assigned.
