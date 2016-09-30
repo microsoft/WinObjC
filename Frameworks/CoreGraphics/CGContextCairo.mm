@@ -62,9 +62,6 @@ static IWLazyIvarLookup<void*> _LazyUISizingFontHandle(_LazyUIFont, "_sizingFont
 
 CGContextCairo::CGContextCairo(CGContextRef base, CGImageRef destinationImage)
     : CGContextImpl(base, destinationImage), _drawContext(0), _filter(CAIRO_FILTER_BILINEAR) {
-    // TODO::
-    // Remove this once issue #1057 is resolved.
-    _hostDisplayScale = static_cast<float>([[WGDDisplayInformation getForCurrentView] resolutionScale] / 100.0f);
 }
 
 CGContextCairo::~CGContextCairo() {
@@ -2024,8 +2021,9 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     // height here with the device scaling factor so they get converted to DIPs and then apply the transform to the D2D render target.
     // Though this workaround is sufficient to get text rendered on the user screen on all Windows form factor devices, this will not work
     // when text is rendered on a PDF or printer.
-    verticalScalingFactor /= _hostDisplayScale;
-    height /= _hostDisplayScale;
+    static float hostDisplayScale = static_cast<float>([[WGDDisplayInformation getForCurrentView] resolutionScale] / 100.0f);
+    verticalScalingFactor /= hostDisplayScale;
+    height /= hostDisplayScale;
     transform = CGAffineTransformTranslate(transform, 0, (height / verticalScalingFactor) - height);
     // Perform anti-clockwise rotation required to match the reference platform.
     imgRenderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, -transform.b, transform.c, transform.d, transform.tx, transform.ty));
