@@ -15,17 +15,16 @@
 //******************************************************************************
 
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AlarmClockTest")]
+[assembly: AssemblyTitle("WOCCatalogTest")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("AlarmClockTest")]
+[assembly: AssemblyProduct("WOCCatalogTest")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -36,7 +35,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("d2d62728-48e1-46c3-ba5b-f5923b0326b8")]
+[assembly: Guid("C9697759-EEB4-40B1-AAAD-554402144CDC")]
 
 // Version information for an assembly consists of the following four values:
 //

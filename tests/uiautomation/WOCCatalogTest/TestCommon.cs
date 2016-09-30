@@ -24,7 +24,7 @@ namespace WOCCatalogTest
 {
     class TestCommon
     {
-        private const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723";
+        public static Uri RemoteHarnessUrl = new Uri("http://10.137.228.14:4723");
         public static IOSDriver<IOSElement> WOCCatalogSession; // Temporary placeholder until Windows namespace exists
 
         static public void LaunchApp()
@@ -36,8 +36,11 @@ namespace WOCCatalogTest
 
             // Launch the WOCCatalog app
             DesiredCapabilities appCapabilities = new DesiredCapabilities();
-            appCapabilities.SetCapability("app", "a5434b32-aabd-4c51-bf85-89de616f861a_vddemm0nz1wmr!App");
-            WOCCatalogSession = new IOSDriver<IOSElement>(new Uri(WindowsApplicationDriverUrl), appCapabilities);
+
+            //appCapabilities.SetCapability("app", "a5434b32-aabd-4c51-bf85-89de616f861a_vddemm0nz1wmr!App");
+            appCapabilities.SetCapability("app", "db891e9d-c39f-44c3-844e-3b4c38f22d1a_vddemm0nz1wmr!App");
+
+            WOCCatalogSession = new IOSDriver<IOSElement>(RemoteHarnessUrl, appCapabilities);
             Assert.IsNotNull(WOCCatalogSession);
             WOCCatalogSession.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(2));
 
@@ -54,9 +57,6 @@ namespace WOCCatalogTest
                 {
                     backButton = WOCCatalogSession.FindElementByAccessibilityId("Back");
                     backButton.Click();
-
-                    // What does this do differently
-                    //WOCCatalogSession.Navigate().Back();
                 }
                 while (backButton != null);
             }
