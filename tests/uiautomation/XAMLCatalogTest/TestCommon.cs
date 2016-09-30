@@ -36,12 +36,13 @@ namespace XAMLCatalogTest
 
             // Launch the WOCCatalog app
             DesiredCapabilities appCapabilities = new DesiredCapabilities();
-            appCapabilities.SetCapability("app", "0b75acd0-df3e-4edb-bebc-847b0ca4bffb_vddemm0nz1wmr!App");
+
+            //appCapabilities.SetCapability("app", "0b75acd0-df3e-4edb-bebc-847b0ca4bffb_vddemm0nz1wmr!App");
+            appCapabilities.SetCapability("app", "db891e9d-c39f-44c3-844e-3b4c38f22d1a_vddemm0nz1wmr!App");
+
             XAMLCatalogSession = new IOSDriver<IOSElement>(new Uri(WindowsApplicationDriverUrl), appCapabilities);
             Assert.IsNotNull(XAMLCatalogSession);
             XAMLCatalogSession.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(2));
-
-            ReturnToMainPage();
         }
 
         static public void ReturnToMainPage()
