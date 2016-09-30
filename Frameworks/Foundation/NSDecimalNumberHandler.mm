@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,20 +16,33 @@
 
 #import <StubReturn.h>
 #import <Foundation/NSDecimalNumberHandler.h>
+#import <Foundation/NSDecimalNumber.h>
+#import <Foundation/NSNumber.h>
 
-@implementation NSDecimalNumberHandler
-/**
- @Status Stub
- @Notes
-*/
-+ (NSDecimalNumberHandler*)defaultDecimalNumberHandler {
-    UNIMPLEMENTED();
-    return StubReturn();
+@implementation NSDecimalNumberHandler {
+    NSRoundingMode _roundingMode;
+    short _scale;
+    BOOL _raiseOnExactness;
+    BOOL _raiseOnOverflow;
+    BOOL _raiseOnUnderflow;
+    BOOL _raiseOnDivideByZero;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
+*/
++ (NSDecimalNumberHandler*)defaultDecimalNumberHandler {
+    static NSDecimalNumberHandler* defaultHandler = [[NSDecimalNumberHandler alloc] initWithRoundingMode:NSRoundPlain
+                                                                                                   scale:NSDecimalNoScale
+                                                                                        raiseOnExactness:NO
+                                                                                         raiseOnOverflow:YES
+                                                                                        raiseOnUnderflow:YES
+                                                                                     raiseOnDivideByZero:YES];
+    return defaultHandler;
+}
+
+/**
+ @Status Interoperable
 */
 + (instancetype)decimalNumberHandlerWithRoundingMode:(NSRoundingMode)roundingMode
                                                scale:(short)scale
@@ -37,13 +50,16 @@
                                      raiseOnOverflow:(BOOL)raiseOnOverflow
                                     raiseOnUnderflow:(BOOL)raiseOnUnderflow
                                  raiseOnDivideByZero:(BOOL)raiseOnDivideByZero {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [[[NSDecimalNumberHandler alloc] initWithRoundingMode:roundingMode
+                                                           scale:scale
+                                                raiseOnExactness:raiseOnExactness
+                                                 raiseOnOverflow:raiseOnOverflow
+                                                raiseOnUnderflow:raiseOnUnderflow
+                                             raiseOnDivideByZero:raiseOnDivideByZero] autorelease];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithRoundingMode:(NSRoundingMode)roundingMode
                                scale:(short)scale
@@ -51,55 +67,91 @@
                      raiseOnOverflow:(BOOL)raiseOnOverflow
                     raiseOnUnderflow:(BOOL)raiseOnUnderflow
                  raiseOnDivideByZero:(BOOL)raiseOnDivideByZero {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (self = [super init]) {
+        _roundingMode = roundingMode;
+        _scale = scale;
+        _raiseOnExactness = raiseOnExactness;
+        _raiseOnOverflow = raiseOnOverflow;
+        _raiseOnUnderflow = raiseOnUnderflow;
+        _raiseOnDivideByZero = raiseOnDivideByZero;
+    }
+
+    return self;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (self == [self init]) {
+        _roundingMode = static_cast<NSRoundingMode>([decoder decodeInt64ForKey:@"NS.roundingMode"]);
+        _scale = [[decoder decodeObjectOfClass:[NSNumber class] forKey:@"NS.scale"] shortValue];
+        _raiseOnExactness = [decoder decodeBoolForKey:@"NS.raiseOnExactness"];
+        _raiseOnOverflow = [decoder decodeBoolForKey:@"NS.raiseOnOverflow"];
+        _raiseOnUnderflow = [decoder decodeBoolForKey:@"NS.raiseOnUnderflow"];
+        _raiseOnDivideByZero = [decoder decodeBoolForKey:@"NS.raiseOnDivideByZero"];
+    }
+    return self;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)encoder {
-    UNIMPLEMENTED();
+    [encoder encodeInt64:_roundingMode forKey:@"NS.roundingMode"];
+    [encoder encodeObject:[NSNumber numberWithShort:_scale] forKey:@"NS.scale"];
+    [encoder encodeBool:_raiseOnExactness forKey:@"NS.raiseOnExactness"];
+    [encoder encodeBool:_raiseOnOverflow forKey:@"NS.raiseOnOverflow"];
+    [encoder encodeBool:_raiseOnUnderflow forKey:@"NS.raiseOnUnderflow"];
+    [encoder encodeBool:_raiseOnDivideByZero forKey:@"NS.raiseOnDivideByZero"];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSRoundingMode)roundingMode {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return _roundingMode;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (short)scale {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return _scale;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSDecimalNumber*)exceptionDuringOperation:(SEL)method
                                        error:(NSCalculationError)error
                                  leftOperand:(NSDecimalNumber*)leftOperand
                                 rightOperand:(NSDecimalNumber*)rightOperand {
-    UNIMPLEMENTED();
-    return StubReturn();
+    switch (error) {
+        case NSCalculationUnderflow:
+            if (_raiseOnUnderflow) {
+                [NSException raise:NSDecimalNumberUnderflowException format:@"NSDecimalNumber underflow"];
+            }
+            return [NSDecimalNumber notANumber];
+        case NSCalculationOverflow:
+            if (_raiseOnOverflow) {
+                [NSException raise:NSDecimalNumberOverflowException format:@"NSDecimalNumber overflow"];
+            }
+            return [NSDecimalNumber notANumber];
+
+        case NSCalculationLossOfPrecision:
+            if (_raiseOnExactness) {
+                [NSException raise:NSDecimalNumberExactnessException format:@"NSDecimalNumber exactness exception"];
+            }
+            return nil;
+        case NSCalculationDivideByZero:
+            if (_raiseOnDivideByZero) {
+                [NSException raise:NSDecimalNumberDivideByZeroException format:@"Attempt to divide by 0"];
+            }
+            return [NSDecimalNumber notANumber];
+    }
+
+    return nil;
 }
 
 @end
