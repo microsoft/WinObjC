@@ -248,13 +248,18 @@ void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTe
         CGContextSetTextPosition(ctx, curTextPos.x + curRun->_relativeXOffset, curTextPos.y + curRun->_relativeYOffset);
     }
 
-    // TODO::
-    // Fix this once CTFont and UIFont become bridgable classes.
     id fontColor = [curRun->_attributes objectForKey:(id)kCTForegroundColorAttributeName];
     if (fontColor == nil) {
-        fontColor = [_LazyUIColor blackColor];
+        CFBooleanRef useContextColor =
+            static_cast<CFBooleanRef>([curRun->_attributes objectForKey:(id)kCTForegroundColorFromContextAttributeName]);
+        if (!useContextColor || !CFBooleanGetValue(useContextColor)) {
+            fontColor = [_LazyUIColor blackColor];
+            CGContextSetFillColorWithColor(ctx, reinterpret_cast<CGColorRef>(fontColor));
+        }
+    } else {
+        CGContextSetFillColorWithColor(ctx, reinterpret_cast<CGColorRef>(fontColor));
     }
-    CGContextSetFillColorWithColor(ctx, reinterpret_cast<CGColorRef>(fontColor));
+
     CGContextDrawGlyphRun(ctx, &curRun->_dwriteGlyphRun);
 }
 

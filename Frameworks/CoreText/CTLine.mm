@@ -51,6 +51,8 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef li
     ret->_leading = _leading;
     ret->_glyphCount = _glyphCount;
     ret->_runs.attach([_runs copy]);
+    ret->_relativeXOffset = _relativeXOffset;
+    ret->_relativeYOffset = _relativeYOffset;
 
     return ret;
 }
