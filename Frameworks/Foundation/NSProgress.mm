@@ -293,7 +293,7 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
     decltype(_cancellationHandler) cancellationHandler;
 
     @synchronized(self) {
-        if (!_cancellable || _cancelled) {
+        if (_cancelled) {
             return;
         }
 
@@ -316,7 +316,7 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
     decltype(_pausingHandler) pausingHandler;
 
     @synchronized(self) {
-        if (!_pausable || _paused) {
+        if (_paused) {
             return;
         }
 

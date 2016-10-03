@@ -18,6 +18,8 @@
 #import <Starboard/SmartTypes.h>
 #include <TestFramework.h>
 
+#import "TestUtils.h"
+
 #pragma region Helper Classes
 #define TEST_PREFIX Foundation_NSObject_KVO_Tests
 #define _CONCAT(x, y) x##y
@@ -33,6 +35,10 @@
 @end
 
 @implementation TEST_IDENT (Observee)
++ (instancetype)observee {
+    return [[[self alloc] init] autorelease];
+}
+
 - (instancetype)init {
     if (self = [super init]) {
         _bareArray = [NSMutableArray new];
@@ -78,17 +84,13 @@
 }
 @end
 
-@interface TEST_IDENT (Observer): NSObject {
+@interface _NSFoundationTestKVOObserver () {
     StrongId<NSArray<void (^)(NSString*, id, NSDictionary*, void*)>> _callbacks;
     NSUInteger _callbackIndex;
 }
-@property (nonatomic, assign, readonly) NSUInteger hits;
-// performBlock:andExpectChangeCallbacks: will call the blocks in 'callbacks', sequentially, giving each one
-// a single observation callback.
-- (void)performBlock:(void (^)())block andExpectChangeCallbacks:(NSArray<void (^)(NSString*, id, NSDictionary*, void*)>*)callbacks;
 @end
 
-@implementation TEST_IDENT (Observer)
+@implementation _NSFoundationTestKVOObserver
 - (void)performBlock:(void (^)())block andExpectChangeCallbacks:(NSArray<void (^)(NSString*, id, NSDictionary*, void*)>*)callbacks {
     _hits = 0;
     _callbackIndex = 0;
@@ -97,53 +99,57 @@
 }
 
 - (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
-    auto x = [_callbacks objectAtIndex:_callbackIndex];
-    if (_callbackIndex++ == [_callbacks count]) {
-        _callbackIndex = 0;
+    if ([_callbacks length] > 0) {
+        auto x = [_callbacks objectAtIndex:_callbackIndex];
+        if (_callbackIndex++ == [_callbacks count]) {
+            _callbackIndex = 0;
+        }
+        x(keyPath, object, change, context);
     }
-    x(keyPath, object, change, context);
     _hits++;
 }
 @end
 
-@interface TEST_IDENT (Facade): NSObject {
-    StrongId<TEST_IDENT(Observee)> _observee;
-    StrongId<TEST_IDENT(Observer)> _observer;
+@interface _NSFoundationTestKVOFacade () {
+    StrongId<NSObject> _observee;
+    StrongId<_NSFoundationTestKVOObserver> _observer;
 }
-@property (nonatomic, assign, readonly) NSUInteger hits;
-- (void)performBlock:(void (^)(TEST_IDENT(Observee)*, TEST_IDENT(Observer)*))block
-    andExpectChangeCallbacks:(NSArray<void (^)(NSString*, id, NSDictionary*, void*)>*)callbacks;
 @end
 
-@implementation TEST_IDENT (Facade)
-- (instancetype)init {
+@implementation _NSFoundationTestKVOFacade
++ (instancetype)newWithObservee:(id)observee {
+    return [[self alloc] initWithObservee:observee];
+}
+
+- (instancetype)initWithObservee:(id)observee {
     if (self = [super init]) {
-        _observee.attach([TEST_IDENT(Observee) new]);
-        _observer.attach([TEST_IDENT(Observer) new]);
+        _observee = observee;
+        _observer.attach([_NSFoundationTestKVOObserver new]);
     }
     return self;
 }
-- (void)performBlock:(void (^)(TEST_IDENT(Observee)*, TEST_IDENT(Observer)*))block
-    andExpectChangeCallbacks:(NSArray<void (^)(NSString*, id, NSDictionary*, void*)>*)callbacks {
+
+- (void)performBlock:(void (^)(id))block andExpectChangeCallbacks:(NSArray<void (^)(NSString*, id, NSDictionary*, void*)>*)callbacks {
     @try {
         [_observer performBlock:^{
-            block(_observee, _observer);
+            block(_observee);
         }
             andExpectChangeCallbacks:callbacks];
     } @catch (NSException* e) {
         ADD_FAILURE();
     }
 }
+
 - (void)observeKeyPath:(NSString*)keyPath
                  withOptions:(NSKeyValueObservingOptions)options
-             performingBlock:(void (^)(TEST_IDENT(Observee)*, TEST_IDENT(Observer)*))block
+             performingBlock:(void (^)(id))block
     andExpectChangeCallbacks:(NSArray<void (^)(NSString*, id, NSDictionary*, void*)>*)callbacks {
-    [self performBlock:^(TEST_IDENT(Observee) * observee, TEST_IDENT(Observer) * observer) {
-        [observee addObserver:observer forKeyPath:keyPath options:options context:nullptr];
+    [self performBlock:^(TEST_IDENT(Observee) * observee) {
+        [observee addObserver:_observer forKeyPath:keyPath options:options context:nullptr];
         @try {
-            block(observee, observer);
+            block(observee);
         } @finally {
-            [observee removeObserver:observer forKeyPath:keyPath];
+            [observee removeObserver:_observer forKeyPath:keyPath];
         }
     }
         andExpectChangeCallbacks:callbacks];
@@ -154,21 +160,19 @@
 }
 @end
 
-#define PERFORM ^(TEST_IDENT(Observee) * observee, TEST_IDENT(Observer) * observer)
+#define PERFORM ^(TEST_IDENT(Observee) * observee)
 #define CHANGE_CB ^(NSString * keyPath, id object, NSDictionary * change, void* context)
 #pragma endregion
 
 TEST(KVO, ToMany_NoNotificationOnBareArray) {
-    TEST_IDENT(Facade)* facade = [[TEST_IDENT(Facade) new] autorelease];
+    _NSFoundationTestKVOFacade* facade = [[_NSFoundationTestKVOFacade newWithObservee:[TEST_IDENT(Observee) observee]] autorelease];
     [facade observeKeyPath:@"bareArray"
                      withOptions:0
                  performingBlock:PERFORM { [observee addObjectToBareArray:@"hello"]; }
-        andExpectChangeCallbacks:@[
-            CHANGE_CB {
-                // Any notification here is illegal.
-                ADD_FAILURE();
-            }
-        ]];
+        andExpectChangeCallbacks:@[ CHANGE_CB {
+            // Any notification here is illegal.
+            ADD_FAILURE();
+        } ]];
     EXPECT_EQ(0, facade.hits);
 }
 
@@ -207,7 +211,7 @@ TEST(KVO, ToMany_ManuallyNotifyingArray) {
         ADD_FAILURE();
     };
 
-    TEST_IDENT(Facade)* facade = [[TEST_IDENT(Facade) new] autorelease];
+    _NSFoundationTestKVOFacade* facade = [[_NSFoundationTestKVOFacade newWithObservee:[TEST_IDENT(Observee) observee]] autorelease];
     // This test expects one change for each key; any more than that is a failure.
     [facade observeKeyPath:@"manualNotificationArray"
                      withOptions:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
@@ -219,7 +223,7 @@ TEST(KVO, ToMany_ManuallyNotifyingArray) {
         andExpectChangeCallbacks:@[ firstInsertCallback, secondInsertCallback, removalCallback, illegalChangeNotification ]];
     EXPECT_EQ(3, facade.hits);
 
-    facade = [[TEST_IDENT(Facade) new] autorelease];
+    facade = [[_NSFoundationTestKVOFacade newWithObservee:[TEST_IDENT(Observee) observee]] autorelease];
     // This test expects two change notifications for each key; any more than that is a failure.
     [facade observeKeyPath:@"manualNotificationArray"
                      withOptions:NSKeyValueObservingOptionPrior | NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
@@ -289,7 +293,7 @@ TEST(KVO, ToMany_KVCMediatedMutableArray) {
         ADD_FAILURE();
     };
 
-    TEST_IDENT(Facade)* facade = [[TEST_IDENT(Facade) new] autorelease];
+    _NSFoundationTestKVOFacade* facade = [[_NSFoundationTestKVOFacade newWithObservee:[TEST_IDENT(Observee) observee]] autorelease];
     // This test expects one change for each key; any more than that is a failure.
     [facade observeKeyPath:@"kvcMediatedArray"
                      withOptions:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
@@ -339,7 +343,7 @@ TEST(KVO, ToMany_KVCMediatedArrayWithHelpers) {
         ADD_FAILURE();
     };
 
-    TEST_IDENT(Facade)* facade = [[TEST_IDENT(Facade) new] autorelease];
+    _NSFoundationTestKVOFacade* facade = [[_NSFoundationTestKVOFacade newWithObservee:[TEST_IDENT(Observee) observee]] autorelease];
     [facade observeKeyPath:@"arrayWithHelpers"
                      withOptions:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
                  performingBlock:PERFORM {
@@ -352,7 +356,7 @@ TEST(KVO, ToMany_KVCMediatedArrayWithHelpers) {
         andExpectChangeCallbacks:@[ firstInsertCallback, secondInsertCallback, removalCallback, illegalChangeNotification ]];
     EXPECT_EQ(3, facade.hits);
 
-    facade = [[TEST_IDENT(Facade) new] autorelease];
+    facade = [[_NSFoundationTestKVOFacade newWithObservee:[TEST_IDENT(Observee) observee]] autorelease];
     // In this test, we use the same arrayWithHelpers as above, but interact with it manually.
     [facade observeKeyPath:@"arrayWithHelpers"
                      withOptions:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
@@ -379,7 +383,7 @@ TEST(KVO, ToMany_KVCMediatedArrayWithHelpers_AggregateFunction) {
         ADD_FAILURE();
     };
 
-    TEST_IDENT(Facade)* facade = [[TEST_IDENT(Facade) new] autorelease];
+    _NSFoundationTestKVOFacade* facade = [[_NSFoundationTestKVOFacade newWithObservee:[TEST_IDENT(Observee) observee]] autorelease];
     [facade observeKeyPath:@"arrayWithHelpers.@count"
                      withOptions:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
                  performingBlock:PERFORM {
@@ -390,7 +394,7 @@ TEST(KVO, ToMany_KVCMediatedArrayWithHelpers_AggregateFunction) {
         andExpectChangeCallbacks:@[ insertCallbackPost, illegalChangeNotification ]];
     EXPECT_EQ(1, facade.hits);
 
-    facade = [[TEST_IDENT(Facade) new] autorelease];
+    facade = [[_NSFoundationTestKVOFacade newWithObservee:[TEST_IDENT(Observee) observee]] autorelease];
     // In this test, we use the same arrayWithHelpers as above, but interact with it manually.
     [facade observeKeyPath:@"arrayWithHelpers.@count"
                      withOptions:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew

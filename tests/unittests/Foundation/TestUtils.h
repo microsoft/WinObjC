@@ -35,3 +35,20 @@ void deleteFile(NSString* name);
 _SCOPE_GUARD([fileHandle](void*) { [fileHandle closeFile]; })
 
 #define SCOPE_DELETE_FILE(fileName) _SCOPE_GUARD([fileName](void*) { deleteFile(fileName); })
+
+@interface _NSFoundationTestKVOObserver : NSObject
+@property (nonatomic, assign, readonly) NSUInteger hits;
+// performBlock:andExpectChangeCallbacks: will call the blocks in 'callbacks', sequentially, giving each one
+// a single observation callback.
+- (void)performBlock:(void (^)())block andExpectChangeCallbacks:(NSArray<void (^)(NSString*, id, NSDictionary*, void*)>*)callbacks;
+@end
+
+@interface _NSFoundationTestKVOFacade : NSObject
+@property (nonatomic, assign, readonly) NSUInteger hits;
++ (instancetype)newWithObservee:(id)observee;
+- (void)performBlock:(void (^)(id))block andExpectChangeCallbacks:(NSArray<void (^)(NSString*, id, NSDictionary*, void*)>*)callbacks;
+- (void)observeKeyPath:(NSString*)keyPath
+                 withOptions:(NSKeyValueObservingOptions)options
+             performingBlock:(void (^)(id))block
+    andExpectChangeCallbacks:(NSArray<void (^)(NSString*, id, NSDictionary*, void*)>*)callbacks;
+@end

@@ -18,6 +18,8 @@
 #import <TestFramework.h>
 #import <thread>
 
+#import "TestUtils.h"
+
 static const uint64_t work1pendingUnitCount = 2;
 static const uint64_t work2pendingUnitCount = 30;
 
@@ -123,8 +125,15 @@ TEST(NSProgress, FractionCompleted) {
     ASSERT_EQ(0, [userInfo totalUnitCount]);
     ASSERT_EQ(0, [userInfo completedUnitCount]);
 
-    [userInfo setTotalUnitCount:2];
-    [userInfo setCompletedUnitCount:1];
+    _NSFoundationTestKVOFacade* kvoListener = [[_NSFoundationTestKVOFacade newWithObservee:userInfo] autorelease];
+    [kvoListener observeKeyPath:@"fractionCompleted"
+                     withOptions:NSKeyValueObservingOptionNew
+                 performingBlock:^(id userInfo) {
+                     [userInfo setTotalUnitCount:2];
+                     [userInfo setCompletedUnitCount:1];
+                 }
+        andExpectChangeCallbacks:nil];
+    EXPECT_EQ(2, kvoListener.hits);
 
     ASSERT_EQ(0.5, [userInfo fractionCompleted]);
 }
@@ -197,18 +206,27 @@ TEST(NSProgress, TreeImplicit) {
     NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
     ProgressThreadHelper* progressThreadHelper = [[ProgressThreadHelper new] autorelease];
 
-    NSThread* thread1 = [[[NSThread alloc] initWithTarget:progressThreadHelper selector:@selector(work1:) object:root] autorelease];
-    NSThread* thread2 = [[[NSThread alloc] initWithTarget:progressThreadHelper selector:@selector(work2:) object:root] autorelease];
+    _NSFoundationTestKVOFacade* kvoListener = [[_NSFoundationTestKVOFacade newWithObservee:root] autorelease];
+    [kvoListener observeKeyPath:@"fractionCompleted"
+                     withOptions:NSKeyValueObservingOptionNew
+                 performingBlock:^(id root) {
+                     NSThread* thread1 =
+                         [[[NSThread alloc] initWithTarget:progressThreadHelper selector:@selector(work1:) object:root] autorelease];
+                     NSThread* thread2 =
+                         [[[NSThread alloc] initWithTarget:progressThreadHelper selector:@selector(work2:) object:root] autorelease];
 
-    [thread1 start];
-    [thread2 start];
+                     [thread1 start];
+                     [thread2 start];
 
-    size_t i = 0;
-    while ((![thread1 isFinished] || ![thread2 isFinished]) && (i++ < 50)) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    }
+                     size_t i = 0;
+                     while ((![thread1 isFinished] || ![thread2 isFinished]) && (i++ < 50)) {
+                         std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                     }
 
-    ASSERT_EQ(work1pendingUnitCount + work2pendingUnitCount, [root completedUnitCount]);
+                     ASSERT_EQ(work1pendingUnitCount + work2pendingUnitCount, [root completedUnitCount]);
+                 }
+        andExpectChangeCallbacks:nil];
+    EXPECT_NE(0, kvoListener.hits);
 }
 
 // The selector addChild:withPendingUnitCount is only supported in OSX Foundation 10.11,
@@ -358,17 +376,36 @@ OSX_DISABLED_TEST(NSProgress, CancelPauseResume) {
     }];
 
     // Verify that the handlers are called and the bools are set
-    [root cancel];
-    ASSERT_EQ(YES, [root isCancelled]);
-    ASSERT_EQ(YES, cancelCalled);
+    _NSFoundationTestKVOFacade* kvoListener = [[_NSFoundationTestKVOFacade newWithObservee:root] autorelease];
+    [kvoListener observeKeyPath:@"cancelled"
+                     withOptions:NSKeyValueObservingOptionNew
+                 performingBlock:^(id root) {
+                     [root cancel];
+                     ASSERT_EQ(YES, [root isCancelled]);
+                     ASSERT_EQ(YES, cancelCalled);
+                 }
+        andExpectChangeCallbacks:nil];
+    EXPECT_EQ(1, kvoListener.hits);
 
-    [root pause];
-    ASSERT_EQ(YES, [root isPaused]);
-    ASSERT_EQ(YES, pauseCalled);
+    [kvoListener observeKeyPath:@"paused"
+                     withOptions:NSKeyValueObservingOptionNew
+                 performingBlock:^(id root) {
+                     [root pause];
+                     ASSERT_EQ(YES, [root isPaused]);
+                     ASSERT_EQ(YES, pauseCalled);
+                 }
+        andExpectChangeCallbacks:nil];
+    EXPECT_EQ(1, kvoListener.hits);
 
-    [root resume];
-    ASSERT_EQ(NO, [root isPaused]);
-    ASSERT_EQ(YES, resumeCalled);
+    [kvoListener observeKeyPath:@"paused"
+                     withOptions:NSKeyValueObservingOptionNew
+                 performingBlock:^(id root) {
+                     [root resume];
+                     ASSERT_EQ(NO, [root isPaused]);
+                     ASSERT_EQ(YES, resumeCalled);
+                 }
+        andExpectChangeCallbacks:nil];
+    EXPECT_EQ(1, kvoListener.hits);
 }
 
 TEST(NSProgress, LocalizedDescription) {
