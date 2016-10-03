@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsRootNamespace>CGCatalog_Headers</ItemsRootNamespace>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <Keyword>IslandwoodProj</Keyword>
+    <ItemsProjectGuid>{80162D58-D637-48F4-9EEE-ECD26E5F0DEB}</ItemsProjectGuid>
+    <SharedGUID>{1A3847F4-5684-4B1C-8AAA-24A80180D8D6}</SharedGUID>
+  </PropertyGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddCurveToPointViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddElipseViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddLineToPointViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddPathViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddQuadCurveToPointViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddRectViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathApplyViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathCloseSubpathViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathContainsPointViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathGetBoundingBoxViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGDrawOptions.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGDrawView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGSamplePage.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\AppDelegate.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGCRootViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGCBaseViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGContextSampleRow.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGContextNewTestsController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGContextSamplesRootViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGPathApplyViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGBitmapContentViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextBeginEndTransparencyLayer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextBeginTransparencyLayerWithRect.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextSetPatternPhase.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextReplacePathWithStrokedPath.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGPathContainsPointViewController.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+</Project>
