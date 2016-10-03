@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -92,8 +92,7 @@ TEST(CoreText, CTParagraphStyle) {
 
 TEST(CoreText, KernAttribute) {
     const static float c_errorDelta = 0.001f;
-    NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@"TESTTESTTEST"];
-    [string autorelease];
+    NSMutableAttributedString* string = [[[NSMutableAttributedString alloc] initWithString:@"TESTTESTTEST"] autorelease];
     [string setAttributes:@{ static_cast<NSString*>(kCTKernAttributeName) : [NSNumber numberWithFloat:0.0f] } range:NSMakeRange(0, 4)];
     [string setAttributes:@{ static_cast<NSString*>(kCTKernAttributeName) : [NSNumber numberWithFloat:2.0f] } range:NSMakeRange(4, 4)];
     [string setAttributes:@{ static_cast<NSString*>(kCTKernAttributeName) : [NSNumber numberWithFloat:-2.0f] } range:NSMakeRange(8, 4)];
