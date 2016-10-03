@@ -284,9 +284,11 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
                                                    longestEffectiveRange:&attributeRange
                                                                  inRange:{ i, [ts->_attributedString length] - i }];
 
+        const DWRITE_TEXT_RANGE dwriteRange = { attributeRange.location, attributeRange.length };
         CTFontRef font = static_cast<CTFontRef>([attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
+        CGFloat fontSize = kCTFontSystemFontSize;
         if (font != nil) {
-            CGFloat fontSize = CTFontGetSize(font);
+            fontSize = CTFontGetSize(font);
             DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_REGULAR;
             DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
             DWRITE_FONT_STRETCH stretch = DWRITE_FONT_STRETCH_NORMAL;
@@ -295,12 +297,36 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
             std::vector<wchar_t> familyName(CFStringGetLength(fontFamilyName) + 1);
             CFStringGetCharacters(fontFamilyName, CFRangeMake(0, familyName.size()), reinterpret_cast<UniChar*>(familyName.data()));
 
-            const DWRITE_TEXT_RANGE dwriteRange = { attributeRange.location, attributeRange.length };
             THROW_IF_FAILED(textLayout->SetFontSize(fontSize, dwriteRange));
             THROW_IF_FAILED(textLayout->SetFontWeight(weight, dwriteRange));
             THROW_IF_FAILED(textLayout->SetFontStretch(stretch, dwriteRange));
             THROW_IF_FAILED(textLayout->SetFontStyle(style, dwriteRange));
             THROW_IF_FAILED(textLayout->SetFontFamilyName(familyName.data(), dwriteRange));
+        }
+
+        CFNumberRef extraKerningRef = static_cast<CFNumberRef>([attribs objectForKey:static_cast<NSString*>(kCTKernAttributeName)]);
+        if (extraKerningRef) {
+            ComPtr<IDWriteTextLayout1> textLayout1;
+            THROW_IF_FAILED(textLayout.As(&textLayout1));
+            CGFloat leadingSpacing, trailingSpacing, minimumAdvanceWidth;
+            THROW_IF_FAILED(
+                textLayout1->GetCharacterSpacing(dwriteRange.startPosition, &leadingSpacing, &trailingSpacing, &minimumAdvanceWidth));
+
+            CGFloat extraKerning;
+            CFNumberGetValue(extraKerningRef, kCFNumberFloatType, &extraKerning);
+            trailingSpacing += extraKerning;
+
+            THROW_IF_FAILED(textLayout1->SetCharacterSpacing(leadingSpacing, trailingSpacing, minimumAdvanceWidth, dwriteRange));
+
+            // Setting kern disables default kerning
+            ComPtr<IDWriteTypography> typography;
+            THROW_IF_FAILED(textLayout->GetTypography(dwriteRange.startPosition, &typography));
+            if (!typography.Get()) {
+                THROW_IF_FAILED(dwriteFactory->CreateTypography(&typography));
+            }
+
+            THROW_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_KERNING, 0 }));
+            THROW_IF_FAILED(textLayout->SetTypography(typography.Get(), dwriteRange));
         }
     }
     return textLayout;

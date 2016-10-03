@@ -32,6 +32,7 @@
     UIColor* color = [UIColor blueColor];
 
     CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, color.CGColor);
 
     // Aligns origin for our frame
     CGContextTranslateCTM(context, 0.0f, self.bounds.size.height);
@@ -57,8 +58,8 @@
     // Make dictionary for attributed string with font, color, and alignment
     NSDictionary* attributesDict = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)myCFFont,
                                                                               (id)kCTFontAttributeName,
-                                                                              color.CGColor,
-                                                                              (id)kCTForegroundColorAttributeName,
+                                                                              kCFBooleanTrue,
+                                                                              (id)kCTForegroundColorFromContextAttributeName,
                                                                               (__bridge id)paragraphStyle,
                                                                               (id)kCTParagraphStyleAttributeName,
                                                                               nil];
