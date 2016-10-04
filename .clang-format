@@ -60,4 +60,5 @@ SpaceBeforeAssignmentOperators: true
 
 ContinuationIndentWidth: 4
 SpaceBeforeParens: ControlStatements
+SortIncludes: false
 ...
