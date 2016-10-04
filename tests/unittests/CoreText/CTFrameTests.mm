@@ -146,16 +146,8 @@ TEST(CTFrame, GetLineOrigins) {
 
     std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });
     CTFrameGetLineOrigins(frame, CFRangeMake(-110, 0), origins.data());
-    EXPECT_NEAR(0.0f, origins[0].x, c_errorDelta);
-    EXPECT_NEAR(43.1641f, origins[0].y, c_errorDelta);
-    EXPECT_NEAR(0.0f, origins[1].x, c_errorDelta);
-    EXPECT_NEAR(96.3672f, origins[1].y, c_errorDelta);
-    EXPECT_NEAR(0.0f, origins[2].x, c_errorDelta);
-    EXPECT_NEAR(149.5703f, origins[2].y, c_errorDelta);
-    EXPECT_NEAR(0.0f, origins[3].x, c_errorDelta);
-    EXPECT_NEAR(202.7734f, origins[3].y, c_errorDelta);
-    EXPECT_EQ(c_arbitraryFloat, origins[4].x);
-    EXPECT_EQ(c_arbitraryFloat, origins[4].y);
+    EXPECT_EQ(c_arbitraryFloat, origins[0].x);
+    EXPECT_EQ(c_arbitraryFloat, origins[0].y);
 
     std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });
     CTFrameGetLineOrigins(frame, CFRangeMake(0, 0), origins.data());
@@ -172,16 +164,8 @@ TEST(CTFrame, GetLineOrigins) {
 
     std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });
     CTFrameGetLineOrigins(frame, CFRangeMake(0, 525600), origins.data());
-    EXPECT_NEAR(0.0f, origins[0].x, c_errorDelta);
-    EXPECT_NEAR(43.1641f, origins[0].y, c_errorDelta);
-    EXPECT_NEAR(0.0f, origins[1].x, c_errorDelta);
-    EXPECT_NEAR(96.3672f, origins[1].y, c_errorDelta);
-    EXPECT_NEAR(0.0f, origins[2].x, c_errorDelta);
-    EXPECT_NEAR(149.5703f, origins[2].y, c_errorDelta);
-    EXPECT_NEAR(0.0f, origins[3].x, c_errorDelta);
-    EXPECT_NEAR(202.7734f, origins[3].y, c_errorDelta);
-    EXPECT_EQ(c_arbitraryFloat, origins[4].x);
-    EXPECT_EQ(c_arbitraryFloat, origins[4].y);
+    EXPECT_EQ(c_arbitraryFloat, origins[0].x);
+    EXPECT_EQ(c_arbitraryFloat, origins[0].y);
 
     std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });
     CTFrameGetLineOrigins(frame, CFRangeMake(1, 2), origins.data());
