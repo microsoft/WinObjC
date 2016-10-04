@@ -197,6 +197,7 @@ TEST(CTRun, GetAdvances) {
     EXPECT_EQ(c_arbitraryFloat, advances[5].height);
     EXPECT_EQ(c_arbitraryFloat, advances[5].width);
 
+    // Length greater than available advances, does nothing
     std::fill(advances.begin(), advances.end(), CGSizeMake(c_arbitraryFloat, c_arbitraryFloat));
     CTRunGetAdvances(run, CFRangeMake(0, 5000), advances.data());
     EXPECT_EQ(c_arbitraryFloat, advances[0].height);
@@ -278,6 +279,7 @@ TEST(CTRun, GetPositions) {
     EXPECT_EQ(c_arbitraryFloat, positions[6].x);
     EXPECT_EQ(c_arbitraryFloat, positions[6].y);
 
+    // Location larger than available positions, does nothing
     std::fill(positions.begin(), positions.end(), CGPointMake(c_arbitraryFloat, c_arbitraryFloat));
     CTRunGetPositions(run, CFRangeMake(10, 0), positions.data());
     EXPECT_EQ(c_arbitraryFloat, positions[0].x);
@@ -285,10 +287,13 @@ TEST(CTRun, GetPositions) {
     EXPECT_EQ(c_arbitraryFloat, positions[6].x);
     EXPECT_EQ(c_arbitraryFloat, positions[6].y);
 
+    // Length larger than available positions, does nothing
     std::fill(positions.begin(), positions.end(), CGPointMake(c_arbitraryFloat, c_arbitraryFloat));
     CTRunGetPositions(run, CFRangeMake(0, 5000), positions.data());
     EXPECT_NEAR(c_arbitraryFloat, positions[0].x, c_errorDelta);
     EXPECT_NEAR(c_arbitraryFloat, positions[0].y, c_errorDelta);
+    EXPECT_NEAR(c_arbitraryFloat, positions[6].x, c_errorDelta);
+    EXPECT_NEAR(c_arbitraryFloat, positions[6].y, c_errorDelta);
 
     std::fill(positions.begin(), positions.end(), CGPointMake(c_arbitraryFloat, c_arbitraryFloat));
     CTRunGetPositions(run, CFRangeMake(1, 2), positions.data());

@@ -59,7 +59,7 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef li
 @end
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string) {
     return string ? static_cast<CTLineRef>(_DWriteGetLine(string)) : nil;

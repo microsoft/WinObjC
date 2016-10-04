@@ -216,10 +216,7 @@ double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, C
     }
 
     CTFontRef font = static_cast<CTFontRef>([curRun->_attributes objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
-    CGFloat pointSize = kCTFontSystemFontSize;
-    if (font) {
-        pointSize = CTFontGetSize(font);
-    }
+    CGFloat pointSize = font ? CTFontGetSize(font) : kCTFontSystemFontSize;
 
     DWRITE_FONT_METRICS fontMetrics;
     curRun->_dwriteGlyphRun.fontFace->GetMetrics(&fontMetrics);

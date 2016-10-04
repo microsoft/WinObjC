@@ -134,16 +134,20 @@ TEST(CTFrame, GetLineOrigins) {
     CFAutorelease(framesetter);
     CFAutorelease(frame);
 
+    // Location greater than available lines, does nothing
     std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });
     CTFrameGetLineOrigins(frame, CFRangeMake(110, 0), origins.data());
     EXPECT_EQ(c_arbitraryFloat, origins[0].x);
     EXPECT_EQ(c_arbitraryFloat, origins[0].y);
 
+    // Length negative, does nothing
     std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });
     CTFrameGetLineOrigins(frame, CFRangeMake(0, -110), origins.data());
     EXPECT_EQ(c_arbitraryFloat, origins[0].x);
     EXPECT_EQ(c_arbitraryFloat, origins[0].y);
 
+    // Location negative, does nothing
+    std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });
     std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });
     CTFrameGetLineOrigins(frame, CFRangeMake(-110, 0), origins.data());
     EXPECT_EQ(c_arbitraryFloat, origins[0].x);
@@ -162,6 +166,7 @@ TEST(CTFrame, GetLineOrigins) {
     EXPECT_EQ(c_arbitraryFloat, origins[4].x);
     EXPECT_EQ(c_arbitraryFloat, origins[4].y);
 
+    // Length greater than available lines, does nothing
     std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });
     CTFrameGetLineOrigins(frame, CFRangeMake(0, 525600), origins.data());
     EXPECT_EQ(c_arbitraryFloat, origins[0].x);
