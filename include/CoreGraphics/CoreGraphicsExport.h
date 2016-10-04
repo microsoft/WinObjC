@@ -39,7 +39,7 @@
 #endif
 #endif
 
-// import CoreGraphis opaque types here to avoid ugly public header
+// import CoreGraphics opaque types here to avoid ugly public header
 // and to avoid compiler errors caused by import ordering
 typedef struct __CGColor* CGColorRef;
 typedef struct __CGColorSpace* CGColorSpaceRef;

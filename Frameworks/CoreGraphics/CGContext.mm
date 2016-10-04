@@ -33,8 +33,89 @@
 #import "CGSurfaceInfoInternal.h"
 #import <pthread.h>
 
+#import <CFRuntime.h>
+
+#include <COMIncludes.h>
+#import <d2d1.h>
+#import <d2d1_1.h>
+#import <wrl/client.h>
+#include <COMIncludes_end.h>
+
+using namespace Microsoft::WRL;
+
+struct __CGContextImpl {
+    ComPtr<ID2D1RenderTarget> _renderTarget;
+};
+
+struct __CGContext {
+    CFRuntimeBase _base;
+
+    // Use an inline impl struct so that we don't need to placement new each element.
+    __CGContextImpl _impl;
+    CGContextImpl* (*Backing)(void);
+};
+
+static Boolean __CGContextEqual(CFTypeRef cf1, CFTypeRef cf2) {
+    return FALSE;
+}
+
+static CFHashCode __CGContextHash(CFTypeRef cf) {
+    return (CFHashCode)cf;
+}
+
+static CFStringRef __CGContextCopyDescription(CFTypeRef cf) {
+    return CFStringCreateWithFormat(kCFAllocatorSystemDefault, NULL, CFSTR("<CGContext %p>"), cf);
+}
+
+static void __CGContextInit(CFTypeRef cf) {
+    CGContextRef context = (CGContextRef)cf;
+    struct __CGContext* mutableContext = const_cast<struct __CGContext*>(context);
+    new (std::addressof(mutableContext->_impl)) __CGContextImpl();
+}
+
+static void __CGContextDeallocate(CFTypeRef cf) {
+    CGContextRef context = (CGContextRef)cf;
+    context->_impl.~__CGContextImpl();
+}
+
+static CFTypeID __kCGContextTypeID = _kCFRuntimeNotATypeID;
+
+static const CFRuntimeClass __CGContextClass = { 0,
+                                                 "CGContext",
+                                                 __CGContextInit, // init
+                                                 NULL,
+                                                 __CGContextDeallocate, // deallocate
+                                                 NULL,
+                                                 NULL,
+                                                 NULL,
+                                                 __CGContextCopyDescription };
+
+/**
+ @Status Interoperable
+*/
+CFTypeID CGContextGetTypeID() {
+    static dispatch_once_t initOnce = 0;
+    dispatch_once(&initOnce, ^{
+        __kCGContextTypeID = _CFRuntimeRegisterClass(&__CGContextClass);
+    });
+    return __kCGContextTypeID;
+}
+
 static const wchar_t* TAG = L"CGContext";
 
+template <typename T, typename B = decltype(std::declval<T>()->_base)>
+T _CFRuntimeCreateInstance(CFTypeID typeID, CFAllocatorRef allocator = kCFAllocatorDefault) {
+    return static_cast<T>(const_cast<void*>(_CFRuntimeCreateInstance(allocator, typeID, sizeof(T) - sizeof(B), nullptr)));
+}
+
+CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget) {
+    THROW_HR_IF_NULL(E_INVALIDARG, renderTarget);
+    CGContextRef context = _CFRuntimeCreateInstance<CGContextRef>(CGContextGetTypeID());
+    context->_impl._renderTarget = renderTarget;
+    return context;
+}
+
+#if 0
 #define DEBUG_CONTEXT_COUNT
 
 int contextCount = 0;
@@ -74,6 +155,7 @@ __CGContext::~__CGContext() {
 CGContextImpl* __CGContext::Backing() {
     return _backing;
 }
+#endif
 
 /**
  @Status Interoperable
@@ -789,6 +871,7 @@ CGContextRef CGBitmapContextCreate(void* data,
                                    size_t bytesPerRow,
                                    CGColorSpaceRef colorSpace,
                                    CGBitmapInfo bitmapInfo) {
+#if 0
     CGImageRef newImage = NULL;
     DWORD alphaType = bitmapInfo & kCGBitmapAlphaInfoMask;
 
@@ -832,6 +915,8 @@ CGContextRef CGBitmapContextCreate(void* data,
     }
 
     return ret;
+#endif
+    return nullptr;
 }
 
 /**
@@ -1033,6 +1118,7 @@ CGImageRef CGBitmapContextGetImage(CGContextRef ctx) {
 }
 
 CGContextRef _CGBitmapContextCreateWithTexture(int width, int height, DisplayTexture* texture, DisplayTextureLocking* locking) {
+#if 0
     CGImageRef newImage = nullptr;
     __CGSurfaceInfo surfaceInfo = _CGSurfaceInfoInit(width, height, _ColorARGB);
 
@@ -1046,15 +1132,20 @@ CGContextRef _CGBitmapContextCreateWithTexture(int width, int height, DisplayTex
     CGImageRelease(newImage);
 
     return context;
+#endif
+    return nullptr;
 }
 
 CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurfaceFormat fmt) {
+#if 0
     __CGSurfaceInfo surfaceInfo = _CGSurfaceInfoInit(width, height, fmt);
     CGImageRef newImage = new CGBitmapImage(surfaceInfo);
     CGContextRef context = new __CGContext(newImage);
     CGImageRelease(newImage);
 
     return context;
+#endif
+    return nullptr;
 }
 
 /**
@@ -1110,15 +1201,6 @@ void CGContextFillRects(CGContextRef c, const CGRect* rects, size_t count) {
  @Notes
 */
 CGPoint CGContextGetPathCurrentPoint(CGContextRef c) {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-CFTypeID CGContextGetTypeID() {
     UNIMPLEMENTED();
     return StubReturn();
 }
