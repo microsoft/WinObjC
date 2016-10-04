@@ -47,6 +47,6 @@ TEST(UITextField, GetXamlElement) {
                       ASSERT_TRUE(backingElement);
 
                       // TODO: Fix up when UITextField moves fully to XAML
-                      ASSERT_TRUE([backingElement isKindOfClass:[WXCTextBox class]]);
+                      ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
                   });
 }

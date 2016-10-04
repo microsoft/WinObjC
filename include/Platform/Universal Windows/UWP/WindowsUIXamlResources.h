@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_RESOURCES_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_RESOURCES_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Resources.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXRCustomXamlResourceLoader;
@@ -44,7 +48,7 @@
 #ifndef __WUXRCustomXamlResourceLoader_DEFINED__
 #define __WUXRCustomXamlResourceLoader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_RESOURCES_EXPORT
 @interface WUXRCustomXamlResourceLoader : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

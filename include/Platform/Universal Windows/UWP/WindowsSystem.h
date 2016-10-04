@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WSAppMemoryUsageLimitChangingEventArgs, WSAppMemoryReport, WSProcessMemoryReport, WSMemoryManager, WSProtocolForResultsOperation,
@@ -322,7 +326,7 @@ typedef unsigned WSLaunchUriStatus;
 #ifndef __WSAppMemoryUsageLimitChangingEventArgs_DEFINED__
 #define __WSAppMemoryUsageLimitChangingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSAppMemoryUsageLimitChangingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -337,7 +341,7 @@ WINRT_EXPORT
 #ifndef __WSAppMemoryReport_DEFINED__
 #define __WSAppMemoryReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSAppMemoryReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -354,7 +358,7 @@ WINRT_EXPORT
 #ifndef __WSProcessMemoryReport_DEFINED__
 #define __WSProcessMemoryReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSProcessMemoryReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -369,7 +373,7 @@ WINRT_EXPORT
 #ifndef __WSMemoryManager_DEFINED__
 #define __WSMemoryManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSMemoryManager : RTObject
 + (WSAppMemoryReport*)getAppMemoryReport;
 + (WSProcessMemoryReport*)getProcessMemoryReport;
@@ -390,7 +394,7 @@ WINRT_EXPORT
 #ifndef __WSProtocolForResultsOperation_DEFINED__
 #define __WSProtocolForResultsOperation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSProtocolForResultsOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -404,7 +408,7 @@ WINRT_EXPORT
 #ifndef __WSUserWatcher_DEFINED__
 #define __WSUserWatcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSUserWatcher : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -434,7 +438,7 @@ WINRT_EXPORT
 #ifndef __WSUser_DEFINED__
 #define __WSUser_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSUser : RTObject
 + (WSUserWatcher*)createWatcher;
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WSUser* */))success failure:(void (^)(NSError*))failure;
@@ -465,7 +469,7 @@ WINRT_EXPORT
 #ifndef __WSUserChangedEventArgs_DEFINED__
 #define __WSUserChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSUserChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -479,7 +483,7 @@ WINRT_EXPORT
 #ifndef __WSUserAuthenticationStatusChangingEventArgs_DEFINED__
 #define __WSUserAuthenticationStatusChangingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSUserAuthenticationStatusChangingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -496,7 +500,7 @@ WINRT_EXPORT
 #ifndef __WSUserAuthenticationStatusChangeDeferral_DEFINED__
 #define __WSUserAuthenticationStatusChangeDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSUserAuthenticationStatusChangeDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -510,7 +514,7 @@ WINRT_EXPORT
 #ifndef __WSKnownUserProperties_DEFINED__
 #define __WSKnownUserProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSKnownUserProperties : RTObject
 + (NSString*)accountName;
 + (NSString*)displayName;
@@ -529,7 +533,7 @@ WINRT_EXPORT
 #ifndef __WSLaunchUriResult_DEFINED__
 #define __WSLaunchUriResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSLaunchUriResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -544,7 +548,7 @@ WINRT_EXPORT
 #ifndef __WSLauncherUIOptions_DEFINED__
 #define __WSLauncherUIOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSLauncherUIOptions : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -560,7 +564,7 @@ WINRT_EXPORT
 #ifndef __WSLauncherOptions_DEFINED__
 #define __WSLauncherOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSLauncherOptions : RTObject <WSILauncherViewOptions>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -584,7 +588,7 @@ WINRT_EXPORT
 #ifndef __WSFolderLauncherOptions_DEFINED__
 #define __WSFolderLauncherOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSFolderLauncherOptions : RTObject <WSILauncherViewOptions>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -600,7 +604,7 @@ WINRT_EXPORT
 #ifndef __WSLauncher_DEFINED__
 #define __WSLauncher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSLauncher : RTObject
 + (void)launchFolderAsync:(RTObject<WSIStorageFolder>*)folder success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (void)launchFolderWithOptionsAsync:(RTObject<WSIStorageFolder>*)folder

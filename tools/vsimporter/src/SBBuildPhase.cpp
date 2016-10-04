@@ -22,6 +22,7 @@
 #include "SBFrameworksBuildPhase.h"
 #include "SBResourcesBuildPhase.h"
 #include "SBSourcesBuildPhase.h"
+#include "SBHeadersBuildPhase.h"
 #include "SBNativeTarget.h"
 #include "SBBuildPhase.h"
 #include "xc2vs.h"
@@ -43,6 +44,8 @@ void SBBuildPhase::create(const BuildPhaseList& buildPhaseList, SBTarget& parent
       resourcesPhase = phase = SBResourcesBuildPhase::create(buildPhaseList[i], parentTarget);
     else if (isa == "PBXSourcesBuildPhase")
       sourcesPhase = phase = SBSourcesBuildPhase::create(buildPhaseList[i], parentTarget);
+    else if (isa == "PBXHeadersBuildPhase")
+      phase = SBHeadersBuildPhase::create(buildPhaseList[i], parentTarget);
     else
     {
         SBLog::warning() << "Ignoring unsupported " << isa << " in \"" << parentTarget.getName() << "\" target." << std::endl;
@@ -72,7 +75,7 @@ void SBBuildPhase::writeVSFileDescriptions(VCProject& proj, const String& defaul
     return;
 
   const BuildSettings& projBS = m_parentTarget.getProject().getBuildSettings();
-  VCItemHint itemHint = { defaultGroup, "" };
+  VCItemHint itemHint = { defaultGroup, "", "" };
   for (auto buildFile : m_phase->getBuildFileList()) {
     addBuildFileToVS(buildFile, proj, projBS, &itemHint);
   }

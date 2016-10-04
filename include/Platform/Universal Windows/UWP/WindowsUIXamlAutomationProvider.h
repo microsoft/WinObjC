@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXAPIRawElementProviderSimple;
@@ -537,7 +541,7 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -558,7 +562,7 @@ WINRT_EXPORT
 #ifndef __WUXAPIRawElementProviderSimple_DEFINED__
 #define __WUXAPIRawElementProviderSimple_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXAPIRawElementProviderSimple : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

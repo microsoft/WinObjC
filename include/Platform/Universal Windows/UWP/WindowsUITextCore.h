@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
+#define OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Text_Core.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUTCCoreTextTextRequest, WUTCCoreTextSelectionRequest, WUTCCoreTextLayoutBounds, WUTCCoreTextLayoutRequest,
@@ -148,7 +152,7 @@ typedef unsigned WUTCCoreTextFormatUpdatingReason;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Text.Core.CoreTextRange
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextRange : NSObject
 + (instancetype) new;
 @property int startCaretPosition;
@@ -159,7 +163,7 @@ WINRT_EXPORT
 #ifndef __WUTCCoreTextTextRequest_DEFINED__
 #define __WUTCCoreTextTextRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextTextRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -176,7 +180,7 @@ WINRT_EXPORT
 #ifndef __WUTCCoreTextSelectionRequest_DEFINED__
 #define __WUTCCoreTextSelectionRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextSelectionRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -192,7 +196,7 @@ WINRT_EXPORT
 #ifndef __WUTCCoreTextLayoutBounds_DEFINED__
 #define __WUTCCoreTextLayoutBounds_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextLayoutBounds : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -207,7 +211,7 @@ WINRT_EXPORT
 #ifndef __WUTCCoreTextLayoutRequest_DEFINED__
 #define __WUTCCoreTextLayoutRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextLayoutRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -224,7 +228,7 @@ WINRT_EXPORT
 #ifndef __WUTCCoreTextCompositionSegment_DEFINED__
 #define __WUTCCoreTextCompositionSegment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextCompositionSegment : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -239,7 +243,7 @@ WINRT_EXPORT
 #ifndef __WUTCCoreTextEditContext_DEFINED__
 #define __WUTCCoreTextEditContext_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextEditContext : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -279,7 +283,7 @@ WINRT_EXPORT
 #ifndef __WUTCCoreTextTextRequestedEventArgs_DEFINED__
 #define __WUTCCoreTextTextRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextTextRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -293,7 +297,7 @@ WINRT_EXPORT
 #ifndef __WUTCCoreTextSelectionRequestedEventArgs_DEFINED__
 #define __WUTCCoreTextSelectionRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextSelectionRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -307,7 +311,7 @@ WINRT_EXPORT
 #ifndef __WUTCCoreTextLayoutRequestedEventArgs_DEFINED__
 #define __WUTCCoreTextLayoutRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextLayoutRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -321,7 +325,7 @@ WINRT_EXPORT
 #ifndef __WUTCCoreTextTextUpdatingEventArgs_DEFINED__
 #define __WUTCCoreTextTextUpdatingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextTextUpdatingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -341,7 +345,7 @@ WINRT_EXPORT
 #ifndef __WUTCCoreTextSelectionUpdatingEventArgs_DEFINED__
 #define __WUTCCoreTextSelectionUpdatingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextSelectionUpdatingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -358,7 +362,7 @@ WINRT_EXPORT
 #ifndef __WUTCCoreTextFormatUpdatingEventArgs_DEFINED__
 #define __WUTCCoreTextFormatUpdatingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextFormatUpdatingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -380,7 +384,7 @@ WINRT_EXPORT
 #ifndef __WUTCCoreTextCompositionStartedEventArgs_DEFINED__
 #define __WUTCCoreTextCompositionStartedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextCompositionStartedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -395,7 +399,7 @@ WINRT_EXPORT
 #ifndef __WUTCCoreTextCompositionCompletedEventArgs_DEFINED__
 #define __WUTCCoreTextCompositionCompletedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextCompositionCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -411,7 +415,7 @@ WINRT_EXPORT
 #ifndef __WUTCCoreTextServicesManager_DEFINED__
 #define __WUTCCoreTextServicesManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextServicesManager : RTObject
 + (WUTCCoreTextServicesManager*)getForCurrentView;
 #if defined(__cplusplus)
@@ -429,7 +433,7 @@ WINRT_EXPORT
 #ifndef __WUTCCoreTextServicesConstants_DEFINED__
 #define __WUTCCoreTextServicesConstants_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextServicesConstants : RTObject
 + (wchar_t)hiddenCharacter;
 @end

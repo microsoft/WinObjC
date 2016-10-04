@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Media_Core_Capture_Devices_Protection_Playback.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WMPPlaybackMediaMarker, WMPPlaybackMediaMarkerSequence, WMPMediaPlayerFailedEventArgs, WMPMediaPlayerRateChangedEventArgs,
@@ -140,7 +144,7 @@ typedef unsigned WMPTimedMetadataTrackPresentationMode;
 #ifndef __WMPPlaybackMediaMarker_DEFINED__
 #define __WMPPlaybackMediaMarker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPPlaybackMediaMarker : RTObject
 + (WMPPlaybackMediaMarker*)makeFromTime:(WFTimeSpan*)value ACTIVATOR;
 + (WMPPlaybackMediaMarker*)make:(WFTimeSpan*)value mediaMarketType:(NSString*)mediaMarketType text:(NSString*)text ACTIVATOR;
@@ -158,7 +162,7 @@ WINRT_EXPORT
 #ifndef __WMPPlaybackMediaMarkerSequence_DEFINED__
 #define __WMPPlaybackMediaMarkerSequence_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPPlaybackMediaMarkerSequence : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -174,7 +178,7 @@ WINRT_EXPORT
 #ifndef __WMPMediaPlayerFailedEventArgs_DEFINED__
 #define __WMPMediaPlayerFailedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPMediaPlayerFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -190,7 +194,7 @@ WINRT_EXPORT
 #ifndef __WMPMediaPlayerRateChangedEventArgs_DEFINED__
 #define __WMPMediaPlayerRateChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPMediaPlayerRateChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -204,7 +208,7 @@ WINRT_EXPORT
 #ifndef __WMPPlaybackMediaMarkerReachedEventArgs_DEFINED__
 #define __WMPPlaybackMediaMarkerReachedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPPlaybackMediaMarkerReachedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -218,7 +222,7 @@ WINRT_EXPORT
 #ifndef __WMPMediaPlayerDataReceivedEventArgs_DEFINED__
 #define __WMPMediaPlayerDataReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPMediaPlayerDataReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -232,7 +236,7 @@ WINRT_EXPORT
 #ifndef __WMPMediaPlayer_DEFINED__
 #define __WMPMediaPlayer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPMediaPlayer : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -289,7 +293,7 @@ WINRT_EXPORT
 #ifndef __WMPBackgroundMediaPlayer_DEFINED__
 #define __WMPBackgroundMediaPlayer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPBackgroundMediaPlayer : RTObject
 + (void)sendMessageToBackground:(WFCValueSet*)value;
 + (void)sendMessageToForeground:(WFCValueSet*)value;
@@ -308,7 +312,7 @@ WINRT_EXPORT
 #ifndef __WMPMediaPlaybackItem_DEFINED__
 #define __WMPMediaPlaybackItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPMediaPlaybackItem : RTObject <WMPIMediaPlaybackSource>
 + (WMPMediaPlaybackItem*)make:(WMCMediaSource*)source ACTIVATOR;
 #if defined(__cplusplus)
@@ -344,7 +348,7 @@ WINRT_EXPORT
 #ifndef __WMPMediaPlaybackAudioTrackList_DEFINED__
 #define __WMPMediaPlaybackAudioTrackList_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPMediaPlaybackAudioTrackList : RTObject <WMCISingleSelectMediaTrackList>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -365,7 +369,7 @@ WINRT_EXPORT
 #ifndef __WMPMediaPlaybackVideoTrackList_DEFINED__
 #define __WMPMediaPlaybackVideoTrackList_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPMediaPlaybackVideoTrackList : RTObject <WMCISingleSelectMediaTrackList>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -386,7 +390,7 @@ WINRT_EXPORT
 #ifndef __WMPMediaPlaybackTimedMetadataTrackList_DEFINED__
 #define __WMPMediaPlaybackTimedMetadataTrackList_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPMediaPlaybackTimedMetadataTrackList : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -409,7 +413,7 @@ WINRT_EXPORT
 #ifndef __WMPMediaPlaybackItemError_DEFINED__
 #define __WMPMediaPlaybackItemError_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPMediaPlaybackItemError : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -424,7 +428,7 @@ WINRT_EXPORT
 #ifndef __WMPMediaPlaybackList_DEFINED__
 #define __WMPMediaPlaybackList_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPMediaPlaybackList : RTObject <WMPIMediaPlaybackSource>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -452,7 +456,7 @@ WINRT_EXPORT
 #ifndef __WMPMediaPlaybackItemFailedEventArgs_DEFINED__
 #define __WMPMediaPlaybackItemFailedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPMediaPlaybackItemFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -467,7 +471,7 @@ WINRT_EXPORT
 #ifndef __WMPCurrentMediaPlaybackItemChangedEventArgs_DEFINED__
 #define __WMPCurrentMediaPlaybackItemChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPCurrentMediaPlaybackItemChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -482,7 +486,7 @@ WINRT_EXPORT
 #ifndef __WMPMediaPlaybackItemOpenedEventArgs_DEFINED__
 #define __WMPMediaPlaybackItemOpenedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPMediaPlaybackItemOpenedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -496,7 +500,7 @@ WINRT_EXPORT
 #ifndef __WMPTimedMetadataPresentationModeChangedEventArgs_DEFINED__
 #define __WMPTimedMetadataPresentationModeChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPTimedMetadataPresentationModeChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

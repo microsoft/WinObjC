@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Devices_HumanInterfaceDevice.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDHHidDevice, WDHHidInputReport, WDHHidFeatureReport, WDHHidOutputReport, WDHHidBooleanControlDescription,
@@ -68,7 +72,7 @@ typedef unsigned WDHHidCollectionType;
 #ifndef __WDHHidDevice_DEFINED__
 #define __WDHHidDevice_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidDevice : RTObject <WFIClosable>
 + (NSString*)getDeviceSelector:(unsigned short)usagePage usageId:(unsigned short)usageId;
 + (NSString*)getDeviceSelectorVidPid:(unsigned short)usagePage
@@ -118,7 +122,7 @@ WINRT_EXPORT
 #ifndef __WDHHidInputReport_DEFINED__
 #define __WDHHidInputReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidInputReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -139,7 +143,7 @@ WINRT_EXPORT
 #ifndef __WDHHidFeatureReport_DEFINED__
 #define __WDHHidFeatureReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidFeatureReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -158,7 +162,7 @@ WINRT_EXPORT
 #ifndef __WDHHidOutputReport_DEFINED__
 #define __WDHHidOutputReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidOutputReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -177,7 +181,7 @@ WINRT_EXPORT
 #ifndef __WDHHidBooleanControlDescription_DEFINED__
 #define __WDHHidBooleanControlDescription_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidBooleanControlDescription : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -196,7 +200,7 @@ WINRT_EXPORT
 #ifndef __WDHHidNumericControlDescription_DEFINED__
 #define __WDHHidNumericControlDescription_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidNumericControlDescription : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -225,7 +229,7 @@ WINRT_EXPORT
 #ifndef __WDHHidInputReportReceivedEventArgs_DEFINED__
 #define __WDHHidInputReportReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidInputReportReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -239,7 +243,7 @@ WINRT_EXPORT
 #ifndef __WDHHidCollection_DEFINED__
 #define __WDHHidCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -256,7 +260,7 @@ WINRT_EXPORT
 #ifndef __WDHHidBooleanControl_DEFINED__
 #define __WDHHidBooleanControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidBooleanControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -274,7 +278,7 @@ WINRT_EXPORT
 #ifndef __WDHHidNumericControl_DEFINED__
 #define __WDHHidNumericControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidNumericControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

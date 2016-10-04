@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
+#define OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Networking_Proximity.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WNPProximityMessage, WNPProximityDevice, WNPTriggeredConnectionStateChangedEventArgs, WNPPeerInformation,
@@ -124,7 +128,7 @@ typedef void (^WNPDeviceDepartedEventHandler)(WNPProximityDevice* sender);
 #ifndef __WNPProximityMessage_DEFINED__
 #define __WNPProximityMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 @interface WNPProximityMessage : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -141,7 +145,7 @@ WINRT_EXPORT
 #ifndef __WNPProximityDevice_DEFINED__
 #define __WNPProximityDevice_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 @interface WNPProximityDevice : RTObject
 + (NSString*)getDeviceSelector;
 + (WNPProximityDevice*)getDefault;
@@ -177,7 +181,7 @@ WINRT_EXPORT
 #ifndef __WNPTriggeredConnectionStateChangedEventArgs_DEFINED__
 #define __WNPTriggeredConnectionStateChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 @interface WNPTriggeredConnectionStateChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -193,7 +197,7 @@ WINRT_EXPORT
 #ifndef __WNPPeerInformation_DEFINED__
 #define __WNPPeerInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 @interface WNPPeerInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -211,7 +215,7 @@ WINRT_EXPORT
 #ifndef __WNPConnectionRequestedEventArgs_DEFINED__
 #define __WNPConnectionRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 @interface WNPConnectionRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -225,7 +229,7 @@ WINRT_EXPORT
 #ifndef __WNPPeerWatcher_DEFINED__
 #define __WNPPeerWatcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 @interface WNPPeerWatcher : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -251,7 +255,7 @@ WINRT_EXPORT
 #ifndef __WNPPeerFinder_DEFINED__
 #define __WNPPeerFinder_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 @interface WNPPeerFinder : RTObject
 + (WNPPeerWatcher*)createWatcher;
 + (void)start;

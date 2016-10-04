@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Chat.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WACChatMessageTransportConfiguration, WACChatMessage, WACChatMessageChange, WACChatMessageChangeReader, WACChatMessageAttachment,
@@ -194,7 +198,7 @@ typedef unsigned WACChatItemKind;
 #ifndef __WACChatMessageTransportConfiguration_DEFINED__
 #define __WACChatMessageTransportConfiguration_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageTransportConfiguration : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -212,7 +216,7 @@ WINRT_EXPORT
 #ifndef __WACChatMessage_DEFINED__
 #define __WACChatMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessage : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -253,7 +257,7 @@ WINRT_EXPORT
 #ifndef __WACChatMessageChange_DEFINED__
 #define __WACChatMessageChange_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageChange : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -268,7 +272,7 @@ WINRT_EXPORT
 #ifndef __WACChatMessageChangeReader_DEFINED__
 #define __WACChatMessageChangeReader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageChangeReader : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -284,7 +288,7 @@ WINRT_EXPORT
 #ifndef __WACChatMessageAttachment_DEFINED__
 #define __WACChatMessageAttachment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageAttachment : RTObject
 + (WACChatMessageAttachment*)makeChatMessageAttachment:(NSString*)mimeType
                                    dataStreamReference:(RTObject<WSSIRandomAccessStreamReference>*)dataStreamReference ACTIVATOR;
@@ -306,7 +310,7 @@ WINRT_EXPORT
 #ifndef __WACChatConversationThreadingInfo_DEFINED__
 #define __WACChatConversationThreadingInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatConversationThreadingInfo : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -325,7 +329,7 @@ WINRT_EXPORT
 #ifndef __WACChatRecipientDeliveryInfo_DEFINED__
 #define __WACChatRecipientDeliveryInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatRecipientDeliveryInfo : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -347,7 +351,7 @@ WINRT_EXPORT
 #ifndef __WACChatMessageChangeTracker_DEFINED__
 #define __WACChatMessageChangeTracker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageChangeTracker : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -363,7 +367,7 @@ WINRT_EXPORT
 #ifndef __WACChatMessageReader_DEFINED__
 #define __WACChatMessageReader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageReader : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -378,7 +382,7 @@ WINRT_EXPORT
 #ifndef __WACChatMessageValidationResult_DEFINED__
 #define __WACChatMessageValidationResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageValidationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -395,7 +399,7 @@ WINRT_EXPORT
 #ifndef __WACChatMessageStore_DEFINED__
 #define __WACChatMessageStore_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageStore : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -450,7 +454,7 @@ WINRT_EXPORT
 #ifndef __WACChatMessageChangedEventArgs_DEFINED__
 #define __WACChatMessageChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -464,7 +468,7 @@ WINRT_EXPORT
 #ifndef __WACChatConversation_DEFINED__
 #define __WACChatConversation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatConversation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -498,7 +502,7 @@ WINRT_EXPORT
 #ifndef __WACChatConversationReader_DEFINED__
 #define __WACChatConversationReader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatConversationReader : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -515,7 +519,7 @@ WINRT_EXPORT
 #ifndef __WACChatQueryOptions_DEFINED__
 #define __WACChatQueryOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatQueryOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -530,7 +534,7 @@ WINRT_EXPORT
 #ifndef __WACChatSearchReader_DEFINED__
 #define __WACChatSearchReader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatSearchReader : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -547,7 +551,7 @@ WINRT_EXPORT
 #ifndef __WACChatMessageStoreChangedEventArgs_DEFINED__
 #define __WACChatMessageStoreChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageStoreChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -562,7 +566,7 @@ WINRT_EXPORT
 #ifndef __WACChatMessageChangedDeferral_DEFINED__
 #define __WACChatMessageChangedDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageChangedDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -576,7 +580,7 @@ WINRT_EXPORT
 #ifndef __WACChatMessageTransport_DEFINED__
 #define __WACChatMessageTransport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageTransport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -596,7 +600,7 @@ WINRT_EXPORT
 #ifndef __WACChatCapabilities_DEFINED__
 #define __WACChatCapabilities_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatCapabilities : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -614,7 +618,7 @@ WINRT_EXPORT
 #ifndef __WACRemoteParticipantComposingChangedEventArgs_DEFINED__
 #define __WACRemoteParticipantComposingChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRemoteParticipantComposingChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -630,7 +634,7 @@ WINRT_EXPORT
 #ifndef __WACRcsEndUserMessageManager_DEFINED__
 #define __WACRcsEndUserMessageManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRcsEndUserMessageManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -646,7 +650,7 @@ WINRT_EXPORT
 #ifndef __WACRcsTransport_DEFINED__
 #define __WACRcsTransport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRcsTransport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -668,7 +672,7 @@ WINRT_EXPORT
 #ifndef __WACRcsTransportConfiguration_DEFINED__
 #define __WACRcsTransportConfiguration_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRcsTransportConfiguration : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -687,7 +691,7 @@ WINRT_EXPORT
 #ifndef __WACRcsServiceKindSupportedChangedEventArgs_DEFINED__
 #define __WACRcsServiceKindSupportedChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRcsServiceKindSupportedChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -701,7 +705,7 @@ WINRT_EXPORT
 #ifndef __WACRcsEndUserMessageAvailableEventArgs_DEFINED__
 #define __WACRcsEndUserMessageAvailableEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRcsEndUserMessageAvailableEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -716,7 +720,7 @@ WINRT_EXPORT
 #ifndef __WACRcsEndUserMessageAction_DEFINED__
 #define __WACRcsEndUserMessageAction_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRcsEndUserMessageAction : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -730,7 +734,7 @@ WINRT_EXPORT
 #ifndef __WACRcsEndUserMessage_DEFINED__
 #define __WACRcsEndUserMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRcsEndUserMessage : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -750,7 +754,7 @@ WINRT_EXPORT
 #ifndef __WACChatMessageManager_DEFINED__
 #define __WACChatMessageManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageManager : RTObject
 + (void)getTransportsAsyncWithSuccess:(void (^)(NSArray* /* WACChatMessageTransport* */))success failure:(void (^)(NSError*))failure;
 + (void)requestStoreAsyncWithSuccess:(void (^)(WACChatMessageStore*))success failure:(void (^)(NSError*))failure;
@@ -770,7 +774,7 @@ WINRT_EXPORT
 #ifndef __WACChatMessageNotificationTriggerDetails_DEFINED__
 #define __WACChatMessageNotificationTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageNotificationTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -788,7 +792,7 @@ WINRT_EXPORT
 #ifndef __WACChatMessageBlocking_DEFINED__
 #define __WACChatMessageBlocking_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatMessageBlocking : RTObject
 + (RTObject<WFIAsyncAction>*)markMessageAsBlockedAsync:(NSString*)localChatMessageId blocked:(BOOL)blocked;
 @end
@@ -799,7 +803,7 @@ WINRT_EXPORT
 #ifndef __WACChatCapabilitiesManager_DEFINED__
 #define __WACChatCapabilitiesManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACChatCapabilitiesManager : RTObject
 + (void)getCachedCapabilitiesAsync:(NSString*)address success:(void (^)(WACChatCapabilities*))success failure:(void (^)(NSError*))failure;
 + (void)getCapabilitiesFromNetworkAsync:(NSString*)address
@@ -813,7 +817,7 @@ WINRT_EXPORT
 #ifndef __WACRcsManager_DEFINED__
 #define __WACRcsManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRcsManager : RTObject
 + (WACRcsEndUserMessageManager*)getEndUserMessageManager;
 + (void)getTransportsAsyncWithSuccess:(void (^)(NSArray* /* WACRcsTransport* */))success failure:(void (^)(NSError*))failure;
@@ -827,7 +831,7 @@ WINRT_EXPORT
 #ifndef __WACRcsEndUserMessageAvailableTriggerDetails_DEFINED__
 #define __WACRcsEndUserMessageAvailableTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 @interface WACRcsEndUserMessageAvailableTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

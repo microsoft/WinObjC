@@ -33,6 +33,7 @@
 #import "UIView.h"
 #import "UIInterface.h"
 #import "UIActionSheetDelegate.h"
+
 #import <UIKit/UITextField.h>
 
 @class UIActionSheet, UITabBar, UIToolbar, UIBarButtonItem;
@@ -44,28 +45,20 @@ typedef enum {
     UIActionSheetStyleBlackOpaque = UIBarStyleBlackOpaque,
 } UIActionSheetStyle;
 
-typedef struct {
-    __unsafe_unretained id button;
-    CGRect buttonPos;
-} ActionSheetButton;
-
 UIKIT_EXPORT_CLASS
 @interface UIActionSheet : UIView
 
-- (id)initWithTitle:(NSString*)title
-                  delegate:(id<UIActionSheetDelegate>)delegate
-         cancelButtonTitle:(NSString*)cancelButtonTitle
-    destructiveButtonTitle:(NSString*)destructiveButtonTitle
-         otherButtonTitles:(NSString*)otherButtonTitles, ...;
-- (id)addButtonWithTitle:(NSString*)title;
+- (instancetype)initWithTitle:(NSString*)title
+                     delegate:(id<UIActionSheetDelegate>)delegate
+            cancelButtonTitle:(NSString*)cancelButtonTitle
+       destructiveButtonTitle:(NSString*)destructiveButtonTitle
+            otherButtonTitles:(NSString*)otherButtonTitles, ...;
+- (NSInteger)addButtonWithTitle:(NSString*)title;
 
-- (id)showInView:(UIView*)view; // menu will appear wherever the mouse cursor is
-- (void)showFromRect:(CGRect)rect
-              inView:(UIView*)view
-            animated:(BOOL)animated STUB_METHOD; // if rect is CGRectNull, the menu will appear wherever the mouse cursor is
-- (id)dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(BOOL)animated;
+- (void)showInView:(UIView*)view;
+- (void)showFromRect:(CGRect)rect inView:(UIView*)view animated:(BOOL)animated STUB_METHOD;
+- (void)dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(BOOL)animated;
 
-// these are not yet implemented:
 - (void)showFromToolbar:(UIToolbar*)view;
 - (void)showFromTabBar:(UITabBar*)view;
 - (void)showFromBarButtonItem:(UIBarButtonItem*)item animated:(BOOL)animated;
@@ -74,11 +67,14 @@ UIKIT_EXPORT_CLASS
 
 @property (nonatomic, copy) NSString* title;
 @property (nonatomic, assign) id<UIActionSheetDelegate> delegate;
-@property (nonatomic, assign) UIActionSheetStyle actionSheetStyle STUB_PROPERTY;
-@property (nonatomic, readonly, getter=isVisible) BOOL visible STUB_PROPERTY;
-@property (nonatomic) NSInteger destructiveButtonIndex;
+
 @property (nonatomic) NSInteger cancelButtonIndex;
+@property (nonatomic) NSInteger destructiveButtonIndex;
+
 @property (nonatomic, readonly) NSInteger firstOtherButtonIndex;
 @property (nonatomic, readonly) NSInteger numberOfButtons;
+
+@property (nonatomic, assign) UIActionSheetStyle actionSheetStyle STUB_PROPERTY;
+@property (nonatomic, readonly, getter=isVisible) BOOL visible STUB_PROPERTY;
 
 @end

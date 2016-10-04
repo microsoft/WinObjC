@@ -5,59 +5,20 @@
     xmlns:local="using:UIKit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Width="50"
+    Height="50">
     <Button.Template>
         <ControlTemplate TargetType="Button" x:Name="UIKitButtonControlTemplate">
-            <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="Normal">
-                            <Storyboard>
-                                <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
-                            </Storyboard>
-                        </VisualState>
-                        <!-- TODO: Add new property setters for UIKit states (pressed background, pressed text, etc.).-->
-                        <VisualState x:Name="PointerOver">
-                            <Storyboard>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}"/>
-                                </ObjectAnimationUsingKeyFrames>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}"/>
-                                </ObjectAnimationUsingKeyFrames>
-                                <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
-                            </Storyboard>
-                        </VisualState>
-                        <VisualState x:Name="Pressed">
-                            <Storyboard>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
-                                </ObjectAnimationUsingKeyFrames>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}"/>
-                                </ObjectAnimationUsingKeyFrames>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}"/>
-                                </ObjectAnimationUsingKeyFrames>
-                                <PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
-                            </Storyboard>
-                        </VisualState>
-                        <VisualState x:Name="Disabled">
-                            <Storyboard>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
-                                </ObjectAnimationUsingKeyFrames>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
-                                </ObjectAnimationUsingKeyFrames>
-                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
-                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}"/>
-                                </ObjectAnimationUsingKeyFrames>
-                            </Storyboard>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateManager.VisualStateGroups>
-                <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+            <Grid x:Name="RootGrid" Background="Transparent">
+                <!-- TODO: Since NineGrid works on image pixels, to support an image with 2x scaling we need to multiply the Size and NineGrid, 
+                     and inverse render transform it back to the right size. Grid clips its children, so we need to host it in a Canvas first. -->
+                <Image x:Name="backgroundImage" 
+                       Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" IsHitTestVisible="False" Stretch="Fill"/>
+                <Canvas x:Name="contentGrid" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
+                    <Image x:Name="buttonImage" Stretch="Fill" IsHitTestVisible="False" />
+                    <TextBlock x:Name="buttonText" MaxLines="1" TextTrimming="CharacterEllipsis" IsHitTestVisible="False"/>
+                </Canvas>
             </Grid>
         </ControlTemplate>
     </Button.Template>

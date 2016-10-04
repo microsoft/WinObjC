@@ -35,10 +35,12 @@ public:
   virtual String getProductFileName() const { return ""; }
   virtual String getProductFileType() const { return ""; }
   virtual String getProductReference() const { return ""; }
+  virtual String getTargetType() const = 0;
   virtual void getBuildSettings(VariableCollection& settings) const;
   
   const XCConfigurationList* getBuildConfigurationList() const { return m_buildConfigurationListPtr; }
   const String& getName() const { return m_name; }
+  String getNameWithType() const { return getName() + " [" + getTargetType() + "]"; }
   const String& getProductName() const { return m_productName; }
   const DependencyList& getDependencies() const { return m_dependencyPtrs; }
   const BuildPhaseList& getBuildPhases() const { return m_buildPhasePtrs; }

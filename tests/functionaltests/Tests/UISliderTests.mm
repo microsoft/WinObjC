@@ -47,6 +47,6 @@ TEST(UISlider, GetXamlElement) {
                       ASSERT_TRUE(backingElement);
 
                       // TODO: Fix up when UISlider moves fully to XAML
-                      ASSERT_TRUE([backingElement isKindOfClass:[WXCGrid class]]);
+                      ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
                   });
 }

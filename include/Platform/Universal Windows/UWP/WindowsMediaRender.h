@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_RENDER_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_RENDER_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Media_Render.lib")
+#endif
 #include <UWP/interopBase.h>
 
 // Windows.Media.Render.AudioRenderCategory

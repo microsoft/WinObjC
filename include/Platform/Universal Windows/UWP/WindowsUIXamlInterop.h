@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Interop.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXINotifyCollectionChangedEventArgs;
@@ -61,7 +65,7 @@ typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINo
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Interop.TypeName
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
 @interface WUXITypeName : NSObject
 + (instancetype) new;
 @property (retain) NSString* name;
@@ -171,8 +175,13 @@ typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINo
 #ifndef __WUXINotifyCollectionChangedEventArgs_DEFINED__
 #define __WUXINotifyCollectionChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
 @interface WUXINotifyCollectionChangedEventArgs : RTObject
++ (WUXINotifyCollectionChangedEventArgs*)makeInstanceWithAllParameters:(WUXINotifyCollectionChangedAction)action
+                                                              newItems:(RTObject<WUXIIBindableVector>*)newItems
+                                                              oldItems:(RTObject<WUXIIBindableVector>*)oldItems
+                                                              newIndex:(int)newIndex
+                                                              oldIndex:(int)oldIndex ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif

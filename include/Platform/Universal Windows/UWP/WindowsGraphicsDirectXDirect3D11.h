@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
+#define OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Graphics_DirectX_Direct3D11.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WGDDDirect3DMultisampleDescription, WGDDDirect3DSurfaceDescription;
@@ -55,7 +59,7 @@ typedef unsigned WGDDDirect3DBindings;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Graphics.DirectX.Direct3D11.Direct3DMultisampleDescription
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
 @interface WGDDDirect3DMultisampleDescription : NSObject
 + (instancetype) new;
 @property int count;
@@ -63,7 +67,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Graphics.DirectX.Direct3D11.Direct3DSurfaceDescription
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
 @interface WGDDDirect3DSurfaceDescription : NSObject
 + (instancetype) new;
 @property int width;

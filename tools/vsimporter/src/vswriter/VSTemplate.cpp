@@ -36,9 +36,10 @@ VSTemplate* VSTemplate::getTemplate(const std::string& templateName)
   // Get template directory
   const BuildSettings bs(NULL);
   String templatesDir = bs.getValue("VSIMPORTER_TEMPLATES_DIR");
+  String outputFormat = bs.getValue("VSIMPORTER_OUTPUT_FORMAT");
 
   // Construct template name
-  String templateFile = joinPaths(templateName, "Project.vstemplate");
+  String templateFile = joinPaths(outputFormat + "-" + templateName, "Project.vstemplate");
   String templatePath = joinPaths(templatesDir, templateFile);
 
   return VSTemplate::createFromFile(templatePath);

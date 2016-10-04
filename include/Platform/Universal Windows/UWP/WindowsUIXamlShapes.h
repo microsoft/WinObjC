@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Shapes.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXSShape, WUXSEllipse, WUXSLine, WUXSPath, WUXSPolygon, WUXSPolyline, WUXSRectangle;
@@ -168,7 +172,7 @@ typedef void (^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventAr
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -189,7 +193,7 @@ WINRT_EXPORT
 #ifndef __WXUIElement_DEFINED__
 #define __WXUIElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 #if defined(__cplusplus)
@@ -341,7 +345,7 @@ WINRT_EXPORT
 #ifndef __WXFrameworkElement_DEFINED__
 #define __WXFrameworkElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WXFrameworkElement : WXUIElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -413,7 +417,7 @@ WINRT_EXPORT
 #ifndef __WUXSShape_DEFINED__
 #define __WUXSShape_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSShape : WXFrameworkElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -449,7 +453,7 @@ WINRT_EXPORT
 #ifndef __WUXSEllipse_DEFINED__
 #define __WUXSEllipse_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSEllipse : WUXSShape
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -463,7 +467,7 @@ WINRT_EXPORT
 #ifndef __WUXSLine_DEFINED__
 #define __WUXSLine_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSLine : WUXSShape
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -485,7 +489,7 @@ WINRT_EXPORT
 #ifndef __WUXSPath_DEFINED__
 #define __WUXSPath_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSPath : WUXSShape
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -501,7 +505,7 @@ WINRT_EXPORT
 #ifndef __WUXSPolygon_DEFINED__
 #define __WUXSPolygon_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSPolygon : WUXSShape
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -519,7 +523,7 @@ WINRT_EXPORT
 #ifndef __WUXSPolyline_DEFINED__
 #define __WUXSPolyline_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSPolyline : WUXSShape
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -537,7 +541,7 @@ WINRT_EXPORT
 #ifndef __WUXSRectangle_DEFINED__
 #define __WUXSRectangle_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSRectangle : WUXSShape
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

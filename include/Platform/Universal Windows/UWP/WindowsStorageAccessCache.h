@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
+#define OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Storage_AccessCache.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WSAAccessListEntryView, WSAStorageItemMostRecentlyUsedList, WSAItemRemovedEventArgs, WSAStorageItemAccessList,
@@ -51,7 +55,7 @@ typedef unsigned WSARecentStorageItemVisibility;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Storage.AccessCache.AccessListEntry
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 @interface WSAAccessListEntry : NSObject
 + (instancetype) new;
 @property (retain) NSString* token;
@@ -96,7 +100,7 @@ WINRT_EXPORT
 #ifndef __WSAAccessListEntryView_DEFINED__
 #define __WSAAccessListEntryView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 @interface WSAAccessListEntryView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -114,7 +118,7 @@ WINRT_EXPORT
 #ifndef __WSAStorageItemMostRecentlyUsedList_DEFINED__
 #define __WSAStorageItemMostRecentlyUsedList_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 @interface WSAStorageItemMostRecentlyUsedList : RTObject <WSAIStorageItemAccessList>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -161,7 +165,7 @@ WINRT_EXPORT
 #ifndef __WSAItemRemovedEventArgs_DEFINED__
 #define __WSAItemRemovedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 @interface WSAItemRemovedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -175,7 +179,7 @@ WINRT_EXPORT
 #ifndef __WSAStorageItemAccessList_DEFINED__
 #define __WSAStorageItemAccessList_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 @interface WSAStorageItemAccessList : RTObject <WSAIStorageItemAccessList>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -213,7 +217,7 @@ WINRT_EXPORT
 #ifndef __WSAStorageApplicationPermissions_DEFINED__
 #define __WSAStorageApplicationPermissions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 @interface WSAStorageApplicationPermissions : RTObject
 + (WSAStorageItemAccessList*)futureAccessList;
 + (WSAStorageItemMostRecentlyUsedList*)mostRecentlyUsedList;

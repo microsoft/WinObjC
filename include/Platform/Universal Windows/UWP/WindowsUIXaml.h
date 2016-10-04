@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WXDispatcherTimer, WXCornerRadiusHelper, WXDurationHelper, WXGridLengthHelper, WXThicknessHelper,
@@ -482,7 +486,7 @@ typedef void (^WXWindowVisibilityChangedEventHandler)(RTObject* sender, WUCVisib
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.CornerRadius
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCornerRadius : NSObject
 + (instancetype) new;
 @property double topLeft;
@@ -492,7 +496,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.UI.Xaml.Duration
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDuration : NSObject
 + (instancetype) new;
 @property (retain) WFTimeSpan* timeSpan;
@@ -500,7 +504,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.UI.Xaml.GridLength
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXGridLength : NSObject
 + (instancetype) new;
 @property double value;
@@ -508,7 +512,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.UI.Xaml.Thickness
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXThickness : NSObject
 + (instancetype) new;
 @property double left;
@@ -703,7 +707,7 @@ typedef void (^WXBindingFailedEventHandler)(RTObject* sender, WXBindingFailedEve
 #ifndef __WXDispatcherTimer_DEFINED__
 #define __WXDispatcherTimer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDispatcherTimer : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -723,7 +727,7 @@ WINRT_EXPORT
 #ifndef __WXCornerRadiusHelper_DEFINED__
 #define __WXCornerRadiusHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCornerRadiusHelper : RTObject
 + (WXCornerRadius*)fromRadii:(double)topLeft topRight:(double)topRight bottomRight:(double)bottomRight bottomLeft:(double)bottomLeft;
 + (WXCornerRadius*)fromUniformRadius:(double)uniformRadius;
@@ -738,7 +742,7 @@ WINRT_EXPORT
 #ifndef __WXDurationHelper_DEFINED__
 #define __WXDurationHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDurationHelper : RTObject
 + (int)compare:(WXDuration*)duration1 duration2:(WXDuration*)duration2;
 + (WXDuration*)fromTimeSpan:(WFTimeSpan*)timeSpan;
@@ -759,7 +763,7 @@ WINRT_EXPORT
 #ifndef __WXGridLengthHelper_DEFINED__
 #define __WXGridLengthHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXGridLengthHelper : RTObject
 + (WXGridLength*)fromPixels:(double)pixels;
 + (WXGridLength*)fromValueAndType:(double)value type:(WXGridUnitType)type;
@@ -779,7 +783,7 @@ WINRT_EXPORT
 #ifndef __WXThicknessHelper_DEFINED__
 #define __WXThicknessHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXThicknessHelper : RTObject
 + (WXThickness*)fromLengths:(double)left top:(double)top right:(double)right bottom:(double)bottom;
 + (WXThickness*)fromUniformLength:(double)uniformLength;
@@ -794,7 +798,7 @@ WINRT_EXPORT
 #ifndef __WXApplicationInitializationCallbackParams_DEFINED__
 #define __WXApplicationInitializationCallbackParams_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXApplicationInitializationCallbackParams : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -807,7 +811,7 @@ WINRT_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -828,7 +832,7 @@ WINRT_EXPORT
 #ifndef __WXDependencyProperty_DEFINED__
 #define __WXDependencyProperty_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyProperty : RTObject
 + (WXDependencyProperty*)Register:(NSString*)name
                      propertyType:(WUXITypeName*)propertyType
@@ -851,7 +855,7 @@ WINRT_EXPORT
 #ifndef __WXDependencyPropertyChangedEventArgs_DEFINED__
 #define __WXDependencyPropertyChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyPropertyChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -867,7 +871,7 @@ WINRT_EXPORT
 #ifndef __WXRoutedEventArgs_DEFINED__
 #define __WXRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -882,7 +886,7 @@ WINRT_EXPORT
 #ifndef __WXUnhandledExceptionEventArgs_DEFINED__
 #define __WXUnhandledExceptionEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXUnhandledExceptionEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -898,7 +902,7 @@ WINRT_EXPORT
 #ifndef __WXVisualStateChangedEventArgs_DEFINED__
 #define __WXVisualStateChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXVisualStateChangedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -915,7 +919,7 @@ WINRT_EXPORT
 #ifndef __WXDataContextChangedEventArgs_DEFINED__
 #define __WXDataContextChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDataContextChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -930,7 +934,7 @@ WINRT_EXPORT
 #ifndef __WXDataTemplateKey_DEFINED__
 #define __WXDataTemplateKey_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDataTemplateKey : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -945,7 +949,7 @@ WINRT_EXPORT
 #ifndef __WXPropertyMetadata_DEFINED__
 #define __WXPropertyMetadata_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXPropertyMetadata : RTObject
 + (WXPropertyMetadata*)createWithDefaultValue:(RTObject*)defaultValue;
 + (WXPropertyMetadata*)createWithDefaultValueAndCallback:(RTObject*)defaultValue
@@ -953,6 +957,9 @@ WINRT_EXPORT
 + (WXPropertyMetadata*)createWithFactory:(WXCreateDefaultValueCallback)createDefaultValueCallback;
 + (WXPropertyMetadata*)createWithFactoryAndCallback:(WXCreateDefaultValueCallback)createDefaultValueCallback
                             propertyChangedCallback:(WXPropertyChangedCallback)propertyChangedCallback;
++ (WXPropertyMetadata*)makeInstanceWithDefaultValue:(RTObject*)defaultValue ACTIVATOR;
++ (WXPropertyMetadata*)makeInstanceWithDefaultValueAndCallback:(RTObject*)defaultValue
+                                       propertyChangedCallback:(WXPropertyChangedCallback)propertyChangedCallback ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -966,7 +973,7 @@ WINRT_EXPORT
 #ifndef __WXDragOperationDeferral_DEFINED__
 #define __WXDragOperationDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDragOperationDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -980,7 +987,7 @@ WINRT_EXPORT
 #ifndef __WXDragUI_DEFINED__
 #define __WXDragUI_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDragUI : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -998,7 +1005,7 @@ WINRT_EXPORT
 #ifndef __WXDragUIOverride_DEFINED__
 #define __WXDragUIOverride_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDragUIOverride : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1034,7 +1041,7 @@ WINRT_EXPORT
 #ifndef __WXFrameworkView_DEFINED__
 #define __WXFrameworkView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXFrameworkView : RTObject <WACIFrameworkView>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1053,7 +1060,7 @@ WINRT_EXPORT
 #ifndef __WXRoutedEvent_DEFINED__
 #define __WXRoutedEvent_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXRoutedEvent : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1066,7 +1073,7 @@ WINRT_EXPORT
 #ifndef __WXSetterBaseCollection_DEFINED__
 #define __WXSetterBaseCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXSetterBaseCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1092,7 +1099,7 @@ WINRT_EXPORT
 #ifndef __WXTargetPropertyPath_DEFINED__
 #define __WXTargetPropertyPath_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXTargetPropertyPath : RTObject
 + (WXTargetPropertyPath*)makeInstance:(WXDependencyProperty*)targetProperty ACTIVATOR;
 + (instancetype)make ACTIVATOR;
@@ -1109,7 +1116,7 @@ WINRT_EXPORT
 #ifndef __WXTriggerActionCollection_DEFINED__
 #define __WXTriggerActionCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXTriggerActionCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1134,7 +1141,7 @@ WINRT_EXPORT
 #ifndef __WXTriggerCollection_DEFINED__
 #define __WXTriggerCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXTriggerCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1158,7 +1165,7 @@ WINRT_EXPORT
 #ifndef __WXWindow_DEFINED__
 #define __WXWindow_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXWindow : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1188,7 +1195,7 @@ WINRT_EXPORT
 #ifndef __WXWindowCreatedEventArgs_DEFINED__
 #define __WXWindowCreatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXWindowCreatedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1202,7 +1209,7 @@ WINRT_EXPORT
 #ifndef __WXDependencyObjectCollection_DEFINED__
 #define __WXDependencyObjectCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObjectCollection : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1232,7 +1239,7 @@ WINRT_EXPORT
 #ifndef __WXDragEventArgs_DEFINED__
 #define __WXDragEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDragEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1253,7 +1260,7 @@ WINRT_EXPORT
 #ifndef __WXDragStartingEventArgs_DEFINED__
 #define __WXDragStartingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDragStartingEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1271,7 +1278,7 @@ WINRT_EXPORT
 #ifndef __WXDropCompletedEventArgs_DEFINED__
 #define __WXDropCompletedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDropCompletedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1285,7 +1292,7 @@ WINRT_EXPORT
 #ifndef __WXExceptionRoutedEventArgs_DEFINED__
 #define __WXExceptionRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXExceptionRoutedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1299,7 +1306,7 @@ WINRT_EXPORT
 #ifndef __WXFrameworkTemplate_DEFINED__
 #define __WXFrameworkTemplate_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXFrameworkTemplate : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1312,7 +1319,7 @@ WINRT_EXPORT
 #ifndef __WXDataTemplate_DEFINED__
 #define __WXDataTemplate_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDataTemplate : WXFrameworkTemplate
 + (RTObject<WXIDataTemplateExtension>*)getExtensionInstance:(WXFrameworkElement*)element;
 + (void)setExtensionInstance:(WXFrameworkElement*)element value:(RTObject<WXIDataTemplateExtension>*)value;
@@ -1330,7 +1337,7 @@ WINRT_EXPORT
 #ifndef __WXPropertyPath_DEFINED__
 #define __WXPropertyPath_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXPropertyPath : WXDependencyObject
 + (WXPropertyPath*)makeInstance:(NSString*)path ACTIVATOR;
 #if defined(__cplusplus)
@@ -1345,7 +1352,7 @@ WINRT_EXPORT
 #ifndef __WXResourceDictionary_DEFINED__
 #define __WXResourceDictionary_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXResourceDictionary : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1378,7 +1385,7 @@ WINRT_EXPORT
 #ifndef __WXSetterBase_DEFINED__
 #define __WXSetterBase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXSetterBase : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1392,7 +1399,7 @@ WINRT_EXPORT
 #ifndef __WXSizeChangedEventArgs_DEFINED__
 #define __WXSizeChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXSizeChangedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1407,7 +1414,7 @@ WINRT_EXPORT
 #ifndef __WXStateTriggerBase_DEFINED__
 #define __WXStateTriggerBase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXStateTriggerBase : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1421,7 +1428,7 @@ WINRT_EXPORT
 #ifndef __WXStyle_DEFINED__
 #define __WXStyle_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXStyle : WXDependencyObject
 + (WXStyle*)makeInstance:(WUXITypeName*)targetType ACTIVATOR;
 + (instancetype)make ACTIVATOR;
@@ -1441,7 +1448,7 @@ WINRT_EXPORT
 #ifndef __WXTriggerAction_DEFINED__
 #define __WXTriggerAction_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXTriggerAction : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1454,7 +1461,7 @@ WINRT_EXPORT
 #ifndef __WXTriggerBase_DEFINED__
 #define __WXTriggerBase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXTriggerBase : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1467,7 +1474,7 @@ WINRT_EXPORT
 #ifndef __WXUIElement_DEFINED__
 #define __WXUIElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 #if defined(__cplusplus)
@@ -1619,7 +1626,7 @@ WINRT_EXPORT
 #ifndef __WXVisualState_DEFINED__
 #define __WXVisualState_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXVisualState : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1637,7 +1644,7 @@ WINRT_EXPORT
 #ifndef __WXVisualStateGroup_DEFINED__
 #define __WXVisualStateGroup_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXVisualStateGroup : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1659,7 +1666,7 @@ WINRT_EXPORT
 #ifndef __WXVisualStateManager_DEFINED__
 #define __WXVisualStateManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXVisualStateManager : WXDependencyObject
 + (NSMutableArray* /* WXVisualStateGroup* */)getVisualStateGroups:(WXFrameworkElement*)obj;
 + (WXVisualStateManager*)getCustomVisualStateManager:(WXFrameworkElement*)obj;
@@ -1692,7 +1699,7 @@ WINRT_EXPORT
 #ifndef __WXVisualTransition_DEFINED__
 #define __WXVisualTransition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXVisualTransition : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1711,7 +1718,7 @@ WINRT_EXPORT
 #ifndef __WXAdaptiveTrigger_DEFINED__
 #define __WXAdaptiveTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXAdaptiveTrigger : WXStateTriggerBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1729,7 +1736,7 @@ WINRT_EXPORT
 #ifndef __WXEventTrigger_DEFINED__
 #define __WXEventTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXEventTrigger : WXTriggerBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1745,7 +1752,7 @@ WINRT_EXPORT
 #ifndef __WXFrameworkElement_DEFINED__
 #define __WXFrameworkElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXFrameworkElement : WXUIElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1817,7 +1824,7 @@ WINRT_EXPORT
 #ifndef __WXMediaFailedRoutedEventArgs_DEFINED__
 #define __WXMediaFailedRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXMediaFailedRoutedEventArgs : WXExceptionRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1831,7 +1838,7 @@ WINRT_EXPORT
 #ifndef __WXSetter_DEFINED__
 #define __WXSetter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXSetter : WXSetterBase
 + (WXSetter*)makeInstance:(WXDependencyProperty*)targetProperty value:(RTObject*)value ACTIVATOR;
 + (instancetype)make ACTIVATOR;
@@ -1849,7 +1856,7 @@ WINRT_EXPORT
 #ifndef __WXStateTrigger_DEFINED__
 #define __WXStateTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXStateTrigger : WXStateTriggerBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1865,7 +1872,7 @@ WINRT_EXPORT
 #ifndef __WXBindingFailedEventArgs_DEFINED__
 #define __WXBindingFailedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXBindingFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1879,7 +1886,7 @@ WINRT_EXPORT
 #ifndef __WXDebugSettings_DEFINED__
 #define __WXDebugSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDebugSettings : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1899,7 +1906,7 @@ WINRT_EXPORT
 #ifndef __WXApplication_DEFINED__
 #define __WXApplication_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXApplication : RTObject
 + (void)start:(WXApplicationInitializationCallback)callback;
 + (void)loadComponent:(RTObject*)component resourceLocator:(WFUri*)resourceLocator;
@@ -1948,7 +1955,7 @@ WINRT_EXPORT
 #ifndef __WXFrameworkViewSource_DEFINED__
 #define __WXFrameworkViewSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXFrameworkViewSource : RTObject <WACIFrameworkViewSource>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1963,7 +1970,7 @@ WINRT_EXPORT
 #ifndef __WXPointHelper_DEFINED__
 #define __WXPointHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXPointHelper : RTObject
 + (WFPoint*)fromCoordinates:(float)x y:(float)y;
 #if defined(__cplusplus)
@@ -1977,7 +1984,7 @@ WINRT_EXPORT
 #ifndef __WXRectHelper_DEFINED__
 #define __WXRectHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXRectHelper : RTObject
 + (WFRect*)fromCoordinatesAndDimensions:(float)x y:(float)y width:(float)width height:(float)height;
 + (WFRect*)fromPoints:(WFPoint*)point1 point2:(WFPoint*)point2;
@@ -2004,7 +2011,7 @@ WINRT_EXPORT
 #ifndef __WXSizeHelper_DEFINED__
 #define __WXSizeHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXSizeHelper : RTObject
 + (WFSize*)fromDimensions:(float)width height:(float)height;
 + (BOOL)getIsEmpty:(WFSize*)target;

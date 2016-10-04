@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+#define OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_ViewManagement.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUVApplicationView, WUVApplicationViewConsolidatedEventArgs, WUVApplicationViewTitleBar, WUVApplicationViewSwitcher,
@@ -148,7 +152,7 @@ typedef unsigned WUVUIElementType;
 #ifndef __WUVApplicationView_DEFINED__
 #define __WUVApplicationView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVApplicationView : RTObject
 + (WUVApplicationView*)getForCurrentView;
 + (BOOL)tryUnsnap;
@@ -196,7 +200,7 @@ WINRT_EXPORT
 #ifndef __WUVApplicationViewConsolidatedEventArgs_DEFINED__
 #define __WUVApplicationViewConsolidatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVApplicationViewConsolidatedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -210,7 +214,7 @@ WINRT_EXPORT
 #ifndef __WUVApplicationViewTitleBar_DEFINED__
 #define __WUVApplicationViewTitleBar_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVApplicationViewTitleBar : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -235,7 +239,7 @@ WINRT_EXPORT
 #ifndef __WUVApplicationViewSwitcher_DEFINED__
 #define __WUVApplicationViewSwitcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVApplicationViewSwitcher : RTObject
 + (void)disableShowingMainViewOnActivation;
 + (void)tryShowAsStandaloneAsync:(int)viewId success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
@@ -268,7 +272,7 @@ WINRT_EXPORT
 #ifndef __WUVActivationViewSwitcher_DEFINED__
 #define __WUVActivationViewSwitcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVActivationViewSwitcher : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -284,7 +288,7 @@ WINRT_EXPORT
 #ifndef __WUVInputPaneVisibilityEventArgs_DEFINED__
 #define __WUVInputPaneVisibilityEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVInputPaneVisibilityEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -299,7 +303,7 @@ WINRT_EXPORT
 #ifndef __WUVInputPane_DEFINED__
 #define __WUVInputPane_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVInputPane : RTObject
 + (WUVInputPane*)getForCurrentView;
 #if defined(__cplusplus)
@@ -321,7 +325,7 @@ WINRT_EXPORT
 #ifndef __WUVProjectionManager_DEFINED__
 #define __WUVProjectionManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVProjectionManager : RTObject
 + (RTObject<WFIAsyncAction>*)startProjectingAsync:(int)projectionViewId anchorViewId:(int)anchorViewId;
 + (RTObject<WFIAsyncAction>*)swapDisplaysForViewsAsync:(int)projectionViewId anchorViewId:(int)anchorViewId;
@@ -352,7 +356,7 @@ WINRT_EXPORT
 #ifndef __WUVUIViewSettings_DEFINED__
 #define __WUVUIViewSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVUIViewSettings : RTObject
 + (WUVUIViewSettings*)getForCurrentView;
 #if defined(__cplusplus)
@@ -367,7 +371,7 @@ WINRT_EXPORT
 #ifndef __WUVAccessibilitySettings_DEFINED__
 #define __WUVAccessibilitySettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVAccessibilitySettings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -385,7 +389,7 @@ WINRT_EXPORT
 #ifndef __WUVUISettings_DEFINED__
 #define __WUVUISettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVUISettings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

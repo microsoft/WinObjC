@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Markup.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXMXamlBinaryWriter, WUXMXamlReader, WUXMXamlBindingHelper;
@@ -35,7 +39,7 @@
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Markup.XamlBinaryWriterErrorInformation
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 @interface WUXMXamlBinaryWriterErrorInformation : NSObject
 + (instancetype) new;
 @property unsigned int inputStreamIndex;
@@ -44,7 +48,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.UI.Xaml.Markup.XmlnsDefinition
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 @interface WUXMXmlnsDefinition : NSObject
 + (instancetype) new;
 @property (retain) NSString* xmlNamespace;
@@ -142,7 +146,7 @@ WINRT_EXPORT
 #ifndef __WUXMXamlBinaryWriter_DEFINED__
 #define __WUXMXamlBinaryWriter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 @interface WUXMXamlBinaryWriter : RTObject
 + (WUXMXamlBinaryWriterErrorInformation*)write:(NSMutableArray* /* RTObject<WSSIRandomAccessStream>* */)inputStreams
                                  outputStreams:(NSMutableArray* /* RTObject<WSSIRandomAccessStream>* */)outputStreams
@@ -158,7 +162,7 @@ WINRT_EXPORT
 #ifndef __WUXMXamlReader_DEFINED__
 #define __WUXMXamlReader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 @interface WUXMXamlReader : RTObject
 + (RTObject*)Load:(NSString*)xaml;
 + (RTObject*)loadWithInitialTemplateValidation:(NSString*)xaml;
@@ -173,7 +177,7 @@ WINRT_EXPORT
 #ifndef __WUXMXamlBindingHelper_DEFINED__
 #define __WUXMXamlBindingHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 @interface WUXMXamlBindingHelper : RTObject
 + (RTObject<WUXMIDataTemplateComponent>*)getDataTemplateComponent:(WXDependencyObject*)element;
 + (void)setDataTemplateComponent:(WXDependencyObject*)element value:(RTObject<WUXMIDataTemplateComponent>*)value;

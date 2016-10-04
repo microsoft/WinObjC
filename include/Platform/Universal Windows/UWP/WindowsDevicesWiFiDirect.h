@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Devices_WiFiDirect.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDWWiFiDirectDevice, WDWWiFiDirectConnectionParameters, WDWWiFiDirectInformationElement, WDWWiFiDirectLegacySettings,
@@ -91,7 +95,7 @@ typedef unsigned WDWWiFiDirectAdvertisementPublisherStatus;
 #ifndef __WDWWiFiDirectDevice_DEFINED__
 #define __WDWWiFiDirectDevice_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectDevice : RTObject <WFIClosable>
 + (NSString*)getDeviceSelector;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDWWiFiDirectDevice*))success failure:(void (^)(NSError*))failure;
@@ -117,7 +121,7 @@ WINRT_EXPORT
 #ifndef __WDWWiFiDirectConnectionParameters_DEFINED__
 #define __WDWWiFiDirectConnectionParameters_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectConnectionParameters : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -132,7 +136,7 @@ WINRT_EXPORT
 #ifndef __WDWWiFiDirectInformationElement_DEFINED__
 #define __WDWWiFiDirectInformationElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectInformationElement : RTObject
 + (NSMutableArray* /* WDWWiFiDirectInformationElement* */)createFromBuffer:(RTObject<WSSIBuffer>*)buffer;
 + (NSMutableArray* /* WDWWiFiDirectInformationElement* */)createFromDeviceInformation:(WDEDeviceInformation*)deviceInformation;
@@ -151,7 +155,7 @@ WINRT_EXPORT
 #ifndef __WDWWiFiDirectLegacySettings_DEFINED__
 #define __WDWWiFiDirectLegacySettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectLegacySettings : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -167,7 +171,7 @@ WINRT_EXPORT
 #ifndef __WDWWiFiDirectAdvertisement_DEFINED__
 #define __WDWWiFiDirectAdvertisement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectAdvertisement : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -184,7 +188,7 @@ WINRT_EXPORT
 #ifndef __WDWWiFiDirectAdvertisementPublisherStatusChangedEventArgs_DEFINED__
 #define __WDWWiFiDirectAdvertisementPublisherStatusChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectAdvertisementPublisherStatusChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -199,7 +203,7 @@ WINRT_EXPORT
 #ifndef __WDWWiFiDirectAdvertisementPublisher_DEFINED__
 #define __WDWWiFiDirectAdvertisementPublisher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectAdvertisementPublisher : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -220,7 +224,7 @@ WINRT_EXPORT
 #ifndef __WDWWiFiDirectConnectionRequest_DEFINED__
 #define __WDWWiFiDirectConnectionRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectConnectionRequest : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -235,7 +239,7 @@ WINRT_EXPORT
 #ifndef __WDWWiFiDirectConnectionRequestedEventArgs_DEFINED__
 #define __WDWWiFiDirectConnectionRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectConnectionRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -249,7 +253,7 @@ WINRT_EXPORT
 #ifndef __WDWWiFiDirectConnectionListener_DEFINED__
 #define __WDWWiFiDirectConnectionListener_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectConnectionListener : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
