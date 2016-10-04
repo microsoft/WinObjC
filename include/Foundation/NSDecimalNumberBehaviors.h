@@ -18,6 +18,7 @@
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSCoder.h>
 #import <Foundation/NSObject.h>
+#import <Foundation/NSDecimal.h>
 
 @class NSDecimalNumber;
 
