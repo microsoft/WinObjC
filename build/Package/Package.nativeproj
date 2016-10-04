@@ -51,6 +51,7 @@
       <SBIncludes Include="..\..\include\**\*" />
       <SBIncludes Include="..\..\deps\prebuilt\include\zlib.h" />
       <SBIncludes Include="..\..\deps\prebuilt\include\zconf.h" />
+      <SBIncludes Include="..\..\deps\prebuilt\include\sqlite3.h" />
       <SBXMLIncludes Include="..\..\deps\prebuilt\include\libxml\**" />
       <SBICUUnicodeIncludes Include="..\..\deps\prebuilt\include\icu\unicode\**" />
       <SBDispatchIncludes Include="..\..\deps\prebuilt\include\dispatch\**" />
