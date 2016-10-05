@@ -3565,7 +3565,8 @@ static float doRound(float f) {
 
 // Retrieve the backing XAML element's Automation Id
 - (NSString*)accessibilityIdentifier {
-    WXFrameworkElement* xamlElement = [self xamlElement];
+    WXFrameworkElement* layerContentElement = [self layer].contentsElement;
+    WXFrameworkElement* xamlElement = layerContentElement ? layerContentElement : priv->_xamlInputElement.get();
     if (xamlElement) {
         return [WUXAAutomationProperties getAutomationId:xamlElement];
     }
@@ -3575,7 +3576,8 @@ static float doRound(float f) {
 
 // Set the backing XAML element's Automation Id
 - (void)setAccessibilityIdentifier:(NSString*)accessibilityId {
-    WXFrameworkElement* xamlElement = [self xamlElement];
+    WXFrameworkElement* layerContentElement = [self layer].contentsElement;
+    WXFrameworkElement* xamlElement = layerContentElement ? layerContentElement : priv->_xamlInputElement.get();
     if (xamlElement) {
         [WUXAAutomationProperties setAutomationId:xamlElement value:accessibilityId];
     }
