@@ -1147,9 +1147,6 @@ void CGContextCairo::CGContextFillEllipseInRect(CGRect rct) {
 }
 
 void CGContextCairo::CGContextAddPath(CGPathRef path) {
-    ObtainLock();
-
-    _CGPathApplyPath(path, _rootContext);
 }
 
 void CGContextCairo::CGContextStrokePath() {

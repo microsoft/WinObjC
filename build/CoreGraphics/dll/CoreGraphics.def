@@ -397,11 +397,6 @@ LIBRARY CoreGraphics
         CGPathIsRect
         CGPathContainsPoint
 
-        ; private exports below
-        _CGPathFitRect
-        _CGPathApplyPath
-        _CGPathGetBoundingBoxInternal
-
         ; CGPattern.mm
         CGPatternCreate
         CGPatternGetTypeID

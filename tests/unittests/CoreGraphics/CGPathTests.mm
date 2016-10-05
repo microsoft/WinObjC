@@ -582,3 +582,72 @@ DISABLED_TEST(CGPath, CGPathContainsPointEOFillFalse) {
 
     EXPECT_TRUE(test);
 }
+
+void EXPECT_POINTEQ(CGPoint pathPoint, CGFloat x, CGFloat y) {
+    EXPECT_EQ(x, pathPoint.x);
+    EXPECT_EQ(y, pathPoint.y);
+}
+
+void EXPECT_SIZEEQ(CGSize pathSize, CGFloat width, CGFloat height) {
+    EXPECT_EQ(width, pathSize.width);
+    EXPECT_EQ(height, pathSize.height);
+}
+
+// Simple tests for the status of a CGPath during the CGPath rework into D2D.
+TEST(CGPath, CGPathD2DSimpleCreation) {
+    CGMutablePathRef path = CGPathCreateMutable();
+    EXPECT_NE(nullptr, path);
+
+    CGPathMoveToPoint(path, NULL, 50, 50);
+    EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 50, 50);
+
+    CGPathMoveToPoint(path, NULL, 100, 50);
+    EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 100, 50);
+
+    CGMutablePathRef pathCopy = CGPathCreateMutableCopy(path);
+    CGPathMoveToPoint(pathCopy, NULL, 200, 200);
+    EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 100, 50);
+    EXPECT_POINTEQ(CGPathGetCurrentPoint(pathCopy), 200, 200);
+}
+
+TEST(CGPath, CGPathD2DSimpleLines) {
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathMoveToPoint(path, NULL, 50, 50);
+    CGPathAddLineToPoint(path, NULL, 25, 25);
+    EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 25, 25);
+
+    CGRect boundingBox = CGPathGetBoundingBox(path);
+    EXPECT_POINTEQ(boundingBox.origin, 25, 25);
+    EXPECT_SIZEEQ(boundingBox.size, 25, 25);
+
+    CGPathAddLineToPoint(path, NULL, 100, 200);
+
+    boundingBox = CGPathGetBoundingBox(path);
+
+    EXPECT_POINTEQ(boundingBox.origin, 25, 25);
+    EXPECT_SIZEEQ(boundingBox.size, 75, 175);
+
+    path = CGPathCreateMutable();
+    CGPathMoveToPoint(path, NULL, 50, 50);
+    CGPathAddLineToPoint(path, NULL, 81, 107);
+
+    boundingBox = CGPathGetBoundingBox(path);
+    EXPECT_POINTEQ(boundingBox.origin, 50, 50);
+    EXPECT_SIZEEQ(boundingBox.size, 31, 57);
+
+    CGMutablePathRef pathCopy = CGPathCreateMutableCopy(path);
+    CGPathAddLineToPoint(pathCopy, NULL, 200, 200);
+
+    // Check that original bounding box has not changed.
+    boundingBox = CGPathGetBoundingBox(path);
+    EXPECT_POINTEQ(boundingBox.origin, 50, 50);
+    EXPECT_SIZEEQ(boundingBox.size, 31, 57);
+
+    boundingBox = CGPathGetBoundingBox(pathCopy);
+    EXPECT_POINTEQ(boundingBox.origin, 50, 50);
+    EXPECT_SIZEEQ(boundingBox.size, 150, 150);
+
+    boundingBox = CGPathGetBoundingBox(path);
+    EXPECT_POINTEQ(boundingBox.origin, 50, 50);
+    EXPECT_SIZEEQ(boundingBox.size, 31, 57);
+}

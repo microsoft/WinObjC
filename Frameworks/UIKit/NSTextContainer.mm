@@ -77,8 +77,9 @@
 
     if (_exclusionPaths != nil) {
         for (UIBezierPath* path in(NSArray*)_exclusionPaths) {
-            CGRect shapeRect = _CGPathFitRect(path.CGPath, ret, _size, self.lineFragmentPadding);
-            ret = CGRectIntersection(shapeRect, ret);
+            // TODO : Replace with public function or work around.
+            // CGRect shapeRect = _CGPathFitRect(path.CGPath, ret, _size, self.lineFragmentPadding);
+            // ret = CGRectIntersection(shapeRect, ret);
         }
     }
 
