@@ -14,14 +14,11 @@
 //
 //******************************************************************************
 
-#import <CoreGraphics/D2DWrapper.h>
-#import <Starboard.h>
+#pragma once
 
-using namespace Microsoft::WRL;
+#include <COMIncludes.h>
+#import <wrl/client.h>
+#import <D2d1.h>
+#include <COMIncludes_End.h>
 
-// Helper for creating a D2DFactory
-ComPtr<ID2D1Factory> _CreateD2DFactoryInstance() {
-    ComPtr<ID2D1Factory> d2dFactory;
-    THROW_IF_FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &d2dFactory));
-    return d2dFactory;
-}
+Microsoft::WRL::ComPtr<ID2D1Factory> _CreateD2DFactoryInstance();
