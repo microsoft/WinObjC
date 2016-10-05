@@ -55,10 +55,10 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreGraphics\CGPDFStream.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreGraphics\CGPDFString.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreGraphics\CGShading.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreGraphics\D2DWrapper.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreGraphics\D2DWrapper.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Frameworks\include\CoreGraphics\D2DWrapper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\CoreGraphics\D2DWrapper.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6293444C-1461-4CC7-9634-44AB90B8BBC3}</ProjectGuid>
