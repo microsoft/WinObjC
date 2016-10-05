@@ -17,12 +17,8 @@
 #pragma once
 
 #include <COMIncludes.h>
-#import <wrl/implements.h>
+#import <wrl/client.h>
 #import <D2d1.h>
 #include <COMIncludes_End.h>
 
-using namespace std;
-using namespace Microsoft::WRL;
-
-static ComPtr<ID2D1Factory> _CreateD2DFactoryInstance(D2D1_FACTORY_TYPE type);
-static ComPtr<ID2D1Factory> _GetD2DFactoryInstance();
+Microsoft::WRL::ComPtr<ID2D1Factory> _GetD2DFactoryInstance();

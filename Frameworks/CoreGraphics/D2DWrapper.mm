@@ -17,17 +17,17 @@
 #import <CoreGraphics/D2DWrapper.h>
 #import <Starboard.h>
 
-static const wchar_t* TAG = L"_D2DWrapper";
+using namespace Microsoft::WRL;
 
-// Helper for creating a D2DFactory
-static ComPtr<ID2D1Factory> _CreateD2DFactoryInstance(D2D1_FACTORY_TYPE type) {
+// Private helper for creating a D2DFactory
+static ComPtr<ID2D1Factory> __CreateD2DFactoryInstance() {
     ComPtr<ID2D1Factory> d2dFactory;
-    THROW_IF_FAILED(D2D1CreateFactory(type, d2dFactory.ReleaseAndGetAddressOf()));
+    THROW_IF_FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED, __uuidof(ID2D1Factory), &d2dFactory));
     return d2dFactory;
 }
 
 // Helper for accessing a single static multithreaded D2DFactory instance
-static ComPtr<ID2D1Factory> _GetD2DFactoryInstance() {
-    static ComPtr<ID2D1Factory> s_d2dFactory = _CreateD2DFactoryInstance(D2D1_FACTORY_TYPE_MULTI_THREADED);
+ComPtr<ID2D1Factory> _GetD2DFactoryInstance() {
+    static ComPtr<ID2D1Factory> s_d2dFactory = __CreateD2DFactoryInstance();
     return s_d2dFactory;
 }
