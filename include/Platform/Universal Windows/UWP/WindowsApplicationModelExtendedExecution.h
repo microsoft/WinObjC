@@ -77,6 +77,10 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.ApplicationModel.ExtendedExecution.ExtendedExecutionSession

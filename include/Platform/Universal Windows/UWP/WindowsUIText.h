@@ -470,6 +470,10 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 - (void)undo;
 @end
 
+OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+@interface WUTITextDocument : RTObject <WUTITextDocument>
+@end
+
 #endif // __WUTITextDocument_DEFINED__
 
 // Windows.UI.Text.ITextRange
@@ -530,6 +534,10 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 - (int)startOf:(WUTTextRangeUnit)unit extend:(BOOL)extend;
 @end
 
+OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+@interface WUTITextRange : RTObject <WUTITextRange>
+@end
+
 #endif // __WUTITextRange_DEFINED__
 
 // Windows.UI.Text.ITextSelection
@@ -588,6 +596,10 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 - (int)startOf:(WUTTextRangeUnit)unit extend:(BOOL)extend;
 @end
 
+OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+@interface WUTITextSelection : RTObject <WUTITextSelection>
+@end
+
 #endif // __WUTITextSelection_DEFINED__
 
 // Windows.UI.Text.ITextCharacterFormat
@@ -622,6 +634,10 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 - (void)setClone:(RTObject<WUTITextCharacterFormat>*)value;
 - (RTObject<WUTITextCharacterFormat>*)getClone;
 - (BOOL)IsEqual:(RTObject<WUTITextCharacterFormat>*)format;
+@end
+
+OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+@interface WUTITextCharacterFormat : RTObject <WUTITextCharacterFormat>
 @end
 
 #endif // __WUTITextCharacterFormat_DEFINED__
@@ -662,6 +678,10 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 - (void)setClone:(RTObject<WUTITextParagraphFormat>*)format;
 - (void)setIndents:(float)start left:(float)left right:(float)right;
 - (void)setLineSpacing:(WUTLineSpacingRule)rule spacing:(float)spacing;
+@end
+
+OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+@interface WUTITextParagraphFormat : RTObject <WUTITextParagraphFormat>
 @end
 
 #endif // __WUTITextParagraphFormat_DEFINED__

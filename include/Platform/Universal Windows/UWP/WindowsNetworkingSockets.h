@@ -187,6 +187,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSMutableArray* /* NSString * */ supportedProtocols;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WNSIWebSocketControl : RTObject <WNSIWebSocketControl>
+@end
+
 #endif // __WNSIWebSocketControl_DEFINED__
 
 // Windows.Networking.Sockets.IWebSocketInformation
@@ -199,6 +203,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString* protocol;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WNSIWebSocketInformation : RTObject <WNSIWebSocketInformation>
+@end
+
 #endif // __WNSIWebSocketInformation_DEFINED__
 
 // Windows.Foundation.IClosable
@@ -207,6 +215,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 @protocol WFIClosable
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
 @end
 
 #endif // __WFIClosable_DEFINED__
@@ -223,6 +235,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)setRequestHeader:(NSString*)headerName headerValue:(NSString*)headerValue;
 - (void)closeWithStatus:(unsigned short)code reason:(NSString*)reason;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WNSIWebSocket : RTObject <WNSIWebSocket>
 @end
 
 #endif // __WNSIWebSocket_DEFINED__
@@ -689,6 +705,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 @protocol WABIBackgroundTask
 - (void)run:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WABIBackgroundTask : RTObject <WABIBackgroundTask>
 @end
 
 #endif // __WABIBackgroundTask_DEFINED__

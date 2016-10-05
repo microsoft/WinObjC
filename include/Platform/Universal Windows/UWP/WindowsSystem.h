@@ -320,6 +320,10 @@ typedef unsigned WSLaunchUriStatus;
 @property WUVViewSizePreference desiredRemainingView;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSILauncherViewOptions : RTObject <WSILauncherViewOptions>
+@end
+
 #endif // __WSILauncherViewOptions_DEFINED__
 
 // Windows.System.AppMemoryUsageLimitChangingEventArgs

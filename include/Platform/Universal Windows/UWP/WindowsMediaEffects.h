@@ -98,6 +98,10 @@ typedef unsigned WMEMediaEffectClosedReason;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+@interface WMEIVideoCompositorDefinition : RTObject <WMEIVideoCompositorDefinition>
+@end
+
 #endif // __WMEIVideoCompositorDefinition_DEFINED__
 
 // Windows.Media.IMediaExtension
@@ -106,6 +110,10 @@ typedef unsigned WMEMediaEffectClosedReason;
 
 @protocol WMIMediaExtension
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+@interface WMIMediaExtension : RTObject <WMIMediaExtension>
 @end
 
 #endif // __WMIMediaExtension_DEFINED__
@@ -123,6 +131,10 @@ typedef unsigned WMEMediaEffectClosedReason;
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+@interface WMEIVideoCompositor : RTObject <WMEIVideoCompositor>
+@end
+
 #endif // __WMEIVideoCompositor_DEFINED__
 
 // Windows.Media.Effects.IAudioEffectDefinition
@@ -134,6 +146,10 @@ typedef unsigned WMEMediaEffectClosedReason;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+@interface WMEIAudioEffectDefinition : RTObject <WMEIAudioEffectDefinition>
+@end
+
 #endif // __WMEIAudioEffectDefinition_DEFINED__
 
 // Windows.Media.Effects.IVideoEffectDefinition
@@ -143,6 +159,10 @@ typedef unsigned WMEMediaEffectClosedReason;
 @protocol WMEIVideoEffectDefinition
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+@interface WMEIVideoEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 @end
 
 #endif // __WMEIVideoEffectDefinition_DEFINED__
@@ -163,6 +183,10 @@ typedef unsigned WMEMediaEffectClosedReason;
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+@interface WMEIBasicVideoEffect : RTObject <WMEIBasicVideoEffect>
+@end
+
 #endif // __WMEIBasicVideoEffect_DEFINED__
 
 // Windows.Media.Effects.IBasicAudioEffect
@@ -177,6 +201,10 @@ typedef unsigned WMEMediaEffectClosedReason;
 - (void)close:(WMEMediaEffectClosedReason)reason;
 - (void)discardQueuedFrames;
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+@interface WMEIBasicAudioEffect : RTObject <WMEIBasicAudioEffect>
 @end
 
 #endif // __WMEIBasicAudioEffect_DEFINED__

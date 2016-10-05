@@ -92,6 +92,10 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
+@interface WFIAsyncInfo : RTObject <WFIAsyncInfo>
+@end
+
 #endif // __WFIAsyncInfo_DEFINED__
 
 // Windows.Security.Authentication.OnlineId.UserAuthenticationOperation
@@ -123,6 +127,10 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 - (void)getResults;
 - (void)cancel;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
+@interface WFIAsyncAction : RTObject <WFIAsyncAction>
 @end
 
 #endif // __WFIAsyncAction_DEFINED__

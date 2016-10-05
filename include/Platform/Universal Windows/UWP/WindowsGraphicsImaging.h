@@ -181,6 +181,10 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
                    failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+@interface WGIIBitmapPropertiesView : RTObject <WGIIBitmapPropertiesView>
+@end
+
 #endif // __WGIIBitmapPropertiesView_DEFINED__
 
 // Windows.Graphics.Imaging.IBitmapFrame
@@ -206,6 +210,10 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
                  colorManagementMode:(WGIColorManagementMode)colorManagementMode
                              success:(void (^)(WGIPixelDataProvider*))success
                              failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+@interface WGIIBitmapFrame : RTObject <WGIIBitmapFrame>
 @end
 
 #endif // __WGIIBitmapFrame_DEFINED__
@@ -236,6 +244,10 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
                  colorManagementMode:(WGIColorManagementMode)colorManagementMode
                              success:(void (^)(WGIPixelDataProvider*))success
                              failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+@interface WGIIBitmapFrameWithSoftwareBitmap : RTObject <WGIIBitmapFrameWithSoftwareBitmap>
 @end
 
 #endif // __WGIIBitmapFrameWithSoftwareBitmap_DEFINED__
@@ -362,6 +374,10 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Storage.Streams.IInputStream
@@ -378,6 +394,10 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+@interface WSSIInputStream : RTObject <WSSIInputStream>
+@end
+
 #endif // __WSSIInputStream_DEFINED__
 
 // Windows.Storage.Streams.IOutputStream
@@ -391,6 +411,10 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
            failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+@interface WSSIOutputStream : RTObject <WSSIOutputStream>
 @end
 
 #endif // __WSSIOutputStream_DEFINED__
@@ -422,6 +446,10 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+@interface WSSIRandomAccessStream : RTObject <WSSIRandomAccessStream>
+@end
+
 #endif // __WSSIRandomAccessStream_DEFINED__
 
 // Windows.Storage.Streams.IContentTypeProvider
@@ -430,6 +458,10 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 
 @protocol WSSIContentTypeProvider
 @property (readonly) NSString* contentType;
+@end
+
+OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+@interface WSSIContentTypeProvider : RTObject <WSSIContentTypeProvider>
 @end
 
 #endif // __WSSIContentTypeProvider_DEFINED__
@@ -456,6 +488,10 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
           progress:(void (^)(unsigned int))progress
            failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+@interface WSSIRandomAccessStreamWithContentType : RTObject <WSSIRandomAccessStreamWithContentType>
 @end
 
 #endif // __WSSIRandomAccessStreamWithContentType_DEFINED__
@@ -684,6 +720,10 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 @protocol WFIMemoryBuffer <WFIClosable>
 - (RTObject<WFIMemoryBufferReference>*)createReference;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+@interface WFIMemoryBuffer : RTObject <WFIMemoryBuffer>
 @end
 
 #endif // __WFIMemoryBuffer_DEFINED__

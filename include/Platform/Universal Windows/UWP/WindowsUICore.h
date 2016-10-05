@@ -196,6 +196,10 @@ typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 @property BOOL handled;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUCICoreWindowEventArgs : RTObject <WUCICoreWindowEventArgs>
+@end
+
 #endif // __WUCICoreWindowEventArgs_DEFINED__
 
 // Windows.UI.Core.ICoreWindow
@@ -254,6 +258,10 @@ typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 - (void)setPointerCapture;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUCICoreWindow : RTObject <WUCICoreWindow>
+@end
+
 #endif // __WUCICoreWindow_DEFINED__
 
 // Windows.UI.Core.ICoreAcceleratorKeys
@@ -265,6 +273,10 @@ typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 - (void)removeAcceleratorKeyActivatedEvent:(EventRegistrationToken)tok;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUCICoreAcceleratorKeys : RTObject <WUCICoreAcceleratorKeys>
+@end
+
 #endif // __WUCICoreAcceleratorKeys_DEFINED__
 
 // Windows.UI.Core.IInitializeWithCoreWindow
@@ -273,6 +285,10 @@ typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 
 @protocol WUCIInitializeWithCoreWindow
 - (void)Initialize:(WUCCoreWindow*)window;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUCIInitializeWithCoreWindow : RTObject <WUCIInitializeWithCoreWindow>
 @end
 
 #endif // __WUCIInitializeWithCoreWindow_DEFINED__
@@ -286,6 +302,10 @@ typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 @property BOOL isInputEnabled;
 - (EventRegistrationToken)addInputEnabledEvent:(void (^)(RTObject*, WUCInputEnabledEventArgs*))del;
 - (void)removeInputEnabledEvent:(EventRegistrationToken)tok;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUCICoreInputSourceBase : RTObject <WUCICoreInputSourceBase>
 @end
 
 #endif // __WUCICoreInputSourceBase_DEFINED__
@@ -314,6 +334,10 @@ typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 - (void)removePointerWheelChangedEvent:(EventRegistrationToken)tok;
 - (void)releasePointerCapture;
 - (void)setPointerCapture;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUCICorePointerInputSource : RTObject <WUCICorePointerInputSource>
 @end
 
 #endif // __WUCICorePointerInputSource_DEFINED__

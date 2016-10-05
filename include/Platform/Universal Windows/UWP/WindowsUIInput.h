@@ -156,6 +156,10 @@ OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 - (WFRect*)transformBounds:(WFRect*)rect;
 @end
 
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
+@interface WUIIPointerPointTransform : RTObject <WUIIPointerPointTransform>
+@end
+
 #endif // __WUIIPointerPointTransform_DEFINED__
 
 // Windows.UI.Input.EdgeGestureEventArgs

@@ -102,6 +102,10 @@ typedef unsigned WMMMediaMirroringOptions;
 @property (readonly) NSString* type;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
+@interface WMMIMediaEncodingProperties : RTObject <WMMIMediaEncodingProperties>
+@end
+
 #endif // __WMMIMediaEncodingProperties_DEFINED__
 
 // Windows.Media.MediaProperties.MediaRatio

@@ -91,6 +91,10 @@ OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_DATA_PDF_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Data.Pdf.PdfPage

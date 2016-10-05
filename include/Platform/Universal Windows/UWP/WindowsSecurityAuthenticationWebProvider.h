@@ -89,6 +89,10 @@ typedef unsigned WSAWPWebAccountScope;
 @property (readonly) WSAWPWebAccountProviderOperationKind kind;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSAWPIWebAccountProviderOperation : RTObject <WSAWPIWebAccountProviderOperation>
+@end
+
 #endif // __WSAWPIWebAccountProviderOperation_DEFINED__
 
 // Windows.Security.Authentication.Web.Provider.IWebAccountProviderBaseReportOperation
@@ -98,6 +102,10 @@ typedef unsigned WSAWPWebAccountScope;
 @protocol WSAWPIWebAccountProviderBaseReportOperation
 - (void)reportCompleted;
 - (void)reportError:(WSAWCWebProviderError*)value;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSAWPIWebAccountProviderBaseReportOperation : RTObject <WSAWPIWebAccountProviderBaseReportOperation>
 @end
 
 #endif // __WSAWPIWebAccountProviderBaseReportOperation_DEFINED__
@@ -110,6 +118,10 @@ typedef unsigned WSAWPWebAccountScope;
 - (void)reportUserCanceled;
 - (void)reportCompleted;
 - (void)reportError:(WSAWCWebProviderError*)value;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSAWPIWebAccountProviderUIReportOperation : RTObject <WSAWPIWebAccountProviderUIReportOperation>
 @end
 
 #endif // __WSAWPIWebAccountProviderUIReportOperation_DEFINED__
@@ -125,6 +137,10 @@ typedef unsigned WSAWPWebAccountScope;
 - (void)reportError:(WSAWCWebProviderError*)value;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSAWPIWebAccountProviderSilentReportOperation : RTObject <WSAWPIWebAccountProviderSilentReportOperation>
+@end
+
 #endif // __WSAWPIWebAccountProviderSilentReportOperation_DEFINED__
 
 // Windows.Security.Authentication.Web.Provider.IWebAccountProviderTokenOperation
@@ -137,6 +153,10 @@ typedef unsigned WSAWPWebAccountScope;
 @property (readonly) NSMutableArray* /* WSAWPWebProviderTokenResponse* */ providerResponses;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSAWPIWebAccountProviderTokenOperation : RTObject <WSAWPIWebAccountProviderTokenOperation>
+@end
+
 #endif // __WSAWPIWebAccountProviderTokenOperation_DEFINED__
 
 // Windows.Security.Authentication.Web.Provider.IWebAccountProviderTokenObjects
@@ -145,6 +165,10 @@ typedef unsigned WSAWPWebAccountScope;
 
 @protocol WSAWPIWebAccountProviderTokenObjects
 @property (readonly) RTObject<WSAWPIWebAccountProviderOperation>* operation;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSAWPIWebAccountProviderTokenObjects : RTObject <WSAWPIWebAccountProviderTokenObjects>
 @end
 
 #endif // __WSAWPIWebAccountProviderTokenObjects_DEFINED__

@@ -37,6 +37,10 @@
 @protocol WGEIGraphicsEffectSource
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_EFFECTS_EXPORT
+@interface WGEIGraphicsEffectSource : RTObject <WGEIGraphicsEffectSource>
+@end
+
 #endif // __WGEIGraphicsEffectSource_DEFINED__
 
 // Windows.Graphics.Effects.IGraphicsEffect
@@ -45,6 +49,10 @@
 
 @protocol WGEIGraphicsEffect <WGEIGraphicsEffectSource>
 @property (retain) NSString* name;
+@end
+
+OBJCUWP_WINDOWS_GRAPHICS_EFFECTS_EXPORT
+@interface WGEIGraphicsEffect : RTObject <WGEIGraphicsEffect>
 @end
 
 #endif // __WGEIGraphicsEffect_DEFINED__

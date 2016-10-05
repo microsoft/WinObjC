@@ -233,6 +233,10 @@ typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistra
 - (WABBackgroundTaskDeferral*)getDeferral;
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
+@interface WABIBackgroundTaskInstance : RTObject <WABIBackgroundTaskInstance>
+@end
+
 #endif // __WABIBackgroundTaskInstance_DEFINED__
 
 // Windows.ApplicationModel.Background.IBackgroundTaskInstance2
@@ -244,6 +248,10 @@ typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistra
 - (WABBackgroundTaskDeferral*)getDeferral;
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
+@interface WABIBackgroundTaskInstance2 : RTObject <WABIBackgroundTaskInstance2>
+@end
+
 #endif // __WABIBackgroundTaskInstance2_DEFINED__
 
 // Windows.ApplicationModel.Background.IBackgroundTask
@@ -252,6 +260,10 @@ typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistra
 
 @protocol WABIBackgroundTask
 - (void)run:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
+@end
+
+OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
+@interface WABIBackgroundTask : RTObject <WABIBackgroundTask>
 @end
 
 #endif // __WABIBackgroundTask_DEFINED__
@@ -270,6 +282,10 @@ typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistra
 - (void)unregister:(BOOL)cancelTask;
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
+@interface WABIBackgroundTaskRegistration : RTObject <WABIBackgroundTaskRegistration>
+@end
+
 #endif // __WABIBackgroundTaskRegistration_DEFINED__
 
 // Windows.ApplicationModel.Background.IBackgroundTaskRegistration2
@@ -281,6 +297,10 @@ typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistra
 - (void)unregister:(BOOL)cancelTask;
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
+@interface WABIBackgroundTaskRegistration2 : RTObject <WABIBackgroundTaskRegistration2>
+@end
+
 #endif // __WABIBackgroundTaskRegistration2_DEFINED__
 
 // Windows.ApplicationModel.Background.IBackgroundTrigger
@@ -290,6 +310,10 @@ typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistra
 @protocol WABIBackgroundTrigger
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
+@interface WABIBackgroundTrigger : RTObject <WABIBackgroundTrigger>
+@end
+
 #endif // __WABIBackgroundTrigger_DEFINED__
 
 // Windows.ApplicationModel.Background.IBackgroundCondition
@@ -297,6 +321,10 @@ typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistra
 #define __WABIBackgroundCondition_DEFINED__
 
 @protocol WABIBackgroundCondition
+@end
+
+OBJCUWP_WINDOWS_APPLICATIONMODEL_BACKGROUND_EXPORT
+@interface WABIBackgroundCondition : RTObject <WABIBackgroundCondition>
 @end
 
 #endif // __WABIBackgroundCondition_DEFINED__

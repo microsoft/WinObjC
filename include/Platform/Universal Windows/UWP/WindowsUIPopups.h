@@ -71,6 +71,10 @@ typedef void (^WUPUICommandInvokedHandler)(RTObject<WUPIUICommand>* command);
 @property (retain) NSString* label;
 @end
 
+OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
+@interface WUPIUICommand : RTObject <WUPIUICommand>
+@end
+
 #endif // __WUPIUICommand_DEFINED__
 
 // Windows.UI.Popups.MessageDialog

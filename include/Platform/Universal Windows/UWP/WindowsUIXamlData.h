@@ -112,6 +112,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.UI.Xaml.Data.IItemsRangeInfo
@@ -121,6 +125,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 @protocol WUXDIItemsRangeInfo <WFIClosable>
 - (void)rangesChanged:(WUXDItemIndexRange*)visibleRange trackedItems:(NSArray* /* WUXDItemIndexRange* */)trackedItems;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDIItemsRangeInfo : RTObject <WUXDIItemsRangeInfo>
 @end
 
 #endif // __WUXDIItemsRangeInfo_DEFINED__
@@ -134,6 +142,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 - (void)deselectRange:(WUXDItemIndexRange*)itemIndexRange;
 - (BOOL)isSelected:(int)index;
 - (NSArray* /* WUXDItemIndexRange* */)getSelectedRanges;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDISelectionInfo : RTObject <WUXDISelectionInfo>
 @end
 
 #endif // __WUXDISelectionInfo_DEFINED__
@@ -174,6 +186,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 - (void)loadMoreItemsAsync:(unsigned int)count success:(void (^)(WUXDLoadMoreItemsResult*))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDICollectionView : RTObject <WUXDICollectionView>
+@end
+
 #endif // __WUXDICollectionView_DEFINED__
 
 // Windows.UI.Xaml.Data.ICollectionViewFactory
@@ -182,6 +198,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 
 @protocol WUXDICollectionViewFactory
 - (RTObject<WUXDICollectionView>*)createView;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDICollectionViewFactory : RTObject <WUXDICollectionViewFactory>
 @end
 
 #endif // __WUXDICollectionViewFactory_DEFINED__
@@ -193,6 +213,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 @protocol WUXDICollectionViewGroup
 @property (readonly) RTObject* group;
 @property (readonly) NSMutableArray<RTObservableCollection>* /* RTObject* */ groupItems;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDICollectionViewGroup : RTObject <WUXDICollectionViewGroup>
 @end
 
 #endif // __WUXDICollectionViewGroup_DEFINED__
@@ -212,6 +236,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 - (void)setIndexedValue:(RTObject*)target value:(RTObject*)value index:(RTObject*)index;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDICustomProperty : RTObject <WUXDICustomProperty>
+@end
+
 #endif // __WUXDICustomProperty_DEFINED__
 
 // Windows.UI.Xaml.Data.ICustomPropertyProvider
@@ -225,6 +253,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 - (NSString*)getStringRepresentation;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDICustomPropertyProvider : RTObject <WUXDICustomPropertyProvider>
+@end
+
 #endif // __WUXDICustomPropertyProvider_DEFINED__
 
 // Windows.UI.Xaml.Data.INotifyPropertyChanged
@@ -234,6 +266,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 @protocol WUXDINotifyPropertyChanged
 - (EventRegistrationToken)addPropertyChangedEvent:(WUXDPropertyChangedEventHandler)del;
 - (void)removePropertyChangedEvent:(EventRegistrationToken)tok;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDINotifyPropertyChanged : RTObject <WUXDINotifyPropertyChanged>
 @end
 
 #endif // __WUXDINotifyPropertyChanged_DEFINED__
@@ -247,6 +283,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 - (void)loadMoreItemsAsync:(unsigned int)count success:(void (^)(WUXDLoadMoreItemsResult*))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDISupportIncrementalLoading : RTObject <WUXDISupportIncrementalLoading>
+@end
+
 #endif // __WUXDISupportIncrementalLoading_DEFINED__
 
 // Windows.UI.Xaml.Data.IValueConverter
@@ -256,6 +296,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 @protocol WUXDIValueConverter
 - (RTObject*)convert:(RTObject*)value targetType:(WUXITypeName*)targetType parameter:(RTObject*)parameter language:(NSString*)language;
 - (RTObject*)convertBack:(RTObject*)value targetType:(WUXITypeName*)targetType parameter:(RTObject*)parameter language:(NSString*)language;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDIValueConverter : RTObject <WUXDIValueConverter>
 @end
 
 #endif // __WUXDIValueConverter_DEFINED__
