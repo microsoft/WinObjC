@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <CoreGraphics/D2DWrapper.h>
+#import <Starboard.h>
 
 static const wchar_t* TAG = L"_D2DWrapper";
 

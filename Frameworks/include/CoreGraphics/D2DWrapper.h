@@ -21,8 +21,6 @@
 #import <D2d1.h>
 #include <COMIncludes_End.h>
 
-#import <Starboard.h>
-
 using namespace std;
 using namespace Microsoft::WRL;
 
