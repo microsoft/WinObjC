@@ -17,6 +17,9 @@
 
 #import "CTCRunTestViewController.h"
 
+static const NSString* c_text = @"XCTRunX";
+static const CFRange c_visibleRange = CFRangeMake(1, 5);
+
 @interface CTRunTestView : UIView {
 }
 
@@ -64,9 +67,8 @@
                                                                               (id)kCTParagraphStyleAttributeName,
                                                                               nil];
 
-    NSString* text = @"CTRun";
     CFAttributedStringRef attrString =
-        CFAttributedStringCreate(kCFAllocatorDefault, (__bridge CFStringRef)text, (__bridge CFDictionaryRef)attributesDict);
+        CFAttributedStringCreate(kCFAllocatorDefault, (__bridge CFStringRef)c_text, (__bridge CFDictionaryRef)attributesDict);
     CFAutorelease(attrString);
 
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(attrString);
@@ -83,7 +85,7 @@
 
     // Flips y-axis for our frame
     CGContextSetTextPosition(context, 0.0, 10.0);
-    CTRunDraw(run, context, CFRangeMake(0, 0));
+    CTRunDraw(run, context, c_visibleRange);
 
     // Creates outline
     CGContextSetLineWidth(context, 2.0);
@@ -169,7 +171,7 @@
     }
 
     CGPoint points[5];
-    CTRunGetPositions(run, CFRangeMake(0, 0), points);
+    CTRunGetPositions(run, c_visibleRange, points);
     const CGPoint* pointPtr = CTRunGetPositionsPtr(run);
     [_testCells addObject:createTextCell(@"CTRunGetPositions - {x, y}:", @"CTRunGetPositionsPtr - {x, y}", width / 2)];
     for (CFIndex i = 0; i < 5; ++i) {
@@ -179,7 +181,7 @@
     }
 
     CGSize advances[5];
-    CTRunGetAdvances(run, CFRangeMake(0, 0), advances);
+    CTRunGetAdvances(run, c_visibleRange, advances);
     const CGSize* advancePtr = CTRunGetAdvancesPtr(run);
     [_testCells addObject:createTextCell(@"CTRunGetAdvances - {width, height}:", @"CTRunGetAdvancesPtr {width, height}", width / 2)];
     for (CFIndex i = 0; i < 5; ++i) {
@@ -189,7 +191,7 @@
     }
 
     CGGlyph glyphs[5];
-    CTRunGetGlyphs(run, CFRangeMake(0, 0), glyphs);
+    CTRunGetGlyphs(run, c_visibleRange, glyphs);
     const CGGlyph* glyphPtr = CTRunGetGlyphsPtr(run);
     [_testCells addObject:createTextCell(@"CTRunGetGlyphs:", @"CTRunGetGlyphsPtr:", width / 2)];
     for (CFIndex i = 0; i < 5; ++i) {
@@ -199,7 +201,7 @@
     }
 
     CFIndex indices[5];
-    CTRunGetStringIndices(run, CFRangeMake(0, 0), indices);
+    CTRunGetStringIndices(run, c_visibleRange, indices);
     const CFIndex* indicesPtr = CTRunGetStringIndicesPtr(run);
     [_testCells addObject:createTextCell(@"CTRunGetStringIndices:", @"CTRunGetStringIndicesPtr:", width / 2)];
     for (CFIndex i = 0; i < 5; ++i) {
@@ -209,7 +211,7 @@
     }
 
     CGFloat ascent, descent, leading;
-    double totalWidth = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, &leading);
+    double totalWidth = CTRunGetTypographicBounds(run, c_visibleRange, &ascent, &descent, &leading);
     [_testCells
         addObject:createTextCell(@"CTRunGetTypographicBounds",
                                  [NSString
