@@ -36,6 +36,9 @@ using namespace ABI::Windows::Storage;
 using namespace ABI::Windows::Foundation::Collections;
 using namespace Microsoft::WRL;
 
+// TODO 1091: dynamic cast shouldn't be necessary but returned projected type is incorrect.
+@class WSIStorageItem;
+
 // Method to call in tests to activate app
 extern "C" void UIApplicationActivationTest(IInspectable* args, void* delegateClassName);
 
@@ -103,7 +106,8 @@ MOCK_CLASS(MockStorageItem,
     EXPECT_NE(nullptr, launchOptions[UIApplicationLaunchOptionsFileKey]);
     WAAFileActivatedEventArgs* result = launchOptions[UIApplicationLaunchOptionsFileKey];
     EXPECT_EQ(1, result.files.count);
-    EXPECT_OBJCEQ(@"FILEACTIVATED_TEST", [result.files[0] name]);
+    // TODO 1091: dynamic cast shouldn't be necessary but returned projected type is incorrect.
+    EXPECT_OBJCEQ(@"FILEACTIVATED_TEST", [rt_dynamic_cast<WSIStorageItem>(result.files[0]) name]);
     [_methodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
@@ -112,7 +116,8 @@ MOCK_CLASS(MockStorageItem,
     EXPECT_NE(nullptr, launchOptions[UIApplicationLaunchOptionsFileKey]);
     WAAFileActivatedEventArgs* result = launchOptions[UIApplicationLaunchOptionsFileKey];
     EXPECT_EQ(1, result.files.count);
-    EXPECT_OBJCEQ(@"FILEACTIVATED_TEST", [result.files[0] name]);
+    // TODO 1091: dynamic cast shouldn't be necessary but returned projected type is incorrect.
+    EXPECT_OBJCEQ(@"FILEACTIVATED_TEST", [rt_dynamic_cast<WSIStorageItem>(result.files[0]) name]);
     [_methodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
@@ -121,7 +126,8 @@ MOCK_CLASS(MockStorageItem,
     // Delegate method should only be called once
     EXPECT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
     EXPECT_EQ(1, result.files.count);
-    EXPECT_OBJCEQ(@"FILEACTIVATED_TEST", [result.files[0] name]);
+    // TODO 1091: dynamic cast shouldn't be necessary but returned projected type is incorrect.
+    EXPECT_OBJCEQ(@"FILEACTIVATED_TEST", [rt_dynamic_cast<WSIStorageItem>(result.files[0]) name]);
     [_methodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return;
 }
@@ -151,6 +157,8 @@ TEST(FileActivatedTest, ForegroundActivation) {
                 nameWrapper.CopyTo(name);
                 return S_OK;
             });
+
+            mockItem.CopyTo(item);
 
             return S_OK;
         });
