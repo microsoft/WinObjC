@@ -48,59 +48,59 @@ MOCK_CLASS(MockToastNotificationActivatedEventArgs,
            });
 
 @interface ToastNotificationForegroundActivationTestDelegate : NSObject <UIApplicationDelegate>
-@property (nonatomic, readonly) NSMutableDictionary* methodsCalled;
+@property (nonatomic, readonly) StrongId<NSMutableDictionary> methodsCalled;
 @end
 
 @implementation ToastNotificationForegroundActivationTestDelegate
 - (id)init {
     self = [super init];
     if (self) {
-        _methodsCalled = [NSMutableDictionary new];
+        _methodsCalled.attach([NSMutableDictionary new]);
     }
     return self;
 }
 
 - (BOOL)application:(UIApplication*)application willFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
-    EXPECT_TRUE(launchOptions[UIApplicationLaunchOptionsToastActionKey]);
+    EXPECT_NE(nullptr, launchOptions[UIApplicationLaunchOptionsToastActionKey]);
     NSDictionary* toastAction = launchOptions[UIApplicationLaunchOptionsToastActionKey];
     EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", toastAction[UIApplicationLaunchOptionsToastActionArgumentKey]);
     NSDictionary* userInput = toastAction[UIApplicationLaunchOptionsToastActionUserInputKey];
     EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST_VALUE", userInput[@"TOAST_NOTIFICATION_TEST_KEY"]);
-    _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
+    [_methodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
-    EXPECT_TRUE(launchOptions[UIApplicationLaunchOptionsToastActionKey]);
+    EXPECT_NE(nullptr, launchOptions[UIApplicationLaunchOptionsToastActionKey]);
     NSDictionary* toastAction = launchOptions[UIApplicationLaunchOptionsToastActionKey];
     EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", toastAction[UIApplicationLaunchOptionsToastActionArgumentKey]);
     NSDictionary* userInput = toastAction[UIApplicationLaunchOptionsToastActionUserInputKey];
     EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST_VALUE", userInput[@"TOAST_NOTIFICATION_TEST_KEY"]);
-    _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
+    [_methodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
     return true;
 }
 
-- (BOOL)application:(UIApplication*)application didReceiveToastAction:(NSDictionary*)toastAction {
+- (void)application:(UIApplication*)application didReceiveToastAction:(NSDictionary*)toastAction {
     // Delegate method should only be called once
     EXPECT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
     EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", toastAction[UIApplicationLaunchOptionsToastActionArgumentKey]);
     NSDictionary* userInput = toastAction[UIApplicationLaunchOptionsToastActionUserInputKey];
     EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST_VALUE", userInput[@"TOAST_NOTIFICATION_TEST_KEY"]);
-    _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
-    return true;
+    [_methodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
+    return;
 }
 
 @end
 
 @interface ActivatedAppReceivesToastNotificationDelegate : NSObject <UIApplicationDelegate>
-@property (nonatomic, readonly) NSMutableDictionary* methodsCalled;
+@property (nonatomic, readonly) StrongId<NSMutableDictionary> methodsCalled;
 @end
 
 @implementation ActivatedAppReceivesToastNotificationDelegate
 - (id)init {
     self = [super init];
     if (self) {
-        _methodsCalled = [NSMutableDictionary new];
+        _methodsCalled.attach([NSMutableDictionary new]);
     }
     return self;
 }
@@ -117,12 +117,12 @@ MOCK_CLASS(MockToastNotificationActivatedEventArgs,
     return true;
 }
 
-- (BOOL)application:(UIApplication*)application didReceiveToastAction:(NSDictionary*)toastAction {
+- (void)application:(UIApplication*)application didReceiveToastAction:(NSDictionary*)toastAction {
     // Delegate method should only be called once
     EXPECT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
     EXPECT_OBJCEQ(@"TOAST_NOTIFICATION_TEST", toastAction[UIApplicationLaunchOptionsToastActionArgumentKey]);
-    _methodsCalled[NSStringFromSelector(_cmd)] = @(YES);
-    return true;
+    [_methodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
+    return;
 }
 
 @end
@@ -160,8 +160,7 @@ TEST(ToastNotificationTest, ForegroundActivation) {
     });
 
     // Pass activation argument to method which activates the app
-    auto args = fakeToastNotificationActivatedEventArgs.Detach();
-    UIApplicationActivationTest(reinterpret_cast<IInspectable*>(args),
+    UIApplicationActivationTest(reinterpret_cast<IInspectable*>(fakeToastNotificationActivatedEventArgs.Get()),
                                 NSStringFromClass([ToastNotificationForegroundActivationTestDelegate class]));
 }
 
@@ -210,8 +209,7 @@ TEST(ToastNotificationTest, ActivatedAppReceivesToastNotification) {
 
     // Calls OnActivated, which should not go through activation because we are activated
     // But should still call our new delegate method
-    auto args = fakeToastNotificationActivatedEventArgs.Detach();
-    UIApplicationActivationTest(reinterpret_cast<IInspectable*>(args),
+    UIApplicationActivationTest(reinterpret_cast<IInspectable*>(fakeToastNotificationActivatedEventArgs.Get()),
                                 NSStringFromClass([ToastNotificationForegroundActivationTestDelegate class]));
 
     NSDictionary* methodsCalled = [testDelegate methodsCalled];

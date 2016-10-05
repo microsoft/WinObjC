@@ -86,6 +86,9 @@ int ApplicationMainStart(const char* principalName,
     } else if (activationType == ActivationTypeProtocol) {
         WFUri* uri = [WFUri createWith:(IInspectable*)activationArg];
         activationArgument = uri;
+    } else if (activationType == ActivationTypeFile) {
+        WAAFileActivatedEventArgs* activatedEventArgs = [WAAFileActivatedEventArgs createWith:activationArg];
+        activationArgument = activatedEventArgs;
     }
 
     WOCDisplayMode* displayMode = [UIApplication displayMode];

@@ -259,6 +259,9 @@ int UIApplicationMainInit(NSString* principalClassName,
         case ActivationTypeProtocol:
             [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsProtocolKey];
             break;
+        case ActivationTypeFile:
+            [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsFileKey];
+            break;
         default:
             break;
     }
@@ -356,6 +359,10 @@ extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisibl
 extern "C" void UIApplicationMainHandleVoiceCommandEvent(IInspectable* voiceCommandResult) {
     WMSSpeechRecognitionResult* result = [WMSSpeechRecognitionResult createWith:voiceCommandResult];
     [[UIApplication sharedApplication] _sendVoiceCommandReceivedEvent:result];
+}
+
+extern "C" void UIApplicationMainHandleFileEvent(IInspectable* result) {
+    [[UIApplication sharedApplication] _sendFileReceivedEvent:[WAAFileActivatedEventArgs createWith:result]];
 }
 
 static NSString* _bundleIdFromPackageFamilyName(const wchar_t* packageFamily) {

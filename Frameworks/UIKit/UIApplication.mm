@@ -100,6 +100,7 @@ NSString* const UIApplicationLaunchOptionsAnnotationKey = @"UIApplicationLaunchO
 NSString* const UIApplicationLaunchOptionsLocalNotificationKey = @"UIApplicationLaunchOptionsLocalNotificationKey";
 NSString* const UIApplicationLaunchOptionsToastActionKey = @"UIApplicationLaunchOptionsToastActionKey";
 NSString* const UIApplicationLaunchOptionsVoiceCommandKey = @"UIApplicationLaunchOptionsVoiceCommandKey";
+NSString* const UIApplicationLaunchOptionsFileKey = @"UIApplicationLaunchOptionsFileKey";
 NSString* const UIApplicationLaunchOptionsProtocolKey = @"UIApplicationLaunchOptionsProtocolKey";
 NSString* const UIApplicationLaunchOptionsLocationKey = @"UIApplicationLaunchOptionsLocationKey";
 
@@ -1249,6 +1250,12 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
 - (void)_sendVoiceCommandReceivedEvent:(WMSSpeechRecognitionResult*)result {
     if ([self.delegate respondsToSelector:@selector(application:didReceiveVoiceCommand:)]) {
         [self.delegate application:sharedApplication didReceiveVoiceCommand:result];
+    }
+}
+
+- (void)_sendFileReceivedEvent:(WAAFileActivatedEventArgs*)result {
+    if ([self.delegate respondsToSelector:@selector(application:didReceiveFile:)]) {
+        [self.delegate application:sharedApplication didReceiveFile:result];
     }
 }
 

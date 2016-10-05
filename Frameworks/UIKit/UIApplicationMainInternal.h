@@ -21,6 +21,7 @@ extern "C" void UIApplicationMainHandlePLMEvent(bool isActive);
 extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible);
 extern "C" void UIApplicationMainHandleToastActionEvent(HSTRING argument, IInspectable* userInput);
 extern "C" void UIApplicationMainHandleVoiceCommandEvent(IInspectable* voiceCommandResult);
+extern "C" void UIApplicationMainHandleFileEvent(IInspectable* result);
 extern "C" void UIApplicationMainHandleProtocolEvent(IInspectable* protocolUri, const wchar_t* sourceApplication);
 extern "C" void UIApplicationMainHandleSuspendEvent();
 extern "C" void UIApplicationMainHandleResumeEvent();

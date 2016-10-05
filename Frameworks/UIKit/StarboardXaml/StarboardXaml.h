@@ -27,6 +27,7 @@ typedef enum {
     ActivationTypeVoiceCommand = 2,
     ActivationTypeProtocol = 3,
     ActivationTypeLibrary = 4,
+    ActivationTypeFile = 5,
 } ActivationType;
 
 #ifdef __cplusplus_winrt
@@ -40,6 +41,7 @@ public:
     void Connect(int connectionId, Platform::Object^ target);
     void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args) override;
     void OnActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ args) override;
+    void OnFileActivated(Windows::ApplicationModel::Activation::FileActivatedEventArgs^ args) override;
 #ifdef ENABLE_BACKGROUND_TASK
     void OnBackgroundActivated(Windows::ApplicationModel::Activation::BackgroundActivatedEventArgs^ args) override;
 #endif
