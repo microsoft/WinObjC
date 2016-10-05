@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_FOUNDATION_EXPORT
+#define OBJCUWP_WINDOWS_FOUNDATION_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Foundation.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WFPropertyValue, WFDeferral, WFWwwFormUrlDecoder, WFUri, WFWwwFormUrlDecoderEntry, WFMemoryBuffer;
@@ -91,7 +95,7 @@ typedef void (^WFDeferralCompletedHandler)();
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Foundation.Point
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
 @interface WFPoint : NSObject
 + (instancetype) new;
 @property float x;
@@ -99,7 +103,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Foundation.Size
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
 @interface WFSize : NSObject
 + (instancetype) new;
 @property float width;
@@ -107,7 +111,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Foundation.Rect
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
 @interface WFRect : NSObject
 + (instancetype) new;
 @property float x;
@@ -117,14 +121,14 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Foundation.DateTime
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
 @interface WFDateTime : NSObject
 + (instancetype) new;
 @property int64_t universalTime;
 @end
 
 // [struct] Windows.Foundation.TimeSpan
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
 @interface WFTimeSpan : NSObject
 + (instancetype) new;
 @property int64_t duration;
@@ -293,7 +297,7 @@ typedef void (^WFDeferralCompletedHandler)();
 #ifndef __WFPropertyValue_DEFINED__
 #define __WFPropertyValue_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
 @interface WFPropertyValue : RTObject
 + (RTObject*)createEmpty;
 + (RTObject*)createUInt8:(uint8_t)value;
@@ -342,7 +346,7 @@ WINRT_EXPORT
 #ifndef __WFDeferral_DEFINED__
 #define __WFDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
 @interface WFDeferral : RTObject <WFIClosable>
 + (WFDeferral*)make:(WFDeferralCompletedHandler)handler ACTIVATOR;
 #if defined(__cplusplus)
@@ -358,7 +362,7 @@ WINRT_EXPORT
 #ifndef __WFWwwFormUrlDecoder_DEFINED__
 #define __WFWwwFormUrlDecoder_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
 @interface WFWwwFormUrlDecoder : RTObject
 + (WFWwwFormUrlDecoder*)makeWwwFormUrlDecoder:(NSString*)query ACTIVATOR;
 #if defined(__cplusplus)
@@ -378,7 +382,7 @@ WINRT_EXPORT
 #ifndef __WFUri_DEFINED__
 #define __WFUri_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
 @interface WFUri : RTObject <WFIStringable>
 + (NSString*)unescapeComponent:(NSString*)toUnescape;
 + (NSString*)escapeComponent:(NSString*)toEscape;
@@ -415,7 +419,7 @@ WINRT_EXPORT
 #ifndef __WFWwwFormUrlDecoderEntry_DEFINED__
 #define __WFWwwFormUrlDecoderEntry_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
 @interface WFWwwFormUrlDecoderEntry : RTObject <WFIWwwFormUrlDecoderEntry>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -430,7 +434,7 @@ WINRT_EXPORT
 #ifndef __WFMemoryBuffer_DEFINED__
 #define __WFMemoryBuffer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
 @interface WFMemoryBuffer : RTObject <WFIMemoryBuffer, WFIClosable>
 + (WFMemoryBuffer*)make:(unsigned int)capacity ACTIVATOR;
 #if defined(__cplusplus)

@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
+#define OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Security_Authentication_OnlineId.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WSAOOnlineIdServiceTicketRequest, WSAOOnlineIdServiceTicket, WSAOUserAuthenticationOperation, WSAOSignOutUserOperation,
@@ -47,7 +51,7 @@ typedef void (^WFAsyncActionCompletedHandler)(RTObject<WFIAsyncAction>* asyncInf
 #ifndef __WSAOOnlineIdServiceTicketRequest_DEFINED__
 #define __WSAOOnlineIdServiceTicketRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 @interface WSAOOnlineIdServiceTicketRequest : RTObject
 + (WSAOOnlineIdServiceTicketRequest*)makeOnlineIdServiceTicketRequest:(NSString*)service policy:(NSString*)policy ACTIVATOR;
 + (WSAOOnlineIdServiceTicketRequest*)makeOnlineIdServiceTicketRequestAdvanced:(NSString*)service ACTIVATOR;
@@ -64,7 +68,7 @@ WINRT_EXPORT
 #ifndef __WSAOOnlineIdServiceTicket_DEFINED__
 #define __WSAOOnlineIdServiceTicket_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 @interface WSAOOnlineIdServiceTicket : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -94,7 +98,7 @@ WINRT_EXPORT
 #ifndef __WSAOUserAuthenticationOperation_DEFINED__
 #define __WSAOUserAuthenticationOperation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 @interface WSAOUserAuthenticationOperation : RTObject <WFIAsyncInfo>
 // Failed to get type for default interface: Can't marshal
 // Windows.Foundation.IAsyncOperation`1<Windows.Security.Authentication.OnlineId.UserIdentity>
@@ -127,7 +131,7 @@ WINRT_EXPORT
 #ifndef __WSAOSignOutUserOperation_DEFINED__
 #define __WSAOSignOutUserOperation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 @interface WSAOSignOutUserOperation : RTObject <WFIAsyncAction, WFIAsyncInfo>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -147,7 +151,7 @@ WINRT_EXPORT
 #ifndef __WSAOUserIdentity_DEFINED__
 #define __WSAOUserIdentity_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 @interface WSAOUserIdentity : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -168,7 +172,7 @@ WINRT_EXPORT
 #ifndef __WSAOOnlineIdAuthenticator_DEFINED__
 #define __WSAOOnlineIdAuthenticator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 @interface WSAOOnlineIdAuthenticator : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

@@ -22,6 +22,7 @@
 class PBXAggregateTarget : public PBXTarget {
 public:
   virtual ~PBXAggregateTarget();
+  virtual String getTargetType() const { return "Aggregate"; }
   static PBXAggregateTarget* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
   
 private:

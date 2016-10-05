@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
+#define OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Graphics_Printing_OptionDetails.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WGPOPrintCopiesOptionDetails, WGPOPrintMediaSizeOptionDetails, WGPOPrintMediaTypeOptionDetails, WGPOPrintOrientationOptionDetails,
@@ -116,7 +120,7 @@ typedef unsigned WGPOPrintOptionType;
 #ifndef __WGPOPrintCopiesOptionDetails_DEFINED__
 #define __WGPOPrintCopiesOptionDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
 @interface WGPOPrintCopiesOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintNumberOptionDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -137,7 +141,7 @@ WINRT_EXPORT
 #ifndef __WGPOPrintMediaSizeOptionDetails_DEFINED__
 #define __WGPOPrintMediaSizeOptionDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
 @interface WGPOPrintMediaSizeOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -157,7 +161,7 @@ WINRT_EXPORT
 #ifndef __WGPOPrintMediaTypeOptionDetails_DEFINED__
 #define __WGPOPrintMediaTypeOptionDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
 @interface WGPOPrintMediaTypeOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -177,7 +181,7 @@ WINRT_EXPORT
 #ifndef __WGPOPrintOrientationOptionDetails_DEFINED__
 #define __WGPOPrintOrientationOptionDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
 @interface WGPOPrintOrientationOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -197,7 +201,7 @@ WINRT_EXPORT
 #ifndef __WGPOPrintQualityOptionDetails_DEFINED__
 #define __WGPOPrintQualityOptionDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
 @interface WGPOPrintQualityOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -217,7 +221,7 @@ WINRT_EXPORT
 #ifndef __WGPOPrintColorModeOptionDetails_DEFINED__
 #define __WGPOPrintColorModeOptionDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
 @interface WGPOPrintColorModeOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -237,7 +241,7 @@ WINRT_EXPORT
 #ifndef __WGPOPrintDuplexOptionDetails_DEFINED__
 #define __WGPOPrintDuplexOptionDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
 @interface WGPOPrintDuplexOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -257,7 +261,7 @@ WINRT_EXPORT
 #ifndef __WGPOPrintCollationOptionDetails_DEFINED__
 #define __WGPOPrintCollationOptionDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
 @interface WGPOPrintCollationOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -277,7 +281,7 @@ WINRT_EXPORT
 #ifndef __WGPOPrintStapleOptionDetails_DEFINED__
 #define __WGPOPrintStapleOptionDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
 @interface WGPOPrintStapleOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -297,7 +301,7 @@ WINRT_EXPORT
 #ifndef __WGPOPrintHolePunchOptionDetails_DEFINED__
 #define __WGPOPrintHolePunchOptionDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
 @interface WGPOPrintHolePunchOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -317,7 +321,7 @@ WINRT_EXPORT
 #ifndef __WGPOPrintBindingOptionDetails_DEFINED__
 #define __WGPOPrintBindingOptionDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
 @interface WGPOPrintBindingOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -337,7 +341,7 @@ WINRT_EXPORT
 #ifndef __WGPOPrintCustomTextOptionDetails_DEFINED__
 #define __WGPOPrintCustomTextOptionDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
 @interface WGPOPrintCustomTextOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintCustomOptionDetails>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -358,7 +362,7 @@ WINRT_EXPORT
 #ifndef __WGPOPrintCustomItemDetails_DEFINED__
 #define __WGPOPrintCustomItemDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
 @interface WGPOPrintCustomItemDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -373,7 +377,7 @@ WINRT_EXPORT
 #ifndef __WGPOPrintCustomItemListOptionDetails_DEFINED__
 #define __WGPOPrintCustomItemListOptionDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
 @interface WGPOPrintCustomItemListOptionDetails
     : RTObject <WGPOIPrintOptionDetails, WGPOIPrintCustomOptionDetails, WGPOIPrintItemListOptionDetails>
 #if defined(__cplusplus)
@@ -396,7 +400,7 @@ WINRT_EXPORT
 #ifndef __WGPOPrintTaskOptionChangedEventArgs_DEFINED__
 #define __WGPOPrintTaskOptionChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
 @interface WGPOPrintTaskOptionChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -430,7 +434,7 @@ WINRT_EXPORT
 #ifndef __WGPOPrintTaskOptionDetails_DEFINED__
 #define __WGPOPrintTaskOptionDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
 @interface WGPOPrintTaskOptionDetails : RTObject <WGPIPrintTaskOptionsCore, WGPIPrintTaskOptionsCoreUIConfiguration>
 + (WGPOPrintTaskOptionDetails*)getFromPrintTaskOptions:(WGPPrintTaskOptions*)printTaskOptions;
 #if defined(__cplusplus)

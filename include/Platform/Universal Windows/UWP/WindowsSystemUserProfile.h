@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
+#define OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_System_UserProfile.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WSUAdvertisingManager, WSUUserProfilePersonalizationSettings, WSUGlobalizationPreferences, WSUFirstSignInSettings;
@@ -35,7 +39,7 @@
 #ifndef __WSUAdvertisingManager_DEFINED__
 #define __WSUAdvertisingManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
 @interface WSUAdvertisingManager : RTObject
 + (NSString*)advertisingId;
 @end
@@ -46,7 +50,7 @@ WINRT_EXPORT
 #ifndef __WSUUserProfilePersonalizationSettings_DEFINED__
 #define __WSUUserProfilePersonalizationSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
 @interface WSUUserProfilePersonalizationSettings : RTObject
 + (BOOL)isSupported;
 #if defined(__cplusplus)
@@ -63,7 +67,7 @@ WINRT_EXPORT
 #ifndef __WSUGlobalizationPreferences_DEFINED__
 #define __WSUGlobalizationPreferences_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
 @interface WSUGlobalizationPreferences : RTObject
 + (NSArray* /* NSString * */)calendars;
 + (NSArray* /* NSString * */)clocks;
@@ -79,7 +83,7 @@ WINRT_EXPORT
 #ifndef __WSUFirstSignInSettings_DEFINED__
 #define __WSUFirstSignInSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
 @interface WSUFirstSignInSettings : RTObject
 + (WSUFirstSignInSettings*)getDefault;
 #if defined(__cplusplus)

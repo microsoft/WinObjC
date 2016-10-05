@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+#define OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Globalization_NumberFormatting.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WGNSignificantDigitsNumberRounder, WGNIncrementNumberRounder, WGNDecimalFormatter, WGNPercentFormatter, WGNPermilleFormatter,
@@ -157,7 +161,7 @@ typedef unsigned WGNCurrencyFormatterMode;
 #ifndef __WGNSignificantDigitsNumberRounder_DEFINED__
 #define __WGNSignificantDigitsNumberRounder_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @interface WGNSignificantDigitsNumberRounder : RTObject <WGNINumberRounder>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -179,7 +183,7 @@ WINRT_EXPORT
 #ifndef __WGNIncrementNumberRounder_DEFINED__
 #define __WGNIncrementNumberRounder_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @interface WGNIncrementNumberRounder : RTObject <WGNINumberRounder>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -201,7 +205,7 @@ WINRT_EXPORT
 #ifndef __WGNDecimalFormatter_DEFINED__
 #define __WGNDecimalFormatter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @interface WGNDecimalFormatter : RTObject <WGNINumberFormatterOptions,
                                            WGNINumberFormatter,
                                            WGNINumberFormatter2,
@@ -241,7 +245,7 @@ WINRT_EXPORT
 #ifndef __WGNPercentFormatter_DEFINED__
 #define __WGNPercentFormatter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @interface WGNPercentFormatter : RTObject <WGNINumberFormatterOptions,
                                            WGNINumberFormatter,
                                            WGNINumberFormatter2,
@@ -281,7 +285,7 @@ WINRT_EXPORT
 #ifndef __WGNPermilleFormatter_DEFINED__
 #define __WGNPermilleFormatter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @interface WGNPermilleFormatter : RTObject <WGNINumberFormatterOptions,
                                             WGNINumberFormatter,
                                             WGNINumberFormatter2,
@@ -321,7 +325,7 @@ WINRT_EXPORT
 #ifndef __WGNCurrencyFormatter_DEFINED__
 #define __WGNCurrencyFormatter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @interface WGNCurrencyFormatter : RTObject <WGNINumberParser,
                                             WGNINumberFormatter2,
                                             WGNINumberFormatter,
@@ -365,7 +369,7 @@ WINRT_EXPORT
 #ifndef __WGNNumeralSystemTranslator_DEFINED__
 #define __WGNNumeralSystemTranslator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @interface WGNNumeralSystemTranslator : RTObject
 + (WGNNumeralSystemTranslator*)make:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
 + (instancetype)make ACTIVATOR;

@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WWHHttpRequestMessage, WWHHttpResponseMessage, WWHHttpClient, WWHHttpCookie, WWHHttpCookieCollection, WWHHttpMethod,
@@ -144,7 +148,7 @@ typedef unsigned WWHHttpResponseMessageSource;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Web.Http.HttpProgress
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpProgress : NSObject
 + (instancetype) new;
 @property WWHHttpProgressStage stage;
@@ -203,7 +207,7 @@ WINRT_EXPORT
 #ifndef __WWHHttpRequestMessage_DEFINED__
 #define __WWHHttpRequestMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpRequestMessage : RTObject <WFIClosable, WFIStringable>
 + (instancetype)make ACTIVATOR;
 + (WWHHttpRequestMessage*)make:(WWHHttpMethod*)method uri:(WFUri*)uri ACTIVATOR;
@@ -226,7 +230,7 @@ WINRT_EXPORT
 #ifndef __WWHHttpResponseMessage_DEFINED__
 #define __WWHHttpResponseMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpResponseMessage : RTObject <WFIClosable, WFIStringable>
 + (instancetype)make ACTIVATOR;
 + (WWHHttpResponseMessage*)make:(WWHHttpStatusCode)statusCode ACTIVATOR;
@@ -252,7 +256,7 @@ WINRT_EXPORT
 #ifndef __WWHHttpClient_DEFINED__
 #define __WWHHttpClient_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpClient : RTObject <WFIClosable, WFIStringable>
 + (instancetype)make ACTIVATOR;
 + (WWHHttpClient*)make:(RTObject<WWHFIHttpFilter>*)filter ACTIVATOR;
@@ -314,7 +318,7 @@ WINRT_EXPORT
 #ifndef __WWHHttpCookie_DEFINED__
 #define __WWHHttpCookie_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpCookie : RTObject <WFIStringable>
 + (WWHHttpCookie*)make:(NSString*)name domain:(NSString*)domain path:(NSString*)path ACTIVATOR;
 #if defined(__cplusplus)
@@ -336,7 +340,7 @@ WINRT_EXPORT
 #ifndef __WWHHttpCookieCollection_DEFINED__
 #define __WWHHttpCookieCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpCookieCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -354,7 +358,7 @@ WINRT_EXPORT
 #ifndef __WWHHttpMethod_DEFINED__
 #define __WWHHttpMethod_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpMethod : RTObject <WFIStringable>
 + (WWHHttpMethod*)make:(NSString*)method ACTIVATOR;
 #if defined(__cplusplus)
@@ -377,7 +381,7 @@ WINRT_EXPORT
 #ifndef __WWHHttpTransportInformation_DEFINED__
 #define __WWHHttpTransportInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpTransportInformation : RTObject <WFIStringable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -395,7 +399,7 @@ WINRT_EXPORT
 #ifndef __WWHHttpStringContent_DEFINED__
 #define __WWHHttpStringContent_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpStringContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpStringContent*)makeFromString:(NSString*)content ACTIVATOR;
 + (WWHHttpStringContent*)makeFromStringWithEncoding:(NSString*)content encoding:(WSSUnicodeEncoding)encoding ACTIVATOR;
@@ -429,7 +433,7 @@ WINRT_EXPORT
 #ifndef __WWHHttpBufferContent_DEFINED__
 #define __WWHHttpBufferContent_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpBufferContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpBufferContent*)makeFromBuffer:(RTObject<WSSIBuffer>*)content ACTIVATOR;
 + (WWHHttpBufferContent*)makeFromBufferWithOffset:(RTObject<WSSIBuffer>*)content
@@ -462,7 +466,7 @@ WINRT_EXPORT
 #ifndef __WWHHttpStreamContent_DEFINED__
 #define __WWHHttpStreamContent_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpStreamContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpStreamContent*)makeFromInputStream:(RTObject<WSSIInputStream>*)content ACTIVATOR;
 #if defined(__cplusplus)
@@ -492,7 +496,7 @@ WINRT_EXPORT
 #ifndef __WWHHttpFormUrlEncodedContent_DEFINED__
 #define __WWHHttpFormUrlEncodedContent_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpFormUrlEncodedContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpFormUrlEncodedContent*)make:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)content ACTIVATOR;
 #if defined(__cplusplus)
@@ -522,7 +526,7 @@ WINRT_EXPORT
 #ifndef __WWHHttpMultipartContent_DEFINED__
 #define __WWHHttpMultipartContent_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpMultipartContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpMultipartContent*)makeWithSubtype:(NSString*)subtype ACTIVATOR;
 + (WWHHttpMultipartContent*)makeWithSubtypeAndBoundary:(NSString*)subtype boundary:(NSString*)boundary ACTIVATOR;
@@ -555,7 +559,7 @@ WINRT_EXPORT
 #ifndef __WWHHttpMultipartFormDataContent_DEFINED__
 #define __WWHHttpMultipartFormDataContent_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpMultipartFormDataContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpMultipartFormDataContent*)makeWithBoundary:(NSString*)boundary ACTIVATOR;
 + (instancetype)make ACTIVATOR;
@@ -589,7 +593,7 @@ WINRT_EXPORT
 #ifndef __WWHHttpCookieManager_DEFINED__
 #define __WWHHttpCookieManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpCookieManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

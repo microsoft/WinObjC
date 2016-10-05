@@ -845,6 +845,13 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
 /**
  @Status Interoperable
 */
+- (UIEdgeInsets)capInsets {
+    return _imageInsets;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)drawInRect:(CGRect)pos {
     [self drawInRect:pos blendMode:kCGBlendModeNormal alpha:1.0f];
 }
@@ -965,10 +972,17 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
     if (leftCap != 0) {
         ret->_imageStretch.origin.x = leftCap / imgSize.width;
         ret->_imageStretch.size.width = 1.0f / imgSize.width;
+        if (leftCap < imgSize.width) {
+            // As per UIImage documentation, left/top caps create cap insets with a center section of 1x1 logical pixels
+            ret->_imageInsets.right = imgSize.width - (ret->_imageInsets.left + 1);
+        }
     }
     if (topCap != 0) {
         ret->_imageStretch.origin.y = topCap / imgSize.height;
         ret->_imageStretch.size.height = 1.0f / imgSize.height;
+        if (topCap < imgSize.height) {
+            ret->_imageInsets.bottom = imgSize.height - (ret->_imageInsets.top + 1);
+        }
     }
 
     return [ret autorelease];

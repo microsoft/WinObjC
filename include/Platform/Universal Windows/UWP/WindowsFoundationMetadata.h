@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_FOUNDATION_METADATA_EXPORT
+#define OBJCUWP_WINDOWS_FOUNDATION_METADATA_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Foundation_Metadata.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WFMApiInformation;
@@ -95,7 +99,7 @@ typedef unsigned WFMDeprecationType;
 #ifndef __WFMApiInformation_DEFINED__
 #define __WFMApiInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_METADATA_EXPORT
 @interface WFMApiInformation : RTObject
 + (BOOL)isTypePresent:(NSString*)typeName;
 + (BOOL)isMethodPresent:(NSString*)typeName methodName:(NSString*)methodName;

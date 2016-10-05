@@ -25,6 +25,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
     self.title = @"Xaml Slider";
     [self tableView].allowsSelection = NO;
 }

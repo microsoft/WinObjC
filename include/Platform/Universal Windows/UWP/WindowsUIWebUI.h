@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+#define OBJCUWP_WINDOWS_UI_WEBUI_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_WebUI.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUWWebUIVoiceCommandActivatedEventArgs, WUWActivatedDeferral, WUWActivatedOperation, WUWWebUILaunchActivatedEventArgs,
@@ -177,7 +181,7 @@ typedef void (^WUWNavigatedEventHandler)(RTObject* sender, RTObject<WUWIWebUINav
 #ifndef __WUWWebUIVoiceCommandActivatedEventArgs_DEFINED__
 #define __WUWWebUIVoiceCommandActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIVoiceCommandActivatedEventArgs
     : RTObject <WAAIVoiceCommandActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
@@ -196,7 +200,7 @@ WINRT_EXPORT
 #ifndef __WUWActivatedDeferral_DEFINED__
 #define __WUWActivatedDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWActivatedDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -210,7 +214,7 @@ WINRT_EXPORT
 #ifndef __WUWActivatedOperation_DEFINED__
 #define __WUWActivatedOperation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWActivatedOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -255,7 +259,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUILaunchActivatedEventArgs_DEFINED__
 #define __WUWWebUILaunchActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUILaunchActivatedEventArgs : RTObject <WAAILaunchActivatedEventArgs,
                                                         WAAIActivatedEventArgs,
                                                         WAAIPrelaunchActivatedEventArgs,
@@ -290,7 +294,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIShareTargetActivatedEventArgs_DEFINED__
 #define __WUWWebUIShareTargetActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIShareTargetActivatedEventArgs
     : RTObject <WAAIShareTargetActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
@@ -330,7 +334,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIFileActivatedEventArgs_DEFINED__
 #define __WUWWebUIFileActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIFileActivatedEventArgs : RTObject <WAAIFileActivatedEventArgs,
                                                       WAAIActivatedEventArgs,
                                                       WAAIApplicationViewActivatedEventArgs,
@@ -376,7 +380,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIProtocolActivatedEventArgs_DEFINED__
 #define __WUWWebUIProtocolActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIProtocolActivatedEventArgs : RTObject <WAAIProtocolActivatedEventArgs,
                                                           WAAIActivatedEventArgs,
                                                           WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData,
@@ -411,7 +415,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIProtocolForResultsActivatedEventArgs_DEFINED__
 #define __WUWWebUIProtocolForResultsActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIProtocolForResultsActivatedEventArgs : RTObject <WAAIProtocolForResultsActivatedEventArgs,
                                                                     WAAIActivatedEventArgs,
                                                                     WAAIProtocolActivatedEventArgs,
@@ -458,7 +462,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIFileOpenPickerActivatedEventArgs_DEFINED__
 #define __WUWWebUIFileOpenPickerActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIFileOpenPickerActivatedEventArgs : RTObject <WAAIFileOpenPickerActivatedEventArgs,
                                                                 WAAIActivatedEventArgs,
                                                                 WAAIFileOpenPickerActivatedEventArgs2,
@@ -501,7 +505,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIFileSavePickerActivatedEventArgs_DEFINED__
 #define __WUWWebUIFileSavePickerActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIFileSavePickerActivatedEventArgs : RTObject <WAAIFileSavePickerActivatedEventArgs,
                                                                 WAAIActivatedEventArgs,
                                                                 WAAIFileSavePickerActivatedEventArgs2,
@@ -534,7 +538,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUICachedFileUpdaterActivatedEventArgs_DEFINED__
 #define __WUWWebUICachedFileUpdaterActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUICachedFileUpdaterActivatedEventArgs
     : RTObject <WAAICachedFileUpdaterActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
@@ -564,7 +568,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIDeviceActivatedEventArgs_DEFINED__
 #define __WUWWebUIDeviceActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIDeviceActivatedEventArgs
     : RTObject <WAAIDeviceActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
@@ -605,7 +609,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIAppointmentsProviderAddAppointmentActivatedEventArgs_DEFINED__
 #define __WUWWebUIAppointmentsProviderAddAppointmentActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIAppointmentsProviderAddAppointmentActivatedEventArgs
     : RTObject <WAAIAppointmentsProviderAddAppointmentActivatedEventArgs,
                 WAAIAppointmentsProviderActivatedEventArgs,
@@ -638,7 +642,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIAppointmentsProviderReplaceAppointmentActivatedEventArgs_DEFINED__
 #define __WUWWebUIAppointmentsProviderReplaceAppointmentActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIAppointmentsProviderReplaceAppointmentActivatedEventArgs
     : RTObject <WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs,
                 WAAIAppointmentsProviderActivatedEventArgs,
@@ -671,7 +675,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIAppointmentsProviderRemoveAppointmentActivatedEventArgs_DEFINED__
 #define __WUWWebUIAppointmentsProviderRemoveAppointmentActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIAppointmentsProviderRemoveAppointmentActivatedEventArgs
     : RTObject <WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs,
                 WAAIAppointmentsProviderActivatedEventArgs,
@@ -707,7 +711,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs_DEFINED__
 #define __WUWWebUIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs
     : RTObject <WAAIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs,
                 WAAIAppointmentsProviderActivatedEventArgs,
@@ -743,7 +747,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIAppointmentsProviderShowTimeFrameActivatedEventArgs_DEFINED__
 #define __WUWWebUIAppointmentsProviderShowTimeFrameActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIAppointmentsProviderShowTimeFrameActivatedEventArgs : RTObject <WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs,
                                                                                    WAAIAppointmentsProviderActivatedEventArgs,
                                                                                    WAAIActivatedEventArgs,
@@ -776,7 +780,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUILockScreenActivatedEventArgs_DEFINED__
 #define __WUWWebUILockScreenActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUILockScreenActivatedEventArgs : RTObject <WAAILockScreenActivatedEventArgs,
                                                             WAAIActivatedEventArgs,
                                                             WAAIApplicationViewActivatedEventArgs,
@@ -808,7 +812,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIRestrictedLaunchActivatedEventArgs_DEFINED__
 #define __WUWWebUIRestrictedLaunchActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIRestrictedLaunchActivatedEventArgs
     : RTObject <WAAIRestrictedLaunchActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
@@ -847,7 +851,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIFileOpenPickerContinuationEventArgs_DEFINED__
 #define __WUWWebUIFileOpenPickerContinuationEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIFileOpenPickerContinuationEventArgs : RTObject <WAAIFileOpenPickerContinuationEventArgs,
                                                                    WAAIContinuationActivatedEventArgs,
                                                                    WAAIActivatedEventArgs,
@@ -879,7 +883,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIFileSavePickerContinuationEventArgs_DEFINED__
 #define __WUWWebUIFileSavePickerContinuationEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIFileSavePickerContinuationEventArgs : RTObject <WAAIFileSavePickerContinuationEventArgs,
                                                                    WAAIContinuationActivatedEventArgs,
                                                                    WAAIActivatedEventArgs,
@@ -911,7 +915,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIFolderPickerContinuationEventArgs_DEFINED__
 #define __WUWWebUIFolderPickerContinuationEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIFolderPickerContinuationEventArgs : RTObject <WAAIFolderPickerContinuationEventArgs,
                                                                  WAAIContinuationActivatedEventArgs,
                                                                  WAAIActivatedEventArgs,
@@ -943,7 +947,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIWebAuthenticationBrokerContinuationEventArgs_DEFINED__
 #define __WUWWebUIWebAuthenticationBrokerContinuationEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIWebAuthenticationBrokerContinuationEventArgs : RTObject <WAAIWebAuthenticationBrokerContinuationEventArgs,
                                                                             WAAIContinuationActivatedEventArgs,
                                                                             WAAIActivatedEventArgs,
@@ -975,7 +979,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIWebAccountProviderActivatedEventArgs_DEFINED__
 #define __WUWWebUIWebAccountProviderActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIWebAccountProviderActivatedEventArgs
     : RTObject <WAAIWebAccountProviderActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
@@ -1004,7 +1008,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIDialReceiverActivatedEventArgs_DEFINED__
 #define __WUWWebUIDialReceiverActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIDialReceiverActivatedEventArgs : RTObject <WAAIDialReceiverActivatedEventArgs,
                                                               WAAILaunchActivatedEventArgs,
                                                               WAAIActivatedEventArgs,
@@ -1040,7 +1044,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIToastNotificationActivatedEventArgs_DEFINED__
 #define __WUWWebUIToastNotificationActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIToastNotificationActivatedEventArgs
     : RTObject <WAAIToastNotificationActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 #if defined(__cplusplus)
@@ -1060,7 +1064,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUINavigatedOperation_DEFINED__
 #define __WUWWebUINavigatedOperation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUINavigatedOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1084,7 +1088,7 @@ WINRT_EXPORT
 #ifndef __WUWSuspendingDeferral_DEFINED__
 #define __WUWSuspendingDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWSuspendingDeferral : RTObject <WAISuspendingDeferral>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1109,7 +1113,7 @@ WINRT_EXPORT
 #ifndef __WUWSuspendingOperation_DEFINED__
 #define __WUWSuspendingOperation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWSuspendingOperation : RTObject <WAISuspendingOperation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1134,7 +1138,7 @@ WINRT_EXPORT
 #ifndef __WUWSuspendingEventArgs_DEFINED__
 #define __WUWSuspendingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWSuspendingEventArgs : RTObject <WAISuspendingEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1165,7 +1169,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIBackgroundTaskInstanceRuntimeClass_DEFINED__
 #define __WUWWebUIBackgroundTaskInstanceRuntimeClass_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIBackgroundTaskInstanceRuntimeClass : RTObject <WUWIWebUIBackgroundTaskInstance, WABIBackgroundTaskInstance>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1187,7 +1191,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIBackgroundTaskInstance_DEFINED__
 #define __WUWWebUIBackgroundTaskInstance_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIBackgroundTaskInstance : RTObject
 + (RTObject<WUWIWebUIBackgroundTaskInstance>*)current;
 @end
@@ -1198,7 +1202,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUINavigatedDeferral_DEFINED__
 #define __WUWWebUINavigatedDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUINavigatedDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1212,7 +1216,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUINavigatedEventArgs_DEFINED__
 #define __WUWWebUINavigatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUINavigatedEventArgs : RTObject <WUWIWebUINavigatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1226,7 +1230,7 @@ WINRT_EXPORT
 #ifndef __WUWWebUIApplication_DEFINED__
 #define __WUWWebUIApplication_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWWebUIApplication : RTObject
 + (EventRegistrationToken)addActivatedEvent:(WUWActivatedEventHandler)del;
 + (void)removeActivatedEvent:(EventRegistrationToken)tok;
@@ -1263,7 +1267,7 @@ WINRT_EXPORT
 #ifndef __WUWHtmlPrintDocumentSource_DEFINED__
 #define __WUWHtmlPrintDocumentSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @interface WUWHtmlPrintDocumentSource : RTObject <WGPIPrintDocumentSource, WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

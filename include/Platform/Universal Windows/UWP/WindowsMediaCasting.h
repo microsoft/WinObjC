@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Media_Casting.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WMCCastingSource, WMCCastingConnectionErrorOccurredEventArgs, WMCCastingDevice, WMCCastingConnection,
@@ -69,7 +73,7 @@ typedef unsigned WMCCastingConnectionState;
 #ifndef __WMCCastingSource_DEFINED__
 #define __WMCCastingSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingSource : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -83,7 +87,7 @@ WINRT_EXPORT
 #ifndef __WMCCastingConnectionErrorOccurredEventArgs_DEFINED__
 #define __WMCCastingConnectionErrorOccurredEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingConnectionErrorOccurredEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -98,7 +102,7 @@ WINRT_EXPORT
 #ifndef __WMCCastingDevice_DEFINED__
 #define __WMCCastingDevice_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingDevice : RTObject
 + (NSString*)getDeviceSelector:(WMCCastingPlaybackTypes)type;
 + (void)getDeviceSelectorFromCastingSourceAsync:(WMCCastingSource*)castingSource
@@ -132,7 +136,7 @@ WINRT_EXPORT
 #ifndef __WMCCastingConnection_DEFINED__
 #define __WMCCastingConnection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingConnection : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -157,7 +161,7 @@ WINRT_EXPORT
 #ifndef __WMCCastingDeviceSelectedEventArgs_DEFINED__
 #define __WMCCastingDeviceSelectedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingDeviceSelectedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -171,7 +175,7 @@ WINRT_EXPORT
 #ifndef __WMCCastingDevicePickerFilter_DEFINED__
 #define __WMCCastingDevicePickerFilter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingDevicePickerFilter : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -188,7 +192,7 @@ WINRT_EXPORT
 #ifndef __WMCCastingDevicePicker_DEFINED__
 #define __WMCCastingDevicePicker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingDevicePicker : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

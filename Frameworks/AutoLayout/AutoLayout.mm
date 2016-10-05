@@ -425,8 +425,13 @@ public:
     } else {
         if (layoutProperties->_contentHuggingConstraint[Horizontal].FIsInSolver()) {
             if (contentSize.width != layoutProperties->_contentHuggingConstraint[Horizontal].Expression().Constant()) {
+                // Changing constants on constraints while they're in a solver is ineffectual. Explicitly add/remove.
+                c_solver.RemoveConstraint(&layoutProperties->_contentHuggingConstraint[Horizontal]);
+                c_solver.RemoveConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Horizontal]);
                 layoutProperties->_contentHuggingConstraint[Horizontal].ChangeConstant(contentSize.width);
                 layoutProperties->_contentCompressionResistanceConstraint[Horizontal].ChangeConstant(contentSize.width);
+                c_solver.AddConstraint(&layoutProperties->_contentHuggingConstraint[Horizontal]);
+                c_solver.AddConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Horizontal]);
             }
             if ([self contentHuggingPriorityForAxis:UILayoutConstraintAxisHorizontal] != layoutProperties->_contentHuggingConstraint[Horizontal].weight()) {
                 c_solver.ChangeWeight(&layoutProperties->_contentHuggingConstraint[Horizontal], [self contentHuggingPriorityForAxis:UILayoutConstraintAxisHorizontal]);
@@ -464,8 +469,13 @@ public:
     } else {
         if (layoutProperties->_contentHuggingConstraint[Vertical].FIsInSolver()) {
             if (contentSize.height != layoutProperties->_contentHuggingConstraint[Vertical].Expression().Constant()) {
+                // Changing constants on constraints while they're in a solver is ineffectual. Explicitly add/remove.
+                c_solver.RemoveConstraint(&layoutProperties->_contentHuggingConstraint[Vertical]);
+                c_solver.RemoveConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Vertical]);
                 layoutProperties->_contentHuggingConstraint[Vertical].ChangeConstant(contentSize.height);
                 layoutProperties->_contentCompressionResistanceConstraint[Vertical].ChangeConstant(contentSize.height);
+                c_solver.AddConstraint(&layoutProperties->_contentHuggingConstraint[Vertical]);
+                c_solver.AddConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Vertical]);
             }
             if ([self contentHuggingPriorityForAxis:UILayoutConstraintAxisVertical] != layoutProperties->_contentHuggingConstraint[Vertical].weight()) {
                 c_solver.ChangeWeight(&layoutProperties->_contentHuggingConstraint[Vertical], [self contentHuggingPriorityForAxis:UILayoutConstraintAxisVertical]);

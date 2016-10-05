@@ -33,7 +33,7 @@ public:
   virtual void resolvePointers();
   
   const BuildConfigurationList& getConfigurations() const { return m_buildConfigurationPtrs; }
-  void getConfigurations(const StringSet& configNames, BuildConfigurationList& ret) const;
+  void getValidConfigurations(const StringSet& configNames, StringSet& ret) const;
   const XCBuildConfiguration* getConfiguration(const String& configName) const;
   const String& getDefaultConfigurationName() const { return m_defaultConfigurationName; }
   

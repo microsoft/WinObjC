@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
+#define OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Foundation_Collections.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WFCPropertySet, WFCValueSet, WFCStringMap;
@@ -82,7 +86,7 @@ typedef unsigned WFCCollectionChange;
 #ifndef __WFCPropertySet_DEFINED__
 #define __WFCPropertySet_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
 @interface WFCPropertySet : RTObject <WFCIPropertySet>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -116,7 +120,7 @@ WINRT_EXPORT
 #ifndef __WFCValueSet_DEFINED__
 #define __WFCValueSet_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
 @interface WFCValueSet : RTObject <WFCIPropertySet>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -150,7 +154,7 @@ WINRT_EXPORT
 #ifndef __WFCStringMap_DEFINED__
 #define __WFCStringMap_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
 @interface WFCStringMap : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

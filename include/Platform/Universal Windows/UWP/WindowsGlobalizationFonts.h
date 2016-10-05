@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GLOBALIZATION_FONTS_EXPORT
+#define OBJCUWP_WINDOWS_GLOBALIZATION_FONTS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Globalization_Fonts.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WGFLanguageFont, WGFLanguageFontGroup;
@@ -33,7 +37,7 @@
 #ifndef __WGFLanguageFont_DEFINED__
 #define __WGFLanguageFont_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_FONTS_EXPORT
 @interface WGFLanguageFont : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -51,7 +55,7 @@ WINRT_EXPORT
 #ifndef __WGFLanguageFontGroup_DEFINED__
 #define __WGFLanguageFontGroup_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_FONTS_EXPORT
 @interface WGFLanguageFontGroup : RTObject
 + (WGFLanguageFontGroup*)makeLanguageFontGroup:(NSString*)languageTag ACTIVATOR;
 #if defined(__cplusplus)

@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+#define OBJCUWP_WINDOWS_UI_TEXT_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Text.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUTTextConstants, WUTFontWeights;
@@ -429,7 +433,7 @@ typedef unsigned WUTFontStyle;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Text.FontWeight
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 @interface WUTFontWeight : NSObject
 + (instancetype) new;
 @property unsigned short weight;
@@ -666,7 +670,7 @@ WINRT_EXPORT
 #ifndef __WUTTextConstants_DEFINED__
 #define __WUTTextConstants_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 @interface WUTTextConstants : RTObject
 + (WUColor*)autoColor;
 + (int)maxUnitCount;
@@ -684,7 +688,7 @@ WINRT_EXPORT
 #ifndef __WUTFontWeights_DEFINED__
 #define __WUTFontWeights_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 @interface WUTFontWeights : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXMVisualTreeHelper, WUXMPartialMediaFailureDetectedEventArgs, WUXMMatrixHelper, WUXMCompositionTarget, WUXMDoubleCollection,
@@ -235,7 +239,7 @@ typedef void (^WXRoutedEventHandler)(RTObject* sender, WXRoutedEventArgs* e);
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Media.Matrix
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMMatrix : NSObject
 + (instancetype) new;
 @property double m11;
@@ -274,7 +278,7 @@ typedef void (^WUXMTimelineMarkerRoutedEventHandler)(RTObject* sender, WUXMTimel
 #ifndef __WUXMVisualTreeHelper_DEFINED__
 #define __WUXMVisualTreeHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMVisualTreeHelper : RTObject
 + (id<NSFastEnumeration> /* WXUIElement* */)findElementsInHostCoordinatesPoint:(WFPoint*)intersectingPoint subtree:(WXUIElement*)subtree;
 + (id<NSFastEnumeration> /* WXUIElement* */)findElementsInHostCoordinatesRect:(WFRect*)intersectingRect subtree:(WXUIElement*)subtree;
@@ -300,7 +304,7 @@ WINRT_EXPORT
 #ifndef __WUXMPartialMediaFailureDetectedEventArgs_DEFINED__
 #define __WUXMPartialMediaFailureDetectedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPartialMediaFailureDetectedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -315,7 +319,7 @@ WINRT_EXPORT
 #ifndef __WUXMMatrixHelper_DEFINED__
 #define __WUXMMatrixHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMMatrixHelper : RTObject
 + (WUXMMatrix*)fromElements:(double)m11 m12:(double)m12 m21:(double)m21 m22:(double)m22 offsetX:(double)offsetX offsetY:(double)offsetY;
 + (BOOL)getIsIdentity:(WUXMMatrix*)target;
@@ -332,7 +336,7 @@ WINRT_EXPORT
 #ifndef __WUXMCompositionTarget_DEFINED__
 #define __WUXMCompositionTarget_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMCompositionTarget : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -349,7 +353,7 @@ WINRT_EXPORT
 #ifndef __WUXMDoubleCollection_DEFINED__
 #define __WUXMDoubleCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMDoubleCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -374,8 +378,9 @@ WINRT_EXPORT
 #ifndef __WUXMFontFamily_DEFINED__
 #define __WUXMFontFamily_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMFontFamily : RTObject
++ (WUXMFontFamily*)makeInstanceWithName:(NSString*)familyName ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -388,7 +393,7 @@ WINRT_EXPORT
 #ifndef __WUXMGeometryCollection_DEFINED__
 #define __WUXMGeometryCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMGeometryCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -413,7 +418,7 @@ WINRT_EXPORT
 #ifndef __WUXMGradientStopCollection_DEFINED__
 #define __WUXMGradientStopCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMGradientStopCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -438,7 +443,7 @@ WINRT_EXPORT
 #ifndef __WUXMPathFigureCollection_DEFINED__
 #define __WUXMPathFigureCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPathFigureCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -463,7 +468,7 @@ WINRT_EXPORT
 #ifndef __WUXMPathSegmentCollection_DEFINED__
 #define __WUXMPathSegmentCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPathSegmentCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -488,7 +493,7 @@ WINRT_EXPORT
 #ifndef __WUXMPointCollection_DEFINED__
 #define __WUXMPointCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPointCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -513,7 +518,7 @@ WINRT_EXPORT
 #ifndef __WUXMRenderingEventArgs_DEFINED__
 #define __WUXMRenderingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMRenderingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -527,7 +532,7 @@ WINRT_EXPORT
 #ifndef __WUXMTimelineMarkerCollection_DEFINED__
 #define __WUXMTimelineMarkerCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMTimelineMarkerCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -552,7 +557,7 @@ WINRT_EXPORT
 #ifndef __WUXMTransformCollection_DEFINED__
 #define __WUXMTransformCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMTransformCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -577,7 +582,7 @@ WINRT_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -598,7 +603,7 @@ WINRT_EXPORT
 #ifndef __WUXMBrush_DEFINED__
 #define __WUXMBrush_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMBrush : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -617,7 +622,7 @@ WINRT_EXPORT
 #ifndef __WUXMCacheMode_DEFINED__
 #define __WUXMCacheMode_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMCacheMode : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -630,7 +635,7 @@ WINRT_EXPORT
 #ifndef __WUXMGeneralTransform_DEFINED__
 #define __WUXMGeneralTransform_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMGeneralTransform : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -650,7 +655,7 @@ WINRT_EXPORT
 #ifndef __WUXMGeometry_DEFINED__
 #define __WUXMGeometry_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMGeometry : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -668,7 +673,7 @@ WINRT_EXPORT
 #ifndef __WUXMGradientStop_DEFINED__
 #define __WUXMGradientStop_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMGradientStop : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -686,7 +691,7 @@ WINRT_EXPORT
 #ifndef __WUXMImageSource_DEFINED__
 #define __WUXMImageSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMImageSource : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -699,7 +704,7 @@ WINRT_EXPORT
 #ifndef __WUXMPathFigure_DEFINED__
 #define __WUXMPathFigure_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPathFigure : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -721,7 +726,7 @@ WINRT_EXPORT
 #ifndef __WUXMPathSegment_DEFINED__
 #define __WUXMPathSegment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPathSegment : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -734,7 +739,7 @@ WINRT_EXPORT
 #ifndef __WUXMProjection_DEFINED__
 #define __WUXMProjection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMProjection : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -747,7 +752,7 @@ WINRT_EXPORT
 #ifndef __WXRoutedEventArgs_DEFINED__
 #define __WXRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -762,7 +767,7 @@ WINRT_EXPORT
 #ifndef __WUXMRateChangedRoutedEventArgs_DEFINED__
 #define __WUXMRateChangedRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMRateChangedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -776,7 +781,7 @@ WINRT_EXPORT
 #ifndef __WUXMTimelineMarker_DEFINED__
 #define __WUXMTimelineMarker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMTimelineMarker : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -796,7 +801,7 @@ WINRT_EXPORT
 #ifndef __WUXMTimelineMarkerRoutedEventArgs_DEFINED__
 #define __WUXMTimelineMarkerRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMTimelineMarkerRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -811,7 +816,7 @@ WINRT_EXPORT
 #ifndef __WUXMArcSegment_DEFINED__
 #define __WUXMArcSegment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMArcSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -835,7 +840,7 @@ WINRT_EXPORT
 #ifndef __WUXMBezierSegment_DEFINED__
 #define __WUXMBezierSegment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMBezierSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -855,7 +860,7 @@ WINRT_EXPORT
 #ifndef __WUXMBitmapCache_DEFINED__
 #define __WUXMBitmapCache_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMBitmapCache : WUXMCacheMode
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -869,7 +874,7 @@ WINRT_EXPORT
 #ifndef __WUXMEllipseGeometry_DEFINED__
 #define __WUXMEllipseGeometry_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMEllipseGeometry : WUXMGeometry
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -889,7 +894,7 @@ WINRT_EXPORT
 #ifndef __WUXMGeometryGroup_DEFINED__
 #define __WUXMGeometryGroup_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMGeometryGroup : WUXMGeometry
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -907,7 +912,7 @@ WINRT_EXPORT
 #ifndef __WUXMGradientBrush_DEFINED__
 #define __WUXMGradientBrush_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMGradientBrush : WUXMBrush
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -928,7 +933,7 @@ WINRT_EXPORT
 #ifndef __WUXMLineGeometry_DEFINED__
 #define __WUXMLineGeometry_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMLineGeometry : WUXMGeometry
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -946,7 +951,7 @@ WINRT_EXPORT
 #ifndef __WUXMLineSegment_DEFINED__
 #define __WUXMLineSegment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMLineSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -962,7 +967,7 @@ WINRT_EXPORT
 #ifndef __WUXMMatrix3DProjection_DEFINED__
 #define __WUXMMatrix3DProjection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMMatrix3DProjection : WUXMProjection
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -978,7 +983,7 @@ WINRT_EXPORT
 #ifndef __WUXMPathGeometry_DEFINED__
 #define __WUXMPathGeometry_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPathGeometry : WUXMGeometry
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -996,7 +1001,7 @@ WINRT_EXPORT
 #ifndef __WUXMPlaneProjection_DEFINED__
 #define __WUXMPlaneProjection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPlaneProjection : WUXMProjection
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1036,7 +1041,7 @@ WINRT_EXPORT
 #ifndef __WUXMPolyBezierSegment_DEFINED__
 #define __WUXMPolyBezierSegment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPolyBezierSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1052,7 +1057,7 @@ WINRT_EXPORT
 #ifndef __WUXMPolyLineSegment_DEFINED__
 #define __WUXMPolyLineSegment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPolyLineSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1068,7 +1073,7 @@ WINRT_EXPORT
 #ifndef __WUXMPolyQuadraticBezierSegment_DEFINED__
 #define __WUXMPolyQuadraticBezierSegment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMPolyQuadraticBezierSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1084,7 +1089,7 @@ WINRT_EXPORT
 #ifndef __WUXMQuadraticBezierSegment_DEFINED__
 #define __WUXMQuadraticBezierSegment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMQuadraticBezierSegment : WUXMPathSegment
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1102,7 +1107,7 @@ WINRT_EXPORT
 #ifndef __WUXMRectangleGeometry_DEFINED__
 #define __WUXMRectangleGeometry_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMRectangleGeometry : WUXMGeometry
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1118,7 +1123,7 @@ WINRT_EXPORT
 #ifndef __WUXMSolidColorBrush_DEFINED__
 #define __WUXMSolidColorBrush_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMSolidColorBrush : WUXMBrush
 + (WUXMSolidColorBrush*)makeInstanceWithColor:(WUColor*)color ACTIVATOR;
 + (instancetype)make ACTIVATOR;
@@ -1135,7 +1140,7 @@ WINRT_EXPORT
 #ifndef __WUXMTileBrush_DEFINED__
 #define __WUXMTileBrush_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMTileBrush : WUXMBrush
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1154,7 +1159,7 @@ WINRT_EXPORT
 #ifndef __WUXMTransform_DEFINED__
 #define __WUXMTransform_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMTransform : WUXMGeneralTransform
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1167,7 +1172,7 @@ WINRT_EXPORT
 #ifndef __WUXMCompositeTransform_DEFINED__
 #define __WUXMCompositeTransform_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMCompositeTransform : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1199,7 +1204,7 @@ WINRT_EXPORT
 #ifndef __WUXMImageBrush_DEFINED__
 #define __WUXMImageBrush_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMImageBrush : WUXMTileBrush
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1219,7 +1224,7 @@ WINRT_EXPORT
 #ifndef __WUXMLinearGradientBrush_DEFINED__
 #define __WUXMLinearGradientBrush_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMLinearGradientBrush : WUXMGradientBrush
 + (WUXMLinearGradientBrush*)makeInstanceWithGradientStopCollectionAndAngle:(WUXMGradientStopCollection*)gradientStopCollection
                                                                      angle:(double)angle ACTIVATOR;
@@ -1239,7 +1244,7 @@ WINRT_EXPORT
 #ifndef __WUXMMatrixTransform_DEFINED__
 #define __WUXMMatrixTransform_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMMatrixTransform : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1255,7 +1260,7 @@ WINRT_EXPORT
 #ifndef __WUXMRotateTransform_DEFINED__
 #define __WUXMRotateTransform_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMRotateTransform : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1275,7 +1280,7 @@ WINRT_EXPORT
 #ifndef __WUXMScaleTransform_DEFINED__
 #define __WUXMScaleTransform_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMScaleTransform : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1297,7 +1302,7 @@ WINRT_EXPORT
 #ifndef __WUXMSkewTransform_DEFINED__
 #define __WUXMSkewTransform_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMSkewTransform : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1319,7 +1324,7 @@ WINRT_EXPORT
 #ifndef __WUXMTransformGroup_DEFINED__
 #define __WUXMTransformGroup_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMTransformGroup : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1336,7 +1341,7 @@ WINRT_EXPORT
 #ifndef __WUXMTranslateTransform_DEFINED__
 #define __WUXMTranslateTransform_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMTranslateTransform : WUXMTransform
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

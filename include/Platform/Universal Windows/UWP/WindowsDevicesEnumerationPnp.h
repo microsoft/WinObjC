@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Enumeration_Pnp.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDEPPnpObjectUpdate, WDEPPnpObjectCollection, WDEPPnpObjectWatcher, WDEPPnpObject;
@@ -47,7 +51,7 @@ typedef unsigned WDEPPnpObjectType;
 #ifndef __WDEPPnpObjectUpdate_DEFINED__
 #define __WDEPPnpObjectUpdate_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
 @interface WDEPPnpObjectUpdate : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -63,7 +67,7 @@ WINRT_EXPORT
 #ifndef __WDEPPnpObjectCollection_DEFINED__
 #define __WDEPPnpObjectCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
 @interface WDEPPnpObjectCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -81,7 +85,7 @@ WINRT_EXPORT
 #ifndef __WDEPPnpObjectWatcher_DEFINED__
 #define __WDEPPnpObjectWatcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
 @interface WDEPPnpObjectWatcher : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -107,7 +111,7 @@ WINRT_EXPORT
 #ifndef __WDEPPnpObject_DEFINED__
 #define __WDEPPnpObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
 @interface WDEPPnpObject : RTObject
 + (void)createFromIdAsync:(WDEPPnpObjectType)type
                        id:(NSString*)id

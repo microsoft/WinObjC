@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GRAPHICS_EFFECTS_EXPORT
+#define OBJCUWP_WINDOWS_GRAPHICS_EFFECTS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Graphics_Effects.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @protocol WGEIGraphicsEffectSource

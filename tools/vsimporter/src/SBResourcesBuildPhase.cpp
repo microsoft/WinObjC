@@ -148,7 +148,7 @@ void SBResourcesBuildPhase::writeVCProjectFiles(VCProject& proj) const
       }
     }
 
-    VCItemHint itemHint = { "SBResourceCopy" , pathOverride };
+    VCItemHint itemHint = { "SBResourceCopy" , pathOverride, "" };
     addBuildFileToVS(buildFiles[i], proj, projBS, &itemHint);
   }
 

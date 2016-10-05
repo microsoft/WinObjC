@@ -37,6 +37,7 @@
 
     _draggableButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [_draggableButton setTitle:@"Move me!" forState:UIControlStateNormal];
+    [_draggableButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [_draggableButton setTintColor:[UIColor whiteColor]];
     _draggableButton.frame = CGRectMake(bounds.size.width / 2.0f - 50.0f, 50.0f, 100.0f, 40.0f);
     [_draggableButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -48,6 +49,7 @@
 
     _longPressableButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [_longPressableButton setTitle:@"LongPress me!" forState:UIControlStateNormal];
+    [_longPressableButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [_longPressableButton setTintColor:[UIColor purpleColor]];
     _longPressableButton.frame = CGRectMake(bounds.size.width / 2.0f - 50.0f, 100.0f, 140.0f, 40.0f);
     [_mainWindow addSubview:_longPressableButton];
@@ -59,6 +61,7 @@
     _tapGestureButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [_tapGestureButton setTitle:@"Touch Gesture!" forState:UIControlStateNormal];
     [_tapGestureButton setTintColor:[UIColor purpleColor]];
+    [_tapGestureButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     _tapGestureButton.frame = CGRectMake(bounds.size.width / 2.0f - 50.0f, 150.0f, 100.0f, 40.0f);
     [_mainWindow addSubview:_tapGestureButton];
     UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];

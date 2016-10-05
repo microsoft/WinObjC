@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Media_Core_Capture_Devices_Protection_Playback.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WMCAudioStreamDescriptor, WMCVideoStreamDescriptor, WMCMediaStreamSource, WMCMediaStreamSourceClosedEventArgs,
@@ -228,7 +232,7 @@ typedef unsigned WMCTimedTextFlowDirection;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Media.Core.MseTimeRange
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMseTimeRange : NSObject
 + (instancetype) new;
 @property (retain) WFTimeSpan* start;
@@ -236,7 +240,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Media.Core.TimedTextPadding
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCTimedTextPadding : NSObject
 + (instancetype) new;
 @property double before;
@@ -247,7 +251,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Media.Core.TimedTextSize
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCTimedTextSize : NSObject
 + (instancetype) new;
 @property double height;
@@ -256,7 +260,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Media.Core.TimedTextDouble
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCTimedTextDouble : NSObject
 + (instancetype) new;
 @property double value;
@@ -264,7 +268,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Media.Core.TimedTextPoint
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCTimedTextPoint : NSObject
 + (instancetype) new;
 @property double x;
@@ -334,7 +338,7 @@ WINRT_EXPORT
 #ifndef __WMCAudioStreamDescriptor_DEFINED__
 #define __WMCAudioStreamDescriptor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCAudioStreamDescriptor : RTObject <WMCIMediaStreamDescriptor>
 + (WMCAudioStreamDescriptor*)make:(WMMAudioEncodingProperties*)encodingProperties ACTIVATOR;
 #if defined(__cplusplus)
@@ -352,7 +356,7 @@ WINRT_EXPORT
 #ifndef __WMCVideoStreamDescriptor_DEFINED__
 #define __WMCVideoStreamDescriptor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCVideoStreamDescriptor : RTObject <WMCIMediaStreamDescriptor>
 + (WMCVideoStreamDescriptor*)make:(WMMVideoEncodingProperties*)encodingProperties ACTIVATOR;
 #if defined(__cplusplus)
@@ -370,7 +374,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaStreamSource_DEFINED__
 #define __WMCMediaStreamSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaStreamSource : RTObject <WMCIMediaSource>
 + (WMCMediaStreamSource*)makeFromDescriptor:(RTObject<WMCIMediaStreamDescriptor>*)descriptor ACTIVATOR;
 + (WMCMediaStreamSource*)makeFromDescriptors:(RTObject<WMCIMediaStreamDescriptor>*)descriptor
@@ -410,7 +414,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaStreamSourceClosedEventArgs_DEFINED__
 #define __WMCMediaStreamSourceClosedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaStreamSourceClosedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -424,7 +428,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaStreamSourceStartingEventArgs_DEFINED__
 #define __WMCMediaStreamSourceStartingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaStreamSourceStartingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -438,7 +442,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaStreamSourceSampleRequestedEventArgs_DEFINED__
 #define __WMCMediaStreamSourceSampleRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaStreamSourceSampleRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -452,7 +456,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaStreamSourceSwitchStreamsRequestedEventArgs_DEFINED__
 #define __WMCMediaStreamSourceSwitchStreamsRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaStreamSourceSwitchStreamsRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -466,7 +470,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaStreamSamplePropertySet_DEFINED__
 #define __WMCMediaStreamSamplePropertySet_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaStreamSamplePropertySet : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -495,7 +499,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaStreamSample_DEFINED__
 #define __WMCMediaStreamSample_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaStreamSample : RTObject
 + (WMCMediaStreamSample*)createFromBuffer:(RTObject<WSSIBuffer>*)buffer timestamp:(WFTimeSpan*)timestamp;
 + (void)createFromStreamAsync:(RTObject<WSSIInputStream>*)stream
@@ -524,7 +528,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaStreamSampleProtectionProperties_DEFINED__
 #define __WMCMediaStreamSampleProtectionProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaStreamSampleProtectionProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -543,7 +547,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaStreamSourceClosedRequest_DEFINED__
 #define __WMCMediaStreamSourceClosedRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaStreamSourceClosedRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -557,7 +561,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaStreamSourceStartingRequestDeferral_DEFINED__
 #define __WMCMediaStreamSourceStartingRequestDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaStreamSourceStartingRequestDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -571,7 +575,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaStreamSourceStartingRequest_DEFINED__
 #define __WMCMediaStreamSourceStartingRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaStreamSourceStartingRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -587,7 +591,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaStreamSourceSampleRequestDeferral_DEFINED__
 #define __WMCMediaStreamSourceSampleRequestDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaStreamSourceSampleRequestDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -601,7 +605,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaStreamSourceSampleRequest_DEFINED__
 #define __WMCMediaStreamSourceSampleRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaStreamSourceSampleRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -618,7 +622,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaStreamSourceSwitchStreamsRequestDeferral_DEFINED__
 #define __WMCMediaStreamSourceSwitchStreamsRequestDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaStreamSourceSwitchStreamsRequestDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -632,7 +636,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaStreamSourceSwitchStreamsRequest_DEFINED__
 #define __WMCMediaStreamSourceSwitchStreamsRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaStreamSourceSwitchStreamsRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -648,7 +652,7 @@ WINRT_EXPORT
 #ifndef __WMCMseStreamSource_DEFINED__
 #define __WMCMseStreamSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMseStreamSource : RTObject <WMCIMediaSource>
 + (BOOL)isContentTypeSupported:(NSString*)contentType;
 + (instancetype)make ACTIVATOR;
@@ -676,7 +680,7 @@ WINRT_EXPORT
 #ifndef __WMCMseSourceBufferList_DEFINED__
 #define __WMCMseSourceBufferList_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMseSourceBufferList : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -694,7 +698,7 @@ WINRT_EXPORT
 #ifndef __WMCMseSourceBuffer_DEFINED__
 #define __WMCMseSourceBuffer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMseSourceBuffer : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -728,7 +732,7 @@ WINRT_EXPORT
 #ifndef __WMCHighDynamicRangeControl_DEFINED__
 #define __WMCHighDynamicRangeControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCHighDynamicRangeControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -752,7 +756,7 @@ WINRT_EXPORT
 #ifndef __WMCSceneAnalysisEffect_DEFINED__
 #define __WMCSceneAnalysisEffect_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCSceneAnalysisEffect : RTObject <WMIMediaExtension>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -770,7 +774,7 @@ WINRT_EXPORT
 #ifndef __WMCSceneAnalyzedEventArgs_DEFINED__
 #define __WMCSceneAnalyzedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCSceneAnalyzedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -784,7 +788,7 @@ WINRT_EXPORT
 #ifndef __WMCHighDynamicRangeOutput_DEFINED__
 #define __WMCHighDynamicRangeOutput_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCHighDynamicRangeOutput : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -826,7 +830,7 @@ WINRT_EXPORT
 #ifndef __WMCSceneAnalysisEffectFrame_DEFINED__
 #define __WMCSceneAnalysisEffectFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCSceneAnalysisEffectFrame : RTObject <WMIMediaFrame, WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -860,7 +864,7 @@ WINRT_EXPORT
 #ifndef __WMCSceneAnalysisEffectDefinition_DEFINED__
 #define __WMCSceneAnalysisEffectDefinition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCSceneAnalysisEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -876,7 +880,7 @@ WINRT_EXPORT
 #ifndef __WMCFaceDetectionEffectFrame_DEFINED__
 #define __WMCFaceDetectionEffectFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCFaceDetectionEffectFrame : RTObject <WMIMediaFrame, WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -898,7 +902,7 @@ WINRT_EXPORT
 #ifndef __WMCFaceDetectedEventArgs_DEFINED__
 #define __WMCFaceDetectedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCFaceDetectedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -912,7 +916,7 @@ WINRT_EXPORT
 #ifndef __WMCFaceDetectionEffect_DEFINED__
 #define __WMCFaceDetectionEffect_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCFaceDetectionEffect : RTObject <WMIMediaExtension>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -930,7 +934,7 @@ WINRT_EXPORT
 #ifndef __WMCFaceDetectionEffectDefinition_DEFINED__
 #define __WMCFaceDetectionEffectDefinition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCFaceDetectionEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -948,7 +952,7 @@ WINRT_EXPORT
 #ifndef __WMCVideoStabilizationEffectEnabledChangedEventArgs_DEFINED__
 #define __WMCVideoStabilizationEffectEnabledChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCVideoStabilizationEffectEnabledChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -962,7 +966,7 @@ WINRT_EXPORT
 #ifndef __WMCVideoStabilizationEffect_DEFINED__
 #define __WMCVideoStabilizationEffect_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCVideoStabilizationEffect : RTObject <WMIMediaExtension>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -982,7 +986,7 @@ WINRT_EXPORT
 #ifndef __WMCVideoStabilizationEffectDefinition_DEFINED__
 #define __WMCVideoStabilizationEffectDefinition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCVideoStabilizationEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -998,7 +1002,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaSourceError_DEFINED__
 #define __WMCMediaSourceError_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaSourceError : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1021,7 +1025,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaSource_DEFINED__
 #define __WMCMediaSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaSource : RTObject <WFIClosable, WMPIMediaPlaybackSource>
 + (WMCMediaSource*)createFromAdaptiveMediaSource:(WMSAAdaptiveMediaSource*)mediaSource;
 + (WMCMediaSource*)createFromMediaStreamSource:(WMCMediaStreamSource*)mediaSource;
@@ -1050,7 +1054,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaSourceOpenOperationCompletedEventArgs_DEFINED__
 #define __WMCMediaSourceOpenOperationCompletedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaSourceOpenOperationCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1064,7 +1068,7 @@ WINRT_EXPORT
 #ifndef __WMCTimedTextSource_DEFINED__
 #define __WMCTimedTextSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCTimedTextSource : RTObject
 + (WMCTimedTextSource*)createFromStream:(RTObject<WSSIRandomAccessStream>*)stream;
 + (WMCTimedTextSource*)createFromUri:(WFUri*)uri;
@@ -1083,7 +1087,7 @@ WINRT_EXPORT
 #ifndef __WMCTimedMetadataTrack_DEFINED__
 #define __WMCTimedMetadataTrack_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCTimedMetadataTrack : RTObject <WMCIMediaTrack>
 + (WMCTimedMetadataTrack*)make:(NSString*)id language:(NSString*)language kind:(WMCTimedMetadataKind)kind ACTIVATOR;
 #if defined(__cplusplus)
@@ -1113,7 +1117,7 @@ WINRT_EXPORT
 #ifndef __WMCTimedTextRegion_DEFINED__
 #define __WMCTimedTextRegion_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCTimedTextRegion : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1139,7 +1143,7 @@ WINRT_EXPORT
 #ifndef __WMCTimedTextStyle_DEFINED__
 #define __WMCTimedTextStyle_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCTimedTextStyle : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1165,7 +1169,7 @@ WINRT_EXPORT
 #ifndef __WMCTimedTextLine_DEFINED__
 #define __WMCTimedTextLine_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCTimedTextLine : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1181,7 +1185,7 @@ WINRT_EXPORT
 #ifndef __WMCTimedTextSubformat_DEFINED__
 #define __WMCTimedTextSubformat_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCTimedTextSubformat : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1198,7 +1202,7 @@ WINRT_EXPORT
 #ifndef __WMCTimedMetadataTrackError_DEFINED__
 #define __WMCTimedMetadataTrackError_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCTimedMetadataTrackError : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1213,7 +1217,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaCueEventArgs_DEFINED__
 #define __WMCMediaCueEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaCueEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1227,7 +1231,7 @@ WINRT_EXPORT
 #ifndef __WMCTimedMetadataTrackFailedEventArgs_DEFINED__
 #define __WMCTimedMetadataTrackFailedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCTimedMetadataTrackFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1241,7 +1245,7 @@ WINRT_EXPORT
 #ifndef __WMCTimedTextSourceResolveResultEventArgs_DEFINED__
 #define __WMCTimedTextSourceResolveResultEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCTimedTextSourceResolveResultEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1256,7 +1260,7 @@ WINRT_EXPORT
 #ifndef __WMCTimedTextCue_DEFINED__
 #define __WMCTimedTextCue_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCTimedTextCue : RTObject <WMCIMediaCue>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1276,7 +1280,7 @@ WINRT_EXPORT
 #ifndef __WMCDataCue_DEFINED__
 #define __WMCDataCue_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCDataCue : RTObject <WMCIMediaCue>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1294,7 +1298,7 @@ WINRT_EXPORT
 #ifndef __WMCVideoTrack_DEFINED__
 #define __WMCVideoTrack_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCVideoTrack : RTObject <WMCIMediaTrack>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1311,7 +1315,7 @@ WINRT_EXPORT
 #ifndef __WMCAudioTrack_DEFINED__
 #define __WMCAudioTrack_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCAudioTrack : RTObject <WMCIMediaTrack>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

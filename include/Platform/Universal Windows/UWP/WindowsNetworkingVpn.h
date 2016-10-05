@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
+#define OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Networking_Vpn.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WNVVpnRoute, WNVVpnNamespaceInfo, WNVVpnInterfaceId, WNVVpnRouteAssignment, WNVVpnNamespaceAssignment, WNVVpnPickedCredential,
@@ -292,7 +296,7 @@ typedef unsigned WNVVpnManagementErrorStatus;
 #ifndef __WNVVpnRoute_DEFINED__
 #define __WNVVpnRoute_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnRoute : RTObject
 + (WNVVpnRoute*)makeVpnRoute:(WNHostName*)address prefixSize:(uint8_t)prefixSize ACTIVATOR;
 #if defined(__cplusplus)
@@ -308,7 +312,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnNamespaceInfo_DEFINED__
 #define __WNVVpnNamespaceInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnNamespaceInfo : RTObject
 + (WNVVpnNamespaceInfo*)makeVpnNamespaceInfo:(NSString*)name
                                dnsServerList:(NSMutableArray* /* WNHostName* */)dnsServerList
@@ -327,7 +331,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnInterfaceId_DEFINED__
 #define __WNVVpnInterfaceId_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnInterfaceId : RTObject
 + (WNVVpnInterfaceId*)makeVpnInterfaceId:(NSArray* /* uint8_t */)address ACTIVATOR;
 #if defined(__cplusplus)
@@ -342,7 +346,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnRouteAssignment_DEFINED__
 #define __WNVVpnRouteAssignment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnRouteAssignment : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -361,7 +365,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnNamespaceAssignment_DEFINED__
 #define __WNVVpnNamespaceAssignment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnNamespaceAssignment : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -377,7 +381,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnPickedCredential_DEFINED__
 #define __WNVVpnPickedCredential_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnPickedCredential : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -393,7 +397,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnPacketBuffer_DEFINED__
 #define __WNVVpnPacketBuffer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnPacketBuffer : RTObject
 + (WNVVpnPacketBuffer*)makeVpnPacketBuffer:(WNVVpnPacketBuffer*)parentBuffer
                                     offset:(unsigned int)offset
@@ -413,7 +417,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnChannelConfiguration_DEFINED__
 #define __WNVVpnChannelConfiguration_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnChannelConfiguration : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -430,7 +434,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnChannel_DEFINED__
 #define __WNVVpnChannel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnChannel : RTObject
 + (void)processEventAsync:(RTObject*)thirdPartyPlugIn event:(RTObject*)event;
 #if defined(__cplusplus)
@@ -517,7 +521,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnChannelActivityEventArgs_DEFINED__
 #define __WNVVpnChannelActivityEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnChannelActivityEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -531,7 +535,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnSystemHealth_DEFINED__
 #define __WNVVpnSystemHealth_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnSystemHealth : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -545,7 +549,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnDomainNameAssignment_DEFINED__
 #define __WNVVpnDomainNameAssignment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnDomainNameAssignment : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -561,7 +565,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnChannelActivityStateChangedArgs_DEFINED__
 #define __WNVVpnChannelActivityStateChangedArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnChannelActivityStateChangedArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -575,7 +579,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnCredential_DEFINED__
 #define __WNVVpnCredential_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCredential : RTObject <WNVIVpnCredential>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -592,7 +596,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnTrafficFilterAssignment_DEFINED__
 #define __WNVVpnTrafficFilterAssignment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnTrafficFilterAssignment : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -609,7 +613,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnAppId_DEFINED__
 #define __WNVVpnAppId_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnAppId : RTObject
 + (WNVVpnAppId*)make:(WNVVpnAppIdType)type value:(NSString*)value ACTIVATOR;
 #if defined(__cplusplus)
@@ -625,7 +629,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnDomainNameInfo_DEFINED__
 #define __WNVVpnDomainNameInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnDomainNameInfo : RTObject
 + (WNVVpnDomainNameInfo*)makeVpnDomainNameInfo:(NSString*)name
                                       nameType:(WNVVpnDomainNameType)nameType
@@ -646,7 +650,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnTrafficFilter_DEFINED__
 #define __WNVVpnTrafficFilter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnTrafficFilter : RTObject
 + (WNVVpnTrafficFilter*)make:(WNVVpnAppId*)appId ACTIVATOR;
 #if defined(__cplusplus)
@@ -668,7 +672,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnPacketBufferList_DEFINED__
 #define __WNVVpnPacketBufferList_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnPacketBufferList : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -688,7 +692,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnCustomEditBox_DEFINED__
 #define __WNVVpnCustomEditBox_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCustomEditBox : RTObject <WNVIVpnCustomPrompt>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -708,7 +712,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnCustomPromptTextInput_DEFINED__
 #define __WNVVpnCustomPromptTextInput_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCustomPromptTextInput : RTObject <WNVIVpnCustomPromptElement>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -728,7 +732,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnCustomComboBox_DEFINED__
 #define __WNVVpnCustomComboBox_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCustomComboBox : RTObject <WNVIVpnCustomPrompt>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -747,7 +751,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnCustomPromptOptionSelector_DEFINED__
 #define __WNVVpnCustomPromptOptionSelector_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCustomPromptOptionSelector : RTObject <WNVIVpnCustomPromptElement>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -766,7 +770,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnCustomTextBox_DEFINED__
 #define __WNVVpnCustomTextBox_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCustomTextBox : RTObject <WNVIVpnCustomPrompt>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -784,7 +788,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnCustomPromptText_DEFINED__
 #define __WNVVpnCustomPromptText_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCustomPromptText : RTObject <WNVIVpnCustomPromptElement>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -802,7 +806,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnCustomCheckBox_DEFINED__
 #define __WNVVpnCustomCheckBox_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCustomCheckBox : RTObject <WNVIVpnCustomPrompt>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -821,7 +825,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnCustomPromptBooleanInput_DEFINED__
 #define __WNVVpnCustomPromptBooleanInput_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCustomPromptBooleanInput : RTObject <WNVIVpnCustomPromptElement>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -840,7 +844,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnCustomErrorBox_DEFINED__
 #define __WNVVpnCustomErrorBox_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCustomErrorBox : RTObject <WNVIVpnCustomPrompt>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -857,7 +861,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnPlugInProfile_DEFINED__
 #define __WNVVpnPlugInProfile_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnPlugInProfile : RTObject <WNVIVpnProfile>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -881,7 +885,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnNativeProfile_DEFINED__
 #define __WNVVpnNativeProfile_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnNativeProfile : RTObject <WNVIVpnProfile>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -908,7 +912,7 @@ WINRT_EXPORT
 #ifndef __WNVVpnManagementAgent_DEFINED__
 #define __WNVVpnManagementAgent_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnManagementAgent : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

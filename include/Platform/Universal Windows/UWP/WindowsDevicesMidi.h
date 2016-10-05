@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Midi.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDMMidiNoteOffMessage, WDMMidiNoteOnMessage, WDMMidiPolyphonicKeyPressureMessage, WDMMidiControlChangeMessage,
@@ -105,7 +109,7 @@ typedef unsigned WDMMidiMessageType;
 #ifndef __WDMMidiNoteOffMessage_DEFINED__
 #define __WDMMidiNoteOffMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiNoteOffMessage : RTObject <WDMIMidiMessage>
 + (WDMMidiNoteOffMessage*)makeMidiNoteOffMessage:(uint8_t)channel note:(uint8_t)note velocity:(uint8_t)velocity ACTIVATOR;
 #if defined(__cplusplus)
@@ -125,7 +129,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiNoteOnMessage_DEFINED__
 #define __WDMMidiNoteOnMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiNoteOnMessage : RTObject <WDMIMidiMessage>
 + (WDMMidiNoteOnMessage*)makeMidiNoteOnMessage:(uint8_t)channel note:(uint8_t)note velocity:(uint8_t)velocity ACTIVATOR;
 #if defined(__cplusplus)
@@ -145,7 +149,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiPolyphonicKeyPressureMessage_DEFINED__
 #define __WDMMidiPolyphonicKeyPressureMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiPolyphonicKeyPressureMessage : RTObject <WDMIMidiMessage>
 + (WDMMidiPolyphonicKeyPressureMessage*)makeMidiPolyphonicKeyPressureMessage:(uint8_t)channel
                                                                         note:(uint8_t)note
@@ -167,7 +171,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiControlChangeMessage_DEFINED__
 #define __WDMMidiControlChangeMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiControlChangeMessage : RTObject <WDMIMidiMessage>
 + (WDMMidiControlChangeMessage*)makeMidiControlChangeMessage:(uint8_t)channel
                                                   controller:(uint8_t)controller
@@ -189,7 +193,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiProgramChangeMessage_DEFINED__
 #define __WDMMidiProgramChangeMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiProgramChangeMessage : RTObject <WDMIMidiMessage>
 + (WDMMidiProgramChangeMessage*)makeMidiProgramChangeMessage:(uint8_t)channel program:(uint8_t)program ACTIVATOR;
 #if defined(__cplusplus)
@@ -208,7 +212,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiChannelPressureMessage_DEFINED__
 #define __WDMMidiChannelPressureMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiChannelPressureMessage : RTObject <WDMIMidiMessage>
 + (WDMMidiChannelPressureMessage*)makeMidiChannelPressureMessage:(uint8_t)channel pressure:(uint8_t)pressure ACTIVATOR;
 #if defined(__cplusplus)
@@ -227,7 +231,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiPitchBendChangeMessage_DEFINED__
 #define __WDMMidiPitchBendChangeMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiPitchBendChangeMessage : RTObject <WDMIMidiMessage>
 + (WDMMidiPitchBendChangeMessage*)makeMidiPitchBendChangeMessage:(uint8_t)channel bend:(unsigned short)bend ACTIVATOR;
 #if defined(__cplusplus)
@@ -246,7 +250,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiSystemExclusiveMessage_DEFINED__
 #define __WDMMidiSystemExclusiveMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiSystemExclusiveMessage : RTObject <WDMIMidiMessage>
 + (WDMMidiSystemExclusiveMessage*)makeMidiSystemExclusiveMessage:(RTObject<WSSIBuffer>*)rawData ACTIVATOR;
 #if defined(__cplusplus)
@@ -263,7 +267,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiTimeCodeMessage_DEFINED__
 #define __WDMMidiTimeCodeMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiTimeCodeMessage : RTObject <WDMIMidiMessage>
 + (WDMMidiTimeCodeMessage*)makeMidiTimeCodeMessage:(uint8_t)frameType values:(uint8_t)values ACTIVATOR;
 #if defined(__cplusplus)
@@ -282,7 +286,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiSongPositionPointerMessage_DEFINED__
 #define __WDMMidiSongPositionPointerMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiSongPositionPointerMessage : RTObject <WDMIMidiMessage>
 + (WDMMidiSongPositionPointerMessage*)makeMidiSongPositionPointerMessage:(unsigned short)beats ACTIVATOR;
 #if defined(__cplusplus)
@@ -300,7 +304,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiSongSelectMessage_DEFINED__
 #define __WDMMidiSongSelectMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiSongSelectMessage : RTObject <WDMIMidiMessage>
 + (WDMMidiSongSelectMessage*)makeMidiSongSelectMessage:(uint8_t)song ACTIVATOR;
 #if defined(__cplusplus)
@@ -318,7 +322,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiTuneRequestMessage_DEFINED__
 #define __WDMMidiTuneRequestMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiTuneRequestMessage : RTObject <WDMIMidiMessage>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -335,7 +339,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiTimingClockMessage_DEFINED__
 #define __WDMMidiTimingClockMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiTimingClockMessage : RTObject <WDMIMidiMessage>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -352,7 +356,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiStartMessage_DEFINED__
 #define __WDMMidiStartMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiStartMessage : RTObject <WDMIMidiMessage>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -369,7 +373,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiContinueMessage_DEFINED__
 #define __WDMMidiContinueMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiContinueMessage : RTObject <WDMIMidiMessage>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -386,7 +390,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiStopMessage_DEFINED__
 #define __WDMMidiStopMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiStopMessage : RTObject <WDMIMidiMessage>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -403,7 +407,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiActiveSensingMessage_DEFINED__
 #define __WDMMidiActiveSensingMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiActiveSensingMessage : RTObject <WDMIMidiMessage>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -420,7 +424,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiSystemResetMessage_DEFINED__
 #define __WDMMidiSystemResetMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiSystemResetMessage : RTObject <WDMIMidiMessage>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -437,7 +441,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiMessageReceivedEventArgs_DEFINED__
 #define __WDMMidiMessageReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiMessageReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -451,7 +455,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiInPort_DEFINED__
 #define __WDMMidiInPort_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiInPort : RTObject <WFIClosable>
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDMMidiInPort*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
@@ -470,7 +474,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiOutPort_DEFINED__
 #define __WDMMidiOutPort_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiOutPort : RTObject <WDMIMidiOutPort, WFIClosable>
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(RTObject<WDMIMidiOutPort>*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
@@ -489,7 +493,7 @@ WINRT_EXPORT
 #ifndef __WDMMidiSynthesizer_DEFINED__
 #define __WDMMidiSynthesizer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiSynthesizer : RTObject <WDMIMidiOutPort, WFIClosable>
 + (void)createAsyncWithSuccess:(void (^)(WDMMidiSynthesizer*))success failure:(void (^)(NSError*))failure;
 + (void)createFromAudioDeviceAsync:(WDEDeviceInformation*)audioDevice

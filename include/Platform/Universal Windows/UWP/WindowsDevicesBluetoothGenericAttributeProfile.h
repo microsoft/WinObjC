@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Bluetooth.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDBGGattDeviceService, WDBGGattCharacteristic, WDBGGattDescriptor, WDBGGattPresentationFormat, WDBGGattReadResult,
@@ -98,7 +102,7 @@ typedef unsigned WDBGGattCommunicationStatus;
 #ifndef __WDBGGattDeviceService_DEFINED__
 #define __WDBGGattDeviceService_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattDeviceService : RTObject <WFIClosable>
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDBGGattDeviceService*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelectorFromUuid:(WFGUID*)serviceUuid;
@@ -125,7 +129,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattCharacteristic_DEFINED__
 #define __WDBGGattCharacteristic_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattCharacteristic : RTObject
 + (WFGUID*)convertShortIdToUuid:(unsigned short)shortId;
 #if defined(__cplusplus)
@@ -168,7 +172,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattDescriptor_DEFINED__
 #define __WDBGGattDescriptor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattDescriptor : RTObject
 + (WFGUID*)convertShortIdToUuid:(unsigned short)shortId;
 #if defined(__cplusplus)
@@ -192,7 +196,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattPresentationFormat_DEFINED__
 #define __WDBGGattPresentationFormat_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattPresentationFormat : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -211,7 +215,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattReadResult_DEFINED__
 #define __WDBGGattReadResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattReadResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -226,7 +230,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattReadClientCharacteristicConfigurationDescriptorResult_DEFINED__
 #define __WDBGGattReadClientCharacteristicConfigurationDescriptorResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattReadClientCharacteristicConfigurationDescriptorResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -241,7 +245,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattValueChangedEventArgs_DEFINED__
 #define __WDBGGattValueChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattValueChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -256,7 +260,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattServiceUuids_DEFINED__
 #define __WDBGGattServiceUuids_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattServiceUuids : RTObject
 + (WFGUID*)genericAccess;
 + (WFGUID*)heartRate;
@@ -288,7 +292,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattCharacteristicUuids_DEFINED__
 #define __WDBGGattCharacteristicUuids_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattCharacteristicUuids : RTObject
 + (WFGUID*)batteryLevel;
 + (WFGUID*)cscFeature;
@@ -379,7 +383,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattDescriptorUuids_DEFINED__
 #define __WDBGGattDescriptorUuids_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattDescriptorUuids : RTObject
 + (WFGUID*)characteristicAggregateFormat;
 + (WFGUID*)characteristicExtendedProperties;
@@ -395,7 +399,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattReliableWriteTransaction_DEFINED__
 #define __WDBGGattReliableWriteTransaction_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattReliableWriteTransaction : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -411,7 +415,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattPresentationFormatTypes_DEFINED__
 #define __WDBGGattPresentationFormatTypes_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBGGattPresentationFormatTypes : RTObject
 + (uint8_t)bit2;
 + (uint8_t)boolean;

@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+#define OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Composition.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUCCompositionObject, WUCCompositionEffect, WUCCompositionEffectFactoryLoadResult, WUCCompositionEffectSourceParameter,
@@ -135,7 +139,7 @@ typedef unsigned WUCCompositionStretch;
 #ifndef __WUCCompositionObject_DEFINED__
 #define __WUCCompositionObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionObject : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -154,7 +158,7 @@ WINRT_EXPORT
 #ifndef __WUCCompositionEffect_DEFINED__
 #define __WUCCompositionEffect_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionEffect : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -169,7 +173,7 @@ WINRT_EXPORT
 #ifndef __WUCCompositionEffectFactoryLoadResult_DEFINED__
 #define __WUCCompositionEffectFactoryLoadResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionEffectFactoryLoadResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -193,7 +197,7 @@ WINRT_EXPORT
 #ifndef __WUCCompositionEffectSourceParameter_DEFINED__
 #define __WUCCompositionEffectSourceParameter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionEffectSourceParameter : RTObject <WGEIGraphicsEffectSource>
 + (WUCCompositionEffectSourceParameter*)make:(NSString*)name ACTIVATOR;
 #if defined(__cplusplus)
@@ -208,7 +212,7 @@ WINRT_EXPORT
 #ifndef __WUCCompositionImageOptions_DEFINED__
 #define __WUCCompositionImageOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionImageOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -224,7 +228,7 @@ WINRT_EXPORT
 #ifndef __WUCCompositionImage_DEFINED__
 #define __WUCCompositionImage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionImage : WUCCompositionObject <WUCICompositionSurface>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -241,7 +245,7 @@ WINRT_EXPORT
 #ifndef __WUCCompositionImageLoadResult_DEFINED__
 #define __WUCCompositionImageLoadResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionImageLoadResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -256,7 +260,7 @@ WINRT_EXPORT
 #ifndef __WUCCompositor_DEFINED__
 #define __WUCCompositor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositor : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -294,7 +298,7 @@ WINRT_EXPORT
 #ifndef __WUCCompositionAnimation_DEFINED__
 #define __WUCCompositionAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionAnimation : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -316,7 +320,7 @@ WINRT_EXPORT
 #ifndef __WUCCompositionPropertyAnimator_DEFINED__
 #define __WUCCompositionPropertyAnimator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionPropertyAnimator : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -334,7 +338,7 @@ WINRT_EXPORT
 #ifndef __WUCAnimationEndedEventArgs_DEFINED__
 #define __WUCAnimationEndedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCAnimationEndedEventArgs : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -348,7 +352,7 @@ WINRT_EXPORT
 #ifndef __WUCCompositionPropertySet_DEFINED__
 #define __WUCCompositionPropertySet_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionPropertySet : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -373,7 +377,7 @@ WINRT_EXPORT
 #ifndef __WUCCompositionGraphicsDevice_DEFINED__
 #define __WUCCompositionGraphicsDevice_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionGraphicsDevice : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -388,7 +392,7 @@ WINRT_EXPORT
 #ifndef __WUCCompositionEffectFactory_DEFINED__
 #define __WUCCompositionEffectFactory_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionEffectFactory : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -403,7 +407,7 @@ WINRT_EXPORT
 #ifndef __WUCCompositionTarget_DEFINED__
 #define __WUCCompositionTarget_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionTarget : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -417,7 +421,7 @@ WINRT_EXPORT
 #ifndef __WUCExpressionAnimation_DEFINED__
 #define __WUCExpressionAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCExpressionAnimation : WUCCompositionAnimation
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -431,7 +435,7 @@ WINRT_EXPORT
 #ifndef __WUCCompositionEasingFunction_DEFINED__
 #define __WUCCompositionEasingFunction_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionEasingFunction : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -444,7 +448,7 @@ WINRT_EXPORT
 #ifndef __WUCCubicBezierEasingFunction_DEFINED__
 #define __WUCCubicBezierEasingFunction_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCubicBezierEasingFunction : WUCCompositionEasingFunction
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -459,7 +463,7 @@ WINRT_EXPORT
 #ifndef __WUCLinearEasingFunction_DEFINED__
 #define __WUCLinearEasingFunction_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCLinearEasingFunction : WUCCompositionEasingFunction
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -472,7 +476,7 @@ WINRT_EXPORT
 #ifndef __WUCVisual_DEFINED__
 #define __WUCVisual_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCVisual : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -496,7 +500,7 @@ WINRT_EXPORT
 #ifndef __WUCContainerVisual_DEFINED__
 #define __WUCContainerVisual_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCContainerVisual : WUCVisual
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -510,7 +514,7 @@ WINRT_EXPORT
 #ifndef __WUCEffectVisual_DEFINED__
 #define __WUCEffectVisual_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCEffectVisual : WUCContainerVisual
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -524,7 +528,7 @@ WINRT_EXPORT
 #ifndef __WUCImageVisual_DEFINED__
 #define __WUCImageVisual_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCImageVisual : WUCContainerVisual
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -541,7 +545,7 @@ WINRT_EXPORT
 #ifndef __WUCSolidColorVisual_DEFINED__
 #define __WUCSolidColorVisual_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCSolidColorVisual : WUCContainerVisual
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -555,7 +559,7 @@ WINRT_EXPORT
 #ifndef __WUCCompositionClip_DEFINED__
 #define __WUCCompositionClip_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCCompositionClip : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -568,7 +572,7 @@ WINRT_EXPORT
 #ifndef __WUCInsetClip_DEFINED__
 #define __WUCInsetClip_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCInsetClip : WUCCompositionClip
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -585,7 +589,7 @@ WINRT_EXPORT
 #ifndef __WUCVisualCollection_DEFINED__
 #define __WUCVisualCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCVisualCollection : WUCCompositionObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -605,7 +609,7 @@ WINRT_EXPORT
 #ifndef __WUCKeyFrameAnimation_DEFINED__
 #define __WUCKeyFrameAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCKeyFrameAnimation : WUCCompositionAnimation
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -628,7 +632,7 @@ WINRT_EXPORT
 #ifndef __WUCScalarKeyFrameAnimation_DEFINED__
 #define __WUCScalarKeyFrameAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCScalarKeyFrameAnimation : WUCKeyFrameAnimation
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -645,7 +649,7 @@ WINRT_EXPORT
 #ifndef __WUCVector2KeyFrameAnimation_DEFINED__
 #define __WUCVector2KeyFrameAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCVector2KeyFrameAnimation : WUCKeyFrameAnimation
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -662,7 +666,7 @@ WINRT_EXPORT
 #ifndef __WUCVector3KeyFrameAnimation_DEFINED__
 #define __WUCVector3KeyFrameAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCVector3KeyFrameAnimation : WUCKeyFrameAnimation
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -679,7 +683,7 @@ WINRT_EXPORT
 #ifndef __WUCVector4KeyFrameAnimation_DEFINED__
 #define __WUCVector4KeyFrameAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 @interface WUCVector4KeyFrameAnimation : WUCKeyFrameAnimation
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
+#define OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Storage_Compression.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WSCCompressor, WSCDecompressor;
@@ -70,7 +74,7 @@ typedef unsigned WSCCompressAlgorithm;
 #ifndef __WSCCompressor_DEFINED__
 #define __WSCCompressor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
 @interface WSCCompressor : RTObject <WSSIOutputStream, WFIClosable>
 + (WSCCompressor*)makeCompressor:(RTObject<WSSIOutputStream>*)underlyingStream ACTIVATOR;
 + (WSCCompressor*)makeCompressorEx:(RTObject<WSSIOutputStream>*)underlyingStream
@@ -111,7 +115,7 @@ WINRT_EXPORT
 #ifndef __WSCDecompressor_DEFINED__
 #define __WSCDecompressor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
 @interface WSCDecompressor : RTObject <WSSIInputStream, WFIClosable>
 + (WSCDecompressor*)makeDecompressor:(RTObject<WSSIInputStream>*)underlyingStream ACTIVATOR;
 #if defined(__cplusplus)

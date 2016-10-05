@@ -2,22 +2,25 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{f939d6a1-4f91-4201-b38a-24edd790e1ce}</UniqueIdentifier>
+      <UniqueIdentifier>{ece160f0-baf3-4df4-9f85-2936c1fa0af6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{90a6809e-64b6-4d8a-9aa5-14b6d6977de5}</UniqueIdentifier>
+      <UniqueIdentifier>{8782035d-b248-4b22-908e-a12037c901ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Images">
+      <UniqueIdentifier>{7BE7E61C-0728-4081-99B5-F3466C87586D}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog">
-      <UniqueIdentifier>{3DB0B2CA-72CF-4FDE-8B63-35D5400227DC}</UniqueIdentifier>
+      <UniqueIdentifier>{7E791C48-C8A5-4A4C-B7C4-9FF18B856A8C}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\Supporting Files">
-      <UniqueIdentifier>{7061AEB8-2AC7-437E-A515-A323D14C5819}</UniqueIdentifier>
+      <UniqueIdentifier>{6F7F269B-5F9A-4070-8452-3ACA35C8033B}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\UIKitControls">
-      <UniqueIdentifier>{1DCAF78B-738F-4176-AC7A-A50DDE931B85}</UniqueIdentifier>
+      <UniqueIdentifier>{59828056-6D1F-4F47-993E-19913C3EFA1F}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{806C73D9-F6F7-4933-B57A-521789FA9A53}</UniqueIdentifier>
+      <UniqueIdentifier>{2B709FF5-2A65-40D7-B06A-750707ED342C}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -54,8 +57,14 @@
     <ClangCompile Include="..\..\XAMLCatalog\ProgrammaticViewController.m">
       <Filter>XAMLCatalog</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\XAMLCatalog\MiscellaneousViewController.m">
+      <Filter>XAMLCatalog</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\UIActivityIndicatorViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\XAMLCatalog\UIButtonViewController.m">
+      <Filter>XAMLCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\UISliderViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
@@ -66,6 +75,18 @@
     <ClangCompile Include="..\..\XAMLCatalog\MenuTableViewController.m">
       <Filter>XAMLCatalog</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\XAMLCatalog\UIActionSheetViewController.m">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClangCompile>
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\yellow_background.jpg">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\blue_background.jpg">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\button_image.png">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
     <AssetCatalogCompile Include="..\..\XAMLCatalog\Assets.xcassets">
       <Filter>XAMLCatalog</Filter>
     </AssetCatalogCompile>

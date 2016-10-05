@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_PLAYLISTS_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_PLAYLISTS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Media_Playlists.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WMPPlaylist;
@@ -42,7 +46,7 @@ typedef unsigned WMPPlaylistFormat;
 #ifndef __WMPPlaylist_DEFINED__
 #define __WMPPlaylist_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYLISTS_EXPORT
 @interface WMPPlaylist : RTObject
 + (void)loadAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WMPPlaylist*))success failure:(void (^)(NSError*))failure;
 + (instancetype)make ACTIVATOR;

@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Media_SpeechSynthesis.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WMSVoiceInformation, WMSSpeechSynthesisStream, WMSSpeechSynthesizer;
@@ -42,7 +46,7 @@ typedef unsigned WMSVoiceGender;
 #ifndef __WMSVoiceInformation_DEFINED__
 #define __WMSVoiceInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 @interface WMSVoiceInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -166,7 +170,7 @@ WINRT_EXPORT
 #ifndef __WMSSpeechSynthesisStream_DEFINED__
 #define __WMSSpeechSynthesisStream_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 @interface WMSSpeechSynthesisStream : RTObject <WSSIRandomAccessStreamWithContentType,
                                                 WSSIContentTypeProvider,
                                                 WSSIRandomAccessStream,
@@ -206,7 +210,7 @@ WINRT_EXPORT
 #ifndef __WMSSpeechSynthesizer_DEFINED__
 #define __WMSSpeechSynthesizer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 @interface WMSSpeechSynthesizer : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

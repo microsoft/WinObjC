@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_DataTransfer.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WADStandardDataFormats, WADDataPackagePropertySetView, WADDataPackagePropertySet, WADDataProviderDeferral, WADDataProviderRequest,
@@ -63,7 +67,7 @@ typedef void (^WADDataProviderHandler)(WADDataProviderRequest* request);
 #ifndef __WADStandardDataFormats_DEFINED__
 #define __WADStandardDataFormats_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADStandardDataFormats : RTObject
 + (NSString*)bitmap;
 + (NSString*)html;
@@ -81,7 +85,7 @@ WINRT_EXPORT
 #ifndef __WADDataPackagePropertySetView_DEFINED__
 #define __WADDataPackagePropertySetView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataPackagePropertySetView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -114,7 +118,7 @@ WINRT_EXPORT
 #ifndef __WADDataPackagePropertySet_DEFINED__
 #define __WADDataPackagePropertySet_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataPackagePropertySet : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -155,7 +159,7 @@ WINRT_EXPORT
 #ifndef __WADDataProviderDeferral_DEFINED__
 #define __WADDataProviderDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataProviderDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -169,7 +173,7 @@ WINRT_EXPORT
 #ifndef __WADDataProviderRequest_DEFINED__
 #define __WADDataProviderRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataProviderRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -186,7 +190,7 @@ WINRT_EXPORT
 #ifndef __WADOperationCompletedEventArgs_DEFINED__
 #define __WADOperationCompletedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADOperationCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -200,7 +204,7 @@ WINRT_EXPORT
 #ifndef __WADDataPackageView_DEFINED__
 #define __WADDataPackageView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataPackageView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -235,7 +239,7 @@ WINRT_EXPORT
 #ifndef __WADDataPackage_DEFINED__
 #define __WADDataPackage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataPackage : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -268,7 +272,7 @@ WINRT_EXPORT
 #ifndef __WADHtmlFormatHelper_DEFINED__
 #define __WADHtmlFormatHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADHtmlFormatHelper : RTObject
 + (NSString*)getStaticFragment:(NSString*)htmlFormat;
 + (NSString*)createHtmlFormat:(NSString*)htmlFragment;
@@ -280,7 +284,7 @@ WINRT_EXPORT
 #ifndef __WADClipboard_DEFINED__
 #define __WADClipboard_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADClipboard : RTObject
 + (WADDataPackageView*)getContent;
 + (void)setContent:(WADDataPackage*)content;
@@ -296,7 +300,7 @@ WINRT_EXPORT
 #ifndef __WADDataRequestDeferral_DEFINED__
 #define __WADDataRequestDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataRequestDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -310,7 +314,7 @@ WINRT_EXPORT
 #ifndef __WADDataRequest_DEFINED__
 #define __WADDataRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -327,7 +331,7 @@ WINRT_EXPORT
 #ifndef __WADDataRequestedEventArgs_DEFINED__
 #define __WADDataRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -341,7 +345,7 @@ WINRT_EXPORT
 #ifndef __WADTargetApplicationChosenEventArgs_DEFINED__
 #define __WADTargetApplicationChosenEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADTargetApplicationChosenEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -355,7 +359,7 @@ WINRT_EXPORT
 #ifndef __WADDataTransferManager_DEFINED__
 #define __WADDataTransferManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataTransferManager : RTObject
 + (void)showShareUI;
 + (WADDataTransferManager*)getForCurrentView;
@@ -374,7 +378,7 @@ WINRT_EXPORT
 #ifndef __WADSharedStorageAccessManager_DEFINED__
 #define __WADSharedStorageAccessManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADSharedStorageAccessManager : RTObject
 + (NSString*)addFile:(RTObject<WSIStorageFile>*)file;
 + (void)redeemTokenForFileAsync:(NSString*)token success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;

@@ -50,7 +50,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>user32.lib;ws2_32.lib;libdispatch.lib;objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>user32.lib;ws2_32.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>SystemConfiguration.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -63,7 +63,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>user32.lib;ws2_32.lib;libdispatch.lib;objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>user32.lib;ws2_32.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>SystemConfiguration.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -76,7 +76,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>user32.lib;ws2_32.lib;libdispatch.lib;objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>user32.lib;ws2_32.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>SystemConfiguration.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -89,7 +89,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>user32.lib;ws2_32.lib;libdispatch.lib;objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>user32.lib;ws2_32.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>SystemConfiguration.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
