@@ -34,7 +34,7 @@ namespace XAMLCatalogTest
                 XAMLCatalogSession.Quit();
             }
 
-            // Launch the WOCCatalog app
+            // Launch the XAMLCatalog app
             DesiredCapabilities appCapabilities = new DesiredCapabilities();
             appCapabilities.SetCapability("app", "0b75acd0-df3e-4edb-bebc-847b0ca4bffb_vddemm0nz1wmr!App");
 
