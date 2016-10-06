@@ -93,9 +93,6 @@
     [self addMenuItemViewController:[[SBDisplayModeViewController alloc] init] andTitle:@"Display Mode"];
 #endif
 
-    // TextFields
-    [self addMenuItemViewController:[[TextFieldsViewController alloc] init] andTitle:@"TextFields"];
-
     // SearchBar
     [self addMenuItemViewController:[[SearchBarViewController alloc] init] andTitle:@"SearchBar"];
 
