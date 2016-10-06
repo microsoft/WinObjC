@@ -133,6 +133,10 @@ typedef void (^WUWNavigatedEventHandler)(RTObject* sender, RTObject<WUWIWebUINav
 @property (readonly) WUWActivatedOperation* activatedOperation;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WUWIActivatedEventArgsDeferral : RTObject <WUWIActivatedEventArgsDeferral>
+@end
+
 #endif // __WUWIActivatedEventArgsDeferral_DEFINED__
 
 // Windows.UI.WebUI.IWebUINavigatedEventArgs
@@ -143,6 +147,10 @@ typedef void (^WUWNavigatedEventHandler)(RTObject* sender, RTObject<WUWIWebUINav
 @property (readonly) WUWWebUINavigatedOperation* navigatedOperation;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WUWIWebUINavigatedEventArgs : RTObject <WUWIWebUINavigatedEventArgs>
+@end
+
 #endif // __WUWIWebUINavigatedEventArgs_DEFINED__
 
 // Windows.UI.WebUI.IWebUIBackgroundTaskInstance
@@ -151,6 +159,10 @@ typedef void (^WUWNavigatedEventHandler)(RTObject* sender, RTObject<WUWIWebUINav
 
 @protocol WUWIWebUIBackgroundTaskInstance
 @property BOOL succeeded;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WUWIWebUIBackgroundTaskInstance : RTObject <WUWIWebUIBackgroundTaskInstance>
 @end
 
 #endif // __WUWIWebUIBackgroundTaskInstance_DEFINED__
@@ -165,6 +177,10 @@ typedef void (^WUWNavigatedEventHandler)(RTObject* sender, RTObject<WUWIWebUINav
 @property (readonly) WAASplashScreen* splashScreen;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIActivatedEventArgs : RTObject <WAAIActivatedEventArgs>
+@end
+
 #endif // __WAAIActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IVoiceCommandActivatedEventArgs
@@ -173,6 +189,10 @@ typedef void (^WUWNavigatedEventHandler)(RTObject* sender, RTObject<WUWIWebUINav
 
 @protocol WAAIVoiceCommandActivatedEventArgs <WAAIActivatedEventArgs>
 @property (readonly) WMSSpeechRecognitionResult* result;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIVoiceCommandActivatedEventArgs : RTObject <WAAIVoiceCommandActivatedEventArgs>
 @end
 
 #endif // __WAAIVoiceCommandActivatedEventArgs_DEFINED__
@@ -233,6 +253,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString* tileId;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAILaunchActivatedEventArgs : RTObject <WAAILaunchActivatedEventArgs>
+@end
+
 #endif // __WAAILaunchActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IPrelaunchActivatedEventArgs
@@ -243,6 +267,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) BOOL prelaunchActivated;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIPrelaunchActivatedEventArgs : RTObject <WAAIPrelaunchActivatedEventArgs>
+@end
+
 #endif // __WAAIPrelaunchActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IApplicationViewActivatedEventArgs
@@ -251,6 +279,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 
 @protocol WAAIApplicationViewActivatedEventArgs <WAAIActivatedEventArgs>
 @property (readonly) int currentlyShownApplicationViewId;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIApplicationViewActivatedEventArgs : RTObject <WAAIApplicationViewActivatedEventArgs>
 @end
 
 #endif // __WAAIApplicationViewActivatedEventArgs_DEFINED__
@@ -288,6 +320,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WADSShareOperation* shareOperation;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIShareTargetActivatedEventArgs : RTObject <WAAIShareTargetActivatedEventArgs>
+@end
+
 #endif // __WAAIShareTargetActivatedEventArgs_DEFINED__
 
 // Windows.UI.WebUI.WebUIShareTargetActivatedEventArgs
@@ -318,6 +354,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString* verb;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIFileActivatedEventArgs : RTObject <WAAIFileActivatedEventArgs>
+@end
+
 #endif // __WAAIFileActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IFileActivatedEventArgsWithNeighboringFiles
@@ -326,6 +366,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 
 @protocol WAAIFileActivatedEventArgsWithNeighboringFiles <WAAIFileActivatedEventArgs, WAAIActivatedEventArgs>
 @property (readonly) WSSStorageFileQueryResult* neighboringFilesQuery;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIFileActivatedEventArgsWithNeighboringFiles : RTObject <WAAIFileActivatedEventArgsWithNeighboringFiles>
 @end
 
 #endif // __WAAIFileActivatedEventArgsWithNeighboringFiles_DEFINED__
@@ -363,6 +407,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WFUri* uri;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIProtocolActivatedEventArgs : RTObject <WAAIProtocolActivatedEventArgs>
+@end
+
 #endif // __WAAIProtocolActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData
@@ -372,6 +420,11 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @protocol WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData <WAAIActivatedEventArgs>
 @property (readonly) NSString* callerPackageFamilyName;
 @property (readonly) WFCValueSet* data;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData
+    : RTObject <WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData>
 @end
 
 #endif // __WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData_DEFINED__
@@ -407,6 +460,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 
 @protocol WAAIProtocolForResultsActivatedEventArgs <WAAIActivatedEventArgs>
 @property (readonly) WSProtocolForResultsOperation* protocolForResultsOperation;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIProtocolForResultsActivatedEventArgs : RTObject <WAAIProtocolForResultsActivatedEventArgs>
 @end
 
 #endif // __WAAIProtocolForResultsActivatedEventArgs_DEFINED__
@@ -446,6 +503,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WSPPFileOpenPickerUI* fileOpenPickerUI;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIFileOpenPickerActivatedEventArgs : RTObject <WAAIFileOpenPickerActivatedEventArgs>
+@end
+
 #endif // __WAAIFileOpenPickerActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IFileOpenPickerActivatedEventArgs2
@@ -454,6 +515,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 
 @protocol WAAIFileOpenPickerActivatedEventArgs2
 @property (readonly) NSString* callerPackageFamilyName;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIFileOpenPickerActivatedEventArgs2 : RTObject <WAAIFileOpenPickerActivatedEventArgs2>
 @end
 
 #endif // __WAAIFileOpenPickerActivatedEventArgs2_DEFINED__
@@ -488,6 +553,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WSPPFileSavePickerUI* fileSavePickerUI;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIFileSavePickerActivatedEventArgs : RTObject <WAAIFileSavePickerActivatedEventArgs>
+@end
+
 #endif // __WAAIFileSavePickerActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IFileSavePickerActivatedEventArgs2
@@ -497,6 +566,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @protocol WAAIFileSavePickerActivatedEventArgs2
 @property (readonly) NSString* callerPackageFamilyName;
 @property (readonly) NSString* enterpriseId;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIFileSavePickerActivatedEventArgs2 : RTObject <WAAIFileSavePickerActivatedEventArgs2>
 @end
 
 #endif // __WAAIFileSavePickerActivatedEventArgs2_DEFINED__
@@ -532,6 +605,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WSPCachedFileUpdaterUI* cachedFileUpdaterUI;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAICachedFileUpdaterActivatedEventArgs : RTObject <WAAICachedFileUpdaterActivatedEventArgs>
+@end
+
 #endif // __WAAICachedFileUpdaterActivatedEventArgs_DEFINED__
 
 // Windows.UI.WebUI.WebUICachedFileUpdaterActivatedEventArgs
@@ -560,6 +637,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @protocol WAAIDeviceActivatedEventArgs <WAAIActivatedEventArgs>
 @property (readonly) NSString* deviceInformationId;
 @property (readonly) NSString* verb;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIDeviceActivatedEventArgs : RTObject <WAAIDeviceActivatedEventArgs>
 @end
 
 #endif // __WAAIDeviceActivatedEventArgs_DEFINED__
@@ -593,6 +674,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString* verb;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIAppointmentsProviderActivatedEventArgs : RTObject <WAAIAppointmentsProviderActivatedEventArgs>
+@end
+
 #endif // __WAAIAppointmentsProviderActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IAppointmentsProviderAddAppointmentActivatedEventArgs
@@ -601,6 +686,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 
 @protocol WAAIAppointmentsProviderAddAppointmentActivatedEventArgs <WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs>
 @property (readonly) WAAAAddAppointmentOperation* addAppointmentOperation;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIAppointmentsProviderAddAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderAddAppointmentActivatedEventArgs>
 @end
 
 #endif // __WAAIAppointmentsProviderAddAppointmentActivatedEventArgs_DEFINED__
@@ -636,6 +725,11 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WAAAReplaceAppointmentOperation* replaceAppointmentOperation;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs
+    : RTObject <WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs>
+@end
+
 #endif // __WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs_DEFINED__
 
 // Windows.UI.WebUI.WebUIAppointmentsProviderReplaceAppointmentActivatedEventArgs
@@ -667,6 +761,11 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 
 @protocol WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs <WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs>
 @property (readonly) WAAARemoveAppointmentOperation* removeAppointmentOperation;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs
+    : RTObject <WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs>
 @end
 
 #endif // __WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs_DEFINED__
@@ -705,6 +804,11 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) NSString* roamingId;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs
+    : RTObject <WAAIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs>
+@end
+
 #endif // __WAAIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs_DEFINED__
 
 // Windows.UI.WebUI.WebUIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs
@@ -741,6 +845,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WFDateTime* timeToShow;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs : RTObject <WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs>
+@end
+
 #endif // __WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs_DEFINED__
 
 // Windows.UI.WebUI.WebUIAppointmentsProviderShowTimeFrameActivatedEventArgs
@@ -772,6 +880,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 
 @protocol WAAILockScreenActivatedEventArgs <WAAIActivatedEventArgs>
 @property (readonly) RTObject* info;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAILockScreenActivatedEventArgs : RTObject <WAAILockScreenActivatedEventArgs>
 @end
 
 #endif // __WAAILockScreenActivatedEventArgs_DEFINED__
@@ -806,6 +918,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) RTObject* sharedContext;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIRestrictedLaunchActivatedEventArgs : RTObject <WAAIRestrictedLaunchActivatedEventArgs>
+@end
+
 #endif // __WAAIRestrictedLaunchActivatedEventArgs_DEFINED__
 
 // Windows.UI.WebUI.WebUIRestrictedLaunchActivatedEventArgs
@@ -835,6 +951,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WFCValueSet* continuationData;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIContinuationActivatedEventArgs : RTObject <WAAIContinuationActivatedEventArgs>
+@end
+
 #endif // __WAAIContinuationActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IFileOpenPickerContinuationEventArgs
@@ -843,6 +963,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 
 @protocol WAAIFileOpenPickerContinuationEventArgs <WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs>
 @property (readonly) NSArray* /* WSStorageFile* */ files;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIFileOpenPickerContinuationEventArgs : RTObject <WAAIFileOpenPickerContinuationEventArgs>
 @end
 
 #endif // __WAAIFileOpenPickerContinuationEventArgs_DEFINED__
@@ -877,6 +1001,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WSStorageFile* file;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIFileSavePickerContinuationEventArgs : RTObject <WAAIFileSavePickerContinuationEventArgs>
+@end
+
 #endif // __WAAIFileSavePickerContinuationEventArgs_DEFINED__
 
 // Windows.UI.WebUI.WebUIFileSavePickerContinuationEventArgs
@@ -907,6 +1035,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 
 @protocol WAAIFolderPickerContinuationEventArgs <WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs>
 @property (readonly) WSStorageFolder* folder;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIFolderPickerContinuationEventArgs : RTObject <WAAIFolderPickerContinuationEventArgs>
 @end
 
 #endif // __WAAIFolderPickerContinuationEventArgs_DEFINED__
@@ -941,6 +1073,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) WSAWWebAuthenticationResult* webAuthenticationResult;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIWebAuthenticationBrokerContinuationEventArgs : RTObject <WAAIWebAuthenticationBrokerContinuationEventArgs>
+@end
+
 #endif // __WAAIWebAuthenticationBrokerContinuationEventArgs_DEFINED__
 
 // Windows.UI.WebUI.WebUIWebAuthenticationBrokerContinuationEventArgs
@@ -973,6 +1109,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @property (readonly) RTObject<WSAWPIWebAccountProviderOperation>* operation;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIWebAccountProviderActivatedEventArgs : RTObject <WAAIWebAccountProviderActivatedEventArgs>
+@end
+
 #endif // __WAAIWebAccountProviderActivatedEventArgs_DEFINED__
 
 // Windows.UI.WebUI.WebUIWebAccountProviderActivatedEventArgs
@@ -1000,6 +1140,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 
 @protocol WAAIDialReceiverActivatedEventArgs <WAAILaunchActivatedEventArgs, WAAIActivatedEventArgs>
 @property (readonly) NSString* appName;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIDialReceiverActivatedEventArgs : RTObject <WAAIDialReceiverActivatedEventArgs>
 @end
 
 #endif // __WAAIDialReceiverActivatedEventArgs_DEFINED__
@@ -1036,6 +1180,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @protocol WAAIToastNotificationActivatedEventArgs <WAAIActivatedEventArgs>
 @property (readonly) NSString* argument;
 @property (readonly) WFCValueSet* userInput;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAAIToastNotificationActivatedEventArgs : RTObject <WAAIToastNotificationActivatedEventArgs>
 @end
 
 #endif // __WAAIToastNotificationActivatedEventArgs_DEFINED__
@@ -1082,6 +1230,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 - (void)complete;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAISuspendingDeferral : RTObject <WAISuspendingDeferral>
+@end
+
 #endif // __WAISuspendingDeferral_DEFINED__
 
 // Windows.UI.WebUI.SuspendingDeferral
@@ -1107,6 +1259,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 - (WASuspendingDeferral*)getDeferral;
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAISuspendingOperation : RTObject <WAISuspendingOperation>
+@end
+
 #endif // __WAISuspendingOperation_DEFINED__
 
 // Windows.UI.WebUI.SuspendingOperation
@@ -1130,6 +1286,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 
 @protocol WAISuspendingEventArgs
 @property (readonly) WASuspendingOperation* suspendingOperation;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WAISuspendingEventArgs : RTObject <WAISuspendingEventArgs>
 @end
 
 #endif // __WAISuspendingEventArgs_DEFINED__
@@ -1161,6 +1321,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 - (EventRegistrationToken)addCanceledEvent:(WABBackgroundTaskCanceledEventHandler)del;
 - (void)removeCanceledEvent:(EventRegistrationToken)tok;
 - (WABBackgroundTaskDeferral*)getDeferral;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WABIBackgroundTaskInstance : RTObject <WABIBackgroundTaskInstance>
 @end
 
 #endif // __WABIBackgroundTaskInstance_DEFINED__
@@ -1251,6 +1415,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 @protocol WGPIPrintDocumentSource
 @end
 
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WGPIPrintDocumentSource : RTObject <WGPIPrintDocumentSource>
+@end
+
 #endif // __WGPIPrintDocumentSource_DEFINED__
 
 // Windows.Foundation.IClosable
@@ -1259,6 +1427,10 @@ OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
 
 @protocol WFIClosable
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_UI_WEBUI_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
 @end
 
 #endif // __WFIClosable_DEFINED__

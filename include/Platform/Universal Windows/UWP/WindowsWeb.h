@@ -100,6 +100,10 @@ typedef unsigned WWWebErrorStatus;
 - (void)uriToStreamAsync:(WFUri*)uri success:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_WEB_EXPORT
+@interface WWIUriToStreamResolver : RTObject <WWIUriToStreamResolver>
+@end
+
 #endif // __WWIUriToStreamResolver_DEFINED__
 
 // Windows.Web.WebError

@@ -95,6 +95,10 @@ OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 - (void)removeUserChangedEvent:(EventRegistrationToken)tok;
 @end
 
+OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
+@interface WGIIGameController : RTObject <WGIIGameController>
+@end
+
 #endif // __WGIIGameController_DEFINED__
 
 // Windows.Gaming.Input.Headset

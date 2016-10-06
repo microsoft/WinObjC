@@ -54,6 +54,10 @@ typedef unsigned WFCCollectionChange;
 @property (readonly) unsigned int index;
 @end
 
+OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
+@interface WFCIVectorChangedEventArgs : RTObject <WFCIVectorChangedEventArgs>
+@end
+
 #endif // __WFCIVectorChangedEventArgs_DEFINED__
 
 // Windows.Foundation.Collections.IPropertySet
@@ -78,6 +82,10 @@ typedef unsigned WFCCollectionChange;
 - (void)setDictionary:(NSDictionary*)dict;
 - (EventRegistrationToken)addObserver:(RTCollectionListener)receiver;
 - (void)removeObserver:(EventRegistrationToken)receiverToken;
+@end
+
+OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
+@interface WFCIPropertySet : RTObject <WFCIPropertySet>
 @end
 
 #endif // __WFCIPropertySet_DEFINED__

@@ -150,6 +150,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)setNavigationStateCore:(NSString*)navigationState;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMAINavigationTransitionInfoOverrides : RTObject <WUXMAINavigationTransitionInfoOverrides>
+@end
+
 #endif // __WUXMAINavigationTransitionInfoOverrides_DEFINED__
 
 // Windows.UI.Xaml.Media.Animation.KeyTimeHelper

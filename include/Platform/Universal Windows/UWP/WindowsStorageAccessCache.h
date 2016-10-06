@@ -94,6 +94,10 @@ OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 - (BOOL)checkAccess:(RTObject<WSIStorageItem>*)file;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
+@interface WSAIStorageItemAccessList : RTObject <WSAIStorageItemAccessList>
+@end
+
 #endif // __WSAIStorageItemAccessList_DEFINED__
 
 // Windows.Storage.AccessCache.AccessListEntryView

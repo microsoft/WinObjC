@@ -58,6 +58,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)complete;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAISuspendingDeferral : RTObject <WAISuspendingDeferral>
+@end
+
 #endif // __WAISuspendingDeferral_DEFINED__
 
 // Windows.ApplicationModel.ISuspendingOperation
@@ -69,6 +73,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (WASuspendingDeferral*)getDeferral;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAISuspendingOperation : RTObject <WAISuspendingOperation>
+@end
+
 #endif // __WAISuspendingOperation_DEFINED__
 
 // Windows.ApplicationModel.ISuspendingEventArgs
@@ -77,6 +85,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 @protocol WAISuspendingEventArgs
 @property (readonly) WASuspendingOperation* suspendingOperation;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAISuspendingEventArgs : RTObject <WAISuspendingEventArgs>
 @end
 
 #endif // __WAISuspendingEventArgs_DEFINED__

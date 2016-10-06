@@ -123,6 +123,10 @@ typedef unsigned WUCCompositionStretch;
 @protocol WUCICompositionSurface
 @end
 
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+@interface WUCICompositionSurface : RTObject <WUCICompositionSurface>
+@end
+
 #endif // __WUCICompositionSurface_DEFINED__
 
 // Windows.Foundation.IClosable
@@ -131,6 +135,10 @@ typedef unsigned WUCCompositionStretch;
 
 @protocol WFIClosable
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
 @end
 
 #endif // __WFIClosable_DEFINED__
@@ -189,6 +197,10 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
 #define __WGEIGraphicsEffectSource_DEFINED__
 
 @protocol WGEIGraphicsEffectSource
+@end
+
+OBJCUWP_WINDOWS_UI_COMPOSITION_EXPORT
+@interface WGEIGraphicsEffectSource : RTObject <WGEIGraphicsEffectSource>
 @end
 
 #endif // __WGEIGraphicsEffectSource_DEFINED__

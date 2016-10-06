@@ -130,6 +130,10 @@ OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Media.Casting.CastingConnection

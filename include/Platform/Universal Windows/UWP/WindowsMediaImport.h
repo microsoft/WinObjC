@@ -224,6 +224,10 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Media.Import.PhotoImportSession

@@ -377,6 +377,10 @@ typedef void (^WUXCPScrollEventHandler)(RTObject* sender, WUXCPScrollEventArgs* 
 - (float)getRegularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment offset:(float*)offset;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXCPIScrollSnapPointsInfo : RTObject <WUXCPIScrollSnapPointsInfo>
+@end
+
 #endif // __WUXCPIScrollSnapPointsInfo_DEFINED__
 
 // Windows.UI.Xaml.Controls.Primitives.IFlyoutBaseOverrides
@@ -385,6 +389,10 @@ typedef void (^WUXCPScrollEventHandler)(RTObject* sender, WUXCPScrollEventArgs* 
 
 @protocol WUXCPIFlyoutBaseOverrides
 - (WXCControl*)createPresenter;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXCPIFlyoutBaseOverrides : RTObject <WUXCPIFlyoutBaseOverrides>
 @end
 
 #endif // __WUXCPIFlyoutBaseOverrides_DEFINED__
@@ -399,6 +407,10 @@ typedef void (^WUXCPScrollEventHandler)(RTObject* sender, WUXCPScrollEventArgs* 
 - (void)onValueChanged:(double)oldValue newValue:(double)newValue;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXCPIRangeBaseOverrides : RTObject <WUXCPIRangeBaseOverrides>
+@end
+
 #endif // __WUXCPIRangeBaseOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.Primitives.IToggleButtonOverrides
@@ -407,6 +419,10 @@ typedef void (^WUXCPScrollEventHandler)(RTObject* sender, WUXCPScrollEventArgs* 
 
 @protocol WUXCPIToggleButtonOverrides
 - (void)onToggle;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXCPIToggleButtonOverrides : RTObject <WUXCPIToggleButtonOverrides>
 @end
 
 #endif // __WUXCPIToggleButtonOverrides_DEFINED__
@@ -418,6 +434,10 @@ typedef void (^WUXCPScrollEventHandler)(RTObject* sender, WUXCPScrollEventArgs* 
 @protocol WUXCPIPickerFlyoutBaseOverrides
 - (void)onConfirmed;
 - (BOOL)shouldShowConfirmationButtons;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXCPIPickerFlyoutBaseOverrides : RTObject <WUXCPIPickerFlyoutBaseOverrides>
 @end
 
 #endif // __WUXCPIPickerFlyoutBaseOverrides_DEFINED__
@@ -850,6 +870,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onApplyTemplate;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXIFrameworkElementOverrides : RTObject <WXIFrameworkElementOverrides>
+@end
+
 #endif // __WXIFrameworkElementOverrides_DEFINED__
 
 // Windows.UI.Xaml.IFrameworkElementOverrides2
@@ -858,6 +882,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 @protocol WXIFrameworkElementOverrides2
 - (BOOL)goToElementStateCore:(NSString*)stateName useTransitions:(BOOL)useTransitions;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXIFrameworkElementOverrides2 : RTObject <WXIFrameworkElementOverrides2>
 @end
 
 #endif // __WXIFrameworkElementOverrides2_DEFINED__
@@ -871,6 +899,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onDisconnectVisualChildren;
 - (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point
                                                                                       boundingRect:(WFRect*)boundingRect;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXIUIElementOverrides : RTObject <WXIUIElementOverrides>
 @end
 
 #endif // __WXIUIElementOverrides_DEFINED__
@@ -1155,6 +1187,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)bringIndexIntoView:(int)index;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIVirtualizingPanelOverrides : RTObject <WXCIVirtualizingPanelOverrides>
+@end
+
 #endif // __WXCIVirtualizingPanelOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.Panel
@@ -1310,6 +1346,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onContentTemplateChanged:(WXDataTemplate*)oldContentTemplate newContentTemplate:(WXDataTemplate*)newContentTemplate;
 - (void)onContentTemplateSelectorChanged:(WXCDataTemplateSelector*)oldContentTemplateSelector
               newContentTemplateSelector:(WXCDataTemplateSelector*)newContentTemplateSelector;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIContentPresenterOverrides : RTObject <WXCIContentPresenterOverrides>
 @end
 
 #endif // __WXCIContentPresenterOverrides_DEFINED__
@@ -1520,6 +1560,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
               newContentTemplateSelector:(WXCDataTemplateSelector*)newContentTemplateSelector;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIContentControlOverrides : RTObject <WXCIContentControlOverrides>
+@end
+
 #endif // __WXCIContentControlOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.IControlOverrides
@@ -1552,6 +1596,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onDragLeave:(WXDragEventArgs*)e;
 - (void)onDragOver:(WXDragEventArgs*)e;
 - (void)onDrop:(WXDragEventArgs*)e;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIControlOverrides : RTObject <WXCIControlOverrides>
 @end
 
 #endif // __WXCIControlOverrides_DEFINED__
@@ -1806,6 +1854,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
               newGroupStyleSelector:(WXCGroupStyleSelector*)newGroupStyleSelector;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIItemsControlOverrides : RTObject <WXCIItemsControlOverrides>
+@end
+
 #endif // __WXCIItemsControlOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.IItemContainerMapping
@@ -1817,6 +1869,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (WXDependencyObject*)containerFromItem:(RTObject*)item;
 - (int)indexFromContainer:(WXDependencyObject*)container;
 - (WXDependencyObject*)containerFromIndex:(int)index;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIItemContainerMapping : RTObject <WXCIItemContainerMapping>
 @end
 
 #endif // __WXCIItemContainerMapping_DEFINED__
@@ -1955,6 +2011,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @protocol WUXDIValueConverter
 - (RTObject*)convert:(RTObject*)value targetType:(WUXITypeName*)targetType parameter:(RTObject*)parameter language:(NSString*)language;
 - (RTObject*)convertBack:(RTObject*)value targetType:(WUXITypeName*)targetType parameter:(RTObject*)parameter language:(NSString*)language;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDIValueConverter : RTObject <WUXDIValueConverter>
 @end
 
 #endif // __WUXDIValueConverter_DEFINED__

@@ -62,6 +62,10 @@ typedef unsigned WADDCCoreDragUIContentMode;
 - (void)dropAsync:(WADDCCoreDragInfo*)dragInfo success:(void (^)(WADDataPackageOperation))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
+@interface WADDCICoreDropOperationTarget : RTObject <WADDCICoreDropOperationTarget>
+@end
+
 #endif // __WADDCICoreDropOperationTarget_DEFINED__
 
 // Windows.ApplicationModel.DataTransfer.DragDrop.Core.CoreDragInfo

@@ -417,6 +417,10 @@ typedef void (^WGPPrintTaskSourceRequestedHandler)(WGPPrintTaskSourceRequestedAr
 @property WGPPrintStaple staple;
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
+@interface WGPIPrintTaskOptionsCoreProperties : RTObject <WGPIPrintTaskOptionsCoreProperties>
+@end
+
 #endif // __WGPIPrintTaskOptionsCoreProperties_DEFINED__
 
 // Windows.Graphics.Printing.IPrintTaskOptionsCoreUIConfiguration
@@ -425,6 +429,10 @@ typedef void (^WGPPrintTaskSourceRequestedHandler)(WGPPrintTaskSourceRequestedAr
 
 @protocol WGPIPrintTaskOptionsCoreUIConfiguration
 @property (readonly) NSMutableArray* /* NSString * */ displayedOptions;
+@end
+
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
+@interface WGPIPrintTaskOptionsCoreUIConfiguration : RTObject <WGPIPrintTaskOptionsCoreUIConfiguration>
 @end
 
 #endif // __WGPIPrintTaskOptionsCoreUIConfiguration_DEFINED__
@@ -437,6 +445,10 @@ typedef void (^WGPPrintTaskSourceRequestedHandler)(WGPPrintTaskSourceRequestedAr
 - (WGPPrintPageDescription*)getPageDescription:(unsigned int)jobPageNumber;
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
+@interface WGPIPrintTaskOptionsCore : RTObject <WGPIPrintTaskOptionsCore>
+@end
+
 #endif // __WGPIPrintTaskOptionsCore_DEFINED__
 
 // Windows.Graphics.Printing.IPrintDocumentSource
@@ -444,6 +456,10 @@ typedef void (^WGPPrintTaskSourceRequestedHandler)(WGPPrintTaskSourceRequestedAr
 #define __WGPIPrintDocumentSource_DEFINED__
 
 @protocol WGPIPrintDocumentSource
+@end
+
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
+@interface WGPIPrintDocumentSource : RTObject <WGPIPrintDocumentSource>
 @end
 
 #endif // __WGPIPrintDocumentSource_DEFINED__

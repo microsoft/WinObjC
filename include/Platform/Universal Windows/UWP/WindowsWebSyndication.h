@@ -104,6 +104,10 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
 @end
 
+OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+@interface WWSISyndicationNode : RTObject <WWSISyndicationNode>
+@end
+
 #endif // __WWSISyndicationNode_DEFINED__
 
 // Windows.Web.Syndication.ISyndicationText
@@ -115,6 +119,10 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 @property (retain) NSString* type;
 @property (retain) WDXDXmlDocument* xml;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
+@end
+
+OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+@interface WWSISyndicationText : RTObject <WWSISyndicationText>
 @end
 
 #endif // __WWSISyndicationText_DEFINED__
@@ -134,6 +142,10 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
                   success:(void (^)(WWSSyndicationFeed*))success
                  progress:(void (^)(WWSRetrievalProgress*))progress
                   failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+@interface WWSISyndicationClient : RTObject <WWSISyndicationClient>
 @end
 
 #endif // __WWSISyndicationClient_DEFINED__

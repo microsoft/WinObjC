@@ -84,6 +84,10 @@ OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Graphics.DirectX.Direct3D11.IDirect3DDevice
@@ -95,6 +99,10 @@ OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
+@interface WGDDIDirect3DDevice : RTObject <WGDDIDirect3DDevice>
+@end
+
 #endif // __WGDDIDirect3DDevice_DEFINED__
 
 // Windows.Graphics.DirectX.Direct3D11.IDirect3DSurface
@@ -104,6 +112,10 @@ OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
 @protocol WGDDIDirect3DSurface <WFIClosable>
 @property (readonly) WGDDDirect3DSurfaceDescription* Description;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
+@interface WGDDIDirect3DSurface : RTObject <WGDDIDirect3DSurface>
 @end
 
 #endif // __WGDDIDirect3DSurface_DEFINED__

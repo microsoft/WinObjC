@@ -86,6 +86,10 @@ OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
 - (NSString*)toString;
 @end
 
+OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
+@interface WFIStringable : RTObject <WFIStringable>
+@end
+
 #endif // __WFIStringable_DEFINED__
 
 // Windows.Networking.ServiceDiscovery.Dnssd.DnssdServiceInstance

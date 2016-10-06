@@ -113,6 +113,10 @@ typedef void (^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager* se
 @property (readonly) WFGUID* type;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WMPIMediaProtectionServiceRequest : RTObject <WMPIMediaProtectionServiceRequest>
+@end
+
 #endif // __WMPIMediaProtectionServiceRequest_DEFINED__
 
 // Windows.Media.Protection.MediaProtectionManager

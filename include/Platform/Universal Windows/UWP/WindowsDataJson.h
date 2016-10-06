@@ -69,6 +69,10 @@ typedef unsigned WDJJsonErrorStatus;
 - (WDJJsonObject*)getObject;
 @end
 
+OBJCUWP_WINDOWS_DATA_JSON_EXPORT
+@interface WDJIJsonValue : RTObject <WDJIJsonValue>
+@end
+
 #endif // __WDJIJsonValue_DEFINED__
 
 // Windows.Foundation.IStringable
@@ -77,6 +81,10 @@ typedef unsigned WDJJsonErrorStatus;
 
 @protocol WFIStringable
 - (NSString*)toString;
+@end
+
+OBJCUWP_WINDOWS_DATA_JSON_EXPORT
+@interface WFIStringable : RTObject <WFIStringable>
 @end
 
 #endif // __WFIStringable_DEFINED__

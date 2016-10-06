@@ -294,6 +294,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (WUXAPItemAutomationPeer*)onCreateItemAutomationPeer:(RTObject*)item;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIItemsControlAutomationPeerOverrides2 : RTObject <WUXAPIItemsControlAutomationPeerOverrides2>
+@end
+
 #endif // __WUXAPIItemsControlAutomationPeerOverrides2_DEFINED__
 
 // Windows.UI.Xaml.Automation.Peers.IAutomationPeerOverrides
@@ -330,6 +334,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (WUXAPAutomationLiveSetting)getLiveSettingCore;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIAutomationPeerOverrides : RTObject <WUXAPIAutomationPeerOverrides>
+@end
+
 #endif // __WUXAPIAutomationPeerOverrides_DEFINED__
 
 // Windows.UI.Xaml.Automation.Peers.IAutomationPeerOverrides2
@@ -339,6 +347,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @protocol WUXAPIAutomationPeerOverrides2
 - (void)showContextMenuCore;
 - (NSArray* /* WUXAPAutomationPeer* */)getControlledPeersCore;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIAutomationPeerOverrides2 : RTObject <WUXAPIAutomationPeerOverrides2>
 @end
 
 #endif // __WUXAPIAutomationPeerOverrides2_DEFINED__
@@ -355,6 +367,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (int)getPositionInSetCore;
 - (int)getSizeOfSetCore;
 - (int)getLevelCore;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIAutomationPeerOverrides3 : RTObject <WUXAPIAutomationPeerOverrides3>
 @end
 
 #endif // __WUXAPIAutomationPeerOverrides3_DEFINED__
@@ -927,6 +943,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)invoke;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIInvokeProvider : RTObject <WUXAPIInvokeProvider>
+@end
+
 #endif // __WUXAPIInvokeProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Peers.ButtonAutomationPeer
@@ -1013,6 +1033,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
                                                 value:(RTObject*)value;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIItemContainerProvider : RTObject <WUXAPIItemContainerProvider>
+@end
+
 #endif // __WUXAPIItemContainerProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Peers.ItemsControlAutomationPeer
@@ -1060,6 +1084,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) double smallChange;
 @property (readonly) double value;
 - (void)setValue:(double)value;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIRangeValueProvider : RTObject <WUXAPIRangeValueProvider>
 @end
 
 #endif // __WUXAPIRangeValueProvider_DEFINED__
@@ -1135,6 +1163,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)scrollIntoView;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIScrollItemProvider : RTObject <WUXAPIScrollItemProvider>
+@end
+
 #endif // __WUXAPIScrollItemProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Peers.HubSectionAutomationPeer
@@ -1165,6 +1197,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) BOOL verticallyScrollable;
 - (void)scroll:(WUXAScrollAmount)horizontalAmount verticalAmount:(WUXAScrollAmount)verticalAmount;
 - (void)setScrollPercent:(double)horizontalPercent verticalPercent:(double)verticalPercent;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIScrollProvider : RTObject <WUXAPIScrollProvider>
 @end
 
 #endif // __WUXAPIScrollProvider_DEFINED__
@@ -1199,6 +1235,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) BOOL canSelectMultiple;
 @property (readonly) BOOL isSelectionRequired;
 - (NSArray* /* WUXAPIRawElementProviderSimple* */)getSelection;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPISelectionProvider : RTObject <WUXAPISelectionProvider>
 @end
 
 #endif // __WUXAPISelectionProvider_DEFINED__
@@ -1257,6 +1297,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) NSArray* /* NSString * */ dropEffects;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIDropTargetProvider : RTObject <WUXAPIDropTargetProvider>
+@end
+
 #endif // __WUXAPIDropTargetProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Peers.ListViewBaseAutomationPeer
@@ -1310,6 +1354,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @protocol WUXAPIToggleProvider
 @property (readonly) WUXAToggleState toggleState;
 - (void)toggle;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIToggleProvider : RTObject <WUXAPIToggleProvider>
 @end
 
 #endif // __WUXAPIToggleProvider_DEFINED__
@@ -1388,6 +1436,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)select;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPISelectionItemProvider : RTObject <WUXAPISelectionItemProvider>
+@end
+
 #endif // __WUXAPISelectionItemProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Peers.RadioButtonAutomationPeer
@@ -1417,6 +1469,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) WUXAExpandCollapseState expandCollapseState;
 - (void)collapse;
 - (void)expand;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIExpandCollapseProvider : RTObject <WUXAPIExpandCollapseProvider>
 @end
 
 #endif // __WUXAPIExpandCollapseProvider_DEFINED__
@@ -1480,6 +1536,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)setValue:(NSString*)value;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIValueProvider : RTObject <WUXAPIValueProvider>
+@end
+
 #endif // __WUXAPIValueProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Peers.ComboBoxAutomationPeer
@@ -1508,6 +1568,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 @protocol WUXAPIVirtualizedItemProvider
 - (void)realize;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIVirtualizedItemProvider : RTObject <WUXAPIVirtualizedItemProvider>
 @end
 
 #endif // __WUXAPIVirtualizedItemProvider_DEFINED__

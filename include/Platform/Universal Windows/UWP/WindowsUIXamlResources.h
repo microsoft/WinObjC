@@ -42,6 +42,10 @@
             propertyType:(NSString*)propertyType;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_RESOURCES_EXPORT
+@interface WUXRICustomXamlResourceLoaderOverrides : RTObject <WUXRICustomXamlResourceLoaderOverrides>
+@end
+
 #endif // __WUXRICustomXamlResourceLoaderOverrides_DEFINED__
 
 // Windows.UI.Xaml.Resources.CustomXamlResourceLoader

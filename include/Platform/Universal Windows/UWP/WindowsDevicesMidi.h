@@ -80,6 +80,10 @@ typedef unsigned WDMMidiMessageType;
 @property (readonly) WDMMidiMessageType type;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
+@interface WDMIMidiMessage : RTObject <WDMIMidiMessage>
+@end
+
 #endif // __WDMIMidiMessage_DEFINED__
 
 // Windows.Foundation.IClosable
@@ -88,6 +92,10 @@ typedef unsigned WDMMidiMessageType;
 
 @protocol WFIClosable
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
 @end
 
 #endif // __WFIClosable_DEFINED__
@@ -101,6 +109,10 @@ typedef unsigned WDMMidiMessageType;
 - (void)sendMessage:(RTObject<WDMIMidiMessage>*)midiMessage;
 - (void)sendBuffer:(RTObject<WSSIBuffer>*)midiData;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
+@interface WDMIMidiOutPort : RTObject <WDMIMidiOutPort>
 @end
 
 #endif // __WDMIMidiOutPort_DEFINED__

@@ -53,6 +53,10 @@ typedef unsigned WSCCompressAlgorithm;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Storage.Streams.IOutputStream
@@ -66,6 +70,10 @@ typedef unsigned WSCCompressAlgorithm;
            failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
+@interface WSSIOutputStream : RTObject <WSSIOutputStream>
 @end
 
 #endif // __WSSIOutputStream_DEFINED__
@@ -107,6 +115,10 @@ OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
          progress:(void (^)(unsigned int))progress
           failure:(void (^)(NSError*))failure;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
+@interface WSSIInputStream : RTObject <WSSIInputStream>
 @end
 
 #endif // __WSSIInputStream_DEFINED__
