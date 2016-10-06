@@ -74,6 +74,8 @@ CGContextRef UIGraphicsGetCurrentContext() {
  @Notes opaque parameter not supported
 */
 void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, float scale) {
+    return;
+#if 0
     if (scale == 0.0f) {
         scale = GetCACompositor()->screenScale();
     }
@@ -84,6 +86,8 @@ void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, float scal
     CGContextScaleCTM(newCtx, 1.0f, -1.0f);
 
     UIGraphicsPushContext(newCtx);
+#endif
+    // TODO(DH)
 }
 
 /**
@@ -97,11 +101,14 @@ void UIGraphicsBeginImageContext(CGSize size) {
  @Status Interoperable
 */
 UIImage* UIGraphicsGetImageFromCurrentImageContext() {
+    return nil;
+#if 0 // TODO(DH)
     id ret = [UIImage imageWithCGImage:CGBitmapContextGetImage(UIGraphicsGetCurrentContext())
                                  scale:UIGraphicsGetCurrentContext()->scale
                            orientation:UIImageOrientationUp];
 
     return ret;
+#endif
 }
 
 /**

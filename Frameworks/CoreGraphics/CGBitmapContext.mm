@@ -55,6 +55,7 @@ CGImageRef CGBitmapContextCreateImage(CGContextRef context) {
 @Notes
 */
 CGBitmapInfo CGBitmapContextGetBitmapInfo(CGContextRef context) {
+#if 0
     int ret;
 
     if (context) {
@@ -66,6 +67,8 @@ CGBitmapInfo CGBitmapContextGetBitmapInfo(CGContextRef context) {
     }
 
     return (CGBitmapInfo)ret;
+#endif
+    return 0;
 }
 
 /**
@@ -73,6 +76,7 @@ CGBitmapInfo CGBitmapContextGetBitmapInfo(CGContextRef context) {
 @Notes
 */
 CGImageAlphaInfo CGBitmapContextGetAlphaInfo(CGContextRef context) {
+#if 0
     int ret;
 
     if (context) {
@@ -84,6 +88,8 @@ CGImageAlphaInfo CGBitmapContextGetAlphaInfo(CGContextRef context) {
     }
 
     return (CGImageAlphaInfo)ret;
+#endif
+    return (CGImageAlphaInfo)0;
 }
 
 /**
@@ -91,9 +97,12 @@ CGImageAlphaInfo CGBitmapContextGetAlphaInfo(CGContextRef context) {
  @Notes
 */
 size_t CGBitmapContextGetBitsPerComponent(CGContextRef context) {
+#if 0
     CGImageRef imageRef = context->Backing()->DestImage();
     size_t bitsPerComponent = CGImageGetBitsPerComponent(imageRef);
     return bitsPerComponent;
+#endif
+    return 0;
 }
 
 /**
@@ -102,10 +111,13 @@ size_t CGBitmapContextGetBitsPerComponent(CGContextRef context) {
  Expect returns of 24 bits on Islandwood where 32 bits is expected on iOS.
 */
 size_t CGBitmapContextGetBitsPerPixel(CGContextRef context) {
+    return 0;
+#if 0
     CGImageRef imageRef = context->Backing()->DestImage();
     const size_t bytesPerPixel = imageRef->Backing()->BytesPerPixel();
     const size_t bitsPerByte = 8;
     return bytesPerPixel * bitsPerByte;
+#endif
 }
 
 /**

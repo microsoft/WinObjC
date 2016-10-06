@@ -349,7 +349,8 @@ CGBitmapImage::CGBitmapImage(CGImageRef img) {
 }
 
 CGContextImpl* CGBitmapImageBacking::CreateDrawingContext(CGContextRef base) {
-    return new CGContextCairo(base, _parent);
+    return nullptr;
+    //return new CGContextCairo(base, _parent);
 }
 
 CGBitmapImageBacking::CGBitmapImageBacking(const __CGSurfaceInfo& surfaceInfo) {

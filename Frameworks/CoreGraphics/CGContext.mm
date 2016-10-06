@@ -27,9 +27,6 @@
 #import <CoreGraphics/CGAffineTransform.h>
 #import <CoreGraphics/CGGradient.h>
 #import <Foundation/NSString.h>
-#import <UIKit/UIImage.h>
-#import <UIKit/UIFont.h>
-#import <UIKit/UIColor.h>
 #import "CGSurfaceInfoInternal.h"
 #import <pthread.h>
 
@@ -41,10 +38,43 @@
 #import <wrl/client.h>
 #include <COMIncludes_end.h>
 
+#import <list>
+#import <stack>
+
 using namespace Microsoft::WRL;
+
+struct __CGContextDrawingState {
+    // Not populated by default.
+    ComPtr<ID2D1DrawingStateBlock> _d2dState;
+
+    ComPtr<ID2D1Brush> _fillBrush;
+    ComPtr<ID2D1Brush> _strokeBrush;
+
+    CGFloat _flatness;
+
+    ComPtr<ID2D1StrokeStyle> _strokeStyle;
+    CGFloat _lineWidth = 1.0f;
+
+    CGPathRef _currentClippingPath;
+
+    D2D1_INTERPOLATION_MODE _bitmapInterpolationMode;
+};
 
 struct __CGContextImpl {
     ComPtr<ID2D1RenderTarget> _renderTarget;
+
+    std::stack<__CGContextDrawingState> _stateStack;
+
+    CGPathRef _currentPath;
+
+    bool _allowsAntialiasing;
+    bool _allowsFontSmoothing;
+    bool _allowsFontSubpixelPositioning;
+    bool _allowsFontSubpixelQuantization;
+
+    __CGContextImpl() : _stateStack() {
+        _stateStack.emplace();
+    }
 };
 
 struct __CGContext {
@@ -52,7 +82,8 @@ struct __CGContext {
 
     // Use an inline impl struct so that we don't need to placement new each element.
     __CGContextImpl _impl;
-    CGContextImpl* (*Backing)(void);
+    // Temporary; should be in CGBitmapContext.
+    CGImageRef img;
 };
 
 static Boolean __CGContextEqual(CFTypeRef cf1, CFTypeRef cf2) {
@@ -76,6 +107,7 @@ static void __CGContextInit(CFTypeRef cf) {
 static void __CGContextDeallocate(CFTypeRef cf) {
     CGContextRef context = (CGContextRef)cf;
     context->_impl.~__CGContextImpl();
+    CGImageRelease(context->img);
 }
 
 static CFTypeID __kCGContextTypeID = _kCFRuntimeNotATypeID;
@@ -104,14 +136,17 @@ CFTypeID CGContextGetTypeID() {
 static const wchar_t* TAG = L"CGContext";
 
 template <typename T, typename B = decltype(std::declval<T>()->_base)>
-T _CFRuntimeCreateInstance(CFTypeID typeID, CFAllocatorRef allocator = kCFAllocatorDefault) {
-    return static_cast<T>(const_cast<void*>(_CFRuntimeCreateInstance(allocator, typeID, sizeof(T) - sizeof(B), nullptr)));
+static T _CFRuntimeCreateInstance(CFTypeID typeID, CFAllocatorRef allocator = kCFAllocatorDefault) {
+    return static_cast<T>(const_cast<void*>(_CFRuntimeCreateInstance(allocator, typeID, sizeof(typename std::remove_pointer<T>::type) - sizeof(B), nullptr)));
 }
 
-CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget) {
+CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget, CGImageRef img) {
     THROW_HR_IF_NULL(E_INVALIDARG, renderTarget);
     CGContextRef context = _CFRuntimeCreateInstance<CGContextRef>(CGContextGetTypeID());
     context->_impl._renderTarget = renderTarget;
+    context->img = CGImageRetain(img);
+    CGContextSetRGBFillColor(context, 0, 0, 0, 0);
+    CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
     return context;
 }
 
@@ -148,7 +183,6 @@ void CGContextRelease(CGContextRef ctx) {
 #define DEBUG_CONTEXT_COUNT
 
 int contextCount = 0;
-static IWLazyClassLookup _LazyUIImage("UIImage"), _LazyUIScreen("UIScreen");
 
 pthread_mutex_t _cairoLock = PTHREAD_MUTEX_INITIALIZER;
 
@@ -348,9 +382,7 @@ void CGContextDrawImage(CGContextRef ctx, CGRect rect, CGImageRef image) {
         return;
     }
 
-    {
-    UNIMPLEMENTED();
-    }
+    { UNIMPLEMENTED(); }
 }
 
 void CGContextDrawImageRect(CGContextRef ctx, CGImageRef image, CGRect src, CGRect dst) {
@@ -410,7 +442,9 @@ void CGContextSetStrokeColor(CGContextRef ctx, const CGFloat* components) {
  @Status Interoperable
 */
 void CGContextSetStrokeColorWithColor(CGContextRef ctx, CGColorRef color) {
-    UNIMPLEMENTED();
+    // TODO(DH)
+    const CGFloat* comp = CGColorGetComponents(color);
+    CGContextSetRGBStrokeColor(ctx, comp[0], comp[1], comp[2], comp[3]);
 }
 
 /**
@@ -431,7 +465,9 @@ void CGContextSetGrayStrokeColor(CGContextRef ctx, CGFloat gray, CGFloat alpha) 
  @Status Interoperable
 */
 void CGContextSetRGBStrokeColor(CGContextRef ctx, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
-    UNIMPLEMENTED();
+    ComPtr<ID2D1SolidColorBrush> brush;
+    THROW_IF_FAILED(ctx->_impl._renderTarget->CreateSolidColorBrush({ r, g, b, a }, &brush));
+    THROW_IF_FAILED(brush.As(&ctx->_impl._stateStack.top()._strokeBrush));
 }
 
 /**
@@ -454,6 +490,8 @@ void CGContextSetFillColor(CGContextRef ctx, const CGFloat* components) {
  @Status Interoperable
 */
 void CGContextSetFillColorWithColor(CGContextRef ctx, CGColorRef color) {
+    const CGFloat* comp = CGColorGetComponents(color);
+    CGContextSetRGBFillColor(ctx, comp[0], comp[1], comp[2], comp[3]);
     UNIMPLEMENTED();
 }
 
@@ -475,7 +513,9 @@ void CGContextSetGrayFillColor(CGContextRef ctx, CGFloat gray, CGFloat alpha) {
  @Status Interoperable
 */
 void CGContextSetRGBFillColor(CGContextRef ctx, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
-    UNIMPLEMENTED();
+    ComPtr<ID2D1SolidColorBrush> brush;
+    THROW_IF_FAILED(ctx->_impl._renderTarget->CreateSolidColorBrush({ r, g, b, a }, &brush));
+    THROW_IF_FAILED(brush.As(&ctx->_impl._stateStack.top()._fillBrush));
 }
 
 /**
@@ -505,14 +545,31 @@ CGPoint CGContextGetTextPosition(CGContextRef ctx) {
  @Status Interoperable
 */
 void CGContextSaveGState(CGContextRef ctx) {
-    UNIMPLEMENTED();
+    auto& oldState = ctx->_impl._stateStack.top();
+    ctx->_impl._stateStack.emplace(oldState /* copy */);
+
+    ComPtr<ID2D1Factory> factory;
+    ctx->_impl._renderTarget->GetFactory(&factory);
+
+    ComPtr<ID2D1DrawingStateBlock> drawingState;
+    THROW_IF_FAILED(factory->CreateDrawingStateBlock(&drawingState));
+    ctx->_impl._renderTarget->SaveDrawingState(drawingState.Get());
+    oldState._d2dState = drawingState;
 }
 
 /**
  @Status Interoperable
 */
 void CGContextRestoreGState(CGContextRef ctx) {
-    UNIMPLEMENTED();
+    if (ctx->_impl._stateStack.size() <= 1) {
+        TraceError(TAG, L"Attempted to pop last GState.");
+        return;
+    }
+
+    ctx->_impl._stateStack.pop();
+    auto& newState = ctx->_impl._stateStack.top();
+    ctx->_impl._renderTarget->RestoreDrawingState(newState._d2dState.Get());
+    newState._d2dState = nullptr;
 }
 
 /**
@@ -526,7 +583,17 @@ void CGContextClearRect(CGContextRef ctx, CGRect rect) {
  @Status Interoperable
 */
 void CGContextFillRect(CGContextRef ctx, CGRect rect) {
-    UNIMPLEMENTED();
+    auto renderTarget = ctx->_impl._renderTarget.Get();
+    renderTarget->BeginDraw();
+
+    ComPtr<ID2D1Factory> factory;
+    ctx->_impl._renderTarget->GetFactory(&factory);
+    ComPtr<ID2D1Geometry> geometry;
+    ComPtr<ID2D1RectangleGeometry> rectGeometry;
+    THROW_IF_FAILED(factory->CreateRectangleGeometry({rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width, rect.origin.y + rect.size.height}, &rectGeometry));
+    THROW_IF_FAILED(rectGeometry.As(&geometry));
+    renderTarget->FillGeometry(geometry.Get(), ctx->_impl._stateStack.top()._fillBrush.Get());
+    renderTarget->EndDraw();
 }
 
 /**
@@ -637,7 +704,17 @@ void CGContextStrokePath(CGContextRef ctx) {
  @Status Interoperable
 */
 void CGContextStrokeRect(CGContextRef ctx, CGRect rect) {
-    UNIMPLEMENTED();
+    auto renderTarget = ctx->_impl._renderTarget.Get();
+    renderTarget->BeginDraw();
+
+    ComPtr<ID2D1Factory> factory;
+    ctx->_impl._renderTarget->GetFactory(&factory);
+    ComPtr<ID2D1Geometry> geometry;
+    ComPtr<ID2D1RectangleGeometry> rectGeometry;
+    THROW_IF_FAILED(factory->CreateRectangleGeometry({rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width, rect.origin.y + rect.size.height}, &rectGeometry));
+    THROW_IF_FAILED(rectGeometry.As(&geometry));
+    renderTarget->DrawGeometry(geometry.Get(), ctx->_impl._stateStack.top()._strokeBrush.Get(), ctx->_impl._stateStack.top()._lineWidth);
+    renderTarget->EndDraw();
 }
 
 /**
@@ -771,7 +848,7 @@ void CGContextSetLineCap(CGContextRef ctx, CGLineCap lineCap) {
  @Status Interoperable
 */
 void CGContextSetLineWidth(CGContextRef ctx, CGFloat width) {
-    UNIMPLEMENTED();
+    ctx->_impl._stateStack.top()._lineWidth = width;
 }
 
 /**
@@ -1110,6 +1187,7 @@ void CGContextClearToColor(CGContextRef ctx, CGFloat r, CGFloat g, CGFloat b, CG
 }
 
 bool CGContextIsDirty(CGContextRef ctx) {
+    return true;
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1133,7 +1211,7 @@ bool CGContextIsPointInPath(CGContextRef c, bool eoFill, CGFloat x, CGFloat y) {
 }
 
 void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun) {
-    ctx->Backing()->CGContextDrawGlyphRun(glyphRun);
+    // ctx->Backing()->CGContextDrawGlyphRun(glyphRun);
 }
 
 CGImageRef CGPNGImageCreateFromFile(NSString* path) {
@@ -1157,7 +1235,8 @@ CGImageRef CGJPEGImageCreateFromData(NSData* data) {
 */
 CGColorSpaceRef CGBitmapContextGetColorSpace(CGContextRef ctx) {
     // TODO: Consider caching colorspaceRef in CGImageRef
-    return (CGColorSpaceRef) new __CGColorSpace(ctx->Backing()->DestImage()->Backing()->ColorSpaceModel());
+    return nullptr;
+    // return (CGColorSpaceRef) new __CGColorSpace(ctx->Backing()->DestImage()->Backing()->ColorSpaceModel());
 }
 
 /**
@@ -1263,17 +1342,28 @@ CGImageRef CGBitmapContextCreateImage(CGContextRef ctx) {
 }
 
 CGImageRef CGBitmapContextGetImage(CGContextRef ctx) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return ctx->img;
+    //UNIMPLEMENTED();
+    //return StubReturn();
 }
 
 CGContextRef _CGBitmapContextCreateWithTexture(int width, int height, DisplayTexture* texture, DisplayTextureLocking* locking) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    CGImageRef newImage = nullptr;
+    __CGSurfaceInfo surfaceInfo = _CGSurfaceInfoInit(width, height, _ColorARGB);
+
+    //if (texture) {
+    newImage = new CGGraphicBufferImage(surfaceInfo, texture, locking);
+    //} else {
+        //newImage = new CGBitmapImage(surfaceInfo);
+    //}
+
+    //CGContextRef context = new __CGContext(newImage);
+    ComPtr<ID2D1RenderTarget> renderTarget = newImage->Backing()->GetRenderTarget();
+    return _CGContextCreateWithD2DRenderTarget(renderTarget.Get(), newImage);
+    CGImageRelease(newImage);
 }
 
 CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurfaceFormat fmt) {
     UNIMPLEMENTED();
     return StubReturn();
 }
-

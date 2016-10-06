@@ -500,7 +500,8 @@
 
         size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(size.width, size.height) lineBreakMode:_lineBreakMode];
 
-        EbrCenterTextInRectVertically(&rect, &size, _font);
+        // TODO(DH)
+        //EbrCenterTextInRectVertically(&rect, &size, _font);
 
         if ((_shadowOffset.width != 0.0f || _shadowOffset.height != 0.0f) && _shadowColor != nil) {
             CGRect shadowRect = rect;

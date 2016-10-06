@@ -218,7 +218,6 @@ LIBRARY CoreGraphics
         CGContextSetDirty
         CGContextGetBacking
         CGContextDrawGlyphRun
-        EbrCenterTextInRectVertically
 
         ; CGDataConsumer.mm
         CGDataConsumerCreate
