@@ -235,6 +235,7 @@ void _CTLineDraw(CTLineRef lineRef, CGContextRef ctx, bool adjustTextPosition) {
     for (size_t i = 0; i < [line->_runs count]; ++i) {
         _CTRun* curRun = [line->_runs objectAtIndex:i];
         if (i > 0) {
+            // Adjusts x position relative to the last run drawn
             curTextPos = CGContextGetTextPosition(ctx);
             CGContextSetTextPosition(ctx, curTextPos.x + curRun->_relativeXOffset, curTextPos.y);
         }
