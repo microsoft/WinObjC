@@ -37,7 +37,10 @@ using namespace ABI::Windows::Foundation::Collections;
 using namespace Microsoft::WRL;
 
 // TODO 1091: dynamic cast shouldn't be necessary but returned projected type is incorrect.
-@class WSIStorageItem;
+#include <UWP/WindowsStorage.h>
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageItem : RTObject <WSIStorageItem>
+@end
 
 // Method to call in tests to activate app
 extern "C" void UIApplicationActivationTest(IInspectable* args, void* delegateClassName);
@@ -106,6 +109,7 @@ MOCK_CLASS(MockStorageItem,
     EXPECT_NE(nullptr, launchOptions[UIApplicationLaunchOptionsFileKey]);
     WAAFileActivatedEventArgs* result = launchOptions[UIApplicationLaunchOptionsFileKey];
     EXPECT_EQ(1, result.files.count);
+
     // TODO 1091: dynamic cast shouldn't be necessary but returned projected type is incorrect.
     EXPECT_OBJCEQ(@"FILEACTIVATED_TEST", [rt_dynamic_cast<WSIStorageItem>(result.files[0]) name]);
     [_methodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
@@ -116,6 +120,7 @@ MOCK_CLASS(MockStorageItem,
     EXPECT_NE(nullptr, launchOptions[UIApplicationLaunchOptionsFileKey]);
     WAAFileActivatedEventArgs* result = launchOptions[UIApplicationLaunchOptionsFileKey];
     EXPECT_EQ(1, result.files.count);
+
     // TODO 1091: dynamic cast shouldn't be necessary but returned projected type is incorrect.
     EXPECT_OBJCEQ(@"FILEACTIVATED_TEST", [rt_dynamic_cast<WSIStorageItem>(result.files[0]) name]);
     [_methodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
@@ -126,6 +131,7 @@ MOCK_CLASS(MockStorageItem,
     // Delegate method should only be called once
     EXPECT_EQ([[self methodsCalled] objectForKey:NSStringFromSelector(_cmd)], nil);
     EXPECT_EQ(1, result.files.count);
+
     // TODO 1091: dynamic cast shouldn't be necessary but returned projected type is incorrect.
     EXPECT_OBJCEQ(@"FILEACTIVATED_TEST", [rt_dynamic_cast<WSIStorageItem>(result.files[0]) name]);
     [_methodsCalled setObject:@(YES) forKey:NSStringFromSelector(_cmd)];
@@ -135,16 +141,12 @@ MOCK_CLASS(MockStorageItem,
 @end
 
 // Creates test method which we call in TEST_CLASS_SETUP to activate app
-TEST(FileActivatedTest, ForegroundActivation) {
+void FileActivatedTestForegroundActivation() {
     LOG_INFO("FileActivatedTest Foreground Activation Test: ");
 
     auto fakeArgs = Make<MockFileActivatedEventArgs>();
     fakeArgs->Setget_Files([](IVectorView<IStorageItem*>** files) {
         auto mockVector = Make<MockFileVectorView>();
-        mockVector->Setget_Size([](unsigned* size) {
-            *size = 1;
-            return S_OK;
-        });
 
         mockVector->SetGetAt([](unsigned index, IStorageItem** item) {
             if (index != 0) {
@@ -160,6 +162,11 @@ TEST(FileActivatedTest, ForegroundActivation) {
 
             mockItem.CopyTo(item);
 
+            return S_OK;
+        });
+
+        mockVector->Setget_Size([](unsigned* size) {
+            *size = 1;
             return S_OK;
         });
 
@@ -182,7 +189,7 @@ TEST(FileActivatedTest, ForegroundActivation) {
                                 NSStringFromClass([FileActivationForegroundTestDelegate class]));
 }
 
-TEST(FileActivatedTest, ForegroundActivationDelegateMethodsCalled) {
+void FileActivatedTestForegroundActivationDelegateMethodsCalled() {
     FileActivationForegroundTestDelegate* testDelegate = [[UIApplication sharedApplication] delegate];
     NSDictionary* methodsCalled = [testDelegate methodsCalled];
     EXPECT_TRUE(methodsCalled);
