@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		230C2CD41CEE839C0095E3E5 /* XAMLCatalog.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2324634D1CE69DC600B7AAE4 /* XAMLCatalog.storyboard */; };
+		231FBF8A1DA5E191004116E9 /* UITextFieldViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231FBF891DA5E191004116E9 /* UITextFieldViewController.m */; };
 		23E594D31D6FC38D000BB01E /* UIActionSheetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23E594D21D6FC38D000BB01E /* UIActionSheetViewController.m */; };
 		6EEB8A381CE4F4050021021E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8A371CE4F4050021021E /* main.m */; };
 		6EEB8A3B1CE4F4050021021E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8A3A1CE4F4050021021E /* AppDelegate.m */; };
@@ -25,6 +26,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		231FBF881DA5E191004116E9 /* UITextFieldViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UITextFieldViewController.h; sourceTree = "<group>"; };
+		231FBF891DA5E191004116E9 /* UITextFieldViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITextFieldViewController.m; sourceTree = "<group>"; };
 		2324634D1CE69DC600B7AAE4 /* XAMLCatalog.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = XAMLCatalog.storyboard; sourceTree = "<group>"; };
 		23E594D11D6FC38D000BB01E /* UIActionSheetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIActionSheetViewController.h; sourceTree = "<group>"; };
 		23E594D21D6FC38D000BB01E /* UIActionSheetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIActionSheetViewController.m; sourceTree = "<group>"; };
@@ -67,6 +70,8 @@
 		2324634F1CE69E2C00B7AAE4 /* UIKitControls */ = {
 			isa = PBXGroup;
 			children = (
+				231FBF881DA5E191004116E9 /* UITextFieldViewController.h */,
+				231FBF891DA5E191004116E9 /* UITextFieldViewController.m */,
 				23E594D11D6FC38D000BB01E /* UIActionSheetViewController.h */,
 				23E594D21D6FC38D000BB01E /* UIActionSheetViewController.m */,
 				82E63A5C1D07905D005C0993 /* UISliderViewController.h */,
@@ -218,6 +223,7 @@
 				82E63A5E1D07905D005C0993 /* UISliderViewController.m in Sources */,
 				6EEB8A381CE4F4050021021E /* main.m in Sources */,
 				6EEB8A561CE546A80021021E /* MenuTableViewController.m in Sources */,
+				231FBF8A1DA5E191004116E9 /* UITextFieldViewController.m in Sources */,
 				23E594D31D6FC38D000BB01E /* UIActionSheetViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
