@@ -29,8 +29,9 @@ namespace XAMLCatalogTest
             // TODO: Ensure WOCCatalog is not running
 
             // Find the text fields list entry
-            var textFields = TestCommon.XAMLCatalogSession.FindElementsByName("TextFields");
+            var textFields = TestCommon.XAMLCatalogSession.FindElementsByName("UITextField");
             Assert.IsTrue(textFields.Count > 0);
+
             TestCommon.XAMLCatalogSession.Mouse.ContextClick(textFields[0].Coordinates);
         }
 
@@ -45,13 +46,10 @@ namespace XAMLCatalogTest
         public void TextFields_Password()
         {
             // Action
-            var passwordTextField = TestCommon.XAMLCatalogSession.FindElementsByName("password");
-
-            // Verify
-            Assert.IsTrue(passwordTextField.Count > 0);
+            var passwordTextField = TestCommon.XAMLCatalogSession.FindElementByAccessibilityId("textField_0"); // password
 
             var newText = "MySecretPassword";
-            passwordTextField[0].SendKeys(newText);
+            passwordTextField.SendKeys(newText);
 
             // Verify
             //var currentHiddenText = passwordTextField[0].Text;
@@ -62,104 +60,101 @@ namespace XAMLCatalogTest
         public void TextFields_BlueBackground_RightAligned()
         {
             // Action
-            var blueTextField = TestCommon.XAMLCatalogSession.FindElementsByName("blue background, right aligned");
+            var blueTextField = TestCommon.XAMLCatalogSession.FindElementByAccessibilityId("textField_1"); // blue background, right aligned
 
             // Verify
-            Assert.IsTrue(blueTextField.Count > 0);
+            Assert.IsNotNull(blueTextField);
         }
 
         [TestMethod]
         public void TextFields_RedText_CenteredAligned()
         {
             // Action
-            var redTextField = TestCommon.XAMLCatalogSession.FindElementsByName("red text, alignment center");
+            var redTextField = TestCommon.XAMLCatalogSession.FindElementByAccessibilityId("textField_2"); // red text, alignment center
 
-            // Verify
-            Assert.IsTrue(redTextField.Count > 0);
+            Assert.IsNotNull(redTextField);
         }
 
         [TestMethod]
         public void TextFields_RejectFocus()
         {
             // Action
-            var readonlyTextField = TestCommon.XAMLCatalogSession.FindElementsByName("This control reject focus");
+            var readonlyTextField = TestCommon.XAMLCatalogSession.FindElementByAccessibilityId("textField_3"); // This control rejects focus
 
             // Verify
-            Assert.IsTrue(readonlyTextField.Count > 0);
+            Assert.IsNotNull(readonlyTextField);
 
-            var originalText = readonlyTextField[0].Text;
+            var originalText = readonlyTextField.Text;
             var newText = "This text should be rejected";
-            readonlyTextField[0].SendKeys(newText);
+            readonlyTextField.SendKeys(newText);
 
             // Verify
-            Assert.AreSame(readonlyTextField[0].Text, originalText);
+            Assert.AreSame(readonlyTextField.Text, originalText);
         }
 
         [TestMethod]
         public void TextFields_Url()
         {
             // Action
-            var urlTextField = TestCommon.XAMLCatalogSession.FindElementsByName("type in URL");
+            var urlTextField = TestCommon.XAMLCatalogSession.FindElementByAccessibilityId("textField_4"); // type in URL
 
             // Verify
-            Assert.IsTrue(urlTextField.Count > 0);
+            Assert.IsNotNull(urlTextField);
 
-            var originalText = urlTextField[0].Text;
+            var originalText = urlTextField.Text;
             var newText = "http://github.com/Microsoft/WinObjC";
-            urlTextField[0].SendKeys(newText);
+            urlTextField.SendKeys(newText);
 
             // Verify
-            Assert.AreNotSame(urlTextField[0].Text, originalText);
-            Assert.AreEqual(urlTextField[0].Text, newText);
+            Assert.AreNotSame(urlTextField.Text, originalText);
+            Assert.AreEqual(urlTextField.Text, newText);
         }
 
         [TestMethod]
         public void TextFields_NameAndPhone()
         {
             // Action
-            var nameAndPhoneTextField = TestCommon.XAMLCatalogSession.FindElementsByName("type in your Name and Phone");
+            var nameAndPhoneTextField = TestCommon.XAMLCatalogSession.FindElementByAccessibilityId("textField_5"); // type in your Name and Phone
 
             // Verify
-            Assert.IsTrue(nameAndPhoneTextField.Count > 0);
+            Assert.IsNotNull(nameAndPhoneTextField);
 
-            var originalText = nameAndPhoneTextField[0].Text;
+            var originalText = nameAndPhoneTextField.Text;
             var newText = "Jenny McCool 425-867-9305";
-            nameAndPhoneTextField[0].SendKeys(newText);
+            nameAndPhoneTextField.SendKeys(newText);
 
             // Verify
-            Assert.AreNotSame(nameAndPhoneTextField[0].Text, originalText);
+            Assert.AreNotSame(nameAndPhoneTextField.Text, originalText);
         }
 
         [TestMethod]
         public void TextFields_EmailAddress()
         {
             // Action
-            var emailTextField = TestCommon.XAMLCatalogSession.FindElementsByName("type in your email address");
-            Assert.IsTrue(emailTextField.Count > 1);
+            var emailTextField = TestCommon.XAMLCatalogSession.FindElementByAccessibilityId("textField_6"); // type in your email address
+            Assert.IsNotNull(emailTextField);
 
-            var placeholderText = emailTextField[1].Text;
-            var originalText = emailTextField[0].Text;
+            var originalText = emailTextField.Text;
             var newText = "someemail@bogus.net";
-            emailTextField[0].SendKeys(newText);
+            emailTextField.SendKeys(newText);
 
             // Verify
-            Assert.AreNotSame(emailTextField[0].Text, placeholderText);
-            Assert.AreNotSame(emailTextField[0].Text, originalText);
+            Assert.AreNotSame(emailTextField.Text, originalText);
         }
 
         [TestMethod]
         public void TextFields_Decimal()
         {
             // Action
-            var decimalTextField = TestCommon.XAMLCatalogSession.FindElementsByName("Decimal");
-            Assert.IsTrue(decimalTextField.Count > 1);
+            var decimalTextField = TestCommon.XAMLCatalogSession.FindElementByAccessibilityId("textField_7"); // Decimal
+            Assert.IsNotNull(decimalTextField);
 
-            var originalText = decimalTextField[0].Text;
+            var originalText = decimalTextField.Text;
             var newText = "3.1415926535";
-            decimalTextField[0].SendKeys(newText);
+            decimalTextField.SendKeys(newText);
 
             // Verify
-            Assert.AreNotSame(decimalTextField[0].Text, originalText);
+            Assert.AreNotSame(decimalTextField.Text, originalText);
         }
     }
 }

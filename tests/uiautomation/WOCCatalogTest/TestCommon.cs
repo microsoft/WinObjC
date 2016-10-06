@@ -57,7 +57,7 @@ namespace WOCCatalogTest
                 }
                 while (backButton != null);
             }
-            catch { }
+            catch {}
         }
 
         static public void QuitApp()

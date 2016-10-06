@@ -40,8 +40,8 @@
     [self addMenuItemViewController:buttonVC andTitle:@"UIButtonSB"];
 
     // UISlider
-    UIViewController* sliderVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UISliderSB"];
-    [self addMenuItemViewController:sliderVC andTitle:@"UISliderSB"];
+    UIViewController* textFieldVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UITextFieldSB"];
+    [self addMenuItemViewController:textFieldVC andTitle:@"UITextFieldSB"];
 }
 
 @end

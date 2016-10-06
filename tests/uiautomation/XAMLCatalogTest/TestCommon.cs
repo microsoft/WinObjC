@@ -24,7 +24,7 @@ namespace XAMLCatalogTest
 {
     class TestCommon
     {
-        private const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723";
+        public static Uri RemoteHarnessUrl = new Uri("http://127.0.0.1:4723");
         public static IOSDriver<IOSElement> XAMLCatalogSession; // Temporary placeholder until Windows namespace exists
 
         static public void LaunchApp()
@@ -36,12 +36,11 @@ namespace XAMLCatalogTest
 
             // Launch the WOCCatalog app
             DesiredCapabilities appCapabilities = new DesiredCapabilities();
+            appCapabilities.SetCapability("app", "0b75acd0-df3e-4edb-bebc-847b0ca4bffb_vddemm0nz1wmr!App");
 
-            //appCapabilities.SetCapability("app", "0b75acd0-df3e-4edb-bebc-847b0ca4bffb_vddemm0nz1wmr!App");
-            appCapabilities.SetCapability("app", "db891e9d-c39f-44c3-844e-3b4c38f22d1a_vddemm0nz1wmr!App");
-
-            XAMLCatalogSession = new IOSDriver<IOSElement>(new Uri(WindowsApplicationDriverUrl), appCapabilities);
+            XAMLCatalogSession = new IOSDriver<IOSElement>(RemoteHarnessUrl, appCapabilities);
             Assert.IsNotNull(XAMLCatalogSession);
+
             XAMLCatalogSession.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(2));
         }
 
@@ -58,7 +57,7 @@ namespace XAMLCatalogTest
                 }
                 while (backButton != null);
             }
-            catch { }
+            catch {}
         }
 
         static public void QuitApp()
