@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -232,9 +232,14 @@ void _CTLineDraw(CTLineRef lineRef, CGContextRef ctx, bool adjustTextPosition) {
         CGContextSetTextPosition(ctx, curTextPos.x + line->_relativeXOffset, curTextPos.y + line->_relativeYOffset);
     }
 
-    for (_CTRun* curRun in static_cast<id<NSFastEnumeration>>(line->_runs)) {
-        CFRange range = { 0 };
-        _CTRunDraw(static_cast<CTRunRef>(curRun), ctx, range, false);
+    for (size_t i = 0; i < [line->_runs count]; ++i) {
+        _CTRun* curRun = [line->_runs objectAtIndex:i];
+        if (i > 0) {
+            curTextPos = CGContextGetTextPosition(ctx);
+            CGContextSetTextPosition(ctx, curTextPos.x + curRun->_relativeXOffset, curTextPos.y);
+        }
+
+        _CTRunDraw(static_cast<CTRunRef>(curRun), ctx, CFRange{}, false);
     }
 }
 
