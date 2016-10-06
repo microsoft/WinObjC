@@ -26,8 +26,6 @@ namespace XAMLCatalogTest
         {
             TestCommon.LaunchApp();
 
-            // TODO: Ensure WOCCatalog is not running
-
             // Find the text fields list entry
             var textFields = TestCommon.XAMLCatalogSession.FindElementsByName("UITextField");
             Assert.IsTrue(textFields.Count > 0);
