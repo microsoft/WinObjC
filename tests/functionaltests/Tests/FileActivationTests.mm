@@ -26,6 +26,7 @@
 #include <COMIncludes_End.h>
 
 #include <UWP/WindowsApplicationModelActivation.h>
+#include <UWP/WindowsStorage.h>
 #include <UWP/WindowsUIXaml.h>
 #include "StringHelpers.h"
 #include "UIKit/UIApplication.h"
@@ -35,12 +36,6 @@ using namespace ABI::Windows::Foundation;
 using namespace ABI::Windows::Storage;
 using namespace ABI::Windows::Foundation::Collections;
 using namespace Microsoft::WRL;
-
-// TODO 1091: dynamic cast shouldn't be necessary but returned projected type is incorrect.
-#include <UWP/WindowsStorage.h>
-OBJCUWP_WINDOWS_STORAGE_EXPORT
-@interface WSIStorageItem : RTObject <WSIStorageItem>
-@end
 
 // Method to call in tests to activate app
 extern "C" void UIApplicationActivationTest(IInspectable* args, void* delegateClassName);
