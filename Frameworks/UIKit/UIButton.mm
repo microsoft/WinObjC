@@ -263,8 +263,8 @@ struct ButtonState {
         _states[state].inspectableImage = [imageBrush comObj];
     }
 
-    [self setNeedsDisplay];
     [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 /**
@@ -436,8 +436,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
                                                  image.capInsets.bottom * image.scale };
     }
 
-    [self setNeedsDisplay];
     [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 /**
@@ -482,8 +482,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
         _states[state].inspectableTitle = [rtString comObj];
     }
 
-    [self setNeedsDisplay];
     [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 /**
@@ -514,7 +514,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     }
 
     [self setNeedsLayout];
-    [self setNeedsDisplay];
+    [self layoutIfNeeded];
 }
 
 /**
@@ -585,8 +585,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // Relayout when new state is different than old state
     if (_curState != newState) {
         _curState = newState;
-        [self setNeedsDisplay];
         [self setNeedsLayout];
+        [self layoutIfNeeded];
     }
 
     [super touchesBegan:touchSet withEvent:event];
@@ -609,8 +609,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // Relayout when new state is different than old state
     if (_curState != newState) {
         _curState = newState;
-        [self setNeedsDisplay];
         [self setNeedsLayout];
+        [self layoutIfNeeded];
     }
 
     [super touchesEnded:touchSet withEvent:event];
@@ -633,8 +633,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // Relayout when new state is different than old state
     if (_curState != newState) {
         _curState = newState;
-        [self setNeedsDisplay];
         [self setNeedsLayout];
+        [self layoutIfNeeded];
     }
 
     [super touchesCancelled:touchSet withEvent:event];
