@@ -42,11 +42,19 @@
 #include <ctype.h>
 
 #if DEPLOYMENT_TARGET_WINDOWS
-#define statinfo _stat
 
-// HACKHACK: replaced with _stat64i32 because it was giving me troubles. Not sure on ramifications.
+#if WINOBJC
+// WINOBJC: redirect more things to work with Ebr
+// since unfortunately that is still needed
+#define open _NS_open
+#define stat(a,b) _NS_stat64i32(a,b)
+#define statinfo _stat
+#define lseek _NS_lseek
+#else
+#define statinfo _stat
 #define stat(x,y) _stat64i32(x,y)
 #define open _NS_open
+#endif
 #define MAP_FAILED 0
 
 // Windows isspace implementation limits the input chars to < 256 in the ASCII range.  It will

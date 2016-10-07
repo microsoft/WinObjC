@@ -39,6 +39,7 @@ LIBRARY CoreFoundation
         _CFDisableZombies
         __CFZombifyNSObjectHook CONSTANT
         _NS_chdir
+        CFReadStreamCreateWithData
 
         ; Base Utilities.mm
         kCFCoreFoundationVersionNumber DATA

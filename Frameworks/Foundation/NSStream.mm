@@ -22,7 +22,9 @@
 #include "NSSocket.h"
 #include "NSInputStream_socket.h"
 #include "NSOutputStream_socket.h"
-#include "NSStreamInternal.h"
+#include "NSRaise.h"
+
+#include <CoreFoundation/CFStream.h>
 
 FOUNDATION_EXPORT NSString* const NSStreamSocketSecurityLevelKey = @"NSStreamSocketSecurityLevelKey";
 FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyConfigurationKey = @"NSStreamSOCKSProxyConfigurationKey";
@@ -33,8 +35,8 @@ FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyUserKey = @"NSStreamSOCKSPro
 FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyPasswordKey = @"NSStreamSOCKSProxyPasswordKey";
 FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyVersion4 = @"NSStreamSOCKSProxyVersion4";
 FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyVersion5 = @"NSStreamSOCKSProxyVersion5";
-FOUNDATION_EXPORT NSString* const NSStreamDataWrittenToMemoryStreamKey = @"NSStreamDataWrittenToMemoryStreamKey";
-FOUNDATION_EXPORT NSString* const NSStreamFileCurrentOffsetKey = @"NSStreamFileCurrentOffsetKey";
+FOUNDATION_EXPORT NSString* const NSStreamDataWrittenToMemoryStreamKey = static_cast<NSString*>(kCFStreamPropertyDataWritten);
+FOUNDATION_EXPORT NSString* const NSStreamFileCurrentOffsetKey = static_cast<NSString*>(kCFStreamPropertyFileCurrentOffset);
 FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceType = @"NSStreamNetworkServiceType";
 FOUNDATION_EXPORT NSString* const NSStreamSocketSSLErrorDomain = @"NSStreamSocketSSLErrorDomain";
 FOUNDATION_EXPORT NSString* const NSStreamSOCKSErrorDomain = @"NSStreamSOCKSErrorDomain";
@@ -53,63 +55,38 @@ FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceTypeVoice = @"NSStreamNe
 /**
  @Status Interoperable
 */
-+ (void)initialize {
-}
-
-/**
- @Status Interoperable
-*/
 - (unsigned)streamStatus {
-    return _status;
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (void)close {
-    if (fp) {
-        EbrFclose(fp);
-        fp = NULL;
-    }
-    _status = NSStreamStatusClosed;
+    NSInvalidAbstractInvocation();
 }
 
 /**
  @Status Interoperable
 */
-- (void)dealloc {
-    if (fp) {
-        EbrFclose(fp);
-        fp = NULL;
-    }
-    _data = nil;
-
-    [super dealloc];
-}
-
-/**
- @Status Stub
-*/
 - (id)propertyForKey:(NSString*)key {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (BOOL)setProperty:(id)property forKey:(NSString*)key {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (void)open {
-    UNIMPLEMENTED();
+    NSInvalidAbstractInvocation();
 }
 
 /**
