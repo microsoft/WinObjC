@@ -643,3 +643,25 @@ public:
         UIApplicationTestsOpenURL();
     }
 }; /* class UIApplicationTests */
+
+
+//
+// UIApplicationTests
+//
+extern void NSURLStorageFileURL();
+
+class NSURLStorageFileTests {
+public:
+    BEGIN_TEST_CLASS(NSURLStorageFileTests)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(NSURLStorageFileTestsSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
+
+    TEST_METHOD(NSURLTests_StorageFileURL) {
+        NSURLStorageFileURL();
+    }
+}; /* class UIApplicationTests */

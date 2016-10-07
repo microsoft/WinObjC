@@ -1,0 +1,85 @@
+//******************************************************************************
+//
+// Copyright (c) Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+
+#import <Starboard.h>
+#import <TestFramework.h>
+#import <Foundation/Foundation.h>
+#import <UWP/WindowsFoundation.h>
+#import <UWP/WindowsStorage.h>
+
+TEST(NSURL, StorageFileURL) {
+    
+    // First up is to make a storage file for something. Lets create a new file and use that.
+    __block WSStorageFile* storageFile = nil;
+    __block NSCondition* condition = [NSCondition new];
+
+    [[[WSApplicationData current] localFolder] createFileAsync:@"tempStorageFile.txt" options:WSCreationCollisionOptionOpenIfExists 
+        success:^void(WSStorageFile* file) {
+           storageFile = file;
+           [condition signal];
+         }
+
+         failure:^void(NSError* error) {
+            LOG_ERROR([[error description] UTF8String]);
+            [condition signal];
+         }];
+
+    [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
+    ASSERT_TRUE(nil != storageFile);
+
+    WSStorageFile* lambdaStorageFile = storageFile; 
+
+    // Now that a storage file is created. Lets make sure we delete it in case of test failure.
+    auto deleter = wil::ScopeExit([&lambdaStorageFile]() {
+        __block NSCondition* deleterCondition = [NSCondition new];
+        [[lambdaStorageFile deleteAsyncOverloadDefaultOptions] setCompleted:^void(RTObject<WFIAsyncAction>* asyncInfo, WFAsyncStatus asyncStatus) {
+           [deleterCondition signal];
+         }];
+
+        [deleterCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
+    });
+
+    // Ok all the logistics are taken care of. Lets get to work on the meat of the test. mmmmm URLs.
+    NSURL* storageUrl = [NSURL URLWithStorageFile:storageFile];
+
+    // Lets write some data!!!!
+    unsigned char rawDataToWrite[] = { 'a', 'b', 'c' };
+    NSData* writeData = [NSData dataWithBytesNoCopy:rawDataToWrite length:_countof(rawDataToWrite) freeWhenDone:NO];
+    [writeData writeToURL:storageUrl options:0 error:nil];
+
+    // Ok now lets read it out!!!
+    NSData* readData = [NSData dataWithContentsOfURL:storageUrl];
+    ASSERT_TRUE([readData isEqual:writeData]);
+
+    // Try writing different data!!!
+    unsigned char rawDataToWrite2[] = { 'e', 'f', 'g' };
+    writeData = [NSData dataWithBytesNoCopy:rawDataToWrite2 length:_countof(rawDataToWrite2) freeWhenDone:NO];
+    [writeData writeToURL:storageUrl options:0 error:nil];
+
+    readData = [NSData dataWithContentsOfURL:storageUrl];
+    ASSERT_TRUE([readData isEqual:writeData]);
+
+    // Now with appending!
+    writeData = [NSData dataWithBytesNoCopy:rawDataToWrite length:_countof(rawDataToWrite) freeWhenDone:NO];
+    [writeData writeToURL:storageUrl options:NSDataWritingWithoutOverwriting error:nil];
+
+
+    unsigned char rawDataToValidate[] = { 'e', 'f', 'g', 'a', 'b', 'c'}; 
+    NSData* appendData = [NSData dataWithBytesNoCopy:rawDataToValidate length:_countof(rawDataToValidate) freeWhenDone:NO];
+
+    readData = [NSData dataWithContentsOfURL:storageUrl];
+    ASSERT_TRUE([readData isEqual:appendData]);
+}

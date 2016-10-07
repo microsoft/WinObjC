@@ -17,6 +17,7 @@
 
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
+#import <UWP/InteropBase.h>
 
 @class NSString;
 @class NSArray;
@@ -24,6 +25,8 @@
 @class NSData;
 @class NSNumber;
 @class NSDictionary;
+@class RTObject;
+@protocol WSIStorageFile;
 
 typedef NSUInteger NSURLBookmarkFileCreationOptions;
 typedef NSUInteger NSURLBookmarkCreationOptions;
@@ -230,4 +233,8 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)checkPromisedItemIsReachableAndReturnError:(NSError* _Nullable*)error STUB_METHOD;
 - (BOOL)getPromisedItemResourceValue:(id _Nullable*)value forKey:(NSString*)key error:(NSError* _Nullable*)error STUB_METHOD;
 - (NSDictionary*)promisedItemResourceValuesForKeys:(NSArray*)keys error:(NSError* _Nullable*)error STUB_METHOD;
+
+// MSFT Additions
++ (instancetype)URLWithStorageFile:(RTObject<WSIStorageFile>*)storageFile;
+- (instancetype)initWithStorageFile:(RTObject<WSIStorageFile>*)storageFile;
 @end

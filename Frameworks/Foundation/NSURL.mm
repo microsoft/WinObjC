@@ -26,9 +26,27 @@
 #import "BridgeHelpers.h"
 #import "LoggingNative.h"
 #import "NSPathUtilitiesInternal.h"
+#import "NSStringInternal.h"
 #import "StubReturn.h"
 
 #import <memory>
+#import <mutex>
+
+#include <COMIncludes.h>
+#include "ErrorHandling.h"
+#include <wrl/client.h>
+#include <wrl\wrappers\corewrappers.h>
+#include <windows.storage.accesscache.h>
+#include <windows.storage.h>
+#include <COMIncludes_End.h>
+
+#include <UWP/InteropBase.h>
+
+using namespace Microsoft::WRL;
+using namespace ABI::Windows::Storage::AccessCache;
+using namespace ABI::Windows::Storage;
+using namespace Windows::Foundation;
+using namespace ABI::Windows::Foundation::Collections;
 
 // Keys that apply to file system URLs.
 NSString* const NSURLAddedToDirectoryDateKey = static_cast<NSString*>(kCFURLAddedToDirectoryDateKey);
@@ -888,6 +906,65 @@ BASE_CLASS_REQUIRED_IMPLS(NSURL, NSURLPrototype, CFURLGetTypeID);
 - (NSDictionary<NSString*, id>*)promisedItemResourceValuesForKeys:(NSArray<NSString*>*)keys error:(NSError* _Nullable*)error {
     UNIMPLEMENTED();
     return StubReturn();
+}
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)URLWithStorageFile:(RTObject<WSIStorageFile>*)storageFile {
+    return [[[self alloc] initWithStorageFile:storageFile] autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithStorageFile:(RTObject<WSIStorageFile>*)storageFile {
+    ComPtr<IInspectable> comPtr = [storageFile comObj];
+    ComPtr<IStorageItem> comStorageItem;
+    RETURN_NULL_IF_FAILED(comPtr.As(&comStorageItem));
+
+    // Now cache the storage item so that it can later be retreived.
+    ComPtr<IStorageApplicationPermissionsStatics> storageApplicationPermissionsStatics;
+    RETURN_NULL_IF_FAILED(
+        GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Storage_AccessCache_StorageApplicationPermissions).Get(),
+                             &storageApplicationPermissionsStatics));
+
+    ComPtr<IStorageItemAccessList> accessList;
+    RETURN_NULL_IF_FAILED(storageApplicationPermissionsStatics->get_FutureAccessList(&accessList));
+
+    // See how close we are to the cap.
+    uint32_t maxItems = 0;
+    RETURN_NULL_IF_FAILED(accessList->get_MaximumItemsAllowed(&maxItems));
+
+    // Documentation says 1000 but lets just make sure it was somthing valid.
+    RETURN_NULL_IF_FALSE(maxItems > 0);
+
+    uint32_t count = 0;
+    Wrappers::HString token;
+
+    static std::mutex s_lock;
+    {
+        std::lock_guard<std::mutex> guard(s_lock);
+
+        // protect the count check and addint logic with a lock since we don't want to race to add the last guy.
+        ComPtr<IVectorView<AccessListEntry>> entries;
+        RETURN_NULL_IF_FAILED(accessList->get_Entries(&entries));
+        RETURN_NULL_IF_FAILED(entries->get_Size(&count));
+
+        if (count >= maxItems) {
+            // All full so delete the oldest one. Though not mentioned, the *last* item in the
+            // list is oldest as sorted by the time added to cache (doesn't update for accesses).
+            AccessListEntry lastEntry{};
+            RETURN_NULL_IF_FAILED(entries->GetAt(count - 1, &lastEntry));
+            RETURN_NULL_IF_FAILED(accessList->Remove(lastEntry.Token));
+        }
+
+        RETURN_NULL_IF_FAILED(accessList->AddOverloadDefaultMetadata(comStorageItem.Get(), token.GetAddressOf()));
+    }
+
+    // now that a token has been acquired, form a file path URL similar to a file reference URL based on it.
+    return [self initFileURLWithPath:[NSString stringWithFormat:@"/.file/id=%@", [NSString _stringWithHSTRING:token.Get()]]
+                         isDirectory:NO];
 }
 
 @end
