@@ -97,12 +97,12 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UICTFont, CTFontGetTypeID);
 }
 
 + (UIFont*)defaultFont {
-    static id dFont = [[self systemFontOfSize:10.0f] retain];
+    static id dFont = [[self systemFontOfSize:[self systemFontSize]] retain];
     return dFont;
 }
 
 + (UIFont*)buttonFont {
-    static id dFont = [[self systemFontOfSize:17.0f] retain];
+    static id dFont = [[self systemFontOfSize:[self buttonFontSize]] retain];
     return dFont;
 }
 
