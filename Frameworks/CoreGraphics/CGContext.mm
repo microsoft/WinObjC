@@ -17,18 +17,16 @@
 #import <StubReturn.h>
 #import <Starboard.h>
 #import <math.h>
+
+#import "CGSurfaceInfoInternal.h" //EVAL
+
 #import <CoreGraphics/CGContext.h>
 #import <CoreGraphics/CGPath.h>
 #import <CoreGraphics/CGLayer.h>
-#import "CGColorSpaceInternal.h"
-#import "CGContextInternal.h"
-#include "LoggingNative.h"
-#import "_CGLifetimeBridgingType.h"
 #import <CoreGraphics/CGAffineTransform.h>
 #import <CoreGraphics/CGGradient.h>
-#import <Foundation/NSString.h>
-#import "CGSurfaceInfoInternal.h"
-#import <pthread.h>
+#import "CGColorSpaceInternal.h"
+#import "CGContextInternal.h"
 
 #import <CFRuntime.h>
 
@@ -37,27 +35,60 @@
 #import <d2d1_1.h>
 #import <wrl/client.h>
 #include <COMIncludes_end.h>
+#import <LoggingNative.h>
 
 #import <list>
+#import <vector>
 #import <stack>
 
 using namespace Microsoft::WRL;
 
+static inline D2D_RECT_F __CGRectToD2D(CGRect rect) {
+    return {
+        rect.origin.x,
+        rect.origin.y,
+        rect.origin.x + rect.size.width,
+        rect.origin.y + rect.size.height,
+    };
+}
+
 struct __CGContextDrawingState {
     // Not populated by default.
-    ComPtr<ID2D1DrawingStateBlock> _d2dState;
+    ComPtr<ID2D1DrawingStateBlock> d2dState;
 
-    ComPtr<ID2D1Brush> _fillBrush;
-    ComPtr<ID2D1Brush> _strokeBrush;
+    // Fills
+    ComPtr<ID2D1Brush> fillBrush;
 
-    CGFloat _flatness;
+    // Strokes
+    ComPtr<ID2D1Brush> strokeBrush;
+    ComPtr<ID2D1StrokeStyle> strokeStyle;
+    D2D1_STROKE_STYLE_PROPERTIES strokeProperties{
+        D2D1_CAP_STYLE_FLAT,
+        D2D1_CAP_STYLE_FLAT,
+        D2D1_CAP_STYLE_FLAT,
+        D2D1_LINE_JOIN_MITER,
+        10.f, // Default from Reference Docs
+        D2D1_DASH_STYLE_SOLID,
+        0.f,
+    };
+    std::vector<CGFloat> dashes;
 
-    ComPtr<ID2D1StrokeStyle> _strokeStyle;
-    CGFloat _lineWidth = 1.0f;
+    CGFloat lineWidth = 1.0f;
 
-    CGPathRef _currentClippingPath;
+    CGFloat flatness;
 
-    D2D1_INTERPOLATION_MODE _bitmapInterpolationMode;
+    // Clipping
+    CGMutablePathRef currentClippingPath;
+
+    // Image Drawing
+    D2D1_INTERPOLATION_MODE bitmapInterpolationMode;
+
+    // Userspace Coordinate Transformation
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    CGAffineTransform textMatrix = CGAffineTransformIdentity;
+
+    // Alpha Blending
+    CGFloat alpha = 1.0f;
 };
 
 struct __CGContextImpl {
@@ -65,7 +96,7 @@ struct __CGContextImpl {
 
     std::stack<__CGContextDrawingState> _stateStack;
 
-    CGPathRef _currentPath;
+    CGMutablePathRef _currentPath;
 
     bool _allowsAntialiasing;
     bool _allowsFontSmoothing;
@@ -82,8 +113,28 @@ struct __CGContext {
 
     // Use an inline impl struct so that we don't need to placement new each element.
     __CGContextImpl _impl;
-    // Temporary; should be in CGBitmapContext.
     CGImageRef img;
+
+    inline __CGContextImpl& Impl() {
+        return _impl;
+    }
+
+    inline ID2D1RenderTarget* RenderTarget() {
+        return _impl._renderTarget.Get();
+    }
+
+    inline std::stack<__CGContextDrawingState>& StateStack() {
+        return _impl._stateStack;
+    }
+
+    inline __CGContextDrawingState& CurrentGState() {
+        return StateStack().top();
+    }
+
+    inline void ClearPath() {
+        CGPathRelease(_impl._currentPath);
+        _impl._currentPath = nullptr;
+    }
 };
 
 static Boolean __CGContextEqual(CFTypeRef cf1, CFTypeRef cf2) {
@@ -168,57 +219,6 @@ void CGContextRelease(CGContextRef ctx) {
 
     CFRelease((CFTypeRef)ctx);
 }
-
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-#if 0
-#define DEBUG_CONTEXT_COUNT
-
-int contextCount = 0;
-
-pthread_mutex_t _cairoLock = PTHREAD_MUTEX_INITIALIZER;
-
-@interface CGNSContext : _CGLifetimeBridgingType
-@end
-
-@implementation CGNSContext
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
-- (void)dealloc {
-    delete (__CGContext*)self;
-}
-#pragma clang diagnostic pop
-@end
-
-__CGContext::__CGContext(CGImageRef pDest) {
-    contextCount++;
-
-#ifdef DEBUG_CONTEXT_COUNT
-    TraceVerbose(TAG, L"contextCount: %d", contextCount);
-#endif
-    object_setClass((id) this, [CGNSContext class]);
-    scale = 1.0f;
-    _backing = pDest->Backing()->CreateDrawingContext(this);
-}
-
-__CGContext::~__CGContext() {
-    contextCount--;
-
-    delete _backing;
-}
-
-CGContextImpl* __CGContext::Backing() {
-    return _backing;
-}
-#endif
 
 /**
  @Status Interoperable
@@ -329,8 +329,8 @@ void CGContextSetTextDrawingMode(CGContextRef ctx, CGTextDrawingMode mode) {
  @Status Interoperable
 */
 CGAffineTransform CGContextGetCTM(CGContextRef ctx) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    auto& state = ctx->CurrentGState();
+    return state.transform;
 }
 
 /**
@@ -358,14 +358,16 @@ void CGContextRotateCTM(CGContextRef ctx, CGFloat angle) {
  @Status Interoperable
 */
 void CGContextConcatCTM(CGContextRef ctx, CGAffineTransform t) {
-    UNIMPLEMENTED();
+    auto& state = ctx->CurrentGState();
+    state.transform = CGAffineTransformConcat(state.transform, t);
 }
 
 /**
  @Status Interoperable
 */
 void CGContextSetCTM(CGContextRef ctx, CGAffineTransform transform) {
-    UNIMPLEMENTED();
+    auto& state = ctx->CurrentGState();
+    state.transform = transform;
 }
 
 /// TODO(DH): IMAGE DRAWING
@@ -466,8 +468,8 @@ void CGContextSetGrayStrokeColor(CGContextRef ctx, CGFloat gray, CGFloat alpha) 
 */
 void CGContextSetRGBStrokeColor(CGContextRef ctx, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
     ComPtr<ID2D1SolidColorBrush> brush;
-    THROW_IF_FAILED(ctx->_impl._renderTarget->CreateSolidColorBrush({ r, g, b, a }, &brush));
-    THROW_IF_FAILED(brush.As(&ctx->_impl._stateStack.top()._strokeBrush));
+    THROW_IF_FAILED(ctx->RenderTarget()->CreateSolidColorBrush({ r, g, b, a }, &brush));
+    THROW_IF_FAILED(brush.As(&ctx->CurrentGState().strokeBrush));
 }
 
 /**
@@ -514,8 +516,8 @@ void CGContextSetGrayFillColor(CGContextRef ctx, CGFloat gray, CGFloat alpha) {
 */
 void CGContextSetRGBFillColor(CGContextRef ctx, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
     ComPtr<ID2D1SolidColorBrush> brush;
-    THROW_IF_FAILED(ctx->_impl._renderTarget->CreateSolidColorBrush({ r, g, b, a }, &brush));
-    THROW_IF_FAILED(brush.As(&ctx->_impl._stateStack.top()._fillBrush));
+    THROW_IF_FAILED(ctx->RenderTarget()->CreateSolidColorBrush({ r, g, b, a }, &brush));
+    THROW_IF_FAILED(brush.As(&ctx->CurrentGState().fillBrush));
 }
 
 /**
@@ -545,31 +547,33 @@ CGPoint CGContextGetTextPosition(CGContextRef ctx) {
  @Status Interoperable
 */
 void CGContextSaveGState(CGContextRef ctx) {
-    auto& oldState = ctx->_impl._stateStack.top();
-    ctx->_impl._stateStack.emplace(oldState /* copy */);
+    auto& oldState = ctx->CurrentGState();
+
+    // This uses the drawing state's copy constructor.
+    ctx->StateStack().emplace(oldState);
 
     ComPtr<ID2D1Factory> factory;
-    ctx->_impl._renderTarget->GetFactory(&factory);
+    ctx->RenderTarget()->GetFactory(&factory);
 
     ComPtr<ID2D1DrawingStateBlock> drawingState;
     THROW_IF_FAILED(factory->CreateDrawingStateBlock(&drawingState));
-    ctx->_impl._renderTarget->SaveDrawingState(drawingState.Get());
-    oldState._d2dState = drawingState;
+    ctx->RenderTarget()->SaveDrawingState(drawingState.Get());
+    oldState.d2dState = drawingState;
 }
 
 /**
  @Status Interoperable
 */
 void CGContextRestoreGState(CGContextRef ctx) {
-    if (ctx->_impl._stateStack.size() <= 1) {
+    if (ctx->StateStack().size() <= 1) {
         TraceError(TAG, L"Attempted to pop last GState.");
         return;
     }
 
-    ctx->_impl._stateStack.pop();
-    auto& newState = ctx->_impl._stateStack.top();
-    ctx->_impl._renderTarget->RestoreDrawingState(newState._d2dState.Get());
-    newState._d2dState = nullptr;
+    ctx->StateStack().pop();
+    auto& newState = ctx->CurrentGState();
+    ctx->RenderTarget()->RestoreDrawingState(newState.d2dState.Get());
+    newState.d2dState = nullptr;
 }
 
 /**
@@ -579,21 +583,72 @@ void CGContextClearRect(CGContextRef ctx, CGRect rect) {
     UNIMPLEMENTED();
 }
 
+static void __CGContextDrawGeometry(CGContextRef ctx, ID2D1Geometry* geometry, CGPathDrawingMode drawMode) {
+    auto renderTarget = ctx->RenderTarget();
+    auto& currentState = ctx->CurrentGState();
+
+    renderTarget->BeginDraw();
+
+    CGAffineTransform& currentTransform = currentState.transform;
+    CGAffineTransform transform = CGAffineTransformScale(currentTransform, 1.0, -1.0);
+    D2D1_SIZE_F targetSize = renderTarget->GetSize();
+    transform = CGAffineTransformTranslate(transform, 0., targetSize.height);
+    renderTarget->SetTransform({transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty});
+
+    ComPtr<ID2D1Layer> layer;
+    if (currentState.alpha != 1.0f || false /* mask, clip, etc. */) {
+        renderTarget->CreateLayer(&layer);
+        renderTarget->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(), NULL, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE, D2D1::IdentityMatrix(), currentState.alpha), layer.Get());
+    }
+
+    if (drawMode & kCGPathFill) {
+        if (drawMode & kCGPathEOFill) {
+            // TODO(DH): Regenerate geometry in Even/Odd fill mode.
+        }
+        renderTarget->FillGeometry(geometry, currentState.fillBrush.Get());
+    }
+
+    if (drawMode & kCGPathStroke) {
+        ComPtr<ID2D1Factory> factory;
+        renderTarget->GetFactory(&factory);
+
+        /* TODO(DH): do not recreate for every drawing operation */
+        ComPtr<ID2D1StrokeStyle> strokeStyle;
+        // dashes must be adjusted to be based on line width
+        std::vector<CGFloat> adjustedDashes{currentState.dashes};
+        for (float& f: adjustedDashes) {
+            f /= currentState.lineWidth;
+        }
+        THROW_IF_FAILED(factory->CreateStrokeStyle(currentState.strokeProperties, adjustedDashes.data(), adjustedDashes.size(), &strokeStyle));
+        /* --- */
+
+        renderTarget->DrawGeometry(geometry, currentState.strokeBrush.Get(), currentState.lineWidth, strokeStyle.Get());
+    }
+
+    if (layer) {
+        renderTarget->PopLayer();
+    }
+
+    renderTarget->EndDraw();
+}
+
 /**
  @Status Interoperable
 */
 void CGContextFillRect(CGContextRef ctx, CGRect rect) {
-    auto renderTarget = ctx->_impl._renderTarget.Get();
-    renderTarget->BeginDraw();
+    auto renderTarget = ctx->RenderTarget();
 
     ComPtr<ID2D1Factory> factory;
-    ctx->_impl._renderTarget->GetFactory(&factory);
+    renderTarget->GetFactory(&factory);
+
     ComPtr<ID2D1Geometry> geometry;
     ComPtr<ID2D1RectangleGeometry> rectGeometry;
-    THROW_IF_FAILED(factory->CreateRectangleGeometry({rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width, rect.origin.y + rect.size.height}, &rectGeometry));
+    THROW_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D(rect), &rectGeometry));
     THROW_IF_FAILED(rectGeometry.As(&geometry));
-    renderTarget->FillGeometry(geometry.Get(), ctx->_impl._stateStack.top()._fillBrush.Get());
-    renderTarget->EndDraw();
+
+    __CGContextDrawGeometry(ctx, geometry.Get(), kCGPathFill);
+
+    ctx->ClearPath();
 }
 
 /**
@@ -672,14 +727,38 @@ void CGContextAddEllipseInRect(CGContextRef ctx, CGRect rect) {
  @Status Interoperable
 */
 void CGContextStrokeEllipseInRect(CGContextRef ctx, CGRect rect) {
-    UNIMPLEMENTED();
+    auto renderTarget = ctx->RenderTarget();
+
+    ComPtr<ID2D1Factory> factory;
+    renderTarget->GetFactory(&factory);
+
+    ComPtr<ID2D1Geometry> geometry;
+    ComPtr<ID2D1EllipseGeometry> ellipseGeometry;
+    THROW_IF_FAILED(factory->CreateEllipseGeometry({{CGRectGetMidX(rect), CGRectGetMidY(rect)}, rect.size.width / 2.f, rect.size.height / 2.f}, &ellipseGeometry));
+    THROW_IF_FAILED(ellipseGeometry.As(&geometry));
+
+    __CGContextDrawGeometry(ctx, geometry.Get(), kCGPathStroke);
+
+    ctx->ClearPath();
 }
 
 /**
  @Status Interoperable
 */
 void CGContextFillEllipseInRect(CGContextRef ctx, CGRect rect) {
-    UNIMPLEMENTED();
+    auto renderTarget = ctx->RenderTarget();
+
+    ComPtr<ID2D1Factory> factory;
+    renderTarget->GetFactory(&factory);
+
+    ComPtr<ID2D1Geometry> geometry;
+    ComPtr<ID2D1EllipseGeometry> ellipseGeometry;
+    THROW_IF_FAILED(factory->CreateEllipseGeometry({{CGRectGetMidX(rect), CGRectGetMidY(rect)}, rect.size.width / 2.f, rect.size.height / 2.f}, &ellipseGeometry));
+    THROW_IF_FAILED(ellipseGeometry.As(&geometry));
+
+    __CGContextDrawGeometry(ctx, geometry.Get(), kCGPathFill);
+
+    ctx->ClearPath();
 }
 
 /**
@@ -697,45 +776,50 @@ void CGContextAddPath(CGContextRef ctx, CGPathRef path) {
  @Status Interoperable
 */
 void CGContextStrokePath(CGContextRef ctx) {
-    UNIMPLEMENTED();
+    CGContextDrawPath(ctx, kCGPathStroke);
 }
 
 /**
  @Status Interoperable
 */
 void CGContextStrokeRect(CGContextRef ctx, CGRect rect) {
-    auto renderTarget = ctx->_impl._renderTarget.Get();
-    renderTarget->BeginDraw();
+    auto renderTarget = ctx->RenderTarget();
 
     ComPtr<ID2D1Factory> factory;
-    ctx->_impl._renderTarget->GetFactory(&factory);
+    renderTarget->GetFactory(&factory);
+
     ComPtr<ID2D1Geometry> geometry;
     ComPtr<ID2D1RectangleGeometry> rectGeometry;
-    THROW_IF_FAILED(factory->CreateRectangleGeometry({rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width, rect.origin.y + rect.size.height}, &rectGeometry));
+    THROW_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D(rect), &rectGeometry));
     THROW_IF_FAILED(rectGeometry.As(&geometry));
-    renderTarget->DrawGeometry(geometry.Get(), ctx->_impl._stateStack.top()._strokeBrush.Get(), ctx->_impl._stateStack.top()._lineWidth);
-    renderTarget->EndDraw();
+
+    __CGContextDrawGeometry(ctx, geometry.Get(), kCGPathStroke);
+
+    ctx->ClearPath();
 }
 
 /**
  @Status Interoperable
 */
 void CGContextStrokeRectWithWidth(CGContextRef ctx, CGRect rect, CGFloat width) {
-    UNIMPLEMENTED();
+    CGContextSaveGState(ctx);
+    CGContextSetLineWidth(ctx, width);
+    CGContextStrokeRect(ctx, rect);
+    CGContextRestoreGState(ctx);
 }
 
 /**
  @Status Interoperable
 */
 void CGContextFillPath(CGContextRef ctx) {
-    UNIMPLEMENTED();
+    CGContextDrawPath(ctx, kCGPathFill);
 }
 
 /**
  @Status Interoperable
 */
 void CGContextEOFillPath(CGContextRef ctx) {
-    UNIMPLEMENTED();
+    CGContextDrawPath(ctx, kCGPathEOFill);
 }
 
 /**
@@ -816,39 +900,57 @@ void CGContextDrawLayerAtPoint(CGContextRef ctx, CGPoint destPoint, CGLayerRef l
     UNIMPLEMENTED();
 }
 
+/// STROKE STYLE
 /**
  @Status Interoperable
 */
 void CGContextSetLineDash(CGContextRef ctx, CGFloat phase, const CGFloat* lengths, unsigned count) {
-    UNIMPLEMENTED();
+    auto& state = ctx->CurrentGState();
+    auto& dashes = state.dashes;
+
+    if (count == 0) {
+        state.strokeProperties.dashOffset = 0;
+        state.strokeProperties.dashStyle = D2D1_DASH_STYLE_SOLID;
+        dashes.clear();
+    } else {
+        state.strokeProperties.dashOffset = phase;
+        state.strokeProperties.dashStyle = D2D1_DASH_STYLE_CUSTOM;
+        dashes.assign(lengths, lengths + count);
+    }
 }
 
 /**
  @Status Interoperable
 */
 void CGContextSetMiterLimit(CGContextRef ctx, CGFloat limit) {
-    UNIMPLEMENTED();
+    auto& state = ctx->CurrentGState();
+    state.strokeProperties.miterLimit = limit;
 }
 
 /**
  @Status Interoperable
 */
 void CGContextSetLineJoin(CGContextRef ctx, CGLineJoin lineJoin) {
-    UNIMPLEMENTED();
+    auto& state = ctx->CurrentGState();
+    state.strokeProperties.lineJoin = (D2D1_LINE_JOIN)lineJoin;
 }
 
 /**
  @Status Interoperable
 */
 void CGContextSetLineCap(CGContextRef ctx, CGLineCap lineCap) {
-    UNIMPLEMENTED();
+    auto& state = ctx->CurrentGState();
+    state.strokeProperties.startCap = (D2D1_CAP_STYLE)lineCap;
+    state.strokeProperties.endCap = (D2D1_CAP_STYLE)lineCap;
+    state.strokeProperties.dashCap = (D2D1_CAP_STYLE)lineCap;
 }
 
 /**
  @Status Interoperable
 */
 void CGContextSetLineWidth(CGContextRef ctx, CGFloat width) {
-    ctx->_impl._stateStack.top()._lineWidth = width;
+    auto& state = ctx->CurrentGState();
+    state.lineWidth = width;
 }
 
 /**
@@ -971,6 +1073,13 @@ void CGContextBeginTransparencyLayer(CGContextRef ctx, CFDictionaryRef auxInfo) 
 /**
  @Status Interoperable
 */
+void CGContextBeginTransparencyLayerWithRect(CGContextRef ctx, CGRect rect, CFDictionaryRef auxInfo) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Interoperable
+*/
 void CGContextEndTransparencyLayer(CGContextRef ctx) {
     UNIMPLEMENTED();
 }
@@ -998,8 +1107,8 @@ CGInterpolationQuality CGContextGetInterpolationQuality(CGContextRef context) {
 /**
  @Status Interoperable
 */
-void CGContextSetAlpha(CGContextRef ctx, CGFloat a) {
-    UNIMPLEMENTED();
+void CGContextSetAlpha(CGContextRef ctx, CGFloat alpha) {
+    ctx->CurrentGState().alpha = alpha;
 }
 
 /**
@@ -1076,14 +1185,6 @@ void CGContextBeginPage(CGContextRef c, const CGRect* mediaBox) {
  @Status Interoperable
  @Notes
 */
-void CGContextBeginTransparencyLayerWithRect(CGContextRef ctx, CGRect rect, CFDictionaryRef auxInfo) {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Interoperable
- @Notes
-*/
 CGPathRef CGContextCopyPath(CGContextRef c) {
     UNIMPLEMENTED();
     return StubReturn();
@@ -1106,11 +1207,12 @@ void CGContextEndPage(CGContextRef c) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-void CGContextFillRects(CGContextRef c, const CGRect* rects, size_t count) {
-    UNIMPLEMENTED();
+void CGContextFillRects(CGContextRef ctx, const CGRect* rects, size_t count) {
+    for(size_t i = 0; i < count; ++i) {
+        CGContextFillRect(ctx, rects[i]);
+    }
 }
 
 /**
