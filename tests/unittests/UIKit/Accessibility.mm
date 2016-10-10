@@ -5,7 +5,9 @@
 #import "CALayerInternal.h"
 #import "NullCompositor.h"
 
-TEST(Accessibility, accessors) {
+// TODO:Task 8737070:Create Button in UIThread to enable Unit tests. Do it for all other controls and write UT for them. Also re-enable
+// Accessibility UT
+DISABLED_TEST(Accessibility, accessors) {
     SetCACompositor(new NullCompositor);
 
     auto button = [[UIButton alloc] init];

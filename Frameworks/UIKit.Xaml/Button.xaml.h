@@ -27,7 +27,13 @@ namespace UIKit {
 public ref class Button sealed {
 public:
     Button();
+    void OnApplyTemplate() override;
+    Windows::Foundation::Size ArrangeOverride(Windows::Foundation::Size finalSize) override;
     void OnPointerPressed(Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e) override;
+    void OnPointerMoved(Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e) override;
+    void OnPointerReleased(Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e) override;
+    void OnPointerCanceled(Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e) override;
+    void OnPointerCaptureLost(Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e) override;
 
 internal:
     void HookPointerEvents(
@@ -37,12 +43,27 @@ internal:
         const Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler>& pointerCanceledHook,
         const Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler>& pointerCaptureLostHook);
 
+    void HookLayoutEvent(
+        const Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler>& layoutHook);
+
+    // methods for removing registered events
+    void RemovePointerEvents();
+    void RemoveLayoutEvent();
+
+    Windows::UI::Xaml::Controls::TextBlock^ _textBlock;
+    Windows::UI::Xaml::Controls::Image^ _image;
+    Windows::UI::Xaml::Controls::Image^ _backgroundImage;
+
 private:
+
     Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler> _pointerPressedHook;
     Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler> _pointerMovedHook;
     Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler> _pointerReleasedHook;
     Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler> _pointerCanceledHook;
     Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler> _pointerCaptureLostHook;
+
+    // Auto Layout hook, change name and type later
+    Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler> _layoutHook;
 };
 
 }

@@ -48,6 +48,7 @@ WINRT_EXPORT
 // For composable objects, this is the original interface.
 @property (nonatomic) Microsoft::WRL::ComPtr<IInspectable> innerInterface;
 #endif /*__cplusplus*/
+
 @end
 
 // Does a safe cast of rtObject into a derived projected class type. Throws if it is an invalid cast.

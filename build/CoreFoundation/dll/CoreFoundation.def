@@ -37,6 +37,9 @@ LIBRARY CoreFoundation
         _CFGetSlashStr
         _CFProcessPath
         _CFURLCreateCurrentDirectoryURL
+        _CFEnableZombies
+        _CFDisableZombies
+        __CFZombifyNSObjectHook CONSTANT
         _NS_chdir
 
         ; Base Utilities.mm

@@ -14,19 +14,19 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
 #include "Foundation/NSSet.h"
-#include "Foundation/NSMutableSet.h"
+#include "BridgeHelpers.h"
 #include "Foundation/NSCountedSet.h"
 #include "Foundation/NSEnumerator.h"
-#include "NSEnumeratorInternal.h"
 #include "Foundation/NSKeyedArchiver.h"
-#include "NSKeyedArchiverInternal.h"
+#include "Foundation/NSMutableSet.h"
 #include "NSCFSet.h"
-#include "VAListHelper.h"
+#include "NSEnumeratorInternal.h"
+#include "NSKeyedArchiverInternal.h"
 #include "NSRaise.h"
-#include "BridgeHelpers.h"
+#include "Starboard.h"
+#include "StubReturn.h"
+#include "VAListHelper.h"
 #import <_NSKeyValueCodingAggregateFunctions.h>
 
 @implementation NSSet
@@ -459,12 +459,16 @@ BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSSet*)setByAddingObjectsFromArray:(NSArray*)other {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSMutableSet* result = [[self mutableCopy] autorelease];
+
+    for (id curObj in other) {
+        [result addObject:curObj];
+    }
+
+    return result;
 }
 
 /**

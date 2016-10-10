@@ -29,3 +29,15 @@ TEST(NSObject, NSZombie) { // This test will fail with an AV if zombies do not w
 
     WinObjC_SetZombiesEnabled(NO);
 }
+
+TEST(NSCFObject, NSZombie) {
+    WinObjC_SetZombiesEnabled(YES);
+
+    NSString* string = [[NSMutableString alloc] initWithString:@"Hello"];
+    [string release];
+    EXPECT_ANY_THROW([string self]);
+
+    EXPECT_ANY_THROW(CFStringGetLength(static_cast<CFStringRef>(string)));
+
+    WinObjC_SetZombiesEnabled(NO);
+}

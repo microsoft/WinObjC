@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_INPUT_INKING_CORE_EXPORT
+#define OBJCUWP_WINDOWS_UI_INPUT_INKING_CORE_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Input_Inking_Core.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUIICCoreInkIndependentInputSource;
@@ -35,7 +39,7 @@
 #ifndef __WUIICCoreInkIndependentInputSource_DEFINED__
 #define __WUIICCoreInkIndependentInputSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_INKING_CORE_EXPORT
 @interface WUIICCoreInkIndependentInputSource : RTObject
 + (WUIICCoreInkIndependentInputSource*)create:(WUIIInkPresenter*)inkPresenter;
 #if defined(__cplusplus)

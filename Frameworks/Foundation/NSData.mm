@@ -26,8 +26,6 @@
 #import "Foundation/NSMutableArray.h"
 #import "Foundation/NSValue.h"
 #import <CoreFoundation/CFData.h>
-#import <UWP/WindowsStorageStreams.h>
-#import <UWP/WindowsSecurityCryptography.h>
 #include <COMIncludes.h>
 #import "ErrorHandling.h"
 #import "RawBuffer.h"

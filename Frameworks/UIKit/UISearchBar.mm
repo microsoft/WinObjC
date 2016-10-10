@@ -193,6 +193,7 @@ static void initInternal(UISearchBar* self) {
             self->_cancelButton.attach([[UIButton alloc] init]);
             [self->_cancelButton setBackgroundColor:nil];
             [self->_cancelButton setTitle:cancelButtonText forState:UIControlStateNormal];
+            [self->_cancelButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
             [self addSubview:self->_cancelButton];
         }
     }

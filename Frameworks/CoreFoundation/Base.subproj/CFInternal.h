@@ -689,7 +689,8 @@ CF_INLINE bool __CF_IsBridgedObject(CFTypeRef obj) {
         return false;
     }
 
-    if ((object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFString)) || 
+    if ((object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFType)) || 
+        (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFString)) || 
         (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFNumber)) || 
         (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFBoolean))) {
         return true;
@@ -712,6 +713,7 @@ CF_INLINE bool __CF_IsBridgedObject(CFTypeRef obj) {
 CF_INLINE bool __CF_IsCFObject(CFTypeRef obj) {
     CFRuntimeBase* object = (CFRuntimeBase*)obj;
     if ((object->_cfisa == 0) || 
+        (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFType)) ||
         (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFString)) ||
         (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFNumber)) ||
         (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFBoolean)) ||

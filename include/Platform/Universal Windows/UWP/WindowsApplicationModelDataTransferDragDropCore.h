@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_DataTransfer_DragDrop_Core.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WADDCCoreDragInfo, WADDCCoreDragUIOverride, WADDCCoreDragDropManager, WADDCCoreDropOperationTargetRequestedEventArgs,
@@ -58,13 +62,17 @@ typedef unsigned WADDCCoreDragUIContentMode;
 - (void)dropAsync:(WADDCCoreDragInfo*)dragInfo success:(void (^)(WADDataPackageOperation))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
+@interface WADDCICoreDropOperationTarget : RTObject <WADDCICoreDropOperationTarget>
+@end
+
 #endif // __WADDCICoreDropOperationTarget_DEFINED__
 
 // Windows.ApplicationModel.DataTransfer.DragDrop.Core.CoreDragInfo
 #ifndef __WADDCCoreDragInfo_DEFINED__
 #define __WADDCCoreDragInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
 @interface WADDCCoreDragInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -80,7 +88,7 @@ WINRT_EXPORT
 #ifndef __WADDCCoreDragUIOverride_DEFINED__
 #define __WADDCCoreDragUIOverride_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
 @interface WADDCCoreDragUIOverride : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -100,7 +108,7 @@ WINRT_EXPORT
 #ifndef __WADDCCoreDragDropManager_DEFINED__
 #define __WADDCCoreDragDropManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
 @interface WADDCCoreDragDropManager : RTObject
 + (WADDCCoreDragDropManager*)getForCurrentView;
 #if defined(__cplusplus)
@@ -117,7 +125,7 @@ WINRT_EXPORT
 #ifndef __WADDCCoreDropOperationTargetRequestedEventArgs_DEFINED__
 #define __WADDCCoreDropOperationTargetRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
 @interface WADDCCoreDropOperationTargetRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -131,7 +139,7 @@ WINRT_EXPORT
 #ifndef __WADDCCoreDragOperation_DEFINED__
 #define __WADDCCoreDragOperation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
 @interface WADDCCoreDragOperation : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

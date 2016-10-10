@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Appointments.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WAAAppointment, WAAAppointmentStore, WAAAppointmentOrganizer, WAAAppointmentInvitee, WAAAppointmentRecurrence, WAAAppointmentManager,
@@ -201,13 +205,17 @@ typedef unsigned WAAAppointmentStoreChangeType;
 @property (retain) NSString* displayName;
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
+@interface WAAIAppointmentParticipant : RTObject <WAAIAppointmentParticipant>
+@end
+
 #endif // __WAAIAppointmentParticipant_DEFINED__
 
 // Windows.ApplicationModel.Appointments.Appointment
 #ifndef __WAAAppointment_DEFINED__
 #define __WAAAppointment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointment : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -249,7 +257,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentStore_DEFINED__
 #define __WAAAppointmentStore_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentStore : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -335,7 +343,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentOrganizer_DEFINED__
 #define __WAAAppointmentOrganizer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentOrganizer : RTObject <WAAIAppointmentParticipant>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -351,7 +359,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentInvitee_DEFINED__
 #define __WAAAppointmentInvitee_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentInvitee : RTObject <WAAIAppointmentParticipant>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -369,7 +377,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentRecurrence_DEFINED__
 #define __WAAAppointmentRecurrence_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentRecurrence : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -394,7 +402,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentManager_DEFINED__
 #define __WAAAppointmentManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentManager : RTObject
 + (RTObject<WFIAsyncAction>*)showAppointmentDetailsAsync:(NSString*)appointmentId;
 + (RTObject<WFIAsyncAction>*)showAppointmentDetailsWithDateAsync:(NSString*)appointmentId instanceStartDate:(WFDateTime*)instanceStartDate;
@@ -453,7 +461,7 @@ WINRT_EXPORT
 #ifndef __WAAFindAppointmentsOptions_DEFINED__
 #define __WAAFindAppointmentsOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAFindAppointmentsOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -471,7 +479,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentException_DEFINED__
 #define __WAAAppointmentException_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentException : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -487,7 +495,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentCalendarSyncManager_DEFINED__
 #define __WAAAppointmentCalendarSyncManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentCalendarSyncManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -506,7 +514,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentCalendar_DEFINED__
 #define __WAAAppointmentCalendar_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentCalendar : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -605,7 +613,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentStoreChange_DEFINED__
 #define __WAAAppointmentStoreChange_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentStoreChange : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -621,7 +629,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentStoreChangeReader_DEFINED__
 #define __WAAAppointmentStoreChangeReader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentStoreChangeReader : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -637,7 +645,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentStoreChangedDeferral_DEFINED__
 #define __WAAAppointmentStoreChangedDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentStoreChangedDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -651,7 +659,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentStoreChangeTracker_DEFINED__
 #define __WAAAppointmentStoreChangeTracker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentStoreChangeTracker : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -667,7 +675,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentConflictResult_DEFINED__
 #define __WAAAppointmentConflictResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentConflictResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -682,7 +690,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentStoreChangedEventArgs_DEFINED__
 #define __WAAAppointmentStoreChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentStoreChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -696,7 +704,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentProperties_DEFINED__
 #define __WAAAppointmentProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentProperties : RTObject
 + (NSString*)hasInvitees;
 + (NSString*)allDay;
@@ -732,7 +740,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentStoreNotificationTriggerDetails_DEFINED__
 #define __WAAAppointmentStoreNotificationTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
 @interface WAAAppointmentStoreNotificationTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

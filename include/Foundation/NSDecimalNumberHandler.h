@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,22 +16,25 @@
 #pragma once
 
 #import <Foundation/FoundationExport.h>
-#import <Foundation/NSDecimalNumberBehaviors.h>
 #import <Foundation/NSObject.h>
+#import <Foundation/NSDecimal.h>
+#import <Foundation/NSDecimalNumberBehaviors.h>
 
 FOUNDATION_EXPORT_CLASS
 @interface NSDecimalNumberHandler : NSObject <NSCoding, NSDecimalNumberBehaviors>
-+ (NSDecimalNumberHandler*)defaultDecimalNumberHandler STUB_METHOD;
++ (NSDecimalNumberHandler*)defaultDecimalNumberHandler;
+
 + (instancetype)decimalNumberHandlerWithRoundingMode:(NSRoundingMode)roundingMode
                                                scale:(short)scale
                                     raiseOnExactness:(BOOL)raiseOnExactness
                                      raiseOnOverflow:(BOOL)raiseOnOverflow
                                     raiseOnUnderflow:(BOOL)raiseOnUnderflow
-                                 raiseOnDivideByZero:(BOOL)raiseOnDivideByZero STUB_METHOD;
+                                 raiseOnDivideByZero:(BOOL)raiseOnDivideByZero;
+
 - (instancetype)initWithRoundingMode:(NSRoundingMode)roundingMode
                                scale:(short)scale
                     raiseOnExactness:(BOOL)raiseOnExactness
                      raiseOnOverflow:(BOOL)raiseOnOverflow
                     raiseOnUnderflow:(BOOL)raiseOnUnderflow
-                 raiseOnDivideByZero:(BOOL)raiseOnDivideByZero STUB_METHOD;
+                 raiseOnDivideByZero:(BOOL)raiseOnDivideByZero;
 @end

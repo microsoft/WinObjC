@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_BACKGROUND_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_BACKGROUND_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Bluetooth_Background.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDBBRfcommInboundConnectionInformation, WDBBRfcommOutboundConnectionInformation, WDBBRfcommConnectionTriggerDetails,
@@ -41,7 +45,7 @@
 #ifndef __WDBBRfcommInboundConnectionInformation_DEFINED__
 #define __WDBBRfcommInboundConnectionInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_BACKGROUND_EXPORT
 @interface WDBBRfcommInboundConnectionInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -57,7 +61,7 @@ WINRT_EXPORT
 #ifndef __WDBBRfcommOutboundConnectionInformation_DEFINED__
 #define __WDBBRfcommOutboundConnectionInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_BACKGROUND_EXPORT
 @interface WDBBRfcommOutboundConnectionInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -71,7 +75,7 @@ WINRT_EXPORT
 #ifndef __WDBBRfcommConnectionTriggerDetails_DEFINED__
 #define __WDBBRfcommConnectionTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_BACKGROUND_EXPORT
 @interface WDBBRfcommConnectionTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -87,7 +91,7 @@ WINRT_EXPORT
 #ifndef __WDBBGattCharacteristicNotificationTriggerDetails_DEFINED__
 #define __WDBBGattCharacteristicNotificationTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_BACKGROUND_EXPORT
 @interface WDBBGattCharacteristicNotificationTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -102,7 +106,7 @@ WINRT_EXPORT
 #ifndef __WDBBBluetoothLEAdvertisementWatcherTriggerDetails_DEFINED__
 #define __WDBBBluetoothLEAdvertisementWatcherTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_BACKGROUND_EXPORT
 @interface WDBBBluetoothLEAdvertisementWatcherTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -118,7 +122,7 @@ WINRT_EXPORT
 #ifndef __WDBBBluetoothLEAdvertisementPublisherTriggerDetails_DEFINED__
 #define __WDBBBluetoothLEAdvertisementPublisherTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_BACKGROUND_EXPORT
 @interface WDBBBluetoothLEAdvertisementPublisherTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

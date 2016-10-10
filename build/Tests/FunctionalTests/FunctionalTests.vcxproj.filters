@@ -88,11 +88,10 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibraryTestHelpers.mm">
       <Filter>Tests\AssetsLibraryTests</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\tests\functionaltests\Tests\ProjectionTests\CoreDispatcherTests.mm">
-      <Filter>ProjectionTests</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\tests\functionaltests\Tests\ProjectionTests\SanityTests.mm">
-      <Filter>ProjectionTests</Filter>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\ProjectionTests\CoreDispatcherTests.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\ProjectionTests\SanityTests.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIActionSheetTests.mm">
+      <Filter>Tests</Filter>
     </ClangCompile>
   </ItemGroup>
   <ItemGroup>

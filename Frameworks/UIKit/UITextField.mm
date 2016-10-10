@@ -18,6 +18,7 @@
 #import <Starboard.h>
 #import <StubReturn.h>
 
+#import "XamlControls.h"
 #import "XamlUtilities.h"
 
 #import "CGContextInternal.h"

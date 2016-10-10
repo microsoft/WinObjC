@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXDBlockCollection, WUXDInlineCollection, WUXDTextPointer, WUXDTypography, WUXDTextElement, WUXDBlock, WUXDInline,
@@ -157,13 +161,17 @@ typedef void (^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventAr
 - (void)onDisconnectVisualChildren;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDITextElementOverrides : RTObject <WUXDITextElementOverrides>
+@end
+
 #endif // __WUXDITextElementOverrides_DEFINED__
 
 // Windows.UI.Xaml.Documents.BlockCollection
 #ifndef __WUXDBlockCollection_DEFINED__
 #define __WUXDBlockCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDBlockCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -187,7 +195,7 @@ WINRT_EXPORT
 #ifndef __WUXDInlineCollection_DEFINED__
 #define __WUXDInlineCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDInlineCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -211,7 +219,7 @@ WINRT_EXPORT
 #ifndef __WUXDTextPointer_DEFINED__
 #define __WUXDTextPointer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDTextPointer : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -230,7 +238,7 @@ WINRT_EXPORT
 #ifndef __WUXDTypography_DEFINED__
 #define __WUXDTypography_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDTypography : RTObject
 + (int)getAnnotationAlternates:(WXDependencyObject*)element;
 + (void)setAnnotationAlternates:(WXDependencyObject*)element value:(int)value;
@@ -372,7 +380,7 @@ WINRT_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -393,7 +401,7 @@ WINRT_EXPORT
 #ifndef __WUXDTextElement_DEFINED__
 #define __WUXDTextElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDTextElement : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -431,7 +439,7 @@ WINRT_EXPORT
 #ifndef __WUXDBlock_DEFINED__
 #define __WUXDBlock_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDBlock : WUXDTextElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -452,7 +460,7 @@ WINRT_EXPORT
 #ifndef __WUXDInline_DEFINED__
 #define __WUXDInline_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDInline : WUXDTextElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -465,7 +473,7 @@ WINRT_EXPORT
 #ifndef __WUXDInlineUIContainer_DEFINED__
 #define __WUXDInlineUIContainer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDInlineUIContainer : WUXDInline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -480,7 +488,7 @@ WINRT_EXPORT
 #ifndef __WUXDLineBreak_DEFINED__
 #define __WUXDLineBreak_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDLineBreak : WUXDInline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -494,7 +502,7 @@ WINRT_EXPORT
 #ifndef __WUXDParagraph_DEFINED__
 #define __WUXDParagraph_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDParagraph : WUXDBlock
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -511,7 +519,7 @@ WINRT_EXPORT
 #ifndef __WUXDRun_DEFINED__
 #define __WUXDRun_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDRun : WUXDInline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -528,7 +536,7 @@ WINRT_EXPORT
 #ifndef __WUXDSpan_DEFINED__
 #define __WUXDSpan_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDSpan : WUXDInline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -543,7 +551,7 @@ WINRT_EXPORT
 #ifndef __WUXDBold_DEFINED__
 #define __WUXDBold_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDBold : WUXDSpan
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -557,7 +565,7 @@ WINRT_EXPORT
 #ifndef __WUXDItalic_DEFINED__
 #define __WUXDItalic_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDItalic : WUXDSpan
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -571,7 +579,7 @@ WINRT_EXPORT
 #ifndef __WUXDUnderline_DEFINED__
 #define __WUXDUnderline_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDUnderline : WUXDSpan
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -585,7 +593,7 @@ WINRT_EXPORT
 #ifndef __WUXDHyperlink_DEFINED__
 #define __WUXDHyperlink_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDHyperlink : WUXDSpan
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -605,7 +613,7 @@ WINRT_EXPORT
 #ifndef __WXRoutedEventArgs_DEFINED__
 #define __WXRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -620,7 +628,7 @@ WINRT_EXPORT
 #ifndef __WUXDHyperlinkClickEventArgs_DEFINED__
 #define __WUXDHyperlinkClickEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDHyperlinkClickEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -639,6 +647,10 @@ WINRT_EXPORT
 - (void)onApplyTemplate;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXIFrameworkElementOverrides : RTObject <WXIFrameworkElementOverrides>
+@end
+
 #endif // __WXIFrameworkElementOverrides_DEFINED__
 
 // Windows.UI.Xaml.IFrameworkElementOverrides2
@@ -647,6 +659,10 @@ WINRT_EXPORT
 
 @protocol WXIFrameworkElementOverrides2
 - (BOOL)goToElementStateCore:(NSString*)stateName useTransitions:(BOOL)useTransitions;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXIFrameworkElementOverrides2 : RTObject <WXIFrameworkElementOverrides2>
 @end
 
 #endif // __WXIFrameworkElementOverrides2_DEFINED__
@@ -662,13 +678,17 @@ WINRT_EXPORT
                                                                                       boundingRect:(WFRect*)boundingRect;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXIUIElementOverrides : RTObject <WXIUIElementOverrides>
+@end
+
 #endif // __WXIUIElementOverrides_DEFINED__
 
 // Windows.UI.Xaml.UIElement
 #ifndef __WXUIElement_DEFINED__
 #define __WXUIElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 #if defined(__cplusplus)
@@ -820,7 +840,7 @@ WINRT_EXPORT
 #ifndef __WXFrameworkElement_DEFINED__
 #define __WXFrameworkElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXFrameworkElement : WXUIElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -892,7 +912,7 @@ WINRT_EXPORT
 #ifndef __WUXDGlyphs_DEFINED__
 #define __WUXDGlyphs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDGlyphs : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

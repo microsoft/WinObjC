@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
+#define OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Storage_Pickers.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WSPFilePickerSelectedFilesArray, WSPFilePickerFileTypesOrderedMap, WSPFileExtensionVector, WSPFileOpenPicker, WSPFileSavePicker,
@@ -58,7 +62,7 @@ typedef unsigned WSPPickerLocationId;
 #ifndef __WSPFilePickerSelectedFilesArray_DEFINED__
 #define __WSPFilePickerSelectedFilesArray_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 @interface WSPFilePickerSelectedFilesArray : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -76,7 +80,7 @@ WINRT_EXPORT
 #ifndef __WSPFilePickerFileTypesOrderedMap_DEFINED__
 #define __WSPFilePickerFileTypesOrderedMap_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 @interface WSPFilePickerFileTypesOrderedMap : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -105,7 +109,7 @@ WINRT_EXPORT
 #ifndef __WSPFileExtensionVector_DEFINED__
 #define __WSPFileExtensionVector_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 @interface WSPFileExtensionVector : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -129,7 +133,7 @@ WINRT_EXPORT
 #ifndef __WSPFileOpenPicker_DEFINED__
 #define __WSPFileOpenPicker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 @interface WSPFileOpenPicker : RTObject
 + (void)resumePickSingleFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 + (instancetype)make ACTIVATOR;
@@ -155,7 +159,7 @@ WINRT_EXPORT
 #ifndef __WSPFileSavePicker_DEFINED__
 #define __WSPFileSavePicker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 @interface WSPFileSavePicker : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -180,7 +184,7 @@ WINRT_EXPORT
 #ifndef __WSPFolderPicker_DEFINED__
 #define __WSPFolderPicker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 @interface WSPFolderPicker : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

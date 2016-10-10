@@ -59,7 +59,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9}</ProjectGuid>
-    <RootNamespace>UIKit</RootNamespace>
+    <RootNamespace>UIKit.ObjC</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>UIKit</OutputName>
@@ -76,7 +76,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
-      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -89,7 +89,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
-      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -102,7 +102,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
-      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -115,7 +115,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
-      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;freetype.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>

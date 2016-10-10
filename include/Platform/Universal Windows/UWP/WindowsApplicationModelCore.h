@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WACAppListEntry, WACCoreApplication, WACCoreApplicationView, WACCoreApplicationViewTitleBar, WACUnhandledErrorDetectedEventArgs,
@@ -49,6 +53,10 @@
 - (void)uninitialize;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WACIFrameworkView : RTObject <WACIFrameworkView>
+@end
+
 #endif // __WACIFrameworkView_DEFINED__
 
 // Windows.ApplicationModel.Core.IFrameworkViewSource
@@ -57,6 +65,10 @@
 
 @protocol WACIFrameworkViewSource
 - (RTObject<WACIFrameworkView>*)createView;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WACIFrameworkViewSource : RTObject <WACIFrameworkViewSource>
 @end
 
 #endif // __WACIFrameworkViewSource_DEFINED__
@@ -70,13 +82,17 @@
 - (void)removeUnhandledErrorDetectedEvent:(EventRegistrationToken)tok;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WACICoreApplicationUnhandledError : RTObject <WACICoreApplicationUnhandledError>
+@end
+
 #endif // __WACICoreApplicationUnhandledError_DEFINED__
 
 // Windows.ApplicationModel.Core.AppListEntry
 #ifndef __WACAppListEntry_DEFINED__
 #define __WACAppListEntry_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WACAppListEntry : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -91,7 +107,7 @@ WINRT_EXPORT
 #ifndef __WACCoreApplication_DEFINED__
 #define __WACCoreApplication_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WACCoreApplication : RTObject
 + (void)exit;
 + (void)incrementApplicationUseCount;
@@ -122,7 +138,7 @@ WINRT_EXPORT
 #ifndef __WACCoreApplicationView_DEFINED__
 #define __WACCoreApplicationView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WACCoreApplicationView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -145,7 +161,7 @@ WINRT_EXPORT
 #ifndef __WACCoreApplicationViewTitleBar_DEFINED__
 #define __WACCoreApplicationViewTitleBar_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WACCoreApplicationViewTitleBar : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -167,7 +183,7 @@ WINRT_EXPORT
 #ifndef __WACUnhandledErrorDetectedEventArgs_DEFINED__
 #define __WACUnhandledErrorDetectedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WACUnhandledErrorDetectedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -181,7 +197,7 @@ WINRT_EXPORT
 #ifndef __WACHostedViewClosingEventArgs_DEFINED__
 #define __WACHostedViewClosingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WACHostedViewClosingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -195,7 +211,7 @@ WINRT_EXPORT
 #ifndef __WACUnhandledError_DEFINED__
 #define __WACUnhandledError_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WACUnhandledError : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

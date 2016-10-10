@@ -54,7 +54,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>QuartzCore.def</ModuleDefinitionFile>
-      <AdditionalDependencies>objcuwp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -67,7 +67,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>QuartzCore.def</ModuleDefinitionFile>
-      <AdditionalDependencies>objcuwp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -80,7 +80,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>QuartzCore.def</ModuleDefinitionFile>
-      <AdditionalDependencies>objcuwp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -93,7 +93,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>QuartzCore.def</ModuleDefinitionFile>
-      <AdditionalDependencies>objcuwp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>

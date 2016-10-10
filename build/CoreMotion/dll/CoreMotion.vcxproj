@@ -47,7 +47,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      
       <ModuleDefinitionFile>CoreMotion.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -61,7 +61,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      
       <ModuleDefinitionFile>CoreMotion.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -75,7 +75,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      
       <ModuleDefinitionFile>CoreMotion.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -89,7 +89,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      
       <ModuleDefinitionFile>CoreMotion.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>

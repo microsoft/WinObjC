@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="CGCatalog">
+      <UniqueIdentifier>{6FAAF018-16AC-4E98-84A2-E0323764B313}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CGCatalog\NewSamples">
+      <UniqueIdentifier>{1347706D-0D43-4375-9741-2E179DAF6F61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CGCatalog\OldSamples">
+      <UniqueIdentifier>{9D031F1A-A1BF-4518-98A9-5E323025DEB4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddCurveToPointViewController.h">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddElipseViewController.h">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddLineToPointViewController.h">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddPathViewController.h">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddQuadCurveToPointViewController.h">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddRectViewController.h">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathApplyViewController.h">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathCloseSubpathViewController.h">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathContainsPointViewController.h">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathGetBoundingBoxViewController.h">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGDrawOptions.h">
+      <Filter>CGCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGDrawView.h">
+      <Filter>CGCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGSamplePage.h">
+      <Filter>CGCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\AppDelegate.h">
+      <Filter>CGCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGCRootViewController.h">
+      <Filter>CGCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGCBaseViewController.h">
+      <Filter>CGCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGContextSampleRow.h">
+      <Filter>CGCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGContextNewTestsController.h">
+      <Filter>CGCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGContextSamplesRootViewController.h">
+      <Filter>CGCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGPathApplyViewController.h">
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGBitmapContentViewController.h">
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextViewController.h">
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextBeginEndTransparencyLayer.h">
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextBeginTransparencyLayerWithRect.h">
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextSetPatternPhase.h">
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextReplacePathWithStrokedPath.h">
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGPathContainsPointViewController.h">
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

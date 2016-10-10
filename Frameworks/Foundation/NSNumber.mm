@@ -520,8 +520,7 @@ static NSComparisonResult _NSNumberCompareUnsignedSigned(unsigned long long unsi
  @Status Interoperable
 */
 - (NSDecimal)decimalValue {
-    NSDecimal ret = {[self doubleValue] };
-    return ret;
+    return [[NSDecimalNumber numberWithDouble:[self doubleValue]] decimalValue];
 }
 
 /**
@@ -689,84 +688,3 @@ static NSComparisonResult _NSNumberCompareUnsignedSigned(unsigned long long unsi
 }
 
 @end
-
-/**
- @Status Stub
-*/
-DWORD
-NSDecimalCompare(NSDecimal* num1, NSDecimal* num2) {
-    UNIMPLEMENTED();
-    if (num1->val < num2->val) {
-        return -1;
-    } else if (num1->val > num2->val) {
-        return 1;
-    } else {
-        return 0;
-    }
-}
-
-/**
- @Status Stub
-*/
-DWORD NSDecimalAdd(NSDecimal* result, NSDecimal* left, NSDecimal* right, DWORD rounding) {
-    UNIMPLEMENTED();
-    result->val = left->val + right->val;
-    return 0;
-}
-
-/**
- @Status Stub
-*/
-DWORD NSDecimalSubtract(NSDecimal* result, NSDecimal* left, NSDecimal* right, DWORD rounding) {
-    UNIMPLEMENTED();
-    result->val = left->val - right->val;
-    return 0;
-}
-
-/**
- @Status Stub
-*/
-DWORD NSDecimalDivide(NSDecimal* result, NSDecimal* left, NSDecimal* right, DWORD rounding) {
-    UNIMPLEMENTED();
-    result->val = left->val / right->val;
-    return 0;
-}
-
-/**
- @Status Stub
-*/
-DWORD NSDecimalMultiply(NSDecimal* result, NSDecimal* left, NSDecimal* right, DWORD rounding) {
-    UNIMPLEMENTED();
-    result->val = left->val * right->val;
-    return 0;
-}
-
-/**
- @Status Stub
-*/
-DWORD NSDecimalIsNotANumber(NSDecimal* num) {
-    UNIMPLEMENTED();
-    if (num->val != num->val) {
-        return TRUE;
-    }
-    return FALSE;
-}
-
-/**
- @Status Stub
-*/
-DWORD NSDecimalRound(NSDecimal* result, NSDecimal* num, int scale, DWORD rounding) {
-    UNIMPLEMENTED();
-    result->val = num->val;
-    return 0;
-}
-
-/**
- @Status Stub
-*/
-NSString* NSDecimalString(NSDecimal* num, id locale) {
-    UNIMPLEMENTED();
-    char szVal[128];
-    sprintf_s(szVal, sizeof(szVal), "%f", num->val);
-    return [NSString stringWithCString:szVal];
-}

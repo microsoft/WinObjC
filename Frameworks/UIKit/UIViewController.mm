@@ -20,6 +20,7 @@
 #import <unordered_map>
 
 #import "StringHelpers.h"
+#import "XamlControls.h"
 #import "XamlUtilities.h"
 
 #import "Foundation/NSBundle.h"
@@ -339,7 +340,7 @@ class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArg
     }
 };
 
-NSMutableDictionary *_pageMappings;
+NSMutableDictionary* _pageMappings;
 
 @implementation UIViewController : UIResponder
 
@@ -1773,7 +1774,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     }
 
     if (_pageMappings == nil) {
-        _pageMappings = (NSMutableDictionary *)CFDictionaryCreateMutable(NULL, 10, NULL, NULL);
+        _pageMappings = (NSMutableDictionary*)CFDictionaryCreateMutable(NULL, 10, NULL, NULL);
     }
 
     CGRect frame = [[UIScreen mainScreen] applicationFrame];
@@ -1791,8 +1792,8 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     auto xamlType = ReturnXamlType(priv->_xamlClassName);
     xamlType->ActivateInstance(pageObj.GetAddressOf());
 
-    priv->_page = CreateRtProxy([WXCPage class], pageObj.Get());
-    [_pageMappings setObject: self forKey: (id) (void *) pageObj.Get()];
+    priv->_page = XamlControls::_createRtProxy([WXCPage class], pageObj.Get());
+    [_pageMappings setObject:self forKey:(id)(void*)pageObj.Get()];
 
     // Walk the list of outlets and assign them to the corresponding XAML UIElement
     unsigned int propListCount = 0;
@@ -2784,10 +2785,8 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 
 @end
 
-extern "C" void UIViewControllerFirePageEvent(void *pageController, const char *selector)
-{
-    id obj = [_pageMappings objectForKey: (id)pageController];
+extern "C" void UIViewControllerFirePageEvent(void* pageController, const char* selector) {
+    id obj = [_pageMappings objectForKey:(id)pageController];
     SEL sel = sel_registerName(selector);
-    [obj performSelector: sel withObject: nil];
+    [obj performSelector:sel withObject:nil];
 }
-

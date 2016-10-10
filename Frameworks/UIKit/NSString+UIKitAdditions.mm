@@ -579,158 +579,84 @@ static NSDictionary* _getDefaultUITextAttributes() {
     return fontExtent;
 }
 
+// Private helper for sizeWith... functions
+// Returns the bounding box size this string would occupy when drawn as specified
+// All sizeWith... functions in this file funnel to this
+- (CGSize)_sizeWithAttributes:(NSDictionary<NSString*, id>*)attributes constrainedToSize:(CGSize)size {
+    NSAttributedString* attributedSelf = [[[NSAttributedString alloc] initWithString:self attributes:attributes] autorelease];
+
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)attributedSelf);
+    CFAutorelease(framesetter);
+
+    return CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, self.length), nullptr, size, nullptr);
+}
+
+// Private helper that converts a UILineBreakMode -> NSParagraphStyle
+// TODO #1108: NS/CT ParagraphStyle are not properly bridged, and ParagraphStyle is not currently read anywhere
+static inline NSParagraphStyle* _paragraphStyleWithLineBreakMode(UILineBreakMode lineBreakMode) {
+    NSMutableParagraphStyle* ret = [NSMutableParagraphStyle new];
+    ret.lineBreakMode = lineBreakMode;
+    return ret;
+}
+
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes lineBreakMode is currently not fully supported
 */
 - (CGSize)sizeWithFont:(UIFont*)font constrainedToSize:(CGSize)size lineBreakMode:(UILineBreakMode)lineBreakMode {
-    CGSize ret;
-    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
-    WORD* str = (WORD*)wideBuffer.c_str();
-
-    CGRect rct;
-    rct.origin.x = 0;
-    rct.origin.y = 0;
-    rct.size = size;
-
-    drawString(font, NULL, str, [self length], rct, lineBreakMode, UITextAlignmentLeft, &ret);
-
-    return ret;
+    return [self _sizeWithAttributes:@{
+        NSFontAttributeName : font,
+        NSParagraphStyleAttributeName : _paragraphStyleWithLineBreakMode(lineBreakMode)
+    }
+                   constrainedToSize:size];
 }
 
 /**
  @Status Interoperable
 */
 - (CGSize)sizeWithFont:(UIFont*)font constrainedToSize:(CGSize)size {
-    CGSize ret;
-    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
-    WORD* str = (WORD*)wideBuffer.c_str();
-
-    CGRect rct;
-    rct.origin.x = 0;
-    rct.origin.y = 0;
-    rct.size = size;
-
-    drawString(font, NULL, str, [self length], rct, UILineBreakModeWordWrap, UITextAlignmentLeft, &ret);
-
-    return ret;
+    return [self _sizeWithAttributes:@{ NSFontAttributeName : font } constrainedToSize:size];
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes lineBreakMode is currently not fully supported
 */
 - (CGSize)sizeWithFont:(UIFont*)font forWidth:(float)width lineBreakMode:(UILineBreakMode)lineBreakMode {
-    CGSize ret;
-    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
-    WORD* str = (WORD*)wideBuffer.c_str();
-
-    CGRect rct = { 0 };
-    rct.origin.x = 0;
-    rct.origin.y = 0;
-    rct.size.width = width;
-
-    drawString(font, NULL, str, [self length], rct, lineBreakMode, UITextAlignmentLeft, &ret);
-
-    return ret;
-}
-
-- (CGSize)sizeWithFont:(UIFont*)font forWidth:(float)width lineBreakMode:(UILineBreakMode)lineBreakMode lastCharPos:(CGPoint*)lastCharPos {
-    CGSize ret;
-    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
-    WORD* str = (WORD*)wideBuffer.c_str();
-
-    CGRect rct = { 0 };
-    rct.origin.x = 0;
-    rct.origin.y = 0;
-    rct.size.width = width;
-
-    drawString(font, NULL, str, [self length], rct, lineBreakMode, UITextAlignmentLeft, &ret, lastCharPos);
-
-    return ret;
+    return [self sizeWithFont:font constrainedToSize:{ width, std::numeric_limits<CGFloat>::max() } lineBreakMode:lineBreakMode];
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes minFontSize, which is supposed to enable variable font-size scaling, is unsupported
+        However, documentation for this function discourages changing the font size anyway, as it leads to an inconsistent user experience
+        lineBreakMode is currently not fully supported
 */
 - (CGSize)sizeWithFont:(UIFont*)font
            minFontSize:(float)minFontSize
         actualFontSize:(float*)actualFontSize
-              forWidth:(float)forWidth
-         lineBreakMode:(UILineBreakMode)lineBreak {
-    CGSize ret;
-    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
-    WORD* str = (WORD*)wideBuffer.c_str();
-
-    CGRect rct;
-
-    rct.origin.x = 0;
-    rct.origin.y = 0;
-    rct.size.width = forWidth;
-    rct.size.height = 0;
-
-    drawString(font, NULL, str, [self length], rct, lineBreak, UITextAlignmentLeft, &ret);
+              forWidth:(float)width
+         lineBreakMode:(UILineBreakMode)lineBreakMode {
     if (actualFontSize) {
-        *actualFontSize = 10.0f;
+        *actualFontSize = [font pointSize];
     }
 
-    return ret;
+    return [self sizeWithFont:font forWidth:width lineBreakMode:lineBreakMode];
 }
 
 /**
  @Status Interoperable
 */
 - (CGSize)sizeWithFont:(UIFont*)font {
-    if (font == nil) {
-        font = [UIFont defaultFont];
-    }
-
-    CGSize ret;
-    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
-    WORD* str = (WORD*)wideBuffer.c_str();
-
-    CGRect rct;
-    rct.origin.x = 0;
-    rct.origin.y = 0;
-    rct.size.width = 0;
-    rct.size.height = 0;
-
-    drawString(font, NULL, str, [self length], rct, UILineBreakModeClip, UITextAlignmentLeft, &ret);
-
-    return ret;
+    return [self sizeWithFont:font constrainedToSize:{ std::numeric_limits<CGFloat>::max(), std::numeric_limits<CGFloat>::max() }];
 }
 
 /**
  @Status Caveat
- @Notes Currently UITextAttributeTextShadowColor and UITextAttributeTextShadowOffset will be ignored.
+ @Notes not all attributes are currently supported
 */
-- (CGSize)sizeWithAttributes:(NSDictionary*)attrs {
-    if (attrs == nil) {
-        attrs = _getDefaultUITextAttributes();
-    }
-
-    UIColor* uiShadowColor = [attrs valueForKey:UITextAttributeTextShadowColor];
-    NSValue* textShadowOffset = [attrs valueForKey:UITextAttributeTextShadowOffset];
-
-    // TODO enable UITextAttributeTextShadowColor and UITextAttributeTextShadowOffset
-    if (uiShadowColor != nil && textShadowOffset != nil) {
-        CGSize offset = textShadowOffset.sizeValue;
-        CGContextSetShadowWithColor(UIGraphicsGetCurrentContext(), offset, 0, [uiShadowColor CGColor]);
-    } else if (textShadowOffset != nil) {
-        CGSize offset = textShadowOffset.sizeValue;
-        CGContextSetShadow(UIGraphicsGetCurrentContext(), offset, 0);
-    }
-
-    UIColor* uiTextColor = [attrs valueForKey:UITextAttributeTextColor];
-    if (uiTextColor != nil) {
-        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [uiTextColor CGColor]);
-    }
-
-    UIFont* uiFont = [attrs valueForKey:UITextAttributeFont];
-    if (uiFont != nil) {
-        return [self sizeWithFont:uiFont];
-    }
-
-    // No font was found
-    return { 0, 0 };
+- (CGSize)sizeWithAttributes:(NSDictionary<NSString*, id>*)attrs {
+    return [self _sizeWithAttributes:attrs constrainedToSize:{ std::numeric_limits<CGFloat>::max(), std::numeric_limits<CGFloat>::max() }];
 }
 
 /**

@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>CGCatalog</ProjectName>
+    <RootNamespace>CGCatalog</RootNamespace>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <AppContainerApplication>true</AppContainerApplication>
+    <ApplicationType>Windows Store</ApplicationType>
+    <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
+    <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
+    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
+    <Keyword>IslandwoodProj</Keyword>
+    <ProjectGuid>{2E407584-7C8E-433E-A103-3F6126EE26F7}</ProjectGuid>
+    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..\..</WINOBJC_SDK_ROOT>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <TargetName>CGCatalog</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <TargetName>CGCatalog</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <Optimize>true</Optimize>
+    <TargetName>CGCatalog</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <Optimize>true</Optimize>
+    <TargetName>CGCatalog</TargetName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.props" />
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+    <Import Project="../CGCatalog-Headers-WinStore10/CGCatalog-Headers.vcxitems" Label="Shared" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <PackageCertificateKeyFile>CGCatalog_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>D095ED4071F7A0D93085697ECF15F78E76342CCF</PackageCertificateThumbprint>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClangCompile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
+      <HeaderMap>Project</HeaderMap>
+      <ObjectiveCARC>true</ObjectiveCARC>
+      <ObjectiveCModules>true</ObjectiveCModules>
+      <OptimizationLevel>Disabled</OptimizationLevel>
+      <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
+    </ClangCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <SBInfoPlistCopy>
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </SBInfoPlistCopy>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClangCompile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
+      <HeaderMap>Project</HeaderMap>
+      <ObjectiveCARC>true</ObjectiveCARC>
+      <ObjectiveCModules>true</ObjectiveCModules>
+      <OptimizationLevel>Disabled</OptimizationLevel>
+      <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
+    </ClangCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <SBInfoPlistCopy>
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </SBInfoPlistCopy>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+    </ClCompile>
+    <ClangCompile>
+      <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
+      <HeaderMap>Project</HeaderMap>
+      <ObjectiveCARC>true</ObjectiveCARC>
+      <ObjectiveCModules>true</ObjectiveCModules>
+      <OptimizationLevel>MinSpace</OptimizationLevel>
+    </ClangCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <SBInfoPlistCopy>
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </SBInfoPlistCopy>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ClCompile>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+    </ClCompile>
+    <ClangCompile>
+      <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
+      <HeaderMap>Project</HeaderMap>
+      <ObjectiveCARC>true</ObjectiveCARC>
+      <ObjectiveCModules>true</ObjectiveCModules>
+      <OptimizationLevel>MinSpace</OptimizationLevel>
+    </ClangCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <SBInfoPlistCopy>
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </SBInfoPlistCopy>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+    <Xml Include="default.rd.xml" />
+    <None Include="CGCatalog_TemporaryKey.pfx" />
+    <Image Include="Assets\LockScreenLogo.scale-200.png" />
+    <Image Include="Assets\SplashScreen.scale-200.png" />
+    <Image Include="Assets\Square150x150Logo.scale-200.png" />
+    <Image Include="Assets\Square44x44Logo.scale-200.png" />
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Image Include="Assets\StoreLogo.png" />
+    <Image Include="Assets\Wide310x150Logo.scale-200.png" />
+    <ClangCompile Include="..\..\CGCatalog\CGDrawOptions.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathCloseSubpathViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGContextNewTestsController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGCRootViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddCurveToPointViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextReplacePathWithStrokedPath.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddLineToPointViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGContextSamplesRootViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextBeginEndTransparencyLayer.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddRectViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextSetPatternPhase.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddPathViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGDrawView.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathContainsPointViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGPathContainsPointViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\AppDelegate.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGContextSampleRow.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGCBaseViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextBeginTransparencyLayerWithRect.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGBitmapContentViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathApplyViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddQuadCurveToPointViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGPathApplyViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\main.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathGetBoundingBoxViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddElipseViewController.m" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddLineToPoint.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\PathApply.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddElipseToRect.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddQuadCurveToPoint.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddCurveToPoint.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddPath.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\LogoAutodesk.png" />
+    <StoryboardCompile Include="..\..\CGCatalog\Resources\Launch Screen.storyboard" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\GetBoundingBox.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\PathAddRect.png" />
+    <AssetCatalogCompile Include="..\..\CGCatalog\Resources\Assets.xcassets" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\GetBoundingBox.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png" />
+    <SBInfoPlistCopy Include="..\..\CGCatalog\Info.plist">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release'">false</ExcludedFromBuild>
+      <VariableFile Condition="'$(Configuration)'=='Debug'">CGCatalog-Debug-xcvars.txt</VariableFile>
+      <VariableFile Condition="'$(Configuration)'=='Release'">CGCatalog-Release-xcvars.txt</VariableFile>
+    </SBInfoPlistCopy>
+    <Text Include="CGCatalog-Debug-xcvars.txt">
+      <DeploymentContent>false</DeploymentContent>
+    </Text>
+    <Text Include="CGCatalog-Release-xcvars.txt">
+      <DeploymentContent>false</DeploymentContent>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h">
+      <DependentUpon>App.xaml</DependentUpon>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.xaml.cpp">
+      <DependentUpon>App.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
+  </ImportGroup>
+</Project>

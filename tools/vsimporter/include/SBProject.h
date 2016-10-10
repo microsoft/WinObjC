@@ -42,16 +42,13 @@ public:
   String getProjectDir() const;
   String getName() const;
   const StringSet& getSelectedConfigurations() const;
-  void getTargets(SBTargetList& ret) const;
+  void getQueuedTargets(SBTargetList& ret) const;
   const BuildSettings& getBuildSettings() const;
   const PBXProject* getPBXProject() const;
 
-/** Should only be called from the workspace **/
-  void queueProjectTargetWithId(const String& targetId, const StringSet& configNames);
-  void queueProjectTargets(const StringSet& targets, const StringSet& configNames);
-/**********************************************/
-
+  void queueAllTargets(const StringSet* configNames = NULL);
   SBTarget* queueTargetWithId(const String& targetId, const StringSet* configNames = NULL);
+  SBTarget* queueTargetWithName(const String& targetName, const StringSet* configNames = NULL);
   SBTarget* queueTarget(const PBXTarget* target, const StringSet* configNames = NULL);  
   SBTarget* queueTargetWithProductName(const String& productName, const StringSet* configNames = NULL);
   SBTarget* queueTargetWithProductReference(const String& productRef, const StringSet* configNames = NULL);
@@ -63,8 +60,7 @@ private:
   typedef std::set<const PBXTarget*> TargetSet;
 
   SBProject(const PBXDocument* pbxDoc, const PBXProject* project);
-  void queryBuildConfigurations(BuildConfigurationList& ret) const;
-  void queryTargets(PBXTargetList& ret) const;
+  void queryBuildConfigurations();
   void selectBuildConfigurations(const StringSet* configNames);
   void getMatchingFiles(fileMatchFunc matchFunc, ConstFileList& ret) const;
 

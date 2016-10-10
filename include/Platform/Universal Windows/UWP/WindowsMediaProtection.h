@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Media_Core_Capture_Devices_Protection_Playback.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WMPMediaProtectionManager, WMPServiceRequestedEventArgs, WMPComponentLoadFailedEventArgs, WMPMediaProtectionServiceCompletion,
@@ -109,13 +113,17 @@ typedef void (^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager* se
 @property (readonly) WFGUID* type;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WMPIMediaProtectionServiceRequest : RTObject <WMPIMediaProtectionServiceRequest>
+@end
+
 #endif // __WMPIMediaProtectionServiceRequest_DEFINED__
 
 // Windows.Media.Protection.MediaProtectionManager
 #ifndef __WMPMediaProtectionManager_DEFINED__
 #define __WMPMediaProtectionManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPMediaProtectionManager : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -136,7 +144,7 @@ WINRT_EXPORT
 #ifndef __WMPServiceRequestedEventArgs_DEFINED__
 #define __WMPServiceRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPServiceRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -152,7 +160,7 @@ WINRT_EXPORT
 #ifndef __WMPComponentLoadFailedEventArgs_DEFINED__
 #define __WMPComponentLoadFailedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPComponentLoadFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -167,7 +175,7 @@ WINRT_EXPORT
 #ifndef __WMPMediaProtectionServiceCompletion_DEFINED__
 #define __WMPMediaProtectionServiceCompletion_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPMediaProtectionServiceCompletion : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -181,7 +189,7 @@ WINRT_EXPORT
 #ifndef __WMPRevocationAndRenewalInformation_DEFINED__
 #define __WMPRevocationAndRenewalInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPRevocationAndRenewalInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -195,7 +203,7 @@ WINRT_EXPORT
 #ifndef __WMPRevocationAndRenewalItem_DEFINED__
 #define __WMPRevocationAndRenewalItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPRevocationAndRenewalItem : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -213,7 +221,7 @@ WINRT_EXPORT
 #ifndef __WMPMediaProtectionPMPServer_DEFINED__
 #define __WMPMediaProtectionPMPServer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMPMediaProtectionPMPServer : RTObject
 + (WMPMediaProtectionPMPServer*)makePMPServer:(RTObject<WFCIPropertySet>*)pProperties ACTIVATOR;
 #if defined(__cplusplus)
