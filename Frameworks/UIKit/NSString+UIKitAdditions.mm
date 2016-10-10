@@ -592,7 +592,7 @@ static NSDictionary* _getDefaultUITextAttributes() {
 }
 
 // Private helper that converts a UILineBreakMode -> NSParagraphStyle
-// TODO #: NS/CT ParagraphStyle are not properly bridged, and ParagraphStyle is not currently read anywhere
+// TODO #1108: NS/CT ParagraphStyle are not properly bridged, and ParagraphStyle is not currently read anywhere
 static inline NSParagraphStyle* _paragraphStyleWithLineBreakMode(UILineBreakMode lineBreakMode) {
     NSMutableParagraphStyle* ret = [NSMutableParagraphStyle new];
     ret.lineBreakMode = lineBreakMode;
