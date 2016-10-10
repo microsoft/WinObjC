@@ -54,6 +54,8 @@
         button.frame = CGRectMake(5.0f, 5.0f, 200.0f, cell.frame.size.height - 5.0f);
         button.layer.cornerRadius = 5.0f;
         [button setTitle:@"Simple Button" forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+
         [cell addSubview:button];
     } else if (indexPath.row == 1) {
         UIImage* buttonBackground = [UIImage imageNamed:@"whiteButton.png"];
@@ -68,6 +70,7 @@
         [button setBackgroundImage:newPressedImage forState:UIControlStateHighlighted];
 
         [button setTitle:@"Image Button" forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [button setTintColor:[UIColor whiteColor]];
         [cell addSubview:button];
     }

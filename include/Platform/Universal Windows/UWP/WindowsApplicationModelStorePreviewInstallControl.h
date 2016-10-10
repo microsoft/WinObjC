@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Store_Preview_InstallControl.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WASPIAppInstallStatus, WASPIAppInstallItem, WASPIAppInstallManagerItemEventArgs, WASPIAppInstallManager;
@@ -69,7 +73,7 @@ typedef unsigned WASPIAutoUpdateSetting;
 #ifndef __WASPIAppInstallStatus_DEFINED__
 #define __WASPIAppInstallStatus_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 @interface WASPIAppInstallStatus : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -87,7 +91,7 @@ WINRT_EXPORT
 #ifndef __WASPIAppInstallItem_DEFINED__
 #define __WASPIAppInstallItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 @interface WASPIAppInstallItem : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -112,7 +116,7 @@ WINRT_EXPORT
 #ifndef __WASPIAppInstallManagerItemEventArgs_DEFINED__
 #define __WASPIAppInstallManagerItemEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 @interface WASPIAppInstallManagerItemEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -126,7 +130,7 @@ WINRT_EXPORT
 #ifndef __WASPIAppInstallManager_DEFINED__
 #define __WASPIAppInstallManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 @interface WASPIAppInstallManager : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

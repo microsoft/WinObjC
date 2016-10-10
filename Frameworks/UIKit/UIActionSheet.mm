@@ -14,76 +14,135 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIControl.h"
-#include "Foundation/NSString.h"
-#include "CoreGraphics/CGAffineTransform.h"
-#include "CoreGraphics/CGContext.h"
-#include "UIKit/UIColor.h"
-#include "UIKit/UIImage.h"
-#include "UIKit/UIActionSheet.h"
-#include "UIApplicationInternal.h"
-#include "UIBarButtonItem+Internals.h"
-#include "LoggingNative.h"
+#import "AssertARCEnabled.h"
+#import "Starboard.h"
+
+#import "LoggingNative.h"
+
+#import "CoreGraphics/CGAffineTransform.h"
+#import "CoreGraphics/CGContext.h"
+
+#import "UIKit/UIView.h"
+#import "UIKit/UIControl.h"
+#import "UIKit/UIColor.h"
+#import "UIKit/UIImage.h"
+#import "UIKit/UIActionSheet.h"
+
+#import "UIApplicationInternal.h"
+#import "UIBarButtonItem+Internals.h"
+
+#import "UWP/WindowsFoundation.h"
+#import "UWP/WindowsUIXamlControls.h"
+
+#import "XamlUtilities.h"
+#import "XamlControls.h"
 
 static const wchar_t* TAG = L"UIActionSheet";
 
+static const int s_InvalidButtonIndex = -1;
+
 @implementation UIActionSheet {
     id<UIActionSheetDelegate> _delegate;
-    NSString* _title;
-    UILabel* _titleLabel;
-    UIView* _darkView;
-    CGRect _hidePosition;
-    int _dismissIndex;
-    BOOL _delegateSupportsDidDismiss;
 
-    ActionSheetButton _buttons[16];
-    int _numButtons;
+    // XAML ContentDialog
+    StrongId<WXCContentDialog> _contentDialog;
 
-    float _totalHeight;
-    int _cancelButtonIndex, _cancelCustomIndex;
-    int _destructiveIndex;
-    int _otherButtonIndex;
+    // Track these events on ContentDialog
+    EventRegistrationToken _contentDialogOpenedEventToken;
+    EventRegistrationToken _contentDialogClosingEventToken;
+    EventRegistrationToken _contentDialogClosedEventToken;
+
+    // Boolean to indicate whether ContentDialog is displayed or hidden
+    BOOL _isContentDialogVisible;
+
+    // TODO: We should remove these and move them into ContentDialog
+    int _cancelButtonIndex;
+    int _destructiveButtonIndex;
+
+    // It seems that this index is static once set via initWithTitle:.... in iOS even if cancel or destructive indices are updated
+    int _firstOtherButtonIndex;
 }
 
-static int addButton(UIActionSheet* self, id text) {
-    CGRect frame;
+- (void)_buttonClicked:(NSInteger)buttonIndex {
+    TraceVerbose(TAG, L"_buttonClicked index: %ld", buttonIndex);
 
-    frame.origin.x = 10.0f;
-    frame.origin.y = self->_totalHeight;
-    frame.size.width = 300.0f;
-    frame.size.height = 30.0f;
+    // ActionSheetCancel is invoked before the action sheet is canceled
+    if (buttonIndex == _cancelButtonIndex) {
+        if ([_delegate respondsToSelector:@selector(actionSheetCancel:)]) {
+            [_delegate actionSheetCancel:self];
+        }
+    }
 
-    self->_totalHeight += 40.0f;
+    if ([_delegate respondsToSelector:@selector(actionSheet:clickedButtonAtIndex:)]) {
+        [_delegate actionSheet:self clickedButtonAtIndex:buttonIndex];
+    }
 
-    id ret = [[UIButton alloc] initWithFrame:frame];
-    [ret setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [ret setTitle:text forState:0];
-    [ret setTitleColor:[UIColor blackColor] forState:0];
-    [ret setTag:self->_numButtons];
-    [ret addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    if ([_delegate respondsToSelector:@selector(actionSheet:willDismissWithButtonIndex:)]) {
+        [_delegate actionSheet:self willDismissWithButtonIndex:buttonIndex];
+    }
 
-    self->_buttons[self->_numButtons].button = ret;
-    self->_buttons[self->_numButtons].buttonPos = frame;
+    // This might be a no-op if the dialog has been dismissed already
+    [_contentDialog hide];
 
-    return self->_numButtons++;
+    // Technically the content dialog is only dismissed when the XAML thread get its chance because of its async nature
+    if ([_delegate respondsToSelector:@selector(actionSheet:didDismissWithButtonIndex:)]) {
+        [_delegate actionSheet:self didDismissWithButtonIndex:buttonIndex];
+    }
+}
+
+- (void)_UIActionSheet_initInternal:(WXFrameworkElement*)xamlElement {
+    if (xamlElement) {
+        _contentDialog = static_cast<WXCContentDialog*>(xamlElement);
+    } else {
+        _contentDialog = XamlControls::CreateContentDialog();
+    }
+
+    // Only used to update _isContentDialogVisible - if we move to XAML Popup, we might be able to leverage isOpen property instead
+    __weak UIActionSheet* weakSelf = self;
+    _contentDialogOpenedEventToken = [_contentDialog addOpenedEvent:^void(WXCContentDialog* sender, WXCContentDialogOpenedEventArgs* e) {
+        __strong UIActionSheet* strongSelf = weakSelf;
+
+        strongSelf->_isContentDialogVisible = YES;
+
+        if ([strongSelf->_delegate respondsToSelector:@selector(didPresentActionSheet:)]) {
+            [strongSelf->_delegate didPresentActionSheet:strongSelf];
+        }
+    }];
+
+    // Block the closing of the dialog via ESC if _cancelButtonIndex is invalid
+    _contentDialogClosingEventToken = [_contentDialog addClosingEvent:^void(WXCContentDialog* sender, WXCContentDialogClosingEventArgs* e) {
+        __strong UIActionSheet* strongSelf = weakSelf;
+
+        // Verify whether a button was pressed or if we dismissed the dialog via ESC
+        int pressedIndex = XamlControls::XamlContentDialogPressedIndex(strongSelf->_contentDialog);
+        if (pressedIndex == s_InvalidButtonIndex && strongSelf->_cancelButtonIndex == s_InvalidButtonIndex) {
+            // Cancel closing the dialog if ESC was pressed and cancelButtonIndex is invalid
+            e.cancel = YES;
+        }
+    }];
+
+    // Only used to update _isContentDialogVisible - if we move to XAML Popup, we might be able to leverage isOpen property instead
+    _contentDialogClosedEventToken = [_contentDialog addClosedEvent:^void(WXCContentDialog* sender, WXCContentDialogClosedEventArgs* e) {
+        __strong UIActionSheet* strongSelf = weakSelf;
+
+        strongSelf->_isContentDialogVisible = NO;
+    }];
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)init {
-    _cancelButtonIndex = _cancelCustomIndex = -1;
-    _otherButtonIndex = -1;
-    _destructiveIndex = -1;
+    if (self = [super init]) {
+        _isContentDialogVisible = NO;
 
-    id image;
-    image = [[UIImage imageNamed:@"/img/alertsheet-background@2x.png"] stretchableImageWithLeftCapWidth:70 topCapHeight:18];
+        _cancelButtonIndex = s_InvalidButtonIndex;
+        _destructiveButtonIndex = s_InvalidButtonIndex;
+        _firstOtherButtonIndex = s_InvalidButtonIndex;
 
-    UIImageSetLayerContents([self layer], image);
-
-    _totalHeight += 20.0f;
+        // Create XAML-backing control
+        [self _UIActionSheet_initInternal:nil];
+    }
 
     return self;
 }
@@ -91,168 +150,122 @@ static int addButton(UIActionSheet* self, id text) {
 /**
  @Status Interoperable
 */
-- (instancetype)initWithTitle:(id)title
-                     delegate:(id)delegate
-            cancelButtonTitle:(id)cancelButtonTitle
-       destructiveButtonTitle:(id)destructiveButtonTitle
-            otherButtonTitles:(id)otherButtonTitles, ... {
-    va_list pReader;
-    va_start(pReader, otherButtonTitles);
-    [self init];
+- (instancetype)initWithTitle:(NSString*)title
+                     delegate:(id<UIActionSheetDelegate>)delegate
+            cancelButtonTitle:(NSString*)cancelButtonTitle
+       destructiveButtonTitle:(NSString*)destructiveButtonTitle
+            otherButtonTitles:(NSString*)otherButtonTitles, ... {
+    if (self = [self init]) {
+        [self setTitle:title];
+        [self setDelegate:delegate];
 
-    _totalHeight = 0.0f;
+        // The other button/s category
+        va_list pReader;
+        va_start(pReader, otherButtonTitles);
 
-    [self setDelegate:delegate];
-    _title = title;
-    _cancelButtonIndex = _cancelCustomIndex = -1;
-    _otherButtonIndex = -1;
-    _destructiveIndex = -1;
+        id otherButtonTitle = otherButtonTitles;
+        while (otherButtonTitle != nil) {
+            NSInteger buttonIndex = [self addButtonWithTitle:otherButtonTitle];
+            if (_firstOtherButtonIndex == s_InvalidButtonIndex) {
+                _firstOtherButtonIndex = buttonIndex;
+            }
 
-    if (_title != nil) {
-        CGRect frame;
-
-        frame.origin.x = 10.0f;
-        frame.origin.y = 0.0f;
-        frame.size.width = 300.0f;
-        frame.size.height = 50.0f;
-
-        _titleLabel = [[UILabel alloc] initWithFrame:frame];
-        [_titleLabel setText:_title];
-        [_titleLabel setTextColor:[UIColor blackColor]];
-        [_titleLabel setBackgroundColor:nil];
-
-        _totalHeight += 50.0f;
-    } else {
-        _totalHeight += 20.0f;
-    }
-
-    if (destructiveButtonTitle != nil) {
-        _destructiveIndex = addButton(self, destructiveButtonTitle);
-    }
-
-    id otherButtonTitle = otherButtonTitles; // va_arg(pReader, id);
-    while (otherButtonTitle != nil) {
-        int idx = addButton(self, otherButtonTitle);
-        if (_otherButtonIndex == -1) {
-            _otherButtonIndex = idx;
+            otherButtonTitle = va_arg(pReader, id);
         }
 
-        otherButtonTitle = va_arg(pReader, id);
-    }
+        va_end(pReader);
 
-    va_end(pReader);
+        // The destructive button category
+        if (destructiveButtonTitle != nil) {
+            _destructiveButtonIndex = [self addButtonWithTitle:destructiveButtonTitle];
+        }
 
-    if (cancelButtonTitle != nil) {
-        _totalHeight += 10.0f;
-        _cancelButtonIndex = _cancelCustomIndex = addButton(self, cancelButtonTitle);
-    }
-
-    if (cancelButtonTitle != nil) {
-        [_buttons[_cancelButtonIndex].button sendControlEventsOnBack:UIControlEventTouchUpInside];
-    } else if (destructiveButtonTitle != nil) {
-        [_buttons[_destructiveIndex].button sendControlEventsOnBack:UIControlEventTouchUpInside];
-    }
-
-    _totalHeight += 10.0f;
-
-    if (_titleLabel != nil) {
-        [self addSubview:_titleLabel];
-    }
-
-    for (int i = 0; i < _numButtons; i++) {
-        [self addSubview:_buttons[i].button];
+        // The cancel button category
+        if (cancelButtonTitle != nil) {
+            _cancelButtonIndex = [self addButtonWithTitle:cancelButtonTitle];
+            XamlControls::XamlContentDialogSetCancelButtonIndex(_contentDialog, _cancelButtonIndex);
+        }
     }
 
     return self;
 }
 
+- (void)dealloc {
+    _delegate = nil;
+
+    [_contentDialog removeOpenedEvent:_contentDialogOpenedEventToken];
+    [_contentDialog removeClosedEvent:_contentDialogClosingEventToken];
+    [_contentDialog removeClosedEvent:_contentDialogClosedEventToken];
+
+    [_contentDialog hide];
+    _contentDialog = nil;
+}
+
 /**
- @Status Interoperable
+@Status Interoperable
 */
-- (id)showInView:(id)view {
+- (NSInteger)addButtonWithTitle:(NSString*)title {
+    unsigned int newIndex = XamlControls::XamlContentDialogAddButtonWithTitle(_contentDialog, title);
+
+    // If cancel button is already set, we need to make sure it is the last item in the list
+    if (_cancelButtonIndex != s_InvalidButtonIndex) {
+        XamlControls::XamlContentDialogSetCancelButtonIndex(_contentDialog, _cancelButtonIndex);
+    }
+
+    // Return the index of the appended button (0-based index)
+    return newIndex;
+}
+
+/**
+ @Status Caveat
+ @Notes The view parameter is not used to position the action sheet
+*/
+- (void)showInView:(id)view {
+    if (view) {
+        // TODO: Consider using XAML Popup instead of ContentDialog to remedy this issue
+        UNIMPLEMENTED_WITH_MSG("showInView: does not currently use the view parameter to position the action sheet");
+    }
+
     if ([_delegate respondsToSelector:@selector(willPresentActionSheet:)]) {
         [_delegate willPresentActionSheet:self];
     }
 
-    CGRect frame;
-    frame = [view bounds];
+    // Prematurely indicate that action sheet is visible which is only confirmed after the asynchronous "Opened" event is triggered
+    // However on iOS, a call to isVisible indicates it is visible almost as soon as showInView: is called
+    _isContentDialogVisible = YES;
 
-    UIWindow* popupWindow = [[UIApplication sharedApplication] _popupWindow];
+    // Display the ContentDialog and ultimately capture its dismissal events in either the success or failure blocks
+    __weak UIActionSheet* weakSelf = self;
+    [_contentDialog showAsyncWithSuccess:^void(WXCContentDialogResult result) {
+        __strong UIActionSheet* strongSelf = weakSelf;
 
-    CGPoint pt1, pt2;
-
-    pt1.x = frame.origin.x;
-    pt1.y = frame.origin.y + frame.size.height;
-    pt2.x = frame.origin.x + frame.size.width;
-    pt2.y = frame.origin.y + frame.size.height;
-    pt1 = [view convertPoint:pt1 toView:popupWindow];
-    pt2 = [view convertPoint:pt2 toView:popupWindow];
-
-    CGRect fullScreen;
-    fullScreen = [[UIScreen mainScreen] applicationFrame];
-    _darkView = [[UIView alloc] initWithFrame:fullScreen];
-    [self setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin];
-    [_darkView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-    [_darkView setBackgroundColor:[UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.5f]];
-    [_darkView setAlpha:0.0f];
-
-    if (pt1.y == pt2.y) {
-        frame.origin = pt1;
-        frame.size.height = 0;
-        frame.size.width = pt2.x - pt1.x;
-
-        [self setFrame:frame];
-
-        [popupWindow addSubview:_darkView];
-        [popupWindow addSubview:self];
-
-        [UIView beginAnimations:@"ShowAlert" context:nil];
-        [UIView setAnimationDuration:0.25f];
-        [_darkView setAlpha:1.0f];
-
-        memcpy(&_hidePosition, &frame, sizeof(CGRect));
-        frame.origin.y -= _totalHeight;
-        frame.size.height = _totalHeight;
-        [self setFrame:frame];
-        [UIView commitAnimations];
-    } else {
-        CGAffineTransform trans;
-
-        trans = CGAffineTransformMakeRotation(kPi / 2);
-        [self setTransform:trans];
-
-        //  Rotate
-        frame.origin = pt1;
-        frame.size.width = 0;
-        frame.size.height = pt2.y - pt1.y;
-
-        [self setFrame:frame];
-
-        [popupWindow addSubview:_darkView];
-        [popupWindow addSubview:self];
-
-        [UIView beginAnimations:@"ShowAlert" context:nil];
-        [UIView setAnimationDuration:0.25f];
-        [_darkView setAlpha:1.0f];
-
-        memcpy(&_hidePosition, &frame, sizeof(CGRect));
-        frame.size.width = _totalHeight;
-        [self setFrame:frame];
-        [UIView commitAnimations];
+        int pressedIndex = XamlControls::XamlContentDialogPressedIndex(strongSelf->_contentDialog);
+        if (pressedIndex != s_InvalidButtonIndex) {
+            [strongSelf _buttonClicked:pressedIndex];
+        } else {
+            // Dismissed the dialog via ESC which imitates the cancel button being pressed
+            [strongSelf _buttonClicked:_cancelButtonIndex];
+        }
     }
+    failure:^void(NSError* error) {
+        __strong UIActionSheet* strongSelf = weakSelf;
 
-    if ([_delegate respondsToSelector:@selector(didPresentActionSheet:)]) {
-        [_delegate didPresentActionSheet:self];
-    }
-
-    return self;
+        TraceVerbose(TAG, L"Failed with error: %@", [error description]);
+        strongSelf->_isContentDialogVisible = NO;
+    }];
 }
 
 /**
- @Status Stub
+@Status Caveat
+@Notes No animation support
 */
-- (void)showFromRect:(CGRect)rect inView:(UIView*)view animated:(BOOL)animated {
-    UNIMPLEMENTED();
+- (void)dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(BOOL)animated {
+    if (animated) {
+        // TODO: No animation support when calling dismissedWithClickedButtonIndex:animated:
+        UNIMPLEMENTED_WITH_MSG("dismissWithClickedButtonIndex with animation is not supported");
+    }
+
+    [self _buttonClicked:buttonIndex];
 }
 
 /**
@@ -279,187 +292,120 @@ static int addButton(UIActionSheet* self, id text) {
 /**
  @Status Interoperable
 */
-- (void) /* use typed version */ layoutSubviews {
-    CGRect bounds;
-
-    bounds = [self bounds];
-
-    for (int i = 0; i < _numButtons; i++) {
-        CGRect frame = _buttons[i].buttonPos;
-
-        frame.size.width = bounds.size.width - frame.origin.x * 2.0f;
-        [_buttons[i].button setFrame:frame];
-    }
+- (NSString*)title {
+    return NSStringFromPropertyValue(_contentDialog.title);
 }
 
 /**
- @Status Interoperable
+@Status Interoperable
 */
 - (void)setTitle:(NSString*)title {
-    _title = [title copy];
-    // TODO: Questionable return type and/or value here
+    // Strings are passed via PropertyValues to C++/CX
+    RTObject* propVal = [WFPropertyValue createString:title];
+    _contentDialog.title = propVal;
 }
 
 /**
- @Status Interoperable
+@Status Interoperable
 */
-- (id) /* use typed version */ title {
-    return _title;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)addButtonWithTitle:(NSString*)title {
-    int idx = addButton(self, title);
-    if (_otherButtonIndex == -1) {
-        _otherButtonIndex = idx;
-    }
-    [self addSubview:_buttons[idx].button];
-    [self setNeedsLayout];
-
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setDestructiveButtonIndex:(int)destructiveIndex {
-    _destructiveIndex = destructiveIndex;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setDelegate:(id)delegate {
-    _delegate = delegate;
-    _delegateSupportsDidDismiss = [_delegate respondsToSelector:@selector(actionSheet:didDismissWithButtonIndex:)];
-}
-
-/**
- @Status Interoperable
-*/
-- (id)delegate {
+- (id<UIActionSheetDelegate>)delegate {
     return _delegate;
 }
 
 /**
- @Status Stub
+@Status Interoperable
 */
-- (void)setActionSheetStyle:(UIActionSheetStyle)style {
-    UNIMPLEMENTED();
+- (void)setDelegate:(id<UIActionSheetDelegate>)delegate {
+    _delegate = delegate;
 }
 
-- (id)_didHideAlert {
-    if (_dismissIndex != -1) {
-        if (_delegateSupportsDidDismiss) {
-            [_delegate actionSheet:self didDismissWithButtonIndex:_dismissIndex];
-        }
-    }
-    [_darkView removeFromSuperview];
-    [self removeFromSuperview];
-
-    return 0;
-}
-
-static void dismissView(UIActionSheet* self, int index) {
-    [UIView beginAnimations:@"HideAlert" context:nil];
-    [UIView setAnimationDuration:0.25f];
-    [UIView setAnimationDelegate:self];
-    [UIView setAnimationDidStopSelector:@selector(_didHideAlert)];
-    self->_dismissIndex = index;
-    [self->_darkView setAlpha:0.0f];
-    CGRect frame = self->_hidePosition;
-    [self setFrame:frame];
-    [UIView commitAnimations];
-}
-
-- (void)buttonClicked:(id)button {
-    [[self retain] autorelease];
-    [_delegate retain];
-    [_delegate autorelease];
-    int index = [button tag];
-
-    if (index == _cancelButtonIndex) {
-        index = _cancelCustomIndex;
-    }
-
-    if ([_delegate respondsToSelector:@selector(actionSheet:clickedButtonAtIndex:)]) {
-        [_delegate actionSheet:self clickedButtonAtIndex:index];
-    }
-
-    if ([_delegate respondsToSelector:@selector(actionSheet:willDismissWithButtonIndex:)]) {
-        [_delegate actionSheet:self willDismissWithButtonIndex:index];
-    }
-
-    dismissView(self, index);
+/**
+@Status Interoperable
+*/
+- (BOOL)isVisible {
+    // TODO: If we move to XAML Popup, we might be able to leverage the IsOpen property
+    return _isContentDialogVisible;
 }
 
 /**
  @Status Interoperable
 */
-- (void)touchesEnded:(id)touches withEvent:(id)event {
-    // No-op
+- (NSString*)buttonTitleAtIndex:(NSInteger)index {
+    return XamlControls::XamlContentDialogButtonTitleAtIndex(_contentDialog, index);
 }
 
 /**
  @Status Interoperable
 */
-- (id)buttonTitleAtIndex:(int)index {
-    assert(_buttons[index].button != nil);
-
-    return [_buttons[index].button currentTitle];
+- (NSInteger)numberOfButtons {
+    return XamlControls::XamlContentDialogNumberOfButtons(_contentDialog);
 }
 
 /**
  @Status Interoperable
 */
-- (int)numberOfButtons {
-    return _numButtons;
-}
-
-/**
- @Status Interoperable
-*/
-- (int)cancelButtonIndex {
-    return _cancelCustomIndex;
+- (NSInteger)cancelButtonIndex {
+    return _cancelButtonIndex;
 }
 
 /**
  @Status Interoperable
 */
 - (void)setCancelButtonIndex:(NSInteger)index {
-    _cancelCustomIndex = index;
-    [_buttons[_cancelButtonIndex].button sendControlEventsOnBack:UIControlEventTouchUpInside];
+    //
+    // NOTE: Apple docs recommend this value should not be changed if the index was automatically generated within the initWithTitle....
+    // initializer
+    //
+    if (_cancelButtonIndex != s_InvalidButtonIndex) {
+        TraceVerbose(TAG, L"Cancel button index has already been set");
+    }
+
+    XamlControls::XamlContentDialogSetCancelButtonIndex(_contentDialog, index);
+    _cancelButtonIndex = index;
+}
+
+/**
+@Status Interoperable
+*/
+- (NSInteger)destructiveButtonIndex {
+    return _destructiveButtonIndex;
+}
+
+/**
+@Status Interoperable
+*/
+- (void)setDestructiveButtonIndex:(NSInteger)index {
+    //
+    // NOTE: Apple docs recommend this value should not be changed if the index was automatically generated within the initWithTitle....
+    // initializer
+    //
+    if (_destructiveButtonIndex != s_InvalidButtonIndex) {
+        TraceVerbose(TAG, L"Destructive button index has already been set");
+    }
+
+    XamlControls::XamlContentDialogSetDestructiveButtonIndex(_contentDialog, index);
+    _destructiveButtonIndex = index;
 }
 
 /**
  @Status Interoperable
 */
-- (int)firstOtherButtonIndex {
-    return _otherButtonIndex;
-}
-
-- (id) /* use typed version */ dismiss {
-    dismissView(self, -1);
-
-    return self;
+- (NSInteger)firstOtherButtonIndex {
+    return _firstOtherButtonIndex;
 }
 
 /**
- @Status Stub
+@Status Stub
 */
-- (BOOL)isVisible {
+- (void)showFromRect:(CGRect)rect inView:(UIView*)view animated:(BOOL)animated {
     UNIMPLEMENTED();
-    return [self superview] != nil;
 }
 
 /**
- @Status Interoperable
+@Status Stub
 */
-- (id)dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(BOOL)animated {
-    TraceVerbose(TAG, L"dismissWithClicked .. fire an event?");
-    return self;
+- (void)setActionSheetStyle:(UIActionSheetStyle)style {
+    UNIMPLEMENTED();
 }
 
 @end

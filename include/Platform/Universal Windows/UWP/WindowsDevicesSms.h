@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Sms.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDSSmsTextMessage2, WDSSmsWapMessage, WDSSmsAppMessage, WDSSmsBroadcastMessage, WDSSmsVoicemailMessage, WDSSmsStatusMessage,
@@ -161,7 +165,7 @@ typedef unsigned WDSSmsFilterActionType;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Devices.Sms.SmsEncodedLength
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsEncodedLength : NSObject
 + (instancetype) new;
 @property unsigned int segmentCount;
@@ -183,13 +187,17 @@ WINRT_EXPORT
 @property (readonly) NSString* simIccId;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSISmsMessageBase : RTObject <WDSISmsMessageBase>
+@end
+
 #endif // __WDSISmsMessageBase_DEFINED__
 
 // Windows.Devices.Sms.SmsTextMessage2
 #ifndef __WDSSmsTextMessage2_DEFINED__
 #define __WDSSmsTextMessage2_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsTextMessage2 : RTObject <WDSISmsMessageBase>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -218,7 +226,7 @@ WINRT_EXPORT
 #ifndef __WDSSmsWapMessage_DEFINED__
 #define __WDSSmsWapMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsWapMessage : RTObject <WDSISmsMessageBase>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -243,7 +251,7 @@ WINRT_EXPORT
 #ifndef __WDSSmsAppMessage_DEFINED__
 #define __WDSSmsAppMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsAppMessage : RTObject <WDSISmsMessageBase>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -274,7 +282,7 @@ WINRT_EXPORT
 #ifndef __WDSSmsBroadcastMessage_DEFINED__
 #define __WDSSmsBroadcastMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsBroadcastMessage : RTObject <WDSISmsMessageBase>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -302,7 +310,7 @@ WINRT_EXPORT
 #ifndef __WDSSmsVoicemailMessage_DEFINED__
 #define __WDSSmsVoicemailMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsVoicemailMessage : RTObject <WDSISmsMessageBase>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -324,7 +332,7 @@ WINRT_EXPORT
 #ifndef __WDSSmsStatusMessage_DEFINED__
 #define __WDSSmsStatusMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsStatusMessage : RTObject <WDSISmsMessageBase>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -349,7 +357,7 @@ WINRT_EXPORT
 #ifndef __WDSSmsSendMessageResult_DEFINED__
 #define __WDSSmsSendMessageResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsSendMessageResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -369,7 +377,7 @@ WINRT_EXPORT
 #ifndef __WDSSmsDevice2_DEFINED__
 #define __WDSSmsDevice2_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsDevice2 : RTObject
 + (NSString*)getDeviceSelector;
 + (WDSSmsDevice2*)fromId:(NSString*)deviceId;
@@ -398,7 +406,7 @@ WINRT_EXPORT
 #ifndef __WDSSmsMessageReceivedTriggerDetails_DEFINED__
 #define __WDSSmsMessageReceivedTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsMessageReceivedTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -420,7 +428,7 @@ WINRT_EXPORT
 #ifndef __WDSSmsFilterRule_DEFINED__
 #define __WDSSmsFilterRule_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsFilterRule : RTObject
 + (WDSSmsFilterRule*)makeFilterRule:(WDSSmsMessageType)messageType ACTIVATOR;
 #if defined(__cplusplus)
@@ -447,7 +455,7 @@ WINRT_EXPORT
 #ifndef __WDSSmsFilterRules_DEFINED__
 #define __WDSSmsFilterRules_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsFilterRules : RTObject
 + (WDSSmsFilterRules*)makeFilterRules:(WDSSmsFilterActionType)actionType ACTIVATOR;
 #if defined(__cplusplus)
@@ -463,7 +471,7 @@ WINRT_EXPORT
 #ifndef __WDSSmsMessageRegistration_DEFINED__
 #define __WDSSmsMessageRegistration_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsMessageRegistration : RTObject
 + (WDSSmsMessageRegistration*)Register:(NSString*)id filterRules:(WDSSmsFilterRules*)filterRules;
 #if defined(__cplusplus)

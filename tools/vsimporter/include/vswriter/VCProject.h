@@ -72,7 +72,7 @@ public:
 
 protected:
   typedef std::map<std::string, VCProjectConfiguration*> ConfigurationMap;
-  typedef std::vector<VCProjectItem*> ItemList;
+  typedef std::map<std::string, VCProjectItem*> ItemList;
   typedef void (VCProject::*LabelHandlerFn)(pugi::xml_node& node) const;
   typedef std::map<std::string, LabelHandlerFn> LabelHandlerFnMap;
 

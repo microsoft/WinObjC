@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
+#define OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_UI_StartScreen.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WUSSecondaryTileVisualElements, WUSSecondaryTile, WUSVisualElementsRequestedEventArgs, WUSVisualElementsRequest,
@@ -67,7 +71,7 @@ typedef unsigned WUSForegroundText;
 #ifndef __WUSSecondaryTileVisualElements_DEFINED__
 #define __WUSSecondaryTileVisualElements_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 @interface WUSSecondaryTileVisualElements : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -92,7 +96,7 @@ WINRT_EXPORT
 #ifndef __WUSSecondaryTile_DEFINED__
 #define __WUSSecondaryTile_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 @interface WUSSecondaryTile : RTObject
 + (BOOL)exists:(NSString*)tileId;
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WUSSecondaryTile* */))success failure:(void (^)(NSError*))failure;
@@ -163,7 +167,7 @@ WINRT_EXPORT
 #ifndef __WUSVisualElementsRequestedEventArgs_DEFINED__
 #define __WUSVisualElementsRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 @interface WUSVisualElementsRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -177,7 +181,7 @@ WINRT_EXPORT
 #ifndef __WUSVisualElementsRequest_DEFINED__
 #define __WUSVisualElementsRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 @interface WUSVisualElementsRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -194,7 +198,7 @@ WINRT_EXPORT
 #ifndef __WUSVisualElementsRequestDeferral_DEFINED__
 #define __WUSVisualElementsRequestDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 @interface WUSVisualElementsRequestDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

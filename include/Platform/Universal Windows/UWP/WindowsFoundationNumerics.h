@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
+#define OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Foundation_Numerics.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WFNVector2, WFNVector3, WFNVector4, WFNMatrix3x2, WFNMatrix4x4, WFNPlane, WFNQuaternion;
@@ -26,7 +30,7 @@
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Foundation.Numerics.Vector2
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNVector2 : NSObject
 + (instancetype) new;
 @property float x;
@@ -34,7 +38,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Foundation.Numerics.Vector3
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNVector3 : NSObject
 + (instancetype) new;
 @property float x;
@@ -43,7 +47,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Foundation.Numerics.Vector4
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNVector4 : NSObject
 + (instancetype) new;
 @property float x;
@@ -53,7 +57,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Foundation.Numerics.Matrix3x2
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNMatrix3x2 : NSObject
 + (instancetype) new;
 @property float m11;
@@ -65,7 +69,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Foundation.Numerics.Matrix4x4
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNMatrix4x4 : NSObject
 + (instancetype) new;
 @property float m11;
@@ -87,7 +91,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Foundation.Numerics.Plane
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNPlane : NSObject
 + (instancetype) new;
 @property (retain) WFNVector3* normal;
@@ -95,7 +99,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Foundation.Numerics.Quaternion
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNQuaternion : NSObject
 + (instancetype) new;
 @property float x;

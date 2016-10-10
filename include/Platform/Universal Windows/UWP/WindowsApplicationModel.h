@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WAAppDisplayInfo, WAAppInfo, WASuspendingEventArgs, WASuspendingDeferral, WASuspendingOperation, WAPackageStatus, WAPackageId,
@@ -37,7 +41,7 @@
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.ApplicationModel.PackageVersion
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAPackageVersion : NSObject
 + (instancetype) new;
 @property unsigned short major;
@@ -54,6 +58,10 @@ WINRT_EXPORT
 - (void)complete;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAISuspendingDeferral : RTObject <WAISuspendingDeferral>
+@end
+
 #endif // __WAISuspendingDeferral_DEFINED__
 
 // Windows.ApplicationModel.ISuspendingOperation
@@ -63,6 +71,10 @@ WINRT_EXPORT
 @protocol WAISuspendingOperation
 @property (readonly) WFDateTime* deadline;
 - (WASuspendingDeferral*)getDeferral;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAISuspendingOperation : RTObject <WAISuspendingOperation>
 @end
 
 #endif // __WAISuspendingOperation_DEFINED__
@@ -75,13 +87,17 @@ WINRT_EXPORT
 @property (readonly) WASuspendingOperation* suspendingOperation;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAISuspendingEventArgs : RTObject <WAISuspendingEventArgs>
+@end
+
 #endif // __WAISuspendingEventArgs_DEFINED__
 
 // Windows.ApplicationModel.AppDisplayInfo
 #ifndef __WAAppDisplayInfo_DEFINED__
 #define __WAAppDisplayInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAppDisplayInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -97,7 +113,7 @@ WINRT_EXPORT
 #ifndef __WAAppInfo_DEFINED__
 #define __WAAppInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAppInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -114,7 +130,7 @@ WINRT_EXPORT
 #ifndef __WASuspendingEventArgs_DEFINED__
 #define __WASuspendingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WASuspendingEventArgs : RTObject <WAISuspendingEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -128,7 +144,7 @@ WINRT_EXPORT
 #ifndef __WASuspendingDeferral_DEFINED__
 #define __WASuspendingDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WASuspendingDeferral : RTObject <WAISuspendingDeferral>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -142,7 +158,7 @@ WINRT_EXPORT
 #ifndef __WASuspendingOperation_DEFINED__
 #define __WASuspendingOperation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WASuspendingOperation : RTObject <WAISuspendingOperation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -157,7 +173,7 @@ WINRT_EXPORT
 #ifndef __WAPackageStatus_DEFINED__
 #define __WAPackageStatus_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAPackageStatus : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -182,7 +198,7 @@ WINRT_EXPORT
 #ifndef __WAPackageId_DEFINED__
 #define __WAPackageId_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAPackageId : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -205,7 +221,7 @@ WINRT_EXPORT
 #ifndef __WAPackage_DEFINED__
 #define __WAPackage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAPackage : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -236,7 +252,7 @@ WINRT_EXPORT
 #ifndef __WADesignMode_DEFINED__
 #define __WADesignMode_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WADesignMode : RTObject
 + (BOOL)designModeEnabled;
 @end

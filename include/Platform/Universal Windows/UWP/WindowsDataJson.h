@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DATA_JSON_EXPORT
+#define OBJCUWP_WINDOWS_DATA_JSON_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Data_Json.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WDJJsonArray, WDJJsonObject, WDJJsonValue, WDJJsonError;
@@ -65,6 +69,10 @@ typedef unsigned WDJJsonErrorStatus;
 - (WDJJsonObject*)getObject;
 @end
 
+OBJCUWP_WINDOWS_DATA_JSON_EXPORT
+@interface WDJIJsonValue : RTObject <WDJIJsonValue>
+@end
+
 #endif // __WDJIJsonValue_DEFINED__
 
 // Windows.Foundation.IStringable
@@ -75,13 +83,17 @@ typedef unsigned WDJJsonErrorStatus;
 - (NSString*)toString;
 @end
 
+OBJCUWP_WINDOWS_DATA_JSON_EXPORT
+@interface WFIStringable : RTObject <WFIStringable>
+@end
+
 #endif // __WFIStringable_DEFINED__
 
 // Windows.Data.Json.JsonArray
 #ifndef __WDJJsonArray_DEFINED__
 #define __WDJJsonArray_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 @interface WDJJsonArray : RTObject <WDJIJsonValue, WFIStringable>
 + (WDJJsonArray*)parse:(NSString*)input;
 + (BOOL)tryParse:(NSString*)input result:(WDJJsonArray**)result;
@@ -121,7 +133,7 @@ WINRT_EXPORT
 #ifndef __WDJJsonObject_DEFINED__
 #define __WDJJsonObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 @interface WDJJsonObject : RTObject <WDJIJsonValue, WFIStringable>
 + (WDJJsonObject*)parse:(NSString*)input;
 + (BOOL)tryParse:(NSString*)input result:(WDJJsonObject**)result;
@@ -174,7 +186,7 @@ WINRT_EXPORT
 #ifndef __WDJJsonValue_DEFINED__
 #define __WDJJsonValue_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 @interface WDJJsonValue : RTObject <WDJIJsonValue, WFIStringable>
 + (WDJJsonValue*)parse:(NSString*)input;
 + (BOOL)tryParse:(NSString*)input result:(WDJJsonValue**)result;
@@ -201,7 +213,7 @@ WINRT_EXPORT
 #ifndef __WDJJsonError_DEFINED__
 #define __WDJJsonError_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 @interface WDJJsonError : RTObject
 + (WDJJsonErrorStatus)getJsonStatus:(int)hresult;
 + (WDJJsonErrorStatus)getStatus:(int)hresult;

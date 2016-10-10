@@ -131,7 +131,6 @@ const PBXTarget* PBXProject::getTargetWithName(const String& targetName) const
       return m_targetPtrs[i];
   }
   
-  SBLog::warning() << "Failed to find \"" << targetName << "\" target in \"" << m_pbxDoc->getName() << "\" project." << std::endl;
   return NULL;
 }
 

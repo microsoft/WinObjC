@@ -1,0 +1,200 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{23f3accb-29dd-4190-bbee-f94836c9d96a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{c508701f-3509-421a-a78c-53ddde0c2451}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CGCatalog">
+      <UniqueIdentifier>{A87AA37D-0563-4567-AB1C-A236934753C1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CGCatalog\NewSamples">
+      <UniqueIdentifier>{CB8A3729-6A3C-460B-87E2-E0D465B5BCEB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CGCatalog\OldSamples">
+      <UniqueIdentifier>{82A5531D-D9D6-429D-B67E-791FDDDF4CB5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CGCatalog\Resources">
+      <UniqueIdentifier>{90DF03E6-0AB6-4020-A645-574BD4E9D89E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CGCatalog\Supporting Files">
+      <UniqueIdentifier>{2ED7A9AF-97FF-4B8C-8F68-51980DCEADDA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xcode Variable Files">
+      <UniqueIdentifier>{E66AD4DB-09FE-4C28-8A85-305EADCB7868}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="default.rd.xml" />
+    <AppxManifest Include="Package.appxmanifest" />
+    <None Include="CGCatalog_TemporaryKey.pfx" />
+    <Image Include="Assets\LockScreenLogo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square150x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Wide310x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <ClangCompile Include="..\..\CGCatalog\CGDrawOptions.m">
+      <Filter>CGCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathCloseSubpathViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGContextNewTestsController.m">
+      <Filter>CGCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGCRootViewController.m">
+      <Filter>CGCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddCurveToPointViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextReplacePathWithStrokedPath.m">
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddLineToPointViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGContextSamplesRootViewController.m">
+      <Filter>CGCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextBeginEndTransparencyLayer.m">
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddRectViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextSetPatternPhase.m">
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddPathViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGDrawView.m">
+      <Filter>CGCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextViewController.m">
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathContainsPointViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGPathContainsPointViewController.m">
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\AppDelegate.m">
+      <Filter>CGCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGContextSampleRow.m">
+      <Filter>CGCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGCBaseViewController.m">
+      <Filter>CGCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextBeginTransparencyLayerWithRect.m">
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGBitmapContentViewController.m">
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathApplyViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddQuadCurveToPointViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGPathApplyViewController.m">
+      <Filter>CGCatalog\OldSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\main.m">
+      <Filter>CGCatalog\Supporting Files</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathGetBoundingBoxViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddElipseViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddLineToPoint.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\PathApply.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddElipseToRect.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddQuadCurveToPoint.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddCurveToPoint.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddPath.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\LogoAutodesk.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <StoryboardCompile Include="..\..\CGCatalog\Resources\Launch Screen.storyboard">
+      <Filter>CGCatalog\Resources</Filter>
+    </StoryboardCompile>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\GetBoundingBox.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\PathAddRect.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <AssetCatalogCompile Include="..\..\CGCatalog\Resources\Assets.xcassets">
+      <Filter>CGCatalog\Resources</Filter>
+    </AssetCatalogCompile>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\GetBoundingBox.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBInfoPlistCopy Include="..\..\CGCatalog\Info.plist" />
+    <Text Include="CGCatalog-Debug-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+    <Text Include="CGCatalog-Release-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.xaml.cpp" />
+    <ClCompile Include="pch.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\GetBoundingBox.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png" />
+  </ItemGroup>
+</Project>

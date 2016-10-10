@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GLOBALIZATION_DATETIMEFORMATTING_EXPORT
+#define OBJCUWP_WINDOWS_GLOBALIZATION_DATETIMEFORMATTING_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Globalization_DateTimeFormatting.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WGDDateTimeFormatter;
@@ -89,7 +93,7 @@ typedef unsigned WGDSecondFormat;
 #ifndef __WGDDateTimeFormatter_DEFINED__
 #define __WGDDateTimeFormatter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_DATETIMEFORMATTING_EXPORT
 @interface WGDDateTimeFormatter : RTObject
 + (WGDDateTimeFormatter*)makeDateTimeFormatter:(NSString*)formatTemplate ACTIVATOR;
 + (WGDDateTimeFormatter*)makeDateTimeFormatterLanguages:(NSString*)formatTemplate

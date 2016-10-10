@@ -14,7 +14,10 @@
 //
 //******************************************************************************
 #include "XamlControls.h"
+
 #include "../UIKit.Xaml/ObjCXamlControls.h"
+
+#include "XamlUtilities.h"
 
 using namespace Microsoft::WRL;
 
@@ -24,7 +27,7 @@ namespace XamlControls {
 // Button
 ////////////////////////////////////////////////////////////////////////////////////
 WXCButton* CreateButton() {
-    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlCreateButton());
+    ComPtr<IInspectable> inspectable(XamlCreateButton());
     return _createRtProxy([WXCButton class], inspectable.Get());
 }
 
@@ -35,12 +38,57 @@ void HookButtonPointerEvents(WXCButton* button,
                              WUXIPointerEventHandler pointerCanceledHook,
                              WUXIPointerEventHandler pointerCaptureLostHook) {
     XamlHookButtonPointerEvents([button comObj],
-                                pointerPressedHook ? Microsoft::WRL::Make<WUXIPointerEventHandler_shim>(pointerPressedHook) : nullptr,
-                                pointerMovedHook ? Microsoft::WRL::Make<WUXIPointerEventHandler_shim>(pointerMovedHook) : nullptr,
-                                pointerReleasedHook ? Microsoft::WRL::Make<WUXIPointerEventHandler_shim>(pointerReleasedHook) : nullptr,
-                                pointerCanceledHook ? Microsoft::WRL::Make<WUXIPointerEventHandler_shim>(pointerCanceledHook) : nullptr,
-                                pointerCaptureLostHook ? Microsoft::WRL::Make<WUXIPointerEventHandler_shim>(pointerCaptureLostHook) :
-                                                         nullptr);
+                                pointerPressedHook ? Make<WUXIPointerEventHandler_shim>(pointerPressedHook) : nullptr,
+                                pointerMovedHook ? Make<WUXIPointerEventHandler_shim>(pointerMovedHook) : nullptr,
+                                pointerReleasedHook ? Make<WUXIPointerEventHandler_shim>(pointerReleasedHook) : nullptr,
+                                pointerCanceledHook ? Make<WUXIPointerEventHandler_shim>(pointerCanceledHook) : nullptr,
+                                pointerCaptureLostHook ? Make<WUXIPointerEventHandler_shim>(pointerCaptureLostHook) : nullptr);
+}
+
+void HookLayoutEvent(WXCButton* button, WUXIPointerEventHandler layoutHook) {
+    XamlHookLayoutEvent([button comObj], layoutHook ? Make<WUXIPointerEventHandler_shim>(layoutHook) : nullptr);
+}
+
+////////////////////////////////////////////////////////////////////////////////////
+// ContentDialog
+////////////////////////////////////////////////////////////////////////////////////
+WXCContentDialog* CreateContentDialog() {
+    ComPtr<IInspectable> inspectable(XamlCreateContentDialog());
+    return _createRtProxy([WXCContentDialog class], inspectable.Get());
+}
+
+int XamlContentDialogPressedIndex(WXCContentDialog* contentDialog) {
+    ComPtr<IInspectable> inspectable([contentDialog comObj]);
+    return XamlContentDialogPressedIndex(inspectable);
+}
+
+unsigned int XamlContentDialogAddButtonWithTitle(WXCContentDialog* contentDialog, NSString* buttonTitle) {
+    ComPtr<IInspectable> inspectable([contentDialog comObj]);
+
+    auto title = Strings::NarrowToWide<std::wstring>([buttonTitle UTF8String]);
+    return XamlContentDialogAddButtonWithTitle(inspectable, title);
+}
+
+NSString* XamlContentDialogButtonTitleAtIndex(WXCContentDialog* contentDialog, unsigned int buttonIndex) {
+    ComPtr<IInspectable> inspectable([contentDialog comObj]);
+
+    ComPtr<IInspectable> inspPropVal(XamlContentDialogButtonTitleAtIndex(inspectable, buttonIndex));
+    return NSStringFromPropertyValue(inspPropVal);
+}
+
+unsigned int XamlContentDialogNumberOfButtons(WXCContentDialog* contentDialog) {
+    ComPtr<IInspectable> inspectable([contentDialog comObj]);
+    return XamlContentDialogNumberOfButtons(inspectable);
+}
+
+void XamlContentDialogSetCancelButtonIndex(WXCContentDialog* contentDialog, unsigned int cancelButtonIndex) {
+    ComPtr<IInspectable> inspectable([contentDialog comObj]);
+    XamlContentDialogSetCancelButtonIndex(inspectable, cancelButtonIndex);
+}
+
+void XamlContentDialogSetDestructiveButtonIndex(WXCContentDialog* contentDialog, unsigned int destructiveButtonIndex) {
+    ComPtr<IInspectable> inspectable([contentDialog comObj]);
+    XamlContentDialogSetDestructiveButtonIndex(inspectable, destructiveButtonIndex);
 }
 
 } // namespace XamlControls

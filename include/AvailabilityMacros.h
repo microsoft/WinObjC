@@ -18,6 +18,7 @@
 #define __AVAILABILITYMACROS_H_
 
 #define UNAVAILABLE_ATTRIBUTE __attribute__((unavailable))
-#define DEPRECATED_MSG_ATTRIBUTE(s) __attribute__((deprecated(s)))
+#define __deprecated_msg(s) __attribute__((deprecated(s)))
+#define DEPRECATED_MSG_ATTRIBUTE(s) __deprecated_msg(s)
 
 #endif

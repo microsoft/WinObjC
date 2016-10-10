@@ -38,6 +38,7 @@
 #import <mutex>
 
 #import "ForFoundationOnly.h"
+#import "CFFoundationInternal.h"
 #import "NSInvocationInternal.h"
 
 static void _NSObjCEnumerationMutation(id object) {
@@ -632,6 +633,8 @@ static IMP _NSIMPForward(id object, SEL selector) {
  @Status Interoperable
 */
 + (void)load {
+    class_setSuperclass(objc_getClass("_NSCFType"), self);
+
     objc_proxy_lookup = _NSForwardingDestination;
     __objc_msg_forward2 = _NSIMPForward;
     __objc_msg_forward3 = _NSSlotForward;
@@ -705,11 +708,36 @@ __attribute__((objc_root_class)) @interface NSZombie {
 }
 @end
 
-    @implementation NSZombie
-    /**
-     @Status Interoperable
-    */
-    - (void)doesNotRecognizeSelector : (SEL)selector {
+static void _dealloc_zombify(id self, SEL _cmd); // forward declaration
+
+static void _NSCFZombifyHook(id object) {
+    _dealloc_zombify(object, nullptr);
+}
+
+@implementation NSZombie
++ (void)load {
+    __CFZombifyNSObjectHook = _NSCFZombifyHook;
+}
+
+// This implementation is required by CF, but NSZombie is a root class and does not inherit
+// NSObject's version.
++ (BOOL)isSubclassOfClass:(Class)classRef {
+    Class curClass = self;
+
+    while (curClass != nil) {
+        if (curClass == classRef) {
+            return YES;
+        }
+
+        curClass = class_getSuperclass(curClass);
+    }
+
+    return NO;
+}
+/**
+ @Status Interoperable
+*/
+- (void)doesNotRecognizeSelector: (SEL)selector {
     // NSZombie subclasses store the original class as a class variable. Retrieve it here.
     Class oldIsa = reinterpret_cast<Class*>(object_getIndexedIvars(isa))[0];
     THROW_NS_HR_MSG(HRESULT_FROM_WIN32(ERROR_INVALID_HANDLE),
@@ -720,8 +748,8 @@ __attribute__((objc_root_class)) @interface NSZombie {
 }
 @end
 
-    static void
-    _dealloc_dispose(id self, SEL _cmd) {
+static void
+_dealloc_dispose(id self, SEL _cmd) {
     object_dispose(self);
 }
 
@@ -756,6 +784,12 @@ void WinObjC_SetZombiesEnabled(BOOL enabled) {
     Method dealloc = class_getInstanceMethod([NSObject class], @selector(dealloc));
     if (dealloc) {
         method_setImplementation(dealloc, targetDeallocIMP);
+    }
+
+    if (enabled) {
+        _CFEnableZombies();
+    } else {
+        _CFDisableZombies();
     }
 }
 #pragma endregion

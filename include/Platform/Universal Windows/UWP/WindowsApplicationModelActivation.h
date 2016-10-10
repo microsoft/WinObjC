@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WAASplashScreen, WAALaunchActivatedEventArgs, WAASearchActivatedEventArgs, WAAShareTargetActivatedEventArgs,
@@ -118,6 +122,10 @@ typedef unsigned WAAActivationKind;
 @property (readonly) WAASplashScreen* splashScreen;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIActivatedEventArgs : RTObject <WAAIActivatedEventArgs>
+@end
+
 #endif // __WAAIActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IApplicationViewActivatedEventArgs
@@ -126,6 +134,10 @@ typedef unsigned WAAActivationKind;
 
 @protocol WAAIApplicationViewActivatedEventArgs <WAAIActivatedEventArgs>
 @property (readonly) int currentlyShownApplicationViewId;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIApplicationViewActivatedEventArgs : RTObject <WAAIApplicationViewActivatedEventArgs>
 @end
 
 #endif // __WAAIApplicationViewActivatedEventArgs_DEFINED__
@@ -138,6 +150,10 @@ typedef unsigned WAAActivationKind;
 @property (readonly) WUVActivationViewSwitcher* viewSwitcher;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIViewSwitcherProvider : RTObject <WAAIViewSwitcherProvider>
+@end
+
 #endif // __WAAIViewSwitcherProvider_DEFINED__
 
 // Windows.ApplicationModel.Activation.IPrelaunchActivatedEventArgs
@@ -146,6 +162,10 @@ typedef unsigned WAAActivationKind;
 
 @protocol WAAIPrelaunchActivatedEventArgs <WAAIActivatedEventArgs>
 @property (readonly) BOOL prelaunchActivated;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIPrelaunchActivatedEventArgs : RTObject <WAAIPrelaunchActivatedEventArgs>
 @end
 
 #endif // __WAAIPrelaunchActivatedEventArgs_DEFINED__
@@ -159,6 +179,10 @@ typedef unsigned WAAActivationKind;
 @property (readonly) NSString* tileId;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAILaunchActivatedEventArgs : RTObject <WAAILaunchActivatedEventArgs>
+@end
+
 #endif // __WAAILaunchActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.ISearchActivatedEventArgs
@@ -168,6 +192,10 @@ typedef unsigned WAAActivationKind;
 @protocol WAAISearchActivatedEventArgs <WAAIActivatedEventArgs>
 @property (readonly) NSString* language;
 @property (readonly) NSString* queryText;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAISearchActivatedEventArgs : RTObject <WAAISearchActivatedEventArgs>
 @end
 
 #endif // __WAAISearchActivatedEventArgs_DEFINED__
@@ -180,6 +208,10 @@ typedef unsigned WAAActivationKind;
 @property (readonly) WASSearchPaneQueryLinguisticDetails* linguisticDetails;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAISearchActivatedEventArgsWithLinguisticDetails : RTObject <WAAISearchActivatedEventArgsWithLinguisticDetails>
+@end
+
 #endif // __WAAISearchActivatedEventArgsWithLinguisticDetails_DEFINED__
 
 // Windows.ApplicationModel.Activation.IShareTargetActivatedEventArgs
@@ -188,6 +220,10 @@ typedef unsigned WAAActivationKind;
 
 @protocol WAAIShareTargetActivatedEventArgs <WAAIActivatedEventArgs>
 @property (readonly) WADSShareOperation* shareOperation;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIShareTargetActivatedEventArgs : RTObject <WAAIShareTargetActivatedEventArgs>
 @end
 
 #endif // __WAAIShareTargetActivatedEventArgs_DEFINED__
@@ -201,6 +237,10 @@ typedef unsigned WAAActivationKind;
 @property (readonly) NSString* verb;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIFileActivatedEventArgs : RTObject <WAAIFileActivatedEventArgs>
+@end
+
 #endif // __WAAIFileActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IFileActivatedEventArgsWithNeighboringFiles
@@ -209,6 +249,10 @@ typedef unsigned WAAActivationKind;
 
 @protocol WAAIFileActivatedEventArgsWithNeighboringFiles <WAAIFileActivatedEventArgs, WAAIActivatedEventArgs>
 @property (readonly) WSSStorageFileQueryResult* neighboringFilesQuery;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIFileActivatedEventArgsWithNeighboringFiles : RTObject <WAAIFileActivatedEventArgsWithNeighboringFiles>
 @end
 
 #endif // __WAAIFileActivatedEventArgsWithNeighboringFiles_DEFINED__
@@ -221,6 +265,10 @@ typedef unsigned WAAActivationKind;
 @property (readonly) NSString* callerPackageFamilyName;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIFileActivatedEventArgsWithCallerPackageFamilyName : RTObject <WAAIFileActivatedEventArgsWithCallerPackageFamilyName>
+@end
+
 #endif // __WAAIFileActivatedEventArgsWithCallerPackageFamilyName_DEFINED__
 
 // Windows.ApplicationModel.Activation.IProtocolActivatedEventArgs
@@ -229,6 +277,10 @@ typedef unsigned WAAActivationKind;
 
 @protocol WAAIProtocolActivatedEventArgs <WAAIActivatedEventArgs>
 @property (readonly) WFUri* uri;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIProtocolActivatedEventArgs : RTObject <WAAIProtocolActivatedEventArgs>
 @end
 
 #endif // __WAAIProtocolActivatedEventArgs_DEFINED__
@@ -242,6 +294,11 @@ typedef unsigned WAAActivationKind;
 @property (readonly) WFCValueSet* data;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData
+    : RTObject <WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData>
+@end
+
 #endif // __WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData_DEFINED__
 
 // Windows.ApplicationModel.Activation.IProtocolForResultsActivatedEventArgs
@@ -250,6 +307,10 @@ typedef unsigned WAAActivationKind;
 
 @protocol WAAIProtocolForResultsActivatedEventArgs <WAAIActivatedEventArgs>
 @property (readonly) WSProtocolForResultsOperation* protocolForResultsOperation;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIProtocolForResultsActivatedEventArgs : RTObject <WAAIProtocolForResultsActivatedEventArgs>
 @end
 
 #endif // __WAAIProtocolForResultsActivatedEventArgs_DEFINED__
@@ -262,6 +323,10 @@ typedef unsigned WAAActivationKind;
 @property (readonly) WSPPFileOpenPickerUI* fileOpenPickerUI;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIFileOpenPickerActivatedEventArgs : RTObject <WAAIFileOpenPickerActivatedEventArgs>
+@end
+
 #endif // __WAAIFileOpenPickerActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IFileOpenPickerActivatedEventArgs2
@@ -272,6 +337,10 @@ typedef unsigned WAAActivationKind;
 @property (readonly) NSString* callerPackageFamilyName;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIFileOpenPickerActivatedEventArgs2 : RTObject <WAAIFileOpenPickerActivatedEventArgs2>
+@end
+
 #endif // __WAAIFileOpenPickerActivatedEventArgs2_DEFINED__
 
 // Windows.ApplicationModel.Activation.IFileSavePickerActivatedEventArgs
@@ -280,6 +349,10 @@ typedef unsigned WAAActivationKind;
 
 @protocol WAAIFileSavePickerActivatedEventArgs <WAAIActivatedEventArgs>
 @property (readonly) WSPPFileSavePickerUI* fileSavePickerUI;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIFileSavePickerActivatedEventArgs : RTObject <WAAIFileSavePickerActivatedEventArgs>
 @end
 
 #endif // __WAAIFileSavePickerActivatedEventArgs_DEFINED__
@@ -293,6 +366,10 @@ typedef unsigned WAAActivationKind;
 @property (readonly) NSString* enterpriseId;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIFileSavePickerActivatedEventArgs2 : RTObject <WAAIFileSavePickerActivatedEventArgs2>
+@end
+
 #endif // __WAAIFileSavePickerActivatedEventArgs2_DEFINED__
 
 // Windows.ApplicationModel.Activation.ICachedFileUpdaterActivatedEventArgs
@@ -301,6 +378,10 @@ typedef unsigned WAAActivationKind;
 
 @protocol WAAICachedFileUpdaterActivatedEventArgs <WAAIActivatedEventArgs>
 @property (readonly) WSPCachedFileUpdaterUI* cachedFileUpdaterUI;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAICachedFileUpdaterActivatedEventArgs : RTObject <WAAICachedFileUpdaterActivatedEventArgs>
 @end
 
 #endif // __WAAICachedFileUpdaterActivatedEventArgs_DEFINED__
@@ -314,6 +395,10 @@ typedef unsigned WAAActivationKind;
 @property (readonly) NSString* verb;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIDeviceActivatedEventArgs : RTObject <WAAIDeviceActivatedEventArgs>
+@end
+
 #endif // __WAAIDeviceActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IAppointmentsProviderActivatedEventArgs
@@ -322,6 +407,10 @@ typedef unsigned WAAActivationKind;
 
 @protocol WAAIAppointmentsProviderActivatedEventArgs <WAAIActivatedEventArgs>
 @property (readonly) NSString* verb;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIAppointmentsProviderActivatedEventArgs : RTObject <WAAIAppointmentsProviderActivatedEventArgs>
 @end
 
 #endif // __WAAIAppointmentsProviderActivatedEventArgs_DEFINED__
@@ -334,6 +423,10 @@ typedef unsigned WAAActivationKind;
 @property (readonly) WAAAAddAppointmentOperation* addAppointmentOperation;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIAppointmentsProviderAddAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderAddAppointmentActivatedEventArgs>
+@end
+
 #endif // __WAAIAppointmentsProviderAddAppointmentActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IAppointmentsProviderReplaceAppointmentActivatedEventArgs
@@ -342,6 +435,11 @@ typedef unsigned WAAActivationKind;
 
 @protocol WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs <WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs>
 @property (readonly) WAAAReplaceAppointmentOperation* replaceAppointmentOperation;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs
+    : RTObject <WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs>
 @end
 
 #endif // __WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs_DEFINED__
@@ -354,6 +452,11 @@ typedef unsigned WAAActivationKind;
 @property (readonly) WAAARemoveAppointmentOperation* removeAppointmentOperation;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs
+    : RTObject <WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs>
+@end
+
 #endif // __WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IPickerReturnedActivatedEventArgs
@@ -362,6 +465,10 @@ typedef unsigned WAAActivationKind;
 
 @protocol WAAIPickerReturnedActivatedEventArgs <WAAIActivatedEventArgs>
 @property (readonly) NSString* pickerOperationId;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIPickerReturnedActivatedEventArgs : RTObject <WAAIPickerReturnedActivatedEventArgs>
 @end
 
 #endif // __WAAIPickerReturnedActivatedEventArgs_DEFINED__
@@ -377,6 +484,11 @@ typedef unsigned WAAActivationKind;
 @property (readonly) NSString* roamingId;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs
+    : RTObject <WAAIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs>
+@end
+
 #endif // __WAAIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IAppointmentsProviderShowTimeFrameActivatedEventArgs
@@ -386,6 +498,10 @@ typedef unsigned WAAActivationKind;
 @protocol WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs <WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs>
 @property (readonly) WFTimeSpan* duration;
 @property (readonly) WFDateTime* timeToShow;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs : RTObject <WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs>
 @end
 
 #endif // __WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs_DEFINED__
@@ -398,6 +514,10 @@ typedef unsigned WAAActivationKind;
 @property (readonly) RTObject* sharedContext;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIRestrictedLaunchActivatedEventArgs : RTObject <WAAIRestrictedLaunchActivatedEventArgs>
+@end
+
 #endif // __WAAIRestrictedLaunchActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.ILockScreenActivatedEventArgs
@@ -406,6 +526,10 @@ typedef unsigned WAAActivationKind;
 
 @protocol WAAILockScreenActivatedEventArgs <WAAIActivatedEventArgs>
 @property (readonly) RTObject* info;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAILockScreenActivatedEventArgs : RTObject <WAAILockScreenActivatedEventArgs>
 @end
 
 #endif // __WAAILockScreenActivatedEventArgs_DEFINED__
@@ -418,6 +542,10 @@ typedef unsigned WAAActivationKind;
 @property (readonly) WFCValueSet* continuationData;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIContinuationActivatedEventArgs : RTObject <WAAIContinuationActivatedEventArgs>
+@end
+
 #endif // __WAAIContinuationActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IFileOpenPickerContinuationEventArgs
@@ -426,6 +554,10 @@ typedef unsigned WAAActivationKind;
 
 @protocol WAAIFileOpenPickerContinuationEventArgs <WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs>
 @property (readonly) NSArray* /* WSStorageFile* */ files;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIFileOpenPickerContinuationEventArgs : RTObject <WAAIFileOpenPickerContinuationEventArgs>
 @end
 
 #endif // __WAAIFileOpenPickerContinuationEventArgs_DEFINED__
@@ -438,6 +570,10 @@ typedef unsigned WAAActivationKind;
 @property (readonly) WSStorageFile* file;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIFileSavePickerContinuationEventArgs : RTObject <WAAIFileSavePickerContinuationEventArgs>
+@end
+
 #endif // __WAAIFileSavePickerContinuationEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IFolderPickerContinuationEventArgs
@@ -446,6 +582,10 @@ typedef unsigned WAAActivationKind;
 
 @protocol WAAIFolderPickerContinuationEventArgs <WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs>
 @property (readonly) WSStorageFolder* folder;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIFolderPickerContinuationEventArgs : RTObject <WAAIFolderPickerContinuationEventArgs>
 @end
 
 #endif // __WAAIFolderPickerContinuationEventArgs_DEFINED__
@@ -458,6 +598,10 @@ typedef unsigned WAAActivationKind;
 @property (readonly) WSAWWebAuthenticationResult* webAuthenticationResult;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIWebAuthenticationBrokerContinuationEventArgs : RTObject <WAAIWebAuthenticationBrokerContinuationEventArgs>
+@end
+
 #endif // __WAAIWebAuthenticationBrokerContinuationEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IWebAccountProviderActivatedEventArgs
@@ -466,6 +610,10 @@ typedef unsigned WAAActivationKind;
 
 @protocol WAAIWebAccountProviderActivatedEventArgs <WAAIActivatedEventArgs>
 @property (readonly) RTObject<WSAWPIWebAccountProviderOperation>* operation;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIWebAccountProviderActivatedEventArgs : RTObject <WAAIWebAccountProviderActivatedEventArgs>
 @end
 
 #endif // __WAAIWebAccountProviderActivatedEventArgs_DEFINED__
@@ -479,6 +627,10 @@ typedef unsigned WAAActivationKind;
 @property (readonly) WFCValueSet* userInput;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIToastNotificationActivatedEventArgs : RTObject <WAAIToastNotificationActivatedEventArgs>
+@end
+
 #endif // __WAAIToastNotificationActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.IDialReceiverActivatedEventArgs
@@ -487,6 +639,10 @@ typedef unsigned WAAActivationKind;
 
 @protocol WAAIDialReceiverActivatedEventArgs <WAAILaunchActivatedEventArgs, WAAIActivatedEventArgs>
 @property (readonly) NSString* appName;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIDialReceiverActivatedEventArgs : RTObject <WAAIDialReceiverActivatedEventArgs>
 @end
 
 #endif // __WAAIDialReceiverActivatedEventArgs_DEFINED__
@@ -499,13 +655,17 @@ typedef unsigned WAAActivationKind;
 @property (readonly) WMSSpeechRecognitionResult* result;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAAIVoiceCommandActivatedEventArgs : RTObject <WAAIVoiceCommandActivatedEventArgs>
+@end
+
 #endif // __WAAIVoiceCommandActivatedEventArgs_DEFINED__
 
 // Windows.ApplicationModel.Activation.SplashScreen
 #ifndef __WAASplashScreen_DEFINED__
 #define __WAASplashScreen_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAASplashScreen : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -521,7 +681,7 @@ WINRT_EXPORT
 #ifndef __WAALaunchActivatedEventArgs_DEFINED__
 #define __WAALaunchActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAALaunchActivatedEventArgs : RTObject <WAAILaunchActivatedEventArgs,
                                                    WAAIActivatedEventArgs,
                                                    WAAIApplicationViewActivatedEventArgs,
@@ -546,7 +706,7 @@ WINRT_EXPORT
 #ifndef __WAASearchActivatedEventArgs_DEFINED__
 #define __WAASearchActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAASearchActivatedEventArgs : RTObject <WAAISearchActivatedEventArgs,
                                                    WAAIActivatedEventArgs,
                                                    WAAIApplicationViewActivatedEventArgs,
@@ -571,7 +731,7 @@ WINRT_EXPORT
 #ifndef __WAAShareTargetActivatedEventArgs_DEFINED__
 #define __WAAShareTargetActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAShareTargetActivatedEventArgs : RTObject <WAAIShareTargetActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -588,7 +748,7 @@ WINRT_EXPORT
 #ifndef __WAAFileActivatedEventArgs_DEFINED__
 #define __WAAFileActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAFileActivatedEventArgs : RTObject <WAAIFileActivatedEventArgs,
                                                  WAAIActivatedEventArgs,
                                                  WAAIFileActivatedEventArgsWithNeighboringFiles,
@@ -615,7 +775,7 @@ WINRT_EXPORT
 #ifndef __WAAProtocolActivatedEventArgs_DEFINED__
 #define __WAAProtocolActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAProtocolActivatedEventArgs : RTObject <WAAIProtocolActivatedEventArgs,
                                                      WAAIActivatedEventArgs,
                                                      WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData,
@@ -640,7 +800,7 @@ WINRT_EXPORT
 #ifndef __WAAProtocolForResultsActivatedEventArgs_DEFINED__
 #define __WAAProtocolForResultsActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAProtocolForResultsActivatedEventArgs : RTObject <WAAIProtocolForResultsActivatedEventArgs,
                                                                WAAIActivatedEventArgs,
                                                                WAAIProtocolActivatedEventArgs,
@@ -667,7 +827,7 @@ WINRT_EXPORT
 #ifndef __WAAFileOpenPickerActivatedEventArgs_DEFINED__
 #define __WAAFileOpenPickerActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAFileOpenPickerActivatedEventArgs
     : RTObject <WAAIFileOpenPickerActivatedEventArgs, WAAIActivatedEventArgs, WAAIFileOpenPickerActivatedEventArgs2>
 #if defined(__cplusplus)
@@ -686,7 +846,7 @@ WINRT_EXPORT
 #ifndef __WAAFileSavePickerActivatedEventArgs_DEFINED__
 #define __WAAFileSavePickerActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAFileSavePickerActivatedEventArgs
     : RTObject <WAAIFileSavePickerActivatedEventArgs, WAAIActivatedEventArgs, WAAIFileSavePickerActivatedEventArgs2>
 #if defined(__cplusplus)
@@ -706,7 +866,7 @@ WINRT_EXPORT
 #ifndef __WAACachedFileUpdaterActivatedEventArgs_DEFINED__
 #define __WAACachedFileUpdaterActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAACachedFileUpdaterActivatedEventArgs : RTObject <WAAICachedFileUpdaterActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -723,7 +883,7 @@ WINRT_EXPORT
 #ifndef __WAADeviceActivatedEventArgs_DEFINED__
 #define __WAADeviceActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAADeviceActivatedEventArgs
     : RTObject <WAAIDeviceActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WAAIViewSwitcherProvider>
 #if defined(__cplusplus)
@@ -744,7 +904,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentsProviderAddAppointmentActivatedEventArgs_DEFINED__
 #define __WAAAppointmentsProviderAddAppointmentActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAAppointmentsProviderAddAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderAddAppointmentActivatedEventArgs,
                                                                                WAAIAppointmentsProviderActivatedEventArgs,
                                                                                WAAIActivatedEventArgs>
@@ -764,7 +924,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentsProviderReplaceAppointmentActivatedEventArgs_DEFINED__
 #define __WAAAppointmentsProviderReplaceAppointmentActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAAppointmentsProviderReplaceAppointmentActivatedEventArgs
     : RTObject <WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs,
                 WAAIAppointmentsProviderActivatedEventArgs,
@@ -785,7 +945,7 @@ WINRT_EXPORT
 #ifndef __WAAPickerReturnedActivatedEventArgs_DEFINED__
 #define __WAAPickerReturnedActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAPickerReturnedActivatedEventArgs : RTObject <WAAIPickerReturnedActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -802,7 +962,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentsProviderRemoveAppointmentActivatedEventArgs_DEFINED__
 #define __WAAAppointmentsProviderRemoveAppointmentActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAAppointmentsProviderRemoveAppointmentActivatedEventArgs
     : RTObject <WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs,
                 WAAIAppointmentsProviderActivatedEventArgs,
@@ -823,7 +983,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentsProviderShowAppointmentDetailsActivatedEventArgs_DEFINED__
 #define __WAAAppointmentsProviderShowAppointmentDetailsActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAAppointmentsProviderShowAppointmentDetailsActivatedEventArgs
     : RTObject <WAAIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs,
                 WAAIAppointmentsProviderActivatedEventArgs,
@@ -846,7 +1006,7 @@ WINRT_EXPORT
 #ifndef __WAAAppointmentsProviderShowTimeFrameActivatedEventArgs_DEFINED__
 #define __WAAAppointmentsProviderShowTimeFrameActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAAppointmentsProviderShowTimeFrameActivatedEventArgs
     : RTObject <WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs, WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
@@ -866,7 +1026,7 @@ WINRT_EXPORT
 #ifndef __WAARestrictedLaunchActivatedEventArgs_DEFINED__
 #define __WAARestrictedLaunchActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAARestrictedLaunchActivatedEventArgs : RTObject <WAAIRestrictedLaunchActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -883,7 +1043,7 @@ WINRT_EXPORT
 #ifndef __WAALockScreenActivatedEventArgs_DEFINED__
 #define __WAALockScreenActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAALockScreenActivatedEventArgs : RTObject <WAAILockScreenActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -900,7 +1060,7 @@ WINRT_EXPORT
 #ifndef __WAAFileOpenPickerContinuationEventArgs_DEFINED__
 #define __WAAFileOpenPickerContinuationEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAFileOpenPickerContinuationEventArgs
     : RTObject <WAAIFileOpenPickerContinuationEventArgs, WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
@@ -919,7 +1079,7 @@ WINRT_EXPORT
 #ifndef __WAAFileSavePickerContinuationEventArgs_DEFINED__
 #define __WAAFileSavePickerContinuationEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAFileSavePickerContinuationEventArgs
     : RTObject <WAAIFileSavePickerContinuationEventArgs, WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
@@ -938,7 +1098,7 @@ WINRT_EXPORT
 #ifndef __WAAFolderPickerContinuationEventArgs_DEFINED__
 #define __WAAFolderPickerContinuationEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAFolderPickerContinuationEventArgs
     : RTObject <WAAIFolderPickerContinuationEventArgs, WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
@@ -957,7 +1117,7 @@ WINRT_EXPORT
 #ifndef __WAAWebAuthenticationBrokerContinuationEventArgs_DEFINED__
 #define __WAAWebAuthenticationBrokerContinuationEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAWebAuthenticationBrokerContinuationEventArgs
     : RTObject <WAAIWebAuthenticationBrokerContinuationEventArgs, WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
@@ -976,7 +1136,7 @@ WINRT_EXPORT
 #ifndef __WAAWebAccountProviderActivatedEventArgs_DEFINED__
 #define __WAAWebAccountProviderActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAWebAccountProviderActivatedEventArgs : RTObject <WAAIWebAccountProviderActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -993,7 +1153,7 @@ WINRT_EXPORT
 #ifndef __WAAToastNotificationActivatedEventArgs_DEFINED__
 #define __WAAToastNotificationActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAToastNotificationActivatedEventArgs : RTObject <WAAIToastNotificationActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1011,7 +1171,7 @@ WINRT_EXPORT
 #ifndef __WAADialReceiverActivatedEventArgs_DEFINED__
 #define __WAADialReceiverActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAADialReceiverActivatedEventArgs : RTObject <WAAIDialReceiverActivatedEventArgs,
                                                          WAAILaunchActivatedEventArgs,
                                                          WAAIActivatedEventArgs,
@@ -1036,7 +1196,7 @@ WINRT_EXPORT
 #ifndef __WAAVoiceCommandActivatedEventArgs_DEFINED__
 #define __WAAVoiceCommandActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAVoiceCommandActivatedEventArgs : RTObject <WAAIVoiceCommandActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_STORAGE_EXPORT
+#define OBJCUWP_WINDOWS_STORAGE_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Storage.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WSStorageLibrary, WSStorageFolder, WSKnownFolders, WSStorageFile, WSDownloadsFolder, WSStreamedFileDataRequest,
@@ -167,6 +171,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 - (void)failAndClose:(WSStreamedFileFailureMode)failureMode;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStreamedFileDataRequest : RTObject <WSIStreamedFileDataRequest>
+@end
+
 #endif // __WSIStreamedFileDataRequest_DEFINED__
 
 // Windows.Storage.IStorageItem
@@ -184,6 +192,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 - (RTObject<WFIAsyncAction>*)deleteAsync:(WSStorageDeleteOption)option;
 - (void)getBasicPropertiesAsyncWithSuccess:(void (^)(WSFBasicProperties*))success failure:(void (^)(NSError*))failure;
 - (BOOL)isOfType:(WSStorageItemTypes)type;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageItem : RTObject <WSIStorageItem>
 @end
 
 #endif // __WSIStorageItem_DEFINED__
@@ -224,6 +236,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 - (BOOL)isOfType:(WSStorageItemTypes)type;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageFolder : RTObject <WSIStorageFolder>
+@end
+
 #endif // __WSIStorageFolder_DEFINED__
 
 // Windows.Storage.Streams.IRandomAccessStreamReference
@@ -234,6 +250,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 - (void)openReadAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSSIRandomAccessStreamReference : RTObject <WSSIRandomAccessStreamReference>
+@end
+
 #endif // __WSSIRandomAccessStreamReference_DEFINED__
 
 // Windows.Storage.Streams.IInputStreamReference
@@ -242,6 +262,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 
 @protocol WSSIInputStreamReference
 - (void)openSequentialReadAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSSIInputStreamReference : RTObject <WSSIInputStreamReference>
 @end
 
 #endif // __WSSIInputStreamReference_DEFINED__
@@ -287,6 +311,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 - (void)openSequentialReadAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageFile : RTObject <WSIStorageFile>
+@end
+
 #endif // __WSIStorageFile_DEFINED__
 
 // Windows.Storage.IStorageItem2
@@ -302,6 +330,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 - (RTObject<WFIAsyncAction>*)deleteAsync:(WSStorageDeleteOption)option;
 - (void)getBasicPropertiesAsyncWithSuccess:(void (^)(WSFBasicProperties*))success failure:(void (^)(NSError*))failure;
 - (BOOL)isOfType:(WSStorageItemTypes)type;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageItem2 : RTObject <WSIStorageItem2>
 @end
 
 #endif // __WSIStorageItem2_DEFINED__
@@ -327,6 +359,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
                   options:(WSFThumbnailOptions)options
                   success:(void (^)(WSFStorageItemThumbnail*))success
                   failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageItemProperties : RTObject <WSIStorageItemProperties>
 @end
 
 #endif // __WSIStorageItemProperties_DEFINED__
@@ -362,6 +398,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
                   failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageItemProperties2 : RTObject <WSIStorageItemProperties2>
+@end
+
 #endif // __WSIStorageItemProperties2_DEFINED__
 
 // Windows.Storage.IStorageItemPropertiesWithProvider
@@ -384,6 +424,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
                   failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageItemPropertiesWithProvider : RTObject <WSIStorageItemPropertiesWithProvider>
+@end
+
 #endif // __WSIStorageItemPropertiesWithProvider_DEFINED__
 
 // Windows.Storage.IStorageFilePropertiesWithAvailability
@@ -394,6 +438,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 @property (readonly) BOOL isAvailable;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageFilePropertiesWithAvailability : RTObject <WSIStorageFilePropertiesWithAvailability>
+@end
+
 #endif // __WSIStorageFilePropertiesWithAvailability_DEFINED__
 
 // Windows.Storage.IStorageFolder2
@@ -402,6 +450,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 
 @protocol WSIStorageFolder2
 - (void)tryGetItemAsync:(NSString*)name success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageFolder2 : RTObject <WSIStorageFolder2>
 @end
 
 #endif // __WSIStorageFolder2_DEFINED__
@@ -420,13 +472,17 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
                                     failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageFile2 : RTObject <WSIStorageFile2>
+@end
+
 #endif // __WSIStorageFile2_DEFINED__
 
 // Windows.Storage.StorageLibrary
 #ifndef __WSStorageLibrary_DEFINED__
 #define __WSStorageLibrary_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSStorageLibrary : RTObject
 + (void)getLibraryAsync:(WSKnownLibraryId)libraryId success:(void (^)(WSStorageLibrary*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
@@ -481,13 +537,17 @@ WINRT_EXPORT
 - (BOOL)isCommonFileQuerySupported:(WSSCommonFileQuery)query;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSSIStorageFolderQueryOperations : RTObject <WSSIStorageFolderQueryOperations>
+@end
+
 #endif // __WSSIStorageFolderQueryOperations_DEFINED__
 
 // Windows.Storage.StorageFolder
 #ifndef __WSStorageFolder_DEFINED__
 #define __WSStorageFolder_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSStorageFolder : RTObject <WSIStorageFolder,
                                        WSIStorageItem,
                                        WSSIStorageFolderQueryOperations,
@@ -605,7 +665,7 @@ WINRT_EXPORT
 #ifndef __WSKnownFolders_DEFINED__
 #define __WSKnownFolders_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSKnownFolders : RTObject
 + (WSStorageFolder*)cameraRoll;
 + (WSStorageFolder*)playlists;
@@ -628,7 +688,7 @@ WINRT_EXPORT
 #ifndef __WSStorageFile_DEFINED__
 #define __WSStorageFile_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSStorageFile : RTObject <WSIStorageFile,
                                      WSSIInputStreamReference,
                                      WSSIRandomAccessStreamReference,
@@ -749,7 +809,7 @@ WINRT_EXPORT
 #ifndef __WSDownloadsFolder_DEFINED__
 #define __WSDownloadsFolder_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSDownloadsFolder : RTObject
 + (void)createFileAsync:(NSString*)desiredName success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 + (void)createFolderAsync:(NSString*)desiredName success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
@@ -773,6 +833,10 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Storage.Streams.IOutputStream
@@ -788,13 +852,17 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSSIOutputStream : RTObject <WSSIOutputStream>
+@end
+
 #endif // __WSSIOutputStream_DEFINED__
 
 // Windows.Storage.StreamedFileDataRequest
 #ifndef __WSStreamedFileDataRequest_DEFINED__
 #define __WSStreamedFileDataRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSStreamedFileDataRequest : RTObject <WSSIOutputStream, WFIClosable, WSIStreamedFileDataRequest>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -814,7 +882,7 @@ WINRT_EXPORT
 #ifndef __WSStorageStreamTransaction_DEFINED__
 #define __WSStorageStreamTransaction_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSStorageStreamTransaction : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -830,7 +898,7 @@ WINRT_EXPORT
 #ifndef __WSStorageProvider_DEFINED__
 #define __WSStorageProvider_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSStorageProvider : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -845,7 +913,7 @@ WINRT_EXPORT
 #ifndef __WSFileIO_DEFINED__
 #define __WSFileIO_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSFileIO : RTObject
 + (void)readTextAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
 + (void)readTextWithEncodingAsync:(RTObject<WSIStorageFile>*)file
@@ -888,7 +956,7 @@ WINRT_EXPORT
 #ifndef __WSPathIO_DEFINED__
 #define __WSPathIO_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSPathIO : RTObject
 + (void)readTextAsync:(NSString*)absolutePath success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
 + (void)readTextWithEncodingAsync:(NSString*)absolutePath
@@ -929,7 +997,7 @@ WINRT_EXPORT
 #ifndef __WSCachedFileManager_DEFINED__
 #define __WSCachedFileManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSCachedFileManager : RTObject
 + (void)deferUpdates:(RTObject<WSIStorageFile>*)file;
 + (void)completeUpdatesAsync:(RTObject<WSIStorageFile>*)file
@@ -943,7 +1011,7 @@ WINRT_EXPORT
 #ifndef __WSSystemAudioProperties_DEFINED__
 #define __WSSystemAudioProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSystemAudioProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -957,7 +1025,7 @@ WINRT_EXPORT
 #ifndef __WSSystemGPSProperties_DEFINED__
 #define __WSSystemGPSProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSystemGPSProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -972,7 +1040,7 @@ WINRT_EXPORT
 #ifndef __WSSystemImageProperties_DEFINED__
 #define __WSSystemImageProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSystemImageProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -987,7 +1055,7 @@ WINRT_EXPORT
 #ifndef __WSSystemMediaProperties_DEFINED__
 #define __WSSystemMediaProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSystemMediaProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1006,7 +1074,7 @@ WINRT_EXPORT
 #ifndef __WSSystemMusicProperties_DEFINED__
 #define __WSSystemMusicProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSystemMusicProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1027,7 +1095,7 @@ WINRT_EXPORT
 #ifndef __WSSystemPhotoProperties_DEFINED__
 #define __WSSystemPhotoProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSystemPhotoProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1045,7 +1113,7 @@ WINRT_EXPORT
 #ifndef __WSSystemVideoProperties_DEFINED__
 #define __WSSystemVideoProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSystemVideoProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1063,7 +1131,7 @@ WINRT_EXPORT
 #ifndef __WSSystemProperties_DEFINED__
 #define __WSSystemProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSystemProperties : RTObject
 + (WSSystemAudioProperties*)audio;
 + (NSString*)author;
@@ -1086,7 +1154,7 @@ WINRT_EXPORT
 #ifndef __WSApplicationData_DEFINED__
 #define __WSApplicationData_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSApplicationData : RTObject
 + (void)getForUserAsync:(WSUser*)user success:(void (^)(WSApplicationData*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
@@ -1118,7 +1186,7 @@ WINRT_EXPORT
 #ifndef __WSSetVersionRequest_DEFINED__
 #define __WSSetVersionRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSetVersionRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1134,7 +1202,7 @@ WINRT_EXPORT
 #ifndef __WSApplicationDataContainer_DEFINED__
 #define __WSApplicationDataContainer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSApplicationDataContainer : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1153,7 +1221,7 @@ WINRT_EXPORT
 #ifndef __WSSetVersionDeferral_DEFINED__
 #define __WSSetVersionDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSetVersionDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1187,13 +1255,17 @@ WINRT_EXPORT
 - (void)removeObserver:(EventRegistrationToken)receiverToken;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WFCIPropertySet : RTObject <WFCIPropertySet>
+@end
+
 #endif // __WFCIPropertySet_DEFINED__
 
 // Windows.Storage.ApplicationDataContainerSettings
 #ifndef __WSApplicationDataContainerSettings_DEFINED__
 #define __WSApplicationDataContainerSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSApplicationDataContainerSettings : RTObject <WFCIPropertySet>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1226,7 +1298,7 @@ WINRT_EXPORT
 #ifndef __WSApplicationDataCompositeValue_DEFINED__
 #define __WSApplicationDataCompositeValue_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSApplicationDataCompositeValue : RTObject <WFCIPropertySet>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

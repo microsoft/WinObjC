@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_DATAPROTECTION_EXPORT
+#define OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_DATAPROTECTION_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Security_Cryptography_DataProtection.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WSCDDataProtectionProvider;
@@ -34,7 +38,7 @@
 #ifndef __WSCDDataProtectionProvider_DEFINED__
 #define __WSCDDataProtectionProvider_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_DATAPROTECTION_EXPORT
 @interface WSCDDataProtectionProvider : RTObject
 + (instancetype)make ACTIVATOR;
 + (WSCDDataProtectionProvider*)makeOverloadExplicit:(NSString*)protectionDescriptor ACTIVATOR;

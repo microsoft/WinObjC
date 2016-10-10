@@ -76,6 +76,7 @@ void printUsage(const char *execName, bool full, int exitCode)
   std::cout << "Program Options" << std::endl;
   std::cout << "    -usage" << "\t\t    print brief usage message" << std::endl;
   std::cout << "    -help" << "\t\t    print full usage message" << std::endl;
+  std::cout << "    -genprojections" << "\t    generate WinRT projections project" << std::endl;
   std::cout << "    -interactive" << "\t    enable interactive mode" << std::endl;
   std::cout << "    -loglevel LEVEL" << "\t    debug | info | warning | error" << std::endl;
   std::cout << "    -list" << "\t\t    list the targets and configurations in the project" << std::endl;
@@ -104,6 +105,7 @@ int main(int argc, char* argv[])
   int workspaceSet = 0;
   int interactiveFlag = 0;
   int relativeSdkFlag = 0;
+  int genProjectionsFlag = 0;
   int allTargets = 0;
   int allSchemes = 0;
   int mode = GenerateMode;
@@ -126,6 +128,7 @@ int main(int argc, char* argv[])
     {"scheme", required_argument, 0, 0},
     {"allschemes", required_argument, &allSchemes, 1},
     {"relativepath", no_argument, &relativeSdkFlag, 1},
+    { "genprojections", no_argument, &genProjectionsFlag, 1 },
     {0, 0, 0, 0}
   };
 
@@ -264,8 +267,7 @@ int main(int argc, char* argv[])
 
   // Make sure workspace arguments are valid
   if (workspaceSet) {
-	  sbValidateWithTelemetry(!projectSet, "Cannot specify both a project and a workspace.");
-	sbValidateWithTelemetry(targets.empty(), "Cannot specify target(s) when specifying a workspace.");
+    sbValidateWithTelemetry(!projectSet, "Cannot specify both a project and a workspace.");
   }
 
   // Disallow specifying schemes and targets together
@@ -320,16 +322,12 @@ int main(int argc, char* argv[])
   if (mode == ListMode) {
     mainWorkspace->printSummary();
   } else if (mode == GenerateMode) {
-    if (allTargets) {
-      mainWorkspace->queueAllTargets(configurations);
-    } else if (projectSet) {
-      mainWorkspace->queueTargets(targets, configurations);
-    } else if (workspaceSet) {
+    if (!schemes.empty() || allSchemes) {
       mainWorkspace->queueSchemes(schemes, configurations);
     } else {
-		sbAssertWithTelemetry(0); // non-reachable
+      mainWorkspace->queueTargets(targets, configurations);
     }
-    mainWorkspace->generateFiles();
+    mainWorkspace->generateFiles(genProjectionsFlag);
   } else {
 	  sbAssertWithTelemetry(0); // non-reachable
   }

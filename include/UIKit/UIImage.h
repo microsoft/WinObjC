@@ -74,7 +74,7 @@ UIKIT_EXPORT_CLASS
 @property (readonly, nonatomic) BOOL flipsForRightToLeftLayoutDirection STUB_PROPERTY;
 @property (readonly, nonatomic) CIImage* CIImage STUB_PROPERTY;
 @property (readonly, nonatomic) UIEdgeInsets alignmentRectInsets STUB_PROPERTY;
-@property (readonly, nonatomic) UIEdgeInsets capInsets STUB_PROPERTY;
+@property (readonly, nonatomic) UIEdgeInsets capInsets;
 @property (readonly, nonatomic) UIImageAsset* imageAsset STUB_PROPERTY;
 @property (readonly, nonatomic) UIImageOrientation imageOrientation;
 @property (readonly, nonatomic) UIImageResizingMode resizingMode STUB_PROPERTY;
