@@ -73,7 +73,7 @@
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 14;
+    return 15;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
@@ -278,8 +278,24 @@
 
         [cell addSubview:label];
         [cell addSubview:button];
+    } else if (indexPath.row == 14) {
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
+        label.text = @"UIButton, Selected=true, Title=Blue";
+        
+        UIButton* button =
+        [[UIButton alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop + _labelHeight, _defaultWidth, _defaultHeight)];
+        [button setTitleColor:[UIColor blueColor] forState:UIControlStateSelected];
+        [button setBackgroundImage:[UIImage imageNamed:@"blue_background.jpg"] forState:UIControlStateSelected];
+        [button setTitle:@"Selected Button" forState:UIControlStateNormal];
+        [button setBackgroundImage:[UIImage imageNamed:@"yellow_background.jpg"] forState:UIControlStateNormal];
+        [button setTitle:@"Selected Button" forState:UIControlStateSelected];
+        
+        button.selected = true;
+        
+        [cell addSubview:label];
+        [cell addSubview:button];
     }
-
+    
     return cell;
 }
 
