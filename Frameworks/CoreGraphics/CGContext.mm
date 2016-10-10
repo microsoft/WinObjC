@@ -33,6 +33,7 @@
 #include <COMIncludes.h>
 #import <d2d1.h>
 #import <d2d1_1.h>
+#import <d2d1effects_2.h>
 #import <wrl/client.h>
 #include <COMIncludes_end.h>
 #import <LoggingNative.h>
@@ -91,36 +92,91 @@ struct __CGContextDrawingState {
     CGFloat alpha = 1.0f;
 };
 
-struct __CGContextImpl {
-    ComPtr<ID2D1RenderTarget> _renderTarget;
+/*
+template <typename T>
+struct __AAA {
+    static void _init(CFTypeRef cf) {
+    }
+    static Boolean _equal(CFTypeRef cf1, CFTypeRef cf2) {
+        return (*(T*)cf1) == (*(T*)cf2);
+    }
+    static CFHashCode _hash(CFTypeRef cf) {
+        return 0;
+    }
+    static CFStringRef _description(CFTypeRef cf, CFDictionaryRef dict) {
+        return nullptr;
+    }
 
-    std::stack<__CGContextDrawingState> _stateStack;
+    constexpr static auto get_init(...) -> decltype(&_init) { return nullptr; }
+    constexpr static auto get_equal(...) -> decltype(&_equal) { return nullptr; }
+    constexpr static auto get_hash(...) -> decltype(&_hash) { return nullptr; }
+    constexpr static auto get_description(...) -> decltype(&_description) { return nullptr; }
 
-    CGMutablePathRef _currentPath;
-
-    bool _allowsAntialiasing;
-    bool _allowsFontSmoothing;
-    bool _allowsFontSubpixelPositioning;
-    bool _allowsFontSubpixelQuantization;
-
-    __CGContextImpl() : _stateStack() {
-        _stateStack.emplace();
+    template <typename T>
+    constexpr static auto get_init(T t) -> decltype(&T::CFInit) { return &T::CFInit; }
+    template <typename T>
+    constexpr static auto get_equal(T t, decltype(&T::operator==) dval = nullptr) -> decltype(&T::_equal) { static_assert(false); return &T::_equal; }
+    template <typename T>
+    constexpr static auto get_hash(T t) -> decltype(&T::_hash) { return &T::_hash; }
+    template <typename T>
+    constexpr static auto get_description(T t) -> decltype(&T::_description) { return &T::_description; }
+    static CFTypeID GetTypeID() {
+        static const CFRuntimeClass cls{
+            0,
+            typeid(T).name(),
+            (void(*)(CFTypeRef))get_init(std::declval<T>()),
+            nullptr, //&_copy,
+            nullptr, //&_fini,
+            get_equal(std::declval<T>()),
+            get_hash(std::declval<T>()),
+            get_description(std::declval<T>()),
+        };
+        static CFTypeID _typeID;
+        static dispatch_once_t once = 0;
+        dispatch_once(&once, ^{
+            _typeID = _CFRuntimeRegisterClass(&cls);
+        });
+        return _typeID;
     }
 };
 
+struct Whatever: __AAA<Whatever> {
+    //bool operator==(const Whatever& other) {
+        //return true;
+    //}
+};
+
+CFTypeID GetWhateverTypeID() {
+    return Whatever::GetTypeID();
+}
+*/
+
 struct __CGContext {
+    struct __CGContextImpl {
+        ComPtr<ID2D1RenderTarget> _renderTarget;
+
+        std::stack<__CGContextDrawingState> _stateStack;
+
+        CGMutablePathRef _currentPath;
+
+        bool _allowsAntialiasing;
+        bool _allowsFontSmoothing;
+        bool _allowsFontSubpixelPositioning;
+        bool _allowsFontSubpixelQuantization;
+
+        __CGContextImpl() : _stateStack() {
+            _stateStack.emplace();
+        }
+    };
+
     CFRuntimeBase _base;
 
     // Use an inline impl struct so that we don't need to placement new each element.
     __CGContextImpl _impl;
     CGImageRef img;
 
-    inline __CGContextImpl& Impl() {
-        return _impl;
-    }
-
-    inline ID2D1RenderTarget* RenderTarget() {
-        return _impl._renderTarget.Get();
+    inline ComPtr<ID2D1RenderTarget>& RenderTarget() {
+        return _impl._renderTarget;
     }
 
     inline std::stack<__CGContextDrawingState>& StateStack() {
@@ -134,6 +190,12 @@ struct __CGContext {
     inline void ClearPath() {
         CGPathRelease(_impl._currentPath);
         _impl._currentPath = nullptr;
+    }
+
+    inline ComPtr<ID2D1Factory> Factory() {
+        ComPtr<ID2D1Factory> factory;
+        _impl._renderTarget->GetFactory(&factory);
+        return factory;
     }
 };
 
@@ -153,7 +215,7 @@ static CFStringRef __CGContextCopyDescription(CFTypeRef cf) {
 static void __CGContextInit(CFTypeRef cf) {
     CGContextRef context = (CGContextRef)cf;
     struct __CGContext* mutableContext = const_cast<struct __CGContext*>(context);
-    new (std::addressof(mutableContext->_impl)) __CGContextImpl();
+    new (&mutableContext->_impl) __CGContext::__CGContextImpl();
 }
 
 static void __CGContextDeallocate(CFTypeRef cf) {
@@ -573,11 +635,10 @@ void CGContextSaveGState(CGContextRef ctx) {
     // This uses the drawing state's copy constructor.
     ctx->StateStack().emplace(oldState);
 
-    ComPtr<ID2D1Factory> factory;
-    ctx->RenderTarget()->GetFactory(&factory);
-
+    auto factory = ctx->Factory();
     ComPtr<ID2D1DrawingStateBlock> drawingState;
     THROW_IF_FAILED(factory->CreateDrawingStateBlock(&drawingState));
+
     ctx->RenderTarget()->SaveDrawingState(drawingState.Get());
     oldState.d2dState = drawingState;
 }
@@ -607,33 +668,39 @@ void CGContextClearRect(CGContextRef ctx, CGRect rect) {
 }
 
 static void __CGContextDrawGeometry(CGContextRef ctx, ID2D1Geometry* geometry, CGPathDrawingMode drawMode) {
-    auto renderTarget = ctx->RenderTarget();
+    ComPtr<ID2D1RenderTarget> renderTarget = ctx->RenderTarget();
     auto& currentState = ctx->CurrentGState();
 
-    renderTarget->BeginDraw();
+    ComPtr<ID2D1DeviceContext> dctx;
+    THROW_IF_FAILED(renderTarget.As(&dctx));
+
+    D2D1_SIZE_F targetSize = renderTarget->GetSize();
+    ComPtr<ID2D1Image> originalTarget;
+    dctx->GetTarget(&originalTarget);
+
+    dctx->BeginDraw();
+
+    ComPtr<ID2D1Image> tgtImg;
+    ComPtr<ID2D1CommandList> cmdList;
+    THROW_IF_FAILED(dctx->CreateCommandList(&cmdList));
+    THROW_IF_FAILED(cmdList.As(&tgtImg));
+    dctx->SetTarget(cmdList.Get());
 
     CGAffineTransform& currentTransform = currentState.transform;
     CGAffineTransform transform = CGAffineTransformScale(currentTransform, 1.0, -1.0);
-    D2D1_SIZE_F targetSize = renderTarget->GetSize();
     transform = CGAffineTransformTranslate(transform, 0., targetSize.height);
-    renderTarget->SetTransform({transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty});
-
-    ComPtr<ID2D1Layer> layer;
-    if (currentState.alpha != 1.0f || false /* mask, clip, etc. */) {
-        renderTarget->CreateLayer(&layer);
-        renderTarget->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(), NULL, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE, D2D1::IdentityMatrix(), currentState.alpha), layer.Get());
-    }
+    dctx->SetTransform({transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty});
 
     if (drawMode & kCGPathFill) {
         if (drawMode & kCGPathEOFill) {
             // TODO(DH): Regenerate geometry in Even/Odd fill mode.
         }
-        renderTarget->FillGeometry(geometry, currentState.fillBrush.Get());
+        dctx->FillGeometry(geometry, currentState.fillBrush.Get());
     }
 
     if (drawMode & kCGPathStroke) {
         ComPtr<ID2D1Factory> factory;
-        renderTarget->GetFactory(&factory);
+        dctx->GetFactory(&factory);
 
         /* TODO(DH): do not recreate for every drawing operation */
         ComPtr<ID2D1StrokeStyle> strokeStyle;
@@ -645,24 +712,45 @@ static void __CGContextDrawGeometry(CGContextRef ctx, ID2D1Geometry* geometry, C
         THROW_IF_FAILED(factory->CreateStrokeStyle(currentState.strokeProperties, adjustedDashes.data(), adjustedDashes.size(), &strokeStyle));
         /* --- */
 
-        renderTarget->DrawGeometry(geometry, currentState.strokeBrush.Get(), currentState.lineWidth, strokeStyle.Get());
+        dctx->DrawGeometry(geometry, currentState.strokeBrush.Get(), currentState.lineWidth, strokeStyle.Get());
     }
+
+    dctx->EndDraw();
+    cmdList->Close();
+
+    ComPtr<ID2D1Effect> fx;
+    dctx->CreateEffect(CLSID_D2D1Shadow, &fx);
+    fx->SetInput(0, cmdList.Get());
+
+    ComPtr<ID2D1Effect> compositeEffect;
+    dctx->CreateEffect(CLSID_D2D1Composite, &compositeEffect);
+
+    compositeEffect->SetInputEffect(0, fx.Get());
+    compositeEffect->SetInput(1, cmdList.Get());
+
+    dctx->BeginDraw();
+    dctx->SetTarget(originalTarget.Get());
+
+    bool layer = false;
+    if (currentState.alpha != 1.0f || false /* mask, clip, etc. */) {
+        layer = true;
+        renderTarget->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(), NULL, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE, D2D1::IdentityMatrix(), currentState.alpha), nullptr);
+    }
+
+    dctx->DrawImage(compositeEffect.Get());
 
     if (layer) {
         renderTarget->PopLayer();
     }
 
-    renderTarget->EndDraw();
+    THROW_IF_FAILED(dctx->EndDraw());
 }
 
 /**
  @Status Interoperable
 */
 void CGContextStrokeRect(CGContextRef ctx, CGRect rect) {
-    auto renderTarget = ctx->RenderTarget();
-
-    ComPtr<ID2D1Factory> factory;
-    renderTarget->GetFactory(&factory);
+    auto factory = ctx->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
     ComPtr<ID2D1RectangleGeometry> rectGeometry;
@@ -688,10 +776,7 @@ void CGContextStrokeRectWithWidth(CGContextRef ctx, CGRect rect, CGFloat width) 
  @Status Interoperable
 */
 void CGContextFillRect(CGContextRef ctx, CGRect rect) {
-    auto renderTarget = ctx->RenderTarget();
-
-    ComPtr<ID2D1Factory> factory;
-    renderTarget->GetFactory(&factory);
+    auto factory = ctx->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
     ComPtr<ID2D1RectangleGeometry> rectGeometry;
@@ -707,10 +792,7 @@ void CGContextFillRect(CGContextRef ctx, CGRect rect) {
  @Status Interoperable
 */
 void CGContextStrokeEllipseInRect(CGContextRef ctx, CGRect rect) {
-    auto renderTarget = ctx->RenderTarget();
-
-    ComPtr<ID2D1Factory> factory;
-    renderTarget->GetFactory(&factory);
+    auto factory = ctx->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
     ComPtr<ID2D1EllipseGeometry> ellipseGeometry;
@@ -726,10 +808,7 @@ void CGContextStrokeEllipseInRect(CGContextRef ctx, CGRect rect) {
  @Status Interoperable
 */
 void CGContextFillEllipseInRect(CGContextRef ctx, CGRect rect) {
-    auto renderTarget = ctx->RenderTarget();
-
-    ComPtr<ID2D1Factory> factory;
-    renderTarget->GetFactory(&factory);
+    auto factory = ctx->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
     ComPtr<ID2D1EllipseGeometry> ellipseGeometry;
