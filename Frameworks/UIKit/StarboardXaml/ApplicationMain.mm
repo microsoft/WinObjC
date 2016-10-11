@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -86,6 +86,9 @@ int ApplicationMainStart(const char* principalName,
     } else if (activationType == ActivationTypeProtocol) {
         WFUri* uri = [WFUri createWith:(IInspectable*)activationArg];
         activationArgument = uri;
+    } else if (activationType == ActivationTypeFile) {
+        WAAFileActivatedEventArgs* activatedEventArgs = [WAAFileActivatedEventArgs createWith:activationArg];
+        activationArgument = activatedEventArgs;
     }
 
     WOCDisplayMode* displayMode = [UIApplication displayMode];
