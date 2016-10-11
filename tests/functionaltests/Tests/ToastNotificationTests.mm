@@ -53,8 +53,7 @@ MOCK_CLASS(MockToastNotificationActivatedEventArgs,
 
 @implementation ToastNotificationForegroundActivationTestDelegate
 - (id)init {
-    self = [super init];
-    if (self) {
+    if (self = [super init]) {
         _methodsCalled.attach([NSMutableDictionary new]);
     }
     return self;
@@ -98,8 +97,7 @@ MOCK_CLASS(MockToastNotificationActivatedEventArgs,
 
 @implementation ActivatedAppReceivesToastNotificationDelegate
 - (id)init {
-    self = [super init];
-    if (self) {
+    if (self = [super init]) {
         _methodsCalled.attach([NSMutableDictionary new]);
     }
     return self;

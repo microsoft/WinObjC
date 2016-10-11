@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -93,8 +93,7 @@ MOCK_CLASS(MockStorageItem,
 
 @implementation FileActivationForegroundTestDelegate
 - (id)init {
-    self = [super init];
-    if (self) {
+    if (self = [super init]) {
         _methodsCalled.attach([NSMutableDictionary new]);
     }
     return self;
