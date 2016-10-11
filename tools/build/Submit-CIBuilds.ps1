@@ -11,6 +11,7 @@ Param (
     [switch]$Reconfigure,
     [switch]$SkipRemoteCheck,
     [string]$BuildFilter,
+    [string]$SourceBranch='develop',
 
     [string]$AuthUsername,
     [string]$AuthToken
@@ -273,7 +274,7 @@ ForEach($definitionSet in $matchingDefinitions) {
         $parameters[$parameter.Key] = $parameter.InnerText.Replace("`$REMOTEURL", $RemoteURL).Replace("`$BRANCH", $Ref)
     }
     If ($definitionSet.ConfigMappings.SourceBranch) {
-        $requestBody.sourceBranch = $definitionSet.ConfigMappings.SourceBranch.Replace("`$BRANCH", $Ref)
+        $requestBody.sourceBranch = $definitionSet.ConfigMappings.SourceBranch.Replace("`$SOURCEBRANCH", $SourceBranch)
     }
     $requestBody.parameters = (ConvertTo-JSON -Compress $parameters)
 

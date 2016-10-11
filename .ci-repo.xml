@@ -8,20 +8,14 @@
                 <ID Configuration="Release">72</ID>
                 <ConfigMappings>
                     <Parameter Key="PullRequest">$REMOTEURL $BRANCH</Parameter>
+                    <SourceBranch>$SOURCEBRANCH</SourceBranch>
                 </ConfigMappings>
             </BuildDefinitionSet>
-            <BuildDefinitionSet Name="VSO Any Branch" MatchRemote="*visualstudio*">
-                <ID Configuration="Debug">78</ID>
-                <ID Configuration="Release">79</ID>
+            <BuildDefinitionSet Name="Full"> <!-- No MatchRemote as this one must be specified by BuildFilter -->
+                <ID Configuration="Debug">82</ID>
+                <ID Configuration="Release">83</ID>
                 <ConfigMappings>
-                    <SourceBranch>$BRANCH</SourceBranch>
-                </ConfigMappings>
-            </BuildDefinitionSet>
-            <BuildDefinitionSet Name="VSO Full"> <!-- No MatchRemote as this one must be specified by BuildFilter -->
-                <ID Configuration="Debug">89</ID>
-                <ID Configuration="Release">90</ID>
-                <ConfigMappings>
-                    <SourceBranch>$BRANCH</SourceBranch>
+                    <SourceBranch>$SOURCEBRANCH</SourceBranch>
                 </ConfigMappings>
             </BuildDefinitionSet>
         </BuildDefinitions>
