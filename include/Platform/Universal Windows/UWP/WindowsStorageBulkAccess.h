@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+#define OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Storage_BulkAccess.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WSBFileInformationFactory, WSBFileInformation, WSBFolderInformation;
@@ -50,13 +54,17 @@
 - (void)removeThumbnailUpdatedEvent:(EventRegistrationToken)tok;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+@interface WSBIStorageItemInformation : RTObject <WSBIStorageItemInformation>
+@end
+
 #endif // __WSBIStorageItemInformation_DEFINED__
 
 // Windows.Storage.BulkAccess.FileInformationFactory
 #ifndef __WSBFileInformationFactory_DEFINED__
 #define __WSBFileInformationFactory_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 @interface WSBFileInformationFactory : RTObject
 + (WSBFileInformationFactory*)makeWithMode:(RTObject<WSSIStorageQueryResultBase>*)queryResult mode:(WSFThumbnailMode)mode ACTIVATOR;
 + (WSBFileInformationFactory*)makeWithModeAndSize:(RTObject<WSSIStorageQueryResultBase>*)queryResult
@@ -116,6 +124,10 @@ WINRT_EXPORT
 - (BOOL)isOfType:(WSStorageItemTypes)type;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+@interface WSIStorageItem : RTObject <WSIStorageItem>
+@end
+
 #endif // __WSIStorageItem_DEFINED__
 
 // Windows.Storage.Streams.IRandomAccessStreamReference
@@ -126,6 +138,10 @@ WINRT_EXPORT
 - (void)openReadAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+@interface WSSIRandomAccessStreamReference : RTObject <WSSIRandomAccessStreamReference>
+@end
+
 #endif // __WSSIRandomAccessStreamReference_DEFINED__
 
 // Windows.Storage.Streams.IInputStreamReference
@@ -134,6 +150,10 @@ WINRT_EXPORT
 
 @protocol WSSIInputStreamReference
 - (void)openSequentialReadAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+@interface WSSIInputStreamReference : RTObject <WSSIInputStreamReference>
 @end
 
 #endif // __WSSIInputStreamReference_DEFINED__
@@ -179,6 +199,10 @@ WINRT_EXPORT
 - (void)openSequentialReadAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+@interface WSIStorageFile : RTObject <WSIStorageFile>
+@end
+
 #endif // __WSIStorageFile_DEFINED__
 
 // Windows.Storage.IStorageItemProperties
@@ -204,6 +228,10 @@ WINRT_EXPORT
                   failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+@interface WSIStorageItemProperties : RTObject <WSIStorageItemProperties>
+@end
+
 #endif // __WSIStorageItemProperties_DEFINED__
 
 // Windows.Storage.IStorageItem2
@@ -219,6 +247,10 @@ WINRT_EXPORT
 - (RTObject<WFIAsyncAction>*)deleteAsync:(WSStorageDeleteOption)option;
 - (void)getBasicPropertiesAsyncWithSuccess:(void (^)(WSFBasicProperties*))success failure:(void (^)(NSError*))failure;
 - (BOOL)isOfType:(WSStorageItemTypes)type;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+@interface WSIStorageItem2 : RTObject <WSIStorageItem2>
 @end
 
 #endif // __WSIStorageItem2_DEFINED__
@@ -243,6 +275,10 @@ WINRT_EXPORT
                   failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+@interface WSIStorageItemPropertiesWithProvider : RTObject <WSIStorageItemPropertiesWithProvider>
+@end
+
 #endif // __WSIStorageItemPropertiesWithProvider_DEFINED__
 
 // Windows.Storage.IStorageFilePropertiesWithAvailability
@@ -251,6 +287,10 @@ WINRT_EXPORT
 
 @protocol WSIStorageFilePropertiesWithAvailability
 @property (readonly) BOOL isAvailable;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+@interface WSIStorageFilePropertiesWithAvailability : RTObject <WSIStorageFilePropertiesWithAvailability>
 @end
 
 #endif // __WSIStorageFilePropertiesWithAvailability_DEFINED__
@@ -269,13 +309,17 @@ WINRT_EXPORT
                                     failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+@interface WSIStorageFile2 : RTObject <WSIStorageFile2>
+@end
+
 #endif // __WSIStorageFile2_DEFINED__
 
 // Windows.Storage.BulkAccess.FileInformation
 #ifndef __WSBFileInformation_DEFINED__
 #define __WSBFileInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 @interface WSBFileInformation : RTObject <WSBIStorageItemInformation,
                                           WSIStorageFile,
                                           WSSIInputStreamReference,
@@ -404,6 +448,10 @@ WINRT_EXPORT
 - (BOOL)isOfType:(WSStorageItemTypes)type;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+@interface WSIStorageFolder : RTObject <WSIStorageFolder>
+@end
+
 #endif // __WSIStorageFolder_DEFINED__
 
 // Windows.Storage.Search.IStorageFolderQueryOperations
@@ -445,6 +493,10 @@ WINRT_EXPORT
 - (BOOL)isCommonFileQuerySupported:(WSSCommonFileQuery)query;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+@interface WSSIStorageFolderQueryOperations : RTObject <WSSIStorageFolderQueryOperations>
+@end
+
 #endif // __WSSIStorageFolderQueryOperations_DEFINED__
 
 // Windows.Storage.IStorageFolder2
@@ -455,13 +507,17 @@ WINRT_EXPORT
 - (void)tryGetItemAsync:(NSString*)name success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
+@interface WSIStorageFolder2 : RTObject <WSIStorageFolder2>
+@end
+
 #endif // __WSIStorageFolder2_DEFINED__
 
 // Windows.Storage.BulkAccess.FolderInformation
 #ifndef __WSBFolderInformation_DEFINED__
 #define __WSBFolderInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 @interface WSBFolderInformation : RTObject <WSBIStorageItemInformation,
                                             WSIStorageFolder,
                                             WSIStorageItem,

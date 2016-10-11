@@ -19,9 +19,7 @@
 
 #include "types.h"
 
-template <class T>
-void queryListSelection(const std::vector<T*>& vec, const String& queryMessage, const String& itemName, std::vector<T*>& ret);
-
+void queryListSelection(const StringVec& vec, const String& queryMessage, const String& itemName, std::vector<size_t>& ret);
 bool queryBoolSelection(const String& queryMessage);
 
 #endif /* _QUERY_H_ */

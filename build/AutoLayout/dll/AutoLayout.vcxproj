@@ -51,7 +51,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AutoLayout.def</ModuleDefinitionFile>
-      <AdditionalDependencies>freetype.lib;objcuwp.lib;cassowary-0.60-Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;cassowary-0.60-Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -64,7 +64,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AutoLayout.def</ModuleDefinitionFile>
-      <AdditionalDependencies>freetype.lib;objcuwp.lib;cassowary-0.60.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;cassowary-0.60.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -77,7 +77,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AutoLayout.def</ModuleDefinitionFile>
-      <AdditionalDependencies>freetype.lib;objcuwp.lib;cassowary-0.60-Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;cassowary-0.60-Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -90,7 +90,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AutoLayout.def</ModuleDefinitionFile>
-      <AdditionalDependencies>freetype.lib;objcuwp.lib;cassowary-0.60.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;cassowary-0.60.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>

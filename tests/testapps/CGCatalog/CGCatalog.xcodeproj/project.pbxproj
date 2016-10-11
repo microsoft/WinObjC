@@ -1,0 +1,509 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		552816051D062EC90082C178 /* CGCCGBitmapContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 552816041D062EC90082C178 /* CGCCGBitmapContentViewController.m */; };
+		552816081D062F6B0082C178 /* CGCCGContextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 552816071D062F6B0082C178 /* CGCCGContextViewController.m */; };
+		5528160A1D0630300082C178 /* LogoAutodesk.png in Resources */ = {isa = PBXBuildFile; fileRef = 552816091D0630300082C178 /* LogoAutodesk.png */; };
+		5579D6771D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5579D6761D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m */; };
+		8B2D2E821D9DA57700B8E557 /* AddCurveToPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E7D1D9DA57700B8E557 /* AddCurveToPoint.png */; };
+		8B2D2E831D9DA57700B8E557 /* AddElipseToRect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E7E1D9DA57700B8E557 /* AddElipseToRect.png */; };
+		8B2D2E841D9DA57700B8E557 /* AddLineToPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E7F1D9DA57700B8E557 /* AddLineToPoint.png */; };
+		8B2D2E851D9DA57700B8E557 /* AddPath.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E801D9DA57700B8E557 /* AddPath.png */; };
+		8B2D2E861D9DA57700B8E557 /* AddQuadCurveToPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E811D9DA57700B8E557 /* AddQuadCurveToPoint.png */; };
+		8B2D2E891D9DA5A000B8E557 /* PathAddRect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E871D9DA5A000B8E557 /* PathAddRect.png */; };
+		8B2D2E8A1D9DA5A000B8E557 /* PathApply.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E881D9DA5A000B8E557 /* PathApply.png */; };
+		8B2D2E8D1D9DA5C800B8E557 /* CloseSubPath.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E8B1D9DA5C800B8E557 /* CloseSubPath.png */; };
+		8B2D2E8E1D9DA5C800B8E557 /* GetBoundingBox.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E8C1D9DA5C800B8E557 /* GetBoundingBox.png */; };
+		8B2D2E911D9DA5F100B8E557 /* CloseSubPath.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E8F1D9DA5F100B8E557 /* CloseSubPath.png */; };
+		8B2D2E921D9DA5F100B8E557 /* GetBoundingBox.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E901D9DA5F100B8E557 /* GetBoundingBox.png */; };
+		8B2D2E951D9DA63400B8E557 /* CGDrawOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B2D2E941D9DA63400B8E557 /* CGDrawOptions.m */; };
+		8B6186D31D89CD1800DA47F4 /* CGContextSamplesRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B6186D21D89CD1800DA47F4 /* CGContextSamplesRootViewController.m */; };
+		8B8A9A701D95AD32006CB438 /* CGDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B8A9A6F1D95AD32006CB438 /* CGDrawView.m */; };
+		8B9D65101D89C42800153CCF /* CGContextNewTestsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9D650F1D89C42800153CCF /* CGContextNewTestsController.m */; };
+		8B9D65131D89C5EB00153CCF /* CGContextSampleRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9D65121D89C5EB00153CCF /* CGContextSampleRow.m */; };
+		8BF7B3F01D9C63FA00C25A86 /* CGPathAddCurveToPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3DD1D9C63FA00C25A86 /* CGPathAddCurveToPointViewController.m */; };
+		8BF7B3F11D9C63FA00C25A86 /* CGPathAddElipseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3DF1D9C63FA00C25A86 /* CGPathAddElipseViewController.m */; };
+		8BF7B3F21D9C63FA00C25A86 /* CGPathAddLineToPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3E11D9C63FA00C25A86 /* CGPathAddLineToPointViewController.m */; };
+		8BF7B3F31D9C63FA00C25A86 /* CGPathAddPathViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3E31D9C63FA00C25A86 /* CGPathAddPathViewController.m */; };
+		8BF7B3F41D9C63FA00C25A86 /* CGPathAddQuadCurveToPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3E51D9C63FA00C25A86 /* CGPathAddQuadCurveToPointViewController.m */; };
+		8BF7B3F51D9C63FA00C25A86 /* CGPathAddRectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3E71D9C63FA00C25A86 /* CGPathAddRectViewController.m */; };
+		8BF7B3F61D9C63FA00C25A86 /* CGPathApplyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3E91D9C63FA00C25A86 /* CGPathApplyViewController.m */; };
+		8BF7B3F71D9C63FA00C25A86 /* CGPathCloseSubpathViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3EB1D9C63FA00C25A86 /* CGPathCloseSubpathViewController.m */; };
+		8BF7B3F81D9C63FA00C25A86 /* CGPathContainsPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3ED1D9C63FA00C25A86 /* CGPathContainsPointViewController.m */; };
+		8BF7B3F91D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3EF1D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.m */; };
+		F0D21C831D05FEF9002C32EE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D21C821D05FEF9002C32EE /* main.m */; };
+		F0D21C861D05FEF9002C32EE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D21C851D05FEF9002C32EE /* AppDelegate.m */; };
+		F0D21C891D05FEF9002C32EE /* CGCRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D21C881D05FEF9002C32EE /* CGCRootViewController.m */; };
+		F0D21CB71D060466002C32EE /* CGCCGPathApplyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D21CB61D060466002C32EE /* CGCCGPathApplyViewController.m */; };
+		F0D21CBA1D0605E1002C32EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0D21CB91D0605E1002C32EE /* Assets.xcassets */; };
+		F0D21CBC1D0605ED002C32EE /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0D21CBB1D0605ED002C32EE /* Launch Screen.storyboard */; };
+		F0D21CBF1D06078D002C32EE /* CGCBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D21CBE1D06078D002C32EE /* CGCBaseViewController.m */; };
+		FB10A19A1D10792E008EA8A1 /* CGCCGContextSetPatternPhase.m in Sources */ = {isa = PBXBuildFile; fileRef = FB10A1991D10792E008EA8A1 /* CGCCGContextSetPatternPhase.m */; };
+		FB1264921D0A0484007C907C /* CGCCGContextBeginEndTransparencyLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = FB1264911D0A0484007C907C /* CGCCGContextBeginEndTransparencyLayer.m */; };
+		FB18A4BA1D1AD10A00A9555A /* CGCCGContextBeginTransparencyLayerWithRect.m in Sources */ = {isa = PBXBuildFile; fileRef = FB18A4B91D1AD10A00A9555A /* CGCCGContextBeginTransparencyLayerWithRect.m */; };
+		FBA3A50C1D132C9A00C3C011 /* CGCCGContextReplacePathWithStrokedPath.m in Sources */ = {isa = PBXBuildFile; fileRef = FBA3A50B1D132C9A00C3C011 /* CGCCGContextReplacePathWithStrokedPath.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		552816031D062EC90082C178 /* CGCCGBitmapContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CGCCGBitmapContentViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		552816041D062EC90082C178 /* CGCCGBitmapContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CGCCGBitmapContentViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		552816061D062F6B0082C178 /* CGCCGContextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CGCCGContextViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		552816071D062F6B0082C178 /* CGCCGContextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CGCCGContextViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		552816091D0630300082C178 /* LogoAutodesk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LogoAutodesk.png; sourceTree = "<group>"; };
+		5579D6751D1B73EC00B33059 /* CGCCGPathContainsPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGCCGPathContainsPointViewController.h; sourceTree = "<group>"; };
+		5579D6761D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGCCGPathContainsPointViewController.m; sourceTree = "<group>"; };
+		8B2D2E7D1D9DA57700B8E557 /* AddCurveToPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddCurveToPoint.png; sourceTree = "<group>"; };
+		8B2D2E7E1D9DA57700B8E557 /* AddElipseToRect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddElipseToRect.png; sourceTree = "<group>"; };
+		8B2D2E7F1D9DA57700B8E557 /* AddLineToPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddLineToPoint.png; sourceTree = "<group>"; };
+		8B2D2E801D9DA57700B8E557 /* AddPath.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddPath.png; sourceTree = "<group>"; };
+		8B2D2E811D9DA57700B8E557 /* AddQuadCurveToPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddQuadCurveToPoint.png; sourceTree = "<group>"; };
+		8B2D2E871D9DA5A000B8E557 /* PathAddRect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PathAddRect.png; sourceTree = "<group>"; };
+		8B2D2E881D9DA5A000B8E557 /* PathApply.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PathApply.png; sourceTree = "<group>"; };
+		8B2D2E8B1D9DA5C800B8E557 /* CloseSubPath.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CloseSubPath.png; sourceTree = "<group>"; };
+		8B2D2E8C1D9DA5C800B8E557 /* GetBoundingBox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GetBoundingBox.png; sourceTree = "<group>"; };
+		8B2D2E8F1D9DA5F100B8E557 /* CloseSubPath.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CloseSubPath.png; sourceTree = "<group>"; };
+		8B2D2E901D9DA5F100B8E557 /* GetBoundingBox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GetBoundingBox.png; sourceTree = "<group>"; };
+		8B2D2E931D9DA61A00B8E557 /* CGDrawOptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CGDrawOptions.h; sourceTree = "<group>"; };
+		8B2D2E941D9DA63400B8E557 /* CGDrawOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGDrawOptions.m; sourceTree = "<group>"; };
+		8B2F03A11D93665900A662A3 /* CGSamplePage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CGSamplePage.h; sourceTree = "<group>"; };
+		8B6186D11D89CC6D00DA47F4 /* CGContextSamplesRootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CGContextSamplesRootViewController.h; sourceTree = "<group>"; };
+		8B6186D21D89CD1800DA47F4 /* CGContextSamplesRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGContextSamplesRootViewController.m; sourceTree = "<group>"; };
+		8B8A9A6E1D95AD1D006CB438 /* CGDrawView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CGDrawView.h; sourceTree = "<group>"; };
+		8B8A9A6F1D95AD32006CB438 /* CGDrawView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGDrawView.m; sourceTree = "<group>"; };
+		8B9D650E1D89C30500153CCF /* CGContextNewTestsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CGContextNewTestsController.h; path = Samples/CGContextNewTestsController.h; sourceTree = "<group>"; };
+		8B9D650F1D89C42800153CCF /* CGContextNewTestsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CGContextNewTestsController.m; path = Samples/CGContextNewTestsController.m; sourceTree = "<group>"; };
+		8B9D65111D89C5BF00153CCF /* CGContextSampleRow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CGContextSampleRow.h; sourceTree = "<group>"; };
+		8B9D65121D89C5EB00153CCF /* CGContextSampleRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGContextSampleRow.m; sourceTree = "<group>"; };
+		8BF7B3DC1D9C63FA00C25A86 /* CGPathAddCurveToPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddCurveToPointViewController.h; sourceTree = "<group>"; };
+		8BF7B3DD1D9C63FA00C25A86 /* CGPathAddCurveToPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddCurveToPointViewController.m; sourceTree = "<group>"; };
+		8BF7B3DE1D9C63FA00C25A86 /* CGPathAddElipseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddElipseViewController.h; sourceTree = "<group>"; };
+		8BF7B3DF1D9C63FA00C25A86 /* CGPathAddElipseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddElipseViewController.m; sourceTree = "<group>"; };
+		8BF7B3E01D9C63FA00C25A86 /* CGPathAddLineToPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddLineToPointViewController.h; sourceTree = "<group>"; };
+		8BF7B3E11D9C63FA00C25A86 /* CGPathAddLineToPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddLineToPointViewController.m; sourceTree = "<group>"; };
+		8BF7B3E21D9C63FA00C25A86 /* CGPathAddPathViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddPathViewController.h; sourceTree = "<group>"; };
+		8BF7B3E31D9C63FA00C25A86 /* CGPathAddPathViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddPathViewController.m; sourceTree = "<group>"; };
+		8BF7B3E41D9C63FA00C25A86 /* CGPathAddQuadCurveToPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddQuadCurveToPointViewController.h; sourceTree = "<group>"; };
+		8BF7B3E51D9C63FA00C25A86 /* CGPathAddQuadCurveToPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddQuadCurveToPointViewController.m; sourceTree = "<group>"; };
+		8BF7B3E61D9C63FA00C25A86 /* CGPathAddRectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddRectViewController.h; sourceTree = "<group>"; };
+		8BF7B3E71D9C63FA00C25A86 /* CGPathAddRectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddRectViewController.m; sourceTree = "<group>"; };
+		8BF7B3E81D9C63FA00C25A86 /* CGPathApplyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathApplyViewController.h; sourceTree = "<group>"; };
+		8BF7B3E91D9C63FA00C25A86 /* CGPathApplyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathApplyViewController.m; sourceTree = "<group>"; };
+		8BF7B3EA1D9C63FA00C25A86 /* CGPathCloseSubpathViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathCloseSubpathViewController.h; sourceTree = "<group>"; };
+		8BF7B3EB1D9C63FA00C25A86 /* CGPathCloseSubpathViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathCloseSubpathViewController.m; sourceTree = "<group>"; };
+		8BF7B3EC1D9C63FA00C25A86 /* CGPathContainsPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathContainsPointViewController.h; sourceTree = "<group>"; };
+		8BF7B3ED1D9C63FA00C25A86 /* CGPathContainsPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathContainsPointViewController.m; sourceTree = "<group>"; };
+		8BF7B3EE1D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathGetBoundingBoxViewController.h; sourceTree = "<group>"; };
+		8BF7B3EF1D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathGetBoundingBoxViewController.m; sourceTree = "<group>"; };
+		F0D21C7E1D05FEF9002C32EE /* CGCatalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CGCatalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0D21C821D05FEF9002C32EE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = main.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		F0D21C841D05FEF9002C32EE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AppDelegate.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		F0D21C851D05FEF9002C32EE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		F0D21C871D05FEF9002C32EE /* CGCRootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CGCRootViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		F0D21C881D05FEF9002C32EE /* CGCRootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CGCRootViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		F0D21C921D05FEF9002C32EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F0D21CB51D060466002C32EE /* CGCCGPathApplyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CGCCGPathApplyViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		F0D21CB61D060466002C32EE /* CGCCGPathApplyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CGCCGPathApplyViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		F0D21CB91D0605E1002C32EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F0D21CBB1D0605ED002C32EE /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		F0D21CBD1D06078D002C32EE /* CGCBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CGCBaseViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		F0D21CBE1D06078D002C32EE /* CGCBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CGCBaseViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		FB10A1981D10792E008EA8A1 /* CGCCGContextSetPatternPhase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CGCCGContextSetPatternPhase.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		FB10A1991D10792E008EA8A1 /* CGCCGContextSetPatternPhase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CGCCGContextSetPatternPhase.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		FB1264901D0A0484007C907C /* CGCCGContextBeginEndTransparencyLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CGCCGContextBeginEndTransparencyLayer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		FB1264911D0A0484007C907C /* CGCCGContextBeginEndTransparencyLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CGCCGContextBeginEndTransparencyLayer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		FB18A4B81D1AD10A00A9555A /* CGCCGContextBeginTransparencyLayerWithRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGCCGContextBeginTransparencyLayerWithRect.h; sourceTree = "<group>"; };
+		FB18A4B91D1AD10A00A9555A /* CGCCGContextBeginTransparencyLayerWithRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGCCGContextBeginTransparencyLayerWithRect.m; sourceTree = "<group>"; };
+		FBA3A50A1D132C9A00C3C011 /* CGCCGContextReplacePathWithStrokedPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CGCCGContextReplacePathWithStrokedPath.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		FBA3A50B1D132C9A00C3C011 /* CGCCGContextReplacePathWithStrokedPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CGCCGContextReplacePathWithStrokedPath.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F0D21C7B1D05FEF9002C32EE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8BC8830E1D90A33F009115D0 /* NewSamples */ = {
+			isa = PBXGroup;
+			children = (
+				8BF7B3DC1D9C63FA00C25A86 /* CGPathAddCurveToPointViewController.h */,
+				8BF7B3DD1D9C63FA00C25A86 /* CGPathAddCurveToPointViewController.m */,
+				8BF7B3DE1D9C63FA00C25A86 /* CGPathAddElipseViewController.h */,
+				8BF7B3DF1D9C63FA00C25A86 /* CGPathAddElipseViewController.m */,
+				8BF7B3E01D9C63FA00C25A86 /* CGPathAddLineToPointViewController.h */,
+				8BF7B3E11D9C63FA00C25A86 /* CGPathAddLineToPointViewController.m */,
+				8BF7B3E21D9C63FA00C25A86 /* CGPathAddPathViewController.h */,
+				8BF7B3E31D9C63FA00C25A86 /* CGPathAddPathViewController.m */,
+				8BF7B3E41D9C63FA00C25A86 /* CGPathAddQuadCurveToPointViewController.h */,
+				8BF7B3E51D9C63FA00C25A86 /* CGPathAddQuadCurveToPointViewController.m */,
+				8BF7B3E61D9C63FA00C25A86 /* CGPathAddRectViewController.h */,
+				8BF7B3E71D9C63FA00C25A86 /* CGPathAddRectViewController.m */,
+				8BF7B3E81D9C63FA00C25A86 /* CGPathApplyViewController.h */,
+				8BF7B3E91D9C63FA00C25A86 /* CGPathApplyViewController.m */,
+				8BF7B3EA1D9C63FA00C25A86 /* CGPathCloseSubpathViewController.h */,
+				8BF7B3EB1D9C63FA00C25A86 /* CGPathCloseSubpathViewController.m */,
+				8BF7B3EC1D9C63FA00C25A86 /* CGPathContainsPointViewController.h */,
+				8BF7B3ED1D9C63FA00C25A86 /* CGPathContainsPointViewController.m */,
+				8BF7B3EE1D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.h */,
+				8BF7B3EF1D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.m */,
+			);
+			name = NewSamples;
+			sourceTree = "<group>";
+		};
+		F0D21C751D05FEF9002C32EE = {
+			isa = PBXGroup;
+			children = (
+				F0D21C801D05FEF9002C32EE /* CGCatalog */,
+				F0D21C7F1D05FEF9002C32EE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F0D21C7F1D05FEF9002C32EE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F0D21C7E1D05FEF9002C32EE /* CGCatalog.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F0D21C801D05FEF9002C32EE /* CGCatalog */ = {
+			isa = PBXGroup;
+			children = (
+				8BC8830E1D90A33F009115D0 /* NewSamples */,
+				8B2D2E931D9DA61A00B8E557 /* CGDrawOptions.h */,
+				8B2D2E941D9DA63400B8E557 /* CGDrawOptions.m */,
+				8B8A9A6E1D95AD1D006CB438 /* CGDrawView.h */,
+				8B8A9A6F1D95AD32006CB438 /* CGDrawView.m */,
+				8B2F03A11D93665900A662A3 /* CGSamplePage.h */,
+				F0D21C841D05FEF9002C32EE /* AppDelegate.h */,
+				F0D21C851D05FEF9002C32EE /* AppDelegate.m */,
+				F0D21C871D05FEF9002C32EE /* CGCRootViewController.h */,
+				F0D21C881D05FEF9002C32EE /* CGCRootViewController.m */,
+				F0D21CBD1D06078D002C32EE /* CGCBaseViewController.h */,
+				F0D21CBE1D06078D002C32EE /* CGCBaseViewController.m */,
+				8B9D65111D89C5BF00153CCF /* CGContextSampleRow.h */,
+				8B9D65121D89C5EB00153CCF /* CGContextSampleRow.m */,
+				8B9D650E1D89C30500153CCF /* CGContextNewTestsController.h */,
+				8B9D650F1D89C42800153CCF /* CGContextNewTestsController.m */,
+				8B6186D11D89CC6D00DA47F4 /* CGContextSamplesRootViewController.h */,
+				8B6186D21D89CD1800DA47F4 /* CGContextSamplesRootViewController.m */,
+				F0D21CB81D0605E1002C32EE /* Resources */,
+				F0D21CB41D06045A002C32EE /* OldSamples */,
+				F0D21C921D05FEF9002C32EE /* Info.plist */,
+				F0D21C811D05FEF9002C32EE /* Supporting Files */,
+			);
+			path = CGCatalog;
+			sourceTree = "<group>";
+		};
+		F0D21C811D05FEF9002C32EE /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F0D21C821D05FEF9002C32EE /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F0D21CB41D06045A002C32EE /* OldSamples */ = {
+			isa = PBXGroup;
+			children = (
+				F0D21CB51D060466002C32EE /* CGCCGPathApplyViewController.h */,
+				F0D21CB61D060466002C32EE /* CGCCGPathApplyViewController.m */,
+				552816031D062EC90082C178 /* CGCCGBitmapContentViewController.h */,
+				552816041D062EC90082C178 /* CGCCGBitmapContentViewController.m */,
+				552816061D062F6B0082C178 /* CGCCGContextViewController.h */,
+				552816071D062F6B0082C178 /* CGCCGContextViewController.m */,
+				FB1264901D0A0484007C907C /* CGCCGContextBeginEndTransparencyLayer.h */,
+				FB1264911D0A0484007C907C /* CGCCGContextBeginEndTransparencyLayer.m */,
+				FB18A4B81D1AD10A00A9555A /* CGCCGContextBeginTransparencyLayerWithRect.h */,
+				FB18A4B91D1AD10A00A9555A /* CGCCGContextBeginTransparencyLayerWithRect.m */,
+				FB10A1981D10792E008EA8A1 /* CGCCGContextSetPatternPhase.h */,
+				FB10A1991D10792E008EA8A1 /* CGCCGContextSetPatternPhase.m */,
+				FBA3A50A1D132C9A00C3C011 /* CGCCGContextReplacePathWithStrokedPath.h */,
+				FBA3A50B1D132C9A00C3C011 /* CGCCGContextReplacePathWithStrokedPath.m */,
+				5579D6751D1B73EC00B33059 /* CGCCGPathContainsPointViewController.h */,
+				5579D6761D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m */,
+			);
+			name = OldSamples;
+			path = Samples;
+			sourceTree = "<group>";
+		};
+		F0D21CB81D0605E1002C32EE /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8B2D2E8F1D9DA5F100B8E557 /* CloseSubPath.png */,
+				8B2D2E901D9DA5F100B8E557 /* GetBoundingBox.png */,
+				8B2D2E8B1D9DA5C800B8E557 /* CloseSubPath.png */,
+				8B2D2E8C1D9DA5C800B8E557 /* GetBoundingBox.png */,
+				8B2D2E871D9DA5A000B8E557 /* PathAddRect.png */,
+				8B2D2E881D9DA5A000B8E557 /* PathApply.png */,
+				8B2D2E7D1D9DA57700B8E557 /* AddCurveToPoint.png */,
+				8B2D2E7E1D9DA57700B8E557 /* AddElipseToRect.png */,
+				8B2D2E7F1D9DA57700B8E557 /* AddLineToPoint.png */,
+				8B2D2E801D9DA57700B8E557 /* AddPath.png */,
+				8B2D2E811D9DA57700B8E557 /* AddQuadCurveToPoint.png */,
+				552816091D0630300082C178 /* LogoAutodesk.png */,
+				F0D21CB91D0605E1002C32EE /* Assets.xcassets */,
+				F0D21CBB1D0605ED002C32EE /* Launch Screen.storyboard */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F0D21C7D1D05FEF9002C32EE /* CGCatalog */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F0D21CAB1D05FEF9002C32EE /* Build configuration list for PBXNativeTarget "CGCatalog" */;
+			buildPhases = (
+				F0D21C7A1D05FEF9002C32EE /* Sources */,
+				F0D21C7B1D05FEF9002C32EE /* Frameworks */,
+				F0D21C7C1D05FEF9002C32EE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CGCatalog;
+			productName = CGCatalog;
+			productReference = F0D21C7E1D05FEF9002C32EE /* CGCatalog.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F0D21C761D05FEF9002C32EE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = Vectorform;
+				TargetAttributes = {
+					F0D21C7D1D05FEF9002C32EE = {
+						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = Microsoft;
+					};
+				};
+			};
+			buildConfigurationList = F0D21C791D05FEF9002C32EE /* Build configuration list for PBXProject "CGCatalog" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F0D21C751D05FEF9002C32EE;
+			productRefGroup = F0D21C7F1D05FEF9002C32EE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F0D21C7D1D05FEF9002C32EE /* CGCatalog */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F0D21C7C1D05FEF9002C32EE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8B2D2E841D9DA57700B8E557 /* AddLineToPoint.png in Resources */,
+				8B2D2E8A1D9DA5A000B8E557 /* PathApply.png in Resources */,
+				8B2D2E831D9DA57700B8E557 /* AddElipseToRect.png in Resources */,
+				8B2D2E861D9DA57700B8E557 /* AddQuadCurveToPoint.png in Resources */,
+				8B2D2E911D9DA5F100B8E557 /* CloseSubPath.png in Resources */,
+				8B2D2E821D9DA57700B8E557 /* AddCurveToPoint.png in Resources */,
+				8B2D2E851D9DA57700B8E557 /* AddPath.png in Resources */,
+				5528160A1D0630300082C178 /* LogoAutodesk.png in Resources */,
+				F0D21CBC1D0605ED002C32EE /* Launch Screen.storyboard in Resources */,
+				8B2D2E8E1D9DA5C800B8E557 /* GetBoundingBox.png in Resources */,
+				8B2D2E891D9DA5A000B8E557 /* PathAddRect.png in Resources */,
+				F0D21CBA1D0605E1002C32EE /* Assets.xcassets in Resources */,
+				8B2D2E921D9DA5F100B8E557 /* GetBoundingBox.png in Resources */,
+				8B2D2E8D1D9DA5C800B8E557 /* CloseSubPath.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F0D21C7A1D05FEF9002C32EE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8B2D2E951D9DA63400B8E557 /* CGDrawOptions.m in Sources */,
+				8BF7B3F71D9C63FA00C25A86 /* CGPathCloseSubpathViewController.m in Sources */,
+				8B9D65101D89C42800153CCF /* CGContextNewTestsController.m in Sources */,
+				F0D21C891D05FEF9002C32EE /* CGCRootViewController.m in Sources */,
+				8BF7B3F01D9C63FA00C25A86 /* CGPathAddCurveToPointViewController.m in Sources */,
+				FBA3A50C1D132C9A00C3C011 /* CGCCGContextReplacePathWithStrokedPath.m in Sources */,
+				8BF7B3F21D9C63FA00C25A86 /* CGPathAddLineToPointViewController.m in Sources */,
+				8B6186D31D89CD1800DA47F4 /* CGContextSamplesRootViewController.m in Sources */,
+				FB1264921D0A0484007C907C /* CGCCGContextBeginEndTransparencyLayer.m in Sources */,
+				8BF7B3F51D9C63FA00C25A86 /* CGPathAddRectViewController.m in Sources */,
+				FB10A19A1D10792E008EA8A1 /* CGCCGContextSetPatternPhase.m in Sources */,
+				8BF7B3F31D9C63FA00C25A86 /* CGPathAddPathViewController.m in Sources */,
+				8B8A9A701D95AD32006CB438 /* CGDrawView.m in Sources */,
+				552816081D062F6B0082C178 /* CGCCGContextViewController.m in Sources */,
+				8BF7B3F81D9C63FA00C25A86 /* CGPathContainsPointViewController.m in Sources */,
+				5579D6771D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m in Sources */,
+				F0D21C861D05FEF9002C32EE /* AppDelegate.m in Sources */,
+				8B9D65131D89C5EB00153CCF /* CGContextSampleRow.m in Sources */,
+				F0D21CBF1D06078D002C32EE /* CGCBaseViewController.m in Sources */,
+				FB18A4BA1D1AD10A00A9555A /* CGCCGContextBeginTransparencyLayerWithRect.m in Sources */,
+				552816051D062EC90082C178 /* CGCCGBitmapContentViewController.m in Sources */,
+				8BF7B3F61D9C63FA00C25A86 /* CGPathApplyViewController.m in Sources */,
+				8BF7B3F41D9C63FA00C25A86 /* CGPathAddQuadCurveToPointViewController.m in Sources */,
+				F0D21CB71D060466002C32EE /* CGCCGPathApplyViewController.m in Sources */,
+				F0D21C831D05FEF9002C32EE /* main.m in Sources */,
+				8BF7B3F91D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.m in Sources */,
+				8BF7B3F11D9C63FA00C25A86 /* CGPathAddElipseViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		F0D21CA91D05FEF9002C32EE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = Microsoft;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F0D21CAA1D05FEF9002C32EE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Microsoft;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F0D21CAC1D05FEF9002C32EE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = CGCatalog/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = CGC.CGCatalog;
+				PRODUCT_NAME = CGCatalog;
+			};
+			name = Debug;
+		};
+		F0D21CAD1D05FEF9002C32EE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = CGCatalog/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = CGC.CGCatalog;
+				PRODUCT_NAME = CGCatalog;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F0D21C791D05FEF9002C32EE /* Build configuration list for PBXProject "CGCatalog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F0D21CA91D05FEF9002C32EE /* Debug */,
+				F0D21CAA1D05FEF9002C32EE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F0D21CAB1D05FEF9002C32EE /* Build configuration list for PBXNativeTarget "CGCatalog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F0D21CAC1D05FEF9002C32EE /* Debug */,
+				F0D21CAD1D05FEF9002C32EE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F0D21C761D05FEF9002C32EE /* Project object */;
+}

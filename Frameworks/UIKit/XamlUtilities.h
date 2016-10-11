@@ -30,17 +30,22 @@
 #include "Windows.UI.Xaml.Markup.h"
 #include "COMIncludes_End.h"
 
-using namespace ABI::Windows::UI::Xaml;
-using namespace Microsoft::WRL;
-using namespace Windows::Foundation;
-
 NSString* const XamlAutoGenNamespace = @"IslandwoodAutoGenNamespace";
 
 // Convert UIColor to Color on windows
 WUColor* ConvertUIColorToWUColor(UIColor* uiColor);
 
+// Convert UIImage to WUXMImageBrush on windows
+WUXMImageBrush* ConvertUIImageToWUXMImageBrush(UIImage* image);
+
+// Convert UIImage to WUXMIBitmapSource on windows
+WUXMIBitmapSource* ConvertUIImageToWUXMIBitmapSource(UIImage* image);
+
 // Convert UITextAlignment to TextAlignment on windows
 WXTextAlignment ConvertUITextAlignmentToWXTextAlignment(UITextAlignment alignment);
+
+// Convert TextAlignment to UITextAlignment
+UITextAlignment ConvertWXTextAlignmentToUITextAlignment(WXTextAlignment alignment);
 
 // Convert ios KeyboardType to Windows InputScope
 WUXIInputScope* ConvertKeyboardTypeToInputScope(UIKeyboardType keyboardType, BOOL secureTextMode);
@@ -48,14 +53,19 @@ WUXIInputScope* ConvertKeyboardTypeToInputScope(UIKeyboardType keyboardType, BOO
 // Convert UIControlContentVerticalAlignment to Windows vertical Alignment
 WXVerticalAlignment ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(UIControlContentVerticalAlignment alignment);
 
-// Find the named template child in control tempate of a xaml control
+// Find the named template child in control template of a xaml control
 WXFrameworkElement* FindTemplateChild(WXCControl* control, NSString* name);
+
+// Passing a string between ObjC and WRL requires encasing an NSString within a WFPropertyValue/WFIPropertyValue
+// BUGBUG:8791977 - WFIPropertyValue is not publicly exposed via projections so we used a workaround
+NSString* NSStringFromPropertyValue(const Microsoft::WRL::ComPtr<IInspectable>& inspPropValue);
+NSString* NSStringFromPropertyValue(RTObject* rtPropertyValue);
 
 // Set up border style for a control
 void SetControlBorderStyle(WXCControl* control, UITextBorderStyle style);
 
 // Determine if the XAML type specified by the class name is activatable
-ComPtr<Markup::IXamlType> ReturnXamlType(NSString* xamlClassName);
+Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> ReturnXamlType(NSString* xamlClassName);
 
 // Determine the type of XAML control and generate the UIKit equivalent
 UIView* GenerateUIKitControlFromXamlType(RTObject* xamlObject);

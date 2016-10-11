@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
+#define OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Gaming_Input.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WGIHeadset, WGIGamepad;
@@ -52,7 +56,7 @@ typedef unsigned WGIGamepadButtons;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Gaming.Input.GamepadReading
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 @interface WGIGamepadReading : NSObject
 + (instancetype) new;
 @property uint64_t timestamp;
@@ -66,7 +70,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Gaming.Input.GamepadVibration
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 @interface WGIGamepadVibration : NSObject
 + (instancetype) new;
 @property double leftMotor;
@@ -91,13 +95,17 @@ WINRT_EXPORT
 - (void)removeUserChangedEvent:(EventRegistrationToken)tok;
 @end
 
+OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
+@interface WGIIGameController : RTObject <WGIIGameController>
+@end
+
 #endif // __WGIIGameController_DEFINED__
 
 // Windows.Gaming.Input.Headset
 #ifndef __WGIHeadset_DEFINED__
 #define __WGIHeadset_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 @interface WGIHeadset : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -112,7 +120,7 @@ WINRT_EXPORT
 #ifndef __WGIGamepad_DEFINED__
 #define __WGIGamepad_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 @interface WGIGamepad : RTObject <WGIIGameController>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

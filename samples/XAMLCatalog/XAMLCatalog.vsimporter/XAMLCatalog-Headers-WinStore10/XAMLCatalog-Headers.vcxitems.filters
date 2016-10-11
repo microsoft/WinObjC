@@ -1,11 +1,11 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="XAMLCatalog">
-      <UniqueIdentifier>{84FE0C98-B9BF-43AB-9ABB-6461EC1218CE}</UniqueIdentifier>
+      <UniqueIdentifier>{B2902BCB-EDAE-4D90-B366-789B647411FD}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\UIKitControls">
-      <UniqueIdentifier>{21C662EB-45B4-4238-9502-DDD0FEDD40B7}</UniqueIdentifier>
+      <UniqueIdentifier>{109ACEB3-E743-4AD0-8457-7015054397ED}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -21,11 +21,21 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\StoryBoardViewController.h">
       <Filter>XAMLCatalog</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UIActionSheetViewController.h">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UISliderViewController.h">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UIActivityIndicatorViewController.h">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\MiscellaneousViewController.h">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UIButtonViewController.h">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UISliderViewController.h" />
   </ItemGroup>
 </Project>

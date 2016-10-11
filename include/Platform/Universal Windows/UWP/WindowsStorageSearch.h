@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_STORAGE_EXPORT
+#define OBJCUWP_WINDOWS_STORAGE_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Storage.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WSSContentIndexer, WSSValueAndLanguage, WSSContentIndexerQuery, WSSIndexableContent, WSSQueryOptions, WSSStorageFileQueryResult,
@@ -100,7 +104,7 @@ typedef unsigned WSSIndexedState;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Storage.Search.SortEntry
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSSortEntry : NSObject
 + (instancetype) new;
 @property (retain) NSString* propertyName;
@@ -116,6 +120,10 @@ WINRT_EXPORT
 @property (readonly) NSMutableDictionary* /* NSString *, RTObject* */ properties;
 @property (retain) RTObject<WSSIRandomAccessStream>* stream;
 @property (retain) NSString* streamContentType;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSSIIndexableContent : RTObject <WSSIIndexableContent>
 @end
 
 #endif // __WSSIIndexableContent_DEFINED__
@@ -134,6 +142,10 @@ WINRT_EXPORT
 - (void)findStartIndexAsync:(RTObject*)value success:(void (^)(unsigned int))success failure:(void (^)(NSError*))failure;
 - (WSSQueryOptions*)getCurrentQueryOptions;
 - (void)applyNewQueryOptions:(WSSQueryOptions*)newQueryOptions;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSSIStorageQueryResultBase : RTObject <WSSIStorageQueryResultBase>
 @end
 
 #endif // __WSSIStorageQueryResultBase_DEFINED__
@@ -177,13 +189,17 @@ WINRT_EXPORT
 - (BOOL)isCommonFileQuerySupported:(WSSCommonFileQuery)query;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSSIStorageFolderQueryOperations : RTObject <WSSIStorageFolderQueryOperations>
+@end
+
 #endif // __WSSIStorageFolderQueryOperations_DEFINED__
 
 // Windows.Storage.Search.ContentIndexer
 #ifndef __WSSContentIndexer_DEFINED__
 #define __WSSContentIndexer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSContentIndexer : RTObject
 + (WSSContentIndexer*)getIndexerWithName:(NSString*)indexName;
 + (WSSContentIndexer*)getIndexer;
@@ -217,7 +233,7 @@ WINRT_EXPORT
 #ifndef __WSSValueAndLanguage_DEFINED__
 #define __WSSValueAndLanguage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSValueAndLanguage : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -233,7 +249,7 @@ WINRT_EXPORT
 #ifndef __WSSContentIndexerQuery_DEFINED__
 #define __WSSContentIndexerQuery_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSContentIndexerQuery : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -259,7 +275,7 @@ WINRT_EXPORT
 #ifndef __WSSIndexableContent_DEFINED__
 #define __WSSIndexableContent_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSIndexableContent : RTObject <WSSIIndexableContent>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -277,7 +293,7 @@ WINRT_EXPORT
 #ifndef __WSSQueryOptions_DEFINED__
 #define __WSSQueryOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSQueryOptions : RTObject
 + (WSSQueryOptions*)makeCommonFileQuery:(WSSCommonFileQuery)query
                          fileTypeFilter:(id<NSFastEnumeration> /* NSString * */)fileTypeFilter ACTIVATOR;
@@ -309,7 +325,7 @@ WINRT_EXPORT
 #ifndef __WSSStorageFileQueryResult_DEFINED__
 #define __WSSStorageFileQueryResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSStorageFileQueryResult : RTObject <WSSIStorageQueryResultBase>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -337,7 +353,7 @@ WINRT_EXPORT
 #ifndef __WSSStorageFolderQueryResult_DEFINED__
 #define __WSSStorageFolderQueryResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSStorageFolderQueryResult : RTObject <WSSIStorageQueryResultBase>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -365,7 +381,7 @@ WINRT_EXPORT
 #ifndef __WSSStorageItemQueryResult_DEFINED__
 #define __WSSStorageItemQueryResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSStorageItemQueryResult : RTObject <WSSIStorageQueryResultBase>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -393,7 +409,7 @@ WINRT_EXPORT
 #ifndef __WSSSortEntryVector_DEFINED__
 #define __WSSSortEntryVector_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSSortEntryVector : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -417,7 +433,7 @@ WINRT_EXPORT
 #ifndef __WSSStorageLibraryContentChangedTriggerDetails_DEFINED__
 #define __WSSStorageLibraryContentChangedTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSStorageLibraryContentChangedTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

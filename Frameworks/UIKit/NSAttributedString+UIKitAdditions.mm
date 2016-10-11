@@ -294,11 +294,26 @@ static void _initWithHtml(NSMutableAttributedString* self, NSDictionary* attribu
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Only works with an attributed string with one attribute run
 */
 - (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context {
-    UNIMPLEMENTED();
-    return { { 0, 0 }, 20, 20 };
+    __block int attributeCount = 0;
+    __block NSDictionary* attributes;
+
+    // Find out how many runs we have
+    [self enumerateAttributesInRange:NSMakeRange(0, self.string.length) options:options usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop) {
+        attributeCount++;
+        attributes = attrs;
+    }];
+
+    // If we have 0 or 1 run, just use a regular NSString boundingRectWithSize
+    if (attributeCount < 2) {
+        return [self.string boundingRectWithSize:size options:options attributes:attributes context:context];
+    } else {
+        UNIMPLEMENTED_WITH_MSG("Only single run NSAttributedStrings supported");
+        return { { 0, 0 }, 20, 20 };
+    }
 }
 
 /**

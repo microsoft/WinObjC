@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SYSTEM_THREADING_EXPORT
+#define OBJCUWP_WINDOWS_SYSTEM_THREADING_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_System_Threading.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WSTThreadPoolTimer, WSTThreadPool;
@@ -83,7 +87,7 @@ typedef void (^WSTWorkItemHandler)(RTObject<WFIAsyncAction>* operation);
 #ifndef __WSTThreadPoolTimer_DEFINED__
 #define __WSTThreadPoolTimer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_THREADING_EXPORT
 @interface WSTThreadPoolTimer : RTObject
 + (WSTThreadPoolTimer*)createPeriodicTimer:(WSTTimerElapsedHandler)handler period:(WFTimeSpan*)period;
 + (WSTThreadPoolTimer*)createTimer:(WSTTimerElapsedHandler)handler delay:(WFTimeSpan*)delay;
@@ -107,7 +111,7 @@ WINRT_EXPORT
 #ifndef __WSTThreadPool_DEFINED__
 #define __WSTThreadPool_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_THREADING_EXPORT
 @interface WSTThreadPool : RTObject
 + (RTObject<WFIAsyncAction>*)runAsync:(WSTWorkItemHandler)handler;
 + (RTObject<WFIAsyncAction>*)runWithPriorityAsync:(WSTWorkItemHandler)handler priority:(WSTWorkItemPriority)priority;

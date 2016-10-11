@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
+#define OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Services_Maps.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WSMMapAddress, WSMMapLocation, WSMMapRouteManeuver, WSMMapRouteLeg, WSMMapRoute, WSMMapLocationFinderResult, WSMMapRouteFinderResult,
@@ -122,7 +126,7 @@ typedef unsigned WSMMapRouteFinderStatus;
 #ifndef __WSMMapAddress_DEFINED__
 #define __WSMMapAddress_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapAddress : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -151,7 +155,7 @@ WINRT_EXPORT
 #ifndef __WSMMapLocation_DEFINED__
 #define __WSMMapLocation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapLocation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -168,7 +172,7 @@ WINRT_EXPORT
 #ifndef __WSMMapRouteManeuver_DEFINED__
 #define __WSMMapRouteManeuver_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapRouteManeuver : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -190,7 +194,7 @@ WINRT_EXPORT
 #ifndef __WSMMapRouteLeg_DEFINED__
 #define __WSMMapRouteLeg_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapRouteLeg : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -208,7 +212,7 @@ WINRT_EXPORT
 #ifndef __WSMMapRoute_DEFINED__
 #define __WSMMapRoute_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapRoute : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -229,7 +233,7 @@ WINRT_EXPORT
 #ifndef __WSMMapLocationFinderResult_DEFINED__
 #define __WSMMapLocationFinderResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapLocationFinderResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -244,7 +248,7 @@ WINRT_EXPORT
 #ifndef __WSMMapRouteFinderResult_DEFINED__
 #define __WSMMapRouteFinderResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapRouteFinderResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -260,7 +264,7 @@ WINRT_EXPORT
 #ifndef __WSMMapRouteDrivingOptions_DEFINED__
 #define __WSMMapRouteDrivingOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapRouteDrivingOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -278,7 +282,7 @@ WINRT_EXPORT
 #ifndef __WSMMapLocationFinder_DEFINED__
 #define __WSMMapLocationFinder_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapLocationFinder : RTObject
 + (void)findLocationsAtAsync:(WDGGeopoint*)queryPoint
                      success:(void (^)(WSMMapLocationFinderResult*))success
@@ -300,7 +304,7 @@ WINRT_EXPORT
 #ifndef __WSMMapRouteFinder_DEFINED__
 #define __WSMMapRouteFinder_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapRouteFinder : RTObject
 + (void)getDrivingRouteAsync:(WDGGeopoint*)startPoint
                     endPoint:(WDGGeopoint*)endPoint
@@ -362,7 +366,7 @@ WINRT_EXPORT
 #ifndef __WSMMapService_DEFINED__
 #define __WSMMapService_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapService : RTObject
 + (NSString*)serviceToken;
 + (void)setServiceToken:(NSString*)value;
@@ -375,7 +379,7 @@ WINRT_EXPORT
 #ifndef __WSMMapManager_DEFINED__
 #define __WSMMapManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapManager : RTObject
 + (void)showDownloadedMapsUI;
 + (void)showMapsUpdateUI;

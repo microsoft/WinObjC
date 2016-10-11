@@ -70,7 +70,6 @@ private:
     void _OnEnteredBackground(Platform::Object^ sender, Windows::ApplicationModel::EnteredBackgroundEventArgs^ args);
     void _OnLeavingBackground(Platform::Object^ sender, Windows::ApplicationModel::LeavingBackgroundEventArgs^ args);
 #endif
-    void _OnUnhandledException(Platform::Object^ sender, Windows::UI::Xaml::UnhandledExceptionEventArgs^ args);
 
     Windows::Foundation::Deferral^ _enteredBackgroundEventDeferral;
 };

@@ -21,9 +21,11 @@
 
 class XCWorkspace;
 class PBXProject;
+class PBXTarget;
 class XCScheme;
 class SBProject;
 class SBTarget;
+class VCProject;
 
 class SBWorkspace {
 public:
@@ -39,29 +41,36 @@ public:
 
   /* Called from main */
   void printSummary() const;
-  void generateFiles();
+  void generateFiles(bool genProjectionsProj);
   void queueSchemes(const StringSet& schemeNames, const StringSet& configNames);
-  void queueAllTargets(const StringSet& configNames);
   void queueTargets(const StringSet& targetNames, const StringSet& configNames);
   /********************/
   
   SBTarget* queueTargetWithProductName(const String& productName);
+  SBTarget* queueTargetWithName(const String& targetName, const StringSet& configNames);
   SBProject* openProject(const String& projectPath);
 
 private:
   typedef std::vector<SBTarget*> SBTargetVec;
   typedef std::map<String, SBProject*> ProjectMap;
+  typedef std::vector<SBProject*> SBProjectVec;
   typedef std::vector<const XCScheme*> SchemeVec;
+  typedef std::pair<const PBXTarget*, SBProject*> TargetProjectPair;
+  typedef std::vector<TargetProjectPair> PotentialTargetsVec;
 
   SBWorkspace();
   
   void findSchemes(const String& containerAbsPath);
+  void printSchemes() const;
   
   SBProject* findOpenProject(const String& absProjPath) const;
   const XCScheme* getScheme(const String& schemeName) const;
   void getSchemes(const StringSet& schemeNames, SchemeVec& ret) const;
-  void querySchemes(SchemeVec& ret) const;
+  void selectTargets(PotentialTargetsVec& ret);
   void detectProjectCollisions() const;
+  VCProject* generateGlueProject() const;
+  void getAllTargets(PotentialTargetsVec& targets) const;
+  TargetProjectPair findTargetWithName(const String& targetName) const;
 
   // Relevant if Workspace was constructed from a workspace file
   XCWorkspace* m_workspace;

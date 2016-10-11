@@ -5,14 +5,17 @@
     <ItemsRootNamespace>XAMLCatalog_Headers</ItemsRootNamespace>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <Keyword>IslandwoodProj</Keyword>
-    <ItemsProjectGuid>{54559247-8B43-41C7-B5F4-86DC0EE443AD}</ItemsProjectGuid>
-    <SharedGUID>{BF992A19-F354-4E76-8B98-A07B6A7D244B}</SharedGUID>
+    <ItemsProjectGuid>{D43483E7-5DDF-4C36-B1C1-232640B174DE}</ItemsProjectGuid>
+    <SharedGUID>{DDE3EAA2-E224-4A46-A850-D6E0D7FEF036}</SharedGUID>
   </PropertyGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\MiscellaneousViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UIButtonViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\AppDelegate.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\MenuTableViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\ProgrammaticViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\StoryBoardViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UIActionSheetViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UISliderViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UIActivityIndicatorViewController.h" />
   </ItemGroup>

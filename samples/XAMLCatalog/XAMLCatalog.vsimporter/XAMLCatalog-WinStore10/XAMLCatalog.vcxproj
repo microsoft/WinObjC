@@ -30,7 +30,7 @@
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{57765C7E-E763-4FA8-A786-73CADD51A57F}</ProjectGuid>
+    <ProjectGuid>{04732F36-7C36-4CE9-9759-57411B61CB73}</ProjectGuid>
     <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -189,10 +189,16 @@
     <ClangCompile Include="..\..\XAMLCatalog\StoryBoardViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\AppDelegate.m" />
     <ClangCompile Include="..\..\XAMLCatalog\ProgrammaticViewController.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\MiscellaneousViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIActivityIndicatorViewController.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\UIButtonViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UISliderViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\main.m" />
     <ClangCompile Include="..\..\XAMLCatalog\MenuTableViewController.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\UIActionSheetViewController.m" />
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\yellow_background.jpg" />
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\blue_background.jpg" />
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\button_image.png" />
     <AssetCatalogCompile Include="..\..\XAMLCatalog\Assets.xcassets" />
     <StoryboardCompile Include="..\..\XAMLCatalog\XAMLCatalog.storyboard" />
     <SBInfoPlistCopy Include="..\..\XAMLCatalog\Info.plist">

@@ -50,7 +50,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;bcrypt.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -63,7 +63,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;bcrypt.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -76,7 +76,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;bcrypt.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -89,7 +89,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;bcrypt.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>

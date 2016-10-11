@@ -16,9 +16,13 @@
 #pragma once
 
 @class WUIPointerPoint;
+@class WUXIPointerRoutedEventArgs;
 
 @interface UITouch () {
 @public
+    // Adding a WUXIPointerRoutedEventArgs property so that we can mark the routed event as handled/not handled
+    // when touchsBegan:withEvent method is called.
+    WUXIPointerRoutedEventArgs* _routedEventArgs;
     NSTimeInterval _timestamp;
     float _touchX, _touchY;
     float _previousTouchX, _previousTouchY;
@@ -33,6 +37,7 @@
 }
 
 + (UITouch*)_createWithPoint:(CGPoint)point;
-- (void)_updateWithPoint:(WUIPointerPoint*)pointerPoint forPhase:(UITouchPhase)touchPhase;
-
+- (void)_updateWithPoint:(WUIPointerPoint*)pointerPoint
+         routedEventArgs:(WUXIPointerRoutedEventArgs*)routedEventArgs
+                forPhase:(UITouchPhase)touchPhase;
 @end

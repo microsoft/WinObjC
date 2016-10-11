@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT __declspec(dllimport)
+#pragma comment(lib, "ObjCUWP_Windows_Media_Protection_PlayReady.lib")
+#endif
 #include <UWP/interopBase.h>
 
 @class WMPPPlayReadyContentHeader, WMPPPlayReadySoapMessage, WMPPPlayReadyContentResolver, WMPPPlayReadyIndividualizationServiceRequest,
@@ -180,6 +184,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 - (WFGUID*)getKIDAtChainDepth:(unsigned int)chainDepth;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPIPlayReadyLicense : RTObject <WMPPIPlayReadyLicense>
+@end
+
 #endif // __WMPPIPlayReadyLicense_DEFINED__
 
 // Windows.Media.Protection.PlayReady.IPlayReadyDomain
@@ -194,6 +202,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 @property (readonly) WFGUID* serviceId;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPIPlayReadyDomain : RTObject <WMPPIPlayReadyDomain>
+@end
+
 #endif // __WMPPIPlayReadyDomain_DEFINED__
 
 // Windows.Media.Protection.PlayReady.IPlayReadyLicenseSession
@@ -203,6 +215,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 @protocol WMPPIPlayReadyLicenseSession
 - (RTObject<WMPPIPlayReadyLicenseAcquisitionServiceRequest>*)createLAServiceRequest;
 - (void)configureMediaProtectionManager:(WMPMediaProtectionManager*)mpm;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPIPlayReadyLicenseSession : RTObject <WMPPIPlayReadyLicenseSession>
 @end
 
 #endif // __WMPPIPlayReadyLicenseSession_DEFINED__
@@ -223,6 +239,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 - (void)seek:(WFTimeSpan*)startPosition;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPINDDownloadEngine : RTObject <WMPPINDDownloadEngine>
+@end
+
 #endif // __WMPPINDDownloadEngine_DEFINED__
 
 // Windows.Media.Protection.PlayReady.INDDownloadEngineNotifier
@@ -238,6 +258,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 - (void)onNetworkError;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPINDDownloadEngineNotifier : RTObject <WMPPINDDownloadEngineNotifier>
+@end
+
 #endif // __WMPPINDDownloadEngineNotifier_DEFINED__
 
 // Windows.Media.Protection.PlayReady.INDLicenseFetchDescriptor
@@ -250,6 +274,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 @property (retain) RTObject<WMPPINDCustomData>* licenseFetchChallengeCustomData;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPINDLicenseFetchDescriptor : RTObject <WMPPINDLicenseFetchDescriptor>
+@end
+
 #endif // __WMPPINDLicenseFetchDescriptor_DEFINED__
 
 // Windows.Media.Protection.PlayReady.INDCustomData
@@ -259,6 +287,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 @protocol WMPPINDCustomData
 @property (readonly) NSArray* /* uint8_t */ customData;
 @property (readonly) NSArray* /* uint8_t */ customDataTypeID;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPINDCustomData : RTObject <WMPPINDCustomData>
 @end
 
 #endif // __WMPPINDCustomData_DEFINED__
@@ -273,6 +305,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 - (unsigned int)getStreamInformation:(RTObject<WMCIMediaStreamDescriptor>*)descriptor streamType:(WMPPNDMediaStreamType*)streamType;
 - (void)beginOfStream;
 - (void)endOfStream;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPINDStreamParser : RTObject <WMPPINDStreamParser>
 @end
 
 #endif // __WMPPINDStreamParser_DEFINED__
@@ -296,6 +332,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
                      proBytes:(NSArray* /* uint8_t */)proBytes;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPINDStreamParserNotifier : RTObject <WMPPINDStreamParserNotifier>
+@end
+
 #endif // __WMPPINDStreamParserNotifier_DEFINED__
 
 // Windows.Media.Protection.PlayReady.INDSendResult
@@ -304,6 +344,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 
 @protocol WMPPINDSendResult
 @property (readonly) NSArray* /* uint8_t */ response;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPINDSendResult : RTObject <WMPPINDSendResult>
 @end
 
 #endif // __WMPPINDSendResult_DEFINED__
@@ -335,6 +379,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
                              failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPINDMessenger : RTObject <WMPPINDMessenger>
+@end
+
 #endif // __WMPPINDMessenger_DEFINED__
 
 // Windows.Media.Protection.PlayReady.INDTransmitterProperties
@@ -355,6 +403,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 @property (readonly) NSArray* /* WMPPNDCertificateFeature */ supportedFeatures;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPINDTransmitterProperties : RTObject <WMPPINDTransmitterProperties>
+@end
+
 #endif // __WMPPINDTransmitterProperties_DEFINED__
 
 // Windows.Media.Protection.PlayReady.INDStartResult
@@ -365,6 +417,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 @property (readonly) WMCMediaStreamSource* mediaStreamSource;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPINDStartResult : RTObject <WMPPINDStartResult>
+@end
+
 #endif // __WMPPINDStartResult_DEFINED__
 
 // Windows.Media.Protection.PlayReady.INDLicenseFetchResult
@@ -373,6 +429,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 
 @protocol WMPPINDLicenseFetchResult
 @property (readonly) RTObject<WMPPINDCustomData>* responseCustomData;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPINDLicenseFetchResult : RTObject <WMPPINDLicenseFetchResult>
 @end
 
 #endif // __WMPPINDLicenseFetchResult_DEFINED__
@@ -387,6 +447,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 @property (readonly) RTObject<WMPPINDTransmitterProperties>* transmitterProperties;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPINDRegistrationCompletedEventArgs : RTObject <WMPPINDRegistrationCompletedEventArgs>
+@end
+
 #endif // __WMPPINDRegistrationCompletedEventArgs_DEFINED__
 
 // Windows.Media.Protection.PlayReady.INDProximityDetectionCompletedEventArgs
@@ -397,6 +461,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 @property (readonly) unsigned int proximityDetectionRetryCount;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPINDProximityDetectionCompletedEventArgs : RTObject <WMPPINDProximityDetectionCompletedEventArgs>
+@end
+
 #endif // __WMPPINDProximityDetectionCompletedEventArgs_DEFINED__
 
 // Windows.Media.Protection.PlayReady.INDLicenseFetchCompletedEventArgs
@@ -405,6 +473,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 
 @protocol WMPPINDLicenseFetchCompletedEventArgs
 @property (readonly) RTObject<WMPPINDCustomData>* responseCustomData;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPINDLicenseFetchCompletedEventArgs : RTObject <WMPPINDLicenseFetchCompletedEventArgs>
 @end
 
 #endif // __WMPPINDLicenseFetchCompletedEventArgs_DEFINED__
@@ -419,6 +491,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 @property (readonly) int64_t presentationTimestamp;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPINDClosedCaptionDataReceivedEventArgs : RTObject <WMPPINDClosedCaptionDataReceivedEventArgs>
+@end
+
 #endif // __WMPPINDClosedCaptionDataReceivedEventArgs_DEFINED__
 
 // Windows.Media.Protection.PlayReady.INDStorageFileHelper
@@ -427,6 +503,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 
 @protocol WMPPINDStorageFileHelper
 - (NSMutableArray* /* NSString * */)getFileURLs:(RTObject<WSIStorageFile>*)file;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPINDStorageFileHelper : RTObject <WMPPINDStorageFileHelper>
 @end
 
 #endif // __WMPPINDStorageFileHelper_DEFINED__
@@ -438,6 +518,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 @protocol WMPIMediaProtectionServiceRequest
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPIMediaProtectionServiceRequest : RTObject <WMPIMediaProtectionServiceRequest>
 @end
 
 #endif // __WMPIMediaProtectionServiceRequest_DEFINED__
@@ -456,6 +540,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 - (HRESULT)processManualEnablingResponse:(NSArray* /* uint8_t */)responseBytes;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPIPlayReadyServiceRequest : RTObject <WMPPIPlayReadyServiceRequest>
+@end
+
 #endif // __WMPPIPlayReadyServiceRequest_DEFINED__
 
 // Windows.Media.Protection.PlayReady.IPlayReadyLicenseAcquisitionServiceRequest
@@ -469,6 +557,10 @@ typedef unsigned WMPPNDStartAsyncOptions;
 - (RTObject<WMPPIPlayReadyServiceRequest>*)nextServiceRequest;
 - (WMPPPlayReadySoapMessage*)generateManualEnablingChallenge;
 - (HRESULT)processManualEnablingResponse:(NSArray* /* uint8_t */)responseBytes;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPIPlayReadyLicenseAcquisitionServiceRequest : RTObject <WMPPIPlayReadyLicenseAcquisitionServiceRequest>
 @end
 
 #endif // __WMPPIPlayReadyLicenseAcquisitionServiceRequest_DEFINED__
@@ -489,13 +581,17 @@ typedef unsigned WMPPNDStartAsyncOptions;
 - (HRESULT)processManualEnablingResponse:(NSArray* /* uint8_t */)responseBytes;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
+@interface WMPPIPlayReadySecureStopServiceRequest : RTObject <WMPPIPlayReadySecureStopServiceRequest>
+@end
+
 #endif // __WMPPIPlayReadySecureStopServiceRequest_DEFINED__
 
 // Windows.Media.Protection.PlayReady.PlayReadyContentHeader
 #ifndef __WMPPPlayReadyContentHeader_DEFINED__
 #define __WMPPPlayReadyContentHeader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadyContentHeader : RTObject
 + (WMPPPlayReadyContentHeader*)makeInstanceFromComponents2:(unsigned int)dwFlags
                                              contentKeyIds:(NSArray* /* WFGUID* */)contentKeyIds
@@ -541,7 +637,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadySoapMessage_DEFINED__
 #define __WMPPPlayReadySoapMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadySoapMessage : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -557,7 +653,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadyContentResolver_DEFINED__
 #define __WMPPPlayReadyContentResolver_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadyContentResolver : RTObject
 + (RTObject<WMPPIPlayReadyServiceRequest>*)serviceRequest:(WMPPPlayReadyContentHeader*)contentHeader;
 @end
@@ -568,7 +664,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadyIndividualizationServiceRequest_DEFINED__
 #define __WMPPPlayReadyIndividualizationServiceRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadyIndividualizationServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -591,7 +687,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadyDomainJoinServiceRequest_DEFINED__
 #define __WMPPPlayReadyDomainJoinServiceRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadyDomainJoinServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -617,7 +713,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadyDomainLeaveServiceRequest_DEFINED__
 #define __WMPPPlayReadyDomainLeaveServiceRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadyDomainLeaveServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -642,7 +738,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadyLicenseAcquisitionServiceRequest_DEFINED__
 #define __WMPPPlayReadyLicenseAcquisitionServiceRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadyLicenseAcquisitionServiceRequest
     : RTObject <WMPPIPlayReadyLicenseAcquisitionServiceRequest, WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
 + (instancetype)make ACTIVATOR;
@@ -668,7 +764,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadyMeteringReportServiceRequest_DEFINED__
 #define __WMPPPlayReadyMeteringReportServiceRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadyMeteringReportServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -692,7 +788,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadyRevocationServiceRequest_DEFINED__
 #define __WMPPPlayReadyRevocationServiceRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadyRevocationServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -715,7 +811,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadyLicenseManagement_DEFINED__
 #define __WMPPPlayReadyLicenseManagement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadyLicenseManagement : RTObject
 + (RTObject<WFIAsyncAction>*)deleteLicenses:(WMPPPlayReadyContentHeader*)contentHeader;
 @end
@@ -726,7 +822,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadyLicense_DEFINED__
 #define __WMPPPlayReadyLicense_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadyLicense : RTObject <WMPPIPlayReadyLicense>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -746,7 +842,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadyLicenseIterable_DEFINED__
 #define __WMPPPlayReadyLicenseIterable_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadyLicenseIterable : RTObject
 + (WMPPPlayReadyLicenseIterable*)makeInstance:(WMPPPlayReadyContentHeader*)contentHeader fullyEvaluated:(BOOL)fullyEvaluated ACTIVATOR;
 + (instancetype)make ACTIVATOR;
@@ -761,7 +857,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadyLicenseIterator_DEFINED__
 #define __WMPPPlayReadyLicenseIterator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadyLicenseIterator : RTObject
 // Failed to get type for default interface: Can't marshal
 // Windows.Foundation.Collections.IIterator`1<Windows.Media.Protection.PlayReady.IPlayReadyLicense>
@@ -777,7 +873,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadyDomain_DEFINED__
 #define __WMPPPlayReadyDomain_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadyDomain : RTObject <WMPPIPlayReadyDomain>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -795,7 +891,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadyDomainIterable_DEFINED__
 #define __WMPPPlayReadyDomainIterable_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadyDomainIterable : RTObject
 + (WMPPPlayReadyDomainIterable*)makeInstance:(WFGUID*)domainAccountId ACTIVATOR;
 #if defined(__cplusplus)
@@ -809,7 +905,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadyDomainIterator_DEFINED__
 #define __WMPPPlayReadyDomainIterator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadyDomainIterator : RTObject
 // Failed to get type for default interface: Can't marshal
 // Windows.Foundation.Collections.IIterator`1<Windows.Media.Protection.PlayReady.IPlayReadyDomain>
@@ -825,7 +921,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadyStatics_DEFINED__
 #define __WMPPPlayReadyStatics_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadyStatics : RTObject
 + (BOOL)checkSupportedHardware:(WMPPPlayReadyHardwareDRMFeatures)hwdrmFeature;
 + (WFGUID*)domainJoinServiceRequestType;
@@ -846,7 +942,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadySecureStopServiceRequest_DEFINED__
 #define __WMPPPlayReadySecureStopServiceRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadySecureStopServiceRequest
     : RTObject <WMPPIPlayReadySecureStopServiceRequest, WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
 + (WMPPPlayReadySecureStopServiceRequest*)makeInstance:(NSArray* /* uint8_t */)publisherCertBytes ACTIVATOR;
@@ -877,7 +973,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadySecureStopIterable_DEFINED__
 #define __WMPPPlayReadySecureStopIterable_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadySecureStopIterable : RTObject
 + (WMPPPlayReadySecureStopIterable*)makeInstance:(NSArray* /* uint8_t */)publisherCertBytes ACTIVATOR;
 #if defined(__cplusplus)
@@ -891,7 +987,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadySecureStopIterator_DEFINED__
 #define __WMPPPlayReadySecureStopIterator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadySecureStopIterator : RTObject
 // Failed to get type for default interface: Can't marshal
 // Windows.Foundation.Collections.IIterator`1<Windows.Media.Protection.PlayReady.IPlayReadySecureStopServiceRequest>
@@ -907,7 +1003,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadyITADataGenerator_DEFINED__
 #define __WMPPPlayReadyITADataGenerator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadyITADataGenerator : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -925,7 +1021,7 @@ WINRT_EXPORT
 #ifndef __WMPPPlayReadyLicenseSession_DEFINED__
 #define __WMPPPlayReadyLicenseSession_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPPlayReadyLicenseSession : RTObject <WMPPIPlayReadyLicenseSession>
 + (WMPPPlayReadyLicenseSession*)makeInstance:(RTObject<WFCIPropertySet>*)configuration ACTIVATOR;
 #if defined(__cplusplus)
@@ -941,7 +1037,7 @@ WINRT_EXPORT
 #ifndef __WMPPNDDownloadEngineNotifier_DEFINED__
 #define __WMPPNDDownloadEngineNotifier_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPNDDownloadEngineNotifier : RTObject <WMPPINDDownloadEngineNotifier>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -961,7 +1057,7 @@ WINRT_EXPORT
 #ifndef __WMPPNDStreamParserNotifier_DEFINED__
 #define __WMPPNDStreamParserNotifier_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPNDStreamParserNotifier : RTObject <WMPPINDStreamParserNotifier>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -987,7 +1083,7 @@ WINRT_EXPORT
 #ifndef __WMPPNDTCPMessenger_DEFINED__
 #define __WMPPNDTCPMessenger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPNDTCPMessenger : RTObject <WMPPINDMessenger>
 + (WMPPNDTCPMessenger*)makeInstance:(NSString*)remoteHostName remoteHostPort:(unsigned int)remoteHostPort ACTIVATOR;
 #if defined(__cplusplus)
@@ -1021,7 +1117,7 @@ WINRT_EXPORT
 #ifndef __WMPPNDLicenseFetchDescriptor_DEFINED__
 #define __WMPPNDLicenseFetchDescriptor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPNDLicenseFetchDescriptor : RTObject <WMPPINDLicenseFetchDescriptor>
 + (WMPPNDLicenseFetchDescriptor*)makeInstance:(WMPPNDContentIDType)contentIDType
                                contentIDBytes:(NSArray* /* uint8_t */)contentIDBytes
@@ -1040,7 +1136,7 @@ WINRT_EXPORT
 #ifndef __WMPPNDCustomData_DEFINED__
 #define __WMPPNDCustomData_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPNDCustomData : RTObject <WMPPINDCustomData>
 + (WMPPNDCustomData*)makeInstance:(NSArray* /* uint8_t */)customDataTypeIDBytes
                   customDataBytes:(NSArray* /* uint8_t */)customDataBytes ACTIVATOR;
@@ -1057,7 +1153,7 @@ WINRT_EXPORT
 #ifndef __WMPPNDClient_DEFINED__
 #define __WMPPNDClient_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPNDClient : RTObject
 + (WMPPNDClient*)makeInstance:(RTObject<WMPPINDDownloadEngine>*)downloadEngine
                  streamParser:(RTObject<WMPPINDStreamParser>*)streamParser
@@ -1096,7 +1192,7 @@ WINRT_EXPORT
 #ifndef __WMPPNDStorageFileHelper_DEFINED__
 #define __WMPPNDStorageFileHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PROTECTION_PLAYREADY_EXPORT
 @interface WMPPNDStorageFileHelper : RTObject <WMPPINDStorageFileHelper>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

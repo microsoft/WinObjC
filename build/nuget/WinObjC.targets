@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="$(MSBuildThisFileDirectory)..\lib\uap10.0\ApplicationInsights.winmd">
+      <Implementation>ApplicationInsights.dll</Implementation>
+    </Reference>
+    <Reference Include="$(MSBuildThisFileDirectory)..\lib\uap10.0\UIKit.winmd">
+      <Implementation>UIKit.Xaml.dll</Implementation>
+    </Reference>
+  </ItemGroup>
 </Project>

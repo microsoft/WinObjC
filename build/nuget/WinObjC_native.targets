@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildThisFileDirectory)..\WinObjC.targets" />
+  <ItemGroup>
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\runtimes\win10-x86\native\*" />
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap\UIKit\*">
+      <DestinationSubDirectory>UIKit\</DestinationSubDirectory>
+    </ReferenceCopyLocalPaths>
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap\UIKit\Themes\*">
+      <DestinationSubDirectory>UIKit\Themes\</DestinationSubDirectory>
+    </ReferenceCopyLocalPaths>
+  </ItemGroup>
+</Project>
