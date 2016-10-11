@@ -569,7 +569,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         }
 
         if (!target) {
-#if 0
+#if 0 // TODO(DH): GH#1125 evaluate the interplay between context and displaytexture.
             if ((priv->isOpaque && priv->_backgroundColor == nil) || (priv->backgroundColor.a == 1.0 && 0)) {
                 /* CGVectorImage is currently in development - not ready for general use */
                 if (useVector) {
@@ -588,7 +588,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
 #endif
                 drawContext = CreateLayerContentsBitmapContext32(width, height);
                 priv->drewOpaque = FALSE;
-#if 0
+#if 0 // TODO(DH): GH#1125 evaluate the interplay between context and displaytexture.
             }
 #endif
             priv->ownsContents = TRUE;

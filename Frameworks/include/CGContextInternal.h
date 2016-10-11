@@ -27,7 +27,6 @@
 
 #import <objc/runtime.h>
 
-COREGRAPHICS_EXPORT void EbrCenterTextInRectVertically(CGRect* rect, CGSize* textSize, id font);
 COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithTexture(int width,
                                                                    int height,
                                                                    DisplayTexture* texture = NULL,

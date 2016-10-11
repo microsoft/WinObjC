@@ -18,7 +18,7 @@
 #import <Starboard.h>
 #import <math.h>
 
-#import "CGSurfaceInfoInternal.h" //EVAL
+#import "CGSurfaceInfoInternal.h" // TODO(DH) Evaluate the need for this header.
 
 #import <CoreGraphics/CGContext.h>
 #import <CoreGraphics/CGPath.h>
