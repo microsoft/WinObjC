@@ -108,6 +108,10 @@ typedef unsigned WMAAudioGraphUnrecoverableError;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Media.Audio.IAudioNode
@@ -127,6 +131,10 @@ typedef unsigned WMAAudioGraphUnrecoverableError;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+@interface WMAIAudioNode : RTObject <WMAIAudioNode>
+@end
+
 #endif // __WMAIAudioNode_DEFINED__
 
 // Windows.Media.Audio.IAudioInputNode
@@ -144,6 +152,10 @@ typedef unsigned WMAAudioGraphUnrecoverableError;
 - (void)disableEffectsByDefinition:(RTObject<WMEIAudioEffectDefinition>*)definition;
 - (void)enableEffectsByDefinition:(RTObject<WMEIAudioEffectDefinition>*)definition;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+@interface WMAIAudioInputNode : RTObject <WMAIAudioInputNode>
 @end
 
 #endif // __WMAIAudioInputNode_DEFINED__
@@ -586,6 +598,10 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @protocol WMEIAudioEffectDefinition
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+@interface WMEIAudioEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 @end
 
 #endif // __WMEIAudioEffectDefinition_DEFINED__

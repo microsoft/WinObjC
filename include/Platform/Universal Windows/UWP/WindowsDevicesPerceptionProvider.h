@@ -75,6 +75,10 @@ typedef void (^WDPPPerceptionStopFaceAuthenticationHandler)(WDPPPerceptionFaceAu
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Devices.Perception.Provider.IPerceptionFrameProviderManager
@@ -84,6 +88,10 @@ typedef void (^WDPPPerceptionStopFaceAuthenticationHandler)(WDPPPerceptionFaceAu
 @protocol WDPPIPerceptionFrameProviderManager <WFIClosable>
 - (RTObject<WDPPIPerceptionFrameProvider>*)getFrameProvider:(WDPPPerceptionFrameProviderInfo*)frameProviderInfo;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
+@interface WDPPIPerceptionFrameProviderManager : RTObject <WDPPIPerceptionFrameProviderManager>
 @end
 
 #endif // __WDPPIPerceptionFrameProviderManager_DEFINED__
@@ -100,6 +108,10 @@ typedef void (^WDPPPerceptionStopFaceAuthenticationHandler)(WDPPPerceptionFaceAu
 - (void)stop;
 - (void)setProperty:(WDPPPerceptionPropertyChangeRequest*)value;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
+@interface WDPPIPerceptionFrameProvider : RTObject <WDPPIPerceptionFrameProvider>
 @end
 
 #endif // __WDPPIPerceptionFrameProvider_DEFINED__

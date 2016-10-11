@@ -172,6 +172,10 @@ typedef unsigned WNVVpnManagementErrorStatus;
     controlPacketsToSend:(WNVVpnPacketBufferList*)controlPacketsToSend;
 @end
 
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
+@interface WNVIVpnPlugIn : RTObject <WNVIVpnPlugIn>
+@end
+
 #endif // __WNVIVpnPlugIn_DEFINED__
 
 // Windows.Networking.Vpn.IVpnCustomPrompt
@@ -184,6 +188,10 @@ typedef unsigned WNVVpnManagementErrorStatus;
 @property (retain) NSString* label;
 @end
 
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
+@interface WNVIVpnCustomPrompt : RTObject <WNVIVpnCustomPrompt>
+@end
+
 #endif // __WNVIVpnCustomPrompt_DEFINED__
 
 // Windows.Networking.Vpn.IVpnRouteFactory
@@ -192,6 +200,10 @@ typedef unsigned WNVVpnManagementErrorStatus;
 
 @protocol WNVIVpnRouteFactory
 - (WNVVpnRoute*)createVpnRoute:(WNHostName*)address prefixSize:(uint8_t)prefixSize;
+@end
+
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
+@interface WNVIVpnRouteFactory : RTObject <WNVIVpnRouteFactory>
 @end
 
 #endif // __WNVIVpnRouteFactory_DEFINED__
@@ -206,6 +218,10 @@ typedef unsigned WNVVpnManagementErrorStatus;
                                proxyServerList:(NSMutableArray* /* WNHostName* */)proxyServerList;
 @end
 
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
+@interface WNVIVpnNamespaceInfoFactory : RTObject <WNVIVpnNamespaceInfoFactory>
+@end
+
 #endif // __WNVIVpnNamespaceInfoFactory_DEFINED__
 
 // Windows.Networking.Vpn.IVpnInterfaceIdFactory
@@ -214,6 +230,10 @@ typedef unsigned WNVVpnManagementErrorStatus;
 
 @protocol WNVIVpnInterfaceIdFactory
 - (WNVVpnInterfaceId*)createVpnInterfaceId:(NSArray* /* uint8_t */)address;
+@end
+
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
+@interface WNVIVpnInterfaceIdFactory : RTObject <WNVIVpnInterfaceIdFactory>
 @end
 
 #endif // __WNVIVpnInterfaceIdFactory_DEFINED__
@@ -229,6 +249,10 @@ typedef unsigned WNVVpnManagementErrorStatus;
 @property (readonly) WSCPasswordCredential* passkeyCredential;
 @end
 
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
+@interface WNVIVpnCredential : RTObject <WNVIVpnCredential>
+@end
+
 #endif // __WNVIVpnCredential_DEFINED__
 
 // Windows.Networking.Vpn.IVpnCustomPromptElement
@@ -241,6 +265,10 @@ typedef unsigned WNVVpnManagementErrorStatus;
 @property BOOL emphasized;
 @end
 
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
+@interface WNVIVpnCustomPromptElement : RTObject <WNVIVpnCustomPromptElement>
+@end
+
 #endif // __WNVIVpnCustomPromptElement_DEFINED__
 
 // Windows.Networking.Vpn.IVpnChannelStatics
@@ -251,6 +279,10 @@ typedef unsigned WNVVpnManagementErrorStatus;
 - (void)processEventAsync:(RTObject*)thirdPartyPlugIn event:(RTObject*)event;
 @end
 
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
+@interface WNVIVpnChannelStatics : RTObject <WNVIVpnChannelStatics>
+@end
+
 #endif // __WNVIVpnChannelStatics_DEFINED__
 
 // Windows.Networking.Vpn.IVpnPacketBufferFactory
@@ -259,6 +291,10 @@ typedef unsigned WNVVpnManagementErrorStatus;
 
 @protocol WNVIVpnPacketBufferFactory
 - (WNVVpnPacketBuffer*)createVpnPacketBuffer:(WNVVpnPacketBuffer*)parentBuffer offset:(unsigned int)offset length:(unsigned int)length;
+@end
+
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
+@interface WNVIVpnPacketBufferFactory : RTObject <WNVIVpnPacketBufferFactory>
 @end
 
 #endif // __WNVIVpnPacketBufferFactory_DEFINED__
@@ -272,6 +308,10 @@ typedef unsigned WNVVpnManagementErrorStatus;
                                         nameType:(WNVVpnDomainNameType)nameType
                                    dnsServerList:(id<NSFastEnumeration> /* WNHostName* */)dnsServerList
                                  proxyServerList:(id<NSFastEnumeration> /* WNHostName* */)proxyServerList;
+@end
+
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
+@interface WNVIVpnDomainNameInfoFactory : RTObject <WNVIVpnDomainNameInfoFactory>
 @end
 
 #endif // __WNVIVpnDomainNameInfoFactory_DEFINED__
@@ -288,6 +328,10 @@ typedef unsigned WNVVpnManagementErrorStatus;
 @property BOOL rememberCredentials;
 @property (readonly) NSMutableArray* /* WNVVpnRoute* */ routes;
 @property (readonly) NSMutableArray* /* WNVVpnTrafficFilter* */ trafficFilters;
+@end
+
+OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
+@interface WNVIVpnProfile : RTObject <WNVIVpnProfile>
 @end
 
 #endif // __WNVIVpnProfile_DEFINED__

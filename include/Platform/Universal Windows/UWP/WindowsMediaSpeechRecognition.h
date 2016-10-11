@@ -140,6 +140,10 @@ typedef unsigned WMSSpeechContinuousRecognitionMode;
 @property (readonly) WMSSpeechRecognitionConstraintType type;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+@interface WMSISpeechRecognitionConstraint : RTObject <WMSISpeechRecognitionConstraint>
+@end
+
 #endif // __WMSISpeechRecognitionConstraint_DEFINED__
 
 // Windows.Media.SpeechRecognition.SpeechRecognitionSemanticInterpretation
@@ -295,6 +299,10 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 
 @protocol WFIClosable
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
 @end
 
 #endif // __WFIClosable_DEFINED__

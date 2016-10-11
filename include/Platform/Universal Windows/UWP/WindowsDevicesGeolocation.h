@@ -113,6 +113,10 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 @property (readonly) unsigned int spatialReferenceId;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
+@interface WDGIGeoshape : RTObject <WDGIGeoshape>
+@end
+
 #endif // __WDGIGeoshape_DEFINED__
 
 // Windows.Devices.Geolocation.Geopoint

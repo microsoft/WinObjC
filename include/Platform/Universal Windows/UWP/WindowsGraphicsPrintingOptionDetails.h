@@ -69,6 +69,10 @@ typedef unsigned WGPOPrintOptionType;
 - (BOOL)trySetValue:(RTObject*)value;
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
+@interface WGPOIPrintOptionDetails : RTObject <WGPOIPrintOptionDetails>
+@end
+
 #endif // __WGPOIPrintOptionDetails_DEFINED__
 
 // Windows.Graphics.Printing.OptionDetails.IPrintNumberOptionDetails
@@ -79,6 +83,10 @@ typedef unsigned WGPOPrintOptionType;
 @property (readonly) unsigned int maxValue;
 @property (readonly) unsigned int minValue;
 - (BOOL)trySetValue:(RTObject*)value;
+@end
+
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
+@interface WGPOIPrintNumberOptionDetails : RTObject <WGPOIPrintNumberOptionDetails>
 @end
 
 #endif // __WGPOIPrintNumberOptionDetails_DEFINED__
@@ -92,6 +100,10 @@ typedef unsigned WGPOPrintOptionType;
 - (BOOL)trySetValue:(RTObject*)value;
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
+@interface WGPOIPrintTextOptionDetails : RTObject <WGPOIPrintTextOptionDetails>
+@end
+
 #endif // __WGPOIPrintTextOptionDetails_DEFINED__
 
 // Windows.Graphics.Printing.OptionDetails.IPrintItemListOptionDetails
@@ -103,6 +115,10 @@ typedef unsigned WGPOPrintOptionType;
 - (BOOL)trySetValue:(RTObject*)value;
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
+@interface WGPOIPrintItemListOptionDetails : RTObject <WGPOIPrintItemListOptionDetails>
+@end
+
 #endif // __WGPOIPrintItemListOptionDetails_DEFINED__
 
 // Windows.Graphics.Printing.OptionDetails.IPrintCustomOptionDetails
@@ -112,6 +128,10 @@ typedef unsigned WGPOPrintOptionType;
 @protocol WGPOIPrintCustomOptionDetails <WGPOIPrintOptionDetails>
 @property (retain) NSString* displayName;
 - (BOOL)trySetValue:(RTObject*)value;
+@end
+
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
+@interface WGPOIPrintCustomOptionDetails : RTObject <WGPOIPrintCustomOptionDetails>
 @end
 
 #endif // __WGPOIPrintCustomOptionDetails_DEFINED__
@@ -418,6 +438,10 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
 - (WGPPrintPageDescription*)getPageDescription:(unsigned int)jobPageNumber;
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
+@interface WGPIPrintTaskOptionsCore : RTObject <WGPIPrintTaskOptionsCore>
+@end
+
 #endif // __WGPIPrintTaskOptionsCore_DEFINED__
 
 // Windows.Graphics.Printing.IPrintTaskOptionsCoreUIConfiguration
@@ -426,6 +450,10 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
 
 @protocol WGPIPrintTaskOptionsCoreUIConfiguration
 @property (readonly) NSMutableArray* /* NSString * */ displayedOptions;
+@end
+
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_OPTIONDETAILS_EXPORT
+@interface WGPIPrintTaskOptionsCoreUIConfiguration : RTObject <WGPIPrintTaskOptionsCoreUIConfiguration>
 @end
 
 #endif // __WGPIPrintTaskOptionsCoreUIConfiguration_DEFINED__

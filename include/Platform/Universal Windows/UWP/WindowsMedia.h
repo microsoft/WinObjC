@@ -128,6 +128,10 @@ typedef unsigned WMAudioProcessing;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Media.IMediaFrame
@@ -145,6 +149,10 @@ typedef unsigned WMAudioProcessing;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_EXPORT
+@interface WMIMediaFrame : RTObject <WMIMediaFrame>
+@end
+
 #endif // __WMIMediaFrame_DEFINED__
 
 // Windows.Media.IMediaMarker
@@ -157,6 +165,10 @@ typedef unsigned WMAudioProcessing;
 @property (readonly) WFTimeSpan* time;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_EXPORT
+@interface WMIMediaMarker : RTObject <WMIMediaMarker>
+@end
+
 #endif // __WMIMediaMarker_DEFINED__
 
 // Windows.Media.IMediaMarkers
@@ -167,6 +179,10 @@ typedef unsigned WMAudioProcessing;
 @property (readonly) NSArray* /* RTObject<WMIMediaMarker>* */ markers;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_EXPORT
+@interface WMIMediaMarkers : RTObject <WMIMediaMarkers>
+@end
+
 #endif // __WMIMediaMarkers_DEFINED__
 
 // Windows.Media.IMediaExtension
@@ -175,6 +191,10 @@ typedef unsigned WMAudioProcessing;
 
 @protocol WMIMediaExtension
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_EXPORT
+@interface WMIMediaExtension : RTObject <WMIMediaExtension>
 @end
 
 #endif // __WMIMediaExtension_DEFINED__
@@ -226,6 +246,10 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 @protocol WFIMemoryBuffer <WFIClosable>
 - (RTObject<WFIMemoryBufferReference>*)createReference;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_EXPORT
+@interface WFIMemoryBuffer : RTObject <WFIMemoryBuffer>
 @end
 
 #endif // __WFIMemoryBuffer_DEFINED__

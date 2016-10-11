@@ -14,8 +14,8 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
 #include <Foundation/Foundation.h>
+#include <TestFramework.h>
 
 TEST(NSSet, ExpandBeyondCapacity) {
     NSMutableSet* set = [NSMutableSet setWithCapacity:1];
@@ -104,4 +104,28 @@ TEST(NSSet, FilterUsingPredicateNumbersAlwaysTrue) {
     ASSERT_NE(nil, filteredSet);
     ASSERT_EQ([numbers count], [filteredSet count]);
     ASSERT_OBJCEQ(numbers, filteredSet);
+}
+
+TEST(NSSet, setByAddingObjectsFromArray) {
+    NSArray* testArray = @[ @"Mercedes-Benz", @"BMW", @"Porsche", @"Opel", @"Volkswagen", @"Audi" ];
+    NSSet* set = [NSSet set];
+    NSSet* setFromArray = [set setByAddingObjectsFromArray:testArray];
+    ASSERT_EQ(6, [setFromArray count]);
+    for (id curObj in testArray) {
+        ASSERT_TRUE([setFromArray containsObject:curObj]);
+    }
+}
+
+TEST(NSSet, setByAddingObjectsFromArrayEmpty) {
+    NSArray* emptyArray = @[];
+    NSSet* set = [NSSet set];
+    NSSet* setFromEmptyArray = [set setByAddingObjectsFromArray:emptyArray];
+    ASSERT_TRUE([setFromEmptyArray count] == 0);
+}
+
+TEST(NSSet, setByAddingObjectsFromArrayDuplicate) {
+    NSArray* dupArray = @[ @"Mercedes-Benz", @"Audi", @"BMW", @"Porsche", @"BMW", @"Opel", @"Volkswagen", @"Audi" ];
+    NSSet* set = [NSSet set];
+    NSSet* setFromDupArray = [set setByAddingObjectsFromArray:dupArray];
+    ASSERT_EQ([setFromDupArray count], 6);
 }

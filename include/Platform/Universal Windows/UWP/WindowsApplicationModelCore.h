@@ -53,6 +53,10 @@
 - (void)uninitialize;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WACIFrameworkView : RTObject <WACIFrameworkView>
+@end
+
 #endif // __WACIFrameworkView_DEFINED__
 
 // Windows.ApplicationModel.Core.IFrameworkViewSource
@@ -61,6 +65,10 @@
 
 @protocol WACIFrameworkViewSource
 - (RTObject<WACIFrameworkView>*)createView;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WACIFrameworkViewSource : RTObject <WACIFrameworkViewSource>
 @end
 
 #endif // __WACIFrameworkViewSource_DEFINED__
@@ -72,6 +80,10 @@
 @protocol WACICoreApplicationUnhandledError
 - (EventRegistrationToken)addUnhandledErrorDetectedEvent:(void (^)(RTObject*, WACUnhandledErrorDetectedEventArgs*))del;
 - (void)removeUnhandledErrorDetectedEvent:(EventRegistrationToken)tok;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WACICoreApplicationUnhandledError : RTObject <WACICoreApplicationUnhandledError>
 @end
 
 #endif // __WACICoreApplicationUnhandledError_DEFINED__

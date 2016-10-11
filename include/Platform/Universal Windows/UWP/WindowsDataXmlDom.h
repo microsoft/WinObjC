@@ -69,6 +69,10 @@ typedef unsigned WDXDNodeType;
 - (WDXDXmlNodeList*)selectNodesNS:(NSString*)xpath namespaces:(RTObject*)namespaces;
 @end
 
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
+@interface WDXDIXmlNodeSelector : RTObject <WDXDIXmlNodeSelector>
+@end
+
 #endif // __WDXDIXmlNodeSelector_DEFINED__
 
 // Windows.Data.Xml.Dom.IXmlNodeSerializer
@@ -78,6 +82,10 @@ typedef unsigned WDXDNodeType;
 @protocol WDXDIXmlNodeSerializer
 @property (retain) NSString* innerText;
 - (NSString*)getXml;
+@end
+
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
+@interface WDXDIXmlNodeSerializer : RTObject <WDXDIXmlNodeSerializer>
 @end
 
 #endif // __WDXDIXmlNodeSerializer_DEFINED__
@@ -115,6 +123,10 @@ typedef unsigned WDXDNodeType;
 - (NSString*)getXml;
 @end
 
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
+@interface WDXDIXmlNode : RTObject <WDXDIXmlNode>
+@end
+
 #endif // __WDXDIXmlNode_DEFINED__
 
 // Windows.Data.Xml.Dom.IXmlCharacterData
@@ -143,6 +155,10 @@ typedef unsigned WDXDNodeType;
 - (NSString*)getXml;
 @end
 
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
+@interface WDXDIXmlCharacterData : RTObject <WDXDIXmlCharacterData>
+@end
+
 #endif // __WDXDIXmlCharacterData_DEFINED__
 
 // Windows.Data.Xml.Dom.IXmlText
@@ -168,6 +184,10 @@ typedef unsigned WDXDNodeType;
 - (RTObject<WDXDIXmlNode>*)selectSingleNodeNS:(NSString*)xpath namespaces:(RTObject*)namespaces;
 - (WDXDXmlNodeList*)selectNodesNS:(NSString*)xpath namespaces:(RTObject*)namespaces;
 - (NSString*)getXml;
+@end
+
+OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
+@interface WDXDIXmlText : RTObject <WDXDIXmlText>
 @end
 
 #endif // __WDXDIXmlText_DEFINED__

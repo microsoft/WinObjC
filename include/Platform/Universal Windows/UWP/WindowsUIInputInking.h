@@ -98,6 +98,10 @@ typedef unsigned WUIIPenTipShape;
 - (WUIIInkPoint*)createInkPoint:(WFPoint*)position pressure:(float)pressure;
 @end
 
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+@interface WUIIIInkPointFactory : RTObject <WUIIIInkPointFactory>
+@end
+
 #endif // __WUIIIInkPointFactory_DEFINED__
 
 // Windows.UI.Input.Inking.IInkStrokeContainer
@@ -124,6 +128,10 @@ typedef unsigned WUIIPenTipShape;
 - (NSArray* /* WUIIInkRecognitionResult* */)getRecognitionResults;
 @end
 
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+@interface WUIIIInkStrokeContainer : RTObject <WUIIIInkStrokeContainer>
+@end
+
 #endif // __WUIIIInkStrokeContainer_DEFINED__
 
 // Windows.UI.Input.Inking.IInkRecognizerContainer
@@ -137,6 +145,10 @@ typedef unsigned WUIIPenTipShape;
                success:(void (^)(NSArray* /* WUIIInkRecognitionResult* */))success
                failure:(void (^)(NSError*))failure;
 - (NSArray* /* WUIIInkRecognizer* */)getRecognizers;
+@end
+
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+@interface WUIIIInkRecognizerContainer : RTObject <WUIIIInkRecognizerContainer>
 @end
 
 #endif // __WUIIIInkRecognizerContainer_DEFINED__

@@ -123,6 +123,10 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 - (void)setRequestHeader:(NSString*)headerName headerValue:(NSString*)headerValue;
 @end
 
+OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+@interface WNBIBackgroundTransferBase : RTObject <WNBIBackgroundTransferBase>
+@end
+
 #endif // __WNBIBackgroundTransferBase_DEFINED__
 
 // Windows.Networking.BackgroundTransfer.IBackgroundTransferOperation
@@ -139,6 +143,10 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 - (WNBResponseInformation*)getResponseInformation;
 @end
 
+OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+@interface WNBIBackgroundTransferOperation : RTObject <WNBIBackgroundTransferOperation>
+@end
+
 #endif // __WNBIBackgroundTransferOperation_DEFINED__
 
 // Windows.Networking.BackgroundTransfer.IBackgroundTransferOperationPriority
@@ -147,6 +155,10 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 
 @protocol WNBIBackgroundTransferOperationPriority
 @property WNBBackgroundTransferPriority priority;
+@end
+
+OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+@interface WNBIBackgroundTransferOperationPriority : RTObject <WNBIBackgroundTransferOperationPriority>
 @end
 
 #endif // __WNBIBackgroundTransferOperationPriority_DEFINED__
@@ -158,6 +170,10 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @protocol WNBIBackgroundTransferContentPartFactory
 - (WNBBackgroundTransferContentPart*)createWithName:(NSString*)name;
 - (WNBBackgroundTransferContentPart*)createWithNameAndFileName:(NSString*)name fileName:(NSString*)fileName;
+@end
+
+OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
+@interface WNBIBackgroundTransferContentPartFactory : RTObject <WNBIBackgroundTransferContentPartFactory>
 @end
 
 #endif // __WNBIBackgroundTransferContentPartFactory_DEFINED__

@@ -192,6 +192,10 @@ typedef unsigned WACChatItemKind;
 @property (readonly) WACChatItemKind itemKind;
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+@interface WACIChatItem : RTObject <WACIChatItem>
+@end
+
 #endif // __WACIChatItem_DEFINED__
 
 // Windows.ApplicationModel.Chat.ChatMessageTransportConfiguration

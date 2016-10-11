@@ -233,6 +233,10 @@ typedef unsigned WMDMediaCaptureOptimization;
 @property (readonly) WMDAudioDeviceRole role;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WMDIDefaultAudioDeviceChangedEventArgs : RTObject <WMDIDefaultAudioDeviceChangedEventArgs>
+@end
+
 #endif // __WMDIDefaultAudioDeviceChangedEventArgs_DEFINED__
 
 // Windows.Media.Devices.IMediaDeviceController
@@ -244,6 +248,10 @@ typedef unsigned WMDMediaCaptureOptimization;
 - (RTObject<WMMIMediaEncodingProperties>*)getMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
 - (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType
                                    mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WMDIMediaDeviceController : RTObject <WMDIMediaDeviceController>
 @end
 
 #endif // __WMDIMediaDeviceController_DEFINED__

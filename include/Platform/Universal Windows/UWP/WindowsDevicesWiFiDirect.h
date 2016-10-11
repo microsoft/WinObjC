@@ -89,6 +89,10 @@ typedef unsigned WDWWiFiDirectAdvertisementPublisherStatus;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Devices.WiFiDirect.WiFiDirectDevice

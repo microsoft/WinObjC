@@ -167,6 +167,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Web.Http.IHttpContent
@@ -191,6 +195,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WWHIHttpContent : RTObject <WWHIHttpContent>
+@end
+
 #endif // __WWHIHttpContent_DEFINED__
 
 // Windows.Foundation.IStringable
@@ -199,6 +207,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 @protocol WFIStringable
 - (NSString*)toString;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WFIStringable : RTObject <WFIStringable>
 @end
 
 #endif // __WFIStringable_DEFINED__

@@ -205,6 +205,10 @@ typedef unsigned WAAAppointmentStoreChangeType;
 @property (retain) NSString* displayName;
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_EXPORT
+@interface WAAIAppointmentParticipant : RTObject <WAAIAppointmentParticipant>
+@end
+
 #endif // __WAAIAppointmentParticipant_DEFINED__
 
 // Windows.ApplicationModel.Appointments.Appointment

@@ -979,6 +979,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 - (WXDependencyObject*)containerFromIndex:(int)index;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIItemContainerMapping : RTObject <WXCIItemContainerMapping>
+@end
+
 #endif // __WXCIItemContainerMapping_DEFINED__
 
 // Windows.UI.Xaml.Controls.INavigate
@@ -987,6 +991,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 
 @protocol WXCINavigate
 - (BOOL)navigate:(WUXITypeName*)sourcePageType;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCINavigate : RTObject <WXCINavigate>
 @end
 
 #endif // __WXCINavigate_DEFINED__
@@ -1008,6 +1016,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 - (void)completeViewChangeTo:(WXCSemanticZoomLocation*)source destination:(WXCSemanticZoomLocation*)destination;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCISemanticZoomInformation : RTObject <WXCISemanticZoomInformation>
+@end
+
 #endif // __WXCISemanticZoomInformation_DEFINED__
 
 // Windows.UI.Xaml.Controls.IDataTemplateSelectorOverrides
@@ -1016,6 +1028,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 
 @protocol WXCIDataTemplateSelectorOverrides
 - (WXDataTemplate*)selectTemplateCore:(RTObject*)item container:(WXDependencyObject*)container;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIDataTemplateSelectorOverrides : RTObject <WXCIDataTemplateSelectorOverrides>
 @end
 
 #endif // __WXCIDataTemplateSelectorOverrides_DEFINED__
@@ -1028,6 +1044,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 - (WXDataTemplate*)selectTemplateForItemCore:(RTObject*)item;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIDataTemplateSelectorOverrides2 : RTObject <WXCIDataTemplateSelectorOverrides2>
+@end
+
 #endif // __WXCIDataTemplateSelectorOverrides2_DEFINED__
 
 // Windows.UI.Xaml.Controls.IGroupStyleSelectorOverrides
@@ -1038,6 +1058,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 - (WXCGroupStyle*)selectGroupStyleCore:(RTObject*)group level:(unsigned int)level;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIGroupStyleSelectorOverrides : RTObject <WXCIGroupStyleSelectorOverrides>
+@end
+
 #endif // __WXCIGroupStyleSelectorOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.IStyleSelectorOverrides
@@ -1046,6 +1070,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 
 @protocol WXCIStyleSelectorOverrides
 - (WXStyle*)selectStyleCore:(RTObject*)item container:(WXDependencyObject*)container;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIStyleSelectorOverrides : RTObject <WXCIStyleSelectorOverrides>
 @end
 
 #endif // __WXCIStyleSelectorOverrides_DEFINED__
@@ -1060,6 +1088,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
               newContentTemplateSelector:(WXCDataTemplateSelector*)newContentTemplateSelector;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIContentPresenterOverrides : RTObject <WXCIContentPresenterOverrides>
+@end
+
 #endif // __WXCIContentPresenterOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.IContentControlOverrides
@@ -1071,6 +1103,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 - (void)onContentTemplateChanged:(WXDataTemplate*)oldContentTemplate newContentTemplate:(WXDataTemplate*)newContentTemplate;
 - (void)onContentTemplateSelectorChanged:(WXCDataTemplateSelector*)oldContentTemplateSelector
               newContentTemplateSelector:(WXCDataTemplateSelector*)newContentTemplateSelector;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIContentControlOverrides : RTObject <WXCIContentControlOverrides>
 @end
 
 #endif // __WXCIContentControlOverrides_DEFINED__
@@ -1095,6 +1131,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
               newGroupStyleSelector:(WXCGroupStyleSelector*)newGroupStyleSelector;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIItemsControlOverrides : RTObject <WXCIItemsControlOverrides>
+@end
+
 #endif // __WXCIItemsControlOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.IToggleSwitchOverrides
@@ -1106,6 +1146,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 - (void)onOnContentChanged:(RTObject*)oldContent newContent:(RTObject*)newContent;
 - (void)onOffContentChanged:(RTObject*)oldContent newContent:(RTObject*)newContent;
 - (void)onHeaderChanged:(RTObject*)oldContent newContent:(RTObject*)newContent;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIToggleSwitchOverrides : RTObject <WXCIToggleSwitchOverrides>
 @end
 
 #endif // __WXCIToggleSwitchOverrides_DEFINED__
@@ -1120,6 +1164,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 - (void)bringIndexIntoView:(int)index;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIVirtualizingPanelOverrides : RTObject <WXCIVirtualizingPanelOverrides>
+@end
+
 #endif // __WXCIVirtualizingPanelOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.IComboBoxOverrides
@@ -1129,6 +1177,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 @protocol WXCIComboBoxOverrides
 - (void)onDropDownClosed:(RTObject*)e;
 - (void)onDropDownOpened:(RTObject*)e;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIComboBoxOverrides : RTObject <WXCIComboBoxOverrides>
 @end
 
 #endif // __WXCIComboBoxOverrides_DEFINED__
@@ -1141,6 +1193,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 - (void)onCleanUpVirtualizedItem:(WXCCleanUpVirtualizedItemEventArgs*)e;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIVirtualizingStackPanelOverrides : RTObject <WXCIVirtualizingStackPanelOverrides>
+@end
+
 #endif // __WXCIVirtualizingStackPanelOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.ICommandBarElement
@@ -1149,6 +1205,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 
 @protocol WXCICommandBarElement
 @property BOOL isCompact;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCICommandBarElement : RTObject <WXCICommandBarElement>
 @end
 
 #endif // __WXCICommandBarElement_DEFINED__
@@ -1162,6 +1222,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 - (void)onOpened:(RTObject*)e;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIAppBarOverrides : RTObject <WXCIAppBarOverrides>
+@end
+
 #endif // __WXCIAppBarOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.IAppBarOverrides3
@@ -1171,6 +1235,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 @protocol WXCIAppBarOverrides3
 - (void)onClosing:(RTObject*)e;
 - (void)onOpening:(RTObject*)e;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIAppBarOverrides3 : RTObject <WXCIAppBarOverrides3>
 @end
 
 #endif // __WXCIAppBarOverrides3_DEFINED__
@@ -1183,6 +1251,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 - (void)onNavigatedFrom:(WUXNNavigationEventArgs*)e;
 - (void)onNavigatedTo:(WUXNNavigationEventArgs*)e;
 - (void)onNavigatingFrom:(WUXNNavigatingCancelEventArgs*)e;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIPageOverrides : RTObject <WXCIPageOverrides>
 @end
 
 #endif // __WXCIPageOverrides_DEFINED__
@@ -1217,6 +1289,10 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 - (void)onDragLeave:(WXDragEventArgs*)e;
 - (void)onDragOver:(WXDragEventArgs*)e;
 - (void)onDrop:(WXDragEventArgs*)e;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIControlOverrides : RTObject <WXCIControlOverrides>
 @end
 
 #endif // __WXCIControlOverrides_DEFINED__
@@ -1467,6 +1543,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @protocol WUXDINotifyPropertyChanged
 - (EventRegistrationToken)addPropertyChangedEvent:(WUXDPropertyChangedEventHandler)del;
 - (void)removePropertyChangedEvent:(EventRegistrationToken)tok;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDINotifyPropertyChanged : RTObject <WUXDINotifyPropertyChanged>
 @end
 
 #endif // __WUXDINotifyPropertyChanged_DEFINED__
@@ -2410,6 +2490,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (WXCControl*)createPresenter;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXCPIFlyoutBaseOverrides : RTObject <WUXCPIFlyoutBaseOverrides>
+@end
+
 #endif // __WUXCPIFlyoutBaseOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.Primitives.FlyoutBase
@@ -2605,6 +2689,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onApplyTemplate;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXIFrameworkElementOverrides : RTObject <WXIFrameworkElementOverrides>
+@end
+
 #endif // __WXIFrameworkElementOverrides_DEFINED__
 
 // Windows.UI.Xaml.IFrameworkElementOverrides2
@@ -2613,6 +2701,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 @protocol WXIFrameworkElementOverrides2
 - (BOOL)goToElementStateCore:(NSString*)stateName useTransitions:(BOOL)useTransitions;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXIFrameworkElementOverrides2 : RTObject <WXIFrameworkElementOverrides2>
 @end
 
 #endif // __WXIFrameworkElementOverrides2_DEFINED__
@@ -2626,6 +2718,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onDisconnectVisualChildren;
 - (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point
                                                                                       boundingRect:(WFRect*)boundingRect;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXIUIElementOverrides : RTObject <WXIUIElementOverrides>
 @end
 
 #endif // __WXIUIElementOverrides_DEFINED__
@@ -3026,6 +3122,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)removeVerticalSnapPointsChangedEvent:(EventRegistrationToken)tok;
 - (NSArray* /* float */)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
 - (float)getRegularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment offset:(float*)offset;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXCPIScrollSnapPointsInfo : RTObject <WUXCPIScrollSnapPointsInfo>
 @end
 
 #endif // __WUXCPIScrollSnapPointsInfo_DEFINED__
@@ -4765,6 +4865,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onValueChanged:(double)oldValue newValue:(double)newValue;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXCPIRangeBaseOverrides : RTObject <WUXCPIRangeBaseOverrides>
+@end
+
 #endif // __WUXCPIRangeBaseOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.Primitives.RangeBase
@@ -5092,6 +5196,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 @protocol WUXCPIToggleButtonOverrides
 - (void)onToggle;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXCPIToggleButtonOverrides : RTObject <WUXCPIToggleButtonOverrides>
 @end
 
 #endif // __WUXCPIToggleButtonOverrides_DEFINED__
@@ -6209,6 +6317,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (NSString*)getStringRepresentation;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDICustomPropertyProvider : RTObject <WUXDICustomPropertyProvider>
+@end
+
 #endif // __WUXDICustomPropertyProvider_DEFINED__
 
 // Windows.UI.Xaml.Controls.DatePickerFlyoutItem
@@ -6400,6 +6512,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @protocol WUXCPIPickerFlyoutBaseOverrides
 - (void)onConfirmed;
 - (BOOL)shouldShowConfirmationButtons;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXCPIPickerFlyoutBaseOverrides : RTObject <WUXCPIPickerFlyoutBaseOverrides>
 @end
 
 #endif // __WUXCPIPickerFlyoutBaseOverrides_DEFINED__

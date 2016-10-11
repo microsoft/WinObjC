@@ -127,6 +127,10 @@ typedef unsigned WMPTimedMetadataTrackPresentationMode;
 @protocol WMPIMediaPlaybackSource
 @end
 
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WMPIMediaPlaybackSource : RTObject <WMPIMediaPlaybackSource>
+@end
+
 #endif // __WMPIMediaPlaybackSource_DEFINED__
 
 // Windows.Media.Playback.IMediaEnginePlaybackSource
@@ -136,6 +140,10 @@ typedef unsigned WMPTimedMetadataTrackPresentationMode;
 @protocol WMPIMediaEnginePlaybackSource
 @property (readonly) WMPMediaPlaybackItem* currentItem;
 - (void)setPlaybackSource:(RTObject<WMPIMediaPlaybackSource>*)source;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WMPIMediaEnginePlaybackSource : RTObject <WMPIMediaEnginePlaybackSource>
 @end
 
 #endif // __WMPIMediaEnginePlaybackSource_DEFINED__
@@ -340,6 +348,10 @@ OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @property int selectedIndex;
 - (EventRegistrationToken)addSelectedIndexChangedEvent:(void (^)(RTObject<WMCISingleSelectMediaTrackList>*, RTObject*))del;
 - (void)removeSelectedIndexChangedEvent:(EventRegistrationToken)tok;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WMCISingleSelectMediaTrackList : RTObject <WMCISingleSelectMediaTrackList>
 @end
 
 #endif // __WMCISingleSelectMediaTrackList_DEFINED__

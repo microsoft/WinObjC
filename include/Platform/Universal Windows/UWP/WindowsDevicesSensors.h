@@ -832,6 +832,10 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Devices.Sensors.ProximitySensorDisplayOnOffController
