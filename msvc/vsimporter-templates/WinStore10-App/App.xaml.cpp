@@ -56,6 +56,7 @@ void App::OnActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs
 
 void App::OnFileActivated(FileActivatedEventArgs^ args)
 {
+    main(0, NULL);
     UIApplicationActivated(args);
 }
 
