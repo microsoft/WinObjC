@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{e8d512f2-3543-4e40-92c9-c309c6247ccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{11f53fb2-0b76-4472-ae1b-cc1380bc7bb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CoreAnimationTest">
+      <UniqueIdentifier>{A41DC0B4-7CF3-4155-AA16-7A30F3D41D6F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CoreAnimationTest\Supporting Files">
+      <UniqueIdentifier>{C9FCCFB5-C354-468A-B208-242471EB66BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xcode Variable Files">
+      <UniqueIdentifier>{FCDA1D5F-7389-4AE4-A16F-6503256B847D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="default.rd.xml" />
+    <AppxManifest Include="Package.appxmanifest" />
+    <None Include="CoreAnimationTest_TemporaryKey.pfx" />
+    <Image Include="Assets\LockScreenLogo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square150x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Wide310x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <AssetCatalogCompile Include="..\..\CoreAnimationTest\Assets.xcassets">
+      <Filter>CoreAnimationTest</Filter>
+    </AssetCatalogCompile>
+    <ClInclude Include="..\..\CoreAnimationTest\AppDelegate.h">
+      <Filter>CoreAnimationTest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CoreAnimationTest\MenuTableViewController.h">
+      <Filter>CoreAnimationTest</Filter>
+    </ClInclude>
+    <ClangCompile Include="..\..\CoreAnimationTest\AppDelegate.m">
+      <Filter>CoreAnimationTest</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CoreAnimationTest\MenuTableViewController.m">
+      <Filter>CoreAnimationTest</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CoreAnimationTest\main.m">
+      <Filter>CoreAnimationTest\Supporting Files</Filter>
+    </ClangCompile>
+    <SBInfoPlistCopy Include="..\..\CoreAnimationTest\Info.plist" />
+    <StoryboardCompile Include="..\..\CoreAnimationTest\CoreAnimationTest.storyboard">
+      <Filter>CoreAnimationTest</Filter>
+    </StoryboardCompile>
+    <Text Include="CoreAnimationTest-Debug-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+    <Text Include="CoreAnimationTest-Release-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
