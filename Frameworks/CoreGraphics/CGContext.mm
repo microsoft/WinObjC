@@ -665,16 +665,6 @@ static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometr
     deviceContext->EndDraw();
     commandList->Close();
 
-    ComPtr<ID2D1Effect> fx;
-    deviceContext->CreateEffect(CLSID_D2D1Shadow, &fx);
-    fx->SetInput(0, commandList.Get());
-
-    ComPtr<ID2D1Effect> compositeEffect;
-    deviceContext->CreateEffect(CLSID_D2D1Composite, &compositeEffect);
-
-    compositeEffect->SetInputEffect(0, fx.Get());
-    compositeEffect->SetInput(1, commandList.Get());
-
     deviceContext->BeginDraw();
     deviceContext->SetTarget(originalTarget.Get());
 
@@ -689,7 +679,7 @@ static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometr
                                 nullptr);
     }
 
-    deviceContext->DrawImage(compositeEffect.Get());
+    deviceContext->DrawImage(commandList.Get());
 
     if (layer) {
         renderTarget->PopLayer();
