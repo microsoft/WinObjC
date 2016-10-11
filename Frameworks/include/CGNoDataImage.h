@@ -37,7 +37,6 @@ public:
 
     CGImageRef Copy();
 
-    CGContextImpl* CreateDrawingContext(CGContextRef base);
     DisplayTexture* GetTexture();
     void SetTexture(DisplayTexture* tex);
     void GetPixel(int x, int y, float& r, float& g, float& b, float& a);

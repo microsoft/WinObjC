@@ -109,12 +109,6 @@ CGGraphicBufferImageBacking::~CGGraphicBufferImageBacking() {
     }
 }
 
-CGContextImpl* CGGraphicBufferImageBacking::CreateDrawingContext(CGContextRef base) {
-    // TODO(DH)
-    return nullptr;
-    //return new CGContextCairo(base, _parent);
-}
-
 CGImageRef CGGraphicBufferImageBacking::Copy() {
     CGBitmapImage* ret = new CGBitmapImage(this->_parent);
 

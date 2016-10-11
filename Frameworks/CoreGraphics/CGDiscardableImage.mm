@@ -21,10 +21,6 @@
 #include "CoreGraphics/CGContext.h"
 #include "CGContextImpl.h"
 
-CGContextImpl* CGDiscardableImageBacking::CreateDrawingContext(CGContextRef base) {
-    return _forward->CreateDrawingContext(base);
-}
-
 CGDiscardableImageBacking::CGDiscardableImageBacking() {
     _forward = NULL;
     _hasCachedInfo = false;

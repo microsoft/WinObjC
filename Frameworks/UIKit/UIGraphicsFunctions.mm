@@ -75,6 +75,7 @@ CGContextRef UIGraphicsGetCurrentContext() {
 */
 void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, float scale) {
     return;
+    // TODO(DH) GH#1124 Revisit when we have support for CGImage+IWICBitmap
 #if 0
     if (scale == 0.0f) {
         scale = GetCACompositor()->screenScale();
@@ -102,7 +103,8 @@ void UIGraphicsBeginImageContext(CGSize size) {
 */
 UIImage* UIGraphicsGetImageFromCurrentImageContext() {
     return nil;
-#if 0 // TODO(DH)
+    // TODO(DH) GH#1124 Revisit when we have support for CGImage+IWICBitmap
+#if 0
     id ret = [UIImage imageWithCGImage:CGBitmapContextGetImage(UIGraphicsGetCurrentContext())
                                  scale:UIGraphicsGetCurrentContext()->scale
                            orientation:UIImageOrientationUp];

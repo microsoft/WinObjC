@@ -46,15 +46,12 @@ using namespace Microsoft::WRL;
 
 static inline D2D_RECT_F __CGRectToD2D(CGRect rect) {
     return {
-        rect.origin.x,
-        rect.origin.y,
-        rect.origin.x + rect.size.width,
-        rect.origin.y + rect.size.height,
+        rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width, rect.origin.y + rect.size.height,
     };
 }
 
 struct __CGContextDrawingState {
-    // Not populated by default.
+    // This is populated when the state is saved, and contains the D2D parameters that CG does not know.
     ComPtr<ID2D1DrawingStateBlock> d2dState;
 
     // Fills
@@ -92,80 +89,26 @@ struct __CGContextDrawingState {
     CGFloat alpha = 1.0f;
 };
 
-/*
-template <typename T>
-struct __AAA {
-    static void _init(CFTypeRef cf) {
-    }
-    static Boolean _equal(CFTypeRef cf1, CFTypeRef cf2) {
-        return (*(T*)cf1) == (*(T*)cf2);
-    }
-    static CFHashCode _hash(CFTypeRef cf) {
-        return 0;
-    }
-    static CFStringRef _description(CFTypeRef cf, CFDictionaryRef dict) {
-        return nullptr;
-    }
-
-    constexpr static auto get_init(...) -> decltype(&_init) { return nullptr; }
-    constexpr static auto get_equal(...) -> decltype(&_equal) { return nullptr; }
-    constexpr static auto get_hash(...) -> decltype(&_hash) { return nullptr; }
-    constexpr static auto get_description(...) -> decltype(&_description) { return nullptr; }
-
-    template <typename T>
-    constexpr static auto get_init(T t) -> decltype(&T::CFInit) { return &T::CFInit; }
-    template <typename T>
-    constexpr static auto get_equal(T t, decltype(&T::operator==) dval = nullptr) -> decltype(&T::_equal) { static_assert(false); return &T::_equal; }
-    template <typename T>
-    constexpr static auto get_hash(T t) -> decltype(&T::_hash) { return &T::_hash; }
-    template <typename T>
-    constexpr static auto get_description(T t) -> decltype(&T::_description) { return &T::_description; }
-    static CFTypeID GetTypeID() {
-        static const CFRuntimeClass cls{
-            0,
-            typeid(T).name(),
-            (void(*)(CFTypeRef))get_init(std::declval<T>()),
-            nullptr, //&_copy,
-            nullptr, //&_fini,
-            get_equal(std::declval<T>()),
-            get_hash(std::declval<T>()),
-            get_description(std::declval<T>()),
-        };
-        static CFTypeID _typeID;
-        static dispatch_once_t once = 0;
-        dispatch_once(&once, ^{
-            _typeID = _CFRuntimeRegisterClass(&cls);
-        });
-        return _typeID;
-    }
-};
-
-struct Whatever: __AAA<Whatever> {
-    //bool operator==(const Whatever& other) {
-        //return true;
-    //}
-};
-
-CFTypeID GetWhateverTypeID() {
-    return Whatever::GetTypeID();
-}
-*/
-
 struct __CGContext {
     struct __CGContextImpl {
-        ComPtr<ID2D1RenderTarget> _renderTarget;
+        ComPtr<ID2D1RenderTarget> renderTarget;
 
-        std::stack<__CGContextDrawingState> _stateStack;
+        // Calculated at creation time, this transform flips CG's drawing commands,
+        // anchored in the bottom left, to D2D's top-left coordinate system.
+        CGAffineTransform cgCompatibilityTransform;
 
-        CGMutablePathRef _currentPath;
+        std::stack<__CGContextDrawingState> stateStack;
 
-        bool _allowsAntialiasing;
-        bool _allowsFontSmoothing;
-        bool _allowsFontSubpixelPositioning;
-        bool _allowsFontSubpixelQuantization;
+        woc::unique_cf<CGMutablePathRef> currentPath;
 
-        __CGContextImpl() : _stateStack() {
-            _stateStack.emplace();
+        bool allowsAntialiasing;
+        bool allowsFontSmoothing;
+        bool allowsFontSubpixelPositioning;
+        bool allowsFontSubpixelQuantization;
+
+        __CGContextImpl() : stateStack() {
+            // Set up a default/baseline state
+            stateStack.emplace();
         }
     };
 
@@ -173,28 +116,26 @@ struct __CGContext {
 
     // Use an inline impl struct so that we don't need to placement new each element.
     __CGContextImpl _impl;
-    CGImageRef img;
 
     inline ComPtr<ID2D1RenderTarget>& RenderTarget() {
-        return _impl._renderTarget;
+        return _impl.renderTarget;
     }
 
-    inline std::stack<__CGContextDrawingState>& StateStack() {
-        return _impl._stateStack;
+    inline std::stack<__CGContextDrawingState>& GStateStack() {
+        return _impl.stateStack;
     }
 
     inline __CGContextDrawingState& CurrentGState() {
-        return StateStack().top();
+        return GStateStack().top();
     }
 
     inline void ClearPath() {
-        CGPathRelease(_impl._currentPath);
-        _impl._currentPath = nullptr;
+        _impl.currentPath.reset();
     }
 
     inline ComPtr<ID2D1Factory> Factory() {
         ComPtr<ID2D1Factory> factory;
-        _impl._renderTarget->GetFactory(&factory);
+        _impl.renderTarget->GetFactory(&factory);
         return factory;
     }
 };
@@ -221,30 +162,22 @@ static void __CGContextInit(CFTypeRef cf) {
 static void __CGContextDeallocate(CFTypeRef cf) {
     CGContextRef context = (CGContextRef)cf;
     context->_impl.~__CGContextImpl();
-    CGImageRelease(context->img);
 }
 
-static CFTypeID __kCGContextTypeID = _kCFRuntimeNotATypeID;
-
-static const CFRuntimeClass __CGContextClass = { 0,
-                                                 "CGContext",
-                                                 __CGContextInit, // init
-                                                 NULL,
-                                                 __CGContextDeallocate, // deallocate
-                                                 NULL,
-                                                 NULL,
-                                                 NULL,
-                                                 __CGContextCopyDescription };
-
-template <typename T, typename B = decltype(std::declval<T>()->_base)>
-static T _CFRuntimeCreateInstance(CFTypeID typeID, CFAllocatorRef allocator = kCFAllocatorDefault) {
-    return static_cast<T>(const_cast<void*>(_CFRuntimeCreateInstance(allocator, typeID, sizeof(typename std::remove_pointer<T>::type) - sizeof(B), nullptr)));
+template <typename T, typename PT = typename std::remove_pointer<T>::type*, typename B = decltype(std::declval<PT>()->_base)>
+static PT _CFRuntimeCreateInstance(CFTypeID typeID, CFAllocatorRef allocator = kCFAllocatorDefault) {
+    return static_cast<PT>(
+        const_cast<void*>(_CFRuntimeCreateInstance(allocator, typeID, sizeof(typename std::remove_pointer<T>::type) - sizeof(B), nullptr)));
 }
 
 /**
  @Status Interoperable
 */
 CFTypeID CGContextGetTypeID() {
+    static CFTypeID __kCGContextTypeID = _kCFRuntimeNotATypeID;
+    static const CFRuntimeClass __CGContextClass = { 0,    "CGContext", __CGContextInit,           NULL, __CGContextDeallocate, NULL,
+                                                     NULL, NULL,        __CGContextCopyDescription };
+
     static dispatch_once_t initOnce = 0;
     dispatch_once(&initOnce, ^{
         __kCGContextTypeID = _CFRuntimeRegisterClass(&__CGContextClass);
@@ -255,13 +188,16 @@ CFTypeID CGContextGetTypeID() {
 
 static const wchar_t* TAG = L"CGContext";
 
-CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget, CGImageRef img) {
-    THROW_HR_IF_NULL(E_INVALIDARG, renderTarget);
-    CGContextRef context = _CFRuntimeCreateInstance<CGContextRef>(CGContextGetTypeID());
-    context->_impl._renderTarget = renderTarget;
-    context->img = CGImageRetain(img);
+static void __CGContextInitializeWithRenderTarget(CGContextRef context, ID2D1RenderTarget* renderTarget) {
+    context->_impl.renderTarget = renderTarget;
     CGContextSetRGBFillColor(context, 0, 0, 0, 0);
     CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
+}
+
+CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget) {
+    FAIL_FAST_HR_IF_NULL(E_INVALIDARG, renderTarget);
+    CGContextRef context = _CFRuntimeCreateInstance<CGContextRef>(CGContextGetTypeID());
+    __CGContextInitializeWithRenderTarget(context, renderTarget);
     return context;
 }
 
@@ -269,20 +205,20 @@ CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget
 /**
  @Status Interoperable
 */
-CGContextRef CGContextRetain(CGContextRef ctx) {
-    CFRetain((CFTypeRef)ctx);
-    return ctx;
+CGContextRef CGContextRetain(CGContextRef context) {
+    CFRetain((CFTypeRef)context);
+    return context;
 }
 
 /**
  @Status Interoperable
 */
-void CGContextRelease(CGContextRef ctx) {
-    if (!ctx) {
+void CGContextRelease(CGContextRef context) {
+    if (!context) {
         return;
     }
 
-    CFRelease((CFTypeRef)ctx);
+    CFRelease((CFTypeRef)context);
 }
 #pragma endregion
 
@@ -290,11 +226,11 @@ void CGContextRelease(CGContextRef ctx) {
 /**
  @Status Interoperable
 */
-void CGContextSetBlendMode(CGContextRef ctx, CGBlendMode mode) {
+void CGContextSetBlendMode(CGContextRef context, CGBlendMode mode) {
     UNIMPLEMENTED();
 }
 
-CGBlendMode CGContextGetBlendMode(CGContextRef ctx) {
+CGBlendMode CGContextGetBlendMode(CGContextRef context) {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -303,14 +239,14 @@ CGBlendMode CGContextGetBlendMode(CGContextRef ctx) {
 /**
  @Status Interoperable
 */
-void CGContextSetFillPattern(CGContextRef ctx, CGPatternRef pattern, const CGFloat* components) {
+void CGContextSetFillPattern(CGContextRef context, CGPatternRef pattern, const CGFloat* components) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextSetPatternPhase(CGContextRef ctx, CGSize phase) {
+void CGContextSetPatternPhase(CGContextRef context, CGSize phase) {
     UNIMPLEMENTED();
 }
 
@@ -318,49 +254,49 @@ void CGContextSetPatternPhase(CGContextRef ctx, CGSize phase) {
 /**
  @Status Stub
 */
-void CGContextSetCharacterSpacing(CGContextRef ctx, CGFloat spacing) {
+void CGContextSetCharacterSpacing(CGContextRef context, CGFloat spacing) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextSetTextDrawingMode(CGContextRef ctx, CGTextDrawingMode mode) {
+void CGContextSetTextDrawingMode(CGContextRef context, CGTextDrawingMode mode) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextSetFont(CGContextRef ctx, CGFontRef font) {
+void CGContextSetFont(CGContextRef context, CGFontRef font) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextSelectFont(CGContextRef ctx, const char* name, CGFloat size, CGTextEncoding encoding) {
+void CGContextSelectFont(CGContextRef context, const char* name, CGFloat size, CGTextEncoding encoding) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextSetFontSize(CGContextRef ctx, CGFloat ptSize) {
+void CGContextSetFontSize(CGContextRef context, CGFloat ptSize) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextSetTextMatrix(CGContextRef ctx, CGAffineTransform matrix) {
+void CGContextSetTextMatrix(CGContextRef context, CGAffineTransform matrix) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-CGAffineTransform CGContextGetTextMatrix(CGContextRef ctx) {
+CGAffineTransform CGContextGetTextMatrix(CGContextRef context) {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -368,14 +304,14 @@ CGAffineTransform CGContextGetTextMatrix(CGContextRef ctx) {
 /**
  @Status Interoperable
 */
-void CGContextSetTextPosition(CGContextRef ctx, CGFloat x, CGFloat y) {
+void CGContextSetTextPosition(CGContextRef context, CGFloat x, CGFloat y) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-CGPoint CGContextGetTextPosition(CGContextRef ctx) {
+CGPoint CGContextGetTextPosition(CGContextRef context) {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -392,159 +328,159 @@ void CGContextShowTextAtPoint(CGContextRef pContext, CGFloat x, CGFloat y, const
 /**
  @Status Interoperable
 */
-void CGContextShowGlyphsAtPoint(CGContextRef ctx, CGFloat x, CGFloat y, const CGGlyph* glyphs, unsigned count) {
+void CGContextShowGlyphsAtPoint(CGContextRef context, CGFloat x, CGFloat y, const CGGlyph* glyphs, unsigned count) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextShowGlyphsWithAdvances(CGContextRef ctx, const CGGlyph* glyphs, CGSize* advances, unsigned count) {
+void CGContextShowGlyphsWithAdvances(CGContextRef context, const CGGlyph* glyphs, CGSize* advances, unsigned count) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextShowGlyphs(CGContextRef ctx, const CGGlyph* glyphs, unsigned count) {
+void CGContextShowGlyphs(CGContextRef context, const CGGlyph* glyphs, unsigned count) {
     UNIMPLEMENTED();
 }
 #pragma endregion
 
 #pragma region Userspace Coordinate Transformation
-/// TODO(DH)
 /**
  @Status Interoperable
 */
-CGAffineTransform CGContextGetCTM(CGContextRef ctx) {
-    auto& state = ctx->CurrentGState();
+CGAffineTransform CGContextGetCTM(CGContextRef context) {
+    auto& state = context->CurrentGState();
     return state.transform;
 }
 
 /**
  @Status Interoperable
 */
-void CGContextTranslateCTM(CGContextRef ctx, CGFloat x, CGFloat y) {
-    CGContextConcatCTM(ctx, CGAffineTransformMakeTranslation(x, y));
+void CGContextTranslateCTM(CGContextRef context, CGFloat x, CGFloat y) {
+    CGContextConcatCTM(context, CGAffineTransformMakeTranslation(x, y));
 }
 
 /**
  @Status Interoperable
 */
-void CGContextScaleCTM(CGContextRef ctx, CGFloat sx, CGFloat sy) {
-    CGContextConcatCTM(ctx, CGAffineTransformMakeScale(sx, sy));
+void CGContextScaleCTM(CGContextRef context, CGFloat sx, CGFloat sy) {
+    CGContextConcatCTM(context, CGAffineTransformMakeScale(sx, sy));
 }
 
 /**
  @Status Interoperable
 */
-void CGContextRotateCTM(CGContextRef ctx, CGFloat angle) {
-    CGContextConcatCTM(ctx, CGAffineTransformMakeRotation(angle));
+void CGContextRotateCTM(CGContextRef context, CGFloat angle) {
+    CGContextConcatCTM(context, CGAffineTransformMakeRotation(angle));
 }
 
 /**
  @Status Interoperable
 */
-void CGContextConcatCTM(CGContextRef ctx, CGAffineTransform t) {
-    auto& state = ctx->CurrentGState();
+void CGContextConcatCTM(CGContextRef context, CGAffineTransform t) {
+    auto& state = context->CurrentGState();
     state.transform = CGAffineTransformConcat(state.transform, t);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextSetCTM(CGContextRef ctx, CGAffineTransform transform) {
-    auto& state = ctx->CurrentGState();
+void CGContextSetCTM(CGContextRef context, CGAffineTransform transform) {
+    auto& state = context->CurrentGState();
     state.transform = transform;
 }
 #pragma endregion
 
 #pragma region Image Drawing - Operations
-/// TODO(DH): IMAGE DRAWING
+/// TODO(DH): GH#1078 Image Drawing
 /**
  @Status Interoperable
 */
-void CGContextDrawImage(CGContextRef ctx, CGRect rect, CGImageRef image) {
+void CGContextDrawImage(CGContextRef context, CGRect rect, CGImageRef image) {
     if (!image) {
         TraceWarning(TAG, L"Img == NULL!");
         return;
     }
-    if (!ctx) {
-        TraceWarning(TAG, L"CGContextDrawImage: ctx == NULL!");
+    if (!context) {
+        TraceWarning(TAG, L"CGContextDrawImage: context == NULL!");
         return;
     }
 
     { UNIMPLEMENTED(); }
 }
 
-void CGContextDrawImageRect(CGContextRef ctx, CGImageRef image, CGRect src, CGRect dst) {
+void CGContextDrawImageRect(CGContextRef context, CGImageRef image, CGRect src, CGRect dst) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextDrawTiledImage(CGContextRef ctx, CGRect rect, CGImageRef image) {
+void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image) {
     UNIMPLEMENTED();
 }
 #pragma endregion
 
 #pragma region Clipping and Masking
-/// TODO(DH): CLIPPING AND MASKING
+/// TODO(DH): GH#future Clipping and Masking
 /**
  @Status Interoperable
 */
-void CGContextClip(CGContextRef ctx) {
+void CGContextClip(CGContextRef context) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextClipToRect(CGContextRef ctx, CGRect rect) {
-    CGContextBeginPath(ctx);
-    CGContextAddRect(ctx, rect);
-    CGContextClip(ctx);
+void CGContextClipToRect(CGContextRef context, CGRect rect) {
+    CGContextBeginPath(context);
+    CGContextAddRect(context, rect);
+    CGContextClip(context);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextClipToRects(CGContextRef ctx, const CGRect* rects, unsigned count) {
-    CGContextBeginPath(ctx);
-    CGContextAddRects(ctx, rects, count);
-    CGContextClip(ctx);
+void CGContextClipToRects(CGContextRef context, const CGRect* rects, unsigned count) {
+    CGContextBeginPath(context);
+    CGContextAddRects(context, rects, count);
+    CGContextClip(context);
 }
 
 /**
  @Status Caveat
  @Notes Limited bitmap format support
 */
-void CGContextClipToMask(CGContextRef ctx, CGRect dest, CGImageRef image) {
+void CGContextClipToMask(CGContextRef context, CGRect dest, CGImageRef image) {
     UNIMPLEMENTED();
 }
 #pragma endregion
 
 #pragma region Colors - Stroke
-/// TODO(DH): STROKE COLORS
 /**
- @Status Interoperable
+ @Status Stub
+ @Notes Since we are currently missing Color Space support, this will need to be implemented.
 */
-void CGContextSetStrokeColor(CGContextRef ctx, const CGFloat* components) {
+void CGContextSetStrokeColor(CGContextRef context, const CGFloat* components) {
     UNIMPLEMENTED();
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Interoperable only for RGB.
 */
-void CGContextSetStrokeColorWithColor(CGContextRef ctx, CGColorRef color) {
-    // TODO(DH)
+void CGContextSetStrokeColorWithColor(CGContextRef context, CGColorRef color) {
     const CGFloat* comp = CGColorGetComponents(color);
-    CGContextSetRGBStrokeColor(ctx, comp[0], comp[1], comp[2], comp[3]);
+    CGContextSetRGBStrokeColor(context, comp[0], comp[1], comp[2], comp[3]);
 }
 
 /**
  @Status Stub
+ @Notes Since we are currently missing Color Space support, this will need to be implemented.
 */
 void CGContextSetStrokeColorSpace(CGContextRef pContext, CGColorSpaceRef colorSpace) {
     UNIMPLEMENTED();
@@ -553,48 +489,54 @@ void CGContextSetStrokeColorSpace(CGContextRef pContext, CGColorSpaceRef colorSp
 /**
  @Status Interoperable
 */
-void CGContextSetGrayStrokeColor(CGContextRef ctx, CGFloat gray, CGFloat alpha) {
-    UNIMPLEMENTED();
+void CGContextSetGrayStrokeColor(CGContextRef context, CGFloat gray, CGFloat alpha) {
+    CGContextSetRGBStrokeColor(context, gray, gray, gray, alpha);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextSetRGBStrokeColor(CGContextRef ctx, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
+void CGContextSetRGBStrokeColor(CGContextRef context, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
     ComPtr<ID2D1SolidColorBrush> brush;
-    THROW_IF_FAILED(ctx->RenderTarget()->CreateSolidColorBrush({ r, g, b, a }, &brush));
-    THROW_IF_FAILED(brush.As(&ctx->CurrentGState().strokeBrush));
+    FAIL_FAST_IF_FAILED(context->RenderTarget()->CreateSolidColorBrush({ r, g, b, a }, &brush));
+    FAIL_FAST_IF_FAILED(brush.As(&context->CurrentGState().strokeBrush));
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Manually converts CMYK to RGB, and does not involve the colorspace.
 */
-void CGContextSetCMYKStrokeColor(CGContextRef c, CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha) {
-    UNIMPLEMENTED();
+void CGContextSetCMYKStrokeColor(CGContextRef context, CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha) {
+    CGContextSetRGBStrokeColor(context,
+                               (1.0f - cyan) * (1.0f - black),
+                               (1.0f - magenta) * (1.0f - black),
+                               (1.0f - yellow) * (1.0f - black),
+                               alpha);
 }
 #pragma endregion
 
 #pragma region Colors - Fill
-/// TODO(DH): FILL COLORS
 /**
- @Status Interoperable
+ @Status Stub
+ @Notes Since we are currently missing Color Space support, this will need to be implemented.
 */
-void CGContextSetFillColor(CGContextRef ctx, const CGFloat* components) {
+void CGContextSetFillColor(CGContextRef context, const CGFloat* components) {
     UNIMPLEMENTED();
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Interoperable only for RGB.
 */
-void CGContextSetFillColorWithColor(CGContextRef ctx, CGColorRef color) {
+void CGContextSetFillColorWithColor(CGContextRef context, CGColorRef color) {
     const CGFloat* comp = CGColorGetComponents(color);
-    CGContextSetRGBFillColor(ctx, comp[0], comp[1], comp[2], comp[3]);
+    CGContextSetRGBFillColor(context, comp[0], comp[1], comp[2], comp[3]);
     UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
+ @Notes Since we are currently missing Color Space support, this will need to be implemented.
 */
 void CGContextSetFillColorSpace(CGContextRef pContext, CGColorSpaceRef colorSpace) {
     UNIMPLEMENTED();
@@ -603,25 +545,29 @@ void CGContextSetFillColorSpace(CGContextRef pContext, CGColorSpaceRef colorSpac
 /**
  @Status Interoperable
 */
-void CGContextSetGrayFillColor(CGContextRef ctx, CGFloat gray, CGFloat alpha) {
-    UNIMPLEMENTED();
+void CGContextSetGrayFillColor(CGContextRef context, CGFloat gray, CGFloat alpha) {
+    CGContextSetRGBFillColor(context, gray, gray, gray, alpha);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextSetRGBFillColor(CGContextRef ctx, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
+void CGContextSetRGBFillColor(CGContextRef context, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
     ComPtr<ID2D1SolidColorBrush> brush;
-    THROW_IF_FAILED(ctx->RenderTarget()->CreateSolidColorBrush({ r, g, b, a }, &brush));
-    THROW_IF_FAILED(brush.As(&ctx->CurrentGState().fillBrush));
+    FAIL_FAST_IF_FAILED(context->RenderTarget()->CreateSolidColorBrush({ r, g, b, a }, &brush));
+    FAIL_FAST_IF_FAILED(brush.As(&context->CurrentGState().fillBrush));
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Manually converts CMYK to RGB, and does not involve the colorspace.
 */
-void CGContextSetCMYKFillColor(CGContextRef c, CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha) {
-    UNIMPLEMENTED();
+void CGContextSetCMYKFillColor(CGContextRef context, CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha) {
+    CGContextSetRGBFillColor(context,
+                             (1.0f - cyan) * (1.0f - black),
+                             (1.0f - magenta) * (1.0f - black),
+                             (1.0f - yellow) * (1.0f - black),
+                             alpha);
 }
 #pragma endregion
 
@@ -629,32 +575,32 @@ void CGContextSetCMYKFillColor(CGContextRef c, CGFloat cyan, CGFloat magenta, CG
 /**
  @Status Interoperable
 */
-void CGContextSaveGState(CGContextRef ctx) {
-    auto& oldState = ctx->CurrentGState();
+void CGContextSaveGState(CGContextRef context) {
+    auto& oldState = context->CurrentGState();
 
     // This uses the drawing state's copy constructor.
-    ctx->StateStack().emplace(oldState);
+    context->GStateStack().emplace(oldState);
 
-    auto factory = ctx->Factory();
+    auto factory = context->Factory();
     ComPtr<ID2D1DrawingStateBlock> drawingState;
-    THROW_IF_FAILED(factory->CreateDrawingStateBlock(&drawingState));
+    FAIL_FAST_IF_FAILED(factory->CreateDrawingStateBlock(&drawingState));
 
-    ctx->RenderTarget()->SaveDrawingState(drawingState.Get());
+    context->RenderTarget()->SaveDrawingState(drawingState.Get());
     oldState.d2dState = drawingState;
 }
 
 /**
  @Status Interoperable
 */
-void CGContextRestoreGState(CGContextRef ctx) {
-    if (ctx->StateStack().size() <= 1) {
-        TraceError(TAG, L"Attempted to pop last GState.");
+void CGContextRestoreGState(CGContextRef context) {
+    if (context->GStateStack().size() <= 1) {
+        TraceError(TAG, L"Invalid attempt to pop last graphics state.");
         return;
     }
 
-    ctx->StateStack().pop();
-    auto& newState = ctx->CurrentGState();
-    ctx->RenderTarget()->RestoreDrawingState(newState.d2dState.Get());
+    context->GStateStack().pop();
+    auto& newState = context->CurrentGState();
+    context->RenderTarget()->RestoreDrawingState(newState.d2dState.Get());
     newState.d2dState = nullptr;
 }
 #pragma endregion
@@ -663,161 +609,171 @@ void CGContextRestoreGState(CGContextRef ctx) {
 /**
  @Status Interoperable
 */
-void CGContextClearRect(CGContextRef ctx, CGRect rect) {
-    UNIMPLEMENTED();
+void CGContextClearRect(CGContextRef context, CGRect rect) {
+    ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
+    renderTarget->PushAxisAlignedClip(__CGRectToD2D(rect), D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+    renderTarget->Clear(nullptr); // transparent black clear
+    renderTarget->PopAxisAlignedClip();
 }
 
-static void __CGContextDrawGeometry(CGContextRef ctx, ID2D1Geometry* geometry, CGPathDrawingMode drawMode) {
-    ComPtr<ID2D1RenderTarget> renderTarget = ctx->RenderTarget();
-    auto& currentState = ctx->CurrentGState();
+static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometry, CGPathDrawingMode drawMode) {
+    ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
+    auto& currentState = context->CurrentGState();
 
-    ComPtr<ID2D1DeviceContext> dctx;
-    THROW_IF_FAILED(renderTarget.As(&dctx));
+    ComPtr<ID2D1DeviceContext> deviceContext;
+    FAIL_FAST_IF_FAILED(renderTarget.As(&deviceContext));
 
     D2D1_SIZE_F targetSize = renderTarget->GetSize();
     ComPtr<ID2D1Image> originalTarget;
-    dctx->GetTarget(&originalTarget);
+    deviceContext->GetTarget(&originalTarget);
 
-    dctx->BeginDraw();
+    deviceContext->BeginDraw();
 
-    ComPtr<ID2D1Image> tgtImg;
-    ComPtr<ID2D1CommandList> cmdList;
-    THROW_IF_FAILED(dctx->CreateCommandList(&cmdList));
-    THROW_IF_FAILED(cmdList.As(&tgtImg));
-    dctx->SetTarget(cmdList.Get());
+    ComPtr<ID2D1CommandList> commandList;
+    FAIL_FAST_IF_FAILED(deviceContext->CreateCommandList(&commandList));
+    deviceContext->SetTarget(commandList.Get());
 
     CGAffineTransform& currentTransform = currentState.transform;
     CGAffineTransform transform = CGAffineTransformScale(currentTransform, 1.0, -1.0);
     transform = CGAffineTransformTranslate(transform, 0., targetSize.height);
-    dctx->SetTransform({transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty});
+    deviceContext->SetTransform({ transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty });
 
     if (drawMode & kCGPathFill) {
         if (drawMode & kCGPathEOFill) {
-            // TODO(DH): Regenerate geometry in Even/Odd fill mode.
+            // TODO(DH): GH#1077 Regenerate geometry in Even/Odd fill mode.
         }
-        dctx->FillGeometry(geometry, currentState.fillBrush.Get());
+        deviceContext->FillGeometry(geometry, currentState.fillBrush.Get());
     }
 
     if (drawMode & kCGPathStroke) {
         ComPtr<ID2D1Factory> factory;
-        dctx->GetFactory(&factory);
+        deviceContext->GetFactory(&factory);
 
-        /* TODO(DH): do not recreate for every drawing operation */
+        // TODO(DH): GH#1077 Do not recreate for every drawing operation
         ComPtr<ID2D1StrokeStyle> strokeStyle;
         // dashes must be adjusted to be based on line width
-        std::vector<CGFloat> adjustedDashes{currentState.dashes};
-        for (float& f: adjustedDashes) {
+        std::vector<CGFloat> adjustedDashes{ currentState.dashes };
+        for (float& f : adjustedDashes) {
             f /= currentState.lineWidth;
         }
-        THROW_IF_FAILED(factory->CreateStrokeStyle(currentState.strokeProperties, adjustedDashes.data(), adjustedDashes.size(), &strokeStyle));
-        /* --- */
+        FAIL_FAST_IF_FAILED(
+            factory->CreateStrokeStyle(currentState.strokeProperties, adjustedDashes.data(), adjustedDashes.size(), &strokeStyle));
 
-        dctx->DrawGeometry(geometry, currentState.strokeBrush.Get(), currentState.lineWidth, strokeStyle.Get());
+        deviceContext->DrawGeometry(geometry, currentState.strokeBrush.Get(), currentState.lineWidth, strokeStyle.Get());
     }
 
-    dctx->EndDraw();
-    cmdList->Close();
+    deviceContext->EndDraw();
+    commandList->Close();
 
     ComPtr<ID2D1Effect> fx;
-    dctx->CreateEffect(CLSID_D2D1Shadow, &fx);
-    fx->SetInput(0, cmdList.Get());
+    deviceContext->CreateEffect(CLSID_D2D1Shadow, &fx);
+    fx->SetInput(0, commandList.Get());
 
     ComPtr<ID2D1Effect> compositeEffect;
-    dctx->CreateEffect(CLSID_D2D1Composite, &compositeEffect);
+    deviceContext->CreateEffect(CLSID_D2D1Composite, &compositeEffect);
 
     compositeEffect->SetInputEffect(0, fx.Get());
-    compositeEffect->SetInput(1, cmdList.Get());
+    compositeEffect->SetInput(1, commandList.Get());
 
-    dctx->BeginDraw();
-    dctx->SetTarget(originalTarget.Get());
+    deviceContext->BeginDraw();
+    deviceContext->SetTarget(originalTarget.Get());
 
     bool layer = false;
     if (currentState.alpha != 1.0f || false /* mask, clip, etc. */) {
         layer = true;
-        renderTarget->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(), NULL, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE, D2D1::IdentityMatrix(), currentState.alpha), nullptr);
+        renderTarget->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
+                                                      NULL,
+                                                      D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+                                                      D2D1::IdentityMatrix(),
+                                                      currentState.alpha),
+                                nullptr);
     }
 
-    dctx->DrawImage(compositeEffect.Get());
+    deviceContext->DrawImage(compositeEffect.Get());
 
     if (layer) {
         renderTarget->PopLayer();
     }
 
-    THROW_IF_FAILED(dctx->EndDraw());
+    FAIL_FAST_IF_FAILED(deviceContext->EndDraw());
 }
 
 /**
  @Status Interoperable
 */
-void CGContextStrokeRect(CGContextRef ctx, CGRect rect) {
-    auto factory = ctx->Factory();
+void CGContextStrokeRect(CGContextRef context, CGRect rect) {
+    auto factory = context->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
     ComPtr<ID2D1RectangleGeometry> rectGeometry;
-    THROW_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D(rect), &rectGeometry));
-    THROW_IF_FAILED(rectGeometry.As(&geometry));
+    FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D(rect), &rectGeometry));
+    FAIL_FAST_IF_FAILED(rectGeometry.As(&geometry));
 
-    __CGContextDrawGeometry(ctx, geometry.Get(), kCGPathStroke);
+    __CGContextDrawGeometry(context, geometry.Get(), kCGPathStroke);
 
-    ctx->ClearPath();
+    context->ClearPath();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextStrokeRectWithWidth(CGContextRef ctx, CGRect rect, CGFloat width) {
-    CGContextSaveGState(ctx);
-    CGContextSetLineWidth(ctx, width);
-    CGContextStrokeRect(ctx, rect);
-    CGContextRestoreGState(ctx);
+void CGContextStrokeRectWithWidth(CGContextRef context, CGRect rect, CGFloat width) {
+    CGContextSaveGState(context);
+    CGContextSetLineWidth(context, width);
+    CGContextStrokeRect(context, rect);
+    CGContextRestoreGState(context);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextFillRect(CGContextRef ctx, CGRect rect) {
-    auto factory = ctx->Factory();
+void CGContextFillRect(CGContextRef context, CGRect rect) {
+    auto factory = context->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
     ComPtr<ID2D1RectangleGeometry> rectGeometry;
-    THROW_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D(rect), &rectGeometry));
-    THROW_IF_FAILED(rectGeometry.As(&geometry));
+    FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D(rect), &rectGeometry));
+    FAIL_FAST_IF_FAILED(rectGeometry.As(&geometry));
 
-    __CGContextDrawGeometry(ctx, geometry.Get(), kCGPathFill);
+    __CGContextDrawGeometry(context, geometry.Get(), kCGPathFill);
 
-    ctx->ClearPath();
+    context->ClearPath();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextStrokeEllipseInRect(CGContextRef ctx, CGRect rect) {
-    auto factory = ctx->Factory();
+void CGContextStrokeEllipseInRect(CGContextRef context, CGRect rect) {
+    auto factory = context->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
     ComPtr<ID2D1EllipseGeometry> ellipseGeometry;
-    THROW_IF_FAILED(factory->CreateEllipseGeometry({{CGRectGetMidX(rect), CGRectGetMidY(rect)}, rect.size.width / 2.f, rect.size.height / 2.f}, &ellipseGeometry));
-    THROW_IF_FAILED(ellipseGeometry.As(&geometry));
+    FAIL_FAST_IF_FAILED(
+        factory->CreateEllipseGeometry({ { CGRectGetMidX(rect), CGRectGetMidY(rect) }, rect.size.width / 2.f, rect.size.height / 2.f },
+                                       &ellipseGeometry));
+    FAIL_FAST_IF_FAILED(ellipseGeometry.As(&geometry));
 
-    __CGContextDrawGeometry(ctx, geometry.Get(), kCGPathStroke);
+    __CGContextDrawGeometry(context, geometry.Get(), kCGPathStroke);
 
-    ctx->ClearPath();
+    context->ClearPath();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextFillEllipseInRect(CGContextRef ctx, CGRect rect) {
-    auto factory = ctx->Factory();
+void CGContextFillEllipseInRect(CGContextRef context, CGRect rect) {
+    auto factory = context->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
     ComPtr<ID2D1EllipseGeometry> ellipseGeometry;
-    THROW_IF_FAILED(factory->CreateEllipseGeometry({{CGRectGetMidX(rect), CGRectGetMidY(rect)}, rect.size.width / 2.f, rect.size.height / 2.f}, &ellipseGeometry));
-    THROW_IF_FAILED(ellipseGeometry.As(&geometry));
+    FAIL_FAST_IF_FAILED(
+        factory->CreateEllipseGeometry({ { CGRectGetMidX(rect), CGRectGetMidY(rect) }, rect.size.width / 2.f, rect.size.height / 2.f },
+                                       &ellipseGeometry));
+    FAIL_FAST_IF_FAILED(ellipseGeometry.As(&geometry));
 
-    __CGContextDrawGeometry(ctx, geometry.Get(), kCGPathFill);
+    __CGContextDrawGeometry(context, geometry.Get(), kCGPathFill);
 
-    ctx->ClearPath();
+    context->ClearPath();
 }
 #pragma endregion
 
@@ -825,86 +781,86 @@ void CGContextFillEllipseInRect(CGContextRef ctx, CGRect rect) {
 /**
  @Status Interoperable
 */
-void CGContextBeginPath(CGContextRef ctx) {
+void CGContextBeginPath(CGContextRef context) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextClosePath(CGContextRef ctx) {
+void CGContextClosePath(CGContextRef context) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextAddRect(CGContextRef ctx, CGRect rect) {
+void CGContextAddRect(CGContextRef context, CGRect rect) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextAddRects(CGContextRef ctx, const CGRect* rect, unsigned count) {
+void CGContextAddRects(CGContextRef context, const CGRect* rect, unsigned count) {
     for (unsigned i = 0; i < count; i++) {
-        CGContextAddRect(ctx, rect[i]);
+        CGContextAddRect(context, rect[i]);
     }
 }
 
 /**
  @Status Interoperable
 */
-void CGContextAddLineToPoint(CGContextRef ctx, CGFloat x, CGFloat y) {
+void CGContextAddLineToPoint(CGContextRef context, CGFloat x, CGFloat y) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextAddCurveToPoint(CGContextRef ctx, CGFloat cp1x, CGFloat cp1y, CGFloat cp2x, CGFloat cp2y, CGFloat x, CGFloat y) {
+void CGContextAddCurveToPoint(CGContextRef context, CGFloat cp1x, CGFloat cp1y, CGFloat cp2x, CGFloat cp2y, CGFloat x, CGFloat y) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextAddQuadCurveToPoint(CGContextRef ctx, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y) {
+void CGContextAddQuadCurveToPoint(CGContextRef context, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextMoveToPoint(CGContextRef ctx, CGFloat x, CGFloat y) {
+void CGContextMoveToPoint(CGContextRef context, CGFloat x, CGFloat y) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextAddArc(CGContextRef ctx, CGFloat x, CGFloat y, CGFloat radius, CGFloat startAngle, CGFloat endAngle, int clockwise) {
+void CGContextAddArc(CGContextRef context, CGFloat x, CGFloat y, CGFloat radius, CGFloat startAngle, CGFloat endAngle, int clockwise) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextAddArcToPoint(CGContextRef ctx, CGFloat x1, CGFloat y1, CGFloat x2, CGFloat y2, CGFloat radius) {
+void CGContextAddArcToPoint(CGContextRef context, CGFloat x1, CGFloat y1, CGFloat x2, CGFloat y2, CGFloat radius) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextAddEllipseInRect(CGContextRef ctx, CGRect rect) {
+void CGContextAddEllipseInRect(CGContextRef context, CGRect rect) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextAddPath(CGContextRef ctx, CGPathRef path) {
+void CGContextAddPath(CGContextRef context, CGPathRef path) {
     // The Apple SDK docs imply that passing a NULL path is valid.
     // So avoid calling into the backing if NULL.
     if (path) {
@@ -915,7 +871,7 @@ void CGContextAddPath(CGContextRef ctx, CGPathRef path) {
 /**
  @Status Interoperable
 */
-bool CGContextIsPathEmpty(CGContextRef ctx) {
+bool CGContextIsPathEmpty(CGContextRef context) {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -930,7 +886,7 @@ void CGContextReplacePathWithStrokedPath(CGContextRef context) {
 /**
  @Status Interoperable
 */
-CGRect CGContextGetPathBoundingBox(CGContextRef ctx) {
+CGRect CGContextGetPathBoundingBox(CGContextRef context) {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -951,43 +907,43 @@ void CGContextAddLines(CGContextRef pContext, const CGPoint* pt, unsigned count)
 /**
  @Status Interoperable
 */
-void CGContextDrawPath(CGContextRef ctx, CGPathDrawingMode mode) {
+void CGContextDrawPath(CGContextRef context, CGPathDrawingMode mode) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextStrokePath(CGContextRef ctx) {
-    CGContextDrawPath(ctx, kCGPathStroke);
+void CGContextStrokePath(CGContextRef context) {
+    CGContextDrawPath(context, kCGPathStroke);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextFillPath(CGContextRef ctx) {
-    CGContextDrawPath(ctx, kCGPathFill);
+void CGContextFillPath(CGContextRef context) {
+    CGContextDrawPath(context, kCGPathFill);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextEOFillPath(CGContextRef ctx) {
-    CGContextDrawPath(ctx, kCGPathEOFill);
+void CGContextEOFillPath(CGContextRef context) {
+    CGContextDrawPath(context, kCGPathEOFill);
 }
 #pragma endregion
 
 /**
  @Status Interoperable
 */
-void CGContextEOClip(CGContextRef ctx) {
+void CGContextEOClip(CGContextRef context) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
-void CGContextFlush(CGContextRef ctx) {
+void CGContextFlush(CGContextRef context) {
     UNIMPLEMENTED();
 }
 
@@ -995,14 +951,14 @@ void CGContextFlush(CGContextRef ctx) {
  @Status Interoperable
 */
 void CGContextDrawLinearGradient(
-    CGContextRef ctx, CGGradientRef gradient, CGPoint startPoint, CGPoint endPoint, CGGradientDrawingOptions options) {
+    CGContextRef context, CGGradientRef gradient, CGPoint startPoint, CGPoint endPoint, CGGradientDrawingOptions options) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextDrawRadialGradient(CGContextRef ctx,
+void CGContextDrawRadialGradient(CGContextRef context,
                                  CGGradientRef gradient,
                                  CGPoint startCenter,
                                  CGFloat startRadius,
@@ -1015,21 +971,21 @@ void CGContextDrawRadialGradient(CGContextRef ctx,
 /**
  @Status Stub
 */
-void CGContextDrawShading(CGContextRef ctx, CGShadingRef shading) {
+void CGContextDrawShading(CGContextRef context, CGShadingRef shading) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
-void CGContextDrawLayerInRect(CGContextRef ctx, CGRect destRect, CGLayerRef layer) {
+void CGContextDrawLayerInRect(CGContextRef context, CGRect destRect, CGLayerRef layer) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
-void CGContextDrawLayerAtPoint(CGContextRef ctx, CGPoint destPoint, CGLayerRef layer) {
+void CGContextDrawLayerAtPoint(CGContextRef context, CGPoint destPoint, CGLayerRef layer) {
     UNIMPLEMENTED();
 }
 
@@ -1037,8 +993,8 @@ void CGContextDrawLayerAtPoint(CGContextRef ctx, CGPoint destPoint, CGLayerRef l
 /**
  @Status Interoperable
 */
-void CGContextSetLineDash(CGContextRef ctx, CGFloat phase, const CGFloat* lengths, unsigned count) {
-    auto& state = ctx->CurrentGState();
+void CGContextSetLineDash(CGContextRef context, CGFloat phase, const CGFloat* lengths, unsigned count) {
+    auto& state = context->CurrentGState();
     auto& dashes = state.dashes;
 
     if (count == 0) {
@@ -1055,24 +1011,24 @@ void CGContextSetLineDash(CGContextRef ctx, CGFloat phase, const CGFloat* length
 /**
  @Status Interoperable
 */
-void CGContextSetMiterLimit(CGContextRef ctx, CGFloat limit) {
-    auto& state = ctx->CurrentGState();
+void CGContextSetMiterLimit(CGContextRef context, CGFloat limit) {
+    auto& state = context->CurrentGState();
     state.strokeProperties.miterLimit = limit;
 }
 
 /**
  @Status Interoperable
 */
-void CGContextSetLineJoin(CGContextRef ctx, CGLineJoin lineJoin) {
-    auto& state = ctx->CurrentGState();
+void CGContextSetLineJoin(CGContextRef context, CGLineJoin lineJoin) {
+    auto& state = context->CurrentGState();
     state.strokeProperties.lineJoin = (D2D1_LINE_JOIN)lineJoin;
 }
 
 /**
  @Status Interoperable
 */
-void CGContextSetLineCap(CGContextRef ctx, CGLineCap lineCap) {
-    auto& state = ctx->CurrentGState();
+void CGContextSetLineCap(CGContextRef context, CGLineCap lineCap) {
+    auto& state = context->CurrentGState();
     state.strokeProperties.startCap = (D2D1_CAP_STYLE)lineCap;
     state.strokeProperties.endCap = (D2D1_CAP_STYLE)lineCap;
     state.strokeProperties.dashCap = (D2D1_CAP_STYLE)lineCap;
@@ -1081,15 +1037,15 @@ void CGContextSetLineCap(CGContextRef ctx, CGLineCap lineCap) {
 /**
  @Status Interoperable
 */
-void CGContextSetLineWidth(CGContextRef ctx, CGFloat width) {
-    auto& state = ctx->CurrentGState();
+void CGContextSetLineWidth(CGContextRef context, CGFloat width) {
+    auto& state = context->CurrentGState();
     state.lineWidth = width;
 }
 
 /**
  @Status Stub
 */
-void CGContextSetShouldAntialias(CGContextRef ctx, bool shouldAntialias) {
+void CGContextSetShouldAntialias(CGContextRef context, bool shouldAntialias) {
     UNIMPLEMENTED();
 }
 
@@ -1166,7 +1122,7 @@ void CGContextSetShadow(CGContextRef context, CGSize offset, CGFloat blur) {
 /**
  @Status Interoperable
 */
-CGRect CGContextGetClipBoundingBox(CGContextRef ctx) {
+CGRect CGContextGetClipBoundingBox(CGContextRef context) {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1174,34 +1130,34 @@ CGRect CGContextGetClipBoundingBox(CGContextRef ctx) {
 /**
  @Status Interoperable
 */
-void CGContextBeginTransparencyLayer(CGContextRef ctx, CFDictionaryRef auxInfo) {
+void CGContextBeginTransparencyLayer(CGContextRef context, CFDictionaryRef auxInfo) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextBeginTransparencyLayerWithRect(CGContextRef ctx, CGRect rect, CFDictionaryRef auxInfo) {
+void CGContextBeginTransparencyLayerWithRect(CGContextRef context, CGRect rect, CFDictionaryRef auxInfo) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextEndTransparencyLayer(CGContextRef ctx) {
+void CGContextEndTransparencyLayer(CGContextRef context) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextStrokeLineSegments(CGContextRef ctx, const CGPoint* segments, unsigned count) {
-    CGContextBeginPath(ctx);
+void CGContextStrokeLineSegments(CGContextRef context, const CGPoint* segments, unsigned count) {
+    CGContextBeginPath(context);
     for (unsigned k = 0; k < count; k += 2) {
-        CGContextMoveToPoint(ctx, segments[k].x, segments[k].y);
-        CGContextAddLineToPoint(ctx, segments[k + 1].x, segments[k + 1].y);
+        CGContextMoveToPoint(context, segments[k].x, segments[k].y);
+        CGContextAddLineToPoint(context, segments[k + 1].x, segments[k + 1].y);
     }
-    CGContextStrokePath(ctx);
+    CGContextStrokePath(context);
 }
 
 /**
@@ -1215,14 +1171,14 @@ CGInterpolationQuality CGContextGetInterpolationQuality(CGContextRef context) {
 /**
  @Status Interoperable
 */
-void CGContextSetAlpha(CGContextRef ctx, CGFloat alpha) {
-    ctx->CurrentGState().alpha = alpha;
+void CGContextSetAlpha(CGContextRef context, CGFloat alpha) {
+    context->CurrentGState().alpha = alpha;
 }
 
 /**
  @Status Stub
 */
-CGRect CGContextConvertRectToDeviceSpace(CGContextRef ctx, CGRect rect) {
+CGRect CGContextConvertRectToDeviceSpace(CGContextRef context, CGRect rect) {
     UNIMPLEMENTED();
     return rect;
 }
@@ -1230,7 +1186,7 @@ CGRect CGContextConvertRectToDeviceSpace(CGContextRef ctx, CGRect rect) {
 /**
  @Status Stub
 */
-CGRect CGContextConvertRectToUserSpace(CGContextRef ctx, CGRect rect) {
+CGRect CGContextConvertRectToUserSpace(CGContextRef context, CGRect rect) {
     UNIMPLEMENTED();
     return rect;
 }
@@ -1238,7 +1194,7 @@ CGRect CGContextConvertRectToUserSpace(CGContextRef ctx, CGRect rect) {
 /**
  @Status Stub
 */
-CGPoint CGContextConvertPointToUserSpace(CGContextRef ctx, CGPoint pt) {
+CGPoint CGContextConvertPointToUserSpace(CGContextRef context, CGPoint pt) {
     UNIMPLEMENTED();
     return pt;
 }
@@ -1246,7 +1202,7 @@ CGPoint CGContextConvertPointToUserSpace(CGContextRef ctx, CGPoint pt) {
 /**
  @Status Stub
 */
-CGSize CGContextConvertSizeToUserSpace(CGContextRef c, CGSize size) {
+CGSize CGContextConvertSizeToUserSpace(CGContextRef context, CGSize size) {
     UNIMPLEMENTED();
     return size;
 }
@@ -1254,7 +1210,7 @@ CGSize CGContextConvertSizeToUserSpace(CGContextRef c, CGSize size) {
 /**
  @Status Stub
 */
-CGSize CGContextConvertSizeToDeviceSpace(CGContextRef ctx, CGSize size) {
+CGSize CGContextConvertSizeToDeviceSpace(CGContextRef context, CGSize size) {
     UNIMPLEMENTED();
     return size;
 }
@@ -1262,7 +1218,7 @@ CGSize CGContextConvertSizeToDeviceSpace(CGContextRef ctx, CGSize size) {
 /**
  @Status Stub
 */
-CGPoint CGContextConvertPointToDeviceSpace(CGContextRef ctx, CGPoint pt) {
+CGPoint CGContextConvertPointToDeviceSpace(CGContextRef context, CGPoint pt) {
     UNIMPLEMENTED();
     return pt;
 }
@@ -1270,14 +1226,14 @@ CGPoint CGContextConvertPointToDeviceSpace(CGContextRef ctx, CGPoint pt) {
 /**
  @Status Stub
 */
-void CGContextShowText(CGContextRef ctx, const char* str, unsigned count) {
+void CGContextShowText(CGContextRef context, const char* str, unsigned count) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextSetShadowWithColor(CGContextRef ctx, CGSize offset, CGFloat blur, CGColorRef color) {
+void CGContextSetShadowWithColor(CGContextRef context, CGSize offset, CGFloat blur, CGColorRef color) {
     UNIMPLEMENTED();
 }
 
@@ -1285,7 +1241,7 @@ void CGContextSetShadowWithColor(CGContextRef ctx, CGSize offset, CGFloat blur, 
  @Status Stub
  @Notes
 */
-void CGContextBeginPage(CGContextRef c, const CGRect* mediaBox) {
+void CGContextBeginPage(CGContextRef context, const CGRect* mediaBox) {
     UNIMPLEMENTED();
 }
 
@@ -1293,7 +1249,7 @@ void CGContextBeginPage(CGContextRef c, const CGRect* mediaBox) {
  @Status Interoperable
  @Notes
 */
-CGPathRef CGContextCopyPath(CGContextRef c) {
+CGPathRef CGContextCopyPath(CGContextRef context) {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1302,7 +1258,7 @@ CGPathRef CGContextCopyPath(CGContextRef c) {
  @Status Stub
  @Notes
 */
-void CGContextDrawPDFPage(CGContextRef c, CGPDFPageRef page) {
+void CGContextDrawPDFPage(CGContextRef context, CGPDFPageRef page) {
     UNIMPLEMENTED();
 }
 
@@ -1310,16 +1266,16 @@ void CGContextDrawPDFPage(CGContextRef c, CGPDFPageRef page) {
  @Status Stub
  @Notes
 */
-void CGContextEndPage(CGContextRef c) {
+void CGContextEndPage(CGContextRef context) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGContextFillRects(CGContextRef ctx, const CGRect* rects, size_t count) {
-    for(size_t i = 0; i < count; ++i) {
-        CGContextFillRect(ctx, rects[i]);
+void CGContextFillRects(CGContextRef context, const CGRect* rects, size_t count) {
+    for (size_t i = 0; i < count; ++i) {
+        CGContextFillRect(context, rects[i]);
     }
 }
 
@@ -1327,7 +1283,7 @@ void CGContextFillRects(CGContextRef ctx, const CGRect* rects, size_t count) {
  @Status Stub
  @Notes
 */
-CGPoint CGContextGetPathCurrentPoint(CGContextRef c) {
+CGPoint CGContextGetPathCurrentPoint(CGContextRef context) {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1336,7 +1292,7 @@ CGPoint CGContextGetPathCurrentPoint(CGContextRef c) {
  @Status Stub
  @Notes
 */
-CGAffineTransform CGContextGetUserSpaceToDeviceSpaceTransform(CGContextRef c) {
+CGAffineTransform CGContextGetUserSpaceToDeviceSpaceTransform(CGContextRef context) {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1345,7 +1301,7 @@ CGAffineTransform CGContextGetUserSpaceToDeviceSpaceTransform(CGContextRef c) {
  @Status Stub
  @Notes
 */
-bool CGContextPathContainsPoint(CGContextRef c, CGPoint point, CGPathDrawingMode mode) {
+bool CGContextPathContainsPoint(CGContextRef context, CGPoint point, CGPathDrawingMode mode) {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1354,7 +1310,7 @@ bool CGContextPathContainsPoint(CGContextRef c, CGPoint point, CGPathDrawingMode
  @Status Stub
  @Notes
 */
-void CGContextSetFlatness(CGContextRef c, CGFloat flatness) {
+void CGContextSetFlatness(CGContextRef context, CGFloat flatness) {
     UNIMPLEMENTED();
 }
 
@@ -1362,7 +1318,7 @@ void CGContextSetFlatness(CGContextRef c, CGFloat flatness) {
  @Status Stub
  @Notes
 */
-void CGContextSetStrokePattern(CGContextRef c, CGPatternRef pattern, const CGFloat* components) {
+void CGContextSetStrokePattern(CGContextRef context, CGPatternRef pattern, const CGFloat* components) {
     UNIMPLEMENTED();
 }
 
@@ -1370,7 +1326,7 @@ void CGContextSetStrokePattern(CGContextRef c, CGPatternRef pattern, const CGFlo
  @Status Stub
  @Notes
 */
-void CGContextShowGlyphsAtPositions(CGContextRef c, const CGGlyph* glyphs, const CGPoint* Lpositions, size_t count) {
+void CGContextShowGlyphsAtPositions(CGContextRef context, const CGGlyph* glyphs, const CGPoint* Lpositions, size_t count) {
     UNIMPLEMENTED();
 }
 
@@ -1378,7 +1334,7 @@ void CGContextShowGlyphsAtPositions(CGContextRef c, const CGGlyph* glyphs, const
  @Status Stub
  @Notes
 */
-void CGContextShowGlyphsWithAdvances(CGContextRef c, const CGGlyph* glyphs, const CGSize* advances, size_t count) {
+void CGContextShowGlyphsWithAdvances(CGContextRef context, const CGGlyph* glyphs, const CGSize* advances, size_t count) {
     UNIMPLEMENTED();
 }
 
@@ -1386,42 +1342,42 @@ void CGContextShowGlyphsWithAdvances(CGContextRef c, const CGGlyph* glyphs, cons
  @Status Stub
  @Notes
 */
-void CGContextSynchronize(CGContextRef c) {
+void CGContextSynchronize(CGContextRef context) {
     UNIMPLEMENTED();
 }
 
 // TODO: functions below are not part of offical exports, but they are also exported
 // to be used by other framework components, we should consider moving them to a shared library
-void CGContextClearToColor(CGContextRef ctx, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
+void CGContextClearToColor(CGContextRef context, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
     UNIMPLEMENTED();
 }
 
-bool CGContextIsDirty(CGContextRef ctx) {
+bool CGContextIsDirty(CGContextRef context) {
     return true;
     UNIMPLEMENTED();
     return StubReturn();
 }
 
-void CGContextSetDirty(CGContextRef ctx, bool dirty) {
+void CGContextSetDirty(CGContextRef context, bool dirty) {
     UNIMPLEMENTED();
 }
 
-void CGContextReleaseLock(CGContextRef ctx) {
+void CGContextReleaseLock(CGContextRef context) {
     UNIMPLEMENTED();
 }
 
-CGContextImpl* CGContextGetBacking(CGContextRef ctx) {
+CGContextImpl* CGContextGetBacking(CGContextRef context) {
     UNIMPLEMENTED();
     return nullptr;
 }
 
-bool CGContextIsPointInPath(CGContextRef c, bool eoFill, CGFloat x, CGFloat y) {
+bool CGContextIsPointInPath(CGContextRef context, bool eoFill, CGFloat x, CGFloat y) {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
-void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun) {
-    // ctx->Backing()->CGContextDrawGlyphRun(glyphRun);
+void CGContextDrawGlyphRun(CGContextRef context, const DWRITE_GLYPH_RUN* glyphRun) {
+    // context->Backing()->CGContextDrawGlyphRun(glyphRun);
 }
 
 CGImageRef CGPNGImageCreateFromFile(NSString* path) {
@@ -1440,13 +1396,42 @@ CGImageRef CGJPEGImageCreateFromData(NSData* data) {
     return new CGJPEGDecoderImage(data);
 }
 
-/**
- @Status Interoperable
-*/
-CGColorSpaceRef CGBitmapContextGetColorSpace(CGContextRef ctx) {
-    // TODO: Consider caching colorspaceRef in CGImageRef
-    return nullptr;
-    // return (CGColorSpaceRef) new __CGColorSpace(ctx->Backing()->DestImage()->Backing()->ColorSpaceModel());
+////// CGBitmapContext
+struct __CGBitmapContext : __CGContext {
+    struct __CGBitmapContextImpl {
+        woc::unique_cf<CGImageRef> image;
+    };
+
+    __CGBitmapContextImpl _bitmapImpl;
+};
+
+static void __CGBitmapContextInit(CFTypeRef cf) {
+    // Delegate to parent constructor.
+    __CGContextInit(cf);
+
+    __CGBitmapContext* context = (__CGBitmapContext*)cf;
+    struct __CGBitmapContext* mutableContext = const_cast<struct __CGBitmapContext*>(context);
+    new (&mutableContext->_bitmapImpl) __CGBitmapContext::__CGBitmapContextImpl();
+}
+
+static void __CGBitmapContextDeallocate(CFTypeRef cf) {
+    __CGBitmapContext* context = (__CGBitmapContext*)cf;
+    context->_bitmapImpl.~__CGBitmapContextImpl();
+
+    // Delegate to parent destructor.
+    __CGContextDeallocate(cf);
+}
+
+static CFTypeID __CGBitmapContextGetTypeID() {
+    static CFTypeID __kCGBitmapContextTypeID = _kCFRuntimeNotATypeID;
+    static const CFRuntimeClass __CGBitmapContextClass =
+        { 0, "CGBitmapContext", __CGBitmapContextInit, NULL, __CGBitmapContextDeallocate, NULL, NULL, NULL, __CGContextCopyDescription };
+
+    static dispatch_once_t initOnce = 0;
+    dispatch_once(&initOnce, ^{
+        __kCGBitmapContextTypeID = _CFRuntimeRegisterClass(&__CGBitmapContextClass);
+    });
+    return __kCGBitmapContextTypeID;
 }
 
 /**
@@ -1512,7 +1497,16 @@ CGContextRef CGBitmapContextCreate(void* data,
 /**
  @Status Interoperable
 */
-size_t CGBitmapContextGetWidth(CGContextRef ctx) {
+CGColorSpaceRef CGBitmapContextGetColorSpace(CGContextRef context) {
+    // TODO: Consider caching colorspaceRef in CGImageRef
+    return nullptr;
+    // return (CGColorSpaceRef) new __CGColorSpace(context->Backing()->DestImage()->Backing()->ColorSpaceModel());
+}
+
+/**
+ @Status Interoperable
+*/
+size_t CGBitmapContextGetWidth(CGContextRef context) {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1520,7 +1514,7 @@ size_t CGBitmapContextGetWidth(CGContextRef ctx) {
 /**
  @Status Interoperable
 */
-size_t CGBitmapContextGetHeight(CGContextRef ctx) {
+size_t CGBitmapContextGetHeight(CGContextRef context) {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1528,7 +1522,7 @@ size_t CGBitmapContextGetHeight(CGContextRef ctx) {
 /**
  @Status Interoperable
 */
-size_t CGBitmapContextGetBytesPerRow(CGContextRef ctx) {
+size_t CGBitmapContextGetBytesPerRow(CGContextRef context) {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1536,7 +1530,7 @@ size_t CGBitmapContextGetBytesPerRow(CGContextRef ctx) {
 /**
  @Status Interoperable
 */
-void* CGBitmapContextGetData(CGContextRef ctx) {
+void* CGBitmapContextGetData(CGContextRef context) {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1546,31 +1540,33 @@ void* CGBitmapContextGetData(CGContextRef ctx) {
  @Notes Has no copy-on-write semantics; bitmap returned is the source bitmap representing
         the CGContext
 */
-CGImageRef CGBitmapContextCreateImage(CGContextRef ctx) {
+CGImageRef CGBitmapContextCreateImage(CGContextRef context) {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
-CGImageRef CGBitmapContextGetImage(CGContextRef ctx) {
-    return ctx->img;
-    //UNIMPLEMENTED();
-    //return StubReturn();
+CGImageRef CGBitmapContextGetImage(CGContextRef context) {
+    if (CFGetTypeID(context) != __CGBitmapContextGetTypeID()) {
+        TraceError(TAG, L"Image requested from non-bitmap CGContext.");
+        return nullptr;
+    }
+    return ((__CGBitmapContext*)context)->_bitmapImpl.image.get();
+    // UNIMPLEMENTED();
+    // return StubReturn();
 }
 
 CGContextRef _CGBitmapContextCreateWithTexture(int width, int height, DisplayTexture* texture, DisplayTextureLocking* locking) {
     CGImageRef newImage = nullptr;
     __CGSurfaceInfo surfaceInfo = _CGSurfaceInfoInit(width, height, _ColorARGB);
-
-    //if (texture) {
     newImage = new CGGraphicBufferImage(surfaceInfo, texture, locking);
-    //} else {
-        //newImage = new CGBitmapImage(surfaceInfo);
-    //}
 
-    //CGContextRef context = new __CGContext(newImage);
     ComPtr<ID2D1RenderTarget> renderTarget = newImage->Backing()->GetRenderTarget();
-    return _CGContextCreateWithD2DRenderTarget(renderTarget.Get(), newImage);
-    CGImageRelease(newImage);
+
+    __CGBitmapContext* context = _CFRuntimeCreateInstance<__CGBitmapContext>(__CGBitmapContextGetTypeID());
+    __CGContextInitializeWithRenderTarget(context, renderTarget.Get());
+
+    context->_bitmapImpl.image.reset(newImage); // Consumes +1 reference.
+    return context;
 }
 
 CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurfaceFormat fmt) {
