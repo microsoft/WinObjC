@@ -46,6 +46,7 @@
 @class UIAppearanceSetter;
 
 static const wchar_t* TAG = L"UIView";
+
 static const bool DEBUG_ALL = false;
 static const bool DEBUG_TOUCHES_VERBOSE = DEBUG_ALL || false;
 static const bool DEBUG_TOUCHES = DEBUG_TOUCHES_VERBOSE || false;
@@ -59,6 +60,7 @@ const CGFloat UIViewNoIntrinsicMetric = -1.0f;
 
 /** @Status Stub */
 const CGSize UILayoutFittingCompressedSize = StubConstant();
+
 /** @Status Stub */
 const CGSize UILayoutFittingExpandedSize = StubConstant();
 
@@ -709,7 +711,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
  @Public No
 */
 - (void)initAccessibility {
-    self.isAccessibilityElement = FALSE;
+    self.isAccessibilityElement = NO;
     self.accessibilityTraits = UIAccessibilityTraitNone;
     [self updateAccessibility];
 }
@@ -3559,6 +3561,26 @@ static float doRound(float f) {
 // This results in the XAML FrameworkElement being added as a child of this UIView's root CALayer.
 - (void)setXamlElement:(WXFrameworkElement*)xamlElement {
     [self layer].contentsElement = xamlElement;
+}
+
+// Retrieve the backing XAML element's Automation Id
+- (NSString*)accessibilityIdentifier {
+    WXFrameworkElement* layerContentElement = [self layer].contentsElement;
+    WXFrameworkElement* xamlElement = layerContentElement ? layerContentElement : priv->_xamlInputElement.get();
+    if (xamlElement) {
+        return [WUXAAutomationProperties getAutomationId:xamlElement];
+    }
+
+    return nil;
+}
+
+// Set the backing XAML element's Automation Id
+- (void)setAccessibilityIdentifier:(NSString*)accessibilityId {
+    WXFrameworkElement* layerContentElement = [self layer].contentsElement;
+    WXFrameworkElement* xamlElement = layerContentElement ? layerContentElement : priv->_xamlInputElement.get();
+    if (xamlElement) {
+        [WUXAAutomationProperties setAutomationId:xamlElement value:accessibilityId];
+    }
 }
 
 /**

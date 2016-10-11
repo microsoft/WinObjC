@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XAMLCatalog", "XAMLCatalog", "{9E7481F9-6498-46FF-B088-0BBC794B45E6}"
 EndProject
@@ -10,8 +10,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XAMLCatalog", "XAMLCatalog.
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		XAMLCatalog.vsimporter\XAMLCatalog-Headers-WinStore10\XAMLCatalog-Headers.vcxitems*{D43483E7-5DDF-4C36-B1C1-232640B174DE}*SharedItemsImports = 9
-		XAMLCatalog.vsimporter\XAMLCatalog-Headers-WinStore10\XAMLCatalog-Headers.vcxitems*{04732F36-7C36-4CE9-9759-57411B61CB73}*SharedItemsImports = 4
+		XAMLCatalog.vsimporter\XAMLCatalog-Headers-WinStore10\XAMLCatalog-Headers.vcxitems*{04732f36-7c36-4ce9-9759-57411b61cb73}*SharedItemsImports = 4
+		XAMLCatalog.vsimporter\XAMLCatalog-Headers-WinStore10\XAMLCatalog-Headers.vcxitems*{d43483e7-5ddf-4c36-b1c1-232640b174de}*SharedItemsImports = 9
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM

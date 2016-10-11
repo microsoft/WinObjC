@@ -23,7 +23,6 @@
 		4EE861D41B5997A500682BDB /* PickersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861BC1B5997A500682BDB /* PickersViewController.m */; };
 		4EE861D51B5997A500682BDB /* SearchBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861BE1B5997A500682BDB /* SearchBarViewController.m */; };
 		4EE861D61B5997A500682BDB /* SegmentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861C01B5997A500682BDB /* SegmentsViewController.m */; };
-		4EE861D71B5997A500682BDB /* TextFieldsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861C21B5997A500682BDB /* TextFieldsViewController.m */; };
 		4EE861D91B5997A500682BDB /* ToolbarsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861C61B5997A500682BDB /* ToolbarsViewController.m */; };
 		4EE861DA1B5997A500682BDB /* TransitionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861C81B5997A500682BDB /* TransitionsViewController.m */; };
 		4EE861DB1B5997A500682BDB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861CA1B5997A500682BDB /* ViewController.m */; };
@@ -122,8 +121,6 @@
 		4EE861BE1B5997A500682BDB /* SearchBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchBarViewController.m; sourceTree = "<group>"; };
 		4EE861BF1B5997A500682BDB /* SegmentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentsViewController.h; sourceTree = "<group>"; };
 		4EE861C01B5997A500682BDB /* SegmentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SegmentsViewController.m; sourceTree = "<group>"; };
-		4EE861C11B5997A500682BDB /* TextFieldsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFieldsViewController.h; sourceTree = "<group>"; };
-		4EE861C21B5997A500682BDB /* TextFieldsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFieldsViewController.m; sourceTree = "<group>"; };
 		4EE861C51B5997A500682BDB /* ToolbarsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolbarsViewController.h; sourceTree = "<group>"; };
 		4EE861C61B5997A500682BDB /* ToolbarsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolbarsViewController.m; sourceTree = "<group>"; };
 		4EE861C71B5997A500682BDB /* TransitionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionsViewController.h; sourceTree = "<group>"; };
@@ -315,8 +312,6 @@
 				4EE861BE1B5997A500682BDB /* SearchBarViewController.m */,
 				4EE861BF1B5997A500682BDB /* SegmentsViewController.h */,
 				4EE861C01B5997A500682BDB /* SegmentsViewController.m */,
-				4EE861C11B5997A500682BDB /* TextFieldsViewController.h */,
-				4EE861C21B5997A500682BDB /* TextFieldsViewController.m */,
 				4EE861C51B5997A500682BDB /* ToolbarsViewController.h */,
 				4EE861C61B5997A500682BDB /* ToolbarsViewController.m */,
 				4EE861C71B5997A500682BDB /* TransitionsViewController.h */,
@@ -560,7 +555,6 @@
 				4EE861D91B5997A500682BDB /* ToolbarsViewController.m in Sources */,
 				143EAE4E1D075DD50068D90F /* UserDefaultsViewController.m in Sources */,
 				C14942D41C77E1EE00C2B67E /* AccelerateViewController.m in Sources */,
-				4EE861D71B5997A500682BDB /* TextFieldsViewController.m in Sources */,
 				4EE861D41B5997A500682BDB /* PickersViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
