@@ -48,6 +48,7 @@ public:
 class CGBitmapImageBacking : public CGImageBacking {
 private:
     CGImageData* _data;
+    ID2D1RenderTarget* _renderTarget;
 
 public:
     CGBitmapImageBacking(const __CGSurfaceInfo& surfaceInfo);
@@ -67,6 +68,7 @@ public:
     int BytesPerRow();
     int BytesPerPixel();
     int BitsPerComponent();
+    ID2D1RenderTarget* GetRenderTarget();
     void GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo);
     __CGSurfaceFormat SurfaceFormat();
     CGColorSpaceModel ColorSpaceModel();

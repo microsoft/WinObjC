@@ -2403,8 +2403,8 @@ public:
 private:
     static long volatile s_telemetryId;
 
-    ThreadFailureCallbackHolder** m_ppThreadList;
     IFailureCallback* m_pCallback;
+    ThreadFailureCallbackHolder** m_ppThreadList;
     ThreadFailureCallbackHolder* m_pNext;
     DWORD m_threadId;
     wil::CallContextInfo* m_pCallContext;
@@ -5001,7 +5001,7 @@ void _objcThrowFailureInfo(const wil::FailureInfo& fi) {
     @throw _NSExceptionFromFailureInfo(fi);
 }
 
-void _catchAndPopulateNSError(NSError** outError) {
+void __attribute__((unused)) _catchAndPopulateNSError(NSError** outError) {
     NSError* error;
 
     try {

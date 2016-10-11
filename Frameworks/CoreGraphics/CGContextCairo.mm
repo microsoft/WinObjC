@@ -18,6 +18,12 @@
 #import <Starboard.h>
 #import <memory>
 
+#include <COMIncludes.h>
+#import <wrl/client.h>
+#import <Wincodec.h>
+#import <D2d1.h>
+#include <COMIncludes_End.h>
+
 #import "CGColorSpaceInternal.h"
 #import "CGContextCairo.h"
 #import "CGContextImpl.h"
@@ -28,6 +34,7 @@
 #import "CGPatternInternal.h"
 #import "UIColorInternal.h"
 #import "CGSurfaceInfoInternal.h"
+#import "UWP/WindowsGraphicsDisplay.h"
 
 #define CAIRO_WIN32_STATIC_BUILD
 
@@ -43,6 +50,8 @@ extern "C" {
 }
 
 #include "LoggingNative.h"
+
+using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"CGContextCairo";
 
@@ -1975,4 +1984,57 @@ CGPathRef CGContextCairo::CGContextCopyPath(void) {
     }
     cairo_path_destroy(caPath);
     return (CGPathRef)copyPath;
+}
+
+/**
+ * Helper method to render text with the given DWRITE_GLYPH_RUN.
+ *
+ * @parameter glyphRun DWRITE_GLYPH_RUN object to render
+ */
+void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
+    ObtainLock();
+
+    CGContextStrokePath();
+
+    float height = _imgDest->Backing()->Height();
+
+    ID2D1RenderTarget* imgRenderTarget = _imgDest->Backing()->GetRenderTarget();
+    THROW_NS_IF_NULL(E_UNEXPECTED, imgRenderTarget);
+
+    // Set the brush color to the current values from the context.
+    D2D1::ColorF brushColor =
+        D2D1::ColorF(curState->curFillColor.r, curState->curFillColor.g, curState->curFillColor.b, curState->curFillColor.a);
+
+    imgRenderTarget->BeginDraw();
+
+    // Apply the required transformations as set in the context.
+    // We need some special handling in transform as CoreText in iOS renders from bottom left but DWrite on Windows does top left.
+    //     1. Scaling - to handle scaling once text has been scaled, apply translation to the scaled height
+    //     2. Rotation - CoreText rotates text anti-clockwise but DWrite performs clockwise rotation
+    CGAffineTransform transform = CGAffineTransformConcat(curState->curTransform, curState->curTextMatrix);
+    // Perform translation required to handle scaling.
+    CGFloat verticalScalingFactor = sqrt((transform.b * transform.b) + (transform.d * transform.d));
+    // TODO::
+    // Issue #1057 - CG today talks in Pixels but DirectWrite and D2D only understand DIPs. Because CG talks in Pixels,
+    // curState->curTransform contains both the device scaling factor and any user scale applied to it causing the below D2D render target
+    // transform calculation to be way off on devices that have scaling. Workaround for now is to divide the verticalScalingFactor and
+    // height here with the device scaling factor so they get converted to DIPs and then apply the transform to the D2D render target.
+    // Though this workaround is sufficient to get text rendered on the user screen on all Windows form factor devices, this will not work
+    // when text is rendered on a PDF or printer.
+    static float hostDisplayScale = static_cast<float>([[WGDDisplayInformation getForCurrentView] resolutionScale] / 100.0f);
+    verticalScalingFactor /= hostDisplayScale;
+    height /= hostDisplayScale;
+    transform = CGAffineTransformTranslate(transform, 0, (height / verticalScalingFactor) - height);
+    // Perform anti-clockwise rotation required to match the reference platform.
+    imgRenderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, -transform.b, transform.c, transform.d, transform.tx, transform.ty));
+
+    // Draw the glyph using ID2D1RenderTarget
+    ComPtr<ID2D1SolidColorBrush> brush;
+    THROW_IF_FAILED(imgRenderTarget->CreateSolidColorBrush(brushColor, &brush));
+    imgRenderTarget->DrawGlyphRun(D2D1::Point2F(curState->curTextPosition.x, curState->curTextPosition.y),
+                                  glyphRun,
+                                  brush.Get(),
+                                  DWRITE_MEASURING_MODE_NATURAL);
+
+    THROW_IF_FAILED(imgRenderTarget->EndDraw());
 }

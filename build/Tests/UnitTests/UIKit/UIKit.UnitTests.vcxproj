@@ -258,19 +258,20 @@
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="..\..\..\..\Frameworks\UIKit\NSCoder+UIKitAdditions.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\Accessibility.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\NSAttributedString+UIKitAdditionsTests.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\NSCoder+UIKitAdditionsTest.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\NSLayoutConstraint.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\UIApplication.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\UIViewTest.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\NSValue+UIKitAdditionsTests.mm" />
-    <ClangCompile Include="UIColorTests.mm" />
-    <ClangCompile Include="UIFontTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\Frameworks\UIKit\NSCoder+UIKitAdditions.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\Accessibility.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSAttributedString+UIKitAdditionsTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSCoder+UIKitAdditionsTest.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSLayoutConstraint.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIApplication.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIViewTest.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSValue+UIKitAdditionsTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIColorTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIFontTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIFontDescriptorTests.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\tests\unittests\UIKit\NullCompositor.h" />
+    <ClInclude Include="$(StarboardBasePath)\tests\unittests\UIKit\NullCompositor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -43,7 +43,6 @@ const CFStringRef kCGFontVariationAxisDefaultValue = static_cast<CFStringRef>(@"
 DWORD CGFontGetFontBBox(CGRect* ret, id font);
 
 static IWLazyClassLookup _LazyUIFont("UIFont");
-static IWLazyIvarLookup<float> _LazyUIFontHorizontalScale(_LazyUIFont, "_horizontalScale");
 
 #include "LoggingNative.h"
 
@@ -59,11 +58,7 @@ static DWORD destBuffer[1024];
 void CGFontSetFTFontSize(id uiFont, void* ftFont, float pointSize, float scale) {
     UIFont* fontInfo = uiFont;
 
-    FT_Set_Char_Size((FT_Face)ftFont,
-                     0,
-                     (FT_F26Dot6)(pointSize * 64.0f),
-                     (FT_UInt)(72.f * scale * _LazyUIFontHorizontalScale.member(fontInfo)),
-                     (FT_UInt)(72.f * scale));
+    FT_Set_Char_Size((FT_Face)ftFont, 0, (FT_F26Dot6)(pointSize * 64.0f), (FT_UInt)(72.f * scale), (FT_UInt)(72.f * scale));
 }
 
 CGSize CGFontDrawGlyphsToContext(CGContextRef ctx, WORD* glyphs, DWORD length, float x, float y) {
@@ -414,8 +409,9 @@ CFStringRef CGFontCopyFullName(CGFontRef font) {
     //  Get the font
     FT_Face face = (FT_Face)(DWORD)[font _sizingFontHandle];
 
-    if (face->family_name == NULL)
+    if ((face == NULL) || (face->family_name == NULL)) {
         return nullptr;
+    }
 
     return (CFStringRef)[[NSString stringWithCString:face->family_name] retain];
 }

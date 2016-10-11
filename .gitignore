@@ -109,6 +109,7 @@ Include/CoreFoundation/module.modulemap
 # Ignore all CF shared private headers. They get copied in from the Frameworks directory as a pre build step.
 Frameworks/Include/ForFoundationOnly.h
 Frameworks/Include/CFBundlePriv.h
+Frameworks/Include/CFBridgeUtilities.h
 Frameworks/Include/CFPriv.h
 Frameworks/Include/CFRuntime.h
 Frameworks/Include/CFStreamPriv.h

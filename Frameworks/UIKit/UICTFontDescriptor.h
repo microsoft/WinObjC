@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,16 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-@interface UIFontDescriptor ()
-+ (float)_getSystemSmallFontSize;
-+ (float)_getSystemFontSize;
-+ (float)_getLabelFontSize;
-+ (float)_getButtonFontSize;
-+ (NSString*)_getFallBackFontName:(NSString*)fontName;
-+ (float)_getFallBackFontSize:(float)size;
-- (NSString*)_getFontName;
-- (float)_getSize;
+#import <UIKit/UIFontDescriptor.h>
+
+@interface UIFontDescriptorPrototype : UIFontDescriptor
 @end

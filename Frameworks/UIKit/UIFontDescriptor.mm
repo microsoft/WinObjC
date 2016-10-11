@@ -14,9 +14,16 @@
 //
 //******************************************************************************
 
-#include <StubReturn.h>
-#include "Starboard.h"
-#include "UIKit/UIFontDescriptor.h"
+#import <StubReturn.h>
+#import <Starboard.h>
+#import <UIKit/UIFontDescriptor.h>
+
+#import <Foundation/NSNumber.h>
+
+#import <NSRaise.h>
+#import <BridgeHelpers.h>
+
+#import "UICTFontDescriptor.h"
 
 NSString* const UIFontTextStyleTitle1 = @"UICTFontTextStyleTitle1";
 NSString* const UIFontTextStyleTitle2 = @"UICTFontTextStyleTitle2";
@@ -29,218 +36,133 @@ NSString* const UIFontTextStyleCaption1 = @"UICTFontTextStyleCaption1";
 NSString* const UIFontTextStyleCaption2 = @"UICTFontTextStyleCaption2";
 NSString* const UIFontTextStyleCallout = @"UICTFontTextStyleCallout";
 
-NSString* const UIFontDescriptorFamilyAttribute = @"UIFontDescriptorFamilyAttribute";
-NSString* const UIFontDescriptorTraitsAttribute = @"UIFontDescriptorTraitsAttribute";
+NSString* const UIFontDescriptorFamilyAttribute = static_cast<NSString*>(kCTFontFamilyNameAttribute);
+NSString* const UIFontDescriptorNameAttribute = static_cast<NSString*>(kCTFontNameAttribute);
+NSString* const UIFontDescriptorFaceAttribute = static_cast<NSString*>(kCTFontStyleNameAttribute);
+NSString* const UIFontDescriptorSizeAttribute = static_cast<NSString*>(kCTFontSizeAttribute);
+NSString* const UIFontDescriptorVisibleNameAttribute = static_cast<NSString*>(kCTFontDisplayNameAttribute);
+NSString* const UIFontDescriptorMatrixAttribute = static_cast<NSString*>(kCTFontMatrixAttribute);
+NSString* const UIFontDescriptorCharacterSetAttribute = static_cast<NSString*>(kCTFontCharacterSetAttribute);
+NSString* const UIFontDescriptorCascadeListAttribute = static_cast<NSString*>(kCTFontCascadeListAttribute);
+NSString* const UIFontDescriptorTraitsAttribute = static_cast<NSString*>(kCTFontTraitsAttribute);
+NSString* const UIFontDescriptorFixedAdvanceAttribute = static_cast<NSString*>(kCTFontFixedAdvanceAttribute);
+NSString* const UIFontDescriptorFeatureSettingsAttribute = static_cast<NSString*>(kCTFontFeatureSettingsAttribute);
+NSString* const UIFontDescriptorTextStyleAttribute = @"NSCTFontUIUsageAttribute"; // This matches the reference platform
 
-NSString* const UIFontSymbolicTrait = @"UIFontSymbolicTrait";
+NSString* const UIFontSymbolicTrait = static_cast<NSString*>(kCTFontSymbolicTrait);
+NSString* const UIFontWeightTrait = static_cast<NSString*>(kCTFontWeightTrait);
+NSString* const UIFontWidthTrait = static_cast<NSString*>(kCTFontWidthTrait);
+NSString* const UIFontSlantTrait = static_cast<NSString*>(kCTFontSlantTrait);
 
-NSString* const UIFontDescriptorNameAttribute = @"UIFontDescriptorNameAttribute";
-NSString* const UIFontDescriptorFaceAttribute = @"UIFontDescriptorFaceAttribute";
-NSString* const UIFontDescriptorSizeAttribute = @"UIFontDescriptorSizeAttribute";
-NSString* const UIFontDescriptorVisibleNameAttribute = @"UIFontDescriptorVisibleNameAttribute";
-NSString* const UIFontDescriptorMatrixAttribute = @"UIFontDescriptorMatrixAttribute";
-NSString* const UIFontDescriptorCharacterSetAttribute = @"UIFontDescriptorCharacterSetAttribute";
-NSString* const UIFontDescriptorCascadeListAttribute = @"UIFontDescriptorCascadeListAttribute";
-NSString* const UIFontDescriptorFixedAdvanceAttribute = @"UIFontDescriptorFixedAdvanceAttribute";
-NSString* const UIFontDescriptorFeatureSettingsAttribute = @"UIFontDescriptorFeatureSettingsAttribute";
-NSString* const UIFontDescriptorTextStyleAttribute = @"UIFontDescriptorTextStyleAttribute";
-NSString* const UIFontWeightTrait = @"UIFontWeightTrait";
-NSString* const UIFontWidthTrait = @"UIFontWidthTrait";
-NSString* const UIFontSlantTrait = @"UIFontSlantTrait";
+NSString* const UIFontFeatureTypeIdentifierKey = @"CTFeatureTypeIdentifier";
+NSString* const UIFontFeatureSelectorIdentifierKey = @"CTFeatureSelectorIdentifier";
 
-NSString* const UIFontFeatureTypeIdentifierKey = @"UIFontFeatureTypeIdentifierKey";
-NSString* const UIFontFeatureSelectorIdentifierKey = @"UIFontFeatureSelectorIdentifierKey";
+const CGFloat UIFontWeightUltraLight = kCTFontWeightUltraLight;
+const CGFloat UIFontWeightThin = kCTFontWeightThin;
+const CGFloat UIFontWeightLight = kCTFontWeightLight;
+const CGFloat UIFontWeightRegular = kCTFontWeightRegular;
+const CGFloat UIFontWeightMedium = kCTFontWeightMedium;
+const CGFloat UIFontWeightSemibold = kCTFontWeightSemibold;
+const CGFloat UIFontWeightBold = kCTFontWeightBold;
+const CGFloat UIFontWeightHeavy = kCTFontWeightHeavy;
+const CGFloat UIFontWeightBlack = kCTFontWeightBlack;
 
-NSString* const SystemFontName = @"SegoeUI";
+@implementation UIFontDescriptor
 
-/**@Status Stub */
-const CGFloat UIFontWeightUltraLight = StubConstant();
-/**@Status Stub */
-const CGFloat UIFontWeightThin = StubConstant();
-/**@Status Stub */
-const CGFloat UIFontWeightLight = StubConstant();
-/**@Status Stub */
-const CGFloat UIFontWeightRegular = StubConstant();
-/**@Status Stub */
-const CGFloat UIFontWeightMedium = StubConstant();
-/**@Status Stub */
-const CGFloat UIFontWeightSemibold = StubConstant();
-/**@Status Stub */
-const CGFloat UIFontWeightBold = StubConstant();
-/**@Status Stub */
-const CGFloat UIFontWeightHeavy = StubConstant();
-/**@Status Stub */
-const CGFloat UIFontWeightBlack = StubConstant();
-
-/**
- All these values are fixed number in IOS no matter on iphone* or ipad*.
- */
-const float c_smallSystemFontSize = 12.0f;
-const float c_systemFontSize = 14.0f;
-const float c_labelFontSize = 17.0f;
-const float c_buttonFontSize = 14.0f;
-
-@implementation UIFontDescriptor {
-@private
-    idretaintype(NSString) _name;
-    float _size;
-    UIFontDescriptorSymbolicTraits _traits;
-}
-
-/**
- @Status Interoperable
-*/
-+ (UIFontDescriptor*)fontDescriptorWithName:(NSString*)fontName size:(CGFloat)size {
-    UIFontDescriptor* fontDescriptor = [[UIFontDescriptor alloc] init];
-    fontDescriptor->_name = [UIFontDescriptor _getFallBackFontName:fontName];
-    fontDescriptor->_size = [UIFontDescriptor _getFallBackFontSize:size];
-    return [fontDescriptor autorelease];
-}
-
-+ (UIFontDescriptor*)fontDescriptorWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)size {
-    UIFontDescriptor* fontDescriptor = [[UIFontDescriptor alloc] init];
-    fontDescriptor->_name = descriptor->_name;
-    fontDescriptor->_size = [UIFontDescriptor _getFallBackFontSize:size];
-    fontDescriptor->_traits = descriptor->_traits;
-    return [fontDescriptor autorelease];
-}
+BASE_CLASS_REQUIRED_IMPLS(UIFontDescriptor, UIFontDescriptorPrototype, CTFontDescriptorGetTypeID);
 
 /**
  @Status Caveat
-  @Notes         Force to use default font name and size.
+ @Notes  Force to use default font name and size.
 */
 + (UIFontDescriptor*)preferredFontDescriptorWithTextStyle:(NSString*)style {
     return [UIFontDescriptor fontDescriptorWithName:nil size:0.0];
 }
 
 /**
- This is a temp solution, we need to implement the fall back logic in 1512.
- Here just to check nil, and return default system font as fall back.
- */
-+ (NSString*)_getFallBackFontName:(NSString*)fontName {
-    NSString* ret = [NSString alloc];
-    if (fontName == nil || fontName.length == 0) {
-        ret = [ret initWithString:SystemFontName];
-    } else {
-        ret = [ret initWithString:fontName];
-    }
-    return [ret autorelease];
-}
-
-+ (float)_getFallBackFontSize:(float)size {
-    if (size <= 0) {
-        return c_systemFontSize;
-    } else {
-        return size;
-    }
-}
-
-+ (float)_getSystemSmallFontSize {
-    return c_smallSystemFontSize;
-}
-
-+ (float)_getSystemFontSize {
-    return c_systemFontSize;
-}
-
-+ (float)_getLabelFontSize {
-    return c_labelFontSize;
-}
-
-+ (float)_getButtonFontSize {
-    return c_buttonFontSize;
-}
-
-/**
  @Status Interoperable
-*/
-- (UIFontDescriptor*)fontDescriptorWithSymbolicTraits:(UIFontDescriptorSymbolicTraits)symbolicTraits {
-    UIFontDescriptor* result = [UIFontDescriptor fontDescriptorWithDescriptor:self size:self->_size];
-    result->_traits = symbolicTraits;
-    return result;
-}
-
-/**
- @Status Stub
-*/
-- (instancetype)initWithFontAttributes:(NSDictionary*)attributes {
-    UNIMPLEMENTED();
-    return nil;
-}
-
-- (NSString*)_getFontName {
-    return self->_name;
-}
-
-/**
- @Status Interoperable
-*/
-- (UIFontDescriptorSymbolicTraits)symbolicTraits {
-    return self->_traits;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)dealloc {
-    _name = nil;
-    [super dealloc];
-}
-
-/**
- @Status Stub
 */
 + (UIFontDescriptor*)fontDescriptorWithFontAttributes:(NSDictionary*)attributes {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [[[self alloc] initWithFontAttributes:attributes] autorelease];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (UIFontDescriptor*)fontDescriptorWithName:(NSString*)fontName matrix:(CGAffineTransform)matrix {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self fontDescriptorWithFontAttributes:@{
+        UIFontDescriptorNameAttribute : fontName,
+        UIFontDescriptorMatrixAttribute : [NSData dataWithBytes:reinterpret_cast<byte*>(&matrix) length:sizeof(CGAffineTransform)]
+    }];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
++ (UIFontDescriptor*)fontDescriptorWithName:(NSString*)fontName size:(CGFloat)size {
+    return [self fontDescriptorWithFontAttributes:@{
+        UIFontDescriptorNameAttribute : fontName,
+        UIFontDescriptorSizeAttribute : [NSNumber numberWithFloat:size]
+    }];
+}
+
+/**
+ @Status Interoperable
 */
 - (UIFontDescriptor*)fontDescriptorByAddingAttributes:(NSDictionary*)attributes {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSMutableDictionary* newAttributes = [[[self fontAttributes] mutableCopy] autorelease];
+    [newAttributes addEntriesFromDictionary:attributes];
+    return [UIFontDescriptor fontDescriptorWithFontAttributes:newAttributes];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (UIFontDescriptor*)fontDescriptorWithFace:(NSString*)newFace {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self fontDescriptorByAddingAttributes:@{ UIFontDescriptorFaceAttribute : newFace }];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (UIFontDescriptor*)fontDescriptorWithFamily:(NSString*)newFamily {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSMutableDictionary* newAttributes = [[[self fontAttributes] mutableCopy] autorelease];
+
+    [newAttributes removeObjectForKey:UIFontDescriptorNameAttribute];
+    [newAttributes setObject:newFamily forKey:UIFontDescriptorFamilyAttribute];
+
+    return [UIFontDescriptor fontDescriptorWithFontAttributes:newAttributes];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (UIFontDescriptor*)fontDescriptorWithMatrix:(CGAffineTransform)matrix {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self fontDescriptorByAddingAttributes:@{
+        UIFontDescriptorMatrixAttribute : [NSData dataWithBytes:reinterpret_cast<byte*>(&matrix) length:sizeof(CGAffineTransform)]
+    }];
+}
+
+/**
+ @Status Interoperable
+*/
+- (UIFontDescriptor*)fontDescriptorWithSize:(CGFloat)newPointSize {
+    return [self fontDescriptorByAddingAttributes:@{ UIFontDescriptorSizeAttribute : [NSNumber numberWithFloat:newPointSize] }];
 }
 
 /**
  @Status Stub
 */
-- (UIFontDescriptor*)fontDescriptorWithSize:(CGFloat)newPointSize {
+- (UIFontDescriptor*)fontDescriptorWithSymbolicTraits:(UIFontDescriptorSymbolicTraits)symbolicTraits {
     UNIMPLEMENTED();
     return StubReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithFontAttributes:(NSDictionary*)attributes {
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -252,19 +174,55 @@ const float c_buttonFontSize = 14.0f;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (NSDictionary*)fontAttributes {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (NSDictionary<NSString*, id>*)fontAttributes {
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
+- (CGAffineTransform)matrix {
+    NSData* data = [self objectForKey:UIFontDescriptorMatrixAttribute];
+    if (data) {
+        CGAffineTransform ret;
+        [data getBytes:reinterpret_cast<byte*>(&ret) length:sizeof(CGAffineTransform)];
+        return ret;
+    } else {
+        // Identity matrix seems like a decent default return
+        return CGAffineTransformIdentity;
+    }
+}
+
+/**
+ @Status Interoperable
 */
 - (id)objectForKey:(NSString*)anAttribute {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (CGFloat)pointSize {
+    NSObject* pointSize = [self objectForKey:UIFontDescriptorSizeAttribute];
+    return [pointSize isKindOfClass:[NSNumber class]] ? static_cast<NSNumber*>(pointSize).floatValue : 0.0;
+}
+
+/**
+ @Status Interoperable
+*/
+- (UIFontDescriptorSymbolicTraits)symbolicTraits {
+    NSDictionary* traits = [self objectForKey:UIFontDescriptorTraitsAttribute];
+    if (traits) {
+        NSNumber* symbolicTraits = [traits objectForKey:UIFontSymbolicTrait];
+
+        if (symbolicTraits) {
+            return [symbolicTraits unsignedIntValue];
+        }
+    }
+    return 0;
 }
 
 /**
@@ -273,13 +231,6 @@ const float c_buttonFontSize = 14.0f;
 - (instancetype)copyWithZone:(NSZone*)zone {
     UNIMPLEMENTED();
     return StubReturn();
-}
-
-/**
-  @Status Interoperable
-*/
-- (CGFloat)pointSize {
-    return self->_size;
 }
 
 /**

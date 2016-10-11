@@ -14,110 +14,45 @@
 //
 //******************************************************************************
 
-#import <CoreText/CTFrameSetter.h>
+#import <CoreText/CTFramesetter.h>
 #import <StubReturn.h>
+#import <algorithm>
 #import "CoreTextInternal.h"
 #import "CGPathInternal.h"
+#import <CoreText/DWriteWrapper.h>
 
-@implementation _CTFrameSetter : NSObject
+using namespace std;
+
+@implementation _CTFramesetter : NSObject
 - (void)dealloc {
+    _typesetter = nil;
     [super dealloc];
 }
 @end
 
-static id _createFrame(_CTFrameSetter* frameSetter, CGRect frameSize, CGSize* sizeOut, bool createFrame) {
-    _CTFrame* ret = nil;
-
-    if (createFrame) {
-        ret = [_CTFrame alloc];
-        ret->_frameSetter = [frameSetter retain];
-        ret->_frameRect = frameSize;
-
-        ret->_lines.attach([NSMutableArray new]);
+static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameSize, CFRange range) {
+    if (!framesetter) {
+        return nil;
     }
 
-    // Only fill in frame if there is text
-    if (CFAttributedStringGetLength(static_cast<CFAttributedStringRef>(frameSetter->_typesetter->_attributedString))) {
-        // Paragraph settings are expected at effective range 0
-        NSDictionary* attributes = [frameSetter->_typesetter->_attributedString attributesAtIndex:0 effectiveRange:NULL];
-        CTParagraphStyleRef style = reinterpret_cast<CTParagraphStyleRef>([attributes valueForKey:(id)kCTParagraphStyleAttributeName]);
-        CTTextAlignment alignment = kCTLeftTextAlignment;
-        if (style != nil) {
-            if (!CTParagraphStyleGetValueForSpecifier(style, kCTParagraphStyleSpecifierAlignment, sizeof(CTTextAlignment), &alignment)) {
-                // No alignment found, use default of left alignment
-                alignment = kCTLeftTextAlignment;
-            }
-        }
-
-        sizeOut->width = 0;
-        sizeOut->height = 0;
-
-        float y = frameSize.size.height; //[font ascender];
-        CFIndex curIdx = 0;
-        NSString* string = [frameSetter->_typesetter->_attributedString string];
-        CFIndex stringRange = [string length];
-
-        for (;;) {
-            CFIndex pos =
-                CTTypesetterSuggestLineBreak(static_cast<CTTypesetterRef>(frameSetter->_typesetter.get()), curIdx, frameSize.size.width);
-            if (pos == curIdx) {
-                break;
-            }
-
-            CFRange lineRange;
-            lineRange.location = curIdx;
-            lineRange.length = pos - curIdx;
-
-            CTLineRef line = CTTypesetterCreateLine(static_cast<CTTypesetterRef>(frameSetter->_typesetter.get()), lineRange);
-
-            float ascent = 0.0f, descent = 0.0f, leading = 0.0f;
-            const float width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
-            const float lineHeight = ascent - descent + leading;
-
-            if (ret) {
-                CGPoint lineOrigin;
-                switch (alignment) {
-                    case kCTRightTextAlignment:
-                        lineOrigin.x = frameSize.size.width - width;
-                        break;
-                    case kCTCenterTextAlignment:
-                        lineOrigin.x = (frameSize.size.width - width) / 2;
-                        break;
-                    default: // kCTLeftTextAlignment
-                        lineOrigin.x = 0.0f;
-                        break;
-                }
-                lineOrigin.y = y - ascent;
-                [ret->_lines addObject:(id)line];
-                ret->_lineOrigins.push_back(lineOrigin);
-            }
-            [static_cast<_CTLine*>(line) release];
-
-            curIdx = pos;
-            if (width > sizeOut->width) {
-                sizeOut->width = width;
-            }
-
-            sizeOut->height += lineHeight;
-
-            y -= lineHeight;
-        }
+    // Call _DWriteWrapper to get _CTLine object list that makes up this frame
+    _CTTypesetter* typesetter = static_cast<_CTTypesetter*>(framesetter->_typesetter);
+    if (range.length == 0) {
+        range.length = typesetter->_characters.size();
     }
 
-    if (ret) {
-        ret->_totalSize = *sizeOut;
-    }
-
-    return ret;
+    _CTFrame* ret = _DWriteGetFrame(typesetter, range, frameSize);
+    ret->_framesetter = framesetter;
+    return [ret retain];
 }
 
 /**
  @Status Interoperable
 */
 CTFramesetterRef CTFramesetterCreateWithAttributedString(CFAttributedStringRef string) {
-    _CTFrameSetter* ret = [_CTFrameSetter alloc];
-    ret->_typesetter = (_CTTypesetter*)CTTypesetterCreateWithAttributedString(string);
-    return (CTFramesetterRef)ret;
+    _CTFramesetter* ret = [_CTFramesetter alloc];
+    ret->_typesetter = static_cast<_CTTypesetter*>(CTTypesetterCreateWithAttributedString(string));
+    return static_cast<CTFramesetterRef>(ret);
 }
 
 /**
@@ -127,10 +62,9 @@ CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange string
     CGRect frameSize;
     _CGPathGetBoundingBoxInternal(path, &frameSize);
 
-    CGSize sizeOut;
-    id ret = _createFrame((_CTFrameSetter*)framesetter, frameSize, &sizeOut, true);
+    _CTFrame* ret = __CreateFrame(static_cast<_CTFramesetter*>(framesetter), frameSize, stringRange);
 
-    return (CTFrameRef)ret;
+    return static_cast<CTFrameRef>(ret);
 }
 
 /**
@@ -138,25 +72,26 @@ CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange string
  @Notes
 */
 CTTypesetterRef CTFramesetterGetTypesetter(CTFramesetterRef framesetter) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return framesetter ? static_cast<CTTypesetterRef>(static_cast<_CTFramesetter*>(framesetter)->_typesetter.get()) : nil;
 }
 
 /**
- @Status Caveat
- @Notes Always sets out parameter fitRange to stringRange value
+ @Status Interoperable
+ @Notes
 */
 CGSize CTFramesetterSuggestFrameSizeWithConstraints(
     CTFramesetterRef framesetter, CFRange stringRange, CFDictionaryRef frameAttributes, CGSize constraints, CFRange* fitRange) {
-    CGSize ret;
-    if (fitRange)
-        *fitRange = stringRange;
-
-    CGRect frameSize = { 0, 0, 0, 0 };
+    CGRect frameSize = { 0 };
     frameSize.size = constraints;
 
-    _createFrame((_CTFrameSetter*)framesetter, frameSize, &ret, false);
+    _CTFrame* frame = __CreateFrame(static_cast<_CTFramesetter*>(framesetter), frameSize, stringRange);
+    CGSize ret = frame ? frame->_frameRect.size : CGSize{ 0, 0 };
 
+    if (fitRange) {
+        *fitRange = CTFrameGetVisibleStringRange(static_cast<CTFrameRef>(frame));
+    }
+
+    [frame release];
     return ret;
 }
 

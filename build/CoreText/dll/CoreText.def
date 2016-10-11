@@ -33,6 +33,30 @@ LIBRARY CoreText
         ; Core Text Utilities Reference.mm
         CTGetCoreTextVersion
 
+        ; DWriteWrapper Additions
+        _DWriteGetFontFamilyNames
+        _DWriteGetFontNamesForFamilyName
+        _DWriteGetFamilyNameForFontName
+
+        ; Core Text Constant additions
+        kCTFontLabelFontSize DATA
+        kCTFontButtonFontSize DATA
+        kCTFontSmallSystemFontSize DATA
+        kCTFontSystemFontSize DATA
+        kCTFontWeightUltraLight DATA
+        kCTFontWeightThin DATA
+        kCTFontWeightLight DATA
+        kCTFontWeightRegular DATA
+        kCTFontWeightMedium DATA
+        kCTFontWeightSemibold DATA
+        kCTFontWeightBold DATA
+        kCTFontWeightHeavy DATA
+        kCTFontWeightBlack DATA
+        kCTFontDefaultFontName DATA;
+        kCTFontDefaultBoldFontName DATA;
+        kCTFontDefaultItalicFontName DATA;
+        kCTFontDefaultMonospacedFontName DATA;
+
         ; CTFont Reference.mm
         kCTFontCopyrightNameKey DATA
         kCTFontFamilyNameKey DATA

@@ -13,7 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma cone
+#pragma once
 
 #import <QuartzCore/CoreAnimationExport.h>
 #import <ApplicationServices/ApplicationServices.h>
