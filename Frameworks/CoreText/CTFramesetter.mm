@@ -41,9 +41,7 @@ static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameSize, CF
         range.length = typesetter->_characters.size();
     }
 
-    _CTFrame* ret = _DWriteGetFrame(typesetter, range, frameSize);
-    ret->_framesetter = framesetter;
-    return [ret retain];
+    return [_DWriteGetFrame(static_cast<CFAttributedStringRef>(typesetter->_attributedString.get()), range, frameSize) retain];
 }
 
 /**
@@ -56,7 +54,8 @@ CTFramesetterRef CTFramesetterCreateWithAttributedString(CFAttributedStringRef s
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes frameAttributes parameter ignored
 */
 CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange stringRange, CGPathRef path, CFDictionaryRef frameAttributes) {
     CGRect frameSize;
@@ -64,12 +63,13 @@ CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange string
 
     _CTFrame* ret = __CreateFrame(static_cast<_CTFramesetter*>(framesetter), frameSize, stringRange);
     ret->_path.reset(CGPathRetain(path));
+    ret->_frameRect.origin = frameSize.origin;
 
     return static_cast<CTFrameRef>(ret);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CTTypesetterRef CTFramesetterGetTypesetter(CTFramesetterRef framesetter) {

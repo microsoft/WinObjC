@@ -89,7 +89,6 @@ inline void _SafeRelease(T** p) {
 
 @interface _CTFrame : NSObject {
 @public
-    StrongId<_CTFramesetter> _framesetter;
     CGRect _frameRect;
     woc::unique_cf<CGPathRef> _path;
     std::vector<CGPoint> _lineOrigins;
@@ -145,11 +144,15 @@ struct _CTParagraphStyleProperties {
 
 typedef float (*WidthFinderFunc)(void* opaque, CFIndex idx, float offset, float height);
 
-CORETEXT_EXPORT CFIndex _CTTypesetterSuggestLineBreakWithOffsetAndCallback(
-    CTTypesetterRef ts, CFIndex index, double offset, WidthFinderFunc callback, void* opaque);
+CORETEXT_EXPORT CTLineRef CTLineCreateWithAttributedStringAndWidth(CFAttributedStringRef string, CFRange range, double width);
+CORETEXT_EXPORT BOOL CTLineHasGlyphsAfterIndex(CTLineRef line, CFIndex index);
+CORETEXT_EXPORT CTFrameRef CTFrameCreateWithAttributedString(CFAttributedStringRef string);
+
+CORETEXT_EXPORT void CTFrameDrawUninverted(CTFrameRef frame, CGContextRef ctx);
+CORETEXT_EXPORT void CTLineDrawUninverted(CTLineRef frame, CGContextRef ctx);
 
 // Note: For some reason namemangling does not happen for these functions causing a linker error. Bug??
 CORETEXT_EXTERNC_BEGIN
-void _CTLineDraw(CTLineRef line, CGContextRef ctx, bool adjustTextPosition);
-void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTextPosition);
+void _CTLineDraw(CTLineRef line, CGContextRef ctx, bool adjustTextPosition, bool invertedCoordinates);
+void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTextPosition, bool invertedCoordinates);
 CORETEXT_EXTERNC_END

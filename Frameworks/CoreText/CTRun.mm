@@ -215,43 +215,47 @@ double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, C
         return 0;
     }
 
-    CTFontRef font = static_cast<CTFontRef>([curRun->_attributes objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
-    CGFloat pointSize = font ? CTFontGetSize(font) : kCTFontSystemFontSize;
+    if (ascent || descent || leading) {
+        CTFontRef font = static_cast<CTFontRef>([curRun->_attributes objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
+        CGFloat pointSize = font ? CTFontGetSize(font) : kCTFontSystemFontSize;
 
-    DWRITE_FONT_METRICS fontMetrics;
-    curRun->_dwriteGlyphRun.fontFace->GetMetrics(&fontMetrics);
+        DWRITE_FONT_METRICS fontMetrics;
+        curRun->_dwriteGlyphRun.fontFace->GetMetrics(&fontMetrics);
 
-    // Need scaling factor to convert from design units to pointSize
-    CGFloat scalingFactor = pointSize / fontMetrics.designUnitsPerEm;
+        // Need scaling factor to convert from design units to pointSize
+        CGFloat scalingFactor = pointSize / fontMetrics.designUnitsPerEm;
 
-    DWRITE_GLYPH_METRICS glyphMetrics[range.length];
-    THROW_IF_FAILED(curRun->_dwriteGlyphRun.fontFace->GetDesignGlyphMetrics(curRun->_dwriteGlyphRun.glyphIndices + range.location,
-                                                                            range.length,
-                                                                            glyphMetrics,
-                                                                            curRun->_dwriteGlyphRun.isSideways));
+        DWRITE_GLYPH_METRICS glyphMetrics[range.length];
+        THROW_IF_FAILED(curRun->_dwriteGlyphRun.fontFace->GetDesignGlyphMetrics(curRun->_dwriteGlyphRun.glyphIndices + range.location -
+                                                                                    curRun->_range.location,
+                                                                                range.length,
+                                                                                glyphMetrics,
+                                                                                curRun->_dwriteGlyphRun.isSideways));
 
-    double width = 0;
-    CGFloat newAscent = -FLT_MAX;
-    CGFloat newDescent = -FLT_MAX;
-    for (size_t i = range.location; i < range.location + range.length; ++i) {
-        newAscent = std::max(newAscent, glyphMetrics[i].verticalOriginY * scalingFactor);
-        newDescent = std::max(newDescent, glyphMetrics[i].bottomSideBearing * scalingFactor);
-        width += curRun->_dwriteGlyphRun.glyphAdvances[i];
+        double width = 0;
+        CGFloat newAscent = -FLT_MAX;
+        CGFloat newDescent = FLT_MAX;
+        for (size_t i = range.location - curRun->_range.location; i < range.location + range.length - curRun->_range.location; ++i) {
+            newAscent = std::max(newAscent, glyphMetrics[i].verticalOriginY * scalingFactor);
+            newDescent = std::min(newDescent, -glyphMetrics[i].bottomSideBearing * scalingFactor);
+            width += curRun->_dwriteGlyphRun.glyphAdvances[i];
+        }
+        if (ascent) {
+            *ascent = newAscent;
+        }
+
+        if (descent) {
+            *descent = newDescent;
+        }
+
+        if (leading) {
+            *leading = fontMetrics.lineGap * scalingFactor;
+        }
     }
 
-    if (ascent) {
-        *ascent = newAscent;
-    }
-
-    if (descent) {
-        *descent = newDescent;
-    }
-
-    if (leading) {
-        *leading = fontMetrics.lineGap * scalingFactor;
-    }
-
-    return width;
+    return std::accumulate(curRun->_dwriteGlyphRun.glyphAdvances + range.location - curRun->_range.location,
+                           curRun->_dwriteGlyphRun.glyphAdvances + range.location + range.length - curRun->_range.location,
+                           0.0);
 }
 
 /**
@@ -263,7 +267,7 @@ CGRect CTRunGetImageBounds(CTRunRef run, CGContextRef context, CFRange range) {
     return StubReturn();
 }
 
-void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTextPosition) {
+void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTextPosition, bool invertedCoordinates) {
     _CTRun* curRun = static_cast<_CTRun*>(run);
     if (!curRun || textRange.length < 0L || textRange.location < 0L ||
         textRange.location + textRange.length > curRun->_dwriteGlyphRun.glyphCount) {
@@ -289,7 +293,7 @@ void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTe
 
     if (textRange.location == 0L && (textRange.length == 0L || textRange.length == curRun->_dwriteGlyphRun.glyphCount)) {
         // Print the whole glyph run
-        CGContextDrawGlyphRun(ctx, &curRun->_dwriteGlyphRun);
+        CGContextDrawGlyphRun(ctx, &curRun->_dwriteGlyphRun, invertedCoordinates);
     } else {
         if (textRange.length == 0L) {
             textRange.length = curRun->_dwriteGlyphRun.glyphCount - textRange.location;
@@ -297,7 +301,7 @@ void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTe
 
         // Only print glyphs in range
         DWRITE_GLYPH_RUN runInRange = __GetGlyphRunForDrawingInRange(curRun->_dwriteGlyphRun, textRange);
-        CGContextDrawGlyphRun(ctx, &runInRange);
+        CGContextDrawGlyphRun(ctx, &runInRange, invertedCoordinates);
     }
 }
 
@@ -306,7 +310,7 @@ void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTe
  @Notes
 */
 void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
-    _CTRunDraw(run, ctx, textRange, true);
+    _CTRunDraw(run, ctx, textRange, true, true);
 }
 
 /**

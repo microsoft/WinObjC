@@ -17,6 +17,7 @@
 #import <CoreText/CTFrame.h>
 #import <StubReturn.h>
 
+#import <CoreText/DWriteWrapper.h>
 #import "CoreTextInternal.h"
 #import "CGPathInternal.h"
 
@@ -36,7 +37,6 @@ const CFStringRef kCTFramePathClippingPathAttributeName = static_cast<CFStringRe
 }
 
 - (void)dealloc {
-    _framesetter = nil;
     _lines = nil;
     [super dealloc];
 }
@@ -137,10 +137,29 @@ void CTFrameDraw(CTFrameRef frameRef, CGContextRef ctx) {
 }
 
 /**
+ @Status Interoperable
+*/
+void CTFrameDraw(CTFrameRef frame, CGContextRef ctx) {
+    __CTFrameDraw(frame, ctx, true);
+}
+
+// Exposed to UIKit to draw without having to flip coordinate system or know size of bounding frame
+void CTFrameDrawUninverted(CTFrameRef frame, CGContextRef ctx) {
+    __CTFrameDraw(frame, ctx, false);
+}
+
+/**
  @Status Stub
  @Notes
 */
 CFTypeID CTFrameGetTypeID() {
     UNIMPLEMENTED();
     return StubReturn();
+}
+
+// Private helper method for NSLayoutManager
+CTFrameRef CTFrameCreateWithAttributedString(CFAttributedStringRef attributedString) {
+    return static_cast<CTFrameRef>([_DWriteGetFrame(attributedString,
+                                                    CFRangeMake(0, CFAttributedStringGetLength(attributedString)),
+                                                    CGRectMake(0, 0, FLT_MAX, FLT_MAX)) retain]);
 }

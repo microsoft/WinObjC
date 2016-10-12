@@ -180,7 +180,7 @@ static CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localiz
  *
  * @return the created IDWriteTextFormat object.
  */
-static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(_CTTypesetter* ts, CFRange range) {
+static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(CFAttributedStringRef string, CFRange range) {
     // Get the direct write factory instance
     ComPtr<IDWriteFactory> dwriteFactory = __GetDWriteFactoryInstance();
 
@@ -188,7 +188,7 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(_CTTypesetter* ts, CFR
     // Note here we only look at attribute value at first index of the specified range as we can get a default faont size to use here.
     // Per string range attribute handling will be done in _CreateDWriteTextLayout.
 
-    NSDictionary* attribs = [ts->_attributedString attributesAtIndex:range.location effectiveRange:NULL];
+    NSDictionary* attribs = [static_cast<NSAttributedString*>(string) attributesAtIndex:range.location effectiveRange:NULL];
 
     CGFloat fontSize = kCTFontSystemFontSize;
     DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_REGULAR;
@@ -246,17 +246,17 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(_CTTypesetter* ts, CFR
 /**
  * Helper method to create a IDWriteTextLayout object given _CTTypesetter object, string range and frame size constrain.
  *
- * @parameter ts _CTTypesetter object.
+ * @parameter CFAttributedStringRef string with text and attributes
  * @parameter range string range to consider for rendering.
  * @parameter frameSize frame constrains to render the text on.
  *
  * @return the created IDWriteTextLayout object.
  */
-static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFRange range, CGRect frameSize) {
-    ComPtr<IDWriteTextFormat> textFormat = __CreateDWriteTextFormat(ts, range);
+static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(CFAttributedStringRef string, CFRange range, CGRect frameSize) {
+    ComPtr<IDWriteTextFormat> textFormat = __CreateDWriteTextFormat(string, range);
 
     NSRange curRange = NSMakeRangeFromCF(range);
-    NSString* subString = [ts->_string substringWithRange:curRange];
+    NSString* subString = [static_cast<NSString*>(CFAttributedStringGetString(string)) substringWithRange:curRange];
     wchar_t* wcharString = reinterpret_cast<wchar_t*>(const_cast<char*>([subString cStringUsingEncoding:NSUTF16StringEncoding]));
 
     // TODO::
@@ -282,10 +282,10 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
     uint32_t incompatibleAttributeFlag = 0;
 
     NSRange attributeRange;
-    for (size_t i = 0; i < [ts->_attributedString length]; i += attributeRange.length) {
-        NSDictionary* attribs = [ts->_attributedString attributesAtIndex:i
-                                                   longestEffectiveRange:&attributeRange
-                                                                 inRange:{ i, [ts->_attributedString length] - i }];
+    for (size_t i = 0; i < [subString length]; i += attributeRange.length) {
+        NSDictionary* attribs = [static_cast<NSAttributedString*>(string) attributesAtIndex:i + range.location
+                                                                      longestEffectiveRange:&attributeRange
+                                                                                    inRange:{ i, [subString length] }];
 
         const DWRITE_TEXT_RANGE dwriteRange = { attributeRange.location, attributeRange.length };
 
@@ -436,9 +436,8 @@ HRESULT CustomDWriteTextRenderer::RuntimeClassInitialize() {
  * @return Unmutable array of _CTLine objects created with the requested parameters.
  */
 static _CTLine* _DWriteGetLine(CFAttributedStringRef string) {
-    _CTTypesetter* typesetter = static_cast<_CTTypesetter*>(CTTypesetterCreateWithAttributedString(string));
     CFRange range = CFRangeMake(0, CFAttributedStringGetLength(string));
-    _CTFrame* frame = _DWriteGetFrame(typesetter, range, CGRectMake(0, 0, FLT_MAX, FLT_MAX));
+    _CTFrame* frame = _DWriteGetFrame(string, range, CGRectMake(0, 0, FLT_MAX, FLT_MAX));
     if ([frame->_lines count] > 0) {
         return [[frame->_lines firstObject] retain];
     }
@@ -447,22 +446,22 @@ static _CTLine* _DWriteGetLine(CFAttributedStringRef string) {
 }
 
 /**
- * Helper method to create _CTLine objects given a _CTTypesetter, attributed string range to use and frame size to fit in.
+ * Helper method to create _CTLine objects given a CFAttributedStringRef, attributed string range to use and frame size to fit in.
  *
- * @parameter ts _CTTypesetter object to use.
+ * @parameter CFAttributedStringRef with text and attributes
  * @parameter range attributed string range to use.
  * @parameter frameSize size parameters of the frame to fit the text into.
  *
  * @return _CTFrame* created using the given parameters
  */
-static _CTFrame* _DWriteGetFrame(_CTTypesetter* ts, CFRange range, CGRect frameSize) {
+static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CGRect frameSize) {
     _CTFrame* frame = [_CTFrame new];
-    if (range.length == 0) {
+    if (range.length <= 0) {
         return frame;
     }
 
     // Call custom renderer to get all glyph run details
-    ComPtr<IDWriteTextLayout> textLayout = __CreateDWriteTextLayout(ts, range, frameSize);
+    ComPtr<IDWriteTextLayout> textLayout = __CreateDWriteTextLayout(string, range, frameSize);
     ComPtr<CustomDWriteTextRenderer> textRenderer = Make<CustomDWriteTextRenderer>();
     _DWriteGlyphRunDetails glyphRunDetails = {};
     textLayout->Draw(&glyphRunDetails, textRenderer.Get(), 0, 0);
@@ -495,7 +494,7 @@ static _CTFrame* _DWriteGetFrame(_CTTypesetter* ts, CFRange range, CGRect frameS
 
         // These are created lazily in the first call to CTLineGetTypographicBounds, so initialize with impossible values
         line->_ascent = -FLT_MAX;
-        line->_descent = -FLT_MAX;
+        line->_descent = FLT_MAX;
         line->_leading = -FLT_MAX;
 
         // Glyph runs that have the same _baselineOriginY value are part of the the same Line.
@@ -507,10 +506,12 @@ static _CTFrame* _DWriteGetFrame(_CTTypesetter* ts, CFRange range, CGRect frameS
             _CTRun* run = [[_CTRun new] autorelease];
             run->_range.location = glyphRunDetails._glyphRunDescriptions[i]._textPosition;
             run->_range.length = glyphRunDetails._glyphRunDescriptions[i]._stringLength;
-            run->_stringFragment = [ts->_string substringWithRange:NSMakeRange(range.location + run->_range.location, run->_range.length)];
+            run->_stringFragment = [static_cast<NSString*>(CFAttributedStringGetString(string))
+                substringWithRange:NSMakeRange(range.location + run->_range.location, run->_range.length)];
             run->_dwriteGlyphRun = move(glyphRunDetails._dwriteGlyphRun[i]);
             run->_stringIndices = move(glyphRunDetails._glyphRunDescriptions[i]._clusterMap);
-            run->_attributes = [ts->_attributedString attributesAtIndex:(range.location + run->_range.location) effectiveRange:NULL];
+            run->_attributes =
+                [static_cast<NSAttributedString*>(string) attributesAtIndex:(range.location + run->_range.location) effectiveRange:NULL];
 
             xPos = glyphRunDetails._baselineOriginX[i];
             yPos = glyphRunDetails._baselineOriginY[i];
@@ -536,14 +537,25 @@ static _CTFrame* _DWriteGetFrame(_CTTypesetter* ts, CFRange range, CGRect frameS
             i++;
         }
 
+<<<<<<< 1b720bf9c496dcac4c5df38a8ad2368e808523ee
         if ([runs objectAtIndex:0]) {
             prevYPosForDraw = yPos;
             line->_runs = runs;
             line->_strRange.location = static_cast<_CTRun*>(line->_runs[0])->_range.location;
+=======
+        if ([runs objectAtIndex:0] && static_cast<_CTRun*>([runs objectAtIndex:0])->_dwriteGlyphRun.glyphCount != 0) {
+            prevYPosForDraw = yPos;
+
+            line->_runs = runs;
+            line->_strRange.location = static_cast<_CTRun*>(line->_runs[0])->_range.location;
+            line->_lineOrigin.x = static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].x;
+            line->_lineOrigin.y = static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].y;
+>>>>>>> Implement NSLayoutManager using updated CoreText
             line->_strRange.length = stringRange;
             line->_glyphCount = glyphCount;
             line->_relativeXOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeXOffset;
             line->_relativeYOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeYOffset;
+<<<<<<< 1b720bf9c496dcac4c5df38a8ad2368e808523ee
             if (static_cast<_CTRun*>([line->_runs objectAtIndex:0])->_dwriteGlyphRun.glyphCount != 0) {
                 line->_lineOrigin.x = static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].x;
                 line->_lineOrigin.y = static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].y;
@@ -551,6 +563,13 @@ static _CTFrame* _DWriteGetFrame(_CTTypesetter* ts, CFRange range, CGRect frameS
 
             [frame->_lines addObject:line];
             frame->_lineOrigins.emplace_back(line->_lineOrigin);
+=======
+
+            [frame->_lines addObject:line];
+            frame->_lineOrigins.emplace_back(line->_lineOrigin);
+        } else {
+            __debugbreak();
+>>>>>>> Implement NSLayoutManager using updated CoreText
         }
     }
 

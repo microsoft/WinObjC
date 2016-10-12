@@ -204,6 +204,8 @@ LIBRARY CoreText
         CTFrameGetLineOrigins
         CTFrameDraw
         CTFrameGetTypeID
+        CTFrameDrawUninverted
+        CTFrameCreateWithAttributedString
 
         ; CTFramesetter Reference.mm
         CTFramesetterCreateWithAttributedString
@@ -236,6 +238,9 @@ LIBRARY CoreText
         CTLineGetStringIndexForPosition
         CTLineGetOffsetForStringIndex
         CTLineGetTypeID
+        CTLineCreateWithAttributedStringAndWidth
+        CTLineHasGlyphsAfterIndex
+        CTLineDrawUninverted
 
         ; CTParagraphStyle Reference.mm
         CTParagraphStyleCreate
@@ -287,5 +292,4 @@ LIBRARY CoreText
         CTTypesetterSuggestClusterBreak
         CTTypesetterSuggestClusterBreakWithOffset
         CTTypesetterGetTypeID
-        _CTTypesetterSuggestLineBreakWithOffsetAndCallback
 
