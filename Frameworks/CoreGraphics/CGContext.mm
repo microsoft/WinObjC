@@ -52,14 +52,14 @@ static inline D2D_RECT_F __CGRectToD2D(CGRect rect) {
 
 struct __CGContextDrawingState {
     // This is populated when the state is saved, and contains the D2D parameters that CG does not know.
-    ComPtr<ID2D1DrawingStateBlock> d2dState;
+    ComPtr<ID2D1DrawingStateBlock> d2dState{ nullptr };
 
     // Fills
-    ComPtr<ID2D1Brush> fillBrush;
+    ComPtr<ID2D1Brush> fillBrush{ nullptr };
 
     // Strokes
-    ComPtr<ID2D1Brush> strokeBrush;
-    ComPtr<ID2D1StrokeStyle> strokeStyle;
+    ComPtr<ID2D1Brush> strokeBrush{ nullptr };
+    ComPtr<ID2D1StrokeStyle> strokeStyle{ nullptr };
     D2D1_STROKE_STYLE_PROPERTIES strokeProperties{
         D2D1_CAP_STYLE_FLAT,
         D2D1_CAP_STYLE_FLAT,
@@ -69,21 +69,18 @@ struct __CGContextDrawingState {
         D2D1_DASH_STYLE_SOLID,
         0.f,
     };
-    std::vector<CGFloat> dashes;
+    std::vector<CGFloat> dashes{};
 
     CGFloat lineWidth = 1.0f;
 
-    CGFloat flatness;
-
-    // Clipping
-    CGMutablePathRef currentClippingPath;
+    CGFloat flatness = 0.0f;
 
     // Image Drawing
-    D2D1_INTERPOLATION_MODE bitmapInterpolationMode;
+    D2D1_INTERPOLATION_MODE bitmapInterpolationMode = D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
 
     // Userspace Coordinate Transformation
-    CGAffineTransform transform = CGAffineTransformIdentity;
-    CGAffineTransform textMatrix = CGAffineTransformIdentity;
+    CGAffineTransform transform{ CGAffineTransformIdentity };
+    CGAffineTransform textMatrix{ CGAffineTransformIdentity };
 
     // Alpha Blending
     CGFloat alpha = 1.0f;
@@ -91,22 +88,23 @@ struct __CGContextDrawingState {
 
 struct __CGContext {
     struct __CGContextImpl {
-        ComPtr<ID2D1RenderTarget> renderTarget;
+        ComPtr<ID2D1RenderTarget> renderTarget{ nullptr };
 
         // Calculated at creation time, this transform flips CG's drawing commands,
         // anchored in the bottom left, to D2D's top-left coordinate system.
-        CGAffineTransform cgCompatibilityTransform;
+        CGAffineTransform cgCompatibilityTransform{ CGAffineTransformIdentity };
 
-        std::stack<__CGContextDrawingState> stateStack;
+        std::stack<__CGContextDrawingState> stateStack{};
 
-        woc::unique_cf<CGMutablePathRef> currentPath;
+        woc::unique_cf<CGMutablePathRef> currentPath{ nullptr };
 
-        bool allowsAntialiasing;
-        bool allowsFontSmoothing;
-        bool allowsFontSubpixelPositioning;
-        bool allowsFontSubpixelQuantization;
+        // TODO(DH) GH#1070 evaluate these defaults; they should be set by context creators.
+        bool allowsAntialiasing = false;
+        bool allowsFontSmoothing = false;
+        bool allowsFontSubpixelPositioning = false;
+        bool allowsFontSubpixelQuantization = false;
 
-        __CGContextImpl() : stateStack() {
+        __CGContextImpl() {
             // Set up a default/baseline state
             stateStack.emplace();
         }
@@ -141,18 +139,6 @@ struct __CGContext {
 };
 
 #pragma region CFRuntimeClass
-static Boolean __CGContextEqual(CFTypeRef cf1, CFTypeRef cf2) {
-    return FALSE;
-}
-
-static CFHashCode __CGContextHash(CFTypeRef cf) {
-    return (CFHashCode)cf;
-}
-
-static CFStringRef __CGContextCopyDescription(CFTypeRef cf) {
-    return CFStringCreateWithFormat(kCFAllocatorSystemDefault, NULL, CFSTR("<CGContext %p>"), cf);
-}
-
 static void __CGContextInit(CFTypeRef cf) {
     CGContextRef context = (CGContextRef)cf;
     struct __CGContext* mutableContext = const_cast<struct __CGContext*>(context);
@@ -175,8 +161,8 @@ static PT _CFRuntimeCreateInstance(CFTypeID typeID, CFAllocatorRef allocator = k
 */
 CFTypeID CGContextGetTypeID() {
     static CFTypeID __kCGContextTypeID = _kCFRuntimeNotATypeID;
-    static const CFRuntimeClass __CGContextClass = { 0,    "CGContext", __CGContextInit,           NULL, __CGContextDeallocate, NULL,
-                                                     NULL, NULL,        __CGContextCopyDescription };
+    static const CFRuntimeClass __CGContextClass = { 0,       "CGContext", __CGContextInit, nullptr, __CGContextDeallocate,
+                                                     nullptr, nullptr,     nullptr,         nullptr };
 
     static dispatch_once_t initOnce = 0;
     dispatch_once(&initOnce, ^{
@@ -401,11 +387,11 @@ void CGContextSetCTM(CGContextRef context, CGAffineTransform transform) {
 */
 void CGContextDrawImage(CGContextRef context, CGRect rect, CGImageRef image) {
     if (!image) {
-        TraceWarning(TAG, L"Img == NULL!");
+        TraceWarning(TAG, L"Img == nullptr!");
         return;
     }
     if (!context) {
-        TraceWarning(TAG, L"CGContextDrawImage: context == NULL!");
+        TraceWarning(TAG, L"CGContextDrawImage: context == nullptr!");
         return;
     }
 
@@ -446,6 +432,10 @@ void CGContextClipToRect(CGContextRef context, CGRect rect) {
  @Status Interoperable
 */
 void CGContextClipToRects(CGContextRef context, const CGRect* rects, unsigned count) {
+    if (!rects || count == 0) {
+        return;
+    }
+
     CGContextBeginPath(context);
     CGContextAddRects(context, rects, count);
     CGContextClip(context);
@@ -672,7 +662,7 @@ static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometr
     if (currentState.alpha != 1.0f || false /* mask, clip, etc. */) {
         layer = true;
         renderTarget->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
-                                                      NULL,
+                                                      nullptr,
                                                       D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
                                                       D2D1::IdentityMatrix(),
                                                       currentState.alpha),
@@ -1264,6 +1254,10 @@ void CGContextEndPage(CGContextRef context) {
  @Status Interoperable
 */
 void CGContextFillRects(CGContextRef context, const CGRect* rects, size_t count) {
+    if (!rects || count == 0) {
+        return;
+    }
+
     for (size_t i = 0; i < count; ++i) {
         CGContextFillRect(context, rects[i]);
     }
@@ -1367,7 +1361,7 @@ bool CGContextIsPointInPath(CGContextRef context, bool eoFill, CGFloat x, CGFloa
 }
 
 void CGContextDrawGlyphRun(CGContextRef context, const DWRITE_GLYPH_RUN* glyphRun) {
-    // context->Backing()->CGContextDrawGlyphRun(glyphRun);
+    // TODO(DH) GH#1070 Merge in CGContextCairo.mm's Glyph Run code.
 }
 
 CGImageRef CGPNGImageCreateFromFile(NSString* path) {
@@ -1386,7 +1380,7 @@ CGImageRef CGJPEGImageCreateFromData(NSData* data) {
     return new CGJPEGDecoderImage(data);
 }
 
-////// CGBitmapContext
+#pragma region CGBitmapContext
 struct __CGBitmapContext : __CGContext {
     struct __CGBitmapContextImpl {
         woc::unique_cf<CGImageRef> image;
@@ -1415,7 +1409,7 @@ static void __CGBitmapContextDeallocate(CFTypeRef cf) {
 static CFTypeID __CGBitmapContextGetTypeID() {
     static CFTypeID __kCGBitmapContextTypeID = _kCFRuntimeNotATypeID;
     static const CFRuntimeClass __CGBitmapContextClass =
-        { 0, "CGBitmapContext", __CGBitmapContextInit, NULL, __CGBitmapContextDeallocate, NULL, NULL, NULL, __CGContextCopyDescription };
+        { 0, "CGBitmapContext", __CGBitmapContextInit, nullptr, __CGBitmapContextDeallocate, nullptr, nullptr, nullptr, nullptr };
 
     static dispatch_once_t initOnce = 0;
     dispatch_once(&initOnce, ^{
@@ -1436,51 +1430,7 @@ CGContextRef CGBitmapContextCreate(void* data,
                                    size_t bytesPerRow,
                                    CGColorSpaceRef colorSpace,
                                    CGBitmapInfo bitmapInfo) {
-#if 0
-    CGImageRef newImage = NULL;
-    DWORD alphaType = bitmapInfo & kCGBitmapAlphaInfoMask;
-
-    bool colorSpaceAllocated = false;
-
-    if (!colorSpace) {
-        if (bytesPerRow >= (width * 3)) {
-            TraceWarning(TAG, L"Warning: colorSpace = NULL, assuming RGB based on bytesPerRow.");
-            colorSpace = CGColorSpaceCreateDeviceRGB();
-        } else {
-            TraceWarning(TAG, L"Warning: colorSpace = NULL, assuming Gray based on bytesPerRow.");
-            colorSpace = CGColorSpaceCreateDeviceGray();
-        }
-
-        colorSpaceAllocated = true;
-    }
-
-    const unsigned int numColorComponents = CGColorSpaceGetNumberOfComponents(colorSpace);
-    const unsigned int numComponents = numColorComponents + ((alphaType == kCGImageAlphaNone) ? 0 : 1);
-    const unsigned int bitsPerPixel = (bitsPerComponent == 5) ? 16 : numComponents * bitsPerComponent;
-
-    __CGSurfaceFormat format = _CGImageGetFormat(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo);
-
-    __CGSurfaceInfo surfaceInfo = __CGSurfaceInfo(((__CGColorSpace*)colorSpace)->colorSpaceModel,
-                                                  bitmapInfo,
-                                                  bitsPerComponent,
-                                                  bitsPerPixel >> 3,
-                                                  width,
-                                                  height,
-                                                  bytesPerRow,
-                                                  data,
-                                                  format);
-
-    newImage = new CGBitmapImage(surfaceInfo);
-
-    CGContextRef ret = new __CGContext(newImage);
-    CFRelease((id)newImage);
-
-    if (colorSpaceAllocated == true) {
-        CGColorSpaceRelease(colorSpace);
-    }
-
-    return ret;
-#endif
+    UNIMPLEMENTED();
     return nullptr;
 }
 
@@ -1488,9 +1438,8 @@ CGContextRef CGBitmapContextCreate(void* data,
  @Status Interoperable
 */
 CGColorSpaceRef CGBitmapContextGetColorSpace(CGContextRef context) {
-    // TODO: Consider caching colorspaceRef in CGImageRef
+    UNIMPLEMENTED();
     return nullptr;
-    // return (CGColorSpaceRef) new __CGColorSpace(context->Backing()->DestImage()->Backing()->ColorSpaceModel());
 }
 
 /**
@@ -1541,8 +1490,6 @@ CGImageRef CGBitmapContextGetImage(CGContextRef context) {
         return nullptr;
     }
     return ((__CGBitmapContext*)context)->_bitmapImpl.image.get();
-    // UNIMPLEMENTED();
-    // return StubReturn();
 }
 
 CGContextRef _CGBitmapContextCreateWithTexture(int width, int height, DisplayTexture* texture, DisplayTextureLocking* locking) {
@@ -1563,3 +1510,4 @@ CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurface
     UNIMPLEMENTED();
     return StubReturn();
 }
+#pragma endregion

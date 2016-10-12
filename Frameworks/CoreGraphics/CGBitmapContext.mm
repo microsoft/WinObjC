@@ -25,7 +25,6 @@ static const wchar_t* TAG = L"CGBitmapContext";
 
 /**
  @Status Stub
- @Notes
 */
 CGContextRef CGBitmapContextCreateWithData(void* data,
                                            size_t width,
@@ -41,68 +40,27 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
 }
 
 /**
- @Status Stub
- @Notes
-*/
-/*
-CGImageRef CGBitmapContextCreateImage(CGContextRef context) {
-    UNIMPLEMENTED();
-    return StubReturn();
-}*/
-
-/**
-@Status Interoperable
-@Notes
+ @Status Interoperable
 */
 CGBitmapInfo CGBitmapContextGetBitmapInfo(CGContextRef context) {
-#if 0
-    int ret;
-
-    if (context) {
-        ret = context->Backing()->DestImage()->Backing()->BitmapInfo();
-    }
-    else {
-        TraceWarning(TAG, L"CGBitmapContextGetBitmapInfo: Null context!");
-        ret = 0;
-    }
-
-    return (CGBitmapInfo)ret;
-#endif
-    return 0;
-}
-
-/**
-@Status Interoperable
-@Notes
-*/
-CGImageAlphaInfo CGBitmapContextGetAlphaInfo(CGContextRef context) {
-#if 0
-    int ret;
-
-    if (context) {
-        ret = context->Backing()->DestImage()->Backing()->BitmapInfo() & kCGBitmapAlphaInfoMask;
-    }
-    else {
-        TraceWarning(TAG, L"CGBitmapContextGetAlphaInfo: Null context!");
-        ret = 0;
-    }
-
-    return (CGImageAlphaInfo)ret;
-#endif
-    return (CGImageAlphaInfo)0;
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
  @Status Interoperable
- @Notes
+*/
+CGImageAlphaInfo CGBitmapContextGetAlphaInfo(CGContextRef context) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Interoperable
 */
 size_t CGBitmapContextGetBitsPerComponent(CGContextRef context) {
-#if 0
-    CGImageRef imageRef = context->Backing()->DestImage();
-    size_t bitsPerComponent = CGImageGetBitsPerComponent(imageRef);
-    return bitsPerComponent;
-#endif
-    return 0;
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -111,51 +69,6 @@ size_t CGBitmapContextGetBitsPerComponent(CGContextRef context) {
  Expect returns of 24 bits on Islandwood where 32 bits is expected on iOS.
 */
 size_t CGBitmapContextGetBitsPerPixel(CGContextRef context) {
-    return 0;
-#if 0
-    CGImageRef imageRef = context->Backing()->DestImage();
-    const size_t bytesPerPixel = imageRef->Backing()->BytesPerPixel();
-    const size_t bitsPerByte = 8;
-    return bytesPerPixel * bitsPerByte;
-#endif
+    UNIMPLEMENTED();
+    return StubReturn();
 }
-
-/**
- @Status Stub
- @Notes
-*/
-/*
-CGColorSpaceRef CGBitmapContextGetColorSpace(CGContextRef context) {
-    UNIMPLEMENTED();
-    return StubReturn();
-}*/
-
-/**
- @Status Stub
- @Notes
-*/
-/*
-void * CGBitmapContextGetData(CGContextRef context) {
-	UNIMPLEMENTED();
-    return StubReturn();
-}*/
-
-/**
- @Status Stub
- @Notes
-*/
-/*
-size_t CGBitmapContextGetHeight(CGContextRef context) {
-    UNIMPLEMENTED();
-    return StubReturn();
-}*/
-
-/**
- @Status Stub
- @Notes
-*/
-/*
-size_t CGBitmapContextGetWidth(CGContextRef context) {
-    UNIMPLEMENTED();
-    return StubReturn();
-}*/
