@@ -35,7 +35,7 @@ To get started using the bridge to bring your iOS app to Windows, you'll need:
 
 The best way to get started with the bridge is to run one of the samples. We recommend starting with the **WOCCatalog** sample app, which demonstrates an assortment of iOS and XAML UI controls.
 
-**NOTE:** The following instructions are for getting started using the ***pre-built SDK*** rather than building the SDK from source. If you're building the SDK from the source code, follow the instructions on the [wiki](https://github.com/Microsoft/WinObjC/wiki) instead. 
+**NOTE:** The following instructions are for getting started using the ***pre-built SDK*** rather than building the SDK from source. If you're building the SDK from the source code, follow the instructions on the [wiki](https://github.com/Microsoft/WinObjC/wiki/Building-From-Source) instead. 
 
 To run the sample:
 
