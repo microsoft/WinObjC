@@ -142,18 +142,17 @@ struct _CTParagraphStyleProperties {
 }
 @end
 
-typedef float (*WidthFinderFunc)(void* opaque, CFIndex idx, float offset, float height);
-
-CORETEXT_EXPORT CTLineRef CTLineCreateWithAttributedStringAndWidth(CFAttributedStringRef string, CFRange range, double width);
-CORETEXT_EXPORT BOOL CTLineHasGlyphsAfterIndex(CTLineRef line, CFIndex index);
-CORETEXT_EXPORT CTFrameRef CTFrameCreateWithAttributedString(CFAttributedStringRef string);
-
-CORETEXT_EXPORT void CTFrameDrawUninverted(CTFrameRef frame, CGContextRef ctx);
-CORETEXT_EXPORT void CTLineDrawUninverted(CTLineRef frame, CGContextRef ctx);
-CORETEXT_EXPORT CGSize CTFrameGetSize(CTFrameRef frame);
-
 // Note: For some reason namemangling does not happen for these functions causing a linker error. Bug??
 CORETEXT_EXTERNC_BEGIN
 void _CTLineDraw(CTLineRef line, CGContextRef ctx, bool adjustTextPosition, bool invertedCoordinates);
 void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTextPosition, bool invertedCoordinates);
 CORETEXT_EXTERNC_END
+
+// Private helper methods for UIKit
+
+// Draw text without assuming context has been inverted and translated for CoreText usage
+// Used for UIKit where the size of the frame is unknown
+CORETEXT_EXPORT void _CTFrameDrawUninverted(CTFrameRef frame, CGContextRef ctx);
+CORETEXT_EXPORT void _CTLineDrawUninverted(CTLineRef frame, CGContextRef ctx);
+
+CORETEXT_EXPORT CGSize _CTFrameGetSize(CTFrameRef frame);

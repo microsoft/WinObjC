@@ -338,6 +338,7 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(CFAttributedStringRef 
         THROW_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_DEFAULT, ++incompatibleAttributeFlag }));
         THROW_IF_FAILED(textLayout->SetTypography(typography.Get(), dwriteRange));
     }
+
     return textLayout;
 }
 
@@ -372,9 +373,10 @@ public:
         _DWriteGlyphRunDescription glyphRunDescriptionInfo;
         glyphRunDescriptionInfo._stringLength = glyphRunDescription->stringLength;
         glyphRunDescriptionInfo._textPosition = glyphRunDescription->textPosition;
-        std::copy(glyphRunDescription->clusterMap,
-                  glyphRunDescription->clusterMap + glyphRun->glyphCount,
-                  std::back_inserter(glyphRunDescriptionInfo._clusterMap));
+        std::transform(glyphRunDescription->clusterMap,
+                       glyphRunDescription->clusterMap + glyphRun->glyphCount,
+                       std::back_inserter(glyphRunDescriptionInfo._clusterMap),
+                       [&](uint16_t index) { return index + glyphRunDescription->textPosition; });
         glyphs->_glyphRunDescriptions.push_back(glyphRunDescriptionInfo);
 
         return S_OK;
@@ -537,25 +539,14 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
             i++;
         }
 
-<<<<<<< 1b720bf9c496dcac4c5df38a8ad2368e808523ee
         if ([runs objectAtIndex:0]) {
             prevYPosForDraw = yPos;
             line->_runs = runs;
             line->_strRange.location = static_cast<_CTRun*>(line->_runs[0])->_range.location;
-=======
-        if ([runs objectAtIndex:0] && static_cast<_CTRun*>([runs objectAtIndex:0])->_dwriteGlyphRun.glyphCount != 0) {
-            prevYPosForDraw = yPos;
-
-            line->_runs = runs;
-            line->_strRange.location = static_cast<_CTRun*>(line->_runs[0])->_range.location;
-            line->_lineOrigin.x = static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].x;
-            line->_lineOrigin.y = static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].y;
->>>>>>> Implement NSLayoutManager using updated CoreText
             line->_strRange.length = stringRange;
             line->_glyphCount = glyphCount;
             line->_relativeXOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeXOffset;
             line->_relativeYOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeYOffset;
-<<<<<<< 1b720bf9c496dcac4c5df38a8ad2368e808523ee
             if (static_cast<_CTRun*>([line->_runs objectAtIndex:0])->_dwriteGlyphRun.glyphCount != 0) {
                 line->_lineOrigin.x = static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].x;
                 line->_lineOrigin.y = static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].y;
@@ -563,13 +554,6 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
 
             [frame->_lines addObject:line];
             frame->_lineOrigins.emplace_back(line->_lineOrigin);
-=======
-
-            [frame->_lines addObject:line];
-            frame->_lineOrigins.emplace_back(line->_lineOrigin);
-        } else {
-            __debugbreak();
->>>>>>> Implement NSLayoutManager using updated CoreText
         }
     }
 

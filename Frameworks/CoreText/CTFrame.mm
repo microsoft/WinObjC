@@ -36,10 +36,6 @@ const CFStringRef kCTFramePathClippingPathAttributeName = static_cast<CFStringRe
     return self;
 }
 
-- (void)dealloc {
-    _lines = nil;
-    [super dealloc];
-}
 @end
 
 /**
@@ -144,7 +140,7 @@ void CTFrameDraw(CTFrameRef frame, CGContextRef ctx) {
 }
 
 // Exposed to UIKit to draw without having to flip coordinate system or know size of bounding frame
-void CTFrameDrawUninverted(CTFrameRef frame, CGContextRef ctx) {
+void _CTFrameDrawUninverted(CTFrameRef frame, CGContextRef ctx) {
     __CTFrameDraw(frame, ctx, false);
 }
 
@@ -157,13 +153,7 @@ CFTypeID CTFrameGetTypeID() {
     return StubReturn();
 }
 
-// Private helper method for NSLayoutManager
-CTFrameRef CTFrameCreateWithAttributedString(CFAttributedStringRef attributedString) {
-    return static_cast<CTFrameRef>([_DWriteGetFrame(attributedString,
-                                                    CFRangeMake(0, CFAttributedStringGetLength(attributedString)),
-                                                    CGRectMake(0, 0, FLT_MAX, FLT_MAX)) retain]);
-}
-
-CGSize CTFrameGetSize(CTFrameRef frame) {
+// Convenience private function for NSString+UIKitAdditions
+CGSize _CTFrameGetSize(CTFrameRef frame) {
     return frame ? static_cast<_CTFrame*>(frame)->_frameRect.size : CGSize{};
 }

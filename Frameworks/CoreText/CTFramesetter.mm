@@ -37,7 +37,7 @@ static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameSize, CF
 
     // Call _DWriteWrapper to get _CTLine object list that makes up this frame
     _CTTypesetter* typesetter = static_cast<_CTTypesetter*>(framesetter->_typesetter);
-    if (range.length == 0) {
+    if (range.length == 0L) {
         range.length = typesetter->_characters.size();
     }
 
@@ -82,7 +82,7 @@ CTTypesetterRef CTFramesetterGetTypesetter(CTFramesetterRef framesetter) {
 */
 CGSize CTFramesetterSuggestFrameSizeWithConstraints(
     CTFramesetterRef framesetter, CFRange stringRange, CFDictionaryRef frameAttributes, CGSize constraints, CFRange* fitRange) {
-    CGRect frameSize = { 0 };
+    CGRect frameSize = {};
     frameSize.size = constraints;
 
     _CTFrame* frame = __CreateFrame(static_cast<_CTFramesetter*>(framesetter), frameSize, stringRange);

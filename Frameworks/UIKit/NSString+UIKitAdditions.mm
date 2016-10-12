@@ -82,8 +82,8 @@ static void drawString(UIFont* font,
     CGPathRef path = CGPathCreateWithRect(rect, nullptr);
     CTFrameRef frame = CTFramesetterCreateFrame(framesetter, {}, path, nullptr);
     CGContextSetTextPosition(context, rect.origin.x, rect.origin.y);
-    CTFrameDrawUninverted(frame, context);
-    *sizeOut = CTFrameGetSize(frame);
+    _CTFrameDrawUninverted(frame, context);
+    *sizeOut = _CTFrameGetSize(frame);
 
     CGPathRelease(path);
     CFRelease(framesetter);

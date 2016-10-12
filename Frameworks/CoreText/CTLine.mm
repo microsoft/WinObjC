@@ -24,7 +24,6 @@
 
 #include <algorithm>
 #include <numeric>
-#include <functional>
 
 static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef line,
                                                                     CTLineTruncationType truncationType,
@@ -36,11 +35,6 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef li
         _runs.attach([NSMutableArray new]);
     }
     return self;
-}
-
-- (void)dealloc {
-    _runs = nil;
-    [super dealloc];
 }
 
 - (instancetype)copyWithZone:(NSZone*)zone {
@@ -64,27 +58,6 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef li
 */
 CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string) {
     return string ? static_cast<CTLineRef>(_DWriteGetLine(string)) : nil;
-}
-
-CTLineRef CTLineCreateWithAttributedStringAndWidth(CFAttributedStringRef string, CFRange range, double width) {
-    _CTFrame* frame = _DWriteGetFrame(string, range, CGRectMake(0, 0, width, FLT_MAX));
-    return static_cast<CTLineRef>([[frame->_lines firstObject] retain]);
-}
-
-BOOL CTLineHasGlyphsAfterIndex(CTLineRef lineRef, CFIndex index) {
-    _CTLine* line = static_cast<_CTLine*>(lineRef);
-    if (line) {
-        for (_CTRun* run in static_cast<id<NSFastEnumeration>>(line->_runs)) {
-            if (run->_range.location <= index && index <= run->_range.location + run->_range.length &&
-                std::any_of(run->_stringIndices.cbegin(),
-                            run->_stringIndices.cend(),
-                            std::bind(std::greater_equal<CFIndex>(), std::placeholders::_1, index))) {
-                return YES;
-            }
-        }
-    }
-
-    return NO;
 }
 
 /**
@@ -273,7 +246,7 @@ void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
     _CTLineDraw(lineRef, ctx, true, true);
 }
 
-void CTLineDrawUninverted(CTLineRef lineRef, CGContextRef context) {
+void _CTLineDrawUninverted(CTLineRef lineRef, CGContextRef context) {
     _CTLineDraw(lineRef, context, true, false);
 }
 
@@ -381,7 +354,7 @@ CFIndex CTLineGetStringIndexForPosition(CTLineRef lineRef, CGPoint position) {
     }
 
     if (currPos < position.x) {
-        return line->_strRange.length;
+        return line->_strRange.location + line->_strRange.length;
     }
 
     return kCFNotFound;

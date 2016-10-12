@@ -64,7 +64,7 @@
 
 /**
  @Status Caveat
- @Notes writingDirection and atIndex parameters are not supported
+ @Notes writingDirection and atIndex parameters are ignored
  TODO::1123 This needs to handle multiple exclusion zones properly when creating remainingRect
             Currently processing exclusion zones left-to-right fails to calculate properly
 */
