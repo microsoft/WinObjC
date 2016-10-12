@@ -88,7 +88,6 @@ void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, float scal
 
     UIGraphicsPushContext(newCtx);
 #endif
-    // TODO(DH)
 }
 
 /**
