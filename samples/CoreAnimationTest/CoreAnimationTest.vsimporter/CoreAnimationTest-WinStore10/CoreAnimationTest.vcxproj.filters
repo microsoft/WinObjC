@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
@@ -70,5 +70,30 @@
     <Text Include="CoreAnimationTest-Release-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.xaml.cpp" />
+    <ClCompile Include="pch.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h" />
+    <ClInclude Include="..\..\CoreAnimationTest\ProgrammaticViewController.h">
+      <Filter>CoreAnimationTest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CoreAnimationTest\StoryBoardViewController.h">
+      <Filter>CoreAnimationTest</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="..\..\CoreAnimationTest\ProgrammaticViewController.m">
+      <Filter>CoreAnimationTest</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CoreAnimationTest\StoryBoardViewController.m">
+      <Filter>CoreAnimationTest</Filter>
+    </ClangCompile>
   </ItemGroup>
 </Project>
