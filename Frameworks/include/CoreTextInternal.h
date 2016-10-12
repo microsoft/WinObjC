@@ -150,6 +150,7 @@ CORETEXT_EXPORT CTFrameRef CTFrameCreateWithAttributedString(CFAttributedStringR
 
 CORETEXT_EXPORT void CTFrameDrawUninverted(CTFrameRef frame, CGContextRef ctx);
 CORETEXT_EXPORT void CTLineDrawUninverted(CTLineRef frame, CGContextRef ctx);
+CORETEXT_EXPORT CGSize CTFrameGetSize(CTFrameRef frame);
 
 // Note: For some reason namemangling does not happen for these functions causing a linker error. Bug??
 CORETEXT_EXTERNC_BEGIN

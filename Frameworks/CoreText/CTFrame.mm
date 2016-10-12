@@ -163,3 +163,7 @@ CTFrameRef CTFrameCreateWithAttributedString(CFAttributedStringRef attributedStr
                                                     CFRangeMake(0, CFAttributedStringGetLength(attributedString)),
                                                     CGRectMake(0, 0, FLT_MAX, FLT_MAX)) retain]);
 }
+
+CGSize CTFrameGetSize(CTFrameRef frame) {
+    return frame ? static_cast<_CTFrame*>(frame)->_frameRect.size : CGSize{};
+}

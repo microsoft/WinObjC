@@ -206,6 +206,7 @@ LIBRARY CoreText
         CTFrameGetTypeID
         CTFrameDrawUninverted
         CTFrameCreateWithAttributedString
+        CTFrameGetSize
 
         ; CTFramesetter Reference.mm
         CTFramesetterCreateWithAttributedString

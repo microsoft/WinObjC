@@ -403,8 +403,8 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     NSRange range;
     range.location = 0;
     range.length = INT_MAX;
-    [_layoutManager drawBackgroundForGlyphRange:range atPoint:CGPointMake(_textContainerInset.top, _textContainerInset.left)];
-    [_layoutManager drawGlyphsForGlyphRange:range atPoint:CGPointMake(_textContainerInset.top, _textContainerInset.left)];
+    [_layoutManager drawBackgroundForGlyphRange:range atPoint:CGPointMake(rect.origin.x, rect.origin.y)];
+    [_layoutManager drawGlyphsForGlyphRange:range atPoint:CGPointMake(rect.origin.x, rect.origin.y)];
 }
 
 /**

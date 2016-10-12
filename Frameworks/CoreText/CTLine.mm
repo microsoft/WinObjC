@@ -24,6 +24,7 @@
 
 #include <algorithm>
 #include <numeric>
+#include <functional>
 
 static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef line,
                                                                     CTLineTruncationType truncationType,
@@ -63,6 +64,27 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef li
 */
 CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string) {
     return string ? static_cast<CTLineRef>(_DWriteGetLine(string)) : nil;
+}
+
+CTLineRef CTLineCreateWithAttributedStringAndWidth(CFAttributedStringRef string, CFRange range, double width) {
+    _CTFrame* frame = _DWriteGetFrame(string, range, CGRectMake(0, 0, width, FLT_MAX));
+    return static_cast<CTLineRef>([[frame->_lines firstObject] retain]);
+}
+
+BOOL CTLineHasGlyphsAfterIndex(CTLineRef lineRef, CFIndex index) {
+    _CTLine* line = static_cast<_CTLine*>(lineRef);
+    if (line) {
+        for (_CTRun* run in static_cast<id<NSFastEnumeration>>(line->_runs)) {
+            if (run->_range.location <= index && index <= run->_range.location + run->_range.length &&
+                std::any_of(run->_stringIndices.cbegin(),
+                            run->_stringIndices.cend(),
+                            std::bind(std::greater_equal<CFIndex>(), std::placeholders::_1, index))) {
+                return YES;
+            }
+        }
+    }
+
+    return NO;
 }
 
 /**
@@ -220,7 +242,7 @@ CTLineRef CTLineCreateJustifiedLine(CTLineRef line, CGFloat justificationFactor,
     return StubReturn();
 }
 
-void _CTLineDraw(CTLineRef lineRef, CGContextRef ctx, bool adjustTextPosition) {
+void _CTLineDraw(CTLineRef lineRef, CGContextRef ctx, bool adjustTextPosition, bool invertedCoordinates) {
     if (!lineRef) {
         return;
     }
@@ -240,7 +262,7 @@ void _CTLineDraw(CTLineRef lineRef, CGContextRef ctx, bool adjustTextPosition) {
             CGContextSetTextPosition(ctx, curTextPos.x + curRun->_relativeXOffset, curTextPos.y);
         }
 
-        _CTRunDraw(static_cast<CTRunRef>(curRun), ctx, CFRange{}, false);
+        _CTRunDraw(static_cast<CTRunRef>(curRun), ctx, CFRange{}, false, invertedCoordinates);
     }
 }
 
@@ -248,7 +270,11 @@ void _CTLineDraw(CTLineRef lineRef, CGContextRef ctx, bool adjustTextPosition) {
  @Status Interoperable
 */
 void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
-    _CTLineDraw(lineRef, ctx, true);
+    _CTLineDraw(lineRef, ctx, true, true);
+}
+
+void CTLineDrawUninverted(CTLineRef lineRef, CGContextRef context) {
+    _CTLineDraw(lineRef, context, true, false);
 }
 
 /**
@@ -302,12 +328,12 @@ double CTLineGetTypographicBounds(CTLineRef lineRef, CGFloat* ascent, CGFloat* d
     }
 
     // Created with impossible values -FLT_MAX which signify they need to be populated
-    if (line->_ascent == -FLT_MAX || line->_descent == -FLT_MAX || line->_leading == -FLT_MAX) {
+    if ((line->_ascent == -FLT_MAX || line->_descent == FLT_MAX || line->_leading == -FLT_MAX) && (ascent || descent || leading)) {
         for (_CTRun* run in static_cast<id<NSFastEnumeration>>(line->_runs)) {
             CGFloat newAscent, newDescent, newLeading;
             CTRunGetTypographicBounds(static_cast<CTRunRef>(run), { 0, 0 }, &newAscent, &newDescent, &newLeading);
             line->_ascent = std::max(line->_ascent, newAscent);
-            line->_descent = std::max(line->_descent, newDescent);
+            line->_descent = std::min(line->_descent, newDescent);
             line->_leading = std::max(line->_leading, newLeading);
         }
     }

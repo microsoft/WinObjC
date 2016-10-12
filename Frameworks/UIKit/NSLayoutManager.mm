@@ -48,7 +48,7 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
 
     NSTextContainer* container = (NSTextContainer*)_textContainers[0];
     CGSize containerSize = container.size;
-    CGPoint origin = {};
+    CGPoint origin = { 0, 0 };
     if (!_frame) {
         _frame = CTFrameCreateWithAttributedString((CFAttributedStringRef)(NSTextStorage*)_textStorage);
     }
@@ -94,7 +94,7 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
                 // Entire line can fit in this rect, save this line and break out of while loop to next line
                 [_ctLines addObject:(id)line];
                 _lineOrigins.push_back(rect.origin);
-                origin = { 0.0f, rect.origin.y + lineHeight };
+                origin = { 0.0f, origin.y + lineHeight };
                 _totalSize.height += lineHeight;
                 _totalSize.width = std::max(_totalSize.width, rect.origin.x + (CGFloat)width);
                 break;
