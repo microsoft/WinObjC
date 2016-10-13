@@ -87,17 +87,17 @@ void _DispatchMainRunLoopOnUIThread(int signaledEvent) {
 /**
 * Private method to create the dispatcher
 */
-void _ensureDispatcher() {
+void _EnsureDispatcher() {
     if (s_dispatcher == nullptr) {
         ComPtr<ICoreWindowStatic> coreWindowStatic;
         ComPtr<ICoreWindow> coreWindow;
 
-        THROW_IF_FAILED(
-            GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_UI_Core_CoreWindow).Get(), &coreWindowStatic));
+        THROW_IF_FAILED(GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_UI_Core_CoreWindow).Get(), &coreWindowStatic));
         THROW_IF_FAILED(coreWindowStatic->GetForCurrentThread(&coreWindow));
         THROW_IF_FAILED(coreWindow->get_Dispatcher(&s_dispatcher));
     }
 }
+
 /**
  * Method that schedules the main runloop asynchronously on the UI thread.
  * Note: This method always schedules the work asynchronously on the UI thread to let the caller stack unwind.
@@ -134,7 +134,7 @@ int MainRunLoopTimedMultipleWait(EbrEvent* events, int numEvents, double timeout
         }
 
         _ensureDispatcher();
-        
+
         if (timeout == 0) {
             // Optimization to not schedule a wait on a threadpool when the timeout value passed was 0.
             _DispatchMainRunLoopOnUIThread(-1);
