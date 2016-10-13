@@ -31,7 +31,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFInputStream)
 /**
  @Status Interoperable
 */
-- (id)initWithData:(id)data {
+- (instancetype)initWithData:(NSData*)data {
     return reinterpret_cast<NSInputStreamPrototype*>(CFReadStreamCreateWithData(nullptr, static_cast<CFDataRef>(data)));
 }
 
@@ -55,7 +55,7 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFReadStreamRef, CFReadStreamGetTypeID, NSURL, NSCF
 /**
  @Status Interoperable
 */
-- (unsigned)streamStatus {
+- (NSStreamStatus)streamStatus {
     return CFReadStreamGetStatus(static_cast<CFReadStreamRef>(self));
 }
 
@@ -92,7 +92,7 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFReadStreamRef, CFReadStreamGetTypeID, NSURL, NSCF
 /**
  @Status Interoperable
 */
-- (int)read:(uint8_t*)buf maxLength:(NSUInteger)maxLength {
+- (NSInteger)read:(uint8_t*)buf maxLength:(NSUInteger)maxLength {
     return CFReadStreamRead(static_cast<CFReadStreamRef>(self), buf, maxLength);
 }
 

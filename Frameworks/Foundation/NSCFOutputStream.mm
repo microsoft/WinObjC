@@ -67,7 +67,7 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFWriteStreamRef, CFWriteStreamGetTypeID, NSURL, NS
 /**
  @Status Interoperable
 */
-- (unsigned)streamStatus {
+- (NSStreamStatus)streamStatus {
     return CFWriteStreamGetStatus(static_cast<CFWriteStreamRef>(self));
 }
 

@@ -53,7 +53,7 @@ FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceTypeVoice = @"NSStreamNe
 /**
  @Status Interoperable
 */
-- (unsigned)streamStatus {
+- (NSStreamStatus)streamStatus {
     return NSInvalidAbstractInvocationReturn();
 }
 
