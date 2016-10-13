@@ -44,7 +44,7 @@
 
 using namespace Microsoft::WRL;
 
-static inline D2D_RECT_F __CGRectToD2D(CGRect rect) {
+static inline D2D_RECT_F __CGRectToD2D_F(CGRect rect) {
     return {
         rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width, rect.origin.y + rect.size.height,
     };
@@ -174,8 +174,13 @@ CFTypeID CGContextGetTypeID() {
 
 static const wchar_t* TAG = L"CGContext";
 
-static void __CGContextInitializeWithRenderTarget(CGContextRef context, ID2D1RenderTarget* renderTarget) {
+static void __CGContextInitWithRenderTarget(CGContextRef context, ID2D1RenderTarget* renderTarget) {
     context->_impl.renderTarget = renderTarget;
+
+    // Reference platform defaults:
+    // * Fill  : fully transparent black
+    // * Stroke: fully opaque black
+    // If a context does not support alpha, the default fill looks like fully opaque black.
     CGContextSetRGBFillColor(context, 0, 0, 0, 0);
     CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
 }
@@ -183,7 +188,7 @@ static void __CGContextInitializeWithRenderTarget(CGContextRef context, ID2D1Ren
 CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget) {
     FAIL_FAST_HR_IF_NULL(E_INVALIDARG, renderTarget);
     CGContextRef context = _CFRuntimeCreateInstance<CGContextRef>(CGContextGetTypeID());
-    __CGContextInitializeWithRenderTarget(context, renderTarget);
+    __CGContextInitWithRenderTarget(context, renderTarget);
     return context;
 }
 
@@ -395,7 +400,7 @@ void CGContextDrawImage(CGContextRef context, CGRect rect, CGImageRef image) {
         return;
     }
 
-    { UNIMPLEMENTED(); }
+    UNIMPLEMENTED();
 }
 
 void CGContextDrawImageRect(CGContextRef context, CGImageRef image, CGRect src, CGRect dst) {
@@ -521,7 +526,6 @@ void CGContextSetFillColor(CGContextRef context, const CGFloat* components) {
 void CGContextSetFillColorWithColor(CGContextRef context, CGColorRef color) {
     const CGFloat* comp = CGColorGetComponents(color);
     CGContextSetRGBFillColor(context, comp[0], comp[1], comp[2], comp[3]);
-    UNIMPLEMENTED();
 }
 
 /**
@@ -601,7 +605,7 @@ void CGContextRestoreGState(CGContextRef context) {
 */
 void CGContextClearRect(CGContextRef context, CGRect rect) {
     ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
-    renderTarget->PushAxisAlignedClip(__CGRectToD2D(rect), D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+    renderTarget->PushAxisAlignedClip(__CGRectToD2D_F(rect), D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
     renderTarget->Clear(nullptr); // transparent black clear
     renderTarget->PopAxisAlignedClip();
 }
@@ -686,7 +690,7 @@ void CGContextStrokeRect(CGContextRef context, CGRect rect) {
 
     ComPtr<ID2D1Geometry> geometry;
     ComPtr<ID2D1RectangleGeometry> rectGeometry;
-    FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D(rect), &rectGeometry));
+    FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D_F(rect), &rectGeometry));
     FAIL_FAST_IF_FAILED(rectGeometry.As(&geometry));
 
     __CGContextDrawGeometry(context, geometry.Get(), kCGPathStroke);
@@ -712,7 +716,7 @@ void CGContextFillRect(CGContextRef context, CGRect rect) {
 
     ComPtr<ID2D1Geometry> geometry;
     ComPtr<ID2D1RectangleGeometry> rectGeometry;
-    FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D(rect), &rectGeometry));
+    FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D_F(rect), &rectGeometry));
     FAIL_FAST_IF_FAILED(rectGeometry.As(&geometry));
 
     __CGContextDrawGeometry(context, geometry.Get(), kCGPathFill);
@@ -1330,6 +1334,7 @@ void CGContextSynchronize(CGContextRef context) {
     UNIMPLEMENTED();
 }
 
+// TODO(DH) GH#1077 remove all of these internal functions.
 // TODO: functions below are not part of offical exports, but they are also exported
 // to be used by other framework components, we should consider moving them to a shared library
 void CGContextClearToColor(CGContextRef context, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
@@ -1338,8 +1343,6 @@ void CGContextClearToColor(CGContextRef context, CGFloat r, CGFloat g, CGFloat b
 
 bool CGContextIsDirty(CGContextRef context) {
     return true;
-    UNIMPLEMENTED();
-    return StubReturn();
 }
 
 void CGContextSetDirty(CGContextRef context, bool dirty) {
@@ -1500,7 +1503,7 @@ CGContextRef _CGBitmapContextCreateWithTexture(int width, int height, DisplayTex
     ComPtr<ID2D1RenderTarget> renderTarget = newImage->Backing()->GetRenderTarget();
 
     __CGBitmapContext* context = _CFRuntimeCreateInstance<__CGBitmapContext>(__CGBitmapContextGetTypeID());
-    __CGContextInitializeWithRenderTarget(context, renderTarget.Get());
+    __CGContextInitWithRenderTarget(context, renderTarget.Get());
 
     context->_bitmapImpl.image.reset(newImage); // Consumes +1 reference.
     return context;

@@ -19,6 +19,7 @@
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CoreGraphicsExport.h>
 
+// clang-format off
 typedef enum {
 //  CG Drawing Bitfield   |STROKE|   |FILL  |   |EO    |
     kCGPathStroke =       (1 << 0),
@@ -27,6 +28,7 @@ typedef enum {
     kCGPathEOFill =                  (1 << 1) | (1 << 2),
     kCGPathEOFillStroke = (1 << 0) | (1 << 1) | (1 << 2),
 } CGPathDrawingMode;
+// clang-format on
 
 typedef enum {
     kCGPathElementMoveToPoint,
