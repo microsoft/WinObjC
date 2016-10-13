@@ -38,6 +38,7 @@ public:
 
     virtual DisplayNode* CreateDisplayNode() = 0;
     virtual Microsoft::WRL::ComPtr<IInspectable> GetXamlLayoutElement(DisplayNode*) = 0;
+    virtual Microsoft::WRL::ComPtr<IInspectable> GetXamlContentElement(DisplayNode* displayNode) = 0;
     virtual std::shared_ptr<DisplayTransaction> CreateDisplayTransaction() = 0;
     virtual void QueueDisplayTransaction(const std::shared_ptr<DisplayTransaction>& transaction,
                                          const std::shared_ptr<DisplayTransaction>& onTransaction) = 0;
