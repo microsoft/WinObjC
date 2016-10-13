@@ -18,6 +18,16 @@
 #import <CFFoundationInternal.h>
 #import <BridgeHelpers.h>
 
+// Only exists to support the WinObjC-only [UIFont initWithCoder:]
+#pragma region UIFontPrototype
+@implementation UIFontPrototype
+
+PROTOTYPE_CLASS_REQUIRED_IMPLS(UICTFont)
+
+@end
+#pragma endregion
+
+#pragma region UICTFont
 @implementation UICTFont
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CTFontRef, CTFontGetTypeID, UIFont, UICTFont)
@@ -83,3 +93,4 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CTFontRef, CTFontGetTypeID, UIFont, UICTFont)
 }
 
 @end
+#pragma endregion
