@@ -59,8 +59,6 @@ private:
 #define MAX_CG_STATES 16
 
 class CGContextImpl {
-    __CGCONTEXTIMPL_TEST_FRIENDS;
-
 protected:
     CGContextRef _rootContext;
     CGImageRef _imgDest;

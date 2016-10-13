@@ -22,7 +22,7 @@
 #import <Starboard.h>
 #import <TestFramework.h>
 
-TEST(CGBitmapContext, BitmapInfoAPIs_CMYK) {
+DISABLED_TEST(CGBitmapContext, BitmapInfoAPIs_CMYK) {
     CGColorSpaceRef cmykColorSpace = CGColorSpaceCreateDeviceCMYK();
     CGContextRef context = CGBitmapContextCreate(0, 0, 0, 8, 0, cmykColorSpace, 0);
 
@@ -44,7 +44,7 @@ TEST(CGBitmapContext, BitmapInfoAPIs_CMYK) {
     CGContextRelease(context);
 }
 
-TEST(CGBitmapContext, BitmapInfoAPIs_RGB) {
+DISABLED_TEST(CGBitmapContext, BitmapInfoAPIs_RGB) {
     CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = CGBitmapContextCreate(0, 0, 0, 8, 0, rgbColorSpace, 0);
 
@@ -56,7 +56,7 @@ TEST(CGBitmapContext, BitmapInfoAPIs_RGB) {
     CGContextRelease(context);
 }
 
-TEST(CGBitmapContext, BitmapInfoAPIs_Gray) {
+DISABLED_TEST(CGBitmapContext, BitmapInfoAPIs_Gray) {
     CGColorSpaceRef grayColorSpace = CGColorSpaceCreateDeviceGray();
     CGContextRef context = CGBitmapContextCreate(0, 0, 0, 8, 0, grayColorSpace, 0);
 
