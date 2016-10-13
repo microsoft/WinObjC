@@ -588,6 +588,7 @@ static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometr
     FAIL_FAST_IF_FAILED(renderTarget.As(&deviceContext));
 
     D2D1_SIZE_F targetSize = renderTarget->GetSize();
+    //D2D1_SIZE_U unscaledTargetSize = renderTarget->GetPixelSize();
     ComPtr<ID2D1Image> originalTarget;
     deviceContext->GetTarget(&originalTarget);
 
@@ -599,6 +600,9 @@ static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometr
 
     CGAffineTransform& currentTransform = currentState.transform;
     CGAffineTransform transform = CGAffineTransformScale(currentTransform, 1.0, -1.0);
+    // undo the scale (propagated to DPI)
+    //transform = CGAffineTransformScale(transform, targetSize.width/(double)unscaledTargetSize.width, targetSize.height/(double)unscaledTargetSize.height);
+    // undo the slide (slide was in points, must be done after scale is undone)
     transform = CGAffineTransformTranslate(transform, 0., targetSize.height);
     deviceContext->SetTransform({ transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty });
 
@@ -1434,12 +1438,14 @@ CGImageRef CGBitmapContextGetImage(CGContextRef context) {
     return ((__CGBitmapContext*)context)->Impl().image.get();
 }
 
-CGContextRef _CGBitmapContextCreateWithTexture(int width, int height, DisplayTexture* texture, DisplayTextureLocking* locking) {
+CGContextRef _CGBitmapContextCreateWithTexture(
+    int width, int height, float scale, DisplayTexture* texture, DisplayTextureLocking* locking) {
     CGImageRef newImage = nullptr;
     __CGSurfaceInfo surfaceInfo = _CGSurfaceInfoInit(width, height, _ColorARGB);
     newImage = new CGGraphicBufferImage(surfaceInfo, texture, locking);
 
     ComPtr<ID2D1RenderTarget> renderTarget = newImage->Backing()->GetRenderTarget();
+    renderTarget->SetDpi(96 * scale, 96 * scale);
 
     __CGBitmapContext* context = __CGBitmapContext::CreateInstance(kCFAllocatorDefault);
     __CGContextInitWithRenderTarget(context, renderTarget.Get());

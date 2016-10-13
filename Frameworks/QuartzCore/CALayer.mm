@@ -352,14 +352,14 @@ public:
 
 static LockingBufferInterface _globallockingBufferInterface;
 
-CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
+CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float scale) {
     DisplayTexture* tex = NULL;
 
     if ([NSThread isMainThread]) {
         tex = GetCACompositor()->CreateWritableBitmapTexture32(width, height);
     }
 
-    CGContextRef ret = _CGBitmapContextCreateWithTexture(width, height, tex, &_globallockingBufferInterface);
+    CGContextRef ret = _CGBitmapContextCreateWithTexture(width, height, scale, tex, &_globallockingBufferInterface);
 
     if (tex) {
         _globallockingBufferInterface.ReleaseDisplayTexture(tex);
@@ -573,7 +573,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
             // As an optimization, CALayer would use a bitmap context with a solid background colour
             // instead of a DisplayTexture. Since bitmap contexts are currently broken as part of #1072,
             // we'll fall back to always using the writable bitmap buffer.
-            drawContext = CreateLayerContentsBitmapContext32(width, height);
+            drawContext = CreateLayerContentsBitmapContext32(width, height, priv->contentsScale);
             priv->drewOpaque = FALSE;
             priv->ownsContents = TRUE;
         }
@@ -609,10 +609,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         }
 
         if (target->Backing()->Height() != 0) {
-            CGContextTranslateCTM(drawContext, 0, float(target->Backing()->Height()));
-        }
-        if (priv->contentsScale != 1.0f) {
-            CGContextScaleCTM(drawContext, priv->contentsScale, priv->contentsScale);
+            CGContextTranslateCTM(drawContext, 0, float(target->Backing()->Height())/priv->contentsScale);
         }
 
         CGContextScaleCTM(drawContext, 1.0f, -1.0f);
