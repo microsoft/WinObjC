@@ -147,7 +147,7 @@ int ApplicationMainStart(const char* principalName,
     [displayMode _updateDisplaySettings];
 
     UIApplicationMainInit(principalClassName, delegateClassName, defaultOrientation, (int)activationType, activationArgument);
-    ScheduleMainRunLoop();
+    ScheduleMainRunLoopAsync();
 
     return 0;
 }

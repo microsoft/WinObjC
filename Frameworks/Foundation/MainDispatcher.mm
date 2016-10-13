@@ -85,6 +85,34 @@ void _DispatchMainRunLoopOnUIThread(int signaledEvent) {
 }
 
 /**
+* Private method to create the dispatcher
+*/
+void _ensureDispatcher() {
+    if (s_dispatcher == nullptr) {
+        ComPtr<ICoreWindowStatic> coreWindowStatic;
+        ComPtr<ICoreWindow> coreWindow;
+
+        THROW_IF_FAILED(
+            GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_UI_Core_CoreWindow).Get(), &coreWindowStatic));
+        THROW_IF_FAILED(coreWindowStatic->GetForCurrentThread(&coreWindow));
+        THROW_IF_FAILED(coreWindow->get_Dispatcher(&s_dispatcher));
+    }
+}
+/**
+ * Method that schedules the main runloop asynchronously on the UI thread.
+ * Note: This method always schedules the work asynchronously on the UI thread to let the caller stack unwind.
+ */
+extern "C" void ScheduleMainRunLoopAsync() {
+    auto dispatchCallback = WRLHelpers::MakeAgileCallback<IDispatchedHandler>([]() -> HRESULT {
+        ScheduleMainRunLoop();
+        return S_OK;
+    });
+    _ensureDispatcher();
+    ComPtr<IAsyncAction> asyncAction;
+    s_dispatcher->RunAsync(CoreDispatcherPriority_Normal, dispatchCallback.Get(), &asyncAction);
+}
+
+/**
  * Method that blocks on multiple events on the main runloop.
  * Because this method gets called on the main UI thread, the wait for events happens on a thread pool thread and once the wait completes
  * we schedule the main runoop to process the event back on the main UI thread.
@@ -105,16 +133,8 @@ int MainRunLoopTimedMultipleWait(EbrEvent* events, int numEvents, double timeout
             return 0;
         }
 
-        if (s_dispatcher == nullptr) {
-            ComPtr<ICoreWindowStatic> coreWindowStatic;
-            ComPtr<ICoreWindow> coreWindow;
-
-            THROW_IF_FAILED(
-                GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_UI_Core_CoreWindow).Get(), &coreWindowStatic));
-            THROW_IF_FAILED(coreWindowStatic->GetForCurrentThread(&coreWindow));
-            THROW_IF_FAILED(coreWindow->get_Dispatcher(&s_dispatcher));
-        }
-
+        _ensureDispatcher();
+        
         if (timeout == 0) {
             // Optimization to not schedule a wait on a threadpool when the timeout value passed was 0.
             _DispatchMainRunLoopOnUIThread(-1);
