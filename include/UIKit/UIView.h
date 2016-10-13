@@ -201,7 +201,7 @@ UIKIT_EXPORT_CLASS
       initialSpringVelocity:(CGFloat)velocity
                     options:(UIViewAnimationOptions)options
                  animations:(void (^)(void))animations
-                 completion:(void (^)(BOOL finished))completion STUB_METHOD;
+                 completion:(void (^)(BOOL finished))completion;
 + (void)beginAnimations:(NSString*)animationID context:(void*)context;
 + (void)commitAnimations;
 + (void)performSystemAnimation:(UISystemAnimation)animation
