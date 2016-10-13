@@ -107,7 +107,7 @@ extern "C" void ScheduleMainRunLoopAsync() {
         ScheduleMainRunLoop();
         return S_OK;
     });
-    _ensureDispatcher();
+    _EnsureDispatcher();
     ComPtr<IAsyncAction> asyncAction;
     s_dispatcher->RunAsync(CoreDispatcherPriority_Normal, dispatchCallback.Get(), &asyncAction);
 }
@@ -132,8 +132,6 @@ int MainRunLoopTimedMultipleWait(EbrEvent* events, int numEvents, double timeout
                           });
             return 0;
         }
-
-        _EnsureDispatcher();
 
         if (timeout == 0) {
             // Optimization to not schedule a wait on a threadpool when the timeout value passed was 0.
