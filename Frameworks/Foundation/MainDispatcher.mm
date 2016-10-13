@@ -133,7 +133,7 @@ int MainRunLoopTimedMultipleWait(EbrEvent* events, int numEvents, double timeout
             return 0;
         }
 
-        _ensureDispatcher();
+        _EnsureDispatcher();
 
         if (timeout == 0) {
             // Optimization to not schedule a wait on a threadpool when the timeout value passed was 0.
