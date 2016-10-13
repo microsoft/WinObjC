@@ -17,13 +17,13 @@
 #import <StubReturn.h>
 #import <CFNetwork/CFNetworkErrors.h>
 
-const CFStringRef kCFURLErrorFailingURLErrorKey = static_cast<CFStringRef>(@"kCFURLErrorFailingURLErrorKey");
-const CFStringRef kCFURLErrorFailingURLStringErrorKey = static_cast<CFStringRef>(@"kCFURLErrorFailingURLStringErrorKey");
-const CFStringRef kCFGetAddrInfoFailureKey = static_cast<CFStringRef>(@"kCFGetAddrInfoFailureKey");
-const CFStringRef kCFSOCKSStatusCodeKey = static_cast<CFStringRef>(@"kCFSOCKSStatusCodeKey");
-const CFStringRef kCFSOCKSVersionKey = static_cast<CFStringRef>(@"kCFSOCKSVersionKey");
-const CFStringRef kCFSOCKSNegotiationMethodKey = static_cast<CFStringRef>(@"kCFSOCKSNegotiationMethodKey");
-const CFStringRef kCFDNSServiceFailureKey = static_cast<CFStringRef>(@"kCFDNSServiceFailureKey");
-const CFStringRef kCFFTPStatusCodeKey = static_cast<CFStringRef>(@"kCFFTPStatusCodeKey");
-const CFStringRef kCFErrorDomainCFNetwork = static_cast<CFStringRef>(@"kCFErrorDomainCFNetwork");
-const CFStringRef kCFErrorDomainWinSock = static_cast<CFStringRef>(@"kCFErrorDomainWinSock");
+const CFStringRef kCFURLErrorFailingURLErrorKey = CFSTR("kCFURLErrorFailingURLErrorKey");
+const CFStringRef kCFURLErrorFailingURLStringErrorKey = CFSTR("kCFURLErrorFailingURLStringErrorKey");
+const CFStringRef kCFGetAddrInfoFailureKey = CFSTR("kCFGetAddrInfoFailureKey");
+const CFStringRef kCFSOCKSStatusCodeKey = CFSTR("kCFSOCKSStatusCodeKey");
+const CFStringRef kCFSOCKSVersionKey = CFSTR("kCFSOCKSVersionKey");
+const CFStringRef kCFSOCKSNegotiationMethodKey = CFSTR("kCFSOCKSNegotiationMethodKey");
+const CFStringRef kCFDNSServiceFailureKey = CFSTR("kCFDNSServiceFailureKey");
+const CFStringRef kCFFTPStatusCodeKey = CFSTR("kCFFTPStatusCodeKey");
+const CFStringRef kCFErrorDomainCFNetwork = CFSTR("kCFErrorDomainCFNetwork");
+const CFStringRef kCFErrorDomainWinSock = CFSTR("kCFErrorDomainWinSock");
