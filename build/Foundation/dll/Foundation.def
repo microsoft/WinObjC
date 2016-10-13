@@ -873,4 +873,5 @@ LIBRARY Foundation
 
         ; MainDispatcher
         ScheduleMainRunLoop
+        ScheduleMainRunLoopAsync
         SetupMainRunLoopTimedMultipleWaiter
