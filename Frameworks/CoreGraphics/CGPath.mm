@@ -52,47 +52,76 @@ struct __CGPath {
     ComPtr<ID2D1GeometrySink> _geometrySink;
 
     bool _isPathClosed;
+    bool _isFigureClosed;
     CGPoint _currentPoint;
     CGPoint _startingPoint;
+
+    // A private helper function for re-opening a path geometry. CGPath does not have a concept of an open
+    // and a closed path but D2D relies on it. A path/sink cannot be read from while the path is open
+    // thus it must be closed. However, a CGPath can be edited again after being read from so we must open
+    // the path again. This cannot be done normally, so we must create a new path with the old path information
+    // to edit.
+    void __preparePathForEditing() {
+        if (_isPathClosed) {
+            _pathGeometry.~ComPtr();
+            _geometrySink.~ComPtr();
+
+            // Re-open this geometry.
+            ComPtr<ID2D1Factory> factory = _CreateD2DFactoryInstance();
+            if (FAILED(factory->CreatePathGeometry(&_pathGeometry))) {
+                FAIL_FAST();
+            }
+            if (FAILED(_pathGeometry->Open(&_geometrySink))) {
+                FAIL_FAST();
+            }
+
+            // This path is no longer closed.
+            _isPathClosed = false;
+            // Without a new figure being created, it's by default closed
+            _isFigureClosed = true;
+        }
+    }
+
+    void __closePath() {
+        if (!_isPathClosed) {
+            __endFigure(D2D1_FIGURE_END_OPEN);
+            _geometrySink->Close();
+            _isPathClosed = true;
+        }
+    }
+
+    void __beginFigure() {
+        if (_isFigureClosed) {
+            _geometrySink->BeginFigure(D2D1::Point2F(_currentPoint.x, _currentPoint.y), D2D1_FIGURE_BEGIN_FILLED);
+            _isFigureClosed = false;
+        }
+    }
+
+    void __endFigure(D2D1_FIGURE_END figureStatus) {
+        if (!_isFigureClosed) {
+            _geometrySink->EndFigure(figureStatus);
+            _isFigureClosed = true;
+        }
+    }
 };
 
-// A private helper function for re-opening a path geometry.
-static void __preparePathForEditing(CGPathRef path) {
-    if (path->_isPathClosed) {
-        // Re-open this geometry.
-        ComPtr<ID2D1Factory> factory = _CreateD2DFactoryInstance();
-        if (FAILED(factory->CreatePathGeometry(&path->_pathGeometry))) {
-            return;
-        }
-        if (FAILED(path->_pathGeometry->Open(&path->_geometrySink))) {
-            return;
-        }
+static CFBooleanRef __CGPathEqual(CFTypeRef cf1, CFTypeRef cf2) {
+    __CGPath* path1 = (__CGPath*)cf1;
+    __CGPath* path2 = (__CGPath*)cf2;
 
-        // This path is no longer closed.
-        path->_isPathClosed = false;
-    }
-}
-
-static void __closePath(CGPathRef path) {
-    if (!path->_isPathClosed) {
-        path->_geometrySink->Close();
-        path->_isPathClosed = true;
-    }
-}
-
-static Boolean __CGPathEqual(CFTypeRef cf1, CFTypeRef cf2) {
-    struct __CGPath* path1 = (struct __CGPath*)cf1;
-    struct __CGPath* path2 = (struct __CGPath*)cf2;
-
-    return true;
+    return kCFBooleanFalse;
 }
 
 static void __CGPathInit(CFTypeRef cf) {
     CGPathRef path = (CGPathRef)cf;
     // ComPtr needs to be manually new'd, to avoid calling Create functions to an incomplete out-pointer
-    struct __CGPath* mutablePath = const_cast<struct __CGPath*>(path);
+    __CGPath* mutablePath = const_cast<__CGPath*>(path);
     new (std::addressof(mutablePath->_pathGeometry)) ComPtr<ID2D1PathGeometry>();
     new (std::addressof(mutablePath->_geometrySink)) ComPtr<ID2D1GeometrySink>();
+
+    mutablePath->_currentPoint = { 0, 0 };
+    mutablePath->_startingPoint = { 0, 0 };
+    mutablePath->_isFigureClosed = true;
 }
 
 static void __CGPathDeallocate(CFTypeRef cf) {
@@ -149,29 +178,24 @@ public:
     }
 };
 
-void _CGPathAddElement(
-    CGPathRef path, CGPathElementType type, CGPoint p0 = CGPointZero, CGPoint p1 = CGPointZero, CGPoint p2 = CGPointZero) {
-}
-
 /**
  @Status Interoperable
 */
 CGMutablePathRef CGPathCreateMutable() {
-    size_t memSize = sizeof(struct __CGPath) - sizeof(CFRuntimeBase);
+    size_t memSize = sizeof(__CGPath) - sizeof(CFRuntimeBase);
     CGPathRef ret = ((CGPathRef)(_CFRuntimeCreateInstance(kCFAllocatorDefault, CGPathGetTypeID(), memSize, NULL)));
-    struct __CGPath* mutableRet = const_cast<struct __CGPath*>(ret);
+    __CGPath* mutableRet = const_cast<__CGPath*>(ret);
 
     ComPtr<ID2D1Factory> factory = _CreateD2DFactoryInstance();
 
     if (FAILED(factory->CreatePathGeometry(&mutableRet->_pathGeometry))) {
-        return nullptr;
+        FAIL_FAST();
     }
     if (FAILED(mutableRet->_pathGeometry->Open(&mutableRet->_geometrySink))) {
-        return nullptr;
+        FAIL_FAST();
     }
 
-    mutableRet->_currentPoint = { 0, 0 };
-    mutableRet->_startingPoint = { 0, 0 };
+    factory.~ComPtr();
 
     return mutableRet;
 }
@@ -197,30 +221,15 @@ CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
         return NULL;
     }
 
-    size_t memSize = sizeof(struct __CGPath) - sizeof(CFRuntimeBase);
-    CGPathRef ret = ((CGPathRef)(_CFRuntimeCreateInstance(kCFAllocatorDefault, CGPathGetTypeID(), memSize, NULL)));
-    struct __CGPath* mutableRet = const_cast<struct __CGPath*>(ret);
+    CGMutablePathRef mutableRet = CGPathCreateMutable();
 
-    ComPtr<ID2D1Factory> factory = _CreateD2DFactoryInstance();
-
-    if (FAILED(factory->CreatePathGeometry(&mutableRet->_pathGeometry))) {
-        CFRelease(mutableRet);
-        return nullptr;
-    }
-    if (FAILED(mutableRet->_pathGeometry->Open(&mutableRet->_geometrySink))) {
-        CFRelease(mutableRet);
-        return nullptr;
-    }
-
-    __closePath(path);
+    path->__closePath();
     if (FAILED(path->_pathGeometry->Stream(mutableRet->_geometrySink.Get()))) {
-        CFRelease(mutableRet);
-        return nullptr;
+        FAIL_FAST();
     }
 
-    mutableRet->_currentPoint = { path->_currentPoint.x, path->_currentPoint.y };
-    // Always create an open copy as opening a closed copy would be more expensive.
-    mutableRet->_isPathClosed = false;
+    mutableRet->_currentPoint = path->_currentPoint;
+    mutableRet->_startingPoint = path->_startingPoint;
 
     return mutableRet;
 }
@@ -228,23 +237,20 @@ CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
 /**
  @Status Interoperable
 */
-void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* m, float x, float y) {
+void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* transform, float x, float y) {
     if (path == NULL) {
         return;
     }
 
-    __preparePathForEditing(path);
+    path->__preparePathForEditing();
 
-    CGPoint pt;
-    pt.x = x;
-    pt.y = y;
-    if (m) {
-        pt = CGPointApplyAffineTransform(pt, *m);
+    CGPoint pt = { x, y };
+    if (transform) {
+        pt = CGPointApplyAffineTransform(pt, *transform);
     }
 
-    path->_geometrySink->BeginFigure(D2D1::Point2F(path->_currentPoint.x, path->_currentPoint.y), D2D1_FIGURE_BEGIN_FILLED);
+    path->__beginFigure();
     path->_geometrySink->AddLine(D2D1::Point2F(pt.x, pt.y));
-    path->_geometrySink->EndFigure(D2D1_FIGURE_END_CLOSED);
 
     path->_currentPoint = pt;
 }
@@ -261,7 +267,7 @@ CGFloat _CGPathControlPointOffsetMultiplier(CGFloat angle) {
  @Status Caveat
  @Notes transform property not supported
 */
-void CGPathAddArcToPoint(CGMutablePathRef path, const CGAffineTransform* m, float x1, float y1, float x2, float y2, float radius) {
+void CGPathAddArcToPoint(CGMutablePathRef path, const CGAffineTransform* transform, float x1, float y1, float x2, float y2, float radius) {
     bool isEmpty = CGPathIsEmpty(path);
 
     if (isEmpty) {
@@ -290,7 +296,7 @@ void CGPathAddArcToPoint(CGMutablePathRef path, const CGAffineTransform* m, floa
 
     san = dx2 * dy0 - dx0 * dy2;
     if (san == 0) {
-        CGPathAddLineToPoint(path, m, x1, y1);
+        CGPathAddLineToPoint(path, transform, x1, y1);
         return;
     }
 
@@ -307,7 +313,7 @@ void CGPathAddArcToPoint(CGMutablePathRef path, const CGAffineTransform* m, floa
     }
     t = (dx2 * n2y - dx2 * n0y - dy2 * n2x + dy2 * n0x) / san;
     CGPathAddArc(path,
-                 m,
+                 transform,
                  (float)(x1 + radius * (t * dx0 + n0x)),
                  (float)(y1 + radius * (t * dy0 + n0y)),
                  radius,
@@ -318,7 +324,7 @@ void CGPathAddArcToPoint(CGMutablePathRef path, const CGAffineTransform* m, floa
 
 // Internal function to break down Arcs into pieces smaller than pi/2.
 void _CGPathAddArc(CGMutablePathRef path,
-                   const CGAffineTransform* m,
+                   const CGAffineTransform* transform,
                    CGFloat x,
                    CGFloat y,
                    CGFloat radius,
@@ -337,8 +343,8 @@ void _CGPathAddArc(CGMutablePathRef path,
         CGFloat midAngle = startAngle + (M_PI_2 * (delta < 0 ? -1.0f : 1.0f));
 
         // Call this function again now with the smaller arcs
-        _CGPathAddArc(path, m, x, y, radius, startAngle, midAngle, clockwise);
-        _CGPathAddArc(path, m, x, y, radius, midAngle, endAngle, clockwise);
+        _CGPathAddArc(path, transform, x, y, radius, startAngle, midAngle, clockwise);
+        _CGPathAddArc(path, transform, x, y, radius, midAngle, endAngle, clockwise);
         return;
     }
 
@@ -355,7 +361,7 @@ void _CGPathAddArc(CGMutablePathRef path,
 
     // Create the curve with the control points properly offset
     CGPathAddCurveToPoint(path,
-                          m,
+                          transform,
                           arcStart.x - (offsetMultiplier * arcStartRelative.y),
                           arcStart.y + (offsetMultiplier * arcStartRelative.x),
                           arcEnd.x + (offsetMultiplier * arcEndRelative.y),
@@ -368,7 +374,7 @@ void _CGPathAddArc(CGMutablePathRef path,
  @Status Interoperable
 */
 void CGPathAddArc(CGMutablePathRef path,
-                  const CGAffineTransform* m,
+                  const CGAffineTransform* transform,
                   CGFloat x,
                   CGFloat y,
                   CGFloat radius,
@@ -396,9 +402,9 @@ void CGPathAddArc(CGMutablePathRef path,
 
     // Either draw a line to or move to the start of the arc
     if (!CGPathIsEmpty(path)) {
-        CGPathAddLineToPoint(path, m, arcStart.x, arcStart.y);
+        CGPathAddLineToPoint(path, transform, arcStart.x, arcStart.y);
     } else {
-        CGPathMoveToPoint(path, m, arcStart.x, arcStart.y);
+        CGPathMoveToPoint(path, transform, arcStart.x, arcStart.y);
     }
 
     // Adjust the start/endangles to force the arc
@@ -410,18 +416,18 @@ void CGPathAddArc(CGMutablePathRef path,
     }
 
     // Call the internal function for breaking the arcs down into smaller segments
-    _CGPathAddArc(path, m, x, y, radius, startAngle, endAngle, clockwise);
+    _CGPathAddArc(path, transform, x, y, radius, startAngle, endAngle, clockwise);
 }
 
 /**
  @Status Interoperable
 */
-void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* m, float x, float y) {
+void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* transform, float x, float y) {
     CGPoint pt;
     pt.x = x;
     pt.y = y;
-    if (m) {
-        pt = CGPointApplyAffineTransform(pt, *m);
+    if (transform) {
+        pt = CGPointApplyAffineTransform(pt, *transform);
     }
     path->_startingPoint = pt;
     path->_currentPoint = pt;
@@ -430,30 +436,30 @@ void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* m, float 
 /**
  @Status Interoperable
 */
-void CGPathAddLines(CGMutablePathRef path, const CGAffineTransform* m, const CGPoint* points, size_t count) {
+void CGPathAddLines(CGMutablePathRef path, const CGAffineTransform* transform, const CGPoint* points, size_t count) {
     if (count == 0 || points == NULL || path == NULL) {
         return;
     }
 
-    CGPathMoveToPoint(path, m, points[0].x, points[0].y);
+    CGPathMoveToPoint(path, transform, points[0].x, points[0].y);
     for (int i = 1; i < count; i++) {
-        CGPathAddLineToPoint(path, m, points[i].x, points[i].y);
+        CGPathAddLineToPoint(path, transform, points[i].x, points[i].y);
     }
 }
 
 /**
  @Status Interoperable
 */
-void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rect) {
+void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform* transform, CGRect rect) {
     if (path == NULL) {
         return;
     }
 
-    CGPathMoveToPoint(path, m, CGRectGetMinX(rect), CGRectGetMinY(rect));
+    CGPathMoveToPoint(path, transform, CGRectGetMinX(rect), CGRectGetMinY(rect));
 
-    CGPathAddLineToPoint(path, m, CGRectGetMaxX(rect), CGRectGetMinY(rect));
-    CGPathAddLineToPoint(path, m, CGRectGetMaxX(rect), CGRectGetMaxY(rect));
-    CGPathAddLineToPoint(path, m, CGRectGetMinX(rect), CGRectGetMaxY(rect));
+    CGPathAddLineToPoint(path, transform, CGRectGetMaxX(rect), CGRectGetMinY(rect));
+    CGPathAddLineToPoint(path, transform, CGRectGetMaxX(rect), CGRectGetMaxY(rect));
+    CGPathAddLineToPoint(path, transform, CGRectGetMinX(rect), CGRectGetMaxY(rect));
     CGPathCloseSubpath(path);
 }
 
@@ -461,14 +467,14 @@ void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rec
  @Status Stub
  @Notes
 */
-void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* m, CGPathRef toAdd) {
+void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* transform, CGPathRef toAdd) {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rect) {
+void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* transform, CGRect rect) {
     if (path == NULL) {
         return;
     }
@@ -488,13 +494,13 @@ void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* m, C
     CGFloat maxY = CGRectGetMaxY(rect);
 
     // Move to the center of the ellipse
-    CGPathMoveToPoint(path, m, maxX, midY);
+    CGPathMoveToPoint(path, transform, maxX, midY);
 
     // Add the 4 curves for the ellipse
-    CGPathAddCurveToPoint(path, m, maxX, midY + yControlPointOffset, midX + xControlPointOffset, maxY, midX, maxY);
-    CGPathAddCurveToPoint(path, m, midX - xControlPointOffset, maxY, minX, midY + yControlPointOffset, minX, midY);
-    CGPathAddCurveToPoint(path, m, minX, midY - yControlPointOffset, midX - xControlPointOffset, minY, midX, minY);
-    CGPathAddCurveToPoint(path, m, midX + xControlPointOffset, minY, maxX, midY - yControlPointOffset, maxX, midY);
+    CGPathAddCurveToPoint(path, transform, maxX, midY + yControlPointOffset, midX + xControlPointOffset, maxY, midX, maxY);
+    CGPathAddCurveToPoint(path, transform, midX - xControlPointOffset, maxY, minX, midY + yControlPointOffset, minX, midY);
+    CGPathAddCurveToPoint(path, transform, minX, midY - yControlPointOffset, midX - xControlPointOffset, minY, midX, minY);
+    CGPathAddCurveToPoint(path, transform, midX + xControlPointOffset, minY, maxX, midY - yControlPointOffset, maxX, midY);
 
     CGPathCloseSubpath(path);
 }
@@ -503,11 +509,15 @@ void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* m, C
  @Status Interoperable
 */
 void CGPathCloseSubpath(CGMutablePathRef path) {
-    // If we need to, close the path.
-    if (path->_startingPoint.x != path->_currentPoint.x || path->_startingPoint.y != path->_currentPoint.y) {
+    // We cannot use end figure with the built in way of closing a sub path due to an issue with reading information
+    // from a D2DGeometry. If a figure is open and any information is requested from the path, the call will fail with
+    // a bad state. Because of this, we have to ensure that any open figures are closed before continuing. The problem this
+    // causes is that the sub path is no longer being tracked via figures and we must close the sub path ourselves b
+    // drawing a line to the original point of the path.
+    if (!CGPointEqualToPoint(path->_currentPoint, path->_startingPoint)) {
         CGPathAddLineToPoint(path, nullptr, path->_startingPoint.x, path->_startingPoint.y);
     }
-    __closePath(path);
+    path->__endFigure(D2D1_FIGURE_END_CLOSED);
 }
 
 /**
@@ -517,10 +527,10 @@ void CGPathCloseSubpath(CGMutablePathRef path) {
 CGRect CGPathGetBoundingBox(CGPathRef path) {
     D2D1_RECT_F bounds;
 
-    __closePath(path);
+    path->__closePath();
 
     if (FAILED(path->_pathGeometry->GetBounds(D2D1::IdentityMatrix(), &bounds))) {
-        return CGRectMake(0, 0, 0, 0);
+        FAIL_FAST();
     }
 
     CGFloat x = bounds.left;
@@ -568,7 +578,7 @@ CGPathRef CGPathRetain(CGPathRef path) {
 @Status Stub
 @Notes
 */
-void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* m, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y) {
+void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* transform, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y) {
     UNIMPLEMENTED();
 }
 
@@ -576,8 +586,14 @@ void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* m
 @Status Stub
 @Notes
 */
-void CGPathAddCurveToPoint(
-    CGMutablePathRef path, const CGAffineTransform* m, CGFloat cp1x, CGFloat cp1y, CGFloat cp2x, CGFloat cp2y, CGFloat x, CGFloat y) {
+void CGPathAddCurveToPoint(CGMutablePathRef path,
+                           const CGAffineTransform* transform,
+                           CGFloat cp1x,
+                           CGFloat cp1y,
+                           CGFloat cp2x,
+                           CGFloat cp2y,
+                           CGFloat x,
+                           CGFloat y) {
     UNIMPLEMENTED();
 }
 
@@ -613,7 +629,7 @@ CGRect CGPathGetPathBoundingBox(CGPathRef self) {
  @Status Stub
  @Notes
 */
-void CGPathAddRects(CGMutablePathRef path, const CGAffineTransform* m, const CGRect* rects, size_t count) {
+void CGPathAddRects(CGMutablePathRef path, const CGAffineTransform* transform, const CGRect* rects, size_t count) {
     UNIMPLEMENTED();
 }
 
@@ -621,8 +637,13 @@ void CGPathAddRects(CGMutablePathRef path, const CGAffineTransform* m, const CGR
  @Status Stub
  @Notes
 */
-void CGPathAddRelativeArc(
-    CGMutablePathRef path, const CGAffineTransform* matrix, CGFloat x, CGFloat y, CGFloat radius, CGFloat startAngle, CGFloat delta) {
+void CGPathAddRelativeArc(CGMutablePathRef path,
+                          const CGAffineTransform* transformatrix,
+                          CGFloat x,
+                          CGFloat y,
+                          CGFloat radius,
+                          CGFloat startAngle,
+                          CGFloat delta) {
     UNIMPLEMENTED();
 }
 
@@ -667,9 +688,9 @@ void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function) {
  @Status Interoperable
  @Notes
 */
-bool CGPathContainsPoint(CGPathRef path, const CGAffineTransform* m, CGPoint point, bool eoFill) {
-    if (m) {
-        point = CGPointApplyAffineTransform(point, *m);
+bool CGPathContainsPoint(CGPathRef path, const CGAffineTransform* transform, CGPoint point, bool eoFill) {
+    if (transform) {
+        point = CGPointApplyAffineTransform(point, *transform);
     }
     // check if the point is outside this box already, if it is, return false
     CGRect boundingBox = CGPathGetBoundingBox(path);
@@ -889,55 +910,3 @@ public:
         return true;
     }
 };
-
-CGRect _CGPathFitRect(CGPathRef pathref, CGRect rect, CGSize maxSize, float padding) {
-// This function is disabled for the time being due to our inability to access individual elements of a path at this time.
-#if 0
-    CGPathRef path = pathref;
-    
-    ScanlineCalculator s;
-    s.SetExtents(rect.origin.y, maxSize.width, rect.size.height, padding);
-    
-    CGPoint curPoint = { 0, 0 };
-    CGPoint startPoint = { 0, 0 };
-    bool startPointSet = false;
-    
-    for (unsigned i = 0; i < path->_count; i++) {
-        switch (path->_elements[i].type) {
-            case kCGPathElementMoveToPoint:
-                if (!startPointSet) {
-                    startPoint = path->_elements[i].points[0];
-                    startPointSet = true;
-                }
-                curPoint = path->_elements[i].points[0];
-                break;
-    
-            case kCGPathElementAddLineToPoint:
-                if (!startPointSet) {
-                    startPoint = path->_elements[i].points[0];
-                    startPointSet = true;
-                }
-                s.AddLine(curPoint, path->_elements[i].points[0]);
-                curPoint = path->_elements[i].points[0];
-                break;
-    
-            case kCGPathElementCloseSubpath:
-                if (startPointSet) {
-                    s.AddLine(curPoint, startPoint);
-                }
-                break;
-    
-            default:
-                // The other path types don't effect bounding rects.
-                break;
-        }
-    }
-    
-    if (s.FindLargestRect(rect.origin, rect.size.height, rect)) {
-        return rect;
-    } else {
-        return CGRectMake(0, 0, 0, 0);
-    }
-#endif
-    return { 0, 0, 0, 0 };
-}

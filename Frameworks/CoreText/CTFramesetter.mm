@@ -61,7 +61,7 @@ CTFramesetterRef CTFramesetterCreateWithAttributedString(CFAttributedStringRef s
 CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange stringRange, CGPathRef path, CFDictionaryRef frameAttributes) {
     CGRect frameSize;
 
-    // TODO: Replace with public functions or workaround.
+    // TODO 1143: Replace with public functions or workaround.
     // _CGPathGetBoundingBoxInternal(path, &frameSize);
 
     _CTFrame* ret = __CreateFrame(static_cast<_CTFramesetter*>(framesetter), frameSize, stringRange);

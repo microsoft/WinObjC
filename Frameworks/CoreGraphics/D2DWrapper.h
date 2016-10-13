@@ -21,4 +21,4 @@
 #import <D2d1.h>
 #include <COMIncludes_End.h>
 
-Microsoft::WRL::ComPtr<ID2D1Factory> _CreateD2DFactoryInstance();
+Microsoft::WRL::ComPtr<ID2D1Factory> _GetD2DFactoryInstance();

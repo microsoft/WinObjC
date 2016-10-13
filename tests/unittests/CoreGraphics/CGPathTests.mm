@@ -594,7 +594,7 @@ void EXPECT_SIZEEQ(CGSize pathSize, CGFloat width, CGFloat height) {
 }
 
 // Simple tests for the status of a CGPath during the CGPath rework into D2D.
-TEST(CGPath, CGPathD2DSimpleCreation) {
+TEST(CGPath, CGPathSimpleCreation) {
     CGMutablePathRef path = CGPathCreateMutable();
     EXPECT_NE(nullptr, path);
 
@@ -610,7 +610,7 @@ TEST(CGPath, CGPathD2DSimpleCreation) {
     EXPECT_POINTEQ(CGPathGetCurrentPoint(pathCopy), 200, 200);
 }
 
-TEST(CGPath, CGPathD2DSimpleLines) {
+TEST(CGPath, CGPathSimpleLines) {
     CGMutablePathRef path = CGPathCreateMutable();
     CGPathMoveToPoint(path, NULL, 50, 50);
     CGPathAddLineToPoint(path, NULL, 25, 25);
