@@ -18,8 +18,8 @@
 #import <CFNetwork/CFHTTPMessage.h>
 #import <CFNetwork/CFHTTPAuthentication.h>
 
-const CFStringRef kCFHTTPVersion1_0 = static_cast<CFStringRef>(@"kCFHTTPVersion1_0");
-const CFStringRef kCFHTTPVersion1_1 = static_cast<CFStringRef>(@"kCFHTTPVersion1_1");
+const CFStringRef kCFHTTPVersion1_0 = CFSTR("kCFHTTPVersion1_0");
+const CFStringRef kCFHTTPVersion1_1 = CFSTR("kCFHTTPVersion1_1");
 
 /**
  @Status Stub

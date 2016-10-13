@@ -25,7 +25,7 @@
 #import <Foundation/Foundation.h>
 #import <TestFramework.h>
 
-BOOL ensureFiles(NSArray* fileNames) {
+BOOL ensureFilesWithContents(NSArray* fileNames, NSData* contents) {
     BOOL result = YES;
     NSFileManager* fm = [NSFileManager defaultManager];
     for (NSString* name in fileNames) {
@@ -52,10 +52,14 @@ BOOL ensureFiles(NSArray* fileNames) {
                 return NO;
             }
 
-            result = result && [fm createFileAtPath:name contents:nil attributes:nil];
+            result = result && [fm createFileAtPath:name contents:contents attributes:nil];
         }
     }
     return result;
+}
+
+BOOL ensureFiles(NSArray* fileNames) {
+    return ensureFilesWithContents(fileNames, nil);
 }
 
 NSBundle* testBundle() {
