@@ -12,6 +12,10 @@
 		2312E1321DAD95AC00998C74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2312E1311DAD95AC00998C74 /* Assets.xcassets */; };
 		2312E13E1DAD988B00998C74 /* MenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E13D1DAD988B00998C74 /* MenuTableViewController.m */; };
 		2312E1401DADA53D00998C74 /* CoreAnimationTest.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2312E13F1DADA53D00998C74 /* CoreAnimationTest.storyboard */; };
+		2312E1451DADC5C400998C74 /* ProgrammaticViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E1421DADC5C400998C74 /* ProgrammaticViewController.m */; };
+		2312E1461DADC5C400998C74 /* StoryBoardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E1441DADC5C400998C74 /* StoryBoardViewController.m */; };
+		2312E1481DAED8D100998C74 /* CALayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E1471DAED8D100998C74 /* CALayerViewController.m */; };
+		2312E14C1DAEEE2800998C74 /* safe.png in Resources */ = {isa = PBXBuildFile; fileRef = 2312E14B1DAEEE2800998C74 /* safe.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +28,13 @@
 		2312E13C1DAD988B00998C74 /* MenuTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuTableViewController.h; sourceTree = "<group>"; };
 		2312E13D1DAD988B00998C74 /* MenuTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuTableViewController.m; sourceTree = "<group>"; };
 		2312E13F1DADA53D00998C74 /* CoreAnimationTest.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = CoreAnimationTest.storyboard; sourceTree = "<group>"; };
+		2312E1411DADC5C400998C74 /* ProgrammaticViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgrammaticViewController.h; sourceTree = "<group>"; };
+		2312E1421DADC5C400998C74 /* ProgrammaticViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgrammaticViewController.m; sourceTree = "<group>"; };
+		2312E1431DADC5C400998C74 /* StoryBoardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StoryBoardViewController.h; sourceTree = "<group>"; };
+		2312E1441DADC5C400998C74 /* StoryBoardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StoryBoardViewController.m; sourceTree = "<group>"; };
+		2312E1471DAED8D100998C74 /* CALayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CALayerViewController.m; sourceTree = "<group>"; };
+		2312E1491DAED90100998C74 /* CALayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CALayerViewController.h; sourceTree = "<group>"; };
+		2312E14B1DAEEE2800998C74 /* safe.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = safe.png; path = CoreAnimationTest/Images/safe.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +51,7 @@
 		2312E1191DAD95AB00998C74 = {
 			isa = PBXGroup;
 			children = (
+				2312E14A1DAEEE1800998C74 /* Images */,
 				2312E1241DAD95AC00998C74 /* CoreAnimationTest */,
 				2312E1231DAD95AC00998C74 /* Products */,
 			);
@@ -59,10 +71,16 @@
 				2312E1281DAD95AC00998C74 /* AppDelegate.h */,
 				2312E1291DAD95AC00998C74 /* AppDelegate.m */,
 				2312E1311DAD95AC00998C74 /* Assets.xcassets */,
+				2312E1491DAED90100998C74 /* CALayerViewController.h */,
+				2312E1471DAED8D100998C74 /* CALayerViewController.m */,
 				2312E13F1DADA53D00998C74 /* CoreAnimationTest.storyboard */,
 				2312E1361DAD95AC00998C74 /* Info.plist */,
 				2312E13C1DAD988B00998C74 /* MenuTableViewController.h */,
 				2312E13D1DAD988B00998C74 /* MenuTableViewController.m */,
+				2312E1411DADC5C400998C74 /* ProgrammaticViewController.h */,
+				2312E1421DADC5C400998C74 /* ProgrammaticViewController.m */,
+				2312E1431DADC5C400998C74 /* StoryBoardViewController.h */,
+				2312E1441DADC5C400998C74 /* StoryBoardViewController.m */,
 				2312E1251DAD95AC00998C74 /* Supporting Files */,
 			);
 			path = CoreAnimationTest;
@@ -74,6 +92,14 @@
 				2312E1261DAD95AC00998C74 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2312E14A1DAEEE1800998C74 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				2312E14B1DAEEE2800998C74 /* safe.png */,
+			);
+			name = Images;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -136,6 +162,7 @@
 			files = (
 				2312E1401DADA53D00998C74 /* CoreAnimationTest.storyboard in Resources */,
 				2312E1321DAD95AC00998C74 /* Assets.xcassets in Resources */,
+				2312E14C1DAEEE2800998C74 /* safe.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,9 +173,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2312E1451DADC5C400998C74 /* ProgrammaticViewController.m in Sources */,
 				2312E12A1DAD95AC00998C74 /* AppDelegate.m in Sources */,
 				2312E13E1DAD988B00998C74 /* MenuTableViewController.m in Sources */,
 				2312E1271DAD95AC00998C74 /* main.m in Sources */,
+				2312E1481DAED8D100998C74 /* CALayerViewController.m in Sources */,
+				2312E1461DADC5C400998C74 /* StoryBoardViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,13 +16,15 @@
 
 #import "ProgrammaticViewController.h"
 
+#import "CALayerViewController.h"
+
 @implementation ProgrammaticViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
     // CALayer
-    //[self addMenuItemViewController:[[UIViewController alloc] init] andTitle:@"CALayer"];
+    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle:@"CALayer"];
 }
 
 - (void)didReceiveMemoryWarning {
