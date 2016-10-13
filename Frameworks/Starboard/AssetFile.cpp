@@ -325,13 +325,10 @@ int EbrStat(const char* filename, struct stat* ret) {
         return -1;
     }
 
-    char* assetName = fixedName + 1;
-
     if (EbrIsDir(filename)) {
         memset(ret, 0, sizeof(struct stat));
         ret->st_size = 0;
         ret->st_mode = 0x1B6 | 0040000;
-        // MurmurHash3_x86_32(assetName, strlen(assetName), 0, &ret->st_ino);
         return 0;
     }
 
@@ -350,13 +347,10 @@ int EbrStat64i32(const char* filename, struct _stat64i32* ret) {
         return -1;
     }
 
-    char* assetName = fixedName + 1;
-
     if (EbrIsDir(filename)) {
         memset(ret, 0, sizeof(struct _stat64i32));
         ret->st_size = 0;
         ret->st_mode = 0x1B6 | 0040000;
-        // MurmurHash3_x86_32(assetName, strlen(assetName), 0, &ret->st_ino);
         return 0;
     }
 

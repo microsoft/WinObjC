@@ -126,6 +126,7 @@ static void constructCFFD(_CFFileStreamContext *fileStream, Boolean forRead, str
 static Boolean constructFD(_CFFileStreamContext *fileStream, CFStreamError *error, Boolean forRead, struct _CFStream *stream) {
     int flags = forRead ? O_RDONLY : (O_CREAT | O_TRUNC | O_WRONLY);
 
+    // WINOBJC: improve code reuse here by letting the underlying open implementation handle the narrow/wide conversions etc.
     char path[CFMaxPathSize];
 #if DEPLOYMENT_TARGET_WINDOWS
     flags |= (_O_BINARY|_O_NOINHERIT);

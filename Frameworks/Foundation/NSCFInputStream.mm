@@ -19,8 +19,6 @@
 #import <CoreFoundation/CFStream.h>
 #import <CFFoundationInternal.h>
 
-#import <StubReturn.h>
-
 @interface NSCFInputStream : NSInputStream
 @end
 
@@ -106,11 +104,10 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFReadStreamRef, CFReadStreamGetTypeID, NSURL, NSCF
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (BOOL)getBuffer:(uint8_t* _Nullable*)buffer length:(NSUInteger*)len {
-    
     CFIndex length;
     const UInt8* result = CFReadStreamGetBuffer(static_cast<CFReadStreamRef>(self), 0, &length);
     if (result) {

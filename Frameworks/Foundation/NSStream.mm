@@ -20,8 +20,6 @@
 #include "Foundation/NSString.h"
 #include "Foundation/NSStream.h"
 #include "NSSocket.h"
-#include "NSInputStream_socket.h"
-#include "NSOutputStream_socket.h"
 #include "NSRaise.h"
 
 #include <CoreFoundation/CFStream.h>

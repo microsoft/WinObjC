@@ -19,8 +19,6 @@
 #import <CoreFoundation/CFStream.h>
 #import <CFFoundationInternal.h>
 
-#import <StubReturn.h>
-
 @interface NSCFOutputStream : NSOutputStream
 @end
 
@@ -38,14 +36,14 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFOutputStream)
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (instancetype)initToBuffer:(uint8_t*)buffer capacity:(NSUInteger)capacity {
     return reinterpret_cast<NSOutputStreamPrototype*>(CFWriteStreamCreateWithBuffer(nullptr, buffer, capacity));
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (instancetype)initWithURL:(NSURL*)url append:(BOOL)shouldAppend {
     CFWriteStreamRef outputStream = CFWriteStreamCreateWithFile(nullptr, static_cast<CFURLRef>(url));

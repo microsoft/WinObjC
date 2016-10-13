@@ -29,9 +29,7 @@
 static NSString* createTestFile(NSString* path, NSData* contents) {
     auto fileNames = @[ [NSString stringWithFormat:@"/tmp/TestFoundation_Playground_%@/%@", [[NSUUID UUID] UUIDString], path] ];
 
-    if (ensureFilesWithContents(fileNames, contents))
-
-    {
+    if (ensureFilesWithContents(fileNames, contents)) {
         return fileNames[0];
     } else {
         return nil;
@@ -207,7 +205,8 @@ TEST(NSStream, OutputStreamCreationToMemory) {
     auto dataWritten = [outputStream propertyForKey:NSStreamDataWrittenToMemoryStreamKey];
     if (auto nsdataWritten = ([dataWritten isKindOfClass:[NSData class]] ? (NSData*)dataWritten : nil)) {
         [nsdataWritten getBytes:buffer length:result];
-        ASSERT_OBJCEQ([[[NSString alloc] initWithBytes:buffer length:_countof(buffer) encoding:NSUTF8StringEncoding] autorelease], myString);
+        ASSERT_OBJCEQ([[[NSString alloc] initWithBytes:buffer length:_countof(buffer) encoding:NSUTF8StringEncoding] autorelease],
+                      myString);
         [outputStream close];
     } else {
         ASSERT_TRUE_MSG(false, @"Unable to get data from memeory.");

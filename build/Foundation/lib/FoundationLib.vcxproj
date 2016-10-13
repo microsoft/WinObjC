@@ -83,7 +83,6 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSIndexSet.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSInputSource.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSInputStream.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSInputStream_socket.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSInvocation.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSInvocationOperation.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSJSONSerialization.mm" />
@@ -110,7 +109,6 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSOrderedPerform.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSOrderedSet.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSOutputStream.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSOutputStream_socket.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSPathUtilities.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSPathUtilitiesInternal.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSPersistentDomain.mm" />
@@ -266,9 +264,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSColor.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSConstantString.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDelayedPerform.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSInputStream_socket.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSOrderedPerform.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSOutputStream_socket.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSPathUtilitiesInternal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSPersistentDomain.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSPropertyListWriter_binary.h" />
