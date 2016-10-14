@@ -28,7 +28,7 @@
 #import "CGColorSpaceInternal.h"
 #import "CGContextInternal.h"
 
-#import <CFRuntime.h>
+#import <CFCppBase.h>
 
 #include <COMIncludes.h>
 #import <d2d1.h>
@@ -86,35 +86,30 @@ struct __CGContextDrawingState {
     CGFloat alpha = 1.0f;
 };
 
-struct __CGContext {
-    struct __CGContextImpl {
-        ComPtr<ID2D1RenderTarget> renderTarget{ nullptr };
+struct __CGContextImpl {
+    ComPtr<ID2D1RenderTarget> renderTarget{ nullptr };
 
-        // Calculated at creation time, this transform flips CG's drawing commands,
-        // anchored in the bottom left, to D2D's top-left coordinate system.
-        CGAffineTransform cgCompatibilityTransform{ CGAffineTransformIdentity };
+    // Calculated at creation time, this transform flips CG's drawing commands,
+    // anchored in the bottom left, to D2D's top-left coordinate system.
+    CGAffineTransform cgCompatibilityTransform{ CGAffineTransformIdentity };
 
-        std::stack<__CGContextDrawingState> stateStack{};
+    std::stack<__CGContextDrawingState> stateStack{};
 
-        woc::unique_cf<CGMutablePathRef> currentPath{ nullptr };
+    woc::unique_cf<CGMutablePathRef> currentPath{ nullptr };
 
-        // TODO(DH) GH#1070 evaluate these defaults; they should be set by context creators.
-        bool allowsAntialiasing = false;
-        bool allowsFontSmoothing = false;
-        bool allowsFontSubpixelPositioning = false;
-        bool allowsFontSubpixelQuantization = false;
+    // TODO(DH) GH#1070 evaluate these defaults; they should be set by context creators.
+    bool allowsAntialiasing = false;
+    bool allowsFontSmoothing = false;
+    bool allowsFontSubpixelPositioning = false;
+    bool allowsFontSubpixelQuantization = false;
 
-        __CGContextImpl() {
-            // Set up a default/baseline state
-            stateStack.emplace();
-        }
-    };
+    __CGContextImpl() {
+        // Set up a default/baseline state
+        stateStack.emplace();
+    }
+};
 
-    CFRuntimeBase _base;
-
-    // Use an inline impl struct so that we don't need to placement new each element.
-    __CGContextImpl _impl;
-
+struct __CGContext: CoreFoundation::CppBase<__CGContext, __CGContextImpl> {
     inline ComPtr<ID2D1RenderTarget>& RenderTarget() {
         return _impl.renderTarget;
     }
@@ -139,36 +134,11 @@ struct __CGContext {
 };
 
 #pragma region CFRuntimeClass
-static void __CGContextInit(CFTypeRef cf) {
-    CGContextRef context = (CGContextRef)cf;
-    struct __CGContext* mutableContext = const_cast<struct __CGContext*>(context);
-    new (&mutableContext->_impl) __CGContext::__CGContextImpl();
-}
-
-static void __CGContextDeallocate(CFTypeRef cf) {
-    CGContextRef context = (CGContextRef)cf;
-    context->_impl.~__CGContextImpl();
-}
-
-template <typename T, typename PT = typename std::remove_pointer<T>::type*, typename B = decltype(std::declval<PT>()->_base)>
-static PT _CFRuntimeCreateInstance(CFTypeID typeID, CFAllocatorRef allocator = kCFAllocatorDefault) {
-    return static_cast<PT>(
-        const_cast<void*>(_CFRuntimeCreateInstance(allocator, typeID, sizeof(typename std::remove_pointer<T>::type) - sizeof(B), nullptr)));
-}
-
 /**
  @Status Interoperable
 */
 CFTypeID CGContextGetTypeID() {
-    static CFTypeID __kCGContextTypeID = _kCFRuntimeNotATypeID;
-    static const CFRuntimeClass __CGContextClass = { 0,       "CGContext", __CGContextInit, nullptr, __CGContextDeallocate,
-                                                     nullptr, nullptr,     nullptr,         nullptr };
-
-    static dispatch_once_t initOnce = 0;
-    dispatch_once(&initOnce, ^{
-        __kCGContextTypeID = _CFRuntimeRegisterClass(&__CGContextClass);
-    });
-    return __kCGContextTypeID;
+    return __CGContext::GetTypeID();
 }
 #pragma endregion
 
@@ -187,7 +157,7 @@ static void __CGContextInitWithRenderTarget(CGContextRef context, ID2D1RenderTar
 
 CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget) {
     FAIL_FAST_HR_IF_NULL(E_INVALIDARG, renderTarget);
-    CGContextRef context = _CFRuntimeCreateInstance<CGContextRef>(CGContextGetTypeID());
+    CGContextRef context = __CGContext::CreateInstance(kCFAllocatorDefault);
     __CGContextInitWithRenderTarget(context, renderTarget);
     return context;
 }
@@ -1384,42 +1354,11 @@ CGImageRef CGJPEGImageCreateFromData(NSData* data) {
 }
 
 #pragma region CGBitmapContext
-struct __CGBitmapContext : __CGContext {
-    struct __CGBitmapContextImpl {
-        woc::unique_cf<CGImageRef> image;
-    };
-
-    __CGBitmapContextImpl _bitmapImpl;
+struct __CGBitmapContextImpl {
+    woc::unique_cf<CGImageRef> image;
 };
 
-static void __CGBitmapContextInit(CFTypeRef cf) {
-    // Delegate to parent constructor.
-    __CGContextInit(cf);
-
-    __CGBitmapContext* context = (__CGBitmapContext*)cf;
-    struct __CGBitmapContext* mutableContext = const_cast<struct __CGBitmapContext*>(context);
-    new (&mutableContext->_bitmapImpl) __CGBitmapContext::__CGBitmapContextImpl();
-}
-
-static void __CGBitmapContextDeallocate(CFTypeRef cf) {
-    __CGBitmapContext* context = (__CGBitmapContext*)cf;
-    context->_bitmapImpl.~__CGBitmapContextImpl();
-
-    // Delegate to parent destructor.
-    __CGContextDeallocate(cf);
-}
-
-static CFTypeID __CGBitmapContextGetTypeID() {
-    static CFTypeID __kCGBitmapContextTypeID = _kCFRuntimeNotATypeID;
-    static const CFRuntimeClass __CGBitmapContextClass =
-        { 0, "CGBitmapContext", __CGBitmapContextInit, nullptr, __CGBitmapContextDeallocate, nullptr, nullptr, nullptr, nullptr };
-
-    static dispatch_once_t initOnce = 0;
-    dispatch_once(&initOnce, ^{
-        __kCGBitmapContextTypeID = _CFRuntimeRegisterClass(&__CGBitmapContextClass);
-    });
-    return __kCGBitmapContextTypeID;
-}
+struct __CGBitmapContext : CoreFoundation::CppBase<__CGBitmapContext, __CGBitmapContextImpl, __CGContext> { };
 
 /**
  @Status Caveat
@@ -1488,11 +1427,11 @@ CGImageRef CGBitmapContextCreateImage(CGContextRef context) {
 }
 
 CGImageRef CGBitmapContextGetImage(CGContextRef context) {
-    if (CFGetTypeID(context) != __CGBitmapContextGetTypeID()) {
+    if (CFGetTypeID(context) != __CGBitmapContext::GetTypeID()) {
         TraceError(TAG, L"Image requested from non-bitmap CGContext.");
         return nullptr;
     }
-    return ((__CGBitmapContext*)context)->_bitmapImpl.image.get();
+    return ((__CGBitmapContext*)context)->Impl().image.get();
 }
 
 CGContextRef _CGBitmapContextCreateWithTexture(int width, int height, DisplayTexture* texture, DisplayTextureLocking* locking) {
@@ -1502,10 +1441,10 @@ CGContextRef _CGBitmapContextCreateWithTexture(int width, int height, DisplayTex
 
     ComPtr<ID2D1RenderTarget> renderTarget = newImage->Backing()->GetRenderTarget();
 
-    __CGBitmapContext* context = _CFRuntimeCreateInstance<__CGBitmapContext>(__CGBitmapContextGetTypeID());
+    __CGBitmapContext* context = __CGBitmapContext::CreateInstance(kCFAllocatorDefault);
     __CGContextInitWithRenderTarget(context, renderTarget.Get());
 
-    context->_bitmapImpl.image.reset(newImage); // Consumes +1 reference.
+    context->Impl().image.reset(newImage); // Consumes +1 reference.
     return context;
 }
 
