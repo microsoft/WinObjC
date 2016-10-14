@@ -301,11 +301,9 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
   // Get the output format and directory
   String outputDir = m_buildSettings->getValue("VSIMPORTER_OUTPUT_DIR");
 
-  // Create a solution folder for the project iff we're importing multiple targets
-  VSSolutionFolderProject* projFolder = NULL;
-  if (m_existingTargets.size() > 1) {
-    projFolder = sln.addFolder(getName());
-  }
+  // Create a solution folder for the project, as long as some Xcode target was imported.
+  // The solution folder is necessary for VS build telemetry to work properly.
+  VSSolutionFolderProject* projFolder = sln.addFolder(getName());
 
   // Get the default project configuration
   const XCConfigurationList* buildConfigList = m_project->getBuildConfigurationList();
