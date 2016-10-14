@@ -19,9 +19,15 @@
 
 using namespace Microsoft::WRL;
 
-// Helper for creating a D2DFactory
-ComPtr<ID2D1Factory> _GetD2DFactoryInstance() {
+// Private helper for creating a D2DFactory
+static ComPtr<ID2D1Factory> __createD2DFactory() {
     ComPtr<ID2D1Factory> d2dFactory;
-    THROW_IF_FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &d2dFactory));
+    FAIL_FAST_IF_FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &d2dFactory));
     return d2dFactory;
+}
+
+// Helper for getting a D2DFactory
+ComPtr<ID2D1Factory> _GetD2DFactoryInstance() {
+    static ComPtr<ID2D1Factory> factory = __createD2DFactory();
+    return factory;
 }

@@ -597,6 +597,7 @@ void EXPECT_SIZEEQ(CGSize pathSize, CGFloat width, CGFloat height) {
 TEST(CGPath, CGPathSimpleCreation) {
     CGMutablePathRef path = CGPathCreateMutable();
     EXPECT_NE(nullptr, path);
+    EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 0, 0);
 
     CGPathMoveToPoint(path, NULL, 50, 50);
     EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 50, 50);
@@ -605,6 +606,7 @@ TEST(CGPath, CGPathSimpleCreation) {
     EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 100, 50);
 
     CGMutablePathRef pathCopy = CGPathCreateMutableCopy(path);
+    EXPECT_POINTEQ(CGPathGetCurrentPoint(pathCopy), 100, 50);
     CGPathMoveToPoint(pathCopy, NULL, 200, 200);
     EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 100, 50);
     EXPECT_POINTEQ(CGPathGetCurrentPoint(pathCopy), 200, 200);
