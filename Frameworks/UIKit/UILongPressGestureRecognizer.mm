@@ -251,6 +251,26 @@ static TrackedTouch* findTouch(UITouch* touch, std::vector<TrackedTouch>& touche
     [self reset];
 }
 
+/**
+ @Status Interoperable
+*/
+- (CGPoint)locationInView:(UIView*)view {
+    if (_trackedTouches.size() > 0) {
+        CGPoint averagePoint = { 0, 0 };
+        for (size_t i = 0; i < _trackedTouches.size(); i++) {
+            CGPoint touchLocation = [_trackedTouches[i].touch locationInView:view];
+            averagePoint.x += touchLocation.x;
+            averagePoint.y += touchLocation.y;
+        }
+        averagePoint.x /= _trackedTouches.size();
+        averagePoint.y /= _trackedTouches.size();
+        return averagePoint;
+    }
+
+    CGPoint ret = { 0, 0 };
+    return ret;
+}
+
 - (void)_commonInit {
     self->minimumPressDuration = 0.5f;
     self->numberOfTapsRequired = 0;

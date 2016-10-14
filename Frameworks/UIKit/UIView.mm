@@ -135,7 +135,7 @@ BOOL g_resetAllTrackingGestures = TRUE;
         g_currentlyTrackingGesturesList = [NSMutableArray new];
     }
 
-    bool handled = false;
+    BOOL shouldCancelTouches = false;
 
     UIView* views[128];
     int viewDepth = 0;
@@ -214,9 +214,8 @@ BOOL g_resetAllTrackingGestures = TRUE;
     for (int i = 0; i < s_numGestureTypes; i++) {
         id curgestureClass = s_gesturesPriority[i];
         id gestures = [g_curGesturesDict objectForKey:curgestureClass];
-        if ([curgestureClass _fireGestures:gestures]) {
-            handled = true;
-            if (handled && DEBUG_GESTURES) {
+        if ([curgestureClass _fireGestures:gestures shouldCancelTouches:shouldCancelTouches]) {
+            if (DEBUG_GESTURES) {
                 TraceVerbose(TAG, L"Gesture (%hs) handled.", object_getClassName(curgestureClass));
             }
         }
@@ -244,7 +243,7 @@ BOOL g_resetAllTrackingGestures = TRUE;
     [g_curGesturesDict release];
     g_curGesturesDict = nil;
 
-    return handled;
+    return shouldCancelTouches;
 }
 // TODO: This block of code will likely change when we incorporate WinRT GestureRecognizers
 ///////////////////////////////////////////////////////////////////////////////////////////
