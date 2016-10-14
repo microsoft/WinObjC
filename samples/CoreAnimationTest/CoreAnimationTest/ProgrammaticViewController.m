@@ -17,14 +17,54 @@
 #import "ProgrammaticViewController.h"
 
 #import "CALayerViewController.h"
+#import "CALayerAnimationViewController.h"
 
 @implementation ProgrammaticViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    // CALayer
-    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle:@"CALayer"];
+    // CALayer Basic
+    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle:@"CALayer Basic"];
+
+    // CALayer Animation
+    [self addMenuItemViewController:[[CALayerAnimationViewController alloc] init] andTitle : @"CALayer Animation (CAAnimation)"];
+
+    // CALayer Transactions
+    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CALayer Transactions (CATransactions)"];
+
+    // CALayer Transform2D
+    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CALayer Tranform2D"];
+
+    // CALayer Transform3D
+    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CALayer Transform3D - TBD"];
+
+    // AVPlayerLayer
+    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"AVPlayerLayer - TBD"];
+
+    // CAShapeLayer
+    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CAShapeLayer - TBD"];
+
+    // CAGradientLayer
+    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CAGradientLayer - TBD"];
+
+    // CATextLayer
+    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CATextLayer - TBD"];
+
+    // CATiledLayer
+    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CATiledLayer - TBD"];
+
+    // CAEAGLLayer
+    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CAEAGLLayer - TBD"];
+
+    // CAScrollLayer
+    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CAScrollLayer - TBD"];
+
+    // CAEmitterLayer
+    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CAEmitterLayer - TBD"];
+
+    // CAReplicatorLayer
+    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CAReplicatorLayer - TBD"];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -2,19 +2,22 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{e8d512f2-3543-4e40-92c9-c309c6247ccc}</UniqueIdentifier>
+      <UniqueIdentifier>{4a8b3797-e90e-4f98-a615-987bd2d6dfb2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{11f53fb2-0b76-4472-ae1b-cc1380bc7bb3}</UniqueIdentifier>
+      <UniqueIdentifier>{5f078ebe-3f4c-41d7-bd0a-5fcd0677a0ba}</UniqueIdentifier>
     </Filter>
     <Filter Include="CoreAnimationTest">
-      <UniqueIdentifier>{A41DC0B4-7CF3-4155-AA16-7A30F3D41D6F}</UniqueIdentifier>
+      <UniqueIdentifier>{ADCAACC5-A1D6-481F-B24E-C4DF8D6B9178}</UniqueIdentifier>
     </Filter>
     <Filter Include="CoreAnimationTest\Supporting Files">
-      <UniqueIdentifier>{C9FCCFB5-C354-468A-B208-242471EB66BC}</UniqueIdentifier>
+      <UniqueIdentifier>{F794F411-5E48-4D66-A81C-0E3F498CF34F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Images">
+      <UniqueIdentifier>{6711CE36-7F1B-4F81-AF17-A7FBED3C368B}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{FCDA1D5F-7389-4AE4-A16F-6503256B847D}</UniqueIdentifier>
+      <UniqueIdentifier>{5D0A9D7C-B504-4D21-82E4-2F424E444D93}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,19 +51,40 @@
     <ClInclude Include="..\..\CoreAnimationTest\AppDelegate.h">
       <Filter>CoreAnimationTest</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\CoreAnimationTest\CALayerViewController.h">
+      <Filter>CoreAnimationTest</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\CoreAnimationTest\MenuTableViewController.h">
+      <Filter>CoreAnimationTest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CoreAnimationTest\ProgrammaticViewController.h">
+      <Filter>CoreAnimationTest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CoreAnimationTest\StoryBoardViewController.h">
       <Filter>CoreAnimationTest</Filter>
     </ClInclude>
     <ClangCompile Include="..\..\CoreAnimationTest\AppDelegate.m">
       <Filter>CoreAnimationTest</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\CoreAnimationTest\CALayerViewController.m">
+      <Filter>CoreAnimationTest</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\CoreAnimationTest\MenuTableViewController.m">
+      <Filter>CoreAnimationTest</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CoreAnimationTest\ProgrammaticViewController.m">
+      <Filter>CoreAnimationTest</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CoreAnimationTest\StoryBoardViewController.m">
       <Filter>CoreAnimationTest</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\CoreAnimationTest\main.m">
       <Filter>CoreAnimationTest\Supporting Files</Filter>
     </ClangCompile>
     <SBInfoPlistCopy Include="..\..\CoreAnimationTest\Info.plist" />
+    <SBResourceCopy Include="..\..\CoreAnimationTest\Images\safe.png">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
     <StoryboardCompile Include="..\..\CoreAnimationTest\CoreAnimationTest.storyboard">
       <Filter>CoreAnimationTest</Filter>
     </StoryboardCompile>
@@ -81,18 +105,12 @@
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h" />
-    <ClInclude Include="..\..\CoreAnimationTest\ProgrammaticViewController.h">
-      <Filter>CoreAnimationTest</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\CoreAnimationTest\StoryBoardViewController.h">
+    <ClInclude Include="..\..\CoreAnimationTest\CALayerAnimationViewController.h">
       <Filter>CoreAnimationTest</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="..\..\CoreAnimationTest\ProgrammaticViewController.m">
-      <Filter>CoreAnimationTest</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\CoreAnimationTest\StoryBoardViewController.m">
+    <ClangCompile Include="..\..\CoreAnimationTest\CALayerAnimationViewController.m">
       <Filter>CoreAnimationTest</Filter>
     </ClangCompile>
   </ItemGroup>

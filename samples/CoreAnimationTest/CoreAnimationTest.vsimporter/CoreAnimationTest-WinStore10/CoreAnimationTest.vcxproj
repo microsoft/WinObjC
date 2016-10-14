@@ -29,7 +29,7 @@
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{D41958B1-1EE8-4CD2-B387-B686E565F179}</ProjectGuid>
+    <ProjectGuid>{CC5AC889-EBD1-4ABA-9F53-812396A0F4B9}</ProjectGuid>
     <RootNamespace>CoreAnimationTest</RootNamespace>
     <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">E:\GIT_REPOS\winobjc</WINOBJC_SDK_ROOT>
   </PropertyGroup>
@@ -179,8 +179,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <ClangCompile Include="..\..\CoreAnimationTest\ProgrammaticViewController.m" />
-    <ClangCompile Include="..\..\CoreAnimationTest\StoryBoardViewController.m" />
     <Xml Include="default.rd.xml" />
     <None Include="CoreAnimationTest_TemporaryKey.pfx" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
@@ -192,9 +190,17 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
     <AssetCatalogCompile Include="..\..\CoreAnimationTest\Assets.xcassets" />
     <ClInclude Include="..\..\CoreAnimationTest\AppDelegate.h" />
+    <ClInclude Include="..\..\CoreAnimationTest\CALayerAnimationViewController.h" />
+    <ClInclude Include="..\..\CoreAnimationTest\CALayerViewController.h" />
     <ClInclude Include="..\..\CoreAnimationTest\MenuTableViewController.h" />
+    <ClInclude Include="..\..\CoreAnimationTest\ProgrammaticViewController.h" />
+    <ClInclude Include="..\..\CoreAnimationTest\StoryBoardViewController.h" />
     <ClangCompile Include="..\..\CoreAnimationTest\AppDelegate.m" />
+    <ClangCompile Include="..\..\CoreAnimationTest\CALayerAnimationViewController.m" />
+    <ClangCompile Include="..\..\CoreAnimationTest\CALayerViewController.m" />
     <ClangCompile Include="..\..\CoreAnimationTest\MenuTableViewController.m" />
+    <ClangCompile Include="..\..\CoreAnimationTest\ProgrammaticViewController.m" />
+    <ClangCompile Include="..\..\CoreAnimationTest\StoryBoardViewController.m" />
     <ClangCompile Include="..\..\CoreAnimationTest\main.m" />
     <SBInfoPlistCopy Include="..\..\CoreAnimationTest\Info.plist">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug'">false</ExcludedFromBuild>
@@ -202,6 +208,7 @@
       <VariableFile Condition="'$(Configuration)'=='Debug'">CoreAnimationTest-Debug-xcvars.txt</VariableFile>
       <VariableFile Condition="'$(Configuration)'=='Release'">CoreAnimationTest-Release-xcvars.txt</VariableFile>
     </SBInfoPlistCopy>
+    <SBResourceCopy Include="..\..\CoreAnimationTest\Images\safe.png" />
     <StoryboardCompile Include="..\..\CoreAnimationTest\CoreAnimationTest.storyboard" />
     <Text Include="CoreAnimationTest-Debug-xcvars.txt">
       <DeploymentContent>false</DeploymentContent>
@@ -211,8 +218,6 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\CoreAnimationTest\ProgrammaticViewController.h" />
-    <ClInclude Include="..\..\CoreAnimationTest\StoryBoardViewController.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h">
       <DependentUpon>App.xaml</DependentUpon>

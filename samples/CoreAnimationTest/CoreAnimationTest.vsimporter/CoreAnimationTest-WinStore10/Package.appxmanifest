@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="cf2b1d19-3d50-463d-a26b-2518f9afbf02"
+    Name="0f35a8eb-b329-4e22-a6ee-00b95672faae"
     Publisher="islandwood"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="cf2b1d19-3d50-463d-a26b-2518f9afbf02" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="0f35a8eb-b329-4e22-a6ee-00b95672faae" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>CoreAnimationTest</DisplayName>
