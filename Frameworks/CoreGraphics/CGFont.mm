@@ -62,7 +62,9 @@ void CGFontSetFTFontSize(id uiFont, void* ftFont, float pointSize, float scale) 
 }
 
 CGSize CGFontDrawGlyphsToContext(CGContextRef ctx, WORD* glyphs, DWORD length, float x, float y) {
-    return ctx->Backing()->CGFontDrawGlyphsToContext(glyphs, length, x, y);
+    //TODO(DH)
+    return {0,0};
+    //return ctx->Backing()->CGFontDrawGlyphsToContext(glyphs, length, x, y);
 }
 
 DWORD CGFontFitChars(id font, float size, WORD* chars, unsigned count, float width, CGSize* sizeOut) {

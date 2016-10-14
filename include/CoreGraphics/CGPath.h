@@ -19,7 +19,16 @@
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CoreGraphicsExport.h>
 
-typedef enum { kCGPathFill, kCGPathEOFill, kCGPathStroke, kCGPathFillStroke, kCGPathEOFillStroke } CGPathDrawingMode;
+// clang-format off
+typedef enum {
+//  CG Drawing Bitfield   |STROKE|   |FILL  |   |EO    |
+    kCGPathStroke =       (1 << 0),
+    kCGPathFill =                    (1 << 1),
+    kCGPathFillStroke =   (1 << 0) | (1 << 1),
+    kCGPathEOFill =                  (1 << 1) | (1 << 2),
+    kCGPathEOFillStroke = (1 << 0) | (1 << 1) | (1 << 2),
+} CGPathDrawingMode;
+// clang-format on
 
 typedef enum {
     kCGPathElementMoveToPoint,
@@ -35,15 +44,15 @@ typedef struct {
 } CGPathElement;
 
 typedef enum {
-    kCGLineCapButt,
-    kCGLineCapRound,
+    kCGLineCapButt, // Default
     kCGLineCapSquare,
+    kCGLineCapRound,
 } CGLineCap;
 
 typedef enum {
-    kCGLineJoinMiter,
-    kCGLineJoinRound,
-    kCGLineJoinBevel,
+    kCGLineJoinMiter = 0, // Default
+    kCGLineJoinBevel = 3, // D2D: Miter or Bevel
+    kCGLineJoinRound = 2, // D2D: Round
 } CGLineJoin;
 
 typedef void (*CGPathApplierFunction)(void* info, const CGPathElement* element);

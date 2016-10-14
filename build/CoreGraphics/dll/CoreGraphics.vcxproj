@@ -51,7 +51,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>CoreGraphics.def</ModuleDefinitionFile>
-      <AdditionalDependencies>cairo.lib;pixman.lib;freetype.lib;libpng.lib;libz.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;libdispatch.lib;cairo.lib;pixman.lib;freetype.lib;libpng.lib;libz.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -64,7 +64,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>CoreGraphics.def</ModuleDefinitionFile>
-      <AdditionalDependencies>cairo.lib;pixman.lib;freetype.lib;libpng.lib;libz.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;libdispatch.lib;cairo.lib;pixman.lib;freetype.lib;libpng.lib;libz.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -77,7 +77,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>CoreGraphics.def</ModuleDefinitionFile>
-      <AdditionalDependencies>cairo.lib;pixman.lib;freetype.lib;libpng.lib;libz.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;libdispatch.lib;cairo.lib;pixman.lib;freetype.lib;libpng.lib;libz.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -90,7 +90,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>CoreGraphics.def</ModuleDefinitionFile>
-      <AdditionalDependencies>cairo.lib;pixman.lib;freetype.lib;libpng.lib;libz.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;libdispatch.lib;cairo.lib;pixman.lib;freetype.lib;libpng.lib;libz.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>

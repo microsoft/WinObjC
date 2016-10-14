@@ -569,23 +569,12 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         }
 
         if (!target) {
-            if ((priv->isOpaque && priv->_backgroundColor == nil) || (priv->backgroundColor.a == 1.0 && 0)) {
-                /* CGVectorImage is currently in development - not ready for general use */
-                if (useVector) {
-                    // target = new CGVectorImage(width, height, _ColorBGR);
-                } else {
-                    drawContext = _CGBitmapContextCreateWithFormat(width, height, _ColorBGR);
-                }
-                priv->drewOpaque = TRUE;
-            } else {
-                /* CGVectorImage is currently in development - not ready for general use */
-                if (useVector) {
-                    // target = new CGVectorImage(width, height, _ColorARGB);
-                } else {
-                    drawContext = CreateLayerContentsBitmapContext32(width, height);
-                }
-                priv->drewOpaque = FALSE;
-            }
+            // TODO(DH): GH#1125 evaluate the interplay between context and displaytexture.
+            // As an optimization, CALayer would use a bitmap context with a solid background colour
+            // instead of a DisplayTexture. Since bitmap contexts are currently broken as part of #1072,
+            // we'll fall back to always using the writable bitmap buffer.
+            drawContext = CreateLayerContentsBitmapContext32(width, height);
+            priv->drewOpaque = FALSE;
             priv->ownsContents = TRUE;
         }
         target = CGBitmapContextGetImage(drawContext);

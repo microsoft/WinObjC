@@ -53,7 +53,6 @@ public:
 
     virtual CGImageRef Copy() = 0;
 
-    virtual CGContextImpl* CreateDrawingContext(CGContextRef base) = 0;
     virtual void GetPixel(int x, int y, float& r, float& g, float& b, float& a) = 0;
     virtual int InternalWidth() = 0;
     virtual int InternalHeight() = 0;

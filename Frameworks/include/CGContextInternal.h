@@ -27,8 +27,6 @@
 
 #import <objc/runtime.h>
 
-class CGContextImpl;
-COREGRAPHICS_EXPORT void EbrCenterTextInRectVertically(CGRect* rect, CGSize* textSize, id font);
 COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithTexture(int width,
                                                                    int height,
                                                                    DisplayTexture* texture = NULL,
@@ -40,7 +38,6 @@ COREGRAPHICS_EXPORT void CGContextClearToColor(CGContextRef ctx, float r, float 
 COREGRAPHICS_EXPORT bool CGContextIsDirty(CGContextRef ctx);
 COREGRAPHICS_EXPORT void CGContextSetDirty(CGContextRef ctx, bool dirty);
 COREGRAPHICS_EXPORT void CGContextReleaseLock(CGContextRef ctx);
-COREGRAPHICS_EXPORT CGContextImpl* CGContextGetBacking(CGContextRef ctx);
 COREGRAPHICS_EXPORT CGBlendMode CGContextGetBlendMode(CGContextRef ctx);
 
 COREGRAPHICS_EXPORT CGImageRef CGPNGImageCreateFromFile(NSString* path);
@@ -51,16 +48,5 @@ COREGRAPHICS_EXPORT CGImageRef CGJPEGImageCreateFromData(NSData* data);
 COREGRAPHICS_EXPORT bool CGContextIsPointInPath(CGContextRef c, bool eoFill, float x, float y);
 
 COREGRAPHICS_EXPORT void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun);
-
-class __CGContext : private objc_object {
-public:
-    float scale;
-    CGContextImpl* _backing;
-
-    __CGContext(CGImageRef pDest);
-    ~__CGContext();
-
-    CGContextImpl* Backing();
-};
 
 #include "CGContextImpl.h"

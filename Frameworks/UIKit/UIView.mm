@@ -2158,7 +2158,9 @@ static float doRound(float f) {
     UIGraphicsPushContext(context);
 
     CGRect bounds;
-    bounds = CGContextGetClipBoundingBox(context);
+    // TODO(DH)
+    bounds = self.bounds;
+    //bounds = CGContextGetClipBoundingBox(context);
     [self drawRect:bounds];
 
     UIGraphicsPopContext();
