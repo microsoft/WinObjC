@@ -17,5 +17,8 @@
 
 #import <UIKit/UIFont.h>
 
+@interface UIFontPrototype : UIFont
+@end
+
 @interface UICTFont : UIFont
 @end
