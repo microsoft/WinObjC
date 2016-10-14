@@ -202,18 +202,20 @@ void CGDiscardableImageBacking::GetPixel(int x, int y, float& r, float& g, float
     _forward->GetPixel(x, y, r, g, b, a);
 }
 
-ImageDataStreamFile::ImageDataStreamFile(EbrFile* in) {
-    fpIn = in;
+ImageDataStreamFile::ImageDataStreamFile(NSInputStream* inStream) : _inputStream(inStream) {
+    if (NSStreamStatusOpen != [_inputStream streamStatus]) {
+        [_inputStream open];
+    }
 }
 
 ImageDataStreamFile::~ImageDataStreamFile() {
-    EbrFclose(fpIn);
+    if (NSStreamStatusOpen == [_inputStream streamStatus]) {
+        [_inputStream close];
+    }
 }
 
 int ImageDataStreamFile::readData(void* in, int len) {
-    int ret = EbrFread(in, 1, len, fpIn);
-
-    return ret;
+    return [_inputStream read:(uint8_t*)in maxLength:len];
 }
 
 ImageDataStreamMemory::ImageDataStreamMemory(const void* in, int len) {

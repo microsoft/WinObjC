@@ -25,6 +25,8 @@
 #import "Foundation/NSString.h"
 #import "Foundation/NSMutableArray.h"
 #import "Foundation/NSValue.h"
+#import "Foundation/NSInputStream.h"
+#import "Foundation/NSOutputStream.h"
 #import <CoreFoundation/CFData.h>
 #include <COMIncludes.h>
 #import "ErrorHandling.h"
@@ -303,23 +305,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
  @Notes atomically parameter not supported
 */
 - (BOOL)writeToFile:(NSString*)filename atomically:(BOOL)atomically {
-    char* fname = (char*)[filename UTF8String];
-
-    TraceVerbose(TAG, L"NSData writing %hs (%d bytes)", fname, [self length]);
-    if (!fname) {
-        TraceVerbose(TAG, L"Filename is null!");
-        return FALSE;
-    }
-    EbrFile* fpOut = EbrFopen((const char*)fname, "wb");
-    if (fpOut) {
-        EbrFwrite([self bytes], 1, [self length], fpOut);
-        EbrFclose(fpOut);
-
-        return TRUE;
-    } else {
-        TraceVerbose(TAG, L"NSData couldn't open %hs for write", fname);
-        return FALSE;
-    }
+    return [self writeToURL:[NSURL fileURLWithPath:filename] atomically:atomically];
 }
 
 /**
@@ -327,11 +313,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
  @Notes Only file:// URLs supported. atomically parameter not supported.
 */
 - (BOOL)writeToURL:(NSURL*)url atomically:(BOOL)atomically {
-    if (![url isFileURL]) {
-        TraceVerbose(TAG, L"-[NSData::writeToURL]: Only file: URLs are supported. (%hs)", [[url absoluteString] UTF8String]);
-        return NO;
-    }
-    return [self writeToFile:[url path] atomically:atomically];
+    return [self writeToURL:url options:(atomically ? NSDataWritingAtomic : 0) error:nil];
 }
 
 /**
@@ -339,21 +321,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
  @Notes options parameter not supported
 */
 - (BOOL)writeToFile:(NSString*)filename options:(NSDataWritingOptions)options error:(NSError**)error {
-    char* fname = (char*)[filename UTF8String];
-
-    TraceVerbose(TAG, L"NSData writing %hs (%d bytes)", fname, [self length]);
-    EbrFile* fpOut = EbrFopen((const char*)fname, "wb");
-    if (fpOut) {
-        EbrFwrite([self bytes], 1, [self length], fpOut);
-        EbrFclose(fpOut);
-        return YES;
-    }
-
-    TraceVerbose(TAG, L"NSData couldn't open %hs for write (with options)", fname);
-    if (error) {
-        *error = [NSError errorWithDomain:NSCocoaErrorDomain code:NSFileNoSuchFileError userInfo:@{ NSFilePathErrorKey : filename }];
-    }
-    return NO;
+    return [self writeToURL:[NSURL fileURLWithPath:filename] options:options error:error];
 }
 
 /**
@@ -361,11 +329,35 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
  @Notes options parameter not supported
 */
 - (BOOL)writeToURL:(NSURL*)url options:(NSDataWritingOptions)options error:(NSError**)errorp {
-    if (![url isFileURL]) {
-        TraceVerbose(TAG, L"-[NSData::writeToURL]: Only file: URLs are supported. (%hs)", [[url absoluteString] UTF8String]);
+    if (!url) {
+        if (errorp) {
+            *errorp = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
+        }
         return NO;
     }
-    return [self writeToFile:[url path] options:options error:errorp];
+
+    NSOutputStream* outputStream =
+        [NSOutputStream outputStreamWithURL:url append:(0 != (options & NSDataWritingWithoutOverwriting)) ? YES : NO];
+    [outputStream open];
+
+    if (NSStreamStatusOpen != outputStream.streamStatus) {
+        if (errorp) {
+            *errorp = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
+        }
+        return NO;
+    }
+    auto numBytes = [self length];
+    auto result = [outputStream write:(const unsigned char*)[self bytes] maxLength:numBytes];
+    [outputStream close];
+
+    if (result != numBytes) {
+        if (errorp) {
+            *errorp = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
+        }
+        return NO;
+    }
+
+    return YES;
 }
 
 /**
@@ -396,34 +388,11 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
         return nil;
     }
 
-    char* fname = (char*)[filename UTF8String];
+    NSInputStream* inputStream = [NSInputStream inputStreamWithFileAtPath:filename];
+    [inputStream open];
 
-    TraceVerbose(TAG, L"NSData extended-opening %hs", fname);
-    EbrFile* fpIn = EbrFopen(fname, "rb");
-    if (fpIn) {
-        auto closeFile = wil::ScopeExit([&]() { EbrFclose(fpIn); });
-
-        EbrFseek(fpIn, 0, SEEK_END);
-        size_t length = EbrFtell(fpIn);
-        EbrFseek(fpIn, 0, SEEK_SET);
-
-        if (length) {
-            // The created NSData takes ownership of freeing this
-            woc::unique_iw<uint8_t> copiedBytes(static_cast<uint8_t*>(IwMalloc(length)));
-            if (!copiedBytes.get()) {
-                if (error) {
-                    *error = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
-                }
-                [self release];
-                return nil;
-            }
-
-            size_t fileLength = EbrFread(copiedBytes.get(), 1, length, fpIn);
-            self = [self initWithBytesNoCopy:copiedBytes.release() length:fileLength];
-        }
-
-    } else {
-        TraceVerbose(TAG, L"NSData couldn't open %hs for read (extended)", fname);
+    if (NSStreamStatusOpen != inputStream.streamStatus) {
+        TraceVerbose(TAG, L"NSData couldn't open %hs for read (extended)", filename);
         if (error) {
             *error = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
         }
@@ -431,7 +400,17 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
         return nil;
     }
 
-    return self;
+    auto closeFile = wil::ScopeExit([&]() { [inputStream close]; });
+
+    uint8_t byteBuffer[4096] = {};
+    NSMutableData* tempData = [NSMutableData data];
+
+    while ([inputStream hasBytesAvailable]) {
+        auto result = [inputStream read:byteBuffer maxLength:_countof(byteBuffer)];
+        [tempData appendBytes:byteBuffer length:result];
+    }
+
+    return [self initWithData:tempData];
 }
 
 /**
