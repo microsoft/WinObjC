@@ -57,6 +57,7 @@
 		7BCEEE4C1B70220300C31CF5 /* OpenGLES11Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE481B70220300C31CF5 /* OpenGLES11Controller.m */; };
 		7BCEEE4D1B70220300C31CF5 /* OpenGLES20Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE4A1B70220300C31CF5 /* OpenGLES20Controller.m */; };
 		7BCEEE4F1B70225500C31CF5 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */; };
+		7BFC0CC81DB17E2C00797C13 /* GesturesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BFC0CC71DB17E2C00797C13 /* GesturesViewController.m */; };
 		8252DB791CA9EDDE00A202B6 /* PopoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8252DB781CA9EDDE00A202B6 /* PopoverViewController.m */; };
 		8430AAC91BE7F2E500927545 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8430AAC81BE7F2E500927545 /* GLKit.framework */; };
 		AF8072C61C86238E00512FB6 /* URLDownloadCell.mm in Sources */ = {isa = PBXBuildFile; fileRef = AF8072C41C86238E00512FB6 /* URLDownloadCell.mm */; };
@@ -171,6 +172,8 @@
 		7BCEEE491B70220300C31CF5 /* OpenGLES20Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLES20Controller.h; sourceTree = "<group>"; };
 		7BCEEE4A1B70220300C31CF5 /* OpenGLES20Controller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLES20Controller.m; sourceTree = "<group>"; };
 		7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		7BFC0CC71DB17E2C00797C13 /* GesturesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GesturesViewController.m; sourceTree = "<group>"; };
+		7BFC0CC91DB17E5000797C13 /* GesturesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GesturesViewController.h; sourceTree = "<group>"; };
 		8252DB771CA9EDDE00A202B6 /* PopoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopoverViewController.h; sourceTree = "<group>"; };
 		8252DB781CA9EDDE00A202B6 /* PopoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopoverViewController.m; sourceTree = "<group>"; };
 		8430AAC81BE7F2E500927545 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
@@ -326,6 +329,8 @@
 				7B2A18571BB5FF020004E097 /* AutoLayoutViewController.h */,
 				7B2A18591BB5FF9B0004E097 /* AutoLayoutViewController.m */,
 				4ED640241B717E530092921E /* SingleImageViewController.h */,
+				7BFC0CC71DB17E2C00797C13 /* GesturesViewController.m */,
+				7BFC0CC91DB17E5000797C13 /* GesturesViewController.h */,
 				4EE861581B5996BF00682BDB /* Supporting Files */,
 				7B42BCF31B90ECFE00D45782 /* BezierViewController.h */,
 				7B42BCF41B90ECFE00D45782 /* BezierViewController.m */,
@@ -550,6 +555,7 @@
 				4EE861D01B5997A500682BDB /* AppDelegate.m in Sources */,
 				4EE861D51B5997A500682BDB /* SearchBarViewController.m in Sources */,
 				4EE861FA1B5997E400682BDB /* ImagesViewController.m in Sources */,
+				7BFC0CC81DB17E2C00797C13 /* GesturesViewController.m in Sources */,
 				F01C225B1C1A54450007FF0B /* TaskInfoViewController.m in Sources */,
 				E789B2E01CC59D3C0044F169 /* ShadowViewController.m in Sources */,
 				4EE861D91B5997A500682BDB /* ToolbarsViewController.m in Sources */,
