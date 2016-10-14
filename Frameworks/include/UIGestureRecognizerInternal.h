@@ -67,7 +67,7 @@ typedef NS_ENUM(NSUInteger, _UIPanGestureStage) {
 - (void)_setView:(UIView*)view;
 - (void)_cancelIfActive;
 - (void)_fire;
-+ (BOOL)_fireGestures:(id)gestures;
++ (BOOL)_fireGestures:(id)gestures shouldCancelTouches:(BOOL&)shouldCancelTouches;
 + (void)_failActiveExcept:(UIGestureRecognizer*)gesture;
 - (void)_addEventConnection:(UIRuntimeEventConnection*)connection;
 @end
