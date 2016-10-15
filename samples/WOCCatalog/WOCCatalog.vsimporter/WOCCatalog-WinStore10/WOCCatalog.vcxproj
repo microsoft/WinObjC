@@ -220,7 +220,6 @@
     <ClangCompile Include="..\..\WOCCatalog\UserDefaultsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\AccelerateViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\AccelerateViewController2.m" />
-    <ClangCompile Include="..\..\WOCCatalog\TextFieldsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\PickersViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\GeocodingViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\CoreLocationViewController.mm" />

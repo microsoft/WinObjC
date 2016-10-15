@@ -66,12 +66,14 @@ static NSString* viewTitleKeyName = @"ViewName";
 
     NSDictionary* currentObject = [self.menuItems objectAtIndex:indexPath.row];
     if (currentObject != nil && [currentObject isKindOfClass:[UIViewController class]]) {
-        cell.textLabel.text = [currentObject objectForKey:viewTitleKeyName];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     } else {
-        cell.textLabel.text = [currentObject objectForKey:viewTitleKeyName];
         cell.accessoryView = [currentObject objectForKey:viewKeyName];
     }
+
+    // Set the text and accessibility identifier so we can find these elements via automation
+    cell.textLabel.text = [currentObject objectForKey : viewTitleKeyName];
+    cell.accessibilityIdentifier = cell.textLabel.text;
 
     return cell;
 }

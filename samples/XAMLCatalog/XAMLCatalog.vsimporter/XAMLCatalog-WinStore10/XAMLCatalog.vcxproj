@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -190,12 +190,13 @@
     <ClangCompile Include="..\..\XAMLCatalog\AppDelegate.m" />
     <ClangCompile Include="..\..\XAMLCatalog\ProgrammaticViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\MiscellaneousViewController.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\UIActionSheetViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIActivityIndicatorViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIButtonViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UISliderViewController.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\UITextFieldViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\main.m" />
     <ClangCompile Include="..\..\XAMLCatalog\MenuTableViewController.m" />
-    <ClangCompile Include="..\..\XAMLCatalog\UIActionSheetViewController.m" />
     <SBResourceCopy Include="..\..\XAMLCatalog\Images\yellow_background.jpg" />
     <SBResourceCopy Include="..\..\XAMLCatalog\Images\blue_background.jpg" />
     <SBResourceCopy Include="..\..\XAMLCatalog\Images\button_image.png" />

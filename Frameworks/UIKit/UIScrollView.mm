@@ -319,8 +319,6 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
                             strongSelf->_decelerating = YES;
 
                             if (strongSelf->_pagingEnabled) {
-                                strongSelf->_decelerating = NO;
-
                                 // cancel the direct manipulation before we do manual animating to page boundary
                                 [strongSelf->_scrollViewer cancelDirectManipulations];
 

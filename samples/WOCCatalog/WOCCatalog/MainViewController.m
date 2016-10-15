@@ -18,7 +18,6 @@
 #import "MainViewController.h"
 #import "ButtonsViewController.h"
 #import "ControlsViewController.h"
-#import "TextFieldsViewController.h"
 #import "TextDisplayViewController.h"
 #import "TransitionsViewController.h"
 #import "AlertsViewController.h"
@@ -66,6 +65,7 @@
 
     // AudioToolbox
     [self addMenuItemViewController:[[AudioToolboxViewController alloc] init] andTitle:@"AudioToolbox"];
+
     // CoreMotion
     [self addMenuItemViewController:[[CoreMotionViewController alloc] init] andTitle:@"CoreMotion"];
 
@@ -91,9 +91,6 @@
     // Display mode
     [self addMenuItemViewController:[[SBDisplayModeViewController alloc] init] andTitle:@"Display Mode"];
 #endif
-
-    // TextFields
-    [self addMenuItemViewController:[[TextFieldsViewController alloc] init] andTitle:@"TextFields"];
 
     // SearchBar
     [self addMenuItemViewController:[[SearchBarViewController alloc] init] andTitle:@"SearchBar"];

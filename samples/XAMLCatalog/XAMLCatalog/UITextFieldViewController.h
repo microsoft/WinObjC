@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-#import <UIKit/UIKit.h>
+#import "MenuTableViewController.h"
 
-@interface TextFieldsViewController : UITableViewController <UITextFieldDelegate>
-
+@interface UITextFieldViewController : MenuTableViewController
 @end
