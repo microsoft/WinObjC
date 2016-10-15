@@ -45,6 +45,7 @@
 #import "AudioToolboxViewController.h"
 #import "GeocodingViewController.h"
 #import "CoreLocationViewController.h"
+#import "GesturesViewController.h"
 
 #ifdef WINOBJC
 #import "XamlViewController.h"
@@ -78,6 +79,9 @@
     // Controls
     [self addMenuItemViewController:[[ControlsViewController alloc] init] andTitle:@"Controls"];
 
+    // Gestures
+    [self addMenuItemViewController:[[GesturesViewController alloc] init] andTitle:@"Gestures"];
+    
     // Buttons
     [self addMenuItemViewController:[[ButtonsViewController alloc] init] andTitle:@"ButtonsViewController"];
 

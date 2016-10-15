@@ -19,12 +19,12 @@
 static float segmentStrokeWidth = 4.0f;
 static float splashStrokeWidth = 5.0f;
 
-@interface FadeAwayPathView : UIView
+@interface SplashView : UIView
 @property (nonatomic, assign) CGPathRef path;
 @property (nonatomic, retain) UIColor* color;
 @end
 
-@implementation FadeAwayPathView
+@implementation SplashView
 
 -(void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -47,10 +47,15 @@ static float splashStrokeWidth = 5.0f;
     return self;
 }
 
--(void)showInView:(UIView*)view endSize:(float)size duration:(NSTimeInterval)duration {
+-(void)showInView:(UIView*)view atPoint:(CGPoint)point endSize:(float)size color:(UIColor*)color  {
+    self.frame = CGRectMake(point.x - self.frame.size.width / 2, point.y - self.frame.size.height / 2, self.frame.size.width, self.frame.size.height);
+    
+    self.path = CGPathCreateWithEllipseInRect(CGRectInset(self.bounds, splashStrokeWidth, splashStrokeWidth), NULL);
+    self.color = color;
+    
     [view addSubview:self];
     
-    [UIView animateWithDuration:duration animations:^() {
+    [UIView animateWithDuration:0.5f animations:^() {
         self.transform = CGAffineTransformMakeScale(size, size);
         self.alpha = 0.0f;
     } completion:^(BOOL finished) {
@@ -62,59 +67,51 @@ static float splashStrokeWidth = 5.0f;
 
 @end
 
-@interface SplashView : FadeAwayPathView
-
-@end
-
-@implementation SplashView
-
--(void)showInView:(UIView*)view atPoint:(CGPoint)point endSize:(float)size color:(UIColor*)color  {
-    self.frame = CGRectMake(point.x - self.frame.size.width / 2, point.y - self.frame.size.height / 2, self.frame.size.width, self.frame.size.height);
-    
-    self.path = CGPathCreateWithEllipseInRect(CGRectInset(self.bounds, splashStrokeWidth, splashStrokeWidth), NULL);
-    self.color = color;
-    
-    [super showInView:view endSize:size duration:0.5f];
-}
-
-@end
-
-@interface SegmentView : FadeAwayPathView
-
-@end
-
-@implementation SegmentView {
-    CGMutablePathRef _segment;
-}
-
--(void)showInView:(UIView*)view atPoint:(CGPoint)point toPoint:(CGPoint)toPoint color:(UIColor*)color {
-    CGRect drawRect = { MIN(point.x, toPoint.x), MIN(point.y, toPoint.y), ABS(toPoint.x - point.x), ABS(toPoint.y - point.y) };
-    
-    if (CGSizeEqualToSize(drawRect.size, CGSizeZero)) {
-        return;
-    }
-    
-    CGRect insetRect = CGRectInset(drawRect, -segmentStrokeWidth/2.0f, -segmentStrokeWidth/2.0f);
-    self.frame = insetRect;
-   
-    CGMutablePathRef segment = CGPathCreateMutable();
-    CGPathMoveToPoint(segment, NULL, point.x - insetRect.origin.x, point.y - insetRect.origin.y);
-    CGPathAddLineToPoint(segment, NULL, toPoint.x - insetRect.origin.x, toPoint.y - insetRect.origin.y);
-    self.path = segment;
-    self.color = color;
-    
-    [super showInView:view endSize:1.0f duration:1.0f];
-}
-
-@end
-
 @interface GestureDiagnosticView : UIView
 
 @end
 
-@implementation GestureDiagnosticView
+@implementation GestureDiagnosticView {
+    NSMutableDictionary<NSValue*, UIBezierPath*>* _touchMap;
+    BOOL _clear;
+    
+}
+
+-(instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        self.backgroundColor = [UIColor clearColor];
+        _touchMap = [NSMutableDictionary new];
+    }
+
+    return self;
+}
+
+-(void)addLine:(CGPoint)point hash:(NSUInteger)hash {
+    NSValue* hashKey = [NSNumber numberWithUnsignedInteger:hash];
+    UIBezierPath* path = [_touchMap objectForKey:hashKey];
+    if (!path) {
+        path = [UIBezierPath new];
+        path.lineWidth = segmentStrokeWidth;
+        [path moveToPoint:point];
+        _touchMap[hashKey] = path;
+        return;
+    }
+    
+    [path addLineToPoint:point];
+    [self setNeedsDisplay];
+}
+
+-(void)drawRect:(CGRect)rect {
+    for (UIBezierPath* path in _touchMap.allValues) {
+        [path stroke];
+    }
+}
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    if (touches.count == 1) {
+        _touchMap = [NSMutableDictionary new];
+        [self setNeedsDisplay];
+    }
     for (UITouch* touch in touches) {
         [[[SplashView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)] showInView:self atPoint:[touch locationInView:self] endSize:8 color:[UIColor blueColor]];
     }
@@ -129,8 +126,8 @@ static float splashStrokeWidth = 5.0f;
 -(void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     for (UITouch* touch in touches) {
         CGPoint currentPoint = [touch locationInView:self];
-        CGPoint lastPoint = [touch previousLocationInView:self];
-        [[[SegmentView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)] showInView:self atPoint:lastPoint   toPoint:currentPoint color:[UIColor blueColor]];
+        
+        [self addLine:currentPoint hash:[touch hash]];
     }
 }
 
@@ -144,7 +141,6 @@ static float splashStrokeWidth = 5.0f;
 
 @implementation GesturesViewController {
     UILabel* _stateLabel;
-    CGPoint _lastPanPoint;
 }
 
 -(void)_doTap:(UITapGestureRecognizer*)sender {
@@ -154,15 +150,15 @@ static float splashStrokeWidth = 5.0f;
 }
 
 -(void)_doPan:(UIPanGestureRecognizer*)sender {
+    CGPoint panPoint = [sender locationInView:self.view];
     switch (sender.state) {
         case UIGestureRecognizerStateBegan:
-            _lastPanPoint = [sender locationInView:self.view];
-            [[[SplashView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)] showInView:self.view atPoint:_lastPanPoint endSize:8 color:[UIColor redColor]];
+            [[[SplashView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)] showInView:self.view atPoint:panPoint endSize:8 color:[UIColor redColor]];
+            [(GestureDiagnosticView*)self.view addLine:panPoint hash:sender.hash];
             break;
         case UIGestureRecognizerStateChanged: {
-            CGPoint currentPoint = [sender locationInView:self.view];
-            [[[SegmentView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)] showInView:self.view atPoint:_lastPanPoint toPoint:currentPoint color:[UIColor redColor]];
-            _lastPanPoint = currentPoint;
+            [(GestureDiagnosticView*)self.view addLine:panPoint hash:sender.hash];
+            //[[[SegmentView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)] showInView:self.view atPoint:_lastPanPoint toPoint:currentPoint color:[UIColor redColor]];
             break;
         }
         case UIGestureRecognizerStateEnded:
