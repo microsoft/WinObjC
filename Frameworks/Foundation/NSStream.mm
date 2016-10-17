@@ -20,96 +20,75 @@
 #include "Foundation/NSString.h"
 #include "Foundation/NSStream.h"
 #include "NSSocket.h"
-#include "NSInputStream_socket.h"
-#include "NSOutputStream_socket.h"
-#include "NSStreamInternal.h"
+#include "NSRaise.h"
 
-FOUNDATION_EXPORT NSString* const NSStreamSocketSecurityLevelKey = @"NSStreamSocketSecurityLevelKey";
-FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyConfigurationKey = @"NSStreamSOCKSProxyConfigurationKey";
-FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyHostKey = @"NSStreamSOCKSProxyHostKey";
-FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyPortKey = @"NSStreamSOCKSProxyPortKey";
-FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyVersionKey = @"NSStreamSOCKSProxyVersionKey";
-FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyUserKey = @"NSStreamSOCKSProxyUserKey";
-FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyPasswordKey = @"NSStreamSOCKSProxyPasswordKey";
-FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyVersion4 = @"NSStreamSOCKSProxyVersion4";
-FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyVersion5 = @"NSStreamSOCKSProxyVersion5";
-FOUNDATION_EXPORT NSString* const NSStreamDataWrittenToMemoryStreamKey = @"NSStreamDataWrittenToMemoryStreamKey";
-FOUNDATION_EXPORT NSString* const NSStreamFileCurrentOffsetKey = @"NSStreamFileCurrentOffsetKey";
-FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceType = @"NSStreamNetworkServiceType";
+#include <CoreFoundation/CFStream.h>
+
+FOUNDATION_EXPORT NSString* const NSStreamSocketSecurityLevelKey = static_cast<NSString*>(kCFStreamPropertySocketSecurityLevel);
+
+FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyConfigurationKey = static_cast<NSString*>(kCFStreamPropertySOCKSProxy);
+FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyHostKey = static_cast<NSString*>(kCFStreamPropertySOCKSProxyHost);
+FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyPortKey = static_cast<NSString*>(kCFStreamPropertySOCKSProxyPort);
+FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyVersionKey = static_cast<NSString*>(kCFStreamPropertySOCKSVersion);
+FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyUserKey = static_cast<NSString*>(kCFStreamPropertySOCKSUser);
+FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyPasswordKey = static_cast<NSString*>(kCFStreamPropertySOCKSPassword);
+
+FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyVersion4 = static_cast<NSString*>(kCFStreamSocketSOCKSVersion4);
+FOUNDATION_EXPORT NSString* const NSStreamSOCKSProxyVersion5 = static_cast<NSString*>(kCFStreamSocketSOCKSVersion5);
+FOUNDATION_EXPORT NSString* const NSStreamDataWrittenToMemoryStreamKey = static_cast<NSString*>(kCFStreamPropertyDataWritten);
+FOUNDATION_EXPORT NSString* const NSStreamFileCurrentOffsetKey = static_cast<NSString*>(kCFStreamPropertyFileCurrentOffset);
+
+FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceType = static_cast<NSString*>(kCFStreamNetworkServiceType);
 FOUNDATION_EXPORT NSString* const NSStreamSocketSSLErrorDomain = @"NSStreamSocketSSLErrorDomain";
 FOUNDATION_EXPORT NSString* const NSStreamSOCKSErrorDomain = @"NSStreamSOCKSErrorDomain";
-FOUNDATION_EXPORT NSString* const NSStreamSocketSecurityLevelNone = @"NSStreamSocketSecurityLevelNone";
-FOUNDATION_EXPORT NSString* const NSStreamSocketSecurityLevelSSLv2 = @"NSStreamSocketSecurityLevelSSLv2";
-FOUNDATION_EXPORT NSString* const NSStreamSocketSecurityLevelSSLv3 = @"NSStreamSocketSecurityLevelSSLv3";
-FOUNDATION_EXPORT NSString* const NSStreamSocketSecurityLevelTLSv1 = @"NSStreamSocketSecurityLevelTLSv1";
-FOUNDATION_EXPORT NSString* const NSStreamSocketSecurityLevelNegotiatedSSL = @"NSStreamSocketSecurityLevelNegotiatedSSL";
-FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceTypeVoIP = @"NSStreamNetworkServiceTypeVoIP";
-FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceTypeVideo = @"NSStreamNetworkServiceTypeVideo";
-FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceTypeBackground = @"NSStreamNetworkServiceTypeBackground";
-FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceTypeVoice = @"NSStreamNetworkServiceTypeVoice";
+FOUNDATION_EXPORT NSString* const NSStreamSocketSecurityLevelNone = static_cast<NSString*>(kCFStreamSocketSecurityLevelNone);
+FOUNDATION_EXPORT NSString* const NSStreamSocketSecurityLevelSSLv2 = static_cast<NSString*>(kCFStreamSocketSecurityLevelSSLv2);
+FOUNDATION_EXPORT NSString* const NSStreamSocketSecurityLevelSSLv3 = static_cast<NSString*>(kCFStreamSocketSecurityLevelSSLv3);
+FOUNDATION_EXPORT NSString* const NSStreamSocketSecurityLevelTLSv1 = static_cast<NSString*>(kCFStreamSocketSecurityLevelTLSv1);
+FOUNDATION_EXPORT NSString* const NSStreamSocketSecurityLevelNegotiatedSSL =
+    static_cast<NSString*>(kCFStreamSocketSecurityLevelNegotiatedSSL);
+FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceTypeVoIP = static_cast<NSString*>(kCFStreamNetworkServiceTypeVoIP);
+FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceTypeVideo = static_cast<NSString*>(kCFStreamNetworkServiceTypeVideo);
+FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceTypeBackground = static_cast<NSString*>(kCFStreamNetworkServiceTypeBackground);
+FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceTypeVoice = static_cast<NSString*>(kCFStreamNetworkServiceTypeVoice);
 
 @implementation NSStream
 
 /**
  @Status Interoperable
 */
-+ (void)initialize {
-}
-
-/**
- @Status Interoperable
-*/
-- (unsigned)streamStatus {
-    return _status;
+- (NSStreamStatus)streamStatus {
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (void)close {
-    if (fp) {
-        EbrFclose(fp);
-        fp = NULL;
-    }
-    _status = NSStreamStatusClosed;
+    NSInvalidAbstractInvocation();
 }
 
 /**
  @Status Interoperable
 */
-- (void)dealloc {
-    if (fp) {
-        EbrFclose(fp);
-        fp = NULL;
-    }
-    _data = nil;
-
-    [super dealloc];
-}
-
-/**
- @Status Stub
-*/
 - (id)propertyForKey:(NSString*)key {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (BOOL)setProperty:(id)property forKey:(NSString*)key {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (void)open {
-    UNIMPLEMENTED();
+    NSInvalidAbstractInvocation();
 }
 
 /**

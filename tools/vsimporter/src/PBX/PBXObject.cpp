@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "sbassert.h"
+#include "telemetryutils.h"
 #include "SBLog.h"
 #include "PlistFuncs.h"
 #include "PBXObject.h"
@@ -31,8 +32,8 @@ PBXObject::PBXObject()
 void PBXObject::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
 {
   // Sanity checks
-  sbAssert(!id.empty());
-  sbAssert(pbxDoc);
+  sbAssertWithTelemetry(!id.empty(), "PBXObject has empty id");
+  sbAssertWithTelemetry(pbxDoc, "PBXDocument is NULL");
   
   // Set id
   m_id = id;

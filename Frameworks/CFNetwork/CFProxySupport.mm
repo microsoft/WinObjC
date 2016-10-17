@@ -17,27 +17,27 @@
 #import <StubReturn.h>
 #import <CFNetwork/CFProxySupport.h>
 
-const CFStringRef kCFProxyAutoConfigurationHTTPResponseKey = static_cast<CFStringRef>(@"kCFProxyAutoConfigurationHTTPResponseKey");
-const CFStringRef kCFProxyAutoConfigurationJavaScriptKey = static_cast<CFStringRef>(@"kCFProxyAutoConfigurationJavaScriptKey");
-const CFStringRef kCFProxyAutoConfigurationURLKey = static_cast<CFStringRef>(@"kCFProxyAutoConfigurationURLKey");
-const CFStringRef kCFProxyHostNameKey = static_cast<CFStringRef>(@"kCFProxyHostNameKey");
-const CFStringRef kCFProxyPasswordKey = static_cast<CFStringRef>(@"kCFProxyPasswordKey");
-const CFStringRef kCFProxyPortNumberKey = static_cast<CFStringRef>(@"kCFProxyPortNumberKey");
-const CFStringRef kCFProxyTypeKey = static_cast<CFStringRef>(@"kCFProxyTypeKey");
-const CFStringRef kCFProxyUsernameKey = static_cast<CFStringRef>(@"kCFProxyUsernameKey");
-const CFStringRef kCFProxyTypeNone = static_cast<CFStringRef>(@"kCFProxyTypeNone");
-const CFStringRef kCFProxyTypeAutoConfigurationURL = static_cast<CFStringRef>(@"kCFProxyTypeAutoConfigurationURL");
-const CFStringRef kCFProxyTypeAutoConfigurationJavaScript = static_cast<CFStringRef>(@"kCFProxyTypeAutoConfigurationJavaScript");
-const CFStringRef kCFProxyTypeFTP = static_cast<CFStringRef>(@"kCFProxyTypeFTP");
-const CFStringRef kCFProxyTypeHTTP = static_cast<CFStringRef>(@"kCFProxyTypeHTTP");
-const CFStringRef kCFProxyTypeHTTPS = static_cast<CFStringRef>(@"kCFProxyTypeHTTPS");
-const CFStringRef kCFProxyTypeSOCKS = static_cast<CFStringRef>(@"kCFProxyTypeSOCKS");
-const CFStringRef kCFNetworkProxiesHTTPEnable = static_cast<CFStringRef>(@"kCFNetworkProxiesHTTPEnable");
-const CFStringRef kCFNetworkProxiesHTTPPort = static_cast<CFStringRef>(@"kCFNetworkProxiesHTTPPort");
-const CFStringRef kCFNetworkProxiesHTTPProxy = static_cast<CFStringRef>(@"kCFNetworkProxiesHTTPProxy");
-const CFStringRef kCFNetworkProxiesProxyAutoConfigEnable = static_cast<CFStringRef>(@"kCFNetworkProxiesProxyAutoConfigEnable");
-const CFStringRef kCFNetworkProxiesProxyAutoConfigJavaScript = static_cast<CFStringRef>(@"kCFNetworkProxiesProxyAutoConfigJavaScript");
-const CFStringRef kCFNetworkProxiesProxyAutoConfigURLString = static_cast<CFStringRef>(@"kCFNetworkProxiesProxyAutoConfigURLString");
+const CFStringRef kCFProxyAutoConfigurationHTTPResponseKey = CFSTR("kCFProxyAutoConfigurationHTTPResponseKey");
+const CFStringRef kCFProxyAutoConfigurationJavaScriptKey = CFSTR("kCFProxyAutoConfigurationJavaScriptKey");
+const CFStringRef kCFProxyAutoConfigurationURLKey = CFSTR("kCFProxyAutoConfigurationURLKey");
+const CFStringRef kCFProxyHostNameKey = CFSTR("kCFProxyHostNameKey");
+const CFStringRef kCFProxyPasswordKey = CFSTR("kCFProxyPasswordKey");
+const CFStringRef kCFProxyPortNumberKey = CFSTR("kCFProxyPortNumberKey");
+const CFStringRef kCFProxyTypeKey = CFSTR("kCFProxyTypeKey");
+const CFStringRef kCFProxyUsernameKey = CFSTR("kCFProxyUsernameKey");
+const CFStringRef kCFProxyTypeNone = CFSTR("kCFProxyTypeNone");
+const CFStringRef kCFProxyTypeAutoConfigurationURL = CFSTR("kCFProxyTypeAutoConfigurationURL");
+const CFStringRef kCFProxyTypeAutoConfigurationJavaScript = CFSTR("kCFProxyTypeAutoConfigurationJavaScript");
+const CFStringRef kCFProxyTypeFTP = CFSTR("kCFProxyTypeFTP");
+const CFStringRef kCFProxyTypeHTTP = CFSTR("kCFProxyTypeHTTP");
+const CFStringRef kCFProxyTypeHTTPS = CFSTR("kCFProxyTypeHTTPS");
+const CFStringRef kCFProxyTypeSOCKS = CFSTR("kCFProxyTypeSOCKS");
+const CFStringRef kCFNetworkProxiesHTTPEnable = CFSTR("kCFNetworkProxiesHTTPEnable");
+const CFStringRef kCFNetworkProxiesHTTPPort = CFSTR("kCFNetworkProxiesHTTPPort");
+const CFStringRef kCFNetworkProxiesHTTPProxy = CFSTR("kCFNetworkProxiesHTTPProxy");
+const CFStringRef kCFNetworkProxiesProxyAutoConfigEnable = CFSTR("kCFNetworkProxiesProxyAutoConfigEnable");
+const CFStringRef kCFNetworkProxiesProxyAutoConfigJavaScript = CFSTR("kCFNetworkProxiesProxyAutoConfigJavaScript");
+const CFStringRef kCFNetworkProxiesProxyAutoConfigURLString = CFSTR("kCFNetworkProxiesProxyAutoConfigURLString");
 
 /**
  @Status Stub

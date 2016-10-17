@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -165,6 +165,11 @@ void App::OnActivated(IActivatedEventArgs^ args) {
     UIApplicationActivated(args);
 }
 
+void App::OnFileActivated(FileActivatedEventArgs^ args)
+{
+    UIApplicationActivated(args);
+}
+
 #ifdef ENABLE_BACKGROUND_TASK
 void App::OnBackgroundActivated(BackgroundActivatedEventArgs^ args) {
     __super::OnBackgroundActivated(args);
@@ -229,6 +234,15 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
         }
 
         UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri), caller);
+    } else if (args->Kind == ActivationKind::File) {
+        FileActivatedEventArgs^ result = safe_cast<FileActivatedEventArgs^>(args);
+        TraceVerbose(TAG, L"Received file activation");
+
+        if (initiateAppLaunch) {
+            _ApplicationLaunch(ActivationTypeFile, result);
+        }
+
+        UIApplicationMainHandleFileEvent(reinterpret_cast<IInspectable*>(result));
     } else {
         TraceWarning(TAG, L"Received unhandled activation kind - %d", args->Kind);
 

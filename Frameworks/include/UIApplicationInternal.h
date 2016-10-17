@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,6 +16,9 @@
 #pragma once
 
 #import <UIKit/UIApplication.h>
+#import <UWP/WindowsFoundation.h>
+#import <UWP/WindowsMediaSpeechRecognition.h>
+#import <UWP/WindowsApplicationModelActivation.h>
 
 @interface UIApplication (internal)
 - (UIWindow*)_popupWindow;
@@ -29,6 +32,7 @@
 - (void)_sendToastActionReceivedEvent:(NSDictionary*)toastAction;
 - (void)_sendVoiceCommandReceivedEvent:(WMSSpeechRecognitionResult*)result;
 - (void)_sendProtocolReceivedEvent:(WFUri*)uri;
+- (void)_sendFileReceivedEvent:(WAAFileActivatedEventArgs*)result;
 @end
 
 @interface WOCDisplayMode (internal)

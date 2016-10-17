@@ -45,7 +45,7 @@ using namespace Microsoft::WRL;
 
 @implementation UIFont
 
-BASE_CLASS_REQUIRED_IMPLS(UIFont, UICTFont, CTFontGetTypeID);
+BASE_CLASS_REQUIRED_IMPLS(UIFont, UIFontPrototype, CTFontGetTypeID);
 
 /**
  @Status Interoperable
@@ -285,7 +285,7 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UICTFont, CTFontGetTypeID);
 }
 
 /**
-@Status Interoperable
+ @Status Interoperable
 */
 - (instancetype)copyWithZone:(NSZone*)zone {
     return [self retain];
@@ -294,6 +294,27 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UICTFont, CTFontGetTypeID);
 - (uint32_t)_sizingFontHandle {
     UNIMPLEMENTED();
     return StubReturn();
+}
+
+// WinObjC-only extension for UINibUnarchiver
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    NSString* name = [coder decodeObjectForKey:@"UIFontName"];
+    if ([name length] < 1) {
+        // fallback to default if could not find a font name
+        name = (__bridge NSString*)kCTFontDefaultFontName;
+    }
+
+    CGFloat size = [coder decodeFloatForKey:@"UIFontPointSize"];
+
+    UIFont* font = [UIFont fontWithName:name size:size];
+
+    [self release];
+    if (font) {
+        self = font;
+        return font;
+    } else {
+        return nil;
+    }
 }
 
 @end

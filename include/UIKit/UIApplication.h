@@ -55,6 +55,7 @@ UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsRemoteNotificationKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsToastActionKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsVoiceCommandKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsProtocolKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsFileKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsAnnotationKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsLocalNotificationKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsLocationKey;

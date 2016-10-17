@@ -2,16 +2,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XamlTest", "XamlTest", "{1429A60D-6FC9-4C79-A4A5-3D4D3B366281}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XamlTest", "XamlTest", "{4396EE64-1A66-47CB-9CE7-AD250EEF5BFA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XamlTest-Headers", "XamlTest.vsimporter\XamlTest-Headers-WinStore10\XamlTest-Headers.vcxitems", "{E9A505B7-CD12-4ADF-A234-891BC3123E0D}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XamlTest", "XamlTest.vsimporter\XamlTest-WinStore10\XamlTest.vcxproj", "{BA9B01FA-CC9B-4679-B203-7BEE51C2AD02}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XamlTest", "XamlTest.vsimporter\XamlTest-WinStore10\XamlTest.vcxproj", "{9125CE4D-C3B5-4B05-A78E-C68976AFA8AB}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		XamlTest.vsimporter\XamlTest-Headers-WinStore10\XamlTest-Headers.vcxitems*{E9A505B7-CD12-4ADF-A234-891BC3123E0D}*SharedItemsImports = 9
-		XamlTest.vsimporter\XamlTest-Headers-WinStore10\XamlTest-Headers.vcxitems*{BA9B01FA-CC9B-4679-B203-7BEE51C2AD02}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -20,24 +16,23 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BA9B01FA-CC9B-4679-B203-7BEE51C2AD02}.Debug|ARM.ActiveCfg = Debug|ARM
-		{BA9B01FA-CC9B-4679-B203-7BEE51C2AD02}.Debug|ARM.Build.0 = Debug|ARM
-		{BA9B01FA-CC9B-4679-B203-7BEE51C2AD02}.Debug|ARM.Deploy.0 = Debug|ARM
-		{BA9B01FA-CC9B-4679-B203-7BEE51C2AD02}.Debug|Win32.ActiveCfg = Debug|Win32
-		{BA9B01FA-CC9B-4679-B203-7BEE51C2AD02}.Debug|Win32.Build.0 = Debug|Win32
-		{BA9B01FA-CC9B-4679-B203-7BEE51C2AD02}.Debug|Win32.Deploy.0 = Debug|Win32
-		{BA9B01FA-CC9B-4679-B203-7BEE51C2AD02}.Release|ARM.ActiveCfg = Release|ARM
-		{BA9B01FA-CC9B-4679-B203-7BEE51C2AD02}.Release|ARM.Build.0 = Release|ARM
-		{BA9B01FA-CC9B-4679-B203-7BEE51C2AD02}.Release|ARM.Deploy.0 = Release|ARM
-		{BA9B01FA-CC9B-4679-B203-7BEE51C2AD02}.Release|Win32.ActiveCfg = Release|Win32
-		{BA9B01FA-CC9B-4679-B203-7BEE51C2AD02}.Release|Win32.Build.0 = Release|Win32
-		{BA9B01FA-CC9B-4679-B203-7BEE51C2AD02}.Release|Win32.Deploy.0 = Release|Win32
+		{9125CE4D-C3B5-4B05-A78E-C68976AFA8AB}.Debug|ARM.ActiveCfg = Debug|ARM
+		{9125CE4D-C3B5-4B05-A78E-C68976AFA8AB}.Debug|ARM.Build.0 = Debug|ARM
+		{9125CE4D-C3B5-4B05-A78E-C68976AFA8AB}.Debug|ARM.Deploy.0 = Debug|ARM
+		{9125CE4D-C3B5-4B05-A78E-C68976AFA8AB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9125CE4D-C3B5-4B05-A78E-C68976AFA8AB}.Debug|Win32.Build.0 = Debug|Win32
+		{9125CE4D-C3B5-4B05-A78E-C68976AFA8AB}.Debug|Win32.Deploy.0 = Debug|Win32
+		{9125CE4D-C3B5-4B05-A78E-C68976AFA8AB}.Release|ARM.ActiveCfg = Release|ARM
+		{9125CE4D-C3B5-4B05-A78E-C68976AFA8AB}.Release|ARM.Build.0 = Release|ARM
+		{9125CE4D-C3B5-4B05-A78E-C68976AFA8AB}.Release|ARM.Deploy.0 = Release|ARM
+		{9125CE4D-C3B5-4B05-A78E-C68976AFA8AB}.Release|Win32.ActiveCfg = Release|Win32
+		{9125CE4D-C3B5-4B05-A78E-C68976AFA8AB}.Release|Win32.Build.0 = Release|Win32
+		{9125CE4D-C3B5-4B05-A78E-C68976AFA8AB}.Release|Win32.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{E9A505B7-CD12-4ADF-A234-891BC3123E0D} = {1429A60D-6FC9-4C79-A4A5-3D4D3B366281}
-		{BA9B01FA-CC9B-4679-B203-7BEE51C2AD02} = {1429A60D-6FC9-4C79-A4A5-3D4D3B366281}
+		{9125CE4D-C3B5-4B05-A78E-C68976AFA8AB} = {4396EE64-1A66-47CB-9CE7-AD250EEF5BFA}
 	EndGlobalSection
 EndGlobal

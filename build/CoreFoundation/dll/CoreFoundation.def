@@ -41,6 +41,7 @@ LIBRARY CoreFoundation
         _CFDisableZombies
         __CFZombifyNSObjectHook CONSTANT
         _NS_chdir
+        CFReadStreamCreateWithData
 
         ; Base Utilities.mm
         kCFCoreFoundationVersionNumber DATA
@@ -863,7 +864,7 @@ LIBRARY CoreFoundation
         ; kCFStreamErrorDomainSOCKS DATA ; HACKHACK: not present. Maybe supposed to be in CFNetowrking?
         ; kCFStreamErrorDomainSystemConfiguration DATA ; HACKHACK: not present. Maybe supposed to be in CFNetowrking?
         ; kCFStreamErrorDomainSSL DATA ; HACKHACK: not present. Maybe supposed to be in CFNetowrking?
-        kCFStreamPropertySSLSettings ; HACKHACK: not present. Maybe supposed to be in CFNetowrking? Added Manually since foundation uses it.
+        ; kCFStreamPropertySSLSettings ; HACKHACK: not present. Maybe supposed to be in CFNetowrking? 
         kCFStreamPropertyAppendToFile DATA
         kCFStreamPropertyFileCurrentOffset DATA
         kCFStreamPropertyDataWritten DATA

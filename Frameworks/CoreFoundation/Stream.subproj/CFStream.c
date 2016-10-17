@@ -356,9 +356,6 @@ CONST_STRING_DECL(kCFStreamPropertySocketRemotePortNumber, "kCFStreamPropertySoc
 CONST_STRING_DECL(kCFStreamPropertyDataWritten, "kCFStreamPropertyDataWritten")
 CONST_STRING_DECL(kCFStreamPropertyAppendToFile, "kCFStreamPropertyAppendToFile")
 
-// HACKHACK: manually addded since Foundation depends on it. Really should come from CFNetworking.
-CONST_STRING_DECL(kCFStreamPropertySSLSettings, "kCFStreamPropertySSLSettings")
-
 CF_PRIVATE void __CFStreamInitialize(void) {
     static dispatch_once_t initOnce = 0;
     dispatch_once(&initOnce, ^{ __kCFReadStreamTypeID = _CFRuntimeRegisterClass(&__CFReadStreamClass); __kCFWriteStreamTypeID = _CFRuntimeRegisterClass(&__CFWriteStreamClass); });

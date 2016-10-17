@@ -95,7 +95,7 @@ static VCProjectItem* addFileToVSInternal(const PBXFile* file, VCProject& proj, 
   // Take into account path override
   bool useRelativePath = true;
   if (itemHint && !itemHint->pathOverride.empty()) {
-    sbAssert(!isVariant, "Unexpected path override for variant file: " + realPath);
+    sbAssertWithTelemetry(!isVariant, "Unexpected path override for variant file: " + realPath);
     realPath = itemHint->pathOverride;
     useRelativePath = false;
   }

@@ -1,3 +1,4 @@
+// clang-format off
 // Copyright 2005, Google Inc.
 // All rights reserved.
 //
@@ -295,7 +296,7 @@ class GTEST_API_ AssertionResult {
   // assertion's expectation). When nothing has been streamed into the
   // object, returns an empty string.
   const char* message() const {
-    return message_.get() != NULL ?  message_->c_str() : "";
+    return success_ ? "" : (message_.get() != NULL ?  message_->c_str() : "");
   }
   // TODO(vladl@google.com): Remove this after making sure no clients use it.
   // Deprecated; please use message() instead.
@@ -2238,3 +2239,4 @@ inline int RUN_ALL_TESTS() {
 }
 
 #endif  // GTEST_INCLUDE_GTEST_GTEST_H_
+// clang-format on
