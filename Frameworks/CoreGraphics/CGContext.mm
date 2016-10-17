@@ -580,15 +580,14 @@ void CGContextClearRect(CGContextRef context, CGRect rect) {
     renderTarget->PopAxisAlignedClip();
 }
 
-static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometry, CGPathDrawingMode drawMode) {
+template <typename Lambda>
+static void __CGContextRenderToCommandList(CGContextRef context, ID2D1CommandList** outCommandList, Lambda l) {
     ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
     auto& currentState = context->CurrentGState();
 
     ComPtr<ID2D1DeviceContext> deviceContext;
     FAIL_FAST_IF_FAILED(renderTarget.As(&deviceContext));
 
-    D2D1_SIZE_F targetSize = renderTarget->GetSize();
-    //D2D1_SIZE_U unscaledTargetSize = renderTarget->GetPixelSize();
     ComPtr<ID2D1Image> originalTarget;
     deviceContext->GetTarget(&originalTarget);
 
@@ -598,43 +597,31 @@ static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometr
     FAIL_FAST_IF_FAILED(deviceContext->CreateCommandList(&commandList));
     deviceContext->SetTarget(commandList.Get());
 
-    CGAffineTransform& currentTransform = currentState.transform;
-    CGAffineTransform transform = CGAffineTransformScale(currentTransform, 1.0, -1.0);
-    // undo the scale (propagated to DPI)
-    //transform = CGAffineTransformScale(transform, targetSize.width/(double)unscaledTargetSize.width, targetSize.height/(double)unscaledTargetSize.height);
-    // undo the slide (slide was in points, must be done after scale is undone)
-    transform = CGAffineTransformTranslate(transform, 0., targetSize.height);
-    deviceContext->SetTransform({ transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty });
-
-    if (drawMode & kCGPathFill) {
-        if (drawMode & kCGPathEOFill) {
-            // TODO(DH): GH#1077 Regenerate geometry in Even/Odd fill mode.
-        }
-        deviceContext->FillGeometry(geometry, currentState.fillBrush.Get());
-    }
-
-    if (drawMode & kCGPathStroke) {
-        ComPtr<ID2D1Factory> factory;
-        deviceContext->GetFactory(&factory);
-
-        // TODO(DH): GH#1077 Do not recreate for every drawing operation
-        ComPtr<ID2D1StrokeStyle> strokeStyle;
-        // dashes must be adjusted to be based on line width
-        std::vector<CGFloat> adjustedDashes{ currentState.dashes };
-        for (float& f : adjustedDashes) {
-            f /= currentState.lineWidth;
-        }
-        FAIL_FAST_IF_FAILED(
-            factory->CreateStrokeStyle(currentState.strokeProperties, adjustedDashes.data(), adjustedDashes.size(), &strokeStyle));
-
-        deviceContext->DrawGeometry(geometry, currentState.strokeBrush.Get(), currentState.lineWidth, strokeStyle.Get());
-    }
+    l(context, renderTarget.Get());
 
     deviceContext->EndDraw();
     commandList->Close();
 
-    deviceContext->BeginDraw();
     deviceContext->SetTarget(originalTarget.Get());
+
+    *outCommandList = commandList.Detach();
+}
+
+static void __CGContextRenderCommandList(CGContextRef context, ID2D1CommandList* commandList) {
+    ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
+    auto& currentState = context->CurrentGState();
+
+    ComPtr<ID2D1DeviceContext> deviceContext;
+    FAIL_FAST_IF_FAILED(renderTarget.As(&deviceContext));
+
+    D2D1_SIZE_F targetSize = renderTarget->GetSize();
+    CGAffineTransform& currentTransform = currentState.transform;
+    CGAffineTransform transform = CGAffineTransformScale(currentTransform, 1.0, -1.0);
+    // undo the slide (slide was in points, must be done after scale is undone)
+    transform = CGAffineTransformTranslate(transform, 0., targetSize.height);
+    deviceContext->SetTransform({ transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty });
+
+    deviceContext->BeginDraw();
 
     bool layer = false;
     if (currentState.alpha != 1.0f || false /* mask, clip, etc. */) {
@@ -647,13 +634,47 @@ static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometr
                                 nullptr);
     }
 
-    deviceContext->DrawImage(commandList.Get());
+    deviceContext->DrawImage(commandList);
 
     if (layer) {
         renderTarget->PopLayer();
     }
 
     FAIL_FAST_IF_FAILED(deviceContext->EndDraw());
+
+    deviceContext->SetTransform(D2D1::IdentityMatrix());
+}
+
+static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometry, CGPathDrawingMode drawMode) {
+    ComPtr<ID2D1CommandList> commandList;
+    __CGContextRenderToCommandList(context, &commandList, [geometry, drawMode](CGContextRef context, ID2D1RenderTarget* renderTarget) {
+        auto& currentState = context->CurrentGState();
+        if (drawMode & kCGPathFill) {
+            if (drawMode & kCGPathEOFill) {
+                // TODO(DH): GH#1077 Regenerate geometry in Even/Odd fill mode.
+            }
+            renderTarget->FillGeometry(geometry, currentState.fillBrush.Get());
+        }
+
+        if (drawMode & kCGPathStroke) {
+            ComPtr<ID2D1Factory> factory;
+            renderTarget->GetFactory(&factory);
+
+            // TODO(DH): GH#1077 Do not recreate for every drawing operation
+            ComPtr<ID2D1StrokeStyle> strokeStyle;
+            // dashes must be adjusted to be based on line width
+            std::vector<CGFloat> adjustedDashes{ currentState.dashes };
+            for (float& f : adjustedDashes) {
+                f /= currentState.lineWidth;
+            }
+            FAIL_FAST_IF_FAILED(
+                factory->CreateStrokeStyle(currentState.strokeProperties, adjustedDashes.data(), adjustedDashes.size(), &strokeStyle));
+
+            renderTarget->DrawGeometry(geometry, currentState.strokeBrush.Get(), currentState.lineWidth, strokeStyle.Get());
+        }
+    });
+
+    __CGContextRenderCommandList(context, commandList.Get());
 }
 
 /**
