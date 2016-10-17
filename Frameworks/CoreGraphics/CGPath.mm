@@ -50,7 +50,6 @@ struct __CGPath {
         ComPtr<ID2D1PathGeometry> _pathGeometry{ nullptr };
         ComPtr<ID2D1GeometrySink> _geometrySink{ nullptr };
 
-        // bool _isPathClosed;
         bool _isFigureClosed;
         CGPoint _currentPoint{ 0, 0 };
         CGPoint _startingPoint{ 0, 0 };
@@ -72,13 +71,23 @@ struct __CGPath {
         if (!_impl._geometrySink) {
             // Re-open this geometry.
             ComPtr<ID2D1Factory> factory = _GetD2DFactoryInstance();
-            FAIL_FAST_IF_FAILED(factory->CreatePathGeometry(&_impl._pathGeometry));
-            FAIL_FAST_IF_FAILED(_impl._pathGeometry->Open(&_impl._geometrySink));
+
+            // Create temp vars for new path/sink
+            Microsoft::WRL::ComPtr<ID2D1PathGeometry> newPath;
+            Microsoft::WRL::ComPtr<ID2D1GeometrySink> newSink;
+
+            // Open a new path that the contents of the old path will be streamed into. We cannot re-use the same
+            // path as it is now closed and cannot be opened again. We use the newPath variable because the factory
+            // was returning the same pointer for some strange reason so this will force it to do otherwise.
+            FAIL_FAST_IF_FAILED(factory->CreatePathGeometry(&newPath));
+            FAIL_FAST_IF_FAILED(newPath->Open(&newSink));
+            FAIL_FAST_IF_FAILED(_impl._pathGeometry->Stream(newSink.Get()));
+
+            _impl._pathGeometry = newPath;
+            _impl._geometrySink = newSink;
 
             // Without a new figure being created, it's by default closed
             _impl._isFigureClosed = true;
-
-            //_impl._isPathClosed = false;
         }
     }
 
@@ -87,7 +96,6 @@ struct __CGPath {
             endFigure(D2D1_FIGURE_END_OPEN);
             _impl._geometrySink->Close();
             _impl._geometrySink = nullptr;
-            //_impl._isPathClosed = true;
         }
     }
 
@@ -513,6 +521,10 @@ void CGPathCloseSubpath(CGMutablePathRef path) {
 @Notes
 */
 CGRect CGPathGetBoundingBox(CGPathRef path) {
+    if (path == NULL) {
+        return CGRectMake(INFINITY, INFINITY, 0, 0);
+    }
+
     D2D1_RECT_F bounds;
 
     path->closePath();
@@ -528,12 +540,20 @@ CGRect CGPathGetBoundingBox(CGPathRef path) {
 }
 
 /**
-@Status Stub
-@Notes
+@Status Interoperable
+
 */
 bool CGPathIsEmpty(CGPathRef path) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (path == NULL) {
+        return kCFBooleanTrue;
+    }
+
+    UINT32 count;
+
+    path->closePath();
+
+    path->_impl._pathGeometry->GetFigureCount(&count);
+    return count == 0;
 }
 
 /**

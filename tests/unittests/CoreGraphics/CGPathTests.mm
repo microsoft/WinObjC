@@ -595,48 +595,65 @@ void EXPECT_SIZEEQ(CGSize pathSize, CGFloat width, CGFloat height) {
 
 // Simple tests for the status of a CGPath during the CGPath rework into D2D.
 TEST(CGPath, CGPathSimpleCreation) {
+    // Create a new path
     CGMutablePathRef path = CGPathCreateMutable();
+    EXPECT_TRUE(CGPathIsEmpty(path));
     EXPECT_NE(nullptr, path);
+    // It's starting point should be at 0,0
     EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 0, 0);
 
+    // Move to a new point
     CGPathMoveToPoint(path, NULL, 50, 50);
     EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 50, 50);
 
+    // Move to another new point
     CGPathMoveToPoint(path, NULL, 100, 50);
     EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 100, 50);
 
+    // Create a copy of this path which should be at the same point
     CGMutablePathRef pathCopy = CGPathCreateMutableCopy(path);
     EXPECT_POINTEQ(CGPathGetCurrentPoint(pathCopy), 100, 50);
+
+    // Move the new path to a new point
     CGPathMoveToPoint(pathCopy, NULL, 200, 200);
+
+    // The original should not have been changed but the new path should have moved
     EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 100, 50);
     EXPECT_POINTEQ(CGPathGetCurrentPoint(pathCopy), 200, 200);
 }
 
 TEST(CGPath, CGPathSimpleLines) {
+    // Create a new path at a particular point and draw a line
     CGMutablePathRef path = CGPathCreateMutable();
     CGPathMoveToPoint(path, NULL, 50, 50);
     CGPathAddLineToPoint(path, NULL, 25, 25);
     EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 25, 25);
 
+    // Get the size of its bounding box
     CGRect boundingBox = CGPathGetBoundingBox(path);
     EXPECT_POINTEQ(boundingBox.origin, 25, 25);
     EXPECT_SIZEEQ(boundingBox.size, 25, 25);
 
+    // Add a line further down to increase the bounding box's size
     CGPathAddLineToPoint(path, NULL, 100, 200);
 
     boundingBox = CGPathGetBoundingBox(path);
 
+    // Verify that the size of this box has changed
     EXPECT_POINTEQ(boundingBox.origin, 25, 25);
     EXPECT_SIZEEQ(boundingBox.size, 75, 175);
 
+    // Create a new path and move it to a new point
     path = CGPathCreateMutable();
     CGPathMoveToPoint(path, NULL, 50, 50);
     CGPathAddLineToPoint(path, NULL, 81, 107);
 
+    // Get the bounding box size of that path
     boundingBox = CGPathGetBoundingBox(path);
     EXPECT_POINTEQ(boundingBox.origin, 50, 50);
     EXPECT_SIZEEQ(boundingBox.size, 31, 57);
 
+    // Create a copy of this path
     CGMutablePathRef pathCopy = CGPathCreateMutableCopy(path);
     CGPathAddLineToPoint(pathCopy, NULL, 200, 200);
 
@@ -649,6 +666,7 @@ TEST(CGPath, CGPathSimpleLines) {
     EXPECT_POINTEQ(boundingBox.origin, 50, 50);
     EXPECT_SIZEEQ(boundingBox.size, 150, 150);
 
+    // Redundant check for confidence
     boundingBox = CGPathGetBoundingBox(path);
     EXPECT_POINTEQ(boundingBox.origin, 50, 50);
     EXPECT_SIZEEQ(boundingBox.size, 31, 57);
