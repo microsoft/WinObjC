@@ -18,6 +18,6 @@
 
 #import "MenuTableViewController.h"
 
-@interface CALayerViewController : MenuTableViewController
+@interface CALayerViewController : UIViewController
 
 @end

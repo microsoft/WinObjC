@@ -16,17 +16,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CALayerAnimationViewController : UIViewController {
-    UIImage* photo;
-
-    UIImageView* imageViewLeftTop;
-    UIImageView* imageViewMidTop;
-    UIImageView* imageViewRightTop;
-    UIImageView* imageViewLeftBottom;
-    UIImageView* imageViewMidBottom;
-    UIImageView* imageViewRightBottom;
-
-    CABasicAnimation* animation;
-}
+@interface CALayerAnimationViewController : UIViewController
 
 @end

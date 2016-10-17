@@ -16,6 +16,7 @@
 		2312E1461DADC5C400998C74 /* StoryBoardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E1441DADC5C400998C74 /* StoryBoardViewController.m */; };
 		2312E1481DAED8D100998C74 /* CALayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E1471DAED8D100998C74 /* CALayerViewController.m */; };
 		2312E14C1DAEEE2800998C74 /* safe.png in Resources */ = {isa = PBXBuildFile; fileRef = 2312E14B1DAEEE2800998C74 /* safe.png */; };
+		2312E14F1DB1733D00998C74 /* CALayerAnimationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E14E1DB1733D00998C74 /* CALayerAnimationViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,8 @@
 		2312E1471DAED8D100998C74 /* CALayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CALayerViewController.m; sourceTree = "<group>"; };
 		2312E1491DAED90100998C74 /* CALayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CALayerViewController.h; sourceTree = "<group>"; };
 		2312E14B1DAEEE2800998C74 /* safe.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = safe.png; path = CoreAnimationTest/Images/safe.png; sourceTree = "<group>"; };
+		2312E14D1DB1733D00998C74 /* CALayerAnimationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CALayerAnimationViewController.h; sourceTree = "<group>"; };
+		2312E14E1DB1733D00998C74 /* CALayerAnimationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CALayerAnimationViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +74,8 @@
 				2312E1281DAD95AC00998C74 /* AppDelegate.h */,
 				2312E1291DAD95AC00998C74 /* AppDelegate.m */,
 				2312E1311DAD95AC00998C74 /* Assets.xcassets */,
+				2312E14D1DB1733D00998C74 /* CALayerAnimationViewController.h */,
+				2312E14E1DB1733D00998C74 /* CALayerAnimationViewController.m */,
 				2312E1491DAED90100998C74 /* CALayerViewController.h */,
 				2312E1471DAED8D100998C74 /* CALayerViewController.m */,
 				2312E13F1DADA53D00998C74 /* CoreAnimationTest.storyboard */,
@@ -175,6 +180,7 @@
 			files = (
 				2312E1451DADC5C400998C74 /* ProgrammaticViewController.m in Sources */,
 				2312E12A1DAD95AC00998C74 /* AppDelegate.m in Sources */,
+				2312E14F1DB1733D00998C74 /* CALayerAnimationViewController.m in Sources */,
 				2312E13E1DAD988B00998C74 /* MenuTableViewController.m in Sources */,
 				2312E1271DAD95AC00998C74 /* main.m in Sources */,
 				2312E1481DAED8D100998C74 /* CALayerViewController.m in Sources */,

@@ -19,6 +19,8 @@
 #import "CALayerViewController.h"
 
 @implementation CALayerViewController {
+    MenuTableViewController* _menuTVC;
+
     CALayer* _layer;
     UIView* _viewForLayer;
 }
@@ -26,18 +28,48 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    _viewForLayer = [[UIView alloc] init];
-    _viewForLayer.frame = CGRectMake(0, 0, 200, 200);
+    _viewForLayer = self.view;
+    _viewForLayer.frame = CGRectMake(0, 100, 200, 200);
     _viewForLayer.backgroundColor = [UIColor whiteColor];
 
     [self setupLayer];
-    [_viewForLayer.layer addSublayer : _layer];
+    [_viewForLayer.layer addSublayer:_layer];
 
-    // CALayer
-    [self addMenuItemView:_viewForLayer andTitle : @""];
+    _menuTVC = [[MenuTableViewController alloc] init];
+    _menuTVC.view.frame = CGRectMake(0, 350, 200, 0 /* setting it to 0 allows scrolling to the end */);
+    [self.view addSubview:_menuTVC.view];
 
-    // Hidden
-    [self addMenuItemView:[[UISwitch alloc] init] andTitle : @"Hidden"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"1"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"2"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"3"];
+
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"4"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"5"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"6"];
+
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"7"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"8"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"9"];
+
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"10"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"11"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"12"];
+
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"13"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"14"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"15"];
+
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"16"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"17"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"18"];
+
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"19"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"20"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"21"];
+
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"22"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"23"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"24"];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -34,37 +34,37 @@
     [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CALayer Transactions (CATransactions)"];
 
     // CALayer Transform2D
-    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CALayer Tranform2D"];
+    [self addMenuItemViewController:[[UIViewController alloc] init] andTitle : @"CALayer Tranform2D"];
 
     // CALayer Transform3D
-    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CALayer Transform3D - TBD"];
+    [self addMenuItemViewController:[[UIViewController alloc] init] andTitle : @"CALayer Transform3D - TBD"];
 
     // AVPlayerLayer
-    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"AVPlayerLayer - TBD"];
+    [self addMenuItemViewController:[[UIViewController alloc] init] andTitle : @"AVPlayerLayer - TBD"];
 
     // CAShapeLayer
-    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CAShapeLayer - TBD"];
+    [self addMenuItemViewController:[[UIViewController alloc] init] andTitle : @"CAShapeLayer - TBD"];
 
     // CAGradientLayer
-    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CAGradientLayer - TBD"];
+    [self addMenuItemViewController:[[UIViewController alloc] init] andTitle : @"CAGradientLayer - TBD"];
 
     // CATextLayer
-    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CATextLayer - TBD"];
+    [self addMenuItemViewController:[[UIViewController alloc] init] andTitle : @"CATextLayer - TBD"];
 
     // CATiledLayer
-    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CATiledLayer - TBD"];
+    [self addMenuItemViewController:[[UIViewController alloc] init] andTitle : @"CATiledLayer - TBD"];
 
     // CAEAGLLayer
-    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CAEAGLLayer - TBD"];
+    [self addMenuItemViewController:[[UIViewController alloc] init] andTitle : @"CAEAGLLayer - TBD"];
 
     // CAScrollLayer
-    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CAScrollLayer - TBD"];
+    [self addMenuItemViewController:[[UIViewController alloc] init] andTitle : @"CAScrollLayer - TBD"];
 
     // CAEmitterLayer
-    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CAEmitterLayer - TBD"];
+    [self addMenuItemViewController:[[UIViewController alloc] init] andTitle : @"CAEmitterLayer - TBD"];
 
     // CAReplicatorLayer
-    [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle : @"CAReplicatorLayer - TBD"];
+    [self addMenuItemViewController:[[UIViewController alloc] init] andTitle : @"CAReplicatorLayer - TBD"];
 }
 
 - (void)didReceiveMemoryWarning {
