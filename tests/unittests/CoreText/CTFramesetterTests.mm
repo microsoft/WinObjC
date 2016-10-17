@@ -103,4 +103,4 @@ TEST(CTFramesetter, ShouldNotThrowWhenCreatingFrameWithEmptyLines) {
     EXPECT_EQ(5L, CFArrayGetCount(CTFrameGetLines(frame)));
     CFRelease(frame);
     CGPathRelease(path);
-} 
+}

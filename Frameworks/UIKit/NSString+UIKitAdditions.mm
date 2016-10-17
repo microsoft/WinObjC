@@ -82,11 +82,13 @@ static void drawString(UIFont* font,
     CGPathRef path = CGPathCreateWithRect(rect, nullptr);
     CTFrameRef frame = CTFramesetterCreateFrame(framesetter, {}, path, nullptr);
     CGContextSetTextPosition(context, rect.origin.x, rect.origin.y);
-    _CTFrameDrawUninverted(frame, context);
+    CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0f, -1.0f));
+    CTFrameDraw(frame, context);
     *sizeOut = _CTFrameGetSize(frame);
 
     CGPathRelease(path);
     CFRelease(framesetter);
+    CFRelease(frame);
 }
 
 static NSDictionary* _getDefaultUITextAttributes() {

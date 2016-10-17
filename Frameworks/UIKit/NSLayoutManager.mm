@@ -34,6 +34,8 @@
     CTFrameRef _frame;
 }
 
+// Returns true if any of the characters in line after index have visible glyphs, false otherwise
+// Used to determine if a given index is past the visible part of a line for linebreaking
 static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
     for (id runRef in static_cast<NSArray*>(CTLineGetGlyphRuns(line))) {
         CTRunRef run = static_cast<CTRunRef>(runRef);
@@ -239,6 +241,7 @@ static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
 
     CGContextRef curCtx = UIGraphicsGetCurrentContext();
     CGContextSaveGState(curCtx);
+    CGContextSetTextMatrix(curCtx, CGAffineTransformMakeScale(1.0f, -1.0f));
 
     int count = [_ctLines count];
     for (int curLine = 0; curLine < count; curLine++) {
@@ -248,8 +251,8 @@ static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
         CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
 
         CGContextSaveGState(curCtx);
-        CGContextSetTextPosition(curCtx, _lineOrigins[curLine].x - position.x, _lineOrigins[curLine].y - position.y);
-        _CTLineDrawUninverted(line, curCtx);
+        CGContextSetTextPosition(curCtx, _lineOrigins[curLine].x, _lineOrigins[curLine].y);
+        CTLineDraw(line, curCtx);
         CGContextRestoreGState(curCtx);
     }
     CGContextRestoreGState(curCtx);
