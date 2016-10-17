@@ -30,7 +30,6 @@
 #include "sbassert.h"
 #include "stringutils.h"
 #include "fileutils.h"
-#include "telemetryutils.h"
 
 String sb_basename(const String& path)
 {
@@ -242,7 +241,7 @@ bool isAbsolutePath(const String &path, PathStyle style)
 String getcwd()
 {
   char cwd[PATH_MAX+1];
-  sbAssertWithTelemetry(getcwd(cwd, sizeof(cwd)), "Failed to get CWD");
+  sbAssert(getcwd(cwd, sizeof(cwd)), "Failed to get CWD");
   return posixPath(cwd);
 }
 
