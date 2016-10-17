@@ -1,23 +1,26 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{8db2c930-f5b7-42ed-9c1d-f81218dc719f}</UniqueIdentifier>
+      <UniqueIdentifier>{45aaefb1-8a2a-421f-ac02-0ca6daaf8cc0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{eae09327-af84-4a99-b801-cd4790a50d44}</UniqueIdentifier>
+      <UniqueIdentifier>{500bf699-f85f-40ec-8c58-6c9193c05193}</UniqueIdentifier>
     </Filter>
     <Filter Include="HelloUI">
-      <UniqueIdentifier>{A745B41B-2C32-4E2C-9B50-93A65372A8B6}</UniqueIdentifier>
+      <UniqueIdentifier>{8A14B4B8-922D-4E57-9614-3050469B547A}</UniqueIdentifier>
     </Filter>
     <Filter Include="HelloUI\Supporting Files">
-      <UniqueIdentifier>{FCC940D2-9B02-4CA3-AEE1-0A57FACE9950}</UniqueIdentifier>
+      <UniqueIdentifier>{3B17D930-BDAB-4F1F-BFD1-031CEAD4301B}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{4CE8EE8F-2E83-4AAC-9732-4FCA8E74E95C}</UniqueIdentifier>
+      <UniqueIdentifier>{898025DD-D620-49DE-A9BA-F589D30BA7AC}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="default.rd.xml" />
+    <AppxManifest Include="Package.appxmanifest" />
+    <None Include="HelloUI_TemporaryKey.pfx" />
     <Image Include="Assets\LockScreenLogo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
@@ -39,15 +42,15 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
+    <AssetCatalogCompile Include="..\..\HelloUI\Images.xcassets">
+      <Filter>HelloUI</Filter>
+    </AssetCatalogCompile>
     <ClangCompile Include="..\..\HelloUI\HelloUI.m">
       <Filter>HelloUI</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\HelloUI\main.m">
       <Filter>HelloUI\Supporting Files</Filter>
     </ClangCompile>
-    <AssetCatalogCompile Include="..\..\HelloUI\Images.xcassets">
-      <Filter>HelloUI</Filter>
-    </AssetCatalogCompile>
     <SBInfoPlistCopy Include="..\..\HelloUI\Info.plist" />
     <Text Include="HelloUI-Debug-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
@@ -55,14 +58,5 @@
     <Text Include="HelloUI-Release-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="HelloUI_TemporaryKey.pfx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Xml Include="default.rd.xml" />
   </ItemGroup>
 </Project>
