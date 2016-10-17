@@ -162,6 +162,10 @@
     <X86ProjectToBuild Include="$(MSBuildThisFileDirectory)..\WinObjCRT\dll\WinObjCRT.vcxproj">
       <Properties>Configuration=$(OppositeConfiguration);Platform=x86</Properties>
     </X86ProjectToBuild>
+
+    <ToolsProjectToBuild Include="$(MSBuildThisFileDirectory)..\..\tools\tools.sln">
+      <Properties>Configuration=$(Configuration);Platform=x86</Properties>
+    </ToolsProjectToBuild>
   </ItemGroup>
 
   <Target Name="CompileSDKs" DependsOnTargets="CheckSolution">
@@ -177,7 +181,17 @@
     <MSBuild Projects="@(ARMProjectToBuild)" BuildInParallel="true" Targets="clean"/>
   </Target>
   
-  <Target Name="Build" DependsOnTargets="CompileSDKs;ComputeBuildTarget">
+  <Target Name="CompileTools" DependsOnTargets="CheckSolution">
+    <Message Importance="high" Text="Building tools" />
+    <MSBuild Projects="@(ToolsProjectToBuild)" BuildInParallel="true"/>
+  </Target>
+
+  <Target Name="CleanTools">
+    <Message Importance="high" Text="Cleaning tools" />
+    <MSBuild Projects="@(ToolsProjectToBuild)" BuildInParallel="true" Targets="clean"/>
+  </Target>
+
+  <Target Name="Build" DependsOnTargets="CompileTools;CompileSDKs;ComputeBuildTarget">
     <!-- We want to start from scratch each time, in case we remove a dependency we don't want in the package -->
     <Message Importance="high" Text="Removing old package" />
     <RemoveDir Directories="$(SBPackageDir)" />
@@ -226,7 +240,7 @@
     <Message Importance="high" Text="Cleaning up package remnants. Remove this step if you wish to more closely examine package generation." />
     <RemoveDir Directories="$(SBPackageDir)" />
   </Target>
-  <Target Name="Clean" DependsOnTargets="CleanSDKs">
+  <Target Name="Clean" DependsOnTargets="CleanTools;CleanSDKs">
     <Message Importance="high" Text="Removing old package" />
     <RemoveDir Directories="$(SBPackageDir)" />
     <Delete Files="$(SBSDKZipFile)" />
