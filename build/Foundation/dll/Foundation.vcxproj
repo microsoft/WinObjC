@@ -27,6 +27,9 @@
     <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
       <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\CFNetwork\dll\CFNetwork.vcxproj">
+      <Project>{16E0E9AE-8B17-4C4A-9960-BF90FB9F3424}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\lib\FoundationLib.vcxproj">
       <Project>{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}</Project>
     </ProjectReference>

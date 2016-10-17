@@ -15,7 +15,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 #import "Starboard.h"
 #import "NSSelectInputSource.h"
-#import "NSInputStream_socket.h"
 
 @implementation NSSelectInputSource
 - (id)initWithSocket:(id)socket {

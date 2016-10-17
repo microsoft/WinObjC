@@ -33,8 +33,8 @@ typedef std::set<std::string> StringSet;
 VCProject::VCProject(VSTemplateProject* projTemplate, const std::string& id)
 : m_template(projTemplate)
 {
-  sbAssert(projTemplate);
-  sbAssert(isAbsolutePath(projTemplate->getPath()));
+  sbAssertWithTelemetry(projTemplate, "Unable to create VCProject from NULL VSTemplateProject");
+  sbAssertWithTelemetry(isAbsolutePath(projTemplate->getPath()), "Path to project template is not absolute");
 
   // Determine subtype (shared or not)
    m_subType = projTemplate->isShared() ? VCShared : VCNone;
@@ -331,7 +331,7 @@ bool VCProject::writeTemplate(const std::string& filePath, const LabelHandlerFnM
   // Open the template
   pugi::xml_document projDoc;
   pugi::xml_parse_result result = projDoc.load_file(filePath.c_str());
-  sbValidate(result, "Failed to open template file: " + filePath);
+  sbValidateWithTelemetry(result, "Failed to open template file: " + filePath);
   pugi::xml_node projRoot = projDoc.first_child();
 
   for (pugi::xml_node child = projRoot.first_child(); child; child = child.next_sibling()) {
