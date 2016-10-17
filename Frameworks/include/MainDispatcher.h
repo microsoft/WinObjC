@@ -16,4 +16,5 @@
 #pragma once
 
 extern "C" void ScheduleMainRunLoop();
+extern "C" void ScheduleMainRunLoopAsync();
 extern "C" void SetupMainRunLoopTimedMultipleWaiter();

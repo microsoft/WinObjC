@@ -38,10 +38,12 @@
  * App developers should import the following files to use methods requiring projected classes
  * #import <UWP/WindowsFoundation.h>
  * #import <UWP/WindowsMediaSpeechRecognition.h>
+ * #import <UWP/WindowsApplicationModelActivation.h>
 */
 
 @class NSString, UIApplication, NSDictionary, NSCoder, UIViewController, NSArray, UIUserNotificationSettings, UILocalNotification, NSData,
-    NSError, NSUserActivity, UIApplicationShortcutItem, NSURL, UIWindow, WFCValueSet, WMSSpeechRecognitionResult, WFUri;
+    NSError, NSUserActivity, UIApplicationShortcutItem, NSURL, UIWindow, WFCValueSet, WMSSpeechRecognitionResult, WFUri,
+    WAAFileActivatedEventArgs;
 
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsURLKey;
 UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsSourceApplicationKey;
@@ -129,6 +131,7 @@ UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsToastActionUserInputKey;
 - (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo;
 - (void)application:(UIApplication*)application didReceiveToastAction:(NSDictionary*)action;
 - (void)application:(UIApplication*)application didReceiveVoiceCommand:(WMSSpeechRecognitionResult*)result;
+- (void)application:(UIApplication*)application didReceiveFile:(WAAFileActivatedEventArgs*)result;
 - (void)application:(UIApplication*)application didReceiveProtocol:(WFUri*)uri;
 - (void)application:(UIApplication*)application
     handleActionWithIdentifier:(NSString*)identifier

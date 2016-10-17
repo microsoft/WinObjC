@@ -17,18 +17,17 @@
 #import <StubReturn.h>
 #import <CFNetwork/CFHTTPAuthentication.h>
 
-const CFStringRef kCFHTTPAuthenticationSchemeBasic = static_cast<CFStringRef>(@"kCFHTTPAuthenticationSchemeBasic");
-const CFStringRef kCFHTTPAuthenticationSchemeDigest = static_cast<CFStringRef>(@"kCFHTTPAuthenticationSchemeDigest");
-const CFStringRef kCFHTTPAuthenticationSchemeNTLM = static_cast<CFStringRef>(@"kCFHTTPAuthenticationSchemeNTLM");
-const CFStringRef kCFHTTPAuthenticationSchemeNegotiate = static_cast<CFStringRef>(@"kCFHTTPAuthenticationSchemeNegotiate");
-const CFStringRef kCFHTTPAuthenticationSchemeKerberos = static_cast<CFStringRef>(@"kCFHTTPAuthenticationSchemeKerberos");
-const CFStringRef kCFHTTPAuthenticationSchemeNegotiate2 = static_cast<CFStringRef>(@"kCFHTTPAuthenticationSchemeNegotiate2");
-const CFStringRef kCFHTTPAuthenticationSchemeOAuth1 = static_cast<CFStringRef>(@"kCFHTTPAuthenticationSchemeOAuth1");
-const CFStringRef kCFHTTPAuthenticationSchemeXMobileMeAuthToken =
-    static_cast<CFStringRef>(@"kCFHTTPAuthenticationSchemeXMobileMeAuthToken");
-const CFStringRef kCFHTTPAuthenticationUsername = static_cast<CFStringRef>(@"kCFHTTPAuthenticationUsername");
-const CFStringRef kCFHTTPAuthenticationPassword = static_cast<CFStringRef>(@"kCFHTTPAuthenticationPassword");
-const CFStringRef kCFHTTPAuthenticationAccountDomain = static_cast<CFStringRef>(@"kCFHTTPAuthenticationAccountDomain");
+const CFStringRef kCFHTTPAuthenticationSchemeBasic = CFSTR("kCFHTTPAuthenticationSchemeBasic");
+const CFStringRef kCFHTTPAuthenticationSchemeDigest = CFSTR("kCFHTTPAuthenticationSchemeDigest");
+const CFStringRef kCFHTTPAuthenticationSchemeNTLM = CFSTR("kCFHTTPAuthenticationSchemeNTLM");
+const CFStringRef kCFHTTPAuthenticationSchemeNegotiate = CFSTR("kCFHTTPAuthenticationSchemeNegotiate");
+const CFStringRef kCFHTTPAuthenticationSchemeKerberos = CFSTR("kCFHTTPAuthenticationSchemeKerberos");
+const CFStringRef kCFHTTPAuthenticationSchemeNegotiate2 = CFSTR("kCFHTTPAuthenticationSchemeNegotiate2");
+const CFStringRef kCFHTTPAuthenticationSchemeOAuth1 = CFSTR("kCFHTTPAuthenticationSchemeOAuth1");
+const CFStringRef kCFHTTPAuthenticationSchemeXMobileMeAuthToken = CFSTR("kCFHTTPAuthenticationSchemeXMobileMeAuthToken");
+const CFStringRef kCFHTTPAuthenticationUsername = CFSTR("kCFHTTPAuthenticationUsername");
+const CFStringRef kCFHTTPAuthenticationPassword = CFSTR("kCFHTTPAuthenticationPassword");
+const CFStringRef kCFHTTPAuthenticationAccountDomain = CFSTR("kCFHTTPAuthenticationAccountDomain");
 
 /**
  @Status Stub

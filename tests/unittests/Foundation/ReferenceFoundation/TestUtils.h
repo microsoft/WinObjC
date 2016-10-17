@@ -27,4 +27,5 @@
 #import <Foundation/NSBundle.h>
 
 BOOL ensureFiles(NSArray* fileNames);
+BOOL ensureFilesWithContents(NSArray* fileNames, NSData* contents);
 NSBundle* testBundle();
