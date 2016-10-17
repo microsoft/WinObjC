@@ -79,6 +79,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <PackageCertificateKeyFile>HelloOpenGL_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>ED7986B7A550AE1FE55EBB6678F28A4C28F8611E</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

@@ -79,6 +79,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <PackageCertificateKeyFile>HelloGLKit_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>0B35A048B64D737DB7B21A70804C44778C6BD307</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
