@@ -77,6 +77,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <PackageCertificateKeyFile>HelloUI_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>1029F68D1687A0865D61FEC7055E1EC22550A4DE</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

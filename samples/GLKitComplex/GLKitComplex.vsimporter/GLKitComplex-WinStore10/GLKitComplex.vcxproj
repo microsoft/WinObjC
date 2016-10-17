@@ -79,6 +79,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <PackageCertificateKeyFile>GLKitComplex_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>717FB109EC0FDE017C8A4D518C34CDA862984339</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

@@ -197,5 +197,6 @@
   </ImportGroup>
   <PropertyGroup Label="Overrides">
     <StarboardDefaultLibs>CoreGraphics.lib;CoreText.lib;Foundation.lib;QuartzCore.lib;Starboard.lib;UIKit.lib;libdispatch.lib</StarboardDefaultLibs>
+    <PackageCertificateThumbprint>7119A1E0F250667E732E2EA1FD67997380604F5E</PackageCertificateThumbprint>
   </PropertyGroup>
 </Project>
