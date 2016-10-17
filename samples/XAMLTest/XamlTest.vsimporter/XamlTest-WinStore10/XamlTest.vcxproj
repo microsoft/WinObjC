@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -20,7 +20,6 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>XamlTest</ProjectName>
-    <RootNamespace>XamlTest</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
@@ -30,7 +29,8 @@
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{BA9B01FA-CC9B-4679-B203-7BEE51C2AD02}</ProjectGuid>
+    <ProjectGuid>{9125CE4D-C3B5-4B05-A78E-C68976AFA8AB}</ProjectGuid>
+    <RootNamespace>XamlTest</RootNamespace>
     <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -62,9 +62,7 @@
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.props" />
   </ImportGroup>
-  <ImportGroup Label="Shared">
-    <Import Project="../XamlTest-Headers-WinStore10/XamlTest-Headers.vcxitems" Label="Shared" />
-  </ImportGroup>
+  <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -92,6 +90,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
       <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
@@ -115,6 +114,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
       <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
@@ -136,6 +136,7 @@
     <ClangCompile>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
       <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
@@ -156,6 +157,7 @@
     <ClangCompile>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
       <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
@@ -177,10 +179,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <ClCompile Include="MainViewController.xaml.cpp">
-      <DependentUpon>MainViewController.xaml</DependentUpon>
-      <FileType>Document</FileType>
-    </ClCompile>
     <Xml Include="default.rd.xml" />
     <None Include="XamlTest_TemporaryKey.pfx" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
@@ -190,29 +188,28 @@
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
-    <ClangCompile Include="..\..\XamlTest\AppDelegate.m" />
-    <ClangCompile Include="..\..\XamlTest\main.m" />
-    <ClangCompile Include="..\..\XamlTest\MainViewController.m" />
     <AssetCatalogCompile Include="..\..\XamlTest\Images.xcassets" />
-    <XibCompile Include="..\..\XamlTest\MainViewController.xib" />
-    <SBResourceCopy Include="..\..\Default-568h@2x.png" />
+    <ClInclude Include="..\..\XamlTest\AppDelegate.h" />
+    <ClInclude Include="..\..\XamlTest\MainViewController.h" />
+    <ClangCompile Include="..\..\XamlTest\AppDelegate.m" />
+    <ClangCompile Include="..\..\XamlTest\MainViewController.m" />
+    <ClangCompile Include="..\..\XamlTest\main.m" />
     <SBInfoPlistCopy Include="..\..\XamlTest\Info.plist">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Release'">false</ExcludedFromBuild>
       <VariableFile Condition="'$(Configuration)'=='Debug'">XamlTest-Debug-xcvars.txt</VariableFile>
       <VariableFile Condition="'$(Configuration)'=='Release'">XamlTest-Release-xcvars.txt</VariableFile>
     </SBInfoPlistCopy>
+    <SBResourceCopy Include="..\..\Default-568h@2x.png" />
     <Text Include="XamlTest-Debug-xcvars.txt">
       <DeploymentContent>false</DeploymentContent>
     </Text>
     <Text Include="XamlTest-Release-xcvars.txt">
       <DeploymentContent>false</DeploymentContent>
     </Text>
+    <XibCompile Include="..\..\XamlTest\MainViewController.xib" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MainViewController.xaml.h">
-      <DependentUpon>MainViewController.xaml</DependentUpon>
-    </ClInclude>
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h">
       <DependentUpon>App.xaml</DependentUpon>
@@ -226,9 +223,7 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <Page Include="MainViewController.xaml" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />

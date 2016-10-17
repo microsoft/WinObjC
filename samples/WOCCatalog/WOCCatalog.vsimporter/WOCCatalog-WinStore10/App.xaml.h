@@ -8,7 +8,7 @@
 
 #include "App.g.h"
 
-namespace XAMLCatalog {
+namespace WOCCatalog {
 /// <summary>
 /// Provides application-specific behavior to supplement the default Application class.
 /// </summary>

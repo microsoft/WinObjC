@@ -7,7 +7,7 @@
 
 #include "pch.h"
 
-using namespace XamlTest;
+using namespace HelloUI;
 
 using namespace Platform;
 using namespace Windows::ApplicationModel;
