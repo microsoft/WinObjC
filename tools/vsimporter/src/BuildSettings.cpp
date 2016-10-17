@@ -48,7 +48,7 @@ BuildSettings::BuildSettings(const PBXTarget* target, const String& configName)
   const XCConfigurationList* buildConfigList = project->getBuildConfigurationList();
   if (buildConfigList)
     projectConfig = buildConfigList->getConfiguration(configName);
-  sbAssert(projectConfig);
+  sbAssertWithTelemetry(projectConfig, "Failed to get XCBuildConfiguration with name: " + configName);
 
   // Find target configuration with specified name
   const XCBuildConfiguration* targetConfig = NULL;

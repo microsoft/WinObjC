@@ -3,6 +3,8 @@
 // Implementation of the App class.
 //
 
+// clang-format off
+
 #include "pch.h"
 
 using namespace XamlTest;
@@ -52,6 +54,12 @@ void App::OnActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs
     UIApplicationActivated(e);
 }
 
+void App::OnFileActivated(FileActivatedEventArgs^ args)
+{
+    main(0, NULL);
+    UIApplicationActivated(args);
+}
+
 #ifdef ENABLE_BACKGROUND_TASK
 void App::OnBackgroundActivated(Windows::ApplicationModel::Activation::BackgroundActivatedEventArgs^ e) {
     __super ::OnBackgroundActivated(e);
@@ -78,3 +86,5 @@ void App::OnSuspending(Object^ /*sender*/, SuspendingEventArgs^ /*e*/) {
 void App::OnNavigationFailed(Platform::Object^ sender, Windows::UI::Xaml::Navigation::NavigationFailedEventArgs^ e) {
     throw ref new FailureException("Failed to load Page " + e->SourcePageType.Name);
 }
+
+// clang-format on

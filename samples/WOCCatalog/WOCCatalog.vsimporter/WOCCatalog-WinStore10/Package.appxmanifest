@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="a5434b32-aabd-4c51-bf85-89de616f861a"
-    Publisher="islandwood"
+    Name="1f1f0288-32ce-4dda-81a6-f71aa639596e"
+    Publisher="CN=islandwood"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="a5434b32-aabd-4c51-bf85-89de616f861a" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="1f1f0288-32ce-4dda-81a6-f71aa639596e" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>WOCCatalog</DisplayName>
-    <PublisherDisplayName>oliversa</PublisherDisplayName>
+    <PublisherDisplayName>pradipd</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -45,6 +45,5 @@
 
   <Capabilities>
     <Capability Name="internetClient" />
-    <DeviceCapability Name="location" />
   </Capabilities>
 </Package>

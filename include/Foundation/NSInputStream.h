@@ -26,19 +26,15 @@
 @class NSURL;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSInputStream : NSStream {
-    id filename;
-    unsigned curPos;
-}
+@interface NSInputStream : NSStream
 
 + (instancetype)inputStreamWithData:(NSData*)data;
 + (instancetype)inputStreamWithFileAtPath:(NSString*)path;
-+ (instancetype)inputStreamWithURL:(NSURL*)url STUB_METHOD;
-- (void)open;
++ (instancetype)inputStreamWithURL:(NSURL*)url;
 - (instancetype)initWithData:(NSData*)data;
 - (instancetype)initWithFileAtPath:(NSString*)path;
-- (instancetype)initWithURL:(NSURL*)url STUB_METHOD;
+- (instancetype)initWithURL:(NSURL*)url;
 - (NSInteger)read:(uint8_t*)buffer maxLength:(NSUInteger)len;
-- (BOOL)getBuffer:(uint8_t* _Nullable*)buffer length:(NSUInteger*)len STUB_METHOD;
+- (BOOL)getBuffer:(uint8_t* _Nullable*)buffer length:(NSUInteger*)len;
 @property (readonly) BOOL hasBytesAvailable;
 @end

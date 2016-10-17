@@ -70,7 +70,7 @@ void SBProject::printSummary()
 
     std::cout << "    Build Configurations:" << std::endl;
     const XCConfigurationList* buildConfigList = m_project->getBuildConfigurationList();
-    sbAssert(buildConfigList);
+	sbAssertWithTelemetry(buildConfigList, "The XCConfigurationList is NULL for project: " + m_project->getName());
     const BuildConfigurationList& buildConfigs = buildConfigList->getConfigurations();
     for (int i = 0; i < buildConfigs.size(); i++)
       std::cout << "\t" << buildConfigs[i]->getName() << std::endl;
@@ -242,7 +242,7 @@ void SBProject::queryBuildConfigurations()
   String queryMessage = "The \"" + getName() + "\" project has multiple build configurations.";
 
   const XCConfigurationList* buildConfigList = m_project->getBuildConfigurationList();
-  sbAssert(buildConfigList);
+  sbAssertWithTelemetry(buildConfigList, "The XCConfigurationList is NULL for project: " + m_project->getName());
   const BuildConfigurationList& buildConfigs = buildConfigList->getConfigurations();
 
   StringVec configNames;
@@ -250,6 +250,7 @@ void SBProject::queryBuildConfigurations()
                  buildConfigs.end(),
                  back_inserter(configNames),
                  [](const XCBuildConfiguration* c) { return c->getName(); });
+  sbAssertWithTelemetry(!configNames.empty(), "The XCConfigurationList is empty for project: " + m_project->getName());
 
   std::vector<size_t> selection;
   queryListSelection(configNames, queryMessage, "configuration", selection);
@@ -300,11 +301,9 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
   // Get the output format and directory
   String outputDir = m_buildSettings->getValue("VSIMPORTER_OUTPUT_DIR");
 
-  // Create a solution folder for the project iff we're importing multiple targets
-  VSSolutionFolderProject* projFolder = NULL;
-  if (m_existingTargets.size() > 1) {
-    projFolder = sln.addFolder(getName());
-  }
+  // Create a solution folder for the project, as long as some Xcode target was imported.
+  // The solution folder is necessary for VS build telemetry to work properly.
+  VSSolutionFolderProject* projFolder = sln.addFolder(getName());
 
   // Get the default project configuration
   const XCConfigurationList* buildConfigList = m_project->getBuildConfigurationList();
@@ -330,7 +329,7 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
 
     // Get the template
     VSTemplate* vstemplate = VSTemplate::getTemplate(templateName);
-    sbAssert(vstemplate);
+	sbAssertWithTelemetry(vstemplate, "Failed to get " + templateName + " VS template");
 
     // Set up template parameters
     VSTemplateParameters templateParams;
@@ -340,7 +339,7 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
     // Expand the template
     vstemplate->expand(outputDir, templateParams);
     const VSTemplateProjectVec& projTemplates = vstemplate->getProjects();
-    sbAssert(projTemplates.size() == 1);
+	sbAssertWithTelemetry(projTemplates.size() == 1, "Unexpected " + templateName + " VS template size");
 
     for (auto projTemplate : projTemplates) {
       // Create the project from template
@@ -380,7 +379,7 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
   } else if (!headerFiles.empty()) {
     // Get the template
     VSTemplate* vstemplate = VSTemplate::getTemplate("SharedHeaders");
-    sbAssert(vstemplate);
+	sbAssertWithTelemetry(vstemplate, "Failed to get SharedHeaders VS template");
 
     // Set up basis template parameters
     VSTemplateParameters templateParams;
@@ -389,7 +388,7 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
     // Expand the template and get the template project
     vstemplate->expand(outputDir, templateParams);
     const VSTemplateProjectVec& projTemplates = vstemplate->getProjects();
-    sbAssert(projTemplates.size() == 1);
+	sbAssertWithTelemetry(projTemplates.size() == 1, "Unexpected SharedHeaders VS template size");
 
     // Create a shared project for the headers and add it to the solution
     headerProj = new VCSharedProject(projTemplates.front());

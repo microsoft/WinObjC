@@ -49,7 +49,7 @@ SBWorkspace* SBWorkspace::get()
 
 SBWorkspace* SBWorkspace::createFromProject(const String &projectDir)
 {
-  sbAssert(!s_workspace);
+  sbAssertWithTelemetry(!s_workspace, "Workspace already exists");
   
   // Create the workspace
   s_workspace = new SBWorkspace();
@@ -58,7 +58,7 @@ SBWorkspace* SBWorkspace::createFromProject(const String &projectDir)
   SBProject* proj = s_workspace->openProject(projectDir);
 
   // Failing to open a project here is fatal
-  sbValidate(proj);
+  sbValidateWithTelemetry(proj, "Failed to open main project");
 
   // Save a ptr to the project, so later we can access the "main" project
   s_workspace->m_mainProject = proj;
@@ -68,12 +68,12 @@ SBWorkspace* SBWorkspace::createFromProject(const String &projectDir)
 
 SBWorkspace* SBWorkspace::createFromWorkspace(const String &workspaceDir)
 {
-  sbAssert(!s_workspace);
+  sbAssertWithTelemetry(!s_workspace, "Workspace already exists");
   
   // Create the workspace
   s_workspace = new SBWorkspace();
   s_workspace->m_workspace = XCWorkspace::createFromFile(workspaceDir);
-  sbValidate(s_workspace->m_workspace);
+  sbValidateWithTelemetry(s_workspace->m_workspace, "Failed to open main workspace");
 
   // Record location of the workspace
   VariableCollectionManager& settingsManager = VariableCollectionManager::get();
@@ -88,10 +88,10 @@ SBWorkspace* SBWorkspace::createFromWorkspace(const String &workspaceDir)
   s_workspace->findSchemes(workspaceDir);
 
   // A workspace MUST contain at least one scheme
-  sbValidate(!s_workspace->m_schemes.empty(), "The \"" + s_workspace->getName() + "\" workspace does not contain any schemes.");
+  sbValidateWithTelemetry(!s_workspace->m_schemes.empty(), "The workspace does not contain any schemes.");
   
   // A workspace MUST also contain at least one open project
-  sbValidate(!s_workspace->m_openProjects.empty(), "The \"" + s_workspace->getName() + "\" workspace does not contain any valid projects.");
+  sbValidateWithTelemetry(!s_workspace->m_openProjects.empty(), "The workspace does not contain any valid projects.");
   
   return s_workspace;
 }
@@ -222,6 +222,7 @@ void SBWorkspace::selectTargets(PotentialTargetsVec& ret)
                  allTargets.end(),
                  back_inserter(targetNames),
                  [](auto kv) { return kv.first->getNameWithType(); });
+  sbAssertWithTelemetry(!targetNames.empty(), "The workspace contains no targets");
 
   // Query the user for which targets should be queued
   std::vector<size_t> selection;
@@ -454,7 +455,7 @@ VCProject* SBWorkspace::generateGlueProject() const
 
   // Get the template
   VSTemplate* vstemplate = VSTemplate::getTemplate("WinRT");
-  sbAssert(vstemplate);
+  sbAssertWithTelemetry(vstemplate, "Failed to get WinRT VS template");
 
   // Set up basis template parameters
   string projectName = getName() + "WinRT";
@@ -464,7 +465,7 @@ VCProject* SBWorkspace::generateGlueProject() const
   // Expand the template and get the template project
   vstemplate->expand(sb_dirname(getPath()), templateParams);
   const VSTemplateProjectVec& projTemplates = vstemplate->getProjects();
-  sbAssert(projTemplates.size() == 1);
+  sbAssertWithTelemetry(projTemplates.size() == 1, "Unexpected WinRT template size");
 
   // Create the glue project and add it to the solution
   VCProject* glueProject = new VCProject(projTemplates.front());
@@ -540,6 +541,6 @@ void SBWorkspace::generateFiles(bool genProjectionsProj)
   }
 
   // Write solution/projects to disk
-  sbValidate(!vcProjects.empty(), "No valid targets to import.");
+  sbValidateWithTelemetry(!vcProjects.empty(), "No valid targets to import.");
   sln->write();
 }
