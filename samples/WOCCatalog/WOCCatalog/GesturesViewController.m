@@ -15,12 +15,12 @@
 //******************************************************************************
 
 #import "GesturesViewController.h"
+#import <CoreGraphics/CGBitmapContext.h>
 
-static float segmentStrokeWidth = 4.0f;
+static float segmentStrokeWidth = 1.0f;
 static float splashStrokeWidth = 5.0f;
 
 @interface SplashView : UIView
-@property (nonatomic, assign) CGPathRef path;
 @property (nonatomic, retain) UIColor* color;
 @end
 
@@ -30,11 +30,11 @@ static float splashStrokeWidth = 5.0f;
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     CGContextClearRect(context, self.bounds);
-    CGContextSetLineCap(context, kCGLineCapRound);
-    CGContextSetLineWidth(context, segmentStrokeWidth);
+    CGContextSetLineWidth(context, splashStrokeWidth);
     CGContextSetStrokeColorWithColor(context, [self.color CGColor]);
+    CGContextSetAlpha(context, 0.25f);
     CGContextBeginPath(context);
-    CGContextAddPath(context, self.path);
+    CGContextAddEllipseInRect(context, CGRectInset(self.bounds, splashStrokeWidth, splashStrokeWidth));
     CGContextStrokePath(context);
 }
 
@@ -50,7 +50,6 @@ static float splashStrokeWidth = 5.0f;
 -(void)showInView:(UIView*)view atPoint:(CGPoint)point endSize:(float)size color:(UIColor*)color  {
     self.frame = CGRectMake(point.x - self.frame.size.width / 2, point.y - self.frame.size.height / 2, self.frame.size.width, self.frame.size.height);
     
-    self.path = CGPathCreateWithEllipseInRect(CGRectInset(self.bounds, splashStrokeWidth, splashStrokeWidth), NULL);
     self.color = color;
     
     [view addSubview:self];
@@ -60,10 +59,17 @@ static float splashStrokeWidth = 5.0f;
         self.alpha = 0.0f;
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
-        CGPathRelease(self.path);
-        self.path = nil;
     }];
 }
+
+@end
+
+@interface _TouchColorPair : NSObject
+@property (nonatomic, retain) UIBezierPath* path;
+@property (nonatomic, retain) UIColor* color;
+@end
+
+@implementation _TouchColorPair
 
 @end
 
@@ -72,68 +78,119 @@ static float splashStrokeWidth = 5.0f;
 @end
 
 @implementation GestureDiagnosticView {
-    NSMutableDictionary<NSValue*, UIBezierPath*>* _touchMap;
-    BOOL _clear;
-    
+    NSMutableDictionary<NSValue*, _TouchColorPair*>* _touchMap;
+    NSMutableSet<NSValue*>* _trackedTouches;
+    NSUInteger _numTouches;
+    NSUInteger _numPoints;
+    UIImage* _cachedImage;
 }
 
 -(instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor clearColor];
         _touchMap = [NSMutableDictionary new];
+        _trackedTouches = [NSMutableSet new];
     }
 
     return self;
 }
 
--(void)addLine:(CGPoint)point hash:(NSUInteger)hash {
+-(void)addLine:(CGPoint)point toPoint:(CGPoint)toPoint color:(UIColor*)color hash:(NSUInteger)hash {
     NSValue* hashKey = [NSNumber numberWithUnsignedInteger:hash];
-    UIBezierPath* path = [_touchMap objectForKey:hashKey];
-    if (!path) {
-        path = [UIBezierPath new];
-        path.lineWidth = segmentStrokeWidth;
-        [path moveToPoint:point];
-        _touchMap[hashKey] = path;
-        return;
+    _TouchColorPair* pair = [_touchMap objectForKey:hashKey];
+    if (!pair) {
+        pair = [_TouchColorPair new];
+        pair.path = [UIBezierPath new];
+        pair.path.lineWidth = segmentStrokeWidth;
+        pair.color = color;
+        _touchMap[hashKey] = pair;
     }
+
+    _numPoints++;
     
-    [path addLineToPoint:point];
+    [pair.path moveToPoint:point];
+    [pair.path addLineToPoint:toPoint];
     [self setNeedsDisplay];
 }
 
+-(void)flushPoints {
+    UIGraphicsBeginImageContext(self.bounds.size);
+    
+    [_cachedImage drawAtPoint:CGPointZero];
+    for (_TouchColorPair* pair in _touchMap.allValues) {
+        CGContextSetStrokeColorWithColor(UIGraphicsGetCurrentContext(), pair.color.CGColor);
+        [pair.path stroke];
+    }
+    [_touchMap removeAllObjects];
+    
+    _cachedImage = UIGraphicsGetImageFromCurrentImageContext();
+    _numPoints = 0;
+    
+    UIGraphicsEndImageContext();
+}
+
+-(void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    _cachedImage = nil;
+}
+
 -(void)drawRect:(CGRect)rect {
-    for (UIBezierPath* path in _touchMap.allValues) {
-        [path stroke];
+    if (_numPoints == 128) {
+        [self flushPoints];
+    }
+    
+    [_cachedImage drawAtPoint:CGPointZero];
+    for (_TouchColorPair* pair in _touchMap.allValues) {
+        CGContextSetStrokeColorWithColor(UIGraphicsGetCurrentContext(), pair.color.CGColor);
+        [pair.path stroke];
     }
 }
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    if (touches.count == 1) {
-        _touchMap = [NSMutableDictionary new];
-        [self setNeedsDisplay];
-    }
     for (UITouch* touch in touches) {
+        if (!_trackedTouches.count) {
+            _cachedImage = nil;
+            [self setNeedsDisplay];
+        }
+    
+        [_trackedTouches addObject:[NSNumber numberWithUnsignedInteger:touch.hash]];
+        
         [[[SplashView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)] showInView:self atPoint:[touch locationInView:self] endSize:8 color:[UIColor blueColor]];
     }
 }
 
 -(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     for (UITouch* touch in touches) {
+        [_trackedTouches removeObject:[NSNumber numberWithUnsignedInteger:touch.hash]];
         [[[SplashView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)] showInView:self atPoint:[touch locationInView:self] endSize:0.25 color:[UIColor blueColor]];
+    }
+    if (!_trackedTouches.count) {
+        [self flushPoints];
     }
 }
 
 -(void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     for (UITouch* touch in touches) {
+        if (![_trackedTouches containsObject:[NSNumber numberWithUnsignedInteger:touch.hash]]) {
+            continue;
+        }
         CGPoint currentPoint = [touch locationInView:self];
+        CGPoint lastPoint = [touch previousLocationInView:self];
         
-        [self addLine:currentPoint hash:[touch hash]];
+        [self addLine:lastPoint toPoint:currentPoint color:[UIColor blueColor] hash:[touch hash]];
+        
+        [self setNeedsDisplay];
     }
 }
 
 -(void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     for (UITouch* touch in touches) {
+        [_trackedTouches removeObject:[NSNumber numberWithUnsignedInteger:touch.hash]];
         [[[SplashView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)] showInView:self atPoint:[touch locationInView:self] endSize:0.25 color:[UIColor blueColor]];
+    }
+    
+    if (!_trackedTouches.count) {
+        [self flushPoints];
     }
 }
 
@@ -141,6 +198,7 @@ static float splashStrokeWidth = 5.0f;
 
 @implementation GesturesViewController {
     UILabel* _stateLabel;
+    CGPoint _lastPanPoint;
 }
 
 -(void)_doTap:(UITapGestureRecognizer*)sender {
@@ -154,11 +212,11 @@ static float splashStrokeWidth = 5.0f;
     switch (sender.state) {
         case UIGestureRecognizerStateBegan:
             [[[SplashView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)] showInView:self.view atPoint:panPoint endSize:8 color:[UIColor redColor]];
-            [(GestureDiagnosticView*)self.view addLine:panPoint hash:sender.hash];
+            _lastPanPoint = panPoint;
             break;
         case UIGestureRecognizerStateChanged: {
-            [(GestureDiagnosticView*)self.view addLine:panPoint hash:sender.hash];
-            //[[[SegmentView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)] showInView:self.view atPoint:_lastPanPoint toPoint:currentPoint color:[UIColor redColor]];
+            [(GestureDiagnosticView*)self.view addLine:_lastPanPoint toPoint:panPoint color:[UIColor redColor] hash:sender.hash];
+            _lastPanPoint = panPoint;
             break;
         }
         case UIGestureRecognizerStateEnded:
@@ -176,6 +234,7 @@ static float splashStrokeWidth = 5.0f;
 
 -(void)loadView {
     self.view = [[GestureDiagnosticView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
+    self.view.multipleTouchEnabled = YES;
     self.view.backgroundColor = [UIColor whiteColor];
 }
 
