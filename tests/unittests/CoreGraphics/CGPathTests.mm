@@ -82,7 +82,7 @@ void cgPathCompare(NSArray* expected, NSArray* result) {
     }];
 }
 
-TEST(CGPath, CGPathApplyAddRect) {
+DISABLED_TEST(CGPath, CGPathApplyAddRect) {
     CGMutablePathRef path = CGPathCreateMutable();
 
     CGRect rect = CGRectMake(2, 4, 8, 16);
@@ -111,7 +111,7 @@ TEST(CGPath, CGPathApplyAddRect) {
     CGPathRelease(path);
 }
 
-TEST(CGPath, CGPathApplyAddEllipse) {
+DISABLED_TEST(CGPath, CGPathApplyAddEllipse) {
     CGMutablePathRef path = CGPathCreateMutable();
 
     CGRect rect = CGRectMake(40, 40, 200, 40);
@@ -142,7 +142,7 @@ TEST(CGPath, CGPathApplyAddEllipse) {
     CGPathRelease(path);
 }
 
-TEST(CGPath, CGPathApplyAddArc) {
+DISABLED_TEST(CGPath, CGPathApplyAddArc) {
     CGMutablePathRef path = CGPathCreateMutable();
 
     CGPathAddArc(path, NULL, 25, 100, 20, M_PI * 1.25, 0, 1);
@@ -171,7 +171,7 @@ TEST(CGPath, CGPathApplyAddArc) {
     CGPathRelease(path);
 }
 
-TEST(CGPath, CGPathApplyAddArcToPoint) {
+DISABLED_TEST(CGPath, CGPathApplyAddArcToPoint) {
     CGMutablePathRef path = CGPathCreateMutable();
 
     CGPathMoveToPoint(path, NULL, 400, 400);
@@ -197,7 +197,7 @@ TEST(CGPath, CGPathApplyAddArcToPoint) {
     CGPathRelease(path);
 }
 
-TEST(CGPath, CGPathAddQuadCurveToPoint) {
+DISABLED_TEST(CGPath, CGPathAddQuadCurveToPoint) {
     CGMutablePathRef path = CGPathCreateMutable();
 
     CGPathMoveToPoint(path, NULL, 400, 400);
@@ -219,7 +219,7 @@ TEST(CGPath, CGPathAddQuadCurveToPoint) {
     CGPathRelease(path);
 }
 
-TEST(CGPath, CGPathCreateMutableCopy) {
+DISABLED_TEST(CGPath, CGPathCreateMutableCopy) {
     CGMutablePathRef path1 = CGPathCreateMutable();
 
     CGRect rect = CGRectMake(2, 4, 8, 16);
@@ -237,7 +237,7 @@ TEST(CGPath, CGPathCreateMutableCopy) {
     CGPathRelease(path2);
 }
 
-TEST(CGPath, CGPathEqualToPath) {
+DISABLED_TEST(CGPath, CGPathEqualToPath) {
     CGMutablePathRef path1 = CGPathCreateMutable();
 
     CGRect rect = CGRectMake(2, 4, 8, 16);
@@ -282,7 +282,7 @@ TEST(CGPath, CGPathEqualToPath) {
     CGPathRelease(path1);
 }
 
-TEST(CGPath, CGPathApplyAddManyRects) {
+DISABLED_TEST(CGPath, CGPathApplyAddManyRects) {
     CGMutablePathRef path = CGPathCreateMutable();
     NSMutableArray* expected = [NSMutableArray array];
     for (int i = 0; i < 100; i++) {
@@ -314,7 +314,7 @@ TEST(CGPath, CGPathApplyAddManyRects) {
     CGPathRelease(path);
 }
 
-TEST(CGPath, CGPathAddPath) {
+DISABLED_TEST(CGPath, CGPathAddPath) {
     CGMutablePathRef path1 = CGPathCreateMutable();
 
     CGRect rect1 = CGRectMake(2, 4, 8, 16);

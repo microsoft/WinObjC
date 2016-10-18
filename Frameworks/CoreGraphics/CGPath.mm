@@ -30,38 +30,32 @@
 #import <wrl/client.h>
 #import <D2d1.h>
 #include <COMIncludes_End.h>
+#include "CFCPPBase.h"
 
 static const wchar_t* TAG = L"CGPath";
 
 using namespace std;
 using namespace Microsoft::WRL;
 
-struct __CGPath {
-    struct __CGPathImpl {
-        ComPtr<ID2D1PathGeometry> pathGeometry{ nullptr };
-        ComPtr<ID2D1GeometrySink> geometrySink{ nullptr };
+struct __CGPathImpl {
+    ComPtr<ID2D1PathGeometry> pathGeometry{ nullptr };
+    ComPtr<ID2D1GeometrySink> geometrySink{ nullptr };
 
-        bool isFigureClosed;
-        CGPoint currentPoint{ 0, 0 };
-        CGPoint startingPoint{ 0, 0 };
+    bool isFigureClosed;
+    CGPoint currentPoint{ 0, 0 };
+    CGPoint startingPoint{ 0, 0 };
 
-        __CGPathImpl() : isFigureClosed(true) {
-        }
-    };
+    __CGPathImpl() : isFigureClosed(true) {
+    }
+};
 
-    CFRuntimeBase _base;
-
-    __CGPathImpl _impl;
-
+struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
     // A private helper function for re-opening a path geometry. CGPath does not
-    // have a concept of an open
-    // and a closed path but D2D relies on it. A path/sink cannot be read from
-    // while the path is open
-    // thus it must be closed. However, a CGPath can be edited again after being
-    // read from so we must open
-    // the path again. This cannot be done normally, so we must create a new path
-    // with the old path information
-    // to edit.
+    // have a concept of an open and a closed path but D2D relies on it. A
+    // path/sink cannot be read from while the path is open thus it must be
+    // closed. However, a CGPath can be edited again after being read from so
+    // we must open the path again. This cannot be done normally, so we must
+    // create a new path with the old path information to edit.
     void preparePathForEditing() {
         if (!_impl.geometrySink) {
             // Re-open this geometry.
@@ -72,16 +66,11 @@ struct __CGPath {
             Microsoft::WRL::ComPtr<ID2D1GeometrySink> newSink;
 
             // Open a new path that the contents of the old path will be streamed
-            // into. We cannot re-use the same
-            // path as it is now closed and cannot be opened again. We use the newPath
-            // variable because the factory
-            // was returning the same pointer for some strange reason so this will
-            // force it to do otherwise.
+            // into. We cannot re-use the same path as it is now closed and cannot be opened again. We use the newPath variable because the
+            // factory was returning the same pointer for some strange reason so this will force it to do otherwise.
             FAIL_FAST_IF_FAILED(factory->CreatePathGeometry(&newPath));
             FAIL_FAST_IF_FAILED(newPath->Open(&newSink));
             FAIL_FAST_IF_FAILED(_impl.pathGeometry->Stream(newSink.Get()));
-
-            factory = nullptr;
 
             _impl.pathGeometry = newPath;
             _impl.geometrySink = newSink;
@@ -114,16 +103,14 @@ struct __CGPath {
     }
 };
 
+CFTypeID CGPathGetTypeID() {
+    return __CGPath::GetTypeID();
+}
+
 static Boolean __CGPathEqual(CFTypeRef cf1, CFTypeRef cf2) {
     __CGPath* path1 = (__CGPath*)cf1;
     __CGPath* path2 = (__CGPath*)cf2;
     return false;
-}
-
-static void __CGPathInit(CFTypeRef cf) {
-    CGPathRef path = (CGPathRef)cf;
-    __CGPath* mutablePath = const_cast<__CGPath*>(path);
-    new (&mutablePath->_impl) __CGPath::__CGPathImpl();
 }
 
 static void __CGPathDeallocate(CFTypeRef cf) {
@@ -131,35 +118,16 @@ static void __CGPathDeallocate(CFTypeRef cf) {
     path->_impl.~__CGPathImpl();
 }
 
-static const CFRuntimeClass __CGPathClass = { 0,
-                                              "CGPath",
-                                              __CGPathInit, // init
-                                              NULL, // copy
-                                              __CGPathDeallocate, // deallocate
-                                              __CGPathEqual,
-                                              NULL,
-                                              NULL,
-                                              NULL };
-
-CFTypeID CGPathGetTypeID() {
-    static CFTypeID __kCGPathTypeID = _CFRuntimeRegisterClass(&__CGPathClass);
-    return __kCGPathTypeID;
-}
-
 /**
  @Status Interoperable
 */
 CGMutablePathRef CGPathCreateMutable() {
-    size_t memSize = sizeof(__CGPath) - sizeof(CFRuntimeBase);
-    CGPathRef ret = ((CGPathRef)(_CFRuntimeCreateInstance(kCFAllocatorDefault, CGPathGetTypeID(), memSize, NULL)));
-    __CGPath* mutableRet = const_cast<__CGPath*>(ret);
+    __CGPath* mutableRet = __CGPath::CreateInstance();
 
     ComPtr<ID2D1Factory> factory = _GetD2DFactoryInstance();
 
     FAIL_FAST_IF_FAILED(factory->CreatePathGeometry(&mutableRet->_impl.pathGeometry));
     FAIL_FAST_IF_FAILED(mutableRet->_impl.pathGeometry->Open(&mutableRet->_impl.geometrySink));
-
-    factory = nullptr;
 
     return mutableRet;
 }
