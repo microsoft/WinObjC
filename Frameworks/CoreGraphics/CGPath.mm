@@ -30,7 +30,7 @@
 #import <wrl/client.h>
 #import <D2d1.h>
 #include <COMIncludes_End.h>
-#include "CFCPPBase.h"
+#import <CFCPPBase.h>
 
 static const wchar_t* TAG = L"CGPath";
 
@@ -65,9 +65,9 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
             ComPtr<ID2D1PathGeometry> newPath;
             ComPtr<ID2D1GeometrySink> newSink;
 
-            // Open a new path that the contents of the old path will be streamed
-            // into. We cannot re-use the same path as it is now closed and cannot be opened again. We use the newPath variable because the
-            // factory was returning the same pointer for some strange reason so this will force it to do otherwise.
+            // Open a new path that the contents of the old path will be streamed into. We cannot re-use the same path as it is now closed
+            // and cannot be opened again. We use the newPath variable because the factory was returning the same pointer for some strange
+            // reason so this will force it to do otherwise.
             FAIL_FAST_IF_FAILED(factory->CreatePathGeometry(&newPath));
             FAIL_FAST_IF_FAILED(newPath->Open(&newSink));
             FAIL_FAST_IF_FAILED(_impl.pathGeometry->Stream(newSink.Get()));
@@ -90,7 +90,7 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
 
     void beginFigure() {
         if (_impl.isFigureClosed) {
-            _impl.geometrySink->BeginFigure(D2D1::Point2F(_impl.currentPoint.x, _impl.currentPoint.y), D2D1_FIGURE_BEGIN_FILLED);
+            _impl.geometrySink->BeginFigure(_CGPointToD2D_F(_impl.currentPoint), D2D1_FIGURE_BEGIN_FILLED);
             _impl.isFigureClosed = false;
         }
     }
@@ -111,11 +111,6 @@ static Boolean __CGPathEqual(CFTypeRef cf1, CFTypeRef cf2) {
     __CGPath* path1 = (__CGPath*)cf1;
     __CGPath* path2 = (__CGPath*)cf2;
     return false;
-}
-
-static void __CGPathDeallocate(CFTypeRef cf) {
-    CGPathRef path = (CGPathRef)cf;
-    path->_impl.~__CGPathImpl();
 }
 
 /**
@@ -146,7 +141,6 @@ CGPathRef CGPathCreateCopy(CGPathRef path) {
 
 /**
 @Status Interoperable
-@Notes
 */
 CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
     if (path == NULL) {
@@ -178,13 +172,13 @@ void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* transf
 
     path->preparePathForEditing();
 
-    CGPoint pt = { x, y };
+    CGPoint pt{ x, y };
     if (transform) {
         pt = CGPointApplyAffineTransform(pt, *transform);
     }
 
     path->beginFigure();
-    path->_impl.geometrySink->AddLine(D2D1::Point2F(pt.x, pt.y));
+    path->_impl.geometrySink->AddLine(_CGPointToD2D_F(pt));
 
     path->_impl.currentPoint = pt;
 }
@@ -377,8 +371,7 @@ void CGPathAddLines(CGMutablePathRef path, const CGAffineTransform* transform, c
         return;
     }
 
-    CGPathMoveToPoint(path, transform, points[0].x, points[0].y);
-    for (int i = 1; i < count; i++) {
+    for (int i = 0; i < count; i++) {
         CGPathAddLineToPoint(path, transform, points[i].x, points[i].y);
     }
 }
@@ -452,17 +445,9 @@ void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* tran
  @Status Interoperable
 */
 void CGPathCloseSubpath(CGMutablePathRef path) {
-    // We cannot use end figure with the built in way of closing a sub path due to
-    // an issue with reading information
-    // from a D2DGeometry. If a figure is open and any information is requested
-    // from the path, the call will fail with
-    // a bad state. Because of this, we have to ensure that any open figures are
-    // closed before continuing. The problem this
-    // causes is that the sub path is no longer being tracked via figures and we
-    // must close the sub path ourselves b
-    // drawing a line to the original point of the path.
+    // Move the current point to the starting point since the line is closed.
     if (!CGPointEqualToPoint(path->_impl.currentPoint, path->_impl.startingPoint)) {
-        CGPathAddLineToPoint(path, nullptr, path->_impl.startingPoint.x, path->_impl.startingPoint.y);
+        path->_impl.currentPoint = path->_impl.startingPoint;
     }
     path->endFigure(D2D1_FIGURE_END_CLOSED);
 }
@@ -482,12 +467,7 @@ CGRect CGPathGetBoundingBox(CGPathRef path) {
 
     FAIL_FAST_IF_FAILED(path->_impl.pathGeometry->GetBounds(D2D1::IdentityMatrix(), &bounds));
 
-    CGFloat x = bounds.left;
-    CGFloat y = bounds.top;
-    CGFloat width = bounds.right - x;
-    CGFloat height = bounds.bottom - y;
-
-    return CGRectMake(x, y, width, height);
+    return _D2DRectToCGRect(bounds);
 }
 
 /**
