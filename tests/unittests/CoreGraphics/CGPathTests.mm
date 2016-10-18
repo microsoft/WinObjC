@@ -671,3 +671,26 @@ TEST(CGPath, CGPathSimpleLines) {
     EXPECT_POINTEQ(boundingBox.origin, 50, 50);
     EXPECT_SIZEEQ(boundingBox.size, 31, 57);
 }
+
+TEST(CGPath, CGPathAddPathTest) {
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathMoveToPoint(path, NULL, 50, 50);
+    CGPathAddLineToPoint(path, NULL, 75, 75);
+
+    CGMutablePathRef secondPath = CGPathCreateMutable();
+    CGPathMoveToPoint(secondPath, NULL, 75, 75);
+    CGPathAddLineToPoint(secondPath, NULL, 100, 100);
+
+    CGRect boundingBox = CGPathGetBoundingBox(path);
+    EXPECT_POINTEQ(boundingBox.origin, 50, 50);
+    EXPECT_SIZEEQ(boundingBox.size, 25, 25);
+
+    boundingBox = CGPathGetBoundingBox(secondPath);
+    EXPECT_POINTEQ(boundingBox.origin, 75, 75);
+    EXPECT_SIZEEQ(boundingBox.size, 25, 25);
+
+    CGPathAddPath(path, nullptr, secondPath);
+    boundingBox = CGPathGetBoundingBox(path);
+    EXPECT_POINTEQ(boundingBox.origin, 50, 50);
+    EXPECT_SIZEEQ(boundingBox.size, 50, 50);
+}

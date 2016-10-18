@@ -53,10 +53,14 @@ struct __CGPath {
 
     __CGPathImpl _impl;
 
-    // A private helper function for re-opening a path geometry. CGPath does not have a concept of an open
-    // and a closed path but D2D relies on it. A path/sink cannot be read from while the path is open
-    // thus it must be closed. However, a CGPath can be edited again after being read from so we must open
-    // the path again. This cannot be done normally, so we must create a new path with the old path information
+    // A private helper function for re-opening a path geometry. CGPath does not
+    // have a concept of an open
+    // and a closed path but D2D relies on it. A path/sink cannot be read from
+    // while the path is open
+    // thus it must be closed. However, a CGPath can be edited again after being
+    // read from so we must open
+    // the path again. This cannot be done normally, so we must create a new path
+    // with the old path information
     // to edit.
     void preparePathForEditing() {
         if (!_impl.geometrySink) {
@@ -67,9 +71,12 @@ struct __CGPath {
             Microsoft::WRL::ComPtr<ID2D1PathGeometry> newPath;
             Microsoft::WRL::ComPtr<ID2D1GeometrySink> newSink;
 
-            // Open a new path that the contents of the old path will be streamed into. We cannot re-use the same
-            // path as it is now closed and cannot be opened again. We use the newPath variable because the factory
-            // was returning the same pointer for some strange reason so this will force it to do otherwise.
+            // Open a new path that the contents of the old path will be streamed
+            // into. We cannot re-use the same
+            // path as it is now closed and cannot be opened again. We use the newPath
+            // variable because the factory
+            // was returning the same pointer for some strange reason so this will
+            // force it to do otherwise.
             FAIL_FAST_IF_FAILED(factory->CreatePathGeometry(&newPath));
             FAIL_FAST_IF_FAILED(newPath->Open(&newSink));
             FAIL_FAST_IF_FAILED(_impl.pathGeometry->Stream(newSink.Get()));
@@ -139,38 +146,6 @@ CFTypeID CGPathGetTypeID() {
     return __kCGPathTypeID;
 }
 
-class BBox {
-public:
-    float x, y, x1, y1;
-    bool xset, yset, x1set, y1set;
-
-    BBox() {
-        x = y = x1 = y1 = 0;
-        xset = yset = x1set = y1set = false;
-    }
-
-    void addPoint(float ptX, float ptY) {
-        if (ptX < x || !xset) {
-            x = ptX;
-            xset = true;
-        }
-        if (ptY < y || !yset) {
-            y = ptY;
-            yset = true;
-        }
-
-        if (ptX > x1 || !x1set) {
-            x1 = ptX;
-            x1set = true;
-        }
-
-        if (ptY > y1 || !y1set) {
-            y1 = ptY;
-            y1set = true;
-        }
-    }
-};
-
 /**
  @Status Interoperable
 */
@@ -212,7 +187,8 @@ CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
 
     CGMutablePathRef mutableRet = CGPathCreateMutable();
 
-    // In order to call stream and copy the contents of the original path into the new copy we must close this path.
+    // In order to call stream and copy the contents of the original path into the
+    // new copy we must close this path.
     // Otherwise the D2D calls will return that a bad state has been entered.
     path->closePath();
 
@@ -249,7 +225,8 @@ CGFloat _CGPathControlPointOffsetMultiplier(CGFloat angle) {
     // Constant used to approximate circles with bezier curves.
     // An n-piece cubic Bezier curve can approximate a circle,
     // when each inner control point is the distance 4/3 * tan(t/4)
-    // from an outer control point on a unit circle, where t is 360/n degrees, and n > 2
+    // from an outer control point on a unit circle, where t is 360/n degrees, and
+    // n > 2
     return (4.0f / 3.0f) * tan(angle / 4.0f);
 }
 
@@ -338,7 +315,8 @@ void _CGPathAddArc(CGMutablePathRef path,
         return;
     }
 
-    // The start and end points for the arc, not yet adjusted with the center of the arc
+    // The start and end points for the arc, not yet adjusted with the center of
+    // the arc
     CGPoint arcStartRelative = CGPointMake((cos(startAngle) * radius), (sin(startAngle) * radius));
     CGPoint arcEndRelative = CGPointMake((cos(endAngle) * radius), (sin(endAngle) * radius));
 
@@ -454,11 +432,18 @@ void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform* transform, CG
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Ignores Affine Transform
 */
 void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* transform, CGPathRef toAdd) {
-    UNIMPLEMENTED();
+    if (path == NULL || toAdd == NULL) {
+        return;
+    }
+
+    // Close the path we're adding and open the path we need to add to.
+    toAdd->closePath();
+    path->preparePathForEditing();
+    FAIL_FAST_IF_FAILED(toAdd->_impl.pathGeometry->Stream(path->_impl.geometrySink.Get()));
 }
 
 /**
@@ -499,10 +484,14 @@ void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* tran
  @Status Interoperable
 */
 void CGPathCloseSubpath(CGMutablePathRef path) {
-    // We cannot use end figure with the built in way of closing a sub path due to an issue with reading information
-    // from a D2DGeometry. If a figure is open and any information is requested from the path, the call will fail with
-    // a bad state. Because of this, we have to ensure that any open figures are closed before continuing. The problem this
-    // causes is that the sub path is no longer being tracked via figures and we must close the sub path ourselves b
+    // We cannot use end figure with the built in way of closing a sub path due to
+    // an issue with reading information
+    // from a D2DGeometry. If a figure is open and any information is requested
+    // from the path, the call will fail with
+    // a bad state. Because of this, we have to ensure that any open figures are
+    // closed before continuing. The problem this
+    // causes is that the sub path is no longer being tracked via figures and we
+    // must close the sub path ourselves b
     // drawing a line to the original point of the path.
     if (!CGPointEqualToPoint(path->_impl.currentPoint, path->_impl.startingPoint)) {
         CGPathAddLineToPoint(path, nullptr, path->_impl.startingPoint.x, path->_impl.startingPoint.y);
@@ -774,133 +763,3 @@ bool CGPathIsRect(CGPathRef path, CGRect* rect) {
     UNIMPLEMENTED();
     return StubReturn();
 }
-
-class ScanlineCalculator {
-    typedef std::vector<int> interceptList;
-    interceptList _left, _right;
-
-    int _originY, _height, _width, _padding;
-
-public:
-    void SetExtents(int y, int width, int height, int padding) {
-        _originY = y;
-        _width = width;
-        _height = height;
-        _padding = padding;
-        _left.resize(_height);
-        std::fill(_left.begin(), _left.end(), _width);
-        _right.resize(_height);
-        std::fill(_right.begin(), _right.end(), 0);
-    }
-
-    void AddLine(CGPoint start, CGPoint end) {
-        AddLine(start.x, start.y, end.x, end.y);
-    }
-
-    void AddLine(float xstart, float ystart, float xend, float yend) {
-        xstart = std::min(xstart, 65536.0f);
-        ystart = std::min(ystart, 65536.0f);
-        xend = std::min(xend, 65536.0f);
-        yend = std::min(yend, 65536.0f);
-        xstart = std::max(xstart, -65536.0f);
-        ystart = std::max(ystart, -65536.0f);
-        xend = std::max(xend, -65536.0f);
-        yend = std::max(yend, -65536.0f);
-
-        if (ystart < _originY && yend < _originY)
-            return;
-        if (ystart > _originY + _height - 1 && yend > _originY + _height - 1)
-            return;
-
-        int x = (int)floorf(xstart);
-        int y = (int)floorf(ystart);
-        int x2 = (int)ceilf(xend);
-        int y2 = (int)ceilf(yend);
-
-        int dx = x2 - x;
-        int dy = y2 - y;
-
-        if (dy == 0) {
-            //  Straight line - simply add start and end points
-            AddPoint(x, y);
-            AddPoint(x2, y2);
-            return;
-        }
-
-        int yStart = y;
-        int yEnd = y2;
-        if (yStart > yEnd) {
-            std::swap(yStart, yEnd);
-        }
-        if (yStart < _originY) {
-            yStart = _originY;
-        }
-        if (yEnd > _originY + _height) {
-            yEnd = _originY + _height;
-        }
-
-        for (int curY = yStart; curY < yEnd; curY++) {
-            int b = curY - y2;
-            int xPos = x2 + b * dx / dy;
-            AddPoint(xPos, curY);
-        }
-    }
-
-    void AddPoint(int x, int y) {
-        if (y >= _originY && y < _originY + _height) {
-            if (_left[y - _originY] > x) {
-                _left[y - _originY] = x;
-            }
-            if (_right[y - _originY] < x) {
-                _right[y - _originY] = x;
-            }
-        }
-    }
-
-    bool FindLargestRect(CGPoint point, float rectHeight, CGRect& ret) {
-        float xPos = point.x;
-        int yPos = floorf(point.y);
-        int yHeight = ceilf(rectHeight);
-
-        //  Find the leftmost indexes of the scanlines that can fit the rectangle
-        for (int y = yPos; y < yPos + yHeight; y++) {
-            int yIdx = y - _originY;
-            if (yIdx < 0 || yIdx >= _left.size())
-                continue;
-
-            int excludeStart = _left[yIdx] - _padding;
-            int excludeEnd = _right[yIdx] + _padding;
-
-            if (xPos >= excludeStart && xPos < excludeEnd) {
-                xPos = excludeEnd;
-            }
-        }
-
-        //  Find the maximum width of the overlap rectangle
-        float x2Pos = _width - _padding;
-
-        for (int y = yPos; y < yPos + yHeight; y++) {
-            int yIdx = y - _originY;
-            if (yIdx < 0 || yIdx >= _left.size())
-                continue;
-
-            //  If the end position intersections with an exclusion zone, bump it backward
-            int excludeStart = _left[yIdx] - _padding;
-
-            if (excludeStart > xPos && x2Pos >= excludeStart) {
-                x2Pos = excludeStart;
-            }
-        }
-
-        if (x2Pos <= xPos) {
-            return false;
-        } else {
-            ret.origin.x = xPos;
-            ret.origin.y = point.y;
-            ret.size.width = x2Pos - xPos;
-            ret.size.height = rectHeight;
-        }
-
-        return true;
-    }
-};
