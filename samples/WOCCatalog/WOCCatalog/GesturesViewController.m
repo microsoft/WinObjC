@@ -202,7 +202,7 @@ static float splashStrokeWidth = 5.0f;
 }
 
 -(void)_doTap:(UITapGestureRecognizer*)sender {
-    if (sender.state == UIGestureRecognizerStateBegan) {
+    if (sender.state == UIGestureRecognizerStateRecognized) {
         [[[SplashView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)] showInView:self.view atPoint:[sender locationInView:self.view] endSize:8 color:[UIColor redColor]];
     }
 }

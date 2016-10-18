@@ -192,7 +192,6 @@
     _lineBreakMode = UILineBreakModeTailTruncation;
     [self setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]]];
     _textColor = [UIColor blackColor];
-    [self setBackgroundColor:[UIColor whiteColor]];
     _shadowColor = _textColor;
     _minimumFontSize = 8.0f;
     _numberOfLines = 1;
