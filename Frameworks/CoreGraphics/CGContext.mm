@@ -41,6 +41,7 @@
 #import <list>
 #import <vector>
 #import <stack>
+#import <algorithm>
 
 using namespace Microsoft::WRL;
 
@@ -59,7 +60,6 @@ struct __CGContextDrawingState {
 
     // Strokes
     ComPtr<ID2D1Brush> strokeBrush{ nullptr };
-    ComPtr<ID2D1StrokeStyle> strokeStyle{ nullptr };
     D2D1_STROKE_STYLE_PROPERTIES strokeProperties{
         D2D1_CAP_STYLE_FLAT,
         D2D1_CAP_STYLE_FLAT,
@@ -70,8 +70,10 @@ struct __CGContextDrawingState {
         0.f,
     };
     std::vector<CGFloat> dashes{};
-
     CGFloat lineWidth = 1.0f;
+
+    // Computed from the above at draw time
+    ComPtr<ID2D1StrokeStyle> strokeStyle{ nullptr };
 
     CGFloat flatness = 0.0f;
 
@@ -84,6 +86,20 @@ struct __CGContextDrawingState {
 
     // Alpha Blending
     CGFloat alpha = 1.0f;
+
+    inline void ComputeStrokeStyle(ID2D1Factory* factory) {
+        if (strokeStyle) {
+            return;
+        }
+
+        std::vector<CGFloat> adjustedDashes(dashes.size());
+        std::transform(dashes.cbegin(), dashes.cend(), adjustedDashes.begin(), [this](const float& f) -> CGFloat { return f / lineWidth; });
+        FAIL_FAST_IF_FAILED(factory->CreateStrokeStyle(strokeProperties, adjustedDashes.data(), adjustedDashes.size(), &strokeStyle));
+    }
+
+    inline void ClearStrokeStyle() {
+        strokeStyle.Reset();
+    }
 };
 
 struct __CGContextImpl {
@@ -730,17 +746,10 @@ static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometr
             ComPtr<ID2D1Factory> factory;
             renderTarget->GetFactory(&factory);
 
-            // TODO(DH): GH#1077 Do not recreate for every drawing operation
-            ComPtr<ID2D1StrokeStyle> strokeStyle;
-            // dashes must be adjusted to be based on line width
-            std::vector<CGFloat> adjustedDashes{ state.dashes };
-            for (float& f : adjustedDashes) {
-                f /= state.lineWidth;
-            }
-            FAIL_FAST_IF_FAILED(
-                factory->CreateStrokeStyle(state.strokeProperties, adjustedDashes.data(), adjustedDashes.size(), &strokeStyle));
+            // This only computes the stroke style if its parameters have changed since the last draw.
+            state.ComputeStrokeStyle(factory.Get());
 
-            renderTarget->DrawGeometry(geometry, state.strokeBrush.Get(), state.lineWidth, strokeStyle.Get());
+            renderTarget->DrawGeometry(geometry, state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
         }
     });
 
@@ -1077,6 +1086,8 @@ void CGContextDrawLayerAtPoint(CGContextRef context, CGPoint destPoint, CGLayerR
 void CGContextSetLineDash(CGContextRef context, CGFloat phase, const CGFloat* lengths, unsigned count) {
     CGCONTEXT_CHECK_NULLV(context);
     auto& state = context->CurrentGState();
+    state.ClearStrokeStyle();
+
     auto& dashes = state.dashes;
 
     if (count == 0) {
@@ -1096,6 +1107,7 @@ void CGContextSetLineDash(CGContextRef context, CGFloat phase, const CGFloat* le
 void CGContextSetMiterLimit(CGContextRef context, CGFloat limit) {
     CGCONTEXT_CHECK_NULLV(context);
     auto& state = context->CurrentGState();
+    state.ClearStrokeStyle();
     state.strokeProperties.miterLimit = limit;
 }
 
@@ -1105,6 +1117,7 @@ void CGContextSetMiterLimit(CGContextRef context, CGFloat limit) {
 void CGContextSetLineJoin(CGContextRef context, CGLineJoin lineJoin) {
     CGCONTEXT_CHECK_NULLV(context);
     auto& state = context->CurrentGState();
+    state.ClearStrokeStyle();
     state.strokeProperties.lineJoin = (D2D1_LINE_JOIN)lineJoin;
 }
 
@@ -1114,6 +1127,7 @@ void CGContextSetLineJoin(CGContextRef context, CGLineJoin lineJoin) {
 void CGContextSetLineCap(CGContextRef context, CGLineCap lineCap) {
     CGCONTEXT_CHECK_NULLV(context);
     auto& state = context->CurrentGState();
+    state.ClearStrokeStyle();
     state.strokeProperties.startCap = (D2D1_CAP_STYLE)lineCap;
     state.strokeProperties.endCap = (D2D1_CAP_STYLE)lineCap;
     state.strokeProperties.dashCap = (D2D1_CAP_STYLE)lineCap;
@@ -1125,6 +1139,7 @@ void CGContextSetLineCap(CGContextRef context, CGLineCap lineCap) {
 void CGContextSetLineWidth(CGContextRef context, CGFloat width) {
     CGCONTEXT_CHECK_NULLV(context);
     auto& state = context->CurrentGState();
+    state.ClearStrokeStyle();
     state.lineWidth = width;
 }
 
