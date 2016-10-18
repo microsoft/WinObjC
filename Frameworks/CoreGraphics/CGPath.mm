@@ -62,8 +62,8 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
             ComPtr<ID2D1Factory> factory = _GetD2DFactoryInstance();
 
             // Create temp vars for new path/sink
-            Microsoft::WRL::ComPtr<ID2D1PathGeometry> newPath;
-            Microsoft::WRL::ComPtr<ID2D1GeometrySink> newSink;
+            ComPtr<ID2D1PathGeometry> newPath;
+            ComPtr<ID2D1GeometrySink> newSink;
 
             // Open a new path that the contents of the old path will be streamed
             // into. We cannot re-use the same path as it is now closed and cannot be opened again. We use the newPath variable because the

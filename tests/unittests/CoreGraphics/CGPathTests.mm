@@ -599,7 +599,7 @@ TEST(CGPath, CGPathSimpleCreation) {
     CGMutablePathRef path = CGPathCreateMutable();
     EXPECT_TRUE(CGPathIsEmpty(path));
     EXPECT_NE(nullptr, path);
-    // It's starting point should be at 0,0
+    // Its starting point should be at 0,0
     EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 0, 0);
 
     // Move to a new point
