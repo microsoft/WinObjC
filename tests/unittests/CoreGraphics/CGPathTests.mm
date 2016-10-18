@@ -620,6 +620,9 @@ TEST(CGPath, CGPathSimpleCreation) {
     // The original should not have been changed but the new path should have moved
     EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 100, 50);
     EXPECT_POINTEQ(CGPathGetCurrentPoint(pathCopy), 200, 200);
+
+    CGPathRelease(path);
+    CGPathRelease(pathCopy);
 }
 
 TEST(CGPath, CGPathSimpleLines) {
@@ -642,6 +645,7 @@ TEST(CGPath, CGPathSimpleLines) {
     // Verify that the size of this box has changed
     EXPECT_POINTEQ(boundingBox.origin, 25, 25);
     EXPECT_SIZEEQ(boundingBox.size, 75, 175);
+    CGPathRelease(path);
 
     // Create a new path and move it to a new point
     path = CGPathCreateMutable();
@@ -670,6 +674,9 @@ TEST(CGPath, CGPathSimpleLines) {
     boundingBox = CGPathGetBoundingBox(path);
     EXPECT_POINTEQ(boundingBox.origin, 50, 50);
     EXPECT_SIZEEQ(boundingBox.size, 31, 57);
+
+    CGPathRelease(path);
+    CGPathRelease(pathCopy);
 }
 
 TEST(CGPath, CGPathAddPathTest) {
@@ -693,4 +700,7 @@ TEST(CGPath, CGPathAddPathTest) {
     boundingBox = CGPathGetBoundingBox(path);
     EXPECT_POINTEQ(boundingBox.origin, 50, 50);
     EXPECT_SIZEEQ(boundingBox.size, 50, 50);
+
+    CGPathRelease(path);
+    CGPathRelease(secondPath);
 }

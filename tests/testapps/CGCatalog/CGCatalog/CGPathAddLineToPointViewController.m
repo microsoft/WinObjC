@@ -47,10 +47,6 @@
         CGPathAddLineToPoint(thepath, NULL, 300, 100);
         CGPathAddLineToPoint(thepath, NULL, 235, 100);
 
-        CGPoint points[] = { { 300, 200 }, { 400, 200 }, { 400, 300 }, { 300, 300 }, { 300, 200 } };
-
-        CGPathAddLines(thepath, NULL, points, 5);
-
         // Unnecessary as close subpath will finish this line off but for the sake of consistency, have this here.
         CGPathAddLineToPoint(thepath, NULL, 200, 35);
 

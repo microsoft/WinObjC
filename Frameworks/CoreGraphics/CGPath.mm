@@ -34,6 +34,16 @@
 
 static const wchar_t* TAG = L"CGPath";
 
+//
+static inline CGPoint __CreateCGPointWithTransform(CGFloat x, CGFloat y, const CGAffineTransform* transform) {
+    CGPoint pt{ x, y };
+    if (transform) {
+        pt = CGPointApplyAffineTransform(pt, *transform);
+    }
+
+    return pt;
+}
+
 using namespace std;
 using namespace Microsoft::WRL;
 
@@ -165,17 +175,14 @@ CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
 /**
  @Status Interoperable
 */
-void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* transform, float x, float y) {
+void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* transform, CGFloat x, CGFloat y) {
     if (path == NULL) {
         return;
     }
 
     path->preparePathForEditing();
 
-    CGPoint pt{ x, y };
-    if (transform) {
-        pt = CGPointApplyAffineTransform(pt, *transform);
-    }
+    CGPoint pt = __CreateCGPointWithTransform(x, y, transform);
 
     path->beginFigure();
     path->_impl.geometrySink->AddLine(_CGPointToD2D_F(pt));
@@ -196,7 +203,8 @@ CGFloat _CGPathControlPointOffsetMultiplier(CGFloat angle) {
  @Status Caveat
  @Notes transform property not supported
 */
-void CGPathAddArcToPoint(CGMutablePathRef path, const CGAffineTransform* transform, float x1, float y1, float x2, float y2, float radius) {
+void CGPathAddArcToPoint(
+    CGMutablePathRef path, const CGAffineTransform* transform, CGFloat x1, CGFloat y1, CGFloat x2, CGFloat y2, CGFloat radius) {
     bool isEmpty = CGPathIsEmpty(path);
 
     if (isEmpty) {
@@ -243,11 +251,11 @@ void CGPathAddArcToPoint(CGMutablePathRef path, const CGAffineTransform* transfo
     t = (dx2 * n2y - dx2 * n0y - dy2 * n2x + dy2 * n0x) / san;
     CGPathAddArc(path,
                  transform,
-                 (float)(x1 + radius * (t * dx0 + n0x)),
-                 (float)(y1 + radius * (t * dy0 + n0y)),
+                 (CGFloat)(x1 + radius * (t * dx0 + n0x)),
+                 (CGFloat)(y1 + radius * (t * dy0 + n0y)),
                  radius,
-                 (float)atan2(-n0y, -n0x),
-                 (float)atan2(-n2y, -n2x),
+                 (CGFloat)atan2(-n0y, -n0x),
+                 (CGFloat)atan2(-n2y, -n2x),
                  (san < 0));
 }
 
@@ -352,13 +360,9 @@ void CGPathAddArc(CGMutablePathRef path,
 /**
  @Status Interoperable
 */
-void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* transform, float x, float y) {
-    CGPoint pt;
-    pt.x = x;
-    pt.y = y;
-    if (transform) {
-        pt = CGPointApplyAffineTransform(pt, *transform);
-    }
+void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* transform, CGFloat x, CGFloat y) {
+    CGPoint pt = __CreateCGPointWithTransform(x, y, transform);
+
     path->_impl.startingPoint = pt;
     path->_impl.currentPoint = pt;
 }
@@ -446,9 +450,7 @@ void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* tran
 */
 void CGPathCloseSubpath(CGMutablePathRef path) {
     // Move the current point to the starting point since the line is closed.
-    if (!CGPointEqualToPoint(path->_impl.currentPoint, path->_impl.startingPoint)) {
-        path->_impl.currentPoint = path->_impl.startingPoint;
-    }
+    path->_impl.currentPoint = path->_impl.startingPoint;
     path->endFigure(D2D1_FIGURE_END_CLOSED);
 }
 
