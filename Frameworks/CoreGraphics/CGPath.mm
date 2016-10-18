@@ -48,8 +48,8 @@ using namespace std;
 using namespace Microsoft::WRL;
 
 struct __CGPathImpl {
-    ComPtr<ID2D1PathGeometry> pathGeometry{ nullptr };
-    ComPtr<ID2D1GeometrySink> geometrySink{ nullptr };
+    ComPtr<ID2D1PathGeometry> pathGeometry;
+    ComPtr<ID2D1GeometrySink> geometrySink;
 
     bool isFigureClosed;
     CGPoint currentPoint{ 0, 0 };
@@ -111,6 +111,13 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
             _impl.isFigureClosed = true;
         }
     }
+
+    void initializeGeometries() {
+        ComPtr<ID2D1Factory> factory = _GetD2DFactoryInstance();
+
+        FAIL_FAST_IF_FAILED(factory->CreatePathGeometry(&_impl.pathGeometry));
+        FAIL_FAST_IF_FAILED(_impl.pathGeometry->Open(&_impl.geometrySink));
+    }
 };
 
 CFTypeID CGPathGetTypeID() {
@@ -129,10 +136,7 @@ static Boolean __CGPathEqual(CFTypeRef cf1, CFTypeRef cf2) {
 CGMutablePathRef CGPathCreateMutable() {
     __CGPath* mutableRet = __CGPath::CreateInstance();
 
-    ComPtr<ID2D1Factory> factory = _GetD2DFactoryInstance();
-
-    FAIL_FAST_IF_FAILED(factory->CreatePathGeometry(&mutableRet->_impl.pathGeometry));
-    FAIL_FAST_IF_FAILED(mutableRet->_impl.pathGeometry->Open(&mutableRet->_impl.geometrySink));
+    mutableRet->initializeGeometries();
 
     return mutableRet;
 }
@@ -361,6 +365,9 @@ void CGPathAddArc(CGMutablePathRef path,
  @Status Interoperable
 */
 void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* transform, CGFloat x, CGFloat y) {
+    // CGPathMoveToPoint does not update the geometry in any way. CGPaths do not consider these actions to be
+    // segments of the path and are not considered on CGPathApply. Because of this we do not want to call
+    // BeginFigure or anything else on the D2DPath because that would modify it's state in an invalid way.
     CGPoint pt = __CreateCGPointWithTransform(x, y, transform);
 
     path->_impl.startingPoint = pt;

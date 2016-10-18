@@ -26,11 +26,11 @@
 
 Microsoft::WRL::ComPtr<ID2D1Factory> _GetD2DFactoryInstance();
 
-static inline D2D_POINT_2F _CGPointToD2D_F(CGPoint point) {
+inline D2D_POINT_2F _CGPointToD2D_F(CGPoint point) {
     return { point.x, point.y };
 }
 
-static inline CGRect _D2DRectToCGRect(D2D1_RECT_F rect) {
+inline CGRect _D2DRectToCGRect(D2D1_RECT_F rect) {
     CGFloat x = rect.left;
     CGFloat y = rect.top;
     CGFloat width = rect.right - x;
