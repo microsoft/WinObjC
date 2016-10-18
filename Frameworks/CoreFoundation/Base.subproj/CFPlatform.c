@@ -495,7 +495,7 @@ CF_INLINE CFIndex strlen_UniChar(const UniChar* p) {
  * or if the bundle name cannot be obtained:
  *     <nFolder_path>\Apple Computer\
  * where nFolder_path is obtained by calling SHGetFolderPath with nFolder
- * (CSIDL_LOCAL_APPDATA).
+ * (for example, with CSIDL_APPDATA or CSIDL_LOCAL_APPDATA).
  *
  * The CFMutableStringRef result must be released by the caller.
  *
@@ -505,8 +505,7 @@ CF_EXPORT CFMutableStringRef _CFCreateApplicationRepositoryPath(CFAllocatorRef a
     CFMutableStringRef result = NULL;
     CFStringRef str = NULL;
 
-    // In Reference platform, CFPreferences does not roam, so ignore nFolder
-
+    //WinOBJC- In Reference platform, CFPreferences does not roam, so ignore nFolder
     Wrappers::HString path = GetAppDataPath(true);
     if (path.IsValid()) {
         unsigned int rawLength;
