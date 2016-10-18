@@ -505,7 +505,7 @@ CF_EXPORT CFMutableStringRef _CFCreateApplicationRepositoryPath(CFAllocatorRef a
     CFMutableStringRef result = NULL;
     CFStringRef str = NULL;
 
-    //WinOBJC- In Reference platform, CFPreferences does not roam, so ignore nFolder
+    // WINOBJC: In Reference platform, CFPreferences does not roam, so ignore nFolder
     Wrappers::HString path = GetAppDataPath(true);
     if (path.IsValid()) {
         unsigned int rawLength;
