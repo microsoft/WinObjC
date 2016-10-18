@@ -583,7 +583,7 @@ void CGContextClearRect(CGContextRef context, CGRect rect) {
 template <typename Lambda>
 static void __CGContextRenderToCommandList(CGContextRef context, ID2D1CommandList** outCommandList, Lambda l) {
     ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
-    auto& currentState = context->CurrentGState();
+    auto& state = context->CurrentGState();
 
     ComPtr<ID2D1DeviceContext> deviceContext;
     FAIL_FAST_IF_FAILED(renderTarget.As(&deviceContext));
@@ -609,28 +609,31 @@ static void __CGContextRenderToCommandList(CGContextRef context, ID2D1CommandLis
 
 static void __CGContextRenderCommandList(CGContextRef context, ID2D1CommandList* commandList) {
     ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
-    auto& currentState = context->CurrentGState();
+    auto& state = context->CurrentGState();
 
     ComPtr<ID2D1DeviceContext> deviceContext;
     FAIL_FAST_IF_FAILED(renderTarget.As(&deviceContext));
 
     D2D1_SIZE_F targetSize = renderTarget->GetSize();
-    CGAffineTransform& currentTransform = currentState.transform;
+    CGAffineTransform& currentTransform = state.transform;
+    
+    // CG is anchored in the bottom left, but D2D is anchored in the top left.
+    // Flip the context.
     CGAffineTransform transform = CGAffineTransformScale(currentTransform, 1.0, -1.0);
-    // undo the slide (slide was in points, must be done after scale is undone)
+    // Translate it back onscreen.
     transform = CGAffineTransformTranslate(transform, 0., targetSize.height);
     deviceContext->SetTransform({ transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty });
 
     deviceContext->BeginDraw();
 
     bool layer = false;
-    if (currentState.alpha != 1.0f || false /* mask, clip, etc. */) {
+    if (state.alpha != 1.0f || false /* mask, clip, etc. */) {
         layer = true;
         renderTarget->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
                                                       nullptr,
                                                       D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
                                                       D2D1::IdentityMatrix(),
-                                                      currentState.alpha),
+                                                      state.alpha),
                                 nullptr);
     }
 
@@ -648,12 +651,12 @@ static void __CGContextRenderCommandList(CGContextRef context, ID2D1CommandList*
 static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometry, CGPathDrawingMode drawMode) {
     ComPtr<ID2D1CommandList> commandList;
     __CGContextRenderToCommandList(context, &commandList, [geometry, drawMode](CGContextRef context, ID2D1RenderTarget* renderTarget) {
-        auto& currentState = context->CurrentGState();
+        auto& state = context->CurrentGState();
         if (drawMode & kCGPathFill) {
             if (drawMode & kCGPathEOFill) {
                 // TODO(DH): GH#1077 Regenerate geometry in Even/Odd fill mode.
             }
-            renderTarget->FillGeometry(geometry, currentState.fillBrush.Get());
+            renderTarget->FillGeometry(geometry, state.fillBrush.Get());
         }
 
         if (drawMode & kCGPathStroke) {
@@ -663,14 +666,14 @@ static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometr
             // TODO(DH): GH#1077 Do not recreate for every drawing operation
             ComPtr<ID2D1StrokeStyle> strokeStyle;
             // dashes must be adjusted to be based on line width
-            std::vector<CGFloat> adjustedDashes{ currentState.dashes };
+            std::vector<CGFloat> adjustedDashes{ state.dashes };
             for (float& f : adjustedDashes) {
-                f /= currentState.lineWidth;
+                f /= state.lineWidth;
             }
             FAIL_FAST_IF_FAILED(
-                factory->CreateStrokeStyle(currentState.strokeProperties, adjustedDashes.data(), adjustedDashes.size(), &strokeStyle));
+                factory->CreateStrokeStyle(state.strokeProperties, adjustedDashes.data(), adjustedDashes.size(), &strokeStyle));
 
-            renderTarget->DrawGeometry(geometry, currentState.strokeBrush.Get(), currentState.lineWidth, strokeStyle.Get());
+            renderTarget->DrawGeometry(geometry, state.strokeBrush.Get(), state.lineWidth, strokeStyle.Get());
         }
     });
 
@@ -1071,10 +1074,48 @@ void CGContextSetShouldSubpixelQuantizeFonts(CGContextRef context, bool subpixel
 }
 
 /**
- @Status interoperable
+ @Status Interoperable
+ @Notes CGContext defaults to low-quality linear interpolation.
 */
 void CGContextSetInterpolationQuality(CGContextRef context, CGInterpolationQuality quality) {
-    UNIMPLEMENTED();
+    static D2D1_INTERPOLATION_MODE d2dModes[] = {
+        /* Default */ D2D1_INTERPOLATION_MODE_LINEAR,
+        /* None    */ D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
+        /* Low     */ D2D1_INTERPOLATION_MODE_LINEAR,
+        /* Medium  */ D2D1_INTERPOLATION_MODE_MULTI_SAMPLE_LINEAR,
+        /* High    */ D2D1_INTERPOLATION_MODE_CUBIC,
+    };
+
+    if (quality < kCGInterpolationDefault) {
+        quality = kCGInterpolationDefault;
+    }
+
+    if (quality > kCGInterpolationHigh) {
+        quality = kCGInterpolationHigh;
+    }
+
+    auto& state = context->CurrentGState();
+    state.bitmapInterpolationMode = d2dModes[quality];
+}
+
+/**
+ @Status Interoperable
+ @Notes Low-quality interpolation will be returned as default interpolation.
+*/
+CGInterpolationQuality CGContextGetInterpolationQuality(CGContextRef context) {
+    auto& state = context->CurrentGState();
+    switch (state.bitmapInterpolationMode) {
+        case D2D1_INTERPOLATION_MODE_LINEAR:
+            return kCGInterpolationDefault;
+        case D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR:
+            return kCGInterpolationNone;
+        case D2D1_INTERPOLATION_MODE_MULTI_SAMPLE_LINEAR:
+            return kCGInterpolationMedium;
+        case D2D1_INTERPOLATION_MODE_CUBIC:
+            return kCGInterpolationHigh;
+        default:
+            return kCGInterpolationDefault;
+    }
 }
 
 /**
@@ -1137,14 +1178,6 @@ void CGContextStrokeLineSegments(CGContextRef context, const CGPoint* segments, 
         CGContextAddLineToPoint(context, segments[k + 1].x, segments[k + 1].y);
     }
     CGContextStrokePath(context);
-}
-
-/**
- @Status Interoperable
-*/
-CGInterpolationQuality CGContextGetInterpolationQuality(CGContextRef context) {
-    UNIMPLEMENTED();
-    return StubReturn();
 }
 
 /**
