@@ -91,13 +91,21 @@ struct __CGContextDrawingState {
     // Alpha Blending
     CGFloat alpha = 1.0f;
 
-    inline void ComputeStrokeStyle(ID2D1Factory* factory) {
+    inline void ComputeStrokeStyle(ID2D1DeviceContext* deviceContext) {
         if (strokeStyle) {
             return;
         }
 
-        std::vector<CGFloat> adjustedDashes(dashes.size());
-        std::transform(dashes.cbegin(), dashes.cend(), adjustedDashes.begin(), [this](const float& f) -> CGFloat { return f / lineWidth; });
+        if (std::fpclassify(lineWidth) == FP_ZERO) {
+            // Set no stroke style.
+            return;
+        }
+
+        ComPtr<ID2D1Factory> factory;
+        deviceContext->GetFactory(&factory);
+
+        std::vector<float> adjustedDashes(dashes.size());
+        std::transform(dashes.cbegin(), dashes.cend(), adjustedDashes.begin(), [this](const float& f) -> float { return f / lineWidth; });
         FAIL_FAST_IF_FAILED(factory->CreateStrokeStyle(strokeProperties, adjustedDashes.data(), adjustedDashes.size(), &strokeStyle));
     }
 
@@ -701,13 +709,11 @@ static void __CGContextRenderCommandList(CGContextRef context, ID2D1CommandList*
     FAIL_FAST_IF_FAILED(renderTarget.As(&deviceContext));
 
     D2D1_SIZE_F targetSize = renderTarget->GetSize();
-    CGAffineTransform& currentTransform = state.transform;
 
-    // CG is anchored in the bottom left, but D2D is anchored in the top left.
-    // Flip the context.
-    CGAffineTransform transform = CGAffineTransformScale(currentTransform, 1.0, -1.0);
-    // Translate it back onscreen.
-    transform = CGAffineTransformTranslate(transform, 0., targetSize.height);
+    // CG is a lower-left origin system (LLO), but D2D is upper left (ULO).
+    // We have to translate the render area back onscreen and flip it up to ULO.
+    CGAffineTransform transform = CGAffineTransformMake(1.f, 0.f, 0.f, -1.f, 0.f, targetSize.height);
+    transform = CGAffineTransformConcat(state.transform, transform);
     deviceContext->SetTransform(__CGAffineTransformToD2D_F(transform));
 
     deviceContext->BeginDraw();
@@ -726,6 +732,7 @@ static void __CGContextRenderCommandList(CGContextRef context, ID2D1CommandList*
         renderTarget->PopLayer();
     }
 
+    // TODO GH#1194: We will need to re-evaluate Direct2D's D2DERR_RECREATE when we move to HW acceleration.
     FAIL_FAST_IF_FAILED(deviceContext->EndDraw());
 
     deviceContext->SetTransform(D2D1::IdentityMatrix());
@@ -742,12 +749,9 @@ static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometr
             deviceContext->FillGeometry(geometry, state.fillBrush.Get());
         }
 
-        if (drawMode & kCGPathStroke) {
-            ComPtr<ID2D1Factory> factory;
-            deviceContext->GetFactory(&factory);
-
+        if (drawMode & kCGPathStroke && std::fpclassify(state.lineWidth) != FP_ZERO) {
             // This only computes the stroke style if its parameters have changed since the last draw.
-            state.ComputeStrokeStyle(factory.Get());
+            state.ComputeStrokeStyle(deviceContext);
 
             deviceContext->DrawGeometry(geometry, state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
         }
@@ -868,15 +872,15 @@ void CGContextAddRect(CGContextRef context, CGRect rect) {
 /**
  @Status Interoperable
 */
-void CGContextAddRects(CGContextRef context, const CGRect* rect, unsigned count) {
+void CGContextAddRects(CGContextRef context, const CGRect* rects, unsigned count) {
     CGCONTEXT_CHECK_NULLV(context);
 
-    if (count == 0 || !rect) {
+    if (count == 0 || !rects) {
         return;
     }
 
     for (unsigned i = 0; i < count; i++) {
-        CGContextAddRect(context, rect[i]);
+        CGContextAddRect(context, rects[i]);
     }
 }
 
@@ -977,14 +981,17 @@ CGRect CGContextGetPathBoundingBox(CGContextRef context) {
 /**
  @Status Interoperable
 */
-void CGContextAddLines(CGContextRef context, const CGPoint* pt, unsigned count) {
+void CGContextAddLines(CGContextRef context, const CGPoint* points, unsigned count) {
     CGCONTEXT_CHECK_NULLV(context);
 
-    // TODO(DH) GH#1066 Switch to CGPathAddLines(context->path, pt, count);
+    if (!count || !points) {
+        return;
+    }
 
-    CGContextMoveToPoint(context, pt[0].x, pt[0].y);
-    for (unsigned i = 1; i < count; i++) {
-        CGContextAddLineToPoint(context, pt[i].x, pt[i].y);
+    // TODO(DH) GH#1066 Switch to CGPathAddLines(context->path, points, count);
+    CGContextMoveToPoint(context, points[0].x, points[0].y);
+    for (unsigned int i = 1; i < count; i++) {
+        CGContextAddLineToPoint(context, points[i].x, points[i].y);
     }
 }
 
@@ -1098,7 +1105,7 @@ void CGContextSetLineDash(CGContextRef context, CGFloat phase, const CGFloat* le
 
     auto& dashes = state.dashes;
 
-    if (count == 0) {
+    if (count == 0 || !lengths) {
         state.strokeProperties.dashOffset = 0;
         state.strokeProperties.dashStyle = D2D1_DASH_STYLE_SOLID;
         dashes.clear();
@@ -1221,13 +1228,7 @@ void CGContextSetInterpolationQuality(CGContextRef context, CGInterpolationQuali
         /* High    */ D2D1_INTERPOLATION_MODE_CUBIC,
     };
 
-    if (quality < kCGInterpolationDefault) {
-        quality = kCGInterpolationDefault;
-    }
-
-    if (quality > kCGInterpolationHigh) {
-        quality = kCGInterpolationHigh;
-    }
+    quality = std::max(std::min(quality, kCGInterpolationHigh), kCGInterpolationDefault);
 
     auto& state = context->CurrentGState();
     state.bitmapInterpolationMode = d2dModes[quality];
@@ -1235,20 +1236,22 @@ void CGContextSetInterpolationQuality(CGContextRef context, CGInterpolationQuali
 
 /**
  @Status Interoperable
- @Notes Low-quality interpolation will be returned as default interpolation.
+ @Notes Low-quality interpolation will be returned if the default interpolation is set.
 */
 CGInterpolationQuality CGContextGetInterpolationQuality(CGContextRef context) {
     CGCONTEXT_CHECK_NULL(context);
 
     auto& state = context->CurrentGState();
     switch (state.bitmapInterpolationMode) {
-        case D2D1_INTERPOLATION_MODE_LINEAR:
-            return kCGInterpolationDefault;
         case D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR:
             return kCGInterpolationNone;
+        case D2D1_INTERPOLATION_MODE_LINEAR:
+            return kCGInterpolationLow;
         case D2D1_INTERPOLATION_MODE_MULTI_SAMPLE_LINEAR:
             return kCGInterpolationMedium;
+        case D2D1_INTERPOLATION_MODE_ANISOTROPIC:
         case D2D1_INTERPOLATION_MODE_CUBIC:
+        case D2D1_INTERPOLATION_MODE_HIGH_QUALITY_CUBIC:
             return kCGInterpolationHigh;
         default:
             return kCGInterpolationDefault;
@@ -1361,10 +1364,10 @@ CGRect CGContextConvertRectToUserSpace(CGContextRef context, CGRect rect) {
 /**
  @Status Stub
 */
-CGPoint CGContextConvertPointToUserSpace(CGContextRef context, CGPoint pt) {
+CGPoint CGContextConvertPointToUserSpace(CGContextRef context, CGPoint point) {
     CGCONTEXT_CHECK_NULL(context);
     UNIMPLEMENTED();
-    return pt;
+    return point;
 }
 
 /**
@@ -1388,10 +1391,10 @@ CGSize CGContextConvertSizeToDeviceSpace(CGContextRef context, CGSize size) {
 /**
  @Status Stub
 */
-CGPoint CGContextConvertPointToDeviceSpace(CGContextRef context, CGPoint pt) {
+CGPoint CGContextConvertPointToDeviceSpace(CGContextRef context, CGPoint point) {
     CGCONTEXT_CHECK_NULL(context);
     UNIMPLEMENTED();
-    return pt;
+    return point;
 }
 
 /**

@@ -524,8 +524,10 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
         }
 
         // Update content size, even in case of the early out below.
-        int width = (int)(ceilf(priv->bounds.size.width) * priv->contentsScale);
-        int height = (int)(ceilf(priv->bounds.size.height) * priv->contentsScale);
+        int widthInPoints = ceilf(priv->bounds.size.width);
+        int width = (int)(widthInPoints * priv->contentsScale);
+        int heightInPoints = ceilf(priv->bounds.size.height);
+        int height = (int)(heightInPoints * priv->contentsScale);
 
         if (width <= 0 || height <= 0) {
             return;
@@ -608,10 +610,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
             }
         }
 
-        if (target->Backing()->Height() != 0) {
-            CGContextTranslateCTM(drawContext, 0, float(target->Backing()->Height())/priv->contentsScale);
-        }
-
+        // UIKit and CALayer consumers expect the origin to be in the top left.
+        // CoreGraphics defaults to the bottom left, so we must flip and translate the canvas.
+        CGContextTranslateCTM(drawContext, 0, heightInPoints);
         CGContextScaleCTM(drawContext, 1.0f, -1.0f);
         CGContextTranslateCTM(drawContext, -priv->bounds.origin.x, -priv->bounds.origin.y);
 
