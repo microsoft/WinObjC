@@ -161,21 +161,12 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext, __CGContextImpl> {
     }
 };
 
-#define CGCONTEXT_CHECK_NULL(context)                                         \
-    do {                                                                      \
-        if (!context) {                                                       \
-            TraceError(TAG, L"%hs(...): null context!", __PRETTY_FUNCTION__); \
-            return StubReturn();                                              \
-        }                                                                     \
-    \
-} while (0)
-
-#define CGCONTEXT_CHECK_NULLV(context)                                        \
-    do {                                                                      \
-        if (!context) {                                                       \
-            TraceError(TAG, L"%hs(...): null context!", __PRETTY_FUNCTION__); \
-            return;                                                           \
-        }                                                                     \
+#define NOISY_RETURN_IF_NULL(param, ...)                                         \
+    do {                                                                         \
+        if (!context) {                                                          \
+            TraceError(TAG, L"%hs(...): null " #param "!", __PRETTY_FUNCTION__); \
+            return __VA_ARGS__;                                                  \
+        }                                                                        \
     \
 } while (0)
 
@@ -238,12 +229,12 @@ void CGContextRelease(CGContextRef context) {
  @Status Interoperable
 */
 void CGContextSetBlendMode(CGContextRef context, CGBlendMode mode) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
 CGBlendMode CGContextGetBlendMode(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -253,7 +244,7 @@ CGBlendMode CGContextGetBlendMode(CGContextRef context) {
  @Status Interoperable
 */
 void CGContextSetFillPattern(CGContextRef context, CGPatternRef pattern, const CGFloat* components) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -261,7 +252,7 @@ void CGContextSetFillPattern(CGContextRef context, CGPatternRef pattern, const C
  @Status Interoperable
 */
 void CGContextSetPatternPhase(CGContextRef context, CGSize phase) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -270,7 +261,7 @@ void CGContextSetPatternPhase(CGContextRef context, CGSize phase) {
  @Status Stub
 */
 void CGContextSetCharacterSpacing(CGContextRef context, CGFloat spacing) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -278,7 +269,7 @@ void CGContextSetCharacterSpacing(CGContextRef context, CGFloat spacing) {
  @Status Interoperable
 */
 void CGContextSetTextDrawingMode(CGContextRef context, CGTextDrawingMode mode) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -286,7 +277,7 @@ void CGContextSetTextDrawingMode(CGContextRef context, CGTextDrawingMode mode) {
  @Status Interoperable
 */
 void CGContextSetFont(CGContextRef context, CGFontRef font) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -294,7 +285,7 @@ void CGContextSetFont(CGContextRef context, CGFontRef font) {
  @Status Interoperable
 */
 void CGContextSelectFont(CGContextRef context, const char* name, CGFloat size, CGTextEncoding encoding) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -302,7 +293,7 @@ void CGContextSelectFont(CGContextRef context, const char* name, CGFloat size, C
  @Status Interoperable
 */
 void CGContextSetFontSize(CGContextRef context, CGFloat ptSize) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -310,7 +301,7 @@ void CGContextSetFontSize(CGContextRef context, CGFloat ptSize) {
  @Status Interoperable
 */
 void CGContextSetTextMatrix(CGContextRef context, CGAffineTransform matrix) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -318,7 +309,7 @@ void CGContextSetTextMatrix(CGContextRef context, CGAffineTransform matrix) {
  @Status Interoperable
 */
 CGAffineTransform CGContextGetTextMatrix(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -327,7 +318,7 @@ CGAffineTransform CGContextGetTextMatrix(CGContextRef context) {
  @Status Interoperable
 */
 void CGContextSetTextPosition(CGContextRef context, CGFloat x, CGFloat y) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -335,7 +326,7 @@ void CGContextSetTextPosition(CGContextRef context, CGFloat x, CGFloat y) {
  @Status Interoperable
 */
 CGPoint CGContextGetTextPosition(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -346,7 +337,7 @@ CGPoint CGContextGetTextPosition(CGContextRef context) {
  @Status Interoperable
 */
 void CGContextShowTextAtPoint(CGContextRef context, CGFloat x, CGFloat y, const char* str, size_t length) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -354,7 +345,7 @@ void CGContextShowTextAtPoint(CGContextRef context, CGFloat x, CGFloat y, const 
  @Status Interoperable
 */
 void CGContextShowGlyphsAtPoint(CGContextRef context, CGFloat x, CGFloat y, const CGGlyph* glyphs, unsigned count) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -362,7 +353,7 @@ void CGContextShowGlyphsAtPoint(CGContextRef context, CGFloat x, CGFloat y, cons
  @Status Interoperable
 */
 void CGContextShowGlyphsWithAdvances(CGContextRef context, const CGGlyph* glyphs, CGSize* advances, unsigned count) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -370,7 +361,7 @@ void CGContextShowGlyphsWithAdvances(CGContextRef context, const CGGlyph* glyphs
  @Status Interoperable
 */
 void CGContextShowGlyphs(CGContextRef context, const CGGlyph* glyphs, unsigned count) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 #pragma endregion
@@ -380,7 +371,7 @@ void CGContextShowGlyphs(CGContextRef context, const CGGlyph* glyphs, unsigned c
  @Status Interoperable
 */
 CGAffineTransform CGContextGetCTM(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     auto& state = context->CurrentGState();
     return state.transform;
 }
@@ -389,7 +380,7 @@ CGAffineTransform CGContextGetCTM(CGContextRef context) {
  @Status Interoperable
 */
 void CGContextTranslateCTM(CGContextRef context, CGFloat x, CGFloat y) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     CGContextConcatCTM(context, CGAffineTransformMakeTranslation(x, y));
 }
 
@@ -397,7 +388,7 @@ void CGContextTranslateCTM(CGContextRef context, CGFloat x, CGFloat y) {
  @Status Interoperable
 */
 void CGContextScaleCTM(CGContextRef context, CGFloat sx, CGFloat sy) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     CGContextConcatCTM(context, CGAffineTransformMakeScale(sx, sy));
 }
 
@@ -405,7 +396,7 @@ void CGContextScaleCTM(CGContextRef context, CGFloat sx, CGFloat sy) {
  @Status Interoperable
 */
 void CGContextRotateCTM(CGContextRef context, CGFloat angle) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     CGContextConcatCTM(context, CGAffineTransformMakeRotation(angle));
 }
 
@@ -413,7 +404,7 @@ void CGContextRotateCTM(CGContextRef context, CGFloat angle) {
  @Status Interoperable
 */
 void CGContextConcatCTM(CGContextRef context, CGAffineTransform t) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     auto& state = context->CurrentGState();
     state.transform = CGAffineTransformConcat(t, state.transform);
 }
@@ -422,7 +413,7 @@ void CGContextConcatCTM(CGContextRef context, CGAffineTransform t) {
  @Status Interoperable
 */
 void CGContextSetCTM(CGContextRef context, CGAffineTransform transform) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     auto& state = context->CurrentGState();
     state.transform = transform;
 }
@@ -434,7 +425,7 @@ void CGContextSetCTM(CGContextRef context, CGAffineTransform transform) {
  @Status Interoperable
 */
 void CGContextDrawImage(CGContextRef context, CGRect rect, CGImageRef image) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     if (!image) {
         TraceWarning(TAG, L"Img == nullptr!");
         return;
@@ -448,7 +439,7 @@ void CGContextDrawImage(CGContextRef context, CGRect rect, CGImageRef image) {
 }
 
 void CGContextDrawImageRect(CGContextRef context, CGImageRef image, CGRect src, CGRect dst) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -456,7 +447,7 @@ void CGContextDrawImageRect(CGContextRef context, CGImageRef image, CGRect src, 
  @Status Interoperable
 */
 void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 #pragma endregion
@@ -467,7 +458,7 @@ void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image
  @Status Interoperable
 */
 void CGContextClip(CGContextRef context) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -475,7 +466,7 @@ void CGContextClip(CGContextRef context) {
  @Status Interoperable
 */
 void CGContextClipToRect(CGContextRef context, CGRect rect) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     CGContextBeginPath(context);
     CGContextAddRect(context, rect);
     CGContextClip(context);
@@ -485,7 +476,7 @@ void CGContextClipToRect(CGContextRef context, CGRect rect) {
  @Status Interoperable
 */
 void CGContextClipToRects(CGContextRef context, const CGRect* rects, unsigned count) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     if (!rects || count == 0) {
         return;
     }
@@ -500,7 +491,7 @@ void CGContextClipToRects(CGContextRef context, const CGRect* rects, unsigned co
  @Notes Limited bitmap format support
 */
 void CGContextClipToMask(CGContextRef context, CGRect dest, CGImageRef image) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 #pragma endregion
@@ -511,7 +502,7 @@ void CGContextClipToMask(CGContextRef context, CGRect dest, CGImageRef image) {
  @Notes Since we are currently missing Color Space support, this will need to be implemented.
 */
 void CGContextSetStrokeColor(CGContextRef context, const CGFloat* components) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -520,7 +511,7 @@ void CGContextSetStrokeColor(CGContextRef context, const CGFloat* components) {
  @Notes Interoperable only for RGB.
 */
 void CGContextSetStrokeColorWithColor(CGContextRef context, CGColorRef color) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     const CGFloat* comp = CGColorGetComponents(color);
     CGContextSetRGBStrokeColor(context, comp[0], comp[1], comp[2], comp[3]);
 }
@@ -530,7 +521,7 @@ void CGContextSetStrokeColorWithColor(CGContextRef context, CGColorRef color) {
  @Notes Since we are currently missing Color Space support, this will need to be implemented.
 */
 void CGContextSetStrokeColorSpace(CGContextRef context, CGColorSpaceRef colorSpace) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -538,7 +529,7 @@ void CGContextSetStrokeColorSpace(CGContextRef context, CGColorSpaceRef colorSpa
  @Status Interoperable
 */
 void CGContextSetGrayStrokeColor(CGContextRef context, CGFloat gray, CGFloat alpha) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     CGContextSetRGBStrokeColor(context, gray, gray, gray, alpha);
 }
 
@@ -546,7 +537,7 @@ void CGContextSetGrayStrokeColor(CGContextRef context, CGFloat gray, CGFloat alp
  @Status Interoperable
 */
 void CGContextSetRGBStrokeColor(CGContextRef context, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     ComPtr<ID2D1SolidColorBrush> brush;
     FAIL_FAST_IF_FAILED(context->RenderTarget()->CreateSolidColorBrush({ r, g, b, a }, &brush));
     FAIL_FAST_IF_FAILED(brush.As(&context->CurrentGState().strokeBrush));
@@ -557,7 +548,7 @@ void CGContextSetRGBStrokeColor(CGContextRef context, CGFloat r, CGFloat g, CGFl
  @Notes Manually converts CMYK to RGB, and does not involve the colorspace.
 */
 void CGContextSetCMYKStrokeColor(CGContextRef context, CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     CGContextSetRGBStrokeColor(context,
                                (1.0f - cyan) * (1.0f - black),
                                (1.0f - magenta) * (1.0f - black),
@@ -572,7 +563,7 @@ void CGContextSetCMYKStrokeColor(CGContextRef context, CGFloat cyan, CGFloat mag
  @Notes Since we are currently missing Color Space support, this will need to be implemented.
 */
 void CGContextSetFillColor(CGContextRef context, const CGFloat* components) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -581,7 +572,7 @@ void CGContextSetFillColor(CGContextRef context, const CGFloat* components) {
  @Notes Interoperable only for RGB.
 */
 void CGContextSetFillColorWithColor(CGContextRef context, CGColorRef color) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     const CGFloat* comp = CGColorGetComponents(color);
     CGContextSetRGBFillColor(context, comp[0], comp[1], comp[2], comp[3]);
 }
@@ -591,7 +582,7 @@ void CGContextSetFillColorWithColor(CGContextRef context, CGColorRef color) {
  @Notes Since we are currently missing Color Space support, this will need to be implemented.
 */
 void CGContextSetFillColorSpace(CGContextRef context, CGColorSpaceRef colorSpace) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -599,7 +590,7 @@ void CGContextSetFillColorSpace(CGContextRef context, CGColorSpaceRef colorSpace
  @Status Interoperable
 */
 void CGContextSetGrayFillColor(CGContextRef context, CGFloat gray, CGFloat alpha) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     CGContextSetRGBFillColor(context, gray, gray, gray, alpha);
 }
 
@@ -607,7 +598,7 @@ void CGContextSetGrayFillColor(CGContextRef context, CGFloat gray, CGFloat alpha
  @Status Interoperable
 */
 void CGContextSetRGBFillColor(CGContextRef context, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     ComPtr<ID2D1SolidColorBrush> brush;
     FAIL_FAST_IF_FAILED(context->RenderTarget()->CreateSolidColorBrush({ r, g, b, a }, &brush));
     FAIL_FAST_IF_FAILED(brush.As(&context->CurrentGState().fillBrush));
@@ -618,7 +609,7 @@ void CGContextSetRGBFillColor(CGContextRef context, CGFloat r, CGFloat g, CGFloa
  @Notes Manually converts CMYK to RGB, and does not involve the colorspace.
 */
 void CGContextSetCMYKFillColor(CGContextRef context, CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     CGContextSetRGBFillColor(context,
                              (1.0f - cyan) * (1.0f - black),
                              (1.0f - magenta) * (1.0f - black),
@@ -632,7 +623,7 @@ void CGContextSetCMYKFillColor(CGContextRef context, CGFloat cyan, CGFloat magen
  @Status Interoperable
 */
 void CGContextSaveGState(CGContextRef context) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     auto& oldState = context->CurrentGState();
 
     // This uses the drawing state's copy constructor.
@@ -650,7 +641,7 @@ void CGContextSaveGState(CGContextRef context) {
  @Status Interoperable
 */
 void CGContextRestoreGState(CGContextRef context) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     if (context->GStateStack().size() <= 1) {
         TraceError(TAG, L"Invalid attempt to pop last graphics state.");
         return;
@@ -668,7 +659,7 @@ void CGContextRestoreGState(CGContextRef context) {
  @Status Interoperable
 */
 void CGContextClearRect(CGContextRef context, CGRect rect) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
     renderTarget->PushAxisAlignedClip(__CGRectToD2D_F(rect), D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
     renderTarget->Clear(nullptr); // transparent black clear
@@ -764,7 +755,7 @@ static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometr
  @Status Interoperable
 */
 void CGContextStrokeRect(CGContextRef context, CGRect rect) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     auto factory = context->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
@@ -781,7 +772,7 @@ void CGContextStrokeRect(CGContextRef context, CGRect rect) {
  @Status Interoperable
 */
 void CGContextStrokeRectWithWidth(CGContextRef context, CGRect rect, CGFloat width) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     CGContextSaveGState(context);
     CGContextSetLineWidth(context, width);
     CGContextStrokeRect(context, rect);
@@ -792,7 +783,7 @@ void CGContextStrokeRectWithWidth(CGContextRef context, CGRect rect, CGFloat wid
  @Status Interoperable
 */
 void CGContextFillRect(CGContextRef context, CGRect rect) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     auto factory = context->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
@@ -809,7 +800,7 @@ void CGContextFillRect(CGContextRef context, CGRect rect) {
  @Status Interoperable
 */
 void CGContextStrokeEllipseInRect(CGContextRef context, CGRect rect) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     auto factory = context->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
@@ -828,7 +819,7 @@ void CGContextStrokeEllipseInRect(CGContextRef context, CGRect rect) {
  @Status Interoperable
 */
 void CGContextFillEllipseInRect(CGContextRef context, CGRect rect) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     auto factory = context->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
@@ -849,7 +840,7 @@ void CGContextFillEllipseInRect(CGContextRef context, CGRect rect) {
  @Status Interoperable
 */
 void CGContextBeginPath(CGContextRef context) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -857,7 +848,7 @@ void CGContextBeginPath(CGContextRef context) {
  @Status Interoperable
 */
 void CGContextClosePath(CGContextRef context) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -865,7 +856,7 @@ void CGContextClosePath(CGContextRef context) {
  @Status Interoperable
 */
 void CGContextAddRect(CGContextRef context, CGRect rect) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -873,7 +864,7 @@ void CGContextAddRect(CGContextRef context, CGRect rect) {
  @Status Interoperable
 */
 void CGContextAddRects(CGContextRef context, const CGRect* rects, unsigned count) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
 
     if (count == 0 || !rects) {
         return;
@@ -888,7 +879,7 @@ void CGContextAddRects(CGContextRef context, const CGRect* rects, unsigned count
  @Status Interoperable
 */
 void CGContextAddLineToPoint(CGContextRef context, CGFloat x, CGFloat y) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -896,7 +887,7 @@ void CGContextAddLineToPoint(CGContextRef context, CGFloat x, CGFloat y) {
  @Status Interoperable
 */
 void CGContextAddCurveToPoint(CGContextRef context, CGFloat cp1x, CGFloat cp1y, CGFloat cp2x, CGFloat cp2y, CGFloat x, CGFloat y) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -904,7 +895,7 @@ void CGContextAddCurveToPoint(CGContextRef context, CGFloat cp1x, CGFloat cp1y, 
  @Status Interoperable
 */
 void CGContextAddQuadCurveToPoint(CGContextRef context, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -912,7 +903,7 @@ void CGContextAddQuadCurveToPoint(CGContextRef context, CGFloat cpx, CGFloat cpy
  @Status Interoperable
 */
 void CGContextMoveToPoint(CGContextRef context, CGFloat x, CGFloat y) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -920,7 +911,7 @@ void CGContextMoveToPoint(CGContextRef context, CGFloat x, CGFloat y) {
  @Status Interoperable
 */
 void CGContextAddArc(CGContextRef context, CGFloat x, CGFloat y, CGFloat radius, CGFloat startAngle, CGFloat endAngle, int clockwise) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -928,7 +919,7 @@ void CGContextAddArc(CGContextRef context, CGFloat x, CGFloat y, CGFloat radius,
  @Status Interoperable
 */
 void CGContextAddArcToPoint(CGContextRef context, CGFloat x1, CGFloat y1, CGFloat x2, CGFloat y2, CGFloat radius) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -936,7 +927,7 @@ void CGContextAddArcToPoint(CGContextRef context, CGFloat x1, CGFloat y1, CGFloa
  @Status Interoperable
 */
 void CGContextAddEllipseInRect(CGContextRef context, CGRect rect) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -944,7 +935,7 @@ void CGContextAddEllipseInRect(CGContextRef context, CGRect rect) {
  @Status Interoperable
 */
 void CGContextAddPath(CGContextRef context, CGPathRef path) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     // The Apple SDK docs imply that passing a NULL path is valid.
     // So avoid calling into the backing if NULL.
     if (path) {
@@ -956,7 +947,7 @@ void CGContextAddPath(CGContextRef context, CGPathRef path) {
  @Status Interoperable
 */
 bool CGContextIsPathEmpty(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -965,7 +956,7 @@ bool CGContextIsPathEmpty(CGContextRef context) {
  @Status Stub
 */
 void CGContextReplacePathWithStrokedPath(CGContextRef context) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -973,7 +964,7 @@ void CGContextReplacePathWithStrokedPath(CGContextRef context) {
  @Status Interoperable
 */
 CGRect CGContextGetPathBoundingBox(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -982,7 +973,7 @@ CGRect CGContextGetPathBoundingBox(CGContextRef context) {
  @Status Interoperable
 */
 void CGContextAddLines(CGContextRef context, const CGPoint* points, unsigned count) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
 
     if (!count || !points) {
         return;
@@ -1002,7 +993,7 @@ void CGContextAddLines(CGContextRef context, const CGPoint* points, unsigned cou
  @Status Interoperable
 */
 void CGContextDrawPath(CGContextRef context, CGPathDrawingMode mode) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1010,7 +1001,7 @@ void CGContextDrawPath(CGContextRef context, CGPathDrawingMode mode) {
  @Status Interoperable
 */
 void CGContextStrokePath(CGContextRef context) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     CGContextDrawPath(context, kCGPathStroke);
 }
 
@@ -1018,7 +1009,7 @@ void CGContextStrokePath(CGContextRef context) {
  @Status Interoperable
 */
 void CGContextFillPath(CGContextRef context) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     CGContextDrawPath(context, kCGPathFill);
 }
 
@@ -1026,7 +1017,7 @@ void CGContextFillPath(CGContextRef context) {
  @Status Interoperable
 */
 void CGContextEOFillPath(CGContextRef context) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     CGContextDrawPath(context, kCGPathEOFill);
 }
 #pragma endregion
@@ -1035,7 +1026,7 @@ void CGContextEOFillPath(CGContextRef context) {
  @Status Interoperable
 */
 void CGContextEOClip(CGContextRef context) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1043,7 +1034,7 @@ void CGContextEOClip(CGContextRef context) {
  @Status Stub
 */
 void CGContextFlush(CGContextRef context) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1052,7 +1043,7 @@ void CGContextFlush(CGContextRef context) {
 */
 void CGContextDrawLinearGradient(
     CGContextRef context, CGGradientRef gradient, CGPoint startPoint, CGPoint endPoint, CGGradientDrawingOptions options) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1066,7 +1057,7 @@ void CGContextDrawRadialGradient(CGContextRef context,
                                  CGPoint endCenter,
                                  CGFloat endRadius,
                                  CGGradientDrawingOptions options) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1074,7 +1065,7 @@ void CGContextDrawRadialGradient(CGContextRef context,
  @Status Stub
 */
 void CGContextDrawShading(CGContextRef context, CGShadingRef shading) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1082,7 +1073,7 @@ void CGContextDrawShading(CGContextRef context, CGShadingRef shading) {
  @Status Stub
 */
 void CGContextDrawLayerInRect(CGContextRef context, CGRect destRect, CGLayerRef layer) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1090,7 +1081,7 @@ void CGContextDrawLayerInRect(CGContextRef context, CGRect destRect, CGLayerRef 
  @Status Stub
 */
 void CGContextDrawLayerAtPoint(CGContextRef context, CGPoint destPoint, CGLayerRef layer) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1099,7 +1090,7 @@ void CGContextDrawLayerAtPoint(CGContextRef context, CGPoint destPoint, CGLayerR
  @Status Interoperable
 */
 void CGContextSetLineDash(CGContextRef context, CGFloat phase, const CGFloat* lengths, unsigned count) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     auto& state = context->CurrentGState();
     state.ClearStrokeStyle();
 
@@ -1120,7 +1111,7 @@ void CGContextSetLineDash(CGContextRef context, CGFloat phase, const CGFloat* le
  @Status Interoperable
 */
 void CGContextSetMiterLimit(CGContextRef context, CGFloat limit) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     auto& state = context->CurrentGState();
     state.ClearStrokeStyle();
     state.strokeProperties.miterLimit = limit;
@@ -1130,7 +1121,7 @@ void CGContextSetMiterLimit(CGContextRef context, CGFloat limit) {
  @Status Interoperable
 */
 void CGContextSetLineJoin(CGContextRef context, CGLineJoin lineJoin) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     auto& state = context->CurrentGState();
     state.ClearStrokeStyle();
     state.strokeProperties.lineJoin = (D2D1_LINE_JOIN)lineJoin;
@@ -1140,7 +1131,7 @@ void CGContextSetLineJoin(CGContextRef context, CGLineJoin lineJoin) {
  @Status Interoperable
 */
 void CGContextSetLineCap(CGContextRef context, CGLineCap lineCap) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     auto& state = context->CurrentGState();
     state.ClearStrokeStyle();
     state.strokeProperties.startCap = (D2D1_CAP_STYLE)lineCap;
@@ -1152,7 +1143,7 @@ void CGContextSetLineCap(CGContextRef context, CGLineCap lineCap) {
  @Status Interoperable
 */
 void CGContextSetLineWidth(CGContextRef context, CGFloat width) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     auto& state = context->CurrentGState();
     state.ClearStrokeStyle();
     state.lineWidth = width;
@@ -1162,7 +1153,7 @@ void CGContextSetLineWidth(CGContextRef context, CGFloat width) {
  @Status Stub
 */
 void CGContextSetShouldAntialias(CGContextRef context, bool shouldAntialias) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1170,7 +1161,7 @@ void CGContextSetShouldAntialias(CGContextRef context, bool shouldAntialias) {
  @Status Stub
 */
 void CGContextSetAllowsAntialiasing(CGContextRef context, bool allows) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1178,7 +1169,7 @@ void CGContextSetAllowsAntialiasing(CGContextRef context, bool allows) {
  @Status Stub
 */
 void CGContextSetAllowsFontSmoothing(CGContextRef context, bool allows) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1186,7 +1177,7 @@ void CGContextSetAllowsFontSmoothing(CGContextRef context, bool allows) {
  @Status Stub
 */
 void CGContextSetAllowsFontSubpixelPositioning(CGContextRef context, bool allows) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1194,7 +1185,7 @@ void CGContextSetAllowsFontSubpixelPositioning(CGContextRef context, bool allows
  @Status Stub
 */
 void CGContextSetShouldSubpixelPositionFonts(CGContextRef context, bool subpixel) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1202,7 +1193,7 @@ void CGContextSetShouldSubpixelPositionFonts(CGContextRef context, bool subpixel
  @Status Stub
 */
 void CGContextSetAllowsFontSubpixelQuantization(CGContextRef context, bool allows) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1210,7 +1201,7 @@ void CGContextSetAllowsFontSubpixelQuantization(CGContextRef context, bool allow
  @Status Stub
 */
 void CGContextSetShouldSubpixelQuantizeFonts(CGContextRef context, bool subpixel) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1219,7 +1210,7 @@ void CGContextSetShouldSubpixelQuantizeFonts(CGContextRef context, bool subpixel
  @Notes CGContext defaults to low-quality linear interpolation.
 */
 void CGContextSetInterpolationQuality(CGContextRef context, CGInterpolationQuality quality) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     static D2D1_INTERPOLATION_MODE d2dModes[] = {
         /* Default */ D2D1_INTERPOLATION_MODE_LINEAR,
         /* None    */ D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
@@ -1239,7 +1230,7 @@ void CGContextSetInterpolationQuality(CGContextRef context, CGInterpolationQuali
  @Notes Low-quality interpolation will be returned if the default interpolation is set.
 */
 CGInterpolationQuality CGContextGetInterpolationQuality(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
 
     auto& state = context->CurrentGState();
     switch (state.bitmapInterpolationMode) {
@@ -1262,7 +1253,7 @@ CGInterpolationQuality CGContextGetInterpolationQuality(CGContextRef context) {
  @Status Stub
 */
 void CGContextSetShouldSmoothFonts(CGContextRef context, bool shouldSmooth) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1270,7 +1261,7 @@ void CGContextSetShouldSmoothFonts(CGContextRef context, bool shouldSmooth) {
  @Status Stub
 */
 void CGContextSetRenderingIntent(CGContextRef context, CGColorRenderingIntent intent) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1278,7 +1269,7 @@ void CGContextSetRenderingIntent(CGContextRef context, CGColorRenderingIntent in
  @Status Interoperable
 */
 void CGContextSetShadow(CGContextRef context, CGSize offset, CGFloat blur) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1286,7 +1277,7 @@ void CGContextSetShadow(CGContextRef context, CGSize offset, CGFloat blur) {
  @Status Interoperable
 */
 CGRect CGContextGetClipBoundingBox(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1295,7 +1286,7 @@ CGRect CGContextGetClipBoundingBox(CGContextRef context) {
  @Status Interoperable
 */
 void CGContextBeginTransparencyLayer(CGContextRef context, CFDictionaryRef auxInfo) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1303,7 +1294,7 @@ void CGContextBeginTransparencyLayer(CGContextRef context, CFDictionaryRef auxIn
  @Status Interoperable
 */
 void CGContextBeginTransparencyLayerWithRect(CGContextRef context, CGRect rect, CFDictionaryRef auxInfo) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1311,7 +1302,7 @@ void CGContextBeginTransparencyLayerWithRect(CGContextRef context, CGRect rect, 
  @Status Interoperable
 */
 void CGContextEndTransparencyLayer(CGContextRef context) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1319,7 +1310,7 @@ void CGContextEndTransparencyLayer(CGContextRef context) {
  @Status Interoperable
 */
 void CGContextStrokeLineSegments(CGContextRef context, const CGPoint* points, unsigned count) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
 
     if (!points || count == 0 || count % 2 != 0) {
         // On the reference platform, an uneven number of points results in a sizeof(CGPoint) read
@@ -1339,7 +1330,7 @@ void CGContextStrokeLineSegments(CGContextRef context, const CGPoint* points, un
  @Status Interoperable
 */
 void CGContextSetAlpha(CGContextRef context, CGFloat alpha) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     context->CurrentGState().alpha = alpha;
 }
 
@@ -1347,7 +1338,7 @@ void CGContextSetAlpha(CGContextRef context, CGFloat alpha) {
  @Status Stub
 */
 CGRect CGContextConvertRectToDeviceSpace(CGContextRef context, CGRect rect) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return rect;
 }
@@ -1356,7 +1347,7 @@ CGRect CGContextConvertRectToDeviceSpace(CGContextRef context, CGRect rect) {
  @Status Stub
 */
 CGRect CGContextConvertRectToUserSpace(CGContextRef context, CGRect rect) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return rect;
 }
@@ -1365,7 +1356,7 @@ CGRect CGContextConvertRectToUserSpace(CGContextRef context, CGRect rect) {
  @Status Stub
 */
 CGPoint CGContextConvertPointToUserSpace(CGContextRef context, CGPoint point) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return point;
 }
@@ -1374,7 +1365,7 @@ CGPoint CGContextConvertPointToUserSpace(CGContextRef context, CGPoint point) {
  @Status Stub
 */
 CGSize CGContextConvertSizeToUserSpace(CGContextRef context, CGSize size) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return size;
 }
@@ -1383,7 +1374,7 @@ CGSize CGContextConvertSizeToUserSpace(CGContextRef context, CGSize size) {
  @Status Stub
 */
 CGSize CGContextConvertSizeToDeviceSpace(CGContextRef context, CGSize size) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return size;
 }
@@ -1392,7 +1383,7 @@ CGSize CGContextConvertSizeToDeviceSpace(CGContextRef context, CGSize size) {
  @Status Stub
 */
 CGPoint CGContextConvertPointToDeviceSpace(CGContextRef context, CGPoint point) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return point;
 }
@@ -1401,7 +1392,7 @@ CGPoint CGContextConvertPointToDeviceSpace(CGContextRef context, CGPoint point) 
  @Status Stub
 */
 void CGContextShowText(CGContextRef context, const char* str, unsigned count) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1409,7 +1400,7 @@ void CGContextShowText(CGContextRef context, const char* str, unsigned count) {
  @Status Interoperable
 */
 void CGContextSetShadowWithColor(CGContextRef context, CGSize offset, CGFloat blur, CGColorRef color) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1418,7 +1409,7 @@ void CGContextSetShadowWithColor(CGContextRef context, CGSize offset, CGFloat bl
  @Notes
 */
 void CGContextBeginPage(CGContextRef context, const CGRect* mediaBox) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1427,7 +1418,7 @@ void CGContextBeginPage(CGContextRef context, const CGRect* mediaBox) {
  @Notes
 */
 CGPathRef CGContextCopyPath(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1437,7 +1428,7 @@ CGPathRef CGContextCopyPath(CGContextRef context) {
  @Notes
 */
 void CGContextDrawPDFPage(CGContextRef context, CGPDFPageRef page) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1446,7 +1437,7 @@ void CGContextDrawPDFPage(CGContextRef context, CGPDFPageRef page) {
  @Notes
 */
 void CGContextEndPage(CGContextRef context) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1454,7 +1445,7 @@ void CGContextEndPage(CGContextRef context) {
  @Status Interoperable
 */
 void CGContextFillRects(CGContextRef context, const CGRect* rects, size_t count) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     if (!rects || count == 0) {
         return;
     }
@@ -1469,7 +1460,7 @@ void CGContextFillRects(CGContextRef context, const CGRect* rects, size_t count)
  @Notes
 */
 CGPoint CGContextGetPathCurrentPoint(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1479,7 +1470,7 @@ CGPoint CGContextGetPathCurrentPoint(CGContextRef context) {
  @Notes
 */
 CGAffineTransform CGContextGetUserSpaceToDeviceSpaceTransform(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1489,7 +1480,7 @@ CGAffineTransform CGContextGetUserSpaceToDeviceSpaceTransform(CGContextRef conte
  @Notes
 */
 bool CGContextPathContainsPoint(CGContextRef context, CGPoint point, CGPathDrawingMode mode) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1499,7 +1490,7 @@ bool CGContextPathContainsPoint(CGContextRef context, CGPoint point, CGPathDrawi
  @Notes
 */
 void CGContextSetFlatness(CGContextRef context, CGFloat flatness) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1508,7 +1499,7 @@ void CGContextSetFlatness(CGContextRef context, CGFloat flatness) {
  @Notes
 */
 void CGContextSetStrokePattern(CGContextRef context, CGPatternRef pattern, const CGFloat* components) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1517,7 +1508,7 @@ void CGContextSetStrokePattern(CGContextRef context, CGPatternRef pattern, const
  @Notes
 */
 void CGContextShowGlyphsAtPositions(CGContextRef context, const CGGlyph* glyphs, const CGPoint* Lpositions, size_t count) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1526,7 +1517,7 @@ void CGContextShowGlyphsAtPositions(CGContextRef context, const CGGlyph* glyphs,
  @Notes
 */
 void CGContextShowGlyphsWithAdvances(CGContextRef context, const CGGlyph* glyphs, const CGSize* advances, size_t count) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1535,7 +1526,7 @@ void CGContextShowGlyphsWithAdvances(CGContextRef context, const CGGlyph* glyphs
  @Notes
 */
 void CGContextSynchronize(CGContextRef context) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
@@ -1543,39 +1534,39 @@ void CGContextSynchronize(CGContextRef context) {
 // TODO: functions below are not part of offical exports, but they are also exported
 // to be used by other framework components, we should consider moving them to a shared library
 void CGContextClearToColor(CGContextRef context, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
 bool CGContextIsDirty(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     return true;
 }
 
 void CGContextSetDirty(CGContextRef context, bool dirty) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
 void CGContextReleaseLock(CGContextRef context) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
 
 CGContextImpl* CGContextGetBacking(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return nullptr;
 }
 
 bool CGContextIsPointInPath(CGContextRef context, bool eoFill, CGFloat x, CGFloat y) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return StubReturn();
 }
 
 void CGContextDrawGlyphRun(CGContextRef context, const DWRITE_GLYPH_RUN* glyphRun) {
-    CGCONTEXT_CHECK_NULLV(context);
+    NOISY_RETURN_IF_NULL(context);
     // TODO(DH) GH#1070 Merge in CGContextCairo.mm's Glyph Run code.
 }
 
@@ -1622,7 +1613,7 @@ CGContextRef CGBitmapContextCreate(void* data,
  @Status Interoperable
 */
 CGColorSpaceRef CGBitmapContextGetColorSpace(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return nullptr;
 }
@@ -1631,7 +1622,7 @@ CGColorSpaceRef CGBitmapContextGetColorSpace(CGContextRef context) {
  @Status Interoperable
 */
 size_t CGBitmapContextGetWidth(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1640,7 +1631,7 @@ size_t CGBitmapContextGetWidth(CGContextRef context) {
  @Status Interoperable
 */
 size_t CGBitmapContextGetHeight(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1649,7 +1640,7 @@ size_t CGBitmapContextGetHeight(CGContextRef context) {
  @Status Interoperable
 */
 size_t CGBitmapContextGetBytesPerRow(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1658,7 +1649,7 @@ size_t CGBitmapContextGetBytesPerRow(CGContextRef context) {
  @Status Interoperable
 */
 void* CGBitmapContextGetData(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1669,13 +1660,13 @@ void* CGBitmapContextGetData(CGContextRef context) {
         the CGContext
 */
 CGImageRef CGBitmapContextCreateImage(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return StubReturn();
 }
 
 CGImageRef CGBitmapContextGetImage(CGContextRef context) {
-    CGCONTEXT_CHECK_NULL(context);
+    NOISY_RETURN_IF_NULL(context, StubReturn());
     if (CFGetTypeID(context) != __CGBitmapContext::GetTypeID()) {
         TraceError(TAG, L"Image requested from non-bitmap CGContext.");
         return nullptr;
