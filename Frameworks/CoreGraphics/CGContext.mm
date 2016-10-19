@@ -51,6 +51,10 @@ static inline D2D_RECT_F __CGRectToD2D_F(CGRect rect) {
     };
 }
 
+static inline D2D1_MATRIX_3X2_F __CGAffineTransformToD2D_F(CGAffineTransform transform) {
+    return { transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty };
+}
+
 struct __CGContextDrawingState {
     // This is populated when the state is saved, and contains the D2D parameters that CG does not know.
     ComPtr<ID2D1DrawingStateBlock> d2dState{ nullptr };
@@ -663,27 +667,26 @@ void CGContextClearRect(CGContextRef context, CGRect rect) {
     renderTarget->PopAxisAlignedClip();
 }
 
-template <typename Lambda>
-static void __CGContextRenderToCommandList(CGContextRef context, ID2D1CommandList** outCommandList, Lambda l) {
+template <typename Lambda> // Lambda takes the form void(*)(CGContextRef, ID2D1DeviceContext*)
+static void __CGContextRenderToCommandList(CGContextRef context, ID2D1CommandList** outCommandList, Lambda&& drawLambda) {
     ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
-    auto& state = context->CurrentGState();
-
     ComPtr<ID2D1DeviceContext> deviceContext;
     FAIL_FAST_IF_FAILED(renderTarget.As(&deviceContext));
 
+    // Cache the original target to restore it later.
     ComPtr<ID2D1Image> originalTarget;
     deviceContext->GetTarget(&originalTarget);
 
-    deviceContext->BeginDraw();
-
     ComPtr<ID2D1CommandList> commandList;
     FAIL_FAST_IF_FAILED(deviceContext->CreateCommandList(&commandList));
+
+    deviceContext->BeginDraw();
     deviceContext->SetTarget(commandList.Get());
 
-    l(context, renderTarget.Get());
+    std::forward<Lambda>(drawLambda)(context, deviceContext.Get());
 
-    deviceContext->EndDraw();
-    commandList->Close();
+    FAIL_FAST_IF_FAILED(deviceContext->EndDraw());
+    FAIL_FAST_IF_FAILED(commandList->Close());
 
     deviceContext->SetTarget(originalTarget.Get());
 
@@ -705,19 +708,16 @@ static void __CGContextRenderCommandList(CGContextRef context, ID2D1CommandList*
     CGAffineTransform transform = CGAffineTransformScale(currentTransform, 1.0, -1.0);
     // Translate it back onscreen.
     transform = CGAffineTransformTranslate(transform, 0., targetSize.height);
-    deviceContext->SetTransform({ transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty });
+    deviceContext->SetTransform(__CGAffineTransformToD2D_F(transform));
 
     deviceContext->BeginDraw();
 
     bool layer = false;
     if (state.alpha != 1.0f || false /* mask, clip, etc. */) {
         layer = true;
-        renderTarget->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
-                                                      nullptr,
-                                                      D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
-                                                      D2D1::IdentityMatrix(),
-                                                      state.alpha),
-                                nullptr);
+        renderTarget->PushLayer(
+            D2D1::LayerParameters(D2D1::InfiniteRect(), nullptr, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE, D2D1::IdentityMatrix(), state.alpha),
+            nullptr);
     }
 
     deviceContext->DrawImage(commandList);
@@ -733,23 +733,23 @@ static void __CGContextRenderCommandList(CGContextRef context, ID2D1CommandList*
 
 static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometry, CGPathDrawingMode drawMode) {
     ComPtr<ID2D1CommandList> commandList;
-    __CGContextRenderToCommandList(context, &commandList, [geometry, drawMode](CGContextRef context, ID2D1RenderTarget* renderTarget) {
+    __CGContextRenderToCommandList(context, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
         auto& state = context->CurrentGState();
         if (drawMode & kCGPathFill) {
             if (drawMode & kCGPathEOFill) {
                 // TODO(DH): GH#1077 Regenerate geometry in Even/Odd fill mode.
             }
-            renderTarget->FillGeometry(geometry, state.fillBrush.Get());
+            deviceContext->FillGeometry(geometry, state.fillBrush.Get());
         }
 
         if (drawMode & kCGPathStroke) {
             ComPtr<ID2D1Factory> factory;
-            renderTarget->GetFactory(&factory);
+            deviceContext->GetFactory(&factory);
 
             // This only computes the stroke style if its parameters have changed since the last draw.
             state.ComputeStrokeStyle(factory.Get());
 
-            renderTarget->DrawGeometry(geometry, state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
+            deviceContext->DrawGeometry(geometry, state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
         }
     });
 
@@ -870,6 +870,11 @@ void CGContextAddRect(CGContextRef context, CGRect rect) {
 */
 void CGContextAddRects(CGContextRef context, const CGRect* rect, unsigned count) {
     CGCONTEXT_CHECK_NULLV(context);
+
+    if (count == 0 || !rect) {
+        return;
+    }
+
     for (unsigned i = 0; i < count; i++) {
         CGContextAddRect(context, rect[i]);
     }
@@ -974,6 +979,9 @@ CGRect CGContextGetPathBoundingBox(CGContextRef context) {
 */
 void CGContextAddLines(CGContextRef context, const CGPoint* pt, unsigned count) {
     CGCONTEXT_CHECK_NULLV(context);
+
+    // TODO(DH) GH#1066 Switch to CGPathAddLines(context->path, pt, count);
+
     CGContextMoveToPoint(context, pt[0].x, pt[0].y);
     for (unsigned i = 1; i < count; i++) {
         CGContextAddLineToPoint(context, pt[i].x, pt[i].y);
@@ -1231,6 +1239,7 @@ void CGContextSetInterpolationQuality(CGContextRef context, CGInterpolationQuali
 */
 CGInterpolationQuality CGContextGetInterpolationQuality(CGContextRef context) {
     CGCONTEXT_CHECK_NULL(context);
+
     auto& state = context->CurrentGState();
     switch (state.bitmapInterpolationMode) {
         case D2D1_INTERPOLATION_MODE_LINEAR:
@@ -1306,12 +1315,19 @@ void CGContextEndTransparencyLayer(CGContextRef context) {
 /**
  @Status Interoperable
 */
-void CGContextStrokeLineSegments(CGContextRef context, const CGPoint* segments, unsigned count) {
+void CGContextStrokeLineSegments(CGContextRef context, const CGPoint* points, unsigned count) {
     CGCONTEXT_CHECK_NULLV(context);
+
+    if (!points || count == 0 || count % 2 != 0) {
+        // On the reference platform, an uneven number of points results in a sizeof(CGPoint) read
+        // beyond the end of the point buffer. Here we see fit to make that illegal.
+        return;
+    }
+
     CGContextBeginPath(context);
     for (unsigned k = 0; k < count; k += 2) {
-        CGContextMoveToPoint(context, segments[k].x, segments[k].y);
-        CGContextAddLineToPoint(context, segments[k + 1].x, segments[k + 1].y);
+        CGContextMoveToPoint(context, points[k].x, points[k].y);
+        CGContextAddLineToPoint(context, points[k + 1].x, points[k + 1].y);
     }
     CGContextStrokePath(context);
 }
