@@ -45,9 +45,6 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
-    <AssetCatalogCompile Include="..\..\CoreAnimationTest\Assets.xcassets">
-      <Filter>CoreAnimationTest</Filter>
-    </AssetCatalogCompile>
     <ClInclude Include="..\..\CoreAnimationTest\AppDelegate.h">
       <Filter>CoreAnimationTest</Filter>
     </ClInclude>
@@ -108,10 +105,69 @@
     <ClInclude Include="..\..\CoreAnimationTest\CALayerAnimationViewController.h">
       <Filter>CoreAnimationTest</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\CoreAnimationTest\CAEmitterLayerControlsViewController.h">
+      <Filter>CoreAnimationTest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CoreAnimationTest\CAEmitterLayerViewController.h">
+      <Filter>CoreAnimationTest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CoreAnimationTest\CAScrollLayerViewController.h">
+      <Filter>CoreAnimationTest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CoreAnimationTest\CAShapeLayerViewController.h">
+      <Filter>CoreAnimationTest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CoreAnimationTest\Constants.h">
+      <Filter>CoreAnimationTest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CoreAnimationTest\ScrollingView.h">
+      <Filter>CoreAnimationTest</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="..\..\CoreAnimationTest\CALayerAnimationViewController.m">
       <Filter>CoreAnimationTest</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\CoreAnimationTest\CAEmitterLayerControlsViewController.m">
+      <Filter>CoreAnimationTest</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CoreAnimationTest\CAEmitterLayerViewController.m">
+      <Filter>CoreAnimationTest</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CoreAnimationTest\CAScrollLayerViewController.m">
+      <Filter>CoreAnimationTest</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CoreAnimationTest\CAShapeLayerViewController.m">
+      <Filter>CoreAnimationTest</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CoreAnimationTest\Constants.m">
+      <Filter>CoreAnimationTest</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CoreAnimationTest\ScrollingView.m">
+      <Filter>CoreAnimationTest</Filter>
+    </ClangCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\CoreAnimationTest\Images\align_center.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="..\..\CoreAnimationTest\Images\star.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="..\..\CoreAnimationTest\Images\storkinayutthaya.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="..\..\CoreAnimationTest\Images\align_just.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="..\..\CoreAnimationTest\Images\align_left.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="..\..\CoreAnimationTest\Images\align_right.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="..\..\CoreAnimationTest\Images\earthwindandfire.jpg">
+      <Filter>Images</Filter>
+    </Image>
   </ItemGroup>
 </Project>

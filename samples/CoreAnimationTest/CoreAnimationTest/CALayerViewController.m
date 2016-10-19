@@ -36,40 +36,16 @@
     [_viewForLayer.layer addSublayer:_layer];
 
     _menuTVC = [[MenuTableViewController alloc] init];
-    _menuTVC.view.frame = CGRectMake(0, 350, 200, 0 /* setting it to 0 allows scrolling to the end */);
+    _menuTVC.view.frame = CGRectMake(0, 350, 200, 0 /* setting it to 0 allows vertical scrolling */);
     [self.view addSubview:_menuTVC.view];
 
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"1"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"2"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"3"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle:@"Gravity"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle:@"Display Contents"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle:@"Geometry Flipped"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle:@"Hidden"];
 
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"4"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"5"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"6"];
-
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"7"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"8"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"9"];
-
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"10"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"11"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"12"];
-
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"13"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"14"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"15"];
-
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"16"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"17"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"18"];
-
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"19"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"20"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"21"];
-
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"22"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"23"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle : @"24"];
+    [_menuTVC addMenuItemView:[[UISlider alloc] init] andTitle:@"Opacity"];
+    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle:@"Background color"];
 }
 
 - (void)didReceiveMemoryWarning {

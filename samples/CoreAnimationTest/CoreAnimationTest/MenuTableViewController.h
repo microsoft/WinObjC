@@ -20,6 +20,7 @@
 
 @property (strong, nonatomic) NSMutableArray* menuItems;
 
+- (void)addMenuItemSegue:(NSString*)segueIdentifier andTitle:(NSString*)title;
 - (void)addMenuItemView:(UIView*)view andTitle:(NSString*)title;
 - (void)addMenuItemViewController:(UIViewController*)controller andTitle:(NSString*)title;
 

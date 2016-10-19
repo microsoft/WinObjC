@@ -31,10 +31,14 @@ void UIStoryboardSegue::InitFromStory(XIBObject* obj) {
     ObjectConverter::InitFromStory(obj);
     _destination = getAttrAndHandle("destination");
     if (_destination) {
-        char szDestination[255];
-        sprintf(szDestination, "UIViewController-%s", _destination);
-        _destination = strdup(szDestination);
+        // This trips up Xib2Nib conversions because filenames are not prefixed with UIViewController
+        // char szDestination[255];
+        // sprintf(szDestination, "UIViewController-%s", _destination);
+        //_destination = strdup(szDestination);
+
+        _destination = strdup(_destination);
     }
+
     _identifier = getAttrAndHandle("identifier");
 
     const char* pKind = getAttrib("kind");

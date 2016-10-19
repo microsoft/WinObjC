@@ -78,7 +78,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <PackageCertificateKeyFile>CoreAnimationTest_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>D095ED4071F7A0D93085697ECF15F78E76342CCF</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>AD7837F637F75084CC0918A4A7568EAFCA656EC8</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -181,6 +181,13 @@
     </AppxManifest>
     <Xml Include="default.rd.xml" />
     <None Include="CoreAnimationTest_TemporaryKey.pfx" />
+    <Image Include="..\..\CoreAnimationTest\Images\align_center.png" />
+    <Image Include="..\..\CoreAnimationTest\Images\align_just.png" />
+    <Image Include="..\..\CoreAnimationTest\Images\align_left.png" />
+    <Image Include="..\..\CoreAnimationTest\Images\align_right.png" />
+    <Image Include="..\..\CoreAnimationTest\Images\earthwindandfire.jpg" />
+    <Image Include="..\..\CoreAnimationTest\Images\star.png" />
+    <Image Include="..\..\CoreAnimationTest\Images\storkinayutthaya.png" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
     <Image Include="Assets\SplashScreen.scale-200.png" />
     <Image Include="Assets\Square150x150Logo.scale-200.png" />
@@ -188,18 +195,29 @@
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
-    <AssetCatalogCompile Include="..\..\CoreAnimationTest\Assets.xcassets" />
     <ClInclude Include="..\..\CoreAnimationTest\AppDelegate.h" />
+    <ClInclude Include="..\..\CoreAnimationTest\CAEmitterLayerControlsViewController.h" />
+    <ClInclude Include="..\..\CoreAnimationTest\CAEmitterLayerViewController.h" />
     <ClInclude Include="..\..\CoreAnimationTest\CALayerAnimationViewController.h" />
     <ClInclude Include="..\..\CoreAnimationTest\CALayerViewController.h" />
+    <ClInclude Include="..\..\CoreAnimationTest\CAScrollLayerViewController.h" />
+    <ClInclude Include="..\..\CoreAnimationTest\CAShapeLayerViewController.h" />
+    <ClInclude Include="..\..\CoreAnimationTest\Constants.h" />
     <ClInclude Include="..\..\CoreAnimationTest\MenuTableViewController.h" />
     <ClInclude Include="..\..\CoreAnimationTest\ProgrammaticViewController.h" />
+    <ClInclude Include="..\..\CoreAnimationTest\ScrollingView.h" />
     <ClInclude Include="..\..\CoreAnimationTest\StoryBoardViewController.h" />
     <ClangCompile Include="..\..\CoreAnimationTest\AppDelegate.m" />
+    <ClangCompile Include="..\..\CoreAnimationTest\CAEmitterLayerControlsViewController.m" />
+    <ClangCompile Include="..\..\CoreAnimationTest\CAEmitterLayerViewController.m" />
     <ClangCompile Include="..\..\CoreAnimationTest\CALayerAnimationViewController.m" />
     <ClangCompile Include="..\..\CoreAnimationTest\CALayerViewController.m" />
+    <ClangCompile Include="..\..\CoreAnimationTest\CAScrollLayerViewController.m" />
+    <ClangCompile Include="..\..\CoreAnimationTest\CAShapeLayerViewController.m" />
+    <ClangCompile Include="..\..\CoreAnimationTest\Constants.m" />
     <ClangCompile Include="..\..\CoreAnimationTest\MenuTableViewController.m" />
     <ClangCompile Include="..\..\CoreAnimationTest\ProgrammaticViewController.m" />
+    <ClangCompile Include="..\..\CoreAnimationTest\ScrollingView.m" />
     <ClangCompile Include="..\..\CoreAnimationTest\StoryBoardViewController.m" />
     <ClangCompile Include="..\..\CoreAnimationTest\main.m" />
     <SBInfoPlistCopy Include="..\..\CoreAnimationTest\Info.plist">
@@ -231,7 +249,6 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />

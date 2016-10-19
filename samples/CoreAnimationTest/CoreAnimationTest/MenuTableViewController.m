@@ -16,6 +16,7 @@
 
 #import "MenuTableViewController.h"
 
+static NSString* segueKeyName = @"Seque";
 static NSString* viewKeyName = @"View";
 static NSString* controllerKeyName = @"ViewController";
 static NSString* viewTitleKeyName = @"ViewName";
@@ -30,12 +31,16 @@ static NSString* viewTitleKeyName = @"ViewName";
     return self;
 }
 
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder*)aDecoder {
     if (self = [super initWithCoder:aDecoder]) {
         self.menuItems = [[NSMutableArray alloc] init];
     }
 
     return self;
+}
+
+- (void)addMenuItemSegue:(NSString*)segueIdentifier andTitle:(NSString*)title {
+    [self.menuItems addObject:[NSDictionary dictionaryWithObjectsAndKeys:title, viewTitleKeyName, segueIdentifier, segueKeyName, nil]];
 }
 
 - (void)addMenuItemView:(UIView*)view andTitle:(NSString*)title {
@@ -72,13 +77,19 @@ static NSString* viewTitleKeyName = @"ViewName";
     }
 
     // Set the text and accessibility identifier so we can find these elements via automation
-    cell.textLabel.text = [currentObject objectForKey : viewTitleKeyName];
+    cell.textLabel.text = [currentObject objectForKey:viewTitleKeyName];
     cell.accessibilityIdentifier = cell.textLabel.text;
 
     return cell;
 }
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
+    NSString* segueIdentifier = [[self.menuItems objectAtIndex:indexPath.row] objectForKey:segueKeyName];
+    if ([segueIdentifier length] > 0) {
+        [self performSegueWithIdentifier:segueIdentifier sender:nil];
+        return;
+    }
+
     UIViewController* viewController = [[self.menuItems objectAtIndex:indexPath.row] objectForKey:controllerKeyName];
     if ([viewController isKindOfClass:[UIViewController class]]) {
         [[super navigationController] pushViewController:viewController animated:YES];
