@@ -2027,9 +2027,6 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
 
     transform = CGAffineTransformTranslate(transform, 0, (height / verticalScalingFactor) - height);
 
-    const float dpi = _scale * 96.0f;
-    imgRenderTarget->SetDpi(dpi, dpi);
-
     const float inverseScale = 1.0f / _scale;
     transform = CGAffineTransformConcat(transform, CGAffineTransformMakeScale( inverseScale, inverseScale));
 
@@ -2050,4 +2047,6 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
 // TODO 1077:: Remove once D2D render target is implemented
 void CGContextCairo::_CGContextSetScaleFactor(CGFloat scale) {
     _scale = scale;
+    const float dpi = _scale * 96.0f;
+    _imgDest->Backing()->GetRenderTarget()->SetDpi(dpi, dpi);
 }
