@@ -1242,3 +1242,7 @@ bool CGContextIsPointInPath(CGContextRef c, bool eoFill, CGFloat x, CGFloat y) {
 void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun) {
     ctx->Backing()->CGContextDrawGlyphRun(glyphRun);
 }
+// TODO 1077:: Remove once D2D render target is implemented
+void _CGContextSetScaleFactor(CGContextRef ctx, float scale) {
+    ctx->Backing()->_CGContextSetScaleFactor(scale);
+}

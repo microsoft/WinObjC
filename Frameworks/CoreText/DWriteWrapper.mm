@@ -275,9 +275,12 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
     // TODO::
     // Iterate through all attributed string ranges and identify attributes so they can be used to -
     //  - set indentation
-    //  - set kern
     //  - etc.
     //  These can be done using the DWrite IDWriteTextFormat range property methods.
+
+    // Used to separate runs for attributes which DWrite does not handle until drawing (e.g. Foreground Color)
+    uint32_t incompatableAttributeFlag = 0;
+
     NSRange attributeRange;
     for (size_t i = 0; i < [ts->_attributedString length]; i += attributeRange.length) {
         NSDictionary* attribs = [ts->_attributedString attributesAtIndex:i
@@ -285,6 +288,13 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
                                                                  inRange:{ i, [ts->_attributedString length] - i }];
 
         const DWRITE_TEXT_RANGE dwriteRange = { attributeRange.location, attributeRange.length };
+
+        ComPtr<IDWriteTypography> typography;
+        THROW_IF_FAILED(textLayout->GetTypography(dwriteRange.startPosition, &typography));
+        if (!typography.Get()) {
+            THROW_IF_FAILED(dwriteFactory->CreateTypography(&typography));
+        }
+
         CTFontRef font = static_cast<CTFontRef>([attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
         CGFloat fontSize = kCTFontSystemFontSize;
         if (font != nil) {
@@ -319,15 +329,13 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
             THROW_IF_FAILED(textLayout1->SetCharacterSpacing(leadingSpacing, trailingSpacing, minimumAdvanceWidth, dwriteRange));
 
             // Setting kern disables default kerning
-            ComPtr<IDWriteTypography> typography;
-            THROW_IF_FAILED(textLayout->GetTypography(dwriteRange.startPosition, &typography));
-            if (!typography.Get()) {
-                THROW_IF_FAILED(dwriteFactory->CreateTypography(&typography));
-            }
-
             THROW_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_KERNING, 0 }));
-            THROW_IF_FAILED(textLayout->SetTypography(typography.Get(), dwriteRange));
         }
+
+        // Forces run breaks without interfering with any layout features
+        // Necessary for attributes which DWrite does not support during layout (e.g. Color)
+        THROW_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_DEFAULT, ++incompatableAttributeFlag }));
+        THROW_IF_FAILED(textLayout->SetTypography(typography.Get(), dwriteRange));
     }
     return textLayout;
 }
@@ -527,19 +535,22 @@ static _CTFrame* _DWriteGetFrame(_CTTypesetter* ts, CFRange range, CGRect frameS
             i++;
         }
 
-        prevYPosForDraw = yPos;
+        if ([runs objectAtIndex:0]) {
+            prevYPosForDraw = yPos;
+            line->_runs = runs;
+            line->_strRange.location = static_cast<_CTRun*>(line->_runs[0])->_range.location;
+            line->_strRange.length = stringRange;
+            line->_glyphCount = glyphCount;
+            line->_relativeXOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeXOffset;
+            line->_relativeYOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeYOffset;
+            if (static_cast<_CTRun*>([line->_runs objectAtIndex:0])->_dwriteGlyphRun.glyphCount != 0) {
+                line->_lineOrigin.x = static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].x;
+                line->_lineOrigin.y = static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].y;
+            }
 
-        line->_runs = runs;
-        line->_strRange.location = static_cast<_CTRun*>(line->_runs[0])->_range.location;
-        line->_lineOrigin.x = static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].x;
-        line->_lineOrigin.y = static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].y;
-        line->_strRange.length = stringRange;
-        line->_glyphCount = glyphCount;
-        line->_relativeXOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeXOffset;
-        line->_relativeYOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeYOffset;
-
-        [frame->_lines addObject:line];
-        frame->_lineOrigins.emplace_back(line->_lineOrigin);
+            [frame->_lines addObject:line];
+            frame->_lineOrigins.emplace_back(line->_lineOrigin);
+        }
     }
 
     return [frame autorelease];
