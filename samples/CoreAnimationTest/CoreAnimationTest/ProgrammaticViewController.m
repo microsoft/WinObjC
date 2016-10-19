@@ -41,7 +41,7 @@
     [self addMenuItemSegue:@"CAEmitterLayer" andTitle:@"CAEmitterLayer"];
 
     // CALayer Transactions
-    [self addMenuItemViewController:[[UIView alloc] init] andTitle:@"CALayer Transactions (CATransactions) - TBD"];
+    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CALayer Transactions (CATransactions) - TBD"];
 
     // CALayer Transform2D
     [self addMenuItemViewController:[[UIViewController alloc] init] andTitle:@"CALayer Tranform2D"];

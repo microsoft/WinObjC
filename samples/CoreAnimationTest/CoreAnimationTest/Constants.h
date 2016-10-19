@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CGBase.h>
 
 @interface Constants : NSObject
 
@@ -16,6 +17,7 @@ extern CGFloat const Zero;
 extern CGFloat const One;
 extern CGFloat const Two;
 extern CGFloat const TFF;
+
 extern NSString* const FileName;
 
 #define DEGREES_TO_RADIANS(DEGREES) (DEGREES * M_PI / 180.0f)

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		2312E1271DAD95AC00998C74 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E1261DAD95AC00998C74 /* main.m */; };
 		2312E12A1DAD95AC00998C74 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E1291DAD95AC00998C74 /* AppDelegate.m */; };
-		2312E1321DAD95AC00998C74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2312E1311DAD95AC00998C74 /* Assets.xcassets */; };
 		2312E13E1DAD988B00998C74 /* MenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E13D1DAD988B00998C74 /* MenuTableViewController.m */; };
 		2312E1401DADA53D00998C74 /* CoreAnimationTest.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2312E13F1DADA53D00998C74 /* CoreAnimationTest.storyboard */; };
 		2312E1451DADC5C400998C74 /* ProgrammaticViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E1421DADC5C400998C74 /* ProgrammaticViewController.m */; };
@@ -17,6 +16,19 @@
 		2312E1481DAED8D100998C74 /* CALayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E1471DAED8D100998C74 /* CALayerViewController.m */; };
 		2312E14C1DAEEE2800998C74 /* safe.png in Resources */ = {isa = PBXBuildFile; fileRef = 2312E14B1DAEEE2800998C74 /* safe.png */; };
 		2312E14F1DB1733D00998C74 /* CALayerAnimationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E14E1DB1733D00998C74 /* CALayerAnimationViewController.m */; };
+		2312E1571DB6F85100998C74 /* align_center.png in Resources */ = {isa = PBXBuildFile; fileRef = 2312E1501DB6F85100998C74 /* align_center.png */; };
+		2312E1581DB6F85100998C74 /* align_just.png in Resources */ = {isa = PBXBuildFile; fileRef = 2312E1511DB6F85100998C74 /* align_just.png */; };
+		2312E1591DB6F85100998C74 /* align_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 2312E1521DB6F85100998C74 /* align_left.png */; };
+		2312E15A1DB6F85100998C74 /* align_right.png in Resources */ = {isa = PBXBuildFile; fileRef = 2312E1531DB6F85100998C74 /* align_right.png */; };
+		2312E15B1DB6F85100998C74 /* earthwindandfire.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2312E1541DB6F85100998C74 /* earthwindandfire.jpg */; };
+		2312E15C1DB6F85100998C74 /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = 2312E1551DB6F85100998C74 /* star.png */; };
+		2312E15D1DB6F85100998C74 /* storkinayutthaya.png in Resources */ = {isa = PBXBuildFile; fileRef = 2312E1561DB6F85100998C74 /* storkinayutthaya.png */; };
+		2312E1681DB6F87600998C74 /* CAEmitterLayerControlsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E15F1DB6F87600998C74 /* CAEmitterLayerControlsViewController.m */; };
+		2312E1691DB6F87600998C74 /* CAEmitterLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E1611DB6F87600998C74 /* CAEmitterLayerViewController.m */; };
+		2312E16A1DB6F87600998C74 /* CAScrollLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E1631DB6F87600998C74 /* CAScrollLayerViewController.m */; };
+		2312E16B1DB6F87600998C74 /* CAShapeLayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E1651DB6F87600998C74 /* CAShapeLayerViewController.m */; };
+		2312E16C1DB6F87600998C74 /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E1671DB6F87600998C74 /* Constants.m */; };
+		2312E16F1DB6F88300998C74 /* ScrollingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2312E16E1DB6F88300998C74 /* ScrollingView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,7 +36,6 @@
 		2312E1261DAD95AC00998C74 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2312E1281DAD95AC00998C74 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		2312E1291DAD95AC00998C74 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		2312E1311DAD95AC00998C74 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2312E1361DAD95AC00998C74 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2312E13C1DAD988B00998C74 /* MenuTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuTableViewController.h; sourceTree = "<group>"; };
 		2312E13D1DAD988B00998C74 /* MenuTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuTableViewController.m; sourceTree = "<group>"; };
@@ -38,6 +49,25 @@
 		2312E14B1DAEEE2800998C74 /* safe.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = safe.png; path = CoreAnimationTest/Images/safe.png; sourceTree = "<group>"; };
 		2312E14D1DB1733D00998C74 /* CALayerAnimationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CALayerAnimationViewController.h; sourceTree = "<group>"; };
 		2312E14E1DB1733D00998C74 /* CALayerAnimationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CALayerAnimationViewController.m; sourceTree = "<group>"; };
+		2312E1501DB6F85100998C74 /* align_center.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = align_center.png; path = CoreAnimationTest/Images/align_center.png; sourceTree = "<group>"; };
+		2312E1511DB6F85100998C74 /* align_just.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = align_just.png; path = CoreAnimationTest/Images/align_just.png; sourceTree = "<group>"; };
+		2312E1521DB6F85100998C74 /* align_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = align_left.png; path = CoreAnimationTest/Images/align_left.png; sourceTree = "<group>"; };
+		2312E1531DB6F85100998C74 /* align_right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = align_right.png; path = CoreAnimationTest/Images/align_right.png; sourceTree = "<group>"; };
+		2312E1541DB6F85100998C74 /* earthwindandfire.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = earthwindandfire.jpg; path = CoreAnimationTest/Images/earthwindandfire.jpg; sourceTree = "<group>"; };
+		2312E1551DB6F85100998C74 /* star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = star.png; path = CoreAnimationTest/Images/star.png; sourceTree = "<group>"; };
+		2312E1561DB6F85100998C74 /* storkinayutthaya.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = storkinayutthaya.png; path = CoreAnimationTest/Images/storkinayutthaya.png; sourceTree = "<group>"; };
+		2312E15E1DB6F87600998C74 /* CAEmitterLayerControlsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAEmitterLayerControlsViewController.h; sourceTree = "<group>"; };
+		2312E15F1DB6F87600998C74 /* CAEmitterLayerControlsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CAEmitterLayerControlsViewController.m; sourceTree = "<group>"; };
+		2312E1601DB6F87600998C74 /* CAEmitterLayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAEmitterLayerViewController.h; sourceTree = "<group>"; };
+		2312E1611DB6F87600998C74 /* CAEmitterLayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CAEmitterLayerViewController.m; sourceTree = "<group>"; };
+		2312E1621DB6F87600998C74 /* CAScrollLayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAScrollLayerViewController.h; sourceTree = "<group>"; };
+		2312E1631DB6F87600998C74 /* CAScrollLayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CAScrollLayerViewController.m; sourceTree = "<group>"; };
+		2312E1641DB6F87600998C74 /* CAShapeLayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAShapeLayerViewController.h; sourceTree = "<group>"; };
+		2312E1651DB6F87600998C74 /* CAShapeLayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CAShapeLayerViewController.m; sourceTree = "<group>"; };
+		2312E1661DB6F87600998C74 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		2312E1671DB6F87600998C74 /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		2312E16D1DB6F88300998C74 /* ScrollingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollingView.h; sourceTree = "<group>"; };
+		2312E16E1DB6F88300998C74 /* ScrollingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollingView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,13 +101,24 @@
 		2312E1241DAD95AC00998C74 /* CoreAnimationTest */ = {
 			isa = PBXGroup;
 			children = (
+				2312E16D1DB6F88300998C74 /* ScrollingView.h */,
+				2312E16E1DB6F88300998C74 /* ScrollingView.m */,
 				2312E1281DAD95AC00998C74 /* AppDelegate.h */,
 				2312E1291DAD95AC00998C74 /* AppDelegate.m */,
-				2312E1311DAD95AC00998C74 /* Assets.xcassets */,
+				2312E15E1DB6F87600998C74 /* CAEmitterLayerControlsViewController.h */,
+				2312E15F1DB6F87600998C74 /* CAEmitterLayerControlsViewController.m */,
+				2312E1601DB6F87600998C74 /* CAEmitterLayerViewController.h */,
+				2312E1611DB6F87600998C74 /* CAEmitterLayerViewController.m */,
 				2312E14D1DB1733D00998C74 /* CALayerAnimationViewController.h */,
 				2312E14E1DB1733D00998C74 /* CALayerAnimationViewController.m */,
 				2312E1491DAED90100998C74 /* CALayerViewController.h */,
 				2312E1471DAED8D100998C74 /* CALayerViewController.m */,
+				2312E1621DB6F87600998C74 /* CAScrollLayerViewController.h */,
+				2312E1631DB6F87600998C74 /* CAScrollLayerViewController.m */,
+				2312E1641DB6F87600998C74 /* CAShapeLayerViewController.h */,
+				2312E1651DB6F87600998C74 /* CAShapeLayerViewController.m */,
+				2312E1661DB6F87600998C74 /* Constants.h */,
+				2312E1671DB6F87600998C74 /* Constants.m */,
 				2312E13F1DADA53D00998C74 /* CoreAnimationTest.storyboard */,
 				2312E1361DAD95AC00998C74 /* Info.plist */,
 				2312E13C1DAD988B00998C74 /* MenuTableViewController.h */,
@@ -102,6 +143,13 @@
 		2312E14A1DAEEE1800998C74 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				2312E1501DB6F85100998C74 /* align_center.png */,
+				2312E1511DB6F85100998C74 /* align_just.png */,
+				2312E1521DB6F85100998C74 /* align_left.png */,
+				2312E1531DB6F85100998C74 /* align_right.png */,
+				2312E1541DB6F85100998C74 /* earthwindandfire.jpg */,
+				2312E1551DB6F85100998C74 /* star.png */,
+				2312E1561DB6F85100998C74 /* storkinayutthaya.png */,
 				2312E14B1DAEEE2800998C74 /* safe.png */,
 			);
 			name = Images;
@@ -165,9 +213,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2312E15A1DB6F85100998C74 /* align_right.png in Resources */,
 				2312E1401DADA53D00998C74 /* CoreAnimationTest.storyboard in Resources */,
-				2312E1321DAD95AC00998C74 /* Assets.xcassets in Resources */,
+				2312E1581DB6F85100998C74 /* align_just.png in Resources */,
+				2312E1571DB6F85100998C74 /* align_center.png in Resources */,
 				2312E14C1DAEEE2800998C74 /* safe.png in Resources */,
+				2312E15D1DB6F85100998C74 /* storkinayutthaya.png in Resources */,
+				2312E15C1DB6F85100998C74 /* star.png in Resources */,
+				2312E1591DB6F85100998C74 /* align_left.png in Resources */,
+				2312E15B1DB6F85100998C74 /* earthwindandfire.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -180,11 +234,17 @@
 			files = (
 				2312E1451DADC5C400998C74 /* ProgrammaticViewController.m in Sources */,
 				2312E12A1DAD95AC00998C74 /* AppDelegate.m in Sources */,
+				2312E16F1DB6F88300998C74 /* ScrollingView.m in Sources */,
+				2312E1691DB6F87600998C74 /* CAEmitterLayerViewController.m in Sources */,
 				2312E14F1DB1733D00998C74 /* CALayerAnimationViewController.m in Sources */,
+				2312E16B1DB6F87600998C74 /* CAShapeLayerViewController.m in Sources */,
 				2312E13E1DAD988B00998C74 /* MenuTableViewController.m in Sources */,
 				2312E1271DAD95AC00998C74 /* main.m in Sources */,
 				2312E1481DAED8D100998C74 /* CALayerViewController.m in Sources */,
 				2312E1461DADC5C400998C74 /* StoryBoardViewController.m in Sources */,
+				2312E1681DB6F87600998C74 /* CAEmitterLayerControlsViewController.m in Sources */,
+				2312E16A1DB6F87600998C74 /* CAScrollLayerViewController.m in Sources */,
+				2312E16C1DB6F87600998C74 /* Constants.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
