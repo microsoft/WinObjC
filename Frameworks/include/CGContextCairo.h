@@ -141,5 +141,5 @@ public:
     virtual void CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun);
 
     // TODO 1077:: Remove once D2D render target is implemented
-    virtual void CGContextCairo::_CGContextSetScaleFactor(float scale);
+    virtual void _CGContextSetScaleFactor(float scale);
 };

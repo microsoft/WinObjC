@@ -2027,8 +2027,11 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
 
     transform = CGAffineTransformTranslate(transform, 0, (height / verticalScalingFactor) - height);
 
-    imgRenderTarget->SetDpi(_scale * 96.0f, _scale * 96.0f);
-    transform = CGAffineTransformConcat(transform, CGAffineTransformMakeScale( 1.0f / _scale, 1.0f / _scale));
+    const float dpi = _scale * 96.0f;
+    imgRenderTarget->SetDpi(dpi, dpi);
+
+    const float inverseScale = 1.0f / _scale;
+    transform = CGAffineTransformConcat(transform, CGAffineTransformMakeScale( inverseScale, inverseScale));
 
     // Perform anti-clockwise rotation required to match the reference platform.
     imgRenderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, -transform.b, transform.c, transform.d, transform.tx, transform.ty));
