@@ -59,6 +59,7 @@ public:
 
     virtual int HostFd();
     virtual int Stat(struct stat* ret);
+    virtual int Stat64i32(struct _stat64i32* ret);
     virtual int Read(void* dest, size_t count);
     virtual int Write(const void* src, size_t count);
     virtual int Lseek(__int64 pos, int whence);
@@ -68,6 +69,8 @@ public:
 
     virtual void* Mmap(void* addr, size_t size, uint32_t prot, uint32_t flags, uint32_t offset);
     virtual int Munmap(void* addr, size_t size);
+
+    virtual intptr_t GetOSFHandle();
 };
 
 SB_EXPORT EbrFile* EbrAllocFile(EbrFile* ioInterface);
@@ -88,6 +91,7 @@ SB_EXPORT int EbrFseek64(EbrFile* fp, __int64 offset, int origin);
 SB_EXPORT size_t EbrFtell(EbrFile* fp);
 SB_EXPORT int EbrFeof(EbrFile* fp);
 SB_EXPORT int EbrStat(const char* filename, struct stat* ret);
+SB_EXPORT int EbrStat64i32(const char* filename, struct _stat64i32* st);
 SB_EXPORT int EbrFputc(int c, EbrFile* fp);
 SB_EXPORT int EbrAccess(const char* file, int mode);
 SB_EXPORT int EbrRewind(EbrFile* fp);
@@ -109,9 +113,12 @@ SB_EXPORT int EbrOpenWithPermission(const char* file, int mode, int share, int p
 SB_EXPORT int EbrClose(int fd);
 SB_EXPORT int EbrFd2Host(int fd);
 SB_EXPORT int EbrFstat(int fd, struct stat* ret);
+SB_EXPORT int EbrFstat64i32(int fd, struct _stat64i32* ret);
 SB_EXPORT int EbrRead(int fd, void* dest, size_t count);
 SB_EXPORT int EbrWrite(int fd, const void* src, size_t count);
 SB_EXPORT int EbrLseek(int fd, __int64 pos, int whence);
+SB_EXPORT size_t EbrTell(int fd);
+SB_EXPORT intptr_t EbrGetOSFHandle(int fd);
 SB_EXPORT int EbrTruncate(int fd, off_t size);
 SB_EXPORT int EbrTruncate64(int fd, __int64 size);
 SB_EXPORT int EbrDup(int fd);
@@ -121,6 +128,8 @@ SB_EXPORT bool EbrUnlink(const char* path);
 SB_EXPORT bool EbrMkdir(const char* path);
 SB_EXPORT char* EbrGetcwd(char* buf, size_t len);
 SB_EXPORT int EbrChdir(const char* path);
+
+SB_EXPORT int EbrChmod(const char* path, int mode);
 
 // Remove an item at this path, be it a file or directory:
 SB_EXPORT bool EbrRemove(const char* path);

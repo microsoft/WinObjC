@@ -168,7 +168,7 @@ void PBXDocument::constructObjects(const Plist::dictionary_type& objectsDict)
     } else if (isa == "PBXBuildRule") {
       object = PBXBuildRule::createFromPlist(objectId, objectDict, this);
     } else {
-      m_parseER.reportError("Object type " + isa + " is unsupported.");
+      m_parseER.reportError("Object type is unsupported: " + isa);
     }
 
     // Add object to the map
@@ -200,7 +200,7 @@ PBXObject* PBXDocument::findObjectWithId(const String& id) const
   if (it != m_objects.end()) {
     return it->second;
   } else {
-    m_parseER.reportError("Failed to find object with " + id + " id.");
+    m_parseER.reportError("Failed to find object with id:" + id);
     return NULL;
   }
 }

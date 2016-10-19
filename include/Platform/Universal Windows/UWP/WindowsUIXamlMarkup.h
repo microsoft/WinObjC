@@ -63,6 +63,10 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 - (void)connect:(int)connectionId target:(RTObject*)target;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+@interface WUXMIComponentConnector : RTObject <WUXMIComponentConnector>
+@end
+
 #endif // __WUXMIComponentConnector_DEFINED__
 
 // Windows.UI.Xaml.Markup.IComponentConnector2
@@ -71,6 +75,10 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 
 @protocol WUXMIComponentConnector2
 - (RTObject<WUXMIComponentConnector>*)getBindingConnector:(int)connectionId target:(RTObject*)target;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+@interface WUXMIComponentConnector2 : RTObject <WUXMIComponentConnector2>
 @end
 
 #endif // __WUXMIComponentConnector2_DEFINED__
@@ -88,6 +96,10 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 @property (readonly) RTObject<WUXMIXamlType>* type;
 - (RTObject*)getValue:(RTObject*)instance;
 - (void)setValue:(RTObject*)instance value:(RTObject*)value;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+@interface WUXMIXamlMember : RTObject <WUXMIXamlMember>
 @end
 
 #endif // __WUXMIXamlMember_DEFINED__
@@ -117,6 +129,10 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 - (void)runInitializer;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+@interface WUXMIXamlType : RTObject <WUXMIXamlType>
+@end
+
 #endif // __WUXMIXamlType_DEFINED__
 
 // Windows.UI.Xaml.Markup.IXamlMetadataProvider
@@ -129,6 +145,10 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 - (NSArray* /* WUXMXmlnsDefinition* */)getXmlnsDefinitions;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+@interface WUXMIXamlMetadataProvider : RTObject <WUXMIXamlMetadataProvider>
+@end
+
 #endif // __WUXMIXamlMetadataProvider_DEFINED__
 
 // Windows.UI.Xaml.Markup.IDataTemplateComponent
@@ -138,6 +158,10 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 @protocol WUXMIDataTemplateComponent
 - (void)recycle;
 - (void)processBindings:(RTObject*)item itemIndex:(int)itemIndex phase:(int)phase nextPhase:(int*)nextPhase;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+@interface WUXMIDataTemplateComponent : RTObject <WUXMIDataTemplateComponent>
 @end
 
 #endif // __WUXMIDataTemplateComponent_DEFINED__

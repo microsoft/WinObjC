@@ -36,11 +36,10 @@ static void checkWinObjCSDK()
 {
   const BuildSettings bs(NULL);
   String sdkRoot = bs.getValue("WINOBJC_SDK_ROOT");
-  String baseErrMsg = "Invalid WINOBJC_SDK_ROOT specified: \"" + platformPath(sdkRoot) + "\". ";
-  sbValidateWithTelemetry(!sb_realpath(sdkRoot).empty(), baseErrMsg + "The SDK directory does not exist.");
+  sbValidateWithTelemetry(!sb_realpath(sdkRoot).empty(), "The WINOBJC_SDK_ROOT directory does not exist: \"" + platformPath(sdkRoot) + "\"");
 
   String templateDir = bs.getValue("VSIMPORTER_TEMPLATES_DIR");
-  sbValidateWithTelemetry(!sb_realpath(templateDir).empty(), baseErrMsg + "The SDK directory is missing vsimporter templates.");
+  sbValidateWithTelemetry(!sb_realpath(templateDir).empty(),  "The WINOBJC_SDK_ROOT directory is missing vsimporter templates: \"" + platformPath(sdkRoot) + "\"");
 }
 
 void printVersion(const char *execName)

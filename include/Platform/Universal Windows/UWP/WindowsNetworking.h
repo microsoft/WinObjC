@@ -65,6 +65,10 @@ typedef unsigned WNDomainNameType;
 - (NSString*)toString;
 @end
 
+OBJCUWP_WINDOWS_NETWORKING_EXPORT
+@interface WFIStringable : RTObject <WFIStringable>
+@end
+
 #endif // __WFIStringable_DEFINED__
 
 // Windows.Networking.HostName

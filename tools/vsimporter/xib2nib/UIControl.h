@@ -42,6 +42,20 @@ enum {
    UIControlEventAllEvents           = 0xFFFFFFFF
 };
 
+typedef enum {
+    UIControlContentHorizontalAlignmentCenter = 0,
+    UIControlContentHorizontalAlignmentLeft = 1,
+    UIControlContentHorizontalAlignmentRight = 2,
+    UIControlContentHorizontalAlignmentFill = 3,
+} UIControlContentHorizontalAlignment;
+
+typedef enum {
+    UIControlContentVerticalAlignmentCenter = 0,
+    UIControlContentVerticalAlignmentTop = 1,
+    UIControlContentVerticalAlignmentBottom = 2,
+    UIControlContentVerticalAlignmentFill = 3,
+} UIControlContentVerticalAlignment;
+
 class UIControl :
     public UIView
 {

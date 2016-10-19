@@ -122,6 +122,10 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 @property (retain) NSString* streamContentType;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSSIIndexableContent : RTObject <WSSIIndexableContent>
+@end
+
 #endif // __WSSIIndexableContent_DEFINED__
 
 // Windows.Storage.Search.IStorageQueryResultBase
@@ -138,6 +142,10 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (void)findStartIndexAsync:(RTObject*)value success:(void (^)(unsigned int))success failure:(void (^)(NSError*))failure;
 - (WSSQueryOptions*)getCurrentQueryOptions;
 - (void)applyNewQueryOptions:(WSSQueryOptions*)newQueryOptions;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSSIStorageQueryResultBase : RTObject <WSSIStorageQueryResultBase>
 @end
 
 #endif // __WSSIStorageQueryResultBase_DEFINED__
@@ -179,6 +187,10 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (BOOL)areQueryOptionsSupported:(WSSQueryOptions*)queryOptions;
 - (BOOL)isCommonFolderQuerySupported:(WSSCommonFolderQuery)query;
 - (BOOL)isCommonFileQuerySupported:(WSSCommonFileQuery)query;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSSIStorageFolderQueryOperations : RTObject <WSSIStorageFolderQueryOperations>
 @end
 
 #endif // __WSSIStorageFolderQueryOperations_DEFINED__

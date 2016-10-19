@@ -151,6 +151,9 @@ LIBRARY Starboard
         EbrFtell
         EbrFeof
         EbrStat
+        EbrStat64i32
+        EbrTell
+        EbrGetOSFHandle
         EbrFputc
         EbrAccess
         EbrRewind
@@ -171,6 +174,7 @@ LIBRARY Starboard
         EbrClose
         EbrFd2Host
         EbrFstat
+        EbrFstat64i32
         EbrRead
         EbrWrite
         EbrLseek
@@ -182,6 +186,7 @@ LIBRARY Starboard
         EbrMkdir
         EbrGetcwd
         EbrChdir
+        EbrChmod
         EbrRemove
         EbrRemoveEmptyDir
         EbrIsDir

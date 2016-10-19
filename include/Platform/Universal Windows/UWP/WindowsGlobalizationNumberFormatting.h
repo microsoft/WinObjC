@@ -71,6 +71,10 @@ typedef unsigned WGNCurrencyFormatterMode;
 - (double)roundDouble:(double)value;
 @end
 
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNINumberRounder : RTObject <WGNINumberRounder>
+@end
+
 #endif // __WGNINumberRounder_DEFINED__
 
 // Windows.Globalization.NumberFormatting.INumberFormatter
@@ -81,6 +85,10 @@ typedef unsigned WGNCurrencyFormatterMode;
 - (NSString*)formatInt:(int64_t)value;
 - (NSString*)formatUInt:(uint64_t)value;
 - (NSString*)formatDouble:(double)value;
+@end
+
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNINumberFormatter : RTObject <WGNINumberFormatter>
 @end
 
 #endif // __WGNINumberFormatter_DEFINED__
@@ -95,6 +103,10 @@ typedef unsigned WGNCurrencyFormatterMode;
 - (NSString*)formatDouble:(double)value;
 @end
 
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNINumberFormatter2 : RTObject <WGNINumberFormatter2>
+@end
+
 #endif // __WGNINumberFormatter2_DEFINED__
 
 // Windows.Globalization.NumberFormatting.INumberParser
@@ -105,6 +117,10 @@ typedef unsigned WGNCurrencyFormatterMode;
 - (id /* int64_t */)parseInt:(NSString*)text;
 - (id /* uint64_t */)parseUInt:(NSString*)text;
 - (id /* double */)parseDouble:(NSString*)text;
+@end
+
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNINumberParser : RTObject <WGNINumberParser>
 @end
 
 #endif // __WGNINumberParser_DEFINED__
@@ -125,6 +141,10 @@ typedef unsigned WGNCurrencyFormatterMode;
 @property (readonly) NSString* resolvedLanguage;
 @end
 
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNINumberFormatterOptions : RTObject <WGNINumberFormatterOptions>
+@end
+
 #endif // __WGNINumberFormatterOptions_DEFINED__
 
 // Windows.Globalization.NumberFormatting.ISignificantDigitsOption
@@ -133,6 +153,10 @@ typedef unsigned WGNCurrencyFormatterMode;
 
 @protocol WGNISignificantDigitsOption
 @property int significantDigits;
+@end
+
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNISignificantDigitsOption : RTObject <WGNISignificantDigitsOption>
 @end
 
 #endif // __WGNISignificantDigitsOption_DEFINED__
@@ -145,6 +169,10 @@ typedef unsigned WGNCurrencyFormatterMode;
 @property (retain) RTObject<WGNINumberRounder>* numberRounder;
 @end
 
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNINumberRounderOption : RTObject <WGNINumberRounderOption>
+@end
+
 #endif // __WGNINumberRounderOption_DEFINED__
 
 // Windows.Globalization.NumberFormatting.ISignedZeroOption
@@ -153,6 +181,10 @@ typedef unsigned WGNCurrencyFormatterMode;
 
 @protocol WGNISignedZeroOption
 @property BOOL isZeroSigned;
+@end
+
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNISignedZeroOption : RTObject <WGNISignedZeroOption>
 @end
 
 #endif // __WGNISignedZeroOption_DEFINED__

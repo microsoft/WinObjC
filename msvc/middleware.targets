@@ -18,6 +18,9 @@
       <SBResourceCopy
         Condition="$([System.Convert]::ToString(%(Link.AdditionalDependencies)).Contains('FBSDKShareKit'))"
         Include="$(StarboardLibDirs)\AssetsLibrary.dll" />
+      <SBResourceCopy
+        Condition="$([System.Convert]::ToString(%(Link.AdditionalDependencies)).Contains('FBSDKShareKit'))"
+        Include="$(StarboardLibDirs)\AudioToolbox.dll" />
     </ItemGroup>
   </Target>
 </Project>

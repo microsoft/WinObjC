@@ -25,6 +25,46 @@
 #include <string.h>
 #include <stdio.h>
 #include <sys/stat.h>
+
+#if DEPLOYMENT_TARGET_WINDOWS
+#include <io.h>
+#include <fcntl.h>
+
+#if WINOBJC
+// WINOBJC: redirect more things to work with Ebr
+// since unfortunately that is still needed
+#define close _NS_close
+#define write _NS_write
+#define read _NS_read
+#define open _NS_open
+#define stat(a,b) _NS_stat64i32(a,b)
+#define fstat _NS_fstat
+#define mkdir(a,b) _NS_mkdir(a)
+#define rmdir _NS_rmdir
+#define unlink _NS_unlink
+#define statinfo _NS_stat
+#define lseek _NS_lseek
+#else
+#define close _close
+#define write _write
+#define read _read
+#define open _NS_open
+#define stat(a,b) _stat64i32(a,b)
+#define fstat _fstat
+#define mkdir(a,b) _NS_mkdir(a)
+#define rmdir _NS_rmdir
+#define unlink _NS_unlink
+
+#define statinfo _stat
+#endif
+
+#else
+
+#define statinfo stat
+
+#endif
+
+
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI || DEPLOYMENT_TARGET_LINUX
 #include <sys/time.h>
 #include <unistd.h>
@@ -85,15 +125,14 @@ static void constructCFFD(_CFFileStreamContext *fileStream, Boolean forRead, str
 
 static Boolean constructFD(_CFFileStreamContext *fileStream, CFStreamError *error, Boolean forRead, struct _CFStream *stream) {
     int flags = forRead ? O_RDONLY : (O_CREAT | O_TRUNC | O_WRONLY);
-#if DEPLOYMENT_TARGET_WINDOWS
-    wchar_t path[CFMaxPathSize];
-    flags |= (_O_BINARY|_O_NOINHERIT);
-    if (_CFURLGetWideFileSystemRepresentation(fileStream->url, TRUE, path, CFMaxPathSize) == FALSE)
-#elif DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI || DEPLOYMENT_TARGET_LINUX
+
+    // WINOBJC: improve code reuse here by letting the underlying open implementation handle the narrow/wide conversions etc.
     char path[CFMaxPathSize];
+#if DEPLOYMENT_TARGET_WINDOWS
+    flags |= (_O_BINARY|_O_NOINHERIT);
+#endif    
     if (CFURLGetFileSystemRepresentation(fileStream->url, TRUE, (UInt8 *)path, CFMaxPathSize) == FALSE)
-#endif
-     {
+    {
         error->error = ENOENT;
         error->domain = kCFStreamErrorDomainPOSIX;
         return FALSE;
@@ -104,11 +143,7 @@ static Boolean constructFD(_CFFileStreamContext *fileStream, CFStreamError *erro
     }
     
     do {
-#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI || DEPLOYMENT_TARGET_LINUX
         fileStream->fd = open((const char *)path, flags, 0666);
-#elif DEPLOYMENT_TARGET_WINDOWS
-    fileStream->fd = _wopen(path, flags, 0666);
-#endif
         if (fileStream->fd < 0)
             break;
         

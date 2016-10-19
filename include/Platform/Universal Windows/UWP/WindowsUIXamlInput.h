@@ -214,6 +214,10 @@ typedef void (^WUXITappedEventHandler)(RTObject* sender, WUXITappedRoutedEventAr
 - (void)execute:(RTObject*)parameter;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXIICommand : RTObject <WUXIICommand>
+@end
+
 #endif // __WUXIICommand_DEFINED__
 
 // Windows.UI.Xaml.Input.Pointer

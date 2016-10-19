@@ -97,6 +97,10 @@ typedef unsigned WDAAllJoynSessionLostReason;
 - (void)accept;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
+@interface WDAIAllJoynAcceptSessionJoiner : RTObject <WDAIAllJoynAcceptSessionJoiner>
+@end
+
 #endif // __WDAIAllJoynAcceptSessionJoiner_DEFINED__
 
 // Windows.Devices.AllJoyn.AllJoynStatus

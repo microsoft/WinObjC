@@ -111,6 +111,10 @@ typedef void (^WUACredentialCommandCredentialDeletedHandler)(WUACredentialComman
 @property (retain) NSString* label;
 @end
 
+OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
+@interface WUPIUICommand : RTObject <WUPIUICommand>
+@end
+
 #endif // __WUPIUICommand_DEFINED__
 
 // Windows.UI.ApplicationSettings.SettingsCommand

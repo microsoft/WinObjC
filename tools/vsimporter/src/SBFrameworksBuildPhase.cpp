@@ -85,8 +85,8 @@ void SBFrameworksBuildPhase::loadFrameworkBlockListFromFile(const String& fileNa
 
             // We do not expect more than 2 tokens per line.
             // First is the blocked library name and possibly a second token which is the replacement library name.
-            sbValidate(tokens.size() <= 2, 
-                "Invalid Block List: Only one blocked library and an optional replacement library separated by '->' are allowed per line");
+            sbValidateWithTelemetry(tokens.size() <= 2, 
+                "Invalid Block List. Only one blocked library and an optional replacement library separated by '->' are allowed per line");
             
             String blockedLibrary = tokens[0];
 
@@ -101,7 +101,7 @@ void SBFrameworksBuildPhase::loadFrameworkBlockListFromFile(const String& fileNa
                 while (it != s_blockedLibraries.end())
                 {
                     replaceWithLibrary = it->second;
-                    sbValidate(blockedLibrary != replaceWithLibrary, 
+					sbValidateWithTelemetry(blockedLibrary != replaceWithLibrary,
                         blockedLibrary + " is trying to cyclically replace itself with another blocked library.");
                     it = s_blockedLibraries.find(replaceWithLibrary);
                 }
@@ -136,7 +136,7 @@ void SBFrameworksBuildPhase::writeVCProjectFiles(VCProject& proj) const
   StringVec buildFilePaths;
   if (m_phase) {
     const BuildFileList& buildFiles = m_phase->getBuildFileList();
-    sbAssert(buildFiles.size() == m_buildFileTargets.size());
+	sbAssertWithTelemetry(buildFiles.size() == m_buildFileTargets.size(), "Inconsistent number of Framework build files");
     for (size_t i = 0; i < buildFiles.size(); i++) {
       const PBXFile* file = buildFiles[i]->getFile();
       // Ignore any frameworks build from source (they will be added as project references)

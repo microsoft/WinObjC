@@ -139,6 +139,10 @@ typedef unsigned WFDLoggingFieldFormat;
 - (WFDErrorOptions)getErrorOptions;
 @end
 
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
+@interface WFDIErrorReportingSettings : RTObject <WFDIErrorReportingSettings>
+@end
+
 #endif // __WFDIErrorReportingSettings_DEFINED__
 
 // Windows.Foundation.Diagnostics.ILoggingTarget
@@ -167,6 +171,10 @@ typedef unsigned WFDLoggingFieldFormat;
                                                  options:(WFDLoggingOptions*)options;
 @end
 
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
+@interface WFDILoggingTarget : RTObject <WFDILoggingTarget>
+@end
+
 #endif // __WFDILoggingTarget_DEFINED__
 
 // Windows.Foundation.IClosable
@@ -175,6 +183,10 @@ typedef unsigned WFDLoggingFieldFormat;
 
 @protocol WFIClosable
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
 @end
 
 #endif // __WFIClosable_DEFINED__
@@ -196,6 +208,10 @@ typedef unsigned WFDLoggingFieldFormat;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
+@interface WFDILoggingChannel : RTObject <WFDILoggingChannel>
+@end
+
 #endif // __WFDILoggingChannel_DEFINED__
 
 // Windows.Foundation.Diagnostics.ILoggingSession
@@ -214,6 +230,10 @@ typedef unsigned WFDLoggingFieldFormat;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
+@interface WFDILoggingSession : RTObject <WFDILoggingSession>
+@end
+
 #endif // __WFDILoggingSession_DEFINED__
 
 // Windows.Foundation.Diagnostics.IFileLoggingSession
@@ -229,6 +249,10 @@ typedef unsigned WFDLoggingFieldFormat;
 - (void)removeLoggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel;
 - (void)closeAndSaveToFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
+@interface WFDIFileLoggingSession : RTObject <WFDIFileLoggingSession>
 @end
 
 #endif // __WFDIFileLoggingSession_DEFINED__

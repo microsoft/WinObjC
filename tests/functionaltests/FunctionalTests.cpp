@@ -1,6 +1,6 @@
 ﻿//******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -440,6 +440,35 @@ class ActivatedAppReceivesToastNotification {
         ToastNotificationTestActivatedAppReceivesToastNotification();
     }
 }; /* class ActivatedAppReceivesToastNotification */
+
+//
+// File Activation Tests
+//
+
+extern void FileActivatedTestForegroundActivation();
+extern void FileActivatedTestForegroundActivationDelegateMethodsCalled();
+
+class FileActivationForegroundActivation {
+public:
+    BEGIN_TEST_CLASS(FileActivationForegroundActivation)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(FileActivationForegroundActivationClassSetup) {
+        // The class setup allows us to activate the app in our test method, but can only be done once per class
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FileActivatedTestForegroundActivation));
+    }
+
+    TEST_METHOD_CLEANUP(FileActivationForegroundActivationCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
+    TEST_METHOD(FileActivation_TestForegroundActivationDelegateMethodsCalled) {
+        FileActivatedTestForegroundActivationDelegateMethodsCalled();
+    }
+}; /* class FileActivatedTestForegroundActivation */
 
 // UIKitTests
 //

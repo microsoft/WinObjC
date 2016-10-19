@@ -95,6 +95,10 @@ typedef void (^WUXMIDownloadProgressEventHandler)(RTObject* sender, WUXMIDownloa
 - (void)onRun:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
+@interface WUXMIIXamlRenderingBackgroundTaskOverrides : RTObject <WUXMIIXamlRenderingBackgroundTaskOverrides>
+@end
+
 #endif // __WUXMIIXamlRenderingBackgroundTaskOverrides_DEFINED__
 
 // Windows.UI.Xaml.Media.Imaging.DownloadProgressEventArgs
@@ -286,6 +290,10 @@ OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 
 @protocol WFIClosable
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
 @end
 
 #endif // __WFIClosable_DEFINED__

@@ -95,6 +95,10 @@ typedef unsigned WSCKeyCredentialCreationOption;
 @property (readonly) WSCWebAccountProvider* webAccountProvider;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSCIWebAccount : RTObject <WSCIWebAccount>
+@end
+
 #endif // __WSCIWebAccount_DEFINED__
 
 // Windows.Security.Credentials.WebAccountProvider
@@ -288,6 +292,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)setDictionary:(NSDictionary*)dict;
 - (EventRegistrationToken)addObserver:(RTCollectionListener)receiver;
 - (void)removeObserver:(EventRegistrationToken)receiverToken;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WFCIPropertySet : RTObject <WFCIPropertySet>
 @end
 
 #endif // __WFCIPropertySet_DEFINED__

@@ -272,6 +272,10 @@ typedef void (^WUXMTimelineMarkerRoutedEventHandler)(RTObject* sender, WUXMTimel
 - (WFRect*)transformBoundsCore:(WFRect*)rect;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMIGeneralTransformOverrides : RTObject <WUXMIGeneralTransformOverrides>
+@end
+
 #endif // __WUXMIGeneralTransformOverrides_DEFINED__
 
 // Windows.UI.Xaml.Media.VisualTreeHelper

@@ -171,6 +171,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 - (void)failAndClose:(WSStreamedFileFailureMode)failureMode;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStreamedFileDataRequest : RTObject <WSIStreamedFileDataRequest>
+@end
+
 #endif // __WSIStreamedFileDataRequest_DEFINED__
 
 // Windows.Storage.IStorageItem
@@ -188,6 +192,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 - (RTObject<WFIAsyncAction>*)deleteAsync:(WSStorageDeleteOption)option;
 - (void)getBasicPropertiesAsyncWithSuccess:(void (^)(WSFBasicProperties*))success failure:(void (^)(NSError*))failure;
 - (BOOL)isOfType:(WSStorageItemTypes)type;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageItem : RTObject <WSIStorageItem>
 @end
 
 #endif // __WSIStorageItem_DEFINED__
@@ -228,6 +236,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 - (BOOL)isOfType:(WSStorageItemTypes)type;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageFolder : RTObject <WSIStorageFolder>
+@end
+
 #endif // __WSIStorageFolder_DEFINED__
 
 // Windows.Storage.Streams.IRandomAccessStreamReference
@@ -238,6 +250,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 - (void)openReadAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSSIRandomAccessStreamReference : RTObject <WSSIRandomAccessStreamReference>
+@end
+
 #endif // __WSSIRandomAccessStreamReference_DEFINED__
 
 // Windows.Storage.Streams.IInputStreamReference
@@ -246,6 +262,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 
 @protocol WSSIInputStreamReference
 - (void)openSequentialReadAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSSIInputStreamReference : RTObject <WSSIInputStreamReference>
 @end
 
 #endif // __WSSIInputStreamReference_DEFINED__
@@ -291,6 +311,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 - (void)openSequentialReadAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageFile : RTObject <WSIStorageFile>
+@end
+
 #endif // __WSIStorageFile_DEFINED__
 
 // Windows.Storage.IStorageItem2
@@ -306,6 +330,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 - (RTObject<WFIAsyncAction>*)deleteAsync:(WSStorageDeleteOption)option;
 - (void)getBasicPropertiesAsyncWithSuccess:(void (^)(WSFBasicProperties*))success failure:(void (^)(NSError*))failure;
 - (BOOL)isOfType:(WSStorageItemTypes)type;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageItem2 : RTObject <WSIStorageItem2>
 @end
 
 #endif // __WSIStorageItem2_DEFINED__
@@ -331,6 +359,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
                   options:(WSFThumbnailOptions)options
                   success:(void (^)(WSFStorageItemThumbnail*))success
                   failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageItemProperties : RTObject <WSIStorageItemProperties>
 @end
 
 #endif // __WSIStorageItemProperties_DEFINED__
@@ -366,6 +398,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
                   failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageItemProperties2 : RTObject <WSIStorageItemProperties2>
+@end
+
 #endif // __WSIStorageItemProperties2_DEFINED__
 
 // Windows.Storage.IStorageItemPropertiesWithProvider
@@ -388,6 +424,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
                   failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageItemPropertiesWithProvider : RTObject <WSIStorageItemPropertiesWithProvider>
+@end
+
 #endif // __WSIStorageItemPropertiesWithProvider_DEFINED__
 
 // Windows.Storage.IStorageFilePropertiesWithAvailability
@@ -398,6 +438,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 @property (readonly) BOOL isAvailable;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageFilePropertiesWithAvailability : RTObject <WSIStorageFilePropertiesWithAvailability>
+@end
+
 #endif // __WSIStorageFilePropertiesWithAvailability_DEFINED__
 
 // Windows.Storage.IStorageFolder2
@@ -406,6 +450,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 
 @protocol WSIStorageFolder2
 - (void)tryGetItemAsync:(NSString*)name success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageFolder2 : RTObject <WSIStorageFolder2>
 @end
 
 #endif // __WSIStorageFolder2_DEFINED__
@@ -422,6 +470,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 - (void)openTransactedWriteWithOptionsAsync:(WSStorageOpenOptions)options
                                     success:(void (^)(WSStorageStreamTransaction*))success
                                     failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageFile2 : RTObject <WSIStorageFile2>
 @end
 
 #endif // __WSIStorageFile2_DEFINED__
@@ -483,6 +535,10 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (BOOL)areQueryOptionsSupported:(WSSQueryOptions*)queryOptions;
 - (BOOL)isCommonFolderQuerySupported:(WSSCommonFolderQuery)query;
 - (BOOL)isCommonFileQuerySupported:(WSSCommonFileQuery)query;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSSIStorageFolderQueryOperations : RTObject <WSSIStorageFolderQueryOperations>
 @end
 
 #endif // __WSSIStorageFolderQueryOperations_DEFINED__
@@ -777,6 +833,10 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Storage.Streams.IOutputStream
@@ -790,6 +850,10 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
            failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSSIOutputStream : RTObject <WSSIOutputStream>
 @end
 
 #endif // __WSSIOutputStream_DEFINED__
@@ -1189,6 +1253,10 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (void)setDictionary:(NSDictionary*)dict;
 - (EventRegistrationToken)addObserver:(RTCollectionListener)receiver;
 - (void)removeObserver:(EventRegistrationToken)receiverToken;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WFCIPropertySet : RTObject <WFCIPropertySet>
 @end
 
 #endif // __WFCIPropertySet_DEFINED__

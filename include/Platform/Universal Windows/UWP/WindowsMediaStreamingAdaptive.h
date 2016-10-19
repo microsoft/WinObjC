@@ -71,6 +71,10 @@ typedef unsigned WMSAAdaptiveMediaSourceResourceType;
 @protocol WMCIMediaSource
 @end
 
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
+@interface WMCIMediaSource : RTObject <WMCIMediaSource>
+@end
+
 #endif // __WMCIMediaSource_DEFINED__
 
 // Windows.Media.Streaming.Adaptive.AdaptiveMediaSource

@@ -83,7 +83,7 @@
         segmentedControl.frame = frame;
         segmentedControl.autoresizingMask = (UIViewAutoresizingFlexibleWidth);
         
-        segmentedControl.tintColor = [UIColor colorWithRed:0.10 green:0.90 blue:0.30 alpha:1.0];
+        segmentedControl.tintColor = [UIColor greenColor];
         
         [cell addSubview: segmentedControl];
     }

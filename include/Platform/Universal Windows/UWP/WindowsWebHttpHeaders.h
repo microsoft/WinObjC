@@ -77,6 +77,10 @@
 - (NSString*)toString;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WFIStringable : RTObject <WFIStringable>
+@end
+
 #endif // __WFIStringable_DEFINED__
 
 // Windows.Web.Http.Headers.HttpContentHeaderCollection
