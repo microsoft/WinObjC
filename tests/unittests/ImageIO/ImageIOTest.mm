@@ -1311,7 +1311,7 @@ TEST(ImageIO, DestinationImageOptionsTIFFTest) {
 
     NSDictionary* exifOptions = @{
         (id)kCGImagePropertyExifUserComment : @"Test2",
-        (id)kCGImagePropertyExifExposureTime : [NSNumber numberWithDouble:12.34],uble:12.34],
+        (id)kCGImagePropertyExifExposureTime : [NSNumber numberWithDouble:12.34],
     };
 
     NSDictionary* tiffOptions = @{
@@ -1534,7 +1534,7 @@ TEST(ImageIO, DestinationImageOptionsPNGTest) {
 
     NSDictionary* encodeOptions = @{
         (id)kCGImagePropertyOrientation : encodeOrientation,
-        (id)kCGImagePropertyGIFDictionary : gifOptions,
+        (id)kCGImagePropertyGIFDictionary : pngOtions,
         (id)kCGImagePropertyDPIWidth : [NSNumber numberWithDouble:1000],
         (id)kCGImagePropertyDPIHeight : [NSNumber numberWithDouble:200],
     };
