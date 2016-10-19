@@ -20,7 +20,6 @@
 #import <algorithm>
 
 #import "Starboard.h"
-#import "Platform/EbrPlatform.h"
 #import "Etc.h"
 #include "CAFDecoder.h"
 #include "LoggingNative.h"
@@ -74,9 +73,9 @@ public:
 
 class AudioFileOGG : public OpaqueAudioFileID {
     stb_vorbis* _handle;
-    EbrFile* _file;
+    StrongId<NSData> _data;
 
-    AudioFileOGG(stb_vorbis* handle, EbrFile* file) : _handle(handle), _file(file) {
+    AudioFileOGG(stb_vorbis* handle, NSData* data) : _handle(handle), _data(data) {
     }
 
 public:
@@ -85,24 +84,16 @@ public:
             stb_vorbis_close(_handle);
             _handle = 0;
         }
-        if (_file) {
-            EbrFclose(_file);
-            _file = 0;
-        }
     }
 
-    static OpaqueAudioFileID* openURL(char* url) {
-        //  Open the file using EbrFopen so that path mapping is applied
-        //  (since the url will often reference / as the root of the app directory)
-        EbrFile* file = EbrFopen(url, "rb");
-        if (file) {
+    static OpaqueAudioFileID* openURL(NSURL* url) {
+        NSData* data = [NSData dataWithContentsOfURL:url];
+        if ([data length] > 0) {
             int err = 0;
-
-            //  Pass the FILE* handle directly to stb_vorbis
-            stb_vorbis* handle = stb_vorbis_open_file(EbrNativeFILE(file), 0, &err, 0);
+            stb_vorbis* handle = stb_vorbis_open_memory((unsigned char*)[data bytes], [data length], &err, nullptr);
 
             if (handle && err == 0) {
-                return new AudioFileOGG(handle, file);
+                return new AudioFileOGG(handle, data);
             }
 
             TraceError(TAG, L"[OGG] OGG open error: %d", err);
@@ -196,9 +187,10 @@ class AudioFileWAV : public OpaqueAudioFileID {
         u32 dataSize;
     } _dataChunk;
 
-    EbrFile* _file;
+    StrongId<NSInputStream> _inStream;
 
-    AudioFileWAV(Header header, ChunkHeader dataChunk, EbrFile* f) : _header(header), _dataChunk(dataChunk), _file(f) {
+    AudioFileWAV(Header header, ChunkHeader dataChunk, NSInputStream* inStream)
+        : _header(header), _dataChunk(dataChunk), _inStream(inStream) {
         fileFormat.mFormatID = 'lpcm';
         fileFormat.mChannelsPerFrame = _header.channels;
         fileFormat.mSampleRate = _header.samplesPerSec;
@@ -212,41 +204,45 @@ class AudioFileWAV : public OpaqueAudioFileID {
     }
 
 public:
-    static OpaqueAudioFileID* openURL(char* url) {
-        EbrFile* f = EbrFopen(url, "rb");
-        if (!f)
-            return 0;
+    static OpaqueAudioFileID* openURL(NSURL* url) {
+        NSInputStream* inStream = [NSInputStream inputStreamWithURL:url];
+        [inStream open];
 
-        char id[4];
-        EbrFread(id, sizeof(id), 1, f);
-        if (strncmp(id, "RIFF", 4) != 0) {
-            TraceError(TAG, L"Tried to open %hs as WAV, it's not", url);
-            EbrFclose(f);
+        if (NSStreamStatusOpen != inStream.streamStatus) {
             return 0;
         }
 
-        OpaqueAudioFileID* ret = openFile(f);
+        char id[4];
+        [inStream read:(uint8_t*)id maxLength:_countof(id)];
+        if (strncmp(id, "RIFF", 4) != 0) {
+            TraceError(TAG, L"Tried to open %hs as WAV, it's not", url);
+            [inStream close];
+            return 0;
+        }
+
+        OpaqueAudioFileID* ret = openFile(inStream);
         if (!ret) {
             TraceError(TAG, L"Failed to open %hs as a WAV", url);
-            EbrFclose(f);
+            [inStream close];
             return 0;
         }
 
         return ret;
     }
 
-    static OpaqueAudioFileID* openFile(EbrFile* f) {
+    static OpaqueAudioFileID* openFile(NSInputStream* inStream) {
         u32 size;
         char id[4];
-        EbrFread(&size, sizeof(size), 1, f);
-        EbrFread(&id, 1, sizeof(id), f);
+        [inStream read:(uint8_t*)&size maxLength:sizeof(size)];
+        [inStream read:(uint8_t*)id maxLength:_countof(id)];
+
         if (strncmp(id, "WAVE", 4) != 0) {
             TraceError(TAG, L"malformed WAV file");
             return 0;
         }
 
         ChunkHeader cheader;
-        EbrFread(&cheader, sizeof(cheader), 1, f);
+        [inStream read:(uint8_t*)&cheader maxLength:sizeof(cheader)];
         if (strncmp(cheader.chunkId, "fmt ", 4) != 0) {
             TraceError(TAG, L"WAV Expected to get a fmt tag first");
             return 0;
@@ -254,12 +250,12 @@ public:
 
         // Grab the main header:
         Header header;
-        EbrFread(&header, sizeof(header), 1, f);
+        [inStream read:(uint8_t*)&header maxLength:sizeof(header)];
 
         //  Search for the data chunk
         ChunkHeader dheader;
-        while (!EbrFeof(f)) {
-            EbrFread(&dheader, sizeof(dheader), 1, f);
+        while ([inStream hasBytesAvailable]) {
+            [inStream read:(uint8_t*)&dheader maxLength:sizeof(dheader)];
             if (memcmp(dheader.chunkId, "data", 4) == 0)
                 break;
 
@@ -268,15 +264,17 @@ public:
                 TraceError(TAG, L"Bad data chunk size");
                 return 0;
             }
-            int ret = EbrFseek(f, dheader.dataSize, SEEK_CUR);
-            if (ret != 0) {
+
+            std::vector<uint8_t> dataToSkip(dheader.dataSize);
+            auto result = [inStream read:(uint8_t*)&(dataToSkip[0]) maxLength:dataToSkip.size()];
+            if (result != dataToSkip.size()) {
                 TraceError(TAG, L"Error seeking in WAV file");
                 return 0;
             }
         }
 
         // We leave the file position right where it's ready to go for the main data
-        return new AudioFileWAV(header, dheader, f);
+        return new AudioFileWAV(header, dheader, inStream);
     }
 
     int readBytes(i64 start, u32* numBytes, void* buffer) {
@@ -286,8 +284,8 @@ public:
         }
 
         int readSize = min(*numBytes, _dataChunk.dataSize);
-        EbrFread(buffer, readSize, 1, _file);
-        *numBytes = readSize;
+        auto result = [_inStream read:(uint8_t*)buffer maxLength:readSize];
+        *numBytes = result;
 
         return 0;
     }
@@ -377,9 +375,8 @@ public:
     }
 
     virtual ~AudioFileWAV() {
-        if (_file) {
-            EbrFclose(_file);
-            _file = 0;
+        if (NSStreamStatusOpen == [_inStream streamStatus]) {
+            [_inStream close];
         }
     }
 };
@@ -392,15 +389,17 @@ class AudioFileCAF : public OpaqueAudioFileID {
     std::vector<i16> _data;
 
 public:
-    static OpaqueAudioFileID* openURL(char* url) {
-        EbrFile* f = EbrFopen(url, "rb");
-        if (!f) {
+    static OpaqueAudioFileID* openURL(NSURL* url) {
+        NSInputStream* inStream = [NSInputStream inputStreamWithURL:url];
+        [inStream open];
+
+        if (NSStreamStatusOpen != inStream.streamStatus) {
             TraceError(TAG, L"CAF %hs doesn't exist..", url);
             return NULL;
         }
 
-        AudioFileCAF* self = new AudioFileCAF;
-        if (!self->_decoder.InitForRead(f)) {
+        AudioFileCAF* self = new AudioFileCAF();
+        if (!self->_decoder.InitForRead(inStream)) {
             TraceError(TAG, L"CAF %hs has an unsupported format..", url);
             return NULL;
         }
@@ -408,7 +407,7 @@ public:
         i16 buffer[1024];
         while (true) {
             uint numBytes = sizeof(buffer) / 2;
-            self->_decoder.ReadBuf(buffer, numBytes);
+            self->_decoder.ReadBuf(inStream, buffer, numBytes);
 
             if (numBytes == 0) {
                 // Done!
@@ -477,7 +476,6 @@ public:
 
         int readSize = min(*numBytes, _data.size() * 2);
         memcpy(buffer, &*_data.begin(), readSize);
-        // fread(buffer, readSize, 1, _file);
         *numBytes = readSize;
 
         return 0;
@@ -505,30 +503,32 @@ public:
  @Notes Only file:// URLs supported
 */
 OSStatus AudioFileOpenURL(CFURLRef url, AudioFilePermissions permissions, AudioFileTypeID type, AudioFileID _Nullable* out) {
-    char* filename = (char*)[[(__bridge NSURL*)url path] UTF8String];
-    EbrFile* f = EbrFopen(filename, "rb");
-    if (!f) {
-        TraceError(TAG, L"Could not find audio file %hs", filename);
+    NSURL* nsURL = (__bridge NSURL*)(url);
+    NSInputStream* inStream = [NSInputStream inputStreamWithURL:nsURL];
+    [inStream open];
+
+    if (NSStreamStatusOpen != inStream.streamStatus) {
+        TraceError(TAG, L"Could not find audio file");
         return 0;
     }
 
     char header[4];
-    EbrFread(&header, sizeof(header), 1, f);
-    EbrFclose(f);
+    [inStream read:(uint8_t*)header maxLength:_countof(header)];
+    [inStream close];
 
     // Try to figure out what this is:
     if (out) {
         if (strncmp(header, "OggS", 4) == 0) {
-            *out = AudioFileOGG::openURL(filename);
+            *out = AudioFileOGG::openURL(nsURL);
         } else if (strncmp(header, "RIFF", 4) == 0) {
-            *out = AudioFileWAV::openURL(filename);
+            *out = AudioFileWAV::openURL(nsURL);
         } else if (strncmp(header, "caff", 4) == 0) {
-            *out = AudioFileCAF::openURL(filename);
+            *out = AudioFileCAF::openURL(nsURL);
         } else if (strncmp(header, "ID3", 3) == 0) {
             TraceError(TAG, L"MP3s not supported!");
             return 1234;
         } else {
-            TraceError(TAG, L"What is %hs?!", filename);
+            TraceError(TAG, L"Unknown Audio File Type");
             return 1234;
         }
     }
@@ -536,39 +536,81 @@ OSStatus AudioFileOpenURL(CFURLRef url, AudioFilePermissions permissions, AudioF
     return 0;
 }
 
-class EbrCallbackFile : public EbrFile {
-private:
-    void* funcContext;
-    AudioFile_ReadProc readFunc;
-    AudioFile_WriteProc writeFunc;
-    AudioFile_GetSizeProc getSizeFunc;
-    AudioFile_SetSizeProc setSizeFunc;
-    DWORD position;
+@interface NSCallbackInputStream : NSInputStream 
 
-public:
-    EbrCallbackFile(
-        void* context, AudioFile_ReadProc read, AudioFile_WriteProc write, AudioFile_GetSizeProc getSize, AudioFile_SetSizeProc setSize) {
-        funcContext = context;
-        readFunc = read;
-        writeFunc = write;
-        getSizeFunc = getSize;
-        setSizeFunc = setSize;
-        position = 0;
+@end
+
+@implementation NSCallbackInputStream {
+    void* _context;
+    AudioFile_ReadProc _readFunc;
+    AudioFile_WriteProc _writeFunc;
+    AudioFile_GetSizeProc _getSizeFunc;
+    AudioFile_SetSizeProc _setSizeFunc;
+    DWORD _position;
+    NSStreamStatus _status;
+}
+
++ (instancetype)inputStreamWithCallBacks:(void*)context
+                                readFunc:(AudioFile_ReadProc)read
+                               writeFunc:(AudioFile_WriteProc)write
+                             getSizeFunc:(AudioFile_GetSizeProc)getSize
+                             setSizeFunc:(AudioFile_SetSizeProc)setSize {
+    return [[self alloc] initWithCallbacks:context readFunc:read writeFunc:write getSizeFunc:getSize setSizeFunc:setSize];
+}
+
+- (instancetype)initWithCallbacks:(void*)context
+                         readFunc:(AudioFile_ReadProc)read
+                        writeFunc:(AudioFile_WriteProc)write
+                      getSizeFunc:(AudioFile_GetSizeProc)getSize
+                      setSizeFunc:(AudioFile_SetSizeProc)setSize {
+    if (self = [super init]) {
+        _context = context;
+        _readFunc = read;
+        _writeFunc = write;
+        _getSizeFunc = getSize;
+        _setSizeFunc = setSize;
+        _position = 0;
+        _status = NSStreamStatusNotOpen;
     }
+    return self;
+}
 
-    int Close() {
-        return 0;
-    }
+- (NSStreamStatus)streamStatus {
+    return _status;
+}
 
-    size_t Read(void* dest, size_t elem, size_t count) {
-        size_t readCount = elem * count;
-        uint32_t amtRead = 0;
-        unsigned int status = readFunc(funcContext, position, readCount, dest, &amtRead);
-        position += amtRead;
+- (void)close {
+    _status = NSStreamStatusClosed;
+}
 
-        return amtRead;
-    }
-};
+- (id)propertyForKey:(NSString*)key {
+    return nil;
+}
+
+- (BOOL)setProperty:(id)property forKey:(NSString*)key {
+    return NO;
+}
+
+- (void)open {
+    _status = NSStreamStatusOpen;
+}
+
+- (NSInteger)read:(uint8_t*)buf maxLength:(NSUInteger)maxLength {
+    UInt32 actualCount;
+    _readFunc(_context, _position, maxLength, buf, &actualCount);
+    _position += actualCount;
+    return actualCount;
+}
+
+- (BOOL)hasBytesAvailable {
+    return _position != _getSizeFunc(_context);
+}
+
+- (BOOL)getBuffer:(uint8_t* _Nullable*)buffer length:(NSUInteger*)len {
+    return NO;
+}
+
+@end
 
 /**
  @Status Interoperable
@@ -580,11 +622,14 @@ DWORD AudioFileOpenWithCallbacks(void* context,
                                  AudioFile_SetSizeProc setSizeFunc,
                                  DWORD typeHint,
                                  AudioFileID _Nullable* out) {
-    EbrCallbackFile* callbackFP = new EbrCallbackFile(context, readFunc, writeFunc, getSizeFunc, setSizeFunc);
-    EbrFile* in = EbrAllocFile(callbackFP);
-
-    char header[4] = { 0 };
-    EbrFread(&header, sizeof(header), 1, in);
+    NSInputStream* in = [NSCallbackInputStream inputStreamWithCallBacks:context
+                                                               readFunc:readFunc
+                                                              writeFunc:writeFunc
+                                                            getSizeFunc:getSizeFunc
+                                                            setSizeFunc:setSizeFunc];
+    [in open];
+    char header[4] = {};
+    [in read:(uint8_t*)header maxLength:_countof(header)];
 
     // Try to figure out what this is:
     if (out) {

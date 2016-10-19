@@ -168,7 +168,7 @@ TEST(NSURLSession, DataTaskWithURL) {
     // Wait for data.
     if (![dataTaskTestHelper.condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]) {
         // Wait timed out.
-        ASSERT_FALSE_MSG(false, "FAILED: Waiting for connection timed out!");
+        ASSERT_FALSE_MSG(true, "FAILED: Waiting for connection timed out!");
     }
 
     // Give some time for all delegates to be called.
@@ -228,7 +228,7 @@ TEST(NSURLSession, DataTaskWithURL_Failure) {
     // Wait for data.
     if (![dataTaskTestHelper.condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]) {
         // Wait timed out.
-        ASSERT_FALSE_MSG(false, "FAILED: Waiting for connection timed out!");
+        ASSERT_FALSE_MSG(true, "FAILED: Waiting for connection timed out!");
     }
 
     // Give some time for all delegates to be called.
@@ -290,7 +290,7 @@ TEST(NSURLSession, DataTaskWithURL_WithCompletionHandler) {
     // Wait for data.
     if (![condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]) {
         // Wait timed out.
-        ASSERT_FALSE_MSG(false, "FAILED: Waiting for connection timed out!");
+        ASSERT_FALSE_MSG(true, "FAILED: Waiting for connection timed out!");
     }
 
     // Make sure we received a response.
@@ -339,7 +339,7 @@ TEST(NSURLSession, DataTaskWithURL_WithCompletionHandler_Failure) {
     // Wait for data.
     if (![condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]) {
         // Wait timed out.
-        ASSERT_FALSE_MSG(false, "FAILED: Waiting for connection timed out!");
+        ASSERT_FALSE_MSG(true, "FAILED: Waiting for connection timed out!");
     }
 
     // Make sure we received a response.
@@ -507,7 +507,7 @@ TEST(NSURLSession, DownloadTaskWithURL) {
     if (![downloadTaskTestHelper.conditionDownloadComplete
             waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testDownloadTimeoutInSec]]) {
         // Wait timed out.
-        ASSERT_FALSE_MSG(false, "FAILED: Waiting for download timed out!");
+        ASSERT_FALSE_MSG(true, "FAILED: Waiting for download timed out!");
     }
 
     // Give some time for all delegates to be called.
@@ -554,7 +554,7 @@ TEST(NSURLSession, DownloadTaskWithURL_Failure) {
     if (![downloadTaskTestHelper.conditionDownloadComplete
             waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testDownloadTimeoutInSec]]) {
         // Wait timed out.
-        ASSERT_FALSE_MSG(false, "FAILED: Waiting for download timed out!");
+        ASSERT_FALSE_MSG(true, "FAILED: Waiting for download timed out!");
     }
 
     // Give some time for all delegates to be called.
@@ -608,7 +608,7 @@ TEST(NSURLSession, DownloadTaskWithURL_WithCompletionHandler) {
     // Wait for download to complete.
     if (![condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testDownloadTimeoutInSec]]) {
         // Wait timed out.
-        ASSERT_FALSE_MSG(false, "FAILED: Waiting for download timed out!");
+        ASSERT_FALSE_MSG(true, "FAILED: Waiting for download timed out!");
     }
 
     // Make sure we get a download location.
@@ -633,7 +633,7 @@ TEST(NSURLSession, DownloadTaskWithURL_WithCancelResume) {
     // Wait for first delegate to be arrive.
     if (![downloadTaskTestHelper.condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]) {
         // Wait timed out.
-        ASSERT_FALSE_MSG(false, "FAILED: Waiting for download timed out!");
+        ASSERT_FALSE_MSG(true, "FAILED: Waiting for download timed out!");
     }
 
     // Make sure the download started.
@@ -672,7 +672,7 @@ TEST(NSURLSession, DownloadTaskWithURL_WithCancelResume) {
     // Wait for the task to be cancelled.
     if (![conditionCancelled waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]) {
         // Wait timed out.
-        ASSERT_FALSE_MSG(false, "FAILED: Waiting for download timed out!");
+        ASSERT_FALSE_MSG(true, "FAILED: Waiting for download timed out!");
     }
 
     // Make sure download has stopped.
@@ -694,7 +694,7 @@ TEST(NSURLSession, DownloadTaskWithURL_WithCancelResume) {
     // Wait for resume delegate.
     if (![downloadTaskTestHelper.conditionDownloadResumed waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]) {
         // Wait timed out.
-        ASSERT_FALSE_MSG(false, "FAILED: Waiting for download resume timed out!");
+        ASSERT_FALSE_MSG(true, "FAILED: Waiting for download resume timed out!");
     }
 
     LOG_INFO("Download resumed");
