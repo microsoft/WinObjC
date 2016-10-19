@@ -392,6 +392,10 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
     SInt32 cfError{};
 
     if (CFURLCreateDataAndPropertiesFromResource(nullptr, static_cast<CFURLRef>([NSURL fileURLWithPath:filename]), &tempData, nullptr, nullptr, &cfError)) {
+        // An astute reader may be wondering why initWithData should be called when tempData is already a fully realized NSData with the information we want.
+        // In order to comply with Toll Free bridging and class clustering, *instancetype* always needs to be returned here which may not be the case for a 
+        // derived class (say NSMutableData). This init call forwards to a designated initializer internally so the derived implementor need not think about
+        // it if they don't want. Note that the default NSData implementation, NSCFData, does not make an extra copy since a CFDataRef is a NSCFData.
         return [self initWithData:static_cast<NSData*>(tempData)];
     } else if (error != nullptr) {
         *error = [NSError errorWithDomain:@"NSData" code:cfError userInfo:nil];
