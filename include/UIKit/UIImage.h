@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
- * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+ * Copyright (c) Microsoft. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -16,14 +16,18 @@
  *    be used to endorse or promote products derived from this software without
  *    specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL THE ICONFACTORY BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING,
  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ * OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -92,7 +96,9 @@ UIKIT_EXPORT_CLASS
 + (UIImage*)imageNamed:(NSString*)name
                          inBundle:(NSBundle*)bundle
     compatibleWithTraitCollection:(UITraitCollection*)traitCollection STUB_METHOD;
-+ (UIImage*)imageNamed:(NSString*)name; // Note, this caches the images somewhat like iPhone OS 2ish in that it never releases them. :)
++ (UIImage*)imageNamed:(NSString*)name; // Note, this caches the images
+// somewhat like iPhone OS 2ish in
+// that it never releases them. :)
 + (UIImage*)imageWithCGImage:(CGImageRef)imageRef scale:(CGFloat)scale orientation:(UIImageOrientation)orientation;
 + (UIImage*)imageWithCGImage:(CGImageRef)imageRef;
 + (UIImage*)imageWithCIImage:(CIImage*)ciImage STUB_METHOD;
@@ -123,7 +129,8 @@ UIKIT_EXPORT void UIImageWriteToSavedPhotosAlbum(UIImage* image, id completionTa
 UIKIT_EXPORT void UISaveVideoAtPathToSavedPhotosAlbum(NSString* videoPath, id completionTarget, SEL completionSelector, void* contextInfo);
 UIKIT_EXPORT BOOL UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(NSString* videoPath);
 
-// both of these use .CGImage to generate the image data - note what this means for multi-scale images!
+// both of these use .CGImage to generate the image data - note what this means
+// for multi-scale images!
 UIKIT_EXPORT NSData* UIImageJPEGRepresentation(UIImage* image, CGFloat compressionQuality);
 UIKIT_EXPORT NSData* UIImagePNGRepresentation(UIImage* image);
 

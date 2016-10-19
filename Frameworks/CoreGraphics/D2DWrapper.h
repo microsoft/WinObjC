@@ -19,12 +19,15 @@
 #include <COMIncludes.h>
 #import <wrl/client.h>
 #import <D2d1.h>
+#import "Wincodec.h"
 #include <COMIncludes_End.h>
 
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGBase.h>
 
 Microsoft::WRL::ComPtr<ID2D1Factory> _GetD2DFactoryInstance();
+
+Microsoft::WRL::ComPtr<IWICImagingFactory> _GetWICFactory();
 
 inline D2D_POINT_2F _CGPointToD2D_F(CGPoint point) {
     return { point.x, point.y };

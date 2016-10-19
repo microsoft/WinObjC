@@ -341,14 +341,24 @@ LIBRARY CoreGraphics
         CGImageGetWidth
         CGImageIsMask
 
+        ; CGImage private exports
+        _CGImageLoadGIF;
+        _CGImageLoadBMP;
+        _CGImageLoadTIFF;
+        _CGImageLoadPNG;
+        _CGImageLoadJPEG;
+        _CGImageLoadImageWithWICDecoder;
+        _CGImageGetImageFromData;
+        _CGImagePNGRepresentation;
+        _CGImageJPEGRepresentation;
+        _CGImageRepresentation;
+
         ; private exports below
         CGImageAddDestructionListener
         CGJPEGImageCreateFromData
         CGPNGImageCreateFromData
         CGJPEGImageCreateFromFile
         CGPNGImageCreateFromFile
-        _CGImagePNGRepresentation
-        _CGImageGetData
 
         ; CGLayer.mm
         CGLayerCreateWithContext

@@ -85,7 +85,7 @@ vImage_Error vImageBuffer_InitWithCGImage(
     if (result == kvImageNoError) {
         const uint32_t srcPitch = CGImageGetBytesPerRow(image);
         const uint32_t dstPitch = buffer->rowBytes;
-        BYTE* srcData = reinterpret_cast<BYTE*>(_CGImageGetData(image));
+        const BYTE* srcData = static_cast<const BYTE *>([static_cast<NSData*>(CGImageGetDataProvider(image)) bytes]);
         BYTE* dstData = reinterpret_cast<BYTE*>(buffer->data);
         const uint32_t bytesPerPixel = format->bitsPerPixel >> 3;
         const uint32_t bytesToCopy = width * bytesPerPixel;

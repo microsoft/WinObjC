@@ -1,7 +1,7 @@
 //******************************************************************************
 //
 // Copyright (c) 2016 Intel Corporation. All rights reserved.
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,13 +17,19 @@
 
 #pragma once
 
-#include "Starboard.h"
-#include "CoreGraphicsInternal.h"
-#include "CoreGraphics/CGImage.h"
-#include <objc/runtime.h>
+#import <Starboard.h>
+#import "CoreGraphicsInternal.h"
+#import <CoreGraphics/CGImage.h>
+#import <objc/runtime.h>
+#import <Foundation/NSData.h>
+#import <CFRuntime.h>
+#import <CFCppBase.h>
+#import <map>
 
 #include <COMIncludes.h>
 #import <D2d1.h>
+#import "Wincodec.h"
+#import <wrl/client.h>
 #include <COMIncludes_End.h>
 
 struct _cairo_surface;
@@ -40,6 +46,7 @@ public:
     virtual void ReleaseDisplayTexture(DisplayTexture* tex) = 0;
 };
 
+// TODO: Remove CGImageBacking
 class CGImageBacking {
 protected:
     int _imageLocks;
@@ -96,31 +103,153 @@ typedef enum {
     CGImageTypeJPEG
 } CGImageType;
 
-class __CGImage : private objc_object {
-protected:
-    CGImageBacking* _img;
+// TODO: use for reverse mapping of GetPixelFormat
+typedef struct {
+    CGColorSpaceModel colorSpaceModel;
+    CGBitmapInfo bitmapInfo;
+    BYTE bitsPerComponent;
+    BYTE bytesPerPixel;
+} __CGImagePixelProperties;
 
-public:
+struct __CGImageImpl {
+    Microsoft::WRL::ComPtr<IWICBitmapSource> bitmapImageSource;
+    CGBitmapInfo bitmapInfo;
+    bool isMask;
+    bool interpolate;
+    CGColorSpaceRef colorSpace;
+    CGColorRenderingIntent renderingIntent;
+
+    ~__CGImageImpl() {
+        if (colorSpace) {
+            CGColorSpaceRelease(colorSpace);
+        }
+    }
+};
+
+struct __CGImage : CoreFoundation::CppBase<__CGImage, __CGImageImpl> {
+    inline Microsoft::WRL::ComPtr<IWICBitmapSource>& ImageSource() {
+        return _impl.bitmapImageSource;
+    }
+
+    inline size_t Height() {
+        size_t width, height;
+        if (FAILED(_impl.bitmapImageSource->GetSize(&width, &height))) {
+            return 0;
+        }
+
+        return height;
+    }
+
+    inline size_t Width() {
+        size_t width, height;
+        if (FAILED(_impl.bitmapImageSource->GetSize(&width, &height))) {
+            return 0;
+        }
+
+        return width;
+    }
+
+    inline bool IsMask() {
+        return _impl.isMask;
+    }
+
+    inline bool Interpolate() {
+        return _impl.interpolate;
+    }
+
+    inline CGColorSpaceRef ColorSpace() {
+        return _impl.colorSpace;
+    }
+
+    inline CGColorRenderingIntent RenderingIntent() {
+        return _impl.renderingIntent;
+    }
+
+    inline CGBitmapInfo BitmapInfo() {
+        return _impl.bitmapInfo;
+    }
+
+    inline __CGImage& SetIsMask(bool mask) {
+        _impl.isMask = mask;
+        return *this;
+    }
+
+    inline __CGImage& SetInterpolate(bool interpolate) {
+        _impl.interpolate = interpolate;
+        return *this;
+    }
+
+    inline __CGImage& SetColorSpace(CGColorSpaceRef space) {
+        if (_impl.colorSpace) {
+            CGColorSpaceRelease(_impl.colorSpace);
+        }
+        _impl.colorSpace = space;
+        CGColorSpaceRetain(space);
+        return *this;
+    }
+
+    inline __CGImage& SetRenderingIntent(CGColorRenderingIntent intent) {
+        _impl.renderingIntent = intent;
+        return *this;
+    }
+
+    inline __CGImage& SetBitmapInfo(CGBitmapInfo info) {
+        _impl.bitmapInfo = info;
+        return *this;
+    }
+
+    //---Old to be removed //
+    CGImageBacking* _img;
     bool _has32BitAlpha;
     CGImageType _imgType;
     idretain _provider;
 
-    __CGImage();
-    ~__CGImage();
-
     inline CGImageBacking* Backing() const {
         return _img;
     }
-    CGImageBacking* DetachBacking(CGImageRef newParent);
+
+    inline CGImageBacking* DetachBacking(CGImageRef newParent) {
+        CGImageBacking* ret = _img;
+
+        _img->_parent = newParent;
+        _img = NULL;
+
+        return ret;
+    }
+    //--End Old code //
 };
 
-#include "CGBitmapImage.h"
-#include "CGGraphicBufferImage.h"
-#include "CGVectorImage.h"
-#include "CGDiscardableImage.h"
-#include "CGPNGDecoderImage.h"
-#include "CGJPEGDecoderImage.h"
+//--Helpers--
+
+COREGRAPHICS_EXPORT CGImageRef _CGImageLoadGIF(void* bytes, int length);
+
+COREGRAPHICS_EXPORT CGImageRef _CGImageLoadBMP(void* bytes, size_t length);
+
+COREGRAPHICS_EXPORT CGImageRef _CGImageLoadTIFF(void* bytes, int length);
+
+COREGRAPHICS_EXPORT CGImageRef _CGImageLoadPNG(void* bytes, int length);
+
+COREGRAPHICS_EXPORT CGImageRef _CGImageLoadJPEG(void* bytes, int length);
+
+COREGRAPHICS_EXPORT CGImageRef _CGImageLoadImageWithWICDecoder(REFGUID decoderCls, void* bytes, int length);
+
+COREGRAPHICS_EXPORT CGImageRef _CGImageGetImageFromData(void* data, int length);
+
+COREGRAPHICS_EXPORT NSData* _CGImagePNGRepresentation(CGImageRef image);
+COREGRAPHICS_EXPORT NSData* _CGImageJPEGRepresentation(CGImageRef image);
+COREGRAPHICS_EXPORT NSData* _CGImageRepresentation(CGImageRef image, REFGUID guid);
+
+REFGUID _CGImageGetWICPixelFormat(unsigned int bitsPerComponent,
+                                  unsigned int bitsPerPixel,
+                                  CGColorSpaceRef colorSpace,
+                                  CGBitmapInfo bitmapInfo);
+
+#import "CGBitmapImage.h"
+#import "CGGraphicBufferImage.h"
+#import "CGVectorImage.h"
+#import "CGDiscardableImage.h"
+#import "CGPNGDecoderImage.h"
+#import "CGJPEGDecoderImage.h"
 
 typedef void (*CGImageDestructionListener)(CGImageRef img);
 COREGRAPHICS_EXPORT void CGImageAddDestructionListener(CGImageDestructionListener listener);
-COREGRAPHICS_EXPORT NSData* _CGImagePNGRepresentation(UIImage* img);
