@@ -1216,8 +1216,8 @@ TEST(ImageIO, DestinationOptionsTest) {
     int loopCount = 15;
     float delayTime = 0.5;
     NSDictionary* gifEncodeOptions = @{
-        (id) kCGImagePropertyGIFLoopCount : [NSNumber numberWithInt:loopCount], (id)
-        kCGImagePropertyGIFDelayTime : [NSNumber numberWithFloat:delayTime],
+        (id)kCGImagePropertyGIFLoopCount : [NSNumber numberWithInt:loopCount],
+        (id)kCGImagePropertyGIFDelayTime : [NSNumber numberWithFloat:delayTime],
     };
 
     NSDictionary* encodeDictionary = @{
@@ -1297,39 +1297,39 @@ TEST(ImageIO, DestinationImageOptionsTIFFTest) {
     CFURLRef imgUrl = getURLRefFromFilename(outFile);
 
     NSDictionary* gpsOptions = @{
-        (id) kCGImagePropertyGPSLatitude : [NSNumber numberWithDouble:100.55], (id)
-        kCGImagePropertyGPSLongitude : [NSNumber numberWithDouble:200.0], (id)
-        kCGImagePropertyGPSLatitudeRef : @"N", (id)
-        kCGImagePropertyGPSLongitudeRef : @"W", (id)
-        kCGImagePropertyGPSAltitude : [NSNumber numberWithDouble:150.25], (id)
-        kCGImagePropertyGPSAltitudeRef : [NSNumber numberWithShort:1], (id)
-        kCGImagePropertyGPSImgDirection : [NSNumber numberWithFloat:2.4], (id)
-        kCGImagePropertyGPSImgDirectionRef : @"test", (id)
-        kCGImagePropertyGPSTimeStamp : @"04:30:51.71", (id)
-        kCGImagePropertyGPSVersion : @"2.2.0.0",
+        (id)kCGImagePropertyGPSLatitude : [NSNumber numberWithDouble:100.55],
+        (id)kCGImagePropertyGPSLongitude : [NSNumber numberWithDouble:200.0],
+        (id)kCGImagePropertyGPSLatitudeRef : @"N",
+        (id)kCGImagePropertyGPSLongitudeRef : @"W",
+        (id)kCGImagePropertyGPSAltitude : [NSNumber numberWithDouble:150.25],
+        (id)kCGImagePropertyGPSAltitudeRef : [NSNumber numberWithShort:1],
+        (id)kCGImagePropertyGPSImgDirection : [NSNumber numberWithFloat:2.4],
+        (id)kCGImagePropertyGPSImgDirectionRef : @"test",
+        (id)kCGImagePropertyGPSTimeStamp : @"04:30:51.71",
+        (id)kCGImagePropertyGPSVersion : @"2.2.0.0",
     };
 
     NSDictionary* exifOptions = @{
-        (id) kCGImagePropertyExifUserComment : @"Test2", (id)
-        kCGImagePropertyExifExposureTime : [NSNumber numberWithDouble:12.34],
+        (id)kCGImagePropertyExifUserComment : @"Test2",
+        (id)kCGImagePropertyExifExposureTime : [NSNumber numberWithDouble:12.34],uble:12.34],
     };
 
     NSDictionary* tiffOptions = @{
-        (id) kCGImagePropertyTIFFXResolution : [NSNumber numberWithDouble:100], (id)
-        kCGImagePropertyTIFFYResolution : [NSNumber numberWithDouble:120], (id)
-        kCGImagePropertyTIFFResolutionUnit : [NSNumber numberWithInt:1],
+        (id)kCGImagePropertyTIFFXResolution : [NSNumber numberWithDouble:100],
+        (id)kCGImagePropertyTIFFYResolution : [NSNumber numberWithDouble:120],
+        (id)kCGImagePropertyTIFFResolutionUnit : [NSNumber numberWithInt:1],
     };
 
     int orientation = 3;
     NSNumber* encodeOrientation = [NSNumber numberWithInt:orientation];
 
     NSDictionary* encodeOptions = @{
-        (id) kCGImagePropertyGPSDictionary : gpsOptions, (id)
-        kCGImagePropertyOrientation : encodeOrientation, (id)
-        kCGImagePropertyExifDictionary : exifOptions, (id)
-        kCGImagePropertyTIFFDictionary : tiffOptions, (id)
-        kCGImagePropertyDPIWidth : [NSNumber numberWithDouble:1000], (id)
-        kCGImagePropertyDPIHeight : [NSNumber numberWithDouble:200],
+        (id)kCGImagePropertyGPSDictionary : gpsOptions,
+        (id)kCGImagePropertyOrientation : encodeOrientation,
+        (id)kCGImagePropertyExifDictionary : exifOptions,
+        (id)kCGImagePropertyTIFFDictionary : tiffOptions,
+        (id)kCGImagePropertyDPIWidth : [NSNumber numberWithDouble:1000],
+        (id)kCGImagePropertyDPIHeight : [NSNumber numberWithDouble:200],
     };
 
     CGImageDestinationRef myImageDest = CGImageDestinationCreateWithURL(imgUrl, kUTTypeTIFF, 1, NULL);
@@ -1384,39 +1384,39 @@ TEST(ImageIO, DestinationImageOptionsJPEGTest) {
     CFURLRef imgUrl = getURLRefFromFilename(outFile);
 
     NSDictionary* gpsOptions = @{
-        (id) kCGImagePropertyGPSLatitude : [NSNumber numberWithDouble:100.55], (id)
-        kCGImagePropertyGPSLongitude : [NSNumber numberWithDouble:200.0], (id)
-        kCGImagePropertyGPSLatitudeRef : @"N", (id)
-        kCGImagePropertyGPSLongitudeRef : @"W", (id)
-        kCGImagePropertyGPSAltitude : [NSNumber numberWithDouble:150.25], (id)
-        kCGImagePropertyGPSAltitudeRef : [NSNumber numberWithShort:1], (id)
-        kCGImagePropertyGPSImgDirection : [NSNumber numberWithFloat:2.4], (id)
-        kCGImagePropertyGPSImgDirectionRef : @"test", (id)
-        kCGImagePropertyGPSTimeStamp : @"04:30:51.71", (id)
-        kCGImagePropertyGPSVersion : @"2.2.0.0",
+        (id)kCGImagePropertyGPSLatitude : [NSNumber numberWithDouble:100.55],
+        (id)kCGImagePropertyGPSLongitude : [NSNumber numberWithDouble:200.0],
+        (id)kCGImagePropertyGPSLatitudeRef : @"N",
+        (id)kCGImagePropertyGPSLongitudeRef : @"W",
+        (id)kCGImagePropertyGPSAltitude : [NSNumber numberWithDouble:150.25],
+        (id)kCGImagePropertyGPSAltitudeRef : [NSNumber numberWithShort:1],
+        (id)kCGImagePropertyGPSImgDirection : [NSNumber numberWithFloat:2.4],
+        (id)kCGImagePropertyGPSImgDirectionRef : @"test",
+        (id)kCGImagePropertyGPSTimeStamp : @"04:30:51.71",
+        (id)kCGImagePropertyGPSVersion : @"2.2.0.0",
     };
 
     NSDictionary* exifOptions = @{
-        (id) kCGImagePropertyExifUserComment : @"Test2", (id)
-        kCGImagePropertyExifExposureTime : [NSNumber numberWithDouble:12.34],
+        (id)kCGImagePropertyExifUserComment : @"Test2",
+        (id)kCGImagePropertyExifExposureTime : [NSNumber numberWithDouble:12.34],
     };
 
     NSDictionary* tiffOptions = @{
-        (id) kCGImagePropertyTIFFXResolution : [NSNumber numberWithDouble:100], (id)
-        kCGImagePropertyTIFFYResolution : [NSNumber numberWithDouble:120], (id)
-        kCGImagePropertyTIFFResolutionUnit : [NSNumber numberWithInt:1],
+        (id)kCGImagePropertyTIFFXResolution : [NSNumber numberWithDouble:100],
+        (id)kCGImagePropertyTIFFYResolution : [NSNumber numberWithDouble:120],
+        (id)kCGImagePropertyTIFFResolutionUnit : [NSNumber numberWithInt:1],
     };
 
     int orientation = 2;
     NSNumber* encodeOrientation = [NSNumber numberWithInt:orientation];
 
     NSDictionary* encodeOptions = @{
-        (id) kCGImagePropertyGPSDictionary : gpsOptions, (id)
-        kCGImagePropertyOrientation : encodeOrientation, (id)
-        kCGImagePropertyExifDictionary : exifOptions, (id)
-        kCGImagePropertyTIFFDictionary : tiffOptions, (id)
-        kCGImagePropertyDPIWidth : [NSNumber numberWithDouble:1000], (id)
-        kCGImagePropertyDPIHeight : [NSNumber numberWithDouble:200],
+        (id)kCGImagePropertyGPSDictionary : gpsOptions,
+        (id)kCGImagePropertyOrientation : encodeOrientation,
+        (id)kCGImagePropertyExifDictionary : exifOptions,
+        (id)kCGImagePropertyTIFFDictionary : tiffOptions,
+        (id)kCGImagePropertyDPIWidth : [NSNumber numberWithDouble:1000],
+        (id)kCGImagePropertyDPIHeight : [NSNumber numberWithDouble:200],
     };
 
     CGImageDestinationRef myImageDest = CGImageDestinationCreateWithURL(imgUrl, kUTTypeJPEG, 1, NULL);
@@ -1477,10 +1477,10 @@ TEST(ImageIO, DestinationImageOptionsGIFTest) {
     NSNumber* encodeOrientation = [NSNumber numberWithInt:orientation];
 
     NSDictionary* encodeOptions = @{
-        (id) kCGImagePropertyOrientation : encodeOrientation, (id)
-        kCGImagePropertyGIFDictionary : gifOptions, (id)
-        kCGImagePropertyDPIWidth : [NSNumber numberWithDouble:1000], (id)
-        kCGImagePropertyDPIHeight : [NSNumber numberWithDouble:200],
+        (id)kCGImagePropertyOrientation : encodeOrientation,
+        (id)kCGImagePropertyGIFDictionary : gifOptions,
+        (id)kCGImagePropertyDPIWidth : [NSNumber numberWithDouble:1000],
+        (id)kCGImagePropertyDPIHeight : [NSNumber numberWithDouble:200],
     };
 
     CGImageDestinationRef myImageDest = CGImageDestinationCreateWithURL(imgUrl, kUTTypeGIF, 1, NULL);
@@ -1533,10 +1533,10 @@ TEST(ImageIO, DestinationImageOptionsPNGTest) {
     NSNumber* encodeOrientation = [NSNumber numberWithInt:orientation];
 
     NSDictionary* encodeOptions = @{
-        (id) kCGImagePropertyOrientation : encodeOrientation, (id)
-        kCGImagePropertyPNGDictionary : pngOtions, (id)
-        kCGImagePropertyDPIWidth : [NSNumber numberWithDouble:1000], (id)
-        kCGImagePropertyDPIHeight : [NSNumber numberWithDouble:200],
+        (id)kCGImagePropertyOrientation : encodeOrientation,
+        (id)kCGImagePropertyGIFDictionary : gifOptions,
+        (id)kCGImagePropertyDPIWidth : [NSNumber numberWithDouble:1000],
+        (id)kCGImagePropertyDPIHeight : [NSNumber numberWithDouble:200],
     };
 
     CGImageDestinationRef myImageDest = CGImageDestinationCreateWithURL(imgUrl, kUTTypePNG, 1, NULL);
