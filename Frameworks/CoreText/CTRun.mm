@@ -232,13 +232,11 @@ double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, C
                                                                                 glyphMetrics,
                                                                                 curRun->_dwriteGlyphRun.isSideways));
 
-        double width = 0;
         CGFloat newAscent = -FLT_MAX;
         CGFloat newDescent = FLT_MAX;
         for (size_t i = range.location - curRun->_range.location; i < range.location + range.length - curRun->_range.location; ++i) {
             newAscent = std::max(newAscent, glyphMetrics[i].verticalOriginY * scalingFactor);
             newDescent = std::min(newDescent, -glyphMetrics[i].bottomSideBearing * scalingFactor);
-            width += curRun->_dwriteGlyphRun.glyphAdvances[i];
         }
         if (ascent) {
             *ascent = newAscent;

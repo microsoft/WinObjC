@@ -104,7 +104,6 @@ void CTFrameGetLineOrigins(CTFrameRef frameRef, CFRange range, CGPoint origins[]
     }
 }
 
-<<<<<<< 1e404e0954613945aa4e817c3b184e2201822994
 /**
  @Status Interoperable
 */
@@ -131,13 +130,6 @@ void CTFrameDraw(CTFrameRef frameRef, CGContextRef ctx) {
         CGContextRestoreGState(ctx);
         CGContextSetTextMatrix(ctx, textMatrix);
     }
-}
-
-/**
- @Status Interoperable
-*/
-void CTFrameDraw(CTFrameRef frame, CGContextRef ctx) {
-    __CTFrameDraw(frame, ctx);
 }
 
 /**
