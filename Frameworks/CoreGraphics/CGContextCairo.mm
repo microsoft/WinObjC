@@ -2011,7 +2011,31 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     // We need some special handling in transform as CoreText in iOS renders from bottom left but DWrite on Windows does top left.
     //     1. Scaling - to handle scaling once text has been scaled, apply translation to the scaled height
     //     2. Rotation - CoreText rotates text anti-clockwise but DWrite performs clockwise rotation
-    CGAffineTransform transform = CGAffineTransformConcat(curState->curTransform, curState->curTextMatrix);
+
+    // Apply the text transformation (text position, text matrix) in text space rather than user space
+    // This means flipping the coordinate system,
+    // and applying the transformation about the center of the glyph run rather than about the baseline
+    // Flip and translate by the difference between the center and the baseline, apply text transforms, then flip and translate back
+    DWRITE_FONT_METRICS fontMetrics;
+    glyphRun->fontFace->GetMetrics(&fontMetrics);
+    float baselineCenterDelta = (fontMetrics.ascent - fontMetrics.descent) * glyphRun->fontEmSize / fontMetrics.designUnitsPerEm / 2;
+
+    // Transform to text space
+    // Technically there should be a horizontal translation to the center as well,
+    // but it's to the center of _each individual glyph_, as the reference platform applies the text matrix to each glyph individually
+    // Uncertain whether it's ever going to be worth it to support this using DWrite, so just ignore it for now
+    CGAffineTransform transform = CGAffineTransformMake(1, 0, 0, -1, 0, baselineCenterDelta);
+
+    // Apply text transforms
+    transform = CGAffineTransformConcat(curState->curTextMatrix, transform);
+    transform = CGAffineTransformTranslate(transform, curState->curTextPosition.x, curState->curTextPosition.y);
+
+    // Undo transform to text space
+    transform = CGAffineTransformConcat(CGAffineTransformMake(1, 0, 0, -1, 0, -baselineCenterDelta), transform);
+
+    // Apply the context CTM
+    transform = CGAffineTransformConcat(curState->curTransform, transform);
+
     // Perform translation required to handle scaling.
     CGFloat verticalScalingFactor = sqrt((transform.b * transform.b) + (transform.d * transform.d));
     // TODO::
@@ -2019,6 +2043,7 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     // curState->curTransform contains both the device scaling factor and any user scale applied to it causing the below D2D render target
     // transform calculation to be way off on devices that have scaling. Workaround for now is to divide the verticalScalingFactor and
     // height here with the device scaling factor so they get converted to DIPs and then apply the transform to the D2D render target.
+
     // Though this workaround is sufficient to get text rendered on the user screen on all Windows form factor devices, this will not
     // work when text is rendered on a PDF or printer.
     verticalScalingFactor /= _scale;
@@ -2027,7 +2052,7 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     transform = CGAffineTransformTranslate(transform, 0, (height / verticalScalingFactor) - height);
 
     const float inverseScale = 1.0f / _scale;
-    transform = CGAffineTransformConcat(transform, CGAffineTransformMakeScale( inverseScale, inverseScale));
+    transform = CGAffineTransformTranslate(transform, 0, (height / verticalScalingFactor));
 
     // Perform anti-clockwise rotation required to match the reference platform.
     imgRenderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, -transform.b, transform.c, transform.d, transform.tx, transform.ty));
@@ -2035,10 +2060,7 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     // Draw the glyph using ID2D1RenderTarget
     ComPtr<ID2D1SolidColorBrush> brush;
     THROW_IF_FAILED(imgRenderTarget->CreateSolidColorBrush(brushColor, &brush));
-    imgRenderTarget->DrawGlyphRun(D2D1::Point2F(curState->curTextPosition.x, curState->curTextPosition.y),
-                                  glyphRun,
-                                  brush.Get(),
-                                  DWRITE_MEASURING_MODE_NATURAL);
+    imgRenderTarget->DrawGlyphRun(D2D1::Point2F(0, 0), glyphRun, brush.Get(), DWRITE_MEASURING_MODE_NATURAL);
 
     THROW_IF_FAILED(imgRenderTarget->EndDraw());
 }
