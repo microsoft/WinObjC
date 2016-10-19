@@ -31,6 +31,7 @@
 #include "pevents.h"
 #include "PathMapper.h"
 #include "LoggingNative.h"
+#include "PlatformSupportInternal.h"
 
 static const wchar_t* TAG = L"PlatformSupport";
 
@@ -651,8 +652,8 @@ int EbrIOFile::Flush() {
     return fflush(fp);
 }
 
-int EbrFflush(EbrFile* fp) {
-    return fp->Flush();
+int EbrFflush(int fd) {
+    return _openFiles[fd]->Flush();
 }
 
 int EbrIOFile::Setpos(__int64* pos) {
