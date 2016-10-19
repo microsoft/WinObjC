@@ -92,6 +92,7 @@ TEST(CTFramesetter, SuggestFrameSizeWithConstraints) {
     EXPECT_EQ(0, fitRange.location);
     EXPECT_LT(fitRange.length, 4);
 }
+<<<<<<< 1e404e0954613945aa4e817c3b184e2201822994
 
 TEST(CTFramesetter, ShouldNotThrowWhenCreatingFrameWithEmptyLines) {
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString(@"TEST\n \n\n\t\nTEST");
@@ -104,3 +105,5 @@ TEST(CTFramesetter, ShouldNotThrowWhenCreatingFrameWithEmptyLines) {
     CFRelease(frame);
     CGPathRelease(path);
 }
+=======
+>>>>>>> Remove private drawing functions

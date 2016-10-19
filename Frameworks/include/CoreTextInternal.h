@@ -144,15 +144,9 @@ struct _CTParagraphStyleProperties {
 
 // Note: For some reason namemangling does not happen for these functions causing a linker error. Bug??
 CORETEXT_EXTERNC_BEGIN
-void _CTLineDraw(CTLineRef line, CGContextRef ctx, bool adjustTextPosition, bool invertedCoordinates);
-void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTextPosition, bool invertedCoordinates);
+void _CTLineDraw(CTLineRef line, CGContextRef ctx, bool adjustTextPosition);
+void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTextPosition);
 CORETEXT_EXTERNC_END
 
 // Private helper methods for UIKit
-
-// Draw text without assuming context has been inverted and translated for CoreText usage
-// Used for UIKit where the size of the frame is unknown
-CORETEXT_EXPORT void _CTFrameDrawUninverted(CTFrameRef frame, CGContextRef ctx);
-CORETEXT_EXPORT void _CTLineDrawUninverted(CTLineRef frame, CGContextRef ctx);
-
 CORETEXT_EXPORT CGSize _CTFrameGetSize(CTFrameRef frame);

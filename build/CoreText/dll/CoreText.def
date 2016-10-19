@@ -204,7 +204,6 @@ LIBRARY CoreText
         CTFrameGetLineOrigins
         CTFrameDraw
         CTFrameGetTypeID
-        _CTFrameDrawUninverted
         _CTFrameGetSize
 
         ; CTFramesetter Reference.mm
@@ -238,7 +237,6 @@ LIBRARY CoreText
         CTLineGetStringIndexForPosition
         CTLineGetOffsetForStringIndex
         CTLineGetTypeID
-        _CTLineDrawUninverted
 
         ; CTParagraphStyle Reference.mm
         CTParagraphStyleCreate

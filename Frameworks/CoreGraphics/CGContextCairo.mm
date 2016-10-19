@@ -1991,7 +1991,7 @@ CGPathRef CGContextCairo::CGContextCopyPath(void) {
  *
  * @parameter glyphRun DWRITE_GLYPH_RUN object to render
  */
-void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, bool invertedCoordinates) {
+void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     ObtainLock();
 
     CGContextStrokePath();

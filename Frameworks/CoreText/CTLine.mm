@@ -215,7 +215,7 @@ CTLineRef CTLineCreateJustifiedLine(CTLineRef line, CGFloat justificationFactor,
     return StubReturn();
 }
 
-void _CTLineDraw(CTLineRef lineRef, CGContextRef ctx, bool adjustTextPosition, bool invertedCoordinates) {
+void _CTLineDraw(CTLineRef lineRef, CGContextRef ctx, bool adjustTextPosition) {
     if (!lineRef) {
         return;
     }
@@ -235,7 +235,7 @@ void _CTLineDraw(CTLineRef lineRef, CGContextRef ctx, bool adjustTextPosition, b
             CGContextSetTextPosition(ctx, curTextPos.x + curRun->_relativeXOffset, curTextPos.y);
         }
 
-        _CTRunDraw(static_cast<CTRunRef>(curRun), ctx, CFRange{}, false, invertedCoordinates);
+        _CTRunDraw(static_cast<CTRunRef>(curRun), ctx, CFRange{}, false);
     }
 }
 
@@ -243,11 +243,7 @@ void _CTLineDraw(CTLineRef lineRef, CGContextRef ctx, bool adjustTextPosition, b
  @Status Interoperable
 */
 void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
-    _CTLineDraw(lineRef, ctx, true, true);
-}
-
-void _CTLineDrawUninverted(CTLineRef lineRef, CGContextRef context) {
-    _CTLineDraw(lineRef, context, true, false);
+    _CTLineDraw(lineRef, ctx, true);
 }
 
 /**

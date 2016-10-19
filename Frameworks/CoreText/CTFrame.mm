@@ -104,6 +104,7 @@ void CTFrameGetLineOrigins(CTFrameRef frameRef, CFRange range, CGPoint origins[]
     }
 }
 
+<<<<<<< 1e404e0954613945aa4e817c3b184e2201822994
 /**
  @Status Interoperable
 */
@@ -136,12 +137,7 @@ void CTFrameDraw(CTFrameRef frameRef, CGContextRef ctx) {
  @Status Interoperable
 */
 void CTFrameDraw(CTFrameRef frame, CGContextRef ctx) {
-    __CTFrameDraw(frame, ctx, true);
-}
-
-// Exposed to UIKit to draw without having to flip coordinate system or know size of bounding frame
-void _CTFrameDrawUninverted(CTFrameRef frame, CGContextRef ctx) {
-    __CTFrameDraw(frame, ctx, false);
+    __CTFrameDraw(frame, ctx);
 }
 
 /**
