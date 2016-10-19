@@ -25,6 +25,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    UIView* placeholderUIView = [[UIView alloc] init];
+
     // CALayer Basic
     [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle:@"CALayer Basic"];
 
@@ -41,31 +43,31 @@
     [self addMenuItemSegue:@"CAEmitterLayer" andTitle:@"CAEmitterLayer"];
 
     // CALayer Transactions
-    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CALayer Transactions (CATransactions) - TBD"];
+    [self addMenuItemView:placeholderUIView andTitle:@"CALayer Transactions (CATransactions) - TBD"];
 
     // CALayer Transform2D
-    [self addMenuItemViewController:[[UIViewController alloc] init] andTitle:@"CALayer Tranform2D"];
+    [self addMenuItemView:placeholderUIView andTitle:@"CALayer Tranform2D - TBD"];
 
     // CALayer Transform3D
-    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CALayer Transform3D - TBD"];
+    [self addMenuItemView:placeholderUIView andTitle:@"CALayer Transform3D - TBD"];
 
     // AVPlayerLayer
-    [self addMenuItemView:[[UIView alloc] init] andTitle:@"AVPlayerLayer - TBD"];
+    [self addMenuItemView:placeholderUIView andTitle:@"AVPlayerLayer - TBD"];
 
     // CAGradientLayer
-    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CAGradientLayer - TBD"];
+    [self addMenuItemView:placeholderUIView andTitle:@"CAGradientLayer - TBD"];
 
     // CATextLayer
-    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CATextLayer - TBD"];
+    [self addMenuItemView:placeholderUIView andTitle:@"CATextLayer - TBD"];
 
     // CATiledLayer
-    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CATiledLayer - TBD"];
+    [self addMenuItemView:placeholderUIView andTitle:@"CATiledLayer - TBD"];
 
     // CAEAGLLayer
-    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CAEAGLLayer - TBD"];
+    [self addMenuItemView:placeholderUIView andTitle:@"CAEAGLLayer - TBD"];
 
     // CAReplicatorLayer
-    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CAReplicatorLayer - TBD"];
+    [self addMenuItemView:placeholderUIView andTitle:@"CAReplicatorLayer - TBD"];
 }
 
 - (void)didReceiveMemoryWarning {

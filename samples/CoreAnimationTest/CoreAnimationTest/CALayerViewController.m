@@ -23,11 +23,39 @@
 
     CALayer* _layer;
     UIView* _viewForLayer;
+
+    UIImage* _safeImage;
+    NSArray* _contentsGravityValues;
+
+    UISwitch* _switchDisplayContents;
+    UISwitch* _switchGeometryFlipped;
+    UISwitch* _switchHidden;
+
+    UISlider* _sliderGravity;
+    UISlider* _sliderOpacity;
+    UISlider* _sliderBackgroundColor;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    _safeImage = (__bridge id)[UIImage imageNamed:@"safe.png"].CGImage;
+    _contentsGravityValues = @[
+        kCAGravityCenter,
+        kCAGravityTop,
+        kCAGravityBottom,
+        kCAGravityLeft,
+        kCAGravityRight,
+        kCAGravityTopLeft,
+        kCAGravityTopRight,
+        kCAGravityBottomLeft,
+        kCAGravityBottomRight,
+        kCAGravityResize,
+        kCAGravityResizeAspect,
+        kCAGravityResizeAspectFill
+    ];
+
+    // Give the layer its initial values and add it as a sublayer to the current UIView.layer
     _viewForLayer = self.view;
     _viewForLayer.frame = CGRectMake(0, 100, 200, 200);
     _viewForLayer.backgroundColor = [UIColor whiteColor];
@@ -35,44 +63,99 @@
     [self setupLayer];
     [_viewForLayer.layer addSublayer:_layer];
 
+    // Add controls to modify the layer's appearance and behavior
     _menuTVC = [[MenuTableViewController alloc] init];
     _menuTVC.view.frame = CGRectMake(0, 350, 200, 0 /* setting it to 0 allows vertical scrolling */);
     [self.view addSubview:_menuTVC.view];
 
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle:@"Gravity"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle:@"Display Contents"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle:@"Geometry Flipped"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle:@"Hidden"];
+    _sliderGravity = [[UISlider alloc] initWithFrame:CGRectMake(0.0, 0.0, 100.0, 38.0)];
+    _sliderGravity.backgroundColor = [UIColor clearColor];
+    _sliderGravity.minimumValue = 0;
+    _sliderGravity.maximumValue = 11;
+    _sliderGravity.continuous = YES;
+    _sliderGravity.value = 0;
+    [_sliderGravity addTarget:self action:@selector(gravityValueChanged) forControlEvents:UIControlEventValueChanged];
+    [_menuTVC addMenuItemView:_sliderGravity andTitle:@"Gravity"];
 
-    [_menuTVC addMenuItemView:[[UISlider alloc] init] andTitle:@"Opacity"];
-    [_menuTVC addMenuItemView:[[UISwitch alloc] init] andTitle:@"Background color"];
+    _switchDisplayContents = [[UISwitch alloc] init];
+    [_switchDisplayContents setOn:YES animated:NO];
+    [_switchDisplayContents addTarget:self action:@selector(displayContentsToggle) forControlEvents:UIControlEventValueChanged];
+    [_menuTVC addMenuItemView:_switchDisplayContents andTitle:@"Display Contents"];
+
+    _switchGeometryFlipped = [[UISwitch alloc] init];
+    [_switchGeometryFlipped addTarget:self action:@selector(geometryFlippedToggle) forControlEvents:UIControlEventValueChanged];
+    [_menuTVC addMenuItemView:_switchGeometryFlipped andTitle:@"Geometry Flipped"];
+
+    _switchHidden = [[UISwitch alloc] init];
+    [_switchHidden addTarget:self action:@selector(hiddenToggle) forControlEvents:UIControlEventValueChanged];
+    [_menuTVC addMenuItemView:_switchHidden andTitle:@"Hidden"];
+
+    _sliderOpacity = [[UISlider alloc] initWithFrame:CGRectMake(0.0, 0.0, 100.0, 38.0)];
+    _sliderOpacity.backgroundColor = [UIColor clearColor];
+    _sliderOpacity.minimumValue = 0.0f;
+    _sliderOpacity.maximumValue = 1.0f;
+    _sliderOpacity.continuous = YES;
+    _sliderOpacity.value = 1.0f;
+    [_sliderOpacity addTarget:self action:@selector(opacityValueChanged) forControlEvents:UIControlEventValueChanged];
+    [_menuTVC addMenuItemView:_sliderOpacity andTitle:@"Opacity"];
+
+    _sliderBackgroundColor = [[UISlider alloc] initWithFrame:CGRectMake(0.0, 0.0, 100.0, 38.0)];
+    _sliderBackgroundColor.backgroundColor = [UIColor clearColor];
+    _sliderBackgroundColor.minimumValue = 0.0f;
+    _sliderBackgroundColor.maximumValue = 360.0f;
+    _sliderBackgroundColor.continuous = YES;
+    _sliderBackgroundColor.value = 360.0f;
+    [_sliderBackgroundColor addTarget:self action:@selector(backgroundColorValueChanged) forControlEvents:UIControlEventValueChanged];
+    [_menuTVC addMenuItemView:_sliderBackgroundColor andTitle:@"Background color"];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
 
+- (void)displayContentsToggle {
+    _layer.contents = _switchDisplayContents.on ? _safeImage : nil;
+}
+
+- (void)geometryFlippedToggle {
+    _layer.geometryFlipped = _switchGeometryFlipped.on;
+}
+
+- (void)hiddenToggle {
+    _layer.hidden = _switchHidden.on;
+}
+
+- (void)gravityValueChanged {
+    _layer.contentsGravity = _contentsGravityValues[(int)_sliderGravity.value];
+}
+
+- (void)opacityValueChanged {
+    _layer.opacity = _sliderOpacity.value;
+}
+
+- (void)backgroundColorValueChanged {
+    CGFloat hue = _sliderBackgroundColor.value / 359.0f;
+    UIColor* color = [UIColor colorWithHue:hue saturation:hue brightness:0.4f alpha:1.0f];
+    _layer.backgroundColor = color.CGColor;
+}
+
 /*
- Supported CALayer properties 10/14/16
+ CALayer properties
     "contentsCenter"
     "anchorPoint"
     "position"
     "bounds.origin"
     "bounds.size"
-    "opacity"
-    "hidden"
     "masksToBounds"
     "transform"
     "contentsOrientation"
     "zIndex"
-    "gravity"
-    "backgroundColor"
 */
 
 - (void)setupLayer {
     _layer = [[CALayer alloc] init];
 
-    _layer.contents = (__bridge id)[UIImage imageNamed:@"safe.png"].CGImage;
+    _layer.contents = _safeImage;
     // _layer.contentsRect
     // _layer.contentsCenter
     // _layer.display
