@@ -653,7 +653,7 @@ int EbrIOFile::Flush() {
 }
 
 int EbrFflush(int fd) {
-    return return _openFiles[fd]->Flush();
+    return _openFiles[fd]->Flush();
 }
 
 int EbrIOFile::Setpos(__int64* pos) {
