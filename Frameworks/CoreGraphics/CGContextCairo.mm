@@ -2011,7 +2011,6 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     // We need some special handling in transform as CoreText in iOS renders from bottom left but DWrite on Windows does top left.
     //     1. Scaling - to handle scaling once text has been scaled, apply translation to the scaled height
     //     2. Rotation - CoreText rotates text anti-clockwise but DWrite performs clockwise rotation
-    CGAffineTransform transform = CGAffineTransformIdentity;
 
     // Apply the text transformation (text position, text matrix) in text space rather than user space
     // This means flipping the coordinate system,
@@ -2025,7 +2024,7 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     // Technically there should be a horizontal translation to the center as well,
     // but it's to the center of _each individual glyph_, as the reference platform applies the text matrix to each glyph individually
     // Uncertain whether it's ever going to be worth it to support this using DWrite, so just ignore it for now
-    transform = CGAffineTransformConcat(CGAffineTransformMake(1, 0, 0, -1, 0, baselineCenterDelta), transform);
+    CGAffineTransform transform = CGAffineTransformMake(1, 0, 0, -1, 0, baselineCenterDelta);
 
     // Apply text transforms
     transform = CGAffineTransformConcat(curState->curTextMatrix, transform);
