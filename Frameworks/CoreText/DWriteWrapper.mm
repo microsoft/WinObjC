@@ -279,7 +279,7 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
     //  These can be done using the DWrite IDWriteTextFormat range property methods.
 
     // Used to separate runs for attributes which DWrite does not handle until drawing (e.g. Foreground Color)
-    uint32_t incompatableAttributeFlag = 0;
+    uint32_t incompatibleAttributeFlag = 0;
 
     NSRange attributeRange;
     for (size_t i = 0; i < [ts->_attributedString length]; i += attributeRange.length) {
@@ -289,11 +289,6 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
 
         const DWRITE_TEXT_RANGE dwriteRange = { attributeRange.location, attributeRange.length };
 
-        ComPtr<IDWriteTypography> typography;
-        THROW_IF_FAILED(textLayout->GetTypography(dwriteRange.startPosition, &typography));
-        if (!typography.Get()) {
-            THROW_IF_FAILED(dwriteFactory->CreateTypography(&typography));
-        }
 
         CTFontRef font = static_cast<CTFontRef>([attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
         CGFloat fontSize = kCTFontSystemFontSize;
@@ -312,6 +307,12 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
             THROW_IF_FAILED(textLayout->SetFontStretch(stretch, dwriteRange));
             THROW_IF_FAILED(textLayout->SetFontStyle(style, dwriteRange));
             THROW_IF_FAILED(textLayout->SetFontFamilyName(familyName.data(), dwriteRange));
+        }
+
+        ComPtr<IDWriteTypography> typography;
+        THROW_IF_FAILED(textLayout->GetTypography(dwriteRange.startPosition, &typography));
+        if (!typography.Get()) {
+            THROW_IF_FAILED(dwriteFactory->CreateTypography(&typography));
         }
 
         CFNumberRef extraKerningRef = static_cast<CFNumberRef>([attribs objectForKey:static_cast<NSString*>(kCTKernAttributeName)]);
@@ -334,7 +335,7 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(_CTTypesetter* ts, CFR
 
         // Forces run breaks without interfering with any layout features
         // Necessary for attributes which DWrite does not support during layout (e.g. Color)
-        THROW_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_DEFAULT, ++incompatableAttributeFlag }));
+        THROW_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_DEFAULT, ++incompatibleAttributeFlag }));
         THROW_IF_FAILED(textLayout->SetTypography(typography.Get(), dwriteRange));
     }
     return textLayout;
