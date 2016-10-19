@@ -13,31 +13,24 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#include <COMIncludes.h>
-#import <wrl/client.h>
-#import <D2d1.h>
-#import "Wincodec.h"
-#include <COMIncludes_End.h>
+#import <Foundation/Foundation.h>
+#import <functional>
+#include <memory>
 
-#import <CoreGraphics/CGGeometry.h>
-#import <CoreGraphics/CGBase.h>
+#define _CONCAT(x, y) x##y
+#define CONCAT(x, y) _CONCAT(x, y)
 
-Microsoft::WRL::ComPtr<ID2D1Factory> _GetD2DFactoryInstance();
+#define _SCOPE_GUARD(STATEMENT) std::unique_ptr<void, std::function<void(void*)>> CONCAT(_closeScope_, __LINE__)((void*)0x1, STATEMENT)
 
-Microsoft::WRL::ComPtr<IWICImagingFactory> _GetWICFactory();
+NSString* getModulePath();
+NSString* getPathToFile(NSString* fileName);
+void createFileWithContentAndVerify(NSString* fileName, NSString* content);
+void deleteFile(NSString* name);
 
-inline D2D_POINT_2F _CGPointToD2D_F(CGPoint point) {
-    return { point.x, point.y };
-}
+#define SCOPE_CLOSE_HANDLE(fileHandle) \
+    \
+_SCOPE_GUARD([fileHandle](void*) { [fileHandle closeFile]; })
 
-inline CGRect _D2DRectToCGRect(D2D1_RECT_F rect) {
-    CGFloat x = rect.left;
-    CGFloat y = rect.top;
-    CGFloat width = rect.right - x;
-    CGFloat height = rect.bottom - y;
-
-    return CGRectMake(x, y, width, height);
-}
+#define SCOPE_DELETE_FILE(fileName) _SCOPE_GUARD([fileName](void*) { deleteFile(fileName); })
