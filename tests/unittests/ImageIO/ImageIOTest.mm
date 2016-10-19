@@ -1526,7 +1526,7 @@ TEST(ImageIO, DestinationImageOptionsPNGTest) {
     CFURLRef imgUrl = getURLRefForOutFile(outFile);
 
     NSDictionary* pngOtions = @{
-        (id) kCGImagePropertyPNGGamma : [NSNumber numberWithInt:45045],
+        (id)kCGImagePropertyPNGGamma : [NSNumber numberWithInt:45045],
     };
 
     int orientation = 2;
@@ -1534,7 +1534,7 @@ TEST(ImageIO, DestinationImageOptionsPNGTest) {
 
     NSDictionary* encodeOptions = @{
         (id)kCGImagePropertyOrientation : encodeOrientation,
-        (id)kCGImagePropertyGIFDictionary : pngOtions,
+        (id)kCGImagePropertyPNGDictionary : pngOtions,
         (id)kCGImagePropertyDPIWidth : [NSNumber numberWithDouble:1000],
         (id)kCGImagePropertyDPIHeight : [NSNumber numberWithDouble:200],
     };
