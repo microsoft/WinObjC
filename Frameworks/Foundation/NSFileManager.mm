@@ -323,25 +323,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
  @Notes attributes parameter not supported
 */
 - (BOOL)createFileAtPath:(id)pathAddr contents:(id)contents attributes:(id)attributes {
-    const char* path = [pathAddr UTF8String];
-
-    TraceVerbose(TAG, L"createFileAtPath: %hs", path);
-
-    EbrFile* fpOut = EbrFopen(path, "wb");
-
-    if (!fpOut) {
-        TraceError(TAG, L"failed to createFileAtPath: %hs", path);
-        return NO;
-    }
-
-    char* bytes = (char*)[contents bytes];
-    int length = [contents length];
-
-    EbrFwrite(bytes, 1, length, fpOut);
-
-    EbrFclose(fpOut);
-
-    return YES;
+    return [[NSData dataWithData:contents] writeToFile:pathAddr options:0 error:nil];
 }
 
 /**
@@ -412,27 +394,50 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 
     TraceVerbose(TAG, L"Copying %hs to %hs", src, dest);
 
-    EbrFile* fpIn = EbrFopen(src, "rb");
-    if (!fpIn) {
+    NSOutputStream* outputStream = [NSOutputStream outputStreamToFileAtPath:destPath append:NO];
+    NSInputStream* inputStream = [NSInputStream inputStreamWithFileAtPath:srcPath];
+
+    [outputStream open];
+    [inputStream open];
+    auto closeStreams = wil::ScopeExit([&outputStream, &inputStream]() {
+        [outputStream close]; 
+        [inputStream close]; 
+    });
+
+
+    if (NSStreamStatusOpen != inputStream.streamStatus) {
         TraceError(TAG, L"Error opening %hs", src);
         return NO;
     }
 
-    EbrFile* fpOut = EbrFopen(dest, "wb");
-    if (!fpOut) {
-        EbrFclose(fpIn);
+    if (NSStreamStatusOpen != outputStream.streamStatus) {
         TraceError(TAG, L"Error opening %hs", dest);
         return NO;
     }
 
-    while (!EbrFeof(fpIn)) {
-        BYTE in[4096];
-        int read = EbrFread(in, 1, 4096, fpIn);
-        EbrFwrite(in, 1, read, fpOut);
-    }
+    uint8_t in[4096];
+    while ([inputStream hasBytesAvailable]) {
 
-    EbrFclose(fpOut);
-    EbrFclose(fpIn);
+        NSInteger readResult = [inputStream read:in maxLength:_countof(in)];
+        if (readResult == -1) {
+            return NO;
+        }
+
+        int bytesToWrite = readResult;
+        const unsigned char* baseAddress = (const unsigned char*)in;
+
+        while (bytesToWrite > 0) {
+
+            auto result = [outputStream write:(baseAddress + (readResult - bytesToWrite)) maxLength:bytesToWrite];
+            if (result == -1) {
+                return NO;
+            } else if (result == 0) {
+                break;
+            }
+
+            bytesToWrite -= result;
+        }
+    }
 
     TraceVerbose(TAG, L"Done copying");
 

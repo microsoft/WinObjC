@@ -326,7 +326,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
 
 /**
  @Status Caveat
- @Notes options parameter not supported
+ @Notes options parameter not fully supported (only NSDataWritingWithoutOverwriting is supported)
 */
 - (BOOL)writeToURL:(NSURL*)url options:(NSDataWritingOptions)options error:(NSError**)errorp {
     if (!url) {
@@ -339,6 +339,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
     NSOutputStream* outputStream =
         [NSOutputStream outputStreamWithURL:url append:(0 != (options & NSDataWritingWithoutOverwriting)) ? YES : NO];
     [outputStream open];
+    auto closeStream = wil::ScopeExit([&outputStream]() { [outputStream close]; });
 
     if (NSStreamStatusOpen != outputStream.streamStatus) {
         if (errorp) {
@@ -346,15 +347,22 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
         }
         return NO;
     }
-    auto numBytes = [self length];
-    auto result = [outputStream write:(const unsigned char*)[self bytes] maxLength:numBytes];
-    [outputStream close];
+    int bytesToWrite = [self length];
+    const unsigned char* baseAddress = (const unsigned char*)[self bytes];
 
-    if (result != numBytes) {
-        if (errorp) {
-            *errorp = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
+    while (bytesToWrite > 0) {
+
+        auto result = [outputStream write:(baseAddress + ([self length] - bytesToWrite)) maxLength:bytesToWrite];
+        if (result == -1) {
+            if (errorp) {
+                *errorp = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
+            }
+            return NO;
+        } else if (result == 0) {
+            break;
         }
-        return NO;
+
+        bytesToWrite -= result;
     }
 
     return YES;
@@ -380,37 +388,16 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
  @Notes options parameter not supported
 */
 - (instancetype)initWithContentsOfFile:(NSString*)filename options:(NSDataReadingOptions)options error:(NSError**)error {
-    if (!filename) {
-        if (error) {
-            *error = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
-        }
-        [self release];
-        return nil;
+    CFDataRef tempData;
+    SInt32 cfError{};
+
+    if (CFURLCreateDataAndPropertiesFromResource(nullptr, static_cast<CFURLRef>([NSURL fileURLWithPath:filename]), &tempData, nullptr, nullptr, &cfError)) {
+        return [self initWithData:static_cast<NSData*>(tempData)];
+    } else if (error != nullptr) {
+        *error = [NSError errorWithDomain:@"NSData" code:cfError userInfo:nil];
     }
 
-    NSInputStream* inputStream = [NSInputStream inputStreamWithFileAtPath:filename];
-    [inputStream open];
-
-    if (NSStreamStatusOpen != inputStream.streamStatus) {
-        TraceVerbose(TAG, L"NSData couldn't open %hs for read (extended)", filename);
-        if (error) {
-            *error = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
-        }
-        [self release];
-        return nil;
-    }
-
-    auto closeFile = wil::ScopeExit([&]() { [inputStream close]; });
-
-    uint8_t byteBuffer[4096] = {};
-    NSMutableData* tempData = [NSMutableData data];
-
-    while ([inputStream hasBytesAvailable]) {
-        auto result = [inputStream read:byteBuffer maxLength:_countof(byteBuffer)];
-        [tempData appendBytes:byteBuffer length:result];
-    }
-
-    return [self initWithData:tempData];
+    return nil;
 }
 
 /**
