@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -70,12 +70,12 @@ static void drawString(UIFont* font,
     styles[1] = { kCTParagraphStyleSpecifierLineBreakMode, sizeof(CTLineBreakMode), &breakMode };
 
     NSAttributedString* attr =
-        [[NSAttributedString alloc] initWithString:string
-                                        attributes:@{
-                                            (NSString*) kCTForegroundColorFromContextAttributeName : (id)kCFBooleanTrue, (NSString*)
-                                            kCTParagraphStyleAttributeName : (id)CTParagraphStyleCreate(styles, 2), (NSString*)
-                                            kCTFontAttributeName : font
-                                        }];
+        [[[NSAttributedString alloc] initWithString:string
+                                         attributes:@{
+                                             (NSString*) kCTForegroundColorFromContextAttributeName : (id)kCFBooleanTrue, (NSString*)
+                                             kCTParagraphStyleAttributeName : (id)CTParagraphStyleCreate(styles, 2), (NSString*)
+                                             kCTFontAttributeName : font
+                                         }] autorelease];
 
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(static_cast<CFAttributedStringRef>(attr));
 
@@ -84,7 +84,10 @@ static void drawString(UIFont* font,
     CGContextSetTextPosition(context, rect.origin.x, rect.origin.y);
     CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0f, -1.0f));
     CTFrameDraw(frame, context);
-    *sizeOut = _CTFrameGetSize(frame);
+
+    if (sizeOut) {
+        *sizeOut = _CTFrameGetSize(frame);
+    }
 
     CGPathRelease(path);
     CFRelease(framesetter);
