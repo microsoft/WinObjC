@@ -407,7 +407,7 @@ void CGContextRotateCTM(CGContextRef context, CGFloat angle) {
 void CGContextConcatCTM(CGContextRef context, CGAffineTransform t) {
     CGCONTEXT_CHECK_NULLV(context);
     auto& state = context->CurrentGState();
-    state.transform = CGAffineTransformConcat(state.transform, t);
+    state.transform = CGAffineTransformConcat(t, state.transform);
 }
 
 /**
