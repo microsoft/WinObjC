@@ -633,6 +633,10 @@ typedef void (^WXBindingFailedEventHandler)(RTObject* sender, WXBindingFailedEve
 - (int)processBindings:(WXCContainerContentChangingEventArgs*)arg;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXIDataTemplateExtension : RTObject <WXIDataTemplateExtension>
+@end
+
 #endif // __WXIDataTemplateExtension_DEFINED__
 
 // Windows.UI.Xaml.IUIElementOverrides
@@ -644,6 +648,10 @@ typedef void (^WXBindingFailedEventHandler)(RTObject* sender, WXBindingFailedEve
 - (void)onDisconnectVisualChildren;
 - (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point
                                                                                       boundingRect:(WFRect*)boundingRect;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXIUIElementOverrides : RTObject <WXIUIElementOverrides>
 @end
 
 #endif // __WXIUIElementOverrides_DEFINED__
@@ -661,6 +669,10 @@ typedef void (^WXBindingFailedEventHandler)(RTObject* sender, WXBindingFailedEve
        useTransitions:(BOOL)useTransitions;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXIVisualStateManagerOverrides : RTObject <WXIVisualStateManagerOverrides>
+@end
+
 #endif // __WXIVisualStateManagerOverrides_DEFINED__
 
 // Windows.UI.Xaml.IFrameworkElementOverrides
@@ -673,6 +685,10 @@ typedef void (^WXBindingFailedEventHandler)(RTObject* sender, WXBindingFailedEve
 - (void)onApplyTemplate;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXIFrameworkElementOverrides : RTObject <WXIFrameworkElementOverrides>
+@end
+
 #endif // __WXIFrameworkElementOverrides_DEFINED__
 
 // Windows.UI.Xaml.IFrameworkElementOverrides2
@@ -681,6 +697,10 @@ typedef void (^WXBindingFailedEventHandler)(RTObject* sender, WXBindingFailedEve
 
 @protocol WXIFrameworkElementOverrides2
 - (BOOL)goToElementStateCore:(NSString*)stateName useTransitions:(BOOL)useTransitions;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXIFrameworkElementOverrides2 : RTObject <WXIFrameworkElementOverrides2>
 @end
 
 #endif // __WXIFrameworkElementOverrides2_DEFINED__
@@ -699,6 +719,10 @@ typedef void (^WXBindingFailedEventHandler)(RTObject* sender, WXBindingFailedEve
 - (void)onFileSavePickerActivated:(WAAFileSavePickerActivatedEventArgs*)args;
 - (void)onCachedFileUpdaterActivated:(WAACachedFileUpdaterActivatedEventArgs*)args;
 - (void)onWindowCreated:(WXWindowCreatedEventArgs*)args;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXIApplicationOverrides : RTObject <WXIApplicationOverrides>
 @end
 
 #endif // __WXIApplicationOverrides_DEFINED__
@@ -1033,6 +1057,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)Load:(NSString*)entryPoint;
 - (void)run;
 - (void)uninitialize;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WACIFrameworkView : RTObject <WACIFrameworkView>
 @end
 
 #endif // __WACIFrameworkView_DEFINED__
@@ -1947,6 +1975,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 @protocol WACIFrameworkViewSource
 - (RTObject<WACIFrameworkView>*)createView;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WACIFrameworkViewSource : RTObject <WACIFrameworkViewSource>
 @end
 
 #endif // __WACIFrameworkViewSource_DEFINED__

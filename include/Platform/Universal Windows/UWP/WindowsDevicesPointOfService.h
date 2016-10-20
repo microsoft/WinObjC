@@ -334,6 +334,10 @@ typedef unsigned WDPMagneticStripeReaderTrackErrorType;
 @property (readonly) NSArray* /* unsigned int */ supportedCharactersPerLine;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
+@interface WDPICommonPosPrintStationCapabilities : RTObject <WDPICommonPosPrintStationCapabilities>
+@end
+
 #endif // __WDPICommonPosPrintStationCapabilities_DEFINED__
 
 // Windows.Devices.PointOfService.ICommonReceiptSlipCapabilities
@@ -352,6 +356,10 @@ typedef unsigned WDPMagneticStripeReaderTrackErrorType;
 @property (readonly) NSArray* /* WDPPosPrinterRotation */ supportedBitmapRotations;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
+@interface WDPICommonReceiptSlipCapabilities : RTObject <WDPICommonReceiptSlipCapabilities>
+@end
+
 #endif // __WDPICommonReceiptSlipCapabilities_DEFINED__
 
 // Windows.Devices.PointOfService.IPosPrinterJob
@@ -363,6 +371,10 @@ typedef unsigned WDPMagneticStripeReaderTrackErrorType;
 - (void)printLine:(NSString*)data;
 - (void)printNewline;
 - (void)executeAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
+@interface WDPIPosPrinterJob : RTObject <WDPIPosPrinterJob>
 @end
 
 #endif // __WDPIPosPrinterJob_DEFINED__
@@ -415,6 +427,10 @@ typedef unsigned WDPMagneticStripeReaderTrackErrorType;
 - (void)executeAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
+@interface WDPIReceiptOrSlipJob : RTObject <WDPIReceiptOrSlipJob>
+@end
+
 #endif // __WDPIReceiptOrSlipJob_DEFINED__
 
 // Windows.Devices.PointOfService.ICommonClaimedPosPrinterStation
@@ -438,6 +454,10 @@ typedef unsigned WDPMagneticStripeReaderTrackErrorType;
 - (BOOL)validateData:(NSString*)data;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
+@interface WDPICommonClaimedPosPrinterStation : RTObject <WDPICommonClaimedPosPrinterStation>
+@end
+
 #endif // __WDPICommonClaimedPosPrinterStation_DEFINED__
 
 // Windows.Devices.PointOfService.ICashDrawerEventSourceEventArgs
@@ -446,6 +466,10 @@ typedef unsigned WDPMagneticStripeReaderTrackErrorType;
 
 @protocol WDPICashDrawerEventSourceEventArgs
 @property (readonly) WDPCashDrawer* cashDrawer;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
+@interface WDPICashDrawerEventSourceEventArgs : RTObject <WDPICashDrawerEventSourceEventArgs>
 @end
 
 #endif // __WDPICashDrawerEventSourceEventArgs_DEFINED__
@@ -699,6 +723,10 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 
 @protocol WFIClosable
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
 @end
 
 #endif // __WFIClosable_DEFINED__

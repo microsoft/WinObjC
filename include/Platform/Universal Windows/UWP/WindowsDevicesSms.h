@@ -187,6 +187,10 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @property (readonly) NSString* simIccId;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSISmsMessageBase : RTObject <WDSISmsMessageBase>
+@end
+
 #endif // __WDSISmsMessageBase_DEFINED__
 
 // Windows.Devices.Sms.SmsTextMessage2

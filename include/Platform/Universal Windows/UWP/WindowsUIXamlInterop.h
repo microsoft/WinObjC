@@ -92,6 +92,10 @@ typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINo
 - (RTObject<WUXIIBindableIterator>*)first;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+@interface WUXIIBindableIterable : RTObject <WUXIIBindableIterable>
+@end
+
 #endif // __WUXIIBindableIterable_DEFINED__
 
 // Windows.UI.Xaml.Interop.IBindableVector
@@ -110,6 +114,10 @@ typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINo
 - (void)removeAtEnd;
 - (void)clear;
 - (RTObject<WUXIIBindableIterator>*)first;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+@interface WUXIIBindableVector : RTObject <WUXIIBindableVector>
 @end
 
 #endif // __WUXIIBindableVector_DEFINED__
@@ -133,6 +141,10 @@ typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINo
 - (RTObject<WUXIIBindableIterator>*)first;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+@interface WUXIIBindableObservableVector : RTObject <WUXIIBindableObservableVector>
+@end
+
 #endif // __WUXIIBindableObservableVector_DEFINED__
 
 // Windows.UI.Xaml.Interop.IBindableVectorView
@@ -144,6 +156,10 @@ typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINo
 - (RTObject*)getAt:(unsigned int)index;
 - (BOOL)indexOf:(RTObject*)value index:(unsigned int*)index;
 - (RTObject<WUXIIBindableIterator>*)first;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+@interface WUXIIBindableVectorView : RTObject <WUXIIBindableVectorView>
 @end
 
 #endif // __WUXIIBindableVectorView_DEFINED__
@@ -158,6 +174,10 @@ typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINo
 - (BOOL)moveNext;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+@interface WUXIIBindableIterator : RTObject <WUXIIBindableIterator>
+@end
+
 #endif // __WUXIIBindableIterator_DEFINED__
 
 // Windows.UI.Xaml.Interop.INotifyCollectionChanged
@@ -167,6 +187,10 @@ typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINo
 @protocol WUXIINotifyCollectionChanged
 - (EventRegistrationToken)addCollectionChangedEvent:(WUXINotifyCollectionChangedEventHandler)del;
 - (void)removeCollectionChangedEvent:(EventRegistrationToken)tok;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+@interface WUXIINotifyCollectionChanged : RTObject <WUXIINotifyCollectionChanged>
 @end
 
 #endif // __WUXIINotifyCollectionChanged_DEFINED__

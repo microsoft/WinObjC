@@ -169,6 +169,10 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Storage.Streams.IInputStream
@@ -185,6 +189,10 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+@interface WSSIInputStream : RTObject <WSSIInputStream>
+@end
+
 #endif // __WSSIInputStream_DEFINED__
 
 // Windows.Storage.Streams.IOutputStream
@@ -198,6 +206,10 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
            failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+@interface WSSIOutputStream : RTObject <WSSIOutputStream>
 @end
 
 #endif // __WSSIOutputStream_DEFINED__
@@ -229,6 +241,10 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+@interface WSSIRandomAccessStream : RTObject <WSSIRandomAccessStream>
+@end
+
 #endif // __WSSIRandomAccessStream_DEFINED__
 
 // Windows.Storage.Streams.IContentTypeProvider
@@ -237,6 +253,10 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 
 @protocol WSSIContentTypeProvider
 @property (readonly) NSString* contentType;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+@interface WSSIContentTypeProvider : RTObject <WSSIContentTypeProvider>
 @end
 
 #endif // __WSSIContentTypeProvider_DEFINED__
@@ -263,6 +283,10 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
           progress:(void (^)(unsigned int))progress
            failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+@interface WSSIRandomAccessStreamWithContentType : RTObject <WSSIRandomAccessStreamWithContentType>
 @end
 
 #endif // __WSSIRandomAccessStreamWithContentType_DEFINED__

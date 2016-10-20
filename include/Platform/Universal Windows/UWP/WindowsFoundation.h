@@ -161,6 +161,10 @@ typedef void (^WFDeferralCompletedHandler)();
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Foundation.IPropertyValue
@@ -209,6 +213,10 @@ typedef void (^WFDeferralCompletedHandler)();
 - (void)getRectArray:(NSArray* /* WFRect* */*)value;
 @end
 
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
+@interface WFIPropertyValue : RTObject <WFIPropertyValue>
+@end
+
 #endif // __WFIPropertyValue_DEFINED__
 
 // Windows.Foundation.IStringable
@@ -217,6 +225,10 @@ typedef void (^WFDeferralCompletedHandler)();
 
 @protocol WFIStringable
 - (NSString*)toString;
+@end
+
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
+@interface WFIStringable : RTObject <WFIStringable>
 @end
 
 #endif // __WFIStringable_DEFINED__
@@ -233,6 +245,10 @@ typedef void (^WFDeferralCompletedHandler)();
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
+@interface WFIAsyncInfo : RTObject <WFIAsyncInfo>
+@end
+
 #endif // __WFIAsyncInfo_DEFINED__
 
 // Windows.Foundation.IAsyncAction
@@ -246,6 +262,10 @@ typedef void (^WFDeferralCompletedHandler)();
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
+@interface WFIAsyncAction : RTObject <WFIAsyncAction>
+@end
+
 #endif // __WFIAsyncAction_DEFINED__
 
 // Windows.Foundation.IWwwFormUrlDecoderEntry
@@ -257,6 +277,10 @@ typedef void (^WFDeferralCompletedHandler)();
 @property (readonly) NSString* value;
 @end
 
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
+@interface WFIWwwFormUrlDecoderEntry : RTObject <WFIWwwFormUrlDecoderEntry>
+@end
+
 #endif // __WFIWwwFormUrlDecoderEntry_DEFINED__
 
 // Windows.Foundation.IGetActivationFactory
@@ -265,6 +289,10 @@ typedef void (^WFDeferralCompletedHandler)();
 
 @protocol WFIGetActivationFactory
 - (RTObject*)getActivationFactory:(NSString*)activatableClassId;
+@end
+
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
+@interface WFIGetActivationFactory : RTObject <WFIGetActivationFactory>
 @end
 
 #endif // __WFIGetActivationFactory_DEFINED__
@@ -280,6 +308,10 @@ typedef void (^WFDeferralCompletedHandler)();
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
+@interface WFIMemoryBufferReference : RTObject <WFIMemoryBufferReference>
+@end
+
 #endif // __WFIMemoryBufferReference_DEFINED__
 
 // Windows.Foundation.IMemoryBuffer
@@ -289,6 +321,10 @@ typedef void (^WFDeferralCompletedHandler)();
 @protocol WFIMemoryBuffer <WFIClosable>
 - (RTObject<WFIMemoryBufferReference>*)createReference;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_FOUNDATION_EXPORT
+@interface WFIMemoryBuffer : RTObject <WFIMemoryBuffer>
 @end
 
 #endif // __WFIMemoryBuffer_DEFINED__

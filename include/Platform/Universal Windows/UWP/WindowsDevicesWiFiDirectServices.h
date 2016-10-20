@@ -127,6 +127,10 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Devices.WiFiDirect.Services.WiFiDirectServiceSession

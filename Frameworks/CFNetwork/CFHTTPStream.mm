@@ -17,15 +17,13 @@
 #import <StubReturn.h>
 #import <CFNetwork/CFHTTPStream.h>
 
-const CFStringRef kCFStreamPropertyHTTPAttemptPersistentConnection =
-    static_cast<CFStringRef>(@"kCFStreamPropertyHTTPAttemptPersistentConnection");
-const CFStringRef kCFStreamPropertyHTTPFinalURL = static_cast<CFStringRef>(@"kCFStreamPropertyHTTPFinalURL");
-const CFStringRef kCFStreamPropertyHTTPFinalRequest = static_cast<CFStringRef>(@"kCFStreamPropertyHTTPFinalRequest");
-const CFStringRef kCFStreamPropertyHTTPProxy = static_cast<CFStringRef>(@"kCFStreamPropertyHTTPProxy");
-const CFStringRef kCFStreamPropertyHTTPRequestBytesWrittenCount =
-    static_cast<CFStringRef>(@"kCFStreamPropertyHTTPRequestBytesWrittenCount");
-const CFStringRef kCFStreamPropertyHTTPResponseHeader = static_cast<CFStringRef>(@"kCFStreamPropertyHTTPResponseHeader");
-const CFStringRef kCFStreamPropertyHTTPShouldAutoredirect = static_cast<CFStringRef>(@"kCFStreamPropertyHTTPShouldAutoredirect");
+const CFStringRef kCFStreamPropertyHTTPAttemptPersistentConnection = CFSTR("kCFStreamPropertyHTTPAttemptPersistentConnection");
+const CFStringRef kCFStreamPropertyHTTPFinalURL = CFSTR("kCFStreamPropertyHTTPFinalURL");
+const CFStringRef kCFStreamPropertyHTTPFinalRequest = CFSTR("kCFStreamPropertyHTTPFinalRequest");
+const CFStringRef kCFStreamPropertyHTTPProxy = CFSTR("kCFStreamPropertyHTTPProxy");
+const CFStringRef kCFStreamPropertyHTTPRequestBytesWrittenCount = CFSTR("kCFStreamPropertyHTTPRequestBytesWrittenCount");
+const CFStringRef kCFStreamPropertyHTTPResponseHeader = CFSTR("kCFStreamPropertyHTTPResponseHeader");
+const CFStringRef kCFStreamPropertyHTTPShouldAutoredirect = CFSTR("kCFStreamPropertyHTTPShouldAutoredirect");
 const SInt32 kCFStreamErrorDomainHTTP = StubConstant();
 
 /**

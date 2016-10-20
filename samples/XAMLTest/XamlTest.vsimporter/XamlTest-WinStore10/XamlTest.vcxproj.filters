@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{d1676cd3-0308-4282-8a40-c67e365b02c7}</UniqueIdentifier>
+      <UniqueIdentifier>{1acb552d-7fa1-4888-bb03-c9e5bb23be92}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{71ad7bf9-68a2-479e-945a-ec56e30172b4}</UniqueIdentifier>
+      <UniqueIdentifier>{0ff5a6e7-a304-4561-bcbb-7f6543644c88}</UniqueIdentifier>
     </Filter>
     <Filter Include="XamlTest">
-      <UniqueIdentifier>{F6A8B573-94DA-4B9E-9292-BF1B78A30A50}</UniqueIdentifier>
+      <UniqueIdentifier>{1AA73257-DD6C-4638-8054-87A6BFBF36D2}</UniqueIdentifier>
     </Filter>
     <Filter Include="XamlTest\Supporting Files">
-      <UniqueIdentifier>{A2907B55-833D-455F-9974-1AC678DE1105}</UniqueIdentifier>
+      <UniqueIdentifier>{B6E50746-56B3-40BA-B8F8-464D80BE6787}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{31A67F7B-623E-40DB-9103-0E9BEF65762E}</UniqueIdentifier>
+      <UniqueIdentifier>{14B770EE-5108-4EBE-A843-11E7C437DF49}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -42,48 +42,36 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
+    <AssetCatalogCompile Include="..\..\XamlTest\Images.xcassets">
+      <Filter>XamlTest</Filter>
+    </AssetCatalogCompile>
+    <ClInclude Include="..\..\XamlTest\AppDelegate.h">
+      <Filter>XamlTest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XamlTest\MainViewController.h">
+      <Filter>XamlTest</Filter>
+    </ClInclude>
     <ClangCompile Include="..\..\XamlTest\AppDelegate.m">
+      <Filter>XamlTest</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\XamlTest\MainViewController.m">
       <Filter>XamlTest</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\XamlTest\main.m">
       <Filter>XamlTest\Supporting Files</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\XamlTest\MainViewController.m">
-      <Filter>XamlTest</Filter>
-    </ClangCompile>
-    <AssetCatalogCompile Include="..\..\XamlTest\Images.xcassets">
-      <Filter>XamlTest</Filter>
-    </AssetCatalogCompile>
-    <XibCompile Include="..\..\XamlTest\MainViewController.xib">
-      <Filter>XamlTest</Filter>
-    </XibCompile>
+    <SBInfoPlistCopy Include="..\..\XamlTest\Info.plist" />
     <SBResourceCopy Include="..\..\Default-568h@2x.png">
       <Filter>XamlTest\Supporting Files</Filter>
     </SBResourceCopy>
-    <SBInfoPlistCopy Include="..\..\XamlTest\Info.plist" />
     <Text Include="XamlTest-Debug-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
     <Text Include="XamlTest-Release-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="App.xaml.cpp" />
-    <ClCompile Include="pch.cpp" />
-    <ClCompile Include="MainViewController.xaml.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="App.xaml.h" />
-    <ClInclude Include="MainViewController.xaml.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="MainViewController.xaml">
+    <XibCompile Include="..\..\XamlTest\MainViewController.xib">
       <Filter>XamlTest</Filter>
-    </Page>
+    </XibCompile>
   </ItemGroup>
 </Project>

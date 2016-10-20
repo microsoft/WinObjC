@@ -59,6 +59,10 @@ typedef unsigned WWHFHttpCacheWriteBehavior;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Web.Http.Filters.IHttpFilter
@@ -71,6 +75,10 @@ typedef unsigned WWHFHttpCacheWriteBehavior;
                 progress:(void (^)(WWHHttpProgress*))progress
                  failure:(void (^)(NSError*))failure;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
+@interface WWHFIHttpFilter : RTObject <WWHFIHttpFilter>
 @end
 
 #endif // __WWHFIHttpFilter_DEFINED__

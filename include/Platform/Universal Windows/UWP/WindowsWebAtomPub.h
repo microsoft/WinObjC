@@ -52,6 +52,10 @@
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
 @end
 
+OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
+@interface WWSISyndicationNode : RTObject <WWSISyndicationNode>
+@end
+
 #endif // __WWSISyndicationNode_DEFINED__
 
 // Windows.Web.AtomPub.ResourceCollection
@@ -139,6 +143,10 @@ OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
                   success:(void (^)(WWSSyndicationFeed*))success
                  progress:(void (^)(WWSRetrievalProgress*))progress
                   failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
+@interface WWSISyndicationClient : RTObject <WWSISyndicationClient>
 @end
 
 #endif // __WWSISyndicationClient_DEFINED__

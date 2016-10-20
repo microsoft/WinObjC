@@ -56,6 +56,10 @@ OBJCUWP_WINDOWS_MANAGEMENT_ORCHESTRATION_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_MANAGEMENT_ORCHESTRATION_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Management.Orchestration.SingleAppModeContext

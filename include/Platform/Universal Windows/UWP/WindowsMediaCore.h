@@ -283,6 +283,10 @@ OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @protocol WMCIMediaSource
 @end
 
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WMCIMediaSource : RTObject <WMCIMediaSource>
+@end
+
 #endif // __WMCIMediaSource_DEFINED__
 
 // Windows.Media.Core.IMediaStreamDescriptor
@@ -293,6 +297,10 @@ OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @property (readonly) BOOL isSelected;
 @property (retain) NSString* language;
 @property (retain) NSString* name;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WMCIMediaStreamDescriptor : RTObject <WMCIMediaStreamDescriptor>
 @end
 
 #endif // __WMCIMediaStreamDescriptor_DEFINED__
@@ -307,6 +315,10 @@ OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @property (retain) WFTimeSpan* startTime;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WMCIMediaCue : RTObject <WMCIMediaCue>
+@end
+
 #endif // __WMCIMediaCue_DEFINED__
 
 // Windows.Media.Core.ISingleSelectMediaTrackList
@@ -317,6 +329,10 @@ OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @property int selectedIndex;
 - (EventRegistrationToken)addSelectedIndexChangedEvent:(void (^)(RTObject<WMCISingleSelectMediaTrackList>*, RTObject*))del;
 - (void)removeSelectedIndexChangedEvent:(EventRegistrationToken)tok;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WMCISingleSelectMediaTrackList : RTObject <WMCISingleSelectMediaTrackList>
 @end
 
 #endif // __WMCISingleSelectMediaTrackList_DEFINED__
@@ -330,6 +346,10 @@ OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @property (retain) NSString* label;
 @property (readonly) NSString* language;
 @property (readonly) WMCMediaTrackKind trackKind;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WMCIMediaTrack : RTObject <WMCIMediaTrack>
 @end
 
 #endif // __WMCIMediaTrack_DEFINED__
@@ -750,6 +770,10 @@ OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WMIMediaExtension : RTObject <WMIMediaExtension>
+@end
+
 #endif // __WMIMediaExtension_DEFINED__
 
 // Windows.Media.Core.SceneAnalysisEffect
@@ -807,6 +831,10 @@ OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Media.IMediaFrame
@@ -822,6 +850,10 @@ OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @property (retain) id /* WFTimeSpan* */ systemRelativeTime;
 @property (readonly) NSString* type;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WMIMediaFrame : RTObject <WMIMediaFrame>
 @end
 
 #endif // __WMIMediaFrame_DEFINED__
@@ -856,6 +888,10 @@ OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @protocol WMEIVideoEffectDefinition
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WMEIVideoEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 @end
 
 #endif // __WMEIVideoEffectDefinition_DEFINED__
@@ -1017,6 +1053,10 @@ OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 #define __WMPIMediaPlaybackSource_DEFINED__
 
 @protocol WMPIMediaPlaybackSource
+@end
+
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WMPIMediaPlaybackSource : RTObject <WMPIMediaPlaybackSource>
 @end
 
 #endif // __WMPIMediaPlaybackSource_DEFINED__

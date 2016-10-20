@@ -870,6 +870,10 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 - (void)onDrop:(WXDragEventArgs*)e;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
+@interface WXCIControlOverrides : RTObject <WXCIControlOverrides>
+@end
+
 #endif // __WXCIControlOverrides_DEFINED__
 
 // Windows.UI.Xaml.IFrameworkElementOverrides
@@ -882,6 +886,10 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 - (void)onApplyTemplate;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
+@interface WXIFrameworkElementOverrides : RTObject <WXIFrameworkElementOverrides>
+@end
+
 #endif // __WXIFrameworkElementOverrides_DEFINED__
 
 // Windows.UI.Xaml.IFrameworkElementOverrides2
@@ -890,6 +898,10 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 @protocol WXIFrameworkElementOverrides2
 - (BOOL)goToElementStateCore:(NSString*)stateName useTransitions:(BOOL)useTransitions;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
+@interface WXIFrameworkElementOverrides2 : RTObject <WXIFrameworkElementOverrides2>
 @end
 
 #endif // __WXIFrameworkElementOverrides2_DEFINED__
@@ -903,6 +915,10 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 - (void)onDisconnectVisualChildren;
 - (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point
                                                                                       boundingRect:(WFRect*)boundingRect;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
+@interface WXIUIElementOverrides : RTObject <WXIUIElementOverrides>
 @end
 
 #endif // __WXIUIElementOverrides_DEFINED__

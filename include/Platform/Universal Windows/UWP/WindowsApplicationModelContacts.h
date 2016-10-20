@@ -281,6 +281,10 @@ typedef unsigned WACContactFieldCategory;
 @property (readonly) NSString* value;
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
+@interface WACIContactField : RTObject <WACIContactField>
+@end
+
 #endif // __WACIContactField_DEFINED__
 
 // Windows.ApplicationModel.Contacts.IContactFieldFactory
@@ -294,6 +298,10 @@ typedef unsigned WACContactFieldCategory;
                                  value:(NSString*)value
                                   type:(WACContactFieldType)type
                               category:(WACContactFieldCategory)category;
+@end
+
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
+@interface WACIContactFieldFactory : RTObject <WACIContactFieldFactory>
 @end
 
 #endif // __WACIContactFieldFactory_DEFINED__
@@ -314,6 +322,10 @@ typedef unsigned WACContactFieldCategory;
                                     postalCode:(NSString*)postalCode;
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
+@interface WACIContactLocationFieldFactory : RTObject <WACIContactLocationFieldFactory>
+@end
+
 #endif // __WACIContactLocationFieldFactory_DEFINED__
 
 // Windows.ApplicationModel.Contacts.IContactInstantMessageFieldFactory
@@ -328,6 +340,10 @@ typedef unsigned WACContactFieldCategory;
                                                    service:(NSString*)service
                                                displayText:(NSString*)displayText
                                                       verb:(WFUri*)verb;
+@end
+
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
+@interface WACIContactInstantMessageFieldFactory : RTObject <WACIContactInstantMessageFieldFactory>
 @end
 
 #endif // __WACIContactInstantMessageFieldFactory_DEFINED__
@@ -392,6 +408,10 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 
 @protocol WFIClosable
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
 @end
 
 #endif // __WFIClosable_DEFINED__
