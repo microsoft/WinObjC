@@ -352,14 +352,14 @@ public:
 
 static LockingBufferInterface _globallockingBufferInterface;
 
-CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
+CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float scale) {
     DisplayTexture* tex = NULL;
 
     if ([NSThread isMainThread]) {
         tex = GetCACompositor()->CreateWritableBitmapTexture32(width, height);
     }
 
-    CGContextRef ret = _CGBitmapContextCreateWithTexture(width, height, tex, &_globallockingBufferInterface);
+    CGContextRef ret = _CGBitmapContextCreateWithTexture(width, height, scale, tex, &_globallockingBufferInterface);
 
     if (tex) {
         _globallockingBufferInterface.ReleaseDisplayTexture(tex);
@@ -524,8 +524,10 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         }
 
         // Update content size, even in case of the early out below.
-        int width = (int)(ceilf(priv->bounds.size.width) * priv->contentsScale);
-        int height = (int)(ceilf(priv->bounds.size.height) * priv->contentsScale);
+        int widthInPoints = ceilf(priv->bounds.size.width);
+        int width = (int)(widthInPoints * priv->contentsScale);
+        int heightInPoints = ceilf(priv->bounds.size.height);
+        int height = (int)(heightInPoints * priv->contentsScale);
 
         if (width <= 0 || height <= 0) {
             return;
@@ -573,7 +575,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
             // As an optimization, CALayer would use a bitmap context with a solid background colour
             // instead of a DisplayTexture. Since bitmap contexts are currently broken as part of #1072,
             // we'll fall back to always using the writable bitmap buffer.
-            drawContext = CreateLayerContentsBitmapContext32(width, height);
+            drawContext = CreateLayerContentsBitmapContext32(width, height, priv->contentsScale);
             priv->drewOpaque = FALSE;
             priv->ownsContents = TRUE;
         }
@@ -608,13 +610,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
             }
         }
 
-        if (target->Backing()->Height() != 0) {
-            CGContextTranslateCTM(drawContext, 0, float(target->Backing()->Height()));
-        }
-        if (priv->contentsScale != 1.0f) {
-            CGContextScaleCTM(drawContext, priv->contentsScale, priv->contentsScale);
-        }
-
+        // UIKit and CALayer consumers expect the origin to be in the top left.
+        // CoreGraphics defaults to the bottom left, so we must flip and translate the canvas.
+        CGContextTranslateCTM(drawContext, 0, heightInPoints);
         CGContextScaleCTM(drawContext, 1.0f, -1.0f);
         CGContextTranslateCTM(drawContext, -priv->bounds.origin.x, -priv->bounds.origin.y);
 

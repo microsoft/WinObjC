@@ -29,6 +29,7 @@
 
 COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithTexture(int width,
                                                                    int height,
+                                                                   float scale,
                                                                    DisplayTexture* texture = NULL,
                                                                    DisplayTextureLocking* locking = NULL);
 COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurfaceFormat fmt);

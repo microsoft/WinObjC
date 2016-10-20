@@ -35,7 +35,7 @@ NSString* const kCALineCapButt = @"kCALineCapButt";
 NSString* const kCALineCapRound = @"kCALineCapRound";
 NSString* const kCALineCapSquare = @"kCALineCapSquare";
 
-CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
+CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float scale);
 
 @implementation CAShapeLayer {
     CGPathRef _path;
@@ -92,7 +92,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
     int width = (int)(bbox.size.width * scale);
     int height = (int)(bbox.size.height * scale);
 
-    CGContextRef drawContext = CreateLayerContentsBitmapContext32(width, height);
+    CGContextRef drawContext = CreateLayerContentsBitmapContext32(width, height, scale);
 
     CGContextTranslateCTM(drawContext, 0, height);
     if (scale != 1.0f) {
