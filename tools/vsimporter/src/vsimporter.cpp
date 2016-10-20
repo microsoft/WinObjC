@@ -131,9 +131,9 @@ int main(int argc, char* argv[])
     int option_index = 0;
     int c = getopt_long_only(argc, argv, "", long_options, &option_index);
 
-    if (c == -1)
+    if (c == -1) {
       break;
-    else if (c || option_index < 0 || option_index >= numOptions) {
+    } else if (c || option_index < 0 || option_index >= numOptions) {
       printUsage(argv[0], false);
       exit(EXIT_FAILURE);
     }
@@ -208,15 +208,15 @@ int main(int argc, char* argv[])
   while (optind < argc) {
     String arg = argv[optind];
     if (arg == "/?") {
-        // Due to issue 6715724, flush before exiting
-		TELEMETRY_EVENT_DATA(L"VSImporterIncomplete", "printUsage");
-		TELEMETRY_FLUSH();
-        printUsage(argv[0], true);
-        exit(EXIT_SUCCESS);
+      // Due to issue 6715724, flush before exiting
+      TELEMETRY_EVENT_DATA(L"VSImporterIncomplete", "printUsage");
+      TELEMETRY_FLUSH();
+      printUsage(argv[0], true);
+      exit(EXIT_SUCCESS);
     } else if (arg.find_first_of('=') != String::npos) {
       settingsManager.processGlobalAssignment(arg);
     } else {
-		sbValidateWithTelemetry(0, "Unsupported argument: " + arg);
+      sbValidateWithTelemetry(0, "Unsupported argument: " + arg);
     }
     optind++;
   }
