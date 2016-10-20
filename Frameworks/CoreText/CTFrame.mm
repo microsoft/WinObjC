@@ -119,17 +119,19 @@ void CTFrameDraw(CTFrameRef frameRef, CGContextRef ctx) {
         CGRect boundingRect;
         _CGPathGetBoundingBoxInternal(frame->_path.get(), &boundingRect);
         CGContextTranslateCTM(ctx, 0, boundingRect.size.height);
+
+        // Invert Text Matrix so glyphs are drawn in correct orientation
         CGAffineTransform textMatrix = CGContextGetTextMatrix(ctx);
         CGContextSetTextMatrix(ctx, CGAffineTransformScale(textMatrix, 1.0f, -1.0f));
         CGContextScaleCTM(ctx, 1.0f, -1.0f);
+
         for (_CTLine* line in static_cast<id<NSFastEnumeration>>(frame->_lines)) {
             CGContextSetTextPosition(ctx, line->_lineOrigin.x, line->_lineOrigin.y);
             _CTLineDraw(static_cast<CTLineRef>(line), ctx, false);
         }
 
+        // Restore CTM and Text Matrix to values before we modified them
         CGContextRestoreGState(ctx);
-
-        // Restoring GState should not return text matrix to original value
         CGContextSetTextMatrix(ctx, textMatrix);
     }
 }
