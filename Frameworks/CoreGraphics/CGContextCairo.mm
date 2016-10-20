@@ -2046,12 +2046,6 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
 
     // Though this workaround is sufficient to get text rendered on the user screen on all Windows form factor devices, this will not
     // work when text is rendered on a PDF or printer.
-    verticalScalingFactor /= _scale;
-    height /= _scale;
-
-    transform = CGAffineTransformTranslate(transform, 0, (height / verticalScalingFactor) - height);
-
-    const float inverseScale = 1.0f / _scale;
     transform = CGAffineTransformTranslate(transform, 0, (height / verticalScalingFactor));
 
     // Perform anti-clockwise rotation required to match the reference platform.
