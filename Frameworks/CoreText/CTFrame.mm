@@ -75,7 +75,7 @@ CFRange CTFrameGetVisibleStringRange(CTFrameRef frame) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGPathRef CTFrameGetPath(CTFrameRef frame) {
@@ -128,6 +128,9 @@ void CTFrameDraw(CTFrameRef frameRef, CGContextRef ctx) {
         }
 
         CGContextRestoreGState(ctx);
+
+        // Restoring GState should not return text matrix to original value
+        CGContextSetTextMatrix(ctx, textMatrix);
     }
 }
 
