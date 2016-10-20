@@ -144,9 +144,6 @@
     <ClInclude Include="..\..\WOCCatalog\TextDisplayViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WOCCatalog\TextFieldsViewController.h">
-      <Filter>WOCCatalog</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\WOCCatalog\ToolbarsViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
@@ -262,9 +259,6 @@
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\TextFieldsViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\ToolbarsViewController.m">

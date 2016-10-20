@@ -220,7 +220,6 @@
     <ClInclude Include="..\..\WOCCatalog\SingleImageViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\TaskInfoViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\TextDisplayViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\TextFieldsViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\ToolbarsViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\TransitionsViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\UIPasteboardViewController.h" />
@@ -260,7 +259,6 @@
     <ClangCompile Include="..\..\WOCCatalog\SingleImageViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\TaskInfoViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\TextFieldsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ToolbarsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\TransitionsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\UIPasteboardViewController.m" />
