@@ -28,6 +28,27 @@ static const wchar_t* TAG = L"SFSafariWebViewController";
 static const char* SAFARI_USER_AGENT =
     "Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25";
 
+static bool appCanOpenURL(NSURL* url) {
+    // Check the app's main bundle to see whether this URL conforms to a scheme
+    // that this app can open
+    NSDictionary* info = [[NSBundle mainBundle] infoDictionary];
+    NSArray<NSDictionary*>* urlTypes = info[@"CFBundleURLTypes"];
+
+    NSString* targetScheme = url.scheme;
+
+    for (NSDictionary* urlType in urlTypes) {
+        NSArray<NSString*>* urlSchemes = urlType[@"CFBundleURLSchemes"];
+
+        for (NSString* scheme in urlSchemes) {
+            if ([scheme isEqualToString:targetScheme]) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 // Delegate for the UIWebView that underlies a SFSafariWebViewController
 @interface _SFWebViewDelegate : NSObject <UIWebViewDelegate>
 @property (weak, nonatomic) SFSafariWebViewController* viewController;
@@ -49,13 +70,24 @@ static const char* SAFARI_USER_AGENT =
     shouldStartLoadWithRequest:(NSURLRequest*)request
                 navigationType:(UIWebViewNavigationType)navigationType {
     NSURL* url = request.URL;
+    BOOL openWithAppDelegate = NO;
 
     // Check whether this request is for the redirect URL that we're watching out for
     // (modulo the query string and fragment, which are allowed to vary)
-
     if ([url.scheme isEqualToString:_redirectUrl.scheme] && [url.host isEqualToString:_redirectUrl.host] &&
         [url.path isEqualToString:_redirectUrl.path]) {
-        // Let the client know we received the redirect URL
+        openWithAppDelegate = YES;
+    }
+
+    // Check whether the URL can be opened directly by this application, in which case we'll send it
+    // straight to the application delegate.
+    // Asking the WebView to open such a URL would work, since it would send an activation request
+    // to this app, but that would cause an extraneous confirmation dialog from Windows.
+    if (appCanOpenURL(url)) {
+        openWithAppDelegate = YES;
+    }
+
+    if (openWithAppDelegate) {
         id delegate = [[UIApplication sharedApplication] delegate];
         if ([delegate respondsToSelector:@selector(application:openURL:sourceApplication:annotation:)]) {
             dispatch_async(dispatch_get_main_queue(),
@@ -66,17 +98,15 @@ static const char* SAFARI_USER_AGENT =
                                           annotation:nil];
                            });
         }
-
-        // Tell the WebView not continue loading
-        return NO;
     }
 
-    return YES;
+    return !openWithAppDelegate;
 }
 @end
 
 @implementation SFSafariWebViewController {
     NSString* _redirectUrl;
+    UIWebView* _webView;
     _SFWebViewDelegate* _webViewDelegate;
 }
 
@@ -127,19 +157,19 @@ static const char* SAFARI_USER_AGENT =
     webFrame.origin.y += toolbarHeight;
     webFrame.size.height -= toolbarHeight;
 
-    UIWebView* webView = [[UIWebView alloc] initWithFrame:webFrame];
-    webView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    _webView = [[UIWebView alloc] initWithFrame:webFrame];
+    _webView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
 
     _webViewDelegate = [[_SFWebViewDelegate alloc] initWithRedirectUrl:_redirectUrl];
-    webView.delegate = _webViewDelegate;
+    _webView.delegate = _webViewDelegate;
     _webViewDelegate.viewController = self;
 
     // The client asked for Safari, so act like Safari (insofar as it is possible)
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:_url];
     [request setValue:[NSString stringWithUTF8String:SAFARI_USER_AGENT] forHTTPHeaderField:@"User-Agent"];
 
-    [webView loadRequest:request];
-    [topView addSubview:webView];
+    [_webView loadRequest:request];
+    [topView addSubview:_webView];
 
     // Create a toolbar at the top of the view
     CGRect toolbarFrame = CGRectMake(0, 0, frame.size.width, toolbarHeight);
@@ -147,11 +177,11 @@ static const char* SAFARI_USER_AGENT =
 
     // <-
     UIBarButtonItem* backButton =
-        [[UIBarButtonItem alloc] initWithImage:backArrow style:UIBarButtonItemStylePlain target:webView action:@selector(goBack)];
+        [[UIBarButtonItem alloc] initWithImage:backArrow style:UIBarButtonItemStylePlain target:_webView action:@selector(goBack)];
 
     // ->
     UIBarButtonItem* forwardButton =
-        [[UIBarButtonItem alloc] initWithImage:backArrow style:UIBarButtonItemStylePlain target:webView action:@selector(goForward)];
+        [[UIBarButtonItem alloc] initWithImage:backArrow style:UIBarButtonItemStylePlain target:_webView action:@selector(goForward)];
 
     [[forwardButton _view] setTransform:CGAffineTransformMakeRotation(M_PI)];
 
@@ -175,6 +205,10 @@ static const char* SAFARI_USER_AGENT =
 - (void)_cancel {
     // User clicked Done button
     [self dismissViewControllerAnimated:NO completion:nil];
+}
+
+- (void)dealloc {
+    _webView.delegate = nil;
 }
 
 @end
