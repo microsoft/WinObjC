@@ -84,7 +84,7 @@ static const CFRange c_visibleRange = CFRangeMake(1, 5);
     CTRunRef run = static_cast<CTRunRef>(CFArrayGetValueAtIndex(runs, 0));
 
     // Flips y-axis for our frame
-    CGContextSetTextPosition(context, 0.0, 10.0);
+    CGContextSetTextPosition(context, 0.0, 0.0);
     CTRunDraw(run, context, c_visibleRange);
 
     // Creates outline

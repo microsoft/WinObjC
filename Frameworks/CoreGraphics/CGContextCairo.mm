@@ -2043,11 +2043,15 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     // curState->curTransform contains both the device scaling factor and any user scale applied to it causing the below D2D render target
     // transform calculation to be way off on devices that have scaling. Workaround for now is to divide the verticalScalingFactor and
     // height here with the device scaling factor so they get converted to DIPs and then apply the transform to the D2D render target.
-    // Though this workaround is sufficient to get text rendered on the user screen on all Windows form factor devices, this will not work
-    // when text is rendered on a PDF or printer.
-    static float hostDisplayScale = static_cast<float>([[WGDDisplayInformation getForCurrentView] resolutionScale] / 100.0f);
-    verticalScalingFactor /= hostDisplayScale;
-    height /= hostDisplayScale;
+
+    // Though this workaround is sufficient to get text rendered on the user screen on all Windows form factor devices, this will not
+    // work when text is rendered on a PDF or printer.
+    verticalScalingFactor /= _scale;
+    height /= _scale;
+
+    transform = CGAffineTransformTranslate(transform, 0, (height / verticalScalingFactor) - height);
+
+    const float inverseScale = 1.0f / _scale;
     transform = CGAffineTransformTranslate(transform, 0, (height / verticalScalingFactor));
 
     // Perform anti-clockwise rotation required to match the reference platform.
@@ -2059,4 +2063,11 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     imgRenderTarget->DrawGlyphRun(D2D1::Point2F(0, 0), glyphRun, brush.Get(), DWRITE_MEASURING_MODE_NATURAL);
 
     THROW_IF_FAILED(imgRenderTarget->EndDraw());
+}
+
+// TODO 1077:: Remove once D2D render target is implemented
+void CGContextCairo::_CGContextSetScaleFactor(CGFloat scale) {
+    _scale = scale;
+    const float dpi = _scale * 96.0f;
+    _imgDest->Backing()->GetRenderTarget()->SetDpi(dpi, dpi);
 }

@@ -52,6 +52,9 @@ COREGRAPHICS_EXPORT bool CGContextIsPointInPath(CGContextRef c, bool eoFill, flo
 
 COREGRAPHICS_EXPORT void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun);
 
+// TODO 1077:: Remove once D2D render target is implemented
+COREGRAPHICS_EXPORT void _CGContextSetScaleFactor(CGContextRef ctx, float scale);
+
 class __CGContext : private objc_object {
 public:
     float scale;
