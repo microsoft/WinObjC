@@ -122,14 +122,14 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(CFAttributedStringRef 
         fontSize = CTFontGetSize(font);
         CFStringRef fontFullName = CTFontCopyName(font, kCTFontFullNameKey);
         CFAutorelease(fontFullName);
-        _InitDWriteFontPropertiesFromName(fontFullName, &weight, &stretch, &style, &fontFamilyName);
+        _DWriteInitFontPropertiesFromName(fontFullName, &weight, &stretch, &style, &fontFamilyName);
     }
 
     familyName.resize(CFStringGetLength(fontFamilyName) + 1, 0);
     CFStringGetCharacters(fontFamilyName, CFRangeMake(0, familyName.size()), reinterpret_cast<UniChar*>(familyName.data()));
 
     ComPtr<IDWriteTextFormat> textFormat;
-    THROW_IF_FAILED(_DWriteCreateTextFormat(familyName.data(), weight, style, stretch, fontSize, &textFormat));
+    RETURN_NULL_IF_FAILED(_DWriteCreateTextFormat(familyName.data(), weight, style, stretch, fontSize, &textFormat));
 
     CTParagraphStyleRef settings =
         static_cast<CTParagraphStyleRef>([attribs valueForKey:static_cast<NSString*>(kCTParagraphStyleAttributeName)]);
@@ -137,7 +137,7 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(CFAttributedStringRef 
         CTTextAlignment alignment = kCTNaturalTextAlignment;
         if (CTParagraphStyleGetValueForSpecifier(settings, kCTParagraphStyleSpecifierAlignment, sizeof(CTTextAlignment), &alignment)) {
             DWRITE_TEXT_ALIGNMENT dwriteAlignment = __CoreTextAlignmentToDwrite(alignment);
-            THROW_IF_FAILED(textFormat->SetTextAlignment(dwriteAlignment));
+            RETURN_NULL_IF_FAILED(textFormat->SetTextAlignment(dwriteAlignment));
         }
 
         CTWritingDirection direction;
@@ -149,13 +149,13 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(CFAttributedStringRef 
                 // DWrite alignment is based upon reading direction whereas CoreText alignment is constant
                 // so we have to flip the writing direction
                 if (alignment == kCTRightTextAlignment || alignment == kCTNaturalTextAlignment) {
-                    THROW_IF_FAILED(textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING));
+                    RETURN_NULL_IF_FAILED(textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING));
                 } else if (alignment == kCTLeftTextAlignment) {
-                    THROW_IF_FAILED(textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING));
+                    RETURN_NULL_IF_FAILED(textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING));
                 }
             }
 
-            THROW_IF_FAILED(textFormat->SetReadingDirection(dwriteDirection));
+            RETURN_NULL_IF_FAILED(textFormat->SetReadingDirection(dwriteDirection));
         }
     }
 
@@ -186,10 +186,10 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(CFAttributedStringRef 
 
     // Get the direct write factory instance
     ComPtr<IDWriteFactory> dwriteFactory;
-    THROW_IF_FAILED(_DWriteCreateFactoryInstance(&dwriteFactory));
+    RETURN_NULL_IF_FAILED(_DWriteCreateFactoryInstance(&dwriteFactory));
 
     ComPtr<IDWriteTextLayout> textLayout;
-    THROW_IF_FAILED(dwriteFactory->CreateTextLayout(
+    RETURN_NULL_IF_FAILED(dwriteFactory->CreateTextLayout(
         wcharString, [subString length], textFormat.Get(), frameSize.size.width, frameSize.size.height, &textLayout));
 
     // TODO::
@@ -217,45 +217,45 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(CFAttributedStringRef 
             DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
             DWRITE_FONT_STRETCH stretch = DWRITE_FONT_STRETCH_NORMAL;
             CFStringRef fontFamilyName;
-            _InitDWriteFontPropertiesFromName(CTFontCopyName(font, kCTFontFullNameKey), &weight, &stretch, &style, &fontFamilyName);
+            _DWriteInitFontPropertiesFromName(CTFontCopyName(font, kCTFontFullNameKey), &weight, &stretch, &style, &fontFamilyName);
             std::vector<wchar_t> familyName(CFStringGetLength(fontFamilyName) + 1);
             CFStringGetCharacters(fontFamilyName, CFRangeMake(0, familyName.size()), reinterpret_cast<UniChar*>(familyName.data()));
 
-            THROW_IF_FAILED(textLayout->SetFontSize(fontSize, dwriteRange));
-            THROW_IF_FAILED(textLayout->SetFontWeight(weight, dwriteRange));
-            THROW_IF_FAILED(textLayout->SetFontStretch(stretch, dwriteRange));
-            THROW_IF_FAILED(textLayout->SetFontStyle(style, dwriteRange));
-            THROW_IF_FAILED(textLayout->SetFontFamilyName(familyName.data(), dwriteRange));
+            RETURN_NULL_IF_FAILED(textLayout->SetFontSize(fontSize, dwriteRange));
+            RETURN_NULL_IF_FAILED(textLayout->SetFontWeight(weight, dwriteRange));
+            RETURN_NULL_IF_FAILED(textLayout->SetFontStretch(stretch, dwriteRange));
+            RETURN_NULL_IF_FAILED(textLayout->SetFontStyle(style, dwriteRange));
+            RETURN_NULL_IF_FAILED(textLayout->SetFontFamilyName(familyName.data(), dwriteRange));
         }
 
         ComPtr<IDWriteTypography> typography;
-        THROW_IF_FAILED(textLayout->GetTypography(dwriteRange.startPosition, &typography));
+        RETURN_NULL_IF_FAILED(textLayout->GetTypography(dwriteRange.startPosition, &typography));
         if (!typography.Get()) {
-            THROW_IF_FAILED(dwriteFactory->CreateTypography(&typography));
+            RETURN_NULL_IF_FAILED(dwriteFactory->CreateTypography(&typography));
         }
 
         CFNumberRef extraKerningRef = static_cast<CFNumberRef>([attribs objectForKey:static_cast<NSString*>(kCTKernAttributeName)]);
         if (extraKerningRef) {
             ComPtr<IDWriteTextLayout1> textLayout1;
-            THROW_IF_FAILED(textLayout.As(&textLayout1));
+            RETURN_NULL_IF_FAILED(textLayout.As(&textLayout1));
             CGFloat leadingSpacing, trailingSpacing, minimumAdvanceWidth;
-            THROW_IF_FAILED(
+            RETURN_NULL_IF_FAILED(
                 textLayout1->GetCharacterSpacing(dwriteRange.startPosition, &leadingSpacing, &trailingSpacing, &minimumAdvanceWidth));
 
             CGFloat extraKerning;
             CFNumberGetValue(extraKerningRef, kCFNumberFloatType, &extraKerning);
             trailingSpacing += extraKerning;
 
-            THROW_IF_FAILED(textLayout1->SetCharacterSpacing(leadingSpacing, trailingSpacing, minimumAdvanceWidth, dwriteRange));
+            RETURN_NULL_IF_FAILED(textLayout1->SetCharacterSpacing(leadingSpacing, trailingSpacing, minimumAdvanceWidth, dwriteRange));
 
             // Setting kern disables default kerning
-            THROW_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_KERNING, 0 }));
+            RETURN_NULL_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_KERNING, 0 }));
         }
 
         // Forces run breaks without interfering with any layout features
         // Necessary for attributes which DWrite does not support during layout (e.g. Color)
-        THROW_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_DEFAULT, ++incompatibleAttributeFlag }));
-        THROW_IF_FAILED(textLayout->SetTypography(typography.Get(), dwriteRange));
+        RETURN_NULL_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_DEFAULT, ++incompatibleAttributeFlag }));
+        RETURN_NULL_IF_FAILED(textLayout->SetTypography(typography.Get(), dwriteRange));
     }
 
     return textLayout;
@@ -376,7 +376,9 @@ static _CTLine* _DWriteGetLine(CFAttributedStringRef string) {
  * @return _CTFrame* created using the given parameters
  */
 static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CGRect frameSize) {
-    _CTFrame* frame = [_CTFrame new];
+    RETURN_NULL_IF(!ts);
+
+    _CTFrame* frame = [[_CTFrame new] autorelease];
     if (range.length <= 0) {
         return frame;
     }
@@ -387,7 +389,7 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
     _DWriteGlyphRunDetails glyphRunDetails = {};
     textLayout->Draw(&glyphRunDetails, textRenderer.Get(), 0, 0);
     DWRITE_TEXT_METRICS textMetrics;
-    THROW_IF_FAILED(textLayout->GetMetrics(&textMetrics));
+    RETURN_NULL_IF_FAILED(textLayout->GetMetrics(&textMetrics));
     frame->_frameRect = frameSize;
 
     // TODO:: find more precise value than 1.0 to increase width by to fully enclose frame
@@ -476,7 +478,7 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
         }
     }
 
-    return [frame autorelease];
+    return frame;
 }
 
 /**
@@ -771,19 +773,11 @@ HRESULT _DWriteCreateFontFaceWithFontDescriptor(CTFontDescriptorRef fontDescript
 
         // Create a best matching font based on the family name and weight/stretch/style
         ComPtr<IDWriteFontFamily> fontFamily;
-        if (FAILED(_DWriteCreateFontFamilyWithName(familyName, &fontFamily)) || !fontFamily) {
-            TraceError(TAG, L"Unable to find font family named \"%hs\"", [static_cast<NSString*>(familyName) UTF8String]);
-            return E_INVALIDARG;
-        }
+        RETURN_IF_FAILED(_DWriteCreateFontFamilyWithName(familyName, &fontFamily));
+        RETURN_HR_IF_NULL(E_INVALIDARG, fontFamily);
 
         ComPtr<IDWriteFont> font;
-        HRESULT hr = fontFamily->GetFirstMatchingFont(weight, stretch, style, &font);
-        if (FAILED(hr)) {
-            TraceError(TAG,
-                       L"Unable to create font for family name \"%hs\" and specified traits",
-                       [static_cast<NSString*>(familyName) UTF8String]);
-            return hr;
-        }
+        RETURN_IF_FAILED(fontFamily->GetFirstMatchingFont(weight, stretch, style, &font));
 
         return font->CreateFontFace(outFontFace);
     }
@@ -844,14 +838,14 @@ CGFloat __DWriteGetCTFontWidth(DWRITE_FONT_STRETCH stretch) {
  * Helper function that reads certain properties from a DWrite font face,
  * then parses them into a dictionary suitable for kCTFontTraitsAttribute
  */
-static CFDictionaryRef _DWriteFontCreateTraitsDict(ComPtr<IDWriteFontFace> fontFace) {
+static CFDictionaryRef _DWriteFontCreateTraitsDict(const ComPtr<IDWriteFontFace>& fontFace) {
     // Get pointers for the additional FontFace interfaces
     ComPtr<IDWriteFontFace1> fontFace1;
-    fontFace.As(&fontFace1);
+    RETURN_NULL_IF_FAILED(fontFace.As(&fontFace1));
     ComPtr<IDWriteFontFace2> fontFace2;
-    fontFace.As(&fontFace2);
+    RETURN_NULL_IF_FAILED(fontFace.As(&fontFace2));
     ComPtr<IDWriteFontFace3> fontFace3;
-    fontFace.As(&fontFace3);
+    RETURN_NULL_IF_FAILED(fontFace.As(&fontFace3));
 
     DWRITE_FONT_WEIGHT weight = fontFace3->GetWeight();
     DWRITE_FONT_STRETCH stretch = fontFace3->GetStretch();
@@ -925,7 +919,7 @@ static CFDictionaryRef _DWriteFontCreateTraitsDict(ComPtr<IDWriteFontFace> fontF
 /**
  * Gets a name/informational string from a DWrite font face corresponding to a CTFont constant
  */
-CFStringRef _DWriteFontCopyName(Microsoft::WRL::ComPtr<IDWriteFontFace> fontFace, CFStringRef nameKey) {
+CFStringRef _DWriteFontCopyName(const ComPtr<IDWriteFontFace>& fontFace, CFStringRef nameKey) {
     if (nameKey == nullptr || fontFace == nullptr) {
         return nullptr;
     }
@@ -940,9 +934,9 @@ CFStringRef _DWriteFontCopyName(Microsoft::WRL::ComPtr<IDWriteFontFace> fontFace
         informationalStringId = DWRITE_INFORMATIONAL_STRING_WIN32_SUBFAMILY_NAMES;
     } else if (CFEqual(nameKey, kCTFontStyleNameKey)) {
         ComPtr<IDWriteFontFace3> dwriteFontFace3;
-        fontFace.As(&dwriteFontFace3);
+        RETURN_NULL_IF_FAILED(fontFace.As(&dwriteFontFace3));
         ComPtr<IDWriteLocalizedStrings> name;
-        THROW_IF_FAILED(dwriteFontFace3->GetFaceNames(&name));
+        RETURN_NULL_IF_FAILED(dwriteFontFace3->GetFaceNames(&name));
         return static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(name.Get())));
 
     } else if (CFEqual(nameKey, kCTFontUniqueNameKey)) {

@@ -59,5 +59,5 @@ HRESULT _DWriteCreateFontFaceWithFontDescriptor(CTFontDescriptorRef fontDescript
 CFNumberRef _CFNumberCreateFromSymbolicTraits(CTFontSymbolicTraits symbolicTraits);
 CTFontSymbolicTraits _CTFontSymbolicTraitsFromCFNumber(CFNumberRef num);
 
-CFDictionaryRef _DWriteFontCreateTraitsDict(Microsoft::WRL::ComPtr<IDWriteFontFace> fontFace);
-CFStringRef _DWriteFontCopyName(Microsoft::WRL::ComPtr<IDWriteFontFace> fontFace, CFStringRef nameKey);
+CFDictionaryRef _DWriteFontCreateTraitsDict(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace);
+CFStringRef _DWriteFontCopyName(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace, CFStringRef nameKey);

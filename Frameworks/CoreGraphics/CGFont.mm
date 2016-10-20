@@ -48,7 +48,7 @@ static Boolean __CGFontEqual(CFTypeRef cf1, CFTypeRef cf2) {
     struct __CGFont* font1 = (struct __CGFont*)cf1;
     struct __CGFont* font2 = (struct __CGFont*)cf2;
 
-    return (font1->_dwriteFontFace == font2->_dwriteFontFace);
+    return CFEqual(CFAutorelease(CGFontCopyPostScriptName(font1)), CFAutorelease(CGFontCopyPostScriptName(font2)));
 }
 
 static CFHashCode __CGFontHash(CFTypeRef cf) {
@@ -115,15 +115,12 @@ CGFontRef CGFontCreateWithDataProvider(CGDataProviderRef cgDataProvider) {
 CGFontRef CGFontCreateWithFontName(CFStringRef name) {
     size_t memSize = sizeof(struct __CGFont) - sizeof(CFRuntimeBase);
     CGFontRef ret = static_cast<CGFontRef>(_CFRuntimeCreateInstance(kCFAllocatorDefault, CGFontGetTypeID(), memSize, NULL));
+    CFAutorelease(ret);
     struct __CGFont* mutableRet = const_cast<struct __CGFont*>(ret);
 
-    if (FAILED(_DWriteCreateFontFaceWithName(name, &mutableRet->_dwriteFontFace))) {
-        TraceError(g_logTag, L"Failed to create font.");
-        CFRelease(ret);
-        return nullptr;
-    }
+    RETURN_NULL_IF_FAILED(_DWriteCreateFontFaceWithName(name, &mutableRet->_dwriteFontFace));
 
-    return ret;
+    return static_cast<CGFontRef>(CFRetain(ret));
 }
 
 /**
@@ -140,9 +137,7 @@ CGFontRef CGFontCreateCopyWithVariations(CGFontRef font, CFDictionaryRef variati
  @Notes
 */
 CFStringRef CGFontCopyPostScriptName(CGFontRef font) {
-    if (!font) {
-        return nullptr;
-    }
+    RETURN_NULL_IF(!font);
     return _DWriteFontCopyInformationalString(font->_dwriteFontFace, DWRITE_INFORMATIONAL_STRING_POSTSCRIPT_NAME);
 }
 
@@ -217,9 +212,7 @@ CFDictionaryRef CGFontCopyVariations(CGFontRef font) {
  @Notes Returns family name
 */
 CFStringRef CGFontCopyFullName(CGFontRef font) {
-    if (!font) {
-        return nullptr;
-    }
+    RETURN_NULL_IF(!font);
     return _DWriteFontCopyInformationalString(font->_dwriteFontFace, DWRITE_INFORMATIONAL_STRING_FULL_NAME);
 }
 
@@ -276,7 +269,7 @@ int CGFontGetXHeight(CGFontRef font) {
 */
 CGRect CGFontGetFontBBox(CGFontRef font) {
     if (!font) {
-        return { { 0, 0 }, { 0, 0 } };
+        return {};
     }
     return _DWriteFontGetBoundingBox(font->_dwriteFontFace);
 }
@@ -302,7 +295,7 @@ CGFloat CGFontGetStemV(CGFontRef font) {
  @Status Interoperable
 */
 bool CGFontGetGlyphBBoxes(CGFontRef font, const CGGlyph* glyphs, size_t count, CGRect* bboxes) {
-    if (!glyphs || !bboxes || FAILED(_DWriteFontGetBoundingBoxesForGlyphs(font->_dwriteFontFace, glyphs, bboxes, count, false))) {
+    if (!font || !glyphs || !bboxes || FAILED(_DWriteFontGetBoundingBoxesForGlyphs(font->_dwriteFontFace, glyphs, bboxes, count, false))) {
         TraceError(g_logTag, L"Unable to get glyph bounding boxes");
         return false;
     }
@@ -340,9 +333,7 @@ size_t CGFontGetNumberOfGlyphs(CGFontRef font) {
  @Status Interoperable
 */
 bool CGFontGetGlyphAdvances(CGFontRef font, const CGGlyph* glyphs, size_t count, int* advances) {
-    if (!font) {
-        return false;
-    }
+    RETURN_FALSE_IF(!font);
 
     ComPtr<IDWriteFontFace1> fontFace1;
     font->_dwriteFontFace.As(&fontFace1);
@@ -368,9 +359,8 @@ int CGFontGetUnitsPerEm(CGFontRef font) {
 */
 CFTypeID CGFontGetTypeID() {
     static dispatch_once_t initOnce = 0;
-    dispatch_once(&initOnce,
-                  ^{
-                      __kCGFontTypeID = _CFRuntimeRegisterClass(&__CGFontClass);
-                  });
+    dispatch_once(&initOnce, ^{
+        __kCGFontTypeID = _CFRuntimeRegisterClass(&__CGFontClass);
+    });
     return __kCGFontTypeID;
 }

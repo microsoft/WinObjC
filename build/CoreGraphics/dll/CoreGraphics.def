@@ -41,7 +41,7 @@ LIBRARY CoreGraphics
         _DWriteGetFontFamilyNames
         _DWriteGetFontNamesForFamilyName
         _DWriteGetFamilyNameForFontName
-        _InitDWriteFontPropertiesFromName
+        _DWriteInitFontPropertiesFromName
         _DWriteCreateFactoryInstance
         _DWriteCreateTextFormat
         _DWriteCreateFontFamilyWithName
@@ -291,15 +291,6 @@ LIBRARY CoreGraphics
         CGFontGetNumberOfGlyphs
         CGFontGetGlyphAdvances
         CGFontGetUnitsPerEm
-
-        ; private exports below
-        ; CGFontFitChars
-        ; CGFontGetGlyphs
-        ; CGFontGetGlyphsForUnichars
-        ; CGFontSetFTFontSize
-        ; CGFontWrap
-        ; _CGFontLock
-        ; _CGFontUnlock
 
         ; CGFunction.mm
         CGFunctionCreate

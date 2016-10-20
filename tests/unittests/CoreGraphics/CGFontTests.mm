@@ -22,21 +22,21 @@
 // CTFont functionality is generally a superset of CGFont functionality, and hits the same code path
 // Thus, CTFont unit tests can also be thought of as CGFont test coverage
 
-TEST(CGFont, GetFontBBox) {
 // Font names differ slightly between platforms
 #if TARGET_OS_WIN32
-    CFStringRef name = CFSTR("Arial Bold Italic");
-    CFStringRef name2 = CFSTR("Arial Italic");
-    CFStringRef name3 = CFSTR("Courier New Italic");
+static const CFStringRef c_arialBoldItalicName = CFSTR("Arial Bold Italic");
+static const CFStringRef c_arialItalicName = CFSTR("Arial Italic");
+static const CFStringRef c_courierNewItalicName = CFSTR("Courier New Italic");
 #else
-    CFStringRef name = CFSTR("Arial-BoldItalicMT");
-    CFStringRef name2 = CFSTR("Arial-ItalicMT");
-    CFStringRef name3 = CFSTR("CourierNewPS-ItalicMT");
+static const CFStringRef c_arialBoldItalicName = CFSTR("Arial-BoldItalicMT");
+static const CFStringRef c_arialItalicName = CFSTR("Arial-ItalicMT");
+static const CFStringRef c_courierNewItalicName = CFSTR("CourierNewPS-ItalicMT");
 #endif
 
+TEST(CGFont, GetFontBBox) {
     // Windows font bounding boxes differ from ref plat's in 'interesting' but inconsistent ways
     // Best hypothesis: Windows has different versions of the same fonts
-    CGFontRef font = CGFontCreateWithFontName(name);
+    CGFontRef font = CGFontCreateWithFontName(c_arialBoldItalicName);
     CFAutorelease(font);
     CGRect box = CGFontGetFontBBox(font);
 
@@ -51,7 +51,7 @@ TEST(CGFont, GetFontBBox) {
     EXPECT_EQ(2820, box.size.height);
 #endif
 
-    font = CGFontCreateWithFontName(name2);
+    font = CGFontCreateWithFontName(c_arialItalicName);
     CFAutorelease(font);
     box = CGFontGetFontBBox(font);
 
@@ -65,7 +65,7 @@ TEST(CGFont, GetFontBBox) {
     EXPECT_EQ(3884, box.size.width);
 #endif
 
-    font = CGFontCreateWithFontName(name3);
+    font = CGFontCreateWithFontName(c_courierNewItalicName);
     CFAutorelease(font);
     box = CGFontGetFontBBox(font);
 
@@ -87,14 +87,7 @@ TEST(CGFont, GetFontBBox) {
 }
 
 TEST(CGFont, GetBoundingBoxes) {
-// Font names differ slightly between platforms
-#if TARGET_OS_WIN32
-    CFStringRef name = CFSTR("Arial Bold Italic");
-#else
-    CFStringRef name = CFSTR("Arial-BoldItalicMT");
-#endif
-
-    CGFontRef font = CGFontCreateWithFontName(name);
+    CGFontRef font = CGFontCreateWithFontName(c_arialBoldItalicName);
     CFAutorelease(font);
 
     const size_t count = 6;

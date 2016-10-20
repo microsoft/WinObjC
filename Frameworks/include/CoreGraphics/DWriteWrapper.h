@@ -35,7 +35,7 @@ COREGRAPHICS_EXPORT CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef fami
 COREGRAPHICS_EXPORT CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName);
 
 // Create DWrite objects
-COREGRAPHICS_EXPORT void _InitDWriteFontPropertiesFromName(
+COREGRAPHICS_EXPORT void _DWriteInitFontPropertiesFromName(
     CFStringRef fontName, DWRITE_FONT_WEIGHT* weight, DWRITE_FONT_STRETCH* stretch, DWRITE_FONT_STYLE* style, CFStringRef* familyName);
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateFactoryInstance(IDWriteFactory** outFactory);
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateTextFormat(const wchar_t* fontFamilyName,
@@ -48,10 +48,10 @@ COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFamilyWithName(CFStringRef familyNa
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace);
 
 // DWriteFont getters that convert to a CF/CG object or struct
-COREGRAPHICS_EXPORT CFStringRef _DWriteFontCopyInformationalString(Microsoft::WRL::ComPtr<IDWriteFontFace> fontFace,
+COREGRAPHICS_EXPORT CFStringRef _DWriteFontCopyInformationalString(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace,
                                                                    DWRITE_INFORMATIONAL_STRING_ID informationalStringId);
-COREGRAPHICS_EXPORT CFDataRef _DWriteFontCopyTable(Microsoft::WRL::ComPtr<IDWriteFontFace> fontFace, uint32_t tag);
-COREGRAPHICS_EXPORT CGFloat _DWriteFontGetSlantDegrees(Microsoft::WRL::ComPtr<IDWriteFontFace> fontFace);
-COREGRAPHICS_EXPORT CGRect _DWriteFontGetBoundingBox(Microsoft::WRL::ComPtr<IDWriteFontFace> fontFace);
+COREGRAPHICS_EXPORT CFDataRef _DWriteFontCopyTable(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace, uint32_t tag);
+COREGRAPHICS_EXPORT CGFloat _DWriteFontGetSlantDegrees(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace);
+COREGRAPHICS_EXPORT CGRect _DWriteFontGetBoundingBox(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace);
 COREGRAPHICS_EXPORT HRESULT _DWriteFontGetBoundingBoxesForGlyphs(
-    Microsoft::WRL::ComPtr<IDWriteFontFace> fontFace, const CGGlyph* glyphs, CGRect* boundingRects, size_t count, bool isSideways);
+    const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace, const CGGlyph* glyphs, CGRect* boundingRects, size_t count, bool isSideways);

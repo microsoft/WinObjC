@@ -111,8 +111,9 @@ static Boolean __CTFontEqual(CFTypeRef cf1, CFTypeRef cf2) {
     struct __CTFont* font1 = (struct __CTFont*)cf1;
     struct __CTFont* font2 = (struct __CTFont*)cf2;
 
-    return (font1->_pointSize == font2->_pointSize) && (font1->_dwriteFontFace == font2->_dwriteFontFace) &&
-           CFEqual(font1->_descriptor, font2->_descriptor);
+    return (font1->_pointSize == font2->_pointSize) &&
+           (CFEqual(CFAutorelease(CTFontCopyPostScriptName(font1)), CFAutorelease(CTFontCopyPostScriptName(font2)))) &&
+           (CFEqual(font1->_descriptor, font2->_descriptor));
 }
 
 static CFHashCode __CTFontHash(CFTypeRef cf) {
@@ -550,6 +551,15 @@ static CGFloat __CTFontScaleMetric(CTFontRef font, CGFloat metric) {
     return metric * font->_pointSize / CTFontGetUnitsPerEm(font);
 }
 
+// Private helper for converting a whole CGRect rather than a single metric
+static CGRect __CTFontScaleRect(CTFontRef font, CGRect& rect) {
+    rect.origin.x = __CTFontScaleMetric(font, rect.origin.x);
+    rect.origin.y = __CTFontScaleMetric(font, rect.origin.y);
+    rect.size.width = __CTFontScaleMetric(font, rect.size.width);
+    rect.size.height = __CTFontScaleMetric(font, rect.size.height);
+    return rect;
+}
+
 /**
  @Status Interoperable
  @Notes
@@ -620,12 +630,7 @@ CGRect CTFontGetBoundingBox(CTFontRef font) {
     CGRect ret = _DWriteFontGetBoundingBox(font->_dwriteFontFace);
 
     // Scale the bounding box
-    ret.origin.x = __CTFontScaleMetric(font, ret.origin.x);
-    ret.origin.y = __CTFontScaleMetric(font, ret.origin.y);
-    ret.size.width = __CTFontScaleMetric(font, ret.size.width);
-    ret.size.height = __CTFontScaleMetric(font, ret.size.height);
-
-    return ret;
+    return __CTFontScaleRect(font, ret);
 }
 
 /**
@@ -719,28 +724,26 @@ CGRect CTFontGetBoundingRectsForGlyphs(
                 font->_dwriteFontFace, glyphs, boundingRects, count, (orientation == kCTFontVerticalOrientation)))) {
             TraceError(g_logTag, L"Unable to get glyph bounding boxes");
             return CGRectNull;
-
-        } else {
-            CGRect ret = { { std::numeric_limits<CGFloat>::max(), std::numeric_limits<CGFloat>::max() },
-                           { std::numeric_limits<CGFloat>::lowest(), std::numeric_limits<CGFloat>::lowest() } };
-            for (size_t i = 0; i < count; ++i) {
-                // DWrite uses design units, where as CTFont uses point size
-                // Scale all the boundingRects
-                boundingRects[i].origin.x = __CTFontScaleMetric(font, boundingRects[i].origin.x);
-                boundingRects[i].origin.y = __CTFontScaleMetric(font, boundingRects[i].origin.y);
-                boundingRects[i].size.width = __CTFontScaleMetric(font, boundingRects[i].size.width);
-                boundingRects[i].size.height = __CTFontScaleMetric(font, boundingRects[i].size.height);
-
-                // Find the overall bounding rect
-                // This can probably be made more efficient by putting all of each attribute in an array and sorting it,
-                // but that seems like overkill for now
-                ret.origin.x = std::min(ret.origin.x, boundingRects[i].origin.x);
-                ret.origin.y = std::min(ret.origin.y, boundingRects[i].origin.y);
-                ret.size.width = std::max(ret.size.width, boundingRects[i].size.width);
-                ret.size.height = std::max(ret.size.height, boundingRects[i].size.height);
-            }
-            return ret;
         }
+
+        CGRect ret = { { std::numeric_limits<CGFloat>::max(), std::numeric_limits<CGFloat>::max() },
+                       { std::numeric_limits<CGFloat>::lowest(), std::numeric_limits<CGFloat>::lowest() } };
+
+        for (size_t i = 0; i < count; ++i) {
+            // DWrite uses design units, where as CTFont uses point size
+            // Scale all the boundingRects
+            boundingRects[i] = __CTFontScaleRect(font, boundingRects[i]);
+
+            // Find the overall bounding rect
+            // This can probably be made more efficient by putting all of each attribute in an array and sorting it,
+            // but that seems like overkill for now
+            ret.origin.x = std::min(ret.origin.x, boundingRects[i].origin.x);
+            ret.origin.y = std::min(ret.origin.y, boundingRects[i].origin.y);
+            ret.size.width = std::max(ret.size.width, boundingRects[i].size.width);
+            ret.size.height = std::max(ret.size.height, boundingRects[i].size.height);
+        }
+
+        return ret;
 
     } else {
         // Caller doesn't care about boundingRects, but still needs to calculate the overall rect
@@ -900,9 +903,8 @@ CFDataRef CTFontCopyTable(CTFontRef font, CTFontTableTag table, CTFontTableOptio
 */
 CFTypeID CTFontGetTypeID() {
     static dispatch_once_t initOnce = 0;
-    dispatch_once(&initOnce,
-                  ^{
-                      __kCTFontTypeID = _CFRuntimeRegisterClass(&__CTFontClass);
-                  });
+    dispatch_once(&initOnce, ^{
+        __kCTFontTypeID = _CFRuntimeRegisterClass(&__CTFontClass);
+    });
     return __kCTFontTypeID;
 }
