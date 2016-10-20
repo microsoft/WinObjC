@@ -75,10 +75,10 @@ public:
 
 class ImageDataStreamFile : public ImageDataStream {
 private:
-    EbrFile* fpIn;
+    StrongId<NSInputStream> _inputStream;
 
 public:
-    ImageDataStreamFile(EbrFile* in);
+    ImageDataStreamFile(NSInputStream* inStream);
     int readData(void* in, int len);
     ~ImageDataStreamFile();
 };

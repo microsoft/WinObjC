@@ -52,21 +52,7 @@ static NSString* getPathForFile(const wchar_t* fileName) {
 static NSData* getDataFromImageFile(const wchar_t* imageFilename) {
     NSString* testFileFullPath = getPathForFile(imageFilename);
 
-    EbrFile* fp = EbrFopen([testFileFullPath UTF8String], "rb");
-    if (!fp) {
-        return nil;
-    }
-
-    EbrFseek(fp, 0, SEEK_END);
-    size_t length = EbrFtell(fp);
-    char* byteData = (char*)IwMalloc(length);
-    EbrFseek(fp, 0, SEEK_SET);
-    size_t newLen = EbrFread(byteData, sizeof(char), length, fp);
-    EbrFclose(fp);
-
-    NSData* imgData = [NSData dataWithBytes:(const void*)byteData length:length];
-    IwFree(byteData);
-    return imgData;
+    return [NSData dataWithContentsOfFile:testFileFullPath];
 }
 
 static CFURLRef getURLRefFromFilename(const wchar_t* filename) {
@@ -76,7 +62,7 @@ static CFURLRef getURLRefFromFilename(const wchar_t* filename) {
 
 static CFURLRef getURLRefForOutFile(const wchar_t* filename) {
     NSString* testFileFullPath = getPathForFile(filename);
-    EbrRemove([testFileFullPath UTF8String]);
+    [[NSFileManager defaultManager] removeItemAtPath:testFileFullPath error:nil];
     return (CFURLRef)[NSURL fileURLWithPath:testFileFullPath];
 }
 
@@ -1235,7 +1221,7 @@ TEST(ImageIO, DestinationOptionsTest) {
     };
 
     NSDictionary* encodeDictionary = @{
-        (id)kCGImagePropertyGIFDictionary : gifEncodeOptions,
+        (id) kCGImagePropertyGIFDictionary : gifEncodeOptions,
     };
 
     myImageDest = CGImageDestinationCreateWithURL(imgUrl, kUTTypeGIF, 3, NULL);
@@ -1484,7 +1470,7 @@ TEST(ImageIO, DestinationImageOptionsGIFTest) {
     CFURLRef imgUrl = getURLRefForOutFile(outFile);
 
     NSDictionary* gifOptions = @{
-        (id)kCGImagePropertyGIFDelayTime : [NSNumber numberWithFloat:0.05],
+        (id) kCGImagePropertyGIFDelayTime : [NSNumber numberWithFloat:0.05],
     };
 
     int orientation = 2;

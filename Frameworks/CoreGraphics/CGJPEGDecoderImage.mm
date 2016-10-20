@@ -297,18 +297,11 @@ CGImageBacking* CGJPEGImageBacking::ConstructBacking() {
 }
 
 void CGJPEGImageBacking::Decode(void* imgDest, int stride) {
-    EbrFile* fpIn;
-
     ImageDataStream* reader;
 
     if (_fileName) {
-        fpIn = EbrFopen(_fileName, "rb");
-        if (!fpIn) {
-            assert(0);
-            return;
-        }
-
-        reader = new ImageDataStreamFile(fpIn);
+        NSInputStream* inputStream = [NSInputStream inputStreamWithFileAtPath:[NSString stringWithUTF8String:_fileName]];
+        reader = new ImageDataStreamFile(inputStream);
     } else {
         reader = new ImageDataStreamMemory((char*)[_data bytes], [_data length]);
     }

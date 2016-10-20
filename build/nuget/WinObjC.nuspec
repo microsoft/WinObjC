@@ -61,6 +61,7 @@
     <file src="$winobjc_root$\build\win32\release\universal windows\safariservices.dll"                                          target="runtimes\win10-x86\native" />
     <file src="$winobjc_root$\build\win32\release\universal windows\cfcharactersetbitmaps.bitmap"                                target="runtimes\win10-x86\native" />
     <file src="$winobjc_root$\build\win32\release\universal windows\mobilecoreservices.dll"                                      target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\audiotoolbox.dll"                                            target="runtimes\win10-x86\native" />
 
     <file src="$winobjc_root$\build\win32\release\universal windows\release\winobjcrt.dll"                                       target="runtimes\win10-x86\native" />
 
