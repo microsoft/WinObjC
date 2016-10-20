@@ -151,5 +151,5 @@ CORETEXT_EXPORT CFIndex _CTTypesetterSuggestLineBreakWithOffsetAndCallback(
 // Note: For some reason namemangling does not happen for these functions causing a linker error. Bug??
 CORETEXT_EXTERNC_BEGIN
 void _CTLineDraw(CTLineRef line, CGContextRef ctx, bool adjustTextPosition);
-void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTextPosition);
+void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTextPosition, CGFloat lineHeight);
 CORETEXT_EXTERNC_END

@@ -1991,7 +1991,7 @@ CGPathRef CGContextCairo::CGContextCopyPath(void) {
  *
  * @parameter glyphRun DWRITE_GLYPH_RUN object to render
  */
-void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
+void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, float lineHeight) {
     ObtainLock();
 
     CGContextStrokePath();
@@ -2014,22 +2014,19 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     // This means flipping the coordinate system,
     // and applying the transformation about the center of the glyph run rather than about the baseline
     // Flip and translate by the difference between the center and the baseline, apply text transforms, then flip and translate back
-    DWRITE_FONT_METRICS fontMetrics;
-    glyphRun->fontFace->GetMetrics(&fontMetrics);
-    float baselineCenterDelta = (fontMetrics.ascent - fontMetrics.descent) * glyphRun->fontEmSize / fontMetrics.designUnitsPerEm / 2;
 
     // Transform to text space
     // Technically there should be a horizontal translation to the center as well,
     // but it's to the center of _each individual glyph_, as the reference platform applies the text matrix to each glyph individually
     // Uncertain whether it's ever going to be worth it to support this using DWrite, so just ignore it for now
-    CGAffineTransform transform = CGAffineTransformMake(1, 0, 0, -1, 0, baselineCenterDelta);
+    CGAffineTransform transform = CGAffineTransformMake(1, 0, 0, -1, 0, lineHeight / 2.0f);
 
     // Apply text transforms
     transform = CGAffineTransformConcat(curState->curTextMatrix, transform);
     transform = CGAffineTransformTranslate(transform, curState->curTextPosition.x, curState->curTextPosition.y);
 
     // Undo transform to text space
-    transform = CGAffineTransformConcat(CGAffineTransformMake(1, 0, 0, -1, 0, -baselineCenterDelta), transform);
+    transform = CGAffineTransformConcat(CGAffineTransformMake(1, 0, 0, -1, 0, -lineHeight / 2.0f), transform);
 
     // Apply the context CTM
     transform = CGAffineTransformConcat(curState->curTransform, transform);
