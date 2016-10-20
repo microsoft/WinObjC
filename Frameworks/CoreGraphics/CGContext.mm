@@ -164,7 +164,7 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext, __CGContextImpl> {
 #define NOISY_RETURN_IF_NULL(param, ...)                                         \
     do {                                                                         \
         if (!context) {                                                          \
-            TraceError(TAG, L"%hs(...): null " #param "!", __PRETTY_FUNCTION__); \
+            TraceError(TAG, L"%hs: null " #param "!", __PRETTY_FUNCTION__); \
             return __VA_ARGS__;                                                  \
         }                                                                        \
     \
