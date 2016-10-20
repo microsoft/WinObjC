@@ -596,10 +596,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
 
     if ([self alpha] <= 0.01f) {
         if (DEBUG_HIT_TESTING) {
-            TraceVerbose(TAG,
-                         L"_isHitTestable returning NO for %hs(0x%p) because [self alpha] <= 0.01f.",
-                         object_getClassName(self),
-                         self);
+            TraceVerbose(TAG, L"_isHitTestable returning NO for %hs(0x%p) because [self alpha] <= 0.01f.", object_getClassName(self), self);
         }
         return NO;
     }
@@ -1577,12 +1574,7 @@ static float doRound(float f) {
     }
 
     if (DEBUG_LAYOUT) {
-        TraceVerbose(TAG,
-                     L"Adding subview %hs(0x%p) to %hs(0x%p)",
-                     object_getClassName(subview),
-                     subview,
-                     object_getClassName(self),
-                     self);
+        TraceVerbose(TAG, L"Adding subview %hs(0x%p) to %hs(0x%p)", object_getClassName(subview), subview, object_getClassName(self), self);
     }
 
     UIWindow* subviewWindow = [subview _getWindowInternal];
@@ -2293,11 +2285,7 @@ static float doRound(float f) {
     priv->userInteractionEnabled = enabled;
 
     if (DEBUG_HIT_TESTING) {
-        TraceVerbose(TAG,
-                     L"Setting %hs(0x%p) to userInteractionEnabled=%hs.",
-                     object_getClassName(self),
-                     self,
-                     enabled ? "true" : "false");
+        TraceVerbose(TAG, L"Setting %hs(0x%p) to userInteractionEnabled=%hs.", object_getClassName(self), self, enabled ? "true" : "false");
     }
 
     // Keep our hit test state up to date
@@ -2934,7 +2922,8 @@ static float doRound(float f) {
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Spring parameters are ignored
 */
 + (void)animateWithDuration:(NSTimeInterval)duration
                       delay:(NSTimeInterval)delay
@@ -2943,8 +2932,7 @@ static float doRound(float f) {
                     options:(UIViewAnimationOptions)options
                  animations:(void (^)(void))animations
                  completion:(void (^)(BOOL finished))completion {
-    UNIMPLEMENTED();
-    completion(YES);
+    [self animateWithDuration:duration delay:delay options:options animations:animations completion:completion];
 }
 
 /**

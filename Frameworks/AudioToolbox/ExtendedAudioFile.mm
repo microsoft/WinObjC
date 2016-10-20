@@ -15,7 +15,6 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#include "Platform/EbrPlatform.h"
 #include "Etc.h"
 
 #import "stb_vorbis.h"

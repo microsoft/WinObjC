@@ -505,8 +505,8 @@ CF_EXPORT CFMutableStringRef _CFCreateApplicationRepositoryPath(CFAllocatorRef a
     CFMutableStringRef result = NULL;
     CFStringRef str = NULL;
 
-    // WINOBJC: make sure that nFolder is CSIDL_APPDATA or CSIDL_LOCAL_APPDATA and return the app data folder for the app.
-    Wrappers::HString path = GetAppDataPath(nFolder == CSIDL_LOCAL_APPDATA);
+    // WINOBJC: In Reference platform, CFPreferences does not roam, so ignore nFolder
+    Wrappers::HString path = GetAppDataPath(true);
     if (path.IsValid()) {
         unsigned int rawLength;
         const wchar_t* rawPath = WindowsGetStringRawBuffer(path.Get(), &rawLength);

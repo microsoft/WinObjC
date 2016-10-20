@@ -348,7 +348,7 @@ typedef NS_ENUM(NSUInteger, _NSFileOpenMode) { _NSFileOpenModeRead, _NSFileOpenM
  @Status Interoperable
 */
 - (void)synchronizeFile {
-    if (EbrFflush(EbrFileFromFd(_fileDescriptor)) != 0) {
+    if (EbrFflush(_fileDescriptor) != 0) {
         [NSException raise:NSFileHandleOperationException format:@"Unable to synchronize file."];
     }
 }
