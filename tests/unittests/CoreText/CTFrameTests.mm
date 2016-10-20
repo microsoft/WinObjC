@@ -183,3 +183,20 @@ TEST(CTFrame, GetLineOrigins) {
 
     CGPathRelease(path);
 }
+
+TEST(CTFrame, GetPath) {
+    EXPECT_EQ(nil, CTFrameGetPath(nil));
+
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString(@"TEST");
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(string);
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddRect(path, NULL, CGRectMake(0, 0, 60, 300));
+    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    CFAutorelease(framesetter);
+    CFAutorelease(frame);
+
+    EXPECT_EQ(path, CTFrameGetPath(frame));
+
+    CGPathRelease(path);
+    EXPECT_NE(nil, CTFrameGetPath(frame));
+}
