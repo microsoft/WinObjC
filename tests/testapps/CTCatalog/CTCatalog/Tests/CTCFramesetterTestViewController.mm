@@ -153,12 +153,14 @@
     _framesetterView.backgroundColor = [UIColor whiteColor];
     // Sets view to call updateTableViews when done drawing
     _framesetterView.drawDelegate = self;
+    _framesetterView.text = @"";
     [self.view addSubview:_framesetterView];
 
     _functionCells = [NSMutableArray new];
 
     _suggestedFrameSizeView = [[CTFramesetterTestView alloc] initWithFrame:CGRectMake(0, 200, 100, 100)];
     _suggestedFrameSizeView.backgroundColor = [UIColor whiteColor];
+    _suggestedFrameSizeView.text = @"";
     [self.view addSubview:_suggestedFrameSizeView];
 
     // Draws the three alignment boxes
