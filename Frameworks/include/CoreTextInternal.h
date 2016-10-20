@@ -91,6 +91,7 @@ inline void _SafeRelease(T** p) {
 @public
     StrongId<_CTFramesetter> _framesetter;
     CGRect _frameRect;
+    woc::unique_cf<CGPathRef> _path;
     std::vector<CGPoint> _lineOrigins;
     StrongId<NSMutableArray<_CTLine*>> _lines;
 }

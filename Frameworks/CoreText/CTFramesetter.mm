@@ -63,6 +63,7 @@ CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange string
     _CGPathGetBoundingBoxInternal(path, &frameSize);
 
     _CTFrame* ret = __CreateFrame(static_cast<_CTFramesetter*>(framesetter), frameSize, stringRange);
+    ret->_path.reset(CGPathRetain(path));
 
     return static_cast<CTFrameRef>(ret);
 }
