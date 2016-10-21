@@ -46,6 +46,8 @@
 
 using namespace Microsoft::WRL;
 
+static const wchar_t* TAG = L"CGContext";
+
 static inline D2D_RECT_F __CGRectToD2D_F(CGRect rect) {
     return {
         rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width, rect.origin.y + rect.size.height,
@@ -135,7 +137,7 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
     // See the comments above _CGContextSetShadowProjectionTransform.
     CGAffineTransform shadowProjectionTransform{ CGAffineTransformIdentity };
 
-    std::stack<__CGContextDrawingState> stateStack{};
+    std::stack<std::stack<__CGContextDrawingState>> layerStateStack{};
 
     woc::unique_cf<CGMutablePathRef> currentPath{ nullptr };
 
@@ -145,21 +147,88 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
     bool allowsFontSubpixelPositioning = false;
     bool allowsFontSubpixelQuantization = false;
 
+    CGAffineTransform textMatrix;
+
     __CGContext() {
-        // Set up a default/baseline state
-        stateStack.emplace();
+        // Set up a default/baseline state stack...
+        layerStateStack.emplace();
+        // ... containing a baseline state.
+        layerStateStack.top().emplace();
     }
 
     inline ComPtr<ID2D1RenderTarget>& RenderTarget() {
         return renderTarget;
     }
 
-    inline std::stack<__CGContextDrawingState>& GStateStack() {
-        return stateStack;
+    inline __CGContextDrawingState& CurrentGState() {
+        return layerStateStack.top().top();
     }
 
-    inline __CGContextDrawingState& CurrentGState() {
-        return GStateStack().top();
+    inline void _SaveD2DDrawingState(__CGContextDrawingState& gState) {
+        ComPtr<ID2D1DrawingStateBlock> drawingState;
+        FAIL_FAST_IF_FAILED(Factory()->CreateDrawingStateBlock(&drawingState));
+
+        RenderTarget()->SaveDrawingState(drawingState.Get());
+
+        gState.d2dState = drawingState;
+    }
+
+    inline void _RestoreD2DDrawingState(__CGContextDrawingState& gState) {
+        RenderTarget()->RestoreDrawingState(gState.d2dState.Get());
+        gState.d2dState = nullptr;
+    }
+
+    inline void PushGState() {
+        auto& currentLayerStack = layerStateStack.top();
+        auto& oldState = currentLayerStack.top();
+
+        // This uses the drawing state's copy constructor.
+        currentLayerStack.emplace(oldState);
+
+        _SaveD2DDrawingState(oldState);
+    }
+
+    inline void PopGState() {
+        auto& currentLayerStack = layerStateStack.top();
+        if (currentLayerStack.size() <= 1) {
+            TraceError(TAG, L"Invalid attempt to pop last graphics state.");
+            return;
+        }
+
+        currentLayerStack.pop();
+        auto& newState = currentLayerStack.top();
+        _RestoreD2DDrawingState(newState);
+    }
+
+    inline void PushLayer(CGRect* rect = nullptr) {
+        auto& oldState = CurrentGState();
+
+        layerStateStack.emplace();
+        auto& newLayerStack = layerStateStack.top();
+
+        // Copy the old state into the base state for the new layer.
+        newLayerStack.emplace(oldState);
+
+        _SaveD2DDrawingState(oldState);
+
+        D2D1_RECT_F layerRect = D2D1::InfiniteRect();
+        if (rect) {
+            layerRect = __CGRectToD2D_F(*rect);
+        }
+        RenderTarget()->PushLayer(
+            D2D1::LayerParameters(layerRect, nullptr, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE, D2D1::IdentityMatrix(), oldState.alpha), nullptr);
+    }
+
+    inline void PopLayer() {
+        if (layerStateStack.size() <= 1) {
+            TraceError(TAG, L"Invalid attempt to pop base layer.");
+            return;
+        }
+        layerStateStack.pop();
+        auto& newState = CurrentGState();
+        _RestoreD2DDrawingState(newState);
+
+        RenderTarget()->PopLayer();
     }
 
     inline bool HasPath() {
@@ -240,8 +309,6 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
         }                                                                   \
     } while (0)
 
-static const wchar_t* TAG = L"CGContext";
-
 #pragma region Global State - CFRuntimeClass
 /**
  @Status Interoperable
@@ -305,17 +372,7 @@ void CGContextRelease(CGContextRef context) {
 */
 void CGContextSaveGState(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
-    auto& oldState = context->CurrentGState();
-
-    // This uses the drawing state's copy constructor.
-    context->GStateStack().emplace(oldState);
-
-    auto factory = context->Factory();
-    ComPtr<ID2D1DrawingStateBlock> drawingState;
-    FAIL_FAST_IF_FAILED(factory->CreateDrawingStateBlock(&drawingState));
-
-    context->RenderTarget()->SaveDrawingState(drawingState.Get());
-    oldState.d2dState = drawingState;
+    context->PushGState();
 }
 
 /**
@@ -323,15 +380,7 @@ void CGContextSaveGState(CGContextRef context) {
 */
 void CGContextRestoreGState(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
-    if (context->GStateStack().size() <= 1) {
-        TraceError(TAG, L"Invalid attempt to pop last graphics state.");
-        return;
-    }
-
-    context->GStateStack().pop();
-    auto& newState = context->CurrentGState();
-    context->RenderTarget()->RestoreDrawingState(newState.d2dState.Get());
-    newState.d2dState = nullptr;
+    context->PopGState();
 }
 #pragma endregion
 
@@ -360,7 +409,8 @@ void CGContextSynchronize(CGContextRef context) {
 */
 void CGContextBeginTransparencyLayer(CGContextRef context, CFDictionaryRef auxInfo) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->PushLayer();
+    CGContextSetAlpha(context, 1.0);
 }
 
 /**
@@ -368,7 +418,8 @@ void CGContextBeginTransparencyLayer(CGContextRef context, CFDictionaryRef auxIn
 */
 void CGContextBeginTransparencyLayerWithRect(CGContextRef context, CGRect rect, CFDictionaryRef auxInfo) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->PushLayer(&rect);
+    CGContextSetAlpha(context, 1.0);
 }
 
 /**
@@ -376,7 +427,7 @@ void CGContextBeginTransparencyLayerWithRect(CGContextRef context, CGRect rect, 
 */
 void CGContextEndTransparencyLayer(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->PopLayer();
 }
 #pragma endregion
 
@@ -895,19 +946,20 @@ void CGContextSetFontSize(CGContextRef context, CGFloat ptSize) {
 
 /**
  @Status Interoperable
+ @Notes Not part of the Graphics State Block.
 */
 void CGContextSetTextMatrix(CGContextRef context, CGAffineTransform matrix) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->textMatrix = matrix;
 }
 
 /**
  @Status Interoperable
+ @Notes Not part of the Graphics State Block.
 */
 CGAffineTransform CGContextGetTextMatrix(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return StubReturn();
+    NOISY_RETURN_IF_NULL(context, CGAffineTransformIdentity);
+    return context->textMatrix;
 }
 
 /**
