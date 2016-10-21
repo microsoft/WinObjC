@@ -263,7 +263,7 @@ CGRect CTRunGetImageBounds(CTRunRef run, CGContextRef context, CFRange range) {
     return StubReturn();
 }
 
-void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTextPosition, CGFloat lineHeight) {
+void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTextPosition, CGFloat lineAscent) {
     _CTRun* curRun = static_cast<_CTRun*>(run);
     if (!curRun || textRange.length < 0L || textRange.location < 0L ||
         textRange.location + textRange.length > curRun->_dwriteGlyphRun.glyphCount) {
@@ -289,7 +289,7 @@ void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTe
 
     if (textRange.location == 0L && (textRange.length == 0L || textRange.length == curRun->_dwriteGlyphRun.glyphCount)) {
         // Print the whole glyph run
-        CGContextDrawGlyphRun(ctx, &curRun->_dwriteGlyphRun, lineHeight);
+        CGContextDrawGlyphRun(ctx, &curRun->_dwriteGlyphRun, lineAscent);
     } else {
         if (textRange.length == 0L) {
             textRange.length = curRun->_dwriteGlyphRun.glyphCount - textRange.location;
@@ -297,7 +297,7 @@ void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTe
 
         // Only print glyphs in range
         DWRITE_GLYPH_RUN runInRange = __GetGlyphRunForDrawingInRange(curRun->_dwriteGlyphRun, textRange);
-        CGContextDrawGlyphRun(ctx, &runInRange, lineHeight);
+        CGContextDrawGlyphRun(ctx, &runInRange, lineAscent);
     }
 }
 
@@ -307,9 +307,9 @@ void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTe
 */
 void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
     if (run && ctx) {
-        CGFloat ascent, descent;
-        CTRunGetTypographicBounds(run, {}, &ascent, &descent, nullptr);
-        _CTRunDraw(run, ctx, textRange, true, ascent - descent);
+        CGFloat ascent;
+        CTRunGetTypographicBounds(run, {}, &ascent, nullptr, nullptr);
+        _CTRunDraw(run, ctx, textRange, true, ascent);
     }
 }
 

@@ -1991,7 +1991,7 @@ CGPathRef CGContextCairo::CGContextCopyPath(void) {
  *
  * @parameter glyphRun DWRITE_GLYPH_RUN object to render
  */
-void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, float lineHeight) {
+void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, float lineAscent) {
     ObtainLock();
 
     CGContextStrokePath();
@@ -2019,14 +2019,14 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, flo
     // Technically there should be a horizontal translation to the center as well,
     // but it's to the center of _each individual glyph_, as the reference platform applies the text matrix to each glyph individually
     // Uncertain whether it's ever going to be worth it to support this using DWrite, so just ignore it for now
-    CGAffineTransform transform = CGAffineTransformMake(1, 0, 0, -1, 0, lineHeight / 2.0f);
+    CGAffineTransform transform = CGAffineTransformMake(1, 0, 0, -1, 0, lineAscent / 2.0f);
 
     // Apply text transforms
     transform = CGAffineTransformConcat(curState->curTextMatrix, transform);
     transform = CGAffineTransformTranslate(transform, curState->curTextPosition.x, curState->curTextPosition.y);
 
     // Undo transform to text space
-    transform = CGAffineTransformConcat(CGAffineTransformMake(1, 0, 0, -1, 0, -lineHeight / 2.0f), transform);
+    transform = CGAffineTransformConcat(CGAffineTransformMake(1, 0, 0, -1, 0, -lineAscent / 2.0f), transform);
 
     // Apply the context CTM
     transform = CGAffineTransformConcat(curState->curTransform, transform);

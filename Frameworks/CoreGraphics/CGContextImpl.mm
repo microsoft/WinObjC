@@ -788,7 +788,7 @@ CGPathRef CGContextImpl::CGContextCopyPath(void) {
     return NULL;
 }
 
-void CGContextImpl::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, float lineHeight) {
+void CGContextImpl::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, float lineAscent) {
 }
 
 // TODO 1077:: Remove once D2D render target is implemented
