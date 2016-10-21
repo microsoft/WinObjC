@@ -72,18 +72,31 @@ static void drawString(UIFont* font,
     NSAttributedString* attr =
         [[[NSAttributedString alloc] initWithString:string
                                          attributes:@{
-                                             (NSString*) kCTForegroundColorFromContextAttributeName : (id)kCFBooleanTrue, (NSString*)
-                                             kCTParagraphStyleAttributeName : (id)CTParagraphStyleCreate(styles, 2), (NSString*)
-                                             kCTFontAttributeName : font
+                                             (NSString*)kCTForegroundColorFromContextAttributeName : (id)kCFBooleanTrue,
+                                             (NSString*)kCTParagraphStyleAttributeName : (id)CTParagraphStyleCreate(styles, 2),
+                                             (NSString*)kCTFontAttributeName : font
                                          }] autorelease];
 
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(static_cast<CFAttributedStringRef>(attr));
 
     CGPathRef path = CGPathCreateWithRect(rect, nullptr);
     CTFrameRef frame = CTFramesetterCreateFrame(framesetter, {}, path, nullptr);
-    CGContextSetTextPosition(context, rect.origin.x, rect.origin.y);
+
+    // Invert text matrix so glyphs are drawn with correct orientation
     CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0f, -1.0f));
-    CTFrameDraw(frame, context);
+
+    // Can't draw the entire frame because it assumes our space has been flipped and translated
+    NSArray* lines = static_cast<NSArray*>(CTFrameGetLines(frame));
+    std::vector<CGPoint> origins([lines count]);
+    CTFrameGetLineOrigins(frame, {}, origins.data());
+    for (size_t i = 0; i < origins.size(); ++i) {
+        // Need to draw each line at given line origin relative to rect origin
+        // Translated vertically by lineheight (ascent - descent) to counteract flip done by CT*Draw methods
+        CGFloat ascent, descent;
+        CTLineGetTypographicBounds(static_cast<CTLineRef>(lines[i]), &ascent, &descent, nullptr);
+        CGContextSetTextPosition(context, origins[i].x + rect.origin.x, origins[i].y + rect.origin.y - (ascent - descent));
+        CTLineDraw(static_cast<CTLineRef>(lines[i]), context);
+    }
 
     if (sizeOut) {
         *sizeOut = _CTFrameGetSize(frame);
@@ -238,12 +251,12 @@ static NSDictionary* _getDefaultUITextAttributes() {
  @Status Interoperable
 */
 - (CGSize)drawAtPoint:(CGPoint)pt
-             forWidth:(float)forWidth
-             withFont:(UIFont*)font
-          minFontSize:(float)minFontSize
-       actualFontSize:(float*)actualFontSize
-        lineBreakMode:(UILineBreakMode)lineBreak
-   baselineAdjustment:(UIBaselineAdjustment)baseline {
+              forWidth:(float)forWidth
+              withFont:(UIFont*)font
+           minFontSize:(float)minFontSize
+        actualFontSize:(float*)actualFontSize
+         lineBreakMode:(UILineBreakMode)lineBreak
+    baselineAdjustment:(UIBaselineAdjustment)baseline {
     CGSize fontExtent;
     CGRect rct;
 
@@ -264,11 +277,11 @@ static NSDictionary* _getDefaultUITextAttributes() {
  @Status Interoperable
 */
 - (CGSize)drawAtPoint:(CGPoint)pt
-             forWidth:(float)forWidth
-             withFont:(UIFont*)font
-             fontSize:(float)fontSize
-        lineBreakMode:(UILineBreakMode)lineBreak
-   baselineAdjustment:(UIBaselineAdjustment)baseline {
+              forWidth:(float)forWidth
+              withFont:(UIFont*)font
+              fontSize:(float)fontSize
+         lineBreakMode:(UILineBreakMode)lineBreak
+    baselineAdjustment:(UIBaselineAdjustment)baseline {
     CGSize fontExtent;
     CGRect rct;
 
