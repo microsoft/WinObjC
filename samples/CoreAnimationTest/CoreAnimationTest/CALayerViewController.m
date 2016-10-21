@@ -139,19 +139,6 @@
     _layer.backgroundColor = color.CGColor;
 }
 
-/*
- CALayer properties
-    "contentsCenter"
-    "anchorPoint"
-    "position"
-    "bounds.origin"
-    "bounds.size"
-    "masksToBounds"
-    "transform"
-    "contentsOrientation"
-    "zIndex"
-*/
-
 - (void)setupLayer {
     _layer = [[CALayer alloc] init];
 
@@ -168,15 +155,15 @@
     // _layer.mask
     // _layer.doubleSided
 
-    _layer.cornerRadius = 100.0;
-    _layer.borderWidth = 12.0;
-    _layer.borderColor = [UIColor whiteColor].CGColor;
+    //_layer.cornerRadius = 100.0;
+    //_layer.borderWidth = 12.0;
+    //_layer.borderColor = [UIColor whiteColor].CGColor;
 
     _layer.backgroundColor = [UIColor orangeColor].CGColor;
 
-    _layer.shadowOpacity = 0.75;
-    _layer.shadowRadius = 3.0;
-    _layer.shadowOffset = CGSizeMake(0, 3);
+    //_layer.shadowOpacity = 0.75;
+    //_layer.shadowRadius = 3.0;
+    //_layer.shadowOffset = CGSizeMake(0, 3);
     // _layer.shadowPath
     // _layer.style
     // _layer.allowsEdgeAntiAliasing

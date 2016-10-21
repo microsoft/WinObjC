@@ -25,8 +25,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    UIView* placeholderUIView = [[UIView alloc] init];
-
     // CALayer Basic
     [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle:@"CALayer Basic"];
 
@@ -43,31 +41,31 @@
     [self addMenuItemSegue:@"CAEmitterLayer" andTitle:@"CAEmitterLayer"];
 
     // CALayer Transactions
-    [self addMenuItemView:placeholderUIView andTitle:@"CALayer Transactions (CATransactions) - TBD"];
+    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CALayer Transactions (CATransactions) - TBD"];
 
     // CALayer Transform2D
-    [self addMenuItemView:placeholderUIView andTitle:@"CALayer Tranform2D - TBD"];
+    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CALayer Tranform2D - TBD"];
 
     // CALayer Transform3D
-    [self addMenuItemView:placeholderUIView andTitle:@"CALayer Transform3D - TBD"];
+    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CALayer Transform3D - TBD"];
 
     // AVPlayerLayer
-    [self addMenuItemView:placeholderUIView andTitle:@"AVPlayerLayer - TBD"];
+    [self addMenuItemView:[[UIView alloc] init] andTitle:@"AVPlayerLayer - TBD"];
 
     // CAGradientLayer
-    [self addMenuItemView:placeholderUIView andTitle:@"CAGradientLayer - TBD"];
+    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CAGradientLayer - TBD"];
 
     // CATextLayer
-    [self addMenuItemView:placeholderUIView andTitle:@"CATextLayer - TBD"];
+    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CATextLayer - TBD"];
 
     // CATiledLayer
-    [self addMenuItemView:placeholderUIView andTitle:@"CATiledLayer - TBD"];
+    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CATiledLayer - TBD"];
 
     // CAEAGLLayer
-    [self addMenuItemView:placeholderUIView andTitle:@"CAEAGLLayer - TBD"];
+    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CAEAGLLayer - TBD"];
 
     // CAReplicatorLayer
-    [self addMenuItemView:placeholderUIView andTitle:@"CAReplicatorLayer - TBD"];
+    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CAReplicatorLayer - TBD"];
 }
 
 - (void)didReceiveMemoryWarning {
