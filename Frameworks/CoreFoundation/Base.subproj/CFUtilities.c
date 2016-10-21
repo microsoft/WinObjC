@@ -1058,6 +1058,19 @@ CF_PRIVATE ThrottleTypeB __CFCreateThrottleTypeB(uint64_t amount, uint64_t nanos
 #if DEPLOYMENT_TARGET_WINDOWS
 #include <io.h>
 #include <direct.h>
+
+#if WINOBJC
+// WINOBJC: redirect more things to work with Ebr
+// since unfortunately that is still needed
+#define close _NS_close
+#define write _NS_write
+#define read _NS_read
+#define open _NS_open
+#define stat(a,b) _NS_stat64i32(a,b)
+#define fstat _NS_fstat
+#define statinfo _stat
+#define _get_osfhandle _NS_get_osfhandle
+#else
 #define close _close
 #define write _write
 #define read _read
@@ -1065,6 +1078,7 @@ CF_PRIVATE ThrottleTypeB __CFCreateThrottleTypeB(uint64_t amount, uint64_t nanos
 #define stat _NS_stat
 #define fstat _fstat
 #define statinfo _stat
+#endif
     
 #define mach_task_self() 0
 

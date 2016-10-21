@@ -76,8 +76,6 @@ static bool parseListSelection(const String& selection, size_t upperBound, std::
 
 void queryListSelection(const StringVec& values, const String& queryMessage, const String& itemName, std::vector<size_t>& ret)
 {
-  sbAssert(!values.empty());
-
   std::set<size_t> selection;
   if (values.size() == 1) {
     selection.insert(1);

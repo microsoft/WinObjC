@@ -19,156 +19,72 @@
 #import "Foundation/NSStream.h"
 #import "Foundation/NSString.h"
 #import "Foundation/NSInputStream.h"
-#import "NSStreamInternal.h"
 #import "LoggingNative.h"
 
-#ifdef WIN32
-#include <io.h>
-#elif defined(WINPHONE)
-#else
-//#include <unistd.h>
-#endif
+#import "NSCFInputStream.h"
 
 static const wchar_t* TAG = L"NSInputStream";
 
 @implementation NSInputStream
 
+BASE_CLASS_REQUIRED_IMPLS(NSInputStream, NSInputStreamPrototype, CFReadStreamGetTypeID);
+
 /**
  @Status Interoperable
 */
 + (id)inputStreamWithFileAtPath:(id)file {
-    NSInputStream* ret = [self alloc];
-
-    ret->filename = file;
-    if (EbrAccess([file UTF8String], 0) != 0) {
-        TraceError(TAG, L"Open failed");
-        return nil;
-    }
-
-    return ret;
+    return [[[self alloc] initWithFileAtPath:file] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (id)inputStreamWithData:(id)data {
-    id ret = [self alloc];
+    return [[[self alloc] initWithData:data] autorelease];
+}
 
-    return [[ret initWithData:data] autorelease];
+/**
+ @Status Interoperable
+ @Notes
+*/
++ (instancetype)inputStreamWithURL:(NSURL*)url {
+    return [[[self alloc] initWithURL:url] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (id)initWithData:(id)data {
-    _data = data;
-
-    return self;
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (id)initWithFileAtPath:(id)file {
-    if (file == nil) {
-        TraceVerbose(TAG, L"initWithFileAtPath: nil!");
-        return nil;
-    }
+    return [self initWithURL:[NSURL fileURLWithPath:file]];
+}
 
-    filename = file;
-    TraceVerbose(TAG, L"NSInputStream opening %hs", [file UTF8String]);
-    if (EbrAccess([file UTF8String], 0) != 0) {
-        TraceError(TAG, L"Open failed");
-        return nil;
-    }
-
-    return self;
+/**
+ @Status Interoperable
+ @Notes
+*/
+- (instancetype)initWithURL:(NSURL*)url {
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (int)read:(uint8_t*)buf maxLength:(NSUInteger)maxLength {
-    if (_data == nil) {
-        int ret = EbrFread(buf, 1, maxLength, fp);
-
-        if (EbrFeof(fp)) {
-            _status = NSStreamStatusAtEnd;
-        }
-
-        return ret;
-    } else {
-        int toRead = [_data length] - curPos;
-
-        assert(toRead >= 0);
-        if (toRead > (int)maxLength) {
-            toRead = (int)maxLength;
-        }
-
-        char* pBytes = (char*)[_data bytes];
-        memcpy(buf, pBytes + curPos, toRead);
-        curPos += toRead;
-
-        return toRead;
-    }
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)hasBytesAvailable {
-    if (_data == nil) {
-        if (!fp) {
-            return FALSE;
-        }
-
-        if (EbrFeof(fp)) {
-            return FALSE;
-        } else {
-            return TRUE;
-        }
-    } else {
-        if ([_data length] > curPos) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (void)open {
-    if (_data == nil) {
-        TraceVerbose(TAG, L"Opening %hs", [filename UTF8String]);
-        fp = EbrFopen([filename UTF8String], "rb");
-        if (!fp) {
-            TraceError(TAG, L"Open of %hs failed", [filename UTF8String]);
-            _status = NSStreamStatusNotOpen;
-        } else {
-            _status = NSStreamStatusOpen;
-        }
-    } else {
-        _status = NSStreamStatusOpen;
-    }
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (void)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (instancetype)initWithURL:(NSURL*)url {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -176,17 +92,7 @@ static const wchar_t* TAG = L"NSInputStream";
  @Notes
 */
 - (BOOL)getBuffer:(uint8_t* _Nullable*)buffer length:(NSUInteger*)len {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (instancetype)inputStreamWithURL:(NSURL*)url {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return NSInvalidAbstractInvocationReturn();
 }
 
 @end

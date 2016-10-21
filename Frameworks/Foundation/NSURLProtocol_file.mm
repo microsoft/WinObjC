@@ -23,8 +23,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "Foundation/NSRunLoop.h"
 #import "Foundation/NSTimer.h"
 #import "Foundation/NSStream.h"
-#import "NSInputStream_socket.h"
-#import "NSOutputStream_socket.h"
 #import "Foundation/NSError.h"
 #import "Foundation/NSHTTPURLResponse.h"
 #import "NSURLProtocol_file.h"

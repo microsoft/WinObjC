@@ -27,6 +27,21 @@
 #include <io.h>
 #include <fcntl.h>
 
+#if WINOBJC
+// WINOBJC: redirect more things to work with Ebr
+// since unfortunately that is still needed
+#define close _NS_close
+#define write _NS_write
+#define read _NS_read
+#define open _NS_open
+#define stat(a,b) _NS_stat64i32(a,b)
+#define fstat _NS_fstat
+#define mkdir(a,b) _NS_mkdir(a)
+#define rmdir _NS_rmdir
+#define unlink _NS_unlink
+#define statinfo _stat
+#define _get_osfhandle _NS_get_osfhandle
+#else
 #define close _close
 #define write _write
 #define read _read
@@ -36,8 +51,9 @@
 #define mkdir(a,b) _NS_mkdir(a)
 #define rmdir _NS_rmdir
 #define unlink _NS_unlink
-
 #define statinfo _stat
+
+#endif
 
 #else
 

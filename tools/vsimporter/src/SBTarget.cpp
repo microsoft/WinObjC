@@ -46,8 +46,8 @@ SBTarget::SBTarget(const PBXTarget* target, const StringSet& configNames, SBProj
     m_parentProject(parentProject),
     m_explicit(false)
 {
-  sbAssert(target);
-  sbAssert(!configNames.empty());
+  sbAssertWithTelemetry(target, "Unable to create SBTarget from NULL PBXTarget");
+  sbAssertWithTelemetry(!configNames.empty(), "No configuration names specified for target: " + target->getName());
 
   for (auto configName : configNames) {
     m_buildSettings[configName] = new BuildSettings(target, configName);
@@ -196,7 +196,7 @@ SBTarget* SBTarget::getPossibleTarget(const PBXBuildFile* buildFile)
   static const char* const _productWildcards[] = {"lib*.a", "*.app", "*.framework", "*.bundle"};
   static StringVec productWildcards(_productWildcards, _productWildcards + sizeof(_productWildcards) / sizeof(char*));
 
-  sbAssert(buildFile);
+  sbAssertWithTelemetry(buildFile, "PBXBuildFile being checked against possible targets is NULL");
   const PBXFile* file = buildFile->getFile();
   
   String filePath, fileName;
@@ -343,7 +343,7 @@ void SBTarget::resolveVCProjectDependecies(VCProject* proj, std::multimap<SBTarg
       }
     }
 
-    sbAssert(match);
+	sbAssertWithTelemetry(match, "No dependencies match specified VCProject project: " + proj->getName());
     proj->addProjectReference(match);
   }
 }

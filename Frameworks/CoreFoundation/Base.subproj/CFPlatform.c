@@ -51,7 +51,7 @@ using namespace Windows::Foundation;
 #define CSIDL_LOCAL_APPDATA 0x001c
 
 // WINOBJC: Export CFCopyHomeDirectoryURL declaration needed in this translation unit
-#include "CFUtilities.h""
+#include "CFUtilities.h"
 
 #endif
 
@@ -505,8 +505,8 @@ CF_EXPORT CFMutableStringRef _CFCreateApplicationRepositoryPath(CFAllocatorRef a
     CFMutableStringRef result = NULL;
     CFStringRef str = NULL;
 
-    // WINOBJC: make sure that nFolder is CSIDL_APPDATA or CSIDL_LOCAL_APPDATA and return the app data folder for the app.
-    Wrappers::HString path = GetAppDataPath(nFolder == CSIDL_LOCAL_APPDATA);
+    // WINOBJC: In Reference platform, CFPreferences does not roam, so ignore nFolder
+    Wrappers::HString path = GetAppDataPath(true);
     if (path.IsValid()) {
         unsigned int rawLength;
         const wchar_t* rawPath = WindowsGetStringRawBuffer(path.Get(), &rawLength);
@@ -784,6 +784,85 @@ static void copyToNarrowFileSystemRepresentation(const wchar_t *wide, CFIndex ds
     CFRelease(cfStr);
 }
 
+CF_EXPORT char *_NS_getenv(const char *name) {
+    // todo: wide getenv
+    // We have to be careful what happens here, because getenv is called during cf initialization, and things like cfstring may not be working yet
+    // WINOBJC: can't get env variables in an appcontainer. // return getenv(name);
+    return nullptr;
+}
+
+#if WINOBJC
+// WINOBJC: running in an app context places special requirements on how
+// files can be accessed. To account for this, use special handling for open
+// and close here.
+//
+// TODO 1099: augment to handle StorageFile operations as well. Additionally,
+// clean up Ebr usage.
+#include <Platform/EbrPlatform.h>
+
+CF_EXPORT int _NS_stat(const char *name, struct stat *st) {
+    return EbrStat(name, st);
+}
+
+CF_EXPORT int _NS_stat64i32(const char *name, struct _stat64i32 *st) {
+    return EbrStat64i32(name, st);
+}
+
+CF_EXPORT int _NS_mkdir(const char *name) {
+    return EbrMkdir(name);
+}
+
+CF_EXPORT int _NS_rmdir(const char *name) {
+    return EbrRemove(name);
+}
+
+CF_EXPORT int _NS_chmod(const char *name, int mode) {
+    return EbrChmod(name, mode);
+
+}
+
+CF_EXPORT int _NS_unlink(const char *name) {
+    return EbrUnlink(name);
+}
+
+CF_EXPORT int _NS_rename(const char *oldName, const char *newName) {
+    return EbrRename(oldName, newName);
+}
+
+CF_EXPORT int _NS_open(const char *name, int oflag, int pmode) {
+    return EbrOpenWithPermission(name, oflag, SH_DENYNO, _S_IREAD | _S_IWRITE);
+}
+
+CF_EXPORT int _NS_close(int fd) {
+    return EbrClose(fd);
+}
+
+CF_EXPORT long _NS_lseek(int fd,long offset, int origin) {
+    return EbrLseek(fd, offset, origin);
+}
+
+CF_EXPORT int _NS_read(int fd, void *buffer, unsigned int count) {
+    return EbrRead(fd, buffer, count);
+}
+
+CF_EXPORT int _NS_write(int fd, const void *buffer, unsigned int count) {
+    return EbrWrite(fd, buffer, count);
+}
+
+CF_EXPORT int _NS_fstat(int fd, struct _stat64i32* ret) {
+    return EbrFstat64i32(fd, ret);
+}
+
+CF_EXPORT size_t _NS_tell(int fd) {
+    return EbrTell(fd);
+}
+
+CF_EXPORT intptr_t _NS_get_osfhandle(int fd) {
+    return EbrGetOSFHandle(fd);
+}
+
+#else
+
 CF_EXPORT int _NS_stat(const char *name, struct _stat *st) {
     wchar_t *wide = createWideFileSystemRepresentation(name, NULL);
     int res = _wstat(wide, st);
@@ -826,31 +905,6 @@ CF_EXPORT int _NS_unlink(const char *name) {
     return res;
 }
 
-// Warning: this doesn't support dstbuf as null even though 'getcwd' does
-CF_EXPORT char *_NS_getcwd(char *dstbuf, size_t size) {
-    if (!dstbuf) {
-    CFLog(kCFLogLevelWarning, CFSTR("CFPlatform: getcwd called with null buffer"));
-    return 0;
-    }
-    
-    wchar_t *buf = _wgetcwd(NULL, 0);
-    if (!buf) {
-        return NULL;
-    }
-        
-    // Convert result to UTF8
-    copyToNarrowFileSystemRepresentation(buf, (CFIndex)size, dstbuf);
-    free(buf);
-    return dstbuf;
-}
-
-CF_EXPORT char *_NS_getenv(const char *name) {
-    // todo: wide getenv
-    // We have to be careful what happens here, because getenv is called during cf initialization, and things like cfstring may not be working yet
-    // WINOBJC: can't get env variables in an appcontainer. // return getenv(name);
-    return nullptr;
-}
-
 CF_EXPORT int _NS_rename(const char *oldName, const char *newName) {
     wchar_t *oldWide = createWideFileSystemRepresentation(oldName, NULL);
     wchar_t *newWide = createWideFileSystemRepresentation(newName, NULL);
@@ -887,6 +941,27 @@ CF_EXPORT int _NS_open(const char *name, int oflag, int pmode) {
     free(wide);
     return fd;
 }
+
+#endif
+
+// Warning: this doesn't support dstbuf as null even though 'getcwd' does
+CF_EXPORT char *_NS_getcwd(char *dstbuf, size_t size) {
+    if (!dstbuf) {
+    CFLog(kCFLogLevelWarning, CFSTR("CFPlatform: getcwd called with null buffer"));
+    return 0;
+    }
+    
+    wchar_t *buf = _wgetcwd(NULL, 0);
+    if (!buf) {
+        return NULL;
+    }
+        
+    // Convert result to UTF8
+    copyToNarrowFileSystemRepresentation(buf, (CFIndex)size, dstbuf);
+    free(buf);
+    return dstbuf;
+}
+
 
 CF_EXPORT int _NS_chdir(const char *name) {
     wchar_t *wide = createWideFileSystemRepresentation(name, NULL);

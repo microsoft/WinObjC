@@ -64,7 +64,7 @@ const std::string& VSTemplateProject::getName() const
 
 const std::string& VSTemplateProject::getPath() const
 {
-  sbAssert(!m_items.empty());
+  sbAssertWithTelemetry(!m_items.empty(), "VSTemplateProject contains no items");
   return m_items.front()->outFile;
 }
 

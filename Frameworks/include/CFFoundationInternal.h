@@ -72,3 +72,6 @@ CF_EXPORT void _CFDisableZombies(void);
 
 // Expose current directory functionality from CFURL
 CF_EXPORT CFURLRef _CFURLCreateCurrentDirectoryURL(CFAllocatorRef allocator) CF_RETURNS_RETAINED;
+
+// Expose internal stream helper for benefit of Foundation
+CF_EXPORT CFReadStreamRef CFReadStreamCreateWithData(CFAllocatorRef alloc, CFDataRef data);
