@@ -31,12 +31,11 @@ void UIStoryboardSegue::InitFromStory(XIBObject* obj) {
     ObjectConverter::InitFromStory(obj);
     _destination = getAttrAndHandle("destination");
     if (_destination) {
-        // This trips up Xib2Nib conversions because filenames are not prefixed with UIViewController
+        // IMPORTANT: Commenting out the next few lines because it this blocks segue handling when NIB filenames are prefixed with "UIViewController-".
+        //            This prefix is prepended generated under the IBTool (compatibility purposes) but it's not required by WinObjC-generated usage.
         // char szDestination[255];
         // sprintf(szDestination, "UIViewController-%s", _destination);
         //_destination = strdup(szDestination);
-
-        _destination = strdup(_destination);
     }
 
     _identifier = getAttrAndHandle("identifier");
