@@ -32,6 +32,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="..\..\msvc\tools-build.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -67,7 +68,7 @@
       <AdditionalDependencies>version.lib;WinHttp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\build</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SharedVersionHeaderDir)</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -89,11 +90,11 @@
       <AdditionalDependencies>version.lib;WinHttp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\build</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SharedVersionHeaderDir)</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="resource1.h" />
+    <ClInclude Include="resource_xib2nib.h" />
     <ClInclude Include="xib2nib\MKMapView.h" />
     <ClInclude Include="xib2nib\NIBWriter.h" />
     <ClInclude Include="xib2nib\NSLayoutConstraint.h" />
@@ -251,5 +252,6 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\msvc\tools-build.targets" />
   </ImportGroup>
 </Project>

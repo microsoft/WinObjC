@@ -1,14 +1,1 @@
-#define VERSION_MAJOR               0
-#define VERSION_MINOR               2
-#define VERSION_REVISION            1610 // YYMM
-#define VERSION_BUILD               17   // DD
-
-// DO NOT EDIT THESE MACROS
-#define STRINGIZE2(s) #s
-#define STRINGIZE(s) STRINGIZE2(s)
- 
-#define VER_FILE_VERSION            VERSION_MAJOR, VERSION_MINOR, VERSION_REVISION, VERSION_BUILD
-#define VER_FILE_VERSION_STR        STRINGIZE(VERSION_MAJOR)        \
-                                    "." STRINGIZE(VERSION_MINOR)    \
-                                    "." STRINGIZE(VERSION_REVISION) \
-                                    "." STRINGIZE(VERSION_BUILD)
+0.2.1610.21
