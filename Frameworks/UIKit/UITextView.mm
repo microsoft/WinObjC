@@ -402,8 +402,8 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
     NSRange range{ 0, INT_MAX };
     CGPoint origin = self.bounds.origin;
-    [_layoutManager drawBackgroundForGlyphRange:range atPoint:CGPointMake(origin.x, origin.y)];
-    [_layoutManager drawGlyphsForGlyphRange:range atPoint:CGPointMake(origin.x, origin.y)];
+    [_layoutManager drawBackgroundForGlyphRange:range atPoint:origin];
+    [_layoutManager drawGlyphsForGlyphRange:range atPoint:origin];
 }
 
 /**
