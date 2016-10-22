@@ -89,7 +89,6 @@ inline void _SafeRelease(T** p) {
 
 @interface _CTFrame : NSObject {
 @public
-    StrongId<_CTFramesetter> _framesetter;
     CGRect _frameRect;
     woc::unique_cf<CGPathRef> _path;
     std::vector<CGPoint> _lineOrigins;
@@ -143,13 +142,11 @@ struct _CTParagraphStyleProperties {
 }
 @end
 
-typedef float (*WidthFinderFunc)(void* opaque, CFIndex idx, float offset, float height);
-
-CORETEXT_EXPORT CFIndex _CTTypesetterSuggestLineBreakWithOffsetAndCallback(
-    CTTypesetterRef ts, CFIndex index, double offset, WidthFinderFunc callback, void* opaque);
-
 // Note: For some reason namemangling does not happen for these functions causing a linker error. Bug??
 CORETEXT_EXTERNC_BEGIN
 void _CTLineDraw(CTLineRef line, CGContextRef ctx, bool adjustTextPosition);
 void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTextPosition);
 CORETEXT_EXTERNC_END
+
+// Private helper methods for UIKit
+CORETEXT_EXPORT CGSize _CTFrameGetSize(CTFrameRef frame);

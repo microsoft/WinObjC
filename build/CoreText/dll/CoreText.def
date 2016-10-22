@@ -204,6 +204,7 @@ LIBRARY CoreText
         CTFrameGetLineOrigins
         CTFrameDraw
         CTFrameGetTypeID
+        _CTFrameGetSize
 
         ; CTFramesetter Reference.mm
         CTFramesetterCreateWithAttributedString
@@ -287,5 +288,4 @@ LIBRARY CoreText
         CTTypesetterSuggestClusterBreak
         CTTypesetterSuggestClusterBreakWithOffset
         CTTypesetterGetTypeID
-        _CTTypesetterSuggestLineBreakWithOffsetAndCallback
 

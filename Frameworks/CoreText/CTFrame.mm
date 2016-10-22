@@ -17,6 +17,7 @@
 #import <CoreText/CTFrame.h>
 #import <StubReturn.h>
 
+#import <CoreText/DWriteWrapper.h>
 #import "CoreTextInternal.h"
 #import "CGPathInternal.h"
 
@@ -35,11 +36,6 @@ const CFStringRef kCTFramePathClippingPathAttributeName = static_cast<CFStringRe
     return self;
 }
 
-- (void)dealloc {
-    _framesetter = nil;
-    _lines = nil;
-    [super dealloc];
-}
 @end
 
 /**
@@ -143,4 +139,9 @@ void CTFrameDraw(CTFrameRef frameRef, CGContextRef ctx) {
 CFTypeID CTFrameGetTypeID() {
     UNIMPLEMENTED();
     return StubReturn();
+}
+
+// Convenience private function for NSString+UIKitAdditions
+CGSize _CTFrameGetSize(CTFrameRef frame) {
+    return frame ? static_cast<_CTFrame*>(frame)->_frameRect.size : CGSize{};
 }

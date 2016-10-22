@@ -215,43 +215,49 @@ double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, C
         return 0;
     }
 
-    CTFontRef font = static_cast<CTFontRef>([curRun->_attributes objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
-    CGFloat pointSize = font ? CTFontGetSize(font) : kCTFontSystemFontSize;
+    if (ascent || descent || leading) {
+        CTFontRef font = static_cast<CTFontRef>([curRun->_attributes objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
+        CGFloat pointSize = font ? CTFontGetSize(font) : kCTFontSystemFontSize;
 
-    DWRITE_FONT_METRICS fontMetrics;
-    curRun->_dwriteGlyphRun.fontFace->GetMetrics(&fontMetrics);
+        DWRITE_FONT_METRICS fontMetrics;
+        curRun->_dwriteGlyphRun.fontFace->GetMetrics(&fontMetrics);
 
-    // Need scaling factor to convert from design units to pointSize
-    CGFloat scalingFactor = pointSize / fontMetrics.designUnitsPerEm;
+        // Need scaling factor to convert from design units to pointSize
+        CGFloat scalingFactor = pointSize / fontMetrics.designUnitsPerEm;
 
-    DWRITE_GLYPH_METRICS glyphMetrics[range.length];
-    THROW_IF_FAILED(curRun->_dwriteGlyphRun.fontFace->GetDesignGlyphMetrics(curRun->_dwriteGlyphRun.glyphIndices + range.location,
-                                                                            range.length,
-                                                                            glyphMetrics,
-                                                                            curRun->_dwriteGlyphRun.isSideways));
+        DWRITE_GLYPH_METRICS glyphMetrics[range.length];
+        THROW_IF_FAILED(curRun->_dwriteGlyphRun.fontFace->GetDesignGlyphMetrics(curRun->_dwriteGlyphRun.glyphIndices + range.location -
+                                                                                    curRun->_range.location,
+                                                                                range.length,
+                                                                                glyphMetrics,
+                                                                                curRun->_dwriteGlyphRun.isSideways));
 
-    double width = 0;
-    CGFloat newAscent = -FLT_MAX;
-    CGFloat newDescent = -FLT_MAX;
-    for (size_t i = range.location; i < range.location + range.length; ++i) {
-        newAscent = std::max(newAscent, glyphMetrics[i].verticalOriginY * scalingFactor);
-        newDescent = std::max(newDescent, glyphMetrics[i].bottomSideBearing * scalingFactor);
-        width += curRun->_dwriteGlyphRun.glyphAdvances[i];
+        CGFloat newAscent = -FLT_MAX;
+        CGFloat newDescent = FLT_MAX;
+        for (size_t i = range.location - curRun->_range.location; i < range.location + range.length - curRun->_range.location; ++i) {
+            // CoreText ascent is equivalent of DWrite verticalOriginY, and descent the opposite value of bottomSideBearing
+            // which are in designUnits, so they need to be converted to points for CoreText
+            // The ascent and descent of the run is the max and min of the respective values per glyph
+            newAscent = std::max(newAscent, glyphMetrics[i].verticalOriginY * scalingFactor);
+            newDescent = std::min(newDescent, -glyphMetrics[i].bottomSideBearing * scalingFactor);
+        }
+        if (ascent) {
+            *ascent = newAscent;
+        }
+
+        if (descent) {
+            *descent = newDescent;
+        }
+
+        // CoreText leading is equivalent to DWrite lineGap, which are based solely upon the font
+        if (leading) {
+            *leading = fontMetrics.lineGap * scalingFactor;
+        }
     }
 
-    if (ascent) {
-        *ascent = newAscent;
-    }
-
-    if (descent) {
-        *descent = newDescent;
-    }
-
-    if (leading) {
-        *leading = fontMetrics.lineGap * scalingFactor;
-    }
-
-    return width;
+    return std::accumulate(curRun->_dwriteGlyphRun.glyphAdvances + range.location - curRun->_range.location,
+                           curRun->_dwriteGlyphRun.glyphAdvances + range.location + range.length - curRun->_range.location,
+                           0.0);
 }
 
 /**
