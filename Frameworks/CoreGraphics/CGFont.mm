@@ -74,8 +74,6 @@ static void __CGFontDeallocate(CFTypeRef cf) {
     font->_dwriteFontFace.~ComPtr();
 }
 
-static CFTypeID __kCGFontTypeID = _kCFRuntimeNotATypeID;
-
 static const CFRuntimeClass __CGFontClass = { 0,
                                               "CGFont",
                                               __CGFontInit, // init
@@ -85,6 +83,8 @@ static const CFRuntimeClass __CGFontClass = { 0,
                                               __CGFontHash,
                                               NULL, //
                                               __CGFontCopyDescription };
+
+static CFTypeID __kCGFontTypeID = _CFRuntimeRegisterClass(&__CGFontClass);
 
 /**
  @Status Interoperable
@@ -358,9 +358,5 @@ int CGFontGetUnitsPerEm(CGFontRef font) {
  @Notes
 */
 CFTypeID CGFontGetTypeID() {
-    static dispatch_once_t initOnce = 0;
-    dispatch_once(&initOnce, ^{
-        __kCGFontTypeID = _CFRuntimeRegisterClass(&__CGFontClass);
-    });
     return __kCGFontTypeID;
 }

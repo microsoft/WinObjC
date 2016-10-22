@@ -146,8 +146,6 @@ static void __CTFontDeallocate(CFTypeRef cf) {
     font->_dwriteFontFace.~ComPtr();
 }
 
-static CFTypeID __kCTFontTypeID = _kCFRuntimeNotATypeID;
-
 static const CFRuntimeClass __CTFontClass = { 0,
                                               "CTFont",
                                               __CTFontInit, // init
@@ -157,6 +155,8 @@ static const CFRuntimeClass __CTFontClass = { 0,
                                               __CTFontHash,
                                               NULL, //
                                               __CTFontCopyDescription };
+
+static CFTypeID __kCTFontTypeID = _CFRuntimeRegisterClass(&__CTFontClass);
 
 // Private convenience helper for creating a CFDataRef from a CGAffineTransform
 CFDataRef __CFDataCreateWithCGAffineTransform(CGAffineTransform matrix) {
@@ -902,9 +902,5 @@ CFDataRef CTFontCopyTable(CTFontRef font, CTFontTableTag table, CTFontTableOptio
  @Notes
 */
 CFTypeID CTFontGetTypeID() {
-    static dispatch_once_t initOnce = 0;
-    dispatch_once(&initOnce, ^{
-        __kCTFontTypeID = _CFRuntimeRegisterClass(&__CTFontClass);
-    });
     return __kCTFontTypeID;
 }

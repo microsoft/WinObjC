@@ -34,10 +34,16 @@ COREGRAPHICS_EXPORT CFArrayRef _DWriteGetFontFamilyNames();
 COREGRAPHICS_EXPORT CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName);
 COREGRAPHICS_EXPORT CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName);
 
+struct _DWriteFontProperties {
+    DWRITE_FONT_WEIGHT weight;
+    DWRITE_FONT_STRETCH stretch;
+    DWRITE_FONT_STYLE style;
+    CFStringRef familyName;
+};
+
 // Create DWrite objects
-COREGRAPHICS_EXPORT void _DWriteInitFontPropertiesFromName(
-    CFStringRef fontName, DWRITE_FONT_WEIGHT* weight, DWRITE_FONT_STRETCH* stretch, DWRITE_FONT_STYLE* style, CFStringRef* familyName);
-COREGRAPHICS_EXPORT HRESULT _DWriteCreateFactoryInstance(IDWriteFactory** outFactory);
+COREGRAPHICS_EXPORT _DWriteFontProperties _DWriteGetFontPropertiesFromName(CFStringRef fontName);
+
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateTextFormat(const wchar_t* fontFamilyName,
                                                     DWRITE_FONT_WEIGHT weight,
                                                     DWRITE_FONT_STYLE style,

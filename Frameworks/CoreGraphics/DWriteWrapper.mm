@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-// Do not move this block, it has to come first for some reason
+// #1207: Do not move this block, it has to come first for some reason
 #include <COMIncludes.h>
 #import <wrl/implements.h>
 #include <COMIncludes_End.h>
@@ -92,12 +92,11 @@ CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedStrin
  * @return Immutable array of font family name strings that are installed in the system.
  */
 CFArrayRef _DWriteGetFontFamilyNames() {
-    CFMutableArrayRef fontFamilyNames = CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks);
-    CFAutorelease(fontFamilyNames);
+    woc::unique_cf<CFMutableArrayRef> fontFamilyNames(CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks));
 
     // Get the direct write factory instance
     ComPtr<IDWriteFactory> dwriteFactory;
-    RETURN_NULL_IF_FAILED(_DWriteCreateFactoryInstance(&dwriteFactory));
+    RETURN_NULL_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 
     // Get the system font collection.
     ComPtr<IDWriteFontCollection> fontCollection;
@@ -122,21 +121,20 @@ CFArrayRef _DWriteGetFontFamilyNames() {
             continue;
         }
 
-        CFArrayAppendValue(fontFamilyNames, name);
+        CFArrayAppendValue(fontFamilyNames.get(), name);
     }
 
-    return fontFamilyNames;
+    return fontFamilyNames.release();
 }
 
 /**
  * Helper method to retrieve names of individual fonts under a font family.
  */
 CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName) {
-    CFMutableArrayRef fontNames = CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks);
-    CFAutorelease(fontNames);
+    woc::unique_cf<CFMutableArrayRef> fontNames(CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks));
 
     ComPtr<IDWriteFactory> dwriteFactory;
-    RETURN_NULL_IF_FAILED(_DWriteCreateFactoryInstance(&dwriteFactory));
+    RETURN_NULL_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 
     // Get the system font collection.
     ComPtr<IDWriteFontCollection> fontCollection;
@@ -153,7 +151,7 @@ CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName) {
     RETURN_NULL_IF_FAILED(fontCollection->FindFamilyName(reinterpret_cast<wchar_t*>(unicharFamilyName.data()), &index, &exists));
     if (!exists) {
         TraceError(TAG, L"Failed to find the font family name.");
-        return fontNames;
+        return fontNames.release();
     }
 
     ComPtr<IDWriteFontFamily> fontFamily;
@@ -180,11 +178,11 @@ CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName) {
                 continue;
             }
 
-            CFArrayAppendValue(fontNames, name);
+            CFArrayAppendValue(fontNames.get(), name);
         }
     }
 
-    return fontNames;
+    return fontNames.release();
 }
 
 /**
@@ -193,14 +191,12 @@ CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName) {
  * Note: This function currently uses a cache, meaning that fonts installed during runtime will not be reflected
  */
 CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName) {
-    CFLocaleRef locale = CFLocaleCopyCurrent();
-    CFAutorelease(locale);
+    woc::unique_cf<CFLocaleRef> locale(CFLocaleCopyCurrent());
 
-    static CFDictionaryRef fontToFamilyMap = [locale]() {
+    static CFDictionaryRef fontToFamilyMap = [&locale]() {
         // initialize fontToFamilyMap
-        CFMutableDictionaryRef initMap =
-            CFDictionaryCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-        CFAutorelease(initMap);
+        woc::unique_cf<CFMutableDictionaryRef> initMap(
+            CFDictionaryCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks));
 
         CFArrayRef familyNames = _DWriteGetFontFamilyNames();
 
@@ -210,21 +206,19 @@ CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName) {
 
             for (size_t j = 0; j < CFArrayGetCount(fontNames); j++) {
                 CFStringRef systemFontName = static_cast<CFStringRef>(CFArrayGetValueAtIndex(fontNames, j));
-                CFMutableStringRef upperSystemFontName =
-                    CFStringCreateMutableCopy(nullptr, CFStringGetLength(systemFontName), systemFontName);
-                CFAutorelease(upperSystemFontName);
-                CFStringUppercase(upperSystemFontName, locale);
-                CFDictionaryAddValue(initMap, upperSystemFontName, familyName);
+                woc::unique_cf<CFMutableStringRef> upperSystemFontName(
+                    CFStringCreateMutableCopy(nullptr, CFStringGetLength(systemFontName), systemFontName));
+                CFStringUppercase(upperSystemFontName.get(), locale.get());
+                CFDictionaryAddValue(initMap.get(), upperSystemFontName.get(), familyName);
             }
         }
 
-        return CFDictionaryCreateCopy(kCFAllocatorSystemDefault, initMap);
+        return CFDictionaryCreateCopy(kCFAllocatorSystemDefault, initMap.get());
     }();
 
-    CFMutableStringRef upperFontName = CFStringCreateMutableCopy(nullptr, CFStringGetLength(fontName), fontName);
-    CFAutorelease(upperFontName);
-    CFStringUppercase(upperFontName, locale);
-    return static_cast<CFStringRef>(CFDictionaryGetValue(fontToFamilyMap, upperFontName));
+    woc::unique_cf<CFMutableStringRef> upperFontName(CFStringCreateMutableCopy(nullptr, CFStringGetLength(fontName), fontName));
+    CFStringUppercase(upperFontName.get(), locale.get());
+    return static_cast<CFStringRef>(CFDictionaryGetValue(fontToFamilyMap, upperFontName.get()));
 }
 
 // Represents a mapping between multiple representations of the same font weight across font names, DWrite, and CoreText
@@ -260,50 +254,39 @@ static const struct WeightMapping c_weightMap[] = { { CFSTR("THIN"), DWRITE_FONT
 /**
  * Helper that parses a font name, and returns appropriate weight, stretch, style, and family name values
  */
-void _DWriteInitFontPropertiesFromName(
-    CFStringRef fontName, DWRITE_FONT_WEIGHT* weight, DWRITE_FONT_STRETCH* stretch, DWRITE_FONT_STYLE* style, CFStringRef* familyName) {
-    // Set some defaults for when weight/stretch/style are not mentioned in the name
-    // Since this is a file-private helper, assume the pointers are safe to dereference.
-    *weight = DWRITE_FONT_WEIGHT_NORMAL;
-    *stretch = DWRITE_FONT_STRETCH_NORMAL;
-    *style = DWRITE_FONT_STYLE_NORMAL;
+_DWriteFontProperties _DWriteGetFontPropertiesFromName(CFStringRef fontName) {
+    _DWriteFontProperties ret;
 
-    *familyName = _DWriteGetFamilyNameForFontName(fontName);
+    // Set some defaults for when weight/stretch/style are not mentioned in the name
+    ret.weight = DWRITE_FONT_WEIGHT_NORMAL;
+    ret.stretch = DWRITE_FONT_STRETCH_NORMAL;
+    ret.style = DWRITE_FONT_STYLE_NORMAL;
+
+    ret.familyName = _DWriteGetFamilyNameForFontName(fontName);
 
     // Relationship of family name -> font name not always consistent
     // Usually, properties are added to the end (eg: Arial -> Arial Narrow Bold)
     // However, this is not always the case (eg: Eras ITC -> Eras Bold ITC)
     // In addition, some fonts with properties are occasionally placed into their own family (eg: Segoe WP SemiLight -> Segoe WP SemiLight)
     // Try to be more prudent about these edge cases, by looking only at the difference between the font name and family name
-    CFArrayRef fontNameTokens = CFStringCreateArrayBySeparatingStrings(kCFAllocatorDefault, fontName, CFSTR(" "));
-    CFAutorelease(fontNameTokens);
-    CFMutableSetRef propertyTokens = CFSetCreateMutable(kCFAllocatorDefault, 0, &kCFTypeSetCallBacks);
-    CFAutorelease(propertyTokens);
+    woc::unique_cf<CFArrayRef> fontNameTokens(CFStringCreateArrayBySeparatingStrings(kCFAllocatorDefault, fontName, CFSTR(" ")));
+    woc::unique_cf<CFMutableSetRef> propertyTokens(CFSetCreateMutable(kCFAllocatorDefault, 0, &kCFTypeSetCallBacks));
 
-    for (size_t i = 0; i < CFArrayGetCount(fontNameTokens); ++i) {
-        CFSetAddValue(propertyTokens, CFArrayGetValueAtIndex(fontNameTokens, i));
+    for (size_t i = 0; i < CFArrayGetCount(fontNameTokens.get()); ++i) {
+        CFSetAddValue(propertyTokens.get(), CFArrayGetValueAtIndex(fontNameTokens.get(), i));
     }
 
-    if (*familyName) {
-        CFArrayRef familyNameTokens = CFStringCreateArrayBySeparatingStrings(kCFAllocatorDefault, *familyName, CFSTR(" "));
-        CFAutorelease(familyNameTokens);
-        for (size_t i = 0; i < CFArrayGetCount(familyNameTokens); ++i) {
-            CFSetRemoveValue(propertyTokens, CFArrayGetValueAtIndex(familyNameTokens, i));
+    if (ret.familyName) {
+        woc::unique_cf<CFArrayRef> familyNameTokens(
+            CFStringCreateArrayBySeparatingStrings(kCFAllocatorDefault, ret.familyName, CFSTR(" ")));
+        for (size_t i = 0; i < CFArrayGetCount(familyNameTokens.get()); ++i) {
+            CFSetRemoveValue(propertyTokens.get(), CFArrayGetValueAtIndex(familyNameTokens.get(), i));
         }
     }
 
-    // Store weight, stretch, and style in a single struct to be passed into a CFSetApplierFunction's context
-    struct PropertyContext {
-        DWRITE_FONT_WEIGHT* weight;
-        DWRITE_FONT_STRETCH* stretch;
-        DWRITE_FONT_STYLE* style;
-    };
-
-    struct PropertyContext propertyContext = { weight, stretch, style };
-
     CFSetApplierFunction initPropertyFromToken = [](const void* value, void* context) {
         CFMutableStringRef propertyToken = CFStringCreateMutableCopy(kCFAllocatorDefault, 0, static_cast<CFStringRef>(value));
-        struct PropertyContext* pPropertyContext = reinterpret_cast<struct PropertyContext*>(context);
+        _DWriteFontProperties* properties = reinterpret_cast<_DWriteFontProperties*>(context);
 
         // Font names are not always consistent about capitalization (SemiLight vs Semilight)
         // Standardize on uppercase
@@ -313,53 +296,47 @@ void _DWriteInitFontPropertiesFromName(
         // but seems excessive given that font names generally don't have more than three modifiers
         for (const auto& weightMapping : c_weightMap) {
             if (CFEqual(propertyToken, weightMapping.stringValue)) {
-                *(pPropertyContext->weight) = weightMapping.dwriteValue;
+                properties->weight = weightMapping.dwriteValue;
                 break;
             }
         }
 
         if (CFEqual(propertyToken, CFSTR("UNDEFINED"))) {
-            *(pPropertyContext->stretch) = DWRITE_FONT_STRETCH_UNDEFINED;
+            properties->stretch = DWRITE_FONT_STRETCH_UNDEFINED;
         } else if (CFEqual(propertyToken, CFSTR("ULTRACONDENSED"))) {
-            *(pPropertyContext->stretch) = DWRITE_FONT_STRETCH_ULTRA_CONDENSED;
+            properties->stretch = DWRITE_FONT_STRETCH_ULTRA_CONDENSED;
         } else if (CFEqual(propertyToken, CFSTR("EXTRACONDENSED"))) {
-            *(pPropertyContext->stretch) = DWRITE_FONT_STRETCH_EXTRA_CONDENSED;
+            properties->stretch = DWRITE_FONT_STRETCH_EXTRA_CONDENSED;
         } else if (CFEqual(propertyToken, CFSTR("CONDENSED")) || CFEqual(propertyToken, CFSTR("NARROW")) ||
                    CFEqual(propertyToken, CFSTR("COND"))) {
-            *(pPropertyContext->stretch) = DWRITE_FONT_STRETCH_CONDENSED;
+            properties->stretch = DWRITE_FONT_STRETCH_CONDENSED;
         } else if (CFEqual(propertyToken, CFSTR("SEMICONDENSED"))) {
-            *(pPropertyContext->stretch) = DWRITE_FONT_STRETCH_SEMI_CONDENSED;
+            properties->stretch = DWRITE_FONT_STRETCH_SEMI_CONDENSED;
             // skip since this is the default
             // } else if (CFEqual(propertyToken, CFSTR("NORMAL"))) {
-            //     *(pPropertyContext->stretch) = DWRITE_FONT_STRETCH_NORMAL;
+            //     properties->stretch = DWRITE_FONT_STRETCH_NORMAL;
 
         } else if (CFEqual(propertyToken, CFSTR("SEMIEXPANDED"))) {
-            *(pPropertyContext->stretch) = DWRITE_FONT_STRETCH_SEMI_EXPANDED;
+            properties->stretch = DWRITE_FONT_STRETCH_SEMI_EXPANDED;
         } else if (CFEqual(propertyToken, CFSTR("EXPANDED"))) {
-            *(pPropertyContext->stretch) = DWRITE_FONT_STRETCH_EXPANDED;
+            properties->stretch = DWRITE_FONT_STRETCH_EXPANDED;
         } else if (CFEqual(propertyToken, CFSTR("EXTRAEXPANDED"))) {
-            *(pPropertyContext->stretch) = DWRITE_FONT_STRETCH_EXTRA_EXPANDED;
+            properties->stretch = DWRITE_FONT_STRETCH_EXTRA_EXPANDED;
         } else if (CFEqual(propertyToken, CFSTR("ULTRAEXPANDED"))) {
-            *(pPropertyContext->stretch) = DWRITE_FONT_STRETCH_ULTRA_EXPANDED;
+            properties->stretch = DWRITE_FONT_STRETCH_ULTRA_EXPANDED;
 
             // skip since this is the default
             // } else if (CFEqual(propertyToken, CFSTR("NORMAL"))) {
-            //     *(pPropertyContext->style) = DWRITE_FONT_STYLE_NORMAL;
+            //     properties->style = DWRITE_FONT_STYLE_NORMAL;
         } else if (CFEqual(propertyToken, CFSTR("OBLIQUE"))) {
-            *(pPropertyContext->style) = DWRITE_FONT_STYLE_OBLIQUE;
+            properties->style = DWRITE_FONT_STYLE_OBLIQUE;
         } else if (CFEqual(propertyToken, CFSTR("ITALIC"))) {
-            *(pPropertyContext->style) = DWRITE_FONT_STYLE_ITALIC;
+            properties->style = DWRITE_FONT_STYLE_ITALIC;
         }
     };
 
-    CFSetApplyFunction(propertyTokens, initPropertyFromToken, &propertyContext);
-}
-
-/**
- * Creates a standard DWrite factory object
- */
-HRESULT _DWriteCreateFactoryInstance(IDWriteFactory** outFactory) {
-    return DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), reinterpret_cast<IUnknown**>(outFactory));
+    CFSetApplyFunction(propertyTokens.get(), initPropertyFromToken, &ret);
+    return ret;
 }
 
 /**
@@ -373,11 +350,7 @@ HRESULT _DWriteCreateTextFormat(const wchar_t* fontFamilyName,
                                 IDWriteTextFormat** outTextFormat) {
     // Get the direct write factory instance
     ComPtr<IDWriteFactory> dwriteFactory;
-    HRESULT hr = _DWriteCreateFactoryInstance(&dwriteFactory);
-    if (FAILED(hr)) {
-        TraceError(TAG, L"Unable to create DWrite factory");
-        return hr;
-    }
+    RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 
     return dwriteFactory->CreateTextFormat(fontFamilyName,
                                            nullptr,
@@ -394,7 +367,7 @@ HRESULT _DWriteCreateTextFormat(const wchar_t* fontFamilyName,
  */
 HRESULT _DWriteCreateFontFamilyWithName(CFStringRef familyName, IDWriteFontFamily** outFontFamily) {
     ComPtr<IDWriteFactory> dwriteFactory;
-    RETURN_IF_FAILED(_DWriteCreateFactoryInstance(&dwriteFactory));
+    RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 
     ComPtr<IDWriteFontCollection> systemFontCollection;
     RETURN_IF_FAILED(dwriteFactory->GetSystemFontCollection(&systemFontCollection));
@@ -424,22 +397,16 @@ HRESULT _DWriteCreateFontFamilyWithName(CFStringRef familyName, IDWriteFontFamil
 HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace) {
     // Parse the font name for font weight, stretch, and style
     // Eg: Bold, Condensed, Light, Italic
-    DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_NORMAL;
-    DWRITE_FONT_STRETCH stretch = DWRITE_FONT_STRETCH_NORMAL;
-    DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
+    _DWriteFontProperties properties = _DWriteGetFontPropertiesFromName(name);
 
-    CFStringRef familyName;
-    _DWriteInitFontPropertiesFromName(name, &weight, &stretch, &style, &familyName);
-
-    RETURN_HR_IF_NULL(E_INVALIDARG, familyName);
+    RETURN_HR_IF_NULL(E_INVALIDARG, properties.familyName);
 
     ComPtr<IDWriteFontFamily> fontFamily;
-
-    RETURN_IF_FAILED(_DWriteCreateFontFamilyWithName(familyName, &fontFamily));
+    RETURN_IF_FAILED(_DWriteCreateFontFamilyWithName(properties.familyName, &fontFamily));
     RETURN_HR_IF_NULL(E_INVALIDARG, fontFamily);
 
     ComPtr<IDWriteFont> font;
-    RETURN_IF_FAILED(fontFamily->GetFirstMatchingFont(weight, stretch, style, &font));
+    RETURN_IF_FAILED(fontFamily->GetFirstMatchingFont(properties.weight, properties.stretch, properties.style, &font));
 
     return font->CreateFontFace(outFontFace);
 }
@@ -476,15 +443,14 @@ CFDataRef _DWriteFontCopyTable(const ComPtr<IDWriteFontFace>& fontFace, uint32_t
     }
 
     // Copy the font table's binary data to a CFDataRef
-    CFDataRef ret = CFDataCreate(kCFAllocatorDefault, reinterpret_cast<const byte*>(tableData), tableSize);
-    CFAutorelease(ret); // Autorelease here to make sure this isn't leaked if ReleaseFontTable() throws
+    woc::unique_cf<CFDataRef> ret(CFDataCreate(kCFAllocatorDefault, reinterpret_cast<const byte*>(tableData), tableSize));
 
     // As part of the contact for TryGetFontTable, tableContext must always be released via ReleaseFontTable
     if (tableContext) {
         fontFace->ReleaseFontTable(tableContext);
     }
 
-    return static_cast<CFDataRef>(CFRetain(ret)); // Retain to get the retain count correct for the signature of this function
+    return ret.release();
 }
 
 /**

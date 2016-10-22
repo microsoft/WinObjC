@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-// Do not move this block, it has to come first for some reason
+// #1207: Do not move this block, it has to come first for some reason
 #include <COMIncludes.h>
 #import <wrl/implements.h>
 #include <COMIncludes_End.h>
@@ -111,25 +111,24 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(CFAttributedStringRef 
     NSDictionary* attribs = [static_cast<NSAttributedString*>(string) attributesAtIndex:range.location effectiveRange:NULL];
 
     CGFloat fontSize = kCTFontSystemFontSize;
-    DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_REGULAR;
-    DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
-    DWRITE_FONT_STRETCH stretch = DWRITE_FONT_STRETCH_NORMAL;
     CTFontRef font = static_cast<CTFontRef>([attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
     std::vector<wchar_t> familyName;
-    CFStringRef fontFamilyName = kCTFontDefaultFontName;
+
+    _DWriteFontProperties properties = { DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STRETCH_NORMAL, DWRITE_FONT_STYLE_NORMAL, nullptr };
 
     if (font) {
         fontSize = CTFontGetSize(font);
         CFStringRef fontFullName = CTFontCopyName(font, kCTFontFullNameKey);
         CFAutorelease(fontFullName);
-        _DWriteInitFontPropertiesFromName(fontFullName, &weight, &stretch, &style, &fontFamilyName);
+        properties = _DWriteGetFontPropertiesFromName(fontFullName);
     }
 
-    familyName.resize(CFStringGetLength(fontFamilyName) + 1, 0);
-    CFStringGetCharacters(fontFamilyName, CFRangeMake(0, familyName.size()), reinterpret_cast<UniChar*>(familyName.data()));
+    familyName.resize(CFStringGetLength(properties.familyName) + 1, 0);
+    CFStringGetCharacters(properties.familyName, CFRangeMake(0, familyName.size()), reinterpret_cast<UniChar*>(familyName.data()));
 
     ComPtr<IDWriteTextFormat> textFormat;
-    RETURN_NULL_IF_FAILED(_DWriteCreateTextFormat(familyName.data(), weight, style, stretch, fontSize, &textFormat));
+    RETURN_NULL_IF_FAILED(
+        _DWriteCreateTextFormat(familyName.data(), properties.weight, properties.style, properties.stretch, fontSize, &textFormat));
 
     CTParagraphStyleRef settings =
         static_cast<CTParagraphStyleRef>([attribs valueForKey:static_cast<NSString*>(kCTParagraphStyleAttributeName)]);
@@ -186,7 +185,7 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(CFAttributedStringRef 
 
     // Get the direct write factory instance
     ComPtr<IDWriteFactory> dwriteFactory;
-    RETURN_NULL_IF_FAILED(_DWriteCreateFactoryInstance(&dwriteFactory));
+    RETURN_NULL_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 
     ComPtr<IDWriteTextLayout> textLayout;
     RETURN_NULL_IF_FAILED(dwriteFactory->CreateTextLayout(
@@ -213,18 +212,14 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(CFAttributedStringRef 
         CGFloat fontSize = kCTFontSystemFontSize;
         if (font != nil) {
             fontSize = CTFontGetSize(font);
-            DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_REGULAR;
-            DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
-            DWRITE_FONT_STRETCH stretch = DWRITE_FONT_STRETCH_NORMAL;
-            CFStringRef fontFamilyName;
-            _DWriteInitFontPropertiesFromName(CTFontCopyName(font, kCTFontFullNameKey), &weight, &stretch, &style, &fontFamilyName);
-            std::vector<wchar_t> familyName(CFStringGetLength(fontFamilyName) + 1);
-            CFStringGetCharacters(fontFamilyName, CFRangeMake(0, familyName.size()), reinterpret_cast<UniChar*>(familyName.data()));
+            _DWriteFontProperties properties = _DWriteGetFontPropertiesFromName(CTFontCopyName(font, kCTFontFullNameKey));
+            std::vector<wchar_t> familyName(CFStringGetLength(properties.familyName) + 1);
+            CFStringGetCharacters(properties.familyName, CFRangeMake(0, familyName.size()), reinterpret_cast<UniChar*>(familyName.data()));
 
             RETURN_NULL_IF_FAILED(textLayout->SetFontSize(fontSize, dwriteRange));
-            RETURN_NULL_IF_FAILED(textLayout->SetFontWeight(weight, dwriteRange));
-            RETURN_NULL_IF_FAILED(textLayout->SetFontStretch(stretch, dwriteRange));
-            RETURN_NULL_IF_FAILED(textLayout->SetFontStyle(style, dwriteRange));
+            RETURN_NULL_IF_FAILED(textLayout->SetFontWeight(properties.weight, dwriteRange));
+            RETURN_NULL_IF_FAILED(textLayout->SetFontStretch(properties.stretch, dwriteRange));
+            RETURN_NULL_IF_FAILED(textLayout->SetFontStyle(properties.style, dwriteRange));
             RETURN_NULL_IF_FAILED(textLayout->SetFontFamilyName(familyName.data(), dwriteRange));
         }
 
