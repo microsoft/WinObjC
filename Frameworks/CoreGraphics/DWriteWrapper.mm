@@ -93,7 +93,6 @@ CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedStrin
  */
 CFArrayRef _DWriteGetFontFamilyNames() {
     woc::unique_cf<CFMutableArrayRef> fontFamilyNames(CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks));
-    CFAutorelease(fontFamilyNames.get());
 
     // Get the direct write factory instance
     ComPtr<IDWriteFactory> dwriteFactory;
@@ -125,7 +124,7 @@ CFArrayRef _DWriteGetFontFamilyNames() {
         CFArrayAppendValue(fontFamilyNames.get(), name);
     }
 
-    return fontFamilyNames.release();
+    return static_cast<CFArrayRef>(CFAutorelease(fontFamilyNames.release()));
 }
 
 /**
@@ -133,7 +132,6 @@ CFArrayRef _DWriteGetFontFamilyNames() {
  */
 CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName) {
     woc::unique_cf<CFMutableArrayRef> fontNames(CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks));
-    CFAutorelease(fontNames.get());
 
     ComPtr<IDWriteFactory> dwriteFactory;
     RETURN_NULL_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
@@ -153,7 +151,7 @@ CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName) {
     RETURN_NULL_IF_FAILED(fontCollection->FindFamilyName(reinterpret_cast<wchar_t*>(unicharFamilyName.data()), &index, &exists));
     if (!exists) {
         TraceError(TAG, L"Failed to find the font family name.");
-        return fontNames.release();
+        return static_cast<CFArrayRef>(CFAutorelease(fontNames.release()));
     }
 
     ComPtr<IDWriteFontFamily> fontFamily;
@@ -184,7 +182,7 @@ CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName) {
         }
     }
 
-    return fontNames.release();
+    return static_cast<CFArrayRef>(CFAutorelease(fontNames.release()));
 }
 
 /**
