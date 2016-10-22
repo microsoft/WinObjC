@@ -93,6 +93,7 @@ CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedStrin
  */
 CFArrayRef _DWriteGetFontFamilyNames() {
     woc::unique_cf<CFMutableArrayRef> fontFamilyNames(CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks));
+    CFAutorelease(fontFamilyNames.get());
 
     // Get the direct write factory instance
     ComPtr<IDWriteFactory> dwriteFactory;
@@ -132,6 +133,7 @@ CFArrayRef _DWriteGetFontFamilyNames() {
  */
 CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName) {
     woc::unique_cf<CFMutableArrayRef> fontNames(CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks));
+    CFAutorelease(fontNames.get());
 
     ComPtr<IDWriteFactory> dwriteFactory;
     RETURN_NULL_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));

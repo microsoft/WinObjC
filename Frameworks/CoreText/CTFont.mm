@@ -156,8 +156,6 @@ static const CFRuntimeClass __CTFontClass = { 0,
                                               NULL, //
                                               __CTFontCopyDescription };
 
-static CFTypeID __kCTFontTypeID = _CFRuntimeRegisterClass(&__CTFontClass);
-
 // Private convenience helper for creating a CFDataRef from a CGAffineTransform
 CFDataRef __CFDataCreateWithCGAffineTransform(CGAffineTransform matrix) {
     return CFDataCreate(kCFAllocatorDefault, reinterpret_cast<byte*>(&matrix), sizeof(CGAffineTransform));
@@ -902,5 +900,6 @@ CFDataRef CTFontCopyTable(CTFontRef font, CTFontTableTag table, CTFontTableOptio
  @Notes
 */
 CFTypeID CTFontGetTypeID() {
+    static CFTypeID __kCTFontTypeID = _CFRuntimeRegisterClass(&__CTFontClass);
     return __kCTFontTypeID;
 }

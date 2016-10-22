@@ -84,8 +84,6 @@ static const CFRuntimeClass __CGFontClass = { 0,
                                               NULL, //
                                               __CGFontCopyDescription };
 
-static CFTypeID __kCGFontTypeID = _CFRuntimeRegisterClass(&__CGFontClass);
-
 /**
  @Status Interoperable
 */
@@ -358,5 +356,6 @@ int CGFontGetUnitsPerEm(CGFontRef font) {
  @Notes
 */
 CFTypeID CGFontGetTypeID() {
+    static CFTypeID __kCGFontTypeID = _CFRuntimeRegisterClass(&__CGFontClass);
     return __kCGFontTypeID;
 }
