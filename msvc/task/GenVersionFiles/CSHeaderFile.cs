@@ -19,7 +19,7 @@ namespace GenVersionFiles
                 file.WriteLine("using System.Runtime.CompilerServices;");
                 file.WriteLine("using System.Runtime.InteropServices;");
                 file.WriteLine();
-                file.WriteLine("[assembly: AssemblyFileVersion(\"{0}.{1}.{2}.{3}\")]", version.Major, version.Minor, version.Revision, version.Build);
+                file.WriteLine("[assembly: AssemblyFileVersion(\"{0}.{1}.{2}.{3}\")]", version.Major, version.Minor, version.Build, version.Revision);
                 file.WriteLine("[assembly: AssemblyInformationalVersion(\"{0}\")]", version.ToString());
             }
         }

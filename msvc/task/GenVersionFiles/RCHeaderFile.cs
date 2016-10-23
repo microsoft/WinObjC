@@ -15,7 +15,7 @@ namespace GenVersionFiles
         {
             using (StreamWriter file = new System.IO.StreamWriter(filePath))
             {
-                file.WriteLine("#define FILE_VERSION {0}, {1}, {2}, {3}", version.Major, version.Minor, version.Revision, version.Build);
+                file.WriteLine("#define FILE_VERSION {0}, {1}, {2}, {3}", version.Major, version.Minor, version.Build, version.Revision);
                 file.WriteLine("#define FILE_VERSION_STR \"{0}\"", version.ToString());
             }
         }
