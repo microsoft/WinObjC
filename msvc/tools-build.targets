@@ -15,10 +15,15 @@
     <BuildDependsOn Condition="'$(ProjectExt)' == '.vcxproj'">GenSharedHeaderFile;$(BuildDependsOn);</BuildDependsOn>
   </PropertyGroup>
 
+  <Target Name="MakeSharedVersionHeaderDir" >
+    <MakeDir Directories="$(SharedVersionHeaderDir)" />
+  </Target>
+
   <Target
     Name="GenSharedAssemblyFile"
     Inputs="$(WinObjCVersionFile)"
-    Outputs="$(SharedHeaderFile)">
+    Outputs="$(SharedHeaderFile)"
+    DependsOnTargets="MakeSharedVersionHeaderDir">
 
     <Message Importance="High" Text="Generating $([System.IO.Path]::GetFileName('$(SharedHeaderFile)'))" />
 
@@ -35,7 +40,8 @@
   <Target
     Name="GenSharedHeaderFile"
     Inputs="$(WinObjCVersionFile)"
-    Outputs="$(SharedHeaderFile)">
+    Outputs="$(SharedHeaderFile)"
+    DependsOnTargets="MakeSharedVersionHeaderDir">
 
     <Message Importance="High" Text="Generating $([System.IO.Path]::GetFileName('$(SharedHeaderFile)'))" />
 
