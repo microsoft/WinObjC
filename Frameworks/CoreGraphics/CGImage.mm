@@ -37,7 +37,7 @@ static const wchar_t* TAG = L"CGImage";
 
 #define RETURN_FALSE_IF_FAILED(input) RETURN_FALSE_IF(FAILED(input));
 
-// TODO: remove old code
+// TODO #1124: remove old code
 #pragma region OLD_CODE
 static std::vector<CGImageDestructionListener> _imageDestructionListeners;
 COREGRAPHICS_EXPORT void CGImageAddDestructionListener(CGImageDestructionListener listener) {
@@ -101,7 +101,6 @@ CGImageRef CGImageCreate(size_t width,
 
     REFGUID pixelFormat = _CGImageGetWICPixelFormat(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo);
 
-    // TODO: take care of the stride (mapping of the guids)
     HRESULT status = imageFactory->CreateBitmapFromMemory(width, height, pixelFormat, bytesPerRow, height * bytesPerRow, data, &image);
 
     CGImageRef imageRef = __CGImage::CreateInstance();
@@ -204,8 +203,7 @@ CGDataProviderRef CGImageGetDataProvider(CGImageRef img) {
     size_t height, width;
     RETURN_NULL_IF_FAILED(img->ImageSource()->GetSize(&width, &height));
 
-    // TODO: should be using the CGImageGetBytesPerRow
-    const unsigned int stride = width * 4;
+    const unsigned int stride = width * CGImageGetBytesPerRow(img);
     const unsigned int size = height * stride;
     woc::unique_iw<unsigned char> data(static_cast<unsigned char*>(IwMalloc(size)));
 
@@ -353,7 +351,7 @@ size_t CGImageGetBitsPerComponent(CGImageRef img) {
 size_t CGImageGetBytesPerRow(CGImageRef img) {
     RETURN_RESULT_IF_NULL(img, 0);
     // ((bitsperpixel * 8) bytes) * width;
-    // TODO: Move it to struct (avoid comuptation everytime.)
+    // TODO #1124: Move it to struct (avoid comuptation everytime.)
     return (CGImageGetBitsPerPixel(img) >> 3) * CGImageGetWidth(img);
 }
 
@@ -379,7 +377,7 @@ CGImageRef CGImageCreateCopyWithColorSpace(CGImageRef ref, CGColorSpaceRef color
  @Status Stub
  */
 CGImageRef CGImageCreateWithMask(CGImageRef image, CGImageRef mask) {
-    // TODO: Given how masks are applied during rendering via D2D, we will hold onto the
+    // TODO #1124: Given how masks are applied during rendering via D2D, we will hold onto the
     // mask then apply it at the appropriate time.
     RETURN_NULL_IF(!image);
     UNIMPLEMENTED();
@@ -471,7 +469,6 @@ CGImageRef _CGImageLoadImageWithWICDecoder(REFGUID decoderCls, void* bytes, int 
 
     CGImageRef imageRef = __CGImage::CreateInstance();
     imageRef->ImageSource().Attach(bitMapFrameDecoder.Detach());
-    // TODO:(JJ) Set the color space
     return imageRef;
 }
 
@@ -508,12 +505,11 @@ REFGUID _CGImageGetWICPixelFormat(unsigned int bitsPerComponent,
                                   unsigned int bitsPerPixel,
                                   CGColorSpaceRef colorSpace,
                                   CGBitmapInfo bitmapInfo) {
-    // TODO: NUll check?
     CGColorSpaceModel colorSpaceModel = CGColorSpaceGetModel(colorSpace);
 
     unsigned int alphaInfo = bitmapInfo & kCGBitmapAlphaInfoMask;
-    // TODO: support for kCGBitmapFloatComponents
-    // TODO: make this more verbose, map?
+    // TODO #1124: support for kCGBitmapFloatComponents
+    // TODO #1124: make this more verbose, map?
 
     if (colorSpaceModel == kCGColorSpaceModelRGB) {
         switch (alphaInfo) {

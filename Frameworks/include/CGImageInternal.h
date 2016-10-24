@@ -47,7 +47,7 @@ public:
     virtual void ReleaseDisplayTexture(DisplayTexture* tex) = 0;
 };
 
-// TODO: Remove CGImageBacking
+// TODO #1124: Remove CGImageBacking
 class CGImageBacking {
 protected:
     int _imageLocks;
@@ -227,6 +227,16 @@ struct __CGImageImpl {
     inline CGImageAlphaInfo AlphaInfo() const {
         return static_cast<CGImageAlphaInfo>(BitmapInfo() & kCGBitmapAlphaInfoMask);
     }
+
+    inline CGColorSpaceRef ColorSpace() const {
+        if(_impl.colorSpace) {
+            return _impl.colorSpace;
+        }
+        
+        const __CGImagePixelProperties* properties = Properties();
+        RETURN_NULL_IF(!properties);
+        return properties->colorSpaceModel;        
+    }
 };
 
 struct __CGImage : CoreFoundation::CppBase<__CGImage, __CGImageImpl> {
@@ -251,7 +261,7 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage, __CGImageImpl> {
     }
 
     inline CGColorSpaceRef ColorSpace() const {
-        return _impl.colorSpace;
+        return _impl.ColorSpace();
     }
 
     inline CGColorRenderingIntent RenderingIntent() const {
