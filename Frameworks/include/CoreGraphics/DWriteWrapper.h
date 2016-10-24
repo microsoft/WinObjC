@@ -30,8 +30,8 @@
 COREGRAPHICS_EXPORT CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedString);
 
 // Font name <-> font family
-COREGRAPHICS_EXPORT CFArrayRef _DWriteGetFontFamilyNames();
-COREGRAPHICS_EXPORT CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName);
+COREGRAPHICS_EXPORT CFArrayRef _DWriteCopyFontFamilyNames();
+COREGRAPHICS_EXPORT CFArrayRef _DWriteCopyFontNamesForFamilyName(CFStringRef familyName);
 COREGRAPHICS_EXPORT CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName);
 
 struct _DWriteFontProperties {

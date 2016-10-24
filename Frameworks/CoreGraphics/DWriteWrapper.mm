@@ -91,7 +91,7 @@ CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedStrin
  *
  * @return Immutable array of font family name strings that are installed in the system.
  */
-CFArrayRef _DWriteGetFontFamilyNames() {
+CFArrayRef _DWriteCopyFontFamilyNames() {
     woc::unique_cf<CFMutableArrayRef> fontFamilyNames(CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks));
 
     // Get the direct write factory instance
@@ -124,13 +124,13 @@ CFArrayRef _DWriteGetFontFamilyNames() {
         CFArrayAppendValue(fontFamilyNames.get(), name);
     }
 
-    return static_cast<CFArrayRef>(CFAutorelease(fontFamilyNames.release()));
+    return fontFamilyNames.release();
 }
 
 /**
  * Helper method to retrieve names of individual fonts under a font family.
  */
-CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName) {
+CFArrayRef _DWriteCopyFontNamesForFamilyName(CFStringRef familyName) {
     woc::unique_cf<CFMutableArrayRef> fontNames(CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks));
 
     ComPtr<IDWriteFactory> dwriteFactory;
@@ -151,7 +151,7 @@ CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName) {
     RETURN_NULL_IF_FAILED(fontCollection->FindFamilyName(reinterpret_cast<wchar_t*>(unicharFamilyName.data()), &index, &exists));
     if (!exists) {
         TraceError(TAG, L"Failed to find the font family name.");
-        return static_cast<CFArrayRef>(CFAutorelease(fontNames.release()));
+        return fontNames.release();
     }
 
     ComPtr<IDWriteFontFamily> fontFamily;
@@ -182,7 +182,7 @@ CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName) {
         }
     }
 
-    return static_cast<CFArrayRef>(CFAutorelease(fontNames.release()));
+    return fontNames.release();
 }
 
 /**
@@ -198,14 +198,14 @@ CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName) {
         woc::unique_cf<CFMutableDictionaryRef> initMap(
             CFDictionaryCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks));
 
-        CFArrayRef familyNames = _DWriteGetFontFamilyNames();
+        woc::unique_cf<CFArrayRef> familyNames(_DWriteCopyFontFamilyNames());
 
-        for (size_t i = 0; i < CFArrayGetCount(familyNames); ++i) {
-            CFStringRef familyName = static_cast<CFStringRef>(CFArrayGetValueAtIndex(familyNames, i));
-            CFArrayRef fontNames = _DWriteGetFontNamesForFamilyName(familyName);
+        for (size_t i = 0; i < CFArrayGetCount(familyNames.get()); ++i) {
+            CFStringRef familyName = static_cast<CFStringRef>(CFArrayGetValueAtIndex(familyNames.get(), i));
+            woc::unique_cf<CFArrayRef> fontNames(_DWriteCopyFontNamesForFamilyName(familyName));
 
-            for (size_t j = 0; j < CFArrayGetCount(fontNames); j++) {
-                CFStringRef systemFontName = static_cast<CFStringRef>(CFArrayGetValueAtIndex(fontNames, j));
+            for (size_t j = 0; j < CFArrayGetCount(fontNames.get()); j++) {
+                CFStringRef systemFontName = static_cast<CFStringRef>(CFArrayGetValueAtIndex(fontNames.get(), j));
                 woc::unique_cf<CFMutableStringRef> upperSystemFontName(
                     CFStringCreateMutableCopy(nullptr, CFStringGetLength(systemFontName), systemFontName));
                 CFStringUppercase(upperSystemFontName.get(), locale.get());

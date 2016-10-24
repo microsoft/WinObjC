@@ -38,8 +38,8 @@ LIBRARY CoreGraphics
 
         ; DWriteWrapper Additions
         _CFStringFromLocalizedString
-        _DWriteGetFontFamilyNames
-        _DWriteGetFontNamesForFamilyName
+        _DWriteCopyFontFamilyNames
+        _DWriteCopyFontNamesForFamilyName
         _DWriteGetFamilyNameForFontName
         _DWriteGetFontPropertiesFromName
         _DWriteCreateTextFormat

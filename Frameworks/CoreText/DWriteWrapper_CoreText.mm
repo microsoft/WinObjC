@@ -371,7 +371,7 @@ static _CTLine* _DWriteGetLine(CFAttributedStringRef string) {
  * @return _CTFrame* created using the given parameters
  */
 static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CGRect frameSize) {
-    RETURN_NULL_IF(!ts);
+    RETURN_NULL_IF(!string);
 
     _CTFrame* frame = [[_CTFrame new] autorelease];
     if (range.length <= 0) {
@@ -476,183 +476,9 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
     return frame;
 }
 
-/**
- * Helper method to retrieve font family names installed in the system.
- *
- * @return Unmutable array of font family name strings that are installed in the system.
- */
-static CFArrayRef _DWriteGetFontFamilyNames() {
-    CFMutableArrayRef fontFamilyNames = CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks);
-    CFAutorelease(fontFamilyNames);
-
-    // Get the direct write factory instance
-    ComPtr<IDWriteFactory> dwriteFactory = __GetDWriteFactoryInstance();
-
-    // Get the system font collection.
-    ComPtr<IDWriteFontCollection> fontCollection;
-    THROW_IF_FAILED(dwriteFactory->GetSystemFontCollection(&fontCollection));
-
-    // Get the number of font families in the collection.
-    uint32_t count = 0;
-    count = fontCollection->GetFontFamilyCount();
-
-    for (uint32_t i = 0; i < count; ++i) {
-        // Get the font family.
-        ComPtr<IDWriteFontFamily> fontFamily;
-        THROW_IF_FAILED(fontCollection->GetFontFamily(i, &fontFamily));
-
-        // Get a list of localized strings for the family name.
-        ComPtr<IDWriteLocalizedStrings> familyNames;
-        THROW_IF_FAILED(fontFamily->GetFamilyNames(&familyNames));
-
-        CFStringRef name = _CFStringFromLocalizedString(familyNames.Get());
-        if (CFStringGetLength(name) == 0) {
-            TraceError(TAG, L"Failed to convert the localized string to wide string.");
-            return fontFamilyNames;
-        }
-
-        CFArrayAppendValue(fontFamilyNames, name);
-    }
-
-    return fontFamilyNames;
-}
-
-/**
- * Helper method to retrieve names of individual fonts under a font family.
- */
-CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName) {
-    CFMutableArrayRef fontNames = CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks);
-    CFAutorelease(fontNames);
-
-    ComPtr<IDWriteFactory> dwriteFactory = __GetDWriteFactoryInstance();
-
-    // Get the system font collection.
-    ComPtr<IDWriteFontCollection> fontCollection;
-    THROW_IF_FAILED(dwriteFactory->GetSystemFontCollection(&fontCollection));
-
-    // Get the font family.
-    size_t index = 0;
-    BOOL exists = false;
-
-    CFIndex familyNameLength = CFStringGetLength(familyName);
-    std::vector<UniChar> unicharFamilyName(familyNameLength + 1);
-    CFStringGetCharacters(familyName, CFRangeMake(0, familyNameLength), unicharFamilyName.data());
-
-    THROW_IF_FAILED(fontCollection->FindFamilyName(reinterpret_cast<wchar_t*>(unicharFamilyName.data()), &index, &exists));
-    if (!exists) {
-        TraceError(TAG, L"Failed to find the font family name.");
-        return fontNames;
-    }
-
-    ComPtr<IDWriteFontFamily> fontFamily;
-    THROW_IF_FAILED(fontCollection->GetFontFamily(index, &fontFamily));
-
-    ComPtr<IDWriteFontList> fontList;
-    THROW_IF_FAILED(
-        fontFamily->GetMatchingFonts(DWRITE_FONT_WEIGHT_THIN, DWRITE_FONT_STRETCH_UNDEFINED, DWRITE_FONT_STYLE_NORMAL, &fontList));
-
-    size_t count = fontList->GetFontCount();
-
-    for (size_t i = 0; i < count; i++) {
-        ComPtr<IDWriteFont> font;
-        THROW_IF_FAILED(fontList->GetFont(i, &font));
-
-        ComPtr<IDWriteLocalizedStrings> fullName;
-        BOOL exist = FALSE;
-        THROW_IF_FAILED(font->GetInformationalStrings(DWRITE_INFORMATIONAL_STRING_FULL_NAME, &fullName, &exist));
-
-        if (exist) {
-            CFStringRef name = _CFStringFromLocalizedString(fullName.Get());
-            if (CFStringGetLength(name) == 0) {
-                TraceError(TAG, L"Failed to convert the localized string to wide string.");
-                return fontNames;
-            }
-
-            CFArrayAppendValue(fontNames, name);
-        }
-    }
-
-    return fontNames;
-}
-
-/**
- * Helper method that maps a font name to the name of its family.
- *
- * Note: This function currently uses a cache, meaning that fonts installed during runtime will not be reflected
- */
-CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName) {
-    static CFDictionaryRef fontToFamilyMap = nullptr;
-
-    CFLocaleRef locale = CFLocaleCopyCurrent();
-    CFAutorelease(locale);
-
-    static dispatch_once_t initOnce = 0;
-    dispatch_once(&initOnce, ^{
-        // initialize fontToFamilyMap
-        CFMutableDictionaryRef initMap =
-            CFDictionaryCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-        CFAutorelease(initMap);
-
-        CFArrayRef familyNames = _DWriteGetFontFamilyNames();
-
-        for (size_t i = 0; i < CFArrayGetCount(familyNames); ++i) {
-            CFStringRef familyName = static_cast<CFStringRef>(CFArrayGetValueAtIndex(familyNames, i));
-            CFArrayRef fontNames = _DWriteGetFontNamesForFamilyName(familyName);
-
-            for (size_t j = 0; j < CFArrayGetCount(fontNames); j++) {
-                CFStringRef systemFontName = static_cast<CFStringRef>(CFArrayGetValueAtIndex(fontNames, j));
-                CFMutableStringRef upperSystemFontName =
-                    CFStringCreateMutableCopy(nullptr, CFStringGetLength(systemFontName), systemFontName);
-                CFAutorelease(upperSystemFontName);
-                CFStringUppercase(upperSystemFontName, locale);
-                CFDictionaryAddValue(initMap, upperSystemFontName, familyName);
-            }
-        }
-
-        fontToFamilyMap = CFDictionaryCreateCopy(kCFAllocatorSystemDefault, initMap);
-    });
-
-    CFMutableStringRef upperFontName = CFStringCreateMutableCopy(nullptr, CFStringGetLength(fontName), fontName);
-    CFAutorelease(upperFontName);
-    CFStringUppercase(upperFontName, locale);
-    return static_cast<CFStringRef>(CFDictionaryGetValue(fontToFamilyMap, upperFontName));
-}
-
-/**
- * Private helper that acquires an IDWriteFontFamily object for a given family name
- */
-static ComPtr<IDWriteFontFamily> __GetDWriteFontFamily(CFStringRef familyName) {
-    ComPtr<IDWriteFontFamily> fontFamily;
-
-    ComPtr<IDWriteFactory> factory = __GetDWriteFactoryInstance();
-
-    ComPtr<IDWriteFontCollection> systemFontCollection;
-    THROW_IF_FAILED(factory->GetSystemFontCollection(&systemFontCollection));
-
-    CFIndex familyNameLength = CFStringGetLength(familyName);
-    std::vector<UniChar> unicharFamilyName(familyNameLength + 1);
-    CFStringGetCharacters(familyName, CFRangeMake(0, familyNameLength), unicharFamilyName.data());
-
-    size_t fontFamilyIndex;
-    BOOL fontFamilyExists;
-
-    THROW_IF_FAILED(systemFontCollection->FindFamilyName(reinterpret_cast<const wchar_t*>(unicharFamilyName.data()),
-                                                         &fontFamilyIndex,
-                                                         &fontFamilyExists));
-
-    if (!fontFamilyExists) {
-        TraceError(TAG, L"Unable to find font family \"%ws\"", unicharFamilyName.data());
-        return fontFamily;
-    }
-
-    THROW_IF_FAILED(systemFontCollection->GetFontFamily(fontFamilyIndex, &fontFamily));
-    return fontFamily;
-}
-
-// Represents a mapping between multiple representations of the same font weight across font names, DWrite, and CoreText
-// eg: CFSTR("BOLD") = DWRITE_FONT_WEIGHT_BOLD = kCTFontWeightBold
+// Represents a mapping between multiple representations of the same font weight across DWrite and CoreText
+// DWRITE_FONT_WEIGHT_BOLD = kCTFontWeightBold
 struct WeightMapping {
-    CFStringRef stringValue;
     DWRITE_FONT_WEIGHT dwriteValue;
     CGFloat ctValue;
 };
@@ -661,23 +487,25 @@ struct WeightMapping {
 // Some loss of precision here as CT presents fewer values than DWrite
 // Note also that Thin and Ultra/Extra-Light are in opposite order in DWrite and CoreText/UIKit constants
 // (However, "Thin" fonts on the reference platform have UIFontWeightUltraLight...)
-static const struct WeightMapping c_weightMap[] = { { CFSTR("THIN"), DWRITE_FONT_WEIGHT_THIN, kCTFontWeightUltraLight },
-                                                    { CFSTR("EXTRALIGHT"), DWRITE_FONT_WEIGHT_EXTRA_LIGHT, kCTFontWeightThin },
-                                                    { CFSTR("ULTRALIGHT"), DWRITE_FONT_WEIGHT_ULTRA_LIGHT, kCTFontWeightThin },
-                                                    { CFSTR("LIGHT"), DWRITE_FONT_WEIGHT_LIGHT, kCTFontWeightLight },
-                                                    { CFSTR("SEMILIGHT"), DWRITE_FONT_WEIGHT_SEMI_LIGHT, kCTFontWeightLight },
-                                                    { CFSTR("NORMAL"), DWRITE_FONT_WEIGHT_NORMAL, kCTFontWeightRegular },
-                                                    { CFSTR("REGULAR"), DWRITE_FONT_WEIGHT_REGULAR, kCTFontWeightRegular },
-                                                    { CFSTR("MEDIUM"), DWRITE_FONT_WEIGHT_MEDIUM, kCTFontWeightMedium },
-                                                    { CFSTR("DEMIBOLD"), DWRITE_FONT_WEIGHT_DEMI_BOLD, kCTFontWeightSemibold },
-                                                    { CFSTR("SEMIBOLD"), DWRITE_FONT_WEIGHT_SEMI_BOLD, kCTFontWeightSemibold },
-                                                    { CFSTR("BOLD"), DWRITE_FONT_WEIGHT_BOLD, kCTFontWeightBold },
-                                                    { CFSTR("EXTRABOLD"), DWRITE_FONT_WEIGHT_EXTRA_BOLD, kCTFontWeightHeavy },
-                                                    { CFSTR("ULTRABOLD"), DWRITE_FONT_WEIGHT_ULTRA_BOLD, kCTFontWeightHeavy },
-                                                    { CFSTR("BLACK"), DWRITE_FONT_WEIGHT_BLACK, kCTFontWeightBlack },
-                                                    { CFSTR("HEAVY"), DWRITE_FONT_WEIGHT_HEAVY, kCTFontWeightBlack },
-                                                    { CFSTR("EXTRABLACK"), DWRITE_FONT_WEIGHT_EXTRA_BLACK, kCTFontWeightBlack },
-                                                    { CFSTR("ULTRABLACK"), DWRITE_FONT_WEIGHT_ULTRA_BLACK, kCTFontWeightBlack } };
+// clang-format off
+static const struct WeightMapping c_weightMap[] = { { DWRITE_FONT_WEIGHT_THIN, kCTFontWeightUltraLight },
+                                                    { DWRITE_FONT_WEIGHT_EXTRA_LIGHT, kCTFontWeightThin },
+                                                    { DWRITE_FONT_WEIGHT_ULTRA_LIGHT, kCTFontWeightThin },
+                                                    { DWRITE_FONT_WEIGHT_LIGHT, kCTFontWeightLight },
+                                                    { DWRITE_FONT_WEIGHT_SEMI_LIGHT, kCTFontWeightLight },
+                                                    { DWRITE_FONT_WEIGHT_NORMAL, kCTFontWeightRegular },
+                                                    { DWRITE_FONT_WEIGHT_REGULAR, kCTFontWeightRegular },
+                                                    { DWRITE_FONT_WEIGHT_MEDIUM, kCTFontWeightMedium },
+                                                    { DWRITE_FONT_WEIGHT_DEMI_BOLD, kCTFontWeightSemibold },
+                                                    { DWRITE_FONT_WEIGHT_SEMI_BOLD, kCTFontWeightSemibold },
+                                                    { DWRITE_FONT_WEIGHT_BOLD, kCTFontWeightBold },
+                                                    { DWRITE_FONT_WEIGHT_EXTRA_BOLD, kCTFontWeightHeavy },
+                                                    { DWRITE_FONT_WEIGHT_ULTRA_BOLD, kCTFontWeightHeavy },
+                                                    { DWRITE_FONT_WEIGHT_BLACK, kCTFontWeightBlack },
+                                                    { DWRITE_FONT_WEIGHT_HEAVY, kCTFontWeightBlack },
+                                                    { DWRITE_FONT_WEIGHT_EXTRA_BLACK, kCTFontWeightBlack },
+                                                    { DWRITE_FONT_WEIGHT_ULTRA_BLACK, kCTFontWeightBlack } };
+// clang-format on
 
 /**
  * Creates an IDWriteFontFace given the attributes of a CTFontDescriptor

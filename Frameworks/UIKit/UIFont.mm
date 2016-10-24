@@ -50,7 +50,7 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UIFontPrototype, CTFontGetTypeID);
  @Status Interoperable
 */
 + (NSArray<NSString*>*)familyNames {
-    return static_cast<NSArray<NSString*>*>(_DWriteGetFontFamilyNames());
+    return [static_cast<NSArray<NSString*>*>(_DWriteCopyFontFamilyNames()) autorelease];
 }
 
 /**
@@ -145,7 +145,7 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UIFontPrototype, CTFontGetTypeID);
  @Status Interoperable
 */
 + (NSArray<NSString*>*)fontNamesForFamilyName:(NSString*)familyName {
-    return static_cast<NSArray<NSString*>*>(_DWriteGetFontNamesForFamilyName((__bridge CFStringRef)familyName));
+    return [static_cast<NSArray<NSString*>*>(_DWriteCopyFontNamesForFamilyName((__bridge CFStringRef)familyName)) autorelease];
 }
 
 /**
