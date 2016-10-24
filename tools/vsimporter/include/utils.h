@@ -21,5 +21,6 @@
 #include "stringutils.h"
 #include "miscutils.h"
 #include "telemetryutils.h"
+#include "versionutils.h"
 
 #endif /* _UTILS_H_ */
