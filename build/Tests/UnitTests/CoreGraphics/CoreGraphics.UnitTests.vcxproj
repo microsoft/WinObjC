@@ -242,9 +242,12 @@
     <ClangCompile Include="..\..\..\..\tests\unittests\CoreGraphics\CGImageTests.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\CoreGraphics\TestUtils.mm" />
   </ItemGroup>
-  <ItemGroup>
-    <SBResourceCopy Include="..\..\..\..\tests\unittests\CoreGraphics\images\**\*" />
-  </ItemGroup>
+  <Target Name="CopyTestResourcesToOutput" AfterTargets="AfterBuild">
+    <ItemGroup>
+      <TestResourceFile Include="..\..\..\..\tests\unittests\CoreGraphics\images\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(TestResourceFile)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="True" />
+  </Target>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.targets" />

@@ -15,7 +15,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#import <TestFramework.h>
 #import <Foundation/Foundation.h>
 #import <Accelerate/Accelerate.h>
 #import <CoreGraphics/CGImage.h>
@@ -821,7 +821,7 @@ TEST(Accelerate, Convert) {
     vImageTestBufferFree(&rgbDest);
 }
 
-TEST(Accelerate, AlphaUnpremultiply) {
+DISABLED_TEST(Accelerate, AlphaUnpremultiply) {
     SetCACompositor(new NullCompositor);
 
     char fullPath[_MAX_PATH];

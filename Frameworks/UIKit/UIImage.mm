@@ -82,7 +82,6 @@ void UIImageSetLayerContents(CALayer* layer, UIImage* image) {
     bool _isFromCache;
     uint8_t* out;
     uint8_t** row_pointers;
-    StrongId<NSData> _deferredImageData;
 }
 
 /**
@@ -123,17 +122,9 @@ void UIImageSetLayerContents(CALayer* layer, UIImage* image) {
     return [obj autorelease];
 }
 
-static inline CGImageRef getImage(UIImage* self) {
-    RETURN_NULL_IF(!self);
-
-    // TODO: This can be removed given deferredLoading is no longer used.
-    if (!self->m_pImage && self->_deferredImageData != nil) {
-        unsigned char* in = (unsigned char*)[self->_deferredImageData bytes];
-        int len = [self->_deferredImageData length];
-        self->m_pImage = _CGImageGetImageFromData(in, len);
-        self->_deferredImageData = nil;
-    }
-    return self->m_pImage;
+static inline CGImageRef getImage(UIImage* uiImage) {
+    RETURN_NULL_IF(!uiImage);
+    return uiImage->m_pImage;
 }
 
 /**
@@ -233,7 +224,7 @@ static inline CGImageRef getImage(UIImage* self) {
  @Status Interoperable
 */
 - (instancetype)initWithCGImage:(CGImageRef)image {
-    if(!image) {
+    if (!image) {
         [self release];
         return nil;
     }
@@ -258,7 +249,10 @@ static inline CGImageRef getImage(UIImage* self) {
 }
 
 - (instancetype)_initWithCopyOfImage:(UIImage*)imageToCopy WithRenderingMode:(UIImageRenderingMode)renderingMode {
-    RETURN_NULL_IF(!imageToCopy);
+    if (!imageToCopy) {
+        [self release];
+        return nil;
+    }
 
     if (self = [self initWithCGImage:getImage(imageToCopy)]) {
         _scale = imageToCopy->_scale;
@@ -274,7 +268,10 @@ static inline CGImageRef getImage(UIImage* self) {
  @Status Interoperable
 */
 - (instancetype)initWithContentsOfFile:(NSString*)pathAddr {
-    RETURN_NULL_IF(!pathAddr);
+    if (!pathAddr) {
+        [self release];
+        return nil;
+    }
 
     if (self = [self init]) {
         NSBundle* bundle = [NSBundle mainBundle];
@@ -306,8 +303,9 @@ static inline CGImageRef getImage(UIImage* self) {
 
                 if (pathFind != nil) {
                     path = (char*)[pathFind UTF8String];
-                    if (pathStr)
+                    if (pathStr) {
                         IwFree(pathStr);
+                    }
                     pathStr = IwStrDup(path);
                     found = true;
                 }
@@ -318,8 +316,9 @@ static inline CGImageRef getImage(UIImage* self) {
         }
 
         if (!found) {
-            if (pathStr)
+            if (pathStr) {
                 IwFree(pathStr);
+            }
             pathStr = IwStrDup(path);
 
             if (EbrAccess(pathStr, 0) == -1) {
@@ -327,8 +326,9 @@ static inline CGImageRef getImage(UIImage* self) {
 
                 if (pathFind != nil) {
                     path = [pathFind UTF8String];
-                    if (pathStr)
+                    if (pathStr) {
                         IwFree(pathStr);
+                    }
                     pathStr = IwStrDup(path);
                 }
             }
@@ -340,8 +340,9 @@ static inline CGImageRef getImage(UIImage* self) {
 
             if (pathFind != nil) {
                 path = [pathFind UTF8String];
-                if (pathStr)
+                if (pathStr) {
                     IwFree(pathStr);
+                }
                 pathStr = IwStrDup(path);
                 found = true;
             } else {
@@ -349,8 +350,9 @@ static inline CGImageRef getImage(UIImage* self) {
 
                 if (pathFind != nil) {
                     path = [pathFind UTF8String];
-                    if (pathStr)
+                    if (pathStr) {
                         IwFree(pathStr);
+                    }
                     pathStr = IwStrDup(path);
                     found = true;
                 }
@@ -424,10 +426,12 @@ static inline CGImageRef getImage(UIImage* self) {
  @Status Interoperable
 */
 - (instancetype)initWithData:(NSData*)data scale:(float)scale {
-    RETURN_NULL_IF(!data);
+    if (!data) {
+        [self release];
+        return nil;
+    }
 
     if (self = [self init]) {
-        unsigned char* in = static_cast<unsigned char*>([data bytes]);
         _scale = scale;
 
         if ([data length] == 0) {
@@ -435,7 +439,7 @@ static inline CGImageRef getImage(UIImage* self) {
             return nil;
         }
 
-        m_pImage = _CGImageGetImageFromData(in, [data length]);
+        m_pImage = _CGImageGetImageFromData((void*)[data bytes], [data length]);
         if (!m_pImage) {
             [self release];
             return nil;
@@ -522,6 +526,8 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
     // direction
     // relative to its the origin. Any custom transforms applied to the GFX
     // context are handled in the underlying draw function.
+
+    RETURN_IF(!img);
 
     CGImageRef cgImg = getImage(img);
     RETURN_IF(!cgImg);
@@ -894,20 +900,21 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 NSData* UIImagePNGRepresentation(UIImage* img) {
     RETURN_NULL_IF(!img);
-    return _CGImagePNGRepresentation(getImage(img));
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
- @Status Caveat
- @Notes quality is being ignored.
+ @Status Stub
 */
 NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat quality) {
     RETURN_NULL_IF(!img);
-    return _CGImageJPEGRepresentation(getImage(img));
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**

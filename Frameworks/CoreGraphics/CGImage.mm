@@ -35,9 +35,7 @@ using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"CGImage";
 
-#define RETURN_FALSE_IF_FAILED(input) RETURN_FALSE_IF(FAILED(input));
-
-// TODO: remove old code
+// TODO #1124: remove old code
 #pragma region OLD_CODE
 static std::vector<CGImageDestructionListener> _imageDestructionListeners;
 COREGRAPHICS_EXPORT void CGImageAddDestructionListener(CGImageDestructionListener listener) {
@@ -77,41 +75,21 @@ CGImageRef CGImageCreate(size_t width,
                          const float* decode,
                          bool shouldInterpolate,
                          CGColorRenderingIntent intent) {
-    RETURN_NULL_IF(((provider == nullptr) || ![(NSObject*)provider isKindOfClass:[NSData class]]));
+    RETURN_NULL_IF(((provider == nullptr) || ![(NSObject*)provider isKindOfClass:[NSData class]]) || (colorSpace == nullptr));
 
     NSData* dataProvider = (__bridge NSData*)provider;
 
     unsigned char* data = (unsigned char*)[dataProvider bytes];
-
-    bool colorSpaceAllocated = false;
-    if (colorSpace == NULL) {
-        if (bytesPerRow >= (width * 3)) {
-            TraceWarning(TAG, L"Warning: colorSpace = NULL, assuming RGB based on bytesPerRow.");
-            colorSpace = CGColorSpaceCreateDeviceRGB();
-        } else {
-            TraceWarning(TAG, L"Warning: colorSpace = NULL, assuming Gray based on bytesPerRow.");
-            colorSpace = CGColorSpaceCreateDeviceGray();
-        }
-
-        colorSpaceAllocated = true;
-    }
 
     ComPtr<IWICBitmap> image;
     ComPtr<IWICImagingFactory> imageFactory = _GetWICFactory();
 
     REFGUID pixelFormat = _CGImageGetWICPixelFormat(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo);
 
-    // TODO: take care of the stride (mapping of the guids)
     HRESULT status = imageFactory->CreateBitmapFromMemory(width, height, pixelFormat, bytesPerRow, height * bytesPerRow, data, &image);
 
     CGImageRef imageRef = __CGImage::CreateInstance();
-    imageRef->ImageSource().Attach(image.Detach());
-
-    imageRef->SetBitmapInfo(bitmapInfo).SetColorSpace(colorSpace).SetRenderingIntent(intent).SetInterpolate(shouldInterpolate);
-
-    if (colorSpaceAllocated) {
-        CGColorSpaceRelease(colorSpace);
-    }
+    imageRef->SetImageSource(image).SetColorSpace(colorSpace).SetRenderingIntent(intent).SetInterpolate(shouldInterpolate);
 
     return imageRef;
 }
@@ -129,12 +107,9 @@ CGImageRef CGImageCreateWithImageInRect(CGImageRef ref, CGRect rect) {
     RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSourceRect(
         ref->ImageSource().Get(), rect.origin.x, rect.origin.y, rect.size.width, rect.size.height, &rectImage));
 
-    imageRef->ImageSource().Attach(rectImage.Detach());
+    imageRef->SetImageSource(rectImage);
 
-    imageRef->SetBitmapInfo(ref->BitmapInfo())
-        .SetColorSpace(ref->ColorSpace())
-        .SetRenderingIntent(ref->RenderingIntent())
-        .SetInterpolate(ref->Interpolate());
+    imageRef->SetColorSpace(ref->ColorSpace()).SetRenderingIntent(ref->RenderingIntent()).SetInterpolate(ref->Interpolate());
 
     return imageRef;
 }
@@ -145,15 +120,13 @@ CGImageRef CGImageCreateWithImageInRect(CGImageRef ref, CGRect rect) {
 CGImageRef CGImageCreateCopy(CGImageRef ref) {
     RETURN_NULL_IF(!ref);
 
-    CGImageRef imageRef = __CGImage::CreateInstance();
-
     ComPtr<IWICImagingFactory> imageFactory = _GetWICFactory();
     ComPtr<IWICBitmap> image;
 
     RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(ref->ImageSource().Get(), WICBitmapCacheOnDemand, &image));
 
-    imageRef->ImageSource().Attach(image.Detach());
-    imageRef->SetBitmapInfo(ref->BitmapInfo())
+    CGImageRef imageRef = __CGImage::CreateInstance();
+    imageRef->SetImageSource(image)
         .SetIsMask(ref->IsMask())
         .SetInterpolate(ref->Interpolate())
         .SetColorSpace(ref->ColorSpace())
@@ -174,8 +147,6 @@ CGImageRef CGImageMaskCreate(size_t width,
                              CGDataProviderRef provider,
                              const CGFloat* decode,
                              bool shouldInterpolate) {
-    RETURN_NULL_IF(((bitsPerComponent == 8) && (bitsPerPixel == 32)));
-
     RETURN_NULL_IF(((provider == nullptr) || ![(NSObject*)provider isKindOfClass:[NSData class]]));
 
     NSData* dataProvider = (__bridge NSData*)provider;
@@ -185,12 +156,15 @@ CGImageRef CGImageMaskCreate(size_t width,
     ComPtr<IWICBitmap> image;
     ComPtr<IWICImagingFactory> imageFactory = _GetWICFactory();
 
-    HRESULT status =
-        imageFactory->CreateBitmapFromMemory(width, height, GUID_WICPixelFormatBlackWhite, bytesPerRow, height * bytesPerRow, data, &image);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    REFGUID pixelFormat = _CGImageGetWICPixelFormat(bitsPerComponent, bitsPerPixel, colorSpace, kCGBitmapByteOrderDefault);
+    CGColorSpaceRelease(colorSpace);
+
+    RETURN_NULL_IF_FAILED(
+        imageFactory->CreateBitmapFromMemory(width, height, pixelFormat, bytesPerRow, height * bytesPerRow, data, &image));
 
     CGImageRef imageRef = __CGImage::CreateInstance();
-    imageRef->ImageSource().Attach(image.Detach());
-    imageRef->SetIsMask(true).SetInterpolate(shouldInterpolate);
+    imageRef->SetImageSource(image).SetIsMask(true).SetInterpolate(shouldInterpolate);
 
     return imageRef;
 }
@@ -201,12 +175,8 @@ CGImageRef CGImageMaskCreate(size_t width,
 CGDataProviderRef CGImageGetDataProvider(CGImageRef img) {
     RETURN_NULL_IF(!img);
 
-    size_t height, width;
-    RETURN_NULL_IF_FAILED(img->ImageSource()->GetSize(&width, &height));
-
-    // TODO: should be using the CGImageGetBytesPerRow
-    const unsigned int stride = width * 4;
-    const unsigned int size = height * stride;
+    const unsigned int stride = CGImageGetWidth(img) * CGImageGetBytesPerRow(img);
+    const unsigned int size = CGImageGetHeight(img) * stride;
     woc::unique_iw<unsigned char> data(static_cast<unsigned char*>(IwMalloc(size)));
 
     RETURN_NULL_IF_FAILED(img->ImageSource()->CopyPixels(0, stride, stride, data.get()));
@@ -255,6 +225,14 @@ CGColorSpaceRef CGImageGetColorSpace(CGImageRef img) {
 /**
  @Status Interoperable
 */
+CGBitmapInfo CGImageGetBitmapInfo(CGImageRef img) {
+    RETURN_RESULT_IF_NULL(img, 0);
+    return img->BitmapInfo();
+}
+
+/**
+ @Status Interoperable
+*/
 size_t CGImageGetWidth(CGImageRef img) {
     RETURN_RESULT_IF_NULL(img, 0);
     return img->Width();
@@ -283,14 +261,6 @@ CGImageRef CGImageRetain(CGImageRef img) {
     RETURN_NULL_IF(!img);
     CFRetain((CFTypeRef)img);
     return img;
-}
-
-/**
- @Status Interoperable
-*/
-CGBitmapInfo CGImageGetBitmapInfo(CGImageRef img) {
-    RETURN_RESULT_IF_NULL(img, 0);
-    return img->BitmapInfo();
 }
 
 /**
@@ -332,6 +302,38 @@ CGImageRef CGImageCreateWithPNGDataProvider(CGDataProviderRef source,
 }
 
 /**
+ @Status Interoperable
+*/
+size_t CGImageGetBitsPerPixel(CGImageRef img) {
+    RETURN_RESULT_IF_NULL(img, 0);
+    return img->BitsPerPixel();
+}
+
+/**
+ @Status Interoperable
+*/
+size_t CGImageGetBitsPerComponent(CGImageRef img) {
+    RETURN_RESULT_IF_NULL(img, 0);
+    return img->BitsPerComponent();
+}
+
+/**
+ @Status Interoperable
+*/
+size_t CGImageGetBytesPerRow(CGImageRef img) {
+    RETURN_RESULT_IF_NULL(img, 0);
+    return img->BytesPerRow();
+}
+
+/**
+ @Status Interoperable
+*/
+CGImageAlphaInfo CGImageGetAlphaInfo(CGImageRef img) {
+    RETURN_RESULT_IF_NULL(img, kCGImageAlphaNone);
+    return img->AlphaInfo();
+}
+
+/**
  @Status Stub
  @Notes
 */
@@ -345,48 +347,9 @@ CGImageRef CGImageCreateCopyWithColorSpace(CGImageRef ref, CGColorSpaceRef color
  @Status Stub
  */
 CGImageRef CGImageCreateWithMask(CGImageRef image, CGImageRef mask) {
-    // TODO: Given how masks are applied during rendering via D2D, we will hold onto the
+    // TODO #1124: Given how masks are applied during rendering via D2D, we will hold onto the
     // mask then apply it at the appropriate time.
     RETURN_NULL_IF(!image);
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-CGImageAlphaInfo CGImageGetAlphaInfo(CGImageRef img) {
-    if (!img) {
-        return kCGImageAlphaNone;
-    }
-    // We would only have three values.
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Interoperable
-*/
-size_t CGImageGetBitsPerPixel(CGImageRef img) {
-    RETURN_RESULT_IF_NULL(img, 0);
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Interoperable
-*/
-size_t CGImageGetBitsPerComponent(CGImageRef img) {
-    RETURN_RESULT_IF_NULL(img, 0);
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Interoperable
-*/
-size_t CGImageGetBytesPerRow(CGImageRef img) {
-    RETURN_RESULT_IF_NULL(img, 0);
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -441,33 +404,14 @@ CGImageRef _CGImageLoadImageWithWICDecoder(REFGUID decoderCls, void* bytes, int 
     ComPtr<IWICImagingFactory> imageFactory = _GetWICFactory();
 
     ComPtr<IWICBitmapDecoder> pDecoder;
+    ComPtr<IWICStream> spStream;
+    RETURN_NULL_IF_FAILED(imageFactory->CreateStream(&spStream));
+    RETURN_NULL_IF_FAILED(spStream->InitializeFromMemory(static_cast<unsigned char*>(bytes), length));
 
-    if (decoderCls != GUID_NULL) {
-        ComPtr<IStream> spStream;
-        RETURN_NULL_IF_FAILED(::CreateStreamOnHGlobal(NULL, FALSE, &spStream));
-
-        ULONG written = 0;
-        HRESULT hr = spStream->Write(bytes, length, &written);
-        if (FAILED(hr) || (written != length)) {
-            TraceError(TAG, L"IStream::Write failed hr=%x len=%d written=%d", hr, length, written);
-            return NULL;
-        }
-
-        // seek to start
-        LARGE_INTEGER offset;
-        offset.QuadPart = 0;
-        RETURN_NULL_IF_FAILED(spStream->Seek(offset, STREAM_SEEK_SET, NULL));
-
-        RETURN_NULL_IF_FAILED(imageFactory->CreateDecoder(decoderCls, NULL, &pDecoder));
-
-        hr = pDecoder->Initialize(spStream.Get(), WICDecodeMetadataCacheOnLoad);
-        RETURN_NULL_IF_FAILED(hr);
-
+    if (!IsEqualGUID(decoderCls, GUID_NULL)) {
+        RETURN_NULL_IF_FAILED(imageFactory->CreateDecoder(decoderCls, nullptr, &pDecoder));
+        RETURN_NULL_IF_FAILED(pDecoder->Initialize(spStream.Get(), WICDecodeMetadataCacheOnLoad));
     } else {
-        ComPtr<IWICStream> spStream;
-        RETURN_NULL_IF_FAILED(imageFactory->CreateStream(&spStream));
-
-        RETURN_NULL_IF_FAILED(spStream->InitializeFromMemory(static_cast<unsigned char*>(bytes), length));
         RETURN_NULL_IF_FAILED(imageFactory->CreateDecoderFromStream(spStream.Get(), nullptr, WICDecodeMetadataCacheOnDemand, &pDecoder));
     }
 
@@ -475,54 +419,36 @@ CGImageRef _CGImageLoadImageWithWICDecoder(REFGUID decoderCls, void* bytes, int 
     RETURN_NULL_IF_FAILED(pDecoder->GetFrame(0, &bitMapFrameDecoder));
 
     CGImageRef imageRef = __CGImage::CreateInstance();
-    imageRef->ImageSource().Attach(bitMapFrameDecoder.Detach());
-    // TODO:(JJ) Set the color space
+    imageRef->SetImageSource(bitMapFrameDecoder);
     return imageRef;
 }
 
 NSData* _CGImagePNGRepresentation(CGImageRef image) {
-    return _CGImageRepresentation(image, GUID_WICPixelFormat32bppBGRA);
+    return _CGImageRepresentation(image, GUID_ContainerFormatPng, -1);
 }
 
-NSData* _CGImageJPEGRepresentation(CGImageRef image) {
-    return _CGImageRepresentation(image, GUID_WICPixelFormat32bppCMYK);
+NSData* _CGImageJPEGRepresentation(CGImageRef image, float quality) {
+    return _CGImageRepresentation(image, GUID_ContainerFormatJpeg, quality);
 }
 
-NSData* _CGImageRepresentation(CGImageRef image, REFGUID guid) {
-    RETURN_NULL_IF(!image);
-
-    ComPtr<IWICImagingFactory> imageFactory = _GetWICFactory();
-    ComPtr<IWICFormatConverter> imageFormatConverter;
-
-    RETURN_NULL_IF_FAILED(imageFactory->CreateFormatConverter(&imageFormatConverter));
-
-    RETURN_NULL_IF_FAILED(imageFormatConverter->Initialize(
-        image->ImageSource().Get(), guid, WICBitmapDitherTypeNone, nullptr, 0.f, WICBitmapPaletteTypeCustom));
-
-    size_t height, width;
-    RETURN_NULL_IF_FAILED(image->ImageSource()->GetSize(&width, &height));
-
-    const unsigned int size = height * width * 4;
-    woc::unique_iw<unsigned char> data(static_cast<unsigned char*>(IwMalloc(size)));
-    RETURN_NULL_IF_FAILED(imageFormatConverter->CopyPixels(0, width * 4, size, data.get()));
-
-    return [NSData dataWithBytesNoCopy:data.release() length:size freeWhenDone:YES];
+NSData* _CGImageRepresentation(CGImageRef image, REFGUID guid, float quality) {
+    // TODO #1124 implement encoder.
+    return nil;
 }
 
 REFGUID _CGImageGetWICPixelFormat(unsigned int bitsPerComponent,
                                   unsigned int bitsPerPixel,
                                   CGColorSpaceRef colorSpace,
                                   CGBitmapInfo bitmapInfo) {
-    // TODO: NUll check?
     CGColorSpaceModel colorSpaceModel = CGColorSpaceGetModel(colorSpace);
 
     unsigned int alphaInfo = bitmapInfo & kCGBitmapAlphaInfoMask;
-    // TODO: support for kCGBitmapFloatComponents
-    // TODO: make this more verbose, map?
+    // TODO #1124: support for kCGBitmapFloatComponents and account for ByteOrder
+    // TODO #1124: make this more verbose, map?
 
     if (colorSpaceModel == kCGColorSpaceModelRGB) {
         switch (alphaInfo) {
-            case kCGImageAlphaPremultipliedLast:
+            case kCGImageAlphaFirst:
             case kCGImageAlphaLast:
                 if (bitsPerPixel == 32) {
                     return GUID_WICPixelFormat32bppRGBA;
@@ -533,6 +459,7 @@ REFGUID _CGImageGetWICPixelFormat(unsigned int bitsPerComponent,
                     return GUID_WICPixelFormat32bppRGBA;
                 }
                 break;
+            case kCGImageAlphaPremultipliedLast:
             case kCGImageAlphaPremultipliedFirst:
                 if (bitsPerPixel == 32) {
                     return GUID_WICPixelFormat32bppPRGBA;
@@ -542,9 +469,6 @@ REFGUID _CGImageGetWICPixelFormat(unsigned int bitsPerComponent,
                     UNIMPLEMENTED_WITH_MSG("kCGImageAlphaPremultipliedFirst: Unknown pixelformat: %d", bitsPerPixel);
                     return GUID_WICPixelFormat32bppPRGBA;
                 }
-
-            case kCGImageAlphaFirst:
-                return GUID_WICPixelFormat32bppRGBA;
                 break;
             case kCGImageAlphaNoneSkipFirst:
             case kCGImageAlphaNoneSkipLast:
@@ -579,7 +503,9 @@ REFGUID _CGImageGetWICPixelFormat(unsigned int bitsPerComponent,
             return GUID_WICPixelFormat80bppCMYKAlpha;
         }
     } else if (colorSpaceModel == kCGColorSpaceModelMonochrome) {
-        if (bitsPerPixel == 4) {
+        if (bitsPerPixel == 1) {
+            return GUID_WICPixelFormatBlackWhite;
+        } else if (bitsPerPixel == 4) {
             return GUID_WICPixelFormat4bppGray;
         } else if (bitsPerPixel == 8) {
             return GUID_WICPixelFormat8bppGray;
