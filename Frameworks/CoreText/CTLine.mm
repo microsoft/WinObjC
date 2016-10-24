@@ -235,7 +235,10 @@ void _CTLineDraw(CTLineRef lineRef, CGContextRef ctx, bool adjustTextPosition) {
             CGContextSetTextPosition(ctx, curTextPos.x + curRun->_relativeXOffset, curTextPos.y);
         }
 
-        _CTRunDraw(static_cast<CTRunRef>(curRun), ctx, CFRange{}, false);
+        // Get height of the line so we draw with the correct baseline for each run
+        CGFloat ascent;
+        CTLineGetTypographicBounds(lineRef, &ascent, nullptr, nullptr);
+        _CTRunDraw(static_cast<CTRunRef>(curRun), ctx, CFRange{}, false, ascent);
     }
 }
 
