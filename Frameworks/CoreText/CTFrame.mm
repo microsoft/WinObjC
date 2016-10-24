@@ -17,7 +17,7 @@
 #import <CoreText/CTFrame.h>
 #import <StubReturn.h>
 
-#import <CoreText/DWriteWrapper.h>
+#import "DWriteWrapper_CoreText.h"
 #import "CoreTextInternal.h"
 #import "CGPathInternal.h"
 

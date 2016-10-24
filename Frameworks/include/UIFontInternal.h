@@ -20,9 +20,7 @@
 
 @interface UIFont ()
 + (UIFont*)defaultFont;
-+ (UIFont*)fontWithData:(NSData*)data;
 + (UIFont*)titleFont;
 + (UIFont*)messageFont;
 + (UIFont*)buttonFont;
-- (uint32_t)_sizingFontHandle;
 @end

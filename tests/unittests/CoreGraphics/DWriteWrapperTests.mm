@@ -16,8 +16,7 @@
 
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
-#import <CoreText/CoreText.h>
-#import <CoreText/DWriteWrapper.h>
+#import <CoreGraphics/DWriteWrapper.h>
 
 TEST(DWriteWrapper, FontToFamilyName) {
     EXPECT_OBJCEQ(@"Arial", (id)_DWriteGetFamilyNameForFontName(CFSTR("Arial Narrow")));

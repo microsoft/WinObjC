@@ -17,9 +17,8 @@
 #import <CoreText/CTTypesetter.h>
 #import <StubReturn.h>
 #import "CoreTextInternal.h"
-#import "CGFontInternal.h"
 #import "UIFontInternal.h"
-#import <CoreText/DWriteWrapper.h>
+#import "DWriteWrapper_CoreText.h"
 #import <Foundation/NSAttributedString.h>
 #import <algorithm>
 #import "LoggingNative.h"
@@ -81,6 +80,8 @@ CTLineRef CTTypesetterCreateLineWithOffset(CTTypesetterRef ts, CFRange range, do
     _CTFrame* frame = _DWriteGetFrame(static_cast<CFAttributedStringRef>(static_cast<_CTTypesetter*>(ts)->_attributedString.get()),
                                       range,
                                       CGRectMake(offset, 0, FLT_MAX, FLT_MAX));
+
+    RETURN_NULL_IF(!frame);
     THROW_NS_IF_FALSE(E_UNEXPECTED, [frame->_lines count] == 1);
 
     return static_cast<CTLineRef>([[frame->_lines firstObject] retain]);

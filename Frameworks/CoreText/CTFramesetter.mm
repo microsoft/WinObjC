@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -19,21 +19,15 @@
 #import <algorithm>
 #import "CoreTextInternal.h"
 #import "CGPathInternal.h"
-#import <CoreText/DWriteWrapper.h>
+#import "DWriteWrapper_CoreText.h"
 
 using namespace std;
 
 @implementation _CTFramesetter : NSObject
-- (void)dealloc {
-    _typesetter = nil;
-    [super dealloc];
-}
 @end
 
 static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameSize, CFRange range) {
-    if (!framesetter) {
-        return nil;
-    }
+    RETURN_NULL_IF(!framesetter);
 
     // Call _DWriteWrapper to get _CTLine object list that makes up this frame
     _CTTypesetter* typesetter = static_cast<_CTTypesetter*>(framesetter->_typesetter);

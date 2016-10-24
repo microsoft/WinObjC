@@ -20,10 +20,9 @@
 #import <Wincodec.h>
 #import <D2d1.h>
 #include <COMIncludes_End.h>
-#import <CoreText/DWriteWrapper.h>
+#import "DWriteWrapper_CoreText.h"
 #import "CoreTextInternal.h"
 #import "CGContextInternal.h"
-#import "CGFontInternal.h"
 
 #include <numeric>
 

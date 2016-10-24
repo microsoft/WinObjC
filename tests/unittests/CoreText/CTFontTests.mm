@@ -184,6 +184,23 @@ TEST(CTFont, CaseInsensitive) {
     EXPECT_TRUE(CFEqual(font1, font4));
 }
 
+// Font names differ slightly between platforms
+#if TARGET_OS_WIN32
+static const CFStringRef c_arialBoldItalicName = CFSTR("Arial Bold Italic");
+static const CFStringRef c_arialItalicName = CFSTR("Arial Italic");
+static const CFStringRef c_courierNewItalicName = CFSTR("Courier New Italic");
+static const CFStringRef c_courierNewBoldName = CFSTR("Courier New Bold");
+static const CFStringRef c_courierNewBoldItalicName = CFSTR("Courier New Bold Italic");
+static const CFStringRef c_trebuchetMSItalicName = CFSTR("Trebuchet MS Italic");
+#else
+static const CFStringRef c_arialBoldItalicName = CFSTR("Arial-BoldItalicMT");
+static const CFStringRef c_arialItalicName = CFSTR("Arial-ItalicMT");
+static const CFStringRef c_courierNewItalicName = CFSTR("CourierNewPS-ItalicMT");
+static const CFStringRef c_courierNewBoldName = CFSTR("CourierNewPS-BoldMT");
+static const CFStringRef c_courierNewBoldItalicName = CFSTR("CourierNewPS-BoldItalicMT");
+static const CFStringRef c_trebuchetMSItalicName = CFSTR("TrebuchetMS-Italic");
+#endif
+
 static const float c_errorMargin = 0.001f;
 
 TEST(CTFont, Traits) {
@@ -233,15 +250,7 @@ TEST(CTFont, CreateWithFontDescriptor) {
         CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     CFAutorelease(attributes);
 
-    // Use slightly different fonts on Windows and OSX, since the platforms have different default fonts
     CFStringRef fontFamilyName = CFSTR("Courier New");
-#if TARGET_OS_WIN32
-    CFStringRef boldName = CFSTR("Courier New Bold");
-    CFStringRef boldItalicName = CFSTR("Courier New Bold Italic");
-#else
-    CFStringRef boldName = CFSTR("CourierNewPS-BoldMT");
-    CFStringRef boldItalicName = CFSTR("CourierNewPS-BoldItalicMT");
-#endif
     CGFloat size = 10.0f;
 
     CFDictionaryAddValue(attributes, kCTFontFamilyNameAttribute, fontFamilyName);
@@ -268,7 +277,7 @@ TEST(CTFont, CreateWithFontDescriptor) {
     descriptor = static_cast<CTFontDescriptorRef>(CFAutorelease(CTFontDescriptorCreateWithAttributes(attributes)));
     font = static_cast<CTFontRef>(CFAutorelease(CTFontCreateWithFontDescriptor(descriptor, size, nullptr)));
     ASSERT_OBJCNE(nil, (id)font);
-    ASSERT_OBJCEQ((id)CFAutorelease(CTFontCreateWithName(boldName, size, nullptr)), (id)font);
+    ASSERT_OBJCEQ((id)CFAutorelease(CTFontCreateWithName(c_courierNewBoldName, size, nullptr)), (id)font);
 
     // Set the weight trait to 'narrow' (no matching font in Courier) - should then return the default font in the family
     CFDictionarySetValue(traits, kCTFontWeightTrait, (__bridge CFNumberRef) @-0.4f);
@@ -285,7 +294,7 @@ TEST(CTFont, CreateWithFontDescriptor) {
 // DWrite diverges from iOS here - DWrite tries to do a 'best match' and returns the bold font
 // iOS is more stringent and just returns nullptr
 #if TARGET_OS_WIN32
-    ASSERT_OBJCEQ((id)CFAutorelease(CTFontCreateWithName(boldName, size, nullptr)), (id)font);
+    ASSERT_OBJCEQ((id)CFAutorelease(CTFontCreateWithName(c_courierNewBoldName, size, nullptr)), (id)font);
 #else
     ASSERT_OBJCEQ((id)CFAutorelease(CTFontCreateWithName(fontFamilyName, size, nullptr)), (id)font);
 #endif
@@ -305,7 +314,7 @@ TEST(CTFont, CreateWithFontDescriptor) {
     descriptor = static_cast<CTFontDescriptorRef>(CFAutorelease(CTFontDescriptorCreateWithAttributes(attributes)));
     font = static_cast<CTFontRef>(CFAutorelease(CTFontCreateWithFontDescriptor(descriptor, size, nullptr)));
     ASSERT_OBJCNE(nil, (id)font);
-    ASSERT_OBJCEQ((id)CFAutorelease(CTFontCreateWithName(boldName, size, nullptr)), (id)font);
+    ASSERT_OBJCEQ((id)CFAutorelease(CTFontCreateWithName(c_courierNewBoldName, size, nullptr)), (id)font);
 
     // Add the italic flag to symbolic traits
     CFDictionarySetValue(traits,
@@ -314,7 +323,7 @@ TEST(CTFont, CreateWithFontDescriptor) {
     descriptor = static_cast<CTFontDescriptorRef>(CFAutorelease(CTFontDescriptorCreateWithAttributes(attributes)));
     font = static_cast<CTFontRef>(CFAutorelease(CTFontCreateWithFontDescriptor(descriptor, size, nullptr)));
     ASSERT_OBJCNE(nil, (id)font);
-    ASSERT_OBJCEQ((id)CFAutorelease(CTFontCreateWithName(boldItalicName, size, nullptr)), (id)font);
+    ASSERT_OBJCEQ((id)CFAutorelease(CTFontCreateWithName(c_courierNewBoldItalicName, size, nullptr)), (id)font);
 }
 
 TEST(CTFont, CreateCopyWith) {
@@ -326,23 +335,15 @@ TEST(CTFont, CreateCopyWith) {
     CTFontRef italicFont = CTFontCreateCopyWithSymbolicTraits(baseFont, newSize, nullptr, kCTFontItalicTrait, 0xFF);
     CFAutorelease(italicFont);
 
-// Font names differ slightly between platforms
-#if TARGET_OS_WIN32
-    CFStringRef italicName = CFSTR("Arial Italic");
-    CFStringRef italicName2 = CFSTR("Trebuchet MS Italic");
-#else
-    CFStringRef italicName = CFSTR("Arial-ItalicMT");
-    CFStringRef italicName2 = CFSTR("TrebuchetMS-Italic");
-#endif
     ASSERT_OBJCNE(nil, (id)italicFont);
-    ASSERT_OBJCEQ((id)CFAutorelease(CTFontCreateWithName(italicName, newSize, nullptr)), (id)italicFont);
+    ASSERT_OBJCEQ((id)CFAutorelease(CTFontCreateWithName(c_arialItalicName, newSize, nullptr)), (id)italicFont);
 
     // Create a new font with the same traits but in the 'Trebuchet MS' family
     CGFloat newSize2 = 105.4f;
     CTFontRef italicFont2 = CTFontCreateCopyWithFamily(italicFont, newSize2, nullptr, CFSTR("Trebuchet MS"));
     CFAutorelease(italicFont2);
     ASSERT_OBJCNE(nil, (id)italicFont2);
-    ASSERT_OBJCEQ((id)CFAutorelease(CTFontCreateWithName(italicName2, newSize2, nullptr)), (id)italicFont2);
+    ASSERT_OBJCEQ((id)CFAutorelease(CTFontCreateWithName(c_trebuchetMSItalicName, newSize2, nullptr)), (id)italicFont2);
 
     // Create a new font in a nonexistent family
     CTFontRef doesNotExistFont = CTFontCreateCopyWithFamily(italicFont, newSize, nullptr, CFSTR("DoesNotExistFamily"));
@@ -359,18 +360,9 @@ TEST(CTFont, GetMatrix) {
 }
 
 TEST(CTFont, GetSlantAngle) {
-// Font names differ slightly between platforms
-#if TARGET_OS_WIN32
-    CFStringRef italicName = CFSTR("Courier New Italic");
-    CFStringRef italicName2 = CFSTR("Trebuchet MS Italic");
-#else
-    CFStringRef italicName = CFSTR("CourierNewPS-ItalicMT");
-    CFStringRef italicName2 = CFSTR("TrebuchetMS-Italic");
-#endif
-
-    CTFontRef font = CTFontCreateWithName(italicName, 10.0f, nullptr);
+    CTFontRef font = CTFontCreateWithName(c_courierNewItalicName, 10.0f, nullptr);
     CFAutorelease(font);
-    CTFontRef font2 = CTFontCreateWithName(italicName2, 10.0f, nullptr);
+    CTFontRef font2 = CTFontCreateWithName(c_trebuchetMSItalicName, 10.0f, nullptr);
     CFAutorelease(font2);
 
     // Reference platform appears to round the angle to the nearest degree
@@ -380,14 +372,7 @@ TEST(CTFont, GetSlantAngle) {
 }
 
 TEST(CTFont, GetAdvancesForGlyphs) {
-// Font names differ slightly between platforms
-#if TARGET_OS_WIN32
-    CFStringRef name = CFSTR("Trebuchet MS Italic");
-#else
-    CFStringRef name = CFSTR("TrebuchetMS-Italic");
-#endif
-
-    CTFontRef font = CTFontCreateWithName(name, 10.0f, nullptr);
+    CTFontRef font = CTFontCreateWithName(c_trebuchetMSItalicName, 10.0f, nullptr);
     CFAutorelease(font);
 
     const size_t count = 26;
@@ -433,6 +418,97 @@ TEST(CTFont, GetAdvancesForGlyphs) {
     for (size_t i = 0; i < count; i++) {
         EXPECT_NEAR(9.423828f, verAdvances[i].width, c_errorMargin);
         EXPECT_EQ(0, verAdvances[i].height); // Yes actually!
+    }
+#endif
+}
+
+TEST(CTFont, GetBoundingBox) {
+// Windows may have slightly different versions of the same fonts compared to the reference platform
+#if TARGET_OS_WIN32
+    CGRect expectedBox = { { -36.9264, -23.188 }, { 133.967, 94.4256 } };
+#else
+    CGRect expectedBox = { { -36.9264, -23.188 }, { 135.432, 94.4256 } };
+#endif
+
+    CTFontRef font = CTFontCreateWithName(c_arialItalicName, 71.412f, nullptr);
+    CFAutorelease(font);
+
+    CGRect box = CTFontGetBoundingBox(font);
+    EXPECT_NEAR(expectedBox.origin.x, box.origin.x, c_errorMargin);
+    EXPECT_NEAR(expectedBox.origin.y, box.origin.y, c_errorMargin);
+    EXPECT_NEAR(expectedBox.size.width, box.size.width, c_errorMargin);
+    EXPECT_NEAR(expectedBox.size.height, box.size.height, c_errorMargin);
+}
+
+TEST(CTFont, GetBoundingBoxes) {
+    CTFontRef font = CTFontCreateWithName(c_arialBoldItalicName, 585.45f, nullptr);
+    CFAutorelease(font);
+
+    const size_t count = 3;
+    CGGlyph glyphs[count] = { 68, 40, 22 };
+    CGRect boxes[count];
+
+    // Default/horizontal orientation
+    CGRect expectedBoxes[count] = {
+        { { 26.2995, -7.14661 }, { 285.864, 317.881 } },
+        { { 24.0126, 0 }, { 398.209, 419.077 } },
+        { { 29.7299, -7.14661 }, { 298.156, 427.939 } },
+    };
+
+    CGRect expectedTotalBox = { { 24.0126, -7.14661 }, { 398.209, 427.939 } };
+
+    CGRect totalBox = CTFontGetBoundingRectsForGlyphs(font, kCTFontDefaultOrientation, glyphs, boxes, count);
+    EXPECT_NEAR(expectedTotalBox.origin.x, totalBox.origin.x, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBox.origin.y, totalBox.origin.y, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBox.size.width, totalBox.size.width, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBox.size.height, totalBox.size.height, c_errorMargin);
+
+    for (size_t i = 0; i < count; ++i) {
+        EXPECT_NEAR(expectedBoxes[i].origin.x, boxes[i].origin.x, c_errorMargin);
+        EXPECT_NEAR(expectedBoxes[i].origin.y, boxes[i].origin.y, c_errorMargin);
+        EXPECT_NEAR(expectedBoxes[i].size.width, boxes[i].size.width, c_errorMargin);
+        EXPECT_NEAR(expectedBoxes[i].size.height, boxes[i].size.height, c_errorMargin);
+    }
+
+    totalBox = CTFontGetBoundingRectsForGlyphs(font, kCTFontHorizontalOrientation, glyphs, boxes, count);
+    EXPECT_NEAR(expectedTotalBox.origin.x, totalBox.origin.x, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBox.origin.y, totalBox.origin.y, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBox.size.width, totalBox.size.width, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBox.size.height, totalBox.size.height, c_errorMargin);
+    for (size_t i = 0; i < count; ++i) {
+        EXPECT_NEAR(expectedBoxes[i].origin.x, boxes[i].origin.x, c_errorMargin);
+        EXPECT_NEAR(expectedBoxes[i].origin.y, boxes[i].origin.y, c_errorMargin);
+        EXPECT_NEAR(expectedBoxes[i].size.width, boxes[i].size.width, c_errorMargin);
+        EXPECT_NEAR(expectedBoxes[i].size.height, boxes[i].size.height, c_errorMargin);
+    }
+
+    // Null outpointer for boxes should evaluate just the total box
+    totalBox = CTFontGetBoundingRectsForGlyphs(font, kCTFontHorizontalOrientation, glyphs, nullptr, count);
+    EXPECT_NEAR(expectedTotalBox.origin.x, totalBox.origin.x, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBox.origin.y, totalBox.origin.y, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBox.size.width, totalBox.size.width, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBox.size.height, totalBox.size.height, c_errorMargin);
+
+// DWrite seems to not respect orientation
+#if !TARGET_OS_WIN32
+    // Vertical orientation
+    CGRect expectedBoxesVert[count] = {
+        { { 29.158, -136.357 }, { 317.881, 285.864 } },
+        { { 29.158, -171.233 }, { 419.077, 398.209 } },
+        { { 29.158, -132.927 }, { 427.939, 298.156 } },
+    };
+    CGRect expectedTotalBoxVert = { { 29.158, -171.233 }, { 427.939, 398.209 } };
+
+    totalBox = CTFontGetBoundingRectsForGlyphs(font, kCTFontVerticalOrientation, glyphs, boxes, count);
+    EXPECT_NEAR(expectedTotalBoxVert.origin.x, totalBox.origin.x, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBoxVert.origin.y, totalBox.origin.y, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBoxVert.size.width, totalBox.size.width, c_errorMargin);
+    EXPECT_NEAR(expectedTotalBoxVert.size.height, totalBox.size.height, c_errorMargin);
+    for (size_t i = 0; i < count; ++i) {
+        EXPECT_NEAR(expectedBoxesVert[i].origin.x, boxes[i].origin.x, c_errorMargin);
+        EXPECT_NEAR(expectedBoxesVert[i].origin.y, boxes[i].origin.y, c_errorMargin);
+        EXPECT_NEAR(expectedBoxesVert[i].size.width, boxes[i].size.width, c_errorMargin);
+        EXPECT_NEAR(expectedBoxesVert[i].size.height, boxes[i].size.height, c_errorMargin);
     }
 #endif
 }

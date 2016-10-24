@@ -16,6 +16,8 @@
 
 #pragma once
 
+#import <CoreGraphics/DWriteWrapper.h>
+
 #import <CoreFoundation/CoreFoundation.h>
 #import <CoreText/CoreTextExport.h>
 #import <CoreGraphics/CoreGraphics.h>
@@ -47,20 +49,15 @@ struct _DWriteGlyphRunDetails {
     std::vector<_DWriteGlyphRunDescription> _glyphRunDescriptions;
 };
 
-CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedString);
+bool _CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Out_ DWRITE_GLYPH_RUN* dest);
+
 _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CGRect frameSize);
 _CTLine* _DWriteGetLine(CFAttributedStringRef string);
 
-CFArrayRef _DWriteGetFontFamilyNames();
-CFArrayRef _DWriteGetFontNamesForFamilyName(CFStringRef familyName);
-CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName);
-
-HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace);
 HRESULT _DWriteCreateFontFaceWithFontDescriptor(CTFontDescriptorRef fontDescriptor, IDWriteFontFace** outFontFace);
-bool _CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Out_ DWRITE_GLYPH_RUN* dest);
+
 CFNumberRef _CFNumberCreateFromSymbolicTraits(CTFontSymbolicTraits symbolicTraits);
 CTFontSymbolicTraits _CTFontSymbolicTraitsFromCFNumber(CFNumberRef num);
 
-CGFloat _DWriteFontGetSlantDegrees(Microsoft::WRL::ComPtr<IDWriteFontFace> fontFace);
-CFDictionaryRef _DWriteFontCreateTraitsDict(Microsoft::WRL::ComPtr<IDWriteFontFace> fontFace);
-CFStringRef _DWriteFontCopyName(Microsoft::WRL::ComPtr<IDWriteFontFace> fontFace, CFStringRef nameKey);
+CFDictionaryRef _DWriteFontCreateTraitsDict(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace);
+CFStringRef _DWriteFontCopyName(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace, CFStringRef nameKey);
