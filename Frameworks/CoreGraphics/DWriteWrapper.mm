@@ -191,9 +191,9 @@ CFArrayRef _DWriteCopyFontNamesForFamilyName(CFStringRef familyName) {
  * Note: This function currently uses a cache, meaning that fonts installed during runtime will not be reflected
  */
 CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName) {
-    woc::unique_cf<CFLocaleRef> locale(CFLocaleCopyCurrent());
+    static CFDictionaryRef fontToFamilyMap = []() {
+        woc::unique_cf<CFLocaleRef> locale(CFLocaleCopyCurrent());
 
-    static CFDictionaryRef fontToFamilyMap = [&locale]() {
         // initialize fontToFamilyMap
         woc::unique_cf<CFMutableDictionaryRef> initMap(
             CFDictionaryCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks));
@@ -215,6 +215,8 @@ CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName) {
 
         return CFDictionaryCreateCopy(kCFAllocatorSystemDefault, initMap.get());
     }();
+
+    woc::unique_cf<CFLocaleRef> locale(CFLocaleCopyCurrent());
 
     woc::unique_cf<CFMutableStringRef> upperFontName(CFStringCreateMutableCopy(nullptr, CFStringGetLength(fontName), fontName));
     CFStringUppercase(upperFontName.get(), locale.get());
@@ -255,14 +257,11 @@ static const struct WeightMapping c_weightMap[] = { { CFSTR("THIN"), DWRITE_FONT
  * Helper that parses a font name, and returns appropriate weight, stretch, style, and family name values
  */
 _DWriteFontProperties _DWriteGetFontPropertiesFromName(CFStringRef fontName) {
-    _DWriteFontProperties ret;
-
     // Set some defaults for when weight/stretch/style are not mentioned in the name
-    ret.weight = DWRITE_FONT_WEIGHT_NORMAL;
-    ret.stretch = DWRITE_FONT_STRETCH_NORMAL;
-    ret.style = DWRITE_FONT_STYLE_NORMAL;
-
-    ret.familyName = _DWriteGetFamilyNameForFontName(fontName);
+    _DWriteFontProperties ret{ DWRITE_FONT_WEIGHT_NORMAL,
+                               DWRITE_FONT_STRETCH_NORMAL,
+                               DWRITE_FONT_STYLE_NORMAL,
+                               _DWriteGetFamilyNameForFontName(fontName) };
 
     // Relationship of family name -> font name not always consistent
     // Usually, properties are added to the end (eg: Arial -> Arial Narrow Bold)
@@ -383,10 +382,7 @@ HRESULT _DWriteCreateFontFamilyWithName(CFStringRef familyName, IDWriteFontFamil
                                                           &fontFamilyIndex,
                                                           &fontFamilyExists));
 
-    if (!fontFamilyExists) {
-        TraceError(TAG, L"Unable to find font family \"%ws\"", unicharFamilyName.data());
-        return E_INVALIDARG;
-    }
+    RETURN_HR_IF(E_INVALIDARG, !fontFamilyExists);
 
     return systemFontCollection->GetFontFamily(fontFamilyIndex, outFontFamily);
 }
@@ -437,10 +433,8 @@ CFDataRef _DWriteFontCopyTable(const ComPtr<IDWriteFontFace>& fontFace, uint32_t
     void* tableContext;
     BOOL exists;
 
-    if (FAILED(fontFace->TryGetFontTable(tag, &tableData, &tableSize, &tableContext, &exists)) || !exists) {
-        TraceError(TAG, L"Unable to get font table for tag %u", tag);
-        return nullptr;
-    }
+    RETURN_NULL_IF_FAILED(fontFace->TryGetFontTable(tag, &tableData, &tableSize, &tableContext, &exists));
+    RETURN_NULL_IF(!exists);
 
     // Copy the font table's binary data to a CFDataRef
     woc::unique_cf<CFDataRef> ret(CFDataCreate(kCFAllocatorDefault, reinterpret_cast<const byte*>(tableData), tableSize));
