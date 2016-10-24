@@ -342,11 +342,6 @@ LIBRARY CoreGraphics
         CGImageIsMask
 
         ; CGImage private exports
-        _CGImageLoadGIF;
-        _CGImageLoadBMP;
-        _CGImageLoadTIFF;
-        _CGImageLoadPNG;
-        _CGImageLoadJPEG;
         _CGImageLoadImageWithWICDecoder;
         _CGImageGetImageFromData;
         _CGImagePNGRepresentation;

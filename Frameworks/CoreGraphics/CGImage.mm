@@ -107,7 +107,7 @@ CGImageRef CGImageCreate(size_t width,
     CGImageRef imageRef = __CGImage::CreateInstance();
     imageRef->ImageSource().Attach(image.Detach());
 
-    imageRef->SetBitmapInfo(bitmapInfo).SetColorSpace(colorSpace).SetRenderingIntent(intent).SetInterpolate(shouldInterpolate);
+    imageRef->SetColorSpace(colorSpace).SetRenderingIntent(intent).SetInterpolate(shouldInterpolate);
 
     if (colorSpaceAllocated) {
         CGColorSpaceRelease(colorSpace);
@@ -131,10 +131,7 @@ CGImageRef CGImageCreateWithImageInRect(CGImageRef ref, CGRect rect) {
 
     imageRef->ImageSource().Attach(rectImage.Detach());
 
-    imageRef->SetBitmapInfo(ref->BitmapInfo())
-        .SetColorSpace(ref->ColorSpace())
-        .SetRenderingIntent(ref->RenderingIntent())
-        .SetInterpolate(ref->Interpolate());
+    imageRef->SetColorSpace(ref->ColorSpace()).SetRenderingIntent(ref->RenderingIntent()).SetInterpolate(ref->Interpolate());
 
     return imageRef;
 }
@@ -153,8 +150,7 @@ CGImageRef CGImageCreateCopy(CGImageRef ref) {
     RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(ref->ImageSource().Get(), WICBitmapCacheOnDemand, &image));
 
     imageRef->ImageSource().Attach(image.Detach());
-    imageRef->SetBitmapInfo(ref->BitmapInfo())
-        .SetIsMask(ref->IsMask())
+    imageRef->SetIsMask(ref->IsMask())
         .SetInterpolate(ref->Interpolate())
         .SetColorSpace(ref->ColorSpace())
         .SetRenderingIntent(ref->RenderingIntent());
@@ -174,6 +170,7 @@ CGImageRef CGImageMaskCreate(size_t width,
                              CGDataProviderRef provider,
                              const CGFloat* decode,
                              bool shouldInterpolate) {
+    // Native platform support
     RETURN_NULL_IF(((bitsPerComponent == 8) && (bitsPerPixel == 32)));
 
     RETURN_NULL_IF(((provider == nullptr) || ![(NSObject*)provider isKindOfClass:[NSData class]]));
@@ -185,8 +182,11 @@ CGImageRef CGImageMaskCreate(size_t width,
     ComPtr<IWICBitmap> image;
     ComPtr<IWICImagingFactory> imageFactory = _GetWICFactory();
 
-    HRESULT status =
-        imageFactory->CreateBitmapFromMemory(width, height, GUID_WICPixelFormatBlackWhite, bytesPerRow, height * bytesPerRow, data, &image);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    REFGUID pixelFormat = _CGImageGetWICPixelFormat(bitsPerComponent, bitsPerPixel, colorSpace, kCGBitmapByteOrderDefault);
+    CGColorSpaceRelease(colorSpace);
+
+    HRESULT status = imageFactory->CreateBitmapFromMemory(width, height, pixelFormat, bytesPerRow, height * bytesPerRow, data, &image);
 
     CGImageRef imageRef = __CGImage::CreateInstance();
     imageRef->ImageSource().Attach(image.Detach());
@@ -255,6 +255,14 @@ CGColorSpaceRef CGImageGetColorSpace(CGImageRef img) {
 /**
  @Status Interoperable
 */
+CGBitmapInfo CGImageGetBitmapInfo(CGImageRef img) {
+    RETURN_RESULT_IF_NULL(img, 0);
+    return img->BitmapInfo();
+}
+
+/**
+ @Status Interoperable
+*/
 size_t CGImageGetWidth(CGImageRef img) {
     RETURN_RESULT_IF_NULL(img, 0);
     return img->Width();
@@ -283,14 +291,6 @@ CGImageRef CGImageRetain(CGImageRef img) {
     RETURN_NULL_IF(!img);
     CFRetain((CFTypeRef)img);
     return img;
-}
-
-/**
- @Status Interoperable
-*/
-CGBitmapInfo CGImageGetBitmapInfo(CGImageRef img) {
-    RETURN_RESULT_IF_NULL(img, 0);
-    return img->BitmapInfo();
 }
 
 /**
@@ -332,6 +332,40 @@ CGImageRef CGImageCreateWithPNGDataProvider(CGDataProviderRef source,
 }
 
 /**
+ @Status Interoperable
+*/
+size_t CGImageGetBitsPerPixel(CGImageRef img) {
+    RETURN_RESULT_IF_NULL(img, 0);
+    return img->BitsPerPixel();
+}
+
+/**
+ @Status Interoperable
+*/
+size_t CGImageGetBitsPerComponent(CGImageRef img) {
+    RETURN_RESULT_IF_NULL(img, 0);
+    return img->BitsPerComponent();
+}
+
+/**
+ @Status Interoperable
+*/
+size_t CGImageGetBytesPerRow(CGImageRef img) {
+    RETURN_RESULT_IF_NULL(img, 0);
+    // ((bitsperpixel * 8) bytes) * width;
+    // TODO: Move it to struct (avoid comuptation everytime.)
+    return (CGImageGetBitsPerPixel(img) >> 3) * CGImageGetWidth(img);
+}
+
+/**
+ @Status Interoperable
+*/
+CGImageAlphaInfo CGImageGetAlphaInfo(CGImageRef img) {
+    RETURN_RESULT_IF_NULL(img, kCGImageAlphaNone);
+    return img->AlphaInfo();
+}
+
+/**
  @Status Stub
  @Notes
 */
@@ -348,45 +382,6 @@ CGImageRef CGImageCreateWithMask(CGImageRef image, CGImageRef mask) {
     // TODO: Given how masks are applied during rendering via D2D, we will hold onto the
     // mask then apply it at the appropriate time.
     RETURN_NULL_IF(!image);
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-CGImageAlphaInfo CGImageGetAlphaInfo(CGImageRef img) {
-    if (!img) {
-        return kCGImageAlphaNone;
-    }
-    // We would only have three values.
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Interoperable
-*/
-size_t CGImageGetBitsPerPixel(CGImageRef img) {
-    RETURN_RESULT_IF_NULL(img, 0);
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Interoperable
-*/
-size_t CGImageGetBitsPerComponent(CGImageRef img) {
-    RETURN_RESULT_IF_NULL(img, 0);
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Interoperable
-*/
-size_t CGImageGetBytesPerRow(CGImageRef img) {
-    RETURN_RESULT_IF_NULL(img, 0);
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -522,7 +517,7 @@ REFGUID _CGImageGetWICPixelFormat(unsigned int bitsPerComponent,
 
     if (colorSpaceModel == kCGColorSpaceModelRGB) {
         switch (alphaInfo) {
-            case kCGImageAlphaPremultipliedLast:
+            case kCGImageAlphaFirst:
             case kCGImageAlphaLast:
                 if (bitsPerPixel == 32) {
                     return GUID_WICPixelFormat32bppRGBA;
@@ -533,6 +528,7 @@ REFGUID _CGImageGetWICPixelFormat(unsigned int bitsPerComponent,
                     return GUID_WICPixelFormat32bppRGBA;
                 }
                 break;
+            case kCGImageAlphaPremultipliedLast:
             case kCGImageAlphaPremultipliedFirst:
                 if (bitsPerPixel == 32) {
                     return GUID_WICPixelFormat32bppPRGBA;
@@ -542,9 +538,6 @@ REFGUID _CGImageGetWICPixelFormat(unsigned int bitsPerComponent,
                     UNIMPLEMENTED_WITH_MSG("kCGImageAlphaPremultipliedFirst: Unknown pixelformat: %d", bitsPerPixel);
                     return GUID_WICPixelFormat32bppPRGBA;
                 }
-
-            case kCGImageAlphaFirst:
-                return GUID_WICPixelFormat32bppRGBA;
                 break;
             case kCGImageAlphaNoneSkipFirst:
             case kCGImageAlphaNoneSkipLast:
@@ -579,7 +572,9 @@ REFGUID _CGImageGetWICPixelFormat(unsigned int bitsPerComponent,
             return GUID_WICPixelFormat80bppCMYKAlpha;
         }
     } else if (colorSpaceModel == kCGColorSpaceModelMonochrome) {
-        if (bitsPerPixel == 4) {
+        if (bitsPerPixel == 1) {
+            return GUID_WICPixelFormatBlackWhite;
+        } else if (bitsPerPixel == 4) {
             return GUID_WICPixelFormat4bppGray;
         } else if (bitsPerPixel == 8) {
             return GUID_WICPixelFormat8bppGray;

@@ -26,26 +26,32 @@ typedef struct {
     size_t height;
     size_t width;
     bool isMask;
+    BYTE bitPerPixel;
+    BYTE bitPerComponent;
 } _ImageInfo;
 
-static const int number_of_jpeg_files = 4;
-static const _ImageInfo imagesJPEG[number_of_jpeg_files] = {
-    { @"dog.jpg", 639, 960, false },
-    { @"CroppedPhoto2.jpg", 200, 200, false },
-    { @"bowl.jpg", 4000, 6000, false },
-    { @"photo.jpg", 1024, 683, false },
+static const _ImageInfo imagesJPEG[] = {
+    /*{"filename",height,width,isMask,bit per pixel, bits per component} */
+    { @"jpg1.jpg", 639, 960, false, 24, 8 },
+    { @"jpg2.jpg", 200, 200, false, 32, 8 },
+    { @"jpg3.jpg", 4000, 6000, false, 24, 8 },
+    { @"jpg4.jpg", 1024, 683, false, 24, 8 },
 };
 
-static const int number_of_png_files = 2;
-static const _ImageInfo imagesPNG[number_of_png_files] = {
-    { @"dog.PNG", 700, 1044, false }, { @"microsoft.png", 136, 370, false },
+static const _ImageInfo imagesPNG[] = {
+    /*{"filename",height,width,isMask,bit per pixel, bits per component} */
+    { @"png1.png", 700, 1044, false, 32, 8 },
+    { @"png2.png", 136, 370, false, 8, 1 },
 };
 
-#define EXPECT_IMAGE_DATA(image, imageInfo)               \
-    EXPECT_TRUE(image != NULL);                           \
-    EXPECT_EQ(imageInfo.isMask, CGImageIsMask(image));    \
-    EXPECT_EQ(imageInfo.height, CGImageGetHeight(image)); \
-    EXPECT_EQ(imageInfo.width, CGImageGetWidth(image));
+#define EXPECT_IMAGE_DATA(image, imageInfo)                                  \
+    EXPECT_TRUE(image != NULL);                                              \
+    EXPECT_EQ(imageInfo.isMask, CGImageIsMask(image));                       \
+    EXPECT_EQ(imageInfo.height, CGImageGetHeight(image));                    \
+    EXPECT_EQ(imageInfo.width, CGImageGetWidth(image));                      \
+    EXPECT_EQ(imageInfo.bitPerPixel, CGImageGetBitsPerPixel(image));         \
+    EXPECT_EQ(imageInfo.bitPerComponent, CGImageGetBitsPerComponent(image)); \
+    EXPECT_EQ((imageInfo.bitPerPixel >> 3) * imageInfo.width, CGImageGetBytesPerRow(image));
 
 static CGImageRef createJPEG(NSString* path) {
     CFDataRef data = (CFDataRef)[NSData dataWithContentsOfFile:getPathToFile(path)];
@@ -66,6 +72,7 @@ static CGImageRef createPNG(NSString* path) {
 TEST(CGImage, CreateWithJPEGGDataAndCreateWithCopy) {
     for (int i = 0; i < _countof(imagesJPEG); ++i) {
         CGImageRef image = createJPEG(imagesJPEG[i].fileName);
+
         EXPECT_IMAGE_DATA(image, imagesJPEG[i]);
 
         CGImageRef copy = CGImageCreateCopy(image);

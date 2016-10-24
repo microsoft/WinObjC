@@ -25,6 +25,7 @@
 #import <CFRuntime.h>
 #import <CFCppBase.h>
 #import <map>
+#import <windows.h>
 
 #include <COMIncludes.h>
 #import <D2d1.h>
@@ -103,26 +104,128 @@ typedef enum {
     CGImageTypeJPEG
 } CGImageType;
 
-// TODO: use for reverse mapping of GetPixelFormat
 typedef struct {
     CGColorSpaceModel colorSpaceModel;
     CGBitmapInfo bitmapInfo;
     BYTE bitsPerComponent;
-    BYTE bytesPerPixel;
+    BYTE bitsPerPixel;
 } __CGImagePixelProperties;
+
+struct GuidPixelLess : public std::binary_function<GUID, GUID, bool> {
+    bool operator()(const GUID& left, const GUID& right) const {
+        return memcmp(&left, &right, sizeof(GUID)) < 0;
+    }
+};
+
+static const std::map<GUID, __CGImagePixelProperties, GuidPixelLess> s_PixelFormats = {
+    /*Alpha First,Last*/
+    { GUID_WICPixelFormat32bppRGBA, { kCGColorSpaceModelRGB, (kCGImageAlphaLast | kCGBitmapByteOrderDefault), 8, 32 } },
+    { GUID_WICPixelFormat32bppBGRA, { kCGColorSpaceModelRGB, (kCGImageAlphaLast | kCGBitmapByteOrderDefault), 8, 32 } },
+    { GUID_WICPixelFormat64bppRGBA, { kCGColorSpaceModelRGB, (kCGImageAlphaLast | kCGBitmapByteOrderDefault), 16, 64 } },
+    { GUID_WICPixelFormat64bppBGRA, { kCGColorSpaceModelRGB, (kCGImageAlphaLast | kCGBitmapByteOrderDefault), 16, 64 } },
+    /*Alpha Premultiplied Last/First */
+    { GUID_WICPixelFormat32bppPRGBA, { kCGColorSpaceModelRGB, (kCGImageAlphaPremultipliedLast | kCGBitmapByteOrderDefault), 8, 32 } },
+    { GUID_WICPixelFormat32bppPBGRA, { kCGColorSpaceModelRGB, (kCGImageAlphaPremultipliedLast | kCGBitmapByteOrderDefault), 8, 32 } },
+    { GUID_WICPixelFormat64bppPRGBA, { kCGColorSpaceModelRGB, (kCGImageAlphaPremultipliedLast | kCGBitmapByteOrderDefault), 16, 64 } },
+    { GUID_WICPixelFormat64bppPBGRA, { kCGColorSpaceModelRGB, (kCGImageAlphaPremultipliedLast | kCGBitmapByteOrderDefault), 16, 64 } },
+    /*Alpha None, AlphaNoneSkipFirst, AlphaNoneSkipLast*/
+    { GUID_WICPixelFormat24bppRGB, { kCGColorSpaceModelRGB, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 8, 24 } },
+    { GUID_WICPixelFormat24bppBGR, { kCGColorSpaceModelRGB, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 8, 24 } },
+    { GUID_WICPixelFormat32bppRGB, { kCGColorSpaceModelRGB, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 8, 32 } },
+    { GUID_WICPixelFormat32bppBGR, { kCGColorSpaceModelRGB, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 8, 32 } },
+    { GUID_WICPixelFormat48bppRGB, { kCGColorSpaceModelRGB, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 16, 48 } },
+    { GUID_WICPixelFormat48bppBGR, { kCGColorSpaceModelRGB, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 16, 48 } },
+    { GUID_WICPixelFormat64bppRGB, { kCGColorSpaceModelRGB, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 16, 64 } },
+    /*Alpha Only */
+    { GUID_WICPixelFormat8bppAlpha, { kCGColorSpaceModelRGB, (kCGImageAlphaOnly | kCGBitmapByteOrderDefault), 8, 32 } },
+    /* CYMK */
+    { GUID_WICPixelFormat32bppCMYK, { kCGColorSpaceModelCMYK, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 8, 32 } },
+    { GUID_WICPixelFormat64bppCMYK, { kCGColorSpaceModelCMYK, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 16, 64 } },
+    { GUID_WICPixelFormat40bppCMYKAlpha, { kCGColorSpaceModelCMYK, (kCGImageAlphaLast | kCGBitmapByteOrderDefault), 8, 40 } },
+    { GUID_WICPixelFormat80bppCMYKAlpha, { kCGColorSpaceModelCMYK, (kCGImageAlphaLast | kCGBitmapByteOrderDefault), 16, 64 } },
+    /*Monochrome*/
+    { GUID_WICPixelFormat4bppGray, { kCGColorSpaceModelMonochrome, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 4, 4 } },
+    { GUID_WICPixelFormat8bppGray, { kCGColorSpaceModelMonochrome, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 8, 8 } },
+    { GUID_WICPixelFormat16bppGray, { kCGColorSpaceModelMonochrome, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 16, 16 } },
+    { GUID_WICPixelFormat32bppGrayFloat, { kCGColorSpaceModelMonochrome, (kCGImageAlphaNone | kCGBitmapFloatComponents), 32, 32 } },
+    /*Indexed*/
+    { GUID_WICPixelFormat1bppIndexed, { kCGColorSpaceModelIndexed, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 1, 1 } },
+    { GUID_WICPixelFormat2bppIndexed, { kCGColorSpaceModelIndexed, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 1, 2 } },
+    { GUID_WICPixelFormat4bppIndexed, { kCGColorSpaceModelIndexed, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 1, 4 } },
+    { GUID_WICPixelFormat8bppIndexed, { kCGColorSpaceModelIndexed, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 1, 8 } }
+};
 
 struct __CGImageImpl {
     Microsoft::WRL::ComPtr<IWICBitmapSource> bitmapImageSource;
-    CGBitmapInfo bitmapInfo;
     bool isMask;
     bool interpolate;
     CGColorSpaceRef colorSpace;
     CGColorRenderingIntent renderingIntent;
 
+    __CGImageImpl() {
+        isMask = false;
+        interpolate = false;
+        renderingIntent = kCGRenderingIntentDefault;
+    }
+
     ~__CGImageImpl() {
         if (colorSpace) {
             CGColorSpaceRelease(colorSpace);
         }
+    }
+
+    inline size_t Height() const {
+        size_t width, height;
+        RETURN_RESULT_IF_FAILED(bitmapImageSource->GetSize(&width, &height), 0);
+
+        return height;
+    }
+
+    inline size_t Width() const {
+        size_t width, height;
+        RETURN_RESULT_IF_FAILED(bitmapImageSource->GetSize(&width, &height), 0);
+
+        return width;
+    }
+
+    // TODO: Add cavet everywhere for how format changes
+    inline WICPixelFormatGUID PixelFormat() const {
+        WICPixelFormatGUID pixelFormat;
+        RETURN_RESULT_IF_FAILED(bitmapImageSource->GetPixelFormat(&pixelFormat), GUID_WICPixelFormatUndefined);
+        return pixelFormat;
+    }
+
+    inline const __CGImagePixelProperties* Properties() const {
+        WICPixelFormatGUID pixelFormat = PixelFormat();
+        RETURN_NULL_IF(pixelFormat == GUID_WICPixelFormatUndefined);
+
+        auto iterator = s_PixelFormats.find(pixelFormat);
+        // TODO: log here
+        RETURN_NULL_IF(iterator == s_PixelFormats.end());
+
+        return &iterator->second;
+    }
+
+    inline size_t BitsPerPixel() const {
+        const __CGImagePixelProperties* properties = Properties();
+        RETURN_RESULT_IF_NULL(properties, 0);
+        return properties->bitsPerPixel;
+    }
+
+    inline size_t BitsPerComponent() const {
+        const __CGImagePixelProperties* properties = Properties();
+        RETURN_RESULT_IF_NULL(properties, 0);
+        return properties->bitsPerComponent;
+    }
+
+    inline CGBitmapInfo BitmapInfo() const {
+        const __CGImagePixelProperties* properties = Properties();
+        RETURN_RESULT_IF_NULL(properties, 0);
+        return properties->bitmapInfo;
+    }
+
+    inline CGImageAlphaInfo AlphaInfo() const {
+        return static_cast<CGImageAlphaInfo>(BitmapInfo() & kCGBitmapAlphaInfoMask);
     }
 };
 
@@ -131,42 +234,44 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage, __CGImageImpl> {
         return _impl.bitmapImageSource;
     }
 
-    inline size_t Height() {
-        size_t width, height;
-        if (FAILED(_impl.bitmapImageSource->GetSize(&width, &height))) {
-            return 0;
-        }
-
-        return height;
+    inline size_t Height() const {
+        return _impl.Height();
     }
 
-    inline size_t Width() {
-        size_t width, height;
-        if (FAILED(_impl.bitmapImageSource->GetSize(&width, &height))) {
-            return 0;
-        }
-
-        return width;
+    inline size_t Width() const {
+        return _impl.Width();
     }
 
-    inline bool IsMask() {
+    inline bool IsMask() const {
         return _impl.isMask;
     }
 
-    inline bool Interpolate() {
+    inline bool Interpolate() const {
         return _impl.interpolate;
     }
 
-    inline CGColorSpaceRef ColorSpace() {
+    inline CGColorSpaceRef ColorSpace() const {
         return _impl.colorSpace;
     }
 
-    inline CGColorRenderingIntent RenderingIntent() {
+    inline CGColorRenderingIntent RenderingIntent() const {
         return _impl.renderingIntent;
     }
 
-    inline CGBitmapInfo BitmapInfo() {
-        return _impl.bitmapInfo;
+    inline CGBitmapInfo BitmapInfo() const {
+        return _impl.BitmapInfo();
+    }
+
+    inline CGImageAlphaInfo AlphaInfo() const {
+        return _impl.AlphaInfo();
+    }
+
+    inline size_t BitsPerPixel() const {
+        return _impl.BitsPerPixel();
+    }
+
+    inline size_t BitsPerComponent() const {
+        return _impl.BitsPerComponent();
     }
 
     inline __CGImage& SetIsMask(bool mask) {
@@ -190,11 +295,6 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage, __CGImageImpl> {
 
     inline __CGImage& SetRenderingIntent(CGColorRenderingIntent intent) {
         _impl.renderingIntent = intent;
-        return *this;
-    }
-
-    inline __CGImage& SetBitmapInfo(CGBitmapInfo info) {
-        _impl.bitmapInfo = info;
         return *this;
     }
 

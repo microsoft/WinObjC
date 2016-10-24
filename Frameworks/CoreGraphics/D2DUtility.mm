@@ -19,19 +19,15 @@
 
 using namespace Microsoft::WRL;
 
-// Private helper for creating a D2DFactory
-static ComPtr<ID2D1Factory> __createD2DFactory() {
-    ComPtr<ID2D1Factory> d2dFactory;
-    FAIL_FAST_IF_FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &d2dFactory));
-    return d2dFactory;
+// Helper for creating a D2DFactory
+ComPtr<ID2D1Factory> _CreateD2DFactoryInstance() {
+  ComPtr<ID2D1Factory> d2dFactory;
+  THROW_IF_FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED,
+                                    __uuidof(ID2D1Factory), &d2dFactory));
+  return d2dFactory;
 }
 
-ComPtr<ID2D1Factory> _GetD2DFactoryInstance() {
-    static ComPtr<ID2D1Factory> factory = __createD2DFactory();
-    return factory;
-}
-
-static ComPtr<IWICImagingFactory> __createWICFactory() {
+static ComPtr<IWICImagingFactory> __GetWICFactory() {
   ComPtr<IWICImagingFactory> wicFactory;
   THROW_IF_FAILED(CoCreateInstance(CLSID_WICImagingFactory, nullptr,
                                    CLSCTX_INPROC_SERVER,
@@ -40,6 +36,6 @@ static ComPtr<IWICImagingFactory> __createWICFactory() {
 }
 
 ComPtr<IWICImagingFactory> _GetWICFactory() {
-  static ComPtr<IWICImagingFactory> s_WICFactory = __createWICFactory();
+  static ComPtr<IWICImagingFactory> s_WICFactory = __GetWICFactory();
   return s_WICFactory;
 }
