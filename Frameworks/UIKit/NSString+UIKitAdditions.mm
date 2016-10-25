@@ -90,10 +90,10 @@ static void drawString(UIFont* font,
     CTFrameGetLineOrigins(frame, {}, origins.data());
     for (size_t i = 0; i < origins.size(); ++i) {
         // Need to draw each line at given line origin relative to rect origin
-        // Translated vertically by lineheight (ascent - descent) to counteract flip done by CT*Draw methods
-        CGFloat ascent, descent;
-        CTLineGetTypographicBounds(static_cast<CTLineRef>(lines[i]), &ascent, &descent, nullptr);
-        CGContextSetTextPosition(context, origins[i].x + rect.origin.x, origins[i].y + rect.origin.y - (ascent - descent));
+        // Translated vertically by ascent / 2.0 to counteract flip done by CT*Draw methods
+        CGFloat ascent;
+        CTLineGetTypographicBounds(static_cast<CTLineRef>(lines[i]), &ascent, nullptr, nullptr);
+        CGContextSetTextPosition(context, origins[i].x + rect.origin.x, origins[i].y + rect.origin.y - ascent / 2.0);
         CTLineDraw(static_cast<CTLineRef>(lines[i]), context);
     }
 
