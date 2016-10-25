@@ -26,6 +26,7 @@
 #import <CFCppBase.h>
 #import <map>
 #import <windows.h>
+#import <CGColorSpaceInternal.h>
 
 #include <COMIncludes.h>
 #import <D2d1.h>
@@ -159,7 +160,7 @@ struct __CGImageImpl {
     Microsoft::WRL::ComPtr<IWICBitmapSource> bitmapImageSource;
     bool isMask;
     bool interpolate;
-    CGColorSpaceRef colorSpace;
+    woc::unique_cf<CGColorSpaceRef> colorSpace;
     CGColorRenderingIntent renderingIntent;
 
     __CGImageImpl() {
@@ -168,21 +169,17 @@ struct __CGImageImpl {
         renderingIntent = kCGRenderingIntentDefault;
     }
 
-    ~__CGImageImpl() {
-        if (colorSpace) {
-            CGColorSpaceRelease(colorSpace);
-        }
-    }
-
     inline size_t Height() const {
-        size_t width, height;
+        size_t width = 0;
+        size_t height = 0;
         RETURN_RESULT_IF_FAILED(bitmapImageSource->GetSize(&width, &height), 0);
 
         return height;
     }
 
     inline size_t Width() const {
-        size_t width, height;
+        size_t width = 0;
+        size_t height = 0;
         RETURN_RESULT_IF_FAILED(bitmapImageSource->GetSize(&width, &height), 0);
 
         return width;
@@ -195,15 +192,19 @@ struct __CGImageImpl {
         return pixelFormat;
     }
 
-    inline const __CGImagePixelProperties* Properties() const {
+    inline const __CGImagePixelProperties* __Properties() const {
         WICPixelFormatGUID pixelFormat = PixelFormat();
         RETURN_NULL_IF(pixelFormat == GUID_WICPixelFormatUndefined);
 
         auto iterator = s_PixelFormats.find(pixelFormat);
-        // TODO: log here
         RETURN_NULL_IF(iterator == s_PixelFormats.end());
 
         return &iterator->second;
+    }
+
+    inline const __CGImagePixelProperties* Properties() const {
+        static const __CGImagePixelProperties* properties = __Properties();
+        return properties;
     }
 
     inline size_t BitsPerPixel() const {
@@ -228,14 +229,13 @@ struct __CGImageImpl {
         return static_cast<CGImageAlphaInfo>(BitmapInfo() & kCGBitmapAlphaInfoMask);
     }
 
-    inline CGColorSpaceRef ColorSpace() const {
-        if(_impl.colorSpace) {
-            return _impl.colorSpace;
+    inline CGColorSpaceRef ColorSpace() {
+        if (colorSpace.get()) {
+            const __CGImagePixelProperties* properties = Properties();
+            RETURN_NULL_IF(!properties);
+            colorSpace.reset(_CGColorSpaceCreate(properties->colorSpaceModel));
         }
-        
-        const __CGImagePixelProperties* properties = Properties();
-        RETURN_NULL_IF(!properties);
-        return properties->colorSpaceModel;        
+        return colorSpace.get();
     }
 };
 
@@ -245,11 +245,13 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage, __CGImageImpl> {
     }
 
     inline size_t Height() const {
-        return _impl.Height();
+        static size_t height = _impl.Height();
+        return height;
     }
 
     inline size_t Width() const {
-        return _impl.Width();
+        static size_t width = _impl.Width();
+        return width;
     }
 
     inline bool IsMask() const {
@@ -260,8 +262,9 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage, __CGImageImpl> {
         return _impl.interpolate;
     }
 
-    inline CGColorSpaceRef ColorSpace() const {
-        return _impl.ColorSpace();
+    inline CGColorSpaceRef ColorSpace() {
+        static CGColorSpaceRef colorSpace = _impl.ColorSpace();
+        return colorSpace;
     }
 
     inline CGColorRenderingIntent RenderingIntent() const {
@@ -269,19 +272,28 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage, __CGImageImpl> {
     }
 
     inline CGBitmapInfo BitmapInfo() const {
-        return _impl.BitmapInfo();
+        static CGBitmapInfo bitmapInfo = _impl.BitmapInfo();
+        return bitmapInfo;
     }
 
     inline CGImageAlphaInfo AlphaInfo() const {
-        return _impl.AlphaInfo();
+        static CGImageAlphaInfo alphaInfo = _impl.AlphaInfo();
+        return alphaInfo;
     }
 
     inline size_t BitsPerPixel() const {
-        return _impl.BitsPerPixel();
+        size_t bitsPerPixel = _impl.BitsPerPixel();
+        return bitsPerPixel;
     }
 
     inline size_t BitsPerComponent() const {
-        return _impl.BitsPerComponent();
+        size_t bitsPerComponent = _impl.BitsPerComponent();
+        return bitsPerComponent;
+    }
+
+    inline __CGImage& SetImageSource(Microsoft::WRL::ComPtr<IWICBitmapSource> source) {
+        _impl.bitmapImageSource = source;
+        return *this;
     }
 
     inline __CGImage& SetIsMask(bool mask) {
@@ -295,10 +307,7 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage, __CGImageImpl> {
     }
 
     inline __CGImage& SetColorSpace(CGColorSpaceRef space) {
-        if (_impl.colorSpace) {
-            CGColorSpaceRelease(_impl.colorSpace);
-        }
-        _impl.colorSpace = space;
+        _impl.colorSpace.reset(space);
         CGColorSpaceRetain(space);
         return *this;
     }
@@ -346,8 +355,8 @@ COREGRAPHICS_EXPORT CGImageRef _CGImageLoadImageWithWICDecoder(REFGUID decoderCl
 COREGRAPHICS_EXPORT CGImageRef _CGImageGetImageFromData(void* data, int length);
 
 COREGRAPHICS_EXPORT NSData* _CGImagePNGRepresentation(CGImageRef image);
-COREGRAPHICS_EXPORT NSData* _CGImageJPEGRepresentation(CGImageRef image);
-COREGRAPHICS_EXPORT NSData* _CGImageRepresentation(CGImageRef image, REFGUID guid);
+COREGRAPHICS_EXPORT NSData* _CGImageJPEGRepresentation(CGImageRef image, float quality);
+COREGRAPHICS_EXPORT NSData* _CGImageRepresentation(CGImageRef image, REFGUID guid, float quality);
 
 REFGUID _CGImageGetWICPixelFormat(unsigned int bitsPerComponent,
                                   unsigned int bitsPerPixel,

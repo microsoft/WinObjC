@@ -17,7 +17,7 @@
 #import <TestFramework.h>
 #import <Starboard.h>
 #import <CoreGraphics/CGImage.h>
-#import <Foundation\Foundation.h>
+#import <Foundation/Foundation.h>
 #import <Starboard/SmartTypes.h>
 #import "TestUtils.h"
 

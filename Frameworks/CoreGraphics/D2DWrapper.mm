@@ -32,14 +32,12 @@ ComPtr<ID2D1Factory> _GetD2DFactoryInstance() {
 }
 
 static ComPtr<IWICImagingFactory> __createWICFactory() {
-  ComPtr<IWICImagingFactory> wicFactory;
-  THROW_IF_FAILED(CoCreateInstance(CLSID_WICImagingFactory, nullptr,
-                                   CLSCTX_INPROC_SERVER,
-                                   IID_PPV_ARGS(&wicFactory)));
-  return wicFactory;
+    ComPtr<IWICImagingFactory> wicFactory;
+    FAIL_FAST_IF_FAILED(CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&wicFactory)));
+    return wicFactory;
 }
 
 ComPtr<IWICImagingFactory> _GetWICFactory() {
-  static ComPtr<IWICImagingFactory> s_WICFactory = __createWICFactory();
-  return s_WICFactory;
+    static ComPtr<IWICImagingFactory> s_WICFactory = __createWICFactory();
+    return s_WICFactory;
 }

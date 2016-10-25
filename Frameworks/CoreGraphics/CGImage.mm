@@ -35,8 +35,6 @@ using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"CGImage";
 
-#define RETURN_FALSE_IF_FAILED(input) RETURN_FALSE_IF(FAILED(input));
-
 // TODO #1124: remove old code
 #pragma region OLD_CODE
 static std::vector<CGImageDestructionListener> _imageDestructionListeners;
@@ -83,17 +81,17 @@ CGImageRef CGImageCreate(size_t width,
 
     unsigned char* data = (unsigned char*)[dataProvider bytes];
 
-    bool colorSpaceAllocated = false;
+    woc::unique_cf<CGColorSpaceRef> defaultColorSpace;
     if (colorSpace == NULL) {
         if (bytesPerRow >= (width * 3)) {
             TraceWarning(TAG, L"Warning: colorSpace = NULL, assuming RGB based on bytesPerRow.");
-            colorSpace = CGColorSpaceCreateDeviceRGB();
+            defaultColorSpace.reset(CGColorSpaceCreateDeviceRGB());
         } else {
             TraceWarning(TAG, L"Warning: colorSpace = NULL, assuming Gray based on bytesPerRow.");
-            colorSpace = CGColorSpaceCreateDeviceGray();
+            defaultColorSpace.reset(CGColorSpaceCreateDeviceGray());
         }
 
-        colorSpaceAllocated = true;
+        colorSpace = defaultColorSpace.get();
     }
 
     ComPtr<IWICBitmap> image;
@@ -104,13 +102,7 @@ CGImageRef CGImageCreate(size_t width,
     HRESULT status = imageFactory->CreateBitmapFromMemory(width, height, pixelFormat, bytesPerRow, height * bytesPerRow, data, &image);
 
     CGImageRef imageRef = __CGImage::CreateInstance();
-    imageRef->ImageSource().Attach(image.Detach());
-
-    imageRef->SetColorSpace(colorSpace).SetRenderingIntent(intent).SetInterpolate(shouldInterpolate);
-
-    if (colorSpaceAllocated) {
-        CGColorSpaceRelease(colorSpace);
-    }
+    imageRef->SetImageSource(image).SetColorSpace(colorSpace).SetRenderingIntent(intent).SetInterpolate(shouldInterpolate);
 
     return imageRef;
 }
@@ -128,7 +120,7 @@ CGImageRef CGImageCreateWithImageInRect(CGImageRef ref, CGRect rect) {
     RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSourceRect(
         ref->ImageSource().Get(), rect.origin.x, rect.origin.y, rect.size.width, rect.size.height, &rectImage));
 
-    imageRef->ImageSource().Attach(rectImage.Detach());
+    imageRef->SetImageSource(rectImage);
 
     imageRef->SetColorSpace(ref->ColorSpace()).SetRenderingIntent(ref->RenderingIntent()).SetInterpolate(ref->Interpolate());
 
@@ -141,15 +133,14 @@ CGImageRef CGImageCreateWithImageInRect(CGImageRef ref, CGRect rect) {
 CGImageRef CGImageCreateCopy(CGImageRef ref) {
     RETURN_NULL_IF(!ref);
 
-    CGImageRef imageRef = __CGImage::CreateInstance();
-
     ComPtr<IWICImagingFactory> imageFactory = _GetWICFactory();
     ComPtr<IWICBitmap> image;
 
     RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(ref->ImageSource().Get(), WICBitmapCacheOnDemand, &image));
 
-    imageRef->ImageSource().Attach(image.Detach());
-    imageRef->SetIsMask(ref->IsMask())
+    CGImageRef imageRef = __CGImage::CreateInstance();
+    imageRef->SetImageSource(image)
+        .SetIsMask(ref->IsMask())
         .SetInterpolate(ref->Interpolate())
         .SetColorSpace(ref->ColorSpace())
         .SetRenderingIntent(ref->RenderingIntent());
@@ -169,8 +160,6 @@ CGImageRef CGImageMaskCreate(size_t width,
                              CGDataProviderRef provider,
                              const CGFloat* decode,
                              bool shouldInterpolate) {
-    // Native platform support
-    RETURN_NULL_IF(((bitsPerComponent == 8) && (bitsPerPixel == 32)));
 
     RETURN_NULL_IF(((provider == nullptr) || ![(NSObject*)provider isKindOfClass:[NSData class]]));
 
@@ -188,8 +177,7 @@ CGImageRef CGImageMaskCreate(size_t width,
     HRESULT status = imageFactory->CreateBitmapFromMemory(width, height, pixelFormat, bytesPerRow, height * bytesPerRow, data, &image);
 
     CGImageRef imageRef = __CGImage::CreateInstance();
-    imageRef->ImageSource().Attach(image.Detach());
-    imageRef->SetIsMask(true).SetInterpolate(shouldInterpolate);
+    imageRef->SetImageSource(image).SetIsMask(true).SetInterpolate(shouldInterpolate);
 
     return imageRef;
 }
@@ -200,11 +188,8 @@ CGImageRef CGImageMaskCreate(size_t width,
 CGDataProviderRef CGImageGetDataProvider(CGImageRef img) {
     RETURN_NULL_IF(!img);
 
-    size_t height, width;
-    RETURN_NULL_IF_FAILED(img->ImageSource()->GetSize(&width, &height));
-
-    const unsigned int stride = width * CGImageGetBytesPerRow(img);
-    const unsigned int size = height * stride;
+    const unsigned int stride = CGImageGetWidth(img) * CGImageGetBytesPerRow(img);
+    const unsigned int size = CGImageGetHeight(img) * stride;
     woc::unique_iw<unsigned char> data(static_cast<unsigned char*>(IwMalloc(size)));
 
     RETURN_NULL_IF_FAILED(img->ImageSource()->CopyPixels(0, stride, stride, data.get()));
@@ -434,33 +419,14 @@ CGImageRef _CGImageLoadImageWithWICDecoder(REFGUID decoderCls, void* bytes, int 
     ComPtr<IWICImagingFactory> imageFactory = _GetWICFactory();
 
     ComPtr<IWICBitmapDecoder> pDecoder;
+    ComPtr<IWICStream> spStream;
+    RETURN_NULL_IF_FAILED(imageFactory->CreateStream(&spStream));
+    RETURN_NULL_IF_FAILED(spStream->InitializeFromMemory(static_cast<unsigned char*>(bytes), length));
 
-    if (decoderCls != GUID_NULL) {
-        ComPtr<IStream> spStream;
-        RETURN_NULL_IF_FAILED(::CreateStreamOnHGlobal(NULL, FALSE, &spStream));
-
-        ULONG written = 0;
-        HRESULT hr = spStream->Write(bytes, length, &written);
-        if (FAILED(hr) || (written != length)) {
-            TraceError(TAG, L"IStream::Write failed hr=%x len=%d written=%d", hr, length, written);
-            return NULL;
-        }
-
-        // seek to start
-        LARGE_INTEGER offset;
-        offset.QuadPart = 0;
-        RETURN_NULL_IF_FAILED(spStream->Seek(offset, STREAM_SEEK_SET, NULL));
-
-        RETURN_NULL_IF_FAILED(imageFactory->CreateDecoder(decoderCls, NULL, &pDecoder));
-
-        hr = pDecoder->Initialize(spStream.Get(), WICDecodeMetadataCacheOnLoad);
-        RETURN_NULL_IF_FAILED(hr);
-
+    if (!IsEqualGUID(decoderCls, GUID_NULL)) {
+        RETURN_NULL_IF_FAILED(imageFactory->CreateDecoder(decoderCls, nullptr, &pDecoder));
+        RETURN_NULL_IF_FAILED(pDecoder->Initialize(spStream.Get(), WICDecodeMetadataCacheOnLoad));
     } else {
-        ComPtr<IWICStream> spStream;
-        RETURN_NULL_IF_FAILED(imageFactory->CreateStream(&spStream));
-
-        RETURN_NULL_IF_FAILED(spStream->InitializeFromMemory(static_cast<unsigned char*>(bytes), length));
         RETURN_NULL_IF_FAILED(imageFactory->CreateDecoderFromStream(spStream.Get(), nullptr, WICDecodeMetadataCacheOnDemand, &pDecoder));
     }
 
@@ -468,37 +434,21 @@ CGImageRef _CGImageLoadImageWithWICDecoder(REFGUID decoderCls, void* bytes, int 
     RETURN_NULL_IF_FAILED(pDecoder->GetFrame(0, &bitMapFrameDecoder));
 
     CGImageRef imageRef = __CGImage::CreateInstance();
-    imageRef->ImageSource().Attach(bitMapFrameDecoder.Detach());
+    imageRef->SetImageSource(bitMapFrameDecoder);
     return imageRef;
 }
 
 NSData* _CGImagePNGRepresentation(CGImageRef image) {
-    return _CGImageRepresentation(image, GUID_WICPixelFormat32bppBGRA);
+    return _CGImageRepresentation(image, GUID_ContainerFormatPng, -1);
 }
 
-NSData* _CGImageJPEGRepresentation(CGImageRef image) {
-    return _CGImageRepresentation(image, GUID_WICPixelFormat32bppCMYK);
+NSData* _CGImageJPEGRepresentation(CGImageRef image, float quality) {
+    return _CGImageRepresentation(image, GUID_ContainerFormatJpeg, quality);
 }
 
-NSData* _CGImageRepresentation(CGImageRef image, REFGUID guid) {
-    RETURN_NULL_IF(!image);
-
-    ComPtr<IWICImagingFactory> imageFactory = _GetWICFactory();
-    ComPtr<IWICFormatConverter> imageFormatConverter;
-
-    RETURN_NULL_IF_FAILED(imageFactory->CreateFormatConverter(&imageFormatConverter));
-
-    RETURN_NULL_IF_FAILED(imageFormatConverter->Initialize(
-        image->ImageSource().Get(), guid, WICBitmapDitherTypeNone, nullptr, 0.f, WICBitmapPaletteTypeCustom));
-
-    size_t height, width;
-    RETURN_NULL_IF_FAILED(image->ImageSource()->GetSize(&width, &height));
-
-    const unsigned int size = height * width * 4;
-    woc::unique_iw<unsigned char> data(static_cast<unsigned char*>(IwMalloc(size)));
-    RETURN_NULL_IF_FAILED(imageFormatConverter->CopyPixels(0, width * 4, size, data.get()));
-
-    return [NSData dataWithBytesNoCopy:data.release() length:size freeWhenDone:YES];
+NSData* _CGImageRepresentation(CGImageRef image, REFGUID guid, float quality) {
+    //TODO #1124 implement encoder.
+    return nil;
 }
 
 REFGUID _CGImageGetWICPixelFormat(unsigned int bitsPerComponent,

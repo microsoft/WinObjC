@@ -122,9 +122,9 @@ void UIImageSetLayerContents(CALayer* layer, UIImage* image) {
     return [obj autorelease];
 }
 
-static inline CGImageRef getImage(UIImage* self) {
-    RETURN_NULL_IF(!self);
-    return self->m_pImage;
+static inline CGImageRef getImage(UIImage* uiImage) {
+    RETURN_NULL_IF(!uiImage);
+    return uiImage->m_pImage;
 }
 
 /**
@@ -249,7 +249,7 @@ static inline CGImageRef getImage(UIImage* self) {
 }
 
 - (instancetype)_initWithCopyOfImage:(UIImage*)imageToCopy WithRenderingMode:(UIImageRenderingMode)renderingMode {
-    if(!imageToCopy) {
+    if (!imageToCopy) {
         [self release];
         return nil;
     }
@@ -268,7 +268,7 @@ static inline CGImageRef getImage(UIImage* self) {
  @Status Interoperable
 */
 - (instancetype)initWithContentsOfFile:(NSString*)pathAddr {
-    if(!pathAddr) {
+    if (!pathAddr) {
         [self release];
         return nil;
     }
@@ -426,10 +426,10 @@ static inline CGImageRef getImage(UIImage* self) {
  @Status Interoperable
 */
 - (instancetype)initWithData:(NSData*)data scale:(float)scale {
-	if(!data) {
-		[self release];
-		return nil;
-	}
+    if (!data) {
+        [self release];
+        return nil;
+    }
 
     if (self = [self init]) {
         _scale = scale;
@@ -439,7 +439,7 @@ static inline CGImageRef getImage(UIImage* self) {
             return nil;
         }
 
-        m_pImage = _CGImageGetImageFromData((void *)[data bytes], [data length]);
+        m_pImage = _CGImageGetImageFromData((void*)[data bytes], [data length]);
         if (!m_pImage) {
             [self release];
             return nil;
@@ -900,20 +900,21 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 NSData* UIImagePNGRepresentation(UIImage* img) {
     RETURN_NULL_IF(!img);
-    return _CGImagePNGRepresentation(getImage(img));
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
- @Status Caveat
- @Notes quality is being ignored.
+ @Status Stub
 */
 NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat quality) {
     RETURN_NULL_IF(!img);
-    return _CGImageJPEGRepresentation(getImage(img));
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
