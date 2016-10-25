@@ -55,34 +55,59 @@ typedef CF_ENUM(CFIndex, CGInterpolationQuality) {
 };
 
 typedef CF_ENUM(CFIndex, CGBlendMode) {
-    kCGBlendModeNormal,
-    kCGBlendModeMultiply,
+    // These magic constants may seem unusual, but they break down as follows:
+    // 0xAA 0xBB
+    // ^    ^
+    // +----|---- Direct2D Blend Type (Composition, Blend Effect, Special Operator)
+    //      +---- Mapped value from Direct2D:
+    //            Blends: https://msdn.microsoft.com/en-us/library/windows/desktop/dn934217(v=vs.85).aspx
+    //            Composition: https://msdn.microsoft.com/en-us/library/windows/desktop/hh446995(v=vs.85).aspx
+
+    // D2D Blend Effect Modes
+    kCGBlendModeMultiply = 0x0100,
     kCGBlendModeScreen,
-    kCGBlendModeOverlay,
     kCGBlendModeDarken,
     kCGBlendModeLighten,
-    kCGBlendModeColorDodge,
-    kCGBlendModeColorBurn,
+
+    kCGBlendModeColorBurn = 0x0105,
+    kCGBlendModeColorDodge = 0x0109,
+
+    kCGBlendModeOverlay = 0x010B,
     kCGBlendModeSoftLight,
     kCGBlendModeHardLight,
-    kCGBlendModeDifference,
+
+    kCGBlendModeDifference = 0x0118,
     kCGBlendModeExclusion,
+
     kCGBlendModeHue,
     kCGBlendModeSaturation,
     kCGBlendModeColor,
     kCGBlendModeLuminosity,
-    kCGBlendModeClear,
-    kCGBlendModeCopy,
-    kCGBlendModeSourceIn,
-    kCGBlendModeSourceOut,
-    kCGBlendModeSourceAtop,
+
+    // D2D Composite Draw Modes
+    kCGBlendModeSourceOver = 0x0200,
     kCGBlendModeDestinationOver,
+
+    kCGBlendModeSourceIn,
     kCGBlendModeDestinationIn,
+
+    kCGBlendModeSourceOut,
     kCGBlendModeDestinationOut,
+
+    kCGBlendModeSourceAtop,
     kCGBlendModeDestinationAtop,
+
     kCGBlendModeXOR,
-    kCGBlendModePlusDarker,
-    kCGBlendModePlusLighter
+    kCGBlendModePlusLighter,
+
+    kCGBlendModeCopy,
+
+    kCGBlendModePlusDarker = kCGBlendModePlusLighter, // [Unsupported right now, maps to kCGBlendModePlusLighter with a warning.]
+
+    // Special mode (clears the affected region)
+    kCGBlendModeClear = 0x0400,
+
+    kCGBlendModeNormal = kCGBlendModeSourceOver,
 };
 
 // clang-format off

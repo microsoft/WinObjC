@@ -100,6 +100,9 @@ struct __CGContextDrawingState {
     // Image Drawing
     D2D1_INTERPOLATION_MODE bitmapInterpolationMode = D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
 
+    // Composition
+    CGBlendMode blendMode{kCGBlendModeNormal};
+
     // Userspace Coordinate Transformation
     CGAffineTransform transform{ CGAffineTransformIdentity };
 
@@ -644,7 +647,7 @@ HRESULT __CGContext::PushLayer(CGRect* rect) {
     auto& newDrawingState = newLayer.CurrentGState();
     newDrawingState.alpha = 1.0;
     newDrawingState.shadowColor = { 0.f, 0.f, 0.f, 0.f };
-    // newDrawingState.blendMode = kCGBlendModeNormal; // TODO GH#1389
+    newDrawingState.blendMode = kCGBlendModeNormal;
     newDrawingState.clippingGeometry = nullptr;
     newDrawingState.opacityBrush = nullptr;
     if (rect) {
@@ -1487,11 +1490,19 @@ void CGContextSetShouldSubpixelQuantizeFonts(CGContextRef context, bool subpixel
 
 #pragma region Drawing Parameters - Generic
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Only supports basic composition.
 */
 void CGContextSetBlendMode(CGContextRef context, CGBlendMode mode) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+
+    // TODO(DH): Support Porter-Duff blend modes and operators.
+    if ((mode & _kCGContextBlendD2DCompose) == 0) {
+        UNIMPLEMENTED_WITH_MSG("Unsupported non-composite blend mode %4.04x", mode);
+    }
+
+    auto& state = context->CurrentGState();
+    state.blendMode = mode;
 }
 
 /**
@@ -2362,6 +2373,28 @@ void CGContextClearRect(CGContextRef context, CGRect rect) {
     FAIL_FAST_IF_FAILED(context->ClearRect(rect));
 }
 
+static bool __CGContextCreateBlendEffect(CGContextRef context,
+                                         ID2D1DeviceContext* deviceContext,
+                                         ID2D1Image* inputImage,
+                                         ID2D1Effect** outBlendEffect) {
+    auto& state = context->CurrentGState();
+    if ((state.blendMode & 0x0100) == 0x0100) {
+        ComPtr<ID2D1Effect> blendEffect;
+        ComPtr<ID2D1Effect> affineTransformEffect;
+        ComPtr<ID2D1Effect> compositeEffect;
+
+        deviceContext->CreateEffect(CLSID_D2D1Blend, &blendEffect);
+
+        blendEffect->SetInput(0, inputImage);
+        blendEffect->SetValue(D2D1_BLEND_PROP_MODE, state.blendMode & 0xFF);
+        *outBlendEffect = blendEffect.Detach();
+        return true;
+    }
+
+    *outBlendEffect = nullptr;
+    return false;
+}
+
 HRESULT __CGContext::_CreateShadowEffect(ID2D1Image* inputImage, ID2D1Effect** outShadowEffect) {
     auto& state = CurrentGState();
     if (state.HasShadow()) {
@@ -2498,8 +2531,19 @@ HRESULT __CGContext::Draw(__CGCoordinateMode coordinateMode, CGAffineTransform* 
             RETURN_IF_FAILED(shadowEffect.As(&currentImage));
         }
 
-        deviceContext->DrawImage(currentImage.Get());
+        D2D1_COMPOSITE_MODE compositeMode = D2D1_COMPOSITE_MODE_SOURCE_OVER;
+        if ((state.blendMode & _kCGContextBlendD2DCompose) == _kCGContextBlendD2DCompose) {
+            // If the user has requested a different composition mode, we'll honor it.
+            // If they have requested a porter-duff blend mode, however, we'll use SOURCE_OVER regardless:
+            // It doesn't truly matter, as our porter-duff blends are implemented in terms of a full
+            // target readback, clear and blend effect. There /is/ no destination to compose once we're done.
+            compositeMode = static_cast<D2D1_COMPOSITE_MODE>(state.blendMode & 0xFF);
+        }
 
+        // We use NEAREST_NEIGHBOR here since every CommandList or Image we are rendering will already be context-scaled,
+        // and we assume that there will not be a final interpolation pass.
+        // Bitmaps drawn through CGContextDrawImage will have the interpolation mode applied during input generation.
+        deviceContext->DrawImage(currentImage.Get(), D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR, compositeMode);
     } else {
         deviceContext->SetTransform(__CGAffineTransformToD2D_F(transform));
         auto revertTransform = wil::ScopeExit([this]() { this->deviceContext->SetTransform(D2D1::IdentityMatrix()); });
