@@ -34,6 +34,9 @@
     <ProjectReference Include="..\..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26da08da-d0b9-4579-b168-e7f0a5f20e57}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\CoreText\dll\CoreText.vcxproj">
+        <Project>{36deec5d-f77b-4c94-a63c-86fb716833de}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\AutoLayout\dll\AutoLayout.vcxproj">
       <Project>{D036FDB1-F82C-40C7-B1B4-65F499EAE116}</Project>
     </ProjectReference>
