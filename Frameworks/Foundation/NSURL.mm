@@ -24,9 +24,9 @@
 #import <NSRaise.h>
 
 #import "BridgeHelpers.h"
+#import "StringHelpers.h"
 #import "LoggingNative.h"
 #import "NSPathUtilitiesInternal.h"
-#import "NSStringInternal.h"
 #import "StubReturn.h"
 
 #import <memory>
@@ -35,7 +35,7 @@
 #include <COMIncludes.h>
 #include "ErrorHandling.h"
 #include <wrl/client.h>
-#include <wrl\wrappers\corewrappers.h>
+#include <wrl/wrappers/corewrappers.h>
 #include <windows.storage.accesscache.h>
 #include <windows.storage.h>
 #include <COMIncludes_End.h>
@@ -946,7 +946,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSURL, NSURLPrototype, CFURLGetTypeID);
     {
         std::lock_guard<std::mutex> guard(s_lock);
 
-        // protect the count check and addint logic with a lock since we don't want to race to add the last guy.
+        // protect the count check and adding logic with a lock since we don't want to race to add the last guy.
         ComPtr<IVectorView<AccessListEntry>> entries;
         RETURN_NULL_IF_FAILED(accessList->get_Entries(&entries));
         RETURN_NULL_IF_FAILED(entries->get_Size(&count));
@@ -963,8 +963,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSURL, NSURLPrototype, CFURLGetTypeID);
     }
 
     // now that a token has been acquired, form a file path URL similar to a file reference URL based on it.
-    return [self initFileURLWithPath:[NSString stringWithFormat:@"/.file/id=%@", [NSString _stringWithHSTRING:token.Get()]]
-                         isDirectory:NO];
+    return [self initFileURLWithPath:[NSString stringWithFormat:@"/.file/id=%@", Strings::WideToNSString(token.Get())] isDirectory:NO];
 }
 
 @end

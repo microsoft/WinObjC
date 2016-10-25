@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -36,8 +36,12 @@ using namespace ABI::Windows::Storage::Streams;
 std::shared_ptr<EbrFile> EbrStorageFile::CreateInstance(const char* path, int mode, int share, int pmode) {
     // Check to see if this path is a file id path.
     static const std::string c_fileIdPreamble = "/.file/id=";
-
-    RETURN_NULL_IF_FALSE(0 == strncmp(path, c_fileIdPreamble.c_str() , c_fileIdPreamble.length()));
+    
+    if ((path == nullptr) || (0 != strncmp(path, c_fileIdPreamble.c_str() , c_fileIdPreamble.length()))) {
+        // Don't use a wil macro here since these are necessarily failure conditions worth logging. Normal files
+        // are tried down this path too and are expected to fail.
+        return nullptr;
+    }
 
     Wrappers::HString idHString = Strings::NarrowToWide<HSTRING>(&path[c_fileIdPreamble.length()]);
 
@@ -111,48 +115,22 @@ int EbrStorageFile::Flush() {
 }
 
 int EbrStorageFile::Stat(struct stat* ret) {
-    std::lock_guard<std::recursive_mutex> lock(m_lock);
-
-    if (!ret) {
-        return -1;
-    }
-
-    struct stat toReturn{};
-
-    ComPtr<IStorageItem> storageItem;
-    if (FAILED(m_storageFile.As(&storageItem))) {
-        return -1;
-    }
-
-    ComPtr<IBasicProperties> basicProperties;
-    if (FAILED(AwaitResult(storageItem, &IStorageItem::GetBasicPropertiesAsync, &basicProperties))) {
-        return -1;
-    }
-
-    unsigned long long size{};
-    if (FAILED(basicProperties->get_Size(&size))) {
-        return -1;
-    }
-
-    // TODO 1099: Add more properites that we can fill in stat.
-    toReturn.st_size = (decltype(toReturn.st_size))size;
-
-    // Just assume its a regular file.
-    toReturn.st_mode = S_IFREG;
-
-    *ret = toReturn;
-
-    return 0;
+    return _StatInternal(ret);
 }
 
 int EbrStorageFile::Stat64i32(struct _stat64i32* ret) {
+    return _StatInternal(ret);
+}
+
+template<typename T> 
+int EbrStorageFile::_StatInternal(T* ret) {
     std::lock_guard<std::recursive_mutex> lock(m_lock);
 
     if (!ret) {
         return -1;
     }
 
-    struct _stat64i32 toReturn{};
+    T toReturn{};
 
     ComPtr<IStorageItem> storageItem;
     if (FAILED(m_storageFile.As(&storageItem))) {
@@ -169,7 +147,6 @@ int EbrStorageFile::Stat64i32(struct _stat64i32* ret) {
         return -1;
     }
 
-    // TODO 1099: Add more properites that we can fill in stat.
     toReturn.st_size = (decltype(toReturn.st_size))size;
 
     // Just assume its a regular file.
@@ -212,7 +189,7 @@ int EbrStorageFile::Read(void* dest, size_t count) {
         return -1;
     }
 
-    unsigned int length = 0;
+    unsigned int length{};
     if (FAILED(dataRead->get_Length(&length))) {
         return -1;
     }
@@ -243,12 +220,13 @@ int EbrStorageFile::Read(void* dest, size_t count) {
 int EbrStorageFile::Write(const void* src, size_t count) {
     std::lock_guard<std::recursive_mutex> lock(m_lock);
 
-    if (!m_shouldAllowWrite) {
+    if (!m_shouldAllowWrite || !src) {
         return -1;
     }
 
-    if (!src) {
-        return -1;
+    if (count == 0) {
+        // Well that sure was easy.
+        return 0;
     }
 
     unsigned long long currentPosition{};
@@ -276,7 +254,7 @@ int EbrStorageFile::Write(const void* src, size_t count) {
         return -1;
     }
 
-    UINT32 result;
+    UINT32 result{};
     if (FAILED(AwaitProgressComplete(outStream, &IOutputStream::WriteAsync, dataToWrite.Get(), &result))) {
         return -1;
     }

@@ -17,7 +17,8 @@
 #include "EbrDevRandomFile.h"
 
 std::shared_ptr<EbrFile> EbrDevRandomFile::CreateInstance(const char* path, int mode, int share, int pmode) {
-    if (strcmp(path, "/dev/urandom") == 0) {
+    static const char c_devRandomPath[] = "/dev/urandom";
+    if (strncmp(path, c_devRandomPath, _countof(c_devRandomPath)) == 0) {
         return std::make_shared<EbrDevRandomFile>();
     }
     return nullptr;

@@ -24,20 +24,30 @@ TEST(NSURL, StorageFileURL) {
     
     // First up is to make a storage file for something. Lets create a new file and use that.
     __block WSStorageFile* storageFile = nil;
+    __block bool signaled = false;
     __block NSCondition* condition = [NSCondition new];
 
     [[[WSApplicationData current] localFolder] createFileAsync:@"tempStorageFile.txt" options:WSCreationCollisionOptionOpenIfExists 
         success:^void(WSStorageFile* file) {
            storageFile = file;
+           [condition lock];
+           signaled = true;
            [condition signal];
+           [condition unlock];
          }
 
          failure:^void(NSError* error) {
             LOG_ERROR([[error description] UTF8String]);
-            [condition signal];
+           [condition lock];
+           signaled = true;
+           [condition signal];
+           [condition unlock];
          }];
 
-    [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
+    [condition lock];
+    ASSERT_TRUE(signaled || [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:10]]);
+    [condition unlock];
+
     ASSERT_TRUE(nil != storageFile);
 
     WSStorageFile* lambdaStorageFile = storageFile; 
@@ -45,11 +55,17 @@ TEST(NSURL, StorageFileURL) {
     // Now that a storage file is created. Lets make sure we delete it in case of test failure.
     auto deleter = wil::ScopeExit([&lambdaStorageFile]() {
         __block NSCondition* deleterCondition = [NSCondition new];
+        __block bool deleterSignaled = false;
         [[lambdaStorageFile deleteAsyncOverloadDefaultOptions] setCompleted:^void(RTObject<WFIAsyncAction>* asyncInfo, WFAsyncStatus asyncStatus) {
+           [deleterCondition lock];
+           deleterSignaled = true;
            [deleterCondition signal];
+           [deleterCondition unlock];
          }];
 
-        [deleterCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
+        [deleterCondition lock];
+        ASSERT_TRUE(deleterSignaled || [deleterCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:10]]);
+        [deleterCondition unlock];
     });
 
     // Ok all the logistics are taken care of. Lets get to work on the meat of the test. mmmmm URLs.

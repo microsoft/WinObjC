@@ -646,7 +646,7 @@ public:
 
 
 //
-// UIApplicationTests
+// NSURLStorageFileTests
 //
 extern void NSURLStorageFileURL();
 
@@ -661,7 +661,12 @@ public:
         return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
     }
 
+    TEST_METHOD_CLEANUP(NSURLStorageFileTestsCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
     TEST_METHOD(NSURLTests_StorageFileURL) {
         NSURLStorageFileURL();
     }
-}; /* class UIApplicationTests */
+}; /* class NSURLStorageFileTests */

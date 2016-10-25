@@ -61,6 +61,8 @@ public:
     static std::shared_ptr<EbrFile> CreateInstance(const char* mappedPath, int mode, int share, int pmode);
 
 private:
+    template<typename T> int _StatInternal(T* ret);
+
     Microsoft::WRL::ComPtr<ABI::Windows::Storage::IStorageFile> m_storageFile;
     Microsoft::WRL::ComPtr<ABI::Windows::Storage::Streams::IRandomAccessStream> m_randomAccessStream;
     bool m_shouldAppend;

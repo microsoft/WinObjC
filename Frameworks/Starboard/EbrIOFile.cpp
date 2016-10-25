@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -22,7 +22,7 @@
 
 std::shared_ptr<EbrFile> EbrIOFile::CreateInstance(const char* path, int mode, int share, int pmode) {
     int fid{};
-    auto result = _sopen_s(&fid, CPathMapper(path), mode, share, pmode);
+    int result = _sopen_s(&fid, CPathMapper(path), mode, share, pmode);
 
     if (result != 0) {
         return nullptr;

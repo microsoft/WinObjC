@@ -33,7 +33,7 @@
 #include "EbrDevRandomFile.h"
 #include "EbrStorageFile.h"
 
-static const wchar_t* TAG = L"PlatformSupport";
+static const wchar_t* TAG = L"EbrFile";
 
 std::mutex EbrFile::s_fileMapLock{};
 std::map<int, std::shared_ptr<EbrFile>> EbrFile::s_fileMap{};
@@ -85,18 +85,17 @@ int EbrOpenWithPermission(const char* file, int mode, int share, int pmode) {
 
     // Special random number device. Just a stub.
     fileToAdd = EbrDevRandomFile::CreateInstance(file, mode, share, pmode);
-    if (fileToAdd) {
-        return EbrFile::AddFile(std::move(fileToAdd));
+    
+    if (!fileToAdd) {
+        // Special file type for cached storage files.
+        fileToAdd = EbrStorageFile::CreateInstance(file, mode, share, pmode);
     } 
     
-    // Special file type for cached storage files.
-    fileToAdd = EbrStorageFile::CreateInstance(file, mode, share, pmode);
-    if (fileToAdd) {
-        return EbrFile::AddFile(std::move(fileToAdd));
+    if (!fileToAdd) {
+        // No more special types. Assume its a real file.
+        fileToAdd = EbrIOFile::CreateInstance(file, mode, share, pmode);
     }
 
-    // No more special types. Assume its a real file.
-    fileToAdd = EbrIOFile::CreateInstance(file, mode, share, pmode);
     return (fileToAdd) ? EbrFile::AddFile(std::move(fileToAdd)) : -1;
 }
 
@@ -106,39 +105,48 @@ int EbrClose(int fd) {
 }
 
 int EbrFstat(int fd, struct stat* ret) {
-    return EbrFile::GetFile(fd)->Stat(ret);
+    auto file = EbrFile::GetFile(fd);
+    return (file == nullptr) ? -1 : file->Stat(ret);
 }
 
 int EbrFstat64i32(int fd, struct _stat64i32* ret) {
-    return EbrFile::GetFile(fd)->Stat64i32(ret);
+    auto file = EbrFile::GetFile(fd);
+    return (file == nullptr) ? -1 : file->Stat64i32(ret);
 }
 
 intptr_t EbrGetOSFHandle(int fd) {
-    return EbrFile::GetFile(fd)->GetOSFHandle();
+    auto file = EbrFile::GetFile(fd);
+    return (file == nullptr) ? -1 : file->GetOSFHandle();
 }
 
 int EbrRead(int fd, void* dest, size_t count) {
-    return EbrFile::GetFile(fd)->Read(dest, count);
+    auto file = EbrFile::GetFile(fd);
+    return (file == nullptr) ? -1 : file->Read(dest, count);
 }
 
 int EbrWrite(int fd, const void* src, size_t count) {
-    return EbrFile::GetFile(fd)->Write(src, count);
+    auto file = EbrFile::GetFile(fd);
+    return (file == nullptr) ? -1 : file->Write(src, count);
 }
 
 int EbrLseek(int fd, __int64 pos, int whence) {
-    return EbrFile::GetFile(fd)->Lseek(pos, whence);
+    auto file = EbrFile::GetFile(fd);
+    return (file == nullptr) ? -1 : file->Lseek(pos, whence);
 }
 
 int EbrTruncate64(int fd, __int64 size) {
-    return EbrFile::GetFile(fd)->Truncate64(size);
+    auto file = EbrFile::GetFile(fd);
+    return (file == nullptr) ? -1 : file->Truncate64(size);
 }
 
 size_t EbrTell(int fd) {
-    return EbrFile::GetFile(fd)->Tell();
+    auto file = EbrFile::GetFile(fd);
+    return (file == nullptr) ? 0 : file->Tell();
 }
 
 int EbrFflush(int fd) {
-    return EbrFile::GetFile(fd)->Flush();
+    auto file = EbrFile::GetFile(fd);
+    return (file == nullptr) ? -1 : file->Flush();
 }
 
 bool EbrRemoveEmptyDir(const char* path) {
@@ -250,8 +258,9 @@ bool EbrRemove(const char* path) {
             if (dir) {
                 EbrDirEnt ent;
                 while (EbrReadDir(dir, &ent)) {
-                    if (strcmp(ent.fileName, ".") == 0 || strcmp(ent.fileName, "..") == 0)
+                    if (strcmp(ent.fileName, ".") == 0 || strcmp(ent.fileName, "..") == 0) {
                         continue;
+                    }
 
                     char fullPath[4096]; // max path?
                     sprintf_s(fullPath, sizeof(fullPath), "%s%s%s", path, PATH_SEPARATOR, ent.fileName);

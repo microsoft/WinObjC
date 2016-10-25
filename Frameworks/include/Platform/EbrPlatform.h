@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,8 +14,8 @@
 //
 //******************************************************************************
 
-#ifndef __EBRPLATFORM_H
-#define __EBRPLATFORM_H
+#pragma once
+
 #include <pthread.h>
 #include <sys/types.h>
 #include <stdint.h>
@@ -108,4 +108,3 @@ typedef struct {
 SB_EXPORT int EbrEventTimedMultipleWait(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets);
 SB_EXPORT void EbrEventDestroy(EbrEvent event);
 
-#endif
