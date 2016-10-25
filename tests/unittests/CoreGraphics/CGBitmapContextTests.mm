@@ -101,6 +101,7 @@ void _DrawText(CGContextRef context, NSString* text, const CGRect bounds) {
 
     // Draws the text in the frame
     CTFrameDraw(frame, context);
+    CGPathRelease(path);
 }
 
 // we will create a 10x10 bitmap context and :
