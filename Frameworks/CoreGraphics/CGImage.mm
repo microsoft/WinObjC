@@ -75,24 +75,11 @@ CGImageRef CGImageCreate(size_t width,
                          const float* decode,
                          bool shouldInterpolate,
                          CGColorRenderingIntent intent) {
-    RETURN_NULL_IF(((provider == nullptr) || ![(NSObject*)provider isKindOfClass:[NSData class]]));
+    RETURN_NULL_IF(((provider == nullptr) || ![(NSObject*)provider isKindOfClass:[NSData class]]) || (colorSpace == nullptr));
 
     NSData* dataProvider = (__bridge NSData*)provider;
 
     unsigned char* data = (unsigned char*)[dataProvider bytes];
-
-    woc::unique_cf<CGColorSpaceRef> defaultColorSpace;
-    if (colorSpace == NULL) {
-        if (bytesPerRow >= (width * 3)) {
-            TraceWarning(TAG, L"Warning: colorSpace = NULL, assuming RGB based on bytesPerRow.");
-            defaultColorSpace.reset(CGColorSpaceCreateDeviceRGB());
-        } else {
-            TraceWarning(TAG, L"Warning: colorSpace = NULL, assuming Gray based on bytesPerRow.");
-            defaultColorSpace.reset(CGColorSpaceCreateDeviceGray());
-        }
-
-        colorSpace = defaultColorSpace.get();
-    }
 
     ComPtr<IWICBitmap> image;
     ComPtr<IWICImagingFactory> imageFactory = _GetWICFactory();
@@ -334,9 +321,7 @@ size_t CGImageGetBitsPerComponent(CGImageRef img) {
 */
 size_t CGImageGetBytesPerRow(CGImageRef img) {
     RETURN_RESULT_IF_NULL(img, 0);
-    // ((bitsperpixel * 8) bytes) * width;
-    // TODO #1124: Move it to struct (avoid comuptation everytime.)
-    return (CGImageGetBitsPerPixel(img) >> 3) * CGImageGetWidth(img);
+    return img->BytesPerRow();
 }
 
 /**

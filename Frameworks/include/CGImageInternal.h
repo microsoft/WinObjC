@@ -27,6 +27,7 @@
 #import <map>
 #import <windows.h>
 #import <CGColorSpaceInternal.h>
+#import <utility>
 
 #include <COMIncludes.h>
 #import <D2d1.h>
@@ -166,6 +167,7 @@ struct __CGImageImpl {
     size_t width;
     size_t bitsPerPixel;
     size_t bitsPerComponent;
+    size_t bytesPerRow;
     CGBitmapInfo bitmapInfo;
     CGColorRenderingIntent renderingIntent;
 
@@ -174,6 +176,7 @@ struct __CGImageImpl {
         width = 0;
         bitsPerComponent = 0;
         bitsPerPixel = 0;
+        bytesPerRow = 0;
         bitmapInfo = kCGBitmapByteOrderDefault;
         alphaInfo = kCGImageAlphaNone;
         isMask = false;
@@ -226,7 +229,7 @@ struct __CGImageImpl {
     }
 
     inline void SetImageSource(Microsoft::WRL::ComPtr<IWICBitmapSource> source) {
-        bitmapImageSource = source;
+        bitmapImageSource = std::move(source);
         // populate the image info.
         if (FAILED(bitmapImageSource->GetSize(&width, &height))) {
             height = 0;
@@ -237,7 +240,8 @@ struct __CGImageImpl {
         alphaInfo = AlphaInfo();
         bitsPerPixel = BitsPerPixel();
         bitsPerComponent = BitsPerComponent();
-        if (colorSpace.get() == NULL) {
+        bytesPerRow = (bitsPerPixel >> 3) * width;
+        if (!colorSpace) {
             colorSpace.reset(ColorSpace());
         }
     }
@@ -282,6 +286,10 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage, __CGImageImpl> {
 
     inline size_t BitsPerPixel() const {
         return _impl.bitsPerPixel;
+    }
+
+    inline size_t BytesPerRow() const {
+        return _impl.bytesPerRow;
     }
 
     inline size_t BitsPerComponent() const {
