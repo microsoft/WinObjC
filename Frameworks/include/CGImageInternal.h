@@ -181,22 +181,6 @@ struct __CGImageImpl {
         renderingIntent = kCGRenderingIntentDefault;
     }
 
-    inline size_t Height() const {
-        size_t width = 0;
-        size_t height = 0;
-        RETURN_RESULT_IF_FAILED(bitmapImageSource->GetSize(&width, &height), 0);
-
-        return height;
-    }
-
-    inline size_t Width() const {
-        size_t width = 0;
-        size_t height = 0;
-        RETURN_RESULT_IF_FAILED(bitmapImageSource->GetSize(&width, &height), 0);
-
-        return width;
-    }
-
     inline WICPixelFormatGUID PixelFormat() const {
         WICPixelFormatGUID pixelFormat;
         RETURN_RESULT_IF_FAILED(bitmapImageSource->GetPixelFormat(&pixelFormat), GUID_WICPixelFormatUndefined);
@@ -236,12 +220,26 @@ struct __CGImageImpl {
     }
 
     inline CGColorSpaceRef ColorSpace() {
-        if (!colorSpace.get()) {
-            const __CGImagePixelProperties* properties = Properties();
-            RETURN_NULL_IF(!properties);
-            colorSpace.reset(_CGColorSpaceCreate(properties->colorSpaceModel));
+        const __CGImagePixelProperties* properties = Properties();
+        RETURN_NULL_IF(!properties);
+        return _CGColorSpaceCreate(properties->colorSpaceModel);
+    }
+
+    inline void SetImageSource(Microsoft::WRL::ComPtr<IWICBitmapSource> source) {
+        bitmapImageSource = source;
+        // populate the image info.
+        if (FAILED(bitmapImageSource->GetSize(&width, &height))) {
+            height = 0;
+            width = 0;
         }
-        return colorSpace.get();
+
+        bitmapInfo = BitmapInfo();
+        alphaInfo = AlphaInfo();
+        bitsPerPixel = BitsPerPixel();
+        bitsPerComponent = BitsPerComponent();
+        if (colorSpace.get() == NULL) {
+            colorSpace.reset(ColorSpace());
+        }
     }
 };
 
@@ -291,16 +289,7 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage, __CGImageImpl> {
     }
 
     inline __CGImage& SetImageSource(Microsoft::WRL::ComPtr<IWICBitmapSource> source) {
-        _impl.bitmapImageSource = source;
-        // populate the image info.
-        _impl.height = _impl.Height();
-        _impl.width = _impl.Width();
-        _impl.ColorSpace();
-        _impl.bitmapInfo = _impl.BitmapInfo();
-        _impl.alphaInfo = _impl.AlphaInfo();
-        _impl.bitsPerPixel = _impl.BitsPerPixel();
-        _impl.bitsPerComponent = _impl.BitsPerComponent();
-
+        _impl.SetImageSource(source);
         return *this;
     }
 

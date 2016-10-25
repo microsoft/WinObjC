@@ -160,7 +160,6 @@ CGImageRef CGImageMaskCreate(size_t width,
                              CGDataProviderRef provider,
                              const CGFloat* decode,
                              bool shouldInterpolate) {
-
     RETURN_NULL_IF(((provider == nullptr) || ![(NSObject*)provider isKindOfClass:[NSData class]]));
 
     NSData* dataProvider = (__bridge NSData*)provider;
@@ -447,7 +446,7 @@ NSData* _CGImageJPEGRepresentation(CGImageRef image, float quality) {
 }
 
 NSData* _CGImageRepresentation(CGImageRef image, REFGUID guid, float quality) {
-    //TODO #1124 implement encoder.
+    // TODO #1124 implement encoder.
     return nil;
 }
 
