@@ -161,9 +161,21 @@ struct __CGImageImpl {
     bool isMask;
     bool interpolate;
     woc::unique_cf<CGColorSpaceRef> colorSpace;
+    CGImageAlphaInfo alphaInfo;
+    size_t height;
+    size_t width;
+    size_t bitsPerPixel;
+    size_t bitsPerComponent;
+    CGBitmapInfo bitmapInfo;
     CGColorRenderingIntent renderingIntent;
 
     __CGImageImpl() {
+        height = 0;
+        width = 0;
+        bitsPerComponent = 0;
+        bitsPerPixel = 0;
+        bitmapInfo = kCGBitmapByteOrderDefault;
+        alphaInfo = kCGImageAlphaNone;
         isMask = false;
         interpolate = false;
         renderingIntent = kCGRenderingIntentDefault;
@@ -185,14 +197,13 @@ struct __CGImageImpl {
         return width;
     }
 
-    // TODO: Add cavet everywhere for how format changes
     inline WICPixelFormatGUID PixelFormat() const {
         WICPixelFormatGUID pixelFormat;
         RETURN_RESULT_IF_FAILED(bitmapImageSource->GetPixelFormat(&pixelFormat), GUID_WICPixelFormatUndefined);
         return pixelFormat;
     }
 
-    inline const __CGImagePixelProperties* __Properties() const {
+    inline const __CGImagePixelProperties* Properties() const {
         WICPixelFormatGUID pixelFormat = PixelFormat();
         RETURN_NULL_IF(pixelFormat == GUID_WICPixelFormatUndefined);
 
@@ -200,11 +211,6 @@ struct __CGImageImpl {
         RETURN_NULL_IF(iterator == s_PixelFormats.end());
 
         return &iterator->second;
-    }
-
-    inline const __CGImagePixelProperties* Properties() const {
-        static const __CGImagePixelProperties* properties = __Properties();
-        return properties;
     }
 
     inline size_t BitsPerPixel() const {
@@ -230,7 +236,7 @@ struct __CGImageImpl {
     }
 
     inline CGColorSpaceRef ColorSpace() {
-        if (colorSpace.get()) {
+        if (!colorSpace.get()) {
             const __CGImagePixelProperties* properties = Properties();
             RETURN_NULL_IF(!properties);
             colorSpace.reset(_CGColorSpaceCreate(properties->colorSpaceModel));
@@ -245,13 +251,11 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage, __CGImageImpl> {
     }
 
     inline size_t Height() const {
-        static size_t height = _impl.Height();
-        return height;
+        return _impl.height;
     }
 
     inline size_t Width() const {
-        static size_t width = _impl.Width();
-        return width;
+        return _impl.width;
     }
 
     inline bool IsMask() const {
@@ -263,8 +267,7 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage, __CGImageImpl> {
     }
 
     inline CGColorSpaceRef ColorSpace() {
-        static CGColorSpaceRef colorSpace = _impl.ColorSpace();
-        return colorSpace;
+        return _impl.colorSpace.get();
     }
 
     inline CGColorRenderingIntent RenderingIntent() const {
@@ -272,27 +275,32 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage, __CGImageImpl> {
     }
 
     inline CGBitmapInfo BitmapInfo() const {
-        static CGBitmapInfo bitmapInfo = _impl.BitmapInfo();
-        return bitmapInfo;
+        return _impl.bitmapInfo;
     }
 
     inline CGImageAlphaInfo AlphaInfo() const {
-        static CGImageAlphaInfo alphaInfo = _impl.AlphaInfo();
-        return alphaInfo;
+        return _impl.alphaInfo;
     }
 
     inline size_t BitsPerPixel() const {
-        size_t bitsPerPixel = _impl.BitsPerPixel();
-        return bitsPerPixel;
+        return _impl.bitsPerPixel;
     }
 
     inline size_t BitsPerComponent() const {
-        size_t bitsPerComponent = _impl.BitsPerComponent();
-        return bitsPerComponent;
+        return _impl.bitsPerComponent;
     }
 
     inline __CGImage& SetImageSource(Microsoft::WRL::ComPtr<IWICBitmapSource> source) {
         _impl.bitmapImageSource = source;
+        // populate the image info.
+        _impl.height = _impl.Height();
+        _impl.width = _impl.Width();
+        _impl.ColorSpace();
+        _impl.bitmapInfo = _impl.BitmapInfo();
+        _impl.alphaInfo = _impl.AlphaInfo();
+        _impl.bitsPerPixel = _impl.BitsPerPixel();
+        _impl.bitsPerComponent = _impl.BitsPerComponent();
+
         return *this;
     }
 
