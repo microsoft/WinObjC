@@ -20,7 +20,7 @@
 #import <CoreFoundation/CoreFoundation.h>
 
 static NSAttributedString* getMultilineAttributedString() {
-    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Times New Roman" size:40];
+    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Segoe UI" size:40];
     UIFont* font = [UIFont fontWithDescriptor:fontDescriptor size:40];
 
     NSRange wholeRange = NSMakeRange(0, 20);
@@ -41,19 +41,23 @@ TEST(CTTypeSetter, SuggestLineBreak) {
     index = CTTypesetterSuggestLineBreak(ts, 0, 100.0f);
     EXPECT_EQ_MSG(7, index, "SuggestLineBreak should end line when hard line break is hit");
 
-    index = CTTypesetterSuggestLineBreak(ts, 7, 250.0f);
+    index = CTTypesetterSuggestLineBreak(ts, 7, 275.0f);
     EXPECT_EQ_MSG(13,
                   index,
                   "SuggestLineBreak should end line at space when soft line break is possible and the text is longer than the width");
+
+    CFRelease(ts);
 }
 
-TEST(CTTypeSetter, CreateLineShouldTrimWhitespace) {
+TEST(CTTypeSetter, CreateLineShouldTrimHardLineBreak) {
     const double errorDelta = 1;
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getMultilineAttributedString();
     CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(string);
     CFRange range = { 0, 7 };
     CTLineRef line = CTTypesetterCreateLine(ts, range);
-    ASSERT_EQ_MSG(5, CTLineGetGlyphCount(line), "CreateLine should trim whitespace from the end of the line");
+    ASSERT_EQ_MSG(6, CTLineGetGlyphCount(line), "CreateLine should trim hard line break from the end of the line");
+    CFRelease(ts);
+    CFRelease(line);
 }
 
 TEST(CTTypeSetter, LinesShouldDefaultToZeroOffset) {
@@ -78,4 +82,7 @@ TEST(CTTypeSetter, LinesShouldDefaultToZeroOffset) {
     EXPECT_EQ(ascentWithOffset, ascent);
     EXPECT_EQ(descentWithOffset, descent);
     EXPECT_EQ(leadingWithOffset, leading);
+    CFRelease(ts);
+    CFRelease(line);
+    CFRelease(lineWithOffset);
 }

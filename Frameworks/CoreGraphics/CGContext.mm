@@ -60,7 +60,7 @@ __CGContext::__CGContext(CGImageRef pDest) {
 #ifdef DEBUG_CONTEXT_COUNT
     TraceVerbose(TAG, L"contextCount: %d", contextCount);
 #endif
-    object_setClass((id) this, [CGNSContext class]);
+    object_setClass((id)this, [CGNSContext class]);
     scale = 1.0f;
     _backing = pDest->Backing()->CreateDrawingContext(this);
 }
@@ -1237,4 +1237,12 @@ CGImageRef CGJPEGImageCreateFromData(NSData* data) {
 
 bool CGContextIsPointInPath(CGContextRef c, bool eoFill, CGFloat x, CGFloat y) {
     return c->Backing()->CGContextIsPointInPath(eoFill, x, y);
+}
+
+void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun, float lineAscent) {
+    ctx->Backing()->CGContextDrawGlyphRun(glyphRun, lineAscent);
+}
+// TODO 1077:: Remove once D2D render target is implemented
+void _CGContextSetScaleFactor(CGContextRef ctx, float scale) {
+    ctx->Backing()->_CGContextSetScaleFactor(scale);
 }

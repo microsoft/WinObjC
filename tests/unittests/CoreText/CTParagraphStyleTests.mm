@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -88,4 +88,35 @@ TEST(CoreText, CTParagraphStyle) {
 
     success = CTParagraphStyleGetValueForSpecifier(paragraphStyleCopy, 513, sizeof(CGFloat), nullptr);
     ASSERT_TRUE_MSG(!success, "FAILED: An invalid specifier crash should not occur.");
+}
+
+TEST(CoreText, KernAttribute) {
+    const static float c_errorDelta = 0.001f;
+    const static float c_diff = 2.0f;
+    NSMutableAttributedString* string = [[[NSMutableAttributedString alloc] initWithString:@"TESTTESTTEST"] autorelease];
+    [string setAttributes:@{ static_cast<NSString*>(kCTKernAttributeName) : [NSNumber numberWithFloat:0.0f] } range:NSMakeRange(0, 4)];
+    [string setAttributes:@{ static_cast<NSString*>(kCTKernAttributeName) : [NSNumber numberWithFloat:c_diff] } range:NSMakeRange(4, 4)];
+    [string setAttributes:@{ static_cast<NSString*>(kCTKernAttributeName) : [NSNumber numberWithFloat:-c_diff] } range:NSMakeRange(8, 4)];
+    CTLineRef line = CTLineCreateWithAttributedString(static_cast<CFAttributedStringRef>(string));
+    CFAutorelease(line);
+    CFArrayRef runs = CTLineGetGlyphRuns(line);
+    ASSERT_EQ(3, CFArrayGetCount(runs));
+
+    CTRunRef firstRun = static_cast<CTRunRef>(CFArrayGetValueAtIndex(runs, 0));
+    CTRunRef secondRun = static_cast<CTRunRef>(CFArrayGetValueAtIndex(runs, 1));
+    CTRunRef thirdRun = static_cast<CTRunRef>(CFArrayGetValueAtIndex(runs, 2));
+
+    CGSize firstAdvances[4], secondAdvances[4], thirdAdvances[4];
+    CTRunGetAdvances(firstRun, { 0, 0 }, firstAdvances);
+    CTRunGetAdvances(secondRun, { 0, 0 }, secondAdvances);
+    CTRunGetAdvances(thirdRun, { 0, 0 }, thirdAdvances);
+
+    EXPECT_NEAR(secondAdvances[0].width, firstAdvances[0].width + c_diff, c_errorDelta);
+    EXPECT_NEAR(secondAdvances[1].width, firstAdvances[1].width + c_diff, c_errorDelta);
+    EXPECT_NEAR(secondAdvances[2].width, firstAdvances[2].width + c_diff, c_errorDelta);
+    EXPECT_NEAR(secondAdvances[3].width, firstAdvances[3].width + c_diff, c_errorDelta);
+    EXPECT_NEAR(thirdAdvances[0].width, firstAdvances[0].width - c_diff, c_errorDelta);
+    EXPECT_NEAR(thirdAdvances[1].width, firstAdvances[1].width - c_diff, c_errorDelta);
+    EXPECT_NEAR(thirdAdvances[2].width, firstAdvances[2].width - c_diff, c_errorDelta);
+    EXPECT_NEAR(thirdAdvances[3].width, firstAdvances[3].width - c_diff, c_errorDelta);
 }

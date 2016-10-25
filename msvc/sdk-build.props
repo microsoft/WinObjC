@@ -143,6 +143,7 @@
     <ItemGroup>
     <!-- Since Core Foundation has been forked and its directory structure does not match WinObjC's, copy all shared private headers into the right spot. -->
     <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\ForFoundationOnly.h"/>
+    <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\CFBridgeUtilities.h"/>
     <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\CFPriv.h"/>
     <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\CFRuntime.h"/>
     <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\PlugIn.subproj\CFBundlePriv.h"/>

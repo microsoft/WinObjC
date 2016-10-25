@@ -40,10 +40,6 @@ NSString* const UITextViewTextDidEndEditingNotification = @"UITextViewTextDidEnd
 extern float keyboardBaseHeight;
 static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
-@interface NSString (CaretMeasurement)
-- (CGSize)sizeWithFont:(UIFont*)font forWidth:(float)width lineBreakMode:(UILineBreakMode)lineBreakMode lastCharPos:(CGPoint*)lastCharPos;
-@end
-
 @interface UITextView ()
 @property (nonatomic) NSString* _text;
 @end
@@ -404,11 +400,10 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 - (void)drawRect:(CGRect)rect {
     CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_textColor CGColor]);
 
-    NSRange range;
-    range.location = 0;
-    range.length = INT_MAX;
-    [_layoutManager drawBackgroundForGlyphRange:range atPoint:CGPointMake(_textContainerInset.top, _textContainerInset.left)];
-    [_layoutManager drawGlyphsForGlyphRange:range atPoint:CGPointMake(_textContainerInset.top, _textContainerInset.left)];
+    NSRange range{ 0, INT_MAX };
+    CGPoint origin = self.bounds.origin;
+    [_layoutManager drawBackgroundForGlyphRange:range atPoint:origin];
+    [_layoutManager drawGlyphsForGlyphRange:range atPoint:origin];
 }
 
 /**
@@ -756,10 +751,8 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     rect.size.height -= _marginSize * 2.0f;
 
     CGSize fontExtent = { 0, 0 };
-    CGPoint cursorPos = { 0, 0 };
 
-    fontExtent =
-        [[self _text] sizeWithFont:(id)_font forWidth:rect.size.width lineBreakMode:UILineBreakModeWordWrap lastCharPos:&cursorPos];
+    fontExtent = [[self _text] sizeWithFont:(id)_font forWidth:rect.size.width lineBreakMode:UILineBreakModeWordWrap];
 
     CGRect centerRect;
     centerRect.origin.x = 0;
