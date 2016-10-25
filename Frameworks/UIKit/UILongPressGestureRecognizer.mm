@@ -257,8 +257,8 @@ static TrackedTouch* findTouch(UITouch* touch, std::vector<TrackedTouch>& touche
 - (CGPoint)locationInView:(UIView*)view {
     if (_trackedTouches.size() > 0) {
         CGPoint averagePoint = { 0, 0 };
-        for (size_t i = 0; i < _trackedTouches.size(); i++) {
-            CGPoint touchLocation = [_trackedTouches[i].touch locationInView:view];
+        for (TrackedTouch& trackedTouch : _trackedTouches) {
+            CGPoint touchLocation = [trackedTouch.touch locationInView:view];
             averagePoint.x += touchLocation.x;
             averagePoint.y += touchLocation.y;
         }
@@ -267,8 +267,7 @@ static TrackedTouch* findTouch(UITouch* touch, std::vector<TrackedTouch>& touche
         return averagePoint;
     }
 
-    CGPoint ret = { 0, 0 };
-    return ret;
+    return { 0, 0 };
 }
 
 - (void)_commonInit {

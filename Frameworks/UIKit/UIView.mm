@@ -487,7 +487,6 @@ static std::string _printViewHeirarchy(UIView* leafView) {
                 }
 
                 // Use this sole touch for the event we send to the view
-                // TODO: This is how it worked before; is that the expected behavior?
                 touchesForEvent = [NSMutableSet setWithObject:touchPoint.touch];
                 break;
 
@@ -521,7 +520,6 @@ static std::string _printViewHeirarchy(UIView* leafView) {
                 [touchPoint.touch->_view->priv->currentTouches removeObject:touchPoint.touch];
 
                 // Use this sole touch for the event we send to the view
-                // TODO: This is how it worked before; is that the expected behavior?
                 touchesForEvent = [NSMutableSet setWithObject:touchPoint.touch];
                 break;
 
