@@ -155,15 +155,19 @@
     // _layer.mask
     // _layer.doubleSided
 
-    //_layer.cornerRadius = 100.0;
-    //_layer.borderWidth = 12.0;
-    //_layer.borderColor = [UIColor whiteColor].CGColor;
+#ifndef WINOBJC
+    _layer.cornerRadius = 100.0;
+    _layer.borderWidth = 12.0;
+    _layer.borderColor = [UIColor whiteColor].CGColor;
+#endif
 
     _layer.backgroundColor = [UIColor orangeColor].CGColor;
 
-    //_layer.shadowOpacity = 0.75;
-    //_layer.shadowRadius = 3.0;
-    //_layer.shadowOffset = CGSizeMake(0, 3);
+#ifndef WINOBJC
+    _layer.shadowOpacity = 0.75;
+    _layer.shadowRadius = 3.0;
+    _layer.shadowOffset = CGSizeMake(0, 3);
+#endif
     // _layer.shadowPath
     // _layer.style
     // _layer.allowsEdgeAntiAliasing

@@ -21,6 +21,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    // TODO: We should add storyboard tests that will exercise the CoreAnimation/CALayer APIs and properties. Re-enable in the future.
+
     // Main storyboard view
     //UIStoryboard* xamlStoryBoard = [UIStoryboard storyboardWithName:@"CoreAnimationTest" bundle:[NSBundle mainBundle]];
 
