@@ -19,10 +19,6 @@
 #import <CoreGraphics/DWriteWrapper.h>
 
 TEST(DWriteWrapper, FontToFamilyName) {
-    EXPECT_OBJCEQ(@"Arial", (id)_DWriteGetFamilyNameForFontName(CFSTR("Arial Narrow")));
-    EXPECT_OBJCEQ(@"Arial", (id)_DWriteGetFamilyNameForFontName(CFSTR("Arial Narrow Italic")));
-    EXPECT_OBJCEQ(@"Arial", (id)_DWriteGetFamilyNameForFontName(CFSTR("Arial Narrow Bold")));
-    EXPECT_OBJCEQ(@"Arial", (id)_DWriteGetFamilyNameForFontName(CFSTR("Arial Narrow Bold Italic")));
     EXPECT_OBJCEQ(@"Arial", (id)_DWriteGetFamilyNameForFontName(CFSTR("Arial")));
     EXPECT_OBJCEQ(@"Arial", (id)_DWriteGetFamilyNameForFontName(CFSTR("Arial Italic")));
     EXPECT_OBJCEQ(@"Arial", (id)_DWriteGetFamilyNameForFontName(CFSTR("Arial Bold")));
