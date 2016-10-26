@@ -20,8 +20,10 @@
 #import <stdlib.h>
 #import "CGContextCairo.h"
 #import "CGSurfaceInfoInternal.h"
+#import "CGIWICBitmap.h"
 
-#include "LoggingNative.h"
+#import "LoggingNative.h"
+#import <CGGraphicBufferImage.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-register"
@@ -29,6 +31,8 @@
 #import <cairoint.h> // uses 'register int'
 
 #pragma clang diagnostic pop
+
+using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"CGGraphicBufferImage";
 extern int imgDataCount;
@@ -82,12 +86,16 @@ CGGraphicBufferImageBacking::CGGraphicBufferImageBacking(const __CGSurfaceInfo& 
     _nativeTexture = nativeTexture;
     _nativeTextureLocking = locking;
     _nativeTextureLocking->RetainDisplayTexture(_nativeTexture);
+    _renderTarget = nullptr;
 }
 
 CGGraphicBufferImageBacking::~CGGraphicBufferImageBacking() {
     EbrDecrement((volatile int*)&imgDataCount);
     TraceVerbose(TAG, L"Destroyed (freeing fasttexture 0x%x) - Number of images: %d", _nativeTexture, imgDataCount);
 
+    if (_renderTarget != nullptr) {
+        _renderTarget->Release();
+    }
     while (_cairoLocks > 0) {
         TraceWarning(TAG, L"Warning: surface lock not released cnt=%d", _cairoLocks);
         ReleaseCairoSurface();
@@ -96,8 +104,9 @@ CGGraphicBufferImageBacking::~CGGraphicBufferImageBacking() {
         TraceWarning(TAG, L"Warning: image lock not released cnt=%d", _imageLocks);
         ReleaseImageData();
     }
-    if (_nativeTexture)
+    if (_nativeTexture) {
         _nativeTextureLocking->ReleaseDisplayTexture(_nativeTexture);
+    }
 }
 
 CGContextImpl* CGGraphicBufferImageBacking::CreateDrawingContext(CGContextRef base) {
@@ -144,6 +153,21 @@ int CGGraphicBufferImageBacking::BytesPerPixel() {
 
 int CGGraphicBufferImageBacking::BitsPerComponent() {
     return _bitsPerComponent;
+}
+
+ID2D1RenderTarget* CGGraphicBufferImageBacking::GetRenderTarget() {
+    if (_renderTarget == nullptr) {
+        BYTE* imageData = static_cast<BYTE*>(LockImageData());
+        ComPtr<IWICBitmap> wicBitmap = Make<CGIWICBitmap>(this, SurfaceFormat());
+        ComPtr<ID2D1Factory> d2dFactory;
+        THROW_IF_FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &d2dFactory));
+        ComPtr<ID2D1RenderTarget> renderTarget;
+        THROW_IF_FAILED(d2dFactory->CreateWicBitmapRenderTarget(wicBitmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
+        _renderTarget = renderTarget.Detach();
+        ReleaseImageData();
+    }
+
+    return _renderTarget;
 }
 
 void CGGraphicBufferImageBacking::GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo) {

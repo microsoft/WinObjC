@@ -37,6 +37,7 @@
     <ClInclude Include="..\..\..\Frameworks\CoreFoundation\AppServices.subproj\CFUserNotification.h" />
     <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFAvailability.h" />
     <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFBase.h" />
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFBridgeUtilities.h" />
     <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFByteOrder.h" />
     <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFInternal.h" />
     <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFLogUtilities.h" />

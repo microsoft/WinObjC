@@ -256,12 +256,12 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
     }
 
     id allTouches = [event allTouches];
-    unsigned count = [touches count];
 
-    if (count > _numberOfTouchesRequired || EbrGetMediaTime() - _tapTime > 0.75f) {
-        TraceVerbose(TAG, L"too many touches, numberOfTouchesRequired=%d, count=%d", _numberOfTouchesRequired, count);
+    // We may have to revisit this logic, since the UITouch tap count should drive it.
+    if (_maxTouches > _numberOfTouchesRequired || EbrGetMediaTime() - _tapTime > 0.75f) {
+        TraceVerbose(TAG, L"too many touches, numberOfTouchesRequired=%d, _maxTouches=%d", _numberOfTouchesRequired, _maxTouches);
         _state = UIGestureRecognizerStateFailed;
-    } else if (count == _numberOfTouchesRequired) {
+    } else if (_maxTouches == _numberOfTouchesRequired) {
         bool success = true;
 
         // get max numberofTapsRequired in current Tap gesture list.

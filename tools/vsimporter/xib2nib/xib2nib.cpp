@@ -30,6 +30,7 @@
 #include "NIBWriter.h"
 #include "Plist.hpp"
 #include "miscutils.h"
+#include "versionutils.h"
 
 #include "..\WBITelemetry\WBITelemetry.h"
 
@@ -246,15 +247,13 @@ int main(int argc, char* argv[]) {
         TELEMETRY_DISABLE();
     }
 
-    std::tr2::sys::path fName(argv[1]);
-
     TELEMETRY_SET_INTERNAL(isMSFTInternalMachine());
     string machineID = getMachineID();
     if (!machineID.empty()) {
         TELEMETRY_SET_MACHINEID(machineID.c_str());
     }
 
-    TELEMETRY_EVENT_DATA(L"Xib2NibStart", fName.filename());
+    TELEMETRY_EVENT_DATA(L"Xib2NibStart", getProductVersion().c_str());
 
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(argv[1]);
@@ -320,7 +319,7 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-    TELEMETRY_EVENT_DATA(L"Xib2NibFinish", fName.filename());
+    TELEMETRY_EVENT_DATA(L"Xib2NibFinish", getProductVersion().c_str());
     TELEMETRY_FLUSH();
 
     exit(0);

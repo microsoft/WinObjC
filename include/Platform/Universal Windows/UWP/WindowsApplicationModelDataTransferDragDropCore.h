@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT
 #define OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_CORE_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_DataTransfer_DragDrop_Core.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 
@@ -55,9 +57,9 @@ typedef unsigned WADDCCoreDragUIContentMode;
            success:(void (^)(WADDataPackageOperation))success
            failure:(void (^)(NSError*))failure;
 - (void)overAsync:(WADDCCoreDragInfo*)dragInfo
-   dragUIOverride:(WADDCCoreDragUIOverride*)dragUIOverride
-          success:(void (^)(WADDataPackageOperation))success
-          failure:(void (^)(NSError*))failure;
+    dragUIOverride:(WADDCCoreDragUIOverride*)dragUIOverride
+           success:(void (^)(WADDataPackageOperation))success
+           failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)leaveAsync:(WADDCCoreDragInfo*)dragInfo;
 - (void)dropAsync:(WADDCCoreDragInfo*)dragInfo success:(void (^)(WADDataPackageOperation))success failure:(void (^)(NSError*))failure;
 @end

@@ -624,6 +624,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         }
         if (priv->contentsScale != 1.0f) {
             CGContextScaleCTM(drawContext, priv->contentsScale, priv->contentsScale);
+
+            // TODO 1077:: Remove once D2D render target is implemented
+            _CGContextSetScaleFactor(drawContext, priv->contentsScale);
         }
 
         CGContextScaleCTM(drawContext, 1.0f, -1.0f);
@@ -2562,7 +2565,7 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
 }
 
 inline WXUIElement* _getBackingXamlElementForCALayer(CALayer* layer) {
-    Microsoft::WRL::ComPtr<IInspectable> fromNode(GetCACompositor()->GetXamlLayoutElement([layer _presentationNode]));
+    Microsoft::WRL::ComPtr<IInspectable> fromNode(GetCACompositor()->GetXamlContentElement([layer _presentationNode]));
     return _createRtProxy([WXUIElement class], fromNode.Get());
 }
 
@@ -2586,6 +2589,10 @@ inline WXUIElement* _getBackingXamlElementForCALayer(CALayer* layer) {
         WFPoint* pointInFromLayer = [WXPointHelper fromCoordinates:point.x y:point.y];
         WFPoint* pointInToLayer = [transform transformPoint:pointInFromLayer];
         ret = { pointInToLayer.x, pointInToLayer.y };
+    }
+
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG, L"convertPoint: {%f, %f} to {%f, %f}",  point.x, point.y, ret.x, ret.y);
     }
 
     return ret;

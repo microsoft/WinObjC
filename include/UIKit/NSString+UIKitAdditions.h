@@ -71,5 +71,5 @@ UIKIT_EXPORT NSString* const UITextAttributeTextShadowOffset;
              options:(NSStringDrawingOptions)options
           attributes:(NSDictionary*)attributes
              context:(NSStringDrawingContext*)context;
-- (CGSize)sizeWithAttributes:(NSDictionary*)attrs;
+- (CGSize)sizeWithAttributes:(NSDictionary<NSString*, id>*)attrs;
 @end

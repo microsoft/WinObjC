@@ -298,6 +298,8 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIViewPrintFormatter.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIVisualEffect.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIVisualEffectView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICTFont.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICTFontDescriptor.mm" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAnimationNotification.h" />
@@ -334,6 +336,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIViewInternal+Xaml.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\XamlControls.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\XamlUtilities.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICTFont.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICTFontDescriptor.h" />
   </ItemGroup>
   <!-- StarboardXaml files -->
   <ItemGroup>

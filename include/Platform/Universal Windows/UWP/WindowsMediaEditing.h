@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #define OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Media_Effects_Editing.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

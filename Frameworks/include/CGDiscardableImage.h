@@ -42,6 +42,7 @@ public:
     int BytesPerRow();
     int BytesPerPixel();
     int BitsPerComponent();
+    ID2D1RenderTarget* GetRenderTarget();
     void GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo);
     __CGSurfaceFormat SurfaceFormat();
     CGColorSpaceModel ColorSpaceModel();

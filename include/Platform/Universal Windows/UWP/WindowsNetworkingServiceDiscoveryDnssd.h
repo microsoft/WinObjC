@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
 #define OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Networking_ServiceDiscovery_Dnssd.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

@@ -53,7 +53,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>CoreText.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -67,7 +67,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>CoreText.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -81,7 +81,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>CoreText.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -95,7 +95,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>CoreText.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>

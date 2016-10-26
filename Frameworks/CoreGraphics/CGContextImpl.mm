@@ -19,7 +19,6 @@
 #import <Starboard.h>
 
 #import "CGContextInternal.h"
-#import "CGFontInternal.h"
 #import "CGPathInternal.h"
 #import "CGPatternInternal.h"
 #import "CoreGraphics/CGGeometry.h"
@@ -142,17 +141,8 @@ CGBlendMode CGContextImpl::CGContextGetBlendMode() {
 }
 
 void CGContextImpl::CGContextShowTextAtPoint(float x, float y, const char* str, DWORD length) {
-    WORD* glyphs = (WORD*)IwMalloc(length * sizeof(WORD));
-    DWORD i;
-
-    for (i = 0; i < length; i++) {
-        glyphs[i] = str[i];
-    }
-
-    CGFontGetGlyphs(curState->getCurFont(), glyphs, length, glyphs);
-    CGContextShowGlyphsAtPoint(x, y, glyphs, length);
-
-    IwFree(glyphs);
+    // TODO #924: Implement this with DWrite
+    UNIMPLEMENTED();
 }
 
 void CGContextImpl::CGContextShowGlyphsAtPoint(float x, float y, WORD* glyphs, int count) {
@@ -172,7 +162,8 @@ void CGContextImpl::CGContextShowGlyphsAtPoint(float x, float y, WORD* glyphs, i
 
         case kCGTextClip:
         case kCGTextInvisible:
-            CGFontMeasureGlyphs(curState->getCurFont(), curState->fontSize, glyphs, count, &size);
+            // TODO #924: Update the text position in this case
+            UNIMPLEMENTED();
             break;
     }
 
@@ -786,4 +777,11 @@ bool CGContextImpl::CGContextIsPointInPath(bool eoFill, float x, float y) {
 }
 CGPathRef CGContextImpl::CGContextCopyPath(void) {
     return NULL;
+}
+
+void CGContextImpl::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, float lineAscent) {
+}
+
+// TODO 1077:: Remove once D2D render target is implemented
+void CGContextImpl::_CGContextSetScaleFactor(float scale) {
 }

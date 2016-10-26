@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 
@@ -3795,11 +3797,11 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)setSource:(RTObject<WSSIRandomAccessStream>*)stream mimeType:(NSString*)mimeType;
 - (NSString*)getAudioStreamLanguage:(id /* int */)index;
 - (void)addAudioEffect:(NSString*)effectID
-        effectOptional:(BOOL)effectOptional
-   effectConfiguration:(RTObject<WFCIPropertySet>*)effectConfiguration;
+         effectOptional:(BOOL)effectOptional
+    effectConfiguration:(RTObject<WFCIPropertySet>*)effectConfiguration;
 - (void)addVideoEffect:(NSString*)effectID
-        effectOptional:(BOOL)effectOptional
-   effectConfiguration:(RTObject<WFCIPropertySet>*)effectConfiguration;
+         effectOptional:(BOOL)effectOptional
+    effectConfiguration:(RTObject<WFCIPropertySet>*)effectConfiguration;
 - (void)removeAllEffects;
 - (void)setMediaStreamSource:(RTObject<WMCIMediaSource>*)source;
 - (void)setPlaybackSource:(RTObject<WMPIMediaPlaybackSource>*)source;

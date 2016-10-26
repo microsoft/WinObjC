@@ -20,6 +20,7 @@
 #import "UIActivityIndicatorViewController.h"
 #import "UIButtonViewController.h"
 #import "UISliderViewController.h"
+#import "UITextFieldViewController.h"
 
 #import "MiscellaneousViewController.h"
 
@@ -39,6 +40,9 @@
 
     // UISlider
     [self addMenuItemViewController:[[UISliderViewController alloc] init] andTitle:@"UISlider"];
+
+    // UITextField
+    [self addMenuItemViewController:[[UITextFieldViewController alloc] init] andTitle : @"UITextField"];
 
     // MiscellaneousViewController
     [self addMenuItemViewController:[[MiscellaneousViewController alloc] init] andTitle:@"MiscellaneousViews"];

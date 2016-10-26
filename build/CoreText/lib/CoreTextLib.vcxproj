@@ -19,21 +19,25 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="..\..\..\Frameworks\CoreText\CTFont.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreText\CTFontCollection.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreText\CTFontDescriptor.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreText\CTFontManager.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreText\CTFrame.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreText\CTFramesetter.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreText\CTGlyphInfo.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreText\CTLine.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreText\CTParagraphStyle.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreText\CTRun.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreText\CTRunDelegate.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreText\CTStringAttributes.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreText\CTTextTab.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreText\CTTypesetter.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreText\CTUtilities.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\CTFont.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\CTFontCollection.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\CTFontDescriptor.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\CTFontManager.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\CTFrame.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\CTFramesetter.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\CTGlyphInfo.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\CTLine.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\CTParagraphStyle.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\CTRun.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\CTRunDelegate.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\CTStringAttributes.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\CTTextTab.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\CTTypesetter.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\CTUtilities.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\DWriteWrapper_CoreText.mm" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\DWriteWrapper_CoreText.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{39D93F30-F8F9-4D8E-A428-C188E918AA48}</ProjectGuid>
