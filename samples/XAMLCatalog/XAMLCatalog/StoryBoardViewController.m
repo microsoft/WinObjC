@@ -42,6 +42,10 @@
     // UISlider
     UIViewController* sliderVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UISliderSB"];
     [self addMenuItemViewController:sliderVC andTitle:@"UISliderSB"];
+
+    // UITextField
+    UIViewController* textFieldVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UITextFieldSB"];
+    [self addMenuItemViewController:textFieldVC andTitle:@"UITextFieldSB"];
 }
 
 @end

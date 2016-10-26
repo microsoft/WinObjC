@@ -161,7 +161,9 @@ UIKIT_XAML_EXPORT void XamlRemoveLayoutEvent(const ComPtr<IInspectable>& inspect
 // This will be used by autolayout to get the intrinsic content size when XAML has done calculating the elements final desired size.
 Windows::Foundation::Size Button::ArrangeOverride(Windows::Foundation::Size finalSize) {
     __super::ArrangeOverride(finalSize);
-    _layoutHook->Invoke(nullptr, nullptr);
+	if (_layoutHook) {
+		_layoutHook->Invoke(nullptr, nullptr);
+	}
 
     return finalSize;
 }
