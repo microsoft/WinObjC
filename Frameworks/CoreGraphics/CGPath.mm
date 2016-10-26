@@ -14,7 +14,6 @@
 //
 //******************************************************************************
 
-#import "CGContextInternal.h"
 #import <CoreGraphics/CGBitmapContext.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <Starboard.h>
@@ -34,8 +33,7 @@
 
 static const wchar_t* TAG = L"CGPath";
 
-//
-static inline CGPoint __CreateCGPointWithTransform(CGFloat x, CGFloat y, const CGAffineTransform* transform) {
+inline CGPoint __CreateCGPointWithTransform(CGFloat x, CGFloat y, const CGAffineTransform* transform) {
     CGPoint pt{ x, y };
     if (transform) {
         pt = CGPointApplyAffineTransform(pt, *transform);
@@ -127,6 +125,24 @@ CFTypeID CGPathGetTypeID() {
 static Boolean __CGPathEqual(CFTypeRef cf1, CFTypeRef cf2) {
     __CGPath* path1 = (__CGPath*)cf1;
     __CGPath* path2 = (__CGPath*)cf2;
+
+    path1->closePath();
+    path2->closePath();
+
+    // ID2D1 Geometries have no isEquals method. However, for two geometries to be equal they are both reported to contain the other.
+    // Thus we must do two comparisons.
+
+    D2D1_GEOMETRY_RELATION relation = D2D1_GEOMETRY_RELATION_UNKNOWN;
+    if (SUCCEEDED(path1->_impl.pathGeometry->CompareWithGeometry(path2->_impl.pathGeometry.Get(), D2D1::IdentityMatrix(), &relation))) {
+        // Does path 1 contain path 2?
+        if (relation == D2D1_GEOMETRY_RELATION_IS_CONTAINED) {
+            if (SUCCEEDED(
+                    path2->_impl.pathGeometry->CompareWithGeometry(path1->_impl.pathGeometry.Get(), D2D1::IdentityMatrix(), &relation))) {
+                // Return true if path 2 also contains path 1
+                return (relation == D2D1_GEOMETRY_RELATION_IS_CONTAINED ? true : false);
+            }
+        }
+    }
     return false;
 }
 
@@ -372,6 +388,8 @@ void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* transform
 
     path->_impl.startingPoint = pt;
     path->_impl.currentPoint = pt;
+
+    path->endFigure(D2D1_FIGURE_END_OPEN);
 }
 
 /**
@@ -626,29 +644,20 @@ void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function) {
 }
 
 /**
- @Status Interoperable
- @Notes
+ @Status Caveat
+ @Notes eoFill ignored. Default fill pattern for ID2D1 Geometry is used.
 */
 bool CGPathContainsPoint(CGPathRef path, const CGAffineTransform* transform, CGPoint point, bool eoFill) {
     if (transform) {
         point = CGPointApplyAffineTransform(point, *transform);
     }
-    // check if the point is outside this box already, if it is, return false
-    CGRect boundingBox = CGPathGetBoundingBox(path);
-    if (!CGRectContainsPoint(boundingBox, point)) {
-        return false;
-    }
 
-    CGContextRef context =
-        CGBitmapContextCreate(0, boundingBox.origin.x + boundingBox.size.width, boundingBox.origin.y + boundingBox.size.height, 1, 1, 0, 0);
+    BOOL containsPoint = false;
 
-    CGContextAddPath(context, path);
+    path->closePath();
+    FAIL_FAST_IF_FAILED(path->_impl.pathGeometry.Get()->FillContainsPoint(_CGPointToD2D_F(point), D2D1::IdentityMatrix(), &containsPoint));
 
-    bool inPath = CGContextIsPointInPath(context, eoFill, point.x, point.y);
-
-    CGContextRelease(context);
-
-    return inPath;
+    return (containsPoint ? true : false);
 }
 
 /**

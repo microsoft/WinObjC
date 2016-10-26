@@ -696,11 +696,175 @@ TEST(CGPath, CGPathAddPathTest) {
     EXPECT_POINTEQ(boundingBox.origin, 75, 75);
     EXPECT_SIZEEQ(boundingBox.size, 25, 25);
 
-    CGPathAddPath(path, nullptr, secondPath);
+    CGPathAddPath(path, NULL, secondPath);
     boundingBox = CGPathGetBoundingBox(path);
     EXPECT_POINTEQ(boundingBox.origin, 50, 50);
     EXPECT_SIZEEQ(boundingBox.size, 50, 50);
 
     CGPathRelease(path);
     CGPathRelease(secondPath);
+}
+
+TEST(CGPath, CGPathRectanglesTest) {
+    CGRect theRectangle = CGRectMake(50, 50, 100, 100);
+    CGMutablePathRef path = CGPathCreateWithRect(theRectangle, NULL);
+    CGRect boundingBox = CGPathGetBoundingBox(path);
+
+    EXPECT_POINTEQ(boundingBox.origin, theRectangle.origin.x, theRectangle.origin.y);
+    EXPECT_SIZEEQ(boundingBox.size, theRectangle.size.height, theRectangle.size.width);
+
+    path = CGPathCreateMutable();
+
+    CGPathMoveToPoint(path, NULL, 50, 50);
+    CGPathAddLineToPoint(path, NULL, 100, 100);
+    CGPathAddRect(path, NULL, CGRectMake(100, 100, 200, 100));
+
+    CGPathRelease(path);
+}
+
+TEST(CGPath, CGPathAddLinesTest) {
+    CGMutablePathRef path = CGPathCreateMutable();
+
+    CGPoint points[] = { { 50, 50 }, { 100, 50 }, { 50, 50 }, { 50, 100 } };
+
+    CGPathMoveToPoint(path, NULL, 50, 50);
+
+    CGPathAddLines(path, NULL, points, 4);
+
+    CGRect boundingBox = CGPathGetBoundingBox(path);
+
+    EXPECT_POINTEQ(boundingBox.origin, 50, 50);
+    EXPECT_SIZEEQ(boundingBox.size, 50, 50);
+
+    CGPoint newPoints[] = { { 100, 100 }, { 200, 25 }, { 100, 100 }, { 25, 200 } };
+
+    CGPathAddLines(path, NULL, newPoints, 4);
+
+    boundingBox = CGPathGetBoundingBox(path);
+
+    EXPECT_POINTEQ(boundingBox.origin, 25, 25);
+    EXPECT_SIZEEQ(boundingBox.size, 175, 175);
+
+    CGPathRelease(path);
+}
+
+TEST(CGPath, CGPathContainsPointTest) {
+    // bool CGPathContainsPoint(CGPathRef path, const CGAffineTransform* transform, CGPoint point, bool eoFill) {
+    CGRect theRectangle = CGRectMake(50, 50, 100, 100);
+    CGMutablePathRef path = CGPathCreateWithRect(theRectangle, NULL);
+
+    EXPECT_TRUE(CGPathContainsPoint(path, NULL, CGPointMake(75, 75), NO));
+    EXPECT_TRUE(!(CGPathContainsPoint(path, NULL, CGPointMake(200, 200), NO)));
+
+    CGPathRelease(path);
+}
+
+bool testBidirectionalEquals(CGPathRef path1, CGPathRef path2) {
+    return (CGPathEqualToPath(path1, path2) && CGPathEqualToPath(path2, path1));
+}
+
+TEST(CGPath, CGPathEqualsTest) {
+    CGMutablePathRef path1 = CGPathCreateMutable();
+    CGMutablePathRef path2 = CGPathCreateMutable();
+
+    CGPathMoveToPoint(path1, NULL, 50, 50);
+    CGPathAddLineToPoint(path1, NULL, 75, 75);
+
+    CGPathMoveToPoint(path2, NULL, 50, 50);
+    CGPathAddLineToPoint(path2, NULL, 75, 75);
+
+    EXPECT_TRUE(testBidirectionalEquals(path1, path2));
+
+    CGPathAddLineToPoint(path2, NULL, 100, 100);
+
+    EXPECT_TRUE(!(testBidirectionalEquals(path1, path2)));
+
+    path1 = CGPathCreateMutable();
+    path2 = CGPathCreateMutable();
+
+    CGPathMoveToPoint(path1, NULL, 50, 50);
+    CGPathAddLineToPoint(path1, NULL, 100, 100);
+
+    // Two segments should be the same as one longer segment.
+    CGPathMoveToPoint(path2, NULL, 50, 50);
+    CGPathAddLineToPoint(path2, NULL, 75, 75);
+    CGPathAddLineToPoint(path2, NULL, 100, 100);
+
+    EXPECT_TRUE(testBidirectionalEquals(path1, path2));
+
+    // Rectangles
+    CGRect theRectangle = CGRectMake(50, 50, 100, 100);
+    CGMutablePathRef rectPath1 = CGPathCreateWithRect(theRectangle, NULL);
+    CGMutablePathRef rectPath2 = CGPathCreateWithRect(theRectangle, NULL);
+
+    EXPECT_TRUE(testBidirectionalEquals(rectPath1, rectPath2));
+
+    // Add an extra segment coming off of the rectangle.
+    CGPathAddLineToPoint(rectPath2, NULL, 200, 200);
+
+    EXPECT_TRUE(!(testBidirectionalEquals(rectPath1, rectPath2)));
+
+    // A small line contained entirely within rect1.
+    CGMutablePathRef containedPath = CGPathCreateMutable();
+    CGPathMoveToPoint(path1, NULL, 75, 75);
+    CGPathAddLineToPoint(path1, NULL, 80, 80);
+
+    EXPECT_TRUE(!(testBidirectionalEquals(rectPath1, containedPath)));
+
+    CGMutablePathRef intersectPath = CGPathCreateMutable();
+    CGPathMoveToPoint(intersectPath, NULL, 75, 75);
+    CGPathAddLineToPoint(intersectPath, NULL, 250, 250);
+
+    EXPECT_TRUE(!(testBidirectionalEquals(rectPath1, intersectPath)));
+
+    CGMutablePathRef removedPath = CGPathCreateMutable();
+    CGPathMoveToPoint(removedPath, NULL, 500, 500);
+    CGPathAddLineToPoint(removedPath, NULL, 550, 550);
+
+    EXPECT_TRUE(!(testBidirectionalEquals(rectPath1, removedPath)));
+
+    CGRect overLappingRectangle = CGRectMake(75, 75, 100, 100);
+    CGMutablePathRef strictlyOverlappingRectangle = CGPathCreateWithRect(overLappingRectangle, NULL);
+
+    EXPECT_TRUE(!(testBidirectionalEquals(rectPath1, strictlyOverlappingRectangle)));
+
+    CGRect smallRectangle = CGRectMake(75, 75, 5, 5);
+    CGMutablePathRef containedRectangle = CGPathCreateWithRect(smallRectangle, NULL);
+
+    EXPECT_TRUE(!(testBidirectionalEquals(rectPath1, containedRectangle)));
+
+    // Two complicated paths that should be equal.
+    theRectangle = CGRectMake(50, 50, 100, 100);
+    rectPath1 = CGPathCreateWithRect(theRectangle, NULL);
+    rectPath2 = CGPathCreateWithRect(theRectangle, NULL);
+
+    CGPathAddLineToPoint(rectPath1, nullptr, 200, 200);
+
+    // The multiple line segments should not affect equality since it's still a straight line to the same point.
+    CGPathAddLineToPoint(rectPath2, nullptr, 97, 97);
+    CGPathAddLineToPoint(rectPath2, nullptr, 124, 124);
+    CGPathAddLineToPoint(rectPath2, nullptr, 139, 139);
+    CGPathAddLineToPoint(rectPath2, nullptr, 187, 187);
+    CGPathAddLineToPoint(rectPath2, nullptr, 200, 200);
+
+    // Direction shoudl not matter either
+    CGPathAddLineToPoint(rectPath1, nullptr, 230, 200);
+    CGPathAddLineToPoint(rectPath1, nullptr, 230, 230);
+    CGPathAddLineToPoint(rectPath1, nullptr, 200, 200);
+
+    CGPathAddLineToPoint(rectPath2, nullptr, 230, 230);
+    CGPathAddLineToPoint(rectPath2, nullptr, 230, 200);
+    CGPathAddLineToPoint(rectPath2, nullptr, 200, 200);
+
+    EXPECT_TRUE(testBidirectionalEquals(rectPath1, rectPath2));
+
+    CGPathRelease(path1);
+    CGPathRelease(path2);
+    CGPathRelease(rectPath1);
+    CGPathRelease(rectPath2);
+    CGPathRelease(containedPath);
+    CGPathRelease(intersectPath);
+    CGPathRelease(removedPath);
+    CGPathRelease(strictlyOverlappingRectangle);
+    CGPathRelease(containedRectangle);
 }
