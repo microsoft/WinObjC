@@ -407,6 +407,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
         *error = [NSError errorWithDomain:@"NSData" code:cfError userInfo:nil];
     }
 
+    [self release];
     return nil;
 }
 

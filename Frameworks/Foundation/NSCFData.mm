@@ -59,6 +59,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFData)
         *error = [NSError errorWithDomain:@"NSData" code:cfError userInfo:nil];
     }
 
+    [self release];
     return nil;
 }
 
