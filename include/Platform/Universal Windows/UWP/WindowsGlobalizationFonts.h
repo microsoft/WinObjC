@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_GLOBALIZATION_FONTS_EXPORT
 #define OBJCUWP_WINDOWS_GLOBALIZATION_FONTS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Globalization_Fonts.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

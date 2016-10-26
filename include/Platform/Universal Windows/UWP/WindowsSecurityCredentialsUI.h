@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
 #define OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Security_Credentials_UI.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

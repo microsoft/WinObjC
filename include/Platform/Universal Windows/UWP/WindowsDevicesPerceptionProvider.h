@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 #define OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Devices_Perception_Provider.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 
