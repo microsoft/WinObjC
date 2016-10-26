@@ -2194,11 +2194,13 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
  @Status Interoperable
 */
 - (UIViewController*)presentedViewController {
-    if (priv->_presentedViewController == nil) {
-        return [priv->_parentViewController presentingViewController];
+    if (priv->_presentedViewController) {
+        return priv->_presentedViewController;
+    } else if ([priv->_parentViewController presentedViewController] != self) {
+        return [priv->_parentViewController presentedViewController];
     }
 
-    return priv->_presentingViewController;
+    return nil;
 }
 
 /**
