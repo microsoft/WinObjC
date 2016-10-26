@@ -38,6 +38,7 @@
 #import <CACompositorClient.h>
 #import <UIApplicationInternal.h>
 #import <MainDispatcher.h>
+#import <_UIPopupViewController.h>
 #import <UWP/WindowsApplicationModelActivation.h>
 
 using namespace Microsoft::WRL;
@@ -147,6 +148,12 @@ int ApplicationMainStart(const char* principalName,
     [displayMode _updateDisplaySettings];
 
     UIApplicationMainInit(principalClassName, delegateClassName, defaultOrientation, (int)activationType, activationArgument);
+
+    if (activationType == ActivationTypeLibrary) {
+        UIWindow* keyWindow = [[UIWindow alloc] init];
+        keyWindow.rootViewController = [[_UIPopupViewController alloc] init];
+        [keyWindow makeKeyWindow];
+    }
 
     // The main runloop has to be started asynchronously, so we return as soon as possible from application activate.
     // The apps can (and do) handle application launch delegate from the first tine NSRunloop run is called, and that can

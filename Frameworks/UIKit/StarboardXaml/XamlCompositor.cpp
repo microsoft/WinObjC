@@ -333,7 +333,9 @@ void DisplayNode::AddSubnode(DisplayNode* subNode, DisplayNode* before, DisplayN
     Windows::UI::Xaml::Controls::Panel^ contentElementForThisNode = GetContentElement(this);
 
     if (before == NULL && after == NULL) {
-        contentElementForThisNode->Children->Append(layoutElementForSubNode);
+        if (layoutElementForSubNode->Parent == nullptr) {
+            contentElementForThisNode->Children->Append(layoutElementForSubNode);
+        }
     } else if (before != NULL) {
         XamlCompositor::Controls::CALayerXaml^ xamlBeforeNode = GetLayoutElement(before);
         unsigned int idx = 0;
@@ -426,7 +428,7 @@ void DisplayNode::RemoveFromSupernode() {
     if (contentElementForParentNode->Children->IndexOf(layoutElementForThisNode, &idx) == true) {
         contentElementForParentNode->Children->RemoveAt(idx);
     } else {
-        assert(0);
+        //assert(0);
     }
 }
 
