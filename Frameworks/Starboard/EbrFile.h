@@ -30,10 +30,10 @@ public:
     virtual int Stat(struct stat* ret) = 0;
     virtual int Stat64i32(struct _stat64i32* ret) = 0;
 
-    virtual int Lseek(__int64 pos, int whence) = 0;
+    virtual __int64 Lseek(__int64 pos, int whence) = 0;
     virtual intptr_t GetOSFHandle() = 0;
 
-    virtual int Tell() = 0;
+    virtual __int64 Tell() = 0;
     virtual int Flush() = 0;
     virtual int Truncate64(__int64 size) = 0;
 

@@ -32,10 +32,10 @@ public:
     virtual int Stat(struct stat* ret) override;
     virtual int Stat64i32(struct _stat64i32* ret) override;
 
-    virtual int Lseek(__int64 pos, int whence) override;
+    virtual __int64 Lseek(__int64 pos, int whence) override;
     virtual intptr_t GetOSFHandle() override;
 
-    virtual int Tell() override;
+    virtual __int64 Tell() override;
     virtual int Flush() override;
     virtual int Truncate64(__int64 size) override;
 

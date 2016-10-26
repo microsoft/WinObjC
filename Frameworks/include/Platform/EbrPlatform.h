@@ -42,8 +42,8 @@ SB_EXPORT int EbrFstat(int fd, struct stat* ret);
 SB_EXPORT int EbrFstat64i32(int fd, struct _stat64i32* ret);
 SB_EXPORT int EbrRead(int fd, void* dest, size_t count);
 SB_EXPORT int EbrWrite(int fd, const void* src, size_t count);
-SB_EXPORT int EbrLseek(int fd, __int64 pos, int whence);
-SB_EXPORT size_t EbrTell(int fd);
+SB_EXPORT __int64 EbrLseek(int fd, __int64 pos, int whence);
+SB_EXPORT __int64 EbrTell(int fd);
 SB_EXPORT intptr_t EbrGetOSFHandle(int fd);
 SB_EXPORT int EbrTruncate64(int fd, __int64 size);
 

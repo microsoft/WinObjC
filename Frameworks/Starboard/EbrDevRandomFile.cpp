@@ -45,7 +45,7 @@ int EbrDevRandomFile::Write(const void* , size_t ) {
     return -1;
 }
 
-int EbrDevRandomFile::Lseek(__int64 , int ) {
+__int64 EbrDevRandomFile::Lseek(__int64 , int ) {
     return -1;
 }
 
@@ -53,7 +53,7 @@ intptr_t EbrDevRandomFile::GetOSFHandle() {
     return (intptr_t)INVALID_HANDLE_VALUE;
 }
 
-int EbrDevRandomFile::Tell() {
+__int64 EbrDevRandomFile::Tell() {
     return -1;
 }
 

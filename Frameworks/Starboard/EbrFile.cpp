@@ -129,7 +129,7 @@ int EbrWrite(int fd, const void* src, size_t count) {
     return (file == nullptr) ? -1 : file->Write(src, count);
 }
 
-int EbrLseek(int fd, __int64 pos, int whence) {
+__int64 EbrLseek(int fd, __int64 pos, int whence) {
     auto file = EbrFile::GetFile(fd);
     return (file == nullptr) ? -1 : file->Lseek(pos, whence);
 }
@@ -139,7 +139,7 @@ int EbrTruncate64(int fd, __int64 size) {
     return (file == nullptr) ? -1 : file->Truncate64(size);
 }
 
-size_t EbrTell(int fd) {
+__int64 EbrTell(int fd) {
     auto file = EbrFile::GetFile(fd);
     return (file == nullptr) ? 0 : file->Tell();
 }

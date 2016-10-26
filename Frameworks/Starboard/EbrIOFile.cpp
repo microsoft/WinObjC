@@ -40,7 +40,7 @@ EbrIOFile::~EbrIOFile() {
     }
 }
 
-int EbrIOFile::Tell() {
+__int64 EbrIOFile::Tell() {
     return Lseek(0, SEEK_CUR);
 }
 
@@ -72,7 +72,7 @@ int EbrIOFile::Write(const void* src, size_t count) {
     return _write(m_fid, src, count);
 }
 
-int EbrIOFile::Lseek(__int64 pos, int whence) {
+__int64 EbrIOFile::Lseek(__int64 pos, int whence) {
     return _lseeki64(m_fid, pos, whence);
 }
 

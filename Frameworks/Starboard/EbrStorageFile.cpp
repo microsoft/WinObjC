@@ -89,7 +89,7 @@ EbrStorageFile::EbrStorageFile(
     }
 }
 
-int EbrStorageFile::Tell() {
+__int64 EbrStorageFile::Tell() {
     return Lseek(0, SEEK_CUR);
 }
 
@@ -267,7 +267,7 @@ int EbrStorageFile::Write(const void* src, size_t count) {
     return (int)result;
 }
 
-int EbrStorageFile::Lseek(__int64 pos, int whence) {
+__int64 EbrStorageFile::Lseek(__int64 pos, int whence) {
     std::lock_guard<std::recursive_mutex> lock(m_lock);
 
     unsigned long long newPosition {};
@@ -315,7 +315,7 @@ int EbrStorageFile::Lseek(__int64 pos, int whence) {
         return -1;
     }
 
-    return (int)(newPosition);
+    return (__int64)(newPosition);
 
 }
 
