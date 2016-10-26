@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 #define OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Shapes.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

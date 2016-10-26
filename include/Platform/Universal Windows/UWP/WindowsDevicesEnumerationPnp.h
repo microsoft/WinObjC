@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
 #define OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Devices_Enumeration_Pnp.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 
@@ -119,9 +121,9 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
                   success:(void (^)(WDEPPnpObject*))success
                   failure:(void (^)(NSError*))failure;
 + (void)findAllAsync:(WDEPPnpObjectType)type
- requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties
-             success:(void (^)(WDEPPnpObjectCollection*))success
-             failure:(void (^)(NSError*))failure;
+    requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties
+                success:(void (^)(WDEPPnpObjectCollection*))success
+                failure:(void (^)(NSError*))failure;
 + (void)findAllAsyncAqsFilter:(WDEPPnpObjectType)type
           requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties
                     aqsFilter:(NSString*)aqsFilter

@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 #define OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Foundation_Numerics.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 
