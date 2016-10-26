@@ -205,6 +205,7 @@
     <ClInclude Include="..\..\WOCCatalog\FoundationsViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\GLKitExampleController.h" />
     <ClInclude Include="..\..\WOCCatalog\GeocodingViewController.h" />
+    <ClInclude Include="..\..\WOCCatalog\GesturesViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\ImagesViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\MainViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\MenuTableViewController.h" />
@@ -244,6 +245,7 @@
     <ClangCompile Include="..\..\WOCCatalog\FoundationsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm" />
     <ClangCompile Include="..\..\WOCCatalog\GeocodingViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\GesturesViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ImagesViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\MainViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\MenuTableViewController.m" />
