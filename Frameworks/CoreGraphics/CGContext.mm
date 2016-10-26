@@ -27,6 +27,7 @@
 #import <CoreGraphics/CGGradient.h>
 #import "CGColorSpaceInternal.h"
 #import "CGContextInternal.h"
+#import "CGPathInternal.h"
 
 #import <CFCppBase.h>
 
@@ -1646,7 +1647,8 @@ void CGContextFillRects(CGContextRef context, const CGRect* rects, size_t count)
 */
 void CGContextDrawPath(CGContextRef context, CGPathDrawingMode mode) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+
+    __CGContextDrawGeometry(context, _getAndClosePathGeometry(context->Path()), mode);
     context->ClearPath();
 }
 

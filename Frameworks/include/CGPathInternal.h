@@ -21,6 +21,10 @@
 #include "CoreGraphics/CGContext.h"
 #include "CoreGraphics/CGPath.h"
 
+#include <COMIncludes.h>
+#include <d2d1.h>
+#include <COMIncludes_End.h>
+
 const int kCGPathMaxPointCount = 3;
 
 struct CGPathElementInternal : CGPathElement {
@@ -50,5 +54,7 @@ struct CGPathElementInternal : CGPathElement {
     }
 };
 typedef struct CGPathElementInternal CGPathElementInternal;
+
+ID2D1Geometry* _getAndClosePathGeometry(CGPathRef path);
 
 #endif

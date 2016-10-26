@@ -24,11 +24,12 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <CFRuntime.h>
 #import "D2DWrapper.h"
+#import "CGPathInternal.h"
 
 #include <COMIncludes.h>
 #import <wrl/client.h>
-#import <D2d1.h>
 #include <COMIncludes_End.h>
+
 #import <CFCPPBase.h>
 
 static const wchar_t* TAG = L"CGPath";
@@ -144,6 +145,14 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
         return S_OK;
     }
 };
+ID2D1Geometry* _getAndClosePathGeometry(CGPathRef path) {
+    if (path) {
+        path->ClosePath();
+        return path->GetPathGeometry().Get();
+    }
+
+    return nullptr;
+}
 
 CFTypeID CGPathGetTypeID() {
     return __CGPath::GetTypeID();
