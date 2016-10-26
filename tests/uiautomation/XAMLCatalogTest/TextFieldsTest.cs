@@ -40,6 +40,7 @@ namespace XAMLCatalogTest
             TestCommon.QuitApp();
         }
 
+        [Ignore]
         [TestMethod]
         public void TextFields_Password()
         {
@@ -50,8 +51,8 @@ namespace XAMLCatalogTest
             passwordTextField.SendKeys(newText);
 
             // Verify
-            //var currentHiddenText = passwordTextField[0].Text;
-            //Assert.AreNotSame(newText, currentHiddenText);
+            var currentHiddenText = passwordTextField.Text;
+            Assert.AreNotSame(newText, currentHiddenText);
         }
 
         [TestMethod]
@@ -62,6 +63,8 @@ namespace XAMLCatalogTest
 
             // Verify
             Assert.IsNotNull(blueTextField);
+
+            // Let's see if we can inspect the XAML background and output it manually
         }
 
         [TestMethod]

@@ -75,6 +75,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestCommon.cs" />
+    <Compile Include="SliderTest.cs" />
     <Compile Include="TextFieldsTest.cs" />
   </ItemGroup>
   <ItemGroup>

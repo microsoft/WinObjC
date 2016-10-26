@@ -138,6 +138,9 @@
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h" />
+    <ClInclude Include="..\..\XAMLCatalog\UITextFieldViewController.h">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="..\..\XAMLCatalog\UITextFieldViewController.m">
