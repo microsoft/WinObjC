@@ -46,8 +46,14 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFData)
 - (_Nullable instancetype)initWithContentsOfFile:(NSString*)filename options:(NSDataReadingOptions)options error:(NSError**)error {
     CFDataRef tempData;
     SInt32 cfError{};
-    
-    if (CFURLCreateDataAndPropertiesFromResource(nullptr, static_cast<CFURLRef>([NSURL fileURLWithPath:filename]), &tempData, nullptr, nullptr, &cfError)) {
+
+    if (!filename) {
+        [self release];
+        return nil;
+    }
+
+    if (CFURLCreateDataAndPropertiesFromResource(
+            nullptr, static_cast<CFURLRef>([NSURL fileURLWithPath:filename]), &tempData, nullptr, nullptr, &cfError)) {
         return reinterpret_cast<NSDataPrototype*>(static_cast<NSData*>(tempData));
     } else if (error != nullptr) {
         *error = [NSError errorWithDomain:@"NSData" code:cfError userInfo:nil];
