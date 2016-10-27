@@ -1268,22 +1268,21 @@ static bool __CGContextCreateShadowEffect(CGContextRef context, ID2D1DeviceConte
     auto& state = context->CurrentGState();
     if (std::fpclassify(state.shadowColor.w) != FP_ZERO) {
         ComPtr<ID2D1Effect> shadowEffect;
-        ComPtr<ID2D1Effect> affineTransformEffect;
-        ComPtr<ID2D1Effect> compositeEffect;
-
-        deviceContext->CreateEffect(CLSID_D2D1Shadow, &shadowEffect);
-        deviceContext->CreateEffect(CLSID_D2D12DAffineTransform, &affineTransformEffect);
-        deviceContext->CreateEffect(CLSID_D2D1Composite, &compositeEffect);
-
+        FAIL_FAST_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Shadow, &shadowEffect));
         shadowEffect->SetInput(0, inputImage);
-        shadowEffect->SetValue(D2D1_SHADOW_PROP_COLOR, state.shadowColor);
-        shadowEffect->SetValue(D2D1_SHADOW_PROP_BLUR_STANDARD_DEVIATION, state.shadowBlur);
+        FAIL_FAST_IF_FAILED(shadowEffect->SetValue(D2D1_SHADOW_PROP_COLOR, state.shadowColor));
+        FAIL_FAST_IF_FAILED(shadowEffect->SetValue(D2D1_SHADOW_PROP_BLUR_STANDARD_DEVIATION, state.shadowBlur));
 
+        ComPtr<ID2D1Effect> affineTransformEffect;
+        FAIL_FAST_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D12DAffineTransform, &affineTransformEffect));
         affineTransformEffect->SetInputEffect(0, shadowEffect.Get());
-        affineTransformEffect->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX, D2D1::Matrix3x2F::Translation(state.shadowOffset.width, state.shadowOffset.height));
+        FAIL_FAST_IF_FAILED(affineTransformEffect->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX, D2D1::Matrix3x2F::Translation(state.shadowOffset.width, state.shadowOffset.height)));
 
+        ComPtr<ID2D1Effect> compositeEffect;
+        FAIL_FAST_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Composite, &compositeEffect));
         compositeEffect->SetInputEffect(0, affineTransformEffect.Get());
         compositeEffect->SetInput(1, inputImage);
+
         *outShadowEffect = compositeEffect.Detach();
         return true;
     }
@@ -1347,7 +1346,7 @@ static void __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
 
     ComPtr<ID2D1Effect> shadowEffect;
     if (__CGContextCreateShadowEffect(context, deviceContext.Get(), currentImage.Get(), &shadowEffect)) {
-        shadowEffect.As(&currentImage);
+        FAIL_FAST_IF_FAILED(shadowEffect.As(&currentImage));
     }
 
     deviceContext->DrawImage(currentImage.Get());
