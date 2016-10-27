@@ -50,7 +50,7 @@
 #import <UWP/WindowsUIViewManagement.h>
 #import <UWP/WindowsDevicesInput.h>
 #import "UIColorInternal.h"
-#import <CoreGraphics/DWriteWrapper.h>
+#import "UIFontInternal.h"
 
 static const wchar_t* TAG = L"CompositorInterface";
 
@@ -335,10 +335,7 @@ public:
         std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(text);
 
         // The Font Family names DWrite will return are not always compatible with Xaml
-        ConstructGlyphs(Strings::NarrowToWide<HSTRING>(
-                            static_cast<NSString*>(_DWriteGetFamilyNameForFontName(static_cast<CFStringRef>([font fontName])))),
-                        wideBuffer.c_str(),
-                        wideBuffer.length());
+        ConstructGlyphs(Strings::NarrowToWide<HSTRING>([font _compatibleFamilyName]), wideBuffer.c_str(), wideBuffer.length());
     }
 };
 
