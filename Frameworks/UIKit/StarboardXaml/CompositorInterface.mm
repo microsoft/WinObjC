@@ -50,6 +50,7 @@
 #import <UWP/WindowsUIViewManagement.h>
 #import <UWP/WindowsDevicesInput.h>
 #import "UIColorInternal.h"
+#import <CoreGraphics/DWriteWrapper.h>
 
 static const wchar_t* TAG = L"CompositorInterface";
 
@@ -332,7 +333,12 @@ public:
         _isBold = (mask & UIFontDescriptorTraitBold) > 0;
         _isItalic = (mask & UIFontDescriptorTraitItalic) > 0;
         std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(text);
-        ConstructGlyphs([[font fontName] UTF8String], wideBuffer.c_str(), wideBuffer.length());
+
+        // The Font Family names DWrite will return are not always compatible with Xaml
+        ConstructGlyphs(Strings::NarrowToWide<HSTRING>(
+                            static_cast<NSString*>(_DWriteGetFamilyNameForFontName(static_cast<CFStringRef>([font fontName])))),
+                        wideBuffer.c_str(),
+                        wideBuffer.length());
     }
 };
 
@@ -343,11 +349,10 @@ public:
 
     void Completed() {
         id animHandler = _animHandler; // Save in a local for the block to retain.
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [animHandler animationDidStop:TRUE];
-                           [animHandler _removeAnimationsFromLayer];
-                       });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [animHandler animationDidStop:TRUE];
+            [animHandler _removeAnimationsFromLayer];
+        });
     }
 
     DisplayAnimationTransition(id animHandler, NSString* type, NSString* subType) {
@@ -710,11 +715,10 @@ public:
 
     void Completed() {
         id animHandler = _animHandler; // Save in a local for the block to retain.
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [animHandler animationDidStop:TRUE];
-                           [animHandler _removeAnimationsFromLayer];
-                       });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [animHandler animationDidStop:TRUE];
+            [animHandler _removeAnimationsFromLayer];
+        });
     }
 
     DisplayAnimationBasic(id animHandler,

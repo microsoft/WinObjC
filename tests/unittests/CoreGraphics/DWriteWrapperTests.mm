@@ -32,4 +32,5 @@ TEST(DWriteWrapper, FontToFamilyName) {
     EXPECT_OBJCEQ(@"Times New Roman", (id)_DWriteGetFamilyNameForFontName(CFSTR("Times New Roman Italic")));
     EXPECT_OBJCEQ(@"Times New Roman", (id)_DWriteGetFamilyNameForFontName(CFSTR("Times New Roman Bold")));
     EXPECT_OBJCEQ(@"Times New Roman", (id)_DWriteGetFamilyNameForFontName(CFSTR("Times New Roman Bold Italic")));
+    EXPECT_OBJCEQ(@"Franklin Gothic", (id)_DWriteGetFamilyNameForFontName(CFSTR("Franklin Gothic Medium Cond")));
 }
