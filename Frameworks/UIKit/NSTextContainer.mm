@@ -62,39 +62,81 @@
     return _exclusionPaths;
 }
 
+static CGFloat _leftMostLocationForPath(CGRect proposedRectangle, CGPathRef path, CGFloat bufferAmount, bool eoFill) {
+    CGFloat topLocation = proposedRectangle.origin.y;
+
+    for (CGFloat left = proposedRectangle.origin.x; left < proposedRectangle.origin.x + proposedRectangle.size.width;
+         left += bufferAmount) {
+        // Transform is ignored since UIBezierPath has already applied it
+        if (!CGPathContainsPoint(path, NULL, CGPointMake(left, topLocation), eoFill)) {
+            return left;
+        }
+    }
+
+    return proposedRectangle.origin.x + proposedRectangle.size.width;
+}
+
+static CGFloat _rightMostLocationForPath(CGRect proposedRectangle, CGPathRef path, CGFloat bufferAmount, bool eoFill) {
+    CGFloat topLocation = proposedRectangle.origin.y;
+    CGFloat lastRight = proposedRectangle.origin.x;
+
+    for (CGFloat right = proposedRectangle.origin.x; right < proposedRectangle.origin.x + proposedRectangle.size.width;
+         right += bufferAmount) {
+        // Transform is ignored since UIBezierPath has already applied it
+        if (CGPathContainsPoint(path, NULL, CGPointMake(right, topLocation), eoFill)) {
+            return lastRight;
+        }
+        lastRight = right;
+    }
+    // No exclusion zone hit.
+    return proposedRectangle.origin.x + proposedRectangle.size.width;
+}
+
 /**
  @Status Caveat
  @Notes writingDirection and atIndex parameters are ignored
- TODO::1123 This needs to handle multiple exclusion zones properly when creating remainingRect
-            Currently processing exclusion zones left-to-right fails to calculate properly
 */
 
 - (CGRect)lineFragmentRectForProposedRect:(CGRect)proposed
                                   atIndex:(NSUInteger)idx
                          writingDirection:(NSWritingDirection)direction
                             remainingRect:(CGRect*)remainingRect {
+    // Issue 1123 & 1143 : This requires further investigation after CGPath work.
     CGRect totalRect = CGRectMake(0, 0, _size.width, _size.height);
     CGRect ret = CGRectIntersection(proposed, totalRect);
 
     if (_exclusionPaths != nil) {
-        for (UIBezierPath* path in(NSArray*)_exclusionPaths) {
-            // TODO 1143: Replace with public function or work around.
-            // CGRect shapeRect = _CGPathFitRect(path.CGPath, ret, _size, self.lineFragmentPadding);
-            // ret = CGRectIntersection(shapeRect, ret);
+        CGFloat leftMostAllowedPosition = proposed.origin.x;
+        CGFloat rightMostAllowedPosition = proposed.origin.x + proposed.size.width;
+
+        for (UIBezierPath* path in (NSArray*)_exclusionPaths) {
+            for (CGFloat yposition = proposed.origin.y; yposition < proposed.origin.y + proposed.size.height;
+                 yposition += self.lineFragmentPadding) {
+                CGFloat leftMost = _leftMostLocationForPath(proposed, path.CGPath, self.lineFragmentPadding, path.usesEvenOddFillRule);
+                if (leftMostAllowedPosition < leftMost) {
+                    leftMostAllowedPosition = leftMost;
+                }
+
+                CGFloat rightMost = _rightMostLocationForPath(proposed, path.CGPath, self.lineFragmentPadding, path.usesEvenOddFillRule);
+                if (rightMostAllowedPosition < rightMost) {
+                    rightMostAllowedPosition = rightMost;
+                }
+            }
         }
 
+        CGRect fitRect = CGRectMake(leftMostAllowedPosition,
+                                    proposed.origin.y,
+                                    rightMostAllowedPosition - leftMostAllowedPosition,
+                                    proposed.size.height);
+        ret = CGRectIntersection(fitRect, ret);
+
         if (remainingRect) {
-            *remainingRect = CGRectMake(ret.origin.x + ret.size.width + self.lineFragmentPadding,
-                                        ret.origin.y,
-                                        _size.width - ret.origin.x - ret.size.width,
-                                        ret.size.height);
-            for (UIBezierPath* path in(NSArray*)_exclusionPaths) {
-                CGRect shapeRect = _CGPathFitRect(path.CGPath, *remainingRect, _size, self.lineFragmentPadding);
-                *remainingRect = CGRectIntersection(shapeRect, *remainingRect);
-            }
+            *remainingRect =
+                CGRectMake(rightMostAllowedPosition, proposed.origin.y, proposed.size.width - fitRect.size.width, proposed.size.height);
         }
     }
 
     return ret;
 }
+
 @end
