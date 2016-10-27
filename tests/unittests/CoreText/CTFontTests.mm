@@ -125,13 +125,13 @@ TEST(CTFont, CopyNameHelpers) {
     EXPECT_OBJCEQ(@"Arial Italic", (id)CFAutorelease(CTFontCopyFullName(font)));
     EXPECT_OBJCEQ(@"Arial Italic", (id)CFAutorelease(CTFontCopyDisplayName(font)));
 
-    font = CTFontCreateWithName(CFSTR("Arial Narrow"), 15.0, NULL);
+    font = CTFontCreateWithName(CFSTR("Courier New Bold Italic"), 15.0, NULL);
     CFAutorelease(font);
 
-    EXPECT_OBJCEQ(@"ArialNarrow", (id)CFAutorelease(CTFontCopyPostScriptName(font)));
-    EXPECT_OBJCEQ(@"Arial Narrow", (id)CFAutorelease(CTFontCopyFamilyName(font)));
-    EXPECT_OBJCEQ(@"Arial Narrow", (id)CFAutorelease(CTFontCopyFullName(font)));
-    EXPECT_OBJCEQ(@"Arial Narrow", (id)CFAutorelease(CTFontCopyDisplayName(font)));
+    EXPECT_OBJCEQ(@"CourierNewPS-BoldItalicMT", (id)CFAutorelease(CTFontCopyPostScriptName(font)));
+    EXPECT_OBJCEQ(@"Courier New", (id)CFAutorelease(CTFontCopyFamilyName(font)));
+    EXPECT_OBJCEQ(@"Courier New Bold Italic", (id)CFAutorelease(CTFontCopyFullName(font)));
+    EXPECT_OBJCEQ(@"Courier New Bold Italic", (id)CFAutorelease(CTFontCopyDisplayName(font)));
 }
 
 TEST(CTFont, Metrics) {

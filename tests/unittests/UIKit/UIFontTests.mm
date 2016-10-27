@@ -108,8 +108,8 @@ TEST(UIFont, Description) {
 
 TEST(UIFont, Metrics) {
     float size = 22.0f;
-    UIFont* font = [UIFont fontWithName:@"Segoe UI Semibold Italic" size:size];
-    ASSERT_OBJCEQ(@"Segoe UI Semibold Italic", [font fontName]);
+    UIFont* font = [UIFont fontWithName:@"Segoe UI" size:size];
+    ASSERT_OBJCEQ(@"Segoe UI", [font fontName]);
 
     ASSERT_NE(0, [font descender]);
     ASSERT_NE(0, [font ascender]);
@@ -121,7 +121,7 @@ TEST(UIFont, Metrics) {
 
 TEST(UIFont, Bridging) {
     float size = 14.5f;
-    NSString* name = @"Lucida Sans Demibold Italic";
+    NSString* name = @"Times New Roman Bold Italic";
 
     UIFont* uiFont = [UIFont fontWithName:name size:size];
     CTFontRef ctFont = CTFontCreateWithName((__bridge CFStringRef)name, size, nullptr);
