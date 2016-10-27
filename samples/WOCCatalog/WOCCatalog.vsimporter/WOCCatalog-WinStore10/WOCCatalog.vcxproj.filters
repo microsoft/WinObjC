@@ -99,6 +99,9 @@
     <ClInclude Include="..\..\WOCCatalog\GeocodingViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\GesturesViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\WOCCatalog\ImagesViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
@@ -142,9 +145,6 @@
       <Filter>WOCCatalog</Filter>
     </ClInclude>
     <ClInclude Include="..\..\WOCCatalog\TextDisplayViewController.h">
-      <Filter>WOCCatalog</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\WOCCatalog\TextFieldsViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
     <ClInclude Include="..\..\WOCCatalog\ToolbarsViewController.h">
@@ -219,6 +219,9 @@
     <ClangCompile Include="..\..\WOCCatalog\GeocodingViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\GesturesViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>    
     <ClangCompile Include="..\..\WOCCatalog\ImagesViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
@@ -262,9 +265,6 @@
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\TextFieldsViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\ToolbarsViewController.m">

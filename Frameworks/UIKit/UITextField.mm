@@ -92,8 +92,8 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
     BOOL _enablesReturnKeyAutomatically;
 
     // backing xaml textbox and passwordBox
-    WXCTextBox* _textBox;
-    WXCPasswordBox* _passwordBox;
+    StrongId<WXCTextBox> _textBox;
+    StrongId<WXCPasswordBox> _passwordBox;
 
     // lock use to access the properties
     StrongId<NSRecursiveLock> _secureModeLock;

@@ -19,7 +19,7 @@
 #import "NSStringInternal.h"
 #import "CoreTextInternal.h"
 #import "CGContextInternal.h"
-#import <CoreText/DWriteWrapper.h>
+#import "DWriteWrapper_CoreText.h"
 #import <CoreText/CTTypesetter.h>
 
 #include <algorithm>
@@ -35,11 +35,6 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef li
         _runs.attach([NSMutableArray new]);
     }
     return self;
-}
-
-- (void)dealloc {
-    _runs = nil;
-    [super dealloc];
 }
 
 - (instancetype)copyWithZone:(NSZone*)zone {
@@ -240,7 +235,10 @@ void _CTLineDraw(CTLineRef lineRef, CGContextRef ctx, bool adjustTextPosition) {
             CGContextSetTextPosition(ctx, curTextPos.x + curRun->_relativeXOffset, curTextPos.y);
         }
 
-        _CTRunDraw(static_cast<CTRunRef>(curRun), ctx, CFRange{}, false);
+        // Get height of the line so we draw with the correct baseline for each run
+        CGFloat ascent;
+        CTLineGetTypographicBounds(lineRef, &ascent, nullptr, nullptr);
+        _CTRunDraw(static_cast<CTRunRef>(curRun), ctx, CFRange{}, false, ascent);
     }
 }
 
@@ -302,12 +300,12 @@ double CTLineGetTypographicBounds(CTLineRef lineRef, CGFloat* ascent, CGFloat* d
     }
 
     // Created with impossible values -FLT_MAX which signify they need to be populated
-    if (line->_ascent == -FLT_MAX || line->_descent == -FLT_MAX || line->_leading == -FLT_MAX) {
+    if ((line->_ascent == -FLT_MAX || line->_descent == FLT_MAX || line->_leading == -FLT_MAX) && (ascent || descent || leading)) {
         for (_CTRun* run in static_cast<id<NSFastEnumeration>>(line->_runs)) {
             CGFloat newAscent, newDescent, newLeading;
             CTRunGetTypographicBounds(static_cast<CTRunRef>(run), { 0, 0 }, &newAscent, &newDescent, &newLeading);
             line->_ascent = std::max(line->_ascent, newAscent);
-            line->_descent = std::max(line->_descent, newDescent);
+            line->_descent = std::min(line->_descent, newDescent);
             line->_leading = std::max(line->_leading, newLeading);
         }
     }
@@ -355,7 +353,7 @@ CFIndex CTLineGetStringIndexForPosition(CTLineRef lineRef, CGPoint position) {
     }
 
     if (currPos < position.x) {
-        return line->_strRange.length;
+        return line->_strRange.location + line->_strRange.length;
     }
 
     return kCFNotFound;

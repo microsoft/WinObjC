@@ -216,6 +216,9 @@
     <ClInclude Include="xib2nib\UIPongPressGestureRecognizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xib2nib\NIBWriter.cpp">
@@ -422,5 +425,11 @@
     <ClCompile Include="xib2nib\UIPongPressGestureRecognizer.cpp">
       <Filter>Source Files\UIKit</Filter>
     </ClCompile>
+    <ClCompile Include="src\utils\versionutils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="xib2nib.rc" />
   </ItemGroup>
 </Project>

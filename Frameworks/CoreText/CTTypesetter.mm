@@ -17,9 +17,8 @@
 #import <CoreText/CTTypesetter.h>
 #import <StubReturn.h>
 #import "CoreTextInternal.h"
-#import "CGFontInternal.h"
 #import "UIFontInternal.h"
-#import <CoreText/DWriteWrapper.h>
+#import "DWriteWrapper_CoreText.h"
 #import <Foundation/NSAttributedString.h>
 #import <algorithm>
 #import "LoggingNative.h"
@@ -47,14 +46,6 @@ const CFStringRef kCTTypesetterOptionForcedEmbeddingLevel = static_cast<CFString
     [super dealloc];
 }
 @end
-
-static float FixedWidthFinderFunc(void* opaque, CFIndex idx, float offset, float height) {
-    return *((double*)opaque) - offset;
-}
-
-static float UnlimitedWidthFinderFunc(void* opaque, CFIndex idx, float offset, float height) {
-    return FLT_MAX;
-}
 
 /**
 @Status Interoperable
@@ -86,7 +77,11 @@ CTLineRef CTTypesetterCreateLine(CTTypesetterRef typesetter, CFRange stringRange
  @Notes
 */
 CTLineRef CTTypesetterCreateLineWithOffset(CTTypesetterRef ts, CFRange range, double offset) {
-    _CTFrame* frame = _DWriteGetFrame(static_cast<_CTTypesetter*>(ts), range, CGRectMake(offset, 0, FLT_MAX, FLT_MAX));
+    _CTFrame* frame = _DWriteGetFrame(static_cast<CFAttributedStringRef>(static_cast<_CTTypesetter*>(ts)->_attributedString.get()),
+                                      range,
+                                      CGRectMake(offset, 0, FLT_MAX, FLT_MAX));
+
+    RETURN_NULL_IF(!frame);
     THROW_NS_IF_FALSE(E_UNEXPECTED, [frame->_lines count] == 1);
 
     return static_cast<CTLineRef>([[frame->_lines firstObject] retain]);
@@ -100,23 +95,15 @@ CFIndex CTTypesetterSuggestLineBreak(CTTypesetterRef typesetter, CFIndex startIn
     return CTTypesetterSuggestLineBreakWithOffset(typesetter, startIndex, width, 0.0f);
 }
 
-// Private/exported function
-CFIndex _CTTypesetterSuggestLineBreakWithOffsetAndCallback(
-    CTTypesetterRef ts, CFIndex index, double offset, WidthFinderFunc callback, void* opaque) {
-    // TODO::
-    // Implement this for NSLayout* to work.
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
 /**
  @Status Interoperable
  @Notes
 */
 CFIndex CTTypesetterSuggestLineBreakWithOffset(CTTypesetterRef ts, CFIndex index, double width, double offset) {
     _CTTypesetter* typesetter = static_cast<_CTTypesetter*>(ts);
-    _CTFrame* frame =
-        _DWriteGetFrame(typesetter, CFRangeMake(index, typesetter->_characters.size() - index), CGRectMake(offset, 0, width, FLT_MAX));
+    _CTFrame* frame = _DWriteGetFrame(static_cast<CFAttributedStringRef>(typesetter->_attributedString.get()),
+                                      CFRangeMake(index, typesetter->_characters.size() - index),
+                                      CGRectMake(offset, 0, width, FLT_MAX));
     return ([frame->_lines count] > 0) ? static_cast<_CTLine*>([frame->_lines firstObject])->_strRange.length : 0;
 }
 

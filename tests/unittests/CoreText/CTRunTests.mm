@@ -98,7 +98,7 @@ protected:
 
     static constexpr NSString* const c_testString = @"bp";
     static constexpr float c_ascentExpected = 8.7363f;
-    static constexpr float c_descentExpected = 2.3848f;
+    static constexpr float c_descentExpected = -2.3848f;
     static constexpr float c_leadingExpected = 0.392578f;
 };
 

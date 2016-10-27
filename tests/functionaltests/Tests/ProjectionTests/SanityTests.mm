@@ -29,7 +29,7 @@
 #endif
 
 #include <Windows.UI.Xaml.Media.h>
-#include <RTHelpers.h>
+#include <UWP/RTHelpers.h>
 
 #ifdef __OBJC__
 #pragma pop_macro("Nil")
@@ -53,25 +53,22 @@ TEST(Projection, HStringTest) {
 TEST(Projection, CreateWithTest) {
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     ComPtr<ABI::Windows::UI::Xaml::Media::IFontFamilyFactory> fontFamilyFactory;
-    ASSERT_HRESULT_SUCCEEDED_MSG(ABI::Windows::Foundation::GetActivationFactory(Microsoft::WRL::Wrappers::HString::MakeReference(
-                                                                                    L"Windows.UI.Xaml.Media.FontFamily")
-                                                                                    .Get(),
-                                                                                &fontFamilyFactory),
+    ASSERT_HRESULT_SUCCEEDED_MSG(ABI::Windows::Foundation::GetActivationFactory(
+                                     Microsoft::WRL::Wrappers::HString::MakeReference(L"Windows.UI.Xaml.Media.FontFamily").Get(),
+                                     &fontFamilyFactory),
                                  "Failed: Could not get activation factory");
 
     // Get the dispatcher for the main thread.
-    dispatch_sync(dispatch_get_main_queue(),
-        ^{
-            ComPtr<ABI::Windows::UI::Xaml::Media::IFontFamily> fontFamilyInstance;
-            HString hstr;
-            ASSERT_HRESULT_SUCCEEDED_MSG(hstr.Set(L"Comic Sans MS"), "Failed: HString::Set failed");
-            HRESULT hr =
-                fontFamilyFactory->CreateInstanceWithName(hstr.Get(), nullptr, nullptr, fontFamilyInstance.GetAddressOf());
-            ASSERT_HRESULT_SUCCEEDED_MSG(hr, "Failed: CreateInstanceWithName failed");
-            StrongId<WUXMFontFamily> fontFamily;
-            ASSERT_NO_THROW_MSG(fontFamily = [WUXMFontFamily createWith:fontFamilyInstance.Get()], "Failed: createWith failed");
-            ASSERT_NE_MSG(fontFamily, nil, "Failed: CreateWithTest failed");
-        });
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        ComPtr<ABI::Windows::UI::Xaml::Media::IFontFamily> fontFamilyInstance;
+        HString hstr;
+        ASSERT_HRESULT_SUCCEEDED_MSG(hstr.Set(L"Comic Sans MS"), "Failed: HString::Set failed");
+        HRESULT hr = fontFamilyFactory->CreateInstanceWithName(hstr.Get(), nullptr, nullptr, fontFamilyInstance.GetAddressOf());
+        ASSERT_HRESULT_SUCCEEDED_MSG(hr, "Failed: CreateInstanceWithName failed");
+        StrongId<WUXMFontFamily> fontFamily;
+        ASSERT_NO_THROW_MSG(fontFamily = [WUXMFontFamily createWith:fontFamilyInstance.Get()], "Failed: createWith failed");
+        ASSERT_NE_MSG(fontFamily, nil, "Failed: CreateWithTest failed");
+    });
 
     // createWith method returns autoreleased object.
     // So draining the pool should not throw.
@@ -79,10 +76,9 @@ TEST(Projection, CreateWithTest) {
 }
 
 TEST(Projection, ComposableAttrClass) {
-    dispatch_sync(dispatch_get_main_queue(),
-        ^{
-            StrongId<WUXMFontFamily> fontFamily;
-            EXPECT_NO_THROW(fontFamily = [WUXMFontFamily makeInstanceWithName:@"Comic Sans MS"]);
-            ASSERT_NE_MSG(fontFamily, nil, "FAILED: ComposableAttrClass Test failed\n");
-        });
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        StrongId<WUXMFontFamily> fontFamily;
+        EXPECT_NO_THROW(fontFamily = [WUXMFontFamily makeInstanceWithName:@"Comic Sans MS"]);
+        ASSERT_NE_MSG(fontFamily, nil, "FAILED: ComposableAttrClass Test failed\n");
+    });
 }

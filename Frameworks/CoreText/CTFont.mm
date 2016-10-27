@@ -15,21 +15,22 @@
 //******************************************************************************
 
 #import <CoreText/CTFont.h>
-#import <CGFontInternal.h>
+#import <CoreGraphics/CGFont.h>
 #import <LoggingNative.h>
 #import <Starboard.h>
 #import <StubReturn.h>
 #import <CoreFoundation/CFString.h>
 #import <CFRuntime.h>
 #import <CFBridgeUtilities.h>
-#import <CoreText/DWriteWrapper.h>
-#import "UIFontInternal.h"
+#import <UIKit/UIFont.h>
 
 #import <CoreText/CTFontDescriptor.h>
 #include <COMIncludes.h>
 #import <DWrite_3.h>
 #import <wrl/client.h>
 #include <COMIncludes_End.h>
+
+#import "DWriteWrapper_CoreText.h"
 
 #import <map>
 #import <memory>
@@ -110,8 +111,9 @@ static Boolean __CTFontEqual(CFTypeRef cf1, CFTypeRef cf2) {
     struct __CTFont* font1 = (struct __CTFont*)cf1;
     struct __CTFont* font2 = (struct __CTFont*)cf2;
 
-    return (font1->_pointSize == font2->_pointSize) && (font1->_dwriteFontFace == font2->_dwriteFontFace) &&
-           CFEqual(font1->_descriptor, font2->_descriptor);
+    return (font1->_pointSize == font2->_pointSize) &&
+           (CFEqual(CFAutorelease(CTFontCopyPostScriptName(font1)), CFAutorelease(CTFontCopyPostScriptName(font2)))) &&
+           (CFEqual(font1->_descriptor, font2->_descriptor));
 }
 
 static CFHashCode __CTFontHash(CFTypeRef cf) {
@@ -143,8 +145,6 @@ static void __CTFontDeallocate(CFTypeRef cf) {
     // ComPtr needs to be manually destructed, since CFTypes do a memset(0) on dealloc
     font->_dwriteFontFace.~ComPtr();
 }
-
-static CFTypeID __kCTFontTypeID = _kCFRuntimeNotATypeID;
 
 static const CFRuntimeClass __CTFontClass = { 0,
                                               "CTFont",
@@ -549,6 +549,15 @@ static CGFloat __CTFontScaleMetric(CTFontRef font, CGFloat metric) {
     return metric * font->_pointSize / CTFontGetUnitsPerEm(font);
 }
 
+// Private helper for converting a whole CGRect rather than a single metric
+static CGRect __CTFontScaleRect(CTFontRef font, CGRect& rect) {
+    rect.origin.x = __CTFontScaleMetric(font, rect.origin.x);
+    rect.origin.y = __CTFontScaleMetric(font, rect.origin.y);
+    rect.size.width = __CTFontScaleMetric(font, rect.size.width);
+    rect.size.height = __CTFontScaleMetric(font, rect.size.height);
+    return rect;
+}
+
 /**
  @Status Interoperable
  @Notes
@@ -608,12 +617,18 @@ CFIndex CTFontGetGlyphCount(CTFontRef font) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGRect CTFontGetBoundingBox(CTFontRef font) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!font) {
+        return { { 0, 0 }, { 0, 0 } };
+    }
+
+    CGRect ret = _DWriteFontGetBoundingBox(font->_dwriteFontFace);
+
+    // Scale the bounding box
+    return __CTFontScaleRect(font, ret);
 }
 
 /**
@@ -692,13 +707,48 @@ CGGlyph CTFontGetGlyphWithName(CTFontRef font, CFStringRef glyphName) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes  kCTFontVerticalOrientation is unsupported, returns the same as default and horizontal orientations
 */
 CGRect CTFontGetBoundingRectsForGlyphs(
     CTFontRef font, CTFontOrientation orientation, const CGGlyph glyphs[], CGRect* boundingRects, CFIndex count) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!glyphs || count <= 0) {
+        TraceError(g_logTag, L"No glyphs were specified");
+        return CGRectNull;
+    }
+
+    if (boundingRects) {
+        if (FAILED(_DWriteFontGetBoundingBoxesForGlyphs(
+                font->_dwriteFontFace, glyphs, boundingRects, count, (orientation == kCTFontVerticalOrientation)))) {
+            TraceError(g_logTag, L"Unable to get glyph bounding boxes");
+            return CGRectNull;
+        }
+
+        CGRect ret = { { std::numeric_limits<CGFloat>::max(), std::numeric_limits<CGFloat>::max() },
+                       { std::numeric_limits<CGFloat>::lowest(), std::numeric_limits<CGFloat>::lowest() } };
+
+        for (size_t i = 0; i < count; ++i) {
+            // DWrite uses design units, where as CTFont uses point size
+            // Scale all the boundingRects
+            boundingRects[i] = __CTFontScaleRect(font, boundingRects[i]);
+
+            // Find the overall bounding rect
+            // This can probably be made more efficient by putting all of each attribute in an array and sorting it,
+            // but that seems like overkill for now
+            ret.origin.x = std::min(ret.origin.x, boundingRects[i].origin.x);
+            ret.origin.y = std::min(ret.origin.y, boundingRects[i].origin.y);
+            ret.size.width = std::max(ret.size.width, boundingRects[i].size.width);
+            ret.size.height = std::max(ret.size.height, boundingRects[i].size.height);
+        }
+
+        return ret;
+
+    } else {
+        // Caller doesn't care about boundingRects, but still needs to calculate the overall rect
+        // Call the boundingRects code path above with a temporary buffer
+        std::vector<CGRect> rects = std::vector<CGRect>(count);
+        return CTFontGetBoundingRectsForGlyphs(font, orientation, glyphs, rects.data(), count);
+    }
 }
 
 /**
@@ -838,12 +888,11 @@ CFArrayRef CTFontCopyAvailableTables(CTFontRef font, CTFontTableOptions options)
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
+ @Notes options is not supported, and is deprecated anyway
 */
 CFDataRef CTFontCopyTable(CTFontRef font, CTFontTableTag table, CTFontTableOptions options) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return _DWriteFontCopyTable(font->_dwriteFontFace, table);
 }
 
 /**
@@ -851,10 +900,6 @@ CFDataRef CTFontCopyTable(CTFontRef font, CTFontTableTag table, CTFontTableOptio
  @Notes
 */
 CFTypeID CTFontGetTypeID() {
-    static dispatch_once_t initOnce = 0;
-    dispatch_once(&initOnce,
-                  ^{
-                      __kCTFontTypeID = _CFRuntimeRegisterClass(&__CTFontClass);
-                  });
+    static CFTypeID __kCTFontTypeID = _CFRuntimeRegisterClass(&__CTFontClass);
     return __kCTFontTypeID;
 }

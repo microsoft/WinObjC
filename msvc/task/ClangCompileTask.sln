@@ -1,7 +1,6 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClangCompile", "ClangCompileTask\ClangCompile.csproj", "{5C4F5580-8A68-4540-9BFE-F14FA7F31297}"
 EndProject
@@ -9,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PropSchemaGen", "PropSchema
 	ProjectSection(ProjectDependencies) = postProject
 		{5C4F5580-8A68-4540-9BFE-F14FA7F31297} = {5C4F5580-8A68-4540-9BFE-F14FA7F31297}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenVersionFiles", "GenVersionFiles\GenVersionFiles.csproj", "{D36AC681-C0B6-43DC-8CD9-75193B02100C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +25,10 @@ Global
 		{06DED017-9111-4288-B211-FC5ED4C78260}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06DED017-9111-4288-B211-FC5ED4C78260}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06DED017-9111-4288-B211-FC5ED4C78260}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D36AC681-C0B6-43DC-8CD9-75193B02100C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D36AC681-C0B6-43DC-8CD9-75193B02100C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D36AC681-C0B6-43DC-8CD9-75193B02100C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D36AC681-C0B6-43DC-8CD9-75193B02100C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

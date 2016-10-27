@@ -4,7 +4,7 @@
   <mp:PhoneIdentity PhoneProductId="34906fc5-08c8-4bad-b833-46a91bb7cf95" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>AddressBookSample</DisplayName>
-    <PublisherDisplayName>t-chmou</PublisherDisplayName>
+    <PublisherDisplayName>islandwood</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>

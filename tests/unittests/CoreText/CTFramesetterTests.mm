@@ -92,3 +92,15 @@ TEST(CTFramesetter, SuggestFrameSizeWithConstraints) {
     EXPECT_EQ(0, fitRange.location);
     EXPECT_LT(fitRange.length, 4);
 }
+
+TEST(CTFramesetter, ShouldNotThrowWhenCreatingFrameWithEmptyLines) {
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString(@"TEST\n \n\n\t\nTEST");
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(string);
+    CFAutorelease(framesetter);
+    CGPathRef path = CGPathCreateWithRect(CGRectMake(0, 0, FLT_MAX, FLT_MAX), nullptr);
+    CTFrameRef frame = nil;
+    EXPECT_NO_THROW(frame = CTFramesetterCreateFrame(framesetter, {}, path, nullptr));
+    EXPECT_EQ(5L, CFArrayGetCount(CTFrameGetLines(frame)));
+    CFRelease(frame);
+    CGPathRelease(path);
+}

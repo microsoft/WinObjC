@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_MEDIA_OCR_EXPORT
 #define OBJCUWP_WINDOWS_MEDIA_OCR_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Media_Ocr.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

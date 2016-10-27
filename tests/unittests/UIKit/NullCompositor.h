@@ -29,6 +29,9 @@ public:
     Microsoft::WRL::ComPtr<IInspectable> GetXamlLayoutElement(DisplayNode*) override {
         return Microsoft::WRL::ComPtr<IInspectable>();
     }
+    Microsoft::WRL::ComPtr<IInspectable> GetXamlContentElement(DisplayNode*) override {
+        return Microsoft::WRL::ComPtr<IInspectable>();
+    }
     std::shared_ptr<DisplayTransaction> CreateDisplayTransaction() override {
         return nullptr;
     }

@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT
 #define OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Hosting.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

@@ -243,7 +243,7 @@
                                                                     CTFrameGetVisibleStringRange(frame).length],
                                          width / 2)];
 
-    ADD_UNIMPLEMENTED(_lineCells, @"CTFrameGetPath", width / 2);
+    [_lineCells addObject:createTextCell(@"CTFrameGetPath", [NSString stringWithFormat:@"%@", CTFrameGetPath(frame)], width / 2)];
     ADD_UNIMPLEMENTED(_lineCells, @"CTFrameGetFrameAttributes", width / 2);
     ADD_UNIMPLEMENTED(_lineCells, @"CTFrameGetTypeID", width / 2);
 

@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
 #define OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Graphics_DirectX_Direct3D11.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

@@ -34,10 +34,10 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\CTTextTab.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\CTTypesetter.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\CTUtilities.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\DWriteWrapper.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\DWriteWrapper_CoreText.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\CoreText\DWriteWrapper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreText\DWriteWrapper_CoreText.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{39D93F30-F8F9-4D8E-A428-C188E918AA48}</ProjectGuid>

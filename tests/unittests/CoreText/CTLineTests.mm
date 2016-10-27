@@ -285,3 +285,54 @@ TEST(CTLine, CTLineGetTypographicBounds) {
     EXPECT_LE_MSG(baseAscent, variableAscent, "The ascent with \'H\' should be no less than the ascent with \'x\'");
     EXPECT_GE_MSG(baseDescent, variableDescent, "The descent with \'g\' should be no greater than the descent with \'x\'");
 }
+
+TEST(CTLine, ShouldSeparateRunsBasedOnColor) {
+    NSMutableAttributedString* string = getAttributedString(@"ABCDEF");
+    [string addAttribute:NSForegroundColorAttributeName value:[UIColor magentaColor] range:{0, 2}];
+    [string addAttribute:NSForegroundColorAttributeName value:[UIColor yellowColor] range:{2, 2}];
+    [string addAttribute:NSForegroundColorAttributeName value:[UIColor cyanColor] range:{4, 2}];
+    CTLineRef line = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef)string);
+    EXPECT_EQ(6L, CTLineGetGlyphCount(line));
+    EXPECT_EQ(3L, CFArrayGetCount(CTLineGetGlyphRuns(line)));
+}
+
+TEST(CTLine, ShouldBeAbleToDrawOnBackgroundThread) {
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_group_async(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        CGColorRef myCGColor = [UIColor blackColor].CGColor;
+        CTFontRef myCFFont = CTFontCreateWithName((__bridge CFStringRef) @"Helvetica", 20, NULL);
+        CFAutorelease(myCFFont);
+        NSDictionary* attributesDict =
+            @{ (id)kCTFontAttributeName : (__bridge id)myCFFont, (id)kCTForegroundColorAttributeName : (__bridge id)myCGColor };
+
+        CGSize contextSize = CGSizeMake(1000, 1000);
+        CGColorSpaceRef colSpace = CGColorSpaceCreateDeviceRGB();
+        std::vector<uint8_t> bitmapData(contextSize.width * contextSize.height * 4);
+        CGContextRef bitmapContext = CGBitmapContextCreate(bitmapData.data(),
+                                                           contextSize.width,
+                                                           contextSize.height,
+                                                           8,
+                                                           contextSize.width * 4,
+                                                           colSpace,
+                                                           kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Host);
+        CGColorSpaceRelease(colSpace);
+
+        CGContextSetRGBFillColor(bitmapContext, 0, 0.0, 0.0, 1);
+        CGContextFillRect(bitmapContext, CGRectMake(0.0, 0.0, contextSize.width, contextSize.height));
+        CGContextSetRGBFillColor(bitmapContext, 1, 1, 1, 1);
+        CGContextSetTextMatrix(bitmapContext, CGAffineTransformIdentity);
+
+        CFAttributedStringRef attrString =
+            CFAttributedStringCreate(kCFAllocatorDefault, (__bridge CFStringRef) @"TEST", (__bridge CFDictionaryRef)attributesDict);
+        CFAutorelease(attrString);
+        CTLineRef line = CTLineCreateWithAttributedString(attrString);
+        CFAutorelease(line);
+        CGContextSetTextPosition(bitmapContext, 1, floorf(contextSize.height / 5) + 1);
+
+        EXPECT_NO_THROW(CTLineDraw(line, bitmapContext));
+        CGContextRelease(bitmapContext);
+    });
+
+    dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+    dispatch_release(group);
+}

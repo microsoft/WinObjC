@@ -222,7 +222,7 @@ CORETEXT_EXPORT CGFloat CTFontGetDescent(CTFontRef font);
 CORETEXT_EXPORT CGFloat CTFontGetLeading(CTFontRef font);
 CORETEXT_EXPORT unsigned int CTFontGetUnitsPerEm(CTFontRef font);
 CORETEXT_EXPORT CFIndex CTFontGetGlyphCount(CTFontRef font);
-CORETEXT_EXPORT CGRect CTFontGetBoundingBox(CTFontRef font) STUB_METHOD;
+CORETEXT_EXPORT CGRect CTFontGetBoundingBox(CTFontRef font);
 CORETEXT_EXPORT CGFloat CTFontGetUnderlinePosition(CTFontRef font);
 CORETEXT_EXPORT CGFloat CTFontGetUnderlineThickness(CTFontRef font);
 CORETEXT_EXPORT CGFloat CTFontGetSlantAngle(CTFontRef font);
@@ -231,7 +231,7 @@ CORETEXT_EXPORT CGFloat CTFontGetXHeight(CTFontRef font);
 CORETEXT_EXPORT CGPathRef CTFontCreatePathForGlyph(CTFontRef font, CGGlyph glyph, const CGAffineTransform* matrix) STUB_METHOD;
 CORETEXT_EXPORT CGGlyph CTFontGetGlyphWithName(CTFontRef font, CFStringRef glyphName) STUB_METHOD;
 CORETEXT_EXPORT CGRect CTFontGetBoundingRectsForGlyphs(
-    CTFontRef font, CTFontOrientation orientation, const CGGlyph glyphs[], CGRect* boundingRects, CFIndex count) STUB_METHOD;
+    CTFontRef font, CTFontOrientation orientation, const CGGlyph glyphs[], CGRect* boundingRects, CFIndex count);
 CORETEXT_EXPORT double CTFontGetAdvancesForGlyphs(
     CTFontRef font, CTFontOrientation orientation, const CGGlyph glyphs[], CGSize* advances, CFIndex count);
 CORETEXT_EXPORT void CTFontGetVerticalTranslationsForGlyphs(CTFontRef font, const CGGlyph glyphs[], CGSize translations[], CFIndex count)
@@ -251,5 +251,5 @@ CORETEXT_EXPORT CTFontRef CTFontCreateWithGraphicsFont(CGFontRef graphicsFont,
                                                        const CGAffineTransform* matrix,
                                                        CTFontDescriptorRef attributes);
 CORETEXT_EXPORT CFArrayRef CTFontCopyAvailableTables(CTFontRef font, CTFontTableOptions options) STUB_METHOD;
-CORETEXT_EXPORT CFDataRef CTFontCopyTable(CTFontRef font, CTFontTableTag table, CTFontTableOptions options) STUB_METHOD;
+CORETEXT_EXPORT CFDataRef CTFontCopyTable(CTFontRef font, CTFontTableTag table, CTFontTableOptions options);
 CORETEXT_EXPORT CFTypeID CTFontGetTypeID();

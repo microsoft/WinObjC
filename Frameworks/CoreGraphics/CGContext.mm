@@ -1577,7 +1577,7 @@ bool CGContextIsPointInPath(CGContextRef context, bool eoFill, CGFloat x, CGFloa
     return StubReturn();
 }
 
-void CGContextDrawGlyphRun(CGContextRef context, const DWRITE_GLYPH_RUN* glyphRun) {
+void CGContextDrawGlyphRun(CGContextRef context, const DWRITE_GLYPH_RUN* glyphRun, float lineAscent) {
     NOISY_RETURN_IF_NULL(context);
     // TODO(DH) GH#1070 Merge in CGContextCairo.mm's Glyph Run code.
 }

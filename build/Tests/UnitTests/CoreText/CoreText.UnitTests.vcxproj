@@ -144,7 +144,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>freetype.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;freetype.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -166,7 +166,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>freetype.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;freetype.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -192,7 +192,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>freetype.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;freetype.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -218,7 +218,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>freetype.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;freetype.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -242,7 +242,6 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreText\CTRunTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreText\CTTypesetterTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreText\CTFramesetterTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreText\DWriteWrapperTests.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
 #define OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Appointments_AppointmentsProvider.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 
