@@ -112,8 +112,7 @@ void CTFrameDraw(CTFrameRef frameRef, CGContextRef ctx) {
     if (frame && ctx) {
         // Need to invert and translate coordinates so frame draws from top-left
         CGContextSaveGState(ctx);
-        CGRect boundingRect;
-        _CGPathGetBoundingBoxInternal(frame->_path.get(), &boundingRect);
+        CGRect boundingRect = CGPathGetBoundingBox(frame->_path.get());
         CGContextTranslateCTM(ctx, 0, boundingRect.size.height);
 
         // Invert Text Matrix so glyphs are drawn in correct orientation

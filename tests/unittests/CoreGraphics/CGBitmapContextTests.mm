@@ -151,7 +151,7 @@ void _TestPixelFormat(const CGRect bounds, const CGBitmapInfo info, DWORD expect
     CGColorSpaceRelease(colorSpace);
     CGContextRelease(context);
 }
-TEST(CGBitmapContext, VerifyPixelFormatRGBA) {
+DISABLED_TEST(CGBitmapContext, VerifyPixelFormatRGBA) {
     _TestPixelFormat(CGRect{ 0, 0, 10, 10 },
                      kCGBitmapByteOrder32Big | kCGImageAlphaPremultipliedLast,
                      0xff800000, // expectedbg
@@ -160,7 +160,7 @@ TEST(CGBitmapContext, VerifyPixelFormatRGBA) {
                      );
 }
 
-TEST(CGBitmapContext, VerifyPixelFormatBGRA) {
+DISABLED_TEST(CGBitmapContext, VerifyPixelFormatBGRA) {
     _TestPixelFormat(CGRect{ 0, 0, 10, 10 },
                      kCGBitmapByteOrder32Big | kCGImageAlphaPremultipliedFirst,
                      0xff000080, // expectedbg

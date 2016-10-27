@@ -52,14 +52,11 @@ CTFramesetterRef CTFramesetterCreateWithAttributedString(CFAttributedStringRef s
  @Notes frameAttributes parameter ignored
 */
 CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange stringRange, CGPathRef path, CFDictionaryRef frameAttributes) {
-    CGRect frameSize;
+    CGRect containingRect = CGPathGetBoundingBox(path);
 
-    // TODO 1143: Replace with public functions or workaround.
-    // _CGPathGetBoundingBoxInternal(path, &frameSize);
-
-    _CTFrame* ret = __CreateFrame(static_cast<_CTFramesetter*>(framesetter), frameSize, stringRange);
+    _CTFrame* ret = __CreateFrame(static_cast<_CTFramesetter*>(framesetter), containingRect, stringRange);
     ret->_path.reset(CGPathRetain(path));
-    ret->_frameRect.origin = frameSize.origin;
+    ret->_frameRect.origin = containingRect.origin;
 
     return static_cast<CTFrameRef>(ret);
 }
