@@ -548,7 +548,7 @@ Platform::String^ charToPlatformString(const char* str) {
     return ref new Platform::String(widStr.c_str());
 }
 
-void DisplayTextureXamlGlyphs::ConstructGlyphs(Microsoft::WRL::Wrappers::HString fontFamilyName, const wchar_t* str, int length) {
+void DisplayTextureXamlGlyphs::ConstructGlyphs(const Microsoft::WRL::Wrappers::HString& fontFamilyName, const wchar_t* str, int length) {
     auto textLayer = (XamlCompositor::Controls::CATextLayerXaml^)(Platform::Object^)_xamlTextbox;
     Windows::UI::Xaml::Controls::TextBlock^ textControl = textLayer->TextBlock;
     textControl->Text = ref new Platform::String(str, length);

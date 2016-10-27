@@ -167,7 +167,7 @@ public:
 
     float _desiredWidth, _desiredHeight;
     void Measure(float width, float height);
-    void ConstructGlyphs(Microsoft::WRL::Wrappers::HString fontFamilyName, const wchar_t* str, int len);
+    void ConstructGlyphs(const Microsoft::WRL::Wrappers::HString& fontFamilyName, const wchar_t* str, int len);
     void SetNodeContent(DisplayNode* node, float width, float height, float scale);
 };
 
