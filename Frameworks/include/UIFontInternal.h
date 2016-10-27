@@ -23,4 +23,5 @@
 + (UIFont*)titleFont;
 + (UIFont*)messageFont;
 + (UIFont*)buttonFont;
+- (NSString*)_compatibleFamilyName;
 @end
