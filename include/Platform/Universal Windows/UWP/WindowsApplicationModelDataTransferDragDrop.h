@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_DRAGDROP_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_DataTransfer_DragDrop.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 // Windows.ApplicationModel.DataTransfer.DragDrop.DragDropModifiers

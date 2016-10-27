@@ -36,22 +36,21 @@ static void checkWinObjCSDK()
 {
   const BuildSettings bs(NULL);
   String sdkRoot = bs.getValue("WINOBJC_SDK_ROOT");
-  String baseErrMsg = "Invalid WINOBJC_SDK_ROOT specified: \"" + platformPath(sdkRoot) + "\". ";
-  sbValidateWithTelemetry(!sb_realpath(sdkRoot).empty(), baseErrMsg + "The SDK directory does not exist.");
+  sbValidateWithTelemetry(!sb_realpath(sdkRoot).empty(), "The WINOBJC_SDK_ROOT directory does not exist: \"" + platformPath(sdkRoot) + "\"");
 
   String templateDir = bs.getValue("VSIMPORTER_TEMPLATES_DIR");
-  sbValidateWithTelemetry(!sb_realpath(templateDir).empty(), baseErrMsg + "The SDK directory is missing vsimporter templates.");
+  sbValidateWithTelemetry(!sb_realpath(templateDir).empty(),  "The WINOBJC_SDK_ROOT directory is missing vsimporter templates: \"" + platformPath(sdkRoot) + "\"");
 }
 
 void printVersion(const char *execName)
 {
-static String binaryVersion = "1.0";
-  std::cout << sb_basename(execName) << " " << binaryVersion << std::endl;
-  exit(EXIT_SUCCESS);
+  std::cout << "Xcode to Visual Studio Importer (" << getProductVersion() << ")" << std::endl;
 }
 
-void printUsage(const char *execName, bool full, int exitCode)
+void printUsage(const char *execName, bool full)
 {
+  printVersion(execName);
+  std::cout << std::endl;
   std::cout << "Usage: ";
   std::cout << "\t" << sb_basename(execName) << " ";
   std::cout << "[-project projectname] [-target targetname ...] [-configuration configurationname] ";
@@ -69,30 +68,27 @@ void printUsage(const char *execName, bool full, int exitCode)
   std::cout << "-list [-project projectname | -workspace workspacename]" << std::endl;
 
   // Don't print option descriptions if brief usage was requested
-  if (!full)
-    goto done;
-
-  std::cout << std::endl;
-  std::cout << "Program Options" << std::endl;
-  std::cout << "    -usage" << "\t\t    print brief usage message" << std::endl;
-  std::cout << "    -help" << "\t\t    print full usage message" << std::endl;
-  std::cout << "    -interactive" << "\t    enable interactive mode" << std::endl;
-  std::cout << "    -loglevel LEVEL" << "\t    debug | info | warning | error" << std::endl;
-  std::cout << "    -list" << "\t\t    list the targets and configurations in the project" << std::endl;
-  std::cout << "    -sdk SDKROOT" << "\t    specify path to WinObjC SDK root (by default calculated from binary's location)" << std::endl;
-  std::cout << "    -relativepath" << "\t    write a relative WinObjC SDK path to project files" << std::endl;
-  std::cout << "    -project PATH" << "\t    specify project to process" << std::endl;
-  std::cout << "    -workspace PATH" << "\t    specify workspace to process" << std::endl;
-  std::cout << "    -target NAME" << "\t    specify target to process" << std::endl;
-  std::cout << "    -alltargets" << "\t\t    process all targets" << std::endl;
-  std::cout << "    -scheme NAME" << "\t    specify scheme to process" << std::endl;
-  std::cout << "    -allschemes" << "\t\t    process all schemes" << std::endl;
-  std::cout << "    -configuration NAME" << "\t    specify configuration to use" << std::endl;
-  std::cout << "    -xcconfig FILE" << "\t    apply build settings defined in FILE as overrides" << std::endl;
-  std::cout << "    -version" << "\t\t    print the tool version" << std::endl;
-
-done:
-  exit(exitCode);
+  if (full) {
+    std::cout << std::endl;
+    std::cout << "Program Options" << std::endl;
+    std::cout << "    -usage" << "\t\t    print brief usage message" << std::endl;
+    std::cout << "    -help" << "\t\t    print full usage message" << std::endl;
+    std::cout << "    -genprojections" << "\t    generate WinRT projections project" << std::endl;
+    std::cout << "    -interactive" << "\t    enable interactive mode" << std::endl;
+    std::cout << "    -loglevel LEVEL" << "\t    debug | info | warning | error" << std::endl;
+    std::cout << "    -list" << "\t\t    list the targets and configurations in the project" << std::endl;
+    std::cout << "    -sdk SDKROOT" << "\t    specify path to WinObjC SDK root (by default calculated from binary's location)" << std::endl;
+    std::cout << "    -relativepath" << "\t    write a relative WinObjC SDK path to project files" << std::endl;
+    std::cout << "    -project PATH" << "\t    specify project to process" << std::endl;
+    std::cout << "    -workspace PATH" << "\t    specify workspace to process" << std::endl;
+    std::cout << "    -target NAME" << "\t    specify target to process" << std::endl;
+    std::cout << "    -alltargets" << "\t\t    process all targets" << std::endl;
+    std::cout << "    -scheme NAME" << "\t    specify scheme to process" << std::endl;
+    std::cout << "    -allschemes" << "\t\t    process all schemes" << std::endl;
+    std::cout << "    -configuration NAME" << "\t    specify configuration to use" << std::endl;
+    std::cout << "    -xcconfig FILE" << "\t    apply build settings defined in FILE as overrides" << std::endl;
+    std::cout << "    -version" << "\t\t    print the tool version" << std::endl;
+  }
 }
 
 int main(int argc, char* argv[])
@@ -104,10 +100,10 @@ int main(int argc, char* argv[])
   int workspaceSet = 0;
   int interactiveFlag = 0;
   int relativeSdkFlag = 0;
+  int genProjectionsFlag = 0;
   int allTargets = 0;
   int allSchemes = 0;
   int mode = GenerateMode;
-
 
   static struct option long_options[] = {
     {"version", no_argument, 0, 0},
@@ -126,6 +122,7 @@ int main(int argc, char* argv[])
     {"scheme", required_argument, 0, 0},
     {"allschemes", required_argument, &allSchemes, 1},
     {"relativepath", no_argument, &relativeSdkFlag, 1},
+    { "genprojections", no_argument, &genProjectionsFlag, 1 },
     {0, 0, 0, 0}
   };
 
@@ -134,21 +131,26 @@ int main(int argc, char* argv[])
     int option_index = 0;
     int c = getopt_long_only(argc, argv, "", long_options, &option_index);
 
-    if (c == -1)
+    if (c == -1) {
       break;
-    else if (c || option_index < 0 || option_index >= numOptions)
-      printUsage(argv[0], false, EXIT_FAILURE);
+    } else if (c || option_index < 0 || option_index >= numOptions) {
+      printUsage(argv[0], false);
+      exit(EXIT_FAILURE);
+    }
 
     // Process options
     switch (option_index) {
     case 0:
       printVersion(argv[0]);
+      exit(EXIT_SUCCESS);
       break;
     case 1:
-      printUsage(argv[0], false, EXIT_SUCCESS);
+      printUsage(argv[0], false);
+      exit(EXIT_SUCCESS);
       break;
     case 2:
-      printUsage(argv[0], true, EXIT_SUCCESS);
+      printUsage(argv[0], true);
+      exit(EXIT_SUCCESS);
       break;
     case 4:
       logVerbosity = strToLower(optarg);
@@ -199,21 +201,22 @@ int main(int argc, char* argv[])
       TELEMETRY_SET_MACHINEID(machineID.c_str());
   }
 
-  TELEMETRY_EVENT_DATA(L"VSImporterStart", "WinStore10");
+  TELEMETRY_EVENT_DATA(L"VSImporterStart", getProductVersion().c_str());
 
   // Process non-option ARGV-elements
   VariableCollectionManager& settingsManager = VariableCollectionManager::get();
   while (optind < argc) {
     String arg = argv[optind];
     if (arg == "/?") {
-        // Due to issue 6715724, flush before exiting
-		TELEMETRY_EVENT_DATA(L"VSImporterIncomplete", "printUsage");
-		TELEMETRY_FLUSH();
-        printUsage(argv[0], true, EXIT_SUCCESS);
+      // Due to issue 6715724, flush before exiting
+      TELEMETRY_EVENT_DATA(L"VSImporterIncomplete", "printUsage");
+      TELEMETRY_FLUSH();
+      printUsage(argv[0], true);
+      exit(EXIT_SUCCESS);
     } else if (arg.find_first_of('=') != String::npos) {
       settingsManager.processGlobalAssignment(arg);
     } else {
-		sbValidateWithTelemetry(0, "Unsupported argument: " + arg);
+      sbValidateWithTelemetry(0, "Unsupported argument: " + arg);
     }
     optind++;
   }
@@ -264,8 +267,7 @@ int main(int argc, char* argv[])
 
   // Make sure workspace arguments are valid
   if (workspaceSet) {
-	  sbValidateWithTelemetry(!projectSet, "Cannot specify both a project and a workspace.");
-	sbValidateWithTelemetry(targets.empty(), "Cannot specify target(s) when specifying a workspace.");
+    sbValidateWithTelemetry(!projectSet, "Cannot specify both a project and a workspace.");
   }
 
   // Disallow specifying schemes and targets together
@@ -320,21 +322,17 @@ int main(int argc, char* argv[])
   if (mode == ListMode) {
     mainWorkspace->printSummary();
   } else if (mode == GenerateMode) {
-    if (allTargets) {
-      mainWorkspace->queueAllTargets(configurations);
-    } else if (projectSet) {
-      mainWorkspace->queueTargets(targets, configurations);
-    } else if (workspaceSet) {
+    if (!schemes.empty() || allSchemes) {
       mainWorkspace->queueSchemes(schemes, configurations);
     } else {
-		sbAssertWithTelemetry(0); // non-reachable
+      mainWorkspace->queueTargets(targets, configurations);
     }
-    mainWorkspace->generateFiles();
+    mainWorkspace->generateFiles(genProjectionsFlag);
   } else {
 	  sbAssertWithTelemetry(0); // non-reachable
   }
 
-  TELEMETRY_EVENT_DATA(L"VSImporterComplete", "WinStore10");
+  TELEMETRY_EVENT_DATA(L"VSImporterComplete", getProductVersion().c_str());
   TELEMETRY_FLUSH();
 
   return EXIT_SUCCESS;

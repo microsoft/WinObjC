@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Bluetooth.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDBBluetoothClassOfDevice, WDBBluetoothDevice, WDBBluetoothLEDevice, WDBBluetoothSignalStrengthFilter;
@@ -170,7 +176,7 @@ typedef unsigned WDBBluetoothError;
 #ifndef __WDBBluetoothClassOfDevice_DEFINED__
 #define __WDBBluetoothClassOfDevice_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBBluetoothClassOfDevice : RTObject
 + (WDBBluetoothClassOfDevice*)fromRawValue:(unsigned int)rawValue;
 + (WDBBluetoothClassOfDevice*)fromParts:(WDBBluetoothMajorClass)majorClass
@@ -195,13 +201,17 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Devices.Bluetooth.BluetoothDevice
 #ifndef __WDBBluetoothDevice_DEFINED__
 #define __WDBBluetoothDevice_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBBluetoothDevice : RTObject <WFIClosable>
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDBBluetoothDevice*))success failure:(void (^)(NSError*))failure;
 + (void)fromHostNameAsync:(WNHostName*)hostName success:(void (^)(WDBBluetoothDevice*))success failure:(void (^)(NSError*))failure;
@@ -233,7 +243,7 @@ WINRT_EXPORT
 #ifndef __WDBBluetoothLEDevice_DEFINED__
 #define __WDBBluetoothLEDevice_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBBluetoothLEDevice : RTObject <WFIClosable>
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDBBluetoothLEDevice*))success failure:(void (^)(NSError*))failure;
 + (void)fromBluetoothAddressAsync:(uint64_t)bluetoothAddress
@@ -264,7 +274,7 @@ WINRT_EXPORT
 #ifndef __WDBBluetoothSignalStrengthFilter_DEFINED__
 #define __WDBBluetoothSignalStrengthFilter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_EXPORT
 @interface WDBBluetoothSignalStrengthFilter : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

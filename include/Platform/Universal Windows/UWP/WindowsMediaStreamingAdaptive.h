@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_Streaming_Adaptive.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WMSAAdaptiveMediaSource, WMSAAdaptiveMediaSourceCreationResult, WMSAAdaptiveMediaSourceDownloadBitrateChangedEventArgs,
@@ -67,13 +73,17 @@ typedef unsigned WMSAAdaptiveMediaSourceResourceType;
 @protocol WMCIMediaSource
 @end
 
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
+@interface WMCIMediaSource : RTObject <WMCIMediaSource>
+@end
+
 #endif // __WMCIMediaSource_DEFINED__
 
 // Windows.Media.Streaming.Adaptive.AdaptiveMediaSource
 #ifndef __WMSAAdaptiveMediaSource_DEFINED__
 #define __WMSAAdaptiveMediaSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSource : RTObject <WMCIMediaSource>
 + (BOOL)isContentTypeSupported:(NSString*)contentType;
 + (void)createFromUriAsync:(WFUri*)uri
@@ -130,7 +140,7 @@ WINRT_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceCreationResult_DEFINED__
 #define __WMSAAdaptiveMediaSourceCreationResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceCreationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -146,7 +156,7 @@ WINRT_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceDownloadBitrateChangedEventArgs_DEFINED__
 #define __WMSAAdaptiveMediaSourceDownloadBitrateChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadBitrateChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -161,7 +171,7 @@ WINRT_EXPORT
 #ifndef __WMSAAdaptiveMediaSourcePlaybackBitrateChangedEventArgs_DEFINED__
 #define __WMSAAdaptiveMediaSourcePlaybackBitrateChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourcePlaybackBitrateChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -177,7 +187,7 @@ WINRT_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceDownloadRequestedEventArgs_DEFINED__
 #define __WMSAAdaptiveMediaSourceDownloadRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -196,7 +206,7 @@ WINRT_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceDownloadCompletedEventArgs_DEFINED__
 #define __WMSAAdaptiveMediaSourceDownloadCompletedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -214,7 +224,7 @@ WINRT_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceDownloadFailedEventArgs_DEFINED__
 #define __WMSAAdaptiveMediaSourceDownloadFailedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -232,7 +242,7 @@ WINRT_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceDownloadResult_DEFINED__
 #define __WMSAAdaptiveMediaSourceDownloadResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -250,7 +260,7 @@ WINRT_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceDownloadRequestedDeferral_DEFINED__
 #define __WMSAAdaptiveMediaSourceDownloadRequestedDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadRequestedDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

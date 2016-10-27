@@ -25,9 +25,9 @@
 #import "Foundation/NSString.h"
 #import "Foundation/NSMutableArray.h"
 #import "Foundation/NSValue.h"
+#import "Foundation/NSInputStream.h"
+#import "Foundation/NSOutputStream.h"
 #import <CoreFoundation/CFData.h>
-#import <UWP/WindowsStorageStreams.h>
-#import <UWP/WindowsSecurityCryptography.h>
 #include <COMIncludes.h>
 #import "ErrorHandling.h"
 #import "RawBuffer.h"
@@ -305,23 +305,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
  @Notes atomically parameter not supported
 */
 - (BOOL)writeToFile:(NSString*)filename atomically:(BOOL)atomically {
-    char* fname = (char*)[filename UTF8String];
-
-    TraceVerbose(TAG, L"NSData writing %hs (%d bytes)", fname, [self length]);
-    if (!fname) {
-        TraceVerbose(TAG, L"Filename is null!");
-        return FALSE;
-    }
-    EbrFile* fpOut = EbrFopen((const char*)fname, "wb");
-    if (fpOut) {
-        EbrFwrite([self bytes], 1, [self length], fpOut);
-        EbrFclose(fpOut);
-
-        return TRUE;
-    } else {
-        TraceVerbose(TAG, L"NSData couldn't open %hs for write", fname);
-        return FALSE;
-    }
+    return [self writeToURL:[NSURL fileURLWithPath:filename] atomically:atomically];
 }
 
 /**
@@ -329,11 +313,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
  @Notes Only file:// URLs supported. atomically parameter not supported.
 */
 - (BOOL)writeToURL:(NSURL*)url atomically:(BOOL)atomically {
-    if (![url isFileURL]) {
-        TraceVerbose(TAG, L"-[NSData::writeToURL]: Only file: URLs are supported. (%hs)", [[url absoluteString] UTF8String]);
-        return NO;
-    }
-    return [self writeToFile:[url path] atomically:atomically];
+    return [self writeToURL:url options:(atomically ? NSDataWritingAtomic : 0) error:nil];
 }
 
 /**
@@ -341,33 +321,50 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
  @Notes options parameter not supported
 */
 - (BOOL)writeToFile:(NSString*)filename options:(NSDataWritingOptions)options error:(NSError**)error {
-    char* fname = (char*)[filename UTF8String];
-
-    TraceVerbose(TAG, L"NSData writing %hs (%d bytes)", fname, [self length]);
-    EbrFile* fpOut = EbrFopen((const char*)fname, "wb");
-    if (fpOut) {
-        EbrFwrite([self bytes], 1, [self length], fpOut);
-        EbrFclose(fpOut);
-        return YES;
-    }
-
-    TraceVerbose(TAG, L"NSData couldn't open %hs for write (with options)", fname);
-    if (error) {
-        *error = [NSError errorWithDomain:NSCocoaErrorDomain code:NSFileNoSuchFileError userInfo:@{ NSFilePathErrorKey : filename }];
-    }
-    return NO;
+    return [self writeToURL:[NSURL fileURLWithPath:filename] options:options error:error];
 }
 
 /**
  @Status Caveat
- @Notes options parameter not supported
+ @Notes options parameter not fully supported (only NSDataWritingWithoutOverwriting is supported)
 */
 - (BOOL)writeToURL:(NSURL*)url options:(NSDataWritingOptions)options error:(NSError**)errorp {
-    if (![url isFileURL]) {
-        TraceVerbose(TAG, L"-[NSData::writeToURL]: Only file: URLs are supported. (%hs)", [[url absoluteString] UTF8String]);
+    if (!url) {
+        if (errorp) {
+            *errorp = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
+        }
         return NO;
     }
-    return [self writeToFile:[url path] options:options error:errorp];
+
+    NSOutputStream* outputStream =
+        [NSOutputStream outputStreamWithURL:url append:(0 != (options & NSDataWritingWithoutOverwriting)) ? YES : NO];
+    [outputStream open];
+    auto closeStream = wil::ScopeExit([&outputStream]() { [outputStream close]; });
+
+    if (NSStreamStatusOpen != outputStream.streamStatus) {
+        if (errorp) {
+            *errorp = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
+        }
+        return NO;
+    }
+    int bytesToWrite = [self length];
+    const unsigned char* baseAddress = (const unsigned char*)[self bytes];
+
+    while (bytesToWrite > 0) {
+        auto result = [outputStream write:(baseAddress + ([self length] - bytesToWrite)) maxLength:bytesToWrite];
+        if (result == -1) {
+            if (errorp) {
+                *errorp = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
+            }
+            return NO;
+        } else if (result == 0) {
+            break;
+        }
+
+        bytesToWrite -= result;
+    }
+
+    return YES;
 }
 
 /**
@@ -390,50 +387,28 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
  @Notes options parameter not supported
 */
 - (instancetype)initWithContentsOfFile:(NSString*)filename options:(NSDataReadingOptions)options error:(NSError**)error {
+    CFDataRef tempData;
+    SInt32 cfError{};
+
     if (!filename) {
-        if (error) {
-            *error = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
-        }
         [self release];
         return nil;
     }
 
-    char* fname = (char*)[filename UTF8String];
-
-    TraceVerbose(TAG, L"NSData extended-opening %hs", fname);
-    EbrFile* fpIn = EbrFopen(fname, "rb");
-    if (fpIn) {
-        auto closeFile = wil::ScopeExit([&]() { EbrFclose(fpIn); });
-
-        EbrFseek(fpIn, 0, SEEK_END);
-        size_t length = EbrFtell(fpIn);
-        EbrFseek(fpIn, 0, SEEK_SET);
-
-        if (length) {
-            // The created NSData takes ownership of freeing this
-            woc::unique_iw<uint8_t> copiedBytes(static_cast<uint8_t*>(IwMalloc(length)));
-            if (!copiedBytes.get()) {
-                if (error) {
-                    *error = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
-                }
-                [self release];
-                return nil;
-            }
-
-            size_t fileLength = EbrFread(copiedBytes.get(), 1, length, fpIn);
-            self = [self initWithBytesNoCopy:copiedBytes.release() length:fileLength];
-        }
-
-    } else {
-        TraceVerbose(TAG, L"NSData couldn't open %hs for read (extended)", fname);
-        if (error) {
-            *error = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
-        }
-        [self release];
-        return nil;
+    if (CFURLCreateDataAndPropertiesFromResource(
+            nullptr, static_cast<CFURLRef>([NSURL fileURLWithPath:filename]), &tempData, nullptr, nullptr, &cfError)) {
+        // An astute reader may be wondering why initWithData should be called when tempData is already a fully realized NSData with the
+        // information we want. In order to comply with Toll Free bridging and class clustering, *instancetype* always needs to be
+        // returned here which may not be the case for a derived class (say NSMutableData). This init call forwards to a designated
+        // initializer internally so the derived implementor need not think about it if they don't want. Note that the default NSData
+        // implementation, NSCFData, does not make an extra copy since a CFDataRef is a NSCFData.
+        return [self initWithData:static_cast<NSData*>(tempData)];
+    } else if (error != nullptr) {
+        *error = [NSError errorWithDomain:@"NSData" code:cfError userInfo:nil];
     }
 
-    return self;
+    [self release];
+    return nil;
 }
 
 /**

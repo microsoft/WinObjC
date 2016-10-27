@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Store_Preview.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WASPStorePreviewSkuInfo, WASPStorePreviewPurchaseResults, WASPStorePreviewProductInfo, WASPStoreHardwareManufacturerInfo,
@@ -73,7 +79,7 @@ typedef unsigned WASPStoreSystemFeature;
 #ifndef __WASPStorePreviewSkuInfo_DEFINED__
 #define __WASPStorePreviewSkuInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 @interface WASPStorePreviewSkuInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -95,7 +101,7 @@ WINRT_EXPORT
 #ifndef __WASPStorePreviewPurchaseResults_DEFINED__
 #define __WASPStorePreviewPurchaseResults_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 @interface WASPStorePreviewPurchaseResults : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -109,7 +115,7 @@ WINRT_EXPORT
 #ifndef __WASPStorePreviewProductInfo_DEFINED__
 #define __WASPStorePreviewProductInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 @interface WASPStorePreviewProductInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -127,7 +133,7 @@ WINRT_EXPORT
 #ifndef __WASPStoreHardwareManufacturerInfo_DEFINED__
 #define __WASPStoreHardwareManufacturerInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 @interface WASPStoreHardwareManufacturerInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -144,7 +150,7 @@ WINRT_EXPORT
 #ifndef __WASPStorePreview_DEFINED__
 #define __WASPStorePreview_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 @interface WASPStorePreview : RTObject
 + (void)requestProductPurchaseByProductIdAndSkuIdAsync:(NSString*)productId
                                                  skuId:(NSString*)skuId
@@ -160,12 +166,12 @@ WINRT_EXPORT
 #ifndef __WASPStoreConfiguration_DEFINED__
 #define __WASPStoreConfiguration_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 @interface WASPStoreConfiguration : RTObject
 + (void)setSystemConfiguration:(NSString*)catalogHardwareManufacturerId
- catalogStoreContentModifierId:(NSString*)catalogStoreContentModifierId
- systemConfigurationExpiration:(WFDateTime*)systemConfigurationExpiration
-     catalogHardwareDescriptor:(NSString*)catalogHardwareDescriptor;
+    catalogStoreContentModifierId:(NSString*)catalogStoreContentModifierId
+    systemConfigurationExpiration:(WFDateTime*)systemConfigurationExpiration
+        catalogHardwareDescriptor:(NSString*)catalogHardwareDescriptor;
 + (void)setMobileOperatorConfiguration:(NSString*)mobileOperatorId
            appDownloadLimitInMegabytes:(unsigned int)appDownloadLimitInMegabytes
         updateDownloadLimitInMegabytes:(unsigned int)updateDownloadLimitInMegabytes;

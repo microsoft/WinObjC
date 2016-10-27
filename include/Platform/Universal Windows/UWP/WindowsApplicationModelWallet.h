@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Wallet.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WAWWalletBarcode, WAWWalletTransaction, WAWWalletRelevantLocation, WAWWalletItemCustomProperty, WAWWalletVerb, WAWWalletItem,
@@ -96,7 +102,7 @@ typedef unsigned WAWWalletItemKind;
 #ifndef __WAWWalletBarcode_DEFINED__
 #define __WAWWalletBarcode_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
 @interface WAWWalletBarcode : RTObject
 + (WAWWalletBarcode*)makeWalletBarcode:(WAWWalletBarcodeSymbology)symbology value:(NSString*)value ACTIVATOR;
 + (WAWWalletBarcode*)makeCustomWalletBarcode:(RTObject<WSSIRandomAccessStreamReference>*)streamToBarcodeImage ACTIVATOR;
@@ -114,7 +120,7 @@ WINRT_EXPORT
 #ifndef __WAWWalletTransaction_DEFINED__
 #define __WAWWalletTransaction_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
 @interface WAWWalletTransaction : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -134,7 +140,7 @@ WINRT_EXPORT
 #ifndef __WAWWalletRelevantLocation_DEFINED__
 #define __WAWWalletRelevantLocation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
 @interface WAWWalletRelevantLocation : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -150,7 +156,7 @@ WINRT_EXPORT
 #ifndef __WAWWalletItemCustomProperty_DEFINED__
 #define __WAWWalletItemCustomProperty_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
 @interface WAWWalletItemCustomProperty : RTObject
 + (WAWWalletItemCustomProperty*)makeWalletItemCustomProperty:(NSString*)name value:(NSString*)value ACTIVATOR;
 #if defined(__cplusplus)
@@ -169,7 +175,7 @@ WINRT_EXPORT
 #ifndef __WAWWalletVerb_DEFINED__
 #define __WAWWalletVerb_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
 @interface WAWWalletVerb : RTObject
 + (WAWWalletVerb*)makeWalletVerb:(NSString*)name ACTIVATOR;
 #if defined(__cplusplus)
@@ -184,7 +190,7 @@ WINRT_EXPORT
 #ifndef __WAWWalletItem_DEFINED__
 #define __WAWWalletItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
 @interface WAWWalletItem : RTObject
 + (WAWWalletItem*)makeWalletItem:(WAWWalletItemKind)kind displayName:(NSString*)displayName ACTIVATOR;
 #if defined(__cplusplus)
@@ -227,7 +233,7 @@ WINRT_EXPORT
 #ifndef __WAWWalletItemStore_DEFINED__
 #define __WAWWalletItemStore_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
 @interface WAWWalletItemStore : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -254,7 +260,7 @@ WINRT_EXPORT
 #ifndef __WAWWalletManager_DEFINED__
 #define __WAWWalletManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
 @interface WAWWalletManager : RTObject
 + (void)requestStoreAsyncWithSuccess:(void (^)(WAWWalletItemStore*))success failure:(void (^)(NSError*))failure;
 @end

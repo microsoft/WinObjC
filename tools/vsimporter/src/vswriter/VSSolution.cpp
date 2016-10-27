@@ -28,7 +28,7 @@
 VSSolution::VSSolution(const std::string& absPath, unsigned version)
 : m_absFilePath(platformPath(sanitizePath(absPath))), m_version(version)
 {
-  sbAssert(isAbsolutePath(absPath));
+	sbAssertWithTelemetry(isAbsolutePath(absPath), "Path to VS solution is not absolute");
 }
 
 VSSolution::~VSSolution()
@@ -222,7 +222,7 @@ void VSSolution::validateUUIDs() const
   StringSet uuids;
   for (auto project : m_nestingMap) {
     auto result = uuids.insert(project.second->getId());
-    sbValidate(result.second, "UUID collision detected.");
+    sbValidateWithTelemetry(result.second, "UUID collision detected.");
   }
 }
 

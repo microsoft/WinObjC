@@ -11,52 +11,63 @@
     <copyright>Copyright 2016</copyright>
     <tags></tags>
     <dependencies></dependencies>
+    <contentFiles>
+      <files include="**\*.xaml" buildAction="None" copyToOutput="true" />
+    </contentFiles>
   </metadata>
 
   <files>
 
     <file src="WinObjC.props"                                                                                                    target="build\WinObjC.props" />
     <file src="WinObjC.targets"                                                                                                  target="build\WinObjC.targets" />
+    <file src="WinObjC_native.props"                                                                                             target="build\native\WinObjC.props" />
+    <file src="WinObjC_native.targets"                                                                                           target="build\native\WinObjC.targets" />
 
-    <file src="$winobjc_root$\deps\prebuilt\applicationinsights\win32\release\applicationinsights\applicationinsights.winmd"     target="lib\lib\universal windows\x86" />
+    <file src="$winobjc_root$\deps\prebuilt\applicationinsights\win32\release\applicationinsights\applicationinsights.winmd"     target="lib\uap10.0" />
 
-    <file src="$winobjc_root$\build\win32\release\universal windows\cfcharactersetbitmaps.bitmap"                                target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\cfunicharpropertydatabase.data"                              target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\cfunicodedata-b.mapping"                                     target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\cfunicodedata-l.mapping"                                     target="lib\lib\universal windows\x86" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\cfcharactersetbitmaps.bitmap"                                target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\cfunicharpropertydatabase.data"                              target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\cfunicodedata-b.mapping"                                     target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\cfunicodedata-l.mapping"                                     target="runtimes\win10-x86\native" />
 
-    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\cairo.dll"                                                     target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\freetype.dll"                                                  target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\icudt57.dll"                                                   target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\icuin57.dll"                                                   target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\icuuc57.dll"                                                   target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\libjpeg.dll"                                                   target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\libpng.dll"                                                    target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\libxml2.dll"                                                   target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\libz.dll"                                                      target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\objcuwp.dll"                                                   target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\rtobjcinterop.dll"                                             target="lib\lib\universal windows\x86" />
+    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\cairo.dll"                                                     target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\freetype.dll"                                                  target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\icudt57.dll"                                                   target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\icuin57.dll"                                                   target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\icuuc57.dll"                                                   target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\libjpeg.dll"                                                   target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\libpng.dll"                                                    target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\libxml2.dll"                                                   target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\libz.dll"                                                      target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\objcuwp*.dll"                                                   target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\rtobjcinterop.dll"                                             target="runtimes\win10-x86\native" />
 
-    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\release\libdispatch.dll"                                       target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\release\libobjc2.dll"                                          target="lib\lib\universal windows\x86" />
+    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\release\libdispatch.dll"                                       target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\release\libobjc2.dll"                                          target="runtimes\win10-x86\native" />
 
-    <file src="$winobjc_root$\build\win32\release\universal windows\appinsights_win10-uap.dll"                                   target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\applicationinsights.dll"                                     target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\autolayout.dll"                                              target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\corefoundation.dll"                                          target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\coregraphics.dll"                                            target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\coretext.dll"                                                target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\foundation.dll"                                              target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\logging.dll"                                                 target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\quartzcore.dll"                                              target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\starboard.dll"                                               target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\uikit.dll"                                                   target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\security.dll"                                                target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\safariservices.dll"                                          target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\cfcharactersetbitmaps.bitmap"                                target="lib\lib\universal windows\x86" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\mobilecoreservices.dll"                                      target="lib\lib\universal windows\x86" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\appinsights_win10-uap.dll"                                   target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\applicationinsights.dll"                                     target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\autolayout.dll"                                              target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\corefoundation.dll"                                          target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\coregraphics.dll"                                            target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\coretext.dll"                                                target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\foundation.dll"                                              target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\logging.dll"                                                 target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\quartzcore.dll"                                              target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\starboard.dll"                                               target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\uikit.dll"                                                   target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\uikit.xaml.dll"                                              target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\security.dll"                                                target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\safariservices.dll"                                          target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\cfcharactersetbitmaps.bitmap"                                target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\mobilecoreservices.dll"                                      target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\audiotoolbox.dll"                                            target="runtimes\win10-x86\native" />
 
-    <file src="$winobjc_root$\build\win32\release\universal windows\release\winobjcrt.dll"                                       target="lib\lib\universal windows\x86" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\release\winobjcrt.dll"                                       target="runtimes\win10-x86\native" />
+
+    <file src="$winobjc_root$\build\win32\release\universal windows\UIKit.winmd"                                                 target="lib\uap10.0" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\UIKit.pri"                                                   target="lib\uap10.0" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\UIKit.Xaml\**\*.xaml"                                        target="contentFiles\any\uap\UIKit" />
 
   </files>
 

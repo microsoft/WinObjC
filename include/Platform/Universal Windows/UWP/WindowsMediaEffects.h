@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_Effects_Editing.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WMEVideoCompositorDefinition, WMECompositeVideoFrameContext, WMEAudioEffect, WMEAudioRenderEffectsManager,
@@ -94,6 +100,10 @@ typedef unsigned WMEMediaEffectClosedReason;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+@interface WMEIVideoCompositorDefinition : RTObject <WMEIVideoCompositorDefinition>
+@end
+
 #endif // __WMEIVideoCompositorDefinition_DEFINED__
 
 // Windows.Media.IMediaExtension
@@ -102,6 +112,10 @@ typedef unsigned WMEMediaEffectClosedReason;
 
 @protocol WMIMediaExtension
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+@interface WMIMediaExtension : RTObject <WMIMediaExtension>
 @end
 
 #endif // __WMIMediaExtension_DEFINED__
@@ -119,6 +133,10 @@ typedef unsigned WMEMediaEffectClosedReason;
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+@interface WMEIVideoCompositor : RTObject <WMEIVideoCompositor>
+@end
+
 #endif // __WMEIVideoCompositor_DEFINED__
 
 // Windows.Media.Effects.IAudioEffectDefinition
@@ -130,6 +148,10 @@ typedef unsigned WMEMediaEffectClosedReason;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+@interface WMEIAudioEffectDefinition : RTObject <WMEIAudioEffectDefinition>
+@end
+
 #endif // __WMEIAudioEffectDefinition_DEFINED__
 
 // Windows.Media.Effects.IVideoEffectDefinition
@@ -139,6 +161,10 @@ typedef unsigned WMEMediaEffectClosedReason;
 @protocol WMEIVideoEffectDefinition
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+@interface WMEIVideoEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 @end
 
 #endif // __WMEIVideoEffectDefinition_DEFINED__
@@ -159,6 +185,10 @@ typedef unsigned WMEMediaEffectClosedReason;
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+@interface WMEIBasicVideoEffect : RTObject <WMEIBasicVideoEffect>
+@end
+
 #endif // __WMEIBasicVideoEffect_DEFINED__
 
 // Windows.Media.Effects.IBasicAudioEffect
@@ -175,13 +205,17 @@ typedef unsigned WMEMediaEffectClosedReason;
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+@interface WMEIBasicAudioEffect : RTObject <WMEIBasicAudioEffect>
+@end
+
 #endif // __WMEIBasicAudioEffect_DEFINED__
 
 // Windows.Media.Effects.VideoCompositorDefinition
 #ifndef __WMEVideoCompositorDefinition_DEFINED__
 #define __WMEVideoCompositorDefinition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEVideoCompositorDefinition : RTObject <WMEIVideoCompositorDefinition>
 + (WMEVideoCompositorDefinition*)make:(NSString*)activatableClassId ACTIVATOR;
 + (WMEVideoCompositorDefinition*)makeWithProperties:(NSString*)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
@@ -198,7 +232,7 @@ WINRT_EXPORT
 #ifndef __WMECompositeVideoFrameContext_DEFINED__
 #define __WMECompositeVideoFrameContext_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMECompositeVideoFrameContext : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -215,7 +249,7 @@ WINRT_EXPORT
 #ifndef __WMEAudioEffect_DEFINED__
 #define __WMEAudioEffect_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEAudioEffect : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -229,7 +263,7 @@ WINRT_EXPORT
 #ifndef __WMEAudioRenderEffectsManager_DEFINED__
 #define __WMEAudioRenderEffectsManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEAudioRenderEffectsManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -248,7 +282,7 @@ WINRT_EXPORT
 #ifndef __WMEAudioCaptureEffectsManager_DEFINED__
 #define __WMEAudioCaptureEffectsManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEAudioCaptureEffectsManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -264,7 +298,7 @@ WINRT_EXPORT
 #ifndef __WMEAudioEffectsManager_DEFINED__
 #define __WMEAudioEffectsManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEAudioEffectsManager : RTObject
 + (WMEAudioRenderEffectsManager*)createAudioRenderEffectsManager:(NSString*)deviceId category:(WMRAudioRenderCategory)category;
 + (WMEAudioRenderEffectsManager*)createAudioRenderEffectsManagerWithMode:(NSString*)deviceId
@@ -282,7 +316,7 @@ WINRT_EXPORT
 #ifndef __WMEVideoEffectDefinition_DEFINED__
 #define __WMEVideoEffectDefinition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEVideoEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 + (WMEVideoEffectDefinition*)make:(NSString*)activatableClassId ACTIVATOR;
 + (WMEVideoEffectDefinition*)makeWithProperties:(NSString*)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
@@ -299,7 +333,7 @@ WINRT_EXPORT
 #ifndef __WMEAudioEffectDefinition_DEFINED__
 #define __WMEAudioEffectDefinition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEAudioEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 + (WMEAudioEffectDefinition*)make:(NSString*)activatableClassId ACTIVATOR;
 + (WMEAudioEffectDefinition*)makeWithProperties:(NSString*)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
@@ -316,7 +350,7 @@ WINRT_EXPORT
 #ifndef __WMEProcessVideoFrameContext_DEFINED__
 #define __WMEProcessVideoFrameContext_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEProcessVideoFrameContext : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -331,7 +365,7 @@ WINRT_EXPORT
 #ifndef __WMEProcessAudioFrameContext_DEFINED__
 #define __WMEProcessAudioFrameContext_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEProcessAudioFrameContext : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -346,7 +380,7 @@ WINRT_EXPORT
 #ifndef __WMEVideoTransformEffectDefinition_DEFINED__
 #define __WMEVideoTransformEffectDefinition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEVideoTransformEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

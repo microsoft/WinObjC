@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SYSTEM_THREADING_CORE_EXPORT
+#define OBJCUWP_WINDOWS_SYSTEM_THREADING_CORE_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_System_Threading_Core.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WSTCSignalNotifier, WSTCPreallocatedWorkItem;
@@ -51,7 +57,7 @@ typedef void (^WSTCSignalHandler)(WSTCSignalNotifier* signalNotifier, BOOL timed
 #ifndef __WSTCSignalNotifier_DEFINED__
 #define __WSTCSignalNotifier_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_THREADING_CORE_EXPORT
 @interface WSTCSignalNotifier : RTObject
 + (WSTCSignalNotifier*)attachToEvent:(NSString*)name handler:(WSTCSignalHandler)handler;
 + (WSTCSignalNotifier*)attachToEventWithTimeout:(NSString*)name handler:(WSTCSignalHandler)handler timeout:(WFTimeSpan*)timeout;
@@ -70,7 +76,7 @@ WINRT_EXPORT
 #ifndef __WSTCPreallocatedWorkItem_DEFINED__
 #define __WSTCPreallocatedWorkItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_THREADING_CORE_EXPORT
 @interface WSTCPreallocatedWorkItem : RTObject
 + (WSTCPreallocatedWorkItem*)makeWorkItem:(WSTWorkItemHandler)handler ACTIVATOR;
 + (WSTCPreallocatedWorkItem*)makeWorkItemWithPriority:(WSTWorkItemHandler)handler priority:(WSTWorkItemPriority)priority ACTIVATOR;

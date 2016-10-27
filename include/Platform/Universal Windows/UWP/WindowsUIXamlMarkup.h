@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Markup.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXMXamlBinaryWriter, WUXMXamlReader, WUXMXamlBindingHelper;
@@ -35,7 +41,7 @@
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Markup.XamlBinaryWriterErrorInformation
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 @interface WUXMXamlBinaryWriterErrorInformation : NSObject
 + (instancetype) new;
 @property unsigned int inputStreamIndex;
@@ -44,7 +50,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.UI.Xaml.Markup.XmlnsDefinition
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 @interface WUXMXmlnsDefinition : NSObject
 + (instancetype) new;
 @property (retain) NSString* xmlNamespace;
@@ -59,6 +65,10 @@ WINRT_EXPORT
 - (void)connect:(int)connectionId target:(RTObject*)target;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+@interface WUXMIComponentConnector : RTObject <WUXMIComponentConnector>
+@end
+
 #endif // __WUXMIComponentConnector_DEFINED__
 
 // Windows.UI.Xaml.Markup.IComponentConnector2
@@ -67,6 +77,10 @@ WINRT_EXPORT
 
 @protocol WUXMIComponentConnector2
 - (RTObject<WUXMIComponentConnector>*)getBindingConnector:(int)connectionId target:(RTObject*)target;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+@interface WUXMIComponentConnector2 : RTObject <WUXMIComponentConnector2>
 @end
 
 #endif // __WUXMIComponentConnector2_DEFINED__
@@ -84,6 +98,10 @@ WINRT_EXPORT
 @property (readonly) RTObject<WUXMIXamlType>* type;
 - (RTObject*)getValue:(RTObject*)instance;
 - (void)setValue:(RTObject*)instance value:(RTObject*)value;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+@interface WUXMIXamlMember : RTObject <WUXMIXamlMember>
 @end
 
 #endif // __WUXMIXamlMember_DEFINED__
@@ -113,6 +131,10 @@ WINRT_EXPORT
 - (void)runInitializer;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+@interface WUXMIXamlType : RTObject <WUXMIXamlType>
+@end
+
 #endif // __WUXMIXamlType_DEFINED__
 
 // Windows.UI.Xaml.Markup.IXamlMetadataProvider
@@ -123,6 +145,10 @@ WINRT_EXPORT
 - (RTObject<WUXMIXamlType>*)getXamlType:(WUXITypeName*)type;
 - (RTObject<WUXMIXamlType>*)getXamlTypeByFullName:(NSString*)fullName;
 - (NSArray* /* WUXMXmlnsDefinition* */)getXmlnsDefinitions;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+@interface WUXMIXamlMetadataProvider : RTObject <WUXMIXamlMetadataProvider>
 @end
 
 #endif // __WUXMIXamlMetadataProvider_DEFINED__
@@ -136,13 +162,17 @@ WINRT_EXPORT
 - (void)processBindings:(RTObject*)item itemIndex:(int)itemIndex phase:(int)phase nextPhase:(int*)nextPhase;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
+@interface WUXMIDataTemplateComponent : RTObject <WUXMIDataTemplateComponent>
+@end
+
 #endif // __WUXMIDataTemplateComponent_DEFINED__
 
 // Windows.UI.Xaml.Markup.XamlBinaryWriter
 #ifndef __WUXMXamlBinaryWriter_DEFINED__
 #define __WUXMXamlBinaryWriter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 @interface WUXMXamlBinaryWriter : RTObject
 + (WUXMXamlBinaryWriterErrorInformation*)write:(NSMutableArray* /* RTObject<WSSIRandomAccessStream>* */)inputStreams
                                  outputStreams:(NSMutableArray* /* RTObject<WSSIRandomAccessStream>* */)outputStreams
@@ -158,7 +188,7 @@ WINRT_EXPORT
 #ifndef __WUXMXamlReader_DEFINED__
 #define __WUXMXamlReader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 @interface WUXMXamlReader : RTObject
 + (RTObject*)Load:(NSString*)xaml;
 + (RTObject*)loadWithInitialTemplateValidation:(NSString*)xaml;
@@ -173,7 +203,7 @@ WINRT_EXPORT
 #ifndef __WUXMXamlBindingHelper_DEFINED__
 #define __WUXMXamlBindingHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 @interface WUXMXamlBindingHelper : RTObject
 + (RTObject<WUXMIDataTemplateComponent>*)getDataTemplateComponent:(WXDependencyObject*)element;
 + (void)setDataTemplateComponent:(WXDependencyObject*)element value:(RTObject<WUXMIDataTemplateComponent>*)value;

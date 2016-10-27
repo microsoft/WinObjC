@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_OCR_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_OCR_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_Ocr.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WMOOcrWord, WMOOcrLine, WMOOcrResult, WMOOcrEngine;
@@ -35,7 +41,7 @@
 #ifndef __WMOOcrWord_DEFINED__
 #define __WMOOcrWord_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_OCR_EXPORT
 @interface WMOOcrWord : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -50,7 +56,7 @@ WINRT_EXPORT
 #ifndef __WMOOcrLine_DEFINED__
 #define __WMOOcrLine_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_OCR_EXPORT
 @interface WMOOcrLine : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -65,7 +71,7 @@ WINRT_EXPORT
 #ifndef __WMOOcrResult_DEFINED__
 #define __WMOOcrResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_OCR_EXPORT
 @interface WMOOcrResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -81,7 +87,7 @@ WINRT_EXPORT
 #ifndef __WMOOcrEngine_DEFINED__
 #define __WMOOcrEngine_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_OCR_EXPORT
 @interface WMOOcrEngine : RTObject
 + (BOOL)isLanguageSupported:(WGLanguage*)language;
 + (WMOOcrEngine*)tryCreateFromLanguage:(WGLanguage*)language;

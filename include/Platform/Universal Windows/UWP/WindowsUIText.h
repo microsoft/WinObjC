@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+#define OBJCUWP_WINDOWS_UI_TEXT_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Text.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WUTTextConstants, WUTFontWeights;
@@ -429,7 +435,7 @@ typedef unsigned WUTFontStyle;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Text.FontWeight
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 @interface WUTFontWeight : NSObject
 + (instancetype) new;
 @property unsigned short weight;
@@ -466,6 +472,10 @@ WINRT_EXPORT
 - (void)undo;
 @end
 
+OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+@interface WUTITextDocument : RTObject <WUTITextDocument>
+@end
+
 #endif // __WUTITextDocument_DEFINED__
 
 // Windows.UI.Text.ITextRange
@@ -497,9 +507,9 @@ WINRT_EXPORT
 - (RTObject<WUTITextRange>*)getClone;
 - (int)getIndex:(WUTTextRangeUnit)unit;
 - (void)getPoint:(WUTHorizontalCharacterAlignment)horizontalAlign
-   verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign
-         options:(WUTPointOptions)options
-           point:(WFPoint**)point;
+    verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign
+          options:(WUTPointOptions)options
+            point:(WFPoint**)point;
 - (void)getRect:(WUTPointOptions)options rect:(WFRect**)rect hit:(int*)hit;
 - (void)getText:(WUTTextGetOptions)options value:(NSString**)value;
 - (void)getTextViaStream:(WUTTextGetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
@@ -524,6 +534,10 @@ WINRT_EXPORT
 - (void)setText:(WUTTextSetOptions)options value:(NSString*)value;
 - (void)setTextViaStream:(WUTTextSetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
 - (int)startOf:(WUTTextRangeUnit)unit extend:(BOOL)extend;
+@end
+
+OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+@interface WUTITextRange : RTObject <WUTITextRange>
 @end
 
 #endif // __WUTITextRange_DEFINED__
@@ -555,9 +569,9 @@ WINRT_EXPORT
 - (RTObject<WUTITextRange>*)getClone;
 - (int)getIndex:(WUTTextRangeUnit)unit;
 - (void)getPoint:(WUTHorizontalCharacterAlignment)horizontalAlign
-   verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign
-         options:(WUTPointOptions)options
-           point:(WFPoint**)point;
+    verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign
+          options:(WUTPointOptions)options
+            point:(WFPoint**)point;
 - (void)getRect:(WUTPointOptions)options rect:(WFRect**)rect hit:(int*)hit;
 - (void)getText:(WUTTextGetOptions)options value:(NSString**)value;
 - (void)getTextViaStream:(WUTTextGetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
@@ -582,6 +596,10 @@ WINRT_EXPORT
 - (void)setText:(WUTTextSetOptions)options value:(NSString*)value;
 - (void)setTextViaStream:(WUTTextSetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
 - (int)startOf:(WUTTextRangeUnit)unit extend:(BOOL)extend;
+@end
+
+OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+@interface WUTITextSelection : RTObject <WUTITextSelection>
 @end
 
 #endif // __WUTITextSelection_DEFINED__
@@ -618,6 +636,10 @@ WINRT_EXPORT
 - (void)setClone:(RTObject<WUTITextCharacterFormat>*)value;
 - (RTObject<WUTITextCharacterFormat>*)getClone;
 - (BOOL)IsEqual:(RTObject<WUTITextCharacterFormat>*)format;
+@end
+
+OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+@interface WUTITextCharacterFormat : RTObject <WUTITextCharacterFormat>
 @end
 
 #endif // __WUTITextCharacterFormat_DEFINED__
@@ -660,13 +682,17 @@ WINRT_EXPORT
 - (void)setLineSpacing:(WUTLineSpacingRule)rule spacing:(float)spacing;
 @end
 
+OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+@interface WUTITextParagraphFormat : RTObject <WUTITextParagraphFormat>
+@end
+
 #endif // __WUTITextParagraphFormat_DEFINED__
 
 // Windows.UI.Text.TextConstants
 #ifndef __WUTTextConstants_DEFINED__
 #define __WUTTextConstants_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 @interface WUTTextConstants : RTObject
 + (WUColor*)autoColor;
 + (int)maxUnitCount;
@@ -684,7 +710,7 @@ WINRT_EXPORT
 #ifndef __WUTFontWeights_DEFINED__
 #define __WUTFontWeights_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 @interface WUTFontWeights : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

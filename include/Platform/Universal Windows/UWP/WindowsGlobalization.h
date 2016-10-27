@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
+#define OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Globalization.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WGCalendarIdentifiers, WGClockIdentifiers, WGNumeralSystemIdentifiers, WGCurrencyIdentifiers, WGGeographicRegion, WGLanguage,
@@ -49,7 +55,7 @@ typedef unsigned WGDayOfWeek;
 #ifndef __WGCalendarIdentifiers_DEFINED__
 #define __WGCalendarIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 @interface WGCalendarIdentifiers : RTObject
 + (NSString*)gregorian;
 + (NSString*)hebrew;
@@ -69,7 +75,7 @@ WINRT_EXPORT
 #ifndef __WGClockIdentifiers_DEFINED__
 #define __WGClockIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 @interface WGClockIdentifiers : RTObject
 + (NSString*)twelveHour;
 + (NSString*)twentyFourHour;
@@ -81,7 +87,7 @@ WINRT_EXPORT
 #ifndef __WGNumeralSystemIdentifiers_DEFINED__
 #define __WGNumeralSystemIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 @interface WGNumeralSystemIdentifiers : RTObject
 + (NSString*)fullWide;
 + (NSString*)arab;
@@ -139,7 +145,7 @@ WINRT_EXPORT
 #ifndef __WGCurrencyIdentifiers_DEFINED__
 #define __WGCurrencyIdentifiers_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 @interface WGCurrencyIdentifiers : RTObject
 + (NSString*)aED;
 + (NSString*)aFN;
@@ -306,7 +312,7 @@ WINRT_EXPORT
 #ifndef __WGGeographicRegion_DEFINED__
 #define __WGGeographicRegion_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 @interface WGGeographicRegion : RTObject
 + (BOOL)isSupported:(NSString*)geographicRegionCode;
 + (WGGeographicRegion*)makeGeographicRegion:(NSString*)geographicRegionCode ACTIVATOR;
@@ -329,7 +335,7 @@ WINRT_EXPORT
 #ifndef __WGLanguage_DEFINED__
 #define __WGLanguage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 @interface WGLanguage : RTObject
 + (BOOL)trySetInputMethodLanguageTag:(NSString*)languageTag;
 + (BOOL)isWellFormed:(NSString*)languageTag;
@@ -351,7 +357,7 @@ WINRT_EXPORT
 #ifndef __WGCalendar_DEFINED__
 #define __WGCalendar_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 @interface WGCalendar : RTObject
 + (WGCalendar*)makeCalendarDefaultCalendarAndClock:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
 + (WGCalendar*)makeCalendar:(id<NSFastEnumeration> /* NSString * */)languages calendar:(NSString*)calendar clock:(NSString*)clock ACTIVATOR;
@@ -463,7 +469,7 @@ WINRT_EXPORT
 #ifndef __WGApplicationLanguages_DEFINED__
 #define __WGApplicationLanguages_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 @interface WGApplicationLanguages : RTObject
 + (NSString*)primaryLanguageOverride;
 + (void)setPrimaryLanguageOverride:(NSString*)value;

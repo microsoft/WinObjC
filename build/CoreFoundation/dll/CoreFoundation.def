@@ -29,13 +29,19 @@ LIBRARY CoreFoundation
         _CFAppendPathExtension2
         _CFApplicationPreferencesCopyRepresentation
         _CFRuntimeBridgeTypeToClass
+        __CFISAForTypeID
+        __CFGenericValidateType_
         _CFStartOfLastPathComponent2
         _CFStartOfPathExtension2
         _CFGetSlash
         _CFGetSlashStr
         _CFProcessPath
         _CFURLCreateCurrentDirectoryURL
+        _CFEnableZombies
+        _CFDisableZombies
+        __CFZombifyNSObjectHook CONSTANT
         _NS_chdir
+        CFReadStreamCreateWithData
 
         ; Base Utilities.mm
         kCFCoreFoundationVersionNumber DATA
@@ -858,7 +864,7 @@ LIBRARY CoreFoundation
         ; kCFStreamErrorDomainSOCKS DATA ; HACKHACK: not present. Maybe supposed to be in CFNetowrking?
         ; kCFStreamErrorDomainSystemConfiguration DATA ; HACKHACK: not present. Maybe supposed to be in CFNetowrking?
         ; kCFStreamErrorDomainSSL DATA ; HACKHACK: not present. Maybe supposed to be in CFNetowrking?
-        kCFStreamPropertySSLSettings ; HACKHACK: not present. Maybe supposed to be in CFNetowrking? Added Manually since foundation uses it.
+        ; kCFStreamPropertySSLSettings ; HACKHACK: not present. Maybe supposed to be in CFNetowrking? 
         kCFStreamPropertyAppendToFile DATA
         kCFStreamPropertyFileCurrentOffset DATA
         kCFStreamPropertyDataWritten DATA

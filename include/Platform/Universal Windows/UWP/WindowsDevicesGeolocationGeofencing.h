@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_GEOFENCING_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_GEOFENCING_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Geolocation_Geofencing.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDGGGeofence, WDGGGeofenceMonitor, WDGGGeofenceStateChangeReport;
@@ -70,7 +76,7 @@ typedef unsigned WDGGGeofenceRemovalReason;
 #ifndef __WDGGGeofence_DEFINED__
 #define __WDGGGeofence_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_GEOFENCING_EXPORT
 @interface WDGGGeofence : RTObject
 + (WDGGGeofence*)make:(NSString*)id geoshape:(RTObject<WDGIGeoshape>*)geoshape ACTIVATOR;
 + (WDGGGeofence*)makeWithMonitorStates:(NSString*)id
@@ -107,7 +113,7 @@ WINRT_EXPORT
 #ifndef __WDGGGeofenceMonitor_DEFINED__
 #define __WDGGGeofenceMonitor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_GEOFENCING_EXPORT
 @interface WDGGGeofenceMonitor : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -129,7 +135,7 @@ WINRT_EXPORT
 #ifndef __WDGGGeofenceStateChangeReport_DEFINED__
 #define __WDGGGeofenceStateChangeReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_GEOFENCING_EXPORT
 @interface WDGGGeofenceStateChangeReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

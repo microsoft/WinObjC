@@ -56,7 +56,6 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Accelerate.def</ModuleDefinitionFile>
-      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -71,7 +70,6 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Accelerate.def</ModuleDefinitionFile>
-      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -86,7 +84,6 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Accelerate.def</ModuleDefinitionFile>
-      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -101,7 +98,6 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Accelerate.def</ModuleDefinitionFile>
-      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;$(StarboardBasePath)\include\xplat</IncludePaths>

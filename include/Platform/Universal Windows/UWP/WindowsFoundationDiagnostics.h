@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
+#define OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Foundation_Diagnostics.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WFDTracingStatusChangedEventArgs, WFDAsyncCausalityTracer, WFDRuntimeBrokerErrorSettings, WFDErrorDetails, WFDLoggingOptions,
@@ -135,6 +141,10 @@ typedef unsigned WFDLoggingFieldFormat;
 - (WFDErrorOptions)getErrorOptions;
 @end
 
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
+@interface WFDIErrorReportingSettings : RTObject <WFDIErrorReportingSettings>
+@end
+
 #endif // __WFDIErrorReportingSettings_DEFINED__
 
 // Windows.Foundation.Diagnostics.ILoggingTarget
@@ -163,6 +173,10 @@ typedef unsigned WFDLoggingFieldFormat;
                                                  options:(WFDLoggingOptions*)options;
 @end
 
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
+@interface WFDILoggingTarget : RTObject <WFDILoggingTarget>
+@end
+
 #endif // __WFDILoggingTarget_DEFINED__
 
 // Windows.Foundation.IClosable
@@ -171,6 +185,10 @@ typedef unsigned WFDLoggingFieldFormat;
 
 @protocol WFIClosable
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
 @end
 
 #endif // __WFIClosable_DEFINED__
@@ -192,6 +210,10 @@ typedef unsigned WFDLoggingFieldFormat;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
+@interface WFDILoggingChannel : RTObject <WFDILoggingChannel>
+@end
+
 #endif // __WFDILoggingChannel_DEFINED__
 
 // Windows.Foundation.Diagnostics.ILoggingSession
@@ -208,6 +230,10 @@ typedef unsigned WFDLoggingFieldFormat;
 - (void)addLoggingChannelWithLevel:(RTObject<WFDILoggingChannel>*)loggingChannel maxLevel:(WFDLoggingLevel)maxLevel;
 - (void)removeLoggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
+@interface WFDILoggingSession : RTObject <WFDILoggingSession>
 @end
 
 #endif // __WFDILoggingSession_DEFINED__
@@ -227,13 +253,17 @@ typedef unsigned WFDLoggingFieldFormat;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
+@interface WFDIFileLoggingSession : RTObject <WFDIFileLoggingSession>
+@end
+
 #endif // __WFDIFileLoggingSession_DEFINED__
 
 // Windows.Foundation.Diagnostics.TracingStatusChangedEventArgs
 #ifndef __WFDTracingStatusChangedEventArgs_DEFINED__
 #define __WFDTracingStatusChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDTracingStatusChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -248,7 +278,7 @@ WINRT_EXPORT
 #ifndef __WFDAsyncCausalityTracer_DEFINED__
 #define __WFDAsyncCausalityTracer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDAsyncCausalityTracer : RTObject
 + (void)traceOperationCreation:(WFDCausalityTraceLevel)traceLevel
                         source:(WFDCausalitySource)source
@@ -284,7 +314,7 @@ WINRT_EXPORT
 #ifndef __WFDRuntimeBrokerErrorSettings_DEFINED__
 #define __WFDRuntimeBrokerErrorSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDRuntimeBrokerErrorSettings : RTObject <WFDIErrorReportingSettings>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -300,7 +330,7 @@ WINRT_EXPORT
 #ifndef __WFDErrorDetails_DEFINED__
 #define __WFDErrorDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDErrorDetails : RTObject
 + (void)createFromHResultAsync:(int)errorCode success:(void (^)(WFDErrorDetails*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
@@ -317,7 +347,7 @@ WINRT_EXPORT
 #ifndef __WFDLoggingOptions_DEFINED__
 #define __WFDLoggingOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDLoggingOptions : RTObject
 + (instancetype)make ACTIVATOR;
 + (WFDLoggingOptions*)makeWithKeywords:(int64_t)keywords ACTIVATOR;
@@ -338,7 +368,7 @@ WINRT_EXPORT
 #ifndef __WFDLoggingChannelOptions_DEFINED__
 #define __WFDLoggingChannelOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDLoggingChannelOptions : RTObject
 + (WFDLoggingChannelOptions*)make:(WFGUID*)group ACTIVATOR;
 + (instancetype)make ACTIVATOR;
@@ -354,7 +384,7 @@ WINRT_EXPORT
 #ifndef __WFDLoggingFields_DEFINED__
 #define __WFDLoggingFields_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDLoggingFields : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -534,7 +564,7 @@ WINRT_EXPORT
 #ifndef __WFDLoggingActivity_DEFINED__
 #define __WFDLoggingActivity_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDLoggingActivity : RTObject <WFIClosable, WFDILoggingTarget>
 + (WFDLoggingActivity*)makeLoggingActivity:(NSString*)activityName loggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel ACTIVATOR;
 + (WFDLoggingActivity*)makeLoggingActivityWithLevel:(NSString*)activityName
@@ -577,7 +607,7 @@ WINRT_EXPORT
 #ifndef __WFDLoggingChannel_DEFINED__
 #define __WFDLoggingChannel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDLoggingChannel : RTObject <WFDILoggingChannel, WFIClosable, WFDILoggingTarget>
 + (WFDLoggingChannel*)make:(NSString*)name ACTIVATOR;
 + (WFDLoggingChannel*)makeWithOptions:(NSString*)name options:(WFDLoggingChannelOptions*)options ACTIVATOR;
@@ -623,7 +653,7 @@ WINRT_EXPORT
 #ifndef __WFDLoggingSession_DEFINED__
 #define __WFDLoggingSession_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDLoggingSession : RTObject <WFDILoggingSession, WFIClosable>
 + (WFDLoggingSession*)make:(NSString*)name ACTIVATOR;
 #if defined(__cplusplus)
@@ -646,7 +676,7 @@ WINRT_EXPORT
 #ifndef __WFDLogFileGeneratedEventArgs_DEFINED__
 #define __WFDLogFileGeneratedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDLogFileGeneratedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -660,7 +690,7 @@ WINRT_EXPORT
 #ifndef __WFDFileLoggingSession_DEFINED__
 #define __WFDFileLoggingSession_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDFileLoggingSession : RTObject <WFDIFileLoggingSession, WFIClosable>
 + (WFDFileLoggingSession*)make:(NSString*)name ACTIVATOR;
 #if defined(__cplusplus)

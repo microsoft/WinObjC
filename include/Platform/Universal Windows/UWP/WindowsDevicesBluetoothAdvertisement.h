@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Bluetooth_Advertisement.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDBABluetoothLEManufacturerData, WDBABluetoothLEAdvertisementDataSection, WDBABluetoothLEAdvertisement,
@@ -92,7 +98,7 @@ typedef unsigned WDBABluetoothLEAdvertisementPublisherStatus;
 #ifndef __WDBABluetoothLEManufacturerData_DEFINED__
 #define __WDBABluetoothLEManufacturerData_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 @interface WDBABluetoothLEManufacturerData : RTObject
 + (instancetype)make ACTIVATOR;
 + (WDBABluetoothLEManufacturerData*)make:(unsigned short)companyId data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
@@ -109,7 +115,7 @@ WINRT_EXPORT
 #ifndef __WDBABluetoothLEAdvertisementDataSection_DEFINED__
 #define __WDBABluetoothLEAdvertisementDataSection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 @interface WDBABluetoothLEAdvertisementDataSection : RTObject
 + (instancetype)make ACTIVATOR;
 + (WDBABluetoothLEAdvertisementDataSection*)make:(uint8_t)dataType data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
@@ -126,7 +132,7 @@ WINRT_EXPORT
 #ifndef __WDBABluetoothLEAdvertisement_DEFINED__
 #define __WDBABluetoothLEAdvertisement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 @interface WDBABluetoothLEAdvertisement : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -147,7 +153,7 @@ WINRT_EXPORT
 #ifndef __WDBABluetoothLEAdvertisementBytePattern_DEFINED__
 #define __WDBABluetoothLEAdvertisementBytePattern_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 @interface WDBABluetoothLEAdvertisementBytePattern : RTObject
 + (WDBABluetoothLEAdvertisementBytePattern*)make:(uint8_t)dataType offset:(int16_t)offset data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 + (instancetype)make ACTIVATOR;
@@ -165,7 +171,7 @@ WINRT_EXPORT
 #ifndef __WDBABluetoothLEAdvertisementFilter_DEFINED__
 #define __WDBABluetoothLEAdvertisementFilter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 @interface WDBABluetoothLEAdvertisementFilter : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -181,7 +187,7 @@ WINRT_EXPORT
 #ifndef __WDBABluetoothLEAdvertisementWatcherStoppedEventArgs_DEFINED__
 #define __WDBABluetoothLEAdvertisementWatcherStoppedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 @interface WDBABluetoothLEAdvertisementWatcherStoppedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -195,7 +201,7 @@ WINRT_EXPORT
 #ifndef __WDBABluetoothLEAdvertisementWatcher_DEFINED__
 #define __WDBABluetoothLEAdvertisementWatcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 @interface WDBABluetoothLEAdvertisementWatcher : RTObject
 + (WDBABluetoothLEAdvertisementWatcher*)make:(WDBABluetoothLEAdvertisementFilter*)advertisementFilter ACTIVATOR;
 + (instancetype)make ACTIVATOR;
@@ -226,7 +232,7 @@ WINRT_EXPORT
 #ifndef __WDBABluetoothLEAdvertisementReceivedEventArgs_DEFINED__
 #define __WDBABluetoothLEAdvertisementReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 @interface WDBABluetoothLEAdvertisementReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -244,7 +250,7 @@ WINRT_EXPORT
 #ifndef __WDBABluetoothLEAdvertisementDataTypes_DEFINED__
 #define __WDBABluetoothLEAdvertisementDataTypes_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 @interface WDBABluetoothLEAdvertisementDataTypes : RTObject
 + (uint8_t)advertisingInterval;
 + (uint8_t)appearance;
@@ -276,7 +282,7 @@ WINRT_EXPORT
 #ifndef __WDBABluetoothLEAdvertisementPublisherStatusChangedEventArgs_DEFINED__
 #define __WDBABluetoothLEAdvertisementPublisherStatusChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 @interface WDBABluetoothLEAdvertisementPublisherStatusChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -291,7 +297,7 @@ WINRT_EXPORT
 #ifndef __WDBABluetoothLEAdvertisementPublisher_DEFINED__
 #define __WDBABluetoothLEAdvertisementPublisher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BLUETOOTH_ADVERTISEMENT_EXPORT
 @interface WDBABluetoothLEAdvertisementPublisher : RTObject
 + (instancetype)make ACTIVATOR;
 + (WDBABluetoothLEAdvertisementPublisher*)make:(WDBABluetoothLEAdvertisement*)advertisement ACTIVATOR;

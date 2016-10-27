@@ -35,6 +35,9 @@ private:
     void _cairoImageSurfaceBlur(cairo_surface_t* surface);
     void _cairoContextStrokePathShadow();
 
+    // TODO 1077:: Remove once D2D render target is implemented
+    float _scale = 1.0f;
+
 protected:
     cairo_t* _drawContext;
 
@@ -111,7 +114,7 @@ public:
     virtual void CGContextDrawLayerAtPoint(CGPoint destPoint, CGLayerRef layer);
     virtual CGInterpolationQuality CGContextGetInterpolationQuality();
     virtual void CGContextSetInterpolationQuality(CGInterpolationQuality quality);
-    virtual void CGContextSetLineDash(float phase, float* lengths, DWORD count);
+    virtual void CGContextSetLineDash(float phase, const float* lengths, DWORD count);
     virtual void CGContextSetMiterLimit(float limit);
     virtual void CGContextSetLineJoin(DWORD lineJoin);
     virtual void CGContextSetLineCap(DWORD lineCap);
@@ -134,4 +137,9 @@ public:
     virtual CGSize CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, float x, float y);
     virtual bool CGContextIsPointInPath(bool eoFill, float x, float y);
     virtual CGPathRef CGContextCopyPath(void);
+
+    virtual void CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, float lineAscent);
+
+    // TODO 1077:: Remove once D2D render target is implemented
+    virtual void _CGContextSetScaleFactor(float scale);
 };

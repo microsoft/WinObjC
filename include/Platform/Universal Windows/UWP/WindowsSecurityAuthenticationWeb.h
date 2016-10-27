@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_WEB_EXPORT
+#define OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_WEB_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Security_Authentication_Web.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WSAWWebAuthenticationResult, WSAWWebAuthenticationBroker;
@@ -59,7 +65,7 @@ typedef unsigned WSAWWebAuthenticationOptions;
 #ifndef __WSAWWebAuthenticationResult_DEFINED__
 #define __WSAWWebAuthenticationResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_WEB_EXPORT
 @interface WSAWWebAuthenticationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -75,7 +81,7 @@ WINRT_EXPORT
 #ifndef __WSAWWebAuthenticationBroker_DEFINED__
 #define __WSAWWebAuthenticationBroker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_WEB_EXPORT
 @interface WSAWWebAuthenticationBroker : RTObject
 + (void)authenticateAndContinue:(WFUri*)requestUri;
 + (void)authenticateWithCallbackUriAndContinue:(WFUri*)requestUri callbackUri:(WFUri*)callbackUri;

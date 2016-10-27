@@ -39,6 +39,30 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFData)
         (CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, reinterpret_cast<const byte*>(bytes), length, deallocator))));
 }
 
+/**
+ @Status Caveat
+ @Notes options parameter not supported
+*/
+- (_Nullable instancetype)initWithContentsOfFile:(NSString*)filename options:(NSDataReadingOptions)options error:(NSError**)error {
+    CFDataRef tempData;
+    SInt32 cfError{};
+
+    if (!filename) {
+        [self release];
+        return nil;
+    }
+
+    if (CFURLCreateDataAndPropertiesFromResource(
+            nullptr, static_cast<CFURLRef>([NSURL fileURLWithPath:filename]), &tempData, nullptr, nullptr, &cfError)) {
+        return reinterpret_cast<NSDataPrototype*>(static_cast<NSData*>(tempData));
+    } else if (error != nullptr) {
+        *error = [NSError errorWithDomain:@"NSData" code:cfError userInfo:nil];
+    }
+
+    [self release];
+    return nil;
+}
+
 @end
 #pragma endregion
 

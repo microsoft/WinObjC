@@ -2,16 +2,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XAMLCatalog", "XAMLCatalog", "{C18F87DB-02DD-43C4-9A71-F506989F3DB2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XAMLCatalog", "XAMLCatalog", "{9BCE65B8-DF97-44A9-8BD7-66D108647C5B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XAMLCatalog-Headers", "XAMLCatalog.vsimporter\XAMLCatalog-Headers-WinStore10\XAMLCatalog-Headers.vcxitems", "{54559247-8B43-41C7-B5F4-86DC0EE443AD}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XAMLCatalog", "XAMLCatalog.vsimporter\XAMLCatalog-WinStore10\XAMLCatalog.vcxproj", "{57765C7E-E763-4FA8-A786-73CADD51A57F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XAMLCatalog", "XAMLCatalog.vsimporter\XAMLCatalog-WinStore10\XAMLCatalog.vcxproj", "{2FC96279-743B-4BAC-B2A0-4B1BA0277699}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		XAMLCatalog.vsimporter\XAMLCatalog-Headers-WinStore10\XAMLCatalog-Headers.vcxitems*{54559247-8B43-41C7-B5F4-86DC0EE443AD}*SharedItemsImports = 9
-		XAMLCatalog.vsimporter\XAMLCatalog-Headers-WinStore10\XAMLCatalog-Headers.vcxitems*{57765C7E-E763-4FA8-A786-73CADD51A57F}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -20,24 +16,23 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Debug|ARM.ActiveCfg = Debug|ARM
-		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Debug|ARM.Build.0 = Debug|ARM
-		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Debug|ARM.Deploy.0 = Debug|ARM
-		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Debug|Win32.Build.0 = Debug|Win32
-		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Debug|Win32.Deploy.0 = Debug|Win32
-		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Release|ARM.ActiveCfg = Release|ARM
-		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Release|ARM.Build.0 = Release|ARM
-		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Release|ARM.Deploy.0 = Release|ARM
-		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Release|Win32.ActiveCfg = Release|Win32
-		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Release|Win32.Build.0 = Release|Win32
-		{57765C7E-E763-4FA8-A786-73CADD51A57F}.Release|Win32.Deploy.0 = Release|Win32
+		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Debug|ARM.ActiveCfg = Debug|ARM
+		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Debug|ARM.Build.0 = Debug|ARM
+		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Debug|ARM.Deploy.0 = Debug|ARM
+		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Debug|Win32.Build.0 = Debug|Win32
+		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Debug|Win32.Deploy.0 = Debug|Win32
+		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Release|ARM.ActiveCfg = Release|ARM
+		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Release|ARM.Build.0 = Release|ARM
+		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Release|ARM.Deploy.0 = Release|ARM
+		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Release|Win32.ActiveCfg = Release|Win32
+		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Release|Win32.Build.0 = Release|Win32
+		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Release|Win32.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{54559247-8B43-41C7-B5F4-86DC0EE443AD} = {C18F87DB-02DD-43C4-9A71-F506989F3DB2}
-		{57765C7E-E763-4FA8-A786-73CADD51A57F} = {C18F87DB-02DD-43C4-9A71-F506989F3DB2}
+		{2FC96279-743B-4BAC-B2A0-4B1BA0277699} = {9BCE65B8-DF97-44A9-8BD7-66D108647C5B}
 	EndGlobalSection
 EndGlobal

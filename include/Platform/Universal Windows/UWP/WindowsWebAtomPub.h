@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
+#define OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Web_AtomPub.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WWAResourceCollection, WWAWorkspace, WWAServiceDocument, WWAAtomPubClient;
@@ -48,13 +54,17 @@
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
 @end
 
+OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
+@interface WWSISyndicationNode : RTObject <WWSISyndicationNode>
+@end
+
 #endif // __WWSISyndicationNode_DEFINED__
 
 // Windows.Web.AtomPub.ResourceCollection
 #ifndef __WWAResourceCollection_DEFINED__
 #define __WWAResourceCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
 @interface WWAResourceCollection : RTObject <WWSISyndicationNode>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -79,7 +89,7 @@ WINRT_EXPORT
 #ifndef __WWAWorkspace_DEFINED__
 #define __WWAWorkspace_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
 @interface WWAWorkspace : RTObject <WWSISyndicationNode>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -102,7 +112,7 @@ WINRT_EXPORT
 #ifndef __WWAServiceDocument_DEFINED__
 #define __WWAServiceDocument_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
 @interface WWAServiceDocument : RTObject <WWSISyndicationNode>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -137,13 +147,17 @@ WINRT_EXPORT
                   failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
+@interface WWSISyndicationClient : RTObject <WWSISyndicationClient>
+@end
+
 #endif // __WWSISyndicationClient_DEFINED__
 
 // Windows.Web.AtomPub.AtomPubClient
 #ifndef __WWAAtomPubClient_DEFINED__
 #define __WWAAtomPubClient_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
 @interface WWAAtomPubClient : RTObject <WWSISyndicationClient>
 + (WWAAtomPubClient*)makeAtomPubClientWithCredentials:(WSCPasswordCredential*)serverCredential ACTIVATOR;
 + (instancetype)make ACTIVATOR;

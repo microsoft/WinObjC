@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations" VSImporterLabel="ProjectConfigSummary" />
+  <PropertyGroup Label="Globals" VSImporterLabel="GlobalProperties">
+    <ProjectName>$projectname$</ProjectName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <AppContainerApplication>true</AppContainerApplication>
+    <ApplicationType>Windows Store</ApplicationType>
+    <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
+    <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
+    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
+    <Keyword>IslandwoodProj</Keyword>
+    <IslandwoodConfigurationType>Projection</IslandwoodConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration" VSImporterLabel="ConfigurationProperties">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <UseDotNetNativeToolchain VSImporterConfigName="Release">true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" VSImporterLabel="BuildExtensionProperties">
+    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.props" />
+  </ImportGroup>
+  <ImportGroup Label="Shared" VSImporterLabel="SharedProjects" />
+  <ImportGroup Label="PropertySheets" VSImporterLabel="ConfigurationPropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" VSImporterLabel="UserMacros" />
+  <ItemDefinitionGroup VSImporterLabel="ConfigurationItemDefinitions">
+    <ClCompile>
+      <RuntimeLibrary VSImporterConfigName="Debug">MultiThreadedDebugDLL</RuntimeLibrary>
+	  <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
+	  <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClangCompile>
+      <RuntimeLibrary VSImporterConfigName="Debug">MultiThreadedDebugDLL</RuntimeLibrary>
+	  <IncludePaths>$(SolutionPublicHeadersDir);$(WINOBJC_SDK_ROOT)\include\xplat;$(WINOBJC_SDK_ROOT)\Frameworks\include;%(IncludePaths)</IncludePaths>
+      <PreprocessorDefinitions>__MIDL_USE_C_ENUM</PreprocessorDefinitions>
+    </ClangCompile>
+    <Midl>
+      <OutputDirectory>$(Objc2WinmdGeneratedFilesDir)</OutputDirectory>
+      <HeaderFileName>$(Objc2WinmdGeneratedFilesDir)\%(Filename).h</HeaderFileName>
+      <MetadataFileName>$(SolutionDir)$(Configuration)\%(Filename).winmd</MetadataFileName>
+      <AdditionalIncludeDirectories>$(Objc2WinmdGeneratedFilesDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <GenerateTypeLibrary>false</GenerateTypeLibrary>
+      <GenerateClientFiles>None</GenerateClientFiles>
+      <GenerateServerFiles>None</GenerateServerFiles>
+    </Midl>
+	<Link>
+	  <AdditionalDependencies>WinObjCRT.lib;Logging.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+	</Link>
+  </ItemDefinitionGroup>
+  <ItemGroup VSImporterLabel="ProjectItems">
+    <ClCompile Include="Module.cpp" />
+	<_MdMergeOutput Include="$(OutDir)\$(ProjectName).winmd" />
+	<ClangCompile Condition="'$(Objc2WinmdGeneratedFilesDir)' != ''" Include="$(Objc2WinmdGeneratedFilesDir)\*.mm" />
+    <Midl Condition="'$(Objc2WinmdGeneratedFilesDir)' != ''" Include="$(Objc2WinmdGeneratedFilesDir)\*.idl" />
+    <ClInclude Condition="'$(Objc2WinmdGeneratedFilesDir)' != ''" Include="$(Objc2WinmdGeneratedFilesDir)\*.h" />
+  </ItemGroup>
+  <ItemGroup VSImporterLabel="ProjectReferences" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" VSImporterLabel="BuildExtensionTargets">
+    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
+  </ImportGroup>
+</Project>

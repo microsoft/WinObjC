@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
+#define OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Storage_Compression.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WSCCompressor, WSCDecompressor;
@@ -49,6 +55,10 @@ typedef unsigned WSCCompressAlgorithm;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Storage.Streams.IOutputStream
@@ -64,13 +74,17 @@ typedef unsigned WSCCompressAlgorithm;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
+@interface WSSIOutputStream : RTObject <WSSIOutputStream>
+@end
+
 #endif // __WSSIOutputStream_DEFINED__
 
 // Windows.Storage.Compression.Compressor
 #ifndef __WSCCompressor_DEFINED__
 #define __WSCCompressor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
 @interface WSCCompressor : RTObject <WSSIOutputStream, WFIClosable>
 + (WSCCompressor*)makeCompressor:(RTObject<WSSIOutputStream>*)underlyingStream ACTIVATOR;
 + (WSCCompressor*)makeCompressorEx:(RTObject<WSSIOutputStream>*)underlyingStream
@@ -105,13 +119,17 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
+@interface WSSIInputStream : RTObject <WSSIInputStream>
+@end
+
 #endif // __WSSIInputStream_DEFINED__
 
 // Windows.Storage.Compression.Decompressor
 #ifndef __WSCDecompressor_DEFINED__
 #define __WSCDecompressor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
 @interface WSCDecompressor : RTObject <WSSIInputStream, WFIClosable>
 + (WSCDecompressor*)makeDecompressor:(RTObject<WSSIInputStream>*)underlyingStream ACTIVATOR;
 #if defined(__cplusplus)

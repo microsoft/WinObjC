@@ -296,7 +296,6 @@ void OSMemoryBarrier();
 #define __builtin_expect(P1,P2) P1
     
 // These are replacements for POSIX calls on Windows, ensuring that the UTF8 parameters are converted to UTF16 before being passed to Windows
-CF_EXPORT int _NS_stat(const char *name, struct _stat64i32 *st);
 CF_EXPORT int _NS_mkdir(const char *name);
 CF_EXPORT int _NS_rmdir(const char *name);
 CF_EXPORT int _NS_chmod(const char *name, int mode);
@@ -305,6 +304,23 @@ CF_EXPORT char *_NS_getcwd(char *dstbuf, size_t size);     // Warning: this does
 CF_EXPORT char *_NS_getenv(const char *name);
 CF_EXPORT int _NS_rename(const char *oldName, const char *newName);
 CF_EXPORT int _NS_open(const char *name, int oflag, int pmode = 0);
+
+#if WINOBJC
+CF_EXPORT int _NS_stat(const char *name, struct stat *st);
+
+// WINOBJC: add handlers for more fs redirection to interop with existing Ebr using code
+CF_EXPORT int _NS_close(int fd);
+CF_EXPORT long _NS_lseek(int fd,long offset, int origin);
+CF_EXPORT int _NS_read(int fd, void *buffer, unsigned int count);
+CF_EXPORT int _NS_write(int fd, const void *buffer, unsigned int count);
+CF_EXPORT int _NS_stat64i32(const char *name, struct _stat64i32 *st);
+CF_EXPORT int _NS_fstat(int fd, struct _stat64i32* ret);
+CF_EXPORT size_t _NS_tell(int fd);
+CF_EXPORT intptr_t _NS_get_osfhandle(int fd);
+#else 
+CF_EXPORT int _NS_stat(const char *name, struct _stat64i32 *st);
+#endif
+
 CF_EXPORT int _NS_chdir(const char *name);
 CF_EXPORT int _NS_mkstemp(char *name, int bufSize);
 CF_EXPORT int _NS_access(const char *name, int amode);

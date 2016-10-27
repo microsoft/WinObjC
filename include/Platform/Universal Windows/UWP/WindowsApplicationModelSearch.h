@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Search.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WASSearchPaneQueryLinguisticDetails, WASSearchSuggestionCollection, WASLocalContentSuggestionSettings,
@@ -36,7 +42,7 @@
 #ifndef __WASSearchPaneQueryLinguisticDetails_DEFINED__
 #define __WASSearchPaneQueryLinguisticDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchPaneQueryLinguisticDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -52,7 +58,7 @@ WINRT_EXPORT
 #ifndef __WASSearchSuggestionCollection_DEFINED__
 #define __WASSearchSuggestionCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchSuggestionCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -74,7 +80,7 @@ WINRT_EXPORT
 #ifndef __WASLocalContentSuggestionSettings_DEFINED__
 #define __WASLocalContentSuggestionSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASLocalContentSuggestionSettings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -92,7 +98,7 @@ WINRT_EXPORT
 #ifndef __WASSearchQueryLinguisticDetails_DEFINED__
 #define __WASSearchQueryLinguisticDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchQueryLinguisticDetails : RTObject
 + (WASSearchQueryLinguisticDetails*)makeInstance:(id<NSFastEnumeration> /* NSString * */)queryTextAlternatives
                        queryTextCompositionStart:(unsigned int)queryTextCompositionStart
@@ -111,7 +117,7 @@ WINRT_EXPORT
 #ifndef __WASSearchSuggestionsRequestDeferral_DEFINED__
 #define __WASSearchSuggestionsRequestDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchSuggestionsRequestDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -125,7 +131,7 @@ WINRT_EXPORT
 #ifndef __WASSearchSuggestionsRequest_DEFINED__
 #define __WASSearchSuggestionsRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchSuggestionsRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

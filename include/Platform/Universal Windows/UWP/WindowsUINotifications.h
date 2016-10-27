@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+#define OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Notifications.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WUNTileUpdater, WUNTileNotification, WUNScheduledTileNotification, WUNTileFlyoutUpdater, WUNTileFlyoutNotification, WUNBadgeUpdater,
@@ -240,7 +246,7 @@ typedef unsigned WUNToastHistoryChangedType;
 #ifndef __WUNTileUpdater_DEFINED__
 #define __WUNTileUpdater_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNTileUpdater : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -273,7 +279,7 @@ WINRT_EXPORT
 #ifndef __WUNTileNotification_DEFINED__
 #define __WUNTileNotification_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNTileNotification : RTObject
 + (WUNTileNotification*)makeTileNotification:(WDXDXmlDocument*)content ACTIVATOR;
 #if defined(__cplusplus)
@@ -290,7 +296,7 @@ WINRT_EXPORT
 #ifndef __WUNScheduledTileNotification_DEFINED__
 #define __WUNScheduledTileNotification_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNScheduledTileNotification : RTObject
 + (WUNScheduledTileNotification*)makeScheduledTileNotification:(WDXDXmlDocument*)content deliveryTime:(WFDateTime*)deliveryTime ACTIVATOR;
 #if defined(__cplusplus)
@@ -309,7 +315,7 @@ WINRT_EXPORT
 #ifndef __WUNTileFlyoutUpdater_DEFINED__
 #define __WUNTileFlyoutUpdater_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNTileFlyoutUpdater : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -330,7 +336,7 @@ WINRT_EXPORT
 #ifndef __WUNTileFlyoutNotification_DEFINED__
 #define __WUNTileFlyoutNotification_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNTileFlyoutNotification : RTObject
 + (WUNTileFlyoutNotification*)makeTileFlyoutNotification:(WDXDXmlDocument*)content ACTIVATOR;
 #if defined(__cplusplus)
@@ -346,7 +352,7 @@ WINRT_EXPORT
 #ifndef __WUNBadgeUpdater_DEFINED__
 #define __WUNBadgeUpdater_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNBadgeUpdater : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -366,7 +372,7 @@ WINRT_EXPORT
 #ifndef __WUNBadgeNotification_DEFINED__
 #define __WUNBadgeNotification_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNBadgeNotification : RTObject
 + (WUNBadgeNotification*)makeBadgeNotification:(WDXDXmlDocument*)content ACTIVATOR;
 #if defined(__cplusplus)
@@ -382,7 +388,7 @@ WINRT_EXPORT
 #ifndef __WUNToastNotifier_DEFINED__
 #define __WUNToastNotifier_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNToastNotifier : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -401,7 +407,7 @@ WINRT_EXPORT
 #ifndef __WUNToastNotification_DEFINED__
 #define __WUNToastNotification_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNToastNotification : RTObject
 + (WUNToastNotification*)makeToastNotification:(WDXDXmlDocument*)content ACTIVATOR;
 #if defined(__cplusplus)
@@ -426,7 +432,7 @@ WINRT_EXPORT
 #ifndef __WUNScheduledToastNotification_DEFINED__
 #define __WUNScheduledToastNotification_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNScheduledToastNotification : RTObject
 + (WUNScheduledToastNotification*)makeScheduledToastNotification:(WDXDXmlDocument*)content deliveryTime:(WFDateTime*)deliveryTime ACTIVATOR;
 + (WUNScheduledToastNotification*)makeScheduledToastNotificationRecurring:(WDXDXmlDocument*)content
@@ -452,7 +458,7 @@ WINRT_EXPORT
 #ifndef __WUNToastDismissedEventArgs_DEFINED__
 #define __WUNToastDismissedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNToastDismissedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -466,7 +472,7 @@ WINRT_EXPORT
 #ifndef __WUNToastFailedEventArgs_DEFINED__
 #define __WUNToastFailedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNToastFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -480,7 +486,7 @@ WINRT_EXPORT
 #ifndef __WUNToastNotificationHistory_DEFINED__
 #define __WUNToastNotificationHistory_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNToastNotificationHistory : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -502,7 +508,7 @@ WINRT_EXPORT
 #ifndef __WUNTileUpdateManager_DEFINED__
 #define __WUNTileUpdateManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNTileUpdateManager : RTObject
 + (WUNTileUpdater*)createTileUpdaterForApplication;
 + (WUNTileUpdater*)createTileUpdaterForApplicationWithId:(NSString*)applicationId;
@@ -516,7 +522,7 @@ WINRT_EXPORT
 #ifndef __WUNBadgeUpdateManager_DEFINED__
 #define __WUNBadgeUpdateManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNBadgeUpdateManager : RTObject
 + (WUNBadgeUpdater*)createBadgeUpdaterForApplication;
 + (WUNBadgeUpdater*)createBadgeUpdaterForApplicationWithId:(NSString*)applicationId;
@@ -530,7 +536,7 @@ WINRT_EXPORT
 #ifndef __WUNTileFlyoutUpdateManager_DEFINED__
 #define __WUNTileFlyoutUpdateManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNTileFlyoutUpdateManager : RTObject
 + (WUNTileFlyoutUpdater*)createTileFlyoutUpdaterForApplication;
 + (WUNTileFlyoutUpdater*)createTileFlyoutUpdaterForApplicationWithId:(NSString*)applicationId;
@@ -544,7 +550,7 @@ WINRT_EXPORT
 #ifndef __WUNToastNotificationManager_DEFINED__
 #define __WUNToastNotificationManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNToastNotificationManager : RTObject
 + (WUNToastNotifier*)createToastNotifier;
 + (WUNToastNotifier*)createToastNotifierWithId:(NSString*)applicationId;
@@ -558,7 +564,7 @@ WINRT_EXPORT
 #ifndef __WUNToastActivatedEventArgs_DEFINED__
 #define __WUNToastActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNToastActivatedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -572,7 +578,7 @@ WINRT_EXPORT
 #ifndef __WUNToastNotificationHistoryChangedTriggerDetail_DEFINED__
 #define __WUNToastNotificationHistoryChangedTriggerDetail_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNToastNotificationHistoryChangedTriggerDetail : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -586,7 +592,7 @@ WINRT_EXPORT
 #ifndef __WUNToastNotificationActionTriggerDetail_DEFINED__
 #define __WUNToastNotificationActionTriggerDetail_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 @interface WUNToastNotificationActionTriggerDetail : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

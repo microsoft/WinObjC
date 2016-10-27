@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -225,7 +225,7 @@
         }
 
         // Remove overlap if necessary
-        pos ++;
+        pos++;
         if (pos < [self _count]) {
             NSRange& rangeAtPos = [self _itemReferenceAtIndex:pos];
             NSRange rangeBelowPos = [self _itemAtIndex:(pos - 1)];
@@ -236,7 +236,7 @@
                 [self _removeItemAtIndex:(pos - 1)];
             }
         }
-        
+
     } else {
         NSInteger pos = [self _positionOfRangeLessThanOrEqualToLocation:index];
 
@@ -353,6 +353,10 @@
 - (void)_removeRanges:(NSRange)ranges {
     // begin removing from _ranges at ranges.location, remove through ranges.length
     self->_ranges.erase(self->_ranges.begin() + ranges.location, self->_ranges.begin() + ranges.location + ranges.length);
+}
+
+- (NSRangePointer)_allRanges {
+    return _ranges.data();
 }
 
 @end

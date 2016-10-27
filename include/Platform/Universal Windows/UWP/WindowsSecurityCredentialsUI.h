@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
+#define OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Security_Credentials_UI.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WSCUCredentialPickerOptions, WSCUCredentialPickerResults, WSCUCredentialPicker, WSCUUserConsentVerifier;
@@ -75,7 +81,7 @@ typedef unsigned WSCUUserConsentVerificationResult;
 #ifndef __WSCUCredentialPickerOptions_DEFINED__
 #define __WSCUCredentialPickerOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
 @interface WSCUCredentialPickerOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -99,7 +105,7 @@ WINRT_EXPORT
 #ifndef __WSCUCredentialPickerResults_DEFINED__
 #define __WSCUCredentialPickerResults_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
 @interface WSCUCredentialPickerResults : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -119,7 +125,7 @@ WINRT_EXPORT
 #ifndef __WSCUCredentialPicker_DEFINED__
 #define __WSCUCredentialPicker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
 @interface WSCUCredentialPicker : RTObject
 + (void)pickWithOptionsAsync:(WSCUCredentialPickerOptions*)options
                      success:(void (^)(WSCUCredentialPickerResults*))success
@@ -141,7 +147,7 @@ WINRT_EXPORT
 #ifndef __WSCUUserConsentVerifier_DEFINED__
 #define __WSCUUserConsentVerifier_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
 @interface WSCUUserConsentVerifier : RTObject
 + (void)checkAvailabilityAsyncWithSuccess:(void (^)(WSCUUserConsentVerifierAvailability))success failure:(void (^)(NSError*))failure;
 + (void)requestVerificationAsync:(NSString*)message

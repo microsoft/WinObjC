@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GLOBALIZATION_COLLATION_EXPORT
+#define OBJCUWP_WINDOWS_GLOBALIZATION_COLLATION_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Globalization_Collation.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WGCCharacterGrouping, WGCCharacterGroupings;
@@ -31,7 +37,7 @@
 #ifndef __WGCCharacterGrouping_DEFINED__
 #define __WGCCharacterGrouping_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_COLLATION_EXPORT
 @interface WGCCharacterGrouping : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -46,7 +52,7 @@ WINRT_EXPORT
 #ifndef __WGCCharacterGroupings_DEFINED__
 #define __WGCCharacterGroupings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_COLLATION_EXPORT
 @interface WGCCharacterGroupings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

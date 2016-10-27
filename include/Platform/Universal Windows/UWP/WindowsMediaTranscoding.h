@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_TRANSCODING_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_TRANSCODING_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_Transcoding.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WMTPrepareTranscodeResult, WMTMediaTranscoder;
@@ -54,7 +60,7 @@ typedef unsigned WMTTranscodeFailureReason;
 #ifndef __WMTPrepareTranscodeResult_DEFINED__
 #define __WMTPrepareTranscodeResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_TRANSCODING_EXPORT
 @interface WMTPrepareTranscodeResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -70,7 +76,7 @@ WINRT_EXPORT
 #ifndef __WMTMediaTranscoder_DEFINED__
 #define __WMTMediaTranscoder_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_TRANSCODING_EXPORT
 @interface WMTMediaTranscoder : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

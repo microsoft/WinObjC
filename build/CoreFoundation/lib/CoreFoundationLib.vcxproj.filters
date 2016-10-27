@@ -54,6 +54,9 @@
     <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFBase.h">
       <Filter>Base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFBridgeUtilities.h">
+      <Filter>Base</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFByteOrder.h">
       <Filter>Base</Filter>
     </ClInclude>

@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_Effects_Editing.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WMEMediaOverlay, WMEMediaClip, WMEEmbeddedAudioTrack, WMEBackgroundAudioTrack, WMEMediaComposition, WMEMediaOverlayLayer;
@@ -58,7 +64,7 @@ typedef unsigned WMEMediaTrimmingPreference;
 #ifndef __WMEMediaOverlay_DEFINED__
 #define __WMEMediaOverlay_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEMediaOverlay : RTObject
 + (WMEMediaOverlay*)make:(WMEMediaClip*)clip ACTIVATOR;
 + (WMEMediaOverlay*)makeWithPositionAndOpacity:(WMEMediaClip*)clip position:(WFRect*)position opacity:(double)opacity ACTIVATOR;
@@ -79,7 +85,7 @@ WINRT_EXPORT
 #ifndef __WMEMediaClip_DEFINED__
 #define __WMEMediaClip_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEMediaClip : RTObject
 + (WMEMediaClip*)createFromSurface:(RTObject<WGDDIDirect3DSurface>*)surface originalDuration:(WFTimeSpan*)originalDuration;
 + (WMEMediaClip*)createFromColor:(WUColor*)color originalDuration:(WFTimeSpan*)originalDuration;
@@ -113,7 +119,7 @@ WINRT_EXPORT
 #ifndef __WMEEmbeddedAudioTrack_DEFINED__
 #define __WMEEmbeddedAudioTrack_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEEmbeddedAudioTrack : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -127,7 +133,7 @@ WINRT_EXPORT
 #ifndef __WMEBackgroundAudioTrack_DEFINED__
 #define __WMEBackgroundAudioTrack_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEBackgroundAudioTrack : RTObject
 + (WMEBackgroundAudioTrack*)createFromEmbeddedAudioTrack:(WMEEmbeddedAudioTrack*)embeddedAudioTrack;
 + (void)createFromFileAsync:(RTObject<WSIStorageFile>*)file
@@ -154,7 +160,7 @@ WINRT_EXPORT
 #ifndef __WMEMediaComposition_DEFINED__
 #define __WMEMediaComposition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEMediaComposition : RTObject
 + (void)loadAsync:(WSStorageFile*)file success:(void (^)(WMEMediaComposition*))success failure:(void (^)(NSError*))failure;
 + (instancetype)make ACTIVATOR;
@@ -207,7 +213,7 @@ WINRT_EXPORT
 #ifndef __WMEMediaOverlayLayer_DEFINED__
 #define __WMEMediaOverlayLayer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEMediaOverlayLayer : RTObject
 + (instancetype)make ACTIVATOR;
 + (WMEMediaOverlayLayer*)makeWithCompositorDefinition:(RTObject<WMEIVideoCompositorDefinition>*)compositorDefinition ACTIVATOR;

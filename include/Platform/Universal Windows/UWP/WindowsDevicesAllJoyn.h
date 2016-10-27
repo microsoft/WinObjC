@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_AllJoyn.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDAAllJoynStatus, WDAAllJoynAboutData, WDAAllJoynBusAttachment, WDAAllJoynBusAttachmentStateChangedEventArgs,
@@ -93,13 +99,17 @@ typedef unsigned WDAAllJoynSessionLostReason;
 - (void)accept;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
+@interface WDAIAllJoynAcceptSessionJoiner : RTObject <WDAIAllJoynAcceptSessionJoiner>
+@end
+
 #endif // __WDAIAllJoynAcceptSessionJoiner_DEFINED__
 
 // Windows.Devices.AllJoyn.AllJoynStatus
 #ifndef __WDAAllJoynStatus_DEFINED__
 #define __WDAAllJoynStatus_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynStatus : RTObject
 + (int)authenticationFailed;
 + (int)authenticationRejectedByUser;
@@ -127,7 +137,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynAboutData_DEFINED__
 #define __WDAAllJoynAboutData_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynAboutData : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -152,7 +162,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynBusAttachment_DEFINED__
 #define __WDAAllJoynBusAttachment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynBusAttachment : RTObject
 + (WDAAllJoynBusAttachment*)make:(NSString*)connectionSpecification ACTIVATOR;
 + (instancetype)make ACTIVATOR;
@@ -185,7 +195,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynBusAttachmentStateChangedEventArgs_DEFINED__
 #define __WDAAllJoynBusAttachmentStateChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynBusAttachmentStateChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -200,7 +210,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynCredentialsRequestedEventArgs_DEFINED__
 #define __WDAAllJoynCredentialsRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynCredentialsRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -218,7 +228,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynCredentialsVerificationRequestedEventArgs_DEFINED__
 #define __WDAAllJoynCredentialsVerificationRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynCredentialsVerificationRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -239,7 +249,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynAuthenticationCompleteEventArgs_DEFINED__
 #define __WDAAllJoynAuthenticationCompleteEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynAuthenticationCompleteEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -255,7 +265,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynCredentials_DEFINED__
 #define __WDAAllJoynCredentials_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynCredentials : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -272,7 +282,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynServiceInfo_DEFINED__
 #define __WDAAllJoynServiceInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynServiceInfo : RTObject
 + (WDAAllJoynServiceInfo*)make:(NSString*)uniqueName objectPath:(NSString*)objectPath sessionPort:(unsigned short)sessionPort ACTIVATOR;
 #if defined(__cplusplus)
@@ -289,7 +299,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynAboutDataView_DEFINED__
 #define __WDAAllJoynAboutDataView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynAboutDataView : RTObject
 + (void)getDataBySessionPortAsync:(NSString*)uniqueName
                     busAttachment:(WDAAllJoynBusAttachment*)busAttachment
@@ -329,7 +339,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynAcceptSessionJoinerEventArgs_DEFINED__
 #define __WDAAllJoynAcceptSessionJoinerEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynAcceptSessionJoinerEventArgs : RTObject
 + (WDAAllJoynAcceptSessionJoinerEventArgs*)make:(NSString*)uniqueName
                                     sessionPort:(unsigned short)sessionPort
@@ -353,7 +363,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynSessionMemberAddedEventArgs_DEFINED__
 #define __WDAAllJoynSessionMemberAddedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynSessionMemberAddedEventArgs : RTObject
 + (WDAAllJoynSessionMemberAddedEventArgs*)make:(NSString*)uniqueName ACTIVATOR;
 #if defined(__cplusplus)
@@ -368,7 +378,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynSessionMemberRemovedEventArgs_DEFINED__
 #define __WDAAllJoynSessionMemberRemovedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynSessionMemberRemovedEventArgs : RTObject
 + (WDAAllJoynSessionMemberRemovedEventArgs*)make:(NSString*)uniqueName ACTIVATOR;
 #if defined(__cplusplus)
@@ -383,7 +393,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynSessionLostEventArgs_DEFINED__
 #define __WDAAllJoynSessionLostEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynSessionLostEventArgs : RTObject
 + (WDAAllJoynSessionLostEventArgs*)make:(WDAAllJoynSessionLostReason)reason ACTIVATOR;
 #if defined(__cplusplus)
@@ -398,7 +408,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynProducerStoppedEventArgs_DEFINED__
 #define __WDAAllJoynProducerStoppedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynProducerStoppedEventArgs : RTObject
 + (WDAAllJoynProducerStoppedEventArgs*)make:(int)status ACTIVATOR;
 #if defined(__cplusplus)
@@ -413,7 +423,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynWatcherStoppedEventArgs_DEFINED__
 #define __WDAAllJoynWatcherStoppedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynWatcherStoppedEventArgs : RTObject
 + (WDAAllJoynWatcherStoppedEventArgs*)make:(int)status ACTIVATOR;
 #if defined(__cplusplus)
@@ -428,7 +438,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynServiceInfoRemovedEventArgs_DEFINED__
 #define __WDAAllJoynServiceInfoRemovedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynServiceInfoRemovedEventArgs : RTObject
 + (WDAAllJoynServiceInfoRemovedEventArgs*)make:(NSString*)uniqueName ACTIVATOR;
 #if defined(__cplusplus)
@@ -443,7 +453,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynMessageInfo_DEFINED__
 #define __WDAAllJoynMessageInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynMessageInfo : RTObject
 + (WDAAllJoynMessageInfo*)make:(NSString*)senderUniqueName ACTIVATOR;
 #if defined(__cplusplus)

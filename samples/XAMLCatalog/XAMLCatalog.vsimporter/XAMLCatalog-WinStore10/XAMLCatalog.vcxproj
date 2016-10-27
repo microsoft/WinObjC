@@ -20,7 +20,6 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>XAMLCatalog</ProjectName>
-    <RootNamespace>XAMLCatalog</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
@@ -30,7 +29,8 @@
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{57765C7E-E763-4FA8-A786-73CADD51A57F}</ProjectGuid>
+    <ProjectGuid>{2FC96279-743B-4BAC-B2A0-4B1BA0277699}</ProjectGuid>
+    <RootNamespace>XAMLCatalog</RootNamespace>
     <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -62,9 +62,7 @@
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.props" />
   </ImportGroup>
-  <ImportGroup Label="Shared">
-    <Import Project="../XAMLCatalog-Headers-WinStore10/XAMLCatalog-Headers.vcxitems" Label="Shared" />
-  </ImportGroup>
+  <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -92,6 +90,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
       <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
@@ -115,6 +114,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
       <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
@@ -136,6 +136,7 @@
     <ClangCompile>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
       <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
@@ -156,6 +157,7 @@
     <ClangCompile>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
       <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
@@ -186,21 +188,36 @@
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
-    <ClangCompile Include="..\..\XAMLCatalog\StoryBoardViewController.m" />
+    <AssetCatalogCompile Include="..\..\XAMLCatalog\Assets.xcassets" />
+    <ClInclude Include="..\..\XAMLCatalog\AppDelegate.h" />
+    <ClInclude Include="..\..\XAMLCatalog\MenuTableViewController.h" />
+    <ClInclude Include="..\..\XAMLCatalog\MiscellaneousViewController.h" />
+    <ClInclude Include="..\..\XAMLCatalog\ProgrammaticViewController.h" />
+    <ClInclude Include="..\..\XAMLCatalog\StoryBoardViewController.h" />
+    <ClInclude Include="..\..\XAMLCatalog\UIActionSheetViewController.h" />
+    <ClInclude Include="..\..\XAMLCatalog\UIActivityIndicatorViewController.h" />
+    <ClInclude Include="..\..\XAMLCatalog\UIButtonViewController.h" />
+    <ClInclude Include="..\..\XAMLCatalog\UISliderViewController.h" />
     <ClangCompile Include="..\..\XAMLCatalog\AppDelegate.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\MenuTableViewController.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\MiscellaneousViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\ProgrammaticViewController.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\StoryBoardViewController.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\UIActionSheetViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIActivityIndicatorViewController.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\UIButtonViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UISliderViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\main.m" />
-    <ClangCompile Include="..\..\XAMLCatalog\MenuTableViewController.m" />
-    <AssetCatalogCompile Include="..\..\XAMLCatalog\Assets.xcassets" />
-    <StoryboardCompile Include="..\..\XAMLCatalog\XAMLCatalog.storyboard" />
     <SBInfoPlistCopy Include="..\..\XAMLCatalog\Info.plist">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Release'">false</ExcludedFromBuild>
       <VariableFile Condition="'$(Configuration)'=='Debug'">XAMLCatalog-Debug-xcvars.txt</VariableFile>
       <VariableFile Condition="'$(Configuration)'=='Release'">XAMLCatalog-Release-xcvars.txt</VariableFile>
     </SBInfoPlistCopy>
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\blue_background.jpg" />
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\button_image.png" />
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\yellow_background.jpg" />
+    <StoryboardCompile Include="..\..\XAMLCatalog\XAMLCatalog.storyboard" />
     <Text Include="XAMLCatalog-Debug-xcvars.txt">
       <DeploymentContent>false</DeploymentContent>
     </Text>

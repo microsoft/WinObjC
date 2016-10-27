@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SYSTEM_POWER_DIAGNOSTICS_EXPORT
+#define OBJCUWP_WINDOWS_SYSTEM_POWER_DIAGNOSTICS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_System_Power_Diagnostics.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WSPDBackgroundEnergyDiagnostics, WSPDForegroundEnergyDiagnostics;
@@ -31,7 +37,7 @@
 #ifndef __WSPDBackgroundEnergyDiagnostics_DEFINED__
 #define __WSPDBackgroundEnergyDiagnostics_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_POWER_DIAGNOSTICS_EXPORT
 @interface WSPDBackgroundEnergyDiagnostics : RTObject
 + (uint64_t)computeTotalEnergyUsage;
 + (void)resetTotalEnergyUsage;
@@ -44,7 +50,7 @@ WINRT_EXPORT
 #ifndef __WSPDForegroundEnergyDiagnostics_DEFINED__
 #define __WSPDForegroundEnergyDiagnostics_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_POWER_DIAGNOSTICS_EXPORT
 @interface WSPDForegroundEnergyDiagnostics : RTObject
 + (uint64_t)computeTotalEnergyUsage;
 + (void)resetTotalEnergyUsage;

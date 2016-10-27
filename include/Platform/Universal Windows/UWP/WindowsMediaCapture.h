@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_Core_Capture_Devices_Protection_Playback.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WMCCameraCaptureUIPhotoCaptureSettings, WMCCameraCaptureUIVideoCaptureSettings, WMCCameraCaptureUI, WMCMediaCaptureFailedEventArgs,
@@ -187,7 +193,7 @@ typedef void (^WMCRecordLimitationExceededEventHandler)(WMCMediaCapture* sender)
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Media.Capture.WhiteBalanceGain
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCWhiteBalanceGain : NSObject
 + (instancetype) new;
 @property double r;
@@ -211,7 +217,7 @@ typedef void (^WMCRecordLimitationExceededEventHandler)(WMCMediaCapture* sender)
 #ifndef __WMCCameraCaptureUIPhotoCaptureSettings_DEFINED__
 #define __WMCCameraCaptureUIPhotoCaptureSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCCameraCaptureUIPhotoCaptureSettings : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -229,7 +235,7 @@ WINRT_EXPORT
 #ifndef __WMCCameraCaptureUIVideoCaptureSettings_DEFINED__
 #define __WMCCameraCaptureUIVideoCaptureSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCCameraCaptureUIVideoCaptureSettings : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -246,7 +252,7 @@ WINRT_EXPORT
 #ifndef __WMCCameraCaptureUI_DEFINED__
 #define __WMCCameraCaptureUI_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCCameraCaptureUI : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -263,7 +269,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaCaptureFailedEventArgs_DEFINED__
 #define __WMCMediaCaptureFailedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaCaptureFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -282,13 +288,17 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Media.Capture.MediaCapture
 #ifndef __WMCMediaCapture_DEFINED__
 #define __WMCMediaCapture_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaCapture : RTObject <WFIClosable>
 + (BOOL)isVideoProfileSupported:(NSString*)videoDeviceId;
 + (NSArray* /* WMCMediaCaptureVideoProfile* */)findAllVideoProfiles:(NSString*)videoDeviceId;
@@ -399,7 +409,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaCaptureVideoProfileMediaDescription_DEFINED__
 #define __WMCMediaCaptureVideoProfileMediaDescription_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaCaptureVideoProfileMediaDescription : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -417,7 +427,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaCaptureVideoProfile_DEFINED__
 #define __WMCMediaCaptureVideoProfile_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaCaptureVideoProfile : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -436,7 +446,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaCaptureInitializationSettings_DEFINED__
 #define __WMCMediaCaptureInitializationSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaCaptureInitializationSettings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -462,7 +472,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaCaptureSettings_DEFINED__
 #define __WMCMediaCaptureSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaCaptureSettings : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -488,7 +498,7 @@ WINRT_EXPORT
 #ifndef __WMCLowLagMediaRecording_DEFINED__
 #define __WMCLowLagMediaRecording_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCLowLagMediaRecording : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -506,7 +516,7 @@ WINRT_EXPORT
 #ifndef __WMCLowLagPhotoCapture_DEFINED__
 #define __WMCLowLagPhotoCapture_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCLowLagPhotoCapture : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -521,7 +531,7 @@ WINRT_EXPORT
 #ifndef __WMCLowLagPhotoSequenceCapture_DEFINED__
 #define __WMCLowLagPhotoSequenceCapture_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCLowLagPhotoSequenceCapture : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -539,7 +549,7 @@ WINRT_EXPORT
 #ifndef __WMCMediaCaptureFocusChangedEventArgs_DEFINED__
 #define __WMCMediaCaptureFocusChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCMediaCaptureFocusChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -553,7 +563,7 @@ WINRT_EXPORT
 #ifndef __WMCPhotoConfirmationCapturedEventArgs_DEFINED__
 #define __WMCPhotoConfirmationCapturedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCPhotoConfirmationCapturedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -568,7 +578,7 @@ WINRT_EXPORT
 #ifndef __WMCAdvancedPhotoCapture_DEFINED__
 #define __WMCAdvancedPhotoCapture_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCAdvancedPhotoCapture : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -589,7 +599,7 @@ WINRT_EXPORT
 #ifndef __WMCCapturedPhoto_DEFINED__
 #define __WMCCapturedPhoto_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCCapturedPhoto : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -604,7 +614,7 @@ WINRT_EXPORT
 #ifndef __WMCAdvancedCapturedPhoto_DEFINED__
 #define __WMCAdvancedCapturedPhoto_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCAdvancedCapturedPhoto : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -620,7 +630,7 @@ WINRT_EXPORT
 #ifndef __WMCOptionalReferencePhotoCapturedEventArgs_DEFINED__
 #define __WMCOptionalReferencePhotoCapturedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCOptionalReferencePhotoCapturedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -645,6 +655,10 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WSSIInputStream : RTObject <WSSIInputStream>
+@end
+
 #endif // __WSSIInputStream_DEFINED__
 
 // Windows.Storage.Streams.IOutputStream
@@ -658,6 +672,10 @@ WINRT_EXPORT
            failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WSSIOutputStream : RTObject <WSSIOutputStream>
 @end
 
 #endif // __WSSIOutputStream_DEFINED__
@@ -689,6 +707,10 @@ WINRT_EXPORT
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WSSIRandomAccessStream : RTObject <WSSIRandomAccessStream>
+@end
+
 #endif // __WSSIRandomAccessStream_DEFINED__
 
 // Windows.Storage.Streams.IContentTypeProvider
@@ -697,6 +719,10 @@ WINRT_EXPORT
 
 @protocol WSSIContentTypeProvider
 @property (readonly) NSString* contentType;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WSSIContentTypeProvider : RTObject <WSSIContentTypeProvider>
 @end
 
 #endif // __WSSIContentTypeProvider_DEFINED__
@@ -725,13 +751,17 @@ WINRT_EXPORT
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
+@interface WSSIRandomAccessStreamWithContentType : RTObject <WSSIRandomAccessStreamWithContentType>
+@end
+
 #endif // __WSSIRandomAccessStreamWithContentType_DEFINED__
 
 // Windows.Media.Capture.CapturedFrame
 #ifndef __WMCCapturedFrame_DEFINED__
 #define __WMCCapturedFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCCapturedFrame : RTObject <WSSIRandomAccessStreamWithContentType,
                                         WSSIContentTypeProvider,
                                         WSSIRandomAccessStream,
@@ -773,7 +803,7 @@ WINRT_EXPORT
 #ifndef __WMCPhotoCapturedEventArgs_DEFINED__
 #define __WMCPhotoCapturedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCPhotoCapturedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -789,7 +819,7 @@ WINRT_EXPORT
 #ifndef __WMCCapturedFrameControlValues_DEFINED__
 #define __WMCCapturedFrameControlValues_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCCapturedFrameControlValues : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -816,7 +846,7 @@ WINRT_EXPORT
 #ifndef __WMCVideoStreamConfiguration_DEFINED__
 #define __WMCVideoStreamConfiguration_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_CAPTURE_DEVICES_PROTECTION_PLAYBACK_EXPORT
 @interface WMCVideoStreamConfiguration : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

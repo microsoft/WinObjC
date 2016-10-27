@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Controls_Maps.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXCMMapActualCameraChangedEventArgs, WUXCMMapActualCameraChangingEventArgs, WUXCMMapCustomExperienceChangedEventArgs,
@@ -237,7 +243,7 @@ typedef void (^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventAr
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Controls.Maps.MapZoomLevelRange
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapZoomLevelRange : NSObject
 + (instancetype) new;
 @property double min;
@@ -248,7 +254,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapActualCameraChangedEventArgs_DEFINED__
 #define __WUXCMMapActualCameraChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapActualCameraChangedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -263,7 +269,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapActualCameraChangingEventArgs_DEFINED__
 #define __WUXCMMapActualCameraChangingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapActualCameraChangingEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -278,7 +284,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapCustomExperienceChangedEventArgs_DEFINED__
 #define __WUXCMMapCustomExperienceChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapCustomExperienceChangedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -292,7 +298,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapElementClickEventArgs_DEFINED__
 #define __WUXCMMapElementClickEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapElementClickEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -309,7 +315,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapElementPointerEnteredEventArgs_DEFINED__
 #define __WUXCMMapElementPointerEnteredEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapElementPointerEnteredEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -326,7 +332,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapElementPointerExitedEventArgs_DEFINED__
 #define __WUXCMMapElementPointerExitedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapElementPointerExitedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -343,7 +349,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapTargetCameraChangedEventArgs_DEFINED__
 #define __WUXCMMapTargetCameraChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapTargetCameraChangedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -358,7 +364,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapTileBitmapRequestDeferral_DEFINED__
 #define __WUXCMMapTileBitmapRequestDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapTileBitmapRequestDeferral : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -373,7 +379,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapTileBitmapRequest_DEFINED__
 #define __WUXCMMapTileBitmapRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapTileBitmapRequest : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -389,7 +395,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapTileBitmapRequestedEventArgs_DEFINED__
 #define __WUXCMMapTileBitmapRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapTileBitmapRequestedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -407,7 +413,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapTileUriRequestDeferral_DEFINED__
 #define __WUXCMMapTileUriRequestDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapTileUriRequestDeferral : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -422,7 +428,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapTileUriRequest_DEFINED__
 #define __WUXCMMapTileUriRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapTileUriRequest : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -438,7 +444,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapTileUriRequestedEventArgs_DEFINED__
 #define __WUXCMMapTileUriRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapTileUriRequestedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -456,7 +462,7 @@ WINRT_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -477,7 +483,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapCamera_DEFINED__
 #define __WUXCMMapCamera_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapCamera : WXDependencyObject
 + (WUXCMMapCamera*)makeInstanceWithLocation:(WDGGeopoint*)location ACTIVATOR;
 + (WUXCMMapCamera*)makeInstanceWithLocationAndHeading:(WDGGeopoint*)location headingInDegrees:(double)headingInDegrees ACTIVATOR;
@@ -505,7 +511,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapCustomExperience_DEFINED__
 #define __WUXCMMapCustomExperience_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapCustomExperience : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -519,7 +525,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapElement_DEFINED__
 #define __WUXCMMapElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapElement : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -539,7 +545,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapInputEventArgs_DEFINED__
 #define __WUXCMMapInputEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapInputEventArgs : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -555,7 +561,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapItemsControl_DEFINED__
 #define __WUXCMMapItemsControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapItemsControl : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -575,8 +581,9 @@ WINRT_EXPORT
 #ifndef __WUXCMMapRouteView_DEFINED__
 #define __WUXCMMapRouteView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapRouteView : WXDependencyObject
++ (WUXCMMapRouteView*)makeInstanceWithMapRoute:(WSMMapRoute*)route ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -591,7 +598,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapScene_DEFINED__
 #define __WUXCMMapScene_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapScene : WXDependencyObject
 + (WUXCMMapScene*)createFromBoundingBox:(WDGGeoboundingBox*)bounds;
 + (WUXCMMapScene*)createFromBoundingBoxWithHeadingAndPitch:(WDGGeoboundingBox*)bounds
@@ -625,7 +632,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapTileDataSource_DEFINED__
 #define __WUXCMMapTileDataSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapTileDataSource : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -639,7 +646,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapTileSource_DEFINED__
 #define __WUXCMMapTileSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapTileSource : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -675,7 +682,7 @@ WINRT_EXPORT
 #ifndef __WUXCMStreetsidePanorama_DEFINED__
 #define __WUXCMStreetsidePanorama_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMStreetsidePanorama : WXDependencyObject
 + (void)findNearbyWithLocationAsync:(WDGGeopoint*)location
                             success:(void (^)(WUXCMStreetsidePanorama*))success
@@ -696,7 +703,7 @@ WINRT_EXPORT
 #ifndef __WUXCMCustomMapTileDataSource_DEFINED__
 #define __WUXCMCustomMapTileDataSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMCustomMapTileDataSource : WUXCMMapTileDataSource
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -712,7 +719,7 @@ WINRT_EXPORT
 #ifndef __WUXCMHttpMapTileDataSource_DEFINED__
 #define __WUXCMHttpMapTileDataSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMHttpMapTileDataSource : WUXCMMapTileDataSource
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -731,7 +738,7 @@ WINRT_EXPORT
 #ifndef __WUXCMLocalMapTileDataSource_DEFINED__
 #define __WUXCMLocalMapTileDataSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMLocalMapTileDataSource : WUXCMMapTileDataSource
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -748,7 +755,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapIcon_DEFINED__
 #define __WUXCMMapIcon_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapIcon : WUXCMMapElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -771,7 +778,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapPolygon_DEFINED__
 #define __WUXCMMapPolygon_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapPolygon : WUXCMMapElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -793,7 +800,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapPolyline_DEFINED__
 #define __WUXCMMapPolyline_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapPolyline : WUXCMMapElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -813,7 +820,7 @@ WINRT_EXPORT
 #ifndef __WUXCMStreetsideExperience_DEFINED__
 #define __WUXCMStreetsideExperience_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMStreetsideExperience : WUXCMMapCustomExperience
 + (WUXCMStreetsideExperience*)makeInstanceWithPanorama:(WUXCMStreetsidePanorama*)panorama ACTIVATOR;
 + (WUXCMStreetsideExperience*)makeInstanceWithPanoramaHeadingPitchAndFieldOfView:(WUXCMStreetsidePanorama*)panorama
@@ -865,6 +872,10 @@ WINRT_EXPORT
 - (void)onDrop:(WXDragEventArgs*)e;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
+@interface WXCIControlOverrides : RTObject <WXCIControlOverrides>
+@end
+
 #endif // __WXCIControlOverrides_DEFINED__
 
 // Windows.UI.Xaml.IFrameworkElementOverrides
@@ -877,6 +888,10 @@ WINRT_EXPORT
 - (void)onApplyTemplate;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
+@interface WXIFrameworkElementOverrides : RTObject <WXIFrameworkElementOverrides>
+@end
+
 #endif // __WXIFrameworkElementOverrides_DEFINED__
 
 // Windows.UI.Xaml.IFrameworkElementOverrides2
@@ -885,6 +900,10 @@ WINRT_EXPORT
 
 @protocol WXIFrameworkElementOverrides2
 - (BOOL)goToElementStateCore:(NSString*)stateName useTransitions:(BOOL)useTransitions;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
+@interface WXIFrameworkElementOverrides2 : RTObject <WXIFrameworkElementOverrides2>
 @end
 
 #endif // __WXIFrameworkElementOverrides2_DEFINED__
@@ -900,13 +919,17 @@ WINRT_EXPORT
                                                                                       boundingRect:(WFRect*)boundingRect;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
+@interface WXIUIElementOverrides : RTObject <WXIUIElementOverrides>
+@end
+
 #endif // __WXIUIElementOverrides_DEFINED__
 
 // Windows.UI.Xaml.UIElement
 #ifndef __WXUIElement_DEFINED__
 #define __WXUIElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 #if defined(__cplusplus)
@@ -1058,7 +1081,7 @@ WINRT_EXPORT
 #ifndef __WXFrameworkElement_DEFINED__
 #define __WXFrameworkElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WXFrameworkElement : WXUIElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1130,7 +1153,7 @@ WINRT_EXPORT
 #ifndef __WXCControl_DEFINED__
 #define __WXCControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WXCControl : WXFrameworkElement
 + (BOOL)getIsTemplateFocusTarget:(WXFrameworkElement*)element;
 + (void)setIsTemplateFocusTarget:(WXFrameworkElement*)element value:(BOOL)value;
@@ -1220,7 +1243,7 @@ WINRT_EXPORT
 #ifndef __WUXCMMapControl_DEFINED__
 #define __WUXCMMapControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapControl : WXCControl
 + (WDGGeopoint*)getLocation:(WXDependencyObject*)element;
 + (void)setLocation:(WXDependencyObject*)element value:(WDGGeopoint*)value;

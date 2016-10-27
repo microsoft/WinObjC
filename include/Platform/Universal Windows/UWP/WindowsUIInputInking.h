@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+#define OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Input_Inking.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WUIIInkUnprocessedInput, WUIIInkStrokeInput, WUIIInkInputProcessingConfiguration, WUIIInkSynchronizer, WUIIInkPresenter,
@@ -94,6 +100,10 @@ typedef unsigned WUIIPenTipShape;
 - (WUIIInkPoint*)createInkPoint:(WFPoint*)position pressure:(float)pressure;
 @end
 
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+@interface WUIIIInkPointFactory : RTObject <WUIIIInkPointFactory>
+@end
+
 #endif // __WUIIIInkPointFactory_DEFINED__
 
 // Windows.UI.Input.Inking.IInkStrokeContainer
@@ -120,6 +130,10 @@ typedef unsigned WUIIPenTipShape;
 - (NSArray* /* WUIIInkRecognitionResult* */)getRecognitionResults;
 @end
 
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+@interface WUIIIInkStrokeContainer : RTObject <WUIIIInkStrokeContainer>
+@end
+
 #endif // __WUIIIInkStrokeContainer_DEFINED__
 
 // Windows.UI.Input.Inking.IInkRecognizerContainer
@@ -135,13 +149,17 @@ typedef unsigned WUIIPenTipShape;
 - (NSArray* /* WUIIInkRecognizer* */)getRecognizers;
 @end
 
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+@interface WUIIIInkRecognizerContainer : RTObject <WUIIIInkRecognizerContainer>
+@end
+
 #endif // __WUIIIInkRecognizerContainer_DEFINED__
 
 // Windows.UI.Input.Inking.InkUnprocessedInput
 #ifndef __WUIIInkUnprocessedInput_DEFINED__
 #define __WUIIInkUnprocessedInput_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkUnprocessedInput : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -169,7 +187,7 @@ WINRT_EXPORT
 #ifndef __WUIIInkStrokeInput_DEFINED__
 #define __WUIIInkStrokeInput_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkStrokeInput : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -191,7 +209,7 @@ WINRT_EXPORT
 #ifndef __WUIIInkInputProcessingConfiguration_DEFINED__
 #define __WUIIInkInputProcessingConfiguration_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkInputProcessingConfiguration : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -206,7 +224,7 @@ WINRT_EXPORT
 #ifndef __WUIIInkSynchronizer_DEFINED__
 #define __WUIIInkSynchronizer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkSynchronizer : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -221,7 +239,7 @@ WINRT_EXPORT
 #ifndef __WUIIInkPresenter_DEFINED__
 #define __WUIIInkPresenter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkPresenter : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -248,7 +266,7 @@ WINRT_EXPORT
 #ifndef __WUIIInkStrokesCollectedEventArgs_DEFINED__
 #define __WUIIInkStrokesCollectedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkStrokesCollectedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -262,7 +280,7 @@ WINRT_EXPORT
 #ifndef __WUIIInkStrokesErasedEventArgs_DEFINED__
 #define __WUIIInkStrokesErasedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkStrokesErasedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -276,7 +294,7 @@ WINRT_EXPORT
 #ifndef __WUIIInkPoint_DEFINED__
 #define __WUIIInkPoint_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkPoint : RTObject
 + (WUIIInkPoint*)makeInkPoint:(WFPoint*)position pressure:(float)pressure ACTIVATOR;
 #if defined(__cplusplus)
@@ -292,7 +310,7 @@ WINRT_EXPORT
 #ifndef __WUIIInkDrawingAttributes_DEFINED__
 #define __WUIIInkDrawingAttributes_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkDrawingAttributes : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -313,7 +331,7 @@ WINRT_EXPORT
 #ifndef __WUIIInkStrokeRenderingSegment_DEFINED__
 #define __WUIIInkStrokeRenderingSegment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkStrokeRenderingSegment : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -333,7 +351,7 @@ WINRT_EXPORT
 #ifndef __WUIIInkStroke_DEFINED__
 #define __WUIIInkStroke_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkStroke : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -354,7 +372,7 @@ WINRT_EXPORT
 #ifndef __WUIIInkStrokeBuilder_DEFINED__
 #define __WUIIInkStrokeBuilder_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkStrokeBuilder : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -374,7 +392,7 @@ WINRT_EXPORT
 #ifndef __WUIIInkRecognitionResult_DEFINED__
 #define __WUIIInkRecognitionResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkRecognitionResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -390,7 +408,7 @@ WINRT_EXPORT
 #ifndef __WUIIInkStrokeContainer_DEFINED__
 #define __WUIIInkStrokeContainer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkStrokeContainer : RTObject <WUIIIInkStrokeContainer>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -423,7 +441,7 @@ WINRT_EXPORT
 #ifndef __WUIIInkRecognizer_DEFINED__
 #define __WUIIInkRecognizer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkRecognizer : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -437,7 +455,7 @@ WINRT_EXPORT
 #ifndef __WUIIInkRecognizerContainer_DEFINED__
 #define __WUIIInkRecognizerContainer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkRecognizerContainer : RTObject <WUIIIInkRecognizerContainer>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -457,7 +475,7 @@ WINRT_EXPORT
 #ifndef __WUIIInkManager_DEFINED__
 #define __WUIIInkManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 @interface WUIIInkManager : RTObject <WUIIIInkRecognizerContainer, WUIIIInkStrokeContainer>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

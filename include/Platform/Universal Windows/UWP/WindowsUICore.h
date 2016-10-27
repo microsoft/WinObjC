@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WUCCoreDispatcher, WUCCoreCursor, WUCCoreWindow, WUCWindowActivatedEventArgs, WUCAutomationProviderRequestedEventArgs,
@@ -153,7 +159,7 @@ typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Core.CorePhysicalKeyStatus
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCorePhysicalKeyStatus : NSObject
 + (instancetype) new;
 @property unsigned int repeatCount;
@@ -165,7 +171,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.UI.Core.CoreProximityEvaluation
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCoreProximityEvaluation : NSObject
 + (instancetype) new;
 @property int score;
@@ -190,6 +196,10 @@ typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 
 @protocol WUCICoreWindowEventArgs
 @property BOOL handled;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUCICoreWindowEventArgs : RTObject <WUCICoreWindowEventArgs>
 @end
 
 #endif // __WUCICoreWindowEventArgs_DEFINED__
@@ -250,6 +260,10 @@ typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 - (void)setPointerCapture;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUCICoreWindow : RTObject <WUCICoreWindow>
+@end
+
 #endif // __WUCICoreWindow_DEFINED__
 
 // Windows.UI.Core.ICoreAcceleratorKeys
@@ -261,6 +275,10 @@ typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 - (void)removeAcceleratorKeyActivatedEvent:(EventRegistrationToken)tok;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUCICoreAcceleratorKeys : RTObject <WUCICoreAcceleratorKeys>
+@end
+
 #endif // __WUCICoreAcceleratorKeys_DEFINED__
 
 // Windows.UI.Core.IInitializeWithCoreWindow
@@ -269,6 +287,10 @@ typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 
 @protocol WUCIInitializeWithCoreWindow
 - (void)Initialize:(WUCCoreWindow*)window;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUCIInitializeWithCoreWindow : RTObject <WUCIInitializeWithCoreWindow>
 @end
 
 #endif // __WUCIInitializeWithCoreWindow_DEFINED__
@@ -282,6 +304,10 @@ typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 @property BOOL isInputEnabled;
 - (EventRegistrationToken)addInputEnabledEvent:(void (^)(RTObject*, WUCInputEnabledEventArgs*))del;
 - (void)removeInputEnabledEvent:(EventRegistrationToken)tok;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUCICoreInputSourceBase : RTObject <WUCICoreInputSourceBase>
 @end
 
 #endif // __WUCICoreInputSourceBase_DEFINED__
@@ -312,13 +338,17 @@ typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 - (void)setPointerCapture;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUCICorePointerInputSource : RTObject <WUCICorePointerInputSource>
+@end
+
 #endif // __WUCICorePointerInputSource_DEFINED__
 
 // Windows.UI.Core.CoreDispatcher
 #ifndef __WUCCoreDispatcher_DEFINED__
 #define __WUCCoreDispatcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCoreDispatcher : RTObject <WUCICoreAcceleratorKeys>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -346,7 +376,7 @@ WINRT_EXPORT
 #ifndef __WUCCoreCursor_DEFINED__
 #define __WUCCoreCursor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCoreCursor : RTObject
 + (WUCCoreCursor*)makeCursor:(WUCCoreCursorType)type id:(unsigned int)id ACTIVATOR;
 #if defined(__cplusplus)
@@ -362,7 +392,7 @@ WINRT_EXPORT
 #ifndef __WUCCoreWindow_DEFINED__
 #define __WUCCoreWindow_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCoreWindow : RTObject <WUCICoreWindow>
 + (WUCCoreWindow*)getForCurrentThread;
 #if defined(__cplusplus)
@@ -425,7 +455,7 @@ WINRT_EXPORT
 #ifndef __WUCWindowActivatedEventArgs_DEFINED__
 #define __WUCWindowActivatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCWindowActivatedEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -440,7 +470,7 @@ WINRT_EXPORT
 #ifndef __WUCAutomationProviderRequestedEventArgs_DEFINED__
 #define __WUCAutomationProviderRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCAutomationProviderRequestedEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -455,7 +485,7 @@ WINRT_EXPORT
 #ifndef __WUCCharacterReceivedEventArgs_DEFINED__
 #define __WUCCharacterReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCharacterReceivedEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -471,7 +501,7 @@ WINRT_EXPORT
 #ifndef __WUCCoreWindowEventArgs_DEFINED__
 #define __WUCCoreWindowEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCoreWindowEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -485,7 +515,7 @@ WINRT_EXPORT
 #ifndef __WUCInputEnabledEventArgs_DEFINED__
 #define __WUCInputEnabledEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCInputEnabledEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -500,7 +530,7 @@ WINRT_EXPORT
 #ifndef __WUCKeyEventArgs_DEFINED__
 #define __WUCKeyEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCKeyEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -516,7 +546,7 @@ WINRT_EXPORT
 #ifndef __WUCPointerEventArgs_DEFINED__
 #define __WUCPointerEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCPointerEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -533,7 +563,7 @@ WINRT_EXPORT
 #ifndef __WUCTouchHitTestingEventArgs_DEFINED__
 #define __WUCTouchHitTestingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCTouchHitTestingEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -552,7 +582,7 @@ WINRT_EXPORT
 #ifndef __WUCWindowSizeChangedEventArgs_DEFINED__
 #define __WUCWindowSizeChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCWindowSizeChangedEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -567,7 +597,7 @@ WINRT_EXPORT
 #ifndef __WUCVisibilityChangedEventArgs_DEFINED__
 #define __WUCVisibilityChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCVisibilityChangedEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -582,7 +612,7 @@ WINRT_EXPORT
 #ifndef __WUCIdleDispatchedHandlerArgs_DEFINED__
 #define __WUCIdleDispatchedHandlerArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCIdleDispatchedHandlerArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -596,7 +626,7 @@ WINRT_EXPORT
 #ifndef __WUCAcceleratorKeyEventArgs_DEFINED__
 #define __WUCAcceleratorKeyEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCAcceleratorKeyEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -613,7 +643,7 @@ WINRT_EXPORT
 #ifndef __WUCCoreAcceleratorKeys_DEFINED__
 #define __WUCCoreAcceleratorKeys_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCoreAcceleratorKeys : RTObject <WUCICoreAcceleratorKeys>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -628,7 +658,7 @@ WINRT_EXPORT
 #ifndef __WUCCoreWindowResizeManager_DEFINED__
 #define __WUCCoreWindowResizeManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCoreWindowResizeManager : RTObject
 + (WUCCoreWindowResizeManager*)getForCurrentView;
 #if defined(__cplusplus)
@@ -644,7 +674,7 @@ WINRT_EXPORT
 #ifndef __WUCCoreIndependentInputSource_DEFINED__
 #define __WUCCoreIndependentInputSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCoreIndependentInputSource : RTObject <WUCICoreInputSourceBase, WUCICorePointerInputSource>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -680,7 +710,7 @@ WINRT_EXPORT
 #ifndef __WUCCoreComponentInputSource_DEFINED__
 #define __WUCCoreComponentInputSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCCoreComponentInputSource : RTObject <WUCICoreInputSourceBase, WUCICorePointerInputSource>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -730,7 +760,7 @@ WINRT_EXPORT
 #ifndef __WUCBackRequestedEventArgs_DEFINED__
 #define __WUCBackRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCBackRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -744,7 +774,7 @@ WINRT_EXPORT
 #ifndef __WUCSystemNavigationManager_DEFINED__
 #define __WUCSystemNavigationManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUCSystemNavigationManager : RTObject
 + (WUCSystemNavigationManager*)getForCurrentView;
 #if defined(__cplusplus)

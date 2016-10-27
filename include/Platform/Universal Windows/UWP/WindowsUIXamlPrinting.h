@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Printing.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXPAddPagesEventArgs, WUXPGetPreviewPageEventArgs, WUXPPaginateEventArgs, WUXPPrintDocument;
@@ -84,7 +90,7 @@ typedef void (^WUXPPaginateEventHandler)(RTObject* sender, WUXPPaginateEventArgs
 #ifndef __WUXPAddPagesEventArgs_DEFINED__
 #define __WUXPAddPagesEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 @interface WUXPAddPagesEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -99,7 +105,7 @@ WINRT_EXPORT
 #ifndef __WUXPGetPreviewPageEventArgs_DEFINED__
 #define __WUXPGetPreviewPageEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 @interface WUXPGetPreviewPageEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -114,7 +120,7 @@ WINRT_EXPORT
 #ifndef __WUXPPaginateEventArgs_DEFINED__
 #define __WUXPPaginateEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 @interface WUXPPaginateEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -130,7 +136,7 @@ WINRT_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -151,7 +157,7 @@ WINRT_EXPORT
 #ifndef __WUXPPrintDocument_DEFINED__
 #define __WUXPPrintDocument_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 @interface WUXPPrintDocument : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

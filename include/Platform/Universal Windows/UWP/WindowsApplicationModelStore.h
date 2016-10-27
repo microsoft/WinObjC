@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Store.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WSLicenseInformation, WSListingInformation, WSPurchaseResults, WSProductPurchaseDisplayProperties, WSUnfulfilledConsumable,
@@ -77,7 +83,7 @@ typedef void (^WSLicenseChangedEventHandler)();
 #ifndef __WSLicenseInformation_DEFINED__
 #define __WSLicenseInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 @interface WSLicenseInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -96,7 +102,7 @@ WINRT_EXPORT
 #ifndef __WSListingInformation_DEFINED__
 #define __WSListingInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 @interface WSListingInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -115,7 +121,7 @@ WINRT_EXPORT
 #ifndef __WSPurchaseResults_DEFINED__
 #define __WSPurchaseResults_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 @interface WSPurchaseResults : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -132,7 +138,7 @@ WINRT_EXPORT
 #ifndef __WSProductPurchaseDisplayProperties_DEFINED__
 #define __WSProductPurchaseDisplayProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 @interface WSProductPurchaseDisplayProperties : RTObject
 + (WSProductPurchaseDisplayProperties*)makeProductPurchaseDisplayProperties:(NSString*)name ACTIVATOR;
 + (instancetype)make ACTIVATOR;
@@ -150,7 +156,7 @@ WINRT_EXPORT
 #ifndef __WSUnfulfilledConsumable_DEFINED__
 #define __WSUnfulfilledConsumable_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 @interface WSUnfulfilledConsumable : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -166,7 +172,7 @@ WINRT_EXPORT
 #ifndef __WSProductLicense_DEFINED__
 #define __WSProductLicense_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 @interface WSProductLicense : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -183,7 +189,7 @@ WINRT_EXPORT
 #ifndef __WSProductListing_DEFINED__
 #define __WSProductListing_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 @interface WSProductListing : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -204,7 +210,7 @@ WINRT_EXPORT
 #ifndef __WSCurrentApp_DEFINED__
 #define __WSCurrentApp_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 @interface WSCurrentApp : RTObject
 + (void)loadListingInformationByProductIdsAsync:(id<NSFastEnumeration> /* NSString * */)productIds
                                         success:(void (^)(WSListingInformation*))success
@@ -247,7 +253,7 @@ WINRT_EXPORT
 #ifndef __WSCurrentAppSimulator_DEFINED__
 #define __WSCurrentAppSimulator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 @interface WSCurrentAppSimulator : RTObject
 + (void)requestAppPurchaseAsync:(BOOL)includeReceipt success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
 + (void)requestProductPurchaseAsync:(NSString*)productId

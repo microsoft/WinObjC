@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_WiFiDirect_Services.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDWSWiFiDirectServiceProvisioningInfo, WDWSWiFiDirectServiceSession, WDWSWiFiDirectServiceAutoAcceptSessionConnectedEventArgs,
@@ -104,7 +110,7 @@ typedef unsigned WDWSWiFiDirectServiceIPProtocol;
 #ifndef __WDWSWiFiDirectServiceProvisioningInfo_DEFINED__
 #define __WDWSWiFiDirectServiceProvisioningInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceProvisioningInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -123,13 +129,17 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Devices.WiFiDirect.Services.WiFiDirectServiceSession
 #ifndef __WDWSWiFiDirectServiceSession_DEFINED__
 #define __WDWSWiFiDirectServiceSession_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceSession : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -158,7 +168,7 @@ WINRT_EXPORT
 #ifndef __WDWSWiFiDirectServiceAutoAcceptSessionConnectedEventArgs_DEFINED__
 #define __WDWSWiFiDirectServiceAutoAcceptSessionConnectedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceAutoAcceptSessionConnectedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -173,7 +183,7 @@ WINRT_EXPORT
 #ifndef __WDWSWiFiDirectServiceRemotePortAddedEventArgs_DEFINED__
 #define __WDWSWiFiDirectServiceRemotePortAddedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceRemotePortAddedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -188,7 +198,7 @@ WINRT_EXPORT
 #ifndef __WDWSWiFiDirectServiceSessionDeferredEventArgs_DEFINED__
 #define __WDWSWiFiDirectServiceSessionDeferredEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceSessionDeferredEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -202,7 +212,7 @@ WINRT_EXPORT
 #ifndef __WDWSWiFiDirectServiceSessionRequest_DEFINED__
 #define __WDWSWiFiDirectServiceSessionRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceSessionRequest : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -219,7 +229,7 @@ WINRT_EXPORT
 #ifndef __WDWSWiFiDirectServiceSessionRequestedEventArgs_DEFINED__
 #define __WDWSWiFiDirectServiceSessionRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceSessionRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -233,7 +243,7 @@ WINRT_EXPORT
 #ifndef __WDWSWiFiDirectServiceAdvertiser_DEFINED__
 #define __WDWSWiFiDirectServiceAdvertiser_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceAdvertiser : RTObject
 + (WDWSWiFiDirectServiceAdvertiser*)makeWiFiDirectServiceAdvertiser:(NSString*)serviceName ACTIVATOR;
 #if defined(__cplusplus)
@@ -275,7 +285,7 @@ WINRT_EXPORT
 #ifndef __WDWSWiFiDirectService_DEFINED__
 #define __WDWSWiFiDirectService_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectService : RTObject
 + (NSString*)getSelector:(NSString*)serviceName;
 + (NSString*)getSelectorWithFilter:(NSString*)serviceName serviceInfoFilter:(RTObject<WSSIBuffer>*)serviceInfoFilter;

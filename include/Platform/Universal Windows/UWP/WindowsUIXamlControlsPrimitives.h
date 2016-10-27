@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXCPItemsChangedEventArgs, WUXCPLayoutInformation, WUXCPGeneratorPositionHelper, WUXCPProgressRingTemplateSettings,
@@ -315,7 +321,7 @@ typedef void (^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventAr
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Controls.Primitives.GeneratorPosition
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPGeneratorPosition : NSObject
 + (instancetype) new;
 @property int index;
@@ -373,6 +379,10 @@ typedef void (^WUXCPScrollEventHandler)(RTObject* sender, WUXCPScrollEventArgs* 
 - (float)getRegularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment offset:(float*)offset;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXCPIScrollSnapPointsInfo : RTObject <WUXCPIScrollSnapPointsInfo>
+@end
+
 #endif // __WUXCPIScrollSnapPointsInfo_DEFINED__
 
 // Windows.UI.Xaml.Controls.Primitives.IFlyoutBaseOverrides
@@ -381,6 +391,10 @@ typedef void (^WUXCPScrollEventHandler)(RTObject* sender, WUXCPScrollEventArgs* 
 
 @protocol WUXCPIFlyoutBaseOverrides
 - (WXCControl*)createPresenter;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXCPIFlyoutBaseOverrides : RTObject <WUXCPIFlyoutBaseOverrides>
 @end
 
 #endif // __WUXCPIFlyoutBaseOverrides_DEFINED__
@@ -395,6 +409,10 @@ typedef void (^WUXCPScrollEventHandler)(RTObject* sender, WUXCPScrollEventArgs* 
 - (void)onValueChanged:(double)oldValue newValue:(double)newValue;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXCPIRangeBaseOverrides : RTObject <WUXCPIRangeBaseOverrides>
+@end
+
 #endif // __WUXCPIRangeBaseOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.Primitives.IToggleButtonOverrides
@@ -403,6 +421,10 @@ typedef void (^WUXCPScrollEventHandler)(RTObject* sender, WUXCPScrollEventArgs* 
 
 @protocol WUXCPIToggleButtonOverrides
 - (void)onToggle;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXCPIToggleButtonOverrides : RTObject <WUXCPIToggleButtonOverrides>
 @end
 
 #endif // __WUXCPIToggleButtonOverrides_DEFINED__
@@ -416,13 +438,17 @@ typedef void (^WUXCPScrollEventHandler)(RTObject* sender, WUXCPScrollEventArgs* 
 - (BOOL)shouldShowConfirmationButtons;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXCPIPickerFlyoutBaseOverrides : RTObject <WUXCPIPickerFlyoutBaseOverrides>
+@end
+
 #endif // __WUXCPIPickerFlyoutBaseOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.Primitives.ItemsChangedEventArgs
 #ifndef __WUXCPItemsChangedEventArgs_DEFINED__
 #define __WUXCPItemsChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPItemsChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -440,7 +466,7 @@ WINRT_EXPORT
 #ifndef __WUXCPLayoutInformation_DEFINED__
 #define __WUXCPLayoutInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPLayoutInformation : RTObject
 + (WXUIElement*)getLayoutExceptionElement:(RTObject*)dispatcher;
 + (WFRect*)getLayoutSlot:(WXFrameworkElement*)element;
@@ -455,7 +481,7 @@ WINRT_EXPORT
 #ifndef __WUXCPGeneratorPositionHelper_DEFINED__
 #define __WUXCPGeneratorPositionHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPGeneratorPositionHelper : RTObject
 + (WUXCPGeneratorPosition*)fromIndexAndOffset:(int)index offset:(int)offset;
 #if defined(__cplusplus)
@@ -469,7 +495,7 @@ WINRT_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -490,7 +516,7 @@ WINRT_EXPORT
 #ifndef __WUXCPProgressRingTemplateSettings_DEFINED__
 #define __WUXCPProgressRingTemplateSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPProgressRingTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -506,7 +532,7 @@ WINRT_EXPORT
 #ifndef __WUXCPToggleSwitchTemplateSettings_DEFINED__
 #define __WUXCPToggleSwitchTemplateSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPToggleSwitchTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -527,7 +553,7 @@ WINRT_EXPORT
 #ifndef __WUXCPProgressBarTemplateSettings_DEFINED__
 #define __WUXCPProgressBarTemplateSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPProgressBarTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -547,7 +573,7 @@ WINRT_EXPORT
 #ifndef __WUXCPSettingsFlyoutTemplateSettings_DEFINED__
 #define __WUXCPSettingsFlyoutTemplateSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPSettingsFlyoutTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -566,7 +592,7 @@ WINRT_EXPORT
 #ifndef __WUXCPToolTipTemplateSettings_DEFINED__
 #define __WUXCPToolTipTemplateSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPToolTipTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -581,7 +607,7 @@ WINRT_EXPORT
 #ifndef __WUXCPFlyoutBase_DEFINED__
 #define __WUXCPFlyoutBase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPFlyoutBase : WXDependencyObject
 + (WUXCPFlyoutBase*)getAttachedFlyout:(WXFrameworkElement*)element;
 + (void)setAttachedFlyout:(WXFrameworkElement*)element value:(WUXCPFlyoutBase*)value;
@@ -609,7 +635,7 @@ WINRT_EXPORT
 #ifndef __WUXCPComboBoxTemplateSettings_DEFINED__
 #define __WUXCPComboBoxTemplateSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPComboBoxTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -626,7 +652,7 @@ WINRT_EXPORT
 #ifndef __WUXCPGridViewItemTemplateSettings_DEFINED__
 #define __WUXCPGridViewItemTemplateSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPGridViewItemTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -640,7 +666,7 @@ WINRT_EXPORT
 #ifndef __WUXCPListViewItemTemplateSettings_DEFINED__
 #define __WUXCPListViewItemTemplateSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPListViewItemTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -654,7 +680,7 @@ WINRT_EXPORT
 #ifndef __WUXCPCalendarViewTemplateSettings_DEFINED__
 #define __WUXCPCalendarViewTemplateSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPCalendarViewTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -682,7 +708,7 @@ WINRT_EXPORT
 #ifndef __WUXCPSplitViewTemplateSettings_DEFINED__
 #define __WUXCPSplitViewTemplateSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPSplitViewTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -701,7 +727,7 @@ WINRT_EXPORT
 #ifndef __WUXCPAppBarTemplateSettings_DEFINED__
 #define __WUXCPAppBarTemplateSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPAppBarTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -721,7 +747,7 @@ WINRT_EXPORT
 #ifndef __WUXCPCommandBarTemplateSettings_DEFINED__
 #define __WUXCPCommandBarTemplateSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPCommandBarTemplateSettings : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -741,7 +767,7 @@ WINRT_EXPORT
 #ifndef __WXRoutedEventArgs_DEFINED__
 #define __WXRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -756,8 +782,11 @@ WINRT_EXPORT
 #ifndef __WUXCPDragCompletedEventArgs_DEFINED__
 #define __WUXCPDragCompletedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPDragCompletedEventArgs : WXRoutedEventArgs
++ (WUXCPDragCompletedEventArgs*)makeInstanceWithHorizontalChangeVerticalChangeAndCanceled:(double)horizontalChange
+                                                                           verticalChange:(double)verticalChange
+                                                                                 canceled:(BOOL)canceled ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -772,8 +801,10 @@ WINRT_EXPORT
 #ifndef __WUXCPDragDeltaEventArgs_DEFINED__
 #define __WUXCPDragDeltaEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPDragDeltaEventArgs : WXRoutedEventArgs
++ (WUXCPDragDeltaEventArgs*)makeInstanceWithHorizontalChangeAndVerticalChange:(double)horizontalChange
+                                                               verticalChange:(double)verticalChange ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -787,8 +818,10 @@ WINRT_EXPORT
 #ifndef __WUXCPDragStartedEventArgs_DEFINED__
 #define __WUXCPDragStartedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPDragStartedEventArgs : WXRoutedEventArgs
++ (WUXCPDragStartedEventArgs*)makeInstanceWithHorizontalOffsetAndVerticalOffset:(double)horizontalOffset
+                                                                 verticalOffset:(double)verticalOffset ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -802,7 +835,7 @@ WINRT_EXPORT
 #ifndef __WUXCPRangeBaseValueChangedEventArgs_DEFINED__
 #define __WUXCPRangeBaseValueChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPRangeBaseValueChangedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -817,7 +850,7 @@ WINRT_EXPORT
 #ifndef __WUXCPScrollEventArgs_DEFINED__
 #define __WUXCPScrollEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPScrollEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -839,6 +872,10 @@ WINRT_EXPORT
 - (void)onApplyTemplate;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXIFrameworkElementOverrides : RTObject <WXIFrameworkElementOverrides>
+@end
+
 #endif // __WXIFrameworkElementOverrides_DEFINED__
 
 // Windows.UI.Xaml.IFrameworkElementOverrides2
@@ -847,6 +884,10 @@ WINRT_EXPORT
 
 @protocol WXIFrameworkElementOverrides2
 - (BOOL)goToElementStateCore:(NSString*)stateName useTransitions:(BOOL)useTransitions;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXIFrameworkElementOverrides2 : RTObject <WXIFrameworkElementOverrides2>
 @end
 
 #endif // __WXIFrameworkElementOverrides2_DEFINED__
@@ -862,13 +903,17 @@ WINRT_EXPORT
                                                                                       boundingRect:(WFRect*)boundingRect;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXIUIElementOverrides : RTObject <WXIUIElementOverrides>
+@end
+
 #endif // __WXIUIElementOverrides_DEFINED__
 
 // Windows.UI.Xaml.UIElement
 #ifndef __WXUIElement_DEFINED__
 #define __WXUIElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 #if defined(__cplusplus)
@@ -1020,7 +1065,7 @@ WINRT_EXPORT
 #ifndef __WXFrameworkElement_DEFINED__
 #define __WXFrameworkElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXFrameworkElement : WXUIElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1092,7 +1137,7 @@ WINRT_EXPORT
 #ifndef __WUXCPPopup_DEFINED__
 #define __WUXCPPopup_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPPopup : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1122,7 +1167,7 @@ WINRT_EXPORT
 #ifndef __WUXCPTickBar_DEFINED__
 #define __WUXCPTickBar_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPTickBar : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1144,13 +1189,17 @@ WINRT_EXPORT
 - (void)bringIndexIntoView:(int)index;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIVirtualizingPanelOverrides : RTObject <WXCIVirtualizingPanelOverrides>
+@end
+
 #endif // __WXCIVirtualizingPanelOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.Panel
 #ifndef __WXCPanel_DEFINED__
 #define __WXCPanel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCPanel : WXFrameworkElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1170,7 +1219,7 @@ WINRT_EXPORT
 #ifndef __WXCVirtualizingPanel_DEFINED__
 #define __WXCVirtualizingPanel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCVirtualizingPanel : WXCPanel
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1190,7 +1239,7 @@ WINRT_EXPORT
 #ifndef __WUXCPCarouselPanel_DEFINED__
 #define __WUXCPCarouselPanel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPCarouselPanel : WXCVirtualizingPanel <WUXCPIScrollSnapPointsInfo>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1236,7 +1285,7 @@ WINRT_EXPORT
 #ifndef __WUXCPOrientedVirtualizingPanel_DEFINED__
 #define __WUXCPOrientedVirtualizingPanel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPOrientedVirtualizingPanel : WXCVirtualizingPanel <WUXCPIScrollSnapPointsInfo>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1281,7 +1330,7 @@ WINRT_EXPORT
 #ifndef __WUXCPCalendarPanel_DEFINED__
 #define __WUXCPCalendarPanel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPCalendarPanel : WXCPanel
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1301,13 +1350,17 @@ WINRT_EXPORT
               newContentTemplateSelector:(WXCDataTemplateSelector*)newContentTemplateSelector;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIContentPresenterOverrides : RTObject <WXCIContentPresenterOverrides>
+@end
+
 #endif // __WXCIContentPresenterOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.ContentPresenter
 #ifndef __WXCContentPresenter_DEFINED__
 #define __WXCContentPresenter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCContentPresenter : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1374,7 +1427,7 @@ WINRT_EXPORT
 #ifndef __WUXCPGridViewItemPresenter_DEFINED__
 #define __WUXCPGridViewItemPresenter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPGridViewItemPresenter : WXCContentPresenter
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1432,7 +1485,7 @@ WINRT_EXPORT
 #ifndef __WUXCPListViewItemPresenter_DEFINED__
 #define __WUXCPListViewItemPresenter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPListViewItemPresenter : WXCContentPresenter
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1509,6 +1562,10 @@ WINRT_EXPORT
               newContentTemplateSelector:(WXCDataTemplateSelector*)newContentTemplateSelector;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIContentControlOverrides : RTObject <WXCIContentControlOverrides>
+@end
+
 #endif // __WXCIContentControlOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.IControlOverrides
@@ -1543,13 +1600,17 @@ WINRT_EXPORT
 - (void)onDrop:(WXDragEventArgs*)e;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIControlOverrides : RTObject <WXCIControlOverrides>
+@end
+
 #endif // __WXCIControlOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.Control
 #ifndef __WXCControl_DEFINED__
 #define __WXCControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCControl : WXFrameworkElement
 + (BOOL)getIsTemplateFocusTarget:(WXFrameworkElement*)element;
 + (void)setIsTemplateFocusTarget:(WXFrameworkElement*)element value:(BOOL)value;
@@ -1639,7 +1700,7 @@ WINRT_EXPORT
 #ifndef __WXCContentControl_DEFINED__
 #define __WXCContentControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCContentControl : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1666,7 +1727,7 @@ WINRT_EXPORT
 #ifndef __WUXCPSelectorItem_DEFINED__
 #define __WUXCPSelectorItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPSelectorItem : WXCContentControl
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1681,7 +1742,7 @@ WINRT_EXPORT
 #ifndef __WUXCPRangeBase_DEFINED__
 #define __WUXCPRangeBase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPRangeBase : WXCControl
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1709,7 +1770,7 @@ WINRT_EXPORT
 #ifndef __WUXCPThumb_DEFINED__
 #define __WUXCPThumb_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPThumb : WXCControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1732,7 +1793,7 @@ WINRT_EXPORT
 #ifndef __WUXCPButtonBase_DEFINED__
 #define __WUXCPButtonBase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPButtonBase : WXCContentControl
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1757,7 +1818,7 @@ WINRT_EXPORT
 #ifndef __WUXCPScrollBar_DEFINED__
 #define __WUXCPScrollBar_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPScrollBar : WUXCPRangeBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1795,6 +1856,10 @@ WINRT_EXPORT
               newGroupStyleSelector:(WXCGroupStyleSelector*)newGroupStyleSelector;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIItemsControlOverrides : RTObject <WXCIItemsControlOverrides>
+@end
+
 #endif // __WXCIItemsControlOverrides_DEFINED__
 
 // Windows.UI.Xaml.Controls.IItemContainerMapping
@@ -1808,13 +1873,17 @@ WINRT_EXPORT
 - (WXDependencyObject*)containerFromIndex:(int)index;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WXCIItemContainerMapping : RTObject <WXCIItemContainerMapping>
+@end
+
 #endif // __WXCIItemContainerMapping_DEFINED__
 
 // Windows.UI.Xaml.Controls.ItemsControl
 #ifndef __WXCItemsControl_DEFINED__
 #define __WXCItemsControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCItemsControl : WXCControl <WXCIItemContainerMapping>
 + (WXCItemsControl*)getItemsOwner:(WXDependencyObject*)element;
 + (WXCItemsControl*)itemsControlFromItemContainer:(WXDependencyObject*)container;
@@ -1872,7 +1941,7 @@ WINRT_EXPORT
 #ifndef __WUXCPSelector_DEFINED__
 #define __WUXCPSelector_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPSelector : WXCItemsControl
 + (BOOL)getIsSelectionActive:(WXDependencyObject*)element;
 #if defined(__cplusplus)
@@ -1898,7 +1967,7 @@ WINRT_EXPORT
 #ifndef __WUXCPRepeatButton_DEFINED__
 #define __WUXCPRepeatButton_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPRepeatButton : WUXCPButtonBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1916,7 +1985,7 @@ WINRT_EXPORT
 #ifndef __WUXCPToggleButton_DEFINED__
 #define __WUXCPToggleButton_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPToggleButton : WUXCPButtonBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1946,13 +2015,17 @@ WINRT_EXPORT
 - (RTObject*)convertBack:(RTObject*)value targetType:(WUXITypeName*)targetType parameter:(RTObject*)parameter language:(NSString*)language;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDIValueConverter : RTObject <WUXDIValueConverter>
+@end
+
 #endif // __WUXDIValueConverter_DEFINED__
 
 // Windows.UI.Xaml.Controls.Primitives.JumpListItemBackgroundConverter
 #ifndef __WUXCPJumpListItemBackgroundConverter_DEFINED__
 #define __WUXCPJumpListItemBackgroundConverter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPJumpListItemBackgroundConverter : WXDependencyObject <WUXDIValueConverter>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1972,7 +2045,7 @@ WINRT_EXPORT
 #ifndef __WUXCPJumpListItemForegroundConverter_DEFINED__
 #define __WUXCPJumpListItemForegroundConverter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPJumpListItemForegroundConverter : WXDependencyObject <WUXDIValueConverter>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1992,7 +2065,7 @@ WINRT_EXPORT
 #ifndef __WUXCPPickerFlyoutBase_DEFINED__
 #define __WUXCPPickerFlyoutBase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPPickerFlyoutBase : WUXCPFlyoutBase
 + (NSString*)getTitle:(WXDependencyObject*)element;
 + (void)setTitle:(WXDependencyObject*)element value:(NSString*)value;
@@ -2010,7 +2083,7 @@ WINRT_EXPORT
 #ifndef __WUXCPLoopingSelector_DEFINED__
 #define __WUXCPLoopingSelector_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPLoopingSelector : WXCControl
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -2039,7 +2112,7 @@ WINRT_EXPORT
 #ifndef __WUXCPPivotPanel_DEFINED__
 #define __WUXCPPivotPanel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPPivotPanel : WXCPanel <WUXCPIScrollSnapPointsInfo>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -2061,7 +2134,7 @@ WINRT_EXPORT
 #ifndef __WUXCPLoopingSelectorItem_DEFINED__
 #define __WUXCPLoopingSelectorItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPLoopingSelectorItem : WXCContentControl
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -2074,7 +2147,7 @@ WINRT_EXPORT
 #ifndef __WXCCanvas_DEFINED__
 #define __WXCCanvas_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXCCanvas : WXCPanel
 + (double)getLeft:(WXUIElement*)element;
 + (void)setLeft:(WXUIElement*)element length:(double)length;
@@ -2097,7 +2170,7 @@ WINRT_EXPORT
 #ifndef __WUXCPLoopingSelectorPanel_DEFINED__
 #define __WUXCPLoopingSelectorPanel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPLoopingSelectorPanel : WXCCanvas <WUXCPIScrollSnapPointsInfo>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -2118,7 +2191,7 @@ WINRT_EXPORT
 #ifndef __WUXCPPivotHeaderItem_DEFINED__
 #define __WUXCPPivotHeaderItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPPivotHeaderItem : WXCContentControl
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -2132,7 +2205,7 @@ WINRT_EXPORT
 #ifndef __WUXCPPivotHeaderPanel_DEFINED__
 #define __WUXCPPivotHeaderPanel_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXCPPivotHeaderPanel : WXCCanvas
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

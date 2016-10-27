@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
+#define OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Web_Http_Filters.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WWHFHttpCacheControl, WWHFHttpBaseProtocolFilter;
@@ -55,6 +61,10 @@ typedef unsigned WWHFHttpCacheWriteBehavior;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Web.Http.Filters.IHttpFilter
@@ -69,13 +79,17 @@ typedef unsigned WWHFHttpCacheWriteBehavior;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
+@interface WWHFIHttpFilter : RTObject <WWHFIHttpFilter>
+@end
+
 #endif // __WWHFIHttpFilter_DEFINED__
 
 // Windows.Web.Http.Filters.HttpCacheControl
 #ifndef __WWHFHttpCacheControl_DEFINED__
 #define __WWHFHttpCacheControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
 @interface WWHFHttpCacheControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -90,7 +104,7 @@ WINRT_EXPORT
 #ifndef __WWHFHttpBaseProtocolFilter_DEFINED__
 #define __WWHFHttpBaseProtocolFilter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
 @interface WWHFHttpBaseProtocolFilter : RTObject <WWHFIHttpFilter, WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

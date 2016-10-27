@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -29,12 +29,15 @@
 #include "StarboardXaml.h"
 #include "..\UIApplicationMainInternal.h"
 #include "UWPBackgroundTask.h"
+#include "ppltasks.h"
 
 using namespace Windows::ApplicationModel::Activation;
 using namespace Windows::Media::SpeechRecognition;
 using namespace Windows::Foundation;
 using namespace Windows::UI;
 using namespace Windows::System;
+using namespace Windows::UI::Core;
+using namespace Windows::ApplicationModel::Core;
 
 static Platform::String^ g_principalClassName;
 static Platform::String^ g_delegateClassName;
@@ -62,9 +65,6 @@ Platform::Array<Xaml::Markup::XmlnsDefinition>^ App::GetXmlnsDefinitions() {
 }
 
 void AppEventListener::_RegisterEventHandlers() {
-    Windows::UI::Xaml::Application::Current->UnhandledException +=
-        ref new Xaml::UnhandledExceptionEventHandler(this, &AppEventListener::_OnUnhandledException);
-
     Windows::UI::Xaml::Application::Current->Suspending +=
         ref new Xaml::SuspendingEventHandler(this, &AppEventListener::_OnSuspending);
     Windows::UI::Xaml::Application::Current->Resuming +=
@@ -149,13 +149,6 @@ void AppEventListener::_OnBackgroundTaskCancelled(
 }
 #endif
 
-void AppEventListener::_OnUnhandledException(Platform::Object^ sender, Xaml::UnhandledExceptionEventArgs^ args)
-{
-    TraceError(TAG, L"Application hit an unhandled exception %ld (%s)", args->Exception.Value, args->Message->Data());
-    FAIL_FAST();
-}
-
-
 static AppEventListener ^_appEvents;
 
 void App::InitializeComponent() {
@@ -169,6 +162,11 @@ void App::OnLaunched(LaunchActivatedEventArgs^ args) {
 }
 
 void App::OnActivated(IActivatedEventArgs^ args) {
+    UIApplicationActivated(args);
+}
+
+void App::OnFileActivated(FileActivatedEventArgs^ args)
+{
     UIApplicationActivated(args);
 }
 
@@ -236,6 +234,15 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
         }
 
         UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri), caller);
+    } else if (args->Kind == ActivationKind::File) {
+        FileActivatedEventArgs^ result = safe_cast<FileActivatedEventArgs^>(args);
+        TraceVerbose(TAG, L"Received file activation");
+
+        if (initiateAppLaunch) {
+            _ApplicationLaunch(ActivationTypeFile, result);
+        }
+
+        UIApplicationMainHandleFileEvent(reinterpret_cast<IInspectable*>(result));
     } else {
         TraceWarning(TAG, L"Received unhandled activation kind - %d", args->Kind);
 
@@ -262,7 +269,7 @@ void UIApplicationBackgroundActivated(BackgroundActivatedEventArgs^ args) {
 }
 #endif
 
-void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
+void DoApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
     auto uiElem = ref new Xaml::Controls::Grid();
     auto rootFrame = ref new Xaml::Controls::Frame();
     rootFrame->Content = uiElem;
@@ -281,6 +288,19 @@ void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activat
     _appEvents->_RegisterEventHandlers();
 }
 
+void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
+    auto coreWindow = CoreWindow::GetForCurrentThread();
+    if (coreWindow == nullptr) {
+        CoreDispatcher^ c = CoreApplication::MainView->Dispatcher;
+        auto task = concurrency::create_task(c->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, ref new Windows::UI::Core::DispatchedHandler([=]()
+        {
+            DoApplicationLaunch(activationType, activationArg);
+        })));
+        task.wait();
+    } else {
+        DoApplicationLaunch(activationType, activationArg);
+    }
+}
 
 // This is the actual entry point from the app into our framework.
 // Note: principalClassName and delegateClassName are actually NSString*s.

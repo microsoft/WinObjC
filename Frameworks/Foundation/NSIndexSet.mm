@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -29,7 +29,11 @@
 #include "NSIndexSetInternal.h"
 #include "Etc.h"
 
+#include <algorithm>
+
 @implementation NSIndexSet
+
+static NSString* c_archiveKey = @"_NS.IS";
 
 /**
  @Status Interoperable
@@ -64,7 +68,7 @@
 */
 - (instancetype)initWithIndexesInRange:(NSRange)indexRange {
     if (self = [super init]) {
-        [(NSMutableIndexSet*)self _addItem:indexRange];
+        [static_cast<NSMutableIndexSet*>(self) _addItem:indexRange];
     }
     return self;
 }
@@ -74,9 +78,9 @@
 */
 - (instancetype)initWithIndexSet:(NSIndexSet*)other {
     if (self = [super init]) {
-        unsigned numRanges = [(NSMutableIndexSet*)other _count];
+        unsigned numRanges = [static_cast<NSMutableIndexSet*>(other) _count];
         for (unsigned i = 0; i < numRanges; i++) {
-            [(NSMutableIndexSet*)self _addItem:[(NSMutableIndexSet*)other _itemAtIndex:i]];
+            [static_cast<NSMutableIndexSet*>(self) _addItem:[static_cast<NSMutableIndexSet*>(other) _itemAtIndex:i]];
         }
     }
 
@@ -87,13 +91,13 @@
  @Status Interoperable
 */
 - (BOOL)containsIndex:(NSUInteger)anIndex {
-    unsigned rangePos = [(NSMutableIndexSet*)self _positionOfRangeGreaterThanOrEqualToLocation:anIndex];
+    unsigned rangePos = [static_cast<NSMutableIndexSet*>(self) _positionOfRangeGreaterThanOrEqualToLocation:anIndex];
 
     if (rangePos == NSNotFound) {
         return NO;
     }
 
-    return [(NSMutableIndexSet*)self _itemAtIndex:rangePos].location <= anIndex;
+    return [static_cast<NSMutableIndexSet*>(self) _itemAtIndex:rangePos].location <= anIndex;
 }
 
 /**
@@ -101,13 +105,13 @@
 */
 - (BOOL)containsIndexes:(NSIndexSet*)other {
     unsigned selfIndex = 0;
-    unsigned selfSize = [(NSMutableIndexSet*)self _count];
+    unsigned selfSize = [static_cast<NSMutableIndexSet*>(self) _count];
     unsigned otherIndex = 0;
-    unsigned otherSize = [(NSMutableIndexSet*)other _count];
+    unsigned otherSize = [static_cast<NSMutableIndexSet*>(other) _count];
 
     while (selfIndex < selfSize && otherIndex < otherSize) {
-        NSRange currSelf = [(NSMutableIndexSet*)self _itemAtIndex:selfIndex];
-        NSRange currOther = [(NSMutableIndexSet*)other _itemAtIndex:otherIndex];
+        NSRange currSelf = [static_cast<NSMutableIndexSet*>(self) _itemAtIndex:selfIndex];
+        NSRange currOther = [static_cast<NSMutableIndexSet*>(other) _itemAtIndex:otherIndex];
         if (NSEqualRanges(currOther, NSIntersectionRange(currSelf, currOther))) {
             // current range from other a subset of current range from self
             otherIndex++;
@@ -128,10 +132,10 @@
 */
 - (BOOL)containsIndexesInRange:(NSRange)indexRange {
     unsigned selfIndex = 0;
-    unsigned selfSize = [(NSMutableIndexSet*)self _count];
+    unsigned selfSize = [static_cast<NSMutableIndexSet*>(self) _count];
 
     while (selfIndex < selfSize) {
-        NSRange currSelf = [(NSMutableIndexSet*)self _itemAtIndex:selfIndex];
+        NSRange currSelf = [static_cast<NSMutableIndexSet*>(self) _itemAtIndex:selfIndex];
         if (NSEqualRanges(indexRange, NSIntersectionRange(currSelf, indexRange))) {
             // indexRange a subset of current range from self
             return YES;
@@ -147,13 +151,13 @@
  @Status Interoperable
 */
 - (BOOL)intersectsIndexesInRange:(NSRange)range {
-    unsigned first = [(NSMutableIndexSet*)self _positionOfRangeGreaterThanOrEqualToLocation:range.location];
+    unsigned first = [static_cast<NSMutableIndexSet*>(self) _positionOfRangeGreaterThanOrEqualToLocation:range.location];
 
     if (first == NSNotFound) {
         return NO;
     }
 
-    return ([(NSMutableIndexSet*)self _itemAtIndex:first].location < NSMaxRange(range)) ? YES : NO;
+    return ([static_cast<NSMutableIndexSet*>(self) _itemAtIndex:first].location < NSMaxRange(range)) ? YES : NO;
 }
 
 /**
@@ -161,10 +165,10 @@
 */
 - (NSUInteger)count {
     unsigned ret = 0;
-    unsigned numRanges = [(NSMutableIndexSet*)self _count];
+    unsigned numRanges = [static_cast<NSMutableIndexSet*>(self) _count];
 
     for (unsigned i = 0; i < numRanges; i++) {
-        ret += [(NSMutableIndexSet*)self _itemAtIndex:i].length;
+        ret += [static_cast<NSMutableIndexSet*>(self) _itemAtIndex:i].length;
     }
     return ret;
 }
@@ -180,29 +184,11 @@
 /**
  @Status Interoperable
 */
-- (NSUInteger)indexGreaterThanIndex:(NSUInteger)anIndex {
-    unsigned rangePos = [(NSMutableIndexSet*)self _positionOfRangeGreaterThanOrEqualToLocation:anIndex + 1];
-
-    if (rangePos == NSNotFound) {
-        return NSNotFound;
-    }
-
-    NSUInteger locationAtRangePos = [(NSMutableIndexSet*)self _itemAtIndex:rangePos].location;
-    if (locationAtRangePos > anIndex) {
-        return locationAtRangePos;
-    }
-
-    return anIndex + 1;
-}
-
-/**
- @Status Interoperable
-*/
 - (NSUInteger)countOfIndexesInRange:(NSRange)range {
     unsigned ret = 0;
 
-    for (unsigned i = 0; i < [(NSMutableIndexSet*)self _count]; i++) {
-        NSRange cur = [(NSMutableIndexSet*)self _itemAtIndex:i];
+    for (unsigned i = 0; i < [static_cast<NSMutableIndexSet*>(self) _count]; i++) {
+        NSRange cur = [static_cast<NSMutableIndexSet*>(self) _itemAtIndex:i];
 
         if (cur.location > range.location + range.length) {
             break;
@@ -236,12 +222,12 @@
 
     __block BOOL stop = NO;
     BOOL reverse = options & NSEnumerationReverse;
-    unsigned long count = [(NSMutableIndexSet*)self _count];
+    unsigned long count = [static_cast<NSMutableIndexSet*>(self) _count];
     unsigned long start = (reverse) ? count : 1;
     unsigned long end = (reverse) ? 0 : count + 1;
     long step = (reverse) ? -1 : 1;
     for (unsigned long i = start; i != end && !stop; i += step) {
-        NSRange cur = [(NSMutableIndexSet*)self _itemAtIndex:(i - 1)];
+        NSRange cur = [static_cast<NSMutableIndexSet*>(self) _itemAtIndex:(i - 1)];
         __block unsigned long j;
         unsigned long innerStart = (reverse) ? NSMaxRange(cur) - 1 : cur.location;
         for (j = innerStart; NSLocationInRange(j, cur) && !stop; j += step) {
@@ -290,10 +276,10 @@
  @Status Interoperable
 */
 - (NSUInteger)firstIndex {
-    if ([(NSMutableIndexSet*)self _count] == 0) {
+    if ([static_cast<NSMutableIndexSet*>(self) _count] == 0) {
         return NSNotFound;
     }
-    unsigned ret = [(NSMutableIndexSet*)self _itemAtIndex:0].location;
+    unsigned ret = [static_cast<NSMutableIndexSet*>(self) _itemAtIndex:0].location;
 
     return ret;
 }
@@ -302,11 +288,12 @@
  @Status Interoperable
 */
 - (NSUInteger)lastIndex {
-    if ([(NSMutableIndexSet*)self _count] == 0) {
+    if ([static_cast<NSMutableIndexSet*>(self) _count] == 0) {
         return NSNotFound;
     }
 
-    unsigned ret = NSMaxRange([(NSMutableIndexSet*)self _itemAtIndex:([(NSMutableIndexSet*)self _count] - 1)]) - 1;
+    unsigned ret =
+        NSMaxRange([static_cast<NSMutableIndexSet*>(self) _itemAtIndex:([static_cast<NSMutableIndexSet*>(self) _count] - 1)]) - 1;
 
     return ret;
 }
@@ -342,17 +329,17 @@
         return NO;
     }
 
-    NSUInteger count = otherSet ? [(NSMutableIndexSet*)otherSet _count] : 0;
+    NSUInteger count = otherSet ? [static_cast<NSMutableIndexSet*>(otherSet) _count] : 0;
 
-    if (count != [(NSMutableIndexSet*)self _count]) {
+    if (count != [static_cast<NSMutableIndexSet*>(self) _count]) {
         return NO;
     }
     if (count > 0) {
         NSUInteger i;
 
         for (i = 0; i < count; i++) {
-            NSRange rself = [(NSMutableIndexSet*)self _itemAtIndex:i];
-            NSRange rother = [(NSMutableIndexSet*)otherSet _itemAtIndex:i];
+            NSRange rself = [static_cast<NSMutableIndexSet*>(self) _itemAtIndex:i];
+            NSRange rother = [static_cast<NSMutableIndexSet*>(otherSet) _itemAtIndex:i];
 
             if (rself.location != rother.location || rself.length != rother.length) {
                 return NO;
@@ -432,27 +419,67 @@
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSUInteger)indexLessThanIndex:(NSUInteger)index {
-    UNIMPLEMENTED();
-    return StubReturn();
+    unsigned rangePos = [static_cast<NSMutableIndexSet*>(self) _positionOfRangeLessThanOrEqualToLocation:index];
+    if (rangePos != NSNotFound) {
+        NSRange range = [static_cast<NSMutableIndexSet*>(self) _itemAtIndex:rangePos];
+        if (range.location < index) {
+            // Closest index is in this range
+            return std::min(range.location + range.length - 1, index - 1);
+        } else if (rangePos > 0) {
+            // Closest index less than input is in one earlier range
+            range = [static_cast<NSMutableIndexSet*>(self) _itemAtIndex:rangePos - 1];
+            return range.location + range.length;
+        }
+    }
+
+    return NSNotFound;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSUInteger)indexLessThanOrEqualToIndex:(NSUInteger)index {
-    UNIMPLEMENTED();
-    return StubReturn();
+    unsigned rangePos = [static_cast<NSMutableIndexSet*>(self) _positionOfRangeLessThanOrEqualToLocation:index];
+    if (rangePos != NSNotFound) {
+        NSRange range = [static_cast<NSMutableIndexSet*>(self) _itemAtIndex:rangePos];
+        return std::min(range.location + range.length - 1, index);
+    }
+
+    return NSNotFound;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
+- (NSUInteger)indexGreaterThanIndex:(NSUInteger)index {
+    unsigned rangePos = [static_cast<NSMutableIndexSet*>(self) _positionOfRangeGreaterThanOrEqualToLocation:index];
+    if (rangePos != NSNotFound) {
+        NSRange range = [static_cast<NSMutableIndexSet*>(self) _itemAtIndex:rangePos];
+        if (range.location + range.length - 1 > index) {
+            return std::max(range.location, index + 1);
+        } else if (rangePos < [static_cast<NSMutableIndexSet*>(self) _count] - 1) {
+            range = [static_cast<NSMutableIndexSet*>(self) _itemAtIndex:rangePos + 1];
+            return range.location;
+        }
+    }
+
+    return NSNotFound;
+}
+
+/**
+ @Status Interoperable
 */
 - (NSUInteger)indexGreaterThanOrEqualToIndex:(NSUInteger)index {
-    UNIMPLEMENTED();
-    return StubReturn();
+    unsigned rangePos = [static_cast<NSMutableIndexSet*>(self) _positionOfRangeGreaterThanOrEqualToLocation:index];
+    if (rangePos != NSNotFound) {
+        NSRange range = [static_cast<NSMutableIndexSet*>(self) _itemAtIndex:rangePos];
+        return std::max(range.location, index);
+    }
+
+    return NSNotFound;
 }
 
 /**
@@ -471,26 +498,44 @@
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return YES;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (id)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (self = [super init]) {
+        NSUInteger length = 0;
+        const NSRange* ranges = [decoder isKindOfClass:[NSKeyedUnarchiver class]] ?
+                                    reinterpret_cast<const NSRange*>([decoder decodeBytesForKey:c_archiveKey returnedLength:&length]) :
+                                    reinterpret_cast<const NSRange*>([decoder decodeBytesWithReturnedLength:&length]);
+
+        if (ranges && length > 0) {
+            for (size_t i = 0; i < length / sizeof(NSRange); ++i) {
+                [static_cast<NSMutableIndexSet*>(self) _addItem:ranges[i]];
+            }
+        }
+    }
+    return self;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
+    unsigned int count = [static_cast<NSMutableIndexSet*>(self) _count];
+    if (count > 0) {
+        NSRangePointer ranges = [static_cast<NSMutableIndexSet*>(self) _allRanges];
+        if ([coder isKindOfClass:[NSKeyedArchiver class]]) {
+            [coder encodeBytes:reinterpret_cast<uint8_t*>(ranges) length:count * sizeof(NSRange) forKey:c_archiveKey];
+        } else {
+            [coder encodeBytes:ranges length:count * sizeof(NSRange)];
+        }
+    }
 }
 
 @end

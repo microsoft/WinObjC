@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_SerialCommunication.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDSSerialDevice, WDSErrorReceivedEventArgs, WDSPinChangedEventArgs;
@@ -85,13 +91,17 @@ typedef unsigned WDSSerialPinChange;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Devices.SerialCommunication.SerialDevice
 #ifndef __WDSSerialDevice_DEFINED__
 #define __WDSSerialDevice_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 @interface WDSSerialDevice : RTObject <WFIClosable>
 + (NSString*)getDeviceSelector;
 + (NSString*)getDeviceSelectorFromPortName:(NSString*)portName;
@@ -132,7 +142,7 @@ WINRT_EXPORT
 #ifndef __WDSErrorReceivedEventArgs_DEFINED__
 #define __WDSErrorReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 @interface WDSErrorReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -146,7 +156,7 @@ WINRT_EXPORT
 #ifndef __WDSPinChangedEventArgs_DEFINED__
 #define __WDSPinChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 @interface WDSPinChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

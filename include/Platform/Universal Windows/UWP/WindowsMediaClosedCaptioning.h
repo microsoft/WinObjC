@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_CLOSEDCAPTIONING_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_CLOSEDCAPTIONING_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_ClosedCaptioning.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WMCClosedCaptionProperties;
@@ -90,7 +96,7 @@ typedef unsigned WMCClosedCaptionSize;
 #ifndef __WMCClosedCaptionProperties_DEFINED__
 #define __WMCClosedCaptionProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CLOSEDCAPTIONING_EXPORT
 @interface WMCClosedCaptionProperties : RTObject
 + (WMCClosedCaptionColor)backgroundColor;
 + (WMCClosedCaptionOpacity)backgroundOpacity;

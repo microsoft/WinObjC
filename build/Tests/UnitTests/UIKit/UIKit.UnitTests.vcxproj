@@ -46,8 +46,8 @@
     <ProjectReference Include="..\..\..\MobileCoreServices\dll\MobileCoreServicesdll.vcxproj">
       <Project>{F1C44E27-6599-49C3-B4C2-D812C114B166}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\UIKIt\lib\UIKItLib.vcxproj">
-      <Project>{C0A51F53-73EE-435D-81D9-FE8FE625C431}</Project>
+    <ProjectReference Include="..\..\..\UIKIt\dll\UIKIt.vcxproj">
+      <Project>{8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
       <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
@@ -156,7 +156,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ucrtd.lib;msvcrtd.lib;msvcprtd.lib;vccorlibd.lib;vcruntimed.lib;oldnames.lib;DWrite.lib;RTObjCInterop.lib;mincore.lib;freetype.lib;libxml2.lib;Windowscodecs.lib;ObjCUWP.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ucrtd.lib;msvcrtd.lib;msvcprtd.lib;vccorlibd.lib;vcruntimed.lib;oldnames.lib;DWrite.lib;RTObjCInterop.lib;mincore.lib;freetype.lib;libxml2.lib;Windowscodecs.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <AdditionalLibraryDirectories>$(VC_LibraryPath_x86);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -167,7 +167,7 @@
       <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " "-DCORETEXT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " "-DCORETEXT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
@@ -181,7 +181,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ucrtd.lib;msvcrtd.lib;msvcprtd.lib;vccorlibd.lib;vcruntimed.lib;oldnames.lib;DWrite.lib;RTObjCInterop.lib;mincore.lib;freetype.lib;libxml2.lib;Windowscodecs.lib;ObjCUWP.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ucrtd.lib;msvcrtd.lib;msvcprtd.lib;vccorlibd.lib;vcruntimed.lib;oldnames.lib;DWrite.lib;RTObjCInterop.lib;mincore.lib;freetype.lib;libxml2.lib;Windowscodecs.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <AdditionalLibraryDirectories>$(VC_LibraryPath_ARM);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -192,7 +192,7 @@
       <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " "-DCORETEXT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " "-DCORETEXT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -210,7 +210,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ucrt.lib;msvcrt.lib;msvcprt.lib;vccorlib.lib;vcruntime.lib;oldnames.lib;DWrite.lib;RTObjCInterop.lib;mincore.lib;freetype.lib;libxml2.lib;Windowscodecs.lib;ObjCUWP.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ucrt.lib;msvcrt.lib;msvcprt.lib;vccorlib.lib;vcruntime.lib;oldnames.lib;DWrite.lib;RTObjCInterop.lib;mincore.lib;freetype.lib;libxml2.lib;Windowscodecs.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <AdditionalLibraryDirectories>$(VC_LibraryPath_x86);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -220,7 +220,7 @@
       <CompileAs>CompileAsObjCpp</CompileAs>
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " "-DCORETEXT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " "-DCORETEXT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -239,7 +239,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ucrt.lib;msvcrt.lib;msvcprt.lib;vccorlib.lib;vcruntime.lib;oldnames.lib;DWrite.lib;RTObjCInterop.lib;mincore.lib;freetype.lib;libxml2.lib;Windowscodecs.lib;ObjCUWP.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ucrt.lib;msvcrt.lib;msvcprt.lib;vccorlib.lib;vcruntime.lib;oldnames.lib;DWrite.lib;RTObjCInterop.lib;mincore.lib;freetype.lib;libxml2.lib;Windowscodecs.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <AdditionalLibraryDirectories>$(VC_LibraryPath_ARM);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -249,7 +249,7 @@
       <CompileAs>CompileAsObjCpp</CompileAs>
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " "-DCORETEXT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " "-DCORETEXT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -258,19 +258,20 @@
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="..\..\..\..\Frameworks\UIKit\NSCoder+UIKitAdditions.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\Accessibility.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\NSAttributedString+UIKitAdditionsTests.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\NSCoder+UIKitAdditionsTest.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\NSLayoutConstraint.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\UIApplication.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\UIViewTest.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\NSValue+UIKitAdditionsTests.mm" />
-    <ClangCompile Include="UIColorTests.mm" />
-    <ClangCompile Include="UIFontTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\Frameworks\UIKit\NSCoder+UIKitAdditions.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\Accessibility.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSAttributedString+UIKitAdditionsTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSCoder+UIKitAdditionsTest.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSLayoutConstraint.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIApplication.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIViewTest.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSValue+UIKitAdditionsTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIColorTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIFontTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIFontDescriptorTests.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\tests\unittests\UIKit\NullCompositor.h" />
+    <ClInclude Include="$(StarboardBasePath)\tests\unittests\UIKit\NullCompositor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

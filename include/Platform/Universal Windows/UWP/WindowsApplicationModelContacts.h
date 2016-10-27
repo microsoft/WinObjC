@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Contacts.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WACContact, WACContactCardDelayedDataLoader, WACContactStore, WACContactAnnotationStore, WACContactCardOptions,
@@ -277,6 +283,10 @@ typedef unsigned WACContactFieldCategory;
 @property (readonly) NSString* value;
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
+@interface WACIContactField : RTObject <WACIContactField>
+@end
+
 #endif // __WACIContactField_DEFINED__
 
 // Windows.ApplicationModel.Contacts.IContactFieldFactory
@@ -290,6 +300,10 @@ typedef unsigned WACContactFieldCategory;
                                  value:(NSString*)value
                                   type:(WACContactFieldType)type
                               category:(WACContactFieldCategory)category;
+@end
+
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
+@interface WACIContactFieldFactory : RTObject <WACIContactFieldFactory>
 @end
 
 #endif // __WACIContactFieldFactory_DEFINED__
@@ -310,6 +324,10 @@ typedef unsigned WACContactFieldCategory;
                                     postalCode:(NSString*)postalCode;
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
+@interface WACIContactLocationFieldFactory : RTObject <WACIContactLocationFieldFactory>
+@end
+
 #endif // __WACIContactLocationFieldFactory_DEFINED__
 
 // Windows.ApplicationModel.Contacts.IContactInstantMessageFieldFactory
@@ -326,13 +344,17 @@ typedef unsigned WACContactFieldCategory;
                                                       verb:(WFUri*)verb;
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
+@interface WACIContactInstantMessageFieldFactory : RTObject <WACIContactInstantMessageFieldFactory>
+@end
+
 #endif // __WACIContactInstantMessageFieldFactory_DEFINED__
 
 // Windows.ApplicationModel.Contacts.Contact
 #ifndef __WACContact_DEFINED__
 #define __WACContact_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContact : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -390,13 +412,17 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.ApplicationModel.Contacts.ContactCardDelayedDataLoader
 #ifndef __WACContactCardDelayedDataLoader_DEFINED__
 #define __WACContactCardDelayedDataLoader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactCardDelayedDataLoader : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -411,7 +437,7 @@ WINRT_EXPORT
 #ifndef __WACContactStore_DEFINED__
 #define __WACContactStore_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactStore : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -443,7 +469,7 @@ WINRT_EXPORT
 #ifndef __WACContactAnnotationStore_DEFINED__
 #define __WACContactAnnotationStore_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactAnnotationStore : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -474,7 +500,7 @@ WINRT_EXPORT
 #ifndef __WACContactCardOptions_DEFINED__
 #define __WACContactCardOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactCardOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -490,7 +516,7 @@ WINRT_EXPORT
 #ifndef __WACFullContactCardOptions_DEFINED__
 #define __WACFullContactCardOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACFullContactCardOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -505,7 +531,7 @@ WINRT_EXPORT
 #ifndef __WACContactAnnotation_DEFINED__
 #define __WACContactAnnotation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactAnnotation : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -526,7 +552,7 @@ WINRT_EXPORT
 #ifndef __WACContactAnnotationList_DEFINED__
 #define __WACContactAnnotationList_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactAnnotationList : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -550,7 +576,7 @@ WINRT_EXPORT
 #ifndef __WACContactChangeTracker_DEFINED__
 #define __WACContactChangeTracker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactChangeTracker : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -566,7 +592,7 @@ WINRT_EXPORT
 #ifndef __WACContactChangedEventArgs_DEFINED__
 #define __WACContactChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -580,7 +606,7 @@ WINRT_EXPORT
 #ifndef __WACAggregateContactManager_DEFINED__
 #define __WACAggregateContactManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACAggregateContactManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -603,7 +629,7 @@ WINRT_EXPORT
 #ifndef __WACContactList_DEFINED__
 #define __WACContactList_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactList : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -637,7 +663,7 @@ WINRT_EXPORT
 #ifndef __WACContactReader_DEFINED__
 #define __WACContactReader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactReader : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -652,7 +678,7 @@ WINRT_EXPORT
 #ifndef __WACContactQueryOptions_DEFINED__
 #define __WACContactQueryOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactQueryOptions : RTObject
 + (instancetype)make ACTIVATOR;
 + (WACContactQueryOptions*)makeWithText:(NSString*)text ACTIVATOR;
@@ -674,7 +700,7 @@ WINRT_EXPORT
 #ifndef __WACContactListSyncManager_DEFINED__
 #define __WACContactListSyncManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactListSyncManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -693,7 +719,7 @@ WINRT_EXPORT
 #ifndef __WACContactPhone_DEFINED__
 #define __WACContactPhone_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactPhone : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -710,7 +736,7 @@ WINRT_EXPORT
 #ifndef __WACContactEmail_DEFINED__
 #define __WACContactEmail_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactEmail : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -727,7 +753,7 @@ WINRT_EXPORT
 #ifndef __WACContactAddress_DEFINED__
 #define __WACContactAddress_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactAddress : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -748,7 +774,7 @@ WINRT_EXPORT
 #ifndef __WACContactConnectedServiceAccount_DEFINED__
 #define __WACContactConnectedServiceAccount_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactConnectedServiceAccount : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -764,7 +790,7 @@ WINRT_EXPORT
 #ifndef __WACContactDate_DEFINED__
 #define __WACContactDate_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactDate : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -783,7 +809,7 @@ WINRT_EXPORT
 #ifndef __WACContactJobInfo_DEFINED__
 #define __WACContactJobInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactJobInfo : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -805,7 +831,7 @@ WINRT_EXPORT
 #ifndef __WACContactSignificantOther_DEFINED__
 #define __WACContactSignificantOther_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactSignificantOther : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -822,7 +848,7 @@ WINRT_EXPORT
 #ifndef __WACContactWebsite_DEFINED__
 #define __WACContactWebsite_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactWebsite : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -839,7 +865,7 @@ WINRT_EXPORT
 #ifndef __WACContactChangedDeferral_DEFINED__
 #define __WACContactChangedDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactChangedDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -853,7 +879,7 @@ WINRT_EXPORT
 #ifndef __WACContactChange_DEFINED__
 #define __WACContactChange_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactChange : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -868,7 +894,7 @@ WINRT_EXPORT
 #ifndef __WACContactChangeReader_DEFINED__
 #define __WACContactChangeReader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactChangeReader : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -884,7 +910,7 @@ WINRT_EXPORT
 #ifndef __WACContactBatch_DEFINED__
 #define __WACContactBatch_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactBatch : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -899,7 +925,7 @@ WINRT_EXPORT
 #ifndef __WACContactMatchReason_DEFINED__
 #define __WACContactMatchReason_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactMatchReason : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -915,7 +941,7 @@ WINRT_EXPORT
 #ifndef __WACContactQueryTextSearch_DEFINED__
 #define __WACContactQueryTextSearch_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactQueryTextSearch : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -931,7 +957,7 @@ WINRT_EXPORT
 #ifndef __WACContactStoreNotificationTriggerDetails_DEFINED__
 #define __WACContactStoreNotificationTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactStoreNotificationTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -944,7 +970,7 @@ WINRT_EXPORT
 #ifndef __WACContactManager_DEFINED__
 #define __WACContactManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactManager : RTObject
 + (void)requestStoreAsyncWithSuccess:(void (^)(WACContactStore*))success failure:(void (^)(NSError*))failure;
 + (void)showContactCard:(WACContact*)contact selection:(WFRect*)selection;
@@ -1002,7 +1028,7 @@ WINRT_EXPORT
 #ifndef __WACContactLaunchActionVerbs_DEFINED__
 #define __WACContactLaunchActionVerbs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactLaunchActionVerbs : RTObject
 + (NSString*)call;
 + (NSString*)map;
@@ -1017,7 +1043,7 @@ WINRT_EXPORT
 #ifndef __WACContactField_DEFINED__
 #define __WACContactField_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactField : RTObject <WACIContactField>
 + (WACContactField*)makeField_Default:(NSString*)value type:(WACContactFieldType)type ACTIVATOR;
 + (WACContactField*)makeField_Category:(NSString*)value type:(WACContactFieldType)type category:(WACContactFieldCategory)category ACTIVATOR;
@@ -1040,7 +1066,7 @@ WINRT_EXPORT
 #ifndef __WACContactLocationField_DEFINED__
 #define __WACContactLocationField_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactLocationField : RTObject <WACIContactField>
 + (WACContactLocationField*)makeLocation_Default:(NSString*)unstructuredAddress ACTIVATOR;
 + (WACContactLocationField*)makeLocation_Category:(NSString*)unstructuredAddress category:(WACContactFieldCategory)category ACTIVATOR;
@@ -1072,7 +1098,7 @@ WINRT_EXPORT
 #ifndef __WACContactInstantMessageField_DEFINED__
 #define __WACContactInstantMessageField_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactInstantMessageField : RTObject <WACIContactField>
 + (WACContactInstantMessageField*)makeInstantMessage_Default:(NSString*)userName ACTIVATOR;
 + (WACContactInstantMessageField*)makeInstantMessage_Category:(NSString*)userName category:(WACContactFieldCategory)category ACTIVATOR;
@@ -1100,7 +1126,7 @@ WINRT_EXPORT
 #ifndef __WACKnownContactField_DEFINED__
 #define __WACKnownContactField_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACKnownContactField : RTObject
 + (WACContactFieldType)convertNameToType:(NSString*)name;
 + (NSString*)convertTypeToName:(WACContactFieldType)type;
@@ -1116,7 +1142,7 @@ WINRT_EXPORT
 #ifndef __WACContactInformation_DEFINED__
 #define __WACContactInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1138,7 +1164,7 @@ WINRT_EXPORT
 #ifndef __WACContactFieldFactory_DEFINED__
 #define __WACContactFieldFactory_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactFieldFactory
     : RTObject <WACIContactFieldFactory, WACIContactLocationFieldFactory, WACIContactInstantMessageFieldFactory>
 + (instancetype)make ACTIVATOR;
@@ -1175,7 +1201,7 @@ WINRT_EXPORT
 #ifndef __WACContactPicker_DEFINED__
 #define __WACContactPicker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 @interface WACContactPicker : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

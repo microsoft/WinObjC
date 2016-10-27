@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WSCWebAccountProvider, WSCWebAccount, WSCKeyCredentialRetrievalResult, WSCKeyCredentialOperationResult,
@@ -91,13 +97,17 @@ typedef unsigned WSCKeyCredentialCreationOption;
 @property (readonly) WSCWebAccountProvider* webAccountProvider;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSCIWebAccount : RTObject <WSCIWebAccount>
+@end
+
 #endif // __WSCIWebAccount_DEFINED__
 
 // Windows.Security.Credentials.WebAccountProvider
 #ifndef __WSCWebAccountProvider_DEFINED__
 #define __WSCWebAccountProvider_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCWebAccountProvider : RTObject
 + (WSCWebAccountProvider*)makeWebAccountProvider:(NSString*)id displayName:(NSString*)displayName iconUri:(WFUri*)iconUri ACTIVATOR;
 #if defined(__cplusplus)
@@ -117,7 +127,7 @@ WINRT_EXPORT
 #ifndef __WSCWebAccount_DEFINED__
 #define __WSCWebAccount_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCWebAccount : RTObject <WSCIWebAccount>
 + (WSCWebAccount*)makeWebAccount:(WSCWebAccountProvider*)webAccountProvider
                         userName:(NSString*)userName
@@ -143,7 +153,7 @@ WINRT_EXPORT
 #ifndef __WSCKeyCredentialRetrievalResult_DEFINED__
 #define __WSCKeyCredentialRetrievalResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCKeyCredentialRetrievalResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -158,7 +168,7 @@ WINRT_EXPORT
 #ifndef __WSCKeyCredentialOperationResult_DEFINED__
 #define __WSCKeyCredentialOperationResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCKeyCredentialOperationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -173,7 +183,7 @@ WINRT_EXPORT
 #ifndef __WSCKeyCredentialAttestationResult_DEFINED__
 #define __WSCKeyCredentialAttestationResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCKeyCredentialAttestationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -189,7 +199,7 @@ WINRT_EXPORT
 #ifndef __WSCKeyCredential_DEFINED__
 #define __WSCKeyCredential_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCKeyCredential : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -208,7 +218,7 @@ WINRT_EXPORT
 #ifndef __WSCKeyCredentialManager_DEFINED__
 #define __WSCKeyCredentialManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCKeyCredentialManager : RTObject
 + (void)isSupportedAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)renewAttestationAsync;
@@ -226,7 +236,7 @@ WINRT_EXPORT
 #ifndef __WSCPasswordCredential_DEFINED__
 #define __WSCPasswordCredential_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCPasswordCredential : RTObject
 + (instancetype)make ACTIVATOR;
 + (WSCPasswordCredential*)makePasswordCredential:(NSString*)resource userName:(NSString*)userName password:(NSString*)password ACTIVATOR;
@@ -246,7 +256,7 @@ WINRT_EXPORT
 #ifndef __WSCPasswordVault_DEFINED__
 #define __WSCPasswordVault_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCPasswordVault : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -286,13 +296,17 @@ WINRT_EXPORT
 - (void)removeObserver:(EventRegistrationToken)receiverToken;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WFCIPropertySet : RTObject <WFCIPropertySet>
+@end
+
 #endif // __WFCIPropertySet_DEFINED__
 
 // Windows.Security.Credentials.PasswordCredentialPropertyStore
 #ifndef __WSCPasswordCredentialPropertyStore_DEFINED__
 #define __WSCPasswordCredentialPropertyStore_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCPasswordCredentialPropertyStore : RTObject <WFCIPropertySet>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

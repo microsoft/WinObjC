@@ -269,3 +269,63 @@ OSX_DISABLED_TEST(NSIndexSet, shiftIndexes) {
     [expectedIndexSet addIndexesInRange:NSMakeRange(1, 1)]; // [1]
     ASSERT_OBJCEQ(expectedIndexSet, indexSet);
 }
+
+TEST(NSIndexSet, IndexLessThanIndex) {
+    NSMutableIndexSet* set = [[NSMutableIndexSet alloc] initWithIndexesInRange:NSMakeRange(1, 5)];
+    [set addIndexesInRange:NSMakeRange(10, 5)];
+    EXPECT_EQ(NSNotFound, [set indexLessThanIndex:1]);
+    EXPECT_EQ(1, [set indexLessThanIndex:2]);
+    EXPECT_EQ(5, [set indexLessThanIndex:9]);
+    EXPECT_EQ(14, [set indexLessThanIndex:525600]);
+}
+
+TEST(NSIndexSet, IndexLessThanOrEqualToIndex) {
+    NSMutableIndexSet* set = [[NSMutableIndexSet alloc] initWithIndexesInRange:NSMakeRange(1, 5)];
+    [set addIndexesInRange:NSMakeRange(10, 5)];
+    EXPECT_EQ(NSNotFound, [set indexLessThanOrEqualToIndex:0]);
+    EXPECT_EQ(1, [set indexLessThanOrEqualToIndex:1]);
+    EXPECT_EQ(5, [set indexLessThanOrEqualToIndex:9]);
+    EXPECT_EQ(14, [set indexLessThanOrEqualToIndex:525600]);
+}
+
+TEST(NSIndexSet, IndexGreaterThanIndex) {
+    NSMutableIndexSet* set = [[NSMutableIndexSet alloc] initWithIndexesInRange:NSMakeRange(1, 5)];
+    [set addIndexesInRange:NSMakeRange(10, 5)];
+    EXPECT_EQ(1, [set indexGreaterThanIndex:0]);
+    EXPECT_EQ(2, [set indexGreaterThanIndex:1]);
+    EXPECT_EQ(10, [set indexGreaterThanIndex:9]);
+    EXPECT_EQ(NSNotFound, [set indexGreaterThanIndex:15]);
+}
+
+TEST(NSIndexSet, IndexGreaterThanOrEqualToIndex) {
+    NSMutableIndexSet* set = [[NSMutableIndexSet alloc] initWithIndexesInRange:NSMakeRange(1, 5)];
+    [set addIndexesInRange:NSMakeRange(10, 5)];
+    EXPECT_EQ(1, [set indexGreaterThanOrEqualToIndex:0]);
+    EXPECT_EQ(1, [set indexGreaterThanOrEqualToIndex:1]);
+    EXPECT_EQ(10, [set indexGreaterThanOrEqualToIndex:9]);
+    EXPECT_EQ(NSNotFound, [set indexGreaterThanOrEqualToIndex:15]);
+}
+
+TEST(NSIndexSet, NSCodingEmptySet) {
+    NSIndexSet* emptySet = [NSIndexSet new];
+    NSMutableData* data = [NSMutableData new];
+    NSKeyedArchiver* coder = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+    [emptySet encodeWithCoder:coder];
+    [coder finishEncoding];
+    NSKeyedUnarchiver* decoder = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+    NSIndexSet* decodedSet = [[NSIndexSet alloc] initWithCoder:decoder];
+    EXPECT_OBJCEQ(emptySet, decodedSet);
+}
+
+TEST(NSIndexSet, NSCodingNonemptySet) {
+    NSMutableIndexSet* set = [[NSMutableIndexSet alloc] initWithIndexesInRange:NSMakeRange(1, 5)];
+    [set addIndexesInRange:NSMakeRange(10, 5)];
+    NSMutableData* data = [NSMutableData new];
+    NSKeyedArchiver* coder = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+    [set encodeWithCoder:coder];
+    [coder finishEncoding];
+
+    NSKeyedUnarchiver* decoder = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+    NSMutableIndexSet* decodedSet = [[NSMutableIndexSet alloc] initWithCoder:decoder];
+    EXPECT_OBJCEQ(set, decodedSet);
+}

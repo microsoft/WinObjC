@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_WIFI_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_WIFI_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_WiFi.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDWWiFiAdapter, WDWWiFiNetworkReport, WDWWiFiAvailableNetwork, WDWWiFiConnectionResult;
@@ -85,7 +91,7 @@ typedef unsigned WDWWiFiConnectionStatus;
 #ifndef __WDWWiFiAdapter_DEFINED__
 #define __WDWWiFiAdapter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFI_EXPORT
 @interface WDWWiFiAdapter : RTObject
 + (void)findAllAdaptersAsyncWithSuccess:(void (^)(NSArray* /* WDWWiFiAdapter* */))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
@@ -123,7 +129,7 @@ WINRT_EXPORT
 #ifndef __WDWWiFiNetworkReport_DEFINED__
 #define __WDWWiFiNetworkReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFI_EXPORT
 @interface WDWWiFiNetworkReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -138,7 +144,7 @@ WINRT_EXPORT
 #ifndef __WDWWiFiAvailableNetwork_DEFINED__
 #define __WDWWiFiAvailableNetwork_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFI_EXPORT
 @interface WDWWiFiAvailableNetwork : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -162,7 +168,7 @@ WINRT_EXPORT
 #ifndef __WDWWiFiConnectionResult_DEFINED__
 #define __WDWWiFiConnectionResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFI_EXPORT
 @interface WDWWiFiConnectionResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

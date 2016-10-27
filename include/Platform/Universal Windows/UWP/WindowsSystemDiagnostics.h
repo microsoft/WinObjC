@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
+#define OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_System_Diagnostics.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WSDProcessDiagnosticInfo, WSDProcessDiskUsage, WSDProcessMemoryUsage, WSDProcessCpuUsage, WSDProcessMemoryUsageReport,
@@ -35,7 +41,7 @@
 #ifndef __WSDProcessDiagnosticInfo_DEFINED__
 #define __WSDProcessDiagnosticInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 @interface WSDProcessDiagnosticInfo : RTObject
 + (NSArray* /* WSDProcessDiagnosticInfo* */)getForProcesses;
 + (WSDProcessDiagnosticInfo*)getForCurrentProcess;
@@ -57,7 +63,7 @@ WINRT_EXPORT
 #ifndef __WSDProcessDiskUsage_DEFINED__
 #define __WSDProcessDiskUsage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 @interface WSDProcessDiskUsage : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -71,7 +77,7 @@ WINRT_EXPORT
 #ifndef __WSDProcessMemoryUsage_DEFINED__
 #define __WSDProcessMemoryUsage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 @interface WSDProcessMemoryUsage : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -85,7 +91,7 @@ WINRT_EXPORT
 #ifndef __WSDProcessCpuUsage_DEFINED__
 #define __WSDProcessCpuUsage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 @interface WSDProcessCpuUsage : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -99,7 +105,7 @@ WINRT_EXPORT
 #ifndef __WSDProcessMemoryUsageReport_DEFINED__
 #define __WSDProcessMemoryUsageReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 @interface WSDProcessMemoryUsageReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -124,7 +130,7 @@ WINRT_EXPORT
 #ifndef __WSDProcessDiskUsageReport_DEFINED__
 #define __WSDProcessDiskUsageReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 @interface WSDProcessDiskUsageReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -143,7 +149,7 @@ WINRT_EXPORT
 #ifndef __WSDProcessCpuUsageReport_DEFINED__
 #define __WSDProcessCpuUsageReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 @interface WSDProcessCpuUsageReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

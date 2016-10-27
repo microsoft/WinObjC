@@ -1,26 +1,26 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{4b5d9819-1540-461e-ae2e-80a6d44f17c7}</UniqueIdentifier>
+      <UniqueIdentifier>{5bed6950-d05a-479d-b2b8-730ebba80ec9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{9270947b-45a3-42f8-824e-53499305baf2}</UniqueIdentifier>
+      <UniqueIdentifier>{6d009a9c-7c3e-45ad-8498-8caaca978d86}</UniqueIdentifier>
     </Filter>
     <Filter Include="Images">
-      <UniqueIdentifier>{5E0CBBC2-C7A9-444C-992A-FE7C0896A3B7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="WOCCatalog">
-      <UniqueIdentifier>{3ACC0DED-9879-4446-8DA0-43059404C0F9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="WOCCatalog\Supporting Files">
-      <UniqueIdentifier>{160BAD43-3BD5-43E8-8762-5828CF78D7B5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{AC4EA281-C68B-4A1D-9BE5-C6F2859C7F8A}</UniqueIdentifier>
+      <UniqueIdentifier>{D83B8F18-D2C6-4F82-BB54-0E722095D2BF}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sounds">
-      <UniqueIdentifier>{d4374887-0c05-4875-bbd0-cd0db7571693}</UniqueIdentifier>
+      <UniqueIdentifier>{A5600A6F-599B-4319-883B-4A94776520F8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WOCCatalog">
+      <UniqueIdentifier>{DBAA030E-FD36-4236-AB0F-880A412383BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WOCCatalog\Supporting Files">
+      <UniqueIdentifier>{4AFB8E19-FAC9-4EA7-8758-143B7BA80AF7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xcode Variable Files">
+      <UniqueIdentifier>{05701669-1AEF-428C-AF38-DA27FAE571B3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,88 +48,184 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
+    <ClInclude Include="..\..\WOCCatalog\AccelerateViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\AccelerateViewController2.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\AlertsViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\AppDelegate.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\ApplicationViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\AudioToolboxViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\AutoLayoutViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\BasicAnimationViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\BezierViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\ButtonsViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\ControlsViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\CoreLocationViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\CoreMotionViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\DisplayModeViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\FoundationsViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\GLKitExampleController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\GeocodingViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\GesturesViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\ImagesViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\MainViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\MenuTableViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\OpenGLES11Controller.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\OpenGLES20Controller.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\PageViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\PhotogridViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\PickersViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\PopoverViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\SearchBarViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\SegmentsViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\ShadowViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\SingleImageViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\TaskInfoViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\TextDisplayViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\ToolbarsViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\TransitionsViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\UIPasteboardViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\UserDefaultsViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\ViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\WebViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WOCCatalog\XamlViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClangCompile Include="..\..\WOCCatalog\AccelerateViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\AccelerateViewController2.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\XamlViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\ViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\WebViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\AutoLayoutViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\ButtonsViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\BezierViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\UIPasteboardViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\main.m">
-      <Filter>WOCCatalog\Supporting Files</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\URLDownloadCell.mm">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\TransitionsViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\DisplayModeViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\AlertsViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\PopoverViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\FoundationsViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\PageViewController.m">
+    <ClangCompile Include="..\..\WOCCatalog\AppDelegate.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\ApplicationViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\SingleImageViewController.m">
+    <ClangCompile Include="..\..\WOCCatalog\AudioToolboxViewController.mm">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\URLSessionViewController.mm">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\MainViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\OpenGLES20Controller.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\SegmentsViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m">
+    <ClangCompile Include="..\..\WOCCatalog\AutoLayoutViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\BasicAnimationViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\PhotogridViewController.m">
+    <ClangCompile Include="..\..\WOCCatalog\BezierViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\ButtonsViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\ControlsViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\CoreLocationViewController.mm">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\CoreMotionViewController.mm">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\DisplayModeViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\FoundationsViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\GeocodingViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\GesturesViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>    
+    <ClangCompile Include="..\..\WOCCatalog\ImagesViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\MainViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\MenuTableViewController.m">
@@ -138,76 +234,77 @@
     <ClangCompile Include="..\..\WOCCatalog\OpenGLES11Controller.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\AppDelegate.m">
+    <ClangCompile Include="..\..\WOCCatalog\OpenGLES20Controller.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\SearchBarViewController.m">
+    <ClangCompile Include="..\..\WOCCatalog\PageViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\ImagesViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\TaskInfoViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\ShadowViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\ToolbarsViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\UserDefaultsViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\AccelerateViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\AccelerateViewController2.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\TextFieldsViewController.m">
+    <ClangCompile Include="..\..\WOCCatalog\PhotogridViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\PickersViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\AudioToolboxViewController.mm">
+    <ClangCompile Include="..\..\WOCCatalog\PopoverViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\GeocodingViewController.m">
+    <ClangCompile Include="..\..\WOCCatalog\SearchBarViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo9.jpg">
-      <Filter>Images</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo4.jpg">
-      <Filter>Images</Filter>
-    </SBResourceCopy>
-    <XibCompile Include="..\..\WOCCatalog\BezierViewController.xib">
+    <ClangCompile Include="..\..\WOCCatalog\SegmentsViewController.m">
       <Filter>WOCCatalog</Filter>
-    </XibCompile>
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\tf_bgimage.jpg">
-      <Filter>Images</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo8.tif">
-      <Filter>Images</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_check.png">
-      <Filter>Images</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo10.jpg">
-      <Filter>Images</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_search.png">
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\ShadowViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\SingleImageViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\TaskInfoViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\ToolbarsViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\TransitionsViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\UIPasteboardViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\URLDownloadCell.mm">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\URLSessionViewController.mm">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\UserDefaultsViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\ViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\WebViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\XamlViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\main.m">
+      <Filter>WOCCatalog\Supporting Files</Filter>
+    </ClangCompile>
+    <SBInfoPlistCopy Include="..\..\WOCCatalog\Info.plist" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\blueButton.png">
       <Filter>Images</Filter>
     </SBResourceCopy>
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo1.jpg">
       <Filter>Images</Filter>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo2.png">
-      <Filter>Images</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo7.gif">
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo10.jpg">
       <Filter>Images</Filter>
     </SBResourceCopy>
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo2.png">
@@ -216,37 +313,53 @@
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo3.jpg">
       <Filter>Images</Filter>
     </SBResourceCopy>
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo4.jpg">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo5.jpg">
       <Filter>Images</Filter>
     </SBResourceCopy>
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo6.jpg">
       <Filter>Images</Filter>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\whiteButton.png">
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo7.gif">
       <Filter>Images</Filter>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\blueButton.png">
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo8.tif">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo9.jpg">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_check.png">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_search.png">
       <Filter>Images</Filter>
     </SBResourceCopy>
     <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_tools.png">
       <Filter>Images</Filter>
     </SBResourceCopy>
-    <SBInfoPlistCopy Include="..\..\WOCCatalog\Info.plist" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\tf_bgimage.jpg">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\whiteButton.png">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\WOCCatalog\test.wav">
+      <Filter>Sounds</Filter>
+    </SBResourceCopy>
+    <StoryboardCompile Include="..\..\WOCCatalog\XIBTest.storyboard">
+      <Filter>WOCCatalog</Filter>
+    </StoryboardCompile>
     <Text Include="WOCCatalog-Debug-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
     <Text Include="WOCCatalog-Release-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <Media Include="..\..\WOCCatalog\test.wav">
-      <Filter>Sounds</Filter>
-    </Media>
-  </ItemGroup>
-  <ItemGroup>
-    <ClangCompile Include="..\..\WOCCatalog\CoreLocationViewController.mm">
+    <XibCompile Include="..\..\WOCCatalog\BezierViewController.xib">
       <Filter>WOCCatalog</Filter>
-    </ClangCompile>
+    </XibCompile>
   </ItemGroup>
 </Project>

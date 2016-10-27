@@ -1,39 +1,43 @@
-/* Copyright (c) 2006-2007 Christopher J. W. Lloyd
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
-rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
-persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
-Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+//******************************************************************************
+//
+// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
 #import "Starboard.h"
-#import "Foundation/NSMutableString.h"
-#import "Foundation/NSURLProtocol.h"
-#import "Foundation/NSMutableArray.h"
-#import "Foundation/NSNumber.h"
-#import "Foundation/NSMutableData.h"
-#import "Foundation/NSMutableDictionary.h"
-#import "Foundation/NSRunLoop.h"
-#import "Foundation/NSTimer.h"
-#import "Foundation/NSStream.h"
-#import "NSInputStream_socket.h"
-#import "NSOutputStream_socket.h"
-#import "Foundation/NSError.h"
-#import "Foundation/NSHTTPURLResponse.h"
+#import <Foundation/NSMutableString.h>
+#import <Foundation/NSURLProtocol.h>
+#import <Foundation/NSMutableArray.h>
+#import <Foundation/NSNumber.h>
+#import <Foundation/NSMutableData.h>
+#import <Foundation/NSMutableDictionary.h>
+#import <Foundation/NSRunLoop.h>
+#import <Foundation/NSTimer.h>
+#import <Foundation/NSStream.h>
+#import <Foundation/NSError.h>
+#import <Foundation/NSHTTPURLResponse.h>
 #import "NSURLProtocol_file.h"
 #import "NSURLProtocolInternal.h"
 #import "LoggingNative.h"
 
 static const wchar_t* TAG = L"NSURLProtocol_file";
 
-@implementation NSURLProtocol_file
+@implementation NSURLProtocol_file {
+@private
+    StrongId<NSString> _path;
+}
+
 + (void)load {
     [NSURLProtocol registerClass:self];
 }
@@ -48,28 +52,19 @@ static const wchar_t* TAG = L"NSURLProtocol_file";
 }
 
 - (id)initWithRequest:(id)request cachedResponse:(id)response client:(id)client {
-    [super initWithRequest:request cachedResponse:response client:client];
+    if (self = [super initWithRequest:request cachedResponse:response client:client]) {
+        id url = [_request URL];
+        TraceVerbose(TAG, L"Loading %hs", [[url absoluteString] UTF8String]);
 
-    _modes = [[NSMutableArray arrayWithObject:@"kCFRunLoopDefaultMode"] retain];
-
-    id url = [_request URL];
-    TraceVerbose(TAG, L"Loading %hs", [[url absoluteString] UTF8String]);
-
-    _path = [[url path] copy];
-    // id host = [NSHost hostWithName:hostName];
+        _path.attach([[url path] copy]);
+    }
 
     return self;
 }
 
 - (id)startLoading {
-    const char* pFilePath = [_path UTF8String];
-
-    fpIn = EbrFopen(pFilePath, "rb");
-    if (!fpIn) {
-        TraceVerbose(TAG, L"Couldn't open %hs", pFilePath);
-    } else {
-        TraceVerbose(TAG, L"Opened %hs", pFilePath);
-    }
+    // TODO 1162: An NSInputStream should be initialized here and run loop events should be used to schedule
+    // the file operations.
     return self;
 }
 
@@ -87,25 +82,7 @@ static const wchar_t* TAG = L"NSURLProtocol_file";
 }
 
 - (id)_doFileLoad {
-    id url = [_request URL];
-
-    if (fpIn == NULL) {
-        TraceVerbose(TAG, L"doFileLoad: fpIn = NULL! self=%x", self);
-        id error = [NSError errorWithDomain:@"Couldn't open file" code:100 userInfo:nil];
-        [_client URLProtocol:self didFailWithError:error];
-        return self;
-    }
-
-    EbrFseek(fpIn, 0, SEEK_END);
-    int len = EbrFtell(fpIn);
-    EbrFseek(fpIn, 0, SEEK_SET);
-
-    char* pData = (char*)IwMalloc(len);
-    len = EbrFread(pData, 1, len, fpIn);
-    id dataReceived = [NSData dataWithBytes:pData length:len];
-    IwFree(pData);
-
-    EbrFclose(fpIn);
+    NSData* dataReceived = [NSData dataWithContentsOfFile:_path];
 
     [_client URLProtocol:self didReceiveResponse:nil cacheStoragePolicy:NSURLCacheStorageAllowed];
     [_client URLProtocol:self didLoadData:dataReceived];

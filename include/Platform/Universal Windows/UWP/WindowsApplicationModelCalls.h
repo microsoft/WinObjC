@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Calls.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WACPhoneCallHistoryEntryAddress, WACPhoneCallHistoryEntry, WACPhoneCallHistoryEntryReader, WACPhoneCallHistoryEntryQueryOptions,
@@ -80,7 +86,7 @@ typedef unsigned WACPhoneCallHistorySourceIdKind;
 #ifndef __WACPhoneCallHistoryEntryAddress_DEFINED__
 #define __WACPhoneCallHistoryEntryAddress_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
 @interface WACPhoneCallHistoryEntryAddress : RTObject
 + (WACPhoneCallHistoryEntryAddress*)make:(NSString*)rawAddress
                           rawAddressKind:(WACPhoneCallHistoryEntryRawAddressKind)rawAddressKind ACTIVATOR;
@@ -100,7 +106,7 @@ WINRT_EXPORT
 #ifndef __WACPhoneCallHistoryEntry_DEFINED__
 #define __WACPhoneCallHistoryEntry_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
 @interface WACPhoneCallHistoryEntry : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -132,7 +138,7 @@ WINRT_EXPORT
 #ifndef __WACPhoneCallHistoryEntryReader_DEFINED__
 #define __WACPhoneCallHistoryEntryReader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
 @interface WACPhoneCallHistoryEntryReader : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -146,7 +152,7 @@ WINRT_EXPORT
 #ifndef __WACPhoneCallHistoryEntryQueryOptions_DEFINED__
 #define __WACPhoneCallHistoryEntryQueryOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
 @interface WACPhoneCallHistoryEntryQueryOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -162,7 +168,7 @@ WINRT_EXPORT
 #ifndef __WACPhoneCallHistoryStore_DEFINED__
 #define __WACPhoneCallHistoryStore_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
 @interface WACPhoneCallHistoryStore : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -191,7 +197,7 @@ WINRT_EXPORT
 #ifndef __WACPhoneCallHistoryManager_DEFINED__
 #define __WACPhoneCallHistoryManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_EXPORT
 @interface WACPhoneCallHistoryManager : RTObject
 + (void)requestStoreAsync:(WACPhoneCallHistoryStoreAccessType)accessType
                   success:(void (^)(WACPhoneCallHistoryStore*))success

@@ -92,13 +92,26 @@ static VCProjectItem* addFileToVSInternal(const PBXFile* file, VCProject& proj, 
     }
   }
 
-  // Add the item to the project, taking into account path overrides
-  VCProjectItem* item = NULL;
+  // Take into account path override
+  bool useRelativePath = true;
   if (itemHint && !itemHint->pathOverride.empty()) {
-    sbAssert(!isVariant, "Unexpected path override for variant file: " + realPath);
-    item = proj.addItem(vsType, itemHint->pathOverride, sb_dirname(virtualPath));
+    sbAssertWithTelemetry(!isVariant, "Unexpected path override for variant file: " + realPath);
+    realPath = itemHint->pathOverride;
+    useRelativePath = false;
+  }
+
+  // Take into account filter override
+  string filterPath = sb_dirname(virtualPath);
+  if (itemHint && !itemHint->filterOverride.empty()) {
+    filterPath = itemHint->filterOverride;
+  }
+
+  // Add the item to the project
+  VCProjectItem* item = NULL;
+  if (useRelativePath) {
+    item = addRelativeFilePathToVS(vsType, realPath, filterPath, proj, bs);
   } else {
-    item = addRelativeFilePathToVS(vsType, realPath, sb_dirname(virtualPath), proj, bs);
+    item = proj.addItem(vsType, realPath, filterPath);
   }
 
   // Handle Variant files
@@ -155,7 +168,9 @@ void addBuildFileToVS(const PBXBuildFile* buildFile, VCProject& proj, const Buil
     item->setDefinition("AdditionalOptions", fixedFlags);
   }
 
-  // Ignore attributes
-  if (attribs)
-    SBLog::warning() << "Ignoring attributes for \"" << filePath << "\" file." << std::endl;
+  // Mark public headers
+  if ((attribs & ATTR_PUBLIC) &&
+      (fileType == "sourcecode.c.h" || fileType == "sourcecode.cpp.h")) {
+    item->setDefinition("PublicHeader", "true");
+  }
 }

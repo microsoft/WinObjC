@@ -133,7 +133,7 @@ void SBResourcesBuildPhase::writeVCProjectFiles(VCProject& proj) const
   // Process build files
   const BuildSettings& projBS = m_parentTarget.getProject().getBuildSettings();
   const BuildFileList& buildFiles = m_phase->getBuildFileList();
-  sbAssert(buildFiles.size() == m_buildFileTargets.size());
+  sbAssertWithTelemetry(buildFiles.size() == m_buildFileTargets.size(), "Inconsistent number of Resource build files");
   for (size_t i = 0; i < buildFiles.size(); i++) {
     // Construct a path for Bundle build products, relative to the SolutionDir,
     // instead of using the Xcode path
@@ -148,7 +148,7 @@ void SBResourcesBuildPhase::writeVCProjectFiles(VCProject& proj) const
       }
     }
 
-    VCItemHint itemHint = { "SBResourceCopy" , pathOverride };
+    VCItemHint itemHint = { "SBResourceCopy" , pathOverride, "" };
     addBuildFileToVS(buildFiles[i], proj, projBS, &itemHint);
   }
 

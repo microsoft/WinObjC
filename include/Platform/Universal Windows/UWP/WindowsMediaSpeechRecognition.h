@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_SpeechRecognition.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WMSSpeechRecognitionSemanticInterpretation, WMSSpeechRecognitionResult, WMSSpeechRecognitionTopicConstraint,
@@ -136,13 +142,17 @@ typedef unsigned WMSSpeechContinuousRecognitionMode;
 @property (readonly) WMSSpeechRecognitionConstraintType type;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+@interface WMSISpeechRecognitionConstraint : RTObject <WMSISpeechRecognitionConstraint>
+@end
+
 #endif // __WMSISpeechRecognitionConstraint_DEFINED__
 
 // Windows.Media.SpeechRecognition.SpeechRecognitionSemanticInterpretation
 #ifndef __WMSSpeechRecognitionSemanticInterpretation_DEFINED__
 #define __WMSSpeechRecognitionSemanticInterpretation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognitionSemanticInterpretation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -156,7 +166,7 @@ WINRT_EXPORT
 #ifndef __WMSSpeechRecognitionResult_DEFINED__
 #define __WMSSpeechRecognitionResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognitionResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -179,7 +189,7 @@ WINRT_EXPORT
 #ifndef __WMSSpeechRecognitionTopicConstraint_DEFINED__
 #define __WMSSpeechRecognitionTopicConstraint_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognitionTopicConstraint : RTObject <WMSISpeechRecognitionConstraint>
 + (WMSSpeechRecognitionTopicConstraint*)make:(WMSSpeechRecognitionScenario)scenario topicHint:(NSString*)topicHint ACTIVATOR;
 + (WMSSpeechRecognitionTopicConstraint*)makeWithTag:(WMSSpeechRecognitionScenario)scenario
@@ -202,7 +212,7 @@ WINRT_EXPORT
 #ifndef __WMSSpeechRecognitionListConstraint_DEFINED__
 #define __WMSSpeechRecognitionListConstraint_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognitionListConstraint : RTObject <WMSISpeechRecognitionConstraint>
 + (WMSSpeechRecognitionListConstraint*)make:(id<NSFastEnumeration> /* NSString * */)commands ACTIVATOR;
 + (WMSSpeechRecognitionListConstraint*)makeWithTag:(id<NSFastEnumeration> /* NSString * */)commands tag:(NSString*)tag ACTIVATOR;
@@ -222,7 +232,7 @@ WINRT_EXPORT
 #ifndef __WMSSpeechRecognitionGrammarFileConstraint_DEFINED__
 #define __WMSSpeechRecognitionGrammarFileConstraint_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognitionGrammarFileConstraint : RTObject <WMSISpeechRecognitionConstraint>
 + (WMSSpeechRecognitionGrammarFileConstraint*)make:(WSStorageFile*)file ACTIVATOR;
 + (WMSSpeechRecognitionGrammarFileConstraint*)makeWithTag:(WSStorageFile*)file tag:(NSString*)tag ACTIVATOR;
@@ -242,7 +252,7 @@ WINRT_EXPORT
 #ifndef __WMSSpeechRecognizerTimeouts_DEFINED__
 #define __WMSSpeechRecognizerTimeouts_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognizerTimeouts : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -258,7 +268,7 @@ WINRT_EXPORT
 #ifndef __WMSSpeechRecognizerUIOptions_DEFINED__
 #define __WMSSpeechRecognizerUIOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognizerUIOptions : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -275,7 +285,7 @@ WINRT_EXPORT
 #ifndef __WMSSpeechRecognitionCompilationResult_DEFINED__
 #define __WMSSpeechRecognitionCompilationResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognitionCompilationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -293,13 +303,17 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Media.SpeechRecognition.SpeechRecognizer
 #ifndef __WMSSpeechRecognizer_DEFINED__
 #define __WMSSpeechRecognizer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognizer : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 + (WMSSpeechRecognizer*)make:(WGLanguage*)language ACTIVATOR;
@@ -336,7 +350,7 @@ WINRT_EXPORT
 #ifndef __WMSSpeechRecognitionQualityDegradingEventArgs_DEFINED__
 #define __WMSSpeechRecognitionQualityDegradingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognitionQualityDegradingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -350,7 +364,7 @@ WINRT_EXPORT
 #ifndef __WMSSpeechRecognizerStateChangedEventArgs_DEFINED__
 #define __WMSSpeechRecognizerStateChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognizerStateChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -364,7 +378,7 @@ WINRT_EXPORT
 #ifndef __WMSSpeechRecognitionVoiceCommandDefinitionConstraint_DEFINED__
 #define __WMSSpeechRecognitionVoiceCommandDefinitionConstraint_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognitionVoiceCommandDefinitionConstraint : RTObject <WMSISpeechRecognitionConstraint>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -381,7 +395,7 @@ WINRT_EXPORT
 #ifndef __WMSSpeechContinuousRecognitionSession_DEFINED__
 #define __WMSSpeechContinuousRecognitionSession_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechContinuousRecognitionSession : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -407,7 +421,7 @@ WINRT_EXPORT
 #ifndef __WMSSpeechRecognitionHypothesisGeneratedEventArgs_DEFINED__
 #define __WMSSpeechRecognitionHypothesisGeneratedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognitionHypothesisGeneratedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -421,7 +435,7 @@ WINRT_EXPORT
 #ifndef __WMSSpeechRecognitionHypothesis_DEFINED__
 #define __WMSSpeechRecognitionHypothesis_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognitionHypothesis : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -435,7 +449,7 @@ WINRT_EXPORT
 #ifndef __WMSSpeechContinuousRecognitionCompletedEventArgs_DEFINED__
 #define __WMSSpeechContinuousRecognitionCompletedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechContinuousRecognitionCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -449,7 +463,7 @@ WINRT_EXPORT
 #ifndef __WMSSpeechContinuousRecognitionResultGeneratedEventArgs_DEFINED__
 #define __WMSSpeechContinuousRecognitionResultGeneratedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechContinuousRecognitionResultGeneratedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

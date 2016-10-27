@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -81,11 +81,14 @@ int ApplicationMainStart(const char* principalName,
         };
         activationArgument = toastAction;
     } else if (activationType == ActivationTypeVoiceCommand) {
-        WMSSpeechRecognitionResult* result = [WMSSpeechRecognitionResult createWith:activationArg];
+        WMSSpeechRecognitionResult* result = [WMSSpeechRecognitionResult createWith:(IInspectable*)activationArg];
         activationArgument = result;
     } else if (activationType == ActivationTypeProtocol) {
-        WFUri* uri = [WFUri createWith:activationArg];
+        WFUri* uri = [WFUri createWith:(IInspectable*)activationArg];
         activationArgument = uri;
+    } else if (activationType == ActivationTypeFile) {
+        WAAFileActivatedEventArgs* activatedEventArgs = [WAAFileActivatedEventArgs createWith:activationArg];
+        activationArgument = activatedEventArgs;
     }
 
     WOCDisplayMode* displayMode = [UIApplication displayMode];
@@ -144,7 +147,13 @@ int ApplicationMainStart(const char* principalName,
     [displayMode _updateDisplaySettings];
 
     UIApplicationMainInit(principalClassName, delegateClassName, defaultOrientation, (int)activationType, activationArgument);
-    ScheduleMainRunLoop();
+
+    // The main runloop has to be started asynchronously, so we return as soon as possible from application activate.
+    // The apps can (and do) handle application launch delegate from the first tine NSRunloop run is called, and that can
+    // take a REALLY long time to complete, causing PLM to terminate us.  We were getting lucky in some cases and the app would launch.
+    // This will also fix the number of sporadic launch test failures that we have seen in the labs.
+
+    ScheduleMainRunLoopAsync();
 
     return 0;
 }

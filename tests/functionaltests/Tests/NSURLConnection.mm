@@ -99,7 +99,7 @@ TEST(NSURLConnection, RequestWithURL) {
     // Wait for data.
     if (![connectionTestHelper.condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]) {
         // Wait timed out.
-        ASSERT_FALSE_MSG(false, "FAILED: Waiting for connection timed out!");
+        ASSERT_FALSE_MSG(true, "FAILED: Waiting for connection timed out!");
     }
 
     // Give some time for all delegates to be called.

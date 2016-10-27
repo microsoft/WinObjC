@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
+#define OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Networking_NetworkOperators.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WNNMobileBroadbandAccount, WNNMobileBroadbandNetwork, WNNMobileBroadbandDeviceInformation, WNNMobileBroadbandPinManager,
@@ -295,7 +301,7 @@ typedef unsigned WNNUssdResultCode;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Networking.NetworkOperators.ProfileUsage
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNProfileUsage : NSObject
 + (instancetype) new;
 @property unsigned int usageInMegabytes;
@@ -306,7 +312,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandAccount_DEFINED__
 #define __WNNMobileBroadbandAccount_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandAccount : RTObject
 + (WNNMobileBroadbandAccount*)createFromNetworkAccountId:(NSString*)networkAccountId;
 #if defined(__cplusplus)
@@ -327,7 +333,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandNetwork_DEFINED__
 #define __WNNMobileBroadbandNetwork_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandNetwork : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -352,7 +358,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandDeviceInformation_DEFINED__
 #define __WNNMobileBroadbandDeviceInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -382,7 +388,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandPinManager_DEFINED__
 #define __WNNMobileBroadbandPinManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandPinManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -397,7 +403,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandUiccApp_DEFINED__
 #define __WNNMobileBroadbandUiccApp_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandUiccApp : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -419,7 +425,7 @@ WINRT_EXPORT
 #ifndef __WNNNetworkOperatorTetheringAccessPointConfiguration_DEFINED__
 #define __WNNNetworkOperatorTetheringAccessPointConfiguration_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNNetworkOperatorTetheringAccessPointConfiguration : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -435,7 +441,7 @@ WINRT_EXPORT
 #ifndef __WNNNetworkOperatorTetheringOperationResult_DEFINED__
 #define __WNNNetworkOperatorTetheringOperationResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNNetworkOperatorTetheringOperationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -450,7 +456,7 @@ WINRT_EXPORT
 #ifndef __WNNNetworkOperatorTetheringManager_DEFINED__
 #define __WNNNetworkOperatorTetheringManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNNetworkOperatorTetheringManager : RTObject
 + (WNNTetheringCapability)getTetheringCapability:(NSString*)networkAccountId;
 + (WNNNetworkOperatorTetheringManager*)createFromNetworkAccountId:(NSString*)networkAccountId;
@@ -475,7 +481,7 @@ WINRT_EXPORT
 #ifndef __WNNNetworkOperatorTetheringClient_DEFINED__
 #define __WNNNetworkOperatorTetheringClient_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNNetworkOperatorTetheringClient : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -490,7 +496,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandAccountEventArgs_DEFINED__
 #define __WNNMobileBroadbandAccountEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandAccountEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -504,7 +510,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandAccountUpdatedEventArgs_DEFINED__
 #define __WNNMobileBroadbandAccountUpdatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandAccountUpdatedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -520,7 +526,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandAccountWatcher_DEFINED__
 #define __WNNMobileBroadbandAccountWatcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandAccountWatcher : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -548,7 +554,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandModem_DEFINED__
 #define __WNNMobileBroadbandModem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandModem : RTObject
 + (NSString*)getDeviceSelector;
 + (WNNMobileBroadbandModem*)fromId:(NSString*)deviceId;
@@ -575,7 +581,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandUicc_DEFINED__
 #define __WNNMobileBroadbandUicc_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandUicc : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -590,7 +596,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandModemConfiguration_DEFINED__
 #define __WNNMobileBroadbandModemConfiguration_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandModemConfiguration : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -606,7 +612,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandDeviceServiceInformation_DEFINED__
 #define __WNNMobileBroadbandDeviceServiceInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceServiceInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -622,7 +628,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandDeviceService_DEFINED__
 #define __WNNMobileBroadbandDeviceService_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceService : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -639,7 +645,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandPin_DEFINED__
 #define __WNNMobileBroadbandPin_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandPin : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -676,7 +682,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandPinOperationResult_DEFINED__
 #define __WNNMobileBroadbandPinOperationResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandPinOperationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -691,7 +697,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandDeviceServiceDataSession_DEFINED__
 #define __WNNMobileBroadbandDeviceServiceDataSession_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceServiceDataSession : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -709,7 +715,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandDeviceServiceCommandSession_DEFINED__
 #define __WNNMobileBroadbandDeviceServiceCommandSession_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceServiceCommandSession : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -731,7 +737,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandDeviceServiceDataReceivedEventArgs_DEFINED__
 #define __WNNMobileBroadbandDeviceServiceDataReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceServiceDataReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -745,7 +751,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandDeviceServiceCommandResult_DEFINED__
 #define __WNNMobileBroadbandDeviceServiceCommandResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceServiceCommandResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -760,7 +766,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandUiccAppsResult_DEFINED__
 #define __WNNMobileBroadbandUiccAppsResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandUiccAppsResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -775,7 +781,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandUiccAppRecordDetailsResult_DEFINED__
 #define __WNNMobileBroadbandUiccAppRecordDetailsResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandUiccAppRecordDetailsResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -794,7 +800,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandUiccAppReadRecordResult_DEFINED__
 #define __WNNMobileBroadbandUiccAppReadRecordResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandUiccAppReadRecordResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -809,7 +815,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandNetworkRegistrationStateChange_DEFINED__
 #define __WNNMobileBroadbandNetworkRegistrationStateChange_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandNetworkRegistrationStateChange : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -824,7 +830,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandNetworkRegistrationStateChangeTriggerDetails_DEFINED__
 #define __WNNMobileBroadbandNetworkRegistrationStateChangeTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandNetworkRegistrationStateChangeTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -838,7 +844,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandRadioStateChange_DEFINED__
 #define __WNNMobileBroadbandRadioStateChange_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandRadioStateChange : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -853,7 +859,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandRadioStateChangeTriggerDetails_DEFINED__
 #define __WNNMobileBroadbandRadioStateChangeTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandRadioStateChangeTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -867,7 +873,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandPinLockStateChange_DEFINED__
 #define __WNNMobileBroadbandPinLockStateChange_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandPinLockStateChange : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -883,7 +889,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandPinLockStateChangeTriggerDetails_DEFINED__
 #define __WNNMobileBroadbandPinLockStateChangeTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandPinLockStateChangeTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -897,7 +903,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandDeviceServiceTriggerDetails_DEFINED__
 #define __WNNMobileBroadbandDeviceServiceTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceServiceTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -913,7 +919,7 @@ WINRT_EXPORT
 #ifndef __WNNKnownCSimFilePaths_DEFINED__
 #define __WNNKnownCSimFilePaths_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNKnownCSimFilePaths : RTObject
 + (NSArray* /* unsigned int */)eFSpn;
 + (NSArray* /* unsigned int */)gid1;
@@ -926,7 +932,7 @@ WINRT_EXPORT
 #ifndef __WNNKnownRuimFilePaths_DEFINED__
 #define __WNNKnownRuimFilePaths_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNKnownRuimFilePaths : RTObject
 + (NSArray* /* unsigned int */)eFSpn;
 + (NSArray* /* unsigned int */)gid1;
@@ -939,7 +945,7 @@ WINRT_EXPORT
 #ifndef __WNNKnownSimFilePaths_DEFINED__
 #define __WNNKnownSimFilePaths_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNKnownSimFilePaths : RTObject
 + (NSArray* /* unsigned int */)eFOns;
 + (NSArray* /* unsigned int */)eFSpn;
@@ -953,7 +959,7 @@ WINRT_EXPORT
 #ifndef __WNNKnownUSimFilePaths_DEFINED__
 #define __WNNKnownUSimFilePaths_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNKnownUSimFilePaths : RTObject
 + (NSArray* /* unsigned int */)eFOpl;
 + (NSArray* /* unsigned int */)eFPnn;
@@ -968,7 +974,7 @@ WINRT_EXPORT
 #ifndef __WNNHotspotAuthenticationEventDetails_DEFINED__
 #define __WNNHotspotAuthenticationEventDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNHotspotAuthenticationEventDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -982,7 +988,7 @@ WINRT_EXPORT
 #ifndef __WNNHotspotAuthenticationContext_DEFINED__
 #define __WNNHotspotAuthenticationContext_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNHotspotAuthenticationContext : RTObject
 + (BOOL)tryGetAuthenticationContext:(NSString*)evenToken context:(WNNHotspotAuthenticationContext**)context;
 #if defined(__cplusplus)
@@ -1001,11 +1007,11 @@ WINRT_EXPORT
 - (void)skipAuthentication;
 - (void)triggerAttentionRequired:(NSString*)packageRelativeApplicationId applicationParameters:(NSString*)applicationParameters;
 - (void)issueCredentialsAsync:(NSString*)userName
-                     password:(NSString*)password
-              extraParameters:(NSString*)extraParameters
- markAsManualConnectOnFailure:(BOOL)markAsManualConnectOnFailure
-                      success:(void (^)(WNNHotspotCredentialsAuthenticationResult*))success
-                      failure:(void (^)(NSError*))failure;
+                        password:(NSString*)password
+                 extraParameters:(NSString*)extraParameters
+    markAsManualConnectOnFailure:(BOOL)markAsManualConnectOnFailure
+                         success:(void (^)(WNNHotspotCredentialsAuthenticationResult*))success
+                         failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNNHotspotAuthenticationContext_DEFINED__
@@ -1014,7 +1020,7 @@ WINRT_EXPORT
 #ifndef __WNNHotspotCredentialsAuthenticationResult_DEFINED__
 #define __WNNHotspotCredentialsAuthenticationResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNHotspotCredentialsAuthenticationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1031,7 +1037,7 @@ WINRT_EXPORT
 #ifndef __WNNProvisionFromXmlDocumentResults_DEFINED__
 #define __WNNProvisionFromXmlDocumentResults_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNProvisionFromXmlDocumentResults : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1046,7 +1052,7 @@ WINRT_EXPORT
 #ifndef __WNNProvisionedProfile_DEFINED__
 #define __WNNProvisionedProfile_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNProvisionedProfile : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1061,7 +1067,7 @@ WINRT_EXPORT
 #ifndef __WNNProvisioningAgent_DEFINED__
 #define __WNNProvisioningAgent_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNProvisioningAgent : RTObject
 + (WNNProvisioningAgent*)createFromNetworkAccountId:(NSString*)networkAccountId;
 + (instancetype)make ACTIVATOR;
@@ -1080,7 +1086,7 @@ WINRT_EXPORT
 #ifndef __WNNUssdMessage_DEFINED__
 #define __WNNUssdMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNUssdMessage : RTObject
 + (WNNUssdMessage*)makeMessage:(NSString*)messageText ACTIVATOR;
 #if defined(__cplusplus)
@@ -1098,7 +1104,7 @@ WINRT_EXPORT
 #ifndef __WNNUssdReply_DEFINED__
 #define __WNNUssdReply_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNUssdReply : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1113,7 +1119,7 @@ WINRT_EXPORT
 #ifndef __WNNUssdSession_DEFINED__
 #define __WNNUssdSession_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNUssdSession : RTObject
 + (WNNUssdSession*)createFromNetworkAccountId:(NSString*)networkAccountId;
 + (WNNUssdSession*)createFromNetworkInterfaceId:(NSString*)networkInterfaceId;

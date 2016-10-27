@@ -35,9 +35,25 @@
 #include <assert.h>
 
 #if DEPLOYMENT_TARGET_WINDOWS
+
+#if WINOBJC
+// WINOBJC: redirect more things to work with Ebr
+// since unfortunately that is still needed
+#define close _NS_close
+#define write _NS_write
+#define _write _NS_write
+#define open _NS_open
+#define stat(a,b) _NS_stat64i32(a,b)
+#define statinfo _stat
+#define _lseek _NS_lseek
+#define _tell _NS_tell
+#define _get_osfhandle _NS_get_osfhandle
+#else
 #define open _NS_open
 #define statinfo _stat
 #define stat(x,y) _stat64i32(x,y)
+#endif
+
 #define __builtin_memcmp(x, y, z) memcmp(x, y, z)
 #define __builtin_popcountll(x) popcountll(x)
 #define bzero(dst, size)    ZeroMemory(dst, size)

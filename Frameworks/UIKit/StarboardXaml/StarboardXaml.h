@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,6 +27,7 @@ typedef enum {
     ActivationTypeVoiceCommand = 2,
     ActivationTypeProtocol = 3,
     ActivationTypeLibrary = 4,
+    ActivationTypeFile = 5,
 } ActivationType;
 
 #ifdef __cplusplus_winrt
@@ -40,6 +41,7 @@ public:
     void Connect(int connectionId, Platform::Object^ target);
     void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args) override;
     void OnActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ args) override;
+    void OnFileActivated(Windows::ApplicationModel::Activation::FileActivatedEventArgs^ args) override;
 #ifdef ENABLE_BACKGROUND_TASK
     void OnBackgroundActivated(Windows::ApplicationModel::Activation::BackgroundActivatedEventArgs^ args) override;
 #endif
@@ -70,7 +72,6 @@ private:
     void _OnEnteredBackground(Platform::Object^ sender, Windows::ApplicationModel::EnteredBackgroundEventArgs^ args);
     void _OnLeavingBackground(Platform::Object^ sender, Windows::ApplicationModel::LeavingBackgroundEventArgs^ args);
 #endif
-    void _OnUnhandledException(Platform::Object^ sender, Windows::UI::Xaml::UnhandledExceptionEventArgs^ args);
 
     Windows::Foundation::Deferral^ _enteredBackgroundEventDeferral;
 };

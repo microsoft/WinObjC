@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
+#define OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Security_Cryptography_Core.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WSCCKeyDerivationParameters, WSCCCryptographicKey, WSCCCryptographicHash, WSCCPersistedKeyProvider,
@@ -81,7 +87,7 @@ typedef unsigned WSCCCryptographicPadding;
 #ifndef __WSCCKeyDerivationParameters_DEFINED__
 #define __WSCCKeyDerivationParameters_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCKeyDerivationParameters : RTObject
 + (WSCCKeyDerivationParameters*)buildForPbkdf2:(RTObject<WSSIBuffer>*)pbkdf2Salt iterationCount:(unsigned int)iterationCount;
 + (WSCCKeyDerivationParameters*)buildForSP800108:(RTObject<WSSIBuffer>*)label context:(RTObject<WSSIBuffer>*)context;
@@ -105,7 +111,7 @@ WINRT_EXPORT
 #ifndef __WSCCCryptographicKey_DEFINED__
 #define __WSCCCryptographicKey_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCCryptographicKey : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -123,7 +129,7 @@ WINRT_EXPORT
 #ifndef __WSCCCryptographicHash_DEFINED__
 #define __WSCCCryptographicHash_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCCryptographicHash : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -138,7 +144,7 @@ WINRT_EXPORT
 #ifndef __WSCCPersistedKeyProvider_DEFINED__
 #define __WSCCPersistedKeyProvider_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCPersistedKeyProvider : RTObject
 + (void)openKeyPairFromCertificateAsync:(WSCCCertificate*)certificate
                       hashAlgorithmName:(NSString*)hashAlgorithmName
@@ -156,7 +162,7 @@ WINRT_EXPORT
 #ifndef __WSCCEncryptedAndAuthenticatedData_DEFINED__
 #define __WSCCEncryptedAndAuthenticatedData_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCEncryptedAndAuthenticatedData : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -171,7 +177,7 @@ WINRT_EXPORT
 #ifndef __WSCCCryptographicEngine_DEFINED__
 #define __WSCCCryptographicEngine_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCCryptographicEngine : RTObject
 + (RTObject<WSSIBuffer>*)encrypt:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data iv:(RTObject<WSSIBuffer>*)iv;
 + (RTObject<WSSIBuffer>*)decrypt:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data iv:(RTObject<WSSIBuffer>*)iv;
@@ -212,7 +218,7 @@ WINRT_EXPORT
 #ifndef __WSCCHashAlgorithmProvider_DEFINED__
 #define __WSCCHashAlgorithmProvider_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCHashAlgorithmProvider : RTObject
 + (WSCCHashAlgorithmProvider*)openAlgorithm:(NSString*)algorithm;
 #if defined(__cplusplus)
@@ -230,7 +236,7 @@ WINRT_EXPORT
 #ifndef __WSCCMacAlgorithmProvider_DEFINED__
 #define __WSCCMacAlgorithmProvider_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCMacAlgorithmProvider : RTObject
 + (WSCCMacAlgorithmProvider*)openAlgorithm:(NSString*)algorithm;
 #if defined(__cplusplus)
@@ -248,7 +254,7 @@ WINRT_EXPORT
 #ifndef __WSCCKeyDerivationAlgorithmProvider_DEFINED__
 #define __WSCCKeyDerivationAlgorithmProvider_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCKeyDerivationAlgorithmProvider : RTObject
 + (WSCCKeyDerivationAlgorithmProvider*)openAlgorithm:(NSString*)algorithm;
 #if defined(__cplusplus)
@@ -264,7 +270,7 @@ WINRT_EXPORT
 #ifndef __WSCCSymmetricKeyAlgorithmProvider_DEFINED__
 #define __WSCCSymmetricKeyAlgorithmProvider_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCSymmetricKeyAlgorithmProvider : RTObject
 + (WSCCSymmetricKeyAlgorithmProvider*)openAlgorithm:(NSString*)algorithm;
 #if defined(__cplusplus)
@@ -281,7 +287,7 @@ WINRT_EXPORT
 #ifndef __WSCCAsymmetricKeyAlgorithmProvider_DEFINED__
 #define __WSCCAsymmetricKeyAlgorithmProvider_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCAsymmetricKeyAlgorithmProvider : RTObject
 + (WSCCAsymmetricKeyAlgorithmProvider*)openAlgorithm:(NSString*)algorithm;
 #if defined(__cplusplus)
@@ -303,7 +309,7 @@ WINRT_EXPORT
 #ifndef __WSCCHashAlgorithmNames_DEFINED__
 #define __WSCCHashAlgorithmNames_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCHashAlgorithmNames : RTObject
 + (NSString*)md5;
 + (NSString*)sha1;
@@ -318,7 +324,7 @@ WINRT_EXPORT
 #ifndef __WSCCMacAlgorithmNames_DEFINED__
 #define __WSCCMacAlgorithmNames_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCMacAlgorithmNames : RTObject
 + (NSString*)aesCmac;
 + (NSString*)hmacMd5;
@@ -334,7 +340,7 @@ WINRT_EXPORT
 #ifndef __WSCCSymmetricAlgorithmNames_DEFINED__
 #define __WSCCSymmetricAlgorithmNames_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCSymmetricAlgorithmNames : RTObject
 + (NSString*)aesCbc;
 + (NSString*)aesCbcPkcs7;
@@ -363,7 +369,7 @@ WINRT_EXPORT
 #ifndef __WSCCAsymmetricAlgorithmNames_DEFINED__
 #define __WSCCAsymmetricAlgorithmNames_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCAsymmetricAlgorithmNames : RTObject
 + (NSString*)ecdsaP521Sha512;
 + (NSString*)dsaSha1;
@@ -394,7 +400,7 @@ WINRT_EXPORT
 #ifndef __WSCCEccCurveNames_DEFINED__
 #define __WSCCEccCurveNames_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCEccCurveNames : RTObject
 + (NSArray* /* NSString * */)allEccCurveNames;
 + (NSString*)brainpoolP160r1;
@@ -450,7 +456,7 @@ WINRT_EXPORT
 #ifndef __WSCCKeyDerivationAlgorithmNames_DEFINED__
 #define __WSCCKeyDerivationAlgorithmNames_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCKeyDerivationAlgorithmNames : RTObject
 + (NSString*)pbkdf2Sha256;
 + (NSString*)pbkdf2Md5;

@@ -18,6 +18,7 @@
 #import <Starboard.h>
 #import <StubReturn.h>
 
+#import "XamlControls.h"
 #import "XamlUtilities.h"
 
 #import "CGContextInternal.h"
@@ -91,8 +92,8 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
     BOOL _enablesReturnKeyAutomatically;
 
     // backing xaml textbox and passwordBox
-    WXCTextBox* _textBox;
-    WXCPasswordBox* _passwordBox;
+    StrongId<WXCTextBox> _textBox;
+    StrongId<WXCPasswordBox> _passwordBox;
 
     // lock use to access the properties
     StrongId<NSRecursiveLock> _secureModeLock;
@@ -868,7 +869,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 
 - (id)_initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
     if (self = [super initWithFrame:frame]) {
-        _font = [UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]];
+        _font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
         _alignment = UITextAlignmentLeft;
         _borderStyle = UITextBorderStyleNone;
         _secureTextMode = NO;

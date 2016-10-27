@@ -18,18 +18,6 @@
 
 @implementation StoryBoardViewController
 
-- (id)init {
-    self = [super init];
-
-    return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder*)aDecoder {
-    self = [super initWithCoder:aDecoder];
-
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -39,17 +27,25 @@
     // IMPORTANT: Each UIKit control that is added to XAMLCatalog should be contained within its own storyboard file (.storyboard)
     // This will ensure that when we use VSIMPORTER on XAMLCatalog, we can easily verify our storyboard coverage
 
+    // UIActionSheet
+    UIViewController* actionSheetVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UIActionSheetSB"];
+    [self addMenuItemViewController:actionSheetVC andTitle:@"UIActionSheetSB"];
+
     // UIActivityIndicatorView
     UIViewController* activityIndicatorVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UIActivityIndicatorViewSB"];
-    [self addMenuItemViewController:activityIndicatorVC andTitle:@"UIActivityIndicatorView"];
+    [self addMenuItemViewController:activityIndicatorVC andTitle:@"UIActivityIndicatorViewSB"];
+
+    // UIButton
+    UIViewController* buttonVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UIButtonSB"];
+    [self addMenuItemViewController:buttonVC andTitle:@"UIButtonSB"];
 
     // UISlider
     UIViewController* sliderVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UISliderSB"];
     [self addMenuItemViewController:sliderVC andTitle:@"UISliderSB"];
-}
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
+    // UITextField
+    UIViewController* textFieldVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UITextFieldSB"];
+    [self addMenuItemViewController:textFieldVC andTitle:@"UITextFieldSB"];
 }
 
 @end

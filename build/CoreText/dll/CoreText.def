@@ -33,6 +33,25 @@ LIBRARY CoreText
         ; Core Text Utilities Reference.mm
         CTGetCoreTextVersion
 
+        ; Core Text Constant additions
+        kCTFontLabelFontSize DATA
+        kCTFontButtonFontSize DATA
+        kCTFontSmallSystemFontSize DATA
+        kCTFontSystemFontSize DATA
+        kCTFontWeightUltraLight DATA
+        kCTFontWeightThin DATA
+        kCTFontWeightLight DATA
+        kCTFontWeightRegular DATA
+        kCTFontWeightMedium DATA
+        kCTFontWeightSemibold DATA
+        kCTFontWeightBold DATA
+        kCTFontWeightHeavy DATA
+        kCTFontWeightBlack DATA
+        kCTFontDefaultFontName DATA;
+        kCTFontDefaultBoldFontName DATA;
+        kCTFontDefaultItalicFontName DATA;
+        kCTFontDefaultMonospacedFontName DATA;
+
         ; CTFont Reference.mm
         kCTFontCopyrightNameKey DATA
         kCTFontFamilyNameKey DATA
@@ -180,6 +199,7 @@ LIBRARY CoreText
         CTFrameGetLineOrigins
         CTFrameDraw
         CTFrameGetTypeID
+        _CTFrameGetSize
 
         ; CTFramesetter Reference.mm
         CTFramesetterCreateWithAttributedString
@@ -263,5 +283,4 @@ LIBRARY CoreText
         CTTypesetterSuggestClusterBreak
         CTTypesetterSuggestClusterBreakWithOffset
         CTTypesetterGetTypeID
-        _CTTypesetterSuggestLineBreakWithOffsetAndCallback
 

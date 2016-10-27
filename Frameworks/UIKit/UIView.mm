@@ -46,6 +46,7 @@
 @class UIAppearanceSetter;
 
 static const wchar_t* TAG = L"UIView";
+
 static const bool DEBUG_ALL = false;
 static const bool DEBUG_TOUCHES_VERBOSE = DEBUG_ALL || false;
 static const bool DEBUG_TOUCHES = DEBUG_TOUCHES_VERBOSE || false;
@@ -59,6 +60,7 @@ const CGFloat UIViewNoIntrinsicMetric = -1.0f;
 
 /** @Status Stub */
 const CGSize UILayoutFittingCompressedSize = StubConstant();
+
 /** @Status Stub */
 const CGSize UILayoutFittingExpandedSize = StubConstant();
 
@@ -133,10 +135,11 @@ BOOL g_resetAllTrackingGestures = TRUE;
         g_currentlyTrackingGesturesList = [NSMutableArray new];
     }
 
-    bool handled = false;
+    BOOL shouldCancelTouches = false;
 
     UIView* views[128];
     int viewDepth = 0;
+
     if (g_resetAllTrackingGestures) {
         g_resetAllTrackingGestures = FALSE;
         //  Find gesture recognizers in the heirarchy, back-first
@@ -211,9 +214,8 @@ BOOL g_resetAllTrackingGestures = TRUE;
     for (int i = 0; i < s_numGestureTypes; i++) {
         id curgestureClass = s_gesturesPriority[i];
         id gestures = [g_curGesturesDict objectForKey:curgestureClass];
-        if ([curgestureClass _fireGestures:gestures]) {
-            handled = true;
-            if (handled && DEBUG_GESTURES) {
+        if ([curgestureClass _fireGestures:gestures shouldCancelTouches:shouldCancelTouches]) {
+            if (DEBUG_GESTURES) {
                 TraceVerbose(TAG, L"Gesture (%hs) handled.", object_getClassName(curgestureClass));
             }
         }
@@ -241,7 +243,7 @@ BOOL g_resetAllTrackingGestures = TRUE;
     [g_curGesturesDict release];
     g_curGesturesDict = nil;
 
-    return handled;
+    return shouldCancelTouches;
 }
 // TODO: This block of code will likely change when we incorporate WinRT GestureRecognizers
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -392,7 +394,9 @@ static std::string _printViewHeirarchy(UIView* leafView) {
     }
 
     // Update the touch info for this pointer event
-    [touchPoint.touch _updateWithPoint:pointerPoint forPhase:touchPhase];
+    // Also, adding pointerEventArgs to the specific Touch so that it can be used in UIButton's touchesBegan:withEvent method
+    // to mark the event as unhandled
+    [touchPoint.touch _updateWithPoint:pointerPoint routedEventArgs:pointerEventArgs forPhase:touchPhase];
 
     // Preprocess pointer event
     SEL touchEventName;
@@ -403,6 +407,13 @@ static std::string _printViewHeirarchy(UIView* leafView) {
 
             // Add this touch to the set of all current touches in the app
             [s_allTouches addObject:touchPoint.touch];
+
+            if (DEBUG_HIT_TESTING_LIGHT) {
+                TraceVerbose(TAG, L"Hit testing view %hs(0x%p).", object_getClassName(self), self);
+            }
+
+            // Update the hit-tested view. (Only one owner per UITouch lifetime)
+            touchPoint.touch->_view = [self _doHitTest:touchPoint.touch allTouches:s_allTouches];
 
             // Assign the correct selector
             touchEventName = @selector(touchesBegan:withEvent:);
@@ -431,12 +442,6 @@ static std::string _printViewHeirarchy(UIView* leafView) {
 
     // Keep the static touch event up to date
     [s_touchEvent _updateWithTouches:s_allTouches touchEvent:touchPoint.touch];
-
-    // Set the touch's view
-    if (DEBUG_HIT_TESTING_LIGHT) {
-        TraceVerbose(TAG, L"Hit testing view %hs(0x%p) for touchPhase %d.", object_getClassName(self), self, touchPhase);
-    }
-    touchPoint.touch->_view = [self _doHitTest:touchPoint.touch allTouches:s_allTouches];
 
     // Run through GestureRecognizers
     bool touchCanceled =
@@ -482,7 +487,6 @@ static std::string _printViewHeirarchy(UIView* leafView) {
                 }
 
                 // Use this sole touch for the event we send to the view
-                // TODO: This is how it worked before; is that the expected behavior?
                 touchesForEvent = [NSMutableSet setWithObject:touchPoint.touch];
                 break;
 
@@ -494,9 +498,12 @@ static std::string _printViewHeirarchy(UIView* leafView) {
                                  static_cast<UIView*>(touchPoint.touch->_view));
                 }
 
-                // Use *all* of the view's current touches for the event we send to to it
-                // TODO: This is how it worked before; is that the expected behavior?
-                touchesForEvent = [NSMutableSet setWithArray:touchPoint.touch->_view->priv->currentTouches];
+                // There was a time we used *all* of the view's current tracked touches for the event, rather than one
+                // at a time. We likely chose this because the iOS input stack was grouping touches together, however
+                // that no longer appears to be the case. Grouping them causes a problem when a new touch begins, 
+                // another moves, and both were sent as a move, causing previousLocationInView to return bogus results.
+                touchesForEvent = [NSMutableSet setWithObject:touchPoint.touch];
+
                 break;
 
             case UITouchPhaseEnded:
@@ -513,7 +520,6 @@ static std::string _printViewHeirarchy(UIView* leafView) {
                 [touchPoint.touch->_view->priv->currentTouches removeObject:touchPoint.touch];
 
                 // Use this sole touch for the event we send to the view
-                // TODO: This is how it worked before; is that the expected behavior?
                 touchesForEvent = [NSMutableSet setWithObject:touchPoint.touch];
                 break;
 
@@ -593,10 +599,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
 
     if ([self alpha] <= 0.01f) {
         if (DEBUG_HIT_TESTING) {
-            TraceVerbose(TAG,
-                         L"_isHitTestable returning NO for %hs(0x%p) because [self alpha] <= 0.01f.",
-                         object_getClassName(self),
-                         self);
+            TraceVerbose(TAG, L"_isHitTestable returning NO for %hs(0x%p) because [self alpha] <= 0.01f.", object_getClassName(self), self);
         }
         return NO;
     }
@@ -706,7 +709,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
  @Public No
 */
 - (void)initAccessibility {
-    self.isAccessibilityElement = FALSE;
+    self.isAccessibilityElement = NO;
     self.accessibilityTraits = UIAccessibilityTraitNone;
     [self updateAccessibility];
 }
@@ -1574,12 +1577,7 @@ static float doRound(float f) {
     }
 
     if (DEBUG_LAYOUT) {
-        TraceVerbose(TAG,
-                     L"Adding subview %hs(0x%p) to %hs(0x%p)",
-                     object_getClassName(subview),
-                     subview,
-                     object_getClassName(self),
-                     self);
+        TraceVerbose(TAG, L"Adding subview %hs(0x%p) to %hs(0x%p)", object_getClassName(subview), subview, object_getClassName(self), self);
     }
 
     UIWindow* subviewWindow = [subview _getWindowInternal];
@@ -2288,11 +2286,7 @@ static float doRound(float f) {
     priv->userInteractionEnabled = enabled;
 
     if (DEBUG_HIT_TESTING) {
-        TraceVerbose(TAG,
-                     L"Setting %hs(0x%p) to userInteractionEnabled=%hs.",
-                     object_getClassName(self),
-                     self,
-                     enabled ? "true" : "false");
+        TraceVerbose(TAG, L"Setting %hs(0x%p) to userInteractionEnabled=%hs.", object_getClassName(self), self, enabled ? "true" : "false");
     }
 
     // Keep our hit test state up to date
@@ -2929,7 +2923,8 @@ static float doRound(float f) {
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Spring parameters are ignored
 */
 + (void)animateWithDuration:(NSTimeInterval)duration
                       delay:(NSTimeInterval)delay
@@ -2938,8 +2933,7 @@ static float doRound(float f) {
                     options:(UIViewAnimationOptions)options
                  animations:(void (^)(void))animations
                  completion:(void (^)(BOOL finished))completion {
-    UNIMPLEMENTED();
-    completion(YES);
+    [self animateWithDuration:duration delay:delay options:options animations:animations completion:completion];
 }
 
 /**
@@ -3492,6 +3486,9 @@ static float doRound(float f) {
 */
 - (void)invalidateIntrinsicContentSize {
     [self autoLayoutInvalidateContentSize];
+
+    // The parent is always responsible for autolaying out its children
+    [self.superview setNeedsLayout];
 }
 
 /**
@@ -3544,17 +3541,35 @@ static float doRound(float f) {
 
 // Retrieves the XAML FrameworkElement backing this UIView.
 - (WXFrameworkElement*)xamlElement {
-    // Derived UIViews currently assign their backing XAML FrameworkElement (if any) to their
-    // root CALayer's contentsElement property.  Setting a CALayer's contentsElement (which is null by default) results in
-    // the specified XAML FrameworkElement being added as a child of that CALayer.
-    WXFrameworkElement* layerContentElement = [self layer].contentsElement;
-    return layerContentElement ? layerContentElement : priv->_xamlInputElement.get();
+    // Return the CALayerXaml element *backing* this UIView, as opposed to any Xaml element *contained* within the CALayerXaml.
+    // Note: These will be converged into the same Xaml element in the upcoming compositor refactor.
+    return priv->_xamlInputElement.get();
 }
 
 // Sets the backing CALayer's XAML contentsElement (which is null by default)
 // This results in the XAML FrameworkElement being added as a child of this UIView's root CALayer.
 - (void)setXamlElement:(WXFrameworkElement*)xamlElement {
     [self layer].contentsElement = xamlElement;
+}
+
+// Retrieve the backing XAML element's Automation Id
+- (NSString*)accessibilityIdentifier {
+    WXFrameworkElement* layerContentElement = [self layer].contentsElement;
+    WXFrameworkElement* xamlElement = layerContentElement ? layerContentElement : priv->_xamlInputElement.get();
+    if (xamlElement) {
+        return [WUXAAutomationProperties getAutomationId:xamlElement];
+    }
+
+    return nil;
+}
+
+// Set the backing XAML element's Automation Id
+- (void)setAccessibilityIdentifier:(NSString*)accessibilityId {
+    WXFrameworkElement* layerContentElement = [self layer].contentsElement;
+    WXFrameworkElement* xamlElement = layerContentElement ? layerContentElement : priv->_xamlInputElement.get();
+    if (xamlElement) {
+        [WUXAAutomationProperties setAutomationId:xamlElement value:accessibilityId];
+    }
 }
 
 /**

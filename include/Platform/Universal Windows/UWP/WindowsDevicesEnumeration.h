@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Enumeration.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDEDeviceConnectionChangeTriggerDetails, WDEDeviceThumbnail, WDEEnclosureLocation, WDEDeviceInformationUpdate,
@@ -147,7 +153,7 @@ typedef unsigned WDEDevicePickerDisplayStatusOptions;
 #ifndef __WDEDeviceConnectionChangeTriggerDetails_DEFINED__
 #define __WDEDeviceConnectionChangeTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceConnectionChangeTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -163,6 +169,10 @@ WINRT_EXPORT
 
 @protocol WFIClosable
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
 @end
 
 #endif // __WFIClosable_DEFINED__
@@ -181,6 +191,10 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+@interface WSSIInputStream : RTObject <WSSIInputStream>
+@end
+
 #endif // __WSSIInputStream_DEFINED__
 
 // Windows.Storage.Streams.IOutputStream
@@ -194,6 +208,10 @@ WINRT_EXPORT
            failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+@interface WSSIOutputStream : RTObject <WSSIOutputStream>
 @end
 
 #endif // __WSSIOutputStream_DEFINED__
@@ -225,6 +243,10 @@ WINRT_EXPORT
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+@interface WSSIRandomAccessStream : RTObject <WSSIRandomAccessStream>
+@end
+
 #endif // __WSSIRandomAccessStream_DEFINED__
 
 // Windows.Storage.Streams.IContentTypeProvider
@@ -233,6 +255,10 @@ WINRT_EXPORT
 
 @protocol WSSIContentTypeProvider
 @property (readonly) NSString* contentType;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+@interface WSSIContentTypeProvider : RTObject <WSSIContentTypeProvider>
 @end
 
 #endif // __WSSIContentTypeProvider_DEFINED__
@@ -261,13 +287,17 @@ WINRT_EXPORT
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+@interface WSSIRandomAccessStreamWithContentType : RTObject <WSSIRandomAccessStreamWithContentType>
+@end
+
 #endif // __WSSIRandomAccessStreamWithContentType_DEFINED__
 
 // Windows.Devices.Enumeration.DeviceThumbnail
 #ifndef __WDEDeviceThumbnail_DEFINED__
 #define __WDEDeviceThumbnail_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceThumbnail : RTObject <WSSIRandomAccessStreamWithContentType,
                                           WSSIContentTypeProvider,
                                           WSSIRandomAccessStream,
@@ -306,7 +336,7 @@ WINRT_EXPORT
 #ifndef __WDEEnclosureLocation_DEFINED__
 #define __WDEEnclosureLocation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEEnclosureLocation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -322,7 +352,7 @@ WINRT_EXPORT
 #ifndef __WDEDeviceInformationUpdate_DEFINED__
 #define __WDEDeviceInformationUpdate_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceInformationUpdate : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -338,7 +368,7 @@ WINRT_EXPORT
 #ifndef __WDEDeviceInformationCollection_DEFINED__
 #define __WDEDeviceInformationCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceInformationCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -356,7 +386,7 @@ WINRT_EXPORT
 #ifndef __WDEDeviceWatcher_DEFINED__
 #define __WDEDeviceWatcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceWatcher : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -383,7 +413,7 @@ WINRT_EXPORT
 #ifndef __WDEDeviceInformation_DEFINED__
 #define __WDEDeviceInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceInformation : RTObject
 + (NSString*)getAqsFilterFromDeviceClass:(WDEDeviceClass)deviceClass;
 + (void)createFromIdAsyncWithKindAndAdditionalProperties:(NSString*)deviceId
@@ -442,7 +472,7 @@ WINRT_EXPORT
 #ifndef __WDEDevicePairingResult_DEFINED__
 #define __WDEDevicePairingResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDevicePairingResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -457,7 +487,7 @@ WINRT_EXPORT
 #ifndef __WDEDeviceInformationPairing_DEFINED__
 #define __WDEDeviceInformationPairing_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceInformationPairing : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -476,7 +506,7 @@ WINRT_EXPORT
 #ifndef __WDEDeviceAccessChangedEventArgs_DEFINED__
 #define __WDEDeviceAccessChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceAccessChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -490,7 +520,7 @@ WINRT_EXPORT
 #ifndef __WDEDeviceAccessInformation_DEFINED__
 #define __WDEDeviceAccessInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceAccessInformation : RTObject
 + (WDEDeviceAccessInformation*)createFromId:(NSString*)deviceId;
 + (WDEDeviceAccessInformation*)createFromDeviceClassId:(WFGUID*)deviceClassId;
@@ -509,7 +539,7 @@ WINRT_EXPORT
 #ifndef __WDEDevicePickerAppearance_DEFINED__
 #define __WDEDevicePickerAppearance_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDevicePickerAppearance : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -529,7 +559,7 @@ WINRT_EXPORT
 #ifndef __WDEDeviceSelectedEventArgs_DEFINED__
 #define __WDEDeviceSelectedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceSelectedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -543,7 +573,7 @@ WINRT_EXPORT
 #ifndef __WDEDeviceDisconnectButtonClickedEventArgs_DEFINED__
 #define __WDEDeviceDisconnectButtonClickedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceDisconnectButtonClickedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -557,7 +587,7 @@ WINRT_EXPORT
 #ifndef __WDEDevicePickerFilter_DEFINED__
 #define __WDEDevicePickerFilter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDevicePickerFilter : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -572,7 +602,7 @@ WINRT_EXPORT
 #ifndef __WDEDevicePicker_DEFINED__
 #define __WDEDevicePicker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDevicePicker : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -604,7 +634,7 @@ WINRT_EXPORT
 #ifndef __WDEDeviceWatcherEvent_DEFINED__
 #define __WDEDeviceWatcherEvent_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceWatcherEvent : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -620,7 +650,7 @@ WINRT_EXPORT
 #ifndef __WDEDeviceWatcherTriggerDetails_DEFINED__
 #define __WDEDeviceWatcherTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @interface WDEDeviceWatcherTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

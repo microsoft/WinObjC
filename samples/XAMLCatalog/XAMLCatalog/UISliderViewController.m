@@ -14,8 +14,9 @@
 //
 //******************************************************************************
 
-#import "UISliderViewController.h"
 #import <UIKit/UISlider.h>
+
+#import "UISliderViewController.h"
 
 @implementation UISliderViewController {
     UISlider* _setValueSlider;
@@ -25,6 +26,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
     self.title = @"Xaml Slider";
     [self tableView].allowsSelection = NO;
 }

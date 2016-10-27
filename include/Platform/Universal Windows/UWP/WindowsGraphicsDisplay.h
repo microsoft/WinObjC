@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GRAPHICS_DISPLAY_EXPORT
+#define OBJCUWP_WINDOWS_GRAPHICS_DISPLAY_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Graphics_Display.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WGDDisplayInformation, WGDDisplayProperties;
@@ -77,7 +83,7 @@ typedef void (^WGDDisplayPropertiesEventHandler)(RTObject* sender);
 #ifndef __WGDDisplayInformation_DEFINED__
 #define __WGDDisplayInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_DISPLAY_EXPORT
 @interface WGDDisplayInformation : RTObject
 + (WGDDisplayInformation*)getForCurrentView;
 #if defined(__cplusplus)
@@ -112,7 +118,7 @@ WINRT_EXPORT
 #ifndef __WGDDisplayProperties_DEFINED__
 #define __WGDDisplayProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_DISPLAY_EXPORT
 @interface WGDDisplayProperties : RTObject
 + (void)getColorProfileAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
 + (WGDDisplayOrientations)autoRotationPreferences;

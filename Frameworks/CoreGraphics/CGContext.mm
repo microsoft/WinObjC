@@ -60,7 +60,7 @@ __CGContext::__CGContext(CGImageRef pDest) {
 #ifdef DEBUG_CONTEXT_COUNT
     TraceVerbose(TAG, L"contextCount: %d", contextCount);
 #endif
-    object_setClass((id) this, [CGNSContext class]);
+    object_setClass((id)this, [CGNSContext class]);
     scale = 1.0f;
     _backing = pDest->Backing()->CreateDrawingContext(this);
 }
@@ -89,7 +89,7 @@ CGBlendMode CGContextGetBlendMode(CGContextRef ctx) {
 /**
  @Status Interoperable
 */
-void CGContextSetFillPattern(CGContextRef ctx, CGPatternRef pattern, const float* components) {
+void CGContextSetFillPattern(CGContextRef ctx, CGPatternRef pattern, const CGFloat* components) {
     return ctx->Backing()->CGContextSetFillPattern(pattern, components);
 }
 
@@ -103,22 +103,21 @@ void CGContextSetPatternPhase(CGContextRef ctx, CGSize phase) {
 /**
  @Status Stub
 */
-void CGContextSetCharacterSpacing(CGContextRef ctx, float spacing) {
+void CGContextSetCharacterSpacing(CGContextRef ctx, CGFloat spacing) {
     UNIMPLEMENTED();
-    TraceWarning(TAG, L"CGContextSetCharacterSpacing not implemented");
 }
 
 /**
  @Status Interoperable
 */
-void CGContextShowTextAtPoint(CGContextRef pContext, float x, float y, const char* str, size_t length) {
+void CGContextShowTextAtPoint(CGContextRef pContext, CGFloat x, CGFloat y, const char* str, size_t length) {
     pContext->Backing()->CGContextShowTextAtPoint(x, y, str, length);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextShowGlyphsAtPoint(CGContextRef ctx, float x, float y, const CGGlyph* glyphs, unsigned count) {
+void CGContextShowGlyphsAtPoint(CGContextRef ctx, CGFloat x, CGFloat y, const CGGlyph* glyphs, unsigned count) {
     ctx->Backing()->CGContextShowGlyphsAtPoint(x, y, (WORD*)glyphs, count);
 }
 
@@ -146,7 +145,7 @@ void CGContextSetFont(CGContextRef ctx, CGFontRef font) {
 /**
  @Status Interoperable
 */
-void CGContextSetFontSize(CGContextRef ctx, float ptSize) {
+void CGContextSetFontSize(CGContextRef ctx, CGFloat ptSize) {
     ctx->Backing()->CGContextSetFontSize(ptSize);
 }
 
@@ -171,7 +170,7 @@ CGAffineTransform CGContextGetTextMatrix(CGContextRef ctx) {
 /**
  @Status Interoperable
 */
-void CGContextSetTextPosition(CGContextRef ctx, float x, float y) {
+void CGContextSetTextPosition(CGContextRef ctx, CGFloat x, CGFloat y) {
     ctx->Backing()->CGContextSetTextPosition(x, y);
 }
 
@@ -192,21 +191,21 @@ CGAffineTransform CGContextGetCTM(CGContextRef ctx) {
 /**
  @Status Interoperable
 */
-void CGContextTranslateCTM(CGContextRef ctx, float x, float y) {
+void CGContextTranslateCTM(CGContextRef ctx, CGFloat x, CGFloat y) {
     ctx->Backing()->CGContextTranslateCTM(x, y);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextScaleCTM(CGContextRef ctx, float sx, float sy) {
+void CGContextScaleCTM(CGContextRef ctx, CGFloat sx, CGFloat sy) {
     ctx->Backing()->CGContextScaleCTM(sx, sy);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextRotateCTM(CGContextRef ctx, float angle) {
+void CGContextRotateCTM(CGContextRef ctx, CGFloat angle) {
     ctx->Backing()->CGContextRotateCTM(angle);
 }
 
@@ -274,14 +273,14 @@ void CGContextClipToMask(CGContextRef ctx, CGRect dest, CGImageRef img) {
 /**
  @Status Interoperable
 */
-void CGContextSetGrayFillColor(CGContextRef ctx, float gray, float alpha) {
+void CGContextSetGrayFillColor(CGContextRef ctx, CGFloat gray, CGFloat alpha) {
     ctx->Backing()->CGContextSetGrayFillColor(gray, alpha);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextSetStrokeColor(CGContextRef ctx, const float* components) {
+void CGContextSetStrokeColor(CGContextRef ctx, const CGFloat* components) {
     ctx->Backing()->CGContextSetStrokeColor((float*)components);
 }
 
@@ -302,7 +301,7 @@ void CGContextSetFillColorWithColor(CGContextRef ctx, CGColorRef color) {
 /**
  @Status Interoperable
 */
-void CGContextSetFillColor(CGContextRef ctx, const float* components) {
+void CGContextSetFillColor(CGContextRef ctx, const CGFloat* components) {
     ctx->Backing()->CGContextSetFillColor((float*)components);
 }
 
@@ -316,7 +315,7 @@ void CGContextSetFillColorSpace(CGContextRef pContext, CGColorSpaceRef colorSpac
 /**
  @Status Interoperable
 */
-void CGContextSelectFont(CGContextRef ctx, const char* name, float size, CGTextEncoding encoding) {
+void CGContextSelectFont(CGContextRef ctx, const char* name, CGFloat size, CGTextEncoding encoding) {
     ctx->Backing()->CGContextSelectFont((char*)name, size, encoding);
 }
 
@@ -388,42 +387,42 @@ void CGContextAddRects(CGContextRef ctx, const CGRect* rct, unsigned count) {
 /**
  @Status Interoperable
 */
-void CGContextAddLineToPoint(CGContextRef ctx, float x, float y) {
+void CGContextAddLineToPoint(CGContextRef ctx, CGFloat x, CGFloat y) {
     ctx->Backing()->CGContextAddLineToPoint(x, y);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextAddCurveToPoint(CGContextRef ctx, float cp1x, float cp1y, float cp2x, float cp2y, float x, float y) {
+void CGContextAddCurveToPoint(CGContextRef ctx, CGFloat cp1x, CGFloat cp1y, CGFloat cp2x, CGFloat cp2y, CGFloat x, CGFloat y) {
     ctx->Backing()->CGContextAddCurveToPoint(cp1x, cp1y, cp2x, cp2y, x, y);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextAddQuadCurveToPoint(CGContextRef ctx, float cpx, float cpy, float x, float y) {
+void CGContextAddQuadCurveToPoint(CGContextRef ctx, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y) {
     ctx->Backing()->CGContextAddQuadCurveToPoint(cpx, cpy, x, y);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextMoveToPoint(CGContextRef ctx, float x, float y) {
+void CGContextMoveToPoint(CGContextRef ctx, CGFloat x, CGFloat y) {
     ctx->Backing()->CGContextMoveToPoint(x, y);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextAddArc(CGContextRef ctx, float x, float y, float radius, float startAngle, float endAngle, bool clockwise) {
+void CGContextAddArc(CGContextRef ctx, CGFloat x, CGFloat y, CGFloat radius, CGFloat startAngle, CGFloat endAngle, int clockwise) {
     ctx->Backing()->CGContextAddArc(x, y, radius, startAngle, endAngle, clockwise);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextAddArcToPoint(CGContextRef ctx, float x1, float y1, float x2, float y2, float radius) {
+void CGContextAddArcToPoint(CGContextRef ctx, CGFloat x1, CGFloat y1, CGFloat x2, CGFloat y2, CGFloat radius) {
     ctx->Backing()->CGContextAddArcToPoint(x1, y1, x2, y2, radius);
 }
 
@@ -476,7 +475,7 @@ void CGContextStrokeRect(CGContextRef ctx, CGRect rct) {
 /**
  @Status Interoperable
 */
-void CGContextStrokeRectWithWidth(CGContextRef ctx, CGRect rct, float width) {
+void CGContextStrokeRectWithWidth(CGContextRef ctx, CGRect rct, CGFloat width) {
     ctx->Backing()->CGContextStrokeRectWithWidth(rct, width);
 }
 
@@ -543,9 +542,9 @@ void CGContextDrawLinearGradient(
 void CGContextDrawRadialGradient(CGContextRef ctx,
                                  CGGradientRef gradient,
                                  CGPoint startCenter,
-                                 float startRadius,
+                                 CGFloat startRadius,
                                  CGPoint endCenter,
-                                 float endRadius,
+                                 CGFloat endRadius,
                                  CGGradientDrawingOptions options) {
     ctx->Backing()->CGContextDrawRadialGradient(gradient, startCenter, startRadius, endCenter, endRadius, options);
 }
@@ -578,14 +577,14 @@ void CGContextDrawLayerAtPoint(CGContextRef ctx, CGPoint destPoint, CGLayerRef l
 /**
  @Status Interoperable
 */
-void CGContextSetLineDash(CGContextRef ctx, float phase, const float* lengths, unsigned count) {
-    ctx->Backing()->CGContextSetLineDash(phase, (float*)lengths, count);
+void CGContextSetLineDash(CGContextRef ctx, CGFloat phase, const CGFloat* lengths, unsigned count) {
+    ctx->Backing()->CGContextSetLineDash(phase, lengths, count);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextSetMiterLimit(CGContextRef ctx, float limit) {
+void CGContextSetMiterLimit(CGContextRef ctx, CGFloat limit) {
     ctx->Backing()->CGContextSetMiterLimit(limit);
 }
 
@@ -606,7 +605,7 @@ void CGContextSetLineCap(CGContextRef ctx, CGLineCap lineCap) {
 /**
  @Status Interoperable
 */
-void CGContextSetLineWidth(CGContextRef ctx, float width) {
+void CGContextSetLineWidth(CGContextRef ctx, CGFloat width) {
     if (!ctx) {
         TraceWarning(TAG, L"CGContextSetLineWidth: no context!");
         return;
@@ -689,7 +688,7 @@ void CGContextSetRenderingIntent(CGContextRef context, CGColorRenderingIntent in
 /**
  @Status Interoperable
 */
-void CGContextSetShadow(CGContextRef context, CGSize offset, float blur) {
+void CGContextSetShadow(CGContextRef context, CGSize offset, CGFloat blur) {
     context->Backing()->CGContextSetShadow(offset, blur);
 }
 
@@ -870,7 +869,7 @@ void EbrCenterTextInRectVertically(CGRect* rect, CGSize* textSize, id font) {
 /**
  @Status Interoperable
 */
-void CGContextSetGrayStrokeColor(CGContextRef ctx, float gray, float alpha) {
+void CGContextSetGrayStrokeColor(CGContextRef ctx, CGFloat gray, CGFloat alpha) {
     ctx->Backing()->CGContextSetGrayStrokeColor(gray, alpha);
 }
 
@@ -884,7 +883,7 @@ void CGContextSetStrokeColorSpace(CGContextRef pContext, CGColorSpaceRef colorSp
 /**
  @Status Interoperable
 */
-void CGContextSetAlpha(CGContextRef ctx, float a) {
+void CGContextSetAlpha(CGContextRef ctx, CGFloat a) {
     ctx->Backing()->CGContextSetAlpha(a);
 }
 
@@ -939,14 +938,14 @@ CGPoint CGContextConvertPointToDeviceSpace(CGContextRef ctx, CGPoint pt) {
 /**
  @Status Interoperable
 */
-void CGContextSetRGBFillColor(CGContextRef ctx, float r, float g, float b, float a) {
+void CGContextSetRGBFillColor(CGContextRef ctx, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
     ctx->Backing()->CGContextSetRGBFillColor(r, g, b, a);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextSetRGBStrokeColor(CGContextRef ctx, float r, float g, float b, float a) {
+void CGContextSetRGBStrokeColor(CGContextRef ctx, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
     if (!ctx) {
         TraceWarning(TAG, L"CGContextSetRGBStrokeColor: no context!");
         return;
@@ -973,7 +972,7 @@ CGContextRef CGContextRetain(CGContextRef ctx) {
 /**
  @Status Interoperable
 */
-void CGContextSetShadowWithColor(CGContextRef ctx, CGSize offset, float blur, CGColorRef color) {
+void CGContextSetShadowWithColor(CGContextRef ctx, CGSize offset, CGFloat blur, CGColorRef color) {
     ctx->Backing()->CGContextSetShadowWithColor(offset, blur, color);
 }
 
@@ -1056,14 +1055,6 @@ CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurface
     CGImageRelease(newImage);
 
     return context;
-}
-
-/**
- @Status Stub
- @Notes
-*/
-void CGContextAddArc(CGContextRef c, CGFloat x, CGFloat y, CGFloat radius, CGFloat startAngle, CGFloat endAngle, int clockwise) {
-    UNIMPLEMENTED();
 }
 
 /**
@@ -1208,7 +1199,7 @@ void CGContextSynchronize(CGContextRef c) {
 
 // TODO: functions below are not part of offical exports, but they are also exported
 // to be used by other framework components, we should consider moving them to a shared library
-void CGContextClearToColor(CGContextRef ctx, float r, float g, float b, float a) {
+void CGContextClearToColor(CGContextRef ctx, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
     ctx->Backing()->Clear(r, g, b, a);
 }
 
@@ -1244,6 +1235,14 @@ CGImageRef CGJPEGImageCreateFromData(NSData* data) {
     return new CGJPEGDecoderImage(data);
 }
 
-bool CGContextIsPointInPath(CGContextRef c, bool eoFill, float x, float y) {
+bool CGContextIsPointInPath(CGContextRef c, bool eoFill, CGFloat x, CGFloat y) {
     return c->Backing()->CGContextIsPointInPath(eoFill, x, y);
+}
+
+void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun, float lineAscent) {
+    ctx->Backing()->CGContextDrawGlyphRun(glyphRun, lineAscent);
+}
+// TODO 1077:: Remove once D2D render target is implemented
+void _CGContextSetScaleFactor(CGContextRef ctx, float scale) {
+    ctx->Backing()->_CGContextSetScaleFactor(scale);
 }

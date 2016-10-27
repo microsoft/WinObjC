@@ -43,10 +43,11 @@ SBTarget::~SBTarget() {}
 
 SBTarget::SBTarget(const PBXTarget* target, const StringSet& configNames, SBProject& parentProject)
   : m_target(target),
-    m_parentProject(parentProject)
+    m_parentProject(parentProject),
+    m_explicit(false)
 {
-  sbAssert(target);
-  sbAssert(!configNames.empty());
+  sbAssertWithTelemetry(target, "Unable to create SBTarget from NULL PBXTarget");
+  sbAssertWithTelemetry(!configNames.empty(), "No configuration names specified for target: " + target->getName());
 
   for (auto configName : configNames) {
     m_buildSettings[configName] = new BuildSettings(target, configName);
@@ -195,7 +196,7 @@ SBTarget* SBTarget::getPossibleTarget(const PBXBuildFile* buildFile)
   static const char* const _productWildcards[] = {"lib*.a", "*.app", "*.framework", "*.bundle"};
   static StringVec productWildcards(_productWildcards, _productWildcards + sizeof(_productWildcards) / sizeof(char*));
 
-  sbAssert(buildFile);
+  sbAssertWithTelemetry(buildFile, "PBXBuildFile being checked against possible targets is NULL");
   const PBXFile* file = buildFile->getFile();
   
   String filePath, fileName;
@@ -263,6 +264,11 @@ VCProject* SBTarget::constructVCProject(VSTemplateProject* projTemplate)
   // Create the project
   VCProject* proj = new VCProject(projTemplate);
 
+  // Set explicitly queued up project to export public headers
+  if (m_explicit && getProductType() == TargetStaticLib) {
+    proj->addGlobalProperty("ExportPublicHeaders", "true");
+  }
+
   // Get path to WinObjC SDK
   const BuildSettings& projBS = m_parentProject.getBuildSettings();
   String useRelativeSdkPath = projBS.getValue("VSIMPORTER_RELATIVE_SDK_PATH");
@@ -275,14 +281,24 @@ VCProject* SBTarget::constructVCProject(VSTemplateProject* projTemplate)
   }
   proj->addGlobalProperty("WINOBJC_SDK_ROOT", platformPath(sdkDir), "'$(WINOBJC_SDK_ROOT)' == ''");
 
-  // Set configuration properties
+  // Compute a common TargetName (by taking the first value we find)
+  String vsTargetName = getName();
   for (auto configBS : m_buildSettings) {
-    VCProjectConfiguration *projConfig = proj->addConfiguration(configBS.first);
     String productName = configBS.second->getValue("PRODUCT_NAME");
     if (!productName.empty()) {
-      projConfig->setProperty("TargetName", productName);
+      vsTargetName = productName;
+      break;
     }
   }
+
+  // Set configuration properties
+  for (auto configBS : m_buildSettings) {
+    VCProjectConfiguration* projConfig = proj->addConfiguration(configBS.first);
+    projConfig->setProperty("TargetName", vsTargetName);
+  }
+
+  // Set the RootNamespace to match the TargetName
+  proj->addGlobalProperty("RootNamespace", vsTargetName);
 
   // Write files associated with each build phase
   SBBuildPhaseList::const_iterator phaseIt = m_buildPhases.begin();
@@ -327,7 +343,12 @@ void SBTarget::resolveVCProjectDependecies(VCProject* proj, std::multimap<SBTarg
       }
     }
 
-    sbAssert(match);
+	sbAssertWithTelemetry(match, "No dependencies match specified VCProject project: " + proj->getName());
     proj->addProjectReference(match);
   }
+}
+
+void SBTarget::markExplicit()
+{
+  m_explicit = true;
 }

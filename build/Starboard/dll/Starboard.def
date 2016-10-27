@@ -136,41 +136,19 @@ LIBRARY Starboard
         EbrDecrement
         EbrCompareExchange
         EbrSleep
-        EbrAllocFile
-        EbrFreeFile
-        EbrFileFromFd
-        EbrFileGetType
-        EbrFmake
-        EbrFopen
-        EbrFdopen
-        EbrFclose
-        EbrFread
-        EbrFwrite
-        EbrFseek
-        EbrFseek64
-        EbrFtell
-        EbrFeof
         EbrStat
+        EbrStat64i32
+        EbrTell
+        EbrGetOSFHandle
         EbrFputc
         EbrAccess
-        EbrRewind
-        EbrFerror
-        EbrFgetc
-        EbrUngetc
-        EbrFputs
-        EbrFputs
-        EbrFileno
-        EbrNativeFILE
-        EbrClearerr
-        EbrFreopen
         EbrFflush
-        EbrFsetpos
-        EbrFgetpos
         EbrOpen
         EbrOpenWithPermission
         EbrClose
         EbrFd2Host
         EbrFstat
+        EbrFstat64i32
         EbrRead
         EbrWrite
         EbrLseek
@@ -182,6 +160,7 @@ LIBRARY Starboard
         EbrMkdir
         EbrGetcwd
         EbrChdir
+        EbrChmod
         EbrRemove
         EbrRemoveEmptyDir
         EbrIsDir

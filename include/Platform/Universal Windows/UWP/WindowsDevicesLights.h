@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_LIGHTS_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_LIGHTS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Lights.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDLLamp, WDLLampAvailabilityChangedEventArgs;
@@ -38,13 +44,17 @@
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_LIGHTS_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Devices.Lights.Lamp
 #ifndef __WDLLamp_DEFINED__
 #define __WDLLamp_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_LIGHTS_EXPORT
 @interface WDLLamp : RTObject <WFIClosable>
 + (NSString*)getDeviceSelector;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDLLamp*))success failure:(void (^)(NSError*))failure;
@@ -68,7 +78,7 @@ WINRT_EXPORT
 #ifndef __WDLLampAvailabilityChangedEventArgs_DEFINED__
 #define __WDLLampAvailabilityChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_LIGHTS_EXPORT
 @interface WDLLampAvailabilityChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

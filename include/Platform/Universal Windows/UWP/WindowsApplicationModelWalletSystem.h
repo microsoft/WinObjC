@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_SYSTEM_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_SYSTEM_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Wallet_System.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WAWSWalletItemSystemStore, WAWSWalletManagerSystem;
@@ -43,7 +49,7 @@ typedef unsigned WAWSWalletItemAppAssociation;
 #ifndef __WAWSWalletItemSystemStore_DEFINED__
 #define __WAWSWalletItemSystemStore_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_SYSTEM_EXPORT
 @interface WAWSWalletItemSystemStore : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -65,7 +71,7 @@ WINRT_EXPORT
 #ifndef __WAWSWalletManagerSystem_DEFINED__
 #define __WAWSWalletManagerSystem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_SYSTEM_EXPORT
 @interface WAWSWalletManagerSystem : RTObject
 + (void)requestStoreAsyncWithSuccess:(void (^)(WAWSWalletItemSystemStore*))success failure:(void (^)(NSError*))failure;
 @end

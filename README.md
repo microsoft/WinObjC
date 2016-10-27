@@ -2,7 +2,7 @@
 
 **Note on installing the bridge:** We use [Git LFS](https://git-lfs.github.com) to handle the large binaries included in the bridge. This does not affect using the [prebuilt releases found on our releases page](https://github.com/Microsoft/WinObjC/releases). If you build the bridge from source, please see the instructions found on our [Building From Source](https://github.com/Microsoft/WinObjC/wiki/Building-From-Source) wiki page.
 
-**Do not use the Download ZIP via the "Download or Clone" option above.** You will not be able to build the bridge using the resulting .zip file. See ["I'm getting errors after downloading the bridge through the "Download ZIP" button on Github. What should I do?"](https://github.com/Microsoft/WinObjC/wiki/FAQ#im-getting-errors-after-downloading-the-bridge-through-the-download-zip-button-on-github-what-should-i-do) for more information.
+**Do not use the Download ZIP option via the "Clone or download" button above.** You will not be able to build the bridge using the resulting .zip file. See ["I'm getting errors after downloading the bridge through the "Download ZIP" button on Github. What should I do?"](https://github.com/Microsoft/WinObjC/wiki/FAQ#im-getting-errors-after-downloading-the-bridge-through-the-download-zip-button-on-github-what-should-i-do) for more information.
 
 # Welcome to the Windows Bridge for iOS project preview
 The Windows Bridge for iOS (also referred to as WinObjC) is a Microsoft open-source project that provides an Objective-C development environment for Visual Studio and support for iOS APIs. The bridge allows you to create Universal Windows Platform (UWP) apps that will run on many Windows devices using iOS APIs and Objective-C code alongside Windows 10 features like Cortana and Live Tiles.
@@ -15,13 +15,12 @@ Download the latest pre-built Windows Bridge for iOS SDK [here](https://aka.ms/w
 ## Resources
 The following sections will help you get started. For more information, check out:
 
-1. [Wiki](https://github.com/Microsoft/WinObjC/wiki)
-2. [Development roadmap](https://github.com/Microsoft/WinObjC/wiki/Roadmap)
-3. [Website on Windows Dev Center](https://dev.windows.com/bridges/ios)
-4. [Quick Start Challenge](https://github.com/Microsoft/WinObjC/wiki/Quick-Start-Tutorial)
-
-If you'd like to support the project, please consider [submitting your app](https://dev.windows.com/en-us/bridges/ios/app-submission) to help us test our app analysis tool. You can read more about the effort and what we're working on [here](https://blogs.windows.com/buildingapps/2015/11/18/windows-bridge-for-ios-where-we-are-and-where-we-are-headed/).
-
+1. [Wiki](https://github.com/Microsoft/WinObjC/wiki), for documentation and tutorials
+2. [Development Roadmap](https://github.com/Microsoft/WinObjC/wiki/Roadmap), detailing our highest priorities
+3. [App Analysis Tool](https://developer.microsoft.com/en-us/windows/bridges/ios/app-analyzer-tool), to evaluate the compatibility of your app with the bridge
+4. [Website on Windows Dev Center](https://dev.windows.com/bridges/ios), for evaluation virtual machines
+5. [Quick Start Challenge](https://github.com/Microsoft/WinObjC/wiki/Quick-Start-Tutorial), for a quick hands-on introduction to the bridge
+6. [The iOS Bridge Samples Repo](https://github.com/Microsoft/WinObjC-Samples), for project samples apps and code using the bridge
 
 ## Getting started with the bridge
 To get started using the bridge to bring your iOS app to Windows, you'll need:
@@ -33,7 +32,7 @@ To get started using the bridge to bring your iOS app to Windows, you'll need:
 
 - (Optional) Windows 10 1511 Standalone SDK (Updated on November 30th, 2015) from [here](https://dev.windows.com/en-US/downloads/windows-10-sdk).  Note: this step is new and is not required if you already installed Visual Studio 2015 Update 3.
 
-The best way to get started with the bridge is to run one of the samples. We recommend starting with the **WOCCatalog** sample app, which demonstrates an assortment of iOS and XAML UI controls.
+The best way to get started with the bridge is to run one of the samples. We recommend starting with the **WOCCatalog** sample app, which demonstrates an assortment of iOS and XAML UI controls. It's also suggested to use the [App Analysis Tool](https://developer.microsoft.com/en-us/windows/bridges/ios/app-analyzer-tool) to evaluate your app compatibility with the bridge.  
 
 **NOTE:** The following instructions are for getting started using the ***pre-built SDK*** rather than building the SDK from source. If you're building the SDK from the source code, follow the instructions on the [wiki](https://github.com/Microsoft/WinObjC/wiki/Building-From-Source) instead. 
 

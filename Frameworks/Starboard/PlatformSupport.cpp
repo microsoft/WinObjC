@@ -31,6 +31,7 @@
 #include "pevents.h"
 #include "PathMapper.h"
 #include "LoggingNative.h"
+#include "PlatformSupportInternal.h"
 
 static const wchar_t* TAG = L"PlatformSupport";
 
@@ -190,6 +191,15 @@ int EbrFile::Stat(struct stat* ret) {
     return -1;
 }
 
+int EbrFile::Stat64i32(struct _stat64i32* ret) {
+    assert(0);
+    return -1;
+}
+
+intptr_t EbrFile::GetOSFHandle() {
+    return (intptr_t)INVALID_HANDLE_VALUE;
+}
+
 int EbrFile::Read(void* dest, size_t count) {
     assert(0);
     return 0;
@@ -243,6 +253,11 @@ public:
         return 0;
     }
 
+    virtual int Stat64i32(struct _stat64i32* ret) {
+        memset(ret, 0, sizeof(struct _stat64i32));
+        return 0;
+    }
+
     virtual int Read(void* dest, size_t count) {
         return -1;
     }
@@ -282,12 +297,15 @@ public:
 
     virtual int HostFd();
     virtual int Stat(struct stat* ret);
+    virtual int Stat64i32(struct _stat64i32* ret);
     virtual int Read(void* dest, size_t count);
     virtual int Write(const void* src, size_t count);
     virtual int Lseek(__int64 pos, int whence);
     virtual int Truncate(off_t size);
     virtual int Truncate64(__int64 size);
     virtual int Dup();
+
+    virtual intptr_t GetOSFHandle();
 };
 
 EbrIOFile::EbrIOFile() {
@@ -634,8 +652,8 @@ int EbrIOFile::Flush() {
     return fflush(fp);
 }
 
-int EbrFflush(EbrFile* fp) {
-    return fp->Flush();
+int EbrFflush(int fd) {
+    return _openFiles[fd]->Flush();
 }
 
 int EbrIOFile::Setpos(__int64* pos) {
@@ -682,8 +700,24 @@ int EbrIOFile::Stat(struct stat* ret) {
     return fstat(filefd, ret);
 }
 
+int EbrIOFile::Stat64i32(struct _stat64i32* ret) {
+    return _fstat64i32(filefd, ret);
+}
+
+intptr_t EbrIOFile::GetOSFHandle() {
+    return _get_osfhandle(filefd);
+}
+
 int EbrFstat(int fd, struct stat* ret) {
     return _openFiles[fd]->Stat(ret);
+}
+
+int EbrFstat64i32(int fd, struct _stat64i32* ret) {
+    return _openFiles[fd]->Stat64i32(ret);
+}
+
+intptr_t EbrGetOSFHandle(int fd) {
+    return _openFiles[fd]->GetOSFHandle();
 }
 
 int EbrIOFile::Read(void* dest, size_t count) {
@@ -724,6 +758,10 @@ int EbrIOFile::Truncate64(__int64 size) {
 
 int EbrTruncate64(int fd, __int64 size) {
     return _openFiles[fd]->Truncate64(size);
+}
+
+size_t EbrTell(int fd) {
+    return _openFiles[fd]->Tell();
 }
 
 typedef struct {
@@ -850,6 +888,10 @@ int EbrChdir(const char* path) {
     CPathMapper::setCWD(path);
 
     return 0;
+}
+
+int EbrChmod(const char* path, int mode) {
+    return _chmod(CPathMapper(path), mode);
 }
 
 void dbg_printf(const char* fmt, ...) {

@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
+#define OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_System_Profile.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WSPAnalyticsVersionInfo, WSPAnalyticsInfo;
@@ -31,7 +37,7 @@
 #ifndef __WSPAnalyticsVersionInfo_DEFINED__
 #define __WSPAnalyticsVersionInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
 @interface WSPAnalyticsVersionInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -46,7 +52,7 @@ WINRT_EXPORT
 #ifndef __WSPAnalyticsInfo_DEFINED__
 #define __WSPAnalyticsInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
 @interface WSPAnalyticsInfo : RTObject
 + (NSString*)deviceForm;
 + (WSPAnalyticsVersionInfo*)versionInfo;

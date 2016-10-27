@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -100,6 +100,7 @@ NSString* const UIApplicationLaunchOptionsAnnotationKey = @"UIApplicationLaunchO
 NSString* const UIApplicationLaunchOptionsLocalNotificationKey = @"UIApplicationLaunchOptionsLocalNotificationKey";
 NSString* const UIApplicationLaunchOptionsToastActionKey = @"UIApplicationLaunchOptionsToastActionKey";
 NSString* const UIApplicationLaunchOptionsVoiceCommandKey = @"UIApplicationLaunchOptionsVoiceCommandKey";
+NSString* const UIApplicationLaunchOptionsFileKey = @"UIApplicationLaunchOptionsFileKey";
 NSString* const UIApplicationLaunchOptionsProtocolKey = @"UIApplicationLaunchOptionsProtocolKey";
 NSString* const UIApplicationLaunchOptionsLocationKey = @"UIApplicationLaunchOptionsLocationKey";
 
@@ -698,7 +699,8 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
     WUNBadgeNotification* notification = [WUNBadgeNotification makeBadgeNotification:doc];
     WUNBadgeUpdater* updater = [WUNBadgeUpdateManager createBadgeUpdaterForApplication];
 
-    [updater update:notification];
+    // TODO #1201: 0x803e0208 : The notification platform does not have the proper privileges to complete the request.
+    // [updater update:notification];
 }
 
 static void printViews(id curView, int level) {
@@ -1249,6 +1251,12 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
 - (void)_sendVoiceCommandReceivedEvent:(WMSSpeechRecognitionResult*)result {
     if ([self.delegate respondsToSelector:@selector(application:didReceiveVoiceCommand:)]) {
         [self.delegate application:sharedApplication didReceiveVoiceCommand:result];
+    }
+}
+
+- (void)_sendFileReceivedEvent:(WAAFileActivatedEventArgs*)result {
+    if ([self.delegate respondsToSelector:@selector(application:didReceiveFile:)]) {
+        [self.delegate application:sharedApplication didReceiveFile:result];
     }
 }
 

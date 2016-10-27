@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_INPUT_EXPORT
+#define OBJCUWP_WINDOWS_UI_INPUT_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Input.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WUIEdgeGestureEventArgs, WUIEdgeGesture, WUIMouseWheelParameters, WUIGestureRecognizer, WUITappedEventArgs, WUIRightTappedEventArgs,
@@ -114,7 +120,7 @@ typedef unsigned WUIPointerUpdateKind;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Input.ManipulationDelta
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUIManipulationDelta : NSObject
 + (instancetype) new;
 @property (retain) WFPoint* translation;
@@ -124,7 +130,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.UI.Input.ManipulationVelocities
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUIManipulationVelocities : NSObject
 + (instancetype) new;
 @property (retain) WFPoint* linear;
@@ -133,7 +139,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.UI.Input.CrossSlideThresholds
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUICrossSlideThresholds : NSObject
 + (instancetype) new;
 @property float selectionStart;
@@ -152,13 +158,17 @@ WINRT_EXPORT
 - (WFRect*)transformBounds:(WFRect*)rect;
 @end
 
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
+@interface WUIIPointerPointTransform : RTObject <WUIIPointerPointTransform>
+@end
+
 #endif // __WUIIPointerPointTransform_DEFINED__
 
 // Windows.UI.Input.EdgeGestureEventArgs
 #ifndef __WUIEdgeGestureEventArgs_DEFINED__
 #define __WUIEdgeGestureEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUIEdgeGestureEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -172,7 +182,7 @@ WINRT_EXPORT
 #ifndef __WUIEdgeGesture_DEFINED__
 #define __WUIEdgeGesture_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUIEdgeGesture : RTObject
 + (WUIEdgeGesture*)getForCurrentView;
 #if defined(__cplusplus)
@@ -192,7 +202,7 @@ WINRT_EXPORT
 #ifndef __WUIMouseWheelParameters_DEFINED__
 #define __WUIMouseWheelParameters_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUIMouseWheelParameters : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -209,7 +219,7 @@ WINRT_EXPORT
 #ifndef __WUIGestureRecognizer_DEFINED__
 #define __WUIGestureRecognizer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUIGestureRecognizer : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -267,7 +277,7 @@ WINRT_EXPORT
 #ifndef __WUITappedEventArgs_DEFINED__
 #define __WUITappedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUITappedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -283,7 +293,7 @@ WINRT_EXPORT
 #ifndef __WUIRightTappedEventArgs_DEFINED__
 #define __WUIRightTappedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUIRightTappedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -298,7 +308,7 @@ WINRT_EXPORT
 #ifndef __WUIHoldingEventArgs_DEFINED__
 #define __WUIHoldingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUIHoldingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -314,7 +324,7 @@ WINRT_EXPORT
 #ifndef __WUIDraggingEventArgs_DEFINED__
 #define __WUIDraggingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUIDraggingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -330,7 +340,7 @@ WINRT_EXPORT
 #ifndef __WUIManipulationStartedEventArgs_DEFINED__
 #define __WUIManipulationStartedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUIManipulationStartedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -346,7 +356,7 @@ WINRT_EXPORT
 #ifndef __WUIManipulationUpdatedEventArgs_DEFINED__
 #define __WUIManipulationUpdatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUIManipulationUpdatedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -364,7 +374,7 @@ WINRT_EXPORT
 #ifndef __WUIManipulationInertiaStartingEventArgs_DEFINED__
 #define __WUIManipulationInertiaStartingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUIManipulationInertiaStartingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -382,7 +392,7 @@ WINRT_EXPORT
 #ifndef __WUIManipulationCompletedEventArgs_DEFINED__
 #define __WUIManipulationCompletedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUIManipulationCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -399,7 +409,7 @@ WINRT_EXPORT
 #ifndef __WUICrossSlidingEventArgs_DEFINED__
 #define __WUICrossSlidingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUICrossSlidingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -415,7 +425,7 @@ WINRT_EXPORT
 #ifndef __WUIPointerPoint_DEFINED__
 #define __WUIPointerPoint_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUIPointerPoint : RTObject
 + (WUIPointerPoint*)getCurrentPoint:(unsigned int)pointerId;
 + (NSMutableArray* /* WUIPointerPoint* */)getIntermediatePoints:(unsigned int)pointerId;
@@ -441,7 +451,7 @@ WINRT_EXPORT
 #ifndef __WUIPointerPointProperties_DEFINED__
 #define __WUIPointerPointProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUIPointerPointProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -479,7 +489,7 @@ WINRT_EXPORT
 #ifndef __WUIPointerVisualizationSettings_DEFINED__
 #define __WUIPointerVisualizationSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_INPUT_EXPORT
 @interface WUIPointerVisualizationSettings : RTObject
 + (WUIPointerVisualizationSettings*)getForCurrentView;
 #if defined(__cplusplus)

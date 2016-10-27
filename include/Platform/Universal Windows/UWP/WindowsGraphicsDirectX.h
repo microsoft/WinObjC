@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_EXPORT
+#define OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Graphics_DirectX.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 // Windows.Graphics.DirectX.DirectXPixelFormat

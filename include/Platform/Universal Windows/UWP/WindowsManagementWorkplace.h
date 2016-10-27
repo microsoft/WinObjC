@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MANAGEMENT_WORKPLACE_EXPORT
+#define OBJCUWP_WINDOWS_MANAGEMENT_WORKPLACE_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Management_Workplace.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WMWMdmPolicy;
@@ -30,7 +36,7 @@
 #ifndef __WMWMdmPolicy_DEFINED__
 #define __WMWMdmPolicy_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MANAGEMENT_WORKPLACE_EXPORT
 @interface WMWMdmPolicy : RTObject
 + (BOOL)isBrowserAllowed;
 + (BOOL)isCameraAllowed;

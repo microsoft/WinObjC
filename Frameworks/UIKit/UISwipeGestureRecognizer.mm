@@ -160,13 +160,20 @@ static void commonInit(UISwipeGestureRecognizer* self) {
  @Status Interoperable
 */
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
- // Intended no-op
+    _startPos = { 0, 0 };
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (CGPoint)locationInView:(UIView*)viewAddr {
-    return StubReturn();
+- (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event {
+    _startPos = { 0, 0 };
+}
+
+/**
+ @Status Interoperable
+*/
+- (CGPoint)locationInView:(UIView*)view {
+    return [[self view] convertPoint:_startPos toView:view];
 }
 @end

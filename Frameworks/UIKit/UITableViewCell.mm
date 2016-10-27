@@ -91,7 +91,7 @@ static UILabel* getTextLabel(UITableViewCell* self) {
                 [self->_textLabel setBackgroundColor:nil];
                 [self->_textLabel setNumberOfLines:0];
                 [self->_textLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
-                [self->_textLabel setFont:[UIFont fontWithName:@"Helvetica Bold" size:[UIFont labelFontSize]]];
+                [self->_textLabel setFont:[UIFont fontWithName:@"Segoe UI Bold" size:[UIFont labelFontSize]]];
 
                 [self->_contentView addSubview:self->_textLabel];
                 break;
@@ -113,7 +113,7 @@ static UILabel* getTextLabel(UITableViewCell* self) {
                 [self->_textLabel setBackgroundColor:nil];
                 [self->_textLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
                 [self->_textLabel setNumberOfLines:0];
-                [self->_textLabel setFont:[UIFont fontWithName:@"Helvetica Bold" size:[UIFont labelFontSize]]];
+                [self->_textLabel setFont:[UIFont fontWithName:@"Segoe UI Bold" size:[UIFont labelFontSize]]];
 
                 [self->_contentView addSubview:self->_textLabel];
                 break;
@@ -135,7 +135,7 @@ static UILabel* getTextLabel(UITableViewCell* self) {
                 [self->_textLabel setBackgroundColor:nil];
                 [self->_textLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
                 [self->_textLabel setNumberOfLines:1];
-                [self->_textLabel setFont:[UIFont fontWithName:@"Helvetica Bold" size:[UIFont labelFontSize]]];
+                [self->_textLabel setFont:[UIFont fontWithName:@"Segoe UI Bold" size:[UIFont labelFontSize]]];
 
                 [self->_contentView addSubview:self->_textLabel];
                 break;
@@ -148,15 +148,15 @@ static UILabel* getTextLabel(UITableViewCell* self) {
 
         switch (self->_style) {
             case UITableViewCellStyleSubtitle:
-                [self->_textLabel setFont:[UIFont fontWithName:@"Helvetica Bold" size:[UIFont labelFontSize] + 1.0f]];
+                [self->_textLabel setFont:[UIFont fontWithName:@"Segoe UI Bold" size:[UIFont labelFontSize] + 1.0f]];
                 break;
 
             case UITableViewCellStyleValue1:
-                [self->_textLabel setFont:[UIFont fontWithName:@"Helvetica Bold" size:[UIFont labelFontSize]]];
+                [self->_textLabel setFont:[UIFont fontWithName:@"Segoe UI Bold" size:[UIFont labelFontSize]]];
                 break;
 
             case UITableViewCellStyleValue2:
-                [self->_textLabel setFont:[UIFont fontWithName:@"Helvetica Bold" size:[UIFont smallSystemFontSize]]];
+                [self->_textLabel setFont:[UIFont fontWithName:@"Segoe UI Bold" size:[UIFont smallSystemFontSize]]];
                 break;
 
             case UITableViewCellStyleDefault:
@@ -196,7 +196,7 @@ static id getSecondaryLabel(UITableViewCell* self) {
                 [self->_secondaryLabel setHighlightedTextColor:[UIColor blackColor]];
                 [self->_secondaryLabel setBackgroundColor:nil];
                 [self->_secondaryLabel setTextAlignment:UITextAlignmentRight];
-                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]]];
+                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]]];
                 [self->_secondaryLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
 
                 [self->_contentView addSubview:self->_secondaryLabel];
@@ -216,7 +216,7 @@ static id getSecondaryLabel(UITableViewCell* self) {
                 [self->_secondaryLabel setTextColor:[UIColor grayColor]];
                 [self->_secondaryLabel setHighlightedTextColor:[UIColor blackColor]];
                 [self->_secondaryLabel setBackgroundColor:nil];
-                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize] / 2.0f]];
+                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize] / 2.0f]];
                 [self->_secondaryLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
 
                 [self->_contentView addSubview:self->_secondaryLabel];
@@ -236,7 +236,7 @@ static id getSecondaryLabel(UITableViewCell* self) {
                 [self->_secondaryLabel setTextColor:[UIColor grayColor]];
                 [self->_secondaryLabel setHighlightedTextColor:[UIColor blackColor]];
                 [self->_secondaryLabel setBackgroundColor:nil];
-                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize] / 2.0f]];
+                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize] / 2.0f]];
                 [self->_secondaryLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
 
                 [self->_contentView addSubview:self->_secondaryLabel];
@@ -250,15 +250,15 @@ static id getSecondaryLabel(UITableViewCell* self) {
 
         switch (self->_style) {
             case UITableViewCellStyleSubtitle:
-                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont systemFontSize]]];
+                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Segoe UI" size:[UIFont systemFontSize]]];
                 break;
 
             case UITableViewCellStyleValue1:
-                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont systemFontSize] + 1.0f]];
+                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Segoe UI" size:[UIFont systemFontSize] + 1.0f]];
                 break;
 
             case UITableViewCellStyleValue2:
-                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]]];
+                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]]];
                 break;
 
             case UITableViewCellStyleDefault:

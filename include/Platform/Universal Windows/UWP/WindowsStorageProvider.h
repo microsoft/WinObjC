@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_STORAGE_EXPORT
+#define OBJCUWP_WINDOWS_STORAGE_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Storage.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WSPCachedFileUpdaterUI, WSPFileUpdateRequestedEventArgs, WSPFileUpdateRequest, WSPFileUpdateRequestDeferral, WSPCachedFileUpdater;
@@ -86,7 +92,7 @@ typedef unsigned WSPWriteActivationMode;
 #ifndef __WSPCachedFileUpdaterUI_DEFINED__
 #define __WSPCachedFileUpdaterUI_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSPCachedFileUpdaterUI : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -108,7 +114,7 @@ WINRT_EXPORT
 #ifndef __WSPFileUpdateRequestedEventArgs_DEFINED__
 #define __WSPFileUpdateRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSPFileUpdateRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -122,7 +128,7 @@ WINRT_EXPORT
 #ifndef __WSPFileUpdateRequest_DEFINED__
 #define __WSPFileUpdateRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSPFileUpdateRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -141,7 +147,7 @@ WINRT_EXPORT
 #ifndef __WSPFileUpdateRequestDeferral_DEFINED__
 #define __WSPFileUpdateRequestDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSPFileUpdateRequestDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -155,7 +161,7 @@ WINRT_EXPORT
 #ifndef __WSPCachedFileUpdater_DEFINED__
 #define __WSPCachedFileUpdater_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSPCachedFileUpdater : RTObject
 + (void)setUpdateInformation:(RTObject<WSIStorageFile>*)file
                    contentId:(NSString*)contentId

@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXIPointer, WUXIFocusManager, WUXIInertiaExpansionBehavior, WUXIInertiaRotationBehavior, WUXIInertiaTranslationBehavior,
@@ -210,13 +216,17 @@ typedef void (^WUXITappedEventHandler)(RTObject* sender, WUXITappedRoutedEventAr
 - (void)execute:(RTObject*)parameter;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXIICommand : RTObject <WUXIICommand>
+@end
+
 #endif // __WUXIICommand_DEFINED__
 
 // Windows.UI.Xaml.Input.Pointer
 #ifndef __WUXIPointer_DEFINED__
 #define __WUXIPointer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIPointer : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -233,7 +243,7 @@ WINRT_EXPORT
 #ifndef __WUXIFocusManager_DEFINED__
 #define __WUXIFocusManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIFocusManager : RTObject
 + (BOOL)tryMoveFocus:(WUXIFocusNavigationDirection)focusNavigationDirection;
 + (RTObject*)getFocusedElement;
@@ -250,7 +260,7 @@ WINRT_EXPORT
 #ifndef __WUXIInertiaExpansionBehavior_DEFINED__
 #define __WUXIInertiaExpansionBehavior_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIInertiaExpansionBehavior : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -265,7 +275,7 @@ WINRT_EXPORT
 #ifndef __WUXIInertiaRotationBehavior_DEFINED__
 #define __WUXIInertiaRotationBehavior_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIInertiaRotationBehavior : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -280,7 +290,7 @@ WINRT_EXPORT
 #ifndef __WUXIInertiaTranslationBehavior_DEFINED__
 #define __WUXIInertiaTranslationBehavior_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIInertiaTranslationBehavior : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -295,7 +305,7 @@ WINRT_EXPORT
 #ifndef __WUXIManipulationPivot_DEFINED__
 #define __WUXIManipulationPivot_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIManipulationPivot : RTObject
 + (WUXIManipulationPivot*)makeInstanceWithCenterAndRadius:(WFPoint*)center radius:(double)radius ACTIVATOR;
 + (instancetype)make ACTIVATOR;
@@ -312,7 +322,7 @@ WINRT_EXPORT
 #ifndef __WXRoutedEventArgs_DEFINED__
 #define __WXRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -327,7 +337,7 @@ WINRT_EXPORT
 #ifndef __WUXIDoubleTappedRoutedEventArgs_DEFINED__
 #define __WUXIDoubleTappedRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIDoubleTappedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -344,7 +354,7 @@ WINRT_EXPORT
 #ifndef __WUXIHoldingRoutedEventArgs_DEFINED__
 #define __WUXIHoldingRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIHoldingRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -362,7 +372,7 @@ WINRT_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -383,7 +393,7 @@ WINRT_EXPORT
 #ifndef __WUXIInputScope_DEFINED__
 #define __WUXIInputScope_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIInputScope : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -398,7 +408,7 @@ WINRT_EXPORT
 #ifndef __WUXIInputScopeName_DEFINED__
 #define __WUXIInputScopeName_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIInputScopeName : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 + (WUXIInputScopeName*)makeInstance:(WUXIInputScopeNameValue)nameValue ACTIVATOR;
@@ -414,7 +424,7 @@ WINRT_EXPORT
 #ifndef __WUXIKeyRoutedEventArgs_DEFINED__
 #define __WUXIKeyRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIKeyRoutedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -431,7 +441,7 @@ WINRT_EXPORT
 #ifndef __WUXIManipulationCompletedRoutedEventArgs_DEFINED__
 #define __WUXIManipulationCompletedRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIManipulationCompletedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -452,7 +462,7 @@ WINRT_EXPORT
 #ifndef __WUXIManipulationDeltaRoutedEventArgs_DEFINED__
 #define __WUXIManipulationDeltaRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIManipulationDeltaRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -475,7 +485,7 @@ WINRT_EXPORT
 #ifndef __WUXIManipulationInertiaStartingRoutedEventArgs_DEFINED__
 #define __WUXIManipulationInertiaStartingRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIManipulationInertiaStartingRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -498,7 +508,7 @@ WINRT_EXPORT
 #ifndef __WUXIManipulationStartedRoutedEventArgs_DEFINED__
 #define __WUXIManipulationStartedRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIManipulationStartedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -518,7 +528,7 @@ WINRT_EXPORT
 #ifndef __WUXIManipulationStartingRoutedEventArgs_DEFINED__
 #define __WUXIManipulationStartingRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIManipulationStartingRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -536,7 +546,7 @@ WINRT_EXPORT
 #ifndef __WUXIPointerRoutedEventArgs_DEFINED__
 #define __WUXIPointerRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIPointerRoutedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -554,7 +564,7 @@ WINRT_EXPORT
 #ifndef __WUXIRightTappedRoutedEventArgs_DEFINED__
 #define __WUXIRightTappedRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIRightTappedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -571,7 +581,7 @@ WINRT_EXPORT
 #ifndef __WUXITappedRoutedEventArgs_DEFINED__
 #define __WUXITappedRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXITappedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

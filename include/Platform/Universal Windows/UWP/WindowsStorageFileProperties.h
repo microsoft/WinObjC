@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+#define OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Storage_FileProperties.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WSFGeotagHelper, WSFStorageItemThumbnail, WSFMusicProperties, WSFVideoProperties, WSFImageProperties, WSFDocumentProperties,
@@ -107,13 +113,17 @@ typedef unsigned WSFVideoOrientation;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+@interface WSFIStorageItemExtraProperties : RTObject <WSFIStorageItemExtraProperties>
+@end
+
 #endif // __WSFIStorageItemExtraProperties_DEFINED__
 
 // Windows.Storage.FileProperties.GeotagHelper
 #ifndef __WSFGeotagHelper_DEFINED__
 #define __WSFGeotagHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFGeotagHelper : RTObject
 + (void)getGeotagAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WDGGeopoint*))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)setGeotagFromGeolocatorAsync:(RTObject<WSIStorageFile>*)file geolocator:(WDGGeolocator*)geolocator;
@@ -128,6 +138,10 @@ WINRT_EXPORT
 
 @protocol WFIClosable
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
 @end
 
 #endif // __WFIClosable_DEFINED__
@@ -146,6 +160,10 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+@interface WSSIInputStream : RTObject <WSSIInputStream>
+@end
+
 #endif // __WSSIInputStream_DEFINED__
 
 // Windows.Storage.Streams.IOutputStream
@@ -159,6 +177,10 @@ WINRT_EXPORT
            failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+@interface WSSIOutputStream : RTObject <WSSIOutputStream>
 @end
 
 #endif // __WSSIOutputStream_DEFINED__
@@ -190,6 +212,10 @@ WINRT_EXPORT
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+@interface WSSIRandomAccessStream : RTObject <WSSIRandomAccessStream>
+@end
+
 #endif // __WSSIRandomAccessStream_DEFINED__
 
 // Windows.Storage.Streams.IContentTypeProvider
@@ -198,6 +224,10 @@ WINRT_EXPORT
 
 @protocol WSSIContentTypeProvider
 @property (readonly) NSString* contentType;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+@interface WSSIContentTypeProvider : RTObject <WSSIContentTypeProvider>
 @end
 
 #endif // __WSSIContentTypeProvider_DEFINED__
@@ -226,13 +256,17 @@ WINRT_EXPORT
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+@interface WSSIRandomAccessStreamWithContentType : RTObject <WSSIRandomAccessStreamWithContentType>
+@end
+
 #endif // __WSSIRandomAccessStreamWithContentType_DEFINED__
 
 // Windows.Storage.FileProperties.StorageItemThumbnail
 #ifndef __WSFStorageItemThumbnail_DEFINED__
 #define __WSFStorageItemThumbnail_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFStorageItemThumbnail : RTObject <WSSIRandomAccessStreamWithContentType,
                                                WSSIContentTypeProvider,
                                                WSSIRandomAccessStream,
@@ -275,7 +309,7 @@ WINRT_EXPORT
 #ifndef __WSFMusicProperties_DEFINED__
 #define __WSFMusicProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFMusicProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -309,7 +343,7 @@ WINRT_EXPORT
 #ifndef __WSFVideoProperties_DEFINED__
 #define __WSFVideoProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFVideoProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -343,7 +377,7 @@ WINRT_EXPORT
 #ifndef __WSFImageProperties_DEFINED__
 #define __WSFImageProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFImageProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -373,7 +407,7 @@ WINRT_EXPORT
 #ifndef __WSFDocumentProperties_DEFINED__
 #define __WSFDocumentProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFDocumentProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -395,7 +429,7 @@ WINRT_EXPORT
 #ifndef __WSFStorageItemContentProperties_DEFINED__
 #define __WSFStorageItemContentProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFStorageItemContentProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -417,7 +451,7 @@ WINRT_EXPORT
 #ifndef __WSFBasicProperties_DEFINED__
 #define __WSFBasicProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFBasicProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

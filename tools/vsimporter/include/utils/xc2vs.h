@@ -27,6 +27,7 @@ class BuildSettings;
 struct VCItemHint {
   String defaultType;
   String pathOverride;
+  String filterOverride;
 };
 
 void addFileToVS(const PBXFile* file, VCProject& proj, const BuildSettings& bs, const VCItemHint* itemHint = NULL);

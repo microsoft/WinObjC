@@ -40,7 +40,7 @@ CORETEXT_EXPORT const CFStringRef kCTFramePathClippingPathAttributeName;
 
 CORETEXT_EXPORT CFRange CTFrameGetStringRange(CTFrameRef frame);
 CORETEXT_EXPORT CFRange CTFrameGetVisibleStringRange(CTFrameRef frame);
-CORETEXT_EXPORT CGPathRef CTFrameGetPath(CTFrameRef frame) STUB_METHOD;
+CORETEXT_EXPORT CGPathRef CTFrameGetPath(CTFrameRef frame);
 CORETEXT_EXPORT CFDictionaryRef CTFrameGetFrameAttributes(CTFrameRef frame) STUB_METHOD;
 CORETEXT_EXPORT CFArrayRef CTFrameGetLines(CTFrameRef frame);
 CORETEXT_EXPORT void CTFrameGetLineOrigins(CTFrameRef frame, CFRange range, CGPoint origins[]);

@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include <iostream>
+#include <iterator>
 #include "types.h"
 #include "utils.h"
 #include "sbassert.h"
@@ -62,25 +63,19 @@ void SBProject::printSummary()
   } else {
     std::cout << "Information about project \"" << getName() << "\":" << std::endl;
     std::cout << "    Targets:" << std::endl;
-    for (int i = 0; i < targets.size(); i++)
-      std::cout << "\t" << targets[i]->getName() << std::endl;
+    for (int i = 0; i < targets.size(); i++) {
+      std::cout << "\t" << targets[i]->getNameWithType() << std::endl;
+    }
     std::cout << std::endl;
 
     std::cout << "    Build Configurations:" << std::endl;
     const XCConfigurationList* buildConfigList = m_project->getBuildConfigurationList();
-    sbAssert(buildConfigList);
+	sbAssertWithTelemetry(buildConfigList, "The XCConfigurationList is NULL for project: " + m_project->getName());
     const BuildConfigurationList& buildConfigs = buildConfigList->getConfigurations();
     for (int i = 0; i < buildConfigs.size(); i++)
       std::cout << "\t" << buildConfigs[i]->getName() << std::endl;
     std::cout << std::endl;
-
-    const String& defaultConfig = buildConfigList->getDefaultConfigurationName();
-    const String& defaultTarget = targets[0]->getName();
-    std::cout << "    If no build configurations are specified then all configurations will be used." << std::endl;
-    std::cout << "    If no targets are specified then all valid targets will be exported." << std::endl;
   }
-
-  std::cout << std::endl;
 }
 
 const String& SBProject::getPath() const
@@ -114,40 +109,17 @@ const StringSet& SBProject::getSelectedConfigurations() const
   return m_selectedConfigs;
 }
 
-void SBProject::getTargets(SBTargetList& ret) const
+void SBProject::getQueuedTargets(SBTargetList& ret) const
 {
   for (auto targetKV : m_existingTargets) {
     ret.push_back(targetKV.second);
   }
 }
 
-void SBProject::queueProjectTargetWithId(const String& targetId, const StringSet& configNames)
+SBTarget* SBProject::queueTargetWithName(const String& targetName, const StringSet* configNames)
 {
-  SBTarget* sbTarget = queueTargetWithId(targetId, &configNames);
-}
-
-void SBProject::queueProjectTargets(const StringSet& targetNames, const StringSet& configNames)
-{
-  BuildSettings bs(m_project);
-  bool isInteractive = bs.getValue("VSIMPORTER_INTERACTIVE") == "YES";
-
-  // Get the specified targets
-  PBXTargetList pbxTargets;
-  if (isInteractive) {
-    // Query the user to select schemes
-    queryTargets(pbxTargets);
-  } else if (targetNames.empty()) {
-    // Queue up all targets
-    const PBXTargetList& allTargets = m_project->getTargets();
-    pbxTargets.insert(pbxTargets.end(), allTargets.begin(), allTargets.end());
-  } else {
-    m_project->getTargets(targetNames, pbxTargets);
-  }
-  
-  // Queue up targets
-  for (auto target : pbxTargets) {
-    SBTarget* sbTarget = queueTarget(target, &configNames);
-  }
+  const PBXTarget* pbxTarget = m_project->getTargetWithName(targetName);
+  return queueTarget(pbxTarget, configNames);
 }
 
 SBTarget* SBProject::queueTargetWithId(const String& targetId, const StringSet* configNames)
@@ -207,24 +179,28 @@ void SBProject::selectBuildConfigurations(const StringSet* configNames)
   BuildSettings bs(NULL);
   bool isInteractive = bs.getValue("VSIMPORTER_INTERACTIVE") == "YES";
   const XCConfigurationList* buildConfigList = m_project->getBuildConfigurationList();
-  BuildConfigurationList selectedConfigs;
   if (isInteractive) {
-    queryBuildConfigurations(selectedConfigs);
+    queryBuildConfigurations();
   } else if (configNames->empty()) {
     const BuildConfigurationList& projectConfigs = buildConfigList->getConfigurations();
-    selectedConfigs.insert(selectedConfigs.end(), projectConfigs.begin(), projectConfigs.end());
+    std::transform(projectConfigs.begin(),
+                   projectConfigs.end(),
+                   std::inserter(m_selectedConfigs, m_selectedConfigs.end()),
+                   [](const XCBuildConfiguration* c) { return c->getName(); });
   } else {
-    buildConfigList->getConfigurations(*configNames, selectedConfigs);
-  }
-
-  // Cache the configuration names
-  for (auto config : selectedConfigs) {
-    m_selectedConfigs.insert(config->getName());
+    buildConfigList->getValidConfigurations(*configNames, m_selectedConfigs);
   }
 
   // Add the default configuration, if not all configurations were found
   if (configNames->size() > m_selectedConfigs.size()) {
     m_selectedConfigs.insert(buildConfigList->getDefaultConfigurationName());
+  }
+}
+
+void SBProject::queueAllTargets(const StringSet* configNames)
+{
+  for (auto target : m_project->getTargets()) {
+    queueTarget(target, configNames);
   }
 }
 
@@ -261,22 +237,27 @@ SBTarget* SBProject::queueTarget(const PBXTarget* target, const StringSet* confi
   return sbTarget;
 }
 
-void SBProject::queryBuildConfigurations(BuildConfigurationList& ret) const
+void SBProject::queryBuildConfigurations()
 {
   String queryMessage = "The \"" + getName() + "\" project has multiple build configurations.";
 
   const XCConfigurationList* buildConfigList = m_project->getBuildConfigurationList();
-  sbAssert(buildConfigList);
+  sbAssertWithTelemetry(buildConfigList, "The XCConfigurationList is NULL for project: " + m_project->getName());
   const BuildConfigurationList& buildConfigs = buildConfigList->getConfigurations();
 
-  queryListSelection(buildConfigs, queryMessage, "configuration", ret);
-}
+  StringVec configNames;
+  std::transform(buildConfigs.begin(),
+                 buildConfigs.end(),
+                 back_inserter(configNames),
+                 [](const XCBuildConfiguration* c) { return c->getName(); });
+  sbAssertWithTelemetry(!configNames.empty(), "The XCConfigurationList is empty for project: " + m_project->getName());
 
-void SBProject::queryTargets(PBXTargetList& ret) const
-{
-  String queryMessage = "The \"" + getName() + "\" project has multiple targets.";
-  const PBXTargetList& targets = m_project->getTargets();
-  queryListSelection(targets, queryMessage, "target", ret);
+  std::vector<size_t> selection;
+  queryListSelection(configNames, queryMessage, "configuration", selection);
+  for (size_t i = 0; i < selection.size(); i++) {
+    size_t currentSelection = selection[i];
+    m_selectedConfigs.insert(configNames[currentSelection]);
+  }
 }
 
 SBProject* SBProject::createFromPath(const String& projectPath)
@@ -312,66 +293,43 @@ static bool headerTypeMatch(const PBXFile* file)
 
 void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs, std::multimap<SBTarget*, VCProject*>& vcProjects)
 {
+  // Nothing to do if project contains no queued targets
+  if (m_existingTargets.empty()) {
+    return;
+  }
+
   // Get the output format and directory
-  String outputFormat = m_buildSettings->getValue("VSIMPORTER_OUTPUT_FORMAT");
   String outputDir = m_buildSettings->getValue("VSIMPORTER_OUTPUT_DIR");
 
-  // Create a solution folder for the project
+  // Create a solution folder for the project, as long as some Xcode target was imported.
+  // The solution folder is necessary for VS build telemetry to work properly.
   VSSolutionFolderProject* projFolder = sln.addFolder(getName());
-
-  // Get all header files from the Xcode project and add them to the target
-  VCProject* headerProj = NULL;
-  ConstFileList headerFiles;
-  getMatchingFiles(&headerTypeMatch, headerFiles);
-  if (!headerFiles.empty()) {
-    // Get the template
-    VSTemplate* vstemplate = VSTemplate::getTemplate(outputFormat + "-" + "SharedHeaders");
-    sbAssert(vstemplate);
-
-    // Set up basis template parameters
-    VSTemplateParameters templateParams;
-    templateParams.setProjectName(getName() + "-Headers");
-
-    // Expand the template and get the template project
-    vstemplate->expand(outputDir, templateParams);
-    const VSTemplateProjectVec& projTemplates = vstemplate->getProjects();
-    sbAssert(projTemplates.size() == 1);
-
-    // Create a shared project with all the headers
-    VCItemHint headerHint = { "ClInclude", "" };
-    headerProj = new VCSharedProject(projTemplates.front());
-    for (auto file : headerFiles) {
-      addFileToVS(file, *headerProj, getBuildSettings(), &headerHint);
-    }
-
-    // Add the project to the solution
-    sln.addProject(headerProj, projFolder);
-  }
 
   // Get the default project configuration
   const XCConfigurationList* buildConfigList = m_project->getBuildConfigurationList();
   String defaultConfig = buildConfigList->getDefaultConfigurationName();
 
   // Create VS projects from targets
+  std::list<VCProject*> compilableProjects;
   for (auto target : m_existingTargets) {
     // Construct template name
     String templateName;
     TargetProductType productType = target.second->getProductType();
     if (productType == TargetApplication) {
-      templateName = outputFormat + "-" + "App";
+      templateName = "App";
     } else if (productType == TargetStaticLib) {
-      templateName = outputFormat + "-" + "StaticLib";
+      templateName = "StaticLib";
     } else if (productType == TargetBundle) {
-      templateName = outputFormat + "-" + "Bundle";
+      templateName = "Bundle";
     } else if (target.first->getType() == "PBXAggregateTarget") {
-      templateName = outputFormat + "-" + "Aggregate";
+      templateName = "Aggregate";
     } else {
       SBLog::warning() << "Failed to construct VS template name for \"" << target.second->getName() << "\" target." << std::endl;
     }
 
     // Get the template
     VSTemplate* vstemplate = VSTemplate::getTemplate(templateName);
-    sbAssert(vstemplate);
+	sbAssertWithTelemetry(vstemplate, "Failed to get " + templateName + " VS template");
 
     // Set up template parameters
     VSTemplateParameters templateParams;
@@ -381,7 +339,7 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
     // Expand the template
     vstemplate->expand(outputDir, templateParams);
     const VSTemplateProjectVec& projTemplates = vstemplate->getProjects();
-    sbAssert(projTemplates.size() == 1);
+	sbAssertWithTelemetry(projTemplates.size() == 1, "Unexpected " + templateName + " VS template size");
 
     for (auto projTemplate : projTemplates) {
       // Create the project from template
@@ -392,13 +350,12 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
       for (auto platformName : projTemplate->getPlatforms()) {
         sln.addPlatform(platformName);
       }
-    
-      // Add a referenced to the shared headers project to targets that compile things
-      if (productType == TargetApplication || productType == TargetStaticLib)
-      {
-        proj->addSharedProject(headerProj);
+
+      // Keep track of projects that compile things
+      if (productType == TargetApplication || productType == TargetStaticLib) {
+        compilableProjects.push_back(proj);
       }
-    
+
       // Add the project to the solution
       VSBuildableSolutionProject* slnProj = sln.addProject(proj, projFolder);
 
@@ -409,6 +366,46 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
         } else {
           slnProj->mapConfiguration(slnConfig, defaultConfig);
         }
+      }
+    }
+  }
+
+  // Get all header files from the Xcode project
+  VCProject* headerProj = NULL;
+  ConstFileList headerFiles;
+  getMatchingFiles(&headerTypeMatch, headerFiles);
+  if (compilableProjects.size() == 1) {
+    headerProj = compilableProjects.front();
+  } else if (!headerFiles.empty()) {
+    // Get the template
+    VSTemplate* vstemplate = VSTemplate::getTemplate("SharedHeaders");
+	sbAssertWithTelemetry(vstemplate, "Failed to get SharedHeaders VS template");
+
+    // Set up basis template parameters
+    VSTemplateParameters templateParams;
+    templateParams.setProjectName(getName() + "-Headers");
+
+    // Expand the template and get the template project
+    vstemplate->expand(outputDir, templateParams);
+    const VSTemplateProjectVec& projTemplates = vstemplate->getProjects();
+	sbAssertWithTelemetry(projTemplates.size() == 1, "Unexpected SharedHeaders VS template size");
+
+    // Create a shared project for the headers and add it to the solution
+    headerProj = new VCSharedProject(projTemplates.front());
+    sln.addProject(headerProj, projFolder);
+  }
+
+  // Add projects headers
+  if (headerProj) {
+    VCItemHint headerHint = { "ClInclude", "", "" };
+    for (auto file : headerFiles) {
+      addFileToVS(file, *headerProj, getBuildSettings(), &headerHint);
+    }
+
+    // If headers were added to a shared project, add appropriate references
+    if (headerProj->getSubType() == VCShared) {
+      for (auto project : compilableProjects) {
+        project->addSharedProject(headerProj);
       }
     }
   }

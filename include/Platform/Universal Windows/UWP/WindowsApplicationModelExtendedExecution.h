@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_ExtendedExecution.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WAEExtendedExecutionRevokedEventArgs, WAEExtendedExecutionSession;
@@ -55,7 +61,7 @@ typedef unsigned WAEExtendedExecutionRevokedReason;
 #ifndef __WAEExtendedExecutionRevokedEventArgs_DEFINED__
 #define __WAEExtendedExecutionRevokedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_EXPORT
 @interface WAEExtendedExecutionRevokedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -73,13 +79,17 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.ApplicationModel.ExtendedExecution.ExtendedExecutionSession
 #ifndef __WAEExtendedExecutionSession_DEFINED__
 #define __WAEExtendedExecutionSession_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_EXPORT
 @interface WAEExtendedExecutionSession : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)

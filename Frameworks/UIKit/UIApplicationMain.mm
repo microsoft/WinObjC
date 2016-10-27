@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -173,7 +173,6 @@ int UIApplicationMainInit(NSString* principalClassName,
                     if (data != nil) {
                         UIFont* font = [UIFont fontWithData:data];
                         if (font != nil) {
-                            [font _setName:[[path lastPathComponent] stringByDeletingPathExtension]];
                             CTFontManagerRegisterGraphicsFont((CGFontRef)font, NULL);
                         }
                     }
@@ -258,6 +257,9 @@ int UIApplicationMainInit(NSString* principalClassName,
             break;
         case ActivationTypeProtocol:
             [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsProtocolKey];
+            break;
+        case ActivationTypeFile:
+            [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsFileKey];
             break;
         default:
             break;
@@ -356,6 +358,10 @@ extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisibl
 extern "C" void UIApplicationMainHandleVoiceCommandEvent(IInspectable* voiceCommandResult) {
     WMSSpeechRecognitionResult* result = [WMSSpeechRecognitionResult createWith:voiceCommandResult];
     [[UIApplication sharedApplication] _sendVoiceCommandReceivedEvent:result];
+}
+
+extern "C" void UIApplicationMainHandleFileEvent(IInspectable* result) {
+    [[UIApplication sharedApplication] _sendFileReceivedEvent:[WAAFileActivatedEventArgs createWith:result]];
 }
 
 static NSString* _bundleIdFromPackageFamilyName(const wchar_t* packageFamily) {

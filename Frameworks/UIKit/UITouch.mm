@@ -160,7 +160,11 @@ static void recordTouchVelocity(RingBuffer<TouchRecord, 50>& touchHistory, CGPoi
     return newObj;
 }
 
-- (void)_updateWithPoint:(WUIPointerPoint*)pointerPoint forPhase:(UITouchPhase)touchPhase {
+- (void)_updateWithPoint:(WUIPointerPoint*)pointerPoint
+         routedEventArgs:(WUXIPointerRoutedEventArgs*)routedEventArgs
+                forPhase:(UITouchPhase)touchPhase {
+    _routedEventArgs = routedEventArgs;
+
     // Grab the postion of the event
     WFPoint* position = [pointerPoint position];
     CGPoint point = CGPointMake(position.x, position.y);

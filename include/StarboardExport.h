@@ -17,18 +17,11 @@
 
 #ifndef SB_IMPEXP
 #define SB_IMPEXP __declspec(dllimport)
-#define SB_IMPEXP_CLASS __declspec(dllimport)
-#else
-// This is used only by the EbrFile class, and new uses should not be added.
-// In general, C++ classes should not be exported, and EbrFile is tolerated
-// only for legacy reasons.
-#define SB_IMPEXP_CLASS __declspec(dllexport)
 #endif
 
 #ifndef SB_EXPORT
 #ifdef __cplusplus
 #define SB_EXPORT extern "C" SB_IMPEXP
-#define SB_EXPORT_CLASS SB_IMPEXP_CLASS
 #else
 #define SB_EXPORT extern SB_IMPEXP
 #endif

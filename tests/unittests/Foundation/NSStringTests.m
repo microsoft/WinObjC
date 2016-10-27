@@ -33,13 +33,13 @@ TEST(NSString, NSStringTests) {
                               @"5CClosingBracket%5DCaret%5EGraveAccent%60OpeningBrace%7BVerticalBar%7CClosingBrace%7D";
 
     NSString* testString = [decodedString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    ASSERT_OBJCEQ(encodedString, testString);
+    EXPECT_OBJCEQ(encodedString, testString);
 
     testString = [encodedString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    ASSERT_OBJCEQ(decodedString, testString);
+    EXPECT_OBJCEQ(decodedString, testString);
 
     testString = [encodedString stringByRemovingPercentEncoding];
-    ASSERT_OBJCEQ(decodedString, testString);
+    EXPECT_OBJCEQ(decodedString, testString);
 
     NSString* urlDecodedString = @"https://www.microsoft.com/en-us/!@#$%^&*()_";
     NSString* urlEncodedString = @"https://www.microsoft.com/en-us/!@%23$%25%5E&*()_";
@@ -78,41 +78,44 @@ TEST(NSString, NSStringTests) {
     allowedCharacterSet = [NSCharacterSet alphanumericCharacterSet];
 
     testString = [stringWillDie stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacterSet];
-    ASSERT_OBJCEQ(urlEncodedString, testString);
+    EXPECT_OBJCEQ(urlEncodedString, testString);
 
     // stringByAppendingFormat test
     NSString* testString2 = @"Numbers: ";
     NSString* expectedString = @"Numbers: 1, 2";
     NSString* actualString = [testString2 stringByAppendingFormat:@"%d, %@", 1, @"2"];
-    ASSERT_OBJCEQ(expectedString, actualString);
+    EXPECT_OBJCEQ(expectedString, actualString);
 
     // stringWithFormat tests
     actualString = [NSString stringWithFormat:@"%x %d %u %.1f %o %c", 10, 11, 12, 13.0f, 14, 'a'];
-    ASSERT_OBJCEQ(@"a 11 12 13.0 16 a", actualString);
+    EXPECT_OBJCEQ(@"a 11 12 13.0 16 a", actualString);
 
     // %i is undocumented, but apps use it
     actualString = [NSString stringWithFormat:@"%i", -1];
-    ASSERT_OBJCEQ(@"-1", actualString);
+    EXPECT_OBJCEQ(@"-1", actualString);
 
     actualString = [NSString stringWithFormat:@"%hhd %hd %ld %llX", (char)1, (short)2, 3L, -1ULL];
-    ASSERT_OBJCEQ(@"1 2 3 FFFFFFFFFFFFFFFF", actualString);
+    EXPECT_OBJCEQ(@"1 2 3 FFFFFFFFFFFFFFFF", actualString);
 
+// size_t and ptrdiff_t are not a set size causing this to fail on the reference platform
+#ifdef WINOBJC
     actualString = [NSString stringWithFormat:@"%zx %zd", SIZE_MAX, INT_MIN];
-    ASSERT_OBJCEQ(@"ffffffff -2147483648", actualString);
+    EXPECT_OBJCEQ(@"ffffffff -2147483648", actualString);
 
     actualString = [NSString stringWithFormat:@"%tx %td", PTRDIFF_MAX, PTRDIFF_MIN];
-    ASSERT_OBJCEQ(@"7fffffff -2147483648", actualString);
+    EXPECT_OBJCEQ(@"7fffffff -2147483648", actualString);
+#endif
 
     actualString = [NSString stringWithFormat:@"%jx %jd", UINTMAX_MAX, INTMAX_MIN];
-    ASSERT_OBJCEQ(@"ffffffffffffffff -9223372036854775808", actualString);
+    EXPECT_OBJCEQ(@"ffffffffffffffff -9223372036854775808", actualString);
 
     actualString = [NSString stringWithFormat:@"%qx %qd", ULLONG_MAX, LLONG_MIN];
-    ASSERT_OBJCEQ(@"ffffffffffffffff -9223372036854775808", actualString);
+    EXPECT_OBJCEQ(@"ffffffffffffffff -9223372036854775808", actualString);
 
     // Formatting with %g looks like it's printing the wrong number of digits, but it matches
     // the reference platform
     actualString = [NSString stringWithFormat:@"%.1e %.1E %.1g %.1G", 1e10, 1e0, 1e10, 1e0];
-    ASSERT_OBJCEQ(@"1.0e+10 1.0E+00 1e+10 1", actualString);
+    EXPECT_OBJCEQ(@"1.0e+10 1.0E+00 1e+10 1", actualString);
 
     // rangeOfCharactersFromSet test
     NSString* testString3 = @"Alpha Bravo Charlie";
@@ -120,9 +123,9 @@ TEST(NSString, NSStringTests) {
     NSRange range;
 
     range = [testString3 rangeOfCharacterFromSet:charSet options:0];
-    ASSERT_EQ(5, range.location);
+    EXPECT_EQ(5, range.location);
     range = [testString3 rangeOfCharacterFromSet:charSet options:NSBackwardsSearch];
-    ASSERT_EQ(11, range.location);
+    EXPECT_EQ(11, range.location);
 }
 
 TEST(NSString, NSString_FastestEncoding) {

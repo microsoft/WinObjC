@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXDCurrentChangingEventArgs, WUXDPropertyChangedEventArgs, WUXDBindingExpressionBase, WUXDBindingOperations, WUXDBindingBase,
@@ -82,7 +88,7 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Data.LoadMoreItemsResult
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDLoadMoreItemsResult : NSObject
 + (instancetype) new;
 @property unsigned int count;
@@ -108,6 +114,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.UI.Xaml.Data.IItemsRangeInfo
@@ -117,6 +127,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 @protocol WUXDIItemsRangeInfo <WFIClosable>
 - (void)rangesChanged:(WUXDItemIndexRange*)visibleRange trackedItems:(NSArray* /* WUXDItemIndexRange* */)trackedItems;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDIItemsRangeInfo : RTObject <WUXDIItemsRangeInfo>
 @end
 
 #endif // __WUXDIItemsRangeInfo_DEFINED__
@@ -130,6 +144,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 - (void)deselectRange:(WUXDItemIndexRange*)itemIndexRange;
 - (BOOL)isSelected:(int)index;
 - (NSArray* /* WUXDItemIndexRange* */)getSelectedRanges;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDISelectionInfo : RTObject <WUXDISelectionInfo>
 @end
 
 #endif // __WUXDISelectionInfo_DEFINED__
@@ -170,6 +188,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 - (void)loadMoreItemsAsync:(unsigned int)count success:(void (^)(WUXDLoadMoreItemsResult*))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDICollectionView : RTObject <WUXDICollectionView>
+@end
+
 #endif // __WUXDICollectionView_DEFINED__
 
 // Windows.UI.Xaml.Data.ICollectionViewFactory
@@ -178,6 +200,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 
 @protocol WUXDICollectionViewFactory
 - (RTObject<WUXDICollectionView>*)createView;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDICollectionViewFactory : RTObject <WUXDICollectionViewFactory>
 @end
 
 #endif // __WUXDICollectionViewFactory_DEFINED__
@@ -189,6 +215,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 @protocol WUXDICollectionViewGroup
 @property (readonly) RTObject* group;
 @property (readonly) NSMutableArray<RTObservableCollection>* /* RTObject* */ groupItems;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDICollectionViewGroup : RTObject <WUXDICollectionViewGroup>
 @end
 
 #endif // __WUXDICollectionViewGroup_DEFINED__
@@ -208,6 +238,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 - (void)setIndexedValue:(RTObject*)target value:(RTObject*)value index:(RTObject*)index;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDICustomProperty : RTObject <WUXDICustomProperty>
+@end
+
 #endif // __WUXDICustomProperty_DEFINED__
 
 // Windows.UI.Xaml.Data.ICustomPropertyProvider
@@ -221,6 +255,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 - (NSString*)getStringRepresentation;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDICustomPropertyProvider : RTObject <WUXDICustomPropertyProvider>
+@end
+
 #endif // __WUXDICustomPropertyProvider_DEFINED__
 
 // Windows.UI.Xaml.Data.INotifyPropertyChanged
@@ -230,6 +268,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 @protocol WUXDINotifyPropertyChanged
 - (EventRegistrationToken)addPropertyChangedEvent:(WUXDPropertyChangedEventHandler)del;
 - (void)removePropertyChangedEvent:(EventRegistrationToken)tok;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDINotifyPropertyChanged : RTObject <WUXDINotifyPropertyChanged>
 @end
 
 #endif // __WUXDINotifyPropertyChanged_DEFINED__
@@ -243,6 +285,10 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 - (void)loadMoreItemsAsync:(unsigned int)count success:(void (^)(WUXDLoadMoreItemsResult*))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDISupportIncrementalLoading : RTObject <WUXDISupportIncrementalLoading>
+@end
+
 #endif // __WUXDISupportIncrementalLoading_DEFINED__
 
 // Windows.UI.Xaml.Data.IValueConverter
@@ -254,13 +300,17 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 - (RTObject*)convertBack:(RTObject*)value targetType:(WUXITypeName*)targetType parameter:(RTObject*)parameter language:(NSString*)language;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXDIValueConverter : RTObject <WUXDIValueConverter>
+@end
+
 #endif // __WUXDIValueConverter_DEFINED__
 
 // Windows.UI.Xaml.Data.CurrentChangingEventArgs
 #ifndef __WUXDCurrentChangingEventArgs_DEFINED__
 #define __WUXDCurrentChangingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDCurrentChangingEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -276,8 +326,9 @@ WINRT_EXPORT
 #ifndef __WUXDPropertyChangedEventArgs_DEFINED__
 #define __WUXDPropertyChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDPropertyChangedEventArgs : RTObject
++ (WUXDPropertyChangedEventArgs*)makeInstance:(NSString*)name ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -290,7 +341,7 @@ WINRT_EXPORT
 #ifndef __WUXDBindingExpressionBase_DEFINED__
 #define __WUXDBindingExpressionBase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDBindingExpressionBase : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -303,7 +354,7 @@ WINRT_EXPORT
 #ifndef __WUXDBindingOperations_DEFINED__
 #define __WUXDBindingOperations_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDBindingOperations : RTObject
 + (void)setBinding:(WXDependencyObject*)target dp:(WXDependencyProperty*)dp binding:(WUXDBindingBase*)binding;
 #if defined(__cplusplus)
@@ -317,7 +368,7 @@ WINRT_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -338,7 +389,7 @@ WINRT_EXPORT
 #ifndef __WUXDBindingBase_DEFINED__
 #define __WUXDBindingBase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDBindingBase : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -352,7 +403,7 @@ WINRT_EXPORT
 #ifndef __WUXDBindingExpression_DEFINED__
 #define __WUXDBindingExpression_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDBindingExpression : WUXDBindingExpressionBase
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -368,7 +419,7 @@ WINRT_EXPORT
 #ifndef __WUXDCollectionViewSource_DEFINED__
 #define __WUXDCollectionViewSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDCollectionViewSource : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -390,7 +441,7 @@ WINRT_EXPORT
 #ifndef __WUXDRelativeSource_DEFINED__
 #define __WUXDRelativeSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDRelativeSource : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -405,7 +456,7 @@ WINRT_EXPORT
 #ifndef __WUXDBinding_DEFINED__
 #define __WUXDBinding_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDBinding : WUXDBindingBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -430,8 +481,9 @@ WINRT_EXPORT
 #ifndef __WUXDItemIndexRange_DEFINED__
 #define __WUXDItemIndexRange_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDItemIndexRange : RTObject
++ (WUXDItemIndexRange*)makeInstance:(int)firstIndex length:(unsigned int)length ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif

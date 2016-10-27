@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WNSSocketActivityContext, WNSDatagramSocket, WNSStreamSocket, WNSStreamSocketListener, WNSSocketActivityInformation,
@@ -151,7 +157,7 @@ typedef unsigned WNSSocketActivityConnectedStandbyAction;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Networking.Sockets.RoundTripTimeStatistics
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSRoundTripTimeStatistics : NSObject
 + (instancetype) new;
 @property unsigned int variance;
@@ -161,7 +167,7 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Networking.Sockets.BandwidthStatistics
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSBandwidthStatistics : NSObject
 + (instancetype) new;
 @property uint64_t outboundBitsPerSecond;
@@ -183,6 +189,10 @@ WINRT_EXPORT
 @property (readonly) NSMutableArray* /* NSString * */ supportedProtocols;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WNSIWebSocketControl : RTObject <WNSIWebSocketControl>
+@end
+
 #endif // __WNSIWebSocketControl_DEFINED__
 
 // Windows.Networking.Sockets.IWebSocketInformation
@@ -195,6 +205,10 @@ WINRT_EXPORT
 @property (readonly) NSString* protocol;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WNSIWebSocketInformation : RTObject <WNSIWebSocketInformation>
+@end
+
 #endif // __WNSIWebSocketInformation_DEFINED__
 
 // Windows.Foundation.IClosable
@@ -203,6 +217,10 @@ WINRT_EXPORT
 
 @protocol WFIClosable
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
 @end
 
 #endif // __WFIClosable_DEFINED__
@@ -221,13 +239,17 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WNSIWebSocket : RTObject <WNSIWebSocket>
+@end
+
 #endif // __WNSIWebSocket_DEFINED__
 
 // Windows.Networking.Sockets.SocketActivityContext
 #ifndef __WNSSocketActivityContext_DEFINED__
 #define __WNSSocketActivityContext_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSSocketActivityContext : RTObject
 + (WNSSocketActivityContext*)make:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 #if defined(__cplusplus)
@@ -242,7 +264,7 @@ WINRT_EXPORT
 #ifndef __WNSDatagramSocket_DEFINED__
 #define __WNSDatagramSocket_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSDatagramSocket : RTObject <WFIClosable>
 + (void)getEndpointPairsAsync:(WNHostName*)remoteHostName
             remoteServiceName:(NSString*)remoteServiceName
@@ -293,7 +315,7 @@ WINRT_EXPORT
 #ifndef __WNSStreamSocket_DEFINED__
 #define __WNSStreamSocket_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamSocket : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -333,7 +355,7 @@ WINRT_EXPORT
 #ifndef __WNSStreamSocketListener_DEFINED__
 #define __WNSStreamSocketListener_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamSocketListener : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -366,7 +388,7 @@ WINRT_EXPORT
 #ifndef __WNSSocketActivityInformation_DEFINED__
 #define __WNSSocketActivityInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSSocketActivityInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -387,7 +409,7 @@ WINRT_EXPORT
 #ifndef __WNSDatagramSocketControl_DEFINED__
 #define __WNSDatagramSocketControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSDatagramSocketControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -405,7 +427,7 @@ WINRT_EXPORT
 #ifndef __WNSDatagramSocketInformation_DEFINED__
 #define __WNSDatagramSocketInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSDatagramSocketInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -422,7 +444,7 @@ WINRT_EXPORT
 #ifndef __WNSDatagramSocketMessageReceivedEventArgs_DEFINED__
 #define __WNSDatagramSocketMessageReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSDatagramSocketMessageReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -440,7 +462,7 @@ WINRT_EXPORT
 #ifndef __WNSStreamSocketControl_DEFINED__
 #define __WNSStreamSocketControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamSocketControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -461,7 +483,7 @@ WINRT_EXPORT
 #ifndef __WNSStreamSocketInformation_DEFINED__
 #define __WNSStreamSocketInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamSocketInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -488,7 +510,7 @@ WINRT_EXPORT
 #ifndef __WNSStreamSocketListenerControl_DEFINED__
 #define __WNSStreamSocketListenerControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamSocketListenerControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -506,7 +528,7 @@ WINRT_EXPORT
 #ifndef __WNSStreamSocketListenerInformation_DEFINED__
 #define __WNSStreamSocketListenerInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamSocketListenerInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -520,7 +542,7 @@ WINRT_EXPORT
 #ifndef __WNSStreamSocketListenerConnectionReceivedEventArgs_DEFINED__
 #define __WNSStreamSocketListenerConnectionReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamSocketListenerConnectionReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -534,7 +556,7 @@ WINRT_EXPORT
 #ifndef __WNSWebSocketClosedEventArgs_DEFINED__
 #define __WNSWebSocketClosedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSWebSocketClosedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -549,7 +571,7 @@ WINRT_EXPORT
 #ifndef __WNSMessageWebSocketControl_DEFINED__
 #define __WNSMessageWebSocketControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSMessageWebSocketControl : RTObject <WNSIWebSocketControl>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -568,7 +590,7 @@ WINRT_EXPORT
 #ifndef __WNSMessageWebSocketInformation_DEFINED__
 #define __WNSMessageWebSocketInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSMessageWebSocketInformation : RTObject <WNSIWebSocketInformation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -584,7 +606,7 @@ WINRT_EXPORT
 #ifndef __WNSMessageWebSocket_DEFINED__
 #define __WNSMessageWebSocket_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSMessageWebSocket : RTObject <WNSIWebSocket, WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -609,7 +631,7 @@ WINRT_EXPORT
 #ifndef __WNSMessageWebSocketMessageReceivedEventArgs_DEFINED__
 #define __WNSMessageWebSocketMessageReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSMessageWebSocketMessageReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -625,7 +647,7 @@ WINRT_EXPORT
 #ifndef __WNSStreamWebSocketControl_DEFINED__
 #define __WNSStreamWebSocketControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamWebSocketControl : RTObject <WNSIWebSocketControl>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -643,7 +665,7 @@ WINRT_EXPORT
 #ifndef __WNSStreamWebSocketInformation_DEFINED__
 #define __WNSStreamWebSocketInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamWebSocketInformation : RTObject <WNSIWebSocketInformation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -659,7 +681,7 @@ WINRT_EXPORT
 #ifndef __WNSStreamWebSocket_DEFINED__
 #define __WNSStreamWebSocket_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSStreamWebSocket : RTObject <WNSIWebSocket, WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -687,13 +709,17 @@ WINRT_EXPORT
 - (void)run:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WABIBackgroundTask : RTObject <WABIBackgroundTask>
+@end
+
 #endif // __WABIBackgroundTask_DEFINED__
 
 // Windows.Networking.Sockets.WebSocketKeepAlive
 #ifndef __WNSWebSocketKeepAlive_DEFINED__
 #define __WNSWebSocketKeepAlive_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSWebSocketKeepAlive : RTObject <WABIBackgroundTask>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -708,7 +734,7 @@ WINRT_EXPORT
 #ifndef __WNSSocketError_DEFINED__
 #define __WNSSocketError_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSSocketError : RTObject
 + (WNSSocketErrorStatus)getStatus:(int)hresult;
 @end
@@ -719,7 +745,7 @@ WINRT_EXPORT
 #ifndef __WNSWebSocketError_DEFINED__
 #define __WNSWebSocketError_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSWebSocketError : RTObject
 + (WWWebErrorStatus)getStatus:(int)hresult;
 @end
@@ -730,7 +756,7 @@ WINRT_EXPORT
 #ifndef __WNSSocketActivityTriggerDetails_DEFINED__
 #define __WNSSocketActivityTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WNSSocketActivityTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXAPIRawElementProviderSimple;
@@ -59,6 +65,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 @property (readonly) WUXAPIRawElementProviderSimple* target;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIAnnotationProvider : RTObject <WUXAPIAnnotationProvider>
+@end
+
 #endif // __WUXAPIAnnotationProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.IDockProvider
@@ -68,6 +78,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 @protocol WUXAPIDockProvider
 @property (readonly) WUXADockPosition dockPosition;
 - (void)setDockPosition:(WUXADockPosition)dockPosition;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIDockProvider : RTObject <WUXAPIDockProvider>
 @end
 
 #endif // __WUXAPIDockProvider_DEFINED__
@@ -83,6 +97,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (NSArray* /* WUXAPIRawElementProviderSimple* */)getGrabbedItems;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIDragProvider : RTObject <WUXAPIDragProvider>
+@end
+
 #endif // __WUXAPIDragProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.IDropTargetProvider
@@ -92,6 +110,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 @protocol WUXAPIDropTargetProvider
 @property (readonly) NSString* dropEffect;
 @property (readonly) NSArray* /* NSString * */ dropEffects;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIDropTargetProvider : RTObject <WUXAPIDropTargetProvider>
 @end
 
 #endif // __WUXAPIDropTargetProvider_DEFINED__
@@ -104,6 +126,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 @property (readonly) WUXAExpandCollapseState expandCollapseState;
 - (void)collapse;
 - (void)expand;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIExpandCollapseProvider : RTObject <WUXAPIExpandCollapseProvider>
 @end
 
 #endif // __WUXAPIExpandCollapseProvider_DEFINED__
@@ -120,6 +146,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 @property (readonly) int rowSpan;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIGridItemProvider : RTObject <WUXAPIGridItemProvider>
+@end
+
 #endif // __WUXAPIGridItemProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.IGridProvider
@@ -132,6 +162,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (WUXAPIRawElementProviderSimple*)getItem:(int)row column:(int)column;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIGridProvider : RTObject <WUXAPIGridProvider>
+@end
+
 #endif // __WUXAPIGridProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.IInvokeProvider
@@ -140,6 +174,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 
 @protocol WUXAPIInvokeProvider
 - (void)invoke;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIInvokeProvider : RTObject <WUXAPIInvokeProvider>
 @end
 
 #endif // __WUXAPIInvokeProvider_DEFINED__
@@ -152,6 +190,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (WUXAPIRawElementProviderSimple*)findItemByProperty:(WUXAPIRawElementProviderSimple*)startAfter
                                    automationProperty:(WUXAAutomationProperty*)automationProperty
                                                 value:(RTObject*)value;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIItemContainerProvider : RTObject <WUXAPIItemContainerProvider>
 @end
 
 #endif // __WUXAPIItemContainerProvider_DEFINED__
@@ -167,6 +209,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (void)setCurrentView:(int)viewId;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIMultipleViewProvider : RTObject <WUXAPIMultipleViewProvider>
+@end
+
 #endif // __WUXAPIMultipleViewProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.IObjectModelProvider
@@ -175,6 +221,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 
 @protocol WUXAPIObjectModelProvider
 - (RTObject*)getUnderlyingObjectModel;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIObjectModelProvider : RTObject <WUXAPIObjectModelProvider>
 @end
 
 #endif // __WUXAPIObjectModelProvider_DEFINED__
@@ -193,6 +243,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (void)setValue:(double)value;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIRangeValueProvider : RTObject <WUXAPIRangeValueProvider>
+@end
+
 #endif // __WUXAPIRangeValueProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.IScrollItemProvider
@@ -201,6 +255,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 
 @protocol WUXAPIScrollItemProvider
 - (void)scrollIntoView;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIScrollItemProvider : RTObject <WUXAPIScrollItemProvider>
 @end
 
 #endif // __WUXAPIScrollItemProvider_DEFINED__
@@ -220,6 +278,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (void)setScrollPercent:(double)horizontalPercent verticalPercent:(double)verticalPercent;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIScrollProvider : RTObject <WUXAPIScrollProvider>
+@end
+
 #endif // __WUXAPIScrollProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.ISelectionItemProvider
@@ -234,6 +296,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (void)select;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPISelectionItemProvider : RTObject <WUXAPISelectionItemProvider>
+@end
+
 #endif // __WUXAPISelectionItemProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.ISelectionProvider
@@ -244,6 +310,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 @property (readonly) BOOL canSelectMultiple;
 @property (readonly) BOOL isSelectionRequired;
 - (NSArray* /* WUXAPIRawElementProviderSimple* */)getSelection;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPISelectionProvider : RTObject <WUXAPISelectionProvider>
 @end
 
 #endif // __WUXAPISelectionProvider_DEFINED__
@@ -258,6 +328,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (NSArray* /* WUXAAnnotationType */)getAnnotationTypes;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPISpreadsheetItemProvider : RTObject <WUXAPISpreadsheetItemProvider>
+@end
+
 #endif // __WUXAPISpreadsheetItemProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.ISpreadsheetProvider
@@ -266,6 +340,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 
 @protocol WUXAPISpreadsheetProvider
 - (WUXAPIRawElementProviderSimple*)getItemByName:(NSString*)name;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPISpreadsheetProvider : RTObject <WUXAPISpreadsheetProvider>
 @end
 
 #endif // __WUXAPISpreadsheetProvider_DEFINED__
@@ -284,6 +362,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 @property (readonly) NSString* styleName;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIStylesProvider : RTObject <WUXAPIStylesProvider>
+@end
+
 #endif // __WUXAPIStylesProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.ISynchronizedInputProvider
@@ -295,6 +377,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (void)startListening:(WUXASynchronizedInputType)inputType;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPISynchronizedInputProvider : RTObject <WUXAPISynchronizedInputProvider>
+@end
+
 #endif // __WUXAPISynchronizedInputProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.ITableItemProvider
@@ -304,6 +390,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 @protocol WUXAPITableItemProvider
 - (NSArray* /* WUXAPIRawElementProviderSimple* */)getColumnHeaderItems;
 - (NSArray* /* WUXAPIRawElementProviderSimple* */)getRowHeaderItems;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPITableItemProvider : RTObject <WUXAPITableItemProvider>
 @end
 
 #endif // __WUXAPITableItemProvider_DEFINED__
@@ -318,6 +408,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (NSArray* /* WUXAPIRawElementProviderSimple* */)getRowHeaders;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPITableProvider : RTObject <WUXAPITableProvider>
+@end
+
 #endif // __WUXAPITableProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.ITextChildProvider
@@ -327,6 +421,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 @protocol WUXAPITextChildProvider
 @property (readonly) WUXAPIRawElementProviderSimple* textContainer;
 @property (readonly) RTObject<WUXAPITextRangeProvider>* textRange;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPITextChildProvider : RTObject <WUXAPITextChildProvider>
 @end
 
 #endif // __WUXAPITextChildProvider_DEFINED__
@@ -360,6 +458,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (NSArray* /* WUXAPIRawElementProviderSimple* */)getChildren;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPITextRangeProvider : RTObject <WUXAPITextRangeProvider>
+@end
+
 #endif // __WUXAPITextRangeProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.ITextProvider
@@ -375,6 +477,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (RTObject<WUXAPITextRangeProvider>*)rangeFromPoint:(WFPoint*)screenLocation;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPITextProvider : RTObject <WUXAPITextProvider>
+@end
+
 #endif // __WUXAPITextProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.ITextProvider2
@@ -388,6 +494,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (NSArray* /* RTObject<WUXAPITextRangeProvider>* */)getVisibleRanges;
 - (RTObject<WUXAPITextRangeProvider>*)rangeFromChild:(WUXAPIRawElementProviderSimple*)childElement;
 - (RTObject<WUXAPITextRangeProvider>*)rangeFromPoint:(WFPoint*)screenLocation;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPITextProvider2 : RTObject <WUXAPITextProvider2>
 @end
 
 #endif // __WUXAPITextProvider2_DEFINED__
@@ -422,6 +532,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (NSArray* /* WUXAPIRawElementProviderSimple* */)getChildren;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPITextRangeProvider2 : RTObject <WUXAPITextRangeProvider2>
+@end
+
 #endif // __WUXAPITextRangeProvider2_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.IToggleProvider
@@ -431,6 +545,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 @protocol WUXAPIToggleProvider
 @property (readonly) WUXAToggleState toggleState;
 - (void)toggle;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIToggleProvider : RTObject <WUXAPIToggleProvider>
 @end
 
 #endif // __WUXAPIToggleProvider_DEFINED__
@@ -446,6 +564,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (void)move:(double)x y:(double)y;
 - (void)resize:(double)width height:(double)height;
 - (void)rotate:(double)degrees;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPITransformProvider : RTObject <WUXAPITransformProvider>
 @end
 
 #endif // __WUXAPITransformProvider_DEFINED__
@@ -466,6 +588,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (void)rotate:(double)degrees;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPITransformProvider2 : RTObject <WUXAPITransformProvider2>
+@end
+
 #endif // __WUXAPITransformProvider2_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.IValueProvider
@@ -478,6 +604,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (void)setValue:(NSString*)value;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIValueProvider : RTObject <WUXAPIValueProvider>
+@end
+
 #endif // __WUXAPIValueProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.IVirtualizedItemProvider
@@ -486,6 +616,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 
 @protocol WUXAPIVirtualizedItemProvider
 - (void)realize;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIVirtualizedItemProvider : RTObject <WUXAPIVirtualizedItemProvider>
 @end
 
 #endif // __WUXAPIVirtualizedItemProvider_DEFINED__
@@ -506,6 +640,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (BOOL)waitForInputIdle:(int)milliseconds;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPIWindowProvider : RTObject <WUXAPIWindowProvider>
+@end
+
 #endif // __WUXAPIWindowProvider_DEFINED__
 
 // Windows.UI.Xaml.Automation.Provider.ICustomNavigationProvider
@@ -514,6 +652,10 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 
 @protocol WUXAPICustomNavigationProvider
 - (RTObject*)navigateCustom:(WUXAPAutomationNavigationDirection)direction;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPICustomNavigationProvider : RTObject <WUXAPICustomNavigationProvider>
 @end
 
 #endif // __WUXAPICustomNavigationProvider_DEFINED__
@@ -531,13 +673,17 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (RTObject<WUXAPITextRangeProvider>*)rangeFromPoint:(WFPoint*)screenLocation;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXAPITextEditProvider : RTObject <WUXAPITextEditProvider>
+@end
+
 #endif // __WUXAPITextEditProvider_DEFINED__
 
 // Windows.UI.Xaml.DependencyObject
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -558,7 +704,7 @@ WINRT_EXPORT
 #ifndef __WUXAPIRawElementProviderSimple_DEFINED__
 #define __WUXAPIRawElementProviderSimple_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXAPIRawElementProviderSimple : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

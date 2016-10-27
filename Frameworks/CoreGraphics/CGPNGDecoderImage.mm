@@ -192,17 +192,10 @@ CGImageBacking* CGPNGImageBacking::ConstructBacking() {
 }
 
 void CGPNGImageBacking::Decode(void* imgDest, int stride) {
-    EbrFile* fpIn;
-
     ImageDataStream* reader;
 
     if (_fileName) {
-        fpIn = EbrFopen(_fileName, "rb");
-        if (!fpIn) {
-            assert(0);
-        }
-
-        reader = new ImageDataStreamFile(fpIn);
+        reader = new ImageDataStreamFile([NSInputStream inputStreamWithFileAtPath:[NSString stringWithUTF8String:_fileName]]);
     } else {
         reader = new ImageDataStreamMemory((char*)[(NSData*)_data bytes], [(NSData*)_data length]);
     }

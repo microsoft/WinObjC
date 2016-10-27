@@ -102,45 +102,48 @@
 static void initWebKit(UIWebView* self) {
     self->_xamlWebControl = [WXCWebView make];
     [self setXamlElement:self->_xamlWebControl];
-    self->_xamlLoadCompletedEventCookie = [self->_xamlWebControl addLoadCompletedEvent:^void(RTObject* sender, WUXNNavigationEventArgs* e) {
-        self->_isLoading = false;
 
-        if ([self->_delegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
-            [self->_delegate webViewDidFinishLoad:self];
+    __block UIWebView* weakSelf = self;
+    self->_xamlLoadCompletedEventCookie = [self->_xamlWebControl addLoadCompletedEvent:^void(RTObject* sender, WUXNNavigationEventArgs* e) {
+        weakSelf->_isLoading = false;
+
+        if ([weakSelf->_delegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
+            [weakSelf->_delegate webViewDidFinishLoad:weakSelf];
         }
 
     }];
+
     self->_xamlLoadStartedEventCookie =
         [self->_xamlWebControl addNavigationStartingEvent:^void(RTObject* sender, WXCWebViewNavigationStartingEventArgs* e) {
             // Give the client a chance to cancel the navigation
-            if ([self->_delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
+            if ([weakSelf->_delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
                 NSURL* url = [NSURL URLWithString:e.uri.absoluteUri];
                 NSURLRequest* request = [NSURLRequest requestWithURL:url];
 
                 // ???? XAML doesn't expose this information to us
                 UIWebViewNavigationType navigationType = UIWebViewNavigationTypeOther;
 
-                if (![self->_delegate webView:self shouldStartLoadWithRequest:request navigationType:navigationType]) {
+                if (![weakSelf->_delegate webView:weakSelf shouldStartLoadWithRequest:request navigationType:navigationType]) {
                     e.cancel = YES;
                     return;
                 }
             }
 
             // Cancellation declined, navigation is proceeding
-            if ([self->_delegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
-                [self->_delegate webViewDidStartLoad:self];
+            if ([weakSelf->_delegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
+                [weakSelf->_delegate webViewDidStartLoad:weakSelf];
             }
         }];
 
     self->_xamlUnsupportedUriSchemeEventCookie = [self->_xamlWebControl
         addUnsupportedUriSchemeIdentifiedEvent:^(RTObject* sender, WXCWebViewUnsupportedUriSchemeIdentifiedEventArgs* e) {
-            if ([self->_delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
+            if ([weakSelf->_delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
                 NSURL* url = [NSURL URLWithString:e.uri.absoluteUri];
                 NSURLRequest* request = [NSURLRequest requestWithURL:url];
                 UIWebViewNavigationType navigationType = UIWebViewNavigationTypeOther;
 
                 // The WebView doesn't know what to do with this URL, but give our client a crack at it
-                if ([self->_delegate webView:self shouldStartLoadWithRequest:request navigationType:navigationType]) {
+                if ([weakSelf->_delegate webView:weakSelf shouldStartLoadWithRequest:request navigationType:navigationType]) {
                     // Client said to proceed, so pass the URL off to the system URI resolver
                 } else {
                     // Client took care of the URL

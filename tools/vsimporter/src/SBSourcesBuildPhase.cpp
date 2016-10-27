@@ -115,9 +115,8 @@ void SBSourcesBuildPhase::writeVCProjectFiles(VCProject& proj) const
       cur = m_parentTarget.makeRelativePath(cur, vsProjectDir);
       cur = winPath(cur);
     }
-    if (!includePaths.empty()) {
-      config->setItemDefinition("ClangCompile", "IncludePaths", joinStrings(includePaths, ";"));
-    }
+    includePaths.insert(includePaths.begin(), "$(SolutionPublicHeadersDir)");
+    config->setItemDefinition("ClangCompile", "IncludePaths", joinStrings(includePaths, ";"));
 
     // User header search paths (make them relative)
     StringVec userIncludePaths;

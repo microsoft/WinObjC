@@ -56,8 +56,8 @@ static NSString* viewTitleKeyName = @"ViewName";
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
     }
 
-    //    cell.textLabel.text = [self.menuItems objectAtIndex:indexPath.row];
     cell.textLabel.text = [[self.menuItems objectAtIndex:indexPath.row] objectForKey:viewTitleKeyName];
+    cell.accessibilityIdentifier = cell.textLabel.text;
 
     return cell;
 }

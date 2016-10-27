@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_PlayTo.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WMPSourceChangeRequestedEventArgs, WMPPlaybackRateChangeRequestedEventArgs, WMPCurrentTimeChangeRequestedEventArgs,
@@ -60,7 +66,7 @@ typedef unsigned WMPPlayToConnectionError;
 #ifndef __WMPSourceChangeRequestedEventArgs_DEFINED__
 #define __WMPSourceChangeRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPSourceChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -83,7 +89,7 @@ WINRT_EXPORT
 #ifndef __WMPPlaybackRateChangeRequestedEventArgs_DEFINED__
 #define __WMPPlaybackRateChangeRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlaybackRateChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -97,7 +103,7 @@ WINRT_EXPORT
 #ifndef __WMPCurrentTimeChangeRequestedEventArgs_DEFINED__
 #define __WMPCurrentTimeChangeRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPCurrentTimeChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -111,7 +117,7 @@ WINRT_EXPORT
 #ifndef __WMPMuteChangeRequestedEventArgs_DEFINED__
 #define __WMPMuteChangeRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPMuteChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -125,7 +131,7 @@ WINRT_EXPORT
 #ifndef __WMPVolumeChangeRequestedEventArgs_DEFINED__
 #define __WMPVolumeChangeRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPVolumeChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -139,7 +145,7 @@ WINRT_EXPORT
 #ifndef __WMPPlayToReceiver_DEFINED__
 #define __WMPPlayToReceiver_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToReceiver : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -190,7 +196,7 @@ WINRT_EXPORT
 #ifndef __WMPPlayToConnection_DEFINED__
 #define __WMPPlayToConnection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToConnection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -210,7 +216,7 @@ WINRT_EXPORT
 #ifndef __WMPPlayToSource_DEFINED__
 #define __WMPPlayToSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToSource : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -227,7 +233,7 @@ WINRT_EXPORT
 #ifndef __WMPPlayToConnectionStateChangedEventArgs_DEFINED__
 #define __WMPPlayToConnectionStateChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToConnectionStateChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -242,7 +248,7 @@ WINRT_EXPORT
 #ifndef __WMPPlayToConnectionTransferredEventArgs_DEFINED__
 #define __WMPPlayToConnectionTransferredEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToConnectionTransferredEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -257,7 +263,7 @@ WINRT_EXPORT
 #ifndef __WMPPlayToConnectionErrorEventArgs_DEFINED__
 #define __WMPPlayToConnectionErrorEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToConnectionErrorEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -272,7 +278,7 @@ WINRT_EXPORT
 #ifndef __WMPPlayToSourceSelectedEventArgs_DEFINED__
 #define __WMPPlayToSourceSelectedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToSourceSelectedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -290,7 +296,7 @@ WINRT_EXPORT
 #ifndef __WMPPlayToSourceDeferral_DEFINED__
 #define __WMPPlayToSourceDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToSourceDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -304,7 +310,7 @@ WINRT_EXPORT
 #ifndef __WMPPlayToSourceRequest_DEFINED__
 #define __WMPPlayToSourceRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToSourceRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -321,7 +327,7 @@ WINRT_EXPORT
 #ifndef __WMPPlayToSourceRequestedEventArgs_DEFINED__
 #define __WMPPlayToSourceRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToSourceRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -335,7 +341,7 @@ WINRT_EXPORT
 #ifndef __WMPPlayToManager_DEFINED__
 #define __WMPPlayToManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToManager : RTObject
 + (WMPPlayToManager*)getForCurrentView;
 + (void)showPlayToUI;

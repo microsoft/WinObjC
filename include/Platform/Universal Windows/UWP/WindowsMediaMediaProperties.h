@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_MediaProperties.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WMMMediaRatio, WMMMediaPropertySet, WMMAudioEncodingProperties, WMMMediaEncodingSubtypes, WMMH264ProfileIds, WMMMpeg2ProfileIds,
@@ -98,13 +104,17 @@ typedef unsigned WMMMediaMirroringOptions;
 @property (readonly) NSString* type;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
+@interface WMMIMediaEncodingProperties : RTObject <WMMIMediaEncodingProperties>
+@end
+
 #endif // __WMMIMediaEncodingProperties_DEFINED__
 
 // Windows.Media.MediaProperties.MediaRatio
 #ifndef __WMMMediaRatio_DEFINED__
 #define __WMMMediaRatio_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMMediaRatio : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -119,7 +129,7 @@ WINRT_EXPORT
 #ifndef __WMMMediaPropertySet_DEFINED__
 #define __WMMMediaPropertySet_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMMediaPropertySet : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -149,7 +159,7 @@ WINRT_EXPORT
 #ifndef __WMMAudioEncodingProperties_DEFINED__
 #define __WMMAudioEncodingProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMAudioEncodingProperties : RTObject <WMMIMediaEncodingProperties>
 + (WMMAudioEncodingProperties*)createAac:(unsigned int)sampleRate channelCount:(unsigned int)channelCount bitrate:(unsigned int)bitrate;
 + (WMMAudioEncodingProperties*)createAacAdts:(unsigned int)sampleRate channelCount:(unsigned int)channelCount bitrate:(unsigned int)bitrate;
@@ -179,7 +189,7 @@ WINRT_EXPORT
 #ifndef __WMMMediaEncodingSubtypes_DEFINED__
 #define __WMMMediaEncodingSubtypes_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMMediaEncodingSubtypes : RTObject
 + (NSString*)aac;
 + (NSString*)aacAdts;
@@ -229,7 +239,7 @@ WINRT_EXPORT
 #ifndef __WMMH264ProfileIds_DEFINED__
 #define __WMMH264ProfileIds_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMH264ProfileIds : RTObject
 + (int)baseline;
 + (int)constrainedBaseline;
@@ -249,7 +259,7 @@ WINRT_EXPORT
 #ifndef __WMMMpeg2ProfileIds_DEFINED__
 #define __WMMMpeg2ProfileIds_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMMpeg2ProfileIds : RTObject
 + (int)high;
 + (int)main;
@@ -264,7 +274,7 @@ WINRT_EXPORT
 #ifndef __WMMVideoEncodingProperties_DEFINED__
 #define __WMMVideoEncodingProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMVideoEncodingProperties : RTObject <WMMIMediaEncodingProperties>
 + (WMMVideoEncodingProperties*)createH264;
 + (WMMVideoEncodingProperties*)createMpeg2;
@@ -292,7 +302,7 @@ WINRT_EXPORT
 #ifndef __WMMImageEncodingProperties_DEFINED__
 #define __WMMImageEncodingProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMImageEncodingProperties : RTObject <WMMIMediaEncodingProperties>
 + (WMMImageEncodingProperties*)createUncompressed:(WMMMediaPixelFormat)format;
 + (WMMImageEncodingProperties*)createBmp;
@@ -316,7 +326,7 @@ WINRT_EXPORT
 #ifndef __WMMContainerEncodingProperties_DEFINED__
 #define __WMMContainerEncodingProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMContainerEncodingProperties : RTObject <WMMIMediaEncodingProperties>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -333,7 +343,7 @@ WINRT_EXPORT
 #ifndef __WMMMediaEncodingProfile_DEFINED__
 #define __WMMMediaEncodingProfile_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMMediaEncodingProfile : RTObject
 + (WMMMediaEncodingProfile*)createM4a:(WMMAudioEncodingQuality)quality;
 + (WMMMediaEncodingProfile*)createMp3:(WMMAudioEncodingQuality)quality;

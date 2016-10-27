@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXNNavigationEventArgs, WUXNNavigatingCancelEventArgs, WUXNNavigationFailedEventArgs, WUXNPageStackEntry;
@@ -90,7 +96,7 @@ typedef void (^WUXNNavigationStoppedEventHandler)(RTObject* sender, WUXNNavigati
 #ifndef __WUXNNavigationEventArgs_DEFINED__
 #define __WUXNNavigationEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXNNavigationEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -109,7 +115,7 @@ WINRT_EXPORT
 #ifndef __WUXNNavigatingCancelEventArgs_DEFINED__
 #define __WUXNNavigatingCancelEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXNNavigatingCancelEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -127,7 +133,7 @@ WINRT_EXPORT
 #ifndef __WUXNNavigationFailedEventArgs_DEFINED__
 #define __WUXNNavigationFailedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXNNavigationFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -143,7 +149,7 @@ WINRT_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -164,7 +170,7 @@ WINRT_EXPORT
 #ifndef __WUXNPageStackEntry_DEFINED__
 #define __WUXNPageStackEntry_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXNPageStackEntry : WXDependencyObject
 + (WUXNPageStackEntry*)makeInstance:(WUXITypeName*)sourcePageType
                           parameter:(RTObject*)parameter

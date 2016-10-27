@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_BACKGROUND_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_BACKGROUND_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Background.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDBDeviceUseDetails, WDBDeviceServicingDetails;
@@ -33,7 +39,7 @@
 #ifndef __WDBDeviceUseDetails_DEFINED__
 #define __WDBDeviceUseDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BACKGROUND_EXPORT
 @interface WDBDeviceUseDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -48,7 +54,7 @@ WINRT_EXPORT
 #ifndef __WDBDeviceServicingDetails_DEFINED__
 #define __WDBDeviceServicingDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BACKGROUND_EXPORT
 @interface WDBDeviceServicingDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;

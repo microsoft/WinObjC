@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_POWER_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_POWER_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Power.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDPBatteryReport, WDPBattery;
@@ -34,7 +40,7 @@
 #ifndef __WDPBatteryReport_DEFINED__
 #define __WDPBatteryReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_POWER_EXPORT
 @interface WDPBatteryReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -52,7 +58,7 @@ WINRT_EXPORT
 #ifndef __WDPBattery_DEFINED__
 #define __WDPBattery_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_POWER_EXPORT
 @interface WDPBattery : RTObject
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDPBattery*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;

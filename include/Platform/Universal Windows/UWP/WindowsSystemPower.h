@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SYSTEM_POWER_EXPORT
+#define OBJCUWP_WINDOWS_SYSTEM_POWER_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_System_Power.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WSPPowerManager, WSPBackgroundEnergyManager, WSPForegroundEnergyManager;
@@ -58,7 +64,7 @@ typedef unsigned WSPPowerSupplyStatus;
 #ifndef __WSPPowerManager_DEFINED__
 #define __WSPPowerManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_POWER_EXPORT
 @interface WSPPowerManager : RTObject
 + (WSPBatteryStatus)batteryStatus;
 + (WSPEnergySaverStatus)energySaverStatus;
@@ -83,7 +89,7 @@ WINRT_EXPORT
 #ifndef __WSPBackgroundEnergyManager_DEFINED__
 #define __WSPBackgroundEnergyManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_POWER_EXPORT
 @interface WSPBackgroundEnergyManager : RTObject
 + (unsigned int)excessiveUsageLevel;
 + (unsigned int)lowUsageLevel;
@@ -105,7 +111,7 @@ WINRT_EXPORT
 #ifndef __WSPForegroundEnergyManager_DEFINED__
 #define __WSPForegroundEnergyManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_POWER_EXPORT
 @interface WSPForegroundEnergyManager : RTObject
 + (unsigned int)excessiveUsageLevel;
 + (unsigned int)lowUsageLevel;
