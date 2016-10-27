@@ -41,6 +41,18 @@ NSString* const UITextAttributeTextShadowOffset = @"UITextAttributeTextShadowOff
 
 @implementation NSString (UIKitAdditions)
 
+static CTTextAlignment __UITextAlignmentToCTTextAlignment(UITextAlignment alignment) {
+    switch (alignment) {
+        case UITextAlignmentLeft:
+            return kCTLeftTextAlignment;
+        case UITextAlignmentRight:
+            return kCTRightTextAlignment;
+        case UITextAlignmentCenter:
+        default:
+            return kCTCenterTextAlignment;
+    }
+}
+
 static void drawString(UIFont* font,
                        CGContextRef context,
                        NSString* string,
@@ -62,7 +74,7 @@ static void drawString(UIFont* font,
     }
 
     CTParagraphStyleSetting styles[2];
-    CTTextAlignment align = static_cast<CTTextAlignment>(alignment);
+    CTTextAlignment align = __UITextAlignmentToCTTextAlignment(alignment);
     styles[0] = { kCTParagraphStyleSpecifierAlignment, sizeof(CTTextAlignment), &align };
 
     CTLineBreakMode breakMode = static_cast<CTLineBreakMode>(lineBreakMode);
@@ -88,12 +100,11 @@ static void drawString(UIFont* font,
     NSArray* lines = static_cast<NSArray*>(CTFrameGetLines(frame));
     std::vector<CGPoint> origins([lines count]);
     CTFrameGetLineOrigins(frame, {}, origins.data());
+    CGFloat lastYPosition = rect.origin.y;
     for (size_t i = 0; i < origins.size(); ++i) {
-        // Need to draw each line at given line origin relative to rect origin
-        // Translated vertically by ascent / 2.0 to counteract flip done by CT*Draw methods
-        CGFloat ascent;
-        CTLineGetTypographicBounds(static_cast<CTLineRef>(lines[i]), &ascent, nullptr, nullptr);
-        CGContextSetTextPosition(context, origins[i].x + rect.origin.x, origins[i].y + rect.origin.y - ascent / 2.0);
+        // Need to set text position so each line will be drawn in the correct position relative to eachother
+        CGContextSetTextPosition(context, rect.origin.x, lastYPosition);
+        lastYPosition = origins[i].y;
         CTLineDraw(static_cast<CTLineRef>(lines[i]), context);
     }
 
