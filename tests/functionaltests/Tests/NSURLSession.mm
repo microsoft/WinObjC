@@ -95,20 +95,21 @@ typedef NS_ENUM(NSInteger, NSURLSessionAllDelegateType) {
     willPerformHTTPRedirection:(NSHTTPURLResponse*)response
                     newRequest:(NSURLRequest*)request
              completionHandler:(void (^)(NSURLRequest*))completionHandler {
-    dispatch_sync(_queue,
-                  ^{
-                      [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLSessionDelegateWillPerformHTTPRedirection]];
-                  });
+    [self.condition lock];
+    dispatch_sync(_queue, ^{
+        [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLSessionDelegateWillPerformHTTPRedirection]];
+    });
+
     self.redirectionRequest = request;
     completionHandler(request);
     [self.condition signal];
 }
 
 - (void)URLSession:(NSURLSession*)session task:(NSURLSessionTask*)task didCompleteWithError:(NSError*)error {
-    dispatch_sync(_queue,
-                  ^{
-                      [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLSessionDelegateDidCompleteWithError]];
-                  });
+    [self.condition lock];
+    dispatch_sync(_queue, ^{
+        [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLSessionDelegateDidCompleteWithError]];
+    });
     self.completedWithError = error;
     [self.condition signal];
 }
@@ -117,23 +118,23 @@ typedef NS_ENUM(NSInteger, NSURLSessionAllDelegateType) {
 // NSURLSessionDataDelegate
 //
 - (void)URLSession:(NSURLSession*)session
-          dataTask:(NSURLSessionDataTask*)task
-didReceiveResponse:(NSURLResponse*)response
- completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
-    dispatch_sync(_queue,
-                  ^{
-                      [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLSessionDataDelegateDidReceiveResponse]];
-                  });
+              dataTask:(NSURLSessionDataTask*)task
+    didReceiveResponse:(NSURLResponse*)response
+     completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
+    [self.condition lock];
+    dispatch_sync(_queue, ^{
+        [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLSessionDataDelegateDidReceiveResponse]];
+    });
     self.response = response;
     completionHandler(NSURLSessionResponseAllow);
     [self.condition signal];
 }
 
 - (void)URLSession:(NSURLSession*)session dataTask:(NSURLSessionDataTask*)task didReceiveData:(NSData*)data {
-    dispatch_sync(_queue,
-                  ^{
-                      [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLSessionDataDelegateDidReceiveData]];
-                  });
+    [self.condition lock];
+    dispatch_sync(_queue, ^{
+        [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLSessionDataDelegateDidReceiveData]];
+    });
     self.data = data;
     [self.condition signal];
 }
@@ -267,8 +268,6 @@ TEST(NSURLSession, DataTaskWithURL_Failure) {
  * Test to verify a data task call can be successfully made and a valid data is received with a completion handler
  */
 TEST(NSURLSession, DataTaskWithURL_WithCompletionHandler) {
-    // TODO::
-    // todo-nithishm-bug - Switch from NSCondition to dispatch_semaphore_t once bug 7075799 is fixed.
     __block NSCondition* condition = [[NSCondition alloc] init];
     __block NSURLResponse* taskResponse;
     __block NSData* taskData;
@@ -288,10 +287,11 @@ TEST(NSURLSession, DataTaskWithURL_WithCompletionHandler) {
     [dataTask resume];
 
     // Wait for data.
-    if (![condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]) {
-        // Wait timed out.
-        ASSERT_FALSE_MSG(true, "FAILED: Waiting for connection timed out!");
-    }
+    [condition lock];
+    ASSERT_TRUE_MSG((taskResponse || taskData || taskError) ||
+                        [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]],
+                    "FAILED: Waiting for connection timed out!");
+    [condition unlock];
 
     // Make sure we received a response.
     ASSERT_TRUE_MSG((taskResponse != nil), "FAILED: Response cannot be empty!");
@@ -316,8 +316,6 @@ TEST(NSURLSession, DataTaskWithURL_WithCompletionHandler) {
  * error code was received.
  */
 TEST(NSURLSession, DataTaskWithURL_WithCompletionHandler_Failure) {
-    // TODO::
-    // todo-nithishm-bug - Switch from NSCondition to dispatch_semaphore_t once bug 7075799 is fixed.
     __block NSCondition* condition = [[NSCondition alloc] init];
     __block NSURLResponse* taskResponse;
     __block NSData* taskData;
@@ -337,10 +335,11 @@ TEST(NSURLSession, DataTaskWithURL_WithCompletionHandler_Failure) {
     [dataTask resume];
 
     // Wait for data.
-    if (![condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]) {
-        // Wait timed out.
-        ASSERT_FALSE_MSG(true, "FAILED: Waiting for connection timed out!");
-    }
+    [condition lock];
+    ASSERT_TRUE_MSG((taskResponse || taskData || taskError) ||
+                        [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]],
+                    "FAILED: Waiting for connection timed out!");
+    [condition unlock];
 
     // Make sure we received a response.
     ASSERT_TRUE_MSG((taskResponse != nil), "FAILED: Response cannot be empty!");
@@ -428,21 +427,23 @@ TEST(NSURLSession, DataTaskWithURL_WithCompletionHandler_Failure) {
     willPerformHTTPRedirection:(NSHTTPURLResponse*)response
                     newRequest:(NSURLRequest*)request
              completionHandler:(void (^)(NSURLRequest*))completionHandler {
-    dispatch_sync(_queue,
-                  ^{
-                      [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLSessionDelegateWillPerformHTTPRedirection]];
-                  });
+    [self.condition lock];
+    dispatch_sync(_queue, ^{
+        [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLSessionDelegateWillPerformHTTPRedirection]];
+    });
     self.redirectionRequest = request;
     completionHandler(request);
+
     [self.condition signal];
 }
 
 - (void)URLSession:(NSURLSession*)session task:(NSURLSessionTask*)task didCompleteWithError:(NSError*)error {
-    dispatch_sync(_queue,
-                  ^{
-                      [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLSessionDelegateDidCompleteWithError]];
-                  });
+    [self.condition lock];
+    dispatch_sync(_queue, ^{
+        [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLSessionDelegateDidCompleteWithError]];
+    });
     self.completedWithError = error;
+
     [self.condition signal];
 }
 
@@ -451,14 +452,13 @@ TEST(NSURLSession, DataTaskWithURL_WithCompletionHandler_Failure) {
 //
 
 - (void)URLSession:(NSURLSession*)session
-      downloadTask:(NSURLSessionDownloadTask*)downloadTask
- didResumeAtOffset:(int64_t)fileOffset
-expectedTotalBytes:(int64_t)expectedTotalBytes {
-    dispatch_sync(_queue,
-                  ^{
-                      [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLSessionDownloadDelegateDidResumeAtOffset]];
-                  });
-    [self.conditionDownloadResumed signal];
+          downloadTask:(NSURLSessionDownloadTask*)downloadTask
+     didResumeAtOffset:(int64_t)fileOffset
+    expectedTotalBytes:(int64_t)expectedTotalBytes {
+    [self.condition lock];
+    dispatch_sync(_queue, ^{
+        [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLSessionDownloadDelegateDidResumeAtOffset]];
+    });
     [self.condition signal];
 }
 
@@ -469,10 +469,9 @@ expectedTotalBytes:(int64_t)expectedTotalBytes {
     totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     // This delegate will be called periodically.
     if (!_didWriteDatadelegateCalled) {
-        dispatch_sync(_queue,
-                      ^{
-                          [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLSessionDownloadDelegateDidWriteData]];
-                      });
+        dispatch_sync(_queue, ^{
+            [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLSessionDownloadDelegateDidWriteData]];
+        });
         _didWriteDatadelegateCalled = true;
     }
     self.totalBytesExpectedToWrite = totalBytesExpectedToWrite;
@@ -481,10 +480,10 @@ expectedTotalBytes:(int64_t)expectedTotalBytes {
 }
 
 - (void)URLSession:(NSURLSession*)session downloadTask:(NSURLSessionDownloadTask*)downloadTask didFinishDownloadingToURL:(NSURL*)location {
-    dispatch_sync(_queue,
-                  ^{
-                      [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLSessionDownloadDelegateDidFinishDownloadingToURL]];
-                  });
+    [self.condition lock];
+    dispatch_sync(_queue, ^{
+        [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLSessionDownloadDelegateDidFinishDownloadingToURL]];
+    });
     self.downloadedLocation = location;
     [self.condition signal];
     [self.conditionDownloadComplete signal];
@@ -498,7 +497,7 @@ expectedTotalBytes:(int64_t)expectedTotalBytes {
 TEST(NSURLSession, DownloadTaskWithURL) {
     NSURLSessionDownloadTaskTestHelper* downloadTaskTestHelper = [[NSURLSessionDownloadTaskTestHelper alloc] init];
     NSURLSession* session = [downloadTaskTestHelper createSession];
-    NSURL* url = [NSURL URLWithString:@"http://speedtest.sea01.softlayer.com/downloads/test100.zip"];
+    NSURL* url = [NSURL URLWithString:@"http://speedtest.sea01.softlayer.com/downloads/test10.zip"];
     LOG_INFO("Establishing download task with url %@", url);
     NSURLSessionDownloadTask* downloadTask = [session downloadTaskWithURL:url];
     [downloadTask resume];
@@ -522,7 +521,7 @@ TEST(NSURLSession, DownloadTaskWithURL) {
                   "FAILED: didWriteData should be the first delegate to be called!");
     double fileSizeInMB = (double)downloadTaskTestHelper.totalBytesExpectedToWrite / 1024 / 1024;
     LOG_INFO("Downloaded file size is %fMB", fileSizeInMB);
-    ASSERT_EQ_MSG(100, std::floor(fileSizeInMB), "FAILED: Expected download file size does not match!");
+    ASSERT_EQ_MSG(10, std::floor(fileSizeInMB), "FAILED: Expected download file size does not match!");
 
     // Make sure the didFinishDownloadingToURL got called.
     ASSERT_EQ_MSG(NSURLSessionDownloadDelegateDidFinishDownloadingToURL,
@@ -585,8 +584,6 @@ TEST(NSURLSession, DownloadTaskWithURL_Failure) {
  * Test to verify a download task call can be successfully made with a completion handler
  */
 TEST(NSURLSession, DownloadTaskWithURL_WithCompletionHandler) {
-    // TODO::
-    // todo-nithishm-03312016- Switch from NSCondition to dispatch_semaphore_t once bug 7075799 is fixed.
     __block NSCondition* condition = [[NSCondition alloc] init];
     __block NSURLResponse* downloadResponse;
     __block NSURL* downloadLocation;
@@ -594,7 +591,7 @@ TEST(NSURLSession, DownloadTaskWithURL_WithCompletionHandler) {
 
     NSURLSessionDownloadTaskTestHelper* downloadTaskTestHelper = [[NSURLSessionDownloadTaskTestHelper alloc] init];
     NSURLSession* session = [downloadTaskTestHelper createSession];
-    NSURL* url = [NSURL URLWithString:@"http://speedtest.sea01.softlayer.com/downloads/test100.zip"];
+    NSURL* url = [NSURL URLWithString:@"http://speedtest.sea01.softlayer.com/downloads/test10.zip"];
     LOG_INFO("Establishing download task with url %@", url);
     NSURLSessionDownloadTask* downloadTask = [session downloadTaskWithURL:url
                                                         completionHandler:^(NSURL* location, NSURLResponse* response, NSError* error) {
@@ -606,10 +603,11 @@ TEST(NSURLSession, DownloadTaskWithURL_WithCompletionHandler) {
     [downloadTask resume];
 
     // Wait for download to complete.
-    if (![condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testDownloadTimeoutInSec]]) {
-        // Wait timed out.
-        ASSERT_FALSE_MSG(true, "FAILED: Waiting for download timed out!");
-    }
+    [condition lock];
+    ASSERT_TRUE_MSG((downloadLocation || downloadResponse || downloadError) ||
+                        [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testDownloadTimeoutInSec]],
+                    "FAILED: Waiting for download timed out!");
+    [condition unlock];
 
     // Make sure we get a download location.
     ASSERT_TRUE_MSG((downloadLocation != nil), "FAILED: Downloaded location cannot be empty!");
@@ -617,6 +615,11 @@ TEST(NSURLSession, DownloadTaskWithURL_WithCompletionHandler) {
 
     // Make sure there was no error.
     ASSERT_EQ_MSG(nil, downloadError, "FAILED: Download task returned error!");
+}
+
+inline int _GetLastDelegateCall(NSURLSessionDownloadTaskTestHelper* downloadTaskTestHelper) {
+    return [(NSNumber*)[downloadTaskTestHelper.delegateCallOrder objectAtIndex:([downloadTaskTestHelper.delegateCallOrder count] - 1)]
+        integerValue];
 }
 
 /**
@@ -670,10 +673,10 @@ TEST(NSURLSession, DownloadTaskWithURL_WithCancelResume) {
     }];
 
     // Wait for the task to be cancelled.
-    if (![conditionCancelled waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]) {
-        // Wait timed out.
-        ASSERT_FALSE_MSG(true, "FAILED: Waiting for download timed out!");
-    }
+    [conditionCancelled lock];
+    ASSERT_TRUE_MSG(downloadResumeData || [conditionCancelled waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]],
+                    "FAILED: Waiting for download timed out!");
+    [conditionCancelled unlock];
 
     // Make sure download has stopped.
     lastBytesDownloaded = (double)downloadTaskTestHelper.totalBytesWritten / 1024 / 1024;
