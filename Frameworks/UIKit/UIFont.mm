@@ -300,7 +300,7 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UIFontPrototype, CTFontGetTypeID);
 
     CGFloat size = [coder decodeFloatForKey:@"UIFontPointSize"];
 
-    UIFont* font = [UIFont fontWithName:name size:size];
+    UIFont* font = [[UIFont fontWithName:name size:size] retain];
 
     [self release];
     if (font) {
