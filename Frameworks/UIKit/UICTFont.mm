@@ -24,6 +24,19 @@
 
 PROTOTYPE_CLASS_REQUIRED_IMPLS(UICTFont)
 
+// WinObjC-only extension for UINibUnarchiver
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    NSString* name = [coder decodeObjectForKey:@"UIFontName"];
+    if ([name length] < 1) {
+        // fallback to default if could not find a font name
+        name = (__bridge NSString*)kCTFontDefaultFontName;
+    }
+
+    CGFloat size = [coder decodeFloatForKey:@"UIFontPointSize"];
+
+    return reinterpret_cast<UIFontPrototype*>(static_cast<UIFont*>(CTFontCreateWithName((__bridge CFStringRef)name, size, nullptr)));
+}
+
 @end
 #pragma endregion
 
