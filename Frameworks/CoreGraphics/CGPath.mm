@@ -162,9 +162,7 @@ CGMutablePathRef CGPathCreateMutable() {
  @Notes Creates a mutable copy
 */
 CGPathRef CGPathCreateCopy(CGPathRef path) {
-    if (path == NULL) {
-        return NULL;
-    }
+    RETURN_NULL_IF(!path);
 
     return CGPathCreateMutableCopy(path);
 }
@@ -173,9 +171,7 @@ CGPathRef CGPathCreateCopy(CGPathRef path) {
 @Status Interoperable
 */
 CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
-    if (path == NULL) {
-        return NULL;
-    }
+    RETURN_NULL_IF(!path);
 
     CGMutablePathRef mutableRet = CGPathCreateMutable();
 
@@ -184,7 +180,10 @@ CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
     // Otherwise the D2D calls will return that a bad state has been entered.
     path->closePath();
 
-    FAIL_FAST_IF_FAILED(path->_impl.pathGeometry->Stream(mutableRet->_impl.geometrySink.Get()));
+    if (FAILED(path->_impl.pathGeometry->Stream(mutableRet->_impl.geometrySink.Get()))) {
+        CGPathRelease(mutableRet);
+        return NULL;
+    }
 
     mutableRet->_impl.currentPoint = path->_impl.currentPoint;
     mutableRet->_impl.startingPoint = path->_impl.startingPoint;
@@ -529,9 +528,7 @@ void CGPathRelease(CGPathRef path) {
  @Status Interoperable
 */
 CGPathRef CGPathRetain(CGPathRef path) {
-    if (path == NULL) {
-        return NULL;
-    }
+    RETURN_NULL_IF(!path);
 
     CFRetain(path);
 
@@ -648,14 +645,16 @@ void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function) {
  @Notes eoFill ignored. Default fill pattern for ID2D1 Geometry is used.
 */
 bool CGPathContainsPoint(CGPathRef path, const CGAffineTransform* transform, CGPoint point, bool eoFill) {
+    RETURN_FALSE_IF(!path);
+
     if (transform) {
         point = CGPointApplyAffineTransform(point, *transform);
     }
 
-    BOOL containsPoint = false;
+    BOOL containsPoint = FALSE;
 
     path->closePath();
-    FAIL_FAST_IF_FAILED(path->_impl.pathGeometry.Get()->FillContainsPoint(_CGPointToD2D_F(point), D2D1::IdentityMatrix(), &containsPoint));
+    FAIL_FAST_IF_FAILED(path->_impl.pathGeometry->FillContainsPoint(_CGPointToD2D_F(point), D2D1::IdentityMatrix(), &containsPoint));
 
     return (containsPoint ? true : false);
 }
