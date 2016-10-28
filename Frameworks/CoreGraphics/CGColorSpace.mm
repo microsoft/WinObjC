@@ -114,6 +114,11 @@ CGColorSpaceRef CGColorSpaceCreateDeviceGray() {
     return (CGColorSpaceRef) new __CGColorSpace(kCGColorSpaceModelMonochrome);
 }
 
+
+CGColorSpaceRef _CGColorSpaceCreate(CGColorSpaceModel model) {
+    return static_cast<CGColorSpaceRef>(new __CGColorSpace(model));
+}
+
 /**
  @Status Caveat
  @Notes Only GenericRGB, GenericRGBLinear and GenericGray supported
