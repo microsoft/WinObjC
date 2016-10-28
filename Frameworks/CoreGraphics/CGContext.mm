@@ -577,7 +577,7 @@ void CGContextAddPath(CGContextRef context, CGPathRef path) {
 
     if (!context->HasPath()) {
         // If we don't curerntly have a path, take this one in as our own.
-        woc::unique_cf<CGMutablePathRef> copiedPath{CGPathCreateMutableCopy(path)};
+        woc::unique_cf<CGMutablePathRef> copiedPath{ CGPathCreateMutableCopy(path) };
         context->SetPath(copiedPath.get());
         return;
     }
@@ -597,15 +597,20 @@ void CGContextReplacePathWithStrokedPath(CGContextRef context) {
 
     auto& state = context->CurrentGState();
 
-    // TODO GH#xxxx When CGPathCreateCopyByStrokingPath is no longer stubbed, remove the diagnostic suppression.
+// TODO GH#xxxx When CGPathCreateCopyByStrokingPath is no longer stubbed, remove the diagnostic suppression.
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
-    woc::unique_cf<CGPathRef> newPath{CGPathCreateCopyByStrokingPath(context->Path(), &state.transform, state.lineWidth, (CGLineCap)state.strokeProperties.startCap, (CGLineJoin)state.strokeProperties.lineJoin, state.strokeProperties.miterLimit)};
+    woc::unique_cf<CGPathRef> newPath{ CGPathCreateCopyByStrokingPath(context->Path(),
+                                                                      &state.transform,
+                                                                      state.lineWidth,
+                                                                      (CGLineCap)state.strokeProperties.startCap,
+                                                                      (CGLineJoin)state.strokeProperties.lineJoin,
+                                                                      state.strokeProperties.miterLimit) };
 
 #pragma clang diagnostic pop
 
-    woc::unique_cf<CGMutablePathRef> newMutablePath{CGPathCreateMutableCopy(newPath.get())};
+    woc::unique_cf<CGMutablePathRef> newMutablePath{ CGPathCreateMutableCopy(newPath.get()) };
     context->SetPath(newMutablePath.get());
 }
 
