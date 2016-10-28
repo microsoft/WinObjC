@@ -124,7 +124,7 @@ struct __CGContextImpl {
 
     // Calculated at creation time, this transform flips CG's drawing commands,
     // anchored in the bottom left, to D2D's top-left coordinate system.
-    CGAffineTransform cgCompatibilityTransform{ CGAffineTransformIdentity };
+    CGAffineTransform deviceTransform{ CGAffineTransformIdentity };
 
     std::stack<__CGContextDrawingState> stateStack{};
 
@@ -196,6 +196,11 @@ static void __CGContextInitWithRenderTarget(CGContextRef context, ID2D1RenderTar
     // If a context does not support alpha, the default fill looks like fully opaque black.
     CGContextSetRGBFillColor(context, 0, 0, 0, 0);
     CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
+
+    // CG is a lower-left origin system (LLO), but D2D is upper left (ULO).
+    // We have to translate the render area back onscreen and flip it up to ULO.
+    D2D1_SIZE_F targetSize = renderTarget->GetSize();
+    context->Impl().deviceTransform = CGAffineTransformMake(1.f, 0.f, 0.f, -1.f, 0.f, targetSize.height);
 }
 
 CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget) {
@@ -1293,6 +1298,7 @@ static bool __CGContextCreateShadowEffect(CGContextRef context, ID2D1DeviceConte
 
 template <typename Lambda> // Lambda takes the form void(*)(CGContextRef, ID2D1DeviceContext*)
 static void __CGContextRenderToCommandList(CGContextRef context, ID2D1CommandList** outCommandList, Lambda&& drawLambda) {
+    auto& state = context->CurrentGState();
     ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
     ComPtr<ID2D1DeviceContext> deviceContext;
     FAIL_FAST_IF_FAILED(renderTarget.As(&deviceContext));
@@ -1304,6 +1310,8 @@ static void __CGContextRenderToCommandList(CGContextRef context, ID2D1CommandLis
     ComPtr<ID2D1CommandList> commandList;
     FAIL_FAST_IF_FAILED(deviceContext->CreateCommandList(&commandList));
 
+    deviceContext->SetTransform(__CGAffineTransformToD2D_F(state.transform));
+
     deviceContext->BeginDraw();
     deviceContext->SetTarget(commandList.Get());
 
@@ -1313,6 +1321,8 @@ static void __CGContextRenderToCommandList(CGContextRef context, ID2D1CommandLis
     FAIL_FAST_IF_FAILED(commandList->Close());
 
     deviceContext->SetTarget(originalTarget.Get());
+
+    deviceContext->SetTransform(D2D1::IdentityMatrix());
 
     *outCommandList = commandList.Detach();
 }
@@ -1324,13 +1334,7 @@ static void __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
     ComPtr<ID2D1DeviceContext> deviceContext;
     FAIL_FAST_IF_FAILED(renderTarget.As(&deviceContext));
 
-    D2D1_SIZE_F targetSize = renderTarget->GetSize();
-
-    // CG is a lower-left origin system (LLO), but D2D is upper left (ULO).
-    // We have to translate the render area back onscreen and flip it up to ULO.
-    CGAffineTransform transform = CGAffineTransformMake(1.f, 0.f, 0.f, -1.f, 0.f, targetSize.height);
-    transform = CGAffineTransformConcat(state.transform, transform);
-    deviceContext->SetTransform(__CGAffineTransformToD2D_F(transform));
+    deviceContext->SetTransform(__CGAffineTransformToD2D_F(context->Impl().deviceTransform));
 
     deviceContext->BeginDraw();
 
