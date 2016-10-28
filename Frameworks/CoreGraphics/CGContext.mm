@@ -92,9 +92,9 @@ struct __CGContextDrawingState {
     CGFloat alpha = 1.0f;
 
     // Shadowing
-    D2D1_VECTOR_4F shadowColor{0, 0, 0, 0};
-    CGSize shadowOffset{0, 0};
-    CGFloat shadowBlur{0};
+    D2D1_VECTOR_4F shadowColor{ 0, 0, 0, 0 };
+    CGSize shadowOffset{ 0, 0 };
+    CGFloat shadowBlur{ 0 };
 
     inline void ComputeStrokeStyle(ID2D1DeviceContext* deviceContext) {
         if (strokeStyle) {
@@ -169,14 +169,13 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext, __CGContextImpl> {
     }
 };
 
-#define NOISY_RETURN_IF_NULL(param, ...)                                         \
-    do {                                                                         \
-        if (!context) {                                                          \
+#define NOISY_RETURN_IF_NULL(param, ...)                                    \
+    do {                                                                    \
+        if (!context) {                                                     \
             TraceError(TAG, L"%hs: null " #param "!", __PRETTY_FUNCTION__); \
-            return __VA_ARGS__;                                                  \
-        }                                                                        \
-    \
-} while (0)
+            return __VA_ARGS__;                                             \
+        }                                                                   \
+    } while (0)
 
 static const wchar_t* TAG = L"CGContext";
 
@@ -1076,7 +1075,7 @@ void CGContextSetShadow(CGContextRef context, CGSize offset, CGFloat blur) {
 
     auto& state = context->CurrentGState();
     // The default shadow colour on the reference platform is black at 33% alpha.
-    state.shadowColor = {0.f, 0.f, 0.f, 1.f/3.f};
+    state.shadowColor = { 0.f, 0.f, 0.f, 1.f / 3.f };
     state.shadowOffset = CGSizeApplyAffineTransform(offset, context->Impl().shadowProjectionTransform);
     state.shadowBlur = blur;
 }
@@ -1091,11 +1090,11 @@ void CGContextSetShadowWithColor(CGContextRef context, CGSize offset, CGFloat bl
     auto& state = context->CurrentGState();
     if (color) {
         const CGFloat* comp = CGColorGetComponents(color);
-        state.shadowColor = {comp[0], comp[1], comp[2], comp[3]};
+        state.shadowColor = { comp[0], comp[1], comp[2], comp[3] };
     } else {
         // Setting the alpha (4th component) to 0 disables shadowing.
         // This is in line with the reference platform's shadowing specification.
-        state.shadowColor = {0.f, 0.f, 0.f, 0.f};
+        state.shadowColor = { 0.f, 0.f, 0.f, 0.f };
     }
     state.shadowOffset = CGSizeApplyAffineTransform(offset, context->Impl().shadowProjectionTransform);
     state.shadowBlur = blur;
@@ -1286,7 +1285,10 @@ void CGContextClearRect(CGContextRef context, CGRect rect) {
     renderTarget->PopAxisAlignedClip();
 }
 
-static bool __CGContextCreateShadowEffect(CGContextRef context, ID2D1DeviceContext* deviceContext, ID2D1Image* inputImage, ID2D1Effect** outShadowEffect) {
+static bool __CGContextCreateShadowEffect(CGContextRef context,
+                                          ID2D1DeviceContext* deviceContext,
+                                          ID2D1Image* inputImage,
+                                          ID2D1Effect** outShadowEffect) {
     auto& state = context->CurrentGState();
     if (std::fpclassify(state.shadowColor.w) != FP_ZERO) {
         ComPtr<ID2D1Effect> shadowEffect;
@@ -1298,7 +1300,9 @@ static bool __CGContextCreateShadowEffect(CGContextRef context, ID2D1DeviceConte
         ComPtr<ID2D1Effect> affineTransformEffect;
         FAIL_FAST_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D12DAffineTransform, &affineTransformEffect));
         affineTransformEffect->SetInputEffect(0, shadowEffect.Get());
-        FAIL_FAST_IF_FAILED(affineTransformEffect->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX, D2D1::Matrix3x2F::Translation(state.shadowOffset.width, state.shadowOffset.height)));
+        FAIL_FAST_IF_FAILED(
+            affineTransformEffect->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX,
+                                            D2D1::Matrix3x2F::Translation(state.shadowOffset.width, state.shadowOffset.height)));
 
         ComPtr<ID2D1Effect> compositeEffect;
         FAIL_FAST_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Composite, &compositeEffect));
@@ -1363,7 +1367,7 @@ static void __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
             nullptr);
     }
 
-    ComPtr<ID2D1Image> currentImage{image};
+    ComPtr<ID2D1Image> currentImage{ image };
 
     ComPtr<ID2D1Effect> shadowEffect;
     if (__CGContextCreateShadowEffect(context, deviceContext.Get(), currentImage.Get(), &shadowEffect)) {
