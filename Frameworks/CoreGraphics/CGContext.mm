@@ -620,7 +620,7 @@ void CGContextReplacePathWithStrokedPath(CGContextRef context) {
 bool CGContextIsPathEmpty(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, StubReturn());
 
-    return context->HasPath() && CGPathIsEmpty(context->Path());
+    return !context->HasPath() || CGPathIsEmpty(context->Path());
 }
 
 /**
