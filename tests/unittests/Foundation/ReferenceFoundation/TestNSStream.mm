@@ -24,6 +24,7 @@
 
 #import <Foundation/Foundation.h>
 #import <TestFramework.h>
+#import <type_traits>
 #import "TestUtils.h"
 
 static NSString* createTestFile(NSString* path, NSData* contents) {
@@ -52,7 +53,7 @@ TEST(NSStream, InputStreamWithData) {
     ASSERT_EQ(NSStreamStatusOpen, dataStream.streamStatus);
     uint8_t buffer[20] = {};
     if (dataStream.hasBytesAvailable) {
-        NSInteger result = [dataStream read:buffer maxLength:_countof(buffer)];
+        NSInteger result = [dataStream read:buffer maxLength:std::extent<decltype(buffer)>::value];
         [dataStream close];
         ASSERT_EQ(NSStreamStatusClosed, dataStream.streamStatus);
         if (result > 0) {
@@ -75,7 +76,7 @@ TEST(NSStream, InputStreamWithUrl) {
         ASSERT_EQ(NSStreamStatusOpen, urlStream.streamStatus);
         uint8_t buffer[20] = {};
         if (urlStream.hasBytesAvailable) {
-            NSInteger result = [urlStream read:buffer maxLength:_countof(buffer)];
+            NSInteger result = [urlStream read:buffer maxLength:std::extent<decltype(buffer)>::value];
             [urlStream close];
             ASSERT_EQ(NSStreamStatusClosed, urlStream.streamStatus);
             ASSERT_EQ(messageData.length, result);
@@ -102,7 +103,7 @@ TEST(NSStream, InputStreamWithFile) {
         ASSERT_EQ(NSStreamStatusOpen, fileStream.streamStatus);
         uint8_t buffer[20] = {};
         if (fileStream.hasBytesAvailable) {
-            NSInteger result = [fileStream read:buffer maxLength:_countof(buffer)];
+            NSInteger result = [fileStream read:buffer maxLength:std::extent<decltype(buffer)>::value];
             [fileStream close];
             ASSERT_EQ(NSStreamStatusClosed, fileStream.streamStatus);
             ASSERT_EQ(messageData.length, result);
@@ -124,7 +125,7 @@ TEST(NSStream, InputStreamHasBytesAvailable) {
     uint8_t buffer[20] = {};
     [stream open];
     ASSERT_TRUE(stream.hasBytesAvailable);
-    NSInteger result = [stream read:buffer maxLength:_countof(buffer)];
+    NSInteger result = [stream read:buffer maxLength:std::extent<decltype(buffer)>::value];
     ASSERT_FALSE(stream.hasBytesAvailable);
 }
 
@@ -167,7 +168,9 @@ TEST(NSStream, OutputStreamCreationToBuffer) {
     [outputStream close];
     ASSERT_EQ(NSStreamStatusClosed, outputStream.streamStatus);
     ASSERT_EQ(myString.length, result);
-    ASSERT_OBJCEQ([[[NSString alloc] initWithBytes:buffer length:_countof(buffer) encoding:NSUTF8StringEncoding] autorelease], myString);
+    ASSERT_OBJCEQ([[[NSString alloc] initWithBytes:buffer length:std::extent<decltype(buffer)>::value encoding:NSUTF8StringEncoding]
+                      autorelease],
+                  myString);
 }
 
 TEST(NSStream, OutputStreamCreationWithUrl) {
@@ -205,7 +208,8 @@ TEST(NSStream, OutputStreamCreationToMemory) {
     auto dataWritten = [outputStream propertyForKey:NSStreamDataWrittenToMemoryStreamKey];
     if (auto nsdataWritten = ([dataWritten isKindOfClass:[NSData class]] ? (NSData*)dataWritten : nil)) {
         [nsdataWritten getBytes:buffer length:result];
-        ASSERT_OBJCEQ([[[NSString alloc] initWithBytes:buffer length:_countof(buffer) encoding:NSUTF8StringEncoding] autorelease],
+        ASSERT_OBJCEQ([[[NSString alloc] initWithBytes:buffer length:std::extent<decltype(buffer)>::value encoding:NSUTF8StringEncoding]
+                          autorelease],
                       myString);
         [outputStream close];
     } else {
