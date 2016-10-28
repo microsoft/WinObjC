@@ -1877,6 +1877,10 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, flo
     float height = _imgDest->Backing()->Height();
     transform = CGAffineTransformTranslate(transform, 0, (height / verticalScalingFactor));
 
+    // TODO 1077:: Remove once D2D render target is implemented
+    // Perform inverse-scaling to return to proper drawing scale
+    transform = CGAffineTransformScale(transform, 1.0f / _scale, 1.0f / _scale);
+
     // Perform anti-clockwise rotation required to match the reference platform.
     imgRenderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, -transform.b, transform.c, transform.d, transform.tx, transform.ty));
 

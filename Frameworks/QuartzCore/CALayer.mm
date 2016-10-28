@@ -625,6 +625,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         if (priv->contentsScale != 1.0f) {
             // TODO 1077:: Remove once D2D render target is implemented
             _CGContextSetScaleFactor(drawContext, priv->contentsScale);
+            CGContextScaleCTM(drawContext, priv->contentsScale, priv->contentsScale);
         }
 
         CGContextScaleCTM(drawContext, 1.0f, -1.0f);

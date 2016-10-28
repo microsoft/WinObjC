@@ -102,7 +102,7 @@ static void drawString(UIFont* font,
     CTFrameGetLineOrigins(frame, {}, origins.data());
     CGFloat lastYPosition = rect.origin.y;
     for (size_t i = 0; i < origins.size(); ++i) {
-        // Need to set text position so each line will be drawn in the correct position relative to eachother
+        // Need to set text position so each line will be drawn in the correct position relative to each other
         CGContextSetTextPosition(context, rect.origin.x, lastYPosition);
         lastYPosition = origins[i].y;
         CTLineDraw(static_cast<CTLineRef>(lines[i]), context);
