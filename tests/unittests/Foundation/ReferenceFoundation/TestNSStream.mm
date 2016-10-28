@@ -38,7 +38,7 @@ static NSString* createTestFile(NSString* path, NSData* contents) {
 }
 
 static void removeTestFile(NSString* location) {
-    NSError* error;
+    NSError* error = nil;
     [[NSFileManager defaultManager] removeItemAtPath:location error:&error];
     ASSERT_OBJCEQ(nil, error);
 }
