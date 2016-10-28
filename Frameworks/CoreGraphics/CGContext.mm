@@ -161,6 +161,10 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext, __CGContextImpl> {
         return _impl.currentPath.get();
     }
 
+    inline void SetPath(CGMutablePathRef path) {
+        _impl.currentPath.reset(CGPathRetain(path));
+    }
+
     inline void ClearPath() {
         _impl.currentPath.reset();
     }
@@ -481,7 +485,7 @@ void CGContextClosePath(CGContextRef context) {
 void CGContextAddRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddRect(context->Path(), &context->CurrentGState().transform, rect);
+    CGPathAddRect(context->Path(), &(context->CurrentGState().transform), rect);
 }
 
 /**
@@ -505,7 +509,7 @@ void CGContextAddRects(CGContextRef context, const CGRect* rects, unsigned count
 void CGContextAddLineToPoint(CGContextRef context, CGFloat x, CGFloat y) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddLineToPoint(context->Path(), &context->CurrentGState().transform, x, y);
+    CGPathAddLineToPoint(context->Path(), &(context->CurrentGState().transform), x, y);
 }
 
 /**
@@ -514,7 +518,7 @@ void CGContextAddLineToPoint(CGContextRef context, CGFloat x, CGFloat y) {
 void CGContextAddCurveToPoint(CGContextRef context, CGFloat cp1x, CGFloat cp1y, CGFloat cp2x, CGFloat cp2y, CGFloat x, CGFloat y) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddCurveToPoint(context->Path(), &context->CurrentGState().transform, cp1x, cp1y, cp2x, cp2y, x, y);
+    CGPathAddCurveToPoint(context->Path(), &(context->CurrentGState().transform), cp1x, cp1y, cp2x, cp2y, x, y);
 }
 
 /**
@@ -523,7 +527,7 @@ void CGContextAddCurveToPoint(CGContextRef context, CGFloat cp1x, CGFloat cp1y, 
 void CGContextAddQuadCurveToPoint(CGContextRef context, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddQuadCurveToPoint(context->Path(), &context->CurrentGState().transform, cpx, cpy, x, y);
+    CGPathAddQuadCurveToPoint(context->Path(), &(context->CurrentGState().transform), cpx, cpy, x, y);
 }
 
 /**
@@ -532,7 +536,7 @@ void CGContextAddQuadCurveToPoint(CGContextRef context, CGFloat cpx, CGFloat cpy
 void CGContextMoveToPoint(CGContextRef context, CGFloat x, CGFloat y) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathMoveToPoint(context->Path(), &context->CurrentGState().transform, x, y);
+    CGPathMoveToPoint(context->Path(), &(context->CurrentGState().transform), x, y);
 }
 
 /**
@@ -541,7 +545,7 @@ void CGContextMoveToPoint(CGContextRef context, CGFloat x, CGFloat y) {
 void CGContextAddArc(CGContextRef context, CGFloat x, CGFloat y, CGFloat radius, CGFloat startAngle, CGFloat endAngle, int clockwise) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddArc(context->Path(), &context->CurrentGState().transform, x, y, radius, startAngle, endAngle, clockwise);
+    CGPathAddArc(context->Path(), &(context->CurrentGState().transform), x, y, radius, startAngle, endAngle, clockwise);
 }
 
 /**
@@ -550,7 +554,7 @@ void CGContextAddArc(CGContextRef context, CGFloat x, CGFloat y, CGFloat radius,
 void CGContextAddArcToPoint(CGContextRef context, CGFloat x1, CGFloat y1, CGFloat x2, CGFloat y2, CGFloat radius) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddArcToPoint(context->Path(), &context->CurrentGState().transform, x1, y1, x2, y2, radius);
+    CGPathAddArcToPoint(context->Path(), &(context->CurrentGState().transform), x1, y1, x2, y2, radius);
 }
 
 /**
@@ -559,7 +563,7 @@ void CGContextAddArcToPoint(CGContextRef context, CGFloat x1, CGFloat y1, CGFloa
 void CGContextAddEllipseInRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddEllipseInRect(context->Path(), &context->CurrentGState().transform, rect);
+    CGPathAddEllipseInRect(context->Path(), &(context->CurrentGState().transform), rect);
 }
 
 /**
@@ -573,12 +577,12 @@ void CGContextAddPath(CGContextRef context, CGPathRef path) {
 
     if (!context->HasPath()) {
         // If we don't curerntly have a path, take this one in as our own.
-        woc::unique_cf<CGMutablePathRef>& currentPathRef{context->Impl().currentPath};
-        currentPathRef.reset(CGPathCreateMutableCopy(path));
+        woc::unique_cf<CGMutablePathRef> copiedPath{CGPathCreateMutableCopy(path)};
+        context->SetPath(copiedPath.get());
         return;
     }
 
-    CGPathAddPath(context->Path(), &context->CurrentGState().transform, path);
+    CGPathAddPath(context->Path(), &(context->CurrentGState().transform), path);
 }
 
 /**
@@ -591,20 +595,18 @@ void CGContextReplacePathWithStrokedPath(CGContextRef context) {
         return;
     }
 
-    // We're avoiding .Path() here since we want the actual unique_cf<CGMutablePathRef>.
-    woc::unique_cf<CGMutablePathRef>& currentPathRef{context->Impl().currentPath};
-
     auto& state = context->CurrentGState();
 
     // TODO GH#xxxx When CGPathCreateCopyByStrokingPath is no longer stubbed, remove the diagnostic suppression.
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
-    woc::unique_cf<CGPathRef> newPath{CGPathCreateCopyByStrokingPath(currentPathRef.get(), &state.transform, state.lineWidth, (CGLineCap)state.strokeProperties.startCap, (CGLineJoin)state.strokeProperties.lineJoin, state.strokeProperties.miterLimit)};
+    woc::unique_cf<CGPathRef> newPath{CGPathCreateCopyByStrokingPath(context->Path(), &state.transform, state.lineWidth, (CGLineCap)state.strokeProperties.startCap, (CGLineJoin)state.strokeProperties.lineJoin, state.strokeProperties.miterLimit)};
 
 #pragma clang diagnostic pop
 
-    currentPathRef.reset(CGPathCreateMutableCopy(newPath.get()));
+    woc::unique_cf<CGMutablePathRef> newMutablePath{CGPathCreateMutableCopy(newPath.get())};
+    context->SetPath(newMutablePath.get());
 }
 
 /**
@@ -613,11 +615,7 @@ void CGContextReplacePathWithStrokedPath(CGContextRef context) {
 bool CGContextIsPathEmpty(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, StubReturn());
 
-    if (!context->HasPath()) {
-        return true;
-    }
-
-    return CGPathIsEmpty(context->Path());
+    return context->HasPath() && CGPathIsEmpty(context->Path());
 }
 
 /**
@@ -643,7 +641,7 @@ void CGContextAddLines(CGContextRef context, const CGPoint* points, unsigned cou
         return;
     }
 
-    CGPathAddLines(context->Path(), &context->CurrentGState().transform, points, count);
+    CGPathAddLines(context->Path(), &(context->CurrentGState().transform), points, count);
 }
 #pragma endregion
 
@@ -687,7 +685,7 @@ bool CGContextPathContainsPoint(CGContextRef context, CGPoint point, CGPathDrawi
         return false;
     }
 
-    return CGPathContainsPoint(context->Path(), &context->CurrentGState().transform, point, (mode & kCGPathEOFill));
+    return CGPathContainsPoint(context->Path(), &(context->CurrentGState().transform), point, (mode & kCGPathEOFill));
 }
 #pragma endregion
 
