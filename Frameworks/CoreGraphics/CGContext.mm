@@ -1285,75 +1285,76 @@ void CGContextClearRect(CGContextRef context, CGRect rect) {
     renderTarget->PopAxisAlignedClip();
 }
 
-static bool __CGContextCreateShadowEffect(CGContextRef context,
+static HRESULT __CGContextCreateShadowEffect(CGContextRef context,
                                           ID2D1DeviceContext* deviceContext,
                                           ID2D1Image* inputImage,
                                           ID2D1Effect** outShadowEffect) {
     auto& state = context->CurrentGState();
     if (std::fpclassify(state.shadowColor.w) != FP_ZERO) {
         ComPtr<ID2D1Effect> shadowEffect;
-        FAIL_FAST_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Shadow, &shadowEffect));
+        RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Shadow, &shadowEffect));
         shadowEffect->SetInput(0, inputImage);
-        FAIL_FAST_IF_FAILED(shadowEffect->SetValue(D2D1_SHADOW_PROP_COLOR, state.shadowColor));
-        FAIL_FAST_IF_FAILED(shadowEffect->SetValue(D2D1_SHADOW_PROP_BLUR_STANDARD_DEVIATION, state.shadowBlur));
+        RETURN_IF_FAILED(shadowEffect->SetValue(D2D1_SHADOW_PROP_COLOR, state.shadowColor));
+        RETURN_IF_FAILED(shadowEffect->SetValue(D2D1_SHADOW_PROP_BLUR_STANDARD_DEVIATION, state.shadowBlur));
 
         ComPtr<ID2D1Effect> affineTransformEffect;
-        FAIL_FAST_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D12DAffineTransform, &affineTransformEffect));
+        RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D12DAffineTransform, &affineTransformEffect));
         affineTransformEffect->SetInputEffect(0, shadowEffect.Get());
-        FAIL_FAST_IF_FAILED(
+        RETURN_IF_FAILED(
             affineTransformEffect->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX,
                                             D2D1::Matrix3x2F::Translation(state.shadowOffset.width, state.shadowOffset.height)));
 
         ComPtr<ID2D1Effect> compositeEffect;
-        FAIL_FAST_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Composite, &compositeEffect));
+        RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Composite, &compositeEffect));
         compositeEffect->SetInputEffect(0, affineTransformEffect.Get());
         compositeEffect->SetInput(1, inputImage);
 
         *outShadowEffect = compositeEffect.Detach();
-        return true;
+    } else {
+        *outShadowEffect = nullptr;
     }
 
-    *outShadowEffect = nullptr;
-    return false;
+    return S_OK;
 }
 
 template <typename Lambda> // Lambda takes the form void(*)(CGContextRef, ID2D1DeviceContext*)
-static void __CGContextRenderToCommandList(CGContextRef context, ID2D1CommandList** outCommandList, Lambda&& drawLambda) {
+static HRESULT __CGContextRenderToCommandList(CGContextRef context, ID2D1CommandList** outCommandList, Lambda&& drawLambda) {
     auto& state = context->CurrentGState();
     ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
     ComPtr<ID2D1DeviceContext> deviceContext;
-    FAIL_FAST_IF_FAILED(renderTarget.As(&deviceContext));
+    RETURN_IF_FAILED(renderTarget.As(&deviceContext));
 
     // Cache the original target to restore it later.
     ComPtr<ID2D1Image> originalTarget;
     deviceContext->GetTarget(&originalTarget);
 
     ComPtr<ID2D1CommandList> commandList;
-    FAIL_FAST_IF_FAILED(deviceContext->CreateCommandList(&commandList));
+    RETURN_IF_FAILED(deviceContext->CreateCommandList(&commandList));
 
     deviceContext->SetTransform(__CGAffineTransformToD2D_F(state.transform));
 
     deviceContext->BeginDraw();
     deviceContext->SetTarget(commandList.Get());
 
-    std::forward<Lambda>(drawLambda)(context, deviceContext.Get());
+    RETURN_IF_FAILED(std::forward<Lambda>(drawLambda)(context, deviceContext.Get()));
 
-    FAIL_FAST_IF_FAILED(deviceContext->EndDraw());
-    FAIL_FAST_IF_FAILED(commandList->Close());
+    RETURN_IF_FAILED(deviceContext->EndDraw());
+    RETURN_IF_FAILED(commandList->Close());
 
     deviceContext->SetTarget(originalTarget.Get());
 
     deviceContext->SetTransform(D2D1::IdentityMatrix());
 
     *outCommandList = commandList.Detach();
+    return S_OK;
 }
 
-static void __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
+static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
     ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
     auto& state = context->CurrentGState();
 
     ComPtr<ID2D1DeviceContext> deviceContext;
-    FAIL_FAST_IF_FAILED(renderTarget.As(&deviceContext));
+    RETURN_IF_FAILED(renderTarget.As(&deviceContext));
 
     deviceContext->SetTransform(__CGAffineTransformToD2D_F(context->Impl().deviceTransform));
 
@@ -1370,8 +1371,9 @@ static void __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
     ComPtr<ID2D1Image> currentImage{ image };
 
     ComPtr<ID2D1Effect> shadowEffect;
-    if (__CGContextCreateShadowEffect(context, deviceContext.Get(), currentImage.Get(), &shadowEffect)) {
-        FAIL_FAST_IF_FAILED(shadowEffect.As(&currentImage));
+    RETURN_IF_FAILED(__CGContextCreateShadowEffect(context, deviceContext.Get(), currentImage.Get(), &shadowEffect));
+    if (shadowEffect) {
+        RETURN_IF_FAILED(shadowEffect.As(&currentImage));
     }
 
     deviceContext->DrawImage(currentImage.Get());
@@ -1381,14 +1383,16 @@ static void __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
     }
 
     // TODO GH#1194: We will need to re-evaluate Direct2D's D2DERR_RECREATE when we move to HW acceleration.
-    FAIL_FAST_IF_FAILED(deviceContext->EndDraw());
+    RETURN_IF_FAILED(deviceContext->EndDraw());
 
     deviceContext->SetTransform(D2D1::IdentityMatrix());
+
+    return S_OK;
 }
 
-static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometry, CGPathDrawingMode drawMode) {
+static HRESULT __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometry, CGPathDrawingMode drawMode) {
     ComPtr<ID2D1CommandList> commandList;
-    __CGContextRenderToCommandList(context, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+    HRESULT hr = __CGContextRenderToCommandList(context, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
         auto& state = context->CurrentGState();
         if (drawMode & kCGPathFill) {
             if (drawMode & kCGPathEOFill) {
@@ -1403,9 +1407,13 @@ static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometr
 
             deviceContext->DrawGeometry(geometry, state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
         }
+
+        return S_OK;
     });
 
-    __CGContextRenderImage(context, commandList.Get());
+    RETURN_IF_FAILED(hr);
+
+    return __CGContextRenderImage(context, commandList.Get());
 }
 
 /**
@@ -1420,7 +1428,7 @@ void CGContextStrokeRect(CGContextRef context, CGRect rect) {
     FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D_F(rect), &rectGeometry));
     FAIL_FAST_IF_FAILED(rectGeometry.As(&geometry));
 
-    __CGContextDrawGeometry(context, geometry.Get(), kCGPathStroke);
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, geometry.Get(), kCGPathStroke));
 
     context->ClearPath();
 }
@@ -1448,7 +1456,7 @@ void CGContextFillRect(CGContextRef context, CGRect rect) {
     FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D_F(rect), &rectGeometry));
     FAIL_FAST_IF_FAILED(rectGeometry.As(&geometry));
 
-    __CGContextDrawGeometry(context, geometry.Get(), kCGPathFill);
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, geometry.Get(), kCGPathFill));
 
     context->ClearPath();
 }
@@ -1467,7 +1475,7 @@ void CGContextStrokeEllipseInRect(CGContextRef context, CGRect rect) {
                                        &ellipseGeometry));
     FAIL_FAST_IF_FAILED(ellipseGeometry.As(&geometry));
 
-    __CGContextDrawGeometry(context, geometry.Get(), kCGPathStroke);
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, geometry.Get(), kCGPathStroke));
 
     context->ClearPath();
 }
@@ -1486,7 +1494,7 @@ void CGContextFillEllipseInRect(CGContextRef context, CGRect rect) {
                                        &ellipseGeometry));
     FAIL_FAST_IF_FAILED(ellipseGeometry.As(&geometry));
 
-    __CGContextDrawGeometry(context, geometry.Get(), kCGPathFill);
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, geometry.Get(), kCGPathFill));
 
     context->ClearPath();
 }
