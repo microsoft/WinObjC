@@ -37,6 +37,7 @@
 		8BF7B3F71D9C63FA00C25A86 /* CGPathCloseSubpathViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3EB1D9C63FA00C25A86 /* CGPathCloseSubpathViewController.m */; };
 		8BF7B3F81D9C63FA00C25A86 /* CGPathContainsPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3ED1D9C63FA00C25A86 /* CGPathContainsPointViewController.m */; };
 		8BF7B3F91D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7B3EF1D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.m */; };
+		AF797AD91DC2A90700C6825F /* CGContextShadowViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AF797AD81DC2A90700C6825F /* CGContextShadowViewController.mm */; };
 		F0D21C831D05FEF9002C32EE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D21C821D05FEF9002C32EE /* main.m */; };
 		F0D21C861D05FEF9002C32EE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D21C851D05FEF9002C32EE /* AppDelegate.m */; };
 		F0D21C891D05FEF9002C32EE /* CGCRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D21C881D05FEF9002C32EE /* CGCRootViewController.m */; };
@@ -100,6 +101,8 @@
 		8BF7B3ED1D9C63FA00C25A86 /* CGPathContainsPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathContainsPointViewController.m; sourceTree = "<group>"; };
 		8BF7B3EE1D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathGetBoundingBoxViewController.h; sourceTree = "<group>"; };
 		8BF7B3EF1D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathGetBoundingBoxViewController.m; sourceTree = "<group>"; };
+		AF797AD71DC2A90700C6825F /* CGContextShadowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGContextShadowViewController.h; sourceTree = "<group>"; };
+		AF797AD81DC2A90700C6825F /* CGContextShadowViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CGContextShadowViewController.mm; sourceTree = "<group>"; };
 		F0D21C7E1D05FEF9002C32EE /* CGCatalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CGCatalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0D21C821D05FEF9002C32EE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = main.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		F0D21C841D05FEF9002C32EE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AppDelegate.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -157,6 +160,8 @@
 				8BF7B3ED1D9C63FA00C25A86 /* CGPathContainsPointViewController.m */,
 				8BF7B3EE1D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.h */,
 				8BF7B3EF1D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.m */,
+				AF797AD71DC2A90700C6825F /* CGContextShadowViewController.h */,
+				AF797AD81DC2A90700C6825F /* CGContextShadowViewController.mm */,
 			);
 			name = NewSamples;
 			sourceTree = "<group>";
@@ -341,6 +346,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF797AD91DC2A90700C6825F /* CGContextShadowViewController.mm in Sources */,
 				8B2D2E951D9DA63400B8E557 /* CGDrawOptions.m in Sources */,
 				8BF7B3F71D9C63FA00C25A86 /* CGPathCloseSubpathViewController.m in Sources */,
 				8B9D65101D89C42800153CCF /* CGContextNewTestsController.m in Sources */,

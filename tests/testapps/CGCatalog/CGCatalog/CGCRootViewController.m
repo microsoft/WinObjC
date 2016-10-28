@@ -23,6 +23,7 @@
 #import "CGCCGContextViewController.h"
 #import "CGCCGPathApplyViewController.h"
 #import "CGCCGPathContainsPointViewController.h"
+#import "CGContextShadowViewController.h"
 
 #import "CGContextSampleRow.h"
 
@@ -45,6 +46,7 @@
             [CGContextSampleRow row:@"CGContextSetPatternPhase" class:[CGCCGContextSetPatternPhase class]],
             [CGContextSampleRow row:@"CGContextReplacePathWithStrokedPath" class:[CGCCGContextReplacePathWithStrokedPath class]],
             [CGContextSampleRow row:@"CGCCGPathContainsPointViewController" class:[CGCCGPathContainsPointViewController class]],
+            [CGContextSampleRow row:@"CGContextShadows" class:[CGContextShadowViewController class]],
         ];
     }
     return _samples;

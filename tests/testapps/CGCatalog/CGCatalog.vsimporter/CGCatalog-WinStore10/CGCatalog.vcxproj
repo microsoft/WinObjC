@@ -186,6 +186,7 @@
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
+    <ClangCompile Include="..\..\CGCatalog\CGContextShadowViewController.mm" />
     <ClangCompile Include="..\..\CGCatalog\CGDrawOptions.m" />
     <ClangCompile Include="..\..\CGCatalog\CGPathCloseSubpathViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\Samples\CGContextNewTestsController.m" />
