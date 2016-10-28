@@ -126,6 +126,9 @@ struct __CGContextImpl {
     // anchored in the bottom left, to D2D's top-left coordinate system.
     CGAffineTransform deviceTransform{ CGAffineTransformIdentity };
 
+    // See the comments above _CGContextSetShadowProjectionTransform.
+    CGAffineTransform shadowProjectionTransform{ CGAffineTransformIdentity };
+
     std::stack<__CGContextDrawingState> stateStack{};
 
     woc::unique_cf<CGMutablePathRef> currentPath{ nullptr };
@@ -1051,6 +1054,20 @@ void CGContextSetCMYKStrokeColor(CGContextRef context, CGFloat cyan, CGFloat mag
 #pragma endregion
 
 #pragma region Drawing Parameters - Shadows
+// On the reference platform, shadow projection changes based on the framework that provided the
+// drawing context. A bitmap context created through CGBitmapContextCreate(...) will always project
+// shadows to the top right, even if the CTM is scaled [1.0, -1.0]. A context retrieved from UIKit,
+// however, will always (regardless of the scale factor) project its shadows to the bottom right.
+//
+// It is therefore determined that each framework is allowed to specify the shadow projection matrix,
+// likely through a private interface.
+//
+// This is that private interface.
+void _CGContextSetShadowProjectionTransform(CGContextRef context, CGAffineTransform transform) {
+    NOISY_RETURN_IF_NULL(context);
+    context->Impl().shadowProjectionTransform = transform;
+}
+
 /**
  @Status Interoperable
 */
@@ -1060,7 +1077,7 @@ void CGContextSetShadow(CGContextRef context, CGSize offset, CGFloat blur) {
     auto& state = context->CurrentGState();
     // The default shadow colour on the reference platform is black at 33% alpha.
     state.shadowColor = {0.f, 0.f, 0.f, 1.f/3.f};
-    state.shadowOffset = offset;
+    state.shadowOffset = CGSizeApplyAffineTransform(offset, context->Impl().shadowProjectionTransform);
     state.shadowBlur = blur;
 }
 
@@ -1080,7 +1097,7 @@ void CGContextSetShadowWithColor(CGContextRef context, CGSize offset, CGFloat bl
         // This is in line with the reference platform's shadowing specification.
         state.shadowColor = {0.f, 0.f, 0.f, 0.f};
     }
-    state.shadowOffset = offset;
+    state.shadowOffset = CGSizeApplyAffineTransform(offset, context->Impl().shadowProjectionTransform);
     state.shadowBlur = blur;
 }
 #pragma endregion

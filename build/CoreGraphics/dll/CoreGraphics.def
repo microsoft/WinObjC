@@ -218,6 +218,7 @@ LIBRARY CoreGraphics
         CGContextSetDirty
         CGContextGetBacking
         CGContextDrawGlyphRun
+        _CGContextSetShadowProjectionTransform
 
         ; CGDataConsumer.mm
         CGDataConsumerCreate

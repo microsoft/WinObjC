@@ -616,6 +616,8 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
         CGContextScaleCTM(drawContext, 1.0f, -1.0f);
         CGContextTranslateCTM(drawContext, -priv->bounds.origin.x, -priv->bounds.origin.y);
 
+        _CGContextSetShadowProjectionTransform(drawContext, CGAffineTransformMakeScale(1.0, -1.0));
+
         CGContextSetDirty(drawContext, false);
         [self drawInContext:drawContext];
 
