@@ -720,6 +720,11 @@ TEST(CGPath, CGPathRectanglesTest) {
     CGPathAddLineToPoint(path, NULL, 100, 100);
     CGPathAddRect(path, NULL, CGRectMake(100, 100, 200, 100));
 
+    boundingBox = CGPathGetBoundingBox(path);
+
+    EXPECT_POINTEQ(boundingBox.origin, 50, 50);
+    EXPECT_SIZEEQ(boundingBox.size, 250, 150);
+
     CGPathRelease(path);
 }
 
