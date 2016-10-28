@@ -450,7 +450,7 @@ int CGBitmapImageBacking::BitsPerComponent() {
 ID2D1RenderTarget* CGBitmapImageBacking::GetRenderTarget() {
     if (_renderTarget == nullptr) {
         BYTE* imageData = static_cast<BYTE*>(LockImageData());
-        ComPtr<IWICBitmap> wicBitmap = Make<CGIWICBitmap>(this, GUID_WICPixelFormat32bppPBGRA);
+        ComPtr<IWICBitmap> wicBitmap = Make<CGIWICBitmap>(this, SurfaceFormat());
         ComPtr<ID2D1Factory> d2dFactory;
         THROW_IF_FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &d2dFactory));
         ComPtr<ID2D1RenderTarget> renderTarget;

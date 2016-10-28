@@ -22,8 +22,6 @@
 #include <unistd.h>
 #if defined(_MSC_VER)
 #include <direct.h> // getcwd
-#include <Windows.h>
-#include <Psapi.h>
 #endif
 
 #include "SBLog.h"
@@ -392,15 +390,4 @@ void openOutputFileStream(OFStream& ofs, const String& outFilePath, OFStream::op
     SBLog::warning() << "Failed to open " << outFilePath << " for writing." << std::endl;
     return;
   }
-}
-
-String getBinaryLocation()
-{
-#if defined(_MSC_VER)
-  char pathToExe[MAX_PATH];
-  GetModuleFileNameEx(GetCurrentProcess(), NULL, pathToExe, sizeof(pathToExe) / sizeof(pathToExe[0]));
-  return pathToExe;
-#else
-#error Function not defined for current platform.
-#endif
 }

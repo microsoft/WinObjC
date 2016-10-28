@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 #define OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Media_SpeechRecognition.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

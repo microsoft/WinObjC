@@ -72,10 +72,31 @@ private:
     BYTE* m_dataBuffer;
 };
 
+inline WICPixelFormatGUID SurfaceFormatToWICPixelFormat(__CGSurfaceFormat format) {
+    switch (format) {
+        case _ColorABGR:
+        case _ColorXBGR:
+            // XBGR is not supported by wic bitmap render target
+            return GUID_WICPixelFormat32bppPRGBA;
+        case _ColorARGB:
+            return GUID_WICPixelFormat32bppPBGRA;
+        case _ColorBGRX:
+        case _ColorBGR:
+            return GUID_WICPixelFormat32bppBGR;
+        case _ColorGrayscale:
+        case _ColorA8:
+            return GUID_WICPixelFormat8bppAlpha;
+        default:
+            break;
+    }
+    // our default format is alpha premultiplied BGRA
+    return GUID_WICPixelFormat32bppPBGRA;
+}
+
 class CGIWICBitmap : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::ClassicCom>, IAgileObject, FtmBase, IWICBitmap> {
 public:
-    CGIWICBitmap(_In_ CGImageBacking* imageBacking, _In_ WICPixelFormatGUID pixelFormat)
-        : m_imageBacking(imageBacking), m_pixelFormat(pixelFormat) {
+    CGIWICBitmap(_In_ CGImageBacking* imageBacking, _In_ __CGSurfaceFormat format)
+        : m_imageBacking(imageBacking), m_pixelFormat(SurfaceFormatToWICPixelFormat(format)) {
     }
 
     // IWICBitmap interface

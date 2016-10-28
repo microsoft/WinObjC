@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_MEDIA_PLAYLISTS_EXPORT
 #define OBJCUWP_WINDOWS_MEDIA_PLAYLISTS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Media_Playlists.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

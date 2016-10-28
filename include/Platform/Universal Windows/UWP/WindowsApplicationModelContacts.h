@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT
 #define OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Contacts.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

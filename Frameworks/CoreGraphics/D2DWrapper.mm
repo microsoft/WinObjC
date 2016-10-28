@@ -26,8 +26,18 @@ static ComPtr<ID2D1Factory> __createD2DFactory() {
     return d2dFactory;
 }
 
-// Helper for getting a D2DFactory
 ComPtr<ID2D1Factory> _GetD2DFactoryInstance() {
     static ComPtr<ID2D1Factory> factory = __createD2DFactory();
     return factory;
+}
+
+static ComPtr<IWICImagingFactory> __createWICFactory() {
+    ComPtr<IWICImagingFactory> wicFactory;
+    FAIL_FAST_IF_FAILED(CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&wicFactory)));
+    return wicFactory;
+}
+
+ComPtr<IWICImagingFactory> _GetWICFactory() {
+    static ComPtr<IWICImagingFactory> s_WICFactory = __createWICFactory();
+    return s_WICFactory;
 }

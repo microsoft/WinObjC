@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 #define OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Globalization_NumberFormatting.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

@@ -24,7 +24,7 @@
 
 #include <windows.h>
 
-TEST(CoreImage, CGImageFromRect) {
+DISABLED_TEST(CoreImage, CGImageFromRect) {
     SetCACompositor(new NullCompositor);
     CIContext* context = [CIContext contextWithOptions:nil];
     ASSERT_TRUE_MSG(context != nil, "Failed: CIContext is nil.");

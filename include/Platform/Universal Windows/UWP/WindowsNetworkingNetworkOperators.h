@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 #define OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Networking_NetworkOperators.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 
@@ -1005,11 +1007,11 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 - (void)skipAuthentication;
 - (void)triggerAttentionRequired:(NSString*)packageRelativeApplicationId applicationParameters:(NSString*)applicationParameters;
 - (void)issueCredentialsAsync:(NSString*)userName
-                     password:(NSString*)password
-              extraParameters:(NSString*)extraParameters
- markAsManualConnectOnFailure:(BOOL)markAsManualConnectOnFailure
-                      success:(void (^)(WNNHotspotCredentialsAuthenticationResult*))success
-                      failure:(void (^)(NSError*))failure;
+                        password:(NSString*)password
+                 extraParameters:(NSString*)extraParameters
+    markAsManualConnectOnFailure:(BOOL)markAsManualConnectOnFailure
+                         success:(void (^)(WNNHotspotCredentialsAuthenticationResult*))success
+                         failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNNHotspotAuthenticationContext_DEFINED__

@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 #define OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Store_Preview_InstallControl.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

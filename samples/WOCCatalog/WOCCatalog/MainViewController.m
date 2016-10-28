@@ -18,7 +18,6 @@
 #import "MainViewController.h"
 #import "ButtonsViewController.h"
 #import "ControlsViewController.h"
-#import "TextFieldsViewController.h"
 #import "TextDisplayViewController.h"
 #import "TransitionsViewController.h"
 #import "AlertsViewController.h"
@@ -46,6 +45,7 @@
 #import "AudioToolboxViewController.h"
 #import "GeocodingViewController.h"
 #import "CoreLocationViewController.h"
+#import "GesturesViewController.h"
 
 #ifdef WINOBJC
 #import "XamlViewController.h"
@@ -66,6 +66,7 @@
 
     // AudioToolbox
     [self addMenuItemViewController:[[AudioToolboxViewController alloc] init] andTitle:@"AudioToolbox"];
+
     // CoreMotion
     [self addMenuItemViewController:[[CoreMotionViewController alloc] init] andTitle:@"CoreMotion"];
 
@@ -78,6 +79,9 @@
     // Controls
     [self addMenuItemViewController:[[ControlsViewController alloc] init] andTitle:@"Controls"];
 
+    // Gestures
+    [self addMenuItemViewController:[[GesturesViewController alloc] init] andTitle:@"Gestures"];
+    
     // Buttons
     [self addMenuItemViewController:[[ButtonsViewController alloc] init] andTitle:@"ButtonsViewController"];
 
@@ -91,9 +95,6 @@
     // Display mode
     [self addMenuItemViewController:[[SBDisplayModeViewController alloc] init] andTitle:@"Display Mode"];
 #endif
-
-    // TextFields
-    [self addMenuItemViewController:[[TextFieldsViewController alloc] init] andTitle:@"TextFields"];
 
     // SearchBar
     [self addMenuItemViewController:[[SearchBarViewController alloc] init] andTitle:@"SearchBar"];

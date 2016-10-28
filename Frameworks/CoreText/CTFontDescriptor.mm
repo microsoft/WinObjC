@@ -16,11 +16,12 @@
 
 #import <CoreText/CTFontDescriptor.h>
 
-#import <CoreText/DWriteWrapper.h>
 #import <CFBridgeUtilities.h>
 #import <CFRuntime.h>
 #import <Starboard.h>
 #import <StubReturn.h>
+
+#import "DWriteWrapper_CoreText.h"
 
 #include <COMIncludes.h>
 #import <DWrite_3.h>

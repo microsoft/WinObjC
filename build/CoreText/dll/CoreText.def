@@ -33,11 +33,6 @@ LIBRARY CoreText
         ; Core Text Utilities Reference.mm
         CTGetCoreTextVersion
 
-        ; DWriteWrapper Additions
-        _DWriteGetFontFamilyNames
-        _DWriteGetFontNamesForFamilyName
-        _DWriteGetFamilyNameForFontName
-
         ; Core Text Constant additions
         kCTFontLabelFontSize DATA
         kCTFontButtonFontSize DATA
@@ -204,6 +199,7 @@ LIBRARY CoreText
         CTFrameGetLineOrigins
         CTFrameDraw
         CTFrameGetTypeID
+        _CTFrameGetSize
 
         ; CTFramesetter Reference.mm
         CTFramesetterCreateWithAttributedString
@@ -287,5 +283,4 @@ LIBRARY CoreText
         CTTypesetterSuggestClusterBreak
         CTTypesetterSuggestClusterBreakWithOffset
         CTTypesetterGetTypeID
-        _CTTypesetterSuggestLineBreakWithOffsetAndCallback
 

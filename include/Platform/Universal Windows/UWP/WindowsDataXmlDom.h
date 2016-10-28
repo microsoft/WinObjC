@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT
 #define OBJCUWP_WINDOWS_DATA_XML_DOM_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Data_Xml_Dom.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

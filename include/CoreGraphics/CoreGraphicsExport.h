@@ -70,7 +70,6 @@ typedef struct __CGPath* CGMutablePathRef;
 typedef void* CGDataProviderRef;
 
 #if defined(__clang__)
-typedef id CGFontRef;
 typedef id CGPatternRef;
 #endif
 

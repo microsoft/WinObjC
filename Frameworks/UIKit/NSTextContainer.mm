@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -22,7 +22,7 @@
 @implementation NSTextContainer {
     CGSize _size;
     NSLayoutManager* _layoutManager;
-    idretaintype(NSArray) _exclusionPaths;
+    StrongId<NSArray> _exclusionPaths;
 }
 
 /**
@@ -62,27 +62,81 @@
     return _exclusionPaths;
 }
 
+static CGFloat _leftMostLocationForPath(CGRect proposedRectangle, CGPathRef path, CGFloat bufferAmount, bool eoFill) {
+    CGFloat topLocation = proposedRectangle.origin.y;
+
+    for (CGFloat left = proposedRectangle.origin.x; left < proposedRectangle.origin.x + proposedRectangle.size.width;
+         left += bufferAmount) {
+        // Transform is ignored since UIBezierPath has already applied it
+        if (!CGPathContainsPoint(path, NULL, CGPointMake(left, topLocation), eoFill)) {
+            return left;
+        }
+    }
+
+    return proposedRectangle.origin.x + proposedRectangle.size.width;
+}
+
+static CGFloat _rightMostLocationForPath(CGRect proposedRectangle, CGPathRef path, CGFloat bufferAmount, bool eoFill) {
+    CGFloat topLocation = proposedRectangle.origin.y;
+    CGFloat lastRight = proposedRectangle.origin.x;
+
+    for (CGFloat right = proposedRectangle.origin.x; right < proposedRectangle.origin.x + proposedRectangle.size.width;
+         right += bufferAmount) {
+        // Transform is ignored since UIBezierPath has already applied it
+        if (CGPathContainsPoint(path, NULL, CGPointMake(right, topLocation), eoFill)) {
+            return lastRight;
+        }
+        lastRight = right;
+    }
+    // No exclusion zone hit.
+    return proposedRectangle.origin.x + proposedRectangle.size.width;
+}
+
 /**
  @Status Caveat
-
- @Notes reaminingRect parameter is not supported
+ @Notes writingDirection and atIndex parameters are ignored
 */
 
 - (CGRect)lineFragmentRectForProposedRect:(CGRect)proposed
                                   atIndex:(NSUInteger)idx
                          writingDirection:(NSWritingDirection)direction
                             remainingRect:(CGRect*)remainingRect {
+    // Issue 1123 & 1143 : This requires further investigation after CGPath work.
     CGRect totalRect = CGRectMake(0, 0, _size.width, _size.height);
     CGRect ret = CGRectIntersection(proposed, totalRect);
 
     if (_exclusionPaths != nil) {
-        for (UIBezierPath* path in(NSArray*)_exclusionPaths) {
-            // TODO 1143: Replace with public function or work around.
-            // CGRect shapeRect = _CGPathFitRect(path.CGPath, ret, _size, self.lineFragmentPadding);
-            // ret = CGRectIntersection(shapeRect, ret);
+        CGFloat leftMostAllowedPosition = proposed.origin.x;
+        CGFloat rightMostAllowedPosition = proposed.origin.x + proposed.size.width;
+
+        for (UIBezierPath* path in (NSArray*)_exclusionPaths) {
+            for (CGFloat yposition = proposed.origin.y; yposition < proposed.origin.y + proposed.size.height;
+                 yposition += self.lineFragmentPadding) {
+                CGFloat leftMost = _leftMostLocationForPath(proposed, path.CGPath, self.lineFragmentPadding, path.usesEvenOddFillRule);
+                if (leftMostAllowedPosition < leftMost) {
+                    leftMostAllowedPosition = leftMost;
+                }
+
+                CGFloat rightMost = _rightMostLocationForPath(proposed, path.CGPath, self.lineFragmentPadding, path.usesEvenOddFillRule);
+                if (rightMostAllowedPosition < rightMost) {
+                    rightMostAllowedPosition = rightMost;
+                }
+            }
+        }
+
+        CGRect fitRect = CGRectMake(leftMostAllowedPosition,
+                                    proposed.origin.y,
+                                    rightMostAllowedPosition - leftMostAllowedPosition,
+                                    proposed.size.height);
+        ret = CGRectIntersection(fitRect, ret);
+
+        if (remainingRect) {
+            *remainingRect =
+                CGRectMake(rightMostAllowedPosition, proposed.origin.y, proposed.size.width - fitRect.size.width, proposed.size.height);
         }
     }
 
     return ret;
 }
+
 @end

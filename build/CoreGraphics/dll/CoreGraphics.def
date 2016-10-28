@@ -36,6 +36,21 @@ LIBRARY CoreGraphics
         _CGBitmapContextCreateWithFormat
         CGBitmapContextGetImage
 
+        ; DWriteWrapper Additions
+        _CFStringFromLocalizedString
+        _DWriteCopyFontFamilyNames
+        _DWriteCopyFontNamesForFamilyName
+        _DWriteGetFamilyNameForFontName
+        _DWriteGetFontPropertiesFromName
+        _DWriteCreateTextFormat
+        _DWriteCreateFontFamilyWithName
+        _DWriteCreateFontFaceWithName
+        _DWriteFontCopyInformationalString
+        _DWriteFontCopyTable
+        _DWriteFontGetSlantDegrees
+        _DWriteFontGetBoundingBox
+        _DWriteFontGetBoundingBoxesForGlyphs
+
         ; CGColor.mm
         CGColorRelease
         CGColorRetain
@@ -275,15 +290,6 @@ LIBRARY CoreGraphics
         CGFontGetGlyphAdvances
         CGFontGetUnitsPerEm
 
-        ; private exports below
-        CGFontFitChars
-        CGFontGetGlyphs
-        CGFontGetGlyphsForUnichars
-        CGFontSetFTFontSize
-        CGFontWrap
-        _CGFontLock
-        _CGFontUnlock
-
         ; CGFunction.mm
         CGFunctionCreate
         CGFunctionRelease
@@ -342,14 +348,19 @@ LIBRARY CoreGraphics
         CGImageGetWidth
         CGImageIsMask
 
+        ; CGImage private exports
+        _CGImageLoadImageWithWICDecoder;
+        _CGImageGetImageFromData;
+        _CGImagePNGRepresentation;
+        _CGImageJPEGRepresentation;
+        _CGImageRepresentation;
+
         ; private exports below
         CGImageAddDestructionListener
         CGJPEGImageCreateFromData
         CGPNGImageCreateFromData
         CGJPEGImageCreateFromFile
         CGPNGImageCreateFromFile
-        _CGImagePNGRepresentation
-        _CGImageGetData
 
         ; CGLayer.mm
         CGLayerCreateWithContext

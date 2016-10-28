@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 #define OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Networking_Vpn.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 
@@ -164,8 +166,8 @@ typedef unsigned WNVVpnManagementErrorStatus;
 - (void)disconnect:(WNVVpnChannel*)channel;
 - (void)getKeepAlivePayload:(WNVVpnChannel*)channel keepAlivePacket:(WNVVpnPacketBuffer**)keepAlivePacket;
 - (void)encapsulate:(WNVVpnChannel*)channel
-            packets:(WNVVpnPacketBufferList*)packets
- encapulatedPackets:(WNVVpnPacketBufferList*)encapulatedPackets;
+               packets:(WNVVpnPacketBufferList*)packets
+    encapulatedPackets:(WNVVpnPacketBufferList*)encapulatedPackets;
 - (void)decapsulate:(WNVVpnChannel*)channel
              encapBuffer:(WNVVpnPacketBuffer*)encapBuffer
      decapsulatedPackets:(WNVVpnPacketBufferList*)decapsulatedPackets
@@ -547,16 +549,16 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
                               failure:(void (^)(NSError*))failure;
 - (void)terminateConnection:(NSString*)message;
 - (void)startWithTrafficFilter:(NSArray* /* WNHostName* */)assignedClientIpv4List
-        assignedClientIpv6List:(NSArray* /* WNHostName* */)assignedClientIpv6List
-                vpnInterfaceId:(WNVVpnInterfaceId*)vpnInterfaceId
-                assignedRoutes:(WNVVpnRouteAssignment*)assignedRoutes
-             assignedNamespace:(WNVVpnDomainNameAssignment*)assignedNamespace
-                       mtuSize:(unsigned int)mtuSize
-                  maxFrameSize:(unsigned int)maxFrameSize
-                      reserved:(BOOL)reserved
-      mainOuterTunnelTransport:(RTObject*)mainOuterTunnelTransport
-  optionalOuterTunnelTransport:(RTObject*)optionalOuterTunnelTransport
-        assignedTrafficFilters:(WNVVpnTrafficFilterAssignment*)assignedTrafficFilters;
+          assignedClientIpv6List:(NSArray* /* WNHostName* */)assignedClientIpv6List
+                  vpnInterfaceId:(WNVVpnInterfaceId*)vpnInterfaceId
+                  assignedRoutes:(WNVVpnRouteAssignment*)assignedRoutes
+               assignedNamespace:(WNVVpnDomainNameAssignment*)assignedNamespace
+                         mtuSize:(unsigned int)mtuSize
+                    maxFrameSize:(unsigned int)maxFrameSize
+                        reserved:(BOOL)reserved
+        mainOuterTunnelTransport:(RTObject*)mainOuterTunnelTransport
+    optionalOuterTunnelTransport:(RTObject*)optionalOuterTunnelTransport
+          assignedTrafficFilters:(WNVVpnTrafficFilterAssignment*)assignedTrafficFilters;
 @end
 
 #endif // __WNVVpnChannel_DEFINED__

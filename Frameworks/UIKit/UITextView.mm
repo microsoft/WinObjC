@@ -400,11 +400,10 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 - (void)drawRect:(CGRect)rect {
     CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_textColor CGColor]);
 
-    NSRange range;
-    range.location = 0;
-    range.length = INT_MAX;
-    [_layoutManager drawBackgroundForGlyphRange:range atPoint:CGPointMake(_textContainerInset.top, _textContainerInset.left)];
-    [_layoutManager drawGlyphsForGlyphRange:range atPoint:CGPointMake(_textContainerInset.top, _textContainerInset.left)];
+    NSRange range{ 0, INT_MAX };
+    CGPoint origin = self.bounds.origin;
+    [_layoutManager drawBackgroundForGlyphRange:range atPoint:origin];
+    [_layoutManager drawGlyphsForGlyphRange:range atPoint:origin];
 }
 
 /**
