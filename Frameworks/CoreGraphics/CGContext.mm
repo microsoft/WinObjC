@@ -686,11 +686,7 @@ CGPoint CGContextGetPathCurrentPoint(CGContextRef context) {
 bool CGContextPathContainsPoint(CGContextRef context, CGPoint point, CGPathDrawingMode mode) {
     NOISY_RETURN_IF_NULL(context, false);
 
-    if (!context->HasPath()) {
-        return false;
-    }
-
-    return CGPathContainsPoint(context->Path(), &(context->CurrentGState().transform), point, (mode & kCGPathEOFill));
+    return context->HasPath() && CGPathContainsPoint(context->Path(), &(context->CurrentGState().transform), point, (mode & kCGPathEOFill));
 }
 #pragma endregion
 
