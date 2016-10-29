@@ -122,7 +122,7 @@ void CTFrameDraw(CTFrameRef frameRef, CGContextRef ctx) {
         CGContextScaleCTM(ctx, 1.0f, -1.0f);
 
         for (_CTLine* line in static_cast<id<NSFastEnumeration>>(frame->_lines)) {
-            CGContextSetTextPosition(ctx, line->_lineOrigin.x, line->_lineOrigin.y);
+            CGContextSetTextPosition(ctx, line->_lineOrigin.x, -line->_lineOrigin.y);
             _CTLineDraw(static_cast<CTLineRef>(line), ctx, false);
         }
 
