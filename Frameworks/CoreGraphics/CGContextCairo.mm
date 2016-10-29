@@ -1860,29 +1860,26 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, flo
     // Technically there should be a horizontal translation to the center as well,
     // but it's to the center of _each individual glyph_, as the reference platform applies the text matrix to each glyph individually
     // Uncertain whether it's ever going to be worth it to support this using DWrite, so just ignore it for now
-    CGAffineTransform transform = CGAffineTransformMake(1, 0, 0, -1, 0, lineAscent / 2.0f);
+    CGAffineTransform transform = CGAffineTransformMake(1, 0, 0, -1, 0, -lineAscent / 2.0f);
 
     // Apply text transforms
     transform = CGAffineTransformConcat(curState->curTextMatrix, transform);
-    transform = CGAffineTransformTranslate(transform, curState->curTextPosition.x, curState->curTextPosition.y);
 
     // Undo transform to text space
-    transform = CGAffineTransformConcat(CGAffineTransformMake(1, 0, 0, -1, 0, -lineAscent / 2.0f), transform);
+    transform = CGAffineTransformConcat(CGAffineTransformMake(1, 0, 0, -1, 0, lineAscent / 2.0f), transform);
+
+    transform = CGAffineTransformTranslate(transform, curState->curTextPosition.x, curState->curTextPosition.y);
+
+    // Find transform that user created by multiplying given transform by necessary transforms to draw with CoreText
+    float height = _imgDest->Backing()->Height();
+    CGAffineTransform userTransform =
+        CGAffineTransformConcat(curState->curTransform, CGAffineTransformMake(1.0f / _scale, 0, 0, 1.0f / _scale, 0, -height / _scale));
 
     // Apply the context CTM
-    transform = CGAffineTransformConcat(curState->curTransform, transform);
-
-    // Perform translation required to handle scaling.
-    CGFloat verticalScalingFactor = sqrt((transform.b * transform.b) + (transform.d * transform.d));
-    float height = _imgDest->Backing()->Height();
-    transform = CGAffineTransformTranslate(transform, 0, (height / verticalScalingFactor));
-
-    // TODO 1077:: Remove once D2D render target is implemented
-    // Perform inverse-scaling to return to proper drawing scale
-    transform = CGAffineTransformScale(transform, 1.0f / _scale, 1.0f / _scale);
+    transform = CGAffineTransformConcat(transform, userTransform);
 
     // Perform anti-clockwise rotation required to match the reference platform.
-    imgRenderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, -transform.b, transform.c, transform.d, transform.tx, transform.ty));
+    imgRenderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, -transform.b, transform.c, transform.d, transform.tx, -transform.ty));
 
     // Draw the glyph using ID2D1RenderTarget
     ComPtr<ID2D1SolidColorBrush> brush;

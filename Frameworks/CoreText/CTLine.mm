@@ -224,7 +224,7 @@ void _CTLineDraw(CTLineRef lineRef, CGContextRef ctx, bool adjustTextPosition) {
     CGPoint curTextPos = {};
     if (adjustTextPosition) {
         curTextPos = CGContextGetTextPosition(ctx);
-        CGContextSetTextPosition(ctx, curTextPos.x + line->_relativeXOffset, curTextPos.y + line->_relativeYOffset);
+        CGContextSetTextPosition(ctx, curTextPos.x, curTextPos.y + line->_relativeYOffset);
     }
 
     for (size_t i = 0; i < [line->_runs count]; ++i) {
