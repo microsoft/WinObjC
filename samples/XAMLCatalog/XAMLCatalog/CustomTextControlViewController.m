@@ -299,16 +299,24 @@
 
     CGContextSaveGState(ctx);
 
+    CGColorRef borderColor;
+    CGColorRef fillColor = [UIColor whiteColor].CGColor;
+    float borderThickness;
+
     // Draw a focus indication of some sort.
     if (_internalFocus) {
-        CGContextSetFillColorWithColor(ctx, [UIColor blueColor].CGColor);
-        CGContextFillRect(ctx, self.bounds);
-        CGContextSetFillColorWithColor(ctx, [UIColor whiteColor].CGColor);
-        CGContextFillRect(ctx, CGRectInset(self.bounds, 2, 2));
+        borderColor = [UIColor blueColor].CGColor;
+        borderThickness = 2.0f;
     } else {
-        CGContextSetFillColorWithColor(ctx, [UIColor whiteColor].CGColor);
-        CGContextFillRect(ctx, self.bounds);
+        borderColor = [UIColor grayColor].CGColor;
+        borderThickness = 1.0f;
     }
+
+    // Fill a border until we support layer borders
+    CGContextSetFillColorWithColor(ctx, borderColor);
+    CGContextFillRect(ctx, self.bounds);
+    CGContextSetFillColorWithColor(ctx, fillColor);
+    CGContextFillRect(ctx, CGRectInset(self.bounds, borderThickness, borderThickness));
 
     // The raw materials we have are a string (_text) and information about
     // where the caret/selection is (_selection). We can render the control
@@ -330,6 +338,7 @@
         CGFloat xCoord = center.x + (radius * scale * sin(angle));
         CGFloat yCoord = center.y - (radius * scale * cos(angle));
 
+        // Handle selection highlighting
         if (i < _textStorage.length) {
             if (_selection.startCaretPosition != _selection.endCaretPosition) {
                 if (i >= _selection.startCaretPosition && i < _selection.endCaretPosition) {
@@ -848,14 +857,13 @@
         
         SpiralTextEdit* textEdit = [[SpiralTextEdit alloc] initWithFrame:centeredEditRect];
         UILabel* infoLabel = [[UILabel alloc] initWithFrame:centeredInfoRect];
+        UIButton* focusButton = [UIButton buttonWithType:UIButtonTypeSystem];
         
-        textEdit.autoresizingMask = infoLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+        textEdit.autoresizingMask = infoLabel.autoresizingMask = focusButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
         
         infoLabel.text = @"Click the control to gain focus. Use the keyboard to type and caret nagivate. Hold shift to update the selection. Right click or Ctrl+C or V to copy and paste.";
         infoLabel.numberOfLines = 0;
         infoLabel.textAlignment = NSTextAlignmentCenter;
-        
-        UIButton* focusButton = [UIButton buttonWithType:UIButtonTypeSystem];
         
         focusButton.frame = CGRectMake(self.view.bounds.size.width / 2 - 100 / 2, 450, 100, 50);
         [focusButton setTitle:@"Tab To Focus" forState:UIControlStateNormal];

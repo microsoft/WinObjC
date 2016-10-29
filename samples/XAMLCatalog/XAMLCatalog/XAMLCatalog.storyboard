@@ -371,7 +371,7 @@
                                     <constraint firstAttribute="width" constant="100" id="FZH-yN-k9l"/>
                                     <constraint firstAttribute="height" constant="30" id="aij-d9-tsf"/>
                                 </constraints>
-                                <state key="normal" title="Button"/>
+                                <state key="normal" title="Tab To Focus"/>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
