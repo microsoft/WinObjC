@@ -277,7 +277,7 @@ void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTe
 
     if (adjustTextPosition) {
         CGPoint curTextPos = CGContextGetTextPosition(ctx);
-        CGContextSetTextPosition(ctx, curTextPos.x + curRun->_relativeXOffset, curTextPos.y + curRun->_relativeYOffset);
+        CGContextSetTextPosition(ctx, curTextPos.x, curTextPos.y + curRun->_relativeYOffset);
     }
 
     id fontColor = [curRun->_attributes objectForKey:(id)kCTForegroundColorAttributeName];
