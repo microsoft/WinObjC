@@ -290,25 +290,10 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UIFontPrototype, CTFontGetTypeID);
     return [self retain];
 }
 
-// WinObjC-only extension for UINibUnarchiver
-- (instancetype)initWithCoder:(NSCoder*)coder {
-    NSString* name = [coder decodeObjectForKey:@"UIFontName"];
-    if ([name length] < 1) {
-        // fallback to default if could not find a font name
-        name = (__bridge NSString*)kCTFontDefaultFontName;
-    }
-
-    CGFloat size = [coder decodeFloatForKey:@"UIFontPointSize"];
-
-    UIFont* font = [UIFont fontWithName:name size:size];
-
-    [self release];
-    if (font) {
-        self = font;
-        return font;
-    } else {
-        return nil;
-    }
+// WinObjC-only extension for compatibility issues between DWrite and Xaml
+// Returns the family name of the font Xaml can use
+- (NSString*)_compatibleFamilyName {
+    return static_cast<NSString*>(_DWriteGetFamilyNameForFontName(static_cast<CFStringRef>([self fontName])));
 }
 
 @end

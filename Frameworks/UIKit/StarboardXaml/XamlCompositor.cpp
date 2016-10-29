@@ -548,7 +548,7 @@ Platform::String^ charToPlatformString(const char* str) {
     return ref new Platform::String(widStr.c_str());
 }
 
-void DisplayTextureXamlGlyphs::ConstructGlyphs(const char* fontName, const wchar_t* str, int length) {
+void DisplayTextureXamlGlyphs::ConstructGlyphs(const Microsoft::WRL::Wrappers::HString& fontFamilyName, const wchar_t* str, int length) {
     auto textLayer = (XamlCompositor::Controls::CATextLayerXaml^)(Platform::Object^)_xamlTextbox;
     Windows::UI::Xaml::Controls::TextBlock^ textControl = textLayer->TextBlock;
     textControl->Text = ref new Platform::String(str, length);
@@ -559,7 +559,7 @@ void DisplayTextureXamlGlyphs::ConstructGlyphs(const char* fontName, const wchar
     textColor.B = (unsigned char)(_color[2] * 255.0f);
     textColor.A = (unsigned char)(_color[3] * 255.0f);
     textControl->Foreground = ref new Windows::UI::Xaml::Media::SolidColorBrush(textColor);
-    textControl->FontFamily = ref new Windows::UI::Xaml::Media::FontFamily(charToPlatformString(fontName));
+    textControl->FontFamily = ref new Windows::UI::Xaml::Media::FontFamily(reinterpret_cast<Platform::String^>(fontFamilyName.Get()));
 
     if (_isBold) {
         textControl->FontWeight = Windows::UI::Text::FontWeights::Bold;

@@ -224,6 +224,13 @@ public:
     }
 
     TEST_METHOD(NSURLSession_DownloadTaskWithURL) {
+// Disable Test on ARM as it tries to hit a real endpoint and download significant data
+// and arm machines may not have a stable ethernet connection like a build server does.
+#ifdef _M_ARM
+        BEGIN_TEST_METHOD_PROPERTIES()
+        TEST_METHOD_PROPERTY(L"ignore", L"true")
+        END_TEST_METHOD_PROPERTIES()
+#endif
         NSURLSessionDownloadTaskWithURL();
     }
 
@@ -232,6 +239,13 @@ public:
     }
 
     TEST_METHOD(NSURLSession_DownloadTaskWithURL_WithCompletionHandler) {
+// Disable Test on ARM as it tries to hit a real endpoint and download significant data
+// and arm machines may not have a stable ethernet connection like a build server does.
+#ifdef _M_ARM
+        BEGIN_TEST_METHOD_PROPERTIES()
+        TEST_METHOD_PROPERTY(L"ignore", L"true")
+        END_TEST_METHOD_PROPERTIES()
+#endif
         NSURLSessionDownloadTaskWithURL_WithCompletionHandler();
     }
 

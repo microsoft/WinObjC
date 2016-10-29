@@ -156,7 +156,7 @@ static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
 
             // Save line and origin for when it is drawn
             [_ctLines addObject:(id)fitLine];
-            _lineOrigins.push_back(rect.origin);
+            _lineOrigins.emplace_back(CGPoint{ rect.origin.x, rect.origin.y + lineHeight });
 
             double fitWidth = CTLineGetTypographicBounds(fitLine, nullptr, nullptr, nullptr);
             drawnWidth += fitWidth;
@@ -245,12 +245,11 @@ static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
     int count = [_ctLines count];
     for (int curLine = 0; curLine < count; curLine++) {
         CTLineRef line = (CTLineRef)_ctLines[curLine];
-
-        float ascent, descent, leading;
-        CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
-
         CGContextSaveGState(curCtx);
-        CGContextSetTextPosition(curCtx, _lineOrigins[curLine].x, _lineOrigins[curLine].y);
+
+        CGFloat ascent, leading;
+        CTLineGetTypographicBounds(line, &ascent, nullptr, &leading);
+        CGContextSetTextPosition(curCtx, _lineOrigins[curLine].x, -(_lineOrigins[curLine].y + ascent + leading));
         CTLineDraw(line, curCtx);
         CGContextRestoreGState(curCtx);
     }
@@ -745,10 +744,10 @@ static NSRange NSRangeFromCFRange(CFRange range) {
  @Notes
 */
 - (void)setGlyphs:(const CGGlyph*)glyphs
-       properties:(const NSGlyphProperty*)props
- characterIndexes:(const NSUInteger*)charIndexes
-             font:(UIFont*)aFont
-    forGlyphRange:(NSRange)glyphRange {
+          properties:(const NSGlyphProperty*)props
+    characterIndexes:(const NSUInteger*)charIndexes
+                font:(UIFont*)aFont
+       forGlyphRange:(NSRange)glyphRange {
     UNIMPLEMENTED();
 }
 

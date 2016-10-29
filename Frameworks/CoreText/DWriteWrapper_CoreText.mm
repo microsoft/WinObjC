@@ -455,7 +455,7 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
             i++;
         }
 
-        if ([runs objectAtIndex:0]) {
+        if ([runs count] > 0) {
             prevYPosForDraw = yPos;
             line->_runs = runs;
             line->_strRange.location = static_cast<_CTRun*>(line->_runs[0])->_range.location;

@@ -395,6 +395,14 @@ HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFon
     // Eg: Bold, Condensed, Light, Italic
     _DWriteFontProperties properties = _DWriteGetFontPropertiesFromName(name);
 
+    // TODO: #1250: Need to be able to load fonts from the app's bundle
+    // For now return a default font to avoid crashes in case of missing fonts
+    // When #1250 is completed, remove this
+    if (!properties.familyName) {
+        name = CFSTR("Segoe UI");
+        properties = _DWriteGetFontPropertiesFromName(name);
+    }
+
     RETURN_HR_IF_NULL(E_INVALIDARG, properties.familyName);
 
     ComPtr<IDWriteFontFamily> fontFamily;
