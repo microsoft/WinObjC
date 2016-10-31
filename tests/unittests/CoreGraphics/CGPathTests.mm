@@ -879,3 +879,39 @@ TEST(CGPath, CGPathEqualsTest) {
     CGPathRelease(strictlyOverlappingRectangle);
     CGPathRelease(containedRectangle);
 }
+
+TEST(CGPath, SubShapesEqualityTest) {
+    // 0-----------1
+    // |   4       |
+    // |  / \      |
+    // | /   \     |
+    // 3,6------5----2
+
+    CGMutablePathRef path1 = CGPathCreateMutable();
+    CGMutablePathRef path2 = CGPathCreateMutable();
+
+    CGPathMoveToPoint(path1, nullptr, 50, 50);
+    CGPathAddLineToPoint(path1, nullptr, 100, 50);
+    CGPathAddLineToPoint(path1, nullptr, 100, 100);
+    CGPathAddLineToPoint(path1, nullptr, 50, 100);
+    CGPathAddLineToPoint(path1, nullptr, 75, 75);
+    CGPathAddLineToPoint(path1, nullptr, 100, 100);
+    CGPathAddLineToPoint(path1, nullptr, 50, 100);
+    CGPathAddLineToPoint(path1, nullptr, 50, 50);
+    CGPathCloseSubpath(path1);
+
+    CGPathMoveToPoint(path2, nullptr, 50, 50);
+    CGPathAddLineToPoint(path2, nullptr, 100, 50);
+    CGPathAddLineToPoint(path2, nullptr, 100, 100);
+    CGPathAddLineToPoint(path2, nullptr, 50, 100);
+    CGPathAddLineToPoint(path2, nullptr, 75, 75);
+    CGPathAddLineToPoint(path2, nullptr, 100, 100);
+    CGPathAddLineToPoint(path2, nullptr, 50, 100);
+    CGPathAddLineToPoint(path2, nullptr, 50, 50);
+    CGPathCloseSubpath(path2);
+
+    EXPECT_TRUE(testSymmetricEquivalence(path1, path2));
+
+    CGPathRelease(path1);
+    CGPathRelease(path2);
+}

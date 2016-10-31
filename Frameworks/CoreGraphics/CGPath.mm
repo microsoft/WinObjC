@@ -49,11 +49,11 @@ struct __CGPathImpl {
     ComPtr<ID2D1PathGeometry> pathGeometry;
     ComPtr<ID2D1GeometrySink> geometrySink;
 
-    bool isFigureClosed;
+    bool figureClosed;
     CGPoint currentPoint{ 0, 0 };
     CGPoint startingPoint{ 0, 0 };
 
-    __CGPathImpl() : isFigureClosed(true) {
+    __CGPathImpl() : figureClosed(true) {
     }
 };
 
@@ -72,14 +72,6 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
 
     inline CGPoint& StartingPoint() {
         return _impl.startingPoint;
-    }
-
-    void SetIsFigureClosed(bool closed) {
-        _impl.isFigureClosed = closed;
-    }
-
-    bool GetIsFigureClosed() {
-        return _impl.isFigureClosed;
     }
 
     // A private helper function for re-opening a path geometry. CGPath does not
@@ -108,7 +100,7 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
             GeometrySink() = newSink;
 
             // Without a new figure being created, it's by default closed
-            SetIsFigureClosed(true);
+            _impl.figureClosed = true;
         }
         return S_OK;
     }
@@ -122,16 +114,17 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
     }
 
     void BeginFigure() {
-        if (GetIsFigureClosed()) {
+        if (_impl.figureClosed) {
             GeometrySink()->BeginFigure(_CGPointToD2D_F(CurrentPoint()), D2D1_FIGURE_BEGIN_FILLED);
-            SetIsFigureClosed(false);
+            _impl.figureClosed = false;
         }
     }
 
     void EndFigure(D2D1_FIGURE_END figureStatus) {
-        if (!GetIsFigureClosed()) {
+        if (!_impl.figureClosed) {
             GeometrySink()->EndFigure(figureStatus);
-            SetIsFigureClosed(true);
+            _impl.figureClosed = true;
+            ;
         }
     }
 
