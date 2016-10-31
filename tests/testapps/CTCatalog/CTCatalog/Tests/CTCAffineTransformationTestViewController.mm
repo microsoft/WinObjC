@@ -16,7 +16,10 @@
 
 #import "CTCAffineTransformationTestViewController.h"
 
-static const NSString* text = @"The quick brown dog jumps over the lazy fox. THE QUICK BROWN DOG JUMPS OVER THE LAZY FOX.";
+static const NSString* text = @"This frame is manipulated by the above sliders.  The leftmost slider changes rotation, which should be "
+                              @"about the origin in the bottom-left of this frame with left being clockwise rotation and right being "
+                              @"counterclockwise.  The middle sliders change the X and Y scale respectively.  The rightmost sliders "
+                              @"change the position of the X, Y origins of the drawn frame respectively.";
 
 @interface CTAffineTransformationTestView : UIView {
 }
@@ -55,7 +58,7 @@ static const NSString* text = @"The quick brown dog jumps over the lazy fox. THE
 
     setting.spec = kCTParagraphStyleSpecifierAlignment;
     setting.valueSize = sizeof(CTTextAlignment);
-    CTTextAlignment alignment = kCTCenterTextAlignment;
+    CTTextAlignment alignment = kCTLeftTextAlignment;
     setting.value = &alignment;
     CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(&setting, 1);
     CFAutorelease(paragraphStyle);
@@ -139,23 +142,23 @@ static const NSString* text = @"The quick brown dog jumps over the lazy fox. THE
     [self.view addSubview:_scaleYSlider];
 
     _translateXSlider = [[UISlider alloc] initWithFrame:CGRectMake(2.0f * width / 3, 10, width / 4, 50)];
-    _translateXSlider.minimumValue = -100;
-    _translateXSlider.maximumValue = 100;
+    _translateXSlider.minimumValue = -200;
+    _translateXSlider.maximumValue = 200;
     _translateXSlider.value = 0.0f;
     _translateXSlider.continuous = YES;
     [_translateXSlider addTarget:self action:@selector(drawTests) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:_translateXSlider];
 
     _translateYSlider = [[UISlider alloc] initWithFrame:CGRectMake(2.0f * width / 3, 70, width / 4, 50)];
-    _translateYSlider.minimumValue = -100;
-    _translateYSlider.maximumValue = 100;
+    _translateYSlider.minimumValue = -200;
+    _translateYSlider.maximumValue = 200;
     _translateYSlider.value = 0.0f;
     _translateYSlider.continuous = YES;
     [_translateYSlider addTarget:self action:@selector(drawTests) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:_translateYSlider];
 
     // Create frame of text
-    _textView = [[CTAffineTransformationTestView alloc] initWithFrame:CGRectMake(width / 4, 150, width / 2, 100)];
+    _textView = [[CTAffineTransformationTestView alloc] initWithFrame:CGRectMake(width / 4, 150, width / 2, 200)];
     _textView.backgroundColor = [UIColor whiteColor];
     _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     // Sets view to call updateTableViews when done drawing
@@ -170,7 +173,7 @@ static const NSString* text = @"The quick brown dog jumps over the lazy fox. THE
 
 - (void)viewDidLayoutSubviews {
     CGFloat width = CGRectGetWidth(self.view.bounds);
-    _textView.frame = CGRectMake(width / 4, 150, width / 2, 100);
+    _textView.frame = CGRectMake(width / 4, 150, width / 2, 200);
     [_textView setNeedsDisplay];
 
     _rotationSlider.frame = CGRectMake(0, 10, width / 4, 50);
@@ -187,15 +190,6 @@ static const NSString* text = @"The quick brown dog jumps over the lazy fox. THE
 
     _translateYSlider.frame = CGRectMake(2.0f * width / 3, 70, width / 4, 50);
     [_translateYSlider setNeedsDisplay];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
 }
 
 - (void)drawTests {
