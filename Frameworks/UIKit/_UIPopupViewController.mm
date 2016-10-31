@@ -32,6 +32,7 @@ static const wchar_t* TAG = L"_UIPopupViewController";
 
     _UIPopupViewController __weak* weakSelf = self;
 
+    // Keep the popup centered in the window
     _layoutUpdated = [_popup addLayoutUpdatedEvent:^(RTObject* sender, RTObject* args) {
         _UIPopupViewController* strongSelf = weakSelf;
 
@@ -40,24 +41,21 @@ static const wchar_t* TAG = L"_UIPopupViewController";
         }
 
         WUXCPPopup* popup = strongSelf->_popup;
-        id child = popup.child;
+        id popupChild = popup.child;
 
-        if (child != nil) {
-        WXFrameworkElement* child2 = rt_dynamic_cast<WXFrameworkElement>(child);
-        /*
-        if (![child isKindOfClass:[WXFrameworkElement class]]) {
-            // Don't know how to lay this thing out
-            return;
+        if (popupChild != nil) {
+            WXFrameworkElement* child = rt_dynamic_cast<WXFrameworkElement>(popupChild);
+
+            WFRect* appFrame = [[WXWindow current] bounds];
+
+            /*
+            // Setting these properties to any value (even their original values) crashes the app
+            popup.horizontalOffset = (appFrame.width - child.width) / 2.0;
+            popup.verticalOffset = (appFrame.height - child.height) / 2.0;
+            */
         }
-        */
-
-        double childWidth = [static_cast<WXFrameworkElement*>(child2) width];
-        double childHeight = [static_cast<WXFrameworkElement*>(child2) height];
-
-        CGRect appFrame = [[UIScreen mainScreen] bounds];
-        popup.horizontalOffset = max(0, (appFrame.size.width - childWidth) / 2.0);
-        popup.verticalOffset = max(0, (appFrame.size.height - childHeight) / 2.0); }
     }];
+
 
     self.view = view;
 }
