@@ -197,4 +197,9 @@
     <SBResourceCopy Include="..\..\CGCatalog\Resources\GetBoundingBox.png" />
     <SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="..\..\CGCatalog\CGContextShadowViewController.mm">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+  </ItemGroup>
 </Project>

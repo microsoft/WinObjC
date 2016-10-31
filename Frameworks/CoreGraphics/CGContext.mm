@@ -91,6 +91,11 @@ struct __CGContextDrawingState {
     // Alpha Blending
     CGFloat alpha = 1.0f;
 
+    // Shadowing
+    D2D1_VECTOR_4F shadowColor{ 0, 0, 0, 0 };
+    CGSize shadowOffset{ 0, 0 };
+    CGFloat shadowBlur{ 0 };
+
     inline void ComputeStrokeStyle(ID2D1DeviceContext* deviceContext) {
         if (strokeStyle) {
             return;
@@ -119,7 +124,10 @@ struct __CGContextImpl {
 
     // Calculated at creation time, this transform flips CG's drawing commands,
     // anchored in the bottom left, to D2D's top-left coordinate system.
-    CGAffineTransform cgCompatibilityTransform{ CGAffineTransformIdentity };
+    CGAffineTransform deviceTransform{ CGAffineTransformIdentity };
+
+    // See the comments above _CGContextSetShadowProjectionTransform.
+    CGAffineTransform shadowProjectionTransform{ CGAffineTransformIdentity };
 
     std::stack<__CGContextDrawingState> stateStack{};
 
@@ -161,14 +169,13 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext, __CGContextImpl> {
     }
 };
 
-#define NOISY_RETURN_IF_NULL(param, ...)                                         \
-    do {                                                                         \
-        if (!context) {                                                          \
+#define NOISY_RETURN_IF_NULL(param, ...)                                    \
+    do {                                                                    \
+        if (!param) {                                                       \
             TraceError(TAG, L"%hs: null " #param "!", __PRETTY_FUNCTION__); \
-            return __VA_ARGS__;                                                  \
-        }                                                                        \
-    \
-} while (0)
+            return __VA_ARGS__;                                             \
+        }                                                                   \
+    } while (0)
 
 static const wchar_t* TAG = L"CGContext";
 
@@ -191,6 +198,11 @@ static void __CGContextInitWithRenderTarget(CGContextRef context, ID2D1RenderTar
     // If a context does not support alpha, the default fill looks like fully opaque black.
     CGContextSetRGBFillColor(context, 0, 0, 0, 0);
     CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
+
+    // CG is a lower-left origin system (LLO), but D2D is upper left (ULO).
+    // We have to translate the render area back onscreen and flip it up to ULO.
+    D2D1_SIZE_F targetSize = renderTarget->GetSize();
+    context->Impl().deviceTransform = CGAffineTransformMake(1.f, 0.f, 0.f, -1.f, 0.f, targetSize.height);
 }
 
 CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget) {
@@ -1041,20 +1053,51 @@ void CGContextSetCMYKStrokeColor(CGContextRef context, CGFloat cyan, CGFloat mag
 #pragma endregion
 
 #pragma region Drawing Parameters - Shadows
-/**
- @Status Interoperable
-*/
-void CGContextSetShadow(CGContextRef context, CGSize offset, CGFloat blur) {
+// On the reference platform, shadow projection changes based on the framework that provided the
+// drawing context. A bitmap context created through CGBitmapContextCreate(...) will always project
+// shadows to the top right, even if the CTM is scaled [1.0, -1.0]. A context retrieved from UIKit,
+// however, will always (regardless of the scale factor) project its shadows to the bottom right.
+//
+// It is therefore determined that each framework is allowed to specify the shadow projection matrix,
+// likely through a private interface.
+//
+// This is that private interface.
+void _CGContextSetShadowProjectionTransform(CGContextRef context, CGAffineTransform transform) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->Impl().shadowProjectionTransform = transform;
 }
 
 /**
  @Status Interoperable
 */
+void CGContextSetShadow(CGContextRef context, CGSize offset, CGFloat blur) {
+    NOISY_RETURN_IF_NULL(context);
+
+    auto& state = context->CurrentGState();
+    // The default shadow colour on the reference platform is black at 33% alpha.
+    state.shadowColor = { 0.f, 0.f, 0.f, 1.f / 3.f };
+    state.shadowOffset = CGSizeApplyAffineTransform(offset, context->Impl().shadowProjectionTransform);
+    state.shadowBlur = blur;
+}
+
+/**
+ @Status Caveat
+ @Notes Interoperable only for RGB.
+*/
 void CGContextSetShadowWithColor(CGContextRef context, CGSize offset, CGFloat blur, CGColorRef color) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+
+    auto& state = context->CurrentGState();
+    if (color) {
+        const CGFloat* comp = CGColorGetComponents(color);
+        state.shadowColor = { comp[0], comp[1], comp[2], comp[3] };
+    } else {
+        // Setting the alpha (4th component) to 0 disables shadowing.
+        // This is in line with the reference platform's shadowing specification.
+        state.shadowColor = { 0.f, 0.f, 0.f, 0.f };
+    }
+    state.shadowOffset = CGSizeApplyAffineTransform(offset, context->Impl().shadowProjectionTransform);
+    state.shadowBlur = blur;
 }
 #pragma endregion
 
@@ -1242,46 +1285,95 @@ void CGContextClearRect(CGContextRef context, CGRect rect) {
     renderTarget->PopAxisAlignedClip();
 }
 
+static HRESULT __CGContextCreateShadowEffect(CGContextRef context,
+                                          ID2D1DeviceContext* deviceContext,
+                                          ID2D1Image* inputImage,
+                                          ID2D1Effect** outShadowEffect) {
+    auto& state = context->CurrentGState();
+    if (std::fpclassify(state.shadowColor.w) != FP_ZERO) {
+        // The Shadow Effect takes an input image (or command list) and projects a shadow from
+        // it with the specified parameters.
+        //
+        // INPUTS
+        // 0: The input image/command list
+        ComPtr<ID2D1Effect> shadowEffect;
+        RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Shadow, &shadowEffect));
+        shadowEffect->SetInput(0, inputImage);
+        RETURN_IF_FAILED(shadowEffect->SetValue(D2D1_SHADOW_PROP_COLOR, state.shadowColor));
+        RETURN_IF_FAILED(shadowEffect->SetValue(D2D1_SHADOW_PROP_BLUR_STANDARD_DEVIATION, state.shadowBlur));
+
+        // By default, the shadow projects straight down. Stacking it with an
+        // Affine Transform effect allows us to change the shadow's projection.
+        //
+        // INPUTS
+        // 0: The untransformed shadow
+        ComPtr<ID2D1Effect> affineTransformEffect;
+        RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D12DAffineTransform, &affineTransformEffect));
+        affineTransformEffect->SetInputEffect(0, shadowEffect.Get());
+        RETURN_IF_FAILED(
+            affineTransformEffect->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX,
+                                            D2D1::Matrix3x2F::Translation(state.shadowOffset.width, state.shadowOffset.height)));
+
+        // Drawing just a projected shadow is not terribly useful, so we composite the
+        // shadow with the original input image (or command list) so that both get drawn.
+        // The Composite Effect draws its inputs in ascending order.
+        //
+        // INPUTS
+        // 0: The transformed shadow
+        // 1: The input image/command list
+        ComPtr<ID2D1Effect> compositeEffect;
+        RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Composite, &compositeEffect));
+        compositeEffect->SetInputEffect(0, affineTransformEffect.Get());
+        compositeEffect->SetInput(1, inputImage);
+
+        *outShadowEffect = compositeEffect.Detach();
+    } else {
+        *outShadowEffect = nullptr;
+    }
+
+    return S_OK;
+}
+
 template <typename Lambda> // Lambda takes the form void(*)(CGContextRef, ID2D1DeviceContext*)
-static void __CGContextRenderToCommandList(CGContextRef context, ID2D1CommandList** outCommandList, Lambda&& drawLambda) {
+static HRESULT __CGContextRenderToCommandList(CGContextRef context, ID2D1CommandList** outCommandList, Lambda&& drawLambda) {
+    auto& state = context->CurrentGState();
     ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
     ComPtr<ID2D1DeviceContext> deviceContext;
-    FAIL_FAST_IF_FAILED(renderTarget.As(&deviceContext));
+    RETURN_IF_FAILED(renderTarget.As(&deviceContext));
 
     // Cache the original target to restore it later.
     ComPtr<ID2D1Image> originalTarget;
     deviceContext->GetTarget(&originalTarget);
 
     ComPtr<ID2D1CommandList> commandList;
-    FAIL_FAST_IF_FAILED(deviceContext->CreateCommandList(&commandList));
+    RETURN_IF_FAILED(deviceContext->CreateCommandList(&commandList));
+
+    deviceContext->SetTransform(__CGAffineTransformToD2D_F(state.transform));
 
     deviceContext->BeginDraw();
     deviceContext->SetTarget(commandList.Get());
 
-    std::forward<Lambda>(drawLambda)(context, deviceContext.Get());
+    RETURN_IF_FAILED(std::forward<Lambda>(drawLambda)(context, deviceContext.Get()));
 
-    FAIL_FAST_IF_FAILED(deviceContext->EndDraw());
-    FAIL_FAST_IF_FAILED(commandList->Close());
+    RETURN_IF_FAILED(deviceContext->EndDraw());
+    RETURN_IF_FAILED(commandList->Close());
 
     deviceContext->SetTarget(originalTarget.Get());
 
+    deviceContext->SetTransform(D2D1::IdentityMatrix());
+
     *outCommandList = commandList.Detach();
+    return S_OK;
 }
 
-static void __CGContextRenderCommandList(CGContextRef context, ID2D1CommandList* commandList) {
+static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
     ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
     auto& state = context->CurrentGState();
 
     ComPtr<ID2D1DeviceContext> deviceContext;
-    FAIL_FAST_IF_FAILED(renderTarget.As(&deviceContext));
+    RETURN_IF_FAILED(renderTarget.As(&deviceContext));
 
-    D2D1_SIZE_F targetSize = renderTarget->GetSize();
-
-    // CG is a lower-left origin system (LLO), but D2D is upper left (ULO).
-    // We have to translate the render area back onscreen and flip it up to ULO.
-    CGAffineTransform transform = CGAffineTransformMake(1.f, 0.f, 0.f, -1.f, 0.f, targetSize.height);
-    transform = CGAffineTransformConcat(state.transform, transform);
-    deviceContext->SetTransform(__CGAffineTransformToD2D_F(transform));
+    deviceContext->SetTransform(__CGAffineTransformToD2D_F(context->Impl().deviceTransform));
 
     deviceContext->BeginDraw();
 
@@ -1293,21 +1385,31 @@ static void __CGContextRenderCommandList(CGContextRef context, ID2D1CommandList*
             nullptr);
     }
 
-    deviceContext->DrawImage(commandList);
+    ComPtr<ID2D1Image> currentImage{ image };
+
+    ComPtr<ID2D1Effect> shadowEffect;
+    RETURN_IF_FAILED(__CGContextCreateShadowEffect(context, deviceContext.Get(), currentImage.Get(), &shadowEffect));
+    if (shadowEffect) {
+        RETURN_IF_FAILED(shadowEffect.As(&currentImage));
+    }
+
+    deviceContext->DrawImage(currentImage.Get());
 
     if (layer) {
         renderTarget->PopLayer();
     }
 
     // TODO GH#1194: We will need to re-evaluate Direct2D's D2DERR_RECREATE when we move to HW acceleration.
-    FAIL_FAST_IF_FAILED(deviceContext->EndDraw());
+    RETURN_IF_FAILED(deviceContext->EndDraw());
 
     deviceContext->SetTransform(D2D1::IdentityMatrix());
+
+    return S_OK;
 }
 
-static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometry, CGPathDrawingMode drawMode) {
+static HRESULT __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometry, CGPathDrawingMode drawMode) {
     ComPtr<ID2D1CommandList> commandList;
-    __CGContextRenderToCommandList(context, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+    HRESULT hr = __CGContextRenderToCommandList(context, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
         auto& state = context->CurrentGState();
         if (drawMode & kCGPathFill) {
             if (drawMode & kCGPathEOFill) {
@@ -1322,9 +1424,13 @@ static void __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometr
 
             deviceContext->DrawGeometry(geometry, state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
         }
+
+        return S_OK;
     });
 
-    __CGContextRenderCommandList(context, commandList.Get());
+    RETURN_IF_FAILED(hr);
+
+    return __CGContextRenderImage(context, commandList.Get());
 }
 
 /**
@@ -1339,7 +1445,7 @@ void CGContextStrokeRect(CGContextRef context, CGRect rect) {
     FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D_F(rect), &rectGeometry));
     FAIL_FAST_IF_FAILED(rectGeometry.As(&geometry));
 
-    __CGContextDrawGeometry(context, geometry.Get(), kCGPathStroke);
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, geometry.Get(), kCGPathStroke));
 
     context->ClearPath();
 }
@@ -1367,7 +1473,7 @@ void CGContextFillRect(CGContextRef context, CGRect rect) {
     FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D_F(rect), &rectGeometry));
     FAIL_FAST_IF_FAILED(rectGeometry.As(&geometry));
 
-    __CGContextDrawGeometry(context, geometry.Get(), kCGPathFill);
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, geometry.Get(), kCGPathFill));
 
     context->ClearPath();
 }
@@ -1386,7 +1492,7 @@ void CGContextStrokeEllipseInRect(CGContextRef context, CGRect rect) {
                                        &ellipseGeometry));
     FAIL_FAST_IF_FAILED(ellipseGeometry.As(&geometry));
 
-    __CGContextDrawGeometry(context, geometry.Get(), kCGPathStroke);
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, geometry.Get(), kCGPathStroke));
 
     context->ClearPath();
 }
@@ -1405,7 +1511,7 @@ void CGContextFillEllipseInRect(CGContextRef context, CGRect rect) {
                                        &ellipseGeometry));
     FAIL_FAST_IF_FAILED(ellipseGeometry.As(&geometry));
 
-    __CGContextDrawGeometry(context, geometry.Get(), kCGPathFill);
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, geometry.Get(), kCGPathFill));
 
     context->ClearPath();
 }

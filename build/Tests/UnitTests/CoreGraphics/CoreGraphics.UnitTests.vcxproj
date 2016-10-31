@@ -241,6 +241,7 @@
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\CGGeometryTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\CGFontTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\CGPathTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\CGContextTests.mm" />

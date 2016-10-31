@@ -53,4 +53,6 @@ COREGRAPHICS_EXPORT void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GL
 // TODO 1077:: Remove once D2D render target is implemented
 COREGRAPHICS_EXPORT void _CGContextSetScaleFactor(CGContextRef ctx, float scale);
 
+COREGRAPHICS_EXPORT void _CGContextSetShadowProjectionTransform(CGContextRef context, CGAffineTransform transform);
+
 #include "CGContextImpl.h"
