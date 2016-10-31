@@ -498,9 +498,13 @@ void CGContextAddRects(CGContextRef context, const CGRect* rects, unsigned count
         return;
     }
 
-    for (unsigned i = 0; i < count; i++) {
-        CGContextAddRect(context, rects[i]);
-    }
+// TODO GH#xxxx When CGPathAddRects is no longer stubbed, remove the diagnostic suppression.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
+    CGPathAddRects(context->Path(), &(context->CurrentGState().transform), rects, count);
+
+#pragma clang diagnostic pop
 }
 
 /**
@@ -602,7 +606,7 @@ void CGContextReplacePathWithStrokedPath(CGContextRef context) {
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
     woc::unique_cf<CGPathRef> newPath{ CGPathCreateCopyByStrokingPath(context->Path(),
-                                                                      &state.transform,
+                                                                      nullptr, // The points in the path are already transformed; do not transform again!
                                                                       state.lineWidth,
                                                                       (CGLineCap)state.strokeProperties.startCap,
                                                                       (CGLineJoin)state.strokeProperties.lineJoin,
@@ -633,7 +637,9 @@ CGRect CGContextGetPathBoundingBox(CGContextRef context) {
         return CGRectNull;
     }
 
-    return CGPathGetBoundingBox(context->Path());
+    // All queries take place on transformed paths, but return pre-CTM context units.
+    CGAffineTransform invertedCTM = CGAffineTransformInvert(context->CurrentGState().transform);
+    return CGRectApplyAffineTransform(CGPathGetBoundingBox(context->Path()), invertedCTM);
 }
 
 /**
@@ -662,7 +668,18 @@ CGPathRef CGContextCopyPath(CGContextRef context) {
         return nullptr;
     }
 
-    return CGPathCreateCopy(context->Path());
+// TODO GH#xxxx When CGPathCreateCopyByTransformingPath is no longer stubbed, remove the diagnostic suppression.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
+    // All queries take place on transformed paths, but return pre-CTM context units.
+    // This means that the path the user gets back will be in units equivalent to
+    // their inputs. We therefore must de-transform the path into which we inserted
+    // transformed points.
+    CGAffineTransform invertedCTM = CGAffineTransformInvert(context->CurrentGState().transform);
+    return CGPathCreateCopyByTransformingPath(context->Path(), &invertedCTM);
+
+#pragma clang diagnostic pop
 }
 
 /**
@@ -676,7 +693,9 @@ CGPoint CGContextGetPathCurrentPoint(CGContextRef context) {
         return CGPointZero;
     }
 
-    return CGPathGetCurrentPoint(context->Path());
+    // All queries take place on transformed paths, but return pre-CTM context units.
+    CGAffineTransform invertedCTM = CGAffineTransformInvert(context->CurrentGState().transform);
+    return CGPointApplyAffineTransform(CGPathGetCurrentPoint(context->Path()), invertedCTM);
 }
 
 /**
