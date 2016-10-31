@@ -106,8 +106,8 @@
     [self setNeedsDisplay];
 }
 
-- (void)setContextRotationDegrees:(CGFloat)opacity {
-    _contextRotationDegrees = opacity;
+- (void)setContextRotationDegrees:(CGFloat)degrees {
+    _contextRotationDegrees = degrees;
     [self setNeedsDisplay];
 }
 
