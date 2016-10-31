@@ -247,9 +247,9 @@ static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
         CTLineRef line = (CTLineRef)_ctLines[curLine];
         CGContextSaveGState(curCtx);
 
-        CGFloat ascent, leading;
+        CGFloat ascent, descent, leading;
         CTLineGetTypographicBounds(line, &ascent, nullptr, &leading);
-        CGContextSetTextPosition(curCtx, _lineOrigins[curLine].x, -(_lineOrigins[curLine].y + ascent + leading));
+        CGContextSetTextPosition(curCtx, _lineOrigins[curLine].x, -(_lineOrigins[curLine].y + ascent - descent + leading));
         CTLineDraw(line, curCtx);
         CGContextRestoreGState(curCtx);
     }
