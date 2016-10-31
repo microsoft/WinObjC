@@ -516,7 +516,7 @@ TEST(NSURLSession, DownloadTaskWithURL) {
                   "FAILED: didWriteData should be the first delegate to be called!");
     double fileSizeInMB = (double)downloadTaskTestHelper.totalBytesExpectedToWrite / 1024 / 1024;
     LOG_INFO("Downloaded file size is %fMB", fileSizeInMB);
-    ASSERT_EQ_MSG(10, std::floor(fileSizeInMB), "FAILED: Expected download file size does not match!");
+    ASSERT_EQ_MSG(11, std::lround(fileSizeInMB), "FAILED: Expected download file size does not match!");
 
     // Make sure the didFinishDownloadingToURL got called.
     ASSERT_EQ_MSG(NSURLSessionDownloadDelegateDidFinishDownloadingToURL,
@@ -639,7 +639,7 @@ TEST(NSURLSession, DownloadTaskWithURL_WithCancelResume) {
                   "FAILED: didWriteData should be the first delegate to be called!");
     double fileSizeInMB = (double)downloadTaskTestHelper.totalBytesExpectedToWrite / 1024 / 1024;
     LOG_INFO("Downloaded file size is %fMB", fileSizeInMB);
-    ASSERT_EQ_MSG(500, std::floor(fileSizeInMB), "FAILED: Expected download file size does not match!");
+    ASSERT_EQ_MSG(500, std::lround(fileSizeInMB), "FAILED: Expected download file size does not match!");
 
     // Make sure download is in progress.
     double lastBytesDownloaded = (double)downloadTaskTestHelper.totalBytesWritten / 1024 / 1024;
