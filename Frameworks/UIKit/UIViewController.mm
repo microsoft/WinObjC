@@ -764,15 +764,15 @@ NSMutableDictionary* _pageMappings;
 
         if ([strNib length] > 0) {
             priv->nibName.attach([strNib copy]);
+
+            // Load the XAML version if found. First prepend the auto-generated XAML namespace to the XAML class name
+            NSString* xamlClassName = [NSString stringWithFormat : @"%@.%@", XamlAutoGenNamespace, strNib];
+            auto xamlType = ReturnXamlType(xamlClassName);
+            if (xamlType.Get() != nullptr) {
+                priv->_xamlClassName = xamlClassName;
+            }
         } else {
             priv->nibName = nil;
-        }
-
-        // Load the XAML version if found. First prepend the auto-generated XAML namespace to the XAML class name
-        NSString* xamlClassName = [NSString stringWithFormat:@"%@.%@", XamlAutoGenNamespace, strNib];
-        auto xamlType = ReturnXamlType(xamlClassName);
-        if (xamlType.Get() != nullptr) {
-            priv->_xamlClassName = xamlClassName;
         }
     }
 

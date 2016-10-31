@@ -22,6 +22,7 @@
 #import <UIKit/UIImage.h>
 #import "UIColorInternal.h"
 
+@class WXUIElement;
 @class CAAnimation, CALayerContext;
 
 class CADisplayProperties {
@@ -127,6 +128,7 @@ public:
 
 - (void)_setOrigin:(CGPoint)origin updateContent:(BOOL)updateContent;
 
+@property WXUIElement* layoutElement;
 @property WXFrameworkElement* contentsElement;
 
 @end

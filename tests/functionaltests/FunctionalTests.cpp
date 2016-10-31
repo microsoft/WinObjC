@@ -643,3 +643,34 @@ public:
         UIApplicationTestsOpenURL();
     }
 }; /* class UIApplicationTests */
+
+   // CoreAnimationTests
+   //
+
+extern void CALayerAppearanceOpacityChanged();
+extern void CALayerAppearanceBackgroundColorChanged();
+
+class CoreAnimationTests {
+public:
+    BEGIN_TEST_CLASS(CoreAnimationTests)
+        TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+        TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+        END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(CoreAnimationTestsSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
+
+    TEST_METHOD_CLEANUP(CoreAnimationTestsCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
+    TEST_METHOD(CALayerAppearance_OpacityChanged) {
+        CALayerAppearanceOpacityChanged();
+    }
+
+    TEST_METHOD(CALayerAppearance_BackgroundColorChanged) {
+        CALayerAppearanceBackgroundColorChanged();
+    }
+}; /* class CoreAnimationTests */

@@ -473,6 +473,10 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
 - (void)drawInContext:(CGContextRef)ctx {
 }
 
+-(WXUIElement*)layoutElement {
+    return _getBackingXamlElementForCALayer(self);
+}
+
 - (WXFrameworkElement*)contentsElement {
     return _contentsElement;
 }

@@ -17,6 +17,12 @@
     <Filter Include="ProjectionTests">
       <UniqueIdentifier>{1d2d75c3-0b64-46a1-bf8a-05ec70f57e1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tests\CoreAnimationTests">
+      <UniqueIdentifier>{adbe45e4-b65b-408c-ab82-2442ffdabf00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\UIKitTests">
+      <UniqueIdentifier>{34bd5c19-86ba-4661-bbb6-63295c1ca90f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\pch.h" />
@@ -54,9 +60,6 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\CortanaTests.mm">
       <Filter>Tests</Filter>
     </ClangCompile>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIViewTests.mm">
-      <Filter>Tests</Filter>
-    </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSUserDefaultsTests.mm">
       <Filter>Tests</Filter>
     </ClangCompile>
@@ -64,21 +67,6 @@
       <Filter>Tests</Filter>
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\FunctionalTestHelpers.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UITextFieldTests.mm">
-      <Filter>Tests</Filter>
-    </ClangCompile>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIActivityIndicatorTests.mm">
-      <Filter>Tests</Filter>
-    </ClangCompile>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIButtonTests.mm">
-      <Filter>Tests</Filter>
-    </ClangCompile>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIScrollViewTests.mm">
-      <Filter>Tests</Filter>
-    </ClangCompile>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UISliderTests.mm">
-      <Filter>Tests</Filter>
-    </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIApplicationTests.mm">
       <Filter>Tests</Filter>
     </ClangCompile>
@@ -90,8 +78,31 @@
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\ProjectionTests\CoreDispatcherTests.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\ProjectionTests\SanityTests.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\FileActivationTests.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\ProjectionTests\SanityTestsWithARCEnabled.mm" />
+    <ClangCompile Include="..\..\..\tests\functionaltests\Tests\CoreAnimationTests\CALayerAppearanceTests.mm">
+      <Filter>Tests\CoreAnimationTests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIViewTests.mm">
+      <Filter>Tests\UIKitTests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UITextFieldTests.mm">
+      <Filter>Tests\UIKitTests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UISliderTests.mm">
+      <Filter>Tests\UIKitTests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIScrollViewTests.mm">
+      <Filter>Tests\UIKitTests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIButtonTests.mm">
+      <Filter>Tests\UIKitTests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIActivityIndicatorTests.mm">
+      <Filter>Tests\UIKitTests</Filter>
+    </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIActionSheetTests.mm">
-      <Filter>Tests</Filter>
+      <Filter>Tests\UIKitTests</Filter>
     </ClangCompile>
   </ItemGroup>
   <ItemGroup>
