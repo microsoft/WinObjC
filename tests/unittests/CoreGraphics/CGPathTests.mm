@@ -87,7 +87,7 @@ DISABLED_TEST(CGPath, CGPathApplyAddRect) {
 
     CGRect rect = CGRectMake(2, 4, 8, 16);
 
-    CGPathAddRect(path, NULL, rect);
+    CGPathAddRect(path, nullptr, rect);
 
     NSMutableArray* result = [NSMutableArray array];
 
@@ -116,7 +116,7 @@ DISABLED_TEST(CGPath, CGPathApplyAddEllipse) {
 
     CGRect rect = CGRectMake(40, 40, 200, 40);
 
-    CGPathAddEllipseInRect(path, NULL, rect);
+    CGPathAddEllipseInRect(path, nullptr, rect);
 
     NSMutableArray* result = [NSMutableArray array];
 
@@ -145,7 +145,7 @@ DISABLED_TEST(CGPath, CGPathApplyAddEllipse) {
 DISABLED_TEST(CGPath, CGPathApplyAddArc) {
     CGMutablePathRef path = CGPathCreateMutable();
 
-    CGPathAddArc(path, NULL, 25, 100, 20, M_PI * 1.25, 0, 1);
+    CGPathAddArc(path, nullptr, 25, 100, 20, M_PI * 1.25, 0, 1);
 
     NSMutableArray* result = [NSMutableArray array];
 
@@ -174,8 +174,8 @@ DISABLED_TEST(CGPath, CGPathApplyAddArc) {
 DISABLED_TEST(CGPath, CGPathApplyAddArcToPoint) {
     CGMutablePathRef path = CGPathCreateMutable();
 
-    CGPathMoveToPoint(path, NULL, 400, 400);
-    CGPathAddArcToPoint(path, NULL, 140, 250, 110, 180, 50);
+    CGPathMoveToPoint(path, nullptr, 400, 400);
+    CGPathAddArcToPoint(path, nullptr, 140, 250, 110, 180, 50);
 
     NSMutableArray* result = [NSMutableArray array];
 
@@ -200,8 +200,8 @@ DISABLED_TEST(CGPath, CGPathApplyAddArcToPoint) {
 DISABLED_TEST(CGPath, CGPathAddQuadCurveToPoint) {
     CGMutablePathRef path = CGPathCreateMutable();
 
-    CGPathMoveToPoint(path, NULL, 400, 400);
-    CGPathAddQuadCurveToPoint(path, NULL, 140, 250, 110, 180);
+    CGPathMoveToPoint(path, nullptr, 400, 400);
+    CGPathAddQuadCurveToPoint(path, nullptr, 140, 250, 110, 180);
 
     NSMutableArray* result = [NSMutableArray array];
 
@@ -224,7 +224,7 @@ DISABLED_TEST(CGPath, CGPathCreateMutableCopy) {
 
     CGRect rect = CGRectMake(2, 4, 8, 16);
 
-    CGPathAddEllipseInRect(path1, NULL, rect);
+    CGPathAddEllipseInRect(path1, nullptr, rect);
 
     CGMutablePathRef path2 = CGPathCreateMutableCopy(path1);
 
@@ -241,13 +241,13 @@ DISABLED_TEST(CGPath, CGPathEqualToPath) {
 
     CGRect rect = CGRectMake(2, 4, 8, 16);
 
-    CGPathAddRect(path1, NULL, rect);
+    CGPathAddRect(path1, nullptr, rect);
 
     // Create a copy of the path
     CGMutablePathRef path2 = CGPathCreateMutableCopy(path1);
 
     // Change the copy
-    CGPathAddEllipseInRect(path2, NULL, rect);
+    CGPathAddEllipseInRect(path2, nullptr, rect);
 
     // Make sure the paths are not the same object
     ASSERT_NE(path1, path2);
@@ -287,7 +287,7 @@ DISABLED_TEST(CGPath, CGPathApplyAddManyRects) {
     for (int i = 0; i < 100; i++) {
         CGRect rect = CGRectMake(i, 4, 8, 16);
 
-        CGPathAddRect(path, NULL, rect);
+        CGPathAddRect(path, nullptr, rect);
 
         NSArray* expectedRect = @[
             @{ kTypeKey : @(kCGPathElementMoveToPoint),
@@ -318,15 +318,15 @@ DISABLED_TEST(CGPath, CGPathAddPath) {
 
     CGRect rect1 = CGRectMake(2, 4, 8, 16);
 
-    CGPathAddRect(path1, NULL, rect1);
+    CGPathAddRect(path1, nullptr, rect1);
 
     CGMutablePathRef path2 = CGPathCreateMutable();
 
     CGRect rect2 = CGRectMake(4, 4, 8, 16);
 
-    CGPathAddRect(path2, NULL, rect2);
+    CGPathAddRect(path2, nullptr, rect2);
 
-    CGPathAddPath(path1, NULL, path2);
+    CGPathAddPath(path1, nullptr, path2);
 
     NSArray* expected1 = @[
         @{ kTypeKey : @(kCGPathElementMoveToPoint),
@@ -393,19 +393,19 @@ CGPathRef newPathForRoundRect(CGRect rect, CGFloat radius) {
     CGFloat outsideTop = rect.origin.y;
     CGFloat outsideLeft = rect.origin.x;
 
-    CGPathMoveToPoint(path, NULL, innerRect.origin.x, outsideTop);
+    CGPathMoveToPoint(path, nullptr, innerRect.origin.x, outsideTop);
 
-    CGPathAddLineToPoint(path, NULL, insideRight, outsideTop);
-    CGPathAddArcToPoint(path, NULL, outsideRight, outsideTop, outsideRight, insideTop, radius);
+    CGPathAddLineToPoint(path, nullptr, insideRight, outsideTop);
+    CGPathAddArcToPoint(path, nullptr, outsideRight, outsideTop, outsideRight, insideTop, radius);
 
-    CGPathAddLineToPoint(path, NULL, outsideRight, insideBottom);
-    CGPathAddArcToPoint(path, NULL, outsideRight, outsideBottom, insideRight, outsideBottom, radius);
+    CGPathAddLineToPoint(path, nullptr, outsideRight, insideBottom);
+    CGPathAddArcToPoint(path, nullptr, outsideRight, outsideBottom, insideRight, outsideBottom, radius);
 
-    CGPathAddLineToPoint(path, NULL, innerRect.origin.x, outsideBottom);
-    CGPathAddArcToPoint(path, NULL, outsideLeft, outsideBottom, outsideLeft, insideBottom, radius);
+    CGPathAddLineToPoint(path, nullptr, innerRect.origin.x, outsideBottom);
+    CGPathAddArcToPoint(path, nullptr, outsideLeft, outsideBottom, outsideLeft, insideBottom, radius);
 
-    CGPathAddLineToPoint(path, NULL, outsideLeft, insideTop);
-    CGPathAddArcToPoint(path, NULL, outsideLeft, outsideTop, innerRect.origin.x, outsideTop, radius);
+    CGPathAddLineToPoint(path, nullptr, outsideLeft, insideTop);
+    CGPathAddArcToPoint(path, nullptr, outsideLeft, outsideTop, innerRect.origin.x, outsideTop, radius);
 
     CGPathCloseSubpath(path);
 
@@ -423,17 +423,17 @@ TEST(CGPath, CGPathContainsPointOutsideRect) {
 
     // test areas outside the rect
     CGPoint testPoint = CGPointMake(-1.0f, -1.0f);
-    bool test = CGPathContainsPoint(path, NULL, testPoint, YES);
+    bool test = CGPathContainsPoint(path, nullptr, testPoint, YES);
 
     EXPECT_FALSE(test);
 
     testPoint = CGPointMake(testRect.size.width + testRect.origin.x + 1, 0.f);
-    test = CGPathContainsPoint(path, NULL, testPoint, YES);
+    test = CGPathContainsPoint(path, nullptr, testPoint, YES);
 
     EXPECT_FALSE(test);
 
     testPoint = CGPointMake(0.0f, testRect.size.height + testRect.origin.y + 1.0f);
-    test = CGPathContainsPoint(path, NULL, testPoint, YES);
+    test = CGPathContainsPoint(path, nullptr, testPoint, YES);
 
     EXPECT_FALSE(test);
 }
@@ -449,17 +449,17 @@ TEST(CGPath, CGPathContainsPointInsideRectOutsidePath) {
 
     // test areas inside the rect but NOT in the path
     CGPoint testPoint = CGPointMake(1.0f, 1.0f);
-    bool test = CGPathContainsPoint(path, NULL, testPoint, YES);
+    bool test = CGPathContainsPoint(path, nullptr, testPoint, YES);
 
     EXPECT_FALSE(test);
 
     testPoint = CGPointMake(testRect.origin.x, 0.0f);
-    test = CGPathContainsPoint(path, NULL, testPoint, YES);
+    test = CGPathContainsPoint(path, nullptr, testPoint, YES);
 
     EXPECT_FALSE(test);
 
     testPoint = CGPointMake(0.0f, testRect.origin.y);
-    test = CGPathContainsPoint(path, NULL, testPoint, YES);
+    test = CGPathContainsPoint(path, nullptr, testPoint, YES);
 
     EXPECT_FALSE(test);
 }
@@ -475,28 +475,28 @@ DISABLED_TEST(CGPath, CGPathContainsPointShoulders) {
 
     // check the curve OUTSIDE the path's shoulders
     CGPoint testPoint = CGPointMake(testRect.origin.x + 1.0, testRect.origin.y + 1.0);
-    bool test = CGPathContainsPoint(path, NULL, testPoint, YES);
+    bool test = CGPathContainsPoint(path, nullptr, testPoint, YES);
 
     EXPECT_FALSE(test);
 
     // check the curve just INSIDE the path's shoulders
     testPoint = CGPointMake(testRect.origin.x + radius, testRect.origin.y + radius);
-    test = CGPathContainsPoint(path, NULL, testPoint, YES);
+    test = CGPathContainsPoint(path, nullptr, testPoint, YES);
 
     EXPECT_TRUE(test);
 
     testPoint = CGPointMake(testRect.origin.x + testRect.size.width - radius - radius, testRect.origin.y + testRect.size.height - 20.0);
-    test = CGPathContainsPoint(path, NULL, testPoint, YES);
+    test = CGPathContainsPoint(path, nullptr, testPoint, YES);
 
     EXPECT_TRUE(test);
 
     testPoint = CGPointMake(testRect.origin.x + radius, testRect.origin.y + testRect.size.height - radius - radius);
-    test = CGPathContainsPoint(path, NULL, testPoint, YES);
+    test = CGPathContainsPoint(path, nullptr, testPoint, YES);
 
     EXPECT_TRUE(test);
 
     testPoint = CGPointMake(testRect.origin.x + testRect.size.width - radius - radius, testRect.origin.y + radius);
-    test = CGPathContainsPoint(path, NULL, testPoint, YES);
+    test = CGPathContainsPoint(path, nullptr, testPoint, YES);
 
     EXPECT_TRUE(test);
 }
@@ -533,44 +533,44 @@ DISABLED_TEST(CGPath, CGPathContainsPointEOFillFalse) {
 
     // test areas inside the rect but NOT in the path
     CGPoint testPoint = CGPointMake(1.0f, 1.0f);
-    bool test = CGPathContainsPoint(path, NULL, testPoint, NO);
+    bool test = CGPathContainsPoint(path, nullptr, testPoint, NO);
 
     EXPECT_FALSE(test);
 
     testPoint = CGPointMake(testRect.origin.x, 0.0f);
-    test = CGPathContainsPoint(path, NULL, testPoint, NO);
+    test = CGPathContainsPoint(path, nullptr, testPoint, NO);
 
     EXPECT_FALSE(test);
 
     testPoint = CGPointMake(0.0f, testRect.origin.y);
-    test = CGPathContainsPoint(path, NULL, testPoint, NO);
+    test = CGPathContainsPoint(path, nullptr, testPoint, NO);
 
     EXPECT_FALSE(test);
 
     // check the curve OUTSIDE the path's shoulders
     testPoint = CGPointMake(testRect.origin.x + 1.0, testRect.origin.y + 1.0);
-    test = CGPathContainsPoint(path, NULL, testPoint, NO);
+    test = CGPathContainsPoint(path, nullptr, testPoint, NO);
 
     EXPECT_FALSE(test);
 
     // check the curve just INSIDE the path's shoulders
     testPoint = CGPointMake(testRect.origin.x + radius, testRect.origin.y + radius);
-    test = CGPathContainsPoint(path, NULL, testPoint, NO);
+    test = CGPathContainsPoint(path, nullptr, testPoint, NO);
 
     EXPECT_TRUE(test);
 
     testPoint = CGPointMake(testRect.origin.x + testRect.size.width - radius - radius, testRect.origin.y + testRect.size.height - 20.0);
-    test = CGPathContainsPoint(path, NULL, testPoint, NO);
+    test = CGPathContainsPoint(path, nullptr, testPoint, NO);
 
     EXPECT_TRUE(test);
 
     testPoint = CGPointMake(testRect.origin.x + radius, testRect.origin.y + testRect.size.height - radius - radius);
-    test = CGPathContainsPoint(path, NULL, testPoint, NO);
+    test = CGPathContainsPoint(path, nullptr, testPoint, NO);
 
     EXPECT_TRUE(test);
 
     testPoint = CGPointMake(testRect.origin.x + testRect.size.width - radius - radius, testRect.origin.y + radius);
-    test = CGPathContainsPoint(path, NULL, testPoint, NO);
+    test = CGPathContainsPoint(path, nullptr, testPoint, NO);
 
     EXPECT_TRUE(test);
 
@@ -603,11 +603,11 @@ TEST(CGPath, CGPathSimpleCreation) {
     EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 0, 0);
 
     // Move to a new point
-    CGPathMoveToPoint(path, NULL, 50, 50);
+    CGPathMoveToPoint(path, nullptr, 50, 50);
     EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 50, 50);
 
     // Move to another new point
-    CGPathMoveToPoint(path, NULL, 100, 50);
+    CGPathMoveToPoint(path, nullptr, 100, 50);
     EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 100, 50);
 
     // Create a copy of this path which should be at the same point
@@ -615,7 +615,7 @@ TEST(CGPath, CGPathSimpleCreation) {
     EXPECT_POINTEQ(CGPathGetCurrentPoint(pathCopy), 100, 50);
 
     // Move the new path to a new point
-    CGPathMoveToPoint(pathCopy, NULL, 200, 200);
+    CGPathMoveToPoint(pathCopy, nullptr, 200, 200);
 
     // The original should not have been changed but the new path should have moved
     EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 100, 50);
@@ -628,8 +628,8 @@ TEST(CGPath, CGPathSimpleCreation) {
 TEST(CGPath, CGPathSimpleLines) {
     // Create a new path at a particular point and draw a line
     CGMutablePathRef path = CGPathCreateMutable();
-    CGPathMoveToPoint(path, NULL, 50, 50);
-    CGPathAddLineToPoint(path, NULL, 25, 25);
+    CGPathMoveToPoint(path, nullptr, 50, 50);
+    CGPathAddLineToPoint(path, nullptr, 25, 25);
     EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 25, 25);
 
     // Get the size of its bounding box
@@ -638,7 +638,7 @@ TEST(CGPath, CGPathSimpleLines) {
     EXPECT_SIZEEQ(boundingBox.size, 25, 25);
 
     // Add a line further down to increase the bounding box's size
-    CGPathAddLineToPoint(path, NULL, 100, 200);
+    CGPathAddLineToPoint(path, nullptr, 100, 200);
 
     boundingBox = CGPathGetBoundingBox(path);
 
@@ -649,8 +649,8 @@ TEST(CGPath, CGPathSimpleLines) {
 
     // Create a new path and move it to a new point
     path = CGPathCreateMutable();
-    CGPathMoveToPoint(path, NULL, 50, 50);
-    CGPathAddLineToPoint(path, NULL, 81, 107);
+    CGPathMoveToPoint(path, nullptr, 50, 50);
+    CGPathAddLineToPoint(path, nullptr, 81, 107);
 
     // Get the bounding box size of that path
     boundingBox = CGPathGetBoundingBox(path);
@@ -659,7 +659,7 @@ TEST(CGPath, CGPathSimpleLines) {
 
     // Create a copy of this path
     CGMutablePathRef pathCopy = CGPathCreateMutableCopy(path);
-    CGPathAddLineToPoint(pathCopy, NULL, 200, 200);
+    CGPathAddLineToPoint(pathCopy, nullptr, 200, 200);
 
     // Check that original bounding box has not changed.
     boundingBox = CGPathGetBoundingBox(path);
@@ -681,12 +681,12 @@ TEST(CGPath, CGPathSimpleLines) {
 
 TEST(CGPath, CGPathAddPathTest) {
     CGMutablePathRef path = CGPathCreateMutable();
-    CGPathMoveToPoint(path, NULL, 50, 50);
-    CGPathAddLineToPoint(path, NULL, 75, 75);
+    CGPathMoveToPoint(path, nullptr, 50, 50);
+    CGPathAddLineToPoint(path, nullptr, 75, 75);
 
     CGMutablePathRef secondPath = CGPathCreateMutable();
-    CGPathMoveToPoint(secondPath, NULL, 75, 75);
-    CGPathAddLineToPoint(secondPath, NULL, 100, 100);
+    CGPathMoveToPoint(secondPath, nullptr, 75, 75);
+    CGPathAddLineToPoint(secondPath, nullptr, 100, 100);
 
     CGRect boundingBox = CGPathGetBoundingBox(path);
     EXPECT_POINTEQ(boundingBox.origin, 50, 50);
@@ -696,7 +696,7 @@ TEST(CGPath, CGPathAddPathTest) {
     EXPECT_POINTEQ(boundingBox.origin, 75, 75);
     EXPECT_SIZEEQ(boundingBox.size, 25, 25);
 
-    CGPathAddPath(path, NULL, secondPath);
+    CGPathAddPath(path, nullptr, secondPath);
     boundingBox = CGPathGetBoundingBox(path);
     EXPECT_POINTEQ(boundingBox.origin, 50, 50);
     EXPECT_SIZEEQ(boundingBox.size, 50, 50);
@@ -707,7 +707,7 @@ TEST(CGPath, CGPathAddPathTest) {
 
 TEST(CGPath, CGPathRectanglesTest) {
     CGRect theRectangle = CGRectMake(50, 50, 100, 100);
-    CGMutablePathRef path = CGPathCreateWithRect(theRectangle, NULL);
+    CGMutablePathRef path = CGPathCreateWithRect(theRectangle, nullptr);
     CGRect boundingBox = CGPathGetBoundingBox(path);
 
     EXPECT_POINTEQ(boundingBox.origin, theRectangle.origin.x, theRectangle.origin.y);
@@ -716,9 +716,9 @@ TEST(CGPath, CGPathRectanglesTest) {
     CGPathRelease(path);
     path = CGPathCreateMutable();
 
-    CGPathMoveToPoint(path, NULL, 50, 50);
-    CGPathAddLineToPoint(path, NULL, 100, 100);
-    CGPathAddRect(path, NULL, CGRectMake(100, 100, 200, 100));
+    CGPathMoveToPoint(path, nullptr, 50, 50);
+    CGPathAddLineToPoint(path, nullptr, 100, 100);
+    CGPathAddRect(path, nullptr, CGRectMake(100, 100, 200, 100));
 
     boundingBox = CGPathGetBoundingBox(path);
 
@@ -733,9 +733,9 @@ TEST(CGPath, CGPathAddLinesTest) {
 
     CGPoint points[] = { { 50, 50 }, { 100, 50 }, { 50, 50 }, { 50, 100 } };
 
-    CGPathMoveToPoint(path, NULL, 50, 50);
+    CGPathMoveToPoint(path, nullptr, 50, 50);
 
-    CGPathAddLines(path, NULL, points, 4);
+    CGPathAddLines(path, nullptr, points, 4);
 
     CGRect boundingBox = CGPathGetBoundingBox(path);
 
@@ -744,7 +744,7 @@ TEST(CGPath, CGPathAddLinesTest) {
 
     CGPoint newPoints[] = { { 100, 100 }, { 200, 25 }, { 100, 100 }, { 25, 200 } };
 
-    CGPathAddLines(path, NULL, newPoints, 4);
+    CGPathAddLines(path, nullptr, newPoints, 4);
 
     boundingBox = CGPathGetBoundingBox(path);
 
@@ -755,17 +755,16 @@ TEST(CGPath, CGPathAddLinesTest) {
 }
 
 TEST(CGPath, CGPathContainsPointTest) {
-    // bool CGPathContainsPoint(CGPathRef path, const CGAffineTransform* transform, CGPoint point, bool eoFill) {
     CGRect theRectangle = CGRectMake(50, 50, 100, 100);
-    CGMutablePathRef path = CGPathCreateWithRect(theRectangle, NULL);
+    CGMutablePathRef path = CGPathCreateWithRect(theRectangle, nullptr);
 
-    EXPECT_TRUE(CGPathContainsPoint(path, NULL, CGPointMake(75, 75), NO));
-    EXPECT_FALSE(CGPathContainsPoint(path, NULL, CGPointMake(200, 200), NO));
+    EXPECT_TRUE(CGPathContainsPoint(path, nullptr, CGPointMake(75, 75), NO));
+    EXPECT_FALSE(CGPathContainsPoint(path, nullptr, CGPointMake(200, 200), NO));
 
     CGPathRelease(path);
 }
 
-bool testBidirectionalEquals(CGPathRef path1, CGPathRef path2) {
+bool testSymmetricEquivalence(CGPathRef path1, CGPathRef path2) {
     return (CGPathEqualToPath(path1, path2) && CGPathEqualToPath(path2, path1));
 }
 
@@ -773,17 +772,17 @@ TEST(CGPath, CGPathEqualsTest) {
     CGMutablePathRef path1 = CGPathCreateMutable();
     CGMutablePathRef path2 = CGPathCreateMutable();
 
-    CGPathMoveToPoint(path1, NULL, 50, 50);
-    CGPathAddLineToPoint(path1, NULL, 75, 75);
+    CGPathMoveToPoint(path1, nullptr, 50, 50);
+    CGPathAddLineToPoint(path1, nullptr, 75, 75);
 
-    CGPathMoveToPoint(path2, NULL, 50, 50);
-    CGPathAddLineToPoint(path2, NULL, 75, 75);
+    CGPathMoveToPoint(path2, nullptr, 50, 50);
+    CGPathAddLineToPoint(path2, nullptr, 75, 75);
 
-    EXPECT_TRUE(testBidirectionalEquals(path1, path2));
+    EXPECT_TRUE(testSymmetricEquivalence(path1, path2));
 
-    CGPathAddLineToPoint(path2, NULL, 100, 100);
+    CGPathAddLineToPoint(path2, nullptr, 100, 100);
 
-    EXPECT_FALSE(testBidirectionalEquals(path1, path2));
+    EXPECT_FALSE(testSymmetricEquivalence(path1, path2));
 
     CGPathRelease(path1);
     CGPathRelease(path2);
@@ -791,64 +790,64 @@ TEST(CGPath, CGPathEqualsTest) {
     path1 = CGPathCreateMutable();
     path2 = CGPathCreateMutable();
 
-    CGPathMoveToPoint(path1, NULL, 50, 50);
-    CGPathAddLineToPoint(path1, NULL, 100, 100);
+    CGPathMoveToPoint(path1, nullptr, 50, 50);
+    CGPathAddLineToPoint(path1, nullptr, 100, 100);
 
     // Two segments should be the same as one longer segment.
-    CGPathMoveToPoint(path2, NULL, 50, 50);
-    CGPathAddLineToPoint(path2, NULL, 75, 75);
-    CGPathAddLineToPoint(path2, NULL, 100, 100);
+    CGPathMoveToPoint(path2, nullptr, 50, 50);
+    CGPathAddLineToPoint(path2, nullptr, 75, 75);
+    CGPathAddLineToPoint(path2, nullptr, 100, 100);
 
-    EXPECT_TRUE(testBidirectionalEquals(path1, path2));
+    EXPECT_TRUE(testSymmetricEquivalence(path1, path2));
 
     // Rectangles
     CGRect theRectangle = CGRectMake(50, 50, 100, 100);
-    CGMutablePathRef rectPath1 = CGPathCreateWithRect(theRectangle, NULL);
-    CGMutablePathRef rectPath2 = CGPathCreateWithRect(theRectangle, NULL);
+    CGMutablePathRef rectPath1 = CGPathCreateWithRect(theRectangle, nullptr);
+    CGMutablePathRef rectPath2 = CGPathCreateWithRect(theRectangle, nullptr);
 
-    EXPECT_TRUE(testBidirectionalEquals(rectPath1, rectPath2));
+    EXPECT_TRUE(testSymmetricEquivalence(rectPath1, rectPath2));
 
     // Add an extra segment coming off of the rectangle.
-    CGPathAddLineToPoint(rectPath2, NULL, 200, 200);
+    CGPathAddLineToPoint(rectPath2, nullptr, 200, 200);
 
-    EXPECT_FALSE(testBidirectionalEquals(rectPath1, rectPath2));
+    EXPECT_FALSE(testSymmetricEquivalence(rectPath1, rectPath2));
 
     // A small line contained entirely within rect1.
     CGMutablePathRef containedPath = CGPathCreateMutable();
-    CGPathMoveToPoint(path1, NULL, 75, 75);
-    CGPathAddLineToPoint(path1, NULL, 80, 80);
+    CGPathMoveToPoint(path1, nullptr, 75, 75);
+    CGPathAddLineToPoint(path1, nullptr, 80, 80);
 
-    EXPECT_FALSE(testBidirectionalEquals(rectPath1, containedPath));
+    EXPECT_FALSE(testSymmetricEquivalence(rectPath1, containedPath));
 
     CGMutablePathRef intersectPath = CGPathCreateMutable();
-    CGPathMoveToPoint(intersectPath, NULL, 75, 75);
-    CGPathAddLineToPoint(intersectPath, NULL, 250, 250);
+    CGPathMoveToPoint(intersectPath, nullptr, 75, 75);
+    CGPathAddLineToPoint(intersectPath, nullptr, 250, 250);
 
-    EXPECT_FALSE(testBidirectionalEquals(rectPath1, intersectPath));
+    EXPECT_FALSE(testSymmetricEquivalence(rectPath1, intersectPath));
 
     CGMutablePathRef removedPath = CGPathCreateMutable();
-    CGPathMoveToPoint(removedPath, NULL, 500, 500);
-    CGPathAddLineToPoint(removedPath, NULL, 550, 550);
+    CGPathMoveToPoint(removedPath, nullptr, 500, 500);
+    CGPathAddLineToPoint(removedPath, nullptr, 550, 550);
 
-    EXPECT_FALSE(testBidirectionalEquals(rectPath1, removedPath));
+    EXPECT_FALSE(testSymmetricEquivalence(rectPath1, removedPath));
 
     CGRect overLappingRectangle = CGRectMake(75, 75, 100, 100);
-    CGMutablePathRef strictlyOverlappingRectangle = CGPathCreateWithRect(overLappingRectangle, NULL);
+    CGMutablePathRef strictlyOverlappingRectangle = CGPathCreateWithRect(overLappingRectangle, nullptr);
 
-    EXPECT_FALSE(testBidirectionalEquals(rectPath1, strictlyOverlappingRectangle));
+    EXPECT_FALSE(testSymmetricEquivalence(rectPath1, strictlyOverlappingRectangle));
 
     CGRect smallRectangle = CGRectMake(75, 75, 5, 5);
-    CGMutablePathRef containedRectangle = CGPathCreateWithRect(smallRectangle, NULL);
+    CGMutablePathRef containedRectangle = CGPathCreateWithRect(smallRectangle, nullptr);
 
-    EXPECT_FALSE(testBidirectionalEquals(rectPath1, containedRectangle));
+    EXPECT_FALSE(testSymmetricEquivalence(rectPath1, containedRectangle));
 
     CGPathRelease(rectPath1);
     CGPathRelease(rectPath2);
 
     // Two complicated paths that should be equal.
     theRectangle = CGRectMake(50, 50, 100, 100);
-    rectPath1 = CGPathCreateWithRect(theRectangle, NULL);
-    rectPath2 = CGPathCreateWithRect(theRectangle, NULL);
+    rectPath1 = CGPathCreateWithRect(theRectangle, nullptr);
+    rectPath2 = CGPathCreateWithRect(theRectangle, nullptr);
 
     CGPathAddLineToPoint(rectPath1, nullptr, 200, 200);
 
@@ -868,7 +867,7 @@ TEST(CGPath, CGPathEqualsTest) {
     CGPathAddLineToPoint(rectPath2, nullptr, 230, 200);
     CGPathAddLineToPoint(rectPath2, nullptr, 200, 200);
 
-    EXPECT_TRUE(testBidirectionalEquals(rectPath1, rectPath2));
+    EXPECT_TRUE(testSymmetricEquivalence(rectPath1, rectPath2));
 
     CGPathRelease(path1);
     CGPathRelease(path2);
