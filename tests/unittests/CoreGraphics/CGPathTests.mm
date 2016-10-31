@@ -764,7 +764,7 @@ TEST(CGPath, CGPathContainsPointTest) {
     CGPathRelease(path);
 }
 
-bool testSymmetricEquivalence(CGPathRef path1, CGPathRef path2) {
+static bool testSymmetricEquivalence(CGPathRef path1, CGPathRef path2) {
     return (CGPathEqualToPath(path1, path2) && CGPathEqualToPath(path2, path1));
 }
 

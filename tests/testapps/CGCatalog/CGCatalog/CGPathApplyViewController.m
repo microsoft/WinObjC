@@ -55,9 +55,6 @@
         // Unnecessary as close subpath will finish this line off but for the sake of consistency, have this here.
         CGPathAddLineToPoint(thepath, NULL, 200, 35);
 
-        CGMutablePathRef nullPath = NULL;
-        CGRect ourRect = CGPathGetBoundingBox(nullPath);
-
         CGPathCloseSubpath(thepath);
         CGContextAddPath(currentContext, thepath);
         CGContextStrokePath(currentContext);
