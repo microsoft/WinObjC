@@ -485,7 +485,7 @@ void CGContextClosePath(CGContextRef context) {
 void CGContextAddRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddRect(context->Path(), nullptr, rect);
+    CGPathAddRect(context->Path(), &(context->CurrentGState().transform), rect);
 }
 
 /**
@@ -509,7 +509,7 @@ void CGContextAddRects(CGContextRef context, const CGRect* rects, unsigned count
 void CGContextAddLineToPoint(CGContextRef context, CGFloat x, CGFloat y) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddLineToPoint(context->Path(), nullptr, x, y);
+    CGPathAddLineToPoint(context->Path(), &(context->CurrentGState().transform), x, y);
 }
 
 /**
@@ -518,7 +518,7 @@ void CGContextAddLineToPoint(CGContextRef context, CGFloat x, CGFloat y) {
 void CGContextAddCurveToPoint(CGContextRef context, CGFloat cp1x, CGFloat cp1y, CGFloat cp2x, CGFloat cp2y, CGFloat x, CGFloat y) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddCurveToPoint(context->Path(), nullptr, cp1x, cp1y, cp2x, cp2y, x, y);
+    CGPathAddCurveToPoint(context->Path(), &(context->CurrentGState().transform), cp1x, cp1y, cp2x, cp2y, x, y);
 }
 
 /**
@@ -527,7 +527,7 @@ void CGContextAddCurveToPoint(CGContextRef context, CGFloat cp1x, CGFloat cp1y, 
 void CGContextAddQuadCurveToPoint(CGContextRef context, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddQuadCurveToPoint(context->Path(), nullptr, cpx, cpy, x, y);
+    CGPathAddQuadCurveToPoint(context->Path(), &(context->CurrentGState().transform), cpx, cpy, x, y);
 }
 
 /**
@@ -536,7 +536,7 @@ void CGContextAddQuadCurveToPoint(CGContextRef context, CGFloat cpx, CGFloat cpy
 void CGContextMoveToPoint(CGContextRef context, CGFloat x, CGFloat y) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathMoveToPoint(context->Path(), nullptr, x, y);
+    CGPathMoveToPoint(context->Path(), &(context->CurrentGState().transform), x, y);
 }
 
 /**
@@ -545,7 +545,7 @@ void CGContextMoveToPoint(CGContextRef context, CGFloat x, CGFloat y) {
 void CGContextAddArc(CGContextRef context, CGFloat x, CGFloat y, CGFloat radius, CGFloat startAngle, CGFloat endAngle, int clockwise) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddArc(context->Path(), nullptr, x, y, radius, startAngle, endAngle, clockwise);
+    CGPathAddArc(context->Path(), &(context->CurrentGState().transform), x, y, radius, startAngle, endAngle, clockwise);
 }
 
 /**
@@ -554,7 +554,7 @@ void CGContextAddArc(CGContextRef context, CGFloat x, CGFloat y, CGFloat radius,
 void CGContextAddArcToPoint(CGContextRef context, CGFloat x1, CGFloat y1, CGFloat x2, CGFloat y2, CGFloat radius) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddArcToPoint(context->Path(), nullptr, x1, y1, x2, y2, radius);
+    CGPathAddArcToPoint(context->Path(), &(context->CurrentGState().transform), x1, y1, x2, y2, radius);
 }
 
 /**
@@ -563,7 +563,7 @@ void CGContextAddArcToPoint(CGContextRef context, CGFloat x1, CGFloat y1, CGFloa
 void CGContextAddEllipseInRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddEllipseInRect(context->Path(), nullptr, rect);
+    CGPathAddEllipseInRect(context->Path(), &(context->CurrentGState().transform), rect);
 }
 
 /**
@@ -582,7 +582,7 @@ void CGContextAddPath(CGContextRef context, CGPathRef path) {
         return;
     }
 
-    CGPathAddPath(context->Path(), nullptr, path);
+    CGPathAddPath(context->Path(), &(context->CurrentGState().transform), path);
 }
 
 /**
@@ -646,7 +646,7 @@ void CGContextAddLines(CGContextRef context, const CGPoint* points, unsigned cou
         return;
     }
 
-    CGPathAddLines(context->Path(), nullptr, points, count);
+    CGPathAddLines(context->Path(), &(context->CurrentGState().transform), points, count);
 }
 #pragma endregion
 
@@ -686,7 +686,7 @@ CGPoint CGContextGetPathCurrentPoint(CGContextRef context) {
 bool CGContextPathContainsPoint(CGContextRef context, CGPoint point, CGPathDrawingMode mode) {
     NOISY_RETURN_IF_NULL(context, false);
 
-    return context->HasPath() && CGPathContainsPoint(context->Path(), nullptr, point, (mode & kCGPathEOFill));
+    return context->HasPath() && CGPathContainsPoint(context->Path(), &(context->CurrentGState().transform), point, (mode & kCGPathEOFill));
 }
 #pragma endregion
 
