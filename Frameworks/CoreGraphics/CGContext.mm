@@ -171,7 +171,7 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext, __CGContextImpl> {
 
 #define NOISY_RETURN_IF_NULL(param, ...)                                    \
     do {                                                                    \
-        if (!context) {                                                     \
+        if (!param) {                                                       \
             TraceError(TAG, L"%hs: null " #param "!", __PRETTY_FUNCTION__); \
             return __VA_ARGS__;                                             \
         }                                                                   \
@@ -1291,12 +1291,22 @@ static HRESULT __CGContextCreateShadowEffect(CGContextRef context,
                                           ID2D1Effect** outShadowEffect) {
     auto& state = context->CurrentGState();
     if (std::fpclassify(state.shadowColor.w) != FP_ZERO) {
+        // The Shadow Effect takes an input image (or command list) and projects a shadow from
+        // it with the specified parameters.
+        //
+        // INPUTS
+        // 0: The input image/command list
         ComPtr<ID2D1Effect> shadowEffect;
         RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Shadow, &shadowEffect));
         shadowEffect->SetInput(0, inputImage);
         RETURN_IF_FAILED(shadowEffect->SetValue(D2D1_SHADOW_PROP_COLOR, state.shadowColor));
         RETURN_IF_FAILED(shadowEffect->SetValue(D2D1_SHADOW_PROP_BLUR_STANDARD_DEVIATION, state.shadowBlur));
 
+        // By default, the shadow projects straight down. Stacking it with an
+        // Affine Transform effect allows us to change the shadow's projection.
+        //
+        // INPUTS
+        // 0: The untransformed shadow
         ComPtr<ID2D1Effect> affineTransformEffect;
         RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D12DAffineTransform, &affineTransformEffect));
         affineTransformEffect->SetInputEffect(0, shadowEffect.Get());
@@ -1304,6 +1314,13 @@ static HRESULT __CGContextCreateShadowEffect(CGContextRef context,
             affineTransformEffect->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX,
                                             D2D1::Matrix3x2F::Translation(state.shadowOffset.width, state.shadowOffset.height)));
 
+        // Drawing just a projected shadow is not terribly useful, so we composite the
+        // shadow with the original input image (or command list) so that both get drawn.
+        // The Composite Effect draws its inputs in ascending order.
+        //
+        // INPUTS
+        // 0: The transformed shadow
+        // 1: The input image/command list
         ComPtr<ID2D1Effect> compositeEffect;
         RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Composite, &compositeEffect));
         compositeEffect->SetInputEffect(0, affineTransformEffect.Get());
