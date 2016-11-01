@@ -219,7 +219,7 @@ DISABLED_TEST(CGPath, CGPathAddQuadCurveToPoint) {
     CGPathRelease(path);
 }
 
-DISABLED_TEST(CGPath, CGPathCreateMutableCopy) {
+TEST(CGPath, CGPathCreateMutableCopy) {
     CGMutablePathRef path1 = CGPathCreateMutable();
 
     CGRect rect = CGRectMake(2, 4, 8, 16);
@@ -412,7 +412,7 @@ CGPathRef newPathForRoundRect(CGRect rect, CGFloat radius) {
     return path;
 }
 
-DISABLED_TEST(CGPath, CGPathContainsPointOutsideRect) {
+TEST(CGPath, CGPathContainsPointOutsideRect) {
     CGFloat originX = 10.0f;
     CGFloat originY = 20.0f;
     CGFloat pathWidth = 100.0f;
@@ -438,7 +438,7 @@ DISABLED_TEST(CGPath, CGPathContainsPointOutsideRect) {
     EXPECT_FALSE(test);
 }
 
-DISABLED_TEST(CGPath, CGPathContainsPointInsideRectOutsidePath) {
+TEST(CGPath, CGPathContainsPointInsideRectOutsidePath) {
     CGFloat originX = 10.0f;
     CGFloat originY = 20.0f;
     CGFloat pathWidth = 100.0f;
@@ -464,7 +464,7 @@ DISABLED_TEST(CGPath, CGPathContainsPointInsideRectOutsidePath) {
     EXPECT_FALSE(test);
 }
 
-DISABLED_TEST(CGPath, CGPathContainsPointShoulders) {
+TEST(CGPath, CGPathContainsPointShoulders) {
     CGFloat originX = 10.0f;
     CGFloat originY = 20.0f;
     CGFloat pathWidth = 100.0f;
@@ -501,7 +501,7 @@ DISABLED_TEST(CGPath, CGPathContainsPointShoulders) {
     EXPECT_TRUE(test);
 }
 
-DISABLED_TEST(CGPath, CGPathContainsPointWithTransform) {
+TEST(CGPath, CGPathContainsPointWithTransform) {
     CGFloat originX = 10.0f;
     CGFloat originY = 20.0f;
     CGFloat pathWidth = 100.0f;
@@ -919,4 +919,47 @@ TEST(CGPath, SubShapesEqualityTest) {
     CGPathRelease(path1);
     CGPathRelease(path2);
     CGPathRelease(path3);
+}
+
+TEST(CGPath, AddArcTest) {
+    CGMutablePathRef path = CGPathCreateMutable();
+
+    CGPathMoveToPoint(path, nullptr, 50, 50);
+    CGPathAddArc(path, nullptr, 100, 100, 75, 0, (-1 * M_PI / 2.0), true);
+    CGPathCloseSubpath(path);
+
+    CGRect boundingBox = CGPathGetBoundingBox(path);
+    EXPECT_POINTEQ(boundingBox.origin, 50, 25);
+    EXPECT_SIZEEQ(boundingBox.size, 125, 75);
+    CGPathRelease(path);
+}
+
+TEST(CGPath, PathEllipseInRect) {
+    CGMutablePathRef path = CGPathCreateMutable();
+
+    CGRect rectangle = CGRectMake(50, 50, 100, 100);
+
+    CGPathMoveToPoint(path, nullptr, 50, 50);
+    CGPathAddEllipseInRect(path, nullptr, rectangle);
+    CGPathCloseSubpath(path);
+
+    CGRect boundingBox = CGPathGetBoundingBox(path);
+    EXPECT_POINTEQ(boundingBox.origin, 50, 50);
+    EXPECT_SIZEEQ(boundingBox.size, 100, 100);
+    CGPathRelease(path);
+}
+
+TEST(CGPath, CGPathAddArcToPoint) {
+    CGMutablePathRef thepath = CGPathCreateMutable();
+    CGPathMoveToPoint(thepath, NULL, 50, 50);
+    CGPathAddArcToPoint(thepath, NULL, 50, 100, 100, 100, 10);
+    EXPECT_POINTEQ(CGPathGetCurrentPoint(thepath), 60, 100);
+    CGPathAddArcToPoint(thepath, NULL, 100, 100, 100, 50, 10);
+    EXPECT_POINTEQ(CGPathGetCurrentPoint(thepath), 100, 90);
+    CGPathCloseSubpath(thepath);
+
+    CGRect boundingBox = CGPathGetBoundingBox(thepath);
+    EXPECT_POINTEQ(boundingBox.origin, 50, 50);
+    EXPECT_SIZEEQ(boundingBox.size, 50, 50);
+    CGPathRelease(thepath);
 }
