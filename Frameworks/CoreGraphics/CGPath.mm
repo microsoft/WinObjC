@@ -14,7 +14,6 @@
 //
 //******************************************************************************
 
-#import "CGContextInternal.h"
 #import <CoreGraphics/CGBitmapContext.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <Starboard.h>
@@ -34,8 +33,7 @@
 
 static const wchar_t* TAG = L"CGPath";
 
-//
-static inline CGPoint __CreateCGPointWithTransform(CGFloat x, CGFloat y, const CGAffineTransform* transform) {
+inline CGPoint __CreateCGPointWithTransform(CGFloat x, CGFloat y, const CGAffineTransform* transform) {
     CGPoint pt{ x, y };
     if (transform) {
         pt = CGPointApplyAffineTransform(pt, *transform);
@@ -51,22 +49,46 @@ struct __CGPathImpl {
     ComPtr<ID2D1PathGeometry> pathGeometry;
     ComPtr<ID2D1GeometrySink> geometrySink;
 
-    bool isFigureClosed;
+    bool figureClosed;
     CGPoint currentPoint{ 0, 0 };
     CGPoint startingPoint{ 0, 0 };
 
-    __CGPathImpl() : isFigureClosed(true) {
+    __CGPathImpl() : figureClosed(true) {
     }
 };
 
 struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
+    ComPtr<ID2D1PathGeometry> GetPathGeometry() {
+        return _impl.pathGeometry;
+    }
+
+    ComPtr<ID2D1GeometrySink> GetGeometrySink() {
+        return _impl.geometrySink;
+    }
+
+    CGPoint GetCurrentPoint() {
+        return _impl.currentPoint;
+    }
+
+    CGPoint GetStartingPoint() {
+        return _impl.startingPoint;
+    }
+
+    void SetCurrentPoint(CGPoint newPoint) {
+        _impl.currentPoint = newPoint;
+    }
+
+    void SetStartingPoint(CGPoint newPoint) {
+        _impl.startingPoint = newPoint;
+    }
+
     // A private helper function for re-opening a path geometry. CGPath does not
     // have a concept of an open and a closed path but D2D relies on it. A
     // path/sink cannot be read from while the path is open thus it must be
     // closed. However, a CGPath can be edited again after being read from so
     // we must open the path again. This cannot be done normally, so we must
     // create a new path with the old path information to edit.
-    void preparePathForEditing() {
+    HRESULT PreparePathForEditing() {
         if (!_impl.geometrySink) {
             // Re-open this geometry.
             ComPtr<ID2D1Factory> factory = _GetD2DFactoryInstance();
@@ -78,45 +100,48 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
             // Open a new path that the contents of the old path will be streamed into. We cannot re-use the same path as it is now closed
             // and cannot be opened again. We use the newPath variable because the factory was returning the same pointer for some strange
             // reason so this will force it to do otherwise.
-            FAIL_FAST_IF_FAILED(factory->CreatePathGeometry(&newPath));
-            FAIL_FAST_IF_FAILED(newPath->Open(&newSink));
-            FAIL_FAST_IF_FAILED(_impl.pathGeometry->Stream(newSink.Get()));
+            RETURN_IF_FAILED(factory->CreatePathGeometry(&newPath));
+            RETURN_IF_FAILED(newPath->Open(&newSink));
+            RETURN_IF_FAILED(_impl.pathGeometry->Stream(newSink.Get()));
 
             _impl.pathGeometry = newPath;
             _impl.geometrySink = newSink;
 
             // Without a new figure being created, it's by default closed
-            _impl.isFigureClosed = true;
+            _impl.figureClosed = true;
         }
+        return S_OK;
     }
 
-    void closePath() {
+    void ClosePath() {
         if (_impl.geometrySink) {
-            endFigure(D2D1_FIGURE_END_OPEN);
+            EndFigure(D2D1_FIGURE_END_OPEN);
             _impl.geometrySink->Close();
             _impl.geometrySink = nullptr;
         }
     }
 
-    void beginFigure() {
-        if (_impl.isFigureClosed) {
+    void BeginFigure() {
+        if (_impl.figureClosed) {
             _impl.geometrySink->BeginFigure(_CGPointToD2D_F(_impl.currentPoint), D2D1_FIGURE_BEGIN_FILLED);
-            _impl.isFigureClosed = false;
+            _impl.figureClosed = false;
         }
     }
 
-    void endFigure(D2D1_FIGURE_END figureStatus) {
-        if (!_impl.isFigureClosed) {
+    void EndFigure(D2D1_FIGURE_END figureStatus) {
+        if (!_impl.figureClosed) {
             _impl.geometrySink->EndFigure(figureStatus);
-            _impl.isFigureClosed = true;
+            _impl.figureClosed = true;
         }
     }
 
-    void initializeGeometries() {
+    HRESULT InitializeGeometries() {
         ComPtr<ID2D1Factory> factory = _GetD2DFactoryInstance();
 
-        FAIL_FAST_IF_FAILED(factory->CreatePathGeometry(&_impl.pathGeometry));
-        FAIL_FAST_IF_FAILED(_impl.pathGeometry->Open(&_impl.geometrySink));
+        RETURN_IF_FAILED(factory->CreatePathGeometry(&_impl.pathGeometry));
+        RETURN_IF_FAILED(_impl.pathGeometry->Open(&_impl.geometrySink));
+
+        return S_OK;
     }
 };
 
@@ -125,8 +150,33 @@ CFTypeID CGPathGetTypeID() {
 }
 
 static Boolean __CGPathEqual(CFTypeRef cf1, CFTypeRef cf2) {
+    if (!cf1 && !cf2) {
+        return true;
+    }
+    RETURN_FALSE_IF(!cf1);
+    RETURN_FALSE_IF(!cf2);
+
     __CGPath* path1 = (__CGPath*)cf1;
     __CGPath* path2 = (__CGPath*)cf2;
+
+    path1->ClosePath();
+    path2->ClosePath();
+
+    // ID2D1 Geometries have no isEquals method. However, for two geometries to be equal they are both reported to contain the other.
+    // Thus we must do two comparisons.
+    D2D1_GEOMETRY_RELATION relation = D2D1_GEOMETRY_RELATION_UNKNOWN;
+    RETURN_FALSE_IF_FAILED(
+        path1->GetPathGeometry()->CompareWithGeometry(path2->GetPathGeometry().Get(), D2D1::IdentityMatrix(), &relation));
+
+    // Does path 1 contain path 2?
+    if (relation == D2D1_GEOMETRY_RELATION_IS_CONTAINED) {
+        RETURN_FALSE_IF_FAILED(
+            path2->GetPathGeometry()->CompareWithGeometry(path1->GetPathGeometry().Get(), D2D1::IdentityMatrix(), &relation));
+
+        // Return true if path 2 also contains path 1
+        return (relation == D2D1_GEOMETRY_RELATION_IS_CONTAINED ? true : false);
+    }
+
     return false;
 }
 
@@ -136,7 +186,7 @@ static Boolean __CGPathEqual(CFTypeRef cf1, CFTypeRef cf2) {
 CGMutablePathRef CGPathCreateMutable() {
     __CGPath* mutableRet = __CGPath::CreateInstance();
 
-    mutableRet->initializeGeometries();
+    FAIL_FAST_IF_FAILED(mutableRet->InitializeGeometries());
 
     return mutableRet;
 }
@@ -146,9 +196,7 @@ CGMutablePathRef CGPathCreateMutable() {
  @Notes Creates a mutable copy
 */
 CGPathRef CGPathCreateCopy(CGPathRef path) {
-    if (path == NULL) {
-        return NULL;
-    }
+    RETURN_NULL_IF(!path);
 
     return CGPathCreateMutableCopy(path);
 }
@@ -157,21 +205,19 @@ CGPathRef CGPathCreateCopy(CGPathRef path) {
 @Status Interoperable
 */
 CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
-    if (path == NULL) {
-        return NULL;
-    }
+    RETURN_NULL_IF(!path);
 
     CGMutablePathRef mutableRet = CGPathCreateMutable();
 
     // In order to call stream and copy the contents of the original path into the
     // new copy we must close this path.
     // Otherwise the D2D calls will return that a bad state has been entered.
-    path->closePath();
+    path->ClosePath();
 
-    FAIL_FAST_IF_FAILED(path->_impl.pathGeometry->Stream(mutableRet->_impl.geometrySink.Get()));
+    FAIL_FAST_IF_FAILED(path->GetPathGeometry()->Stream(mutableRet->GetGeometrySink().Get()));
 
-    mutableRet->_impl.currentPoint = path->_impl.currentPoint;
-    mutableRet->_impl.startingPoint = path->_impl.startingPoint;
+    mutableRet->SetCurrentPoint(path->GetCurrentPoint());
+    mutableRet->SetStartingPoint(path->GetStartingPoint());
 
     return mutableRet;
 }
@@ -180,18 +226,16 @@ CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
  @Status Interoperable
 */
 void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* transform, CGFloat x, CGFloat y) {
-    if (path == NULL) {
-        return;
-    }
+    RETURN_IF(!path);
 
-    path->preparePathForEditing();
+    FAIL_FAST_IF_FAILED(path->PreparePathForEditing());
 
     CGPoint pt = __CreateCGPointWithTransform(x, y, transform);
 
-    path->beginFigure();
-    path->_impl.geometrySink->AddLine(_CGPointToD2D_F(pt));
+    path->BeginFigure();
+    path->GetGeometrySink()->AddLine(_CGPointToD2D_F(pt));
 
-    path->_impl.currentPoint = pt;
+    path->SetCurrentPoint(pt);
 }
 
 CGFloat _CGPathControlPointOffsetMultiplier(CGFloat angle) {
@@ -323,9 +367,7 @@ void CGPathAddArc(CGMutablePathRef path,
                   CGFloat startAngle,
                   CGFloat endAngle,
                   bool clockwise) {
-    if (path == NULL) {
-        return;
-    }
+    RETURN_IF(!path);
 
     // Normalize the start angle so it's between 0 and 2*pi
     startAngle = fmod(startAngle, 2.0f * M_PI);
@@ -365,22 +407,22 @@ void CGPathAddArc(CGMutablePathRef path,
  @Status Interoperable
 */
 void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* transform, CGFloat x, CGFloat y) {
-    // CGPathMoveToPoint does not update the geometry in any way. CGPaths do not consider these actions to be
-    // segments of the path and are not considered on CGPathApply. Because of this we do not want to call
-    // BeginFigure or anything else on the D2DPath because that would modify it's state in an invalid way.
-    CGPoint pt = __CreateCGPointWithTransform(x, y, transform);
+    RETURN_IF(!path);
 
-    path->_impl.startingPoint = pt;
-    path->_impl.currentPoint = pt;
+    // CGPaths do not consider these actions to be segments of the path and are not considered on CGPathApply, thus we should simply end the
+    // current figure and move the location of this path to the new point.
+    path->EndFigure(D2D1_FIGURE_END_OPEN);
+
+    CGPoint pt = __CreateCGPointWithTransform(x, y, transform);
+    path->SetStartingPoint(pt);
+    path->SetCurrentPoint(pt);
 }
 
 /**
  @Status Interoperable
 */
 void CGPathAddLines(CGMutablePathRef path, const CGAffineTransform* transform, const CGPoint* points, size_t count) {
-    if (count == 0 || points == NULL || path == NULL) {
-        return;
-    }
+    RETURN_IF(count == 0 || !points || !path);
 
     for (int i = 0; i < count; i++) {
         CGPathAddLineToPoint(path, transform, points[i].x, points[i].y);
@@ -391,9 +433,7 @@ void CGPathAddLines(CGMutablePathRef path, const CGAffineTransform* transform, c
  @Status Interoperable
 */
 void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform* transform, CGRect rect) {
-    if (path == NULL) {
-        return;
-    }
+    RETURN_IF(!path);
 
     CGPathMoveToPoint(path, transform, CGRectGetMinX(rect), CGRectGetMinY(rect));
 
@@ -408,23 +448,19 @@ void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform* transform, CG
  @Notes Ignores Affine Transform
 */
 void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* transform, CGPathRef toAdd) {
-    if (path == NULL || toAdd == NULL) {
-        return;
-    }
+    RETURN_IF(!path || !toAdd);
 
     // Close the path we're adding and open the path we need to add to.
-    toAdd->closePath();
-    path->preparePathForEditing();
-    FAIL_FAST_IF_FAILED(toAdd->_impl.pathGeometry->Stream(path->_impl.geometrySink.Get()));
+    toAdd->ClosePath();
+    FAIL_FAST_IF_FAILED(path->PreparePathForEditing());
+    FAIL_FAST_IF_FAILED(toAdd->GetPathGeometry()->Stream(path->GetGeometrySink().Get()));
 }
 
 /**
  @Status Interoperable
 */
 void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* transform, CGRect rect) {
-    if (path == NULL) {
-        return;
-    }
+    RETURN_IF(!path);
 
     // Determine the control point offset multiplier to create 4 arcs
     CGFloat offsetMultiplier = _CGPathControlPointOffsetMultiplier(M_PI_2);
@@ -456,9 +492,11 @@ void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* tran
  @Status Interoperable
 */
 void CGPathCloseSubpath(CGMutablePathRef path) {
+    RETURN_IF(!path);
+
     // Move the current point to the starting point since the line is closed.
-    path->_impl.currentPoint = path->_impl.startingPoint;
-    path->endFigure(D2D1_FIGURE_END_CLOSED);
+    path->SetCurrentPoint(path->GetStartingPoint());
+    path->EndFigure(D2D1_FIGURE_END_CLOSED);
 }
 
 /**
@@ -467,14 +505,16 @@ void CGPathCloseSubpath(CGMutablePathRef path) {
 */
 CGRect CGPathGetBoundingBox(CGPathRef path) {
     if (path == NULL) {
-        return CGRectMake(INFINITY, INFINITY, 0, 0);
+        return CGRectNull;
     }
 
     D2D1_RECT_F bounds;
 
-    path->closePath();
+    path->ClosePath();
 
-    FAIL_FAST_IF_FAILED(path->_impl.pathGeometry->GetBounds(D2D1::IdentityMatrix(), &bounds));
+    if (FAILED(path->GetPathGeometry()->GetBounds(D2D1::IdentityMatrix(), &bounds))) {
+        return CGRectNull;
+    }
 
     return _D2DRectToCGRect(bounds);
 }
@@ -485,14 +525,14 @@ CGRect CGPathGetBoundingBox(CGPathRef path) {
 */
 bool CGPathIsEmpty(CGPathRef path) {
     if (path == NULL) {
-        return kCFBooleanTrue;
+        return true;
     }
 
     UINT32 count;
 
-    path->closePath();
+    path->ClosePath();
 
-    path->_impl.pathGeometry->GetFigureCount(&count);
+    RETURN_FALSE_IF_FAILED(path->GetPathGeometry()->GetFigureCount(&count));
     return count == 0;
 }
 
@@ -500,10 +540,7 @@ bool CGPathIsEmpty(CGPathRef path) {
  @Status Interoperable
 */
 void CGPathRelease(CGPathRef path) {
-    if (path == NULL) {
-        return;
-    }
-
+    RETURN_IF(!path);
     CFRelease(path);
 }
 
@@ -511,9 +548,7 @@ void CGPathRelease(CGPathRef path) {
  @Status Interoperable
 */
 CGPathRef CGPathRetain(CGPathRef path) {
-    if (path == NULL) {
-        return NULL;
-    }
+    RETURN_NULL_IF(!path);
 
     CFRetain(path);
 
@@ -626,29 +661,22 @@ void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function) {
 }
 
 /**
- @Status Interoperable
- @Notes
+ @Status Caveat
+ @Notes eoFill ignored. Default fill pattern for ID2D1 Geometry is used.
 */
 bool CGPathContainsPoint(CGPathRef path, const CGAffineTransform* transform, CGPoint point, bool eoFill) {
+    RETURN_FALSE_IF(!path);
+
     if (transform) {
         point = CGPointApplyAffineTransform(point, *transform);
     }
-    // check if the point is outside this box already, if it is, return false
-    CGRect boundingBox = CGPathGetBoundingBox(path);
-    if (!CGRectContainsPoint(boundingBox, point)) {
-        return false;
-    }
 
-    CGContextRef context =
-        CGBitmapContextCreate(0, boundingBox.origin.x + boundingBox.size.width, boundingBox.origin.y + boundingBox.size.height, 1, 1, 0, 0);
+    BOOL containsPoint = FALSE;
 
-    CGContextAddPath(context, path);
+    path->ClosePath();
+    RETURN_FALSE_IF_FAILED(path->GetPathGeometry()->FillContainsPoint(_CGPointToD2D_F(point), D2D1::IdentityMatrix(), &containsPoint));
 
-    bool inPath = CGContextIsPointInPath(context, eoFill, point.x, point.y);
-
-    CGContextRelease(context);
-
-    return inPath;
+    return (containsPoint ? true : false);
 }
 
 /**
@@ -709,7 +737,10 @@ bool CGPathEqualToPath(CGPathRef path1, CGPathRef path2) {
  @Status Interoperable
 */
 CGPoint CGPathGetCurrentPoint(CGPathRef path) {
-    return path->_impl.currentPoint;
+    if (!path) {
+        return CGPointZero;
+    }
+    return path->GetCurrentPoint();
 }
 
 /**
