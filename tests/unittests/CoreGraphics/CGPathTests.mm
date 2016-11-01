@@ -881,12 +881,6 @@ TEST(CGPath, CGPathEqualsTest) {
 }
 
 TEST(CGPath, SubShapesEqualityTest) {
-    // 0-----------1
-    // |   4       |
-    // |  / \      |
-    // | /   \     |
-    // 3,6------5----2
-
     CGMutablePathRef path1 = CGPathCreateMutable();
     CGMutablePathRef path2 = CGPathCreateMutable();
 
@@ -912,6 +906,17 @@ TEST(CGPath, SubShapesEqualityTest) {
 
     EXPECT_TRUE(testSymmetricEquivalence(path1, path2));
 
+    CGMutablePathRef path3 = CGPathCreateMutable();
+
+    CGPathMoveToPoint(path3, nullptr, 50, 50);
+    CGPathAddLineToPoint(path3, nullptr, 100, 50);
+    CGPathAddLineToPoint(path3, nullptr, 100, 100);
+    CGPathAddLineToPoint(path3, nullptr, 50, 100);
+    CGPathCloseSubpath(path3);
+
+    EXPECT_FALSE(testSymmetricEquivalence(path1, path3));
+
     CGPathRelease(path1);
     CGPathRelease(path2);
+    CGPathRelease(path3);
 }
