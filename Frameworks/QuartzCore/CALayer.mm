@@ -2569,21 +2569,38 @@ inline WXUIElement* _getBackingXamlElementForCALayer(CALayer* layer) {
 + (CGPoint)convertPoint:(CGPoint)point fromLayer:(CALayer*)fromLayer toLayer:(CALayer*)toLayer {
     CGPoint ret = { point.x, point.y };
 
-    if (fromLayer && toLayer) {
-        // get the backing xaml UIElement for fromLayer
-        WXUIElement* fromLayerElement = _getBackingXamlElementForCALayer(fromLayer);
-
-        // get the backing xaml UIElement for toLayer
-        WXUIElement* toLayerElement = _getBackingXamlElementForCALayer(toLayer);
-
-        // set up transform from xaml elment in fromLayer to xaml element in toLayer
-        WUXMGeneralTransform* transform = [fromLayerElement transformToVisual:toLayerElement];
-
-        // transform the points in fromLayer to point in toLayer
-        WFPoint* pointInFromLayer = [WXPointHelper fromCoordinates:point.x y:point.y];
-        WFPoint* pointInToLayer = [transform transformPoint:pointInFromLayer];
-        ret = { pointInToLayer.x, pointInToLayer.y };
+    if (!fromLayer && !toLayer) {
+        return ret;
     }
+
+    if (!fromLayer) {
+        // get the top most window for current view
+        fromLayer = toLayer;
+        while (fromLayer.superlayer != nil) {
+            fromLayer = fromLayer.superlayer;
+        }
+    } 
+    
+    if (!toLayer) {
+        toLayer = fromLayer;
+        while (toLayer.superlayer != nil) {
+            toLayer = toLayer.superlayer;
+        }
+    }
+
+    // get the backing xaml UIElement for fromLayer
+    WXUIElement* fromLayerElement = _getBackingXamlElementForCALayer(fromLayer);
+
+    // get the backing xaml UIElement for toLayer
+    WXUIElement* toLayerElement = _getBackingXamlElementForCALayer(toLayer);
+
+    // set up transform from xaml elment in fromLayer to xaml element in toLayer
+    WUXMGeneralTransform* transform = [fromLayerElement transformToVisual:toLayerElement];
+
+    // transform the points in fromLayer to point in toLayer
+    WFPoint* pointInFromLayer = [WXPointHelper fromCoordinates:point.x y:point.y];
+    WFPoint* pointInToLayer = [transform transformPoint:pointInFromLayer];
+    ret = { pointInToLayer.x, pointInToLayer.y };
 
     if (DEBUG_VERBOSE) {
         TraceVerbose(TAG, L"convertPoint: {%f, %f} to {%f, %f}", point.x, point.y, ret.x, ret.y);

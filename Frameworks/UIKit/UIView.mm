@@ -39,6 +39,7 @@
 #import "UWP/WindowsUIXamlControls.h"
 #import "UIEventInternal.h"
 #import "UITouchInternal.h"
+#import "_UIDMPanGestureRecognizer.h"
 
 #import <math.h>
 #import <string>
@@ -52,7 +53,7 @@ static const bool DEBUG_TOUCHES_VERBOSE = DEBUG_ALL || false;
 static const bool DEBUG_TOUCHES = DEBUG_TOUCHES_VERBOSE || false;
 static const bool DEBUG_TOUCHES_LIGHT = DEBUG_TOUCHES || true;
 static const bool DEBUG_HIT_TESTING = DEBUG_ALL || false;
-static const bool DEBUG_HIT_TESTING_LIGHT = DEBUG_HIT_TESTING || true;
+static const bool DEBUG_HIT_TESTING_LIGHT = DEBUG_HIT_TESTING || false;
 static const bool DEBUG_GESTURES = DEBUG_ALL || false;
 static const bool DEBUG_LAYOUT = DEBUG_ALL || false;
 
@@ -137,20 +138,27 @@ BOOL g_resetAllTrackingGestures = TRUE;
 
     BOOL shouldCancelTouches = false;
 
-    UIView* views[128];
+    const static int MAXIMUM_VIEW_ALLOWED = 128;
+    UIView* views[MAXIMUM_VIEW_ALLOWED];
     int viewDepth = 0;
+    bool handled = false;
 
     if (g_resetAllTrackingGestures) {
         g_resetAllTrackingGestures = FALSE;
-        //  Find gesture recognizers in the heirarchy, back-first
+        // Find gesture recognizers in the heirarchy, back-first
         UIView* curView = view;
 
         while (curView != nil) {
-            assert(viewDepth < 128);
-            views[viewDepth++] = curView;
-            curView = curView->priv->superview;
+            if (viewDepth < MAXIMUM_VIEW_ALLOWED) {
+                views[viewDepth++] = curView;
+                curView = curView->priv->superview;
+            } else {
+                TraceWarning(TAG, L"The view hierachy exceed maxinum allowed number, ignoring the rest");
+                break;
+            }
         }
 
+        // adding those enabled gestures into current tracking gestureList
         for (int i = viewDepth - 1; i >= 0; i--) {
             curView = views[i];
 
@@ -162,14 +170,29 @@ BOOL g_resetAllTrackingGestures = TRUE;
         }
     }
 
-    viewDepth = 0;
-
     g_curGesturesDict = [NSMutableDictionary new];
 
-    UIGestureRecognizer* recognizers[128];
+    const static int MAXIMUM_GESTURE_ALLOW = 128;
+    const static int MAXIMUM_DMGESTURE_ALLOW = 16;
 
+    UIGestureRecognizer* recognizers[MAXIMUM_GESTURE_ALLOW];
+    UIGestureRecognizer* dmrecognizers[MAXIMUM_DMGESTURE_ALLOW];
+
+    // separating all enabled gestures into its own list
+    // and adding each list into a tracking dictionary
+    int gestureCount = 0;
+    int dmGestureCount = 0;
     for (UIGestureRecognizer* curgesture in g_currentlyTrackingGesturesList) {
-        recognizers[viewDepth++] = curgesture;
+        if (![curgesture isKindOfClass:[_UIDMPanGestureRecognizer class]]) {
+            recognizers[gestureCount++] = curgesture;
+        } else {
+            if (dmGestureCount < MAXIMUM_DMGESTURE_ALLOW) {
+                dmrecognizers[dmGestureCount++] = curgesture;
+            } else {
+                TraceWarning(TAG, L"DMGestures exceed maxinum allowed, ignoring the rest");
+                break;
+            }
+        }
 
         id gestureClass = [curgesture class];
         NSMutableArray* arr = [g_curGesturesDict objectForKey:gestureClass];
@@ -178,12 +201,14 @@ BOOL g_resetAllTrackingGestures = TRUE;
             [g_curGesturesDict setObject:arr forKey:gestureClass];
             [arr release];
         }
+
         [arr addObject:curgesture];
     }
 
-    for (int i = 0; i < viewDepth; i++) {
+    // sendTouch to gesture for state transiton
+    BOOL gestureOnGoing = NO; 
+    for (int i = 0; i < gestureCount; i++) {
         UIGestureRecognizer* curgesture = recognizers[i];
-
         if ([curgesture state] != UIGestureRecognizerStateCancelled) {
             if (DEBUG_GESTURES) {
                 TraceVerbose(TAG, L"Checking gesture %hs.", object_getClassName(curgesture));
@@ -197,6 +222,40 @@ BOOL g_resetAllTrackingGestures = TRUE;
 
             if (send) {
                 [curgesture performSelector:eventName withObject:[NSMutableSet setWithObject:touch] withObject:event];
+                // verify if gesture state is Began or recognized after transition
+                if ((curgesture.state == UIGestureRecognizerStateBegan) || (curgesture.state == UIGestureRecognizerStateRecognized)) {
+                    gestureOnGoing = YES;
+                    if (DEBUG_GESTURES) {
+                        TraceVerbose(TAG, L"gesture %hs is in state %d, cancel DMGesture.", object_getClassName(curgesture), curgesture.state);
+                    }
+                }
+            }
+        }
+    }
+
+    // scanning DM Getures, if a gestures is on going, cancel DM Gestures
+    // otherwise, send Touch to DM gestures
+    for (int i = 0; i < dmGestureCount; i++) {
+        UIGestureRecognizer* dmGesture = dmrecognizers[i];
+        if (gestureOnGoing) {
+            [dmGesture _cancelIfActive];
+            if (DEBUG_GESTURES) {
+                TraceVerbose(TAG, L"Cancelled DMGesture %hs .", object_getClassName(dmGesture));
+            }
+        } else {
+            if ([dmGesture state] != UIGestureRecognizerStateCancelled) {
+                id delegate = [dmGesture delegate];
+                BOOL send = TRUE;
+                if (touch.phase == UITouchPhaseBegan && [delegate respondsToSelector:@selector(gestureRecognizer:shouldReceiveTouch:)]) {
+                    send = [delegate gestureRecognizer:dmGesture shouldReceiveTouch:touch];
+                }
+
+                if (send) {
+                    [dmGesture performSelector:eventName withObject:[NSMutableSet setWithObject:touch] withObject:event];
+                    if (DEBUG_GESTURES) {
+                        TraceVerbose(TAG, L"Send Touch with phase=%d to DMGesture %hs.", touch.phase, object_getClassName(dmGesture));
+                    }
+                }
             }
         }
     }
@@ -206,11 +265,12 @@ BOOL g_resetAllTrackingGestures = TRUE;
                                             [UISwipeGestureRecognizer class],
                                             [UIPanGestureRecognizer class],
                                             [UILongPressGestureRecognizer class],
-                                            [UITapGestureRecognizer class] };
+                                            [UITapGestureRecognizer class],
+                                            [_UIDMPanGestureRecognizer class]};
 
     const static int s_numGestureTypes = sizeof(s_gesturesPriority) / sizeof(s_gesturesPriority[0]);
 
-    //  Process all gestures
+    //  Process all gestures, including DM gesture
     for (int i = 0; i < s_numGestureTypes; i++) {
         id curgestureClass = s_gesturesPriority[i];
         id gestures = [g_curGesturesDict objectForKey:curgestureClass];
@@ -221,22 +281,25 @@ BOOL g_resetAllTrackingGestures = TRUE;
         }
     }
 
-    //  Removed/reset failed/done gestures
-    for (int i = 0; i < viewDepth; i++) {
-        UIGestureRecognizer* curgesture = recognizers[i];
-        UIGestureRecognizerState state = (UIGestureRecognizerState)[curgesture state];
+    //  Removed/reset failed/done gestures, including gestures and DMGestures
+    for (int i = 0; i < 2; i++) {
+        int count = (i == 0) ? gestureCount : dmGestureCount;
+        for (int k = 0; i < count; i++) {
+            UIGestureRecognizer* curgesture = recognizers[i];
+            UIGestureRecognizerState state = (UIGestureRecognizerState)[curgesture state];
 
-        if (state == UIGestureRecognizerStateRecognized || state == UIGestureRecognizerStateEnded ||
-            state == UIGestureRecognizerStateFailed || state == UIGestureRecognizerStateCancelled) {
-            [curgesture reset];
+            if (state == UIGestureRecognizerStateRecognized || state == UIGestureRecognizerStateEnded ||
+                state == UIGestureRecognizerStateFailed || state == UIGestureRecognizerStateCancelled) {
+                [curgesture reset];
 
-            if (DEBUG_GESTURES) {
-                TraceVerbose(TAG, L"Removing gesture %hs %x state=%d.", object_getClassName(curgesture), curgesture, state);
+                if (DEBUG_GESTURES) {
+                    TraceVerbose(TAG, L"Removing gesture %hs %x state=%d.", object_getClassName(curgesture), curgesture, state);
+                }
+
+                [g_currentlyTrackingGesturesList removeObject:curgesture];
+                id gesturesArr = [g_curGesturesDict objectForKey:[curgesture class]];
+                [gesturesArr removeObject:curgesture];
             }
-
-            [g_currentlyTrackingGesturesList removeObject:curgesture];
-            id gesturesArr = [g_curGesturesDict objectForKey:[curgesture class]];
-            [gesturesArr removeObject:curgesture];
         }
     }
 
@@ -245,6 +308,7 @@ BOOL g_resetAllTrackingGestures = TRUE;
 
     return shouldCancelTouches;
 }
+
 // TODO: This block of code will likely change when we incorporate WinRT GestureRecognizers
 ///////////////////////////////////////////////////////////////////////////////////////////
 
