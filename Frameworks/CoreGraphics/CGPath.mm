@@ -65,6 +65,14 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
         return geometrySink;
     }
 
+    void SetPathGeometry(ComPtr<ID2D1PathGeometry> path) {
+        pathGeometry = path;
+    }
+
+    void SetGeometrySink(ComPtr<ID2D1GeometrySink> sink) {
+        geometrySink = sink;
+    }
+
     CGPoint GetCurrentPoint() {
         return currentPoint;
     }
@@ -248,120 +256,67 @@ void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* transf
     path->SetCurrentPoint(pt);
 }
 
-CGFloat _CGPathControlPointOffsetMultiplier(CGFloat angle) {
-    // Constant used to approximate circles with bezier curves.
-    // An n-piece cubic Bezier curve can approximate a circle,
-    // when each inner control point is the distance 4/3 * tan(t/4)
-    // from an outer control point on a unit circle, where t is 360/n degrees, and
-    // n > 2
-    return (4.0f / 3.0f) * tan(angle / 4.0f);
-}
-
 /**
- @Status Caveat
- @Notes transform property not supported
+ @Status Interoperable
 */
 void CGPathAddArcToPoint(
     CGMutablePathRef path, const CGAffineTransform* transform, CGFloat x1, CGFloat y1, CGFloat x2, CGFloat y2, CGFloat radius) {
-    bool isEmpty = CGPathIsEmpty(path);
+    RETURN_IF(!path);
 
-    if (isEmpty) {
-        return;
+    CGPoint curPathPosition = path->GetCurrentPoint();
+
+    CGPoint tangentPoint1 = __CreateCGPointWithTransform(x1, y1, transform);
+    CGPoint tangentPoint2 = __CreateCGPointWithTransform(x2, y2, transform);
+
+    x1 = tangentPoint1.x;
+    y1 = tangentPoint1.y;
+
+    x2 = tangentPoint2.x;
+    y2 = tangentPoint2.y;
+
+    CGFloat dx1 = x1 - curPathPosition.x;
+    CGFloat dy1 = y1 - curPathPosition.y;
+
+    CGFloat dx2 = x1 - x2;
+    CGFloat dy2 = y1 - y2;
+
+    // Normalize the angles we're working with.
+    CGFloat startAngle = fmod(atan2(dy1, dx1), 2 * M_PI);
+    CGFloat endAngle = fmod(atan2(dy2, dx2), 2 * M_PI);
+    if (startAngle < 0) {
+        startAngle += M_PI * 2;
+    }
+    if (endAngle < 0) {
+        endAngle += M_PI * 2;
     }
 
-    CGPoint curPathPosition = CGPathGetCurrentPoint(path);
-    double x0, y0;
-    double dx0, dy0, dx2, dy2, xl0, xl2;
-    double san, n0x, n0y, n2x, n2y, t;
+    CGFloat bisector = (endAngle - startAngle) / 2;
 
-    x0 = curPathPosition.x;
-    y0 = curPathPosition.y;
+    // tanLength is the distance to the point on the circle from the tangent line.
+    CGFloat tanLength = abs(radius / tan(bisector));
 
-    dx0 = x0 - x1;
-    dy0 = y0 - y1;
-    xl0 = sqrt(dx0 * dx0 + dy0 * dy0);
-    if (xl0 == 0)
-        return;
+    CGFloat tanPointAx = x1 - (tanLength * cos(startAngle));
+    CGFloat tanPointAy = y1 - (tanLength * sin(startAngle));
+    CGFloat tanPointBx = x1 - (tanLength * cos(endAngle));
+    CGFloat tanPointBy = y1 - (tanLength * sin(endAngle));
 
-    dx2 = x2 - x1;
-    dy2 = y2 - y1;
-    xl2 = sqrt(dx2 * dx2 + dy2 * dy2);
+    CGPoint endPoint = CGPointMake(tanPointBx, tanPointBy);
+    const D2D1_POINT_2F endPointD2D = _CGPointToD2D_F(CGPointMake(tanPointBx, tanPointBy));
 
-    san = dx2 * dy0 - dx0 * dy2;
-    if (san == 0) {
-        CGPathAddLineToPoint(path, transform, x1, y1);
-        return;
-    }
+    D2D1_SWEEP_DIRECTION sweepDirection = { startAngle + M_PI < endAngle ? D2D1_SWEEP_DIRECTION_CLOCKWISE :
+                                                                           D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE };
+    const D2D1_SIZE_F radiusD2D = { radius, radius };
+    FLOAT rotationAngle = bisector * 2;
+    D2D1_ARC_SIZE arcSize = D2D1_ARC_SIZE_SMALL;
+    D2D1_ARC_SEGMENT arcSegment = D2D1::ArcSegment(endPointD2D, radiusD2D, rotationAngle, sweepDirection, arcSize);
 
-    if (san < 0) {
-        n0x = -dy0 / xl0;
-        n0y = dx0 / xl0;
-        n2x = dy2 / xl2;
-        n2y = -dx2 / xl2;
-    } else {
-        n0x = dy0 / xl0;
-        n0y = -dx0 / xl0;
-        n2x = -dy2 / xl2;
-        n2y = dx2 / xl2;
-    }
-    t = (dx2 * n2y - dx2 * n0y - dy2 * n2x + dy2 * n0x) / san;
-    CGPathAddArc(path,
-                 transform,
-                 (CGFloat)(x1 + radius * (t * dx0 + n0x)),
-                 (CGFloat)(y1 + radius * (t * dy0 + n0y)),
-                 radius,
-                 (CGFloat)atan2(-n0y, -n0x),
-                 (CGFloat)atan2(-n2y, -n2x),
-                 (san < 0));
-}
+    // Append a line to the point we need to begin drawing the arc from.
+    FAIL_FAST_IF_FAILED(path->PreparePathForEditing());
+    path->BeginFigure();
+    CGPathAddLineToPoint(path, transform, tanPointAx, tanPointAy);
 
-// Internal function to break down Arcs into pieces smaller than pi/2.
-void _CGPathAddArc(CGMutablePathRef path,
-                   const CGAffineTransform* transform,
-                   CGFloat x,
-                   CGFloat y,
-                   CGFloat radius,
-                   CGFloat startAngle,
-                   CGFloat endAngle,
-                   bool clockwise) {
-    // Get the difference between the start and end angle for this arc
-    CGFloat delta = endAngle - startAngle;
-
-    // If the difference is larger than pi/2 then this arc needs to be
-    // broken down into more pieces
-    // .00001f is used instead of epsilon here to avoid infinite loops with
-    // values close to pi/2
-    if ((fabs(delta) > M_PI_2) && (fabs((M_PI_2 - fabs(delta))) > 0.00001f)) {
-        // Calculate the angle in the middle of the start & end angle.
-        CGFloat midAngle = startAngle + (M_PI_2 * (delta < 0 ? -1.0f : 1.0f));
-
-        // Call this function again now with the smaller arcs
-        _CGPathAddArc(path, transform, x, y, radius, startAngle, midAngle, clockwise);
-        _CGPathAddArc(path, transform, x, y, radius, midAngle, endAngle, clockwise);
-        return;
-    }
-
-    // The start and end points for the arc, not yet adjusted with the center of
-    // the arc
-    CGPoint arcStartRelative = CGPointMake((cos(startAngle) * radius), (sin(startAngle) * radius));
-    CGPoint arcEndRelative = CGPointMake((cos(endAngle) * radius), (sin(endAngle) * radius));
-
-    // The start and end points of the arc, adjuste for the center.
-    CGPoint arcStart = CGPointMake(arcStartRelative.x + x, arcStartRelative.y + y);
-    CGPoint arcEnd = CGPointMake(arcEndRelative.x + x, arcEndRelative.y + y);
-
-    // Use the angle size to determine the offset for control points
-    CGFloat offsetMultiplier = _CGPathControlPointOffsetMultiplier(delta);
-
-    // Create the curve with the control points properly offset
-    CGPathAddCurveToPoint(path,
-                          transform,
-                          arcStart.x - (offsetMultiplier * arcStartRelative.y),
-                          arcStart.y + (offsetMultiplier * arcStartRelative.x),
-                          arcEnd.x + (offsetMultiplier * arcEndRelative.y),
-                          arcEnd.y - (offsetMultiplier * arcEndRelative.x),
-                          arcEnd.x,
-                          arcEnd.y);
+    path->GetGeometrySink()->AddArc(arcSegment);
+    path->SetCurrentPoint(endPoint);
 }
 
 /**
@@ -377,38 +332,36 @@ void CGPathAddArc(CGMutablePathRef path,
                   bool clockwise) {
     RETURN_IF(!path);
 
-    // Normalize the start angle so it's between 0 and 2*pi
-    startAngle = fmod(startAngle, 2.0f * M_PI);
-    if (startAngle < 0.0f) {
-        startAngle += 2.0f * M_PI;
+    CGPoint startPoint = __CreateCGPointWithTransform(x + radius * cos(startAngle), y + radius * sin(startAngle), transform);
+    CGPoint endPoint = __CreateCGPointWithTransform(x + radius * cos(endAngle), y + radius * sin(endAngle), transform);
+
+    if (!CGPointEqualToPoint(path->GetCurrentPoint(), startPoint)) {
+        CGPathAddLineToPoint(path, nullptr, startPoint.x, startPoint.y);
     }
 
-    // Normalize the end angle so it's between 0 and 2*pi
-    endAngle = fmod(endAngle, 2.0f * M_PI);
-    if (endAngle < 0.0f) {
-        endAngle += 2.0f * M_PI;
-    }
+    // Create the parameters for the AddArc method.
+    const D2D1_POINT_2F endPointD2D = _CGPointToD2D_F(endPoint);
+    const D2D1_SIZE_F radiusD2D = { radius, radius };
+    CGFloat rotationAngle = abs(startAngle - endAngle);
+    D2D1_ARC_SIZE arcSize = D2D1_ARC_SIZE_SMALL;
+    CGFloat expectedAngle = (clockwise ? startAngle + rotationAngle : startAngle - rotationAngle);
 
-    // Calculate the starting point of the arc
-    CGPoint arcStart = CGPointMake((cos(startAngle) * radius) + x, (sin(startAngle) * radius) + y);
-
-    // Either draw a line to or move to the start of the arc
-    if (!CGPathIsEmpty(path)) {
-        CGPathAddLineToPoint(path, transform, arcStart.x, arcStart.y);
+    // D2D does not understand that the ending angle must be pointing in the proper direction, thus we must translate
+    // what it means to have an ending angle to the proper small arc or large arc that D2D will use since a circle will
+    // intersect that point regardless of which direction it is drawn in.
+    if (expectedAngle == endAngle) {
+        arcSize = D2D1_ARC_SIZE_LARGE;
     } else {
-        CGPathMoveToPoint(path, transform, arcStart.x, arcStart.y);
+        rotationAngle = (2 * M_PI) - rotationAngle;
     }
+    D2D1_SWEEP_DIRECTION sweepDirection = { clockwise ? D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE : D2D1_SWEEP_DIRECTION_CLOCKWISE };
+    D2D1_ARC_SEGMENT arcSegment = D2D1::ArcSegment(endPointD2D, radiusD2D, rotationAngle, sweepDirection, arcSize);
 
-    // Adjust the start/endangles to force the arc
-    // to be pieced together clockwise or counter-clockwise
-    if (clockwise && endAngle > startAngle) {
-        startAngle += 2.0f * M_PI;
-    } else if (!clockwise && startAngle > endAngle) {
-        endAngle += 2.0f * M_PI;
-    }
+    FAIL_FAST_IF_FAILED(path->PreparePathForEditing());
+    path->BeginFigure();
+    path->GetGeometrySink()->AddArc(arcSegment);
 
-    // Call the internal function for breaking the arcs down into smaller segments
-    _CGPathAddArc(path, transform, x, y, radius, startAngle, endAngle, clockwise);
+    path->SetCurrentPoint(endPoint);
 }
 
 /**
@@ -460,8 +413,12 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* transform, CG
 
     // Close the path we're adding and open the path we need to add to.
     FAIL_FAST_IF_FAILED(toAdd->ClosePath());
+
     FAIL_FAST_IF_FAILED(path->PreparePathForEditing());
+    path->EndFigure(D2D1_FIGURE_END_OPEN);
     FAIL_FAST_IF_FAILED(toAdd->GetPathGeometry()->Stream(path->GetGeometrySink().Get()));
+    path->SetCurrentPoint(toAdd->GetCurrentPoint());
+    path->SetStartingPoint(toAdd->GetStartingPoint());
 }
 
 /**
@@ -469,31 +426,40 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* transform, CG
 */
 void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* transform, CGRect rect) {
     RETURN_IF(!path);
+    CGRect containingRectangle = rect;
+    // First we must transform the coordinates of the rectangle if necessary.
+    if (transform) {
+        containingRectangle = CGRectApplyAffineTransform(rect, *transform);
+    }
 
-    // Determine the control point offset multiplier to create 4 arcs
-    CGFloat offsetMultiplier = _CGPathControlPointOffsetMultiplier(M_PI_2);
+    CGFloat radiusX = containingRectangle.size.width / 2.0;
+    CGFloat radiusY = containingRectangle.size.height / 2.0;
+    CGPoint center = CGPointMake(containingRectangle.origin.x + radiusX, containingRectangle.origin.y + radiusY);
 
-    CGFloat xControlPointOffset = offsetMultiplier * CGRectGetWidth(rect) / 2.0;
-    CGFloat yControlPointOffset = offsetMultiplier * CGRectGetHeight(rect) / 2.0;
+    D2D1_ELLIPSE ellipse = D2D1::Ellipse(_CGPointToD2D_F(center), radiusX, radiusY);
 
-    CGFloat minX = CGRectGetMinX(rect);
-    CGFloat midX = CGRectGetMidX(rect);
-    CGFloat maxX = CGRectGetMaxX(rect);
+    ComPtr<ID2D1Factory> factory;
+    FAIL_FAST_IF_FAILED(_CGGetD2DFactory(&factory));
+    ComPtr<ID2D1EllipseGeometry> ellipseGeometry;
 
-    CGFloat minY = CGRectGetMinY(rect);
-    CGFloat midY = CGRectGetMidY(rect);
-    CGFloat maxY = CGRectGetMaxY(rect);
+    FAIL_FAST_IF_FAILED(factory->CreateEllipseGeometry(&ellipse, &ellipseGeometry));
 
-    // Move to the center of the ellipse
-    CGPathMoveToPoint(path, transform, maxX, midY);
+    path->ClosePath();
 
-    // Add the 4 curves for the ellipse
-    CGPathAddCurveToPoint(path, transform, maxX, midY + yControlPointOffset, midX + xControlPointOffset, maxY, midX, maxY);
-    CGPathAddCurveToPoint(path, transform, midX - xControlPointOffset, maxY, minX, midY + yControlPointOffset, minX, midY);
-    CGPathAddCurveToPoint(path, transform, minX, midY - yControlPointOffset, midX - xControlPointOffset, minY, midX, minY);
-    CGPathAddCurveToPoint(path, transform, midX + xControlPointOffset, minY, maxX, midY - yControlPointOffset, maxX, midY);
+    // Create temp vars for new path/sink
+    ComPtr<ID2D1PathGeometry> newPath;
+    ComPtr<ID2D1GeometrySink> newSink;
 
-    CGPathCloseSubpath(path);
+    // Open a new path that the contents of the old path will be streamed into. We cannot re-use the same path as it is now closed
+    // and cannot be opened again. We use the newPath variable because the factory was returning the same pointer for some strange
+    // reason so this will force it to do otherwise.
+    FAIL_FAST_IF_FAILED(factory->CreatePathGeometry(&newPath));
+    FAIL_FAST_IF_FAILED(newPath->Open(&newSink));
+
+    FAIL_FAST_IF_FAILED(ellipseGeometry->CombineWithGeometry(path->GetPathGeometry().Get(), D2D1_COMBINE_MODE_XOR, NULL, newSink.Get()));
+
+    path->SetPathGeometry(newPath);
+    path->SetGeometrySink(newSink);
 }
 
 /**
@@ -503,13 +469,15 @@ void CGPathCloseSubpath(CGMutablePathRef path) {
     RETURN_IF(!path);
 
     // Move the current point to the starting point since the line is closed.
-    path->SetCurrentPoint(path->GetStartingPoint());
-    path->EndFigure(D2D1_FIGURE_END_CLOSED);
+    // path->SetCurrentPoint(path->GetStartingPoint());
+    if (!CGPointEqualToPoint(path->GetStartingPoint(), path->GetCurrentPoint())) {
+        CGPathAddLineToPoint(path, nullptr, path->GetStartingPoint().x, path->GetStartingPoint().y);
+    }
+    path->EndFigure(D2D1_FIGURE_END_OPEN); // CLOSED);
 }
 
 /**
-@Status Stub
-@Notes
+@Status Interoperable
 */
 CGRect CGPathGetBoundingBox(CGPathRef path) {
     if (path == NULL) {
@@ -566,16 +534,23 @@ CGPathRef CGPathRetain(CGPathRef path) {
 }
 
 /**
-@Status Stub
-@Notes
+@Status Interoperable
 */
 void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* transform, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y) {
-    UNIMPLEMENTED();
+    RETURN_IF(!path);
+
+    CGPoint endPoint = __CreateCGPointWithTransform(x, y, transform);
+    CGPoint controlPoint = __CreateCGPointWithTransform(cpx, cpy, transform);
+
+    FAIL_FAST_IF_FAILED(path->PreparePathForEditing());
+    path->BeginFigure();
+    path->GetGeometrySink()->AddQuadraticBezier(D2D1::QuadraticBezierSegment(_CGPointToD2D_F(controlPoint), _CGPointToD2D_F(endPoint)));
+
+    path->SetCurrentPoint(endPoint);
 }
 
 /**
-@Status Stub
-@Notes
+@Status Interoperable
 */
 void CGPathAddCurveToPoint(CGMutablePathRef path,
                            const CGAffineTransform* transform,
@@ -585,7 +560,18 @@ void CGPathAddCurveToPoint(CGMutablePathRef path,
                            CGFloat cp2y,
                            CGFloat x,
                            CGFloat y) {
-    UNIMPLEMENTED();
+    RETURN_IF(!path);
+
+    CGPoint endPoint = __CreateCGPointWithTransform(x, y, transform);
+    CGPoint controlPoint1 = __CreateCGPointWithTransform(cp1x, cp1y, transform);
+    CGPoint controlPoint2 = __CreateCGPointWithTransform(cp2x, cp2y, transform);
+
+    FAIL_FAST_IF_FAILED(path->PreparePathForEditing());
+    path->BeginFigure();
+    path->GetGeometrySink()->AddBezier(
+        D2D1::BezierSegment(_CGPointToD2D_F(controlPoint1), _CGPointToD2D_F(controlPoint2), _CGPointToD2D_F(endPoint)));
+
+    path->SetCurrentPoint(endPoint);
 }
 
 /**
@@ -633,13 +619,49 @@ void CGPathAddRelativeArc(
     UNIMPLEMENTED();
 }
 
+static inline D2D_RECT_F __CGRectToD2D_F(CGRect rect) {
+    return {
+        rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width, rect.origin.y + rect.size.height,
+    };
+}
+
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 void CGPathAddRoundedRect(
     CGMutablePathRef path, const CGAffineTransform* transform, CGRect rect, CGFloat cornerWidth, CGFloat cornerHeight) {
-    UNIMPLEMENTED();
+    RETURN_IF(!path);
+
+    // First we must transform the coordinates of the rectangle if necessary.
+    if (transform) {
+        rect = CGRectApplyAffineTransform(rect, *transform);
+    }
+
+    D2D1_RECT_F rectangle = __CGRectToD2D_F(rect);
+    D2D1_ROUNDED_RECT roundedRectangle = { rectangle, cornerWidth, cornerHeight };
+
+    ComPtr<ID2D1Factory> factory;
+    FAIL_FAST_IF_FAILED(_CGGetD2DFactory(&factory));
+    ComPtr<ID2D1RoundedRectangleGeometry> rectangleGeometry;
+
+    FAIL_FAST_IF_FAILED(factory->CreateRoundedRectangleGeometry(&roundedRectangle, &rectangleGeometry));
+
+    path->ClosePath();
+
+    // Create temp vars for new path/sink
+    ComPtr<ID2D1PathGeometry> newPath;
+    ComPtr<ID2D1GeometrySink> newSink;
+
+    // Open a new path that the contents of the old path will be streamed into. We cannot re-use the same path as it is now closed
+    // and cannot be opened again.
+    FAIL_FAST_IF_FAILED(factory->CreatePathGeometry(&newPath));
+    FAIL_FAST_IF_FAILED(newPath->Open(&newSink));
+
+    FAIL_FAST_IF_FAILED(rectangleGeometry->CombineWithGeometry(path->GetPathGeometry().Get(), D2D1_COMBINE_MODE_XOR, NULL, newSink.Get()));
+
+    path->SetPathGeometry(newPath);
+    path->SetGeometrySink(newSink);
 }
 
 int _CGPathPointCountForElementType(CGPathElementType type) {
@@ -728,12 +750,14 @@ CGMutablePathRef CGPathCreateMutableCopyByTransformingPath(CGPathRef path, const
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGPathRef CGPathCreateWithRoundedRect(CGRect rect, CGFloat cornerWidth, CGFloat cornerHeight, const CGAffineTransform* transform) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    CGMutablePathRef ret = CGPathCreateMutable();
+    CGPathAddRoundedRect(ret, transform, rect, cornerWidth, cornerHeight);
+
+    return (CGPathRef)ret;
 }
 
 /**

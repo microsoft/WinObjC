@@ -196,10 +196,28 @@
   <ItemGroup>
     <SBResourceCopy Include="..\..\CGCatalog\Resources\GetBoundingBox.png" />
     <SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\GetBoundingBox.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\GetBoundingBox.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png" />
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="..\..\CGCatalog\CGContextShadowViewController.mm">
       <Filter>CGCatalog\NewSamples</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddArcViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddArcToPointViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\CGCatalog\Resources\AddArcToPoint.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </Image>
+    <Image Include="..\..\CGCatalog\Resources\AddArc.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </Image>
   </ItemGroup>
 </Project>

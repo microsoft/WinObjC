@@ -29,6 +29,8 @@
 #import "CGPathCloseSubpathViewController.h"
 #import "CGPathContainsPointViewController.h"
 #import "CGPathGetBoundingBoxViewController.h"
+#import "CGPathAddArcViewController.h"
+#import "CGPathAddArcToPointViewController.h"
 
 @interface CGContextNewTestsController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -54,7 +56,7 @@
     if (!_samples) {
         _samples = @[
             [CGContextSampleRow row:@"CGPathAddCurveToPoint" class:[CGPathAddCurveToPointViewController class]],
-            [CGContextSampleRow row:@"CGPathAddEllipse" class:[CGPathAddElipseViewController class]],
+            [CGContextSampleRow row:@"CGPathAddEllipseInRect" class:[CGPathAddElipseViewController class]],
             [CGContextSampleRow row:@"CGPathAddLineToPoint" class:[CGPathAddLineToPointViewController class]],
             [CGContextSampleRow row:@"CGPathAddPath" class:[CGPathAddPathViewController class]],
             [CGContextSampleRow row:@"CGPathAddQuadCurveToPoint" class:[CGPathAddQuadCurveToPointViewController class]],
@@ -63,6 +65,8 @@
             [CGContextSampleRow row:@"CGPathCloseSubpath" class:[CGPathCloseSubpathViewController class]],
             [CGContextSampleRow row:@"CGPathContainsPoint" class:[CGPathContainsPointViewController class]],
             [CGContextSampleRow row:@"CGPathGetBoundingBox" class:[CGPathGetBoundingBoxViewController class]],
+            [CGContextSampleRow row:@"CGPathAddArc" class:[CGPathAddArcViewController class]],
+            [CGContextSampleRow row:@"CGPathAddArcToPoint" class:[CGPathAddArcToPointViewController class]],
         ];
     }
     return _samples;
@@ -184,19 +188,19 @@
 
     self.redColor = [[UITextField alloc] initWithFrame:CGRectMake(200, 60, 50, 40)];
     [self.redColor setBackgroundColor:[UIColor whiteColor]];
-    [self.redColor setText:@"1.0"];
+    [self.redColor setText:@"0"];
     [self.redColor addTarget:self action:@selector(colorTextBoxCallBack:) forControlEvents:UIControlEventEditingChanged];
     [self.view addSubview:self.redColor];
 
     self.greenColor = [[UITextField alloc] initWithFrame:CGRectMake(230, 60, 50, 40)];
     [self.greenColor setBackgroundColor:[UIColor whiteColor]];
-    [self.greenColor setText:@"1.0"];
+    [self.greenColor setText:@"0"];
     [self.greenColor addTarget:self action:@selector(colorTextBoxCallBack:) forControlEvents:UIControlEventEditingChanged];
     [self.view addSubview:self.greenColor];
 
     self.blueColor = [[UITextField alloc] initWithFrame:CGRectMake(260, 60, 50, 40)];
     [self.blueColor setBackgroundColor:[UIColor whiteColor]];
-    [self.blueColor setText:@"1.0"];
+    [self.blueColor setText:@"0"];
     [self.blueColor addTarget:self action:@selector(colorTextBoxCallBack:) forControlEvents:UIControlEventEditingChanged];
     [self.view addSubview:self.blueColor];
 
