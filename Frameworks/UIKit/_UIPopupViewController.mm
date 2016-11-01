@@ -14,11 +14,18 @@
 //
 //******************************************************************************
 
+#import <cmath>
 #import <UIKit/UIScreen.h>
 #import "_UIPopupViewController.h"
 #import <UWP/WindowsUIXamlControlsPrimitives.h>
 
 static const wchar_t* TAG = L"_UIPopupViewController";
+
+// Compare UI element offsets
+static bool offsetsPrettyClose(double off1, double off2) {
+    // Avoid comparing for exact equality
+    return std::fabs(off1 - off2) < 1.0;
+};
 
 @implementation _UIPopupViewController {
     WUXCPPopup* _popup;
@@ -48,11 +55,16 @@ static const wchar_t* TAG = L"_UIPopupViewController";
 
             WFRect* appFrame = [[WXWindow current] bounds];
 
-            /*
-            // Setting these properties to any value (even their original values) crashes the app
-            popup.horizontalOffset = (appFrame.width - child.width) / 2.0;
-            popup.verticalOffset = (appFrame.height - child.height) / 2.0;
-            */
+            double desiredHorizontalOffset = (appFrame.width - child.width) / 2.0;
+            double desiredVerticalOffset = (appFrame.height - child.height) / 2.0;
+
+            if (!offsetsPrettyClose(desiredHorizontalOffset, popup.horizontalOffset)) {
+                popup.horizontalOffset = desiredHorizontalOffset;
+            }
+
+            if (!offsetsPrettyClose(desiredVerticalOffset, popup.verticalOffset)) {
+                popup.verticalOffset = desiredVerticalOffset;
+            }
         }
     }];
 
