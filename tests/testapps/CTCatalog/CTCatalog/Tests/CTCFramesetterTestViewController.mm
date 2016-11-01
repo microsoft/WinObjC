@@ -80,14 +80,12 @@
 
     // Creates outline
     CGContextSetLineWidth(context, 2.0);
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
     CGContextSetStrokeColorWithColor(context, color.CGColor);
     CGContextMoveToPoint(context, 0, 0);
     CGContextAddRect(context, rect);
     CGContextStrokePath(context);
 
     CGPathRelease(path);
-    CGColorSpaceRelease(colorspace);
 
     [_drawDelegate refreshValuesForFramesetter:framesetter];
 }
