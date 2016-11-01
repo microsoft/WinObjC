@@ -106,7 +106,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self _initializeControl];
-    }    
+    }
 
     return self;
 }
@@ -114,7 +114,7 @@
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
         [self _initializeControl];
-    }    
+    }
 
     return self;
 }
@@ -132,8 +132,8 @@
 
     // Our CALayer implementation is not a Xaml::Control, and so cannot recieve focus.
     // To enable this, the following lines create a Control, and assign it as the
-    // Xaml native element of our hosting UIView. By hosting it in this manner, we 
-    // can add it to the visual tree, and treat it like any other Xaml FrameworkElement, 
+    // Xaml native element of our hosting UIView. By hosting it in this manner, we
+    // can add it to the visual tree, and treat it like any other Xaml FrameworkElement,
     // including gaining focus, getting key events, and so on.
     _xamlControl = [WXCContentControl make];
 
@@ -144,7 +144,7 @@
     // is set. Set it to a Border.
     WXCBorder* border = [WXCBorder make];
 
-    // The background of the control content must not by nullptr in order for it to 
+    // The background of the control content must not by nullptr in order for it to
     // respond to pointer events.
     border.background = [WUXMSolidColorBrush makeInstanceWithColor:[WUColorHelper fromArgb:0 r:0 g:0 b:0]];
 
@@ -157,7 +157,7 @@
     _hostView.xamlElement = _xamlControl;
 
     _textStorage = @"";
-        
+
     _selection = [WUTCCoreTextRange new];
     _selection.endCaretPosition = _selection.startCaretPosition = 0;
 
@@ -214,7 +214,7 @@
         [weakSelf _xamlControlRightTapped:sender args:e];
     }];
 
-    // This event comes from Xaml when either the control is tabbed to, or 
+    // This event comes from Xaml when either the control is tabbed to, or
     // directional focused.
     _customEditControlGotFocusToken = [_xamlControl addGotFocusEvent:^(RTObject* sender, WXRoutedEventArgs* e) {
         [weakSelf _xamlControlGotFocus:sender args:e];
@@ -229,7 +229,7 @@
         [weakSelf _xamlControlPointerPressed:sender args:e];
     }];
 
-    // All keys, including control keys, accelerator keys generate a keydown/up event, 
+    // All keys, including control keys, accelerator keys generate a keydown/up event,
     // when the Control is Xaml-focused.
     _customEditControlKeyDownToken = [_xamlControl addKeyDownEvent:^(RTObject* sender, WUXIKeyRoutedEventArgs* e) {
         [weakSelf _xamlControlKeyDown:sender args:e];
@@ -237,17 +237,19 @@
 
     _customEditControlKeyUpToken = [_xamlControl addKeyUpEvent:^(RTObject* sender, WUXIKeyRoutedEventArgs* e) {
         [weakSelf _xamlControlKeyUp:sender args:e];
-    }];;
+    }];
 
     // The system raises this event to request a specific range of text.
-    _editContextTextRequestedToken = [_editContext addTextRequestedEvent:^(WUTCCoreTextEditContext* sender, WUTCCoreTextTextRequestedEventArgs* e) {
-        [weakSelf _editContextTextRequested:sender args:e];
-    }];
+    _editContextTextRequestedToken =
+        [_editContext addTextRequestedEvent:^(WUTCCoreTextEditContext* sender, WUTCCoreTextTextRequestedEventArgs* e) {
+            [weakSelf _editContextTextRequested:sender args:e];
+        }];
 
     // The system raises this event to request the current selection.
-    _editContextSelectionRequestedToken = [_editContext addSelectionRequestedEvent:^(WUTCCoreTextEditContext* sender, WUTCCoreTextSelectionRequestedEventArgs* e) {
-        [weakSelf _editContextSelectionRequested:sender args:e];
-    }];
+    _editContextSelectionRequestedToken =
+        [_editContext addSelectionRequestedEvent:^(WUTCCoreTextEditContext* sender, WUTCCoreTextSelectionRequestedEventArgs* e) {
+            [weakSelf _editContextSelectionRequested:sender args:e];
+        }];
 
     // The system raises this event when it wants the edit control to remove focus.
     _editContextFocusRemovedToken = [_editContext addFocusRemovedEvent:^(WUTCCoreTextEditContext* sender, RTObject* e) {
@@ -255,39 +257,45 @@
     }];
 
     // The system raises this event to update text in the edit control.
-    _editContextTextUpdatingToken = [_editContext addTextUpdatingEvent:^(WUTCCoreTextEditContext* sender, WUTCCoreTextTextUpdatingEventArgs* e) {
-        [weakSelf _editContextTextUpdating:sender args:e];
-    }];
+    _editContextTextUpdatingToken =
+        [_editContext addTextUpdatingEvent:^(WUTCCoreTextEditContext* sender, WUTCCoreTextTextUpdatingEventArgs* e) {
+            [weakSelf _editContextTextUpdating:sender args:e];
+        }];
 
     // The system raises this event to change the selection in the edit control.
-    _editContextSelectionUpdatingToken = [_editContext addSelectionUpdatingEvent:^(WUTCCoreTextEditContext* sender, WUTCCoreTextSelectionUpdatingEventArgs* e) {
-        [weakSelf _editContextSelectionUpdating:sender args:e];
-    }];
+    _editContextSelectionUpdatingToken =
+        [_editContext addSelectionUpdatingEvent:^(WUTCCoreTextEditContext* sender, WUTCCoreTextSelectionUpdatingEventArgs* e) {
+            [weakSelf _editContextSelectionUpdating:sender args:e];
+        }];
 
     // The system raises this event when it wants the edit control
     // to apply formatting on a range of text.
-    _editContextFormatUpdatingToken = [_editContext addFormatUpdatingEvent:^(WUTCCoreTextEditContext* sender, WUTCCoreTextFormatUpdatingEventArgs* e) {
-        [weakSelf _editContextFormatUpdating:sender args:e];
-    }];
+    _editContextFormatUpdatingToken =
+        [_editContext addFormatUpdatingEvent:^(WUTCCoreTextEditContext* sender, WUTCCoreTextFormatUpdatingEventArgs* e) {
+            [weakSelf _editContextFormatUpdating:sender args:e];
+        }];
 
     // The system raises this event to request layout information.
-    // This is used to help choose a position for the IME candidate window, 
+    // This is used to help choose a position for the IME candidate window,
     // and scroll the focused window into view.
-    _editContextLayoutRequestedToken = [_editContext addLayoutRequestedEvent:^(WUTCCoreTextEditContext* sender, WUTCCoreTextLayoutRequestedEventArgs* e) {
-        [weakSelf _editContextLayoutRequested:sender args:e];
-    }];
+    _editContextLayoutRequestedToken =
+        [_editContext addLayoutRequestedEvent:^(WUTCCoreTextEditContext* sender, WUTCCoreTextLayoutRequestedEventArgs* e) {
+            [weakSelf _editContextLayoutRequested:sender args:e];
+        }];
 
     // The system raises this event to notify the edit control
     // that the string composition has started.
-    _editContextCompositionStartedToken = [_editContext addCompositionStartedEvent:^(WUTCCoreTextEditContext* sender, WUTCCoreTextCompositionStartedEventArgs* e) {
-        [weakSelf _editContextCompositionStarted:sender args:e];
-    }];
+    _editContextCompositionStartedToken =
+        [_editContext addCompositionStartedEvent:^(WUTCCoreTextEditContext* sender, WUTCCoreTextCompositionStartedEventArgs* e) {
+            [weakSelf _editContextCompositionStarted:sender args:e];
+        }];
 
     // The system raises this event to notify the edit control
     // that the string composition is finished.
-    _editContextCompositionCompletedToken = [_editContext addCompositionCompletedEvent:^(WUTCCoreTextEditContext* sender, WUTCCoreTextCompositionCompletedEventArgs* e) {
-        [weakSelf _editContextCompositionCompleted:sender args:e];
-    }];
+    _editContextCompositionCompletedToken =
+        [_editContext addCompositionCompletedEvent:^(WUTCCoreTextEditContext* sender, WUTCCoreTextCompositionCompletedEventArgs* e) {
+            [weakSelf _editContextCompositionCompleted:sender args:e];
+        }];
 
     [self setNeedsDisplay];
 }
@@ -327,7 +335,8 @@
     UIFont* font = [UIFont boldSystemFontOfSize:14];
     UIColor* color = [UIColor blackColor];
     UIColor* selectedColor = [UIColor blueColor];
-    NSMutableDictionary* attrs = [NSMutableDictionary dictionaryWithObjectsAndKeys:font, UITextAttributeFont, color, UITextAttributeTextColor, nil];
+    NSMutableDictionary* attrs =
+        [NSMutableDictionary dictionaryWithObjectsAndKeys:font, UITextAttributeFont, color, UITextAttributeTextColor, nil];
     CGPoint center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
     CGFloat radius = center.x;
 
@@ -346,8 +355,7 @@
                 } else {
                     [attrs setObject:color forKey:UITextAttributeTextColor];
                 }
-            } else
-            {
+            } else {
                 [attrs setObject:color forKey:UITextAttributeTextColor];
             }
 
@@ -360,7 +368,7 @@
                 CGContextSetFillColorWithColor(ctx, selectedColor.CGColor);
                 CGContextFillRect(ctx, CGRectMake(xCoord - 2, yCoord - 6, 4, 12));
             }
-        } 
+        }
 
         angle += 10.0f / 360.0f * M_PI * 2;
         scale *= 0.995f;
@@ -395,7 +403,9 @@
 - (void)_updateTextWithRange:(WUTCCoreTextRange*)range text:(NSString*)text {
     if (_textStorage.length) {
         [self _clampRange:range];
-        _textStorage = [_textStorage stringByReplacingCharactersInRange:NSMakeRange(range.startCaretPosition, range.endCaretPosition - range.startCaretPosition) withString:text];
+        _textStorage = [_textStorage
+            stringByReplacingCharactersInRange:NSMakeRange(range.startCaretPosition, range.endCaretPosition - range.startCaretPosition)
+                                    withString:text];
     } else {
         _textStorage = text;
     }
@@ -408,8 +418,7 @@
 }
 
 - (NSString*)_stringForRange:(WUTCCoreTextRange*)range {
-    if (_textStorage.length)
-    {
+    if (_textStorage.length) {
         [self _clampRange:range];
         return [_textStorage substringWithRange:NSMakeRange(range.startCaretPosition, range.endCaretPosition - range.startCaretPosition)];
     }
@@ -451,15 +460,14 @@
 }
 
 // Change the selection without notifying CoreTextEditContext of the new selection.
-- (void)_setSelection:(WUTCCoreTextRange*)selection
-{
+- (void)_setSelection:(WUTCCoreTextRange*)selection {
     // Modify the internal selection.
     _selection = selection;
 
     // Range-check selection
     [self _clampRange:_selection];
 
-    //Update the UI to show the new selection.
+    // Update the UI to show the new selection.
     [self setNeedsDisplay];
 }
 
@@ -497,8 +505,7 @@
 - (void)_xamlControlKeyDown:(RTObject*)sender args:(WUXIKeyRoutedEventArgs*)e {
     _keyDown[(int)e.key] = true;
 
-    switch (e.key)
-    {
+    switch (e.key) {
         // Back is equivalent to Backspace
         case WSVirtualKeyBack:
             if (_selection.endCaretPosition == _selection.startCaretPosition) {
@@ -579,10 +586,10 @@
                 _extendingLeft = false;
                 _selection.endCaretPosition = _selection.startCaretPosition = 0;
             }
-            
+
             [self _setSelectionAndNotify:_selection];
 
-            break; 
+            break;
         case WSVirtualKeyEnd:
             if (_keyDown[WSVirtualKeyShift]) {
                 if (_extendingLeft) {
@@ -607,8 +614,7 @@
 
             break;
         case WSVirtualKeyC:
-            if (_keyDown[(int)WSVirtualKeyControl])
-            {
+            if (_keyDown[(int)WSVirtualKeyControl]) {
                 [self _copyToClipboard];
             }
 
@@ -633,7 +639,7 @@
     }
 
     if (_internalFocus) {
-        // This calculates an index from a point on the text spiral 
+        // This calculates an index from a point on the text spiral
         WUIPointerPoint* point = [e getCurrentPoint:_xamlControl];
         double x = point.position.x - _xamlControl.width / 2.0f;
         double y = point.position.y - _xamlControl.height / 2.0f;
@@ -652,7 +658,7 @@
         spoke += (int)floor(winds) * 36;
 
         WUTCCoreTextRange* newRange = [WUTCCoreTextRange new];
-                
+
         if (_keyDown[WSVirtualKeyShift]) {
             if (_extendingLeft) {
                 if (spoke >= _selection.endCaretPosition) {
@@ -729,11 +735,11 @@
     [self _setSelection:range];
 }
 
-// The bounds returned drive the IME position and scrolling as to not block the 
+// The bounds returned drive the IME position and scrolling as to not block the
 // field with the on-screen keyboard.
 - (void)_editContextLayoutRequested:(WUTCCoreTextEditContext*)sender args:(WUTCCoreTextLayoutRequestedEventArgs*)e {
     WUTCCoreTextLayoutRequest* request = e.request;
-    WFRect* rect = [WFRect new]; 
+    WFRect* rect = [WFRect new];
     rect.x = 0;
     rect.y = 0;
     rect.width = _xamlControl.width;
@@ -807,13 +813,13 @@
 
 - (void)_commonInit {
     UILabel* infoLabel = [[UILabel alloc] initWithFrame:self.bounds];
-    
+
     infoLabel.text = @"Build this sample using the Islandwood SDK";
     infoLabel.numberOfLines = 0;
     infoLabel.textAlignment = NSTextAlignmentCenter;
-    
+
     [self addSubview:infoLabel];
-    
+
     self.backgroundColor = [UIColor grayColor];
 }
 
@@ -821,15 +827,15 @@
     if (self = [super initWithFrame:frame]) {
         [self _commonInit];
     }
-    
+
     return self;
 }
 
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder*)aDecoder {
     if (self = [super initWithCoder:aDecoder]) {
         [self _commonInit];
     }
-    
+
     return self;
 }
 
@@ -840,34 +846,36 @@
     BOOL _fromCoder;
 }
 
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder*)aDecoder {
     if (self = [super initWithCoder:aDecoder]) {
         _fromCoder = YES;
     }
-    
+
     return self;
 }
 
 - (void)viewDidLoad {
     self.view.backgroundColor = [UIColor whiteColor];
-    
+
     if (!_fromCoder) {
         CGRect centeredEditRect = CGRectMake(self.view.bounds.size.width / 2 - 200 / 2, 200, 200, 200);
         CGRect centeredInfoRect = CGRectMake(self.view.bounds.size.width / 2 - 300 / 2, 100, 300, 100);
-        
+
         SpiralTextEdit* textEdit = [[SpiralTextEdit alloc] initWithFrame:centeredEditRect];
         UILabel* infoLabel = [[UILabel alloc] initWithFrame:centeredInfoRect];
         UIButton* focusButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        
-        textEdit.autoresizingMask = infoLabel.autoresizingMask = focusButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
-        
-        infoLabel.text = @"Click the control to gain focus. Use the keyboard to type and caret nagivate. Hold shift to update the selection. Right click or Ctrl+C or V to copy and paste.";
+
+        textEdit.autoresizingMask = infoLabel.autoresizingMask = focusButton.autoresizingMask =
+            UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+
+        infoLabel.text = @"Click the control to gain focus. Use the keyboard to type and caret nagivate. Hold shift to update the "
+                         @"selection. Right click or Ctrl+C or V to copy and paste.";
         infoLabel.numberOfLines = 0;
         infoLabel.textAlignment = NSTextAlignmentCenter;
-        
+
         focusButton.frame = CGRectMake(self.view.bounds.size.width / 2 - 100 / 2, 450, 100, 50);
         [focusButton setTitle:@"Tab To Focus" forState:UIControlStateNormal];
-        
+
         [self.view addSubview:focusButton];
         [self.view addSubview:textEdit];
         [self.view addSubview:infoLabel];
