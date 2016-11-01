@@ -38,7 +38,6 @@
 // This view's only subview is an autoresized UIView that hosts
 // a Windows.UI.Xaml.ContentControl, which is used to gain focus,
 // tabstop, and recieve pointer events.
-
 @implementation SpiralTextEdit {
     // Internal text storage
     NSString* _textStorage;
@@ -120,11 +119,11 @@
 }
 
 - (void)_initializeControl {
-    // Use weak self, to avoid retain-loops
+     // Use a reference to weak self in our event handler blocks, to avoid retain-loops
     __weak id weakSelf = self;
 
     // This view only stands to be the host of our Xaml element.
-    // Setting the xamlElement is mutually exclusive with drawRect:
+    // Setting the xamlElement is mutually exclusive with custom drawing through drawRect:
     _hostView = [[UIView alloc] initWithFrame:self.bounds];
     _hostView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
@@ -320,7 +319,7 @@
         borderThickness = 1.0f;
     }
 
-    // Fill a border until we support layer borders
+    // Add border using fill, until we support layer borders
     CGContextSetFillColorWithColor(ctx, borderColor);
     CGContextFillRect(ctx, self.bounds);
     CGContextSetFillColorWithColor(ctx, fillColor);
@@ -359,14 +358,14 @@
                 [attrs setObject:color forKey:UITextAttributeTextColor];
             }
 
-            CGSize letterSize = [letter sizeWithAttributes:@{ UITextAttributeFont : font }];
+            CGSize letterSize = [letter sizeWithAttributes:attrs];
             [letter drawAtPoint:CGPointMake(xCoord - (letterSize.width / 2.0f), yCoord - (letterSize.height / 2.0f)) withAttributes:attrs];
         }
 
         if (_selection.startCaretPosition == _selection.endCaretPosition) {
-            if (_selection.startCaretPosition == i) {
+            if (_selection.startCaretPosition == i && _internalFocus) {
                 CGContextSetFillColorWithColor(ctx, selectedColor.CGColor);
-                CGContextFillRect(ctx, CGRectMake(xCoord - 2, yCoord - 6, 4, 12));
+                CGContextFillRect(ctx, CGRectMake(xCoord - 1.5, yCoord - 8, 3, 16));
             }
         }
 
@@ -381,9 +380,9 @@
 
 // Clamps the text range in place to fit within the text storage.
 - (void)_clampRange:(WUTCCoreTextRange*)range {
-    range.endCaretPosition = MIN(range.endCaretPosition, _textStorage.length);
+    range.endCaretPosition = MIN(range.endCaretPosition, (int)_textStorage.length);
     range.endCaretPosition = MAX(range.endCaretPosition, 0);
-    range.startCaretPosition = MIN(range.startCaretPosition, _textStorage.length);
+    range.startCaretPosition = MIN(range.startCaretPosition, (int)_textStorage.length);
     range.startCaretPosition = MAX(range.startCaretPosition, 0);
 }
 
