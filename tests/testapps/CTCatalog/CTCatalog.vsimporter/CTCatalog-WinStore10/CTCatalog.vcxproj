@@ -177,6 +177,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCAffineTransformationTestViewController.mm" />
     <ClangCompile Include="..\..\CTCatalog\Tests\CTCFontTestViewController.mm" />
     <ClangCompile Include="..\..\CTCatalog\Tests\CTCFramesetterTestViewController.mm" />
     <ClangCompile Include="..\..\CTCatalog\Tests\CTCFrameTestViewController.mm" />

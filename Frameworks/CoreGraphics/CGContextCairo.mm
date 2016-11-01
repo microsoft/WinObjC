@@ -1868,6 +1868,7 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, flo
     // Undo transform to text space
     transform = CGAffineTransformConcat(CGAffineTransformMake(1, 0, 0, -1, 0, lineAscent / 2.0f), transform);
 
+    // Translate to the drawing point
     transform = CGAffineTransformTranslate(transform, curState->curTextPosition.x, curState->curTextPosition.y);
 
     // Find transform that user created by multiplying given transform by necessary transforms to draw with CoreText
@@ -1875,11 +1876,11 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, flo
     CGAffineTransform userTransform =
         CGAffineTransformConcat(curState->curTransform, CGAffineTransformMake(1.0f / _scale, 0, 0, 1.0f / _scale, 0, -height / _scale));
 
-    // Apply the context CTM
+    // Apply the context CTM to get total matrix
     transform = CGAffineTransformConcat(transform, userTransform);
 
     // Perform anti-clockwise rotation required to match the reference platform.
-    imgRenderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, -transform.b, transform.c, transform.d, transform.tx, -transform.ty));
+    imgRenderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, -transform.b, -transform.c, transform.d, transform.tx, -transform.ty));
 
     // Draw the glyph using ID2D1RenderTarget
     ComPtr<ID2D1SolidColorBrush> brush;
