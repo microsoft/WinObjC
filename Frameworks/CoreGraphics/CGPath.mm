@@ -58,20 +58,28 @@ struct __CGPathImpl {
 };
 
 struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
-    inline ComPtr<ID2D1PathGeometry> GetPathGeometry() {
+    ComPtr<ID2D1PathGeometry> GetPathGeometry() {
         return _impl.pathGeometry;
     }
 
-    inline ComPtr<ID2D1GeometrySink> GetGeometrySink() {
+    ComPtr<ID2D1GeometrySink> GetGeometrySink() {
         return _impl.geometrySink;
     }
 
-    inline CGPoint& CurrentPoint() {
+    CGPoint GetCurrentPoint() {
         return _impl.currentPoint;
     }
 
-    inline CGPoint& StartingPoint() {
+    CGPoint GetStartingPoint() {
         return _impl.startingPoint;
+    }
+
+    void SetCurrentPoint(CGPoint newPoint) {
+        _impl.currentPoint = newPoint;
+    }
+
+    void SetStartingPoint(CGPoint newPoint) {
+        _impl.startingPoint = newPoint;
     }
 
     // A private helper function for re-opening a path geometry. CGPath does not
@@ -115,7 +123,7 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
 
     void BeginFigure() {
         if (_impl.figureClosed) {
-            _impl.geometrySink->BeginFigure(_CGPointToD2D_F(CurrentPoint()), D2D1_FIGURE_BEGIN_FILLED);
+            _impl.geometrySink->BeginFigure(_CGPointToD2D_F(_impl.currentPoint), D2D1_FIGURE_BEGIN_FILLED);
             _impl.figureClosed = false;
         }
     }
@@ -142,6 +150,9 @@ CFTypeID CGPathGetTypeID() {
 }
 
 static Boolean __CGPathEqual(CFTypeRef cf1, CFTypeRef cf2) {
+    if (!cf1 && !cf2) {
+        return true;
+    }
     RETURN_FALSE_IF(!cf1);
     RETURN_FALSE_IF(!cf2);
 
@@ -205,8 +216,8 @@ CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
 
     FAIL_FAST_IF_FAILED(path->GetPathGeometry()->Stream(mutableRet->GetGeometrySink().Get()));
 
-    mutableRet->CurrentPoint() = path->CurrentPoint();
-    mutableRet->StartingPoint() = path->StartingPoint();
+    mutableRet->SetCurrentPoint(path->GetCurrentPoint());
+    mutableRet->SetStartingPoint(path->GetStartingPoint());
 
     return mutableRet;
 }
@@ -224,7 +235,7 @@ void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* transf
     path->BeginFigure();
     path->GetGeometrySink()->AddLine(_CGPointToD2D_F(pt));
 
-    path->CurrentPoint() = pt;
+    path->SetCurrentPoint(pt);
 }
 
 CGFloat _CGPathControlPointOffsetMultiplier(CGFloat angle) {
@@ -403,8 +414,8 @@ void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* transform
     path->EndFigure(D2D1_FIGURE_END_OPEN);
 
     CGPoint pt = __CreateCGPointWithTransform(x, y, transform);
-    path->StartingPoint() = pt;
-    path->CurrentPoint() = pt;
+    path->SetStartingPoint(pt);
+    path->SetCurrentPoint(pt);
 }
 
 /**
@@ -484,7 +495,7 @@ void CGPathCloseSubpath(CGMutablePathRef path) {
     RETURN_IF(!path);
 
     // Move the current point to the starting point since the line is closed.
-    path->CurrentPoint() = path->StartingPoint();
+    path->SetCurrentPoint(path->GetStartingPoint());
     path->EndFigure(D2D1_FIGURE_END_CLOSED);
 }
 
@@ -729,7 +740,7 @@ CGPoint CGPathGetCurrentPoint(CGPathRef path) {
     if (!path) {
         return CGPointZero;
     }
-    return path->CurrentPoint();
+    return path->GetCurrentPoint();
 }
 
 /**
