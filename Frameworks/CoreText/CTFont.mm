@@ -903,3 +903,30 @@ CFTypeID CTFontGetTypeID() {
     static CFTypeID __kCTFontTypeID = _CFRuntimeRegisterClass(&__CTFontClass);
     return __kCTFontTypeID;
 }
+
+// Private function for getting font weight for XAML
+DWRITE_FONT_WEIGHT _CTFontGetDWriteWeight(CTFontRef font) {
+    ComPtr<IDWriteFontFace3> fontFace3;
+    if (font && SUCCEEDED(font->_dwriteFontFace.As(&fontFace3))) {
+        return fontFace3->GetWeight();
+    }
+    return DWRITE_FONT_WEIGHT_NORMAL;
+}
+
+// Private function for getting font stretch for XAML
+DWRITE_FONT_STRETCH _CTFontGetDWriteStretch(CTFontRef font) {
+    ComPtr<IDWriteFontFace3> fontFace3;
+    if (font && SUCCEEDED(font->_dwriteFontFace.As(&fontFace3))) {
+        return fontFace3->GetStretch();
+    }
+    return DWRITE_FONT_STRETCH_NORMAL;
+}
+
+// Private function for getting font style for XAML
+DWRITE_FONT_STYLE _CTFontGetDWriteStyle(CTFontRef font) {
+    ComPtr<IDWriteFontFace3> fontFace3;
+    if (font && SUCCEEDED(font->_dwriteFontFace.As(&fontFace3))) {
+        return fontFace3->GetStyle();
+    }
+    return DWRITE_FONT_STYLE_NORMAL;
+}
