@@ -389,6 +389,11 @@ CGBitmapImageBacking::CGBitmapImageBacking(CGImageRef img) {
 }
 
 CGBitmapImageBacking::~CGBitmapImageBacking() {
+    // release the render target first as it may hold locks on the image
+    if (_renderTarget != nullptr) {
+        _renderTarget->Release();
+    }
+
     if (_cairoLocks != 0 || _imageLocks != 0) {
         TraceWarning(TAG, L"Warning: Image data not unlocked (refcnt=%d, %d)", _cairoLocks, _imageLocks);
 
@@ -398,10 +403,6 @@ CGBitmapImageBacking::~CGBitmapImageBacking() {
         while (_imageLocks > 0) {
             ReleaseImageData();
         }
-    }
-
-    if (_renderTarget != nullptr) {
-        _renderTarget->Release();
     }
 
     _data->_refCount--;
