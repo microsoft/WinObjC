@@ -37,7 +37,7 @@ static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameSize, CF
 
     _CTFrame* ret = _DWriteGetFrame(static_cast<CFAttributedStringRef>(typesetter->_attributedString.get()), range, frameSize);
 
-    // Trying to access attributes without any text with throw an error
+    // Trying to access attributes without any text will throw an error
     if (range.length <= 0L) {
         return [ret retain];
     }

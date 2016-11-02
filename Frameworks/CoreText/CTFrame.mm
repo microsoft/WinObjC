@@ -125,7 +125,7 @@ void CTFrameDraw(CTFrameRef frameRef, CGContextRef ctx) {
         for (size_t i = 0; i < frame->_lineOrigins.size(); ++i) {
             _CTLine* line = static_cast<_CTLine*>([frame->_lines objectAtIndex:i]);
             CGContextSetTextPosition(ctx, frame->_lineOrigins[i].x, -frame->_lineOrigins[i].y);
-            _CTLineDraw(static_cast<CTLineRef>(line), ctx, false);
+            CTLineDraw(static_cast<CTLineRef>(line), ctx);
         }
 
         // Restore CTM and Text Matrix to values before we modified them

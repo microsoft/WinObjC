@@ -149,9 +149,9 @@ public:
 
 TEST_P(CoreTextLineSpaceMultipleTest, OriginsShouldBeMovedByRatio) {
     NSMutableAttributedString* multipleString = [[[NSMutableAttributedString alloc] initWithString:@"TEST\nTEST\nTEST"] autorelease];
-    CGFloat param = GetParam();
+    CGFloat multiple = GetParam();
     CTParagraphStyleSetting settings[1] = {
-        {.spec = kCTParagraphStyleSpecifierLineHeightMultiple, .valueSize = sizeof(CGFloat), .value = &param }
+        {.spec = kCTParagraphStyleSpecifierLineHeightMultiple, .valueSize = sizeof(CGFloat), .value = &multiple }
     };
     NSDictionary* attributes = @{ static_cast<NSString*>(kCTParagraphStyleAttributeName) : (id)CTParagraphStyleCreate(settings, 1) };
     [multipleString setAttributes:attributes range:NSMakeRange(0, 14)];
@@ -162,8 +162,8 @@ TEST_P(CoreTextLineSpaceMultipleTest, OriginsShouldBeMovedByRatio) {
     CFAutorelease(multipleFrame);
     CGPoint multipleOrigins[3];
     CTFrameGetLineOrigins(multipleFrame, {}, multipleOrigins);
-    EXPECT_NEAR(param * normalLineSpaceFirst, multipleOrigins[1].y - multipleOrigins[0].y, c_errorDelta);
-    EXPECT_NEAR(param * normalLineSpaceSecond, multipleOrigins[2].y - multipleOrigins[0].y, c_errorDelta);
+    EXPECT_NEAR(multiple * normalLineSpaceFirst, multipleOrigins[1].y - multipleOrigins[0].y, c_errorDelta);
+    EXPECT_NEAR(multiple * normalLineSpaceSecond, multipleOrigins[2].y - multipleOrigins[0].y, c_errorDelta);
 }
 
 INSTANTIATE_TEST_CASE_P(OriginsShouldBeMovedByRatio,
