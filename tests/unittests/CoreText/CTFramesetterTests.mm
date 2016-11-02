@@ -113,19 +113,15 @@ TEST(CTFramesetter, ShouldBeAbleToCreateMultipleFramesFromSameFramesetter) {
     CFAutorelease(framesetter);
     CGPathRef path = CGPathCreateWithRect(CGRectMake(0, 0, FLT_MAX, FLT_MAX), nullptr);
     CTFrameRef firstFrame = CTFramesetterCreateFrame(framesetter, { 0, 5 }, path, nullptr);
-    ;
     EXPECT_NE(nil, firstFrame);
 
     CTFrameRef secondFrame = CTFramesetterCreateFrame(framesetter, { 1, 8 }, path, nullptr);
-    ;
     EXPECT_NE(nil, secondFrame);
 
     CTFrameRef thirdFrame = CTFramesetterCreateFrame(framesetter, { 8, 2 }, path, nullptr);
-    ;
     EXPECT_NE(nil, thirdFrame);
 
     CTFrameRef fullFrame = CTFramesetterCreateFrame(framesetter, {}, path, nullptr);
-    ;
     EXPECT_NE(nil, fullFrame);
     CFRelease(firstFrame);
     CFRelease(secondFrame);
