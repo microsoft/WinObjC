@@ -16,10 +16,10 @@
 
 #import "CTCBaseViewController.h"
 
-UITableViewCell* createTextCell(NSString* title, NSString* value) {
+UITableViewCell* createTextCell(NSString* title, NSString* value, CGFloat width) {
     UITableViewCell* cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     cell.textLabel.text = title;
-    UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 20)];
+    UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, width, 20)];
     textLabel.text = value;
     cell.accessoryView = textLabel;
     return cell;

@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 #define OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Store_Preview.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 
@@ -167,9 +169,9 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 @interface WASPStoreConfiguration : RTObject
 + (void)setSystemConfiguration:(NSString*)catalogHardwareManufacturerId
- catalogStoreContentModifierId:(NSString*)catalogStoreContentModifierId
- systemConfigurationExpiration:(WFDateTime*)systemConfigurationExpiration
-     catalogHardwareDescriptor:(NSString*)catalogHardwareDescriptor;
+    catalogStoreContentModifierId:(NSString*)catalogStoreContentModifierId
+    systemConfigurationExpiration:(WFDateTime*)systemConfigurationExpiration
+        catalogHardwareDescriptor:(NSString*)catalogHardwareDescriptor;
 + (void)setMobileOperatorConfiguration:(NSString*)mobileOperatorId
            appDownloadLimitInMegabytes:(unsigned int)appDownloadLimitInMegabytes
         updateDownloadLimitInMegabytes:(unsigned int)updateDownloadLimitInMegabytes;

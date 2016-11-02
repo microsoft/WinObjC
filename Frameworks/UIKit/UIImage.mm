@@ -460,19 +460,18 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     }
     pthread_mutex_unlock(&imageCacheLock);
 
-    EbrFile* fpIn;
     BYTE in[8] = { 0 };
+    NSInputStream* inStream = [NSInputStream inputStreamWithFileAtPath:[NSString stringWithUTF8String:pathStr]];
+    [inStream open];
 
-    fpIn = EbrFopen(pathStr, "rb");
-    if (!fpIn) {
+    if (NSStreamStatusOpen != inStream.streamStatus) {
         TraceVerbose(TAG, L"Image %hs not found", pathStr);
         // m_pImage = new CGBitmapImage(64, 64, __CGSurfaceFormat::_ColorABGR, NULL);
         return nil;
     }
 
-    EbrFread(in, 1, 8, fpIn);
-
-    EbrFclose(fpIn);
+    [inStream read:in maxLength:_countof(in)];
+    [inStream close];
 
     if (in[0] == 0x89 && in[1] == 'P' && in[2] == 'N' && in[3] == 'G') {
         m_pImage = CGPNGImageCreateFromFile([NSString stringWithCString:pathStr]);
@@ -482,36 +481,19 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
             [self setOrientation:((CGJPEGImageBacking*)m_pImage->Backing())->_orientation];
         }
     } else {
-        EbrFile* fpIn;
-
-        fpIn = EbrFopen(pathStr, "rb");
-        if (!fpIn) {
-            TraceVerbose(TAG, L"Image %hs not found", pathStr);
-            // m_pImage = new CGBitmapImage(64, 64, __CGSurfaceFormat::_ColorABGR, NULL);
-            return nil;
-        }
-
-        EbrFseek(fpIn, 0, SEEK_END);
-        int len = EbrFtell(fpIn);
-        if (len <= 0) {
+        NSData* inData = [NSData dataWithContentsOfFile:[NSString stringWithUTF8String:pathStr]];
+        if (!inData) {
             TraceVerbose(TAG, L"Image %hs invalid", pathStr);
             // m_pImage = new CGBitmapImage(64, 64, __CGSurfaceFormat::_ColorABGR, NULL);
-            EbrFclose(fpIn);
             return nil;
         }
-        EbrFseek(fpIn, 0, SEEK_SET);
 
-        auto inBuffer = std::make_unique<char[]>(len);
-        len = EbrFread(inBuffer.get(), 1, len, fpIn);
-
-        EbrFclose(fpIn);
-
-        if (!loadTIFF(self, inBuffer.get(), len)) {
-            if (!loadGIF(self, inBuffer.get(), len)) {
-                if (!loadBMP(self, inBuffer.get(), len)) {
+        if (!loadTIFF(self, (void*)[inData bytes], [inData length])) {
+            if (!loadGIF(self, (void*)[inData bytes], [inData length])) {
+                if (!loadBMP(self, (void*)[inData bytes], [inData length])) {
                     TraceVerbose(TAG, L"Unrecognized image");
-                    for (int i = 0; i < MIN(len, 64); i++) {
-                        TraceVerbose(TAG, L"%02x ", inBuffer[i]);
+                    for (int i = 0; i < MIN([inData length], 64); i++) {
+                        TraceVerbose(TAG, L"%02x ", ((uint8_t*)[inData bytes])[i]);
                         if ((i + 1) % 16 == 0)
                             TraceVerbose(TAG, L"");
                     }

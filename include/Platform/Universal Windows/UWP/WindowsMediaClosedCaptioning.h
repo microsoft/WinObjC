@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_MEDIA_CLOSEDCAPTIONING_EXPORT
 #define OBJCUWP_WINDOWS_MEDIA_CLOSEDCAPTIONING_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Media_ClosedCaptioning.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

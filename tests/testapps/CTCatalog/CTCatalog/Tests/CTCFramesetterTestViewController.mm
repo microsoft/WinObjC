@@ -50,9 +50,11 @@
     CTTextAlignment alignment = kCTCenterTextAlignment;
     setting.value = &alignment;
     CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(&setting, 1);
+    CFAutorelease(paragraphStyle);
 
     UIFont* font = [UIFont systemFontOfSize:20];
     CTFontRef myCFFont = CTFontCreateWithName((__bridge CFStringRef)[font fontName], [font pointSize], NULL);
+    CFAutorelease(myCFFont);
     // Make dictionary for attributed string with font, color, and alignment
     NSDictionary* attributesDict = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)myCFFont,
                                                                               (id)kCTFontAttributeName,
@@ -64,25 +66,27 @@
 
     CFAttributedStringRef attrString =
         CFAttributedStringCreate(kCFAllocatorDefault, (__bridge CFStringRef)_text, (__bridge CFDictionaryRef)attributesDict);
+    CFAutorelease(attrString);
 
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(attrString);
-    CFRelease(attrString);
+    CFAutorelease(framesetter);
 
     // Creates frame for framesetter with current attributed string
     CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    CFAutorelease(frame);
 
     // Draws the text in the frame
     CTFrameDraw(frame, context);
 
     // Creates outline
     CGContextSetLineWidth(context, 2.0);
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
     CGContextSetStrokeColorWithColor(context, color.CGColor);
     CGContextMoveToPoint(context, 0, 0);
     CGContextAddRect(context, rect);
     CGContextStrokePath(context);
 
-    CGColorSpaceRelease(colorspace);
+    CGPathRelease(path);
+
     [_drawDelegate refreshValuesForFramesetter:framesetter];
 }
 
@@ -98,38 +102,64 @@
     NSMutableArray* _functionCells;
 }
 
+- (void)viewDidLayoutSubviews {
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    _textField.frame = CGRectMake(0, 0, width, 30);
+    [_textField setNeedsDisplay];
+    _widthSlider.frame = CGRectMake(0, 30, width / 2, 70);
+    [_widthSlider setNeedsDisplay];
+    _heightSlider.frame = CGRectMake(width / 2, 30, width / 2, 70);
+    [_heightSlider setNeedsDisplay];
+    _functionsView.frame = CGRectMake(0, 300, width, 300);
+    [_functionsView setNeedsDisplay];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    CGFloat width = CGRectGetWidth(self.view.bounds);
     // Adds textbox to change text
-    _textField = [[UITextField alloc] initWithFrame:CGRectMake(40, 40, 300, 30)];
+    _textField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, width, 30)];
     _textField.text = @"the quick brown fox jumps over the lazy dog. THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG";
     _textField.delegate = self;
     [self.view addSubview:_textField];
 
-    _widthSlider = [[UISlider alloc] initWithFrame:CGRectMake(40, 80, 100, 100)];
+    _widthSlider = [[UISlider alloc] initWithFrame:CGRectMake(0, 30, width / 2, 70)];
     _widthSlider.minimumValue = 20.0;
-    _widthSlider.maximumValue = 800.0;
-    _widthSlider.value = 400.0;
+    _widthSlider.maximumValue = width;
+    _widthSlider.value = width / 2;
     _widthSlider.continuous = NO;
     [_widthSlider addTarget:self action:@selector(refreshViews) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:_widthSlider];
 
-    _heightSlider = [[UISlider alloc] initWithFrame:CGRectMake(170, 80, 100, 100)];
+    _heightSlider = [[UISlider alloc] initWithFrame:CGRectMake(width / 2, 30, width / 2, 70)];
     _heightSlider.minimumValue = 20.0;
-    _heightSlider.maximumValue = 400.0;
-    _heightSlider.value = 200.0;
+    _heightSlider.maximumValue = 100.0;
+    _heightSlider.value = 100.0;
     _heightSlider.continuous = NO;
     [_heightSlider addTarget:self action:@selector(refreshViews) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:_heightSlider];
 
     // Create table view to pair function names with results/UNIMPLEMENTED
-    _functionsView = [[UITableView alloc] initWithFrame:CGRectMake(40, 420, 1000, 600) style:UITableViewStylePlain];
+    _functionsView = [[UITableView alloc] initWithFrame:CGRectMake(0, 300, width, 300) style:UITableViewStylePlain];
     _functionsView.dataSource = self;
     _functionsView.delegate = self;
     [self.view addSubview:_functionsView];
 
+    // Create frame of text
+    _framesetterView = [[CTFramesetterTestView alloc] initWithFrame:CGRectMake(0, 100, width, 100)];
+    _framesetterView.backgroundColor = [UIColor whiteColor];
+    // Sets view to call updateTableViews when done drawing
+    _framesetterView.drawDelegate = self;
+    _framesetterView.text = @"";
+    [self.view addSubview:_framesetterView];
+
     _functionCells = [NSMutableArray new];
+
+    _suggestedFrameSizeView = [[CTFramesetterTestView alloc] initWithFrame:CGRectMake(0, 200, 100, 100)];
+    _suggestedFrameSizeView.backgroundColor = [UIColor whiteColor];
+    _suggestedFrameSizeView.text = @"";
+    [self.view addSubview:_suggestedFrameSizeView];
 
     // Draws the three alignment boxes
     [self drawTests];
@@ -145,23 +175,16 @@
 }
 
 - (void)drawTests {
-    // Create frame of text
-    _framesetterView = [[CTFramesetterTestView alloc] initWithFrame:CGRectMake(40, 200, 400, 200)];
-    _framesetterView.backgroundColor = [UIColor whiteColor];
+    // Update the text in the frame
     // Allows input of \n and \t to insert newlines and tabs respectively
     _framesetterView.text =
         [[_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"] stringByReplacingOccurrencesOfString:@"\\t"
                                                                                                                   withString:@"\t"];
-
-    // Sets view to call updateTableViews when done drawing
-    _framesetterView.drawDelegate = self;
-    [self.view addSubview:_framesetterView];
+    [_framesetterView setNeedsDisplay];
 }
 
 // Update frameview for new text or new boxsize
 - (void)refreshViews {
-    [_framesetterView removeFromSuperview];
-    [_suggestedFrameSizeView removeFromSuperview];
     [_functionCells removeAllObjects];
     [self drawTests];
 }
@@ -175,6 +198,7 @@
 
 // Called by framesetter test view to give us framesetter for testing
 - (void)refreshValuesForFramesetter:(CTFramesetterRef)framesetter {
+    CGFloat width = CGRectGetWidth(self.view.bounds);
     CGSize suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter,
                                                                         CFRangeMake(0, 0),
                                                                         nullptr,
@@ -182,17 +206,23 @@
                                                                         nullptr);
     [_functionCells
         addObject:createTextCell(@"CTFramesetterSuggestFrameSizeWithConstraints",
-                                 [NSString stringWithFormat:@"width: %f, height: %f", suggestedSize.width, suggestedSize.height])];
-    ADD_UNIMPLEMENTED(_functionCells, @"CTFramesetterGetTypesetter");
-    ADD_UNIMPLEMENTED(_functionCells, @"CTFramesetterGetTypeID");
+                                 [NSString stringWithFormat:@"width: %f, height: %f", suggestedSize.width, suggestedSize.height],
+                                 width / 2)];
+    [_functionCells addObject:createTextCell(@"CTFramesetterGetTypeSetter",
+                                             [NSString stringWithFormat:@"%@", CTFramesetterGetTypesetter(framesetter)],
+                                             width / 2)];
+
+    ADD_UNIMPLEMENTED(_functionCells, @"CTFramesetterGetTypeID", width / 2);
     [_functionsView reloadData];
 
-    _suggestedFrameSizeView = [[CTFramesetterTestView alloc] initWithFrame:CGRectMake(480, 40, suggestedSize.width, suggestedSize.height)];
-    _suggestedFrameSizeView.backgroundColor = [UIColor whiteColor];
+    CGRect frame = _suggestedFrameSizeView.frame;
+    frame.size.width = suggestedSize.width;
+    frame.size.height = suggestedSize.height;
+    _suggestedFrameSizeView.frame = frame;
     _suggestedFrameSizeView.text =
         [[_textField.text stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"] stringByReplacingOccurrencesOfString:@"\\t"
                                                                                                                   withString:@"\t"];
-    [self.view addSubview:_suggestedFrameSizeView];
+    [_suggestedFrameSizeView setNeedsDisplay];
 }
 
 // Table View Methods

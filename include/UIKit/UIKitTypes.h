@@ -17,26 +17,27 @@
 #pragma once
 
 #import <Foundation/Foundation.h>
+#import <CoreText/CoreText.h>
 
 // This is the home for enums that are shared by more than one interface
 
 enum {
-    NSLineBreakByWordWrapping,
-    NSLineBreakByCharWrapping,
-    NSLineBreakByClipping,
-    NSLineBreakByTruncatingHead,
-    NSLineBreakByTruncatingTail,
-    NSLineBreakByTruncatingMiddle
+    NSLineBreakByWordWrapping = kCTLineBreakByWordWrapping,
+    NSLineBreakByCharWrapping = kCTLineBreakByCharWrapping,
+    NSLineBreakByClipping = kCTLineBreakByClipping,
+    NSLineBreakByTruncatingHead = kCTLineBreakByTruncatingHead,
+    NSLineBreakByTruncatingTail = kCTLineBreakByTruncatingTail,
+    NSLineBreakByTruncatingMiddle = kCTLineBreakByTruncatingMiddle
 };
 typedef NSUInteger NSLineBreakMode;
 
 enum {
-    UILineBreakModeWordWrap = 0,
-    UILineBreakModeCharacterWrap,
-    UILineBreakModeClip,
-    UILineBreakModeHeadTruncation,
-    UILineBreakModeTailTruncation,
-    UILineBreakModeMiddleTruncation,
+    UILineBreakModeWordWrap = NSLineBreakByWordWrapping,
+    UILineBreakModeCharacterWrap = NSLineBreakByCharWrapping,
+    UILineBreakModeClip = NSLineBreakByClipping,
+    UILineBreakModeHeadTruncation = NSLineBreakByTruncatingHead,
+    UILineBreakModeTailTruncation = NSLineBreakByTruncatingTail,
+    UILineBreakModeMiddleTruncation = NSLineBreakByTruncatingMiddle
 };
 typedef NSUInteger UILineBreakMode;
 
@@ -47,7 +48,7 @@ typedef NS_ENUM(NSUInteger, NSWritingDirection) {
 };
 
 enum {
-    UITextAlignmentLeft,
+    UITextAlignmentLeft = 0,
     UITextAlignmentCenter,
     UITextAlignmentRight,
 };

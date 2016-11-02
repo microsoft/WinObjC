@@ -36,6 +36,21 @@ LIBRARY CoreGraphics
         _CGBitmapContextCreateWithFormat
         CGBitmapContextGetImage
 
+        ; DWriteWrapper Additions
+        _CFStringFromLocalizedString
+        _DWriteCopyFontFamilyNames
+        _DWriteCopyFontNamesForFamilyName
+        _DWriteGetFamilyNameForFontName
+        _DWriteGetFontPropertiesFromName
+        _DWriteCreateTextFormat
+        _DWriteCreateFontFamilyWithName
+        _DWriteCreateFontFaceWithName
+        _DWriteFontCopyInformationalString
+        _DWriteFontCopyTable
+        _DWriteFontGetSlantDegrees
+        _DWriteFontGetBoundingBox
+        _DWriteFontGetBoundingBoxesForGlyphs
+
         ; CGColor.mm
         CGColorRelease
         CGColorRetain
@@ -217,7 +232,9 @@ LIBRARY CoreGraphics
         CGContextReleaseLock
         CGContextSetDirty
         CGContextGetBacking
+        CGContextDrawGlyphRun
         EbrCenterTextInRectVertically
+        _CGContextSetScaleFactor
 
         ; CGDataConsumer.mm
         CGDataConsumerCreate
@@ -273,15 +290,6 @@ LIBRARY CoreGraphics
         CGFontGetNumberOfGlyphs
         CGFontGetGlyphAdvances
         CGFontGetUnitsPerEm
-
-        ; private exports below
-        CGFontFitChars
-        CGFontGetGlyphs
-        CGFontGetGlyphsForUnichars
-        CGFontSetFTFontSize
-        CGFontWrap
-        _CGFontLock
-        _CGFontUnlock
 
         ; CGFunction.mm
         CGFunctionCreate

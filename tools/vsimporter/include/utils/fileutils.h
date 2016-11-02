@@ -147,7 +147,5 @@ void getRelativePaths(const String& fromAbsPath, StringVec& toAbsPaths);
 
 void openOutputFileStream(OFStream& ofs, const String& outFilePath, OFStream::openmode mode = OFStream::out);
 
-String getBinaryLocation();
-
 #endif /* _FILEUTILS_H_ */
 

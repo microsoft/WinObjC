@@ -22,6 +22,10 @@
 #include "CoreGraphics/CGImage.h"
 #include <objc/runtime.h>
 
+#include <COMIncludes.h>
+#import <D2d1.h>
+#include <COMIncludes_End.h>
+
 struct _cairo_surface;
 typedef struct _cairo_surface cairo_surface_t;
 
@@ -58,6 +62,7 @@ public:
     virtual int BytesPerRow() = 0;
     virtual int BytesPerPixel() = 0;
     virtual int BitsPerComponent() = 0;
+    virtual ID2D1RenderTarget* GetRenderTarget() = 0;
     virtual void GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo) = 0;
     virtual __CGSurfaceFormat SurfaceFormat() = 0;
     virtual CGColorSpaceModel ColorSpaceModel() = 0;

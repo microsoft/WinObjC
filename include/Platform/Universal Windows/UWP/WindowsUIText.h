@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 #define OBJCUWP_WINDOWS_UI_TEXT_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_UI_Text.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 
@@ -505,9 +507,9 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 - (RTObject<WUTITextRange>*)getClone;
 - (int)getIndex:(WUTTextRangeUnit)unit;
 - (void)getPoint:(WUTHorizontalCharacterAlignment)horizontalAlign
-   verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign
-         options:(WUTPointOptions)options
-           point:(WFPoint**)point;
+    verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign
+          options:(WUTPointOptions)options
+            point:(WFPoint**)point;
 - (void)getRect:(WUTPointOptions)options rect:(WFRect**)rect hit:(int*)hit;
 - (void)getText:(WUTTextGetOptions)options value:(NSString**)value;
 - (void)getTextViaStream:(WUTTextGetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
@@ -567,9 +569,9 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 - (RTObject<WUTITextRange>*)getClone;
 - (int)getIndex:(WUTTextRangeUnit)unit;
 - (void)getPoint:(WUTHorizontalCharacterAlignment)horizontalAlign
-   verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign
-         options:(WUTPointOptions)options
-           point:(WFPoint**)point;
+    verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign
+          options:(WUTPointOptions)options
+            point:(WFPoint**)point;
 - (void)getRect:(WUTPointOptions)options rect:(WFRect**)rect hit:(int*)hit;
 - (void)getText:(WUTTextGetOptions)options value:(NSString**)value;
 - (void)getTextViaStream:(WUTTextGetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;

@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_GLOBALIZATION_DATETIMEFORMATTING_EXPORT
 #define OBJCUWP_WINDOWS_GLOBALIZATION_DATETIMEFORMATTING_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Globalization_DateTimeFormatting.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

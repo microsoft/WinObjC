@@ -110,5 +110,8 @@
     <ClangCompile Include="..\..\CTCatalog\CTCBaseViewController.mm">
       <Filter>CTCatalog</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCAffineTransformationTestViewController.mm">
+      <Filter>CTCatalog\Test</Filter>
+    </ClangCompile>
   </ItemGroup>
 </Project>

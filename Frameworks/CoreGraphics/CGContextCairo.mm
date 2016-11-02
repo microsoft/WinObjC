@@ -18,16 +18,22 @@
 #import <Starboard.h>
 #import <memory>
 
+#include <COMIncludes.h>
+#import <wrl/client.h>
+#import <Wincodec.h>
+#import <D2d1.h>
+#include <COMIncludes_End.h>
+
 #import "CGColorSpaceInternal.h"
 #import "CGContextCairo.h"
 #import "CGContextImpl.h"
-#import "CGFontInternal.h"
 #import "CGGradientInternal.h"
 #import "CGImageInternal.h"
 #import "CGPathInternal.h"
 #import "CGPatternInternal.h"
 #import "UIColorInternal.h"
 #import "CGSurfaceInfoInternal.h"
+#import "UWP/WindowsGraphicsDisplay.h"
 
 #define CAIRO_WIN32_STATIC_BUILD
 
@@ -43,6 +49,9 @@ extern "C" {
 }
 
 #include "LoggingNative.h"
+#import <StubReturn.h>
+
+using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"CGContextCairo";
 
@@ -440,19 +449,8 @@ CGBlendMode CGContextCairo::CGContextGetBlendMode() {
 }
 
 void CGContextCairo::CGContextShowTextAtPoint(float x, float y, const char* str, DWORD length) {
-    WORD* glyphs = (WORD*)IwMalloc(length * sizeof(WORD));
-    DWORD i;
-
-    _isDirty = true;
-
-    for (i = 0; i < length; i++) {
-        glyphs[i] = str[i];
-    }
-
-    CGFontGetGlyphs(curState->getCurFont(), glyphs, length, glyphs);
-    CGContextShowGlyphsAtPoint(x, y, glyphs, length);
-
-    IwFree(glyphs);
+    // TODO #924: Implement this with DWrite
+    UNIMPLEMENTED();
 }
 
 void CGContextCairo::CGContextShowGlyphsAtPoint(float x, float y, WORD* glyphs, int count) {
@@ -472,7 +470,8 @@ void CGContextCairo::CGContextShowGlyphsAtPoint(float x, float y, WORD* glyphs, 
 
         case kCGTextClip:
         case kCGTextInvisible:
-            CGFontMeasureGlyphs(curState->getCurFont(), curState->fontSize, glyphs, count, &size);
+            // TODO #924: Update the text position in this case
+            UNIMPLEMENTED();
             break;
     }
 
@@ -1777,159 +1776,9 @@ void CGContextCairo::CGContextSetRGBStrokeColor(float r, float g, float b, float
 }
 
 CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, float x, float y) {
-    ObtainLock();
-
-    LOCK_CAIRO();
-
-    CGSize ret = { 0.0f, 0.0f };
-
-    cairo_glyph_t* cairoGlyphs = (cairo_glyph_t*)IwMalloc(sizeof(cairo_glyph_t) * length);
-
-    _CGFontLock();
-
-    //  Get the font
-    FT_Face face = (FT_Face)_LazyUISizingFontHandle.member(curState->getCurFont());
-    if (!face) {
-        _CGFontUnlock();
-        UNLOCK_CAIRO();
-        return ret;
-    }
-    FT_Error error;
-    FT_GlyphSlot slot = face->glyph;
-
-    FT_Pos penX = 0;
-    FT_Pos penY = 0;
-
-    UIFont* uiFont = curState->getCurFont();
-    CGFontSetFTFontSize(curState->getCurFont(), face, curState->fontSize);
-
-    CGPoint curOff = { 0, 0 };
-
-    //  Lookup each glyph
-    for (unsigned i = 0; i < length; i++) {
-        error = FT_Load_Glyph(face, glyphs[i], FT_LOAD_NO_HINTING);
-        if (error != 0) {
-            cairoGlyphs[i].index = -1;
-            curOff.x = (((float)penX) / 64.0f);
-        } else {
-            cairoGlyphs[i].index = glyphs[i];
-            curOff.x = (((float)penX) / 64.0f);
-
-            /* increment pen position */
-            penX += slot->advance.x;
-            penY += slot->advance.y;
-        }
-
-        CGPoint out;
-        out = CGPointApplyAffineTransform(curOff, curState->curTextMatrix);
-        cairoGlyphs[i].x = out.x + x;
-        cairoGlyphs[i].y = out.y + y;
-    }
-
-    ret.width = ((float)penX) / 64.0f;
-    ret.height = ((float)(face->size->metrics.ascender - face->size->metrics.descender)) / 64.0f;
-
-    FT_Face fontFace = (FT_Face)_LazyUIFontHandle.member(curState->getCurFont());
-    cairo_font_face_t* cairoFace = cairo_ft_font_face_create_for_ft_face(fontFace, 0);
-    cairo_save(_drawContext);
-    cairo_path_t* curPath = cairo_copy_path(_drawContext);
-
-    cairo_matrix_t fontCTM, fontSizeMatrix;
-
-    cairo_matrix_t m;
-    float trans[6];
-    memcpy(trans, &curState->curTransform, sizeof(curState->curTransform));
-
-    m.xx = trans[0];
-    m.yx = trans[1];
-    m.xy = trans[2];
-    m.yy = trans[3];
-    m.x0 = trans[4];
-    m.y0 = trans[5];
-
-    cairo_set_matrix(_drawContext, &m);
-
-    fontCTM.xx = curState->curTextMatrix.a;
-    fontCTM.yx = curState->curTextMatrix.b;
-    fontCTM.xy = curState->curTextMatrix.c;
-    fontCTM.yy = curState->curTextMatrix.d;
-    fontCTM.x0 = curState->curTextMatrix.tx;
-    fontCTM.y0 = curState->curTextMatrix.ty;
-
-    cairo_matrix_init_identity(&fontSizeMatrix);
-    cairo_matrix_scale(&fontSizeMatrix, 1, -1);
-    // cairo_matrix_translate(&fontSizeMatrix, 0, -1);
-
-    cairo_matrix_scale(&fontSizeMatrix, curState->fontSize * _LazyUIFontHorizontalScale.member(uiFont), curState->fontSize);
-    cairo_matrix_multiply(&fontSizeMatrix, &fontSizeMatrix, &fontCTM);
-
-    cairo_set_font_matrix(_drawContext, &fontSizeMatrix);
-    cairo_set_font_face(_drawContext, cairoFace);
-
-    switch (curState->textDrawingMode) {
-        case kCGTextFill:
-            cairo_set_source_rgba(_drawContext,
-                                  curState->curFillColor.r,
-                                  curState->curFillColor.g,
-                                  curState->curFillColor.b,
-                                  curState->curFillColor.a);
-
-            cairo_show_glyphs(_drawContext, cairoGlyphs, length);
-            break;
-
-        case kCGTextStroke: {
-            cairo_new_path(_drawContext);
-            cairo_glyph_path(_drawContext, cairoGlyphs, length);
-            cairo_set_source_rgba(_drawContext,
-                                  curState->curStrokeColor.r,
-                                  curState->curStrokeColor.g,
-                                  curState->curStrokeColor.b,
-                                  curState->curStrokeColor.a);
-            cairo_stroke(_drawContext);
-            break;
-        }
-
-        case kCGTextFillStroke: {
-            cairo_new_path(_drawContext);
-            cairo_glyph_path(_drawContext, cairoGlyphs, length);
-            cairo_set_source_rgba(_drawContext,
-                                  curState->curFillColor.r,
-                                  curState->curFillColor.g,
-                                  curState->curFillColor.b,
-                                  curState->curFillColor.a);
-            cairo_fill(_drawContext);
-
-            cairo_new_path(_drawContext);
-            cairo_glyph_path(_drawContext, cairoGlyphs, length);
-            cairo_set_source_rgba(_drawContext,
-                                  curState->curStrokeColor.r,
-                                  curState->curStrokeColor.g,
-                                  curState->curStrokeColor.b,
-                                  curState->curStrokeColor.a);
-            cairo_stroke(_drawContext);
-            break;
-        }
-
-        case kCGTextFillClip:
-        case kCGTextStrokeClip:
-        case kCGTextFillStrokeClip:
-        default:
-            UNIMPLEMENTED_WITH_MSG("Unsupported text drawing mode %d", curState->textDrawingMode);
-            break;
-    }
-
-    cairo_set_font_face(_drawContext, NULL);
-    cairo_font_face_destroy(cairoFace);
-    cairo_restore(_drawContext);
-    cairo_new_path(_drawContext);
-    cairo_append_path(_drawContext, curPath);
-    cairo_path_destroy(curPath);
-
-    IwFree(cairoGlyphs);
-    _CGFontUnlock();
-    UNLOCK_CAIRO();
-
-    return ret;
+    // TODO #924: Implement this with DWrite
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 bool CGContextCairo::CGContextIsPointInPath(bool eoFill, float x, float y) {
@@ -1944,6 +1793,7 @@ bool CGContextCairo::CGContextIsPointInPath(bool eoFill, float x, float y) {
     UNLOCK_CAIRO();
     return returnValue;
 }
+
 CGPathRef CGContextCairo::CGContextCopyPath(void) {
     CGMutablePathRef copyPath = CGPathCreateMutable();
     ObtainLock();
@@ -1975,4 +1825,74 @@ CGPathRef CGContextCairo::CGContextCopyPath(void) {
     }
     cairo_path_destroy(caPath);
     return (CGPathRef)copyPath;
+}
+
+/**
+ * Helper method to render text with the given DWRITE_GLYPH_RUN.
+ *
+ * @parameter glyphRun DWRITE_GLYPH_RUN object to render
+ */
+void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, float lineAscent) {
+    ObtainLock();
+
+    CGContextStrokePath();
+
+    ID2D1RenderTarget* imgRenderTarget = _imgDest->Backing()->GetRenderTarget();
+    THROW_NS_IF_NULL(E_UNEXPECTED, imgRenderTarget);
+
+    // Set the brush color to the current values from the context.
+    D2D1::ColorF brushColor =
+        D2D1::ColorF(curState->curFillColor.r, curState->curFillColor.g, curState->curFillColor.b, curState->curFillColor.a);
+
+    imgRenderTarget->BeginDraw();
+
+    // Apply the required transformations as set in the context.
+    // We need some special handling in transform as CoreText in iOS renders from bottom left but DWrite on Windows does top left.
+    //     1. Scaling - to handle scaling once text has been scaled, apply translation to the scaled height
+    //     2. Rotation - CoreText rotates text anti-clockwise but DWrite performs clockwise rotation
+
+    // Apply the text transformation (text position, text matrix) in text space rather than user space
+    // This means flipping the coordinate system,
+    // and applying the transformation about the center of the glyph run rather than about the baseline
+    // Flip and translate by the difference between the center and the baseline, apply text transforms, then flip and translate back
+
+    // Transform to text space
+    // Technically there should be a horizontal translation to the center as well,
+    // but it's to the center of _each individual glyph_, as the reference platform applies the text matrix to each glyph individually
+    // Uncertain whether it's ever going to be worth it to support this using DWrite, so just ignore it for now
+    CGAffineTransform transform = CGAffineTransformMake(1, 0, 0, -1, 0, -lineAscent / 2.0f);
+
+    // Apply text transforms
+    transform = CGAffineTransformConcat(curState->curTextMatrix, transform);
+
+    // Undo transform to text space
+    transform = CGAffineTransformConcat(CGAffineTransformMake(1, 0, 0, -1, 0, lineAscent / 2.0f), transform);
+
+    // Translate to the drawing point
+    transform = CGAffineTransformTranslate(transform, curState->curTextPosition.x, curState->curTextPosition.y);
+
+    // Find transform that user created by multiplying given transform by necessary transforms to draw with CoreText
+    float height = _imgDest->Backing()->Height();
+    CGAffineTransform userTransform =
+        CGAffineTransformConcat(curState->curTransform, CGAffineTransformMake(1.0f / _scale, 0, 0, 1.0f / _scale, 0, -height / _scale));
+
+    // Apply the context CTM to get total matrix
+    transform = CGAffineTransformConcat(transform, userTransform);
+
+    // Perform anti-clockwise rotation required to match the reference platform.
+    imgRenderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, -transform.b, -transform.c, transform.d, transform.tx, -transform.ty));
+
+    // Draw the glyph using ID2D1RenderTarget
+    ComPtr<ID2D1SolidColorBrush> brush;
+    THROW_IF_FAILED(imgRenderTarget->CreateSolidColorBrush(brushColor, &brush));
+    imgRenderTarget->DrawGlyphRun(D2D1::Point2F(0, 0), glyphRun, brush.Get(), DWRITE_MEASURING_MODE_NATURAL);
+
+    THROW_IF_FAILED(imgRenderTarget->EndDraw());
+}
+
+// TODO 1077:: Remove once D2D render target is implemented
+void CGContextCairo::_CGContextSetScaleFactor(CGFloat scale) {
+    _scale = scale;
+    const float dpi = _scale * 96.0f;
+    _imgDest->Backing()->GetRenderTarget()->SetDpi(dpi, dpi);
 }

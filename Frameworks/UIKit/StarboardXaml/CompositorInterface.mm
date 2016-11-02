@@ -50,6 +50,7 @@
 #import <UWP/WindowsUIViewManagement.h>
 #import <UWP/WindowsDevicesInput.h>
 #import "UIColorInternal.h"
+#import "UIFontInternal.h"
 
 static const wchar_t* TAG = L"CompositorInterface";
 
@@ -164,26 +165,16 @@ public:
             const void* data = NULL;
             bool freeData = false;
             int len = 0;
+            StrongId<NSData> fileData;
 
             switch (img->_imgType) {
                 case CGImageTypePNG: {
                     CGPNGImageBacking* pngImg = (CGPNGImageBacking*)img->Backing();
 
                     if (pngImg->_fileName) {
-                        EbrFile* fpIn;
-                        fpIn = EbrFopen(pngImg->_fileName, "rb");
-                        if (!fpIn) {
-                            FAIL_FAST();
-                        }
-                        EbrFseek(fpIn, 0, SEEK_END);
-                        int fileLen = EbrFtell(fpIn);
-                        EbrFseek(fpIn, 0, SEEK_SET);
-                        void* pngData = (void*)IwMalloc(fileLen);
-                        len = EbrFread(pngData, 1, fileLen, fpIn);
-                        EbrFclose(fpIn);
-
-                        data = pngData;
-                        freeData = true;
+                        fileData.attach([[NSData alloc] initWithContentsOfFile:[NSString stringWithUTF8String:pngImg->_fileName]]);
+                        data = [fileData bytes];
+                        len = [fileData length];
                     } else {
                         data = [(NSData*)pngImg->_data bytes];
                         len = [(NSData*)pngImg->_data length];
@@ -194,20 +185,9 @@ public:
                     CGJPEGImageBacking* jpgImg = (CGJPEGImageBacking*)img->Backing();
 
                     if (jpgImg->_fileName) {
-                        EbrFile* fpIn;
-                        fpIn = EbrFopen(jpgImg->_fileName, "rb");
-                        if (!fpIn) {
-                            FAIL_FAST();
-                        }
-                        EbrFseek(fpIn, 0, SEEK_END);
-                        int fileLen = EbrFtell(fpIn);
-                        EbrFseek(fpIn, 0, SEEK_SET);
-                        void* imgData = (void*)IwMalloc(fileLen);
-                        len = EbrFread(imgData, 1, fileLen, fpIn);
-                        EbrFclose(fpIn);
-
-                        data = imgData;
-                        freeData = true;
+                        fileData.attach([[NSData alloc] initWithContentsOfFile:[NSString stringWithUTF8String:jpgImg->_fileName]]);
+                        data = [fileData bytes];
+                        len = [fileData length];
                     } else {
                         data = [(NSData*)jpgImg->_data bytes];
                         len = [(NSData*)jpgImg->_data length];
@@ -218,9 +198,6 @@ public:
                     break;
             }
             _xamlImage = CreateBitmapFromImageData(data, len);
-            if (freeData) {
-                IwFree((void*)data);
-            }
             return;
         }
         lockPtr = NULL;
@@ -356,7 +333,9 @@ public:
         _isBold = (mask & UIFontDescriptorTraitBold) > 0;
         _isItalic = (mask & UIFontDescriptorTraitItalic) > 0;
         std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(text);
-        ConstructGlyphs([[font fontName] UTF8String], wideBuffer.c_str(), wideBuffer.length());
+
+        // The Font Family names DWrite will return are not always compatible with Xaml
+        ConstructGlyphs(Strings::NarrowToWide<HSTRING>([font _compatibleFamilyName]), wideBuffer.c_str(), wideBuffer.length());
     }
 };
 
@@ -367,11 +346,10 @@ public:
 
     void Completed() {
         id animHandler = _animHandler; // Save in a local for the block to retain.
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [animHandler animationDidStop:TRUE];
-                           [animHandler _removeAnimationsFromLayer];
-                       });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [animHandler animationDidStop:TRUE];
+            [animHandler _removeAnimationsFromLayer];
+        });
     }
 
     DisplayAnimationTransition(id animHandler, NSString* type, NSString* subType) {
@@ -734,11 +712,10 @@ public:
 
     void Completed() {
         id animHandler = _animHandler; // Save in a local for the block to retain.
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [animHandler animationDidStop:TRUE];
-                           [animHandler _removeAnimationsFromLayer];
-                       });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [animHandler animationDidStop:TRUE];
+            [animHandler _removeAnimationsFromLayer];
+        });
     }
 
     DisplayAnimationBasic(id animHandler,

@@ -29,7 +29,7 @@
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{2FC96279-743B-4BAC-B2A0-4B1BA0277699}</ProjectGuid>
+    <ProjectGuid>{B1031B85-9024-407A-8D76-107825391494}</ProjectGuid>
     <RootNamespace>XAMLCatalog</RootNamespace>
     <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
@@ -190,6 +190,7 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
     <AssetCatalogCompile Include="..\..\XAMLCatalog\Assets.xcassets" />
     <ClInclude Include="..\..\XAMLCatalog\AppDelegate.h" />
+    <ClInclude Include="..\..\XAMLCatalog\CustomTextControlViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\MenuTableViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\MiscellaneousViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\ProgrammaticViewController.h" />
@@ -200,6 +201,7 @@
     <ClInclude Include="..\..\XAMLCatalog\UISliderViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UITextFieldViewController.h" />
     <ClangCompile Include="..\..\XAMLCatalog\AppDelegate.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\CustomTextControlViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\MenuTableViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\MiscellaneousViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\ProgrammaticViewController.m" />

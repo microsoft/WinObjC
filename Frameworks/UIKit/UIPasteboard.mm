@@ -14,11 +14,6 @@
 //
 //******************************************************************************
 
-#import <COMIncludes.h>
-#import <windows.storage.streams.h>
-#import "RawBuffer.h"
-#import <COMIncludes_End.h>
-
 #import "Starboard.h"
 #import "UIKit/UIPasteboard.h"
 #import "NSLogging.h"
@@ -27,6 +22,11 @@
 #import "UWP/WindowsApplicationModelDataTransfer.h"
 #import "CGImageInternal.h"
 #import "MobileCoreServices/UTType.h"
+
+#include <COMIncludes.h>
+#import <windows.storage.streams.h>
+#import "RawBuffer.h"
+#include <COMIncludes_End.h>
 
 static const wchar_t* TAG = L"UIPasteboard";
 NSString* const UIPasteboardNameGeneral = @"UIPasteboardNameGeneral";
@@ -283,28 +283,17 @@ WADDataPackageView* _getClipboardContent() {
 
     if (img->_imgType == CGImageTypePNG || img->_imgType == CGImageTypeJPEG) {
         const void* data = NULL;
-        bool freeData = false;
         int len = 0;
+        StrongId<NSData> fileData;
 
         switch (img->_imgType) {
             case CGImageTypePNG: {
                 CGPNGImageBacking* pngImg = (CGPNGImageBacking*)img->Backing();
 
                 if (pngImg->_fileName) {
-                    EbrFile* fpIn;
-                    fpIn = EbrFopen(pngImg->_fileName, "rb");
-                    if (!fpIn) {
-                        FAIL_FAST();
-                    }
-                    EbrFseek(fpIn, 0, SEEK_END);
-                    int fileLen = EbrFtell(fpIn);
-                    EbrFseek(fpIn, 0, SEEK_SET);
-                    void* pngData = (void*)IwMalloc(fileLen);
-                    len = EbrFread(pngData, 1, fileLen, fpIn);
-                    EbrFclose(fpIn);
-
-                    data = pngData;
-                    freeData = true;
+                    fileData.attach([[NSData alloc] initWithContentsOfFile:[NSString stringWithUTF8String:pngImg->_fileName]]);
+                    data = [fileData bytes];
+                    len = [fileData length];
                 } else {
                     data = [(NSData*)pngImg->_data bytes];
                     len = [(NSData*)pngImg->_data length];
@@ -315,20 +304,9 @@ WADDataPackageView* _getClipboardContent() {
                 CGJPEGImageBacking* jpgImg = (CGJPEGImageBacking*)img->Backing();
 
                 if (jpgImg->_fileName) {
-                    EbrFile* fpIn;
-                    fpIn = EbrFopen(jpgImg->_fileName, "rb");
-                    if (!fpIn) {
-                        FAIL_FAST();
-                    }
-                    EbrFseek(fpIn, 0, SEEK_END);
-                    int fileLen = EbrFtell(fpIn);
-                    EbrFseek(fpIn, 0, SEEK_SET);
-                    void* imgData = (void*)IwMalloc(fileLen);
-                    len = EbrFread(imgData, 1, fileLen, fpIn);
-                    EbrFclose(fpIn);
-
-                    data = imgData;
-                    freeData = true;
+                    fileData.attach([[NSData alloc] initWithContentsOfFile:[NSString stringWithUTF8String:jpgImg->_fileName]]);
+                    data = [fileData bytes];
+                    len = [fileData length];
                 } else {
                     data = [(NSData*)jpgImg->_data bytes];
                     len = [(NSData*)jpgImg->_data length];
@@ -341,9 +319,6 @@ WADDataPackageView* _getClipboardContent() {
 
         WSSInMemoryRandomAccessStream* stream = [[WSSInMemoryRandomAccessStream make] autorelease];
         [UIPasteboard _populateStream:stream withData:data withLength:len];
-        if (freeData) {
-            IwFree((void*)data);
-        }
         return stream;
     }
     return nil;

@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT
 #define OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_ONLINEID_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Security_Authentication_OnlineId.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

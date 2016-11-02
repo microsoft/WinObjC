@@ -18,7 +18,6 @@
 #include "UIKit/UIColor.h"
 #include "Foundation/NSString.h"
 #include "CoreGraphics/CGContext.h"
-#include "CGFontInternal.h"
 #include "CGContextInternal.h"
 #include "QuartzCore/CATextLayer.h"
 #include "CALayerInternal.h"
