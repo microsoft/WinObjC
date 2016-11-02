@@ -561,17 +561,9 @@ void DisplayTextureXamlGlyphs::ConstructGlyphs(const Microsoft::WRL::Wrappers::H
     textControl->Foreground = ref new Windows::UI::Xaml::Media::SolidColorBrush(textColor);
     textControl->FontFamily = ref new Windows::UI::Xaml::Media::FontFamily(reinterpret_cast<Platform::String^>(fontFamilyName.Get()));
 
-    if (_isBold) {
-        textControl->FontWeight = Windows::UI::Text::FontWeights::Bold;
-    } else {
-        textControl->FontWeight = Windows::UI::Text::FontWeights::Normal;
-    }
-
-    if (_isItalic) {
-        textControl->FontStyle = Windows::UI::Text::FontStyle::Italic;
-    } else {
-        textControl->FontStyle = Windows::UI::Text::FontStyle::Normal;
-    }
+    textControl->FontWeight = Windows::UI::Text::FontWeight{ static_cast<unsigned short>(_fontWeight) };
+    textControl->FontStretch = static_cast<Windows::UI::Text::FontStretch>(_fontStretch);
+    textControl->FontStyle = static_cast<Windows::UI::Text::FontStyle>(_fontStyle);
 
     switch (_horzAlignment) {
         case alignLeft:

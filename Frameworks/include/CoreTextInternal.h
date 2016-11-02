@@ -150,3 +150,6 @@ CORETEXT_EXTERNC_END
 
 // Private helper methods for UIKit
 CORETEXT_EXPORT CGSize _CTFrameGetSize(CTFrameRef frame);
+CORETEXT_EXPORT DWRITE_FONT_WEIGHT _CTFontGetDWriteWeight(CTFontRef font);
+CORETEXT_EXPORT DWRITE_FONT_STRETCH _CTFontGetDWriteStretch(CTFontRef font);
+CORETEXT_EXPORT DWRITE_FONT_STYLE _CTFontGetDWriteStyle(CTFontRef font);
