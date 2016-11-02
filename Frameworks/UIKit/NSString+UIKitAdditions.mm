@@ -104,10 +104,7 @@ static void drawString(UIFont* font,
     for (size_t i = 0; i < origins.size(); ++i) {
         // Need to set text position so each line will be drawn in the correct position relative to each other
         // Y positions will be negative because we are drawing with the coordinate system flipped to what CoreText is expecting
-        // Translated down by lineheight (ascent - descent + leading) to set origin in the correct position
-        CGFloat ascent, descent, leading;
-        CTLineGetTypographicBounds(static_cast<CTLineRef>(lines[i]), &ascent, &descent, &leading);
-        CGContextSetTextPosition(context, rect.origin.x + origins[i].x, -(rect.origin.y + origins[i].y + ascent - descent + leading));
+        CGContextSetTextPosition(context, rect.origin.x + origins[i].x, -(rect.origin.y + origins[i].y));
         CTLineDraw(static_cast<CTLineRef>(lines[i]), context);
     }
 

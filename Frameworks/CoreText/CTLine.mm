@@ -215,38 +215,26 @@ CTLineRef CTLineCreateJustifiedLine(CTLineRef line, CGFloat justificationFactor,
     return StubReturn();
 }
 
-void _CTLineDraw(CTLineRef lineRef, CGContextRef ctx, bool adjustTextPosition) {
-    if (!lineRef) {
+/**
+ @Status Interoperable
+*/
+void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
+    if (lineRef == nil || ctx == nil) {
         return;
     }
 
     _CTLine* line = static_cast<_CTLine*>(lineRef);
-    CGPoint curTextPos = {};
-    if (adjustTextPosition) {
-        curTextPos = CGContextGetTextPosition(ctx);
-        CGContextSetTextPosition(ctx, curTextPos.x, curTextPos.y + line->_relativeYOffset);
-    }
 
     for (size_t i = 0; i < [line->_runs count]; ++i) {
         _CTRun* curRun = [line->_runs objectAtIndex:i];
         if (i > 0) {
             // Adjusts x position relative to the last run drawn
-            curTextPos = CGContextGetTextPosition(ctx);
+            CGPoint curTextPos = CGContextGetTextPosition(ctx);
             CGContextSetTextPosition(ctx, curTextPos.x + curRun->_relativeXOffset, curTextPos.y);
         }
 
-        // Get height of the line so we draw with the correct baseline for each run
-        CGFloat ascent;
-        CTLineGetTypographicBounds(lineRef, &ascent, nullptr, nullptr);
-        _CTRunDraw(static_cast<CTRunRef>(curRun), ctx, CFRange{}, false, ascent);
+        CTRunDraw(static_cast<CTRunRef>(curRun), ctx, CFRange{});
     }
-}
-
-/**
- @Status Interoperable
-*/
-void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
-    _CTLineDraw(lineRef, ctx, true);
 }
 
 /**
