@@ -18,6 +18,8 @@
 #import <CoreText/CTParagraphStyle.h>
 #import <CoreText/CoreText.h>
 
+const static float c_errorDelta = 0.001f;
+
 TEST(CoreText, CTParagraphStyle) {
     CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(nullptr, 0);
     ASSERT_TRUE_MSG(paragraphStyle != nullptr, "FAILED: Could not create paragraph style");
@@ -91,7 +93,6 @@ TEST(CoreText, CTParagraphStyle) {
 }
 
 TEST(CoreText, KernAttribute) {
-    const static float c_errorDelta = 0.001f;
     const static float c_diff = 2.0f;
     NSMutableAttributedString* string = [[[NSMutableAttributedString alloc] initWithString:@"TESTTESTTEST"] autorelease];
     [string setAttributes:@{ static_cast<NSString*>(kCTKernAttributeName) : [NSNumber numberWithFloat:0.0f] } range:NSMakeRange(0, 4)];
@@ -121,57 +122,50 @@ TEST(CoreText, KernAttribute) {
     EXPECT_NEAR(thirdAdvances[3].width, firstAdvances[3].width - c_diff, c_errorDelta);
 }
 
-TEST(CoreText, LineSpaceMultiple) {
-    const static float c_errorDelta = 0.001f;
-    CGPathRef path = CGPathCreateWithRect(CGRectMake(0, 0, FLT_MAX, FLT_MAX), nullptr);
+class CoreTextLineSpaceMultipleTest : public ::testing::TestWithParam<CGFloat> {
+protected:
+    virtual void SetUp() {
+        NSMutableAttributedString* normalString = [[[NSMutableAttributedString alloc] initWithString:@"TEST\nTEST\nTEST"] autorelease];
+        CTFramesetterRef normalFramesetter = CTFramesetterCreateWithAttributedString(static_cast<CFAttributedStringRef>(normalString));
+        CFAutorelease(normalFramesetter);
+        path = CGPathCreateWithRect(CGRectMake(0, 0, FLT_MAX, FLT_MAX), nullptr);
+        CTFrameRef normalFrame = CTFramesetterCreateFrame(normalFramesetter, {}, path, nullptr);
+        CFAutorelease(normalFrame);
+        CGPoint normalOrigins[3];
+        CTFrameGetLineOrigins(normalFrame, {}, normalOrigins);
+        normalLineSpaceFirst = normalOrigins[1].y - normalOrigins[0].y;
+        normalLineSpaceSecond = normalOrigins[2].y - normalOrigins[0].y;
+    }
 
-    NSMutableAttributedString* normalString = [[[NSMutableAttributedString alloc] initWithString:@"TEST\nTEST\nTEST"] autorelease];
-    CTFramesetterRef normalFramesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)normalString);
-    CFAutorelease(normalFramesetter);
-    CTFrameRef normalFrame = CTFramesetterCreateFrame(normalFramesetter, {}, path, nullptr);
-    CFAutorelease(normalFrame);
-    CGPoint normalOrigins[3];
-    CTFrameGetLineOrigins(normalFrame, {}, normalOrigins);
-    const float normalLineSpaceFirst = normalOrigins[1].y - normalOrigins[0].y;
-    const float normalLineSpaceSecond = normalOrigins[2].y - normalOrigins[0].y;
+    virtual void TearDown() {
+        CGPathRelease(path);
+    }
 
-    NSMutableAttributedString* doubleString = [[[NSMutableAttributedString alloc] initWithString:@"TEST\nTEST\nTEST"] autorelease];
-    CGFloat twice = 2.0f;
+public:
+    CGFloat normalLineSpaceFirst = 0;
+    CGFloat normalLineSpaceSecond = 0;
+    CGPathRef path;
+};
+
+TEST_P(CoreTextLineSpaceMultipleTest, OriginsShouldBeMovedByRatio) {
+    NSMutableAttributedString* multipleString = [[[NSMutableAttributedString alloc] initWithString:@"TEST\nTEST\nTEST"] autorelease];
+    CGFloat param = GetParam();
     CTParagraphStyleSetting settings[1] = {
-        {.spec = kCTParagraphStyleSpecifierLineHeightMultiple, .valueSize = sizeof(CGFloat), .value = &twice }
+        {.spec = kCTParagraphStyleSpecifierLineHeightMultiple, .valueSize = sizeof(CGFloat), .value = &param }
     };
-    [doubleString setAttributes:@{
-        static_cast<NSString*>(kCTParagraphStyleAttributeName) : (id)CTParagraphStyleCreate(settings, 1)
-    }
-                          range:NSMakeRange(0, 14)];
+    NSDictionary* attributes = @{ static_cast<NSString*>(kCTParagraphStyleAttributeName) : (id)CTParagraphStyleCreate(settings, 1) };
+    [multipleString setAttributes:attributes range:NSMakeRange(0, 14)];
 
-    CTFramesetterRef doubleFramesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)doubleString);
-    CFAutorelease(doubleFramesetter);
-    CTFrameRef doubleFrame = CTFramesetterCreateFrame(doubleFramesetter, {}, path, nullptr);
-    CFAutorelease(doubleFrame);
-    CGPoint doubleOrigins[3];
-    CTFrameGetLineOrigins(doubleFrame, {}, doubleOrigins);
-    EXPECT_NEAR(twice * normalLineSpaceFirst, doubleOrigins[1].y - doubleOrigins[0].y, c_errorDelta);
-    EXPECT_NEAR(twice * normalLineSpaceSecond, doubleOrigins[2].y - doubleOrigins[0].y, c_errorDelta);
-
-    NSMutableAttributedString* halfString = [[[NSMutableAttributedString alloc] initWithString:@"TEST\nTEST\nTEST"] autorelease];
-    CGFloat half = 0.5f;
-    CTParagraphStyleSetting halfSettings[1] = {
-        {.spec = kCTParagraphStyleSpecifierLineHeightMultiple, .valueSize = sizeof(CGFloat), .value = &half }
-    };
-    [halfString setAttributes:@{
-        static_cast<NSString*>(kCTParagraphStyleAttributeName) : (id)CTParagraphStyleCreate(halfSettings, 1)
-    }
-                        range:NSMakeRange(0, 14)];
-
-    CTFramesetterRef halfFramesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)halfString);
-    CFAutorelease(halfFramesetter);
-    CTFrameRef halfFrame = CTFramesetterCreateFrame(halfFramesetter, {}, path, nullptr);
-    CFAutorelease(halfFrame);
-    CGPoint halfOrigins[3];
-    CTFrameGetLineOrigins(halfFrame, {}, halfOrigins);
-    EXPECT_NEAR(half * normalLineSpaceFirst, halfOrigins[1].y - halfOrigins[0].y, c_errorDelta);
-    EXPECT_NEAR(half * normalLineSpaceSecond, halfOrigins[2].y - halfOrigins[0].y, c_errorDelta);
-
-    CGPathRelease(path);
+    CTFramesetterRef multipleFramesetter = CTFramesetterCreateWithAttributedString(static_cast<CFAttributedStringRef>(multipleString));
+    CFAutorelease(multipleFramesetter);
+    CTFrameRef multipleFrame = CTFramesetterCreateFrame(multipleFramesetter, {}, path, nullptr);
+    CFAutorelease(multipleFrame);
+    CGPoint multipleOrigins[3];
+    CTFrameGetLineOrigins(multipleFrame, {}, multipleOrigins);
+    EXPECT_NEAR(param * normalLineSpaceFirst, multipleOrigins[1].y - multipleOrigins[0].y, c_errorDelta);
+    EXPECT_NEAR(param * normalLineSpaceSecond, multipleOrigins[2].y - multipleOrigins[0].y, c_errorDelta);
 }
+
+INSTANTIATE_TEST_CASE_P(OriginsShouldBeMovedByRatio,
+                        CoreTextLineSpaceMultipleTest,
+                        ::testing::Values(0.5, 1.0, 1.5, 2.0, 4.0, 16.0, 255.9));

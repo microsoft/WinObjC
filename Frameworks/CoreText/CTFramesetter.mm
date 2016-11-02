@@ -38,34 +38,37 @@ static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameSize, CF
     _CTFrame* ret = _DWriteGetFrame(static_cast<CFAttributedStringRef>(typesetter->_attributedString.get()), range, frameSize);
 
     // Trying to access attributes without any text with throw an error
-    if (range.length != 0L) {
-        CTParagraphStyleRef settings =
-            static_cast<CTParagraphStyleRef>([typesetter->_attributedString attribute:static_cast<NSString*>(kCTParagraphStyleAttributeName)
-                                                                              atIndex:0
-                                                                       effectiveRange:nullptr]);
-        if (settings) {
-            // DWrite only gives manual control of lineheight when it is constant through a frame
-            // We need to shift each line by the difference in lineheight manually
-            CGFloat lineHeightMultiple = 0.0f;
-            if (CTParagraphStyleGetValueForSpecifier(settings,
-                                                     kCTParagraphStyleSpecifierLineHeightMultiple,
-                                                     sizeof(lineHeightMultiple),
-                                                     &lineHeightMultiple) &&
-                lineHeightMultiple > 0) {
-                // The actual ratio we need to change the line height by is multiple - 1
-                lineHeightMultiple -= 1.0f;
-                CGFloat totalShifted = 0.0f;
-                CGFloat lastOriginY = frameSize.origin.y;
-                for (size_t i = 0; i < ret->_lineOrigins.size(); ++i) {
-                    totalShifted += lineHeightMultiple * (ret->_lineOrigins[i].y - lastOriginY);
-                    lastOriginY = ret->_lineOrigins[i].y;
-                    ret->_lineOrigins[i].y += totalShifted;
-                }
+    if (range.length <= 0L) {
+        return [ret retain];
+    }
 
-                // Adjust framesize to account for changes in lineheights
-                ret->_frameRect.size.height += totalShifted;
-            }
+    CTParagraphStyleRef settings = static_cast<CTParagraphStyleRef>(
+        [typesetter->_attributedString attribute:static_cast<NSString*>(kCTParagraphStyleAttributeName) atIndex:0 effectiveRange:nullptr]);
+
+    if (settings == nil) {
+        return [ret retain];
+    }
+
+    // DWrite only gives manual control of lineheight when it is constant through a frame
+    // We need to shift each line by the difference in lineheight manually
+    CGFloat lineHeightMultiple = 0.0f;
+    if (CTParagraphStyleGetValueForSpecifier(settings,
+                                             kCTParagraphStyleSpecifierLineHeightMultiple,
+                                             sizeof(lineHeightMultiple),
+                                             &lineHeightMultiple) &&
+        lineHeightMultiple > 0) {
+        // The actual ratio we need to change the line height by is lineHeightMultiple - 1
+        lineHeightMultiple -= 1.0f;
+        CGFloat totalShifted = 0.0f;
+        CGFloat lastOriginY = frameSize.origin.y;
+        for (size_t i = 0; i < ret->_lineOrigins.size(); ++i) {
+            totalShifted += lineHeightMultiple * (ret->_lineOrigins[i].y - lastOriginY);
+            lastOriginY = ret->_lineOrigins[i].y;
+            ret->_lineOrigins[i].y += totalShifted;
         }
+
+        // Adjust framesize to account for changes in lineheights
+        ret->_frameRect.size.height += totalShifted;
     }
 
     return [ret retain];
