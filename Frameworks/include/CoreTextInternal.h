@@ -77,7 +77,6 @@ inline void _SafeRelease(T** p) {
 @interface _CTLine : NSObject {
 @public
     CFRange _strRange;
-    CGPoint _lineOrigin;
     CGFloat _relativeXOffset;
     CGFloat _relativeYOffset;
     CGFloat _width;
