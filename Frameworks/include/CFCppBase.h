@@ -27,22 +27,15 @@
  * - Inheritance is somewhat fiddly and difficult to pull off.
  *
  * Details:
- * CppBase<NewCFType, NewCFTypeImpl[, parent]>
- * NewCFType: The name of the CF type inheriting CppBase.
- * NewCFTypeImpl: The inner struct or class containing NewCFType's members.
- * parent: Optional parent CF type that also derives CppBase.
- *
- * The Impl's lifetime is managed automatically.
- * It can be accessed by reference via .Impl().
+ * CppBase<NewType[, Parent]>
+ * NewType: The name of the CF type deriving CppBase.
+ * Parent: Optional parent CF type that also derives CppBase.
  *
  * Use:
- * struct CFXImpl {
- *     // implementation details for CFX go in here.
+ *
+ * struct CFX: CoreFoundation::CppBase<CFX> {
  *     int a;
  * };
- *
- * struct CFX: CoreFoundation::CppBase<CFX, CFXImpl> { };
- * // Do not populate CFX with any members. Helper functions are okay.
  *
  * CF_EXPORT CFXGetTypeID() {
  *     return CFX::GetTypeID();
@@ -53,10 +46,21 @@
  * }
  *
  * CF_EXPORT CFXGetA(CFXRef x) {
- *     return x->Impl().a;
+ *     return x->a;
  *     // or, with the appropriate helper function,
  *     return x->A();
  * }
+ *
+ * Use with Inheritance:
+ *
+ * struct CFSubX: CoreFoundation::CppBase<CFSubX, CFX> {
+ *     // Optional Constructor
+ *     // NOTE: This is a literal "Parent". CppBase provides it as a convenience.
+ *     CFSubX(int test): Parent(...) { }
+ * };
+ *
+ * // To pass arguments to the CFSubX constructor,
+ * CFSubX::CreateInstance(kCFAllocatorDefault, 1024);
  */
 
 #include <CFRuntime.h>
@@ -66,39 +70,18 @@
 #include <new>
 
 namespace CoreFoundation {
-namespace Details {
-struct Nothing {};
-
-template <typename P>
-struct CppBaseImpl : P {};
-
-template <>
-struct CppBaseImpl<Details::Nothing> : __CFRuntimeBase {
-    static inline void _CFInit(CFTypeRef cf) {
-    }
-    static inline void _CFFinalize(CFTypeRef cf) {
-    }
-};
-}
-
-template <typename T, typename TImpl, typename _Parent = Details::Nothing>
-struct CppBase : Details::CppBaseImpl<_Parent> {
-private:
-    using Parent = Details::CppBaseImpl<_Parent>;
-
+template <typename T, typename _Parent = __CFRuntimeBase>
+struct CppBase : _Parent {
 protected:
-    static void _CFInit(CFTypeRef cf) {
-        Parent::_CFInit(cf);
-
-        T* t = reinterpret_cast<T*>(const_cast<void*>(cf));
-        new (std::addressof(t->_impl)) TImpl();
-    }
-
     static void _CFFinalize(CFTypeRef cf) {
         T* t = reinterpret_cast<T*>(const_cast<void*>(cf));
-        t->_impl.~TImpl();
+        t->~T();
+    }
 
-        Parent::_CFFinalize(cf);
+    using Parent = CppBase;
+
+    template <typename... Args>
+    CppBase(Args&&... args) : _Parent(std::forward<Args>(args)...) {
     }
 
 public:
@@ -106,7 +89,7 @@ public:
         static __CFRuntimeClass _cls{
             0, // Version
             typeid(T).name(), // Class Name
-            &_CFInit, // Init
+            nullptr, // Init
             nullptr, // Copy (ill-defined for CF)
             &_CFFinalize, // Finalize
             nullptr, // Equals
@@ -118,15 +101,21 @@ public:
         return _id;
     }
 
-    static T* CreateInstance(CFAllocatorRef allocator = kCFAllocatorDefault) {
-        return reinterpret_cast<T*>(
+    template <typename... Args>
+    static T* CreateInstance(CFAllocatorRef allocator, Args&&... args) {
+        static_assert(!std::is_polymorphic<T>::value,
+                      "CoreFoundation::CppBase cannot be used with polymorphic types or classes bearing virtual functions.");
+        T* ret = reinterpret_cast<T*>(
             const_cast<void*>(_CFRuntimeCreateInstance(allocator, GetTypeID(), sizeof(T) - sizeof(__CFRuntimeBase), nullptr)));
+        __CFRuntimeBase temp = *(__CFRuntimeBase*)ret;
+        new (ret) T(std::forward<Args>(args)...);
+        *(__CFRuntimeBase*)ret = temp;
+        return ret;
     }
 
-    TImpl _impl;
-
-    inline TImpl& Impl() {
-        return _impl;
+    // Sad no-args version because you can't default the first param of many ;P
+    static T* CreateInstance() {
+        return CreateInstance(kCFAllocatorDefault);
     }
 };
 }
