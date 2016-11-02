@@ -142,11 +142,5 @@ struct _CTParagraphStyleProperties {
 }
 @end
 
-// Note: For some reason namemangling does not happen for these functions causing a linker error. Bug??
-CORETEXT_EXTERNC_BEGIN
-void _CTLineDraw(CTLineRef line, CGContextRef ctx, bool adjustTextPosition);
-void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTextPosition, CGFloat lineAscent);
-CORETEXT_EXTERNC_END
-
 // Private helper methods for UIKit
 CORETEXT_EXPORT CGSize _CTFrameGetSize(CTFrameRef frame);
