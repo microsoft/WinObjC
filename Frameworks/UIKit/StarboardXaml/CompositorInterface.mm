@@ -329,9 +329,10 @@ public:
         _centerVertically = centerVertically;
         _lineHeight = [font ascender] - [font descender];
 
-        int mask = [font fontDescriptor].symbolicTraits;
-        _isBold = (mask & UIFontDescriptorTraitBold) > 0;
-        _isItalic = (mask & UIFontDescriptorTraitItalic) > 0;
+        _fontWeight = [font _fontWeight];
+        _fontStretch = [font _fontStretch];
+        _fontStyle = [font _fontStyle];
+
         std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(text);
 
         // The Font Family names DWrite will return are not always compatible with Xaml
