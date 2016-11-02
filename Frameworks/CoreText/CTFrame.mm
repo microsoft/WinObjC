@@ -62,7 +62,7 @@ CFRange CTFrameGetVisibleStringRange(CTFrameRef frame) {
     CFIndex count = 0;
     if (framePtr) {
         for (size_t i = 0; i < framePtr->_lineOrigins.size(); ++i) {
-            if (framePtr->_lineOrigins[i].y < framePtr->_frameRect.size.height && framePtr->_lineOrigins[i].y > 0) {
+            if (framePtr->_lineOrigins[i].y < framePtr->_frameRect.size.height) {
                 _CTLine* line = static_cast<_CTLine*>([framePtr->_lines objectAtIndex:i]);
                 count += line->_strRange.length;
             }
