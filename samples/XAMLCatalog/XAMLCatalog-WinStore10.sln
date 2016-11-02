@@ -2,9 +2,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XAMLCatalog", "XAMLCatalog", "{9BCE65B8-DF97-44A9-8BD7-66D108647C5B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XAMLCatalog", "XAMLCatalog", "{126EC4E6-1204-4FE2-8CCB-5F0C07B493A7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XAMLCatalog", "XAMLCatalog.vsimporter\XAMLCatalog-WinStore10\XAMLCatalog.vcxproj", "{2FC96279-743B-4BAC-B2A0-4B1BA0277699}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XAMLCatalog", "XAMLCatalog.vsimporter\XAMLCatalog-WinStore10\XAMLCatalog.vcxproj", "{B1031B85-9024-407A-8D76-107825391494}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -16,23 +16,23 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Debug|ARM.ActiveCfg = Debug|ARM
-		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Debug|ARM.Build.0 = Debug|ARM
-		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Debug|ARM.Deploy.0 = Debug|ARM
-		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Debug|Win32.ActiveCfg = Debug|Win32
-		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Debug|Win32.Build.0 = Debug|Win32
-		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Debug|Win32.Deploy.0 = Debug|Win32
-		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Release|ARM.ActiveCfg = Release|ARM
-		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Release|ARM.Build.0 = Release|ARM
-		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Release|ARM.Deploy.0 = Release|ARM
-		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Release|Win32.ActiveCfg = Release|Win32
-		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Release|Win32.Build.0 = Release|Win32
-		{2FC96279-743B-4BAC-B2A0-4B1BA0277699}.Release|Win32.Deploy.0 = Release|Win32
+		{B1031B85-9024-407A-8D76-107825391494}.Debug|ARM.ActiveCfg = Debug|ARM
+		{B1031B85-9024-407A-8D76-107825391494}.Debug|ARM.Build.0 = Debug|ARM
+		{B1031B85-9024-407A-8D76-107825391494}.Debug|ARM.Deploy.0 = Debug|ARM
+		{B1031B85-9024-407A-8D76-107825391494}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B1031B85-9024-407A-8D76-107825391494}.Debug|Win32.Build.0 = Debug|Win32
+		{B1031B85-9024-407A-8D76-107825391494}.Debug|Win32.Deploy.0 = Debug|Win32
+		{B1031B85-9024-407A-8D76-107825391494}.Release|ARM.ActiveCfg = Release|ARM
+		{B1031B85-9024-407A-8D76-107825391494}.Release|ARM.Build.0 = Release|ARM
+		{B1031B85-9024-407A-8D76-107825391494}.Release|ARM.Deploy.0 = Release|ARM
+		{B1031B85-9024-407A-8D76-107825391494}.Release|Win32.ActiveCfg = Release|Win32
+		{B1031B85-9024-407A-8D76-107825391494}.Release|Win32.Build.0 = Release|Win32
+		{B1031B85-9024-407A-8D76-107825391494}.Release|Win32.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{2FC96279-743B-4BAC-B2A0-4B1BA0277699} = {9BCE65B8-DF97-44A9-8BD7-66D108647C5B}
+		{B1031B85-9024-407A-8D76-107825391494} = {126EC4E6-1204-4FE2-8CCB-5F0C07B493A7}
 	EndGlobalSection
 EndGlobal
