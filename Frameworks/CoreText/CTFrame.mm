@@ -61,8 +61,9 @@ CFRange CTFrameGetVisibleStringRange(CTFrameRef frame) {
     _CTFrame* framePtr = static_cast<_CTFrame*>(frame);
     CFIndex count = 0;
     if (framePtr) {
-        for (_CTLine* line in static_cast<id<NSFastEnumeration>>(framePtr->_lines)) {
-            if (line->_lineOrigin.y < framePtr->_frameRect.size.height && line->_lineOrigin.y > 0) {
+        for (size_t i = 0; i < framePtr->_lineOrigins.size(); ++i) {
+            if (framePtr->_lineOrigins[i].y < framePtr->_frameRect.size.height && framePtr->_lineOrigins[i].y > 0) {
+                _CTLine* line = static_cast<_CTLine*>([framePtr->_lines objectAtIndex:i]);
                 count += line->_strRange.length;
             }
         }
@@ -121,10 +122,10 @@ void CTFrameDraw(CTFrameRef frameRef, CGContextRef ctx) {
         CGContextSetTextMatrix(ctx, CGAffineTransformScale(textMatrix, 1.0f, -1.0f));
         CGContextScaleCTM(ctx, 1.0f, -1.0f);
 
-        for (_CTLine* line in static_cast<id<NSFastEnumeration>>(frame->_lines)) {
-            // Y position must be negative because the context is inverted
-            CGContextSetTextPosition(ctx, line->_lineOrigin.x, -line->_lineOrigin.y);
-            CTLineDraw(static_cast<CTLineRef>(line), ctx);
+        for (size_t i = 0; i < frame->_lineOrigins.size(); ++i) {
+            _CTLine* line = static_cast<_CTLine*>([frame->_lines objectAtIndex:i]);
+            CGContextSetTextPosition(ctx, frame->_lineOrigins[i].x, -frame->_lineOrigins[i].y);
+            _CTLineDraw(static_cast<CTLineRef>(line), ctx, false);
         }
 
         // Restore CTM and Text Matrix to values before we modified them
