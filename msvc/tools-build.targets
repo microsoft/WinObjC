@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask TaskName="GenVersionFiles" AssemblyFile="GenVersionFiles.dll"/>
+
+  <PropertyGroup>
+    <WinObjCVersionFile>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', '..\build\winobjc.version'))</WinObjCVersionFile>
+    <SharedVersionHeaderDir>$(IntermediateOutputPath)</SharedVersionHeaderDir>
+    <SharedHeaderFile Condition="'$(ProjectExt)' == '.csproj'">$(SharedVersionHeaderDir)\SharedAssemblyInfo.cs</SharedHeaderFile>
+    <SharedHeaderFile Condition="'$(ProjectExt)' == '.vcxproj'">$(SharedVersionHeaderDir)\SharedVersion.h</SharedHeaderFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BuildDependsOn Condition="'$(ProjectExt)' == '.csproj'">GenSharedAssemblyFile;$(BuildDependsOn);</BuildDependsOn>
+    <BuildDependsOn Condition="'$(ProjectExt)' == '.vcxproj'">GenSharedHeaderFile;$(BuildDependsOn);</BuildDependsOn>
+  </PropertyGroup>
+
+  <Target Name="MakeSharedVersionHeaderDir" >
+    <MakeDir Directories="$(SharedVersionHeaderDir)" />
+  </Target>
+
+  <Target
+    Name="GenSharedAssemblyFile"
+    Inputs="$(WinObjCVersionFile)"
+    Outputs="$(SharedHeaderFile)"
+    DependsOnTargets="MakeSharedVersionHeaderDir">
+
+    <Message Importance="High" Text="Generating $([System.IO.Path]::GetFileName('$(SharedHeaderFile)'))" />
+
+    <GenVersionFiles
+      VersionFile="$(WinObjCVersionFile)"
+      SharedHeaderFile="$(SharedHeaderFile)" />
+
+    <ItemGroup>
+      <Compile Include="$(SharedHeaderFile)" />
+    </ItemGroup>
+
+  </Target>
+
+  <Target
+    Name="GenSharedHeaderFile"
+    Inputs="$(WinObjCVersionFile)"
+    Outputs="$(SharedHeaderFile)"
+    DependsOnTargets="MakeSharedVersionHeaderDir">
+
+    <Message Importance="High" Text="Generating $([System.IO.Path]::GetFileName('$(SharedHeaderFile)'))" />
+
+    <GenVersionFiles
+      VersionFile="$(WinObjCVersionFile)"
+      SharedHeaderFile="$(SharedHeaderFile)" />
+
+    <ItemGroup>
+      <ResourceCompile>
+        <AdditionalIncludeDirectories>$(SharedVersionHeaderDir);%(ResourceCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      </ResourceCompile>
+    </ItemGroup>
+
+  </Target>
+
+  <PropertyGroup>
+    <CleanDependsOn>CleanVersionFile;$(CleanDependsOn);</CleanDependsOn>
+  </PropertyGroup>
+
+  <Target Name="CleanVersionFile">
+    <Delete Files="$(SharedHeaderFile)" />
+  </Target>
+
+</Project>

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -22,7 +22,7 @@
 @implementation NSTextContainer {
     CGSize _size;
     NSLayoutManager* _layoutManager;
-    idretaintype(NSArray) _exclusionPaths;
+    StrongId<NSArray> _exclusionPaths;
 }
 
 /**
@@ -64,8 +64,9 @@
 
 /**
  @Status Caveat
-
- @Notes reaminingRect parameter is not supported
+ @Notes writingDirection and atIndex parameters are ignored
+ TODO::1123 This needs to handle multiple exclusion zones properly when creating remainingRect
+            Currently processing exclusion zones left-to-right fails to calculate properly
 */
 
 - (CGRect)lineFragmentRectForProposedRect:(CGRect)proposed
@@ -79,6 +80,17 @@
         for (UIBezierPath* path in(NSArray*)_exclusionPaths) {
             CGRect shapeRect = _CGPathFitRect(path.CGPath, ret, _size, self.lineFragmentPadding);
             ret = CGRectIntersection(shapeRect, ret);
+        }
+
+        if (remainingRect) {
+            *remainingRect = CGRectMake(ret.origin.x + ret.size.width + self.lineFragmentPadding,
+                                        ret.origin.y,
+                                        _size.width - ret.origin.x - ret.size.width,
+                                        ret.size.height);
+            for (UIBezierPath* path in(NSArray*)_exclusionPaths) {
+                CGRect shapeRect = _CGPathFitRect(path.CGPath, *remainingRect, _size, self.lineFragmentPadding);
+                *remainingRect = CGRectIntersection(shapeRect, *remainingRect);
+            }
         }
     }
 

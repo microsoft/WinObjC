@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -19,51 +19,80 @@
 #import <CoreText/CTParagraphStyle.h>
 
 #import "Starboard.h"
-#include <vector>
+#include <COMIncludes.h>
+#import <DWrite.h>
+#import <wrl/client.h>
+#include <COMIncludes_End.h>
+#import <vector>
+#import <algorithm>
+
+// Helper method for validating range and copying internal data to given outData
+template <typename T>
+void _boundedCopy(CFRange range, CFIndex size, const T inData[], T outData[]) {
+    if (inData && outData && range.location >= 0L && range.length >= 0L && range.location + range.length <= size) {
+        if (range.length == 0L) {
+            range.length = size - range.location;
+        }
+
+        memcpy(outData, inData + range.location, sizeof(T) * range.length);
+    }
+}
+
+template <typename T>
+inline void _SafeRelease(T** p) {
+    if ((*p) != nullptr) {
+        (*p)->Release();
+        *p = nullptr;
+    }
+}
 
 @interface _CTTypesetter : NSObject {
 @public
-    NSAttributedString* _attributedString;
-    NSString* _string;
-    WORD* _characters;
-    CFIndex _charactersLen;
+    StrongId<NSAttributedString> _attributedString;
+    StrongId<NSString> _string;
+    std::vector<WORD> _characters;
 }
 @end
 
-@interface _CTFrameSetter : NSObject {
+@interface _CTFramesetter : NSObject {
 @public
-    idretaintype(_CTTypesetter) _typesetter;
-}
-@end
-
-@interface _CTFrame : NSObject {
-@public
-    _CTFrameSetter* _frameSetter;
-    CGRect _frameRect;
-    CGSize _totalSize;
-    idretaintype(NSMutableArray) _lines;
-    std::vector<CGPoint> _lineOrigins;
-}
-@end
-
-@interface _CTLine : NSObject {
-@public
-    NSRange _strRange;
-    CGFloat _width;
-    CGFloat _ascent, _descent, _leading;
-    idretaintype(NSMutableArray) _runs;
+    StrongId<_CTTypesetter> _typesetter;
 }
 @end
 
 @interface _CTRun : NSObject {
 @public
-    idretaintype(NSMutableDictionary) _attributes;
+    StrongId<NSMutableDictionary<NSString*, id>> _attributes;
     CFRange _range;
-    float _xPos;
-    idretaintype(NSString) _stringFragment;
-    std::vector<CGPoint> _glyphOrigins;
+    StrongId<NSString> _stringFragment;
+    DWRITE_GLYPH_RUN _dwriteGlyphRun;
+    std::vector<CFIndex> _stringIndices;
+    CGFloat _relativeXOffset;
+    CGFloat _relativeYOffset;
     std::vector<CGSize> _glyphAdvances;
-    std::vector<WORD> _characters;
+    std::vector<CGPoint> _glyphOrigins;
+}
+@end
+
+@interface _CTLine : NSObject {
+@public
+    CFRange _strRange;
+    CGPoint _lineOrigin;
+    CGFloat _relativeXOffset;
+    CGFloat _relativeYOffset;
+    CGFloat _width;
+    NSUInteger _glyphCount;
+    StrongId<NSMutableArray<_CTRun*>> _runs;
+    CGFloat _ascent, _descent, _leading;
+}
+@end
+
+@interface _CTFrame : NSObject {
+@public
+    CGRect _frameRect;
+    woc::unique_cf<CGPathRef> _path;
+    std::vector<CGPoint> _lineOrigins;
+    StrongId<NSMutableArray<_CTLine*>> _lines;
 }
 @end
 
@@ -113,7 +142,8 @@ struct _CTParagraphStyleProperties {
 }
 @end
 
-typedef float (*WidthFinderFunc)(void* opaque, CFIndex idx, float offset, float height);
-
-CORETEXT_EXPORT CFIndex _CTTypesetterSuggestLineBreakWithOffsetAndCallback(
-    CTTypesetterRef ts, CFIndex index, double offset, WidthFinderFunc callback, void* opaque);
+// Private helper methods for UIKit
+CORETEXT_EXPORT CGSize _CTFrameGetSize(CTFrameRef frame);
+CORETEXT_EXPORT DWRITE_FONT_WEIGHT _CTFontGetDWriteWeight(CTFontRef font);
+CORETEXT_EXPORT DWRITE_FONT_STRETCH _CTFontGetDWriteStretch(CTFontRef font);
+CORETEXT_EXPORT DWRITE_FONT_STYLE _CTFontGetDWriteStyle(CTFontRef font);

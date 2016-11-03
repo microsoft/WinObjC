@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,7 +17,9 @@
 #import <CoreText/CTFrame.h>
 #import <StubReturn.h>
 
-#include "CoreTextInternal.h"
+#import "DWriteWrapper_CoreText.h"
+#import "CoreTextInternal.h"
+#import "CGPathInternal.h"
 
 const CFStringRef kCTFrameProgressionAttributeName = static_cast<CFStringRef>(@"kCTFrameProgressionAttributeName");
 const CFStringRef kCTFramePathFillRuleAttributeName = static_cast<CFStringRef>(@"kCTFramePathFillRuleAttributeName");
@@ -26,10 +28,14 @@ const CFStringRef kCTFrameClippingPathsAttributeName = static_cast<CFStringRef>(
 const CFStringRef kCTFramePathClippingPathAttributeName = static_cast<CFStringRef>(@"kCTFramePathClippingPathAttributeName");
 
 @implementation _CTFrame : NSObject
-- (void)dealloc {
-    [_frameSetter release];
-    [super dealloc];
+- (instancetype)init {
+    if ([super init]) {
+        _lines.attach([NSMutableArray new]);
+    }
+
+    return self;
 }
+
 @end
 
 /**
@@ -40,7 +46,7 @@ CFRange CTFrameGetStringRange(CTFrameRef frame) {
     _CTFrame* framePtr = static_cast<_CTFrame*>(frame);
     CFIndex count = 0;
     if (framePtr) {
-        for (_CTLine* line in [framePtr->_lines objectEnumerator]) {
+        for (_CTLine* line in static_cast<id<NSFastEnumeration>>(framePtr->_lines)) {
             count += line->_strRange.length;
         }
     }
@@ -55,21 +61,21 @@ CFRange CTFrameGetVisibleStringRange(CTFrameRef frame) {
     _CTFrame* framePtr = static_cast<_CTFrame*>(frame);
     CFIndex count = 0;
     if (framePtr) {
-        for (CFIndex i = 0; i < framePtr->_lineOrigins.size() && framePtr->_lineOrigins[i].y > 0; ++i) {
-            // Lines are ordered vertically so we can stop once we find one outside of the frame
-            count += static_cast<_CTLine*>([framePtr->_lines objectAtIndex:i])->_strRange.length;
+        for (_CTLine* line in static_cast<id<NSFastEnumeration>>(framePtr->_lines)) {
+            if (line->_lineOrigin.y < framePtr->_frameRect.size.height && line->_lineOrigin.y > 0) {
+                count += line->_strRange.length;
+            }
         }
     }
     return CFRangeMake(0, count);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGPathRef CTFrameGetPath(CTFrameRef frame) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return frame ? static_cast<_CTFrame*>(frame)->_path.get() : nil;
 }
 
 /**
@@ -85,41 +91,45 @@ CFDictionaryRef CTFrameGetFrameAttributes(CTFrameRef frame) {
  @Status Interoperable
 */
 CFArrayRef CTFrameGetLines(CTFrameRef frame) {
-    return (CFArrayRef)(id)((_CTFrame*)frame)->_lines;
+    return frame ? static_cast<CFArrayRef>(static_cast<_CTFrame*>(frame)->_lines.get()) : nil;
 }
 
 /**
  @Status Interoperable
 */
-void CTFrameGetLineOrigins(CTFrameRef frame, CFRange range, CGPoint origins[]) {
-    if (range.length == 0) {
-        range.length = 0x7FFFFFF;
-    }
-
-    unsigned count = [((_CTFrame*)frame)->_lines count];
-    int idx = 0;
-
-    for (unsigned i = range.location; i < count && i < range.location + range.length; i++) {
-        origins[idx] = ((_CTFrame*)frame)->_lineOrigins[i];
-        idx++;
+void CTFrameGetLineOrigins(CTFrameRef frameRef, CFRange range, CGPoint origins[]) {
+    _CTFrame* frame = static_cast<_CTFrame*>(frameRef);
+    if (frame) {
+        _boundedCopy(range, frame->_lineOrigins.size(), frame->_lineOrigins.data(), origins);
     }
 }
 
 /**
  @Status Interoperable
 */
-void CTFrameDraw(CTFrameRef frame, CGContextRef ctx) {
-    unsigned count = [((_CTFrame*)frame)->_lines count];
-    CGPoint curTextPos;
+void CTFrameDraw(CTFrameRef frameRef, CGContextRef ctx) {
+    _CTFrame* frame = static_cast<_CTFrame*>(frameRef);
+    if (frame && ctx) {
+        // Need to invert and translate coordinates so frame draws from top-left
+        CGContextSaveGState(ctx);
+        CGRect boundingRect;
+        _CGPathGetBoundingBoxInternal(frame->_path.get(), &boundingRect);
+        CGContextTranslateCTM(ctx, 0, boundingRect.size.height);
 
-    curTextPos = CGContextGetTextPosition(ctx);
+        // Invert Text Matrix so glyphs are drawn in correct orientation
+        CGAffineTransform textMatrix = CGContextGetTextMatrix(ctx);
+        CGContextSetTextMatrix(ctx, CGAffineTransformScale(textMatrix, 1.0f, -1.0f));
+        CGContextScaleCTM(ctx, 1.0f, -1.0f);
 
-    for (unsigned i = 0; i < count; i++) {
-        _CTLine* curLine = [((_CTFrame*)frame)->_lines objectAtIndex:i];
+        for (_CTLine* line in static_cast<id<NSFastEnumeration>>(frame->_lines)) {
+            // Y position must be negative because the context is inverted
+            CGContextSetTextPosition(ctx, line->_lineOrigin.x, -line->_lineOrigin.y);
+            CTLineDraw(static_cast<CTLineRef>(line), ctx);
+        }
 
-        CGPoint newPos = curTextPos + ((_CTFrame*)frame)->_lineOrigins[i];
-        CGContextSetTextPosition(ctx, newPos.x, newPos.y);
-        CTLineDraw((CTLineRef)curLine, ctx);
+        // Restore CTM and Text Matrix to values before we modified them
+        CGContextRestoreGState(ctx);
+        CGContextSetTextMatrix(ctx, textMatrix);
     }
 }
 
@@ -130,4 +140,9 @@ void CTFrameDraw(CTFrameRef frame, CGContextRef ctx) {
 CFTypeID CTFrameGetTypeID() {
     UNIMPLEMENTED();
     return StubReturn();
+}
+
+// Convenience private function for NSString+UIKitAdditions
+CGSize _CTFrameGetSize(CTFrameRef frame) {
+    return frame ? static_cast<_CTFrame*>(frame)->_frameRect.size : CGSize{};
 }

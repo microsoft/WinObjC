@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="WBITelemetry\WBITelemetry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

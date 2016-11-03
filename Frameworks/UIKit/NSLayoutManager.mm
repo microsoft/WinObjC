@@ -1,6 +1,6 @@
 ﻿//******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -22,213 +22,164 @@
 #include "CoreTextInternal.h"
 
 #include <vector>
+#include <functional>
 
 @implementation NSLayoutManager {
     NSMutableArray* _textContainers;
-    idretaintype(NSTextStorage) _textStorage;
+    StrongId<NSTextStorage> _textStorage;
     NSMutableArray* _ctLines;
     std::vector<CGPoint> _lineOrigins;
     CGSize _totalSize;
     BOOL _needsLayout;
+    CTFrameRef _frame;
 }
 
-typedef float (^CalcWidthBlock)(CFIndex idx, float offset, float height);
-
-static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float height) {
-    CalcWidthBlock cwb = (CalcWidthBlock)opaque;
-    return cwb(idx, offset, height);
+// Returns true if any of the characters in line after index have visible glyphs, false otherwise
+// Used to determine if a given index is past the visible part of a line for linebreaking
+static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
+    for (id runRef in static_cast<NSArray*>(CTLineGetGlyphRuns(line))) {
+        CTRunRef run = static_cast<CTRunRef>(runRef);
+        CFRange runRange = CTRunGetStringRange(run);
+        if (runRange.location <= index && index <= runRange.location + runRange.length) {
+            const CFIndex* indices = CTRunGetStringIndicesPtr(run);
+            if (std::any_of(indices,
+                            indices + CTRunGetGlyphCount(run),
+                            std::bind(std::greater_equal<CFIndex>(), std::placeholders::_1, index))) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
-- (void)_layoutAllText {
+- (void)__layoutAllText {
     [_ctLines removeAllObjects];
     _lineOrigins.clear();
-
-    CTTypesetterRef ts = CTTypesetterCreateWithAttributedString((CFAttributedStringRef)(NSTextStorage*)_textStorage);
-
     _totalSize.width = 0;
     _totalSize.height = 0;
 
     NSTextContainer* container = (NSTextContainer*)_textContainers[0];
     CGSize containerSize = container.size;
-    float y = 0.0f;
-    CFIndex curIdx = 0;
-    NSString* string = [_textStorage string];
-    CFIndex stringRange = [string length];
-    bool lastRunWasLineBreak = false;
-    __block float lastFontHeight = 0.0f;
+    CGPoint origin = { 0, 0 };
 
-    while (curIdx < [string length]) {
-        float maxLineHeight = 0.0f;
-        __block float maxFontHeight = 0.0f;
-        __block bool stop = false;
-        float curX = container.lineFragmentPadding;
-        float maxAscent = 0.0f;
+    // Creates frame containing all of the text, which allows us to measure the line heights for measuring rectangles and breaks the text
+    // into CTLineRefs for hard line breaks (e.g. '\n') which allows the assumption that once we run out of glyphs in a line to draw we must
+    // perform a line break
+    if (!_frame) {
+        CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(static_cast<CFAttributedStringRef>(_textStorage.get()));
+        CGPathRef path = CGPathCreateWithRect(CGRectMake(0, 0, FLT_MAX, FLT_MAX), nullptr);
+        _frame = CTFramesetterCreateFrame(framesetter, {}, path, nullptr);
+        CFRelease(framesetter);
+        CGPathRelease(path);
+    }
 
-        lastRunWasLineBreak = false;
-        int numLines = _lineOrigins.size();
+    for (id lineRef in static_cast<NSArray*>(CTFrameGetLines(_frame))) {
+        CTLineRef line = static_cast<CTLineRef>(lineRef);
 
-        while (curIdx < [string length] && !stop) {
-            CGPoint startPoint = CGPointMake(curX, y);
-            __block float newX = curX;
-            __block float lastProposedSize = 0.0f;
+        // Width of line already drawn, saves us from having to redraw line twice
+        double drawnWidth = 0.0;
 
-            //  Ask the typesetter to fit and characters within a given width; it will call us
-            //  to ask what the maximum width is, once it figures out the height it needs to put
-            //  a single character in
-            CFIndex pos =
-                _CTTypesetterSuggestLineBreakWithOffsetAndCallback(ts,
-                                                                   curIdx,
-                                                                   0,
-                                                                   invokeWidthBlock,
-                                                                   ^float(CFIndex idx, float offset, float height) {
-                                                                       lastFontHeight = height;
-                                                                       if (height > maxFontHeight) {
-                                                                           maxFontHeight = height;
-                                                                       }
-                                                                       CGRect proposed = CGRectMake(curX + offset,
-                                                                                                    y + maxFontHeight - height,
-                                                                                                    containerSize.width - (curX + offset),
-                                                                                                    height);
-                                                                       CGRect lineRect = [container
-                                                                           lineFragmentRectForProposedRect:proposed
-                                                                                                   atIndex:idx
-                                                                                          writingDirection:NSWritingDirectionLeftToRight
-                                                                                             remainingRect:&proposed];
+        CGFloat ascent, descent, leading;
 
-                                                                       if (lineRect.size.width == 0.0f) {
-                                                                           stop = true;
-                                                                           return 0.0f;
-                                                                       }
+        // Width of entire line
+        double width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
 
-                                                                       if (lineRect.origin.x != curX + offset) {
-                                                                           newX = lineRect.origin.x;
-                                                                           return 0.0f;
-                                                                       }
-                                                                       if (lineRect.origin.x + lineRect.size.width > newX) {
-                                                                           newX = lineRect.origin.x + lineRect.size.width;
-                                                                       }
+        // Maximum height of lines on current horizontal, needed to get next yPos
+        CGFloat lineHeight = leading + ascent - descent;
 
-                                                                       float ret = lineRect.size.width;
-                                                                       if (ret < 0.0f) {
-                                                                           ret = 0.0f;
-                                                                       }
-                                                                       if (ret > 0.0f) {
-                                                                           lastProposedSize = ret;
-                                                                       }
-                                                                       return ret;
-                                                                   });
+        CFRange lineRange = CTLineGetStringRange(line);
 
-            //  Always advance at least 5px
-            curX = newX;
-            if (curX <= startPoint.x + 5.0f) {
-                curX = startPoint.x + 5.0f;
+        // Index of first glyph in line to be drawn
+        CFIndex stringIndex = lineRange.location;
+        CFIndex lineEnd = stringIndex + lineRange.length;
+
+        while (stringIndex < lineEnd) {
+            if (origin.y > containerSize.height) {
+                // Added as much text as can fit in the frame, can end here
+                return;
             }
 
-            //  In the case that the typesetter cannot fit one character into the container, and the
-            //  proposed size is the full width of the container (there are no exclusions) draw one
-            //  glyph. One caveat is this does not take into account exclusion zones outside the
-            //  container.
-            if ((pos == curIdx) && ((lastProposedSize + container.lineFragmentPadding) >= containerSize.width)) {
-                pos = curIdx + 1;
+            if (!__lineHasGlyphsAfterIndex(line, stringIndex)) {
+                // Ended up without any visible glyphs to draw
+                // Caused by a line of only whitespace
+                origin = { 0.0f, origin.y + lineHeight };
+                _totalSize.height += lineHeight;
+                break;
             }
 
-            //  Did we determine that we can fit at least one character?
-            if (pos != curIdx) {
-                //  Yes, we will record what the (x,y) origin is and create a new CTLine from it
-                CFRange lineRange;
-                lineRange.location = curIdx;
-                lineRange.length = pos - curIdx;
+            CGRect remainingRect = {};
+            CGRect rect = [container lineFragmentRectForProposedRect:CGRectMake(origin.x, origin.y, containerSize.width, lineHeight)
+                                                             atIndex:stringIndex
+                                                    writingDirection:NSWritingDirectionLeftToRight
+                                                       remainingRect:&remainingRect];
 
-                CTLineRef line = CTTypesetterCreateLine(ts, lineRange);
+            // Approximate how many characters can fit to keep from re-rendering large amounts of text
+            CFIndex lastIndex = std::min(CTLineGetStringIndexForPosition(line, { drawnWidth + rect.size.width, 0.0f }) + 1, lineEnd);
 
-                float ascent = 0.0f, descent = 0.0f, leading = 0.0f;
-                float width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
-                float lineHeight = ascent - descent + leading;
-
-                CGPoint lineOrigin;
-                lineOrigin = startPoint;
-                [_ctLines addObject:(id)line];
-                _lineOrigins.push_back(lineOrigin);
-                CFRelease(line);
-
-                //  Record what the height of the line was; we'll need to adjust all lines that fit within
-                curIdx = pos;
-                if (lineOrigin.x + width > _totalSize.width) {
-                    _totalSize.width = lineOrigin.x + width;
+            if (lastIndex == stringIndex) {
+                // Unable to fit any text in the current rect, continue to next
+                if (remainingRect.size.width > 0.0f && stringIndex < lineEnd) {
+                    origin = { remainingRect.origin.x, origin.y };
+                } else {
+                    origin = { 0.0f, origin.y + lineHeight };
+                    _totalSize.height += lineHeight;
                 }
-                if (lineHeight > maxLineHeight) {
-                    maxLineHeight = lineHeight;
-                }
-                if (ascent > maxAscent) {
-                    maxAscent = ascent;
-                }
+
+                continue;
             }
 
-            //  If the last character was a line break, exit this line early
-            if (curIdx > 0) {
-                unichar c = [string characterAtIndex:curIdx - 1];
-                if (c == 10 || c == 13) {
-                    lastRunWasLineBreak = true;
+            CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(static_cast<CFAttributedStringRef>(_textStorage.get()));
+            CGPathRef path = CGPathCreateWithRect(CGRectMake(0, 0, rect.size.width, lineHeight), nullptr);
+            CTFrameRef frame = CTFramesetterCreateFrame(framesetter, { stringIndex, lastIndex - stringIndex }, path, nullptr);
+            CFRelease(framesetter);
+            CGPathRelease(path);
+
+            // Create line to fit as much text as possible in given rect
+            CTLineRef fitLine = static_cast<CTLineRef>([[[static_cast<NSArray*>(CTFrameGetLines(frame)) firstObject] retain] autorelease]);
+            CFRelease(frame);
+
+            CFIndex fitLength = CTLineGetStringRange(fitLine).length;
+            if (fitLength == 0L) {
+                // Failed to fit any text in the current rect, continue to next
+                if (remainingRect.size.width > 0.0f && stringIndex < lineEnd) {
+                    origin = { remainingRect.origin.x, origin.y };
+                } else {
+                    origin = { 0.0f, origin.y + lineHeight };
+                    _totalSize.height += lineHeight;
+                }
+
+                continue;
+            }
+
+            // Increase index of next character to layout
+            stringIndex += fitLength;
+
+            // Save line and origin for when it is drawn
+            [_ctLines addObject:(id)fitLine];
+            _lineOrigins.emplace_back(CGPoint{ rect.origin.x, rect.origin.y + lineHeight });
+
+            double fitWidth = CTLineGetTypographicBounds(fitLine, nullptr, nullptr, nullptr);
+            drawnWidth += fitWidth;
+
+            if (remainingRect.size.width > 0 && stringIndex < lineEnd) {
+                origin = { remainingRect.origin.x, origin.y };
+            } else {
+                origin = { 0.0f, origin.y + lineHeight };
+                _totalSize.height += lineHeight;
+                _totalSize.width = std::max(_totalSize.width, rect.origin.x + (CGFloat)fitWidth);
+                if (!__lineHasGlyphsAfterIndex(line, stringIndex)) {
+                    // Ended up with whitespace at end of the line, break to next line
                     break;
                 }
             }
-
-            if (curX >= containerSize.width) {
-                break;
-            }
-        }
-
-        //  Align baselines for all runs added to this line
-        for (int curIdx = numLines; curIdx < _lineOrigins.size(); curIdx++) {
-            float ascent = 0.0f, descent = 0.0f, leading = 0.0f;
-            CTLineGetTypographicBounds((CTLineRef)[_ctLines objectAtIndex:curIdx], &ascent, &descent, &leading);
-
-            _lineOrigins[curIdx].y += maxAscent - ascent;
-        }
-
-        if (maxLineHeight > 0) {
-            y += maxLineHeight;
-        } else {
-            y += maxFontHeight;
-        }
-
-        if (y > containerSize.height) {
-            break;
         }
     }
-
-    //  Calculate the insertion point
-    if (lastRunWasLineBreak) {
-        CGRect rect;
-
-        rect.origin.x = 0.0f;
-        rect.origin.y = y;
-        rect.size.height = lastFontHeight;
-        rect.size.width = 5;
-
-        _extraLineFragmentRect = rect;
-
-        y += lastFontHeight;
-        _totalSize.height = y;
-    } else {
-        _totalSize.height = y;
-
-        CGRect rect;
-
-        rect = [self boundingRectForGlyphRange:NSMakeRange([string length] - 1, 1) inTextContainer:container];
-        rect.origin.x += rect.size.width;
-        rect.size.width = 2;
-
-        _extraLineFragmentRect = rect;
-    }
-
-    CFRelease(ts);
 }
 
 - (void)layoutIfNeeded {
     if (_needsLayout) {
         _needsLayout = FALSE;
-        [self _layoutAllText];
+        [self __layoutAllText];
     }
 }
 
@@ -271,10 +222,11 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 
 - (void)drawBackgroundForGlyphRange:(NSRange)range atPoint:(CGPoint)position {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -288,23 +240,13 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
 
     CGContextRef curCtx = UIGraphicsGetCurrentContext();
     CGContextSaveGState(curCtx);
-
-    CGContextSetTextPosition(curCtx, 0, 0);
-    CGContextTranslateCTM(curCtx, position.x, position.y);
+    CGContextSetTextMatrix(curCtx, CGAffineTransformMakeScale(1.0f, -1.0f));
 
     int count = [_ctLines count];
-    CGAffineTransform t;
-
-    t = CGAffineTransformMakeScale(1.0, -1.0);
-    CGContextSetTextMatrix(curCtx, t);
     for (int curLine = 0; curLine < count; curLine++) {
         CTLineRef line = (CTLineRef)_ctLines[curLine];
-
-        float ascent, descent, leading;
-        CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
-
         CGContextSaveGState(curCtx);
-        CGContextTranslateCTM(curCtx, _lineOrigins[curLine].x, _lineOrigins[curLine].y + ascent);
+        CGContextSetTextPosition(curCtx, _lineOrigins[curLine].x, -_lineOrigins[curLine].y);
         CTLineDraw(line, curCtx);
         CGContextRestoreGState(curCtx);
     }
@@ -681,6 +623,8 @@ static NSRange NSRangeFromCFRange(CFRange range) {
                                range:(NSRange)editRange
                       changeInLength:(NSInteger)deltaLen
                     invalidatedRange:(NSRange)invalidRange {
+    CFRelease(_frame);
+    _frame = nil;
     [self invalidateDisplayForCharacterRange:invalidRange];
 }
 
@@ -690,6 +634,7 @@ static NSRange NSRangeFromCFRange(CFRange range) {
 - (void)dealloc {
     [_textContainers release];
     [_ctLines release];
+    CFRelease(_frame);
     [super dealloc];
 }
 
@@ -796,10 +741,10 @@ static NSRange NSRangeFromCFRange(CFRange range) {
  @Notes
 */
 - (void)setGlyphs:(const CGGlyph*)glyphs
-       properties:(const NSGlyphProperty*)props
- characterIndexes:(const NSUInteger*)charIndexes
-             font:(UIFont*)aFont
-    forGlyphRange:(NSRange)glyphRange {
+          properties:(const NSGlyphProperty*)props
+    characterIndexes:(const NSUInteger*)charIndexes
+                font:(UIFont*)aFont
+       forGlyphRange:(NSRange)glyphRange {
     UNIMPLEMENTED();
 }
 

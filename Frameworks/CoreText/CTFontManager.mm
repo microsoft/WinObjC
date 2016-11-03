@@ -20,23 +20,11 @@
 #import <UIFontInternal.h>
 #import <UIKit/UIFont.h>
 
-extern "C" {
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include <ftglyph.h>
-#include <tttables.h>
-#include <ftadvanc.h>
-#include <ftsizes.h>
-#include <ftsnames.h>
-#include <ttnameid.h>
-}
-
 const CFStringRef kCTFontManagerRegisteredFontsChangedNotification =
     static_cast<CFStringRef>(@"kCTFontManagerRegisteredFontsChangedNotification");
 const CFStringRef kCTFontManagerErrorDomain = static_cast<CFStringRef>(@"kCTFontManagerErrorDomain");
 const CFStringRef kCTFontManagerErrorFontURLsKey = static_cast<CFStringRef>(@"kCTFontManagerErrorFontURLsKey");
 
-static IWLazyClassLookup _LazyUIFont("UIFont");
 /**
  @Status Stub
  @Notes
@@ -47,20 +35,14 @@ CFArrayRef CTFontManagerCreateFontDescriptorsFromURL(CFURLRef fileURL) {
 }
 
 /**
- @Status Interoperable
+ @Status Stub
+ @Notes
 */
 bool CTFontManagerRegisterFontsForURL(CFURLRef fontURL, CTFontManagerScope scope, CFErrorRef _Nullable* error) {
-    // these scopes are not supported in ios
-    if (scope == kCTFontManagerScopeUser || scope == kCTFontManagerScopeSession) {
-        UNIMPLEMENTED_WITH_MSG("The scope values kCTFontManagerScopeUser and kCTFontManagerScopeSession are not a supported in ios");
-        if (error) {
-            *error = nil;
-        }
-
-        return false;
-    }
-
-    return [_LazyUIFont _CTFontManagerRegisterFontsForURL:fontURL withScope:scope withError:error];
+    // TODO::
+    // Implement this method with DWrite #1022
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -91,11 +73,14 @@ bool CTFontManagerUnregisterFontsForURLs(CFArrayRef fontURLs, CTFontManagerScope
 }
 
 /**
- @Status Interoperable
+ @Status Stub
+ @Notes
 */
 bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error) {
-    // Call into UIFont to do the actual work
-    return [static_cast<UIFont*>(font) _CTFontManagerRegisterGraphicsFont:font withError:error];
+    // TODO::
+    // Implement this method with DWrite #1022
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**

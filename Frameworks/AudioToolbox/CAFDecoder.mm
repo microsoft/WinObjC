@@ -184,45 +184,27 @@ double dSwap(double val) {
     return ret;
 }
 
-enum {
-    kAudioCodecProduceOutputPacketSuccess,
-    kAudioCodecProduceOutputPacketNeedsMoreInputData,
-    kAudioCodecProduceOutputPacketSuccessHasMore
-} Result;
-
-int CAFDecoder::GetUsedInputBufferByteSize(EbrFile* fpIn) {
-    int cur = EbrFtell(fpIn);
-    EbrFseek(fpIn, 0, SEEK_END);
-    int left = EbrFtell(fpIn) - cur;
-    EbrFseek(fpIn, cur, SEEK_SET);
-
-    return left;
-}
-
-Byte* CAFDecoder::GetBytes(EbrFile* fpIn, int len) {
+Byte* CAFDecoder::GetBytes(NSInputStream* stream, int len) {
     Byte* ret = (Byte*)IwMalloc(len);
-
-    EbrFread(ret, 1, len, fpIn);
-
+    [stream read:ret maxLength:len];
     return ret;
 }
 
-UInt32 CAFDecoder::ProduceOutputPackets(EbrFile* fpIn,
-                                        ChannelStateList& mChannelStateList,
-                                        void* outOutputData,
-                                        UInt32& ioOutputDataByteSize,
-                                        UInt32& ioNumberPackets,
-                                        OutputDescription& mOutputFormat,
-                                        CAFAudioDescription& mInputFormat) {
-    if (isPcm) {
-        int read = EbrFread(outOutputData, cafDesc.mBytesPerPacket, ioOutputDataByteSize / cafDesc.mBytesPerPacket, fpIn);
-        ioNumberPackets = read;
-        ioOutputDataByteSize = ioNumberPackets * cafDesc.mBytesPerPacket;
-        return 0;
-    }
+void CAFDecoder::ProduceOutputPackets(NSInputStream* stream,
+                                      ChannelStateList& mChannelStateList,
+                                      void* outOutputData,
+                                      UInt32& ioOutputDataByteSize,
+                                      OutputDescription& mOutputFormat,
+                                      CAFAudioDescription& mInputFormat) {
+    UInt32 ioNumberPackets = 1;
 
-    //  setup the return value, by assuming that everything is going to work
-    UInt32 theAnswer = kAudioCodecProduceOutputPacketSuccess;
+    if (isPcm) {
+        NSInteger result =
+            [stream read:(uint8_t*)&outOutputData maxLength:(cafDesc.mBytesPerPacket * (ioOutputDataByteSize / cafDesc.mBytesPerPacket))];
+        ioNumberPackets = (result / cafDesc.mBytesPerPacket);
+        ioOutputDataByteSize = result;
+        return;
+    }
 
     //  Note that the decoder doesn't suffer from the same problem the encoder
     //  does with not having enough data for a packet, since the encoded data
@@ -231,21 +213,16 @@ UInt32 CAFDecoder::ProduceOutputPackets(EbrFile* fpIn,
     //  clamp the number of packets to produce based on what is available in the
     //  input buffer
     UInt32 inputPacketSize = mInputFormat.mBytesPerPacket;
-    UInt32 numberOfInputPackets = GetUsedInputBufferByteSize(fpIn) / inputPacketSize;
+    UInt32 numberOfInputPackets = ([stream hasBytesAvailable] ? 1 : 0);
     if (ioNumberPackets < numberOfInputPackets) {
         numberOfInputPackets = ioNumberPackets;
     } else if (ioNumberPackets > numberOfInputPackets) {
         ioNumberPackets = numberOfInputPackets;
-
-        //  this also means we need more input to satisfy the request so set the
-        //  return value
-        theAnswer = kAudioCodecProduceOutputPacketNeedsMoreInputData;
     }
 
     // We only produce 1 at a time
     if (ioNumberPackets > 1 && numberOfInputPackets > 1) {
         numberOfInputPackets = ioNumberPackets = 1;
-        theAnswer = kAudioCodecProduceOutputPacketSuccessHasMore;
     }
 
     UInt32 inputByteSize = numberOfInputPackets * inputPacketSize;
@@ -255,23 +232,16 @@ UInt32 CAFDecoder::ProduceOutputPackets(EbrFile* fpIn,
         //  encoded data
         //  it is an error to ask for more output than you pass in buffer space for
         UInt32 theOutputByteSize = ioNumberPackets * mInputFormat.mFramesPerPacket * mOutputFormat.mBytesPerFrame;
-        // ThrowIf(ioOutputDataByteSize < theOutputByteSize,
-        // static_cast<OSStatus>(kAudioCodecNotEnoughBufferSpaceError),
-        // "ACAppleIMA4Decoder::ProduceOutputPackets: not
-        // enough space in the output buffer");
 
         //  set the return value
         ioOutputDataByteSize = theOutputByteSize;
 
         //  decode the input data for each channel
-        Byte* theInputData = GetBytes(fpIn, inputByteSize);
+        Byte* theInputData = GetBytes(stream, inputByteSize);
         SInt16* theOutputData = reinterpret_cast<SInt16*>(outOutputData);
 
         ChannelStateList::iterator theIterator = mChannelStateList.begin();
         for (int theChannelIndex = 0; theChannelIndex < mOutputFormat.mChannelsPerFrame; ++theChannelIndex) {
-            // TraceVerbose(TAG, L"->DecodeChannel %d %d %d %08X %08X",
-            // mOutputFormat.mChannelsPerFrame, theChannelIndex,
-            // ioNumberPackets, theInputData, theOutputData);
             DecodeChannelSInt16(*theIterator,
                                 mOutputFormat.mChannelsPerFrame,
                                 theChannelIndex,
@@ -282,44 +252,33 @@ UInt32 CAFDecoder::ProduceOutputPackets(EbrFile* fpIn,
         }
 
         IwFree(theInputData);
-
-        // ConsumeInputData(inputByteSize);
     } else {
         //  set the return value since we're not actually doing any work
         ioOutputDataByteSize = 0;
     }
 
-    /*
-    if((theAnswer == kAudioCodecProduceOutputPacketSuccess) &&
-    (GetUsedInputBufferByteSize() >= inputPacketSize))
-    {
-    //  we satisfied the request, and there's at least one more full packet of
-    data we can decode
-    //  so set the return value
-    theAnswer = kAudioCodecProduceOutputPacketSuccessHasMore;
-    }
-    */
-
-    return theAnswer;
+    return;
 }
 
-bool CAFDecoder::InitForRead(EbrFile* in) {
-    fpIn = in;
+bool CAFDecoder::InitForRead(NSInputStream* inStream) {
     CAFFileHeader header;
-    EbrFread(&header, 1, sizeof(CAFFileHeader), fpIn);
+    [inStream read:(uint8_t*)&header maxLength:sizeof(CAFFileHeader)];
     bool stop = false;
     isPcm = false;
 
-    while (!EbrFeof(fpIn) && !stop) {
-        CAFChunkHeader chunkHeader;
-        EbrFread(&chunkHeader, 1, sizeof(CAFChunkHeader), fpIn);
+    while ([inStream hasBytesAvailable] && !stop) {
+        CAFChunkHeader chunkHeader{};
+        [inStream read:(uint8_t*)&chunkHeader maxLength:sizeof(CAFChunkHeader)];
         chunkHeader.mChunkType = int32Swap(chunkHeader.mChunkType);
         chunkHeader.mChunkSize = int64Swap(chunkHeader.mChunkSize);
 
-        int64_t chunkEnd = EbrFtell(fpIn) + chunkHeader.mChunkSize;
+        int64_t bytesLeftUntilChunkEnd = chunkHeader.mChunkSize;
+        std::vector<uint8_t> bytesToSkip;
+        uint8_t editCount[4];
+
         switch (chunkHeader.mChunkType) {
             case CAF_StreamDescriptionChunkID:
-                EbrFread(&cafDesc, 1, sizeof(CAFAudioDescription), fpIn);
+                bytesLeftUntilChunkEnd -= [inStream read:(uint8_t*)&cafDesc maxLength:sizeof(CAFAudioDescription)];
                 cafDesc.mSampleRate = dSwap(cafDesc.mSampleRate);
 
                 cafDesc.mFormatID = int32Swap(cafDesc.mFormatID);
@@ -347,7 +306,7 @@ bool CAFDecoder::InitForRead(EbrFile* in) {
                 break;
 
             case CAF_PacketTableChunkID:
-                EbrFread(&cafPacketTbl, 1, sizeof(cafPacketTbl), fpIn);
+                bytesLeftUntilChunkEnd -= [inStream read:(uint8_t*)&cafPacketTbl maxLength:sizeof(cafPacketTbl)];
 
                 cafPacketTbl.mNumberPackets = int64Swap(cafPacketTbl.mNumberPackets);
                 cafPacketTbl.mNumberValidFrames = int64Swap(cafPacketTbl.mNumberValidFrames);
@@ -357,8 +316,7 @@ bool CAFDecoder::InitForRead(EbrFile* in) {
 
             case CAF_AudioDataChunkID:
                 //  Skip edit count
-                EbrFseek(fpIn, 4, SEEK_CUR);
-                dataStart = EbrFtell(fpIn);
+                bytesLeftUntilChunkEnd -= [inStream read:(uint8_t*)editCount maxLength:_countof(editCount)];
                 stop = true;
 
                 OutputFormat.mBytesPerFrame = 2 * cafDesc.mChannelsPerFrame;
@@ -373,29 +331,25 @@ bool CAFDecoder::InitForRead(EbrFile* in) {
                 break;
 
             default:
-                EbrFseek(fpIn, (long)chunkHeader.mChunkSize, SEEK_CUR);
+                if (chunkHeader.mChunkSize > 0) {
+                    bytesToSkip.resize(chunkHeader.mChunkSize);
+                    bytesLeftUntilChunkEnd -= [inStream read:(uint8_t*)&bytesToSkip[0] maxLength:chunkHeader.mChunkSize];
+                }
                 break;
         }
 
-        if (!stop)
-            EbrFseek(fpIn, (long)chunkEnd, SEEK_SET);
+        if (!stop) {
+            if (bytesLeftUntilChunkEnd > 0) {
+                bytesToSkip.resize(bytesLeftUntilChunkEnd);
+                [inStream read:(uint8_t*)&bytesToSkip[0] maxLength:bytesLeftUntilChunkEnd];
+            }
+        }
     }
 
     return true;
 }
 
-int CAFDecoder::ReadBuf(int16_t* out, uint32_t& ioOutputDataByteSize) {
-    UInt32 ioNumberPackets = 1;
-
-    ProduceOutputPackets(fpIn, channelStates, out, ioOutputDataByteSize, ioNumberPackets, OutputFormat, cafDesc);
+int CAFDecoder::ReadBuf(NSInputStream* inputStream, int16_t* out, uint32_t& ioOutputDataByteSize) {
+    ProduceOutputPackets(inputStream, channelStates, out, ioOutputDataByteSize, OutputFormat, cafDesc);
     return ioOutputDataByteSize;
-}
-
-void CAFDecoder::Reset() {
-    EbrFseek(fpIn, dataStart, SEEK_SET);
-
-    channelStates.clear();
-    for (int i = 0; i < OutputFormat.mChannelsPerFrame; i++) {
-        channelStates.push_back(ChannelState());
-    }
 }

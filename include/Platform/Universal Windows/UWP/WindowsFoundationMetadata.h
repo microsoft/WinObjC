@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_FOUNDATION_METADATA_EXPORT
 #define OBJCUWP_WINDOWS_FOUNDATION_METADATA_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Foundation_Metadata.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_UI_INPUT_INKING_CORE_EXPORT
 #define OBJCUWP_WINDOWS_UI_INPUT_INKING_CORE_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_UI_Input_Inking_Core.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

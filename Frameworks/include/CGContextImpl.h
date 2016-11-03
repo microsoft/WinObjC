@@ -178,6 +178,11 @@ public:
     virtual void CGContextSetShadow(CGSize offset, float blur);
     virtual bool CGContextIsPointInPath(bool eoFill, float x, float y);
     virtual CGPathRef CGContextCopyPath(void);
+
+    virtual void CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun);
+
+    // TODO 1077:: Remove once D2D render target is implemented
+    virtual void _CGContextSetScaleFactor(float scale);
 };
 
 #define LOCK_CAIRO() pthread_mutex_lock(&_cairoLock);

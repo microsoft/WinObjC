@@ -16,12 +16,16 @@
 
 #pragma once
 
-#include "CGImageInternal.h"
-#include "CoreGraphics/CGContext.h"
-#include "CoreGraphicsInternal.h"
-#include "Starboard.h"
+#include <COMIncludes.h>
+#import <DWrite.h>
+#include <COMIncludes_End.h>
 
-#include <objc/runtime.h>
+#import "CGImageInternal.h"
+#import "CoreGraphics/CGContext.h"
+#import "CoreGraphicsInternal.h"
+#import "Starboard.h"
+
+#import <objc/runtime.h>
 
 class CGContextImpl;
 COREGRAPHICS_EXPORT void EbrCenterTextInRectVertically(CGRect* rect, CGSize* textSize, id font);
@@ -45,6 +49,11 @@ COREGRAPHICS_EXPORT CGImageRef CGPNGImageCreateFromData(NSData* data);
 COREGRAPHICS_EXPORT CGImageRef CGJPEGImageCreateFromFile(NSString* path);
 COREGRAPHICS_EXPORT CGImageRef CGJPEGImageCreateFromData(NSData* data);
 COREGRAPHICS_EXPORT bool CGContextIsPointInPath(CGContextRef c, bool eoFill, float x, float y);
+
+COREGRAPHICS_EXPORT void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun);
+
+// TODO 1077:: Remove once D2D render target is implemented
+COREGRAPHICS_EXPORT void _CGContextSetScaleFactor(CGContextRef ctx, float scale);
 
 class __CGContext : private objc_object {
 public:

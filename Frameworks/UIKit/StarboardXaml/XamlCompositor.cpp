@@ -548,7 +548,7 @@ Platform::String^ charToPlatformString(const char* str) {
     return ref new Platform::String(widStr.c_str());
 }
 
-void DisplayTextureXamlGlyphs::ConstructGlyphs(const char* fontName, const wchar_t* str, int length) {
+void DisplayTextureXamlGlyphs::ConstructGlyphs(const Microsoft::WRL::Wrappers::HString& fontFamilyName, const wchar_t* str, int length) {
     auto textLayer = (XamlCompositor::Controls::CATextLayerXaml^)(Platform::Object^)_xamlTextbox;
     Windows::UI::Xaml::Controls::TextBlock^ textControl = textLayer->TextBlock;
     textControl->Text = ref new Platform::String(str, length);
@@ -559,19 +559,11 @@ void DisplayTextureXamlGlyphs::ConstructGlyphs(const char* fontName, const wchar
     textColor.B = (unsigned char)(_color[2] * 255.0f);
     textColor.A = (unsigned char)(_color[3] * 255.0f);
     textControl->Foreground = ref new Windows::UI::Xaml::Media::SolidColorBrush(textColor);
-    textControl->FontFamily = ref new Windows::UI::Xaml::Media::FontFamily(charToPlatformString(fontName));
+    textControl->FontFamily = ref new Windows::UI::Xaml::Media::FontFamily(reinterpret_cast<Platform::String^>(fontFamilyName.Get()));
 
-    if (_isBold) {
-        textControl->FontWeight = Windows::UI::Text::FontWeights::Bold;
-    } else {
-        textControl->FontWeight = Windows::UI::Text::FontWeights::Normal;
-    }
-
-    if (_isItalic) {
-        textControl->FontStyle = Windows::UI::Text::FontStyle::Italic;
-    } else {
-        textControl->FontStyle = Windows::UI::Text::FontStyle::Normal;
-    }
+    textControl->FontWeight = Windows::UI::Text::FontWeight{ static_cast<unsigned short>(_fontWeight) };
+    textControl->FontStretch = static_cast<Windows::UI::Text::FontStretch>(_fontStretch);
+    textControl->FontStyle = static_cast<Windows::UI::Text::FontStyle>(_fontStyle);
 
     switch (_horzAlignment) {
         case alignLeft:

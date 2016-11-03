@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 #define OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Management_Deployment.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 
@@ -193,11 +195,11 @@ OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)addPackageAsync:(WFUri*)packageUri
-  dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris
-      deploymentOptions:(WMDDeploymentOptions)deploymentOptions
-                success:(void (^)(WMDDeploymentResult*))success
-               progress:(void (^)(WMDDeploymentProgress*))progress
-                failure:(void (^)(NSError*))failure;
+    dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris
+        deploymentOptions:(WMDDeploymentOptions)deploymentOptions
+                  success:(void (^)(WMDDeploymentResult*))success
+                 progress:(void (^)(WMDDeploymentProgress*))progress
+                  failure:(void (^)(NSError*))failure;
 - (void)updatePackageAsync:(WFUri*)packageUri
      dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris
          deploymentOptions:(WMDDeploymentOptions)deploymentOptions

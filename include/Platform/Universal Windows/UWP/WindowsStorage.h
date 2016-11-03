@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_STORAGE_EXPORT
 #define OBJCUWP_WINDOWS_STORAGE_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Storage.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 
@@ -513,10 +515,10 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (WSSStorageItemQueryResult*)createItemQuery;
 - (WSSStorageItemQueryResult*)createItemQueryWithOptions:(WSSQueryOptions*)queryOptions;
 - (void)getFilesAsync:(WSSCommonFileQuery)query
-           startIndex:(unsigned int)startIndex
-   maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-              success:(void (^)(NSArray* /* WSStorageFile* */))success
-              failure:(void (^)(NSError*))failure;
+            startIndex:(unsigned int)startIndex
+    maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
+               success:(void (^)(NSArray* /* WSStorageFile* */))success
+               failure:(void (^)(NSError*))failure;
 - (void)getFilesAsyncOverloadDefaultStartAndCount:(WSSCommonFileQuery)query
                                           success:(void (^)(NSArray* /* WSStorageFile* */))success
                                           failure:(void (^)(NSError*))failure;
@@ -529,9 +531,9 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
                                             success:(void (^)(NSArray* /* WSStorageFolder* */))success
                                             failure:(void (^)(NSError*))failure;
 - (void)getItemsAsync:(unsigned int)startIndex
-   maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-              success:(void (^)(NSArray* /* RTObject<WSIStorageItem>* */))success
-              failure:(void (^)(NSError*))failure;
+    maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
+               success:(void (^)(NSArray* /* RTObject<WSIStorageItem>* */))success
+               failure:(void (^)(NSError*))failure;
 - (BOOL)areQueryOptionsSupported:(WSSQueryOptions*)queryOptions;
 - (BOOL)isCommonFolderQuerySupported:(WSSCommonFolderQuery)query;
 - (BOOL)isCommonFileQuerySupported:(WSSCommonFileQuery)query;
@@ -608,10 +610,10 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (WSSStorageItemQueryResult*)createItemQuery;
 - (WSSStorageItemQueryResult*)createItemQueryWithOptions:(WSSQueryOptions*)queryOptions;
 - (void)getFilesAsync:(WSSCommonFileQuery)query
-           startIndex:(unsigned int)startIndex
-   maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-              success:(void (^)(NSArray* /* WSStorageFile* */))success
-              failure:(void (^)(NSError*))failure;
+            startIndex:(unsigned int)startIndex
+    maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
+               success:(void (^)(NSArray* /* WSStorageFile* */))success
+               failure:(void (^)(NSError*))failure;
 - (void)getFilesAsyncOverloadDefaultStartAndCount:(WSSCommonFileQuery)query
                                           success:(void (^)(NSArray* /* WSStorageFile* */))success
                                           failure:(void (^)(NSError*))failure;
@@ -624,9 +626,9 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
                                             success:(void (^)(NSArray* /* WSStorageFolder* */))success
                                             failure:(void (^)(NSError*))failure;
 - (void)getItemsAsync:(unsigned int)startIndex
-   maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-              success:(void (^)(NSArray* /* RTObject<WSIStorageItem>* */))success
-              failure:(void (^)(NSError*))failure;
+    maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
+               success:(void (^)(NSArray* /* RTObject<WSIStorageItem>* */))success
+               failure:(void (^)(NSError*))failure;
 - (BOOL)areQueryOptionsSupported:(WSSQueryOptions*)queryOptions;
 - (BOOL)isCommonFolderQuerySupported:(WSSCommonFolderQuery)query;
 - (BOOL)isCommonFileQuerySupported:(WSSCommonFileQuery)query;

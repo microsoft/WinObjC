@@ -15,135 +15,260 @@
 //******************************************************************************
 
 #import <CoreText/CTFont.h>
-#import <CGFontInternal.h>
+#import <CoreGraphics/CGFont.h>
 #import <LoggingNative.h>
 #import <Starboard.h>
 #import <StubReturn.h>
 #import <CoreFoundation/CFString.h>
-#import "UIFontInternal.h"
+#import <CFRuntime.h>
+#import <CFBridgeUtilities.h>
+#import <UIKit/UIFont.h>
 
-extern "C" {
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include <ftglyph.h>
-#include <tttables.h>
-#include <ftadvanc.h>
-#include <ftsizes.h>
-#include <ftsnames.h>
-#include <ttnameid.h>
-}
+#import <CoreText/CTFontDescriptor.h>
+#include <COMIncludes.h>
+#import <DWrite_3.h>
+#import <wrl/client.h>
+#include <COMIncludes_End.h>
 
-#include <map>
+#import "DWriteWrapper_CoreText.h"
+
+#import <map>
+#import <memory>
+#import <vector>
 
 static const wchar_t* g_logTag = L"CTFont";
 
-static IWLazyClassLookup _LazyUIFont("UIFont");
+const CFStringRef kCTFontCopyrightNameKey = CFSTR("CTFontCopyrightName");
+const CFStringRef kCTFontFamilyNameKey = CFSTR("CTFontFamilyName");
+const CFStringRef kCTFontSubFamilyNameKey = CFSTR("CTFontSubFamilyName");
+const CFStringRef kCTFontStyleNameKey = CFSTR("CTFontStyleName");
+const CFStringRef kCTFontUniqueNameKey = CFSTR("CTFontUniqueName");
+const CFStringRef kCTFontFullNameKey = CFSTR("CTFontFullName");
+const CFStringRef kCTFontVersionNameKey = CFSTR("CTFontVersionName");
+const CFStringRef kCTFontPostScriptNameKey = CFSTR("CTFontPostScriptName");
+const CFStringRef kCTFontTrademarkNameKey = CFSTR("CTFontTrademarkName");
+const CFStringRef kCTFontManufacturerNameKey = CFSTR("CTFontManufacturerName");
+const CFStringRef kCTFontDesignerNameKey = CFSTR("CTFontDesignerName");
+const CFStringRef kCTFontDescriptionNameKey = CFSTR("CTFontDescriptionName");
+const CFStringRef kCTFontVendorURLNameKey = CFSTR("CTFontVendorURLName");
+const CFStringRef kCTFontDesignerURLNameKey = CFSTR("CTFontDesignerURLName");
+const CFStringRef kCTFontLicenseNameKey = CFSTR("CTFontLicenseName");
+const CFStringRef kCTFontLicenseURLNameKey = CFSTR("CTFontLicenseURLName");
+const CFStringRef kCTFontSampleTextNameKey = CFSTR("CTFontSampleTextName");
+const CFStringRef kCTFontPostScriptCIDNameKey = CFSTR("CTFontPostScriptCIDName");
+const CFStringRef kCTFontVariationAxisIdentifierKey = CFSTR("CTFontVariationAxisIdentifier");
+const CFStringRef kCTFontVariationAxisMinimumValueKey = CFSTR("CTFontVariationAxisMinimumValue");
+const CFStringRef kCTFontVariationAxisMaximumValueKey = CFSTR("CTFontVariationAxisMaximumValue");
+const CFStringRef kCTFontVariationAxisDefaultValueKey = CFSTR("CTFontVariationAxisDefaultValue");
+const CFStringRef kCTFontVariationAxisNameKey = CFSTR("CTFontVariationAxisName");
+const CFStringRef kCTFontFeatureTypeIdentifierKey = CFSTR("CTFontFeatureTypeIdentifier");
+const CFStringRef kCTFontFeatureTypeNameKey = CFSTR("CTFontFeatureTypeName");
+const CFStringRef kCTFontFeatureTypeExclusiveKey = CFSTR("CTFontFeatureTypeExclusive");
+const CFStringRef kCTFontFeatureTypeSelectorsKey = CFSTR("CTFontFeatureTypeSelectors");
+const CFStringRef kCTFontFeatureSelectorIdentifierKey = CFSTR("CTFontFeatureSelectorIdentifier");
+const CFStringRef kCTFontFeatureSelectorNameKey = CFSTR("CTFontFeatureSelectorName");
+const CFStringRef kCTFontFeatureSelectorDefaultKey = CFSTR("CTFontFeatureSelectorDefault");
+const CFStringRef kCTFontFeatureSelectorSettingKey = CFSTR("CTFontFeatureSelectorSetting");
 
-static const std::map<const CFStringRef, FT_UInt> g_nameIdMap = {
-    { kCTFontCopyrightNameKey, 0 },
-    { kCTFontFamilyNameKey, 1 },
-    { kCTFontSubFamilyNameKey, 2 },
-    { kCTFontUniqueNameKey, 3 },
-    { kCTFontFullNameKey, 4 },
-    { kCTFontVersionNameKey, 5 },
-    { kCTFontPostScriptNameKey, 6 },
-    { kCTFontTrademarkNameKey, 7 },
-    { kCTFontManufacturerNameKey, 8 },
-    { kCTFontDesignerNameKey, 9 },
-    { kCTFontDescriptionNameKey, 10 },
-    { kCTFontVendorURLNameKey, 11 },
-    { kCTFontDesignerURLNameKey, 12 },
-    { kCTFontLicenseNameKey, 13 },
-    { kCTFontLicenseURLNameKey, 14 },
+/**
+ All these values are fixed number in IOS no matter on iphone* or ipad*.
+ */
+const CGFloat kCTFontLabelFontSize = 17.0f;
+const CGFloat kCTFontButtonFontSize = 14.0f;
+const CGFloat kCTFontSmallSystemFontSize = 12.0f;
+const CGFloat kCTFontSystemFontSize = 14.0f;
 
-    // https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html
-    // Name index 15 is reserved.
-    // Name index 16 is not a CTFont name specifier constant.
-    // Name index 17 is not a CTFont name specifier constant.
-    // Name index 18 is not a CTFont name specifier constant.
+// Below values match the reference platform UIKit values
+const CGFloat kCTFontWeightUltraLight = -0.80f;
+const CGFloat kCTFontWeightThin = -0.60f;
+const CGFloat kCTFontWeightLight = -0.40f;
+const CGFloat kCTFontWeightRegular = 0.00f;
+const CGFloat kCTFontWeightMedium = 0.23f;
+const CGFloat kCTFontWeightSemibold = 0.30f;
+const CGFloat kCTFontWeightBold = 0.40f;
+const CGFloat kCTFontWeightHeavy = 0.56f;
+const CGFloat kCTFontWeightBlack = 0.62f;
 
-    { kCTFontSampleTextNameKey, 19 },
+const CFStringRef kCTFontDefaultFontName = CFSTR("Arial");
+const CFStringRef kCTFontDefaultBoldFontName = CFSTR("Arial Bold");
+const CFStringRef kCTFontDefaultItalicFontName = CFSTR("Arial Italic");
+const CFStringRef kCTFontDefaultMonospacedFontName = CFSTR("Courier New");
 
-    // http://scripts.sil.org/cms/scripts/page.php?item_id=IWS-Chapter08
-    { kCTFontPostScriptCIDNameKey, 20 },
+using namespace Microsoft::WRL;
+
+struct __CTFont {
+    CFRuntimeBase _base;
+    ComPtr<IDWriteFontFace> _dwriteFontFace;
+    CGFloat _pointSize; // This is also stored in _descriptor as a CFNumber, but as an optimization, keep it here also as an ordinary float
+
+    CTFontDescriptorRef _descriptor;
+
+    struct DWRITE_FONT_METRICS _metrics;
+    bool _cachedMetrics; // Set to true when _metrics is init'd
 };
 
-const CFStringRef kCTFontCopyrightNameKey = static_cast<CFStringRef>(@"kCTFontCopyrightNameKey");
-const CFStringRef kCTFontFamilyNameKey = static_cast<CFStringRef>(@"kCTFontFamilyNameKey");
-const CFStringRef kCTFontSubFamilyNameKey = static_cast<CFStringRef>(@"kCTFontSubFamilyNameKey");
-const CFStringRef kCTFontStyleNameKey = static_cast<CFStringRef>(@"kCTFontStyleNameKey");
-const CFStringRef kCTFontUniqueNameKey = static_cast<CFStringRef>(@"kCTFontUniqueNameKey");
-const CFStringRef kCTFontFullNameKey = static_cast<CFStringRef>(@"kCTFontFullNameKey");
-const CFStringRef kCTFontVersionNameKey = static_cast<CFStringRef>(@"kCTFontVersionNameKey");
-const CFStringRef kCTFontPostScriptNameKey = static_cast<CFStringRef>(@"kCTFontPostScriptNameKey");
-const CFStringRef kCTFontTrademarkNameKey = static_cast<CFStringRef>(@"kCTFontTrademarkNameKey");
-const CFStringRef kCTFontManufacturerNameKey = static_cast<CFStringRef>(@"kCTFontManufacturerNameKey");
-const CFStringRef kCTFontDesignerNameKey = static_cast<CFStringRef>(@"kCTFontDesignerNameKey");
-const CFStringRef kCTFontDescriptionNameKey = static_cast<CFStringRef>(@"kCTFontDescriptionNameKey");
-const CFStringRef kCTFontVendorURLNameKey = static_cast<CFStringRef>(@"kCTFontVendorURLNameKey");
-const CFStringRef kCTFontDesignerURLNameKey = static_cast<CFStringRef>(@"kCTFontDesignerURLNameKey");
-const CFStringRef kCTFontLicenseNameKey = static_cast<CFStringRef>(@"kCTFontLicenseNameKey");
-const CFStringRef kCTFontLicenseURLNameKey = static_cast<CFStringRef>(@"kCTFontLicenseURLNameKey");
-const CFStringRef kCTFontSampleTextNameKey = static_cast<CFStringRef>(@"kCTFontSampleTextNameKey");
-const CFStringRef kCTFontPostScriptCIDNameKey = static_cast<CFStringRef>(@"kCTFontPostScriptCIDNameKey");
-const CFStringRef kCTFontVariationAxisIdentifierKey = static_cast<CFStringRef>(@"kCTFontVariationAxisIdentifierKey");
-const CFStringRef kCTFontVariationAxisMinimumValueKey = static_cast<CFStringRef>(@"kCTFontVariationAxisMinimumValueKey");
-const CFStringRef kCTFontVariationAxisMaximumValueKey = static_cast<CFStringRef>(@"kCTFontVariationAxisMaximumValueKey");
-const CFStringRef kCTFontVariationAxisDefaultValueKey = static_cast<CFStringRef>(@"kCTFontVariationAxisDefaultValueKey");
-const CFStringRef kCTFontVariationAxisNameKey = static_cast<CFStringRef>(@"kCTFontVariationAxisNameKey");
-const CFStringRef kCTFontFeatureTypeIdentifierKey = static_cast<CFStringRef>(@"kCTFontFeatureTypeIdentifierKey");
-const CFStringRef kCTFontFeatureTypeNameKey = static_cast<CFStringRef>(@"kCTFontFeatureTypeNameKey");
-const CFStringRef kCTFontFeatureTypeExclusiveKey = static_cast<CFStringRef>(@"kCTFontFeatureTypeExclusiveKey");
-const CFStringRef kCTFontFeatureTypeSelectorsKey = static_cast<CFStringRef>(@"kCTFontFeatureTypeSelectorsKey");
-const CFStringRef kCTFontFeatureSelectorIdentifierKey = static_cast<CFStringRef>(@"kCTFontFeatureSelectorIdentifierKey");
-const CFStringRef kCTFontFeatureSelectorNameKey = static_cast<CFStringRef>(@"kCTFontFeatureSelectorNameKey");
-const CFStringRef kCTFontFeatureSelectorDefaultKey = static_cast<CFStringRef>(@"kCTFontFeatureSelectorDefaultKey");
-const CFStringRef kCTFontFeatureSelectorSettingKey = static_cast<CFStringRef>(@"kCTFontFeatureSelectorSettingKey");
+static Boolean __CTFontEqual(CFTypeRef cf1, CFTypeRef cf2) {
+    struct __CTFont* font1 = (struct __CTFont*)cf1;
+    struct __CTFont* font2 = (struct __CTFont*)cf2;
+
+    return (font1->_pointSize == font2->_pointSize) &&
+           (CFEqual(CFAutorelease(CTFontCopyPostScriptName(font1)), CFAutorelease(CTFontCopyPostScriptName(font2)))) &&
+           (CFEqual(font1->_descriptor, font2->_descriptor));
+}
+
+static CFHashCode __CTFontHash(CFTypeRef cf) {
+    CTFontRef font = (CTFontRef)cf;
+    return CFHash(CFAutorelease(CTFontCopyFullName(font))) * CTFontGetSize(font) * CFHash(font->_descriptor);
+}
+
+static CFStringRef __CTFontCopyDescription(CFTypeRef cf) {
+    CTFontRef font = (CTFontRef)cf;
+    return CFStringCreateWithFormat(kCFAllocatorSystemDefault,
+                                    NULL,
+                                    CFSTR("<CTFont %p>{font-name: %@; font-family: %@; font-size: %.2f}"),
+                                    cf,
+                                    CFAutorelease(CTFontCopyDisplayName(font)),
+                                    CFAutorelease(CTFontCopyFamilyName(font)),
+                                    CTFontGetSize(font));
+}
+
+static void __CTFontInit(CFTypeRef cf) {
+    CTFontRef font = (CTFontRef)cf;
+    // ComPtr needs to be manually new'd, to avoid calling Create functions to an incomplete out-pointer
+    struct __CTFont* mutableFont = const_cast<struct __CTFont*>(font);
+    new (std::addressof(mutableFont->_dwriteFontFace)) ComPtr<IDWriteFontFace>();
+}
+
+static void __CTFontDeallocate(CFTypeRef cf) {
+    CTFontRef font = (CTFontRef)cf;
+    CFRelease(font->_descriptor);
+    // ComPtr needs to be manually destructed, since CFTypes do a memset(0) on dealloc
+    font->_dwriteFontFace.~ComPtr();
+}
+
+static const CFRuntimeClass __CTFontClass = { 0,
+                                              "CTFont",
+                                              __CTFontInit, // init
+                                              NULL, // copy
+                                              __CTFontDeallocate, // deallocate
+                                              __CTFontEqual,
+                                              __CTFontHash,
+                                              NULL, //
+                                              __CTFontCopyDescription };
+
+// Private convenience helper for creating a CFDataRef from a CGAffineTransform
+CFDataRef __CFDataCreateWithCGAffineTransform(CGAffineTransform matrix) {
+    return CFDataCreate(kCFAllocatorDefault, reinterpret_cast<byte*>(&matrix), sizeof(CGAffineTransform));
+}
+
+// Private convenience helper for getting the CGAffineTransform value out of a CFDataRef
+CGAffineTransform __CGAffineTransformGetFromCFData(CFDataRef data) {
+    CGAffineTransform ret;
+    CFDataGetBytes(data, CFRangeMake(0, sizeof(CGAffineTransform)), reinterpret_cast<byte*>(&ret));
+    return ret;
+}
+
+// Private convenience helper for getting a mutable dictionary of a font's attributes to work with
+CFMutableDictionaryRef __CTFontCopyAutoreleasedMutableAttributes(CTFontRef font) {
+    CFDictionaryRef originalAttributes = CTFontDescriptorCopyAttributes(font->_descriptor);
+    CFAutorelease(originalAttributes);
+
+    CFMutableDictionaryRef ret = CFDictionaryCreateMutableCopy(kCFAllocatorDefault, 0, originalAttributes);
+    CFAutorelease(ret);
+    return ret;
+}
+
+// Private convenience helper for creating a CTFont with an attributes dictionary
+CTFontRef __CTFontCreateWithAttributes(CFDictionaryRef attributes, CGFloat size, const CGAffineTransform* matrix) {
+    CTFontDescriptorRef descriptor = CTFontDescriptorCreateWithAttributes(attributes);
+    CFAutorelease(descriptor);
+    return CTFontCreateWithFontDescriptor(descriptor, size, matrix);
+}
+
+// Private convenience helper for creating a CTFontDescriptor from a DWriteFontFace
+CTFontDescriptorRef __CTFontDescriptorCreateWithDWriteFontFace(CGFloat size,
+                                                               const CGAffineTransform* matrix,
+                                                               Microsoft::WRL::ComPtr<IDWriteFontFace> fontFace) {
+    CFStringRef name = _DWriteFontCopyName(fontFace, kCTFontFullNameKey);
+    CFAutorelease(name);
+    if (matrix) {
+        CFStringRef keys[] = { kCTFontNameAttribute, kCTFontSizeAttribute, kCTFontMatrixAttribute };
+        CFTypeRef values[] = { name,
+                               CFAutorelease(CFNumberCreate(kCFAllocatorDefault, kCFNumberCGFloatType, &size)),
+                               CFAutorelease(__CFDataCreateWithCGAffineTransform(*matrix)) };
+        CFDictionaryRef attributes = CFDictionaryCreate(kCFAllocatorDefault,
+                                                        reinterpret_cast<const void**>(keys),
+                                                        reinterpret_cast<const void**>(values),
+                                                        3, // number of key-value pairs
+                                                        &kCFTypeDictionaryKeyCallBacks,
+                                                        &kCFTypeDictionaryValueCallBacks);
+
+        CFAutorelease(attributes);
+        return CTFontDescriptorCreateWithAttributes(attributes);
+    } else {
+        return CTFontDescriptorCreateWithNameAndSize(name, size);
+    }
+}
 
 /**
  @Status Caveat
- @Notes matrix parameter not supported
+ @Notes matrix parameter stored but not used
 */
 CTFontRef CTFontCreateWithName(CFStringRef name, CGFloat size, const CGAffineTransform* matrix) {
-    if (size == 0.0f) {
-        size = 12.0f;
-    }
-
-    UIFont* ret = [[_LazyUIFont fontWithName:(NSString*)name size:size] retain];
-    return (CTFontRef)ret;
+    return CTFontCreateWithNameAndOptions(name, size, matrix, kCTFontOptionsDefault);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes matrix parameter stored but not used, options parameter not supported
 */
 CTFontRef CTFontCreateWithNameAndOptions(CFStringRef name, CGFloat size, const CGAffineTransform* matrix, CTFontOptions options) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    size_t memSize = sizeof(struct __CTFont) - sizeof(CFRuntimeBase);
+    CTFontRef ret = static_cast<CTFontRef>(_CFRuntimeCreateInstance(kCFAllocatorDefault, CTFontGetTypeID(), memSize, NULL));
+    struct __CTFont* mutableRet = const_cast<struct __CTFont*>(ret);
+
+    if (FAILED(_DWriteCreateFontFaceWithName(name, &mutableRet->_dwriteFontFace))) {
+        TraceError(g_logTag, L"Failed to create font.");
+        CFRelease(ret);
+        return nullptr;
+    }
+
+    mutableRet->_pointSize = size > 0 ? size : kCTFontSystemFontSize;
+    mutableRet->_descriptor = __CTFontDescriptorCreateWithDWriteFontFace(mutableRet->_pointSize, matrix, mutableRet->_dwriteFontFace);
+
+    return ret;
 }
 
 /**
- @Status Stub
- @Notes Always returns Helvetica 12-point font
+ @Status Caveat
+ @Notes matrix parameter stored but not used
 */
 CTFontRef CTFontCreateWithFontDescriptor(CTFontDescriptorRef descriptor, CGFloat size, const CGAffineTransform* matrix) {
-    UNIMPLEMENTED();
-    if (size == 0.0f)
-        size = 12.0f;
-    id ret = [[_LazyUIFont fontWithName:@"Helvetica" size:size] retain];
-    return (CTFontRef)ret;
+    return CTFontCreateWithFontDescriptorAndOptions(descriptor, size, matrix, kCTFontOptionsDefault);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes matrix parameter stored but not used, options parameter not supported
 */
 CTFontRef CTFontCreateWithFontDescriptorAndOptions(CTFontDescriptorRef descriptor,
                                                    CGFloat size,
                                                    const CGAffineTransform* matrix,
                                                    CTFontOptions options) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    size_t memSize = sizeof(struct __CTFont) - sizeof(CFRuntimeBase);
+    CTFontRef ret = static_cast<CTFontRef>(_CFRuntimeCreateInstance(kCFAllocatorDefault, CTFontGetTypeID(), memSize, NULL));
+    struct __CTFont* mutableRet = const_cast<struct __CTFont*>(ret);
+
+    if (FAILED(_DWriteCreateFontFaceWithFontDescriptor(descriptor, &mutableRet->_dwriteFontFace))) {
+        TraceError(g_logTag, L"Failed to create font.");
+        CFRelease(ret);
+        return nullptr;
+    }
+
+    mutableRet->_pointSize = size > 0 ? size : kCTFontSystemFontSize;
+    mutableRet->_descriptor = __CTFontDescriptorCreateWithDWriteFontFace(mutableRet->_pointSize, matrix, mutableRet->_dwriteFontFace);
+
+    return ret;
 }
 
 /**
@@ -156,43 +281,95 @@ CTFontRef CTFontCreateUIFontForLanguage(CTFontUIFontType uiType, CGFloat size, C
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes matrix parameter stored but not used
 */
 CTFontRef CTFontCreateCopyWithAttributes(CTFontRef font, CGFloat size, const CGAffineTransform* matrix, CTFontDescriptorRef attributes) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!font) {
+        return nullptr;
+    }
+
+    CFDictionaryRef originalAttributes = CTFontDescriptorCopyAttributes(font->_descriptor);
+    CFAutorelease(originalAttributes);
+
+    CFMutableDictionaryRef attributesToUse = CFDictionaryCreateMutableCopy(kCFAllocatorDefault, 0, originalAttributes);
+    CFAutorelease(attributesToUse);
+
+    // Copy new attributes from attributes to attributesToUse
+    CFDictionaryApplyFunction(originalAttributes,
+                              [](const void* key, const void* value, void* context) {
+                                  CFDictionarySetValue(reinterpret_cast<CFMutableDictionaryRef>(context), key, value);
+                              },
+                              attributesToUse);
+
+    // If both font name and family name are present, allow more variation in the final font by relying on just the family name
+    if (CFDictionaryContainsKey(attributesToUse, kCTFontNameAttribute) &&
+        CFDictionaryContainsKey(attributesToUse, kCTFontFamilyNameAttribute)) {
+        CFDictionaryRemoveValue(attributesToUse, kCTFontNameAttribute);
+    }
+
+    return __CTFontCreateWithAttributes(attributesToUse, size, matrix);
 }
 
 /**
  @Status Caveat
- @Notes matrix parameter not supported
+ @Notes matrix parameter stored but not used, only limited bits (italic, bold, expanded, condensed) supported in symTraitMask
 */
 CTFontRef CTFontCreateCopyWithSymbolicTraits(
     CTFontRef font, CGFloat size, const CGAffineTransform* matrix, CTFontSymbolicTraits symTraitValue, CTFontSymbolicTraits symTraitMask) {
-    if (font == nil) {
-        return nullptr;
+    CFMutableDictionaryRef attributesToUse = __CTFontCopyAutoreleasedMutableAttributes(font);
+
+    // Allow more variation in the final font by relying on just the family name
+    if (CFDictionaryContainsKey(attributesToUse, kCTFontNameAttribute)) {
+        CFDictionaryRemoveValue(attributesToUse, kCTFontNameAttribute);
     }
 
-    UIFontDescriptorSymbolicTraits existingTraits = [(UIFont*)font fontDescriptor].symbolicTraits;
-    UIFontDescriptor* newFontDescriptor =
-        [[(UIFont*)font fontDescriptor] fontDescriptorWithSymbolicTraits:(existingTraits | symTraitValue) & symTraitMask];
+    CFDictionarySetValue(attributesToUse, kCTFontFamilyNameAttribute, CFAutorelease(CTFontCopyFamilyName(font)));
 
-    if (size == 0.0f) {
-        size = ((UIFont*)font).pointSize;
-    }
-    UIFont* ret = [[_LazyUIFont fontWithDescriptor:newFontDescriptor size:size] retain];
+    // Reference platform is more nuanced in how it uses the bit mask/bit value
+    // ie: consider the first bit (italic)
+    // mask = false, value = any: iOS doesn't care, will match a font regardless of slant
+    // mask = true, value = false: iOS will try to match a font that matches the default value (not slanted)
+    // mask = true, value = true: iOS will try to find an oblique/italic font
+    // DWrite lacks this level of nuance, requiring at least a default value
+    // As such, just take the bitwise & of the mask and value here
+    // Traits are stored in a separate dictionary
+    CFTypeRef traitKeys[] = { kCTFontSymbolicTrait };
+    CFTypeRef traitValues[] = { CFAutorelease(_CFNumberCreateFromSymbolicTraits(symTraitValue & symTraitMask)) };
+    CFDictionaryRef traits = CFDictionaryCreate(kCFAllocatorDefault,
+                                                reinterpret_cast<const void**>(traitKeys),
+                                                reinterpret_cast<const void**>(traitValues),
+                                                1, // number of key-value pairs
+                                                &kCFTypeDictionaryKeyCallBacks,
+                                                &kCFTypeDictionaryValueCallBacks);
+    CFDictionarySetValue(attributesToUse, kCTFontTraitsAttribute, CFAutorelease(traits));
 
-    return (CTFontRef)ret;
+    return __CTFontCreateWithAttributes(attributesToUse, size, matrix);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes matrix parameter stored but not used
 */
 CTFontRef CTFontCreateCopyWithFamily(CTFontRef font, CGFloat size, const CGAffineTransform* matrix, CFStringRef family) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!font) {
+        return nullptr;
+    }
+
+    CFMutableDictionaryRef attributesToUse = __CTFontCopyAutoreleasedMutableAttributes(font);
+
+    // Make sure attributes have the correct traits
+    CFDictionarySetValue(attributesToUse, kCTFontTraitsAttribute, CFAutorelease(_DWriteFontCreateTraitsDict(font->_dwriteFontFace)));
+
+    // Erase any existing font name
+    if (CFDictionaryContainsKey(attributesToUse, kCTFontNameAttribute)) {
+        CFDictionaryRemoveValue(attributesToUse, kCTFontNameAttribute);
+    }
+
+    // Set family name
+    CFDictionarySetValue(attributesToUse, kCTFontFamilyNameAttribute, family);
+
+    return __CTFontCreateWithAttributes(attributesToUse, size, matrix);
 }
 
 /**
@@ -205,178 +382,120 @@ CTFontRef CTFontCreateForString(CTFontRef currentFont, CFStringRef string, CFRan
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CTFontDescriptorRef CTFontCopyFontDescriptor(CTFontRef font) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    CF_OBJC_FUNCDISPATCHV(CTFontGetTypeID(), CTFontDescriptorRef, (UIFont*)font, fontDescriptor);
+    return CTFontDescriptorCreateWithNameAndSize(static_cast<CFStringRef>(CFAutorelease(CTFontCopyFullName(font))), CTFontGetSize(font));
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFTypeRef CTFontCopyAttribute(CTFontRef font, CFStringRef attribute) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!font) {
+        return nullptr;
+    }
+    return CTFontDescriptorCopyAttribute(font->_descriptor, attribute);
 }
 
 /**
  @Status Interoperable
 */
-float CTFontGetSize(CTFontRef font) {
-    float ret = [(UIFont*)font pointSize];
+CGFloat CTFontGetSize(CTFontRef font) {
+    CF_OBJC_FUNCDISPATCHV(CTFontGetTypeID(), CGFloat, (UIFont*)font, pointSize);
 
-    return ret;
+    if (!font) {
+        return 0;
+    }
+    return font->_pointSize;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGAffineTransform CTFontGetMatrix(CTFontRef font) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    CFDataRef data = static_cast<CFDataRef>(CFAutorelease(CTFontCopyAttribute(font, kCTFontMatrixAttribute)));
+    if (data) {
+        return __CGAffineTransformGetFromCFData(data);
+    } else {
+        // Identity matrix seems like a decent default return
+        return CGAffineTransformIdentity;
+    }
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CTFontSymbolicTraits CTFontGetSymbolicTraits(CTFontRef font) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    CFDictionaryRef traits = CTFontCopyTraits(font);
+
+    if (traits) {
+        const void* num = CFDictionaryGetValue(traits, kCTFontSymbolicTrait);
+        CFRelease(traits);
+
+        if (num) {
+            return _CTFontSymbolicTraitsFromCFNumber(static_cast<CFNumberRef>(num));
+        }
+    }
+
+    return 0;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFDictionaryRef CTFontCopyTraits(CTFontRef font) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!font) {
+        return nullptr;
+    }
+    return static_cast<CFDictionaryRef>(CTFontDescriptorCopyAttribute(font->_descriptor, kCTFontTraitsAttribute));
 }
 
 /**
- @Status Caveat
- @Notes Always returns font family name
+ @Status Interoperable
 */
 CFStringRef CTFontCopyPostScriptName(CTFontRef font) {
-    return (CFStringRef)[[(UIFont*)font fontName] retain];
+    return CTFontCopyName(font, kCTFontPostScriptNameKey);
 }
 
 /**
  @Status Interoperable
 */
 CFStringRef CTFontCopyFamilyName(CTFontRef font) {
-    return (CFStringRef)[[(UIFont*)font fontName] retain];
+    CF_OBJC_FUNCDISPATCHV(CTFontGetTypeID(), CFStringRef, (UIFont*)font, familyName);
+    return CTFontCopyName(font, kCTFontFamilyNameKey);
 }
 
 /**
- @Status Caveat
- @Notes Calls CTFontCopyName which supports limited encodings.
+ @Status Interoperable
 */
 CFStringRef CTFontCopyFullName(CTFontRef font) {
+    CF_OBJC_FUNCDISPATCHV(CTFontGetTypeID(), CFStringRef, (UIFont*)font, fontName);
     return CTFontCopyName(font, kCTFontFullNameKey);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 CFStringRef CTFontCopyDisplayName(CTFontRef font) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    // This should work okay as a display name
+    return CTFontCopyName(font, kCTFontFullNameKey);
 }
 
 /**
- @Status Caveat
- @Notes Supports only English language and limited encodings.
+ @Status Interoperable
 */
 CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
-    if (nameKey == nullptr || font == nullptr) {
+    if (!font) {
         return nullptr;
     }
-
-    //  Get the font
-    FT_Face face = reinterpret_cast<FT_Face>([(UIFont*)font _sizingFontHandle]);
-
-    // Style name is not present in the name table associated with the font.
-    // It is stored in FT_Face.
-    if (nameKey == kCTFontStyleNameKey) {
-        return static_cast<CFStringRef>([[NSString stringWithCString:face->style_name] retain]);
-    }
-
-    auto it = g_nameIdMap.find(nameKey);
-    if (it == g_nameIdMap.end()) {
-        // Specified nameKey is not a CTFont name specifier constant.
-        return nullptr;
-    }
-
-    FT_UInt nameId = it->second;
-    FT_CharMap charMap = face->charmap;
-
-    // For now only Microsoft platform is supported.
-    if (charMap->platform_id != TT_PLATFORM_MICROSOFT) {
-        TraceInfo(g_logTag, L"Unsupported platform %u", charMap->platform_id);
-        return nullptr;
-    }
-
-    FT_ULong languageId = FT_Get_CMap_Language_ID(charMap);
-    if (languageId == TT_MAC_LANGID_ENGLISH) {
-        // In case of error FT_Get_CMap_Language_ID returns a value of 0 which defaults to English on Mac.
-        // For Microsoft platform switch this default value as per the language Ids defined for Microsoft.
-        languageId = TT_MS_LANGID_ENGLISH_UNITED_STATES;
-    }
-
-    // For now only English language is supported.
-    const FT_ULong languageIdSuffixMask = 0xFF;
-    const FT_ULong englishLanguageIdSuffix = 0x09;
-    if ((languageId & languageIdSuffixMask) != englishLanguageIdSuffix) {
-        TraceInfo(g_logTag, L"Unsupported language %u", languageId);
-        return nullptr;
-    }
-
-    CFStringRef fontName = nullptr;
-    FT_UInt nameCount = FT_Get_Sfnt_Name_Count(face);
-    for (FT_UInt i = 0; i < nameCount; i++) {
-        // Get entry at index i from name table.
-        FT_SfntName fontNameInfo = {};
-        FT_Error error = FT_Get_Sfnt_Name(face, i, &fontNameInfo);
-        if (error) {
-            continue;
-        }
-
-        NSStringEncoding stringEncoding{};
-        if (TT_PLATFORM_MICROSOFT == fontNameInfo.platform_id && charMap->encoding_id == fontNameInfo.encoding_id &&
-            languageId == fontNameInfo.language_id && nameId == fontNameInfo.name_id) {
-            // FreeType thinks we are running on Mac and returns the bytes in big endian format even when
-            // we are on Microsoft platform so we adjust the encoding id accordingly.
-            switch (charMap->encoding_id) {
-                case TT_MS_ID_UNICODE_CS: // Unicode BMP
-                    stringEncoding = NSUTF16BigEndianStringEncoding;
-                    break;
-
-                case TT_MS_ID_UCS_4: // Unicode UCS-4
-                    stringEncoding = NSUTF32BigEndianStringEncoding;
-                    break;
-
-                default:
-                    TraceInfo(g_logTag, L"Unsupported encoding %u", charMap->encoding_id);
-                    break;
-            }
-
-            if (stringEncoding) {
-                NSData* data = [NSData dataWithBytesNoCopy:fontNameInfo.string length:fontNameInfo.string_len freeWhenDone:NO];
-                fontName = static_cast<CFStringRef>([[NSString alloc] initWithData:data encoding:stringEncoding]);
-            }
-
-            break;
-        }
-    }
-
-    return fontName;
+    return _DWriteFontCopyName(font->_dwriteFontFace, nameKey);
 }
 
 /**
@@ -415,13 +534,40 @@ CFArrayRef CTFontCopySupportedLanguages(CTFontRef font) {
     return StubReturn();
 }
 
+// Private helper for getting a DWRITE_FONT_METRICS struct, to avoid code duplication
+static struct DWRITE_FONT_METRICS __CTFontGetDWriteMetrics(CTFontRef font) {
+    if (!font->_cachedMetrics) {
+        font->_dwriteFontFace->GetMetrics(&const_cast<struct __CTFont*>(font)->_metrics);
+    }
+    return font->_metrics;
+}
+
+// Private helper for converting a DWRITE_FONT_METRIC unit to a CTFont API unit
+// DWRITE_FONT_METRICS measures its metrics in 'design units'
+// CTFont APIs generally return in terms of point size
+static CGFloat __CTFontScaleMetric(CTFontRef font, CGFloat metric) {
+    return metric * font->_pointSize / CTFontGetUnitsPerEm(font);
+}
+
+// Private helper for converting a whole CGRect rather than a single metric
+static CGRect __CTFontScaleRect(CTFontRef font, CGRect& rect) {
+    rect.origin.x = __CTFontScaleMetric(font, rect.origin.x);
+    rect.origin.y = __CTFontScaleMetric(font, rect.origin.y);
+    rect.size.width = __CTFontScaleMetric(font, rect.size.width);
+    rect.size.height = __CTFontScaleMetric(font, rect.size.height);
+    return rect;
+}
+
 /**
  @Status Interoperable
  @Notes
 */
 CGFloat CTFontGetAscent(CTFontRef font) {
-    //  Get the font
-    return [(UIFont*)font ascender];
+    if (!font) {
+        return 0;
+    }
+    CF_OBJC_FUNCDISPATCHV(CTFontGetTypeID(), CGFloat, (UIFont*)font, ascender);
+    return __CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).ascent);
 }
 
 /**
@@ -429,88 +575,117 @@ CGFloat CTFontGetAscent(CTFontRef font) {
  @Notes
 */
 CGFloat CTFontGetDescent(CTFontRef font) {
-    return [(UIFont*)font descender];
+    if (!font) {
+        return 0;
+    }
+    CF_OBJC_FUNCDISPATCHV(CTFontGetTypeID(), CGFloat, (UIFont*)font, descender);
+    // DWRITE_FONT_METRICS keeps an unsigned value for descent, but CTFontGetDescent is expected to return a negative value
+    return -__CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).descent);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGFloat CTFontGetLeading(CTFontRef font) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!font) {
+        return 0;
+    }
+    return __CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).lineGap);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 unsigned int CTFontGetUnitsPerEm(CTFontRef font) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!font) {
+        return 0;
+    }
+    return __CTFontGetDWriteMetrics(font).designUnitsPerEm;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFIndex CTFontGetGlyphCount(CTFontRef font) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!font) {
+        return 0;
+    }
+    return font->_dwriteFontFace->GetGlyphCount();
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGRect CTFontGetBoundingBox(CTFontRef font) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!font) {
+        return { { 0, 0 }, { 0, 0 } };
+    }
+
+    CGRect ret = _DWriteFontGetBoundingBox(font->_dwriteFontFace);
+
+    // Scale the bounding box
+    return __CTFontScaleRect(font, ret);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGFloat CTFontGetUnderlinePosition(CTFontRef font) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!font) {
+        return 0;
+    }
+    return __CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).underlinePosition);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGFloat CTFontGetUnderlineThickness(CTFontRef font) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!font) {
+        return 0;
+    }
+    return __CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).underlineThickness);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGFloat CTFontGetSlantAngle(CTFontRef font) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!font) {
+        return 0;
+    }
+    return _DWriteFontGetSlantDegrees(font->_dwriteFontFace);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGFloat CTFontGetCapHeight(CTFontRef font) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!font) {
+        return 0;
+    }
+    CF_OBJC_FUNCDISPATCHV(CTFontGetTypeID(), CGFloat, (UIFont*)font, capHeight);
+    return __CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).capHeight);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGFloat CTFontGetXHeight(CTFontRef font) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!font) {
+        return 0;
+    }
+    CF_OBJC_FUNCDISPATCHV(CTFontGetTypeID(), CGFloat, (UIFont*)font, xHeight);
+    return __CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).xHeight);
 }
 
 /**
@@ -532,48 +707,80 @@ CGGlyph CTFontGetGlyphWithName(CTFontRef font, CFStringRef glyphName) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes  kCTFontVerticalOrientation is unsupported, returns the same as default and horizontal orientations
 */
 CGRect CTFontGetBoundingRectsForGlyphs(
     CTFontRef font, CTFontOrientation orientation, const CGGlyph glyphs[], CGRect* boundingRects, CFIndex count) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!glyphs || count <= 0) {
+        TraceError(g_logTag, L"No glyphs were specified");
+        return CGRectNull;
+    }
+
+    if (boundingRects) {
+        if (FAILED(_DWriteFontGetBoundingBoxesForGlyphs(
+                font->_dwriteFontFace, glyphs, boundingRects, count, (orientation == kCTFontVerticalOrientation)))) {
+            TraceError(g_logTag, L"Unable to get glyph bounding boxes");
+            return CGRectNull;
+        }
+
+        CGRect ret = { { std::numeric_limits<CGFloat>::max(), std::numeric_limits<CGFloat>::max() },
+                       { std::numeric_limits<CGFloat>::lowest(), std::numeric_limits<CGFloat>::lowest() } };
+
+        for (size_t i = 0; i < count; ++i) {
+            // DWrite uses design units, where as CTFont uses point size
+            // Scale all the boundingRects
+            boundingRects[i] = __CTFontScaleRect(font, boundingRects[i]);
+
+            // Find the overall bounding rect
+            // This can probably be made more efficient by putting all of each attribute in an array and sorting it,
+            // but that seems like overkill for now
+            ret.origin.x = std::min(ret.origin.x, boundingRects[i].origin.x);
+            ret.origin.y = std::min(ret.origin.y, boundingRects[i].origin.y);
+            ret.size.width = std::max(ret.size.width, boundingRects[i].size.width);
+            ret.size.height = std::max(ret.size.height, boundingRects[i].size.height);
+        }
+
+        return ret;
+
+    } else {
+        // Caller doesn't care about boundingRects, but still needs to calculate the overall rect
+        // Call the boundingRects code path above with a temporary buffer
+        std::vector<CGRect> rects = std::vector<CGRect>(count);
+        return CTFontGetBoundingRectsForGlyphs(font, orientation, glyphs, rects.data(), count);
+    }
 }
 
 /**
  @Status Caveat
- @Notes Orientation parameter is not supported
+ @Notes  kCTFontVerticalOrientation returns an imprecise, equal advance for each glyph
 */
 double CTFontGetAdvancesForGlyphs(CTFontRef font, CTFontOrientation orientation, const CGGlyph glyphs[], CGSize* advances, CFIndex count) {
-    DWORD i;
-    double total = 0.0f;
-
-    _CGFontLock();
-    //  Get the font
-    FT_Face face = (FT_Face)[(UIFont*)font _sizingFontHandle];
-    CGFontSetFTFontSize((CGFontRef)font, face, [(UIFont*)font pointSize]);
-
-    FT_Error error;
-    FT_GlyphSlot slot = face->glyph;
-
-    //  Lookup each glyph
-    for (i = 0; i < count; i++) {
-        error = FT_Load_Glyph(face, glyphs[i], FT_LOAD_NO_HINTING);
-        FT_GlyphSlot slot = face->glyph;
-
-        CGSize size = { 0, 0 };
-        if (error == 0) {
-            size.width = ((float)(slot->advance.x)) / 64.0f;
-        }
-
-        if (advances)
-            advances[i] = size;
-        total += size.width;
+    if (!font) {
+        return 0;
     }
-    _CGFontUnlock();
+    ComPtr<IDWriteFontFace1> fontFace1;
+    font->_dwriteFontFace.As(&fontFace1);
 
-    return total;
+    // DWrite uses design units, where as CTFont uses CGSize (struct of two floats)
+    // Use an intermediatary buffer to call into DWrite
+    int32_t designUnitGlyphAdvances[count];
+
+    if (FAILED(fontFace1->GetDesignGlyphAdvances(count, glyphs, designUnitGlyphAdvances, (orientation == kCTFontVerticalOrientation)))) {
+        TraceError(g_logTag, L"Unable to get glyph advances");
+    }
+
+    CGFloat ret = 0.0f;
+
+    for (size_t i = 0; i < count; i++) {
+        CGSize advance = { __CTFontScaleMetric(font, designUnitGlyphAdvances[i]), 0 };
+        advances[i] = advance;
+
+        // Return value is the sum of all the advances
+        ret += advance.width;
+    }
+
+    return ret;
 }
 
 /**
@@ -621,12 +828,17 @@ CFArrayRef CTFontCopyFeatureSettings(CTFontRef font) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
-bool CTFontGetGlyphsForCharacters(CTFontRef font, const UniChar characters[], CGGlyph glyphs[], CFIndex count) {
-    UNIMPLEMENTED();
-    return StubReturn();
+bool CTFontGetGlyphsForCharacters(CTFontRef fontRef, const UniChar characters[], CGGlyph glyphs[], CFIndex count) {
+    if (!fontRef || !characters || !glyphs || count <= 0) {
+        return false;
+    }
+
+    struct __CTFont* font = const_cast<struct __CTFont*>(fontRef);
+    std::vector<uint32_t> chars(characters, characters + count);
+    return SUCCEEDED(font->_dwriteFontFace->GetGlyphIndices(chars.data(), count, glyphs));
 }
 
 /**
@@ -676,19 +888,45 @@ CFArrayRef CTFontCopyAvailableTables(CTFontRef font, CTFontTableOptions options)
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
+ @Notes options is not supported, and is deprecated anyway
 */
 CFDataRef CTFontCopyTable(CTFontRef font, CTFontTableTag table, CTFontTableOptions options) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return _DWriteFontCopyTable(font->_dwriteFontFace, table);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFTypeID CTFontGetTypeID() {
-    UNIMPLEMENTED();
-    return StubReturn();
+    static CFTypeID __kCTFontTypeID = _CFRuntimeRegisterClass(&__CTFontClass);
+    return __kCTFontTypeID;
+}
+
+// Private function for getting font weight for XAML
+DWRITE_FONT_WEIGHT _CTFontGetDWriteWeight(CTFontRef font) {
+    ComPtr<IDWriteFontFace3> fontFace3;
+    if (font && SUCCEEDED(font->_dwriteFontFace.As(&fontFace3))) {
+        return fontFace3->GetWeight();
+    }
+    return DWRITE_FONT_WEIGHT_NORMAL;
+}
+
+// Private function for getting font stretch for XAML
+DWRITE_FONT_STRETCH _CTFontGetDWriteStretch(CTFontRef font) {
+    ComPtr<IDWriteFontFace3> fontFace3;
+    if (font && SUCCEEDED(font->_dwriteFontFace.As(&fontFace3))) {
+        return fontFace3->GetStretch();
+    }
+    return DWRITE_FONT_STRETCH_NORMAL;
+}
+
+// Private function for getting font style for XAML
+DWRITE_FONT_STYLE _CTFontGetDWriteStyle(CTFontRef font) {
+    ComPtr<IDWriteFontFace3> fontFace3;
+    if (font && SUCCEEDED(font->_dwriteFontFace.As(&fontFace3))) {
+        return fontFace3->GetStyle();
+    }
+    return DWRITE_FONT_STYLE_NORMAL;
 }

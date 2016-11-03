@@ -42,6 +42,7 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
     UIColor* color = [UIColor blueColor];
 
     CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, color.CGColor);
 
     // Aligns origin for our frame
     CGContextTranslateCTM(context, 0.0f, self.bounds.size.height);
@@ -61,14 +62,16 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
     CTTextAlignment alignment = kCTRightTextAlignment;
     setting.value = &alignment;
     CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(&setting, 1);
+    CFAutorelease(paragraphStyle);
 
     CTFontRef myCFFont = CTFontCreateWithName(CTFontCopyFullName(_font), CTFontGetSize(_font), NULL);
+    CFAutorelease(myCFFont);
 
     // Make dictionary for attributed string with font, color, and alignment
     NSDictionary* attributesDict = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)myCFFont,
                                                                               (id)kCTFontAttributeName,
-                                                                              color.CGColor,
-                                                                              (id)kCTForegroundColorAttributeName,
+                                                                              kCFBooleanFalse,
+                                                                              (id)kCTForegroundColorFromContextAttributeName,
                                                                               (__bridge id)paragraphStyle,
                                                                               (id)kCTParagraphStyleAttributeName,
                                                                               nil];
@@ -76,25 +79,26 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
     NSString* text = @"jackdaws love my big sphinx of quartz. JACKDAWS LOVE MY BIG SPHINX OF QUARTZ.";
     CFAttributedStringRef attrString =
         CFAttributedStringCreate(kCFAllocatorDefault, (__bridge CFStringRef)text, (__bridge CFDictionaryRef)attributesDict);
+    CFAutorelease(attrString);
 
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(attrString);
-    CFRelease(attrString);
+    CFAutorelease(framesetter);
 
     // Creates frame for framesetter with current attributed string
     CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    CFAutorelease(frame);
 
     // Draws the text in the frame
     CTFrameDraw(frame, context);
 
     // Creates outline
     CGContextSetLineWidth(context, 2.0);
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
     CGContextSetStrokeColorWithColor(context, color.CGColor);
     CGContextMoveToPoint(context, 0, 0);
     CGContextAddRect(context, rect);
     CGContextStrokePath(context);
 
-    CGColorSpaceRelease(colorspace);
+    CGPathRelease(path);
 }
 @end
 
@@ -212,7 +216,8 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
 // For unimplemented functions, creates a row with the value "UNIMPLEMENTED"
 - (void)createTests {
     // Adds row with pangram in selected font
-    CTFontTestView* pangramView = [[CTFontTestView alloc] initWithFrame:CGRectMake(20, 420, 400, 200)];
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    CTFontTestView* pangramView = [[CTFontTestView alloc] initWithFrame:CGRectMake(0, 0, width / 2, 100)];
     pangramView.backgroundColor = [UIColor whiteColor];
     pangramView.font = _font;
     UITableViewCell* cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
@@ -228,24 +233,34 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
     // There is no straightforward way to show this works properly without rigorously testing, which is beyond the scope of this test page
     CGFontRef cgFont = CTFontCopyGraphicsFont(_font, nullptr);
     NSString* result = [NSString stringWithFormat:@"%d", CFStringCompare(CGFontCopyFullName(cgFont), CTFontCopyFullName(_font), 0)];
-    [_rows addObject:createTextCell(@"CTFontCopyGraphicsFont- should be 0", result)];
+    [_rows addObject:createTextCell(@"CTFontCopyGraphicsFont- should be 0", result, width / 2)];
 
     // Copy and Get functions
-    [_rows addObject:createTextCell(@"CTFontCopyPostScriptName", (__bridge NSString*)CTFontCopyPostScriptName(_font))];
-    [_rows addObject:createTextCell(@"CTFontCopyFamilyName", (__bridge NSString*)CTFontCopyFamilyName(_font))];
-    [_rows addObject:createTextCell(@"CTFontCopyFullName", (__bridge NSString*)CTFontCopyFullName(_font))];
+    [_rows addObject:createTextCell(@"CTFontCopyPostScriptName", (__bridge NSString*)CTFontCopyPostScriptName(_font), width / 2)];
+    [_rows addObject:createTextCell(@"CTFontCopyFamilyName", (__bridge NSString*)CTFontCopyFamilyName(_font), width / 2)];
+    [_rows addObject:createTextCell(@"CTFontCopyFullName", (__bridge NSString*)CTFontCopyFullName(_font), width / 2)];
     [_rows addObject:createTextCell([NSString stringWithFormat:@"CTFontCopyName:%@", _nameKey],
-                                    (__bridge NSString*)CTFontCopyName(_font, _nameKey))];
+                                    (__bridge NSString*)CTFontCopyName(_font, _nameKey),
+                                    width / 2)];
 
-    [_rows addObject:createTextCell(@"CTFontGetAscent", [NSString stringWithFormat:@"%f", CTFontGetAscent(_font)])];
-    [_rows addObject:createTextCell(@"CTFontGetDescent", [NSString stringWithFormat:@"%f", CTFontGetDescent(_font)])];
-    [_rows addObject:createTextCell(@"CTFontGetSize", [NSString stringWithFormat:@"%f", CTFontGetSize(_font)])];
+    [_rows addObject:createTextCell(@"CTFontGetAscent", [NSString stringWithFormat:@"%f", CTFontGetAscent(_font)], width / 2)];
+    [_rows addObject:createTextCell(@"CTFontGetDescent", [NSString stringWithFormat:@"%f", CTFontGetDescent(_font)], width / 2)];
+    [_rows addObject:createTextCell(@"CTFontGetSize", [NSString stringWithFormat:@"%f", CTFontGetSize(_font)], width / 2)];
 
-    // Glyph indicies for "Glyphs" in default font as CTLineCreateWithAttributedString does not currently function
-    CGGlyph glyphs[6] = { 42, 79, 92, 83, 75, 86 };
+    UniChar characters[6];
+    [@"Glyphs" getCharacters:characters range:NSMakeRange(0, 6)];
+    CGGlyph glyphs[6];
+    CTFontGetGlyphsForCharacters(_font, characters, glyphs, 6);
+    [_rows addObject:createTextCell(
+                         @"CTFontGetGlyphsForCharacters:Glyphs",
+                         [NSString stringWithFormat:@"%d %d %d %d %d %d", glyphs[0], glyphs[1], glyphs[2], glyphs[3], glyphs[4], glyphs[5]],
+                         width / 2)];
+
     CGSize advances[6];
     double totalWidth = CTFontGetAdvancesForGlyphs(_font, kCTFontDefaultOrientation, glyphs, advances, 6);
-    [_rows addObject:createTextCell(@"CTFontGetAdvancesForGlyphs:Glyphs - Total Width", [NSString stringWithFormat:@"%f", totalWidth])];
+    [_rows addObject:createTextCell(@"CTFontGetAdvancesForGlyphs:Glyphs - Total Width",
+                                    [NSString stringWithFormat:@"%f", totalWidth],
+                                    width / 2)];
     [_rows addObject:createTextCell(@"CTFontGetAdvancesForGlyphs:Glyphs - Individual Widths",
                                     [NSString stringWithFormat:@"%f %f %f %f %f %f",
                                                                advances[0].width,
@@ -253,47 +268,48 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
                                                                advances[2].width,
                                                                advances[3].width,
                                                                advances[4].width,
-                                                               advances[5].width])];
+                                                               advances[5].width],
+                                    width / 2)];
 
     // Unimplemented functions
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyAttribute");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyAvailableTables");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyCharacterSet");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyDisplayName");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyFeatureSettings");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyFeatures");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyFontDescriptor");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyLocalizedName");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCopySupportedLanguages");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyTable");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyTraits");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyVariation");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyVariationAxes");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyWithFamily");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCreateCopyWithAttributes");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCreateFontDescriptorAndOptions");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCreateForString");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCreatePathForGlyph");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCreateUIFontForLanguage");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontCreateWithNameAndOptions");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontDrawGlyphs");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontGetBoundingBox");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontGetBoundingRectsForGlyphs");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontGetCapHeight");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontGetGlyphCount");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontGetGlyphWithName");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontGetGlyphsForCharacters");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontGetLeading");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontGetLigatureCaretPositions");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontGetMatrix");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontGetSlantAngle");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontGetStringEncoding");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontGetTypeID");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontGetUnderlinePosition");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontGetUnderlineThickness");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontGetUnitsPerEm");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontGetVerticalTranslationsForGlyphs");
-    ADD_UNIMPLEMENTED(_rows, @"CTFontGetXHeight");
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyAttribute", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyAvailableTables", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyCharacterSet", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyDisplayName", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyFeatureSettings", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyFeatures", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyFontDescriptor", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyLocalizedName", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCopySupportedLanguages", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyTable", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyTraits", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyVariation", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyVariationAxes", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCopyWithFamily", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCreateCopyWithAttributes", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCreateFontDescriptorAndOptions", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCreateForString", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCreatePathForGlyph", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCreateUIFontForLanguage", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontCreateWithNameAndOptions", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontDrawGlyphs", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontGetBoundingBox", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontGetBoundingRectsForGlyphs", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontGetCapHeight", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontGetGlyphCount", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontGetGlyphWithName", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontGetGlyphsForCharacters", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontGetLeading", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontGetLigatureCaretPositions", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontGetMatrix", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontGetSlantAngle", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontGetStringEncoding", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontGetTypeID", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontGetUnderlinePosition", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontGetUnderlineThickness", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontGetUnitsPerEm", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontGetVerticalTranslationsForGlyphs", width / 2);
+    ADD_UNIMPLEMENTED(_rows, @"CTFontGetXHeight", width / 2);
 
     CGFontRelease(cgFont);
 }
@@ -360,17 +376,23 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
 // Button Methods
 
 - (void)createWithNameWasSelected {
-    _font = CTFontCreateWithName(CTFontCopyFullName(_font), 20, nullptr);
+    CFStringRef name = CTFontCopyFullName(_font);
+    CFRelease(_font);
+    _font = CTFontCreateWithName(name, 20, nullptr);
+    CFRelease(name);
     [self refreshTests];
 }
 
 - (void)createCopyWithSymbolicTraitsWasSelected {
+    CTFontRef temp = _font;
     _font = CTFontCreateCopyWithSymbolicTraits(_font, 20, nullptr, 0, 0);
+    CFRelease(temp);
     [self refreshTests];
 }
 
 - (void)createWithGraphicsFontWasSelected {
     CGFontRef cgFont = CTFontCopyGraphicsFont(_font, nullptr);
+    CFRelease(_font);
     _font = CTFontCreateWithGraphicsFont(cgFont, 20, nullptr, nullptr);
     [self refreshTests];
 }

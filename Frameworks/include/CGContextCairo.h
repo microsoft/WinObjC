@@ -35,6 +35,9 @@ private:
     void _cairoImageSurfaceBlur(cairo_surface_t* surface);
     void _cairoContextStrokePathShadow();
 
+    // TODO 1077:: Remove once D2D render target is implemented
+    float _scale = 1.0f;
+
 protected:
     cairo_t* _drawContext;
 
@@ -134,4 +137,9 @@ public:
     virtual CGSize CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, float x, float y);
     virtual bool CGContextIsPointInPath(bool eoFill, float x, float y);
     virtual CGPathRef CGContextCopyPath(void);
+
+    virtual void CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun);
+
+    // TODO 1077:: Remove once D2D render target is implemented
+    virtual void _CGContextSetScaleFactor(float scale);
 };

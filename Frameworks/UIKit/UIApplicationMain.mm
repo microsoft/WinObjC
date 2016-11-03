@@ -173,7 +173,6 @@ int UIApplicationMainInit(NSString* principalClassName,
                     if (data != nil) {
                         UIFont* font = [UIFont fontWithData:data];
                         if (font != nil) {
-                            [font _setName:[[path lastPathComponent] stringByDeletingPathExtension]];
                             CTFontManagerRegisterGraphicsFont((CGFontRef)font, NULL);
                         }
                     }

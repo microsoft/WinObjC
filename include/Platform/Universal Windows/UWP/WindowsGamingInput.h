@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 #define OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Gaming_Input.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

@@ -31,7 +31,7 @@
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
     <ProjectGuid>{E679AA4E-A973-44DD-996B-267E3971725D}</ProjectGuid>
-    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..\..\..\WinObjC</WINOBJC_SDK_ROOT>
+    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -177,6 +177,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCAffineTransformationTestViewController.mm" />
     <ClangCompile Include="..\..\CTCatalog\Tests\CTCFontTestViewController.mm" />
     <ClangCompile Include="..\..\CTCatalog\Tests\CTCFramesetterTestViewController.mm" />
     <ClangCompile Include="..\..\CTCatalog\Tests\CTCFrameTestViewController.mm" />

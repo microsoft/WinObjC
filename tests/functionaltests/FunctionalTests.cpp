@@ -224,6 +224,13 @@ public:
     }
 
     TEST_METHOD(NSURLSession_DownloadTaskWithURL) {
+// Disable Test on ARM as it tries to hit a real endpoint and download significant data
+// and arm machines may not have a stable ethernet connection like a build server does.
+#ifdef _M_ARM
+        BEGIN_TEST_METHOD_PROPERTIES()
+        TEST_METHOD_PROPERTY(L"ignore", L"true")
+        END_TEST_METHOD_PROPERTIES()
+#endif
         NSURLSessionDownloadTaskWithURL();
     }
 
@@ -232,6 +239,13 @@ public:
     }
 
     TEST_METHOD(NSURLSession_DownloadTaskWithURL_WithCompletionHandler) {
+// Disable Test on ARM as it tries to hit a real endpoint and download significant data
+// and arm machines may not have a stable ethernet connection like a build server does.
+#ifdef _M_ARM
+        BEGIN_TEST_METHOD_PROPERTIES()
+        TEST_METHOD_PROPERTY(L"ignore", L"true")
+        END_TEST_METHOD_PROPERTIES()
+#endif
         NSURLSessionDownloadTaskWithURL_WithCompletionHandler();
     }
 
@@ -643,3 +657,29 @@ public:
         UIApplicationTestsOpenURL();
     }
 }; /* class UIApplicationTests */
+
+//
+// NSURLStorageFileTests
+//
+extern void NSURLStorageFileURL();
+
+class NSURLStorageFileTests {
+public:
+    BEGIN_TEST_CLASS(NSURLStorageFileTests)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(NSURLStorageFileTestsSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
+
+    TEST_METHOD_CLEANUP(NSURLStorageFileTestsCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
+    TEST_METHOD(NSURLTests_StorageFileURL) {
+        NSURLStorageFileURL();
+    }
+}; /* class NSURLStorageFileTests */

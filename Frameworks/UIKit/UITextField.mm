@@ -869,7 +869,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 
 - (id)_initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
     if (self = [super initWithFrame:frame]) {
-        _font = [UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]];
+        _font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
         _alignment = UITextAlignmentLeft;
         _borderStyle = UITextBorderStyleNone;
         _secureTextMode = NO;

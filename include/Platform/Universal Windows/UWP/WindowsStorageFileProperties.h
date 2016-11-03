@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 #define OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Storage_FileProperties.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 

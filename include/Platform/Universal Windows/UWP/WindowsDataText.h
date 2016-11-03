@@ -21,7 +21,9 @@
 
 #ifndef OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 #define OBJCUWP_WINDOWS_DATA_TEXT_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
 #pragma comment(lib, "ObjCUWP_Windows_Data_Text.lib")
+#endif
 #endif
 #include <UWP/interopBase.h>
 
