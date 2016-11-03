@@ -234,6 +234,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreFoundation\CFAttributedStringTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreFoundation\CFStringTokenizerTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreFoundation\CFTimeZoneTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreFoundation\CFCppBaseTests.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
