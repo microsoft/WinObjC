@@ -103,8 +103,6 @@ static const int MODALFORMSHEET_ROW = 4;
         CGRect frame = CGRectMake(5.0, 12.0, 94.0, 27.0);
         UISwitch* switchCtrl = [[UISwitch alloc] initWithFrame:frame];
 
-        // in case the parent view draws with a custom color or gradient, use a transparent color
-        switchCtrl.backgroundColor = [UIColor clearColor];
         [switchCtrl addTarget:self action:@selector(setUIActivityIndicatorView) forControlEvents:UIControlEventValueChanged];
         switchCtrl.on = TRUE;
 
@@ -115,9 +113,6 @@ static const int MODALFORMSHEET_ROW = 4;
         // slider
         CGRect frame = CGRectMake(5.0, 12.0, 120.0, 38.0);
         UISlider* sliderCtl = [[UISlider alloc] initWithFrame:frame];
-
-        // in case the parent view draws with a custom color or gradient, use a transparent color
-        sliderCtl.backgroundColor = [UIColor clearColor];
 
         sliderCtl.minimumValue = 0.0;
         sliderCtl.maximumValue = 100.0;

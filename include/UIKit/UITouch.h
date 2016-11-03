@@ -61,6 +61,7 @@ typedef NS_ENUM(NSInteger, UITouchPhase) {
 
 @class UIView, UIWindow, SKNode;
 
+UIKIT_EXPORT_CLASS
 @interface UITouch : NSObject
 - (CGFloat)azimuthAngleInView:(UIView*)view STUB_METHOD;
 - (CGPoint)locationInNode:(SKNode*)node STUB_METHOD;

@@ -23,8 +23,8 @@ CA_EXPORT_CLASS
 
 + (CFTimeInterval)fadeDuration STUB_METHOD;
 
-@property size_t levelsOfDetail;
+@property size_t levelsOfDetail STUB_PROPERTY;
 @property size_t levelsOfDetailBias STUB_PROPERTY;
-@property CGSize tileSize;
+@property CGSize tileSize STUB_PROPERTY;
 
 @end

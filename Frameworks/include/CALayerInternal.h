@@ -29,28 +29,24 @@ public:
     BOOL hidden;
     CGRect bounds;
     CGRect contentsRect, contentsCenter;
-    CGRect contentsInset; //  Texture insets
     uint32_t contentsOrientation;
     CGPoint position;
-    float zPosition;
     CGPoint anchorPoint;
     CGSize contentsSize;
     float contentsScale;
     uint32_t gravity;
     BOOL masksToBounds;
     BOOL isOpaque;
-    BOOL drewOpaque;
-    BOOL positionSet, sizeSet, originSet;
 
     CATransform3D transform;
-    CATransform3D sublayerTransform;
-    __CGColorQuad backgroundColor, borderColor, contentColor;
+    __CGColorQuad backgroundColor, borderColor;
     float borderWidth, cornerRadius;
     float opacity;
 };
 
-class DisplayNode;
-class DisplayTexture;
+struct ILayerProxy;
+struct IDisplayTexture;
+
 @class CALayer;
 
 class CAPrivateInfo : public CADisplayProperties, public LLTreeNode<CAPrivateInfo, CALayer> {
@@ -63,7 +59,6 @@ public:
     CGContextRef savedContext;
     BOOL isRootLayer;
     BOOL needsDisplay;
-    BOOL hasNewContents;
     BOOL needsUpdate;
     idretain _name;
     NSMutableDictionary* _animations;
@@ -72,7 +67,14 @@ public:
 
     BOOL _shouldRasterize;
 
-    DisplayNode* _presentationNode;
+    std::shared_ptr<ILayerProxy> _layerProxy;
+
+    // The XAML element backing this CALayer
+    StrongId<WXFrameworkElement> _xamlElement;
+
+    // The Xaml element used for hosting this layer's sublayer element
+    StrongId<WXFrameworkElement> _sublayerXamlElement;
+
     idretain _undefinedKeys;
     idretain _actions;
 
@@ -81,29 +83,28 @@ public:
 
     BOOL needsLayout;
     BOOL didLayout;
-    BOOL alwaysLayout;
     bool _displayPending;
 
-    CALayer* maskLayer;
-
-    DisplayTexture* _textureOverride;
-
-    explicit CAPrivateInfo(CALayer* self);
+    CAPrivateInfo(CALayer* self, WXFrameworkElement* xamlElement);
     ~CAPrivateInfo();
 };
 
 @interface CALayer (Internal)
+// Xaml interop
+- (instancetype)_initWithXamlElement:(WXFrameworkElement*)xamlElement;
+@property (nonatomic, readonly, strong) WXFrameworkElement* _xamlElement;
+
 - (NSObject*)presentationValueForKey:(NSString*)key;
 
 - (int)_pixelWidth;
 - (int)_pixelHeight;
 
 - (void)_setContentColor:(CGColorRef)newColor;
-- (void)setOrigin:(CGPoint)origin;
+- (void)_setOrigin:(CGPoint)origin;
 - (void)_setShouldLayout;
 - (void)setContentsOrientation:(UIImageOrientation)orientation;
 - (UIImageOrientation)contentsOrientation;
-- (DisplayNode*)_presentationNode;
+- (std::shared_ptr<ILayerProxy>)_layerProxy;
 - (void)_releaseContents:(BOOL)immediately;
 
 // Some additional non-standard layer swapping functionality:
@@ -115,19 +116,15 @@ public:
 // Kicks off an update to the layer's layout and display hierarchy if needed
 - (void)_displayChanged;
 
-- (void)updateAccessibilityInfo:(const IWAccessibilityInfo*)info;
++ (CGPoint)convertPoint:(CGPoint)point fromLayer:(CALayer*)layer toLayer:(CALayer*)layer;
 
 - (void)_removeAnimation:(CAAnimation*)animation;
-- (DisplayTexture*)_getDisplayTexture;
+- (std::shared_ptr<IDisplayTexture>)_getDisplayTexture;
 
 - (CAPrivateInfo*)_priv;
 - (void)_setRootLayer:(BOOL)isRootLayer;
 
 - (void)_setZIndex:(int)zIndex;
-
-- (void)_setOrigin:(CGPoint)origin updateContent:(BOOL)updateContent;
-
-@property WXFrameworkElement* contentsElement;
 
 @end
 

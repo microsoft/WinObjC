@@ -23,7 +23,7 @@
 #import <UIKit/UIScreen.h>
 
 #import "StubReturn.h"
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayProperties.h"
 
 extern float statusBarHeight;
 
@@ -98,7 +98,7 @@ NSString* const UIScreenBrightnessDidChangeNotification = @"UIScreenBrightnessDi
  @Notes Returns the system scale and will dynamcially change unlike iOS.
 */
 - (CGFloat)scale {
-    return GetCACompositor()->screenScale();
+    return DisplayProperties::ScreenScale();
 }
 
 /**
@@ -124,8 +124,8 @@ NSString* const UIScreenBrightnessDidChangeNotification = @"UIScreenBrightnessDi
     CGRect ret;
     ret.origin.x = 0.0f;
     ret.origin.y = 0.0f;
-    ret.size.width = GetCACompositor()->screenWidth();
-    ret.size.height = GetCACompositor()->screenHeight();
+    ret.size.width = DisplayProperties::ScreenWidth();
+    ret.size.height = DisplayProperties::ScreenHeight();
 
     return ret;
 }
@@ -152,8 +152,8 @@ NSString* const UIScreenBrightnessDidChangeNotification = @"UIScreenBrightnessDi
     CGRect ret;
     ret.origin.x = 0.0f;
     ret.origin.y = 0.0f;
-    ret.size.width = GetCACompositor()->screenWidth();
-    ret.size.height = GetCACompositor()->screenHeight();
+    ret.size.width = DisplayProperties::ScreenWidth();
+    ret.size.height = DisplayProperties::ScreenHeight();
 
     if (!isHidden) {
         switch (statusBarOrientation) {
