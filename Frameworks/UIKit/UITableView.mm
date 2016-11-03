@@ -32,7 +32,7 @@
 #import "UIScrollViewInternal.h"
 #import <UIKit/UITableViewDataSource.h>
 #import "UINibInternal.h"
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayProperties.h"
 
 static const wchar_t* TAG = L"UITableView";
 
@@ -448,7 +448,7 @@ public:
             if (string != nil) {
                 view = [[[UITableViewCell alloc] initWithFrame:frame] autorelease];
                 [view setText:string];
-                if (GetCACompositor()->isTablet()) {
+                if (DisplayProperties::IsTablet()) {
                     [view setFont:[UIFont boldSystemFontOfSize:17.0f]];
                 } else {
                     [view setFont:[UIFont boldSystemFontOfSize:12.0f]];
@@ -1295,7 +1295,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
             float headerHeight = 0.0f;
             float defaultHeight = 25.0f;
 
-            if (GetCACompositor()->isTablet()) {
+            if (DisplayProperties::IsTablet()) {
                 defaultHeight = 44.0f;
             }
 

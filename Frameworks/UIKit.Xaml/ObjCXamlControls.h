@@ -46,6 +46,25 @@ UIKIT_XAML_EXPORT void XamlHookButtonPointerEvents(const Microsoft::WRL::ComPtr<
                                                    const Microsoft::WRL::ComPtr<IInspectable>& pointerCanceledHook,
                                                    const Microsoft::WRL::ComPtr<IInspectable>& pointerCaptureLostHook);
 
+////////////////////////////////////////////////////////////////////////////////////
+// Label.xaml.cpp
+////////////////////////////////////////////////////////////////////////////////////
+
+// Returns a UIKit::Label as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlCreateLabel();
+
+// Retrieves the UIKit::Label's backing TextBlock as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlGetLabelTextBox(const Microsoft::WRL::ComPtr<IInspectable>& label);
+
+////////////////////////////////////////////////////////////////////////////////////
+// Layer.xaml.cpp
+////////////////////////////////////////////////////////////////////////////////////
+
+// Set one or more layer properties for the specified target xaml element
+UIKIT_XAML_EXPORT void XamlSetFrameworkElementLayerProperties(const Microsoft::WRL::ComPtr<IInspectable>& targetElement,
+                                                              const Microsoft::WRL::ComPtr<IInspectable>& sublayerCanvasProperty,
+                                                              const Microsoft::WRL::ComPtr<IInspectable>& layerContentProperty);
+
 // Hooks other events on a UIKit::Button passed in as IInspectable
 UIKIT_XAML_EXPORT void XamlHookLayoutEvent(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
                                            const Microsoft::WRL::ComPtr<IInspectable>& layoutHook);

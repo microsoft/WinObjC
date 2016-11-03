@@ -18,13 +18,14 @@
 #pragma once
 
 #include "Button.g.h"
+#include "Layer.xaml.h"
 #include <windows.ui.xaml.input.h>
 #include "ObjCXamlControls.h"
 
 namespace UIKit {
 
 [Windows::Foundation::Metadata::WebHostHidden]
-public ref class Button sealed {
+public ref class Button sealed : public Private::CoreAnimation::ILayer {
 public:
     Button();
     void OnApplyTemplate() override;
@@ -34,6 +35,21 @@ public:
     void OnPointerReleased(Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e) override;
     void OnPointerCanceled(Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e) override;
     void OnPointerCaptureLost(Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e) override;
+
+    // Accessor for our Layer content; we create one on demand
+    virtual property Windows::UI::Xaml::Controls::Image^ LayerContent {
+        Windows::UI::Xaml::Controls::Image^ get();
+    }
+
+    // Accessor to check for exising Layer content
+    virtual property bool HasLayerContent {
+        bool get();
+    }
+
+    // Accessor for our SublayerCanvas; we create one on demand
+    virtual property Windows::UI::Xaml::Controls::Canvas^ SublayerCanvas {
+        Windows::UI::Xaml::Controls::Canvas^ get();
+    }
 
 internal:
     void HookPointerEvents(
@@ -55,6 +71,8 @@ internal:
     Windows::UI::Xaml::Controls::Image^ _backgroundImage;
 
 private:
+    Windows::UI::Xaml::Controls::Canvas^ _contentCanvas; // Contains pre-canned button content, as well as any sublayers added by CoreAnimation.
+    Windows::UI::Xaml::Controls::Image^ _content; // Layer content element; created on demand for custom layer rendering.
 
     Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler> _pointerPressedHook;
     Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler> _pointerMovedHook;

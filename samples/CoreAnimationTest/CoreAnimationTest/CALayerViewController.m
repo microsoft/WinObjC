@@ -69,7 +69,6 @@
     [self.view addSubview:_menuTVC.view];
 
     _sliderGravity = [[UISlider alloc] initWithFrame:CGRectMake(0.0, 0.0, 100.0, 38.0)];
-    _sliderGravity.backgroundColor = [UIColor clearColor];
     _sliderGravity.minimumValue = 0;
     _sliderGravity.maximumValue = 11;
     _sliderGravity.continuous = YES;
@@ -91,7 +90,6 @@
     [_menuTVC addMenuItemView:_switchHidden andTitle:@"Hidden"];
 
     _sliderOpacity = [[UISlider alloc] initWithFrame:CGRectMake(0.0, 0.0, 100.0, 38.0)];
-    _sliderOpacity.backgroundColor = [UIColor clearColor];
     _sliderOpacity.minimumValue = 0.0f;
     _sliderOpacity.maximumValue = 1.0f;
     _sliderOpacity.continuous = YES;
@@ -100,7 +98,6 @@
     [_menuTVC addMenuItemView:_sliderOpacity andTitle:@"Opacity"];
 
     _sliderBackgroundColor = [[UISlider alloc] initWithFrame:CGRectMake(0.0, 0.0, 100.0, 38.0)];
-    _sliderBackgroundColor.backgroundColor = [UIColor clearColor];
     _sliderBackgroundColor.minimumValue = 0.0f;
     _sliderBackgroundColor.maximumValue = 360.0f;
     _sliderBackgroundColor.continuous = YES;

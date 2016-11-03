@@ -47,7 +47,6 @@
 
 #include "UIEmptyView.h"
 
-#include "CACompositor.h"
 #include "UIInterface.h"
 
 #include "UWP/WindowsUICore.h"
@@ -55,6 +54,7 @@
 
 #include "LoggingNative.h"
 #include "UIApplicationMainInternal.h"
+#import "StarboardXaml/DisplayProperties.h"
 #import "StarboardXaml/UWPBackgroundTask.h"
 
 static const wchar_t* TAG = L"UIApplication";
@@ -479,8 +479,8 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 
     appFrame.origin.x = 0;
     appFrame.origin.y = 0;
-    appFrame.size.width = GetCACompositor()->screenWidth();
-    appFrame.size.height = GetCACompositor()->screenHeight();
+    appFrame.size.width = DisplayProperties::ScreenWidth();
+    appFrame.size.height = DisplayProperties::ScreenHeight();
 
     _curOrientation = orientation;
     CGAffineTransform trans;
@@ -922,22 +922,22 @@ static void printViews(id curView, int level) {
         CGRect frame;
         frame.origin.x = 0.0f;
         frame.origin.y = 0.0f;
-        frame.size.width = GetCACompositor()->screenWidth();
+        frame.size.width = DisplayProperties::ScreenWidth();
         frame.size.height = statusBarHeight;
         statusBar = [[UIImageView alloc] initWithFrame:frame];
         [statusBar setImage:[UIImage imageNamed:@"/img/StatusBar.png"]];
         [statusBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
 
-        frame.size.height = GetCACompositor()->screenHeight();
+        frame.size.height = DisplayProperties::ScreenHeight();
         statusBarRotationLayer = [[UIView alloc] initWithFrame:frame];
         [statusBarRotationLayer addSubview:statusBar];
         popupRotationLayer = [[UIKeyboardRotationView alloc] initWithFrame:frame];
 
         CALayer* layer = [statusBarRotationLayer layer];
-        GetCACompositor()->setNodeTopMost((DisplayNode*)[layer _presentationNode], true);
+        [layer _layerProxy]->SetTopMost();
         [CATransaction _addSublayerToTop:layer];
-        GetCACompositor()->setNodeTopMost((DisplayNode*)[[popupRotationLayer layer] _presentationNode], true);
-        GetCACompositor()->setNodeTopMost((DisplayNode*)[[statusBarRotationLayer layer] _presentationNode], true);
+        [[popupRotationLayer layer] _layerProxy]->SetTopMost();
+        [[statusBarRotationLayer layer] _layerProxy]->SetTopMost();
     }
 
     _curNotifications = [NSMutableArray new];
@@ -1028,16 +1028,16 @@ static void printViews(id curView, int level) {
 
     switch (_curOrientation) {
         case UIInterfaceOrientationLandscapeRight:
-            ret.origin.x = GetCACompositor()->screenWidth() - statusBarHeight;
+            ret.origin.x = DisplayProperties::ScreenWidth() - statusBarHeight;
             ret.origin.y = 0.0f;
             ret.size.width = statusBarHeight;
-            ret.size.height = GetCACompositor()->screenHeight();
+            ret.size.height = DisplayProperties::ScreenHeight();
             break;
 
         case UIInterfaceOrientationPortrait:
             ret.origin.x = 0.0f;
             ret.origin.y = 0.0f;
-            ret.size.width = GetCACompositor()->screenWidth();
+            ret.size.width = DisplayProperties::ScreenWidth();
             ret.size.height = statusBarHeight;
             break;
 
@@ -1045,13 +1045,13 @@ static void printViews(id curView, int level) {
             ret.origin.x = 0.0f;
             ret.origin.y = 0.0f;
             ret.size.width = statusBarHeight;
-            ret.size.height = GetCACompositor()->screenHeight();
+            ret.size.height = DisplayProperties::ScreenHeight();
             break;
 
         case UIInterfaceOrientationPortraitUpsideDown:
             ret.origin.x = 0.0f;
-            ret.origin.y = GetCACompositor()->screenHeight() - statusBarHeight;
-            ret.size.width = GetCACompositor()->screenWidth();
+            ret.origin.y = DisplayProperties::ScreenHeight() - statusBarHeight;
+            ret.size.width = DisplayProperties::ScreenWidth();
             ret.size.height = statusBarHeight;
             break;
     }
@@ -1071,8 +1071,8 @@ static void printViews(id curView, int level) {
 
         popupRect.origin.x = 0;
         popupRect.origin.y = 0;
-        popupRect.size.width = GetCACompositor()->screenWidth();
-        popupRect.size.height = GetCACompositor()->screenHeight();
+        popupRect.size.width = DisplayProperties::ScreenWidth();
+        popupRect.size.height = DisplayProperties::ScreenHeight();
 
         popupWindow = [[UIWindow alloc] _initWithContentRect:popupRect];
         [popupWindow setWindowLevel:100000.0f];
@@ -1924,9 +1924,9 @@ void UIShutdown() {
             break;
     }
 
-    GetCACompositor()->setTablet(_operationMode == WOCOperationModeTablet);
-    GetCACompositor()->setScreenSize(newWidth, newHeight, newMagnification, newRotation);
-    GetCACompositor()->setDeviceSize(newWidth, newHeight);
+    DisplayProperties::SetTablet(_operationMode == WOCOperationModeTablet);
+    DisplayProperties::SetScreenSize(newWidth, newHeight, newMagnification, newRotation);
+    DisplayProperties::SetDeviceSize(newWidth, newHeight);
 
     //  Adjust size of all UIWindows
     CGRect curBounds;

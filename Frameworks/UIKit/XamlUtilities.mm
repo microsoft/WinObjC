@@ -13,17 +13,16 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #import "XamlUtilities.h"
-#import "UIViewInternal+Xaml.h"
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayTexture.h"
+
+#include <Windows.UI.Xaml.Media.h>
 
 using namespace Microsoft::WRL;
 using namespace Windows::Foundation;
 
 // cornerRadius when border style is set to round rectangle
 static const int c_borderCornerRadius = 8;
-static const wchar_t* TAG = L"XamlUtilities";
 
 WUColor* ConvertUIColorToWUColor(UIColor* uiColor) {
     CGFloat r, g, b, a;
@@ -39,7 +38,7 @@ WUXMImageBrush* ConvertUIImageToWUXMImageBrush(UIImage* image) {
     }
 
     CGImageRef cgImg = [image CGImage];
-    Microsoft::WRL::ComPtr<IInspectable> inspectableNode(GetCACompositor()->GetBitmapForCGImage(cgImg));
+    Microsoft::WRL::ComPtr<IInspectable> inspectableNode(DisplayTexture::GetBitmapForCGImage(cgImg));
     WUXMIBitmapSource* bitmapImageSource = CreateRtProxy([WUXMIBitmapSource class], inspectableNode.Get());
     WUXMImageBrush* imageBrush = [WUXMImageBrush make];
     imageBrush.imageSource = bitmapImageSource;
@@ -53,7 +52,7 @@ WUXMIBitmapSource* ConvertUIImageToWUXMIBitmapSource(UIImage* image) {
     }
 
     CGImageRef cgImg = [image CGImage];
-    Microsoft::WRL::ComPtr<IInspectable> inspectableNode(GetCACompositor()->GetBitmapForCGImage(cgImg));
+    Microsoft::WRL::ComPtr<IInspectable> inspectableNode(DisplayTexture::GetBitmapForCGImage(cgImg));
     WUXMIBitmapSource* bitmapImageSource = CreateRtProxy([WUXMIBitmapSource class], inspectableNode.Get());
 
     return bitmapImageSource;
@@ -287,9 +286,7 @@ UIView* GenerateUIKitControlFromXamlType(RTObject* xamlObject) {
             WXFrameworkElement* xamlElement = rt_dynamic_cast(classType, xamlObject);
             if (xamlElement != nil) {
                 Class controlClass = xamlSupportedControls[classType];
-                if ([controlClass instancesRespondToSelector:@selector(_initWithFrame:xamlElement:)]) {
-                    control = [[controlClass alloc] _initWithFrame:CGRectZero xamlElement:xamlElement];
-                }
+                control = [[controlClass alloc] initWithFrame:CGRectZero xamlElement:xamlElement];
                 break;
             }
         } catch (...) {

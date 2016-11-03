@@ -29,7 +29,7 @@
 #import "UIAppearanceSetter.h"
 #import "UITabBarButton.h"
 #import "UIViewInternal.h"
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayProperties.h"
 
 static const wchar_t* TAG = L"UITabBar";
 
@@ -58,7 +58,7 @@ static const wchar_t* TAG = L"UITabBar";
     [self setBackgroundColor:[UIColor blackColor]];
     [self setContentMode:UIViewContentModeRedraw];
 
-    if (GetCACompositor()->isTablet()) {
+    if (DisplayProperties::IsTablet()) {
         id background =
             [[UIImage imageNamed:@"/img/navgradient-blackopaque.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(2, 3, 10, 3)];
         [self __setContentsImage:background];
@@ -80,7 +80,7 @@ static const wchar_t* TAG = L"UITabBar";
         [[UIImage imageNamed:@"/img/tabbar-button-selected.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 5, 5)];
     _backgroundImage = [[UIImage imageNamed:@"/img/tabbar-background.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(2, 3, 10, 3)];
 
-    if (GetCACompositor()->isTablet()) {
+    if (DisplayProperties::IsTablet()) {
         id background =
             [[UIImage imageNamed:@"/img/navgradient-blackopaque.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(2, 3, 10, 3)];
         [self __setContentsImage:background];
@@ -197,7 +197,7 @@ static const wchar_t* TAG = L"UITabBar";
         float curX = 0.f;
         float spacing = 0.f;
 
-        if (GetCACompositor()->isTablet()) {
+        if (DisplayProperties::IsTablet()) {
             itemWidth = 75.0f;
             spacing = 50.0f;
 

@@ -40,7 +40,7 @@
 #import "UIKit/UIViewController.h"
 
 #import "AutoLayout.h"
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayProperties.h"
 #import "CoreGraphics/CGContext.h"
 #import "CoreGraphics/CGAffineTransform.h"
 
@@ -55,6 +55,8 @@
 
 #import "UWP/WindowsUIXaml.h"
 #import "UWP/WindowsFoundation.h"
+
+#import <ErrorHandling.h>
 
 extern BOOL g_presentingAnimated;
 
@@ -120,7 +122,7 @@ bool isSupportedControllerOrientation(UIViewController* controller, UIInterfaceO
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
     NSArray* orientations = 0;
 
-    if (GetCACompositor()->isTablet()) {
+    if (DisplayProperties::IsTablet()) {
         orientations = [infoDict objectForKey:@"UISupportedInterfaceOrientations~ipad"];
     }
     if (!orientations) {
@@ -160,7 +162,7 @@ bool isSupportedControllerOrientation(UIViewController* controller, UIInterfaceO
 UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* controller, UIInterfaceOrientation orientation) {
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
     NSArray* orientations = 0;
-    if (GetCACompositor()->isTablet()) {
+    if (DisplayProperties::IsTablet()) {
         orientations = [infoDict objectForKey:@"UISupportedInterfaceOrientations~ipad"];
     }
     if (!orientations) {
@@ -247,8 +249,11 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 }
 
 - (instancetype)initWithIdentifier:(NSString*)identifier {
-    _identifier = identifier;
-    self.translatesAutoresizingMaskIntoConstraints = NO;
+    if (self = [super init]) {
+        _identifier = identifier;
+        self.translatesAutoresizingMaskIntoConstraints = NO;
+    }
+
     return self;
 }
 
@@ -258,11 +263,13 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 }
 
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    _UILayoutGuide* ret = [super initWithCoder:coder];
-    _identifier = [coder decodeObjectForKey:@"_UILayoutGuideIdentifier"];
-    self.translatesAutoresizingMaskIntoConstraints = NO;
-    assert(_identifier);
-    return ret;
+    if (self = [super initWithCoder:coder]) {
+        _identifier = [coder decodeObjectForKey:@"_UILayoutGuideIdentifier"];
+        self.translatesAutoresizingMaskIntoConstraints = NO;
+        assert(_identifier);
+    }
+
+    return self;
 }
 
 - (CGFloat)length {
@@ -449,7 +456,7 @@ NSMutableDictionary* _pageMappings;
 }
 
 - (CGRect)_modalPresentationFormSheetFrame {
-    if (!GetCACompositor()->isTablet()) {
+    if (!DisplayProperties::IsTablet()) {
         // fullscreen on non-tablets
         return [[UIScreen mainScreen] applicationFrame];
     }
@@ -471,7 +478,7 @@ NSMutableDictionary* _pageMappings;
 
 - (BOOL)_hidesParent {
     UIModalPresentationStyle style = [self modalPresentationStyle];
-    if ((style == UIModalPresentationFormSheet || style == UIModalPresentationPopover) && GetCACompositor()->isTablet()) {
+    if ((style == UIModalPresentationFormSheet || style == UIModalPresentationPopover) && DisplayProperties::IsTablet()) {
         return NO;
     }
     return YES;
@@ -885,7 +892,7 @@ NSMutableDictionary* _pageMappings;
     }
 
     if (priv->view == nil) {
-        CGRect frame = { 0.0f, 0.0f, GetCACompositor()->screenWidth(), GetCACompositor()->screenHeight() };
+        CGRect frame = { 0.0f, 0.0f, DisplayProperties::ScreenWidth(), DisplayProperties::ScreenHeight() };
 
         frame = [[UIScreen mainScreen] applicationFrame]; /** This is correct **/
         if ([self modalPresentationStyle] == UIModalPresentationFormSheet) {
@@ -903,7 +910,7 @@ NSMutableDictionary* _pageMappings;
 
 - (void)_doResizeToScreen {
     if ((priv->_resizeToScreen && priv->view && priv->_autoresize) || [self wantsFullScreenLayout]) {
-        CGRect frame = { 0.0f, 0.0f, GetCACompositor()->screenHeight(), GetCACompositor()->screenWidth() };
+        CGRect frame = { 0.0f, 0.0f, DisplayProperties::ScreenHeight(), DisplayProperties::ScreenWidth() };
 
         if ([self wantsFullScreenLayout]) {
             frame = [[UIScreen mainScreen] bounds];
@@ -930,7 +937,7 @@ NSMutableDictionary* _pageMappings;
 
         if (priv->view == nil) {
             TraceVerbose(TAG, L"Class name=%hs", object_getClassName(self));
-            CGRect frame = { 0.0f, 0.0f, GetCACompositor()->screenHeight(), GetCACompositor()->screenWidth() };
+            CGRect frame = { 0.0f, 0.0f, DisplayProperties::ScreenHeight(), DisplayProperties::ScreenWidth() };
 
             frame = [[UIScreen mainScreen] applicationFrame];
             if ([self modalPresentationStyle] == UIModalPresentationFormSheet) {
@@ -1253,13 +1260,13 @@ NSMutableDictionary* _pageMappings;
 
         int orientation = findOrientation(self);
         if (orientation == UIInterfaceOrientationPortrait) {
-            curPos.y += GetCACompositor()->screenHeight();
+            curPos.y += DisplayProperties::ScreenHeight();
         } else if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
-            curPos.y -= GetCACompositor()->screenHeight();
+            curPos.y -= DisplayProperties::ScreenHeight();
         } else if (orientation == UIInterfaceOrientationLandscapeLeft) {
-            curPos.x += GetCACompositor()->screenWidth();
+            curPos.x += DisplayProperties::ScreenWidth();
         } else {
-            curPos.x -= GetCACompositor()->screenWidth();
+            curPos.x -= DisplayProperties::ScreenWidth();
         }
 
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
@@ -1402,26 +1409,26 @@ NSMutableDictionary* _pageMappings;
 
                 int orientation = findOrientation(self);
                 if (orientation == UIInterfaceOrientationPortrait) {
-                    curPos.y += GetCACompositor()->screenHeight();
+                    curPos.y += DisplayProperties::ScreenHeight();
                 } else if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
-                    curPos.y -= GetCACompositor()->screenHeight();
+                    curPos.y -= DisplayProperties::ScreenHeight();
                 } else if (orientation == UIInterfaceOrientationLandscapeLeft) {
-                    curPos.x += GetCACompositor()->screenWidth();
+                    curPos.x += DisplayProperties::ScreenWidth();
                 } else {
-                    curPos.x -= GetCACompositor()->screenWidth();
+                    curPos.x -= DisplayProperties::ScreenWidth();
                 }
 
                 CABasicAnimation* animation = [CABasicAnimation animationWithKeyPath:@"position"];
                 [animation setFromValue:[NSValue valueWithCGPoint:curPos]];
 
                 if (orientation == UIInterfaceOrientationPortrait) {
-                    curPos.y -= GetCACompositor()->screenHeight();
+                    curPos.y -= DisplayProperties::ScreenHeight();
                 } else if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
-                    curPos.y += GetCACompositor()->screenHeight();
+                    curPos.y += DisplayProperties::ScreenHeight();
                 } else if (orientation == UIInterfaceOrientationLandscapeLeft) {
-                    curPos.x -= GetCACompositor()->screenWidth();
+                    curPos.x -= DisplayProperties::ScreenWidth();
                 } else {
-                    curPos.x += GetCACompositor()->screenWidth();
+                    curPos.x += DisplayProperties::ScreenWidth();
                 }
 
                 [animation setToValue:[NSValue valueWithCGPoint:curPos]];
@@ -1782,18 +1789,17 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         frame = [self _modalPresentationFormSheetFrame];
     }
 
-    // Create a template UIView
-    UIView* view = [[[UIEmptyView alloc] initWithFrame:frame] autorelease];
-    [view setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
-    [self setView:view];
-
     // Activate an instance of the XAML class and its page
     Microsoft::WRL::ComPtr<IInspectable> pageObj = nullptr;
     auto xamlType = ReturnXamlType(priv->_xamlClassName);
     xamlType->ActivateInstance(pageObj.GetAddressOf());
-
-    priv->_page = XamlControls::_createRtProxy([WXCPage class], pageObj.Get());
     [_pageMappings setObject:self forKey:(id)(void*)pageObj.Get()];
+
+    // Create a template UIView
+    priv->_page = CreateRtProxy([WXCPage class], pageObj.Get());
+    UIView* view = [[[UIEmptyView alloc] initWithFrame:frame xamlElement:priv->_page] autorelease];
+    [view setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+    [self setView:view];
 
     // Walk the list of outlets and assign them to the corresponding XAML UIElement
     unsigned int propListCount = 0;
@@ -1812,8 +1818,6 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
             }
         }
     }
-
-    [self.view setXamlElement:priv->_page];
 }
 
 /**

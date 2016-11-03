@@ -24,6 +24,7 @@
 #import <UWP/WindowsUITextCore.h>
 #import <UWP/WindowsUIViewManagement.h>
 #import <UWP/WindowsUIXamlControls.h>
+#import <UWP/WindowsUIXamlShapes.h>
 #endif // WINOBJC
 
 @interface SpiralTextEdit : UIView
@@ -47,6 +48,7 @@
 
     // Xaml Control used to gain focus and receive pointer/key events
     WXCContentControl* _xamlControl;
+    WUXSRectangle* _xamlControlContent;
 
     // The _editContext lets us communicate with the input system.
     WUTCCoreTextEditContext* _editContext;
@@ -119,41 +121,38 @@
 }
 
 - (void)_initializeControl {
-     // Use a reference to weak self in our event handler blocks, to avoid retain-loops
+    // Use a reference to weak self in our event handler blocks, to avoid retain-loops
     __weak id weakSelf = self;
 
-    // This view only stands to be the host of our Xaml element.
-    // Setting the xamlElement is mutually exclusive with custom drawing through drawRect:
-    _hostView = [[UIView alloc] initWithFrame:self.bounds];
+    // Our CALayer implementation is not a Xaml::Control, and so cannot recieve focus.
+    // To enable focus, the following lines create a Control, then initializes a subview
+    // such that the Control serves as the UIView's backing 'CALayer'.
+    // By hosting it in this manner, we can add it to the visual tree, and treat it like
+    // any other Xaml FrameworkElement, including gaining focus, getting key events, and so on.
+    _xamlControl = [WXCContentControl make];
+
+    // This view only stands to be the host of our Xaml element; we won't draw to it.
+    // Instead, we'll drawRect: to 'self'; the containing SpiralTextEdit UIView.
+    _hostView = [[UIView alloc] initWithFrame:self.bounds xamlElement:_xamlControl];
     _hostView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
     [self addSubview:_hostView];
-
-    // Our CALayer implementation is not a Xaml::Control, and so cannot recieve focus.
-    // To enable this, the following lines create a Control, and assign it as the
-    // Xaml native element of our hosting UIView. By hosting it in this manner, we
-    // can add it to the visual tree, and treat it like any other Xaml FrameworkElement,
-    // including gaining focus, getting key events, and so on.
-    _xamlControl = [WXCContentControl make];
 
     _xamlControl.horizontalContentAlignment = WXHorizontalAlignmentStretch;
     _xamlControl.verticalContentAlignment = WXVerticalAlignmentStretch;
 
     // Xaml ContentControls do not respond to pointer events unless their content
-    // is set. Set it to a Border.
-    WXCBorder* border = [WXCBorder make];
+    // is set. Set it to a Rectangle.
+    _xamlControlContent = [WUXSRectangle make];
 
-    // The background of the control content must not by nullptr in order for it to
+    // The background of the control content must be non-null in order for it to
     // respond to pointer events.
-    border.background = [WUXMSolidColorBrush makeInstanceWithColor:[WUColorHelper fromArgb:0 r:0 g:0 b:0]];
+    _xamlControlContent.fill = [WUXMSolidColorBrush makeInstanceWithColor:[WUColors transparent]];
 
-    _xamlControl.content = border;
+    _xamlControl.content = _xamlControlContent;
 
     // A control must be Tab-Stoppable and Enabled in order to become focused
     _xamlControl.isTabStop = YES;
-
-    // The hosted Xaml element is always Arranged to the size of the host bounds
-    _hostView.xamlElement = _xamlControl;
 
     _textStorage = @"";
 
@@ -224,7 +223,15 @@
         [weakSelf _xamlControlLostFocus:sender args:e];
     }];
 
-    _customEditControlPointerPressedToken = [_xamlControl addPointerPressedEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
+    // Subscribe to pointer events on the content control.
+    // Note: UIView subscribes to, and handles all pointer events for its backing xamlElement (in this case, '_xamlControl'),
+    // in order to integrate with the UIResponder chain.
+    // So if we want to also receive _xamlControl's pointer events, we have a few options:
+    // 1. Subscribe to pointer events on _xamlControl's internal WUXSRectangle content (rather than directly on _xamlControl).
+    // 2. Use addHandler with 'true' to subscribe to _xamlControl's 'pointer pressed' events that UIView already processes/handles.
+    // 3.  Respond to touchesBegan:, etc. on either '_hostView' or 'self'.
+    // This example uses option #1.
+    _customEditControlPointerPressedToken = [_xamlControlContent addPointerPressedEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
         [weakSelf _xamlControlPointerPressed:sender args:e];
     }];
 
@@ -787,7 +794,7 @@
     [_xamlControl removeTappedEvent:_customEditControlTappedToken];
     [_xamlControl removeRightTappedEvent:_customEditControlRightTappedToken];
     [_xamlControl removeGotFocusEvent:_customEditControlGotFocusToken];
-    [_xamlControl removePointerPressedEvent:_customEditControlPointerPressedToken];
+    [_xamlControlContent removePointerPressedEvent:_customEditControlPointerPressedToken];
     [_xamlControl removeLostFocusEvent:_customEditControlLostFocusToken];
     [_xamlControl removeKeyDownEvent:_customEditControlKeyDownToken];
     [_xamlControl removeKeyUpEvent:_customEditControlKeyUpToken];

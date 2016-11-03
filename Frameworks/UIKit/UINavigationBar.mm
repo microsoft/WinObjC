@@ -35,7 +35,7 @@
 #import "UINavigationControllerInternal.h"
 #import "UIBarButtonItem+Internals.h"
 #import "UINavigationBarInternal.h"
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayProperties.h"
 
 static const wchar_t* TAG = L"UINavigationBar";
 
@@ -616,7 +616,7 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
     CGRect frame = self.frame;
 
     shadowImageView = [[UIImageView alloc]
-        initWithFrame:CGRectMake(0.0f, frame.origin.y + frame.size.height, GetCACompositor()->screenWidth(), size.height)];
+        initWithFrame:CGRectMake(0.0f, frame.origin.y + frame.size.height, DisplayProperties::ScreenWidth(), size.height)];
 
     shadowImageView.image = image;
 

@@ -15,15 +15,26 @@
 //******************************************************************************
 #pragma once
 
-@interface CATextLayer (Internal) {
-}
+namespace DisplayProperties {
 
-- (void)_setDisplayParams:(UIFont*)font
-                     text:(NSString*)text
-                    color:(UIColor*)color
-                alignment:(UITextAlignment)alignment
-                lineBreak:(UILineBreakMode)lineBreak
-              shadowColor:(UIColor*)shadowColor
-             shadowOffset:(CGSize)shadowOffset
-                 numLines:(int)numLines;
-@end
+bool IsTablet();
+void SetTablet(bool isTablet);
+
+float ScreenWidth();
+float ScreenHeight();
+void SetScreenSize(float width, float height, float scale, float rotationClockwise);
+
+// Returns a calculated scale/magnification value based upon various app settings
+float ScreenScale();
+
+// Returns the raw scale/magnification factor that was set via a call to 'SetScreenSize'
+float RawScreenScale();
+
+float ScreenXDpi();
+float ScreenYDpi();
+void SetScreenDpi(int xDpi, int yDpi);
+
+int DeviceWidth();
+int DeviceHeight();
+void SetDeviceSize(int width, int height);
+}

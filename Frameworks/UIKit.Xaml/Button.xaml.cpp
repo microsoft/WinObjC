@@ -38,6 +38,27 @@ Brush^ GetDefaultWhiteForegroundBrush() {
 
 Button::Button() {
     InitializeComponent();
+    
+    // Default to a transparent background brush so we can accept pointer input
+    static auto transparentBrush = ref new SolidColorBrush(Windows::UI::Colors::Transparent);
+    Background = transparentBrush;
+}
+
+// Accessor for our Layer content
+Image^ Button::LayerContent::get() {
+    // TODO: Add support for this.  Perhaps we return the same button's image, or we add another image within the canvas.  It should
+    // go just in front of the other button text/image, but behind any sublayers added by CoreAnimation via the SublayerCanvas property.
+    return nullptr;
+}
+
+// Accessor for our Layer content
+bool Button::HasLayerContent::get() {
+    return _content != nullptr;
+}
+
+// Accessor for our SublayerCanvas
+Canvas^ Button::SublayerCanvas::get() {
+    return _contentCanvas;
 }
 
 void Button::OnPointerPressed(PointerRoutedEventArgs^ e) {
@@ -161,9 +182,9 @@ UIKIT_XAML_EXPORT void XamlRemoveLayoutEvent(const ComPtr<IInspectable>& inspect
 // This will be used by autolayout to get the intrinsic content size when XAML has done calculating the elements final desired size.
 Windows::Foundation::Size Button::ArrangeOverride(Windows::Foundation::Size finalSize) {
     __super::ArrangeOverride(finalSize);
-	if (_layoutHook) {
-		_layoutHook->Invoke(nullptr, nullptr);
-	}
+    if (_layoutHook) {
+        _layoutHook->Invoke(nullptr, nullptr);
+    }
 
     return finalSize;
 }
@@ -173,6 +194,7 @@ void Button::OnApplyTemplate() {
     _textBlock = safe_cast<TextBlock^>(GetTemplateChild("buttonText"));
     _image = safe_cast<Image^>(GetTemplateChild("buttonImage"));
     _backgroundImage = safe_cast<Image^>(GetTemplateChild("backgroundImage"));
+    _contentCanvas = safe_cast<Canvas^>(GetTemplateChild(L"contentCanvas"));
 }
 
 UIKIT_XAML_EXPORT void XamlButtonApplyVisuals(const ComPtr<IInspectable>& inspectableButton,
