@@ -25,7 +25,7 @@
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGBase.h>
 
-Microsoft::WRL::ComPtr<ID2D1Factory> _GetD2DFactoryInstance();
+HRESULT _CGGetD2DFactory(ID2D1Factory** factory);
 
 Microsoft::WRL::ComPtr<IWICImagingFactory> _GetWICFactory();
 

@@ -1647,9 +1647,12 @@ void CGContextFillRects(CGContextRef context, const CGRect* rects, size_t count)
 */
 void CGContextDrawPath(CGContextRef context, CGPathDrawingMode mode) {
     NOISY_RETURN_IF_NULL(context);
-
-    __CGContextDrawGeometry(context, _getAndClosePathGeometry(context->Path()), mode);
-    context->ClearPath();
+    if (context->HasPath()) {
+        ID2D1Geometry* pGeometry;
+        FAIL_FAST_IF_FAILED(_CGPathGetGeometry(context->Path(), &pGeometry));
+        __CGContextDrawGeometry(context, pGeometry, mode);
+        context->ClearPath();
+    }
 }
 
 /**

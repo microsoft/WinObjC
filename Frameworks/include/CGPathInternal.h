@@ -55,6 +55,6 @@ struct CGPathElementInternal : CGPathElement {
 };
 typedef struct CGPathElementInternal CGPathElementInternal;
 
-ID2D1Geometry* _getAndClosePathGeometry(CGPathRef path);
+HRESULT _CGPathGetGeometry(CGPathRef path, ID2D1Geometry** pGeometry);
 
 #endif

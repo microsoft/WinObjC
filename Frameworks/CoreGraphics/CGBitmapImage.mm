@@ -453,7 +453,8 @@ ID2D1RenderTarget* CGBitmapImageBacking::GetRenderTarget() {
     if (_renderTarget == nullptr) {
         BYTE* imageData = static_cast<BYTE*>(LockImageData());
         ComPtr<IWICBitmap> wicBitmap = Make<CGIWICBitmap>(this, SurfaceFormat());
-        ComPtr<ID2D1Factory> d2dFactory = _GetD2DFactoryInstance();
+        ComPtr<ID2D1Factory> d2dFactory;
+        FAIL_FAST_IF_FAILED(_CGGetD2DFactory(&d2dFactory));
         ComPtr<ID2D1RenderTarget> renderTarget;
         THROW_IF_FAILED(d2dFactory->CreateWicBitmapRenderTarget(wicBitmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
         _renderTarget = renderTarget.Detach();
