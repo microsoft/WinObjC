@@ -284,7 +284,7 @@ BOOL g_resetAllTrackingGestures = TRUE;
     //  Removed/reset failed/done gestures, including gestures and DMGestures
     for (int i = 0; i < 2; i++) {
         int count = (i == 0) ? gestureCount : dmGestureCount;
-        for (int k = 0; i < count; i++) {
+        for (int k = 0; k < count; k++) {
             UIGestureRecognizer* curgesture = recognizers[i];
             UIGestureRecognizerState state = (UIGestureRecognizerState)[curgesture state];
 
