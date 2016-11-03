@@ -528,7 +528,7 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     return didRecognize;
 }
 
-- (const std::vector<TouchInfo>&)getTouches {
+- (const std::vector<TouchInfo>&)_getTouches {
     return self->_priv->touches;
 }
 

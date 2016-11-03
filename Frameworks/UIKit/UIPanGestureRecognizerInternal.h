@@ -31,6 +31,6 @@ struct Private {
     CGPoint currentTranslation;
 };
 
-@interface UIPanGestureRecognizer()
-    -(const std::vector<TouchInfo>&)getTouches;
+@interface UIPanGestureRecognizer ()
+- (const std::vector<TouchInfo>&)_getTouches;
 @end
