@@ -57,6 +57,7 @@ TEST(CFCppBase, SubclassesGetDifferentTypeIDs) {
 TEST(CFCppBase, InstanceHasTypeID) {
     CFTypeRef boringInstance = __CFBoringClass::CreateInstance();
     ASSERT_EQ(__CFBoringClass::GetTypeID(), CFGetTypeID(boringInstance));
+    EXPECT_NO_THROW(CFRelease(boringInstance));
 }
 
 TEST(CFCppBase, InstanceLifetime) {
