@@ -34,6 +34,7 @@
 #import "LoggingNative.h"
 #import "UICTFont.h"
 #import "UIFontInternal.h"
+#import <CoreTextInternal.h>
 
 #include <COMIncludes.h>
 #import <DWrite.h>
@@ -294,6 +295,24 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UIFontPrototype, CTFontGetTypeID);
 // Returns the family name of the font Xaml can use
 - (NSString*)_compatibleFamilyName {
     return static_cast<NSString*>(_DWriteGetFamilyNameForFontName(static_cast<CFStringRef>([self fontName])));
+}
+
+// WinObjC-only extension for compatibility issues between DWrite and Xaml
+// Returns the weight of the font Xaml can use
+- (DWRITE_FONT_WEIGHT)_fontWeight {
+    return _CTFontGetDWriteWeight(static_cast<CTFontRef>(self));
+}
+
+// WinObjC-only extension for compatibility issues between DWrite and Xaml
+// Returns the stretch of the font Xaml can use
+- (DWRITE_FONT_STRETCH)_fontStretch {
+    return _CTFontGetDWriteStretch(static_cast<CTFontRef>(self));
+}
+
+// WinObjC-only extension for compatibility issues between DWrite and Xaml
+// Returns the style of the font Xaml can use
+- (DWRITE_FONT_STYLE)_fontStyle {
+    return _CTFontGetDWriteStyle(static_cast<CTFontRef>(self));
 }
 
 @end

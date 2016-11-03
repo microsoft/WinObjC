@@ -22,7 +22,7 @@
 
 static const float c_errorDelta = 0.0005f;
 
-static NSAttributedString* getAttributedString(NSString* str) {
+static NSMutableAttributedString* getAttributedString(NSString* str) {
     UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Times New Roman" size:40];
     UIFont* font = [UIFont fontWithDescriptor:fontDescriptor size:40];
 
@@ -103,4 +103,28 @@ TEST(CTFramesetter, ShouldNotThrowWhenCreatingFrameWithEmptyLines) {
     EXPECT_EQ(5L, CFArrayGetCount(CTFrameGetLines(frame)));
     CFRelease(frame);
     CGPathRelease(path);
+}
+
+TEST(CTFramesetter, ShouldBeAbleToCreateMultipleFramesFromSameFramesetter) {
+    NSMutableAttributedString* attrString = getAttributedString(@"ABCDEFGHIJ");
+    [attrString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(0, 7)];
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)attrString;
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(string);
+    CFAutorelease(framesetter);
+    CGPathRef path = CGPathCreateWithRect(CGRectMake(0, 0, FLT_MAX, FLT_MAX), nullptr);
+    CTFrameRef firstFrame = CTFramesetterCreateFrame(framesetter, { 0, 5 }, path, nullptr);
+    EXPECT_NE(nil, firstFrame);
+
+    CTFrameRef secondFrame = CTFramesetterCreateFrame(framesetter, { 1, 8 }, path, nullptr);
+    EXPECT_NE(nil, secondFrame);
+
+    CTFrameRef thirdFrame = CTFramesetterCreateFrame(framesetter, { 8, 2 }, path, nullptr);
+    EXPECT_NE(nil, thirdFrame);
+
+    CTFrameRef fullFrame = CTFramesetterCreateFrame(framesetter, {}, path, nullptr);
+    EXPECT_NE(nil, fullFrame);
+    CFRelease(firstFrame);
+    CFRelease(secondFrame);
+    CFRelease(thirdFrame);
+    CFRelease(fullFrame);
 }

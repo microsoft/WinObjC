@@ -204,7 +204,7 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(CFAttributedStringRef 
     for (size_t i = 0; i < [subString length]; i += attributeRange.length) {
         NSDictionary* attribs = [static_cast<NSAttributedString*>(string) attributesAtIndex:i + range.location
                                                                       longestEffectiveRange:&attributeRange
-                                                                                    inRange:{ i, [subString length] }];
+                                                                                    inRange:{ i + range.location, [subString length] }];
 
         const DWRITE_TEXT_RANGE dwriteRange = { attributeRange.location, attributeRange.length };
 

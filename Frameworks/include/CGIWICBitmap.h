@@ -81,12 +81,13 @@ inline WICPixelFormatGUID SurfaceFormatToWICPixelFormat(__CGSurfaceFormat format
         case _ColorARGB:
             return GUID_WICPixelFormat32bppPBGRA;
         case _ColorBGRX:
-        case _ColorBGR:
             return GUID_WICPixelFormat32bppBGR;
         case _ColorGrayscale:
         case _ColorA8:
             return GUID_WICPixelFormat8bppAlpha;
+        case _ColorBGR:
         default:
+            UNIMPLEMENTED_WITH_MSG("Unsupported pixel format (%d) used in CGIWICBitmap");
             break;
     }
     // our default format is alpha premultiplied BGRA
