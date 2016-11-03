@@ -70,18 +70,20 @@
 #include <new>
 
 namespace CoreFoundation {
-template <typename T, typename _Parent = __CFRuntimeBase>
-struct CppBase : _Parent {
+template <typename T, typename TParent = __CFRuntimeBase>
+struct CppBase : TParent {
 protected:
     static void _CFFinalize(CFTypeRef cf) {
         T* t = reinterpret_cast<T*>(const_cast<void*>(cf));
+
+        // Automatically calls ~CppBase() -> ~TParent()
         t->~T();
     }
 
     using Parent = CppBase;
 
     template <typename... Args>
-    CppBase(Args&&... args) : _Parent(std::forward<Args>(args)...) {
+    CppBase(Args&&... args) : TParent(std::forward<Args>(args)...) {
     }
 
 public:
@@ -107,13 +109,25 @@ public:
                       "CoreFoundation::CppBase cannot be used with polymorphic types or classes bearing virtual functions.");
         T* ret = reinterpret_cast<T*>(
             const_cast<void*>(_CFRuntimeCreateInstance(allocator, GetTypeID(), sizeof(T) - sizeof(__CFRuntimeBase), nullptr)));
-        __CFRuntimeBase temp = *(__CFRuntimeBase*)ret;
+
+        // Technically, accessing any members of __CFRuntimeBase (which are set up by _CFRuntimeCreateInstance) after
+        // new (ret) T() is undefined behaviour, since the constructor chain does not change them from their otherwise
+        // "uninitialized" values.
+        //
+        // To work around that, we save the __CFRuntimeBase at the head of ret, call the constructor, and replace/reinitialize
+        // it. As no constructor has been invoked on ret by the time we save temp, this is not ill-defined.
+        __CFRuntimeBase temp = *reinterpret_cast<__CFRuntimeBase*>(ret);
+
         new (ret) T(std::forward<Args>(args)...);
-        *(__CFRuntimeBase*)ret = temp;
+
+        // This, however, may be ill-defined.
+        *reinterpret_cast<__CFRuntimeBase*>(ret) = temp;
+
         return ret;
     }
 
-    // Sad no-args version because you can't default the first param of many ;P
+    // Sad no-args version because you can't default the first param without defaulting the others,
+    // and you can't default the last parameter after an argument pack as it will not substitute properly.
     static T* CreateInstance() {
         return CreateInstance(kCFAllocatorDefault);
     }

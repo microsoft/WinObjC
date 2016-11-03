@@ -17,6 +17,8 @@
 #include <TestFramework.h>
 #include <CFCppBase.h>
 
+struct __CFBoringClass : CoreFoundation::CppBase<__CFBoringClass> {};
+
 struct __CFLifetimeCounter : CoreFoundation::CppBase<__CFLifetimeCounter> {
     int& ctorCountReference;
     int& dtorCountReference;
@@ -50,6 +52,11 @@ TEST(CFCppBase, SubclassesGetDifferentTypeIDs) {
     CFTypeID baseTypeID = __CFLifetimeCounter::GetTypeID();
     CFTypeID derivedTypeID = __CFSubLifetimeCounter::GetTypeID();
     ASSERT_NE(baseTypeID, derivedTypeID);
+}
+
+TEST(CFCppBase, InstanceHasTypeID) {
+    CFTypeRef boringInstance = __CFBoringClass::CreateInstance();
+    ASSERT_EQ(__CFBoringClass::GetTypeID(), CFGetTypeID(boringInstance));
 }
 
 TEST(CFCppBase, InstanceLifetime) {
