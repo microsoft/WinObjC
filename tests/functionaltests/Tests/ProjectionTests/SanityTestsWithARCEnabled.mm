@@ -37,9 +37,17 @@
 #endif
 
 #import <UWP/WindowsUIXamlMedia.h>
+#import <UWP/WIndowsStoragePickers.h>
 
 static const NSTimeInterval c_testTimeoutInSec = 5;
 
+TEST(Projection, ContainerOfContainers) {
+    StrongId<WSPFileSavePicker> fileSavePicker = [WSPFileSavePicker make];
+    StrongId<NSMutableArray> arr = [[NSMutableArray alloc] init];
+    [arr addObject:@".txt"];
+    NSMutableDictionary* dict = [fileSavePicker fileTypeChoices];
+    EXPECT_NO_THROW([dict setObject:arr forKey:@"Plain Text"]);
+}
 TEST(Projection, CreateWithARCEnabled) {
     EXPECT_NO_THROW(@autoreleasepool {
         StrongId<NSAutoreleasePool> pool = [[NSAutoreleasePool alloc] init];
