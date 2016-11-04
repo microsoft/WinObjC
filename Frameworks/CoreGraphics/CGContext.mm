@@ -183,6 +183,10 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
         renderTarget->GetFactory(&factory);
         return factory;
     }
+
+    inline bool ShouldDraw() {
+        return std::fpclassify(CurrentGState().alpha) != FP_ZERO;
+    }
 };
 
 #define NOISY_RETURN_IF_NULL(param, ...)                                    \
@@ -1488,7 +1492,7 @@ static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
     deviceContext->BeginDraw();
 
     bool layer = false;
-    if (state.alpha != 1.0f || false /* mask, clip, etc. */) {
+    if (false /* mask, clip, etc. */) {
         layer = true;
         renderTarget->PushLayer(
             D2D1::LayerParameters(D2D1::InfiniteRect(), nullptr, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE, D2D1::IdentityMatrix(), state.alpha),
@@ -1524,6 +1528,7 @@ static HRESULT __CGContextDrawGeometry(CGContextRef context,
         context, coordinateMode, nullptr, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
             auto& state = context->CurrentGState();
             if (drawMode & kCGPathFill) {
+                state.fillBrush->SetOpacity(state.alpha);
                 if (drawMode & kCGPathEOFill) {
                     // TODO(DH): GH#1077 Regenerate geometry in Even/Odd fill mode.
                 }
@@ -1533,6 +1538,8 @@ static HRESULT __CGContextDrawGeometry(CGContextRef context,
             if (drawMode & kCGPathStroke && std::fpclassify(state.lineWidth) != FP_ZERO) {
                 // This only computes the stroke style if its parameters have changed since the last draw.
                 state.ComputeStrokeStyle(deviceContext);
+
+                state.strokeBrush->SetOpacity(state.alpha);
 
                 deviceContext->DrawGeometry(geometry, state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
             }
@@ -1551,6 +1558,8 @@ static HRESULT __CGContextDrawGeometry(CGContextRef context,
 */
 void CGContextStrokeRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     auto factory = context->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
@@ -1569,6 +1578,8 @@ void CGContextStrokeRect(CGContextRef context, CGRect rect) {
 */
 void CGContextStrokeRectWithWidth(CGContextRef context, CGRect rect, CGFloat width) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     CGContextSaveGState(context);
     CGContextSetLineWidth(context, width);
     CGContextStrokeRect(context, rect);
@@ -1581,6 +1592,8 @@ void CGContextStrokeRectWithWidth(CGContextRef context, CGRect rect, CGFloat wid
 */
 void CGContextFillRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     auto factory = context->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
@@ -1599,6 +1612,8 @@ void CGContextFillRect(CGContextRef context, CGRect rect) {
 */
 void CGContextStrokeEllipseInRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     auto factory = context->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
@@ -1619,6 +1634,8 @@ void CGContextStrokeEllipseInRect(CGContextRef context, CGRect rect) {
 */
 void CGContextFillEllipseInRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     auto factory = context->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
@@ -1639,6 +1656,7 @@ void CGContextFillEllipseInRect(CGContextRef context, CGRect rect) {
 */
 void CGContextStrokeLineSegments(CGContextRef context, const CGPoint* points, unsigned count) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
 
     if (!points || count == 0 || count % 2 != 0) {
         // On the reference platform, an uneven number of points results in a sizeof(CGPoint) read
@@ -1660,6 +1678,8 @@ void CGContextStrokeLineSegments(CGContextRef context, const CGPoint* points, un
 */
 void CGContextFillRects(CGContextRef context, const CGRect* rects, size_t count) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     if (!rects || count == 0) {
         return;
     }
@@ -1677,6 +1697,8 @@ void CGContextFillRects(CGContextRef context, const CGRect* rects, size_t count)
 */
 void CGContextDrawPath(CGContextRef context, CGPathDrawingMode mode) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     if (context->HasPath()) {
         ComPtr<ID2D1Geometry> pGeometry;
         FAIL_FAST_IF_FAILED(_CGPathGetGeometry(context->Path(), &pGeometry));
@@ -1691,6 +1713,8 @@ void CGContextDrawPath(CGContextRef context, CGPathDrawingMode mode) {
 */
 void CGContextStrokePath(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     CGContextDrawPath(context, kCGPathStroke); // Clears path.
 }
 
@@ -1700,6 +1724,8 @@ void CGContextStrokePath(CGContextRef context) {
 */
 void CGContextFillPath(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     CGContextDrawPath(context, kCGPathFill); // Clears path.
 }
 
@@ -1709,6 +1735,8 @@ void CGContextFillPath(CGContextRef context) {
 */
 void CGContextEOFillPath(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     CGContextDrawPath(context, kCGPathEOFill); // Clears path.
 }
 #pragma endregion
@@ -1720,6 +1748,8 @@ void CGContextEOFillPath(CGContextRef context) {
 void CGContextDrawLinearGradient(
     CGContextRef context, CGGradientRef gradient, CGPoint startPoint, CGPoint endPoint, CGGradientDrawingOptions options) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     UNIMPLEMENTED();
 }
 
@@ -1734,6 +1764,8 @@ void CGContextDrawRadialGradient(CGContextRef context,
                                  CGFloat endRadius,
                                  CGGradientDrawingOptions options) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     UNIMPLEMENTED();
 }
 
@@ -1742,6 +1774,8 @@ void CGContextDrawRadialGradient(CGContextRef context,
 */
 void CGContextDrawShading(CGContextRef context, CGShadingRef shading) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     UNIMPLEMENTED();
 }
 #pragma endregion
@@ -1752,6 +1786,8 @@ void CGContextDrawShading(CGContextRef context, CGShadingRef shading) {
 */
 void CGContextDrawLayerInRect(CGContextRef context, CGRect destRect, CGLayerRef layer) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     UNIMPLEMENTED();
 }
 
@@ -1760,6 +1796,8 @@ void CGContextDrawLayerInRect(CGContextRef context, CGRect destRect, CGLayerRef 
 */
 void CGContextDrawLayerAtPoint(CGContextRef context, CGPoint destPoint, CGLayerRef layer) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     UNIMPLEMENTED();
 }
 #pragma endregion
@@ -1771,6 +1809,8 @@ void CGContextDrawLayerAtPoint(CGContextRef context, CGPoint destPoint, CGLayerR
 */
 void CGContextDrawPDFPage(CGContextRef context, CGPDFPageRef page) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     UNIMPLEMENTED();
 }
 #pragma endregion
