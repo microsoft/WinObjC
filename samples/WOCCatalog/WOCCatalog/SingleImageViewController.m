@@ -73,13 +73,6 @@
 - (void)scrollViewDidZoom:(UIScrollView*)aScrollView {
     // don't have to do anything special to centralize the imageView after zoom when zoomFactor is less than 1
     // xaml scrollview does that automatically now
-    CGFloat offsetX = (scrollView.bounds.size.width > scrollView.contentSize.width) ?
-                          (scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5 :
-                          0.0;
-    CGFloat offsetY = (scrollView.bounds.size.height > scrollView.contentSize.height) ?
-                          (scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5 :
-                          0.0;
-    imageView.center = CGPointMake(scrollView.contentSize.width * 0.5 + offsetX, scrollView.contentSize.height * 0.5 + offsetY);
 }
 
 - (void)handleDoubleTap:(UIGestureRecognizer*)gestureRecognizer {
