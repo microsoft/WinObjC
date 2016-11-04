@@ -170,45 +170,7 @@ Windows::Foundation::Size Button::ArrangeOverride(Windows::Foundation::Size fina
 
 void Button::OnApplyTemplate() {
     // Call GetTemplateChild to grab references to UIElements in our custom control template
-    _textBlock = safe_cast<TextBlock^>(GetTemplateChild("buttonText"));
-    _image = safe_cast<Image^>(GetTemplateChild("buttonImage"));
     _backgroundImage = safe_cast<Image^>(GetTemplateChild("backgroundImage"));
-}
-
-UIKIT_XAML_EXPORT void XamlButtonApplyVisuals(const ComPtr<IInspectable>& inspectableButton,
-    const ComPtr<IInspectable>& inspectableText,
-    const ComPtr<IInspectable>& inspectableButtonImage,
-    const ComPtr<IInspectable>& inspectableBackgroundImage,
-    const RECT insets,
-    const ComPtr<IInspectable>& inspectableTitleColor) {
-
-    auto button = safe_cast<UIKit::Button^>(reinterpret_cast<Platform::Object^>(inspectableButton.Get()));
-    auto title = safe_cast<Platform::String^>(reinterpret_cast<Platform::Object^>(inspectableText.Get()));
-    auto titleColor = safe_cast<Brush^>(reinterpret_cast<Platform::Object^>(inspectableTitleColor.Get()));
-    if (!titleColor) {
-        titleColor = GetDefaultWhiteForegroundBrush();
-    }
-
-    // Set the Textblock's title and Foreground Brush color
-    button->_textBlock->Text = title;
-    button->_textBlock->Foreground = titleColor;
-
-    // Set the background Image and its nine grid
-    auto backgroundImage = safe_cast<Brush^>(reinterpret_cast<Platform::Object^>(inspectableBackgroundImage.Get()));
-    if (backgroundImage) {
-        ImageBrush^ backgroundImageBrush = safe_cast<ImageBrush^>(backgroundImage);
-        button->_backgroundImage->Source = safe_cast<BitmapSource^>(backgroundImageBrush->ImageSource);;
-
-        // Set the NineGrid on the Button's background image which is actually a XAML Image in the Control Template
-        button->_backgroundImage->NineGrid = ThicknessHelper::FromLengths(insets.left, insets.top, insets.right, insets.bottom);
-    }
-
-    // Set the Button's Image
-    auto image = safe_cast<Brush^>(reinterpret_cast<Platform::Object^>(inspectableButtonImage.Get()));
-    if (image) {
-        ImageBrush^ imageBrush = safe_cast<ImageBrush^>(image);
-        button->_image->Source = safe_cast<BitmapSource^>(imageBrush->ImageSource);
-    }
 }
 
 UIKIT_XAML_EXPORT void XamlHookButtonPointerEvents(

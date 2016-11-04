@@ -22,11 +22,11 @@
 #import "UIFontInternal.h"
 #import "UIViewInternal.h"
 #import "UIButtonContent.h"
-#import "UIButtonProxies.h"
 #import "UIEventInternal.h"
 #import "UITouchInternal.h"
 
 #import "XamlUtilities.h"
+#import "StarboardXaml/CompositorInterface.h"
 #include "XamlControls.h"
 #include "../UIKit.Xaml/ObjCXamlControls.h"
 
@@ -39,14 +39,6 @@ struct ButtonState {
     StrongId<UIImage> backgroundImage;
     StrongId<UIColor> textColor;
     StrongId<NSString> title;
-
-    // We also save the converted data types that we need to set on the XAML Button, so that we do not convert
-    // from UIKit datatype to XAML datatype every time layoutSubviews is called.
-    Microsoft::WRL::ComPtr<IInspectable> inspectableImage;
-    Microsoft::WRL::ComPtr<IInspectable> inspectableBackgroundImage;
-    Microsoft::WRL::ComPtr<IInspectable> inspectableTitleColor;
-    Microsoft::WRL::ComPtr<IInspectable> inspectableTitle;
-    RECT backgroundImageInsets;
 };
 
 @interface UIRoundedRectButton : UIButton {
@@ -66,9 +58,8 @@ struct ButtonState {
     UIEdgeInsets _imageInsets;
     UIEdgeInsets _titleInsets;
 
-    // Proxies
-    StrongId<_UILabel_Proxy> _proxyLabel;
-    StrongId<_UIImageView_Proxy> _proxyImageView;
+    StrongId<UILabel> _textLabel;
+    StrongId<UIImageView> _imageView;
 
     bool _isPressed;
 }
@@ -162,19 +153,19 @@ struct ButtonState {
         _xamlButton = XamlControls::CreateButton();
     }
 
-    // Force-load the template, and get the TextBlock and Image for use in our proxies.
+    // Force-load the template, and get content canvas to set as our layout proxy.
     [_xamlButton applyTemplate];
 
-    WXCImage* templateImage = rt_dynamic_cast([WXCImage class], [_xamlButton getTemplateChild:@"buttonImage"]);
-    WXCTextBlock* templateText = rt_dynamic_cast([WXCTextBlock class], [_xamlButton getTemplateChild:@"buttonText"]);
+    WXCCanvas* contentCanvas = rt_dynamic_cast([WXCCanvas class], [_xamlButton getTemplateChild:@"contentCanvas"]);
 
-    if (templateText) {
-        _proxyLabel = [[_UILabel_Proxy alloc] initWithXamlElement:templateText font:[UIFont buttonFont]];
-    }
+    DisplayNode* displayNode = [[self layer] _presentationNode];
+    displayNode->SetContentLayoutProxies([_xamlButton comObj].Get(), contentCanvas.comObj.Get());
 
-    if (templateImage) {
-        _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:templateImage];
-    }
+    _imageView.attach([UIImageView new]);
+    _textLabel.attach([UILabel new]);
+
+    [self addSubview:_imageView];
+    [self addSubview:_textLabel];
 
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
@@ -221,8 +212,6 @@ struct ButtonState {
                                       // intrinsicContentSize is invalidated.
                                       [weakSelf setNeedsLayout];
                                   });
-
-    [self layer].contentsElement = _xamlButton;
 }
 
 - (instancetype)_initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
@@ -258,10 +247,6 @@ struct ButtonState {
 */
 - (void)setImage:(UIImage*)image forState:(UIControlState)state {
     _states[state].image = image;
-    WUXMImageBrush* imageBrush = ConvertUIImageToWUXMImageBrush(image);
-    if (imageBrush) {
-        _states[state].inspectableImage = [imageBrush comObj];
-    }
 
     [self setNeedsLayout];
     [self layoutIfNeeded];
@@ -271,12 +256,14 @@ struct ButtonState {
  @Status Interoperable
 */
 - (void)layoutSubviews {
-    XamlButtonApplyVisuals([_xamlButton comObj],
-                           _currentInspectableTitle(self),
-                           _currentInspectableImage(self),
-                           _currentInspectableBackgroundImage(self),
-                           _currentBackgroundImageInsets(self),
-                           _currentInspectableTitleColor(self));
+    // Probably important to keep around for after the refactor.
+    [super layoutSubviews];
+
+    [_textLabel setText:self.currentTitle];
+    [_textLabel setTextColor:self._currentTitleColor];
+    [_imageView setImage:self.currentImage];
+    
+    UIImageSetLayerContents(self.layer, self.currentBackgroundImage);
 
     // Set frame after updating the visuals
     CGRect contentFrame = [self contentRectForBounds:self.bounds];
@@ -284,9 +271,10 @@ struct ButtonState {
     CGRect imageFrame = [self imageRectForContentRect:contentFrame];
     self.titleLabel.frame = textFrame;
     self.imageView.frame = imageFrame;
+}
 
-    // Probably important to keep around for after the refactor.
-    [super layoutSubviews];
+- (void)setNeedsLayout {
+    [super setNeedsLayout];
 }
 
 static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRect) {
@@ -425,19 +413,11 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Notes UIControlStateSelected, UIControlStateApplication and UIControlStateReserved states not supported
 */
 - (void)setBackgroundImage:(UIImage*)image forState:(UIControlState)state {
-    _states[state].backgroundImage = image;
-    _states[state].backgroundImageInsets = { 0, 0, 0, 0 };
-    WUXMImageBrush* backgroundImageBrush = ConvertUIImageToWUXMImageBrush(image);
-    if (backgroundImageBrush) {
-        _states[state].inspectableBackgroundImage = [backgroundImageBrush comObj];
-        _states[state].backgroundImageInsets = { image.capInsets.left * image.scale,
-                                                 image.capInsets.top * image.scale,
-                                                 image.capInsets.right * image.scale,
-                                                 image.capInsets.bottom * image.scale };
+    if (![_states[state].backgroundImage isEqual:image]) {
+        _states[state].backgroundImage = image;
+        [self setNeedsLayout];
+        [self layoutIfNeeded];
     }
-
-    [self setNeedsLayout];
-    [self layoutIfNeeded];
 }
 
 /**
@@ -476,14 +456,12 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (void)setTitle:(NSString*)title forState:(UIControlState)state {
-    _states[state].title.attach([title copy]);
-    RTObject* rtString = [WFPropertyValue createString:title];
-    if (rtString) {
-        _states[state].inspectableTitle = [rtString comObj];
-    }
+    if (![_states[state].title isEqual:title]) {
+        _states[state].title.attach([title copy]);
 
-    [self setNeedsLayout];
-    [self layoutIfNeeded];
+        [self setNeedsLayout];
+        [self layoutIfNeeded];
+    }
 }
 
 /**
@@ -508,10 +486,6 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 - (void)setTitleColor:(UIColor*)color forState:(UIControlState)state {
     _states[state].textColor = color;
     WUColor* convertedColor = ConvertUIColorToWUColor(color);
-    WUXMSolidColorBrush* titleColorBrush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
-    if (titleColorBrush) {
-        _states[state].inspectableTitleColor = [titleColorBrush comObj];
-    }
 
     [self setNeedsLayout];
     [self layoutIfNeeded];
@@ -796,44 +770,12 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     return self->_states[UIControlStateNormal].title;
 }
 
-static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableTitle(UIButton* self) {
-    if (self->_states[self->_curState].inspectableTitle) {
-        return self->_states[self->_curState].inspectableTitle;
+- (UIColor*)_currentTitleColor {
+    if (self->_states[self->_curState].textColor != nil) {
+        return self->_states[self->_curState].textColor;
     }
 
-    return self->_states[UIControlStateNormal].inspectableTitle;
-}
-
-static RECT _currentBackgroundImageInsets(UIButton* self) {
-    if (self->_states[self->_curState].backgroundImage) {
-        return self->_states[self->_curState].backgroundImageInsets;
-    }
-
-    return self->_states[UIControlStateNormal].backgroundImageInsets;
-}
-
-static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableTitleColor(UIButton* self) {
-    if (self->_states[self->_curState].inspectableTitleColor) {
-        return self->_states[self->_curState].inspectableTitleColor;
-    }
-
-    return self->_states[UIControlStateNormal].inspectableTitleColor;
-}
-
-static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableImage(UIButton* self) {
-    if (self->_states[self->_curState].inspectableImage) {
-        return self->_states[self->_curState].inspectableImage;
-    }
-
-    return self->_states[UIControlStateNormal].inspectableImage;
-}
-
-static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableBackgroundImage(UIButton* self) {
-    if (self->_states[self->_curState].inspectableBackgroundImage) {
-        return self->_states[self->_curState].inspectableBackgroundImage;
-    }
-
-    return self->_states[UIControlStateNormal].inspectableBackgroundImage;
+    return self->_states[UIControlStateNormal].textColor;
 }
 
 /**
@@ -854,7 +796,7 @@ static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableBackgroundImage(U
  @Notes Returns a mock UILabel that proxies some common properties and selectors to the underlying TextBlock
 */
 - (UILabel*)titleLabel {
-    return (UILabel*)[[_proxyLabel retain] autorelease];
+    return [[_textLabel retain] autorelease];
 }
 
 /**
@@ -862,7 +804,7 @@ static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableBackgroundImage(U
  @Notes Returns a mock UIImageView that proxies some common properties and selectors to the underlying Image
 */
 - (UIImageView*)imageView {
-    return (UIImageView*)[[_proxyImageView retain] autorelease];
+    return [[_imageView retain] autorelease];
 }
 
 /**

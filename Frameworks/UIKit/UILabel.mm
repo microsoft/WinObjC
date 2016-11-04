@@ -243,6 +243,9 @@
  @Status Interoperable
 */
 - (void)setText:(NSString*)newStr {
+    if (newStr == nil && _text == nil) {
+        return;
+    }
     if (![newStr isKindOfClass:[NSString class]]) {
         newStr = [newStr description];
     }
@@ -318,6 +321,9 @@
  @Status Interoperable
 */
 - (void)setTextColor:(UIColor*)color {
+    if (color == nil && _textColor == nil) {
+        return;
+    }
     if (![_textColor isEqual:color]) {
         [[_textColor retain] autorelease];
         _textColor = color;

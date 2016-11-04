@@ -223,7 +223,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
     // setting the rootElement and the content element for scroll viewer
     DisplayNode* displayNode = [[self layer] _presentationNode];
-    displayNode->SetScrollviewerControls(_scrollViewer.comObj.Get(), _contentCanvas.comObj.Get());
+    displayNode->SetContentLayoutProxies(_scrollViewer.comObj.Get(), _contentCanvas.comObj.Get());
 
     // setting up manipulation, viewchanging and viewchanged event handlers
     [self _setupManipulationEventHandlers];

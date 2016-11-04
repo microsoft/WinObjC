@@ -237,10 +237,10 @@ public:
 
     void SetShouldRasterize(bool shouldRasterize);
 
-    // Setting the root control and the content control for scrollviewer
+    // Setting the root control and the content control for hosted xaml controls like scrollviewer
     // this is needed because root control will be the first child of CALayerXaml
     // and the content control will be the one to layout children
-    void SetScrollviewerControls(IInspectable* rootControl, IInspectable* contentControl);
+    void SetContentLayoutProxies(IInspectable* rootControl, IInspectable* contentControl);
 
     float GetPresentationPropertyValue(const char* name);
     void AddToRoot();
