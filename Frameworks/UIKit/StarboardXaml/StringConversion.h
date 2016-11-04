@@ -15,6 +15,4 @@
 //******************************************************************************
 #pragma once
 
-#include "winobjc\winobjc.h"
-
 extern "C" const char* _RawBufferFromNSString(void* str);

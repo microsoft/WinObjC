@@ -302,10 +302,12 @@ static void _initWithHtml(NSMutableAttributedString* self, NSDictionary* attribu
     __block NSDictionary* attributes;
 
     // Find out how many runs we have
-    [self enumerateAttributesInRange:NSMakeRange(0, self.string.length) options:options usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop) {
-        attributeCount++;
-        attributes = attrs;
-    }];
+    [self enumerateAttributesInRange:NSMakeRange(0, self.string.length)
+                             options:options
+                          usingBlock:^(NSDictionary* attrs, NSRange range, BOOL* stop) {
+                              attributeCount++;
+                              attributes = attrs;
+                          }];
 
     // If we have 0 or 1 run, just use a regular NSString boundingRectWithSize
     if (attributeCount < 2) {

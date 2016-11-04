@@ -27,7 +27,7 @@
 #import "CALayerInternal.h"
 #import "UITableViewInternal.h"
 #import "UIColorInternal.h"
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayProperties.h"
 
 #import <algorithm>
 
@@ -678,7 +678,7 @@ static float getMarginWidth(UITableViewCell* self) {
 
     float marginWidth = 0.0f;
     if (tableViewWidth > 20) {
-        if (tableViewWidth < 400 || !GetCACompositor()->isTablet()) {
+        if (tableViewWidth < 400 || !DisplayProperties::IsTablet()) {
             marginWidth = 10.0f;
         } else {
             marginWidth = std::max(31.0f, std::min(45.0f, tableViewWidth * 0.06f));

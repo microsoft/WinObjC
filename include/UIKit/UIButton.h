@@ -95,7 +95,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly, retain) UIImage* currentImage;
 @property (nonatomic, readonly, retain) UIImageView* imageView;
 @property (nonatomic, readonly, retain) UILabel* titleLabel;
-@property (nonatomic, retain) UIColor* tintColor;
+@property (nonatomic, retain) UIColor* tintColor STUB_PROPERTY;
 @property (nonatomic, retain) UIFont* font;
 @property (readonly, nonatomic, strong) NSAttributedString* currentAttributedTitle STUB_PROPERTY;
 

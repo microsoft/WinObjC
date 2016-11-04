@@ -22,14 +22,14 @@
 CA_EXPORT_CLASS
 @interface CAReplicatorLayer : CALayer <CAMediaTiming, NSCoding>
 
-@property NSInteger instanceCount;
+@property NSInteger instanceCount STUB_PROPERTY;
 @property CFTimeInterval instanceDelay STUB_PROPERTY;
-@property CATransform3D instanceTransform;
+@property CATransform3D instanceTransform STUB_PROPERTY;
 @property BOOL preservesDepth STUB_PROPERTY;
 @property CGColorRef instanceColor STUB_PROPERTY;
-@property float instanceRedOffset;
-@property float instanceGreenOffset;
-@property float instanceBlueOffset;
+@property float instanceRedOffset STUB_PROPERTY;
+@property float instanceGreenOffset STUB_PROPERTY;
+@property float instanceBlueOffset STUB_PROPERTY;
 @property float instanceAlphaOffset STUB_PROPERTY;
 
 @end

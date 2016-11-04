@@ -18,7 +18,7 @@
 #pragma once
 
 #ifdef __cplusplus_winrt
-#include "LayerRegistration.h"
+#include "XamlTypeInfoRegistration.h"
 #endif
 
 typedef enum {
