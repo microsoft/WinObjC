@@ -22,7 +22,7 @@
 @public
     // Adding a WUXIPointerRoutedEventArgs property so that we can mark the routed event as handled/not handled
     // when touchsBegan:withEvent method is called.
-    WUXIPointerRoutedEventArgs* _routedEventArgs;
+    StrongId<WUXIPointerRoutedEventArgs> _routedEventArgs;
     NSTimeInterval _timestamp;
     float _touchX, _touchY;
     float _previousTouchX, _previousTouchY;

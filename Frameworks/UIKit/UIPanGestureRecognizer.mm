@@ -27,22 +27,9 @@
 #import "UIScrollViewInternal.h"
 #import "UWP/WindowsUIInput.h"
 #import "UITouchInternal.h"
+#import "UIPanGestureRecognizerInternal.h"
 
 static const wchar_t* TAG = L"UIPanGestureRecognizer";
-
-// So we can allocate explicitly because otherwise constructors aren't called:
-struct TouchInfo {
-    UITouch* touch;
-    CGPoint startPos, lastPos;
-    double startTime;
-};
-
-struct Private {
-    std::vector<TouchInfo> touches;
-    CGPoint currentVelocity;
-    CGPoint lastCenter;
-    CGPoint currentTranslation;
-};
 
 #define VELOCITY_THRESHOLD 50.0f
 NSArray* curPanList = nil;
@@ -424,11 +411,12 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     return _touchedView;
 }
 
-/**
- @Status Interoperable
-*/
 - (void)_setDragSlack:(float)slack {
     _dragSlack = slack;
+}
+
+- (float) _getDragSlack {
+    return _dragSlack;
 }
 
 /**
@@ -539,6 +527,10 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     curPanList = nil;
 
     return didRecognize;
+}
+
+- (const std::vector<TouchInfo>&)_getTouches {
+    return self->_priv->touches;
 }
 
 @end
