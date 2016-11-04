@@ -150,10 +150,10 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
 };
 
 HRESULT _CGPathGetGeometry(CGPathRef path, ID2D1Geometry** pGeometry) {
-    if (path && pGeometry) {
-        RETURN_IF_FAILED(path->ClosePath());
-        path->GetPathGeometry().CopyTo(pGeometry);
-    }
+    RETURN_HR_IF_NULL(E_POINTER, pGeometry);
+    RETURN_HR_IF_NULL(E_POINTER, path);
+    RETURN_IF_FAILED(path->ClosePath());
+    path->GetPathGeometry().CopyTo(pGeometry);
     return S_OK;
 }
 
