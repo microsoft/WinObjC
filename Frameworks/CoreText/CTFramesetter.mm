@@ -35,18 +35,18 @@ static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameSize, CF
         range.length = typesetter->_characters.size();
     }
 
-    _CTFrame* ret = _DWriteGetFrame(static_cast<CFAttributedStringRef>(typesetter->_attributedString.get()), range, frameSize);
+    StrongId<_CTFrame> ret = _DWriteGetFrame(static_cast<CFAttributedStringRef>(typesetter->_attributedString.get()), range, frameSize);
 
     // Trying to access attributes without any text will throw an error
     if (range.length <= 0L) {
-        return [ret retain];
+        return ret.detach();
     }
 
     CTParagraphStyleRef settings = static_cast<CTParagraphStyleRef>(
         [typesetter->_attributedString attribute:static_cast<NSString*>(kCTParagraphStyleAttributeName) atIndex:0 effectiveRange:nullptr]);
 
     if (settings == nil) {
-        return [ret retain];
+        return ret.detach();
     }
 
     // DWrite only gives manual control of lineheight when it is constant through a frame
@@ -71,7 +71,7 @@ static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameSize, CF
         ret->_frameRect.size.height += totalShifted;
     }
 
-    return [ret retain];
+    return ret.detach();
 }
 
 /**

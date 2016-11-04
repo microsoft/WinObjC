@@ -155,7 +155,6 @@ TEST_P(CoreTextLineSpaceMultipleTest, OriginsShouldBeMovedByRatio) {
     };
     NSDictionary* attributes = @{ static_cast<NSString*>(kCTParagraphStyleAttributeName) : (id)CTParagraphStyleCreate(settings, 1) };
     [multipleString setAttributes:attributes range:NSMakeRange(0, 14)];
-
     CTFramesetterRef multipleFramesetter = CTFramesetterCreateWithAttributedString(static_cast<CFAttributedStringRef>(multipleString));
     CFAutorelease(multipleFramesetter);
     CTFrameRef multipleFrame = CTFramesetterCreateFrame(multipleFramesetter, {}, path, nullptr);
@@ -168,4 +167,8 @@ TEST_P(CoreTextLineSpaceMultipleTest, OriginsShouldBeMovedByRatio) {
 
 INSTANTIATE_TEST_CASE_P(OriginsShouldBeMovedByRatio,
                         CoreTextLineSpaceMultipleTest,
-                        ::testing::Values(0.5, 1.0, 1.5, 2.0, 4.0, 16.0, 255.9));
+                        ::testing::Values(0.5, 1.0, 1.5, 2.0, 4.0, 16.0, 255.9, []() {
+                            // Need to seed rand before calling to prevent getting the same value each time
+                            srand(time(nullptr));
+                            return (CGFloat)rand() / (CGFloat)RAND_MAX;
+                        }()));
