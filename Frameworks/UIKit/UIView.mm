@@ -141,7 +141,6 @@ BOOL g_resetAllTrackingGestures = TRUE;
     const static int MAXIMUM_VIEW_ALLOWED = 128;
     UIView* views[MAXIMUM_VIEW_ALLOWED];
     int viewDepth = 0;
-    bool handled = false;
 
     if (g_resetAllTrackingGestures) {
         g_resetAllTrackingGestures = FALSE;
