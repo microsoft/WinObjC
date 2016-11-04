@@ -21,16 +21,10 @@ using namespace Microsoft::WRL;
 
 HRESULT _CGGetD2DFactory(ID2D1Factory** factory) {
     static ComPtr<ID2D1Factory> sFactory;
-    static HRESULT sHr;
-    static dispatch_once_t dispatchToken;
+    static HRESULT sHr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &sFactory);
 
-    dispatch_once(&dispatchToken, ^{
-        sHr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &sFactory);
-    });
-
-    sFactory.Get()->AddRef();
     sFactory.CopyTo(factory);
-    return sHr;
+    RETURN_HR(sHr);
 }
 
 static ComPtr<IWICImagingFactory> __createWICFactory() {

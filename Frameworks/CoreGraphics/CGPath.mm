@@ -152,7 +152,7 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
 HRESULT _CGPathGetGeometry(CGPathRef path, ID2D1Geometry** pGeometry) {
     if (path && pGeometry) {
         RETURN_IF_FAILED(path->ClosePath());
-        *pGeometry = path->GetPathGeometry().Get();
+        path->GetPathGeometry().CopyTo(pGeometry);
     }
     return S_OK;
 }
