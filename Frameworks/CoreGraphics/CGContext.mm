@@ -1650,7 +1650,7 @@ void CGContextDrawPath(CGContextRef context, CGPathDrawingMode mode) {
     if (context->HasPath()) {
         ID2D1Geometry* pGeometry;
         FAIL_FAST_IF_FAILED(_CGPathGetGeometry(context->Path(), &pGeometry));
-        __CGContextDrawGeometry(context, pGeometry, mode);
+        FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, pGeometry, mode));
         context->ClearPath();
     }
 }

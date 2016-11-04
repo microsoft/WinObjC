@@ -19,21 +19,17 @@
 
 using namespace Microsoft::WRL;
 
-// Private helper for creating a D2DFactory
-static HRESULT __createD2DFactory(ID2D1Factory** factory) {
-    return D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, factory);
-}
-
 HRESULT _CGGetD2DFactory(ID2D1Factory** factory) {
     static ComPtr<ID2D1Factory> sFactory;
     static HRESULT sHr;
     static dispatch_once_t dispatchToken;
 
     dispatch_once(&dispatchToken, ^{
-        sHr = __createD2DFactory(&sFactory);
+        sHr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &sFactory);
     });
+
     sFactory.Get()->AddRef();
-    *factory = sFactory.Get();
+    sFactory.CopyTo(factory);
     return sHr;
 }
 
