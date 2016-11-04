@@ -166,7 +166,9 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     for (auto const& pointer : [gesture _getTouches]) {
         UITouch* touch = pointer.touch;
         // start direct manipulation only if active touch presents
-        if (touch.phase != UITouchPhaseCancelled && touch->_routedEventArgs.pointer.pointerDeviceType == WDIPointerDeviceTypeTouch) {
+        if (touch.phase != UITouchPhaseCancelled && 
+            touch.phase != UITouchPhaseEnded &&
+            touch->_routedEventArgs.pointer.pointerDeviceType == WDIPointerDeviceTypeTouch) {
             if (![WXFrameworkElement tryStartDirectManipulation:touch->_routedEventArgs.pointer]) {
                 TraceWarning(TAG, L"DManip failed to start");
             }

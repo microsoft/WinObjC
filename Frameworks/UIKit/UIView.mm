@@ -43,7 +43,6 @@
 
 #import <math.h>
 #import <string>
-#import <array>
 
 @class UIAppearanceSetter;
 
