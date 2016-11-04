@@ -156,6 +156,32 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(CFAttributedStringRef 
 
             RETURN_NULL_IF_FAILED(textFormat->SetReadingDirection(dwriteDirection));
         }
+
+        CTLineBreakMode lineBreakMode;
+        if (CTParagraphStyleGetValueForSpecifier(settings,
+                                                 kCTParagraphStyleSpecifierLineBreakMode,
+                                                 sizeof(lineBreakMode),
+                                                 &lineBreakMode)) {
+            DWRITE_WORD_WRAPPING wrapping;
+            switch (lineBreakMode) {
+                case kCTLineBreakByClipping:
+                    wrapping = DWRITE_WORD_WRAPPING_NO_WRAP;
+                    break;
+                case kCTLineBreakByCharWrapping:
+                    wrapping = DWRITE_WORD_WRAPPING_CHARACTER;
+                    break;
+                // TODO 1121:: DWrite does not support line breaking by truncation, so just use default for now
+                case kCTLineBreakByTruncatingHead:
+                case kCTLineBreakByTruncatingTail:
+                case kCTLineBreakByTruncatingMiddle:
+                case kCTLineBreakByWordWrapping:
+                default:
+                    wrapping = DWRITE_WORD_WRAPPING_WRAP;
+                    break;
+            }
+
+            THROW_IF_FAILED(textFormat->SetWordWrapping(wrapping));
+        }
     }
 
     return textFormat;

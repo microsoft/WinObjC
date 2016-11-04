@@ -26,7 +26,7 @@ using namespace std;
 @implementation _CTFramesetter : NSObject
 @end
 
-static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameSize, CFRange range) {
+static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameRect, CFRange range) {
     RETURN_NULL_IF(framesetter == nil);
 
     // Call _DWriteWrapper to get _CTLine object list that makes up this frame
@@ -35,7 +35,7 @@ static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameSize, CF
         range.length = typesetter->_characters.size();
     }
 
-    StrongId<_CTFrame> ret = _DWriteGetFrame(static_cast<CFAttributedStringRef>(typesetter->_attributedString.get()), range, frameSize);
+    StrongId<_CTFrame> ret = _DWriteGetFrame(static_cast<CFAttributedStringRef>(typesetter->_attributedString.get()), range, frameRect);
 
     // Trying to access attributes without any text will throw an error
     if (range.length <= 0L) {
@@ -60,7 +60,7 @@ static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameSize, CF
         // The actual ratio we need to change the line height by is lineHeightMultiple - 1
         lineHeightMultiple -= 1.0f;
         CGFloat totalShifted = 0.0f;
-        CGFloat lastOriginY = frameSize.origin.y;
+        CGFloat lastOriginY = frameRect.origin.y;
         for (size_t i = 0; i < ret->_lineOrigins.size(); ++i) {
             totalShifted += lineHeightMultiple * (ret->_lineOrigins[i].y - lastOriginY);
             lastOriginY = ret->_lineOrigins[i].y;
@@ -69,6 +69,18 @@ static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameSize, CF
 
         // Adjust framesize to account for changes in lineheights
         ret->_frameRect.size.height += totalShifted;
+    }
+
+    // CoreText binds the origin of each line to the left for clipped lines no matter the writing direction / alignment
+    CTLineBreakMode lineBreakMode;
+    if (CTParagraphStyleGetValueForSpecifier(settings, kCTParagraphStyleSpecifierLineBreakMode, sizeof(lineBreakMode), &lineBreakMode) &&
+        lineBreakMode == kCTLineBreakByClipping) {
+        for (size_t i = 0; i < ret->_lineOrigins.size(); ++i) {
+            if (CTLineGetTypographicBounds(static_cast<CTLineRef>([ret->_lines objectAtIndex:i]), nullptr, nullptr, nullptr) >
+                frameRect.size.width) {
+                ret->_lineOrigins[i].x = frameRect.origin.x;
+            }
+        }
     }
 
     return ret.detach();
