@@ -2579,8 +2579,8 @@ inline WXUIElement* _getBackingXamlElementForCALayer(CALayer* layer) {
         while (fromLayer.superlayer != nil) {
             fromLayer = fromLayer.superlayer;
         }
-    } 
-    
+    }
+
     if (!toLayer) {
         toLayer = fromLayer;
         while (toLayer.superlayer != nil) {
@@ -2594,7 +2594,7 @@ inline WXUIElement* _getBackingXamlElementForCALayer(CALayer* layer) {
     // get the backing xaml UIElement for toLayer
     WXUIElement* toLayerElement = _getBackingXamlElementForCALayer(toLayer);
 
-    // set up transform from xaml elment in fromLayer to xaml element in toLayer
+    // set up transform from xaml element in fromLayer to xaml element in toLayer
     WUXMGeneralTransform* transform = [fromLayerElement transformToVisual:toLayerElement];
 
     // transform the points in fromLayer to point in toLayer

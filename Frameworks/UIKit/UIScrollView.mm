@@ -38,7 +38,7 @@
 #import <UWP/WindowsUIXamlControls.h>
 #import <UWP/WindowsUIXamlShapes.h>
 
-#import "_UIDMPanGestureRecognizer.h"
+#import "_UIDirectManipulationRecognizer.h"
 #import "CAAnimationInternal.h"
 #import "CALayerInternal.h"
 #import "CACompositor.h"
@@ -58,7 +58,7 @@ static const bool DEBUG_VERBOSE = DEBUG_ALL || false;
 static const bool DEBUG_DELEGATE = DEBUG_ALL || false;
 static const bool DEBUG_INSETS = DEBUG_ALL || false;
 static const bool DEBUG_ZOOM = DEBUG_ALL || false;
-static const bool DEBUG_DMANIP_GESTURE = DEBUG_ALL || false;
+static const bool DEBUG_DMANIP_GESTURE = DEBUG_ALL || true;
 
 /** @Status Stub */
 const float UIScrollViewDecelerationRateNormal = StubConstant();
@@ -164,12 +164,12 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     [self _setManipulationMode:WUXIManipulationModesSystem recursive:YES];
 
     const std::vector<TouchInfo>& pointers = [gesture _getTouches];
-    for (size_t i = 0; i < pointers.size(); ++i) {
-        UITouch* touch = pointers[i].touch;
+    for (auto const& pointer : pointers) {
+        UITouch* touch = pointer.touch;
         // start Direct manipuation only if active touch presents
         if (touch.phase != UITouchPhaseCancelled && touch->_routedEventArgs.pointer.pointerDeviceType == WDIPointerDeviceTypeTouch) {
             if (![WXFrameworkElement tryStartDirectManipulation:touch->_routedEventArgs.pointer]) {
-                TraceWarning(TAG, L"DManip didn't start");
+                TraceWarning(TAG, L"DManip failed to start");
             }
         }
     }
@@ -293,9 +293,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     _scrollViewer.zoomMode = WXCZoomModeDisabled;
 
     // setting transparent background so we can receive touch input
-    WUColor* convertedColor = ConvertUIColorToWUColor([UIColor clearColor]);
-    WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
-    _contentCanvas.background = brush;
+    _contentCanvas.background = [WUXMSolidColorBrush makeInstanceWithColor:[WUColors transparent]];
 
     // by default, disable direct manipulation on backing scrollviewer
     [self _setManipulationMode:WUXIManipulationModesAll recursive:NO];

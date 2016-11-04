@@ -17,7 +17,7 @@
 #import "Starboard.h"
 #import "UIGestureRecognizerInternal.h"
 #import "UIPanGestureRecognizerInternal.h"
-#import "_UIDMPanGestureRecognizer.h"
+#import "_UIDirectManipulationRecognizer.h"
 
 static const wchar_t* TAG = L"_UIDMPanGestureRecognizer";
 
@@ -25,6 +25,9 @@ static const wchar_t* TAG = L"_UIDMPanGestureRecognizer";
 }
 
 static void commonInit(UIPanGestureRecognizer* self) {
+    // setting it to 7.0 which is slightly larger than 6.0 which is used
+    // by PanGestureRecognizer, this is to ensure PanGestureRecognizer kicks
+    // in first before us.
     [self _setDragSlack:7.0f];
 }
 

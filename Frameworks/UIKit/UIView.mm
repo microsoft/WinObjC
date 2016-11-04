@@ -39,10 +39,11 @@
 #import "UWP/WindowsUIXamlControls.h"
 #import "UIEventInternal.h"
 #import "UITouchInternal.h"
-#import "_UIDMPanGestureRecognizer.h"
+#import "_UIDirectManipulationRecognizer.h"
 
 #import <math.h>
 #import <string>
+#import <array>
 
 @class UIAppearanceSetter;
 
@@ -145,7 +146,7 @@ BOOL g_resetAllTrackingGestures = TRUE;
 
     if (g_resetAllTrackingGestures) {
         g_resetAllTrackingGestures = FALSE;
-        // Find gesture recognizers in the heirarchy, back-first
+        // Find gesture recognizers in the hierarchy, back-first
         UIView* curView = view;
 
         while (curView != nil) {
@@ -153,7 +154,7 @@ BOOL g_resetAllTrackingGestures = TRUE;
                 views[viewDepth++] = curView;
                 curView = curView->priv->superview;
             } else {
-                TraceWarning(TAG, L"The view hierachy exceed maxinum allowed number, ignoring the rest");
+                TraceWarning(TAG, L"The nubmer of view in hierachy exceed maximum allowed, ignoring the rest");
                 break;
             }
         }
@@ -173,23 +174,23 @@ BOOL g_resetAllTrackingGestures = TRUE;
     g_curGesturesDict = [NSMutableDictionary new];
 
     const static int MAXIMUM_GESTURE_ALLOW = 128;
-    const static int MAXIMUM_DMGESTURE_ALLOW = 16;
+    const static int MAXIMUM_DMANIPGESTURE_ALLOW = 16;
 
-    UIGestureRecognizer* recognizers[MAXIMUM_GESTURE_ALLOW];
-    UIGestureRecognizer* dmrecognizers[MAXIMUM_DMGESTURE_ALLOW];
+    std::array<UIGestureRecognizer*, MAXIMUM_GESTURE_ALLOW> recognizers{};
+    std::array<UIGestureRecognizer*, MAXIMUM_DMANIPGESTURE_ALLOW> dManipRecognizers{};
 
     // separating all enabled gestures into its own list
     // and adding each list into a tracking dictionary
     int gestureCount = 0;
-    int dmGestureCount = 0;
+    int dManipGestureCount = 0;
     for (UIGestureRecognizer* curgesture in g_currentlyTrackingGesturesList) {
         if (![curgesture isKindOfClass:[_UIDMPanGestureRecognizer class]]) {
             recognizers[gestureCount++] = curgesture;
         } else {
-            if (dmGestureCount < MAXIMUM_DMGESTURE_ALLOW) {
-                dmrecognizers[dmGestureCount++] = curgesture;
+            if (dManipGestureCount < MAXIMUM_DMANIPGESTURE_ALLOW) {
+                dManipRecognizers[dManipGestureCount++] = curgesture;
             } else {
-                TraceWarning(TAG, L"DMGestures exceed maxinum allowed, ignoring the rest");
+                TraceWarning(TAG, L"The number of DManip gestures exceed maximum allowed, ignoring the rest");
                 break;
             }
         }
@@ -206,9 +207,12 @@ BOOL g_resetAllTrackingGestures = TRUE;
     }
 
     // sendTouch to gesture for state transiton
-    BOOL gestureOnGoing = NO; 
-    for (int i = 0; i < gestureCount; i++) {
-        UIGestureRecognizer* curgesture = recognizers[i];
+    BOOL gestureOnGoing = NO;
+    for (const auto& curgesture : recognizers) {
+        if (!curgesture) {
+            break;
+        }
+
         if ([curgesture state] != UIGestureRecognizerStateCancelled) {
             if (DEBUG_GESTURES) {
                 TraceVerbose(TAG, L"Checking gesture %hs.", object_getClassName(curgesture));
@@ -226,34 +230,45 @@ BOOL g_resetAllTrackingGestures = TRUE;
                 if ((curgesture.state == UIGestureRecognizerStateBegan) || (curgesture.state == UIGestureRecognizerStateRecognized)) {
                     gestureOnGoing = YES;
                     if (DEBUG_GESTURES) {
-                        TraceVerbose(TAG, L"gesture %hs is in state %d, cancel DMGesture.", object_getClassName(curgesture), curgesture.state);
+                        TraceVerbose(TAG,
+                                     L"gesture %hs is in state %d, cancel DManipGesture.",
+                                     object_getClassName(curgesture),
+                                     curgesture.state);
                     }
                 }
             }
         }
     }
 
-    // scanning DM Getures, if a gestures is on going, cancel DM Gestures
+    // scanning DManip Gestures, if one gesture is ongoing, cancel all DManip Gestures
     // otherwise, send Touch to DM gestures
-    for (int i = 0; i < dmGestureCount; i++) {
-        UIGestureRecognizer* dmGesture = dmrecognizers[i];
+    for (const auto& dManipGesture : dManipRecognizers) {
+        if (!dManipGesture) {
+            break;
+        }
+
+        // UIGestureRecognizer* dManipGesture = dManipRecognizers[i];
         if (gestureOnGoing) {
-            [dmGesture _cancelIfActive];
+            [dManipGesture _cancelIfActive];
             if (DEBUG_GESTURES) {
-                TraceVerbose(TAG, L"Cancelled DMGesture %hs .", object_getClassName(dmGesture));
+                TraceVerbose(TAG, L"Cancelled DManip gesture %hs .", object_getClassName(dManipGesture));
             }
         } else {
-            if ([dmGesture state] != UIGestureRecognizerStateCancelled) {
-                id delegate = [dmGesture delegate];
+            if ([dManipGesture state] != UIGestureRecognizerStateCancelled) {
+                id delegate = [dManipGesture delegate];
+
                 BOOL send = TRUE;
                 if (touch.phase == UITouchPhaseBegan && [delegate respondsToSelector:@selector(gestureRecognizer:shouldReceiveTouch:)]) {
-                    send = [delegate gestureRecognizer:dmGesture shouldReceiveTouch:touch];
+                    send = [delegate gestureRecognizer:dManipGesture shouldReceiveTouch:touch];
                 }
 
                 if (send) {
-                    [dmGesture performSelector:eventName withObject:[NSMutableSet setWithObject:touch] withObject:event];
+                    [dManipGesture performSelector:eventName withObject:[NSMutableSet setWithObject:touch] withObject:event];
                     if (DEBUG_GESTURES) {
-                        TraceVerbose(TAG, L"Send Touch with phase=%d to DMGesture %hs.", touch.phase, object_getClassName(dmGesture));
+                        TraceVerbose(TAG,
+                                     L"Send Touch with phase=%d to DManip gesture %hs.",
+                                     touch.phase,
+                                     object_getClassName(dManipGesture));
                     }
                 }
             }
@@ -261,18 +276,14 @@ BOOL g_resetAllTrackingGestures = TRUE;
     }
 
     // gesture priority list
-    const static id s_gesturesPriority[] = {[UIPinchGestureRecognizer class],
-                                            [UISwipeGestureRecognizer class],
-                                            [UIPanGestureRecognizer class],
-                                            [UILongPressGestureRecognizer class],
-                                            [UITapGestureRecognizer class],
-                                            [_UIDMPanGestureRecognizer class]};
+    const static id s_gesturesPriority[] = {[UIPinchGestureRecognizer class], [UISwipeGestureRecognizer class],
+                                            [UIPanGestureRecognizer class],   [UILongPressGestureRecognizer class],
+                                            [UITapGestureRecognizer class],   [_UIDMPanGestureRecognizer class] };
 
     const static int s_numGestureTypes = sizeof(s_gesturesPriority) / sizeof(s_gesturesPriority[0]);
 
     //  Process all gestures, including DM gesture
-    for (int i = 0; i < s_numGestureTypes; i++) {
-        id curgestureClass = s_gesturesPriority[i];
+    for (auto const& curgestureClass : s_gesturesPriority) {
         id gestures = [g_curGesturesDict objectForKey:curgestureClass];
         if ([curgestureClass _fireGestures:gestures shouldCancelTouches:shouldCancelTouches]) {
             if (DEBUG_GESTURES) {
@@ -281,32 +292,32 @@ BOOL g_resetAllTrackingGestures = TRUE;
         }
     }
 
-    //  Removed/reset failed/done gestures, including gestures and DMGestures
-    for (int i = 0; i < 2; i++) {
-        int count = (i == 0) ? gestureCount : dmGestureCount;
-        for (int k = 0; k < count; k++) {
-            UIGestureRecognizer* curgesture = ( i==0 ) ? recognizers[k] : dmrecognizers[k];
-            UIGestureRecognizerState state = (UIGestureRecognizerState)[curgesture state];
-
-            if (state == UIGestureRecognizerStateRecognized || state == UIGestureRecognizerStateEnded ||
-                state == UIGestureRecognizerStateFailed || state == UIGestureRecognizerStateCancelled) {
-                [curgesture reset];
-
-                if (DEBUG_GESTURES) {
-                    TraceVerbose(TAG, L"Removing gesture %hs %x state=%d.", object_getClassName(curgesture), curgesture, state);
-                }
-
-                [g_currentlyTrackingGesturesList removeObject:curgesture];
-                id gesturesArr = [g_curGesturesDict objectForKey:[curgesture class]];
-                [gesturesArr removeObject:curgesture];
-            }
-        }
-    }
+    //  Removed/reset failed/done gestures, including gestures and dManipGestures
+    [self _clearFailedOrEndedGesture:recognizers.data() length:gestureCount];
+    [self _clearFailedOrEndedGesture:dManipRecognizers.data() length:dManipGestureCount];
 
     [g_curGesturesDict release];
     g_curGesturesDict = nil;
 
     return shouldCancelTouches;
+}
+
+- (void)_clearFailedOrEndedGesture:(UIGestureRecognizer**)recognizers length:(int)length {
+    for (int i = 0; i < length; i++) {
+        UIGestureRecognizerState state = (UIGestureRecognizerState)[recognizers[i] state];
+        if (state == UIGestureRecognizerStateRecognized || state == UIGestureRecognizerStateEnded ||
+            state == UIGestureRecognizerStateFailed || state == UIGestureRecognizerStateCancelled) {
+            [recognizers[i] reset];
+
+            if (DEBUG_GESTURES) {
+                TraceVerbose(TAG, L"Removing gesture %hs %x state=%d.", object_getClassName(recognizers[i]), recognizers[i], state);
+            }
+
+            [g_currentlyTrackingGesturesList removeObject:recognizers[i]];
+            id gesturesArr = [g_curGesturesDict objectForKey:[recognizers[i] class]];
+            [gesturesArr removeObject:recognizers[i]];
+        }
+    }
 }
 
 // TODO: This block of code will likely change when we incorporate WinRT GestureRecognizers
@@ -361,7 +372,7 @@ static void _resetTouchPoint(TouchPoint& touchPoint) {
     touchPoint.pointerId = TouchPoint::s_invalidPointerId;
 }
 
-static std::string _printViewHeirarchy(UIView* leafView) {
+static std::string _printViewhierarchy(UIView* leafView) {
     std::string logString;
     char buffer[1024];
     for (UIView* current = leafView; current != nil; current = current->priv->superview) {
@@ -396,8 +407,8 @@ static std::string _printViewHeirarchy(UIView* leafView) {
 
     if (hitTestResult && (hitTestResult != self)) {
         if (DEBUG_HIT_TESTING_LIGHT) {
-            std::string selfTree = _printViewHeirarchy(self);
-            std::string hitTestTree = _printViewHeirarchy(hitTestResult);
+            std::string selfTree = _printViewhierarchy(self);
+            std::string hitTestTree = _printViewhierarchy(hitTestResult);
             TraceWarning(TAG,
                          L"XAML's chosen hit test view: \r\n\t %hs \r\n ...does not match the legacy hit test results: \r\n\t %hs.",
                          selfTree.c_str(),
@@ -564,7 +575,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
 
                 // There was a time we used *all* of the view's current tracked touches for the event, rather than one
                 // at a time. We likely chose this because the iOS input stack was grouping touches together, however
-                // that no longer appears to be the case. Grouping them causes a problem when a new touch begins, 
+                // that no longer appears to be the case. Grouping them causes a problem when a new touch begins,
                 // another moves, and both were sent as a move, causing previousLocationInView to return bogus results.
                 touchesForEvent = [NSMutableSet setWithObject:touchPoint.touch];
 
@@ -1552,7 +1563,7 @@ static float doRound(float f) {
     }
 
     if (window == nil) {
-        /* Optimization: release contents when not part of the view heirarchy */
+        /* Optimization: release contents when not part of the view hierarchy */
         [layer _releaseContents:FALSE];
     }
     [self didMoveToWindow];
