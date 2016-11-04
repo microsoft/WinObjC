@@ -40,6 +40,7 @@
 
     scrollView.delegate = self;
     scrollView.clipsToBounds = YES;
+
     imageView.userInteractionEnabled = YES;
 
     scrollView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);

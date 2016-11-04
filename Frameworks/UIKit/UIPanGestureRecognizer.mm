@@ -411,11 +411,12 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     return _touchedView;
 }
 
-/**
- @Status Interoperable
-*/
 - (void)_setDragSlack:(float)slack {
     _dragSlack = slack;
+}
+
+- (float) _getDragSlack {
+    return _dragSlack;
 }
 
 /**

@@ -58,7 +58,7 @@ static const bool DEBUG_VERBOSE = DEBUG_ALL || false;
 static const bool DEBUG_DELEGATE = DEBUG_ALL || false;
 static const bool DEBUG_INSETS = DEBUG_ALL || false;
 static const bool DEBUG_ZOOM = DEBUG_ALL || false;
-static const bool DEBUG_DMANIP_GESTURE = DEBUG_ALL || true;
+static const bool DEBUG_DMANIP_GESTURE = DEBUG_ALL || false;
 
 /** @Status Stub */
 const float UIScrollViewDecelerationRateNormal = StubConstant();
@@ -163,10 +163,9 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     // so that direct manipulation will be effective on all scrollviews
     [self _setManipulationMode:WUXIManipulationModesSystem recursive:YES];
 
-    const std::vector<TouchInfo>& pointers = [gesture _getTouches];
-    for (auto const& pointer : pointers) {
+    for (auto const& pointer : [gesture _getTouches]) {
         UITouch* touch = pointer.touch;
-        // start Direct manipuation only if active touch presents
+        // start direct manipulation only if active touch presents
         if (touch.phase != UITouchPhaseCancelled && touch->_routedEventArgs.pointer.pointerDeviceType == WDIPointerDeviceTypeTouch) {
             if (![WXFrameworkElement tryStartDirectManipulation:touch->_routedEventArgs.pointer]) {
                 TraceWarning(TAG, L"DManip failed to start");

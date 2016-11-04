@@ -173,11 +173,11 @@ BOOL g_resetAllTrackingGestures = TRUE;
 
     g_curGesturesDict = [NSMutableDictionary new];
 
-    const static int MAXIMUM_GESTURE_ALLOW = 128;
-    const static int MAXIMUM_DMANIPGESTURE_ALLOW = 16;
+    const static int MAXIMUM_GESTURE_ALLOWED = 128;
+    const static int MAXIMUM_DMANIPGESTURE_ALLOWED = 16;
 
-    std::array<UIGestureRecognizer*, MAXIMUM_GESTURE_ALLOW> recognizers{};
-    std::array<UIGestureRecognizer*, MAXIMUM_DMANIPGESTURE_ALLOW> dManipRecognizers{};
+    UIGestureRecognizer* recognizers[MAXIMUM_GESTURE_ALLOWED];
+    UIGestureRecognizer* dManipRecognizers[MAXIMUM_DMANIPGESTURE_ALLOWED];
 
     // separating all enabled gestures into its own list
     // and adding each list into a tracking dictionary
@@ -187,7 +187,7 @@ BOOL g_resetAllTrackingGestures = TRUE;
         if (![curgesture isKindOfClass:[_UIDMPanGestureRecognizer class]]) {
             recognizers[gestureCount++] = curgesture;
         } else {
-            if (dManipGestureCount < MAXIMUM_DMANIPGESTURE_ALLOW) {
+            if (dManipGestureCount < MAXIMUM_DMANIPGESTURE_ALLOWED) {
                 dManipRecognizers[dManipGestureCount++] = curgesture;
             } else {
                 TraceWarning(TAG, L"The number of DManip gestures exceed maximum allowed, ignoring the rest");
@@ -208,11 +208,8 @@ BOOL g_resetAllTrackingGestures = TRUE;
 
     // sendTouch to gesture for state transiton
     BOOL gestureOnGoing = NO;
-    for (const auto& curgesture : recognizers) {
-        if (!curgesture) {
-            break;
-        }
-
+    for (int i = 0; i < gestureCount; i++) {
+        UIGestureRecognizer* curgesture = recognizers[i];
         if ([curgesture state] != UIGestureRecognizerStateCancelled) {
             if (DEBUG_GESTURES) {
                 TraceVerbose(TAG, L"Checking gesture %hs.", object_getClassName(curgesture));
@@ -241,13 +238,9 @@ BOOL g_resetAllTrackingGestures = TRUE;
     }
 
     // scanning DManip Gestures, if one gesture is ongoing, cancel all DManip Gestures
-    // otherwise, send Touch to DM gestures
-    for (const auto& dManipGesture : dManipRecognizers) {
-        if (!dManipGesture) {
-            break;
-        }
-
-        // UIGestureRecognizer* dManipGesture = dManipRecognizers[i];
+    // otherwise, send Touch to DManip gestures
+    for (int i = 0; i < dManipGestureCount; i++) {
+         UIGestureRecognizer* dManipGesture = dManipRecognizers[i];
         if (gestureOnGoing) {
             [dManipGesture _cancelIfActive];
             if (DEBUG_GESTURES) {
@@ -293,8 +286,8 @@ BOOL g_resetAllTrackingGestures = TRUE;
     }
 
     //  Removed/reset failed/done gestures, including gestures and dManipGestures
-    [self _clearFailedOrEndedGesture:recognizers.data() length:gestureCount];
-    [self _clearFailedOrEndedGesture:dManipRecognizers.data() length:dManipGestureCount];
+    [self _clearFailedOrEndedGesture:recognizers length:gestureCount];
+    [self _clearFailedOrEndedGesture:dManipRecognizers length:dManipGestureCount];
 
     [g_curGesturesDict release];
     g_curGesturesDict = nil;
