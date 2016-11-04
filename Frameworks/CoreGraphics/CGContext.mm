@@ -495,7 +495,8 @@ void CGContextClosePath(CGContextRef context) {
 void CGContextAddRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddRect(context->Path(), &(context->CurrentGState().transform), rect);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddRect(context->Path(), &userToDeviceTransform, rect);
 }
 
 /**
@@ -512,7 +513,8 @@ void CGContextAddRects(CGContextRef context, const CGRect* rects, unsigned count
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
-    CGPathAddRects(context->Path(), &(context->CurrentGState().transform), rects, count);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddRects(context->Path(), &userToDeviceTransform, rects, count);
 
 #pragma clang diagnostic pop
 }
@@ -523,7 +525,8 @@ void CGContextAddRects(CGContextRef context, const CGRect* rects, unsigned count
 void CGContextAddLineToPoint(CGContextRef context, CGFloat x, CGFloat y) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddLineToPoint(context->Path(), &(context->CurrentGState().transform), x, y);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddLineToPoint(context->Path(), &userToDeviceTransform, x, y);
 }
 
 /**
@@ -532,7 +535,8 @@ void CGContextAddLineToPoint(CGContextRef context, CGFloat x, CGFloat y) {
 void CGContextAddCurveToPoint(CGContextRef context, CGFloat cp1x, CGFloat cp1y, CGFloat cp2x, CGFloat cp2y, CGFloat x, CGFloat y) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddCurveToPoint(context->Path(), &(context->CurrentGState().transform), cp1x, cp1y, cp2x, cp2y, x, y);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddCurveToPoint(context->Path(), &userToDeviceTransform, cp1x, cp1y, cp2x, cp2y, x, y);
 }
 
 /**
@@ -541,7 +545,8 @@ void CGContextAddCurveToPoint(CGContextRef context, CGFloat cp1x, CGFloat cp1y, 
 void CGContextAddQuadCurveToPoint(CGContextRef context, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddQuadCurveToPoint(context->Path(), &(context->CurrentGState().transform), cpx, cpy, x, y);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddQuadCurveToPoint(context->Path(), &userToDeviceTransform, cpx, cpy, x, y);
 }
 
 /**
@@ -550,7 +555,8 @@ void CGContextAddQuadCurveToPoint(CGContextRef context, CGFloat cpx, CGFloat cpy
 void CGContextMoveToPoint(CGContextRef context, CGFloat x, CGFloat y) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathMoveToPoint(context->Path(), &(context->CurrentGState().transform), x, y);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathMoveToPoint(context->Path(), &userToDeviceTransform, x, y);
 }
 
 /**
@@ -559,7 +565,8 @@ void CGContextMoveToPoint(CGContextRef context, CGFloat x, CGFloat y) {
 void CGContextAddArc(CGContextRef context, CGFloat x, CGFloat y, CGFloat radius, CGFloat startAngle, CGFloat endAngle, int clockwise) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddArc(context->Path(), &(context->CurrentGState().transform), x, y, radius, startAngle, endAngle, clockwise);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddArc(context->Path(), &userToDeviceTransform, x, y, radius, startAngle, endAngle, clockwise);
 }
 
 /**
@@ -568,7 +575,8 @@ void CGContextAddArc(CGContextRef context, CGFloat x, CGFloat y, CGFloat radius,
 void CGContextAddArcToPoint(CGContextRef context, CGFloat x1, CGFloat y1, CGFloat x2, CGFloat y2, CGFloat radius) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddArcToPoint(context->Path(), &(context->CurrentGState().transform), x1, y1, x2, y2, radius);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddArcToPoint(context->Path(), &userToDeviceTransform, x1, y1, x2, y2, radius);
 }
 
 /**
@@ -577,7 +585,8 @@ void CGContextAddArcToPoint(CGContextRef context, CGFloat x1, CGFloat y1, CGFloa
 void CGContextAddEllipseInRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddEllipseInRect(context->Path(), &(context->CurrentGState().transform), rect);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddEllipseInRect(context->Path(), &userToDeviceTransform, rect);
 }
 
 /**
@@ -596,7 +605,8 @@ void CGContextAddPath(CGContextRef context, CGPathRef path) {
         return;
     }
 
-    CGPathAddPath(context->Path(), &(context->CurrentGState().transform), path);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddPath(context->Path(), &userToDeviceTransform, path);
 }
 
 /**
@@ -648,8 +658,7 @@ CGRect CGContextGetPathBoundingBox(CGContextRef context) {
     }
 
     // All queries take place on transformed paths, but return pre-CTM context units.
-    CGAffineTransform invertedCTM = CGAffineTransformInvert(context->CurrentGState().transform);
-    return CGRectApplyAffineTransform(CGPathGetBoundingBox(context->Path()), invertedCTM);
+    return CGContextConvertRectToUserSpace(context, CGPathGetBoundingBox(context->Path()));
 }
 
 /**
@@ -662,7 +671,8 @@ void CGContextAddLines(CGContextRef context, const CGPoint* points, unsigned cou
         return;
     }
 
-    CGPathAddLines(context->Path(), &(context->CurrentGState().transform), points, count);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddLines(context->Path(), &userToDeviceTransform, points, count);
 }
 #pragma endregion
 
@@ -686,8 +696,8 @@ CGPathRef CGContextCopyPath(CGContextRef context) {
     // This means that the path the user gets back will be in units equivalent to
     // their inputs. We therefore must de-transform the path into which we inserted
     // transformed points.
-    CGAffineTransform invertedCTM = CGAffineTransformInvert(context->CurrentGState().transform);
-    return CGPathCreateCopyByTransformingPath(context->Path(), &invertedCTM);
+    CGAffineTransform invertedDeviceSpaceTransform = CGAffineTransformInvert(CGContextGetUserSpaceToDeviceSpaceTransform(context));
+    return CGPathCreateCopyByTransformingPath(context->Path(), &invertedDeviceSpaceTransform);
 
 #pragma clang diagnostic pop
 }
@@ -704,8 +714,7 @@ CGPoint CGContextGetPathCurrentPoint(CGContextRef context) {
     }
 
     // All queries take place on transformed paths, but return pre-CTM context units.
-    CGAffineTransform invertedCTM = CGAffineTransformInvert(context->CurrentGState().transform);
-    return CGPointApplyAffineTransform(CGPathGetCurrentPoint(context->Path()), invertedCTM);
+    return CGContextConvertPointToUserSpace(context, CGPathGetCurrentPoint(context->Path()));
 }
 
 /**
@@ -715,7 +724,8 @@ CGPoint CGContextGetPathCurrentPoint(CGContextRef context) {
 bool CGContextPathContainsPoint(CGContextRef context, CGPoint point, CGPathDrawingMode mode) {
     NOISY_RETURN_IF_NULL(context, false);
 
-    return context->HasPath() && CGPathContainsPoint(context->Path(), &(context->CurrentGState().transform), point, (mode & kCGPathEOFill));
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    return context->HasPath() && CGPathContainsPoint(context->Path(), &userToDeviceTransform, point, (mode & kCGPathEOFill));
 }
 #pragma endregion
 
