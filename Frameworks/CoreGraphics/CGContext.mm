@@ -55,6 +55,11 @@ static inline D2D1_MATRIX_3X2_F __CGAffineTransformToD2D_F(CGAffineTransform tra
     return { transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty };
 }
 
+enum _CGCoordinateMode: unsigned int {
+    _kCGCoordinateModeDeviceSpace = 0,
+    _kCGCoordinateModeUserSpace
+};
+
 struct __CGContextDrawingState {
     // This is populated when the state is saved, and contains the D2D parameters that CG does not know.
     ComPtr<ID2D1DrawingStateBlock> d2dState{ nullptr };
@@ -1426,8 +1431,7 @@ static HRESULT __CGContextCreateShadowEffect(CGContextRef context,
 }
 
 template <typename Lambda> // Lambda takes the form void(*)(CGContextRef, ID2D1DeviceContext*)
-static HRESULT __CGContextRenderToCommandList(CGContextRef context, ID2D1CommandList** outCommandList, Lambda&& drawLambda) {
-    auto& state = context->CurrentGState();
+static HRESULT __CGContextRenderToCommandList(CGContextRef context, _CGCoordinateMode coordinateMode, CGAffineTransform* additionalTransform, ID2D1CommandList** outCommandList, Lambda&& drawLambda) {
     ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
     ComPtr<ID2D1DeviceContext> deviceContext;
     RETURN_IF_FAILED(renderTarget.As(&deviceContext));
@@ -1439,19 +1443,34 @@ static HRESULT __CGContextRenderToCommandList(CGContextRef context, ID2D1Command
     ComPtr<ID2D1CommandList> commandList;
     RETURN_IF_FAILED(deviceContext->CreateCommandList(&commandList));
 
-    deviceContext->SetTransform(__CGAffineTransformToD2D_F(state.transform));
-
     deviceContext->BeginDraw();
     deviceContext->SetTarget(commandList.Get());
 
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    switch (coordinateMode) {
+        case _kCGCoordinateModeUserSpace:
+            transform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+            break;
+        case _kCGCoordinateModeDeviceSpace:
+        default:
+            // do nothing; base transform is identity.
+            break;
+    }
+
+    if (additionalTransform) {
+        transform = CGAffineTransformConcat(*additionalTransform, transform);
+    }
+
+    deviceContext->SetTransform(__CGAffineTransformToD2D_F(transform));
+
     RETURN_IF_FAILED(std::forward<Lambda>(drawLambda)(context, deviceContext.Get()));
+
+    deviceContext->SetTransform(D2D1::IdentityMatrix());
 
     RETURN_IF_FAILED(deviceContext->EndDraw());
     RETURN_IF_FAILED(commandList->Close());
 
     deviceContext->SetTarget(originalTarget.Get());
-
-    deviceContext->SetTransform(D2D1::IdentityMatrix());
 
     *outCommandList = commandList.Detach();
     return S_OK;
@@ -1463,8 +1482,6 @@ static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
 
     ComPtr<ID2D1DeviceContext> deviceContext;
     RETURN_IF_FAILED(renderTarget.As(&deviceContext));
-
-    deviceContext->SetTransform(__CGAffineTransformToD2D_F(context->Impl().deviceTransform));
 
     deviceContext->BeginDraw();
 
@@ -1493,14 +1510,12 @@ static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
     // TODO GH#1194: We will need to re-evaluate Direct2D's D2DERR_RECREATE when we move to HW acceleration.
     RETURN_IF_FAILED(deviceContext->EndDraw());
 
-    deviceContext->SetTransform(D2D1::IdentityMatrix());
-
     return S_OK;
 }
 
-static HRESULT __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometry, CGPathDrawingMode drawMode) {
+static HRESULT __CGContextDrawGeometry(CGContextRef context, _CGCoordinateMode coordinateMode, ID2D1Geometry* geometry, CGPathDrawingMode drawMode) {
     ComPtr<ID2D1CommandList> commandList;
-    HRESULT hr = __CGContextRenderToCommandList(context, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+    HRESULT hr = __CGContextRenderToCommandList(context, coordinateMode, nullptr, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
         auto& state = context->CurrentGState();
         if (drawMode & kCGPathFill) {
             if (drawMode & kCGPathEOFill) {
@@ -1537,7 +1552,7 @@ void CGContextStrokeRect(CGContextRef context, CGRect rect) {
     FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D_F(rect), &rectGeometry));
     FAIL_FAST_IF_FAILED(rectGeometry.As(&geometry));
 
-    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, geometry.Get(), kCGPathStroke));
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, geometry.Get(), kCGPathStroke));
 
     context->ClearPath();
 }
@@ -1567,7 +1582,7 @@ void CGContextFillRect(CGContextRef context, CGRect rect) {
     FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D_F(rect), &rectGeometry));
     FAIL_FAST_IF_FAILED(rectGeometry.As(&geometry));
 
-    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, geometry.Get(), kCGPathFill));
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, geometry.Get(), kCGPathFill));
 
     context->ClearPath();
 }
@@ -1587,7 +1602,7 @@ void CGContextStrokeEllipseInRect(CGContextRef context, CGRect rect) {
                                        &ellipseGeometry));
     FAIL_FAST_IF_FAILED(ellipseGeometry.As(&geometry));
 
-    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, geometry.Get(), kCGPathStroke));
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, geometry.Get(), kCGPathStroke));
 
     context->ClearPath();
 }
@@ -1607,7 +1622,7 @@ void CGContextFillEllipseInRect(CGContextRef context, CGRect rect) {
                                        &ellipseGeometry));
     FAIL_FAST_IF_FAILED(ellipseGeometry.As(&geometry));
 
-    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, geometry.Get(), kCGPathFill));
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, geometry.Get(), kCGPathFill));
 
     context->ClearPath();
 }
