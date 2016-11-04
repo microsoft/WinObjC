@@ -794,16 +794,14 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 }
 
 /**
- @Status Caveat
- @Notes Returns a mock UILabel that proxies some common properties and selectors to the underlying TextBlock
+ @Status Interoperable
 */
 - (UILabel*)titleLabel {
     return [[_textLabel retain] autorelease];
 }
 
 /**
- @Status Caveat
- @Notes Returns a mock UIImageView that proxies some common properties and selectors to the underlying Image
+ @Status Interoperable
 */
 - (UIImageView*)imageView {
     return [[_imageView retain] autorelease];
