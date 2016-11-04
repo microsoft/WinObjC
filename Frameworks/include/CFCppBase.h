@@ -107,6 +107,8 @@ public:
     static T* CreateInstance(CFAllocatorRef allocator, Args&&... args) {
         static_assert(!std::is_polymorphic<T>::value,
                       "CoreFoundation::CppBase cannot be used with polymorphic types or classes bearing virtual functions.");
+        static_assert(std::is_base_of<__CFRuntimeBase, T>::value,
+                      "CoreFoundation::CppBase cannot be used with types that do not derive from __CFRuntimeBase.");
         T* ret = reinterpret_cast<T*>(
             const_cast<void*>(_CFRuntimeCreateInstance(allocator, GetTypeID(), sizeof(T) - sizeof(__CFRuntimeBase), nullptr)));
 
