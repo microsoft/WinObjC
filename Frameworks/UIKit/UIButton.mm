@@ -156,6 +156,9 @@ struct ButtonState {
     // Force-load the template, and get content canvas to set as our layout proxy.
     [_xamlButton applyTemplate];
 
+    [_xamlButton setWidth:self.bounds.size.width];
+    [_xamlButton setHeight:self.bounds.size.height];
+
     WXCCanvas* contentCanvas = rt_dynamic_cast([WXCCanvas class], [_xamlButton getTemplateChild:@"contentCanvas"]);
 
     DisplayNode* displayNode = [[self layer] _presentationNode];
@@ -203,15 +206,6 @@ struct ButtonState {
                                               e.handled = YES;
                                               [weakSelf _processPointerCaptureLostCallback:sender eventArgs:e];
                                           });
-
-    XamlControls::HookLayoutEvent(_xamlButton,
-                                  ^(RTObject*, WUXIPointerRoutedEventArgs*) {
-                                      // Since we are using XAML Button behind the scene, the intrinsicContentSize calculation is done
-                                      // by XAML.
-                                      // The size of XAML elements(for eg Image) is calculated at runtime and then the
-                                      // intrinsicContentSize is invalidated.
-                                      [weakSelf setNeedsLayout];
-                                  });
 }
 
 - (instancetype)_initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
@@ -618,6 +612,15 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 }
 
 /**
+ @Status Interoperable
+*/
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    [_xamlButton setWidth:self.bounds.size.width];
+    [_xamlButton setHeight:self.bounds.size.height];
+}
+
+/**
  @Status Stub
 */
 - (void)setAdjustsImageWhenHighlighted:(BOOL)doAdjust {
@@ -726,7 +729,6 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 */
 - (void)dealloc {
     XamlRemovePointerEvents([_xamlButton comObj]);
-    XamlRemoveLayoutEvent([_xamlButton comObj]);
 
     for (auto& state : _states) {
         state.second.backgroundImage = nil;
