@@ -463,13 +463,15 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
             line->_glyphCount = glyphCount;
             line->_relativeXOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeXOffset;
             line->_relativeYOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeYOffset;
+
+            CGPoint lineOrigin = CGPointZero;
             if (static_cast<_CTRun*>([line->_runs objectAtIndex:0])->_dwriteGlyphRun.glyphCount != 0) {
-                line->_lineOrigin.x = static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].x;
-                line->_lineOrigin.y = static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].y;
+                lineOrigin = { static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].x,
+                               static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].y };
             }
 
             [frame->_lines addObject:line];
-            frame->_lineOrigins.emplace_back(line->_lineOrigin);
+            frame->_lineOrigins.emplace_back(lineOrigin);
         }
     }
 
