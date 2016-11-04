@@ -233,10 +233,10 @@ COREGRAPHICS_EXPORT void CGContextShowText(CGContextRef c, const char* string, s
 
 COREGRAPHICS_EXPORT void CGContextShowTextAtPoint(CGContextRef c, CGFloat x, CGFloat y, const char* string, size_t length);
 
-COREGRAPHICS_EXPORT CGAffineTransform CGContextGetUserSpaceToDeviceSpaceTransform(CGContextRef c) STUB_METHOD;
-COREGRAPHICS_EXPORT CGPoint CGContextConvertPointToDeviceSpace(CGContextRef c, CGPoint point) STUB_METHOD;
-COREGRAPHICS_EXPORT CGPoint CGContextConvertPointToUserSpace(CGContextRef c, CGPoint point) STUB_METHOD;
-COREGRAPHICS_EXPORT CGSize CGContextConvertSizeToDeviceSpace(CGContextRef c, CGSize size) STUB_METHOD;
-COREGRAPHICS_EXPORT CGSize CGContextConvertSizeToUserSpace(CGContextRef c, CGSize size) STUB_METHOD;
-COREGRAPHICS_EXPORT CGRect CGContextConvertRectToDeviceSpace(CGContextRef c, CGRect rect) STUB_METHOD;
-COREGRAPHICS_EXPORT CGRect CGContextConvertRectToUserSpace(CGContextRef c, CGRect rect) STUB_METHOD;
+COREGRAPHICS_EXPORT CGAffineTransform CGContextGetUserSpaceToDeviceSpaceTransform(CGContextRef c);
+COREGRAPHICS_EXPORT CGPoint CGContextConvertPointToDeviceSpace(CGContextRef c, CGPoint point);
+COREGRAPHICS_EXPORT CGPoint CGContextConvertPointToUserSpace(CGContextRef c, CGPoint point);
+COREGRAPHICS_EXPORT CGSize CGContextConvertSizeToDeviceSpace(CGContextRef c, CGSize size);
+COREGRAPHICS_EXPORT CGSize CGContextConvertSizeToUserSpace(CGContextRef c, CGSize size);
+COREGRAPHICS_EXPORT CGRect CGContextConvertRectToDeviceSpace(CGContextRef c, CGRect rect);
+COREGRAPHICS_EXPORT CGRect CGContextConvertRectToUserSpace(CGContextRef c, CGRect rect);

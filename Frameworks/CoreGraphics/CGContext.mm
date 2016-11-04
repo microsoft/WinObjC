@@ -354,67 +354,65 @@ void CGContextEndPage(CGContextRef context) {
 
 #pragma region Global State - Device Coordinate Queries
 /**
- @Status Stub
-*/
-CGRect CGContextConvertRectToDeviceSpace(CGContextRef context, CGRect rect) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return rect;
-}
-
-/**
- @Status Stub
+ @Status Interoperable
 */
 CGRect CGContextConvertRectToUserSpace(CGContextRef context, CGRect rect) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return rect;
+    NOISY_RETURN_IF_NULL(context, rect);
+    // Invariant: The incoming measurement is in DEVICE space.
+    return CGRectApplyAffineTransform(rect, CGAffineTransformInvert(CGContextGetUserSpaceToDeviceSpaceTransform(context)));
 }
 
 /**
- @Status Stub
-*/
-CGPoint CGContextConvertPointToUserSpace(CGContextRef context, CGPoint point) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return point;
-}
-
-/**
- @Status Stub
+ @Status Interoperable
 */
 CGSize CGContextConvertSizeToUserSpace(CGContextRef context, CGSize size) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return size;
+    NOISY_RETURN_IF_NULL(context, size);
+    // Invariant: The incoming measurement is in DEVICE space.
+    return CGSizeApplyAffineTransform(size, CGAffineTransformInvert(CGContextGetUserSpaceToDeviceSpaceTransform(context)));
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
+CGPoint CGContextConvertPointToUserSpace(CGContextRef context, CGPoint point) {
+    NOISY_RETURN_IF_NULL(context, point);
+    // Invariant: The incoming measurement is in DEVICE space.
+    return CGPointApplyAffineTransform(point, CGAffineTransformInvert(CGContextGetUserSpaceToDeviceSpaceTransform(context)));
+}
+
+/**
+ @Status Interoperable
+*/
+CGRect CGContextConvertRectToDeviceSpace(CGContextRef context, CGRect rect) {
+    NOISY_RETURN_IF_NULL(context, rect);
+    // Invariant: The incoming measurement is in USER space.
+    return CGRectApplyAffineTransform(rect, CGContextGetUserSpaceToDeviceSpaceTransform(context));
+}
+
+/**
+ @Status Interoperable
 */
 CGSize CGContextConvertSizeToDeviceSpace(CGContextRef context, CGSize size) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return size;
+    NOISY_RETURN_IF_NULL(context, size);
+    // Invariant: The incoming measurement is in USER space.
+    return CGSizeApplyAffineTransform(size, CGContextGetUserSpaceToDeviceSpaceTransform(context));
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 CGPoint CGContextConvertPointToDeviceSpace(CGContextRef context, CGPoint point) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return point;
+    NOISY_RETURN_IF_NULL(context, point);
+    // Invariant: The incoming measurement is in USER space.
+    return CGPointApplyAffineTransform(point, CGContextGetUserSpaceToDeviceSpaceTransform(context));
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 CGAffineTransform CGContextGetUserSpaceToDeviceSpaceTransform(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return StubReturn();
+    return CGAffineTransformConcat(context->CurrentGState().transform, context->Impl().deviceTransform);
 }
 #pragma endregion
 
@@ -1391,9 +1389,11 @@ static HRESULT __CGContextCreateShadowEffect(CGContextRef context,
         ComPtr<ID2D1Effect> affineTransformEffect;
         RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D12DAffineTransform, &affineTransformEffect));
         affineTransformEffect->SetInputEffect(0, shadowEffect.Get());
+
+        CGSize deviceTransformedShadowOffset = CGSizeApplyAffineTransform(state.shadowOffset, context->Impl().deviceTransform);
         RETURN_IF_FAILED(
             affineTransformEffect->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX,
-                                            D2D1::Matrix3x2F::Translation(state.shadowOffset.width, state.shadowOffset.height)));
+                                            D2D1::Matrix3x2F::Translation(deviceTransformedShadowOffset.width, deviceTransformedShadowOffset.height)));
 
         // Drawing just a projected shadow is not terribly useful, so we composite the
         // shadow with the original input image (or command list) so that both get drawn.
