@@ -412,7 +412,7 @@ CGPathRef newPathForRoundRect(CGRect rect, CGFloat radius) {
     return path;
 }
 
-TEST(CGPath, CGPathContainsPointOutsideRect) {
+DISABLED_TEST(CGPath, CGPathContainsPointOutsideRect) {
     CGFloat originX = 10.0f;
     CGFloat originY = 20.0f;
     CGFloat pathWidth = 100.0f;
@@ -438,7 +438,7 @@ TEST(CGPath, CGPathContainsPointOutsideRect) {
     EXPECT_FALSE(test);
 }
 
-TEST(CGPath, CGPathContainsPointInsideRectOutsidePath) {
+DISABLED_TEST(CGPath, CGPathContainsPointInsideRectOutsidePath) {
     CGFloat originX = 10.0f;
     CGFloat originY = 20.0f;
     CGFloat pathWidth = 100.0f;

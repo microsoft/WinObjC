@@ -19,16 +19,12 @@
 
 using namespace Microsoft::WRL;
 
-// Private helper for creating a D2DFactory
-static ComPtr<ID2D1Factory> __createD2DFactory() {
-    ComPtr<ID2D1Factory> d2dFactory;
-    FAIL_FAST_IF_FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &d2dFactory));
-    return d2dFactory;
-}
+HRESULT _CGGetD2DFactory(ID2D1Factory** factory) {
+    static ComPtr<ID2D1Factory> sFactory;
+    static HRESULT sHr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &sFactory);
 
-ComPtr<ID2D1Factory> _GetD2DFactoryInstance() {
-    static ComPtr<ID2D1Factory> factory = __createD2DFactory();
-    return factory;
+    sFactory.CopyTo(factory);
+    RETURN_HR(sHr);
 }
 
 static ComPtr<IWICImagingFactory> __createWICFactory() {
