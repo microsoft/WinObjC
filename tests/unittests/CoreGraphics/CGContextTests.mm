@@ -22,6 +22,7 @@
 #import <CoreGraphics/CGBitmapContext.h>
 #import <CoreGraphics/CGPattern.h>
 
+#if TARGET_OS_WIN32
 #include <COMIncludes.h>
 #import <wrl/client.h>
 #import <d2d1.h>
@@ -31,6 +32,7 @@
 #import "CGContextInternal.h"
 
 using namespace Microsoft::WRL;
+#endif
 
 static NSString* const kPointsKey = @"PointsKey";
 static NSString* const kTypeKey = @"TypeKey";
@@ -293,6 +295,7 @@ std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, const CGAffineTrans
     return os << "]";
 }
 
+#if TARGET_OS_WIN32
 class ContextCoordinateTest
     : public ::testing::TestWithParam<::testing::tuple<CGAffineTransform, std::vector<CGPoint>, std::vector<CGPoint>>> {
 public:
@@ -415,3 +418,4 @@ TEST_P(ContextCoordinateTest, ConvertToUserSpace) {
 // clang-format on
 
 INSTANTIATE_TEST_CASE_P(CGContextCoordinateSpace, ContextCoordinateTest, ::testing::ValuesIn(coordinateTestTuples));
+#endif
