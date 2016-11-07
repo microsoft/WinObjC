@@ -72,9 +72,11 @@ static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameRect, CF
     }
 
     // CoreText binds the origin of each line to the left for clipped lines no matter the writing direction / alignment
+    // TODO 1121:: DWrite does not support line breaking by truncation, so we are using clipping, so need to adjust for truncation as well
     CTLineBreakMode lineBreakMode;
     if (CTParagraphStyleGetValueForSpecifier(settings, kCTParagraphStyleSpecifierLineBreakMode, sizeof(lineBreakMode), &lineBreakMode) &&
-        lineBreakMode == kCTLineBreakByClipping) {
+        (lineBreakMode == kCTLineBreakByClipping || lineBreakMode == kCTLineBreakByTruncatingHead ||
+         lineBreakMode == kCTLineBreakByTruncatingTail || lineBreakMode == kCTLineBreakByTruncatingMiddle)) {
         for (size_t i = 0; i < ret->_lineOrigins.size(); ++i) {
             if (CTLineGetTypographicBounds(static_cast<CTLineRef>([ret->_lines objectAtIndex:i]), nullptr, nullptr, nullptr) >
                 frameRect.size.width) {

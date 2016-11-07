@@ -164,16 +164,16 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(CFAttributedStringRef 
                                                  &lineBreakMode)) {
             DWRITE_WORD_WRAPPING wrapping;
             switch (lineBreakMode) {
+                // TODO 1121:: DWrite does not support line breaking by truncation, so just use clipping for now
+                case kCTLineBreakByTruncatingHead:
+                case kCTLineBreakByTruncatingTail:
+                case kCTLineBreakByTruncatingMiddle:
                 case kCTLineBreakByClipping:
                     wrapping = DWRITE_WORD_WRAPPING_NO_WRAP;
                     break;
                 case kCTLineBreakByCharWrapping:
                     wrapping = DWRITE_WORD_WRAPPING_CHARACTER;
                     break;
-                // TODO 1121:: DWrite does not support line breaking by truncation, so just use default for now
-                case kCTLineBreakByTruncatingHead:
-                case kCTLineBreakByTruncatingTail:
-                case kCTLineBreakByTruncatingMiddle:
                 case kCTLineBreakByWordWrapping:
                 default:
                     wrapping = DWRITE_WORD_WRAPPING_WRAP;
