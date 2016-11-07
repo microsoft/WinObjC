@@ -636,7 +636,7 @@ TEST(CTFont, CreatePathForGlyph) {
                 break;
 
             default:
-                EXPECT_TRUE_MSG(false, @"An invalid CGPathElementType was returned from CTFontCreatePathForGlyph");
+                FAIL() << "An invalid CGPathElementType was returned from CTFontCreatePathForGlyph";
                 break;
         }
         ++comparePathContext->count;
