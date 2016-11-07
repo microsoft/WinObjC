@@ -1675,7 +1675,7 @@ void CGContextDrawPath(CGContextRef context, CGPathDrawingMode mode) {
     if (context->HasPath()) {
         ComPtr<ID2D1Geometry> pGeometry;
         FAIL_FAST_IF_FAILED(_CGPathGetGeometry(context->Path(), &pGeometry));
-        FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, pGeometry.Get(), mode));
+        FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeDeviceSpace, pGeometry.Get(), mode));
         context->ClearPath();
     }
 }
