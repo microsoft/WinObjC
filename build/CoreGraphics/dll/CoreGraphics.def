@@ -234,6 +234,7 @@ LIBRARY CoreGraphics
         CGContextGetBacking
         CGContextDrawGlyphRun
         _CGContextSetShadowProjectionTransform
+        _CGContextCreateWithD2DRenderTarget
 
         ; CGDataConsumer.mm
         CGDataConsumerCreate
