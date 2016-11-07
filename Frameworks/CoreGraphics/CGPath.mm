@@ -24,11 +24,12 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <CFRuntime.h>
 #import "D2DWrapper.h"
+#import "CGPathInternal.h"
 
 #include <COMIncludes.h>
 #import <wrl/client.h>
-#import <D2d1.h>
 #include <COMIncludes_End.h>
+
 #import <CFCPPBase.h>
 
 static const wchar_t* TAG = L"CGPath";
@@ -91,7 +92,8 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
     HRESULT PreparePathForEditing() {
         if (!_impl.geometrySink) {
             // Re-open this geometry.
-            ComPtr<ID2D1Factory> factory = _GetD2DFactoryInstance();
+            ComPtr<ID2D1Factory> factory;
+            RETURN_IF_FAILED(_CGGetD2DFactory(&factory));
 
             // Create temp vars for new path/sink
             ComPtr<ID2D1PathGeometry> newPath;
@@ -113,12 +115,13 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
         return S_OK;
     }
 
-    void ClosePath() {
+    HRESULT ClosePath() {
         if (_impl.geometrySink) {
             EndFigure(D2D1_FIGURE_END_OPEN);
-            _impl.geometrySink->Close();
+            RETURN_IF_FAILED(_impl.geometrySink->Close());
             _impl.geometrySink = nullptr;
         }
+        return S_OK;
     }
 
     void BeginFigure() {
@@ -136,7 +139,8 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
     }
 
     HRESULT InitializeGeometries() {
-        ComPtr<ID2D1Factory> factory = _GetD2DFactoryInstance();
+        ComPtr<ID2D1Factory> factory;
+        RETURN_IF_FAILED(_CGGetD2DFactory(&factory));
 
         RETURN_IF_FAILED(factory->CreatePathGeometry(&_impl.pathGeometry));
         RETURN_IF_FAILED(_impl.pathGeometry->Open(&_impl.geometrySink));
@@ -144,6 +148,14 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
         return S_OK;
     }
 };
+
+HRESULT _CGPathGetGeometry(CGPathRef path, ID2D1Geometry** pGeometry) {
+    RETURN_HR_IF_NULL(E_POINTER, pGeometry);
+    RETURN_HR_IF_NULL(E_POINTER, path);
+    RETURN_IF_FAILED(path->ClosePath());
+    path->GetPathGeometry().CopyTo(pGeometry);
+    return S_OK;
+}
 
 CFTypeID CGPathGetTypeID() {
     return __CGPath::GetTypeID();
@@ -159,8 +171,8 @@ static Boolean __CGPathEqual(CFTypeRef cf1, CFTypeRef cf2) {
     __CGPath* path1 = (__CGPath*)cf1;
     __CGPath* path2 = (__CGPath*)cf2;
 
-    path1->ClosePath();
-    path2->ClosePath();
+    RETURN_FALSE_IF_FAILED(path1->ClosePath());
+    RETURN_FALSE_IF_FAILED(path2->ClosePath());
 
     // ID2D1 Geometries have no isEquals method. However, for two geometries to be equal they are both reported to contain the other.
     // Thus we must do two comparisons.
@@ -212,7 +224,7 @@ CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
     // In order to call stream and copy the contents of the original path into the
     // new copy we must close this path.
     // Otherwise the D2D calls will return that a bad state has been entered.
-    path->ClosePath();
+    FAIL_FAST_IF_FAILED(path->ClosePath());
 
     FAIL_FAST_IF_FAILED(path->GetPathGeometry()->Stream(mutableRet->GetGeometrySink().Get()));
 
@@ -451,7 +463,7 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* transform, CG
     RETURN_IF(!path || !toAdd);
 
     // Close the path we're adding and open the path we need to add to.
-    toAdd->ClosePath();
+    FAIL_FAST_IF_FAILED(toAdd->ClosePath());
     FAIL_FAST_IF_FAILED(path->PreparePathForEditing());
     FAIL_FAST_IF_FAILED(toAdd->GetPathGeometry()->Stream(path->GetGeometrySink().Get()));
 }
@@ -510,7 +522,9 @@ CGRect CGPathGetBoundingBox(CGPathRef path) {
 
     D2D1_RECT_F bounds;
 
-    path->ClosePath();
+    if (FAILED(path->ClosePath())) {
+        return CGRectNull;
+    }
 
     if (FAILED(path->GetPathGeometry()->GetBounds(D2D1::IdentityMatrix(), &bounds))) {
         return CGRectNull;
@@ -530,7 +544,7 @@ bool CGPathIsEmpty(CGPathRef path) {
 
     UINT32 count;
 
-    path->ClosePath();
+    RETURN_FALSE_IF_FAILED(path->ClosePath());
 
     RETURN_FALSE_IF_FAILED(path->GetPathGeometry()->GetFigureCount(&count));
     return count == 0;
@@ -673,7 +687,7 @@ bool CGPathContainsPoint(CGPathRef path, const CGAffineTransform* transform, CGP
 
     BOOL containsPoint = FALSE;
 
-    path->ClosePath();
+    RETURN_FALSE_IF_FAILED(path->ClosePath());
     RETURN_FALSE_IF_FAILED(path->GetPathGeometry()->FillContainsPoint(_CGPointToD2D_F(point), D2D1::IdentityMatrix(), &containsPoint));
 
     return (containsPoint ? true : false);
