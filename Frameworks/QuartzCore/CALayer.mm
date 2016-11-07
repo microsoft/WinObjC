@@ -244,7 +244,7 @@ CAPrivateInfo::CAPrivateInfo(CALayer* self, WXFrameworkElement* xamlElement) {
     superlayer = 0;
     opacity = 1.0f;
     hidden = FALSE;
-    gravity = 0;
+    gravity = kCAGravityResize;
     contents = NULL;
     ownsContents = FALSE;
     savedContext = NULL;
@@ -1024,7 +1024,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
                      bounds.origin.y,
                      bounds.size.width,
                      bounds.size.height);
-        FAIL_FAST();
+        return;
     }
 
     id<CAAction> action = nil;

@@ -213,9 +213,6 @@
     _minimumFontSize = 8.0f;
     _numberOfLines = 1;
     [self setOpaque:FALSE];
-
-    [self setContentMode:UIViewContentModeRedraw];
-
     [self adjustTextLayerSize];
 }
 
@@ -225,6 +222,10 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self _initUILabel];
+
+        // TODO: Reevaluate whether or not this is the correct default mode for UILabels that are initialized via initWithFrame.
+        //       Some of our test apps expect the initWithCoder path to default to UIViewContentModeScaleToFill (aka kCAGravityResize).
+        [self setContentMode:UIViewContentModeRedraw];
     }
 
     return self;
@@ -236,6 +237,10 @@
 - (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
     if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
         [self _initUILabel];
+
+        // TODO: Reevaluate whether or not this is the correct default mode for UILabels that are initialized via initWithFrame.
+        //       Some of our test apps expect the initWithCoder path to default to UIViewContentModeScaleToFill (aka kCAGravityResize).
+        [self setContentMode:UIViewContentModeRedraw];
     }
 
     return self;
