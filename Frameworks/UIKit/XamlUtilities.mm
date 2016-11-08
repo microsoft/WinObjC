@@ -229,7 +229,7 @@ void SetControlBorderStyle(WXCControl* control, UITextBorderStyle style) {
             break;
 
         case UITextBorderStyleBezel:
-            UNIMPLEMENTED();
+            UNIMPLEMENTED_WITH_MSG("UITextBorderStyleBezel not yet supported; treated as no border.");
             // we don't support UITextBorderStyleBezel, treat it as no border
             control.borderThickness = [WXThicknessHelper fromUniformLength:0];
             break;

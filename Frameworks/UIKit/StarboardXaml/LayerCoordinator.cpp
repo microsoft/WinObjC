@@ -356,6 +356,11 @@ std::map<std::string, AnimatableProperty> s_animatableProperties = {
           ApplyTransformFunction([](FrameworkElement^ target, Object^ toValue) {
               // Update our width
               auto toWidth = std::max<double>(0.0, static_cast<double>(toValue));
+
+              // Override any default MinWidth set on the Xaml element (for example, TextBox's default width/height are set in generic.xaml)
+              target->MinWidth = toWidth;
+
+              // Set the new width
               target->Width = toWidth;
 
               // Update the AnchorPoint transform
@@ -404,6 +409,11 @@ std::map<std::string, AnimatableProperty> s_animatableProperties = {
           ApplyTransformFunction([](FrameworkElement^ target, Object^ toValue) {
               // Update our height
               auto toHeight = std::max<double>(0.0, static_cast<double>(toValue));
+
+              // Override any default MinHeight set on the Xaml element (for example, TextBox's default width/height are set in generic.xaml)
+              target->MinHeight = toHeight;
+
+              // Set the new height
               target->Height = toHeight;
 
               // Update the AnchorPoint transform
