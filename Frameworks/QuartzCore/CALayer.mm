@@ -503,8 +503,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         }
 
         // Create the contents
-        CGContextRef drawContext;
-        drawContext = CreateLayerContentsBitmapContext32(width, height);
+        CGContextRef drawContext = CreateLayerContentsBitmapContext32(width, height);
 
         priv->ownsContents = TRUE;
         CGImageRef target = CGBitmapContextGetImage(drawContext);
@@ -525,13 +524,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
             CGContextSaveGState(drawContext);
             CGContextSetFillColorWithColor(drawContext, [static_cast<UIColor*>(priv->_backgroundColor) CGColor]);
 
-            CGRect wholeRect;
-
-            wholeRect.origin.x = 0;
-            wholeRect.origin.y = 0;
-            wholeRect.size.width = float(width);
-            wholeRect.size.height = float(height);
-
+            CGRect wholeRect = CGRectMake(0, 0, width, height);
             CGContextFillRect(drawContext, wholeRect);
             CGContextRestoreGState(drawContext);
         }
@@ -605,7 +598,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (void)addSublayer:(CALayer*)subLayerAddr {
     if (subLayerAddr == self) {
-        FAIL_FAST();
+        FAIL_FAST_MSG("Cannot addSublayer:self!");
     }
 
     [self _setShouldLayout];
@@ -1490,16 +1483,12 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Interoperable
 */
 - (CGAffineTransform)affineTransform {
-    CGAffineTransform ret;
-
-    ret.a = priv->transform.m[0][0];
-    ret.b = priv->transform.m[0][1];
-    ret.c = priv->transform.m[1][0];
-    ret.d = priv->transform.m[1][1];
-    ret.tx = priv->transform.m[3][0];
-    ret.ty = priv->transform.m[3][1];
-
-    return ret;
+    return CGAffineTransformMake(priv->transform.m[0][0],
+                                 priv->transform.m[0][1],
+                                 priv->transform.m[1][0],
+                                 priv->transform.m[1][1],
+                                 priv->transform.m[3][0],
+                                 priv->transform.m[3][1]);
 }
 
 /**

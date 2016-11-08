@@ -125,12 +125,17 @@ float RawScreenScale() {
     return s_screenMagnification;
 }
 
-void SetScreenSize(float width, float height, float scale, float rotationClockwise) {
-    TraceVerbose(TAG, L"SetScreenSize width=%f, height=%f, scale=%f, rotationClockwise=%f", width, height, scale, rotationClockwise);
+void SetScreenSize(float width, float height, float scale, ScreenRotation rotation) {
+    TraceVerbose(TAG,
+                 L"SetScreenSize width=%f, height=%f, scale=%f, rotationClockwise=%f",
+                 width,
+                 height,
+                 scale,
+                 static_cast<float>(rotation));
     s_screenWidth = width;
     s_screenHeight = height;
     s_screenMagnification = scale;
-    XamlCompositor::Internal::SetScreenParameters(s_screenWidth, s_screenHeight, s_screenMagnification, rotationClockwise);
+    XamlCompositor::Internal::SetScreenParameters(s_screenWidth, s_screenHeight, s_screenMagnification, static_cast<float>(rotation));
 }
 
 float ScreenXDpi() {

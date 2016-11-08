@@ -46,6 +46,14 @@ UIKIT_XAML_EXPORT void XamlHookButtonPointerEvents(const Microsoft::WRL::ComPtr<
                                                    const Microsoft::WRL::ComPtr<IInspectable>& pointerCanceledHook,
                                                    const Microsoft::WRL::ComPtr<IInspectable>& pointerCaptureLostHook);
 
+// Hooks other events on a UIKit::Button passed in as IInspectable
+UIKIT_XAML_EXPORT void XamlHookLayoutEvent(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
+                                           const Microsoft::WRL::ComPtr<IInspectable>& layoutHook);
+
+UIKIT_XAML_EXPORT void XamlRemovePointerEvents(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton);
+
+UIKIT_XAML_EXPORT void XamlRemoveLayoutEvent(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton);
+
 ////////////////////////////////////////////////////////////////////////////////////
 // Label.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
@@ -64,14 +72,6 @@ UIKIT_XAML_EXPORT IInspectable* XamlGetLabelTextBox(const Microsoft::WRL::ComPtr
 UIKIT_XAML_EXPORT void XamlSetFrameworkElementLayerProperties(const Microsoft::WRL::ComPtr<IInspectable>& targetElement,
                                                               const Microsoft::WRL::ComPtr<IInspectable>& sublayerCanvasProperty,
                                                               const Microsoft::WRL::ComPtr<IInspectable>& layerContentProperty);
-
-// Hooks other events on a UIKit::Button passed in as IInspectable
-UIKIT_XAML_EXPORT void XamlHookLayoutEvent(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
-                                           const Microsoft::WRL::ComPtr<IInspectable>& layoutHook);
-
-UIKIT_XAML_EXPORT void XamlRemovePointerEvents(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton);
-
-UIKIT_XAML_EXPORT void XamlRemoveLayoutEvent(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // ProgressRing.xaml.cpp

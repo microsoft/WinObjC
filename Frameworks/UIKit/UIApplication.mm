@@ -1908,19 +1908,19 @@ void UIShutdown() {
     float newWidth = [self currentWidth];
     float newHeight = [self currentHeight];
     float newMagnification = [self currentMagnification];
-    float newRotation = CACompositorRotationNone;
+    DisplayProperties::ScreenRotation newRotation = DisplayProperties::ScreenRotationNone;
 
     switch (_presentationTransform) {
         case UIInterfaceOrientationPortraitUpsideDown:
-            newRotation = CACompositorRotation180;
+            newRotation = DisplayProperties::ScreenRotation180;
             break;
 
         case UIInterfaceOrientationLandscapeLeft:
-            newRotation = CACompositorRotation90CounterClockwise;
+            newRotation = DisplayProperties::ScreenRotation90CounterClockwise;
             break;
 
         case UIInterfaceOrientationLandscapeRight:
-            newRotation = CACompositorRotation90Clockwise;
+            newRotation = DisplayProperties::ScreenRotation90Clockwise;
             break;
     }
 

@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-#ifndef _CALAYERPRIVATE_H_
-#define _CALAYERPRIVATE_H_
+#pragma once
 
 #import <LinkedList.h>
 #import <AccessibilityInternal.h>
@@ -69,7 +68,7 @@ public:
 
     std::shared_ptr<ILayerProxy> _layerProxy;
 
-    // The XAML element backing this CALayer
+    // The Xaml element backing this CALayer
     StrongId<WXFrameworkElement> _xamlElement;
 
     // The Xaml element used for hosting this layer's sublayer element
@@ -127,5 +126,3 @@ public:
 - (void)_setZIndex:(int)zIndex;
 
 @end
-
-#endif /* _CALAYERPRIVATE_H_ */

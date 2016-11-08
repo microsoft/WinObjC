@@ -32,7 +32,7 @@ NSString* const kCATransactionDisableActions = @"kCATransactionDisableActions";
 NSString* const kCATransactionAnimationTimingFunction = @"kCATransactionAnimationTimingFunction";
 NSString* const kCATransactionCompletionBlock = @"kCATransactionCompletionBlock";
 
-__declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
+__declspec(thread) CATransaction* g_curTransaction, *g_rootTransaction;
 
 @implementation CATransaction {
     CATransaction* _parent;
@@ -46,11 +46,11 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 }
 
 + (CATransaction*)_currentTransaction {
-    if (_curTransaction == NULL) {
+    if (g_curTransaction == NULL) {
         [self begin];
     }
 
-    return _curTransaction;
+    return g_curTransaction;
 }
 
 /**
@@ -63,10 +63,10 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 
         _transactionQueue = GetCACompositor()->CreateLayerTransaction();
 
-        if (_curTransaction != NULL) {
-            _parent = _curTransaction;
+        if (g_curTransaction != NULL) {
+            _parent = g_curTransaction;
         } else {
-            _parent = _rootTransaction;
+            _parent = g_rootTransaction;
         }
     }
     return self;
@@ -76,26 +76,26 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
  @Status Interoperable
 */
 + (void)begin {
-    if (_rootTransaction == NULL) {
-        _rootTransaction = [CATransaction new];
+    if (g_rootTransaction == NULL) {
+        g_rootTransaction = [CATransaction new];
     }
 
     CATransaction* ret = [CATransaction new];
     ret->_duration = ret->_parent->_duration;
-    _curTransaction = ret;
+    g_curTransaction = ret;
 }
 
 /**
  @Status Interoperable
 */
 + (void)commit {
-    if (_curTransaction != NULL) {
-        CATransaction* rel = _curTransaction;
-        GetCACompositor()->QueueLayerTransaction(_curTransaction->_transactionQueue, _curTransaction->_parent->_transactionQueue);
-        if (_curTransaction->_parent != _rootTransaction) {
-            _curTransaction = _curTransaction->_parent;
+    if (g_curTransaction != NULL) {
+        CATransaction* rel = g_curTransaction;
+        GetCACompositor()->QueueLayerTransaction(g_curTransaction->_transactionQueue, g_curTransaction->_parent->_transactionQueue);
+        if (g_curTransaction->_parent != g_rootTransaction) {
+            g_curTransaction = g_curTransaction->_parent;
         } else {
-            _curTransaction = NULL;
+            g_curTransaction = NULL;
         }
 
         [rel release];
@@ -103,14 +103,14 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 }
 
 + (void)_commitAndProcessRootQueue {
-    while (_curTransaction) {
+    while (g_curTransaction) {
         [self commit];
     }
 
-    if (_rootTransaction != NULL) {
-        GetCACompositor()->QueueLayerTransaction(_rootTransaction->_transactionQueue, NULL);
-        [_rootTransaction release];
-        _rootTransaction = NULL;
+    if (g_rootTransaction != NULL) {
+        GetCACompositor()->QueueLayerTransaction(g_rootTransaction->_transactionQueue, NULL);
+        [g_rootTransaction release];
+        g_rootTransaction = NULL;
     }
 
     GetCACompositor()->ProcessLayerTransactions();

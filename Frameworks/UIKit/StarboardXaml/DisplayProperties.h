@@ -22,7 +22,15 @@ void SetTablet(bool isTablet);
 
 float ScreenWidth();
 float ScreenHeight();
-void SetScreenSize(float width, float height, float scale, float rotationClockwise);
+
+enum ScreenRotation {
+    ScreenRotationNone = 0,
+    ScreenRotation90Clockwise = 90,
+    ScreenRotation180 = 180,
+    ScreenRotation90CounterClockwise = 270
+};
+
+void SetScreenSize(float width, float height, float scale, ScreenRotation rotation);
 
 // Returns a calculated scale/magnification value based upon various app settings
 float ScreenScale();

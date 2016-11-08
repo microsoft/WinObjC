@@ -23,6 +23,7 @@ using namespace Windows::Foundation;
 
 // cornerRadius when border style is set to round rectangle
 static const int c_borderCornerRadius = 8;
+static const wchar_t* TAG = L"XamlUtilities";
 
 WUColor* ConvertUIColorToWUColor(UIColor* uiColor) {
     CGFloat r, g, b, a;

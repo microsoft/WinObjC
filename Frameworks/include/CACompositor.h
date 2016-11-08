@@ -43,8 +43,7 @@
 // Proxy between CALayer and its Xaml representation
 struct ILayerProxy {
 public:
-    virtual ~ILayerProxy() {
-    }
+    virtual ~ILayerProxy() {};
 
     // Returns the Xaml element backing this layer
     virtual Microsoft::WRL::ComPtr<IInspectable> GetXamlElement() = 0;
@@ -52,6 +51,7 @@ public:
     // Returns the Xaml element used for hosting this layer's sublayer element
     virtual Microsoft::WRL::ComPtr<IInspectable> GetSublayerXamlElement() = 0;
 
+    // Returns the property value as an NSObject*
     virtual void* GetPropertyValue(const char* propertyName) = 0;
     virtual void SetShouldRasterize(bool shouldRasterize) = 0;
 
@@ -62,17 +62,16 @@ public:
 // Proxy between CAAnimation and its Xaml representation
 struct ILayerAnimation {
 public:
-    virtual ~ILayerAnimation() {
-    }
+    virtual ~ILayerAnimation() {};
 };
 
 // Proxy for CG-rendered content
 struct IDisplayTexture {
 public:
-    virtual ~IDisplayTexture() {
-    }
+    virtual ~IDisplayTexture() {};
 
     virtual Microsoft::WRL::ComPtr<IInspectable> GetContent() = 0;
+    // Returns a pointer to the start of the backing buffer
     virtual void* Lock(int* stride) = 0;
     virtual void Unlock() = 0;
 };
@@ -82,8 +81,7 @@ public:
 // Proxy between CATransaction and its backing implementation
 struct ILayerTransaction {
 public:
-    virtual ~ILayerTransaction() {
-    }
+    virtual ~ILayerTransaction() {};
 
     // Sublayer management
     virtual void AddLayer(const std::shared_ptr<ILayerProxy>& layer,
@@ -111,13 +109,10 @@ public:
 
 struct CAMediaTimingProperties;
 
-#define CACompositorRotationNone 0.0f
-#define CACompositorRotation90Clockwise 90.0f
-#define CACompositorRotation180 180.0f
-#define CACompositorRotation90CounterClockwise 270.0f
-
 class CACompositorInterface {
 public:
+    virtual ~CACompositorInterface() {};
+
     // Compositor APIs
     virtual bool IsRunningAsFramework() = 0;
     virtual float GetScreenScale() = 0;
