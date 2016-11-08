@@ -68,7 +68,6 @@ static bool offsetsPrettyClose(double off1, double off2) {
         }
     }];
 
-
     self.view = view;
 }
 
@@ -84,6 +83,7 @@ static bool offsetsPrettyClose(double off1, double off2) {
 
 - (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)())completion {
     _popup.isOpen = NO;
+    _popup.child = nil;
     [super dismissViewControllerAnimated:flag completion:completion];
 }
 
