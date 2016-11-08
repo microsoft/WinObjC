@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WMOOcrWord, WMOOcrLine, WMOOcrResult, WMOOcrEngine;
-@protocol WMOIOcrWord
-, WMOIOcrLine, WMOIOcrResult, WMOIOcrEngine, WMOIOcrEngineStatics;
+@protocol WMOIOcrWord, WMOIOcrLine, WMOIOcrResult, WMOIOcrEngine, WMOIOcrEngineStatics;
 
 #include "WindowsFoundation.h"
 #include "WindowsGraphicsImaging.h"
@@ -47,7 +46,7 @@ OBJCUWP_WINDOWS_MEDIA_OCR_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFRect* boundingRect;
-@property (readonly) NSString* text;
+@property (readonly) NSString * text;
 @end
 
 #endif // __WMOOcrWord_DEFINED__
@@ -61,7 +60,7 @@ OBJCUWP_WINDOWS_MEDIA_OCR_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* text;
+@property (readonly) NSString * text;
 @property (readonly) NSArray* /* WMOOcrWord* */ words;
 @end
 
@@ -77,7 +76,7 @@ OBJCUWP_WINDOWS_MEDIA_OCR_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WMOOcrLine* */ lines;
-@property (readonly) NSString* text;
+@property (readonly) NSString * text;
 @property (readonly) id /* double */ textAngle;
 @end
 
@@ -102,3 +101,4 @@ OBJCUWP_WINDOWS_MEDIA_OCR_EXPORT
 @end
 
 #endif // __WMOOcrEngine_DEFINED__
+

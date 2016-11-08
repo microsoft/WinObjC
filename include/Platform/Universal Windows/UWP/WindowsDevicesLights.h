@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WDLLamp, WDLLampAvailabilityChangedEventArgs;
-@protocol WDLILampStatics
-, WDLILampAvailabilityChangedEventArgs, WDLILamp;
+@protocol WDLILampStatics, WDLILampAvailabilityChangedEventArgs, WDLILamp;
 
 #include "WindowsFoundation.h"
 #include "WindowsUI.h"
@@ -56,8 +55,8 @@ OBJCUWP_WINDOWS_DEVICES_LIGHTS_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_LIGHTS_EXPORT
 @interface WDLLamp : RTObject <WFIClosable>
-+ (NSString*)getDeviceSelector;
-+ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDLLamp*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDLLamp*))success failure:(void (^)(NSError*))failure;
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDLLamp*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -65,9 +64,9 @@ OBJCUWP_WINDOWS_DEVICES_LIGHTS_EXPORT
 @property BOOL isEnabled;
 @property (retain) WUColor* color;
 @property float brightnessLevel;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) BOOL isColorSettable;
-- (EventRegistrationToken)addAvailabilityChangedEvent:(void (^)(WDLLamp*, WDLLampAvailabilityChangedEventArgs*))del;
+- (EventRegistrationToken)addAvailabilityChangedEvent:(void(^)(WDLLamp*, WDLLampAvailabilityChangedEventArgs*))del;
 - (void)removeAvailabilityChangedEvent:(EventRegistrationToken)tok;
 - (void)close;
 @end
@@ -87,3 +86,4 @@ OBJCUWP_WINDOWS_DEVICES_LIGHTS_EXPORT
 @end
 
 #endif // __WDLLampAvailabilityChangedEventArgs_DEFINED__
+

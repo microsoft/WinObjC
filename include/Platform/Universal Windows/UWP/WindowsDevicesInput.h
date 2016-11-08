@@ -29,9 +29,7 @@
 
 @class WDIPointerDevice, WDIMouseDevice, WDIMouseEventArgs, WDIMouseCapabilities, WDIKeyboardCapabilities, WDITouchCapabilities;
 @class WDIPointerDeviceUsage, WDIMouseDelta;
-@protocol WDIIMouseCapabilities
-, WDIIKeyboardCapabilities, WDIITouchCapabilities, WDIIPointerDeviceStatics, WDIIPointerDevice, WDIIPointerDevice2, WDIIMouseEventArgs,
-    WDIIMouseDevice, WDIIMouseDeviceStatics;
+@protocol WDIIMouseCapabilities, WDIIKeyboardCapabilities, WDIITouchCapabilities, WDIIPointerDeviceStatics, WDIIPointerDevice, WDIIPointerDevice2, WDIIMouseEventArgs, WDIIMouseDevice, WDIIMouseDeviceStatics;
 
 // Windows.Devices.Input.PointerDeviceType
 enum _WDIPointerDeviceType {
@@ -48,7 +46,7 @@ typedef unsigned WDIPointerDeviceType;
 // [struct] Windows.Devices.Input.PointerDeviceUsage
 OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 @interface WDIPointerDeviceUsage : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property unsigned int usagePage;
 @property unsigned int usage;
 @property int minLogical;
@@ -62,7 +60,7 @@ OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 // [struct] Windows.Devices.Input.MouseDelta
 OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 @interface WDIMouseDelta : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property int x;
 @property int y;
 @end
@@ -99,7 +97,7 @@ OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (EventRegistrationToken)addMouseMovedEvent:(void (^)(WDIMouseDevice*, WDIMouseEventArgs*))del;
+- (EventRegistrationToken)addMouseMovedEvent:(void(^)(WDIMouseDevice*, WDIMouseEventArgs*))del;
 - (void)removeMouseMovedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -168,3 +166,4 @@ OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 @end
 
 #endif // __WDITouchCapabilities_DEFINED__
+

@@ -29,9 +29,7 @@
 
 @class WUXINotifyCollectionChangedEventArgs;
 @class WUXITypeName;
-@protocol WUXIIBindableIterable
-, WUXIIBindableVector, WUXIIBindableObservableVector, WUXIIBindableVectorView, WUXIIBindableIterator, WUXIINotifyCollectionChanged,
-    WUXIINotifyCollectionChangedEventArgs, WUXIINotifyCollectionChangedEventArgsFactory;
+@protocol WUXIIBindableIterable, WUXIIBindableVector, WUXIIBindableObservableVector, WUXIIBindableVectorView, WUXIIBindableIterator, WUXIINotifyCollectionChanged, WUXIINotifyCollectionChangedEventArgs, WUXIINotifyCollectionChangedEventArgsFactory;
 
 // Windows.UI.Xaml.Interop.NotifyCollectionChangedAction
 enum _WUXINotifyCollectionChangedAction {
@@ -55,35 +53,36 @@ typedef unsigned WUXITypeKind;
 // Windows.UI.Xaml.Interop.BindableVectorChangedEventHandler
 #ifndef __WUXIBindableVectorChangedEventHandler__DEFINED
 #define __WUXIBindableVectorChangedEventHandler__DEFINED
-typedef void (^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObservableVector>* vector, RTObject* e);
+typedef void(^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObservableVector>* vector, RTObject* e);
 #endif // __WUXIBindableVectorChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Interop.NotifyCollectionChangedEventHandler
 #ifndef __WUXINotifyCollectionChangedEventHandler__DEFINED
 #define __WUXINotifyCollectionChangedEventHandler__DEFINED
-typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINotifyCollectionChangedEventArgs* e);
+typedef void(^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINotifyCollectionChangedEventArgs* e);
 #endif // __WUXINotifyCollectionChangedEventHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Interop.TypeName
 OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
 @interface WUXITypeName : NSObject
-+ (instancetype) new;
-@property (retain) NSString* name;
++ (instancetype)new;
+@property (retain) NSString * name;
 @property WUXITypeKind kind;
 @end
 
 // Windows.UI.Xaml.Interop.BindableVectorChangedEventHandler
 #ifndef __WUXIBindableVectorChangedEventHandler__DEFINED
 #define __WUXIBindableVectorChangedEventHandler__DEFINED
-typedef void (^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObservableVector>* vector, RTObject* e);
+typedef void(^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObservableVector>* vector, RTObject* e);
 #endif // __WUXIBindableVectorChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Interop.NotifyCollectionChangedEventHandler
 #ifndef __WUXINotifyCollectionChangedEventHandler__DEFINED
 #define __WUXINotifyCollectionChangedEventHandler__DEFINED
-typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINotifyCollectionChangedEventArgs* e);
+typedef void(^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINotifyCollectionChangedEventArgs* e);
 #endif // __WUXINotifyCollectionChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Interop.IBindableIterable
@@ -203,11 +202,7 @@ OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
 @interface WUXINotifyCollectionChangedEventArgs : RTObject
-+ (WUXINotifyCollectionChangedEventArgs*)makeInstanceWithAllParameters:(WUXINotifyCollectionChangedAction)action
-                                                              newItems:(RTObject<WUXIIBindableVector>*)newItems
-                                                              oldItems:(RTObject<WUXIIBindableVector>*)oldItems
-                                                              newIndex:(int)newIndex
-                                                              oldIndex:(int)oldIndex ACTIVATOR;
++ (WUXINotifyCollectionChangedEventArgs*)makeInstanceWithAllParameters:(WUXINotifyCollectionChangedAction)action newItems:(RTObject<WUXIIBindableVector>*)newItems oldItems:(RTObject<WUXIIBindableVector>*)oldItems newIndex:(int)newIndex oldIndex:(int)oldIndex ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -219,3 +214,4 @@ OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
 @end
 
 #endif // __WUXINotifyCollectionChangedEventArgs_DEFINED__
+

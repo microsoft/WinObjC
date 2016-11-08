@@ -27,11 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WSDProcessDiagnosticInfo, WSDProcessDiskUsage, WSDProcessMemoryUsage, WSDProcessCpuUsage, WSDProcessMemoryUsageReport,
-    WSDProcessDiskUsageReport, WSDProcessCpuUsageReport;
-@protocol WSDIProcessDiagnosticInfo
-, WSDIProcessDiagnosticInfoStatics, WSDIProcessMemoryUsage, WSDIProcessMemoryUsageReport, WSDIProcessDiskUsage, WSDIProcessDiskUsageReport,
-    WSDIProcessCpuUsage, WSDIProcessCpuUsageReport;
+@class WSDProcessDiagnosticInfo, WSDProcessDiskUsage, WSDProcessMemoryUsage, WSDProcessCpuUsage, WSDProcessMemoryUsageReport, WSDProcessDiskUsageReport, WSDProcessCpuUsageReport;
+@protocol WSDIProcessDiagnosticInfo, WSDIProcessDiagnosticInfoStatics, WSDIProcessMemoryUsage, WSDIProcessMemoryUsageReport, WSDIProcessDiskUsage, WSDIProcessDiskUsageReport, WSDIProcessCpuUsage, WSDIProcessCpuUsageReport;
 
 #include "WindowsFoundation.h"
 
@@ -50,7 +47,7 @@ OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 #endif
 @property (readonly) WSDProcessCpuUsage* cpuUsage;
 @property (readonly) WSDProcessDiskUsage* diskUsage;
-@property (readonly) NSString* executableFileName;
+@property (readonly) NSString * executableFileName;
 @property (readonly) WSDProcessMemoryUsage* memoryUsage;
 @property (readonly) WSDProcessDiagnosticInfo* parent;
 @property (readonly) unsigned int processId;
@@ -159,3 +156,4 @@ OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 @end
 
 #endif // __WSDProcessCpuUsageReport_DEFINED__
+

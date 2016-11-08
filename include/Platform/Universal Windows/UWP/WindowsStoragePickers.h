@@ -27,11 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WSPFilePickerSelectedFilesArray, WSPFilePickerFileTypesOrderedMap, WSPFileExtensionVector, WSPFileOpenPicker, WSPFileSavePicker,
-    WSPFolderPicker;
-@protocol WSPIFileOpenPicker
-, WSPIFileOpenPicker2, WSPIFileOpenPickerWithOperationId, WSPIFileOpenPickerStatics, WSPIFileSavePicker, WSPIFileSavePicker2,
-    WSPIFileSavePicker3, WSPIFolderPicker, WSPIFolderPicker2;
+@class WSPFilePickerSelectedFilesArray, WSPFilePickerFileTypesOrderedMap, WSPFileExtensionVector, WSPFileOpenPicker, WSPFileSavePicker, WSPFolderPicker;
+@protocol WSPIFileOpenPicker, WSPIFileOpenPicker2, WSPIFileOpenPickerWithOperationId, WSPIFileOpenPickerStatics, WSPIFileSavePicker, WSPIFileSavePicker2, WSPIFileSavePicker3, WSPIFolderPicker, WSPIFolderPicker2;
 
 // Windows.Storage.Pickers.PickerViewMode
 enum _WSPPickerViewMode {
@@ -72,7 +69,9 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
 @end
 
@@ -88,21 +87,21 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
-- (id)objectForKey:(id)key;
+- (id)objectForKey: (id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject:(id)obj;
+- (NSArray*)allKeysForObject: (id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
-- (void)setObject:(id)obj forKey:(id)key;
-- (void)setObject:(id)object forKeyedSubscript:(id)key;
-- (void)removeObjectForKey:(id)key;
-- (void)removeAllObjects;
-- (void)removeObjectsForKeys:(NSArray*)keys;
-- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
-- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
-- (void)setDictionary:(NSDictionary*)dict;
+-(void)setObject: (id)obj forKey: (id)key;
+-(void)setObject:(id)object forKeyedSubscript:(id)key;
+-(void)removeObjectForKey: (id)key;
+-(void)removeAllObjects;
+-(void)removeObjectsForKeys:(NSArray*)keys;
+-(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+-(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+-(void)setDictionary: (NSDictionary*)dict;
 @end
 
 #endif // __WSPFilePickerFileTypesOrderedMap_DEFINED__
@@ -119,12 +118,14 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
 - (void)removeLastObject;
 
 @end
@@ -144,13 +145,13 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 #endif
 @property WSPPickerViewMode viewMode;
 @property WSPPickerLocationId suggestedStartLocation;
-@property (retain) NSString* settingsIdentifier;
-@property (retain) NSString* commitButtonText;
+@property (retain) NSString * settingsIdentifier;
+@property (retain) NSString * commitButtonText;
 @property (readonly) NSMutableArray* /* NSString * */ fileTypeFilter;
 @property (readonly) WFCValueSet* continuationData;
 - (void)pickSingleFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)pickMultipleFilesAsyncWithSuccess:(void (^)(NSArray* /* WSStorageFile* */))success failure:(void (^)(NSError*))failure;
-- (void)pickSingleFileAsync:(NSString*)pickerOperationId success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (void)pickSingleFileAsync:(NSString *)pickerOperationId success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)pickSingleFileAndContinue;
 - (void)pickMultipleFilesAndContinue;
 @end
@@ -169,13 +170,13 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 #endif
 @property WSPPickerLocationId suggestedStartLocation;
 @property (retain) WSStorageFile* suggestedSaveFile;
-@property (retain) NSString* suggestedFileName;
-@property (retain) NSString* settingsIdentifier;
-@property (retain) NSString* defaultFileExtension;
-@property (retain) NSString* commitButtonText;
+@property (retain) NSString * suggestedFileName;
+@property (retain) NSString * settingsIdentifier;
+@property (retain) NSString * defaultFileExtension;
+@property (retain) NSString * commitButtonText;
 @property (readonly) NSMutableDictionary* /* NSString *, NSMutableArray* < NSString * > */ fileTypeChoices;
 @property (readonly) WFCValueSet* continuationData;
-@property (retain) NSString* enterpriseId;
+@property (retain) NSString * enterpriseId;
 - (void)pickSaveFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)pickSaveFileAndContinue;
 @end
@@ -194,8 +195,8 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 #endif
 @property WSPPickerViewMode viewMode;
 @property WSPPickerLocationId suggestedStartLocation;
-@property (retain) NSString* settingsIdentifier;
-@property (retain) NSString* commitButtonText;
+@property (retain) NSString * settingsIdentifier;
+@property (retain) NSString * commitButtonText;
 @property (readonly) NSMutableArray* /* NSString * */ fileTypeFilter;
 @property (readonly) WFCValueSet* continuationData;
 - (void)pickSingleFolderAsyncWithSuccess:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
@@ -203,3 +204,4 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 @end
 
 #endif // __WSPFolderPicker_DEFINED__
+
