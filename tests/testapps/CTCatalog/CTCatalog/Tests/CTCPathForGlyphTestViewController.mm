@@ -16,18 +16,6 @@
 
 #import "CTCPathForGlyphTestViewController.h"
 
-// @interface CTPathForGlyphTestView : UIView
-
-// @end
-
-// @implementation CTPathForGlyphTestView {
-// }
-
-// - (void)drawRect:(CGRect)rect {
-// }
-
-// @end
-
 @interface GlyphAsPathView : UIView
 @property UniChar character;
 @property UIFont* font;

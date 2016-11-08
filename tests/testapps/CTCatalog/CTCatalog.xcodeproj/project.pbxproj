@@ -56,7 +56,6 @@
 		005B291E1D77545600789716 /* CTCBaseViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CTCBaseViewController.mm; sourceTree = "<group>"; };
 		1ED8201A1DD28D2700DF2DD7 /* CTCPathForGlyphTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTCPathForGlyphTestViewController.h; path = Tests/CTCPathForGlyphTestViewController.h; sourceTree = "<group>"; };
 		1ED8201B1DD28D2700DF2DD7 /* CTCPathForGlyphTestViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CTCPathForGlyphTestViewController.mm; path = Tests/CTCPathForGlyphTestViewController.mm; sourceTree = "<group>"; };
-		1ED8201D1DD28D4D00DF2DD7 /* CTCPathForGlyphTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTCPathForGlyphTestViewController.h; path = Tests/CTCPathForGlyphTestViewController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,7 +115,6 @@
 		002E8DAD1D59314E00D5DC64 /* Test */ = {
 			isa = PBXGroup;
 			children = (
-				1ED8201D1DD28D4D00DF2DD7 /* CTCPathForGlyphTestViewController.h */,
 				1ED8201A1DD28D2700DF2DD7 /* CTCPathForGlyphTestViewController.h */,
 				1ED8201B1DD28D2700DF2DD7 /* CTCPathForGlyphTestViewController.mm */,
 				0005A04E1DC7D76C00921DDB /* CTCAffineTransformationTestViewController.h */,
