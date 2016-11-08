@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WSCDDataProtectionProvider;
-@protocol WSCDIDataProtectionProvider
-, WSCDIDataProtectionProviderFactory;
+@protocol WSCDIDataProtectionProvider, WSCDIDataProtectionProviderFactory;
 
 #include "WindowsFoundation.h"
 #include "WindowsStorageStreams.h"
@@ -43,7 +42,7 @@
 OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_DATAPROTECTION_EXPORT
 @interface WSCDDataProtectionProvider : RTObject
 + (instancetype)make ACTIVATOR;
-+ (WSCDDataProtectionProvider*)makeOverloadExplicit:(NSString*)protectionDescriptor ACTIVATOR;
++ (WSCDDataProtectionProvider*)makeOverloadExplicit:(NSString *)protectionDescriptor ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -54,3 +53,4 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_DATAPROTECTION_EXPORT
 @end
 
 #endif // __WSCDDataProtectionProvider_DEFINED__
+

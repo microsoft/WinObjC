@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WMOCurrentAppOrchestration, WMOSingleAppModeContext;
-@protocol WMOICurrentAppOrchestrationStatics
-, WMOICurrentAppOrchestration, WMOISingleAppModeContext;
+@protocol WMOICurrentAppOrchestrationStatics, WMOICurrentAppOrchestration, WMOISingleAppModeContext;
 
 #include "WindowsFoundation.h"
 
@@ -77,3 +76,4 @@ OBJCUWP_WINDOWS_MANAGEMENT_ORCHESTRATION_EXPORT
 @end
 
 #endif // __WMOSingleAppModeContext_DEFINED__
+

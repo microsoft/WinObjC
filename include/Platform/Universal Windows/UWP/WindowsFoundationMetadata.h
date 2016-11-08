@@ -103,18 +103,17 @@ typedef unsigned WFMDeprecationType;
 
 OBJCUWP_WINDOWS_FOUNDATION_METADATA_EXPORT
 @interface WFMApiInformation : RTObject
-+ (BOOL)isTypePresent:(NSString*)typeName;
-+ (BOOL)isMethodPresent:(NSString*)typeName methodName:(NSString*)methodName;
-+ (BOOL)isMethodPresentWithArity:(NSString*)typeName methodName:(NSString*)methodName inputParameterCount:(unsigned int)inputParameterCount;
-+ (BOOL)isEventPresent:(NSString*)typeName eventName:(NSString*)eventName;
-+ (BOOL)isPropertyPresent:(NSString*)typeName propertyName:(NSString*)propertyName;
-+ (BOOL)isReadOnlyPropertyPresent:(NSString*)typeName propertyName:(NSString*)propertyName;
-+ (BOOL)isWriteablePropertyPresent:(NSString*)typeName propertyName:(NSString*)propertyName;
-+ (BOOL)isEnumNamedValuePresent:(NSString*)enumTypeName valueName:(NSString*)valueName;
-+ (BOOL)isApiContractPresentByMajor:(NSString*)contractName majorVersion:(unsigned short)majorVersion;
-+ (BOOL)isApiContractPresentByMajorAndMinor:(NSString*)contractName
-                               majorVersion:(unsigned short)majorVersion
-                               minorVersion:(unsigned short)minorVersion;
++ (BOOL)isTypePresent:(NSString *)typeName;
++ (BOOL)isMethodPresent:(NSString *)typeName methodName:(NSString *)methodName;
++ (BOOL)isMethodPresentWithArity:(NSString *)typeName methodName:(NSString *)methodName inputParameterCount:(unsigned int)inputParameterCount;
++ (BOOL)isEventPresent:(NSString *)typeName eventName:(NSString *)eventName;
++ (BOOL)isPropertyPresent:(NSString *)typeName propertyName:(NSString *)propertyName;
++ (BOOL)isReadOnlyPropertyPresent:(NSString *)typeName propertyName:(NSString *)propertyName;
++ (BOOL)isWriteablePropertyPresent:(NSString *)typeName propertyName:(NSString *)propertyName;
++ (BOOL)isEnumNamedValuePresent:(NSString *)enumTypeName valueName:(NSString *)valueName;
++ (BOOL)isApiContractPresentByMajor:(NSString *)contractName majorVersion:(unsigned short)majorVersion;
++ (BOOL)isApiContractPresentByMajorAndMinor:(NSString *)contractName majorVersion:(unsigned short)majorVersion minorVersion:(unsigned short)minorVersion;
 @end
 
 #endif // __WFMApiInformation_DEFINED__
+

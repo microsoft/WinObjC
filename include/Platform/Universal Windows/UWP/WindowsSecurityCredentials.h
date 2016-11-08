@@ -27,13 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WSCWebAccountProvider, WSCWebAccount, WSCKeyCredentialRetrievalResult, WSCKeyCredentialOperationResult,
-    WSCKeyCredentialAttestationResult, WSCKeyCredential, WSCKeyCredentialManager, WSCPasswordCredential, WSCPasswordVault,
-    WSCPasswordCredentialPropertyStore;
-@protocol WSCIWebAccountFactory
-, WSCIWebAccount, WSCIWebAccount2, WSCIWebAccountProviderFactory, WSCIWebAccountProvider, WSCIWebAccountProvider2, WSCIWebAccountProvider3,
-    WSCIKeyCredentialManagerStatics, WSCIKeyCredential, WSCIKeyCredentialRetrievalResult, WSCIKeyCredentialOperationResult,
-    WSCIKeyCredentialAttestationResult, WSCIPasswordCredential, WSCICredentialFactory, WSCIPasswordVault;
+@class WSCWebAccountProvider, WSCWebAccount, WSCKeyCredentialRetrievalResult, WSCKeyCredentialOperationResult, WSCKeyCredentialAttestationResult, WSCKeyCredential, WSCKeyCredentialManager, WSCPasswordCredential, WSCPasswordVault, WSCPasswordCredentialPropertyStore;
+@protocol WSCIWebAccountFactory, WSCIWebAccount, WSCIWebAccount2, WSCIWebAccountProviderFactory, WSCIWebAccountProvider, WSCIWebAccountProvider2, WSCIWebAccountProvider3, WSCIKeyCredentialManagerStatics, WSCIKeyCredential, WSCIKeyCredentialRetrievalResult, WSCIKeyCredentialOperationResult, WSCIKeyCredentialAttestationResult, WSCIPasswordCredential, WSCICredentialFactory, WSCIPasswordVault;
 
 // Windows.Security.Credentials.WebAccountState
 enum _WSCWebAccountState {
@@ -82,6 +77,7 @@ typedef unsigned WSCKeyCredentialCreationOption;
 
 #include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
+#include "WindowsSecurityCryptographyCore.h"
 #include "WindowsFoundation.h"
 #include "WindowsSystem.h"
 
@@ -93,7 +89,7 @@ typedef unsigned WSCKeyCredentialCreationOption;
 
 @protocol WSCIWebAccount
 @property (readonly) WSCWebAccountState state;
-@property (readonly) NSString* userName;
+@property (readonly) NSString * userName;
 @property (readonly) WSCWebAccountProvider* webAccountProvider;
 @end
 
@@ -109,15 +105,15 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCWebAccountProvider : RTObject
-+ (WSCWebAccountProvider*)makeWebAccountProvider:(NSString*)id displayName:(NSString*)displayName iconUri:(WFUri*)iconUri ACTIVATOR;
++ (WSCWebAccountProvider*)makeWebAccountProvider:(NSString *)id displayName:(NSString *)displayName iconUri:(WFUri*)iconUri ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* displayName;
+@property (readonly) NSString * displayName;
 @property (readonly) WFUri* iconUri;
-@property (readonly) NSString* id;
-@property (readonly) NSString* authority;
-@property (readonly) NSString* displayPurpose;
+@property (readonly) NSString * id;
+@property (readonly) NSString * authority;
+@property (readonly) NSString * displayPurpose;
 @property (readonly) WSUser* user;
 @end
 
@@ -129,22 +125,18 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCWebAccount : RTObject <WSCIWebAccount>
-+ (WSCWebAccount*)makeWebAccount:(WSCWebAccountProvider*)webAccountProvider
-                        userName:(NSString*)userName
-                           state:(WSCWebAccountState)state ACTIVATOR;
++ (WSCWebAccount*)makeWebAccount:(WSCWebAccountProvider*)webAccountProvider userName:(NSString *)userName state:(WSCWebAccountState)state ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSCWebAccountState state;
-@property (readonly) NSString* userName;
+@property (readonly) NSString * userName;
 @property (readonly) WSCWebAccountProvider* webAccountProvider;
-@property (readonly) NSString* id;
+@property (readonly) NSString * id;
 @property (readonly) NSDictionary* /* NSString *, NSString * */ properties;
-- (void)getPictureAsync:(WSCWebAccountPictureSize)desizedSize
-                success:(void (^)(RTObject<WSSIRandomAccessStream>*))success
-                failure:(void (^)(NSError*))failure;
+- (void)getPictureAsync:(WSCWebAccountPictureSize)desizedSize success:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)signOutAsync;
-- (RTObject<WFIAsyncAction>*)signOutWithClientIdAsync:(NSString*)clientId;
+- (RTObject<WFIAsyncAction>*)signOutWithClientIdAsync:(NSString *)clientId;
 @end
 
 #endif // __WSCWebAccount_DEFINED__
@@ -204,11 +196,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* name;
-- (RTObject<WSSIBuffer>*)retrievePublicKey;
-- (void)requestSignAsync:(RTObject<WSSIBuffer>*)data
-                 success:(void (^)(WSCKeyCredentialOperationResult*))success
-                 failure:(void (^)(NSError*))failure;
+@property (readonly) NSString * name;
+- (RTObject<WSSIBuffer>*)retrievePublicKeyWithDefaultBlobType;
+- (RTObject<WSSIBuffer>*)retrievePublicKeyWithBlobType:(WSCCCryptographicPublicKeyBlobType)blobType;
+- (void)requestSignAsync:(RTObject<WSSIBuffer>*)data success:(void (^)(WSCKeyCredentialOperationResult*))success failure:(void (^)(NSError*))failure;
 - (void)getAttestationAsyncWithSuccess:(void (^)(WSCKeyCredentialAttestationResult*))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -222,12 +213,9 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCKeyCredentialManager : RTObject
 + (void)isSupportedAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)renewAttestationAsync;
-+ (void)requestCreateAsync:(NSString*)name
-                    option:(WSCKeyCredentialCreationOption)option
-                   success:(void (^)(WSCKeyCredentialRetrievalResult*))success
-                   failure:(void (^)(NSError*))failure;
-+ (void)openAsync:(NSString*)name success:(void (^)(WSCKeyCredentialRetrievalResult*))success failure:(void (^)(NSError*))failure;
-+ (RTObject<WFIAsyncAction>*)deleteAsync:(NSString*)name;
++ (void)requestCreateAsync:(NSString *)name option:(WSCKeyCredentialCreationOption)option success:(void (^)(WSCKeyCredentialRetrievalResult*))success failure:(void (^)(NSError*))failure;
++ (void)openAsync:(NSString *)name success:(void (^)(WSCKeyCredentialRetrievalResult*))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)deleteAsync:(NSString *)name;
 @end
 
 #endif // __WSCKeyCredentialManager_DEFINED__
@@ -238,14 +226,14 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSCPasswordCredential : RTObject
++ (WSCPasswordCredential*)makePasswordCredential:(NSString *)resource userName:(NSString *)userName password:(NSString *)password ACTIVATOR;
 + (instancetype)make ACTIVATOR;
-+ (WSCPasswordCredential*)makePasswordCredential:(NSString*)resource userName:(NSString*)userName password:(NSString*)password ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* userName;
-@property (retain) NSString* resource;
-@property (retain) NSString* password;
+@property (retain) NSString * userName;
+@property (retain) NSString * resource;
+@property (retain) NSString * password;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 - (void)retrievePassword;
 @end
@@ -264,9 +252,9 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #endif
 - (void)add:(WSCPasswordCredential*)credential;
 - (void)remove:(WSCPasswordCredential*)credential;
-- (WSCPasswordCredential*)retrieve:(NSString*)resource userName:(NSString*)userName;
-- (NSArray* /* WSCPasswordCredential* */)findAllByResource:(NSString*)resource;
-- (NSArray* /* WSCPasswordCredential* */)findAllByUserName:(NSString*)userName;
+- (WSCPasswordCredential*)retrieve:(NSString *)resource userName:(NSString *)userName;
+- (NSArray* /* WSCPasswordCredential* */)findAllByResource:(NSString *)resource;
+- (NSArray* /* WSCPasswordCredential* */)findAllByUserName:(NSString *)userName;
 - (NSArray* /* WSCPasswordCredential* */)retrieveAll;
 @end
 
@@ -277,23 +265,23 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #define __WFCIPropertySet_DEFINED__
 
 @protocol WFCIPropertySet
-- (id)objectForKey:(id)key;
+- (id)objectForKey: (id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject:(id)obj;
+- (NSArray*)allKeysForObject: (id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
-- (void)setObject:(id)obj forKey:(id)key;
-- (void)setObject:(id)object forKeyedSubscript:(id)key;
-- (void)removeObjectForKey:(id)key;
-- (void)removeAllObjects;
-- (void)removeObjectsForKeys:(NSArray*)keys;
-- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
-- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
-- (void)setDictionary:(NSDictionary*)dict;
-- (EventRegistrationToken)addObserver:(RTCollectionListener)receiver;
-- (void)removeObserver:(EventRegistrationToken)receiverToken;
+-(void)setObject: (id)obj forKey: (id)key;
+-(void)setObject:(id)object forKeyedSubscript:(id)key;
+-(void)removeObjectForKey: (id)key;
+-(void)removeAllObjects;
+-(void)removeObjectsForKeys:(NSArray*)keys;
+-(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+-(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+-(void)setDictionary: (NSDictionary*)dict;
+-(EventRegistrationToken)addObserver: (RTCollectionListener)receiver;
+-(void)removeObserver: (EventRegistrationToken)receiverToken;
 @end
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
@@ -315,23 +303,24 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)
 - (void)removeMapChangedEvent:(EventRegistrationToken)tok;
-- (id)objectForKey:(id)key;
+- (id)objectForKey: (id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject:(id)obj;
+- (NSArray*)allKeysForObject: (id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
-- (void)setObject:(id)obj forKey:(id)key;
-- (void)setObject:(id)object forKeyedSubscript:(id)key;
-- (void)removeObjectForKey:(id)key;
-- (void)removeAllObjects;
-- (void)removeObjectsForKeys:(NSArray*)keys;
-- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
-- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
-- (void)setDictionary:(NSDictionary*)dict;
-- (EventRegistrationToken)addObserver:(RTCollectionListener)receiver;
-- (void)removeObserver:(EventRegistrationToken)receiverToken;
+-(void)setObject: (id)obj forKey: (id)key;
+-(void)setObject:(id)object forKeyedSubscript:(id)key;
+-(void)removeObjectForKey: (id)key;
+-(void)removeAllObjects;
+-(void)removeObjectsForKeys:(NSArray*)keys;
+-(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+-(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+-(void)setDictionary: (NSDictionary*)dict;
+-(EventRegistrationToken)addObserver: (RTCollectionListener)receiver;
+-(void)removeObserver: (EventRegistrationToken)receiverToken;
 @end
 
 #endif // __WSCPasswordCredentialPropertyStore_DEFINED__
+

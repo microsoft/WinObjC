@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WGFLanguageFont, WGFLanguageFontGroup;
-@protocol WGFILanguageFontGroup
-, WGFILanguageFontGroupFactory, WGFILanguageFont;
+@protocol WGFILanguageFontGroup, WGFILanguageFontGroupFactory, WGFILanguageFont;
 
 #include "WindowsUIText.h"
 
@@ -44,7 +43,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_FONTS_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* fontFamily;
+@property (readonly) NSString * fontFamily;
 @property (readonly) WUTFontStretch fontStretch;
 @property (readonly) WUTFontStyle fontStyle;
 @property (readonly) WUTFontWeight* fontWeight;
@@ -59,7 +58,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_FONTS_EXPORT
 
 OBJCUWP_WINDOWS_GLOBALIZATION_FONTS_EXPORT
 @interface WGFLanguageFontGroup : RTObject
-+ (WGFLanguageFontGroup*)makeLanguageFontGroup:(NSString*)languageTag ACTIVATOR;
++ (WGFLanguageFontGroup*)makeLanguageFontGroup:(NSString *)languageTag ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -77,3 +76,4 @@ OBJCUWP_WINDOWS_GLOBALIZATION_FONTS_EXPORT
 @end
 
 #endif // __WGFLanguageFontGroup_DEFINED__
+
