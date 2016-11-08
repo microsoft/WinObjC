@@ -263,8 +263,8 @@ struct ButtonState {
         _states[state].inspectableImage = [imageBrush comObj];
     }
 
+    [self setNeedsDisplay];
     [self setNeedsLayout];
-    [self layoutIfNeeded];
 }
 
 /**
@@ -436,8 +436,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
                                                  image.capInsets.bottom * image.scale };
     }
 
+    [self setNeedsDisplay];
     [self setNeedsLayout];
-    [self layoutIfNeeded];
 }
 
 /**
@@ -482,8 +482,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
         _states[state].inspectableTitle = [rtString comObj];
     }
 
+    [self setNeedsDisplay];
     [self setNeedsLayout];
-    [self layoutIfNeeded];
 }
 
 /**
@@ -513,8 +513,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
         _states[state].inspectableTitleColor = [titleColorBrush comObj];
     }
 
+    [self setNeedsDisplay];
     [self setNeedsLayout];
-    [self layoutIfNeeded];
 }
 
 /**
