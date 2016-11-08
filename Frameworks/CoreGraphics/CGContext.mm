@@ -28,6 +28,7 @@
 #import "CGColorSpaceInternal.h"
 #import "CGContextInternal.h"
 #import "CGPathInternal.h"
+#import <CoreGraphics/D2DWrapper.h>
 
 #import <CFCppBase.h>
 
@@ -188,6 +189,10 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext, __CGContextImpl> {
         _impl.renderTarget->GetFactory(&factory);
         return factory;
     }
+
+    inline void SetRenderTarget(ID2D1RenderTarget* renderTarget) {
+        _impl.renderTarget = renderTarget;
+    }
 };
 
 #define NOISY_RETURN_IF_NULL(param, ...)                                    \
@@ -211,8 +216,7 @@ CFTypeID CGContextGetTypeID() {
 
 #pragma region Global State - Lifetime
 static void __CGContextInitWithRenderTarget(CGContextRef context, ID2D1RenderTarget* renderTarget) {
-    context->_impl.renderTarget = renderTarget;
-
+    context->SetRenderTarget(renderTarget);
     // Reference platform defaults:
     // * Fill  : fully transparent black
     // * Stroke: fully opaque black
@@ -222,14 +226,15 @@ static void __CGContextInitWithRenderTarget(CGContextRef context, ID2D1RenderTar
 
     // CG is a lower-left origin system (LLO), but D2D is upper left (ULO).
     // We have to translate the render area back onscreen and flip it up to ULO.
-    D2D1_SIZE_F targetSize = renderTarget->GetSize();
+    D2D1_SIZE_F targetSize = context->RenderTarget()->GetSize();
     context->Impl().deviceTransform = CGAffineTransformMake(1.f, 0.f, 0.f, -1.f, 0.f, targetSize.height);
 }
 
 CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget) {
     FAIL_FAST_HR_IF_NULL(E_INVALIDARG, renderTarget);
     CGContextRef context = __CGContext::CreateInstance(kCFAllocatorDefault);
-    __CGContextInitWithRenderTarget(context, renderTarget);
+    __CGContextInitWithRenderTarget(context,renderTarget);
+
     return context;
 }
 
@@ -631,12 +636,14 @@ void CGContextReplacePathWithStrokedPath(CGContextRef context) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
-    woc::unique_cf<CGPathRef> newPath{ CGPathCreateCopyByStrokingPath(context->Path(),
-                                                                      nullptr, // The points in the path are already transformed; do not transform again!
-                                                                      state.lineWidth,
-                                                                      (CGLineCap)state.strokeProperties.startCap,
-                                                                      (CGLineJoin)state.strokeProperties.lineJoin,
-                                                                      state.strokeProperties.miterLimit) };
+    woc::unique_cf<CGPathRef> newPath{
+        CGPathCreateCopyByStrokingPath(context->Path(),
+                                       nullptr, // The points in the path are already transformed; do not transform again!
+                                       state.lineWidth,
+                                       (CGLineCap)state.strokeProperties.startCap,
+                                       (CGLineJoin)state.strokeProperties.lineJoin,
+                                       state.strokeProperties.miterLimit)
+    };
 
 #pragma clang diagnostic pop
 
@@ -1257,7 +1264,7 @@ void CGContextSetCMYKFillColor(CGContextRef context, CGFloat cyan, CGFloat magen
 }
 #pragma endregion
 
-#pragma region Drawing Parameters - Stroke/Fill Patterns
+#pragma region Drawing Parameters - Stroke / Fill Patterns
 /**
  @Status Stub
  @Notes
@@ -1381,9 +1388,9 @@ void CGContextClearRect(CGContextRef context, CGRect rect) {
 }
 
 static HRESULT __CGContextCreateShadowEffect(CGContextRef context,
-                                          ID2D1DeviceContext* deviceContext,
-                                          ID2D1Image* inputImage,
-                                          ID2D1Effect** outShadowEffect) {
+                                             ID2D1DeviceContext* deviceContext,
+                                             ID2D1Image* inputImage,
+                                             ID2D1Effect** outShadowEffect) {
     auto& state = context->CurrentGState();
     if (std::fpclassify(state.shadowColor.w) != FP_ZERO) {
         // The Shadow Effect takes an input image (or command list) and projects a shadow from
@@ -1812,28 +1819,17 @@ void CGContextDrawGlyphRun(CGContextRef context, const DWRITE_GLYPH_RUN* glyphRu
 }
 #pragma endregion
 
-CGImageRef CGPNGImageCreateFromFile(NSString* path) {
-    return new CGPNGDecoderImage([path UTF8String]);
-}
-
-CGImageRef CGPNGImageCreateFromData(NSData* data) {
-    return new CGPNGDecoderImage(data);
-}
-
-CGImageRef CGJPEGImageCreateFromFile(NSString* path) {
-    return new CGJPEGDecoderImage([path UTF8String]);
-}
-
-CGImageRef CGJPEGImageCreateFromData(NSData* data) {
-    return new CGJPEGDecoderImage(data);
-}
-
 #pragma region CGBitmapContext
 struct __CGBitmapContextImpl {
     woc::unique_cf<CGImageRef> image;
 };
 
-struct __CGBitmapContext : CoreFoundation::CppBase<__CGBitmapContext, __CGBitmapContextImpl, __CGContext> {};
+struct __CGBitmapContext : CoreFoundation::CppBase<__CGBitmapContext, __CGBitmapContextImpl, __CGContext> {
+    inline void SetImage(CGImageRef image) {
+        _impl.image.reset(image);
+    }
+
+};
 
 /**
  @Status Caveat
@@ -1916,19 +1912,12 @@ CGImageRef CGBitmapContextGetImage(CGContextRef context) {
     return ((__CGBitmapContext*)context)->Impl().image.get();
 }
 
-CGContextRef _CGBitmapContextCreateWithTexture(
-    int width, int height, float scale, DisplayTexture* texture, DisplayTextureLocking* locking) {
-    CGImageRef newImage = nullptr;
-    __CGSurfaceInfo surfaceInfo = _CGSurfaceInfoInit(width, height, _ColorARGB);
-    newImage = new CGGraphicBufferImage(surfaceInfo, texture, locking);
-
-    ComPtr<ID2D1RenderTarget> renderTarget = newImage->Backing()->GetRenderTarget();
-    renderTarget->SetDpi(96 * scale, 96 * scale);
-
+CGContextRef  _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget, CGImageRef img) {
+    RETURN_NULL_IF(!renderTarget);
+    //TODO: do it for image?
     __CGBitmapContext* context = __CGBitmapContext::CreateInstance(kCFAllocatorDefault);
-    __CGContextInitWithRenderTarget(context, renderTarget.Get());
-
-    context->Impl().image.reset(newImage); // Consumes +1 reference.
+    __CGContextInitWithRenderTarget(context, renderTarget);
+    context->SetImage(img);// Consumes +1 reference.
     return context;
 }
 

@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#import "D2DWrapper.h"
+#import <CoreGraphics/D2DWrapper.h>
 #import <Starboard.h>
 
 using namespace Microsoft::WRL;
