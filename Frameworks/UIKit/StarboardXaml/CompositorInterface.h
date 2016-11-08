@@ -21,6 +21,16 @@
 #include "winobjc\winobjc.h"
 #include <ppltasks.h>
 
+#ifdef __clang__
+#include <COMIncludes.h>
+#endif
+
+#include <DWrite_3.h>
+
+#ifdef __clang__
+#include <COMIncludes_End.h>
+#endif
+
 class DisplayNode;
 class DisplayTexture;
 class DisplayAnimation;
@@ -159,15 +169,16 @@ public:
     float _fontSize;
     float _lineHeight;
     bool _centerVertically;
-    bool _isBold = false;
-    bool _isItalic = false;
+    DWRITE_FONT_WEIGHT _fontWeight;
+    DWRITE_FONT_STRETCH _fontStretch;
+    DWRITE_FONT_STYLE _fontStyle;
 
     DisplayTextureXamlGlyphs();
     ~DisplayTextureXamlGlyphs();
 
     float _desiredWidth, _desiredHeight;
     void Measure(float width, float height);
-    void ConstructGlyphs(const char* fontName, const wchar_t* str, int len);
+    void ConstructGlyphs(const Microsoft::WRL::Wrappers::HString& fontFamilyName, const wchar_t* str, int len);
     void SetNodeContent(DisplayNode* node, float width, float height, float scale);
 };
 

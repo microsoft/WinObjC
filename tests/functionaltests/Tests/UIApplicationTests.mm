@@ -24,10 +24,13 @@ TEST(UIApplicationTests, OpenURL) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
                    ^{
                        NSString* urlString = @"itms-apps://itunes.com/apps/iplayfulinc";
+                       [condition lock];
                        success = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
                        [condition signal];
+                       [condition unlock];
                    });
 
-    ASSERT_TRUE([condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]]);
-    ASSERT_FALSE(success);
+    [condition lock];
+    ASSERT_TRUE (!success || [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]]);
+    [condition unlock];
 }

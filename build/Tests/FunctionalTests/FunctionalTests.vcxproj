@@ -272,6 +272,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\ProjectionTests\SanityTestsWithARCEnabled.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSURLStorageFileTests.mm">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSURL.AppxManifest.xml" />

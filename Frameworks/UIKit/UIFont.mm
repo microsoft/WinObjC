@@ -34,6 +34,7 @@
 #import "LoggingNative.h"
 #import "UICTFont.h"
 #import "UIFontInternal.h"
+#import <CoreTextInternal.h>
 
 #include <COMIncludes.h>
 #import <DWrite.h>
@@ -290,25 +291,28 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UIFontPrototype, CTFontGetTypeID);
     return [self retain];
 }
 
-// WinObjC-only extension for UINibUnarchiver
-- (instancetype)initWithCoder:(NSCoder*)coder {
-    NSString* name = [coder decodeObjectForKey:@"UIFontName"];
-    if ([name length] < 1) {
-        // fallback to default if could not find a font name
-        name = (__bridge NSString*)kCTFontDefaultFontName;
-    }
+// WinObjC-only extension for compatibility issues between DWrite and Xaml
+// Returns the family name of the font Xaml can use
+- (NSString*)_compatibleFamilyName {
+    return static_cast<NSString*>(_DWriteGetFamilyNameForFontName(static_cast<CFStringRef>([self fontName])));
+}
 
-    CGFloat size = [coder decodeFloatForKey:@"UIFontPointSize"];
+// WinObjC-only extension for compatibility issues between DWrite and Xaml
+// Returns the weight of the font Xaml can use
+- (DWRITE_FONT_WEIGHT)_fontWeight {
+    return _CTFontGetDWriteWeight(static_cast<CTFontRef>(self));
+}
 
-    UIFont* font = [UIFont fontWithName:name size:size];
+// WinObjC-only extension for compatibility issues between DWrite and Xaml
+// Returns the stretch of the font Xaml can use
+- (DWRITE_FONT_STRETCH)_fontStretch {
+    return _CTFontGetDWriteStretch(static_cast<CTFontRef>(self));
+}
 
-    [self release];
-    if (font) {
-        self = font;
-        return font;
-    } else {
-        return nil;
-    }
+// WinObjC-only extension for compatibility issues between DWrite and Xaml
+// Returns the style of the font Xaml can use
+- (DWRITE_FONT_STYLE)_fontStyle {
+    return _CTFontGetDWriteStyle(static_cast<CTFontRef>(self));
 }
 
 @end

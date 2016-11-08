@@ -26,8 +26,6 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 };
 
 @interface NSURLConnectionTestHelper : NSObject <NSURLConnectionDelegate>
-// TODO::
-// todo-nithishm-03312016 - Switch from NSCondition to dispatch_semaphore_t once bug 7075799 is fixed.
 @property NSCondition* condition;
 @property dispatch_queue_t queue;
 @property NSMutableArray* delegateCallOrder;
@@ -62,8 +60,10 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
                   ^{
                       [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLConnectionDelegateDidReceiveResponse]];
                   });
+    [self.condition lock];
     self.response = response;
     [self.condition signal];
+    [self.condition unlock];
 }
 
 - (void)connection:(NSURLConnection*)connection didReceiveData:(nonnull NSData*)data {
@@ -71,8 +71,11 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
                   ^{
                       [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLConnectionDelegateDidReceiveData]];
                   });
+
+    [self.condition lock];
     self.data = data;
     [self.condition signal];
+    [self.condition unlock];
 }
 
 - (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)e {
@@ -80,8 +83,11 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
                   ^{
                       [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLConnectionDelegateDidFailWithError]];
                   });
+
+    [self.condition lock];
     self.error = e;
     [self.condition signal];
+    [self.condition unlock];
 }
 
 @end
@@ -97,16 +103,12 @@ TEST(NSURLConnection, RequestWithURL) {
     [connection start];
 
     // Wait for data.
-    if (![connectionTestHelper.condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]) {
-        // Wait timed out.
-        ASSERT_FALSE_MSG(true, "FAILED: Waiting for connection timed out!");
+    [connectionTestHelper.condition lock];
+    for (int i = 0; (i < 5) && ([connectionTestHelper.delegateCallOrder count] != 2); i++) {
+        [connectionTestHelper.condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]];
     }
-
-    // Give some time for all delegates to be called.
-    [NSThread sleepForTimeInterval:1.0];
-
-    // We should have the response and date delegates called.
     ASSERT_EQ_MSG(2, [connectionTestHelper.delegateCallOrder count], "FAILED: We should have received two delegates call by now!");
+    [connectionTestHelper.condition unlock];
 
     // Make sure we received a response.
     ASSERT_EQ_MSG(NSURLConnectionDelegateDidReceiveResponse,
@@ -144,16 +146,13 @@ TEST(NSURLConnection, RequestWithURL_Failure) {
     [connection start];
 
     // Wait for a response.
-    if (![connectionTestHelper.condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]) {
-        // Wait timed out.
-        ASSERT_FALSE_MSG(true, "FAILED: Waiting for connection timed out!");
+    [connectionTestHelper.condition lock];
+
+    for (int i = 0; (i < 5) && ([connectionTestHelper.delegateCallOrder count] != 1); i++) {
+        [connectionTestHelper.condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]];
     }
-
-    // Give some time for all delegates to be called.
-    [NSThread sleepForTimeInterval:1.0];
-
-    // We should have the response and date delegates called.
     ASSERT_EQ_MSG(1, [connectionTestHelper.delegateCallOrder count], "FAILED: We should have received one delegate call by now!");
+    [connectionTestHelper.condition unlock];
 
     // Make sure we received a response.
     ASSERT_EQ_MSG(NSURLConnectionDelegateDidReceiveResponse,

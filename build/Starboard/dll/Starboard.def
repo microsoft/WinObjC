@@ -140,21 +140,17 @@ LIBRARY Starboard
         EbrStat64i32
         EbrTell
         EbrGetOSFHandle
-        EbrFputc
         EbrAccess
         EbrFflush
         EbrOpen
         EbrOpenWithPermission
         EbrClose
-        EbrFd2Host
         EbrFstat
         EbrFstat64i32
         EbrRead
         EbrWrite
         EbrLseek
-        EbrTruncate
         EbrTruncate64
-        EbrDup
         EbrRename
         EbrUnlink
         EbrMkdir
@@ -181,9 +177,6 @@ LIBRARY Starboard
         EbrEventTimedWait
         EbrEventTimedMultipleWait
         EbrEventDestroy
-
-        ; Platform support
-        dbg_printf
 
         ; REMOVE / CLEANUP C++ EXPORTS
         ?format@string@woc@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PBDZZ

@@ -30,18 +30,28 @@ TEST(NSBundle, MSAppxURL) {
 
     // Verify that the file can be accessed
     __block BOOL success = NO;
+    __block BOOL signaled = NO;
     __block NSCondition* condition = [[NSCondition new] autorelease];
 
     [WSStorageFile getFileFromApplicationUriAsync:msAppxURI
         success:^void(WSStorageFile* file) {
+            [condition lock];
             success = YES;
+            signaled = YES;
             [condition signal];
+            [condition unlock];
         }
         failure:^void(NSError* error) {
             LOG_ERROR([[error description] UTF8String]);
+            [condition lock];
+            signaled = YES;
             [condition signal];
+            [condition unlock];
         }];
 
-    [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
+    [condition lock];
+    ASSERT_TRUE (signaled || [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]]);
+    [condition unlock];
+
     ASSERT_EQ(YES, success);
 }

@@ -25,7 +25,6 @@
 #undef interface
 #endif
 
-extern "C" void dbg_printf(const char* fmt, ...);
 #define fatal_printf(...)
 #define EbrShutdownAV()
 #define idp(protocol) id<protocol>

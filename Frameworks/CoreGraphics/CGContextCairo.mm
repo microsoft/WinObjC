@@ -1832,7 +1832,7 @@ CGPathRef CGContextCairo::CGContextCopyPath(void) {
  *
  * @parameter glyphRun DWRITE_GLYPH_RUN object to render
  */
-void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, float lineAscent) {
+void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     ObtainLock();
 
     CGContextStrokePath();
@@ -1853,32 +1853,25 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, flo
 
     // Apply the text transformation (text position, text matrix) in text space rather than user space
     // This means flipping the coordinate system,
-    // and applying the transformation about the center of the glyph run rather than about the baseline
-    // Flip and translate by the difference between the center and the baseline, apply text transforms, then flip and translate back
+    // Apply text position, where it will be translated to correct position given text matrix value
+    CGAffineTransform textTransform =
+        CGAffineTransformTranslate(curState->curTextMatrix, curState->curTextPosition.x, curState->curTextPosition.y);
 
-    // Transform to text space
-    // Technically there should be a horizontal translation to the center as well,
-    // but it's to the center of _each individual glyph_, as the reference platform applies the text matrix to each glyph individually
-    // Uncertain whether it's ever going to be worth it to support this using DWrite, so just ignore it for now
-    CGAffineTransform transform = CGAffineTransformMake(1, 0, 0, -1, 0, lineAscent / 2.0f);
+    // Undo assumed inversion about Y axis
+    textTransform = CGAffineTransformConcat(CGAffineTransformMake(1, 0, 0, -1, 0, 0), textTransform);
 
-    // Apply text transforms
-    transform = CGAffineTransformConcat(curState->curTextMatrix, transform);
-    transform = CGAffineTransformTranslate(transform, curState->curTextPosition.x, curState->curTextPosition.y);
-
-    // Undo transform to text space
-    transform = CGAffineTransformConcat(CGAffineTransformMake(1, 0, 0, -1, 0, -lineAscent / 2.0f), transform);
-
-    // Apply the context CTM
-    transform = CGAffineTransformConcat(curState->curTransform, transform);
-
-    // Perform translation required to handle scaling.
-    CGFloat verticalScalingFactor = sqrt((transform.b * transform.b) + (transform.d * transform.d));
+    // Find transform that user created by multiplying given transform by necessary transforms to draw with CoreText
+    // First multiply by inverse scale to get properly scaled values
+    // Then undo assumed inversion about Y axis
+    // Finally inverse translate by height
+    // All of which are rolled into one concatenation
     float height = _imgDest->Backing()->Height();
-    transform = CGAffineTransformTranslate(transform, 0, (height / verticalScalingFactor));
+    CGAffineTransform userTransform =
+        CGAffineTransformConcat(curState->curTransform, CGAffineTransformMake(1.0f / _scale, 0, 0, -1.0f / _scale, 0, height / _scale));
 
-    // Perform anti-clockwise rotation required to match the reference platform.
-    imgRenderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, -transform.b, transform.c, transform.d, transform.tx, transform.ty));
+    // Apply the two transforms giving us the final result
+    CGAffineTransform transform = CGAffineTransformConcat(textTransform, userTransform);
+    imgRenderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty));
 
     // Draw the glyph using ID2D1RenderTarget
     ComPtr<ID2D1SolidColorBrush> brush;

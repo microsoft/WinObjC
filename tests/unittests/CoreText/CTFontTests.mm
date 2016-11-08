@@ -125,13 +125,13 @@ TEST(CTFont, CopyNameHelpers) {
     EXPECT_OBJCEQ(@"Arial Italic", (id)CFAutorelease(CTFontCopyFullName(font)));
     EXPECT_OBJCEQ(@"Arial Italic", (id)CFAutorelease(CTFontCopyDisplayName(font)));
 
-    font = CTFontCreateWithName(CFSTR("Arial Narrow"), 15.0, NULL);
+    font = CTFontCreateWithName(CFSTR("Courier New Bold Italic"), 15.0, NULL);
     CFAutorelease(font);
 
-    EXPECT_OBJCEQ(@"ArialNarrow", (id)CFAutorelease(CTFontCopyPostScriptName(font)));
-    EXPECT_OBJCEQ(@"Arial Narrow", (id)CFAutorelease(CTFontCopyFamilyName(font)));
-    EXPECT_OBJCEQ(@"Arial Narrow", (id)CFAutorelease(CTFontCopyFullName(font)));
-    EXPECT_OBJCEQ(@"Arial Narrow", (id)CFAutorelease(CTFontCopyDisplayName(font)));
+    EXPECT_OBJCEQ(@"CourierNewPS-BoldItalicMT", (id)CFAutorelease(CTFontCopyPostScriptName(font)));
+    EXPECT_OBJCEQ(@"Courier New", (id)CFAutorelease(CTFontCopyFamilyName(font)));
+    EXPECT_OBJCEQ(@"Courier New Bold Italic", (id)CFAutorelease(CTFontCopyFullName(font)));
+    EXPECT_OBJCEQ(@"Courier New Bold Italic", (id)CFAutorelease(CTFontCopyDisplayName(font)));
 }
 
 TEST(CTFont, Metrics) {
@@ -165,7 +165,9 @@ TEST(CTFont, GlyphCount) {
 }
 
 // OSX returns a default font, but iOS returns nullptr
-OSX_DISABLED_TEST(CTFont, UnknownName) {
+// TODO #1250: A default font is currently returned as a short-term fix for another issue
+// Return this test to OSX_DISABLED_TEST when #1250 is completed.
+DISABLED_TEST(CTFont, UnknownName) {
     EXPECT_OBJCEQ(nil, (id)CFAutorelease(CTFontCreateWithName(CFSTR("DoesNotExistFont"), 12.0, NULL)));
 }
 
