@@ -614,21 +614,35 @@ TEST(CTFont, CreatePathForGlyph) {
         EXPECT_EQ(comparePathContext->expectedElements[comparePathContext->count].type, element->type);
 
         // Error margin is slightly higher for this test
+        static const float c_comparePathErrorMargin = 0.002f;
+
         switch (element->type) {
             case kCGPathElementMoveToPoint:
             case kCGPathElementAddLineToPoint:
-                EXPECT_NEAR(comparePathContext->expectedElements[comparePathContext->count].point.x, element->points[0].x, 0.002f);
-                EXPECT_NEAR(comparePathContext->expectedElements[comparePathContext->count].point.y, element->points[0].y, 0.002f);
+                EXPECT_NEAR(comparePathContext->expectedElements[comparePathContext->count].point.x,
+                            element->points[0].x,
+                            c_comparePathErrorMargin);
+                EXPECT_NEAR(comparePathContext->expectedElements[comparePathContext->count].point.y,
+                            element->points[0].y,
+                            c_comparePathErrorMargin);
                 break;
 
             case kCGPathElementAddQuadCurveToPoint:
-                EXPECT_NEAR(comparePathContext->expectedElements[comparePathContext->count].point.x, element->points[1].x, 0.002f);
-                EXPECT_NEAR(comparePathContext->expectedElements[comparePathContext->count].point.y, element->points[1].y, 0.002f);
+                EXPECT_NEAR(comparePathContext->expectedElements[comparePathContext->count].point.x,
+                            element->points[1].x,
+                            c_comparePathErrorMargin);
+                EXPECT_NEAR(comparePathContext->expectedElements[comparePathContext->count].point.y,
+                            element->points[1].y,
+                            c_comparePathErrorMargin);
                 break;
 
             case kCGPathElementAddCurveToPoint:
-                EXPECT_NEAR(comparePathContext->expectedElements[comparePathContext->count].point.x, element->points[2].x, 0.002f);
-                EXPECT_NEAR(comparePathContext->expectedElements[comparePathContext->count].point.y, element->points[2].y, 0.002f);
+                EXPECT_NEAR(comparePathContext->expectedElements[comparePathContext->count].point.x,
+                            element->points[2].x,
+                            c_comparePathErrorMargin);
+                EXPECT_NEAR(comparePathContext->expectedElements[comparePathContext->count].point.y,
+                            element->points[2].y,
+                            c_comparePathErrorMargin);
                 break;
 
             case kCGPathElementCloseSubpath:
@@ -639,7 +653,7 @@ TEST(CTFont, CreatePathForGlyph) {
                 FAIL() << "An invalid CGPathElementType was returned from CTFontCreatePathForGlyph";
                 break;
         }
-        ++comparePathContext->count;
+        ++(comparePathContext->count);
     };
 
     // Iterate through all elements in the path, check against expected elements
