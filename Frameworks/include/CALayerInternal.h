@@ -21,14 +21,17 @@
 #import <UIKit/UIImage.h>
 #import "UIColorInternal.h"
 
-@class CAAnimation, CALayerContext;
+@class CAAnimation;
+@class CALayer;
+struct ILayerProxy;
+struct IDisplayTexture;
 
 class CADisplayProperties {
 public:
     BOOL hidden;
     CGRect bounds;
     CGRect contentsRect, contentsCenter;
-    uint32_t contentsOrientation;
+    uint32_t contentsOrientation; // Not a formal layer property; internally used by UIImage
     CGPoint position;
     CGPoint anchorPoint;
     CGSize contentsSize;
@@ -42,11 +45,6 @@ public:
     float borderWidth, cornerRadius;
     float opacity;
 };
-
-struct ILayerProxy;
-struct IDisplayTexture;
-
-@class CALayer;
 
 class CAPrivateInfo : public CADisplayProperties, public LLTreeNode<CAPrivateInfo, CALayer> {
 public:

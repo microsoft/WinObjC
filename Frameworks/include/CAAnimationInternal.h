@@ -42,7 +42,6 @@ struct CAMediaTimingProperties {
 
 @interface NSObject (CAAnimationInternal)
 - (BOOL)wasRemoved;
-- (BOOL)wasAborted;
 - (std::shared_ptr<ILayerAnimation>)_createAnimation:(CALayer*)layer forKey:(id)forKey;
 - (void)animationDidStart;
 - (id)animationHasStarted;

@@ -167,7 +167,7 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Label.xaml.h">
       <DependentUpon>Label.xaml</DependentUpon>
-    </ClInclude>    
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Layer.xaml.h">
       <DependentUpon>Layer.xaml</DependentUpon>
     </ClInclude>

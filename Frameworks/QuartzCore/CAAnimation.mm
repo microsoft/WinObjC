@@ -35,7 +35,7 @@ static const wchar_t* TAG = L"CAAnimation";
     SEL _finishedSelector;
     id _name;
     idretain _undefinedKeys;
-    BOOL _wasRemoved, _wasAborted;
+    BOOL _wasRemoved;
 }
 
 /**
@@ -357,10 +357,6 @@ static const wchar_t* TAG = L"CAAnimation";
 
 - (BOOL)wasRemoved {
     return _wasRemoved;
-}
-
-- (BOOL)wasAborted {
-    return _wasAborted;
 }
 
 /**

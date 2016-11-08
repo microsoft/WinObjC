@@ -217,21 +217,6 @@ static void DoDisplayList(CALayer* layer) {
     }
 }
 
-// TODO: GitHub issue 508 and 509
-// We need a type-safe way to do this with projections.  This is copied verbatim from the projections
-// code and works perfectly for this limited usage, but we don't do any type validation below.
-// all _createRtProxy instance needs to go in a shared DLL in the future
-inline id _createRtProxy(Class cls, IInspectable* iface) {
-    // Oddly, WinRT can hand us back NULL objects from successful function calls. Plumb these through as nil.
-    if (!iface) {
-        return nil;
-    }
-
-    RTObject* ret = [NSAllocateObject(cls, 0, 0) init];
-    [ret setComObj:iface];
-    return [ret autorelease];
-}
-
 CAPrivateInfo::CAPrivateInfo(CALayer* self, WXFrameworkElement* xamlElement) {
     memset(this, 0, sizeof(CAPrivateInfo));
     setSelf(self);
@@ -284,7 +269,7 @@ CAPrivateInfo::CAPrivateInfo(CALayer* self, WXFrameworkElement* xamlElement) {
     // Query for our backing XAML node.
     // ILayerProxy will have created one if the xamlElement passed into the previous CreateLayerProxy call was nullptr.
     Microsoft::WRL::ComPtr<IInspectable> inspectable(_layerProxy->GetXamlElement());
-    _xamlElement = _createRtProxy([WXFrameworkElement class], inspectable.Get());
+    _xamlElement = [WXFrameworkElement createWith:inspectable.Get()];
 }
 
 CAPrivateInfo::~CAPrivateInfo() {
@@ -2298,7 +2283,7 @@ static CALayer* _findSuperLayerForLayer(CALayer* layer) {
 - (WXFrameworkElement*)_getSublayerXamlElement {
     if (!priv->_sublayerXamlElement) {
         Microsoft::WRL::ComPtr<IInspectable> inspectable(priv->_layerProxy->GetSublayerXamlElement());
-        priv->_sublayerXamlElement = _createRtProxy([WXFrameworkElement class], inspectable.Get());
+        priv->_sublayerXamlElement = [WXFrameworkElement createWith:inspectable.Get()];
     }
 
     return priv->_sublayerXamlElement;
