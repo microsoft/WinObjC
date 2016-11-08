@@ -50,6 +50,7 @@
 #import <UWP/WindowsUIViewManagement.h>
 #import <UWP/WindowsDevicesInput.h>
 #import "UIColorInternal.h"
+#import "CGImageInternal.h"
 
 static const wchar_t* TAG = L"CompositorInterface";
 
@@ -160,100 +161,12 @@ class DisplayTextureContent : public DisplayTexture {
 
 public:
     DisplayTextureContent(CGImageRef img) : name("TextureBitmap") {
-        if (img->_imgType == CGImageTypePNG || img->_imgType == CGImageTypeJPEG) {
-            const void* data = NULL;
-            bool freeData = false;
-            int len = 0;
-            StrongId<NSData> fileData;
-
-            switch (img->_imgType) {
-                case CGImageTypePNG: {
-                    CGPNGImageBacking* pngImg = (CGPNGImageBacking*)img->Backing();
-
-                    if (pngImg->_fileName) {
-                        fileData.attach([[NSData alloc] initWithContentsOfFile:[NSString stringWithUTF8String:pngImg->_fileName]]);
-                        data = [fileData bytes];
-                        len = [fileData length];
-                    } else {
-                        data = [(NSData*)pngImg->_data bytes];
-                        len = [(NSData*)pngImg->_data length];
-                    }
-                } break;
-
-                case CGImageTypeJPEG: {
-                    CGJPEGImageBacking* jpgImg = (CGJPEGImageBacking*)img->Backing();
-
-                    if (jpgImg->_fileName) {
-                        fileData.attach([[NSData alloc] initWithContentsOfFile:[NSString stringWithUTF8String:jpgImg->_fileName]]);
-                        data = [fileData bytes];
-                        len = [fileData length];
-                    } else {
-                        data = [(NSData*)jpgImg->_data bytes];
-                        len = [(NSData*)jpgImg->_data length];
-                    }
-                } break;
-                default:
-                    TraceError(TAG, L"Warning: unrecognized image format sent to DisplayTextureContent!");
-                    break;
-            }
-            _xamlImage = CreateBitmapFromImageData(data, len);
-            return;
-        }
-        lockPtr = NULL;
-
-        int texWidth = img->Backing()->Width();
-        int texHeight = img->Backing()->Height();
-        int imageWidth = texWidth;
-        int imageHeight = texHeight;
-        int imageX = 0;
-        int imageY = 0;
-        CGImageRef pNewImage = 0;
-        CGImageRef pTexImage = img;
-
-        bool matched = false;
-        if (img->Backing()->SurfaceFormat() == _ColorARGB) {
-            matched = true;
-        }
-
-        // Unrecognized, make 8888 ARGB:
-        if (!matched) {
-            CGContextRef ctx = _CGBitmapContextCreateWithFormat(texWidth, texHeight, _ColorARGB);
-
-            pNewImage = CGBitmapContextGetImage(ctx);
-            CGImageRetain(pNewImage);
-
-            pTexImage = pNewImage;
-
-            CGRect rect, destRect;
-
-            int w = fmin(imageWidth, texWidth), h = fmin(imageHeight, texHeight);
-
-            rect.origin.x = float(imageX);
-            rect.origin.y = float(imageY);
-            rect.size.width = float(w);
-            rect.size.height = float(h);
-
-            destRect.origin.x = 0;
-            destRect.origin.y = float(texHeight - imageHeight);
-            destRect.size.width = float(w);
-            destRect.size.height = float(h);
-
-            CGContextDrawImageRect(ctx, img, rect, destRect);
-            CGContextRelease(ctx);
-        }
-
-        void* data = (void*)pTexImage->Backing()->LockImageData();
-        int bytesPerRow = pTexImage->Backing()->BytesPerRow();
-
-        int width = pTexImage->Backing()->Width();
-        int height = pTexImage->Backing()->Height();
-
-        _xamlImage = CreateBitmapFromBits(data, width, height, bytesPerRow);
-
-        pTexImage->Backing()->ReleaseImageData();
-        img->Backing()->DiscardIfPossible();
-
-        CGImageRelease(pNewImage);
+        woc::unique_cf<CGImageRef> image(_CGImageConvertImageToPixelFormat(img, GUID_WICPixelFormat32bppPBGRA));
+        _xamlImage = CreateBitmapFromBits(_CGImageObtainImageBytes(image.get()),
+                                          CGImageGetWidth(image.get()),
+                                          CGImageGetHeight(image.get()),
+                                          CGImageGetBytesPerRow(image.get()));
+        return;
     }
 
     DisplayTextureContent(int width, int height) : name("TextureDirect") {
@@ -343,11 +256,10 @@ public:
 
     void Completed() {
         id animHandler = _animHandler; // Save in a local for the block to retain.
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [animHandler animationDidStop:TRUE];
-                           [animHandler _removeAnimationsFromLayer];
-                       });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [animHandler animationDidStop:TRUE];
+            [animHandler _removeAnimationsFromLayer];
+        });
     }
 
     DisplayAnimationTransition(id animHandler, NSString* type, NSString* subType) {
@@ -710,11 +622,10 @@ public:
 
     void Completed() {
         id animHandler = _animHandler; // Save in a local for the block to retain.
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [animHandler animationDidStop:TRUE];
-                           [animHandler _removeAnimationsFromLayer];
-                       });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [animHandler animationDidStop:TRUE];
+            [animHandler _removeAnimationsFromLayer];
+        });
     }
 
     DisplayAnimationBasic(id animHandler,
@@ -1346,7 +1257,7 @@ public:
 
     virtual DisplayTexture* GetDisplayTextureForCGImage(CGImageRef img, bool create) override {
         CGImageRetain(img);
-        DisplayTexture* ret = img->Backing()->GetDisplayTexture();
+        DisplayTexture* ret = _CGImageGetDisplayTexture(img);
         if (ret) {
             ret->AddRef();
             CGImageRelease(img);

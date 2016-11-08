@@ -31,6 +31,25 @@ struct CAMediaTimingProperties;
 #define CACompositorRotation180 180.0f
 #define CACompositorRotation90CounterClockwise 270.0f
 
+struct IDisplayTexture {
+public:
+    virtual ~IDisplayTexture() {
+    }
+
+    virtual DisplayTexture* GetTexture() = 0;
+    virtual Microsoft::WRL::ComPtr<IInspectable> GetContent() = 0;
+    virtual void* Lock(int* stride) = 0;
+    virtual void Unlock() = 0;
+};
+
+class DisplayTextureLocking {
+public:
+    virtual void* LockWritableBitmapTexture(DisplayTexture* tex, int* stride) = 0;
+    virtual void UnlockWritableBitmapTexture(DisplayTexture* tex) = 0;
+    virtual void RetainDisplayTexture(DisplayTexture* tex) = 0;
+    virtual void ReleaseDisplayTexture(DisplayTexture* tex) = 0;
+};
+
 class CACompositorInterface {
 public:
     virtual void ProcessTransactions() = 0;

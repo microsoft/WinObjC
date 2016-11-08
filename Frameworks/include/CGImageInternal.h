@@ -28,6 +28,7 @@
 #import <windows.h>
 #import <CGColorSpaceInternal.h>
 #import <utility>
+#import "CACompositor.h"
 
 #include <COMIncludes.h>
 #import <D2d1.h>
@@ -35,76 +36,7 @@
 #import <wrl/client.h>
 #include <COMIncludes_End.h>
 
-struct _cairo_surface;
-typedef struct _cairo_surface cairo_surface_t;
-
 class CGContextImpl;
-class DisplayTexture;
-
-class DisplayTextureLocking {
-public:
-    virtual void* LockWritableBitmapTexture(DisplayTexture* tex, int* stride) = 0;
-    virtual void UnlockWritableBitmapTexture(DisplayTexture* tex) = 0;
-    virtual void RetainDisplayTexture(DisplayTexture* tex) = 0;
-    virtual void ReleaseDisplayTexture(DisplayTexture* tex) = 0;
-};
-
-// TODO #1124: Remove CGImageBacking
-class CGImageBacking {
-protected:
-    int _imageLocks;
-    int _cairoLocks;
-
-public:
-    CGImageRef _parent;
-
-    virtual ~CGImageBacking() {
-    }
-
-    virtual CGImageRef Copy() = 0;
-
-    virtual void GetPixel(int x, int y, float& r, float& g, float& b, float& a) = 0;
-    virtual int InternalWidth() = 0;
-    virtual int InternalHeight() = 0;
-    virtual int Width() = 0;
-    virtual int Height() = 0;
-    virtual int BytesPerRow() = 0;
-    virtual int BytesPerPixel() = 0;
-    virtual int BitsPerComponent() = 0;
-    virtual ID2D1RenderTarget* GetRenderTarget() = 0;
-    virtual void GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo) = 0;
-    virtual __CGSurfaceFormat SurfaceFormat() = 0;
-    virtual CGColorSpaceModel ColorSpaceModel() = 0;
-    virtual CGBitmapInfo BitmapInfo() = 0;
-    virtual void* StaticImageData() = 0;
-    virtual void* LockImageData() = 0;
-    virtual void ReleaseImageData() = 0;
-    virtual cairo_surface_t* LockCairoSurface() = 0;
-    virtual void ReleaseCairoSurface() = 0;
-    virtual void SetFreeWhenDone(bool freeWhenDone) = 0;
-    virtual DisplayTexture* GetDisplayTexture() {
-        return NULL;
-    }
-
-    virtual void DiscardIfPossible() {
-    }
-    virtual void ConstructIfNeeded() {
-    }
-    virtual bool DrawDirectlyToContext(CGContextImpl* ctx, CGRect src, CGRect dest) {
-        return false;
-    }
-    virtual CGImageRef CopyOnWrite();
-};
-
-typedef enum {
-    CGImageTypeBitmap,
-    CGImageTypeGraphicBuffer,
-    CGImageTypeNoData,
-    CGImageTypeOpenGL,
-    CGImageTypeVector,
-    CGImageTypePNG,
-    CGImageTypeJPEG
-} CGImageType;
 
 typedef struct {
     CGColorSpaceModel colorSpaceModel;
@@ -252,6 +184,17 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage, __CGImageImpl> {
         return _impl.bitmapImageSource;
     }
 
+    inline void* Data() const {
+        Microsoft::WRL::ComPtr<IWICBitmapLock> lock;
+        IWICBitmap* bitmap = dynamic_cast<IWICBitmap*>(_impl.bitmapImageSource.Get());
+        RETURN_NULL_IF(!bitmap);
+        RETURN_NULL_IF_FAILED(bitmap->Lock(nullptr, WICBitmapLockWrite, &lock));
+        BYTE* data;
+        UINT size;
+        RETURN_NULL_IF_FAILED(lock->GetDataPointer(&size, &data));
+        return static_cast<void*>(data);
+    }
+
     inline size_t Height() const {
         return _impl.height;
     }
@@ -296,6 +239,10 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage, __CGImageImpl> {
         return _impl.bitsPerComponent;
     }
 
+    inline WICPixelFormatGUID PixelFormat() const {
+        return _impl.PixelFormat();
+    }
+
     inline __CGImage& SetImageSource(Microsoft::WRL::ComPtr<IWICBitmapSource> source) {
         _impl.SetImageSource(source);
         return *this;
@@ -321,26 +268,6 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage, __CGImageImpl> {
         _impl.renderingIntent = intent;
         return *this;
     }
-
-    //---Old to be removed //
-    CGImageBacking* _img;
-    bool _has32BitAlpha;
-    CGImageType _imgType;
-    idretain _provider;
-
-    inline CGImageBacking* Backing() const {
-        return _img;
-    }
-
-    inline CGImageBacking* DetachBacking(CGImageRef newParent) {
-        CGImageBacking* ret = _img;
-
-        _img->_parent = newParent;
-        _img = NULL;
-
-        return ret;
-    }
-    //--End Old code //
 };
 
 //--Helpers--
@@ -363,17 +290,24 @@ COREGRAPHICS_EXPORT NSData* _CGImagePNGRepresentation(CGImageRef image);
 COREGRAPHICS_EXPORT NSData* _CGImageJPEGRepresentation(CGImageRef image, float quality);
 COREGRAPHICS_EXPORT NSData* _CGImageRepresentation(CGImageRef image, REFGUID guid, float quality);
 
-REFGUID _CGImageGetWICPixelFormat(unsigned int bitsPerComponent,
-                                  unsigned int bitsPerPixel,
-                                  CGColorSpaceRef colorSpace,
-                                  CGBitmapInfo bitmapInfo);
+// Create a Custom IWIC Image out of the given texture.
+COREGRAPHICS_EXPORT CGImageRef _CGImageCreateCustomWICImage(IDisplayTexture* texture,
+                                                            WICPixelFormatGUID pixelFormat,
+                                                            UINT height,
+                                                            UINT width);
 
-#import "CGBitmapImage.h"
-#import "CGGraphicBufferImage.h"
-#import "CGVectorImage.h"
-#import "CGDiscardableImage.h"
-#import "CGPNGDecoderImage.h"
-#import "CGJPEGDecoderImage.h"
+// Obtain a direct pointer to the data.
+COREGRAPHICS_EXPORT void* _CGImageObtainImageBytes(CGImageRef image);
+
+// Obtain the associated DisplayTexture, return null for images that lacks them.
+COREGRAPHICS_EXPORT DisplayTexture* _CGImageGetDisplayTexture(CGImageRef image);
+
+REFGUID _CGImageGetWICPixelFormatFromImageProperties(unsigned int bitsPerComponent,
+                                                     unsigned int bitsPerPixel,
+                                                     CGColorSpaceRef colorSpace,
+                                                     CGBitmapInfo bitmapInfo);
+
+COREGRAPHICS_EXPORT CGImageRef _CGImageConvertImageToPixelFormat(CGImageRef image, WICPixelFormatGUID pixelFormat);
 
 typedef void (*CGImageDestructionListener)(CGImageRef img);
 COREGRAPHICS_EXPORT void CGImageAddDestructionListener(CGImageDestructionListener listener);

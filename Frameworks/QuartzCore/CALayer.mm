@@ -16,9 +16,11 @@
 //******************************************************************************
 
 #import <StubReturn.h>
-#include <math.h>
-#include "CoreGraphics/CGContext.h"
-#include "CGContextInternal.h"
+#import <math.h>
+#import "CoreGraphics/CGContext.h"
+#import "CGContextInternal.h"
+#import "CGImageInternal.h"
+#import "IDisplayTextureImpl.h"
 
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSMutableDictionary.h"
@@ -353,19 +355,20 @@ public:
 static LockingBufferInterface _globallockingBufferInterface;
 
 CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float scale) {
-    DisplayTexture* tex = NULL;
-
     if ([NSThread isMainThread]) {
-        tex = GetCACompositor()->CreateWritableBitmapTexture32(width, height);
+        DisplayTexture* tex = GetCACompositor()->CreateWritableBitmapTexture32(width, height);
+        if (!tex) {
+            return nil;
+        }
+
+        IDisplayTextureImpl* displayTexture = new IDisplayTextureImpl(tex);
+        CGImageRef texture =
+            _CGImageCreateCustomWICImage(displayTexture, GUID_WICPixelFormat32bppPBGRA, height, width); // +1 is taken care by CGContext
+
+        return _CGBitmapContextCreateWithTexture(texture, scale);
     }
 
-    CGContextRef ret = _CGBitmapContextCreateWithTexture(width, height, scale, tex, &_globallockingBufferInterface);
-
-    if (tex) {
-        _globallockingBufferInterface.ReleaseDisplayTexture(tex);
-    }
-
-    return ret;
+    return nil;
 }
 
 @implementation CALayer
@@ -658,8 +661,8 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
         }
     } else {
         if (priv->contents) {
-            priv->contentsSize.width = float(priv->contents->Backing()->Width());
-            priv->contentsSize.height = float(priv->contents->Backing()->Height());
+            priv->contentsSize.width = float(CGImageGetWidth(priv->contents));
+            priv->contentsSize.height = float(CGImageGetHeight(priv->contents));
 
             /*
             if ( priv->contents->_cachedTexture ) {
@@ -1420,8 +1423,8 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         CGImageRetain(static_cast<CGImageRef>(pImg));
         priv->ownsContents = FALSE;
 
-        priv->contentsSize.width = float(priv->contents->Backing()->Width());
-        priv->contentsSize.height = float(priv->contents->Backing()->Height());
+        priv->contentsSize.width = float(CGImageGetWidth(priv->contents));
+        priv->contentsSize.height = float(CGImageGetHeight(priv->contents));
     } else {
         priv->contents = NULL;
         priv->ownsContents = FALSE;
@@ -2119,11 +2122,11 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 - (void)dealloc {
     if (DEBUG_VERBOSE) {
         TraceVerbose(TAG,
-            L"CALayer dealloc: (%hs - 0x%p, %hs - 0x%p).",
-            object_getClassName(self),
-            self,
-            priv->delegate ? object_getClassName(priv->delegate) : "nil",
-            priv->delegate);
+                     L"CALayer dealloc: (%hs - 0x%p, %hs - 0x%p).",
+                     object_getClassName(self),
+                     self,
+                     priv->delegate ? object_getClassName(priv->delegate) : "nil",
+                     priv->delegate);
     }
 
     [self removeAllAnimations];
@@ -2386,21 +2389,19 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         //////////////////////////////////////////////////////////////////////////////////////////////
         // TODO: Switch to ARC
         // We don't want to do display updates on an object that's currently deallocating.
-        // In order to ensure that we're not mid-deallocation during the display update, 
+        // In order to ensure that we're not mid-deallocation during the display update,
         // we create a weak reference here, and then *immediately* acquire a strong reference to it.
         // If that succeeds, we're guaranteed to not dealloc until after the block executes.
-        
+
         // Store a weak reference - this will fail if we're already deallocating
         id weakSuperLayer = nil;
         objc_storeWeak(&weakSuperLayer, superLayer);
-        
+
         // Grab a strong reference that we can pass into the block - this will fail if we're already deallocating
         auto strongSuperLayer = reinterpret_cast<CALayer*>(objc_loadWeakRetained(&weakSuperLayer));
-        
+
         // We need to make sure the retain we just performed above is released *after* we construct the block
-        auto releaseSuperLayer = wil::ScopeExit([&strongSuperLayer]() { 
-            objc_release(strongSuperLayer); 
-        });
+        auto releaseSuperLayer = wil::ScopeExit([&strongSuperLayer]() { objc_release(strongSuperLayer); });
 
         // The weak reference is no longer needed, so clean up after ourselves
         objc_destroyWeak(&weakSuperLayer);
@@ -2408,41 +2409,38 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         // Grab a raw pointer (so it's not block-retained) - for logging purposes (if needed)
         void* rawSuperLayerForLog = reinterpret_cast<void*>(superLayer);
 
-        dispatch_async(
-            dispatch_get_main_queue(),
-            ^{
-                // If we have a valid non-dealloc'd object, run its display update pass
-                if (strongSuperLayer) {
-                    // Only run the update pass for this superLayer if it's a 'root layer' - aka a UIWindow layer,
-                    // or if we're running as a framework - aka for middleware scenarios - where the layer won't have
-                    // a 'root' superlayer.
-                    if (strongSuperLayer->priv->isRootLayer || GetCACompositor()->IsRunningAsFramework()) {
-                        strongSuperLayer->priv->_displayPending = false;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // If we have a valid non-dealloc'd object, run its display update pass
+            if (strongSuperLayer) {
+                // Only run the update pass for this superLayer if it's a 'root layer' - aka a UIWindow layer,
+                // or if we're running as a framework - aka for middleware scenarios - where the layer won't have
+                // a 'root' superlayer.
+                if (strongSuperLayer->priv->isRootLayer || GetCACompositor()->IsRunningAsFramework()) {
+                    strongSuperLayer->priv->_displayPending = false;
 
-                        if (DEBUG_VERBOSE) {
-                            TraceVerbose(
-                                TAG,
-                                L"Performing _displayChanged work for superlayer (%hs - 0x%p, %hs - 0x%p).",
-                                object_getClassName(strongSuperLayer),
-                                strongSuperLayer,
-                                strongSuperLayer->priv->delegate ? object_getClassName(strongSuperLayer->priv->delegate) : "nil",
-                                strongSuperLayer->priv->delegate);
-                        }
-
-                        // Recalculate layouts
-                        DoLayerLayouts(strongSuperLayer, true);
-
-                        // Redisplay anything necessary
-                        DoDisplayList(strongSuperLayer);
+                    if (DEBUG_VERBOSE) {
+                        TraceVerbose(TAG,
+                                     L"Performing _displayChanged work for superlayer (%hs - 0x%p, %hs - 0x%p).",
+                                     object_getClassName(strongSuperLayer),
+                                     strongSuperLayer,
+                                     strongSuperLayer->priv->delegate ? object_getClassName(strongSuperLayer->priv->delegate) : "nil",
+                                     strongSuperLayer->priv->delegate);
                     }
-                } else if (DEBUG_VERBOSE) {
-                    TraceVerbose(TAG, L"Skipping _displayChanged work for currently-dealloc'd object (0x%p).", rawSuperLayerForLog);
-                }
 
-                // Always commit and process all queued CATransactions
-                [CATransaction _commitRootQueue];
-                GetCACompositor()->ProcessTransactions();
-            });
+                    // Recalculate layouts
+                    DoLayerLayouts(strongSuperLayer, true);
+
+                    // Redisplay anything necessary
+                    DoDisplayList(strongSuperLayer);
+                }
+            } else if (DEBUG_VERBOSE) {
+                TraceVerbose(TAG, L"Skipping _displayChanged work for currently-dealloc'd object (0x%p).", rawSuperLayerForLog);
+            }
+
+            // Always commit and process all queued CATransactions
+            [CATransaction _commitRootQueue];
+            GetCACompositor()->ProcessTransactions();
+        });
     }
 }
 
@@ -2578,7 +2576,7 @@ inline WXUIElement* _getBackingXamlElementForCALayer(CALayer* layer) {
     }
 
     if (DEBUG_VERBOSE) {
-        TraceVerbose(TAG, L"convertPoint: {%f, %f} to {%f, %f}",  point.x, point.y, ret.x, ret.y);
+        TraceVerbose(TAG, L"convertPoint: {%f, %f} to {%f, %f}", point.x, point.y, ret.x, ret.y);
     }
 
     return ret;
