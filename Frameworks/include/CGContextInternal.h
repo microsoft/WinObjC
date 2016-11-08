@@ -18,6 +18,7 @@
 
 #include <COMIncludes.h>
 #import <DWrite.h>
+#import <D2d1.h>
 #include <COMIncludes_End.h>
 
 #import "CGImageInternal.h"
@@ -53,6 +54,7 @@ COREGRAPHICS_EXPORT void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GL
 // TODO 1077:: Remove once D2D render target is implemented
 COREGRAPHICS_EXPORT void _CGContextSetScaleFactor(CGContextRef ctx, float scale);
 
+COREGRAPHICS_EXPORT CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget);
 COREGRAPHICS_EXPORT void _CGContextSetShadowProjectionTransform(CGContextRef context, CGAffineTransform transform);
 
 #include "CGContextImpl.h"

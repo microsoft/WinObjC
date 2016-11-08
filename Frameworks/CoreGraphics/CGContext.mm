@@ -56,6 +56,11 @@ static inline D2D1_MATRIX_3X2_F __CGAffineTransformToD2D_F(CGAffineTransform tra
     return { transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty };
 }
 
+enum _CGCoordinateMode: unsigned int {
+    _kCGCoordinateModeDeviceSpace = 0,
+    _kCGCoordinateModeUserSpace
+};
+
 struct __CGContextDrawingState {
     // This is populated when the state is saved, and contains the D2D parameters that CG does not know.
     ComPtr<ID2D1DrawingStateBlock> d2dState{ nullptr };
@@ -355,67 +360,65 @@ void CGContextEndPage(CGContextRef context) {
 
 #pragma region Global State - Device Coordinate Queries
 /**
- @Status Stub
-*/
-CGRect CGContextConvertRectToDeviceSpace(CGContextRef context, CGRect rect) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return rect;
-}
-
-/**
- @Status Stub
+ @Status Interoperable
 */
 CGRect CGContextConvertRectToUserSpace(CGContextRef context, CGRect rect) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return rect;
+    NOISY_RETURN_IF_NULL(context, rect);
+    // Invariant: The incoming measurement is in DEVICE space.
+    return CGRectApplyAffineTransform(rect, CGAffineTransformInvert(CGContextGetUserSpaceToDeviceSpaceTransform(context)));
 }
 
 /**
- @Status Stub
-*/
-CGPoint CGContextConvertPointToUserSpace(CGContextRef context, CGPoint point) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return point;
-}
-
-/**
- @Status Stub
+ @Status Interoperable
 */
 CGSize CGContextConvertSizeToUserSpace(CGContextRef context, CGSize size) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return size;
+    NOISY_RETURN_IF_NULL(context, size);
+    // Invariant: The incoming measurement is in DEVICE space.
+    return CGSizeApplyAffineTransform(size, CGAffineTransformInvert(CGContextGetUserSpaceToDeviceSpaceTransform(context)));
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
+CGPoint CGContextConvertPointToUserSpace(CGContextRef context, CGPoint point) {
+    NOISY_RETURN_IF_NULL(context, point);
+    // Invariant: The incoming measurement is in DEVICE space.
+    return CGPointApplyAffineTransform(point, CGAffineTransformInvert(CGContextGetUserSpaceToDeviceSpaceTransform(context)));
+}
+
+/**
+ @Status Interoperable
+*/
+CGRect CGContextConvertRectToDeviceSpace(CGContextRef context, CGRect rect) {
+    NOISY_RETURN_IF_NULL(context, rect);
+    // Invariant: The incoming measurement is in USER space.
+    return CGRectApplyAffineTransform(rect, CGContextGetUserSpaceToDeviceSpaceTransform(context));
+}
+
+/**
+ @Status Interoperable
 */
 CGSize CGContextConvertSizeToDeviceSpace(CGContextRef context, CGSize size) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return size;
+    NOISY_RETURN_IF_NULL(context, size);
+    // Invariant: The incoming measurement is in USER space.
+    return CGSizeApplyAffineTransform(size, CGContextGetUserSpaceToDeviceSpaceTransform(context));
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 CGPoint CGContextConvertPointToDeviceSpace(CGContextRef context, CGPoint point) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return point;
+    NOISY_RETURN_IF_NULL(context, point);
+    // Invariant: The incoming measurement is in USER space.
+    return CGPointApplyAffineTransform(point, CGContextGetUserSpaceToDeviceSpaceTransform(context));
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 CGAffineTransform CGContextGetUserSpaceToDeviceSpaceTransform(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return StubReturn();
+    return CGAffineTransformConcat(context->CurrentGState().transform, context->Impl().deviceTransform);
 }
 #pragma endregion
 
@@ -498,7 +501,8 @@ void CGContextClosePath(CGContextRef context) {
 void CGContextAddRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddRect(context->Path(), &(context->CurrentGState().transform), rect);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddRect(context->Path(), &userToDeviceTransform, rect);
 }
 
 /**
@@ -515,7 +519,8 @@ void CGContextAddRects(CGContextRef context, const CGRect* rects, unsigned count
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
-    CGPathAddRects(context->Path(), &(context->CurrentGState().transform), rects, count);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddRects(context->Path(), &userToDeviceTransform, rects, count);
 
 #pragma clang diagnostic pop
 }
@@ -526,7 +531,8 @@ void CGContextAddRects(CGContextRef context, const CGRect* rects, unsigned count
 void CGContextAddLineToPoint(CGContextRef context, CGFloat x, CGFloat y) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddLineToPoint(context->Path(), &(context->CurrentGState().transform), x, y);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddLineToPoint(context->Path(), &userToDeviceTransform, x, y);
 }
 
 /**
@@ -535,7 +541,8 @@ void CGContextAddLineToPoint(CGContextRef context, CGFloat x, CGFloat y) {
 void CGContextAddCurveToPoint(CGContextRef context, CGFloat cp1x, CGFloat cp1y, CGFloat cp2x, CGFloat cp2y, CGFloat x, CGFloat y) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddCurveToPoint(context->Path(), &(context->CurrentGState().transform), cp1x, cp1y, cp2x, cp2y, x, y);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddCurveToPoint(context->Path(), &userToDeviceTransform, cp1x, cp1y, cp2x, cp2y, x, y);
 }
 
 /**
@@ -544,7 +551,8 @@ void CGContextAddCurveToPoint(CGContextRef context, CGFloat cp1x, CGFloat cp1y, 
 void CGContextAddQuadCurveToPoint(CGContextRef context, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddQuadCurveToPoint(context->Path(), &(context->CurrentGState().transform), cpx, cpy, x, y);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddQuadCurveToPoint(context->Path(), &userToDeviceTransform, cpx, cpy, x, y);
 }
 
 /**
@@ -553,7 +561,8 @@ void CGContextAddQuadCurveToPoint(CGContextRef context, CGFloat cpx, CGFloat cpy
 void CGContextMoveToPoint(CGContextRef context, CGFloat x, CGFloat y) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathMoveToPoint(context->Path(), &(context->CurrentGState().transform), x, y);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathMoveToPoint(context->Path(), &userToDeviceTransform, x, y);
 }
 
 /**
@@ -562,7 +571,8 @@ void CGContextMoveToPoint(CGContextRef context, CGFloat x, CGFloat y) {
 void CGContextAddArc(CGContextRef context, CGFloat x, CGFloat y, CGFloat radius, CGFloat startAngle, CGFloat endAngle, int clockwise) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddArc(context->Path(), &(context->CurrentGState().transform), x, y, radius, startAngle, endAngle, clockwise);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddArc(context->Path(), &userToDeviceTransform, x, y, radius, startAngle, endAngle, clockwise);
 }
 
 /**
@@ -571,7 +581,8 @@ void CGContextAddArc(CGContextRef context, CGFloat x, CGFloat y, CGFloat radius,
 void CGContextAddArcToPoint(CGContextRef context, CGFloat x1, CGFloat y1, CGFloat x2, CGFloat y2, CGFloat radius) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddArcToPoint(context->Path(), &(context->CurrentGState().transform), x1, y1, x2, y2, radius);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddArcToPoint(context->Path(), &userToDeviceTransform, x1, y1, x2, y2, radius);
 }
 
 /**
@@ -580,7 +591,8 @@ void CGContextAddArcToPoint(CGContextRef context, CGFloat x1, CGFloat y1, CGFloa
 void CGContextAddEllipseInRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
 
-    CGPathAddEllipseInRect(context->Path(), &(context->CurrentGState().transform), rect);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddEllipseInRect(context->Path(), &userToDeviceTransform, rect);
 }
 
 /**
@@ -599,7 +611,8 @@ void CGContextAddPath(CGContextRef context, CGPathRef path) {
         return;
     }
 
-    CGPathAddPath(context->Path(), &(context->CurrentGState().transform), path);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddPath(context->Path(), &userToDeviceTransform, path);
 }
 
 /**
@@ -651,8 +664,7 @@ CGRect CGContextGetPathBoundingBox(CGContextRef context) {
     }
 
     // All queries take place on transformed paths, but return pre-CTM context units.
-    CGAffineTransform invertedCTM = CGAffineTransformInvert(context->CurrentGState().transform);
-    return CGRectApplyAffineTransform(CGPathGetBoundingBox(context->Path()), invertedCTM);
+    return CGContextConvertRectToUserSpace(context, CGPathGetBoundingBox(context->Path()));
 }
 
 /**
@@ -665,7 +677,8 @@ void CGContextAddLines(CGContextRef context, const CGPoint* points, unsigned cou
         return;
     }
 
-    CGPathAddLines(context->Path(), &(context->CurrentGState().transform), points, count);
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    CGPathAddLines(context->Path(), &userToDeviceTransform, points, count);
 }
 #pragma endregion
 
@@ -689,8 +702,8 @@ CGPathRef CGContextCopyPath(CGContextRef context) {
     // This means that the path the user gets back will be in units equivalent to
     // their inputs. We therefore must de-transform the path into which we inserted
     // transformed points.
-    CGAffineTransform invertedCTM = CGAffineTransformInvert(context->CurrentGState().transform);
-    return CGPathCreateCopyByTransformingPath(context->Path(), &invertedCTM);
+    CGAffineTransform invertedDeviceSpaceTransform = CGAffineTransformInvert(CGContextGetUserSpaceToDeviceSpaceTransform(context));
+    return CGPathCreateCopyByTransformingPath(context->Path(), &invertedDeviceSpaceTransform);
 
 #pragma clang diagnostic pop
 }
@@ -707,8 +720,7 @@ CGPoint CGContextGetPathCurrentPoint(CGContextRef context) {
     }
 
     // All queries take place on transformed paths, but return pre-CTM context units.
-    CGAffineTransform invertedCTM = CGAffineTransformInvert(context->CurrentGState().transform);
-    return CGPointApplyAffineTransform(CGPathGetCurrentPoint(context->Path()), invertedCTM);
+    return CGContextConvertPointToUserSpace(context, CGPathGetCurrentPoint(context->Path()));
 }
 
 /**
@@ -718,7 +730,8 @@ CGPoint CGContextGetPathCurrentPoint(CGContextRef context) {
 bool CGContextPathContainsPoint(CGContextRef context, CGPoint point, CGPathDrawingMode mode) {
     NOISY_RETURN_IF_NULL(context, false);
 
-    return context->HasPath() && CGPathContainsPoint(context->Path(), &(context->CurrentGState().transform), point, (mode & kCGPathEOFill));
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+    return context->HasPath() && CGPathContainsPoint(context->Path(), &userToDeviceTransform, point, (mode & kCGPathEOFill));
 }
 #pragma endregion
 
@@ -1392,9 +1405,11 @@ static HRESULT __CGContextCreateShadowEffect(CGContextRef context,
         ComPtr<ID2D1Effect> affineTransformEffect;
         RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D12DAffineTransform, &affineTransformEffect));
         affineTransformEffect->SetInputEffect(0, shadowEffect.Get());
+
+        CGSize deviceTransformedShadowOffset = CGSizeApplyAffineTransform(state.shadowOffset, context->Impl().deviceTransform);
         RETURN_IF_FAILED(
             affineTransformEffect->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX,
-                                            D2D1::Matrix3x2F::Translation(state.shadowOffset.width, state.shadowOffset.height)));
+                                            D2D1::Matrix3x2F::Translation(deviceTransformedShadowOffset.width, deviceTransformedShadowOffset.height)));
 
         // Drawing just a projected shadow is not terribly useful, so we composite the
         // shadow with the original input image (or command list) so that both get drawn.
@@ -1417,8 +1432,7 @@ static HRESULT __CGContextCreateShadowEffect(CGContextRef context,
 }
 
 template <typename Lambda> // Lambda takes the form void(*)(CGContextRef, ID2D1DeviceContext*)
-static HRESULT __CGContextRenderToCommandList(CGContextRef context, ID2D1CommandList** outCommandList, Lambda&& drawLambda) {
-    auto& state = context->CurrentGState();
+static HRESULT __CGContextRenderToCommandList(CGContextRef context, _CGCoordinateMode coordinateMode, CGAffineTransform* additionalTransform, ID2D1CommandList** outCommandList, Lambda&& drawLambda) {
     ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
     ComPtr<ID2D1DeviceContext> deviceContext;
     RETURN_IF_FAILED(renderTarget.As(&deviceContext));
@@ -1430,19 +1444,34 @@ static HRESULT __CGContextRenderToCommandList(CGContextRef context, ID2D1Command
     ComPtr<ID2D1CommandList> commandList;
     RETURN_IF_FAILED(deviceContext->CreateCommandList(&commandList));
 
-    deviceContext->SetTransform(__CGAffineTransformToD2D_F(state.transform));
-
     deviceContext->BeginDraw();
     deviceContext->SetTarget(commandList.Get());
 
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    switch (coordinateMode) {
+        case _kCGCoordinateModeUserSpace:
+            transform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+            break;
+        case _kCGCoordinateModeDeviceSpace:
+        default:
+            // do nothing; base transform is identity.
+            break;
+    }
+
+    if (additionalTransform) {
+        transform = CGAffineTransformConcat(*additionalTransform, transform);
+    }
+
+    deviceContext->SetTransform(__CGAffineTransformToD2D_F(transform));
+
     RETURN_IF_FAILED(std::forward<Lambda>(drawLambda)(context, deviceContext.Get()));
+
+    deviceContext->SetTransform(D2D1::IdentityMatrix());
 
     RETURN_IF_FAILED(deviceContext->EndDraw());
     RETURN_IF_FAILED(commandList->Close());
 
     deviceContext->SetTarget(originalTarget.Get());
-
-    deviceContext->SetTransform(D2D1::IdentityMatrix());
 
     *outCommandList = commandList.Detach();
     return S_OK;
@@ -1454,8 +1483,6 @@ static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
 
     ComPtr<ID2D1DeviceContext> deviceContext;
     RETURN_IF_FAILED(renderTarget.As(&deviceContext));
-
-    deviceContext->SetTransform(__CGAffineTransformToD2D_F(context->Impl().deviceTransform));
 
     deviceContext->BeginDraw();
 
@@ -1484,14 +1511,12 @@ static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
     // TODO GH#1194: We will need to re-evaluate Direct2D's D2DERR_RECREATE when we move to HW acceleration.
     RETURN_IF_FAILED(deviceContext->EndDraw());
 
-    deviceContext->SetTransform(D2D1::IdentityMatrix());
-
     return S_OK;
 }
 
-static HRESULT __CGContextDrawGeometry(CGContextRef context, ID2D1Geometry* geometry, CGPathDrawingMode drawMode) {
+static HRESULT __CGContextDrawGeometry(CGContextRef context, _CGCoordinateMode coordinateMode, ID2D1Geometry* geometry, CGPathDrawingMode drawMode) {
     ComPtr<ID2D1CommandList> commandList;
-    HRESULT hr = __CGContextRenderToCommandList(context, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+    HRESULT hr = __CGContextRenderToCommandList(context, coordinateMode, nullptr, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
         auto& state = context->CurrentGState();
         if (drawMode & kCGPathFill) {
             if (drawMode & kCGPathEOFill) {
@@ -1528,7 +1553,7 @@ void CGContextStrokeRect(CGContextRef context, CGRect rect) {
     FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D_F(rect), &rectGeometry));
     FAIL_FAST_IF_FAILED(rectGeometry.As(&geometry));
 
-    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, geometry.Get(), kCGPathStroke));
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, geometry.Get(), kCGPathStroke));
 
     context->ClearPath();
 }
@@ -1558,7 +1583,7 @@ void CGContextFillRect(CGContextRef context, CGRect rect) {
     FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D_F(rect), &rectGeometry));
     FAIL_FAST_IF_FAILED(rectGeometry.As(&geometry));
 
-    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, geometry.Get(), kCGPathFill));
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, geometry.Get(), kCGPathFill));
 
     context->ClearPath();
 }
@@ -1578,7 +1603,7 @@ void CGContextStrokeEllipseInRect(CGContextRef context, CGRect rect) {
                                        &ellipseGeometry));
     FAIL_FAST_IF_FAILED(ellipseGeometry.As(&geometry));
 
-    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, geometry.Get(), kCGPathStroke));
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, geometry.Get(), kCGPathStroke));
 
     context->ClearPath();
 }
@@ -1598,7 +1623,7 @@ void CGContextFillEllipseInRect(CGContextRef context, CGRect rect) {
                                        &ellipseGeometry));
     FAIL_FAST_IF_FAILED(ellipseGeometry.As(&geometry));
 
-    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, geometry.Get(), kCGPathFill));
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, geometry.Get(), kCGPathFill));
 
     context->ClearPath();
 }
@@ -1650,7 +1675,7 @@ void CGContextDrawPath(CGContextRef context, CGPathDrawingMode mode) {
     if (context->HasPath()) {
         ComPtr<ID2D1Geometry> pGeometry;
         FAIL_FAST_IF_FAILED(_CGPathGetGeometry(context->Path(), &pGeometry));
-        FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, pGeometry.Get(), mode));
+        FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeDeviceSpace, pGeometry.Get(), mode));
         context->ClearPath();
     }
 }

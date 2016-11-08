@@ -22,6 +22,18 @@
 #import <CoreGraphics/CGBitmapContext.h>
 #import <CoreGraphics/CGPattern.h>
 
+#if TARGET_OS_WIN32
+#include <COMIncludes.h>
+#import <wrl/client.h>
+#import <d2d1.h>
+#import <wincodec.h>
+#include <COMIncludes_end.h>
+
+#import "CGContextInternal.h"
+
+using namespace Microsoft::WRL;
+#endif
+
 static NSString* const kPointsKey = @"PointsKey";
 static NSString* const kTypeKey = @"TypeKey";
 // Helper function to know # of points in an element
@@ -262,3 +274,148 @@ DISABLED_TEST(CGPath, CGContextCopyPathCGPathAddQuadCurveToPoint) {
     CGContextRelease(context);
     CGColorSpaceRelease(rgbColorSpace);
 }
+
+bool operator==(const CGPoint& lhs, const CGPoint& rhs) {
+    return ((std::abs(lhs.x - rhs.x) < 0.00001) && (std::abs(lhs.y - rhs.y) < 0.00001));
+}
+
+template <typename T>
+std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, const CGPoint& pt) {
+    return os << "{" << pt.x << ", " << pt.y << "}";
+}
+
+template <typename T>
+std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, const CGAffineTransform& transform) {
+    os << "[";
+    if (CGAffineTransformIsIdentity(transform)) {
+        os << "identity transform";
+    } else {
+        os << transform.a << " " << transform.b << " " << transform.c << " " << transform.d << " " << transform.tx << " " << transform.ty;
+    }
+    return os << "]";
+}
+
+#if TARGET_OS_WIN32
+class ContextCoordinateTest
+    : public ::testing::TestWithParam<::testing::tuple<CGAffineTransform, std::vector<CGPoint>, std::vector<CGPoint>>> {
+public:
+    woc::unique_cf<CGContextRef> context;
+
+    static ComPtr<ID2D1RenderTarget> renderTarget;
+    static void SetUpTestCase() {
+        // TODO GH#1124: When CGBitmapContext lands, we don't need to do this manually.
+        MULTI_QI multi{
+            .pIID = &IID_IWICImagingFactory, .pItf = nullptr,
+        };
+
+        CGSize dimensions{ 100, 100 };
+
+        ComPtr<IWICImagingFactory> wicFactory;
+        THROW_IF_FAILED(CoCreateInstanceFromApp(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, nullptr, 1, &multi));
+        wicFactory.Attach(static_cast<IWICImagingFactory*>(multi.pItf));
+
+        ComPtr<IWICBitmap> wicBitmap;
+        THROW_IF_FAILED(wicFactory->CreateBitmap(dimensions.width,
+                                                 dimensions.height,
+                                                 GUID_WICPixelFormat32bppPRGBA,
+                                                 WICBitmapCacheOnDemand,
+                                                 &wicBitmap));
+
+        ComPtr<ID2D1Factory> d2dFactory;
+        FAIL_FAST_IF_FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &d2dFactory));
+
+        THROW_IF_FAILED(d2dFactory->CreateWicBitmapRenderTarget(wicBitmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
+    }
+
+    static void TearDownTestCase() {
+        renderTarget = nullptr;
+    }
+
+    virtual void SetUp() {
+        context.reset(_CGContextCreateWithD2DRenderTarget(renderTarget.Get()));
+        ASSERT_NE(nullptr, context);
+
+        CGAffineTransform contextTransform = ::testing::get<0>(GetParam());
+        if (!CGAffineTransformIsIdentity(contextTransform)) {
+            CGContextConcatCTM(context.get(), contextTransform);
+        }
+    }
+};
+
+/* static */
+ComPtr<ID2D1RenderTarget> ContextCoordinateTest::renderTarget;
+
+TEST_P(ContextCoordinateTest, ConvertToDeviceSpace) {
+    const std::vector<CGPoint>& userSpacePoints = ::testing::get<1>(GetParam());
+    const std::vector<CGPoint>& deviceSpacePoints = ::testing::get<2>(GetParam());
+    for (unsigned int i = 0; i < userSpacePoints.size(); ++i) {
+        const CGPoint& userSpacePoint = userSpacePoints[i];
+        const CGPoint& deviceSpacePoint = deviceSpacePoints[i];
+        EXPECT_EQ(deviceSpacePoint, CGContextConvertPointToDeviceSpace(context.get(), userSpacePoint));
+    }
+}
+
+TEST_P(ContextCoordinateTest, ConvertToUserSpace) {
+    const std::vector<CGPoint>& userSpacePoints = ::testing::get<1>(GetParam());
+    const std::vector<CGPoint>& deviceSpacePoints = ::testing::get<2>(GetParam());
+    for (unsigned int i = 0; i < userSpacePoints.size(); ++i) {
+        const CGPoint& userSpacePoint = userSpacePoints[i];
+        const CGPoint& deviceSpacePoint = deviceSpacePoints[i];
+        EXPECT_EQ(userSpacePoint, CGContextConvertPointToUserSpace(context.get(), deviceSpacePoint));
+    }
+}
+
+// clang-format off
+::testing::tuple<CGAffineTransform, std::vector<CGPoint>, std::vector<CGPoint>> coordinateTestTuples[] = {
+    // { Context Transform, Vector of user points, Vector of device points }
+    {
+        // CoreGraphics is a LLO drawing system, but Direct2D is ULO.
+        // In device space, all coordinates are therefore inverted on the Y axis.
+        // Our test images are 100x100, so 0, 0 maps to 100, 100.
+        CGAffineTransformIdentity,
+        { {  0,   0}, { 50,  50}, {100, 100} },
+        { {  0, 100}, { 50,  50}, {100,   0} },
+    },
+    {
+        // Coordinate system scaled by 2x
+        CGAffineTransformMakeScale(2.0, 2.0),
+        { {  0,   0}, { 25,  25}, { 50,  50} },
+        { {  0, 100}, { 50,  50}, {100,   0} },
+    },
+    {
+        // Coordinate system translated by 20, 20
+        CGAffineTransformMakeTranslation(20, 20),
+        { {  0,   0}, { 50,  50}, {100, 100} },
+        { { 20,  80}, { 70,  30}, {120, -20} },
+    },
+    {
+        // Coordinate system rotated by 45deg
+        // Rotation should be COUNTERCLOCKWISE by default.
+        CGAffineTransformMakeRotation(45. * M_PI / 180.),
+        { {  0,   0}, { 20. * (M_SQRT2/2.), 20. * (M_SQRT2/2.)}, {                 0.,                        20.} },
+        { {  0, 100}, {                 0.,                80.}, {-20. * (M_SQRT2/2.), 100. - (20. * (M_SQRT2/2))} },
+    },
+    {
+        // Coordinate system transformed into ULO
+        CGAffineTransformScale(CGAffineTransformMakeTranslation(0, 100), 1.0, -1.0),
+        { {  0,   0}, { 50,  50}, {100, 100} },
+        { {  0,   0}, { 50,  50}, {100, 100} },
+    },
+    {
+        // Coordinate system transformed into ULO + 2x scale
+        CGAffineTransformScale(CGAffineTransformScale(CGAffineTransformMakeTranslation(0, 100), 1.0, -1.0), 2.0, 2.0),
+        { {  0,   0}, { 25,  25}, { 50,  50} },
+        { {  0,   0}, { 50,  50}, {100, 100} },
+    },
+    {
+        // Coordinate system transformed into ULO + 45deg rotation
+        // Rotation should now be CLOCKWISE.
+        CGAffineTransformRotate(CGAffineTransformScale(CGAffineTransformMakeTranslation(0, 100), 1.0, -1.0), 45. * M_PI / 180.),
+        { {  0,   0}, { 20. * (M_SQRT2/2.), 20. * (M_SQRT2/2.)}, {                 0.,               20.} },
+        { {  0,   0}, {                 0.,                20.}, {-20. * (M_SQRT2/2.), 20. * (M_SQRT2/2)} },
+    },
+};
+// clang-format on
+
+INSTANTIATE_TEST_CASE_P(CGContextCoordinateSpace, ContextCoordinateTest, ::testing::ValuesIn(coordinateTestTuples));
+#endif
