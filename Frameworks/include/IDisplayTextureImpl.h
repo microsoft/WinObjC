@@ -15,13 +15,14 @@
 //******************************************************************************
 #pragma once
 
-#import "Starboard.h"
-#import "CoreGraphics/CGImage.h"
+#import <Starboard.h>
+#import <CoreGraphics/CGImage.h>
 #import "CGContextInternal.h"
 #import "CACompositor.h"
 
 #import <memory>
 
+//TODO #1337 - Remove this when Compositor refactoring is complete and ready.
 class IDisplayTextureImpl : public IDisplayTexture {
 public:
     IDisplayTextureImpl(DisplayTexture* texture) {

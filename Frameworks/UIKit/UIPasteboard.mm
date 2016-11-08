@@ -281,7 +281,7 @@ WADDataPackageView* _getClipboardContent() {
 + (WSSInMemoryRandomAccessStream*)_grabStreamFromUIImage:(UIImage*)image {
     CGImageRef img = [image CGImage];
 
-    // TODO: #1124: THIS IS BROKEN, NEEDS THE ACTUAL ENCODED FILE AS PER THIS DESIGN.
+    // TODO #1338 - Support via encoded data from IWIC
     woc::unique_cf<CGImageRef> imgRef(_CGImageConvertImageToPixelFormat(img, GUID_WICPixelFormat32bppPBGRA));
     NSData* data = static_cast<NSData*>(CGImageGetDataProvider(imgRef.get()));
 

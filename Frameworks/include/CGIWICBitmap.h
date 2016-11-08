@@ -44,6 +44,7 @@ public:
 
     ~CGIWICBitmapLock() {
         m_texture->Unlock();
+        m_texture = nullptr;
     }
 
     HRESULT STDMETHODCALLTYPE GetSize(_Out_ UINT* width, _Out_ UINT* height) {
@@ -90,16 +91,13 @@ public:
     }
 
     ~CGIWICBitmap() {
-        if (m_texture) {
-            delete m_texture;
-        }
+        delete m_texture;
+        m_texture = nullptr;
     }
 
     // IWICBitmap interface
     // TODO #1124: Today we do not support locking a region of the WIC bitmap for rendering. We only support locking the complete bitmap.
-    // This
-    // will
-    // suffice CoreText requirement but needs to be revisted for CoreGraphics usage in future.
+    // This will suffice CoreText requirement but needs to be revisted for CoreGraphics usage in future.
 
     HRESULT STDMETHODCALLTYPE Lock(_In_ const WICRect* region, _In_ DWORD flags, _COM_Outptr_ IWICBitmapLock** outLock) {
         // flags is ignored.

@@ -362,6 +362,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
         }
 
         IDisplayTextureImpl* displayTexture = new IDisplayTextureImpl(tex);
+        //We want to convert it to GUID_WICPixelFormat32bppPBGRA for D2D Render Target compatibility.
         CGImageRef texture =
             _CGImageCreateCustomWICImage(displayTexture, GUID_WICPixelFormat32bppPBGRA, height, width); // +1 is taken care by CGContext
 
