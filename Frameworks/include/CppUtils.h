@@ -21,28 +21,28 @@
 
 #pragma region CFRange
 bool operator==(const CFRange& lhs, const CFRange& rhs) {
-    return lhs.location == rhs.location && rhs.length == rhs.length;
+    return lhs.location == rhs.location && lhs.length == rhs.length;
 }
 
 #pragma endregion
 
 #pragma region CGPoint
 bool operator==(const CGPoint& lhs, const CGPoint& rhs) {
-    return lhs.x == rhs.x && rhs.y == rhs.y;
+    return lhs.x == rhs.x && lhs.y == rhs.y;
 }
 
 #pragma endregion
 
 #pragma region CGSize
 bool operator==(const CGSize& lhs, const CGSize& rhs) {
-    return lhs.width == rhs.width && rhs.height == rhs.height;
+    return lhs.width == rhs.width && lhs.height == rhs.height;
 }
 
 #pragma endregion
 
 #pragma region CGRect
 bool operator==(const CGRect& lhs, const CGRect& rhs) {
-    return lhs.origin == rhs.origin && rhs.size == rhs.size;
+    return lhs.origin == rhs.origin && lhs.size == rhs.size;
 }
 
 #pragma endregion
