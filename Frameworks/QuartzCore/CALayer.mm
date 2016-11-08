@@ -98,6 +98,21 @@ NSString* _transformAction = @"transform";
 NSString* _orderInAction = @"onOrderIn";
 NSString* _orderOutAction = @"orderOut";
 
+enum Gravity {
+    kGravityResize = 0,
+    kGravityCenter = 1,
+    kGravityTop = 2,
+    kGravityResizeAspect = 3,
+    kGravityTopLeft = 4,
+    kGravityBottomLeft = 5,
+    kGravityLeft = 6,
+    kGravityAspectFill = 7,
+    kGravityBottom = 8,
+    kGravityTopRight = 9,
+    kGravityRight = 10,
+    kGravityBottomRight = 11
+};
+
 CACompositorInterface* _globalCompositor;
 
 template <class T>
@@ -241,15 +256,15 @@ CAPrivateInfo::CAPrivateInfo(CALayer* self, WXFrameworkElement* xamlElement) {
 
     contentsScale = 1.0f;
 
-    superlayer = 0;
+    superlayer = nil;
     opacity = 1.0f;
     hidden = FALSE;
-    gravity = kCAGravityResize;
-    contents = NULL;
+    gravity = kGravityResize;
+    contents = nullptr;
     ownsContents = FALSE;
     savedContext = NULL;
     isOpaque = FALSE;
-    delegate = 0;
+    delegate = nil;
     needsDisplay = TRUE;
     needsUpdate = FALSE;
     backgroundColor.r = 0.0f;
