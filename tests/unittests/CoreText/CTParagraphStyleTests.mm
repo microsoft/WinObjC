@@ -15,8 +15,8 @@
 //******************************************************************************
 
 #include <TestFramework.h>
-#import <CoreText/CTParagraphStyle.h>
 #import <CoreText/CoreText.h>
+#include "CppUtils.h"
 
 const static float c_errorDelta = 0.001f;
 
@@ -172,3 +172,44 @@ INSTANTIATE_TEST_CASE_P(OriginsShouldBeMovedByRatio,
                             srand(time(nullptr));
                             return (CGFloat)rand() / (CGFloat)RAND_MAX;
                         }()));
+
+// Parameters with values of (line breaking mode, number of lines, string range of last line)
+class CoreTextLineBreakModeTest : public ::testing::TestWithParam<::testing::tuple<CTLineBreakMode, CFIndex, CFRange>> {
+protected:
+    virtual void SetUp() {
+        path = CGPathCreateWithRect(CGRectMake(0, 0, 80, FLT_MAX), nullptr);
+    }
+
+    virtual void TearDown() {
+        CGPathRelease(path);
+    }
+
+public:
+    CGPathRef path;
+};
+
+TEST_P(CoreTextLineBreakModeTest, ShouldBreakLinesCorrectly) {
+    CTLineBreakMode lineBreakMode = ::testing::get<0>(GetParam());
+    CFIndex lineCount = ::testing::get<1>(GetParam());
+    CFRange stringRange = ::testing::get<2>(GetParam());
+    NSMutableAttributedString* attrString = [[[NSMutableAttributedString alloc] initWithString:@"TEST TEST TEST"] autorelease];
+    CTParagraphStyleSetting settings[1] = {
+        {.spec = kCTParagraphStyleSpecifierLineBreakMode, .valueSize = sizeof(CTLineBreakMode), .value = &lineBreakMode }
+    };
+    NSDictionary* attributes = @{ static_cast<NSString*>(kCTParagraphStyleAttributeName) : (id)CTParagraphStyleCreate(settings, 1) };
+    [attrString setAttributes:attributes range:NSMakeRange(0, 14)];
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(static_cast<CFAttributedStringRef>(attrString));
+    CFAutorelease(framesetter);
+    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, {}, path, nullptr);
+    CFAutorelease(frame);
+    CFArrayRef lines = CTFrameGetLines(frame);
+    EXPECT_EQ(lineCount, CFArrayGetCount(lines));
+    CTLineRef lastLine = static_cast<CTLineRef>(CFArrayGetValueAtIndex(lines, lineCount - 1));
+    EXPECT_EQ(stringRange, CTLineGetStringRange(lastLine));
+}
+
+INSTANTIATE_TEST_CASE_P(ShouldBreakLinesCorrectly,
+                        CoreTextLineBreakModeTest,
+                        ::testing::Values(::testing::make_tuple(kCTLineBreakByWordWrapping, 2, CFRange{ 10, 4 }),
+                                          ::testing::make_tuple(kCTLineBreakByCharWrapping, 2, CFRange{ 11, 3 }),
+                                          ::testing::make_tuple(kCTLineBreakByClipping, 1, CFRange{ 0, 14 })));
