@@ -23,7 +23,6 @@
 #include "CoreGraphics/CGImage.h"
 #include "CGPathInternal.h"
 #include "CGContextInternal.h"
-#include "CGGraphicBufferImage.h"
 #include "QuartzCore/CAShapeLayer.h"
 
 NSString* const kCAFillRuleNonZero = @"kCAFillRuleNonZero";

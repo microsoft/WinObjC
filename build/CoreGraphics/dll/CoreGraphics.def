@@ -32,7 +32,7 @@ LIBRARY CoreGraphics
         CGBitmapContextGetWidth
         
         ; private exports below
-        _CGBitmapContextCreateWithTexture
+        _CGBitmapContextCreateWithRenderTarget
         _CGBitmapContextCreateWithFormat
         CGBitmapContextGetImage
 
@@ -235,6 +235,7 @@ LIBRARY CoreGraphics
         CGContextDrawGlyphRun
         _CGContextSetShadowProjectionTransform
         _CGContextCreateWithD2DRenderTarget
+        _CGGetD2DFactory
 
         ; CGDataConsumer.mm
         CGDataConsumerCreate
@@ -350,18 +351,19 @@ LIBRARY CoreGraphics
         CGImageIsMask
 
         ; CGImage private exports
-        _CGImageLoadImageWithWICDecoder;
-        _CGImageGetImageFromData;
-        _CGImagePNGRepresentation;
-        _CGImageJPEGRepresentation;
-        _CGImageRepresentation;
+        _CGImageLoadImageWithWICDecoder
+        _CGImageGetImageFromData
+        _CGImagePNGRepresentation
+        _CGImageJPEGRepresentation
+        _CGImageRepresentation
+        _CGImageCreateWithWICBitmap
+        _CGImageCreateCopyWithPixelFormat
+        _CGImageGetRawBytes
+        _CGImageGetDisplayTexture
+        _CGImageGetImageSource
 
         ; private exports below
         CGImageAddDestructionListener
-        CGJPEGImageCreateFromData
-        CGPNGImageCreateFromData
-        CGJPEGImageCreateFromFile
-        CGPNGImageCreateFromFile
 
         ; CGLayer.mm
         CGLayerCreateWithContext

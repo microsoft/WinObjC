@@ -281,47 +281,13 @@ WADDataPackageView* _getClipboardContent() {
 + (WSSInMemoryRandomAccessStream*)_grabStreamFromUIImage:(UIImage*)image {
     CGImageRef img = [image CGImage];
 
-    if (img->_imgType == CGImageTypePNG || img->_imgType == CGImageTypeJPEG) {
-        const void* data = NULL;
-        int len = 0;
-        StrongId<NSData> fileData;
+    // TODO #1338 - Support via encoded data from IWIC
+    woc::unique_cf<CGImageRef> imgRef(_CGImageCreateCopyWithPixelFormat(img, GUID_WICPixelFormat32bppPBGRA));
+    NSData* data = static_cast<NSData*>(CGImageGetDataProvider(imgRef.get()));
 
-        switch (img->_imgType) {
-            case CGImageTypePNG: {
-                CGPNGImageBacking* pngImg = (CGPNGImageBacking*)img->Backing();
-
-                if (pngImg->_fileName) {
-                    fileData.attach([[NSData alloc] initWithContentsOfFile:[NSString stringWithUTF8String:pngImg->_fileName]]);
-                    data = [fileData bytes];
-                    len = [fileData length];
-                } else {
-                    data = [(NSData*)pngImg->_data bytes];
-                    len = [(NSData*)pngImg->_data length];
-                }
-            } break;
-
-            case CGImageTypeJPEG: {
-                CGJPEGImageBacking* jpgImg = (CGJPEGImageBacking*)img->Backing();
-
-                if (jpgImg->_fileName) {
-                    fileData.attach([[NSData alloc] initWithContentsOfFile:[NSString stringWithUTF8String:jpgImg->_fileName]]);
-                    data = [fileData bytes];
-                    len = [fileData length];
-                } else {
-                    data = [(NSData*)jpgImg->_data bytes];
-                    len = [(NSData*)jpgImg->_data length];
-                }
-            } break;
-            default:
-                TraceError(TAG, L"Warning: unrecognized image format sent to DisplayTextureContent!");
-                break;
-        }
-
-        WSSInMemoryRandomAccessStream* stream = [[WSSInMemoryRandomAccessStream make] autorelease];
-        [UIPasteboard _populateStream:stream withData:data withLength:len];
-        return stream;
-    }
-    return nil;
+    WSSInMemoryRandomAccessStream* stream = [[WSSInMemoryRandomAccessStream make] autorelease];
+    [UIPasteboard _populateStream:stream withData:[data bytes] withLength:[data length]];
+    return stream;
 }
 
 + (void)_setData:(NSString*)type withData:(NSData*)data on:(WADDataPackage*)package {
