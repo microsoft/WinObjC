@@ -22,16 +22,9 @@
 // CTFont functionality is generally a superset of CGFont functionality, and hits the same code path
 // Thus, CTFont unit tests can also be thought of as CGFont test coverage
 
-// Font names differ slightly between platforms
-#if TARGET_OS_WIN32
-static const CFStringRef c_arialBoldItalicName = CFSTR("Arial Bold Italic");
-static const CFStringRef c_arialItalicName = CFSTR("Arial Italic");
-static const CFStringRef c_courierNewItalicName = CFSTR("Courier New Italic");
-#else
 static const CFStringRef c_arialBoldItalicName = CFSTR("Arial-BoldItalicMT");
 static const CFStringRef c_arialItalicName = CFSTR("Arial-ItalicMT");
 static const CFStringRef c_courierNewItalicName = CFSTR("CourierNewPS-ItalicMT");
-#endif
 
 TEST(CGFont, GetFontBBox) {
     // Windows font bounding boxes differ from ref plat's in 'interesting' but inconsistent ways
