@@ -19,6 +19,7 @@
 #include "TextBox.xaml.h"
 
 namespace UIKit {
+namespace Xaml {
 
 TextBox::TextBox() {
     InitializeComponent();
@@ -29,12 +30,14 @@ void TextBox::OnApplyTemplate() {
     // TODO: Add support for toggle - able password field when UITextField is in secure modes, as well as any other required properties, and to expose them as needed to UIKit.
 }
 
+} /* Xaml*/
+} /* UIKit*/
+
 ////////////////////////////////////////////////////////////////////////////////////
 // ObjectiveC Interop
 ////////////////////////////////////////////////////////////////////////////////////
 UIKIT_XAML_EXPORT IInspectable* XamlCreateTextBox() {
-    return InspectableFromObject(ref new UIKit::TextBox()).Detach();
+    return InspectableFromObject(ref new UIKit::Xaml::TextBox()).Detach();
 }
 
-}
 // clang-format on

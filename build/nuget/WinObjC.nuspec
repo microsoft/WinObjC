@@ -65,9 +65,9 @@
 
     <file src="$winobjc_root$\build\win32\release\universal windows\release\winobjcrt.dll"                                       target="runtimes\win10-x86\native" />
 
-    <file src="$winobjc_root$\build\win32\release\universal windows\UIKit.winmd"                                                 target="lib\uap10.0" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\UIKit.pri"                                                   target="lib\uap10.0" />
-    <file src="$winobjc_root$\build\win32\release\universal windows\UIKit.Xaml\**\*.xaml"                                        target="contentFiles\any\uap\UIKit" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\UIKit.Xaml.winmd"                                            target="lib\uap10.0" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\UIKit.Xaml.pri"                                              target="lib\uap10.0" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\UIKit.Xaml\**\*.xaml"                                        target="contentFiles\any\uap\UIKit.Xaml" />
 
   </files>
 

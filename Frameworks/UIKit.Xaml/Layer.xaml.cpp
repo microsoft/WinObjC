@@ -27,6 +27,7 @@ using namespace Windows::UI::Xaml::Controls;
 using namespace Windows::UI::Xaml::Media;
 
 namespace UIKit {
+namespace Xaml {
 namespace Private {
 namespace CoreAnimation {
 
@@ -97,7 +98,8 @@ void Layer::_RegisterDependencyProperties() {
 
 } /* CoreAnimation */
 } /* Private */
-} /* UIKit */
+} /* Xaml*/
+} /* UIKit*/
 
 ////////////////////////////////////////////////////////////////////////////////////
 // ObjectiveC Interop
@@ -112,11 +114,11 @@ UIKIT_XAML_EXPORT void XamlSetFrameworkElementLayerProperties(
     auto frameworkElement = safe_cast<FrameworkElement^>(reinterpret_cast<Object^>(targetElement.Get()));
     if (layerContentProperty) {
         auto contentImage = safe_cast<Image^>(reinterpret_cast<Object^>(layerContentProperty.Get()));
-        frameworkElement->SetValue(UIKit::Private::CoreAnimation::Layer::LayerContentProperty, contentImage);
+        frameworkElement->SetValue(UIKit::Xaml::Private::CoreAnimation::Layer::LayerContentProperty, contentImage);
     }
 
     if (sublayerCanvasProperty) {
         auto sublayerCanvas = safe_cast<Canvas^>(reinterpret_cast<Object^>(sublayerCanvasProperty.Get()));
-        frameworkElement->SetValue(UIKit::Private::CoreAnimation::Layer::SublayerCanvasProperty, sublayerCanvas);
+        frameworkElement->SetValue(UIKit::Xaml::Private::CoreAnimation::Layer::SublayerCanvasProperty, sublayerCanvas);
     }
 }

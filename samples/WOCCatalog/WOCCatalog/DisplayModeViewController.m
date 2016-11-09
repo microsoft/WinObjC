@@ -286,7 +286,7 @@
     cell.textLabel.text = @"Tablet Mode";
     [self.rows addObject:cell];
 
-    fixedWidth = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
+    fixedWidth = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 25)];
     fixedWidth.text = [NSString stringWithFormat:@"%.1f", UIApplication.displayMode.fixedWidth];
     fixedWidth.borderStyle = UITextBorderStyleBezel;
     [fixedWidth addTarget:self action:@selector(setWidth:) forControlEvents:UIControlEventEditingDidEnd];
@@ -297,7 +297,7 @@
     cell.detailTextLabel.text = @"0.0 = fit to window";
     [self.rows addObject:cell];
 
-    fixedHeight = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
+    fixedHeight = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 25)];
     fixedHeight.text = [NSString stringWithFormat:@"%.1f", UIApplication.displayMode.fixedHeight];
     fixedHeight.borderStyle = UITextBorderStyleBezel;
     [fixedHeight addTarget:self action:@selector(setHeight:) forControlEvents:UIControlEventEditingDidEnd];
@@ -307,7 +307,7 @@
     cell.detailTextLabel.text = @"0.0 = fit to window";
     [self.rows addObject:cell];
 
-    fixedAspect = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
+    fixedAspect = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 25)];
     fixedAspect.text = [NSString stringWithFormat:@"%.1f", UIApplication.displayMode.fixedAspectRatio];
     fixedAspect.borderStyle = UITextBorderStyleBezel;
     [fixedAspect addTarget:self action:@selector(setAspect:) forControlEvents:UIControlEventEditingDidEnd];
@@ -317,7 +317,7 @@
     cell.detailTextLabel.text = @"0.0 = none";
     [self.rows addObject:cell];
 
-    magnification = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
+    magnification = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 25)];
     magnification.text = [NSString stringWithFormat:@"%.2f", UIApplication.displayMode.magnification];
     magnification.borderStyle = UITextBorderStyleBezel;
     [magnification addTarget:self action:@selector(setMagnification:) forControlEvents:UIControlEventEditingDidEnd];
@@ -326,7 +326,7 @@
     cell.textLabel.text = @"Magnification";
     [self.rows addObject:cell];
 
-    scale = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
+    scale = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 25)];
     scale.text = [NSString stringWithFormat:@"%.2f", [uiScreen scale]];
     scale.borderStyle = UITextBorderStyleBezel;
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
@@ -334,7 +334,7 @@
     cell.textLabel.text = @"Scale";
     [self.rows addObject:cell];
 
-    nativeScale = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
+    nativeScale = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 25)];
     nativeScale.text = [NSString stringWithFormat:@"%.2f", [uiScreen nativeScale]];
     nativeScale.borderStyle = UITextBorderStyleBezel;
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
@@ -342,7 +342,7 @@
     cell.textLabel.text = @"Native Scale";
     [self.rows addObject:cell];
 
-    nativeBounds = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 150, 20)];
+    nativeBounds = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 150, 25)];
     CGRect nativeBoundRect = [uiScreen nativeBounds];
     nativeBounds.text = [NSString stringWithFormat:@"%.2f, %.2f", nativeBoundRect.size.width, nativeBoundRect.size.height];
     nativeBounds.borderStyle = UITextBorderStyleBezel;
@@ -352,7 +352,7 @@
     cell.textLabel.text = @"Native Bounds";
     [self.rows addObject:cell];
 
-    uiScreenBrightness = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
+    uiScreenBrightness = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 25)];
     uiScreenBrightness.text = [NSString stringWithFormat:@"%.2f", [uiScreen brightness]];
     uiScreenBrightness.borderStyle = UITextBorderStyleBezel;
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
@@ -384,7 +384,7 @@
     ];
 
     for (NSMutableDictionary* curItem in _informationLabels) {
-        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 25)];
         label.adjustsFontSizeToFitWidth = TRUE;
         label.text = [self getLabelTextFromValue:[UIApplication.displayMode valueForKey:curItem[@"ValueName"]]];
 

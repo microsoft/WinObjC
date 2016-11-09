@@ -20,6 +20,7 @@
 #include "Layer.g.h"
 
 namespace UIKit {
+namespace Xaml {
 namespace Private {
 namespace CoreAnimation {
 
@@ -85,4 +86,5 @@ private:
 
 } /* CoreAnimation */
 } /* Private */
-} /* UIKit */
+} /* Xaml*/
+} /* UIKit*/
