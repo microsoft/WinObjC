@@ -104,6 +104,9 @@
     <ClangCompile Include="..\..\CTCatalog\Tests\CTCParagraphStyleTestViewController.mm">
       <Filter>CTCatalog\Test</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCPathForGlyphTestViewController.mm">
+      <Filter>CTCatalog\Test</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\CTCatalog\Tests\CTCRunTestViewController.mm">
       <Filter>CTCatalog\Test</Filter>
     </ClangCompile>
