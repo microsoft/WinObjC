@@ -18,7 +18,7 @@
 #import "Starboard.h"
 #import "CoreGraphicsInternal.h"
 #import "CGImageInternal.h"
-#import "CACompositor.h"
+#import "DisplayTexture.h"
 
 #include <COMIncludes.h>
 #import <WRLHelpers.h>
@@ -30,6 +30,13 @@
 #include <COMIncludes_End.h>
 
 using namespace Microsoft::WRL;
+
+// clang-format off
+struct __declspec(uuid("BA77A716-5FAF-42B1-B5B3-9B6369A0625D")) __declspec(novtable) ICGDisplayTexture : public IUnknown
+{
+    STDMETHOD(DisplayTexture)(_Out_ IDisplayTexture** displayTexture) = 0;
+};
+// clang-format on
 
 class CGIWICBitmap;
 
@@ -84,7 +91,8 @@ private:
     IDisplayTexture* m_texture;
 };
 
-class CGIWICBitmap : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::ClassicCom>, IAgileObject, FtmBase, IWICBitmap> {
+class CGIWICBitmap
+    : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::ClassicCom>, IAgileObject, FtmBase, IWICBitmap, ICGDisplayTexture> {
 public:
     CGIWICBitmap(_In_ IDisplayTexture* texture, _In_ WICPixelFormatGUID pixelFormat, _In_ UINT height, _In_ UINT width)
         : m_texture(texture), m_pixelFormat(pixelFormat), m_height(height), m_width(width) {
@@ -159,8 +167,10 @@ public:
         return E_NOTIMPL;
     }
 
-    IDisplayTexture* GetDisplayTexture() {
-        return m_texture;
+    HRESULT STDMETHODCALLTYPE DisplayTexture(_Out_ IDisplayTexture** displayTexture) {
+        RETURN_HR_IF_NULL(E_POINTER, displayTexture);
+        *displayTexture = m_texture;
+        return S_OK;
     }
 
 private:

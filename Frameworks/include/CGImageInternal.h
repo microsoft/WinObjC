@@ -28,7 +28,7 @@
 #import <windows.h>
 #import <CGColorSpaceInternal.h>
 #import <utility>
-#import "CACompositor.h"
+#import "DisplayTexture.h"
 
 #include <COMIncludes.h>
 #import <D2d1.h>
@@ -288,7 +288,6 @@ COREGRAPHICS_EXPORT NSData* _CGImagePNGRepresentation(CGImageRef image);
 COREGRAPHICS_EXPORT NSData* _CGImageJPEGRepresentation(CGImageRef image, float quality);
 COREGRAPHICS_EXPORT NSData* _CGImageRepresentation(CGImageRef image, REFGUID guid, float quality);
 
-// Create a Custom IWIC Image out of the given texture.
 COREGRAPHICS_EXPORT CGImageRef _CGImageCreateWithWICBitmap(IWICBitmap* bitmap);
 
 COREGRAPHICS_EXPORT IWICBitmap* _CGImageGetImageSource(CGImageRef image);
@@ -296,7 +295,7 @@ COREGRAPHICS_EXPORT IWICBitmap* _CGImageGetImageSource(CGImageRef image);
 // Obtain a direct pointer to the data.
 COREGRAPHICS_EXPORT void* _CGImageGetRawBytes(CGImageRef image);
 
-// Obtain the associated DisplayTexture, return null for images that lacks them.
+// Obtain the associated DisplayTexture, return null for images that lack them.
 COREGRAPHICS_EXPORT DisplayTexture* _CGImageGetDisplayTexture(CGImageRef image);
 
 REFGUID _CGImageGetWICPixelFormatFromImageProperties(unsigned int bitsPerComponent,
@@ -304,8 +303,8 @@ REFGUID _CGImageGetWICPixelFormatFromImageProperties(unsigned int bitsPerCompone
                                                      CGColorSpaceRef colorSpace,
                                                      CGBitmapInfo bitmapInfo);
 
-//If the image is of the same format, the image is retained and returned.
-COREGRAPHICS_EXPORT CGImageRef _CGImageCreateWithPixelFormat(CGImageRef image, WICPixelFormatGUID pixelFormat);
+// If the image is of the same format, the image is retained and returned.
+COREGRAPHICS_EXPORT CGImageRef _CGImageCreateCopyWithPixelFormat(CGImageRef image, WICPixelFormatGUID pixelFormat);
 
 typedef void (*CGImageDestructionListener)(CGImageRef img);
 COREGRAPHICS_EXPORT void CGImageAddDestructionListener(CGImageDestructionListener listener);

@@ -357,7 +357,7 @@ LIBRARY CoreGraphics
         _CGImageJPEGRepresentation
         _CGImageRepresentation
         _CGImageCreateWithWICBitmap
-        _CGImageCreateWithPixelFormat
+        _CGImageCreateCopyWithPixelFormat
         _CGImageGetRawBytes
         _CGImageGetDisplayTexture
         _CGImageGetImageSource

@@ -19,8 +19,18 @@
 #import <CoreGraphics/CGImage.h>
 #import "CGContextInternal.h"
 #import "CACompositor.h"
-
 #import <memory>
+
+struct IDisplayTexture {
+public:
+    virtual ~IDisplayTexture() {
+    }
+
+    virtual DisplayTexture* GetTexture() = 0;
+    virtual Microsoft::WRL::ComPtr<IInspectable> GetContent() = 0;
+    virtual void* Lock(int* stride) = 0;
+    virtual void Unlock() = 0;
+};
 
 //TODO #1337 - Remove this when Compositor refactoring is complete and ready.
 class IDisplayTextureImpl : public IDisplayTexture {

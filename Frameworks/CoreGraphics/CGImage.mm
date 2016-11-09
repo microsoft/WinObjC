@@ -376,9 +376,16 @@ IWICBitmap* _CGImageGetImageSource(CGImageRef image) {
 
 DisplayTexture* _CGImageGetDisplayTexture(CGImageRef image) {
     RETURN_NULL_IF(!image);
-    CGIWICBitmap* iwicImg = dynamic_cast<CGIWICBitmap*>(image->ImageSource().Get());
-    RETURN_NULL_IF(!iwicImg);
-    return iwicImg->GetDisplayTexture()->GetTexture();
+
+    ComPtr<ICGDisplayTexture> displayTextureAccess;
+    RETURN_NULL_IF_FAILED(image->ImageSource().Get()->QueryInterface(IID_PPV_ARGS(&displayTextureAccess)));
+    RETURN_NULL_IF(!displayTextureAccess);
+
+    IDisplayTexture* displayTexture;
+    RETURN_NULL_IF_FAILED(displayTextureAccess->DisplayTexture(&displayTexture));
+    RETURN_NULL_IF(!displayTexture);
+
+    return displayTexture->GetTexture();
 }
 
 // Return the data pointer to the Image data.
@@ -395,7 +402,7 @@ CGImageRef _CGImageCreateWithWICBitmap(IWICBitmap* bitmap) {
     return imageRef;
 }
 
-CGImageRef _CGImageCreateWithPixelFormat(CGImageRef image, WICPixelFormatGUID pixelFormat) {
+CGImageRef _CGImageCreateCopyWithPixelFormat(CGImageRef image, WICPixelFormatGUID pixelFormat) {
     RETURN_NULL_IF(!image);
     if (IsEqualGUID(image->PixelFormat(), pixelFormat)) {
         CGImageRetain(image);

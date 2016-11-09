@@ -57,10 +57,7 @@ static inline D2D1_MATRIX_3X2_F __CGAffineTransformToD2D_F(CGAffineTransform tra
     return { transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty };
 }
 
-enum _CGCoordinateMode: unsigned int {
-    _kCGCoordinateModeDeviceSpace = 0,
-    _kCGCoordinateModeUserSpace
-};
+enum _CGCoordinateMode : unsigned int { _kCGCoordinateModeDeviceSpace = 0, _kCGCoordinateModeUserSpace };
 
 struct __CGContextDrawingState {
     // This is populated when the state is saved, and contains the D2D parameters that CG does not know.
@@ -189,10 +186,6 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext, __CGContextImpl> {
         _impl.renderTarget->GetFactory(&factory);
         return factory;
     }
-
-    inline void SetRenderTarget(ID2D1RenderTarget* renderTarget) {
-        _impl.renderTarget = renderTarget;
-    }
 };
 
 #define NOISY_RETURN_IF_NULL(param, ...)                                    \
@@ -216,7 +209,7 @@ CFTypeID CGContextGetTypeID() {
 
 #pragma region Global State - Lifetime
 static void __CGContextInitWithRenderTarget(CGContextRef context, ID2D1RenderTarget* renderTarget) {
-    context->SetRenderTarget(renderTarget);
+    context->_impl.renderTarget = renderTarget;
     // Reference platform defaults:
     // * Fill  : fully transparent black
     // * Stroke: fully opaque black
@@ -226,14 +219,14 @@ static void __CGContextInitWithRenderTarget(CGContextRef context, ID2D1RenderTar
 
     // CG is a lower-left origin system (LLO), but D2D is upper left (ULO).
     // We have to translate the render area back onscreen and flip it up to ULO.
-    D2D1_SIZE_F targetSize = context->RenderTarget()->GetSize();
+    D2D1_SIZE_F targetSize = renderTarget->GetSize();
     context->Impl().deviceTransform = CGAffineTransformMake(1.f, 0.f, 0.f, -1.f, 0.f, targetSize.height);
 }
 
 CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget) {
     FAIL_FAST_HR_IF_NULL(E_INVALIDARG, renderTarget);
     CGContextRef context = __CGContext::CreateInstance(kCFAllocatorDefault);
-    __CGContextInitWithRenderTarget(context,renderTarget);
+    __CGContextInitWithRenderTarget(context, renderTarget);
 
     return context;
 }
@@ -1414,9 +1407,9 @@ static HRESULT __CGContextCreateShadowEffect(CGContextRef context,
         affineTransformEffect->SetInputEffect(0, shadowEffect.Get());
 
         CGSize deviceTransformedShadowOffset = CGSizeApplyAffineTransform(state.shadowOffset, context->Impl().deviceTransform);
-        RETURN_IF_FAILED(
-            affineTransformEffect->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX,
-                                            D2D1::Matrix3x2F::Translation(deviceTransformedShadowOffset.width, deviceTransformedShadowOffset.height)));
+        RETURN_IF_FAILED(affineTransformEffect->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX,
+                                                         D2D1::Matrix3x2F::Translation(deviceTransformedShadowOffset.width,
+                                                                                       deviceTransformedShadowOffset.height)));
 
         // Drawing just a projected shadow is not terribly useful, so we composite the
         // shadow with the original input image (or command list) so that both get drawn.
@@ -1439,7 +1432,11 @@ static HRESULT __CGContextCreateShadowEffect(CGContextRef context,
 }
 
 template <typename Lambda> // Lambda takes the form void(*)(CGContextRef, ID2D1DeviceContext*)
-static HRESULT __CGContextRenderToCommandList(CGContextRef context, _CGCoordinateMode coordinateMode, CGAffineTransform* additionalTransform, ID2D1CommandList** outCommandList, Lambda&& drawLambda) {
+static HRESULT __CGContextRenderToCommandList(CGContextRef context,
+                                              _CGCoordinateMode coordinateMode,
+                                              CGAffineTransform* additionalTransform,
+                                              ID2D1CommandList** outCommandList,
+                                              Lambda&& drawLambda) {
     ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
     ComPtr<ID2D1DeviceContext> deviceContext;
     RETURN_IF_FAILED(renderTarget.As(&deviceContext));
@@ -1521,26 +1518,30 @@ static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
     return S_OK;
 }
 
-static HRESULT __CGContextDrawGeometry(CGContextRef context, _CGCoordinateMode coordinateMode, ID2D1Geometry* geometry, CGPathDrawingMode drawMode) {
+static HRESULT __CGContextDrawGeometry(CGContextRef context,
+                                       _CGCoordinateMode coordinateMode,
+                                       ID2D1Geometry* geometry,
+                                       CGPathDrawingMode drawMode) {
     ComPtr<ID2D1CommandList> commandList;
-    HRESULT hr = __CGContextRenderToCommandList(context, coordinateMode, nullptr, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
-        auto& state = context->CurrentGState();
-        if (drawMode & kCGPathFill) {
-            if (drawMode & kCGPathEOFill) {
-                // TODO(DH): GH#1077 Regenerate geometry in Even/Odd fill mode.
+    HRESULT hr = __CGContextRenderToCommandList(
+        context, coordinateMode, nullptr, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+            auto& state = context->CurrentGState();
+            if (drawMode & kCGPathFill) {
+                if (drawMode & kCGPathEOFill) {
+                    // TODO(DH): GH#1077 Regenerate geometry in Even/Odd fill mode.
+                }
+                deviceContext->FillGeometry(geometry, state.fillBrush.Get());
             }
-            deviceContext->FillGeometry(geometry, state.fillBrush.Get());
-        }
 
-        if (drawMode & kCGPathStroke && std::fpclassify(state.lineWidth) != FP_ZERO) {
-            // This only computes the stroke style if its parameters have changed since the last draw.
-            state.ComputeStrokeStyle(deviceContext);
+            if (drawMode & kCGPathStroke && std::fpclassify(state.lineWidth) != FP_ZERO) {
+                // This only computes the stroke style if its parameters have changed since the last draw.
+                state.ComputeStrokeStyle(deviceContext);
 
-            deviceContext->DrawGeometry(geometry, state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
-        }
+                deviceContext->DrawGeometry(geometry, state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
+            }
 
-        return S_OK;
-    });
+            return S_OK;
+        });
 
     RETURN_IF_FAILED(hr);
 
@@ -1827,8 +1828,8 @@ struct __CGBitmapContextImpl {
 struct __CGBitmapContext : CoreFoundation::CppBase<__CGBitmapContext, __CGBitmapContextImpl, __CGContext> {
     inline void SetImage(CGImageRef image) {
         _impl.image.reset(image);
+        CGImageRetain(image);
     }
-
 };
 
 /**
@@ -1912,12 +1913,11 @@ CGImageRef CGBitmapContextGetImage(CGContextRef context) {
     return ((__CGBitmapContext*)context)->Impl().image.get();
 }
 
-CGContextRef  _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget, CGImageRef img) {
+CGContextRef _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget, CGImageRef img) {
     RETURN_NULL_IF(!renderTarget);
-    //TODO: do it for image?
     __CGBitmapContext* context = __CGBitmapContext::CreateInstance(kCFAllocatorDefault);
     __CGContextInitWithRenderTarget(context, renderTarget);
-    context->SetImage(img);// Consumes +1 reference.
+    context->SetImage(img);
     return context;
 }
 

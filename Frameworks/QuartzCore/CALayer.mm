@@ -20,7 +20,7 @@
 #import "CoreGraphics/CGContext.h"
 #import "CGContextInternal.h"
 #import "CGImageInternal.h"
-#import "IDisplayTextureImpl.h"
+#import "DisplayTexture.h"
 #import "CGIWICBitmap.h"
 #import <CoreGraphics/D2DWrapper.h>
 
@@ -64,7 +64,7 @@ static const wchar_t* TAG = L"CALayer";
 static const bool DEBUG_ALL = false;
 static const bool DEBUG_VERBOSE = DEBUG_ALL || false;
 
-static const int kWindowsDPI = 96; 
+static const int kWindowsDPI = 96;
 
 NSString* const kCAOnOrderIn = @"kCAOnOrderIn";
 NSString* const kCAOnOrderOut = @"kCAOnOrderOut";
@@ -367,24 +367,27 @@ static LockingBufferInterface _globallockingBufferInterface;
 
 CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float scale) {
     if ([NSThread isMainThread]) {
-        DisplayTexture* tex = GetCACompositor()->CreateWritableBitmapTexture32(width, height);
-        RETURN_NULL_IF(!tex);
+        DisplayTexture* writetableBitmapTexture = GetCACompositor()->CreateWritableBitmapTexture32(width, height);
+        RETURN_NULL_IF(!writetableBitmapTexture);
+        auto releaseWritetableBitmapTexture = wil::ScopeExit([&]() { GetCACompositor()->ReleaseDisplayTexture(writetableBitmapTexture); });
 
-        std::unique_ptr<IDisplayTextureImpl> displayTexture(new IDisplayTextureImpl(tex));
+        std::unique_ptr<IDisplayTextureImpl> displayTexture(new IDisplayTextureImpl(writetableBitmapTexture));
+        releaseWritetableBitmapTexture.Dismiss();
 
-		Microsoft::WRL::ComPtr<IWICBitmap> bitmap = Microsoft::WRL::Make<CGIWICBitmap>(displayTexture.get(), GUID_WICPixelFormat32bppPBGRA, height, width);
-        //We want to convert it to GUID_WICPixelFormat32bppPBGRA for D2D Render Target compatibility.
-        CGImageRef texture = _CGImageCreateWithWICBitmap(bitmap.Get()); // +1 is taken care by CGContext
+        Microsoft::WRL::ComPtr<IWICBitmap> customWICBtmap =
+            Microsoft::WRL::Make<CGIWICBitmap>(displayTexture.get(), GUID_WICPixelFormat32bppPBGRA, height, width);
+        // We want to convert it to GUID_WICPixelFormat32bppPBGRA for D2D Render Target compatibility.
+        woc::unique_cf<CGImageRef> image(_CGImageCreateWithWICBitmap(customWICBtmap.Get()));
 
         Microsoft::WRL::ComPtr<ID2D1Factory> factory;
         RETURN_NULL_IF_FAILED(_CGGetD2DFactory(&factory));
 
         Microsoft::WRL::ComPtr<ID2D1RenderTarget> renderTarget;
-        RETURN_NULL_IF_FAILED(factory->CreateWicBitmapRenderTarget(bitmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
+        RETURN_NULL_IF_FAILED(factory->CreateWicBitmapRenderTarget(customWICBtmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
         renderTarget->SetDpi(kWindowsDPI * scale, kWindowsDPI * scale);
 
-		displayTexture.release();
-        return _CGBitmapContextCreateWithRenderTarget(renderTarget.Get(),texture);
+        displayTexture.release();
+        return _CGBitmapContextCreateWithRenderTarget(renderTarget.Get(), image.get());
     }
 
     return nullptr;
