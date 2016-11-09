@@ -68,8 +68,7 @@ using namespace Microsoft::WRL;
         _mediaElement = [WXCMediaElement make];
         _mediaElement.autoPlay = NO;
         _mediaElement.volume = 1.0f;
-        _hiddenView = [[_UIHiddenMediaView alloc] initWithFrame:{ 0, 0, 0, 0 }];
-        [_hiddenView setXamlElement:_mediaElement];
+        _hiddenView = [[_UIHiddenMediaView alloc] initWithFrame:{ 0, 0, 0, 0 } xamlElement:_mediaElement];
 
         _lastState = _mediaElement.currentState;
 

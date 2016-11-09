@@ -31,7 +31,6 @@
 
 #include <ErrorHandling.h>
 #include <StringHelpers.h>
-#include <VCInclude/winobjc/winobjc.h>
 
 using namespace Microsoft::WRL;
 using namespace ABI::Windows::ApplicationModel::Core;
@@ -78,10 +77,8 @@ namespace FrameworkHelper {
 HRESULT RunOnUIThread(const std::function<void()>& func) {
     // Get the ICoreApplication
     ComPtr<ICoreImmersiveApplication> spApplication;
-    RETURN_IF_FAILED(
-        Windows::Foundation::GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_ApplicationModel_Core_CoreApplication)
-                                                      .Get(),
-                                                  &spApplication));
+    RETURN_IF_FAILED(Windows::Foundation::GetActivationFactory(
+        Wrappers::HStringReference(RuntimeClass_Windows_ApplicationModel_Core_CoreApplication).Get(), &spApplication));
 
     // Get the ICoreApplicationView
     ComPtr<ICoreApplicationView> spView;

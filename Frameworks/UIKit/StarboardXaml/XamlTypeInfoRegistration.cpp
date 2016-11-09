@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -18,8 +18,7 @@
 #include <ppltasks.h>
 #include <wrl/client.h>
 
-#include "CALayerXaml.h"
-#include "LayerRegistration.h"
+#include "XamlTypeInfoRegistration.h"
 
 // XamlTypeInfoProvider
 ::Windows::UI::Xaml::Markup::IXamlType ^
@@ -465,15 +464,6 @@ void ::XamlTypeInfo::InfoProvider::XamlMember::SetValue(::Platform::Object ^ ins
 
     if (typeName == L"Windows.UI.Xaml.Controls.UserControl") {
         return ref new XamlSystemBaseType(typeName);
-    }
-
-    if (typeName == L"XamlCompositorCS.Controls.CALayerXaml") {
-        ::XamlTypeInfo::InfoProvider::XamlUserType ^ userType =
-            ref new ::XamlTypeInfo::InfoProvider::XamlUserType(this, typeName, GetXamlTypeByName(L"Windows.UI.Xaml.Controls.Page"));
-        userType->KindOfType = ::Windows::UI::Xaml::Interop::TypeKind::Custom;
-        userType->Activator = []() -> Platform::Object ^ { return ref new ::XamlCompositor::Controls::CALayerXaml(); };
-        userType->SetIsLocalType();
-        return userType;
     }
 
     return nullptr;

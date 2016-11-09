@@ -35,7 +35,7 @@ static const wchar_t* TAG = L"CAAnimation";
     SEL _finishedSelector;
     id _name;
     idretain _undefinedKeys;
-    BOOL _wasRemoved, _wasAborted;
+    BOOL _wasRemoved;
 }
 
 /**
@@ -222,7 +222,7 @@ static const wchar_t* TAG = L"CAAnimation";
     } else if ([mode isEqualToString:kCAFillModeBoth]) {
         _timingProperties._fillMode = fillModeBoth;
     } else {
-        assert(0);
+        UNIMPLEMENTED_WITH_MSG("Unsupported fillMode %hs", [mode UTF8String]);
     }
 }
 
@@ -236,9 +236,8 @@ static const wchar_t* TAG = L"CAAnimation";
         return kCAFillModeForwards;
     } else if (_timingProperties._fillMode == fillModeBoth) {
         return kCAFillModeBoth;
-    } else {
-        assert(0);
     }
+
     return nil;
 }
 
@@ -287,49 +286,20 @@ static const wchar_t* TAG = L"CAAnimation";
 }
 
 - (void)_removeAnimationsFromLayer {
-    assert(_attachedLayer != nil || (_runningAnimation == NULL && _runningAnimation2 == NULL));
+    assert(_attachedLayer || !_runningAnimation);
 
     CALayer* layer = _attachedLayer;
     if (_runningAnimation) {
         [CATransaction _removeAnimationFromLayer:layer animation:_runningAnimation];
-        _globalCompositor->ReleaseAnimation(_runningAnimation);
-        _runningAnimation = NULL;
+        _runningAnimation = nullptr;
         [layer _displayChanged];
     }
-    if (_runningAnimation2) {
-        [CATransaction _removeAnimationFromLayer:layer animation:_runningAnimation2];
-        _globalCompositor->ReleaseAnimation(_runningAnimation2);
-        _runningAnimation2 = NULL;
-        [layer _displayChanged];
-    }
+
     [_attachedLayer _removeAnimation:self];
     _attachedLayer = nil;
 
     //  Make sure we don't create an animation in case we're transacted
     _wasRemoved = TRUE;
-}
-
-- (void)_abortAnimation {
-    assert(_attachedLayer != nil || (_runningAnimation == NULL && _runningAnimation2 == NULL));
-
-    CALayer* layer = _attachedLayer;
-    if (_runningAnimation) {
-        [CATransaction _removeAnimationFromLayer:layer animation:_runningAnimation];
-        _globalCompositor->ReleaseAnimation(_runningAnimation);
-        _runningAnimation = NULL;
-        [layer _displayChanged];
-    }
-    if (_runningAnimation2) {
-        [CATransaction _removeAnimationFromLayer:layer animation:_runningAnimation2];
-        _globalCompositor->ReleaseAnimation(_runningAnimation2);
-        _runningAnimation2 = NULL;
-        [layer _displayChanged];
-    }
-    [_attachedLayer _removeAnimation:self];
-    _attachedLayer = nil;
-
-    //  If we're transacted, abort the animation without playing
-    _wasAborted = TRUE;
 }
 
 /**
@@ -387,10 +357,6 @@ static const wchar_t* TAG = L"CAAnimation";
 
 - (BOOL)wasRemoved {
     return _wasRemoved;
-}
-
-- (BOOL)wasAborted {
-    return _wasAborted;
 }
 
 /**

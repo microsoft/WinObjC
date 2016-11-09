@@ -19,16 +19,17 @@
 #import "UIKit/UITouch.h"
 #import "UIKit/UIView.h"
 #import "UIViewInternal.h"
-#import "CACompositor.h"
 #import "UITouchInternal.h"
 #import "UWP/WindowsUIInput.h"
 #import "RingBuffer.h"
+
+#import "StarboardXaml/DisplayProperties.h"
 
 static const wchar_t* TAG = L"UITouch";
 static const bool INPUT_TRACING_ENABLED = false;
 
 #define TAP_SLACK_AREA \
-    (((GetCACompositor()->screenWidth() / GetCACompositor()->deviceWidth()) * GetCACompositor()->screenXDpi()) / 3.0f) //  1/3 inch
+    (((DisplayProperties::ScreenWidth() / DisplayProperties::DeviceWidth()) * DisplayProperties::ScreenXDpi()) / 3.0f) //  1/3 inch
 
 static const float c_tapTimeout = 0.300; // seconds
 static const float c_microsecondsToSeconds = 1000000.0;

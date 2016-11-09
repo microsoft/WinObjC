@@ -645,11 +645,11 @@ void ValidateCallback(const TFunctor& functor, const wchar_t* name) {
 // Internally used by MOCK_* macros; do not call directly.
 /////////////////////////////////////////////////////////////
 #define BUILD_MOCK_METHOD_IMPL(METHOD_NAME, PARAMETER_COUNT, IS_CONST, ...)                                                               \
-                                                                                                                                          \
+    \
 private:                                                                                                                                  \
     std::function<WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::ReturnType(                                       \
         BUILD_VARIABLE_NAME(MOCK_NAMED_ARGS_, PARAMETER_COUNT)(METHOD_NAME))> BUILD_VARIABLE_NAME(m_, METHOD_NAME);                       \
-                                                                                                                                          \
+    \
 public:                                                                                                                                   \
     virtual WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::ReturnType __VA_ARGS__ METHOD_NAME(                     \
         BUILD_VARIABLE_NAME(MOCK_NAMED_ARGS_, PARAMETER_COUNT)(METHOD_NAME)) BUILD_VARIABLE_NAME(MEMBER_PARAMETER_TYPES_CONST_, IS_CONST) \
@@ -770,7 +770,7 @@ struct MockInterfaceCalled {
     typedef WEX::Common::ParameterTypes<decltype(&INTERFACE_NAME::METHOD_NAME)> BUILD_VARIABLE_NAME(METHOD_NAME, PARAMETER_TYPES);  \
     static_assert(PARAMETER_COUNT == BUILD_VARIABLE_NAME(METHOD_NAME, PARAMETER_TYPES)::ParameterCount,                             \
                   "Incorrect macro called for function; parameter count doesn't match!");                                           \
-                                                                                                                                    \
+    \
 private:                                                                                                                            \
     std::function<BUILD_VARIABLE_NAME(METHOD_NAME, PARAMETER_TYPES)::ReturnType(                                                    \
         BUILD_VARIABLE_NAME(MOCK_NAMED_ARGS_, PARAMETER_COUNT)(INTERFACE_NAME::METHOD_NAME))> BUILD_VARIABLE_NAME(m_, METHOD_NAME); \
@@ -804,7 +804,7 @@ private:                                                                        
         BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, set), PARAMETER_TYPES);                                        \
     static_assert(1 == BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, set), PARAMETER_TYPES)::ParameterCount,         \
                   "Incorrect macro called for function; parameter count doesn't match!");                                     \
-                                                                                                                              \
+    \
 private:                                                                                                                      \
     std::function<BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ReturnType()>                \
         BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get));                                                     \
@@ -846,7 +846,7 @@ private:                                                                        
         BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES);                                        \
     static_assert(0 == BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ParameterCount,         \
                   "Incorrect macro called for function; parameter count doesn't match!");                                     \
-                                                                                                                              \
+    \
 private:                                                                                                                      \
     std::function<BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ReturnType()>                \
         BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get));                                                     \

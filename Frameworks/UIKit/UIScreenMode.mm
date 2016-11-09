@@ -16,7 +16,7 @@
 
 #import "Starboard.h"
 #import <UIKit/UIScreenMode.h>
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayProperties.h"
 
 @implementation UIScreenMode
 
@@ -25,8 +25,8 @@
 */
 - (CGSize)size {
     CGSize ret;
-    ret.width = GetCACompositor()->screenWidth() * GetCACompositor()->screenScale();
-    ret.height = GetCACompositor()->screenHeight() * GetCACompositor()->screenScale();
+    ret.width = DisplayProperties::ScreenWidth() * DisplayProperties::ScreenScale();
+    ret.height = DisplayProperties::ScreenHeight() * DisplayProperties::ScreenScale();
 
     return ret;
 }

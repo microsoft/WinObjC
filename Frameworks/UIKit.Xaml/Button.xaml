@@ -10,12 +10,12 @@
     Height="50">
     <Button.Template>
         <ControlTemplate TargetType="Button" x:Name="UIKitButtonControlTemplate">
-            <Grid x:Name="RootGrid" Background="Transparent">
+            <Grid x:Name="rootGrid" Background="{TemplateBinding Background}">
                 <!-- TODO: Since NineGrid works on image pixels, to support an image with 2x scaling we need to multiply the Size and NineGrid, 
                      and inverse render transform it back to the right size. Grid clips its children, so we need to host it in a Canvas first. -->
                 <Image x:Name="backgroundImage" 
                        Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" IsHitTestVisible="False" Stretch="Fill"/>
-                <Canvas x:Name="contentGrid" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
+                <Canvas x:Name="contentCanvas" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
                     <Image x:Name="buttonImage" Stretch="Fill" IsHitTestVisible="False" />
                     <TextBlock x:Name="buttonText" MaxLines="1" TextTrimming="CharacterEllipsis" IsHitTestVisible="False"/>
                 </Canvas>
