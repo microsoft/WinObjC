@@ -22,6 +22,7 @@
 #import <Foundation/NSMutableDictionary.h>
 #import "CoreGraphics/CGContext.h"
 #import "CoreTextInternal.h"
+#import "NSParagraphStyleInternal.h"
 #import <assert.h>
 #import "LoggingNative.h"
 #include "StringHelpers.h"
@@ -40,19 +41,6 @@ NSString* const UITextAttributeTextShadowColor = @"UITextAttributeTextShadowColo
 NSString* const UITextAttributeTextShadowOffset = @"UITextAttributeTextShadowOffset";
 
 @implementation NSString (UIKitAdditions)
-
-// The values of CTTextAlignment and UITextAlignment do not correspond so they can't be simply cast
-static CTTextAlignment __UITextAlignmentToCTTextAlignment(UITextAlignment alignment) {
-    switch (alignment) {
-        case UITextAlignmentLeft:
-            return kCTLeftTextAlignment;
-        case UITextAlignmentRight:
-            return kCTRightTextAlignment;
-        case UITextAlignmentCenter:
-        default:
-            return kCTCenterTextAlignment;
-    }
-}
 
 static void drawString(UIFont* font,
                        CGContextRef context,
@@ -75,7 +63,7 @@ static void drawString(UIFont* font,
     }
 
     CTParagraphStyleSetting styles[2];
-    CTTextAlignment align = __UITextAlignmentToCTTextAlignment(alignment);
+    CTTextAlignment align = _NSTextAlignmentToCTTextAlignment(alignment);
     styles[0] = { kCTParagraphStyleSpecifierAlignment, sizeof(CTTextAlignment), &align };
 
     CTLineBreakMode breakMode = static_cast<CTLineBreakMode>(lineBreakMode);
@@ -334,7 +322,8 @@ static inline NSParagraphStyle* _paragraphStyleWithLineBreakMode(UILineBreakMode
 - (CGSize)sizeWithFont:(UIFont*)font constrainedToSize:(CGSize)size lineBreakMode:(UILineBreakMode)lineBreakMode {
     return [self _sizeWithAttributes:@{
         NSFontAttributeName : font,
-        NSParagraphStyleAttributeName : _paragraphStyleWithLineBreakMode(lineBreakMode)
+        static_cast<NSString*>(kCTParagraphStyleAttributeName) :
+            (id)[_paragraphStyleWithLineBreakMode(lineBreakMode) _convertToCTParagraphStyle]
     }
                    constrainedToSize:size];
 }

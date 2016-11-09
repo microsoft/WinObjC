@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -21,19 +21,32 @@
 @implementation NSMutableParagraphStyle
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (id)copyWithZone:(NSZone*)zone {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self mutableCopyWithZone:zone];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (void)setParagraphStyle:(NSParagraphStyle*)obj {
-    UNIMPLEMENTED();
+    self.alignment = obj.alignment;
+    self.firstLineHeadIndent = obj.firstLineHeadIndent;
+    self.headIndent = obj.headIndent;
+    self.tailIndent = obj.tailIndent;
+    self.lineBreakMode = obj.lineBreakMode;
+    self.maximumLineHeight = obj.maximumLineHeight;
+    self.minimumLineHeight = obj.minimumLineHeight;
+    self.lineSpacing = obj.lineSpacing;
+    self.paragraphSpacing = obj.paragraphSpacing;
+    self.paragraphSpacingBefore = obj.paragraphSpacingBefore;
+    self.baseWritingDirection = obj.baseWritingDirection;
+    self.lineHeightMultiple = obj.lineHeightMultiple;
+    self.tabStops = obj.tabStops;
+    self.defaultTabInterval = obj.defaultTabInterval;
+    self.hyphenationFactor = obj.hyphenationFactor;
 }
 
 /**
@@ -50,57 +63,6 @@
 */
 - (void)removeTabStop:(NSTextTab*)anObject {
     UNIMPLEMENTED();
-}
-
-/**
- @Status Caveat
- @Notes Setting this property has no effect
-*/
-- (void)setLineBreakMode:(NSLineBreakMode)lineBreakMode {
-    _lineBreakMode = lineBreakMode;
-}
-
-/**
- @Status Interoperable
- @Notes
-*/
-- (NSLineBreakMode)lineBreakMode {
-    return _lineBreakMode;
-}
-
-/**
-@Status Stub
-@Notes
-*/
-- (instancetype)initWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
-@Status Stub
-@Notes
-*/
-- (void)encodeWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
-}
-
-/**
-@Status Stub
-@Notes
-*/
-+ (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
-@Status Stub
-@Notes
-*/
-- (id)mutableCopyWithZone:(NSZone*)zone {
-    UNIMPLEMENTED();
-    return StubReturn();
 }
 
 @end

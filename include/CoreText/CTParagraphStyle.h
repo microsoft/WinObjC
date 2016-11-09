@@ -74,4 +74,4 @@ CORETEXT_EXPORT bool CTParagraphStyleGetValueForSpecifier(CTParagraphStyleRef pa
                                                           CTParagraphStyleSpecifier spec,
                                                           size_t valueBufferSize,
                                                           void* valueBuffer);
-CORETEXT_EXPORT CFTypeID CTParagraphStyleGetTypeID() STUB_METHOD;
+CORETEXT_EXPORT CFTypeID CTParagraphStyleGetTypeID();
