@@ -302,7 +302,7 @@ __int64 EbrStorageFile::Lseek(__int64 pos, int whence) {
         case SEEK_SET:
         default:
         {
-            if (pos > 0 ) {
+            if (pos >= 0 ) {
                 newPosition = (unsigned long long)(pos);
             } else {
                 return -1;
