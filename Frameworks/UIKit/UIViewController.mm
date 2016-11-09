@@ -1796,7 +1796,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     [_pageMappings setObject:self forKey:(id)(void*)pageObj.Get()];
 
     // Create a template UIView
-    priv->_page = CreateRtProxy([WXCPage class], pageObj.Get());
+    priv->_page = [WXCPage createWith:pageObj.Get()];
     UIView* view = [[[UIEmptyView alloc] initWithFrame:frame xamlElement:priv->_page] autorelease];
     [view setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
     [self setView:view];

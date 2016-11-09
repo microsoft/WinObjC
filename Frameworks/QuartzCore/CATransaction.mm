@@ -32,6 +32,7 @@ NSString* const kCATransactionDisableActions = @"kCATransactionDisableActions";
 NSString* const kCATransactionAnimationTimingFunction = @"kCATransactionAnimationTimingFunction";
 NSString* const kCATransactionCompletionBlock = @"kCATransactionCompletionBlock";
 
+// TODO: Address the fact that __declspec(thread) objective-C pointers will not be properly ref-counted
 __declspec(thread) CATransaction* g_curTransaction, *g_rootTransaction;
 
 @implementation CATransaction {

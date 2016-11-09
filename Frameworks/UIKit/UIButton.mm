@@ -179,9 +179,6 @@ struct ButtonState {
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
 
-    // Set the XAML element's name so it's easily found in the VS live tree viewer
-    [_xamlButton setName:[NSString stringWithUTF8String:object_getClassName(self)]];
-
     __block UIButton* weakSelf = self;
     XamlControls::HookButtonPointerEvents(_xamlButton,
                                           ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {

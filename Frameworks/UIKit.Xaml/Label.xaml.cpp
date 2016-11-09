@@ -29,7 +29,6 @@ namespace UIKit {
 
 Label::Label() {
     InitializeComponent();
-    Name = L"UILabel";
 }
 
 // Accessor for our Layer content

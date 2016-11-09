@@ -3555,7 +3555,7 @@ static float doRound(float f) {
  Microsoft Extension
 */
 + (WXFrameworkElement*)createXamlElement {
-    // Default to CALayer's default backing Xaml element
+    // Use CALayer's default backing Xaml element
     return nil;
 }
 
