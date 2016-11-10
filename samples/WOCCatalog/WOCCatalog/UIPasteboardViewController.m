@@ -172,7 +172,7 @@ static const CGFloat c_height = 50;
         [clearPasteboardButton addTarget:self action:@selector(onClearPasteboard) forControlEvents:UIControlEventTouchUpInside];
         _cell.accessoryView = clearPasteboardButton;
     } else if (indexPath.row == 11) {
-        // set items button 
+        // set items button
         _cell.textLabel.text = @"Setting an item which contains text/url/image, afterwards, try paste text/url/image using above button";
         UIButton* setPasteboardItemsButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [setPasteboardItemsButton setFrame:CGRectMake(50, 50, 200, 40)];
