@@ -144,7 +144,7 @@ private:
 
 /**
  @Status Caveat
- @Notes CTParagraphStyleSpecifier kCTParagraphStyleSpecifierTabStops
+ @Notes CTParagraphStyleSpecifier kCTParagraphStyleSpecifierTabStops not supported
 */
 CTParagraphStyleRef CTParagraphStyleCreate(const CTParagraphStyleSetting* settings, size_t settingsCount) {
     __CTParagraphStyle* style = __CTParagraphStyle::CreateInstance();
@@ -160,7 +160,7 @@ CTParagraphStyleRef CTParagraphStyleCreate(const CTParagraphStyleSetting* settin
 
 /**
  @Status Caveat
- @Notes CTParagraphStyleSpecifier kCTParagraphStyleSpecifierTabStops
+ @Notes CTParagraphStyleSpecifier kCTParagraphStyleSpecifierTabStops not supported
 */
 CTParagraphStyleRef CTParagraphStyleCreateCopy(CTParagraphStyleRef paragraphStyle) {
     return paragraphStyle ? __CTParagraphStyle::CreateInstance(nullptr, *paragraphStyle) : nullptr;
@@ -168,7 +168,7 @@ CTParagraphStyleRef CTParagraphStyleCreateCopy(CTParagraphStyleRef paragraphStyl
 
 /**
  @Status Caveat
- @Notes CTParagraphStyleSpecifier kCTParagraphStyleSpecifierTabStops
+ @Notes CTParagraphStyleSpecifier kCTParagraphStyleSpecifierTabStops not supported
 */
 bool CTParagraphStyleGetValueForSpecifier(CTParagraphStyleRef paragraphStyle,
                                           CTParagraphStyleSpecifier spec,

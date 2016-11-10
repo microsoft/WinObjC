@@ -299,6 +299,13 @@ static NSDictionary* _getDefaultUITextAttributes() {
 // Returns the bounding box size this string would occupy when drawn as specified
 // All sizeWith... functions in this file funnel to this
 - (CGSize)_sizeWithAttributes:(NSDictionary<NSString*, id>*)attributes constrainedToSize:(CGSize)size {
+    if ([attributes objectForKey:NSParagraphStyleAttributeName]) {
+        NSMutableDictionary* copied = [NSMutableDictionary dictionaryWithDictionary:attributes];
+        [copied setObject:(id)[[attributes objectForKey:NSParagraphStyleAttributeName] _createCTParagraphStyle]
+                   forKey:static_cast<NSString*>(kCTParagraphStyleAttributeName)];
+        attributes = copied;
+    }
+
     NSAttributedString* attributedSelf = [[[NSAttributedString alloc] initWithString:self attributes:attributes] autorelease];
 
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)attributedSelf);
@@ -308,7 +315,6 @@ static NSDictionary* _getDefaultUITextAttributes() {
 }
 
 // Private helper that converts a UILineBreakMode -> NSParagraphStyle
-// TODO #1108: NS/CT ParagraphStyle are not properly bridged, and ParagraphStyle is not currently read anywhere
 static inline NSParagraphStyle* _paragraphStyleWithLineBreakMode(UILineBreakMode lineBreakMode) {
     NSMutableParagraphStyle* ret = [NSMutableParagraphStyle new];
     ret.lineBreakMode = lineBreakMode;
@@ -322,8 +328,7 @@ static inline NSParagraphStyle* _paragraphStyleWithLineBreakMode(UILineBreakMode
 - (CGSize)sizeWithFont:(UIFont*)font constrainedToSize:(CGSize)size lineBreakMode:(UILineBreakMode)lineBreakMode {
     return [self _sizeWithAttributes:@{
         NSFontAttributeName : font,
-        static_cast<NSString*>(kCTParagraphStyleAttributeName) :
-            (id)[_paragraphStyleWithLineBreakMode(lineBreakMode) _createCTParagraphStyle]
+        NSParagraphStyleAttributeName : _paragraphStyleWithLineBreakMode(lineBreakMode)
     }
                    constrainedToSize:size];
 }
