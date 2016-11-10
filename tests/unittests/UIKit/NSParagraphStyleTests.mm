@@ -76,3 +76,12 @@ TEST(NSParagraphStyle, CopyShouldBeImmutable) {
     style.lineSpacing = 20.0;
     EXPECT_NEAR(10.0, [copiedStyle lineSpacing], c_errorDelta);
 }
+
+TEST(NSParagraphStyle, DefaultShouldReturnSameInstance) {
+    NSParagraphStyle* first = [NSParagraphStyle defaultParagraphStyle];
+    NSParagraphStyle* second = [NSParagraphStyle defaultParagraphStyle];
+    EXPECT_EQ(first, second);
+
+    NSParagraphStyle* other = [[NSParagraphStyle new] autorelease];
+    EXPECT_NE(first, other);
+}

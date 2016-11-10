@@ -42,7 +42,8 @@
  @Notes Tab Stops not supported
 */
 + (NSParagraphStyle*)defaultParagraphStyle {
-    return [self new];
+    static StrongId<NSParagraphStyle> _default{[[self new] autorelease] };
+    return _default.get();
 }
 
 /**
