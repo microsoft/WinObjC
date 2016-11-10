@@ -27,15 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WDPPPerceptionFrameProviderInfo, WDPPPerceptionPropertyChangeRequest, WDPPPerceptionFaceAuthenticationGroup,
-    WDPPPerceptionControlGroup, WDPPPerceptionCorrelationGroup, WDPPPerceptionFrame, WDPPPerceptionCorrelation,
-    WDPPPerceptionVideoFrameAllocator, WDPPPerceptionFrameProviderManagerService, WDPPKnownPerceptionFrameKind;
-@protocol WDPPIKnownPerceptionFrameKindStatics
-, WDPPIPerceptionFrameProviderManagerServiceStatics, WDPPIPerceptionFrameProviderInfo, WDPPIPerceptionControlGroupFactory,
-    WDPPIPerceptionControlGroup, WDPPIPerceptionFaceAuthenticationGroupFactory, WDPPIPerceptionFaceAuthenticationGroup,
-    WDPPIPerceptionCorrelationFactory, WDPPIPerceptionCorrelation, WDPPIPerceptionCorrelationGroupFactory, WDPPIPerceptionCorrelationGroup,
-    WDPPIPerceptionFrame, WDPPIPerceptionVideoFrameAllocatorFactory, WDPPIPerceptionPropertyChangeRequest,
-    WDPPIPerceptionFrameProviderManager, WDPPIPerceptionFrameProvider, WDPPIPerceptionVideoFrameAllocator;
+@class WDPPPerceptionFrameProviderInfo, WDPPPerceptionPropertyChangeRequest, WDPPPerceptionFaceAuthenticationGroup, WDPPPerceptionControlGroup, WDPPPerceptionCorrelationGroup, WDPPPerceptionFrame, WDPPPerceptionCorrelation, WDPPPerceptionVideoFrameAllocator, WDPPPerceptionFrameProviderManagerService, WDPPKnownPerceptionFrameKind;
+@protocol WDPPIKnownPerceptionFrameKindStatics, WDPPIPerceptionFrameProviderManagerServiceStatics, WDPPIPerceptionFrameProviderInfo, WDPPIPerceptionControlGroupFactory, WDPPIPerceptionControlGroup, WDPPIPerceptionFaceAuthenticationGroupFactory, WDPPIPerceptionFaceAuthenticationGroup, WDPPIPerceptionCorrelationFactory, WDPPIPerceptionCorrelation, WDPPIPerceptionCorrelationGroupFactory, WDPPIPerceptionCorrelationGroup, WDPPIPerceptionFrame, WDPPIPerceptionVideoFrameAllocatorFactory, WDPPIPerceptionPropertyChangeRequest, WDPPIPerceptionFrameProviderManager, WDPPIPerceptionFrameProvider, WDPPIPerceptionVideoFrameAllocator;
 
 #include "WindowsFoundationNumerics.h"
 #include "WindowsFoundation.h"
@@ -46,27 +39,28 @@
 // Windows.Devices.Perception.Provider.PerceptionStartFaceAuthenticationHandler
 #ifndef __WDPPPerceptionStartFaceAuthenticationHandler__DEFINED
 #define __WDPPPerceptionStartFaceAuthenticationHandler__DEFINED
-typedef void (^WDPPPerceptionStartFaceAuthenticationHandler)(WDPPPerceptionFaceAuthenticationGroup* sender);
+typedef void(^WDPPPerceptionStartFaceAuthenticationHandler)(WDPPPerceptionFaceAuthenticationGroup* sender);
 #endif // __WDPPPerceptionStartFaceAuthenticationHandler__DEFINED
 
 // Windows.Devices.Perception.Provider.PerceptionStopFaceAuthenticationHandler
 #ifndef __WDPPPerceptionStopFaceAuthenticationHandler__DEFINED
 #define __WDPPPerceptionStopFaceAuthenticationHandler__DEFINED
-typedef void (^WDPPPerceptionStopFaceAuthenticationHandler)(WDPPPerceptionFaceAuthenticationGroup* sender);
+typedef void(^WDPPPerceptionStopFaceAuthenticationHandler)(WDPPPerceptionFaceAuthenticationGroup* sender);
 #endif // __WDPPPerceptionStopFaceAuthenticationHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // Windows.Devices.Perception.Provider.PerceptionStartFaceAuthenticationHandler
 #ifndef __WDPPPerceptionStartFaceAuthenticationHandler__DEFINED
 #define __WDPPPerceptionStartFaceAuthenticationHandler__DEFINED
-typedef void (^WDPPPerceptionStartFaceAuthenticationHandler)(WDPPPerceptionFaceAuthenticationGroup* sender);
+typedef void(^WDPPPerceptionStartFaceAuthenticationHandler)(WDPPPerceptionFaceAuthenticationGroup* sender);
 #endif // __WDPPPerceptionStartFaceAuthenticationHandler__DEFINED
 
 // Windows.Devices.Perception.Provider.PerceptionStopFaceAuthenticationHandler
 #ifndef __WDPPPerceptionStopFaceAuthenticationHandler__DEFINED
 #define __WDPPPerceptionStopFaceAuthenticationHandler__DEFINED
-typedef void (^WDPPPerceptionStopFaceAuthenticationHandler)(WDPPPerceptionFaceAuthenticationGroup* sender);
+typedef void(^WDPPPerceptionStopFaceAuthenticationHandler)(WDPPPerceptionFaceAuthenticationGroup* sender);
 #endif // __WDPPPerceptionStopFaceAuthenticationHandler__DEFINED
 
 // Windows.Foundation.IClosable
@@ -128,11 +122,11 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* id;
+@property (retain) NSString * id;
 @property BOOL hidden;
-@property (retain) NSString* frameKind;
-@property (retain) NSString* displayName;
-@property (retain) NSString* deviceKind;
+@property (retain) NSString * frameKind;
+@property (retain) NSString * displayName;
+@property (retain) NSString * deviceKind;
 @end
 
 #endif // __WDPPPerceptionFrameProviderInfo_DEFINED__
@@ -147,7 +141,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WDPPerceptionFrameSourcePropertyChangeStatus status;
-@property (readonly) NSString* name;
+@property (readonly) NSString * name;
 @property (readonly) RTObject* value;
 - (WFDeferral*)getDeferral;
 @end
@@ -160,9 +154,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 @interface WDPPPerceptionFaceAuthenticationGroup : RTObject
-+ (WDPPPerceptionFaceAuthenticationGroup*)make:(id<NSFastEnumeration> /* NSString * */)ids
-                                  startHandler:(WDPPPerceptionStartFaceAuthenticationHandler)startHandler
-                                   stopHandler:(WDPPPerceptionStopFaceAuthenticationHandler)stopHandler ACTIVATOR;
++ (WDPPPerceptionFaceAuthenticationGroup*)make:(id<NSFastEnumeration> /* NSString * */)ids startHandler:(WDPPPerceptionStartFaceAuthenticationHandler)startHandler stopHandler:(WDPPPerceptionStopFaceAuthenticationHandler)stopHandler ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -223,13 +215,13 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 @interface WDPPPerceptionCorrelation : RTObject
-+ (WDPPPerceptionCorrelation*)make:(NSString*)targetId position:(WFNVector3*)position orientation:(WFNQuaternion*)orientation ACTIVATOR;
++ (WDPPPerceptionCorrelation*)make:(NSString *)targetId position:(WFNVector3*)position orientation:(WFNQuaternion*)orientation ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFNQuaternion* orientation;
 @property (readonly) WFNVector3* position;
-@property (readonly) NSString* targetId;
+@property (readonly) NSString * targetId;
 @end
 
 #endif // __WDPPPerceptionCorrelation_DEFINED__
@@ -240,10 +232,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 @interface WDPPPerceptionVideoFrameAllocator : RTObject <WFIClosable>
-+ (WDPPPerceptionVideoFrameAllocator*)make:(unsigned int)maxOutstandingFrameCountForWrite
-                                    format:(WGIBitmapPixelFormat)format
-                                resolution:(WFSize*)resolution
-                                     alpha:(WGIBitmapAlphaMode)alpha ACTIVATOR;
++ (WDPPPerceptionVideoFrameAllocator*)make:(unsigned int)maxOutstandingFrameCountForWrite format:(WGIBitmapPixelFormat)format resolution:(WFSize*)resolution alpha:(WGIBitmapAlphaMode)alpha ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -260,21 +249,14 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 @interface WDPPPerceptionFrameProviderManagerService : RTObject
-+ (void)registerFrameProviderInfo:(RTObject<WDPPIPerceptionFrameProviderManager>*)manager
-                frameProviderInfo:(WDPPPerceptionFrameProviderInfo*)frameProviderInfo;
-+ (void)unregisterFrameProviderInfo:(RTObject<WDPPIPerceptionFrameProviderManager>*)manager
-                  frameProviderInfo:(WDPPPerceptionFrameProviderInfo*)frameProviderInfo;
-+ (void)registerFaceAuthenticationGroup:(RTObject<WDPPIPerceptionFrameProviderManager>*)manager
-                faceAuthenticationGroup:(WDPPPerceptionFaceAuthenticationGroup*)faceAuthenticationGroup;
-+ (void)unregisterFaceAuthenticationGroup:(RTObject<WDPPIPerceptionFrameProviderManager>*)manager
-                  faceAuthenticationGroup:(WDPPPerceptionFaceAuthenticationGroup*)faceAuthenticationGroup;
++ (void)registerFrameProviderInfo:(RTObject<WDPPIPerceptionFrameProviderManager>*)manager frameProviderInfo:(WDPPPerceptionFrameProviderInfo*)frameProviderInfo;
++ (void)unregisterFrameProviderInfo:(RTObject<WDPPIPerceptionFrameProviderManager>*)manager frameProviderInfo:(WDPPPerceptionFrameProviderInfo*)frameProviderInfo;
++ (void)registerFaceAuthenticationGroup:(RTObject<WDPPIPerceptionFrameProviderManager>*)manager faceAuthenticationGroup:(WDPPPerceptionFaceAuthenticationGroup*)faceAuthenticationGroup;
++ (void)unregisterFaceAuthenticationGroup:(RTObject<WDPPIPerceptionFrameProviderManager>*)manager faceAuthenticationGroup:(WDPPPerceptionFaceAuthenticationGroup*)faceAuthenticationGroup;
 + (void)registerControlGroup:(RTObject<WDPPIPerceptionFrameProviderManager>*)manager controlGroup:(WDPPPerceptionControlGroup*)controlGroup;
-+ (void)unregisterControlGroup:(RTObject<WDPPIPerceptionFrameProviderManager>*)manager
-                  controlGroup:(WDPPPerceptionControlGroup*)controlGroup;
-+ (void)registerCorrelationGroup:(RTObject<WDPPIPerceptionFrameProviderManager>*)manager
-                correlationGroup:(WDPPPerceptionCorrelationGroup*)correlationGroup;
-+ (void)unregisterCorrelationGroup:(RTObject<WDPPIPerceptionFrameProviderManager>*)manager
-                  correlationGroup:(WDPPPerceptionCorrelationGroup*)correlationGroup;
++ (void)unregisterControlGroup:(RTObject<WDPPIPerceptionFrameProviderManager>*)manager controlGroup:(WDPPPerceptionControlGroup*)controlGroup;
++ (void)registerCorrelationGroup:(RTObject<WDPPIPerceptionFrameProviderManager>*)manager correlationGroup:(WDPPPerceptionCorrelationGroup*)correlationGroup;
++ (void)unregisterCorrelationGroup:(RTObject<WDPPIPerceptionFrameProviderManager>*)manager correlationGroup:(WDPPPerceptionCorrelationGroup*)correlationGroup;
 + (void)updateAvailabilityForProvider:(RTObject<WDPPIPerceptionFrameProvider>*)provider available:(BOOL)available;
 + (void)publishFrameForProvider:(RTObject<WDPPIPerceptionFrameProvider>*)provider frame:(WDPPPerceptionFrame*)frame;
 @end
@@ -287,9 +269,10 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 @interface WDPPKnownPerceptionFrameKind : RTObject
-+ (NSString*)color;
-+ (NSString*)depth;
-+ (NSString*)infrared;
++ (NSString *)color;
++ (NSString *)depth;
++ (NSString *)infrared;
 @end
 
 #endif // __WDPPKnownPerceptionFrameKind_DEFINED__
+

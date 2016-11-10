@@ -29,6 +29,8 @@
 #include <memory>
 #include <type_traits>
 
+#if defined(__OBJC__)
+
 extern "C" id objc_storeStrong(id* object, id value); // Forward decl for non-objc.h users.
 
 // Puzzlingly, this checks whether ARC is enabled instead of whether the compiler supports it.
@@ -299,7 +301,9 @@ bool operator!=(const Any& other, const AutoId<TObj, TLifetimeTraits>& val) {
 #define idretaintype(type) AutoId<type>
 #define idretainproto(type) AutoId<id<type>>
 
-#if defined(__OBJC__)
+#endif
+
+#ifdef CF_EXPORT // Quick way to detect CoreFoundation.
 namespace woc {
 template <typename T>
 class unique_cf : public std::unique_ptr<typename std::remove_pointer<T>::type, decltype(&CFRelease)> {
@@ -312,7 +316,9 @@ public:
     }
 };
 }
+#endif
 
+#ifdef WINOBJCRT_EXPORT // Quick way to detect WinObjCRT.
 namespace woc {
 template <typename T>
 class unique_iw : public std::unique_ptr<T, void (*)(T*)> {
@@ -324,7 +330,6 @@ public:
     }
 };
 }
-
 #endif
 
 #else // else(!defined(__cplusplus))

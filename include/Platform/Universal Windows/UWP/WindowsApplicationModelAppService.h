@@ -27,11 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WAAAppServiceRequest, WAAAppServiceDeferral, WAAAppServiceResponse, WAAAppServiceConnection, WAAAppServiceRequestReceivedEventArgs,
-    WAAAppServiceClosedEventArgs, WAAAppServiceTriggerDetails, WAAAppServiceCatalog;
-@protocol WAAIAppServiceDeferral
-, WAAIAppServiceClosedEventArgs, WAAIAppServiceRequestReceivedEventArgs, WAAIAppServiceTriggerDetails, WAAIAppServiceRequest,
-    WAAIAppServiceResponse, WAAIAppServiceCatalogStatics, WAAIAppServiceConnection;
+@class WAAAppServiceRequest, WAAAppServiceDeferral, WAAAppServiceResponse, WAAAppServiceConnection, WAAAppServiceRequestReceivedEventArgs, WAAAppServiceClosedEventArgs, WAAAppServiceTriggerDetails, WAAAppServiceCatalog;
+@protocol WAAIAppServiceDeferral, WAAIAppServiceClosedEventArgs, WAAIAppServiceRequestReceivedEventArgs, WAAIAppServiceConnection2, WAAIAppServiceTriggerDetails, WAAIAppServiceTriggerDetails2, WAAIAppServiceRequest, WAAIAppServiceResponse, WAAIAppServiceCatalogStatics, WAAIAppServiceConnection;
 
 // Windows.ApplicationModel.AppService.AppServiceClosedStatus
 enum _WAAAppServiceClosedStatus {
@@ -49,6 +46,9 @@ enum _WAAAppServiceConnectionStatus {
     WAAAppServiceConnectionStatusAppUnavailable = 2,
     WAAAppServiceConnectionStatusAppServiceUnavailable = 3,
     WAAAppServiceConnectionStatusUnknown = 4,
+    WAAAppServiceConnectionStatusRemoteSystemUnavailable = 5,
+    WAAAppServiceConnectionStatusRemoteSystemNotSupportedByApp = 6,
+    WAAAppServiceConnectionStatusNotAuthorized = 7,
 };
 typedef unsigned WAAAppServiceConnectionStatus;
 
@@ -58,11 +58,15 @@ enum _WAAAppServiceResponseStatus {
     WAAAppServiceResponseStatusFailure = 1,
     WAAAppServiceResponseStatusResourceLimitsExceeded = 2,
     WAAAppServiceResponseStatusUnknown = 3,
+    WAAAppServiceResponseStatusRemoteSystemUnavailable = 4,
+    WAAAppServiceResponseStatusMessageSizeTooLarge = 5,
 };
 typedef unsigned WAAAppServiceResponseStatus;
 
-#include "WindowsFoundationCollections.h"
+#include "WindowsSystemRemoteSystems.h"
 #include "WindowsApplicationModel.h"
+#include "WindowsSystem.h"
+#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>
@@ -135,15 +139,17 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* packageFamilyName;
-@property (retain) NSString* appServiceName;
-- (EventRegistrationToken)addRequestReceivedEvent:(void (^)(WAAAppServiceConnection*, WAAAppServiceRequestReceivedEventArgs*))del;
+@property (retain) NSString * packageFamilyName;
+@property (retain) NSString * appServiceName;
+@property (retain) WSUser* user;
+- (EventRegistrationToken)addRequestReceivedEvent:(void(^)(WAAAppServiceConnection*, WAAAppServiceRequestReceivedEventArgs*))del;
 - (void)removeRequestReceivedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addServiceClosedEvent:(void (^)(WAAAppServiceConnection*, WAAAppServiceClosedEventArgs*))del;
+- (EventRegistrationToken)addServiceClosedEvent:(void(^)(WAAAppServiceConnection*, WAAAppServiceClosedEventArgs*))del;
 - (void)removeServiceClosedEvent:(EventRegistrationToken)tok;
 - (void)openAsyncWithSuccess:(void (^)(WAAAppServiceConnectionStatus))success failure:(void (^)(NSError*))failure;
 - (void)sendMessageAsync:(WFCValueSet*)message success:(void (^)(WAAAppServiceResponse*))success failure:(void (^)(NSError*))failure;
 - (void)close;
+- (void)openRemoteAsync:(WSRRemoteSystemConnectionRequest*)remoteSystemConnectionRequest success:(void (^)(WAAAppServiceConnectionStatus))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAAAppServiceConnection_DEFINED__
@@ -187,8 +193,9 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAAppServiceConnection* appServiceConnection;
-@property (readonly) NSString* callerPackageFamilyName;
-@property (readonly) NSString* name;
+@property (readonly) NSString * callerPackageFamilyName;
+@property (readonly) NSString * name;
+@property (readonly) BOOL isRemoteSystemConnection;
 @end
 
 #endif // __WAAAppServiceTriggerDetails_DEFINED__
@@ -199,9 +206,8 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 @interface WAAAppServiceCatalog : RTObject
-+ (void)findAppServiceProvidersAsync:(NSString*)appServiceName
-                             success:(void (^)(NSArray* /* WAAppInfo* */))success
-                             failure:(void (^)(NSError*))failure;
++ (void)findAppServiceProvidersAsync:(NSString *)appServiceName success:(void (^)(NSArray* /* WAAppInfo* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAAAppServiceCatalog_DEFINED__
+

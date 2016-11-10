@@ -27,6 +27,15 @@
 #endif
 #include <UWP/interopBase.h>
 
+// Windows.Graphics.DirectX.DirectXAlphaMode
+enum _WGDDirectXAlphaMode {
+    WGDDirectXAlphaModeUnspecified = 0,
+    WGDDirectXAlphaModePremultiplied = 1,
+    WGDDirectXAlphaModeStraight = 2,
+    WGDDirectXAlphaModeIgnore = 3,
+};
+typedef unsigned WGDDirectXAlphaMode;
+
 // Windows.Graphics.DirectX.DirectXPixelFormat
 enum _WGDDirectXPixelFormat {
     WGDDirectXPixelFormatUnknown = 0,
@@ -152,3 +161,4 @@ enum _WGDDirectXPixelFormat {
 typedef unsigned WGDDirectXPixelFormat;
 
 #import <Foundation/Foundation.h>
+

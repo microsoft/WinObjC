@@ -27,14 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WDWSWiFiDirectServiceProvisioningInfo, WDWSWiFiDirectServiceSession, WDWSWiFiDirectServiceAutoAcceptSessionConnectedEventArgs,
-    WDWSWiFiDirectServiceRemotePortAddedEventArgs, WDWSWiFiDirectServiceSessionDeferredEventArgs, WDWSWiFiDirectServiceSessionRequest,
-    WDWSWiFiDirectServiceSessionRequestedEventArgs, WDWSWiFiDirectServiceAdvertiser, WDWSWiFiDirectService;
-@protocol WDWSIWiFiDirectServiceProvisioningInfo
-, WDWSIWiFiDirectServiceAutoAcceptSessionConnectedEventArgs, WDWSIWiFiDirectServiceRemotePortAddedEventArgs,
-    WDWSIWiFiDirectServiceSessionDeferredEventArgs, WDWSIWiFiDirectServiceSessionRequestedEventArgs,
-    WDWSIWiFiDirectServiceAdvertiserFactory, WDWSIWiFiDirectServiceAdvertiser, WDWSIWiFiDirectServiceStatics, WDWSIWiFiDirectService,
-    WDWSIWiFiDirectServiceSessionRequest, WDWSIWiFiDirectServiceSession;
+@class WDWSWiFiDirectServiceProvisioningInfo, WDWSWiFiDirectServiceSession, WDWSWiFiDirectServiceAutoAcceptSessionConnectedEventArgs, WDWSWiFiDirectServiceRemotePortAddedEventArgs, WDWSWiFiDirectServiceSessionDeferredEventArgs, WDWSWiFiDirectServiceSessionRequest, WDWSWiFiDirectServiceSessionRequestedEventArgs, WDWSWiFiDirectServiceAdvertiser, WDWSWiFiDirectService;
+@protocol WDWSIWiFiDirectServiceProvisioningInfo, WDWSIWiFiDirectServiceAutoAcceptSessionConnectedEventArgs, WDWSIWiFiDirectServiceRemotePortAddedEventArgs, WDWSIWiFiDirectServiceSessionDeferredEventArgs, WDWSIWiFiDirectServiceSessionRequestedEventArgs, WDWSIWiFiDirectServiceAdvertiserFactory, WDWSIWiFiDirectServiceAdvertiser, WDWSIWiFiDirectServiceStatics, WDWSIWiFiDirectService, WDWSIWiFiDirectServiceSessionRequest, WDWSIWiFiDirectServiceSession;
 
 // Windows.Devices.WiFiDirect.Services.WiFiDirectServiceConfigurationMethod
 enum _WDWSWiFiDirectServiceConfigurationMethod {
@@ -146,15 +140,14 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 #endif
 @property (readonly) unsigned int advertisementId;
 @property (readonly) WDWSWiFiDirectServiceSessionErrorStatus errorStatus;
-@property (readonly) NSString* serviceAddress;
-@property (readonly) NSString* serviceName;
-@property (readonly) NSString* sessionAddress;
+@property (readonly) NSString * serviceAddress;
+@property (readonly) NSString * serviceName;
+@property (readonly) NSString * sessionAddress;
 @property (readonly) unsigned int sessionId;
 @property (readonly) WDWSWiFiDirectServiceSessionStatus status;
-- (EventRegistrationToken)addRemotePortAddedEvent:(void (^)(WDWSWiFiDirectServiceSession*,
-                                                            WDWSWiFiDirectServiceRemotePortAddedEventArgs*))del;
+- (EventRegistrationToken)addRemotePortAddedEvent:(void(^)(WDWSWiFiDirectServiceSession*, WDWSWiFiDirectServiceRemotePortAddedEventArgs*))del;
 - (void)removeRemotePortAddedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSessionStatusChangedEvent:(void (^)(WDWSWiFiDirectServiceSession*, RTObject*))del;
+- (EventRegistrationToken)addSessionStatusChangedEvent:(void(^)(WDWSWiFiDirectServiceSession*, RTObject*))del;
 - (void)removeSessionStatusChangedEvent:(EventRegistrationToken)tok;
 - (NSArray* /* WNEndpointPair* */)getConnectionEndpointPairs;
 - (RTObject<WFIAsyncAction>*)addStreamSocketListenerAsync:(WNSStreamSocketListener*)value;
@@ -245,7 +238,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectServiceAdvertiser : RTObject
-+ (WDWSWiFiDirectServiceAdvertiser*)makeWiFiDirectServiceAdvertiser:(NSString*)serviceName ACTIVATOR;
++ (WDWSWiFiDirectServiceAdvertiser*)makeWiFiDirectServiceAdvertiser:(NSString *)serviceName ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -257,24 +250,17 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @property BOOL autoAcceptSession;
 @property (readonly) WDWSWiFiDirectServiceError serviceError;
 @property (readonly) NSMutableArray* /* WDWSWiFiDirectServiceConfigurationMethod */ preferredConfigurationMethods;
-@property (readonly) NSString* serviceName;
+@property (readonly) NSString * serviceName;
 @property (readonly) NSMutableArray* /* NSString * */ serviceNamePrefixes;
 @property (readonly) WDWSWiFiDirectServiceAdvertisementStatus advertisementStatus;
-- (EventRegistrationToken)addAdvertisementStatusChangedEvent:(void (^)(WDWSWiFiDirectServiceAdvertiser*, RTObject*))del;
+- (EventRegistrationToken)addAdvertisementStatusChangedEvent:(void(^)(WDWSWiFiDirectServiceAdvertiser*, RTObject*))del;
 - (void)removeAdvertisementStatusChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addAutoAcceptSessionConnectedEvent:(void (^)(WDWSWiFiDirectServiceAdvertiser*,
-                                                                       WDWSWiFiDirectServiceAutoAcceptSessionConnectedEventArgs*))del;
+- (EventRegistrationToken)addAutoAcceptSessionConnectedEvent:(void(^)(WDWSWiFiDirectServiceAdvertiser*, WDWSWiFiDirectServiceAutoAcceptSessionConnectedEventArgs*))del;
 - (void)removeAutoAcceptSessionConnectedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSessionRequestedEvent:(void (^)(WDWSWiFiDirectServiceAdvertiser*,
-                                                             WDWSWiFiDirectServiceSessionRequestedEventArgs*))del;
+- (EventRegistrationToken)addSessionRequestedEvent:(void(^)(WDWSWiFiDirectServiceAdvertiser*, WDWSWiFiDirectServiceSessionRequestedEventArgs*))del;
 - (void)removeSessionRequestedEvent:(EventRegistrationToken)tok;
-- (void)connectAsync:(WDEDeviceInformation*)deviceInfo
-             success:(void (^)(WDWSWiFiDirectServiceSession*))success
-             failure:(void (^)(NSError*))failure;
-- (void)connectAsyncWithPin:(WDEDeviceInformation*)deviceInfo
-                        pin:(NSString*)pin
-                    success:(void (^)(WDWSWiFiDirectServiceSession*))success
-                    failure:(void (^)(NSError*))failure;
+- (void)connectAsync:(WDEDeviceInformation*)deviceInfo success:(void (^)(WDWSWiFiDirectServiceSession*))success failure:(void (^)(NSError*))failure;
+- (void)connectAsyncWithPin:(WDEDeviceInformation*)deviceInfo pin:(NSString *)pin success:(void (^)(WDWSWiFiDirectServiceSession*))success failure:(void (^)(NSError*))failure;
 - (void)start;
 - (void)stop;
 @end
@@ -287,9 +273,9 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @interface WDWSWiFiDirectService : RTObject
-+ (NSString*)getSelector:(NSString*)serviceName;
-+ (NSString*)getSelectorWithFilter:(NSString*)serviceName serviceInfoFilter:(RTObject<WSSIBuffer>*)serviceInfoFilter;
-+ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDWSWiFiDirectService*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getSelector:(NSString *)serviceName;
++ (NSString *)getSelectorWithFilter:(NSString *)serviceName serviceInfoFilter:(RTObject<WSSIBuffer>*)serviceInfoFilter;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDWSWiFiDirectService*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -298,13 +284,12 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 @property (readonly) RTObject<WSSIBuffer>* remoteServiceInfo;
 @property (readonly) WDWSWiFiDirectServiceError serviceError;
 @property (readonly) NSArray* /* WDWSWiFiDirectServiceConfigurationMethod */ supportedConfigurationMethods;
-- (EventRegistrationToken)addSessionDeferredEvent:(void (^)(WDWSWiFiDirectService*, WDWSWiFiDirectServiceSessionDeferredEventArgs*))del;
+- (EventRegistrationToken)addSessionDeferredEvent:(void(^)(WDWSWiFiDirectService*, WDWSWiFiDirectServiceSessionDeferredEventArgs*))del;
 - (void)removeSessionDeferredEvent:(EventRegistrationToken)tok;
-- (void)getProvisioningInfoAsync:(WDWSWiFiDirectServiceConfigurationMethod)selectedConfigurationMethod
-                         success:(void (^)(WDWSWiFiDirectServiceProvisioningInfo*))success
-                         failure:(void (^)(NSError*))failure;
+- (void)getProvisioningInfoAsync:(WDWSWiFiDirectServiceConfigurationMethod)selectedConfigurationMethod success:(void (^)(WDWSWiFiDirectServiceProvisioningInfo*))success failure:(void (^)(NSError*))failure;
 - (void)connectAsyncWithSuccess:(void (^)(WDWSWiFiDirectServiceSession*))success failure:(void (^)(NSError*))failure;
-- (void)connectAsyncWithPin:(NSString*)pin success:(void (^)(WDWSWiFiDirectServiceSession*))success failure:(void (^)(NSError*))failure;
+- (void)connectAsyncWithPin:(NSString *)pin success:(void (^)(WDWSWiFiDirectServiceSession*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDWSWiFiDirectService_DEFINED__
+

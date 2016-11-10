@@ -27,12 +27,27 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WAAppDisplayInfo, WAAppInfo, WASuspendingEventArgs, WASuspendingDeferral, WASuspendingOperation, WAPackageStatus, WAPackageId,
-    WAPackage, WADesignMode;
+@class WAFullTrustProcessLauncher, WAStartupTask, WAAppDisplayInfo, WAAppInfo, WASuspendingEventArgs, WALeavingBackgroundEventArgs, WAEnteredBackgroundEventArgs, WASuspendingDeferral, WASuspendingOperation, WAPackageStatus, WAPackageId, WAPackage, WAPackageStagingEventArgs, WAPackageInstallingEventArgs, WAPackageUpdatingEventArgs, WAPackageUninstallingEventArgs, WAPackageStatusChangedEventArgs, WAPackageCatalog, WADesignMode, WACameraApplicationManager;
 @class WAPackageVersion;
-@protocol WAIAppDisplayInfo
-, WAIAppInfo, WAISuspendingDeferral, WAISuspendingOperation, WAISuspendingEventArgs, WAIPackageIdWithMetadata, WAIPackageWithMetadata,
-    WAIPackageStatus, WAIPackageId, WAIPackage, WAIPackage2, WAIPackage3, WAIPackageStatics, WAIDesignModeStatics;
+@protocol WAIFullTrustProcessLauncherStatics, WAIStartupTask, WAIStartupTaskStatics, WAIAppDisplayInfo, WAIAppInfo, WAISuspendingDeferral, WAISuspendingOperation, WAISuspendingEventArgs, WAILeavingBackgroundEventArgs, WAIEnteredBackgroundEventArgs, WAIPackageIdWithMetadata, WAIPackageWithMetadata, WAIPackageStatus, WAIPackageId, WAIPackage, WAIPackage2, WAIPackage3, WAIPackage4, WAIPackageStatics, WAIPackageStagingEventArgs, WAIPackageInstallingEventArgs, WAIPackageUpdatingEventArgs, WAIPackageUninstallingEventArgs, WAIPackageStatusChangedEventArgs, WAIPackageCatalog, WAIPackageCatalogStatics, WAIDesignModeStatics, WAICameraApplicationManagerStatics;
+
+// Windows.ApplicationModel.StartupTaskState
+enum _WAStartupTaskState {
+    WAStartupTaskStateDisabled = 0,
+    WAStartupTaskStateDisabledByUser = 1,
+    WAStartupTaskStateEnabled = 2,
+};
+typedef unsigned WAStartupTaskState;
+
+// Windows.ApplicationModel.PackageSignatureKind
+enum _WAPackageSignatureKind {
+    WAPackageSignatureKindNone = 0,
+    WAPackageSignatureKindDeveloper = 1,
+    WAPackageSignatureKindEnterprise = 2,
+    WAPackageSignatureKindStore = 3,
+    WAPackageSignatureKindSystem = 4,
+};
+typedef unsigned WAPackageSignatureKind;
 
 #include "WindowsSystem.h"
 #include "WindowsFoundation.h"
@@ -45,7 +60,7 @@
 // [struct] Windows.ApplicationModel.PackageVersion
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAPackageVersion : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property unsigned short major;
 @property unsigned short minor;
 @property unsigned short build;
@@ -95,6 +110,67 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 #endif // __WAISuspendingEventArgs_DEFINED__
 
+// Windows.ApplicationModel.ILeavingBackgroundEventArgs
+#ifndef __WAILeavingBackgroundEventArgs_DEFINED__
+#define __WAILeavingBackgroundEventArgs_DEFINED__
+
+@protocol WAILeavingBackgroundEventArgs
+- (WFDeferral*)getDeferral;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAILeavingBackgroundEventArgs : RTObject <WAILeavingBackgroundEventArgs>
+@end
+
+#endif // __WAILeavingBackgroundEventArgs_DEFINED__
+
+// Windows.ApplicationModel.IEnteredBackgroundEventArgs
+#ifndef __WAIEnteredBackgroundEventArgs_DEFINED__
+#define __WAIEnteredBackgroundEventArgs_DEFINED__
+
+@protocol WAIEnteredBackgroundEventArgs
+- (WFDeferral*)getDeferral;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAIEnteredBackgroundEventArgs : RTObject <WAIEnteredBackgroundEventArgs>
+@end
+
+#endif // __WAIEnteredBackgroundEventArgs_DEFINED__
+
+// Windows.ApplicationModel.FullTrustProcessLauncher
+#ifndef __WAFullTrustProcessLauncher_DEFINED__
+#define __WAFullTrustProcessLauncher_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAFullTrustProcessLauncher : RTObject
++ (RTObject<WFIAsyncAction>*)launchFullTrustProcessForCurrentAppAsync;
++ (RTObject<WFIAsyncAction>*)launchFullTrustProcessForCurrentAppWithParametersAsync:(NSString *)parameterGroupId;
++ (RTObject<WFIAsyncAction>*)launchFullTrustProcessForAppAsync:(NSString *)fullTrustPackageRelativeAppId;
++ (RTObject<WFIAsyncAction>*)launchFullTrustProcessForAppWithParametersAsync:(NSString *)fullTrustPackageRelativeAppId parameterGroupId:(NSString *)parameterGroupId;
+@end
+
+#endif // __WAFullTrustProcessLauncher_DEFINED__
+
+// Windows.ApplicationModel.StartupTask
+#ifndef __WAStartupTask_DEFINED__
+#define __WAStartupTask_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAStartupTask : RTObject
++ (void)getForCurrentPackageAsyncWithSuccess:(void (^)(NSArray* /* WAStartupTask* */))success failure:(void (^)(NSError*))failure;
++ (void)getAsync:(NSString *)taskId success:(void (^)(WAStartupTask*))success failure:(void (^)(NSError*))failure;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WAStartupTaskState state;
+@property (readonly) NSString * taskId;
+- (void)requestEnableAsyncWithSuccess:(void (^)(WAStartupTaskState))success failure:(void (^)(NSError*))failure;
+- (void)disable;
+@end
+
+#endif // __WAStartupTask_DEFINED__
+
 // Windows.ApplicationModel.AppDisplayInfo
 #ifndef __WAAppDisplayInfo_DEFINED__
 #define __WAAppDisplayInfo_DEFINED__
@@ -104,8 +180,8 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* Description;
-@property (readonly) NSString* displayName;
+@property (readonly) NSString * Description;
+@property (readonly) NSString * displayName;
 - (WSSRandomAccessStreamReference*)getLogo:(WFSize*)size;
 @end
 
@@ -120,10 +196,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* appUserModelId;
+@property (readonly) NSString * appUserModelId;
 @property (readonly) WAAppDisplayInfo* displayInfo;
-@property (readonly) NSString* id;
-@property (readonly) NSString* packageFamilyName;
+@property (readonly) NSString * id;
+@property (readonly) NSString * packageFamilyName;
 @end
 
 #endif // __WAAppInfo_DEFINED__
@@ -141,6 +217,34 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @end
 
 #endif // __WASuspendingEventArgs_DEFINED__
+
+// Windows.ApplicationModel.LeavingBackgroundEventArgs
+#ifndef __WALeavingBackgroundEventArgs_DEFINED__
+#define __WALeavingBackgroundEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WALeavingBackgroundEventArgs : RTObject <WAILeavingBackgroundEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+- (WFDeferral*)getDeferral;
+@end
+
+#endif // __WALeavingBackgroundEventArgs_DEFINED__
+
+// Windows.ApplicationModel.EnteredBackgroundEventArgs
+#ifndef __WAEnteredBackgroundEventArgs_DEFINED__
+#define __WAEnteredBackgroundEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAEnteredBackgroundEventArgs : RTObject <WAIEnteredBackgroundEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+- (WFDeferral*)getDeferral;
+@end
+
+#endif // __WAEnteredBackgroundEventArgs_DEFINED__
 
 // Windows.ApplicationModel.SuspendingDeferral
 #ifndef __WASuspendingDeferral_DEFINED__
@@ -206,15 +310,15 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSProcessorArchitecture architecture;
-@property (readonly) NSString* familyName;
-@property (readonly) NSString* fullName;
-@property (readonly) NSString* name;
-@property (readonly) NSString* publisher;
-@property (readonly) NSString* publisherId;
-@property (readonly) NSString* resourceId;
+@property (readonly) NSString * familyName;
+@property (readonly) NSString * fullName;
+@property (readonly) NSString * name;
+@property (readonly) NSString * publisher;
+@property (readonly) NSString * publisherId;
+@property (readonly) NSString * resourceId;
 @property (readonly) WAPackageVersion* Version;
-@property (readonly) NSString* author;
-@property (readonly) NSString* productId;
+@property (readonly) NSString * author;
+@property (readonly) NSString * productId;
 @end
 
 #endif // __WAPackageId_DEFINED__
@@ -232,23 +336,138 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WAPackageId* id;
 @property (readonly) WSStorageFolder* installedLocation;
 @property (readonly) BOOL isFramework;
-@property (readonly) NSString* Description;
-@property (readonly) NSString* displayName;
+@property (readonly) NSString * Description;
+@property (readonly) NSString * displayName;
 @property (readonly) BOOL isBundle;
 @property (readonly) BOOL isDevelopmentMode;
 @property (readonly) BOOL isResourcePackage;
 @property (readonly) WFUri* logo;
-@property (readonly) NSString* publisherDisplayName;
+@property (readonly) NSString * publisherDisplayName;
 @property (readonly) WFDateTime* installedDate;
 @property (readonly) WAPackageStatus* status;
+@property (readonly) BOOL isOptional;
+@property (readonly) WAPackageSignatureKind signatureKind;
 @property (readonly) WFDateTime* installDate;
 + (WAPackage*)current;
 - (void)getAppListEntriesAsyncWithSuccess:(void (^)(NSArray* /* WACAppListEntry* */))success failure:(void (^)(NSError*))failure;
-- (NSString*)getThumbnailToken;
-- (void)launch:(NSString*)parameters;
+- (NSString *)getThumbnailToken;
+- (void)launch:(NSString *)parameters;
+- (void)verifyContentIntegrityAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAPackage_DEFINED__
+
+// Windows.ApplicationModel.PackageStagingEventArgs
+#ifndef __WAPackageStagingEventArgs_DEFINED__
+#define __WAPackageStagingEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAPackageStagingEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WFGUID* activityId;
+@property (readonly) HRESULT errorCode;
+@property (readonly) BOOL isComplete;
+@property (readonly) WAPackage* package;
+@property (readonly) double progress;
+@end
+
+#endif // __WAPackageStagingEventArgs_DEFINED__
+
+// Windows.ApplicationModel.PackageInstallingEventArgs
+#ifndef __WAPackageInstallingEventArgs_DEFINED__
+#define __WAPackageInstallingEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAPackageInstallingEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WFGUID* activityId;
+@property (readonly) HRESULT errorCode;
+@property (readonly) BOOL isComplete;
+@property (readonly) WAPackage* package;
+@property (readonly) double progress;
+@end
+
+#endif // __WAPackageInstallingEventArgs_DEFINED__
+
+// Windows.ApplicationModel.PackageUpdatingEventArgs
+#ifndef __WAPackageUpdatingEventArgs_DEFINED__
+#define __WAPackageUpdatingEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAPackageUpdatingEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WFGUID* activityId;
+@property (readonly) HRESULT errorCode;
+@property (readonly) BOOL isComplete;
+@property (readonly) double progress;
+@property (readonly) WAPackage* sourcePackage;
+@property (readonly) WAPackage* targetPackage;
+@end
+
+#endif // __WAPackageUpdatingEventArgs_DEFINED__
+
+// Windows.ApplicationModel.PackageUninstallingEventArgs
+#ifndef __WAPackageUninstallingEventArgs_DEFINED__
+#define __WAPackageUninstallingEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAPackageUninstallingEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WFGUID* activityId;
+@property (readonly) HRESULT errorCode;
+@property (readonly) BOOL isComplete;
+@property (readonly) WAPackage* package;
+@property (readonly) double progress;
+@end
+
+#endif // __WAPackageUninstallingEventArgs_DEFINED__
+
+// Windows.ApplicationModel.PackageStatusChangedEventArgs
+#ifndef __WAPackageStatusChangedEventArgs_DEFINED__
+#define __WAPackageStatusChangedEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAPackageStatusChangedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WAPackage* package;
+@end
+
+#endif // __WAPackageStatusChangedEventArgs_DEFINED__
+
+// Windows.ApplicationModel.PackageCatalog
+#ifndef __WAPackageCatalog_DEFINED__
+#define __WAPackageCatalog_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAPackageCatalog : RTObject
++ (WAPackageCatalog*)openForCurrentPackage;
++ (WAPackageCatalog*)openForCurrentUser;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+- (EventRegistrationToken)addPackageInstallingEvent:(void(^)(WAPackageCatalog*, WAPackageInstallingEventArgs*))del;
+- (void)removePackageInstallingEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addPackageStagingEvent:(void(^)(WAPackageCatalog*, WAPackageStagingEventArgs*))del;
+- (void)removePackageStagingEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addPackageStatusChangedEvent:(void(^)(WAPackageCatalog*, WAPackageStatusChangedEventArgs*))del;
+- (void)removePackageStatusChangedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addPackageUninstallingEvent:(void(^)(WAPackageCatalog*, WAPackageUninstallingEventArgs*))del;
+- (void)removePackageUninstallingEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addPackageUpdatingEvent:(void(^)(WAPackageCatalog*, WAPackageUpdatingEventArgs*))del;
+- (void)removePackageUpdatingEvent:(EventRegistrationToken)tok;
+@end
+
+#endif // __WAPackageCatalog_DEFINED__
 
 // Windows.ApplicationModel.DesignMode
 #ifndef __WADesignMode_DEFINED__
@@ -260,3 +479,15 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @end
 
 #endif // __WADesignMode_DEFINED__
+
+// Windows.ApplicationModel.CameraApplicationManager
+#ifndef __WACameraApplicationManager_DEFINED__
+#define __WACameraApplicationManager_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WACameraApplicationManager : RTObject
++ (void)showInstalledApplicationsUI;
+@end
+
+#endif // __WACameraApplicationManager_DEFINED__
+

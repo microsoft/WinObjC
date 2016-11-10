@@ -27,8 +27,16 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WMWMdmPolicy;
-@protocol WMWIMdmAllowPolicyStatics;
+@class WMWMdmPolicy, WMWWorkplaceSettings;
+@protocol WMWIMdmAllowPolicyStatics, WMWIMdmPolicyStatics2, WMWIWorkplaceSettingsStatics;
+
+// Windows.Management.Workplace.MessagingSyncPolicy
+enum _WMWMessagingSyncPolicy {
+    WMWMessagingSyncPolicyDisallowed = 0,
+    WMWMessagingSyncPolicyAllowed = 1,
+    WMWMessagingSyncPolicyRequired = 2,
+};
+typedef unsigned WMWMessagingSyncPolicy;
 
 #import <Foundation/Foundation.h>
 
@@ -38,6 +46,7 @@
 
 OBJCUWP_WINDOWS_MANAGEMENT_WORKPLACE_EXPORT
 @interface WMWMdmPolicy : RTObject
++ (WMWMessagingSyncPolicy)getMessagingSyncPolicy;
 + (BOOL)isBrowserAllowed;
 + (BOOL)isCameraAllowed;
 + (BOOL)isMicrosoftAccountAllowed;
@@ -45,3 +54,15 @@ OBJCUWP_WINDOWS_MANAGEMENT_WORKPLACE_EXPORT
 @end
 
 #endif // __WMWMdmPolicy_DEFINED__
+
+// Windows.Management.Workplace.WorkplaceSettings
+#ifndef __WMWWorkplaceSettings_DEFINED__
+#define __WMWWorkplaceSettings_DEFINED__
+
+OBJCUWP_WINDOWS_MANAGEMENT_WORKPLACE_EXPORT
+@interface WMWWorkplaceSettings : RTObject
++ (BOOL)isMicrosoftAccountOptional;
+@end
+
+#endif // __WMWWorkplaceSettings_DEFINED__
+

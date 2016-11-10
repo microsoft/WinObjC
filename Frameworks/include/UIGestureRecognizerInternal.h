@@ -76,6 +76,7 @@ typedef NS_ENUM(NSUInteger, _UIPanGestureStage) {
 @interface UIPanGestureRecognizer ()
 - (UIView*)_touchedView;
 - (void)_setDragSlack:(float)slack;
+- (float)_getDragSlack;
 - (void)_lockDirection:(int)dir;
 - (_UIPanGestureStage)_stage;
 @end

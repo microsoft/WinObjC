@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WUXPAddPagesEventArgs, WUXPGetPreviewPageEventArgs, WUXPPaginateEventArgs, WUXPPrintDocument;
-@protocol WUXPIAddPagesEventArgs
-, WUXPIGetPreviewPageEventArgs, WUXPIPaginateEventArgs, WUXPIPrintDocument, WUXPIPrintDocumentStatics, WUXPIPrintDocumentFactory;
+@protocol WUXPIAddPagesEventArgs, WUXPIGetPreviewPageEventArgs, WUXPIPaginateEventArgs, WUXPIPrintDocument, WUXPIPrintDocumentStatics, WUXPIPrintDocumentFactory;
 
 // Windows.UI.Xaml.Printing.PreviewPageCountType
 enum _WUXPPreviewPageCountType {
@@ -45,45 +44,46 @@ typedef unsigned WUXPPreviewPageCountType;
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED
 #define __WXDependencyPropertyChangedCallback__DEFINED
-typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
+typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
 #endif // __WXDependencyPropertyChangedCallback__DEFINED
 
 // Windows.UI.Xaml.Printing.AddPagesEventHandler
 #ifndef __WUXPAddPagesEventHandler__DEFINED
 #define __WUXPAddPagesEventHandler__DEFINED
-typedef void (^WUXPAddPagesEventHandler)(RTObject* sender, WUXPAddPagesEventArgs* e);
+typedef void(^WUXPAddPagesEventHandler)(RTObject* sender, WUXPAddPagesEventArgs* e);
 #endif // __WUXPAddPagesEventHandler__DEFINED
 
 // Windows.UI.Xaml.Printing.GetPreviewPageEventHandler
 #ifndef __WUXPGetPreviewPageEventHandler__DEFINED
 #define __WUXPGetPreviewPageEventHandler__DEFINED
-typedef void (^WUXPGetPreviewPageEventHandler)(RTObject* sender, WUXPGetPreviewPageEventArgs* e);
+typedef void(^WUXPGetPreviewPageEventHandler)(RTObject* sender, WUXPGetPreviewPageEventArgs* e);
 #endif // __WUXPGetPreviewPageEventHandler__DEFINED
 
 // Windows.UI.Xaml.Printing.PaginateEventHandler
 #ifndef __WUXPPaginateEventHandler__DEFINED
 #define __WUXPPaginateEventHandler__DEFINED
-typedef void (^WUXPPaginateEventHandler)(RTObject* sender, WUXPPaginateEventArgs* e);
+typedef void(^WUXPPaginateEventHandler)(RTObject* sender, WUXPPaginateEventArgs* e);
 #endif // __WUXPPaginateEventHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // Windows.UI.Xaml.Printing.AddPagesEventHandler
 #ifndef __WUXPAddPagesEventHandler__DEFINED
 #define __WUXPAddPagesEventHandler__DEFINED
-typedef void (^WUXPAddPagesEventHandler)(RTObject* sender, WUXPAddPagesEventArgs* e);
+typedef void(^WUXPAddPagesEventHandler)(RTObject* sender, WUXPAddPagesEventArgs* e);
 #endif // __WUXPAddPagesEventHandler__DEFINED
 
 // Windows.UI.Xaml.Printing.GetPreviewPageEventHandler
 #ifndef __WUXPGetPreviewPageEventHandler__DEFINED
 #define __WUXPGetPreviewPageEventHandler__DEFINED
-typedef void (^WUXPGetPreviewPageEventHandler)(RTObject* sender, WUXPGetPreviewPageEventArgs* e);
+typedef void(^WUXPGetPreviewPageEventHandler)(RTObject* sender, WUXPGetPreviewPageEventArgs* e);
 #endif // __WUXPGetPreviewPageEventHandler__DEFINED
 
 // Windows.UI.Xaml.Printing.PaginateEventHandler
 #ifndef __WUXPPaginateEventHandler__DEFINED
 #define __WUXPPaginateEventHandler__DEFINED
-typedef void (^WUXPPaginateEventHandler)(RTObject* sender, WUXPPaginateEventArgs* e);
+typedef void(^WUXPPaginateEventHandler)(RTObject* sender, WUXPPaginateEventArgs* e);
 #endif // __WUXPPaginateEventHandler__DEFINED
 
 // Windows.UI.Xaml.Printing.AddPagesEventArgs
@@ -179,3 +179,4 @@ OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 @end
 
 #endif // __WUXPPrintDocument_DEFINED__
+

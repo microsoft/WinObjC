@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WMFDetectedFace, WMFFaceTracker, WMFFaceDetector;
-@protocol WMFIDetectedFace
-, WMFIFaceDetector, WMFIFaceDetectorStatics, WMFIFaceTracker, WMFIFaceTrackerStatics;
+@protocol WMFIDetectedFace, WMFIFaceDetector, WMFIFaceDetectorStatics, WMFIFaceTracker, WMFIFaceTrackerStatics;
 
 #include "WindowsGraphicsImaging.h"
 #include "WindowsMedia.h"
@@ -65,9 +64,7 @@ OBJCUWP_WINDOWS_MEDIA_FACEANALYSIS_EXPORT
 @property (retain) WGIBitmapSize* minDetectableFaceSize;
 @property (retain) WGIBitmapSize* maxDetectableFaceSize;
 + (BOOL)isSupported;
-- (void)processNextFrameAsync:(WMVideoFrame*)videoFrame
-                      success:(void (^)(NSMutableArray* /* WMFDetectedFace* */))success
-                      failure:(void (^)(NSError*))failure;
+- (void)processNextFrameAsync:(WMVideoFrame*)videoFrame success:(void (^)(NSMutableArray* /* WMFDetectedFace* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMFFaceTracker_DEFINED__
@@ -87,13 +84,9 @@ OBJCUWP_WINDOWS_MEDIA_FACEANALYSIS_EXPORT
 @property (retain) WGIBitmapSize* minDetectableFaceSize;
 @property (retain) WGIBitmapSize* maxDetectableFaceSize;
 + (BOOL)isSupported;
-- (void)detectFacesAsync:(WGISoftwareBitmap*)image
-                 success:(void (^)(NSMutableArray* /* WMFDetectedFace* */))success
-                 failure:(void (^)(NSError*))failure;
-- (void)detectFacesWithSearchAreaAsync:(WGISoftwareBitmap*)image
-                            searchArea:(WGIBitmapBounds*)searchArea
-                               success:(void (^)(NSMutableArray* /* WMFDetectedFace* */))success
-                               failure:(void (^)(NSError*))failure;
+- (void)detectFacesAsync:(WGISoftwareBitmap*)image success:(void (^)(NSMutableArray* /* WMFDetectedFace* */))success failure:(void (^)(NSError*))failure;
+- (void)detectFacesWithSearchAreaAsync:(WGISoftwareBitmap*)image searchArea:(WGIBitmapBounds*)searchArea success:(void (^)(NSMutableArray* /* WMFDetectedFace* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMFFaceDetector_DEFINED__
+

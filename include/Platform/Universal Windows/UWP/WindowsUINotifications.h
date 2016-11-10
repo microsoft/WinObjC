@@ -19,28 +19,16 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
-#define OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT __declspec(dllimport)
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
 #ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Notifications.lib")
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
 
-@class WUNTileUpdater, WUNTileNotification, WUNScheduledTileNotification, WUNTileFlyoutUpdater, WUNTileFlyoutNotification, WUNBadgeUpdater,
-    WUNBadgeNotification, WUNToastNotifier, WUNToastNotification, WUNScheduledToastNotification, WUNToastDismissedEventArgs,
-    WUNToastFailedEventArgs, WUNToastNotificationHistory, WUNTileUpdateManager, WUNBadgeUpdateManager, WUNTileFlyoutUpdateManager,
-    WUNToastNotificationManager, WUNToastActivatedEventArgs, WUNToastNotificationHistoryChangedTriggerDetail,
-    WUNToastNotificationActionTriggerDetail;
-@protocol WUNIToastDismissedEventArgs
-, WUNIToastFailedEventArgs, WUNIToastActivatedEventArgs, WUNITileUpdateManagerStatics, WUNITileUpdater, WUNITileUpdater2,
-    WUNITileFlyoutUpdateManagerStatics, WUNITileFlyoutUpdater, WUNIBadgeUpdateManagerStatics, WUNIBadgeUpdater,
-    WUNIToastNotificationManagerStatics, WUNIToastNotifier, WUNITileNotificationFactory, WUNITileNotification,
-    WUNITileFlyoutNotificationFactory, WUNITileFlyoutNotification, WUNIBadgeNotificationFactory, WUNIBadgeNotification,
-    WUNIToastNotificationFactory, WUNIToastNotification, WUNIToastNotification2, WUNIScheduledToastNotificationFactory,
-    WUNIScheduledToastNotification, WUNIScheduledToastNotification2, WUNIScheduledTileNotificationFactory, WUNIScheduledTileNotification,
-    WUNIToastNotificationManagerStatics2, WUNIToastNotificationHistory, WUNIToastNotificationHistory2,
-    WUNIToastNotificationHistoryChangedTriggerDetail, WUNIToastNotificationActionTriggerDetail;
+@class WUNShownTileNotification, WUNNotification, WUNNotificationBinding, WUNAdaptiveNotificationText, WUNTileUpdater, WUNTileUpdateManagerForUser, WUNTileNotification, WUNScheduledTileNotification, WUNTileFlyoutUpdater, WUNTileFlyoutNotification, WUNBadgeUpdater, WUNBadgeUpdateManagerForUser, WUNBadgeNotification, WUNToastNotifier, WUNToastNotification, WUNScheduledToastNotification, WUNToastDismissedEventArgs, WUNToastFailedEventArgs, WUNNotificationVisual, WUNToastNotificationHistory, WUNToastNotificationManagerForUser, WUNUserNotificationChangedEventArgs, WUNUserNotification, WUNKnownAdaptiveNotificationHints, WUNKnownNotificationBindings, WUNKnownAdaptiveNotificationTextStyles, WUNTileUpdateManager, WUNBadgeUpdateManager, WUNTileFlyoutUpdateManager, WUNToastNotificationManager, WUNToastActivatedEventArgs, WUNToastNotificationHistoryChangedTriggerDetail, WUNToastNotificationActionTriggerDetail;
+@protocol WUNIShownTileNotification, WUNIUserNotificationChangedEventArgs, WUNIUserNotification, WUNINotificationVisual, WUNIAdaptiveNotificationContent, WUNINotificationBinding, WUNIKnownNotificationBindingsStatics, WUNIKnownAdaptiveNotificationHintsStatics, WUNIKnownAdaptiveNotificationTextStylesStatics, WUNIAdaptiveNotificationText, WUNIToastDismissedEventArgs, WUNIToastFailedEventArgs, WUNIToastActivatedEventArgs, WUNITileUpdateManagerStatics, WUNITileUpdateManagerStatics2, WUNITileUpdateManagerForUser, WUNITileUpdater, WUNITileUpdater2, WUNITileFlyoutUpdateManagerStatics, WUNITileFlyoutUpdater, WUNIBadgeUpdateManagerStatics, WUNIBadgeUpdateManagerStatics2, WUNIBadgeUpdateManagerForUser, WUNIBadgeUpdater, WUNIToastNotificationManagerStatics, WUNIToastNotifier, WUNITileNotificationFactory, WUNITileNotification, WUNITileFlyoutNotificationFactory, WUNITileFlyoutNotification, WUNIBadgeNotificationFactory, WUNIBadgeNotification, WUNIToastNotificationFactory, WUNIToastNotification, WUNIToastNotification2, WUNINotification, WUNIToastNotification3, WUNIScheduledToastNotificationFactory, WUNIScheduledToastNotification, WUNIScheduledToastNotification2, WUNIScheduledToastNotification3, WUNIScheduledTileNotificationFactory, WUNIScheduledTileNotification, WUNIToastNotificationManagerStatics2, WUNIToastNotificationManagerStatics4, WUNIToastNotificationManagerForUser, WUNIToastNotificationHistory, WUNIToastNotificationHistory2, WUNIToastNotificationHistoryChangedTriggerDetail, WUNIToastNotificationActionTriggerDetail;
 
 // Windows.UI.Notifications.NotificationSetting
 enum _WUNNotificationSetting {
@@ -236,17 +224,126 @@ enum _WUNToastHistoryChangedType {
 };
 typedef unsigned WUNToastHistoryChangedType;
 
+// Windows.UI.Notifications.AdaptiveNotificationContentKind
+enum _WUNAdaptiveNotificationContentKind {
+    WUNAdaptiveNotificationContentKindText = 0,
+};
+typedef unsigned WUNAdaptiveNotificationContentKind;
+
+// Windows.UI.Notifications.NotificationMirroring
+enum _WUNNotificationMirroring {
+    WUNNotificationMirroringAllowed = 0,
+    WUNNotificationMirroringDisabled = 1,
+};
+typedef unsigned WUNNotificationMirroring;
+
+// Windows.UI.Notifications.NotificationKinds
+enum _WUNNotificationKinds {
+    WUNNotificationKindsUnknown = 0,
+    WUNNotificationKindsToast = 1,
+};
+typedef unsigned WUNNotificationKinds;
+
+// Windows.UI.Notifications.UserNotificationChangedKind
+enum _WUNUserNotificationChangedKind {
+    WUNUserNotificationChangedKindAdded = 0,
+    WUNUserNotificationChangedKindRemoved = 1,
+};
+typedef unsigned WUNUserNotificationChangedKind;
+
+#include "WindowsSystem.h"
+#include "WindowsApplicationModel.h"
 #include "WindowsFoundation.h"
 #include "WindowsDataXmlDom.h"
 #include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 
+// Windows.UI.Notifications.IAdaptiveNotificationContent
+#ifndef __WUNIAdaptiveNotificationContent_DEFINED__
+#define __WUNIAdaptiveNotificationContent_DEFINED__
+
+@protocol WUNIAdaptiveNotificationContent
+@property (readonly) NSMutableDictionary* /* NSString *, NSString * */ hints;
+@property (readonly) WUNAdaptiveNotificationContentKind kind;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUNIAdaptiveNotificationContent : RTObject <WUNIAdaptiveNotificationContent>
+@end
+
+#endif // __WUNIAdaptiveNotificationContent_DEFINED__
+
+// Windows.UI.Notifications.ShownTileNotification
+#ifndef __WUNShownTileNotification_DEFINED__
+#define __WUNShownTileNotification_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUNShownTileNotification : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) NSString * arguments;
+@end
+
+#endif // __WUNShownTileNotification_DEFINED__
+
+// Windows.UI.Notifications.Notification
+#ifndef __WUNNotification_DEFINED__
+#define __WUNNotification_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUNNotification : RTObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) WUNNotificationVisual* visual;
+@property (retain) id /* WFDateTime* */ expirationTime;
+@end
+
+#endif // __WUNNotification_DEFINED__
+
+// Windows.UI.Notifications.NotificationBinding
+#ifndef __WUNNotificationBinding_DEFINED__
+#define __WUNNotificationBinding_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUNNotificationBinding : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) NSString * Template;
+@property (retain) NSString * language;
+@property (readonly) NSMutableDictionary* /* NSString *, NSString * */ hints;
+- (NSArray* /* WUNAdaptiveNotificationText* */)getTextElements;
+@end
+
+#endif // __WUNNotificationBinding_DEFINED__
+
+// Windows.UI.Notifications.AdaptiveNotificationText
+#ifndef __WUNAdaptiveNotificationText_DEFINED__
+#define __WUNAdaptiveNotificationText_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUNAdaptiveNotificationText : RTObject <WUNIAdaptiveNotificationContent>
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) NSMutableDictionary* /* NSString *, NSString * */ hints;
+@property (readonly) WUNAdaptiveNotificationContentKind kind;
+@property (retain) NSString * text;
+@property (retain) NSString * language;
+@end
+
+#endif // __WUNAdaptiveNotificationText_DEFINED__
+
 // Windows.UI.Notifications.TileUpdater
 #ifndef __WUNTileUpdater_DEFINED__
 #define __WUNTileUpdater_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNTileUpdater : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -259,15 +356,10 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 - (void)removeFromSchedule:(WUNScheduledTileNotification*)scheduledTile;
 - (NSArray* /* WUNScheduledTileNotification* */)getScheduledTileNotifications;
 - (void)startPeriodicUpdate:(WFUri*)tileContent requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
-- (void)startPeriodicUpdateAtTime:(WFUri*)tileContent
-                        startTime:(WFDateTime*)startTime
-                requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
+- (void)startPeriodicUpdateAtTime:(WFUri*)tileContent startTime:(WFDateTime*)startTime requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
 - (void)stopPeriodicUpdate;
-- (void)startPeriodicUpdateBatch:(id<NSFastEnumeration> /* WFUri* */)tileContents
-               requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
-- (void)startPeriodicUpdateBatchAtTime:(id<NSFastEnumeration> /* WFUri* */)tileContents
-                             startTime:(WFDateTime*)startTime
-                     requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
+- (void)startPeriodicUpdateBatch:(id<NSFastEnumeration> /* WFUri* */)tileContents requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
+- (void)startPeriodicUpdateBatchAtTime:(id<NSFastEnumeration> /* WFUri* */)tileContents startTime:(WFDateTime*)startTime requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
 - (void)enableNotificationQueueForSquare150x150:(BOOL)enable;
 - (void)enableNotificationQueueForWide310x150:(BOOL)enable;
 - (void)enableNotificationQueueForSquare310x310:(BOOL)enable;
@@ -275,17 +367,34 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 
 #endif // __WUNTileUpdater_DEFINED__
 
+// Windows.UI.Notifications.TileUpdateManagerForUser
+#ifndef __WUNTileUpdateManagerForUser_DEFINED__
+#define __WUNTileUpdateManagerForUser_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUNTileUpdateManagerForUser : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WSUser* user;
+- (WUNTileUpdater*)createTileUpdaterForApplication;
+- (WUNTileUpdater*)createTileUpdaterForApplicationWithId:(NSString *)applicationId;
+- (WUNTileUpdater*)createTileUpdaterForSecondaryTile:(NSString *)tileId;
+@end
+
+#endif // __WUNTileUpdateManagerForUser_DEFINED__
+
 // Windows.UI.Notifications.TileNotification
 #ifndef __WUNTileNotification_DEFINED__
 #define __WUNTileNotification_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNTileNotification : RTObject
 + (WUNTileNotification*)makeTileNotification:(WDXDXmlDocument*)content ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* tag;
+@property (retain) NSString * tag;
 @property (retain) id /* WFDateTime* */ expirationTime;
 @property (readonly) WDXDXmlDocument* content;
 @end
@@ -296,14 +405,14 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 #ifndef __WUNScheduledTileNotification_DEFINED__
 #define __WUNScheduledTileNotification_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNScheduledTileNotification : RTObject
 + (WUNScheduledTileNotification*)makeScheduledTileNotification:(WDXDXmlDocument*)content deliveryTime:(WFDateTime*)deliveryTime ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* tag;
-@property (retain) NSString* id;
+@property (retain) NSString * tag;
+@property (retain) NSString * id;
 @property (retain) id /* WFDateTime* */ expirationTime;
 @property (readonly) WDXDXmlDocument* content;
 @property (readonly) WFDateTime* deliveryTime;
@@ -315,7 +424,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 #ifndef __WUNTileFlyoutUpdater_DEFINED__
 #define __WUNTileFlyoutUpdater_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNTileFlyoutUpdater : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -324,9 +433,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 - (void)update:(WUNTileFlyoutNotification*)notification;
 - (void)clear;
 - (void)startPeriodicUpdate:(WFUri*)tileFlyoutContent requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
-- (void)startPeriodicUpdateAtTime:(WFUri*)tileFlyoutContent
-                        startTime:(WFDateTime*)startTime
-                requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
+- (void)startPeriodicUpdateAtTime:(WFUri*)tileFlyoutContent startTime:(WFDateTime*)startTime requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
 - (void)stopPeriodicUpdate;
 @end
 
@@ -336,7 +443,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 #ifndef __WUNTileFlyoutNotification_DEFINED__
 #define __WUNTileFlyoutNotification_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNTileFlyoutNotification : RTObject
 + (WUNTileFlyoutNotification*)makeTileFlyoutNotification:(WDXDXmlDocument*)content ACTIVATOR;
 #if defined(__cplusplus)
@@ -352,7 +459,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 #ifndef __WUNBadgeUpdater_DEFINED__
 #define __WUNBadgeUpdater_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNBadgeUpdater : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -360,19 +467,34 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 - (void)update:(WUNBadgeNotification*)notification;
 - (void)clear;
 - (void)startPeriodicUpdate:(WFUri*)badgeContent requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
-- (void)startPeriodicUpdateAtTime:(WFUri*)badgeContent
-                        startTime:(WFDateTime*)startTime
-                requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
+- (void)startPeriodicUpdateAtTime:(WFUri*)badgeContent startTime:(WFDateTime*)startTime requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
 - (void)stopPeriodicUpdate;
 @end
 
 #endif // __WUNBadgeUpdater_DEFINED__
 
+// Windows.UI.Notifications.BadgeUpdateManagerForUser
+#ifndef __WUNBadgeUpdateManagerForUser_DEFINED__
+#define __WUNBadgeUpdateManagerForUser_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUNBadgeUpdateManagerForUser : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WSUser* user;
+- (WUNBadgeUpdater*)createBadgeUpdaterForApplication;
+- (WUNBadgeUpdater*)createBadgeUpdaterForApplicationWithId:(NSString *)applicationId;
+- (WUNBadgeUpdater*)createBadgeUpdaterForSecondaryTile:(NSString *)tileId;
+@end
+
+#endif // __WUNBadgeUpdateManagerForUser_DEFINED__
+
 // Windows.UI.Notifications.BadgeNotification
 #ifndef __WUNBadgeNotification_DEFINED__
 #define __WUNBadgeNotification_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNBadgeNotification : RTObject
 + (WUNBadgeNotification*)makeBadgeNotification:(WDXDXmlDocument*)content ACTIVATOR;
 #if defined(__cplusplus)
@@ -388,7 +510,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 #ifndef __WUNToastNotifier_DEFINED__
 #define __WUNToastNotifier_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNToastNotifier : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -407,7 +529,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 #ifndef __WUNToastNotification_DEFINED__
 #define __WUNToastNotification_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNToastNotification : RTObject
 + (WUNToastNotification*)makeToastNotification:(WDXDXmlDocument*)content ACTIVATOR;
 #if defined(__cplusplus)
@@ -415,14 +537,16 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 #endif
 @property (retain) id /* WFDateTime* */ expirationTime;
 @property (readonly) WDXDXmlDocument* content;
-@property (retain) NSString* tag;
+@property (retain) NSString * tag;
 @property BOOL suppressPopup;
-@property (retain) NSString* group;
-- (EventRegistrationToken)addActivatedEvent:(void (^)(WUNToastNotification*, RTObject*))del;
+@property (retain) NSString * group;
+@property (retain) NSString * remoteId;
+@property WUNNotificationMirroring notificationMirroring;
+- (EventRegistrationToken)addActivatedEvent:(void(^)(WUNToastNotification*, RTObject*))del;
 - (void)removeActivatedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDismissedEvent:(void (^)(WUNToastNotification*, WUNToastDismissedEventArgs*))del;
+- (EventRegistrationToken)addDismissedEvent:(void(^)(WUNToastNotification*, WUNToastDismissedEventArgs*))del;
 - (void)removeDismissedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addFailedEvent:(void (^)(WUNToastNotification*, WUNToastFailedEventArgs*))del;
+- (EventRegistrationToken)addFailedEvent:(void(^)(WUNToastNotification*, WUNToastFailedEventArgs*))del;
 - (void)removeFailedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -432,24 +556,23 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 #ifndef __WUNScheduledToastNotification_DEFINED__
 #define __WUNScheduledToastNotification_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNScheduledToastNotification : RTObject
 + (WUNScheduledToastNotification*)makeScheduledToastNotification:(WDXDXmlDocument*)content deliveryTime:(WFDateTime*)deliveryTime ACTIVATOR;
-+ (WUNScheduledToastNotification*)makeScheduledToastNotificationRecurring:(WDXDXmlDocument*)content
-                                                             deliveryTime:(WFDateTime*)deliveryTime
-                                                           snoozeInterval:(WFTimeSpan*)snoozeInterval
-                                                       maximumSnoozeCount:(unsigned int)maximumSnoozeCount ACTIVATOR;
++ (WUNScheduledToastNotification*)makeScheduledToastNotificationRecurring:(WDXDXmlDocument*)content deliveryTime:(WFDateTime*)deliveryTime snoozeInterval:(WFTimeSpan*)snoozeInterval maximumSnoozeCount:(unsigned int)maximumSnoozeCount ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* id;
+@property (retain) NSString * id;
 @property (readonly) WDXDXmlDocument* content;
 @property (readonly) WFDateTime* deliveryTime;
 @property (readonly) unsigned int maximumSnoozeCount;
 @property (readonly) id /* WFTimeSpan* */ snoozeInterval;
-@property (retain) NSString* tag;
+@property (retain) NSString * tag;
 @property BOOL suppressPopup;
-@property (retain) NSString* group;
+@property (retain) NSString * group;
+@property (retain) NSString * remoteId;
+@property WUNNotificationMirroring notificationMirroring;
 @end
 
 #endif // __WUNScheduledToastNotification_DEFINED__
@@ -458,7 +581,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 #ifndef __WUNToastDismissedEventArgs_DEFINED__
 #define __WUNToastDismissedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNToastDismissedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -472,7 +595,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 #ifndef __WUNToastFailedEventArgs_DEFINED__
 #define __WUNToastFailedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNToastFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -482,37 +605,159 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 
 #endif // __WUNToastFailedEventArgs_DEFINED__
 
+// Windows.UI.Notifications.NotificationVisual
+#ifndef __WUNNotificationVisual_DEFINED__
+#define __WUNNotificationVisual_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUNNotificationVisual : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) NSString * language;
+@property (readonly) NSMutableArray* /* WUNNotificationBinding* */ bindings;
+- (WUNNotificationBinding*)getBinding:(NSString *)templateName;
+@end
+
+#endif // __WUNNotificationVisual_DEFINED__
+
 // Windows.UI.Notifications.ToastNotificationHistory
 #ifndef __WUNToastNotificationHistory_DEFINED__
 #define __WUNToastNotificationHistory_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNToastNotificationHistory : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (void)removeGroup:(NSString*)group;
-- (void)removeGroupWithId:(NSString*)group applicationId:(NSString*)applicationId;
-- (void)removeGroupedTagWithId:(NSString*)tag group:(NSString*)group applicationId:(NSString*)applicationId;
-- (void)removeGroupedTag:(NSString*)tag group:(NSString*)group;
-- (void)remove:(NSString*)tag;
+- (void)removeGroup:(NSString *)group;
+- (void)removeGroupWithId:(NSString *)group applicationId:(NSString *)applicationId;
+- (void)removeGroupedTagWithId:(NSString *)tag group:(NSString *)group applicationId:(NSString *)applicationId;
+- (void)removeGroupedTag:(NSString *)tag group:(NSString *)group;
+- (void)remove:(NSString *)tag;
 - (void)clear;
-- (void)clearWithId:(NSString*)applicationId;
+- (void)clearWithId:(NSString *)applicationId;
 - (NSArray* /* WUNToastNotification* */)getHistory;
-- (NSArray* /* WUNToastNotification* */)getHistoryWithId:(NSString*)applicationId;
+- (NSArray* /* WUNToastNotification* */)getHistoryWithId:(NSString *)applicationId;
 @end
 
 #endif // __WUNToastNotificationHistory_DEFINED__
+
+// Windows.UI.Notifications.ToastNotificationManagerForUser
+#ifndef __WUNToastNotificationManagerForUser_DEFINED__
+#define __WUNToastNotificationManagerForUser_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUNToastNotificationManagerForUser : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WUNToastNotificationHistory* history;
+@property (readonly) WSUser* user;
+- (WUNToastNotifier*)createToastNotifier;
+- (WUNToastNotifier*)createToastNotifierWithId:(NSString *)applicationId;
+@end
+
+#endif // __WUNToastNotificationManagerForUser_DEFINED__
+
+// Windows.UI.Notifications.UserNotificationChangedEventArgs
+#ifndef __WUNUserNotificationChangedEventArgs_DEFINED__
+#define __WUNUserNotificationChangedEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUNUserNotificationChangedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WUNUserNotificationChangedKind changeKind;
+@property (readonly) unsigned int userNotificationId;
+@end
+
+#endif // __WUNUserNotificationChangedEventArgs_DEFINED__
+
+// Windows.UI.Notifications.UserNotification
+#ifndef __WUNUserNotification_DEFINED__
+#define __WUNUserNotification_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUNUserNotification : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WAAppInfo* appInfo;
+@property (readonly) WFDateTime* creationTime;
+@property (readonly) unsigned int id;
+@property (readonly) WUNNotification* notification;
+@end
+
+#endif // __WUNUserNotification_DEFINED__
+
+// Windows.UI.Notifications.KnownAdaptiveNotificationHints
+#ifndef __WUNKnownAdaptiveNotificationHints_DEFINED__
+#define __WUNKnownAdaptiveNotificationHints_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUNKnownAdaptiveNotificationHints : RTObject
++ (NSString *)align;
++ (NSString *)maxLines;
++ (NSString *)minLines;
++ (NSString *)style;
++ (NSString *)textStacking;
++ (NSString *)wrap;
+@end
+
+#endif // __WUNKnownAdaptiveNotificationHints_DEFINED__
+
+// Windows.UI.Notifications.KnownNotificationBindings
+#ifndef __WUNKnownNotificationBindings_DEFINED__
+#define __WUNKnownNotificationBindings_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUNKnownNotificationBindings : RTObject
++ (NSString *)toastGeneric;
+@end
+
+#endif // __WUNKnownNotificationBindings_DEFINED__
+
+// Windows.UI.Notifications.KnownAdaptiveNotificationTextStyles
+#ifndef __WUNKnownAdaptiveNotificationTextStyles_DEFINED__
+#define __WUNKnownAdaptiveNotificationTextStyles_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WUNKnownAdaptiveNotificationTextStyles : RTObject
++ (NSString *)base;
++ (NSString *)baseSubtle;
++ (NSString *)body;
++ (NSString *)bodySubtle;
++ (NSString *)caption;
++ (NSString *)captionSubtle;
++ (NSString *)header;
++ (NSString *)headerNumeral;
++ (NSString *)headerNumeralSubtle;
++ (NSString *)headerSubtle;
++ (NSString *)subheader;
++ (NSString *)subheaderNumeral;
++ (NSString *)subheaderNumeralSubtle;
++ (NSString *)subheaderSubtle;
++ (NSString *)subtitle;
++ (NSString *)subtitleSubtle;
++ (NSString *)title;
++ (NSString *)titleNumeral;
++ (NSString *)titleSubtle;
+@end
+
+#endif // __WUNKnownAdaptiveNotificationTextStyles_DEFINED__
 
 // Windows.UI.Notifications.TileUpdateManager
 #ifndef __WUNTileUpdateManager_DEFINED__
 #define __WUNTileUpdateManager_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNTileUpdateManager : RTObject
++ (WUNTileUpdateManagerForUser*)getForUser:(WSUser*)user;
 + (WUNTileUpdater*)createTileUpdaterForApplication;
-+ (WUNTileUpdater*)createTileUpdaterForApplicationWithId:(NSString*)applicationId;
-+ (WUNTileUpdater*)createTileUpdaterForSecondaryTile:(NSString*)tileId;
++ (WUNTileUpdater*)createTileUpdaterForApplicationWithId:(NSString *)applicationId;
++ (WUNTileUpdater*)createTileUpdaterForSecondaryTile:(NSString *)tileId;
 + (WDXDXmlDocument*)getTemplateContent:(WUNTileTemplateType)type;
 @end
 
@@ -522,12 +767,13 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 #ifndef __WUNBadgeUpdateManager_DEFINED__
 #define __WUNBadgeUpdateManager_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNBadgeUpdateManager : RTObject
 + (WUNBadgeUpdater*)createBadgeUpdaterForApplication;
-+ (WUNBadgeUpdater*)createBadgeUpdaterForApplicationWithId:(NSString*)applicationId;
-+ (WUNBadgeUpdater*)createBadgeUpdaterForSecondaryTile:(NSString*)tileId;
++ (WUNBadgeUpdater*)createBadgeUpdaterForApplicationWithId:(NSString *)applicationId;
++ (WUNBadgeUpdater*)createBadgeUpdaterForSecondaryTile:(NSString *)tileId;
 + (WDXDXmlDocument*)getTemplateContent:(WUNBadgeTemplateType)type;
++ (WUNBadgeUpdateManagerForUser*)getForUser:(WSUser*)user;
 @end
 
 #endif // __WUNBadgeUpdateManager_DEFINED__
@@ -536,11 +782,11 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 #ifndef __WUNTileFlyoutUpdateManager_DEFINED__
 #define __WUNTileFlyoutUpdateManager_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNTileFlyoutUpdateManager : RTObject
 + (WUNTileFlyoutUpdater*)createTileFlyoutUpdaterForApplication;
-+ (WUNTileFlyoutUpdater*)createTileFlyoutUpdaterForApplicationWithId:(NSString*)applicationId;
-+ (WUNTileFlyoutUpdater*)createTileFlyoutUpdaterForSecondaryTile:(NSString*)tileId;
++ (WUNTileFlyoutUpdater*)createTileFlyoutUpdaterForApplicationWithId:(NSString *)applicationId;
++ (WUNTileFlyoutUpdater*)createTileFlyoutUpdaterForSecondaryTile:(NSString *)tileId;
 + (WDXDXmlDocument*)getTemplateContent:(WUNTileFlyoutTemplateType)type;
 @end
 
@@ -550,11 +796,13 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 #ifndef __WUNToastNotificationManager_DEFINED__
 #define __WUNToastNotificationManager_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNToastNotificationManager : RTObject
 + (WUNToastNotifier*)createToastNotifier;
-+ (WUNToastNotifier*)createToastNotifierWithId:(NSString*)applicationId;
++ (WUNToastNotifier*)createToastNotifierWithId:(NSString *)applicationId;
 + (WDXDXmlDocument*)getTemplateContent:(WUNToastTemplateType)type;
++ (WUNToastNotificationManagerForUser*)getForUser:(WSUser*)user;
++ (void)configureNotificationMirroring:(WUNNotificationMirroring)value;
 + (WUNToastNotificationHistory*)history;
 @end
 
@@ -564,12 +812,12 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 #ifndef __WUNToastActivatedEventArgs_DEFINED__
 #define __WUNToastActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNToastActivatedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* arguments;
+@property (readonly) NSString * arguments;
 @end
 
 #endif // __WUNToastActivatedEventArgs_DEFINED__
@@ -578,7 +826,7 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 #ifndef __WUNToastNotificationHistoryChangedTriggerDetail_DEFINED__
 #define __WUNToastNotificationHistoryChangedTriggerDetail_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNToastNotificationHistoryChangedTriggerDetail : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -592,13 +840,14 @@ OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
 #ifndef __WUNToastNotificationActionTriggerDetail_DEFINED__
 #define __WUNToastNotificationActionTriggerDetail_DEFINED__
 
-OBJCUWP_WINDOWS_UI_NOTIFICATIONS_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNToastNotificationActionTriggerDetail : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* argument;
+@property (readonly) NSString * argument;
 @property (readonly) WFCValueSet* userInput;
 @end
 
 #endif // __WUNToastNotificationActionTriggerDetail_DEFINED__
+

@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WDSSerialDevice, WDSErrorReceivedEventArgs, WDSPinChangedEventArgs;
-@protocol WDSISerialDeviceStatics
-, WDSIErrorReceivedEventArgs, WDSIPinChangedEventArgs, WDSISerialDevice;
+@protocol WDSISerialDeviceStatics, WDSIErrorReceivedEventArgs, WDSIPinChangedEventArgs, WDSISerialDevice;
 
 // Windows.Devices.SerialCommunication.SerialParity
 enum _WDSSerialParity {
@@ -103,10 +102,10 @@ OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 @interface WDSSerialDevice : RTObject <WFIClosable>
-+ (NSString*)getDeviceSelector;
-+ (NSString*)getDeviceSelectorFromPortName:(NSString*)portName;
-+ (NSString*)getDeviceSelectorFromUsbVidPid:(unsigned short)vendorId productId:(unsigned short)productId;
-+ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDSSerialDevice*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector;
++ (NSString *)getDeviceSelectorFromPortName:(NSString *)portName;
++ (NSString *)getDeviceSelectorFromUsbVidPid:(unsigned short)vendorId productId:(unsigned short)productId;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDSSerialDevice*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -126,12 +125,12 @@ OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 @property (readonly) BOOL dataSetReadyState;
 @property (readonly) RTObject<WSSIInputStream>* inputStream;
 @property (readonly) RTObject<WSSIOutputStream>* outputStream;
-@property (readonly) NSString* portName;
+@property (readonly) NSString * portName;
 @property (readonly) unsigned short usbProductId;
 @property (readonly) unsigned short usbVendorId;
-- (EventRegistrationToken)addErrorReceivedEvent:(void (^)(WDSSerialDevice*, WDSErrorReceivedEventArgs*))del;
+- (EventRegistrationToken)addErrorReceivedEvent:(void(^)(WDSSerialDevice*, WDSErrorReceivedEventArgs*))del;
 - (void)removeErrorReceivedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPinChangedEvent:(void (^)(WDSSerialDevice*, WDSPinChangedEventArgs*))del;
+- (EventRegistrationToken)addPinChangedEvent:(void(^)(WDSSerialDevice*, WDSPinChangedEventArgs*))del;
 - (void)removePinChangedEvent:(EventRegistrationToken)tok;
 - (void)close;
 @end
@@ -165,3 +164,4 @@ OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 @end
 
 #endif // __WDSPinChangedEventArgs_DEFINED__
+

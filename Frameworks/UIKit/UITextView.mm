@@ -169,7 +169,6 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     _marginSize = 5.0f;
 
     [self _adjustTextLayerSize:FALSE];
-    self.showsHorizontalScrollIndicator = FALSE;
 
     return self;
 }

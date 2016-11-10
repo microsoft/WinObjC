@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0005A0501DC7D76C00921DDB /* CTCAffineTransformationTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0005A04F1DC7D76C00921DDB /* CTCAffineTransformationTestViewController.mm */; };
 		002AB41B1D6CA1F1002082A5 /* CTCFontTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 002AB4101D6CA1F1002082A5 /* CTCFontTestViewController.mm */; };
 		002AB41C1D6CA1F1002082A5 /* CTCFramesetterTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 002AB4121D6CA1F1002082A5 /* CTCFramesetterTestViewController.mm */; };
 		002AB41D1D6CA1F1002082A5 /* CTCFrameTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 002AB4141D6CA1F1002082A5 /* CTCFrameTestViewController.mm */; };
@@ -21,9 +22,12 @@
 		002E8DA21D592A3500D5DC64 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 002E8DA01D592A3500D5DC64 /* LaunchScreen.storyboard */; };
 		002E8DAF1D59317500D5DC64 /* CTCAlignmentTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 002E8DAE1D59317500D5DC64 /* CTCAlignmentTestViewController.m */; };
 		005B291F1D77545600789716 /* CTCBaseViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 005B291E1D77545600789716 /* CTCBaseViewController.mm */; };
+		1ED8201C1DD28D2700DF2DD7 /* CTCPathForGlyphTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1ED8201B1DD28D2700DF2DD7 /* CTCPathForGlyphTestViewController.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0005A04E1DC7D76C00921DDB /* CTCAffineTransformationTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTCAffineTransformationTestViewController.h; path = Tests/CTCAffineTransformationTestViewController.h; sourceTree = "<group>"; };
+		0005A04F1DC7D76C00921DDB /* CTCAffineTransformationTestViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CTCAffineTransformationTestViewController.mm; path = Tests/CTCAffineTransformationTestViewController.mm; sourceTree = "<group>"; };
 		002AB40F1D6CA1F1002082A5 /* CTCFontTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTCFontTestViewController.h; path = Tests/CTCFontTestViewController.h; sourceTree = "<group>"; };
 		002AB4101D6CA1F1002082A5 /* CTCFontTestViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CTCFontTestViewController.mm; path = Tests/CTCFontTestViewController.mm; sourceTree = "<group>"; };
 		002AB4111D6CA1F1002082A5 /* CTCFramesetterTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTCFramesetterTestViewController.h; path = Tests/CTCFramesetterTestViewController.h; sourceTree = "<group>"; };
@@ -50,6 +54,8 @@
 		002E8DAC1D5930F600D5DC64 /* CTCAlignmentTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CTCAlignmentTestViewController.h; path = Tests/CTCAlignmentTestViewController.h; sourceTree = "<group>"; };
 		002E8DAE1D59317500D5DC64 /* CTCAlignmentTestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CTCAlignmentTestViewController.m; path = Tests/CTCAlignmentTestViewController.m; sourceTree = "<group>"; };
 		005B291E1D77545600789716 /* CTCBaseViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CTCBaseViewController.mm; sourceTree = "<group>"; };
+		1ED8201A1DD28D2700DF2DD7 /* CTCPathForGlyphTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTCPathForGlyphTestViewController.h; path = Tests/CTCPathForGlyphTestViewController.h; sourceTree = "<group>"; };
+		1ED8201B1DD28D2700DF2DD7 /* CTCPathForGlyphTestViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CTCPathForGlyphTestViewController.mm; path = Tests/CTCPathForGlyphTestViewController.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +115,10 @@
 		002E8DAD1D59314E00D5DC64 /* Test */ = {
 			isa = PBXGroup;
 			children = (
+				1ED8201A1DD28D2700DF2DD7 /* CTCPathForGlyphTestViewController.h */,
+				1ED8201B1DD28D2700DF2DD7 /* CTCPathForGlyphTestViewController.mm */,
+				0005A04E1DC7D76C00921DDB /* CTCAffineTransformationTestViewController.h */,
+				0005A04F1DC7D76C00921DDB /* CTCAffineTransformationTestViewController.mm */,
 				002AB40F1D6CA1F1002082A5 /* CTCFontTestViewController.h */,
 				002AB4101D6CA1F1002082A5 /* CTCFontTestViewController.mm */,
 				002AB4111D6CA1F1002082A5 /* CTCFramesetterTestViewController.h */,
@@ -198,10 +208,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				002AB41F1D6CA1F1002082A5 /* CTCParagraphStyleTestViewController.mm in Sources */,
+				0005A0501DC7D76C00921DDB /* CTCAffineTransformationTestViewController.mm in Sources */,
 				002AB41C1D6CA1F1002082A5 /* CTCFramesetterTestViewController.mm in Sources */,
 				002AB41D1D6CA1F1002082A5 /* CTCFrameTestViewController.mm in Sources */,
 				002E8D9A1D592A3500D5DC64 /* CTCRootViewController.m in Sources */,
 				002E8DAF1D59317500D5DC64 /* CTCAlignmentTestViewController.m in Sources */,
+				1ED8201C1DD28D2700DF2DD7 /* CTCPathForGlyphTestViewController.mm in Sources */,
 				002AB4201D6CA1F1002082A5 /* CTCRunTestViewController.mm in Sources */,
 				002AB41E1D6CA1F1002082A5 /* CTCLineTestViewController.mm in Sources */,
 				002AB41B1D6CA1F1002082A5 /* CTCFontTestViewController.mm in Sources */,

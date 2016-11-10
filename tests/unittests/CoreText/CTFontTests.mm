@@ -17,6 +17,7 @@
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
 #import <CoreText/CoreText.h>
+#import <vector>
 
 class FontCopyName : public ::testing::TestWithParam<::testing::tuple<CFStringRef, const NSString*>> {
 public:
@@ -125,13 +126,13 @@ TEST(CTFont, CopyNameHelpers) {
     EXPECT_OBJCEQ(@"Arial Italic", (id)CFAutorelease(CTFontCopyFullName(font)));
     EXPECT_OBJCEQ(@"Arial Italic", (id)CFAutorelease(CTFontCopyDisplayName(font)));
 
-    font = CTFontCreateWithName(CFSTR("Arial Narrow"), 15.0, NULL);
+    font = CTFontCreateWithName(CFSTR("Courier New Bold Italic"), 15.0, NULL);
     CFAutorelease(font);
 
-    EXPECT_OBJCEQ(@"ArialNarrow", (id)CFAutorelease(CTFontCopyPostScriptName(font)));
-    EXPECT_OBJCEQ(@"Arial Narrow", (id)CFAutorelease(CTFontCopyFamilyName(font)));
-    EXPECT_OBJCEQ(@"Arial Narrow", (id)CFAutorelease(CTFontCopyFullName(font)));
-    EXPECT_OBJCEQ(@"Arial Narrow", (id)CFAutorelease(CTFontCopyDisplayName(font)));
+    EXPECT_OBJCEQ(@"CourierNewPS-BoldItalicMT", (id)CFAutorelease(CTFontCopyPostScriptName(font)));
+    EXPECT_OBJCEQ(@"Courier New", (id)CFAutorelease(CTFontCopyFamilyName(font)));
+    EXPECT_OBJCEQ(@"Courier New Bold Italic", (id)CFAutorelease(CTFontCopyFullName(font)));
+    EXPECT_OBJCEQ(@"Courier New Bold Italic", (id)CFAutorelease(CTFontCopyDisplayName(font)));
 }
 
 TEST(CTFont, Metrics) {
@@ -165,7 +166,9 @@ TEST(CTFont, GlyphCount) {
 }
 
 // OSX returns a default font, but iOS returns nullptr
-OSX_DISABLED_TEST(CTFont, UnknownName) {
+// TODO #1250: A default font is currently returned as a short-term fix for another issue
+// Return this test to OSX_DISABLED_TEST when #1250 is completed.
+DISABLED_TEST(CTFont, UnknownName) {
     EXPECT_OBJCEQ(nil, (id)CFAutorelease(CTFontCreateWithName(CFSTR("DoesNotExistFont"), 12.0, NULL)));
 }
 
@@ -192,6 +195,7 @@ static const CFStringRef c_courierNewItalicName = CFSTR("Courier New Italic");
 static const CFStringRef c_courierNewBoldName = CFSTR("Courier New Bold");
 static const CFStringRef c_courierNewBoldItalicName = CFSTR("Courier New Bold Italic");
 static const CFStringRef c_trebuchetMSItalicName = CFSTR("Trebuchet MS Italic");
+static const CFStringRef c_timesNewRomanName = CFSTR("Times New Roman");
 #else
 static const CFStringRef c_arialBoldItalicName = CFSTR("Arial-BoldItalicMT");
 static const CFStringRef c_arialItalicName = CFSTR("Arial-ItalicMT");
@@ -199,8 +203,8 @@ static const CFStringRef c_courierNewItalicName = CFSTR("CourierNewPS-ItalicMT")
 static const CFStringRef c_courierNewBoldName = CFSTR("CourierNewPS-BoldMT");
 static const CFStringRef c_courierNewBoldItalicName = CFSTR("CourierNewPS-BoldItalicMT");
 static const CFStringRef c_trebuchetMSItalicName = CFSTR("TrebuchetMS-Italic");
+static const CFStringRef c_timesNewRomanName = CFSTR("TimesNewRomanPSMT");
 #endif
-
 static const float c_errorMargin = 0.001f;
 
 TEST(CTFont, Traits) {
@@ -511,4 +515,217 @@ TEST(CTFont, GetBoundingBoxes) {
         EXPECT_NEAR(expectedBoxesVert[i].size.height, boxes[i].size.height, c_errorMargin);
     }
 #endif
+}
+
+TEST(CTFont, CreatePathForGlyph) {
+    // Some background on Bezier curves:
+    // A quadratic Bezier curve is specified by 3 points:     a start point, a control point, and an end point
+    // A cubic Bezier curve is instead specified by 4 points: a start point, TWO control points, and an end point
+    // As a generalization, most "older" fonts specify quadratic curves, and "newer" ones can use cubic curves
+    // Times New Roman's curves are all quadratic
+
+    // CGPath has support for both orders of Bezier curve,
+    // but DWrite's GeometrySink only supports cubic Bezier curves, and approximates any quadratic curves in terms of a cubic curve
+    // Eg: Reference platform quadratic curve:  (previous endpoint),              (512, 632),              (480, 632)
+    //     DWrite approximate cubic curve:      (previous endpoint), (529, 632.666626), (501.333313, 632), (480, 632)
+
+    // As such, for curves, this test will only check that the endpoint is correct
+
+    // Struct for expected values to get out of a CGPath
+    // Because of the previously-noted only-comparing-endpoint, and because CGPathElement uses a C-style raw array to store its points
+    // It's neater to declare a new struct for expected values than reuse CGPathElement
+    struct ExpectedCGPathElement {
+        CGPathElementType type;
+        CGPoint point;
+    };
+
+    // Times New Roman has a units-per-em of 2048. Use this as its point size to make numbers particularly nice below.
+    const CGFloat unitsPerEm = 2048;
+    CTFontRef font = CTFontCreateWithName(c_timesNewRomanName, unitsPerEm, nullptr);
+    CFAutorelease(font);
+
+    // Get the glyph for 'R' - interesting combination of straight lines & curves, inside and outside
+    UniChar capitalRChar = 'R';
+    CGGlyph capitalRGlyph;
+
+    ASSERT_TRUE(CTFontGetGlyphsForCharacters(font, &capitalRChar, &capitalRGlyph, 1)); // Treat capitalRGlyph & Char as size-1 "arrays"
+    EXPECT_EQ(53, capitalRGlyph); // CGGlyph value for 'R' in Times New Roman
+
+    CGPathRef unscaledPath = CTFontCreatePathForGlyph(font, capitalRGlyph, nullptr);
+    CFAutorelease(unscaledPath);
+
+#if TARGET_OS_WIN32
+    static const CGPathElementType c_CGPathElementCurveType = kCGPathElementAddCurveToPoint; // Cubic
+#else
+    static const CGPathElementType c_CGPathElementCurveType = kCGPathElementAddQuadCurveToPoint; // Quadratic
+#endif
+
+    std::vector<ExpectedCGPathElement> expectedElements({ { kCGPathElementMoveToPoint, { 1384, 0 } },
+                                                          { kCGPathElementAddLineToPoint, { 1022, 0 } },
+                                                          { kCGPathElementAddLineToPoint, { 563, 634 } },
+                                                          { c_CGPathElementCurveType, { 480, 632 } },
+                                                          { c_CGPathElementCurveType, { 452, 632.5 } },
+                                                          { c_CGPathElementCurveType, { 421, 634 } },
+                                                          { kCGPathElementAddLineToPoint, { 421, 240 } },
+                                                          { c_CGPathElementCurveType, { 449, 81 } },
+                                                          { c_CGPathElementCurveType, { 563, 37 } },
+                                                          { kCGPathElementAddLineToPoint, { 616, 37 } },
+                                                          { kCGPathElementAddLineToPoint, { 616, 0 } },
+                                                          { kCGPathElementAddLineToPoint, { 35, 0 } },
+                                                          { kCGPathElementAddLineToPoint, { 35, 37 } },
+                                                          { kCGPathElementAddLineToPoint, { 86, 37 } },
+                                                          { c_CGPathElementCurveType, { 209, 93 } },
+                                                          { c_CGPathElementCurveType, { 230, 240 } },
+                                                          { kCGPathElementAddLineToPoint, { 230, 1116 } },
+                                                          { c_CGPathElementCurveType, { 202, 1275 } },
+                                                          { c_CGPathElementCurveType, { 86, 1319 } },
+                                                          { kCGPathElementAddLineToPoint, { 35, 1319 } },
+                                                          { kCGPathElementAddLineToPoint, { 35, 1356 } },
+                                                          { kCGPathElementAddLineToPoint, { 529, 1356 } },
+                                                          { c_CGPathElementCurveType, { 847.5, 1324.5 } },
+                                                          { c_CGPathElementCurveType, { 1021.5, 1208.5 } },
+                                                          { c_CGPathElementCurveType, { 1093, 1007 } },
+                                                          { c_CGPathElementCurveType, { 1011.5, 790 } },
+                                                          { c_CGPathElementCurveType, { 759, 660 } },
+                                                          { kCGPathElementAddLineToPoint, { 1039, 271 } },
+                                                          { c_CGPathElementCurveType, { 1204, 93 } },
+                                                          { c_CGPathElementCurveType, { 1384, 37 } },
+                                                          { kCGPathElementCloseSubpath, {} },
+                                                          { kCGPathElementMoveToPoint, { 421, 697 } },
+                                                          { c_CGPathElementCurveType, { 454, 696.5 } },
+                                                          { c_CGPathElementCurveType, { 477, 696 } },
+                                                          { c_CGPathElementCurveType, { 769.5, 780 } },
+                                                          { c_CGPathElementCurveType, { 868, 994 } },
+                                                          { c_CGPathElementCurveType, { 788.5, 1200.5 } },
+                                                          { c_CGPathElementCurveType, { 578, 1280 } },
+                                                          { c_CGPathElementCurveType, { 421, 1261 } },
+                                                          { kCGPathElementCloseSubpath, {} } });
+
+    // Struct of external variables to pass to CGPathApplyFunction (which does not support lambdacaptures)
+    struct ComparePathContext {
+        size_t count;
+        std::vector<ExpectedCGPathElement> expectedElements;
+    };
+
+    ComparePathContext comparePathContext = { 0, expectedElements };
+
+    CGPathApplierFunction comparePathToExpected = [](void* context, const CGPathElement* element) {
+        ComparePathContext* comparePathContext = reinterpret_cast<ComparePathContext*>(context);
+        EXPECT_EQ(comparePathContext->expectedElements[comparePathContext->count].type, element->type);
+
+        // Error margin is slightly higher for this test
+        static const float c_comparePathErrorMargin = 0.002f;
+
+        switch (element->type) {
+            case kCGPathElementMoveToPoint:
+            case kCGPathElementAddLineToPoint:
+                EXPECT_NEAR(comparePathContext->expectedElements[comparePathContext->count].point.x,
+                            element->points[0].x,
+                            c_comparePathErrorMargin);
+                EXPECT_NEAR(comparePathContext->expectedElements[comparePathContext->count].point.y,
+                            element->points[0].y,
+                            c_comparePathErrorMargin);
+                break;
+
+            case kCGPathElementAddQuadCurveToPoint:
+                EXPECT_NEAR(comparePathContext->expectedElements[comparePathContext->count].point.x,
+                            element->points[1].x,
+                            c_comparePathErrorMargin);
+                EXPECT_NEAR(comparePathContext->expectedElements[comparePathContext->count].point.y,
+                            element->points[1].y,
+                            c_comparePathErrorMargin);
+                break;
+
+            case kCGPathElementAddCurveToPoint:
+                EXPECT_NEAR(comparePathContext->expectedElements[comparePathContext->count].point.x,
+                            element->points[2].x,
+                            c_comparePathErrorMargin);
+                EXPECT_NEAR(comparePathContext->expectedElements[comparePathContext->count].point.y,
+                            element->points[2].y,
+                            c_comparePathErrorMargin);
+                break;
+
+            case kCGPathElementCloseSubpath:
+                // No-op, CloseSubpath has no associated point
+                break;
+
+            default:
+                FAIL() << "An invalid CGPathElementType was returned from CTFontCreatePathForGlyph";
+                break;
+        }
+        ++(comparePathContext->count);
+    };
+
+    // Iterate through all elements in the path, check against expected elements
+    CGPathApply(unscaledPath, &comparePathContext, comparePathToExpected);
+
+    // Make sure that all of expectedElements has been iterated over
+    ASSERT_EQ(expectedElements.size(), comparePathContext.count);
+
+    // Introduce font size
+    CGFloat fontSize = 13;
+    const CGAffineTransform scaleByFontSize = CGAffineTransformMakeScale(fontSize / unitsPerEm, fontSize / unitsPerEm);
+
+    font = CTFontCreateWithName(c_timesNewRomanName, fontSize, nullptr);
+    CFAutorelease(font);
+
+    CGPathRef pathWithFontSize = CTFontCreatePathForGlyph(font, capitalRGlyph, nullptr);
+    CFAutorelease(pathWithFontSize);
+
+    // Compare against a transformed version of expectedElements
+    comparePathContext = { 0, std::vector<ExpectedCGPathElement>(expectedElements.size()) };
+    std::transform(expectedElements.begin(),
+                   expectedElements.end(),
+                   comparePathContext.expectedElements.begin(),
+                   [scaleByFontSize](ExpectedCGPathElement element) {
+                       return ExpectedCGPathElement{ element.type, CGPointApplyAffineTransform(element.point, scaleByFontSize) };
+                   });
+    CGPathApply(pathWithFontSize, &comparePathContext, comparePathToExpected);
+    ASSERT_EQ(expectedElements.size(), comparePathContext.count);
+
+    // Introduce a transform on the font
+    const CGAffineTransform fontTransform =
+        CGAffineTransformTranslate(CGAffineTransformScale(CGAffineTransformMakeRotation(0.5), 6, -3), 10, 20); // Arbitrary transform
+
+    font = CTFontCreateWithName(c_timesNewRomanName, fontSize, &fontTransform);
+    CFAutorelease(font);
+
+    CGPathRef pathWithFontSizeAndFontTransform = CTFontCreatePathForGlyph(font, capitalRGlyph, nullptr);
+    CFAutorelease(pathWithFontSizeAndFontTransform);
+
+    // Concat the font size matrix and the non-translation portions of the fontTransform to get the expected path
+    CGAffineTransform fontTransformWithoutTranslate = fontTransform;
+    fontTransformWithoutTranslate.tx = 0;
+    fontTransformWithoutTranslate.ty = 0;
+    CGAffineTransform totalTransform = CGAffineTransformConcat(fontTransformWithoutTranslate, scaleByFontSize);
+
+    // Compare against a transformed version of expectedElements
+    comparePathContext = { 0, std::vector<ExpectedCGPathElement>(expectedElements.size()) };
+    std::transform(expectedElements.begin(),
+                   expectedElements.end(),
+                   comparePathContext.expectedElements.begin(),
+                   [totalTransform](ExpectedCGPathElement element) {
+                       return ExpectedCGPathElement{ element.type, CGPointApplyAffineTransform(element.point, totalTransform) };
+                   });
+    CGPathApply(pathWithFontSizeAndFontTransform, &comparePathContext, comparePathToExpected);
+    ASSERT_EQ(expectedElements.size(), comparePathContext.count);
+
+    // Introduce a transform on the path
+    const CGAffineTransform pathTransform = CGAffineTransformMake(234, -432.24, 79, -0.3424, 14135, -32); // Arbitrary transform
+
+    CGPathRef pathWithFontSizeAndTransforms = CTFontCreatePathForGlyph(font, capitalRGlyph, &pathTransform);
+    CFAutorelease(pathWithFontSizeAndTransforms);
+
+    totalTransform = CGAffineTransformConcat(totalTransform, pathTransform);
+
+    // Compare against a transformed version of expectedElements
+    comparePathContext = { 0, std::vector<ExpectedCGPathElement>(expectedElements.size()) };
+    std::transform(expectedElements.begin(),
+                   expectedElements.end(),
+                   comparePathContext.expectedElements.begin(),
+                   [totalTransform](ExpectedCGPathElement element) {
+                       return ExpectedCGPathElement{ element.type, CGPointApplyAffineTransform(element.point, totalTransform) };
+                   });
+    CGPathApply(pathWithFontSizeAndTransforms, &comparePathContext, comparePathToExpected);
+    ASSERT_EQ(expectedElements.size(), comparePathContext.count);
 }

@@ -285,9 +285,7 @@ CTFontRef CTFontCreateUIFontForLanguage(CTFontUIFontType uiType, CGFloat size, C
  @Notes matrix parameter stored but not used
 */
 CTFontRef CTFontCreateCopyWithAttributes(CTFontRef font, CGFloat size, const CGAffineTransform* matrix, CTFontDescriptorRef attributes) {
-    if (!font) {
-        return nullptr;
-    }
+    RETURN_NULL_IF(!font);
 
     CFDictionaryRef originalAttributes = CTFontDescriptorCopyAttributes(font->_descriptor);
     CFAutorelease(originalAttributes);
@@ -352,9 +350,7 @@ CTFontRef CTFontCreateCopyWithSymbolicTraits(
  @Notes matrix parameter stored but not used
 */
 CTFontRef CTFontCreateCopyWithFamily(CTFontRef font, CGFloat size, const CGAffineTransform* matrix, CFStringRef family) {
-    if (!font) {
-        return nullptr;
-    }
+    RETURN_NULL_IF(!font);
 
     CFMutableDictionaryRef attributesToUse = __CTFontCopyAutoreleasedMutableAttributes(font);
 
@@ -395,9 +391,7 @@ CTFontDescriptorRef CTFontCopyFontDescriptor(CTFontRef font) {
  @Notes
 */
 CFTypeRef CTFontCopyAttribute(CTFontRef font, CFStringRef attribute) {
-    if (!font) {
-        return nullptr;
-    }
+    RETURN_NULL_IF(!font);
     return CTFontDescriptorCopyAttribute(font->_descriptor, attribute);
 }
 
@@ -451,9 +445,7 @@ CTFontSymbolicTraits CTFontGetSymbolicTraits(CTFontRef font) {
  @Notes
 */
 CFDictionaryRef CTFontCopyTraits(CTFontRef font) {
-    if (!font) {
-        return nullptr;
-    }
+    RETURN_NULL_IF(!font);
     return static_cast<CFDictionaryRef>(CTFontDescriptorCopyAttribute(font->_descriptor, kCTFontTraitsAttribute));
 }
 
@@ -492,9 +484,7 @@ CFStringRef CTFontCopyDisplayName(CTFontRef font) {
  @Status Interoperable
 */
 CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
-    if (!font) {
-        return nullptr;
-    }
+    RETURN_NULL_IF(!font);
     return _DWriteFontCopyName(font->_dwriteFontFace, nameKey);
 }
 
@@ -689,12 +679,26 @@ CGFloat CTFontGetXHeight(CTFontRef font) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGPathRef CTFontCreatePathForGlyph(CTFontRef font, CGGlyph glyph, const CGAffineTransform* matrix) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    RETURN_NULL_IF(!font);
+
+    CGAffineTransform fontMatrix = CTFontGetMatrix(font); // Defaults to identity matrix
+
+    // Do not apply the translation portions of fontMatrix to the path
+    fontMatrix.tx = 0;
+    fontMatrix.ty = 0;
+
+    // fontMatrix is applied before the matrix parameter, if one is specified
+    CGAffineTransform matrixToUse = matrix ? CGAffineTransformConcat(fontMatrix, *matrix) : fontMatrix;
+
+    // Pass no transform if matrixToUse ends up being the identity
+    return _DWriteFontCreatePathForGlyph(font->_dwriteFontFace,
+                                         font->_pointSize,
+                                         glyph,
+                                         CGAffineTransformIsIdentity(matrixToUse) ? nullptr : &matrixToUse);
 }
 
 /**
@@ -902,4 +906,31 @@ CFDataRef CTFontCopyTable(CTFontRef font, CTFontTableTag table, CTFontTableOptio
 CFTypeID CTFontGetTypeID() {
     static CFTypeID __kCTFontTypeID = _CFRuntimeRegisterClass(&__CTFontClass);
     return __kCTFontTypeID;
+}
+
+// Private function for getting font weight for XAML
+DWRITE_FONT_WEIGHT _CTFontGetDWriteWeight(CTFontRef font) {
+    ComPtr<IDWriteFontFace3> fontFace3;
+    if (font && SUCCEEDED(font->_dwriteFontFace.As(&fontFace3))) {
+        return fontFace3->GetWeight();
+    }
+    return DWRITE_FONT_WEIGHT_NORMAL;
+}
+
+// Private function for getting font stretch for XAML
+DWRITE_FONT_STRETCH _CTFontGetDWriteStretch(CTFontRef font) {
+    ComPtr<IDWriteFontFace3> fontFace3;
+    if (font && SUCCEEDED(font->_dwriteFontFace.As(&fontFace3))) {
+        return fontFace3->GetStretch();
+    }
+    return DWRITE_FONT_STRETCH_NORMAL;
+}
+
+// Private function for getting font style for XAML
+DWRITE_FONT_STYLE _CTFontGetDWriteStyle(CTFontRef font) {
+    ComPtr<IDWriteFontFace3> fontFace3;
+    if (font && SUCCEEDED(font->_dwriteFontFace.As(&fontFace3))) {
+        return fontFace3->GetStyle();
+    }
+    return DWRITE_FONT_STYLE_NORMAL;
 }

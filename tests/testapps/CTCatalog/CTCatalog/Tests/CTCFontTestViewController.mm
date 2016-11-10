@@ -93,13 +93,11 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
 
     // Creates outline
     CGContextSetLineWidth(context, 2.0);
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
     CGContextSetStrokeColorWithColor(context, color.CGColor);
     CGContextMoveToPoint(context, 0, 0);
     CGContextAddRect(context, rect);
     CGContextStrokePath(context);
 
-    CGColorSpaceRelease(colorspace);
     CGPathRelease(path);
 }
 @end

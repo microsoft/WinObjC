@@ -19,25 +19,25 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT __declspec(dllimport)
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
 #ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_Enumeration.lib")
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
 
-@class WDEDeviceConnectionChangeTriggerDetails, WDEDeviceThumbnail, WDEEnclosureLocation, WDEDeviceInformationUpdate,
-    WDEDeviceInformationCollection, WDEDeviceWatcher, WDEDeviceInformation, WDEDevicePairingResult, WDEDeviceInformationPairing,
-    WDEDeviceAccessChangedEventArgs, WDEDeviceAccessInformation, WDEDevicePickerAppearance, WDEDeviceSelectedEventArgs,
-    WDEDeviceDisconnectButtonClickedEventArgs, WDEDevicePickerFilter, WDEDevicePicker, WDEDeviceWatcherEvent,
-    WDEDeviceWatcherTriggerDetails;
-@protocol WDEIDeviceConnectionChangeTriggerDetails
-, WDEIEnclosureLocation, WDEIDeviceInformationUpdate, WDEIDeviceInformationUpdate2, WDEIDeviceWatcher, WDEIDeviceWatcher2,
-    WDEIDeviceInformationStatics, WDEIDeviceInformationStatics2, WDEIDeviceInformation, WDEIDevicePairingResult,
-    WDEIDeviceInformationPairing, WDEIDeviceInformation2, WDEIDeviceAccessChangedEventArgs, WDEIDeviceAccessInformation,
-    WDEIDeviceAccessInformationStatics, WDEIDevicePickerAppearance, WDEIDeviceSelectedEventArgs, WDEIDeviceDisconnectButtonClickedEventArgs,
-    WDEIDevicePickerFilter, WDEIDevicePicker, WDEIDeviceWatcherEvent, WDEIDeviceWatcherTriggerDetails;
+@class WDEDeviceConnectionChangeTriggerDetails, WDEDevicePickerAppearance, WDEDeviceSelectedEventArgs, WDEDeviceDisconnectButtonClickedEventArgs, WDEDevicePickerFilter, WDEDevicePicker, WDEDeviceThumbnail, WDEEnclosureLocation, WDEDeviceInformationUpdate, WDEDeviceInformationCollection, WDEDeviceWatcher, WDEDeviceInformation, WDEDevicePairingResult, WDEDeviceUnpairingResult, WDEDevicePairingRequestedEventArgs, WDEDeviceInformationCustomPairing, WDEDeviceInformationPairing, WDEDeviceAccessChangedEventArgs, WDEDeviceAccessInformation, WDEDeviceWatcherEvent, WDEDeviceWatcherTriggerDetails;
+@protocol WDEIDeviceConnectionChangeTriggerDetails, WDEIDevicePickerAppearance, WDEIDeviceSelectedEventArgs, WDEIDeviceDisconnectButtonClickedEventArgs, WDEIDevicePickerFilter, WDEIDevicePicker, WDEIEnclosureLocation, WDEIEnclosureLocation2, WDEIDeviceInformationUpdate, WDEIDeviceInformationUpdate2, WDEIDeviceWatcher, WDEIDeviceWatcher2, WDEIDeviceInformationStatics, WDEIDeviceInformationStatics2, WDEIDeviceInformation, WDEIDevicePairingResult, WDEIDeviceUnpairingResult, WDEIDevicePairingSettings, WDEIDevicePairingRequestedEventArgs, WDEIDeviceInformationCustomPairing, WDEIDeviceInformationPairing, WDEIDeviceInformationPairing2, WDEIDeviceInformationPairingStatics, WDEIDeviceInformation2, WDEIDeviceAccessChangedEventArgs, WDEIDeviceAccessChangedEventArgs2, WDEIDeviceAccessInformation, WDEIDeviceAccessInformationStatics, WDEIDeviceWatcherEvent, WDEIDeviceWatcherTriggerDetails;
+
+// Windows.Devices.Enumeration.DevicePickerDisplayStatusOptions
+enum _WDEDevicePickerDisplayStatusOptions {
+    WDEDevicePickerDisplayStatusOptionsNone = 0,
+    WDEDevicePickerDisplayStatusOptionsShowProgress = 1,
+    WDEDevicePickerDisplayStatusOptionsShowDisconnectButton = 2,
+    WDEDevicePickerDisplayStatusOptionsShowRetryButton = 4,
+};
+typedef unsigned WDEDevicePickerDisplayStatusOptions;
 
 // Windows.Devices.Enumeration.DeviceClass
 enum _WDEDeviceClass {
@@ -95,6 +95,16 @@ enum _WDEDeviceWatcherEventKind {
 };
 typedef unsigned WDEDeviceWatcherEventKind;
 
+// Windows.Devices.Enumeration.DevicePairingKinds
+enum _WDEDevicePairingKinds {
+    WDEDevicePairingKindsNone = 0,
+    WDEDevicePairingKindsConfirmOnly = 1,
+    WDEDevicePairingKindsDisplayPin = 2,
+    WDEDevicePairingKindsProvidePin = 4,
+    WDEDevicePairingKindsConfirmPinMatch = 8,
+};
+typedef unsigned WDEDevicePairingKinds;
+
 // Windows.Devices.Enumeration.DevicePairingResultStatus
 enum _WDEDevicePairingResultStatus {
     WDEDevicePairingResultStatusPaired = 0,
@@ -111,8 +121,24 @@ enum _WDEDevicePairingResultStatus {
     WDEDevicePairingResultStatusProtectionLevelCouldNotBeMet = 11,
     WDEDevicePairingResultStatusAccessDenied = 12,
     WDEDevicePairingResultStatusInvalidCeremonyData = 13,
+    WDEDevicePairingResultStatusPairingCanceled = 14,
+    WDEDevicePairingResultStatusOperationAlreadyInProgress = 15,
+    WDEDevicePairingResultStatusRequiredHandlerNotRegistered = 16,
+    WDEDevicePairingResultStatusRejectedByHandler = 17,
+    WDEDevicePairingResultStatusRemoteDeviceHasAssociation = 18,
+    WDEDevicePairingResultStatusFailed = 19,
 };
 typedef unsigned WDEDevicePairingResultStatus;
+
+// Windows.Devices.Enumeration.DeviceUnpairingResultStatus
+enum _WDEDeviceUnpairingResultStatus {
+    WDEDeviceUnpairingResultStatusUnpaired = 0,
+    WDEDeviceUnpairingResultStatusAlreadyUnpaired = 1,
+    WDEDeviceUnpairingResultStatusOperationAlreadyInProgress = 2,
+    WDEDeviceUnpairingResultStatusAccessDenied = 3,
+    WDEDeviceUnpairingResultStatusFailed = 4,
+};
+typedef unsigned WDEDeviceUnpairingResultStatus;
 
 // Windows.Devices.Enumeration.DevicePairingProtectionLevel
 enum _WDEDevicePairingProtectionLevel {
@@ -132,15 +158,6 @@ enum _WDEDeviceAccessStatus {
 };
 typedef unsigned WDEDeviceAccessStatus;
 
-// Windows.Devices.Enumeration.DevicePickerDisplayStatusOptions
-enum _WDEDevicePickerDisplayStatusOptions {
-    WDEDevicePickerDisplayStatusOptionsNone = 0,
-    WDEDevicePickerDisplayStatusOptionsShowProgress = 1,
-    WDEDevicePickerDisplayStatusOptionsShowDisconnectButton = 2,
-    WDEDevicePickerDisplayStatusOptionsShowRetryButton = 4,
-};
-typedef unsigned WDEDevicePickerDisplayStatusOptions;
-
 #include "WindowsUI.h"
 #include "WindowsUIPopups.h"
 #include "WindowsFoundation.h"
@@ -149,19 +166,124 @@ typedef unsigned WDEDevicePickerDisplayStatusOptions;
 
 #import <Foundation/Foundation.h>
 
+// Windows.Devices.Enumeration.IDevicePairingSettings
+#ifndef __WDEIDevicePairingSettings_DEFINED__
+#define __WDEIDevicePairingSettings_DEFINED__
+
+@protocol WDEIDevicePairingSettings
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WDEIDevicePairingSettings : RTObject <WDEIDevicePairingSettings>
+@end
+
+#endif // __WDEIDevicePairingSettings_DEFINED__
+
 // Windows.Devices.Enumeration.DeviceConnectionChangeTriggerDetails
 #ifndef __WDEDeviceConnectionChangeTriggerDetails_DEFINED__
 #define __WDEDeviceConnectionChangeTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDEDeviceConnectionChangeTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @end
 
 #endif // __WDEDeviceConnectionChangeTriggerDetails_DEFINED__
+
+// Windows.Devices.Enumeration.DevicePickerAppearance
+#ifndef __WDEDevicePickerAppearance_DEFINED__
+#define __WDEDevicePickerAppearance_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WDEDevicePickerAppearance : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) NSString * title;
+@property (retain) WUColor* selectedForegroundColor;
+@property (retain) WUColor* selectedBackgroundColor;
+@property (retain) WUColor* selectedAccentColor;
+@property (retain) WUColor* foregroundColor;
+@property (retain) WUColor* backgroundColor;
+@property (retain) WUColor* accentColor;
+@end
+
+#endif // __WDEDevicePickerAppearance_DEFINED__
+
+// Windows.Devices.Enumeration.DeviceSelectedEventArgs
+#ifndef __WDEDeviceSelectedEventArgs_DEFINED__
+#define __WDEDeviceSelectedEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WDEDeviceSelectedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WDEDeviceInformation* selectedDevice;
+@end
+
+#endif // __WDEDeviceSelectedEventArgs_DEFINED__
+
+// Windows.Devices.Enumeration.DeviceDisconnectButtonClickedEventArgs
+#ifndef __WDEDeviceDisconnectButtonClickedEventArgs_DEFINED__
+#define __WDEDeviceDisconnectButtonClickedEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WDEDeviceDisconnectButtonClickedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WDEDeviceInformation* device;
+@end
+
+#endif // __WDEDeviceDisconnectButtonClickedEventArgs_DEFINED__
+
+// Windows.Devices.Enumeration.DevicePickerFilter
+#ifndef __WDEDevicePickerFilter_DEFINED__
+#define __WDEDevicePickerFilter_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WDEDevicePickerFilter : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) NSMutableArray* /* WDEDeviceClass */ supportedDeviceClasses;
+@property (readonly) NSMutableArray* /* NSString * */ supportedDeviceSelectors;
+@end
+
+#endif // __WDEDevicePickerFilter_DEFINED__
+
+// Windows.Devices.Enumeration.DevicePicker
+#ifndef __WDEDevicePicker_DEFINED__
+#define __WDEDevicePicker_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WDEDevicePicker : RTObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WDEDevicePickerAppearance* appearance;
+@property (readonly) WDEDevicePickerFilter* filter;
+@property (readonly) NSMutableArray* /* NSString * */ requestedProperties;
+- (EventRegistrationToken)addDevicePickerDismissedEvent:(void(^)(WDEDevicePicker*, RTObject*))del;
+- (void)removeDevicePickerDismissedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addDeviceSelectedEvent:(void(^)(WDEDevicePicker*, WDEDeviceSelectedEventArgs*))del;
+- (void)removeDeviceSelectedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addDisconnectButtonClickedEvent:(void(^)(WDEDevicePicker*, WDEDeviceDisconnectButtonClickedEventArgs*))del;
+- (void)removeDisconnectButtonClickedEvent:(EventRegistrationToken)tok;
+- (void)show:(WFRect*)selection;
+- (void)showWithPlacement:(WFRect*)selection placement:(WUPPlacement)placement;
+- (void)pickSingleDeviceAsync:(WFRect*)selection success:(void (^)(WDEDeviceInformation*))success failure:(void (^)(NSError*))failure;
+- (void)pickSingleDeviceAsyncWithPlacement:(WFRect*)selection placement:(WUPPlacement)placement success:(void (^)(WDEDeviceInformation*))success failure:(void (^)(NSError*))failure;
+- (void)hide;
+- (void)setDisplayStatus:(WDEDeviceInformation*)device status:(NSString *)status options:(WDEDevicePickerDisplayStatusOptions)options;
+@end
+
+#endif // __WDEDevicePicker_DEFINED__
 
 // Windows.Foundation.IClosable
 #ifndef __WFIClosable_DEFINED__
@@ -171,7 +293,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -182,16 +304,11 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 #define __WSSIInputStream_DEFINED__
 
 @protocol WSSIInputStream <WFIClosable>
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
-            count:(unsigned int)count
-          options:(WSSInputStreamOptions)options
-          success:(void (^)(RTObject<WSSIBuffer>*))success
-         progress:(void (^)(unsigned int))progress
-          failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSSIInputStream : RTObject <WSSIInputStream>
 @end
 
@@ -202,15 +319,12 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 #define __WSSIOutputStream_DEFINED__
 
 @protocol WSSIOutputStream <WFIClosable>
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
-           success:(void (^)(unsigned int))success
-          progress:(void (^)(unsigned int))progress
-           failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSSIOutputStream : RTObject <WSSIOutputStream>
 @end
 
@@ -230,20 +344,12 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
-            count:(unsigned int)count
-          options:(WSSInputStreamOptions)options
-          success:(void (^)(RTObject<WSSIBuffer>*))success
-         progress:(void (^)(unsigned int))progress
-          failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
-           success:(void (^)(unsigned int))success
-          progress:(void (^)(unsigned int))progress
-           failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSSIRandomAccessStream : RTObject <WSSIRandomAccessStream>
 @end
 
@@ -254,10 +360,10 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 #define __WSSIContentTypeProvider_DEFINED__
 
 @protocol WSSIContentTypeProvider
-@property (readonly) NSString* contentType;
+@property (readonly) NSString * contentType;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSSIContentTypeProvider : RTObject <WSSIContentTypeProvider>
 @end
 
@@ -267,27 +373,18 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 #ifndef __WSSIRandomAccessStreamWithContentType_DEFINED__
 #define __WSSIRandomAccessStreamWithContentType_DEFINED__
 
-@protocol
-    WSSIRandomAccessStreamWithContentType <WSSIRandomAccessStream, WFIClosable, WSSIInputStream, WSSIOutputStream, WSSIContentTypeProvider>
+@protocol WSSIRandomAccessStreamWithContentType <WSSIRandomAccessStream, WFIClosable, WSSIInputStream, WSSIOutputStream, WSSIContentTypeProvider>
 - (RTObject<WSSIInputStream>*)getInputStreamAt:(uint64_t)position;
 - (RTObject<WSSIOutputStream>*)getOutputStreamAt:(uint64_t)position;
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
-            count:(unsigned int)count
-          options:(WSSInputStreamOptions)options
-          success:(void (^)(RTObject<WSSIBuffer>*))success
-         progress:(void (^)(unsigned int))progress
-          failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
-           success:(void (^)(unsigned int))success
-          progress:(void (^)(unsigned int))progress
-           failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSSIRandomAccessStreamWithContentType : RTObject <WSSIRandomAccessStreamWithContentType>
 @end
 
@@ -297,17 +394,12 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 #ifndef __WDEDeviceThumbnail_DEFINED__
 #define __WDEDeviceThumbnail_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
-@interface WDEDeviceThumbnail : RTObject <WSSIRandomAccessStreamWithContentType,
-                                          WSSIContentTypeProvider,
-                                          WSSIRandomAccessStream,
-                                          WSSIOutputStream,
-                                          WFIClosable,
-                                          WSSIInputStream>
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WDEDeviceThumbnail : RTObject <WSSIRandomAccessStreamWithContentType, WSSIContentTypeProvider, WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* contentType;
+@property (readonly) NSString * contentType;
 @property uint64_t size;
 @property (readonly) BOOL canRead;
 @property (readonly) BOOL canWrite;
@@ -317,16 +409,8 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
-            count:(unsigned int)count
-          options:(WSSInputStreamOptions)options
-          success:(void (^)(RTObject<WSSIBuffer>*))success
-         progress:(void (^)(unsigned int))progress
-          failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
-           success:(void (^)(unsigned int))success
-          progress:(void (^)(unsigned int))progress
-           failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -336,7 +420,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 #ifndef __WDEEnclosureLocation_DEFINED__
 #define __WDEEnclosureLocation_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDEEnclosureLocation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -344,6 +428,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @property (readonly) BOOL inDock;
 @property (readonly) BOOL inLid;
 @property (readonly) WDEPanel panel;
+@property (readonly) unsigned int rotationAngleInDegreesClockwise;
 @end
 
 #endif // __WDEEnclosureLocation_DEFINED__
@@ -352,12 +437,12 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 #ifndef __WDEDeviceInformationUpdate_DEFINED__
 #define __WDEDeviceInformationUpdate_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDEDeviceInformationUpdate : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* id;
+@property (readonly) NSString * id;
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) WDEDeviceInformationKind kind;
 @end
@@ -368,7 +453,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 #ifndef __WDEDeviceInformationCollection_DEFINED__
 #define __WDEDeviceInformationCollection_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDEDeviceInformationCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -376,7 +461,9 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
 @end
 
@@ -386,21 +473,21 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 #ifndef __WDEDeviceWatcher_DEFINED__
 #define __WDEDeviceWatcher_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDEDeviceWatcher : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDeviceWatcherStatus status;
-- (EventRegistrationToken)addAddedEvent:(void (^)(WDEDeviceWatcher*, WDEDeviceInformation*))del;
+- (EventRegistrationToken)addAddedEvent:(void(^)(WDEDeviceWatcher*, WDEDeviceInformation*))del;
 - (void)removeAddedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addEnumerationCompletedEvent:(void (^)(WDEDeviceWatcher*, RTObject*))del;
+- (EventRegistrationToken)addEnumerationCompletedEvent:(void(^)(WDEDeviceWatcher*, RTObject*))del;
 - (void)removeEnumerationCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addRemovedEvent:(void (^)(WDEDeviceWatcher*, WDEDeviceInformationUpdate*))del;
+- (EventRegistrationToken)addRemovedEvent:(void(^)(WDEDeviceWatcher*, WDEDeviceInformationUpdate*))del;
 - (void)removeRemovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStoppedEvent:(void (^)(WDEDeviceWatcher*, RTObject*))del;
+- (EventRegistrationToken)addStoppedEvent:(void(^)(WDEDeviceWatcher*, RTObject*))del;
 - (void)removeStoppedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addUpdatedEvent:(void (^)(WDEDeviceWatcher*, WDEDeviceInformationUpdate*))del;
+- (EventRegistrationToken)addUpdatedEvent:(void(^)(WDEDeviceWatcher*, WDEDeviceInformationUpdate*))del;
 - (void)removeUpdatedEvent:(EventRegistrationToken)tok;
 - (void)start;
 - (void)stop;
@@ -413,51 +500,30 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 #ifndef __WDEDeviceInformation_DEFINED__
 #define __WDEDeviceInformation_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDEDeviceInformation : RTObject
-+ (NSString*)getAqsFilterFromDeviceClass:(WDEDeviceClass)deviceClass;
-+ (void)createFromIdAsyncWithKindAndAdditionalProperties:(NSString*)deviceId
-                                    additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties
-                                                    kind:(WDEDeviceInformationKind)kind
-                                                 success:(void (^)(WDEDeviceInformation*))success
-                                                 failure:(void (^)(NSError*))failure;
-+ (void)findAllAsyncWithKindAqsFilterAndAdditionalProperties:(NSString*)aqsFilter
-                                        additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties
-                                                        kind:(WDEDeviceInformationKind)kind
-                                                     success:(void (^)(WDEDeviceInformationCollection*))success
-                                                     failure:(void (^)(NSError*))failure;
-+ (WDEDeviceWatcher*)createWatcherWithKindAqsFilterAndAdditionalProperties:(NSString*)aqsFilter
-                                                      additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties
-                                                                      kind:(WDEDeviceInformationKind)kind;
-+ (void)createFromIdAsync:(NSString*)deviceId success:(void (^)(WDEDeviceInformation*))success failure:(void (^)(NSError*))failure;
-+ (void)createFromIdAsyncAdditionalProperties:(NSString*)deviceId
-                         additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties
-                                      success:(void (^)(WDEDeviceInformation*))success
-                                      failure:(void (^)(NSError*))failure;
++ (NSString *)getAqsFilterFromDeviceClass:(WDEDeviceClass)deviceClass;
++ (void)createFromIdAsyncWithKindAndAdditionalProperties:(NSString *)deviceId additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties kind:(WDEDeviceInformationKind)kind success:(void (^)(WDEDeviceInformation*))success failure:(void (^)(NSError*))failure;
++ (void)findAllAsyncWithKindAqsFilterAndAdditionalProperties:(NSString *)aqsFilter additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties kind:(WDEDeviceInformationKind)kind success:(void (^)(WDEDeviceInformationCollection*))success failure:(void (^)(NSError*))failure;
++ (WDEDeviceWatcher*)createWatcherWithKindAqsFilterAndAdditionalProperties:(NSString *)aqsFilter additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties kind:(WDEDeviceInformationKind)kind;
++ (void)createFromIdAsync:(NSString *)deviceId success:(void (^)(WDEDeviceInformation*))success failure:(void (^)(NSError*))failure;
++ (void)createFromIdAsyncAdditionalProperties:(NSString *)deviceId additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties success:(void (^)(WDEDeviceInformation*))success failure:(void (^)(NSError*))failure;
 + (void)findAllAsyncWithSuccess:(void (^)(WDEDeviceInformationCollection*))success failure:(void (^)(NSError*))failure;
-+ (void)findAllAsyncDeviceClass:(WDEDeviceClass)deviceClass
-                        success:(void (^)(WDEDeviceInformationCollection*))success
-                        failure:(void (^)(NSError*))failure;
-+ (void)findAllAsyncAqsFilter:(NSString*)aqsFilter
-                      success:(void (^)(WDEDeviceInformationCollection*))success
-                      failure:(void (^)(NSError*))failure;
-+ (void)findAllAsyncAqsFilterAndAdditionalProperties:(NSString*)aqsFilter
-                                additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties
-                                             success:(void (^)(WDEDeviceInformationCollection*))success
-                                             failure:(void (^)(NSError*))failure;
++ (void)findAllAsyncDeviceClass:(WDEDeviceClass)deviceClass success:(void (^)(WDEDeviceInformationCollection*))success failure:(void (^)(NSError*))failure;
++ (void)findAllAsyncAqsFilter:(NSString *)aqsFilter success:(void (^)(WDEDeviceInformationCollection*))success failure:(void (^)(NSError*))failure;
++ (void)findAllAsyncAqsFilterAndAdditionalProperties:(NSString *)aqsFilter additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties success:(void (^)(WDEDeviceInformationCollection*))success failure:(void (^)(NSError*))failure;
 + (WDEDeviceWatcher*)createWatcher;
 + (WDEDeviceWatcher*)createWatcherDeviceClass:(WDEDeviceClass)deviceClass;
-+ (WDEDeviceWatcher*)createWatcherAqsFilter:(NSString*)aqsFilter;
-+ (WDEDeviceWatcher*)createWatcherAqsFilterAndAdditionalProperties:(NSString*)aqsFilter
-                                              additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties;
++ (WDEDeviceWatcher*)createWatcherAqsFilter:(NSString *)aqsFilter;
++ (WDEDeviceWatcher*)createWatcherAqsFilterAndAdditionalProperties:(NSString *)aqsFilter additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEEnclosureLocation* enclosureLocation;
-@property (readonly) NSString* id;
+@property (readonly) NSString * id;
 @property (readonly) BOOL isDefault;
 @property (readonly) BOOL isEnabled;
-@property (readonly) NSString* name;
+@property (readonly) NSString * name;
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) WDEDeviceInformationKind kind;
 @property (readonly) WDEDeviceInformationPairing* pairing;
@@ -472,7 +538,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 #ifndef __WDEDevicePairingResult_DEFINED__
 #define __WDEDevicePairingResult_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDEDevicePairingResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -483,21 +549,75 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 
 #endif // __WDEDevicePairingResult_DEFINED__
 
+// Windows.Devices.Enumeration.DeviceUnpairingResult
+#ifndef __WDEDeviceUnpairingResult_DEFINED__
+#define __WDEDeviceUnpairingResult_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WDEDeviceUnpairingResult : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WDEDeviceUnpairingResultStatus status;
+@end
+
+#endif // __WDEDeviceUnpairingResult_DEFINED__
+
+// Windows.Devices.Enumeration.DevicePairingRequestedEventArgs
+#ifndef __WDEDevicePairingRequestedEventArgs_DEFINED__
+#define __WDEDevicePairingRequestedEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WDEDevicePairingRequestedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WDEDeviceInformation* deviceInformation;
+@property (readonly) WDEDevicePairingKinds pairingKind;
+@property (readonly) NSString * pin;
+- (void)accept;
+- (void)acceptWithPin:(NSString *)pin;
+- (WFDeferral*)getDeferral;
+@end
+
+#endif // __WDEDevicePairingRequestedEventArgs_DEFINED__
+
+// Windows.Devices.Enumeration.DeviceInformationCustomPairing
+#ifndef __WDEDeviceInformationCustomPairing_DEFINED__
+#define __WDEDeviceInformationCustomPairing_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WDEDeviceInformationCustomPairing : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+- (EventRegistrationToken)addPairingRequestedEvent:(void(^)(WDEDeviceInformationCustomPairing*, WDEDevicePairingRequestedEventArgs*))del;
+- (void)removePairingRequestedEvent:(EventRegistrationToken)tok;
+- (void)pairAsync:(WDEDevicePairingKinds)pairingKindsSupported success:(void (^)(WDEDevicePairingResult*))success failure:(void (^)(NSError*))failure;
+- (void)pairWithProtectionLevelAsync:(WDEDevicePairingKinds)pairingKindsSupported minProtectionLevel:(WDEDevicePairingProtectionLevel)minProtectionLevel success:(void (^)(WDEDevicePairingResult*))success failure:(void (^)(NSError*))failure;
+- (void)pairWithProtectionLevelAndSettingsAsync:(WDEDevicePairingKinds)pairingKindsSupported minProtectionLevel:(WDEDevicePairingProtectionLevel)minProtectionLevel devicePairingSettings:(RTObject<WDEIDevicePairingSettings>*)devicePairingSettings success:(void (^)(WDEDevicePairingResult*))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WDEDeviceInformationCustomPairing_DEFINED__
+
 // Windows.Devices.Enumeration.DeviceInformationPairing
 #ifndef __WDEDeviceInformationPairing_DEFINED__
 #define __WDEDeviceInformationPairing_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDEDeviceInformationPairing : RTObject
++ (BOOL)tryRegisterForAllInboundPairingRequests:(WDEDevicePairingKinds)pairingKindsSupported;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL canPair;
 @property (readonly) BOOL isPaired;
+@property (readonly) WDEDeviceInformationCustomPairing* custom;
+@property (readonly) WDEDevicePairingProtectionLevel protectionLevel;
 - (void)pairAsyncWithSuccess:(void (^)(WDEDevicePairingResult*))success failure:(void (^)(NSError*))failure;
-- (void)pairWithProtectionLevelAsync:(WDEDevicePairingProtectionLevel)minProtectionLevel
-                             success:(void (^)(WDEDevicePairingResult*))success
-                             failure:(void (^)(NSError*))failure;
+- (void)pairWithProtectionLevelAsync:(WDEDevicePairingProtectionLevel)minProtectionLevel success:(void (^)(WDEDevicePairingResult*))success failure:(void (^)(NSError*))failure;
+- (void)pairWithProtectionLevelAndSettingsAsync:(WDEDevicePairingProtectionLevel)minProtectionLevel devicePairingSettings:(RTObject<WDEIDevicePairingSettings>*)devicePairingSettings success:(void (^)(WDEDevicePairingResult*))success failure:(void (^)(NSError*))failure;
+- (void)unpairAsyncWithSuccess:(void (^)(WDEDeviceUnpairingResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDEDeviceInformationPairing_DEFINED__
@@ -506,12 +626,13 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 #ifndef __WDEDeviceAccessChangedEventArgs_DEFINED__
 #define __WDEDeviceAccessChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDEDeviceAccessChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDeviceAccessStatus status;
+@property (readonly) NSString * id;
 @end
 
 #endif // __WDEDeviceAccessChangedEventArgs_DEFINED__
@@ -520,121 +641,26 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 #ifndef __WDEDeviceAccessInformation_DEFINED__
 #define __WDEDeviceAccessInformation_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDEDeviceAccessInformation : RTObject
-+ (WDEDeviceAccessInformation*)createFromId:(NSString*)deviceId;
++ (WDEDeviceAccessInformation*)createFromId:(NSString *)deviceId;
 + (WDEDeviceAccessInformation*)createFromDeviceClassId:(WFGUID*)deviceClassId;
 + (WDEDeviceAccessInformation*)createFromDeviceClass:(WDEDeviceClass)deviceClass;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDeviceAccessStatus currentStatus;
-- (EventRegistrationToken)addAccessChangedEvent:(void (^)(WDEDeviceAccessInformation*, WDEDeviceAccessChangedEventArgs*))del;
+- (EventRegistrationToken)addAccessChangedEvent:(void(^)(WDEDeviceAccessInformation*, WDEDeviceAccessChangedEventArgs*))del;
 - (void)removeAccessChangedEvent:(EventRegistrationToken)tok;
 @end
 
 #endif // __WDEDeviceAccessInformation_DEFINED__
 
-// Windows.Devices.Enumeration.DevicePickerAppearance
-#ifndef __WDEDevicePickerAppearance_DEFINED__
-#define __WDEDevicePickerAppearance_DEFINED__
-
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
-@interface WDEDevicePickerAppearance : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (retain) NSString* title;
-@property (retain) WUColor* selectedForegroundColor;
-@property (retain) WUColor* selectedBackgroundColor;
-@property (retain) WUColor* selectedAccentColor;
-@property (retain) WUColor* foregroundColor;
-@property (retain) WUColor* backgroundColor;
-@property (retain) WUColor* accentColor;
-@end
-
-#endif // __WDEDevicePickerAppearance_DEFINED__
-
-// Windows.Devices.Enumeration.DeviceSelectedEventArgs
-#ifndef __WDEDeviceSelectedEventArgs_DEFINED__
-#define __WDEDeviceSelectedEventArgs_DEFINED__
-
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
-@interface WDEDeviceSelectedEventArgs : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (readonly) WDEDeviceInformation* selectedDevice;
-@end
-
-#endif // __WDEDeviceSelectedEventArgs_DEFINED__
-
-// Windows.Devices.Enumeration.DeviceDisconnectButtonClickedEventArgs
-#ifndef __WDEDeviceDisconnectButtonClickedEventArgs_DEFINED__
-#define __WDEDeviceDisconnectButtonClickedEventArgs_DEFINED__
-
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
-@interface WDEDeviceDisconnectButtonClickedEventArgs : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (readonly) WDEDeviceInformation* device;
-@end
-
-#endif // __WDEDeviceDisconnectButtonClickedEventArgs_DEFINED__
-
-// Windows.Devices.Enumeration.DevicePickerFilter
-#ifndef __WDEDevicePickerFilter_DEFINED__
-#define __WDEDevicePickerFilter_DEFINED__
-
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
-@interface WDEDevicePickerFilter : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (readonly) NSMutableArray* /* WDEDeviceClass */ supportedDeviceClasses;
-@property (readonly) NSMutableArray* /* NSString * */ supportedDeviceSelectors;
-@end
-
-#endif // __WDEDevicePickerFilter_DEFINED__
-
-// Windows.Devices.Enumeration.DevicePicker
-#ifndef __WDEDevicePicker_DEFINED__
-#define __WDEDevicePicker_DEFINED__
-
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
-@interface WDEDevicePicker : RTObject
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (readonly) WDEDevicePickerAppearance* appearance;
-@property (readonly) WDEDevicePickerFilter* filter;
-@property (readonly) NSMutableArray* /* NSString * */ requestedProperties;
-- (EventRegistrationToken)addDevicePickerDismissedEvent:(void (^)(WDEDevicePicker*, RTObject*))del;
-- (void)removeDevicePickerDismissedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDeviceSelectedEvent:(void (^)(WDEDevicePicker*, WDEDeviceSelectedEventArgs*))del;
-- (void)removeDeviceSelectedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDisconnectButtonClickedEvent:(void (^)(WDEDevicePicker*, WDEDeviceDisconnectButtonClickedEventArgs*))del;
-- (void)removeDisconnectButtonClickedEvent:(EventRegistrationToken)tok;
-- (void)show:(WFRect*)selection;
-- (void)showWithPlacement:(WFRect*)selection placement:(WUPPlacement)placement;
-- (void)pickSingleDeviceAsync:(WFRect*)selection success:(void (^)(WDEDeviceInformation*))success failure:(void (^)(NSError*))failure;
-- (void)pickSingleDeviceAsyncWithPlacement:(WFRect*)selection
-                                 placement:(WUPPlacement)placement
-                                   success:(void (^)(WDEDeviceInformation*))success
-                                   failure:(void (^)(NSError*))failure;
-- (void)hide;
-- (void)setDisplayStatus:(WDEDeviceInformation*)device status:(NSString*)status options:(WDEDevicePickerDisplayStatusOptions)options;
-@end
-
-#endif // __WDEDevicePicker_DEFINED__
-
 // Windows.Devices.Enumeration.DeviceWatcherEvent
 #ifndef __WDEDeviceWatcherEvent_DEFINED__
 #define __WDEDeviceWatcherEvent_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDEDeviceWatcherEvent : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -650,7 +676,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 #ifndef __WDEDeviceWatcherTriggerDetails_DEFINED__
 #define __WDEDeviceWatcherTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDEDeviceWatcherTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -659,3 +685,4 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_EXPORT
 @end
 
 #endif // __WDEDeviceWatcherTriggerDetails_DEFINED__
+

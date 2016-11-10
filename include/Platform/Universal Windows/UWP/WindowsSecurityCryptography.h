@@ -53,12 +53,13 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_EXPORT
 + (unsigned int)generateRandomNumber;
 + (RTObject<WSSIBuffer>*)createFromByteArray:(NSArray* /* uint8_t */)value;
 + (void)copyToByteArray:(RTObject<WSSIBuffer>*)buffer value:(NSArray* /* uint8_t */*)value;
-+ (RTObject<WSSIBuffer>*)decodeFromHexString:(NSString*)value;
-+ (NSString*)encodeToHexString:(RTObject<WSSIBuffer>*)buffer;
-+ (RTObject<WSSIBuffer>*)decodeFromBase64String:(NSString*)value;
-+ (NSString*)encodeToBase64String:(RTObject<WSSIBuffer>*)buffer;
-+ (RTObject<WSSIBuffer>*)convertStringToBinary:(NSString*)value encoding:(WSCBinaryStringEncoding)encoding;
-+ (NSString*)convertBinaryToString:(WSCBinaryStringEncoding)encoding buffer:(RTObject<WSSIBuffer>*)buffer;
++ (RTObject<WSSIBuffer>*)decodeFromHexString:(NSString *)value;
++ (NSString *)encodeToHexString:(RTObject<WSSIBuffer>*)buffer;
++ (RTObject<WSSIBuffer>*)decodeFromBase64String:(NSString *)value;
++ (NSString *)encodeToBase64String:(RTObject<WSSIBuffer>*)buffer;
++ (RTObject<WSSIBuffer>*)convertStringToBinary:(NSString *)value encoding:(WSCBinaryStringEncoding)encoding;
++ (NSString *)convertBinaryToString:(WSCBinaryStringEncoding)encoding buffer:(RTObject<WSSIBuffer>*)buffer;
 @end
 
 #endif // __WSCCryptographicBuffer_DEFINED__
+

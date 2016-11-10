@@ -213,7 +213,7 @@ void CAFDecoder::ProduceOutputPackets(NSInputStream* stream,
     //  clamp the number of packets to produce based on what is available in the
     //  input buffer
     UInt32 inputPacketSize = mInputFormat.mBytesPerPacket;
-    UInt32 numberOfInputPackets = 1;
+    UInt32 numberOfInputPackets = ([stream hasBytesAvailable] ? 1 : 0);
     if (ioNumberPackets < numberOfInputPackets) {
         numberOfInputPackets = ioNumberPackets;
     } else if (ioNumberPackets > numberOfInputPackets) {
@@ -267,7 +267,7 @@ bool CAFDecoder::InitForRead(NSInputStream* inStream) {
     isPcm = false;
 
     while ([inStream hasBytesAvailable] && !stop) {
-        CAFChunkHeader chunkHeader;
+        CAFChunkHeader chunkHeader{};
         [inStream read:(uint8_t*)&chunkHeader maxLength:sizeof(CAFChunkHeader)];
         chunkHeader.mChunkType = int32Swap(chunkHeader.mChunkType);
         chunkHeader.mChunkSize = int64Swap(chunkHeader.mChunkSize);
@@ -331,13 +331,16 @@ bool CAFDecoder::InitForRead(NSInputStream* inStream) {
                 break;
 
             default:
-                bytesToSkip.reserve(chunkHeader.mChunkSize);
-                bytesLeftUntilChunkEnd -= [inStream read:(uint8_t*)&bytesToSkip[0] maxLength:chunkHeader.mChunkSize];
+                if (chunkHeader.mChunkSize > 0) {
+                    bytesToSkip.resize(chunkHeader.mChunkSize);
+                    bytesLeftUntilChunkEnd -= [inStream read:(uint8_t*)&bytesToSkip[0] maxLength:chunkHeader.mChunkSize];
+                }
                 break;
         }
 
         if (!stop) {
             if (bytesLeftUntilChunkEnd > 0) {
+                bytesToSkip.resize(bytesLeftUntilChunkEnd);
                 [inStream read:(uint8_t*)&bytesToSkip[0] maxLength:bytesLeftUntilChunkEnd];
             }
         }

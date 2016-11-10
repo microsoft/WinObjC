@@ -268,16 +268,15 @@ CGRect CTRunGetImageBounds(CTRunRef run, CGContextRef context, CFRange range) {
     return StubReturn();
 }
 
-void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTextPosition, CGFloat lineAscent) {
+/**
+ @Status Interoperable
+ @Notes
+*/
+void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
     _CTRun* curRun = static_cast<_CTRun*>(run);
     if (!curRun || textRange.length < 0L || textRange.location < 0L ||
         textRange.location + textRange.length > curRun->_dwriteGlyphRun.glyphCount) {
         return;
-    }
-
-    if (adjustTextPosition) {
-        CGPoint curTextPos = CGContextGetTextPosition(ctx);
-        CGContextSetTextPosition(ctx, curTextPos.x + curRun->_relativeXOffset, curTextPos.y + curRun->_relativeYOffset);
     }
 
     id fontColor = [curRun->_attributes objectForKey:(id)kCTForegroundColorAttributeName];
@@ -294,7 +293,7 @@ void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTe
 
     if (textRange.location == 0L && (textRange.length == 0L || textRange.length == curRun->_dwriteGlyphRun.glyphCount)) {
         // Print the whole glyph run
-        CGContextDrawGlyphRun(ctx, &curRun->_dwriteGlyphRun, lineAscent);
+        CGContextDrawGlyphRun(ctx, &curRun->_dwriteGlyphRun);
     } else {
         if (textRange.length == 0L) {
             textRange.length = curRun->_dwriteGlyphRun.glyphCount - textRange.location;
@@ -302,19 +301,7 @@ void _CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange, bool adjustTe
 
         // Only print glyphs in range
         DWRITE_GLYPH_RUN runInRange = __GetGlyphRunForDrawingInRange(curRun->_dwriteGlyphRun, textRange);
-        CGContextDrawGlyphRun(ctx, &runInRange, lineAscent);
-    }
-}
-
-/**
- @Status Interoperable
- @Notes
-*/
-void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
-    if (run && ctx) {
-        CGFloat ascent;
-        CTRunGetTypographicBounds(run, {}, &ascent, nullptr, nullptr);
-        _CTRunDraw(run, ctx, textRange, true, ascent);
+        CGContextDrawGlyphRun(ctx, &runInRange);
     }
 }
 
