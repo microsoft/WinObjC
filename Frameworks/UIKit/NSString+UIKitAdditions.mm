@@ -301,8 +301,9 @@ static NSDictionary* _getDefaultUITextAttributes() {
 - (CGSize)_sizeWithAttributes:(NSDictionary<NSString*, id>*)attributes constrainedToSize:(CGSize)size {
     if ([attributes objectForKey:NSParagraphStyleAttributeName]) {
         NSMutableDictionary* copied = [NSMutableDictionary dictionaryWithDictionary:attributes];
-        [copied setObject:(id)[[attributes objectForKey:NSParagraphStyleAttributeName] _createCTParagraphStyle]
-                   forKey:static_cast<NSString*>(kCTParagraphStyleAttributeName)];
+        woc::unique_cf<CTParagraphStyleRef>
+            paragraphStyle{[[attributes objectForKey:NSParagraphStyleAttributeName] _createCTParagraphStyle] };
+        [copied setObject:(id)paragraphStyle.get() forKey:static_cast<NSString*>(kCTParagraphStyleAttributeName)];
         attributes = copied;
     }
 
