@@ -26,6 +26,7 @@ using namespace Windows::UI::Xaml;
 using namespace Windows::UI::Xaml::Controls;
 
 namespace UIKit {
+namespace Xaml {
 
 Label::Label() {
     InitializeComponent();
@@ -62,7 +63,8 @@ TextBlock^ Label::TextBlock::get() {
     return safe_cast<Windows::UI::Xaml::Controls::TextBlock^>(Children->GetAt(0));
 }
 
-} /* UIKit */
+} /* Xaml*/
+} /* UIKit*/
 
 ////////////////////////////////////////////////////////////////////////////////////
 // ObjectiveC Interop
@@ -70,11 +72,11 @@ TextBlock^ Label::TextBlock::get() {
 
 // Returns a UIKit::Label as an IInspectable
 UIKIT_XAML_EXPORT IInspectable* XamlCreateLabel() {
-    return InspectableFromObject(ref new UIKit::Label()).Detach();
+    return InspectableFromObject(ref new UIKit::Xaml::Label()).Detach();
 }
 
 // Retrieves the UIKit::Label's backing TextBlock as an IInspectable
 UIKIT_XAML_EXPORT IInspectable* XamlGetLabelTextBox(const Microsoft::WRL::ComPtr<IInspectable>& label) {
-    auto labelGrid = safe_cast<UIKit::Label^>(reinterpret_cast<Platform::Object^>(label.Get()));
+    auto labelGrid = safe_cast<UIKit::Xaml::Label^>(reinterpret_cast<Platform::Object^>(label.Get()));
     return InspectableFromObject(labelGrid->TextBlock).Detach();
 }

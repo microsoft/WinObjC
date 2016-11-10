@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1884d8f8-2c05-4334-a778-7d3c5a6736e8}</ProjectGuid>
     <Keyword>WindowsRuntimeComponent</Keyword>
-    <RootNamespace>UIKit</RootNamespace>
+    <RootNamespace>UIKit.Xaml</RootNamespace>
     <OutputName>UIKit.Xaml</OutputName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>

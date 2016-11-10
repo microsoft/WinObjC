@@ -21,6 +21,7 @@
 #include "Layer.xaml.h"
 
 namespace UIKit {
+namespace Xaml {
 
 [Windows::Foundation::Metadata::WebHostHidden]
 public ref class Label sealed : public Private::CoreAnimation::ILayer {
@@ -53,4 +54,5 @@ private:
     Windows::UI::Xaml::Controls::Canvas^ _sublayerCanvas;
 };
 
-} /* UIKit */
+} /* Xaml*/
+} /* UIKit*/

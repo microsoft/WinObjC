@@ -59,14 +59,14 @@ internal:
     void Animate(Windows::UI::Xaml::FrameworkElement^ layer, const char* propertyName, Platform::Object^ from, Platform::Object^ to);
 
     void AddTransition(
-        UIKit::Private::CoreAnimation::Layer^ realLayer,
-        UIKit::Private::CoreAnimation::Layer^ snapshotLayer,
+        UIKit::Xaml::Private::CoreAnimation::Layer^ realLayer,
+        UIKit::Xaml::Private::CoreAnimation::Layer^ snapshotLayer,
         Platform::String^ type, 
         Platform::String^ subtype);
 
 private:
-    void _CreateFlip(UIKit::Private::CoreAnimation::Layer^ layer, bool flipRight, bool invert, bool removeFromParent);
-    void _CreateWoosh(UIKit::Private::CoreAnimation::Layer^ layer, bool fromRight, bool invert, bool removeFromParent);
+    void _CreateFlip(UIKit::Xaml::Private::CoreAnimation::Layer^ layer, bool flipRight, bool invert, bool removeFromParent);
+    void _CreateWoosh(UIKit::Xaml::Private::CoreAnimation::Layer^ layer, bool fromRight, bool invert, bool removeFromParent);
 
     AnimationMethod^ m_completed;
     Windows::UI::Xaml::Media::Animation::Storyboard^ m_container = ref new Windows::UI::Xaml::Media::Animation::Storyboard();

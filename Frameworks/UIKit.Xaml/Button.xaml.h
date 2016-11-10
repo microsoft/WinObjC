@@ -23,6 +23,7 @@
 #include "ObjCXamlControls.h"
 
 namespace UIKit {
+namespace Xaml {
 
 [Windows::Foundation::Metadata::WebHostHidden]
 public ref class Button sealed : public Private::CoreAnimation::ILayer {
@@ -84,5 +85,6 @@ private:
     Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler> _layoutHook;
 };
 
-}
+} /* Xaml*/
+} /* UIKit*/
 // clang-format on

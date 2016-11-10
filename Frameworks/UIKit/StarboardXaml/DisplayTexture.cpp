@@ -22,7 +22,7 @@
 #include <robuffer.h>
 
 using namespace Microsoft::WRL;
-using namespace UIKit::Private::CoreAnimation;
+using namespace UIKit::Xaml::Private::CoreAnimation;
 using namespace Windows::Foundation;
 using namespace Windows::Storage::Streams;
 using namespace Windows::UI::Xaml;
