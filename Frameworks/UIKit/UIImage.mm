@@ -135,8 +135,7 @@ static inline CGImageRef getImage(UIImage* uiImage) {
 }
 
 + (UIImage*)applicationImageNamed:(NSString*)pathAddr {
-    UIImage* ret = [UIImage alloc];
-    UIImage* found = [ret initWithContentsOfFile:pathAddr];
+    UIImage* found = [[UIImage alloc] initWithContentsOfFile:pathAddr];
 
     if (found == nil) {
         NSData* loadPackagedImage(NSString * name);
@@ -145,24 +144,14 @@ static inline CGImageRef getImage(UIImage* uiImage) {
         if (strstr([pathAddr UTF8String], "@2x") != NULL)
             scale = 2.0f;
         if (fileData) {
-            found = [ret initWithData:fileData scale:scale];
+            found = [[UIImage alloc] initWithData:fileData scale:scale];
             if (found) {
-                found->_cacheImage = [UIImage cacheImage:ret withName:pathAddr];
+                found->_cacheImage = [UIImage cacheImage:found withName:pathAddr];
             }
         }
     }
 
-    if (found == nil) {
-        [ret release];
-        return nil;
-    }
-
-    //  Application images should stay in the cache
-    if (ret->_isFromCache) {
-        [ret autorelease];
-    }
-
-    return ret;
+    return [found autorelease];
 }
 
 /**

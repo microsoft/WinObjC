@@ -23,7 +23,7 @@
 
 #import <CoreFoundation/CoreFoundation.h>
 #import <CFRuntime.h>
-#import "D2DWrapper.h"
+#import <CoreGraphics/D2DWrapper.h>
 #import "CGPathInternal.h"
 
 #include <COMIncludes.h>

@@ -18,6 +18,18 @@
 #import "Starboard.h"
 #import "CoreGraphicsInternal.h"
 #import "CGImageInternal.h"
+#import "DisplayTexture.h"
+
+// Ignore some warnings
+#if defined __clang__
+
+#pragma clang diagnostic push
+#ifdef _M_ARM
+// Disable 'invalid calling convention' warnings for __stdcall usage in ARM builds
+#pragma clang diagnostic ignored "-Wignored-attributes"
+#endif // _M_ARM
+
+#endif // __clang__
 
 #include <COMIncludes.h>
 #import <WRLHelpers.h>
@@ -30,81 +42,94 @@
 
 using namespace Microsoft::WRL;
 
+// clang-format off
+struct __declspec(uuid("BA77A716-5FAF-42B1-B5B3-9B6369A0625D")) __declspec(novtable) ICGDisplayTexture : public IUnknown
+{
+    STDMETHOD(DisplayTexture)(_Out_ IDisplayTexture** displayTexture) = 0;
+};
+// clang-format on
+
 class CGIWICBitmap;
 
 class CGIWICBitmapLock : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::ClassicCom>, IAgileObject, FtmBase, IWICBitmapLock> {
 public:
-    CGIWICBitmapLock(_In_ CGImageBacking* imageBacking, _In_ WICPixelFormatGUID pixelFormat)
-        : m_imageBacking(imageBacking), m_pixelFormat(pixelFormat) {
-        m_dataBuffer = static_cast<BYTE*>(m_imageBacking->LockImageData());
+    CGIWICBitmapLock(_In_ IDisplayTexture* texture, _In_ const WICRect* region, _In_ WICPixelFormatGUID pixelFormat)
+        : m_texture(texture), m_pixelFormat(pixelFormat), m_locked_rect(region) {
+        int bpr;
+        m_dataBuffer = static_cast<BYTE*>(m_texture->Lock(&bpr));
+        m_bytesPerRow = static_cast<size_t>(bpr);
     }
 
     ~CGIWICBitmapLock() {
-        m_imageBacking->ReleaseImageData();
-        m_imageBacking = nullptr;
+        m_texture->Unlock();
+        m_texture = nullptr;
     }
 
     HRESULT STDMETHODCALLTYPE GetSize(_Out_ UINT* width, _Out_ UINT* height) {
-        *width = m_imageBacking->Width();
-        *height = m_imageBacking->Height();
+        RETURN_HR_IF_NULL(E_POINTER, width);
+        RETURN_HR_IF_NULL(E_POINTER, height);
+
+        *width = m_locked_rect->Width;
+        *height = m_locked_rect->Height;
         return S_OK;
     }
 
     HRESULT STDMETHODCALLTYPE GetStride(_Out_ UINT* stride) {
-        *stride = m_imageBacking->BytesPerRow();
+        RETURN_HR_IF_NULL(E_POINTER, stride);
+        *stride = m_bytesPerRow;
         return S_OK;
     }
 
     HRESULT STDMETHODCALLTYPE GetDataPointer(_Out_ UINT* bufferSize, _Outptr_ WICInProcPointer* data) {
-        *bufferSize = m_imageBacking->Height() * m_imageBacking->BytesPerRow();
+        RETURN_HR_IF_NULL(E_POINTER, bufferSize);
+        RETURN_HR_IF_NULL(E_POINTER, data);
+        *bufferSize = m_locked_rect->Height * m_bytesPerRow;
         *data = m_dataBuffer;
         return S_OK;
     }
 
     HRESULT STDMETHODCALLTYPE GetPixelFormat(_Out_ WICPixelFormatGUID* pixelFormat) {
+        RETURN_HR_IF_NULL(E_POINTER, pixelFormat);
         *pixelFormat = m_pixelFormat;
         return S_OK;
     }
 
 private:
-    CGImageBacking* m_imageBacking;
     WICPixelFormatGUID m_pixelFormat;
     BYTE* m_dataBuffer;
+    const WICRect* m_locked_rect;
+    size_t m_bytesPerRow;
+    IDisplayTexture* m_texture;
 };
 
-inline WICPixelFormatGUID SurfaceFormatToWICPixelFormat(__CGSurfaceFormat format) {
-    switch (format) {
-        case _ColorABGR:
-        case _ColorXBGR:
-            // XBGR is not supported by wic bitmap render target
-            return GUID_WICPixelFormat32bppPRGBA;
-        case _ColorARGB:
-            return GUID_WICPixelFormat32bppPBGRA;
-        case _ColorBGRX:
-        case _ColorBGR:
-            return GUID_WICPixelFormat32bppBGR;
-        case _ColorGrayscale:
-        case _ColorA8:
-            return GUID_WICPixelFormat8bppAlpha;
-        default:
-            break;
-    }
-    // our default format is alpha premultiplied BGRA
-    return GUID_WICPixelFormat32bppPBGRA;
-}
-
-class CGIWICBitmap : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::ClassicCom>, IAgileObject, FtmBase, IWICBitmap> {
+class CGIWICBitmap
+    : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::ClassicCom>, IAgileObject, FtmBase, IWICBitmap, ICGDisplayTexture> {
 public:
-    CGIWICBitmap(_In_ CGImageBacking* imageBacking, _In_ __CGSurfaceFormat format)
-        : m_imageBacking(imageBacking), m_pixelFormat(SurfaceFormatToWICPixelFormat(format)) {
+    CGIWICBitmap(_In_ IDisplayTexture* texture, _In_ WICPixelFormatGUID pixelFormat, _In_ UINT height, _In_ UINT width)
+        : m_texture(texture), m_pixelFormat(pixelFormat), m_height(height), m_width(width) {
+    }
+
+    ~CGIWICBitmap() {
+        delete m_texture;
+        m_texture = nullptr;
     }
 
     // IWICBitmap interface
-    // TODO::
-    // Today we do not support locking a region of the WIC bitmap for rendering. We only support locking the complete bitmap. This will
-    // suffice CoreText requirement but needs to be revisted for CoreGraphics usage in future.
-    HRESULT STDMETHODCALLTYPE Lock(_In_ const WICRect* lockRect, _In_ DWORD flags, _COM_Outptr_ IWICBitmapLock** outLock) {
-        ComPtr<IWICBitmapLock> lock = Make<CGIWICBitmapLock>(m_imageBacking, m_pixelFormat);
+    // TODO #1124: Today we do not support locking a region of the WIC bitmap for rendering. We only support locking the complete bitmap.
+    // This will suffice CoreText requirement but needs to be revisted for CoreGraphics usage in future.
+
+    HRESULT STDMETHODCALLTYPE Lock(_In_ const WICRect* region, _In_ DWORD flags, _COM_Outptr_ IWICBitmapLock** outLock) {
+        // flags is ignored.
+        RETURN_HR_IF_NULL(E_POINTER, outLock);
+
+        if (region == nullptr) {
+            WICRect rect = { 0, 0, m_width, m_height };
+            region = &rect;
+        } else {
+            RETURN_HR_IF(E_INVALIDARG, (region->Width > m_width) || (region->Height > m_height));
+        }
+
+        ComPtr<IWICBitmapLock> lock = Make<CGIWICBitmapLock>(m_texture, region, m_pixelFormat);
         *outLock = lock.Detach();
         return S_OK;
     }
@@ -121,12 +146,16 @@ public:
 
     // IWICBitmapSource interface (that IWICBitmap inherits)
     HRESULT STDMETHODCALLTYPE GetSize(_Out_ UINT* width, _Out_ UINT* height) {
-        *width = m_imageBacking->Width();
-        *height = m_imageBacking->Height();
+        RETURN_HR_IF_NULL(E_POINTER, width);
+        RETURN_HR_IF_NULL(E_POINTER, height);
+
+        *width = m_width;
+        *height = m_height;
         return S_OK;
     }
 
     HRESULT STDMETHODCALLTYPE GetPixelFormat(_Out_ WICPixelFormatGUID* pixelFormat) {
+        RETURN_HR_IF_NULL(E_POINTER, pixelFormat);
         *pixelFormat = m_pixelFormat;
         return S_OK;
     }
@@ -149,7 +178,19 @@ public:
         return E_NOTIMPL;
     }
 
+    HRESULT STDMETHODCALLTYPE DisplayTexture(_Out_ IDisplayTexture** displayTexture) {
+        RETURN_HR_IF_NULL(E_POINTER, displayTexture);
+        *displayTexture = m_texture;
+        return S_OK;
+    }
+
 private:
-    CGImageBacking* m_imageBacking;
     WICPixelFormatGUID m_pixelFormat;
+    IDisplayTexture* m_texture;
+    UINT m_height;
+    UINT m_width;
 };
+
+#if defined __clang__
+#pragma clang diagnostic pop
+#endif
