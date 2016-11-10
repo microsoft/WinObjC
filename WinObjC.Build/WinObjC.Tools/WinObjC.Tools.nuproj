@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.props" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.props')" />
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|AnyCPU">
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|AnyCPU">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Configuration">
+    <PackageId>WinObjC.Tools</PackageId>
+    <Title>WinObjC.Tools</Title>
+    <Authors>Microsoft</Authors>
+    <Owners>Microsoft</Owners>
+    <Summary>WinObjC.Tools</Summary>
+    <Description>WinObjC.Tools</Description>
+    <PackageReleaseNotes>
+    </PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/Microsoft/WinObjC</PackageProjectUrl>
+    <PackageLicenseUrl>
+    </PackageLicenseUrl>
+    <Copyright>Copyright © Microsoft</Copyright>
+    <PackageTags>WinObjC.Tools</PackageTags>
+  </PropertyGroup>
+  <PropertyGroup Label="Globals">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <ProjectGuid>0a23b6b4-94bb-4b3a-ba73-a7cb5ef7d8f9</ProjectGuid>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="project.json" />
+    <None Include="WinObjC.Tools.targets" />
+    <None Include="tools\**\*.*" />
+    <None Include="vsimporter-templates\**\*.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Readme.txt">
+      <IncludeInPackage>true</IncludeInPackage>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\vsimporter\vsimporter.vcxproj" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+  <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
+  <Import Project="WinObjC.Tools.targets" />
+</Project>

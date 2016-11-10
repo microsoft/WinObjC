@@ -42,7 +42,7 @@
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
     <WINOBJC_SDK_ROOT>..\..\..</WINOBJC_SDK_ROOT>
-    <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
+    
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -291,4 +291,7 @@
     <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
   </ImportGroup>
   <Target Name="Build" DependsOnTargets="$(BuildDependsOn)" />
+  <ItemGroup>
+    <None Include="Project.json" />
+  </ItemGroup>
 </Project>

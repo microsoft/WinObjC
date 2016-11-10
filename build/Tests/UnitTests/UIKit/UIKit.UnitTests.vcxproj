@@ -77,7 +77,7 @@
     <WindowsAppContainer>false</WindowsAppContainer>
     <TargetOsAndVersion>Universal Windows</TargetOsAndVersion>
     <StarboardBasePath>..\..\..\..</StarboardBasePath>
-    <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
+    
     <IslandwoodDRT>false</IslandwoodDRT>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(RootNamespace)\</OutDir>
   </PropertyGroup>
@@ -279,4 +279,7 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.targets" />
   </ImportGroup>
+  <ItemGroup>
+    <None Include="Project.json" />
+  </ItemGroup>
 </Project>

@@ -55,7 +55,7 @@
     </ClCompile>
     <ClangCompile>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCORELOCATION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
+      
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -66,7 +66,7 @@
     </ClCompile>
     <ClangCompile>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCORELOCATION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
+      
       <OptimizationLevel>Full</OptimizationLevel>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
@@ -78,7 +78,7 @@
     </ClCompile>
     <ClangCompile>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCORELOCATION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
+      
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -89,7 +89,7 @@
     </ClCompile>
     <ClangCompile>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCORELOCATION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
+      
       <OptimizationLevel>Full</OptimizationLevel>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
@@ -97,4 +97,7 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <ItemGroup>
+    <None Include="Project.json" />
+  </ItemGroup>
 </Project>

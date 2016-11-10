@@ -27,7 +27,6 @@
     <AppContainerApplication Condition="'$(AppContainerApplication)'==''">true</AppContainerApplication>
     <ApplicationType Condition="'$(ApplicationType)'==''">Windows Store</ApplicationType>
     <ApplicationTypeRevision Condition="'$(ApplicationTypeRevision)'==''">10.0</ApplicationTypeRevision>
-    <UseStarboardSourceSdk Condition="'$(UseStarboardSourceSdk)'==''">true</UseStarboardSourceSdk>
     <IslandwoodDRT Condition="'$(IslandwoodDRT)'==''">false</IslandwoodDRT>
     <StarboardLinkWholeArchive Condition="'$(StarboardLinkWholeArchive)'==''">false</StarboardLinkWholeArchive>
     <WindowsTargetPlatformVersion Condition="'$(WindowsTargetPlatformVersion)'==''">10.0.10586.0</WindowsTargetPlatformVersion>
@@ -51,10 +50,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
 
-  <ImportGroup>
-    <Import Project="$(MSBuildThisFileDirectory)starboard.props" />
-  </ImportGroup>
-
   <PropertyGroup>
     <GenerateManifest>false</GenerateManifest>
     <IgnoreImportLibrary>false</IgnoreImportLibrary>
@@ -70,7 +65,8 @@
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebugDLL</RuntimeLibrary>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>true</TreatWarningAsError>    
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)..\include\VCInclude</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -82,6 +78,7 @@
 
       <!-- Ensure we pick up operator new from our project rather than the C runtime -->
       <ForceSymbolReferences>??2@YAPAXI@Z</ForceSymbolReferences>
+      <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(MSBuildThisFileDirectory)..\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -89,6 +86,9 @@
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <AdditionalOptions>-Werror -Wno-microsoft %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_WINOBJC_DO_NOT_USE_NSLOG=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <InternalSystemIncludePaths>%(InternalSystemIncludePaths);$(IncludePath);$(MSBuildThisFileDirectory)..\include\;$(MSBuildThisFileDirectory)..\include\xplat;$(MSBuildThisFileDirectory)..\include\VCInclude\;$(MSBuildThisFileDirectory)..\deps\prebuilt\include\;$(MSBuildThisFileDirectory)..\deps\prebuilt\include\icu;$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)..\include\Platform', '$(TargetOsAndVersion)'))</InternalSystemIncludePaths>
+      <IncludePaths>%(IncludePaths);$(MSBuildThisFileDirectory)..\Frameworks\include\;</IncludePaths>
+      <InternalForceIncludes>%(InternalForceIncludes);StubIncludes.h;</InternalForceIncludes>
     </ClangCompile>
   </ItemDefinitionGroup>
 
