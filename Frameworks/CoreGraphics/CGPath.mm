@@ -46,7 +46,7 @@ inline CGPoint __CreateCGPointWithTransform(CGFloat x, CGFloat y, const CGAffine
 using namespace std;
 using namespace Microsoft::WRL;
 
-struct __CGPathImpl {
+struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     ComPtr<ID2D1PathGeometry> pathGeometry;
     ComPtr<ID2D1GeometrySink> geometrySink;
 
@@ -54,33 +54,31 @@ struct __CGPathImpl {
     CGPoint currentPoint{ 0, 0 };
     CGPoint startingPoint{ 0, 0 };
 
-    __CGPathImpl() : figureClosed(true) {
+    __CGPath() : figureClosed(true) {
     }
-};
 
-struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
     ComPtr<ID2D1PathGeometry> GetPathGeometry() {
-        return _impl.pathGeometry;
+        return pathGeometry;
     }
 
     ComPtr<ID2D1GeometrySink> GetGeometrySink() {
-        return _impl.geometrySink;
+        return geometrySink;
     }
 
     CGPoint GetCurrentPoint() {
-        return _impl.currentPoint;
+        return currentPoint;
     }
 
     CGPoint GetStartingPoint() {
-        return _impl.startingPoint;
+        return startingPoint;
     }
 
     void SetCurrentPoint(CGPoint newPoint) {
-        _impl.currentPoint = newPoint;
+        currentPoint = newPoint;
     }
 
     void SetStartingPoint(CGPoint newPoint) {
-        _impl.startingPoint = newPoint;
+        startingPoint = newPoint;
     }
 
     // A private helper function for re-opening a path geometry. CGPath does not
@@ -90,7 +88,7 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
     // we must open the path again. This cannot be done normally, so we must
     // create a new path with the old path information to edit.
     HRESULT PreparePathForEditing() {
-        if (!_impl.geometrySink) {
+        if (!geometrySink) {
             // Re-open this geometry.
             ComPtr<ID2D1Factory> factory;
             RETURN_IF_FAILED(_CGGetD2DFactory(&factory));
@@ -104,37 +102,37 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
             // reason so this will force it to do otherwise.
             RETURN_IF_FAILED(factory->CreatePathGeometry(&newPath));
             RETURN_IF_FAILED(newPath->Open(&newSink));
-            RETURN_IF_FAILED(_impl.pathGeometry->Stream(newSink.Get()));
+            RETURN_IF_FAILED(pathGeometry->Stream(newSink.Get()));
 
-            _impl.pathGeometry = newPath;
-            _impl.geometrySink = newSink;
+            pathGeometry = newPath;
+            geometrySink = newSink;
 
             // Without a new figure being created, it's by default closed
-            _impl.figureClosed = true;
+            figureClosed = true;
         }
         return S_OK;
     }
 
     HRESULT ClosePath() {
-        if (_impl.geometrySink) {
+        if (geometrySink) {
             EndFigure(D2D1_FIGURE_END_OPEN);
-            RETURN_IF_FAILED(_impl.geometrySink->Close());
-            _impl.geometrySink = nullptr;
+            RETURN_IF_FAILED(geometrySink->Close());
+            geometrySink = nullptr;
         }
         return S_OK;
     }
 
     void BeginFigure() {
-        if (_impl.figureClosed) {
-            _impl.geometrySink->BeginFigure(_CGPointToD2D_F(_impl.currentPoint), D2D1_FIGURE_BEGIN_FILLED);
-            _impl.figureClosed = false;
+        if (figureClosed) {
+            geometrySink->BeginFigure(_CGPointToD2D_F(currentPoint), D2D1_FIGURE_BEGIN_FILLED);
+            figureClosed = false;
         }
     }
 
     void EndFigure(D2D1_FIGURE_END figureStatus) {
-        if (!_impl.figureClosed) {
-            _impl.geometrySink->EndFigure(figureStatus);
-            _impl.figureClosed = true;
+        if (!figureClosed) {
+            geometrySink->EndFigure(figureStatus);
+            figureClosed = true;
         }
     }
 
@@ -142,8 +140,8 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath, __CGPathImpl> {
         ComPtr<ID2D1Factory> factory;
         RETURN_IF_FAILED(_CGGetD2DFactory(&factory));
 
-        RETURN_IF_FAILED(factory->CreatePathGeometry(&_impl.pathGeometry));
-        RETURN_IF_FAILED(_impl.pathGeometry->Open(&_impl.geometrySink));
+        RETURN_IF_FAILED(factory->CreatePathGeometry(&pathGeometry));
+        RETURN_IF_FAILED(pathGeometry->Open(&geometrySink));
 
         return S_OK;
     }
