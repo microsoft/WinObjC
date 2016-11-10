@@ -19,6 +19,7 @@
 #import <CoreText/CoreText.h>
 #import <UIKit/UIKit.h>
 #import <StubReturn.h>
+#import "Starboard/SmartTypes.h"
 
 static const float c_errorDelta = 0.0005f;
 
@@ -127,4 +128,13 @@ TEST(CTFramesetter, ShouldBeAbleToCreateMultipleFramesFromSameFramesetter) {
     CFRelease(secondFrame);
     CFRelease(thirdFrame);
     CFRelease(fullFrame);
+}
+
+TEST(CTFramesetter, ShouldNotCreatePastEndOfString) {
+    NSMutableAttributedString* attrString = getAttributedString(@"ABCDEFGHIJ");
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)attrString;
+    woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString(string) };
+    CGPathRef path = CGPathCreateWithRect(CGRectMake(0, 0, FLT_MAX, FLT_MAX), nullptr);
+    woc::unique_cf<CTFrameRef> firstFrame{ CTFramesetterCreateFrame(framesetter.get(), { 5, 0 }, path, nullptr) };
+    EXPECT_NE(firstFrame.get(), nil);
 }
