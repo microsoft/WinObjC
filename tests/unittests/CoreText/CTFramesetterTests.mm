@@ -134,7 +134,7 @@ TEST(CTFramesetter, ShouldNotCreatePastEndOfString) {
     NSMutableAttributedString* attrString = getAttributedString(@"ABCDEFGHIJ");
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)attrString;
     woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString(string) };
-    CGPathRef path = CGPathCreateWithRect(CGRectMake(0, 0, FLT_MAX, FLT_MAX), nullptr);
-    woc::unique_cf<CTFrameRef> firstFrame{ CTFramesetterCreateFrame(framesetter.get(), { 5, 0 }, path, nullptr) };
+    woc::unique_cf<CGPathRef> path{ CGPathCreateWithRect(CGRectMake(0, 0, FLT_MAX, FLT_MAX), nullptr) };
+    woc::unique_cf<CTFrameRef> firstFrame{ CTFramesetterCreateFrame(framesetter.get(), { 5, 0 }, path.get(), nullptr) };
     EXPECT_NE(firstFrame.get(), nil);
 }
