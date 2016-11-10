@@ -22,6 +22,7 @@
 @interface NSParagraphStyle ()
 
 - (CTParagraphStyleRef)_createCTParagraphStyle;
+- (void)_setParagraphStyle:(NSParagraphStyle*)obj;
 
 // Redeclaring properties for read/write access in mutable subclass
 @property (nonatomic, readwrite) NSTextAlignment alignment;

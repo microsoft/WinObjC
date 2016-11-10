@@ -27,19 +27,22 @@
     [super dealloc];
 }
 
+- (instancetype)init {
+    if (self = [super init]) {
+        self.alignment = NSTextAlignmentNatural;
+        self.lineBreakMode = NSLineBreakByWordWrapping;
+        self.baseWritingDirection = NSWritingDirectionNatural;
+    }
+
+    return self;
+}
+
 /**
  @Status Caveat
  @Notes Tab Stops not supported
 */
 + (NSParagraphStyle*)defaultParagraphStyle {
-    NSParagraphStyle* ret = [self new];
-    if (ret) {
-        ret.alignment = NSTextAlignmentNatural;
-        ret.lineBreakMode = NSLineBreakByWordWrapping;
-        ret.baseWritingDirection = NSWritingDirectionNatural;
-    }
-
-    return ret;
+    return [self new];
 }
 
 /**
@@ -139,6 +142,24 @@
           { kCTParagraphStyleSpecifierParagraphSpacingBefore, sizeof(CGFloat), &_paragraphSpacingBefore },
           { kCTParagraphStyleSpecifierBaseWritingDirection, sizeof(CGFloat), &writingDirection } };
     return CTParagraphStyleCreate(settings, std::extent<decltype(settings)>::value);
+}
+
+- (void)_setParagraphStyle:(NSParagraphStyle*)obj {
+    self.alignment = obj.alignment;
+    self.firstLineHeadIndent = obj.firstLineHeadIndent;
+    self.headIndent = obj.headIndent;
+    self.tailIndent = obj.tailIndent;
+    self.lineBreakMode = obj.lineBreakMode;
+    self.maximumLineHeight = obj.maximumLineHeight;
+    self.minimumLineHeight = obj.minimumLineHeight;
+    self.lineSpacing = obj.lineSpacing;
+    self.paragraphSpacing = obj.paragraphSpacing;
+    self.paragraphSpacingBefore = obj.paragraphSpacingBefore;
+    self.baseWritingDirection = obj.baseWritingDirection;
+    self.lineHeightMultiple = obj.lineHeightMultiple;
+    self.tabStops = obj.tabStops;
+    self.defaultTabInterval = obj.defaultTabInterval;
+    self.hyphenationFactor = obj.hyphenationFactor;
 }
 
 @end

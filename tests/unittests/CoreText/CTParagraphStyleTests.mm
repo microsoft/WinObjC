@@ -22,7 +22,7 @@ const static float c_errorDelta = 0.001f;
 
 TEST(CoreText, CTParagraphStyle) {
     CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(nullptr, 0);
-    EXPECT_TRUE_MSG(paragraphStyle != nullptr, "FAILED: Could not create paragraph style");
+    EXPECT_NE_MSG(paragraphStyle, nullptr, "FAILED: Could not create paragraph style");
 
     CGFloat val = 2.0f;
     CTParagraphStyleSetting settings[1] = { {.spec = kCTParagraphStyleSpecifierTailIndent, .valueSize = sizeof(CGFloat), .value = &val } };

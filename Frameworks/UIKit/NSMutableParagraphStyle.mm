@@ -25,21 +25,7 @@
 */
 - (id)copyWithZone:(NSZone*)zone {
     NSParagraphStyle* ret = [NSParagraphStyle new];
-    ret.alignment = self.alignment;
-    ret.firstLineHeadIndent = self.firstLineHeadIndent;
-    ret.headIndent = self.headIndent;
-    ret.tailIndent = self.tailIndent;
-    ret.lineBreakMode = self.lineBreakMode;
-    ret.maximumLineHeight = self.maximumLineHeight;
-    ret.minimumLineHeight = self.minimumLineHeight;
-    ret.lineSpacing = self.lineSpacing;
-    ret.paragraphSpacing = self.paragraphSpacing;
-    ret.paragraphSpacingBefore = self.paragraphSpacingBefore;
-    ret.baseWritingDirection = self.baseWritingDirection;
-    ret.lineHeightMultiple = self.lineHeightMultiple;
-    ret.tabStops = self.tabStops;
-    ret.defaultTabInterval = self.defaultTabInterval;
-    ret.hyphenationFactor = self.hyphenationFactor;
+    [ret _setParagraphStyle:self];
     return ret;
 }
 
@@ -48,21 +34,7 @@
  @Notes
 */
 - (void)setParagraphStyle:(NSParagraphStyle*)obj {
-    self.alignment = obj.alignment;
-    self.firstLineHeadIndent = obj.firstLineHeadIndent;
-    self.headIndent = obj.headIndent;
-    self.tailIndent = obj.tailIndent;
-    self.lineBreakMode = obj.lineBreakMode;
-    self.maximumLineHeight = obj.maximumLineHeight;
-    self.minimumLineHeight = obj.minimumLineHeight;
-    self.lineSpacing = obj.lineSpacing;
-    self.paragraphSpacing = obj.paragraphSpacing;
-    self.paragraphSpacingBefore = obj.paragraphSpacingBefore;
-    self.baseWritingDirection = obj.baseWritingDirection;
-    self.lineHeightMultiple = obj.lineHeightMultiple;
-    self.tabStops = obj.tabStops;
-    self.defaultTabInterval = obj.defaultTabInterval;
-    self.hyphenationFactor = obj.hyphenationFactor;
+    [self _setParagraphStyle:obj];
 }
 
 /**
