@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Condition="$(MSBuildProjectExtension) == '.nuproj'" Project="WinObjC.Packager.props" />
+  <Import Condition="$(MSBuildProjectExtension) == '.nuproj'" Project="WinObjC.Packager.targets" />
+
+  <Import Condition="$(MSBuildProjectExtension) == '.vcxproj'" Project="WinObjC.Packageable.props" />
+  <Import Condition="$(MSBuildProjectExtension) == '.vcxproj'" Project="WinObjC.Packageable.targets" />
+</Project>

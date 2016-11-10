@@ -269,18 +269,6 @@ VCProject* SBTarget::constructVCProject(VSTemplateProject* projTemplate)
     proj->addGlobalProperty("ExportPublicHeaders", "true");
   }
 
-  // Get path to WinObjC SDK
-  const BuildSettings& projBS = m_parentProject.getBuildSettings();
-  String useRelativeSdkPath = projBS.getValue("VSIMPORTER_RELATIVE_SDK_PATH");
-  String sdkDir = projBS.getValue("WINOBJC_SDK_ROOT");
-
-  // Try to create a relative path to the SDK, if requested
-  if (strToUpper(useRelativeSdkPath) == "YES") {
-    String projectDir = sb_dirname(projTemplate->getPath());
-    sdkDir = getRelativePath(projectDir, sdkDir);
-  }
-  proj->addGlobalProperty("WINOBJC_SDK_ROOT", platformPath(sdkDir), "'$(WINOBJC_SDK_ROOT)' == ''");
-
   // Compute a common TargetName (by taking the first value we find)
   String vsTargetName = getName();
   for (auto configBS : m_buildSettings) {

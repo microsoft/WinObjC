@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hmapmaker", "vsimporter\hmapmaker.vcxproj", "{A3789952-83A5-49E1-A9FC-5280EBD9F499}"
 EndProject
@@ -26,6 +26,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xib2xaml", "vsimporter\xib2xaml\xib2xaml\xib2xaml.csproj", "{816ECDCE-018E-4A5F-BC32-87B676D8119C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Xib2Xaml", "Xib2Xaml", "{EDC25BF0-C646-414A-877E-6BD07C5C9151}"
+EndProject
+Project("{5DD5E4FA-CB73-4610-85AB-557B54E96AA9}") = "WinObjC.Packaging", "WinObjC.Packaging\WinObjC.Packaging.nuproj", "{DDC2AA5F-C8AE-48CB-ADB7-9278985C3DB7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinObjC Packaging Package", "WinObjC Packaging Package", "{44A09656-435B-483B-B055-25B5D6628A64}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Package", "Package", "{DAA31F96-6D42-42D4-9B3C-11D65A17EE17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +111,14 @@ Global
 		{816ECDCE-018E-4A5F-BC32-87B676D8119C}.Release|Any CPU.ActiveCfg = Release|x86
 		{816ECDCE-018E-4A5F-BC32-87B676D8119C}.Release|x86.ActiveCfg = Release|x86
 		{816ECDCE-018E-4A5F-BC32-87B676D8119C}.Release|x86.Build.0 = Release|x86
+		{DDC2AA5F-C8AE-48CB-ADB7-9278985C3DB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDC2AA5F-C8AE-48CB-ADB7-9278985C3DB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDC2AA5F-C8AE-48CB-ADB7-9278985C3DB7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DDC2AA5F-C8AE-48CB-ADB7-9278985C3DB7}.Debug|x86.Build.0 = Debug|Any CPU
+		{DDC2AA5F-C8AE-48CB-ADB7-9278985C3DB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDC2AA5F-C8AE-48CB-ADB7-9278985C3DB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDC2AA5F-C8AE-48CB-ADB7-9278985C3DB7}.Release|x86.ActiveCfg = Release|Any CPU
+		{DDC2AA5F-C8AE-48CB-ADB7-9278985C3DB7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -112,5 +126,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0C1B7E5B-2252-49B5-89EC-FD86A526057D} = {EDC25BF0-C646-414A-877E-6BD07C5C9151}
 		{816ECDCE-018E-4A5F-BC32-87B676D8119C} = {EDC25BF0-C646-414A-877E-6BD07C5C9151}
+		{DDC2AA5F-C8AE-48CB-ADB7-9278985C3DB7} = {DAA31F96-6D42-42D4-9B3C-11D65A17EE17}
+		{DAA31F96-6D42-42D4-9B3C-11D65A17EE17} = {44A09656-435B-483B-B055-25B5D6628A64}
 	EndGlobalSection
 EndGlobal
