@@ -179,7 +179,10 @@ struct __CGImageImpl {
     }
 };
 
-struct __CGImage : CoreFoundation::CppBase<__CGImage, __CGImageImpl> {
+struct __CGImage : CoreFoundation::CppBase<__CGImage> {
+    // TODO(JJ) REMOVE THIS; Merge Impl into __CGImage.
+    __CGImageImpl _impl;
+
     inline Microsoft::WRL::ComPtr<IWICBitmap>& ImageSource() {
         return _impl.bitmapImageSource;
     }
