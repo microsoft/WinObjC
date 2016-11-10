@@ -32,7 +32,7 @@ static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameSize, CF
     // Call _DWriteWrapper to get _CTLine object list that makes up this frame
     _CTTypesetter* typesetter = static_cast<_CTTypesetter*>(framesetter->_typesetter);
     if (range.length == 0L) {
-        range.length = typesetter->_characters.size() - range.location;
+        range.length = typesetter->_characters.size();
     }
 
     StrongId<_CTFrame> ret = _DWriteGetFrame(static_cast<CFAttributedStringRef>(typesetter->_attributedString.get()), range, frameSize);
@@ -42,10 +42,8 @@ static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameSize, CF
         return ret.detach();
     }
 
-    CTParagraphStyleRef settings =
-        static_cast<CTParagraphStyleRef>([typesetter->_attributedString attribute:static_cast<NSString*>(kCTParagraphStyleAttributeName)
-                                                                          atIndex:range.location
-                                                                   effectiveRange:nullptr]);
+    CTParagraphStyleRef settings = static_cast<CTParagraphStyleRef>(
+        [typesetter->_attributedString attribute:static_cast<NSString*>(kCTParagraphStyleAttributeName) atIndex:0 effectiveRange:nullptr]);
 
     if (settings == nullptr) {
         return ret.detach();
