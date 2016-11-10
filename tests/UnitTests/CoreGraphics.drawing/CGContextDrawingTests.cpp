@@ -17,11 +17,17 @@
 #include "DrawingTest.h"
 
 DRAW_TEST_F(CGContext, RedBox, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
     CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1.0);
     CGContextFillRect(context, CGRectInset(bounds, 10, 10));
 }
 
 DRAW_TEST_F(CGContext, FillThenStrokeIsSameAsDrawFillStroke, WhiteBackgroundTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
     // Black with a faint red outline will allow us to see through the red.
     CGContextSetRGBFillColor(context, 0.0, 0.0, 0.0, 1.0);
     CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 0.33);
@@ -57,6 +63,9 @@ static void _drawThreeCirclesInContext(CGContextRef context, CGRect bounds) {
 }
 
 DRAW_TEST_F(CGContext, OverlappingCirclesColorAlpha, WhiteBackgroundTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
     CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 0.5);
     CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
     CGContextSetLineWidth(context, 5);
@@ -65,6 +74,9 @@ DRAW_TEST_F(CGContext, OverlappingCirclesColorAlpha, WhiteBackgroundTest) {
 }
 
 DRAW_TEST_F(CGContext, OverlappingCirclesGlobalAlpha, WhiteBackgroundTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
     CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1.0);
     CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
     CGContextSetLineWidth(context, 5);
@@ -75,6 +87,9 @@ DRAW_TEST_F(CGContext, OverlappingCirclesGlobalAlpha, WhiteBackgroundTest) {
 }
 
 DRAW_TEST_F(CGContext, OverlappingCirclesGlobalAlphaStackedWithColorAlpha, WhiteBackgroundTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
     CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 0.5);
     CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
     CGContextSetLineWidth(context, 5);
@@ -85,6 +100,9 @@ DRAW_TEST_F(CGContext, OverlappingCirclesGlobalAlphaStackedWithColorAlpha, White
 }
 
 DISABLED_DRAW_TEST_F(CGContext, OverlappingCirclesTransparencyLayerAlpha, WhiteBackgroundTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
     CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1.0);
     CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
     CGContextSetLineWidth(context, 5);
@@ -102,6 +120,9 @@ DISABLED_DRAW_TEST_F(CGContext, OverlappingCirclesTransparencyLayerAlpha, WhiteB
 // changing the CTM before stroking it does not cause it to scale!
 // However, the stroke width _is_ scaled (!)
 DRAW_TEST_F(CGContext, ChangeCTMAfterCreatingPath, WhiteBackgroundTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
     CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
     CGContextSetLineWidth(context, 1);
 

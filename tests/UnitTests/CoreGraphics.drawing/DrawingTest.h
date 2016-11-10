@@ -23,10 +23,12 @@
 
 namespace testing {
 class DrawTest : public ::testing::Test {
+private:
+    woc::unique_cf<CGContextRef> _context;
+    CGRect _bounds;
+
 protected:
     static woc::unique_cf<CGColorSpaceRef> s_deviceColorSpace;
-    CGContextRef context;
-    CGRect bounds;
 
 public:
     static void SetUpTestCase();
@@ -37,6 +39,10 @@ public:
     virtual void SetUp();
     virtual void TearDown();
     virtual void TestBody();
+
+    CGContextRef GetDrawingContext();
+    void SetDrawingBounds(CGRect bounds);
+    CGRect GetDrawingBounds();
 };
 }
 

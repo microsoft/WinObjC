@@ -41,16 +41,18 @@ CGSize testing::DrawTest::CanvasSize() {
 void testing::DrawTest::SetUp() {
     CGSize size = CanvasSize();
 
-    context = CGBitmapContextCreate(
-        nullptr, size.width, size.height, 8, size.width * 4, s_deviceColorSpace.get(), kCGImageAlphaPremultipliedFirst);
-    ASSERT_NE(nullptr, context);
+    _context.reset(CGBitmapContextCreate(
+        nullptr, size.width, size.height, 8, size.width * 4, s_deviceColorSpace.get(), kCGImageAlphaPremultipliedFirst));
+    ASSERT_NE(nullptr, _context);
 
-    bounds = { CGPointZero, size };
+    _bounds = { CGPointZero, size };
 
     SetUpContext();
 }
 
 void testing::DrawTest::TearDown() {
+    CGContextRef context = GetDrawingContext();
+
     woc::unique_cf<CGImageRef> image{ CGBitmapContextCreateImage(context) };
     ASSERT_NE(nullptr, image);
 
@@ -100,7 +102,22 @@ void testing::DrawTest::TestBody() {
     // Nothing.
 }
 
+CGContextRef testing::DrawTest::GetDrawingContext() {
+    return _context.get();
+}
+
+void testing::DrawTest::SetDrawingBounds(CGRect bounds) {
+    _bounds = bounds;
+}
+
+CGRect testing::DrawTest::GetDrawingBounds() {
+    return _bounds;
+}
+
 void WhiteBackgroundTest::SetUpContext() {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
     CGContextSaveGState(context);
     CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 1.0);
     CGContextFillRect(context, bounds);
@@ -116,8 +133,14 @@ CGSize UIKitMimicTest::CanvasSize() {
 
 void UIKitMimicTest::SetUpContext() {
     WhiteBackgroundTest::SetUpContext();
+
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
     CGContextScaleCTM(context, 1.0, -1.0);
     CGContextTranslateCTM(context, 0, -bounds.size.height);
     CGContextScaleCTM(context, 2.0, 2.0);
     bounds = CGRectApplyAffineTransform(bounds, CGAffineTransformMakeScale(.5, .5));
+
+    SetDrawingBounds(bounds);
 }
