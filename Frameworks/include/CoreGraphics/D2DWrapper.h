@@ -27,7 +27,7 @@
 
 HRESULT _CGGetD2DFactory(ID2D1Factory** factory);
 
-Microsoft::WRL::ComPtr<IWICImagingFactory> _GetWICFactory();
+HRESULT _CGGetWICFactory(IWICImagingFactory** factory);
 
 inline D2D_POINT_2F _CGPointToD2D_F(CGPoint point) {
     return { point.x, point.y };

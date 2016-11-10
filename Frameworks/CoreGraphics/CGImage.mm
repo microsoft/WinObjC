@@ -74,7 +74,8 @@ CGImageRef CGImageCreate(size_t width,
     unsigned char* data = (unsigned char*)[dataProvider bytes];
 
     ComPtr<IWICBitmap> image;
-    ComPtr<IWICImagingFactory> imageFactory = _GetWICFactory();
+    ComPtr<IWICImagingFactory> imageFactory;
+    RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
 
     REFGUID pixelFormat = _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo);
 
@@ -93,7 +94,9 @@ CGImageRef CGImageCreate(size_t width,
 CGImageRef CGImageCreateWithImageInRect(CGImageRef ref, CGRect rect) {
     RETURN_NULL_IF(!ref);
 
-    ComPtr<IWICImagingFactory> imageFactory = _GetWICFactory();
+    ComPtr<IWICImagingFactory> imageFactory;
+    RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
+
     ComPtr<IWICBitmap> rectImage;
     RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSourceRect(
         ref->ImageSource().Get(), rect.origin.x, rect.origin.y, rect.size.width, rect.size.height, &rectImage));
@@ -113,7 +116,9 @@ CGImageRef CGImageCreateWithImageInRect(CGImageRef ref, CGRect rect) {
 CGImageRef CGImageCreateCopy(CGImageRef ref) {
     RETURN_NULL_IF(!ref);
 
-    ComPtr<IWICImagingFactory> imageFactory = _GetWICFactory();
+    ComPtr<IWICImagingFactory> imageFactory;
+    RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
+
     ComPtr<IWICBitmap> image;
 
     RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(ref->ImageSource().Get(), WICBitmapCacheOnDemand, &image));
@@ -147,7 +152,8 @@ CGImageRef CGImageMaskCreate(size_t width,
     unsigned char* data = (unsigned char*)[dataProvider bytes];
 
     ComPtr<IWICBitmap> image;
-    ComPtr<IWICImagingFactory> imageFactory = _GetWICFactory();
+    ComPtr<IWICImagingFactory> imageFactory;
+    RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
 
     woc::unique_cf<CGColorSpaceRef> colorSpace(CGColorSpaceCreateDeviceGray());
     REFGUID pixelFormat =
@@ -408,7 +414,9 @@ CGImageRef _CGImageCreateCopyWithPixelFormat(CGImageRef image, WICPixelFormatGUI
         return image;
     }
 
-    ComPtr<IWICImagingFactory> imageFactory = _GetWICFactory();
+    ComPtr<IWICImagingFactory> imageFactory;
+    RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
+
     ComPtr<IWICFormatConverter> converter;
     RETURN_NULL_IF_FAILED(imageFactory->CreateFormatConverter(&converter));
 
@@ -449,7 +457,8 @@ CGImageRef _CGImageLoadJPEG(void* bytes, int length) {
 }
 
 CGImageRef _CGImageLoadImageWithWICDecoder(REFGUID decoderCls, void* bytes, int length) {
-    ComPtr<IWICImagingFactory> imageFactory = _GetWICFactory();
+    ComPtr<IWICImagingFactory> imageFactory;
+    RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
 
     ComPtr<IWICBitmapDecoder> pDecoder;
     ComPtr<IWICStream> spStream;
