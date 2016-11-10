@@ -64,7 +64,7 @@ static const CGFloat c_height = 50;
     CGRect frame = CGRectMake(c_originX, c_originY, c_width, c_height);
 
     if (indexPath.row == 0) {
-        // text field for copy and paste
+        // text field for copy
         _copyTextField = [[UITextField alloc] initWithFrame:frame];
 
         _copyTextField.textColor = [UIColor blackColor];
@@ -73,7 +73,7 @@ static const CGFloat c_height = 50;
         _cell.textLabel.text = @"Text is copied from here";
         [_copyTextField addTarget:self action:@selector(onCopyTextChanged:) forControlEvents:UIControlEventEditingChanged];
     } else if (indexPath.row == 1) {
-        // text is pasted here
+        // Label to show pasted text
         _pasteTextLabel = [[UILabel alloc] initWithFrame:frame];
         _pasteTextLabel.textColor = [UIColor blackColor];
         _pasteTextLabel.font = [UIFont systemFontOfSize:17.0];
@@ -81,7 +81,7 @@ static const CGFloat c_height = 50;
         _cell.accessoryView = _pasteTextLabel;
         _cell.textLabel.text = @"Copied text Appears here";
     } else if (indexPath.row == 2) {
-        // control for copy and paste of text
+        // button to paste text
         _textPasteButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [_textPasteButton setFrame:CGRectMake(50, 50, 200, 40)];
         [_textPasteButton setTitle:@"Paste text" forState:UIControlStateNormal];
@@ -90,6 +90,7 @@ static const CGFloat c_height = 50;
         _cell.accessoryView = _textPasteButton;
         _cell.textLabel.text = @"Text copied from notepad will appear after hitting the button";
     } else if (indexPath.row == 3) {
+        // paste text content if exists
         UITextField* textField = [[UITextField alloc] initWithFrame:frame];
         UILabel* label = [[UILabel alloc] initWithFrame:frame];
         [label setBackgroundColor:nil];
@@ -102,7 +103,7 @@ static const CGFloat c_height = 50;
         _cell.accessoryView = label;
         _cell.textLabel.text = @"Copy text from notepad and it will appear in the accesoryView";
     } else if (indexPath.row == 4) {
-        // copy URL
+        // copy URL button
         _URLPasteButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [_URLPasteButton setFrame:CGRectMake(50, 50, 200, 40)];
         [_URLPasteButton setTitle:@"Copy sample URL " forState:UIControlStateNormal];
@@ -111,7 +112,7 @@ static const CGFloat c_height = 50;
         _cell.accessoryView = _URLPasteButton;
         _cell.textLabel.text = @"Click to copy the URL http://www.example.com/ to pasteboard";
     } else if (indexPath.row == 5) {
-        // paste of URL
+        // paste URL button
         _URLPasteButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [_URLPasteButton setFrame:CGRectMake(50, 50, 200, 40)];
         [_URLPasteButton setTitle:@"Paste URL" forState:UIControlStateNormal];
@@ -120,7 +121,7 @@ static const CGFloat c_height = 50;
         _cell.accessoryView = _URLPasteButton;
         _cell.textLabel.text = @"Click to paste URL in pasteboard if exists";
     } else if (indexPath.row == 6) {
-        // displayer for copy and paste of text
+        // Label to show pasted URL if exists
         UILabel* label = [[UILabel alloc] initWithFrame:frame];
         [label setBackgroundColor:nil];
         if (_pasteBoardURL != nil && _pasteBoardURL.absoluteString != nil) {
@@ -128,11 +129,10 @@ static const CGFloat c_height = 50;
         } else {
             [label setText:@"No clipboard URL present"];
         }
-
         _cell.accessoryView = label;
         _cell.textLabel.text = @"Copied URL will appear in the accesoryView";
     } else if (indexPath.row == 7) {
-        // control for copy of image
+        // copy image button
         _textPasteButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [_textPasteButton setFrame:CGRectMake(50, 50, 200, 40)];
         [_textPasteButton setTitle:@"Put Image to Pasteboard" forState:UIControlStateNormal];
@@ -141,7 +141,7 @@ static const CGFloat c_height = 50;
         _cell.accessoryView = _textPasteButton;
         _cell.textLabel.text = @"An image will be put into Pasteboard after hitting the button. Then click the button 'Show Image'.";
     } else if (indexPath.row == 8) {
-        // control for paste iamge in paste board
+        // paste image button
         _screenShotButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [_screenShotButton setFrame:CGRectMake(50, 50, 200, 40)];
         [_screenShotButton setTitle:@"Show Image" forState:UIControlStateNormal];
@@ -150,7 +150,7 @@ static const CGFloat c_height = 50;
         _cell.accessoryView = _screenShotButton;
         _cell.textLabel.text = @"Take A screen shot CTRL + ALT + PrintScreen then click the button the image should appear";
     } else if (indexPath.row == 9) {
-        // displayer for image in pastebard if exists, otherwise it will show image is not available
+        // display area for pasted image from pastebard if exists
         _cell.textLabel.text = @"Image should appear in accessory view";
         if (_imageView != nil) {
             UIView* view = [[UIView alloc] initWithFrame:CGRectMake(50, 50, 200, 40)];
@@ -163,8 +163,7 @@ static const CGFloat c_height = 50;
             _cell.accessoryView = label;
         }
     } else if (indexPath.row == 10) {
-        // clear pasteboard by setting items to be nil
-        // try to paste text/url/image, they all should be nil
+        // clear pasteboard button
         _cell.textLabel.text = @"Click to clear pasteboard, afterwards, try above paste text, url or image again";
         UIButton* clearPasteboardButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [clearPasteboardButton setFrame:CGRectMake(50, 50, 200, 40)];
@@ -173,8 +172,7 @@ static const CGFloat c_height = 50;
         [clearPasteboardButton addTarget:self action:@selector(onClearPasteboard) forControlEvents:UIControlEventTouchUpInside];
         _cell.accessoryView = clearPasteboardButton;
     } else if (indexPath.row == 11) {
-        // set an item contains text/url/image into pasteboard
-        // try to paste text/url/image, they all should be avaiable
+        // set items button 
         _cell.textLabel.text = @"Setting an item which contains text/url/image, afterwards, try paste text/url/image using above button";
         UIButton* setPasteboardItemsButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [setPasteboardItemsButton setFrame:CGRectMake(50, 50, 200, 40)];
@@ -183,6 +181,7 @@ static const CGFloat c_height = 50;
         [setPasteboardItemsButton addTarget:self action:@selector(onSetPasteboardItems) forControlEvents:UIControlEventTouchUpInside];
         _cell.accessoryView = setPasteboardItemsButton;
     } else if (indexPath.row == 12) {
+        // check number of items button
         _cell.textLabel.text = @"Click to check how many items in pasteboard";
         UIButton* onGetNumberOfPasteboardItems = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [onGetNumberOfPasteboardItems setFrame:CGRectMake(50, 50, 200, 40)];
@@ -194,7 +193,7 @@ static const CGFloat c_height = 50;
         _cell.accessoryView = onGetNumberOfPasteboardItems;
     }
     if (indexPath.row == 13) {
-        // displayer for copy and paste of text
+        // label to show how many items that pasteboard has
         UILabel* label = [[UILabel alloc] initWithFrame:frame];
         [label setBackgroundColor:nil];
         [label setText:[NSString stringWithFormat:@"%d", numberOfPasteboardItems]];
