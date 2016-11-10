@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -25,9 +25,12 @@
 #import <CoreGraphics/CGLayer.h>
 #import <CoreGraphics/CGAffineTransform.h>
 #import <CoreGraphics/CGGradient.h>
+#import <LoggingNative.h>
+#import <CoreGraphics/D2DWrapper.h>
 #import "CGColorSpaceInternal.h"
 #import "CGContextInternal.h"
 #import "CGPathInternal.h"
+#import "CGIWICBitmap.h"
 
 #import <CFCppBase.h>
 
@@ -37,7 +40,6 @@
 #import <d2d1effects_2.h>
 #import <wrl/client.h>
 #include <COMIncludes_end.h>
-#import <LoggingNative.h>
 
 #import <list>
 #import <vector>
@@ -1833,9 +1835,10 @@ struct __CGBitmapContext : CoreFoundation::CppBase<__CGBitmapContext, __CGBitmap
 
 /**
  @Status Caveat
- @Notes Limited bitmap formats available. Decode, shouldInterpolate, intent parameters
- and some byte orders ignored.
- */
+ @Notes If the image colorspace is not a valid render target format (as per
+ https://msdn.microsoft.com/en-us/library/windows/desktop/dd756766(v=vs.85).aspx#supported_wic_formats), it's converted to 32bpp BGRA
+ format. Does not support conversion if data is already provided.
+*/
 CGContextRef CGBitmapContextCreate(void* data,
                                    size_t width,
                                    size_t height,
@@ -1843,68 +1846,142 @@ CGContextRef CGBitmapContextCreate(void* data,
                                    size_t bytesPerRow,
                                    CGColorSpaceRef colorSpace,
                                    CGBitmapInfo bitmapInfo) {
-    UNIMPLEMENTED();
-    return nullptr;
+    return CGBitmapContextCreateWithData(data, width, height, bitsPerComponent, bytesPerRow, colorSpace, bitmapInfo, nullptr, nullptr);
+}
+
+/**
+ @Status Caveat
+ @Notes releaseCallback and releaseInfo is ignored. Also if the image colorspace is not a valid render target format (as per
+ https://msdn.microsoft.com/en-us/library/windows/desktop/dd756766(v=vs.85).aspx#supported_wic_formats), it's converted to 32bpp BGRA
+ format. Does not support conversion if data is already provided.
+*/
+CGContextRef CGBitmapContextCreateWithData(void* data,
+                                           size_t width,
+                                           size_t height,
+                                           size_t bitsPerComponent,
+                                           size_t bytesPerRow,
+                                           CGColorSpaceRef space,
+                                           uint32_t bitmapInfo,
+                                           CGBitmapContextReleaseDataCallback releaseCallback,
+                                           void* releaseInfo) {
+    RETURN_NULL_IF(!width);
+    RETURN_NULL_IF(!height);
+    RETURN_NULL_IF(!space);
+
+    size_t bitsPerPixel = ((bytesPerRow / width) << 3);
+    REFGUID pixelFormat = _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, space, bitmapInfo);
+
+    ComPtr<IWICBitmap> customBitmap;
+
+    if (_CGIsValidRenderTargetPixelFormat(pixelFormat)) {
+        // if data is null, enough memory is allocated via CGIWICBitmap
+        customBitmap = Make<CGIWICBitmap>(data, pixelFormat, height, width);
+    } else {
+        // TODO #<GITHUB-ID>: this will be an issue if we have change in stride, account for that.
+        // Also as per documentation, it's best to leave CGBitmapContext to manage the memory
+        if (data != nullptr) {
+            return nullptr;
+        }
+        customBitmap = Make<CGIWICBitmap>(data, GUID_WICPixelFormat32bppPBGRA, height, width);
+    }
+
+    RETURN_NULL_IF(!customBitmap);
+
+    woc::unique_cf<CGImageRef> image(_CGImageCreateWithWICBitmap(customBitmap.Get()));
+    RETURN_NULL_IF(!image);
+
+    ComPtr<ID2D1Factory> factory;
+    RETURN_NULL_IF_FAILED(_CGGetD2DFactory(&factory));
+
+    ComPtr<ID2D1RenderTarget> renderTarget;
+    RETURN_NULL_IF_FAILED(factory->CreateWicBitmapRenderTarget(customBitmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
+    return _CGBitmapContextCreateWithRenderTarget(renderTarget.Get(), image.get());
+}
+
+/**
+ @Status Interoperable
+*/
+CGBitmapInfo CGBitmapContextGetBitmapInfo(CGContextRef context) {
+    NOISY_RETURN_IF_NULL(context, 0);
+    return CGImageGetBitmapInfo(CGBitmapContextGetImage(context));
+}
+
+/**
+ @Status Interoperable
+*/
+CGImageAlphaInfo CGBitmapContextGetAlphaInfo(CGContextRef context) {
+    NOISY_RETURN_IF_NULL(context, kCGImageAlphaNone);
+    return CGImageGetAlphaInfo(CGBitmapContextGetImage(context));
+}
+
+/**
+ @Status Interoperable
+*/
+size_t CGBitmapContextGetBitsPerComponent(CGContextRef context) {
+    NOISY_RETURN_IF_NULL(context, 0);
+    return CGImageGetBitsPerComponent(CGBitmapContextGetImage(context));
+}
+
+/**
+ @Status Interoperable
+*/
+size_t CGBitmapContextGetBitsPerPixel(CGContextRef context) {
+    NOISY_RETURN_IF_NULL(context, 0);
+    return CGImageGetBitsPerPixel(CGBitmapContextGetImage(context));
 }
 
 /**
  @Status Interoperable
 */
 CGColorSpaceRef CGBitmapContextGetColorSpace(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return nullptr;
+    NOISY_RETURN_IF_NULL(context, nullptr);
+    return CGImageGetColorSpace(CGBitmapContextGetImage(context));
 }
 
 /**
  @Status Interoperable
 */
 size_t CGBitmapContextGetWidth(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return StubReturn();
+    NOISY_RETURN_IF_NULL(context, 0);
+    return CGImageGetWidth(CGBitmapContextGetImage(context));
 }
 
 /**
  @Status Interoperable
 */
 size_t CGBitmapContextGetHeight(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return StubReturn();
+    NOISY_RETURN_IF_NULL(context, 0);
+    return CGImageGetHeight(CGBitmapContextGetImage(context));
 }
 
 /**
  @Status Interoperable
 */
 size_t CGBitmapContextGetBytesPerRow(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return StubReturn();
+    NOISY_RETURN_IF_NULL(context, 0);
+    return CGImageGetBytesPerRow(CGBitmapContextGetImage(context));
 }
 
 /**
  @Status Interoperable
 */
 void* CGBitmapContextGetData(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return StubReturn();
+    NOISY_RETURN_IF_NULL(context, nullptr);
+    return _CGImageGetRawBytes(CGBitmapContextGetImage(context));
 }
 
 /**
  @Status Caveat
- @Notes Has no copy-on-write semantics; bitmap returned is the source bitmap representing
+ @Notes Has no copy-on-write semantics; bitmap returned is the copy of the source bitmap representing
         the CGContext
 */
 CGImageRef CGBitmapContextCreateImage(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return StubReturn();
+    NOISY_RETURN_IF_NULL(context, nullptr);
+    return CGImageCreateCopy(CGBitmapContextGetImage(context));
 }
 
 CGImageRef CGBitmapContextGetImage(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
+    NOISY_RETURN_IF_NULL(context, nullptr);
     if (CFGetTypeID(context) != __CGBitmapContext::GetTypeID()) {
         TraceError(TAG, L"Image requested from non-bitmap CGContext.");
         return nullptr;

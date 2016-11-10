@@ -369,6 +369,22 @@ CGImageRef CGImageCreateWithMaskingColors(CGImageRef image, const CGFloat* compo
 
 #pragma region WIC_HELPERS
 
+bool _CGIsValidRenderTargetPixelFormat(WICPixelFormatGUID pixelFormat) {
+    auto iterator = s_ValidRenderTargetPixelFormat.find(pixelFormat);
+    RETURN_FALSE_IF(iterator == s_ValidRenderTargetPixelFormat.end());
+
+    return true;
+}
+
+const __CGImagePixelProperties* _CGGetPixelFormatProperties(WICPixelFormatGUID pixelFormat) {
+    RETURN_NULL_IF(pixelFormat == GUID_WICPixelFormatUndefined);
+
+    auto iterator = s_PixelFormats.find(pixelFormat);
+    RETURN_NULL_IF(iterator == s_PixelFormats.end());
+
+    return &iterator->second;
+}
+
 IWICBitmap* _CGImageGetImageSource(CGImageRef image) {
     RETURN_NULL_IF(!image);
     return image->ImageSource().Get();

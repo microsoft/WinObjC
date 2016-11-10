@@ -44,24 +44,36 @@ DISABLED_TEST(CGBitmapContext, BitmapInfoAPIs_CMYK) {
     CGContextRelease(context);
 }
 
-DISABLED_TEST(CGBitmapContext, BitmapInfoAPIs_RGB) {
+TEST(CGBitmapContext, BitmapInfoAPIs_RGB) {
     CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context = CGBitmapContextCreate(0, 0, 0, 8, 0, rgbColorSpace, 0);
+    CGContextRef context = CGBitmapContextCreate(nullptr, 0, 0, 8, 0, rgbColorSpace, 0);
+    EXPECT_EQ(nullptr, context);
 
-    EXPECT_EQ(CGBitmapContextGetBitmapInfo(context), 0);
+    context = CGBitmapContextCreate(nullptr, 5, 5, 20, 8, rgbColorSpace, 0);
+
+    EXPECT_EQ(CGBitmapContextGetWidth(context), 5);
+    EXPECT_EQ(CGBitmapContextGetHeight(context), 5);
     EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context), 8);
-    EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 24);
+    EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 32);
 
     CGColorSpaceRelease(rgbColorSpace);
     CGContextRelease(context);
 }
 
-DISABLED_TEST(CGBitmapContext, BitmapInfoAPIs_Gray) {
+TEST(CGBitmapContext, BitmapInfoAPIs_Gray) {
     CGColorSpaceRef grayColorSpace = CGColorSpaceCreateDeviceGray();
     CGContextRef context = CGBitmapContextCreate(0, 0, 0, 8, 0, grayColorSpace, 0);
+    EXPECT_EQ(context, nullptr);
+
+    context = CGBitmapContextCreate(nullptr, 120, 20, 8, 480, grayColorSpace, 0);
 
     EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context), 8);
-    EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 8);
+    EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 32);
+    EXPECT_EQ(CGBitmapContextGetWidth(context), 120);
+    EXPECT_EQ(CGBitmapContextGetHeight(context), 20);
+
+    EXPECT_EQ(CGBitmapContextGetBytesPerRow(context), 480);
+    EXPECT_NE(CGBitmapContextGetData(context), nullptr);
 
     CGColorSpaceRelease(grayColorSpace);
     CGContextRelease(context);
@@ -151,6 +163,7 @@ void _TestPixelFormat(const CGRect bounds, const CGBitmapInfo info, DWORD expect
     CGColorSpaceRelease(colorSpace);
     CGContextRelease(context);
 }
+
 DISABLED_TEST(CGBitmapContext, VerifyPixelFormatRGBA) {
     _TestPixelFormat(CGRect{ 0, 0, 10, 10 },
                      kCGBitmapByteOrder32Big | kCGImageAlphaPremultipliedLast,
@@ -167,4 +180,21 @@ DISABLED_TEST(CGBitmapContext, VerifyPixelFormatBGRA) {
                      0xff3a1d63, // expectedfg1
                      0xffb15927 // expectedfg2
                      );
+}
+
+TEST(CGBitmapContext, Contexts) {
+    CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
+
+    CGContextRef context = CGBitmapContextCreate(nullptr, 120, 20, 8, 480, rgbColorSpace, 0);
+
+    EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context), 8);
+    EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 32);
+    EXPECT_EQ(CGBitmapContextGetWidth(context), 120);
+    EXPECT_EQ(CGBitmapContextGetHeight(context), 20);
+
+    EXPECT_EQ(CGBitmapContextGetBytesPerRow(context), 480);
+    EXPECT_NE(CGBitmapContextGetData(context), nullptr);
+
+    CGColorSpaceRelease(rgbColorSpace);
+    CGContextRelease(context);
 }

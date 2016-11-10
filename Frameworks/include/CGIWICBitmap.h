@@ -40,6 +40,8 @@
 #import <D2d1.h>
 #include <COMIncludes_End.h>
 
+#import <memory.h>
+
 using namespace Microsoft::WRL;
 
 // clang-format off
@@ -60,8 +62,15 @@ public:
         m_bytesPerRow = static_cast<size_t>(bpr);
     }
 
+    CGIWICBitmapLock(_In_ BYTE* data, _In_ const WICRect* region, _In_ size_t bytesPerRow, _In_ WICPixelFormatGUID pixelFormat)
+        : m_dataBuffer(data), m_pixelFormat(pixelFormat), m_locked_rect(region), m_bytesPerRow(bytesPerRow) {
+        m_texture = nullptr;
+    }
+
     ~CGIWICBitmapLock() {
-        m_texture->Unlock();
+        if (m_texture) {
+            m_texture->Unlock();
+        }
         m_texture = nullptr;
     }
 
@@ -106,10 +115,31 @@ class CGIWICBitmap
     : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::ClassicCom>, IAgileObject, FtmBase, IWICBitmap, ICGDisplayTexture> {
 public:
     CGIWICBitmap(_In_ IDisplayTexture* texture, _In_ WICPixelFormatGUID pixelFormat, _In_ UINT height, _In_ UINT width)
-        : m_texture(texture), m_pixelFormat(pixelFormat), m_height(height), m_width(width) {
+        : m_dataBuffer(nullptr), m_texture(texture), m_pixelFormat(pixelFormat), m_height(height), m_width(width), m_freeData(false) {
+    }
+
+    // if data is null, then a buffer that is the size of bytes per row is allocated.
+    CGIWICBitmap(_In_ void* data, _In_ WICPixelFormatGUID pixelFormat, _In_ UINT height, _In_ UINT width)
+        : m_texture(nullptr), m_pixelFormat(pixelFormat), m_height(height), m_width(width), m_freeData(false) {
+        // Obtain bytes per row from pixelFormat
+        const __CGImagePixelProperties* properties = _CGGetPixelFormatProperties(m_pixelFormat);
+        FAIL_FAST_IF(properties == nullptr);
+        m_bytesPerRow = (properties->bitsPerPixel >> 3) * m_width;
+
+        if (data) {
+            m_dataBuffer = static_cast<BYTE*>(data);
+        } else {
+            m_dataBuffer = static_cast<BYTE*>(IwMalloc(m_height * m_bytesPerRow));
+            m_freeData = true;
+        }
     }
 
     ~CGIWICBitmap() {
+        if (m_freeData) {
+            IwFree(m_dataBuffer);
+            m_dataBuffer = nullptr;
+            m_freeData = false;
+        }
         delete m_texture;
         m_texture = nullptr;
     }
@@ -129,8 +159,29 @@ public:
             RETURN_HR_IF(E_INVALIDARG, (region->Width > m_width) || (region->Height > m_height));
         }
 
-        ComPtr<IWICBitmapLock> lock = Make<CGIWICBitmapLock>(m_texture, region, m_pixelFormat);
+        ComPtr<IWICBitmapLock> lock = m_texture ? Make<CGIWICBitmapLock>(m_texture, region, m_pixelFormat) :
+                                                  Make<CGIWICBitmapLock>(m_dataBuffer, region, m_bytesPerRow, m_pixelFormat);
         *outLock = lock.Detach();
+        return S_OK;
+    }
+
+    // Only supports full region as per now.
+    HRESULT STDMETHODCALLTYPE CopyPixels(_In_opt_ const WICRect* copyRect,
+                                         _In_ UINT stride,
+                                         _In_ UINT bufferSize,
+                                         _Out_writes_all_(cbBufferSize) BYTE* buffer) {
+        RETURN_HR_IF_NULL(E_POINTER, buffer);
+
+        ComPtr<IWICBitmapLock> lock;
+        RETURN_IF_FAILED(Lock(copyRect, 0, &lock));
+
+        UINT sourceDataSize;
+        BYTE* sourceData;
+        RETURN_IF_FAILED(lock->GetDataPointer(&sourceDataSize, &sourceData));
+
+        RETURN_HR_IF(E_INVALIDARG, sourceDataSize > bufferSize);
+
+        RETURN_HR_IF(E_UNEXPECTED, memcpy_s(buffer, bufferSize, sourceData, sourceDataSize) != 0);
         return S_OK;
     }
 
@@ -170,14 +221,6 @@ public:
         return E_NOTIMPL;
     }
 
-    HRESULT STDMETHODCALLTYPE CopyPixels(_In_opt_ const WICRect* copyRect,
-                                         _In_ UINT stride,
-                                         _In_ UINT bufferSize,
-                                         _Out_writes_all_(cbBufferSize) BYTE* buffer) {
-        UNIMPLEMENTED();
-        return E_NOTIMPL;
-    }
-
     HRESULT STDMETHODCALLTYPE DisplayTexture(_Out_ IDisplayTexture** displayTexture) {
         RETURN_HR_IF_NULL(E_POINTER, displayTexture);
         *displayTexture = m_texture;
@@ -189,6 +232,9 @@ private:
     IDisplayTexture* m_texture;
     UINT m_height;
     UINT m_width;
+    BYTE* m_dataBuffer;
+    size_t m_bytesPerRow;
+    bool m_freeData;
 };
 
 #if defined __clang__
