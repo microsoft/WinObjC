@@ -20,6 +20,17 @@
 #import "CGImageInternal.h"
 #import "DisplayTexture.h"
 
+// Ignore some warnings
+#if defined __clang__
+
+#pragma clang diagnostic push
+#ifdef _M_ARM
+// Disable 'invalid calling convention' warnings for __stdcall usage in ARM builds
+#pragma clang diagnostic ignored "-Wignored-attributes"
+#endif // _M_ARM
+
+#endif // __clang__
+
 #include <COMIncludes.h>
 #import <WRLHelpers.h>
 #import <ErrorHandling.h>
@@ -179,3 +190,7 @@ private:
     UINT m_height;
     UINT m_width;
 };
+
+#if defined __clang__
+#pragma clang diagnostic pop
+#endif
