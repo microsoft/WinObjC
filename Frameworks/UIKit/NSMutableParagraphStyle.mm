@@ -24,7 +24,23 @@
  @Status Interoperable
 */
 - (id)copyWithZone:(NSZone*)zone {
-    return [self mutableCopyWithZone:zone];
+    NSParagraphStyle* ret = [NSParagraphStyle new];
+    ret.alignment = self.alignment;
+    ret.firstLineHeadIndent = self.firstLineHeadIndent;
+    ret.headIndent = self.headIndent;
+    ret.tailIndent = self.tailIndent;
+    ret.lineBreakMode = self.lineBreakMode;
+    ret.maximumLineHeight = self.maximumLineHeight;
+    ret.minimumLineHeight = self.minimumLineHeight;
+    ret.lineSpacing = self.lineSpacing;
+    ret.paragraphSpacing = self.paragraphSpacing;
+    ret.paragraphSpacingBefore = self.paragraphSpacingBefore;
+    ret.baseWritingDirection = self.baseWritingDirection;
+    ret.lineHeightMultiple = self.lineHeightMultiple;
+    ret.tabStops = self.tabStops;
+    ret.defaultTabInterval = self.defaultTabInterval;
+    ret.hyphenationFactor = self.hyphenationFactor;
+    return ret;
 }
 
 /**

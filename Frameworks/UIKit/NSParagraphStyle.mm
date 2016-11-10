@@ -23,15 +23,23 @@
 @implementation NSParagraphStyle
 
 - (void)dealloc {
-    _tabStops = nil;
+    [_tabStops release];
     [super dealloc];
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Tab Stops not supported
 */
 + (NSParagraphStyle*)defaultParagraphStyle {
-    return [[[self alloc] init] autorelease];
+    NSParagraphStyle* ret = [self new];
+    if (ret) {
+        ret.alignment = NSTextAlignmentNatural;
+        ret.lineBreakMode = NSLineBreakByWordWrapping;
+        ret.baseWritingDirection = NSWritingDirectionNatural;
+    }
+
+    return ret;
 }
 
 /**
@@ -63,20 +71,19 @@
 */
 - (instancetype)initWithCoder:(NSCoder*)decoder {
     if (self = [super init]) {
-        _alignment = [[decoder decodeObjectForKey:@"_NSParagraphStyle._alignment"] unsignedIntegerValue];
+        _alignment = (NSTextAlignment)[decoder decodeInt64ForKey:@"_NSParagraphStyle._alignment"];
         _firstLineHeadIndent = [decoder decodeFloatForKey:@"_NSParagraphStyle._firstLineHeadIndent"];
         _headIndent = [decoder decodeFloatForKey:@"_NSParagraphStyle._headIndent"];
         _tailIndent = [decoder decodeFloatForKey:@"_NSParagraphStyle._tailIndent"];
-        _lineBreakMode = [[decoder decodeObjectForKey:@"_NSParagraphStyle._lineBreakMode"] unsignedIntegerValue];
+        _lineBreakMode = [decoder decodeInt64ForKey:@"_NSParagraphStyle._lineBreakMode"];
         _maximumLineHeight = [decoder decodeFloatForKey:@"_NSParagraphStyle._maximumLineHeight"];
         _minimumLineHeight = [decoder decodeFloatForKey:@"_NSParagraphStyle._minimumLineHeight"];
         _lineSpacing = [decoder decodeFloatForKey:@"_NSParagraphStyle._lineSpacing"];
         _paragraphSpacing = [decoder decodeFloatForKey:@"_NSParagraphStyle._paragraphSpacing"];
         _paragraphSpacingBefore = [decoder decodeFloatForKey:@"_NSParagraphStyle._paragraphSpacingBefore"];
-        _baseWritingDirection =
-            (NSWritingDirection)[[decoder decodeObjectForKey:@"_NSParagraphStyle._baseWritingDirection"] unsignedIntegerValue];
+        _baseWritingDirection = (NSWritingDirection)[decoder decodeInt64ForKey:@"_NSParagraphStyle._baseWritingDirection"];
         _lineHeightMultiple = [decoder decodeFloatForKey:@"_NSParagraphStyle._lineHeightMultiple"];
-        _tabStops = [decoder decodeObjectForKey:@"_NSParagraphStyle._tabStops"];
+        _tabStops = [[decoder decodeObjectOfClass:[NSArray class] forKey:@"_NSParagraphStyle._tabStops"] retain];
         _defaultTabInterval = [decoder decodeFloatForKey:@"_NSParagraphStyle._defaultTabInterval"];
         _hyphenationFactor = [decoder decodeFloatForKey:@"_NSParagraphStyle._hyphenationFactor"];
     }
@@ -88,17 +95,17 @@
  @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)encoder {
-    [encoder encodeObject:[NSNumber numberWithUnsignedInteger:_alignment] forKey:@"_NSParagraphStyle._alignment"];
+    [encoder encodeInt64:_alignment forKey:@"_NSParagraphStyle._alignment"];
     [encoder encodeFloat:_firstLineHeadIndent forKey:@"_NSParagraphStyle._firstLineHeadIndent"];
     [encoder encodeFloat:_headIndent forKey:@"_NSParagraphStyle._headIndent"];
     [encoder encodeFloat:_tailIndent forKey:@"_NSParagraphStyle._tailIndent"];
-    [encoder encodeObject:[NSNumber numberWithUnsignedInteger:_lineBreakMode] forKey:@"_NSParagraphStyle._lineBreakMode"];
+    [encoder encodeInt64:_lineBreakMode forKey:@"_NSParagraphStyle._lineBreakMode"];
     [encoder encodeFloat:_maximumLineHeight forKey:@"_NSParagraphStyle._maximumLineHeight"];
     [encoder encodeFloat:_minimumLineHeight forKey:@"_NSParagraphStyle._minimumLineHeight"];
     [encoder encodeFloat:_lineSpacing forKey:@"_NSParagraphStyle._lineSpacing"];
     [encoder encodeFloat:_paragraphSpacing forKey:@"_NSParagraphStyle._paragraphSpacing"];
     [encoder encodeFloat:_paragraphSpacingBefore forKey:@"_NSParagraphStyle._paragraphSpacingBefore"];
-    [encoder encodeObject:[NSNumber numberWithUnsignedInteger:_baseWritingDirection] forKey:@"_NSParagraphStyle._baseWritingDirection"];
+    [encoder encodeInt64:_baseWritingDirection forKey:@"_NSParagraphStyle._baseWritingDirection"];
     [encoder encodeFloat:_lineHeightMultiple forKey:@"_NSParagraphStyle._lineHeightMultiple"];
     [encoder encodeObject:_tabStops forKey:@"_NSParagraphStyle._tabStops"];
     [encoder encodeFloat:_defaultTabInterval forKey:@"_NSParagraphStyle._defaultTabInterval"];
@@ -112,7 +119,7 @@
     return YES;
 }
 
-- (CTParagraphStyleRef)_convertToCTParagraphStyle {
+- (CTParagraphStyleRef)_createCTParagraphStyle {
     CTLineBreakMode lineBreakMode = self.lineBreakMode;
     CTWritingDirection writingDirection = self.baseWritingDirection;
     CTTextAlignment alignment = _NSTextAlignmentToCTTextAlignment(self.alignment);

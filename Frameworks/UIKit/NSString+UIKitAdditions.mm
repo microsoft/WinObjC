@@ -323,7 +323,7 @@ static inline NSParagraphStyle* _paragraphStyleWithLineBreakMode(UILineBreakMode
     return [self _sizeWithAttributes:@{
         NSFontAttributeName : font,
         static_cast<NSString*>(kCTParagraphStyleAttributeName) :
-            (id)[_paragraphStyleWithLineBreakMode(lineBreakMode) _convertToCTParagraphStyle]
+            (id)[_paragraphStyleWithLineBreakMode(lineBreakMode) _createCTParagraphStyle]
     }
                    constrainedToSize:size];
 }

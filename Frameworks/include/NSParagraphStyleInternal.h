@@ -20,30 +20,34 @@
 #import <CoreText/CTParagraphStyle.h>
 
 @interface NSParagraphStyle ()
-@property (nonatomic) NSTextAlignment alignment;
-@property (nonatomic) CGFloat firstLineHeadIndent;
-@property (nonatomic) CGFloat headIndent;
-@property (nonatomic) CGFloat tailIndent;
-@property (nonatomic) NSLineBreakMode lineBreakMode;
-@property (nonatomic) CGFloat maximumLineHeight;
-@property (nonatomic) CGFloat minimumLineHeight;
-@property (nonatomic) CGFloat lineSpacing;
-@property (nonatomic) CGFloat paragraphSpacing;
-@property (nonatomic) CGFloat paragraphSpacingBefore;
-@property (nonatomic) NSWritingDirection baseWritingDirection;
-@property (nonatomic) CGFloat lineHeightMultiple;
-@property (copy, nonatomic) NSArray* tabStops;
-@property (nonatomic) CGFloat defaultTabInterval;
-@property (nonatomic) float hyphenationFactor;
-- (CTParagraphStyleRef)_convertToCTParagraphStyle;
+
+- (CTParagraphStyleRef)_createCTParagraphStyle;
+
+// Redeclaring properties for read/write access in mutable subclass
+@property (nonatomic, readwrite) NSTextAlignment alignment;
+@property (nonatomic, readwrite) CGFloat firstLineHeadIndent;
+@property (nonatomic, readwrite) CGFloat headIndent;
+@property (nonatomic, readwrite) CGFloat tailIndent;
+@property (nonatomic, readwrite) NSLineBreakMode lineBreakMode;
+@property (nonatomic, readwrite) CGFloat maximumLineHeight;
+@property (nonatomic, readwrite) CGFloat minimumLineHeight;
+@property (nonatomic, readwrite) CGFloat lineSpacing;
+@property (nonatomic, readwrite) CGFloat paragraphSpacing;
+@property (nonatomic, readwrite) CGFloat paragraphSpacingBefore;
+@property (nonatomic, readwrite) NSWritingDirection baseWritingDirection;
+@property (nonatomic, readwrite) CGFloat lineHeightMultiple;
+@property (copy, nonatomic, readwrite) NSArray* tabStops;
+@property (nonatomic, readwrite) CGFloat defaultTabInterval;
+@property (nonatomic, readwrite) float hyphenationFactor;
+
 @end
 
 // The values of right and center CTTextAlignment and NSTextAlignment do not correspond so they can't be simply cast
 inline CTTextAlignment _NSTextAlignmentToCTTextAlignment(NSTextAlignment alignment) {
     switch (alignment) {
-        case UITextAlignmentRight:
+        case NSTextAlignmentRight:
             return kCTRightTextAlignment;
-        case UITextAlignmentCenter:
+        case NSTextAlignmentCenter:
             return kCTCenterTextAlignment;
         default:
             return alignment;

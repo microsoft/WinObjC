@@ -42,9 +42,9 @@ static constexpr size_t __CTParagraphStyleSizeTable[kCTParagraphStyleSpecifierCo
 };
 
 #pragma region __CTParagraphStyle
-typedef struct __CTParagraphStyle : CoreFoundation::CppBase<__CTParagraphStyle> {
+struct __CTParagraphStyle : CoreFoundation::CppBase<__CTParagraphStyle> {
     __CTParagraphStyle() {
-        static CFArrayRef __defaultValues = []() {
+        static woc::unique_cf<CFArrayRef> __defaultValues{ []() {
             constexpr CGFloat c_defaultFloat = 0.0;
             // Need to store Alignment and LineBreakMode as ints in CFNumberRef
             constexpr int c_defaultAlignment = kCTNaturalTextAlignment;
@@ -61,14 +61,12 @@ typedef struct __CTParagraphStyle : CoreFoundation::CppBase<__CTParagraphStyle> 
                 __floatDefault.get(), __floatDefault.get(),
             };
             return CFArrayCreate(nullptr, values, kCTParagraphStyleSpecifierCount, &kCFTypeArrayCallBacks);
-        }();
-        _styles.reset(CFArrayCreateMutableCopy(nullptr, kCTParagraphStyleSpecifierCount, __defaultValues));
+        }() };
+        _styles.reset(CFArrayCreateMutableCopy(nullptr, kCTParagraphStyleSpecifierCount, __defaultValues.get()));
     }
 
     __CTParagraphStyle(const __CTParagraphStyle& rhs) {
-        if (this != &rhs) {
-            _styles.reset(CFArrayCreateMutableCopy(nullptr, kCTParagraphStyleSpecifierCount, rhs._styles.get()));
-        }
+        _styles.reset(CFArrayCreateMutableCopy(nullptr, kCTParagraphStyleSpecifierCount, rhs._styles.get()));
     }
 
     bool SetValue(CTParagraphStyleSpecifier specifier, size_t size, const void* value) {
@@ -140,8 +138,7 @@ typedef struct __CTParagraphStyle : CoreFoundation::CppBase<__CTParagraphStyle> 
 
 private:
     woc::unique_cf<CFMutableArrayRef> _styles;
-
-} __CTParagraphStyle;
+};
 
 #pragma endregion
 

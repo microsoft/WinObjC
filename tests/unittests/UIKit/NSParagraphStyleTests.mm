@@ -21,11 +21,13 @@
 #import "NSParagraphStyleInternal.h"
 #import "Starboard/SmartTypes.h"
 
+static constexpr double c_errorDelta = .0001;
+
 TEST(NSParagraphStyle, ShouldConvertToCTParagraphStyle) {
     NSMutableParagraphStyle* style = [[NSMutableParagraphStyle new] autorelease];
     style.alignment = NSTextAlignmentCenter;
     style.lineSpacing = 10.0;
-    woc::unique_cf<CTParagraphStyleRef> convertedStyle{[style _convertToCTParagraphStyle] };
+    woc::unique_cf<CTParagraphStyleRef> convertedStyle{[style _createCTParagraphStyle] };
     CTTextAlignment alignment;
     EXPECT_TRUE(CTParagraphStyleGetValueForSpecifier(convertedStyle.get(),
                                                      kCTParagraphStyleSpecifierAlignment,
@@ -36,17 +38,17 @@ TEST(NSParagraphStyle, ShouldConvertToCTParagraphStyle) {
     CGFloat lineSpacing;
     EXPECT_TRUE(
         CTParagraphStyleGetValueForSpecifier(convertedStyle.get(), kCTParagraphStyleSpecifierLineSpacing, sizeof(CGFloat), &lineSpacing));
-    EXPECT_NEAR(10.0, lineSpacing, .0001);
+    EXPECT_NEAR(10.0, lineSpacing, c_errorDelta);
 
     CGFloat maximumLineHeight = 123545.67;
     EXPECT_TRUE(CTParagraphStyleGetValueForSpecifier(convertedStyle.get(),
                                                      kCTParagraphStyleSpecifierMaximumLineHeight,
                                                      sizeof(CGFloat),
                                                      &maximumLineHeight));
-    EXPECT_NEAR(0.0, maximumLineHeight, .0001);
+    EXPECT_NEAR(0.0, maximumLineHeight, c_errorDelta);
 
     NSParagraphStyle* copiedStyle = [[style copy] autorelease];
-    convertedStyle.reset([copiedStyle _convertToCTParagraphStyle]);
+    convertedStyle.reset([copiedStyle _createCTParagraphStyle]);
     EXPECT_TRUE(CTParagraphStyleGetValueForSpecifier(convertedStyle.get(),
                                                      kCTParagraphStyleSpecifierAlignment,
                                                      sizeof(CTTextAlignment),
@@ -55,11 +57,22 @@ TEST(NSParagraphStyle, ShouldConvertToCTParagraphStyle) {
 
     EXPECT_TRUE(
         CTParagraphStyleGetValueForSpecifier(convertedStyle.get(), kCTParagraphStyleSpecifierLineSpacing, sizeof(CGFloat), &lineSpacing));
-    EXPECT_NEAR(10.0, lineSpacing, .0001);
+    EXPECT_NEAR(10.0, lineSpacing, c_errorDelta);
 
     EXPECT_TRUE(CTParagraphStyleGetValueForSpecifier(convertedStyle.get(),
                                                      kCTParagraphStyleSpecifierMaximumLineHeight,
                                                      sizeof(CGFloat),
                                                      &maximumLineHeight));
-    EXPECT_NEAR(0.0, maximumLineHeight, .0001);
+    EXPECT_NEAR(0.0, maximumLineHeight, c_errorDelta);
+}
+
+TEST(NSParagraphStyle, CopyShouldBeImmutable) {
+    NSMutableParagraphStyle* style = [[NSMutableParagraphStyle new] autorelease];
+    style.alignment = NSTextAlignmentCenter;
+    style.lineSpacing = 10.0;
+    id copiedStyle = [[style copy] autorelease];
+    EXPECT_ANY_THROW([copiedStyle setParagraphStyle:style]);
+
+    style.lineSpacing = 20.0;
+    EXPECT_NEAR(10.0, [copiedStyle lineSpacing], c_errorDelta);
 }

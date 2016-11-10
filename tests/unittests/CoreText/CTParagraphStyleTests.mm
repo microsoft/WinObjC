@@ -27,22 +27,22 @@ TEST(CoreText, CTParagraphStyle) {
     CGFloat val = 2.0f;
     CTParagraphStyleSetting settings[1] = { {.spec = kCTParagraphStyleSpecifierTailIndent, .valueSize = sizeof(CGFloat), .value = &val } };
     paragraphStyle = CTParagraphStyleCreate(settings, 1);
-    EXPECT_TRUE_MSG(paragraphStyle != nullptr, "FAILED: Could not create paragraph style");
+    EXPECT_NE_MSG(paragraphStyle, nullptr, "FAILED: Could not create paragraph style");
 
     CGFloat bufferFloat;
     bool success =
         CTParagraphStyleGetValueForSpecifier(paragraphStyle, kCTParagraphStyleSpecifierTailIndent, sizeof(CGFloat), &bufferFloat);
-    EXPECT_TRUE_MSG(success == true, "FAILED: Could not found the specifier that was set.");
-    EXPECT_TRUE_MSG(fabs(bufferFloat - val) < 0.00001, "FAILED: Incorrect specifier value received");
+    EXPECT_TRUE_MSG(success, "FAILED: Could not found the specifier that was set.");
+    EXPECT_NEAR(bufferFloat, val, .0001f);
 
     CTParagraphStyleRef paragraphStyleCopy = CTParagraphStyleCreateCopy(nullptr);
-    EXPECT_TRUE_MSG(paragraphStyleCopy == nil, "FAILED: Incorrect copy received");
+    EXPECT_EQ(paragraphStyleCopy, nil);
 
     paragraphStyleCopy = CTParagraphStyleCreateCopy(paragraphStyle);
     bufferFloat = 3.0f;
     success = CTParagraphStyleGetValueForSpecifier(paragraphStyleCopy, kCTParagraphStyleSpecifierTailIndent, sizeof(CGFloat), &bufferFloat);
     EXPECT_TRUE_MSG(success, "FAILED: Could not found the specifier that was set.");
-    EXPECT_TRUE_MSG(fabs(bufferFloat - val) < 0.00001, "FAILED: Incorrect specifier value received");
+    EXPECT_NEAR(bufferFloat, val, .0001f);
 
     CTTextAlignment defaultTextAlignment = kCTJustifiedTextAlignment;
     val = 9.0f;
@@ -51,36 +51,36 @@ TEST(CoreText, CTParagraphStyle) {
                                               .value = &defaultTextAlignment },
                                              {.spec = kCTParagraphStyleSpecifierTailIndent, .valueSize = sizeof(CGFloat), .value = &val } };
     paragraphStyle = CTParagraphStyleCreate(settings2, 2);
-    EXPECT_TRUE_MSG(paragraphStyle != nullptr, "FAILED: Could not create paragraph style");
+    EXPECT_NE_MSG(paragraphStyle, nullptr, "FAILED: Could not create paragraph style");
 
     CTTextAlignment buffer;
     success = CTParagraphStyleGetValueForSpecifier(paragraphStyle, kCTParagraphStyleSpecifierAlignment, sizeof(CTTextAlignment), &buffer);
-    EXPECT_TRUE_MSG(success == true, "FAILED: Could not found the specifier that was set.");
-    EXPECT_TRUE_MSG(buffer == kCTJustifiedTextAlignment, "FAILED: Incorrect specifier value received");
+    EXPECT_TRUE_MSG(success, "FAILED: Could not found the specifier that was set.");
+    EXPECT_EQ(buffer, kCTJustifiedTextAlignment);
 
     paragraphStyleCopy = CTParagraphStyleCreateCopy(paragraphStyle);
     success =
         CTParagraphStyleGetValueForSpecifier(paragraphStyleCopy, kCTParagraphStyleSpecifierAlignment, sizeof(CTTextAlignment), &buffer);
     EXPECT_TRUE_MSG(success, "FAILED: Could not found the specifier that was set.");
-    EXPECT_TRUE_MSG(buffer == kCTJustifiedTextAlignment, "FAILED: Incorrect specifier value received");
+    EXPECT_EQ(buffer, kCTJustifiedTextAlignment);
 
     success = CTParagraphStyleGetValueForSpecifier(paragraphStyleCopy, kCTParagraphStyleSpecifierTailIndent, sizeof(CGFloat), &bufferFloat);
     EXPECT_TRUE_MSG(success, "FAILED: Could not find the specifier that was set");
-    EXPECT_TRUE_MSG(fabs(bufferFloat - val) < 0.00001, "FAILED: Incorrect specifier value received");
+    EXPECT_NEAR(bufferFloat, val, .0001f);
 
     success = CTParagraphStyleGetValueForSpecifier(paragraphStyleCopy,
                                                    kCTParagraphStyleSpecifierLineHeightMultiple,
                                                    sizeof(CGFloat),
                                                    &bufferFloat);
     EXPECT_TRUE(success);
-    EXPECT_TRUE_MSG(fabs(bufferFloat - 0.0f) < 0.00001, "FAILED: Incorrect specifier value received");
+    EXPECT_NEAR(bufferFloat, 0.0f, .0001f);
 
     success = CTParagraphStyleGetValueForSpecifier(paragraphStyleCopy,
                                                    kCTParagraphStyleSpecifierMaximumLineSpacing,
                                                    sizeof(CGFloat),
                                                    &bufferFloat);
     EXPECT_TRUE(success);
-    EXPECT_TRUE_MSG(fabs(bufferFloat - 0.0f) < 0.00001, "FAILED: Incorrect specifier value received");
+    EXPECT_NEAR(bufferFloat, 0.0f, .0001f);
 
     success = CTParagraphStyleGetValueForSpecifier(paragraphStyleCopy,
                                                    kCTParagraphStyleSpecifierLineHeightMultiple,
