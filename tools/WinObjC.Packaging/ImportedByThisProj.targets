@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
+    <ItemGroup>
+      <PackageFile Include="$(MSBuildThisFileDirectory)ImportedByAnyDependent.props" Condition="Exists('$(MSBuildThisFileDirectory)ImportedByAnyDependent.props')">
+        <PackagePath>build\$(PackageId).props</PackagePath>
+      </PackageFile>
+      <PackageFile Include="$(MSBuildThisFileDirectory)ImportedByAnyDependent.targets" Condition="Exists('$(MSBuildThisFileDirectory)ImportedByAnyDependent.targets')">
+        <PackagePath>build\$(PackageId).targets</PackagePath>
+      </PackageFile>
+
+      <PackageFile Include="$(MSBuildThisFileDirectory)WinObjC.Packager.props" Condition="Exists('$(MSBuildThisFileDirectory)WinObjC.Packager.props')">
+        <PackagePath>build\WinObjC.Packager.props</PackagePath>
+      </PackageFile>
+      <PackageFile Include="$(MSBuildThisFileDirectory)WinObjC.Packager.targets" Condition="Exists('$(MSBuildThisFileDirectory)WinObjC.Packager.targets')">
+        <PackagePath>build\WinObjC.Packager.targets</PackagePath>
+      </PackageFile>
+
+      <PackageFile Include="$(MSBuildThisFileDirectory)WinObjC.Packageable.props" Condition="Exists('$(MSBuildThisFileDirectory)WinObjC.Packageable.props')">
+        <PackagePath>build\WinObjC.Packageable.props</PackagePath>
+      </PackageFile>
+      <PackageFile Include="$(MSBuildThisFileDirectory)WinObjC.Packageable.targets" Condition="Exists('$(MSBuildThisFileDirectory)WinObjC.Packageable.targets')">
+        <PackagePath>build\WinObjC.Packageable.targets</PackagePath>
+      </PackageFile>
+    </ItemGroup>
+  </Target>
+
+  <!-- Undo what Nuget.Build.Packaging did to unset itself as a project dependency in the output package nuspec -->
+  <Target Name="AddBuiltPackageContent" DependsOnTargets="ReadLegacyDependencies" BeforeTargets="GetPackageContents" >
+    <ItemGroup>
+      <PackageReference Condition="'%(PackageReference.Identity)' == 'NuGet.Build.Packaging'">
+        <PrivateAssets></PrivateAssets>
+      </PackageReference>
+    </ItemGroup>
+  </Target>
+</Project>

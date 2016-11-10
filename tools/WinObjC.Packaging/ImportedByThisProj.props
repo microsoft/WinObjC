@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PackageId>WinObjC.Packaging</PackageId>
+    <Title>WinObjC.Packaging</Title>
+    <Authors>Microsoft</Authors>
+    <Owners>Microsoft</Owners>
+    <Summary>An extension of NuGet.Build.Packaging with WinObjC additions.</Summary>
+    <Description>Include this package in any WinObjC project that you wish to be added to a final NuGet package</Description>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageProjectUrl></PackageProjectUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <Copyright>Copyright © Microsoft</Copyright>
+    <PackageTags>WinObjC.Packaging</PackageTags>
+    <IsDevelopmentDependency>true</IsDevelopmentDependency>
+    <IncludeSymbolsInPackage>false</IncludeSymbolsInPackage>
+    <IncludeFrameworkReferencesInPackage>false</IncludeFrameworkReferencesInPackage>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GetPackageVersionDependsOn>SetPackageVersion;$(GetPackageVersionDependsOn);</GetPackageVersionDependsOn>
+  </PropertyGroup>
+  <Target Name="SetPackageVersion" Returns="$(PackageVersion)" DependsOnTargets="$(GitVersionDependsOn)">
+    <Warning Condition="'$(PackageVersion)' == '' And '$(GitBranch)' == ''"
+        Text="Cannot determine git branch. Please make sure GitInfo is listed in the project.json for this project and that git.exe is part of the PATH environment variable." />
+
+    <PropertyGroup>
+      <PackageTimestamp Condition="'$(PackageTimestamp)' == ''">$([System.DateTime]::Now.ToString(yyyyMMddHHmmss))</PackageTimestamp>
+
+      <PackageVersion Condition="'$(PackageVersion)' == '' And '$(GitBranch)' == 'master'">$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(PackageTimestamp)</PackageVersion>
+      <PackageVersion Condition="'$(PackageVersion)' == '' And '$(GitBranch)' == 'develop'">$(GitBaseVersionMajor).$(GitBaseVersionMinor).$([MSBuild]::Add('$(GitBaseVersionPatch)', '1'))-$(PackageTimestamp).dev</PackageVersion>
+      <PackageVersion Condition="'$(PackageVersion)' == ''">$(GitBaseVersionMajor).$(GitBaseVersionMinor).$([MSBuild]::Add('$(GitBaseVersionPatch)', '1'))-$(PackageTimestamp).pr</PackageVersion>
+    </PropertyGroup>
+  </Target>
+</Project>

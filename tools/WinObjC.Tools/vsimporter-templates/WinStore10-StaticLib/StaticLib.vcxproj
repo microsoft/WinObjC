@@ -20,9 +20,7 @@
     <UseDotNetNativeToolchain VSImporterConfigName="Release">true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings" VSImporterLabel="BuildExtensionProperties">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.props" />
-  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings" VSImporterLabel="BuildExtensionProperties" />
   <ImportGroup Label="Shared" VSImporterLabel="SharedProjects" />
   <ImportGroup Label="PropertySheets" VSImporterLabel="ConfigurationPropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -39,10 +37,10 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup VSImporterLabel="ProjectItems" />
+  <ItemGroup VSImporterLabel="ProjectItems">
+    <None Include="project.json" />
+  </ItemGroup>
   <ItemGroup VSImporterLabel="ProjectReferences" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets" VSImporterLabel="BuildExtensionTargets">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" VSImporterLabel="BuildExtensionTargets" />
 </Project>
