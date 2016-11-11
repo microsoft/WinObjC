@@ -182,7 +182,7 @@ cell.accessoryView = FIELD;                                                     
     ADD_TEXT_FIELD(_inputCells, _specifierLineSpacing, @"kCTParagraphStyleSpecifierLineSpacing", @"0.0", width / 2);
     ADD_TEXT_FIELD(_inputCells, _specifierParagraphSpacing, @"kCTParagraphStyleSpecifierParagraphSpacing", @"0.0", width / 2);
     ADD_TEXT_FIELD(_inputCells, _specifierParagraphSpacingBefore, @"kCTParagraphStyleSpecifierParagraphSpacingBefore", @"0.0", width / 2);
-    ADD_TEXT_FIELD(_inputCells, _specifierMaximumLineSpacing, @"kCTParagraphStyleSpecifierMaximumLineSpacing", @"10000000.0", width / 2);
+    ADD_TEXT_FIELD(_inputCells, _specifierMaximumLineSpacing, @"kCTParagraphStyleSpecifierMaximumLineSpacing", @"0.0", width / 2);
     ADD_TEXT_FIELD(_inputCells, _specifierMinimumLineSpacing, @"kCTParagraphStyleSpecifierMinimumLineSpacing", @"0.0", width / 2);
     ADD_TEXT_FIELD(_inputCells, _specifierLineSpacingAdjustment, @"kCTParagraphStyleSpecifierLineSpacingAdjustment", @"0.0", width / 2);
 

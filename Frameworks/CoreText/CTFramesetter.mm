@@ -45,7 +45,7 @@ static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameRect, CF
     CTParagraphStyleRef settings = static_cast<CTParagraphStyleRef>(
         [typesetter->_attributedString attribute:static_cast<NSString*>(kCTParagraphStyleAttributeName) atIndex:0 effectiveRange:nullptr]);
 
-    if (settings == nil) {
+    if (settings == nullptr) {
         return ret.detach();
     }
 

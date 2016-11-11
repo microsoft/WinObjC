@@ -22,6 +22,7 @@
 #import <Foundation/NSMutableDictionary.h>
 #import "CoreGraphics/CGContext.h"
 #import "CoreTextInternal.h"
+#import "NSParagraphStyleInternal.h"
 #import <assert.h>
 #import "LoggingNative.h"
 #include "StringHelpers.h"
@@ -40,19 +41,6 @@ NSString* const UITextAttributeTextShadowColor = @"UITextAttributeTextShadowColo
 NSString* const UITextAttributeTextShadowOffset = @"UITextAttributeTextShadowOffset";
 
 @implementation NSString (UIKitAdditions)
-
-// The values of CTTextAlignment and UITextAlignment do not correspond so they can't be simply cast
-static CTTextAlignment __UITextAlignmentToCTTextAlignment(UITextAlignment alignment) {
-    switch (alignment) {
-        case UITextAlignmentLeft:
-            return kCTLeftTextAlignment;
-        case UITextAlignmentRight:
-            return kCTRightTextAlignment;
-        case UITextAlignmentCenter:
-        default:
-            return kCTCenterTextAlignment;
-    }
-}
 
 static void drawString(UIFont* font,
                        CGContextRef context,
@@ -75,7 +63,7 @@ static void drawString(UIFont* font,
     }
 
     CTParagraphStyleSetting styles[2];
-    CTTextAlignment align = __UITextAlignmentToCTTextAlignment(alignment);
+    CTTextAlignment align = _NSTextAlignmentToCTTextAlignment(alignment);
     styles[0] = { kCTParagraphStyleSpecifierAlignment, sizeof(CTTextAlignment), &align };
 
     CTLineBreakMode breakMode = static_cast<CTLineBreakMode>(lineBreakMode);
@@ -311,6 +299,14 @@ static NSDictionary* _getDefaultUITextAttributes() {
 // Returns the bounding box size this string would occupy when drawn as specified
 // All sizeWith... functions in this file funnel to this
 - (CGSize)_sizeWithAttributes:(NSDictionary<NSString*, id>*)attributes constrainedToSize:(CGSize)size {
+    if ([attributes objectForKey:NSParagraphStyleAttributeName]) {
+        NSMutableDictionary* copied = [NSMutableDictionary dictionaryWithDictionary:attributes];
+        woc::unique_cf<CTParagraphStyleRef>
+            paragraphStyle{[[attributes objectForKey:NSParagraphStyleAttributeName] _createCTParagraphStyle] };
+        [copied setObject:(id)paragraphStyle.get() forKey:static_cast<NSString*>(kCTParagraphStyleAttributeName)];
+        attributes = copied;
+    }
+
     NSAttributedString* attributedSelf = [[[NSAttributedString alloc] initWithString:self attributes:attributes] autorelease];
 
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)attributedSelf);
@@ -320,7 +316,6 @@ static NSDictionary* _getDefaultUITextAttributes() {
 }
 
 // Private helper that converts a UILineBreakMode -> NSParagraphStyle
-// TODO #1108: NS/CT ParagraphStyle are not properly bridged, and ParagraphStyle is not currently read anywhere
 static inline NSParagraphStyle* _paragraphStyleWithLineBreakMode(UILineBreakMode lineBreakMode) {
     NSMutableParagraphStyle* ret = [NSMutableParagraphStyle new];
     ret.lineBreakMode = lineBreakMode;
