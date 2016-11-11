@@ -2744,12 +2744,16 @@ class RTMapViewKeyEnumerator {
 public:
     void initWith(IInspectable* mapview) {
         ComPtr<IInspectable> mv(mapview);
-        THROW_NS_IF_FAILED(mv.As(&_iterable));
-        _iterable->First(&_iter);
+        if (SUCCEEDED(mv.As(&_iterable))) {
+            _iterable->First(&_iter);
+        }
     }
 
     id nextObject() {
         boolean hasCurrent;
+        if (_iterable == nullptr) {
+            return nil;
+        }
         _iter->get_HasCurrent(&hasCurrent);
         if (!hasCurrent)
             return nil;

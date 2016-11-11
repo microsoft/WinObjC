@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WAEFExtendedExecutionForegroundRevokedEventArgs, WAEFExtendedExecutionForegroundSession;
-@protocol WAEFIExtendedExecutionForegroundRevokedEventArgs
-, WAEFIExtendedExecutionForegroundSession;
+@protocol WAEFIExtendedExecutionForegroundRevokedEventArgs, WAEFIExtendedExecutionForegroundSession;
 
 // Windows.ApplicationModel.ExtendedExecution.Foreground.ExtendedExecutionForegroundResult
 enum _WAEFExtendedExecutionForegroundResult {
@@ -97,11 +96,12 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_FOREGROUND_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WAEFExtendedExecutionForegroundReason reason;
-@property (retain) NSString* Description;
-- (EventRegistrationToken)addRevokedEvent:(void (^)(RTObject*, WAEFExtendedExecutionForegroundRevokedEventArgs*))del;
+@property (retain) NSString * Description;
+- (EventRegistrationToken)addRevokedEvent:(void(^)(RTObject*, WAEFExtendedExecutionForegroundRevokedEventArgs*))del;
 - (void)removeRevokedEvent:(EventRegistrationToken)tok;
 - (void)requestExtensionAsyncWithSuccess:(void (^)(WAEFExtendedExecutionForegroundResult))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
 #endif // __WAEFExtendedExecutionForegroundSession_DEFINED__
+

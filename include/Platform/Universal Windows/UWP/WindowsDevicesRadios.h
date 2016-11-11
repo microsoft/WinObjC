@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WDRRadio;
-@protocol WDRIRadioStatics
-, WDRIRadio;
+@protocol WDRIRadioStatics, WDRIRadio;
 
 // Windows.Devices.Radios.RadioState
 enum _WDRRadioState {
@@ -70,18 +69,19 @@ typedef unsigned WDRRadioAccessStatus;
 OBJCUWP_WINDOWS_DEVICES_RADIOS_EXPORT
 @interface WDRRadio : RTObject
 + (void)getRadiosAsyncWithSuccess:(void (^)(NSArray* /* WDRRadio* */))success failure:(void (^)(NSError*))failure;
-+ (NSString*)getDeviceSelector;
-+ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDRRadio*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDRRadio*))success failure:(void (^)(NSError*))failure;
 + (void)requestAccessAsyncWithSuccess:(void (^)(WDRRadioAccessStatus))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDRRadioKind kind;
-@property (readonly) NSString* name;
+@property (readonly) NSString * name;
 @property (readonly) WDRRadioState state;
-- (EventRegistrationToken)addStateChangedEvent:(void (^)(WDRRadio*, RTObject*))del;
+- (EventRegistrationToken)addStateChangedEvent:(void(^)(WDRRadio*, RTObject*))del;
 - (void)removeStateChangedEvent:(EventRegistrationToken)tok;
 - (void)setStateAsync:(WDRRadioState)value success:(void (^)(WDRRadioAccessStatus))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDRRadio_DEFINED__
+

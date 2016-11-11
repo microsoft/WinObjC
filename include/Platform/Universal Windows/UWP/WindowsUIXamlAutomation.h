@@ -27,31 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUXAAutomationProperty, WUXAAnnotationPatternIdentifiers, WUXAAutomationElementIdentifiers, WUXAAutomationProperties,
-    WUXADockPatternIdentifiers, WUXADragPatternIdentifiers, WUXADropTargetPatternIdentifiers, WUXAExpandCollapsePatternIdentifiers,
-    WUXAGridItemPatternIdentifiers, WUXAGridPatternIdentifiers, WUXAMultipleViewPatternIdentifiers, WUXARangeValuePatternIdentifiers,
-    WUXAScrollPatternIdentifiers, WUXASelectionItemPatternIdentifiers, WUXASelectionPatternIdentifiers,
-    WUXASpreadsheetItemPatternIdentifiers, WUXAStylesPatternIdentifiers, WUXATableItemPatternIdentifiers, WUXATablePatternIdentifiers,
-    WUXATogglePatternIdentifiers, WUXATransformPattern2Identifiers, WUXATransformPatternIdentifiers, WUXAValuePatternIdentifiers,
-    WUXAWindowPatternIdentifiers, WUXAAutomationAnnotation;
-@protocol WUXAIAnnotationPatternIdentifiers
-, WUXAIAnnotationPatternIdentifiersStatics, WUXAIAutomationElementIdentifiers, WUXAIAutomationElementIdentifiersStatics,
-    WUXAIAutomationElementIdentifiersStatics2, WUXAIAutomationElementIdentifiersStatics3, WUXAIAutomationProperties,
-    WUXAIAutomationPropertiesStatics, WUXAIAutomationPropertiesStatics2, WUXAIAutomationPropertiesStatics3, WUXAIAutomationProperty,
-    WUXAIDockPatternIdentifiers, WUXAIDockPatternIdentifiersStatics, WUXAIDragPatternIdentifiers, WUXAIDragPatternIdentifiersStatics,
-    WUXAIDropTargetPatternIdentifiers, WUXAIDropTargetPatternIdentifiersStatics, WUXAIExpandCollapsePatternIdentifiers,
-    WUXAIExpandCollapsePatternIdentifiersStatics, WUXAIGridItemPatternIdentifiers, WUXAIGridItemPatternIdentifiersStatics,
-    WUXAIGridPatternIdentifiers, WUXAIGridPatternIdentifiersStatics, WUXAIMultipleViewPatternIdentifiers,
-    WUXAIMultipleViewPatternIdentifiersStatics, WUXAIRangeValuePatternIdentifiers, WUXAIRangeValuePatternIdentifiersStatics,
-    WUXAIScrollPatternIdentifiers, WUXAIScrollPatternIdentifiersStatics, WUXAISelectionItemPatternIdentifiers,
-    WUXAISelectionItemPatternIdentifiersStatics, WUXAISelectionPatternIdentifiers, WUXAISelectionPatternIdentifiersStatics,
-    WUXAISpreadsheetItemPatternIdentifiers, WUXAISpreadsheetItemPatternIdentifiersStatics, WUXAIStylesPatternIdentifiers,
-    WUXAIStylesPatternIdentifiersStatics, WUXAITableItemPatternIdentifiers, WUXAITableItemPatternIdentifiersStatics,
-    WUXAITablePatternIdentifiers, WUXAITablePatternIdentifiersStatics, WUXAITogglePatternIdentifiers, WUXAITogglePatternIdentifiersStatics,
-    WUXAITransformPattern2Identifiers, WUXAITransformPattern2IdentifiersStatics, WUXAITransformPatternIdentifiers,
-    WUXAITransformPatternIdentifiersStatics, WUXAIValuePatternIdentifiers, WUXAIValuePatternIdentifiersStatics,
-    WUXAIWindowPatternIdentifiers, WUXAIWindowPatternIdentifiersStatics, WUXAIAutomationAnnotation, WUXAIAutomationAnnotationStatics,
-    WUXAIAutomationAnnotationFactory;
+@class WUXAAutomationProperty, WUXAAnnotationPatternIdentifiers, WUXAAutomationElementIdentifiers, WUXAAutomationProperties, WUXADockPatternIdentifiers, WUXADragPatternIdentifiers, WUXADropTargetPatternIdentifiers, WUXAExpandCollapsePatternIdentifiers, WUXAGridItemPatternIdentifiers, WUXAGridPatternIdentifiers, WUXAMultipleViewPatternIdentifiers, WUXARangeValuePatternIdentifiers, WUXAScrollPatternIdentifiers, WUXASelectionItemPatternIdentifiers, WUXASelectionPatternIdentifiers, WUXASpreadsheetItemPatternIdentifiers, WUXAStylesPatternIdentifiers, WUXATableItemPatternIdentifiers, WUXATablePatternIdentifiers, WUXATogglePatternIdentifiers, WUXATransformPattern2Identifiers, WUXATransformPatternIdentifiers, WUXAValuePatternIdentifiers, WUXAWindowPatternIdentifiers, WUXAAutomationAnnotation;
+@protocol WUXAIAnnotationPatternIdentifiers, WUXAIAnnotationPatternIdentifiersStatics, WUXAIAutomationElementIdentifiers, WUXAIAutomationElementIdentifiersStatics, WUXAIAutomationElementIdentifiersStatics2, WUXAIAutomationElementIdentifiersStatics3, WUXAIAutomationElementIdentifiersStatics4, WUXAIAutomationElementIdentifiersStatics5, WUXAIAutomationProperties, WUXAIAutomationPropertiesStatics, WUXAIAutomationPropertiesStatics2, WUXAIAutomationPropertiesStatics3, WUXAIAutomationPropertiesStatics4, WUXAIAutomationPropertiesStatics5, WUXAIAutomationProperty, WUXAIDockPatternIdentifiers, WUXAIDockPatternIdentifiersStatics, WUXAIDragPatternIdentifiers, WUXAIDragPatternIdentifiersStatics, WUXAIDropTargetPatternIdentifiers, WUXAIDropTargetPatternIdentifiersStatics, WUXAIExpandCollapsePatternIdentifiers, WUXAIExpandCollapsePatternIdentifiersStatics, WUXAIGridItemPatternIdentifiers, WUXAIGridItemPatternIdentifiersStatics, WUXAIGridPatternIdentifiers, WUXAIGridPatternIdentifiersStatics, WUXAIMultipleViewPatternIdentifiers, WUXAIMultipleViewPatternIdentifiersStatics, WUXAIRangeValuePatternIdentifiers, WUXAIRangeValuePatternIdentifiersStatics, WUXAIScrollPatternIdentifiers, WUXAIScrollPatternIdentifiersStatics, WUXAISelectionItemPatternIdentifiers, WUXAISelectionItemPatternIdentifiersStatics, WUXAISelectionPatternIdentifiers, WUXAISelectionPatternIdentifiersStatics, WUXAISpreadsheetItemPatternIdentifiers, WUXAISpreadsheetItemPatternIdentifiersStatics, WUXAIStylesPatternIdentifiers, WUXAIStylesPatternIdentifiersStatics, WUXAITableItemPatternIdentifiers, WUXAITableItemPatternIdentifiersStatics, WUXAITablePatternIdentifiers, WUXAITablePatternIdentifiersStatics, WUXAITogglePatternIdentifiers, WUXAITogglePatternIdentifiersStatics, WUXAITransformPattern2Identifiers, WUXAITransformPattern2IdentifiersStatics, WUXAITransformPatternIdentifiers, WUXAITransformPatternIdentifiersStatics, WUXAIValuePatternIdentifiers, WUXAIValuePatternIdentifiersStatics, WUXAIWindowPatternIdentifiers, WUXAIWindowPatternIdentifiersStatics, WUXAIAutomationAnnotation, WUXAIAutomationAnnotationStatics, WUXAIAutomationAnnotationFactory;
 
 // Windows.UI.Xaml.Automation.AnnotationType
 enum _WUXAAnnotationType {
@@ -66,6 +43,18 @@ enum _WUXAAnnotationType {
     WUXAAnnotationTypeHighlighted = 60008,
     WUXAAnnotationTypeEndnote = 60009,
     WUXAAnnotationTypeFootnote = 60010,
+    WUXAAnnotationTypeInsertionChange = 60011,
+    WUXAAnnotationTypeDeletionChange = 60012,
+    WUXAAnnotationTypeMoveChange = 60013,
+    WUXAAnnotationTypeFormatChange = 60014,
+    WUXAAnnotationTypeUnsyncedChange = 60015,
+    WUXAAnnotationTypeEditingLockedChange = 60016,
+    WUXAAnnotationTypeExternalChange = 60017,
+    WUXAAnnotationTypeConflictingChange = 60018,
+    WUXAAnnotationTypeAuthor = 60019,
+    WUXAAnnotationTypeAdvancedProofingIssue = 60020,
+    WUXAAnnotationTypeDataValidationError = 60021,
+    WUXAAnnotationTypeCircularReferenceError = 60022,
 };
 typedef unsigned WUXAAnnotationType;
 
@@ -288,8 +277,9 @@ typedef unsigned WUXAAutomationTextDecorationLineStyle;
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED
 #define __WXDependencyPropertyChangedCallback__DEFINED
-typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
+typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
 #endif // __WXDependencyPropertyChangedCallback__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
@@ -333,12 +323,13 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-+ (WUXAAutomationProperty*)clickablePointProperty;
++ (WUXAAutomationProperty*)isRequiredForFormProperty;
 + (WUXAAutomationProperty*)acceleratorKeyProperty;
 + (WUXAAutomationProperty*)accessKeyProperty;
 + (WUXAAutomationProperty*)automationIdProperty;
 + (WUXAAutomationProperty*)boundingRectangleProperty;
 + (WUXAAutomationProperty*)classNameProperty;
++ (WUXAAutomationProperty*)clickablePointProperty;
 + (WUXAAutomationProperty*)controlTypeProperty;
 + (WUXAAutomationProperty*)hasKeyboardFocusProperty;
 + (WUXAAutomationProperty*)helpTextProperty;
@@ -348,7 +339,6 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (WUXAAutomationProperty*)isKeyboardFocusableProperty;
 + (WUXAAutomationProperty*)isOffscreenProperty;
 + (WUXAAutomationProperty*)isPasswordProperty;
-+ (WUXAAutomationProperty*)isRequiredForFormProperty;
 + (WUXAAutomationProperty*)itemStatusProperty;
 + (WUXAAutomationProperty*)itemTypeProperty;
 + (WUXAAutomationProperty*)labeledByProperty;
@@ -357,10 +347,18 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (WUXAAutomationProperty*)nameProperty;
 + (WUXAAutomationProperty*)orientationProperty;
 + (WUXAAutomationProperty*)controlledPeersProperty;
-+ (WUXAAutomationProperty*)levelProperty;
 + (WUXAAutomationProperty*)positionInSetProperty;
-+ (WUXAAutomationProperty*)sizeOfSetProperty;
++ (WUXAAutomationProperty*)levelProperty;
 + (WUXAAutomationProperty*)annotationsProperty;
++ (WUXAAutomationProperty*)sizeOfSetProperty;
++ (WUXAAutomationProperty*)landmarkTypeProperty;
++ (WUXAAutomationProperty*)localizedLandmarkTypeProperty;
++ (WUXAAutomationProperty*)flowsFromProperty;
++ (WUXAAutomationProperty*)flowsToProperty;
++ (WUXAAutomationProperty*)isPeripheralProperty;
++ (WUXAAutomationProperty*)isDataValidForFormProperty;
++ (WUXAAutomationProperty*)fullDescriptionProperty;
++ (WUXAAutomationProperty*)describedByProperty;
 @end
 
 #endif // __WUXAAutomationElementIdentifiers_DEFINED__
@@ -374,26 +372,41 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (WUXAPAccessibilityView)getAccessibilityView:(WXDependencyObject*)element;
 + (void)setAccessibilityView:(WXDependencyObject*)element value:(WUXAPAccessibilityView)value;
 + (NSMutableArray* /* WXUIElement* */)getControlledPeers:(WXDependencyObject*)element;
-+ (NSString*)getAcceleratorKey:(WXDependencyObject*)element;
-+ (void)setAcceleratorKey:(WXDependencyObject*)element value:(NSString*)value;
-+ (NSString*)getAccessKey:(WXDependencyObject*)element;
-+ (void)setAccessKey:(WXDependencyObject*)element value:(NSString*)value;
-+ (NSString*)getAutomationId:(WXDependencyObject*)element;
-+ (void)setAutomationId:(WXDependencyObject*)element value:(NSString*)value;
-+ (NSString*)getHelpText:(WXDependencyObject*)element;
-+ (void)setHelpText:(WXDependencyObject*)element value:(NSString*)value;
++ (WUXAPAutomationLandmarkType)getLandmarkType:(WXDependencyObject*)element;
++ (void)setLandmarkType:(WXDependencyObject*)element value:(WUXAPAutomationLandmarkType)value;
++ (NSString *)getLocalizedLandmarkType:(WXDependencyObject*)element;
++ (void)setLocalizedLandmarkType:(WXDependencyObject*)element value:(NSString *)value;
++ (NSString *)getAcceleratorKey:(WXDependencyObject*)element;
++ (void)setAcceleratorKey:(WXDependencyObject*)element value:(NSString *)value;
++ (NSString *)getAccessKey:(WXDependencyObject*)element;
++ (void)setAccessKey:(WXDependencyObject*)element value:(NSString *)value;
++ (NSString *)getAutomationId:(WXDependencyObject*)element;
++ (void)setAutomationId:(WXDependencyObject*)element value:(NSString *)value;
++ (NSString *)getHelpText:(WXDependencyObject*)element;
++ (void)setHelpText:(WXDependencyObject*)element value:(NSString *)value;
 + (BOOL)getIsRequiredForForm:(WXDependencyObject*)element;
 + (void)setIsRequiredForForm:(WXDependencyObject*)element value:(BOOL)value;
-+ (NSString*)getItemStatus:(WXDependencyObject*)element;
-+ (void)setItemStatus:(WXDependencyObject*)element value:(NSString*)value;
-+ (NSString*)getItemType:(WXDependencyObject*)element;
-+ (void)setItemType:(WXDependencyObject*)element value:(NSString*)value;
++ (NSString *)getItemStatus:(WXDependencyObject*)element;
++ (void)setItemStatus:(WXDependencyObject*)element value:(NSString *)value;
++ (NSString *)getItemType:(WXDependencyObject*)element;
++ (void)setItemType:(WXDependencyObject*)element value:(NSString *)value;
 + (WXUIElement*)getLabeledBy:(WXDependencyObject*)element;
 + (void)setLabeledBy:(WXDependencyObject*)element value:(WXUIElement*)value;
-+ (NSString*)getName:(WXDependencyObject*)element;
-+ (void)setName:(WXDependencyObject*)element value:(NSString*)value;
++ (NSString *)getName:(WXDependencyObject*)element;
++ (void)setName:(WXDependencyObject*)element value:(NSString *)value;
 + (WUXAPAutomationLiveSetting)getLiveSetting:(WXDependencyObject*)element;
 + (void)setLiveSetting:(WXDependencyObject*)element value:(WUXAPAutomationLiveSetting)value;
++ (BOOL)getIsPeripheral:(WXDependencyObject*)element;
++ (void)setIsPeripheral:(WXDependencyObject*)element value:(BOOL)value;
++ (BOOL)getIsDataValidForForm:(WXDependencyObject*)element;
++ (void)setIsDataValidForForm:(WXDependencyObject*)element value:(BOOL)value;
++ (NSString *)getFullDescription:(WXDependencyObject*)element;
++ (void)setFullDescription:(WXDependencyObject*)element value:(NSString *)value;
++ (NSString *)getLocalizedControlType:(WXDependencyObject*)element;
++ (void)setLocalizedControlType:(WXDependencyObject*)element value:(NSString *)value;
++ (NSMutableArray* /* WXDependencyObject* */)getDescribedBy:(WXDependencyObject*)element;
++ (NSMutableArray* /* WXDependencyObject* */)getFlowsTo:(WXDependencyObject*)element;
++ (NSMutableArray* /* WXDependencyObject* */)getFlowsFrom:(WXDependencyObject*)element;
 + (int)getPositionInSet:(WXDependencyObject*)element;
 + (void)setPositionInSet:(WXDependencyObject*)element value:(int)value;
 + (int)getSizeOfSet:(WXDependencyObject*)element;
@@ -404,22 +417,31 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
++ (WXDependencyProperty*)nameProperty;
++ (WXDependencyProperty*)liveSettingProperty;
++ (WXDependencyProperty*)labeledByProperty;
 + (WXDependencyProperty*)itemTypeProperty;
++ (WXDependencyProperty*)itemStatusProperty;
++ (WXDependencyProperty*)isRequiredForFormProperty;
++ (WXDependencyProperty*)helpTextProperty;
++ (WXDependencyProperty*)automationIdProperty;
 + (WXDependencyProperty*)acceleratorKeyProperty;
 + (WXDependencyProperty*)accessKeyProperty;
-+ (WXDependencyProperty*)automationIdProperty;
-+ (WXDependencyProperty*)helpTextProperty;
-+ (WXDependencyProperty*)isRequiredForFormProperty;
-+ (WXDependencyProperty*)itemStatusProperty;
-+ (WXDependencyProperty*)labeledByProperty;
-+ (WXDependencyProperty*)liveSettingProperty;
-+ (WXDependencyProperty*)nameProperty;
-+ (WXDependencyProperty*)accessibilityViewProperty;
 + (WXDependencyProperty*)controlledPeersProperty;
++ (WXDependencyProperty*)accessibilityViewProperty;
 + (WXDependencyProperty*)levelProperty;
++ (WXDependencyProperty*)annotationsProperty;
 + (WXDependencyProperty*)positionInSetProperty;
 + (WXDependencyProperty*)sizeOfSetProperty;
-+ (WXDependencyProperty*)annotationsProperty;
++ (WXDependencyProperty*)localizedLandmarkTypeProperty;
++ (WXDependencyProperty*)landmarkTypeProperty;
++ (WXDependencyProperty*)localizedControlTypeProperty;
++ (WXDependencyProperty*)isPeripheralProperty;
++ (WXDependencyProperty*)isDataValidForFormProperty;
++ (WXDependencyProperty*)fullDescriptionProperty;
++ (WXDependencyProperty*)flowsToProperty;
++ (WXDependencyProperty*)flowsFromProperty;
++ (WXDependencyProperty*)describedByProperty;
 @end
 
 #endif // __WUXAAutomationProperties_DEFINED__
@@ -775,9 +797,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXAAutomationAnnotation : WXDependencyObject
++ (instancetype)make ACTIVATOR;
 + (WUXAAutomationAnnotation*)makeInstance:(WUXAAnnotationType)type ACTIVATOR;
 + (WUXAAutomationAnnotation*)makeWithElementParameter:(WUXAAnnotationType)type element:(WXUIElement*)element ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -788,3 +810,4 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @end
 
 #endif // __WUXAAutomationAnnotation_DEFINED__
+

@@ -27,11 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WSFGeotagHelper, WSFStorageItemThumbnail, WSFMusicProperties, WSFVideoProperties, WSFImageProperties, WSFDocumentProperties,
-    WSFStorageItemContentProperties, WSFBasicProperties;
-@protocol WSFIGeotagHelperStatics
-, WSFIThumbnailProperties, WSFIStorageItemExtraProperties, WSFIStorageItemContentProperties, WSFIMusicProperties, WSFIImageProperties,
-    WSFIVideoProperties, WSFIDocumentProperties, WSFIBasicProperties;
+@class WSFGeotagHelper, WSFStorageItemThumbnail, WSFMusicProperties, WSFVideoProperties, WSFImageProperties, WSFDocumentProperties, WSFStorageItemContentProperties, WSFBasicProperties;
+@protocol WSFIGeotagHelperStatics, WSFIThumbnailProperties, WSFIStorageItemExtraProperties, WSFIStorageItemContentProperties, WSFIMusicProperties, WSFIImageProperties, WSFIVideoProperties, WSFIDocumentProperties, WSFIBasicProperties;
 
 // Windows.Storage.FileProperties.PropertyPrefetchOptions
 enum _WSFPropertyPrefetchOptions {
@@ -106,9 +103,7 @@ typedef unsigned WSFVideoOrientation;
 #define __WSFIStorageItemExtraProperties_DEFINED__
 
 @protocol WSFIStorageItemExtraProperties
-- (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve
-                        success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success
-                        failure:(void (^)(NSError*))failure;
+- (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, RTObject* > */)propertiesToSave;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
 @end
@@ -151,12 +146,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 #define __WSSIInputStream_DEFINED__
 
 @protocol WSSIInputStream <WFIClosable>
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
-            count:(unsigned int)count
-          options:(WSSInputStreamOptions)options
-          success:(void (^)(RTObject<WSSIBuffer>*))success
-         progress:(void (^)(unsigned int))progress
-          failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -171,10 +161,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 #define __WSSIOutputStream_DEFINED__
 
 @protocol WSSIOutputStream <WFIClosable>
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
-           success:(void (^)(unsigned int))success
-          progress:(void (^)(unsigned int))progress
-           failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
@@ -199,16 +186,8 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
-            count:(unsigned int)count
-          options:(WSSInputStreamOptions)options
-          success:(void (^)(RTObject<WSSIBuffer>*))success
-         progress:(void (^)(unsigned int))progress
-          failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
-           success:(void (^)(unsigned int))success
-          progress:(void (^)(unsigned int))progress
-           failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -223,7 +202,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 #define __WSSIContentTypeProvider_DEFINED__
 
 @protocol WSSIContentTypeProvider
-@property (readonly) NSString* contentType;
+@property (readonly) NSString * contentType;
 @end
 
 OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
@@ -236,23 +215,14 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 #ifndef __WSSIRandomAccessStreamWithContentType_DEFINED__
 #define __WSSIRandomAccessStreamWithContentType_DEFINED__
 
-@protocol
-    WSSIRandomAccessStreamWithContentType <WSSIRandomAccessStream, WFIClosable, WSSIInputStream, WSSIOutputStream, WSSIContentTypeProvider>
+@protocol WSSIRandomAccessStreamWithContentType <WSSIRandomAccessStream, WFIClosable, WSSIInputStream, WSSIOutputStream, WSSIContentTypeProvider>
 - (RTObject<WSSIInputStream>*)getInputStreamAt:(uint64_t)position;
 - (RTObject<WSSIOutputStream>*)getOutputStreamAt:(uint64_t)position;
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
-            count:(unsigned int)count
-          options:(WSSInputStreamOptions)options
-          success:(void (^)(RTObject<WSSIBuffer>*))success
-         progress:(void (^)(unsigned int))progress
-          failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
-           success:(void (^)(unsigned int))success
-          progress:(void (^)(unsigned int))progress
-           failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -267,12 +237,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 #define __WSFStorageItemThumbnail_DEFINED__
 
 OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
-@interface WSFStorageItemThumbnail : RTObject <WSSIRandomAccessStreamWithContentType,
-                                               WSSIContentTypeProvider,
-                                               WSSIRandomAccessStream,
-                                               WSSIOutputStream,
-                                               WFIClosable,
-                                               WSSIInputStream>
+@interface WSFStorageItemThumbnail : RTObject <WSSIRandomAccessStreamWithContentType, WSSIContentTypeProvider, WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -280,7 +245,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @property (readonly) unsigned int originalWidth;
 @property (readonly) BOOL returnedSmallerCachedSize;
 @property (readonly) WSFThumbnailType type;
-@property (readonly) NSString* contentType;
+@property (readonly) NSString * contentType;
 @property uint64_t size;
 @property (readonly) BOOL canRead;
 @property (readonly) BOOL canWrite;
@@ -290,16 +255,8 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
-            count:(unsigned int)count
-          options:(WSSInputStreamOptions)options
-          success:(void (^)(RTObject<WSSIBuffer>*))success
-         progress:(void (^)(unsigned int))progress
-          failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
-           success:(void (^)(unsigned int))success
-          progress:(void (^)(unsigned int))progress
-           failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -315,14 +272,14 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int rating;
-@property (retain) NSString* albumArtist;
-@property (retain) NSString* album;
-@property (retain) NSString* artist;
-@property (retain) NSString* publisher;
+@property (retain) NSString * albumArtist;
+@property (retain) NSString * artist;
+@property (retain) NSString * album;
+@property (retain) NSString * publisher;
 @property unsigned int year;
 @property unsigned int trackNumber;
-@property (retain) NSString* title;
-@property (retain) NSString* subtitle;
+@property (retain) NSString * title;
+@property (retain) NSString * subtitle;
 @property (readonly) NSMutableArray* /* NSString * */ producers;
 @property (readonly) NSMutableArray* /* NSString * */ composers;
 @property (readonly) NSMutableArray* /* NSString * */ conductors;
@@ -330,9 +287,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @property (readonly) NSMutableArray* /* NSString * */ writers;
 @property (readonly) NSMutableArray* /* NSString * */ genre;
 @property (readonly) unsigned int bitrate;
-- (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve
-                        success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success
-                        failure:(void (^)(NSError*))failure;
+- (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, RTObject* > */)propertiesToSave;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
 @end
@@ -349,9 +304,9 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int year;
-@property (retain) NSString* title;
-@property (retain) NSString* subtitle;
-@property (retain) NSString* publisher;
+@property (retain) NSString * title;
+@property (retain) NSString * subtitle;
+@property (retain) NSString * publisher;
 @property unsigned int rating;
 @property (readonly) id /* double */ latitude;
 @property (readonly) WSFVideoOrientation orientation;
@@ -364,9 +319,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @property (readonly) id /* double */ longitude;
 @property (readonly) NSMutableArray* /* NSString * */ writers;
 @property (readonly) NSMutableArray* /* NSString * */ keywords;
-- (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve
-                        success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success
-                        failure:(void (^)(NSError*))failure;
+- (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, RTObject* > */)propertiesToSave;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
 @end
@@ -382,11 +335,11 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* title;
+@property (retain) NSString * title;
 @property unsigned int rating;
 @property (retain) WFDateTime* dateTaken;
-@property (retain) NSString* cameraModel;
-@property (retain) NSString* cameraManufacturer;
+@property (retain) NSString * cameraModel;
+@property (retain) NSString * cameraManufacturer;
 @property (readonly) id /* double */ latitude;
 @property (readonly) id /* double */ longitude;
 @property (readonly) WSFPhotoOrientation orientation;
@@ -394,9 +347,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @property (readonly) unsigned int height;
 @property (readonly) NSMutableArray* /* NSString * */ keywords;
 @property (readonly) unsigned int width;
-- (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve
-                        success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success
-                        failure:(void (^)(NSError*))failure;
+- (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, RTObject* > */)propertiesToSave;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
 @end
@@ -412,13 +363,11 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* title;
-@property (retain) NSString* comment;
+@property (retain) NSString * title;
+@property (retain) NSString * comment;
 @property (readonly) NSMutableArray* /* NSString * */ author;
 @property (readonly) NSMutableArray* /* NSString * */ keywords;
-- (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve
-                        success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success
-                        failure:(void (^)(NSError*))failure;
+- (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, RTObject* > */)propertiesToSave;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
 @end
@@ -438,9 +387,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 - (void)getVideoPropertiesAsyncWithSuccess:(void (^)(WSFVideoProperties*))success failure:(void (^)(NSError*))failure;
 - (void)getImagePropertiesAsyncWithSuccess:(void (^)(WSFImageProperties*))success failure:(void (^)(NSError*))failure;
 - (void)getDocumentPropertiesAsyncWithSuccess:(void (^)(WSFDocumentProperties*))success failure:(void (^)(NSError*))failure;
-- (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve
-                        success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success
-                        failure:(void (^)(NSError*))failure;
+- (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, RTObject* > */)propertiesToSave;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
 @end
@@ -459,11 +406,10 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @property (readonly) WFDateTime* dateModified;
 @property (readonly) WFDateTime* itemDate;
 @property (readonly) uint64_t size;
-- (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve
-                        success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success
-                        failure:(void (^)(NSError*))failure;
+- (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, RTObject* > */)propertiesToSave;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
 @end
 
 #endif // __WSFBasicProperties_DEFINED__
+

@@ -27,11 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WSPPFileRemovedEventArgs, WSPPFileOpenPickerUI, WSPPPickerClosingEventArgs, WSPPPickerClosingOperation, WSPPPickerClosingDeferral,
-    WSPPFileSavePickerUI, WSPPTargetFileRequestedEventArgs, WSPPTargetFileRequest, WSPPTargetFileRequestDeferral;
-@protocol WSPPIFileRemovedEventArgs
-, WSPPIFileOpenPickerUI, WSPPIPickerClosingEventArgs, WSPPIPickerClosingOperation, WSPPIPickerClosingDeferral, WSPPIFileSavePickerUI,
-    WSPPITargetFileRequestedEventArgs, WSPPITargetFileRequest, WSPPITargetFileRequestDeferral;
+@class WSPPFileRemovedEventArgs, WSPPFileOpenPickerUI, WSPPPickerClosingEventArgs, WSPPPickerClosingOperation, WSPPPickerClosingDeferral, WSPPFileSavePickerUI, WSPPTargetFileRequestedEventArgs, WSPPTargetFileRequest, WSPPTargetFileRequestDeferral;
+@protocol WSPPIFileRemovedEventArgs, WSPPIFileOpenPickerUI, WSPPIPickerClosingEventArgs, WSPPIPickerClosingOperation, WSPPIPickerClosingDeferral, WSPPIFileSavePickerUI, WSPPITargetFileRequestedEventArgs, WSPPITargetFileRequest, WSPPITargetFileRequestDeferral;
 
 // Windows.Storage.Pickers.Provider.AddFileResult
 enum _WSPPAddFileResult {
@@ -71,7 +68,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* id;
+@property (readonly) NSString * id;
 @end
 
 #endif // __WSPPFileRemovedEventArgs_DEFINED__
@@ -85,17 +82,17 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* title;
+@property (retain) NSString * title;
 @property (readonly) NSArray* /* NSString * */ allowedFileTypes;
 @property (readonly) WSPPFileSelectionMode selectionMode;
-@property (readonly) NSString* settingsIdentifier;
-- (EventRegistrationToken)addClosingEvent:(void (^)(WSPPFileOpenPickerUI*, WSPPPickerClosingEventArgs*))del;
+@property (readonly) NSString * settingsIdentifier;
+- (EventRegistrationToken)addClosingEvent:(void(^)(WSPPFileOpenPickerUI*, WSPPPickerClosingEventArgs*))del;
 - (void)removeClosingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addFileRemovedEvent:(void (^)(WSPPFileOpenPickerUI*, WSPPFileRemovedEventArgs*))del;
+- (EventRegistrationToken)addFileRemovedEvent:(void(^)(WSPPFileOpenPickerUI*, WSPPFileRemovedEventArgs*))del;
 - (void)removeFileRemovedEvent:(EventRegistrationToken)tok;
-- (WSPPAddFileResult)addFile:(NSString*)id file:(RTObject<WSIStorageFile>*)file;
-- (void)removeFile:(NSString*)id;
-- (BOOL)containsFile:(NSString*)id;
+- (WSPPAddFileResult)addFile:(NSString *)id file:(RTObject<WSIStorageFile>*)file;
+- (void)removeFile:(NSString *)id;
+- (BOOL)containsFile:(NSString *)id;
 - (BOOL)canAddFile:(RTObject<WSIStorageFile>*)file;
 @end
 
@@ -154,15 +151,15 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* title;
+@property (retain) NSString * title;
 @property (readonly) NSArray* /* NSString * */ allowedFileTypes;
-@property (readonly) NSString* fileName;
-@property (readonly) NSString* settingsIdentifier;
-- (EventRegistrationToken)addFileNameChangedEvent:(void (^)(WSPPFileSavePickerUI*, RTObject*))del;
+@property (readonly) NSString * fileName;
+@property (readonly) NSString * settingsIdentifier;
+- (EventRegistrationToken)addFileNameChangedEvent:(void(^)(WSPPFileSavePickerUI*, RTObject*))del;
 - (void)removeFileNameChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTargetFileRequestedEvent:(void (^)(WSPPFileSavePickerUI*, WSPPTargetFileRequestedEventArgs*))del;
+- (EventRegistrationToken)addTargetFileRequestedEvent:(void(^)(WSPPFileSavePickerUI*, WSPPTargetFileRequestedEventArgs*))del;
 - (void)removeTargetFileRequestedEvent:(EventRegistrationToken)tok;
-- (WSPPSetFileNameResult)trySetFileName:(NSString*)value;
+- (WSPPSetFileNameResult)trySetFileName:(NSString *)value;
 @end
 
 #endif // __WSPPFileSavePickerUI_DEFINED__
@@ -209,3 +206,4 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 @end
 
 #endif // __WSPPTargetFileRequestDeferral_DEFINED__
+

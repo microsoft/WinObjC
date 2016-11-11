@@ -27,18 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUTCCoreTextTextRequest, WUTCCoreTextSelectionRequest, WUTCCoreTextLayoutBounds, WUTCCoreTextLayoutRequest,
-    WUTCCoreTextCompositionSegment, WUTCCoreTextEditContext, WUTCCoreTextTextRequestedEventArgs, WUTCCoreTextSelectionRequestedEventArgs,
-    WUTCCoreTextLayoutRequestedEventArgs, WUTCCoreTextTextUpdatingEventArgs, WUTCCoreTextSelectionUpdatingEventArgs,
-    WUTCCoreTextFormatUpdatingEventArgs, WUTCCoreTextCompositionStartedEventArgs, WUTCCoreTextCompositionCompletedEventArgs,
-    WUTCCoreTextServicesManager, WUTCCoreTextServicesConstants;
+@class WUTCCoreTextTextRequest, WUTCCoreTextSelectionRequest, WUTCCoreTextLayoutBounds, WUTCCoreTextLayoutRequest, WUTCCoreTextCompositionSegment, WUTCCoreTextEditContext, WUTCCoreTextTextRequestedEventArgs, WUTCCoreTextSelectionRequestedEventArgs, WUTCCoreTextLayoutRequestedEventArgs, WUTCCoreTextTextUpdatingEventArgs, WUTCCoreTextSelectionUpdatingEventArgs, WUTCCoreTextFormatUpdatingEventArgs, WUTCCoreTextCompositionStartedEventArgs, WUTCCoreTextCompositionCompletedEventArgs, WUTCCoreTextServicesManager, WUTCCoreTextServicesConstants;
 @class WUTCCoreTextRange;
-@protocol WUTCICoreTextTextRequest
-, WUTCICoreTextTextRequestedEventArgs, WUTCICoreTextSelectionRequest, WUTCICoreTextSelectionRequestedEventArgs, WUTCICoreTextLayoutBounds,
-    WUTCICoreTextLayoutRequest, WUTCICoreTextLayoutRequestedEventArgs, WUTCICoreTextTextUpdatingEventArgs,
-    WUTCICoreTextSelectionUpdatingEventArgs, WUTCICoreTextFormatUpdatingEventArgs, WUTCICoreTextCompositionStartedEventArgs,
-    WUTCICoreTextCompositionCompletedEventArgs, WUTCICoreTextEditContext, WUTCICoreTextServicesManager, WUTCICoreTextServicesManagerStatics,
-    WUTCICoreTextServicesStatics, WUTCICoreTextCompositionSegment;
+@protocol WUTCICoreTextTextRequest, WUTCICoreTextTextRequestedEventArgs, WUTCICoreTextSelectionRequest, WUTCICoreTextSelectionRequestedEventArgs, WUTCICoreTextLayoutBounds, WUTCICoreTextLayoutRequest, WUTCICoreTextLayoutRequestedEventArgs, WUTCICoreTextTextUpdatingEventArgs, WUTCICoreTextSelectionUpdatingEventArgs, WUTCICoreTextFormatUpdatingEventArgs, WUTCICoreTextCompositionStartedEventArgs, WUTCICoreTextCompositionCompletedEventArgs, WUTCICoreTextEditContext2, WUTCICoreTextEditContext, WUTCICoreTextServicesManager, WUTCICoreTextServicesManagerStatics, WUTCICoreTextServicesStatics, WUTCICoreTextCompositionSegment;
 
 // Windows.UI.Text.Core.CoreTextInputScope
 enum _WUTCCoreTextInputScope {
@@ -105,6 +96,7 @@ enum _WUTCCoreTextInputScope {
     WUTCCoreTextInputScopeMaps = 62,
     WUTCCoreTextInputScopePasswordNumeric = 63,
     WUTCCoreTextInputScopeFormulaNumber = 67,
+    WUTCCoreTextInputScopeChatWithoutEmoji = 68,
 };
 typedef unsigned WUTCCoreTextInputScope;
 
@@ -156,7 +148,7 @@ typedef unsigned WUTCCoreTextFormatUpdatingReason;
 // [struct] Windows.UI.Text.Core.CoreTextRange
 OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @interface WUTCCoreTextRange : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property int startCaretPosition;
 @property int endCaretPosition;
 @end
@@ -170,7 +162,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* text;
+@property (retain) NSString * text;
 @property (readonly) BOOL isCanceled;
 @property (readonly) WUTCCoreTextRange* range;
 - (WFDeferral*)getDeferral;
@@ -235,7 +227,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* preconversionString;
+@property (readonly) NSString * preconversionString;
 @property (readonly) WUTCCoreTextRange* range;
 @end
 
@@ -250,28 +242,30 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* name;
+@property (retain) NSString * name;
 @property BOOL isReadOnly;
 @property WUTCCoreTextInputScope inputScope;
 @property WUTCCoreTextInputPaneDisplayPolicy inputPaneDisplayPolicy;
-- (EventRegistrationToken)addCompositionCompletedEvent:(void (^)(WUTCCoreTextEditContext*, WUTCCoreTextCompositionCompletedEventArgs*))del;
+- (EventRegistrationToken)addCompositionCompletedEvent:(void(^)(WUTCCoreTextEditContext*, WUTCCoreTextCompositionCompletedEventArgs*))del;
 - (void)removeCompositionCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCompositionStartedEvent:(void (^)(WUTCCoreTextEditContext*, WUTCCoreTextCompositionStartedEventArgs*))del;
+- (EventRegistrationToken)addCompositionStartedEvent:(void(^)(WUTCCoreTextEditContext*, WUTCCoreTextCompositionStartedEventArgs*))del;
 - (void)removeCompositionStartedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addFocusRemovedEvent:(void (^)(WUTCCoreTextEditContext*, RTObject*))del;
+- (EventRegistrationToken)addFocusRemovedEvent:(void(^)(WUTCCoreTextEditContext*, RTObject*))del;
 - (void)removeFocusRemovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addFormatUpdatingEvent:(void (^)(WUTCCoreTextEditContext*, WUTCCoreTextFormatUpdatingEventArgs*))del;
+- (EventRegistrationToken)addFormatUpdatingEvent:(void(^)(WUTCCoreTextEditContext*, WUTCCoreTextFormatUpdatingEventArgs*))del;
 - (void)removeFormatUpdatingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addLayoutRequestedEvent:(void (^)(WUTCCoreTextEditContext*, WUTCCoreTextLayoutRequestedEventArgs*))del;
+- (EventRegistrationToken)addLayoutRequestedEvent:(void(^)(WUTCCoreTextEditContext*, WUTCCoreTextLayoutRequestedEventArgs*))del;
 - (void)removeLayoutRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSelectionRequestedEvent:(void (^)(WUTCCoreTextEditContext*, WUTCCoreTextSelectionRequestedEventArgs*))del;
+- (EventRegistrationToken)addSelectionRequestedEvent:(void(^)(WUTCCoreTextEditContext*, WUTCCoreTextSelectionRequestedEventArgs*))del;
 - (void)removeSelectionRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSelectionUpdatingEvent:(void (^)(WUTCCoreTextEditContext*, WUTCCoreTextSelectionUpdatingEventArgs*))del;
+- (EventRegistrationToken)addSelectionUpdatingEvent:(void(^)(WUTCCoreTextEditContext*, WUTCCoreTextSelectionUpdatingEventArgs*))del;
 - (void)removeSelectionUpdatingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTextRequestedEvent:(void (^)(WUTCCoreTextEditContext*, WUTCCoreTextTextRequestedEventArgs*))del;
+- (EventRegistrationToken)addTextRequestedEvent:(void(^)(WUTCCoreTextEditContext*, WUTCCoreTextTextRequestedEventArgs*))del;
 - (void)removeTextRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTextUpdatingEvent:(void (^)(WUTCCoreTextEditContext*, WUTCCoreTextTextUpdatingEventArgs*))del;
+- (EventRegistrationToken)addTextUpdatingEvent:(void(^)(WUTCCoreTextEditContext*, WUTCCoreTextTextUpdatingEventArgs*))del;
 - (void)removeTextUpdatingEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addNotifyFocusLeaveCompletedEvent:(void(^)(WUTCCoreTextEditContext*, RTObject*))del;
+- (void)removeNotifyFocusLeaveCompletedEvent:(EventRegistrationToken)tok;
 - (void)notifyFocusEnter;
 - (void)notifyFocusLeave;
 - (void)notifyTextChanged:(WUTCCoreTextRange*)modifiedRange newLength:(int)newLength newSelection:(WUTCCoreTextRange*)newSelection;
@@ -337,7 +331,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @property (readonly) BOOL isCanceled;
 @property (readonly) WUTCCoreTextRange* newSelection;
 @property (readonly) WUTCCoreTextRange* range;
-@property (readonly) NSString* text;
+@property (readonly) NSString * text;
 - (WFDeferral*)getDeferral;
 @end
 
@@ -424,7 +418,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WGLanguage* inputLanguage;
-- (EventRegistrationToken)addInputLanguageChangedEvent:(void (^)(WUTCCoreTextServicesManager*, RTObject*))del;
+- (EventRegistrationToken)addInputLanguageChangedEvent:(void(^)(WUTCCoreTextServicesManager*, RTObject*))del;
 - (void)removeInputLanguageChangedEvent:(EventRegistrationToken)tok;
 - (WUTCCoreTextEditContext*)createEditContext;
 @end
@@ -441,3 +435,4 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @end
 
 #endif // __WUTCCoreTextServicesConstants_DEFINED__
+

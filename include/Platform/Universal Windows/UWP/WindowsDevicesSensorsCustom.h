@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WDSCCustomSensor, WDSCCustomSensorReading, WDSCCustomSensorReadingChangedEventArgs;
-@protocol WDSCICustomSensorStatics
-, WDSCICustomSensor, WDSCICustomSensorReading, WDSCICustomSensorReadingChangedEventArgs;
+@protocol WDSCICustomSensorStatics, WDSCICustomSensor, WDSCICustomSensorReading, WDSCICustomSensorReadingChangedEventArgs;
 
 #include "WindowsFoundation.h"
 
@@ -41,15 +40,15 @@
 
 OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
 @interface WDSCCustomSensor : RTObject
-+ (NSString*)getDeviceSelector:(WFGUID*)interfaceId;
-+ (void)fromIdAsync:(NSString*)sensorId success:(void (^)(WDSCCustomSensor*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector:(WFGUID*)interfaceId;
++ (void)fromIdAsync:(NSString *)sensorId success:(void (^)(WDSCCustomSensor*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int reportInterval;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) unsigned int minimumReportInterval;
-- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSCCustomSensor*, WDSCCustomSensorReadingChangedEventArgs*))del;
+- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSCCustomSensor*, WDSCCustomSensorReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
 - (WDSCCustomSensorReading*)getCurrentReading;
 @end
@@ -84,3 +83,4 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
 @end
 
 #endif // __WDSCCustomSensorReadingChangedEventArgs_DEFINED__
+

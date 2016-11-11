@@ -19,6 +19,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCFrameTestViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCLineTestViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCParagraphStyleTestViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCPathForGlyphTestViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCRunTestViewController.h" />
   </ItemGroup>
   <ItemGroup>
