@@ -125,7 +125,7 @@ static const CGFloat c_height = 50;
         UILabel* label = [[UILabel alloc] initWithFrame:frame];
         [label setBackgroundColor:nil];
         if (_pasteBoardURL != nil && _pasteBoardURL.absoluteString != nil) {
-            [label setText:_pasteBoardURL];
+            [label setText:_pasteBoardURL.absoluteString];
         } else {
             [label setText:@"No clipboard URL present"];
         }
