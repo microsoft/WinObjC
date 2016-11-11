@@ -38,6 +38,7 @@
 #import <wrl/client.h>
 #include <COMIncludes_end.h>
 #import <LoggingNative.h>
+#import <CoreGraphics/D2DWrapper.h>
 
 #import <list>
 #import <vector>
@@ -1479,7 +1480,13 @@ static HRESULT __CGContextRenderToCommandList(CGContextRef context,
 }
 
 static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
+    if (!image) {
+        // Being asked to draw nothing is valid!
+        return S_OK;
+    }
+
     ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
+
     auto& state = context->CurrentGState();
 
     ComPtr<ID2D1DeviceContext> deviceContext;
@@ -1517,24 +1524,31 @@ static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
 
 static HRESULT __CGContextDrawGeometry(CGContextRef context,
                                        _CGCoordinateMode coordinateMode,
-                                       ID2D1Geometry* geometry,
+                                       ID2D1Geometry* pGeometry,
                                        CGPathDrawingMode drawMode) {
     ComPtr<ID2D1CommandList> commandList;
+    ComPtr<ID2D1Geometry> geometry(pGeometry);
     HRESULT hr = __CGContextRenderToCommandList(
         context, coordinateMode, nullptr, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
             auto& state = context->CurrentGState();
             if (drawMode & kCGPathFill) {
-                if (drawMode & kCGPathEOFill) {
-                    // TODO(DH): GH#1077 Regenerate geometry in Even/Odd fill mode.
-                }
-                deviceContext->FillGeometry(geometry, state.fillBrush.Get());
+                state.fillBrush->SetOpacity(state.alpha);
+
+                ComPtr<ID2D1Geometry> geometryToFill;
+                D2D1_FILL_MODE d2dFillMode =
+                    (drawMode & kCGPathEOFill) == kCGPathEOFill ? D2D1_FILL_MODE_ALTERNATE : D2D1_FILL_MODE_WINDING;
+                RETURN_IF_FAILED(_CGConvertD2DGeometryToFillMode(geometry.Get(), d2dFillMode, &geometryToFill));
+
+                deviceContext->FillGeometry(geometryToFill.Get(), state.fillBrush.Get());
             }
 
             if (drawMode & kCGPathStroke && std::fpclassify(state.lineWidth) != FP_ZERO) {
                 // This only computes the stroke style if its parameters have changed since the last draw.
                 state.ComputeStrokeStyle(deviceContext);
 
-                deviceContext->DrawGeometry(geometry, state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
+                state.strokeBrush->SetOpacity(state.alpha);
+
+                deviceContext->DrawGeometry(geometry.Get(), state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
             }
 
             return S_OK;
