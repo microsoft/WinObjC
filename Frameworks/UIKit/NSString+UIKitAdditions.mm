@@ -311,11 +311,11 @@ static NSDictionary* _getDefaultUITextAttributes() {
     woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)attributedSelf) };
 
     if (size.width == 0.0) {
-        size.width = FLT_MAX;
+        size.width = std::numeric_limits<CGFloat>::max();
     }
 
     if (size.height == 0.0) {
-        size.height = FLT_MAX;
+        size.height = std::numeric_limits<CGFloat>::max();
     }
 
     return CTFramesetterSuggestFrameSizeWithConstraints(framesetter.get(), CFRangeMake(0, self.length), nullptr, size, nullptr);

@@ -15,11 +15,11 @@
 //******************************************************************************
 
 #import <TestFramework.h>
-#import <Starboard/SmartTypes.h>
 #import <UIKit/UIKit.h>
 
 TEST(NSString_UIKitAdditions, ShouldNotReturnSizeOfZeroWidth) {
-    NSString* string = @"TEST";
-    CGSize size = [string sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:{ 0, 0 } lineBreakMode:NSLineBreakByWordWrapping];
-    EXPECT_NE(0, size.width);
+    CGSize size =
+        [@"TEST" sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:CGSizeZero lineBreakMode:NSLineBreakByWordWrapping];
+    EXPECT_LT(0.0, size.width);
+    EXPECT_LT(0.0, size.height);
 }
