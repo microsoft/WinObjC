@@ -31,22 +31,16 @@
 #import "UWP/WindowsUIXamlControls.h"
 
 TEST(UIActivityIndicatorView, CreateXamlElement) {
-    dispatch_sync(dispatch_get_main_queue(),
-                  ^{
-                      // TODO: Switch to UIKit.Xaml projections when they're available.
-                      Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateProgressRing());
-                      ASSERT_TRUE(xamlElement);
-                  });
+    // TODO: Switch to UIKit.Xaml projections when they're available.
+    Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateProgressRing());
+    ASSERT_TRUE(xamlElement);
 }
 
 TEST(UIActivityIndicatorView, GetXamlElement) {
-    dispatch_sync(dispatch_get_main_queue(),
-                  ^{
-                      UIView* view = [[[UIActivityIndicatorView alloc] init] autorelease];
-                      WXFrameworkElement* backingElement = [view xamlElement];
-                      ASSERT_TRUE(backingElement);
+    UIView* view = [[[UIActivityIndicatorView alloc] init] autorelease];
+    WXFrameworkElement* backingElement = [view xamlElement];
+    ASSERT_TRUE(backingElement);
 
-                      // TODO: Fix up when UIActivityIndicator moves fully to XAML
-                      ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
-                  });
+    // TODO: Fix up when UIActivityIndicator moves fully to XAML
+    ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
 }
