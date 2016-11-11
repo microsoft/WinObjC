@@ -43,10 +43,8 @@ struct ButtonState {
     // We also save the converted data types that we need to set on the XAML Button, so that we do not convert
     // from UIKit datatype to XAML datatype every time layoutSubviews is called.
     Microsoft::WRL::ComPtr<IInspectable> inspectableImage;
-    Microsoft::WRL::ComPtr<IInspectable> inspectableBackgroundImage;
     Microsoft::WRL::ComPtr<IInspectable> inspectableTitleColor;
     Microsoft::WRL::ComPtr<IInspectable> inspectableTitle;
-    RECT backgroundImageInsets;
 };
 
 @interface UIRoundedRectButton : UIButton {
@@ -269,7 +267,6 @@ Microsoft Extension
     }
 
     [self setNeedsLayout];
-    [self layoutIfNeeded];
 }
 
 /**
@@ -279,8 +276,6 @@ Microsoft Extension
     XamlButtonApplyVisuals([_xamlButton comObj],
                            _currentInspectableTitle(self),
                            _currentInspectableImage(self),
-                           _currentInspectableBackgroundImage(self),
-                           _currentBackgroundImageInsets(self),
                            _currentInspectableTitleColor(self));
 
     // Set frame after updating the visuals
@@ -289,6 +284,7 @@ Microsoft Extension
     CGRect imageFrame = [self imageRectForContentRect:contentFrame];
     self.titleLabel.frame = textFrame;
     self.imageView.frame = imageFrame;
+    UIImageSetLayerContents([self layer], self.currentBackgroundImage);
 
     // Probably important to keep around for after the refactor.
     [super layoutSubviews];
@@ -426,27 +422,17 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 }
 
 /**
- @Status Caveat
- @Notes UIControlStateSelected, UIControlStateApplication and UIControlStateReserved states not supported
+ @Status Interoperable
+ @Notes The xaml element may be modified directly and we could still return stale values.
 */
 - (void)setBackgroundImage:(UIImage*)image forState:(UIControlState)state {
     _states[state].backgroundImage = image;
-    _states[state].backgroundImageInsets = { 0, 0, 0, 0 };
-    WUXMImageBrush* backgroundImageBrush = ConvertUIImageToWUXMImageBrush(image);
-    if (backgroundImageBrush) {
-        _states[state].inspectableBackgroundImage = [backgroundImageBrush comObj];
-        _states[state].backgroundImageInsets = { image.capInsets.left * image.scale,
-                                                 image.capInsets.top * image.scale,
-                                                 image.capInsets.right * image.scale,
-                                                 image.capInsets.bottom * image.scale };
-    }
 
     [self setNeedsLayout];
-    [self layoutIfNeeded];
 }
 
 /**
- @Status Caveat
+ @Status Interoperable
  @Notes The xaml element may be modified directly and we could still return stale values.
 */
 - (UIImage*)backgroundImageForState:(UIControlState)state {
@@ -454,7 +440,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 }
 
 /**
- @Status Caveat
+ @Status Interoperable
  @Notes The xaml element may be modified directly and we could still return stale values.
 */
 - (UIImage*)currentImage {
@@ -466,7 +452,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 }
 
 /**
- @Status Caveat
+ @Status Interoperable
  @Notes The xaml element may be modified directly and we could still return stale values.
 */
 - (UIImage*)currentBackgroundImage {
@@ -488,11 +474,10 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     }
 
     [self setNeedsLayout];
-    [self layoutIfNeeded];
 }
 
 /**
- @Status Caveat
+ @Status Interoperable
  @Notes The xaml element may be modified directly and we could still return stale values.
 */
 - (NSString*)titleForState:(UIControlState)state {
@@ -500,7 +485,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 }
 
 /**
- @Status Caveat
+ @Status Interoperable
  @Notes The xaml element may be modified directly and we could still return stale values.
 */
 - (UIImage*)imageForState:(UIControlState)state {
@@ -519,7 +504,6 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     }
 
     [self setNeedsLayout];
-    [self layoutIfNeeded];
 }
 
 /**
@@ -591,7 +575,6 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     if (_curState != newState) {
         _curState = newState;
         [self setNeedsLayout];
-        [self layoutIfNeeded];
     }
 
     [super touchesBegan:touchSet withEvent:event];
@@ -615,7 +598,6 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     if (_curState != newState) {
         _curState = newState;
         [self setNeedsLayout];
-        [self layoutIfNeeded];
     }
 
     [super touchesEnded:touchSet withEvent:event];
@@ -639,7 +621,6 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     if (_curState != newState) {
         _curState = newState;
         [self setNeedsLayout];
-        [self layoutIfNeeded];
     }
 
     [super touchesCancelled:touchSet withEvent:event];
@@ -809,14 +790,6 @@ static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableTitle(UIButton* s
     return self->_states[UIControlStateNormal].inspectableTitle;
 }
 
-static RECT _currentBackgroundImageInsets(UIButton* self) {
-    if (self->_states[self->_curState].backgroundImage) {
-        return self->_states[self->_curState].backgroundImageInsets;
-    }
-
-    return self->_states[UIControlStateNormal].backgroundImageInsets;
-}
-
 static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableTitleColor(UIButton* self) {
     if (self->_states[self->_curState].inspectableTitleColor) {
         return self->_states[self->_curState].inspectableTitleColor;
@@ -831,14 +804,6 @@ static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableImage(UIButton* s
     }
 
     return self->_states[UIControlStateNormal].inspectableImage;
-}
-
-static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableBackgroundImage(UIButton* self) {
-    if (self->_states[self->_curState].inspectableBackgroundImage) {
-        return self->_states[self->_curState].inspectableBackgroundImage;
-    }
-
-    return self->_states[UIControlStateNormal].inspectableBackgroundImage;
 }
 
 /**

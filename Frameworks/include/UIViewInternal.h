@@ -55,6 +55,7 @@ public:
     UIViewAutoresizing autoresizingMask;
     CGSize _contentHuggingPriority;
     CGSize _contentCompressionResistancePriority;
+    CGSize _previousIntrinsicContentSize;
     BOOL autoresizesSubviews;
     BOOL translatesAutoresizingMaskIntoConstraints;
     CGRect _resizeRoundingError;
@@ -107,7 +108,6 @@ public:
 }
 
 - (UITouchPhase)_processPointerEvent:(WUXIPointerRoutedEventArgs*)pointerEventArgs forTouchPhase:(UITouchPhase)touchPhase;
-- (void)_initPriv;
 
 + (void)_setPageTransitionForView:(UIView*)view fromLeft:(BOOL)fromLeft;
 - (void)_applyConstraints;

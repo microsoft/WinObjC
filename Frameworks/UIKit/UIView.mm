@@ -653,6 +653,10 @@ static std::string _printViewHeirarchy(UIView* leafView) {
     // Create the private backing object
     self->priv = new UIViewPrivateState(self);
 
+    // Since we piggyback on autoresize masks and layoutSubviews for autolayout, we need to
+    // edge-trigger intrinsic content size changes, or we stumble into layout loops
+    priv->_previousIntrinsicContentSize = { UIViewNoIntrinsicMetric, UIViewNoIntrinsicMetric };
+
     // Configure autolayout
     static bool isAutoLayoutInitialized = InitializeAutoLayout();
     [self autoLayoutAlloc];
@@ -2442,6 +2446,13 @@ static float doRound(float f) {
 /**
  @Status Interoperable
 */
+- (BOOL)autoresizesSubviews {
+    return priv->autoresizesSubviews;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)setAutoresizesSubviews:(BOOL)autoresize {
     if (autoresize != priv->autoresizesSubviews) {
         priv->autoresizesSubviews = autoresize;
@@ -3489,10 +3500,12 @@ static float doRound(float f) {
  @Status Interoperable
 */
 - (void)invalidateIntrinsicContentSize {
-    [self autoLayoutInvalidateContentSize];
-
     // The parent is always responsible for autolaying out its children
-    [self.superview setNeedsLayout];
+    if (!CGSizeEqualToSize(priv->_previousIntrinsicContentSize, self.intrinsicContentSize)) {
+        priv->_previousIntrinsicContentSize = self.intrinsicContentSize;
+        [self autoLayoutInvalidateContentSize];
+        [self.superview setNeedsLayout];
+    }
 }
 
 /**
