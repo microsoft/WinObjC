@@ -21,6 +21,7 @@
 #import "UIApplicationInternal.h"
 
 #import <algorithm>
+#import "UWP/WindowsUICore.h"
 
 static const wchar_t* TAG = L"DisplayProperties";
 
@@ -57,6 +58,11 @@ float ScreenHeight() {
 
 float ScreenScale() {
     float scale = s_screenMagnification;
+
+    // If we're not running in a UWP, return the default scale factor
+    if (![WUCCoreWindow getForCurrentThread]) {
+        return scale;
+    }
 
     if ([[UIApplication displayMode] useHostScaleFactor]) {
         scale *= [UIApplication displayMode].hostScreenScale;

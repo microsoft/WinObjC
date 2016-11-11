@@ -262,9 +262,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\Accessibility.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSAttributedString+UIKitAdditionsTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSCoder+UIKitAdditionsTest.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSLayoutConstraint.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIApplication.m" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIViewTest.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSValue+UIKitAdditionsTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIColorTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIFontTests.mm" />

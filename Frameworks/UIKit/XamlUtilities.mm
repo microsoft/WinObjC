@@ -257,9 +257,11 @@ ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> ReturnXamlType(NSString* xamlC
 
     ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> xamlType;
     auto className = Strings::NarrowToWide<HSTRING>(xamlClassName);
-    HRESULT hr = xamlMetaProvider->GetXamlTypeByFullName(className.Get(), xamlType.GetAddressOf());
-    if (SUCCEEDED(hr) && xamlType.Get() != nullptr) {
-        return xamlType;
+    if (xamlMetaProvider) {
+        HRESULT hr = xamlMetaProvider->GetXamlTypeByFullName(className.Get(), xamlType.GetAddressOf());
+        if (SUCCEEDED(hr) && xamlType.Get() != nullptr) {
+            return xamlType;
+        }
     }
 
     return nullptr;
