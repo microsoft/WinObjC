@@ -308,11 +308,17 @@ static NSDictionary* _getDefaultUITextAttributes() {
     }
 
     NSAttributedString* attributedSelf = [[[NSAttributedString alloc] initWithString:self attributes:attributes] autorelease];
+    woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)attributedSelf) };
 
-    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)attributedSelf);
-    CFAutorelease(framesetter);
+    if (size.width == 0.0) {
+        size.width = FLT_MAX;
+    }
 
-    return CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, self.length), nullptr, size, nullptr);
+    if (size.height == 0.0) {
+        size.height = FLT_MAX;
+    }
+
+    return CTFramesetterSuggestFrameSizeWithConstraints(framesetter.get(), CFRangeMake(0, self.length), nullptr, size, nullptr);
 }
 
 // Private helper that converts a UILineBreakMode -> NSParagraphStyle
