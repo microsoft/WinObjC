@@ -100,6 +100,9 @@ struct __CGContextDrawingState {
     CGSize shadowOffset{ 0, 0 };
     CGFloat shadowBlur{ 0 };
 
+    // Clipping
+    ComPtr<ID2D1Geometry> clippingGeometry;
+
     inline void ComputeStrokeStyle(ID2D1DeviceContext* deviceContext) {
         if (strokeStyle) {
             return;
@@ -183,6 +186,49 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
         ComPtr<ID2D1Factory> factory;
         renderTarget->GetFactory(&factory);
         return factory;
+    }
+
+    HRESULT Clip(CGPathDrawingMode pathMode) {
+        if (!HasPath()) {
+            // Clipping to nothing is okay.
+            return S_OK;
+        }
+
+        auto& state = CurrentGState();
+
+        ComPtr<ID2D1Geometry> additionalClippingGeometry;
+        RETURN_IF_FAILED(_CGPathGetGeometry(Path(), &additionalClippingGeometry));
+        ClearPath();
+
+        D2D1_FILL_MODE d2dFillMode = (pathMode & kCGPathEOFill) == kCGPathEOFill ? D2D1_FILL_MODE_ALTERNATE : D2D1_FILL_MODE_WINDING;
+
+        ComPtr<ID2D1Geometry> convertedClippingGeometry;
+        RETURN_IF_FAILED(_CGConvertD2DGeometryToFillMode(additionalClippingGeometry.Get(), d2dFillMode, &convertedClippingGeometry));
+
+        if (state.clippingGeometry) {
+            // If we have a clipping geometry right now, we must intersect it with the new path.
+
+            // To do so, we need to stream the combined geometry into a totally new geometry.
+            ComPtr<ID2D1PathGeometry> newClippingPathGeometry;
+            RETURN_IF_FAILED(Factory()->CreatePathGeometry(&newClippingPathGeometry));
+
+            ComPtr<ID2D1GeometrySink> geometrySink;
+            RETURN_IF_FAILED(newClippingPathGeometry->Open(&geometrySink));
+
+            geometrySink->SetFillMode(d2dFillMode);
+
+            RETURN_IF_FAILED(state.clippingGeometry->CombineWithGeometry(additionalClippingGeometry.Get(),
+                                                                         D2D1_COMBINE_MODE_INTERSECT,
+                                                                         nullptr,
+                                                                         geometrySink.Get()));
+
+            RETURN_IF_FAILED(geometrySink->Close());
+
+            return newClippingPathGeometry.As(&state.clippingGeometry);
+        } else {
+            // If we don't have a clipping geometry, however, we are free to take this one wholesale.
+            return convertedClippingGeometry.As(&state.clippingGeometry);
+        }
     }
 };
 
@@ -740,7 +786,7 @@ bool CGContextPathContainsPoint(CGContextRef context, CGPoint point, CGPathDrawi
 */
 void CGContextClip(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->Clip(kCGPathFill);
 }
 
 /**
@@ -748,7 +794,7 @@ void CGContextClip(CGContextRef context) {
 */
 void CGContextEOClip(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->Clip(kCGPathEOFill);
 }
 
 /**
@@ -788,9 +834,20 @@ void CGContextClipToMask(CGContextRef context, CGRect dest, CGImageRef image) {
  @Status Interoperable
 */
 CGRect CGContextGetClipBoundingBox(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return StubReturn();
+    NOISY_RETURN_IF_NULL(context, CGRectNull);
+
+    auto& state = context->CurrentGState();
+    if (!state.clippingGeometry) {
+        return CGRectNull;
+    }
+
+    D2D1_RECT_F bounds;
+
+    if (FAILED(state.clippingGeometry->GetBounds(nullptr, &bounds))) {
+        return CGRectNull;
+    }
+
+    return CGContextConvertRectToUserSpace(context, _D2DRectToCGRect(bounds));
 }
 #pragma endregion
 
@@ -1495,11 +1552,14 @@ static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
     deviceContext->BeginDraw();
 
     bool layer = false;
-    if (state.alpha != 1.0f || false /* mask, clip, etc. */) {
+    if (state.alpha != 1.0f || state.clippingGeometry) {
         layer = true;
-        renderTarget->PushLayer(
-            D2D1::LayerParameters(D2D1::InfiniteRect(), nullptr, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE, D2D1::IdentityMatrix(), state.alpha),
-            nullptr);
+        renderTarget->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
+                                                      state.clippingGeometry.Get(),
+                                                      D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+                                                      D2D1::IdentityMatrix(),
+                                                      state.alpha),
+                                nullptr);
     }
 
     ComPtr<ID2D1Image> currentImage{ image };
