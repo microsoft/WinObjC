@@ -18,9 +18,17 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <UIKit/UIFont.h>
 
+#include <COMIncludes.h>
+#import <DWrite_3.h>
+#include <COMIncludes_End.h>
+
 @interface UIFont ()
 + (UIFont*)defaultFont;
 + (UIFont*)titleFont;
 + (UIFont*)messageFont;
 + (UIFont*)buttonFont;
+- (NSString*)_compatibleFamilyName;
+- (DWRITE_FONT_WEIGHT)_fontWeight;
+- (DWRITE_FONT_STRETCH)_fontStretch;
+- (DWRITE_FONT_STYLE)_fontStyle;
 @end

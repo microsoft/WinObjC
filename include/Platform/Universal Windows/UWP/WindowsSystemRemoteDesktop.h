@@ -42,3 +42,4 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTEDESKTOP_EXPORT
 @end
 
 #endif // __WSRInteractiveSession_DEFINED__
+

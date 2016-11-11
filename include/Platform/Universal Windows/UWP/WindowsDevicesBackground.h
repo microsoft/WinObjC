@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WDBDeviceUseDetails, WDBDeviceServicingDetails;
-@protocol WDBIDeviceUseDetails
-, WDBIDeviceServicingDetails;
+@protocol WDBIDeviceUseDetails, WDBIDeviceServicingDetails;
 
 #include "WindowsFoundation.h"
 
@@ -44,8 +43,8 @@ OBJCUWP_WINDOWS_DEVICES_BACKGROUND_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* arguments;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * arguments;
+@property (readonly) NSString * deviceId;
 @end
 
 #endif // __WDBDeviceUseDetails_DEFINED__
@@ -59,9 +58,10 @@ OBJCUWP_WINDOWS_DEVICES_BACKGROUND_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* arguments;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * arguments;
+@property (readonly) NSString * deviceId;
 @property (readonly) WFTimeSpan* expectedDuration;
 @end
 
 #endif // __WDBDeviceServicingDetails_DEFINED__
+

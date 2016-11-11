@@ -122,7 +122,7 @@ struct __CGContextDrawingState {
     }
 };
 
-struct __CGContextImpl {
+struct __CGContext : CoreFoundation::CppBase<__CGContext> {
     ComPtr<ID2D1RenderTarget> renderTarget{ nullptr };
 
     // Calculated at creation time, this transform flips CG's drawing commands,
@@ -142,19 +142,17 @@ struct __CGContextImpl {
     bool allowsFontSubpixelPositioning = false;
     bool allowsFontSubpixelQuantization = false;
 
-    __CGContextImpl() {
+    __CGContext() {
         // Set up a default/baseline state
         stateStack.emplace();
     }
-};
 
-struct __CGContext : CoreFoundation::CppBase<__CGContext, __CGContextImpl> {
     inline ComPtr<ID2D1RenderTarget>& RenderTarget() {
-        return _impl.renderTarget;
+        return renderTarget;
     }
 
     inline std::stack<__CGContextDrawingState>& GStateStack() {
-        return _impl.stateStack;
+        return stateStack;
     }
 
     inline __CGContextDrawingState& CurrentGState() {
@@ -162,27 +160,27 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext, __CGContextImpl> {
     }
 
     inline bool HasPath() {
-        return _impl.currentPath != nullptr;
+        return currentPath != nullptr;
     }
 
     inline CGMutablePathRef Path() {
-        if (!_impl.currentPath) {
-            _impl.currentPath.reset(CGPathCreateMutable());
+        if (!currentPath) {
+            currentPath.reset(CGPathCreateMutable());
         }
-        return _impl.currentPath.get();
+        return currentPath.get();
     }
 
     inline void SetPath(CGMutablePathRef path) {
-        _impl.currentPath.reset(CGPathRetain(path));
+        currentPath.reset(CGPathRetain(path));
     }
 
     inline void ClearPath() {
-        _impl.currentPath.reset();
+        currentPath.reset();
     }
 
     inline ComPtr<ID2D1Factory> Factory() {
         ComPtr<ID2D1Factory> factory;
-        _impl.renderTarget->GetFactory(&factory);
+        renderTarget->GetFactory(&factory);
         return factory;
     }
 };
@@ -208,7 +206,7 @@ CFTypeID CGContextGetTypeID() {
 
 #pragma region Global State - Lifetime
 static void __CGContextInitWithRenderTarget(CGContextRef context, ID2D1RenderTarget* renderTarget) {
-    context->_impl.renderTarget = renderTarget;
+    context->renderTarget = renderTarget;
     // Reference platform defaults:
     // * Fill  : fully transparent black
     // * Stroke: fully opaque black
@@ -219,7 +217,7 @@ static void __CGContextInitWithRenderTarget(CGContextRef context, ID2D1RenderTar
     // CG is a lower-left origin system (LLO), but D2D is upper left (ULO).
     // We have to translate the render area back onscreen and flip it up to ULO.
     D2D1_SIZE_F targetSize = renderTarget->GetSize();
-    context->Impl().deviceTransform = CGAffineTransformMake(1.f, 0.f, 0.f, -1.f, 0.f, targetSize.height);
+    context->deviceTransform = CGAffineTransformMake(1.f, 0.f, 0.f, -1.f, 0.f, targetSize.height);
 }
 
 CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget) {
@@ -415,7 +413,7 @@ CGPoint CGContextConvertPointToDeviceSpace(CGContextRef context, CGPoint point) 
 */
 CGAffineTransform CGContextGetUserSpaceToDeviceSpaceTransform(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, StubReturn());
-    return CGAffineTransformConcat(context->CurrentGState().transform, context->Impl().deviceTransform);
+    return CGAffineTransformConcat(context->CurrentGState().transform, context->deviceTransform);
 }
 #pragma endregion
 
@@ -1158,7 +1156,7 @@ void CGContextSetCMYKStrokeColor(CGContextRef context, CGFloat cyan, CGFloat mag
 // This is that private interface.
 void _CGContextSetShadowProjectionTransform(CGContextRef context, CGAffineTransform transform) {
     NOISY_RETURN_IF_NULL(context);
-    context->Impl().shadowProjectionTransform = transform;
+    context->shadowProjectionTransform = transform;
 }
 
 /**
@@ -1170,7 +1168,7 @@ void CGContextSetShadow(CGContextRef context, CGSize offset, CGFloat blur) {
     auto& state = context->CurrentGState();
     // The default shadow colour on the reference platform is black at 33% alpha.
     state.shadowColor = { 0.f, 0.f, 0.f, 1.f / 3.f };
-    state.shadowOffset = CGSizeApplyAffineTransform(offset, context->Impl().shadowProjectionTransform);
+    state.shadowOffset = CGSizeApplyAffineTransform(offset, context->shadowProjectionTransform);
     state.shadowBlur = blur;
 }
 
@@ -1190,7 +1188,7 @@ void CGContextSetShadowWithColor(CGContextRef context, CGSize offset, CGFloat bl
         // This is in line with the reference platform's shadowing specification.
         state.shadowColor = { 0.f, 0.f, 0.f, 0.f };
     }
-    state.shadowOffset = CGSizeApplyAffineTransform(offset, context->Impl().shadowProjectionTransform);
+    state.shadowOffset = CGSizeApplyAffineTransform(offset, context->shadowProjectionTransform);
     state.shadowBlur = blur;
 }
 #pragma endregion
@@ -1405,7 +1403,7 @@ static HRESULT __CGContextCreateShadowEffect(CGContextRef context,
         RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D12DAffineTransform, &affineTransformEffect));
         affineTransformEffect->SetInputEffect(0, shadowEffect.Get());
 
-        CGSize deviceTransformedShadowOffset = CGSizeApplyAffineTransform(state.shadowOffset, context->Impl().deviceTransform);
+        CGSize deviceTransformedShadowOffset = CGSizeApplyAffineTransform(state.shadowOffset, context->deviceTransform);
         RETURN_IF_FAILED(affineTransformEffect->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX,
                                                          D2D1::Matrix3x2F::Translation(deviceTransformedShadowOffset.width,
                                                                                        deviceTransformedShadowOffset.height)));
@@ -1813,21 +1811,18 @@ bool CGContextIsPointInPath(CGContextRef context, bool eoFill, CGFloat x, CGFloa
     return StubReturn();
 }
 
-void CGContextDrawGlyphRun(CGContextRef context, const DWRITE_GLYPH_RUN* glyphRun, float lineAscent) {
+void CGContextDrawGlyphRun(CGContextRef context, const DWRITE_GLYPH_RUN* glyphRun) {
     NOISY_RETURN_IF_NULL(context);
     // TODO(DH) GH#1070 Merge in CGContextCairo.mm's Glyph Run code.
 }
 #pragma endregion
 
 #pragma region CGBitmapContext
-struct __CGBitmapContextImpl {
-    woc::unique_cf<CGImageRef> image;
-};
+struct __CGBitmapContext : CoreFoundation::CppBase<__CGBitmapContext, __CGContext> {
+    woc::unique_cf<CGImageRef> _image;
 
-struct __CGBitmapContext : CoreFoundation::CppBase<__CGBitmapContext, __CGBitmapContextImpl, __CGContext> {
     inline void SetImage(CGImageRef image) {
-        _impl.image.reset(image);
-        CGImageRetain(image);
+        _image.reset(CGImageRetain(image));
     }
 };
 
@@ -1909,7 +1904,7 @@ CGImageRef CGBitmapContextGetImage(CGContextRef context) {
         TraceError(TAG, L"Image requested from non-bitmap CGContext.");
         return nullptr;
     }
-    return ((__CGBitmapContext*)context)->Impl().image.get();
+    return ((__CGBitmapContext*)context)->_image.get();
 }
 
 CGContextRef _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget, CGImageRef img) {

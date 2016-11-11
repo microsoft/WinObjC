@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WGCCharacterGrouping, WGCCharacterGroupings;
-@protocol WGCICharacterGrouping
-, WGCICharacterGroupings;
+@protocol WGCICharacterGrouping, WGCICharacterGroupings;
 
 #import <Foundation/Foundation.h>
 
@@ -42,8 +41,8 @@ OBJCUWP_WINDOWS_GLOBALIZATION_COLLATION_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* first;
-@property (readonly) NSString* label;
+@property (readonly) NSString * first;
+@property (readonly) NSString * label;
 @end
 
 #endif // __WGCCharacterGrouping_DEFINED__
@@ -61,9 +60,12 @@ OBJCUWP_WINDOWS_GLOBALIZATION_COLLATION_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (NSString*)lookup:(NSString*)text;
+- (NSString *)lookup:(NSString *)text;
 @end
 
 #endif // __WGCCharacterGroupings_DEFINED__
+

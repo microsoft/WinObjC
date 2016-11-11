@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WMCApplicationDataManager;
-@protocol WMCIApplicationDataManagerStatics
-, WMCIApplicationDataManager;
+@protocol WMCIApplicationDataManagerStatics, WMCIApplicationDataManager;
 
 #include "WindowsStorage.h"
 
@@ -41,10 +40,11 @@
 
 OBJCUWP_WINDOWS_MANAGEMENT_CORE_EXPORT
 @interface WMCApplicationDataManager : RTObject
-+ (WSApplicationData*)createForPackageFamily:(NSString*)packageFamilyName;
++ (WSApplicationData*)createForPackageFamily:(NSString *)packageFamilyName;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
 #endif // __WMCApplicationDataManager_DEFINED__
+

@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WUXRCustomXamlResourceLoader;
-@protocol WUXRICustomXamlResourceLoader
-, WUXRICustomXamlResourceLoaderOverrides, WUXRICustomXamlResourceLoaderStatics, WUXRICustomXamlResourceLoaderFactory;
+@protocol WUXRICustomXamlResourceLoader, WUXRICustomXamlResourceLoaderOverrides, WUXRICustomXamlResourceLoaderStatics, WUXRICustomXamlResourceLoaderFactory;
 
 #import <Foundation/Foundation.h>
 
@@ -38,10 +37,7 @@
 #define __WUXRICustomXamlResourceLoaderOverrides_DEFINED__
 
 @protocol WUXRICustomXamlResourceLoaderOverrides
-- (RTObject*)getResource:(NSString*)resourceId
-              objectType:(NSString*)objectType
-            propertyName:(NSString*)propertyName
-            propertyType:(NSString*)propertyType;
+- (RTObject*)getResource:(NSString *)resourceId objectType:(NSString *)objectType propertyName:(NSString *)propertyName propertyType:(NSString *)propertyType;
 @end
 
 OBJCUWP_WINDOWS_UI_XAML_RESOURCES_EXPORT
@@ -62,10 +58,8 @@ OBJCUWP_WINDOWS_UI_XAML_RESOURCES_EXPORT
 #endif
 + (WUXRCustomXamlResourceLoader*)current;
 + (void)setCurrent:(WUXRCustomXamlResourceLoader*)value;
-- (RTObject*)getResource:(NSString*)resourceId
-              objectType:(NSString*)objectType
-            propertyName:(NSString*)propertyName
-            propertyType:(NSString*)propertyType;
+- (RTObject*)getResource:(NSString *)resourceId objectType:(NSString *)objectType propertyName:(NSString *)propertyName propertyType:(NSString *)propertyType;
 @end
 
 #endif // __WUXRCustomXamlResourceLoader_DEFINED__
+

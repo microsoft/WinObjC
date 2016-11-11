@@ -19,17 +19,16 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_PROVIDER_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_PROVIDER_EXPORT __declspec(dllimport)
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
 #ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Contacts_Provider.lib")
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
 
 @class WACPContactRemovedEventArgs, WACPContactPickerUI;
-@protocol WACPIContactRemovedEventArgs
-, WACPIContactPickerUI, WACPIContactPickerUI2;
+@protocol WACPIContactRemovedEventArgs, WACPIContactPickerUI, WACPIContactPickerUI2;
 
 // Windows.ApplicationModel.Contacts.Provider.AddContactResult
 enum _WACPAddContactResult {
@@ -48,12 +47,12 @@ typedef unsigned WACPAddContactResult;
 #ifndef __WACPContactRemovedEventArgs_DEFINED__
 #define __WACPContactRemovedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_PROVIDER_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WACPContactRemovedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* id;
+@property (readonly) NSString * id;
 @end
 
 #endif // __WACPContactRemovedEventArgs_DEFINED__
@@ -62,7 +61,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_PROVIDER_EXPORT
 #ifndef __WACPContactPickerUI_DEFINED__
 #define __WACPContactPickerUI_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_PROVIDER_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WACPContactPickerUI : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -70,12 +69,13 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_PROVIDER_EXPORT
 @property (readonly) NSArray* /* NSString * */ desiredFields;
 @property (readonly) WACContactSelectionMode selectionMode;
 @property (readonly) NSMutableArray* /* WACContactFieldType */ desiredFieldsWithContactFieldType;
-- (EventRegistrationToken)addContactRemovedEvent:(void (^)(WACPContactPickerUI*, WACPContactRemovedEventArgs*))del;
+- (EventRegistrationToken)addContactRemovedEvent:(void(^)(WACPContactPickerUI*, WACPContactRemovedEventArgs*))del;
 - (void)removeContactRemovedEvent:(EventRegistrationToken)tok;
-- (WACPAddContactResult)addContact:(NSString*)id contact:(WACContact*)contact;
-- (void)removeContact:(NSString*)id;
-- (BOOL)containsContact:(NSString*)id;
+- (WACPAddContactResult)addContact:(NSString *)id contact:(WACContact*)contact;
+- (void)removeContact:(NSString *)id;
+- (BOOL)containsContact:(NSString *)id;
 - (WACPAddContactResult)addContact:(WACContact*)contact;
 @end
 
 #endif // __WACPContactPickerUI_DEFINED__
+

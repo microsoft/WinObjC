@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WAWSWalletItemSystemStore, WAWSWalletManagerSystem;
-@protocol WAWSIWalletItemSystemStore
-, WAWSIWalletItemSystemStore2, WAWSIWalletManagerSystemStatics;
+@protocol WAWSIWalletItemSystemStore, WAWSIWalletItemSystemStore2, WAWSIWalletManagerSystemStatics;
 
 // Windows.ApplicationModel.Wallet.System.WalletItemAppAssociation
 enum _WAWSWalletItemAppAssociation {
@@ -54,13 +53,11 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_SYSTEM_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (EventRegistrationToken)addItemsChangedEvent:(void (^)(WAWSWalletItemSystemStore*, RTObject*))del;
+- (EventRegistrationToken)addItemsChangedEvent:(void(^)(WAWSWalletItemSystemStore*, RTObject*))del;
 - (void)removeItemsChangedEvent:(EventRegistrationToken)tok;
 - (void)getItemsAsyncWithSuccess:(void (^)(NSArray* /* WAWWalletItem* */))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)deleteAsync:(WAWWalletItem*)item;
-- (void)importItemAsync:(RTObject<WSSIRandomAccessStreamReference>*)stream
-                success:(void (^)(WAWWalletItem*))success
-                failure:(void (^)(NSError*))failure;
+- (void)importItemAsync:(RTObject<WSSIRandomAccessStreamReference>*)stream success:(void (^)(WAWWalletItem*))success failure:(void (^)(NSError*))failure;
 - (WAWSWalletItemAppAssociation)getAppStatusForItem:(WAWWalletItem*)item;
 - (void)launchAppForItemAsync:(WAWWalletItem*)item success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
@@ -77,3 +74,4 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_SYSTEM_EXPORT
 @end
 
 #endif // __WAWSWalletManagerSystem_DEFINED__
+

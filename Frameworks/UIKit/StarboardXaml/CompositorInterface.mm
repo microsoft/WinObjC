@@ -50,6 +50,8 @@
 #import <UWP/WindowsUIViewManagement.h>
 #import <UWP/WindowsDevicesInput.h>
 #import "UIColorInternal.h"
+#import "UIFontInternal.h"
+
 #import "CGImageInternal.h"
 
 static const wchar_t* TAG = L"CompositorInterface";
@@ -241,11 +243,14 @@ public:
         _centerVertically = centerVertically;
         _lineHeight = [font ascender] - [font descender];
 
-        int mask = [font fontDescriptor].symbolicTraits;
-        _isBold = (mask & UIFontDescriptorTraitBold) > 0;
-        _isItalic = (mask & UIFontDescriptorTraitItalic) > 0;
+        _fontWeight = [font _fontWeight];
+        _fontStretch = [font _fontStretch];
+        _fontStyle = [font _fontStyle];
+
         std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(text);
-        ConstructGlyphs([[font fontName] UTF8String], wideBuffer.c_str(), wideBuffer.length());
+
+        // The Font Family names DWrite will return are not always compatible with Xaml
+        ConstructGlyphs(Strings::NarrowToWide<HSTRING>([font _compatibleFamilyName]), wideBuffer.c_str(), wideBuffer.length());
     }
 };
 
