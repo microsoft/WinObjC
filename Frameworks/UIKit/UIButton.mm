@@ -378,7 +378,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 - (CGRect)titleRectForContentRect:(CGRect)contentRect {
     CGSize titleSize = [self.currentTitle sizeWithFont:self.font];
     CGSize totalSize = titleSize;
-    CGSize imageSize = [self.currentImage size];
+    CGSize imageSize = self.currentImage ? [self.currentImage size] : CGSizeZero;
     CGRect insetsRect = UIEdgeInsetsInsetRect(contentRect, self.titleEdgeInsets);
 
     if ([self currentTitle].length == 0) {
@@ -896,7 +896,7 @@ static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableBackgroundImage(U
     // If we have a background, its image size dictates the smallest size.
     if (self.currentBackgroundImage) {
         UIImage* background = self.currentBackgroundImage;
-        CGSize size = [background size];
+        CGSize size = background ? [background size] : CGSizeZero;
 
         ret.width = std::max(size.width, ret.width);
         ret.height = std::max(size.height, ret.height);
