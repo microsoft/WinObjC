@@ -29,6 +29,7 @@
  */
 #pragma once
 
+#import "UIKitExport.h"
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CGGeometry.h>
 
