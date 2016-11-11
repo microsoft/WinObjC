@@ -27,60 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUXMAKeyTimeHelper, WUXMARepeatBehaviorHelper, WUXMATransitionCollection, WUXMAColorKeyFrameCollection,
-    WUXMADoubleKeyFrameCollection, WUXMAObjectKeyFrameCollection, WUXMAPointKeyFrameCollection, WUXMATimelineCollection, WUXMAColorKeyFrame,
-    WUXMADoubleKeyFrame, WUXMAEasingFunctionBase, WUXMAKeySpline, WUXMANavigationTransitionInfo, WUXMAObjectKeyFrame, WUXMAPointKeyFrame,
-    WUXMATimeline, WUXMATransition, WUXMAAddDeleteThemeTransition, WUXMABackEase, WUXMABeginStoryboard, WUXMABounceEase, WUXMACircleEase,
-    WUXMAColorAnimation, WUXMAColorAnimationUsingKeyFrames, WUXMAContentThemeTransition, WUXMACubicEase, WUXMADiscreteColorKeyFrame,
-    WUXMADiscreteDoubleKeyFrame, WUXMADiscreteObjectKeyFrame, WUXMADiscretePointKeyFrame, WUXMADoubleAnimation,
-    WUXMADoubleAnimationUsingKeyFrames, WUXMADragItemThemeAnimation, WUXMADragOverThemeAnimation, WUXMADrillInThemeAnimation,
-    WUXMADrillOutThemeAnimation, WUXMADropTargetItemThemeAnimation, WUXMAEasingColorKeyFrame, WUXMAEasingDoubleKeyFrame,
-    WUXMAEasingPointKeyFrame, WUXMAEdgeUIThemeTransition, WUXMAElasticEase, WUXMAEntranceThemeTransition, WUXMAExponentialEase,
-    WUXMAFadeInThemeAnimation, WUXMAFadeOutThemeAnimation, WUXMALinearColorKeyFrame, WUXMALinearDoubleKeyFrame, WUXMALinearPointKeyFrame,
-    WUXMAObjectAnimationUsingKeyFrames, WUXMAPaneThemeTransition, WUXMAPointAnimation, WUXMAPointAnimationUsingKeyFrames,
-    WUXMAPointerDownThemeAnimation, WUXMAPointerUpThemeAnimation, WUXMAPopInThemeAnimation, WUXMAPopOutThemeAnimation,
-    WUXMAPopupThemeTransition, WUXMAPowerEase, WUXMAQuadraticEase, WUXMAQuarticEase, WUXMAQuinticEase, WUXMAReorderThemeTransition,
-    WUXMARepositionThemeAnimation, WUXMARepositionThemeTransition, WUXMASineEase, WUXMASplineColorKeyFrame, WUXMASplineDoubleKeyFrame,
-    WUXMASplinePointKeyFrame, WUXMASplitCloseThemeAnimation, WUXMASplitOpenThemeAnimation, WUXMAStoryboard, WUXMASwipeBackThemeAnimation,
-    WUXMASwipeHintThemeAnimation, WUXMACommonNavigationTransitionInfo, WUXMAContinuumNavigationTransitionInfo,
-    WUXMADrillInNavigationTransitionInfo, WUXMAEntranceNavigationTransitionInfo, WUXMANavigationThemeTransition,
-    WUXMASlideNavigationTransitionInfo, WUXMASuppressNavigationTransitionInfo;
+@class WUXMAKeyTimeHelper, WUXMARepeatBehaviorHelper, WUXMATransitionCollection, WUXMAColorKeyFrameCollection, WUXMADoubleKeyFrameCollection, WUXMAObjectKeyFrameCollection, WUXMAPointKeyFrameCollection, WUXMATimelineCollection, WUXMAColorKeyFrame, WUXMADoubleKeyFrame, WUXMAEasingFunctionBase, WUXMAKeySpline, WUXMANavigationTransitionInfo, WUXMAObjectKeyFrame, WUXMAPointKeyFrame, WUXMATimeline, WUXMATransition, WUXMAAddDeleteThemeTransition, WUXMABackEase, WUXMABeginStoryboard, WUXMABounceEase, WUXMACircleEase, WUXMAColorAnimation, WUXMAColorAnimationUsingKeyFrames, WUXMAContentThemeTransition, WUXMACubicEase, WUXMADiscreteColorKeyFrame, WUXMADiscreteDoubleKeyFrame, WUXMADiscreteObjectKeyFrame, WUXMADiscretePointKeyFrame, WUXMADoubleAnimation, WUXMADoubleAnimationUsingKeyFrames, WUXMADragItemThemeAnimation, WUXMADragOverThemeAnimation, WUXMADrillInThemeAnimation, WUXMADrillOutThemeAnimation, WUXMADropTargetItemThemeAnimation, WUXMAEasingColorKeyFrame, WUXMAEasingDoubleKeyFrame, WUXMAEasingPointKeyFrame, WUXMAEdgeUIThemeTransition, WUXMAElasticEase, WUXMAEntranceThemeTransition, WUXMAExponentialEase, WUXMAFadeInThemeAnimation, WUXMAFadeOutThemeAnimation, WUXMALinearColorKeyFrame, WUXMALinearDoubleKeyFrame, WUXMALinearPointKeyFrame, WUXMAObjectAnimationUsingKeyFrames, WUXMAPaneThemeTransition, WUXMAPointAnimation, WUXMAPointAnimationUsingKeyFrames, WUXMAPointerDownThemeAnimation, WUXMAPointerUpThemeAnimation, WUXMAPopInThemeAnimation, WUXMAPopOutThemeAnimation, WUXMAPopupThemeTransition, WUXMAPowerEase, WUXMAQuadraticEase, WUXMAQuarticEase, WUXMAQuinticEase, WUXMAReorderThemeTransition, WUXMARepositionThemeAnimation, WUXMARepositionThemeTransition, WUXMASineEase, WUXMASplineColorKeyFrame, WUXMASplineDoubleKeyFrame, WUXMASplinePointKeyFrame, WUXMASplitCloseThemeAnimation, WUXMASplitOpenThemeAnimation, WUXMAStoryboard, WUXMASwipeBackThemeAnimation, WUXMASwipeHintThemeAnimation, WUXMAConnectedAnimation, WUXMAConnectedAnimationService, WUXMACommonNavigationTransitionInfo, WUXMAContinuumNavigationTransitionInfo, WUXMADrillInNavigationTransitionInfo, WUXMAEntranceNavigationTransitionInfo, WUXMANavigationThemeTransition, WUXMASlideNavigationTransitionInfo, WUXMASuppressNavigationTransitionInfo;
 @class WUXMAKeyTime, WUXMARepeatBehavior;
-@protocol WUXMAIKeyTimeHelper
-, WUXMAIKeyTimeHelperStatics, WUXMAIRepeatBehaviorHelper, WUXMAIRepeatBehaviorHelperStatics, WUXMAIColorKeyFrame,
-    WUXMAIColorKeyFrameStatics, WUXMAIColorKeyFrameFactory, WUXMAIDoubleKeyFrame, WUXMAIDoubleKeyFrameStatics, WUXMAIDoubleKeyFrameFactory,
-    WUXMAIEasingFunctionBase, WUXMAIEasingFunctionBaseStatics, WUXMAIEasingFunctionBaseFactory, WUXMAIKeySpline,
-    WUXMAINavigationTransitionInfo, WUXMAINavigationTransitionInfoOverrides, WUXMAINavigationTransitionInfoFactory, WUXMAIObjectKeyFrame,
-    WUXMAIObjectKeyFrameStatics, WUXMAIObjectKeyFrameFactory, WUXMAIPointKeyFrame, WUXMAIPointKeyFrameStatics, WUXMAIPointKeyFrameFactory,
-    WUXMAITimeline, WUXMAITimelineStatics, WUXMAITimelineFactory, WUXMAITransition, WUXMAITransitionFactory, WUXMAIAddDeleteThemeTransition,
-    WUXMAIBackEase, WUXMAIBackEaseStatics, WUXMAIBeginStoryboard, WUXMAIBeginStoryboardStatics, WUXMAIBounceEase, WUXMAIBounceEaseStatics,
-    WUXMAICircleEase, WUXMAIColorAnimation, WUXMAIColorAnimationStatics, WUXMAIColorAnimationUsingKeyFrames,
-    WUXMAIColorAnimationUsingKeyFramesStatics, WUXMAIContentThemeTransition, WUXMAIContentThemeTransitionStatics, WUXMAICubicEase,
-    WUXMAIDiscreteColorKeyFrame, WUXMAIDiscreteDoubleKeyFrame, WUXMAIDiscreteObjectKeyFrame, WUXMAIDiscretePointKeyFrame,
-    WUXMAIDoubleAnimation, WUXMAIDoubleAnimationStatics, WUXMAIDoubleAnimationUsingKeyFrames, WUXMAIDoubleAnimationUsingKeyFramesStatics,
-    WUXMAIDragItemThemeAnimation, WUXMAIDragItemThemeAnimationStatics, WUXMAIDragOverThemeAnimation, WUXMAIDragOverThemeAnimationStatics,
-    WUXMAIDrillInThemeAnimation, WUXMAIDrillInThemeAnimationStatics, WUXMAIDrillOutThemeAnimation, WUXMAIDrillOutThemeAnimationStatics,
-    WUXMAIDropTargetItemThemeAnimation, WUXMAIDropTargetItemThemeAnimationStatics, WUXMAIEasingColorKeyFrame,
-    WUXMAIEasingColorKeyFrameStatics, WUXMAIEasingDoubleKeyFrame, WUXMAIEasingDoubleKeyFrameStatics, WUXMAIEasingPointKeyFrame,
-    WUXMAIEasingPointKeyFrameStatics, WUXMAIEdgeUIThemeTransition, WUXMAIEdgeUIThemeTransitionStatics, WUXMAIElasticEase,
-    WUXMAIElasticEaseStatics, WUXMAIEntranceThemeTransition, WUXMAIEntranceThemeTransitionStatics, WUXMAIExponentialEase,
-    WUXMAIExponentialEaseStatics, WUXMAIFadeInThemeAnimation, WUXMAIFadeInThemeAnimationStatics, WUXMAIFadeOutThemeAnimation,
-    WUXMAIFadeOutThemeAnimationStatics, WUXMAILinearColorKeyFrame, WUXMAILinearDoubleKeyFrame, WUXMAILinearPointKeyFrame,
-    WUXMAIObjectAnimationUsingKeyFrames, WUXMAIObjectAnimationUsingKeyFramesStatics, WUXMAIPaneThemeTransition,
-    WUXMAIPaneThemeTransitionStatics, WUXMAIPointAnimation, WUXMAIPointAnimationStatics, WUXMAIPointAnimationUsingKeyFrames,
-    WUXMAIPointAnimationUsingKeyFramesStatics, WUXMAIPointerDownThemeAnimation, WUXMAIPointerDownThemeAnimationStatics,
-    WUXMAIPointerUpThemeAnimation, WUXMAIPointerUpThemeAnimationStatics, WUXMAIPopInThemeAnimation, WUXMAIPopInThemeAnimationStatics,
-    WUXMAIPopOutThemeAnimation, WUXMAIPopOutThemeAnimationStatics, WUXMAIPopupThemeTransition, WUXMAIPopupThemeTransitionStatics,
-    WUXMAIPowerEase, WUXMAIPowerEaseStatics, WUXMAIQuadraticEase, WUXMAIQuarticEase, WUXMAIQuinticEase, WUXMAIReorderThemeTransition,
-    WUXMAIRepositionThemeAnimation, WUXMAIRepositionThemeAnimationStatics, WUXMAIRepositionThemeTransition, WUXMAISineEase,
-    WUXMAISplineColorKeyFrame, WUXMAISplineColorKeyFrameStatics, WUXMAISplineDoubleKeyFrame, WUXMAISplineDoubleKeyFrameStatics,
-    WUXMAISplinePointKeyFrame, WUXMAISplinePointKeyFrameStatics, WUXMAISplitCloseThemeAnimation, WUXMAISplitCloseThemeAnimationStatics,
-    WUXMAISplitOpenThemeAnimation, WUXMAISplitOpenThemeAnimationStatics, WUXMAIStoryboard, WUXMAIStoryboardStatics,
-    WUXMAISwipeBackThemeAnimation, WUXMAISwipeBackThemeAnimationStatics, WUXMAISwipeHintThemeAnimation,
-    WUXMAISwipeHintThemeAnimationStatics, WUXMAICommonNavigationTransitionInfo, WUXMAICommonNavigationTransitionInfoStatics,
-    WUXMAIContinuumNavigationTransitionInfo, WUXMAIContinuumNavigationTransitionInfoStatics, WUXMAIDrillInNavigationTransitionInfo,
-    WUXMAIEntranceNavigationTransitionInfo, WUXMAIEntranceNavigationTransitionInfoStatics, WUXMAINavigationThemeTransition,
-    WUXMAINavigationThemeTransitionStatics, WUXMAISlideNavigationTransitionInfo, WUXMAISuppressNavigationTransitionInfo;
+@protocol WUXMAIKeyTimeHelper, WUXMAIKeyTimeHelperStatics, WUXMAIRepeatBehaviorHelper, WUXMAIRepeatBehaviorHelperStatics, WUXMAIColorKeyFrame, WUXMAIColorKeyFrameStatics, WUXMAIColorKeyFrameFactory, WUXMAIDoubleKeyFrame, WUXMAIDoubleKeyFrameStatics, WUXMAIDoubleKeyFrameFactory, WUXMAIEasingFunctionBase, WUXMAIEasingFunctionBaseStatics, WUXMAIEasingFunctionBaseFactory, WUXMAIKeySpline, WUXMAINavigationTransitionInfo, WUXMAINavigationTransitionInfoOverrides, WUXMAINavigationTransitionInfoFactory, WUXMAIObjectKeyFrame, WUXMAIObjectKeyFrameStatics, WUXMAIObjectKeyFrameFactory, WUXMAIPointKeyFrame, WUXMAIPointKeyFrameStatics, WUXMAIPointKeyFrameFactory, WUXMAITimeline, WUXMAITimelineStatics, WUXMAITimelineFactory, WUXMAITransition, WUXMAITransitionFactory, WUXMAIAddDeleteThemeTransition, WUXMAIBackEase, WUXMAIBackEaseStatics, WUXMAIBeginStoryboard, WUXMAIBeginStoryboardStatics, WUXMAIBounceEase, WUXMAIBounceEaseStatics, WUXMAICircleEase, WUXMAIColorAnimation, WUXMAIColorAnimationStatics, WUXMAIColorAnimationUsingKeyFrames, WUXMAIColorAnimationUsingKeyFramesStatics, WUXMAIContentThemeTransition, WUXMAIContentThemeTransitionStatics, WUXMAICubicEase, WUXMAIDiscreteColorKeyFrame, WUXMAIDiscreteDoubleKeyFrame, WUXMAIDiscreteObjectKeyFrame, WUXMAIDiscretePointKeyFrame, WUXMAIDoubleAnimation, WUXMAIDoubleAnimationStatics, WUXMAIDoubleAnimationUsingKeyFrames, WUXMAIDoubleAnimationUsingKeyFramesStatics, WUXMAIDragItemThemeAnimation, WUXMAIDragItemThemeAnimationStatics, WUXMAIDragOverThemeAnimation, WUXMAIDragOverThemeAnimationStatics, WUXMAIDrillInThemeAnimation, WUXMAIDrillInThemeAnimationStatics, WUXMAIDrillOutThemeAnimation, WUXMAIDrillOutThemeAnimationStatics, WUXMAIDropTargetItemThemeAnimation, WUXMAIDropTargetItemThemeAnimationStatics, WUXMAIEasingColorKeyFrame, WUXMAIEasingColorKeyFrameStatics, WUXMAIEasingDoubleKeyFrame, WUXMAIEasingDoubleKeyFrameStatics, WUXMAIEasingPointKeyFrame, WUXMAIEasingPointKeyFrameStatics, WUXMAIEdgeUIThemeTransition, WUXMAIEdgeUIThemeTransitionStatics, WUXMAIElasticEase, WUXMAIElasticEaseStatics, WUXMAIEntranceThemeTransition, WUXMAIEntranceThemeTransitionStatics, WUXMAIExponentialEase, WUXMAIExponentialEaseStatics, WUXMAIFadeInThemeAnimation, WUXMAIFadeInThemeAnimationStatics, WUXMAIFadeOutThemeAnimation, WUXMAIFadeOutThemeAnimationStatics, WUXMAILinearColorKeyFrame, WUXMAILinearDoubleKeyFrame, WUXMAILinearPointKeyFrame, WUXMAIObjectAnimationUsingKeyFrames, WUXMAIObjectAnimationUsingKeyFramesStatics, WUXMAIPaneThemeTransition, WUXMAIPaneThemeTransitionStatics, WUXMAIPointAnimation, WUXMAIPointAnimationStatics, WUXMAIPointAnimationUsingKeyFrames, WUXMAIPointAnimationUsingKeyFramesStatics, WUXMAIPointerDownThemeAnimation, WUXMAIPointerDownThemeAnimationStatics, WUXMAIPointerUpThemeAnimation, WUXMAIPointerUpThemeAnimationStatics, WUXMAIPopInThemeAnimation, WUXMAIPopInThemeAnimationStatics, WUXMAIPopOutThemeAnimation, WUXMAIPopOutThemeAnimationStatics, WUXMAIPopupThemeTransition, WUXMAIPopupThemeTransitionStatics, WUXMAIPowerEase, WUXMAIPowerEaseStatics, WUXMAIQuadraticEase, WUXMAIQuarticEase, WUXMAIQuinticEase, WUXMAIReorderThemeTransition, WUXMAIRepositionThemeAnimation, WUXMAIRepositionThemeAnimationStatics, WUXMAIRepositionThemeTransition, WUXMAIRepositionThemeTransition2, WUXMAIRepositionThemeTransitionStatics2, WUXMAISineEase, WUXMAISplineColorKeyFrame, WUXMAISplineColorKeyFrameStatics, WUXMAISplineDoubleKeyFrame, WUXMAISplineDoubleKeyFrameStatics, WUXMAISplinePointKeyFrame, WUXMAISplinePointKeyFrameStatics, WUXMAISplitCloseThemeAnimation, WUXMAISplitCloseThemeAnimationStatics, WUXMAISplitOpenThemeAnimation, WUXMAISplitOpenThemeAnimationStatics, WUXMAIStoryboard, WUXMAIStoryboardStatics, WUXMAISwipeBackThemeAnimation, WUXMAISwipeBackThemeAnimationStatics, WUXMAISwipeHintThemeAnimation, WUXMAISwipeHintThemeAnimationStatics, WUXMAIConnectedAnimation, WUXMAIConnectedAnimationService, WUXMAIConnectedAnimationServiceStatics, WUXMAICommonNavigationTransitionInfo, WUXMAICommonNavigationTransitionInfoStatics, WUXMAIContinuumNavigationTransitionInfo, WUXMAIContinuumNavigationTransitionInfoStatics, WUXMAIDrillInNavigationTransitionInfo, WUXMAIEntranceNavigationTransitionInfo, WUXMAIEntranceNavigationTransitionInfoStatics, WUXMAINavigationThemeTransition, WUXMAINavigationThemeTransitionStatics, WUXMAISlideNavigationTransitionInfo, WUXMAISuppressNavigationTransitionInfo;
 
 // Windows.UI.Xaml.Media.Animation.ClockState
 enum _WUXMAClockState {
@@ -117,27 +66,29 @@ typedef unsigned WUXMARepeatBehaviorType;
 #include "WindowsFoundation.h"
 #include "WindowsUIXamlControlsPrimitives.h"
 #include "WindowsUI.h"
+#include "WindowsUIComposition.h"
 #include "WindowsUIXaml.h"
 #include "WindowsUICore.h"
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED
 #define __WXDependencyPropertyChangedCallback__DEFINED
-typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
+typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
 #endif // __WXDependencyPropertyChangedCallback__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Media.Animation.KeyTime
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAKeyTime : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property (retain) WFTimeSpan* timeSpan;
 @end
 
 // [struct] Windows.UI.Xaml.Media.Animation.RepeatBehavior
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMARepeatBehavior : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property double count;
 @property (retain) WFTimeSpan* duration;
 @property WUXMARepeatBehaviorType type;
@@ -148,8 +99,8 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #define __WUXMAINavigationTransitionInfoOverrides_DEFINED__
 
 @protocol WUXMAINavigationTransitionInfoOverrides
-- (NSString*)getNavigationStateCore;
-- (void)setNavigationStateCore:(NSString*)navigationState;
+- (NSString *)getNavigationStateCore;
+- (void)setNavigationStateCore:(NSString *)navigationState;
 @end
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
@@ -204,12 +155,14 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
 - (void)removeLastObject;
 
 @end
@@ -229,12 +182,14 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
 - (void)removeLastObject;
 
 @end
@@ -254,12 +209,14 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
 - (void)removeLastObject;
 
 @end
@@ -279,12 +236,14 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
 - (void)removeLastObject;
 
 @end
@@ -304,12 +263,14 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
 - (void)removeLastObject;
 
 @end
@@ -329,12 +290,14 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
 - (void)removeLastObject;
 
 @end
@@ -437,8 +400,8 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (NSString*)getNavigationStateCore;
-- (void)setNavigationStateCore:(NSString*)navigationState;
+- (NSString *)getNavigationStateCore;
+- (void)setNavigationStateCore:(NSString *)navigationState;
 @end
 
 #endif // __WUXMANavigationTransitionInfo_DEFINED__
@@ -500,7 +463,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (WXDependencyProperty*)fillBehaviorProperty;
 + (WXDependencyProperty*)repeatBehaviorProperty;
 + (WXDependencyProperty*)speedRatioProperty;
-- (EventRegistrationToken)addCompletedEvent:(void (^)(RTObject*, RTObject*))del;
+- (EventRegistrationToken)addCompletedEvent:(void(^)(RTObject*, RTObject*))del;
 - (void)removeCompletedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -790,7 +753,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
 
@@ -807,7 +770,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double toOffset;
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 @property WUXCPAnimationDirection direction;
 + (WXDependencyProperty*)directionProperty;
 + (WXDependencyProperty*)targetNameProperty;
@@ -826,9 +789,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* exitTargetName;
+@property (retain) NSString * exitTargetName;
 @property (retain) WXDependencyObject* exitTarget;
-@property (retain) NSString* entranceTargetName;
+@property (retain) NSString * entranceTargetName;
 @property (retain) WXDependencyObject* entranceTarget;
 + (WXDependencyProperty*)entranceTargetNameProperty;
 + (WXDependencyProperty*)entranceTargetProperty;
@@ -848,9 +811,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* exitTargetName;
+@property (retain) NSString * exitTargetName;
 @property (retain) WXDependencyObject* exitTarget;
-@property (retain) NSString* entranceTargetName;
+@property (retain) NSString * entranceTargetName;
 @property (retain) WXDependencyObject* entranceTarget;
 + (WXDependencyProperty*)entranceTargetNameProperty;
 + (WXDependencyProperty*)entranceTargetProperty;
@@ -870,7 +833,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
 
@@ -1004,7 +967,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
 
@@ -1020,7 +983,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
 
@@ -1152,7 +1115,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
 
@@ -1168,7 +1131,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
 
@@ -1184,7 +1147,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 @property double fromVerticalOffset;
 @property double fromHorizontalOffset;
 + (WXDependencyProperty*)fromHorizontalOffsetProperty;
@@ -1204,7 +1167,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
 
@@ -1310,7 +1273,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 @property double fromVerticalOffset;
 @property double fromHorizontalOffset;
 + (WXDependencyProperty*)fromHorizontalOffsetProperty;
@@ -1330,6 +1293,8 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
+@property BOOL isStaggeringEnabled;
++ (WXDependencyProperty*)isStaggeringEnabledProperty;
 @end
 
 #endif // __WUXMARepositionThemeTransition_DEFINED__
@@ -1407,12 +1372,12 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUXCPAnimationDirection contentTranslationDirection;
-@property (retain) NSString* contentTargetName;
+@property (retain) NSString * contentTargetName;
 @property (retain) WXDependencyObject* contentTarget;
-@property (retain) NSString* closedTargetName;
+@property (retain) NSString * closedTargetName;
 @property (retain) WXDependencyObject* closedTarget;
 @property double closedLength;
-@property (retain) NSString* openedTargetName;
+@property (retain) NSString * openedTargetName;
 @property (retain) WXDependencyObject* openedTarget;
 @property double openedLength;
 @property double offsetFromCenter;
@@ -1443,12 +1408,12 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUXCPAnimationDirection contentTranslationDirection;
-@property (retain) NSString* contentTargetName;
+@property (retain) NSString * contentTargetName;
 @property (retain) WXDependencyObject* contentTarget;
-@property (retain) NSString* closedTargetName;
+@property (retain) NSString * closedTargetName;
 @property (retain) WXDependencyObject* closedTarget;
 @property double closedLength;
-@property (retain) NSString* openedTargetName;
+@property (retain) NSString * openedTargetName;
 @property (retain) WXDependencyObject* openedTarget;
 @property double openedLength;
 @property double offsetFromCenter;
@@ -1474,10 +1439,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAStoryboard : WUXMATimeline
-+ (NSString*)getTargetProperty:(WUXMATimeline*)element;
-+ (void)setTargetProperty:(WUXMATimeline*)element path:(NSString*)path;
-+ (NSString*)getTargetName:(WUXMATimeline*)element;
-+ (void)setTargetName:(WUXMATimeline*)element name:(NSString*)name;
++ (NSString *)getTargetProperty:(WUXMATimeline*)element;
++ (void)setTargetProperty:(WUXMATimeline*)element path:(NSString *)path;
++ (NSString *)getTargetName:(WUXMATimeline*)element;
++ (void)setTargetName:(WUXMATimeline*)element name:(NSString *)name;
 + (void)setTarget:(WUXMATimeline*)timeline target:(WXDependencyObject*)target;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1509,7 +1474,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 @property double fromVerticalOffset;
 @property double fromHorizontalOffset;
 + (WXDependencyProperty*)fromHorizontalOffsetProperty;
@@ -1531,13 +1496,48 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #endif
 @property double toVerticalOffset;
 @property double toHorizontalOffset;
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 + (WXDependencyProperty*)targetNameProperty;
 + (WXDependencyProperty*)toHorizontalOffsetProperty;
 + (WXDependencyProperty*)toVerticalOffsetProperty;
 @end
 
 #endif // __WUXMASwipeHintThemeAnimation_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.ConnectedAnimation
+#ifndef __WUXMAConnectedAnimation_DEFINED__
+#define __WUXMAConnectedAnimation_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMAConnectedAnimation : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+- (EventRegistrationToken)addCompletedEvent:(void(^)(WUXMAConnectedAnimation*, RTObject*))del;
+- (void)removeCompletedEvent:(EventRegistrationToken)tok;
+- (BOOL)tryStart:(WXUIElement*)destination;
+- (void)cancel;
+@end
+
+#endif // __WUXMAConnectedAnimation_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.ConnectedAnimationService
+#ifndef __WUXMAConnectedAnimationService_DEFINED__
+#define __WUXMAConnectedAnimationService_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMAConnectedAnimationService : RTObject
++ (WUXMAConnectedAnimationService*)getForCurrentView;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) WUCCompositionEasingFunction* defaultEasingFunction;
+@property (retain) WFTimeSpan* defaultDuration;
+- (WUXMAConnectedAnimation*)prepareToAnimate:(NSString *)key source:(WXUIElement*)source;
+- (WUXMAConnectedAnimation*)getAnimation:(NSString *)key;
+@end
+
+#endif // __WUXMAConnectedAnimationService_DEFINED__
 
 // Windows.UI.Xaml.Media.Animation.CommonNavigationTransitionInfo
 #ifndef __WUXMACommonNavigationTransitionInfo_DEFINED__
@@ -1657,3 +1657,4 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @end
 
 #endif // __WUXMASuppressNavigationTransitionInfo_DEFINED__
+

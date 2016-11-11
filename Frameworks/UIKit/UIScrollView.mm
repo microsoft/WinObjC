@@ -33,17 +33,19 @@
 #import <UIKit/UIEvent.h>
 #import <UIKit/UITouch.h>
 #import <UIKit/UIGestureRecognizer.h>
-#import <UIKit/UIPanGestureRecognizer.h>
 #import <UIKit/UIScrollView.h>
 #import <UWP/WindowsUIXaml.h>
 #import <UWP/WindowsUIXamlControls.h>
 #import <UWP/WindowsUIXamlShapes.h>
 
+#import "_UIDirectManipulationRecognizer.h"
 #import "CAAnimationInternal.h"
 #import "CALayerInternal.h"
 #import "StarboardXaml/DisplayProperties.h"
 #import "UIEventInternal.h"
+#import "UIScrollViewInternal.h"
 #import "UIGestureRecognizerInternal.h"
+#import "UIPanGestureRecognizerInternal.h"
 #import "UITouchInternal.h"
 #import "Etc.h"
 #import "XamlControls.h"
@@ -56,6 +58,7 @@ static const bool DEBUG_VERBOSE = DEBUG_ALL || false;
 static const bool DEBUG_DELEGATE = DEBUG_ALL || false;
 static const bool DEBUG_INSETS = DEBUG_ALL || false;
 static const bool DEBUG_ZOOM = DEBUG_ALL || false;
+static const bool DEBUG_DMANIP_GESTURE = DEBUG_ALL || false;
 
 /** @Status Stub */
 const float UIScrollViewDecelerationRateNormal = StubConstant();
@@ -77,6 +80,9 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     float _zoomScale;
     BOOL _isZooming;
     BOOL _isZoomingToRect;
+
+    // DManip gesture recognizer, used for detecting if DManip should start or not
+    StrongId<_UIDMPanGestureRecognizer> _dManipGesture;
 
     // xaml visuals to back UIScrollView - includes Scrollviewer, ContentGrid, Insets, and ContentCanvas
     StrongId<WXCScrollViewer> _scrollViewer;
@@ -123,12 +129,48 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     WXCScrollBarVisibility _previousVerticalScrollBarVisibility;
 }
 
+- (id)_dManipGestureCallback:(_UIDMPanGestureRecognizer*)gesture {
+    if (DEBUG_DMANIP_GESTURE) {
+        TraceVerbose(TAG, L"_dManipGestureCallback fired");
+    }
+
+    // check the gesture state, if it is already being cancelled, don't start direct manipulation
+    if (gesture.state == UIGestureRecognizerStateCancelled) {
+        if (DEBUG_DMANIP_GESTURE) {
+            TraceVerbose(TAG, L"dManipGesture cancelled");
+        }
+
+        return self;
+    }
+
+    // setting manipulationMode of scrollview (on its canvas) chain to be System.
+    // so that direct manipulation will be effective on all scrollviews
+    [self _setManipulationMode:WUXIManipulationModesSystem recursive:YES];
+
+    for (auto const& pointer : [gesture _getTouches]) {
+        UITouch* touch = pointer.touch;
+        // start direct manipulation only if active touch presents
+        if (touch.phase != UITouchPhaseCancelled && 
+            touch.phase != UITouchPhaseEnded &&
+            touch->_routedEventArgs.pointer.pointerDeviceType == WDIPointerDeviceTypeTouch) {
+            if (![WXFrameworkElement tryStartDirectManipulation:touch->_routedEventArgs.pointer]) {
+                TraceWarning(TAG, L"DManip failed to start");
+            }
+        }
+    }
+
+    return self;
+}
+
 - (void)_initUIScrollView {
     // Store a strongly-typed backing scrollviewer
     _scrollViewer = rt_dynamic_cast<WXCScrollViewer>([self xamlElement]);
     if (!_scrollViewer) {
         FAIL_FAST();
     }
+
+    self->_dManipGesture = [[_UIDMPanGestureRecognizer alloc] initWithTarget:self action:@selector(_dManipGestureCallback:)];
+    [self addGestureRecognizer:self->_dManipGesture];
 
     [self setMultipleTouchEnabled:TRUE];
 
@@ -239,6 +281,12 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     _scrollViewer.maxZoomFactor = 1.0f;
     _scrollViewer.minZoomFactor = 1.0f;
     _scrollViewer.zoomMode = WXCZoomModeDisabled;
+
+    // setting transparent background so we can receive touch input
+    _contentCanvas.background = [WUXMSolidColorBrush makeInstanceWithColor:[WUColors transparent]];
+
+    // by default, disable direct manipulation on backing scrollviewer
+    [self _setManipulationMode:WUXIManipulationModesAll recursive:NO];
 }
 
 - (BOOL)_isAnimating {
@@ -495,7 +543,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     _directManipulationStartedEventToken = [_scrollViewer addDirectManipulationStartedEvent:^void(RTObject*, RTObject*) {
         __strong UIScrollView* strongSelf = weakself;
         if (DEBUG_VERBOSE) {
-            TraceVerbose(TAG, L"Manipulation----Started");
+            TraceVerbose(TAG, L"DirectManipulation----Started");
         }
 
         if (strongSelf) {
@@ -506,10 +554,13 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     _directManipulationCompletedEventToken = [_scrollViewer addDirectManipulationCompletedEvent:^void(RTObject*, RTObject*) {
         __strong UIScrollView* strongSelf = weakself;
         if (DEBUG_VERBOSE) {
-            TraceVerbose(TAG, L"Manipulation----Completed");
+            TraceVerbose(TAG, L"DirectManipulation----Completed");
         }
 
         if (strongSelf) {
+            // re-setting manipulationMode of scrollview (on its canvas) chain to be ALL.
+            // so that direct manipulation will be disabled on all scrollviews
+            [strongSelf _setManipulationMode:WUXIManipulationModesAll recursive:YES];
             strongSelf->_manipulationStarted = NO;
             strongSelf->_isTracking = NO;
             strongSelf->_isDragging = NO;
@@ -1469,6 +1520,32 @@ static float findMinY(UIScrollView* o) {
 - (UIPanGestureRecognizer*)panGestureRecognizer {
     UNIMPLEMENTED();
     return StubReturn();
+}
+
+- (void)_setManipulationMode:(WUXIManipulationModes)mode recursive:(BOOL)recursive {
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG,
+                     L"_setManipulationMode: currentMode=%d, targetmode=%d, recursive=%d",
+                     self->_contentCanvas.manipulationMode,
+                     mode,
+                     recursive);
+    }
+
+    if (_contentCanvas.manipulationMode != mode) {
+        _contentCanvas.manipulationMode = mode;
+
+        if (recursive) {
+            UIView* parent = [self superview];
+            while (parent) {
+                if ([parent isKindOfClass:[UIScrollView class]]) {
+                    UIScrollView* parentUIScrollview = (UIScrollView*)parent;
+                    [parentUIScrollview _setManipulationMode:mode recursive:NO];
+                }
+
+                parent = [parent superview];
+            }
+        }
+    }
 }
 
 @end

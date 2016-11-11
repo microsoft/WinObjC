@@ -27,21 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WMAAudioGraph, WMACreateAudioGraphResult, WMAAudioGraphSettings, WMAAudioDeviceInputNode, WMACreateAudioDeviceInputNodeResult,
-    WMAAudioDeviceOutputNode, WMACreateAudioDeviceOutputNodeResult, WMAAudioFileInputNode, WMACreateAudioFileInputNodeResult,
-    WMAAudioFileOutputNode, WMACreateAudioFileOutputNodeResult, WMAAudioGraphUnrecoverableErrorOccurredEventArgs, WMAAudioFrameInputNode,
-    WMAAudioFrameOutputNode, WMAAudioSubmixNode, WMAAudioGraphConnection, WMAAudioFrameCompletedEventArgs,
-    WMAFrameInputNodeQuantumStartedEventArgs, WMAEqualizerBand, WMAEqualizerEffectDefinition, WMAReverbEffectDefinition,
-    WMAEchoEffectDefinition, WMALimiterEffectDefinition;
-@protocol WMAICreateAudioGraphResult
-, WMAIAudioGraphSettingsFactory, WMAIAudioGraphSettings, WMAIAudioGraphStatics, WMAICreateAudioDeviceInputNodeResult,
-    WMAICreateAudioDeviceOutputNodeResult, WMAICreateAudioFileInputNodeResult, WMAICreateAudioFileOutputNodeResult,
-    WMAIAudioGraphUnrecoverableErrorOccurredEventArgs, WMAIAudioGraph, WMAIAudioNode, WMAIAudioInputNode, WMAIAudioFrameInputNode,
-    WMAIAudioFileInputNode, WMAIAudioDeviceInputNode, WMAIAudioDeviceOutputNode, WMAIAudioFrameOutputNode, WMAIAudioFileOutputNode,
-    WMAIAudioFrameCompletedEventArgs, WMAIFrameInputNodeQuantumStartedEventArgs, WMAIAudioGraphConnection, WMAIEqualizerBand,
-    WMAIEqualizerEffectDefinitionFactory, WMAIReverbEffectDefinitionFactory, WMAIEchoEffectDefinitionFactory,
-    WMAILimiterEffectDefinitionFactory, WMAIEqualizerEffectDefinition, WMAIReverbEffectDefinition, WMAIEchoEffectDefinition,
-    WMAILimiterEffectDefinition;
+@class WMAAudioGraph, WMACreateAudioGraphResult, WMAAudioGraphSettings, WMAAudioDeviceInputNode, WMACreateAudioDeviceInputNodeResult, WMAAudioDeviceOutputNode, WMACreateAudioDeviceOutputNodeResult, WMAAudioFileInputNode, WMACreateAudioFileInputNodeResult, WMAAudioFileOutputNode, WMACreateAudioFileOutputNodeResult, WMAAudioGraphUnrecoverableErrorOccurredEventArgs, WMAAudioGraphBatchUpdater, WMAAudioFrameInputNode, WMAAudioFrameOutputNode, WMAAudioSubmixNode, WMAAudioNodeEmitter, WMAAudioNodeListener, WMAAudioGraphConnection, WMAAudioFrameCompletedEventArgs, WMAFrameInputNodeQuantumStartedEventArgs, WMAEqualizerBand, WMAEqualizerEffectDefinition, WMAReverbEffectDefinition, WMAEchoEffectDefinition, WMALimiterEffectDefinition, WMAAudioNodeEmitterConeProperties, WMAAudioNodeEmitterShape, WMAAudioNodeEmitterNaturalDecayModelProperties, WMAAudioNodeEmitterDecayModel;
+@protocol WMAICreateAudioGraphResult, WMAIAudioGraphSettingsFactory, WMAIAudioGraphSettings, WMAIAudioGraphStatics, WMAICreateAudioDeviceInputNodeResult, WMAICreateAudioDeviceOutputNodeResult, WMAICreateAudioFileInputNodeResult, WMAICreateAudioFileOutputNodeResult, WMAIAudioGraphUnrecoverableErrorOccurredEventArgs, WMAIAudioGraph, WMAIAudioGraph2, WMAIAudioNode, WMAIAudioNodeWithListener, WMAIAudioInputNode, WMAIAudioInputNode2, WMAIAudioFrameInputNode, WMAIAudioFileInputNode, WMAIAudioDeviceInputNode, WMAIAudioDeviceOutputNode, WMAIAudioFrameOutputNode, WMAIAudioFileOutputNode, WMAIAudioFrameCompletedEventArgs, WMAIFrameInputNodeQuantumStartedEventArgs, WMAIAudioGraphConnection, WMAIEqualizerBand, WMAIEqualizerEffectDefinitionFactory, WMAIReverbEffectDefinitionFactory, WMAIEchoEffectDefinitionFactory, WMAILimiterEffectDefinitionFactory, WMAIAudioNodeEmitterConeProperties, WMAIAudioNodeEmitterShape, WMAIAudioNodeEmitterShapeStatics, WMAIAudioNodeEmitterNaturalDecayModelProperties, WMAIAudioNodeEmitterDecayModel, WMAIAudioNodeEmitterDecayModelStatics, WMAIAudioNodeEmitter, WMAIAudioNodeEmitter2, WMAIAudioNodeEmitterFactory, WMAIAudioNodeListener, WMAIEqualizerEffectDefinition, WMAIReverbEffectDefinition, WMAIEchoEffectDefinition, WMAILimiterEffectDefinition;
 
 // Windows.Media.Audio.AudioGraphCreationStatus
 enum _WMAAudioGraphCreationStatus {
@@ -89,6 +76,34 @@ enum _WMAAudioGraphUnrecoverableError {
 };
 typedef unsigned WMAAudioGraphUnrecoverableError;
 
+// Windows.Media.Audio.AudioNodeEmitterSettings
+enum _WMAAudioNodeEmitterSettings {
+    WMAAudioNodeEmitterSettingsNone = 0,
+    WMAAudioNodeEmitterSettingsDisableDoppler = 1,
+};
+typedef unsigned WMAAudioNodeEmitterSettings;
+
+// Windows.Media.Audio.AudioNodeEmitterShapeKind
+enum _WMAAudioNodeEmitterShapeKind {
+    WMAAudioNodeEmitterShapeKindOmnidirectional = 0,
+    WMAAudioNodeEmitterShapeKindCone = 1,
+};
+typedef unsigned WMAAudioNodeEmitterShapeKind;
+
+// Windows.Media.Audio.AudioNodeEmitterDecayKind
+enum _WMAAudioNodeEmitterDecayKind {
+    WMAAudioNodeEmitterDecayKindNatural = 0,
+    WMAAudioNodeEmitterDecayKindCustom = 1,
+};
+typedef unsigned WMAAudioNodeEmitterDecayKind;
+
+// Windows.Media.Audio.SpatialAudioModel
+enum _WMASpatialAudioModel {
+    WMASpatialAudioModelObjectBased = 0,
+    WMASpatialAudioModelFoldDown = 1,
+};
+typedef unsigned WMASpatialAudioModel;
+
 #include "WindowsMedia.h"
 #include "WindowsDevicesEnumeration.h"
 #include "WindowsMediaRender.h"
@@ -98,6 +113,7 @@ typedef unsigned WMAAudioGraphUnrecoverableError;
 #include "WindowsMediaCapture.h"
 #include "WindowsStorage.h"
 #include "WindowsMediaTranscoding.h"
+#include "WindowsFoundationNumerics.h"
 #include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
@@ -139,6 +155,26 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 
 #endif // __WMAIAudioNode_DEFINED__
 
+// Windows.Media.Audio.IAudioNodeWithListener
+#ifndef __WMAIAudioNodeWithListener_DEFINED__
+#define __WMAIAudioNodeWithListener_DEFINED__
+
+@protocol WMAIAudioNodeWithListener <WFIClosable, WMAIAudioNode>
+@property (retain) WMAAudioNodeListener* listener;
+- (void)close;
+- (void)start;
+- (void)stop;
+- (void)reset;
+- (void)disableEffectsByDefinition:(RTObject<WMEIAudioEffectDefinition>*)definition;
+- (void)enableEffectsByDefinition:(RTObject<WMEIAudioEffectDefinition>*)definition;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+@interface WMAIAudioNodeWithListener : RTObject <WMAIAudioNodeWithListener>
+@end
+
+#endif // __WMAIAudioNodeWithListener_DEFINED__
+
 // Windows.Media.Audio.IAudioInputNode
 #ifndef __WMAIAudioInputNode_DEFINED__
 #define __WMAIAudioInputNode_DEFINED__
@@ -162,15 +198,36 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 
 #endif // __WMAIAudioInputNode_DEFINED__
 
+// Windows.Media.Audio.IAudioInputNode2
+#ifndef __WMAIAudioInputNode2_DEFINED__
+#define __WMAIAudioInputNode2_DEFINED__
+
+@protocol WMAIAudioInputNode2 <WMAIAudioNode, WFIClosable, WMAIAudioInputNode>
+@property (readonly) WMAAudioNodeEmitter* emitter;
+- (void)start;
+- (void)stop;
+- (void)reset;
+- (void)disableEffectsByDefinition:(RTObject<WMEIAudioEffectDefinition>*)definition;
+- (void)enableEffectsByDefinition:(RTObject<WMEIAudioEffectDefinition>*)definition;
+- (void)close;
+- (void)addOutgoingConnection:(RTObject<WMAIAudioNode>*)destination;
+- (void)addOutgoingConnectionWithGain:(RTObject<WMAIAudioNode>*)destination gain:(double)gain;
+- (void)removeOutgoingConnection:(RTObject<WMAIAudioNode>*)destination;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+@interface WMAIAudioInputNode2 : RTObject <WMAIAudioInputNode2>
+@end
+
+#endif // __WMAIAudioInputNode2_DEFINED__
+
 // Windows.Media.Audio.AudioGraph
 #ifndef __WMAAudioGraph_DEFINED__
 #define __WMAAudioGraph_DEFINED__
 
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAAudioGraph : RTObject <WFIClosable>
-+ (void)createAsync:(WMAAudioGraphSettings*)settings
-            success:(void (^)(WMACreateAudioGraphResult*))success
-            failure:(void (^)(NSError*))failure;
++ (void)createAsync:(WMAAudioGraphSettings*)settings success:(void (^)(WMACreateAudioGraphResult*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -180,46 +237,34 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @property (readonly) WDEDeviceInformation* primaryRenderDevice;
 @property (readonly) WMAudioProcessing renderDeviceAudioProcessing;
 @property (readonly) int samplesPerQuantum;
-- (EventRegistrationToken)addQuantumProcessedEvent:(void (^)(WMAAudioGraph*, RTObject*))del;
+- (EventRegistrationToken)addQuantumProcessedEvent:(void(^)(WMAAudioGraph*, RTObject*))del;
 - (void)removeQuantumProcessedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addQuantumStartedEvent:(void (^)(WMAAudioGraph*, RTObject*))del;
+- (EventRegistrationToken)addQuantumStartedEvent:(void(^)(WMAAudioGraph*, RTObject*))del;
 - (void)removeQuantumStartedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addUnrecoverableErrorOccurredEvent:(void (^)(WMAAudioGraph*,
-                                                                       WMAAudioGraphUnrecoverableErrorOccurredEventArgs*))del;
+- (EventRegistrationToken)addUnrecoverableErrorOccurredEvent:(void(^)(WMAAudioGraph*, WMAAudioGraphUnrecoverableErrorOccurredEventArgs*))del;
 - (void)removeUnrecoverableErrorOccurredEvent:(EventRegistrationToken)tok;
 - (WMAAudioFrameInputNode*)createFrameInputNode;
 - (WMAAudioFrameInputNode*)createFrameInputNodeWithFormat:(WMMAudioEncodingProperties*)encodingProperties;
-- (void)createDeviceInputNodeAsync:(WMCMediaCategory)category
-                           success:(void (^)(WMACreateAudioDeviceInputNodeResult*))success
-                           failure:(void (^)(NSError*))failure;
-- (void)createDeviceInputNodeWithFormatAsync:(WMCMediaCategory)category
-                          encodingProperties:(WMMAudioEncodingProperties*)encodingProperties
-                                     success:(void (^)(WMACreateAudioDeviceInputNodeResult*))success
-                                     failure:(void (^)(NSError*))failure;
-- (void)createDeviceInputNodeWithFormatOnDeviceAsync:(WMCMediaCategory)category
-                                  encodingProperties:(WMMAudioEncodingProperties*)encodingProperties
-                                              device:(WDEDeviceInformation*)device
-                                             success:(void (^)(WMACreateAudioDeviceInputNodeResult*))success
-                                             failure:(void (^)(NSError*))failure;
+- (void)createDeviceInputNodeAsync:(WMCMediaCategory)category success:(void (^)(WMACreateAudioDeviceInputNodeResult*))success failure:(void (^)(NSError*))failure;
+- (void)createDeviceInputNodeWithFormatAsync:(WMCMediaCategory)category encodingProperties:(WMMAudioEncodingProperties*)encodingProperties success:(void (^)(WMACreateAudioDeviceInputNodeResult*))success failure:(void (^)(NSError*))failure;
+- (void)createDeviceInputNodeWithFormatOnDeviceAsync:(WMCMediaCategory)category encodingProperties:(WMMAudioEncodingProperties*)encodingProperties device:(WDEDeviceInformation*)device success:(void (^)(WMACreateAudioDeviceInputNodeResult*))success failure:(void (^)(NSError*))failure;
 - (WMAAudioFrameOutputNode*)createFrameOutputNode;
 - (WMAAudioFrameOutputNode*)createFrameOutputNodeWithFormat:(WMMAudioEncodingProperties*)encodingProperties;
 - (void)createDeviceOutputNodeAsyncWithSuccess:(void (^)(WMACreateAudioDeviceOutputNodeResult*))success failure:(void (^)(NSError*))failure;
-- (void)createFileInputNodeAsync:(RTObject<WSIStorageFile>*)file
-                         success:(void (^)(WMACreateAudioFileInputNodeResult*))success
-                         failure:(void (^)(NSError*))failure;
-- (void)createFileOutputNodeAsync:(RTObject<WSIStorageFile>*)file
-                          success:(void (^)(WMACreateAudioFileOutputNodeResult*))success
-                          failure:(void (^)(NSError*))failure;
-- (void)createFileOutputNodeWithFileProfileAsync:(RTObject<WSIStorageFile>*)file
-                             fileEncodingProfile:(WMMMediaEncodingProfile*)fileEncodingProfile
-                                         success:(void (^)(WMACreateAudioFileOutputNodeResult*))success
-                                         failure:(void (^)(NSError*))failure;
+- (void)createFileInputNodeAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WMACreateAudioFileInputNodeResult*))success failure:(void (^)(NSError*))failure;
+- (void)createFileOutputNodeAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WMACreateAudioFileOutputNodeResult*))success failure:(void (^)(NSError*))failure;
+- (void)createFileOutputNodeWithFileProfileAsync:(RTObject<WSIStorageFile>*)file fileEncodingProfile:(WMMMediaEncodingProfile*)fileEncodingProfile success:(void (^)(WMACreateAudioFileOutputNodeResult*))success failure:(void (^)(NSError*))failure;
 - (WMAAudioSubmixNode*)createSubmixNode;
 - (WMAAudioSubmixNode*)createSubmixNodeWithFormat:(WMMAudioEncodingProperties*)encodingProperties;
 - (void)start;
 - (void)stop;
 - (void)resetAllNodes;
 - (void)close;
+- (WMAAudioFrameInputNode*)createFrameInputNodeWithFormatAndEmitter:(WMMAudioEncodingProperties*)encodingProperties emitter:(WMAAudioNodeEmitter*)emitter;
+- (void)createDeviceInputNodeWithFormatAndEmitterOnDeviceAsync:(WMCMediaCategory)category encodingProperties:(WMMAudioEncodingProperties*)encodingProperties device:(WDEDeviceInformation*)device emitter:(WMAAudioNodeEmitter*)emitter success:(void (^)(WMACreateAudioDeviceInputNodeResult*))success failure:(void (^)(NSError*))failure;
+- (void)createFileInputNodeWithEmitterAsync:(RTObject<WSIStorageFile>*)file emitter:(WMAAudioNodeEmitter*)emitter success:(void (^)(WMACreateAudioFileInputNodeResult*))success failure:(void (^)(NSError*))failure;
+- (WMAAudioSubmixNode*)createSubmixNodeWithFormatAndEmitter:(WMMAudioEncodingProperties*)encodingProperties emitter:(WMAAudioNodeEmitter*)emitter;
+- (WMAAudioGraphBatchUpdater*)createBatchUpdater;
 @end
 
 #endif // __WMAAudioGraph_DEFINED__
@@ -264,12 +309,13 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #define __WMAAudioDeviceInputNode_DEFINED__
 
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
-@interface WMAAudioDeviceInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable>
+@interface WMAAudioDeviceInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable, WMAIAudioInputNode2>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDeviceInformation* device;
 @property (readonly) NSArray* /* WMAAudioGraphConnection* */ outgoingConnections;
+@property (readonly) WMAAudioNodeEmitter* emitter;
 @property double outgoingGain;
 @property BOOL consumeInput;
 @property (readonly) NSMutableArray* /* RTObject<WMEIAudioEffectDefinition>* */ effectDefinitions;
@@ -307,7 +353,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #define __WMAAudioDeviceOutputNode_DEFINED__
 
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
-@interface WMAAudioDeviceOutputNode : RTObject <WMAIAudioNode, WFIClosable>
+@interface WMAAudioDeviceOutputNode : RTObject <WMAIAudioNode, WFIClosable, WMAIAudioNodeWithListener>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -316,6 +362,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @property BOOL consumeInput;
 @property (readonly) NSMutableArray* /* RTObject<WMEIAudioEffectDefinition>* */ effectDefinitions;
 @property (readonly) WMMAudioEncodingProperties* encodingProperties;
+@property (retain) WMAAudioNodeListener* listener;
 - (void)start;
 - (void)stop;
 - (void)reset;
@@ -346,7 +393,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #define __WMAAudioFileInputNode_DEFINED__
 
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
-@interface WMAAudioFileInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable>
+@interface WMAAudioFileInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable, WMAIAudioInputNode2>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -358,11 +405,12 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @property (readonly) WSStorageFile* sourceFile;
 @property (readonly) WFTimeSpan* duration;
 @property (readonly) NSArray* /* WMAAudioGraphConnection* */ outgoingConnections;
+@property (readonly) WMAAudioNodeEmitter* emitter;
 @property double outgoingGain;
 @property BOOL consumeInput;
 @property (readonly) NSMutableArray* /* RTObject<WMEIAudioEffectDefinition>* */ effectDefinitions;
 @property (readonly) WMMAudioEncodingProperties* encodingProperties;
-- (EventRegistrationToken)addFileCompletedEvent:(void (^)(WMAAudioFileInputNode*, RTObject*))del;
+- (EventRegistrationToken)addFileCompletedEvent:(void(^)(WMAAudioFileInputNode*, RTObject*))del;
 - (void)removeFileCompletedEvent:(EventRegistrationToken)tok;
 - (void)seek:(WFTimeSpan*)position;
 - (void)addOutgoingConnection:(RTObject<WMAIAudioNode>*)destination;
@@ -448,25 +496,40 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 
 #endif // __WMAAudioGraphUnrecoverableErrorOccurredEventArgs_DEFINED__
 
+// Windows.Media.Audio.AudioGraphBatchUpdater
+#ifndef __WMAAudioGraphBatchUpdater_DEFINED__
+#define __WMAAudioGraphBatchUpdater_DEFINED__
+
+OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+@interface WMAAudioGraphBatchUpdater : RTObject <WFIClosable>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+- (void)close;
+@end
+
+#endif // __WMAAudioGraphBatchUpdater_DEFINED__
+
 // Windows.Media.Audio.AudioFrameInputNode
 #ifndef __WMAAudioFrameInputNode_DEFINED__
 #define __WMAAudioFrameInputNode_DEFINED__
 
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
-@interface WMAAudioFrameInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable>
+@interface WMAAudioFrameInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable, WMAIAudioInputNode2>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double playbackSpeedFactor;
 @property (readonly) uint64_t queuedSampleCount;
 @property (readonly) NSArray* /* WMAAudioGraphConnection* */ outgoingConnections;
+@property (readonly) WMAAudioNodeEmitter* emitter;
 @property double outgoingGain;
 @property BOOL consumeInput;
 @property (readonly) NSMutableArray* /* RTObject<WMEIAudioEffectDefinition>* */ effectDefinitions;
 @property (readonly) WMMAudioEncodingProperties* encodingProperties;
-- (EventRegistrationToken)addAudioFrameCompletedEvent:(void (^)(WMAAudioFrameInputNode*, WMAAudioFrameCompletedEventArgs*))del;
+- (EventRegistrationToken)addAudioFrameCompletedEvent:(void(^)(WMAAudioFrameInputNode*, WMAAudioFrameCompletedEventArgs*))del;
 - (void)removeAudioFrameCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addQuantumStartedEvent:(void (^)(WMAAudioFrameInputNode*, WMAFrameInputNodeQuantumStartedEventArgs*))del;
+- (EventRegistrationToken)addQuantumStartedEvent:(void(^)(WMAAudioFrameInputNode*, WMAFrameInputNodeQuantumStartedEventArgs*))del;
 - (void)removeQuantumStartedEvent:(EventRegistrationToken)tok;
 - (void)addFrame:(WMAudioFrame*)frame;
 - (void)discardQueuedFrames;
@@ -512,11 +575,12 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #define __WMAAudioSubmixNode_DEFINED__
 
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
-@interface WMAAudioSubmixNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable>
+@interface WMAAudioSubmixNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable, WMAIAudioInputNode2>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WMAAudioGraphConnection* */ outgoingConnections;
+@property (readonly) WMAAudioNodeEmitter* emitter;
 @property double outgoingGain;
 @property BOOL consumeInput;
 @property (readonly) NSMutableArray* /* RTObject<WMEIAudioEffectDefinition>* */ effectDefinitions;
@@ -533,6 +597,49 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @end
 
 #endif // __WMAAudioSubmixNode_DEFINED__
+
+// Windows.Media.Audio.AudioNodeEmitter
+#ifndef __WMAAudioNodeEmitter_DEFINED__
+#define __WMAAudioNodeEmitter_DEFINED__
+
+OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+@interface WMAAudioNodeEmitter : RTObject
++ (WMAAudioNodeEmitter*)makeAudioNodeEmitter:(WMAAudioNodeEmitterShape*)shape decayModel:(WMAAudioNodeEmitterDecayModel*)decayModel settings:(WMAAudioNodeEmitterSettings)settings ACTIVATOR;
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) WFNVector3* position;
+@property double gain;
+@property (retain) WFNVector3* dopplerVelocity;
+@property double dopplerScale;
+@property double distanceScale;
+@property (retain) WFNVector3* direction;
+@property (readonly) WMAAudioNodeEmitterDecayModel* decayModel;
+@property (readonly) BOOL isDopplerDisabled;
+@property (readonly) WMAAudioNodeEmitterShape* shape;
+@property WMASpatialAudioModel spatialAudioModel;
+@end
+
+#endif // __WMAAudioNodeEmitter_DEFINED__
+
+// Windows.Media.Audio.AudioNodeListener
+#ifndef __WMAAudioNodeListener_DEFINED__
+#define __WMAAudioNodeListener_DEFINED__
+
+OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+@interface WMAAudioNodeListener : RTObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property double speedOfSound;
+@property (retain) WFNVector3* position;
+@property (retain) WFNQuaternion* orientation;
+@property (retain) WFNVector3* dopplerVelocity;
+@end
+
+#endif // __WMAAudioNodeListener_DEFINED__
 
 // Windows.Media.Audio.AudioGraphConnection
 #ifndef __WMAAudioGraphConnection_DEFINED__
@@ -598,7 +705,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #define __WMEIAudioEffectDefinition_DEFINED__
 
 @protocol WMEIAudioEffectDefinition
-@property (readonly) NSString* activatableClassId;
+@property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
@@ -619,7 +726,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WMAEqualizerBand* */ bands;
-@property (readonly) NSString* activatableClassId;
+@property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
@@ -658,7 +765,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @property double roomSize;
 @property double roomFilterMain;
 @property double roomFilterHF;
-@property (readonly) NSString* activatableClassId;
+@property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
@@ -677,7 +784,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @property double wetDryMix;
 @property double feedback;
 @property double delay;
-@property (readonly) NSString* activatableClassId;
+@property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
@@ -695,8 +802,76 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #endif
 @property unsigned int Release;
 @property unsigned int loudness;
-@property (readonly) NSString* activatableClassId;
+@property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
 #endif // __WMALimiterEffectDefinition_DEFINED__
+
+// Windows.Media.Audio.AudioNodeEmitterConeProperties
+#ifndef __WMAAudioNodeEmitterConeProperties_DEFINED__
+#define __WMAAudioNodeEmitterConeProperties_DEFINED__
+
+OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+@interface WMAAudioNodeEmitterConeProperties : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) double innerAngle;
+@property (readonly) double outerAngle;
+@property (readonly) double outerAngleGain;
+@end
+
+#endif // __WMAAudioNodeEmitterConeProperties_DEFINED__
+
+// Windows.Media.Audio.AudioNodeEmitterShape
+#ifndef __WMAAudioNodeEmitterShape_DEFINED__
+#define __WMAAudioNodeEmitterShape_DEFINED__
+
+OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+@interface WMAAudioNodeEmitterShape : RTObject
++ (WMAAudioNodeEmitterShape*)createCone:(double)innerAngle outerAngle:(double)outerAngle outerAngleGain:(double)outerAngleGain;
++ (WMAAudioNodeEmitterShape*)createOmnidirectional;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WMAAudioNodeEmitterConeProperties* coneProperties;
+@property (readonly) WMAAudioNodeEmitterShapeKind kind;
+@end
+
+#endif // __WMAAudioNodeEmitterShape_DEFINED__
+
+// Windows.Media.Audio.AudioNodeEmitterNaturalDecayModelProperties
+#ifndef __WMAAudioNodeEmitterNaturalDecayModelProperties_DEFINED__
+#define __WMAAudioNodeEmitterNaturalDecayModelProperties_DEFINED__
+
+OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+@interface WMAAudioNodeEmitterNaturalDecayModelProperties : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) double cutoffDistance;
+@property (readonly) double unityGainDistance;
+@end
+
+#endif // __WMAAudioNodeEmitterNaturalDecayModelProperties_DEFINED__
+
+// Windows.Media.Audio.AudioNodeEmitterDecayModel
+#ifndef __WMAAudioNodeEmitterDecayModel_DEFINED__
+#define __WMAAudioNodeEmitterDecayModel_DEFINED__
+
+OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+@interface WMAAudioNodeEmitterDecayModel : RTObject
++ (WMAAudioNodeEmitterDecayModel*)createNatural:(double)minGain maxGain:(double)maxGain unityGainDistance:(double)unityGainDistance cutoffDistance:(double)cutoffDistance;
++ (WMAAudioNodeEmitterDecayModel*)createCustom:(double)minGain maxGain:(double)maxGain;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WMAAudioNodeEmitterDecayKind kind;
+@property (readonly) double maxGain;
+@property (readonly) double minGain;
+@property (readonly) WMAAudioNodeEmitterNaturalDecayModelProperties* naturalProperties;
+@end
+
+#endif // __WMAAudioNodeEmitterDecayModel_DEFINED__
+

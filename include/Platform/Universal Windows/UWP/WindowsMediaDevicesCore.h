@@ -27,15 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WMDCCameraIntrinsics, WMDCVariablePhotoSequenceController, WMDCFrameExposureCapabilities, WMDCFrameExposureCompensationCapabilities,
-    WMDCFrameIsoSpeedCapabilities, WMDCFrameFocusCapabilities, WMDCFrameFlashCapabilities, WMDCFrameControlCapabilities,
-    WMDCFrameExposureControl, WMDCFrameExposureCompensationControl, WMDCFrameIsoSpeedControl, WMDCFrameFocusControl, WMDCFrameFlashControl,
-    WMDCFrameController;
-@protocol WMDCICameraIntrinsicsFactory
-, WMDCICameraIntrinsics, WMDCIFrameExposureCapabilities, WMDCIFrameExposureCompensationCapabilities, WMDCIFrameIsoSpeedCapabilities,
-    WMDCIFrameFocusCapabilities, WMDCIFrameFlashCapabilities, WMDCIFrameControlCapabilities, WMDCIFrameControlCapabilities2,
-    WMDCIFrameExposureControl, WMDCIFrameExposureCompensationControl, WMDCIFrameIsoSpeedControl, WMDCIFrameFocusControl,
-    WMDCIFrameFlashControl, WMDCIFrameController, WMDCIFrameController2, WMDCIVariablePhotoSequenceController;
+@class WMDCCameraIntrinsics, WMDCDepthCorrelatedCoordinateMapper, WMDCVariablePhotoSequenceController, WMDCFrameExposureCapabilities, WMDCFrameExposureCompensationCapabilities, WMDCFrameIsoSpeedCapabilities, WMDCFrameFocusCapabilities, WMDCFrameFlashCapabilities, WMDCFrameControlCapabilities, WMDCFrameExposureControl, WMDCFrameExposureCompensationControl, WMDCFrameIsoSpeedControl, WMDCFrameFocusControl, WMDCFrameFlashControl, WMDCFrameController;
+@protocol WMDCIFrameExposureCapabilities, WMDCIFrameExposureCompensationCapabilities, WMDCIFrameIsoSpeedCapabilities, WMDCIFrameFocusCapabilities, WMDCIFrameFlashCapabilities, WMDCIFrameControlCapabilities, WMDCIFrameControlCapabilities2, WMDCIFrameExposureControl, WMDCIFrameExposureCompensationControl, WMDCIFrameIsoSpeedControl, WMDCIFrameFocusControl, WMDCIFrameFlashControl, WMDCIFrameController, WMDCIFrameController2, WMDCIVariablePhotoSequenceController, WMDCICameraIntrinsicsFactory, WMDCICameraIntrinsics, WMDCICameraIntrinsics2, WMDCIDepthCorrelatedCoordinateMapper;
 
 // Windows.Media.Devices.Core.FrameFlashMode
 enum _WMDCFrameFlashMode {
@@ -45,9 +38,10 @@ enum _WMDCFrameFlashMode {
 };
 typedef unsigned WMDCFrameFlashMode;
 
-#include "WindowsFoundationNumerics.h"
 #include "WindowsFoundation.h"
 #include "WindowsMediaMediaProperties.h"
+#include "WindowsFoundationNumerics.h"
+#include "WindowsPerceptionSpatial.h"
 
 #import <Foundation/Foundation.h>
 
@@ -66,13 +60,50 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 @property (readonly) WFNVector2* principalPoint;
 @property (readonly) WFNVector3* radialDistortion;
 @property (readonly) WFNVector2* tangentialDistortion;
+@property (readonly) WFNMatrix4x4* undistortedProjectionTransform;
 - (WFPoint*)projectOntoFrame:(WFNVector3*)coordinate;
 - (WFNVector2*)unprojectAtUnitDepth:(WFPoint*)pixelCoordinate;
 - (void)projectManyOntoFrame:(NSArray* /* WFNVector3* */)coordinates results:(NSArray* /* WFPoint* */*)results;
 - (void)unprojectPixelsAtUnitDepth:(NSArray* /* WFPoint* */)pixelCoordinates results:(NSArray* /* WFNVector2* */*)results;
+- (WFPoint*)distortPoint:(WFPoint*)input;
+- (void)distortPoints:(NSArray* /* WFPoint* */)inputs results:(NSArray* /* WFPoint* */*)results;
+- (WFPoint*)undistortPoint:(WFPoint*)input;
+- (void)undistortPoints:(NSArray* /* WFPoint* */)inputs results:(NSArray* /* WFPoint* */*)results;
 @end
 
 #endif // __WMDCCameraIntrinsics_DEFINED__
+
+// Windows.Foundation.IClosable
+#ifndef __WFIClosable_DEFINED__
+#define __WFIClosable_DEFINED__
+
+@protocol WFIClosable
+- (void)close;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
+#endif // __WFIClosable_DEFINED__
+
+// Windows.Media.Devices.Core.DepthCorrelatedCoordinateMapper
+#ifndef __WMDCDepthCorrelatedCoordinateMapper_DEFINED__
+#define __WMDCDepthCorrelatedCoordinateMapper_DEFINED__
+
+OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
+@interface WMDCDepthCorrelatedCoordinateMapper : RTObject <WFIClosable>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+- (WFNVector3*)unprojectPoint:(WFPoint*)sourcePoint targetCoordinateSystem:(WPSSpatialCoordinateSystem*)targetCoordinateSystem;
+- (void)unprojectPoints:(NSArray* /* WFPoint* */)sourcePoints targetCoordinateSystem:(WPSSpatialCoordinateSystem*)targetCoordinateSystem results:(NSArray* /* WFNVector3* */*)results;
+- (WFPoint*)mapPoint:(WFPoint*)sourcePoint targetCoordinateSystem:(WPSSpatialCoordinateSystem*)targetCoordinateSystem targetCameraIntrinsics:(WMDCCameraIntrinsics*)targetCameraIntrinsics;
+- (void)mapPoints:(NSArray* /* WFPoint* */)sourcePoints targetCoordinateSystem:(WPSSpatialCoordinateSystem*)targetCoordinateSystem targetCameraIntrinsics:(WMDCCameraIntrinsics*)targetCameraIntrinsics results:(NSArray* /* WFPoint* */*)results;
+- (void)close;
+@end
+
+#endif // __WMDCDepthCorrelatedCoordinateMapper_DEFINED__
 
 // Windows.Media.Devices.Core.VariablePhotoSequenceController
 #ifndef __WMDCVariablePhotoSequenceController_DEFINED__
@@ -291,3 +322,4 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 @end
 
 #endif // __WMDCFrameController_DEFINED__
+

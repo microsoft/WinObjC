@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WGDDDirect3DMultisampleDescription, WGDDDirect3DSurfaceDescription;
-@protocol WGDDIDirect3DDevice
-, WGDDIDirect3DSurface;
+@protocol WGDDIDirect3DDevice, WGDDIDirect3DSurface;
 
 // Windows.Graphics.DirectX.Direct3D11.Direct3DUsage
 enum _WGDDDirect3DUsage {
@@ -63,7 +62,7 @@ typedef unsigned WGDDDirect3DBindings;
 // [struct] Windows.Graphics.DirectX.Direct3D11.Direct3DMultisampleDescription
 OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
 @interface WGDDDirect3DMultisampleDescription : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property int count;
 @property int quality;
 @end
@@ -71,7 +70,7 @@ OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
 // [struct] Windows.Graphics.DirectX.Direct3D11.Direct3DSurfaceDescription
 OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
 @interface WGDDDirect3DSurfaceDescription : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property int width;
 @property int height;
 @property WGDDirectXPixelFormat format;
@@ -121,3 +120,4 @@ OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
 @end
 
 #endif // __WGDDIDirect3DSurface_DEFINED__
+

@@ -27,8 +27,7 @@
 #endif
 #include <UWP/interopBase.h>
 
-@protocol WGEIGraphicsEffectSource
-, WGEIGraphicsEffect;
+@protocol WGEIGraphicsEffectSource, WGEIGraphicsEffect;
 
 #import <Foundation/Foundation.h>
 
@@ -50,7 +49,7 @@ OBJCUWP_WINDOWS_GRAPHICS_EFFECTS_EXPORT
 #define __WGEIGraphicsEffect_DEFINED__
 
 @protocol WGEIGraphicsEffect <WGEIGraphicsEffectSource>
-@property (retain) NSString* name;
+@property (retain) NSString * name;
 @end
 
 OBJCUWP_WINDOWS_GRAPHICS_EFFECTS_EXPORT
@@ -58,3 +57,4 @@ OBJCUWP_WINDOWS_GRAPHICS_EFFECTS_EXPORT
 @end
 
 #endif // __WGEIGraphicsEffect_DEFINED__
+

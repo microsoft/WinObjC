@@ -156,7 +156,7 @@ HRESULT ForEach(ABI::Windows::Foundation::Collections::IMap<K, V>* map, Q&& func
 }
 
 #pragma region Async Helpers
-struct ActionCallback : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::ClassicCom>,
+struct ActionCallback : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::WinRtClassicComMix>,
                                                             ABI::Windows::Foundation::IAsyncActionCompletedHandler> {
 public:
     HRESULT RuntimeClassInitialize() {
@@ -211,7 +211,7 @@ HRESULT Await(const Microsoft::WRL::ComPtr<TI>& pThing,
 }
 
 template <typename T>
-struct OperationCallback : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::ClassicCom>,
+struct OperationCallback : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::WinRtClassicComMix>,
                                                                ABI::Windows::Foundation::IAsyncOperationCompletedHandler<T>> {
 public:
     HRESULT RuntimeClassInitialize() {
@@ -404,7 +404,7 @@ HRESULT AwaitStaticResult(HRESULT(STDMETHODCALLTYPE* pfn)(P1, P2, P3, P4, ABI::W
 
 template <typename T, typename Q>
 struct ProgressCompleteCallback
-    : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::ClassicCom>,
+    : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::WinRtClassicComMix>,
                                           ABI::Windows::Foundation::IAsyncOperationWithProgressCompletedHandler<T, Q>> {
 public:
     HRESULT RuntimeClassInitialize() {

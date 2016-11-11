@@ -27,15 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WFDTracingStatusChangedEventArgs, WFDAsyncCausalityTracer, WFDRuntimeBrokerErrorSettings, WFDErrorDetails, WFDLoggingOptions,
-    WFDLoggingChannelOptions, WFDLoggingFields, WFDLoggingActivity, WFDLoggingChannel, WFDLoggingSession, WFDLogFileGeneratedEventArgs,
-    WFDFileLoggingSession;
-@protocol WFDITracingStatusChangedEventArgs
-, WFDIAsyncCausalityTracerStatics, WFDIErrorReportingSettings, WFDIErrorDetailsStatics, WFDIErrorDetails, WFDILoggingOptions,
-    WFDILoggingOptionsFactory, WFDILoggingChannelOptions, WFDILoggingChannelOptionsFactory, WFDILoggingFields, WFDILoggingTarget,
-    WFDILoggingChannel, WFDILoggingChannel2, WFDILoggingChannelFactory, WFDILoggingChannelFactory2, WFDILoggingActivity,
-    WFDILoggingActivity2, WFDILoggingActivityFactory, WFDILoggingSession, WFDILoggingSessionFactory, WFDILogFileGeneratedEventArgs,
-    WFDIFileLoggingSession, WFDIFileLoggingSessionFactory;
+@class WFDTracingStatusChangedEventArgs, WFDAsyncCausalityTracer, WFDRuntimeBrokerErrorSettings, WFDErrorDetails, WFDLoggingOptions, WFDLoggingChannelOptions, WFDLoggingFields, WFDLoggingActivity, WFDLoggingChannel, WFDLoggingSession, WFDLogFileGeneratedEventArgs, WFDFileLoggingSession;
+@protocol WFDITracingStatusChangedEventArgs, WFDIAsyncCausalityTracerStatics, WFDIErrorReportingSettings, WFDIErrorDetailsStatics, WFDIErrorDetails, WFDILoggingOptions, WFDILoggingOptionsFactory, WFDILoggingChannelOptions, WFDILoggingChannelOptionsFactory, WFDILoggingFields, WFDILoggingTarget, WFDILoggingChannel, WFDILoggingChannel2, WFDILoggingChannelFactory, WFDILoggingChannelFactory2, WFDILoggingActivity, WFDILoggingActivity2, WFDILoggingActivityFactory, WFDILoggingSession, WFDILoggingSessionFactory, WFDILogFileGeneratedEventArgs, WFDIFileLoggingSession, WFDIFileLoggingSessionFactory;
 
 // Windows.Foundation.Diagnostics.CausalityTraceLevel
 enum _WFDCausalityTraceLevel {
@@ -155,22 +148,14 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 - (BOOL)isEnabled;
 - (BOOL)isEnabledWithLevel:(WFDLoggingLevel)level;
 - (BOOL)isEnabledWithLevelAndKeywords:(WFDLoggingLevel)level keywords:(int64_t)keywords;
-- (void)logEvent:(NSString*)eventName;
-- (void)logEventWithFields:(NSString*)eventName fields:(WFDLoggingFields*)fields;
-- (void)logEventWithFieldsAndLevel:(NSString*)eventName fields:(WFDLoggingFields*)fields level:(WFDLoggingLevel)level;
-- (void)logEventWithFieldsAndOptions:(NSString*)eventName
-                              fields:(WFDLoggingFields*)fields
-                               level:(WFDLoggingLevel)level
-                             options:(WFDLoggingOptions*)options;
-- (WFDLoggingActivity*)startActivity:(NSString*)startEventName;
-- (WFDLoggingActivity*)startActivityWithFields:(NSString*)startEventName fields:(WFDLoggingFields*)fields;
-- (WFDLoggingActivity*)startActivityWithFieldsAndLevel:(NSString*)startEventName
-                                                fields:(WFDLoggingFields*)fields
-                                                 level:(WFDLoggingLevel)level;
-- (WFDLoggingActivity*)startActivityWithFieldsAndOptions:(NSString*)startEventName
-                                                  fields:(WFDLoggingFields*)fields
-                                                   level:(WFDLoggingLevel)level
-                                                 options:(WFDLoggingOptions*)options;
+- (void)logEvent:(NSString *)eventName;
+- (void)logEventWithFields:(NSString *)eventName fields:(WFDLoggingFields*)fields;
+- (void)logEventWithFieldsAndLevel:(NSString *)eventName fields:(WFDLoggingFields*)fields level:(WFDLoggingLevel)level;
+- (void)logEventWithFieldsAndOptions:(NSString *)eventName fields:(WFDLoggingFields*)fields level:(WFDLoggingLevel)level options:(WFDLoggingOptions*)options;
+- (WFDLoggingActivity*)startActivity:(NSString *)startEventName;
+- (WFDLoggingActivity*)startActivityWithFields:(NSString *)startEventName fields:(WFDLoggingFields*)fields;
+- (WFDLoggingActivity*)startActivityWithFieldsAndLevel:(NSString *)startEventName fields:(WFDLoggingFields*)fields level:(WFDLoggingLevel)level;
+- (WFDLoggingActivity*)startActivityWithFieldsAndOptions:(NSString *)startEventName fields:(WFDLoggingFields*)fields level:(WFDLoggingLevel)level options:(WFDLoggingOptions*)options;
 @end
 
 OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
@@ -200,13 +185,13 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @protocol WFDILoggingChannel <WFIClosable>
 @property (readonly) BOOL enabled;
 @property (readonly) WFDLoggingLevel level;
-@property (readonly) NSString* name;
-- (EventRegistrationToken)addLoggingEnabledEvent:(void (^)(RTObject<WFDILoggingChannel>*, RTObject*))del;
+@property (readonly) NSString * name;
+- (EventRegistrationToken)addLoggingEnabledEvent:(void(^)(RTObject<WFDILoggingChannel>*, RTObject*))del;
 - (void)removeLoggingEnabledEvent:(EventRegistrationToken)tok;
-- (void)logMessage:(NSString*)eventString;
-- (void)logMessageWithLevel:(NSString*)eventString level:(WFDLoggingLevel)level;
-- (void)logValuePair:(NSString*)value1 value2:(int)value2;
-- (void)logValuePairWithLevel:(NSString*)value1 value2:(int)value2 level:(WFDLoggingLevel)level;
+- (void)logMessage:(NSString *)eventString;
+- (void)logMessageWithLevel:(NSString *)eventString level:(WFDLoggingLevel)level;
+- (void)logValuePair:(NSString *)value1 value2:(int)value2;
+- (void)logValuePairWithLevel:(NSString *)value1 value2:(int)value2 level:(WFDLoggingLevel)level;
 - (void)close;
 @end
 
@@ -221,11 +206,8 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 #define __WFDILoggingSession_DEFINED__
 
 @protocol WFDILoggingSession <WFIClosable>
-@property (readonly) NSString* name;
-- (void)saveToFileAsync:(RTObject<WSIStorageFolder>*)folder
-               fileName:(NSString*)fileName
-                success:(void (^)(WSStorageFile*))success
-                failure:(void (^)(NSError*))failure;
+@property (readonly) NSString * name;
+- (void)saveToFileAsync:(RTObject<WSIStorageFolder>*)folder fileName:(NSString *)fileName success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)addLoggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel;
 - (void)addLoggingChannelWithLevel:(RTObject<WFDILoggingChannel>*)loggingChannel maxLevel:(WFDLoggingLevel)maxLevel;
 - (void)removeLoggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel;
@@ -243,8 +225,8 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 #define __WFDIFileLoggingSession_DEFINED__
 
 @protocol WFDIFileLoggingSession <WFIClosable>
-@property (readonly) NSString* name;
-- (EventRegistrationToken)addLogFileGeneratedEvent:(void (^)(RTObject<WFDIFileLoggingSession>*, WFDLogFileGeneratedEventArgs*))del;
+@property (readonly) NSString * name;
+- (EventRegistrationToken)addLogFileGeneratedEvent:(void(^)(RTObject<WFDIFileLoggingSession>*, WFDLogFileGeneratedEventArgs*))del;
 - (void)removeLogFileGeneratedEvent:(EventRegistrationToken)tok;
 - (void)addLoggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel;
 - (void)addLoggingChannelWithLevel:(RTObject<WFDILoggingChannel>*)loggingChannel maxLevel:(WFDLoggingLevel)maxLevel;
@@ -280,31 +262,12 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 
 OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDAsyncCausalityTracer : RTObject
-+ (void)traceOperationCreation:(WFDCausalityTraceLevel)traceLevel
-                        source:(WFDCausalitySource)source
-                    platformId:(WFGUID*)platformId
-                   operationId:(uint64_t)operationId
-                 operationName:(NSString*)operationName
-                relatedContext:(uint64_t)relatedContext;
-+ (void)traceOperationCompletion:(WFDCausalityTraceLevel)traceLevel
-                          source:(WFDCausalitySource)source
-                      platformId:(WFGUID*)platformId
-                     operationId:(uint64_t)operationId
-                          status:(WFAsyncStatus)status;
-+ (void)traceOperationRelation:(WFDCausalityTraceLevel)traceLevel
-                        source:(WFDCausalitySource)source
-                    platformId:(WFGUID*)platformId
-                   operationId:(uint64_t)operationId
-                      relation:(WFDCausalityRelation)relation;
-+ (void)traceSynchronousWorkStart:(WFDCausalityTraceLevel)traceLevel
-                           source:(WFDCausalitySource)source
-                       platformId:(WFGUID*)platformId
-                      operationId:(uint64_t)operationId
-                             work:(WFDCausalitySynchronousWork)work;
-+ (void)traceSynchronousWorkCompletion:(WFDCausalityTraceLevel)traceLevel
-                                source:(WFDCausalitySource)source
-                                  work:(WFDCausalitySynchronousWork)work;
-+ (EventRegistrationToken)addTracingStatusChangedEvent:(void (^)(RTObject*, WFDTracingStatusChangedEventArgs*))del;
++ (void)traceOperationCreation:(WFDCausalityTraceLevel)traceLevel source:(WFDCausalitySource)source platformId:(WFGUID*)platformId operationId:(uint64_t)operationId operationName:(NSString *)operationName relatedContext:(uint64_t)relatedContext;
++ (void)traceOperationCompletion:(WFDCausalityTraceLevel)traceLevel source:(WFDCausalitySource)source platformId:(WFGUID*)platformId operationId:(uint64_t)operationId status:(WFAsyncStatus)status;
++ (void)traceOperationRelation:(WFDCausalityTraceLevel)traceLevel source:(WFDCausalitySource)source platformId:(WFGUID*)platformId operationId:(uint64_t)operationId relation:(WFDCausalityRelation)relation;
++ (void)traceSynchronousWorkStart:(WFDCausalityTraceLevel)traceLevel source:(WFDCausalitySource)source platformId:(WFGUID*)platformId operationId:(uint64_t)operationId work:(WFDCausalitySynchronousWork)work;
++ (void)traceSynchronousWorkCompletion:(WFDCausalityTraceLevel)traceLevel source:(WFDCausalitySource)source work:(WFDCausalitySynchronousWork)work;
++ (EventRegistrationToken)addTracingStatusChangedEvent:(void(^)(RTObject*, WFDTracingStatusChangedEventArgs*))del;
 + (void)removeTracingStatusChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -336,9 +299,9 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* Description;
+@property (readonly) NSString * Description;
 @property (readonly) WFUri* helpUri;
-@property (readonly) NSString* longDescription;
+@property (readonly) NSString * longDescription;
 @end
 
 #endif // __WFDErrorDetails_DEFINED__
@@ -349,8 +312,8 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 
 OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDLoggingOptions : RTObject
-+ (instancetype)make ACTIVATOR;
 + (WFDLoggingOptions*)makeWithKeywords:(int64_t)keywords ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -370,8 +333,8 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 
 OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDLoggingChannelOptions : RTObject
-+ (WFDLoggingChannelOptions*)make:(WFGUID*)group ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (WFDLoggingChannelOptions*)make:(WFGUID*)group ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -391,171 +354,120 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)clear;
-- (void)beginStruct:(NSString*)name;
-- (void)beginStructWithTags:(NSString*)name tags:(int)tags;
+- (void)beginStruct:(NSString *)name;
+- (void)beginStructWithTags:(NSString *)name tags:(int)tags;
 - (void)endStruct;
-- (void)addEmpty:(NSString*)name;
-- (void)addEmptyWithFormat:(NSString*)name format:(WFDLoggingFieldFormat)format;
-- (void)addEmptyWithFormatAndTags:(NSString*)name format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addUInt8:(NSString*)name value:(uint8_t)value;
-- (void)addUInt8WithFormat:(NSString*)name value:(uint8_t)value format:(WFDLoggingFieldFormat)format;
-- (void)addUInt8WithFormatAndTags:(NSString*)name value:(uint8_t)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addUInt8Array:(NSString*)name value:(NSArray* /* uint8_t */)value;
-- (void)addUInt8ArrayWithFormat:(NSString*)name value:(NSArray* /* uint8_t */)value format:(WFDLoggingFieldFormat)format;
-- (void)addUInt8ArrayWithFormatAndTags:(NSString*)name
-                                 value:(NSArray* /* uint8_t */)value
-                                format:(WFDLoggingFieldFormat)format
-                                  tags:(int)tags;
-- (void)addInt16:(NSString*)name value:(int16_t)value;
-- (void)addInt16WithFormat:(NSString*)name value:(int16_t)value format:(WFDLoggingFieldFormat)format;
-- (void)addInt16WithFormatAndTags:(NSString*)name value:(int16_t)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addInt16Array:(NSString*)name value:(NSArray* /* int16_t */)value;
-- (void)addInt16ArrayWithFormat:(NSString*)name value:(NSArray* /* int16_t */)value format:(WFDLoggingFieldFormat)format;
-- (void)addInt16ArrayWithFormatAndTags:(NSString*)name
-                                 value:(NSArray* /* int16_t */)value
-                                format:(WFDLoggingFieldFormat)format
-                                  tags:(int)tags;
-- (void)addUInt16:(NSString*)name value:(unsigned short)value;
-- (void)addUInt16WithFormat:(NSString*)name value:(unsigned short)value format:(WFDLoggingFieldFormat)format;
-- (void)addUInt16WithFormatAndTags:(NSString*)name value:(unsigned short)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addUInt16Array:(NSString*)name value:(NSArray* /* unsigned short */)value;
-- (void)addUInt16ArrayWithFormat:(NSString*)name value:(NSArray* /* unsigned short */)value format:(WFDLoggingFieldFormat)format;
-- (void)addUInt16ArrayWithFormatAndTags:(NSString*)name
-                                  value:(NSArray* /* unsigned short */)value
-                                 format:(WFDLoggingFieldFormat)format
-                                   tags:(int)tags;
-- (void)addInt32:(NSString*)name value:(int)value;
-- (void)addInt32WithFormat:(NSString*)name value:(int)value format:(WFDLoggingFieldFormat)format;
-- (void)addInt32WithFormatAndTags:(NSString*)name value:(int)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addInt32Array:(NSString*)name value:(NSArray* /* int */)value;
-- (void)addInt32ArrayWithFormat:(NSString*)name value:(NSArray* /* int */)value format:(WFDLoggingFieldFormat)format;
-- (void)addInt32ArrayWithFormatAndTags:(NSString*)name value:(NSArray* /* int */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addUInt32:(NSString*)name value:(unsigned int)value;
-- (void)addUInt32WithFormat:(NSString*)name value:(unsigned int)value format:(WFDLoggingFieldFormat)format;
-- (void)addUInt32WithFormatAndTags:(NSString*)name value:(unsigned int)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addUInt32Array:(NSString*)name value:(NSArray* /* unsigned int */)value;
-- (void)addUInt32ArrayWithFormat:(NSString*)name value:(NSArray* /* unsigned int */)value format:(WFDLoggingFieldFormat)format;
-- (void)addUInt32ArrayWithFormatAndTags:(NSString*)name
-                                  value:(NSArray* /* unsigned int */)value
-                                 format:(WFDLoggingFieldFormat)format
-                                   tags:(int)tags;
-- (void)addInt64:(NSString*)name value:(int64_t)value;
-- (void)addInt64WithFormat:(NSString*)name value:(int64_t)value format:(WFDLoggingFieldFormat)format;
-- (void)addInt64WithFormatAndTags:(NSString*)name value:(int64_t)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addInt64Array:(NSString*)name value:(NSArray* /* int64_t */)value;
-- (void)addInt64ArrayWithFormat:(NSString*)name value:(NSArray* /* int64_t */)value format:(WFDLoggingFieldFormat)format;
-- (void)addInt64ArrayWithFormatAndTags:(NSString*)name
-                                 value:(NSArray* /* int64_t */)value
-                                format:(WFDLoggingFieldFormat)format
-                                  tags:(int)tags;
-- (void)addUInt64:(NSString*)name value:(uint64_t)value;
-- (void)addUInt64WithFormat:(NSString*)name value:(uint64_t)value format:(WFDLoggingFieldFormat)format;
-- (void)addUInt64WithFormatAndTags:(NSString*)name value:(uint64_t)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addUInt64Array:(NSString*)name value:(NSArray* /* uint64_t */)value;
-- (void)addUInt64ArrayWithFormat:(NSString*)name value:(NSArray* /* uint64_t */)value format:(WFDLoggingFieldFormat)format;
-- (void)addUInt64ArrayWithFormatAndTags:(NSString*)name
-                                  value:(NSArray* /* uint64_t */)value
-                                 format:(WFDLoggingFieldFormat)format
-                                   tags:(int)tags;
-- (void)addSingle:(NSString*)name value:(float)value;
-- (void)addSingleWithFormat:(NSString*)name value:(float)value format:(WFDLoggingFieldFormat)format;
-- (void)addSingleWithFormatAndTags:(NSString*)name value:(float)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addSingleArray:(NSString*)name value:(NSArray* /* float */)value;
-- (void)addSingleArrayWithFormat:(NSString*)name value:(NSArray* /* float */)value format:(WFDLoggingFieldFormat)format;
-- (void)addSingleArrayWithFormatAndTags:(NSString*)name
-                                  value:(NSArray* /* float */)value
-                                 format:(WFDLoggingFieldFormat)format
-                                   tags:(int)tags;
-- (void)addDouble:(NSString*)name value:(double)value;
-- (void)addDoubleWithFormat:(NSString*)name value:(double)value format:(WFDLoggingFieldFormat)format;
-- (void)addDoubleWithFormatAndTags:(NSString*)name value:(double)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addDoubleArray:(NSString*)name value:(NSArray* /* double */)value;
-- (void)addDoubleArrayWithFormat:(NSString*)name value:(NSArray* /* double */)value format:(WFDLoggingFieldFormat)format;
-- (void)addDoubleArrayWithFormatAndTags:(NSString*)name
-                                  value:(NSArray* /* double */)value
-                                 format:(WFDLoggingFieldFormat)format
-                                   tags:(int)tags;
-- (void)addChar16:(NSString*)name value:(wchar_t)value;
-- (void)addChar16WithFormat:(NSString*)name value:(wchar_t)value format:(WFDLoggingFieldFormat)format;
-- (void)addChar16WithFormatAndTags:(NSString*)name value:(wchar_t)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addChar16Array:(NSString*)name value:(NSArray* /* wchar_t */)value;
-- (void)addChar16ArrayWithFormat:(NSString*)name value:(NSArray* /* wchar_t */)value format:(WFDLoggingFieldFormat)format;
-- (void)addChar16ArrayWithFormatAndTags:(NSString*)name
-                                  value:(NSArray* /* wchar_t */)value
-                                 format:(WFDLoggingFieldFormat)format
-                                   tags:(int)tags;
-- (void)addBoolean:(NSString*)name value:(BOOL)value;
-- (void)addBooleanWithFormat:(NSString*)name value:(BOOL)value format:(WFDLoggingFieldFormat)format;
-- (void)addBooleanWithFormatAndTags:(NSString*)name value:(BOOL)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addBooleanArray:(NSString*)name value:(NSArray* /* BOOL */)value;
-- (void)addBooleanArrayWithFormat:(NSString*)name value:(NSArray* /* BOOL */)value format:(WFDLoggingFieldFormat)format;
-- (void)addBooleanArrayWithFormatAndTags:(NSString*)name
-                                   value:(NSArray* /* BOOL */)value
-                                  format:(WFDLoggingFieldFormat)format
-                                    tags:(int)tags;
-- (void)addString:(NSString*)name value:(NSString*)value;
-- (void)addStringWithFormat:(NSString*)name value:(NSString*)value format:(WFDLoggingFieldFormat)format;
-- (void)addStringWithFormatAndTags:(NSString*)name value:(NSString*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addStringArray:(NSString*)name value:(NSArray* /* NSString * */)value;
-- (void)addStringArrayWithFormat:(NSString*)name value:(NSArray* /* NSString * */)value format:(WFDLoggingFieldFormat)format;
-- (void)addStringArrayWithFormatAndTags:(NSString*)name
-                                  value:(NSArray* /* NSString * */)value
-                                 format:(WFDLoggingFieldFormat)format
-                                   tags:(int)tags;
-- (void)addGuid:(NSString*)name value:(WFGUID*)value;
-- (void)addGuidWithFormat:(NSString*)name value:(WFGUID*)value format:(WFDLoggingFieldFormat)format;
-- (void)addGuidWithFormatAndTags:(NSString*)name value:(WFGUID*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addGuidArray:(NSString*)name value:(NSArray* /* WFGUID* */)value;
-- (void)addGuidArrayWithFormat:(NSString*)name value:(NSArray* /* WFGUID* */)value format:(WFDLoggingFieldFormat)format;
-- (void)addGuidArrayWithFormatAndTags:(NSString*)name
-                                value:(NSArray* /* WFGUID* */)value
-                               format:(WFDLoggingFieldFormat)format
-                                 tags:(int)tags;
-- (void)addDateTime:(NSString*)name value:(WFDateTime*)value;
-- (void)addDateTimeWithFormat:(NSString*)name value:(WFDateTime*)value format:(WFDLoggingFieldFormat)format;
-- (void)addDateTimeWithFormatAndTags:(NSString*)name value:(WFDateTime*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addDateTimeArray:(NSString*)name value:(NSArray* /* WFDateTime* */)value;
-- (void)addDateTimeArrayWithFormat:(NSString*)name value:(NSArray* /* WFDateTime* */)value format:(WFDLoggingFieldFormat)format;
-- (void)addDateTimeArrayWithFormatAndTags:(NSString*)name
-                                    value:(NSArray* /* WFDateTime* */)value
-                                   format:(WFDLoggingFieldFormat)format
-                                     tags:(int)tags;
-- (void)addTimeSpan:(NSString*)name value:(WFTimeSpan*)value;
-- (void)addTimeSpanWithFormat:(NSString*)name value:(WFTimeSpan*)value format:(WFDLoggingFieldFormat)format;
-- (void)addTimeSpanWithFormatAndTags:(NSString*)name value:(WFTimeSpan*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addTimeSpanArray:(NSString*)name value:(NSArray* /* WFTimeSpan* */)value;
-- (void)addTimeSpanArrayWithFormat:(NSString*)name value:(NSArray* /* WFTimeSpan* */)value format:(WFDLoggingFieldFormat)format;
-- (void)addTimeSpanArrayWithFormatAndTags:(NSString*)name
-                                    value:(NSArray* /* WFTimeSpan* */)value
-                                   format:(WFDLoggingFieldFormat)format
-                                     tags:(int)tags;
-- (void)addPoint:(NSString*)name value:(WFPoint*)value;
-- (void)addPointWithFormat:(NSString*)name value:(WFPoint*)value format:(WFDLoggingFieldFormat)format;
-- (void)addPointWithFormatAndTags:(NSString*)name value:(WFPoint*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addPointArray:(NSString*)name value:(NSArray* /* WFPoint* */)value;
-- (void)addPointArrayWithFormat:(NSString*)name value:(NSArray* /* WFPoint* */)value format:(WFDLoggingFieldFormat)format;
-- (void)addPointArrayWithFormatAndTags:(NSString*)name
-                                 value:(NSArray* /* WFPoint* */)value
-                                format:(WFDLoggingFieldFormat)format
-                                  tags:(int)tags;
-- (void)addSize:(NSString*)name value:(WFSize*)value;
-- (void)addSizeWithFormat:(NSString*)name value:(WFSize*)value format:(WFDLoggingFieldFormat)format;
-- (void)addSizeWithFormatAndTags:(NSString*)name value:(WFSize*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addSizeArray:(NSString*)name value:(NSArray* /* WFSize* */)value;
-- (void)addSizeArrayWithFormat:(NSString*)name value:(NSArray* /* WFSize* */)value format:(WFDLoggingFieldFormat)format;
-- (void)addSizeArrayWithFormatAndTags:(NSString*)name
-                                value:(NSArray* /* WFSize* */)value
-                               format:(WFDLoggingFieldFormat)format
-                                 tags:(int)tags;
-- (void)addRect:(NSString*)name value:(WFRect*)value;
-- (void)addRectWithFormat:(NSString*)name value:(WFRect*)value format:(WFDLoggingFieldFormat)format;
-- (void)addRectWithFormatAndTags:(NSString*)name value:(WFRect*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addRectArray:(NSString*)name value:(NSArray* /* WFRect* */)value;
-- (void)addRectArrayWithFormat:(NSString*)name value:(NSArray* /* WFRect* */)value format:(WFDLoggingFieldFormat)format;
-- (void)addRectArrayWithFormatAndTags:(NSString*)name
-                                value:(NSArray* /* WFRect* */)value
-                               format:(WFDLoggingFieldFormat)format
-                                 tags:(int)tags;
+- (void)addEmpty:(NSString *)name;
+- (void)addEmptyWithFormat:(NSString *)name format:(WFDLoggingFieldFormat)format;
+- (void)addEmptyWithFormatAndTags:(NSString *)name format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addUInt8:(NSString *)name value:(uint8_t)value;
+- (void)addUInt8WithFormat:(NSString *)name value:(uint8_t)value format:(WFDLoggingFieldFormat)format;
+- (void)addUInt8WithFormatAndTags:(NSString *)name value:(uint8_t)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addUInt8Array:(NSString *)name value:(NSArray* /* uint8_t */)value;
+- (void)addUInt8ArrayWithFormat:(NSString *)name value:(NSArray* /* uint8_t */)value format:(WFDLoggingFieldFormat)format;
+- (void)addUInt8ArrayWithFormatAndTags:(NSString *)name value:(NSArray* /* uint8_t */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addInt16:(NSString *)name value:(int16_t)value;
+- (void)addInt16WithFormat:(NSString *)name value:(int16_t)value format:(WFDLoggingFieldFormat)format;
+- (void)addInt16WithFormatAndTags:(NSString *)name value:(int16_t)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addInt16Array:(NSString *)name value:(NSArray* /* int16_t */)value;
+- (void)addInt16ArrayWithFormat:(NSString *)name value:(NSArray* /* int16_t */)value format:(WFDLoggingFieldFormat)format;
+- (void)addInt16ArrayWithFormatAndTags:(NSString *)name value:(NSArray* /* int16_t */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addUInt16:(NSString *)name value:(unsigned short)value;
+- (void)addUInt16WithFormat:(NSString *)name value:(unsigned short)value format:(WFDLoggingFieldFormat)format;
+- (void)addUInt16WithFormatAndTags:(NSString *)name value:(unsigned short)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addUInt16Array:(NSString *)name value:(NSArray* /* unsigned short */)value;
+- (void)addUInt16ArrayWithFormat:(NSString *)name value:(NSArray* /* unsigned short */)value format:(WFDLoggingFieldFormat)format;
+- (void)addUInt16ArrayWithFormatAndTags:(NSString *)name value:(NSArray* /* unsigned short */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addInt32:(NSString *)name value:(int)value;
+- (void)addInt32WithFormat:(NSString *)name value:(int)value format:(WFDLoggingFieldFormat)format;
+- (void)addInt32WithFormatAndTags:(NSString *)name value:(int)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addInt32Array:(NSString *)name value:(NSArray* /* int */)value;
+- (void)addInt32ArrayWithFormat:(NSString *)name value:(NSArray* /* int */)value format:(WFDLoggingFieldFormat)format;
+- (void)addInt32ArrayWithFormatAndTags:(NSString *)name value:(NSArray* /* int */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addUInt32:(NSString *)name value:(unsigned int)value;
+- (void)addUInt32WithFormat:(NSString *)name value:(unsigned int)value format:(WFDLoggingFieldFormat)format;
+- (void)addUInt32WithFormatAndTags:(NSString *)name value:(unsigned int)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addUInt32Array:(NSString *)name value:(NSArray* /* unsigned int */)value;
+- (void)addUInt32ArrayWithFormat:(NSString *)name value:(NSArray* /* unsigned int */)value format:(WFDLoggingFieldFormat)format;
+- (void)addUInt32ArrayWithFormatAndTags:(NSString *)name value:(NSArray* /* unsigned int */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addInt64:(NSString *)name value:(int64_t)value;
+- (void)addInt64WithFormat:(NSString *)name value:(int64_t)value format:(WFDLoggingFieldFormat)format;
+- (void)addInt64WithFormatAndTags:(NSString *)name value:(int64_t)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addInt64Array:(NSString *)name value:(NSArray* /* int64_t */)value;
+- (void)addInt64ArrayWithFormat:(NSString *)name value:(NSArray* /* int64_t */)value format:(WFDLoggingFieldFormat)format;
+- (void)addInt64ArrayWithFormatAndTags:(NSString *)name value:(NSArray* /* int64_t */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addUInt64:(NSString *)name value:(uint64_t)value;
+- (void)addUInt64WithFormat:(NSString *)name value:(uint64_t)value format:(WFDLoggingFieldFormat)format;
+- (void)addUInt64WithFormatAndTags:(NSString *)name value:(uint64_t)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addUInt64Array:(NSString *)name value:(NSArray* /* uint64_t */)value;
+- (void)addUInt64ArrayWithFormat:(NSString *)name value:(NSArray* /* uint64_t */)value format:(WFDLoggingFieldFormat)format;
+- (void)addUInt64ArrayWithFormatAndTags:(NSString *)name value:(NSArray* /* uint64_t */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addSingle:(NSString *)name value:(float)value;
+- (void)addSingleWithFormat:(NSString *)name value:(float)value format:(WFDLoggingFieldFormat)format;
+- (void)addSingleWithFormatAndTags:(NSString *)name value:(float)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addSingleArray:(NSString *)name value:(NSArray* /* float */)value;
+- (void)addSingleArrayWithFormat:(NSString *)name value:(NSArray* /* float */)value format:(WFDLoggingFieldFormat)format;
+- (void)addSingleArrayWithFormatAndTags:(NSString *)name value:(NSArray* /* float */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addDouble:(NSString *)name value:(double)value;
+- (void)addDoubleWithFormat:(NSString *)name value:(double)value format:(WFDLoggingFieldFormat)format;
+- (void)addDoubleWithFormatAndTags:(NSString *)name value:(double)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addDoubleArray:(NSString *)name value:(NSArray* /* double */)value;
+- (void)addDoubleArrayWithFormat:(NSString *)name value:(NSArray* /* double */)value format:(WFDLoggingFieldFormat)format;
+- (void)addDoubleArrayWithFormatAndTags:(NSString *)name value:(NSArray* /* double */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addChar16:(NSString *)name value:(wchar_t)value;
+- (void)addChar16WithFormat:(NSString *)name value:(wchar_t)value format:(WFDLoggingFieldFormat)format;
+- (void)addChar16WithFormatAndTags:(NSString *)name value:(wchar_t)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addChar16Array:(NSString *)name value:(NSArray* /* wchar_t */)value;
+- (void)addChar16ArrayWithFormat:(NSString *)name value:(NSArray* /* wchar_t */)value format:(WFDLoggingFieldFormat)format;
+- (void)addChar16ArrayWithFormatAndTags:(NSString *)name value:(NSArray* /* wchar_t */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addBoolean:(NSString *)name value:(BOOL)value;
+- (void)addBooleanWithFormat:(NSString *)name value:(BOOL)value format:(WFDLoggingFieldFormat)format;
+- (void)addBooleanWithFormatAndTags:(NSString *)name value:(BOOL)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addBooleanArray:(NSString *)name value:(NSArray* /* BOOL */)value;
+- (void)addBooleanArrayWithFormat:(NSString *)name value:(NSArray* /* BOOL */)value format:(WFDLoggingFieldFormat)format;
+- (void)addBooleanArrayWithFormatAndTags:(NSString *)name value:(NSArray* /* BOOL */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addString:(NSString *)name value:(NSString *)value;
+- (void)addStringWithFormat:(NSString *)name value:(NSString *)value format:(WFDLoggingFieldFormat)format;
+- (void)addStringWithFormatAndTags:(NSString *)name value:(NSString *)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addStringArray:(NSString *)name value:(NSArray* /* NSString * */)value;
+- (void)addStringArrayWithFormat:(NSString *)name value:(NSArray* /* NSString * */)value format:(WFDLoggingFieldFormat)format;
+- (void)addStringArrayWithFormatAndTags:(NSString *)name value:(NSArray* /* NSString * */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addGuid:(NSString *)name value:(WFGUID*)value;
+- (void)addGuidWithFormat:(NSString *)name value:(WFGUID*)value format:(WFDLoggingFieldFormat)format;
+- (void)addGuidWithFormatAndTags:(NSString *)name value:(WFGUID*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addGuidArray:(NSString *)name value:(NSArray* /* WFGUID* */)value;
+- (void)addGuidArrayWithFormat:(NSString *)name value:(NSArray* /* WFGUID* */)value format:(WFDLoggingFieldFormat)format;
+- (void)addGuidArrayWithFormatAndTags:(NSString *)name value:(NSArray* /* WFGUID* */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addDateTime:(NSString *)name value:(WFDateTime*)value;
+- (void)addDateTimeWithFormat:(NSString *)name value:(WFDateTime*)value format:(WFDLoggingFieldFormat)format;
+- (void)addDateTimeWithFormatAndTags:(NSString *)name value:(WFDateTime*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addDateTimeArray:(NSString *)name value:(NSArray* /* WFDateTime* */)value;
+- (void)addDateTimeArrayWithFormat:(NSString *)name value:(NSArray* /* WFDateTime* */)value format:(WFDLoggingFieldFormat)format;
+- (void)addDateTimeArrayWithFormatAndTags:(NSString *)name value:(NSArray* /* WFDateTime* */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addTimeSpan:(NSString *)name value:(WFTimeSpan*)value;
+- (void)addTimeSpanWithFormat:(NSString *)name value:(WFTimeSpan*)value format:(WFDLoggingFieldFormat)format;
+- (void)addTimeSpanWithFormatAndTags:(NSString *)name value:(WFTimeSpan*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addTimeSpanArray:(NSString *)name value:(NSArray* /* WFTimeSpan* */)value;
+- (void)addTimeSpanArrayWithFormat:(NSString *)name value:(NSArray* /* WFTimeSpan* */)value format:(WFDLoggingFieldFormat)format;
+- (void)addTimeSpanArrayWithFormatAndTags:(NSString *)name value:(NSArray* /* WFTimeSpan* */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addPoint:(NSString *)name value:(WFPoint*)value;
+- (void)addPointWithFormat:(NSString *)name value:(WFPoint*)value format:(WFDLoggingFieldFormat)format;
+- (void)addPointWithFormatAndTags:(NSString *)name value:(WFPoint*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addPointArray:(NSString *)name value:(NSArray* /* WFPoint* */)value;
+- (void)addPointArrayWithFormat:(NSString *)name value:(NSArray* /* WFPoint* */)value format:(WFDLoggingFieldFormat)format;
+- (void)addPointArrayWithFormatAndTags:(NSString *)name value:(NSArray* /* WFPoint* */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addSize:(NSString *)name value:(WFSize*)value;
+- (void)addSizeWithFormat:(NSString *)name value:(WFSize*)value format:(WFDLoggingFieldFormat)format;
+- (void)addSizeWithFormatAndTags:(NSString *)name value:(WFSize*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addSizeArray:(NSString *)name value:(NSArray* /* WFSize* */)value;
+- (void)addSizeArrayWithFormat:(NSString *)name value:(NSArray* /* WFSize* */)value format:(WFDLoggingFieldFormat)format;
+- (void)addSizeArrayWithFormatAndTags:(NSString *)name value:(NSArray* /* WFSize* */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addRect:(NSString *)name value:(WFRect*)value;
+- (void)addRectWithFormat:(NSString *)name value:(WFRect*)value format:(WFDLoggingFieldFormat)format;
+- (void)addRectWithFormatAndTags:(NSString *)name value:(WFRect*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addRectArray:(NSString *)name value:(NSArray* /* WFRect* */)value;
+- (void)addRectArrayWithFormat:(NSString *)name value:(NSArray* /* WFRect* */)value format:(WFDLoggingFieldFormat)format;
+- (void)addRectArrayWithFormatAndTags:(NSString *)name value:(NSArray* /* WFRect* */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
 @end
 
 #endif // __WFDLoggingFields_DEFINED__
@@ -566,39 +478,29 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 
 OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDLoggingActivity : RTObject <WFIClosable, WFDILoggingTarget>
-+ (WFDLoggingActivity*)makeLoggingActivity:(NSString*)activityName loggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel ACTIVATOR;
-+ (WFDLoggingActivity*)makeLoggingActivityWithLevel:(NSString*)activityName
-                                     loggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel
-                                              level:(WFDLoggingLevel)level ACTIVATOR;
++ (WFDLoggingActivity*)makeLoggingActivity:(NSString *)activityName loggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel ACTIVATOR;
++ (WFDLoggingActivity*)makeLoggingActivityWithLevel:(NSString *)activityName loggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel level:(WFDLoggingLevel)level ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFGUID* id;
-@property (readonly) NSString* name;
+@property (readonly) NSString * name;
 @property (readonly) WFDLoggingChannel* channel;
 - (void)close;
-- (void)stopActivity:(NSString*)stopEventName;
-- (void)stopActivityWithFields:(NSString*)stopEventName fields:(WFDLoggingFields*)fields;
-- (void)stopActivityWithFieldsAndOptions:(NSString*)stopEventName fields:(WFDLoggingFields*)fields options:(WFDLoggingOptions*)options;
+- (void)stopActivity:(NSString *)stopEventName;
+- (void)stopActivityWithFields:(NSString *)stopEventName fields:(WFDLoggingFields*)fields;
+- (void)stopActivityWithFieldsAndOptions:(NSString *)stopEventName fields:(WFDLoggingFields*)fields options:(WFDLoggingOptions*)options;
 - (BOOL)isEnabled;
 - (BOOL)isEnabledWithLevel:(WFDLoggingLevel)level;
 - (BOOL)isEnabledWithLevelAndKeywords:(WFDLoggingLevel)level keywords:(int64_t)keywords;
-- (void)logEvent:(NSString*)eventName;
-- (void)logEventWithFields:(NSString*)eventName fields:(WFDLoggingFields*)fields;
-- (void)logEventWithFieldsAndLevel:(NSString*)eventName fields:(WFDLoggingFields*)fields level:(WFDLoggingLevel)level;
-- (void)logEventWithFieldsAndOptions:(NSString*)eventName
-                              fields:(WFDLoggingFields*)fields
-                               level:(WFDLoggingLevel)level
-                             options:(WFDLoggingOptions*)options;
-- (WFDLoggingActivity*)startActivity:(NSString*)startEventName;
-- (WFDLoggingActivity*)startActivityWithFields:(NSString*)startEventName fields:(WFDLoggingFields*)fields;
-- (WFDLoggingActivity*)startActivityWithFieldsAndLevel:(NSString*)startEventName
-                                                fields:(WFDLoggingFields*)fields
-                                                 level:(WFDLoggingLevel)level;
-- (WFDLoggingActivity*)startActivityWithFieldsAndOptions:(NSString*)startEventName
-                                                  fields:(WFDLoggingFields*)fields
-                                                   level:(WFDLoggingLevel)level
-                                                 options:(WFDLoggingOptions*)options;
+- (void)logEvent:(NSString *)eventName;
+- (void)logEventWithFields:(NSString *)eventName fields:(WFDLoggingFields*)fields;
+- (void)logEventWithFieldsAndLevel:(NSString *)eventName fields:(WFDLoggingFields*)fields level:(WFDLoggingLevel)level;
+- (void)logEventWithFieldsAndOptions:(NSString *)eventName fields:(WFDLoggingFields*)fields level:(WFDLoggingLevel)level options:(WFDLoggingOptions*)options;
+- (WFDLoggingActivity*)startActivity:(NSString *)startEventName;
+- (WFDLoggingActivity*)startActivityWithFields:(NSString *)startEventName fields:(WFDLoggingFields*)fields;
+- (WFDLoggingActivity*)startActivityWithFieldsAndLevel:(NSString *)startEventName fields:(WFDLoggingFields*)fields level:(WFDLoggingLevel)level;
+- (WFDLoggingActivity*)startActivityWithFieldsAndOptions:(NSString *)startEventName fields:(WFDLoggingFields*)fields level:(WFDLoggingLevel)level options:(WFDLoggingOptions*)options;
 @end
 
 #endif // __WFDLoggingActivity_DEFINED__
@@ -609,42 +511,34 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 
 OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDLoggingChannel : RTObject <WFDILoggingChannel, WFIClosable, WFDILoggingTarget>
-+ (WFDLoggingChannel*)make:(NSString*)name ACTIVATOR;
-+ (WFDLoggingChannel*)makeWithOptions:(NSString*)name options:(WFDLoggingChannelOptions*)options ACTIVATOR;
-+ (WFDLoggingChannel*)makeWithOptionsAndId:(NSString*)name options:(WFDLoggingChannelOptions*)options id:(WFGUID*)id ACTIVATOR;
++ (WFDLoggingChannel*)make:(NSString *)name ACTIVATOR;
++ (WFDLoggingChannel*)makeWithOptions:(NSString *)name options:(WFDLoggingChannelOptions*)options ACTIVATOR;
++ (WFDLoggingChannel*)makeWithOptionsAndId:(NSString *)name options:(WFDLoggingChannelOptions*)options id:(WFGUID*)id ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL enabled;
 @property (readonly) WFDLoggingLevel level;
-@property (readonly) NSString* name;
+@property (readonly) NSString * name;
 @property (readonly) WFGUID* id;
-- (EventRegistrationToken)addLoggingEnabledEvent:(void (^)(RTObject<WFDILoggingChannel>*, RTObject*))del;
+- (EventRegistrationToken)addLoggingEnabledEvent:(void(^)(RTObject<WFDILoggingChannel>*, RTObject*))del;
 - (void)removeLoggingEnabledEvent:(EventRegistrationToken)tok;
-- (void)logMessage:(NSString*)eventString;
-- (void)logMessageWithLevel:(NSString*)eventString level:(WFDLoggingLevel)level;
-- (void)logValuePair:(NSString*)value1 value2:(int)value2;
-- (void)logValuePairWithLevel:(NSString*)value1 value2:(int)value2 level:(WFDLoggingLevel)level;
+- (void)logMessage:(NSString *)eventString;
+- (void)logMessageWithLevel:(NSString *)eventString level:(WFDLoggingLevel)level;
+- (void)logValuePair:(NSString *)value1 value2:(int)value2;
+- (void)logValuePairWithLevel:(NSString *)value1 value2:(int)value2 level:(WFDLoggingLevel)level;
 - (void)close;
 - (BOOL)isEnabled;
 - (BOOL)isEnabledWithLevel:(WFDLoggingLevel)level;
 - (BOOL)isEnabledWithLevelAndKeywords:(WFDLoggingLevel)level keywords:(int64_t)keywords;
-- (void)logEvent:(NSString*)eventName;
-- (void)logEventWithFields:(NSString*)eventName fields:(WFDLoggingFields*)fields;
-- (void)logEventWithFieldsAndLevel:(NSString*)eventName fields:(WFDLoggingFields*)fields level:(WFDLoggingLevel)level;
-- (void)logEventWithFieldsAndOptions:(NSString*)eventName
-                              fields:(WFDLoggingFields*)fields
-                               level:(WFDLoggingLevel)level
-                             options:(WFDLoggingOptions*)options;
-- (WFDLoggingActivity*)startActivity:(NSString*)startEventName;
-- (WFDLoggingActivity*)startActivityWithFields:(NSString*)startEventName fields:(WFDLoggingFields*)fields;
-- (WFDLoggingActivity*)startActivityWithFieldsAndLevel:(NSString*)startEventName
-                                                fields:(WFDLoggingFields*)fields
-                                                 level:(WFDLoggingLevel)level;
-- (WFDLoggingActivity*)startActivityWithFieldsAndOptions:(NSString*)startEventName
-                                                  fields:(WFDLoggingFields*)fields
-                                                   level:(WFDLoggingLevel)level
-                                                 options:(WFDLoggingOptions*)options;
+- (void)logEvent:(NSString *)eventName;
+- (void)logEventWithFields:(NSString *)eventName fields:(WFDLoggingFields*)fields;
+- (void)logEventWithFieldsAndLevel:(NSString *)eventName fields:(WFDLoggingFields*)fields level:(WFDLoggingLevel)level;
+- (void)logEventWithFieldsAndOptions:(NSString *)eventName fields:(WFDLoggingFields*)fields level:(WFDLoggingLevel)level options:(WFDLoggingOptions*)options;
+- (WFDLoggingActivity*)startActivity:(NSString *)startEventName;
+- (WFDLoggingActivity*)startActivityWithFields:(NSString *)startEventName fields:(WFDLoggingFields*)fields;
+- (WFDLoggingActivity*)startActivityWithFieldsAndLevel:(NSString *)startEventName fields:(WFDLoggingFields*)fields level:(WFDLoggingLevel)level;
+- (WFDLoggingActivity*)startActivityWithFieldsAndOptions:(NSString *)startEventName fields:(WFDLoggingFields*)fields level:(WFDLoggingLevel)level options:(WFDLoggingOptions*)options;
 @end
 
 #endif // __WFDLoggingChannel_DEFINED__
@@ -655,15 +549,12 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 
 OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDLoggingSession : RTObject <WFDILoggingSession, WFIClosable>
-+ (WFDLoggingSession*)make:(NSString*)name ACTIVATOR;
++ (WFDLoggingSession*)make:(NSString *)name ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* name;
-- (void)saveToFileAsync:(RTObject<WSIStorageFolder>*)folder
-               fileName:(NSString*)fileName
-                success:(void (^)(WSStorageFile*))success
-                failure:(void (^)(NSError*))failure;
+@property (readonly) NSString * name;
+- (void)saveToFileAsync:(RTObject<WSIStorageFolder>*)folder fileName:(NSString *)fileName success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)addLoggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel;
 - (void)addLoggingChannelWithLevel:(RTObject<WFDILoggingChannel>*)loggingChannel maxLevel:(WFDLoggingLevel)maxLevel;
 - (void)removeLoggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel;
@@ -692,12 +583,12 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 
 OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDFileLoggingSession : RTObject <WFDIFileLoggingSession, WFIClosable>
-+ (WFDFileLoggingSession*)make:(NSString*)name ACTIVATOR;
++ (WFDFileLoggingSession*)make:(NSString *)name ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* name;
-- (EventRegistrationToken)addLogFileGeneratedEvent:(void (^)(RTObject<WFDIFileLoggingSession>*, WFDLogFileGeneratedEventArgs*))del;
+@property (readonly) NSString * name;
+- (EventRegistrationToken)addLogFileGeneratedEvent:(void(^)(RTObject<WFDIFileLoggingSession>*, WFDLogFileGeneratedEventArgs*))del;
 - (void)removeLogFileGeneratedEvent:(EventRegistrationToken)tok;
 - (void)addLoggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel;
 - (void)addLoggingChannelWithLevel:(RTObject<WFDILoggingChannel>*)loggingChannel maxLevel:(WFDLoggingLevel)maxLevel;
@@ -707,3 +598,4 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @end
 
 #endif // __WFDFileLoggingSession_DEFINED__
+

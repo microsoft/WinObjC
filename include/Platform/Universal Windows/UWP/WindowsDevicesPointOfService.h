@@ -27,35 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WDPUnifiedPosErrorData, WDPBarcodeScannerStatusUpdatedEventArgs, WDPBarcodeSymbologies, WDPBarcodeScannerReport,
-    WDPBarcodeScannerDataReceivedEventArgs, WDPBarcodeScannerErrorOccurredEventArgs, WDPBarcodeScannerImagePreviewReceivedEventArgs,
-    WDPBarcodeScannerCapabilities, WDPBarcodeScanner, WDPClaimedBarcodeScanner, WDPMagneticStripeReaderEncryptionAlgorithms,
-    WDPMagneticStripeReaderCardTypes, WDPMagneticStripeReaderTrackData, WDPMagneticStripeReaderReport,
-    WDPMagneticStripeReaderBankCardDataReceivedEventArgs, WDPMagneticStripeReaderAamvaCardDataReceivedEventArgs,
-    WDPMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs, WDPMagneticStripeReaderErrorOccurredEventArgs,
-    WDPMagneticStripeReaderStatusUpdatedEventArgs, WDPMagneticStripeReaderCapabilities, WDPClaimedMagneticStripeReader,
-    WDPMagneticStripeReader, WDPPosPrinterCharacterSetIds, WDPReceiptPrinterCapabilities, WDPSlipPrinterCapabilities,
-    WDPJournalPrinterCapabilities, WDPPosPrinterCapabilities, WDPPosPrinterStatus, WDPPosPrinterStatusUpdatedEventArgs,
-    WDPPosPrinterReleaseDeviceRequestedEventArgs, WDPPosPrinter, WDPClaimedPosPrinter, WDPReceiptPrintJob, WDPSlipPrintJob,
-    WDPJournalPrintJob, WDPClaimedReceiptPrinter, WDPClaimedSlipPrinter, WDPClaimedJournalPrinter, WDPCashDrawerStatus,
-    WDPCashDrawerStatusUpdatedEventArgs, WDPCashDrawerCapabilities, WDPCashDrawer, WDPCashDrawerClosedEventArgs,
-    WDPCashDrawerOpenedEventArgs, WDPCashDrawerEventSource, WDPClaimedCashDrawer, WDPCashDrawerCloseAlarm;
-@protocol WDPIUnifiedPosErrorData
-, WDPIBarcodeScannerStatusUpdatedEventArgs, WDPIBarcodeSymbologiesStatics, WDPIBarcodeScannerDataReceivedEventArgs,
-    WDPIBarcodeScannerReport, WDPIBarcodeScannerErrorOccurredEventArgs, WDPIBarcodeScannerImagePreviewReceivedEventArgs,
-    WDPIBarcodeScannerCapabilities, WDPIBarcodeScannerCapabilities1, WDPIBarcodeScannerStatics, WDPIBarcodeScanner,
-    WDPIMagneticStripeReaderEncryptionAlgorithmsStatics, WDPIMagneticStripeReaderCardTypesStatics, WDPIMagneticStripeReaderTrackData,
-    WDPIMagneticStripeReaderReport, WDPIMagneticStripeReaderBankCardDataReceivedEventArgs,
-    WDPIMagneticStripeReaderAamvaCardDataReceivedEventArgs, WDPIMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs,
-    WDPIMagneticStripeReaderErrorOccurredEventArgs, WDPIMagneticStripeReaderStatusUpdatedEventArgs, WDPIMagneticStripeReaderCapabilities,
-    WDPIMagneticStripeReaderStatics, WDPIMagneticStripeReader, WDPIPosPrinterCharacterSetIdsStatics, WDPICommonPosPrintStationCapabilities,
-    WDPICommonReceiptSlipCapabilities, WDPIReceiptPrinterCapabilities, WDPISlipPrinterCapabilities, WDPIJournalPrinterCapabilities,
-    WDPIPosPrinterCapabilities, WDPIPosPrinterStatus, WDPIPosPrinterStatusUpdatedEventArgs, WDPIPosPrinterReleaseDeviceRequestedEventArgs,
-    WDPIPosPrinterStatics, WDPIPosPrinter, WDPIPosPrinterJob, WDPIReceiptOrSlipJob, WDPIReceiptPrintJob, WDPICommonClaimedPosPrinterStation,
-    WDPIClaimedReceiptPrinter, WDPIClaimedSlipPrinter, WDPIClaimedJournalPrinter, WDPICashDrawerStatusUpdatedEventArgs,
-    WDPICashDrawerStatus, WDPICashDrawerCapabilities, WDPICashDrawerEventSourceEventArgs, WDPICashDrawerEventSource, WDPICashDrawerStatics,
-    WDPICashDrawer, WDPICashDrawerCloseAlarm, WDPIClaimedBarcodeScanner, WDPIClaimedBarcodeScanner1, WDPIClaimedMagneticStripeReader,
-    WDPIClaimedPosPrinter, WDPIClaimedCashDrawer;
+@class WDPUnifiedPosErrorData, WDPBarcodeScannerStatusUpdatedEventArgs, WDPBarcodeSymbologies, WDPBarcodeScannerReport, WDPBarcodeScannerDataReceivedEventArgs, WDPBarcodeScannerErrorOccurredEventArgs, WDPBarcodeScannerImagePreviewReceivedEventArgs, WDPBarcodeScannerCapabilities, WDPBarcodeScanner, WDPClaimedBarcodeScanner, WDPMagneticStripeReaderEncryptionAlgorithms, WDPMagneticStripeReaderCardTypes, WDPMagneticStripeReaderTrackData, WDPMagneticStripeReaderReport, WDPMagneticStripeReaderBankCardDataReceivedEventArgs, WDPMagneticStripeReaderAamvaCardDataReceivedEventArgs, WDPMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs, WDPMagneticStripeReaderErrorOccurredEventArgs, WDPMagneticStripeReaderStatusUpdatedEventArgs, WDPMagneticStripeReaderCapabilities, WDPClaimedMagneticStripeReader, WDPMagneticStripeReader, WDPPosPrinterCharacterSetIds, WDPReceiptPrinterCapabilities, WDPSlipPrinterCapabilities, WDPJournalPrinterCapabilities, WDPPosPrinterCapabilities, WDPPosPrinterStatus, WDPPosPrinterStatusUpdatedEventArgs, WDPPosPrinterReleaseDeviceRequestedEventArgs, WDPPosPrinter, WDPClaimedPosPrinter, WDPReceiptPrintJob, WDPSlipPrintJob, WDPJournalPrintJob, WDPClaimedReceiptPrinter, WDPClaimedSlipPrinter, WDPClaimedJournalPrinter, WDPCashDrawerStatus, WDPCashDrawerStatusUpdatedEventArgs, WDPCashDrawerCapabilities, WDPCashDrawer, WDPCashDrawerClosedEventArgs, WDPCashDrawerOpenedEventArgs, WDPCashDrawerEventSource, WDPClaimedCashDrawer, WDPCashDrawerCloseAlarm;
+@protocol WDPIUnifiedPosErrorData, WDPIBarcodeScannerStatusUpdatedEventArgs, WDPIBarcodeSymbologiesStatics, WDPIBarcodeScannerDataReceivedEventArgs, WDPIBarcodeScannerReport, WDPIBarcodeScannerErrorOccurredEventArgs, WDPIBarcodeScannerImagePreviewReceivedEventArgs, WDPIBarcodeScannerCapabilities, WDPIBarcodeScannerCapabilities1, WDPIBarcodeScannerStatics, WDPIBarcodeScanner, WDPIBarcodeScanner2, WDPIMagneticStripeReaderEncryptionAlgorithmsStatics, WDPIMagneticStripeReaderCardTypesStatics, WDPIMagneticStripeReaderTrackData, WDPIMagneticStripeReaderReport, WDPIMagneticStripeReaderBankCardDataReceivedEventArgs, WDPIMagneticStripeReaderAamvaCardDataReceivedEventArgs, WDPIMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs, WDPIMagneticStripeReaderErrorOccurredEventArgs, WDPIMagneticStripeReaderStatusUpdatedEventArgs, WDPIMagneticStripeReaderCapabilities, WDPIMagneticStripeReaderStatics, WDPIMagneticStripeReader, WDPIPosPrinterCharacterSetIdsStatics, WDPICommonPosPrintStationCapabilities, WDPICommonReceiptSlipCapabilities, WDPIReceiptPrinterCapabilities, WDPISlipPrinterCapabilities, WDPIJournalPrinterCapabilities, WDPIPosPrinterCapabilities, WDPIPosPrinterStatus, WDPIPosPrinterStatusUpdatedEventArgs, WDPIPosPrinterReleaseDeviceRequestedEventArgs, WDPIPosPrinterStatics, WDPIPosPrinter, WDPIPosPrinterJob, WDPIReceiptOrSlipJob, WDPIReceiptPrintJob, WDPICommonClaimedPosPrinterStation, WDPIClaimedReceiptPrinter, WDPIClaimedSlipPrinter, WDPIClaimedJournalPrinter, WDPICashDrawerStatusUpdatedEventArgs, WDPICashDrawerStatus, WDPICashDrawerCapabilities, WDPICashDrawerEventSourceEventArgs, WDPICashDrawerEventSource, WDPICashDrawerStatics, WDPICashDrawer, WDPICashDrawerCloseAlarm, WDPIClaimedBarcodeScanner, WDPIClaimedBarcodeScanner1, WDPIClaimedMagneticStripeReader, WDPIClaimedPosPrinter, WDPIClaimedCashDrawer;
 
 // Windows.Devices.PointOfService.UnifiedPosErrorSeverity
 enum _WDPUnifiedPosErrorSeverity {
@@ -369,8 +342,8 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 #define __WDPIPosPrinterJob_DEFINED__
 
 @protocol WDPIPosPrinterJob
-- (void)print:(NSString*)data;
-- (void)printLine:(NSString*)data;
+- (void)print:(NSString *)data;
+- (void)printLine:(NSString *)data;
 - (void)printNewline;
 - (void)executeAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
@@ -390,41 +363,19 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 - (void)setPrintRotation:(WDPPosPrinterRotation)value includeBitmaps:(BOOL)includeBitmaps;
 - (void)setPrintArea:(WFRect*)value;
 - (void)setBitmap:(unsigned int)bitmapNumber bitmap:(WGIBitmapFrame*)bitmap alignment:(WDPPosPrinterAlignment)alignment;
-- (void)setBitmapCustomWidthStandardAlign:(unsigned int)bitmapNumber
-                                   bitmap:(WGIBitmapFrame*)bitmap
-                                alignment:(WDPPosPrinterAlignment)alignment
-                                    width:(unsigned int)width;
+- (void)setBitmapCustomWidthStandardAlign:(unsigned int)bitmapNumber bitmap:(WGIBitmapFrame*)bitmap alignment:(WDPPosPrinterAlignment)alignment width:(unsigned int)width;
 - (void)setCustomAlignedBitmap:(unsigned int)bitmapNumber bitmap:(WGIBitmapFrame*)bitmap alignmentDistance:(unsigned int)alignmentDistance;
-- (void)setBitmapCustomWidthCustomAlign:(unsigned int)bitmapNumber
-                                 bitmap:(WGIBitmapFrame*)bitmap
-                      alignmentDistance:(unsigned int)alignmentDistance
-                                  width:(unsigned int)width;
+- (void)setBitmapCustomWidthCustomAlign:(unsigned int)bitmapNumber bitmap:(WGIBitmapFrame*)bitmap alignmentDistance:(unsigned int)alignmentDistance width:(unsigned int)width;
 - (void)printSavedBitmap:(unsigned int)bitmapNumber;
-- (void)drawRuledLine:(NSString*)positionList
-        lineDirection:(WDPPosPrinterLineDirection)lineDirection
-            lineWidth:(unsigned int)lineWidth
-            lineStyle:(WDPPosPrinterLineStyle)lineStyle
-            lineColor:(unsigned int)lineColor;
-- (void)printBarcode:(NSString*)data
-           symbology:(unsigned int)symbology
-              height:(unsigned int)height
-               width:(unsigned int)width
-        textPosition:(WDPPosPrinterBarcodeTextPosition)textPosition
-           alignment:(WDPPosPrinterAlignment)alignment;
-- (void)printBarcodeCustomAlign:(NSString*)data
-                      symbology:(unsigned int)symbology
-                         height:(unsigned int)height
-                          width:(unsigned int)width
-                   textPosition:(WDPPosPrinterBarcodeTextPosition)textPosition
-              alignmentDistance:(unsigned int)alignmentDistance;
+- (void)drawRuledLine:(NSString *)positionList lineDirection:(WDPPosPrinterLineDirection)lineDirection lineWidth:(unsigned int)lineWidth lineStyle:(WDPPosPrinterLineStyle)lineStyle lineColor:(unsigned int)lineColor;
+- (void)printBarcode:(NSString *)data symbology:(unsigned int)symbology height:(unsigned int)height width:(unsigned int)width textPosition:(WDPPosPrinterBarcodeTextPosition)textPosition alignment:(WDPPosPrinterAlignment)alignment;
+- (void)printBarcodeCustomAlign:(NSString *)data symbology:(unsigned int)symbology height:(unsigned int)height width:(unsigned int)width textPosition:(WDPPosPrinterBarcodeTextPosition)textPosition alignmentDistance:(unsigned int)alignmentDistance;
 - (void)printBitmap:(WGIBitmapFrame*)bitmap alignment:(WDPPosPrinterAlignment)alignment;
 - (void)printBitmapCustomWidthStandardAlign:(WGIBitmapFrame*)bitmap alignment:(WDPPosPrinterAlignment)alignment width:(unsigned int)width;
 - (void)printCustomAlignedBitmap:(WGIBitmapFrame*)bitmap alignmentDistance:(unsigned int)alignmentDistance;
-- (void)printBitmapCustomWidthCustomAlign:(WGIBitmapFrame*)bitmap
-                        alignmentDistance:(unsigned int)alignmentDistance
-                                    width:(unsigned int)width;
-- (void)print:(NSString*)data;
-- (void)printLine:(NSString*)data;
+- (void)printBitmapCustomWidthCustomAlign:(WGIBitmapFrame*)bitmap alignmentDistance:(unsigned int)alignmentDistance width:(unsigned int)width;
+- (void)print:(NSString *)data;
+- (void)printLine:(NSString *)data;
 - (void)printNewline;
 - (void)executeAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
@@ -453,7 +404,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @property unsigned int lineHeight;
 @property unsigned int lineSpacing;
 @property (readonly) unsigned int lineWidth;
-- (BOOL)validateData:(NSString*)data;
+- (BOOL)validateData:(NSString *)data;
 @end
 
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
@@ -486,7 +437,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int extendedReason;
-@property (readonly) NSString* message;
+@property (readonly) NSString * message;
 @property (readonly) WDPUnifiedPosErrorReason reason;
 @property (readonly) WDPUnifiedPosErrorSeverity severity;
 @end
@@ -514,7 +465,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPBarcodeSymbologies : RTObject
-+ (NSString*)getName:(unsigned int)scanDataType;
++ (NSString *)getName:(unsigned int)scanDataType;
 + (unsigned int)ausPost;
 + (unsigned int)aztec;
 + (unsigned int)canPost;
@@ -697,24 +648,23 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPBarcodeScanner : RTObject
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDPBarcodeScanner*))success failure:(void (^)(NSError*))failure;
-+ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDPBarcodeScanner*))success failure:(void (^)(NSError*))failure;
-+ (NSString*)getDeviceSelector;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPBarcodeScanner*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPBarcodeScannerCapabilities* capabilities;
-@property (readonly) NSString* deviceId;
-- (EventRegistrationToken)addStatusUpdatedEvent:(void (^)(WDPBarcodeScanner*, WDPBarcodeScannerStatusUpdatedEventArgs*))del;
+@property (readonly) NSString * deviceId;
+@property (readonly) NSString * videoDeviceId;
+- (EventRegistrationToken)addStatusUpdatedEvent:(void(^)(WDPBarcodeScanner*, WDPBarcodeScannerStatusUpdatedEventArgs*))del;
 - (void)removeStatusUpdatedEvent:(EventRegistrationToken)tok;
 - (void)claimScannerAsyncWithSuccess:(void (^)(WDPClaimedBarcodeScanner*))success failure:(void (^)(NSError*))failure;
-- (void)checkHealthAsync:(WDPUnifiedPosHealthCheckLevel)level success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
+- (void)checkHealthAsync:(WDPUnifiedPosHealthCheckLevel)level success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 - (void)getSupportedSymbologiesAsyncWithSuccess:(void (^)(NSArray* /* unsigned int */))success failure:(void (^)(NSError*))failure;
 - (void)isSymbologySupportedAsync:(unsigned int)barcodeSymbology success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-- (void)retrieveStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories
-                        success:(void (^)(RTObject<WSSIBuffer>*))success
-                        failure:(void (^)(NSError*))failure;
+- (void)retrieveStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 - (NSArray* /* NSString * */)getSupportedProfiles;
-- (BOOL)isProfileSupported:(NSString*)profile;
+- (BOOL)isProfileSupported:(NSString *)profile;
 @end
 
 #endif // __WDPBarcodeScanner_DEFINED__
@@ -744,20 +694,19 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 #endif
 @property BOOL isDisabledOnDataReceived;
 @property BOOL isDecodeDataEnabled;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) BOOL isEnabled;
-- (EventRegistrationToken)addDataReceivedEvent:(void (^)(WDPClaimedBarcodeScanner*, WDPBarcodeScannerDataReceivedEventArgs*))del;
+- (EventRegistrationToken)addDataReceivedEvent:(void(^)(WDPClaimedBarcodeScanner*, WDPBarcodeScannerDataReceivedEventArgs*))del;
 - (void)removeDataReceivedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addErrorOccurredEvent:(void (^)(WDPClaimedBarcodeScanner*, WDPBarcodeScannerErrorOccurredEventArgs*))del;
+- (EventRegistrationToken)addErrorOccurredEvent:(void(^)(WDPClaimedBarcodeScanner*, WDPBarcodeScannerErrorOccurredEventArgs*))del;
 - (void)removeErrorOccurredEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addImagePreviewReceivedEvent:(void (^)(WDPClaimedBarcodeScanner*,
-                                                                 WDPBarcodeScannerImagePreviewReceivedEventArgs*))del;
+- (EventRegistrationToken)addImagePreviewReceivedEvent:(void(^)(WDPClaimedBarcodeScanner*, WDPBarcodeScannerImagePreviewReceivedEventArgs*))del;
 - (void)removeImagePreviewReceivedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addReleaseDeviceRequestedEvent:(void (^)(RTObject*, WDPClaimedBarcodeScanner*))del;
+- (EventRegistrationToken)addReleaseDeviceRequestedEvent:(void(^)(RTObject*, WDPClaimedBarcodeScanner*))del;
 - (void)removeReleaseDeviceRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTriggerPressedEvent:(void (^)(RTObject*, WDPClaimedBarcodeScanner*))del;
+- (EventRegistrationToken)addTriggerPressedEvent:(void(^)(RTObject*, WDPClaimedBarcodeScanner*))del;
 - (void)removeTriggerPressedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTriggerReleasedEvent:(void (^)(RTObject*, WDPClaimedBarcodeScanner*))del;
+- (EventRegistrationToken)addTriggerReleasedEvent:(void(^)(RTObject*, WDPClaimedBarcodeScanner*))del;
 - (void)removeTriggerReleasedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)enableAsync;
 - (RTObject<WFIAsyncAction>*)disableAsync;
@@ -765,7 +714,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 - (RTObject<WFIAsyncAction>*)setActiveSymbologiesAsync:(id<NSFastEnumeration> /* unsigned int */)symbologies;
 - (RTObject<WFIAsyncAction>*)resetStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories;
 - (RTObject<WFIAsyncAction>*)updateStatisticsAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)statistics;
-- (RTObject<WFIAsyncAction>*)setActiveProfileAsync:(NSString*)profile;
+- (RTObject<WFIAsyncAction>*)setActiveProfileAsync:(NSString *)profile;
 - (void)close;
 - (RTObject<WFIAsyncAction>*)startSoftwareTriggerAsync;
 - (RTObject<WFIAsyncAction>*)stopSoftwareTriggerAsync;
@@ -847,15 +796,15 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* accountNumber;
-@property (readonly) NSString* expirationDate;
-@property (readonly) NSString* firstName;
-@property (readonly) NSString* middleInitial;
+@property (readonly) NSString * accountNumber;
+@property (readonly) NSString * expirationDate;
+@property (readonly) NSString * firstName;
+@property (readonly) NSString * middleInitial;
 @property (readonly) WDPMagneticStripeReaderReport* report;
-@property (readonly) NSString* serviceCode;
-@property (readonly) NSString* suffix;
-@property (readonly) NSString* surname;
-@property (readonly) NSString* title;
+@property (readonly) NSString * serviceCode;
+@property (readonly) NSString * suffix;
+@property (readonly) NSString * surname;
+@property (readonly) NSString * title;
 @end
 
 #endif // __WDPMagneticStripeReaderBankCardDataReceivedEventArgs_DEFINED__
@@ -869,25 +818,25 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* address;
-@property (readonly) NSString* birthDate;
-@property (readonly) NSString* city;
-@property (readonly) NSString* Class;
-@property (readonly) NSString* endorsements;
-@property (readonly) NSString* expirationDate;
-@property (readonly) NSString* eyeColor;
-@property (readonly) NSString* firstName;
-@property (readonly) NSString* gender;
-@property (readonly) NSString* hairColor;
-@property (readonly) NSString* height;
-@property (readonly) NSString* licenseNumber;
-@property (readonly) NSString* postalCode;
+@property (readonly) NSString * address;
+@property (readonly) NSString * birthDate;
+@property (readonly) NSString * city;
+@property (readonly) NSString * Class;
+@property (readonly) NSString * endorsements;
+@property (readonly) NSString * expirationDate;
+@property (readonly) NSString * eyeColor;
+@property (readonly) NSString * firstName;
+@property (readonly) NSString * gender;
+@property (readonly) NSString * hairColor;
+@property (readonly) NSString * height;
+@property (readonly) NSString * licenseNumber;
+@property (readonly) NSString * postalCode;
 @property (readonly) WDPMagneticStripeReaderReport* report;
-@property (readonly) NSString* restrictions;
-@property (readonly) NSString* state;
-@property (readonly) NSString* suffix;
-@property (readonly) NSString* surname;
-@property (readonly) NSString* weight;
+@property (readonly) NSString * restrictions;
+@property (readonly) NSString * state;
+@property (readonly) NSString * suffix;
+@property (readonly) NSString * surname;
+@property (readonly) NSString * weight;
 @end
 
 #endif // __WDPMagneticStripeReaderAamvaCardDataReceivedEventArgs_DEFINED__
@@ -950,7 +899,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPMagneticStripeReaderAuthenticationLevel authenticationLevel;
-@property (readonly) NSString* cardAuthentication;
+@property (readonly) NSString * cardAuthentication;
 @property (readonly) BOOL isIsoSupported;
 @property (readonly) BOOL isJisOneSupported;
 @property (readonly) BOOL isJisTwoSupported;
@@ -978,22 +927,18 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @property BOOL isDisabledOnDataReceived;
 @property BOOL isDecodeDataEnabled;
 @property unsigned int dataEncryptionAlgorithm;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) BOOL isDeviceAuthenticated;
 @property (readonly) BOOL isEnabled;
-- (EventRegistrationToken)addAamvaCardDataReceivedEvent:(void (^)(WDPClaimedMagneticStripeReader*,
-                                                                  WDPMagneticStripeReaderAamvaCardDataReceivedEventArgs*))del;
+- (EventRegistrationToken)addAamvaCardDataReceivedEvent:(void(^)(WDPClaimedMagneticStripeReader*, WDPMagneticStripeReaderAamvaCardDataReceivedEventArgs*))del;
 - (void)removeAamvaCardDataReceivedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addBankCardDataReceivedEvent:(void (^)(WDPClaimedMagneticStripeReader*,
-                                                                 WDPMagneticStripeReaderBankCardDataReceivedEventArgs*))del;
+- (EventRegistrationToken)addBankCardDataReceivedEvent:(void(^)(WDPClaimedMagneticStripeReader*, WDPMagneticStripeReaderBankCardDataReceivedEventArgs*))del;
 - (void)removeBankCardDataReceivedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addErrorOccurredEvent:(void (^)(WDPClaimedMagneticStripeReader*,
-                                                          WDPMagneticStripeReaderErrorOccurredEventArgs*))del;
+- (EventRegistrationToken)addErrorOccurredEvent:(void(^)(WDPClaimedMagneticStripeReader*, WDPMagneticStripeReaderErrorOccurredEventArgs*))del;
 - (void)removeErrorOccurredEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addReleaseDeviceRequestedEvent:(void (^)(RTObject*, WDPClaimedMagneticStripeReader*))del;
+- (EventRegistrationToken)addReleaseDeviceRequestedEvent:(void(^)(RTObject*, WDPClaimedMagneticStripeReader*))del;
 - (void)removeReleaseDeviceRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addVendorSpecificDataReceivedEvent:(void (^)(WDPClaimedMagneticStripeReader*,
-                                                                       WDPMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs*))del;
+- (EventRegistrationToken)addVendorSpecificDataReceivedEvent:(void(^)(WDPClaimedMagneticStripeReader*, WDPMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs*))del;
 - (void)removeVendorSpecificDataReceivedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)enableAsync;
 - (RTObject<WFIAsyncAction>*)disableAsync;
@@ -1002,7 +947,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 - (void)retrieveDeviceAuthenticationDataAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)authenticateDeviceAsync:(NSArray* /* uint8_t */)responseToken;
 - (RTObject<WFIAsyncAction>*)deAuthenticateDeviceAsync:(NSArray* /* uint8_t */)responseToken;
-- (RTObject<WFIAsyncAction>*)updateKeyAsync:(NSString*)key keyName:(NSString*)keyName;
+- (RTObject<WFIAsyncAction>*)updateKeyAsync:(NSString *)key keyName:(NSString *)keyName;
 - (RTObject<WFIAsyncAction>*)resetStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories;
 - (RTObject<WFIAsyncAction>*)updateStatisticsAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)statistics;
 - (void)close;
@@ -1017,22 +962,20 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPMagneticStripeReader : RTObject
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDPMagneticStripeReader*))success failure:(void (^)(NSError*))failure;
-+ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDPMagneticStripeReader*))success failure:(void (^)(NSError*))failure;
-+ (NSString*)getDeviceSelector;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPMagneticStripeReader*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPMagneticStripeReaderCapabilities* capabilities;
 @property (readonly) WDPMagneticStripeReaderAuthenticationProtocol deviceAuthenticationProtocol;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) NSArray* /* unsigned int */ supportedCardTypes;
-- (EventRegistrationToken)addStatusUpdatedEvent:(void (^)(WDPMagneticStripeReader*, WDPMagneticStripeReaderStatusUpdatedEventArgs*))del;
+- (EventRegistrationToken)addStatusUpdatedEvent:(void(^)(WDPMagneticStripeReader*, WDPMagneticStripeReaderStatusUpdatedEventArgs*))del;
 - (void)removeStatusUpdatedEvent:(EventRegistrationToken)tok;
-- (void)checkHealthAsync:(WDPUnifiedPosHealthCheckLevel)level success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
+- (void)checkHealthAsync:(WDPUnifiedPosHealthCheckLevel)level success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 - (void)claimReaderAsyncWithSuccess:(void (^)(WDPClaimedMagneticStripeReader*))success failure:(void (^)(NSError*))failure;
-- (void)retrieveStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories
-                        success:(void (^)(RTObject<WSSIBuffer>*))success
-                        failure:(void (^)(NSError*))failure;
+- (void)retrieveStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 - (WDPMagneticStripeReaderErrorReportingType)getErrorReportingType;
 @end
 
@@ -1224,23 +1167,21 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPPosPrinter : RTObject
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDPPosPrinter*))success failure:(void (^)(NSError*))failure;
-+ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDPPosPrinter*))success failure:(void (^)(NSError*))failure;
-+ (NSString*)getDeviceSelector;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPPosPrinter*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPPosPrinterCapabilities* capabilities;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) WDPPosPrinterStatus* status;
 @property (readonly) NSArray* /* unsigned int */ supportedCharacterSets;
 @property (readonly) NSArray* /* NSString * */ supportedTypeFaces;
-- (EventRegistrationToken)addStatusUpdatedEvent:(void (^)(WDPPosPrinter*, WDPPosPrinterStatusUpdatedEventArgs*))del;
+- (EventRegistrationToken)addStatusUpdatedEvent:(void(^)(WDPPosPrinter*, WDPPosPrinterStatusUpdatedEventArgs*))del;
 - (void)removeStatusUpdatedEvent:(EventRegistrationToken)tok;
 - (void)claimPrinterAsyncWithSuccess:(void (^)(WDPClaimedPosPrinter*))success failure:(void (^)(NSError*))failure;
-- (void)checkHealthAsync:(WDPUnifiedPosHealthCheckLevel)level success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
-- (void)getStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories
-                   success:(void (^)(NSString*))success
-                   failure:(void (^)(NSError*))failure;
+- (void)checkHealthAsync:(WDPUnifiedPosHealthCheckLevel)level success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
+- (void)getStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDPPosPrinter_DEFINED__
@@ -1257,24 +1198,19 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @property WDPPosPrinterMapMode mapMode;
 @property BOOL isCharacterSetMappingEnabled;
 @property unsigned int characterSet;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) BOOL isCoverOpen;
 @property (readonly) BOOL isEnabled;
 @property (readonly) WDPClaimedJournalPrinter* journal;
 @property (readonly) WDPClaimedReceiptPrinter* receipt;
 @property (readonly) WDPClaimedSlipPrinter* slip;
-- (EventRegistrationToken)addReleaseDeviceRequestedEvent:(void (^)(WDPClaimedPosPrinter*,
-                                                                   WDPPosPrinterReleaseDeviceRequestedEventArgs*))del;
+- (EventRegistrationToken)addReleaseDeviceRequestedEvent:(void(^)(WDPClaimedPosPrinter*, WDPPosPrinterReleaseDeviceRequestedEventArgs*))del;
 - (void)removeReleaseDeviceRequestedEvent:(EventRegistrationToken)tok;
 - (void)enableAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)disableAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)retainDeviceAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-- (void)resetStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories
-                     success:(void (^)(BOOL))success
-                     failure:(void (^)(NSError*))failure;
-- (void)updateStatisticsAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)statistics
-                      success:(void (^)(BOOL))success
-                      failure:(void (^)(NSError*))failure;
+- (void)resetStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)updateStatisticsAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)statistics success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -1296,41 +1232,19 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 - (void)setPrintRotation:(WDPPosPrinterRotation)value includeBitmaps:(BOOL)includeBitmaps;
 - (void)setPrintArea:(WFRect*)value;
 - (void)setBitmap:(unsigned int)bitmapNumber bitmap:(WGIBitmapFrame*)bitmap alignment:(WDPPosPrinterAlignment)alignment;
-- (void)setBitmapCustomWidthStandardAlign:(unsigned int)bitmapNumber
-                                   bitmap:(WGIBitmapFrame*)bitmap
-                                alignment:(WDPPosPrinterAlignment)alignment
-                                    width:(unsigned int)width;
+- (void)setBitmapCustomWidthStandardAlign:(unsigned int)bitmapNumber bitmap:(WGIBitmapFrame*)bitmap alignment:(WDPPosPrinterAlignment)alignment width:(unsigned int)width;
 - (void)setCustomAlignedBitmap:(unsigned int)bitmapNumber bitmap:(WGIBitmapFrame*)bitmap alignmentDistance:(unsigned int)alignmentDistance;
-- (void)setBitmapCustomWidthCustomAlign:(unsigned int)bitmapNumber
-                                 bitmap:(WGIBitmapFrame*)bitmap
-                      alignmentDistance:(unsigned int)alignmentDistance
-                                  width:(unsigned int)width;
+- (void)setBitmapCustomWidthCustomAlign:(unsigned int)bitmapNumber bitmap:(WGIBitmapFrame*)bitmap alignmentDistance:(unsigned int)alignmentDistance width:(unsigned int)width;
 - (void)printSavedBitmap:(unsigned int)bitmapNumber;
-- (void)drawRuledLine:(NSString*)positionList
-        lineDirection:(WDPPosPrinterLineDirection)lineDirection
-            lineWidth:(unsigned int)lineWidth
-            lineStyle:(WDPPosPrinterLineStyle)lineStyle
-            lineColor:(unsigned int)lineColor;
-- (void)printBarcode:(NSString*)data
-           symbology:(unsigned int)symbology
-              height:(unsigned int)height
-               width:(unsigned int)width
-        textPosition:(WDPPosPrinterBarcodeTextPosition)textPosition
-           alignment:(WDPPosPrinterAlignment)alignment;
-- (void)printBarcodeCustomAlign:(NSString*)data
-                      symbology:(unsigned int)symbology
-                         height:(unsigned int)height
-                          width:(unsigned int)width
-                   textPosition:(WDPPosPrinterBarcodeTextPosition)textPosition
-              alignmentDistance:(unsigned int)alignmentDistance;
+- (void)drawRuledLine:(NSString *)positionList lineDirection:(WDPPosPrinterLineDirection)lineDirection lineWidth:(unsigned int)lineWidth lineStyle:(WDPPosPrinterLineStyle)lineStyle lineColor:(unsigned int)lineColor;
+- (void)printBarcode:(NSString *)data symbology:(unsigned int)symbology height:(unsigned int)height width:(unsigned int)width textPosition:(WDPPosPrinterBarcodeTextPosition)textPosition alignment:(WDPPosPrinterAlignment)alignment;
+- (void)printBarcodeCustomAlign:(NSString *)data symbology:(unsigned int)symbology height:(unsigned int)height width:(unsigned int)width textPosition:(WDPPosPrinterBarcodeTextPosition)textPosition alignmentDistance:(unsigned int)alignmentDistance;
 - (void)printBitmap:(WGIBitmapFrame*)bitmap alignment:(WDPPosPrinterAlignment)alignment;
 - (void)printBitmapCustomWidthStandardAlign:(WGIBitmapFrame*)bitmap alignment:(WDPPosPrinterAlignment)alignment width:(unsigned int)width;
 - (void)printCustomAlignedBitmap:(WGIBitmapFrame*)bitmap alignmentDistance:(unsigned int)alignmentDistance;
-- (void)printBitmapCustomWidthCustomAlign:(WGIBitmapFrame*)bitmap
-                        alignmentDistance:(unsigned int)alignmentDistance
-                                    width:(unsigned int)width;
-- (void)print:(NSString*)data;
-- (void)printLine:(NSString*)data;
+- (void)printBitmapCustomWidthCustomAlign:(WGIBitmapFrame*)bitmap alignmentDistance:(unsigned int)alignmentDistance width:(unsigned int)width;
+- (void)print:(NSString *)data;
+- (void)printLine:(NSString *)data;
 - (void)printNewline;
 - (void)executeAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
@@ -1350,41 +1264,19 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 - (void)setPrintRotation:(WDPPosPrinterRotation)value includeBitmaps:(BOOL)includeBitmaps;
 - (void)setPrintArea:(WFRect*)value;
 - (void)setBitmap:(unsigned int)bitmapNumber bitmap:(WGIBitmapFrame*)bitmap alignment:(WDPPosPrinterAlignment)alignment;
-- (void)setBitmapCustomWidthStandardAlign:(unsigned int)bitmapNumber
-                                   bitmap:(WGIBitmapFrame*)bitmap
-                                alignment:(WDPPosPrinterAlignment)alignment
-                                    width:(unsigned int)width;
+- (void)setBitmapCustomWidthStandardAlign:(unsigned int)bitmapNumber bitmap:(WGIBitmapFrame*)bitmap alignment:(WDPPosPrinterAlignment)alignment width:(unsigned int)width;
 - (void)setCustomAlignedBitmap:(unsigned int)bitmapNumber bitmap:(WGIBitmapFrame*)bitmap alignmentDistance:(unsigned int)alignmentDistance;
-- (void)setBitmapCustomWidthCustomAlign:(unsigned int)bitmapNumber
-                                 bitmap:(WGIBitmapFrame*)bitmap
-                      alignmentDistance:(unsigned int)alignmentDistance
-                                  width:(unsigned int)width;
+- (void)setBitmapCustomWidthCustomAlign:(unsigned int)bitmapNumber bitmap:(WGIBitmapFrame*)bitmap alignmentDistance:(unsigned int)alignmentDistance width:(unsigned int)width;
 - (void)printSavedBitmap:(unsigned int)bitmapNumber;
-- (void)drawRuledLine:(NSString*)positionList
-        lineDirection:(WDPPosPrinterLineDirection)lineDirection
-            lineWidth:(unsigned int)lineWidth
-            lineStyle:(WDPPosPrinterLineStyle)lineStyle
-            lineColor:(unsigned int)lineColor;
-- (void)printBarcode:(NSString*)data
-           symbology:(unsigned int)symbology
-              height:(unsigned int)height
-               width:(unsigned int)width
-        textPosition:(WDPPosPrinterBarcodeTextPosition)textPosition
-           alignment:(WDPPosPrinterAlignment)alignment;
-- (void)printBarcodeCustomAlign:(NSString*)data
-                      symbology:(unsigned int)symbology
-                         height:(unsigned int)height
-                          width:(unsigned int)width
-                   textPosition:(WDPPosPrinterBarcodeTextPosition)textPosition
-              alignmentDistance:(unsigned int)alignmentDistance;
+- (void)drawRuledLine:(NSString *)positionList lineDirection:(WDPPosPrinterLineDirection)lineDirection lineWidth:(unsigned int)lineWidth lineStyle:(WDPPosPrinterLineStyle)lineStyle lineColor:(unsigned int)lineColor;
+- (void)printBarcode:(NSString *)data symbology:(unsigned int)symbology height:(unsigned int)height width:(unsigned int)width textPosition:(WDPPosPrinterBarcodeTextPosition)textPosition alignment:(WDPPosPrinterAlignment)alignment;
+- (void)printBarcodeCustomAlign:(NSString *)data symbology:(unsigned int)symbology height:(unsigned int)height width:(unsigned int)width textPosition:(WDPPosPrinterBarcodeTextPosition)textPosition alignmentDistance:(unsigned int)alignmentDistance;
 - (void)printBitmap:(WGIBitmapFrame*)bitmap alignment:(WDPPosPrinterAlignment)alignment;
 - (void)printBitmapCustomWidthStandardAlign:(WGIBitmapFrame*)bitmap alignment:(WDPPosPrinterAlignment)alignment width:(unsigned int)width;
 - (void)printCustomAlignedBitmap:(WGIBitmapFrame*)bitmap alignmentDistance:(unsigned int)alignmentDistance;
-- (void)printBitmapCustomWidthCustomAlign:(WGIBitmapFrame*)bitmap
-                        alignmentDistance:(unsigned int)alignmentDistance
-                                    width:(unsigned int)width;
-- (void)print:(NSString*)data;
-- (void)printLine:(NSString*)data;
+- (void)printBitmapCustomWidthCustomAlign:(WGIBitmapFrame*)bitmap alignmentDistance:(unsigned int)alignmentDistance width:(unsigned int)width;
+- (void)print:(NSString *)data;
+- (void)printLine:(NSString *)data;
 - (void)printNewline;
 - (void)executeAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
@@ -1400,8 +1292,8 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (void)print:(NSString*)data;
-- (void)printLine:(NSString*)data;
+- (void)print:(NSString *)data;
+- (void)printLine:(NSString *)data;
 - (void)printNewline;
 - (void)executeAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
@@ -1436,7 +1328,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @property (readonly) BOOL isCartridgeEmpty;
 @property (readonly) unsigned int lineWidth;
 - (WDPReceiptPrintJob*)createJob;
-- (BOOL)validateData:(NSString*)data;
+- (BOOL)validateData:(NSString *)data;
 @end
 
 #endif // __WDPClaimedReceiptPrinter_DEFINED__
@@ -1476,7 +1368,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 - (void)removeSlipAsync:(WFTimeSpan*)timeout success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)changePrintSide:(WDPPosPrinterPrintSide)printSide;
 - (WDPSlipPrintJob*)createJob;
-- (BOOL)validateData:(NSString*)data;
+- (BOOL)validateData:(NSString *)data;
 @end
 
 #endif // __WDPClaimedSlipPrinter_DEFINED__
@@ -1504,7 +1396,7 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @property (readonly) BOOL isReadyToPrint;
 @property (readonly) unsigned int lineWidth;
 - (WDPJournalPrintJob*)createJob;
-- (BOOL)validateData:(NSString*)data;
+- (BOOL)validateData:(NSString *)data;
 @end
 
 #endif // __WDPClaimedJournalPrinter_DEFINED__
@@ -1564,23 +1456,21 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @interface WDPCashDrawer : RTObject
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDPCashDrawer*))success failure:(void (^)(NSError*))failure;
-+ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDPCashDrawer*))success failure:(void (^)(NSError*))failure;
-+ (NSString*)getDeviceSelector;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPCashDrawer*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPCashDrawerCapabilities* capabilities;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) WDPCashDrawerEventSource* drawerEventSource;
 @property (readonly) BOOL isDrawerOpen;
 @property (readonly) WDPCashDrawerStatus* status;
-- (EventRegistrationToken)addStatusUpdatedEvent:(void (^)(WDPCashDrawer*, WDPCashDrawerStatusUpdatedEventArgs*))del;
+- (EventRegistrationToken)addStatusUpdatedEvent:(void(^)(WDPCashDrawer*, WDPCashDrawerStatusUpdatedEventArgs*))del;
 - (void)removeStatusUpdatedEvent:(EventRegistrationToken)tok;
 - (void)claimDrawerAsyncWithSuccess:(void (^)(WDPClaimedCashDrawer*))success failure:(void (^)(NSError*))failure;
-- (void)checkHealthAsync:(WDPUnifiedPosHealthCheckLevel)level success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
-- (void)getStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories
-                   success:(void (^)(NSString*))success
-                   failure:(void (^)(NSError*))failure;
+- (void)checkHealthAsync:(WDPUnifiedPosHealthCheckLevel)level success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
+- (void)getStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDPCashDrawer_DEFINED__
@@ -1622,9 +1512,9 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (EventRegistrationToken)addDrawerClosedEvent:(void (^)(WDPCashDrawerEventSource*, WDPCashDrawerClosedEventArgs*))del;
+- (EventRegistrationToken)addDrawerClosedEvent:(void(^)(WDPCashDrawerEventSource*, WDPCashDrawerClosedEventArgs*))del;
 - (void)removeDrawerClosedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDrawerOpenedEvent:(void (^)(WDPCashDrawerEventSource*, WDPCashDrawerOpenedEventArgs*))del;
+- (EventRegistrationToken)addDrawerOpenedEvent:(void(^)(WDPCashDrawerEventSource*, WDPCashDrawerOpenedEventArgs*))del;
 - (void)removeDrawerOpenedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -1640,21 +1530,17 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDPCashDrawerCloseAlarm* closeAlarm;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) BOOL isDrawerOpen;
 @property (readonly) BOOL isEnabled;
-- (EventRegistrationToken)addReleaseDeviceRequestedEvent:(void (^)(WDPClaimedCashDrawer*, RTObject*))del;
+- (EventRegistrationToken)addReleaseDeviceRequestedEvent:(void(^)(WDPClaimedCashDrawer*, RTObject*))del;
 - (void)removeReleaseDeviceRequestedEvent:(EventRegistrationToken)tok;
 - (void)openDrawerAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)enableAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)disableAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)retainDeviceAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-- (void)resetStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories
-                     success:(void (^)(BOOL))success
-                     failure:(void (^)(NSError*))failure;
-- (void)updateStatisticsAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)statistics
-                      success:(void (^)(BOOL))success
-                      failure:(void (^)(NSError*))failure;
+- (void)resetStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)updateStatisticsAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)statistics success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -1673,9 +1559,10 @@ OBJCUWP_WINDOWS_DEVICES_POINTOFSERVICE_EXPORT
 @property (retain) WFTimeSpan* beepDuration;
 @property (retain) WFTimeSpan* beepDelay;
 @property (retain) WFTimeSpan* alarmTimeout;
-- (EventRegistrationToken)addAlarmTimeoutExpiredEvent:(void (^)(WDPCashDrawerCloseAlarm*, RTObject*))del;
+- (EventRegistrationToken)addAlarmTimeoutExpiredEvent:(void(^)(WDPCashDrawerCloseAlarm*, RTObject*))del;
 - (void)removeAlarmTimeoutExpiredEvent:(EventRegistrationToken)tok;
 - (void)startAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDPCashDrawerCloseAlarm_DEFINED__
+

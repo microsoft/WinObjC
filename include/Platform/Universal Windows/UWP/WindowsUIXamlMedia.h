@@ -27,37 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WUXMVisualTreeHelper, WUXMPartialMediaFailureDetectedEventArgs, WUXMMatrixHelper, WUXMCompositionTarget, WUXMDoubleCollection,
-    WUXMFontFamily, WUXMGeometryCollection, WUXMGradientStopCollection, WUXMPathFigureCollection, WUXMPathSegmentCollection,
-    WUXMPointCollection, WUXMRenderingEventArgs, WUXMTimelineMarkerCollection, WUXMTransformCollection, WUXMBrush, WUXMCacheMode,
-    WUXMGeneralTransform, WUXMGeometry, WUXMGradientStop, WUXMImageSource, WUXMPathFigure, WUXMPathSegment, WUXMProjection,
-    WUXMRateChangedRoutedEventArgs, WUXMTimelineMarker, WUXMTimelineMarkerRoutedEventArgs, WUXMArcSegment, WUXMBezierSegment,
-    WUXMBitmapCache, WUXMEllipseGeometry, WUXMGeometryGroup, WUXMGradientBrush, WUXMLineGeometry, WUXMLineSegment, WUXMMatrix3DProjection,
-    WUXMPathGeometry, WUXMPlaneProjection, WUXMPolyBezierSegment, WUXMPolyLineSegment, WUXMPolyQuadraticBezierSegment,
-    WUXMQuadraticBezierSegment, WUXMRectangleGeometry, WUXMSolidColorBrush, WUXMTileBrush, WUXMTransform, WUXMCompositeTransform,
-    WUXMImageBrush, WUXMLinearGradientBrush, WUXMMatrixTransform, WUXMRotateTransform, WUXMScaleTransform, WUXMSkewTransform,
-    WUXMTransformGroup, WUXMTranslateTransform;
+@class WUXMVisualTreeHelper, WUXMPartialMediaFailureDetectedEventArgs, WUXMMatrixHelper, WUXMBrushCollection, WUXMCompositionTarget, WUXMDoubleCollection, WUXMFontFamily, WUXMMediaTransportControlsThumbnailRequestedEventArgs, WUXMPointCollection, WUXMRenderingEventArgs, WUXMTimelineMarkerCollection, WUXMTransformCollection, WUXMBrush, WUXMCacheMode, WUXMGeneralTransform, WUXMGeometry, WUXMImageSource, WUXMPathSegment, WUXMProjection, WUXMRateChangedRoutedEventArgs, WUXMTimelineMarker, WUXMTimelineMarkerRoutedEventArgs, WUXMBitmapCache, WUXMMatrix3DProjection, WUXMPlaneProjection, WUXMRectangleGeometry, WUXMSolidColorBrush, WUXMTransform, WUXMCompositeTransform, WUXMMatrixTransform, WUXMRotateTransform, WUXMScaleTransform, WUXMSkewTransform, WUXMTransformGroup, WUXMTranslateTransform, WUXMGeometryCollection, WUXMGradientStopCollection, WUXMPathFigureCollection, WUXMPathSegmentCollection, WUXMGradientStop, WUXMPathFigure, WUXMArcSegment, WUXMBezierSegment, WUXMEllipseGeometry, WUXMGeometryGroup, WUXMGradientBrush, WUXMLineGeometry, WUXMLineSegment, WUXMPathGeometry, WUXMPolyBezierSegment, WUXMPolyLineSegment, WUXMPolyQuadraticBezierSegment, WUXMQuadraticBezierSegment, WUXMTileBrush, WUXMImageBrush, WUXMLinearGradientBrush;
 @class WUXMMatrix;
-@protocol WUXMIVisualTreeHelper
-, WUXMIVisualTreeHelperStatics, WUXMIVisualTreeHelperStatics2, WUXMIPartialMediaFailureDetectedEventArgs, WUXMIMatrixHelper,
-    WUXMIMatrixHelperStatics, WUXMICompositionTarget, WUXMICompositionTargetStatics, WUXMIFontFamily, WUXMIFontFamilyFactory,
-    WUXMIRenderingEventArgs, WUXMIBrush, WUXMIBrushStatics, WUXMIBrushFactory, WUXMICacheMode, WUXMICacheModeFactory, WUXMIGeneralTransform,
-    WUXMIGeneralTransformOverrides, WUXMIGeneralTransformFactory, WUXMIGeometry, WUXMIGeometryStatics, WUXMIGeometryFactory,
-    WUXMIGradientStop, WUXMIGradientStopStatics, WUXMIImageSource, WUXMIImageSourceFactory, WUXMIPathFigure, WUXMIPathFigureStatics,
-    WUXMIPathSegment, WUXMIPathSegmentFactory, WUXMIProjection, WUXMIProjectionFactory, WUXMIRateChangedRoutedEventArgs,
-    WUXMITimelineMarker, WUXMITimelineMarkerStatics, WUXMITimelineMarkerRoutedEventArgs, WUXMIArcSegment, WUXMIArcSegmentStatics,
-    WUXMIBezierSegment, WUXMIBezierSegmentStatics, WUXMIBitmapCache, WUXMIEllipseGeometry, WUXMIEllipseGeometryStatics, WUXMIGeometryGroup,
-    WUXMIGeometryGroupStatics, WUXMIGradientBrush, WUXMIGradientBrushStatics, WUXMIGradientBrushFactory, WUXMILineGeometry,
-    WUXMILineGeometryStatics, WUXMILineSegment, WUXMILineSegmentStatics, WUXMIMatrix3DProjection, WUXMIMatrix3DProjectionStatics,
-    WUXMIPathGeometry, WUXMIPathGeometryStatics, WUXMIPlaneProjection, WUXMIPlaneProjectionStatics, WUXMIPolyBezierSegment,
-    WUXMIPolyBezierSegmentStatics, WUXMIPolyLineSegment, WUXMIPolyLineSegmentStatics, WUXMIPolyQuadraticBezierSegment,
-    WUXMIPolyQuadraticBezierSegmentStatics, WUXMIQuadraticBezierSegment, WUXMIQuadraticBezierSegmentStatics, WUXMIRectangleGeometry,
-    WUXMIRectangleGeometryStatics, WUXMISolidColorBrush, WUXMISolidColorBrushStatics, WUXMISolidColorBrushFactory, WUXMITileBrush,
-    WUXMITileBrushStatics, WUXMITileBrushFactory, WUXMITransform, WUXMITransformFactory, WUXMICompositeTransform,
-    WUXMICompositeTransformStatics, WUXMIImageBrush, WUXMIImageBrushStatics, WUXMILinearGradientBrush, WUXMILinearGradientBrushStatics,
-    WUXMILinearGradientBrushFactory, WUXMIMatrixTransform, WUXMIMatrixTransformStatics, WUXMIRotateTransform, WUXMIRotateTransformStatics,
-    WUXMIScaleTransform, WUXMIScaleTransformStatics, WUXMISkewTransform, WUXMISkewTransformStatics, WUXMITransformGroup,
-    WUXMITransformGroupStatics, WUXMITranslateTransform, WUXMITranslateTransformStatics;
+@protocol WUXMIVisualTreeHelper, WUXMIVisualTreeHelperStatics, WUXMIVisualTreeHelperStatics2, WUXMIPartialMediaFailureDetectedEventArgs, WUXMIPartialMediaFailureDetectedEventArgs2, WUXMIMatrixHelper, WUXMIMatrixHelperStatics, WUXMICompositionTarget, WUXMICompositionTargetStatics, WUXMIFontFamily, WUXMIFontFamilyFactory, WUXMIFontFamilyStatics2, WUXMIMediaTransportControlsThumbnailRequestedEventArgs, WUXMIRenderingEventArgs, WUXMIBrush, WUXMIBrushStatics, WUXMIBrushFactory, WUXMICacheMode, WUXMICacheModeFactory, WUXMIGeneralTransform, WUXMIGeneralTransformOverrides, WUXMIGeneralTransformFactory, WUXMIGeometry, WUXMIGeometryStatics, WUXMIGeometryFactory, WUXMIImageSource, WUXMIImageSourceFactory, WUXMIPathSegment, WUXMIPathSegmentFactory, WUXMIProjection, WUXMIProjectionFactory, WUXMIRateChangedRoutedEventArgs, WUXMITimelineMarker, WUXMITimelineMarkerStatics, WUXMITimelineMarkerRoutedEventArgs, WUXMIBitmapCache, WUXMIMatrix3DProjection, WUXMIMatrix3DProjectionStatics, WUXMIPlaneProjection, WUXMIPlaneProjectionStatics, WUXMIRectangleGeometry, WUXMIRectangleGeometryStatics, WUXMISolidColorBrush, WUXMISolidColorBrushStatics, WUXMISolidColorBrushFactory, WUXMITransform, WUXMITransformFactory, WUXMICompositeTransform, WUXMICompositeTransformStatics, WUXMIMatrixTransform, WUXMIMatrixTransformStatics, WUXMIRotateTransform, WUXMIRotateTransformStatics, WUXMIScaleTransform, WUXMIScaleTransformStatics, WUXMISkewTransform, WUXMISkewTransformStatics, WUXMITransformGroup, WUXMITransformGroupStatics, WUXMITranslateTransform, WUXMITranslateTransformStatics, WUXMIGradientStop, WUXMIGradientStopStatics, WUXMIPathFigure, WUXMIPathFigureStatics, WUXMIArcSegment, WUXMIArcSegmentStatics, WUXMIBezierSegment, WUXMIBezierSegmentStatics, WUXMIEllipseGeometry, WUXMIEllipseGeometryStatics, WUXMIGeometryGroup, WUXMIGeometryGroupStatics, WUXMIGradientBrush, WUXMIGradientBrushStatics, WUXMIGradientBrushFactory, WUXMILineGeometry, WUXMILineGeometryStatics, WUXMILineSegment, WUXMILineSegmentStatics, WUXMIPathGeometry, WUXMIPathGeometryStatics, WUXMIPolyBezierSegment, WUXMIPolyBezierSegmentStatics, WUXMIPolyLineSegment, WUXMIPolyLineSegmentStatics, WUXMIPolyQuadraticBezierSegment, WUXMIPolyQuadraticBezierSegmentStatics, WUXMIQuadraticBezierSegment, WUXMIQuadraticBezierSegmentStatics, WUXMITileBrush, WUXMITileBrushStatics, WUXMITileBrushFactory, WUXMIImageBrush, WUXMIImageBrushStatics, WUXMILinearGradientBrush, WUXMILinearGradientBrushStatics, WUXMILinearGradientBrushFactory;
 
 // Windows.UI.Xaml.Media.MediaElementState
 enum _WUXMMediaElementState {
@@ -69,22 +41,6 @@ enum _WUXMMediaElementState {
     WUXMMediaElementStateStopped = 5,
 };
 typedef unsigned WUXMMediaElementState;
-
-// Windows.UI.Xaml.Media.AlignmentX
-enum _WUXMAlignmentX {
-    WUXMAlignmentXLeft = 0,
-    WUXMAlignmentXCenter = 1,
-    WUXMAlignmentXRight = 2,
-};
-typedef unsigned WUXMAlignmentX;
-
-// Windows.UI.Xaml.Media.AlignmentY
-enum _WUXMAlignmentY {
-    WUXMAlignmentYTop = 0,
-    WUXMAlignmentYCenter = 1,
-    WUXMAlignmentYBottom = 2,
-};
-typedef unsigned WUXMAlignmentY;
 
 // Windows.UI.Xaml.Media.AudioCategory
 enum _WUXMAudioCategory {
@@ -132,6 +88,14 @@ enum _WUXMElementCompositeMode {
     WUXMElementCompositeModeMinBlend = 2,
 };
 typedef unsigned WUXMElementCompositeMode;
+
+// Windows.UI.Xaml.Media.FastPlayFallbackBehaviour
+enum _WUXMFastPlayFallbackBehaviour {
+    WUXMFastPlayFallbackBehaviourSkip = 0,
+    WUXMFastPlayFallbackBehaviourHide = 1,
+    WUXMFastPlayFallbackBehaviourDisable = 2,
+};
+typedef unsigned WUXMFastPlayFallbackBehaviour;
 
 // Windows.UI.Xaml.Media.FillRule
 enum _WUXMFillRule {
@@ -213,37 +177,55 @@ enum _WUXMSweepDirection {
 };
 typedef unsigned WUXMSweepDirection;
 
+// Windows.UI.Xaml.Media.AlignmentX
+enum _WUXMAlignmentX {
+    WUXMAlignmentXLeft = 0,
+    WUXMAlignmentXCenter = 1,
+    WUXMAlignmentXRight = 2,
+};
+typedef unsigned WUXMAlignmentX;
+
+// Windows.UI.Xaml.Media.AlignmentY
+enum _WUXMAlignmentY {
+    WUXMAlignmentYTop = 0,
+    WUXMAlignmentYCenter = 1,
+    WUXMAlignmentYBottom = 2,
+};
+typedef unsigned WUXMAlignmentY;
+
+#include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
 #include "WindowsUIXaml.h"
-#include "WindowsUI.h"
 #include "WindowsUIXamlControlsPrimitives.h"
+#include "WindowsUI.h"
 #include "WindowsUIXamlMediaMedia3D.h"
 #include "WindowsMediaPlayback.h"
 #include "WindowsUICore.h"
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED
 #define __WXDependencyPropertyChangedCallback__DEFINED
-typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
+typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
 #endif // __WXDependencyPropertyChangedCallback__DEFINED
 
 // Windows.UI.Xaml.ExceptionRoutedEventHandler
 #ifndef __WXExceptionRoutedEventHandler__DEFINED
 #define __WXExceptionRoutedEventHandler__DEFINED
-typedef void (^WXExceptionRoutedEventHandler)(RTObject* sender, WXExceptionRoutedEventArgs* e);
+typedef void(^WXExceptionRoutedEventHandler)(RTObject* sender, WXExceptionRoutedEventArgs* e);
 #endif // __WXExceptionRoutedEventHandler__DEFINED
 
 // Windows.UI.Xaml.RoutedEventHandler
 #ifndef __WXRoutedEventHandler__DEFINED
 #define __WXRoutedEventHandler__DEFINED
-typedef void (^WXRoutedEventHandler)(RTObject* sender, WXRoutedEventArgs* e);
+typedef void(^WXRoutedEventHandler)(RTObject* sender, WXRoutedEventArgs* e);
 #endif // __WXRoutedEventHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Media.Matrix
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMMatrix : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property double m11;
 @property double m12;
 @property double m21;
@@ -255,13 +237,13 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 // Windows.UI.Xaml.Media.RateChangedRoutedEventHandler
 #ifndef __WUXMRateChangedRoutedEventHandler__DEFINED
 #define __WUXMRateChangedRoutedEventHandler__DEFINED
-typedef void (^WUXMRateChangedRoutedEventHandler)(RTObject* sender, WUXMRateChangedRoutedEventArgs* e);
+typedef void(^WUXMRateChangedRoutedEventHandler)(RTObject* sender, WUXMRateChangedRoutedEventArgs* e);
 #endif // __WUXMRateChangedRoutedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Media.TimelineMarkerRoutedEventHandler
 #ifndef __WUXMTimelineMarkerRoutedEventHandler__DEFINED
 #define __WUXMTimelineMarkerRoutedEventHandler__DEFINED
-typedef void (^WUXMTimelineMarkerRoutedEventHandler)(RTObject* sender, WUXMTimelineMarkerRoutedEventArgs* e);
+typedef void(^WUXMTimelineMarkerRoutedEventHandler)(RTObject* sender, WUXMTimelineMarkerRoutedEventArgs* e);
 #endif // __WUXMTimelineMarkerRoutedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Media.IGeneralTransformOverrides
@@ -286,19 +268,15 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMVisualTreeHelper : RTObject
++ (NSArray* /* WUXCPPopup* */)getOpenPopups:(WXWindow*)window;
 + (id<NSFastEnumeration> /* WXUIElement* */)findElementsInHostCoordinatesPoint:(WFPoint*)intersectingPoint subtree:(WXUIElement*)subtree;
 + (id<NSFastEnumeration> /* WXUIElement* */)findElementsInHostCoordinatesRect:(WFRect*)intersectingRect subtree:(WXUIElement*)subtree;
-+ (id<NSFastEnumeration> /* WXUIElement* */)findAllElementsInHostCoordinatesPoint:(WFPoint*)intersectingPoint
-                                                                          subtree:(WXUIElement*)subtree
-                                                               includeAllElements:(BOOL)includeAllElements;
-+ (id<NSFastEnumeration> /* WXUIElement* */)findAllElementsInHostCoordinatesRect:(WFRect*)intersectingRect
-                                                                         subtree:(WXUIElement*)subtree
-                                                              includeAllElements:(BOOL)includeAllElements;
++ (id<NSFastEnumeration> /* WXUIElement* */)findAllElementsInHostCoordinatesPoint:(WFPoint*)intersectingPoint subtree:(WXUIElement*)subtree includeAllElements:(BOOL)includeAllElements;
++ (id<NSFastEnumeration> /* WXUIElement* */)findAllElementsInHostCoordinatesRect:(WFRect*)intersectingRect subtree:(WXUIElement*)subtree includeAllElements:(BOOL)includeAllElements;
 + (WXDependencyObject*)getChild:(WXDependencyObject*)reference childIndex:(int)childIndex;
 + (int)getChildrenCount:(WXDependencyObject*)reference;
 + (WXDependencyObject*)getParent:(WXDependencyObject*)reference;
 + (void)disconnectChildrenRecursive:(WXUIElement*)element;
-+ (NSArray* /* WUXCPPopup* */)getOpenPopups:(WXWindow*)window;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -317,6 +295,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPFailedMediaStreamKind streamKind;
+@property (readonly) HRESULT extendedError;
 @end
 
 #endif // __WUXMPartialMediaFailureDetectedEventArgs_DEFINED__
@@ -338,6 +317,33 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 #endif // __WUXMMatrixHelper_DEFINED__
 
+// Windows.UI.Xaml.Media.BrushCollection
+#ifndef __WUXMBrushCollection_DEFINED__
+#define __WUXMBrushCollection_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMBrushCollection : RTObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) unsigned int size;
+- (unsigned int)count;
+- (id)objectAtIndex:(unsigned)idx;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
+
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
+- (void)removeLastObject;
+
+@end
+
+#endif // __WUXMBrushCollection_DEFINED__
+
 // Windows.UI.Xaml.Media.CompositionTarget
 #ifndef __WUXMCompositionTarget_DEFINED__
 #define __WUXMCompositionTarget_DEFINED__
@@ -347,9 +353,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-+ (EventRegistrationToken)addRenderingEvent:(void (^)(RTObject*, RTObject*))del;
++ (EventRegistrationToken)addRenderingEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeRenderingEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addSurfaceContentsLostEvent:(void (^)(RTObject*, RTObject*))del;
++ (EventRegistrationToken)addSurfaceContentsLostEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeSurfaceContentsLostEvent:(EventRegistrationToken)tok;
 @end
 
@@ -368,12 +374,14 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
 - (void)removeLastObject;
 
 @end
@@ -386,114 +394,30 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMFontFamily : RTObject
-+ (WUXMFontFamily*)makeInstanceWithName:(NSString*)familyName ACTIVATOR;
++ (WUXMFontFamily*)makeInstanceWithName:(NSString *)familyName ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* source;
+@property (readonly) NSString * source;
++ (WUXMFontFamily*)xamlAutoFontFamily;
 @end
 
 #endif // __WUXMFontFamily_DEFINED__
 
-// Windows.UI.Xaml.Media.GeometryCollection
-#ifndef __WUXMGeometryCollection_DEFINED__
-#define __WUXMGeometryCollection_DEFINED__
+// Windows.UI.Xaml.Media.MediaTransportControlsThumbnailRequestedEventArgs
+#ifndef __WUXMMediaTransportControlsThumbnailRequestedEventArgs_DEFINED__
+#define __WUXMMediaTransportControlsThumbnailRequestedEventArgs_DEFINED__
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMGeometryCollection : RTObject
-+ (instancetype)make ACTIVATOR;
+@interface WUXMMediaTransportControlsThumbnailRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) unsigned int size;
-- (unsigned int)count;
-- (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
-
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
-- (void)removeLastObject;
-
+- (void)setThumbnailImage:(RTObject<WSSIInputStream>*)source;
+- (WFDeferral*)getDeferral;
 @end
 
-#endif // __WUXMGeometryCollection_DEFINED__
-
-// Windows.UI.Xaml.Media.GradientStopCollection
-#ifndef __WUXMGradientStopCollection_DEFINED__
-#define __WUXMGradientStopCollection_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMGradientStopCollection : RTObject
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (readonly) unsigned int size;
-- (unsigned int)count;
-- (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
-
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
-- (void)removeLastObject;
-
-@end
-
-#endif // __WUXMGradientStopCollection_DEFINED__
-
-// Windows.UI.Xaml.Media.PathFigureCollection
-#ifndef __WUXMPathFigureCollection_DEFINED__
-#define __WUXMPathFigureCollection_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMPathFigureCollection : RTObject
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (readonly) unsigned int size;
-- (unsigned int)count;
-- (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
-
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
-- (void)removeLastObject;
-
-@end
-
-#endif // __WUXMPathFigureCollection_DEFINED__
-
-// Windows.UI.Xaml.Media.PathSegmentCollection
-#ifndef __WUXMPathSegmentCollection_DEFINED__
-#define __WUXMPathSegmentCollection_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMPathSegmentCollection : RTObject
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (readonly) unsigned int size;
-- (unsigned int)count;
-- (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
-
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
-- (void)removeLastObject;
-
-@end
-
-#endif // __WUXMPathSegmentCollection_DEFINED__
+#endif // __WUXMMediaTransportControlsThumbnailRequestedEventArgs_DEFINED__
 
 // Windows.UI.Xaml.Media.PointCollection
 #ifndef __WUXMPointCollection_DEFINED__
@@ -508,12 +432,14 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
 - (void)removeLastObject;
 
 @end
@@ -547,12 +473,14 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
 - (void)removeLastObject;
 
 @end
@@ -572,12 +500,14 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
 - (void)removeLastObject;
 
 @end
@@ -675,24 +605,6 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 #endif // __WUXMGeometry_DEFINED__
 
-// Windows.UI.Xaml.Media.GradientStop
-#ifndef __WUXMGradientStop_DEFINED__
-#define __WUXMGradientStop_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMGradientStop : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property double offset;
-@property (retain) WUColor* color;
-+ (WXDependencyProperty*)colorProperty;
-+ (WXDependencyProperty*)offsetProperty;
-@end
-
-#endif // __WUXMGradientStop_DEFINED__
-
 // Windows.UI.Xaml.Media.ImageSource
 #ifndef __WUXMImageSource_DEFINED__
 #define __WUXMImageSource_DEFINED__
@@ -705,28 +617,6 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @end
 
 #endif // __WUXMImageSource_DEFINED__
-
-// Windows.UI.Xaml.Media.PathFigure
-#ifndef __WUXMPathFigure_DEFINED__
-#define __WUXMPathFigure_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMPathFigure : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (retain) WFPoint* startPoint;
-@property (retain) WUXMPathSegmentCollection* segments;
-@property BOOL isFilled;
-@property BOOL isClosed;
-+ (WXDependencyProperty*)isClosedProperty;
-+ (WXDependencyProperty*)isFilledProperty;
-+ (WXDependencyProperty*)segmentsProperty;
-+ (WXDependencyProperty*)startPointProperty;
-@end
-
-#endif // __WUXMPathFigure_DEFINED__
 
 // Windows.UI.Xaml.Media.PathSegment
 #ifndef __WUXMPathSegment_DEFINED__
@@ -793,9 +683,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* type;
+@property (retain) NSString * type;
 @property (retain) WFTimeSpan* time;
-@property (retain) NSString* text;
+@property (retain) NSString * text;
 + (WXDependencyProperty*)textProperty;
 + (WXDependencyProperty*)timeProperty;
 + (WXDependencyProperty*)typeProperty;
@@ -818,50 +708,6 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 #endif // __WUXMTimelineMarkerRoutedEventArgs_DEFINED__
 
-// Windows.UI.Xaml.Media.ArcSegment
-#ifndef __WUXMArcSegment_DEFINED__
-#define __WUXMArcSegment_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMArcSegment : WUXMPathSegment
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property WUXMSweepDirection sweepDirection;
-@property (retain) WFSize* size;
-@property double rotationAngle;
-@property (retain) WFPoint* point;
-@property BOOL isLargeArc;
-+ (WXDependencyProperty*)isLargeArcProperty;
-+ (WXDependencyProperty*)pointProperty;
-+ (WXDependencyProperty*)rotationAngleProperty;
-+ (WXDependencyProperty*)sizeProperty;
-+ (WXDependencyProperty*)sweepDirectionProperty;
-@end
-
-#endif // __WUXMArcSegment_DEFINED__
-
-// Windows.UI.Xaml.Media.BezierSegment
-#ifndef __WUXMBezierSegment_DEFINED__
-#define __WUXMBezierSegment_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMBezierSegment : WUXMPathSegment
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (retain) WFPoint* point3;
-@property (retain) WFPoint* point2;
-@property (retain) WFPoint* point1;
-+ (WXDependencyProperty*)point1Property;
-+ (WXDependencyProperty*)point2Property;
-+ (WXDependencyProperty*)point3Property;
-@end
-
-#endif // __WUXMBezierSegment_DEFINED__
-
 // Windows.UI.Xaml.Media.BitmapCache
 #ifndef __WUXMBitmapCache_DEFINED__
 #define __WUXMBitmapCache_DEFINED__
@@ -875,99 +721,6 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @end
 
 #endif // __WUXMBitmapCache_DEFINED__
-
-// Windows.UI.Xaml.Media.EllipseGeometry
-#ifndef __WUXMEllipseGeometry_DEFINED__
-#define __WUXMEllipseGeometry_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMEllipseGeometry : WUXMGeometry
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property double radiusY;
-@property double radiusX;
-@property (retain) WFPoint* center;
-+ (WXDependencyProperty*)centerProperty;
-+ (WXDependencyProperty*)radiusXProperty;
-+ (WXDependencyProperty*)radiusYProperty;
-@end
-
-#endif // __WUXMEllipseGeometry_DEFINED__
-
-// Windows.UI.Xaml.Media.GeometryGroup
-#ifndef __WUXMGeometryGroup_DEFINED__
-#define __WUXMGeometryGroup_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMGeometryGroup : WUXMGeometry
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property WUXMFillRule fillRule;
-@property (retain) WUXMGeometryCollection* children;
-+ (WXDependencyProperty*)childrenProperty;
-+ (WXDependencyProperty*)fillRuleProperty;
-@end
-
-#endif // __WUXMGeometryGroup_DEFINED__
-
-// Windows.UI.Xaml.Media.GradientBrush
-#ifndef __WUXMGradientBrush_DEFINED__
-#define __WUXMGradientBrush_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMGradientBrush : WUXMBrush
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property WUXMGradientSpreadMethod spreadMethod;
-@property WUXMBrushMappingMode mappingMode;
-@property (retain) WUXMGradientStopCollection* gradientStops;
-@property WUXMColorInterpolationMode colorInterpolationMode;
-+ (WXDependencyProperty*)colorInterpolationModeProperty;
-+ (WXDependencyProperty*)gradientStopsProperty;
-+ (WXDependencyProperty*)mappingModeProperty;
-+ (WXDependencyProperty*)spreadMethodProperty;
-@end
-
-#endif // __WUXMGradientBrush_DEFINED__
-
-// Windows.UI.Xaml.Media.LineGeometry
-#ifndef __WUXMLineGeometry_DEFINED__
-#define __WUXMLineGeometry_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMLineGeometry : WUXMGeometry
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (retain) WFPoint* startPoint;
-@property (retain) WFPoint* endPoint;
-+ (WXDependencyProperty*)endPointProperty;
-+ (WXDependencyProperty*)startPointProperty;
-@end
-
-#endif // __WUXMLineGeometry_DEFINED__
-
-// Windows.UI.Xaml.Media.LineSegment
-#ifndef __WUXMLineSegment_DEFINED__
-#define __WUXMLineSegment_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMLineSegment : WUXMPathSegment
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (retain) WFPoint* point;
-+ (WXDependencyProperty*)pointProperty;
-@end
-
-#endif // __WUXMLineSegment_DEFINED__
 
 // Windows.UI.Xaml.Media.Matrix3DProjection
 #ifndef __WUXMMatrix3DProjection_DEFINED__
@@ -984,24 +737,6 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @end
 
 #endif // __WUXMMatrix3DProjection_DEFINED__
-
-// Windows.UI.Xaml.Media.PathGeometry
-#ifndef __WUXMPathGeometry_DEFINED__
-#define __WUXMPathGeometry_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMPathGeometry : WUXMGeometry
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property WUXMFillRule fillRule;
-@property (retain) WUXMPathFigureCollection* figures;
-+ (WXDependencyProperty*)figuresProperty;
-+ (WXDependencyProperty*)fillRuleProperty;
-@end
-
-#endif // __WUXMPathGeometry_DEFINED__
 
 // Windows.UI.Xaml.Media.PlaneProjection
 #ifndef __WUXMPlaneProjection_DEFINED__
@@ -1043,72 +778,6 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 #endif // __WUXMPlaneProjection_DEFINED__
 
-// Windows.UI.Xaml.Media.PolyBezierSegment
-#ifndef __WUXMPolyBezierSegment_DEFINED__
-#define __WUXMPolyBezierSegment_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMPolyBezierSegment : WUXMPathSegment
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (retain) WUXMPointCollection* points;
-+ (WXDependencyProperty*)pointsProperty;
-@end
-
-#endif // __WUXMPolyBezierSegment_DEFINED__
-
-// Windows.UI.Xaml.Media.PolyLineSegment
-#ifndef __WUXMPolyLineSegment_DEFINED__
-#define __WUXMPolyLineSegment_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMPolyLineSegment : WUXMPathSegment
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (retain) WUXMPointCollection* points;
-+ (WXDependencyProperty*)pointsProperty;
-@end
-
-#endif // __WUXMPolyLineSegment_DEFINED__
-
-// Windows.UI.Xaml.Media.PolyQuadraticBezierSegment
-#ifndef __WUXMPolyQuadraticBezierSegment_DEFINED__
-#define __WUXMPolyQuadraticBezierSegment_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMPolyQuadraticBezierSegment : WUXMPathSegment
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (retain) WUXMPointCollection* points;
-+ (WXDependencyProperty*)pointsProperty;
-@end
-
-#endif // __WUXMPolyQuadraticBezierSegment_DEFINED__
-
-// Windows.UI.Xaml.Media.QuadraticBezierSegment
-#ifndef __WUXMQuadraticBezierSegment_DEFINED__
-#define __WUXMQuadraticBezierSegment_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMQuadraticBezierSegment : WUXMPathSegment
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (retain) WFPoint* point2;
-@property (retain) WFPoint* point1;
-+ (WXDependencyProperty*)point1Property;
-+ (WXDependencyProperty*)point2Property;
-@end
-
-#endif // __WUXMQuadraticBezierSegment_DEFINED__
-
 // Windows.UI.Xaml.Media.RectangleGeometry
 #ifndef __WUXMRectangleGeometry_DEFINED__
 #define __WUXMRectangleGeometry_DEFINED__
@@ -1131,8 +800,8 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMSolidColorBrush : WUXMBrush
-+ (WUXMSolidColorBrush*)makeInstanceWithColor:(WUColor*)color ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (WUXMSolidColorBrush*)makeInstanceWithColor:(WUColor*)color ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -1141,25 +810,6 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @end
 
 #endif // __WUXMSolidColorBrush_DEFINED__
-
-// Windows.UI.Xaml.Media.TileBrush
-#ifndef __WUXMTileBrush_DEFINED__
-#define __WUXMTileBrush_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMTileBrush : WUXMBrush
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property WUXMStretch stretch;
-@property WUXMAlignmentY alignmentY;
-@property WUXMAlignmentX alignmentX;
-+ (WXDependencyProperty*)alignmentXProperty;
-+ (WXDependencyProperty*)alignmentYProperty;
-+ (WXDependencyProperty*)stretchProperty;
-@end
-
-#endif // __WUXMTileBrush_DEFINED__
 
 // Windows.UI.Xaml.Media.Transform
 #ifndef __WUXMTransform_DEFINED__
@@ -1205,46 +855,6 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @end
 
 #endif // __WUXMCompositeTransform_DEFINED__
-
-// Windows.UI.Xaml.Media.ImageBrush
-#ifndef __WUXMImageBrush_DEFINED__
-#define __WUXMImageBrush_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMImageBrush : WUXMTileBrush
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (retain) WUXMImageSource* imageSource;
-+ (WXDependencyProperty*)imageSourceProperty;
-- (EventRegistrationToken)addImageFailedEvent:(WXExceptionRoutedEventHandler)del;
-- (void)removeImageFailedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addImageOpenedEvent:(WXRoutedEventHandler)del;
-- (void)removeImageOpenedEvent:(EventRegistrationToken)tok;
-@end
-
-#endif // __WUXMImageBrush_DEFINED__
-
-// Windows.UI.Xaml.Media.LinearGradientBrush
-#ifndef __WUXMLinearGradientBrush_DEFINED__
-#define __WUXMLinearGradientBrush_DEFINED__
-
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
-@interface WUXMLinearGradientBrush : WUXMGradientBrush
-+ (WUXMLinearGradientBrush*)makeInstanceWithGradientStopCollectionAndAngle:(WUXMGradientStopCollection*)gradientStopCollection
-                                                                     angle:(double)angle ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (retain) WFPoint* startPoint;
-@property (retain) WFPoint* endPoint;
-+ (WXDependencyProperty*)endPointProperty;
-+ (WXDependencyProperty*)startPointProperty;
-@end
-
-#endif // __WUXMLinearGradientBrush_DEFINED__
 
 // Windows.UI.Xaml.Media.MatrixTransform
 #ifndef __WUXMMatrixTransform_DEFINED__
@@ -1360,3 +970,431 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @end
 
 #endif // __WUXMTranslateTransform_DEFINED__
+
+// Windows.UI.Xaml.Media.GeometryCollection
+#ifndef __WUXMGeometryCollection_DEFINED__
+#define __WUXMGeometryCollection_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMGeometryCollection : RTObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) unsigned int size;
+- (unsigned int)count;
+- (id)objectAtIndex:(unsigned)idx;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
+
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
+- (void)removeLastObject;
+
+@end
+
+#endif // __WUXMGeometryCollection_DEFINED__
+
+// Windows.UI.Xaml.Media.GradientStopCollection
+#ifndef __WUXMGradientStopCollection_DEFINED__
+#define __WUXMGradientStopCollection_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMGradientStopCollection : RTObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) unsigned int size;
+- (unsigned int)count;
+- (id)objectAtIndex:(unsigned)idx;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
+
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
+- (void)removeLastObject;
+
+@end
+
+#endif // __WUXMGradientStopCollection_DEFINED__
+
+// Windows.UI.Xaml.Media.PathFigureCollection
+#ifndef __WUXMPathFigureCollection_DEFINED__
+#define __WUXMPathFigureCollection_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMPathFigureCollection : RTObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) unsigned int size;
+- (unsigned int)count;
+- (id)objectAtIndex:(unsigned)idx;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
+
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
+- (void)removeLastObject;
+
+@end
+
+#endif // __WUXMPathFigureCollection_DEFINED__
+
+// Windows.UI.Xaml.Media.PathSegmentCollection
+#ifndef __WUXMPathSegmentCollection_DEFINED__
+#define __WUXMPathSegmentCollection_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMPathSegmentCollection : RTObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) unsigned int size;
+- (unsigned int)count;
+- (id)objectAtIndex:(unsigned)idx;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
+
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
+- (void)removeLastObject;
+
+@end
+
+#endif // __WUXMPathSegmentCollection_DEFINED__
+
+// Windows.UI.Xaml.Media.GradientStop
+#ifndef __WUXMGradientStop_DEFINED__
+#define __WUXMGradientStop_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMGradientStop : WXDependencyObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property double offset;
+@property (retain) WUColor* color;
++ (WXDependencyProperty*)colorProperty;
++ (WXDependencyProperty*)offsetProperty;
+@end
+
+#endif // __WUXMGradientStop_DEFINED__
+
+// Windows.UI.Xaml.Media.PathFigure
+#ifndef __WUXMPathFigure_DEFINED__
+#define __WUXMPathFigure_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMPathFigure : WXDependencyObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) WFPoint* startPoint;
+@property (retain) WUXMPathSegmentCollection* segments;
+@property BOOL isFilled;
+@property BOOL isClosed;
++ (WXDependencyProperty*)isClosedProperty;
++ (WXDependencyProperty*)isFilledProperty;
++ (WXDependencyProperty*)segmentsProperty;
++ (WXDependencyProperty*)startPointProperty;
+@end
+
+#endif // __WUXMPathFigure_DEFINED__
+
+// Windows.UI.Xaml.Media.ArcSegment
+#ifndef __WUXMArcSegment_DEFINED__
+#define __WUXMArcSegment_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMArcSegment : WUXMPathSegment
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property WUXMSweepDirection sweepDirection;
+@property (retain) WFSize* size;
+@property double rotationAngle;
+@property (retain) WFPoint* point;
+@property BOOL isLargeArc;
++ (WXDependencyProperty*)isLargeArcProperty;
++ (WXDependencyProperty*)pointProperty;
++ (WXDependencyProperty*)rotationAngleProperty;
++ (WXDependencyProperty*)sizeProperty;
++ (WXDependencyProperty*)sweepDirectionProperty;
+@end
+
+#endif // __WUXMArcSegment_DEFINED__
+
+// Windows.UI.Xaml.Media.BezierSegment
+#ifndef __WUXMBezierSegment_DEFINED__
+#define __WUXMBezierSegment_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMBezierSegment : WUXMPathSegment
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) WFPoint* point3;
+@property (retain) WFPoint* point2;
+@property (retain) WFPoint* point1;
++ (WXDependencyProperty*)point1Property;
++ (WXDependencyProperty*)point2Property;
++ (WXDependencyProperty*)point3Property;
+@end
+
+#endif // __WUXMBezierSegment_DEFINED__
+
+// Windows.UI.Xaml.Media.EllipseGeometry
+#ifndef __WUXMEllipseGeometry_DEFINED__
+#define __WUXMEllipseGeometry_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMEllipseGeometry : WUXMGeometry
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property double radiusY;
+@property double radiusX;
+@property (retain) WFPoint* center;
++ (WXDependencyProperty*)centerProperty;
++ (WXDependencyProperty*)radiusXProperty;
++ (WXDependencyProperty*)radiusYProperty;
+@end
+
+#endif // __WUXMEllipseGeometry_DEFINED__
+
+// Windows.UI.Xaml.Media.GeometryGroup
+#ifndef __WUXMGeometryGroup_DEFINED__
+#define __WUXMGeometryGroup_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMGeometryGroup : WUXMGeometry
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property WUXMFillRule fillRule;
+@property (retain) WUXMGeometryCollection* children;
++ (WXDependencyProperty*)childrenProperty;
++ (WXDependencyProperty*)fillRuleProperty;
+@end
+
+#endif // __WUXMGeometryGroup_DEFINED__
+
+// Windows.UI.Xaml.Media.GradientBrush
+#ifndef __WUXMGradientBrush_DEFINED__
+#define __WUXMGradientBrush_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMGradientBrush : WUXMBrush
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property WUXMGradientSpreadMethod spreadMethod;
+@property WUXMBrushMappingMode mappingMode;
+@property (retain) WUXMGradientStopCollection* gradientStops;
+@property WUXMColorInterpolationMode colorInterpolationMode;
++ (WXDependencyProperty*)colorInterpolationModeProperty;
++ (WXDependencyProperty*)gradientStopsProperty;
++ (WXDependencyProperty*)mappingModeProperty;
++ (WXDependencyProperty*)spreadMethodProperty;
+@end
+
+#endif // __WUXMGradientBrush_DEFINED__
+
+// Windows.UI.Xaml.Media.LineGeometry
+#ifndef __WUXMLineGeometry_DEFINED__
+#define __WUXMLineGeometry_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMLineGeometry : WUXMGeometry
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) WFPoint* startPoint;
+@property (retain) WFPoint* endPoint;
++ (WXDependencyProperty*)endPointProperty;
++ (WXDependencyProperty*)startPointProperty;
+@end
+
+#endif // __WUXMLineGeometry_DEFINED__
+
+// Windows.UI.Xaml.Media.LineSegment
+#ifndef __WUXMLineSegment_DEFINED__
+#define __WUXMLineSegment_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMLineSegment : WUXMPathSegment
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) WFPoint* point;
++ (WXDependencyProperty*)pointProperty;
+@end
+
+#endif // __WUXMLineSegment_DEFINED__
+
+// Windows.UI.Xaml.Media.PathGeometry
+#ifndef __WUXMPathGeometry_DEFINED__
+#define __WUXMPathGeometry_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMPathGeometry : WUXMGeometry
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property WUXMFillRule fillRule;
+@property (retain) WUXMPathFigureCollection* figures;
++ (WXDependencyProperty*)figuresProperty;
++ (WXDependencyProperty*)fillRuleProperty;
+@end
+
+#endif // __WUXMPathGeometry_DEFINED__
+
+// Windows.UI.Xaml.Media.PolyBezierSegment
+#ifndef __WUXMPolyBezierSegment_DEFINED__
+#define __WUXMPolyBezierSegment_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMPolyBezierSegment : WUXMPathSegment
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) WUXMPointCollection* points;
++ (WXDependencyProperty*)pointsProperty;
+@end
+
+#endif // __WUXMPolyBezierSegment_DEFINED__
+
+// Windows.UI.Xaml.Media.PolyLineSegment
+#ifndef __WUXMPolyLineSegment_DEFINED__
+#define __WUXMPolyLineSegment_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMPolyLineSegment : WUXMPathSegment
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) WUXMPointCollection* points;
++ (WXDependencyProperty*)pointsProperty;
+@end
+
+#endif // __WUXMPolyLineSegment_DEFINED__
+
+// Windows.UI.Xaml.Media.PolyQuadraticBezierSegment
+#ifndef __WUXMPolyQuadraticBezierSegment_DEFINED__
+#define __WUXMPolyQuadraticBezierSegment_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMPolyQuadraticBezierSegment : WUXMPathSegment
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) WUXMPointCollection* points;
++ (WXDependencyProperty*)pointsProperty;
+@end
+
+#endif // __WUXMPolyQuadraticBezierSegment_DEFINED__
+
+// Windows.UI.Xaml.Media.QuadraticBezierSegment
+#ifndef __WUXMQuadraticBezierSegment_DEFINED__
+#define __WUXMQuadraticBezierSegment_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMQuadraticBezierSegment : WUXMPathSegment
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) WFPoint* point2;
+@property (retain) WFPoint* point1;
++ (WXDependencyProperty*)point1Property;
++ (WXDependencyProperty*)point2Property;
+@end
+
+#endif // __WUXMQuadraticBezierSegment_DEFINED__
+
+// Windows.UI.Xaml.Media.TileBrush
+#ifndef __WUXMTileBrush_DEFINED__
+#define __WUXMTileBrush_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMTileBrush : WUXMBrush
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property WUXMStretch stretch;
+@property WUXMAlignmentY alignmentY;
+@property WUXMAlignmentX alignmentX;
++ (WXDependencyProperty*)alignmentXProperty;
++ (WXDependencyProperty*)alignmentYProperty;
++ (WXDependencyProperty*)stretchProperty;
+@end
+
+#endif // __WUXMTileBrush_DEFINED__
+
+// Windows.UI.Xaml.Media.ImageBrush
+#ifndef __WUXMImageBrush_DEFINED__
+#define __WUXMImageBrush_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMImageBrush : WUXMTileBrush
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) WUXMImageSource* imageSource;
++ (WXDependencyProperty*)imageSourceProperty;
+- (EventRegistrationToken)addImageFailedEvent:(WXExceptionRoutedEventHandler)del;
+- (void)removeImageFailedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addImageOpenedEvent:(WXRoutedEventHandler)del;
+- (void)removeImageOpenedEvent:(EventRegistrationToken)tok;
+@end
+
+#endif // __WUXMImageBrush_DEFINED__
+
+// Windows.UI.Xaml.Media.LinearGradientBrush
+#ifndef __WUXMLinearGradientBrush_DEFINED__
+#define __WUXMLinearGradientBrush_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMLinearGradientBrush : WUXMGradientBrush
++ (instancetype)make ACTIVATOR;
++ (WUXMLinearGradientBrush*)makeInstanceWithGradientStopCollectionAndAngle:(WUXMGradientStopCollection*)gradientStopCollection angle:(double)angle ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) WFPoint* startPoint;
+@property (retain) WFPoint* endPoint;
++ (WXDependencyProperty*)endPointProperty;
++ (WXDependencyProperty*)startPointProperty;
+@end
+
+#endif // __WUXMLinearGradientBrush_DEFINED__
+

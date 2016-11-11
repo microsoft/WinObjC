@@ -27,11 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WDHHidDevice, WDHHidInputReport, WDHHidFeatureReport, WDHHidOutputReport, WDHHidBooleanControlDescription,
-    WDHHidNumericControlDescription, WDHHidInputReportReceivedEventArgs, WDHHidCollection, WDHHidBooleanControl, WDHHidNumericControl;
-@protocol WDHIHidDeviceStatics
-, WDHIHidBooleanControlDescription, WDHIHidNumericControlDescription, WDHIHidCollection, WDHIHidInputReport, WDHIHidOutputReport,
-    WDHIHidFeatureReport, WDHIHidInputReportReceivedEventArgs, WDHIHidBooleanControl, WDHIHidNumericControl, WDHIHidDevice;
+@class WDHHidDevice, WDHHidInputReport, WDHHidFeatureReport, WDHHidOutputReport, WDHHidBooleanControlDescription, WDHHidNumericControlDescription, WDHHidInputReportReceivedEventArgs, WDHHidCollection, WDHHidBooleanControl, WDHHidNumericControl;
+@protocol WDHIHidDeviceStatics, WDHIHidBooleanControlDescription, WDHIHidBooleanControlDescription2, WDHIHidNumericControlDescription, WDHIHidCollection, WDHIHidInputReport, WDHIHidOutputReport, WDHIHidFeatureReport, WDHIHidInputReportReceivedEventArgs, WDHIHidBooleanControl, WDHIHidNumericControl, WDHIHidDevice;
 
 // Windows.Devices.HumanInterfaceDevice.HidReportType
 enum _WDHHidReportType {
@@ -80,15 +77,9 @@ OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidDevice : RTObject <WFIClosable>
-+ (NSString*)getDeviceSelector:(unsigned short)usagePage usageId:(unsigned short)usageId;
-+ (NSString*)getDeviceSelectorVidPid:(unsigned short)usagePage
-                             usageId:(unsigned short)usageId
-                            vendorId:(unsigned short)vendorId
-                           productId:(unsigned short)productId;
-+ (void)fromIdAsync:(NSString*)deviceId
-         accessMode:(WSFileAccessMode)accessMode
-            success:(void (^)(WDHHidDevice*))success
-            failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector:(unsigned short)usagePage usageId:(unsigned short)usageId;
++ (NSString *)getDeviceSelectorVidPid:(unsigned short)usagePage usageId:(unsigned short)usageId vendorId:(unsigned short)vendorId productId:(unsigned short)productId;
++ (void)fromIdAsync:(NSString *)deviceId accessMode:(WSFileAccessMode)accessMode success:(void (^)(WDHHidDevice*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -97,28 +88,20 @@ OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @property (readonly) unsigned short usagePage;
 @property (readonly) unsigned short vendorId;
 @property (readonly) unsigned short Version;
-- (EventRegistrationToken)addInputReportReceivedEvent:(void (^)(WDHHidDevice*, WDHHidInputReportReceivedEventArgs*))del;
+- (EventRegistrationToken)addInputReportReceivedEvent:(void(^)(WDHHidDevice*, WDHHidInputReportReceivedEventArgs*))del;
 - (void)removeInputReportReceivedEvent:(EventRegistrationToken)tok;
 - (void)getInputReportAsyncWithSuccess:(void (^)(WDHHidInputReport*))success failure:(void (^)(NSError*))failure;
 - (void)getInputReportByIdAsync:(unsigned short)reportId success:(void (^)(WDHHidInputReport*))success failure:(void (^)(NSError*))failure;
 - (void)getFeatureReportAsyncWithSuccess:(void (^)(WDHHidFeatureReport*))success failure:(void (^)(NSError*))failure;
-- (void)getFeatureReportByIdAsync:(unsigned short)reportId
-                          success:(void (^)(WDHHidFeatureReport*))success
-                          failure:(void (^)(NSError*))failure;
+- (void)getFeatureReportByIdAsync:(unsigned short)reportId success:(void (^)(WDHHidFeatureReport*))success failure:(void (^)(NSError*))failure;
 - (WDHHidOutputReport*)createOutputReport;
 - (WDHHidOutputReport*)createOutputReportById:(unsigned short)reportId;
 - (WDHHidFeatureReport*)createFeatureReport;
 - (WDHHidFeatureReport*)createFeatureReportById:(unsigned short)reportId;
 - (void)sendOutputReportAsync:(WDHHidOutputReport*)outputReport success:(void (^)(unsigned int))success failure:(void (^)(NSError*))failure;
-- (void)sendFeatureReportAsync:(WDHHidFeatureReport*)featureReport
-                       success:(void (^)(unsigned int))success
-                       failure:(void (^)(NSError*))failure;
-- (NSArray* /* WDHHidBooleanControlDescription* */)getBooleanControlDescriptions:(WDHHidReportType)reportType
-                                                                       usagePage:(unsigned short)usagePage
-                                                                         usageId:(unsigned short)usageId;
-- (NSArray* /* WDHHidNumericControlDescription* */)getNumericControlDescriptions:(WDHHidReportType)reportType
-                                                                       usagePage:(unsigned short)usagePage
-                                                                         usageId:(unsigned short)usageId;
+- (void)sendFeatureReportAsync:(WDHHidFeatureReport*)featureReport success:(void (^)(unsigned int))success failure:(void (^)(NSError*))failure;
+- (NSArray* /* WDHHidBooleanControlDescription* */)getBooleanControlDescriptions:(WDHHidReportType)reportType usagePage:(unsigned short)usagePage usageId:(unsigned short)usageId;
+- (NSArray* /* WDHHidNumericControlDescription* */)getNumericControlDescriptions:(WDHHidReportType)reportType usagePage:(unsigned short)usagePage usageId:(unsigned short)usageId;
 - (void)close;
 @end
 
@@ -198,6 +181,7 @@ OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @property (readonly) WDHHidReportType reportType;
 @property (readonly) unsigned short usageId;
 @property (readonly) unsigned short usagePage;
+@property (readonly) BOOL isAbsolute;
 @end
 
 #endif // __WDHHidBooleanControlDescription_DEFINED__
@@ -299,3 +283,4 @@ OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @end
 
 #endif // __WDHHidNumericControl_DEFINED__
+

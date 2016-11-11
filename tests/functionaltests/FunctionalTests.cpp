@@ -675,6 +675,7 @@ extern void ProjectionAsyncOnUIThread();
 extern void ProjectionAsyncOnBackgroundThread();
 extern void ProjectionCreateWithARCEnabled();
 extern void ProjectionComposableAttrClass();
+extern void ProjectionContainerOfContainers();
 
 class ProjectionTest {
 public:
@@ -712,6 +713,10 @@ public:
 
     TEST_METHOD(ProjectionTest_ComposableAttrClass) {
         ProjectionComposableAttrClass();
+    }
+
+    TEST_METHOD(ProjectionTest_ContainerOfContainers) {
+        ProjectionContainerOfContainers();
     }
 
 }; /* class ProjectionTest */

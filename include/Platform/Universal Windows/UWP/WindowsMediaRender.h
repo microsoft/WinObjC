@@ -45,3 +45,4 @@ enum _WMRAudioRenderCategory {
 typedef unsigned WMRAudioRenderCategory;
 
 #import <Foundation/Foundation.h>
+
