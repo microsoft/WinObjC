@@ -113,6 +113,4 @@ unsigned int XamlContentDialogNumberOfButtons(WXCContentDialog* contentDialog);
 void XamlContentDialogSetCancelButtonIndex(WXCContentDialog* contentDialog, unsigned int cancelButtonIndex);
 void XamlContentDialogSetDestructiveButtonIndex(WXCContentDialog* contentDialog, unsigned int destructiveButtonIndex);
 
-void HookLayoutEvent(WXCButton* button, WUXIPointerEventHandler autoLayoutHook);
-
 } // namespace XamlControls

@@ -122,7 +122,7 @@ static XamlCompositor::Controls::EventedStoryboard^ GetStoryboard(DisplayAnimati
     return (XamlCompositor::Controls::EventedStoryboard^)(Platform::Object^)anim->_xamlAnimation;
 }
 
-void DisplayNode::SetScrollviewerControls(IInspectable* rootControl, IInspectable* contentControl) {
+void DisplayNode::SetContentLayoutProxies(IInspectable* rootControl, IInspectable* contentControl) {
 
     // append the rootElement as the first (and the only) child of the layoutElement
     XamlCompositor::Controls::CALayerXaml^ layoutPanel = (XamlCompositor::Controls::CALayerXaml^)(Platform::Object^)_layoutElement;
