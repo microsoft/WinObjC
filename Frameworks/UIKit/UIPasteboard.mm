@@ -260,7 +260,8 @@ WADDataPackageView* _getClipboardContent() {
             UNIMPLEMENTED_WITH_MSG("Only support first item in items, the rest is ignored");
         }
 
-        StrongId<WADDataPackage> dataPackage = [WADDataPackage make];
+        StrongId<WADDataPackage> dataPackage;
+        dataPackage.attach([WADDataPackage make]);
         [dataPackage setRequestedOperation:WADDataPackageOperationCopy];
         __block BOOL dataSet = NO;
 
@@ -351,7 +352,8 @@ WADDataPackageView* _getClipboardContent() {
 
     if (data && pasteboardType) {
         // only set data when both data and pasteType are avaiable
-        StrongId<WADDataPackage> dataPackage = [WADDataPackage make];
+        StrongId<WADDataPackage> dataPackage;
+        dataPackage.attach([WADDataPackage make]);
         [dataPackage setRequestedOperation:WADDataPackageOperationCopy];
         [UIPasteboard _setData:pasteboardType withData:data on:dataPackage];
         [WADClipboard setContent:dataPackage];
@@ -360,7 +362,8 @@ WADDataPackageView* _getClipboardContent() {
 }
 
 + (WSSInMemoryRandomAccessStream*)_populateStream:(WSSInMemoryRandomAccessStream*)stream withData:(const void*)data withLength:(int)length {
-    StrongId<WSSDataWriter> dataWriter = [WSSDataWriter makeDataWriter:[stream getOutputStreamAt:0]];
+    StrongId<WSSDataWriter> dataWriter;
+    dataWriter.attach([WSSDataWriter makeDataWriter:[stream getOutputStreamAt:0]]);
     ComPtr<IBuffer> buffer;
     IBuffer* rawBuffer = nullptr;
     HRESULT result;
@@ -425,7 +428,8 @@ WADDataPackageView* _getClipboardContent() {
                 break;
         }
 
-        StrongId<WSSInMemoryRandomAccessStream> stream = [WSSInMemoryRandomAccessStream make];
+        StrongId<WSSInMemoryRandomAccessStream> stream;
+        stream.attach([WSSInMemoryRandomAccessStream make]);
         [UIPasteboard _populateStream:stream withData:data withLength:len];
         return stream;
     }
@@ -460,7 +464,8 @@ WADDataPackageView* _getClipboardContent() {
         }
 
         // convert to WFURI
-        StrongId<WFUri> uri = [WFUri makeUri:url.absoluteString];
+        StrongId<WFUri> uri;
+        uri.attach([WFUri makeUri:url.absoluteString]);
         [package setUri:uri];
         return YES;
     } else {
@@ -593,7 +598,8 @@ WADDataPackageView* _getClipboardContent() {
 }
 
 + (void)_setStringToClipboard:(NSString*)stringData {
-    StrongId<WADDataPackage> dataPackage = [WADDataPackage make];
+    StrongId<WADDataPackage> dataPackage;
+    dataPackage.attach([WADDataPackage make]);
     [dataPackage setRequestedOperation:WADDataPackageOperationCopy];
     [UIPasteboard _setString:stringData onDataPackage:dataPackage];
     [WADClipboard setContent:dataPackage];
@@ -639,7 +645,8 @@ WADDataPackageView* _getClipboardContent() {
 
             [randomAccessStreamReference openReadAsyncWithSuccess:^void(RTObject<WSSIRandomAccessStreamWithContentType>* content) {
 
-                StrongId<WSSBuffer> buffer = [WSSBuffer make:content.size];
+                StrongId<WSSBuffer> buffer;
+                buffer.attach([WSSBuffer make:content.size]);
 
                 [content readAsync:buffer
                     count:content.size
@@ -709,7 +716,8 @@ WADDataPackageView* _getClipboardContent() {
 }
 
 + (void)_setImageToClipboard:(UIImage*)imageData {
-    StrongId<WADDataPackage> dataPackage = [WADDataPackage make];
+    StrongId<WADDataPackage> dataPackage;
+    dataPackage.attach([WADDataPackage make]);
     [dataPackage setRequestedOperation:WADDataPackageOperationCopy];
     [UIPasteboard _setImage:imageData onDataPackage:dataPackage];
     [WADClipboard setContent:dataPackage];
@@ -789,12 +797,14 @@ WADDataPackageView* _getClipboardContent() {
 }
 
 + (void)_setURL:(NSURL*)URLData onDataPackage:(WADDataPackage*)dataPackage {
-    StrongId<WFUri> uri = [WFUri makeUri:URLData.absoluteString];
+    StrongId<WFUri> uri;
+    uri.attach([WFUri makeUri:URLData.absoluteString]);
     [dataPackage setUri:uri];
 }
 
 + (void)_setURLToClipboard:(NSURL*)URLData {
-    StrongId<WADDataPackage> dataPackage = [WADDataPackage make];
+    StrongId<WADDataPackage> dataPackage;
+    dataPackage.attach([WADDataPackage make]);
     [dataPackage setRequestedOperation:WADDataPackageOperationCopy];
     [UIPasteboard _setURL:URLData onDataPackage:dataPackage];
     [WADClipboard setContent:dataPackage];
