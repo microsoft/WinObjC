@@ -220,26 +220,27 @@ WADDataPackageView* _getClipboardContent() {
         }
     }
 
-    // at most items will contain item, if there is no item, still need return empty array
+    // at most items can contain one item, or zero item if no supported type found
     NSMutableArray<NSDictionary<NSString*, id>*>* items = [NSMutableArray arrayWithCapacity:1];
-
-    NSMutableDictionary* ret = (supportedTypes > 0) ? [NSMutableDictionary dictionaryWithCapacity:supportedTypes] : nil;
-    if (ret) {
-        if ([dataPackageView contains:[WADStandardDataFormats text]]) {
-            [ret setValue:[UIPasteboard _getStringFromDataPackageView:dataPackageView] forKey:(NSString*)kUTTypeText];
-        }
-
-        if ([dataPackageView contains:[WADStandardDataFormats bitmap]]) {
-            [ret setValue:[UIPasteboard _getImageFromDataPackageView:dataPackageView] forKey:(NSString*)kUTTypeImage];
-        }
-
-        if ([dataPackageView contains:[WADStandardDataFormats uri]]) {
-            [ret setValue:[UIPasteboard _getURLFromDataPackageView:dataPackageView] forKey:(NSString*)kUTTypeURL];
-        }
-
-        [items addObject:ret];
+    if (supportedTypes == 0) {
+        // early return empty array if no supported type found
+        return items;
     }
 
+    NSMutableDictionary* ret = [NSMutableDictionary dictionaryWithCapacity:supportedTypes];
+    if ([dataPackageView contains:[WADStandardDataFormats text]]) {
+        [ret setValue:[UIPasteboard _getStringFromDataPackageView:dataPackageView] forKey:(NSString*)kUTTypeText];
+    }
+
+    if ([dataPackageView contains:[WADStandardDataFormats bitmap]]) {
+        [ret setValue:[UIPasteboard _getImageFromDataPackageView:dataPackageView] forKey:(NSString*)kUTTypeImage];
+    }
+
+    if ([dataPackageView contains:[WADStandardDataFormats uri]]) {
+        [ret setValue:[UIPasteboard _getURLFromDataPackageView:dataPackageView] forKey:(NSString*)kUTTypeURL];
+    }
+
+    [items addObject:ret];
     return items;
 }
 
@@ -292,7 +293,7 @@ WADDataPackageView* _getClipboardContent() {
             [WADClipboard flush];
         }
     } else {
-        // assigning items to nil or an empty arrary clears the pasteboard
+        // assigning items to nil or an empty array clears the pasteboard
         [WADClipboard clear];
     }
 }
