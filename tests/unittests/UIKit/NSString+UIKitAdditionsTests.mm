@@ -14,43 +14,12 @@
 //
 //******************************************************************************
 
-#import <UIKit/NSMutableParagraphStyle.h>
-#import <StubReturn.h>
-#import "NSParagraphStyleInternal.h"
+#import <TestFramework.h>
+#import <UIKit/UIKit.h>
 
-@implementation NSMutableParagraphStyle
-
-/**
- @Status Interoperable
-*/
-- (id)copyWithZone:(NSZone*)zone {
-    NSParagraphStyle* ret = [NSParagraphStyle new];
-    [ret _setParagraphStyle:self];
-    return ret;
+TEST(NSString_UIKitAdditions, ShouldNotReturnSizeOfZeroWidth) {
+    CGSize size =
+        [@"TEST" sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:CGSizeZero lineBreakMode:NSLineBreakByWordWrapping];
+    EXPECT_LT(0.0, size.width);
+    EXPECT_LT(0.0, size.height);
 }
-
-/**
- @Status Interoperable
- @Notes
-*/
-- (void)setParagraphStyle:(NSParagraphStyle*)obj {
-    [self _setParagraphStyle:obj];
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (void)addTabStop:(NSTextTab*)anObject {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (void)removeTabStop:(NSTextTab*)anObject {
-    UNIMPLEMENTED();
-}
-
-@end
