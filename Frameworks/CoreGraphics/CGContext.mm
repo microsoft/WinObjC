@@ -1868,6 +1868,7 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
     RETURN_NULL_IF(!height);
     RETURN_NULL_IF(!space);
 
+    // bitsperpixel = ((bytesPerRow/width) * 8bits/byte)
     size_t bitsPerPixel = ((bytesPerRow / width) << 3);
     REFGUID pixelFormat = _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, space, bitmapInfo);
 
@@ -1880,6 +1881,7 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
         // TODO #<GITHUB-ID>: this will be an issue if we have change in stride, account for that.
         // Also as per documentation, it's best to leave CGBitmapContext to manage the memory
         if (data != nullptr) {
+            UNIMPLEMENTED_WITH_MSG("Does not support conversion to supported rendering target format, if the data was provided.");
             return nullptr;
         }
         customBitmap = Make<CGIWICBitmap>(data, GUID_WICPixelFormat32bppPBGRA, height, width);
@@ -1902,7 +1904,7 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
  @Status Interoperable
 */
 CGBitmapInfo CGBitmapContextGetBitmapInfo(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context, 0);
+    NOISY_RETURN_IF_NULL(context, kCGBitmapByteOrderDefault);
     return CGImageGetBitmapInfo(CGBitmapContextGetImage(context));
 }
 

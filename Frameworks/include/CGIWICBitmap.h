@@ -40,7 +40,7 @@
 #import <D2d1.h>
 #include <COMIncludes_End.h>
 
-#import <memory.h>
+#import <memory>
 
 using namespace Microsoft::WRL;
 
@@ -124,6 +124,8 @@ public:
         // Obtain bytes per row from pixelFormat
         const __CGImagePixelProperties* properties = _CGGetPixelFormatProperties(m_pixelFormat);
         FAIL_FAST_IF(properties == nullptr);
+
+        //bytesPerRow = ((bitsPerPixel) / 8 byte/pixel) * width
         m_bytesPerRow = (properties->bitsPerPixel >> 3) * m_width;
 
         if (data) {

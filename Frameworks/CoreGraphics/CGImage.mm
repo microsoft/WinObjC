@@ -219,7 +219,7 @@ CGColorSpaceRef CGImageGetColorSpace(CGImageRef img) {
  @Status Interoperable
 */
 CGBitmapInfo CGImageGetBitmapInfo(CGImageRef img) {
-    RETURN_RESULT_IF_NULL(img, 0);
+    RETURN_RESULT_IF_NULL(img, kCGBitmapByteOrderDefault);
     return img->BitmapInfo();
 }
 
@@ -371,9 +371,7 @@ CGImageRef CGImageCreateWithMaskingColors(CGImageRef image, const CGFloat* compo
 
 bool _CGIsValidRenderTargetPixelFormat(WICPixelFormatGUID pixelFormat) {
     auto iterator = s_ValidRenderTargetPixelFormat.find(pixelFormat);
-    RETURN_FALSE_IF(iterator == s_ValidRenderTargetPixelFormat.end());
-
-    return true;
+    return iterator != s_ValidRenderTargetPixelFormat.end();
 }
 
 const __CGImagePixelProperties* _CGGetPixelFormatProperties(WICPixelFormatGUID pixelFormat) {
