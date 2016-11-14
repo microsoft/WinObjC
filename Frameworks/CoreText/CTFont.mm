@@ -569,8 +569,7 @@ CGFloat CTFontGetDescent(CTFontRef font) {
         return 0;
     }
     CF_OBJC_FUNCDISPATCHV(CTFontGetTypeID(), CGFloat, (UIFont*)font, descender);
-    // DWRITE_FONT_METRICS keeps an unsigned value for descent, but CTFontGetDescent is expected to return a negative value
-    return -__CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).descent);
+    return __CTFontScaleMetric(font, __CTFontGetDWriteMetrics(font).descent);
 }
 
 /**
