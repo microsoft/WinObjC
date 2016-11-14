@@ -350,7 +350,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 */
 - (CGRect)imageRectForContentRect:(CGRect)contentRect {
     CGSize titleSize = [self.currentTitle sizeWithFont:self.font];
-    CGSize imageSize = { 0 };
+    // TODO  #1365 :: Currently cannot assume getting size from nil will return CGSizeZero
+    CGSize imageSize = CGSizeZero;
     CGRect insetsRect = UIEdgeInsetsInsetRect(contentRect, self.imageEdgeInsets);
 
     if (!self.currentImage) {
@@ -383,7 +384,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 - (CGRect)titleRectForContentRect:(CGRect)contentRect {
     CGSize titleSize = [self.currentTitle sizeWithFont:self.font];
     CGSize totalSize = titleSize;
-    CGSize imageSize = [self.currentImage size];
+    // TODO  #1365 :: Currently cannot assume getting size from nil will return CGSizeZero
+    CGSize imageSize = self.currentImage ? [self.currentImage size] : CGSizeZero;
     CGRect insetsRect = UIEdgeInsetsInsetRect(contentRect, self.titleEdgeInsets);
 
     if ([self currentTitle].length == 0) {
@@ -901,7 +903,8 @@ static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableBackgroundImage(U
     // If we have a background, its image size dictates the smallest size.
     if (self.currentBackgroundImage) {
         UIImage* background = self.currentBackgroundImage;
-        CGSize size = [background size];
+        // TODO  #1365 :: Currently cannot assume getting size from nil will return CGSizeZero
+        CGSize size = background ? [background size] : CGSizeZero;
 
         ret.width = std::max(size.width, ret.width);
         ret.height = std::max(size.height, ret.height);

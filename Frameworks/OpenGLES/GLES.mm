@@ -755,6 +755,13 @@ EAGL_EXPORT void EXPORT_glTexStorage2DEXT(GLenum target, GLsizei levels, GLenum 
 /**
    @Status Interoperable
 */
+EAGL_EXPORT void EXPORT_glMapBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access) {
+    glMapBufferRangeEXT(target, offset, length, access);
+}
+
+/**
+   @Status Interoperable
+*/
 EAGL_EXPORT void EXPORT_glCompressedTexImage2D(GLenum target,
                                                GLint level,
                                                GLint internalformat,
