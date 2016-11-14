@@ -98,8 +98,6 @@ void StoryboardManager::_CreateFlip(Layer^ layer, bool flipRight, bool invert, b
         }
     }
 
-    ((PlaneProjection^)layer->Projection)->CenterOfRotationX = LayerCoordinator::GetVisualWidth(layer) / 2;
-    ((PlaneProjection^)layer->Projection)->CenterOfRotationY = LayerCoordinator::GetVisualHeight(layer) / 2;
     Storyboard::SetTargetProperty(rotateAnim, "(UIElement.Projection).(PlaneProjection.RotationY)");
     Storyboard::SetTarget(rotateAnim, layer);
     m_container->Children->Append(rotateAnim);
@@ -148,6 +146,10 @@ void StoryboardManager::_CreateFlip(Layer^ layer, bool flipRight, bool invert, b
                 unsigned int index = 0;
                 parentPanel->Children->IndexOf(layer, &index);
                 parentPanel->Children->RemoveAt(index);
+            } else {
+                // TODO: Track down why we sometimes don't have a parent when the animation completes.
+                TraceWarning(TAG, L"Failed to remove flip animation from scene; didn't have a parent to remove from!");
+                layer->Visibility = Visibility::Collapsed;
             }
         });
     } else {
@@ -199,6 +201,10 @@ void StoryboardManager::_CreateWoosh(Layer^ layer, bool fromRight, bool invert, 
                 unsigned int index = 0;
                 parentPanel->Children->IndexOf(layer, &index);
                 parentPanel->Children->RemoveAt(index);
+            } else {
+                // TODO: Track down why we sometimes don't have a parent when the animation completes.
+                TraceWarning(TAG, L"Failed to remove woosh animation from scene; didn't have a parent to remove from!");
+                layer->Visibility = Visibility::Collapsed;
             }
         });
     } else {
@@ -235,8 +241,7 @@ void StoryboardManager::AddTransition(Layer^ realLayer, Layer^ snapshotLayer, St
         }
 
         _CreateFlip(realLayer, flipToLeft, true, false);
-    }
-    else {
+    } else {
         TimeSpan timeSpan = TimeSpan();
         timeSpan.Duration = (long long)(0.5 * c_hundredNanoSeconds);
         m_container->Duration = Duration(timeSpan);

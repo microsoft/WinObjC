@@ -128,7 +128,7 @@ concurrency::task<Layer^> _SnapshotLayer(Layer^ layer) {
     else {
         RenderTargetBitmap^ snapshot = ref new RenderTargetBitmap();
         return concurrency::create_task(
-                snapshot->RenderAsync(layer, static_cast<int>(LayerCoordinator::GetVisualWidth(layer) * DisplayProperties::RawScreenScale()), 0))
+                snapshot->RenderAsync(layer))
             .then([snapshot, layer](concurrency::task<void> result) noexcept {
             try {
                 result.get();
@@ -143,12 +143,14 @@ concurrency::task<Layer^> _SnapshotLayer(Layer^ layer) {
 
             // Return a new 'copy' layer with the rendered content
             Layer^ newLayer = ref new Layer();
+            newLayer->Name = "_Temporary_CoreAnimation_SnapshotLayer";
             LayerCoordinator::InitializeFrameworkElement(newLayer);
 
             // Copy display properties from the old layer to the new layer
             LayerCoordinator::SetValue(newLayer, "opacity", LayerCoordinator::GetValue(layer, "opacity"));
             LayerCoordinator::SetValue(newLayer, "position", LayerCoordinator::GetValue(layer, "position"));
-            LayerCoordinator::SetValue(newLayer, "size", LayerCoordinator::GetValue(layer, "size"));
+            newLayer->Width = layer->Width;
+            newLayer->Height = layer->Height;
             LayerCoordinator::SetValue(newLayer, "anchorPoint", LayerCoordinator::GetValue(layer, "anchorPoint"));
 
             int width = snapshot->PixelWidth;
@@ -159,8 +161,8 @@ concurrency::task<Layer^> _SnapshotLayer(Layer^ layer) {
             LayerCoordinator::SetContent(
                 newLayer, 
                 snapshot,
-                static_cast<float>(width),
-                static_cast<float>(height), 
+                static_cast<float>(layer->Width),
+                static_cast<float>(layer->Height),
                 static_cast<float>(DisplayProperties::RawScreenScale() * dispInfo->RawPixelsPerViewPixel));
 
             // There seems to be a bug in Xaml where Render'd layers get sized to their visible content... sort of.
