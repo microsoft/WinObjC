@@ -50,6 +50,23 @@ void testing::DrawTest::SetUp() {
     SetUpContext();
 }
 
+CFStringRef testing::DrawTest::CreateAdditionalTestDescription() {
+    return nullptr;
+}
+
+CFStringRef testing::DrawTest::CreateOutputFilename() {
+    const ::testing::TestInfo* const test_info = ::testing::UnitTest::GetInstance()->current_test_info();
+    woc::unique_cf<CFStringRef> additionalDesc{ CreateAdditionalTestDescription() };
+    woc::unique_cf<CFStringRef> filename{ CFStringCreateWithFormat(nullptr,
+                                                                   nullptr,
+                                                                   CFSTR("TestImage.%s.%s%s%@.png"),
+                                                                   test_info->test_case_name(),
+                                                                   test_info->name(),
+                                                                   (additionalDesc ? "." : ""),
+                                                                   (additionalDesc ? additionalDesc.get() : CFSTR(""))) };
+    return filename.release();
+}
+
 void testing::DrawTest::TearDown() {
     CGContextRef context = GetDrawingContext();
 
@@ -61,10 +78,11 @@ void testing::DrawTest::TearDown() {
     CGImageDestinationAddImage(imageDest.get(), image.get(), nullptr);
     CGImageDestinationFinalize(imageDest.get());
 
-    const ::testing::TestInfo* const test_info = ::testing::UnitTest::GetInstance()->current_test_info();
-    woc::unique_cf<CFStringRef> filename{
-        CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.%s.%s.png"), test_info->test_case_name(), test_info->name())
-    };
+    woc::unique_cf<CFStringRef> originalFilename{ CreateOutputFilename() };
+
+    woc::unique_cf<CFMutableStringRef> filename{ CFStringCreateMutableCopy(nullptr, 0, originalFilename.get()) };
+
+    CFStringFindAndReplace(filename.get(), CFSTR("/"), CFSTR("_"), CFRange{ 0, CFStringGetLength(filename.get()) }, 0);
 
     // This is only populated if CFStringGetCStringPtr fails.
     std::unique_ptr<char[]> owningFilenamePtr;

@@ -34,6 +34,8 @@ public:
     static void SetUpTestCase();
     static void TearDownTestCase();
 
+    virtual CFStringRef CreateAdditionalTestDescription();
+    virtual CFStringRef CreateOutputFilename();
     virtual CGSize CanvasSize();
     virtual void SetUpContext();
     virtual void SetUp();
