@@ -47,7 +47,9 @@ struct _DWriteFontProperties {
 };
 
 // Create DWrite objects
+#ifdef __cplusplus
 extern "C++" std::shared_ptr<_DWriteFontProperties> _DWriteGetFontPropertiesFromName(CFStringRef fontName);
+#endif
 
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateTextFormat(const wchar_t* fontFamilyName,
                                                     DWRITE_FONT_WEIGHT weight,

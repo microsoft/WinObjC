@@ -46,7 +46,7 @@ static wstring __GetUserDefaultLocaleName() {
 /**
  * Private helper that creates an uppercase copy of a CFString
  */
-CFStringRef __CFStringCreateUppercaseCopy(CFStringRef string, CFLocaleRef locale) {
+static CFStringRef __CFStringCreateUppercaseCopy(CFStringRef string, CFLocaleRef locale) {
     CFMutableStringRef ret = CFStringCreateMutableCopy(nullptr, CFStringGetLength(string), string);
     CFStringUppercase(ret, locale);
     return ret;
@@ -69,7 +69,7 @@ HRESULT __DWriteGetFontListForFamilyName(CFStringRef familyName, IDWriteFontList
     CFStringGetCharacters(familyName, CFRangeMake(0, familyNameLength), unicharFamilyName.data());
 
     size_t index = 0;
-    BOOL exists = false;
+    BOOL exists = FALSE;
 
     RETURN_IF_FAILED(fontCollection->FindFamilyName(reinterpret_cast<wchar_t*>(unicharFamilyName.data()), &index, &exists));
     RETURN_HR_IF(E_INVALIDARG, !exists);
@@ -169,7 +169,7 @@ CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedStrin
     wstring localeName = __GetUserDefaultLocaleName();
 
     uint32_t index = 0;
-    BOOL exists = false;
+    BOOL exists = FALSE;
 
     // If the default locale is returned, find that locale name, otherwise use "en-us".
     RETURN_NULL_IF_FAILED(localizedString->FindLocaleName(localeName.c_str(), &index, &exists));
