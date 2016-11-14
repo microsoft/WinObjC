@@ -452,7 +452,7 @@ TEST(GLKit, TemporaryShaderNodes) {
 }
 
 TEST(GLKit, BasicMath) {
-    BOOL invertible = FALSE;
+    bool invertible = false;
 
     Dw32 cos2f;
     Dw32 sin2f;
@@ -542,7 +542,7 @@ TEST(GLKit, BasicMath) {
     // Make mc a non-invertible matrix by clearing the m33 element of the rotation+translation matrix.
     mc.m33 = 0.0f;
     mcInverse = GLKMatrix4Invert(mc, &invertible);
-    EXPECT_TRUE_MSG((invertible == FALSE), "GLKMatrix4Invert erroneously reported non-invertible matrix as invertible.");
+    EXPECT_TRUE_MSG((invertible == false), "GLKMatrix4Invert erroneously reported non-invertible matrix as invertible.");
     checkMatrix("GLKMatrix4Invert should return the identity matrix when a non-invertible matrix is passed in.", 
                 &mcInverse.m[0], &mIdentity.m[0]);
 

@@ -87,7 +87,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 }
 
 - (void)prepareToDraw {
-    BOOL success = FALSE;
+    bool success = false;
 
     _cameraRequired = FALSE;
     _modelRefTrans = GLKMatrix4Invert(self.transform.modelviewMatrix, &success);
