@@ -202,33 +202,34 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
 
         D2D1_FILL_MODE d2dFillMode = (pathMode & kCGPathEOFill) == kCGPathEOFill ? D2D1_FILL_MODE_ALTERNATE : D2D1_FILL_MODE_WINDING;
 
-        ComPtr<ID2D1Geometry> convertedClippingGeometry;
-        RETURN_IF_FAILED(_CGConvertD2DGeometryToFillMode(additionalClippingGeometry.Get(), d2dFillMode, &convertedClippingGeometry));
+        if (!state.clippingGeometry) {
+            // If we don't have a clipping geometry, however, we are free to take this one wholesale (after EO/Winding conversion.)
+            ComPtr<ID2D1Geometry> convertedClippingGeometry;
+            RETURN_IF_FAILED(_CGConvertD2DGeometryToFillMode(additionalClippingGeometry.Get(), d2dFillMode, &convertedClippingGeometry));
 
-        if (state.clippingGeometry) {
-            // If we have a clipping geometry right now, we must intersect it with the new path.
-
-            // To do so, we need to stream the combined geometry into a totally new geometry.
-            ComPtr<ID2D1PathGeometry> newClippingPathGeometry;
-            RETURN_IF_FAILED(Factory()->CreatePathGeometry(&newClippingPathGeometry));
-
-            ComPtr<ID2D1GeometrySink> geometrySink;
-            RETURN_IF_FAILED(newClippingPathGeometry->Open(&geometrySink));
-
-            geometrySink->SetFillMode(d2dFillMode);
-
-            RETURN_IF_FAILED(state.clippingGeometry->CombineWithGeometry(additionalClippingGeometry.Get(),
-                                                                         D2D1_COMBINE_MODE_INTERSECT,
-                                                                         nullptr,
-                                                                         geometrySink.Get()));
-
-            RETURN_IF_FAILED(geometrySink->Close());
-
-            return newClippingPathGeometry.As(&state.clippingGeometry);
-        } else {
-            // If we don't have a clipping geometry, however, we are free to take this one wholesale.
-            return convertedClippingGeometry.As(&state.clippingGeometry);
+            state.clippingGeometry.Attach(convertedClippingGeometry.Detach());
+            return S_OK;
         }
+
+        // If we have a clipping geometry right now, we must intersect it with the new path.
+        // To do so, we need to stream the combined geometry into a totally new geometry.
+        ComPtr<ID2D1PathGeometry> newClippingPathGeometry;
+        RETURN_IF_FAILED(Factory()->CreatePathGeometry(&newClippingPathGeometry));
+
+        ComPtr<ID2D1GeometrySink> geometrySink;
+        RETURN_IF_FAILED(newClippingPathGeometry->Open(&geometrySink));
+
+        geometrySink->SetFillMode(d2dFillMode);
+
+        RETURN_IF_FAILED(state.clippingGeometry->CombineWithGeometry(additionalClippingGeometry.Get(),
+                                                                     D2D1_COMBINE_MODE_INTERSECT,
+                                                                     nullptr,
+                                                                     geometrySink.Get()));
+
+        RETURN_IF_FAILED(geometrySink->Close());
+
+        state.clippingGeometry.Attach(newClippingPathGeometry.Detach());
+        return S_OK;
     }
 };
 
@@ -780,7 +781,6 @@ bool CGContextPathContainsPoint(CGContextRef context, CGPoint point, CGPathDrawi
 #pragma endregion
 
 #pragma region Global State - Clipping and Masking
-/// TODO(DH): GH#future Clipping and Masking
 /**
  @Status Interoperable
 */
@@ -838,12 +838,14 @@ CGRect CGContextGetClipBoundingBox(CGContextRef context) {
 
     auto& state = context->CurrentGState();
     if (!state.clippingGeometry) {
-        return CGRectNull;
+        D2D1_SIZE_F targetSize = context->RenderTarget()->GetSize();
+        return CGContextConvertRectToUserSpace(context, CGRect{ CGPointZero, { targetSize.width, targetSize.height }});
     }
 
     D2D1_RECT_F bounds;
 
     if (FAILED(state.clippingGeometry->GetBounds(nullptr, &bounds))) {
+        TraceError(TAG, L"failed to get bounds for clipping geometry in context %p", context);
         return CGRectNull;
     }
 
