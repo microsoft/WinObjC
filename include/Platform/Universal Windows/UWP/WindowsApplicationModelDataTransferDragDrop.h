@@ -40,3 +40,4 @@ enum _WADDDragDropModifiers {
 typedef unsigned WADDDragDropModifiers;
 
 #import <Foundation/Foundation.h>
+

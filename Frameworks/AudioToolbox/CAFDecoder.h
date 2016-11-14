@@ -114,9 +114,6 @@ private:
         int64_t mNumberValidFrames;
         int32_t mPrimingFrames;
         int32_t mRemainderFrames;
-
-        uint8_t mPacketDescriptions[1]; // this is a variable length array of
-        // mNumberPackets elements
     } CAFPacketTableHeader;
 
     typedef struct CAFDataChunk { uint32_t mEditCount; } CAFDataChunk;
@@ -142,7 +139,6 @@ private:
     CAFAudioDescription cafDesc;
     CAFPacketTableHeader cafPacketTbl;
 
-    
     ChannelStateList channelStates;
 
 public:

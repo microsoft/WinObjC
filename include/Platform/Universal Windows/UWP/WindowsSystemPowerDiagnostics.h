@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WSPDBackgroundEnergyDiagnostics, WSPDForegroundEnergyDiagnostics;
-@protocol WSPDIBackgroundEnergyDiagnosticsStatics
-, WSPDIForegroundEnergyDiagnosticsStatics;
+@protocol WSPDIBackgroundEnergyDiagnosticsStatics, WSPDIForegroundEnergyDiagnosticsStatics;
 
 #import <Foundation/Foundation.h>
 
@@ -58,3 +57,4 @@ OBJCUWP_WINDOWS_SYSTEM_POWER_DIAGNOSTICS_EXPORT
 @end
 
 #endif // __WSPDForegroundEnergyDiagnostics_DEFINED__
+

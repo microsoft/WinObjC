@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WDPPdfPageRenderOptions, WDPPdfPageDimensions, WDPPdfPage, WDPPdfDocument;
-@protocol WDPIPdfPageDimensions
-, WDPIPdfPageRenderOptions, WDPIPdfPage, WDPIPdfDocument, WDPIPdfDocumentStatics;
+@protocol WDPIPdfPageDimensions, WDPIPdfPageRenderOptions, WDPIPdfPage, WDPIPdfDocument, WDPIPdfDocumentStatics;
 
 // Windows.Data.Pdf.PdfPageRotation
 enum _WDPPdfPageRotation {
@@ -114,8 +113,7 @@ OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 @property (readonly) WDPPdfPageRotation rotation;
 @property (readonly) WFSize* size;
 - (RTObject<WFIAsyncAction>*)renderToStreamAsync:(RTObject<WSSIRandomAccessStream>*)outputStream;
-- (RTObject<WFIAsyncAction>*)renderWithOptionsToStreamAsync:(RTObject<WSSIRandomAccessStream>*)outputStream
-                                                    options:(WDPPdfPageRenderOptions*)options;
+- (RTObject<WFIAsyncAction>*)renderWithOptionsToStreamAsync:(RTObject<WSSIRandomAccessStream>*)outputStream options:(WDPPdfPageRenderOptions*)options;
 - (RTObject<WFIAsyncAction>*)preparePageAsync;
 - (void)close;
 @end
@@ -129,17 +127,9 @@ OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 @interface WDPPdfDocument : RTObject
 + (void)loadFromFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WDPPdfDocument*))success failure:(void (^)(NSError*))failure;
-+ (void)loadFromFileWithPasswordAsync:(RTObject<WSIStorageFile>*)file
-                             password:(NSString*)password
-                              success:(void (^)(WDPPdfDocument*))success
-                              failure:(void (^)(NSError*))failure;
-+ (void)loadFromStreamAsync:(RTObject<WSSIRandomAccessStream>*)inputStream
-                    success:(void (^)(WDPPdfDocument*))success
-                    failure:(void (^)(NSError*))failure;
-+ (void)loadFromStreamWithPasswordAsync:(RTObject<WSSIRandomAccessStream>*)inputStream
-                               password:(NSString*)password
-                                success:(void (^)(WDPPdfDocument*))success
-                                failure:(void (^)(NSError*))failure;
++ (void)loadFromFileWithPasswordAsync:(RTObject<WSIStorageFile>*)file password:(NSString *)password success:(void (^)(WDPPdfDocument*))success failure:(void (^)(NSError*))failure;
++ (void)loadFromStreamAsync:(RTObject<WSSIRandomAccessStream>*)inputStream success:(void (^)(WDPPdfDocument*))success failure:(void (^)(NSError*))failure;
++ (void)loadFromStreamWithPasswordAsync:(RTObject<WSSIRandomAccessStream>*)inputStream password:(NSString *)password success:(void (^)(WDPPdfDocument*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -149,3 +139,4 @@ OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 @end
 
 #endif // __WDPPdfDocument_DEFINED__
+

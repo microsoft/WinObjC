@@ -47,3 +47,4 @@ OBJCUWP_WINDOWS_SYSTEM_DISPLAY_EXPORT
 @end
 
 #endif // __WSDDisplayRequest_DEFINED__
+

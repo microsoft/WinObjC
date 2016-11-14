@@ -48,7 +48,7 @@ typedef NS_ENUM(NSUInteger, NSWritingDirection) {
 };
 
 enum {
-    UITextAlignmentLeft,
+    UITextAlignmentLeft = 0,
     UITextAlignmentCenter,
     UITextAlignmentRight,
 };

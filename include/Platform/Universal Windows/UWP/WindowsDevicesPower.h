@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WDPBatteryReport, WDPBattery;
-@protocol WDPIBattery
-, WDPIBatteryReport, WDPIBatteryStatics;
+@protocol WDPIBattery, WDPIBatteryReport, WDPIBatteryStatics;
 
 #include "WindowsFoundation.h"
 #include "WindowsSystemPower.h"
@@ -60,16 +59,17 @@ OBJCUWP_WINDOWS_DEVICES_POWER_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_POWER_EXPORT
 @interface WDPBattery : RTObject
-+ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDPBattery*))success failure:(void (^)(NSError*))failure;
-+ (NSString*)getDeviceSelector;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPBattery*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 + (WDPBattery*)aggregateBattery;
-- (EventRegistrationToken)addReportUpdatedEvent:(void (^)(WDPBattery*, RTObject*))del;
+- (EventRegistrationToken)addReportUpdatedEvent:(void(^)(WDPBattery*, RTObject*))del;
 - (void)removeReportUpdatedEvent:(EventRegistrationToken)tok;
 - (WDPBatteryReport*)getReport;
 @end
 
 #endif // __WDPBattery_DEFINED__
+

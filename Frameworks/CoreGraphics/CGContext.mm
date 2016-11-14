@@ -56,10 +56,7 @@ static inline D2D1_MATRIX_3X2_F __CGAffineTransformToD2D_F(CGAffineTransform tra
     return { transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty };
 }
 
-enum _CGCoordinateMode: unsigned int {
-    _kCGCoordinateModeDeviceSpace = 0,
-    _kCGCoordinateModeUserSpace
-};
+enum _CGCoordinateMode : unsigned int { _kCGCoordinateModeDeviceSpace = 0, _kCGCoordinateModeUserSpace };
 
 struct __CGContextDrawingState {
     // This is populated when the state is saved, and contains the D2D parameters that CG does not know.
@@ -125,7 +122,7 @@ struct __CGContextDrawingState {
     }
 };
 
-struct __CGContextImpl {
+struct __CGContext : CoreFoundation::CppBase<__CGContext> {
     ComPtr<ID2D1RenderTarget> renderTarget{ nullptr };
 
     // Calculated at creation time, this transform flips CG's drawing commands,
@@ -145,19 +142,17 @@ struct __CGContextImpl {
     bool allowsFontSubpixelPositioning = false;
     bool allowsFontSubpixelQuantization = false;
 
-    __CGContextImpl() {
+    __CGContext() {
         // Set up a default/baseline state
         stateStack.emplace();
     }
-};
 
-struct __CGContext : CoreFoundation::CppBase<__CGContext, __CGContextImpl> {
     inline ComPtr<ID2D1RenderTarget>& RenderTarget() {
-        return _impl.renderTarget;
+        return renderTarget;
     }
 
     inline std::stack<__CGContextDrawingState>& GStateStack() {
-        return _impl.stateStack;
+        return stateStack;
     }
 
     inline __CGContextDrawingState& CurrentGState() {
@@ -165,28 +160,32 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext, __CGContextImpl> {
     }
 
     inline bool HasPath() {
-        return _impl.currentPath != nullptr;
+        return currentPath != nullptr;
     }
 
     inline CGMutablePathRef Path() {
-        if (!_impl.currentPath) {
-            _impl.currentPath.reset(CGPathCreateMutable());
+        if (!currentPath) {
+            currentPath.reset(CGPathCreateMutable());
         }
-        return _impl.currentPath.get();
+        return currentPath.get();
     }
 
     inline void SetPath(CGMutablePathRef path) {
-        _impl.currentPath.reset(CGPathRetain(path));
+        currentPath.reset(CGPathRetain(path));
     }
 
     inline void ClearPath() {
-        _impl.currentPath.reset();
+        currentPath.reset();
     }
 
     inline ComPtr<ID2D1Factory> Factory() {
         ComPtr<ID2D1Factory> factory;
-        _impl.renderTarget->GetFactory(&factory);
+        renderTarget->GetFactory(&factory);
         return factory;
+    }
+
+    inline bool ShouldDraw() {
+        return std::fpclassify(CurrentGState().alpha) != FP_ZERO;
     }
 };
 
@@ -211,8 +210,7 @@ CFTypeID CGContextGetTypeID() {
 
 #pragma region Global State - Lifetime
 static void __CGContextInitWithRenderTarget(CGContextRef context, ID2D1RenderTarget* renderTarget) {
-    context->_impl.renderTarget = renderTarget;
-
+    context->renderTarget = renderTarget;
     // Reference platform defaults:
     // * Fill  : fully transparent black
     // * Stroke: fully opaque black
@@ -223,13 +221,14 @@ static void __CGContextInitWithRenderTarget(CGContextRef context, ID2D1RenderTar
     // CG is a lower-left origin system (LLO), but D2D is upper left (ULO).
     // We have to translate the render area back onscreen and flip it up to ULO.
     D2D1_SIZE_F targetSize = renderTarget->GetSize();
-    context->Impl().deviceTransform = CGAffineTransformMake(1.f, 0.f, 0.f, -1.f, 0.f, targetSize.height);
+    context->deviceTransform = CGAffineTransformMake(1.f, 0.f, 0.f, -1.f, 0.f, targetSize.height);
 }
 
 CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget) {
     FAIL_FAST_HR_IF_NULL(E_INVALIDARG, renderTarget);
     CGContextRef context = __CGContext::CreateInstance(kCFAllocatorDefault);
     __CGContextInitWithRenderTarget(context, renderTarget);
+
     return context;
 }
 
@@ -418,7 +417,7 @@ CGPoint CGContextConvertPointToDeviceSpace(CGContextRef context, CGPoint point) 
 */
 CGAffineTransform CGContextGetUserSpaceToDeviceSpaceTransform(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, StubReturn());
-    return CGAffineTransformConcat(context->CurrentGState().transform, context->Impl().deviceTransform);
+    return CGAffineTransformConcat(context->CurrentGState().transform, context->deviceTransform);
 }
 #pragma endregion
 
@@ -631,12 +630,14 @@ void CGContextReplacePathWithStrokedPath(CGContextRef context) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
-    woc::unique_cf<CGPathRef> newPath{ CGPathCreateCopyByStrokingPath(context->Path(),
-                                                                      nullptr, // The points in the path are already transformed; do not transform again!
-                                                                      state.lineWidth,
-                                                                      (CGLineCap)state.strokeProperties.startCap,
-                                                                      (CGLineJoin)state.strokeProperties.lineJoin,
-                                                                      state.strokeProperties.miterLimit) };
+    woc::unique_cf<CGPathRef> newPath{
+        CGPathCreateCopyByStrokingPath(context->Path(),
+                                       nullptr, // The points in the path are already transformed; do not transform again!
+                                       state.lineWidth,
+                                       (CGLineCap)state.strokeProperties.startCap,
+                                       (CGLineJoin)state.strokeProperties.lineJoin,
+                                       state.strokeProperties.miterLimit)
+    };
 
 #pragma clang diagnostic pop
 
@@ -1159,7 +1160,7 @@ void CGContextSetCMYKStrokeColor(CGContextRef context, CGFloat cyan, CGFloat mag
 // This is that private interface.
 void _CGContextSetShadowProjectionTransform(CGContextRef context, CGAffineTransform transform) {
     NOISY_RETURN_IF_NULL(context);
-    context->Impl().shadowProjectionTransform = transform;
+    context->shadowProjectionTransform = transform;
 }
 
 /**
@@ -1171,7 +1172,7 @@ void CGContextSetShadow(CGContextRef context, CGSize offset, CGFloat blur) {
     auto& state = context->CurrentGState();
     // The default shadow colour on the reference platform is black at 33% alpha.
     state.shadowColor = { 0.f, 0.f, 0.f, 1.f / 3.f };
-    state.shadowOffset = CGSizeApplyAffineTransform(offset, context->Impl().shadowProjectionTransform);
+    state.shadowOffset = CGSizeApplyAffineTransform(offset, context->shadowProjectionTransform);
     state.shadowBlur = blur;
 }
 
@@ -1191,7 +1192,7 @@ void CGContextSetShadowWithColor(CGContextRef context, CGSize offset, CGFloat bl
         // This is in line with the reference platform's shadowing specification.
         state.shadowColor = { 0.f, 0.f, 0.f, 0.f };
     }
-    state.shadowOffset = CGSizeApplyAffineTransform(offset, context->Impl().shadowProjectionTransform);
+    state.shadowOffset = CGSizeApplyAffineTransform(offset, context->shadowProjectionTransform);
     state.shadowBlur = blur;
 }
 #pragma endregion
@@ -1257,7 +1258,7 @@ void CGContextSetCMYKFillColor(CGContextRef context, CGFloat cyan, CGFloat magen
 }
 #pragma endregion
 
-#pragma region Drawing Parameters - Stroke/Fill Patterns
+#pragma region Drawing Parameters - Stroke / Fill Patterns
 /**
  @Status Stub
  @Notes
@@ -1381,9 +1382,9 @@ void CGContextClearRect(CGContextRef context, CGRect rect) {
 }
 
 static HRESULT __CGContextCreateShadowEffect(CGContextRef context,
-                                          ID2D1DeviceContext* deviceContext,
-                                          ID2D1Image* inputImage,
-                                          ID2D1Effect** outShadowEffect) {
+                                             ID2D1DeviceContext* deviceContext,
+                                             ID2D1Image* inputImage,
+                                             ID2D1Effect** outShadowEffect) {
     auto& state = context->CurrentGState();
     if (std::fpclassify(state.shadowColor.w) != FP_ZERO) {
         // The Shadow Effect takes an input image (or command list) and projects a shadow from
@@ -1406,10 +1407,10 @@ static HRESULT __CGContextCreateShadowEffect(CGContextRef context,
         RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D12DAffineTransform, &affineTransformEffect));
         affineTransformEffect->SetInputEffect(0, shadowEffect.Get());
 
-        CGSize deviceTransformedShadowOffset = CGSizeApplyAffineTransform(state.shadowOffset, context->Impl().deviceTransform);
-        RETURN_IF_FAILED(
-            affineTransformEffect->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX,
-                                            D2D1::Matrix3x2F::Translation(deviceTransformedShadowOffset.width, deviceTransformedShadowOffset.height)));
+        CGSize deviceTransformedShadowOffset = CGSizeApplyAffineTransform(state.shadowOffset, context->deviceTransform);
+        RETURN_IF_FAILED(affineTransformEffect->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX,
+                                                         D2D1::Matrix3x2F::Translation(deviceTransformedShadowOffset.width,
+                                                                                       deviceTransformedShadowOffset.height)));
 
         // Drawing just a projected shadow is not terribly useful, so we composite the
         // shadow with the original input image (or command list) so that both get drawn.
@@ -1432,7 +1433,11 @@ static HRESULT __CGContextCreateShadowEffect(CGContextRef context,
 }
 
 template <typename Lambda> // Lambda takes the form void(*)(CGContextRef, ID2D1DeviceContext*)
-static HRESULT __CGContextRenderToCommandList(CGContextRef context, _CGCoordinateMode coordinateMode, CGAffineTransform* additionalTransform, ID2D1CommandList** outCommandList, Lambda&& drawLambda) {
+static HRESULT __CGContextRenderToCommandList(CGContextRef context,
+                                              _CGCoordinateMode coordinateMode,
+                                              CGAffineTransform* additionalTransform,
+                                              ID2D1CommandList** outCommandList,
+                                              Lambda&& drawLambda) {
     ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
     ComPtr<ID2D1DeviceContext> deviceContext;
     RETURN_IF_FAILED(renderTarget.As(&deviceContext));
@@ -1487,7 +1492,7 @@ static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
     deviceContext->BeginDraw();
 
     bool layer = false;
-    if (state.alpha != 1.0f || false /* mask, clip, etc. */) {
+    if (false /* mask, clip, etc. */) {
         layer = true;
         renderTarget->PushLayer(
             D2D1::LayerParameters(D2D1::InfiniteRect(), nullptr, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE, D2D1::IdentityMatrix(), state.alpha),
@@ -1514,26 +1519,33 @@ static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
     return S_OK;
 }
 
-static HRESULT __CGContextDrawGeometry(CGContextRef context, _CGCoordinateMode coordinateMode, ID2D1Geometry* geometry, CGPathDrawingMode drawMode) {
+static HRESULT __CGContextDrawGeometry(CGContextRef context,
+                                       _CGCoordinateMode coordinateMode,
+                                       ID2D1Geometry* geometry,
+                                       CGPathDrawingMode drawMode) {
     ComPtr<ID2D1CommandList> commandList;
-    HRESULT hr = __CGContextRenderToCommandList(context, coordinateMode, nullptr, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
-        auto& state = context->CurrentGState();
-        if (drawMode & kCGPathFill) {
-            if (drawMode & kCGPathEOFill) {
-                // TODO(DH): GH#1077 Regenerate geometry in Even/Odd fill mode.
+    HRESULT hr = __CGContextRenderToCommandList(
+        context, coordinateMode, nullptr, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+            auto& state = context->CurrentGState();
+            if (drawMode & kCGPathFill) {
+                state.fillBrush->SetOpacity(state.alpha);
+                if (drawMode & kCGPathEOFill) {
+                    // TODO(DH): GH#1077 Regenerate geometry in Even/Odd fill mode.
+                }
+                deviceContext->FillGeometry(geometry, state.fillBrush.Get());
             }
-            deviceContext->FillGeometry(geometry, state.fillBrush.Get());
-        }
 
-        if (drawMode & kCGPathStroke && std::fpclassify(state.lineWidth) != FP_ZERO) {
-            // This only computes the stroke style if its parameters have changed since the last draw.
-            state.ComputeStrokeStyle(deviceContext);
+            if (drawMode & kCGPathStroke && std::fpclassify(state.lineWidth) != FP_ZERO) {
+                // This only computes the stroke style if its parameters have changed since the last draw.
+                state.ComputeStrokeStyle(deviceContext);
 
-            deviceContext->DrawGeometry(geometry, state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
-        }
+                state.strokeBrush->SetOpacity(state.alpha);
 
-        return S_OK;
-    });
+                deviceContext->DrawGeometry(geometry, state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
+            }
+
+            return S_OK;
+        });
 
     RETURN_IF_FAILED(hr);
 
@@ -1546,6 +1558,8 @@ static HRESULT __CGContextDrawGeometry(CGContextRef context, _CGCoordinateMode c
 */
 void CGContextStrokeRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     auto factory = context->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
@@ -1564,6 +1578,8 @@ void CGContextStrokeRect(CGContextRef context, CGRect rect) {
 */
 void CGContextStrokeRectWithWidth(CGContextRef context, CGRect rect, CGFloat width) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     CGContextSaveGState(context);
     CGContextSetLineWidth(context, width);
     CGContextStrokeRect(context, rect);
@@ -1576,6 +1592,8 @@ void CGContextStrokeRectWithWidth(CGContextRef context, CGRect rect, CGFloat wid
 */
 void CGContextFillRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     auto factory = context->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
@@ -1594,6 +1612,8 @@ void CGContextFillRect(CGContextRef context, CGRect rect) {
 */
 void CGContextStrokeEllipseInRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     auto factory = context->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
@@ -1614,6 +1634,8 @@ void CGContextStrokeEllipseInRect(CGContextRef context, CGRect rect) {
 */
 void CGContextFillEllipseInRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     auto factory = context->Factory();
 
     ComPtr<ID2D1Geometry> geometry;
@@ -1634,6 +1656,7 @@ void CGContextFillEllipseInRect(CGContextRef context, CGRect rect) {
 */
 void CGContextStrokeLineSegments(CGContextRef context, const CGPoint* points, unsigned count) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
 
     if (!points || count == 0 || count % 2 != 0) {
         // On the reference platform, an uneven number of points results in a sizeof(CGPoint) read
@@ -1655,6 +1678,8 @@ void CGContextStrokeLineSegments(CGContextRef context, const CGPoint* points, un
 */
 void CGContextFillRects(CGContextRef context, const CGRect* rects, size_t count) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     if (!rects || count == 0) {
         return;
     }
@@ -1672,6 +1697,8 @@ void CGContextFillRects(CGContextRef context, const CGRect* rects, size_t count)
 */
 void CGContextDrawPath(CGContextRef context, CGPathDrawingMode mode) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     if (context->HasPath()) {
         ComPtr<ID2D1Geometry> pGeometry;
         FAIL_FAST_IF_FAILED(_CGPathGetGeometry(context->Path(), &pGeometry));
@@ -1686,6 +1713,8 @@ void CGContextDrawPath(CGContextRef context, CGPathDrawingMode mode) {
 */
 void CGContextStrokePath(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     CGContextDrawPath(context, kCGPathStroke); // Clears path.
 }
 
@@ -1695,6 +1724,8 @@ void CGContextStrokePath(CGContextRef context) {
 */
 void CGContextFillPath(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     CGContextDrawPath(context, kCGPathFill); // Clears path.
 }
 
@@ -1704,6 +1735,8 @@ void CGContextFillPath(CGContextRef context) {
 */
 void CGContextEOFillPath(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     CGContextDrawPath(context, kCGPathEOFill); // Clears path.
 }
 #pragma endregion
@@ -1715,6 +1748,8 @@ void CGContextEOFillPath(CGContextRef context) {
 void CGContextDrawLinearGradient(
     CGContextRef context, CGGradientRef gradient, CGPoint startPoint, CGPoint endPoint, CGGradientDrawingOptions options) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     UNIMPLEMENTED();
 }
 
@@ -1729,6 +1764,8 @@ void CGContextDrawRadialGradient(CGContextRef context,
                                  CGFloat endRadius,
                                  CGGradientDrawingOptions options) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     UNIMPLEMENTED();
 }
 
@@ -1737,6 +1774,8 @@ void CGContextDrawRadialGradient(CGContextRef context,
 */
 void CGContextDrawShading(CGContextRef context, CGShadingRef shading) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     UNIMPLEMENTED();
 }
 #pragma endregion
@@ -1747,6 +1786,8 @@ void CGContextDrawShading(CGContextRef context, CGShadingRef shading) {
 */
 void CGContextDrawLayerInRect(CGContextRef context, CGRect destRect, CGLayerRef layer) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     UNIMPLEMENTED();
 }
 
@@ -1755,6 +1796,8 @@ void CGContextDrawLayerInRect(CGContextRef context, CGRect destRect, CGLayerRef 
 */
 void CGContextDrawLayerAtPoint(CGContextRef context, CGPoint destPoint, CGLayerRef layer) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     UNIMPLEMENTED();
 }
 #pragma endregion
@@ -1766,6 +1809,8 @@ void CGContextDrawLayerAtPoint(CGContextRef context, CGPoint destPoint, CGLayerR
 */
 void CGContextDrawPDFPage(CGContextRef context, CGPDFPageRef page) {
     NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!context->ShouldDraw());
+
     UNIMPLEMENTED();
 }
 #pragma endregion
@@ -1806,34 +1851,20 @@ bool CGContextIsPointInPath(CGContextRef context, bool eoFill, CGFloat x, CGFloa
     return StubReturn();
 }
 
-void CGContextDrawGlyphRun(CGContextRef context, const DWRITE_GLYPH_RUN* glyphRun, float lineAscent) {
+void CGContextDrawGlyphRun(CGContextRef context, const DWRITE_GLYPH_RUN* glyphRun) {
     NOISY_RETURN_IF_NULL(context);
     // TODO(DH) GH#1070 Merge in CGContextCairo.mm's Glyph Run code.
 }
 #pragma endregion
 
-CGImageRef CGPNGImageCreateFromFile(NSString* path) {
-    return new CGPNGDecoderImage([path UTF8String]);
-}
-
-CGImageRef CGPNGImageCreateFromData(NSData* data) {
-    return new CGPNGDecoderImage(data);
-}
-
-CGImageRef CGJPEGImageCreateFromFile(NSString* path) {
-    return new CGJPEGDecoderImage([path UTF8String]);
-}
-
-CGImageRef CGJPEGImageCreateFromData(NSData* data) {
-    return new CGJPEGDecoderImage(data);
-}
-
 #pragma region CGBitmapContext
-struct __CGBitmapContextImpl {
-    woc::unique_cf<CGImageRef> image;
-};
+struct __CGBitmapContext : CoreFoundation::CppBase<__CGBitmapContext, __CGContext> {
+    woc::unique_cf<CGImageRef> _image;
 
-struct __CGBitmapContext : CoreFoundation::CppBase<__CGBitmapContext, __CGBitmapContextImpl, __CGContext> {};
+    inline void SetImage(CGImageRef image) {
+        _image.reset(CGImageRetain(image));
+    }
+};
 
 /**
  @Status Caveat
@@ -1913,22 +1944,14 @@ CGImageRef CGBitmapContextGetImage(CGContextRef context) {
         TraceError(TAG, L"Image requested from non-bitmap CGContext.");
         return nullptr;
     }
-    return ((__CGBitmapContext*)context)->Impl().image.get();
+    return ((__CGBitmapContext*)context)->_image.get();
 }
 
-CGContextRef _CGBitmapContextCreateWithTexture(
-    int width, int height, float scale, DisplayTexture* texture, DisplayTextureLocking* locking) {
-    CGImageRef newImage = nullptr;
-    __CGSurfaceInfo surfaceInfo = _CGSurfaceInfoInit(width, height, _ColorARGB);
-    newImage = new CGGraphicBufferImage(surfaceInfo, texture, locking);
-
-    ComPtr<ID2D1RenderTarget> renderTarget = newImage->Backing()->GetRenderTarget();
-    renderTarget->SetDpi(96 * scale, 96 * scale);
-
+CGContextRef _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget, CGImageRef img) {
+    RETURN_NULL_IF(!renderTarget);
     __CGBitmapContext* context = __CGBitmapContext::CreateInstance(kCFAllocatorDefault);
-    __CGContextInitWithRenderTarget(context, renderTarget.Get());
-
-    context->Impl().image.reset(newImage); // Consumes +1 reference.
+    __CGContextInitWithRenderTarget(context, renderTarget);
+    context->SetImage(img);
     return context;
 }
 

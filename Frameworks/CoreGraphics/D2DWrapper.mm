@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#import "D2DWrapper.h"
+#import <CoreGraphics/D2DWrapper.h>
 #import <Starboard.h>
 
 using namespace Microsoft::WRL;
@@ -27,13 +27,9 @@ HRESULT _CGGetD2DFactory(ID2D1Factory** factory) {
     RETURN_HR(sHr);
 }
 
-static ComPtr<IWICImagingFactory> __createWICFactory() {
-    ComPtr<IWICImagingFactory> wicFactory;
-    FAIL_FAST_IF_FAILED(CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&wicFactory)));
-    return wicFactory;
-}
-
-ComPtr<IWICImagingFactory> _GetWICFactory() {
-    static ComPtr<IWICImagingFactory> s_WICFactory = __createWICFactory();
-    return s_WICFactory;
+HRESULT _CGGetWICFactory(IWICImagingFactory** factory) {
+    static ComPtr<IWICImagingFactory> sWicFactory;
+    static HRESULT sHr = CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&sWicFactory));
+    sWicFactory.CopyTo(factory);
+    RETURN_HR(sHr);
 }

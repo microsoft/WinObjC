@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -22,17 +22,14 @@
 #include <COMIncludes_End.h>
 
 #import "CGImageInternal.h"
+#import <CoreGraphics/CGImage.h>
 #import "CoreGraphics/CGContext.h"
 #import "CoreGraphicsInternal.h"
 #import "Starboard.h"
 
 #import <objc/runtime.h>
 
-COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithTexture(int width,
-                                                                   int height,
-                                                                   float scale,
-                                                                   DisplayTexture* texture = NULL,
-                                                                   DisplayTextureLocking* locking = NULL);
+COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget, CGImageRef img = nullptr);
 COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurfaceFormat fmt);
 COREGRAPHICS_EXPORT CGImageRef CGBitmapContextGetImage(CGContextRef ctx);
 COREGRAPHICS_EXPORT void CGContextDrawImageRect(CGContextRef ctx, CGImageRef img, CGRect src, CGRect dst);
@@ -41,15 +38,9 @@ COREGRAPHICS_EXPORT bool CGContextIsDirty(CGContextRef ctx);
 COREGRAPHICS_EXPORT void CGContextSetDirty(CGContextRef ctx, bool dirty);
 COREGRAPHICS_EXPORT void CGContextReleaseLock(CGContextRef ctx);
 COREGRAPHICS_EXPORT CGBlendMode CGContextGetBlendMode(CGContextRef ctx);
-
-COREGRAPHICS_EXPORT CGImageRef CGPNGImageCreateFromFile(NSString* path);
-COREGRAPHICS_EXPORT CGImageRef CGPNGImageCreateFromData(NSData* data);
-
-COREGRAPHICS_EXPORT CGImageRef CGJPEGImageCreateFromFile(NSString* path);
-COREGRAPHICS_EXPORT CGImageRef CGJPEGImageCreateFromData(NSData* data);
 COREGRAPHICS_EXPORT bool CGContextIsPointInPath(CGContextRef c, bool eoFill, float x, float y);
 
-COREGRAPHICS_EXPORT void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun, float lineAscent);
+COREGRAPHICS_EXPORT void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun);
 
 // TODO 1077:: Remove once D2D render target is implemented
 COREGRAPHICS_EXPORT void _CGContextSetScaleFactor(CGContextRef ctx, float scale);

@@ -61,3 +61,7 @@ CTFontSymbolicTraits _CTFontSymbolicTraitsFromCFNumber(CFNumberRef num);
 
 CFDictionaryRef _DWriteFontCreateTraitsDict(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace);
 CFStringRef _DWriteFontCopyName(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace, CFStringRef nameKey);
+CGPathRef _DWriteFontCreatePathForGlyph(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace,
+                                        CGFloat pointSize,
+                                        CGGlyph glyph,
+                                        const CGAffineTransform* transform);

@@ -189,7 +189,6 @@ static char kUIColletionViewExt;
         [self _commonSetup];
         self.collectionViewLayout = layout;
         _collectionViewData = [[UICollectionViewData alloc] initWithCollectionView:self layout:layout];
-        self.showsHorizontalScrollIndicator = FALSE;
     }
     return self;
 }
@@ -198,7 +197,7 @@ static char kUIColletionViewExt;
  @Status Interoperable
 */
 - (void)setShowsHorizontalScrollIndicator:(BOOL)show {
-    [super setShowsHorizontalScrollIndicator:FALSE];
+    [super setShowsHorizontalScrollIndicator:show];
 }
 
 /**
