@@ -269,9 +269,8 @@ CFTypeRef CTFontDescriptorCopyLocalizedAttribute(CTFontDescriptorRef descriptor,
 */
 CFTypeID CTFontDescriptorGetTypeID() {
     static dispatch_once_t initOnce = 0;
-    dispatch_once(&initOnce,
-                  ^{
-                      __kCTFontDescriptorTypeID = _CFRuntimeRegisterClass(&__CTFontDescriptorClass);
-                  });
+    dispatch_once(&initOnce, ^{
+        __kCTFontDescriptorTypeID = _CFRuntimeRegisterClass(&__CTFontDescriptorClass);
+    });
     return __kCTFontDescriptorTypeID;
 }
