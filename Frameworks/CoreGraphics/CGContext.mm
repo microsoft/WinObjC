@@ -203,7 +203,7 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
         D2D1_FILL_MODE d2dFillMode = (pathMode & kCGPathEOFill) == kCGPathEOFill ? D2D1_FILL_MODE_ALTERNATE : D2D1_FILL_MODE_WINDING;
 
         if (!state.clippingGeometry) {
-            // If we don't have a clipping geometry, however, we are free to take this one wholesale (after EO/Winding conversion.)
+            // If we don't have a clipping geometry, we are free to take this one wholesale (after EO/Winding conversion.)
             ComPtr<ID2D1Geometry> convertedClippingGeometry;
             RETURN_IF_FAILED(_CGConvertD2DGeometryToFillMode(additionalClippingGeometry.Get(), d2dFillMode, &convertedClippingGeometry));
 
@@ -211,7 +211,7 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
             return S_OK;
         }
 
-        // If we have a clipping geometry right now, we must intersect it with the new path.
+        // If we have a clipping geometry, however, we must intersect it with the new path.
         // To do so, we need to stream the combined geometry into a totally new geometry.
         ComPtr<ID2D1PathGeometry> newClippingPathGeometry;
         RETURN_IF_FAILED(Factory()->CreatePathGeometry(&newClippingPathGeometry));
