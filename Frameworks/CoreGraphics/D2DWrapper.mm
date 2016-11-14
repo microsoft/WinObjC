@@ -34,6 +34,7 @@ HRESULT _CGGetWICFactory(IWICImagingFactory** factory) {
     RETURN_HR(sHr);
 }
 
+// TODO GH#1375: Remove this when CGPath's fill mode has been worked out.
 HRESULT _CGConvertD2DGeometryToFillMode(ID2D1Geometry* geometry, D2D1_FILL_MODE fillMode, ID2D1Geometry** pNewGeometry) {
     ComPtr<ID2D1Factory> factory;
     geometry->GetFactory(&factory);

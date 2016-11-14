@@ -208,14 +208,10 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
 
         if (!state.clippingGeometry) {
             // If we don't have a clipping geometry, we are free to take this one wholesale (after EO/Winding conversion.)
-            ComPtr<ID2D1Geometry> convertedClippingGeometry;
-            RETURN_IF_FAILED(_CGConvertD2DGeometryToFillMode(additionalClippingGeometry.Get(), d2dFillMode, &convertedClippingGeometry));
-
-            state.clippingGeometry.Attach(convertedClippingGeometry.Detach());
-            return S_OK;
+            return _CGConvertD2DGeometryToFillMode(additionalClippingGeometry.Get(), d2dFillMode, &state.clippingGeometry);
         }
 
-        // If we have a clipping geometry, however, we must intersect it with the new path.
+        // If we have a clipping geometry, we must intersect it with the new path.
         // To do so, we need to stream the combined geometry into a totally new geometry.
         ComPtr<ID2D1PathGeometry> newClippingPathGeometry;
         RETURN_IF_FAILED(Factory()->CreatePathGeometry(&newClippingPathGeometry));
