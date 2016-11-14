@@ -263,8 +263,7 @@ void StoryboardManager::AddTransition(Layer^ realLayer, Layer^ snapshotLayer, St
             }
 
             _CreateWoosh(realLayer, fromRight, false, false);
-        }
-        else {
+        } else {
             // We don't need to animate a snapshot if it doesn't exist
             if (snapshotLayer) {
                 unsigned int idx;
