@@ -14,18 +14,12 @@
 //
 //******************************************************************************
 
-#import <cmath>
-#import <UIKit/UIScreen.h>
+#import "UIApplicationInternal.h"
+#import "StarboardXaml/StarboardXaml.h"
 #import "_UIPopupViewController.h"
 #import <UWP/WindowsUIXamlControlsPrimitives.h>
 
 static const wchar_t* TAG = L"_UIPopupViewController";
-
-// Compare UI element offsets
-static bool offsetsPrettyClose(double off1, double off2) {
-    // Avoid comparing for exact equality
-    return std::fabs(off1 - off2) < 1.0;
-};
 
 @implementation _UIPopupViewController {
     WUXCPPopup* _popup;
@@ -33,13 +27,12 @@ static bool offsetsPrettyClose(double off1, double off2) {
 }
 
 - (void)loadView {
-    UIView* view = [[UIView alloc] init];
     _popup = [WUXCPPopup make];
-    [view setXamlElement:_popup];
+    _popup.child = [WXFrameworkElement createWith:GetRootXamlElement()];
 
     _UIPopupViewController __weak* weakSelf = self;
 
-    // Keep the popup centered in the window
+    // Keep the popup's contents sized to fit the window
     _layoutUpdated = [_popup addLayoutUpdatedEvent:^(RTObject* sender, RTObject* args) {
         _UIPopupViewController* strongSelf = weakSelf;
 
@@ -55,20 +48,10 @@ static bool offsetsPrettyClose(double off1, double off2) {
 
             WFRect* appFrame = [[WXWindow current] bounds];
 
-            double desiredHorizontalOffset = (appFrame.width - child.width) / 2.0;
-            double desiredVerticalOffset = (appFrame.height - child.height) / 2.0;
-
-            if (!offsetsPrettyClose(desiredHorizontalOffset, popup.horizontalOffset)) {
-                popup.horizontalOffset = desiredHorizontalOffset;
-            }
-
-            if (!offsetsPrettyClose(desiredVerticalOffset, popup.verticalOffset)) {
-                popup.verticalOffset = desiredVerticalOffset;
-            }
+            child.width = appFrame.width;
+            child.height = appFrame.height;
         }
     }];
-
-    self.view = view;
 }
 
 - (void)dealloc {
@@ -76,14 +59,12 @@ static bool offsetsPrettyClose(double off1, double off2) {
 }
 
 - (void)presentViewController:(UIViewController*)viewControllerToPresent animated:(BOOL)flag completion:(void (^)())completion {
-    _popup.child = viewControllerToPresent.view.xamlElement;
     _popup.isOpen = YES;
     [super presentViewController:viewControllerToPresent animated:flag completion:completion];
 }
 
 - (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)())completion {
     _popup.isOpen = NO;
-    _popup.child = nil;
     [super dismissViewControllerAnimated:flag completion:completion];
 }
 

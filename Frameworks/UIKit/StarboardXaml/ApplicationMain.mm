@@ -40,6 +40,7 @@
 #import <MainDispatcher.h>
 #import <_UIPopupViewController.h>
 #import <UWP/WindowsApplicationModelActivation.h>
+#import <UWP/WindowsUIXamlControlsPrimitives.h>
 
 using namespace Microsoft::WRL;
 
@@ -94,6 +95,10 @@ int ApplicationMainStart(const char* principalName,
 
     WOCDisplayMode* displayMode = [UIApplication displayMode];
     [displayMode _setWindowSize:CGSizeMake(windowWidth, windowHeight)];
+
+    if (activationType == ActivationTypeLibrary) {
+        [displayMode setDisplayPreset:WOCDisplayPresetNative];
+    }
 
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
 
@@ -150,7 +155,10 @@ int ApplicationMainStart(const char* principalName,
     UIApplicationMainInit(principalClassName, delegateClassName, defaultOrientation, (int)activationType, activationArgument);
 
     if (activationType == ActivationTypeLibrary) {
-        UIWindow* keyWindow = [[UIWindow alloc] init];
+        WFRect* appFrame = [[WXWindow current] bounds];
+        CGRect windowFrame = CGRectMake(0, 0, appFrame.width, appFrame.height);
+
+        UIWindow* keyWindow = [[UIWindow alloc] initWithFrame:windowFrame];
         keyWindow.rootViewController = [[_UIPopupViewController alloc] init];
         [keyWindow makeKeyWindow];
     }

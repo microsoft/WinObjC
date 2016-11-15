@@ -21,6 +21,14 @@
 #include "XamlTypeInfoRegistration.h"
 #endif
 
+#ifdef __OBJC__
+#include "COMIncludes.h"
+#endif
+#include <inspectable.h>
+#ifdef __OBJC__
+#include "COMIncludes_End.h"
+#endif
+
 typedef enum {
     ActivationTypeNone = 0,
     ActivationTypeToast = 1,
@@ -29,6 +37,8 @@ typedef enum {
     ActivationTypeLibrary = 4,
     ActivationTypeFile = 5,
 } ActivationType;
+
+IInspectable* GetRootXamlElement();
 
 #ifdef __cplusplus_winrt
 

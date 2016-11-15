@@ -41,6 +41,8 @@ using namespace Windows::ApplicationModel::Core;
 static Platform::String^ g_principalClassName;
 static Platform::String^ g_delegateClassName;
 
+static Xaml::Controls::Grid^ g_rootElement;
+
 static const wchar_t* TAG = L"StarboardXaml";
 
 Xaml::Markup::IXamlType^ App::GetXamlType(Xaml::Interop::TypeName type) {
@@ -182,8 +184,8 @@ void UIApplicationLaunched(LaunchActivatedEventArgs^ args) {
     // Opt out of prelaunch for now. MSDN guidance is to check the flag and just return.
     // Or skip re-initializing as the app is being resumed from memory.
     bool initiateAppLaunch = (!(args->PrelaunchActivated)
-                                && (args->PreviousExecutionState != ApplicationExecutionState::Running)
-                                && (args->PreviousExecutionState != ApplicationExecutionState::Suspended));
+        && (args->PreviousExecutionState != ApplicationExecutionState::Running)
+        && (args->PreviousExecutionState != ApplicationExecutionState::Suspended));
 
     if (initiateAppLaunch) {
         TraceVerbose(TAG, L"Initializing application");
@@ -212,7 +214,8 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
         UIApplicationMainHandleToastActionEvent(reinterpret_cast<HSTRING>(toastArgs->Argument),
             reinterpret_cast<IInspectable*>(toastArgs->UserInput));
 
-    } else if (args->Kind == ActivationKind::VoiceCommand) {
+    }
+    else if (args->Kind == ActivationKind::VoiceCommand) {
         SpeechRecognitionResult^ result = safe_cast<VoiceCommandActivatedEventArgs^>(args)->Result;
         TraceVerbose(TAG, L"Received voice command with argument - %ls", result->Text->Data());
 
@@ -222,7 +225,8 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
 
         UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(result));
 
-    } else if (args->Kind == ActivationKind::Protocol) {
+    }
+    else if (args->Kind == ActivationKind::Protocol) {
         ProtocolActivatedEventArgs^ protocolArgs = safe_cast<ProtocolActivatedEventArgs^>(args);
         Windows::Foundation::Uri^ argUri = protocolArgs->Uri;
         const wchar_t* caller = protocolArgs->CallerPackageFamilyName->Data();
@@ -233,7 +237,8 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
         }
 
         UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri), caller);
-    } else if (args->Kind == ActivationKind::File) {
+    }
+    else if (args->Kind == ActivationKind::File) {
         FileActivatedEventArgs^ result = safe_cast<FileActivatedEventArgs^>(args);
         TraceVerbose(TAG, L"Received file activation");
 
@@ -242,7 +247,8 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
         }
 
         UIApplicationMainHandleFileEvent(reinterpret_cast<IInspectable*>(result));
-    } else {
+    }
+    else {
         TraceWarning(TAG, L"Received unhandled activation kind - %d", args->Kind);
 
         if (initiateAppLaunch) {
@@ -268,14 +274,23 @@ void UIApplicationBackgroundActivated(BackgroundActivatedEventArgs^ args) {
 }
 #endif
 
+IInspectable* GetRootXamlElement() {
+    return reinterpret_cast<IInspectable*>(g_rootElement);
+}
+
 void DoApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
-    auto uiElem = ref new Xaml::Controls::Grid();
-    auto rootFrame = ref new Xaml::Controls::Frame();
-    rootFrame->Content = uiElem;
+    g_rootElement = ref new Xaml::Controls::Grid();
 
-    XamlCompositor::Initialize(uiElem, activationType);
+    XamlCompositor::Initialize(g_rootElement, activationType);
 
-    if (activationType != ActivationTypeLibrary) {
+    if (activationType == ActivationTypeLibrary) {
+        // In library mode, presented UI should completely cover whatever's behind it
+        g_rootElement->Background = ref new Xaml::Media::SolidColorBrush(Colors::White);
+    }
+    else {
+        auto rootFrame = ref new Xaml::Controls::Frame();
+        rootFrame->Content = g_rootElement;
+
         Xaml::Window::Current->Content = rootFrame;
         Xaml::Window::Current->Activate();
     }
@@ -296,7 +311,8 @@ void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activat
             DoApplicationLaunch(activationType, activationArg);
         })));
         task.wait();
-    } else {
+    }
+    else {
         DoApplicationLaunch(activationType, activationArg);
     }
 }
@@ -306,7 +322,7 @@ void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activat
 UIKIT_EXPORT
 int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* delegateClassName) {
     // Make method only run once
-    static int once = [principalClassName, delegateClassName] () -> int {
+    static int once = [principalClassName, delegateClassName]() -> int {
 
         // Initialize COM on this thread
         ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
@@ -357,13 +373,15 @@ void UIApplicationInitialize(const wchar_t* principalClassName, const wchar_t* d
 
     if (principalClassName != nullptr) {
         g_principalClassName = ref new Platform::String(principalClassName);
-    } else {
+    }
+    else {
         g_principalClassName = ref new Platform::String();
     }
 
     if (delegateClassName != nullptr) {
         g_delegateClassName = ref new Platform::String(delegateClassName);
-    } else {
+    }
+    else {
         g_delegateClassName = ref new Platform::String();
     }
 
@@ -372,7 +390,7 @@ void UIApplicationInitialize(const wchar_t* principalClassName, const wchar_t* d
 
 // Note: Like UIApplicationMain, delegateClassName is actually an NSString*.
 UIKIT_EXPORT
-void UIApplicationActivationTest(IInspectable* activationArgs, void* delegateClassName){
+void UIApplicationActivationTest(IInspectable* activationArgs, void* delegateClassName) {
     // Initialize COM on this thread
     ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
@@ -382,7 +400,8 @@ void UIApplicationActivationTest(IInspectable* activationArgs, void* delegateCla
     if (delegateClassName) {
         auto rawString = _RawBufferFromNSString(delegateClassName);
         g_delegateClassName = reinterpret_cast<Platform::String^>(Strings::NarrowToWide<HSTRING>(rawString).Detach());
-    } else {
+    }
+    else {
         g_delegateClassName = ref new Platform::String();
     }
 
