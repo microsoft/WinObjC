@@ -27,6 +27,7 @@ namespace Xaml {
 public ref class Label sealed : public Private::CoreAnimation::ILayer {
 public:
     Label();
+    Windows::Foundation::Size ArrangeOverride(Windows::Foundation::Size finalSize) override;
 
     // Accessor for our Layer content; we create one on demand
     virtual property Windows::UI::Xaml::Controls::Image^ LayerContent {

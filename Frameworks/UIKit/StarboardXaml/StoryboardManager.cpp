@@ -150,6 +150,12 @@ void StoryboardManager::_CreateFlip(Layer^ layer, bool flipRight, bool invert, b
                 // TODO: Track down why we sometimes don't have a parent when the animation completes.
                 TraceWarning(TAG, L"Failed to remove flip animation from scene; didn't have a parent to remove from!");
                 layer->Visibility = Visibility::Collapsed;
+                LayerCoordinator::SetContent(
+                    layer,
+                    nullptr,
+                    static_cast<float>(0),
+                    static_cast<float>(0),
+                    static_cast<float>(0));
             }
         });
     } else {
@@ -205,6 +211,12 @@ void StoryboardManager::_CreateWoosh(Layer^ layer, bool fromRight, bool invert, 
                 // TODO: Track down why we sometimes don't have a parent when the animation completes.
                 TraceWarning(TAG, L"Failed to remove woosh animation from scene; didn't have a parent to remove from!");
                 layer->Visibility = Visibility::Collapsed;
+                LayerCoordinator::SetContent(
+                    layer,
+                    nullptr,
+                    static_cast<float>(0),
+                    static_cast<float>(0),
+                    static_cast<float>(0));
             }
         });
     } else {

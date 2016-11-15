@@ -149,12 +149,9 @@ concurrency::task<Layer^> _SnapshotLayer(Layer^ layer) {
             // Copy display properties from the old layer to the new layer
             LayerCoordinator::SetValue(newLayer, "opacity", LayerCoordinator::GetValue(layer, "opacity"));
             LayerCoordinator::SetValue(newLayer, "position", LayerCoordinator::GetValue(layer, "position"));
-            newLayer->Width = layer->Width;
-            newLayer->Height = layer->Height;
+            LayerCoordinator::SetValue(newLayer, "size", LayerCoordinator::GetValue(layer, "size"));
             LayerCoordinator::SetValue(newLayer, "anchorPoint", LayerCoordinator::GetValue(layer, "anchorPoint"));
 
-            int width = snapshot->PixelWidth;
-            int height = snapshot->PixelHeight;
             auto dispInfo = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
 
             // Set the snapshot as the content of the new layer
