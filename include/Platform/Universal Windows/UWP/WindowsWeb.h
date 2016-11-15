@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WWWebError;
-@protocol WWIUriToStreamResolver
-, WWIWebErrorStatics;
+@protocol WWIUriToStreamResolver, WWIWebErrorStatics;
 
 // Windows.Web.WebErrorStatus
 enum _WWWebErrorStatus {
@@ -118,3 +117,4 @@ OBJCUWP_WINDOWS_WEB_EXPORT
 @end
 
 #endif // __WWWebError_DEFINED__
+

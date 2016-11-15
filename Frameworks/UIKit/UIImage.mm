@@ -31,7 +31,7 @@
 #include "UIKit/UIImage.h"
 #include "UIImageCachedObject.h"
 #include "CALayerInternal.h"
-#include "CACompositor.h"
+#include "StarboardXaml/DisplayProperties.h"
 
 #include "windows.h"
 #include "COMIncludes.h"
@@ -369,7 +369,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         return nil;
     }
 
-    if (strrchr(path, '.') != NULL && GetCACompositor()->screenScale() > 1.5f) {
+    if (strrchr(path, '.') != NULL && DisplayProperties::ScreenScale() > 1.5f) {
         size_t newStrSize = strlen(path) + 10;
         char* newStr = (char*)IwMalloc(newStrSize);
         const char* pathEnd = strrchr(path, '.');
@@ -413,7 +413,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
             }
         }
     }
-    if (!found && GetCACompositor()->screenScale() > 1.5f) {
+    if (!found && DisplayProperties::ScreenScale() > 1.5f) {
         NSString* _2x = [pathAddr stringByAppendingString:@"@2x"];
 
         NSString* pathFind = [bundle pathForResource:_2x ofType:@"png" inDirectory:nil forLocalization:@"English"];

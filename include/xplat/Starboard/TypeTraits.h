@@ -30,7 +30,6 @@ struct IsBlock<Ret (^)(Args...)> : std::true_type {};
 // for variadic blocks.
 template <typename Ret, typename... Args>
 struct IsBlock<Ret (^)(Args..., ...)> : std::true_type {};
-#endif
 
 // MakeObjcPointer conditionally applies pointer semantics to Objective-C class types without damaging
 // id or block pointers.
@@ -43,4 +42,5 @@ public:
     static_assert(std::is_convertible<_type, id>::value, "MakeObjcPointer can't wrap non-Objective-C types.");
     using type = _type;
 };
+#endif
 }

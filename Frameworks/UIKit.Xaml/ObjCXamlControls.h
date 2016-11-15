@@ -55,6 +55,25 @@ UIKIT_XAML_EXPORT void XamlRemovePointerEvents(const Microsoft::WRL::ComPtr<IIns
 UIKIT_XAML_EXPORT void XamlRemoveLayoutEvent(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton);
 
 ////////////////////////////////////////////////////////////////////////////////////
+// Label.xaml.cpp
+////////////////////////////////////////////////////////////////////////////////////
+
+// Returns a UIKit::Label as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlCreateLabel();
+
+// Retrieves the UIKit::Label's backing TextBlock as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlGetLabelTextBox(const Microsoft::WRL::ComPtr<IInspectable>& label);
+
+////////////////////////////////////////////////////////////////////////////////////
+// Layer.xaml.cpp
+////////////////////////////////////////////////////////////////////////////////////
+
+// Set one or more layer properties for the specified target xaml element
+UIKIT_XAML_EXPORT void XamlSetFrameworkElementLayerProperties(const Microsoft::WRL::ComPtr<IInspectable>& targetElement,
+                                                              const Microsoft::WRL::ComPtr<IInspectable>& sublayerCanvasProperty,
+                                                              const Microsoft::WRL::ComPtr<IInspectable>& layerContentProperty);
+
+////////////////////////////////////////////////////////////////////////////////////
 // ProgressRing.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
 

@@ -28,13 +28,13 @@
 #include <UWP/interopBase.h>
 
 @class WSAWWebAuthenticationResult, WSAWWebAuthenticationBroker;
-@protocol WSAWIWebAuthenticationResult
-, WSAWIWebAuthenticationBrokerStatics, WSAWIWebAuthenticationBrokerStatics2;
+@protocol WSAWIWebAuthenticationResult, WSAWIWebAuthenticationBrokerStatics, WSAWIWebAuthenticationBrokerStatics2;
 
 // Windows.Security.Authentication.Web.TokenBindingKeyType
 enum _WSAWTokenBindingKeyType {
     WSAWTokenBindingKeyTypeRsa2048 = 0,
     WSAWTokenBindingKeyTypeEcdsaP256 = 1,
+    WSAWTokenBindingKeyTypeAnyExisting = 2,
 };
 typedef unsigned WSAWTokenBindingKeyType;
 
@@ -70,7 +70,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_WEB_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* responseData;
+@property (readonly) NSString * responseData;
 @property (readonly) unsigned int responseErrorDetail;
 @property (readonly) WSAWWebAuthenticationStatus responseStatus;
 @end
@@ -85,27 +85,13 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_WEB_EXPORT
 @interface WSAWWebAuthenticationBroker : RTObject
 + (void)authenticateAndContinue:(WFUri*)requestUri;
 + (void)authenticateWithCallbackUriAndContinue:(WFUri*)requestUri callbackUri:(WFUri*)callbackUri;
-+ (void)authenticateWithCallbackUriContinuationDataAndOptionsAndContinue:(WFUri*)requestUri
-                                                             callbackUri:(WFUri*)callbackUri
-                                                        continuationData:(WFCValueSet*)continuationData
-                                                                 options:(WSAWWebAuthenticationOptions)options;
-+ (void)authenticateSilentlyAsync:(WFUri*)requestUri
-                          success:(void (^)(WSAWWebAuthenticationResult*))success
-                          failure:(void (^)(NSError*))failure;
-+ (void)authenticateSilentlyWithOptionsAsync:(WFUri*)requestUri
-                                     options:(WSAWWebAuthenticationOptions)options
-                                     success:(void (^)(WSAWWebAuthenticationResult*))success
-                                     failure:(void (^)(NSError*))failure;
-+ (void)authenticateWithCallbackUriAsync:(WSAWWebAuthenticationOptions)options
-                              requestUri:(WFUri*)requestUri
-                             callbackUri:(WFUri*)callbackUri
-                                 success:(void (^)(WSAWWebAuthenticationResult*))success
-                                 failure:(void (^)(NSError*))failure;
-+ (void)authenticateWithoutCallbackUriAsync:(WSAWWebAuthenticationOptions)options
-                                 requestUri:(WFUri*)requestUri
-                                    success:(void (^)(WSAWWebAuthenticationResult*))success
-                                    failure:(void (^)(NSError*))failure;
++ (void)authenticateWithCallbackUriContinuationDataAndOptionsAndContinue:(WFUri*)requestUri callbackUri:(WFUri*)callbackUri continuationData:(WFCValueSet*)continuationData options:(WSAWWebAuthenticationOptions)options;
++ (void)authenticateSilentlyAsync:(WFUri*)requestUri success:(void (^)(WSAWWebAuthenticationResult*))success failure:(void (^)(NSError*))failure;
++ (void)authenticateSilentlyWithOptionsAsync:(WFUri*)requestUri options:(WSAWWebAuthenticationOptions)options success:(void (^)(WSAWWebAuthenticationResult*))success failure:(void (^)(NSError*))failure;
++ (void)authenticateWithCallbackUriAsync:(WSAWWebAuthenticationOptions)options requestUri:(WFUri*)requestUri callbackUri:(WFUri*)callbackUri success:(void (^)(WSAWWebAuthenticationResult*))success failure:(void (^)(NSError*))failure;
++ (void)authenticateWithoutCallbackUriAsync:(WSAWWebAuthenticationOptions)options requestUri:(WFUri*)requestUri success:(void (^)(WSAWWebAuthenticationResult*))success failure:(void (^)(NSError*))failure;
 + (WFUri*)getCurrentApplicationCallbackUri;
 @end
 
 #endif // __WSAWWebAuthenticationBroker_DEFINED__
+

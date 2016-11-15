@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WADSQuickLink, WADSShareOperation;
-@protocol WADSIQuickLink
-, WADSIShareOperation, WADSIShareOperation2;
+@protocol WADSIQuickLink, WADSIShareOperation, WADSIShareOperation2;
 
 #include "WindowsApplicationModelDataTransfer.h"
 #include "WindowsStorageStreams.h"
@@ -46,9 +45,9 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_SHARETARGET_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* title;
+@property (retain) NSString * title;
 @property (retain) WSSRandomAccessStreamReference* thumbnail;
-@property (retain) NSString* id;
+@property (retain) NSString * id;
 @property (readonly) NSMutableArray* /* NSString * */ supportedDataFormats;
 @property (readonly) NSMutableArray* /* NSString * */ supportedFileTypes;
 @end
@@ -65,15 +64,16 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_SHARETARGET_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WADDataPackageView* data;
-@property (readonly) NSString* quickLinkId;
+@property (readonly) NSString * quickLinkId;
 - (void)removeThisQuickLink;
 - (void)reportStarted;
 - (void)reportDataRetrieved;
 - (void)reportSubmittedBackgroundTask;
 - (void)reportCompletedWithQuickLink:(WADSQuickLink*)quicklink;
 - (void)reportCompleted;
-- (void)reportError:(NSString*)value;
+- (void)reportError:(NSString *)value;
 - (void)dismissUI;
 @end
 
 #endif // __WADSShareOperation_DEFINED__
+

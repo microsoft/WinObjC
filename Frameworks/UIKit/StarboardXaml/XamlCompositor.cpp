@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,6 +16,8 @@
 // clang-format does not like C++/CX
 // clang-format off
 
+#include "XamlCompositor.h"
+
 #include <wrl/client.h>
 #include <memory>
 #include <agile.h>
@@ -23,58 +25,67 @@
 #include <robuffer.h>
 #include <collection.h>
 #include <assert.h>
-#include "CALayerXaml.h"
 
-#include <windows.ui.xaml.automation.peers.h>
-#include <windows.ui.xaml.media.h>
-
-using namespace concurrency;
-using namespace Windows::Storage::Streams;
-using namespace Microsoft::WRL;
-
-#include "winobjc\winobjc.h"
 #include "ApplicationCompositor.h"
-#include "CompositorInterface.h"
 #include <StringHelpers.h>
 
-Windows::UI::Xaml::Controls::Grid^ rootNode;
-Windows::UI::Xaml::Controls::Canvas^ windowCollection;
-extern float screenWidth, screenHeight;
-void GridSizeChanged(float newWidth, float newHeight);
+#include "DisplayProperties.h"
+#include "LayerProxy.h"
 
-void OnGridSizeChanged(Platform::Object^ sender, Windows::UI::Xaml::SizeChangedEventArgs^ e) {
+using namespace Microsoft::WRL;
+using namespace UIKit::Xaml::Private::CoreAnimation;
+using namespace Windows::Foundation;
+using namespace Windows::Storage::Streams;
+using namespace Windows::UI::Xaml;
+using namespace Windows::UI::Xaml::Controls;
+using namespace Windows::UI::Xaml::Media;
+using namespace XamlCompositor::Internal;
+
+Grid^ s_rootGrid;
+Canvas^ s_windowCollection;
+
+void OnGridSizeChanged(Platform::Object^ sender, SizeChangedEventArgs^ e) {
     Windows::Foundation::Size newSize = e->NewSize;
-    GridSizeChanged(newSize.Width, newSize.Height);
+    RootGridSizeChanged(newSize.Width, newSize.Height);
 }
 
-void SetRootGrid(winobjc::Id& root) {
-    rootNode = (Windows::UI::Xaml::Controls::Grid^)(Platform::Object^)root;
+namespace XamlCompositor {
 
-    // canvas serves as the container for UI windows, thus named as windowCollection
-    windowCollection = ref new Windows::UI::Xaml::Controls::Canvas();
-    windowCollection->HorizontalAlignment = Windows::UI::Xaml::HorizontalAlignment::Center;
-    windowCollection->VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Center;
+void Initialize(Windows::UI::Xaml::Controls::Grid^ rootGrid, ActivationType activationType) {
+    Internal::CreateXamlCompositor(((activationType == ActivationTypeLibrary) ? CompositionModeLibrary : CompositionModeDefault));
 
-    // for the canvas servering window collection, we give it a special name
+    s_rootGrid = rootGrid;
+
+    // canvas serves as the container for UI windows, thus named as s_windowCollection
+    s_windowCollection = ref new Canvas();
+    s_windowCollection->HorizontalAlignment = HorizontalAlignment::Center;
+    s_windowCollection->VerticalAlignment = VerticalAlignment::Center;
+
+    // For the canvas servering window collection, we give it a special name
     // useful for later when we try to locate this canvas
-    windowCollection->Name = L"windowCollection";
+    s_windowCollection->Name = L"windowCollection";
 
-    rootNode->Children->Append(windowCollection);
-    rootNode->InvalidateArrange();
+    s_rootGrid->Children->Append(s_windowCollection);
+    s_rootGrid->InvalidateArrange();
 
-    rootNode->SizeChanged += ref new Windows::UI::Xaml::SizeChangedEventHandler(&OnGridSizeChanged);
+    s_rootGrid->SizeChanged += ref new SizeChangedEventHandler(&OnGridSizeChanged);
 }
 
-void (*RenderCallback)();
+namespace Internal {
+
+void (*RenderCallback)() = nullptr;
 
 ref class XamlRenderingListener sealed {
 private:
     bool _isListening = false;
     Windows::Foundation::EventHandler<Platform::Object^>^ listener;
     Windows::Foundation::EventRegistrationToken listenerToken;
-    internal : void RenderedFrame(Object^ sender, Object^ args) {
-        if (RenderCallback)
+internal: 
+
+    void RenderedFrame(Object^ sender, Object^ args) {
+        if (RenderCallback) {
             RenderCallback();
+        }
     }
 
     XamlRenderingListener() {
@@ -84,14 +95,14 @@ private:
     void Start() {
         if (!_isListening) {
             _isListening = true;
-            listenerToken = Windows::UI::Xaml::Media::CompositionTarget::Rendering += listener;
+            listenerToken = Media::CompositionTarget::Rendering += listener;
         }
     }
 
     void Stop() {
         if (!_isListening) {
             _isListening = false;
-            Windows::UI::Xaml::Media::CompositionTarget::Rendering -= listenerToken;
+            Media::CompositionTarget::Rendering -= listenerToken;
         }
     }
 };
@@ -110,6 +121,7 @@ void DisableRenderingListener() {
     renderListener->Stop();
 }
 
+<<<<<<< HEAD
 XamlCompositor::Controls::CALayerXaml^ GetLayoutElement(DisplayNode* node) {
     return (XamlCompositor::Controls::CALayerXaml^)(Platform::Object^)node->_layoutElement;
 };
@@ -578,55 +590,41 @@ void DisplayTextureXamlGlyphs::ConstructGlyphs(const Microsoft::WRL::Wrappers::H
             textControl->TextAlignment = Windows::UI::Xaml::TextAlignment::Right;
             break;
     }
-
-    textControl->Padding = Windows::UI::Xaml::Thickness(_insets[0], _insets[1], _insets[2], _insets[3]);
-    textControl->TextWrapping = Windows::UI::Xaml::TextWrapping::Wrap;
-    textControl->LineStackingStrategy = Windows::UI::Xaml::LineStackingStrategy::BlockLineHeight;
-    textControl->LineHeight = _lineHeight;
-}
-
-void DisplayTextureXamlGlyphs::Measure(float width, float height) {
-    auto textLayer = (XamlCompositor::Controls::CATextLayerXaml^)(Platform::Object^)_xamlTextbox;
-    Windows::UI::Xaml::Controls::TextBlock^ textControl = textLayer->TextBlock;
-
-    textControl->Measure(Windows::Foundation::Size(width, height));
-
-    _desiredWidth = textControl->DesiredSize.Width;
-    if (_centerVertically) {
-        _desiredHeight = textControl->DesiredSize.Height;
-    } else {
-        _desiredHeight = height;
-    }
-}
-
-void DisplayTextureXamlGlyphs::SetNodeContent(DisplayNode* node, float width, float height, float scale) {
-    auto textLayer = (XamlCompositor::Controls::CATextLayerXaml^)(Platform::Object^)_xamlTextbox;
-    winobjc::Id textControl = textLayer->TextBlock;
-
-    float slackWidth = (width / scale) + 2.0f;
-    Measure(slackWidth, height / scale);
-    node->SetContentsElement(textControl, slackWidth, _desiredHeight, 1.0f);
-}
-
+=======
 void SetScreenParameters(float width, float height, float magnification, float rotation) {
-    windowCollection->Width = width;
-    windowCollection->Height = height;
-    windowCollection->InvalidateArrange();
-    windowCollection->InvalidateMeasure();
-    rootNode->InvalidateArrange();
-    rootNode->InvalidateMeasure();
-    XamlCompositor::Controls::CALayerXaml::ApplyMagnificationFactor(windowCollection, magnification, rotation);
-}
+    s_windowCollection->Width = width;
+    s_windowCollection->Height = height;
+    s_windowCollection->InvalidateArrange();
+    s_windowCollection->InvalidateMeasure();
+    s_rootGrid->InvalidateArrange();
+    s_rootGrid->InvalidateMeasure();
+>>>>>>> e74ff18cc12d7a4b0523ecbd24ad5ff958143853
 
-extern "C" void SetXamlRoot(Windows::UI::Xaml::Controls::Grid^ grid, ActivationType activationType) {
-    winobjc::Id gridObj((Platform::Object^)grid);
-    CreateXamlCompositor(gridObj, ((activationType == ActivationTypeLibrary) ? CompositionModeLibrary : CompositionModeDefault));
+    TransformGroup^ globalTransform = ref new TransformGroup();
+    ScaleTransform^ windowScale = ref new ScaleTransform();
+    RotateTransform^ orientation = ref new RotateTransform();
+
+    windowScale->ScaleX = magnification;
+    windowScale->ScaleY = magnification;
+    windowScale->CenterX = s_windowCollection->Width / 2.0;
+    windowScale->CenterY = s_windowCollection->Height / 2.0;
+
+    globalTransform->Children->Append(windowScale);
+    if (rotation != 0.0) {
+        orientation->Angle = rotation;
+        orientation->CenterX = s_windowCollection->Width / 2.0;
+        orientation->CenterY = s_windowCollection->Height / 2.0;
+
+        globalTransform->Children->Append(orientation);
+    }
+
+    s_windowCollection->RenderTransform = globalTransform;
 }
 
 void DispatchCompositorTransactions(
     std::deque<std::shared_ptr<ICompositorTransaction>>&& subTransactions,
     std::deque<std::shared_ptr<ICompositorAnimationTransaction>>&& animationTransactions,
-    std::map<DisplayNode*, std::map<std::string, std::shared_ptr<ICompositorTransaction>>>&& propertyTransactions,
+    std::map<std::shared_ptr<ILayerProxy>, std::map<std::string, std::shared_ptr<ICompositorTransaction>>>&& propertyTransactions,
     std::deque<std::shared_ptr<ICompositorTransaction>>&& movementTransactions) {
 
     // Walk and process the list of subtransactions
@@ -644,19 +642,22 @@ void DispatchCompositorTransactions(
         }, concurrency::task_continuation_context::use_current());
     }
 
-    // Walk and process the map of queued properties per DisplayNode and the list of node movements as a single distinct task
+    // Walk and process the map of queued properties per ILayerProxy and the list of layer movements as a single distinct task
     s_compositorTransactions = s_compositorTransactions
         .then([movementTransactions = std::move(movementTransactions),
             propertyTransactions = std::move(propertyTransactions)]() noexcept {
-        for (auto& nodeMovement : movementTransactions) {
-            nodeMovement->Process();
+        for (auto& layerMovement : movementTransactions) {
+            layerMovement->Process();
         }
 
-        for (auto& nodeProperties : propertyTransactions) {
-            // Walk the map of queued properties for this DisplayNode
-            for (auto& nodeProperty : nodeProperties.second) {
-                nodeProperty.second->Process();
+        for (auto& layerProperties : propertyTransactions) {
+            // Walk the map of queued properties for this ILayerProxy
+            for (auto& layerProperty : layerProperties.second) {
+                layerProperty.second->Process();
             }
         }
     }, concurrency::task_continuation_context::use_current());
 }
+
+} /* namespace Internal */
+} /* namespace XamlCompositor */

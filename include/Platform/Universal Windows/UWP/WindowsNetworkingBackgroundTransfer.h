@@ -27,20 +27,9 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WNBDownloadOperation, WNBUnconstrainedTransferRequestResult, WNBUploadOperation, WNBBackgroundTransferGroup,
-    WNBBackgroundTransferCompletionGroup, WNBBackgroundTransferContentPart, WNBResponseInformation, WNBBackgroundDownloader,
-    WNBBackgroundUploader, WNBBackgroundTransferError, WNBContentPrefetcher, WNBBackgroundTransferCompletionGroupTriggerDetails;
+@class WNBDownloadOperation, WNBUnconstrainedTransferRequestResult, WNBUploadOperation, WNBBackgroundTransferGroup, WNBBackgroundTransferCompletionGroup, WNBBackgroundTransferContentPart, WNBResponseInformation, WNBBackgroundDownloader, WNBBackgroundUploader, WNBBackgroundTransferError, WNBContentPrefetcher, WNBBackgroundTransferCompletionGroupTriggerDetails;
 @class WNBBackgroundDownloadProgress, WNBBackgroundUploadProgress;
-@protocol WNBIBackgroundTransferBase
-, WNBIUnconstrainedTransferRequestResult, WNBIBackgroundDownloaderUserConsent, WNBIBackgroundUploaderUserConsent, WNBIBackgroundDownloader,
-    WNBIBackgroundDownloader2, WNBIBackgroundDownloader3, WNBIBackgroundUploader, WNBIBackgroundUploader2, WNBIBackgroundUploader3,
-    WNBIBackgroundTransferOperation, WNBIBackgroundTransferOperationPriority, WNBIDownloadOperation, WNBIDownloadOperation2,
-    WNBIUploadOperation, WNBIUploadOperation2, WNBIBackgroundDownloaderFactory, WNBIBackgroundDownloaderStaticMethods,
-    WNBIBackgroundDownloaderStaticMethods2, WNBIBackgroundUploaderFactory, WNBIBackgroundUploaderStaticMethods,
-    WNBIBackgroundUploaderStaticMethods2, WNBIResponseInformation, WNBIBackgroundTransferErrorStaticMethods,
-    WNBIBackgroundTransferContentPart, WNBIBackgroundTransferContentPartFactory, WNBIBackgroundTransferGroup,
-    WNBIBackgroundTransferGroupStatics, WNBIContentPrefetcherTime, WNBIContentPrefetcher, WNBIBackgroundTransferCompletionGroup,
-    WNBIBackgroundTransferCompletionGroupTriggerDetails;
+@protocol WNBIBackgroundTransferBase, WNBIUnconstrainedTransferRequestResult, WNBIBackgroundDownloaderUserConsent, WNBIBackgroundUploaderUserConsent, WNBIBackgroundDownloader, WNBIBackgroundDownloader2, WNBIBackgroundDownloader3, WNBIBackgroundUploader, WNBIBackgroundUploader2, WNBIBackgroundUploader3, WNBIBackgroundTransferOperation, WNBIBackgroundTransferOperationPriority, WNBIDownloadOperation, WNBIDownloadOperation2, WNBIUploadOperation, WNBIUploadOperation2, WNBIBackgroundDownloaderFactory, WNBIBackgroundDownloaderStaticMethods, WNBIBackgroundDownloaderStaticMethods2, WNBIBackgroundUploaderFactory, WNBIBackgroundUploaderStaticMethods, WNBIBackgroundUploaderStaticMethods2, WNBIResponseInformation, WNBIBackgroundTransferErrorStaticMethods, WNBIBackgroundTransferContentPart, WNBIBackgroundTransferContentPartFactory, WNBIBackgroundTransferGroup, WNBIBackgroundTransferGroupStatics, WNBIContentPrefetcherTime, WNBIContentPrefetcher, WNBIBackgroundTransferCompletionGroup, WNBIBackgroundTransferCompletionGroupTriggerDetails;
 
 // Windows.Networking.BackgroundTransfer.BackgroundTransferStatus
 enum _WNBBackgroundTransferStatus {
@@ -91,7 +80,7 @@ typedef unsigned WNBBackgroundTransferBehavior;
 // [struct] Windows.Networking.BackgroundTransfer.BackgroundDownloadProgress
 OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @interface WNBBackgroundDownloadProgress : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property uint64_t bytesReceived;
 @property uint64_t totalBytesToReceive;
 @property WNBBackgroundTransferStatus status;
@@ -102,7 +91,7 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 // [struct] Windows.Networking.BackgroundTransfer.BackgroundUploadProgress
 OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @interface WNBBackgroundUploadProgress : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property uint64_t bytesReceived;
 @property uint64_t bytesSent;
 @property uint64_t totalBytesToReceive;
@@ -118,11 +107,11 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 
 @protocol WNBIBackgroundTransferBase
 @property WNBBackgroundTransferCostPolicy costPolicy;
-@property (retain) NSString* group;
-@property (retain) NSString* method;
+@property (retain) NSString * group;
+@property (retain) NSString * method;
 @property (retain) WSCPasswordCredential* proxyCredential;
 @property (retain) WSCPasswordCredential* serverCredential;
-- (void)setRequestHeader:(NSString*)headerName headerValue:(NSString*)headerValue;
+- (void)setRequestHeader:(NSString *)headerName headerValue:(NSString *)headerValue;
 @end
 
 OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
@@ -137,9 +126,9 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 
 @protocol WNBIBackgroundTransferOperation
 @property WNBBackgroundTransferCostPolicy costPolicy;
-@property (readonly) NSString* group;
+@property (readonly) NSString * group;
 @property (readonly) WFGUID* guid;
-@property (readonly) NSString* method;
+@property (readonly) NSString * method;
 @property (readonly) WFUri* requestedUri;
 - (RTObject<WSSIInputStream>*)getResultStreamAt:(uint64_t)position;
 - (WNBResponseInformation*)getResponseInformation;
@@ -170,8 +159,8 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 #define __WNBIBackgroundTransferContentPartFactory_DEFINED__
 
 @protocol WNBIBackgroundTransferContentPartFactory
-- (WNBBackgroundTransferContentPart*)createWithName:(NSString*)name;
-- (WNBBackgroundTransferContentPart*)createWithNameAndFileName:(NSString*)name fileName:(NSString*)fileName;
+- (WNBBackgroundTransferContentPart*)createWithName:(NSString *)name;
+- (WNBBackgroundTransferContentPart*)createWithNameAndFileName:(NSString *)name fileName:(NSString *)fileName;
 @end
 
 OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
@@ -190,20 +179,16 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WNBBackgroundTransferCostPolicy costPolicy;
-@property (readonly) NSString* group;
+@property (readonly) NSString * group;
 @property (readonly) WFGUID* guid;
-@property (readonly) NSString* method;
+@property (readonly) NSString * method;
 @property (readonly) WFUri* requestedUri;
 @property WNBBackgroundTransferPriority priority;
 @property (readonly) WNBBackgroundDownloadProgress* progress;
 @property (readonly) RTObject<WSIStorageFile>* resultFile;
 @property (readonly) WNBBackgroundTransferGroup* transferGroup;
-- (void)startAsyncWithSuccess:(void (^)(WNBDownloadOperation*))success
-                     progress:(void (^)(WNBDownloadOperation*))progress
-                      failure:(void (^)(NSError*))failure;
-- (void)attachAsyncWithSuccess:(void (^)(WNBDownloadOperation*))success
-                      progress:(void (^)(WNBDownloadOperation*))progress
-                       failure:(void (^)(NSError*))failure;
+- (void)startAsyncWithSuccess:(void (^)(WNBDownloadOperation*))success progress:(void (^)(WNBDownloadOperation*))progress failure:(void (^)(NSError*))failure;
+- (void)attachAsyncWithSuccess:(void (^)(WNBDownloadOperation*))success progress:(void (^)(WNBDownloadOperation*))progress failure:(void (^)(NSError*))failure;
 - (void)pause;
 - (void)resume;
 - (RTObject<WSSIInputStream>*)getResultStreamAt:(uint64_t)position;
@@ -236,20 +221,16 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WNBBackgroundTransferCostPolicy costPolicy;
-@property (readonly) NSString* group;
+@property (readonly) NSString * group;
 @property (readonly) WFGUID* guid;
-@property (readonly) NSString* method;
+@property (readonly) NSString * method;
 @property (readonly) WFUri* requestedUri;
 @property WNBBackgroundTransferPriority priority;
 @property (readonly) WNBBackgroundUploadProgress* progress;
 @property (readonly) RTObject<WSIStorageFile>* sourceFile;
 @property (readonly) WNBBackgroundTransferGroup* transferGroup;
-- (void)startAsyncWithSuccess:(void (^)(WNBUploadOperation*))success
-                     progress:(void (^)(WNBUploadOperation*))progress
-                      failure:(void (^)(NSError*))failure;
-- (void)attachAsyncWithSuccess:(void (^)(WNBUploadOperation*))success
-                      progress:(void (^)(WNBUploadOperation*))progress
-                       failure:(void (^)(NSError*))failure;
+- (void)startAsyncWithSuccess:(void (^)(WNBUploadOperation*))success progress:(void (^)(WNBUploadOperation*))progress failure:(void (^)(NSError*))failure;
+- (void)attachAsyncWithSuccess:(void (^)(WNBUploadOperation*))success progress:(void (^)(WNBUploadOperation*))progress failure:(void (^)(NSError*))failure;
 - (RTObject<WSSIInputStream>*)getResultStreamAt:(uint64_t)position;
 - (WNBResponseInformation*)getResponseInformation;
 @end
@@ -262,12 +243,12 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @interface WNBBackgroundTransferGroup : RTObject
-+ (WNBBackgroundTransferGroup*)createGroup:(NSString*)name;
++ (WNBBackgroundTransferGroup*)createGroup:(NSString *)name;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WNBBackgroundTransferBehavior transferBehavior;
-@property (readonly) NSString* name;
+@property (readonly) NSString * name;
 @end
 
 #endif // __WNBBackgroundTransferGroup_DEFINED__
@@ -296,13 +277,13 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @interface WNBBackgroundTransferContentPart : RTObject
 + (instancetype)make ACTIVATOR;
-+ (WNBBackgroundTransferContentPart*)makeWithName:(NSString*)name ACTIVATOR;
-+ (WNBBackgroundTransferContentPart*)makeWithNameAndFileName:(NSString*)name fileName:(NSString*)fileName ACTIVATOR;
++ (WNBBackgroundTransferContentPart*)makeWithName:(NSString *)name ACTIVATOR;
++ (WNBBackgroundTransferContentPart*)makeWithNameAndFileName:(NSString *)name fileName:(NSString *)fileName ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (void)setHeader:(NSString*)headerName headerValue:(NSString*)headerValue;
-- (void)setText:(NSString*)value;
+- (void)setHeader:(NSString *)headerName headerValue:(NSString *)headerValue;
+- (void)setText:(NSString *)value;
 - (void)setFile:(RTObject<WSIStorageFile>*)value;
 @end
 
@@ -331,18 +312,12 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @interface WNBBackgroundDownloader : RTObject <WNBIBackgroundTransferBase>
-+ (void)getCurrentDownloadsForTransferGroupAsync:(WNBBackgroundTransferGroup*)group
-                                         success:(void (^)(NSArray* /* WNBDownloadOperation* */))success
-                                         failure:(void (^)(NSError*))failure;
++ (void)requestUnconstrainedDownloadsAsync:(id<NSFastEnumeration> /* WNBDownloadOperation* */)operations success:(void (^)(WNBUnconstrainedTransferRequestResult*))success failure:(void (^)(NSError*))failure;
 + (void)getCurrentDownloadsAsyncWithSuccess:(void (^)(NSArray* /* WNBDownloadOperation* */))success failure:(void (^)(NSError*))failure;
-+ (void)getCurrentDownloadsForGroupAsync:(NSString*)group
-                                 success:(void (^)(NSArray* /* WNBDownloadOperation* */))success
-                                 failure:(void (^)(NSError*))failure;
-+ (void)requestUnconstrainedDownloadsAsync:(id<NSFastEnumeration> /* WNBDownloadOperation* */)operations
-                                   success:(void (^)(WNBUnconstrainedTransferRequestResult*))success
-                                   failure:(void (^)(NSError*))failure;
-+ (WNBBackgroundDownloader*)makeWithCompletionGroup:(WNBBackgroundTransferCompletionGroup*)completionGroup ACTIVATOR;
++ (void)getCurrentDownloadsForGroupAsync:(NSString *)group success:(void (^)(NSArray* /* WNBDownloadOperation* */))success failure:(void (^)(NSError*))failure;
++ (void)getCurrentDownloadsForTransferGroupAsync:(WNBBackgroundTransferGroup*)group success:(void (^)(NSArray* /* WNBDownloadOperation* */))success failure:(void (^)(NSError*))failure;
 + (instancetype)make ACTIVATOR;
++ (WNBBackgroundDownloader*)makeWithCompletionGroup:(WNBBackgroundTransferCompletionGroup*)completionGroup ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -353,20 +328,14 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @property (retain) WUNTileNotification* failureTileNotification;
 @property (readonly) WNBBackgroundTransferCompletionGroup* completionGroup;
 @property WNBBackgroundTransferCostPolicy costPolicy;
-@property (retain) NSString* group;
-@property (retain) NSString* method;
+@property (retain) NSString * group;
+@property (retain) NSString * method;
 @property (retain) WSCPasswordCredential* proxyCredential;
 @property (retain) WSCPasswordCredential* serverCredential;
 - (WNBDownloadOperation*)createDownload:(WFUri*)uri resultFile:(RTObject<WSIStorageFile>*)resultFile;
-- (WNBDownloadOperation*)createDownloadFromFile:(WFUri*)uri
-                                     resultFile:(RTObject<WSIStorageFile>*)resultFile
-                                requestBodyFile:(RTObject<WSIStorageFile>*)requestBodyFile;
-- (void)createDownloadAsync:(WFUri*)uri
-                 resultFile:(RTObject<WSIStorageFile>*)resultFile
-          requestBodyStream:(RTObject<WSSIInputStream>*)requestBodyStream
-                    success:(void (^)(WNBDownloadOperation*))success
-                    failure:(void (^)(NSError*))failure;
-- (void)setRequestHeader:(NSString*)headerName headerValue:(NSString*)headerValue;
+- (WNBDownloadOperation*)createDownloadFromFile:(WFUri*)uri resultFile:(RTObject<WSIStorageFile>*)resultFile requestBodyFile:(RTObject<WSIStorageFile>*)requestBodyFile;
+- (void)createDownloadAsync:(WFUri*)uri resultFile:(RTObject<WSIStorageFile>*)resultFile requestBodyStream:(RTObject<WSSIInputStream>*)requestBodyStream success:(void (^)(WNBDownloadOperation*))success failure:(void (^)(NSError*))failure;
+- (void)setRequestHeader:(NSString *)headerName headerValue:(NSString *)headerValue;
 @end
 
 #endif // __WNBBackgroundDownloader_DEFINED__
@@ -377,25 +346,19 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @interface WNBBackgroundUploader : RTObject <WNBIBackgroundTransferBase>
-+ (void)requestUnconstrainedUploadsAsync:(id<NSFastEnumeration> /* WNBUploadOperation* */)operations
-                                 success:(void (^)(WNBUnconstrainedTransferRequestResult*))success
-                                 failure:(void (^)(NSError*))failure;
++ (void)getCurrentUploadsForTransferGroupAsync:(WNBBackgroundTransferGroup*)group success:(void (^)(NSArray* /* WNBUploadOperation* */))success failure:(void (^)(NSError*))failure;
 + (void)getCurrentUploadsAsyncWithSuccess:(void (^)(NSArray* /* WNBUploadOperation* */))success failure:(void (^)(NSError*))failure;
-+ (void)getCurrentUploadsForGroupAsync:(NSString*)group
-                               success:(void (^)(NSArray* /* WNBUploadOperation* */))success
-                               failure:(void (^)(NSError*))failure;
-+ (void)getCurrentUploadsForTransferGroupAsync:(WNBBackgroundTransferGroup*)group
-                                       success:(void (^)(NSArray* /* WNBUploadOperation* */))success
-                                       failure:(void (^)(NSError*))failure;
-+ (instancetype)make ACTIVATOR;
++ (void)getCurrentUploadsForGroupAsync:(NSString *)group success:(void (^)(NSArray* /* WNBUploadOperation* */))success failure:(void (^)(NSError*))failure;
++ (void)requestUnconstrainedUploadsAsync:(id<NSFastEnumeration> /* WNBUploadOperation* */)operations success:(void (^)(WNBUnconstrainedTransferRequestResult*))success failure:(void (^)(NSError*))failure;
 + (WNBBackgroundUploader*)makeWithCompletionGroup:(WNBBackgroundTransferCompletionGroup*)completionGroup ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WSCPasswordCredential* serverCredential;
 @property (retain) WSCPasswordCredential* proxyCredential;
-@property (retain) NSString* method;
-@property (retain) NSString* group;
+@property (retain) NSString * method;
+@property (retain) NSString * group;
 @property WNBBackgroundTransferCostPolicy costPolicy;
 @property (retain) WUNTileNotification* failureTileNotification;
 @property (retain) WNBBackgroundTransferGroup* transferGroup;
@@ -404,26 +367,11 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @property (retain) WUNToastNotification* failureToastNotification;
 @property (readonly) WNBBackgroundTransferCompletionGroup* completionGroup;
 - (WNBUploadOperation*)createUpload:(WFUri*)uri sourceFile:(RTObject<WSIStorageFile>*)sourceFile;
-- (void)createUploadFromStreamAsync:(WFUri*)uri
-                       sourceStream:(RTObject<WSSIInputStream>*)sourceStream
-                            success:(void (^)(WNBUploadOperation*))success
-                            failure:(void (^)(NSError*))failure;
-- (void)createUploadWithFormDataAndAutoBoundaryAsync:(WFUri*)uri
-                                               parts:(id<NSFastEnumeration> /* WNBBackgroundTransferContentPart* */)parts
-                                             success:(void (^)(WNBUploadOperation*))success
-                                             failure:(void (^)(NSError*))failure;
-- (void)createUploadWithSubTypeAsync:(WFUri*)uri
-                               parts:(id<NSFastEnumeration> /* WNBBackgroundTransferContentPart* */)parts
-                             subType:(NSString*)subType
-                             success:(void (^)(WNBUploadOperation*))success
-                             failure:(void (^)(NSError*))failure;
-- (void)createUploadWithSubTypeAndBoundaryAsync:(WFUri*)uri
-                                          parts:(id<NSFastEnumeration> /* WNBBackgroundTransferContentPart* */)parts
-                                        subType:(NSString*)subType
-                                       boundary:(NSString*)boundary
-                                        success:(void (^)(WNBUploadOperation*))success
-                                        failure:(void (^)(NSError*))failure;
-- (void)setRequestHeader:(NSString*)headerName headerValue:(NSString*)headerValue;
+- (void)createUploadFromStreamAsync:(WFUri*)uri sourceStream:(RTObject<WSSIInputStream>*)sourceStream success:(void (^)(WNBUploadOperation*))success failure:(void (^)(NSError*))failure;
+- (void)createUploadWithFormDataAndAutoBoundaryAsync:(WFUri*)uri parts:(id<NSFastEnumeration> /* WNBBackgroundTransferContentPart* */)parts success:(void (^)(WNBUploadOperation*))success failure:(void (^)(NSError*))failure;
+- (void)createUploadWithSubTypeAsync:(WFUri*)uri parts:(id<NSFastEnumeration> /* WNBBackgroundTransferContentPart* */)parts subType:(NSString *)subType success:(void (^)(WNBUploadOperation*))success failure:(void (^)(NSError*))failure;
+- (void)createUploadWithSubTypeAndBoundaryAsync:(WFUri*)uri parts:(id<NSFastEnumeration> /* WNBBackgroundTransferContentPart* */)parts subType:(NSString *)subType boundary:(NSString *)boundary success:(void (^)(WNBUploadOperation*))success failure:(void (^)(NSError*))failure;
+- (void)setRequestHeader:(NSString *)headerName headerValue:(NSString *)headerValue;
 @end
 
 #endif // __WNBBackgroundUploader_DEFINED__
@@ -467,3 +415,4 @@ OBJCUWP_WINDOWS_NETWORKING_BACKGROUNDTRANSFER_EXPORT
 @end
 
 #endif // __WNBBackgroundTransferCompletionGroupTriggerDetails_DEFINED__
+

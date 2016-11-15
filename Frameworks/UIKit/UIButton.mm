@@ -79,7 +79,7 @@ struct ButtonState {
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
-        [self _UIButton_initInternal:nil];
+        [self _initUIButton];
 
         if ([coder containsValueForKey:@"UIDisabled"]) {
             BOOL disabled = [coder decodeIntegerForKey:@"UIDisabled"];
@@ -155,11 +155,11 @@ struct ButtonState {
     [self _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
 }
 
-- (void)_UIButton_initInternal:(WXFrameworkElement*)xamlElement {
-    if (xamlElement != nil && [xamlElement isKindOfClass:[WXCButton class]]) {
-        _xamlButton = static_cast<WXCButton*>(xamlElement);
-    } else {
-        _xamlButton = XamlControls::CreateButton();
+- (void)_initUIButton {
+    // Store a strongly-typed backing button
+    _xamlButton = rt_dynamic_cast<WXCButton>([self xamlElement]);
+    if (!_xamlButton) {
+        FAIL_FAST();
     }
 
     // Force-load the template, and get the TextBlock and Image for use in our proxies.
@@ -178,9 +178,6 @@ struct ButtonState {
 
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-
-    // Set the XAML element's name so it's easily found in the VS live tree viewer
-    [_xamlButton setName:[NSString stringWithUTF8String:object_getClassName(self)]];
 
     __block UIButton* weakSelf = self;
     XamlControls::HookButtonPointerEvents(_xamlButton,
@@ -213,35 +210,43 @@ struct ButtonState {
                                               [weakSelf _processPointerCaptureLostCallback:sender eventArgs:e];
                                           });
 
-    XamlControls::HookLayoutEvent(_xamlButton,
-                                  ^(RTObject*, WUXIPointerRoutedEventArgs*) {
-                                      // Since we are using XAML Button behind the scene, the intrinsicContentSize calculation is done
-                                      // by XAML.
-                                      // The size of XAML elements(for eg Image) is calculated at runtime and then the
-                                      // intrinsicContentSize is invalidated.
-                                      [weakSelf setNeedsLayout];
-                                  });
-
-    [self layer].contentsElement = _xamlButton;
+    XamlControls::HookLayoutEvent(_xamlButton, ^(RTObject*, WUXIPointerRoutedEventArgs*) {
+        // Since we are using XAML Button behind the scene, the intrinsicContentSize calculation is done
+        // by XAML.
+        // The size of XAML elements(for eg Image) is calculated at runtime and then the
+        // intrinsicContentSize is invalidated.
+        [weakSelf setNeedsLayout];
+    });
 }
 
-- (instancetype)_initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        [self _UIButton_initInternal:xamlElement];
+        [self _initUIButton];
     }
 
     return self;
 }
 
 /**
- @Status Interoperable
+Microsoft Extension
 */
-- (instancetype)initWithFrame:(CGRect)pos {
-    if (self = [super initWithFrame:pos]) {
-        [self _UIButton_initInternal:nil];
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+    if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
+        [self _initUIButton];
     }
 
     return self;
+}
+
+/**
+ Microsoft Extension
+*/
++ (WXFrameworkElement*)createXamlElement {
+    // No autorelease needed because CreateButton is autoreleased
+    return XamlControls::CreateButton();
 }
 
 /**
@@ -345,7 +350,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 */
 - (CGRect)imageRectForContentRect:(CGRect)contentRect {
     CGSize titleSize = [self.currentTitle sizeWithFont:self.font];
-    CGSize imageSize = { 0 };
+    // TODO  #1365 :: Currently cannot assume getting size from nil will return CGSizeZero
+    CGSize imageSize = CGSizeZero;
     CGRect insetsRect = UIEdgeInsetsInsetRect(contentRect, self.imageEdgeInsets);
 
     if (!self.currentImage) {
@@ -378,7 +384,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 - (CGRect)titleRectForContentRect:(CGRect)contentRect {
     CGSize titleSize = [self.currentTitle sizeWithFont:self.font];
     CGSize totalSize = titleSize;
-    CGSize imageSize = [self.currentImage size];
+    // TODO  #1365 :: Currently cannot assume getting size from nil will return CGSizeZero
+    CGSize imageSize = self.currentImage ? [self.currentImage size] : CGSizeZero;
     CGRect insetsRect = UIEdgeInsetsInsetRect(contentRect, self.titleEdgeInsets);
 
     if ([self currentTitle].length == 0) {
@@ -896,7 +903,8 @@ static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableBackgroundImage(U
     // If we have a background, its image size dictates the smallest size.
     if (self.currentBackgroundImage) {
         UIImage* background = self.currentBackgroundImage;
-        CGSize size = [background size];
+        // TODO  #1365 :: Currently cannot assume getting size from nil will return CGSizeZero
+        CGSize size = background ? [background size] : CGSizeZero;
 
         ret.width = std::max(size.width, ret.width);
         ret.height = std::max(size.height, ret.height);

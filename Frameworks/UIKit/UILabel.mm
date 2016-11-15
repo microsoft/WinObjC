@@ -24,12 +24,9 @@
 #import "UIKit/UIAccessibility.h"
 #import "UIFontInternal.h"
 #import "CGContextInternal.h"
-#import "CATextLayerInternal.h"
-#import "QuartzCore/CATextLayer.h"
-
-#import "CACompositor.h"
-
-#define USE_TEXT_LAYER 1
+#import "StarboardXaml/DisplayProperties.h"
+#import "XamlControls.h"
+#import "XamlUtilities.h"
 
 @implementation UILabel {
     idretaintype(NSString) _text;
@@ -37,7 +34,6 @@
     idretaintype(UIColor) _textColor, _shadowColor, _highlightedTextColor;
     idretaintype(NSAttributedString) _attributedText;
     idretaintype(UIColor) _savedBackgroundColor;
-    CATextLayer* _textLayer;
     CGSize _shadowOffset;
     UITextAlignment _alignment;
     UILineBreakMode _lineBreakMode;
@@ -48,6 +44,7 @@
     BOOL _isDisabled;
     BOOL _isHighlighted;
     UIBaselineAdjustment _baselineAdjustment;
+    StrongId<WXCTextBlock> _textBlock;
 }
 
 - (void)adjustFontSizeToFit {
@@ -97,96 +94,116 @@
 }
 
 - (void)adjustTextLayerSize {
-#if USE_TEXT_LAYER
-    if ([self class] != [UILabel class]) {
-        [[self layer] setShouldRasterize:TRUE];
-    }
+    [_textBlock setText:_text];
+    [_textBlock setFontSize:[_font pointSize]];
+
+    StrongId<WUTFontWeight> fontWeight;
+    fontWeight.attach([WUTFontWeight new]);
+    fontWeight.get().weight = static_cast<unsigned short>([_font _fontWeight]);
+    [_textBlock setFontWeight:fontWeight];
+    [_textBlock setFontStyle:static_cast<WUTFontStyle>([_font _fontStyle])];
+    [_textBlock setFontStretch:static_cast<WUTFontStretch>([_font _fontStretch])];
+
+    [_textBlock setFontFamily:[WUXMFontFamily makeInstanceWithName:[_font _compatibleFamilyName]]];
+
+    [_textBlock setTextAlignment:ConvertUITextAlignmentToWXTextAlignment(_alignment)];
+
+    [_textBlock setLineHeight:[_font ascender] - [_font descender]];
+
+    // Note: These were set in the compositor before the refactor.
+    // TODO: Revisit to fix the remaining text issues with the  refactor.
+    [_textBlock setTextWrapping:WXTextWrappingWrap];
+    [_textBlock setLineStackingStrategy:WXLineStackingStrategyBlockLineHeight];
+
     UIColor* color = _textColor;
     if (_isHighlighted && _highlightedTextColor != nil) {
         color = _highlightedTextColor;
     }
-    [static_cast<CATextLayer*>([self layer]) _setDisplayParams:(id)_font
-                                                          text:(id)_text
-                                                         color:color
-                                                     alignment:_alignment
-                                                     lineBreak:_lineBreakMode
-                                                   shadowColor:(id)_shadowColor
-                                                  shadowOffset:_shadowOffset
-                                                      numLines:_numberOfLines];
-#endif
+    [_textBlock setForeground:[WUXMSolidColorBrush makeInstanceWithColor:ConvertUIColorToWUColor(color)]];
+
     [self invalidateIntrinsicContentSize];
     [self setNeedsDisplay];
 }
-
-#if USE_TEXT_LAYER
-/**
- @Status Interoperable
-*/
-+ (Class)layerClass {
-    return [CATextLayer class];
-}
-#endif
 
 /**
  @Status Caveat
  @Notes May not be fully implemented
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    [super initWithCoder:coder];
+    if (self = [super initWithCoder:coder]) {
+        [self _initUILabel];
 
-    _text = [coder decodeObjectForKey:@"UIText"];
-    _textColor = [coder decodeObjectForKey:@"UITextColor"];
-    _highlightedTextColor = [coder decodeObjectForKey:@"UIHighlightedColor"];
-    _shadowColor = [coder decodeObjectForKey:@"UIShadowColor"];
+        _text = [coder decodeObjectForKey:@"UIText"];
+        _textColor = [coder decodeObjectForKey:@"UITextColor"];
+        _highlightedTextColor = [coder decodeObjectForKey:@"UIHighlightedColor"];
+        _shadowColor = [coder decodeObjectForKey:@"UIShadowColor"];
 
-    UIFont* font = [coder decodeObjectForKey:@"UIFont"];
-    if (font == nil) {
-        font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
-    }
-    [self setFont:font];
-
-    _alignment = (UITextAlignment)[coder decodeInt32ForKey:@"UITextAlignment"];
-    _adjustFontSize = [coder decodeInt32ForKey:@"UIAdjustsFontSizeToFit"];
-
-    if ([coder containsValueForKey:@"UINumberOfLines"]) {
-        _numberOfLines = [coder decodeInt32ForKey:@"UINumberOfLines"];
-    } else {
-        _numberOfLines = 1;
-    }
-
-    _minimumFontSize = [coder decodeFloatForKey:@"UIMinimumFontSize"];
-
-    if ([coder containsValueForKey:@"UILineBreakMode"]) {
-        _lineBreakMode = (UILineBreakMode)[coder decodeInt32ForKey:@"UILineBreakMode"];
-    } else {
-        _lineBreakMode = UILineBreakModeTailTruncation;
-    }
-    if ([coder containsValueForKey:@"UIShadowOffset"]) {
-        id obj = [coder decodeObjectForKey:@"UIShadowOffset"];
-        CGSize size = { 0 };
-        if ([obj isKindOfClass:[NSString class]]) {
-            const char* str = (const char*)([obj UTF8String]);
-            sscanf_s(str, "{%f, %f}", &_shadowOffset.width, &_shadowOffset.height);
-        } else {
-            CGSize* pSize = (CGSize*)((char*)[obj bytes] + 1);
-            memcpy(&_shadowOffset, pSize, sizeof(CGSize));
+        UIFont* font = [coder decodeObjectForKey:@"UIFont"];
+        if (font == nil) {
+            font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
         }
-    }
+        [self setFont:font];
 
-    if (_adjustFontSize) {
-        [self adjustFontSizeToFit];
-    } else {
-        [self adjustTextLayerSize];
+        _alignment = (UITextAlignment)[coder decodeInt32ForKey:@"UITextAlignment"];
+        _adjustFontSize = [coder decodeInt32ForKey:@"UIAdjustsFontSizeToFit"];
+
+        if ([coder containsValueForKey:@"UINumberOfLines"]) {
+            _numberOfLines = [coder decodeInt32ForKey:@"UINumberOfLines"];
+        } else {
+            _numberOfLines = 1;
+        }
+
+        _minimumFontSize = [coder decodeFloatForKey:@"UIMinimumFontSize"];
+
+        if ([coder containsValueForKey:@"UILineBreakMode"]) {
+            _lineBreakMode = (UILineBreakMode)[coder decodeInt32ForKey:@"UILineBreakMode"];
+        } else {
+            _lineBreakMode = UILineBreakModeTailTruncation;
+        }
+        if ([coder containsValueForKey:@"UIShadowOffset"]) {
+            id obj = [coder decodeObjectForKey:@"UIShadowOffset"];
+            CGSize size = { 0 };
+            if ([obj isKindOfClass:[NSString class]]) {
+                const char* str = (const char*)([obj UTF8String]);
+                sscanf_s(str, "{%f, %f}", &_shadowOffset.width, &_shadowOffset.height);
+            } else {
+                CGSize* pSize = (CGSize*)((char*)[obj bytes] + 1);
+                memcpy(&_shadowOffset, pSize, sizeof(CGSize));
+            }
+        }
+
+        if (_adjustFontSize) {
+            [self adjustFontSizeToFit];
+        } else {
+            [self adjustTextLayerSize];
+        }
     }
 
     return self;
 }
 
-/**
- @Status Interoperable
-*/
-- (instancetype)initWithFrame:(CGRect)frame {
-    [super initWithFrame:frame];
+- (void)_initUILabel {
+    ////////////////////////////////////////////////////////////////////
+    // TODO: Ultimately this will be a UIKit.Label projected to us and
+    // it will expose its backing TextBlock.  For now, we'll have to
+    // know that it's truly backed by a Grid and we must reach down
+    // to retrieve its TextBlock.
+    WXCGrid* labelGrid = rt_dynamic_cast<WXCGrid>([self xamlElement]);
+    WXCTextBlock* textBlock = nil;
+    if (labelGrid) {
+        textBlock = XamlControls::GetLabelTextBlock(labelGrid);
+    } else {
+        // If we didn't get a UIKit.Label, that's ok - as long as
+        // we've received a TextBlock directly.
+        textBlock = rt_dynamic_cast<WXCTextBlock>([self xamlElement]);
+    }
+
+    if (!textBlock) {
+        // Definitely didn't receive any supported backing xaml elements
+        FAIL_FAST();
+    }
+
+    _textBlock = textBlock;
 
     _alignment = UITextAlignmentLeft;
     _lineBreakMode = UILineBreakModeTailTruncation;
@@ -196,13 +213,45 @@
     _minimumFontSize = 8.0f;
     _numberOfLines = 1;
     [self setOpaque:FALSE];
-
-    [self setUserInteractionEnabled:FALSE];
-    [self setContentMode:UIViewContentModeRedraw];
-
     [self adjustTextLayerSize];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        [self _initUILabel];
+
+        // TODO: Reevaluate whether or not this is the correct default mode for UILabels that are initialized via initWithFrame.
+        //       Some of our test apps expect the initWithCoder path to default to UIViewContentModeScaleToFill (aka kCAGravityResize).
+        [self setContentMode:UIViewContentModeRedraw];
+    }
 
     return self;
+}
+
+/**
+ Microsoft Extension
+*/
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+    if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
+        [self _initUILabel];
+
+        // TODO: Reevaluate whether or not this is the correct default mode for UILabels that are initialized via initWithFrame.
+        //       Some of our test apps expect the initWithCoder path to default to UIViewContentModeScaleToFill (aka kCAGravityResize).
+        [self setContentMode:UIViewContentModeRedraw];
+    }
+
+    return self;
+}
+
+/**
+ Microsoft Extension
+*/
++ (WXFrameworkElement*)createXamlElement {
+    // No autorelease needed because CreateLabel is autoreleased
+    return XamlControls::CreateLabel();
 }
 
 /**
@@ -364,9 +413,6 @@
  @Status Interoperable
 */
 - (void)setBackgroundColor:(UIColor*)colorref {
-    if (_textLayer != nil) {
-        [_textLayer setBackgroundColor:(CGColorRef)colorref];
-    }
     if (!_isHighlighted) {
         _savedBackgroundColor = colorref;
     }
@@ -467,69 +513,10 @@
 }
 
 /**
- @Status Interoperable
-*/
-- (void)drawRect:(CGRect)rect {
-    CGRect bounds = self.bounds;
-    CGRect drawArea = CGRectMake(0, 0, bounds.size.width, bounds.size.height);
-    [self drawTextInRect:drawArea];
-}
-
-/**
- @Status Interoperable
+@Status Stub
 */
 - (void)drawTextInRect:(CGRect)rect {
-    if (_text != nil) {
-        if (_font == nil) {
-            [self setFont:[UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]]];
-        }
-
-        CGContextRef currentCtx = UIGraphicsGetCurrentContext();
-
-        CGContextSetFillColorWithColor(currentCtx, [_textColor CGColor]);
-        CGContextSetStrokeColorWithColor(currentCtx, [_textColor CGColor]);
-
-        CGSize size = rect.size;
-        if (_numberOfLines == 1) {
-            CGSize fontHeight;
-
-            fontHeight = [@" " sizeWithFont:_font];
-            size.height = fontHeight.height;
-        }
-
-        size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(size.width, size.height) lineBreakMode:_lineBreakMode];
-
-        EbrCenterTextInRectVertically(&rect, &size, _font);
-
-        if ((_shadowOffset.width != 0.0f || _shadowOffset.height != 0.0f) && _shadowColor != nil) {
-            CGRect shadowRect = rect;
-
-            switch (_alignment) {
-                case UITextAlignmentLeft:
-                    shadowRect.origin.x += _shadowOffset.width;
-                    shadowRect.origin.y += _shadowOffset.height;
-                    break;
-
-                case UITextAlignmentCenter:
-                    shadowRect.origin.x += _shadowOffset.width;
-                    shadowRect.origin.y += _shadowOffset.height;
-                    break;
-
-                case UITextAlignmentRight:
-                    rect.origin.x -= _shadowOffset.width;
-                    shadowRect.origin.y += _shadowOffset.height;
-                    break;
-            }
-
-            CGContextSetFillColorWithColor(currentCtx, [_shadowColor CGColor]);
-            CGContextSetStrokeColorWithColor(currentCtx, [_shadowColor CGColor]);
-            size = [_text drawInRect:shadowRect withFont:_font lineBreakMode:_lineBreakMode alignment:_alignment];
-        }
-
-        CGContextSetFillColorWithColor(currentCtx, [_textColor CGColor]);
-        CGContextSetStrokeColorWithColor(currentCtx, [_textColor CGColor]);
-        size = [_text drawInRect:rect withFont:_font lineBreakMode:_lineBreakMode alignment:_alignment];
-    }
+    UNIMPLEMENTED();
 }
 
 /**
@@ -616,7 +603,7 @@
         }
 
         size = [_text sizeWithFont:_font
-                 constrainedToSize:CGSizeMake(GetCACompositor()->screenWidth(), bounds.size.height)
+                 constrainedToSize:CGSizeMake(DisplayProperties::ScreenWidth(), bounds.size.height)
                      lineBreakMode:_lineBreakMode];
         size.height -= [_font descender];
 
@@ -636,7 +623,6 @@
     _textColor = nil;
     _shadowColor = nil;
     _highlightedTextColor = nil;
-    _textLayer = nil;
     _savedBackgroundColor = nil;
     _attributedText = nil;
 
@@ -683,8 +669,5 @@
 
     return ret;
 }
-
-#if USE_TEXT_LAYER
-#endif
 
 @end

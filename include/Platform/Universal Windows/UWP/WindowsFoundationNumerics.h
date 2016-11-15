@@ -34,7 +34,7 @@
 // [struct] Windows.Foundation.Numerics.Vector2
 OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNVector2 : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property float x;
 @property float y;
 @end
@@ -42,7 +42,7 @@ OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 // [struct] Windows.Foundation.Numerics.Vector3
 OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNVector3 : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property float x;
 @property float y;
 @property float z;
@@ -51,7 +51,7 @@ OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 // [struct] Windows.Foundation.Numerics.Vector4
 OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNVector4 : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property float x;
 @property float y;
 @property float z;
@@ -61,7 +61,7 @@ OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 // [struct] Windows.Foundation.Numerics.Matrix3x2
 OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNMatrix3x2 : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property float m11;
 @property float m12;
 @property float m21;
@@ -73,7 +73,7 @@ OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 // [struct] Windows.Foundation.Numerics.Matrix4x4
 OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNMatrix4x4 : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property float m11;
 @property float m12;
 @property float m13;
@@ -95,7 +95,7 @@ OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 // [struct] Windows.Foundation.Numerics.Plane
 OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNPlane : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property (retain) WFNVector3* normal;
 @property float d;
 @end
@@ -103,9 +103,10 @@ OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 // [struct] Windows.Foundation.Numerics.Quaternion
 OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNQuaternion : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property float x;
 @property float y;
 @property float z;
 @property float w;
 @end
+

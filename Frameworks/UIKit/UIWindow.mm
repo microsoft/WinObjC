@@ -29,11 +29,9 @@
 #import "CALayerInternal.h"
 #import "UIDeviceInternal.h"
 #import "CATransactionInternal.h"
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayProperties.h"
 
 static const wchar_t* TAG = L"UIWindow";
-
-UIWindow* m_pMainWindow = NULL;
 
 UIWindow* _curKeyWindow = nil;
 
@@ -104,16 +102,12 @@ const UIWindowLevel UIWindowLevelStatusBar = 1000.0f;
 }
 
 static void initInternal(UIWindow* self, CGRect pos) {
-    if (m_pMainWindow == NULL) {
-        m_pMainWindow = (UIWindow*)(id)self;
-    }
-
     CALayer* ourLayer = [self layer];
     [ourLayer setOpaque:FALSE];
     [ourLayer _setRootLayer:TRUE];
 
     [CATransaction _addSublayerToTop:ourLayer];
-    GetCACompositor()->setNodeTopMost((DisplayNode*)[ourLayer _presentationNode], true);
+    [ourLayer _layerProxy]->SetTopMost();
 
     [self setWindowLevel:UIWindowLevelNormal];
     [self setSizeUIWindowToFit:[[UIApplication displayMode] sizeUIWindowToFit]];
@@ -122,7 +116,6 @@ static void initInternal(UIWindow* self, CGRect pos) {
 }
 
 - (void)_destroy {
-    m_pMainWindow = NULL;
     [CATransaction _removeLayer:[self layer]];
     [static_cast<NSMutableArray*>([[UIApplication sharedApplication] windows]) removeObject:self];
     [self resignKeyWindow];
@@ -165,12 +158,12 @@ static void initInternal(UIWindow* self, CGRect pos) {
     frame = [self frame];
 
 #ifdef RUN_NATIVE_RESOLUTION
-    frame.size.width = GetCACompositor()->screenWidth();
-    frame.size.height = GetCACompositor()->screenHeight();
+    frame.size.width = DisplayProperties::ScreenWidth();
+    frame.size.height = DisplayProperties::ScreenHeight();
     [super setFrame:frame];
 #else
-    if (frame.size.height == 480.0f && GetCACompositor()->screenHeight() == 568.0f) {
-        frame.size.height = GetCACompositor()->screenHeight();
+    if (frame.size.height == 480.0f && DisplayProperties::ScreenHeight() == 568.0f) {
+        frame.size.height = DisplayProperties::ScreenHeight();
         [super setFrame:frame];
     }
 #endif
@@ -184,17 +177,10 @@ static void initInternal(UIWindow* self, CGRect pos) {
     return self;
 }
 
-/**
- @Status Interoperable
-*/
-+ (UIWindow*)mainWindow {
-    return (UIWindow*)m_pMainWindow;
-}
-
--(void)_moveToTopOfSameLevel {
+- (void)_moveToTopOfSameLevel {
     id windows = [[UIApplication sharedApplication] windows];
     int windowCount = [windows count];
-    int idxOfCurrentWindow = [windows indexOfObject : self];
+    int idxOfCurrentWindow = [windows indexOfObject:self];
 
     // Nothing needed if the current window is the last one in windows arrary
     if (idxOfCurrentWindow == windowCount - 1) {
@@ -202,13 +188,13 @@ static void initInternal(UIWindow* self, CGRect pos) {
     }
 
     // Nothing needed if the window level of next window is larger than current one
-    UIWindow* nextWindow = (UIWindow*)[windows objectAtIndex : idxOfCurrentWindow + 1];
+    UIWindow* nextWindow = (UIWindow*)[windows objectAtIndex:idxOfCurrentWindow + 1];
     if (nextWindow.windowLevel > _windowLevel) {
         return;
     }
 
     // Get the index of the window whose window level is larger than current window's and calculate the new position
-    int nextLevelIndex = [windows indexOfObjectPassingTest : ^BOOL(id obj, NSUInteger idx, BOOL* stop) {
+    int nextLevelIndex = [windows indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL* stop) {
         if ([(UIWindow*)obj windowLevel] > _windowLevel) {
             *stop = YES;
             return YES;
@@ -219,19 +205,18 @@ static void initInternal(UIWindow* self, CGRect pos) {
     int idxOfNewPosition = 0;
     if (nextLevelIndex == NSNotFound) {
         idxOfNewPosition = windowCount - 1;
-    }
-    else {
+    } else {
         idxOfNewPosition = nextLevelIndex - 1;
     }
 
     // Move current window to the last one of windows with same window level
     [static_cast<NSMutableArray*>(windows) removeObjectAtIndex:idxOfCurrentWindow];
-    [static_cast<NSMutableArray*>(windows) insertObject:self atIndex : idxOfNewPosition];
+    [static_cast<NSMutableArray*>(windows) insertObject:self atIndex:idxOfNewPosition];
 
     // Reset the ZIndex property of the windows impacted
     for (int i = idxOfCurrentWindow; i <= idxOfNewPosition; i++) {
-        UIWindow* window = (UIWindow*)[windows objectAtIndex : i];
-        [window.layer _setZIndex : i + 1];
+        UIWindow* window = (UIWindow*)[windows objectAtIndex:i];
+        [window.layer _setZIndex:i + 1];
     }
 }
 
@@ -376,7 +361,6 @@ static void initInternal(UIWindow* self, CGRect pos) {
  @Status Interoperable
 */
 - (void)dealloc {
-    m_pMainWindow = NULL;
     [CATransaction _removeLayer:[self layer]];
     [static_cast<NSMutableArray*>([[UIApplication sharedApplication] windows]) removeObject:self];
 

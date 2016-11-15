@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap">
+  <!-- TAEF's default manifest uses an Identity Name of "TAEF.TailoredApplication.HostProcess". If you want to
+       customize this manifest, change the Identity Name attribute on the following line to make sure TAEF can
+       detect that the manifest has been customized. If you don't, TAEF might overwrite your manifest with a new
+       default manifest or delete the manifest in some cases. -->
+  <Identity Name="TAEF.TailoredApplication.HostProcess"
+          ProcessorArchitecture="neutral"
+          Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+          Version="1.0.0.0"
+          ResourceId="en-us" />
+  <Properties>
+    <DisplayName>TAEF Tailored Application Host Process</DisplayName>
+    <PublisherDisplayName>Microsoft Corp.</PublisherDisplayName>
+    <Logo>taef.png</Logo>
+    <Description>TAEF Tailored Application Host Process</Description>
+  </Properties>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+  </Dependencies>
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+  <Applications>
+    <Application Id="TE.ProcessHost" Executable="TE.ProcessHost.UAP.exe" EntryPoint="ProcessHostApplication">
+      <uap:VisualElements DisplayName="TAEF Tailored Application Host Process" Square150x150Logo="taef.png" Square44x44Logo="taef.png" Description="TAEF Tailored Application Host Process" BackgroundColor="#222222">
+        <uap:SplashScreen Image="taef.png" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+  <Extensions>
+    <Extension Category="windows.activatableClass.inProcessServer">
+      <InProcessServer>
+        <Path>UIKit.Xaml.dll</Path>
+        <ActivatableClass ActivatableClassId="UIKit.Xaml.ContentDialog" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="UIKit.Xaml.TextBox" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="UIKit.Xaml.ScrollViewer" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="UIKit.Xaml.Private.CoreAnimation.Layer" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="UIKit.Xaml.UIKit_Xaml_XamlTypeInfo.XamlMetaDataProvider" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="UIKit.Xaml.Slider" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="UIKit.Xaml.ProgressRing" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="UIKit.Xaml.Item" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="UIKit.Xaml.Button" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="UIKit.Xaml.Label" ThreadingModel="both" />
+      </InProcessServer>
+    </Extension>
+  </Extensions>
+</Package>

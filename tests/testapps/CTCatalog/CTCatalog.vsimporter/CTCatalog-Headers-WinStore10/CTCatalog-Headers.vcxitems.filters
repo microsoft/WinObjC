@@ -42,5 +42,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCAffineTransformationTestViewController.h">
       <Filter>CTCatalog\Test</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CTCatalog\Tests\CTCPathForGlyphTestViewController.h">
+      <Filter>CTCatalog\Test</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

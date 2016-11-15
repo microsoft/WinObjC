@@ -27,33 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WDPPerceptionColorFrameSourceWatcher, WDPPerceptionColorFrameSourceAddedEventArgs, WDPPerceptionColorFrameSourceRemovedEventArgs,
-    WDPPerceptionDepthFrameSourceWatcher, WDPPerceptionDepthFrameSourceAddedEventArgs, WDPPerceptionDepthFrameSourceRemovedEventArgs,
-    WDPPerceptionInfraredFrameSourceWatcher, WDPPerceptionInfraredFrameSourceAddedEventArgs,
-    WDPPerceptionInfraredFrameSourceRemovedEventArgs, WDPPerceptionColorFrameSource, WDPPerceptionDepthFrameSource,
-    WDPPerceptionInfraredFrameSource, WDPPerceptionControlSession, WDPPerceptionFrameSourcePropertyChangeResult,
-    WDPPerceptionFrameSourcePropertiesChangedEventArgs, WDPPerceptionVideoProfile, WDPPerceptionDepthCorrelatedCameraIntrinsics,
-    WDPPerceptionDepthCorrelatedCoordinateMapper, WDPPerceptionColorFrameReader, WDPPerceptionDepthFrameReader,
-    WDPPerceptionInfraredFrameReader, WDPPerceptionColorFrameArrivedEventArgs, WDPPerceptionColorFrame,
-    WDPPerceptionDepthFrameArrivedEventArgs, WDPPerceptionDepthFrame, WDPPerceptionInfraredFrameArrivedEventArgs,
-    WDPPerceptionInfraredFrame, WDPKnownPerceptionFrameSourceProperties, WDPKnownPerceptionVideoFrameSourceProperties,
-    WDPKnownPerceptionInfraredFrameSourceProperties, WDPKnownPerceptionDepthFrameSourceProperties,
-    WDPKnownPerceptionColorFrameSourceProperties, WDPKnownPerceptionVideoProfileProperties, WDPKnownCameraIntrinsicsProperties;
-@protocol WDPIPerceptionColorFrameSourceWatcher
-, WDPIPerceptionDepthFrameSourceWatcher, WDPIPerceptionInfraredFrameSourceWatcher, WDPIPerceptionColorFrameSourceAddedEventArgs,
-    WDPIPerceptionColorFrameSourceRemovedEventArgs, WDPIPerceptionDepthFrameSourceAddedEventArgs,
-    WDPIPerceptionDepthFrameSourceRemovedEventArgs, WDPIPerceptionInfraredFrameSourceAddedEventArgs,
-    WDPIPerceptionInfraredFrameSourceRemovedEventArgs, WDPIKnownPerceptionFrameSourcePropertiesStatics,
-    WDPIKnownPerceptionVideoFrameSourcePropertiesStatics, WDPIKnownPerceptionInfraredFrameSourcePropertiesStatics,
-    WDPIKnownPerceptionDepthFrameSourcePropertiesStatics, WDPIKnownPerceptionColorFrameSourcePropertiesStatics,
-    WDPIKnownPerceptionVideoProfilePropertiesStatics, WDPIKnownCameraIntrinsicsPropertiesStatics,
-    WDPIPerceptionFrameSourcePropertyChangeResult, WDPIPerceptionFrameSourcePropertiesChangedEventArgs,
-    WDPIPerceptionInfraredFrameSourceStatics, WDPIPerceptionDepthFrameSourceStatics, WDPIPerceptionColorFrameSourceStatics,
-    WDPIPerceptionColorFrameSource, WDPIPerceptionDepthFrameSource, WDPIPerceptionInfraredFrameSource, WDPIPerceptionVideoProfile,
-    WDPIPerceptionColorFrameArrivedEventArgs, WDPIPerceptionDepthFrameArrivedEventArgs, WDPIPerceptionInfraredFrameArrivedEventArgs,
-    WDPIPerceptionDepthCorrelatedCameraIntrinsics, WDPIPerceptionDepthCorrelatedCoordinateMapper, WDPIPerceptionControlSession,
-    WDPIPerceptionColorFrameReader, WDPIPerceptionDepthFrameReader, WDPIPerceptionInfraredFrameReader, WDPIPerceptionColorFrame,
-    WDPIPerceptionDepthFrame, WDPIPerceptionInfraredFrame;
+@class WDPPerceptionColorFrameSourceWatcher, WDPPerceptionColorFrameSourceAddedEventArgs, WDPPerceptionColorFrameSourceRemovedEventArgs, WDPPerceptionDepthFrameSourceWatcher, WDPPerceptionDepthFrameSourceAddedEventArgs, WDPPerceptionDepthFrameSourceRemovedEventArgs, WDPPerceptionInfraredFrameSourceWatcher, WDPPerceptionInfraredFrameSourceAddedEventArgs, WDPPerceptionInfraredFrameSourceRemovedEventArgs, WDPPerceptionColorFrameSource, WDPPerceptionDepthFrameSource, WDPPerceptionInfraredFrameSource, WDPPerceptionControlSession, WDPPerceptionFrameSourcePropertyChangeResult, WDPPerceptionFrameSourcePropertiesChangedEventArgs, WDPPerceptionVideoProfile, WDPPerceptionDepthCorrelatedCameraIntrinsics, WDPPerceptionDepthCorrelatedCoordinateMapper, WDPPerceptionColorFrameReader, WDPPerceptionDepthFrameReader, WDPPerceptionInfraredFrameReader, WDPPerceptionColorFrameArrivedEventArgs, WDPPerceptionColorFrame, WDPPerceptionDepthFrameArrivedEventArgs, WDPPerceptionDepthFrame, WDPPerceptionInfraredFrameArrivedEventArgs, WDPPerceptionInfraredFrame, WDPKnownPerceptionFrameSourceProperties, WDPKnownPerceptionVideoFrameSourceProperties, WDPKnownPerceptionInfraredFrameSourceProperties, WDPKnownPerceptionDepthFrameSourceProperties, WDPKnownPerceptionColorFrameSourceProperties, WDPKnownPerceptionVideoProfileProperties, WDPKnownCameraIntrinsicsProperties;
+@protocol WDPIPerceptionColorFrameSourceWatcher, WDPIPerceptionDepthFrameSourceWatcher, WDPIPerceptionInfraredFrameSourceWatcher, WDPIPerceptionColorFrameSourceAddedEventArgs, WDPIPerceptionColorFrameSourceRemovedEventArgs, WDPIPerceptionDepthFrameSourceAddedEventArgs, WDPIPerceptionDepthFrameSourceRemovedEventArgs, WDPIPerceptionInfraredFrameSourceAddedEventArgs, WDPIPerceptionInfraredFrameSourceRemovedEventArgs, WDPIKnownPerceptionFrameSourcePropertiesStatics, WDPIKnownPerceptionFrameSourcePropertiesStatics2, WDPIKnownPerceptionVideoFrameSourcePropertiesStatics, WDPIKnownPerceptionInfraredFrameSourcePropertiesStatics, WDPIKnownPerceptionDepthFrameSourcePropertiesStatics, WDPIKnownPerceptionColorFrameSourcePropertiesStatics, WDPIKnownPerceptionVideoProfilePropertiesStatics, WDPIKnownCameraIntrinsicsPropertiesStatics, WDPIPerceptionFrameSourcePropertyChangeResult, WDPIPerceptionFrameSourcePropertiesChangedEventArgs, WDPIPerceptionInfraredFrameSourceStatics, WDPIPerceptionDepthFrameSourceStatics, WDPIPerceptionColorFrameSourceStatics, WDPIPerceptionColorFrameSource, WDPIPerceptionColorFrameSource2, WDPIPerceptionDepthFrameSource, WDPIPerceptionDepthFrameSource2, WDPIPerceptionInfraredFrameSource, WDPIPerceptionInfraredFrameSource2, WDPIPerceptionVideoProfile, WDPIPerceptionColorFrameArrivedEventArgs, WDPIPerceptionDepthFrameArrivedEventArgs, WDPIPerceptionInfraredFrameArrivedEventArgs, WDPIPerceptionDepthCorrelatedCameraIntrinsics, WDPIPerceptionDepthCorrelatedCoordinateMapper, WDPIPerceptionControlSession, WDPIPerceptionColorFrameReader, WDPIPerceptionDepthFrameReader, WDPIPerceptionInfraredFrameReader, WDPIPerceptionColorFrame, WDPIPerceptionDepthFrame, WDPIPerceptionInfraredFrame;
 
 // Windows.Devices.Perception.PerceptionFrameSourceAccessStatus
 enum _WDPPerceptionFrameSourceAccessStatus {
@@ -95,15 +70,13 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDeviceWatcherStatus status;
-- (EventRegistrationToken)addEnumerationCompletedEvent:(void (^)(WDPPerceptionColorFrameSourceWatcher*, RTObject*))del;
+- (EventRegistrationToken)addEnumerationCompletedEvent:(void(^)(WDPPerceptionColorFrameSourceWatcher*, RTObject*))del;
 - (void)removeEnumerationCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSourceAddedEvent:(void (^)(WDPPerceptionColorFrameSourceWatcher*,
-                                                        WDPPerceptionColorFrameSourceAddedEventArgs*))del;
+- (EventRegistrationToken)addSourceAddedEvent:(void(^)(WDPPerceptionColorFrameSourceWatcher*, WDPPerceptionColorFrameSourceAddedEventArgs*))del;
 - (void)removeSourceAddedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSourceRemovedEvent:(void (^)(WDPPerceptionColorFrameSourceWatcher*,
-                                                          WDPPerceptionColorFrameSourceRemovedEventArgs*))del;
+- (EventRegistrationToken)addSourceRemovedEvent:(void(^)(WDPPerceptionColorFrameSourceWatcher*, WDPPerceptionColorFrameSourceRemovedEventArgs*))del;
 - (void)removeSourceRemovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStoppedEvent:(void (^)(WDPPerceptionColorFrameSourceWatcher*, RTObject*))del;
+- (EventRegistrationToken)addStoppedEvent:(void(^)(WDPPerceptionColorFrameSourceWatcher*, RTObject*))del;
 - (void)removeStoppedEvent:(EventRegistrationToken)tok;
 - (void)start;
 - (void)stop;
@@ -149,15 +122,13 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDeviceWatcherStatus status;
-- (EventRegistrationToken)addEnumerationCompletedEvent:(void (^)(WDPPerceptionDepthFrameSourceWatcher*, RTObject*))del;
+- (EventRegistrationToken)addEnumerationCompletedEvent:(void(^)(WDPPerceptionDepthFrameSourceWatcher*, RTObject*))del;
 - (void)removeEnumerationCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSourceAddedEvent:(void (^)(WDPPerceptionDepthFrameSourceWatcher*,
-                                                        WDPPerceptionDepthFrameSourceAddedEventArgs*))del;
+- (EventRegistrationToken)addSourceAddedEvent:(void(^)(WDPPerceptionDepthFrameSourceWatcher*, WDPPerceptionDepthFrameSourceAddedEventArgs*))del;
 - (void)removeSourceAddedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSourceRemovedEvent:(void (^)(WDPPerceptionDepthFrameSourceWatcher*,
-                                                          WDPPerceptionDepthFrameSourceRemovedEventArgs*))del;
+- (EventRegistrationToken)addSourceRemovedEvent:(void(^)(WDPPerceptionDepthFrameSourceWatcher*, WDPPerceptionDepthFrameSourceRemovedEventArgs*))del;
 - (void)removeSourceRemovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStoppedEvent:(void (^)(WDPPerceptionDepthFrameSourceWatcher*, RTObject*))del;
+- (EventRegistrationToken)addStoppedEvent:(void(^)(WDPPerceptionDepthFrameSourceWatcher*, RTObject*))del;
 - (void)removeStoppedEvent:(EventRegistrationToken)tok;
 - (void)start;
 - (void)stop;
@@ -203,15 +174,13 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDeviceWatcherStatus status;
-- (EventRegistrationToken)addEnumerationCompletedEvent:(void (^)(WDPPerceptionInfraredFrameSourceWatcher*, RTObject*))del;
+- (EventRegistrationToken)addEnumerationCompletedEvent:(void(^)(WDPPerceptionInfraredFrameSourceWatcher*, RTObject*))del;
 - (void)removeEnumerationCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSourceAddedEvent:(void (^)(WDPPerceptionInfraredFrameSourceWatcher*,
-                                                        WDPPerceptionInfraredFrameSourceAddedEventArgs*))del;
+- (EventRegistrationToken)addSourceAddedEvent:(void(^)(WDPPerceptionInfraredFrameSourceWatcher*, WDPPerceptionInfraredFrameSourceAddedEventArgs*))del;
 - (void)removeSourceAddedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSourceRemovedEvent:(void (^)(WDPPerceptionInfraredFrameSourceWatcher*,
-                                                          WDPPerceptionInfraredFrameSourceRemovedEventArgs*))del;
+- (EventRegistrationToken)addSourceRemovedEvent:(void(^)(WDPPerceptionInfraredFrameSourceWatcher*, WDPPerceptionInfraredFrameSourceRemovedEventArgs*))del;
 - (void)removeSourceRemovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStoppedEvent:(void (^)(WDPPerceptionInfraredFrameSourceWatcher*, RTObject*))del;
+- (EventRegistrationToken)addStoppedEvent:(void(^)(WDPPerceptionInfraredFrameSourceWatcher*, RTObject*))del;
 - (void)removeStoppedEvent:(EventRegistrationToken)tok;
 - (void)start;
 - (void)stop;
@@ -255,7 +224,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionColorFrameSource : RTObject
 + (WDPPerceptionColorFrameSourceWatcher*)createWatcher;
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WDPPerceptionColorFrameSource* */))success failure:(void (^)(NSError*))failure;
-+ (void)fromIdAsync:(NSString*)id success:(void (^)(WDPPerceptionColorFrameSource*))success failure:(void (^)(NSError*))failure;
++ (void)fromIdAsync:(NSString *)id success:(void (^)(WDPPerceptionColorFrameSource*))success failure:(void (^)(NSError*))failure;
 + (void)requestAccessAsyncWithSuccess:(void (^)(WDPPerceptionFrameSourceAccessStatus))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -264,39 +233,31 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @property (readonly) BOOL available;
 @property (readonly) NSArray* /* WDPPerceptionVideoProfile* */ availableVideoProfiles;
 @property (readonly) WMDCCameraIntrinsics* cameraIntrinsics;
-@property (readonly) NSString* deviceKind;
-@property (readonly) NSString* displayName;
-@property (readonly) NSString* id;
+@property (readonly) NSString * deviceKind;
+@property (readonly) NSString * displayName;
+@property (readonly) NSString * id;
 @property (readonly) BOOL isControlled;
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) NSArray* /* WDPPerceptionVideoProfile* */ supportedVideoProfiles;
 @property (readonly) WDPPerceptionVideoProfile* videoProfile;
-- (EventRegistrationToken)addActiveChangedEvent:(void (^)(WDPPerceptionColorFrameSource*, RTObject*))del;
+@property (readonly) NSString * deviceId;
+- (EventRegistrationToken)addActiveChangedEvent:(void(^)(WDPPerceptionColorFrameSource*, RTObject*))del;
 - (void)removeActiveChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addAvailableChangedEvent:(void (^)(WDPPerceptionColorFrameSource*, RTObject*))del;
+- (EventRegistrationToken)addAvailableChangedEvent:(void(^)(WDPPerceptionColorFrameSource*, RTObject*))del;
 - (void)removeAvailableChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCameraIntrinsicsChangedEvent:(void (^)(WDPPerceptionColorFrameSource*, RTObject*))del;
+- (EventRegistrationToken)addCameraIntrinsicsChangedEvent:(void(^)(WDPPerceptionColorFrameSource*, RTObject*))del;
 - (void)removeCameraIntrinsicsChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPropertiesChangedEvent:(void (^)(WDPPerceptionColorFrameSource*,
-                                                              WDPPerceptionFrameSourcePropertiesChangedEventArgs*))del;
+- (EventRegistrationToken)addPropertiesChangedEvent:(void(^)(WDPPerceptionColorFrameSource*, WDPPerceptionFrameSourcePropertiesChangedEventArgs*))del;
 - (void)removePropertiesChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addVideoProfileChangedEvent:(void (^)(WDPPerceptionColorFrameSource*, RTObject*))del;
+- (EventRegistrationToken)addVideoProfileChangedEvent:(void(^)(WDPPerceptionColorFrameSource*, RTObject*))del;
 - (void)removeVideoProfileChangedEvent:(EventRegistrationToken)tok;
 - (WDPPerceptionControlSession*)acquireControlSession;
-- (BOOL)canControlIndependentlyFrom:(NSString*)targetId;
-- (BOOL)isCorrelatedWith:(NSString*)targetId;
-- (BOOL)tryGetTransformTo:(NSString*)targetId result:(WFNMatrix4x4**)result;
-- (void)tryGetDepthCorrelatedCameraIntrinsicsAsync:(WDPPerceptionDepthFrameSource*)correlatedDepthFrameSource
-                                           success:(void (^)(WDPPerceptionDepthCorrelatedCameraIntrinsics*))success
-                                           failure:(void (^)(NSError*))failure;
-- (void)tryGetDepthCorrelatedCoordinateMapperAsync:(NSString*)targetSourceId
-                        correlatedDepthFrameSource:(WDPPerceptionDepthFrameSource*)correlatedDepthFrameSource
-                                           success:(void (^)(WDPPerceptionDepthCorrelatedCoordinateMapper*))success
-                                           failure:(void (^)(NSError*))failure;
-- (void)trySetVideoProfileAsync:(WDPPerceptionControlSession*)controlSession
-                        profile:(WDPPerceptionVideoProfile*)profile
-                        success:(void (^)(WDPPerceptionFrameSourcePropertyChangeResult*))success
-                        failure:(void (^)(NSError*))failure;
+- (BOOL)canControlIndependentlyFrom:(NSString *)targetId;
+- (BOOL)isCorrelatedWith:(NSString *)targetId;
+- (BOOL)tryGetTransformTo:(NSString *)targetId result:(WFNMatrix4x4**)result;
+- (void)tryGetDepthCorrelatedCameraIntrinsicsAsync:(WDPPerceptionDepthFrameSource*)correlatedDepthFrameSource success:(void (^)(WDPPerceptionDepthCorrelatedCameraIntrinsics*))success failure:(void (^)(NSError*))failure;
+- (void)tryGetDepthCorrelatedCoordinateMapperAsync:(NSString *)targetSourceId correlatedDepthFrameSource:(WDPPerceptionDepthFrameSource*)correlatedDepthFrameSource success:(void (^)(WDPPerceptionDepthCorrelatedCoordinateMapper*))success failure:(void (^)(NSError*))failure;
+- (void)trySetVideoProfileAsync:(WDPPerceptionControlSession*)controlSession profile:(WDPPerceptionVideoProfile*)profile success:(void (^)(WDPPerceptionFrameSourcePropertyChangeResult*))success failure:(void (^)(NSError*))failure;
 - (WDPPerceptionColorFrameReader*)openReader;
 @end
 
@@ -310,7 +271,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionDepthFrameSource : RTObject
 + (WDPPerceptionDepthFrameSourceWatcher*)createWatcher;
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WDPPerceptionDepthFrameSource* */))success failure:(void (^)(NSError*))failure;
-+ (void)fromIdAsync:(NSString*)id success:(void (^)(WDPPerceptionDepthFrameSource*))success failure:(void (^)(NSError*))failure;
++ (void)fromIdAsync:(NSString *)id success:(void (^)(WDPPerceptionDepthFrameSource*))success failure:(void (^)(NSError*))failure;
 + (void)requestAccessAsyncWithSuccess:(void (^)(WDPPerceptionFrameSourceAccessStatus))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -319,39 +280,31 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @property (readonly) BOOL available;
 @property (readonly) NSArray* /* WDPPerceptionVideoProfile* */ availableVideoProfiles;
 @property (readonly) WMDCCameraIntrinsics* cameraIntrinsics;
-@property (readonly) NSString* deviceKind;
-@property (readonly) NSString* displayName;
-@property (readonly) NSString* id;
+@property (readonly) NSString * deviceKind;
+@property (readonly) NSString * displayName;
+@property (readonly) NSString * id;
 @property (readonly) BOOL isControlled;
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) NSArray* /* WDPPerceptionVideoProfile* */ supportedVideoProfiles;
 @property (readonly) WDPPerceptionVideoProfile* videoProfile;
-- (EventRegistrationToken)addActiveChangedEvent:(void (^)(WDPPerceptionDepthFrameSource*, RTObject*))del;
+@property (readonly) NSString * deviceId;
+- (EventRegistrationToken)addActiveChangedEvent:(void(^)(WDPPerceptionDepthFrameSource*, RTObject*))del;
 - (void)removeActiveChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addAvailableChangedEvent:(void (^)(WDPPerceptionDepthFrameSource*, RTObject*))del;
+- (EventRegistrationToken)addAvailableChangedEvent:(void(^)(WDPPerceptionDepthFrameSource*, RTObject*))del;
 - (void)removeAvailableChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCameraIntrinsicsChangedEvent:(void (^)(WDPPerceptionDepthFrameSource*, RTObject*))del;
+- (EventRegistrationToken)addCameraIntrinsicsChangedEvent:(void(^)(WDPPerceptionDepthFrameSource*, RTObject*))del;
 - (void)removeCameraIntrinsicsChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPropertiesChangedEvent:(void (^)(WDPPerceptionDepthFrameSource*,
-                                                              WDPPerceptionFrameSourcePropertiesChangedEventArgs*))del;
+- (EventRegistrationToken)addPropertiesChangedEvent:(void(^)(WDPPerceptionDepthFrameSource*, WDPPerceptionFrameSourcePropertiesChangedEventArgs*))del;
 - (void)removePropertiesChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addVideoProfileChangedEvent:(void (^)(WDPPerceptionDepthFrameSource*, RTObject*))del;
+- (EventRegistrationToken)addVideoProfileChangedEvent:(void(^)(WDPPerceptionDepthFrameSource*, RTObject*))del;
 - (void)removeVideoProfileChangedEvent:(EventRegistrationToken)tok;
 - (WDPPerceptionControlSession*)acquireControlSession;
-- (BOOL)canControlIndependentlyFrom:(NSString*)targetId;
-- (BOOL)isCorrelatedWith:(NSString*)targetId;
-- (BOOL)tryGetTransformTo:(NSString*)targetId result:(WFNMatrix4x4**)result;
-- (void)tryGetDepthCorrelatedCameraIntrinsicsAsync:(WDPPerceptionDepthFrameSource*)target
-                                           success:(void (^)(WDPPerceptionDepthCorrelatedCameraIntrinsics*))success
-                                           failure:(void (^)(NSError*))failure;
-- (void)tryGetDepthCorrelatedCoordinateMapperAsync:(NSString*)targetId
-                         depthFrameSourceToMapWith:(WDPPerceptionDepthFrameSource*)depthFrameSourceToMapWith
-                                           success:(void (^)(WDPPerceptionDepthCorrelatedCoordinateMapper*))success
-                                           failure:(void (^)(NSError*))failure;
-- (void)trySetVideoProfileAsync:(WDPPerceptionControlSession*)controlSession
-                        profile:(WDPPerceptionVideoProfile*)profile
-                        success:(void (^)(WDPPerceptionFrameSourcePropertyChangeResult*))success
-                        failure:(void (^)(NSError*))failure;
+- (BOOL)canControlIndependentlyFrom:(NSString *)targetId;
+- (BOOL)isCorrelatedWith:(NSString *)targetId;
+- (BOOL)tryGetTransformTo:(NSString *)targetId result:(WFNMatrix4x4**)result;
+- (void)tryGetDepthCorrelatedCameraIntrinsicsAsync:(WDPPerceptionDepthFrameSource*)target success:(void (^)(WDPPerceptionDepthCorrelatedCameraIntrinsics*))success failure:(void (^)(NSError*))failure;
+- (void)tryGetDepthCorrelatedCoordinateMapperAsync:(NSString *)targetId depthFrameSourceToMapWith:(WDPPerceptionDepthFrameSource*)depthFrameSourceToMapWith success:(void (^)(WDPPerceptionDepthCorrelatedCoordinateMapper*))success failure:(void (^)(NSError*))failure;
+- (void)trySetVideoProfileAsync:(WDPPerceptionControlSession*)controlSession profile:(WDPPerceptionVideoProfile*)profile success:(void (^)(WDPPerceptionFrameSourcePropertyChangeResult*))success failure:(void (^)(NSError*))failure;
 - (WDPPerceptionDepthFrameReader*)openReader;
 @end
 
@@ -365,7 +318,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPPerceptionInfraredFrameSource : RTObject
 + (WDPPerceptionInfraredFrameSourceWatcher*)createWatcher;
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WDPPerceptionInfraredFrameSource* */))success failure:(void (^)(NSError*))failure;
-+ (void)fromIdAsync:(NSString*)id success:(void (^)(WDPPerceptionInfraredFrameSource*))success failure:(void (^)(NSError*))failure;
++ (void)fromIdAsync:(NSString *)id success:(void (^)(WDPPerceptionInfraredFrameSource*))success failure:(void (^)(NSError*))failure;
 + (void)requestAccessAsyncWithSuccess:(void (^)(WDPPerceptionFrameSourceAccessStatus))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -374,39 +327,31 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @property (readonly) BOOL available;
 @property (readonly) NSArray* /* WDPPerceptionVideoProfile* */ availableVideoProfiles;
 @property (readonly) WMDCCameraIntrinsics* cameraIntrinsics;
-@property (readonly) NSString* deviceKind;
-@property (readonly) NSString* displayName;
-@property (readonly) NSString* id;
+@property (readonly) NSString * deviceKind;
+@property (readonly) NSString * displayName;
+@property (readonly) NSString * id;
 @property (readonly) BOOL isControlled;
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) NSArray* /* WDPPerceptionVideoProfile* */ supportedVideoProfiles;
 @property (readonly) WDPPerceptionVideoProfile* videoProfile;
-- (EventRegistrationToken)addActiveChangedEvent:(void (^)(WDPPerceptionInfraredFrameSource*, RTObject*))del;
+@property (readonly) NSString * deviceId;
+- (EventRegistrationToken)addActiveChangedEvent:(void(^)(WDPPerceptionInfraredFrameSource*, RTObject*))del;
 - (void)removeActiveChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addAvailableChangedEvent:(void (^)(WDPPerceptionInfraredFrameSource*, RTObject*))del;
+- (EventRegistrationToken)addAvailableChangedEvent:(void(^)(WDPPerceptionInfraredFrameSource*, RTObject*))del;
 - (void)removeAvailableChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCameraIntrinsicsChangedEvent:(void (^)(WDPPerceptionInfraredFrameSource*, RTObject*))del;
+- (EventRegistrationToken)addCameraIntrinsicsChangedEvent:(void(^)(WDPPerceptionInfraredFrameSource*, RTObject*))del;
 - (void)removeCameraIntrinsicsChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPropertiesChangedEvent:(void (^)(WDPPerceptionInfraredFrameSource*,
-                                                              WDPPerceptionFrameSourcePropertiesChangedEventArgs*))del;
+- (EventRegistrationToken)addPropertiesChangedEvent:(void(^)(WDPPerceptionInfraredFrameSource*, WDPPerceptionFrameSourcePropertiesChangedEventArgs*))del;
 - (void)removePropertiesChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addVideoProfileChangedEvent:(void (^)(WDPPerceptionInfraredFrameSource*, RTObject*))del;
+- (EventRegistrationToken)addVideoProfileChangedEvent:(void(^)(WDPPerceptionInfraredFrameSource*, RTObject*))del;
 - (void)removeVideoProfileChangedEvent:(EventRegistrationToken)tok;
 - (WDPPerceptionControlSession*)acquireControlSession;
-- (BOOL)canControlIndependentlyFrom:(NSString*)targetId;
-- (BOOL)isCorrelatedWith:(NSString*)targetId;
-- (BOOL)tryGetTransformTo:(NSString*)targetId result:(WFNMatrix4x4**)result;
-- (void)tryGetDepthCorrelatedCameraIntrinsicsAsync:(WDPPerceptionDepthFrameSource*)target
-                                           success:(void (^)(WDPPerceptionDepthCorrelatedCameraIntrinsics*))success
-                                           failure:(void (^)(NSError*))failure;
-- (void)tryGetDepthCorrelatedCoordinateMapperAsync:(NSString*)targetId
-                         depthFrameSourceToMapWith:(WDPPerceptionDepthFrameSource*)depthFrameSourceToMapWith
-                                           success:(void (^)(WDPPerceptionDepthCorrelatedCoordinateMapper*))success
-                                           failure:(void (^)(NSError*))failure;
-- (void)trySetVideoProfileAsync:(WDPPerceptionControlSession*)controlSession
-                        profile:(WDPPerceptionVideoProfile*)profile
-                        success:(void (^)(WDPPerceptionFrameSourcePropertyChangeResult*))success
-                        failure:(void (^)(NSError*))failure;
+- (BOOL)canControlIndependentlyFrom:(NSString *)targetId;
+- (BOOL)isCorrelatedWith:(NSString *)targetId;
+- (BOOL)tryGetTransformTo:(NSString *)targetId result:(WFNMatrix4x4**)result;
+- (void)tryGetDepthCorrelatedCameraIntrinsicsAsync:(WDPPerceptionDepthFrameSource*)target success:(void (^)(WDPPerceptionDepthCorrelatedCameraIntrinsics*))success failure:(void (^)(NSError*))failure;
+- (void)tryGetDepthCorrelatedCoordinateMapperAsync:(NSString *)targetId depthFrameSourceToMapWith:(WDPPerceptionDepthFrameSource*)depthFrameSourceToMapWith success:(void (^)(WDPPerceptionDepthCorrelatedCoordinateMapper*))success failure:(void (^)(NSError*))failure;
+- (void)trySetVideoProfileAsync:(WDPPerceptionControlSession*)controlSession profile:(WDPPerceptionVideoProfile*)profile success:(void (^)(WDPPerceptionFrameSourcePropertyChangeResult*))success failure:(void (^)(NSError*))failure;
 - (WDPPerceptionInfraredFrameReader*)openReader;
 @end
 
@@ -435,12 +380,9 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (EventRegistrationToken)addControlLostEvent:(void (^)(WDPPerceptionControlSession*, RTObject*))del;
+- (EventRegistrationToken)addControlLostEvent:(void(^)(WDPPerceptionControlSession*, RTObject*))del;
 - (void)removeControlLostEvent:(EventRegistrationToken)tok;
-- (void)trySetPropertyAsync:(NSString*)name
-                      value:(RTObject*)value
-                    success:(void (^)(WDPPerceptionFrameSourcePropertyChangeResult*))success
-                    failure:(void (^)(NSError*))failure;
+- (void)trySetPropertyAsync:(NSString *)name value:(RTObject*)value success:(void (^)(WDPPerceptionFrameSourcePropertyChangeResult*))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -471,7 +413,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFCCollectionChange collectionChange;
-@property (readonly) NSString* key;
+@property (readonly) NSString * key;
 @end
 
 #endif // __WDPPerceptionFrameSourcePropertiesChangedEventArgs_DEFINED__
@@ -505,14 +447,9 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (WFNVector3*)unprojectPixelAtCorrelatedDepth:(WFPoint*)pixelCoordinate depthFrame:(WDPPerceptionDepthFrame*)depthFrame;
-- (void)unprojectPixelsAtCorrelatedDepth:(NSArray* /* WFPoint* */)sourceCoordinates
-                              depthFrame:(WDPPerceptionDepthFrame*)depthFrame
-                                 results:(NSArray* /* WFNVector3* */*)results;
-- (RTObject<WFIAsyncAction>*)unprojectRegionPixelsAtCorrelatedDepthAsync:(WFRect*)region
-                                                              depthFrame:(WDPPerceptionDepthFrame*)depthFrame
-                                                                 results:(NSArray* /* WFNVector3* */*)results;
-- (RTObject<WFIAsyncAction>*)unprojectAllPixelsAtCorrelatedDepthAsync:(WDPPerceptionDepthFrame*)depthFrame
-                                                              results:(NSArray* /* WFNVector3* */*)results;
+- (void)unprojectPixelsAtCorrelatedDepth:(NSArray* /* WFPoint* */)sourceCoordinates depthFrame:(WDPPerceptionDepthFrame*)depthFrame results:(NSArray* /* WFNVector3* */*)results;
+- (RTObject<WFIAsyncAction>*)unprojectRegionPixelsAtCorrelatedDepthAsync:(WFRect*)region depthFrame:(WDPPerceptionDepthFrame*)depthFrame results:(NSArray* /* WFNVector3* */*)results;
+- (RTObject<WFIAsyncAction>*)unprojectAllPixelsAtCorrelatedDepthAsync:(WDPPerceptionDepthFrame*)depthFrame results:(NSArray* /* WFNVector3* */*)results;
 @end
 
 #endif // __WDPPerceptionDepthCorrelatedCameraIntrinsics_DEFINED__
@@ -527,14 +464,9 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (WFPoint*)mapPixelToTarget:(WFPoint*)sourcePixelCoordinate depthFrame:(WDPPerceptionDepthFrame*)depthFrame;
-- (void)mapPixelsToTarget:(NSArray* /* WFPoint* */)sourceCoordinates
-               depthFrame:(WDPPerceptionDepthFrame*)depthFrame
-                  results:(NSArray* /* WFPoint* */*)results;
-- (RTObject<WFIAsyncAction>*)mapRegionOfPixelsToTargetAsync:(WFRect*)region
-                                                 depthFrame:(WDPPerceptionDepthFrame*)depthFrame
-                                          targetCoordinates:(NSArray* /* WFPoint* */*)targetCoordinates;
-- (RTObject<WFIAsyncAction>*)mapAllPixelsToTargetAsync:(WDPPerceptionDepthFrame*)depthFrame
-                                     targetCoordinates:(NSArray* /* WFPoint* */*)targetCoordinates;
+- (void)mapPixelsToTarget:(NSArray* /* WFPoint* */)sourceCoordinates depthFrame:(WDPPerceptionDepthFrame*)depthFrame results:(NSArray* /* WFPoint* */*)results;
+- (RTObject<WFIAsyncAction>*)mapRegionOfPixelsToTargetAsync:(WFRect*)region depthFrame:(WDPPerceptionDepthFrame*)depthFrame targetCoordinates:(NSArray* /* WFPoint* */*)targetCoordinates;
+- (RTObject<WFIAsyncAction>*)mapAllPixelsToTargetAsync:(WDPPerceptionDepthFrame*)depthFrame targetCoordinates:(NSArray* /* WFPoint* */*)targetCoordinates;
 @end
 
 #endif // __WDPPerceptionDepthCorrelatedCoordinateMapper_DEFINED__
@@ -550,7 +482,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 #endif
 @property BOOL isPaused;
 @property (readonly) WDPPerceptionColorFrameSource* source;
-- (EventRegistrationToken)addFrameArrivedEvent:(void (^)(WDPPerceptionColorFrameReader*, WDPPerceptionColorFrameArrivedEventArgs*))del;
+- (EventRegistrationToken)addFrameArrivedEvent:(void(^)(WDPPerceptionColorFrameReader*, WDPPerceptionColorFrameArrivedEventArgs*))del;
 - (void)removeFrameArrivedEvent:(EventRegistrationToken)tok;
 - (WDPPerceptionColorFrame*)tryReadLatestFrame;
 - (void)close;
@@ -569,7 +501,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 #endif
 @property BOOL isPaused;
 @property (readonly) WDPPerceptionDepthFrameSource* source;
-- (EventRegistrationToken)addFrameArrivedEvent:(void (^)(WDPPerceptionDepthFrameReader*, WDPPerceptionDepthFrameArrivedEventArgs*))del;
+- (EventRegistrationToken)addFrameArrivedEvent:(void(^)(WDPPerceptionDepthFrameReader*, WDPPerceptionDepthFrameArrivedEventArgs*))del;
 - (void)removeFrameArrivedEvent:(EventRegistrationToken)tok;
 - (WDPPerceptionDepthFrame*)tryReadLatestFrame;
 - (void)close;
@@ -588,8 +520,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 #endif
 @property BOOL isPaused;
 @property (readonly) WDPPerceptionInfraredFrameSource* source;
-- (EventRegistrationToken)addFrameArrivedEvent:(void (^)(WDPPerceptionInfraredFrameReader*,
-                                                         WDPPerceptionInfraredFrameArrivedEventArgs*))del;
+- (EventRegistrationToken)addFrameArrivedEvent:(void(^)(WDPPerceptionInfraredFrameReader*, WDPPerceptionInfraredFrameArrivedEventArgs*))del;
 - (void)removeFrameArrivedEvent:(EventRegistrationToken)tok;
 - (WDPPerceptionInfraredFrame*)tryReadLatestFrame;
 - (void)close;
@@ -693,11 +624,12 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPKnownPerceptionFrameSourceProperties : RTObject
-+ (NSString*)deviceModelVersion;
-+ (NSString*)enclosureLocation;
-+ (NSString*)frameKind;
-+ (NSString*)id;
-+ (NSString*)physicalDeviceIds;
++ (NSString *)deviceModelVersion;
++ (NSString *)enclosureLocation;
++ (NSString *)frameKind;
++ (NSString *)id;
++ (NSString *)physicalDeviceIds;
++ (NSString *)deviceId;
 @end
 
 #endif // __WDPKnownPerceptionFrameSourceProperties_DEFINED__
@@ -708,11 +640,11 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPKnownPerceptionVideoFrameSourceProperties : RTObject
-+ (NSString*)availableVideoProfiles;
-+ (NSString*)cameraIntrinsics;
-+ (NSString*)isMirrored;
-+ (NSString*)supportedVideoProfiles;
-+ (NSString*)videoProfile;
++ (NSString *)availableVideoProfiles;
++ (NSString *)cameraIntrinsics;
++ (NSString *)isMirrored;
++ (NSString *)supportedVideoProfiles;
++ (NSString *)videoProfile;
 @end
 
 #endif // __WDPKnownPerceptionVideoFrameSourceProperties_DEFINED__
@@ -723,13 +655,13 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPKnownPerceptionInfraredFrameSourceProperties : RTObject
-+ (NSString*)activeIlluminationEnabled;
-+ (NSString*)ambientSubtractionEnabled;
-+ (NSString*)autoExposureEnabled;
-+ (NSString*)exposure;
-+ (NSString*)exposureCompensation;
-+ (NSString*)interleavedIlluminationEnabled;
-+ (NSString*)structureLightPatternEnabled;
++ (NSString *)activeIlluminationEnabled;
++ (NSString *)ambientSubtractionEnabled;
++ (NSString *)autoExposureEnabled;
++ (NSString *)exposure;
++ (NSString *)exposureCompensation;
++ (NSString *)interleavedIlluminationEnabled;
++ (NSString *)structureLightPatternEnabled;
 @end
 
 #endif // __WDPKnownPerceptionInfraredFrameSourceProperties_DEFINED__
@@ -740,8 +672,8 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPKnownPerceptionDepthFrameSourceProperties : RTObject
-+ (NSString*)maxDepth;
-+ (NSString*)minDepth;
++ (NSString *)maxDepth;
++ (NSString *)minDepth;
 @end
 
 #endif // __WDPKnownPerceptionDepthFrameSourceProperties_DEFINED__
@@ -752,9 +684,9 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPKnownPerceptionColorFrameSourceProperties : RTObject
-+ (NSString*)autoExposureEnabled;
-+ (NSString*)exposure;
-+ (NSString*)exposureCompensation;
++ (NSString *)autoExposureEnabled;
++ (NSString *)exposure;
++ (NSString *)exposureCompensation;
 @end
 
 #endif // __WDPKnownPerceptionColorFrameSourceProperties_DEFINED__
@@ -765,11 +697,11 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPKnownPerceptionVideoProfileProperties : RTObject
-+ (NSString*)bitmapAlphaMode;
-+ (NSString*)bitmapPixelFormat;
-+ (NSString*)frameDuration;
-+ (NSString*)height;
-+ (NSString*)width;
++ (NSString *)bitmapAlphaMode;
++ (NSString *)bitmapPixelFormat;
++ (NSString *)frameDuration;
++ (NSString *)height;
++ (NSString *)width;
 @end
 
 #endif // __WDPKnownPerceptionVideoProfileProperties_DEFINED__
@@ -780,10 +712,11 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 @interface WDPKnownCameraIntrinsicsProperties : RTObject
-+ (NSString*)focalLength;
-+ (NSString*)principalPoint;
-+ (NSString*)radialDistortion;
-+ (NSString*)tangentialDistortion;
++ (NSString *)focalLength;
++ (NSString *)principalPoint;
++ (NSString *)radialDistortion;
++ (NSString *)tangentialDistortion;
 @end
 
 #endif // __WDPKnownCameraIntrinsicsProperties_DEFINED__
+
