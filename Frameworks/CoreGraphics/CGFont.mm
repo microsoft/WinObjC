@@ -235,7 +235,8 @@ int CGFontGetAscent(CGFontRef font) {
 */
 int CGFontGetDescent(CGFontRef font) {
     // Value for CGFont metrics are specified in 'glyph space units', which appear to be the same as DWrite's 'design units'
-    return font ? __CGFontGetDWriteMetrics(font).descent : 0;
+    // But CGFont expects descent to be negative for glyphs extending below the baseline, whereas DWrite has them positive
+    return font ? -__CGFontGetDWriteMetrics(font).descent : 0;
 }
 
 /**

@@ -443,7 +443,7 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
 
         // These are created lazily in the first call to CTLineGetTypographicBounds, so initialize with impossible values
         line->_ascent = -FLT_MAX;
-        line->_descent = FLT_MAX;
+        line->_descent = -FLT_MAX;
         line->_leading = -FLT_MAX;
 
         // Glyph runs that have the same _baselineOriginY value are part of the the same Line.
