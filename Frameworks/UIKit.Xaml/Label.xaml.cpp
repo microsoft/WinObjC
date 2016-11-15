@@ -59,6 +59,16 @@ Canvas^ Label::SublayerCanvas::get() {
     return _sublayerCanvas;
 }
 
+Windows::Foundation::Size Label::ArrangeOverride(Windows::Foundation::Size finalSize) {
+    // Make sure we render vertically-centered text if possible, else cap at the containing layer's height.
+    TextBlock->Measure(finalSize);
+    if (TextBlock->DesiredSize.Height >= finalSize.Height) {
+        TextBlock->VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Top;
+    }
+
+    return __super::ArrangeOverride(finalSize);
+}
+
 TextBlock^ Label::TextBlock::get() {
     return safe_cast<Windows::UI::Xaml::Controls::TextBlock^>(Children->GetAt(0));
 }
