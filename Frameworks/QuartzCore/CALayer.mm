@@ -574,7 +574,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
                 if (useVector) {
                     // target = new CGVectorImage(width, height, _ColorBGR);
                 } else {
-                    drawContext = _CGBitmapContextCreateWithFormat(width, height, _ColorBGRX);
+                    drawContext = _CGBitmapContextCreateWithFormat(width, height, _ColorXBGR);
                 }
                 priv->drewOpaque = TRUE;
             } else {
