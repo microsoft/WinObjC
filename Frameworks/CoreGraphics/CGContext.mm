@@ -1835,8 +1835,7 @@ struct __CGBitmapContext : CoreFoundation::CppBase<__CGBitmapContext, __CGBitmap
 
 /**
  @Status Caveat
- The following formats are supported GUID_WICPixelFormat32bppPBGRA, GUID_WICPixelFormat32bppPRGBA, GUID_WICPixelFormat32bppBGR and
- GUID_WICPixelFormat8bppAlpha. Any other format will return a null value.
+ We only support formats that are 32 bits per pixel, colorspace and bitmapinfo that are ARGB.
 */
 CGContextRef CGBitmapContextCreate(void* data,
                                    size_t width,
@@ -1851,8 +1850,7 @@ CGContextRef CGBitmapContextCreate(void* data,
 /**
  @Status Caveat
  @Notes releaseCallback and releaseInfo is ignored.
- The following formats are supported GUID_WICPixelFormat32bppPBGRA, GUID_WICPixelFormat32bppPRGBA, GUID_WICPixelFormat32bppBGR and
- GUID_WICPixelFormat8bppAlpha. Any other format will return a null value.
+ We only support formats that are 32 bits per pixel, colorspace and bitmapinfo that are ARGB.
 */
 CGContextRef CGBitmapContextCreateWithData(void* data,
                                            size_t width,

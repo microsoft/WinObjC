@@ -42,9 +42,8 @@
 
 #import <memory>
 
-using namespace Microsoft::WRL;
-
 // clang-format off
+//The following interface is used to obtain the set display texture from a CGIWICBitmap
 struct __declspec(uuid("BA77A716-5FAF-42B1-B5B3-9B6369A0625D")) __declspec(novtable) ICGDisplayTexture : public IUnknown
 {
     STDMETHOD(DisplayTexture)(_Out_ IDisplayTexture** displayTexture) = 0;
@@ -53,7 +52,11 @@ struct __declspec(uuid("BA77A716-5FAF-42B1-B5B3-9B6369A0625D")) __declspec(novta
 
 class CGIWICBitmap;
 
-class CGIWICBitmapLock : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::ClassicCom>, IAgileObject, FtmBase, IWICBitmapLock> {
+class CGIWICBitmapLock
+    : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::RuntimeClassType::ClassicCom>,
+                                          IAgileObject,
+                                          Microsoft::WRL::FtmBase,
+                                          IWICBitmapLock> {
 public:
     CGIWICBitmapLock(_In_ IDisplayTexture* texture, _In_ const WICRect* region, _In_ WICPixelFormatGUID pixelFormat)
         : m_texture(texture), m_pixelFormat(pixelFormat), m_locked_rect(region) {
@@ -70,8 +73,8 @@ public:
     ~CGIWICBitmapLock() {
         if (m_texture) {
             m_texture->Unlock();
+            m_texture = nullptr;
         }
-        m_texture = nullptr;
     }
 
     HRESULT STDMETHODCALLTYPE GetSize(_Out_ UINT* width, _Out_ UINT* height) {
@@ -111,8 +114,11 @@ private:
     IDisplayTexture* m_texture;
 };
 
-class CGIWICBitmap
-    : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::ClassicCom>, IAgileObject, FtmBase, IWICBitmap, ICGDisplayTexture> {
+class CGIWICBitmap : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::RuntimeClassType::ClassicCom>,
+                                                         IAgileObject,
+                                                         Microsoft::WRL::FtmBase,
+                                                         IWICBitmap,
+                                                         ICGDisplayTexture> {
 public:
     CGIWICBitmap(_In_ IDisplayTexture* texture, _In_ WICPixelFormatGUID pixelFormat, _In_ UINT height, _In_ UINT width)
         : m_dataBuffer(nullptr), m_texture(texture) {
@@ -170,8 +176,9 @@ public:
             RETURN_HR_IF(E_INVALIDARG, (region->Width > m_width) || (region->Height > m_height));
         }
 
-        ComPtr<IWICBitmapLock> lock = m_texture ? Make<CGIWICBitmapLock>(m_texture, region, m_pixelFormat) :
-                                                  Make<CGIWICBitmapLock>(m_dataBuffer, region, m_bytesPerRow, m_pixelFormat);
+        Microsoft::WRL::ComPtr<IWICBitmapLock> lock =
+            m_texture ? Microsoft::WRL::Make<CGIWICBitmapLock>(m_texture, region, m_pixelFormat) :
+                        Microsoft::WRL::Make<CGIWICBitmapLock>(m_dataBuffer, region, m_bytesPerRow, m_pixelFormat);
         *outLock = lock.Detach();
         return S_OK;
     }
@@ -183,7 +190,7 @@ public:
                                          _Out_writes_all_(cbBufferSize) BYTE* buffer) {
         RETURN_HR_IF_NULL(E_POINTER, buffer);
 
-        ComPtr<IWICBitmapLock> lock;
+        Microsoft::WRL::ComPtr<IWICBitmapLock> lock;
         RETURN_IF_FAILED(Lock(copyRect, 0, &lock));
 
         UINT sourceDataSize;
