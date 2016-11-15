@@ -526,7 +526,7 @@ TEST(GLKit, BasicMath) {
 
     // Generate inversion matrix
     auto mcInverse = GLKMatrix4Invert(mc, &invertible);
-    EXPECT_TRUE_MSG(invertible, "Expected to be able to calculate matrix inverse.");
+    EXPECT_TRUE_MSG(invertible, "Expected to be able to calculate inverse matrix 4x4.");
 
     // Validate inversion matrix
     auto mcMultInverse = GLKMatrix4Multiply(mc, mcInverse);
@@ -545,6 +545,21 @@ TEST(GLKit, BasicMath) {
     EXPECT_TRUE_MSG((invertible == false), "GLKMatrix4Invert erroneously reported non-invertible matrix as invertible.");
     checkMatrix("GLKMatrix4Invert should return the identity matrix when a non-invertible matrix is passed in.", 
                 &mcInverse.m[0], &mIdentity.m[0]);
+
+    invertible = false;
+    GLKMatrix3 mRot = GLKMatrix3MakeRotation(M_PI / 2.f, 1.f, 3.f, 2.f);
+    GLKMatrix3 m3Scale = GLKMatrix3MakeScale(0.3f, 0.5f, 0.9f);
+
+    GLKMatrix3 m3Origin = GLKMatrix3Multiply(mRot, m3Scale);
+    GLKMatrix3 m3xInv = GLKMatrix3Invert(m3Origin, &invertible);
+    EXPECT_TRUE_MSG(invertible, "Expected to be able to calculate inverse matrix 3x3.");
+
+    GLKMatrix3 m3Identity = GLKMatrix3Identity;
+    GLKMatrix3 m3cMultInverse = GLKMatrix3Multiply(m3Origin, m3xInv);
+    checkMatrixWithinTolerance("A matrix 3x3 multiplied by it's inverse should produce the identity matrix.",
+                               &m3Identity.m[0],
+                               &m3cMultInverse.m[0],
+                               3);
 
     // Validate Making a 4x4 matrix using various methods
     float m4Values[16]  = { 0.f, 1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f, 9.f, 10.f, 11.f, 12.f, 13.f, 14.f, 15.f };

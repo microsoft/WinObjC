@@ -76,28 +76,24 @@ typedef struct _GLKMatrix2 {
     };
 } GLKMatrix2;
 
-union _GLKMatrix3
-{
-	struct
-	{
-		float m00, m01, m02;
-		float m10, m11, m12;
-		float m20, m21, m22;
-	};
-	float m[9];
+union _GLKMatrix3 {
+    struct {
+        float m00, m01, m02;
+        float m10, m11, m12;
+        float m20, m21, m22;
+    };
+    float m[9];
 };
 typedef union _GLKMatrix3 GLKMatrix3;
 
-union _GLKMatrix4
-{
-	struct
-	{
-		float m00, m01, m02, m03;
-		float m10, m11, m12, m13;
-		float m20, m21, m22, m23;
-		float m30, m31, m32, m33;
-	};
-	float m[16];
+union _GLKMatrix4 {
+    struct {
+        float m00, m01, m02, m03;
+        float m10, m11, m12, m13;
+        float m20, m21, m22, m23;
+        float m30, m31, m32, m33;
+    };
+    float m[16];
 };
 typedef union _GLKMatrix4 GLKMatrix4;
 
@@ -1196,33 +1192,31 @@ inline GLKQuaternion GLKQuaternionInvert(GLKQuaternion q) {
  @Status Interoperable
 */
 inline GLKQuaternion GLKQuaternionSlerp(GLKQuaternion quaternionStart, GLKQuaternion quaternionEnd, float t) {
+    GLKQuaternion q1 = GLKQuaternionNormalize(quaternionStart);
+    GLKQuaternion q2 = GLKQuaternionNormalize(quaternionEnd);
 
-	GLKQuaternion q1 = GLKQuaternionNormalize(quaternionStart);
-	GLKQuaternion q2 = GLKQuaternionNormalize(quaternionEnd);
+    float dot = GLKQuaternionDot(q1, q2);
 
-	float dot = GLKQuaternionDot(q1, q2);
+    if (dot < 0) {
+        dot = -dot;
+        q2 = GLKQuaternionMultiplyByScalar(-1.0, q2);
+    }
 
-	if (dot < 0) {
-		dot = -dot;
-		q2 = GLKQuaternionMultiplyByScalar(-1.0, q2);
-	}
+    if (dot > 0.9999f) {
+        dot = 0.9999f;
+    }
 
-	if (dot > 0.9999f) {
-		dot = 0.9999f;
-	}
+    float omega = acosf(dot);
 
-	float omega = acosf(dot);
+    float inv_sin_omega = (1.0f / sinf(omega));
 
-	float inv_sin_omega = (1.0f / sinf(omega));
+    q1 = GLKQuaternionMultiplyByScalar(inv_sin_omega, q1);
+    q2 = GLKQuaternionMultiplyByScalar(inv_sin_omega, q2);
 
-	q1 = GLKQuaternionMultiplyByScalar(inv_sin_omega, q1);
-	q2 = GLKQuaternionMultiplyByScalar(inv_sin_omega, q2);
+    q1 = GLKQuaternionMultiplyByScalar(sinf((1.0f - t) * omega), q1);
+    q2 = GLKQuaternionMultiplyByScalar(sinf(t * omega), q2);
 
-
-	q1 = GLKQuaternionMultiplyByScalar(sinf((1.0f - t)*omega), q1);
-	q2 = GLKQuaternionMultiplyByScalar(sinf(t*omega), q2);
-
-	return GLKQuaternionAdd(q1, q2);
+    return GLKQuaternionAdd(q1, q2);
 }
 
 /**
