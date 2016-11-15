@@ -116,7 +116,7 @@ CGImageRef CGImageCreateCopy(CGImageRef ref) {
     ComPtr<IWICImagingFactory> imageFactory = _GetWICFactory();
     ComPtr<IWICBitmap> image;
 
-    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(ref->ImageSource().Get(), WICBitmapCacheOnDemand, &image));
+    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(ref->ImageSource().Get(), WICBitmapCacheOnLoad, &image));
 
     CGImageRef imageRef = __CGImage::CreateInstance();
     imageRef->SetImageSource(image)
@@ -430,7 +430,7 @@ CGImageRef _CGImageCreateCopyWithPixelFormat(CGImageRef image, WICPixelFormatGUI
         image->ImageSource().Get(), pixelFormat, WICBitmapDitherTypeNone, nullptr, 0.f, WICBitmapPaletteTypeMedianCut));
 
     ComPtr<IWICBitmap> convertedImage;
-    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(converter.Get(), WICBitmapCacheOnDemand, &convertedImage));
+    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(converter.Get(), WICBitmapCacheOnLoad, &convertedImage));
 
     CGImageRef imageRef = __CGImage::CreateInstance();
     imageRef->SetImageSource(convertedImage);

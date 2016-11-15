@@ -115,30 +115,32 @@ class CGIWICBitmap
     : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::ClassicCom>, IAgileObject, FtmBase, IWICBitmap, ICGDisplayTexture> {
 public:
     CGIWICBitmap(_In_ IDisplayTexture* texture, _In_ WICPixelFormatGUID pixelFormat, _In_ UINT height, _In_ UINT width)
-        : m_dataBuffer(nullptr), m_texture(texture), m_pixelFormat(pixelFormat), m_height(height), m_width(width), m_freeData(false) {
+        : m_dataBuffer(nullptr), m_texture(texture) {
+        Init(pixelFormat, height, width);
     }
 
     // if data is null, then a buffer that is the size of bytes per row is allocated.
-    CGIWICBitmap(_In_ void* data, _In_ WICPixelFormatGUID pixelFormat, _In_ UINT height, _In_ UINT width)
-        : m_texture(nullptr), m_pixelFormat(pixelFormat), m_height(height), m_width(width), m_freeData(false) {
+    CGIWICBitmap(_In_ void* data, _In_ WICPixelFormatGUID pixelFormat, _In_ UINT height, _In_ UINT width) : m_texture(nullptr) {
+        Init(pixelFormat, height, width);
+
         // Obtain bytes per row from pixelFormat
         const __CGImagePixelProperties* properties = _CGGetPixelFormatProperties(m_pixelFormat);
         FAIL_FAST_IF(properties == nullptr);
 
-        //bytesPerRow = ((bitsPerPixel) / 8 byte/pixel) * width
+        // bytesPerRow = ((bitsPerPixel) / 8 byte/pixel) * width
         m_bytesPerRow = (properties->bitsPerPixel >> 3) * m_width;
 
         if (data) {
             m_dataBuffer = static_cast<BYTE*>(data);
         } else {
-            m_dataBuffer = static_cast<BYTE*>(IwMalloc(m_height * m_bytesPerRow));
+            m_dataBuffer = new BYTE[m_height * m_bytesPerRow];
             m_freeData = true;
         }
     }
 
     ~CGIWICBitmap() {
         if (m_freeData) {
-            IwFree(m_dataBuffer);
+            delete m_dataBuffer;
             m_dataBuffer = nullptr;
             m_freeData = false;
         }
@@ -158,6 +160,13 @@ public:
             WICRect rect = { 0, 0, m_width, m_height };
             region = &rect;
         } else {
+            // This is for tracking purpose, we do not support sub-regions.
+            // TODO #1379 - should support regional locking.
+            // This check will be removed.
+            if (region->X || region->Y || (region->Height < m_height) || (region->Width < m_width)) {
+                return E_NOTIMPL;
+            }
+
             RETURN_HR_IF(E_INVALIDARG, (region->Width > m_width) || (region->Height > m_height));
         }
 
@@ -183,6 +192,7 @@ public:
 
         RETURN_HR_IF(E_INVALIDARG, sourceDataSize > bufferSize);
 
+        // TODO #1379 - should support regional copying.
         RETURN_HR_IF(E_UNEXPECTED, memcpy_s(buffer, bufferSize, sourceData, sourceDataSize) != 0);
         return S_OK;
     }
@@ -193,8 +203,9 @@ public:
     }
 
     HRESULT STDMETHODCALLTYPE SetResolution(_In_ double dpiX, _In_ double dpiY) {
-        UNIMPLEMENTED();
-        return E_NOTIMPL;
+        m_dpiY = dpiY;
+        m_dpiX = dpiX;
+        return S_OK;
     }
 
     // IWICBitmapSource interface (that IWICBitmap inherits)
@@ -214,8 +225,11 @@ public:
     }
 
     HRESULT STDMETHODCALLTYPE GetResolution(_Out_ double* dpiX, _Out_ double* dpiY) {
-        UNIMPLEMENTED();
-        return E_NOTIMPL;
+        RETURN_HR_IF_NULL(E_POINTER, dpiX);
+        RETURN_HR_IF_NULL(E_POINTER, dpiY);
+        *dpiY = m_dpiY;
+        *dpiX = m_dpiX;
+        return S_OK;
     }
 
     HRESULT STDMETHODCALLTYPE CopyPalette(_In_ IWICPalette* palette) {
@@ -230,6 +244,15 @@ public:
     }
 
 private:
+    void Init(_In_ WICPixelFormatGUID pixelFormat, _In_ UINT height, _In_ UINT width) {
+        m_dpiX = 96;
+        m_dpiY = 96;
+        m_pixelFormat = pixelFormat;
+        m_height = height;
+        m_width = width;
+        m_freeData = false;
+    }
+
     WICPixelFormatGUID m_pixelFormat;
     IDisplayTexture* m_texture;
     UINT m_height;
@@ -237,6 +260,8 @@ private:
     BYTE* m_dataBuffer;
     size_t m_bytesPerRow;
     bool m_freeData;
+    double m_dpiX;
+    double m_dpiY;
 };
 
 #if defined __clang__

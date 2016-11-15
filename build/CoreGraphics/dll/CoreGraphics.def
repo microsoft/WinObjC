@@ -236,7 +236,6 @@ LIBRARY CoreGraphics
         _CGContextSetShadowProjectionTransform
         _CGContextCreateWithD2DRenderTarget
         _CGGetD2DFactory
-        _CGGetPixelFormatProperties
 
         ; CGDataConsumer.mm
         CGDataConsumerCreate

@@ -95,7 +95,7 @@ static const std::map<GUID, __CGImagePixelProperties, GuidPixelLess> s_PixelForm
 };
 
 bool _CGIsValidRenderTargetPixelFormat(WICPixelFormatGUID pixelFormat);
-COREGRAPHICS_EXPORT const __CGImagePixelProperties* _CGGetPixelFormatProperties(WICPixelFormatGUID pixelFormat);
+const __CGImagePixelProperties* _CGGetPixelFormatProperties(WICPixelFormatGUID pixelFormat);
 
 struct __CGImageImpl {
     Microsoft::WRL::ComPtr<IWICBitmap> bitmapImageSource;
