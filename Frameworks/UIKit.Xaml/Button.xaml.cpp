@@ -45,16 +45,12 @@ Button::Button() {
 
 // Accessor for our Layer content
 Image^ Button::LayerContent::get() {
-    if (!_content) {
-        Canvas^ rootCanvas = safe_cast<Canvas^>(GetTemplateChild(L"rootCanvas"));
+    if (!_content && _contentCanvas) {
+        _content = ref new Image();
+        _content->Name = "LayerContent";
 
-        if (rootCanvas) {
-            _content = ref new Image();
-            _content->Name = "LayerContent";
-
-            // Layer content is behind any sublayers
-            rootCanvas->Children->InsertAt(0, _content);
-        }
+        // Layer content is behind any sublayers
+        _contentCanvas->Children->InsertAt(0, _content);
     }
 
     return _content;

@@ -8,11 +8,9 @@
     mc:Ignorable="d">
     <Button.Template>
         <ControlTemplate TargetType="Button" x:Name="UIKitButtonControlTemplate">
-            <Canvas x:Name="rootCanvas" Background="{TemplateBinding Background}">
-                <Canvas x:Name="contentCanvas" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
-                    <Image x:Name="buttonImage" Stretch="Fill" IsHitTestVisible="False" />
-                    <TextBlock x:Name="buttonText" MaxLines="1" TextTrimming="CharacterEllipsis" IsHitTestVisible="False"/>
-                </Canvas>
+            <Canvas x:Name="contentCanvas" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{TemplateBinding Background}">
+                <Image x:Name="buttonImage" Stretch="Fill" IsHitTestVisible="False" />
+                <TextBlock x:Name="buttonText" MaxLines="1" TextTrimming="CharacterEllipsis" IsHitTestVisible="False"/>
             </Canvas>
         </ControlTemplate>
     </Button.Template>
