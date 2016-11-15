@@ -147,7 +147,7 @@ DISABLED_TEST(CGBitmapContext, VerifyPixelFormatBGRA) {
                      );
 }
 
-static void _expectArrayValues(BYTE* res, BYTE* source, int size) {
+static void _expectArrayValues(const BYTE* res, const BYTE* source, int size) {
     for (int i = 0; i < size; ++i) {
         EXPECT_EQ(res[i], source[i]);
     }
@@ -209,9 +209,9 @@ TEST(CGBitmapContext, Rendering) {
     woc::unique_cf<CGImageRef> image(CGBitmapContextCreateImage(context.get()));
     ASSERT_NE(image, nullptr);
 
-    NSData* dataProvider = static_cast<NSData*>(CGImageGetDataProvider(image.get()));
-    ASSERT_NE(dataProvider, nullptr);
+    woc::unique_cf<CFDataRef> rawData(CGDataProviderCopyData(CGImageGetDataProvider(image.get())));
+    ASSERT_NE(rawData, nullptr);
 
-    NSData* ref = [[NSData dataWithBytesNoCopy:result length:4 freeWhenDone:NO] autorelease];
-    ASSERT_OBJCEQ(dataProvider, ref);
+    const BYTE* rData = static_cast<const BYTE*>(CFDataGetBytePtr(rawData.get()));
+    _expectArrayValues(result, rData, 4);
 }
