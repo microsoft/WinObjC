@@ -177,7 +177,7 @@ void StoryboardManager::_CreateFlip(Layer^ layer, bool flipRight, bool invert, b
                             std::begin(strongThis->_animatingSnapshots), 
                             std::end(strongThis->_animatingSnapshots), 
                             [strongLayer](Layer^ snapshotLayer) {
-                                return snapshotLayer = strongLayer;
+                                return snapshotLayer == strongLayer;
                             }));
                 } else if (DEBUG_TRANSITIONS) {
                     TraceVerbose(TAG, L"fade1->Completed (for snapshot layer) wasn't able to resolve its weakLayer reference.");
@@ -247,7 +247,7 @@ void StoryboardManager::_CreateWoosh(Layer^ layer, bool fromRight, bool invert, 
                             std::begin(strongThis->_animatingSnapshots), 
                             std::end(strongThis->_animatingSnapshots), 
                             [strongLayer](Layer^ snapshotLayer) {
-                                return snapshotLayer = strongLayer;
+                                return snapshotLayer == strongLayer;
                             }));
                 } else if (DEBUG_TRANSITIONS) {
                     TraceVerbose(TAG, L"wooshAnim->Completed (for snapshot layer) wasn't able to resolve its weakLayer reference.");
