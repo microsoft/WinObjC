@@ -88,7 +88,7 @@ TEST(NSFileManager, EnumateDirectoryUsingURL) {
     wchar_t startUpPath[_MAX_PATH];
     GetModuleFileNameW(NULL, startUpPath, _MAX_PATH);
 
-// Window needs extra handling for the drive character
+// Windows needs extra handling for the drive character
 #if TARGET_OS_WIN32
     // construct the start up dir
     wchar_t drive[_MAX_DRIVE];

@@ -603,38 +603,44 @@ HRESULT _DWriteCreateFontFaceWithDataProvider(CGDataProviderRef dataProvider, ID
 
     RETURN_IF_FAILED(dwriteFactory->RegisterFontFileLoader(dwriteDataLoader.Get()));
 
-    ComPtr<IDWriteFontFile> fontFile;
+    HRESULT createdFont = [&dwriteFactory, &dwriteDataLoader, &dataProvider, outFontFace]() {
+        ComPtr<IDWriteFontFile> fontFile;
 
-    // First two params are not used (see DWriteFontBinaryDataLoader::CreateStreamFromKey())
-    // However, CreateCustomFontFileReference throws E_INVALIDARG if null is passed for the first parameter
-    // Pass in a pointer to an arbitrary, unused key, to get around this.
-    int unusedKey;
-    RETURN_IF_FAILED(dwriteFactory->CreateCustomFontFileReference(&unusedKey, sizeof(unusedKey), dwriteDataLoader.Get(), &fontFile));
+        // First two params are not used (see DWriteFontBinaryDataLoader::CreateStreamFromKey())
+        // However, CreateCustomFontFileReference throws E_INVALIDARG if null is passed for the first parameter
+        // Pass in a pointer to an arbitrary, unused key, to get around this.
+        int unusedKey;
+        RETURN_IF_FAILED(dwriteFactory->CreateCustomFontFileReference(&unusedKey, sizeof(unusedKey), dwriteDataLoader.Get(), &fontFile));
 
-    // Analyze the font file for creating a font face
-    BOOL isSupportedFontType;
-    DWRITE_FONT_FILE_TYPE fontFileType;
-    DWRITE_FONT_FACE_TYPE fontFaceType;
-    uint32_t numberOfFaces;
-    RETURN_IF_FAILED(fontFile->Analyze(&isSupportedFontType, &fontFileType, &fontFaceType, &numberOfFaces));
+        // Analyze the font file for creating a font face
+        BOOL isSupportedFontType;
+        DWRITE_FONT_FILE_TYPE fontFileType;
+        DWRITE_FONT_FACE_TYPE fontFaceType;
+        uint32_t numberOfFaces;
+        RETURN_IF_FAILED(fontFile->Analyze(&isSupportedFontType, &fontFileType, &fontFaceType, &numberOfFaces));
 
-    RETURN_HR_IF(E_INVALIDARG, !isSupportedFontType);
-    RETURN_HR_IF(E_INVALIDARG, numberOfFaces == 0);
+        RETURN_HR_IF(E_INVALIDARG, !isSupportedFontType);
+        RETURN_HR_IF(E_INVALIDARG, numberOfFaces == 0);
 
-    IDWriteFontFile* fontFileArray[] = { fontFile.Get() };
+        IDWriteFontFile* fontFileArray[] = { fontFile.Get() };
 
-    HRESULT created = dwriteFactory->CreateFontFace(fontFaceType,
-                                                    1, // number of elements in fontFileArray
-                                                    fontFileArray,
-                                                    0, // Just use the first face
-                                                    DWRITE_FONT_SIMULATIONS_NONE,
-                                                    outFontFace);
+        RETURN_IF_FAILED(dwriteFactory->CreateFontFace(fontFaceType,
+                                                       1, // number of elements in fontFileArray
+                                                       fontFileArray,
+                                                       0, // Just use the first face
+                                                       DWRITE_FONT_SIMULATIONS_NONE,
+                                                       outFontFace));
+        return S_OK;
+    }();
 
-    // Always try to unregister the font file loader, even if creation failed above
-    RETURN_IF_FAILED(dwriteFactory->UnregisterFontFileLoader(dwriteDataLoader.Get()));
+    // Always try to unregister the font file loader, even if anything failed above
+    // Just log the failure to unregister instead of failing the whole function, though -
+    // Should be safe enough to continue even if this doesn't work out
+    if (FAILED(dwriteFactory->UnregisterFontFileLoader(dwriteDataLoader.Get()))) {
+        TraceError(TAG, L"Failed to unregister font file loader in _DWriteCreateFontFaceWithDataProvider");
+    }
 
-    // Return the HR from CreateFontFace, if it failed
-    RETURN_IF_FAILED(created);
+    RETURN_IF_FAILED(createdFont);
 
     return S_OK;
 }
