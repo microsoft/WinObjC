@@ -38,6 +38,7 @@
 #import <wrl/client.h>
 #include <COMIncludes_end.h>
 #import <LoggingNative.h>
+#import <CoreGraphics/D2DWrapper.h>
 
 #import <list>
 #import <vector>
@@ -98,6 +99,9 @@ struct __CGContextDrawingState {
     D2D1_VECTOR_4F shadowColor{ 0, 0, 0, 0 };
     CGSize shadowOffset{ 0, 0 };
     CGFloat shadowBlur{ 0 };
+
+    // Clipping
+    ComPtr<ID2D1Geometry> clippingGeometry;
 
     inline void ComputeStrokeStyle(ID2D1DeviceContext* deviceContext) {
         if (strokeStyle) {
@@ -186,6 +190,46 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
 
     inline bool ShouldDraw() {
         return std::fpclassify(CurrentGState().alpha) != FP_ZERO;
+    }
+
+    HRESULT Clip(CGPathDrawingMode pathMode) {
+        if (!HasPath()) {
+            // Clipping to nothing is okay.
+            return S_OK;
+        }
+
+        auto& state = CurrentGState();
+
+        ComPtr<ID2D1Geometry> additionalClippingGeometry;
+        RETURN_IF_FAILED(_CGPathGetGeometry(Path(), &additionalClippingGeometry));
+        ClearPath();
+
+        D2D1_FILL_MODE d2dFillMode = (pathMode & kCGPathEOFill) == kCGPathEOFill ? D2D1_FILL_MODE_ALTERNATE : D2D1_FILL_MODE_WINDING;
+
+        if (!state.clippingGeometry) {
+            // If we don't have a clipping geometry, we are free to take this one wholesale (after EO/Winding conversion.)
+            return _CGConvertD2DGeometryToFillMode(additionalClippingGeometry.Get(), d2dFillMode, &state.clippingGeometry);
+        }
+
+        // If we have a clipping geometry, we must intersect it with the new path.
+        // To do so, we need to stream the combined geometry into a totally new geometry.
+        ComPtr<ID2D1PathGeometry> newClippingPathGeometry;
+        RETURN_IF_FAILED(Factory()->CreatePathGeometry(&newClippingPathGeometry));
+
+        ComPtr<ID2D1GeometrySink> geometrySink;
+        RETURN_IF_FAILED(newClippingPathGeometry->Open(&geometrySink));
+
+        geometrySink->SetFillMode(d2dFillMode);
+
+        RETURN_IF_FAILED(state.clippingGeometry->CombineWithGeometry(additionalClippingGeometry.Get(),
+                                                                     D2D1_COMBINE_MODE_INTERSECT,
+                                                                     nullptr,
+                                                                     geometrySink.Get()));
+
+        RETURN_IF_FAILED(geometrySink->Close());
+
+        state.clippingGeometry.Attach(newClippingPathGeometry.Detach());
+        return S_OK;
     }
 };
 
@@ -737,13 +781,12 @@ bool CGContextPathContainsPoint(CGContextRef context, CGPoint point, CGPathDrawi
 #pragma endregion
 
 #pragma region Global State - Clipping and Masking
-/// TODO(DH): GH#future Clipping and Masking
 /**
  @Status Interoperable
 */
 void CGContextClip(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->Clip(kCGPathFill);
 }
 
 /**
@@ -751,7 +794,7 @@ void CGContextClip(CGContextRef context) {
 */
 void CGContextEOClip(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->Clip(kCGPathEOFill);
 }
 
 /**
@@ -791,9 +834,22 @@ void CGContextClipToMask(CGContextRef context, CGRect dest, CGImageRef image) {
  @Status Interoperable
 */
 CGRect CGContextGetClipBoundingBox(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return StubReturn();
+    NOISY_RETURN_IF_NULL(context, CGRectNull);
+
+    auto& state = context->CurrentGState();
+    if (!state.clippingGeometry) {
+        D2D1_SIZE_F targetSize = context->RenderTarget()->GetSize();
+        return CGContextConvertRectToUserSpace(context, CGRect{ CGPointZero, { targetSize.width, targetSize.height }});
+    }
+
+    D2D1_RECT_F bounds;
+
+    if (FAILED(state.clippingGeometry->GetBounds(nullptr, &bounds))) {
+        TraceError(TAG, L"failed to get bounds for clipping geometry in context %p", context);
+        return CGRectNull;
+    }
+
+    return CGContextConvertRectToUserSpace(context, _D2DRectToCGRect(bounds));
 }
 #pragma endregion
 
@@ -1483,7 +1539,13 @@ static HRESULT __CGContextRenderToCommandList(CGContextRef context,
 }
 
 static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
+    if (!image) {
+        // Being asked to draw nothing is valid!
+        return S_OK;
+    }
+
     ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
+
     auto& state = context->CurrentGState();
 
     ComPtr<ID2D1DeviceContext> deviceContext;
@@ -1492,11 +1554,14 @@ static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
     deviceContext->BeginDraw();
 
     bool layer = false;
-    if (false /* mask, clip, etc. */) {
+    if (state.clippingGeometry) {
         layer = true;
-        renderTarget->PushLayer(
-            D2D1::LayerParameters(D2D1::InfiniteRect(), nullptr, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE, D2D1::IdentityMatrix(), state.alpha),
-            nullptr);
+        renderTarget->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
+                                                      state.clippingGeometry.Get(),
+                                                      D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+                                                      D2D1::IdentityMatrix(),
+                                                      1.0f),
+                                nullptr);
     }
 
     ComPtr<ID2D1Image> currentImage{ image };
@@ -1521,18 +1586,22 @@ static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
 
 static HRESULT __CGContextDrawGeometry(CGContextRef context,
                                        _CGCoordinateMode coordinateMode,
-                                       ID2D1Geometry* geometry,
+                                       ID2D1Geometry* pGeometry,
                                        CGPathDrawingMode drawMode) {
     ComPtr<ID2D1CommandList> commandList;
+    ComPtr<ID2D1Geometry> geometry(pGeometry);
     HRESULT hr = __CGContextRenderToCommandList(
         context, coordinateMode, nullptr, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
             auto& state = context->CurrentGState();
             if (drawMode & kCGPathFill) {
                 state.fillBrush->SetOpacity(state.alpha);
-                if (drawMode & kCGPathEOFill) {
-                    // TODO(DH): GH#1077 Regenerate geometry in Even/Odd fill mode.
-                }
-                deviceContext->FillGeometry(geometry, state.fillBrush.Get());
+
+                ComPtr<ID2D1Geometry> geometryToFill;
+                D2D1_FILL_MODE d2dFillMode =
+                    (drawMode & kCGPathEOFill) == kCGPathEOFill ? D2D1_FILL_MODE_ALTERNATE : D2D1_FILL_MODE_WINDING;
+                RETURN_IF_FAILED(_CGConvertD2DGeometryToFillMode(geometry.Get(), d2dFillMode, &geometryToFill));
+
+                deviceContext->FillGeometry(geometryToFill.Get(), state.fillBrush.Get());
             }
 
             if (drawMode & kCGPathStroke && std::fpclassify(state.lineWidth) != FP_ZERO) {
@@ -1541,7 +1610,7 @@ static HRESULT __CGContextDrawGeometry(CGContextRef context,
 
                 state.strokeBrush->SetOpacity(state.alpha);
 
-                deviceContext->DrawGeometry(geometry, state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
+                deviceContext->DrawGeometry(geometry.Get(), state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
             }
 
             return S_OK;
