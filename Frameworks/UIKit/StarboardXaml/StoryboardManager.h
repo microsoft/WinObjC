@@ -17,6 +17,7 @@
 // clang-format off
 #pragma once
 
+#include <vector>
 #include <ppltasks.h>
 
 namespace CoreAnimation {
@@ -67,7 +68,9 @@ internal:
 private:
     void _CreateFlip(UIKit::Xaml::Private::CoreAnimation::Layer^ layer, bool flipRight, bool invert, bool removeFromParent);
     void _CreateWoosh(UIKit::Xaml::Private::CoreAnimation::Layer^ layer, bool fromRight, bool invert, bool removeFromParent);
+    void _RemoveSnapshotLayer(UIKit::Xaml::Private::CoreAnimation::Layer^ snapshotLayer);
 
+    std::vector<UIKit::Xaml::Private::CoreAnimation::Layer^> _animatingSnapshots;
     AnimationMethod^ m_completed;
     Windows::UI::Xaml::Media::Animation::Storyboard^ m_container = ref new Windows::UI::Xaml::Media::Animation::Storyboard();
     Windows::UI::Xaml::Media::Animation::EasingFunctionBase^ m_animationEase;
