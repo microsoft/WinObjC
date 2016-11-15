@@ -108,3 +108,9 @@ TEST(CGFont, GetBoundingBoxes) {
         EXPECT_EQ(expectedBoxes[i].size.height, boxes[i].size.height);
     }
 }
+
+TEST(CGFont, GetDescent) {
+    CGFontRef font = CGFontCreateWithFontName(c_arialBoldItalicName);
+    CFAutorelease(font);
+    EXPECT_EQ(-434, CGFontGetDescent(font));
+}
