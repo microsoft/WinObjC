@@ -214,8 +214,7 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
         UIApplicationMainHandleToastActionEvent(reinterpret_cast<HSTRING>(toastArgs->Argument),
             reinterpret_cast<IInspectable*>(toastArgs->UserInput));
 
-    }
-    else if (args->Kind == ActivationKind::VoiceCommand) {
+    } else if (args->Kind == ActivationKind::VoiceCommand) {
         SpeechRecognitionResult^ result = safe_cast<VoiceCommandActivatedEventArgs^>(args)->Result;
         TraceVerbose(TAG, L"Received voice command with argument - %ls", result->Text->Data());
 
@@ -225,8 +224,7 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
 
         UIApplicationMainHandleVoiceCommandEvent(reinterpret_cast<IInspectable*>(result));
 
-    }
-    else if (args->Kind == ActivationKind::Protocol) {
+    } else if (args->Kind == ActivationKind::Protocol) {
         ProtocolActivatedEventArgs^ protocolArgs = safe_cast<ProtocolActivatedEventArgs^>(args);
         Windows::Foundation::Uri^ argUri = protocolArgs->Uri;
         const wchar_t* caller = protocolArgs->CallerPackageFamilyName->Data();
@@ -237,8 +235,7 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
         }
 
         UIApplicationMainHandleProtocolEvent(reinterpret_cast<IInspectable*>(argUri), caller);
-    }
-    else if (args->Kind == ActivationKind::File) {
+    } else if (args->Kind == ActivationKind::File) {
         FileActivatedEventArgs^ result = safe_cast<FileActivatedEventArgs^>(args);
         TraceVerbose(TAG, L"Received file activation");
 
@@ -247,8 +244,7 @@ void UIApplicationActivated(IActivatedEventArgs^ args) {
         }
 
         UIApplicationMainHandleFileEvent(reinterpret_cast<IInspectable*>(result));
-    }
-    else {
+    } else {
         TraceWarning(TAG, L"Received unhandled activation kind - %d", args->Kind);
 
         if (initiateAppLaunch) {
@@ -311,8 +307,7 @@ void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activat
             DoApplicationLaunch(activationType, activationArg);
         })));
         task.wait();
-    }
-    else {
+    } else {
         DoApplicationLaunch(activationType, activationArg);
     }
 }
@@ -322,7 +317,7 @@ void _ApplicationLaunch(ActivationType activationType, Platform::Object^ activat
 UIKIT_EXPORT
 int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* delegateClassName) {
     // Make method only run once
-    static int once = [principalClassName, delegateClassName]() -> int {
+    static int once = [principalClassName, delegateClassName] () -> int {
 
         // Initialize COM on this thread
         ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
@@ -373,15 +368,13 @@ void UIApplicationInitialize(const wchar_t* principalClassName, const wchar_t* d
 
     if (principalClassName != nullptr) {
         g_principalClassName = ref new Platform::String(principalClassName);
-    }
-    else {
+    } else {
         g_principalClassName = ref new Platform::String();
     }
 
     if (delegateClassName != nullptr) {
         g_delegateClassName = ref new Platform::String(delegateClassName);
-    }
-    else {
+    } else {
         g_delegateClassName = ref new Platform::String();
     }
 
@@ -390,7 +383,7 @@ void UIApplicationInitialize(const wchar_t* principalClassName, const wchar_t* d
 
 // Note: Like UIApplicationMain, delegateClassName is actually an NSString*.
 UIKIT_EXPORT
-void UIApplicationActivationTest(IInspectable* activationArgs, void* delegateClassName) {
+void UIApplicationActivationTest(IInspectable* activationArgs, void* delegateClassName){
     // Initialize COM on this thread
     ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
@@ -400,8 +393,7 @@ void UIApplicationActivationTest(IInspectable* activationArgs, void* delegateCla
     if (delegateClassName) {
         auto rawString = _RawBufferFromNSString(delegateClassName);
         g_delegateClassName = reinterpret_cast<Platform::String^>(Strings::NarrowToWide<HSTRING>(rawString).Detach());
-    }
-    else {
+    } else {
         g_delegateClassName = ref new Platform::String();
     }
 
