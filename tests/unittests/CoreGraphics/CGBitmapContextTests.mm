@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -41,41 +41,6 @@ DISABLED_TEST(CGBitmapContext, BitmapInfoAPIs_CMYK) {
     // EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 32);
 
     CGColorSpaceRelease(cmykColorSpace);
-    CGContextRelease(context);
-}
-
-TEST(CGBitmapContext, BitmapInfoAPIs_RGB) {
-    CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context = CGBitmapContextCreate(nullptr, 0, 0, 8, 0, rgbColorSpace, 0);
-    EXPECT_EQ(nullptr, context);
-
-    context = CGBitmapContextCreate(nullptr, 5, 5, 20, 8, rgbColorSpace, 0);
-
-    EXPECT_EQ(CGBitmapContextGetWidth(context), 5);
-    EXPECT_EQ(CGBitmapContextGetHeight(context), 5);
-    EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context), 8);
-    EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 32);
-
-    CGColorSpaceRelease(rgbColorSpace);
-    CGContextRelease(context);
-}
-
-TEST(CGBitmapContext, BitmapInfoAPIs_Gray) {
-    CGColorSpaceRef grayColorSpace = CGColorSpaceCreateDeviceGray();
-    CGContextRef context = CGBitmapContextCreate(0, 0, 0, 8, 0, grayColorSpace, 0);
-    EXPECT_EQ(context, nullptr);
-
-    context = CGBitmapContextCreate(nullptr, 120, 20, 8, 480, grayColorSpace, 0);
-
-    EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context), 8);
-    EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 32);
-    EXPECT_EQ(CGBitmapContextGetWidth(context), 120);
-    EXPECT_EQ(CGBitmapContextGetHeight(context), 20);
-
-    EXPECT_EQ(CGBitmapContextGetBytesPerRow(context), 480);
-    EXPECT_NE(CGBitmapContextGetData(context), nullptr);
-
-    CGColorSpaceRelease(grayColorSpace);
     CGContextRelease(context);
 }
 
@@ -182,10 +147,25 @@ DISABLED_TEST(CGBitmapContext, VerifyPixelFormatBGRA) {
                      );
 }
 
-TEST(CGBitmapContext, Contexts) {
+static void _expectArrayValues(BYTE* res, BYTE* source, int size) {
+    for (int i = 0; i < size; ++i) {
+        EXPECT_EQ(res[i], source[i]);
+    }
+}
+
+TEST(CGBitmapContext, BitmapInfoAPIs_Gray) {
+    CGColorSpaceRef grayColorSpace = CGColorSpaceCreateDeviceGray();
+    CGContextRef context = CGBitmapContextCreate(0, 0, 0, 8, 0, grayColorSpace, 0);
+    EXPECT_EQ(context, nullptr);
+
+    context = CGBitmapContextCreate(nullptr, 120, 20, 8, 480, grayColorSpace, 0);
+    EXPECT_EQ(context, nullptr);
+}
+
+TEST(CGBitmapContext, BitmapInfoAPIs_RGB) {
     CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
 
-    CGContextRef context = CGBitmapContextCreate(nullptr, 120, 20, 8, 480, rgbColorSpace, 0);
+    CGContextRef context = CGBitmapContextCreate(nullptr, 120, 20, 8, 480, rgbColorSpace, kCGImageAlphaPremultipliedFirst);
 
     EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context), 8);
     EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 32);
@@ -197,4 +177,41 @@ TEST(CGBitmapContext, Contexts) {
 
     CGColorSpaceRelease(rgbColorSpace);
     CGContextRelease(context);
+}
+
+TEST(CGBitmapContext, Rendering) {
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+
+    BYTE result[4] = { 0xff, 0, 0, 0xff };
+    woc::unique_cf<CGContextRef> context(CGBitmapContextCreate(nullptr, 1, 1, 8, 4, rgbColorSpace.get(), kCGImageAlphaPremultipliedFirst));
+
+    EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context.get()), 8);
+    EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context.get()), 32);
+    EXPECT_EQ(CGBitmapContextGetWidth(context.get()), 1);
+    EXPECT_EQ(CGBitmapContextGetHeight(context.get()), 1);
+
+    EXPECT_EQ(CGBitmapContextGetBytesPerRow(context.get()), 4);
+    EXPECT_NE(CGBitmapContextGetData(context.get()), nullptr);
+
+    // Draw a rectangle into it.
+    CGRect rectangle = CGRectMake(0, 0, 2, 2);
+    CGContextSetRGBFillColor(context.get(), 1.0, 0.0, 0.0, 1.0);
+    CGContextSetRGBStrokeColor(context.get(), 1.0, 0.0, 0.0, 1.0);
+    CGContextFillRect(context.get(), rectangle);
+
+    // verify the rect was drawn
+    BYTE* data = static_cast<BYTE*>(CGBitmapContextGetData(context.get()));
+    ASSERT_NE(data, nullptr);
+
+    _expectArrayValues(result, data, 4);
+
+    // Create the image out of the bitmap context
+    woc::unique_cf<CGImageRef> image(CGBitmapContextCreateImage(context.get()));
+    ASSERT_NE(image, nullptr);
+
+    NSData* dataProvider = static_cast<NSData*>(CGImageGetDataProvider(image.get()));
+    ASSERT_NE(dataProvider, nullptr);
+
+    NSData* ref = [[NSData dataWithBytesNoCopy:result length:4 freeWhenDone:NO] autorelease];
+    ASSERT_OBJCEQ(dataProvider, ref);
 }

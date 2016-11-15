@@ -1835,9 +1835,8 @@ struct __CGBitmapContext : CoreFoundation::CppBase<__CGBitmapContext, __CGBitmap
 
 /**
  @Status Caveat
- @Notes If the image colorspace is not a valid render target format (as per
- https://msdn.microsoft.com/en-us/library/windows/desktop/dd756766(v=vs.85).aspx#supported_wic_formats), it's converted to 32bpp BGRA
- format. Does not support conversion if data is already provided.
+ The following formats are supported GUID_WICPixelFormat32bppPBGRA, GUID_WICPixelFormat32bppPRGBA, GUID_WICPixelFormat32bppBGR and
+ GUID_WICPixelFormat8bppAlpha. Any other format will return a null value.
 */
 CGContextRef CGBitmapContextCreate(void* data,
                                    size_t width,
@@ -1851,9 +1850,9 @@ CGContextRef CGBitmapContextCreate(void* data,
 
 /**
  @Status Caveat
- @Notes releaseCallback and releaseInfo is ignored. Also if the image colorspace is not a valid render target format (as per
- https://msdn.microsoft.com/en-us/library/windows/desktop/dd756766(v=vs.85).aspx#supported_wic_formats), it's converted to 32bpp BGRA
- format. Does not support conversion if data is already provided.
+ @Notes releaseCallback and releaseInfo is ignored.
+ The following formats are supported GUID_WICPixelFormat32bppPBGRA, GUID_WICPixelFormat32bppPRGBA, GUID_WICPixelFormat32bppBGR and
+ GUID_WICPixelFormat8bppAlpha. Any other format will return a null value.
 */
 CGContextRef CGBitmapContextCreateWithData(void* data,
                                            size_t width,
@@ -1872,21 +1871,13 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
     size_t bitsPerPixel = ((bytesPerRow / width) << 3);
     REFGUID pixelFormat = _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, space, bitmapInfo);
 
-    ComPtr<IWICBitmap> customBitmap;
-
-    if (_CGIsValidRenderTargetPixelFormat(pixelFormat)) {
-        // if data is null, enough memory is allocated via CGIWICBitmap
-        customBitmap = Make<CGIWICBitmap>(data, pixelFormat, height, width);
-    } else {
-        // TODO #<GITHUB-ID>: this will be an issue if we have change in stride, account for that.
-        // Also as per documentation, it's best to leave CGBitmapContext to manage the memory
-        if (data != nullptr) {
-            UNIMPLEMENTED_WITH_MSG("Does not support conversion to supported rendering target format, if the data was provided.");
-            return nullptr;
-        }
-        customBitmap = Make<CGIWICBitmap>(data, GUID_WICPixelFormat32bppPBGRA, height, width);
+    if (!_CGIsValidRenderTargetPixelFormat(pixelFormat)) {
+        UNIMPLEMENTED_WITH_MSG("CGBitmapContext does not currently support conversion and can only render into 32bpp PRGBA buffers.");
+        return nullptr;
     }
 
+    // if data is null, enough memory is allocated via CGIWICBitmap
+    ComPtr<IWICBitmap> customBitmap = Make<CGIWICBitmap>(data, pixelFormat, height, width);
     RETURN_NULL_IF(!customBitmap);
 
     woc::unique_cf<CGImageRef> image(_CGImageCreateWithWICBitmap(customBitmap.Get()));

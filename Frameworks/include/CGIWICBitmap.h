@@ -140,7 +140,7 @@ public:
 
     ~CGIWICBitmap() {
         if (m_freeData) {
-            delete m_dataBuffer;
+            delete[] m_dataBuffer;
             m_dataBuffer = nullptr;
             m_freeData = false;
         }
