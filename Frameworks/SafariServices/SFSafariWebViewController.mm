@@ -90,13 +90,12 @@ static bool appCanOpenURL(NSURL* url) {
     if (openWithAppDelegate) {
         id delegate = [[UIApplication sharedApplication] delegate];
         if ([delegate respondsToSelector:@selector(application:openURL:sourceApplication:annotation:)]) {
-            dispatch_async(dispatch_get_main_queue(),
-                           ^{
-                               [delegate application:[UIApplication sharedApplication]
-                                             openURL:url
-                                   sourceApplication:[self.viewController _sourceApplication]
-                                          annotation:nil];
-                           });
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [delegate application:[UIApplication sharedApplication]
+                              openURL:url
+                    sourceApplication:[self.viewController _sourceApplication]
+                           annotation:nil];
+            });
         }
     }
 
