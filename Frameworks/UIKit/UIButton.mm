@@ -284,6 +284,8 @@ Microsoft Extension
     CGRect imageFrame = [self imageRectForContentRect:contentFrame];
     self.titleLabel.frame = textFrame;
     self.imageView.frame = imageFrame;
+
+    // Use the layer contents to draw the background image, similar to UIImageView.
     UIImageSetLayerContents([self layer], self.currentBackgroundImage);
 
     // Probably important to keep around for after the refactor.
@@ -507,7 +509,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 }
 
 /**
- @Status Caveat
+ @Status Interoperable
  @Notes The xaml element may be modified directly and we could still return stale values.
 */
 - (UIColor*)titleColorForState:(UIControlState)state {
