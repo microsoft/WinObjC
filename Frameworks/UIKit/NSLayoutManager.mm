@@ -133,10 +133,9 @@ static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
             };
 
             // Create line to fit as much text as possible in given rect
-            woc::unique_cf<CTLineRef> fitLine{ static_cast<CTLineRef>(
-                [[static_cast<NSArray*>(CTFrameGetLines(frame.get())) firstObject] retain]) };
+            CTLineRef fitLine = (CTLineRef)CFArrayGetValueAtIndex(CTFrameGetLines(frame.get()), 0);
 
-            CFIndex fitLength = CTLineGetStringRange(fitLine.get()).length;
+            CFIndex fitLength = CTLineGetStringRange(fitLine).length;
             if (fitLength == 0L) {
                 // Failed to fit any text in the current rect, continue to next
                 if (remainingRect.size.width > 0.0f && stringIndex < lineEnd) {
@@ -153,10 +152,10 @@ static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
             stringIndex += fitLength;
 
             // Save line and origin for when it is drawn
-            [_ctLines addObject:(id)fitLine.get()];
+            [_ctLines addObject:(id)fitLine];
             _lineOrigins.emplace_back(CGPoint{ rect.origin.x, rect.origin.y + lineHeight });
 
-            double fitWidth = CTLineGetTypographicBounds(fitLine.get(), nullptr, nullptr, nullptr);
+            double fitWidth = CTLineGetTypographicBounds(fitLine, nullptr, nullptr, nullptr);
             drawnWidth += fitWidth;
 
             if (remainingRect.size.width > 0 && stringIndex < lineEnd) {

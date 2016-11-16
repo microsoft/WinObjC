@@ -24,11 +24,21 @@ inline bool operator==(const CFRange& lhs, const CFRange& rhs) {
     return lhs.location == rhs.location && lhs.length == rhs.length;
 }
 
+std::ostream& operator<<(std::ostream& os, const CFRange& range) {
+    os << "{ location: " << range.location << ", length: " << range.length << " }";
+    return os;
+}
+
 #pragma endregion
 
 #pragma region CGPoint
 inline bool operator==(const CGPoint& lhs, const CGPoint& rhs) {
     return lhs.x == rhs.x && lhs.y == rhs.y;
+}
+
+std::ostream& operator<<(std::ostream& os, const CGPoint& point) {
+    os << "{ x: " << point.x << ", y: " << point.y << " }";
+    return os;
 }
 
 #pragma endregion
@@ -38,11 +48,21 @@ inline bool operator==(const CGSize& lhs, const CGSize& rhs) {
     return lhs.width == rhs.width && lhs.height == rhs.height;
 }
 
+std::ostream& operator<<(std::ostream& os, const CGSize& size) {
+    os << "{ width: " << size.width << ", height: " << size.height << " }";
+    return os;
+}
+
 #pragma endregion
 
 #pragma region CGRect
 inline bool operator==(const CGRect& lhs, const CGRect& rhs) {
     return lhs.origin == rhs.origin && lhs.size == rhs.size;
+}
+
+std::ostream& operator<<(std::ostream& os, const CGRect& rect) {
+    os << "{ origin: " << rect.origin << ", size: " << rect.size << " }";
+    return os;
 }
 
 #pragma endregion
