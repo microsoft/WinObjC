@@ -29,8 +29,6 @@ using namespace Windows::UI::Xaml::Controls;
 namespace UIKit {
 namespace Xaml {
 
-static const float button_padding = 20.0f;
-
 // Method to get default text Foreground brush
 Brush^ GetDefaultWhiteForegroundBrush() {
     static auto ret = ref new SolidColorBrush(Windows::UI::Colors::White);
@@ -47,9 +45,15 @@ Button::Button() {
 
 // Accessor for our Layer content
 Image^ Button::LayerContent::get() {
-    // TODO: Add support for this.  Perhaps we return the same button's image, or we add another image within the canvas.  It should
-    // go just in front of the other button text/image, but behind any sublayers added by CoreAnimation via the SublayerCanvas property.
-    return nullptr;
+    if (!_content && _contentCanvas) {
+        _content = ref new Image();
+        _content->Name = "LayerContent";
+
+        // Layer content is behind any sublayers
+        _contentCanvas->Children->InsertAt(0, _content);
+    }
+
+    return _content;
 }
 
 // Accessor for our Layer content
@@ -176,7 +180,6 @@ void Button::OnApplyTemplate() {
     // Call GetTemplateChild to grab references to UIElements in our custom control template
     _textBlock = safe_cast<TextBlock^>(GetTemplateChild("buttonText"));
     _image = safe_cast<Image^>(GetTemplateChild("buttonImage"));
-    _backgroundImage = safe_cast<Image^>(GetTemplateChild("backgroundImage"));
     _contentCanvas = safe_cast<Canvas^>(GetTemplateChild(L"contentCanvas"));
 }
 
@@ -204,8 +207,6 @@ UIKIT_XAML_EXPORT void XamlRemoveLayoutEvent(const ComPtr<IInspectable>& inspect
 UIKIT_XAML_EXPORT void XamlButtonApplyVisuals(const ComPtr<IInspectable>& inspectableButton,
     const ComPtr<IInspectable>& inspectableText,
     const ComPtr<IInspectable>& inspectableButtonImage,
-    const ComPtr<IInspectable>& inspectableBackgroundImage,
-    const RECT insets,
     const ComPtr<IInspectable>& inspectableTitleColor) {
 
     auto button = safe_cast<UIKit::Xaml::Button^>(reinterpret_cast<Platform::Object^>(inspectableButton.Get()));
@@ -218,16 +219,6 @@ UIKIT_XAML_EXPORT void XamlButtonApplyVisuals(const ComPtr<IInspectable>& inspec
     // Set the Textblock's title and Foreground Brush color
     button->_textBlock->Text = title;
     button->_textBlock->Foreground = titleColor;
-
-    // Set the background Image and its nine grid
-    auto backgroundImage = safe_cast<Brush^>(reinterpret_cast<Platform::Object^>(inspectableBackgroundImage.Get()));
-    if (backgroundImage) {
-        ImageBrush^ backgroundImageBrush = safe_cast<ImageBrush^>(backgroundImage);
-        button->_backgroundImage->Source = safe_cast<BitmapSource^>(backgroundImageBrush->ImageSource);;
-
-        // Set the NineGrid on the Button's background image which is actually a XAML Image in the Control Template
-        button->_backgroundImage->NineGrid = ThicknessHelper::FromLengths(insets.left, insets.top, insets.right, insets.bottom);
-    }
 
     // Set the Button's Image
     auto image = safe_cast<Brush^>(reinterpret_cast<Platform::Object^>(inspectableButtonImage.Get()));

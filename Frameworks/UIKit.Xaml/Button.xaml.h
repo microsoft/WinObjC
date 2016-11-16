@@ -69,7 +69,6 @@ internal:
 
     Windows::UI::Xaml::Controls::TextBlock^ _textBlock;
     Windows::UI::Xaml::Controls::Image^ _image;
-    Windows::UI::Xaml::Controls::Image^ _backgroundImage;
 
 private:
     Windows::UI::Xaml::Controls::Canvas^ _contentCanvas; // Contains pre-canned button content, as well as any sublayers added by CoreAnimation.
