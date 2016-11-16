@@ -80,7 +80,10 @@ static constexpr CGFloat c_defaultPadding = 5.0f;
 
 // Finds the first viable region for the proposed rect given the exclusion areas based upon x positions
 // Assumes writing direction is left to right, exclusionLines is sorted and preprocessed for y positions, and all inputs are valid
-CGRect __FirstPossibleRectForProposed(CGRect proposed, const std::vector<CGRect>& exclusionLines, CGFloat padding, CGFloat maxWidth) {
+static CGRect __FirstPossibleRectForProposed(CGRect proposed,
+                                             const std::vector<CGRect>& exclusionLines,
+                                             CGFloat padding,
+                                             CGFloat maxWidth) {
     for (auto path : exclusionLines) {
         if (proposed.origin.x < path.origin.x) {
             proposed.size.width = path.origin.x - proposed.origin.x - padding;
@@ -98,8 +101,9 @@ CGRect __FirstPossibleRectForProposed(CGRect proposed, const std::vector<CGRect>
 }
 
 // Finds the first point at which the given rect intersects the given exclusionContext, moving by delta each iteration
-CGFloat __GetXPositionIntersectingZone(CGRect rect, const CGContextRef exclusionContext, CGFloat delta) {
-    while (!CGContextIsPointInPath(exclusionContext, true, rect.origin.x + delta, rect.origin.y) &&
+static CGFloat __GetXPositionIntersectingZone(CGRect rect, const CGContextRef exclusionContext, CGFloat delta, CGFloat maxWidth) {
+    while (0 <= rect.origin.x && rect.origin.x < maxWidth &&
+           !CGContextIsPointInPath(exclusionContext, true, rect.origin.x + delta, rect.origin.y) &&
            !CGContextIsPointInPath(exclusionContext, true, rect.origin.x + delta, rect.origin.y + rect.size.height / 2.0) &&
            !CGContextIsPointInPath(exclusionContext, true, rect.origin.x + delta, rect.origin.y + rect.size.height)) {
         rect.origin.x += delta;
@@ -117,9 +121,13 @@ CGFloat __GetXPositionIntersectingZone(CGRect rect, const CGContextRef exclusion
                                   atIndex:(NSUInteger)idx
                          writingDirection:(NSWritingDirection)direction
                             remainingRect:(CGRect*)remainingRect {
+    if (remainingRect) {
+        *remainingRect = CGRectZero;
+    }
+
     CGRect totalRect = CGRectMake(0, 0, _size.width, _size.height);
     CGRect ret = CGRectIntersection(proposed, totalRect);
-    if ([_exclusionPaths count] == 0L || ret.size.width <= 0) {
+    if ([self.exclusionPaths count] == 0L || ret.size.width <= 0) {
         return ret;
     }
 
@@ -129,28 +137,29 @@ CGFloat __GetXPositionIntersectingZone(CGRect rect, const CGContextRef exclusion
         padding = c_defaultPadding;
     }
 
-    if (remainingRect) {
-        *remainingRect = CGRectZero;
-    }
-
     std::vector<CGRect> exclusionRectsForHorizontal{};
     for (size_t i = 0; i < _exclusionPathBoundingRects.size(); ++i) {
+        CGRect boundingRect = _exclusionPathBoundingRects[i];
         // If our proposed area doesn't intersect the bounding box of the exclusion zone at all, no need to compare against it
-        if (proposed.origin.y < _exclusionPathBoundingRects[i].origin.y + _exclusionPathBoundingRects[i].size.height &&
-            proposed.origin.y + proposed.size.height > _exclusionPathBoundingRects[i].origin.y &&
-            proposed.origin.x < _exclusionPathBoundingRects[i].origin.x + _exclusionPathBoundingRects[i].size.width) {
-            CGRect lineIntersection{ { _exclusionPathBoundingRects[i].origin.x, proposed.origin.y },
-                                     { _exclusionPathBoundingRects[i].size.width, proposed.size.height } };
+        if ((proposed.origin.y < boundingRect.origin.y + boundingRect.size.height) &&
+            (proposed.origin.y + proposed.size.height > boundingRect.origin.y) &&
+            (proposed.origin.x < boundingRect.origin.x + boundingRect.size.width)) {
+            // Get maximum outer points to minimize stepping
+            CGRect lineIntersection = CGRectMake(boundingRect.origin.x, proposed.origin.y, boundingRect.size.width, proposed.size.height);
+            // TODO 1394: Remove and replace with CGPath
+            CGContextRef exclusionContext = _exclusionContexts[i].get();
 
             // TODO 1394: Convert to CGPathContainsPoint for CGD2D
             // Find the leftmost and rightmost points of the exclusion zone intersecting the same horizontal region as the proposed rect
-            lineIntersection.origin.x = __GetXPositionIntersectingZone(lineIntersection, _exclusionContexts[i].get(), padding);
-            lineIntersection.size.width =
-                __GetXPositionIntersectingZone({ { lineIntersection.origin.x + lineIntersection.size.width, lineIntersection.origin.y },
-                                                 lineIntersection.size },
-                                               _exclusionContexts[i].get(),
-                                               -padding) -
-                lineIntersection.origin.x;
+            lineIntersection.origin.x = __GetXPositionIntersectingZone(lineIntersection, exclusionContext, padding, _size.width);
+            CGFloat rightmostPosition = __GetXPositionIntersectingZone(CGRectMake(lineIntersection.origin.x + lineIntersection.size.width,
+                                                                                  lineIntersection.origin.y,
+                                                                                  lineIntersection.size.width,
+                                                                                  lineIntersection.size.height),
+                                                                       exclusionContext,
+                                                                       -padding,
+                                                                       _size.width);
+            lineIntersection.size.width = rightmostPosition - lineIntersection.origin.x;
             exclusionRectsForHorizontal.emplace_back(lineIntersection);
         }
     }
@@ -160,7 +169,7 @@ CGFloat __GetXPositionIntersectingZone(CGRect rect, const CGContextRef exclusion
         return rect.size.width <= 0;
     });
 
-    if (exclusionRectsForHorizontal.size() == 0L) {
+    if (exclusionRectsForHorizontal.empty()) {
         return ret;
     }
 
@@ -171,6 +180,7 @@ CGFloat __GetXPositionIntersectingZone(CGRect rect, const CGContextRef exclusion
     ret = __FirstPossibleRectForProposed(ret, exclusionRectsForHorizontal, padding, _size.width);
 
     if (remainingRect) {
+        // Should be padding to the right of whatever stopped the first rect, which is padding past the end of it
         CGFloat newXPosition = ret.origin.x + ret.size.width + 2 * padding;
         if (newXPosition < _size.width) {
             *remainingRect =

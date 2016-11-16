@@ -271,6 +271,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIFontDescriptorTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSParagraphStyleTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSString+UIKitAdditionsTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSTextContainerTests.mm" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(StarboardBasePath)\tests\unittests\UIKit\NullCompositor.h" />
