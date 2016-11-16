@@ -121,7 +121,7 @@ CGImageRef CGImageCreateCopy(CGImageRef ref) {
 
     ComPtr<IWICBitmap> image;
 
-    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(ref->ImageSource().Get(), WICBitmapCacheOnDemand, &image));
+    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(ref->ImageSource().Get(), WICBitmapCacheOnLoad, &image));
 
     CGImageRef imageRef = __CGImage::CreateInstance();
     imageRef->SetImageSource(image)
@@ -225,7 +225,7 @@ CGColorSpaceRef CGImageGetColorSpace(CGImageRef img) {
  @Status Interoperable
 */
 CGBitmapInfo CGImageGetBitmapInfo(CGImageRef img) {
-    RETURN_RESULT_IF_NULL(img, 0);
+    RETURN_RESULT_IF_NULL(img, kCGBitmapByteOrderDefault);
     return img->BitmapInfo();
 }
 
@@ -375,6 +375,20 @@ CGImageRef CGImageCreateWithMaskingColors(CGImageRef image, const CGFloat* compo
 
 #pragma region WIC_HELPERS
 
+bool _CGIsValidRenderTargetPixelFormat(WICPixelFormatGUID pixelFormat) {
+    auto iterator = s_ValidRenderTargetPixelFormat.find(pixelFormat);
+    return iterator != s_ValidRenderTargetPixelFormat.end();
+}
+
+const __CGImagePixelProperties* _CGGetPixelFormatProperties(WICPixelFormatGUID pixelFormat) {
+    RETURN_NULL_IF(pixelFormat == GUID_WICPixelFormatUndefined);
+
+    auto iterator = s_PixelFormats.find(pixelFormat);
+    RETURN_NULL_IF(iterator == s_PixelFormats.end());
+
+    return &iterator->second;
+}
+
 IWICBitmap* _CGImageGetImageSource(CGImageRef image) {
     RETURN_NULL_IF(!image);
     return image->ImageSource().Get();
@@ -424,7 +438,7 @@ CGImageRef _CGImageCreateCopyWithPixelFormat(CGImageRef image, WICPixelFormatGUI
         image->ImageSource().Get(), pixelFormat, WICBitmapDitherTypeNone, nullptr, 0.f, WICBitmapPaletteTypeMedianCut));
 
     ComPtr<IWICBitmap> convertedImage;
-    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(converter.Get(), WICBitmapCacheOnDemand, &convertedImage));
+    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(converter.Get(), WICBitmapCacheOnLoad, &convertedImage));
 
     CGImageRef imageRef = __CGImage::CreateInstance();
     imageRef->SetImageSource(convertedImage);

@@ -51,6 +51,11 @@ struct GuidPixelLess : public std::binary_function<GUID, GUID, bool> {
     }
 };
 
+static const std::map<GUID, int, GuidPixelLess> s_ValidRenderTargetPixelFormat = { { GUID_WICPixelFormat8bppAlpha, 1 },
+                                                                                   { GUID_WICPixelFormat32bppPRGBA, 1 },
+                                                                                   { GUID_WICPixelFormat32bppBGR, 1 },
+                                                                                   { GUID_WICPixelFormat32bppPBGRA, 1 } };
+
 static const std::map<GUID, __CGImagePixelProperties, GuidPixelLess> s_PixelFormats = {
     /*Alpha First,Last*/
     { GUID_WICPixelFormat32bppRGBA, { kCGColorSpaceModelRGB, (kCGImageAlphaLast | kCGBitmapByteOrderDefault), 8, 32 } },
@@ -89,6 +94,9 @@ static const std::map<GUID, __CGImagePixelProperties, GuidPixelLess> s_PixelForm
     { GUID_WICPixelFormat8bppIndexed, { kCGColorSpaceModelIndexed, (kCGImageAlphaNone | kCGBitmapByteOrderDefault), 1, 8 } }
 };
 
+bool _CGIsValidRenderTargetPixelFormat(WICPixelFormatGUID pixelFormat);
+const __CGImagePixelProperties* _CGGetPixelFormatProperties(WICPixelFormatGUID pixelFormat);
+
 struct __CGImageImpl {
     Microsoft::WRL::ComPtr<IWICBitmap> bitmapImageSource;
     bool isMask;
@@ -124,12 +132,7 @@ struct __CGImageImpl {
 
     inline const __CGImagePixelProperties* Properties() const {
         WICPixelFormatGUID pixelFormat = PixelFormat();
-        RETURN_NULL_IF(pixelFormat == GUID_WICPixelFormatUndefined);
-
-        auto iterator = s_PixelFormats.find(pixelFormat);
-        RETURN_NULL_IF(iterator == s_PixelFormats.end());
-
-        return &iterator->second;
+        return _CGGetPixelFormatProperties(pixelFormat);
     }
 
     inline size_t BitsPerPixel() const {
