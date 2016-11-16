@@ -696,7 +696,6 @@ void LayerCoordinator::SetContent(FrameworkElement^ element, ImageSource^ source
     contentImage->Source = source;
 
     // Store content size with the scale factor applied
-    // TODO: This check existed on the old codebase; was it necessary?
     if (scale <= 0.0) {
         scale = 1.0f;
     }

@@ -64,6 +64,8 @@ Windows::Foundation::Size Label::ArrangeOverride(Windows::Foundation::Size final
     TextBlock->Measure(finalSize);
     if (TextBlock->DesiredSize.Height >= finalSize.Height) {
         TextBlock->VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Top;
+    } else {
+        TextBlock->VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Center;
     }
 
     return __super::ArrangeOverride(finalSize);
