@@ -35,6 +35,8 @@ void Initialize(Windows::UI::Xaml::Controls::Grid^ rootGrid, ActivationType acti
 // clang-format on
 #endif // !defined(__OBJC__)
 
+Microsoft::WRL::ComPtr<IInspectable> GetRootElement();
+
 namespace Internal {
 
 typedef enum {

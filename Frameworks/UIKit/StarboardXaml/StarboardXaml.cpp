@@ -182,8 +182,8 @@ void UIApplicationLaunched(LaunchActivatedEventArgs^ args) {
     // Opt out of prelaunch for now. MSDN guidance is to check the flag and just return.
     // Or skip re-initializing as the app is being resumed from memory.
     bool initiateAppLaunch = (!(args->PrelaunchActivated)
-                                && (args->PreviousExecutionState != ApplicationExecutionState::Running)
-                                && (args->PreviousExecutionState != ApplicationExecutionState::Suspended));
+        && (args->PreviousExecutionState != ApplicationExecutionState::Running)
+        && (args->PreviousExecutionState != ApplicationExecutionState::Suspended));
 
     if (initiateAppLaunch) {
         TraceVerbose(TAG, L"Initializing application");
@@ -270,12 +270,16 @@ void UIApplicationBackgroundActivated(BackgroundActivatedEventArgs^ args) {
 
 void DoApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
     auto uiElem = ref new Xaml::Controls::Grid();
-    auto rootFrame = ref new Xaml::Controls::Frame();
-    rootFrame->Content = uiElem;
 
     XamlCompositor::Initialize(uiElem, activationType);
 
-    if (activationType != ActivationTypeLibrary) {
+    if (activationType == ActivationTypeLibrary) {
+        // In library mode, presented UI should completely cover whatever's behind it
+        uiElem->Background = ref new Xaml::Media::SolidColorBrush(Colors::White);
+    } else {
+        auto rootFrame = ref new Xaml::Controls::Frame();
+        rootFrame->Content = uiElem;
+
         Xaml::Window::Current->Content = rootFrame;
         Xaml::Window::Current->Activate();
     }

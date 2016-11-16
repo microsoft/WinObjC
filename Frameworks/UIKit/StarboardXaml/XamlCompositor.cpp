@@ -71,6 +71,10 @@ void Initialize(Windows::UI::Xaml::Controls::Grid^ rootGrid, ActivationType acti
     s_rootGrid->SizeChanged += ref new SizeChangedEventHandler(&OnGridSizeChanged);
 }
 
+ComPtr<IInspectable> GetRootElement() {
+    return reinterpret_cast<IInspectable*>(s_rootGrid);
+}
+
 namespace Internal {
 
 void (*RenderCallback)() = nullptr;
