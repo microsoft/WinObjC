@@ -83,5 +83,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\CppUtils.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\MockClass.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\unittests\Tests.Shared\ByteUtils.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\unittests\Tests.Shared\TestUtils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\unittests\Tests.Shared\TestUtils.mm" />
   </ItemGroup>
 </Project>

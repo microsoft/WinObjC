@@ -19,6 +19,8 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <Foundation/Foundation.h>
 
+#import <TestUtils.h>
+
 // CTFont functionality is generally a superset of CGFont functionality, and hits the same code path
 // Thus, CTFont unit tests can also be thought of as CGFont test coverage
 
@@ -109,21 +111,7 @@ TEST(CGFont, GetDescent) {
 }
 
 TEST(CGFont, CreateWithDataProvider) {
-    // get test startup full path
-    wchar_t fullPath[_MAX_PATH];
-    size_t len = GetModuleFileNameW(NULL, fullPath, _MAX_PATH);
-
-// OSX has twice-as-wide wchars
-#if TARGET_OS_WIN32
-    NSString* testFileFullPath = [NSString stringWithCharacters:(const unichar*)fullPath length:len + 1];
-#else
-    NSString* testFileFullPath = [NSString stringWithBytes:fullPath length:sizeof(wchar_t) * len encoding:WCHAR_ENCODING];
-#endif
-
-    // reconstruct fullpath for test artifact file. e.g., /Volumes/WinObjC/build/Tests/UnitTests/Foundation/OSX/data/NSFileManagerUT.txt
-    testFileFullPath = [[testFileFullPath stringByDeletingLastPathComponent] stringByAppendingString:@"/data/WinObjC-Regular.ttf"];
-
-    NSURL* testFileURL = [NSURL fileURLWithPath:testFileFullPath];
+    NSURL* testFileURL = [NSURL fileURLWithPath:getPathToFile(@"/data/WinObjC-Regular.ttf")];
 
     CGDataProviderRef dataProvider = CGDataProviderCreateWithURL((__bridge CFURLRef)testFileURL);
     CFAutorelease(dataProvider);

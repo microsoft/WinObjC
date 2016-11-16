@@ -103,6 +103,8 @@ CGFontRef CGFontRetain(CGFontRef font) {
  @Status Interoperable
 */
 CGFontRef CGFontCreateWithDataProvider(CGDataProviderRef cgDataProvider) {
+    RETURN_NULL_IF(!cgDataProvider);
+
     size_t memSize = sizeof(struct __CGFont) - sizeof(CFRuntimeBase);
     CGFontRef ret = static_cast<CGFontRef>(_CFRuntimeCreateInstance(kCFAllocatorDefault, CGFontGetTypeID(), memSize, NULL));
     CFAutorelease(ret);

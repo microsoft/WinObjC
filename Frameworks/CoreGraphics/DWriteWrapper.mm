@@ -485,6 +485,10 @@ HRESULT _DWriteFontGetBoundingBoxesForGlyphs(
 
 /**
  * Custom implementation of IDWriteFontFileStream that implements Read in terms of an underlying CFDataRef
+ *
+ * While IDWriteFontFileStream normally frees its underlying data bit by bit through ReleaseFileFragment(),
+ * for WinObjC purposes, it is easier to rely on existing mechanisms for CFData's destruction.
+ * Thus, this class releases its CFData all at once, at the time of its destruction.
  */
 class DWriteFontBinaryDataStream : public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IDWriteFontFileStream> {
 protected:
@@ -499,11 +503,7 @@ public:
 
         // Just use current time for _lastWriteTime
         FILETIME fileTime;
-        SYSTEMTIME systemTime;
-
-        GetSystemTime(&systemTime);
-        // Returns 0 on failure, which is probably good enough for WinObjC purposes?
-        SystemTimeToFileTime(&systemTime, &fileTime);
+        GetSystemTimeAsFileTime(&fileTime);
 
         // Concat filetime into a single uint64_t
         _lastWriteTime = 0;
@@ -572,14 +572,13 @@ public:
         return S_OK;
     }
 
+    // Ignores first two params, just return the same kind of stream always
+    // Stream returned is dictated by dataProvider passed in at initialization time
     HRESULT STDMETHODCALLTYPE CreateStreamFromKey(_In_ const void* fontFileReferenceKey,
                                                   uint32_t fontFileReferenceKeySize,
                                                   _Out_ IDWriteFontFileStream** fontFileStream) {
-        if (!fontFileStream) {
-            return E_INVALIDARG;
-        }
+        RETURN_HR_IF_NULL(E_INVALIDARG, fontFileStream);
 
-        // Ignore first two params, just return the same kind of stream always
         ComPtr<DWriteFontBinaryDataStream> ret;
         RETURN_IF_FAILED(MakeAndInitialize<DWriteFontBinaryDataStream>(&ret, _dataProvider.get()));
 

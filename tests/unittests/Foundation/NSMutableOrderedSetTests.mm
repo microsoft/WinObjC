@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,7 +16,7 @@
 
 #import <Foundation/Foundation.h>
 #import <TestFramework.h>
-#import "TestUtils.h"
+#import <TestUtils.h>
 
 TEST(NSMutableOrderedSet, Init) {
     NSMutableOrderedSet* orderedSet = [[NSMutableOrderedSet alloc] init];

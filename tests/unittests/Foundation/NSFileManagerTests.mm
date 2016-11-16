@@ -24,31 +24,10 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <Starboard/SmartTypes.h>
-#include "TestUtils.h"
+#include <TestUtils.h>
 
 TEST(NSFileManager, GetAttributes) {
-    // get test startup full path
-    wchar_t fullPath[_MAX_PATH];
-    size_t len = GetModuleFileNameW(NULL, fullPath, _MAX_PATH);
-
-// Window needs extra handling for the drive character, OSX has twice-as-wide wchars
-#if TARGET_OS_WIN32
-    // split test startup full path into components like drive, directory, filename and ext etc.
-    wchar_t drive[_MAX_DRIVE];
-    wchar_t dir[_MAX_DIR];
-    ASSERT_TRUE(::_wsplitpath_s(fullPath, drive, _countof(drive), dir, _countof(dir), NULL, 0, NULL, 0) == 0);
-
-    // reconstruct fullpath for test artifact file. e.g., C:\WinObjc\WinObjC\build\Debug\data\NSFileManagerUT.txt
-    ASSERT_TRUE(wcscat_s(dir, _countof(dir), L"\\data\\") == 0);
-    ASSERT_TRUE(::_wmakepath_s(fullPath, _countof(fullPath), drive, dir, L"NSFileManagerUT", L".txt") == 0);
-
-    NSString* testFileFullPath = [NSString stringWithCharacters:(const unichar*)fullPath length:len + 1];
-#else
-    NSString* testFileFullPath = [NSString stringWithBytes:fullPath length:sizeof(wchar_t) * len encoding:WCHAR_ENCODING];
-
-    // reconstruct fullpath for test artifact file. e.g., /Volumes/WinObjC/build/Tests/UnitTests/Foundation/OSX/data/NSFileManagerUT.txt
-    testFileFullPath = [[testFileFullPath stringByDeletingLastPathComponent] stringByAppendingString:@"/data/NSFileManagerUT.txt"];
-#endif
+    NSString* testFileFullPath = getPathToFile(@"/data/NSFileManagerUT.txt");
 
     LOG_INFO("this test try to validate file creation date and modification date and size for %@", testFileFullPath);
     NSFileManager* manager = [NSFileManager defaultManager];
