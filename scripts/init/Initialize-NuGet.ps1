@@ -6,7 +6,9 @@ $ErrorActionPreference = "Stop"
 
 # Create the .tools directory
 New-Item -ItemType Directory -Force -Path "$repoRoot\.tools" | Out-Null
+New-Item -ItemType Directory -Force -Path "$repoRoot\.tools\beta" | Out-Null
 $toolsDir = Join-Path -Resolve $repoRoot ".tools"
+$toolsBetaDir = Join-Path -Resolve $repoRoot ".tools\beta"
 
 # Ensure nuget.exe is up-to-date
 $nugetDownloadName = "nuget.exe"
@@ -18,6 +20,8 @@ $credProviderPackageName = "Microsoft.VisualStudio.Services.NuGet.CredentialProv
 $credProviderExeName = "CredentialProvider.VSS.exe"
 
 . "$PSScriptRoot\Initialize-InstallFromNuget.ps1" -OutDir $toolsDir -DownloadFeed $credProviderDownloadFeed -PackageName $credProviderPackageName -targetFileName $credProviderExeName
+
+. "$PSScriptRoot\Initialize-InstallFromNuget.ps1" -OutDir $toolsBetaDir -DownloadFeed "https://dotnet.myget.org/F/nuget-build/api/v2/" -PackageName "NuGet.CommandLine" -targetFileName "nuget.exe" -NugetDir $toolsDir
 
 # Add the tools dir to the path which directly contains NuGet.exe and VSS.NuGet.AuthHelper.exe
 if (!($env:Path -like "*$toolsDir;*"))
