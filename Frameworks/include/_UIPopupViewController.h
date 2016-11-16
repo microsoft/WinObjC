@@ -18,5 +18,7 @@
 
 #import <UIKit/UIViewController.h>
 
+// Top level view controller when WinObjC is running in library mode.
+// All presented UI appears inside a XAML Popup.
 @interface _UIPopupViewController : UIViewController
 @end

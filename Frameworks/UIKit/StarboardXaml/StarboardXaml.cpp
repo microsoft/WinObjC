@@ -41,8 +41,6 @@ using namespace Windows::ApplicationModel::Core;
 static Platform::String^ g_principalClassName;
 static Platform::String^ g_delegateClassName;
 
-static Xaml::Controls::Grid^ g_rootElement;
-
 static const wchar_t* TAG = L"StarboardXaml";
 
 Xaml::Markup::IXamlType^ App::GetXamlType(Xaml::Interop::TypeName type) {
@@ -270,22 +268,17 @@ void UIApplicationBackgroundActivated(BackgroundActivatedEventArgs^ args) {
 }
 #endif
 
-IInspectable* GetRootXamlElement() {
-    return reinterpret_cast<IInspectable*>(g_rootElement);
-}
-
 void DoApplicationLaunch(ActivationType activationType, Platform::Object^ activationArg) {
-    g_rootElement = ref new Xaml::Controls::Grid();
+    auto uiElem = ref new Xaml::Controls::Grid();
 
-    XamlCompositor::Initialize(g_rootElement, activationType);
+    XamlCompositor::Initialize(uiElem, activationType);
 
     if (activationType == ActivationTypeLibrary) {
         // In library mode, presented UI should completely cover whatever's behind it
-        g_rootElement->Background = ref new Xaml::Media::SolidColorBrush(Colors::White);
-    }
-    else {
+        uiElem->Background = ref new Xaml::Media::SolidColorBrush(Colors::White);
+    } else {
         auto rootFrame = ref new Xaml::Controls::Frame();
-        rootFrame->Content = g_rootElement;
+        rootFrame->Content = uiElem;
 
         Xaml::Window::Current->Content = rootFrame;
         Xaml::Window::Current->Activate();

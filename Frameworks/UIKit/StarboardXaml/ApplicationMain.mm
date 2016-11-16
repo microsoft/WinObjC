@@ -97,6 +97,7 @@ int ApplicationMainStart(const char* principalName,
     [displayMode _setWindowSize:CGSizeMake(windowWidth, windowHeight)];
 
     if (activationType == ActivationTypeLibrary) {
+        // In library mode, honor app's native display size
         [displayMode setDisplayPreset:WOCDisplayPresetNative];
     }
 
@@ -155,6 +156,9 @@ int ApplicationMainStart(const char* principalName,
     UIApplicationMainInit(principalClassName, delegateClassName, defaultOrientation, (int)activationType, activationArgument);
 
     if (activationType == ActivationTypeLibrary) {
+        // Create a top-level UIWindow with popup view controller, which will not normally be visible.
+        // If some other view controller tries to present to it, the popup view controller will make
+        // the desired UI visible inside a XAML Popup.
         WFRect* appFrame = [[WXWindow current] bounds];
         CGRect windowFrame = CGRectMake(0, 0, appFrame.width, appFrame.height);
 

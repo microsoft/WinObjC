@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #import "UIApplicationInternal.h"
-#import "StarboardXaml/StarboardXaml.h"
+#import "StarboardXaml/XamlCompositor.h"
 #import "_UIPopupViewController.h"
 #import <UWP/WindowsUIXamlControlsPrimitives.h>
 
@@ -28,9 +28,9 @@ static const wchar_t* TAG = L"_UIPopupViewController";
 
 - (void)loadView {
     _popup = [WUXCPPopup make];
-    _popup.child = [WXFrameworkElement createWith:GetRootXamlElement()];
+    _popup.child = [WXFrameworkElement createWith:XamlCompositor::GetRootElement().Get()];
 
-    _UIPopupViewController __weak* weakSelf = self;
+    __weak _UIPopupViewController* weakSelf = self;
 
     // Keep the popup's contents sized to fit the window
     _layoutUpdated = [_popup addLayoutUpdatedEvent:^(RTObject* sender, RTObject* args) {
@@ -41,7 +41,7 @@ static const wchar_t* TAG = L"_UIPopupViewController";
         }
 
         WUXCPPopup* popup = strongSelf->_popup;
-        id popupChild = popup.child;
+        WXUIElement* popupChild = popup.child;
 
         if (popupChild != nil) {
             WXFrameworkElement* child = rt_dynamic_cast<WXFrameworkElement>(popupChild);
@@ -59,13 +59,23 @@ static const wchar_t* TAG = L"_UIPopupViewController";
 }
 
 - (void)presentViewController:(UIViewController*)viewControllerToPresent animated:(BOOL)flag completion:(void (^)())completion {
-    _popup.isOpen = YES;
-    [super presentViewController:viewControllerToPresent animated:flag completion:completion];
+    [super presentViewController:viewControllerToPresent animated:flag completion:^{
+        _popup.isOpen = YES;
+
+        if (completion != nil) {
+            completion();
+        }
+    }];
 }
 
 - (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)())completion {
-    _popup.isOpen = NO;
-    [super dismissViewControllerAnimated:flag completion:completion];
+    [super dismissViewControllerAnimated:flag completion:^{
+        _popup.isOpen = NO;
+
+        if (completion != nil) {
+            completion();
+        }
+    }];
 }
 
 @end
