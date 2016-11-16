@@ -233,6 +233,7 @@ LIBRARY CoreGraphics
         CGContextSetDirty
         CGContextGetBacking
         CGContextDrawGlyphRun
+        CGContextIsPointInPath
         EbrCenterTextInRectVertically
         _CGContextSetScaleFactor
 
@@ -406,7 +407,6 @@ LIBRARY CoreGraphics
         CGPathContainsPoint
 
         ; private exports below
-        _CGPathFitRect
         _CGPathApplyPath
         _CGPathGetBoundingBoxInternal
 
